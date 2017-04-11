@@ -1,0 +1,106 @@
+{
+  "name": "nodefony",
+  "version": "2.0.4-beta",
+  "description": "FRAMEWORK web developpement symfony like",
+  "main": "./core/autoloader.js",
+  "scripts": {},
+  "keywords": [
+    "Node.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nodefony/nodefony.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nodefony/nodefony/issues"
+  },
+  "license": "CECILL-B",
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "engines": {
+    "node": ">=6"
+  },
+  "dependencies": {
+    "asciify": "1.3.5",
+    "babel-cli": "6.24.0",
+    "babel-loader": "6.4.1",
+    "babel-preset-es2015": "6.24.0",
+    "babel-register": "6.24.0",
+    "bluebird": "3.5.0",
+    "bootstrap": "3.3.7",
+    "bootstrap-loader": "2.0.0",
+    "chai": "3.5.0",
+    "cheerio": "0.22.0",
+    "chokidar": "^1.6.1",
+    "cli-color": "^1.2.0",
+    "cli-table": "^0.3.1",
+    "connect": ">= 2.8 < 3",
+    "cookie": "0.3.1",
+    "css-loader": "0.28.0",
+    "elasticsearch": "13.0.0-rc2",
+    "extract-text-webpack-plugin": "2.1.0",
+    "file-loader": "0.11.1",
+    "font-awesome": "4.7.0",
+    "jquery": "^3.2.1",
+    "js-yaml": "3.8.3",
+    "jshint": "2.9.4",
+    "less": "^2.3.1",
+    "less-loader": "4.0.3",
+    "markdown-it": "8.3.1",
+    "memcached": "2.2.2",
+    "mime": "1.3.4",
+    "mkdirp": "0.5.1",
+    "mocha": "3.2.0",
+    "mysql": "2.13.0",
+    "node-getopt": "0.2.3",
+    "node-pre-gyp": "0.6.34",
+    "node-sass": "4.5.2",
+    "nodefony-stage": "git+https://github.com/nodefony/nodefony-stage.git#webpack",
+    "nodegit": "0.18.0",
+    "npm": "4.5.0",
+    "npmi": "2.0.1",
+    "passport": "0.3.2",
+    "passport-github2": "0.1.10",
+    "passport-google-oauth": "1.0.0",
+    "passport-http": "0.3.0",
+    "passport-ldapauth": "0.6.0",
+    "passport-local": "1.0.0",
+    "passport-nodefony": "2.0.2",
+    "pm2": "2.4.4",
+    "promise": "7.1.1",
+    "qs": "6.4.0",
+    "raw-loader": "0.5.1",
+    "request": "2.81.0",
+    "resolve-url-loader": "2.0.2",
+    "sass-loader": "6.0.3",
+    "sequelize": "3.30.4",
+    "shortid": "2.2.8",
+    "sqlite3": "3.1.8",
+    "style-loader": "0.16.1",
+    "twig": "1.10.4",
+    "uglify-js": "git+https://github.com/mishoo/UglifyJS2.git#harmony",
+    "uglifycss": "0.0.25",
+    "url-loader": "0.5.8",
+    "useragent": "2.1.13",
+    "webpack": "fulls1z3/webpack#v2.2.1-harmony",
+    "webpack-merge": "4.1.0",
+    "websocket": "1.0.24",
+    "xml2js": "0.4.17"
+  },
+  "devDependencies": {
+    "bithound": "1.7.0"
+  },
+  "author": "cci <christophe.camensuli@gmail.com>",
+  "readmeFilename": "README.md",
+  "contributors": [
+    {}
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  	"name": "DOCUMENTATION",
+  	"version": "1.0",
+  	"description": "",
+  	"author": " ",
+  	"contributors": [],
+  	"keywords": [
+		"nodefony",
+		"javascript"
+  	],
+  	"dependencies": {
+		"cheerio" : "0.22.0",
+		"elasticsearch" : "12.1.3"
+  	}
+}
