@@ -315,7 +315,7 @@ nodefony.registerController("default", function(){
 
 				var url = this.generateUrl("documentation-version",{
 					bundle:"nodefony",
-					version:this.kernel.settings.version
+					version:"Beta"
 				}, true)
 				
 				var request = this.getRequest();

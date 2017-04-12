@@ -50,8 +50,7 @@ locale :			en_en
 #        views:			true
 #        translations:          true
 #
-watch:                          true
-
+watch:                          ~
 
 
 webpack:
