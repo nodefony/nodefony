@@ -1,18 +1,21 @@
 {
   "name": "nodefony",
-  "version": "2.0.4-beta",
+  "version": "2.1.0-beta",
   "description": "FRAMEWORK web developpement symfony like",
-  "main": "./core/autoloader.js",
-  "scripts": {},
+  "main": "./src//nodefony/core/autoloader.js",
+  "scripts": {
+  	"start": "make deploy",
+	"test": "./console unitTest:launch:all"
+  },
   "keywords": [
     "Node.js"
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/nodefony/nodefony.git"
+    "url": "git://github.com/nodefony/nodefony-core.git"
   },
   "bugs": {
-    "url": "https://github.com/nodefony/nodefony/issues"
+    "url": "https://github.com/nodefony/help/issues"
   },
   "license": "CECILL-B",
   "licenses": [

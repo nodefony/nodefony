@@ -1,0 +1,4 @@
+home: 
+  pattern:  /
+  defaults: 
+    controller: "documentationBundle:default:index"

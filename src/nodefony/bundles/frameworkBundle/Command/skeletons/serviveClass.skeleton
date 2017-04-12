@@ -1,0 +1,30 @@
+{% extends "./licence.cecill-b.skeleton" %}
+
+{% block body %}
+
+
+nodefony.registerService("{{name}}", function(){
+
+	/**
+	 *	The class is a **`{{name}}` SERVICE** .
+	 *	@module {{module}}
+	 *	@main {{module}}
+	 *	@class {{name}}
+	 *	@constructor
+	 *	
+	 */
+
+	var {{name}} = class {{name}} extends nodefony.Service {
+		
+		constructor(){
+			super("{{name}}");
+		}
+
+	};
+
+	return {{name}};
+
+});
+
+
+{% endblock %}

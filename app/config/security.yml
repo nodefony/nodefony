@@ -1,0 +1,22 @@
+# Security
+security:
+
+    #  FIREWALL strategy when change security context (multi firewalls areas) 
+    session_fixation_strategy:  migrate  # Strategy can be : none, migrate, invalidate
+ 
+    #
+    #  FIREWALL  AREAS
+    #
+    firewalls: ~ 
+
+    #
+    #  FIREWALL  PROVIDER
+    #
+    providers: ~
+
+    # TODO
+    # FIREWALL ACCES CONTROL    
+    #
+    #access_control: ~
+
+

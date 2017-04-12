@@ -24,12 +24,12 @@
 					<li> <a href="{{ path('documentation-section',{section:'installation', version:version, bundle:bundle })}}"> {{"installation" | trans() | capitalize() }} </a></li>
 					<li> <a href="{{ path('documentation-section',{section:'started', version:version, bundle:bundle })}}"> {{"begin" | trans() | capitalize() }} </a></li>
 					<li> <a href="{{ path('documentation-version',{version:version, bundle:'App' })}}"> {{"Application" | trans() | capitalize() }}</a></li>
-					<li> <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle })}}"> {{"configurations" | trans() | capitalize() }}</a></li>
+					<li> <a href="{{ path('documentation-section',{version:version ,section:'configurations', bundle:bundle })}}"> {{"configurations" | trans() | capitalize() }}</a></li>
 					<li> <a href="{{ path('documentation-section',{section:'running', version:version, bundle:bundle })}}"> {{"running" | trans() | capitalize() }}</a></li>
 					<li> <a href="{{ path('documentation-section',{section:'helloWord', version:version, bundle:bundle })}}"> Hello Word </a></li>
-					<li> <a href="{{ path('documentation-section',{section:'routing', version:'Default', bundle:'framework' })}}"> {{"Routing" | trans() | capitalize() }}</a></li>
-					<li> <a href="{{ path('documentation-section',{section:'controller', version:'Default', bundle:'framework' })}}"> {{"controller" | trans() | capitalize() }}</a></li>
-					<li> <a href="{{ path('documentation-section',{section:'view', version:'Default', bundle:'framework' })}}"> {{"view" | trans() | capitalize() }} </a></li> 
+					<li> <a href="{{ path('documentation-section',{section:'routing', version:version, bundle:'framework' })}}"> {{"Routing" | trans() | capitalize() }}</a></li>
+					<li> <a href="{{ path('documentation-section',{section:'controller', version:version, bundle:'framework' })}}"> {{"controller" | trans() | capitalize() }}</a></li>
+					<li> <a href="{{ path('documentation-section',{section:'view', version:version, bundle:'framework' })}}"> {{"view" | trans() | capitalize() }} </a></li> 
 					<li> <a href="{{ path('documentation-section',{section:'models', version:version, bundle:bundle })}}"> {{"models" | trans() | capitalize() }}</a></li>
 					<li> <a href="{{ path('documentation-section',{section:'console', version:version, bundle:bundle })}}"> {{"console" | trans() | capitalize() }}</a></li>
 					<li> <a href="{{ path('documentation-section',{section:'websocket', version:version, bundle:bundle })}}"> {{"websocket" | trans() | capitalize() }}</a></li>  </li>
