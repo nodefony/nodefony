@@ -8,6 +8,7 @@
 const webpack = require("webpack");
 const webpackMerge = require('webpack-merge'); // used to merge webpack configs
 const ExtractTextPluginCss = require('extract-text-webpack-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 
 nodefony.registerService("webpack", function(){
@@ -28,7 +29,7 @@ nodefony.registerService("webpack", function(){
 		};
 	};
 
-	var cssRule  = function(basename){
+	var cssRule  = function(basename, production){
 		return {
 			test: /\.css$/,
 			use: ExtractTextPluginCss.extract({
@@ -110,25 +111,31 @@ nodefony.registerService("webpack", function(){
 			var basename ="assets";	
 		}
 		var public = Path ? Path + "/Resources/public" : null;
+		var devtool = this.production ? false : 'source-map' ;
+		var rules = [babelRule(basename), cssRule(basename, this.production), fontsRule(basename), imagesRule(basename), sassRule(basename),  lessRule(basename)] ;		
+		var plugins = [];
+		plugins.push( new ExtractTextPluginCss( {
+			filename:"./assets/css/"+ name +".css", 
+		}));
+		if ( this.production  && this.kernel.type !== "CONSOLE" ){
+			plugins.push( this.getUglifyJsPlugin() );	
+			plugins.push( this.getOptimizeCssPlugin() );	
+		}
 		return {
 			// Configuration Object
 			context:	public ,
 			target:		"web",
 			watch:		true,
-			devtool:	this.production ? false : 'source-map',
+			devtool:	devtool,
 			output:		{
 				path:	public 
 			},
 			externals:	{},
 			resolve:	{},
 			module: {
-				rules: [babelRule(basename), cssRule(basename), fontsRule(basename), imagesRule(basename), sassRule(basename),  lessRule(basename)]
+				rules: rules
 			},
-			plugins: [
-				new ExtractTextPluginCss( {
-					 filename:"./assets/css/"+ name +".css", 
-				})
-			]
+			plugins: plugins
 		};
 	};
 	
@@ -138,7 +145,7 @@ nodefony.registerService("webpack", function(){
 		constructor(container){
 			super ("WEBPACK", container);
 			this.production = ( this.kernel.environment === "prod" ) ?  true :  false ;
-			this.defaultConfig = defaultConfig.call(this,"nodefony");
+			this.defaultConfig = defaultConfig.call(this, "nodefony");
 		}
 
 		loggerStat (err, stats, bundle , watcher){
@@ -171,15 +178,19 @@ nodefony.registerService("webpack", function(){
 
 		loadConfig( config , Path ){
 
-			if ( this.production  && ( this.kernel.type !== "CONSOLE" ) ) {
-				return null ;
-			}
+			//if ( this.production  && ( this.kernel.type !== "CONSOLE" ) ) {
+			//	return null ;
+			//}
 			var basename = path.basename(Path);
 			var name = config.output ? config.output.library : "index" ;
 						
 			var myConf = webpackMerge( defaultConfig.call(this, name, Path), config ) ;
+
+			if ( this.production ){
+				myConf.watch = false ;
+			}
 			
-			this.logger( "LOAD WEBPACK BUNDLE ENTRY POINT :" + myConf.entry.main , "DEBUG" )
+			this.logger( "LOAD WEBPACK BUNDLE ENTRY POINT :" + util.inspect(myConf.entry) , "DEBUG" )
 
 			try {
 				var compiler =  webpack( myConf );
@@ -216,13 +227,23 @@ nodefony.registerService("webpack", function(){
 		getUglifyJsPlugin( config ){
 			try {
 				return new webpack.optimize.UglifyJsPlugin( nodefony.extend(true, {}, {
-					compress: this.production
+					minimize: this.production
 				}, config) );
 			}catch(e){
 				throw e;
 			}
 		}
 
+		getOptimizeCssPlugin( config ){
+			try {
+				return new OptimizeCssAssetsPlugin( nodefony.extend(true, {}, {
+					cssProcessorOptions: { discardComments: {removeAll: true } },
+					canPrint: true 
+    				}, config) );
+			}catch(e){
+				throw e;
+			}
+		}
 	}
 
 	return  webpackService ;

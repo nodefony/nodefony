@@ -29,6 +29,7 @@
 npm-debug.log
 
 **/assets/**
+**/tests/**
 
 /CHANGELOG.md
 changelog.md
