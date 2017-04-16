@@ -2,7 +2,7 @@
   "name": "nodefony",
   "version": "2.1.0-beta",
   "description": "FRAMEWORK web developpement symfony like",
-  "main": "./src//nodefony/core/autoloader.js",
+  "main": "./src/nodefony/core/autoloader.js",
   "scripts": {
     "start": "make deploy",
     "test": "./console unitTest:launch:all"
