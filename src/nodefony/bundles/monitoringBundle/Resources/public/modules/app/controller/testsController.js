@@ -260,7 +260,7 @@ stage.registerController("testsController", function() {
 
 		indexAction (){
 		
-			var navView = this.renderDefaultContent("appModule:tests:tests", {});
+			var navView = this.renderDefaultContent("appModule:test:tests", {});
 
 			this.close = null ;
 			$("#startLoad").click((event) => {

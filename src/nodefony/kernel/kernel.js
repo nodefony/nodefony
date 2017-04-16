@@ -82,7 +82,10 @@ nodefony.register("kernel", function(){
 			this.configPath = path.resolve( this.rootDir, "config/config.yml") ;
 			this.generateConfigPath = path.resolve( this.rootDir, "config/generatedConfig.yml") ;
 			this.publicPath = path.resolve( this.rootDir, "web");
+			this.cacheLink = path.resolve (this.rootDir ,"tmp", "assestLink" ) ;
+
 			this.platform = process.platform ;
+			this.typeCluster = this.clusterIsMaster() ? "master" : "worker" ;
 			this.type = type;
 			this.bundles = {};
 			
@@ -123,7 +126,14 @@ nodefony.register("kernel", function(){
 
 			this.listen(this, "onPostRegister" , () =>{
 				if ( this.type === "SERVER" ){
-					this.cli.assetInstall();
+					if ( ! fs.existsSync( this.cacheLink ) ){
+						try {
+							fs.mkdirSync( this.cacheLink );	
+							this.cli.assetInstall();
+						}catch(e){
+							this.logger(e,"WARNING");
+						}
+					}
 				}
 			});
 
@@ -233,7 +243,6 @@ nodefony.register("kernel", function(){
 			/*
  		 	*	BUNDLES
  		 	*/
-			 
 			this.configBundle = this.getConfigBunbles() ;
 
 			var bundles = [];
@@ -252,7 +261,7 @@ nodefony.register("kernel", function(){
 					bundles.push( path.resolve(this.nodefonyPath, "bundles/sequelizeBundle") );
  				break;
 				default :
-					throw new Error ("nodefony can't load ORM : " + this.settings.orm );
+					this.logger( new Error ("nodefony can't load ORM : " + this.settings.orm ), "WARNING" );
 			}
 
 			// REALTIME
@@ -323,7 +332,7 @@ nodefony.register("kernel", function(){
 			var exist = null ;
 			if (yml && yml.system && yml.system.bundles ){
 				for ( var bundle in yml.system.bundles ){
-					exist = fs.existsSync(this.rootDir+"/"+yml.system.bundles[bundle] );
+					exist = fs.existsSync( path.resolve ( this.rootDir, yml.system.bundles[bundle] ) );
 					if ( ! exist){
 						delete yml.system.bundles[bundle];
 						if ( remove ){
@@ -341,7 +350,7 @@ nodefony.register("kernel", function(){
 							this.logger( yml.system.bundles );
 						}
 						try {
-							var link = this.publicPath+"/"+bundle+"Bundle" ;
+							var link = path.resolve( this.publicPath, bundle+"Bundle") ;
 							var stat = fs.lstatSync(link) ;
 							if ( stat ){
 								exist = fs.existsSync( fs.readlinkSync(link) ) ;
@@ -414,6 +423,14 @@ nodefony.register("kernel", function(){
 			}
 		}
 
+		/*
+		 *  CLUSTERS
+		 *
+		 */
+		clusterIsMaster(){
+			return cluster.isMaster ;
+		}
+
 		initCluster (){
 			this.processId = process.pid ;
 			this.process = process ;
@@ -427,8 +444,6 @@ nodefony.register("kernel", function(){
 				this.worker = cluster.worker ;
 				this.fire("onCluster", "WORKER",  this, process);
 				process.on("message" , this.listen(this, "onMessage" ) ); 
-				/*this.listen(this, "onMessage", function(worker, message){
-				})*/
 			}
 		}
 
@@ -805,7 +820,11 @@ nodefony.register("kernel", function(){
 			if ( code === undefined ){
 				code = 0 ;
 			}
+
 			try {
+				if ( fs.existsSync( this.cacheLink ) ){
+					fs.rmdirSync( this.cacheLink );
+				}
 				this.fire("onTerminate", this, code);
 			}catch(e){
 				console.trace(e);

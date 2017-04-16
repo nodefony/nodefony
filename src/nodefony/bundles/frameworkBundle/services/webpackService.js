@@ -72,16 +72,6 @@ nodefony.registerService("webpack", function(){
 		};
 	};
 
-
-	/*var bootstrapRule  = function(basename){
-		return {
-			test:	/bootstrap-sass[\/\\]assets[\/\\]javascripts[\/\\]/, 
-			loader: 'imports-loader?jQuery=jquery'	
-		};
-	};*/
-
-
-
 	/*
  	 * File loader for supporting fonts, for example, in CSS files.
          */
@@ -110,7 +100,7 @@ nodefony.registerService("webpack", function(){
 		}else{
 			var basename ="assets";	
 		}
-		var public = Path ? Path + "/Resources/public" : null;
+		var public = Path ? path.resolve( Path, "Resources", "public") : null;
 		var devtool = this.production ? false : 'source-map' ;
 		var rules = [babelRule(basename), cssRule(basename, this.production), fontsRule(basename), imagesRule(basename), sassRule(basename),  lessRule(basename)] ;		
 		var plugins = [];
@@ -146,6 +136,24 @@ nodefony.registerService("webpack", function(){
 			super ("WEBPACK", container);
 			this.production = ( this.kernel.environment === "prod" ) ?  true :  false ;
 			this.defaultConfig = defaultConfig.call(this, "nodefony");
+			this.pathCache = path.resolve(this.kernel.rootDir, "tmp", "webpack") ;
+			if ( this.production ){ 
+				try {
+					if ( ! fs.existsSync( this.pathCache ) ){
+						fs.mkdirSync( this.pathCache );
+					}
+				}catch(e){
+					this.logger(e.message, "WARNING");
+				}
+				this.kernel.listen(this, "onTerminate", () =>{
+					var res = fs.readdirSync(this.pathCache);
+					if ( res && res.length ){
+						for ( var i = 0 ; i < res.length ; i++ ){
+							fs.rmdirSync( path.resolve (this.pathCache ,res[i] ) );
+						}
+					}
+				});
+			}
 		}
 
 		loggerStat (err, stats, bundle , watcher){
@@ -177,10 +185,7 @@ nodefony.registerService("webpack", function(){
 		}
 
 		loadConfig( config , Path ){
-
-			//if ( this.production  && ( this.kernel.type !== "CONSOLE" ) ) {
-			//	return null ;
-			//}
+			
 			var basename = path.basename(Path);
 			var name = config.output ? config.output.library : "index" ;
 						
@@ -219,9 +224,20 @@ nodefony.registerService("webpack", function(){
 		}
 
 		runCompiler (compiler, bundle){
-			return compiler.run( (err, stats) => {
-				this.loggerStat(err, stats,  bundle);	
-			});
+			try {
+				if ( this.production ){
+					var pathCache = path.resolve( this.pathCache, bundle );
+					if ( fs.existsSync( pathCache ) ){
+						return ;
+					}
+					fs.mkdirSync( pathCache );
+				}
+				return compiler.run( (err, stats) => {
+					this.loggerStat(err, stats,  bundle);	
+				});
+			}catch(e){
+				throw e ;
+			}
 		}
 
 		getUglifyJsPlugin( config ){

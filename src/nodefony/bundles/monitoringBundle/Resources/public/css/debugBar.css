@@ -13,7 +13,7 @@
 	left:			0;
 	right:			0;
 	bottom:			0;
-	z-index:		10000000;
+	z-index:		1000000;
 	height:			30px;
 	background-color:	#167b87;
 	color:			#ffffff;
@@ -166,7 +166,7 @@
 	/*width:			30px;*/
 	bottom:			0;
 	right:			0;
-	z-index:		10000001;
+	z-index:		1000001;
 	height:			30px;
 	background-color:	#167b87;
 	overflow:		hidden;

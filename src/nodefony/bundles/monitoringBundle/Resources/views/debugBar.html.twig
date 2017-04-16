@@ -1,7 +1,7 @@
 <!-- WEBPACK BUNDLE -->
 <link rel="stylesheet" href="{{CDN('stylesheet')}}/monitoringBundle/assets/css/debugBar.css" />
 
-<div id="nodefony-container"  >
+<div id="nodefony-container" style="z-index:100000" >
 	<ul class="pull-left">
 		<li> <img class="logo" src="/frameworkBundle/images/nodefony-logo.png"> </li>
 		<li> <label class="label"> <a target="blank"  href='{{path("monitoring-index")}}'>NODEFONY </label><label class="label label-default" >{{kernelSettings.system.version}}</label> </a>
@@ -399,7 +399,7 @@
 	</ul>
 </div>
 
-<div id="nodefony-small" class='hidden logo'>
+<div id="nodefony-small" class='hidden logo'  style="z-index:100001">
 	<img src="/frameworkBundle/images/nodefony-logo.png">
 </div>
 
