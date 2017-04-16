@@ -9,7 +9,5 @@
 		"javascript"
   	],
   	"dependencies": {
-		"cheerio" : "0.22.0",
-		"elasticsearch" : "12.1.3"
   	}
 }
