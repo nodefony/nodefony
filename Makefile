@@ -9,11 +9,9 @@ VERSION := $(subst v,,$(subst .,,$(NODE_VERSION)))
 #$(error $(VERSION))  
 VERSION := $(shell expr $(VERSION) )
 
-all:  install 
+all:  npm install 
 
 install:
-
-	make npm ;
 
 	@echo "";
 	@echo "#########################################" ;

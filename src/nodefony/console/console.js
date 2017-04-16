@@ -137,7 +137,20 @@ nodefony.register("console", function(){
 								try {
 									if ( process.argv[2] && process.argv[2] === "npm:install" ){
 										var name = this.getBundleName(file.name);
-										this.InstallPackage(name, file);	
+										switch( name ){
+											case "http":
+											case "framework":
+											case "assetic":
+											case "security":
+											case "sequelize":
+											case "realTime":
+											case "monitoring":
+											case "documentation":
+											case "unitTest":
+											break;
+											default:
+												this.InstallPackage(name, file);	
+										}
 									}else{
 										this.loadBundle( file);
 									}
@@ -250,7 +263,6 @@ nodefony.register("console", function(){
 				var dependencies = createNpmiDependenciesArray(conf.path, options) ;
 
 
-				this.logger("NPMI USE NPM VERSION : " + npmi.NPM_VERSION);
 				for (var i= 0 ; i < dependencies.length ; i++){
 					let nodeDep =  dependencies[i].name + "@" + dependencies[i].version ;
 					this.logger("LOAD BUNDLE " + name +" dependence : " + nodeDep);	

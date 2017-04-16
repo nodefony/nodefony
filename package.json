@@ -79,7 +79,7 @@
     "passport-ldapauth": "0.6.0",
     "passport-local": "1.0.0",
     "passport-nodefony": "2.0.2",
-    "pm2": "2.4.4",
+    "pm2": "2.4.5",
     "promise": "7.1.1",
     "qs": "6.4.0",
     "raw-loader": "0.5.1",
