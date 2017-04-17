@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 const path = require("path");
 const asciify = require('asciify');
+const fs = require("fs");
 
 // --expose-gc --trace-gc --log-gc --trace-gc-verbose
 //--debug
 
-
-/*var profiler = require('v8-profiler');
-var heapdump = require('heapdump');
-heapdump.writeSnapshot(process.cwd()+'/tmp/' + Date.now() + '.heapsnapshot', function(err, filename) {
-	console.log('heapdump written to', filename);
-});*/
+///*var profiler = require('v8-profiler');
+//var heapdump = require('heapdump');
+//heapdump.writeSnapshot(process.cwd()+'/tmp/' + Date.now() + '.heapsnapshot', function(err, filename) {
+//	console.log('heapdump written to', filename);
+//});*/
 
 /*
  *
@@ -19,15 +19,20 @@ heapdump.writeSnapshot(process.cwd()+'/tmp/' + Date.now() + '.heapsnapshot', fun
  *	DEVELOPPEMENT
  *
  */
-// AUTOLOADER
+
 var autoloader = null ;
+// AUTOLOADER
 try {
 	autoloader = require("nodefony");
 }catch(e){
-	autoloader = require("./src/nodefony/core/autoloader");	
+	autoloader = require(".", "src", "nodefony", "core", "autoloader");	
 }
-autoloader.setEnv("dev");
-autoloader.load( path.resolve("./app/appKernel.js" ) );
+autoloader.load( path.resolve(".", "app", "appKernel.js" ) );
+
+var links = path.resolve( ".", "tmp", "assestLink" ) ;
+if ( fs.existsSync( links) ){
+	fs.rmdirSync( links );	
+}
 
 var environment = "dev" ;
 var debug = true ;
