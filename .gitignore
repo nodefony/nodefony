@@ -1,8 +1,6 @@
 #Ignore directory 
-build/**
-docs/**
-tmp/**
-web/**
+/tmp/*
+/web/*
 **/assets/**
 config/generatedConfig.yml
 src/bundles/webrtcBundle

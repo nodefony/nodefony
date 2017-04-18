@@ -823,7 +823,11 @@ nodefony.register("kernel", function(){
 
 			try {
 				if ( fs.existsSync( this.cacheLink ) ){
-					fs.rmdirSync( this.cacheLink );
+					try {
+						fs.rmdirSync( this.cacheLink );
+					}catch(e){
+						this.logger(e, "WARNING");
+					}
 				}
 				this.fire("onTerminate", this, code);
 			}catch(e){
