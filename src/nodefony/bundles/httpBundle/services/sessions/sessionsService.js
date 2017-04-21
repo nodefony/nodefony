@@ -80,7 +80,7 @@ nodefony.registerService("sessions", function(){
 		set (name, object){
 			//console.log(name)
 			//console.log(object)
-			super.set(name, object);	
+			return super.set(name, object);	
 		} 
 	
 		encrypt  (text){
