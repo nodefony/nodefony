@@ -1,6 +1,6 @@
 {
   "name": "nodefony",
-  "version": "2.1.0-beta",
+  "version": "2.1.1-beta",
   "description": "FRAMEWORK web developpement symfony like",
   "main": "./src/nodefony/core/autoloader.js",
   "scripts": {
