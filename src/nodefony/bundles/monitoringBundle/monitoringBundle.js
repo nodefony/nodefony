@@ -591,7 +591,7 @@ nodefony.registerBundle ("monitoring", function(){
 						if( ! context.isAjax && context.showDebugBar /*&& context.profiling.route.name !== "monitoring"*/ ){
 							if (response && typeof response.body === "string" && response.body.indexOf("</body>") > 0 ){
 								try {
-									var result = this.debugView.render( context.extendTwig(context.profiling) );
+									var result = this.debugView.render( context.extendTwig(context.profiling, context) );
 									response.body = response.body.replace("</body>",result+"\n </body>") ;
 								}catch(e){
 									throw e ;	
@@ -626,7 +626,7 @@ nodefony.registerBundle ("monitoring", function(){
 					if( ! context.isAjax && context.showDebugBar /*&& context.profiling.route.name !== "monitoring"*/ ){
 						if (response && typeof response.body === "string" && response.body.indexOf("</body>") > 0 ){
 							try {
-								var result = this.debugView.render( context.extendTwig(context.profiling) );
+								var result = this.debugView.render( context.extendTwig(context.profiling, context) );
 								response.body = response.body.replace("</body>",result+"\n </body>") ;
 							}catch(e){
 								throw e ;	
