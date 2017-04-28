@@ -162,7 +162,6 @@ nodefony.registerController("api", function(){
 
 		constructor (container, context){
 			super(container, context);
-			this.kernel = this.get("kernel") ;
 		}
 
 		renderRest (data, async){

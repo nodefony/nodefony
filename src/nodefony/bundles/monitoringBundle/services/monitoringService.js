@@ -93,13 +93,13 @@ nodefony.registerService("monitoring", function(){
 					}		
 				},callback);*/	
 
-				pm2.connect( function() {
+				pm2.connect( () => {
 					this.logger("CONNECT PM2 REALTIME MONITORING", "DEBUG");
-				}.bind(this));
+				});
+
 				// PM2 REALTIME
-				
-				var pm2Interval = setInterval(function(){
-					pm2.describe(this.name,function(err, list){
+				var pm2Interval = setInterval( () => {
+					pm2.describe(this.name, (err, list) => {
 						var clusters = {
 							pm2:[],
 							name:this.name
@@ -125,9 +125,9 @@ nodefony.registerService("monitoring", function(){
 							return ;	
 						}
 						conn.write(JSON.stringify(clusters));	
-					}.bind(this));
+					});
 					
-				}.bind(this),1000);
+				}, 1000);
 
 				//SESSIONS  INTERVAL
 					//CONTEXT
@@ -139,7 +139,7 @@ nodefony.registerService("monitoring", function(){
 					//WEBSOCKET CLOSE
 					//HTTP 
 
-				socket.on('end',function(){
+				socket.on('end',() => {
 					closed = true ;
 					if ( this.syslog ){
 						if (this.connections && this.connections[conn.id] && this.connections[conn.id]["listener"] )
@@ -149,15 +149,15 @@ nodefony.registerService("monitoring", function(){
 					this.logger("CLOSE CONNECTION TO SERVICE MONITORING FROM : "+socket.remoteAddress + " ID :" +conn.id, "INFO");
 					socket.end();
 					delete this.connections[conn.id];
-				}.bind(this))
+				});
 
-				socket.on("data",function(buffer){
+				socket.on("data",(buffer) => {
 					try {
 						console.log( buffer.toString() )	
 					}catch(e){
 						this.logger("message :" + buffer.toString() + " error : "+e.message,"ERROR")
 					}
-				}.bind(this));
+				});
 
 			});
 

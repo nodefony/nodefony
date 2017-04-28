@@ -10,7 +10,6 @@ const path = require("path");
 const fs = require("fs");
 const cluster = require('cluster');
 const url = require("url");
-const async = require('async');
 const xmlParser = require('xml2js').Parser;
 const dns = require('dns');
 const https = require('https');

@@ -367,11 +367,12 @@ nodefony.registerService("realTime", function(){
 						this.logger("SUBCRIBE SERVICE "+ name+" UDP LISTEN ON : " + address.address + ":" + address.port +" ID = "+id, "INFO");
 
 						if (data){
-							client.write(data, function(error){
+							client.write(data, (error) => {
 								if (error){
-								
+									this.logger(error , "ERROR");
+									return ;
 								}
-								console.log("SEND")
+								this.logger("SEND MESSAGE : "+ data, "DEBUG");
 							});
 						}
 						this.send(context, this.protocol.send( message ) );
@@ -381,12 +382,11 @@ nodefony.registerService("realTime", function(){
 									
 					// Listen for messages from client
 					client.on('message',  (buffer, rinfo) => {
-						console.log("MESSAGE UDP")
+						this.logger("MESSAGE UDP : "+ buffer.toString(), "DEBUG");
 						this.send( context , this.protocol.publishMessage( message.subscription, buffer.toString(), message.clientId ) );
 					});
 
 					client.on("close", (error) => { 
-						console.log("CLOSE UDP") 
 						//console.log("close client");
 						if (error){
 							this.logger("CANNOT CONNECT SERVICE : " + name , "ERROR");
@@ -394,6 +394,8 @@ nodefony.registerService("realTime", function(){
 							client = null ;
 							throw error ;
 						}else{
+
+							this.logger("CLOSE SOCKET UDP "  , "DEBUG");
 							var connection = this.connections.getConnection(client);
 							if (connection && connection.mustClose){
 								var size = Object.keys(connection.clients).length ;
