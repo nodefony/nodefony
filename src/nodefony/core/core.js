@@ -12,6 +12,7 @@ const cluster = require('cluster');
 const url = require("url");
 const xmlParser = require('xml2js').Parser;
 const dns = require('dns');
+const async = require('async');
 const https = require('https');
 const http = require('http');
 const nodedomain = require('domain');

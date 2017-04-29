@@ -230,7 +230,11 @@ nodefony.registerService("webpack", function(){
 					if ( fs.existsSync( pathCache ) ){
 						return ;
 					}
-					fs.mkdirSync( pathCache );
+					try {
+						fs.mkdirSync( pathCache );
+					}catch(e){
+						
+					}
 				}
 				return compiler.run( (err, stats) => {
 					this.loggerStat(err, stats,  bundle);	

@@ -1,6 +1,6 @@
 {
   "name": "nodefony",
-  "version": "2.1.2-beta",
+  "version": "2.1.3-beta",
   "description": "FRAMEWORK web developpement symfony like",
   "main": "./src/nodefony/core/autoloader.js",
   "scripts": {
@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "asciify": "1.3.5",
+    "async": "2.3.0",
     "babel-cli": "6.24.1",
     "babel-loader": "7.0.0",
     "babel-preset-es2015": "6.24.1",

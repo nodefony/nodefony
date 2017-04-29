@@ -4,6 +4,7 @@
  *
  *
  */
+const nodefony_version = require("../../../package.json").version;
 
 nodefony.register("kernel", function(){
 	
@@ -79,8 +80,8 @@ nodefony.register("kernel", function(){
 			super( "KERNEL" , null, null , nodefony.extend( {}, defaultOptions,  options) );
 			this.rootDir = process.cwd();
 			this.appPath = path.resolve( this.rootDir, "app");
-			this.configPath = path.resolve( this.rootDir, "config/config.yml") ;
-			this.generateConfigPath = path.resolve( this.rootDir, "config/generatedConfig.yml") ;
+			this.configPath = path.resolve( this.rootDir, "config", "config.yml") ;
+			this.generateConfigPath = path.resolve( this.rootDir, "config", "generatedConfig.yml") ;
 			this.publicPath = path.resolve( this.rootDir, "web");
 			this.cacheLink = path.resolve (this.rootDir ,"tmp", "assestLink" ) ;
 
@@ -197,6 +198,8 @@ nodefony.register("kernel", function(){
 			try {
 				this.reader.readConfig(this.configPath, (result) => {
 					this.settings = result;
+					this.settings.name = "NODEFONY";
+					this.settings.version = nodefony_version;
 					this.settings.environment = this.environment ;
 					this.setParameters("kernel", this.settings);
 					this.httpPort = result.system.httpPort || null;
@@ -246,19 +249,19 @@ nodefony.register("kernel", function(){
 			this.configBundle = this.getConfigBunbles() ;
 
 			var bundles = [];
-			bundles.push( path.resolve(this.nodefonyPath, "bundles/httpBundle") );
-			bundles.push( path.resolve(this.nodefonyPath, "bundles/frameworkBundle") );
-			bundles.push( path.resolve(this.nodefonyPath, "bundles/asseticBundle") );
+			bundles.push( path.resolve(this.nodefonyPath, "bundles", "httpBundle") );
+			bundles.push( path.resolve(this.nodefonyPath, "bundles", "frameworkBundle") );
+			bundles.push( path.resolve(this.nodefonyPath, "bundles", "asseticBundle") );
 			
 			// FIREWALL 
 			if (this.settings.system.security){
-				bundles.push( path.resolve(this.nodefonyPath, "bundles/securityBundle") );
+				bundles.push( path.resolve(this.nodefonyPath, "bundles", "securityBundle") );
 			}
 
 			// ORM MANAGEMENT
 			switch ( this.settings.orm ){
 				case "sequelize" :
-					bundles.push( path.resolve(this.nodefonyPath, "bundles/sequelizeBundle") );
+					bundles.push( path.resolve(this.nodefonyPath, "bundles", "sequelizeBundle") );
  				break;
 				default :
 					this.logger( new Error ("nodefony can't load ORM : " + this.settings.orm ), "WARNING" );
@@ -266,22 +269,22 @@ nodefony.register("kernel", function(){
 
 			// REALTIME
 			if ( this.settings.system.realtime) {
-				bundles.push( path.resolve(this.nodefonyPath, "bundles/realTimeBundle") );
+				bundles.push( path.resolve(this.nodefonyPath, "bundles", "realTimeBundle") );
 			}
 
 			// MONITORING
 			if ( this.settings.system.monitoring) {
-				bundles.push( path.resolve(this.nodefonyPath, "bundles/monitoringBundle") );
+				bundles.push( path.resolve(this.nodefonyPath, "bundles", "monitoringBundle") );
 			}
 
 			// DOCUMENTATION
 			if ( this.settings.system.documentation) {
-				bundles.push( path.resolve(this.nodefonyPath, "bundles/documentationBundle") );
+				bundles.push( path.resolve(this.nodefonyPath, "bundles", "documentationBundle") );
 			}
 
 			// TEST UNIT
 			if ( this.settings.system.unitTest) {
-				bundles.push( path.resolve(this.nodefonyPath, "bundles/unitTestBundle") );
+				bundles.push( path.resolve(this.nodefonyPath, "bundles", "unitTestBundle") );
 			}
 
 			try {
@@ -458,19 +461,21 @@ nodefony.register("kernel", function(){
 	 	*	@method initializeLog
          	*/
 		initializeLog (options){
-			
-			if ( this.settings.system.log.console ||  this.environment === "dev"){
+
+			if ( ! this.settings.system.log.active ){
+				return ;
+			}
+			if (  this.environment === "dev" ){
 				this.cli.listenSyslog( this.syslog , this.debug);
-				//logConsole.call(this, this.syslog);
 			}else{
 				// PM2
-				if ( this.settings.system.log.active && options.node_start === "PM2" ){
+				if (  options.node_start === "PM2" ){
 					this.cli.listenSyslog( this.syslog , this.debug );
-					//logConsole.call(this, this.syslog);
+					return ;
 				}
 
 				if ( this.settings.system.log.file ){
-					this.logStream = new nodefony.log(this.rootDir+this.settings.system.log.error,{
+					/*this.logStream = new nodefony.log(this.rootDir+this.settings.system.log.error,{
 						rotate:this.settings.system.log.rotate
 					});
 					this.syslog.listenWithConditions(this,{
@@ -505,7 +510,9 @@ nodefony.register("kernel", function(){
 						var reg = new RegExp("\\[32m");
 						var line = pdu.severityName +" SYSLOG "  + pdu.msgid +  " : "+ pdu.payload.replace(reg,"");
 						this.logStreamD.logger( new Date(pdu.timeStamp) + " " +line +"\n" );
-					});
+					});*/
+				}else{
+					this.cli.listenSyslog( this.syslog , this.debug );
 				}
 			}
 		}

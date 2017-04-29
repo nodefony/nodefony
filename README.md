@@ -114,15 +114,6 @@ Access to App with URL : http://localhost:5151
 ## <a name="configurations"></a>Configurations Kernel
 Open **[./config/config.yml](https://github.com/nodefony/nodefony-core/blob/master/config/config.yml)**  if you want change httpPort, domain ,servers, add bundle, locale ...
 ```yml
-#########################################################
-#
-#  NODEFONY FRAMEWORK
-#
-#       KERNEL CONFIG
-#
-
-name                            : "NODEFONY"
-version                         : "2.1.2-beta"
 system:
   domain                        : localhost                             # nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
   domainAlias:                                                          # domainAlias string only <<regexp>>   example ".*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$"
@@ -134,6 +125,8 @@ system:
   security                      : true
   realtime                      : true
   monitoring                    : true
+  documentation                 : true
+  unitTest                      : true
   locale                        : "en_en"
 
   servers:
@@ -148,25 +141,18 @@ system:
       options:
         rejectUnauthorized      : false
 
-  bundles:
-    documentation 	        : "./src/nodefony/bundles/documentationBundle"
-    test		        : "./src/nodefony/bundles/unitTestBundle"
-    demo			: "./src/bundles/demoBundle"
+  bundles                       : ~                      
 
   PM2:
-    script		        : "nodefony"
-    name			: "demo"
+    name			: "nodefony"
     exec_mode		        : "cluster"
     max_memory_restart	        : "1024M"
     autorestart		        : true
     max_restarts		: 10
     watch			: false
-    error_file                  : "tmp/nodefony.log" 
-    out_file                    : "tmp/nodefony.error.log"
-    merge_logs                  : true
-    env:
-      NODE_ENV                  : "production"
-      MODE_START                : "PM2"
+    log_file                    : "tmp/nodefony.log"
+    out_file                    : "tmp/nodefony.out.log"
+    error_file                  : "tmp/nodefony.error.log"
 ```
 
 ## <a name="cli"></a>Command Line Interface
