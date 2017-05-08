@@ -14,6 +14,7 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 nodefony.registerService("webpack", function(){
 
 
+	
 	var babelRule  = function(basename){
 		return {
                     	test: /\.es6$/,
@@ -194,8 +195,6 @@ nodefony.registerService("webpack", function(){
 			if ( this.production ){
 				myConf.watch = false ;
 			}
-			
-			this.logger( "LOAD WEBPACK BUNDLE ENTRY POINT :" + util.inspect(myConf.entry) , "DEBUG" )
 
 			try {
 				var compiler =  webpack( myConf );
@@ -206,7 +205,12 @@ nodefony.registerService("webpack", function(){
 				throw e ;
 			}
 			
+			if ( ! ( basename  in this.kernel.bundlesCore ) ){
+				this.logger( "WEBPACK BUNDLE : " +  basename +" WATCHING : "+ myConf.watch );
+			}
+			
 			if ( myConf.watch ){
+				this.logger( "WEBPACK BUNDLE : "+ basename +" WATCHING ENTRY POINT : \n" + util.inspect(myConf.entry) , "DEBUG" );
 				var watching = compiler.watch({
 					/* watchOptions */
 				}, (err, stats) => {
@@ -214,10 +218,14 @@ nodefony.registerService("webpack", function(){
 				});
 				this.kernel.listen(this ,"onTerminate", ( ) => {
 					watching.close(() => {
-						this.logger("Watching Ended :" + myConf.context +"/"+myConf.entry.main , "INFO");
+						this.logger("Watching Ended  " + myConf.context +" : "+util.inspect(myConf.entry) , "INFO");
 					});
 				});
 			}else{
+				if ( (this.kernel.environment === "dev" ) && (basename in this.kernel.bundlesCore) && ( ! this.kernel.settings.system.core ) ){
+					return compiler ;
+				}
+				this.logger( "WEBPACK BUNDLE : "+ basename +" COMPILE ENTRY POINT : \n" + util.inspect(myConf.entry)  );
 				this.runCompiler(compiler, basename);	
 			}
 			return compiler ;

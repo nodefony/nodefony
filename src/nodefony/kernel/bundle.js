@@ -69,6 +69,7 @@ nodefony.register("Bundle", function(){
 			super( name, container );
 			
 			this.logger("\x1b[36m REGISTER BUNDLE : "+this.name+"   \x1b[0m","DEBUG",this.kernel.cli.clc.magenta("KERNEL") );
+			this.bundleName = path.basename(this.path);;
 			this.environment = this.kernel.environment;
 			this.waitBundleReady = false ;
 			this.locale = this.kernel.settings.system.locale ;
@@ -248,9 +249,6 @@ nodefony.register("Bundle", function(){
 									if ( this.webPackConfig ){
 										this.kernel.listen(this, "onPostRegister", () => {
 											if (  this.webpackService ){
-												if ( this.kernel.environment === "dev" ){
-													this.logger("WEBPACK BUNDLE RUN COMPILER WATCHING : "+ this.webPackConfig.watch )
-												}
 												this.webpackCompiler = this.webpackService.loadConfig( this.webPackConfig ,this.path);	
 											}
 										});

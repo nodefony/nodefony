@@ -1,0 +1,1 @@
+/Users/christophecamensuli/repository/nodefony-core/src/bundles/testBundle/doc/1.0/readme.md

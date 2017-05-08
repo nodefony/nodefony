@@ -50,12 +50,12 @@ watch:				true
 #
 webpack:
   entry:
-    main:                       "./js/{{ name }}.js"
+    {{ name }}:				"./js/{{ name }}.js"
   watch:                        true
   devtool:                      "source-map"
   output:
-    filename:                   "./assets/js/{{ name }}.js"
-    library:                    "{{ name }}"
+    filename:                   "./assets/js/[name].js"
+    library:                    "[name]"
     libraryTarget:              "umd"
 
 #

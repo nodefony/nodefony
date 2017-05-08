@@ -18,8 +18,8 @@
 #
 #
 system:
-  domain                        : localhost                             # nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
-  domainAlias:                                                          # domainAlias string only <<regexp>>   example ".*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$"
+  domain                        : localhost             # nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
+  domainAlias:                                          # domainAlias string only <<regexp>>   example ".*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$"
     - "^127.0.0.1$" 
     - "^docker.nodefony$"
   httpPort                      : 5151
@@ -30,6 +30,7 @@ system:
   monitoring                    : true
   documentation                 : true
   unitTest                      : true
+  core                          : true
   locale                        : "en_en"
 
   servers:
@@ -44,10 +45,10 @@ system:
       options:
         rejectUnauthorized      : false
 
-  bundles                       : ~                      
+  bundles: 
+    test                        : "src/bundles//testBundle"      
 
   PM2:
-    name			: "nodefony"
     exec_mode		        : "cluster"
     max_memory_restart	        : "1024M"
     autorestart		        : true
@@ -56,16 +57,11 @@ system:
     log_file                    : "tmp/nodefony.log"
     out_file                    : "tmp/nodefony.out.log"
     error_file                  : "tmp/nodefony.error.log"
-    #merge_logs                  : true
+    merge_logs                  : true
   
   log:
     active                      : true
-    #TODO
-    file                        : false
-    messages                    : "/tmp/nodefony.log"
-    error                       : "/tmp/nodefony.error.log"
-    rotate                      : false
-
+    
 #
 #       ASSETS CDN
 #

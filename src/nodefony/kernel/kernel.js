@@ -4,7 +4,7 @@
  *
  *
  */
-const nodefony_version = require("../../../package.json").version;
+const nodefony_version = require( path.join ("..", "..", "..", "package.json") ).version;
 
 nodefony.register("kernel", function(){
 	
@@ -50,6 +50,17 @@ nodefony.register("kernel", function(){
 		}
 	};
 
+	var bundlesCore = {
+		frameworkBundle : true,
+		monitoringBundle : true,
+		documentationBundle: true,
+		asseticBundle: true,
+		httpBundle: true,
+		realTimeBundle: true,
+		securityBundle: true,
+		sequelizeBundle: true,
+		unitTestBundle: true
+	};
 
 	var defaultEnvEnable = {
 		dev:		true,
@@ -89,6 +100,7 @@ nodefony.register("kernel", function(){
 			this.typeCluster = this.clusterIsMaster() ? "master" : "worker" ;
 			this.type = type;
 			this.bundles = {};
+			this.bundlesCore = bundlesCore ;
 			
 			if ( environment in defaultEnvEnable ){
 				switch ( environment ){

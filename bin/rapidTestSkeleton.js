@@ -1,16 +1,9 @@
-#!/usr/local/bin/node  
-
+#!/usr/bin/env node  
 
 // AUTOLOADER 
-var autoloader = require("../vendors/nodefony/core/autoloader");
+require("../src/nodefony/core/autoloader");
 
-
-
-// HERE NaneSpace nodefony is ready 
-
-
-
-// CREATE INSTANCE OF CONTAINER 
-var globalContainer  = new nodefony.Container() ;
+// HERE Library nodefony is ready 
+console.log(nodefony)
 
 

@@ -88,7 +88,7 @@ nodefony.registerService("upload", function(){
 					try {
 						res = fs.mkdirSync(this.path);
 					}catch(e){
-						throw e ;
+						this.logger(e, "DEBUG") ;
 					}
 				}
 			});
