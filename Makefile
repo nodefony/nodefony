@@ -80,6 +80,7 @@ startup:
 start:
 	./node_modules/pm2/bin/pm2 update
 	./nodefony_pm2
+	./node_modules/pm2/bin/pm2 --lines 20 logs 
 
 stop:
 	./node_modules/pm2/bin/pm2 stop $(APP_NAME)
@@ -105,6 +106,9 @@ restart:
 logs:
 	./node_modules/pm2/bin/pm2 --lines 1000 logs $(APP_NAME)
 
+clean-log:
+	./node_modules/pm2/bin/pm2 flush
+
 # NODEFONY BUILD FRAMEWORK 
 npm:
 	@echo "" ;
@@ -125,7 +129,9 @@ npm:
 		fi \
 	fi
 
-deploy: webpack asset start
+deploy:  asset
+	./node_modules/pm2/bin/pm2 update
+	./nodefony_pm2
 
 webpack:
 	@echo "";

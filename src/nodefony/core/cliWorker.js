@@ -128,20 +128,23 @@ nodefony.register("cliWorker", function(){
 				continue ;
 			}
 			if ( result.length() ){
-				name = path.basename(bundles[bundle].path) ;
-				srcpath = bundles[bundle].path+"/Resources/public";
+				name = bundles[bundle].bundleName ;
+				srcpath = path.resolve ( bundles[bundle].path, "Resources", "public");
 				this.createSymlink(srcpath, this.publicDirectory+name, (Srcpath, dstpath) => {
 					var size = "not Defined";
+					var sizeAssets = "not Defined";
 					try {
-						size = nodefony.niceBytes( this.getSizeDirectory(Srcpath ) ) ;
+						size = nodefony.niceBytes( this.getSizeDirectory(Srcpath, /^docs$|^tests|^node_modules|^assets$/ ) ) ;
+						sizeAssets = nodefony.niceBytes( this.getSizeDirectory(path.resolve (Srcpath, "assets") ) ) ;
 					}catch(e){
-						this.logger(e, "ERROR");	
+						//this.logger(e, "ERROR");	
 					}
 					table.push([
 						bundle,
 						dstpath.replace(this.kernel.rootDir,"."),
 						Srcpath.replace(this.kernel.rootDir,"."),
-						size 
+						size,
+						sizeAssets
 					]);
 				});
 			}
@@ -369,7 +372,8 @@ nodefony.register("cliWorker", function(){
 					"BUNDLES",
 					"DESTINATION PATH",
 					"SOURCE PATH",
-					"SIZE"
+					"SIZE",
+					"ASSETS COMPILE"
 				]
 			})
 			createAssetDirectory.call(this, this.publicDirectory, () => {

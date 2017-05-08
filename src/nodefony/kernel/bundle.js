@@ -103,7 +103,7 @@ nodefony.register("Bundle", function(){
 			// views
 			this.serviceTemplate = this.get("templating") ;
 			this.regTemplateExt = new RegExp("^(.+)\."+this.serviceTemplate.extention+"$");
-			this.viewsPath = path.resolve( this.path, "Resources/views") ; 
+			this.viewsPath = path.resolve( this.path, "Resources", "views") ; 
 			this.viewFiles = this.findViewFiles(this.finder.result);
 			this.views = {};
 			this.views["."] = {};
@@ -111,7 +111,7 @@ nodefony.register("Bundle", function(){
 
 			// config
 			this.regConfigFile = regConfigFile ;
-			this.configPath = path.resolve( this.path, "Resources/config");
+			this.configPath = path.resolve( this.path, "Resources", "config");
 
 			// others
 			this.entities = {};
@@ -125,7 +125,7 @@ nodefony.register("Bundle", function(){
 			}
 
 			// I18n
-			this.i18nPath = path.resolve( this.path, "Resources/translations");
+			this.i18nPath = path.resolve( this.path, "Resources", "translations");
 			this.i18nFiles = this.findI18nFiles( this.resourcesFiles);
 			this.watcherI18n = null;
 			this.regI18nFile = regI18nFile;
@@ -664,7 +664,7 @@ nodefony.register("Bundle", function(){
 			var res =  null ;
 			try {
 				res  = new nodefony.finder( {
-					path:path.resolve( this.path, "Resources/public"),
+					path:path.resolve( this.path, "Resources", "public"),
 					exclude:/^docs$|^tests|^node_modules|^assets$/
 				});
 			}catch(e){

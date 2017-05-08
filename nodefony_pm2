@@ -72,7 +72,6 @@ require('asciify')("      NODEFONY", {font:'standard'}, function(err, res){
 	if ( ! config.instances ){
 		config.instances = instances ;
 	}
-
 	pm2.connect(true, function() {
   		pm2.start(config, (err, apps) =>  {
     			if (err){
@@ -122,6 +121,8 @@ require('asciify')("      NODEFONY", {font:'standard'}, function(err, res){
 					]);
 				} );
 				console.log( table.toString() );
+				console.log(" To see all logs use the command  make logs ")
+				console.log(" Or use PM2  pm2 --lines 1000 logs ")
 			}catch(e){
 				//console.error(e);	
 			}
