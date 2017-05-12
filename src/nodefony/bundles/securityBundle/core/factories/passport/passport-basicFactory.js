@@ -40,20 +40,24 @@ nodefony.register.call(nodefony.security.factory, "passport-basic",function(){
 					// get passwd 
 					this.contextSecurity.provider.getUserPassword(username,  (error, passwd) => {
 							if ( error ){
-								return done(error, null)
+								done(error, null)
+								return error;
 							}
 							if ( passwd !== password ){
-								return done(null, false);
+								done(null, false);
+								return false ;
 							}
 							this.contextSecurity.provider.loadUserByUsername(username, (error, result) => {
 								if ( error ){
-									return done(error, null)
+									done(error, null)
+									return error
 								}
 								if ( ! result ){
-									return done( null, false  )
+									done( null, false  )
+									return false ;
 								}
-								return done( null, result  )
-								
+								done( null, result  )
+								return 	result ;
 							});
 					});
 			});	

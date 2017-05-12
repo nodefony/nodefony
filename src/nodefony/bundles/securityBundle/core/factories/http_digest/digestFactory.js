@@ -41,7 +41,7 @@ nodefony.register.call(nodefony.security.factory, "http_digest",function(){
 					if (error){
 						context.response.headers["WWW-Authenticate"] = token.generateResponse();
 						callback(error, null)
-						return ;
+						return error;
 					}
 					if ( result === true ){
 						this.contextSecurity.provider.loadUserByUsername(token.username, (error, result) => {
@@ -51,8 +51,10 @@ nodefony.register.call(nodefony.security.factory, "http_digest",function(){
 							}
 							context.user = 	result;
 							callback(null, token)
+							return result
 						});
 					}
+					return result ;
 				})
 				
 			}catch(e){

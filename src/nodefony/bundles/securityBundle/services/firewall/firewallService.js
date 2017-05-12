@@ -224,6 +224,7 @@ nodefony.registerService("firewall", function(){
 					}	
 				break;	
 			}
+			return e ;
 		}
 
 		handle (context){
@@ -231,7 +232,8 @@ nodefony.registerService("firewall", function(){
 				if ( this.factory ){
 					this.factory.handle(context, (error, token) => {
 						if (error){
-							return this.handleError(context, error) ;
+							this.handleError(context, error) ;
+							return context ;
 						}
 						this.token = token ;
 						//if ( ! context.session.strategyNone ){	
@@ -263,7 +265,8 @@ nodefony.registerService("firewall", function(){
 								message:"OK",
 								status:200,
 							});
-							return context.notificationsCenter.fire("onRequest", obj );
+							context.notificationsCenter.fire("onRequest", obj );
+							return context ;
 						}else{
 							return this.redirect(context, target);
 						}
@@ -271,8 +274,9 @@ nodefony.registerService("firewall", function(){
 					});	
 				}
 			}catch(e){
-				return this.handleError(context, e);
+				this.handleError(context, e);
 			}
+			return context ;
 		}
 
 		// Factory
@@ -437,10 +441,12 @@ nodefony.registerService("firewall", function(){
 						try {
 							return this.handle(context, request, response, session);
 						}catch(error){
-							return context.notificationsCenter.fire("onError", context.container, error );
+							context.notificationsCenter.fire("onError", context.container, error );
+							return context ;
 						}
 					}).catch((error)=>{
-						return context.security.handleError(context, error);	
+						context.security.handleError(context, error);	
+						return context ;
 					});	
 				}else{
 					try {
@@ -452,10 +458,12 @@ nodefony.registerService("firewall", function(){
 								try {
 									return this.handle(context, request, response, session);
 								}catch(error){
-									return context.notificationsCenter.fire("onError", context.container, error );
+									context.notificationsCenter.fire("onError", context.container, error );
+									return context ;
 								}
 							}).catch((error)=>{
-								return context.notificationsCenter.fire("onError", context.container, error );	
+								context.notificationsCenter.fire("onError", context.container, error );	
+								return context ;
 							});
 						}else{
 							if (context.cookieSession){
@@ -468,19 +476,24 @@ nodefony.registerService("firewall", function(){
 										if ( meta ){
 											context.user = meta.userFull ; 		
 										}
-										return context.notificationsCenter.fire("onRequest");
+										context.notificationsCenter.fire("onRequest");
+										return context ;
 									}catch(error){
-										return context.notificationsCenter.fire("onError", context.container, error );
+										context.notificationsCenter.fire("onError", context.container, error );
+										return context ;
 									}
 								}).catch((error)=>{
-									return context.notificationsCenter.fire("onError", context.container, error );	
+									context.notificationsCenter.fire("onError", context.container, error );	
+									return context ;
 								});
 							}else{
-								return context.notificationsCenter.fire("onRequest");	
+								context.notificationsCenter.fire("onRequest");	
+								return context ;
 							}
 						}
 					}catch(e){
-						return context.notificationsCenter.fire("onError", context.container, e );	
+						context.notificationsCenter.fire("onError", context.container, e );	
+						return context ;
 					}
 				}
 			});
@@ -508,9 +521,11 @@ nodefony.registerService("firewall", function(){
 						return this.handle(context, request, response, session);
 					}catch(error){
 						context.notificationsCenter.fire("onError", context.container, error );
+						return context ;
 					}
 				}).catch( (error) => {
-					return context.security.handleError(context, error);
+					context.security.handleError(context, error);
+					return context ;
 				});	
 			}else{
 				try {
@@ -523,10 +538,12 @@ nodefony.registerService("firewall", function(){
 							try {
 								return this.handle(context, request, response, session);
 							}catch(error){
-								return context.notificationsCenter.fire("onError", context.container, error );
+								context.notificationsCenter.fire("onError", context.container, error );
+								return context ;
 							}
 					 	}).catch( (error) => {
-							return context.notificationsCenter.fire("onError", context.container, error );
+							context.notificationsCenter.fire("onError", context.container, error );
+							return context ;
 						});
 					}else{
 						if (context.cookieSession){
@@ -539,19 +556,24 @@ nodefony.registerService("firewall", function(){
 									if ( meta ){
 										context.user = meta.userFull ; 		
 									}
-									return context.notificationsCenter.fire("onRequest");
+									context.notificationsCenter.fire("onRequest");
+									return context
 								}catch(error){
-									return context.notificationsCenter.fire("onError", context.container, error );
+									context.notificationsCenter.fire("onError", context.container, error );
+									return context ;
 								}
 							}).catch( (error) => {
-								return context.notificationsCenter.fire("onError", context.container, error );
+								context.notificationsCenter.fire("onError", context.container, error );
+								return context;
 							});	
 						}else{
-							return context.notificationsCenter.fire("onRequest");	
+							context.notificationsCenter.fire("onRequest");	
+							return context ;
 						}
 					}	
 				}catch(e){
-					return context.notificationsCenter.fire("onError", context.container, e );	
+					context.notificationsCenter.fire("onError", context.container, e );	
+					return context;
 				}
 			}
 		}
@@ -598,14 +620,17 @@ nodefony.registerService("firewall", function(){
 						}
 					}.bind(this)) ;*/
 				}
-				return context.notificationsCenter.fire("onRequest");
+				context.notificationsCenter.fire("onRequest");
+				return context ;
 
 			}catch(e){
 				if ( context.security ){
-					return context.security.handleError(context, e);
+					context.security.handleError(context, e);
+					return context ;
 				}
 				throw e ;
 			}
+			return context ;
 		}
 
 		setSessionStrategy (strategy){

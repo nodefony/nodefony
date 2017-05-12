@@ -99,19 +99,21 @@ nodefony.register.call(nodefony.security.factory, "sasl",function(){
 					if (error){
 						response.headers["WWW-Authenticate"] = this.generateResponse(token);
 						callback( error, null);
-						return ;
+						return error ;
  			        	}	
 					if ( result === true ){
 						this.contextSecurity.provider.loadUserByUsername(token.username, (error, result) => {
 							if ( error ){
 								response.headers["WWW-Authenticate"] = this.generateResponse(token);
 								callback( error, null);
-								return ;
+								return error;
 							}
 							context.user = 	result;
 							callback(null,token)
+							return token ;
 						});
 					}
+					return result ;
 				})
 
 			}catch(e){

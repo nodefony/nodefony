@@ -19,9 +19,6 @@ $(info $(LINE))
 
 all:  npm install 
 
-version:
-	@echo ""
-
 install:
 
 	@echo "";
@@ -49,9 +46,9 @@ build:
 
 	make npm ;
 	
-	make install ;
+	make install && echo "success nodefony install !" || echo "failure nodefony install !" ;
 
-	make sequelize
+	make sequelize && echo "success nodefony sequelize !" || echo "failure nodefony sequelize !" ;
 
 	@if [ $(VERBOSE) = 0 ] ; then \
 		echo "./console router:generate:routes";\
