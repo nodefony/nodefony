@@ -347,7 +347,11 @@ nodefony.register("kernel", function(){
 			var exist = null ;
 			if (yml && yml.system && yml.system.bundles ){
 				for ( var bundle in yml.system.bundles ){
-					exist = fs.existsSync( path.resolve ( this.rootDir, yml.system.bundles[bundle] ) );
+					try {
+						exist = fs.existsSync( path.resolve ( this.rootDir, yml.system.bundles[bundle] ) );
+					}catch(e){
+						this.logger(e ,"WARNING");
+					}
 					if ( ! exist){
 						delete yml.system.bundles[bundle];
 						if ( remove ){

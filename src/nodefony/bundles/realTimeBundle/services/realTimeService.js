@@ -1,7 +1,6 @@
 
 var net = require('net');
 var dgram = require('dgram');
-var xml = require('xml2js');
 var shortId = require('shortid');
 
 nodefony.registerService("realTime", function(){
@@ -49,7 +48,7 @@ nodefony.registerService("realTime", function(){
 
 		removeConnection (id){
 			if (this.connections[id]) {
-				delete this.connections[id]
+				delete this.connections[id];
 				return true ;
 			}
 			return false ;
@@ -60,7 +59,7 @@ nodefony.registerService("realTime", function(){
 				var idClient  = this.generateId() ;
 				client.idClient = idClient ;
 				client.idConnection = idConnection ;
-				this.connections[idConnection]["clients"][idClient] = client;
+				this.connections[idConnection].clients[idClient] = client;
 				return idClient;
 			}else{
 				throw idConnection ;
@@ -80,10 +79,10 @@ nodefony.registerService("realTime", function(){
 
 		removeClient (client){
 			var idConnection = this.getConnectionId(client);
-			var idClient = this.getClientId(client)
+			var idClient = this.getClientId(client);
 			if (idConnection && idClient){
 				if ( this.connections[idConnection] ){
-					delete this.connections[idConnection]["clients"][idClient]	;
+					delete this.connections[idConnection].clients[idClient]	;
 					return idClient;
 				}
 			}
