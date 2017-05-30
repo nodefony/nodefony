@@ -20,7 +20,7 @@ nodefony.registerService("uglifyjs2", function(){
 			try {
 				this.engine = require("uglify-js") ;
 			}catch(e){
-				this.logger(e, "WARNING");
+				//this.logger(e, "WARNING");
 				try {
 					this.engine = require("uglify-es") ;
 				}catch(e){
@@ -43,7 +43,7 @@ nodefony.registerService("uglifyjs2", function(){
 				break;
 				default :
 					return done(  new Error("Service  uglifyjs2 FILTER bad path type  ") , null);
-				
+
 			}
 		}
 	};

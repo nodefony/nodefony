@@ -1,14 +1,14 @@
 #
 #
-#	CONFIG BUNDLE documentationBundle 
+#	CONFIG BUNDLE documentationBundle
 #
 #===============================================================================
 #
-#  Copyright © /2016         | 
+#  Copyright © /2016         |
 #
 # ===============================================================================
 #
-#        GENERATE BY App BUILDER YAML FILE 
+#        GENERATE BY App BUILDER YAML FILE
 #
 # This file is YAML  FILE
 # ---
@@ -31,19 +31,19 @@
 
 ########## App CONFIG BUNDLE  documentationBundle  ############
 name :				documentationBundle
-version:			"Beta"
+version:			"2.0.0-beta"
 locale :			en_en
 
 #
 #  WATCHERS
-#    
-#    watchers Listen to changes, deletion, renaming of files and directories 
+#
+#    watchers Listen to changes, deletion, renaming of files and directories
 #    of different components
-#       
-#    For watch all components 
-# 
+#
+#    For watch all components
+#
 #      watch:			true
-#    or 
+#    or
 #      watch:
 #        controller:		true
 #        config:                true
@@ -68,4 +68,3 @@ webpack:
 
 #elasticSearch:
 #  host:                         "127.0.0.1:9200"
-

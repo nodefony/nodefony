@@ -1,6 +1,6 @@
 #
 #
-#	CONFIG BUNDLE {{ bundleName }} 
+#	CONFIG BUNDLE {{ bundleName }}
 #
 #===============================================================================
 #
@@ -8,7 +8,7 @@
 #
 # ===============================================================================
 #
-#        GENERATE BY {{projectName}} BUILDER YAML FILE 
+#        GENERATE BY {{projectName}} BUILDER YAML FILE
 #
 # This file is YAML  FILE
 # ---
@@ -24,19 +24,19 @@
 
 ########## {{projectName}} CONFIG BUNDLE  {{ bundleName }}  ############
 name :				{{ bundleName }}
-version:			"1.0"
+version:			"1.0.0"
 locale :			{{ local }}
 
 #
 #  WATCHERS
-#    
-#    watchers Listen to changes, deletion, renaming of files and directories 
+#
+#    watchers Listen to changes, deletion, renaming of files and directories
 #    of different components
-#       
-#    For watch all components 
-# 
+#
+#    For watch all components
+#
 #      watch:			true
-#    or 
+#    or
 #      watch:
 #        controller:		true
 #        config:                true		# only  routing.yml
@@ -46,7 +46,7 @@ locale :			{{ local }}
 watch:				true
 
 #
-#  WEBPACK CONFIG       
+#  WEBPACK CONFIG
 #
 webpack:
   entry:
@@ -62,8 +62,8 @@ webpack:
 #
 #	Insert here the bundle-specific configurations
 #
-#	You can also override config of another bundle  
-#	with the name of the bundle 
+#	You can also override config of another bundle
+#	with the name of the bundle
 #
 #	example : create an other database connector
 #

@@ -1,5 +1,5 @@
 #
-#        NODEFONY CONFIG BUNDLE YAML FILE 
+#        NODEFONY CONFIG BUNDLE YAML FILE
 #
 #
 # This file is YAML  FILE
@@ -24,7 +24,7 @@
 ########## NODEFONY CONFIG BUNDLE  asseticBundle  ############
 name :				asseticBundle
 locale :			en_en
-version :                       "Beta"
+version :           "2.0.0-beta"
 
 #  Documentaion : http://lesscss.org/   https://github.com/less/less-docs
 less:
@@ -34,11 +34,11 @@ less:
   cache:                        true
   async:                        false
 
- 
+
 #TODO
 coffescript:
 
-# DOMAIN CDN    WARNING  change all assets url with CDN domain  
+# DOMAIN CDN    WARNING  change all assets url with CDN domain
 CDN:
   stylesheets:                  null           # example  : cdn.nodefony.com
   javascripts:                  null           # example  : cdn.nodefony.com

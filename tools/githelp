@@ -24,7 +24,7 @@ $ git update-index --assume-unchanged file
 
 // SSH add key 
 $ eval "$(ssh-agent -s)"
-$ ssh-add ~/.ssh/my_github_key/id_rsa
+$ ssh-add -K ~/.ssh/my_github_key/id_rsa
 
 
 // submodules

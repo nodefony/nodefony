@@ -1,6 +1,6 @@
 ########## NODEFONY CONFIG BUNDLE  frameworkBundle  ############
 name :				frameworkBundle
-version :			"Beta"
+version :			"2.0.0-beta"
 
 # webpack assets root path is ./Resources/public
 webpack:
@@ -12,4 +12,3 @@ webpack:
     filename:                   "./assets/js/framework.js"
     library:                    "framework"
     libraryTarget:              "umd"
-

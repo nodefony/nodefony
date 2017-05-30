@@ -1,5 +1,5 @@
 #
-#        GENERATE BY NODEFONY CONFIG BUNDLE YAML FILE 
+#        GENERATE BY NODEFONY CONFIG BUNDLE YAML FILE
 #
 # This file is YAML  FILE
 # ---
@@ -12,26 +12,26 @@
 
 ########## NODEFONY CONFIG BUNDLE  monitoringBundle  ############
 name :				monitoringBundle
-version:			"Beta"
+version:			"2.0.0-beta"
 locale :			en_en
-debugBar:                       true
+debugBar:           true
 
 #
 #  WATCHERS
-#    
-#    watchers Listen to changes, deletion, renaming of files and directories 
+#
+#    watchers Listen to changes, deletion, renaming of files and directories
 #    of different components
-#       
-#    For watch all components 
-# 
+#
+#    For watch all components
+#
 #      watch:			true
-#    or 
+#    or
 #      watch:
 #        controller:		true
 #        views:			true
 #        translations:          true
 #
-watch:                          ~ 
+watch:                          ~
 
 #
 #  WEBPACK
@@ -48,7 +48,7 @@ webpack:
     jquery:                     "jQuery"
   output:
     filename:                   "./assets/js/[name].js"
-    library:                    "[name]"                 
+    library:                    "[name]"
     libraryTarget:              "umd"
 
 realTimeBundle:
@@ -60,7 +60,5 @@ realTimeBundle:
 
 
 storage:
-  active:                     true                      
-  requests:                   orm           # syslog    
-
-
+  active:                     true
+  requests:                   orm           # syslog

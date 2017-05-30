@@ -1,9 +1,9 @@
 /*
- * 
- * 
- *    
- * 
- * 
+ *
+ *
+ *
+ *
+ *
  */
 const webpack = require("webpack");
 const webpackMerge = require('webpack-merge'); // used to merge webpack configs
@@ -14,7 +14,7 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 nodefony.registerService("webpack", function(){
 
 
-	
+
 	var babelRule  = function(basename){
 		return {
                     	test: /\.es6$/,
@@ -84,10 +84,10 @@ nodefony.registerService("webpack", function(){
 		};
         };
 
-	/* 
+	/*
          * File loader for supporting images, for example, in CSS files.
          */
-	var imagesRule = function(basename){ 
+	var imagesRule = function(basename){
 		return {
 			test: /\.(jpg|png|gif)$/,
           		//use: 'file-loader?name=[name].[ext]&publicPath=/'+basename+'/assets/images/&outputPath=/assets/images/'
@@ -97,20 +97,20 @@ nodefony.registerService("webpack", function(){
 
 	var defaultConfig = function(name, Path){
 		if ( Path ){
-			var basename = path.basename(Path); 
+			var basename = path.basename(Path);
 		}else{
-			var basename ="assets";	
+			var basename ="assets";
 		}
 		var public = Path ? path.resolve( Path, "Resources", "public") : null;
 		var devtool = this.production ? false : 'source-map' ;
-		var rules = [babelRule(basename), cssRule(basename, this.production), fontsRule(basename), imagesRule(basename), sassRule(basename),  lessRule(basename)] ;		
+		var rules = [babelRule(basename), cssRule(basename, this.production), fontsRule(basename), imagesRule(basename), sassRule(basename),  lessRule(basename)] ;
 		var plugins = [];
 		plugins.push( new ExtractTextPluginCss( {
-			filename:"./assets/css/"+ name +".css", 
+			filename:"./assets/css/"+ name +".css",
 		}));
 		if ( this.production  && this.kernel.type !== "CONSOLE" ){
-			plugins.push( this.getUglifyJsPlugin() );	
-			plugins.push( this.getOptimizeCssPlugin() );	
+			plugins.push( this.getUglifyJsPlugin() );
+			plugins.push( this.getOptimizeCssPlugin() );
 		}
 		return {
 			// Configuration Object
@@ -119,7 +119,7 @@ nodefony.registerService("webpack", function(){
 			watch:		true,
 			devtool:	devtool,
 			output:		{
-				path:	public 
+				path:	public
 			},
 			externals:	{},
 			resolve:	{},
@@ -129,7 +129,7 @@ nodefony.registerService("webpack", function(){
 			plugins: plugins
 		};
 	};
-	
+
 	//https://webpack.js.org/api/node/
 	const webpackService = class webpackService extends nodefony.Service {
 
@@ -138,7 +138,7 @@ nodefony.registerService("webpack", function(){
 			this.production = ( this.kernel.environment === "prod" ) ?  true :  false ;
 			this.defaultConfig = defaultConfig.call(this, "nodefony");
 			this.pathCache = path.resolve(this.kernel.rootDir, "tmp", "webpack") ;
-			if ( this.production ){ 
+			if ( this.production ){
 				try {
 					if ( ! fs.existsSync( this.pathCache ) ){
 						fs.mkdirSync( this.pathCache );
@@ -168,9 +168,9 @@ nodefony.registerService("webpack", function(){
 			}else{
 				if (bundle){
 					if ( watcher ){
-						this.logger( "WATCHING BUNDLE : " + bundle,"INFO"); 
+						this.logger( "WATCHING BUNDLE : " + bundle,"INFO");
 					}else{
-						this.logger( "COMPILE BUNDLE : " + bundle,"INFO");	
+						this.logger( "COMPILE BUNDLE : " + bundle,"INFO");
 					}
 				}
 				if ( watcher ){
@@ -186,10 +186,10 @@ nodefony.registerService("webpack", function(){
 		}
 
 		loadConfig( config , Path ){
-			
+
 			var basename = path.basename(Path);
 			var name = config.output ? config.output.library : "index" ;
-						
+
 			var myConf = webpackMerge( defaultConfig.call(this, name, Path), config ) ;
 
 			if ( this.production ){
@@ -204,11 +204,11 @@ nodefony.registerService("webpack", function(){
 			}catch(e){
 				throw e ;
 			}
-			
+
 			if ( ! ( basename  in this.kernel.bundlesCore ) ){
 				this.logger( "WEBPACK BUNDLE : " +  basename +" WATCHING : "+ myConf.watch );
 			}
-			
+
 			if ( myConf.watch ){
 				this.logger( "WEBPACK BUNDLE : "+ basename +" WATCHING ENTRY POINT : \n" + util.inspect(myConf.entry) , "DEBUG" );
 				var watching = compiler.watch({
@@ -226,7 +226,7 @@ nodefony.registerService("webpack", function(){
 					return compiler ;
 				}
 				this.logger( "WEBPACK BUNDLE : "+ basename +" COMPILE ENTRY POINT : \n" + util.inspect(myConf.entry)  );
-				this.runCompiler(compiler, basename);	
+				this.runCompiler(compiler, basename);
 			}
 			return compiler ;
 		}
@@ -241,11 +241,11 @@ nodefony.registerService("webpack", function(){
 					try {
 						fs.mkdirSync( pathCache );
 					}catch(e){
-						
+
 					}
 				}
 				return compiler.run( (err, stats) => {
-					this.loggerStat(err, stats,  bundle);	
+					this.loggerStat(err, stats,  bundle);
 				});
 			}catch(e){
 				throw e ;
@@ -266,7 +266,7 @@ nodefony.registerService("webpack", function(){
 			try {
 				return new OptimizeCssAssetsPlugin( nodefony.extend(true, {}, {
 					cssProcessorOptions: { discardComments: {removeAll: true } },
-					canPrint: true 
+					canPrint: true
     				}, config) );
 			}catch(e){
 				throw e;

@@ -5,9 +5,10 @@
  *
  *
  */
+ const semver = require('semver');
 
 nodefony.register("Bundle", function(){
-	
+
 	var regBundle = /^(.*)Bundle$/;
 	var regFixtures = /^(.+)Fixtures.js$/;
 	var regController = /^(.+)Controller.js$/;
@@ -15,7 +16,7 @@ nodefony.register("Bundle", function(){
 	var regCommand = /^(.+)Command.js$/;
 	var regEntity = /^(.+)Entity.js$/;
 	var regI18nFile =/^(.*)\.(.._..)\.(.*)$/;
-	var regConfigFile = /^routing\..*$/; 
+	var regConfigFile = /^routing\..*$/;
 
 	var checkIngnoreFile = function(string, basename){
 		var file = null;
@@ -58,7 +59,7 @@ nodefony.register("Bundle", function(){
 			cwd:this.path
 		} ;
 	};
-	
+
 	/*
  	 *	BUNDLE CLASS
  	 */
@@ -67,7 +68,7 @@ nodefony.register("Bundle", function(){
 		constructor (name , kernel , container){
 
 			super( name, container );
-			
+
 			this.logger("\x1b[36m REGISTER BUNDLE : "+this.name+"   \x1b[0m","DEBUG",this.kernel.cli.clc.magenta("KERNEL") );
 			this.bundleName = path.basename(this.path);;
 			this.environment = this.kernel.environment;
@@ -83,18 +84,18 @@ nodefony.register("Bundle", function(){
 					exclude:/^tests$|^public$|^node_modules$/,
 				});
 			}catch(e){
-				this.logger(e, "ERROR");	
+				this.logger(e, "ERROR");
 			}
-			
+
 			this.translation = this.get("translation");
 			this.reader = this.kernel.reader;
 
-			// assets 
+			// assets
 			this.webPackConfig = null ;
 
 			// controllers
-			this.controllersPath = path.resolve( this.path, "controller") ; 
-			
+			this.controllersPath = path.resolve( this.path, "controller") ;
+
 			this.findControllerFiles();
 			this.controllers = {};
 			this.watcherController = null ;
@@ -103,7 +104,7 @@ nodefony.register("Bundle", function(){
 			// views
 			this.serviceTemplate = this.get("templating") ;
 			this.regTemplateExt = new RegExp("^(.+)\."+this.serviceTemplate.extention+"$");
-			this.viewsPath = path.resolve( this.path, "Resources", "views") ; 
+			this.viewsPath = path.resolve( this.path, "Resources", "views") ;
 			this.viewFiles = this.findViewFiles(this.finder.result);
 			this.views = {};
 			this.views["."] = {};
@@ -116,7 +117,7 @@ nodefony.register("Bundle", function(){
 			// others
 			this.entities = {};
 			this.fixtures = {};
-			
+
 			try {
 				this.resourcesFiles = this.finder.result.findByNode("Resources") ;
 			}catch(e){
@@ -132,7 +133,7 @@ nodefony.register("Bundle", function(){
 
 			// Register Service
 			this.registerServices();
-			
+
 			// read config files
 			this.kernel.readConfig.call(this, null, this.resourcesFiles.findByNode("config") ,(result) => {
 				this.parseConfig(result);
@@ -140,7 +141,7 @@ nodefony.register("Bundle", function(){
 
 			// WATCHERS
 			if ( this.kernel.environment === "dev" && this.settings.watch ){
-				this.initWatchers();	
+				this.initWatchers();
 			}
 
 			// WEBPACK SERVICE
@@ -156,7 +157,7 @@ nodefony.register("Bundle", function(){
 			var views = false ;
 			var i18n = false ;
 			var config = false ;
-			try { 
+			try {
 				switch ( typeof this.settings.watch   ){
 					case "object":
 						controllers = this.settings.watch.controllers ;
@@ -165,7 +166,7 @@ nodefony.register("Bundle", function(){
 						config = this.settings.watch.config ;
 					break;
 					case "boolean":
-						controllers = true ;	
+						controllers = true ;
 						views = true ;
 						i18n = true ;
 						config = true ;
@@ -214,7 +215,7 @@ nodefony.register("Bundle", function(){
 			}
 			this.logger("KERNEL WATCHER","INFO");
 		}
-			
+
 		parseConfig (result){
 			if (result){
 				var config = null ;
@@ -232,10 +233,20 @@ nodefony.register("Bundle", function(){
 								this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : "+name[1] + " BUT BUNDLE "+ name[1] +" NOT YET REGISTERED "  ,"WARNING");
 							}
 							if ( this.kernel.bundles[name[1]] ){
-								this.kernel.bundles[name[1]].settings = ext ; 
-								this.setParameters("bundles."+name[1], this.kernel.bundles[name[1]].settings); 
+								this.kernel.bundles[name[1]].settings = ext ;
+								this.setParameters("bundles."+name[1], this.kernel.bundles[name[1]].settings);
 							}else{
-								this.setParameters("bundles."+name[1], ext || {}); 
+								this.setParameters("bundles."+name[1], ext || {});
+							}
+						break;
+						case /^version$/.test(ele) :
+							try {
+								var res = semver.valid(result[ele]);
+								if ( ! res ){
+									this.logger("Bad Bundle Semantic Versioning  : "+ result[ele] +" Check  http://semver.org " , "WARNING");
+								}
+							}catch(e){
+								this.logger(e , "ERROR");
 							}
 						break;
 						case /^locale$/.test(ele) :
@@ -249,12 +260,12 @@ nodefony.register("Bundle", function(){
 									if ( this.webPackConfig ){
 										this.kernel.listen(this, "onPostRegister", () => {
 											if (  this.webpackService ){
-												this.webpackCompiler = this.webpackService.loadConfig( this.webPackConfig ,this.path);	
+												this.webpackCompiler = this.webpackService.loadConfig( this.webPackConfig ,this.path);
 											}
 										});
 									}
 								}catch(e){
-									throw  e ;	
+									throw  e ;
 								}
 						break;
 					}
@@ -262,12 +273,12 @@ nodefony.register("Bundle", function(){
 				config = this.getParameters("bundles."+this.name);
  		        	if ( Object.keys(config).length ){
 					this.logger("\x1b[32m BUNDLE IS ALREADY OVERRIDING BY AN OTHERONE  INVERT\x1b[0m  CONFIG  "+ util.inspect(config)  ,"WARNING");
-					this.settings = nodefony.extend(true, {}, result, config ); 
+					this.settings = nodefony.extend(true, {}, result, config );
 					this.setParameters("bundles."+this.name, this.settings);
 				}else{
 					this.settings = result ;
-					this.setParameters("bundles."+this.name, this.settings);	
-				}	
+					this.setParameters("bundles."+this.name, this.settings);
+				}
 			}
 		}
 
@@ -282,23 +293,23 @@ nodefony.register("Bundle", function(){
 
 		boot (){
 			this.fire("onBoot",this);
-			try { 
+			try {
 				// Register Controller
 				this.registerControllers(this.controllerFiles);
 
 				// Register Views
 				this.registerViews();
 
-				// Register internationalisation 
+				// Register internationalisation
 				if ( this.translation ){
 					this.locale = this.translation.defaultLocal;
 				}
 				this.registerI18n(this.locale);
 
-				// Register Entity 
+				// Register Entity
 				this.registerEntities();
-				
-				// Register Fixtures 
+
+				// Register Fixtures
 				if ( this.kernel.type === "CONSOLE" ){
 					this.registerFixtures();
 				}
@@ -323,15 +334,15 @@ nodefony.register("Bundle", function(){
 		compileWebpack (){
 			if ( this.webpackCompiler ){
 				try {
-					return this.webpackService.runCompiler( this.webpackCompiler, this.name);	
+					return this.webpackService.runCompiler( this.webpackCompiler, this.name);
 				}catch(e){
 					throw e ;
 				}
 			}
 		}
-		
+
 		registerServices (){
-			// find  controler files 
+			// find  controler files
 			var services = this.finder.result.findByNode("services");
 			services.forEach((ele) => {
 				var res = regService.exec( ele.name );
@@ -358,16 +369,16 @@ nodefony.register("Bundle", function(){
 					this.logger("Bundle " + this.name +" controller directory not found", "WARNING");
 				}
 			}else{
-				// find  views files 
+				// find  views files
 				this.controllerFiles = result.findByNode("controller") ;
 			}
-			return this.controllerFiles ;	
+			return this.controllerFiles ;
 		}
 
 		registerControllers ( result ){
 			if ( result ){
 				this.controllerFiles = result ;
-			}	
+			}
 			if ( this.controllerFiles ){
 				this.controllerFiles.forEach((ele) => {
 					var res = this.regController.exec( ele.name );
@@ -389,7 +400,7 @@ nodefony.register("Bundle", function(){
 		}
 
 		reloadWatcherControleur ( name, Path){
-			try { 
+			try {
 				if ( this.controllers[name] ){
 					delete this.controllers[name] ;
 					this.controllers[name] = null ;
@@ -422,7 +433,7 @@ nodefony.register("Bundle", function(){
 			}catch(e){
 				if ( e === "BREAK" ) { return ; }
 				throw e ;
-			}	
+			}
 		}
 
 		findViewFiles(result){
@@ -435,9 +446,9 @@ nodefony.register("Bundle", function(){
 				}catch(e){
 					this.logger("Bundle " + this.name +" views directory not found", "WARNING");
 				}
-		
+
 			}else{
-				// find  views files 
+				// find  views files
 				views = result.findByNode("views") ;
 			}
 			return views ;
@@ -450,9 +461,9 @@ nodefony.register("Bundle", function(){
 					return ;
 				}
 				this.views[basename][name].template = template ;
-			});	
+			});
 		}
-		
+
 		setView(file){
 			var basename = path.basename(file.dirName);
 			var res = null ;
@@ -489,7 +500,7 @@ nodefony.register("Bundle", function(){
 						template:null
 					};
 				}
-			}		
+			}
 			return null ;
 		}
 
@@ -508,7 +519,7 @@ nodefony.register("Bundle", function(){
 		registerViews (result){
 			var views = null ;
 			if ( result ){
-				views = this.findViewFiles(result);	
+				views = this.findViewFiles(result);
 			}else{
 				views = this.viewFiles ;
 			}
@@ -523,7 +534,7 @@ nodefony.register("Bundle", function(){
 						}
 					}
 				}catch(e){
-					throw e ;	
+					throw e ;
 				}
 			});
 		}
@@ -572,27 +583,27 @@ nodefony.register("Bundle", function(){
 				}catch(e){
 					this.logger("Bundle " + this.name +" I18n directory not found", "WARNING");
 				}
-		
+
 			}else{
-				// find  i18n files 
+				// find  i18n files
 				i18n = result.findByNode("translations");
 			}
-			return i18n ;	
+			return i18n ;
 		}
 
 		getfilesByLocal(locale){
-			var reg = new RegExp("^(.*)\.("+locale+")\.(.*)$"); 
+			var reg = new RegExp("^(.*)\.("+locale+")\.(.*)$");
 			return this.i18nFiles.match(reg);
 		}
-		
+
 		registerI18n (locale, result){
-			if (! this.translation ) { 
-				this.translation = this.get("translation"); 
+			if (! this.translation ) {
+				this.translation = this.get("translation");
 				if ( this.translation ){
 					this.locale = this.translation.defaultLocal;
 				}else{
 					return ;
- 				}	
+ 				}
 			}
 			if (result){
 				this.i18nFiles = this.findI18nFiles(result) ;
@@ -624,7 +635,7 @@ nodefony.register("Bundle", function(){
  	 	*	COMMAND
  	 	*
  	 	*/
-				
+
 		registerCommand (store){
 			// find i18n files
 			this.commandFiles = this.finder.result.findByNode("Command") ;
@@ -644,15 +655,15 @@ nodefony.register("Bundle", function(){
 					if (! name ) { throw new Error("Command : "+name+"BAD FORMAT NANE "); }
 
 					if ( ! store[this.name] ){
-						store[this.name] = {};	
+						store[this.name] = {};
 					}
 					if (command.worker){
 						if ( command.commands ){
 							command.worker.prototype.commands = command.commands ;
-							store[this.name][name] = command.worker ; 
+							store[this.name][name] = command.worker ;
 						}else{
-							throw new Error("Command : "+name+"BAD FORMAT commands ");	
-						}	
+							throw new Error("Command : "+name+"BAD FORMAT commands ");
+						}
 					}else{
 						throw new Error("Command : "+name+" WORKER COMMAND NOT FIND");
 					}
@@ -690,7 +701,7 @@ nodefony.register("Bundle", function(){
 							this.logger("Register ENTITY : "+name +"  error ENTITY bad format");
 						}
 					}
-				});	
+				});
 			}
 		}
 
@@ -724,10 +735,10 @@ nodefony.register("Bundle", function(){
 							this.logger("Register FIXTURE : "+name +"  error FIXTURE bad format");
 						}
 					}
-				});	
+				});
 			}
 		}
-		
+
 		getFixture (name){
 			if ( this.fixtures[name] ){
 				return this.fixtures[name];

@@ -1,5 +1,5 @@
 #
-#        GENERATE BY NODEFONY CONFIG BUNDLE YAML FILE 
+#        GENERATE BY NODEFONY CONFIG BUNDLE YAML FILE
 #
 # This file is YAML  FILE
 # ---
@@ -23,16 +23,16 @@
 ########## NODEFONY CONFIG BUNDLE  realTimeBundle  ############
 name :				realTimeBundle
 locale :			en_en
-version :                       "beta"
+version :           "2.0.0-beta"
 
- 
+
 system:
   reconnect:
     handshake:                  false
-    connect:                    true 
-#  bufferSize:                   650000  
+    connect:                    true
+#  bufferSize:                   650000
 
-            
+
 #https://github.com/Worlize/WebSocket-Node/wiki/Documentation
 httpBundle:
   websocket:

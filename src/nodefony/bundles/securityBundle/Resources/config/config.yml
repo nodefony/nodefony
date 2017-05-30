@@ -1,5 +1,5 @@
 #
-#        NODEFONY CONFIG BUNDLE YAML FILE 
+#        NODEFONY CONFIG BUNDLE YAML FILE
 #
 #
 # This file is YAML  FILE
@@ -22,6 +22,4 @@
 
 ########## NODEFONY CONFIG BUNDLE  securityBundle  ############
 name :				securityBundle
-version :			"beta"
-
-
+version :			"2.0.0-beta"

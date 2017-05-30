@@ -1,14 +1,14 @@
 #
 #
-#	CONFIG BUNDLE unitTestBundle 
+#	CONFIG BUNDLE unitTestBundle
 #
 #===============================================================================
 #
-#  Copyright © 2015/2016         | 
+#  Copyright © 2015/2016         |
 #
 # ===============================================================================
 #
-#        GENERATE BY nodefony BUILDER YAML FILE 
+#        GENERATE BY nodefony BUILDER YAML FILE
 #
 # This file is YAML  FILE
 # ---
@@ -31,7 +31,7 @@
 
 ########## nodefony CONFIG BUNDLE  unitTestBundle  ############
 name :				unitTestBundle
-version:			"Beta"
+version:			"2.0.0-beta"
 locale :			en_en
 
 mocha:
@@ -40,6 +40,3 @@ mocha:
       ui: 'bdd'
       reporter: 'list'          # spec | list
       timeout: 20000
-    
-
-

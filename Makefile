@@ -1,7 +1,7 @@
 #https://www.gnu.org/software/make/manual/html_node/index.html
 
 DISTRIB := $(shell uname)
-VERBOSE = 0 
+VERBOSE = 0
 NODE_VERSION := $(shell node -v)
 
 PWD := $(shell pwd)
@@ -17,7 +17,7 @@ NODEFONY_VERSION := $(shell bin/nodefony version 2>/dev/null )
 LINE := NODEFONY $(NODEFONY_VERSION)  PLATFORM : $(DISTRIB)   NODE VERSION : $(NODE_VERSION)   APPLICATION : $(APP_NAME)   DEBUG : $(VERBOSE)
 $(info $(LINE))
 
-all:  npm install 
+all:  npm install
 
 install:
 
@@ -45,7 +45,7 @@ build:
 	make clean ;
 
 	make npm ;
-	
+
 	make install && echo "success nodefony install !" || echo "failure nodefony install !" ;
 
 	make sequelize && echo "success nodefony sequelize !" || echo "failure nodefony sequelize !" ;
@@ -69,7 +69,7 @@ build:
 	make certificates ;
 
 #
-# PM2 MANAGEMENT PRODUCTION 
+# PM2 MANAGEMENT PRODUCTION
 #
 startup:
 	./node_modules/pm2/bin/pm2 startup
@@ -77,7 +77,7 @@ startup:
 start:
 	./node_modules/pm2/bin/pm2 update
 	./nodefony_pm2
-	./node_modules/pm2/bin/pm2 --lines 20 logs 
+	./node_modules/pm2/bin/pm2 --lines 20 logs
 
 stop:
 	./node_modules/pm2/bin/pm2 stop $(APP_NAME)
@@ -106,7 +106,7 @@ logs:
 clean-log:
 	./node_modules/pm2/bin/pm2 flush
 
-# NODEFONY BUILD FRAMEWORK 
+# NODEFONY BUILD FRAMEWORK
 npm:
 	@echo "" ;
 	@echo "#######################################################" ;
@@ -114,8 +114,8 @@ npm:
 	@echo "#######################################################" ;
 	@echo "" ;
 
-	@[ $(VERSION) -ge 600 ]  || ( echo '$(NODE_VERSION) NODEFONY ERROR NODE VERSION must have version >= v6.0.0  See https://nodejs.org/en/download/package-manager for upgrade version '; exit 1; )  
-	
+	@[ $(VERSION) -ge 600 ]  || ( echo '$(NODE_VERSION) NODEFONY ERROR NODE VERSION must have version >= v6.0.0  See https://nodejs.org/en/download/package-manager for upgrade version '; exit 1; )
+
 	@if [  -f package.json  ] ; then \
 		if [ $(VERBOSE) = 0 ] ; then \
 			echo "npm -s install" ;\
@@ -125,6 +125,23 @@ npm:
 			npm -ddd install  ;\
 		fi \
 	fi
+
+outdated:
+	@echo "" ;
+	@echo "#######################################################" ;
+	@echo "#           node.js  outdated dependencies            #" ;
+	@echo "#######################################################" ;
+	@echo "" ;
+	npm outdated --deph=0
+
+list:
+	@echo "" ;
+	@echo "#######################################################" ;
+	@echo "#           node.js  list  dependencies               #" ;
+	@echo "#######################################################" ;
+	@echo "" ;
+	npm ls --depth=0
+
 
 deploy:  asset
 	./node_modules/pm2/bin/pm2 update
@@ -168,7 +185,7 @@ framework:
 		git submodule sync ; \
 		git submodule update --init --recursive ; \
 	fi
-	
+
 	@echo "";
 	@echo "####################################################" ;
 	@echo "#            CREATE FRAMEWORK REPOSITORY           #" ;
@@ -214,11 +231,11 @@ framework:
 	@if [ ! -e web/favicon.ico ] ; then \
 		echo " copy favicon.ico " ;\
 		cp app/Resources/public/favicon.ico web/ ;\
-	fi 
+	fi
 	@if [ ! -e web/robots.txt ] ; then  \
 		echo " copy robots.txt " ;\
 		cp app/Resources/public/robots.txt web/ ;\
-	fi 
+	fi
 
 sequelize:
 	./console Sequelize:generate:entities
@@ -250,7 +267,7 @@ clean:
 		echo ""; \
 		rm -rf web/* ; \
 	fi
-	
+
 	make framework ;
 
 test:
@@ -275,12 +292,12 @@ docker-build:
 	make framework ;
 
 	make npm ;
-	
+
 	make install ;
 
 	make certificates ;
 
-docker-compose: docker-compose-stop 
+docker-compose: docker-compose-stop
 	$(MAKE) -C docker compose-start
 
 docker-compose-stop:

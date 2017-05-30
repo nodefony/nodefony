@@ -1,5 +1,5 @@
 #
-#        NODEFONY BUNDLE CONFIG YAML FILE 
+#        NODEFONY BUNDLE CONFIG YAML FILE
 #
 #
 # This file is YAML  FILE
@@ -22,15 +22,15 @@
 
 ########## NODEFONY CONFIG BUNDLE  httpBundle  ############
 name :				httpBundle
-version :			"Beta"
+version :			"2.0.0-beta"
 watch:                          false
 
 
-#       
-#       SERVERS HTTP 
+#
+#       SERVERS HTTP
 #
 #
-http:                         
+http:
   maxHeadersCount:              null
   timeout:                      null            # For Keep alive spec
   responseTimeout:              30000           # In ms | 30 seconds by default
@@ -43,8 +43,8 @@ https:
     options:
       rejectUnauthorized:       false
 
-#                  
-#       SERVERS WEBSOCKET 
+#
+#       SERVERS WEBSOCKET
 #
 #
 websocket:
@@ -55,9 +55,9 @@ websocketSecure:
   keepaliveInterval:            20000
   keepaliveGracePeriod:         10000
 
-#                  
-#       SERVERS STACTIC FILES 
-#       For dev only 
+#
+#       SERVERS STACTIC FILES
+#       For dev only
 #       use varnish  or similar reverse proxy caches
 #
 #       you can add directory for find statics file
@@ -67,19 +67,19 @@ websocketSecure:
 #
 statics:
   settings:
-    cache :                     true	
-    maxAge:                     96*60*60          
+    cache :                     true
+    maxAge:                     96*60*60
   web:
     path:                       "/web/"
     maxage:                     30*24*60*60*1000
 
-# 
-#                   
-#       SESSIONS MANAGER 
+#
+#
+#       SESSIONS MANAGER
 #
 #               WARNING !!
-#               IF YOU USE FIREWALL NODEFONY FIREWALL AUTO START SESSION 
-#       
+#               IF YOU USE FIREWALL NODEFONY FIREWALL AUTO START SESSION
+#
 #               name            : cookies session name
 #               handler         : session.storage.files | session.storage.sequelize | session.storage.memcached
 #
@@ -90,7 +90,7 @@ statics:
 
 session:
   start:                        "autostart"            #"autostart"
-  use_strict_mode:              true                    
+  use_strict_mode:              true
   name:                         "nodefony"
   handler:                      session.storage.files
   save_path:                    "/tmp/sessions"
@@ -98,7 +98,7 @@ session:
   gc_divisor:                   100
   gc_maxlifetime:               1440
   hash_function:                "md5"           # sha1
-  use_cookies:                  true           
+  use_cookies:                  true
   use_only_cookies:             true
   referer_check:                false
   cookie:
@@ -107,8 +107,8 @@ session:
     secure:                     false           # https only
     signed:                     false
   memcached:
-    servers:                      
-      nodefony: 
+    servers:
+      nodefony:
         location:               127.0.0.1
         port:                   11211
         weight:                 1
@@ -123,6 +123,3 @@ session:
 upload:
   tmp_dir:                      "tmp/upload"
   max_filesize:                 10485760                # 10Mbits
-
-
-

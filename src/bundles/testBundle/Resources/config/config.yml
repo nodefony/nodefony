@@ -1,14 +1,14 @@
 #
 #
-#	CONFIG BUNDLE testBundle 
+#	CONFIG BUNDLE testBundle
 #
 #===============================================================================
 #
-#  Copyright © 2016/2017         | 
+#  Copyright © 2016/2017         |
 #
 # ===============================================================================
 #
-#        GENERATE BY nodefony BUILDER YAML FILE 
+#        GENERATE BY nodefony BUILDER YAML FILE
 #
 # This file is YAML  FILE
 # ---
@@ -24,19 +24,19 @@
 
 ########## nodefony CONFIG BUNDLE  testBundle  ############
 name :				testBundle
-version:			"beta"
+version:			"2.0.0-beta"
 locale :			en_en
 
 #
 #  WATCHERS
-#    
-#    watchers Listen to changes, deletion, renaming of files and directories 
+#
+#    watchers Listen to changes, deletion, renaming of files and directories
 #    of different components
-#       
-#    For watch all components 
-# 
+#
+#    For watch all components
+#
 #      watch:			true
-#    or 
+#    or
 #      watch:
 #        controller:		true
 #        config:                true		# only  routing.yml
@@ -46,7 +46,7 @@ locale :			en_en
 watch:				false
 
 #
-#  WEBPACK CONFIG       
+#  WEBPACK CONFIG
 #
 webpack:
   entry:
@@ -62,8 +62,8 @@ webpack:
 #
 #	Insert here the bundle-specific configurations
 #
-#	You can also override config of another bundle  
-#	with the name of the bundle 
+#	You can also override config of another bundle
+#	with the name of the bundle
 #
 #	example : create an other database connector
 #
