@@ -5,7 +5,7 @@
  *
  */
 const yaml = require("js-yaml");
-const util = require('util');	
+const util = require('util');
 const path = require("path");
 const fs = require("fs");
 const cluster = require('cluster');
@@ -18,6 +18,7 @@ const http = require('http');
 const nodedomain = require('domain');
 const WebSocketServer = require('websocket');
 const Promise = require('promise');
+const shell = require("shelljs");
 
 var nodefony = function(){
 
@@ -26,7 +27,7 @@ var nodefony = function(){
 	 *	@class Nodefony
 	 *	@constructor
 	 *	@module Nodefony
-	 *	
+	 *
 	 */
 	var Nodefony = class Nodefony {
 
@@ -52,12 +53,12 @@ var nodefony = function(){
 		/**
 	 	*	@method require
 	 	*/
-		require (){ } 
+		require (){ }
 
 		/**
 	 	*	@method provide
 	 	*/
-		provide (){ } 
+		provide (){ }
 
 		/**
 	 	*	@method typeOf
@@ -95,9 +96,9 @@ var nodefony = function(){
 			}
   			return t;
 		}
-	
+
 		/**
- 	 	* extend jquery for nodejs only 
+ 	 	* extend jquery for nodejs only
 	 	* @method extend
 	 	*
  	 	*/
@@ -141,7 +142,7 @@ var nodefony = function(){
 						}
 
 						// Recurse if we're merging plain objects or arrays
-						var bool = this.typeOf( copy ); 
+						var bool = this.typeOf( copy );
 						if ( deep && copy && ( bool === "object" ||
 							( copyIsArray = (bool === "array") ) ) ) {
 
@@ -173,11 +174,11 @@ var nodefony = function(){
 	 	*  @param {String} name
 	 	*  @param {Function} closure
 	 	*
- 	 	*/	
+ 	 	*/
 		register (name, closure){
 			var register = null ;
 			if (typeof closure === "function") {
-				// exec closure 
+				// exec closure
 				register = closure(this, name);
 			} else {
 				register = closure;
@@ -186,7 +187,7 @@ var nodefony = function(){
 		}
 
 		/**
- 	 	*  Register Nodefony Bundle 
+ 	 	*  Register Nodefony Bundle
 	 	*  @method registerBundle
 	 	*  @param {String} name
 	 	*  @param {Function} closure
@@ -194,7 +195,7 @@ var nodefony = function(){
  	 	*/
 		registerBundle (name, closure){
 			if (typeof closure === "function" ){
-				return this.bundles[name] = closure();	
+				return this.bundles[name] = closure();
 			}
 			throw new Error( "Register bundle : "+ name +"  error bundle bad format" );
 		}
@@ -226,7 +227,7 @@ var nodefony = function(){
 		}
 
 		/**
- 	 	*  Register Nodefony service 
+ 	 	*  Register Nodefony service
 	 	*  @method registerService
 	 	*  @param {String} name
 	 	*  @param {Function} closure
@@ -243,7 +244,7 @@ var nodefony = function(){
 		}
 
 		/**
- 	 	*  Register Nodefony entity 
+ 	 	*  Register Nodefony entity
 	 	*  @method registerEntity
 	 	*  @param {String} name
 	 	*  @param {Function} closure
@@ -256,9 +257,9 @@ var nodefony = function(){
 			}
 			throw new Error( "Register Entity : "+ name +"  error Entity bad format" );
 		}
-		
+
 		/**
- 	 	*  Register Nodefony fixture 
+ 	 	*  Register Nodefony fixture
 	 	*  @method registerFixture
 	 	*  @param {String} name
 	 	*  @param {Function} closure
@@ -273,7 +274,7 @@ var nodefony = function(){
 		}
 
 		/**
- 	 	*  Register Nodefony command 
+ 	 	*  Register Nodefony command
 	 	*  @method registerCommand
 	 	*  @param {String} name
 	 	*  @param {Function} closure
@@ -282,11 +283,11 @@ var nodefony = function(){
 		registerCommand (name, closure){
 			if (typeof closure === "function" ){
 				return  closure();
-				//return this.commands[name] = closure();	
+				//return this.commands[name] = closure();
 			}
 			throw new Error( "Register commands : "+ name +"  error commands bad format" );
-		}	
+		}
 	};
-	
+
 	return new Nodefony();
 }();

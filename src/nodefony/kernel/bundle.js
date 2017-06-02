@@ -147,6 +147,7 @@ nodefony.register("Bundle", function(){
 			// WEBPACK SERVICE
 			this.webpackService = this.get("webpack");
 			this.webpackCompiler = null ;
+            this.findWebPackConfig()
 
 			this.fire( "onRegister", this);
 		}
@@ -271,7 +272,7 @@ nodefony.register("Bundle", function(){
 					}
 				}
 				config = this.getParameters("bundles."+this.name);
- 		        	if ( Object.keys(config).length ){
+ 		        if ( Object.keys(config).length ){
 					this.logger("\x1b[32m BUNDLE IS ALREADY OVERRIDING BY AN OTHERONE  INVERT\x1b[0m  CONFIG  "+ util.inspect(config)  ,"WARNING");
 					this.settings = nodefony.extend(true, {}, result, config );
 					this.setParameters("bundles."+this.name, this.settings);
@@ -287,8 +288,13 @@ nodefony.register("Bundle", function(){
 			return this.syslog.logger(pci, severity, msgid,  msg);
 		}
 
-		loadFile (Path, force, watch){
-			return this.autoLoader.load(Path, force, watch);
+		loadFile (Path, force){
+            try {
+                    return  this.autoLoader.load(Path, force);
+            }catch(e){
+                this.logger(e, "ERROR");
+                throw e ;
+            }
 		}
 
 		boot (){
@@ -359,6 +365,13 @@ nodefony.register("Bundle", function(){
 			});
 		}
 
+        findWebPackConfig (){
+            var res = this.finder.result.getFile("webpack.config.js", true) ;
+            if ( res ){
+                this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this.path );
+            }
+        }
+
 		findControllerFiles ( result ){
 			if ( ! result ){
 				try {
@@ -384,7 +397,7 @@ nodefony.register("Bundle", function(){
 					var res = this.regController.exec( ele.name );
 					if ( res ){
 						var name = res[1] ;
-						var Class = this.loadFile( ele.path, false, true);
+						var Class = this.loadFile( ele.path, false);
 						if (typeof Class === "function" ){
 							Class.prototype.name = name;
 							Class.prototype.bundle = this;

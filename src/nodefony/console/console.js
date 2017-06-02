@@ -8,20 +8,10 @@
  */
 const Getopt = require('node-getopt');
 const npm = require("npm");
-const npmi = require('npmi');
+//const npmi = require('npmi');
 
 nodefony.register("console", function(){
 
-	/*var createNpmDependenciesArray = function (packageFilePath) {
-    		var p = require(packageFilePath);
-    		if (!p.dependencies) { return []; }
-
-    		var deps = [];
-    		for (var mod in p.dependencies) {
-        		deps.push(mod + "@" + p.dependencies[mod]);
-    		}
-    		return deps;
-	};*/
 
 	var createNpmiDependenciesArray = function (packageFilePath, opt) {
     		var p = require(packageFilePath);
@@ -38,14 +28,14 @@ nodefony.register("console", function(){
     		return deps;
 	};
 
-	
+
 	var generateHelp = function(obj, str){
 		str += this.cli.clc.cyan("nodefony")+" \n";
 		str += this.cli.clc.green("\tnpm:list")+"							 List all installed packages \n";
 		str += this.cli.clc.green("\tnpm:install")+"							 Install all framework packages\n";
 		for (var ele in obj){
 			if (obj[ele].name ){
-				str +=  obj[ele].name; 
+				str +=  obj[ele].name;
 			}
 			for (var cmd in obj[ele].task ){
 				str +=  this.cli.clc.green("\t"+ obj[ele].task[cmd][0]);
@@ -68,19 +58,19 @@ nodefony.register("console", function(){
 	var Console = class Console extends nodefony.appKernel {
 
 		constructor (environment, debug, loader , settings){
-			// App Kernel 
+			// App Kernel
 			super("CONSOLE", environment, debug, loader, nodefony.extend( settings , {
 				onBoot:function(){
 					if ( process.argv[2] && process.argv[2] === "npm:list" ){
 						this.listPackage(this.rootDir+"/package.json");
-					}	
+					}
 				},
 				syslog:settingsSysLog
 			}));
 
 			this.commands = {};
 			this.getOptsTab = [];
-			
+
 			if ( process.argv[2] && process.argv[2] === "npm:install" ||  process.argv[2] && process.argv[2] === "npm:list" ){
 				return ;
 			}
@@ -97,7 +87,7 @@ nodefony.register("console", function(){
 					return ;
 				}
 				process.nextTick( ()=> {
-					try {	
+					try {
 						this.matchCommand();
 					}catch(e){
 						this.logger(e,  "ERROR");
@@ -120,13 +110,13 @@ nodefony.register("console", function(){
 		}
 
 		/**
-	 	*	register Bundle 
-	 	*	@method registerBundles 
+	 	*	register Bundle
+	 	*	@method registerBundles
 	 	*	@param {String} path
 	 	*	@param {Function} callbackFinish
          	*/
 		registerBundles (path, callbackFinish, nextick){
-			
+
 			var func = ( Path ) => {
 				try{
 					new nodefony.finder( {
@@ -149,7 +139,8 @@ nodefony.register("console", function(){
 											case "unitTest":
 											break;
 											default:
-												this.InstallPackage(name, file);	
+												//this.InstallPackage(name, file);
+												this.installPackage(name, file);
 										}
 									}else{
 										this.loadBundle( file);
@@ -157,7 +148,7 @@ nodefony.register("console", function(){
 								}catch(e){
 									console.trace(e);
 									this.logger(e, "ERROR");
-								}	
+								}
 							}
 						},
 						onFinish:callbackFinish || this.initializeBundles.bind(this)
@@ -173,13 +164,13 @@ nodefony.register("console", function(){
 					}
 				}
 			};
-			
+
 			if ( nextick === undefined ){
 				process.nextTick( () =>{
 					func.call(this, path );
 				});
 				//func.apply(this)
-				//process.nextTick( func.bind(this) );	
+				//process.nextTick( func.bind(this) );
 			}else{
 				func.call(this, path );
 			}
@@ -205,38 +196,60 @@ nodefony.register("console", function(){
 					}
 					this.logger( "NPM NODEFONY PACKAGES", "INFO")
 					var headers = [
-						"NAME", 
+						"NAME",
 						"VERSION",
 						"DESCRIPTION"
 					];
 					this.cli.displayTable(ele, {
-						head: headers, 
+						head: headers,
 						colWidths :[30,10,100]
 					});
 					this.terminate(0);
 				});
 			});
 		}
-		
-		/*installPackage (name, file){
+
+		installPackage (name, file, prod){
 			try {
 				var conf = new nodefony.fileClass(file.dirName+"/package.json");
 				var config = require(conf.path);
-				npm.load( config ,(error) => {
+				npm.load( config ,(error, event) => {
 					if (error){
 						this.logger(error, "ERROR");
 						this.terminate(1);
 					}
-					var dependencies = createNpmDependenciesArray(conf.path) ;
-					this.logger("Install Package BUNDLE : "+ name,"INFO");
-					npm.commands.install(dependencies,  (er, data) => {
-						if (er){
- 				       			this.logger(er, "ERROR", "SERVICE NPM BUNDLE " + name);
-							this.terminate(1);
-							return ;
+					//event.config.localPrefix = file.dirName ;
+					//event.config.globalPrefix = this.rootDir ;
+					var tab = [] ;
+					this.logger("NPM :"+npm.version+  " Installing Dependencies for bundle : " + file.shortName  );
+					for (let dep in config.dependencies ){
+							let mypackage = dep+"@"+config.dependencies[dep] ;
+							try {
+								require.resolve(dep);
+							}catch(e){
+								this.logger( "\t Dependency : " + mypackage  );
+								tab.push( mypackage );
+							}
+					}
+					if ( ! prod ){
+						for (let dep in config.devDependencies ){
+								let mypackage = dep+"@"+config.devDependencies[dep] ;
+								try {
+									require.resolve(dep);
+								}catch(e){
+									this.logger( "\t Dependency dev : " + mypackage  );
+									tab.push( mypackage );
+								};
 						}
-						this.loadBundle(file);	
-					});
+					}
+					if (tab.length ){
+						event.commands.install(tab, (err, data) =>{
+							if ( err ){
+								this.logger("NPM :"+npm.version+  " Installing Dependencies for bundle : " + file.shortName  , "ERROR");
+								this.logger(err, "ERROR");
+							}
+						});
+					}
 				});
 			}catch(e){
 				if (e.code !== "ENOENT"){
@@ -244,28 +257,27 @@ nodefony.register("console", function(){
 					throw e ;
 				}
 			}
-		}*/
+		}
 
-		InstallPackage (name, file){
+		/*InstallPackage (name, file){
 			try {
 				var conf = new nodefony.fileClass(file.dirName+"/package.json");
 				var options = {
     					path: '.',              // installation path [default: '.']
-    					forceInstall: false,    // force install if set to true 
+    					forceInstall: false,    // force install if set to true
     					npmLoad: {              // npm.load(options, callback): this is the "options" given to npm.load()
         					loglevel: 'silent'  // [default: {loglevel: 'silent'}]
     					}
 				};
 				if ( this.debug && this.environment ==="dev"){
-					options.npmLoad.loglevel = "verbose" ;	
+					options.npmLoad.loglevel = "verbose" ;
 				}
 
 				var dependencies = createNpmiDependenciesArray(conf.path, options) ;
 
-
 				for (var i= 0 ; i < dependencies.length ; i++){
 					let nodeDep =  dependencies[i].name + "@" + dependencies[i].version ;
-					this.logger("LOAD BUNDLE " + name +" dependence : " + nodeDep);	
+					this.logger("LOAD BUNDLE " + name +" dependence : " + nodeDep);
 					npmi( dependencies[i], ( err, result) => {
     						if (err) {
         						if (err.code === npmi.LOAD_ERR){
@@ -293,7 +305,7 @@ nodefony.register("console", function(){
 					this.logger("Install Package BUNDLE : "+ name +":"+e,"WARNING");
 				}
 			}
-		}
+		}*/
 
 		loadCommand (){
 			this.stop = false;
@@ -301,8 +313,8 @@ nodefony.register("console", function(){
 				this.bundles[bundle].registerCommand( this.commands );
 			}
 			this.getopts =  this.getopt(this.getOptsTab);
-			
-			
+
+
 			this.helpString = this.getopts.getHelp();
 			this.helpString += "\nCommands : [arguments]\n";
 
@@ -310,7 +322,7 @@ nodefony.register("console", function(){
 			for ( let bundle in this.commands ){
 				if ( ! bundles[bundle] ){
 					var name = this.cli.clc.cyan(bundle)+" \n" ;
-					bundles[bundle] = { 
+					bundles[bundle] = {
 						name : name,
 						task: []
 					};
@@ -328,7 +340,7 @@ nodefony.register("console", function(){
 			//this.getopts.setHelp(this.helpString);
 			return this.stop;
 		}
-		
+
 		matchCommand (){
 			this.cliParse = this.getopts.parseSystem();
 			var ret = null;
@@ -365,7 +377,7 @@ nodefony.register("console", function(){
 		showHelp (){
 			return this.getopts.showHelp();
 		}
-			
+
 		/*
  	 	*
  	 	*
@@ -400,13 +412,13 @@ nodefony.register("console", function(){
 						this.registerBundles(result.path, this.initializeBundles.bind(this))
 					}
 				}
-			})	
+			})
 		};*/
 
 		startTimer (name){
-			this.startTime = new Date();	
+			this.startTime = new Date();
 			this.logger(" BEGIN TIMER : " + name, "INFO");
-		
+
 		}
 
 		stopTimer (name){

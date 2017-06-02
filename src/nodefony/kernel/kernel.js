@@ -7,7 +7,7 @@
 const nodefony_version = require( path.join ("..", "..", "..", "package.json") ).version;
 
 nodefony.register("kernel", function(){
-	
+
 	/**
 	 *	@event onTerminate
 	 *
@@ -64,16 +64,16 @@ nodefony.register("kernel", function(){
 
 	var defaultEnvEnable = {
 		dev:		true,
-		development:	true,	
+		development:	true,
 		prod:		true,
-		production:	true,	
+		production:	true,
 	};
 
 	var defaultOptions = {
 		nbListener:30
 	};
 	/**
-	 *	KERKEL class   
+	 *	KERKEL class
 	 *	The class is a **`KERNEL NODEFONY`** .
 	 *	@module NODEFONY
 	 *	@main nodefony
@@ -82,9 +82,9 @@ nodefony.register("kernel", function(){
 	 *	@param {String} environment  DEV || PROD
 	 *	@param {Bollean} debug
 	 *	@param {class} autoLoader
-	 *	
+	 *
 	 */
-	var kernel = class kernel extends nodefony.Service {	
+	var kernel = class kernel extends nodefony.Service {
 
 		constructor (environment, debug, autoLoader, type, options){
 
@@ -101,7 +101,7 @@ nodefony.register("kernel", function(){
 			this.type = type;
 			this.bundles = {};
 			this.bundlesCore = bundlesCore ;
-			
+
 			if ( environment in defaultEnvEnable ){
 				switch ( environment ){
 					case "dev" :
@@ -116,7 +116,7 @@ nodefony.register("kernel", function(){
 					break;
 				}
 			}
-			
+
 			this.debug = debug || false;
 			this.booted = false;
 			this.ready = false;
@@ -141,7 +141,7 @@ nodefony.register("kernel", function(){
 				if ( this.type === "SERVER" ){
 					if ( ! fs.existsSync( this.cacheLink ) ){
 						try {
-							fs.mkdirSync( this.cacheLink );	
+							fs.mkdirSync( this.cacheLink );
 							this.cli.assetInstall();
 						}catch(e){
 							this.logger(e,"WARNING");
@@ -158,17 +158,17 @@ nodefony.register("kernel", function(){
 			process.on('SIGINT', () => {
 				this.logger("SIGINT", "CRITIC");
 				this.fire("onSignal", "SIGINT", this);
-				this.terminate(0);	
+				this.terminate(0);
 			});
 			process.on('SIGTERM', () => {
 				this.logger("SIGTERM", "CRITIC");
 				this.fire("onSignal", "SIGTERM", this);
-				this.terminate(0);	
+				this.terminate(0);
 			});
 			process.on('SIGHUP', () => {
 				this.logger("SIGHUP", "CRITIC");
 				this.fire("onSignal", "SIGHUP", this);
-				this.terminate(0);	
+				this.terminate(0);
 			});
 			process.on('SIGQUIT',() =>{
 				this.logger("SIGQUIT", "CRITIC");
@@ -179,7 +179,7 @@ nodefony.register("kernel", function(){
 			/**
 		 	*	@promise
 		 	*
-		 	*	
+		 	*
 		 	*/
 			const unhandledRejections = new Map();
 			process.on('rejectionHandled', (promise) => {
@@ -196,12 +196,12 @@ nodefony.register("kernel", function(){
 
 			this.boot(options);
 		}
-				
+
 		/**
 	 	*	@method boot
          	*/
-		boot (options){	
-			
+		boot (options){
+
 			// Manage Reader
 			this.reader = new nodefony.Reader(this.container);
 			this.set("reader",this.reader);
@@ -231,7 +231,7 @@ nodefony.register("kernel", function(){
 					this.initTemplate();
 				});
 				if ( ! this.settings.system.bundles ){
-					this.settings.system.bundles = {} ;	
+					this.settings.system.bundles = {} ;
 				}
 				var gconf = this.readGeneratedConfig() ;
 				if ( gconf ){
@@ -247,12 +247,12 @@ nodefony.register("kernel", function(){
 			this.initCluster();
 
 			this.eventReadywait = 0 ;
-			
+
 			// Manage Injections
 			this.injection = new nodefony.injection(this.container);
 			this.set("injection", this.injection);
 
-			// SERVERS 
+			// SERVERS
 			this.initServers();
 
 			/*
@@ -264,8 +264,8 @@ nodefony.register("kernel", function(){
 			bundles.push( path.resolve(this.nodefonyPath, "bundles", "httpBundle") );
 			bundles.push( path.resolve(this.nodefonyPath, "bundles", "frameworkBundle") );
 			bundles.push( path.resolve(this.nodefonyPath, "bundles", "asseticBundle") );
-			
-			// FIREWALL 
+
+			// FIREWALL
 			if (this.settings.system.security){
 				bundles.push( path.resolve(this.nodefonyPath, "bundles", "securityBundle") );
 			}
@@ -335,7 +335,7 @@ nodefony.register("kernel", function(){
 			try {
 				for ( var bundle in this.settings.system.bundles){
 					var name = this.settings.system.bundles[bundle].replace("\.\/","").replace(/\/\//,"/") ;
-					config.push(name);	
+					config.push(name);
 				}
 			}catch(e){
 				throw e ;
@@ -387,7 +387,7 @@ nodefony.register("kernel", function(){
 						}*/
 					}
 				}
-			}	
+			}
 		}
 
 		readGeneratedConfig (){
@@ -396,15 +396,15 @@ nodefony.register("kernel", function(){
 				exist = fs.existsSync(this.generateConfigPath);
 				if (exist){
 					try {
-						var yml = yaml.load( fs.readFileSync(this.generateConfigPath, 'utf8' ) ); 
+						var yml = yaml.load( fs.readFileSync(this.generateConfigPath, 'utf8' ) );
 						this.checkBundlesExist( yml, "Generated Config", this.generateConfigPath, true);
 						return yml ;
 					}catch(e){
 						throw e;
 					}
 				}else{
-					return null ;	
-				}	
+					return null ;
+				}
 			}catch(e){
 				console.trace(e);
 				this.logger(e, "ERROR");
@@ -414,7 +414,7 @@ nodefony.register("kernel", function(){
 		initServers (){
 			if (this.type === "SERVER"){
 				this.listen(this,"onPostReady", () => {
-					// create HTTP server 
+					// create HTTP server
 					var http =null ;
 					var https =null ;
 					try {
@@ -462,7 +462,7 @@ nodefony.register("kernel", function(){
 				this.workerId = cluster.worker.id ;
 				this.worker = cluster.worker ;
 				this.fire("onCluster", "WORKER",  this, process);
-				process.on("message" , this.listen(this, "onMessage" ) ); 
+				process.on("message" , this.listen(this, "onMessage" ) );
 			}
 		}
 
@@ -472,7 +472,7 @@ nodefony.register("kernel", function(){
 				data : message
 			});
 		}
-		
+
 		/**
 	 	*	@method initializeLog
          	*/
@@ -497,13 +497,13 @@ nodefony.register("kernel", function(){
 					this.syslog.listenWithConditions(this,{
 						severity:{
 							data:"CRITIC,ERROR"
-						}		
+						}
 					},function(pdu){
 						var pay = pdu.payload ? (pdu.payload.stack || pdu.payload) : "Error undefined" ;
 						var reg = new RegExp("\\[32m");
 						var line = pdu.severityName +" SYSLOG "  + pdu.msgid +  " " + pdu.msg+" : "+ pay.replace(reg,"");
 						this.logStream.logger( new Date(pdu.timeStamp) + " " +line +"\n" );
-					});	
+					});
 					var data ;
 					this.logStreamD = new nodefony.log(this.rootDir+this.settings.system.log.messages,{
 						rotate:this.settings.system.log.rotate
@@ -516,13 +516,13 @@ nodefony.register("kernel", function(){
 					this.syslog.listenWithConditions(this,{
 						severity:{
 							data:data
-						}		
+						}
 					},function(pdu){
 						if ( pdu.msgid === "SERVER WELCOME"){
-							console.log(  pdu.payload);	
+							console.log(  pdu.payload);
 							return ;
 						}
-						if (! pdu.payload ) { return ; } 
+						if (! pdu.payload ) { return ; }
 						var reg = new RegExp("\\[32m");
 						var line = pdu.severityName +" SYSLOG "  + pdu.msgid +  " : "+ pdu.payload.replace(reg,"");
 						this.logStreamD.logger( new Date(pdu.timeStamp) + " " +line +"\n" );
@@ -537,12 +537,12 @@ nodefony.register("kernel", function(){
 	 	*	@method initializeContainer
          	*/
 		initializeContainer (){
-			this.set("kernel", this);	
+			this.set("kernel", this);
 		}
 
 		/**
 	 	*	@method getTemplate
-         	*/	
+         	*/
 		getTemplate (name){
 			return nodefony.templatings[name];
 		}
@@ -566,7 +566,7 @@ nodefony.register("kernel", function(){
 
 		/**
 	 	*	get bundle instance
-	 	*	@method getBundle 
+	 	*	@method getBundle
 	 	*	@param {String} name
          	*/
 		getBundle (name){
@@ -575,24 +575,24 @@ nodefony.register("kernel", function(){
 					return this.bundles[ns];
 				}
 			}
-			return null;	
+			return null;
 		}
 
 		/**
 	 	*	get all Bundles instance
-	 	*	@method getBundles 
+	 	*	@method getBundles
 	 	*	@param {String} name
          	*/
 		getBundles (name){
 			if (name){
 				return this.getBundle(name);
 			}
-			return this.bundles;	
+			return this.bundles;
 		}
-		
+
 		/**
 	 	*	get  Bundle name
-	 	*	@method getBundleName 
+	 	*	@method getBundleName
 	 	*	@param {String} str
          	*/
 		getBundleName (str){
@@ -602,9 +602,14 @@ nodefony.register("kernel", function(){
 			}
 			throw new Error("Bundle Name :" +str +" not exist") ;
 		}
-		
+
 		loadBundle (file){
 			try {
+				//console.log( require.main );
+				require.main.paths.unshift(file.dirName+"/node_modules");
+				//shell.cd(file.dirName);
+				//require('module').addPath( file.dirName+"/node_modules") // Module._initPaths();
+				//require('app-module-path').addPath(file.dirName+"/node_modules", require.main);
 				var name = this.getBundleName(file.name);
 				var Class = this.autoLoader.load(file.path);
 				if (Class) {
@@ -616,22 +621,25 @@ nodefony.register("kernel", function(){
 						}catch(e){
 							this.logger(e, "ERROR");
 							console.trace(e);
+							//shell.cd(this.rootDir);
 							throw e ;
 						}
 						if ( this.bundles[name].waitBundleReady ){
 							this.eventReadywait += 1 ;
 							this.bundles[name].listen(this,"onReady", waitingBundle);
-						}	
+						}
 					}
-				}	
+				}
 			}catch(e){
+				//shell.cd(this.rootDir);
 				throw e ;
 			}
+			//shell.cd(this.rootDir);
 		}
 
 		/**
-	 	*	register Bundle 
-	 	*	@method registerBundles 
+	 	*	register Bundle
+	 	*	@method registerBundles
 	 	*	@param {String} path
 	 	*	@param {Function} callbackFinish
          	*/
@@ -649,7 +657,7 @@ nodefony.register("kernel", function(){
 									this.loadBundle(file);
 								}catch(e){
 									this.logger(e, "ERROR");
-								}	
+								}
 							}
 						},
 						onFinish:callbackFinish || this.initializeBundles.bind(this)
@@ -663,22 +671,22 @@ nodefony.register("kernel", function(){
 					try {
 						return func.call(this);
 					}catch(e){
-						this.logger(e, "ERROR");	
+						this.logger(e, "ERROR");
 					}
- 				});	
+ 				});
 			}else{
 				try {
 					return func.apply(this);
 				}catch(e){
-					this.logger(e, "ERROR");	
+					this.logger(e, "ERROR");
 				}
 			}
 		}
 
 		/**
-	 	*	initialisation application bundle 
-	 	*	@method initApplication 
-         	*/	
+	 	*	initialisation application bundle
+	 	*	@method initApplication
+         	*/
 		initApplication (){
 			var App = class App extends nodefony.Bundle {
 				constructor (name, myKernel, myContainer){
@@ -714,13 +722,13 @@ nodefony.register("kernel", function(){
 		}
 
 		/**
-	 	*	initialisation  all bundles 
-	 	*	@method initializeBundles 
-         	*/	
+	 	*	initialisation  all bundles
+	 	*	@method initializeBundles
+         	*/
 		initializeBundles (){
 
 			this.app = this.initApplication();
-			
+
 			this.logger("\x1B[33m EVENT KERNEL onPostRegister\x1b[0m", "DEBUG");
 			this.fire("onPostRegister", this);
 
@@ -740,11 +748,11 @@ nodefony.register("kernel", function(){
 			this.booted = true ;
 			return;
 		}
-	
+
 		/**
-	 	*	 
-	 	*	@method readConfigDirectory 
-         	*/	
+	 	*
+	 	*	@method readConfigDirectory
+         	*/
 		readConfigDirectory (Path, callbackConfig){
 			var finder = new nodefony.finder({
 				path:Path,
@@ -756,8 +764,8 @@ nodefony.register("kernel", function(){
 		}
 
 		/**
-	 	*	 
-	 	*	@method readConfig 
+	 	*
+	 	*	@method readConfig
          	*/
 		readConfig (error, result, callback){
 			if (error){
@@ -781,7 +789,7 @@ nodefony.register("kernel", function(){
 								if ( router ){
 									router.reader(ele.path);
 								}else{
-									this.logger("Router service not ready to LOAD FILE :"+ele.path ,"WARNING", "SERVICE KERNEL READER");	
+									this.logger("Router service not ready to LOAD FILE :"+ele.path ,"WARNING", "SERVICE KERNEL READER");
 								}
 							}catch(e){
 								this.logger(util.inspect(e),"ERROR","BUNDLE "+this.name.toUpperCase()+" CONFIG ROUTING :"+ele.name);
@@ -804,7 +812,7 @@ nodefony.register("kernel", function(){
 									this.logger("SECURITY LOAD FILE :"+ele.path ,"DEBUG", "SERVICE KERNEL READER");
 									firewall.reader(ele.path);
 								}else{
-									this.logger("SECURITY LOAD FILE :"+ele.path +" BUT SERVICE NOT READY" ,"WARNING");	
+									this.logger("SECURITY LOAD FILE :"+ele.path +" BUT SERVICE NOT READY" ,"WARNING");
 								}
 							}catch(e){
 								this.logger(util.inspect(e),"ERROR","BUNDLE "+this.name.toUpperCase()+" CONFIG SECURITY :"+ele.name);
@@ -836,8 +844,8 @@ nodefony.register("kernel", function(){
 		}
 
 		/**
-	 	*	 
-	 	*	@method terminate 
+	 	*
+	 	*	@method terminate
          	*/
 		terminate (code){
 			if ( code === undefined ){
@@ -865,7 +873,7 @@ nodefony.register("kernel", function(){
 				this.logStream.close("Close error stream\n");
 			}
 			if (this.logStreamD){
-				this.logStreamD.close("Close debug stream\n");	
+				this.logStreamD.close("Close debug stream\n");
 			}
 			process.nextTick( () => {
 				this.logger("Kernel Life Cycle Terminate CODE : "+code,"INFO");

@@ -7,6 +7,7 @@
  */
 var Table = require('cli-table');
 const clc = require('cli-color');
+const spawn = require('child_process').spawn;
 
 nodefony.register("cliWorker", function(){
 
@@ -45,17 +46,17 @@ nodefony.register("cliWorker", function(){
 		if ( skeleton ){
 			buildSkeleton.call(this, skeleton, parse, params,(error, result) => {
 				if (error){
-					this.logger(error, "ERROR");	
+					this.logger(error, "ERROR");
 				}else{
 					try {
 						fs.writeFileSync(Path, result,{
 							mode:"777"
 						});
-						callback( new nodefony.fileClass(Path) ); 
+						callback( new nodefony.fileClass(Path) );
 					}catch(e){
 						throw e	;
-					}		
-				}					
+					}
+				}
 			});
 		}else{
 			var data = "/* generate by nodefony */";
@@ -63,7 +64,7 @@ nodefony.register("cliWorker", function(){
 				fs.writeFileSync(Path, data,{
 					mode:"777"
 				});
-				callback( new nodefony.fileClass(Path) ); 
+				callback( new nodefony.fileClass(Path) );
 			}catch(e){
 				throw e	;
 			}
@@ -76,7 +77,7 @@ nodefony.register("cliWorker", function(){
 			skelete = new nodefony.fileClass(skeleton);
 			if (skelete.type === "File"){
 				if (parse !== false){
-					obj.settings = this.twigOptions ; 
+					obj.settings = this.twigOptions ;
 					this.twig.renderFile(skelete.path, obj, callback);
 				}else{
 					callback(null, fs.readFileSync(skelete.path,{
@@ -100,7 +101,7 @@ nodefony.register("cliWorker", function(){
 			if ( fs.existsSync(Path) ){
 				return callback( fs.statSync(Path) );
 			}
-			throw new Error( Path +" don' exist") ;	
+			throw new Error( Path +" don' exist") ;
 		}catch(e){
 			this.logger("Create directory : "+ Path);
 			fs.mkdir(Path, (e) => {
@@ -116,14 +117,14 @@ nodefony.register("cliWorker", function(){
 	var parseAssetsBundles = function (table, Name){
 		var bundles = this.kernel.getBundles();
 		var result = null ;
-		let name =null; 
-		let srcpath =null; 
+		let name =null;
+		let srcpath =null;
 		for ( let bundle in bundles ){
 			if (Name && Name !== bundle){
 				continue;
 			}
 			try {
-				result = bundles[bundle].getPublicDirectory();	
+				result = bundles[bundle].getPublicDirectory();
 			}catch(e){
 				continue ;
 			}
@@ -137,7 +138,7 @@ nodefony.register("cliWorker", function(){
 						size = nodefony.niceBytes( this.getSizeDirectory(Srcpath, /^docs$|^tests|^node_modules|^assets$/ ) ) ;
 						sizeAssets = nodefony.niceBytes( this.getSizeDirectory(path.resolve (Srcpath, "assets") ) ) ;
 					}catch(e){
-						//this.logger(e, "ERROR");	
+						//this.logger(e, "ERROR");
 					}
 					table.push([
 						bundle,
@@ -148,18 +149,18 @@ nodefony.register("cliWorker", function(){
 					]);
 				});
 			}
-		}	
+		}
 		try {
 			this.logger("INSTALL LINK IN /web TOTAL SIZE : " + nodefony.niceBytes( this.getSizeDirectory( this.publicDirectory ,/^docs$|^tests|^node_modules|^assets$/ )) );
 		}catch(e){
-			this.logger(e, "WARNING");		
+			this.logger(e, "WARNING");
 		}
 	};
 
 	var niceBytes = function (x){
   		var units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
-    		    n = parseInt(x, 10) || 0, 
-    		    l = 0;        
+    		    n = parseInt(x, 10) || 0,
+    		    l = 0;
   		while(n >= 1024){
       			n = n/1024;
       			l++;
@@ -188,7 +189,7 @@ nodefony.register("cliWorker", function(){
 				views :this.kernel.rootDir,
 				'twig options':{
 					async: false,
-					cache: false 
+					cache: false
 				}
 			};
 		}
@@ -209,25 +210,62 @@ nodefony.register("cliWorker", function(){
 			return this.kernel.terminate(code);
 		}
 
+		spawn (command , args, options, close){
+			var cmd = null ;
+			try {
+				cmd = spawn(command , args, options);
+
+				cmd.stdout.on('data', (data) => {
+					this.logger(data.toString());
+				});
+				cmd.stderr.on('data', (data) => {
+					this.logger(data.toString(), "ERROR");
+				});
+				cmd.on('close', (code) => {
+					this.logger(`child process exited with code ${code}`);
+					if ( close ){
+						close( code);
+					}
+				});
+				cmd.on('error', (err) => {
+					this.logger(err, "ERROR");
+					this.terminate(1);
+				})
+			}catch(e){
+				this.logger(e, "ERROR");
+				throw e;
+			}
+			return cmd ;
+		}
+
 		displayTable ( datas, options ){
 			var table = new Table( nodefony.extend(true, defaultTableCli, options ) );
-				
+
 			if ( datas ) {
 				for ( var i= 0 ;  i < datas.length ; i++ ){
-					table.push( datas[i] )	
+					table.push( datas[i] )
 				}
-				console.log(table.toString()); 
+				console.log(table.toString());
 			}
 			return table ;
 		}
 
-		createDirectory (Path, mode, callback){
+		createDirectory (Path, mode, callback, force){
 			try {
 				fs.mkdirSync(Path, mode);
 				var file = new nodefony.fileClass(Path);
 				callback( file );
 				return file ;
 			}catch(e){
+				switch ( e.code ){
+					case "EEXIST" :
+						if ( force ){
+							var file = new nodefony.fileClass(Path);
+							callback( file );
+							return file ;
+						}
+					break;
+				}
 				throw e ;
 			}
 		}
@@ -235,10 +273,10 @@ nodefony.register("cliWorker", function(){
 		normalizeLog  (pdu){
 			var date = new Date(pdu.timeStamp) ;
 
-			if ( ! pdu.payload ){
+			if (  pdu.payload === "" || pdu.payload === undefined ){
 				console.log( date.toDateString() + " " + date.toLocaleTimeString() + " " + logSeverity( pdu.severityName ) + " " + green( pdu.msgid) + " " + " : " + "logger message empty !!!!");
 				console.trace(pdu);
-				return 	;	
+				return 	;
 			}
 			var message = pdu.payload;
 			switch( typeof message ){
@@ -258,7 +296,7 @@ nodefony.register("cliWorker", function(){
 			syslog.listenWithConditions(this,{
 				severity:{
 					data:"CRITIC,ERROR"
-				}		
+				}
 			},(pdu) => {
 				this.normalizeLog( pdu);
 			});
@@ -272,10 +310,10 @@ nodefony.register("cliWorker", function(){
 			syslog.listenWithConditions(this, {
 				severity:{
 					data:data
-				}		
+				}
 			},(pdu) => {
 				if ( pdu.msgid === "SERVER WELCOME"){
-					console.log(   '\x1b[34m' + "              \x1b[0m "+ pdu.payload);	
+					console.log(   '\x1b[34m' + "              \x1b[0m "+ pdu.payload);
 					return ;
 				}
 				this.normalizeLog( pdu);
@@ -293,7 +331,7 @@ nodefony.register("cliWorker", function(){
 				}catch(e){
 					//console.log("PASS CATCH")
 					//console.log(e ,"ERROR")
-				}			
+				}
 				//console.log(srcpath+" : "+ dstpath);
 				res = fs.symlink(srcpath, dstpath, (e) => {
     					if(!e || (e && e.code === 'EEXIST')){
@@ -335,7 +373,7 @@ nodefony.register("cliWorker", function(){
 				default:
 					throw  new Error ( dir+" is not a directory");
 			}
-				
+
 			var i, totalSizeBytes= 0;
 			var dirSize = null ;
 			for (i=0; i<files.length; i++) {
@@ -360,8 +398,8 @@ nodefony.register("cliWorker", function(){
 						dirSize = this.getSizeDirectory(fs.realpathSync(Path), exclude);
 						totalSizeBytes += dirSize;
 					break;
-				}	
-			}		
+				}
+			}
 			return totalSizeBytes ;
 		}
 
@@ -378,17 +416,17 @@ nodefony.register("cliWorker", function(){
 			})
 			createAssetDirectory.call(this, this.publicDirectory, () => {
 				parseAssetsBundles.call(this, table, name);
-				console.log(table.toString());	
+				console.log(table.toString());
 			});
 		}
-		
-		build (obj, parent){
+
+		build (obj, parent, force){
 			var child = null;
 			switch ( nodefony.typeOf(obj) ){
 				case "array" :
 					for (var i = 0 ; i < obj.length ; i++){
-						this.build(obj[i], parent);
-					}	
+						this.build(obj[i], parent, force);
+					}
 				break;
 				case "object" :
 					for (var ele in obj ){
@@ -401,8 +439,12 @@ nodefony.register("cliWorker", function(){
 								switch(value){
 									case "directory":
 										child = this.createDirectory(parent.path+"/"+name, "777", (ele) => {
-											this.logger("Create Directory :" + ele.name);
-										} );
+											if ( force ){
+												this.logger("Force Create Directory :" + ele.name  );
+											}else{
+												this.logger("Create Directory :" + ele.name );
+											}
+										} , force );
 									break;
 									case "file":
 										createFile.call(this, parent.path+"/"+name, obj.skeleton, obj.parse, obj.params, (ele) =>{
@@ -410,17 +452,22 @@ nodefony.register("cliWorker", function(){
 										});
 									break;
 									case "symlink":
-										fs.symlink ( parent.path+"/"+obj.params.source, parent.path+"/"+obj.params.dest , obj.params.type || "file", (ele) => {
+										if ( force ){
+											shell.ln('-sf', parent.path+"/"+obj.params.source , parent.path+"/"+obj.params.dest);
+										}else{
+											shell.ln('-s', parent.path+"/"+obj.params.source , parent.path+"/"+obj.params.dest);
+										}
+										this.logger("Create symbolic link :" + obj.name);
+										/*fs.symlink ( parent.path+"/"+obj.params.source, parent.path+"/"+obj.params.dest , obj.params.type || "file", (ele) => {
 											this.logger("Create symbolic link :" + ele.name);
-										} );
+										} );*/
 									break;
 								}
 							break;
 							case "childs" :
 								try {
-									//console.log(value)
 									this.build(value, child);
-								}catch (e){
+								}catch(e){
 									this.logger(e, "ERROR");
 								}
 							break;
@@ -435,4 +482,3 @@ nodefony.register("cliWorker", function(){
 	};
 	return cliWorker ;
 });
-

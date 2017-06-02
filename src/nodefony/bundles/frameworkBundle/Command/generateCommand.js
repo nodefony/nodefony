@@ -4,6 +4,9 @@
  *
  */
 
+const spawnSync = require('child_process').spawnSync;
+
+
 nodefony.registerCommand("generate",function(){
 
 	/*
@@ -11,7 +14,7 @@ nodefony.registerCommand("generate",function(){
  	 *
  	 */
 	var regBundle = /^(.*)Bundle$/;
-	var bundle = function(Path , name, type, location){
+	var bundle = function(Path , name, type, location, force){
 
 		var realName = null ;
 		var res = regBundle.exec(name);
@@ -62,12 +65,10 @@ nodefony.registerCommand("generate",function(){
 						params:param
 					}
 				]
-			}, Path );
+			}, Path , force);
 	};
 
-
 	var documentation = function(param, location){
-		
 		return {
 			name:"doc",
 			type:"directory",
@@ -80,9 +81,9 @@ nodefony.registerCommand("generate",function(){
 						type:"file",
 						skeleton:path.resolve( this.kernel.autoLoader.dirname,"bundles/frameworkBundle/Command/skeletons/readme.skeleton" ),
 						params:nodefony.extend(param, {
-							path:location 
+							path:location
 						})
-					}]	
+					}]
 				},
 				{
 					name:"Default",
@@ -96,7 +97,6 @@ nodefony.registerCommand("generate",function(){
 		};
 	};
 
-	
 	var Resources = function(name, type, location){
 		var Name = /(.*)Bundle/.exec(name)[1];
 		var param = {
@@ -112,7 +112,7 @@ nodefony.registerCommand("generate",function(){
 			domain:this.configKernel.system.domain,
 			location:location
 		};
-		
+
 		return {
 			name:"Resources",
 			type:"directory",
@@ -124,8 +124,8 @@ nodefony.registerCommand("generate",function(){
 						type:"file",
 						skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/config."+type+".skeleton" ),
 						params:param
-							
-						
+
+
 					},
 					routing.call(this, param, type)
 				]
@@ -146,10 +146,10 @@ nodefony.registerCommand("generate",function(){
 		}]
 	};
 
-		
 
-	var viewString = function(param){ 
-		
+
+	var viewString = function(param){
+
 		return "{% extends '/app/Resources/views/base.html.twig' %}\n\
 \n\
 {% block title %}Welcome {{kernel.name}}! {% endblock %}\n\
@@ -180,7 +180,7 @@ nodefony.registerCommand("generate",function(){
 \n\
 {% endblock %}";
 	};
-		
+
 	var views = function(directory, name, params){
 		var obj = {
 			name:directory,
@@ -196,7 +196,7 @@ nodefony.registerCommand("generate",function(){
 			parse:true,
 			skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/bundleView.skeleton" ),
 			params:	params || {}
-		}]; 
+		}];
 		obj.childs = file;
 		return obj;
 	};
@@ -206,7 +206,7 @@ nodefony.registerCommand("generate",function(){
 			name:"routing."+type,
 			type:"file",
 			skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/routing."+type+".skeleton" ),
-			params:obj	
+			params:obj
 		};
 		return file;
 	};
@@ -221,7 +221,7 @@ nodefony.registerCommand("generate",function(){
 					mode:"777"
 				});
 			}catch(e){
-				throw e;	
+				throw e;
 			}
 		});
 	};
@@ -231,13 +231,13 @@ nodefony.registerCommand("generate",function(){
 			name:"service."+type,
 			type:"file",
 			skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/service."+type+".skeleton" ),
-			params:obj	
+			params:obj
 		}];
 		return file;
 	};
 
 	service.addConfigService = function(){
-	
+
 	};
 
 	var manager = {
@@ -250,7 +250,7 @@ nodefony.registerCommand("generate",function(){
 	};
 
 	var tests = function(param){
-		
+
 		return {
 			name:"tests",
 			type:"directory",
@@ -383,7 +383,7 @@ nodefony.registerCommand("generate",function(){
 	 *	controller generator
 	 *
 	 */
-	
+
 	var controller = function(bundleName, directory, controllerName, viewDir, location){
 		var res = regController.exec(controllerName);
 		var realName = null ;
@@ -392,7 +392,7 @@ nodefony.registerCommand("generate",function(){
 		}else{
 			throw new Error("Bad controller name");
 		}
-	
+
 		var obj = {
 			name:directory,
 			type:"directory"
@@ -469,63 +469,45 @@ nodefony.registerCommand("generate",function(){
 	var generate = class generate extends nodefony.cliWorker {
 
 		constructor(container, command/*, options*/){
-			
+
 			super( "generate", container, container.get("notificationsCenter") );
 
 			this.config = this.container.getParameters("bundles.App");
 			this.configKernel = this.container.getParameters("kernel");
 			var arg = command[0].split(":");
 			switch ( arg[1] ){
-				case "bundle" : 
+				case "bundle" :
 					if ( command[1] ){
 						try {
-							this.generateBundle(command[1], command[2]);
+							if (  ! arg[2] ){
+								this.generateBundle(command[1], command[2]);
+								this.installBundle(command[1], command[2]);
+								this.terminate(0);
+								return ;
+							}else{
+								switch ( arg[2] ){
+									case "angular" :
+										this.generateAngularBundle(command[1], command[2]);
+										//var file = new nodefony.fileClass(command[2]);
+										//bundle.call(this, file, command[1], "yml", command[2])
+										//this.installBundle(command);
+										//this.terminate(1);
+										//return ;
+									break ;
+								}
+							}
 						}catch(e){
+							this.logger(e, "ERROR");
 							this.terminate(1);
 							return ;
 						}
 					}else{
 						this.showHelp();
 						this.terminate(1);
-					}
-
-					try {
-						var name = command[1].match(regBundle)[1];
-						var json = this.kernel.readGeneratedConfig();
-						var bundleFile =  command[2]+"/"+command[1]+"/"+command[1]+".js" ;
-						var bundlePath = command[2]+"/"+command[1] ;
-						if (json){
-							if ( json.system && json.system.bundles ){
-								json.system.bundles[ name ]= bundlePath ;
-							}else{
-								if ( json.system ){
-									json.system.bundles = {};
-								}else{
-									json.system ={
-										bundles:{}	
-									};	
-								}
-								json.system.bundles[ name ] = bundlePath ;
-							}
-						}else{
-							var json = {
-								system:{
-									bundles:{}
-								}
-							} ;
-							json.system.bundles[ name ] = bundlePath ;
-						}
-						fs.writeFileSync( this.kernel.generateConfigPath, yaml.safeDump(json),{encoding:'utf8'} )
-						var file = new nodefony.fileClass( bundleFile );
-						this.kernel.loadBundle(file);
-						this.assetInstall(name);
-					}catch(e){
-						this.logger(e, "ERROR");
-						this.terminate(1);
 						return ;
 					}
 				break;
-				case "controller" : 
+				case "controller" :
 					switch (command.length){
 						case 1:
 							this.showHelp();
@@ -543,19 +525,17 @@ nodefony.registerCommand("generate",function(){
 						break;
 					}
 				break;
-				case "command" : 
-					console.log("GENERATE command");
+				case "command" :
 					try{
-						this.generateCommand(command[1], command[2]);	
+						this.generateCommand(command[1], command[2]);
 					}catch(e){
 						this.terminate(1);
 						return ;
 					}
 				break;
-				case "service" : 
-					console.log("GENERATE service");
-					try { 
-						this.generateService();	
+				case "service" :
+					try {
+						this.generateService();
 					}catch(e){
 						this.terminate(1);
 						return ;
@@ -563,12 +543,65 @@ nodefony.registerCommand("generate",function(){
 				break;
 				default:
 					this.showHelp();
+					this.terminate(0);
 			}
-			this.terminate(0);
-
+			//this.terminate(0);
 		}
 
-		generateBundle (name, Path){	
+		installBundle (bundleName, Path){
+			try {
+				var name = bundleName.match(regBundle)[1];
+				var json = this.kernel.readGeneratedConfig();
+				var bundleFile =  Path+"/"+bundleName+"/"+bundleName+".js" ;
+				var bundlePath = Path+"/"+bundleName ;
+				if (json){
+					if ( json.system && json.system.bundles ){
+						json.system.bundles[ name ]= bundlePath ;
+					}else{
+						if ( json.system ){
+							json.system.bundles = {};
+						}else{
+							json.system ={
+								bundles:{}
+							};
+						}
+						json.system.bundles[ name ] = bundlePath ;
+					}
+				}else{
+					var json = {
+						system:{
+							bundles:{}
+						}
+					} ;
+					json.system.bundles[ name ] = bundlePath ;
+				}
+				fs.writeFileSync( this.kernel.generateConfigPath, yaml.safeDump(json),{encoding:'utf8'} )
+				var file = new nodefony.fileClass( bundleFile );
+				this.kernel.loadBundle(file);
+				this.assetInstall(name);
+			}catch(e){
+				throw e ;
+			}
+		}
+
+		spawnSync (command , args, options){
+			try {
+				var cmd = spawnSync(command, args, options);
+				if ( cmd.output[2].toString() ){
+					this.logger( cmd.output[2].toString() ,"ERROR");
+				}else{
+					if ( cmd.output[1].toString() ){
+						this.logger( cmd.output[1].toString() );
+					}
+				}
+			}catch(e){
+				this.logger(e, "ERROR");
+				throw e;
+			}
+			return cmd ;
+		}
+
+		generateBundle (name, Path){
 			this.logger("GENERATE bundle : " + name +" LOCATION : " + Path);
 			try {
 				var file = new nodefony.fileClass(Path);
@@ -576,6 +609,56 @@ nodefony.registerCommand("generate",function(){
 			}catch (e){
 				this.logger(e, "ERROR");
 				throw e ;
+			}
+		}
+
+		generateAngularBundle (name, Path){
+			this.logger("GENERATE Angular Bundle : " + name +" LOCATION : " + Path);
+			//this.generateBundle(name, Path);
+			var ng = process.cwd()+'/node_modules/.bin/ng' ;
+			var realPath = process.cwd() + "/" + Path  ;
+			var cwd =  "/tmp"   ;
+			process.env.NODE_ENV = "development";
+			try {
+					this.logger ("install angular cli  ng new -v -sg "+ name );
+					this.spawn(ng, ['new', '-v', '-sg', name], {
+						cwd:cwd,
+					}, ( code ) => {
+						if ( code === 1 ){
+							throw new Error ("nstall angular cli  ng new error");
+						}
+						this.logger (" Install webpack config angular ng eject");
+						this.spawn("ng", ["eject"], {
+							cwd:cwd+"/"+name,
+							//shell:true
+						} ,(code) => {
+							if ( code === 1 ){
+								throw new Error ("ng eject error");
+							}
+							shell.mv( cwd+"/"+name, realPath+"/");
+							this.logger (" nmp install ");
+							this.spawn("npm", ["install"], {
+								cwd:realPath+"/"+name,
+								shell:true
+							} , (code) => {
+								if ( code === 1 ){
+									throw new Error ("nmp install error");
+								}
+								try {
+									var file = new nodefony.fileClass(Path);
+									bundle.call(this, file, name, "yml", Path, true);
+									this.installBundle(name, Path);
+									this.terminate(code);
+								}catch(e){
+									throw e;
+								}
+							});
+
+						});
+					} );
+			}catch(e){
+				this.logger(e, "ERROR");
+				this.terminate(1);
 			}
 		}
 
@@ -588,13 +671,9 @@ nodefony.registerCommand("generate",function(){
 				this.logger(e, "ERROR");
 				throw e ;
 			}
-
-		
 		}
 
-		
 		generateCommand (name, Path){
-			
 			this.logger("GENERATE Command : " + name +" LOCATION : " + Path+"Command");
 			try {
 				var file = new nodefony.fileClass( Path);
@@ -603,20 +682,18 @@ nodefony.registerCommand("generate",function(){
 				this.logger(e, "ERROR");
 				throw e ;
 			}
-		
 		}
 
 		generateService (){
-		
+
 		}
-
 	};
-
 
 	return {
 		name:"generate",
 		commands:{
 			bundle:["generate:bundle nameBundle path" ,"Generate a Bundle directory in path directory Example : ./console generate:bundle myprojectBundle ./src/bundles"],
+			bundleAngular:["generate:bundle:angular nameBundle path" ,"Generate a Bundle directory in path directory Example : ./console generate:bundle:angular myprojectBundle ./src/bundles"],
 			controller:["generate:controller  nameController path" ,"Generate a controller js file in bundle path Example : ./console generate:controller myController src/nodefony/bundles/myBundle"],
 			command:["generate:command nameCommand path" ,"Generate a command js file in bundle path"],
 			//service:["generate:service nameService path" ,"Generate a service js file in bundle path"]
@@ -624,5 +701,3 @@ nodefony.registerCommand("generate",function(){
 		worker:generate
 	};
 });
-
-

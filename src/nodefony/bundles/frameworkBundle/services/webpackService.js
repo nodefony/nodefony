@@ -185,6 +185,56 @@ nodefony.registerService("webpack", function(){
 			}
 		}
 
+		loadConfigFile (file, Path){
+			try {
+				if ( ! ( file instanceof nodefony.fileClass ) ){
+					file = new nodefony.fileClass(file);
+				}
+			}catch(e){
+				throw e ;
+			}
+			try {
+				shell.cd(Path);
+				var config = require(file.path );
+				config.output.path = path.resolve("Resources","public","dist") ;
+				console.log(config.output.path)
+				var compiler =  webpack( config );
+				if ( this.kernel.type === "CONSOLE" ){
+					return  compiler;
+				}
+			}catch(e){
+				shell.cd(this.kernel.rootDir);
+				throw e ;
+			}
+			try {
+				var basename = path.basename(Path);
+				if ( true ){
+					this.logger( "WEBPACK BUNDLE : "+ basename +" WATCHING ENTRY POINT : \n" + util.inspect(config.entry) , "DEBUG" );
+					var watching = compiler.watch({
+						/* watchOptions */
+					}, (err, stats) => {
+						this.loggerStat(err, stats, basename, true);
+					});
+					this.kernel.listen(this ,"onTerminate", ( ) => {
+						watching.close(() => {
+							this.logger("Watching Ended  " + config.context +" : "+util.inspect(config.entry) , "INFO");
+						});
+					});
+				}else{
+					if ( (this.kernel.environment === "dev" ) && (basename in this.kernel.bundlesCore) && ( ! this.kernel.settings.system.core ) ){
+						return compiler ;
+					}
+					this.logger( "WEBPACK BUNDLE : "+ basename +" COMPILE ENTRY POINT : \n" + util.inspect(config.entry)  );
+					this.runCompiler(compiler, basename);
+				}
+			}catch(e){
+				shell.cd(this.kernel.rootDir);
+				throw e ;
+			}
+			shell.cd(this.kernel.rootDir);
+			return compiler ;
+		}
+
 		loadConfig( config , Path ){
 
 			var basename = path.basename(Path);

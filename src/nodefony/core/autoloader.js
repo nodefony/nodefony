@@ -4,12 +4,13 @@ const path = require("path");
 
 module.exports = function(){
 
-	var self = this;
 	// copy require not present see load runInThisContext
+	var self = this;
 	self.require = require;
 	self.module = module ;
 	self.exports = exports ;
 	self.__dirname = __dirname ;
+	self.__filename = __filename ;
 
 	/**
 	 *  Nodefony autoloader
@@ -25,6 +26,8 @@ module.exports = function(){
 	var autoload = class autoload {
 
 		constructor() {
+			this.timeout = 20000 ;
+			this.displayError = true ;
 			this.dirname = path.resolve(  __dirname, "../" );
 			this.load( path.resolve( this.dirname, "core", "core.js") );
 			this.load( path.resolve( this.dirname, "core", "notificationsCenter.js") );
@@ -48,16 +51,16 @@ module.exports = function(){
 				case "prod":
 				case "PROD":
 					this.environment = "prod";
-					this.dataCache = true;	
+					this.dataCache = true;
 				break;
 				case "dev":
 				case "DEV":
 					this.environment = "dev";
-					this.dataCache = false;	
+					this.dataCache = false;
 				break;
 				default:
 					this.environment = "prod";
-					this.dataCache = true;	
+					this.dataCache = true;
 			}
 		}
 
@@ -72,19 +75,20 @@ module.exports = function(){
 				this.logger( file, "WARNING","AUTOLOADER ALREADY LOADED ADD FORCE TO RELOAD ");
 				return cache[file].runInThisContext({
 					filename:file,
-					displayErrors:true
+					timeout:this.timeout,
+					displayErrors:this.displayError
 				});
 			}
 			if(fs.existsSync(file)){
 				try {
-					var txt = null ; 
+					var txt = null ;
 					if ( vm.Script ){
 						txt = fs.readFileSync(file, {encoding: 'utf8'});
 						cache[file] =  new vm.Script(txt, {
 							filename:file,
-							displayErrors:true,
-							timeout:10000,
-							produceCachedData:false
+							displayErrors:this.displayError,
+							timeout:this.timeout,
+							produceCachedData:this.dataCache
 						});
 					}else{
 						txt = fs.readFileSync(file, {encoding: 'utf8'});
@@ -93,17 +97,19 @@ module.exports = function(){
 					if ( force ){
 						if (this.syslog) {this.logger(file, "WARNING","AUTOLOADER RELOAD FORCE");}
 					}else{
-						//if (this.syslog){ this.logger(file, "DEBUG","AUTOLOADER LOAD");}	
+						//if (this.syslog){ this.logger(file, "DEBUG","AUTOLOADER LOAD");}
 					}
+					self.__dirname = path.dirname(file);
+					self.__filename = file;
 					return cache[file].runInThisContext({
 						filename:file,
-					        timeout:10000,
-						displayErrors:true
+					    timeout:this.timeout,
+						displayErrors:this.displayError
 					});
 				}catch(e){
 					console.trace(e);
 					throw e;
-				}	
+				}
 			}else{
 				throw new Error("AUTOLOADER file :"+file+" not exist !!!!");
 			}
@@ -116,7 +122,7 @@ module.exports = function(){
 		}
 
 		close(){
-			this.deleteCache();	
+			this.deleteCache();
 		}
 
 		/*run (file, force){
@@ -161,7 +167,7 @@ module.exports = function(){
 				}
 			};
 			if ( exclude ){
-				settings.exclude = exclude ;	
+				settings.exclude = exclude ;
 			}
 			if ( nodefony.finder ){
 				try {
