@@ -196,8 +196,9 @@ nodefony.registerService("webpack", function(){
 			try {
 				shell.cd(Path);
 				var config = require(file.path );
-				config.output.path = path.resolve("Resources","public","dist") ;
-				console.log(config.output.path)
+				//config.output.path = path.resolve("Resources","public","dist") ;
+				config.output.path = this.kernel.publicPath ;
+				//console.log(config.output.path)
 				var compiler =  webpack( config );
 				if ( this.kernel.type === "CONSOLE" ){
 					return  compiler;
