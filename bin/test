@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+const path = require("path");
+
+
+var autoloader = null ;
+// AUTOLOADER
+autoloader = require(path.resolve( "src", "nodefony", "core", "autoloader"));	
+
+/*
+ *	CLI WORKER 
+ */
+var worker = new nodefony.cliWorker("spawn") 
+worker.listenSyslog(null, true)
+worker.logger(" welcome ");
+
+
+var args = [];
+var myCmd = worker.spawn("./bin/my.sh", args);
+process.stdin.pipe(myCmd.stdin) ;
+

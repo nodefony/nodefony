@@ -13,6 +13,9 @@ try {
 }
 autoloader.load( path.resolve(".", "app", "appKernel.js" ) );
 
+process.env.BABEL_ENV = 'production';
+process.env.NODE_ENV = 'production';
+
 /*
  *
  * NODEFONY FRAMEWORK START WITH PM2

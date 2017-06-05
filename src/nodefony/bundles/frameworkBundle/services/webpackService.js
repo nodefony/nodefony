@@ -196,9 +196,8 @@ nodefony.registerService("webpack", function(){
 			try {
 				shell.cd(Path);
 				var config = require(file.path );
-				//config.output.path = path.resolve("Resources","public","dist") ;
-				config.output.path = this.kernel.publicPath ;
-				//console.log(config.output.path)
+				config.output.path = path.resolve("Resources", "public", "dist") ;
+				config.output.publicPath = path.resolve( "/", path.basename(file.dirName), "dist") ;
 				var compiler =  webpack( config );
 				if ( this.kernel.type === "CONSOLE" ){
 					return  compiler;
@@ -207,9 +206,16 @@ nodefony.registerService("webpack", function(){
 				shell.cd(this.kernel.rootDir);
 				throw e ;
 			}
+
+			if ( this.production ){
+				var watch = false ;
+			}else{
+				var watch = true ;
+			}
+
 			try {
 				var basename = path.basename(Path);
-				if ( true ){
+				if ( watch ){
 					this.logger( "WEBPACK BUNDLE : "+ basename +" WATCHING ENTRY POINT : \n" + util.inspect(config.entry) , "DEBUG" );
 					var watching = compiler.watch({
 						/* watchOptions */

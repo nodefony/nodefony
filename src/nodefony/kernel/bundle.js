@@ -70,7 +70,8 @@ nodefony.register("Bundle", function(){
 			super( name, container );
 
 			this.logger("\x1b[36m REGISTER BUNDLE : "+this.name+"   \x1b[0m","DEBUG",this.kernel.cli.clc.magenta("KERNEL") );
-			this.bundleName = path.basename(this.path);;
+			this.bundleName = path.basename(this.path);
+			this.publicPath = path.resolve( this.path, "Resources", "public");
 			this.environment = this.kernel.environment;
 			this.waitBundleReady = false ;
 			this.locale = this.kernel.settings.system.locale ;
@@ -140,14 +141,16 @@ nodefony.register("Bundle", function(){
 			});
 
 			// WATCHERS
-			if ( this.kernel.environment === "dev" && this.settings.watch ){
+			if ( this.kernel.environment === "dev" && this.settings.watch && this.kernel.type !== "CONSOLE" ){
 				this.initWatchers();
 			}
 
 			// WEBPACK SERVICE
 			this.webpackService = this.get("webpack");
 			this.webpackCompiler = null ;
-            this.findWebPackConfig()
+			if( this.kernel.type !== "CONSOLE"){
+				this.findWebPackConfig()
+			}
 
 			this.fire( "onRegister", this);
 		}
@@ -365,12 +368,12 @@ nodefony.register("Bundle", function(){
 			});
 		}
 
-        findWebPackConfig (){
-            var res = this.finder.result.getFile("webpack.config.js", true) ;
-            if ( res ){
-                this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this.path );
-            }
-        }
+        	findWebPackConfig (){
+            		var res = this.finder.result.getFile("webpack.config.js", true) ;
+            		if ( res ){
+                		this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this.path );
+            		}
+        	}
 
 		findControllerFiles ( result ){
 			if ( ! result ){

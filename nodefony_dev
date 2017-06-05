@@ -39,6 +39,8 @@ var debug = true ;
 if ( process.env["NODEFONY_DEBUG"] ){
 	debug = process.env["NODEFONY_DEBUG"] ;
 }
+process.env.BABEL_ENV = 'development';
+process.env.NODE_ENV = 'development';
 
 process.env["MODE_START"] = "NODEFONY_DEV" ;
 

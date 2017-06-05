@@ -4,17 +4,103 @@
  *
  */
 
-const spawnSync = require('child_process').spawnSync;
-
-
 nodefony.registerCommand("generate",function(){
 
 	/*
  	 *	Bundle generator
  	 *
  	 */
-	var regBundle = /^(.*)Bundle$/;
-	var bundle = function(Path , name, type, location, force){
+	var regBundle = /^(.*)[Bb]undle$/;
+	var regController = /^(.*)Controller$/;
+
+	var angularBundle = function(Path , name, type, location, force){
+		var realName = null ;
+		var res = regBundle.exec(name);
+		if ( res ){
+			realName = res[1] ;
+		}else{
+			throw new Error("Bad bundle name");
+		}
+		var param = {
+			bundleName: name,
+			name: realName,
+			module:this.config.App.projectName,
+			projectName:this.config.App.projectName,
+			authorName:this.config.App.authorName,
+			authorEmail:this.config.App.authorMail,
+			projectYear:this.config.App.projectYear,
+			projectYearNow:	new Date().getFullYear()
+		};
+
+		return this.build( {
+			name:name,
+			type:"directory",
+			childs:[
+				Command,
+				controller.call(this, name, "controller", "defaultController", null, location, path.resolve("src", "nodefony", "bundles", "frameworkBundle", "Command", "skeletons", "controllerAngularClass.skeleton") ),
+				manager,
+				tests.call(this, param),
+				Resources.call(this, name, type, location),
+				documentation.call(this, param, location),
+				core,
+				entity,
+		       	{
+					name:name+".js",
+					type:"file",
+					skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles", "frameworkBundle", "Command", "skeletons", "bundleClass.skeleton"),
+					params:param
+		       	},{
+					name:"readme.md",
+					type:"file"
+		       	}]
+		}, Path , force);
+	};
+
+	var reactBundle = function(Path , name, type, location, force){
+		var realName = null ;
+		var res = regBundle.exec(name);
+		if ( res ){
+			realName = res[1] ;
+		}else{
+			throw new Error("Bad bundle name");
+		}
+		var param = {
+			bundleName: name,
+			name: realName,
+			module:this.config.App.projectName,
+			projectName:this.config.App.projectName,
+			authorName:this.config.App.authorName,
+			authorEmail:this.config.App.authorMail,
+			projectYear:this.config.App.projectYear,
+			projectYearNow:	new Date().getFullYear()
+		};
+
+		return this.build( {
+			name:name,
+			type:"directory",
+			childs:[
+				Command,
+				controller.call(this, name, "controller", "defaultController", null, location, path.resolve("src", "nodefony", "bundles", "frameworkBundle", "Command", "skeletons", "controllerAngularClass.skeleton") ),
+				manager,
+				tests.call(this, param),
+				Resources.call(this, name, type, location),
+				documentation.call(this, param, location),
+				core,
+				entity,
+		       	{
+					name:name+".js",
+					type:"file",
+					skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles", "frameworkBundle", "Command", "skeletons", "bundleClass.skeleton"),
+					params:param
+		       	},{
+					name:"readme.md",
+					type:"file"
+		       	}]
+		}, Path , force);
+
+	}
+
+	var nodefonyBundle = function(Path , name, type, location, force){
 
 		var realName = null ;
 		var res = regBundle.exec(name);
@@ -39,7 +125,7 @@ nodefony.registerCommand("generate",function(){
 				type:"directory",
 				childs:[
 					Command,
-					controller.call(this, name, "controller" ,"defaultController",null,location),
+					controller.call(this, name, "controller" , "defaultController", null, location),
 					manager,
 					tests.call(this, param),
 					Resources.call(this, name, type, location),
@@ -49,7 +135,7 @@ nodefony.registerCommand("generate",function(){
 					{
 						name:name+".js",
 						type:"file",
-						skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/bundleClass.skeleton"),
+						skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles","frameworkBundle","Command","skeletons","bundleClass.skeleton"),
 						params:param
 					},{
 						name:"readme.md",
@@ -61,7 +147,7 @@ nodefony.registerCommand("generate",function(){
 					},{
 						name:"package.json",
 						type:"file",
-						skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/package.skeleton"),
+						skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles","frameworkBundle","Command","skeletons","package.skeleton"),
 						params:param
 					}
 				]
@@ -384,7 +470,7 @@ nodefony.registerCommand("generate",function(){
 	 *
 	 */
 
-	var controller = function(bundleName, directory, controllerName, viewDir, location){
+	var controller = function(bundleName, directory, controllerName, viewDir, location, skeleton){
 		var res = regController.exec(controllerName);
 		var realName = null ;
 		if ( res ){
@@ -397,11 +483,20 @@ nodefony.registerCommand("generate",function(){
 			name:directory,
 			type:"directory"
 		};
-		var nameBundle = /^(.*)Bundle$/.exec(bundleName)[1];
+		var nameBundle = null ;
+		try {
+			var nameBundle = regBundle.exec(bundleName)[1];
+		}catch(e){
+			throw e ;
+		}
+
+		if ( ! skeleton ){
+			skeleton = "bundles/frameworkBundle/Command/skeletons/controllerClass.skeleton" ;	
+		}
 		var file  = [{
 			name:controllerName+".js",
 			type:"file",
-			skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/controllerClass.skeleton"),
+			skeleton:path.resolve( this.kernel.autoLoader.dirname, skeleton ),
 			params:{
 				bundleName: bundleName,
 				smallName:nameBundle,
@@ -461,7 +556,6 @@ nodefony.registerCommand("generate",function(){
 		}
 	};
 
-	var regController = /^(.*)Controller$/;
 
 	/*
  	 *
@@ -488,12 +582,10 @@ nodefony.registerCommand("generate",function(){
 								switch ( arg[2] ){
 									case "angular" :
 										this.generateAngularBundle(command[1], command[2]);
-										//var file = new nodefony.fileClass(command[2]);
-										//bundle.call(this, file, command[1], "yml", command[2])
-										//this.installBundle(command);
-										//this.terminate(1);
-										//return ;
 									break ;
+									case "react" :
+										this.generateReactBundle(command[1], command[2]);
+									break;
 								}
 							}
 						}catch(e){
@@ -584,78 +676,130 @@ nodefony.registerCommand("generate",function(){
 			}
 		}
 
-		spawnSync (command , args, options){
-			try {
-				var cmd = spawnSync(command, args, options);
-				if ( cmd.output[2].toString() ){
-					this.logger( cmd.output[2].toString() ,"ERROR");
-				}else{
-					if ( cmd.output[1].toString() ){
-						this.logger( cmd.output[1].toString() );
-					}
-				}
-			}catch(e){
-				this.logger(e, "ERROR");
-				throw e;
-			}
-			return cmd ;
-		}
-
 		generateBundle (name, Path){
-			this.logger("GENERATE bundle : " + name +" LOCATION : " + Path);
+			this.logger("GENERATE bundle : " + name +" LOCATION : " + path.resolve(Path) );
 			try {
-				var file = new nodefony.fileClass(Path);
-				return bundle.call(this, file, name, "yml", Path);
+				var file = new nodefony.fileClass(path.resolve(Path));
+				return nodefonyBundle.call(this, file, name, "yml", path.resolve(Path));
 			}catch (e){
 				this.logger(e, "ERROR");
 				throw e ;
 			}
 		}
 
-		generateAngularBundle (name, Path){
-			this.logger("GENERATE Angular Bundle : " + name +" LOCATION : " + Path);
-			//this.generateBundle(name, Path);
-			var ng = process.cwd()+'/node_modules/.bin/ng' ;
-			var realPath = process.cwd() + "/" + Path  ;
-			var cwd =  "/tmp"   ;
+		generateReactBundle (name, Path ){
+			this.logger("GENERATE React Bundle : " + name +" LOCATION : " +  path.resolve(Path));
+			var react = process.cwd()+'/node_modules/.bin/create-react-app' ;
+			var realPath = path.resolve( this.kernel.rootDir ,  path.resolve(Path)  );
+			var cwd = path.resolve( Path) ;
 			process.env.NODE_ENV = "development";
+			var realName = null ;
+			var res = regBundle.exec(name);
+			if ( res ){
+				realName = res[1] ;
+			}else{
+				throw new Error("Bad bundle name");
+			}
+			var args = null ;
 			try {
-					this.logger ("install angular cli  ng new -v -sg "+ name );
-					this.spawn(ng, ['new', '-v', '-sg', name], {
+				args = [name] ;
+				this.logger ("install react cli  create-react-app "+ args.join(" ") );
+				var create = this.spawn(react, args, {
+					cwd:cwd,
+					stdin: 'pipe',
+					stdio: ['pipe', 'pipe', 'pipe'], 
+					shell: true
+				}, ( code ) => {
+					if ( code === 1 ){
+						throw new Error ("install react cli create-react-app  new error : " +code);
+					}
+					args = ['run', 'eject', "-f"];
+					this.logger (" React eject : npm " + args.join(" ") );
+					var eject = this.spawn("npm", args, {
+						cwd: path.resolve( cwd, name),
+						stdin: 'pipe',
+						stdio: ['pipe', 'pipe', 'pipe'], 
+						shell: true
+					}, ( code ) => {
+						try {
+							var file = new nodefony.fileClass(Path);
+							reactBundle.call(this, file, name, "yml", path.resolve(Path), true);
+							this.installBundle(name, Path);
+							this.terminate(code);
+						}catch(e){
+							throw e;
+						}
+					});
+					process.stdin.pipe(eject.stdin) ;
+				});
+				process.stdin.pipe(create.stdin) ;
+
+			}catch(e){
+				this.logger(e, "ERROR");
+				this.terminate(1);
+			}
+
+		}
+
+		generateAngularBundle (name, Path){
+			this.logger("GENERATE Angular Bundle : " + name +" LOCATION : " +  path.resolve(Path));
+			var ng = process.cwd()+'/node_modules/.bin/ng' ;
+			var realPath = path.resolve( this.kernel.rootDir ,  path.resolve(Path)  );
+			var cwd = path.resolve( "/", "tmp") ;
+			process.env.NODE_ENV = "development";
+			var realName = null ;
+			var res = regBundle.exec(name);
+			if ( res ){
+				realName = res[1] ;
+			}else{
+				throw new Error("Bad bundle name");
+			}
+			var args = null ;
+			try {
+					args = ['new', '-v', '-sg','--routing', name] ;
+					this.logger ("install angular cli ng"+ args.join(" ") );
+					this.spawn(ng, args, {
 						cwd:cwd,
 					}, ( code ) => {
 						if ( code === 1 ){
-							throw new Error ("nstall angular cli  ng new error");
+							throw new Error ("nstall angular cli  ng new error : " +code);
 						}
-						this.logger (" Install webpack config angular ng eject");
-						this.spawn("ng", ["eject"], {
-							cwd:cwd+"/"+name,
-							//shell:true
-						} ,(code) => {
+						args = ['generate', 'module', '--spec', '--routing', '-m', 'app', realName ];
+						this.logger (" Generate Angular module : ng " + args.join(" ") );
+						this.spawn(ng, args, {
+							cwd: path.resolve( cwd, name)
+						}, ( code ) => {
 							if ( code === 1 ){
-								throw new Error ("ng eject error");
+								throw new Error ("ng generate module error code : " +code);
 							}
-							shell.mv( cwd+"/"+name, realPath+"/");
-							this.logger (" nmp install ");
-							this.spawn("npm", ["install"], {
-								cwd:realPath+"/"+name,
-								shell:true
-							} , (code) => {
+							args = ["eject"] ;
+							this.logger (" eject  webpack config angular : ng " + args.join(" "));
+							this.spawn(ng, args, {
+								cwd: path.resolve( cwd, name)
+							} ,(code) => {
 								if ( code === 1 ){
-									throw new Error ("nmp install error");
+									throw new Error ("ng eject error : " +code);
 								}
-								try {
-									var file = new nodefony.fileClass(Path);
-									bundle.call(this, file, name, "yml", Path, true);
-									this.installBundle(name, Path);
-									this.terminate(code);
-								}catch(e){
-									throw e;
-								}
+								shell.mv( cwd+"/"+name, realPath+"/");
+								this.logger (" npm install ");
+								this.spawn("npm", ["install"], {
+									cwd:path.resolve( realPath, name)
+								} , (code) => {
+									if ( code === 1 ){
+										throw new Error ("nmp install error : " +code);
+									}
+									try {
+										var file = new nodefony.fileClass(Path);
+										angularBundle.call(this, file, name, "yml", path.resolve(Path), true);
+										this.installBundle(name, Path);
+										this.terminate(code);
+									}catch(e){
+										throw e;
+									}
+								});
 							});
-
 						});
-					} );
+					});
 			}catch(e){
 				this.logger(e, "ERROR");
 				this.terminate(1);
@@ -692,9 +836,10 @@ nodefony.registerCommand("generate",function(){
 	return {
 		name:"generate",
 		commands:{
-			bundle:["generate:bundle nameBundle path" ,"Generate a Bundle directory in path directory Example : ./console generate:bundle myprojectBundle ./src/bundles"],
-			bundleAngular:["generate:bundle:angular nameBundle path" ,"Generate a Bundle directory in path directory Example : ./console generate:bundle:angular myprojectBundle ./src/bundles"],
-			controller:["generate:controller  nameController path" ,"Generate a controller js file in bundle path Example : ./console generate:controller myController src/nodefony/bundles/myBundle"],
+			bundle:["generate:bundle nameBundle path" ,"Generate a nodefony Bundle  Example : ./console generate:bundle myBundle ./src/bundles"],
+			bundleAngular:["generate:bundle:angular nameBundle path" ,"Generate a Angular Bundle  Example : ./console generate:bundle:angular myBundle ./src/bundles"],
+			bundleReact:["generate:bundle:react nameBundle path" ,"Generate a React Bundle Example : ./console generate:bundle:react myBundle ./src/bundles"],
+			controller:["generate:controller  nameController bundlePath" ,"Generate a controller Example : ./console generate:controller myController ./src/bundles/myBundle"],
 			command:["generate:command nameCommand path" ,"Generate a command js file in bundle path"],
 			//service:["generate:service nameService path" ,"Generate a service js file in bundle path"]
 		},

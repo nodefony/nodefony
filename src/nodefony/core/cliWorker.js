@@ -8,6 +8,8 @@
 var Table = require('cli-table');
 const clc = require('cli-color');
 const spawn = require('child_process').spawn;
+const spawnSync = require('child_process').spawnSync;
+
 
 nodefony.register("cliWorker", function(){
 
@@ -182,16 +184,22 @@ nodefony.register("cliWorker", function(){
 
 		constructor (name, container, notificationsCenter){
 			super( name, container, notificationsCenter);
-			this.publicDirectory = this.kernel.rootDir+"/web/";
-			this.twig = twig ;
+			if ( this.kernel ){
+				this.publicDirectory = this.kernel.rootDir+"/web/";
+			} else {
+				
+			}
 			this.clc = clc ;
-			this.twigOptions = {
-				views :this.kernel.rootDir,
-				'twig options':{
-					async: false,
-					cache: false
-				}
-			};
+			if ( this.twig ){
+				this.twig = twig ;
+				this.twigOptions = {
+					views :this.kernel.rootDir,
+					'twig options':{
+						async: false,
+						cache: false
+					}
+				};
+			}
 		}
 
 		reset (){
@@ -207,7 +215,10 @@ nodefony.register("cliWorker", function(){
 		}
 
 		terminate (code){
-			return this.kernel.terminate(code);
+			if ( this.kernel ) {
+				return this.kernel.terminate(code);
+			}
+			process.exit(code);
 		}
 
 		spawn (command , args, options, close){
@@ -231,6 +242,23 @@ nodefony.register("cliWorker", function(){
 					this.logger(err, "ERROR");
 					this.terminate(1);
 				})
+			}catch(e){
+				this.logger(e, "ERROR");
+				throw e;
+			}
+			return cmd ;
+		}
+
+		spawnSync (command , args, options){
+			try {
+				var cmd = spawnSync(command, args, options);
+				if ( cmd.output[2].toString() ){
+					this.logger( cmd.output[2].toString() ,"ERROR");
+				}else{
+					if ( cmd.output[1].toString() ){
+						this.logger( cmd.output[1].toString() );
+					}
+				}
 			}catch(e){
 				this.logger(e, "ERROR");
 				throw e;
@@ -292,6 +320,9 @@ nodefony.register("cliWorker", function(){
 		}
 
 		listenSyslog (syslog, debug){
+			if ( ! syslog ){
+				syslog = this.syslog;
+			}
 			// CRITIC ERROR
 			syslog.listenWithConditions(this,{
 				severity:{

@@ -13,22 +13,6 @@ const npm = require("npm");
 nodefony.register("console", function(){
 
 
-	var createNpmiDependenciesArray = function (packageFilePath, opt) {
-    		var p = require(packageFilePath);
-    		if (!p.dependencies) { return [];}
-
-    		var deps = [];
-    		for (var mod in p.dependencies) {
-			var options = {
-				name: mod,    // your module name
-				version:  p.dependencies[mod],       // expected version [default: 'latest']
-			};
-        		deps.push(nodefony.extend({}, opt, options));
-    		}
-    		return deps;
-	};
-
-
 	var generateHelp = function(obj, str){
 		str += this.cli.clc.cyan("nodefony")+" \n";
 		str += this.cli.clc.green("\tnpm:list")+"							 List all installed packages \n";
@@ -258,54 +242,6 @@ nodefony.register("console", function(){
 				}
 			}
 		}
-
-		/*InstallPackage (name, file){
-			try {
-				var conf = new nodefony.fileClass(file.dirName+"/package.json");
-				var options = {
-    					path: '.',              // installation path [default: '.']
-    					forceInstall: false,    // force install if set to true
-    					npmLoad: {              // npm.load(options, callback): this is the "options" given to npm.load()
-        					loglevel: 'silent'  // [default: {loglevel: 'silent'}]
-    					}
-				};
-				if ( this.debug && this.environment ==="dev"){
-					options.npmLoad.loglevel = "verbose" ;
-				}
-
-				var dependencies = createNpmiDependenciesArray(conf.path, options) ;
-
-				for (var i= 0 ; i < dependencies.length ; i++){
-					let nodeDep =  dependencies[i].name + "@" + dependencies[i].version ;
-					this.logger("LOAD BUNDLE " + name +" dependence : " + nodeDep);
-					npmi( dependencies[i], ( err, result) => {
-    						if (err) {
-        						if (err.code === npmi.LOAD_ERR){
-								this.logger(err.message, "ERROR", "NMPI load error");
-        						}else if (err.code === npmi.INSTALL_ERR) {
-								this.logger(err.message, "ERROR", "NMPI install error");
-							}
-							this.logger("Try to install in mode cli   : npm install  "+nodeDep, "ERROR", "NMPI install error");
-							return ;
-							//this.terminate();
-    						}
-						// installed
-						if ( ! result ){
-							this.logger(nodeDep+' Already installed  in nodefony');
-						}else{
-							this.logger(nodeDep+' installed successfully in nodefony');
-						}
-					});
-				}
-				//this.terminate();
-
-			}catch(e){
-				console.trace(e);
-				if (e.code !== "ENOENT"){
-					this.logger("Install Package BUNDLE : "+ name +":"+e,"WARNING");
-				}
-			}
-		}*/
 
 		loadCommand (){
 			this.stop = false;

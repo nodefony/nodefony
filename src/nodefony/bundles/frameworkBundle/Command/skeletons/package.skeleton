@@ -1,14 +1,16 @@
 {
-  	"name": "{{name|upper}}",
-  	"version": "1.0.0",
-  	"description": "{{name|upper}}",
-  	"author": "{{authorName}} {{authorEmail}}",
-  	"keywords": [
-		"nodefony",
-		"javascript"
-  	],
+    "name": "{{name|upper}}",
+    "version": "1.0.0",
+    "description": "{{name|upper}}",
+    "author": "{{authorName}} {{authorEmail}}",
+    "scripts": {},
+    "private": true,
+    "keywords": [
+     "nodefony",
+     "javascript"
+    ],
     "repository": {},
-  	"dependencies": {},
+    "dependencies": {},
     "devDependencies": {},
     "license": "CECILL-B",
     "readmeFilename": "README.md",

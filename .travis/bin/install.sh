@@ -15,10 +15,12 @@ make build
 
 if [ "$DB" = "mysql" ]
 then
+	./console generate:bundle:angular generatedBundle ./src/bundles
 	make deploy & 
 	sleep 30;
 	make status &
 else
+	./console generate:bundle generatedBundle ./src/bundles
 	./nodefony_dev &
 fi
 
