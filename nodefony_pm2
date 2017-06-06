@@ -5,6 +5,7 @@ const yaml = require('js-yaml');
 const fs = require("fs");
 const path = require('path');
 const instances =  require('os').cpus().length ;
+const shell = require("shelljs");
 
 require('asciify')("      NODEFONY", {font:'standard'}, function(err, res){
 	console.log('\n');
@@ -13,21 +14,21 @@ require('asciify')("      NODEFONY", {font:'standard'}, function(err, res){
 	var links = path.resolve( ".", "tmp", "assestLink" ) ;
 	if ( fs.existsSync( links) ){
 		console.log("DELETE TMP :" + links)
-		fs.rmdirSync( links );	
+		shell.rm("-Rf", links);
 	}
 
 	var webpack = path.resolve( ".", "tmp", "webpack" ) ;
 	if ( fs.existsSync( webpack) ){
 		console.log("DELETE TMP :" + webpack)
-		fs.rmdirSync( webpack );	
+		shell.rm("-Rf", webpack);
 	}
 
-	var nodefonyConfig = null ; 
+	var nodefonyConfig = null ;
 	try {
 		var conf = path.resolve(".", "config", "config.yml");
 		var exist = fs.existsSync( conf );
 		if (exist){
-			nodefonyConfig =  yaml.load( fs.readFileSync(conf, 'utf8' ) ); 
+			nodefonyConfig =  yaml.load( fs.readFileSync(conf, 'utf8' ) );
 		}
 	}catch(e){
 		console.trace(e)
@@ -39,7 +40,7 @@ require('asciify')("      NODEFONY", {font:'standard'}, function(err, res){
 		var app = path.resolve( "app", "config", "config.yml") ;
 		var exist = fs.existsSync( app );
 		if (exist){
-			projectName = yaml.load( fs.readFileSync( app, 'utf8' ) ).App.projectName; 
+			projectName = yaml.load( fs.readFileSync( app, 'utf8' ) ).App.projectName;
 		}
 	}catch(e){
 		console.trace(e)
@@ -51,7 +52,7 @@ require('asciify')("      NODEFONY", {font:'standard'}, function(err, res){
 		var conf = path.resolve(".", "config", "pm2.json");
 		var exist = fs.existsSync(conf);
 		if (exist){
-			config = require(conf); 
+			config = require(conf);
 		}
 	}catch(e){
 		console.trace(e)
@@ -59,15 +60,15 @@ require('asciify')("      NODEFONY", {font:'standard'}, function(err, res){
 	}
 
 	if ( ! config ){
-		config = nodefonyConfig.system.PM2 ;		
+		config = nodefonyConfig.system.PM2 ;
 	}
 	config.script = "nodefony" ;
 	config.env =  {
 		NODE_ENV : "production",
 		MODE_START : "PM2"
 	};
-	config.cwd = process.cwd(); 
-	config.name = projectName || "nodefony" ; 
+	config.cwd = process.cwd();
+	config.name = projectName || "nodefony" ;
 
 	if ( ! config.instances ){
 		config.instances = instances ;
@@ -78,7 +79,7 @@ require('asciify')("      NODEFONY", {font:'standard'}, function(err, res){
  			       	console.trace('Error while launching applications', err.stack || err);
 				throw err ;
 			}
-			try { 
+			try {
 				var table = new Table({
 					head: [
 						"EXEC MODE",
@@ -98,7 +99,7 @@ require('asciify')("      NODEFONY", {font:'standard'}, function(err, res){
 					config.autorestart,
 					config.max_restarts,
 					config.error_file.replace(config.cwd,"."),
-					config.out_file.replace(config.cwd,".")	
+					config.out_file.replace(config.cwd,".")
 				]);
 				console.log(table.toString());
 				table = null ;
@@ -124,10 +125,10 @@ require('asciify')("      NODEFONY", {font:'standard'}, function(err, res){
 				console.log(" To see all logs use the command  make logs ")
 				console.log(" Or use PM2  pm2 --lines 1000 logs ")
 			}catch(e){
-				//console.error(e);	
+				//console.error(e);
 			}
 			process.exit(0);
-    			// Display logs in standard output 
+    			// Display logs in standard output
     			/*
 			pm2.launchBus((err, bus) =>  {
 				bus.on('process:msg',function(packet) {

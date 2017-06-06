@@ -382,7 +382,8 @@ nodefony.register("Bundle", function(){
                                 break;
                             }
                             res = new nodefony.fileClass( file );
-                            process.env.PUBLIC_URL = path.resolve(this.publicPath, "dist", "/");
+                            process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
+                            //console.log(process.env.PUBLIC_URL)
                         }catch(e){
                             res = null ;
                         }

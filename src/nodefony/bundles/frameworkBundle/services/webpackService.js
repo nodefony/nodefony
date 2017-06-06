@@ -10,10 +10,7 @@ const webpackMerge = require('webpack-merge'); // used to merge webpack configs
 const ExtractTextPluginCss = require('extract-text-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-
 nodefony.registerService("webpack", function(){
-
-
 
 	var babelRule  = function(basename){
 		return {
@@ -193,12 +190,13 @@ nodefony.registerService("webpack", function(){
 			}catch(e){
 				throw e ;
 			}
+			var config = null ;
 			try {
 				shell.cd(Path);
-				var config = require(file.path );
+				config = require(file.path );
 				config.output.path = path.resolve("Resources", "public", "dist") ;
 				if ( publicPath ){
-						config.output.publicPath = publicPath+"/" ;
+					config.output.publicPath = publicPath+"/" ;
 				}else{
 					config.output.publicPath = path.resolve( "/", path.basename(file.dirName), "dist")+"/" ;
 				}
@@ -217,8 +215,9 @@ nodefony.registerService("webpack", function(){
 
 			try {
 				var basename = path.basename(Path);
+				var idfile = basename+"_"+file.name ;
 				if ( watch ){
-					this.logger( "WEBPACK BUNDLE : "+ basename +" WATCHING ENTRY POINT : \n" + util.inspect(config.entry) , "DEBUG" );
+					this.logger( "WEBPACK Config  : "+ file.path +" WATCHING ENTRY POINT : \n" + util.inspect(config.entry) , "DEBUG" );
 					var watching = compiler.watch({
 						/* watchOptions */
 					}, (err, stats) => {
@@ -234,7 +233,7 @@ nodefony.registerService("webpack", function(){
 						return compiler ;
 					}
 					this.logger( "WEBPACK BUNDLE : "+ basename +" COMPILE ENTRY POINT : \n" + util.inspect(config.entry)  );
-					this.runCompiler(compiler, basename);
+					this.runCompiler(compiler, idfile);
 				}
 			}catch(e){
 				shell.cd(this.kernel.rootDir);
