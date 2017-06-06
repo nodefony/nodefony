@@ -9,7 +9,7 @@
 
 nodefony.register("Bundle", function(){
 
-	var regBundle = /^(.*)Bundle$/;
+	var regBundle = /^(.*)[Bb]undle$/;
 	var regFixtures = /^(.+)Fixtures.js$/;
 	var regController = /^(.+)Controller.js$/;
 	var regService = /^(.+)Service.js$/;
@@ -370,8 +370,25 @@ nodefony.register("Bundle", function(){
 
         	findWebPackConfig (){
             		var res = this.finder.result.getFile("webpack.config.js", true) ;
+                    if ( ! res ){
+                        var file =null ;
+                        try {
+                            switch (process.env.NODE_ENV){
+                                case "development" :
+                                    file = path.resolve(this.path, "config", "webpack.config.dev.js");
+                                break;
+                                case "production" :
+                                    file = path.resolve(this.path, "config", "webpack.config.prod.js");
+                                break;
+                            }
+                            res = new nodefony.fileClass( file );
+                            process.env.PUBLIC_URL = path.resolve(this.publicPath, "dist", "/");
+                        }catch(e){
+                            res = null ;
+                        }
+                    }
             		if ( res ){
-                		this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this.path );
+                		this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this.path , path.resolve("/", this.bundleName, "dist") );
             		}
         	}
 

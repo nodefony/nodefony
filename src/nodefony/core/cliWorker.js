@@ -187,10 +187,10 @@ nodefony.register("cliWorker", function(){
 			if ( this.kernel ){
 				this.publicDirectory = this.kernel.rootDir+"/web/";
 			} else {
-				
+
 			}
 			this.clc = clc ;
-			if ( this.twig ){
+			if ( this.kernel ){
 				this.twig = twig ;
 				this.twigOptions = {
 					views :this.kernel.rootDir,

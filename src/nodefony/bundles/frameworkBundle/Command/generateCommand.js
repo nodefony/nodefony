@@ -37,7 +37,7 @@ nodefony.registerCommand("generate",function(){
 			type:"directory",
 			childs:[
 				Command,
-				controller.call(this, name, "controller", "defaultController", null, location, path.resolve("src", "nodefony", "bundles", "frameworkBundle", "Command", "skeletons", "controllerAngularClass.skeleton") ),
+				controller.call(this, name, "controller", "defaultController", null, location, path.resolve(this.kernel.autoLoader.dirname, "bundles", "frameworkBundle", "Command", "skeletons", "controllerAngularClass.skeleton") ),
 				manager,
 				tests.call(this, param),
 				Resources.call(this, name, type, location),
@@ -80,7 +80,7 @@ nodefony.registerCommand("generate",function(){
 			type:"directory",
 			childs:[
 				Command,
-				controller.call(this, name, "controller", "defaultController", null, location, path.resolve("src", "nodefony", "bundles", "frameworkBundle", "Command", "skeletons", "controllerAngularClass.skeleton") ),
+				controller.call(this, name, "controller", "defaultController", null, location, path.resolve(this.kernel.autoLoader.dirname, "bundles", "frameworkBundle", "Command", "skeletons", "controllerAngularClass.skeleton") ),
 				manager,
 				tests.call(this, param),
 				Resources.call(this, name, type, location),
@@ -184,7 +184,7 @@ nodefony.registerCommand("generate",function(){
 	};
 
 	var Resources = function(name, type, location){
-		var Name = /(.*)Bundle/.exec(name)[1];
+		var Name = regBundle.exec(name)[1];
 		var param = {
 			name:Name,
 			title:Name,
@@ -491,12 +491,12 @@ nodefony.registerCommand("generate",function(){
 		}
 
 		if ( ! skeleton ){
-			skeleton = "bundles/frameworkBundle/Command/skeletons/controllerClass.skeleton" ;	
+			skeleton = path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/controllerClass.skeleton" );
 		}
 		var file  = [{
 			name:controllerName+".js",
 			type:"file",
-			skeleton:path.resolve( this.kernel.autoLoader.dirname, skeleton ),
+			skeleton:skeleton,
 			params:{
 				bundleName: bundleName,
 				smallName:nameBundle,
@@ -543,7 +543,7 @@ nodefony.registerCommand("generate",function(){
 		var bundleDirectoryController = new nodefony.fileClass(bundlePath.path+"/controller");
 		var bundleDirectoryview = new nodefony.fileClass(bundlePath.path+"/Resources/views");
 		//var bundleDirectoryConfig = new nodefony.fileClass(bundlePath.path+"/Resources/config");
-		var name = /^(.*)Bundle$/.exec(bundleName)[1];
+		var name = regBundle.exec(bundleName)[1];
 		try {
 			this.build(controller.call(this, bundlePath.name, directory, controllerName, directory), bundleDirectoryController );
 			this.build(views.call(this, directory, "index.html.twig",{name:name,bundleName:bundleName}) ,bundleDirectoryview );
@@ -691,7 +691,8 @@ nodefony.registerCommand("generate",function(){
 			this.logger("GENERATE React Bundle : " + name +" LOCATION : " +  path.resolve(Path));
 			var react = process.cwd()+'/node_modules/.bin/create-react-app' ;
 			var realPath = path.resolve( this.kernel.rootDir ,  path.resolve(Path)  );
-			var cwd = path.resolve( Path) ;
+			//var cwd = path.resolve( Path) ;
+			var cwd = path.resolve( "/", "tmp") ;
 			process.env.NODE_ENV = "development";
 			var realName = null ;
 			var res = regBundle.exec(name);
@@ -705,25 +706,23 @@ nodefony.registerCommand("generate",function(){
 				args = [name] ;
 				this.logger ("install react cli  create-react-app "+ args.join(" ") );
 				var create = this.spawn(react, args, {
-					cwd:cwd,
-					stdin: 'pipe',
-					stdio: ['pipe', 'pipe', 'pipe'], 
-					shell: true
+					cwd:cwd
 				}, ( code ) => {
 					if ( code === 1 ){
 						throw new Error ("install react cli create-react-app  new error : " +code);
 					}
-					args = ['run', 'eject', "-f"];
+					args = ['run', 'eject'];
 					this.logger (" React eject : npm " + args.join(" ") );
 					var eject = this.spawn("npm", args, {
-						cwd: path.resolve( cwd, name),
-						stdin: 'pipe',
-						stdio: ['pipe', 'pipe', 'pipe'], 
-						shell: true
+						cwd: path.resolve( cwd, name)
 					}, ( code ) => {
+						shell.mv( path.resolve( cwd, name), realPath+"/");
 						try {
 							var file = new nodefony.fileClass(Path);
 							reactBundle.call(this, file, name, "yml", path.resolve(Path), true);
+							this.logger( "ln -s " +  path.resolve( realPath, name, "public")  + " " + path.resolve( realPath, name, "Resources", "public", "dist"));
+							//shell.mv( path.resolve( realPath, name, "public"), path.resolve( realPath, name, "Resources", "public", "dist") );
+							shell.cp('-Rf', path.resolve( realPath, name, "public") , path.resolve( realPath, name, "Resources", "public", "dist"));
 							this.installBundle(name, Path);
 							this.terminate(code);
 						}catch(e){
@@ -757,7 +756,7 @@ nodefony.registerCommand("generate",function(){
 			var args = null ;
 			try {
 					args = ['new', '-v', '-sg','--routing', name] ;
-					this.logger ("install angular cli ng"+ args.join(" ") );
+					this.logger ("install angular cli : ng "+ args.join(" ") );
 					this.spawn(ng, args, {
 						cwd:cwd,
 					}, ( code ) => {

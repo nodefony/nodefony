@@ -185,7 +185,7 @@ nodefony.registerService("webpack", function(){
 			}
 		}
 
-		loadConfigFile (file, Path){
+		loadConfigFile (file, Path, publicPath){
 			try {
 				if ( ! ( file instanceof nodefony.fileClass ) ){
 					file = new nodefony.fileClass(file);
@@ -197,7 +197,12 @@ nodefony.registerService("webpack", function(){
 				shell.cd(Path);
 				var config = require(file.path );
 				config.output.path = path.resolve("Resources", "public", "dist") ;
-				config.output.publicPath = path.resolve( "/", path.basename(file.dirName), "dist") ;
+				if ( publicPath ){
+						config.output.publicPath = publicPath+"/" ;
+				}else{
+					config.output.publicPath = path.resolve( "/", path.basename(file.dirName), "dist")+"/" ;
+				}
+				console.log(config.output.publicPath+"/")
 				var compiler =  webpack( config );
 				if ( this.kernel.type === "CONSOLE" ){
 					return  compiler;
@@ -206,11 +211,9 @@ nodefony.registerService("webpack", function(){
 				shell.cd(this.kernel.rootDir);
 				throw e ;
 			}
-
+			var watch = true ;
 			if ( this.production ){
-				var watch = false ;
-			}else{
-				var watch = true ;
+				watch = false ;
 			}
 
 			try {

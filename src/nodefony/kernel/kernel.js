@@ -19,8 +19,8 @@ nodefony.register("kernel", function(){
 	 *	@event onBoot
 	 */
 
-	var regBundleName = /^(.*)Bundle[\.js]{0,3}$/;
-	var regBundle = /^(.*)Bundle.js$/;
+	var regBundleName = /^(.*)[Bb]undle[\.js]{0,3}$/;
+	var regBundle = /^(.*)[Bb]undle.js$/;
 
 	var waitingBundle = function(){
 		this.eventReadywait -= 1 ;
