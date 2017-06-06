@@ -387,8 +387,8 @@ nodefony.register("cliWorker", function(){
 				}
 				var stat = fs.lstatSync(dir);
 			}catch(e){
-				this.logger(e, "ERROR");
-				throw e ;
+				this.logger(e, "WARNING");
+				return 0 ;
 			}
 			var files = null ;
 			switch (true){

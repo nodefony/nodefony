@@ -2,6 +2,7 @@
 const path = require("path");
 const asciify = require('asciify');
 const fs = require("fs");
+const shell = require("shelljs");
 
 // --expose-gc --trace-gc --log-gc --trace-gc-verbose
 //--debug
@@ -31,7 +32,7 @@ autoloader.load( path.resolve(".", "app", "appKernel.js" ) );
 
 var links = path.resolve( ".", "tmp", "assestLink" ) ;
 if ( fs.existsSync( links) ){
-	fs.rmdirSync( links );	
+	shell.rm("-Rf", links);
 }
 
 var environment = "dev" ;

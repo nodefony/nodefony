@@ -203,7 +203,9 @@ nodefony.register("console", function(){
 						this.terminate(1);
 					}
 					//event.config.localPrefix = file.dirName ;
-					//event.config.globalPrefix = this.rootDir ;
+					//event.config.globalPrefix = file.dirName ;
+					//npm.config.set('localPrefix', file.dirName);
+					//npm.config.set('globalPrefix', this.rootDir);
 					var tab = [] ;
 					this.logger("NPM :"+npm.version+  " Installing Dependencies for bundle : " + file.shortName  );
 					for (let dep in config.dependencies ){
@@ -338,18 +340,6 @@ nodefony.register("console", function(){
 			};
 			return res;
 		}
-
-		/*readBundleDirectory (path){
-			var finder = new nodefony.finder({
-				path:path,
-				recurse:false,
-				onDirectory:(result) => {
-					if (result){
-						this.registerBundles(result.path, this.initializeBundles.bind(this))
-					}
-				}
-			})
-		};*/
 
 		startTimer (name){
 			this.startTime = new Date();

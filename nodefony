@@ -3,6 +3,7 @@ const asciify = require('asciify');
 const cluster = require('cluster');
 const path = require("path");
 const fs = require("fs");
+const shell = require("shelljs");
 
 var autoloader = null ;
 // AUTOLOADER
@@ -47,13 +48,13 @@ if (cluster.isMaster) {
 		var links = path.resolve(".", "tmp", "assestLink" ) ;
 		if ( fs.existsSync( links) ){
 			console.log("DELETE TMP :" + links)
-			fs.rmdirSync( links );	
+			shell.rm("-Rf", links);
 		}
 
 		var webpack = path.resolve(".", "tmp", "webpack" ) ;
 		if ( fs.existsSync( webpack) ){
 			console.log("DELETE TMP :" + webpack)
-			fs.rmdirSync( webpack );	
+			shell.rm("-Rf", webpack);
 		}
 	});
 	var nbProc = require('os').cpus().length; 
