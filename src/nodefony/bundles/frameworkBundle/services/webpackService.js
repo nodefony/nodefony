@@ -202,7 +202,6 @@ nodefony.registerService("webpack", function(){
 				}else{
 					config.output.publicPath = path.resolve( "/", path.basename(file.dirName), "dist")+"/" ;
 				}
-				console.log(config.output.publicPath+"/")
 				var compiler =  webpack( config );
 				if ( this.kernel.type === "CONSOLE" ){
 					return  compiler;
