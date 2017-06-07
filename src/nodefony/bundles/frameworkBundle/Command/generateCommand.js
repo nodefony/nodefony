@@ -755,7 +755,8 @@ nodefony.registerCommand("generate",function(){
 			}
 			var args = null ;
 			try {
-					args = ['new', '-v', '-sg','--routing', name] ;
+					//args = ['new', '-v', '-sg','--routing', name] ;
+					args = ['new', '-v', '-sg', name] ;
 					this.logger ("install angular cli : ng "+ args.join(" ") );
 					this.spawn(ng, args, {
 						cwd:cwd,

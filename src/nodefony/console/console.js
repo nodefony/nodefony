@@ -202,8 +202,8 @@ nodefony.register("console", function(){
 						this.logger(error, "ERROR");
 						this.terminate(1);
 					}
-					//event.config.localPrefix = file.dirName ;
-					//event.config.globalPrefix = file.dirName ;
+					event.config.localPrefix = file.dirName ;
+					event.config.globalPrefix = this.rootDir ;
 					//npm.config.set('localPrefix', file.dirName);
 					//npm.config.set('globalPrefix', this.rootDir);
 					var tab = [] ;

@@ -67,7 +67,7 @@ nodefony.registerService("websocket", function(){
 							this.ready = true ;
 							this.logger(" Server is listening on DOMAIN : ws://"+this.domain+":"+this.port , "INFO");
 						}
-
+						this.bundle.fire("onServersReady", this.type, this);
 						return this.websocketServer;
 					}catch(e){
 						this.logger(e);

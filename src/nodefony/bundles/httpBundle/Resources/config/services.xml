@@ -13,6 +13,7 @@
         	<parameter key="websocketServerSecure">websocketSecure</parameter>
         	<parameter key="sessions">sessions</parameter>
         	<parameter key="upload">upload</parameter>
+        	<parameter key="sockjs">sockjs</parameter>
     	</parameters>
 
     	<services>
@@ -56,7 +57,12 @@
             		<argument type="service" id="httpKernel" />
         	</service>
 
-		
+		<service id="sockjs" class="{{sockjs}}">
+            		<argument type="service" id="httpKernel" />
+            		<argument type="service" id="httpServer" />
+            		<argument type="service" id="httpsServer" />
+        	</service>
+	
 
 		<!--service id="request" scope="request" synthetic="true" synchronized="true" /-->
 
