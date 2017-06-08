@@ -17,16 +17,16 @@ nodefony.registerService("sockjs", function(){
 			}
 		}
 
-		createServer (type, service){
+		createServer (sockUrl , compiler){
 			this.logger(" Create sockjs server  :" + type);	
 
-			var echo = Sockjs.createServer({ 
+			var sockjsServer = Sockjs.createServer({ 
 				sockjs_url: 'http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js' ,
 				log: (severity, line)  => {
 					this.logger( line, severity.toUpperCase() )
 				}
 			});
-			echo.on('connection', (conn) => {
+			sockjsServer.on('connection', (conn) => {
     				conn.on('data', function(message) {
         				conn.write(message);
     				});
@@ -34,19 +34,31 @@ nodefony.registerService("sockjs", function(){
 					this.logger(" CLOSE")
 				});
 			});
-			switch (type){
-				case 'WEBSOCKET' :
-				case 'WEBSOCKET_SECURE' :
-					console.log(service.websocketServer)
-					echo.installHandlers(service.websocketServer, {prefix:'/sockjs-node'});
-				break;
-				default:
-					echo.installHandlers(service.server, {prefix:'/sockjs-node'});
-					
 
+			if ( this.HTTP ){
+				sockjsServer.installHandlers(this.HTTP.server, {prefix:'/sockjs-node'});
+			
 			}
+
+			if ( this.HTTPS ){
+				sockjsServer.installHandlers(this.HTTPS.server, {prefix:'/sockjs-node'});
+			
+			}
+
+			return sockjsServer ;
 			
 		}
+
+		sockWrite (sockets, type, data) {
+			sockets.forEach((sock) => {
+				sock.write(JSON.stringify({
+					type: type,
+					data: data
+				}));
+			}
+		)
+}
+		
 
 
 	}

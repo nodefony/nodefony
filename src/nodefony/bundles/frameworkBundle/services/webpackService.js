@@ -330,6 +330,11 @@ nodefony.registerService("webpack", function(){
 				throw e;
 			}
 		}
+		getProgressPlugin (handler){
+			//function handler(percentage, msg) {/* ... */}
+			return new webpack.ProgressPlugin(handler)
+		
+		}
 	}
 
 	return  webpackService ;
