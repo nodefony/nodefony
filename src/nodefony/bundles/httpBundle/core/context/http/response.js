@@ -169,7 +169,7 @@ nodefony.register("Response",function(){
 				this.headers['Transfer-Encoding'] = 'chunked' ;
 				this.writeHead();
 			}
-			return this.response.write( data , encoding);
+			return this.response.write( ( data || this.body ) , ( encoding || this.encoding ) );
 		}
 
 		write (){

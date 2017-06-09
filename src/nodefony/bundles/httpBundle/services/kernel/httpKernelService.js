@@ -50,11 +50,11 @@ nodefony.registerService("httpKernel", function(){
 				this.compileAlias();
 			});
 
-			this.listen(this, "onClientError", (e) => {
+			this.listen(this, "onClientError", (e, socket) => {
 				this.logger(e, "ERROR", "HTTP KERNEL SOCKET CLIENT ERROR");
+				socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 			});
-
-			
+	
 		}
 
 		boot (){
@@ -291,7 +291,6 @@ nodefony.registerService("httpKernel", function(){
 		}
 
 		onError (container, error){
-			console.log(error)
 			var myError = null ;
 			if ( ! error ){
  		       		error = {
@@ -358,6 +357,20 @@ nodefony.registerService("httpKernel", function(){
 			});
 		}
 
+		onHttpRequest(request, response, type){
+			if ( response.headersSent ) {
+				return ;
+			}
+			response.setHeader("Server", "nodefony");
+			if ( this.kernel.settings.system.statics ){
+				this.serverStatic.handle(request, response , () => {
+					this.fire("onServerRequest", request, response, type);
+				});
+			}else{
+				this.fire("onServerRequest", request, response, type);
+			}	
+		}
+
 		handle (request, response, type, domain){
 			
 			// SCOPE REQUEST ;
@@ -421,8 +434,6 @@ nodefony.registerService("httpKernel", function(){
 				});
 			}
 
-			//this.fire("onHttpRequest", container, context, type);
-			
 			if ( ( ! this.firewall ) || resolver.bypassFirewall ){
 				request.on('end', () => {
 					try {

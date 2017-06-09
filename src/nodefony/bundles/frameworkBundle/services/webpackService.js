@@ -152,6 +152,10 @@ nodefony.registerService("webpack", function(){
 					}
 				});
 			}
+
+			this.sockjs =  this.get("sockjs") ;
+			
+
 		}
 
 		loggerStat (err, stats, bundle , watcher){
@@ -191,6 +195,7 @@ nodefony.registerService("webpack", function(){
 				throw e ;
 			}
 			var config = null ;
+			var basename = path.basename(Path);
 			try {
 				shell.cd(Path);
 				config = require(file.path );
@@ -198,12 +203,16 @@ nodefony.registerService("webpack", function(){
 				if ( publicPath ){
 					config.output.publicPath = publicPath+"/" ;
 				}else{
-					config.output.publicPath = path.resolve( "/", path.basename(file.dirName), "dist")+"/" ;
+					config.output.publicPath =  "/"+path.basename(file.dirName)+"/dist/" ;
 				}
 				var compiler =  webpack( config );
 				if ( this.kernel.type === "CONSOLE" ){
 					return  compiler;
 				}
+				if ( this.sockjs && compiler ) {
+					this.sockjs.addCompiler(  compiler, basename);	
+				}
+				
 			}catch(e){
 				shell.cd(this.kernel.rootDir);
 				throw e ;
@@ -214,7 +223,7 @@ nodefony.registerService("webpack", function(){
 			}
 
 			try {
-				var basename = path.basename(Path);
+				
 				var idfile = basename+"_"+file.name ;
 				if ( watch ){
 					this.logger( "WEBPACK Config  : "+ file.path +" WATCHING ENTRY POINT : \n" + util.inspect(config.entry) , "DEBUG" );
@@ -259,6 +268,7 @@ nodefony.registerService("webpack", function(){
 				if ( this.kernel.type === "CONSOLE" ){
 					return  compiler;
 				}
+				
 			}catch(e){
 				throw e ;
 			}
@@ -266,6 +276,7 @@ nodefony.registerService("webpack", function(){
 			if ( ! ( basename  in this.kernel.bundlesCore ) ){
 				this.logger( "WEBPACK BUNDLE : " +  basename +" WATCHING : "+ myConf.watch );
 			}
+
 
 			if ( myConf.watch ){
 				this.logger( "WEBPACK BUNDLE : "+ basename +" WATCHING ENTRY POINT : \n" + util.inspect(myConf.entry) , "DEBUG" );
@@ -333,7 +344,7 @@ nodefony.registerService("webpack", function(){
 		getProgressPlugin (handler){
 			//function handler(percentage, msg) {/* ... */}
 			return new webpack.ProgressPlugin(handler)
-		
+
 		}
 	}
 

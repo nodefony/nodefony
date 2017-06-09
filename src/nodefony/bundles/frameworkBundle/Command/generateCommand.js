@@ -772,7 +772,7 @@ nodefony.registerCommand("generate",function(){
 							if ( code === 1 ){
 								throw new Error ("ng generate module error code : " +code);
 							}
-							args = ["eject"] ;
+							args = ["eject", "--environment", "dev", "-dev"] ;
 							this.logger (" eject  webpack config angular : ng " + args.join(" "));
 							this.spawn(ng, args, {
 								cwd: path.resolve( cwd, name)

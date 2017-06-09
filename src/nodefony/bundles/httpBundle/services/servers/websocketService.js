@@ -39,20 +39,7 @@ nodefony.registerService("websocket", function(){
 							httpServer: http
 						}));
 
-											
 						this.websocketServer.on('request', (request) => {
-							/*var d = nodedomain.create();
-							d.on('error', (er) => {
-								if ( d.container ){
-									this.httpKernel.onErrorWebsoket( d.container, er.stack);
-								}else{
-									this.logger(er.stack, "ERROR");
-								}
-							});
-							d.add(request);
-							d.run( () => {
-								this.fire("onServerRequest", request, null, this.type, d);
-							});*/
 							this.fire("onServerRequest", request, null, this.type);
 						} );
 
