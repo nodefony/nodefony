@@ -78,7 +78,7 @@ nodefony.register("Response",function(){
 		setCookie (cookie){
 			//this.response.on('header', function(){
 				this.logger("ADD COOKIE ==> " + cookie.serialize(), "DEBUG");
-				this.setHeader('Set-Cookie', cookie.serialize());
+				return this.setHeader('Set-Cookie', cookie.serialize());
 			//}.bind(this))
 		}
 
@@ -91,12 +91,16 @@ nodefony.register("Response",function(){
 		//ADD INPLICIT HEADER
 		setHeader (name, value){
 			if ( this.response ){
-				this.response.setHeader(name, value);
+				return this.response.setHeader(name, value);
 			}
 		}
 		
 		setHeaders (obj){
-			nodefony.extend(this.headers, obj);
+			return nodefony.extend(this.headers, obj);
+		}
+
+		addTrailers (obj){
+			return response.addTrailers(obj);
 		}
 
 		setEncoding (encoding){
@@ -163,13 +167,15 @@ nodefony.register("Response",function(){
 			}
 		}
 
+
+
 		flush (data, encoding){
 			if ( ! this.response.headersSent ) {
 				this.setHeader('Transfer-Encoding', 'chunked');
 				this.headers['Transfer-Encoding'] = 'chunked' ;
 				this.writeHead();
 			}
-			return this.response.write( data , encoding);
+			return this.response.write( ( data || this.body ) , ( encoding || this.encoding ) );
 		}
 
 		write (){
