@@ -72,8 +72,8 @@ nodefony.registerService("https", function(){
 			}
 			return opt ;
 		}
-	
-		createServer (/*port, domain*/){
+
+		createServer (){
 			try {
 				this.options = this.getCertificats();
 				for (var ele in this.options ){
@@ -100,42 +100,18 @@ nodefony.registerService("https", function(){
 
 			this.options = nodefony.extend(this.options, this.settings.certificats.options);
 
-			this.server = https.createServer(this.options, (request, response) => {
-				response.setHeader("Server", "nodefony");
-				if (  this.kernel.settings.system.statics ){
-					this.httpKernel.serverStatic.handle(request, response , () => {
-						/*var d = nodedomain.create();
-						d.on('error', (er) => {
-							if ( d.container ){
-								this.httpKernel.onError( d.container, er.stack);
-							}else{
-								this.logger(er.stack , "ERROR", "SERVICE HTTPS");
-							}
-						});
-						d.add(request);
-						d.add(response);
-						d.run( () => {
-							this.fire("onServerRequest", request, response, this.type, d);
-						});*/
-						this.fire("onServerRequest", request, response, this.type);
-					});
-				}else{
-					/*var d = nodedomain.create();
-					d.on('error', (er) => {
-						if ( d.container ){
-							this.httpKernel.onError( d.container, er.stack);
-						}else{
-							this.logger(er.stack,"ERROR");
-						}
-					});
-					d.add(request);
-					d.add(response);
-					d.run( () => {
-						this.fire("onServerRequest", request, response, this.type, d);
-					});*/	
-					this.fire("onServerRequest", request, response, this.type);
-				}
-			});
+			try {
+				this.server = https.createServer(this.options);
+				this.bundle.fire("onCreateServer", this.type, this);
+			}catch(e){
+				this.logger(e, "CRITIC");
+				throw e ;
+			}
+
+			this.server.on("request", ( request, response ) => {
+				this.httpKernel.onHttpRequest(request, response, this.type);
+			} );
+
 
 			if (this.settings.timeout){
 				this.server.timeout = this.settings.timeout;
@@ -144,6 +120,8 @@ nodefony.registerService("https", function(){
 			if (this.settings.maxHeadersCount ){
 				this.server.maxHeadersCount = this.settings.maxHeadersCount;
 			}
+
+			
 
 			// LISTEN ON PORT 
 			this.server.listen(this.port, this.domain, () => {
@@ -172,7 +150,6 @@ nodefony.registerService("https", function(){
 
 			this.server.on("clientError",(e, socket) => {
 				this.fire("onClientError", e, socket);
-				socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 			});
 
 			this.listen(this, "onTerminate", () => {

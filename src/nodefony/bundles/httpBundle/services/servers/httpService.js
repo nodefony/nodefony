@@ -57,47 +57,21 @@ nodefony.registerService("http", function(){
 				this.logger(err);
 			});
 		}
-	
-		createServer (/*port, domain*/){
+
+		createServer (){
 			this.settings = this.getParameters("bundles.http").http || null ;
 
-			this.server = http.createServer((request, response) => {
-				response.setHeader("Server", "nodefony");
-				if ( this.kernel.settings.system.statics ){
-					this.httpKernel.serverStatic.handle(request, response , () => {
-						//this.createZone(request, response);
-						/*var d = nodedomain.create();
-						d.on('error', (er) => {
-							if ( d.container ){
-								this.httpKernel.onError( d.container, er.stack,  "ERROR");
-							}else{
-								this.logger(er.stack, "ERROR");
-							}
-						});
-						d.add(request);
-						d.add(response);
-						d.run(() => {
-							this.fire("onServerRequest", request, response, this.type, d);
-						});*/
-						this.fire("onServerRequest", request, response, this.type);
-					});
-				}else{
-					/*var d = nodedomain.create();
-					d.on('error', (er) => {
-						if ( d.container ){
-							this.httpKernel.onError( d.container, er.stack);
-						}else{
-							this.logger(er.stack, "ERROR");
-						}
-					});
-					d.add(request);
-					d.add(response);
-					d.run( () => {
-						this.fire("onServerRequest", request, response, this.type, d);
-					});*/	
-					this.fire("onServerRequest", request, response, this.type);
-				}
-			});
+			try {
+				this.server = http.createServer();
+				this.bundle.fire("onCreateServer", this.type, this);
+			}catch(e){
+				this.logger(e, "CRITIC");
+				throw e ;
+			}
+
+			this.server.on("request", ( request, response ) => {
+				this.httpKernel.onHttpRequest(request, response, this.type);
+			} );
 			
 			if (this.settings.timeout){
 				this.server.timeout = this.settings.timeout;
@@ -106,6 +80,7 @@ nodefony.registerService("http", function(){
 			if (this.settings.maxHeadersCount ){
 				this.server.maxHeadersCount = this.settings.maxHeadersCount;
 			}
+
 
 			// LISTEN ON PORT 
 			this.server.listen(this.port, this.domain, () => {
@@ -142,7 +117,6 @@ nodefony.registerService("http", function(){
 
 			this.server.on("clientError",(e, socket) =>{
 				this.fire("onClientError", e, socket);
-				socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 			});
 
 			return this.server;
