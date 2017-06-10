@@ -37,6 +37,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 			super ("websocketContext", container);
 			this.type = type ;
 			this.protocol = ( type === "WEBSOCKET SECURE" ) ? "wss" : "ws" ;
+			this.acceptedProtocol = null ;
 
 			//I18n
 			this.translation = new nodefony.services.translation( container, type );
@@ -57,7 +58,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 			this.remoteAddress = this.request.remoteAddress ;
 			this.origin = request.origin;
 			//TODO acceptProtocol header sec-websocket-protocol   
-			this.connection = request.accept(null, this.origin);
+			this.connection = request.accept(this.acceptedProtocol, this.origin);
 			this.response = new nodefony.wsResponse( this.connection ,container , type);
 
 			this.request.url = url.parse( this.protocol+"://" + this.request.host ) ;

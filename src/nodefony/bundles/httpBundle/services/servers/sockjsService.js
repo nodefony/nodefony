@@ -69,7 +69,7 @@ nodefony.registerService("sockjs", function(){
 
 			this.compilers = {} ;
 			this.sockets =	[];
-			this.prefix = "/sockjs-node";
+			this.setPrefix("/sockjs-node");
 
 			if ( this.kernel.environment === "dev" ){
 				this.bundle.listen(this, 'onCreateServer', (type, service) => {
@@ -85,6 +85,11 @@ nodefony.registerService("sockjs", function(){
 			}
 		}
 
+		setPrefix (prefix){
+			this.prefix = prefix ;
+			this.regPrefix = new RegExp('^' + this.prefix  + '([/].+|[/]?)$');
+		}
+
 		addCompiler ( compiler, basename){
 			this.compilers[basename] = new sockCompiler(this, "SOCKJS_" + basename ,compiler  );
 			this.logger( "Add sock-js compiler  : " + "SOCKJS_" + basename );		
@@ -94,7 +99,7 @@ nodefony.registerService("sockjs", function(){
 
 			try { 
 				this.logger(" Create sockjs server :   "+ service.type);	
-				var serverSock = Sockjs.createServer({ 
+				this[protocol] = Sockjs.createServer({ 
 					sockjs_url: protocol+'://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js' ,
 					//websocket:false,
 					prefix: this.prefix,
@@ -102,7 +107,7 @@ nodefony.registerService("sockjs", function(){
 						this.logger( line, severity.toUpperCase() )
 					}
 				});
-				serverSock.on('connection', (conn) => {
+				this[protocol].on('connection', (conn) => {
 					if(!conn) return;
 
 					this.sockets.push(conn);
@@ -123,8 +128,8 @@ nodefony.registerService("sockjs", function(){
 					
 				});
 
-				serverSock.installHandlers(service.server);
-				return serverSock ;
+				this[protocol].installHandlers(service.server);
+				return this[protocol] ;
 			}catch(e){
 				this.logger(e, "ERROR");
 				throw e;

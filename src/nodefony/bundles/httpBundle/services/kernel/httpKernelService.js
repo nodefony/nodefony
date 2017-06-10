@@ -48,6 +48,7 @@ nodefony.registerService("httpKernel", function(){
 			this.listen(this, "onBoot",() =>{
 				this.sessionService = this.get("sessions");
 				this.compileAlias();
+				this.sockjs = this.get("sockjs");
 			});
 
 			this.listen(this, "onClientError", (e, socket) => {
@@ -358,6 +359,10 @@ nodefony.registerService("httpKernel", function(){
 		}
 
 		onHttpRequest(request, response, type){
+			if ( request.url && this.sockjs && request.url.match( this.sockjs.regPrefix ) ){
+				this.logger("drop sockjs", "DEBUG");
+				return ;
+			}
 			if ( response.headersSent ) {
 				return ;
 			}
@@ -459,6 +464,14 @@ nodefony.registerService("httpKernel", function(){
 			this.fire("onSecurity", context);	
 		}
 
+		onWebsocketRequest (request, type){
+			if ( request.resourceURL.path && this.sockjs && request.resourceURL.path.match( this.sockjs.regPrefix ) ){
+				this.logger("drop sockjs", "DEBUG");
+				return ;
+			}
+			this.fire("onServerRequest", request, null, type);	
+		}
+
 		handleWebsocket (container, request, response, type){
 			var context = new nodefony.context.websocket(container, request, response, type);
 			container.set("context", context);
@@ -477,7 +490,6 @@ nodefony.registerService("httpKernel", function(){
 				resolver = null ;
 			});
 			
-			//context.notificationsCenter.listen(this, "onError", this.onErrorWebsoket);	
 
 			// DOMAIN VALID 
 			var next = this.checkValidDomain(context) ;

@@ -22,10 +22,6 @@ nodefony.registerService("websocketSecure", function(){
 			this.firewall =  security ;
 			this.ready = false ;
 			this.type = "WEBSOCKET SECURE";
-			this.listen(this, "onBoot",() => {
-				this.bundle = this.kernel.getBundles("http") ;
-				
-			});
 		}
 
 		logger (pci, severity, msgid,  msg){
@@ -45,8 +41,7 @@ nodefony.registerService("websocketSecure", function(){
 						}));
 						
 						this.websocketServer.on('request', (request) => {
-							
-							this.fire("onServerRequest", request, null, this.type);
+							return this.httpKernel.onWebsocketRequest(request, this.type);
 						});
 
 						this.listen(this, "onTerminate", () =>{
@@ -55,7 +50,6 @@ nodefony.registerService("websocketSecure", function(){
 								this.logger(" SHUTDOWN WEBSOCKET SECURE Server is listening on DOMAIN : "+this.domain+"    PORT : "+this.port , "INFO");
 							}
 						});
-
 
 						if ( this.websocketServer ){
 							this.ready = true ;

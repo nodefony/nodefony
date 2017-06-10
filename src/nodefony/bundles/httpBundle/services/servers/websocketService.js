@@ -40,7 +40,7 @@ nodefony.registerService("websocket", function(){
 						}));
 
 						this.websocketServer.on('request', (request) => {
-							this.fire("onServerRequest", request, null, this.type);
+							return this.httpKernel.onWebsocketRequest(request, this.type);
 						} );
 
 						this.kernel.listen(this, "onTerminate",() => {
