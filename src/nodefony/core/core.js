@@ -19,6 +19,8 @@ const nodedomain = require('domain');
 const WebSocketServer = require('websocket');
 const Promise = require('promise');
 const shell = require("shelljs");
+const clc = require('cli-color');
+
 
 var nodefony = function(){
 

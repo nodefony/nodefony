@@ -6,7 +6,6 @@
  *
  */
 var Table = require('cli-table');
-const clc = require('cli-color');
 const spawn = require('child_process').spawn;
 const spawnSync = require('child_process').spawnSync;
 

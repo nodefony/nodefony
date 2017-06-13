@@ -1,5 +1,4 @@
 
-
 nodefony.register("Service", function(){
 
 	var settingsSyslog = {
@@ -13,6 +12,32 @@ nodefony.register("Service", function(){
 		nbListener:20
 	};
 
+	const red   = clc.red.bold;
+	const cyan   = clc.cyan.bold;
+	const blue  = clc.blueBright.bold;
+	const green = clc.green;
+	const yellow = clc.yellow.bold;
+
+	var logSeverity = function(severity) {
+		switch(severity){
+			case "DEBUG":
+				return cyan(severity);
+			case "INFO":
+				return blue(severity);
+			case "NOTICE" :
+				return red(severity);
+			case "WARNING" :
+				return yellow(severity);
+			case "ERROR" :
+			case "CRITIC":
+			case "ALERT":
+			case "EMERGENCY":
+				return red(severity);
+			default:
+				return cyan(severity);
+		}
+	};
+
 	const Service = class Service {
 	
 		constructor(name, container, notificationsCenter, options ){
@@ -20,7 +45,7 @@ nodefony.register("Service", function(){
 			if (name){
 				this.name = name ;
 			}
-			options = nodefony.extend( {}, defaultOptions, options) ;
+			options = nodefony.extend(true, {}, defaultOptions, options) ;
 
 			if ( container instanceof nodefony.Container  ){
 				this.container = container ;
@@ -31,7 +56,10 @@ nodefony.register("Service", function(){
 				this.container = new nodefony.Container(); 
 				this.container.set("container", this.container);
 			}
-			this.kernel = this.container.get("kernel");
+			var kernel =  this.container.get("kernel");
+			if ( kernel ){
+				this.kernel = kernel ;
+			}
 			this.syslog = this.container.get("syslog");
 			if ( ! this.syslog ){
 				this.settingsSyslog = nodefony.extend({}, settingsSyslog , {
@@ -109,6 +137,19 @@ nodefony.register("Service", function(){
 			return this.notificationsCenter.on.apply(this.notificationsCenter, arguments);
 		}
 
+		listenSyslog(options){
+
+			var defaultOption = {
+				severity: {
+					operator:"<=",
+					data : "7"
+				}
+			}
+			this.syslog.listenWithConditions(this, options || defaultOption , (pdu) => {
+				var date = new Date(pdu.timeStamp) ;
+				console.log( date.toDateString() + " " + date.toLocaleTimeString() + " " + logSeverity( pdu.severityName ) + " " + green(pdu.msgid) + " " + " : " +  pdu.payload);
+			});
+		}
 
 		/**
 	 	*	@method once
