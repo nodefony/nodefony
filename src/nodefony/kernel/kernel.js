@@ -95,6 +95,7 @@ nodefony.register("kernel", function(){
 			this.generateConfigPath = path.resolve( this.rootDir, "config", "generatedConfig.yml") ;
 			this.publicPath = path.resolve( this.rootDir, "web");
 			this.cacheLink = path.resolve (this.rootDir ,"tmp", "assestLink" ) ;
+			
 
 			this.platform = process.platform ;
 			this.typeCluster = this.clusterIsMaster() ? "master" : "worker" ;
@@ -136,6 +137,14 @@ nodefony.register("kernel", function(){
 			this.listen(this, "onReady" , () =>{
 				this.autoLoader.deleteCache();
 			});
+
+			this.cli.createDirectory( path.resolve (this.rootDir ,"tmp"), null , (file) => {
+				this.tmpDir = file ;
+			}, true );
+
+			/*this.cli.createDirectory( this.cacheLink, null , (file) => {
+				this.cacheLink = file ;
+			}, true );*/
 
 			this.listen(this, "onPostRegister" , () =>{
 				if ( this.type === "SERVER" ){
@@ -357,13 +366,13 @@ nodefony.register("kernel", function(){
 						if ( remove ){
 							try{
 								fs.writeFileSync( pathConfig, yaml.safeDump(yml),{encoding:'utf8'} );
-								this.logger( nameConfig+" : " + bundle +" Bundle dont't exit", "WARNING" );
+								this.logger( nameConfig+" : " + bundle +" Bundle don't exist", "WARNING" );
 								this.logger("Update Config  : " + pathConfig);
 							}catch(e){
 								this.logger(e, "ERROR");
 							}
 						}else{
-							var error = new Error(nameConfig+" : " + bundle +" Bundle dont't exit") ;
+							var error = new Error(nameConfig+" : " + bundle +" Bundle don't exist") ;
 							this.logger( error, "ERROR" );
 							this.logger( "Config file : " + pathConfig );
 							this.logger( yml.system.bundles );
