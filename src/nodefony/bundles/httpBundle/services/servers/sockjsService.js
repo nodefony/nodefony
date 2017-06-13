@@ -122,7 +122,7 @@ nodefony.registerService("sockjs", function(){
 
 					for( var compiler  in this.compilers ){
 						if ( this.compilers[compiler].stats){
-							this.compilers[compiler].sendStats(this.compilers[compiler].stats, true, conn);
+							//this.compilers[compiler].sendStats(this.compilers[compiler].stats, true, conn);
 						}	
 					}
 					

@@ -467,6 +467,10 @@ nodefony.registerService("httpKernel", function(){
 		onWebsocketRequest (request, type){
 			if ( request.resourceURL.path && this.sockjs && request.resourceURL.path.match( this.sockjs.regPrefix ) ){
 				this.logger("drop sockjs", "DEBUG");
+				var connection = request.accept(null, request.origin);
+				connection.drop(1006, 'TCP connection lost before handshake completed.', true);
+				request = null ;
+				connection = null ;
 				return ;
 			}
 			this.fire("onServerRequest", request, null, type);	
@@ -513,8 +517,6 @@ nodefony.registerService("httpKernel", function(){
 					message:"not Found"
 				});
 			}
-
-			//this.fire("onWebsocketRequest", container, context, type);
 			
 			if ( ( ! this.firewall ) || resolver.bypassFirewall ){
 				try {
