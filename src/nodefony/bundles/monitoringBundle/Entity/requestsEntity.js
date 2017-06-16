@@ -7,9 +7,7 @@
  */
 var Sequelize =require("sequelize");
 
-
 nodefony.registerEntity("requests", function(){
-
 
 	var requests = function(db/*, ormService*/){
 
@@ -24,15 +22,11 @@ nodefony.registerEntity("requests", function(){
 				protocole	:	{type:Sequelize.STRING },
 				username	:	{type:Sequelize.STRING },
 				data		:	{type: Sequelize.TEXT },
-    		},{
-			classMethods: {
-				
-			}
 		});
 
 		/*ormService.listen(this, 'onReadyConnection', function(connectionName, db, ormService){
 			if(connectionName == 'nodefony'){
-				
+
 			}
 		});*/
 		return model ;
@@ -45,4 +39,3 @@ nodefony.registerEntity("requests", function(){
 
 	};
 });
-

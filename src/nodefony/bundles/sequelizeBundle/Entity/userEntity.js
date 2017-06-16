@@ -15,6 +15,7 @@ nodefony.registerEntity("user", function(){
 
 
 	var User = function(db, ormService){
+
 		var model = db.define("user", {
 				id		:	{type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
 				username	:	{type: Sequelize.STRING, unique: true, allowNull: false},
@@ -32,41 +33,41 @@ nodefony.registerEntity("user", function(){
 				displayName	:	Sequelize.STRING,
 				url		:	Sequelize.STRING,
 				image		:	Sequelize.STRING
-    		},{
-			classMethods: {
-				getUserPassword : function(username, callback){
-					this.findOne({where:{ username: username }}).then( function ( user) {
-						if ( user )
-							return callback(null, user.password)
-						return callback({
-							status:401,
-				        		message:"User : " + username +" not Found"
-						}, null)
-					}).catch(function(error){
-						if (error){
-							return callback(error, null);
-						}
-					});
-				},	
-				loadUserByUsername : function(username, callback){
-					this.findOne({
-  						where: {username: username}
-					}).then(function( user) {
-						return callback(null, user);
-					}).catch(function(error){
-						if (error){
-							return callback(error, null);	
-						}
-					});
-				},
-				generatePassword:function(){
-					var date = new Date().getTime();
-					var buf = crypto.randomBytes(256);
-					var hash = crypto.createHash('md5');
-					return hash.update(buf).digest("hex");	
+    	});
+
+		model.getUserPassword = function getUserPassword (username, callback){
+			return this.findOne({where:{ username: username }}).then( function ( user) {
+				if ( user )
+					return callback(null, user.password)
+				return callback({
+					status:401,
+						message:"User : " + username +" not Found"
+				}, null)
+			}).catch(function(error){
+				if (error){
+					return callback(error, null);
 				}
-			}
-		});
+			});
+		};
+
+		model.loadUserByUsername = function(username, callback){
+			return this.findOne({
+				where: {username: username}
+			}).then(function( user) {
+				return callback(null, user);
+			}).catch(function(error){
+				if (error){
+					return callback(error, null);
+				}
+			});
+		};
+
+		model.generatePassword = function generatePassword (){
+			var date = new Date().getTime();
+			var buf = crypto.randomBytes(256);
+			var hash = crypto.createHash('md5');
+			return hash.update(buf).digest("hex");
+		}
 
 		ormService.listen(this, 'onReadyConnection', function(connectionName, db, ormService){
 			if(connectionName == 'nodefony'){
@@ -78,6 +79,7 @@ nodefony.registerEntity("user", function(){
 				}
 			}
 		});
+
 		return model ;
 	};
 
@@ -87,4 +89,3 @@ nodefony.registerEntity("user", function(){
 		entity:User
 	};
 });
-
