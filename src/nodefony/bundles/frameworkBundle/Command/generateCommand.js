@@ -252,6 +252,11 @@ nodefony.registerCommand("generate",function(){
 {% block body %}\n\
 	<div class='container'>\n\
 		<div class='row'>\n\
+			<img class='displayed' src='"+param.CDN_image+"/frameworkBundle/images/nodefony-logo-white.png'>\n\
+		</div>\n\
+	</div>\n\
+	<div class='container'>\n\
+		<div class='row displayed'>\n\
 			{{readme}}\n\
 		</div>\n\
 	</div>\n\
@@ -274,6 +279,7 @@ nodefony.registerCommand("generate",function(){
 		};
 		params["CDN_stylesheet"] = '{{CDN("stylesheet")}}';
 		params["CDN_javascript"] = '{{CDN("javascript")}}';
+		params["CDN_image"] = '{{CDN("image")}}';
 
 		params["myview"] = viewString(params);
 		var file = [{
