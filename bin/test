@@ -1,0 +1,39 @@
+#!/usr/bin/env node
+
+
+// WORKER
+const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
+
+
+// SERVICE
+var service = class service extends nodefony.Service {
+
+	constructor (){
+		super("MY SERVICE");
+		this.listenSyslog();
+
+		this.on("onMyEvent", (txt) => {
+
+			this.logger(txt);
+		})
+		
+		setTimeout ( () =>{
+			this.fire("onMyEvent", "Event onMyEvent ");
+		}, 5000);
+	}
+
+};
+
+var myService = new service();
+
+myService.listen( myService , "onMyEvent" , function(txt){
+	this.logger(txt);
+	this.logger("test", "DEBUG") ;
+	this.logger("test", "INFO") ;
+	this.logger("test", "WARNING") ;
+	this.logger("test", "ERROR") ;
+	this.logger("test", "CRITIC") ;
+	this.logger("test", "EMERGENCY") ;
+})
+
+myService.logger("Waiting event onMyEvent ... ", "ALERT") ;

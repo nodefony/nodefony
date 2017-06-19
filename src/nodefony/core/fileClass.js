@@ -111,8 +111,7 @@ nodefony.register("fileClass", function(){
 		}
 
 		matchName (ele){
-		 	
-			if (ele instanceof RegExp ){
+			if (nodefony.typeOf(ele) === "RegExp" ){
 				this.match = ele.exec(this.name);
 				return this.match;
 			}

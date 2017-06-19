@@ -21,14 +21,12 @@ const shell = require("shelljs");
  *
  */
 
-var autoloader = null ;
-// AUTOLOADER
 try {
-	autoloader = require("nodefony");
+	const nodefony = require("nodefony");
 }catch(e){
-	autoloader = require(".", "src", "nodefony", "core", "autoloader");	
+	const nodefony = require(".", "src", "nodefony", "core", "autoloader");	
 }
-autoloader.load( path.resolve(".", "app", "appKernel.js" ) );
+//nodefony.autoloader.load( path.resolve(".", "app", "appKernel.js" ) );
 
 var links = path.resolve( ".", "tmp", "assestLink" ) ;
 if ( fs.existsSync( links) ){
@@ -48,9 +46,8 @@ process.env["MODE_START"] = "NODEFONY_DEV" ;
 asciify("      NODEFONY", {font:'standard'}, function(err, res){
 	console.log('\033[31m'+res+'\033[0m'); 
 	// KERNEL 
-	var kernel = new nodefony.appKernel("SERVER", environment, debug, autoloader, {
+	var kernel = new nodefony.appKernel("SERVER", environment, debug, nodefony.autoloader, {
 		node_start:process.env["MODE_START"]
 	});
-	autoloader.setKernel(kernel);
 	return kernel ;
 });

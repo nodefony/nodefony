@@ -207,7 +207,6 @@ nodefony.register("finder", function(){
 
 
 	var checkExclude = function(file, settings){
-		
 		if ( file.matchName( settings.exclude ) ){
 			return true ;
 		}

@@ -4,10 +4,11 @@
  *
  *
  */
-const yaml = require("js-yaml");
-const util = require('util');
-const path = require("path");
 const fs = require("fs");
+const vm = require("vm");
+const yaml = require("js-yaml");
+const util = require('util');	
+const path = require("path");
 const cluster = require('cluster');
 const url = require("url");
 const xmlParser = require('xml2js').Parser;
@@ -18,8 +19,8 @@ const http = require('http');
 const nodedomain = require('domain');
 const WebSocketServer = require('websocket');
 const Promise = require('promise');
-const shell = require("shelljs");
 const clc = require('cli-color');
+const shell = require("shelljs");
 
 
 var nodefony = function(){
@@ -42,6 +43,7 @@ var nodefony = function(){
 			this.bundles={};
 			this.templatings={};
 			this.services= {};
+			this.isRegExp = require('lodash.isregexp');
 		}
 
 		isFunction  (it) {
@@ -50,6 +52,10 @@ var nodefony = function(){
 
 		isArray  (it) {
 			return Object.prototype.toString.call(it) === '[object Array]';
+		}
+
+		isRegExp (it){
+			return isRegExp(it);
 		}
 
 		/**
@@ -81,6 +87,9 @@ var nodefony = function(){
       				}
 				if (value instanceof Date ){
 					return "date";
+				}
+				if ( this.isRegExp (value) ){
+					return "RegExp" ;
 				}
 				if ( value.callee ){
 					return "arguments";
@@ -291,5 +300,5 @@ var nodefony = function(){
 		}
 	};
 
-	return new Nodefony();
+	return new Nodefony() ;
 }();

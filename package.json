@@ -5,6 +5,8 @@
   "main": "./src/nodefony/core/autoloader.js",
   "scripts": {
     "start": "make deploy",
+    "stop": "make stop",
+    "kill": "make kill",
     "test": "./console unitTest:launch:all",
     "version": "changelog nodefony all -m"
   },
@@ -61,6 +63,8 @@
     "jshint": "2.9.4",
     "less": " 2.7.2",
     "less-loader": "4.0.4",
+    "lodash": "^4.17.4",
+    "lodash.isregexp": "^4.0.1",
     "markdown-it": "8.3.1",
     "memcached": "2.2.2",
     "mime": "1.3.6",

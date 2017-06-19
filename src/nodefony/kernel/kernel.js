@@ -89,6 +89,9 @@ nodefony.register("kernel", function(){
 		constructor (environment, debug, autoLoader, type, options){
 
 			super( "KERNEL" , null, null , nodefony.extend( {}, defaultOptions,  options) );
+			this.autoLoader = autoLoader;
+			this.autoLoader.setKernel(this);
+
 			this.rootDir = process.cwd();
 			this.appPath = path.resolve( this.rootDir, "app");
 			this.configPath = path.resolve( this.rootDir, "config", "config.yml") ;
@@ -121,7 +124,7 @@ nodefony.register("kernel", function(){
 			this.debug = debug || false;
 			this.booted = false;
 			this.ready = false;
-			this.autoLoader = autoLoader;
+			
 			this.nodefonyPath = this.autoLoader.dirname;
 			this.settings = null;
 			this.regBundle = regBundle;

@@ -30,6 +30,7 @@ module.exports = function(){
 			this.displayError = true ;
 			this.dirname = path.resolve(  __dirname, "../" );
 			this.load( path.resolve( this.dirname, "core", "core.js") );
+			this.load( path.resolve( this.dirname, "core", "container.js") );
 			this.load( path.resolve( this.dirname, "core", "notificationsCenter.js") );
 			this.load( path.resolve( this.dirname, "core", "../syslog/syslog.js") );
 			this.load( path.resolve( this.dirname, "core", "service.js") );
@@ -41,6 +42,7 @@ module.exports = function(){
 			this.load( path.resolve( this.dirname, "core", "watcher.js") );
 			this.load( path.resolve( this.dirname, "core", "cliWorker.js") );
 			this.loadDirectory( path.resolve( this.dirname, "kernel"), /^tests$/ );
+			this.load( path.resolve( this.dirname, "app", "appKernel.js") );
 			this.syslog = null;
 			this.setEnv();
 		}
@@ -207,7 +209,8 @@ module.exports = function(){
 
 	};
 
-	var auto = new autoload();
-	self.logger =  auto.logger.bind(auto);
-	return auto ;
+	var autoloader = new autoload();
+	nodefony.autoloader = autoloader;
+	self.logger =  autoloader.logger.bind(autoloader);
+	return nodefony ;
 }();

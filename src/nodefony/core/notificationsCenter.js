@@ -33,7 +33,7 @@ nodefony.register("notificationsCenter",function(){
 		listen (context, eventName, callback) {
 			var event = arguments[1];
 			var ContextClosure = this;
-			if ( callback instanceof Function ){
+			if (  typeof(callback ) === 'function'  || callback instanceof Function ){
 				this.event.addListener(eventName, callback.bind(context));
 			}
 			return function() {
@@ -45,7 +45,7 @@ nodefony.register("notificationsCenter",function(){
 		on (eventName, callback) {
 			var event = arguments[1];
 			var ContextClosure = this;
-			if ( callback instanceof Function ){
+			if ( typeof(callback ) === 'function'  || callback instanceof Function ){
 				this.event.addListener(eventName, callback);
 				return function() {
 					Array.prototype.unshift.call(arguments, event);
@@ -63,7 +63,7 @@ nodefony.register("notificationsCenter",function(){
 		once (context, eventName, callback){
 			var event = arguments[1];
 			var ContextClosure = this;
-			if ( callback instanceof Function ){
+			if ( typeof(callback ) === 'function'  || callback instanceof Function ){
 				this.event.once(eventName, callback.bind(context));
 			}
 			return function() {
