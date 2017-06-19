@@ -473,6 +473,9 @@ nodefony.registerService("router", function(){
 						break ;
 					}
 				}catch(e){
+					if (e && e.type && e.type === "domain"){
+						continue ;
+					}
 					throw e ;
 				}
 			}

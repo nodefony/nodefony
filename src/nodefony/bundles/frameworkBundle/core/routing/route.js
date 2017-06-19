@@ -20,20 +20,20 @@ nodefony.register("Route", function(){
  	 *	CLASS ROUTE
  	 *
  	 */
-	const regRoute = /(\/)?(\.)?\{([^}]+)\}(?:\(([^)]*)\))?(\?)?/g ; 
+	const regRoute = /(\/)?(\.)?\{([^}]+)\}(?:\(([^)]*)\))?(\?)?/g ;
 
 	var Route = class Route {
 		constructor (name, obj){
-			this.name = name ; 
-			this.path  = null; 
-			this.host= null;                     	
-			this.defaults= {};     
+			this.name = name ;
+			this.path  = null;
+			this.host= null;
+			this.defaults= {};
             		this.requirements= {};
-			//TODO 	
+			//TODO
             		this.options= {};
 
 			//TODO http | websocket
-            		this.schemes= null;      
+            		this.schemes= null;
 			//TODO with obj
 			if ( obj ){
 				this.setName(obj.id);
@@ -49,7 +49,7 @@ nodefony.register("Route", function(){
 
 		generateId(){
 			//console.log(  "GENERATE : " + JSON.stringify(this) );
-			this.hash = crypto.createHash("md5").update(JSON.stringify(this)).digest("hex") ;	
+			this.hash = crypto.createHash("md5").update(JSON.stringify(this)).digest("hex") ;
 			return this.hash ;
 		}
 
@@ -60,11 +60,11 @@ nodefony.register("Route", function(){
 		setPattern (pattern){
 			this.path = pattern;
 		}
-		
+
 		setHostname (hostname){
 			this.host = hostname;
 		}
-		
+
 		addDefault (key , value){
 			this.defaults[key] = value;
 		}
@@ -91,7 +91,7 @@ nodefony.register("Route", function(){
 		setMethods (){}
 		setHost (){}
 		setSchemes (){}*/
-		
+
 		checkDefaultParameters ( variable ){
 			for( var def in this.defaults ){
 				switch ( def ){
@@ -103,7 +103,7 @@ nodefony.register("Route", function(){
 						}
 				}
 			}
-			return false ;	
+			return false ;
 		}
 
 		hydrateDefaultParameters ( res ){
@@ -112,9 +112,9 @@ nodefony.register("Route", function(){
 					if (  this.defaults[ this.variables[i] ] ){
 						if (res[i+1] === "" ){
 							res[i+1] = this.defaults[ this.variables[i] ];
-						}	
+						}
 					}
-				}	
+				}
 			}else{
 				for( var def in this.defaults ){
 					switch ( def ){
@@ -124,9 +124,9 @@ nodefony.register("Route", function(){
 							res.push( this.defaults[def] );
 					}
 				}
-			}	
-		}	
-		
+			}
+		}
+
 		compile (){
 			var pattern = this.path.replace( regRoute, (match, slash, dot, key, capture, opt, offset)  => {
 				var incl = (this.path[match.length+offset] || '/') === '/';
@@ -151,25 +151,25 @@ nodefony.register("Route", function(){
 			try {
 				this.hydrateDefaultParameters( res );
 			}catch(e){
-				throw  e  ;	
+				throw  e  ;
 			}
 
 			//check requierments
 			try {
-				this.matchRequirements(context) ;	
+				this.matchRequirements(context) ;
 			}catch(e){
 				throw  e  ;
 			}
 			//check Hostname
 			try {
-				this.matchHostname(context) ;	
+				this.matchHostname(context) ;
 			}catch(e){
 				throw  e  ;
 			}
 
 			//check options
 			/*try {
-				this.matchOptions(context) ;	
+				this.matchOptions(context) ;
 			}catch(e){
 				throw  e  ;
 			}*/
@@ -223,8 +223,9 @@ nodefony.register("Route", function(){
 					return true;
 				}
 				throw {
-					message:	"Domain "+ context.domain +" Unauthorized",
-					status:		401
+					type		: "domain",
+					message		: "Domain "+ context.domain +" Unauthorized",
+					status		: 401
 				};
 			}
 			return true ;
@@ -240,8 +241,9 @@ nodefony.register("Route", function(){
 									var req = this.requirements[i].replace(/\s/g,"").toUpperCase();
 									if (req.split(",").lastIndexOf(context.method) < 0){
 										throw {
+											type: "method",
 											message:	"Method "+ context.method +" Unauthorized",
-											status:		401	
+											status:		401
 										};
 									}
 								break ;
@@ -249,22 +251,24 @@ nodefony.register("Route", function(){
 									if (  this.requirements[i].indexOf(context.method) < 0 ){
 										if ( this.requirements[i].indexOf( context.method.toLowerCase() ) < 0  ){
 											throw {
+												type: "method",
 												message:	"Method "+ context.method +" Unauthorized",
-												status:		401	
+												status:		401
 											};
 										}
 									}
 								break;
 								default:
-									throw new Error ("Bad config route method : " + this.requirements[i] );	
-							}	
-							
+									throw new Error ("Bad config route method : " + this.requirements[i] );
+							}
+
 						break;
 						case "domain":
 							if (context.domain !== this.requirements[i]){
 								throw {
-									message:	"Domain "+ context.domain +" Unauthorized",
-									status:		401
+									type		: "domain",
+									message		: "Domain "+ context.domain +" Unauthorized",
+									status		: 401
 								};
 							}
 						break;
@@ -275,9 +279,9 @@ nodefony.register("Route", function(){
 		}
 
 		/*matchOptions (context){
-			var testOpt = true ;	
+			var testOpt = true ;
 			for(var i  in this.options ){
-				
+
 			}
 			return testOpt;
 		}*/
