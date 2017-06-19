@@ -6792,7 +6792,13 @@ promise-retry@^1.1.1:
     err-code "^1.0.0"
     retry "^0.10.0"
 
-promise@7.2.0, promise@^7.1.1:
+promise@7.3.0:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/promise/-/promise-7.3.0.tgz#e7feec5aa87a2cbb81acf47d9a3adbd9d4642d7b"
+  dependencies:
+    asap "~2.0.3"
+
+promise@^7.1.1:
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/promise/-/promise-7.2.0.tgz#67075a5fc537b39d66b87cdeb3732cf75867dbe2"
   dependencies:
@@ -8470,9 +8476,9 @@ uc.micro@^1.0.1, uc.micro@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.3.tgz#7ed50d5e0f9a9fb0a573379259f2a77458d50192"
 
-uglify-es@3.0.17:
-  version "3.0.17"
-  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.0.17.tgz#fafc1129d64d3900ae255672e64a4cf94d25796c"
+uglify-es@3.0.18:
+  version "3.0.18"
+  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.0.18.tgz#ad206e41b5e4b90bfbf5d2a058ef0321b9f118ac"
   dependencies:
     commander "~2.9.0"
     source-map "~0.5.1"
