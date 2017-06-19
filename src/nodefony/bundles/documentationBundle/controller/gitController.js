@@ -14,27 +14,31 @@ nodefony.registerController("git", function(){
 		};
 
 		getStatusAction (){
-		
+
 			var tab = [] ;
-			Git.Repository.open(this.get("kernel").rootDir).then((repo)  => {
+			try {
+				Git.Repository.open(this.get("kernel").rootDir).then((repo)  => {
 
-				repo.getStatus().then( (statuses) => {
-					statuses.forEach( (file) => { 
-						var obj = {
-							path:file.path(),
-							type:file.status()
-						};
-						tab.push(obj)
-					});
-					this.renderJsonAsync(tab);
+					repo.getStatus().then( (statuses) => {
+						statuses.forEach( (file) => {
+							var obj = {
+								path:file.path(),
+								type:file.status()
+							};
+							tab.push(obj)
+						});
+						this.renderJsonAsync(tab);
+					})
+
 				})
-
-			})
-			.catch( (err) =>  {
-				this.renderJsonAsync(tab);
-			}).done(function () {
-  				//console.log('Finished');
-			});
+				.catch( (err) =>  {
+					this.renderJsonAsync(tab);
+				}).done(function () {
+	  				//console.log('Finished');
+				});
+			}catch(e){
+				throw e ;
+			}
 
 		}
 
@@ -56,10 +60,10 @@ nodefony.registerController("git", function(){
 			}).done(function () {
   				//console.log('Finished');
 			});
-		
+
 
 		}
-		
+
 		getMostRecentCommitAction (){
 
 			var tab = [] ;
@@ -100,6 +104,3 @@ nodefony.registerController("git", function(){
 
 	return gitController;
 });
-
-
-

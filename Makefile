@@ -44,6 +44,8 @@ build:
 
 	make clean ;
 
+	make certificates ;
+
 	make npm ;
 
 	make install && echo "success nodefony install !" || echo "failure nodefony install !" ;
@@ -65,8 +67,6 @@ build:
 		echo "./.console_dev npm:list";\
 		./.console_dev npm:list ;\
 	fi \
-
-	make certificates ;
 
 #
 # PM2 MANAGEMENT PRODUCTION
