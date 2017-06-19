@@ -2,7 +2,7 @@ const Sockjs = require('sockjs');
 
 
 nodefony.registerService("sockjs", function(){
-	
+
 
 	var sockCompiler = class sockServer extends nodefony.Service {
 
@@ -10,9 +10,9 @@ nodefony.registerService("sockjs", function(){
 			super( name, service.container ,service.notificationsCenter   );
 
 			this.service = service ;
-			
+
 			this.clientStats = {
-				errorDetails: false
+				errorDetails: true
 			}
 			this.stats = null ;
 			if ( compiler ){
@@ -26,31 +26,35 @@ nodefony.registerService("sockjs", function(){
 						this.sockWrite( "invalid");
 					});
 					this.compiler.plugin("done", (stats) => {
-						this.sendStats( stats.toJson(this.clientStats));
+						var ret = this.sendStats( stats.toJson(this.clientStats));
 						this.stats = stats;
-						this.sockWrite( "content-changed");
+						if ( ret !== "errors"){
+							this.sockWrite( "content-changed");
+						}
 					});
 				//});
-					
+
 			}
 		}
-		
+
 		sendStats (stats, force, connection) {
 			if(!force &&
 					stats &&
 					(!stats.errors || stats.errors.length === 0) &&
 					stats.assets &&
 					stats.assets.every((asset) => !asset.emitted)
-			  )
+			  ){
 				return this.sockWrite( "still-ok", null,connection );
+			}
 			this.sockWrite( "hash", stats.hash, connection);
 			if(stats.errors && stats.errors.length > 0){
 				this.sockWrite( "errors", stats.errors, connection);
+				return "errors" ;
 			}else{
- 			       	if(stats.warnings && stats.warnings.length > 0){
-					this.sockWrite( "warnings", stats.warnings, connection);
+ 			    if(stats.warnings && stats.warnings.length > 0){
+					return this.sockWrite( "warnings", stats.warnings, connection);
 				}else{
-					this.sockWrite( "ok", null,connection);
+					return this.sockWrite( "ok", null,connection);
 				}
 			}
 		}
@@ -92,14 +96,14 @@ nodefony.registerService("sockjs", function(){
 
 		addCompiler ( compiler, basename){
 			this.compilers[basename] = new sockCompiler(this, "SOCKJS_" + basename ,compiler  );
-			this.logger( "Add sock-js compiler  : " + "SOCKJS_" + basename );		
+			this.logger( "Add sock-js compiler  : " + "SOCKJS_" + basename );
 		}
 
 		createServer (service ,protocol){
 
-			try { 
-				this.logger(" Create sockjs server :   "+ service.type);	
-				this[protocol] = Sockjs.createServer({ 
+			try {
+				this.logger(" Create sockjs server :   "+ service.type);
+				this[protocol] = Sockjs.createServer({
 					sockjs_url: protocol+'://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js' ,
 					//websocket:false,
 					prefix: this.prefix,
@@ -123,9 +127,9 @@ nodefony.registerService("sockjs", function(){
 					for( var compiler  in this.compilers ){
 						if ( this.compilers[compiler].stats){
 							//this.compilers[compiler].sendStats(this.compilers[compiler].stats, true, conn);
-						}	
+						}
 					}
-					
+
 				});
 
 				this[protocol].installHandlers(service.server);
@@ -143,7 +147,7 @@ nodefony.registerService("sockjs", function(){
 					return connection.write(JSON.stringify({
 						type: type,
 						data: data
-					}));	
+					}));
 				}
 				this.sockets.forEach((sock) => {
 					this.logger(type, "DEBUG");

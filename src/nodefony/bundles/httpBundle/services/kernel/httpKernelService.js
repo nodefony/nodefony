@@ -55,7 +55,7 @@ nodefony.registerService("httpKernel", function(){
 				this.logger(e, "ERROR", "HTTP KERNEL SOCKET CLIENT ERROR");
 				socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 			});
-	
+
 		}
 
 		boot (){
@@ -66,7 +66,7 @@ nodefony.registerService("httpKernel", function(){
 			if ( ! this.kernel.domainAlias ){
 				str = "^"+this.kernel.domain+"$" ;
 				this.regAlias = new RegExp(str);
-				return ;	
+				return ;
 			}
 			try {
 				var alias = [] ;
@@ -75,7 +75,7 @@ nodefony.registerService("httpKernel", function(){
 						alias = this.kernel.domainAlias.split(" ");
 						Array.prototype.unshift.call(alias,  "^"+this.kernel.domain+"$" );
 						for ( var i = 0 ; i <alias.length ;i++ ){
-							if (i === 0){ 
+							if (i === 0){
 								str = alias[i];
 							}else{
 								str += "|"+ alias[i] ;
@@ -89,7 +89,7 @@ nodefony.registerService("httpKernel", function(){
 								var first = false;
 								str = this.kernel.domainAlias[myAlias] ;
 							}else{
-								str += "|"+ this.kernel.domainAlias[myAlias] ;	
+								str += "|"+ this.kernel.domainAlias[myAlias] ;
 							}
 						}
 					break;
@@ -106,7 +106,7 @@ nodefony.registerService("httpKernel", function(){
 					this.regAlias = new RegExp(str);
 				}else{
 					str = "^"+this.kernel.domain+"$" ;
-					this.regAlias = new RegExp(str);	
+					this.regAlias = new RegExp(str);
 				}
 			}catch(e){
 				throw e ;
@@ -118,13 +118,13 @@ nodefony.registerService("httpKernel", function(){
 		}
 
 		isCrossDomain (context){
-			// request origin 
+			// request origin
 			var URL = context.originUrl ;
 			var hostnameOrigin = URL.hostname ;
 			var portOrigin = URL.port ;
 
 			// request server
-			var requestProto = context.protocol ; 
+			var requestProto = context.protocol ;
 			var requestPort = context.port ;
 			var protocolOrigin = null ;
 
@@ -134,7 +134,7 @@ nodefony.registerService("httpKernel", function(){
 					return false  ;
 				}
 			}
-			
+
 			//console.log( "prototcol ::::" + URL.protocol )
 			if ( ! portOrigin ){
 				if (URL.protocol === "http:" ){
@@ -143,15 +143,15 @@ nodefony.registerService("httpKernel", function(){
 				}
 				if ( URL.protocol === "https:" ){
 					URL.port = 443 ;
-					portOrigin = 443 ;	
-				}	
+					portOrigin = 443 ;
+				}
 			}
 			//console.log( "portOrigin ::::" + portOrigin )
 			if (  context.proxy  ){
-				requestProto = context.proxy.proxyProto ;	
-				requestPort =	context.proxy.proxyPort;	
+				requestProto = context.proxy.proxyProto ;
+				requestPort =	context.proxy.proxyPort;
 			}
-			
+
 			//console.log( "requestProto : " + requestProto)
 			switch  ( requestProto ){
 				case "http" :
@@ -169,26 +169,26 @@ nodefony.registerService("httpKernel", function(){
 				break;
 			}
 
-			//console.log( "check domain Request:" + this.regAlias.test( hostnameOrigin ) +" Origin : "+hostnameOrigin)		
+			//console.log( "check domain Request:" + this.regAlias.test( hostnameOrigin ) +" Origin : "+hostnameOrigin)
 			//check domain
 			if (  ! this.regAlias.test( hostnameOrigin )  ){
-				return true ; 
+				return true ;
 			}
 
-			//console.log( "check protocol Request:" + requestProto +" Origin : "+protocolOrigin)		
-			// check protocol  	
+			//console.log( "check protocol Request:" + requestProto +" Origin : "+protocolOrigin)
+			// check protocol
 			if (requestProto+":" !== protocolOrigin  ){
-				return true ; 
+				return true ;
 			}
 
-			//console.log( "check port Request:" + requestPort +" Origin : "+portOrigin)		
+			//console.log( "check port Request:" + requestPort +" Origin : "+portOrigin)
 			// check port
 			if (requestPort != portOrigin  ){
 				return true ;
 			}
 			return false ;
 		}
-			
+
 		getEngineTemplate (name){
 			return nodefony.templatings[name];
 		}
@@ -216,7 +216,7 @@ nodefony.registerService("httpKernel", function(){
 				}
 				return myBundle.getView(objPattern.directory, objPattern.file);
 			}catch (e){
-				throw e;	
+				throw e;
 			}
 		}
 
@@ -228,7 +228,7 @@ nodefony.registerService("httpKernel", function(){
 				}
 				return myBundle.getTemplate(objPattern.directory, objPattern.file);
 			}catch (e){
-				throw e;	
+				throw e;
 			}
 		}
 
@@ -237,7 +237,7 @@ nodefony.registerService("httpKernel", function(){
 				var parse = this.parseViewPattern( name );
 				return this.getBundleView(parse);
 			}catch (e){
-				throw e;	
+				throw e;
 			}
 		}
 
@@ -246,7 +246,7 @@ nodefony.registerService("httpKernel", function(){
 				var parse = this.parseViewPattern( name );
 				return this.getBundleTemplate(parse);
 			}catch (e){
-				throw e;	
+				throw e;
 			}
 		}
 
@@ -288,7 +288,7 @@ nodefony.registerService("httpKernel", function(){
 					}
 				break;
 			}
-			return next ;	
+			return next ;
 		}
 
 		onError (container, error){
@@ -304,7 +304,7 @@ nodefony.registerService("httpKernel", function(){
 					this.logger(error.message, "ERROR");
 					this.logger(myError, "ERROR");
 					myError = myError.split('\n').map(function(v){ return ' -- ' + v +"</br>"; }).join('');
-            					
+
 				}else{
 					myError =  error;
 					this.logger(util.inspect(error),"ERROR");
@@ -347,7 +347,7 @@ nodefony.registerService("httpKernel", function(){
 			context.response.setStatusCode(error.status || 500, error.message ) ;
 
 			if (error.xjson){
-				if ( context.setXjson ){ 
+				if ( context.setXjson ){
 					context.setXjson(error.xjson);
 				}
 			}
@@ -360,7 +360,7 @@ nodefony.registerService("httpKernel", function(){
 
 		onHttpRequest(request, response, type){
 			if ( request.url && this.sockjs && request.url.match( this.sockjs.regPrefix ) ){
-				this.logger("drop sockjs", "DEBUG");
+				this.logger("HTTP drop to sockj " + request.url, "DEBUG");
 				return ;
 			}
 			if ( response.headersSent ) {
@@ -373,13 +373,13 @@ nodefony.registerService("httpKernel", function(){
 				});
 			}else{
 				this.fire("onServerRequest", request, response, type);
-			}	
+			}
 		}
 
 		handle (request, response, type, domain){
-			
+
 			// SCOPE REQUEST ;
-			var container = this.container.enterScope("request");	
+			var container = this.container.enterScope("request");
 			if ( domain ) { domain.container = container ; }
 			switch (type){
 				case "HTTP" :
@@ -388,7 +388,7 @@ nodefony.registerService("httpKernel", function(){
 				break;
 				case "WEBSOCKET" :
 				case "WEBSOCKET SECURE" :
-					return this.handleWebsocket(container, request, response, type, domain);	
+					return this.handleWebsocket(container, request, response, type, domain);
 				break;
 			}
 		}
@@ -399,7 +399,7 @@ nodefony.registerService("httpKernel", function(){
 			var resolver = null ;
 			var next = null ;
 			container.set("context", context);
-			//response events	
+			//response events
 			context.response.response.on("finish",() => {
 				//console.log("FINISH")
 				context.fire("onFinish", context);
@@ -413,24 +413,24 @@ nodefony.registerService("httpKernel", function(){
 				type = null ;
 				next = null ;
 			});
-			
-			//request events	
+
+			//request events
 			context.notificationsCenter.listen(this, "onError", this.onError);
 
-			// DOMAIN VALID 
+			// DOMAIN VALID
 			next = this.checkValidDomain(context) ;
 			if ( next !== 200){
 				return ;
 			}
-			
-			// FRONT ROUTER 
+
+			// FRONT ROUTER
 			try {
 				resolver  = this.router.resolve(container, context);
 			}catch(e){
-				return context.notificationsCenter.fire("onError", container, e );	
+				return context.notificationsCenter.fire("onError", container, e );
 			}
 			if (resolver.resolve) {
-				context.resolver = resolver ;	
+				context.resolver = resolver ;
 			}else{
 				return context.notificationsCenter.fire("onError", container, {
 					status:404,
@@ -453,27 +453,27 @@ nodefony.registerService("httpKernel", function(){
 								return error;
 							});
 						}else{
-							context.notificationsCenter.fire("onRequest");	
+							context.notificationsCenter.fire("onRequest");
 						}
 					}catch(e){
-						context.notificationsCenter.fire("onError", container, e );	
+						context.notificationsCenter.fire("onError", container, e );
 					}
 				});
-				return ;	
+				return ;
 			}
-			this.fire("onSecurity", context);	
+			this.fire("onSecurity", context);
 		}
 
 		onWebsocketRequest (request, type){
 			if ( request.resourceURL.path && this.sockjs && request.resourceURL.path.match( this.sockjs.regPrefix ) ){
-				this.logger("drop sockjs", "DEBUG");
-				var connection = request.accept(null, request.origin);
-				connection.drop(1006, 'TCP connection lost before handshake completed.', true);
+				this.logger("websocket drop to sockjs : " +request.resourceURL.path, "DEBUG");
+				//var connection = request.accept(null, request.origin);
+				//connection.drop(1006, 'TCP connection lost before handshake completed.', false);
 				request = null ;
-				connection = null ;
+				//connection = null ;
 				return ;
 			}
-			this.fire("onServerRequest", request, null, type);	
+			this.fire("onServerRequest", request, null, type);
 		}
 
 		handleWebsocket (container, request, response, type){
@@ -493,23 +493,23 @@ nodefony.registerService("httpKernel", function(){
 				next = null ;
 				resolver = null ;
 			});
-			
 
-			// DOMAIN VALID 
+
+			// DOMAIN VALID
 			var next = this.checkValidDomain(context) ;
 			if ( next !== 200){
 				return ;
 			}
 
-			// FRONT ROUTER 
+			// FRONT ROUTER
 			try {
 				resolver  = this.router.resolve(container, context);
 			}catch(e){
-				return context.notificationsCenter.fire("onError", container, e );	
+				return context.notificationsCenter.fire("onError", container, e );
 			}
 
 			if (resolver.resolve) {
-				context.resolver = resolver ;	
+				context.resolver = resolver ;
 			}else{
 				return context.notificationsCenter.fire("onError", container, {
 					status:404,
@@ -517,7 +517,7 @@ nodefony.registerService("httpKernel", function(){
 					message:"not Found"
 				});
 			}
-			
+
 			if ( ( ! this.firewall ) || resolver.bypassFirewall ){
 				try {
 					if ( context.sessionAutoStart === "autostart" ){
@@ -531,14 +531,14 @@ nodefony.registerService("httpKernel", function(){
 							return error;
 						});
 					}else{
-						context.notificationsCenter.fire("onRequest");	
+						context.notificationsCenter.fire("onRequest");
 					}
 				}catch(e){
-					context.notificationsCenter.fire("onError", container, e );	
+					context.notificationsCenter.fire("onError", container, e );
 				}
-				return ;	
+				return ;
 			}
-			this.fire("onSecurity", context);	
+			this.fire("onSecurity", context);
 			return ;
 		}
 
@@ -553,7 +553,7 @@ nodefony.registerService("httpKernel", function(){
 					myError =  error.stack;
 					this.logger(myError);
 					myError = myError.split('\n').map(function(v){ return ' -- ' + v +"</br>"; }).join('');
-            					
+
 				}else{
 					myError =  error;
 					this.logger(util.inspect(error));
@@ -562,7 +562,7 @@ nodefony.registerService("httpKernel", function(){
 		}
 
 		setCDN(){
-			return  this.kernel.settings.CDN ;	
+			return  this.kernel.settings.CDN ;
 		}
 		getCDN(type, nb){
 			var wish = 0 ;
@@ -578,18 +578,18 @@ nodefony.registerService("httpKernel", function(){
 				case "object":
 					if ( ! this.cdn ){
 						return "";
-					} 
+					}
 					if (this.cdn.global ){
 						return this.cdn.global ;
 					}
 					if ( ! type ){
 						var txt = "CDN ERROR getCDN bad argument type  ";
 						this.logger(txt, "ERROR");
-						throw new Error (txt);	
+						throw new Error (txt);
 					}
 					if (type in this.cdn ) {
 						if ( this.cdn[type][wish] ){
-							return this.cdn[type][wish]; 
+							return this.cdn[type][wish];
 						}
 					}
 					return "";

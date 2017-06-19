@@ -36,6 +36,8 @@ nodefony.registerService("webpack", function(){
 		};
 	};
 
+
+
 	var sassRule  = function(basename){
 		return {
                     test: /.scss$/,
@@ -154,7 +156,7 @@ nodefony.registerService("webpack", function(){
 			}
 
 			this.sockjs =  this.get("sockjs") ;
-			
+
 
 		}
 
@@ -186,7 +188,7 @@ nodefony.registerService("webpack", function(){
 			}
 		}
 
-		loadConfigFile (file, Path, publicPath){
+		loadConfigFile (file, Path, publicPath, type){
 			try {
 				if ( ! ( file instanceof nodefony.fileClass ) ){
 					file = new nodefony.fileClass(file);
@@ -199,20 +201,36 @@ nodefony.registerService("webpack", function(){
 			try {
 				shell.cd(Path);
 				config = require(file.path );
-				config.output.path = path.resolve("Resources", "public", "dist") ;
-				if ( publicPath ){
-					config.output.publicPath = publicPath+"/" ;
-				}else{
-					config.output.publicPath =  "/"+path.basename(file.dirName)+"/dist/" ;
+				switch (type){
+					case "angular" :
+						config.output.path = path.resolve("Resources", "public", "dist") ;
+						if ( publicPath ){
+							config.output.publicPath = publicPath+"/" ;
+						}else{
+							config.output.publicPath =  "/"+path.basename(file.dirName)+"/dist/" ;
+						}
+						if ( ! this.production ){
+							config.entry.main.unshift("webpack-dev-server/client?http://localhost:5152/");
+						}
+					break;
+					case "react" :
+						config.output.path = path.resolve("Resources", "public", "dist") ;
+						if ( publicPath ){
+							config.output.publicPath = publicPath+"/" ;
+						}else{
+							config.output.publicPath =  "/"+path.basename(file.dirName)+"/dist/" ;
+						}
+					break;
 				}
+
 				var compiler =  webpack( config );
 				if ( this.kernel.type === "CONSOLE" ){
 					return  compiler;
 				}
 				if ( this.sockjs && compiler ) {
-					this.sockjs.addCompiler(  compiler, basename);	
+					this.sockjs.addCompiler(  compiler, basename);
 				}
-				
+
 			}catch(e){
 				shell.cd(this.kernel.rootDir);
 				throw e ;
@@ -223,7 +241,7 @@ nodefony.registerService("webpack", function(){
 			}
 
 			try {
-				
+
 				var idfile = basename+"_"+file.name ;
 				if ( watch ){
 					this.logger( "WEBPACK Config  : "+ file.path +" WATCHING ENTRY POINT : \n" + util.inspect(config.entry) , "DEBUG" );
@@ -268,7 +286,7 @@ nodefony.registerService("webpack", function(){
 				if ( this.kernel.type === "CONSOLE" ){
 					return  compiler;
 				}
-				
+
 			}catch(e){
 				throw e ;
 			}

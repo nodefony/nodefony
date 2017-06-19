@@ -40,7 +40,7 @@ nodefony.registerCommand("generate",function(){
 				controller.call(this, name, "controller", "defaultController", null, location, path.resolve(this.kernel.autoLoader.dirname, "bundles", "frameworkBundle", "Command", "skeletons", "controllerAngularClass.skeleton") ),
 				manager,
 				tests.call(this, param),
-				Resources.call(this, name, type, location),
+				Resources.call(this, name, type, location, "configAngular"),
 				documentation.call(this, param, location),
 				core,
 				entity,
@@ -83,7 +83,7 @@ nodefony.registerCommand("generate",function(){
 				controller.call(this, name, "controller", "defaultController", null, location, path.resolve(this.kernel.autoLoader.dirname, "bundles", "frameworkBundle", "Command", "skeletons", "controllerAngularClass.skeleton") ),
 				manager,
 				tests.call(this, param),
-				Resources.call(this, name, type, location),
+				Resources.call(this, name, type, location, "configReact"),
 				documentation.call(this, param, location),
 				core,
 				entity,
@@ -128,7 +128,7 @@ nodefony.registerCommand("generate",function(){
 					controller.call(this, name, "controller" , "defaultController", null, location),
 					manager,
 					tests.call(this, param),
-					Resources.call(this, name, type, location),
+					Resources.call(this, name, type, location, "config"),
 					documentation.call(this, param, location),
 					core,
 					entity,
@@ -183,7 +183,7 @@ nodefony.registerCommand("generate",function(){
 		};
 	};
 
-	var Resources = function(name, type, location){
+	var Resources = function(name, type, location, configName){
 		var Name = regBundle.exec(name)[1];
 		var param = {
 			name:Name,
@@ -208,7 +208,7 @@ nodefony.registerCommand("generate",function(){
 				childs:[{
 						name:"config."+type,
 						type:"file",
-						skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/config."+type+".skeleton" ),
+						skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/"+configName+"."+type+".skeleton" ),
 						params:param
 
 

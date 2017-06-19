@@ -368,30 +368,43 @@ nodefony.register("Bundle", function(){
 			});
 		}
 
-        	findWebPackConfig (){
-            		var res = this.finder.result.getFile("webpack.config.js", true) ;
+    	findWebPackConfig (){
+            switch(this.settings.type){
+                case "angular":
+                    var res = this.finder.result.getFile("webpack.config.js", true) ;
                     if ( ! res ){
-                        var file =null ;
-                        try {
-                            switch (process.env.NODE_ENV){
-                                case "development" :
-                                    file = path.resolve(this.path, "config", "webpack.config.dev.js");
-                                break;
-                                case "production" :
-                                    file = path.resolve(this.path, "config", "webpack.config.prod.js");
-                                break;
-                            }
-                            res = new nodefony.fileClass( file );
-                            process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
-                            //console.log(process.env.PUBLIC_URL)
-                        }catch(e){
-                            res = null ;
-                        }
+                        throw new Error("Angular bundle no webpack config file : webpack.config.js ");
                     }
-            		if ( res ){
-                		this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this.path , path.resolve("/", this.bundleName, "dist") );
-            		}
-        	}
+                break;
+                case "react":
+                    var file =null ;
+                    try {
+                        switch (process.env.NODE_ENV){
+                            case "development" :
+                                file = path.resolve(this.path, "config", "webpack.config.dev.js");
+                            break;
+                            case "production" :
+                                file = path.resolve(this.path, "config", "webpack.config.prod.js");
+                            break;
+                        }
+                        res = new nodefony.fileClass( file );
+                        process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
+                    }catch(e){
+                        throw new Error("React bundle no webpack config file : "+file ) ;
+                    }
+                break;
+                default:
+                    var res = this.finder.result.getFile("webpack.config.js", true) ;
+                    if ( ! res ){
+                        return ;
+                    }
+            }
+            try {
+                this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this.path , path.resolve("/", this.bundleName, "dist") , this.settings.type);
+            }catch(e){
+                throw e ;
+            }
+    	}
 
 		findControllerFiles ( result ){
 			if ( ! result ){
