@@ -137,6 +137,7 @@ nodefony.registerService("webpack", function(){
 			this.production = ( this.kernel.environment === "prod" ) ?  true :  false ;
 			this.defaultConfig = defaultConfig.call(this, "nodefony");
 			this.pathCache = path.resolve(this.kernel.rootDir, "tmp", "webpack") ;
+			this.host = this.kernel.hostHttps ;
 			if ( this.production ){
 				try {
 					if ( ! fs.existsSync( this.pathCache ) ){
@@ -210,7 +211,7 @@ nodefony.registerService("webpack", function(){
 							config.output.publicPath =  "/"+path.basename(file.dirName)+"/dist/" ;
 						}
 						if ( ! this.production ){
-							config.entry.main.unshift("webpack-dev-server/client?http://localhost:5152/");
+							config.entry.main.unshift("webpack-dev-server/client?https://"+this.host+"/");
 						}
 					break;
 					case "react" :
