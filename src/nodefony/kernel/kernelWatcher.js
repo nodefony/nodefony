@@ -9,7 +9,7 @@ nodefony.register("kernelWatcher", function(){
 
 	/*
 	 *
-	 *	WATCHER 
+	 *	WATCHER
 	 *
 	 */
 	var defaultWatcherSettings  = {
@@ -22,22 +22,22 @@ nodefony.register("kernelWatcher", function(){
   		//binaryInterval: 300,
   		atomic: true // or a custom 'atomicity delay', in milliseconds (default 100)
 	};
-	
+
 	var Watcher = class Watcher extends nodefony.watcher {
 		constructor (Path , settings, bundle){
-		
+
 			super( Path , nodefony.extend(true, {}, defaultWatcherSettings, settings), bundle.container );
 
 			if ( bundle ){
 				this.bundle = bundle ;
-				this.cwd = bundle.path ; 
+				this.cwd = bundle.path ;
 			}
 			this.router = this.get("router") ;
 		}
 
 		logger (  payload, severity, msgid, msg  ){
 			if ( typeof payload  === "string"){
-				var txt = "\x1b[36m"; 
+				var txt = "\x1b[36m";
 				if ( this.bundle ){
 					txt += "BUNDLE "+ this.bundle.name + "\x1b[0m ";
 				}
@@ -47,7 +47,7 @@ nodefony.register("kernelWatcher", function(){
 			}
 			return super.logger( payload, severity, msgid, msg );
 		}
-		
+
 		listenWatcherController(){
 			this.on('all', (event, Path) => {
 				switch(event){
@@ -86,7 +86,7 @@ nodefony.register("kernelWatcher", function(){
 					break;
 				}
 				this.fire(event, this.watcher , Path);
-			});	
+			});
 		}
 
 		listenWatcherView(){
@@ -99,7 +99,7 @@ nodefony.register("kernelWatcher", function(){
 					case "change" :
 						this.logger( Path, "INFO", event );
 						var file = this.cwd + "/" + Path ;
-						try{ 
+						try{
 							var fileClass = new nodefony.fileClass(file);
 							var ele = this.bundle.recompileTemplate(fileClass);
 							if ( ele.basename === "." ){
@@ -135,13 +135,13 @@ nodefony.register("kernelWatcher", function(){
 								if ( this.bundle.views["."][name] ){
 									delete this.bundle.views["."][name] ;
 									this.logger( "REMOVE TEMPLATE : " +  file, "INFO", event );
-								}	
+								}
 							}
 						}
 					break;
 				}
 				this.fire(event, this.watcher , Path);
-			});	
+			});
 		}
 
 		listenWatcherI18n(){
@@ -154,9 +154,9 @@ nodefony.register("kernelWatcher", function(){
 					case "change" :
 						this.logger( Path, "INFO", event );
 						var file = this.cwd + "/" + Path ;
-						try{ 
+						try{
 							var fileClass = new nodefony.fileClass(file);
-							fileClass.matchName(this.bundle.regI18nFile);	
+							fileClass.matchName(this.bundle.regI18nFile);
 							var domain = fileClass.match[1] ;
 							var Locale = fileClass.match[2] ;
 							this.bundle.translation.reader(fileClass.path, Locale, domain);
@@ -178,7 +178,6 @@ nodefony.register("kernelWatcher", function(){
 		}
 		listenWatcherConfig(){
 			this.on('all', (event, Path) => {
-				//console.log(Path)
 				switch( event ){
 					case "addDir" :
 						this.logger( Path, "INFO", event );
@@ -187,7 +186,7 @@ nodefony.register("kernelWatcher", function(){
 					case "change" :
 						this.logger( Path, "INFO", event );
 						var file = this.cwd + "/" + Path ;
-						try{ 
+						try{
 							var fileClass = new nodefony.fileClass(file);
 							this.router.reader(fileClass.path);
 						}catch(e){
@@ -203,7 +202,7 @@ nodefony.register("kernelWatcher", function(){
 					case "unlink" :
 						this.logger( Path, "INFO", event );
 						/*var file = this.cwd + "/" + Path ;
-						try{ 
+						try{
 							var fileClass = new nodefony.fileClass(file);
 							this.router.removeRoutes(fileClass.path);
 						}catch(e){
@@ -211,7 +210,7 @@ nodefony.register("kernelWatcher", function(){
 						}*/
 					break;
 				}
-			});	
+			});
 		}
 	};
 

@@ -1,25 +1,56 @@
 #!/usr/bin/env node
 
+const util = require("util");
 
 // WORKER
 const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
+
+// SYSLOG
+var sys = new nodefony.syslog();
+
+sys.listenWithConditions(sys,{
+	severity:{
+		data:"INFO,ERROR,DEBUG"
+	}
+},(pdu) => {
+	console.log( pdu.msgid + " => " + pdu.severityName + " : "  + pdu.payload  );
+});
+
+let severity = "DEBUG" ;
+for ( let i = 0 ; i< 10 ; i++){
+	if ( i % 2 ){
+		severity = "INFO" ;
+
+	}else{
+		severity = "DEBUG" ;
+	}
+
+	sys.logger("Message : " + i, severity);
+
+}
+
+
+//container
+var globalContainer = new nodefony.Container();
+globalContainer.set("syslog", sys);
+globalContainer.setParameters("asu.settings.foo", "bar" );
 
 
 // SERVICE
 var service = class service extends nodefony.Service {
 
 	constructor (){
-		super("MY SERVICE");
+		super("MY SERVICE ", globalContainer );
 		this.listenSyslog();
 
 		this.on("onMyEvent", (txt) => {
-
-			this.logger(txt);
+			this.logger ( "TETST" ,"DEBUG");
+			this.logger ( util.inspect( this.getParameters("asu") ) );
 		})
-		
+
 		setTimeout ( () =>{
 			this.fire("onMyEvent", "Event onMyEvent ");
-		}, 5000);
+		}, 2000);
 	}
 
 };
@@ -27,6 +58,7 @@ var service = class service extends nodefony.Service {
 var myService = new service();
 
 myService.listen( myService , "onMyEvent" , function(txt){
+
 	this.logger(txt);
 	this.logger("test", "DEBUG") ;
 	this.logger("test", "INFO") ;
@@ -37,3 +69,37 @@ myService.listen( myService , "onMyEvent" , function(txt){
 })
 
 myService.logger("Waiting event onMyEvent ... ", "ALERT") ;
+
+
+
+
+
+
+/*var settings = {
+	onAsu: () =>{
+		console.log("PASSS  2 ");
+	}
+};
+
+var notificationsCenter = nodefony.notificationsCenter.create({
+		onAsu: () =>{
+			console.log("passs settingToListen")
+		}
+	}
+);
+notificationsCenter.settingsToListen(settings);
+
+notificationsCenter.on( "onAsu", (monArg) => {
+	console.log(monArg)
+	console.log(this)
+});
+notificationsCenter.listen(this, "onAsu", function(monArg){
+	console.log(monArg)
+	console.log(this)
+});
+
+setTimeout( () =>{
+
+	notificationsCenter.fire("onAsu" , "mon argument");
+} , 2000)
+*/

@@ -257,7 +257,13 @@ nodefony.registerService("webpack", function(){
 						});
 					});
 				}else{
-					if ( (this.kernel.environment === "dev" ) && (basename in this.kernel.bundlesCore) && ( ! this.kernel.settings.system.core ) ){
+					var isCore = null ;
+					try {
+						isCore = new nodefony.fileClass(path.resolve(this.kernel.rootDir + "/.core") );
+					}catch(e){
+						isCore = false ;
+					}
+					if ( (this.kernel.environment === "dev" ) && (basename in this.kernel.bundlesCore) && ( ! isCore ) ){
 						return compiler ;
 					}
 					this.logger( "WEBPACK BUNDLE : "+ basename +" COMPILE ENTRY POINT : \n" + util.inspect(config.entry)  );
@@ -296,7 +302,6 @@ nodefony.registerService("webpack", function(){
 				this.logger( "WEBPACK BUNDLE : " +  basename +" WATCHING : "+ myConf.watch );
 			}
 
-
 			if ( myConf.watch ){
 				this.logger( "WEBPACK BUNDLE : "+ basename +" WATCHING ENTRY POINT : \n" + util.inspect(myConf.entry) , "DEBUG" );
 				var watching = compiler.watch({
@@ -310,7 +315,13 @@ nodefony.registerService("webpack", function(){
 					});
 				});
 			}else{
-				if ( (this.kernel.environment === "dev" ) && (basename in this.kernel.bundlesCore) && ( ! this.kernel.settings.system.core ) ){
+				var isCore = null ;
+				try {
+					isCore = new nodefony.fileClass(path.resolve(this.kernel.rootDir + "/.core") );
+				}catch(e){
+					isCore = false ;
+				}
+				if ( (this.kernel.environment === "dev" ) && (basename in this.kernel.bundlesCore) && ( ! isCore ) ){
 					return compiler ;
 				}
 				this.logger( "WEBPACK BUNDLE : "+ basename +" COMPILE ENTRY POINT : \n" + util.inspect(myConf.entry)  );

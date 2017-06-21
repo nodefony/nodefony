@@ -98,7 +98,7 @@ nodefony.register("kernel", function(){
 			this.generateConfigPath = path.resolve( this.rootDir, "config", "generatedConfig.yml") ;
 			this.publicPath = path.resolve( this.rootDir, "web");
 			this.cacheLink = path.resolve (this.rootDir ,"tmp", "assestLink" ) ;
-			
+
 
 			this.platform = process.platform ;
 			this.typeCluster = this.clusterIsMaster() ? "master" : "worker" ;
@@ -124,7 +124,7 @@ nodefony.register("kernel", function(){
 			this.debug = debug || false;
 			this.booted = false;
 			this.ready = false;
-			
+
 			this.nodefonyPath = this.autoLoader.dirname;
 			this.settings = null;
 			this.regBundle = regBundle;
@@ -712,6 +712,10 @@ nodefony.register("kernel", function(){
 			this.readConfigDirectory(path.resolve( this.appPath, "config" ), (result) => {
 				if (result){
 					this.bundles.App.parseConfig(result);
+					this.bundles.App.configPath = path.resolve( this.bundles.App.path, "config"); 
+					if ( this.environment === "dev" && this.type !== "CONSOLE" ){
+						this.bundles.App.initWatchers();
+					}
 				}
 			});
 			// OVERRIDE VIEWS BUNDLE in APP DIRECTORY

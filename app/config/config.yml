@@ -31,6 +31,25 @@ lang:
   fr_fr:                        "français"
 
 
+#
+#  WATCHERS
+#
+#    watchers Listen to changes, deletion, renaming of files and directories
+#    of different components
+#
+#    For watch all components
+#
+#      watch:			true
+#    or
+#      watch:
+#        controller:		true
+#        config:                true		# only  routing.yml
+#        views:			true
+#        translations:          true
+#
+watch:				false
+
+
 ##########
 #
 #  WEBPACK
@@ -79,16 +98,16 @@ monitoringBundle:
 #
 sequelizeBundle:
   debug:        false
-#  connectors:
-#    nodefony:
-#      driver:          mysql
-#      dbname:          'nodefony'
-#      username:        'username'
-#      password:        'password'
-#      options:
-#        dialect:       mysql
-#        host:          localhost
-#        port:          '3306'
+  connectors:
+    nodefony:
+      driver:          mysql
+      dbname:          'nodefony'
+      username:        'cci'
+      password:        '91984869'
+      options:
+        dialect:       mysql
+        host:          localhost
+        port:          '3306'
 
 
 ############################

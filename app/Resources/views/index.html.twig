@@ -1,0 +1,84 @@
+i{% extends '/app/Resources/views/base.html.twig' %}
+
+{% block title %}Welcome {{kernel.name}}! {% endblock %}
+
+{% block stylesheets %}
+
+	{{ parent() }}
+
+	<!-- WEBPACK BUNDLE -->
+	<link rel='stylesheet' href='{{CDN("stylesheet")}}/app/assets/css/app.css' />
+
+{% endblock %}
+
+{% block body %}
+	<div class='container'>
+		<div class='row'>
+			<img class='displayed' src='{{CDN("image")}}/frameworkBundle/images/nodefony-logo-white.png'>
+            <h1 class="success" >
+                <a href="https://nodefony.net">
+                    <strong itemprop="name" class="text-primary" style="font-size:45px">
+                        NODEFONY CORE
+                    </strong>
+                </a>
+            </h1>
+		</div>
+	</div>
+	<div class='container'>
+		<div class='row displayed'>
+			{{readme}}
+		</div>
+	</div>
+    <div class="container-fluid" style="padding-top: 70px;padding-bottom: 70px">
+        <div class="row">
+			<hr style="margin-top:100px">
+
+			<div class="row-fluid m-t-xl">
+
+				<div class="col-md-6">
+					<div class="panel panel-success">
+						<div class="panel-heading">Local Recent Commits
+							<span class="branch label label-default pull-right"></span>
+						</div>
+						<div class="panel-body" style="overflow: auto;">
+							<ul id="commits">
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="panel panel-success">
+						<div class="panel-heading">GitHub Issue Queue Activity</div>
+						<div class="panel-body" style="overflow: auto;">
+							<ul id="issues" class="list-group">
+
+							</ul>
+						</div>
+					</div>
+				</div>
+		</div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+	<footer>
+		{{ render( controller("documentationBundle:default:footer" )) }}
+	</footer>
+{% endblock %}
+
+{% block javascripts %}
+
+	{{ parent() }}
+
+	<!-- WEBPACK BUNDLE -->
+	<script src='{{CDN("javascript")}}/app/assets/js/app.js'></script>
+    <script src='{{CDN("javascript")}}/documentationBundle/assets/js/documentation.js'></script>
+
+    <script>
+		var bundle =  "nodefony" ;
+		var section = "{{section }}" || null  ;
+		documentation.index( bundle , section );
+	</script>
+
+{% endblock %}

@@ -90,7 +90,7 @@
     "passport-nodefony": "2.0.2",
     "passport-oauth2": "^1.4.0",
     "pm2": "2.5.0",
-    "promise": "7.3.0",
+    "promise": "8.0.0",
     "qs": "6.4.0",
     "raw-loader": "0.5.1",
     "request": "2.81.0",

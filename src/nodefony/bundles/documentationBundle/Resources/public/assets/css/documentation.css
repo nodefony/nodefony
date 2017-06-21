@@ -1,1 +1,62 @@
-html{font-size:14px}h1{color:#337ab7;margin-left:0}h2{font-size:20px;text-transform:uppercase;margin-left:20px}h2,h3{color:#167b87}h3{font-size:17px;margin-left:40px}h4{font-size:14px;margin-left:50px}.doc2{margin-left:20px}.doc3{margin-left:40px}.doc4{margin-left:50px}.config-parameters{font-size:15px;color:#167b87}.scroll-wrap{max-height:50vh;overflow-y:auto}
+html {
+  font-size: 14px;
+}
+
+
+
+h1{
+	color:#337ab7;
+	margin-left:0px;
+}
+
+h2{
+	font-size: 20px;
+	color: #167b87;
+	text-transform: uppercase;
+	margin-left:20px;
+}
+
+
+h3{
+	font-size: 17px;
+	color: #167b87;
+	/*text-transform: uppercase;*/
+	margin-left:40px;
+}
+
+h4{
+	font-size: 14px;
+	margin-left:50px;
+}
+
+
+
+.doc2  {
+	margin-left:20px;
+}
+.doc3  {
+	margin-left:40px;
+
+}
+.doc4  {
+	margin-left:50px;
+
+}
+
+
+.config-parameters{
+	font-size: 15px;
+	color:#167b87;	
+}
+
+
+hr{
+
+}
+
+.scroll-wrap {
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+/*# sourceMappingURL=documentation.css.map*/

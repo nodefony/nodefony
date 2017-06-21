@@ -293,12 +293,8 @@ nodefony.registerService("httpKernel", function(){
 
 		onError (container, error){
 			var myError = null ;
-			if ( ! error ){
- 		       		error = {
-					status:500
-				};
-				console.trace(error);
-			}else{
+			var context = container.get('context');
+			if (  error ){
 				if ( error.stack ){
 					myError =  error.stack;
 					this.logger(error.message, "ERROR");
@@ -309,8 +305,11 @@ nodefony.registerService("httpKernel", function(){
 					myError =  error;
 					this.logger(util.inspect(error),"ERROR");
 				}
+			}else{
+				error = {
+					status : null
+				}
 			}
-			var context = container.get('context');
 			if ( (! context ) ||  ( ! context.response ) ){
  				return 	;
 			}

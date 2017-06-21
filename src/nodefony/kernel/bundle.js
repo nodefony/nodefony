@@ -156,7 +156,6 @@ nodefony.register("Bundle", function(){
 		}
 
 		initWatchers(){
-
 			var controllers = false ;
 			var views = false ;
 			var i18n = false ;
