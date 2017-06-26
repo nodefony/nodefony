@@ -4,10 +4,9 @@
  *
  *
  */
-const fs = require("fs");
-const vm = require("vm");
+/*const fs = require("fs");
 const yaml = require("js-yaml");
-const util = require('util');	
+const util = require('util');
 const path = require("path");
 const cluster = require('cluster');
 const url = require("url");
@@ -20,10 +19,10 @@ const nodedomain = require('domain');
 const WebSocketServer = require('websocket');
 const Promise = require('promise');
 const clc = require('cli-color');
-const shell = require("shelljs");
+const shell = require("shelljs");*/
 
 
-var nodefony = function(){
+module.exports = function(){
 
 	/**
 	 *	The class is a **`Nodefony Nodefony `** .
@@ -57,16 +56,6 @@ var nodefony = function(){
 		isRegExp (it){
 			return isRegExp(it);
 		}
-
-		/**
-	 	*	@method require
-	 	*/
-		require (){ }
-
-		/**
-	 	*	@method provide
-	 	*/
-		provide (){ }
 
 		/**
 	 	*	@method typeOf
@@ -300,5 +289,5 @@ var nodefony = function(){
 		}
 	};
 
-	return new Nodefony() ;
+	return  new Nodefony() ;
 }();

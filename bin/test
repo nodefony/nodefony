@@ -1,10 +1,17 @@
 #!/usr/bin/env node
 
 const util = require("util");
-
+const m = require("module")
 // WORKER
 const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
 
+
+var ele = {
+	foo:"bar"
+}
+console.log(require.main)
+
+/*
 // SYSLOG
 var sys = new nodefony.syslog();
 
@@ -28,8 +35,8 @@ for ( let i = 0 ; i< 10 ; i++){
 	sys.logger("Message : " + i, severity);
 
 }
-
-
+*/
+/*
 //container
 var globalContainer = new nodefony.Container();
 globalContainer.set("syslog", sys);
@@ -71,7 +78,7 @@ myService.listen( myService , "onMyEvent" , function(txt){
 myService.logger("Waiting event onMyEvent ... ", "ALERT") ;
 
 
-
+*/
 
 
 

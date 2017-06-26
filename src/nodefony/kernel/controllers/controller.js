@@ -6,7 +6,6 @@
  *
  */
 //var Promise = require('promise');
-
 nodefony.register("controller", function(){
 
 	var Controller = class Controller extends nodefony.Service {
@@ -22,10 +21,10 @@ nodefony.register("controller", function(){
 			this.queryPost = context.request.queryPost;
 			this.serviceTemplating = this.get('templating') ;
 			this.httpKernel = this.get("httpKernel") ;
-			this.response = this.context.response ; 
-			this.request = this.context.request ; 
+			this.response = this.context.response ;
+			this.request = this.context.request ;
 		}
-	
+
 		getRequest (){
 			return this.request;
 		}
@@ -95,7 +94,7 @@ nodefony.register("controller", function(){
 				try {
 					resolve( this.renderJsonSync(obj , status , headers) )
 				}catch(e){
-					reject(e);	
+					reject(e);
 				}
 			});
 		}
@@ -119,7 +118,7 @@ nodefony.register("controller", function(){
 				data = JSON.stringify( obj ) ;
 			}catch(e){
 				this.logger(e,"ERROR");
-				throw e	;	
+				throw e	;
 			}
 			var response = this.getResponse(data);
 			if (! response ){
@@ -128,7 +127,7 @@ nodefony.register("controller", function(){
 			}
 			//this.fire("onView", data, this.context );
 			response.setHeaders(nodefony.extend( {}, {
-				'Content-Type': "text/json ; charset="+ this.response.encoding	
+				'Content-Type': "text/json ; charset="+ this.response.encoding
 			}, headers ))
 			if (status){ response.setStatusCode(status);}
 			return response ;
@@ -141,12 +140,12 @@ nodefony.register("controller", function(){
 			}
 			try {
 				return this.renderViewAsync(view, param);
-				
+
 			}catch(e){
 			 	this.fire("onError", this.context.container, e);
 			}
 		}
-		
+
 		renderSync (view, param){
 			var response = this.getResponse() ;
 			if (! response ){
@@ -155,7 +154,7 @@ nodefony.register("controller", function(){
 			}
 			try {
 				this.renderView(view, param);
-				
+
 			}catch(e){
 			 	this.fire("onError", this.context.container, e);
 			 	return ;
@@ -230,7 +229,7 @@ nodefony.register("controller", function(){
 		renderRawView (path, param ){
 			var res = null;
 			var extendParam = this.context.extendTwig(param, this.context);
-			try{ 
+			try{
 				this.serviceTemplating.renderFile(path, extendParam, (error, result) => {
 					if (error || result === undefined){
 						if ( ! error ){
@@ -259,10 +258,10 @@ nodefony.register("controller", function(){
 				File = file;
 			}else{
 				if ( typeof file  === "string"){
-					File  = new nodefony.fileClass(file);	
+					File  = new nodefony.fileClass(file);
 				}else{
 					throw new Error("File argument bad type for renderFileDownload :" + typeof file);
-				}	
+				}
 			}
 			if (File.type !== "File"){
 				throw new Error("renderMediaStream bad type for  :" +  file);
@@ -287,9 +286,9 @@ nodefony.register("controller", function(){
 			}
 			fileStream.on("open",() => {
 				try {
-					response.response.writeHead(200, head); 
+					response.response.writeHead(200, head);
 					fileStream.pipe(response.response, {
-						// auto end response 
+						// auto end response
 						end:false
 					});
 				}catch(e){
@@ -325,10 +324,10 @@ nodefony.register("controller", function(){
 			fileStream.on("error", (error) =>{
 				this.logger(error, "ERROR");
 				response.end();
-				throw error ;				
+				throw error ;
 			});
 		}
-			
+
 		renderMediaStream (file , options, headers){
 			//console.log("renderMediaStream :" + file.path)
 			var File = null ;
@@ -336,10 +335,10 @@ nodefony.register("controller", function(){
 				File = file;
 			}else{
 				if ( typeof file  === "string"){
-					File  = new nodefony.fileClass(file);	
+					File  = new nodefony.fileClass(file);
 				}else{
 					throw new Error("File argument bad type for renderMediaStream :" + typeof file);
-				}	
+				}
 			}
 			if (File.type !== "File"){
 				throw new Error("renderMediaStreambad type for  :" +  file);
@@ -372,14 +371,14 @@ nodefony.register("controller", function(){
 					'Content-Range': 'bytes ' + start + '-' + end + '/' + length,
 					'Accept-Ranges': 'bytes',
 					'Content-Length': chunksize,
-					'Content-Type': File.mimeType	
+					'Content-Type': File.mimeType
 				}, headers);
-				
+
 				code = 206 ;
 			}else{
 				head = nodefony.extend({
 					'Content-Type': File.mimeType,
-					'Content-Length':length,	
+					'Content-Length':length,
 					'Content-Disposition' : ' inline; filename="'+File.name+'"'
 				},headers);
 				code = 200 ;
@@ -388,7 +387,7 @@ nodefony.register("controller", function(){
 			var response = this.getResponse();
 			var fileStream = null ;
 			try {
-				fileStream = fs.createReadStream(File.path, value ? nodefony.extend( options, value) : options);	
+				fileStream = fs.createReadStream(File.path, value ? nodefony.extend( options, value) : options);
 			}catch(e){
 				this.logger(e, "ERROR");
 				throw e ;
@@ -396,9 +395,9 @@ nodefony.register("controller", function(){
 			//console.log(head);
 			fileStream.on("open", () =>{
 				try {
-					response.response.writeHead(code, head); 
+					response.response.writeHead(code, head);
 					fileStream.pipe(response.response, {
-						// auto end response 
+						// auto end response
 						end:false
 					});
 				}catch(e){
@@ -441,19 +440,19 @@ nodefony.register("controller", function(){
 		createNotFoundException (message){
 			this.response.setStatusCode(404) ;
 			this.fire("onError", this.container, message );
-			
-		}  
+
+		}
 
 		createUnauthorizedException (message){
 			this.response.setStatusCode(401) ;
 			this.fire("onError", this.container, message );
-			
-		}  
+
+		}
 
 		createException (message){
 			this.response.setStatusCode(500) ;
 			this.fire("onError", this.container, message );
-		} 
+		}
 
 		redirect (url ,status, headers){
 			if (! url ){
@@ -479,7 +478,7 @@ nodefony.register("controller", function(){
 		getUser (){
 			return this.context.getUser();
 		}
-		
+
 		isAjax (){
 			return this.getRequest().isAjax();
 		}
@@ -491,14 +490,14 @@ nodefony.register("controller", function(){
 		getRoute (){
 			return this.context.resolver.getRoute();
 		}
-			
+
 		generateUrl (name, variables, absolute){
 			if (absolute){
 				var context = this.getContext();
 				var host = context.request.url.protocol+"//"+context.request.url.host;
 				absolute = host;
 			}
-			var router = this.get("router");	
+			var router = this.get("router");
 			try {
 				return router.generatePath.call(router, name, variables, absolute);
 			}catch(e){

@@ -1,4 +1,4 @@
-#!/usr/bin/env node 
+#!/usr/bin/env node
 const asciify = require('asciify');
 const cluster = require('cluster');
 const path = require("path");
@@ -8,9 +8,8 @@ const shell = require("shelljs");
 try {
 	const nodefony = require("nodefony");
 }catch(e){
-	const nodefony = require(".", "src", "nodefony", "core", "autoloader");	
+	const nodefony = require(".", "src", "nodefony", "core", "autoloader");
 }
-//nodefony.autoloader.load( path.resolve(".", "app", "appKernel.js" ) );
 
 process.env.BABEL_ENV = 'production';
 process.env.NODE_ENV = 'production';
@@ -19,7 +18,7 @@ process.env.NODE_ENV = 'production';
  *
  * NODEFONY FRAMEWORK START WITH PM2
  *
- *	PRODUCTION 
+ *	PRODUCTION
  *
  */
 if ( process.env["MODE_START"] && process.env["MODE_START"] === "PM2"){
@@ -32,7 +31,7 @@ if ( process.env["MODE_START"] && process.env["MODE_START"] === "PM2"){
 
 /*
  *
- * NODEFONY FRAMEWORK START 
+ * NODEFONY FRAMEWORK START
  *
  *	PRODUCTION ( preprod )
  *
@@ -53,7 +52,7 @@ if (cluster.isMaster) {
 			shell.rm("-Rf", webpack);
 		}
 	});
-	var nbProc = require('os').cpus().length; 
+	var nbProc = require('os').cpus().length;
 	for (var i=0 ; i < nbProc; i++){
 		cluster.fork();
 	}
@@ -64,21 +63,21 @@ if (cluster.isMaster) {
 		let wid = worker.id ;
 		worker.on('message', (msg) => {
 			if ( msg && msg.worker === wid ){
-				return ;	
+				return ;
 			}
 			Object.keys(cluster.workers).forEach(function(id) {
 				if ( id != wid){
 					//console.log("CLUSTER SEND FROM  "+ wid + " to " + id)
 					cluster.workers[id].send(nodefony.extend(msg, {
 						worker:wid,
-					}));		
+					}));
 				}
-			});	
+			});
 		});
 	});
 }else {
 	const kernel = new nodefony.appKernel("SERVER", "prod", false, nodefony.autoloader,{
-		node_start:process.env["MODE_START"]	
+		node_start:process.env["MODE_START"]
 	});
 	return kernel ;
 }

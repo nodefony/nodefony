@@ -89,6 +89,7 @@ nodefony.register("kernel", function(){
 		constructor (environment, debug, autoLoader, type, options){
 
 			super( "KERNEL" , null, null , nodefony.extend( {}, defaultOptions,  options) );
+			this.setParameters("bundles", {} ) ;
 			this.autoLoader = autoLoader;
 			this.autoLoader.setKernel(this);
 
@@ -618,12 +619,14 @@ nodefony.register("kernel", function(){
 		loadBundle (file){
 			try {
 				//console.log( require.main );
-				require.main.paths.unshift(file.dirName+"/node_modules");
+				//require.main.paths.unshift(file.dirName+"/node_modules");
+				//require.main.paths.unshift(file.dirName);
+				//require("module")._initPaths();
 				//shell.cd(file.dirName);
 				//require('module').addPath( file.dirName+"/node_modules") // Module._initPaths();
 				//require('app-module-path').addPath(file.dirName+"/node_modules", require.main);
 				var name = this.getBundleName(file.name);
-				var Class = this.autoLoader.load(file.path);
+				var Class = this.autoLoader.load(file.path, false);
 				if (Class) {
 					if (typeof Class === "function" ){
 						Class.prototype.path = file.dirName;
@@ -712,7 +715,7 @@ nodefony.register("kernel", function(){
 			this.readConfigDirectory(path.resolve( this.appPath, "config" ), (result) => {
 				if (result){
 					this.bundles.App.parseConfig(result);
-					this.bundles.App.configPath = path.resolve( this.bundles.App.path, "config"); 
+					this.bundles.App.configPath = path.resolve( this.bundles.App.path, "config");
 					if ( this.environment === "dev" && this.type !== "CONSOLE" ){
 						this.bundles.App.initWatchers();
 					}

@@ -8,7 +8,6 @@
  */
 const Getopt = require('node-getopt');
 const npm = require("npm");
-//const npmi = require('npmi');
 
 nodefony.register("console", function(){
 
@@ -98,9 +97,8 @@ nodefony.register("console", function(){
 	 	*	@method registerBundles
 	 	*	@param {String} path
 	 	*	@param {Function} callbackFinish
-         	*/
+    */
 		registerBundles (path, callbackFinish, nextick){
-
 			var func = ( Path ) => {
 				try{
 					new nodefony.finder( {
@@ -123,7 +121,6 @@ nodefony.register("console", function(){
 											case "unitTest":
 											break;
 											default:
-												//this.InstallPackage(name, file);
 												this.installPackage(name, file);
 										}
 									}else{
@@ -202,8 +199,11 @@ nodefony.register("console", function(){
 						this.logger(error, "ERROR");
 						this.terminate(1);
 					}
-					event.config.localPrefix = file.dirName ;
+					shell.cd(file.dirName)
+					event.config.localPrefix = file.dirName;
 					event.config.globalPrefix = this.rootDir ;
+					event.localPrefix = file.dirName ;
+					event.globalPrefix = this.rootDir ;
 					//npm.config.set('localPrefix', file.dirName);
 					//npm.config.set('globalPrefix', this.rootDir);
 					var tab = [] ;
@@ -240,9 +240,11 @@ nodefony.register("console", function(){
 			}catch(e){
 				if (e.code !== "ENOENT"){
 					this.logger("Install Package BUNDLE : "+ name +":"+e,"ERROR");
+					shell.cd(this.rootDir);
 					throw e ;
 				}
 			}
+			shell.cd(this.rootDir);
 		}
 
 		loadCommand (){

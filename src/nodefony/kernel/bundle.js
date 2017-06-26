@@ -68,17 +68,13 @@ nodefony.register("Bundle", function(){
 		constructor (name , kernel , container){
 
 			super( name, container );
-
 			this.logger("\x1b[36m REGISTER BUNDLE : "+this.name+"   \x1b[0m","DEBUG",this.kernel.cli.clc.magenta("KERNEL") );
 			this.bundleName = path.basename(this.path);
 			this.publicPath = path.resolve( this.path, "Resources", "public");
 			this.environment = this.kernel.environment;
 			this.waitBundleReady = false ;
 			this.locale = this.kernel.settings.system.locale ;
-			var config = this.getParameters("bundles."+this.name) ;
-			if ( ! config ){
-				this.setParameters("bundles."+this.name, {});
-			}
+			this.setParameters("bundles."+this.name, this.getParameters("bundles."+this.name) || {} );
 			try {
 				this.finder = new nodefony.finder( {
 					path:this.path,
@@ -221,12 +217,12 @@ nodefony.register("Bundle", function(){
 
 		parseConfig (result){
 			if (result){
-				var config = null ;
-				for (var ele in result){
-					var ext = null ;
+				let config = null ;
+				for (let ele in result){
+					let ext = null ;
 					switch (true){
 						case regBundle.test(ele) :
-							var name = regBundle.exec(ele);
+							let name = regBundle.exec(ele);
 							config = this.getParameters("bundles."+name[1]);
 							if ( config ){
 								ext = nodefony.extend(true, {}, config , result[ele]);
@@ -274,7 +270,7 @@ nodefony.register("Bundle", function(){
 					}
 				}
 				config = this.getParameters("bundles."+this.name);
- 		        if ( Object.keys(config).length ){
+ 		    if ( config && Object.keys(config).length ){
 					this.logger("\x1b[32m BUNDLE IS ALREADY OVERRIDING BY AN OTHERONE  INVERT\x1b[0m  CONFIG  "+ util.inspect(config)  ,"WARNING");
 					this.settings = nodefony.extend(true, {}, result, config );
 					this.setParameters("bundles."+this.name, this.settings);

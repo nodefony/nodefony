@@ -77,7 +77,7 @@ webpack:
 monitoringBundle:
   debugBar:                     true
   storage:
-    active:                     false
+    active:                     true
     requests:                   orm
 
 
@@ -98,16 +98,16 @@ monitoringBundle:
 #
 sequelizeBundle:
   debug:        false
-  connectors:
-    nodefony:
-      driver:          mysql
-      dbname:          'nodefony'
-      username:        'cci'
-      password:        '91984869'
-      options:
-        dialect:       mysql
-        host:          localhost
-        port:          '3306'
+#  connectors:
+#    nodefony:
+#      driver:          mysql
+#      dbname:          'nodefony'
+#      username:        'username'
+#      password:        'password'
+#      options:
+#        dialect:       mysql
+#        host:          localhost
+#        port:          '3306'
 
 
 ############################

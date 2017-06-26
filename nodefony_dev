@@ -15,7 +15,7 @@ const shell = require("shelljs");
 
 /*
  *
- * NODEFONY FRAMEWORK  
+ * NODEFONY FRAMEWORK
  *
  *	DEVELOPPEMENT
  *
@@ -24,9 +24,8 @@ const shell = require("shelljs");
 try {
 	const nodefony = require("nodefony");
 }catch(e){
-	const nodefony = require(".", "src", "nodefony", "core", "autoloader");	
+	const nodefony = require(".", "src", "nodefony", "core", "autoloader");
 }
-//nodefony.autoloader.load( path.resolve(".", "app", "appKernel.js" ) );
 
 var links = path.resolve( ".", "tmp", "assestLink" ) ;
 if ( fs.existsSync( links) ){
@@ -44,8 +43,8 @@ process.env.NODE_ENV = 'development';
 process.env["MODE_START"] = "NODEFONY_DEV" ;
 
 asciify("      NODEFONY", {font:'standard'}, function(err, res){
-	console.log('\033[31m'+res+'\033[0m'); 
-	// KERNEL 
+	console.log('\033[31m'+res+'\033[0m');
+	// KERNEL
 	var kernel = new nodefony.appKernel("SERVER", environment, debug, nodefony.autoloader, {
 		node_start:process.env["MODE_START"]
 	});

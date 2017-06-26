@@ -118,8 +118,8 @@ npm:
 
 	@if [  -f package.json  ] ; then \
 		if [ $(VERBOSE) = 0 ] ; then \
-			echo "npm -s install" ;\
-			npm -s install  ;\
+			echo "npm  install" ;\
+			npm  install  ;\
 		else \
 			echo "npm -ddd install" ;\
 			npm -ddd install  ;\
@@ -163,13 +163,13 @@ asset:
 	@echo "";
 
 	@if [ $(VERBOSE) = 0 ] ; then \
-		echo "./console assets:install" ;\
-		./console assets:install ;\
+		#echo "./console assets:install" ;\
+		#./console assets:install ;\
 		echo "./console assets:dump" ;\
 		./console assets:dump ;\
 	else \
-		echo "./.console_dev assets:install" ;\
-		./.console_dev assets:install ;\
+		#echo "./.console_dev assets:install" ;\
+		#./.console_dev assets:install ;\
 		echo "./.console_dev assets:dump" ;\
 		./.console_dev assets:dump ;\
 	fi \

@@ -8,20 +8,16 @@
 
 nodefony.registerBundle ("http", function(){
 
-	
-	var httpServer  = class httpServer extends nodefony.Bundle {
+	const httpBundle  = class httpServer extends nodefony.Bundle {
 
 		constructor (name, kernel, container){
 
-
 			super(name, kernel, container );
 
-			this.autoLoader.loadDirectory(this.path+"/core");
-
-			//this.waitBundleReady = true ; 
+			this.autoLoader.loadDirectory( path.resolve( this.path, "core") );
 
 		}
 	};
 
-	return httpServer;
+	return httpBundle;
 });

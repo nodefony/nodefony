@@ -14,8 +14,8 @@ nodefony.registerService("webpack", function(){
 
 	var babelRule  = function(basename){
 		return {
-                    	test: /\.es6$/,
-			exclude: /node_modules/,
+      test: new RegExp("\.es6$"),
+			exclude: new RegExp("node_modules"),
 			use: [
 				{
 					loader: 'babel-loader',
@@ -29,7 +29,7 @@ nodefony.registerService("webpack", function(){
 
 	var cssRule  = function(basename, production){
 		return {
-			test: /\.css$/,
+			test: new RegExp("\.css$"),
 			use: ExtractTextPluginCss.extract({
 				use: 'css-loader'
 			})
@@ -40,22 +40,22 @@ nodefony.registerService("webpack", function(){
 
 	var sassRule  = function(basename){
 		return {
-                    test: /.scss$/,
-                    use: [
-                        {
-                            loader: 'style-loader'
-                        }, {
-                            loader: 'css-loader'
-                        }, {
-                            loader: 'sass-loader'
-                        }
-                    ]
-                };
+        test: new RegExp(".scss$"),
+        use: [
+            {
+                loader: 'style-loader'
+            }, {
+                loader: 'css-loader'
+            }, {
+                loader: 'sass-loader'
+            }
+        ]
+    };
 	};
 
 	var lessRule  = function(basename){
 		return {
-			test: /\.less$/,
+			test: new RegExp("\.less$"),
 			use: ExtractTextPluginCss.extract({
 				use: [
 					//'style-loader',
@@ -77,7 +77,7 @@ nodefony.registerService("webpack", function(){
          */
 	var fontsRule = function(basename){
 		return {
-			test: /\.(eot|woff2?|svg|ttf)([\?]?.*)$/,
+			test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
 			//use: 'file-loader?name=[name].[ext]&publicPath=/'+basename+'/assets/fonts/&outputPath=/assets/fonts/',
 			use: 'file-loader?name=[name].[ext]&publicPath=/'+basename+'&outputPath=/assets/fonts/',
 		};
@@ -88,9 +88,9 @@ nodefony.registerService("webpack", function(){
          */
 	var imagesRule = function(basename){
 		return {
-			test: /\.(jpg|png|gif)$/,
-          		//use: 'file-loader?name=[name].[ext]&publicPath=/'+basename+'/assets/images/&outputPath=/assets/images/'
-          		use: 'file-loader?name=[name].[ext]&publicPath=/'+basename+'&outputPath=/assets/images/'
+			test: new RegExp("\.(jpg|png|gif)$"),
+  		//use: 'file-loader?name=[name].[ext]&publicPath=/'+basename+'/assets/images/&outputPath=/assets/images/'
+  		use: 'file-loader?name=[name].[ext]&publicPath=/'+basename+'&outputPath=/assets/images/'
 		};
         };
 
@@ -155,10 +155,7 @@ nodefony.registerService("webpack", function(){
 					}
 				});
 			}
-
 			this.sockjs =  this.get("sockjs") ;
-
-
 		}
 
 		loggerStat (err, stats, bundle , watcher){
