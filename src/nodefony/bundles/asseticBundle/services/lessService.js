@@ -6,7 +6,7 @@
  *
  */
 
-nodefony.registerService("less", function(){
+module.exports = nodefony.registerService("less", function(){
 
 	//var regexCss =/^(.+)\.css$/;
 	var regexLess =/^(.+)\.less$/;
@@ -18,7 +18,7 @@ nodefony.registerService("less", function(){
 
 			super("less", container, container.get("notificationsCenter") );
 
-			this.engine = require("less");	
+			this.engine = require("less");
 			this.kernel = kernel ;
 			this.environment = this.kernel.environment ;
 			this.filesLess = [];
@@ -47,10 +47,10 @@ nodefony.registerService("less", function(){
 										var pfile = dest.slice(indexof+aj);
 										url = "/"+bundle+"Bundle"+"/"+pfile;
 
-										var index = this.filesLess.push(file); 	
+										var index = this.filesLess.push(file);
 										this.filesLess[url] = {
 											file:this.filesLess[index-1],
-											source:file.path, 
+											source:file.path,
 											dest : dest,
 											checkSum:crypto.createHash('md5').update(file.content()).digest("hex")
 										};
@@ -78,7 +78,7 @@ nodefony.registerService("less", function(){
 			if (! msgid) { msgid = "SERVICE LESS";}
 			return this.syslog.logger(pci, severity || "DEBUG", msgid,  msg);
 		}
-	
+
 		parse (file, dest, callback){
 			var vendors = process.cwd()+"/web/vendors" ;
 			var settings = nodefony.extend({}, this.settings,{
@@ -91,7 +91,7 @@ nodefony.registerService("less", function(){
 
 			this.engine.render(file.content(),settings, (e, css) => {
 					if (e){
-						var str = "IN FILE : " + e.filename +"\n Line : " + e.line + "\n column : " + e.column + "\n message :" +e.message; 
+						var str = "IN FILE : " + e.filename +"\n Line : " + e.line + "\n column : " + e.column + "\n message :" +e.message;
 						this.logger(str, "ERROR");
 						if (callback) { callback(e, null);}
 					}else{
@@ -121,7 +121,7 @@ nodefony.registerService("less", function(){
 				if (this.settings.cache){
 					var checkSum = crypto.createHash('md5').update(obj.file.content()).digest("hex") ;
 					if ( checkSum === obj.checkSum ) { return false;}
-					obj.checkSum =  checkSum ;	
+					obj.checkSum =  checkSum ;
 				}
 				this.parse(obj.file, obj.dest, callback);
 				return true;
@@ -144,7 +144,7 @@ nodefony.registerService("less", function(){
 					filename: file.name ,		// Specify a filename, for better error messages
 				}, function(e, data){
 					if ( e ){
-						callback( e , null );	
+						callback( e , null );
 					}
 					var mydata ="\n \/*** NODEFONY  LESS COMPILE : "+ file.name +"  ***\/\n" ;
 					mydata+=data.css
@@ -173,7 +173,7 @@ nodefony.registerService("less", function(){
 					callback( null, mydata );
 				}, function(e){
 					if ( e ){
-						callback( e , null );	
+						callback( e , null );
 					}
 				});
 			}catch(e){

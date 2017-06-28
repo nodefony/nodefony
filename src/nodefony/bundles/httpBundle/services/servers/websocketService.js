@@ -5,10 +5,10 @@
 //var WebSocketServer = require('websocket');
 //var nodedomain = require('domain');
 
-nodefony.registerService("websocket", function(){
-	
+module.exports = nodefony.registerService("websocket", function(){
+
 	// https://github.com/Worlize/WebSocket-Node/wiki/Documentation
-	
+
 	var websocket = class websocket extends nodefony.Service {
 
 		constructor (httpKernel, security, options){
@@ -22,7 +22,7 @@ nodefony.registerService("websocket", function(){
 			this.ready = false ;
 			this.type = "WEBSOCKET";
 		}
-	
+
 		logger (pci, severity, msgid,  msg){
 			if (! msgid) {msgid = "SERVICE WEBSOCKET ";}
 			return this.syslog.logger(pci, severity, msgid,  msg);
@@ -58,12 +58,12 @@ nodefony.registerService("websocket", function(){
 						return this.websocketServer;
 					}catch(e){
 						this.logger(e);
-						throw e ;	
+						throw e ;
 					}
 				}
 			});
 		}
 	};
-	
+
 	return websocket;
 });

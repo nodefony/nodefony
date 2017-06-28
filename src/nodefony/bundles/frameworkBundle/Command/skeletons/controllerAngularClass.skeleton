@@ -2,7 +2,7 @@
 
 {% block body %}
 
-nodefony.registerController("{{name}}", function(){
+module.exports = nodefony.registerController("{{name}}", function(){
 
 		/**
 		 *	The class is a **`{{name}}` CONTROLLER** .
@@ -10,9 +10,9 @@ nodefony.registerController("{{name}}", function(){
 		 *	@main {{module}}
 		 *	@class {{name}}
 		 *	@constructor
-		 *	@param {class} container   
+		 *	@param {class} container
 		 *	@param {class} context
-		 *	
+		 *
 		 */
 		var {{controllerName}} = class {{controllerName}} extends nodefony.controller {
 

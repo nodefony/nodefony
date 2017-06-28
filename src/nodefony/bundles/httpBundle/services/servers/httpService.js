@@ -5,8 +5,8 @@
 //var http = require('http');
 //var nodedomain = require('domain');
 
-nodefony.registerService("http", function(){
-	
+module.exports = nodefony.registerService("http", function(){
+
 	var Http = class Http extends nodefony.Service {
 
 		constructor (httpKernel , security, options ){
@@ -72,7 +72,7 @@ nodefony.registerService("http", function(){
 			this.server.on("request", ( request, response ) => {
 				this.httpKernel.onHttpRequest(request, response, this.type);
 			} );
-			
+
 			if (this.settings.timeout){
 				this.server.timeout = this.settings.timeout;
 			}
@@ -82,7 +82,7 @@ nodefony.registerService("http", function(){
 			}
 
 
-			// LISTEN ON PORT 
+			// LISTEN ON PORT
 			this.server.listen(this.port, this.domain, () => {
 				this.logger(this.type+"  Server is listening on DOMAIN : http://"+this.domain+":"+this.port , "INFO");
 				this.ready = true ;
@@ -103,8 +103,8 @@ nodefony.registerService("http", function(){
     						}, 1000);
 					break;
 					default :
-						this.logger( new Error(httpError) ,"CRITIC", "SERVICE HTTPS");	
-				}	
+						this.logger( new Error(httpError) ,"CRITIC", "SERVICE HTTPS");
+				}
 			});
 
 			this.listen(this, "onTerminate",() => {

@@ -11,7 +11,7 @@ try {
   console.log('sequelize  is disabled! ' + err);
 }
 
-nodefony.registerEntity("user", function(){
+module.exports = nodefony.registerEntity("user", function(){
 
 
 	var User = function(db, ormService){

@@ -6,7 +6,7 @@
  *
  */
 
-nodefony.registerService("httpKernel", function(){
+module.exports = nodefony.registerService("httpKernel", function(){
 
 	/*
  	 *

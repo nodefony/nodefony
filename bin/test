@@ -1,15 +1,9 @@
 #!/usr/bin/env node
 
 const util = require("util");
-const m = require("module")
-// WORKER
+
+// nodefony
 const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
-
-
-var ele = {
-	foo:"bar"
-}
-console.log(require.main)
 
 /*
 // SYSLOG

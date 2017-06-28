@@ -6,7 +6,7 @@
  *
  */
 
-nodefony.registerBundle ("http", function(){
+ module.exports = nodefony.registerBundle ("http", function(){
 
 	const httpBundle  = class httpServer extends nodefony.Bundle {
 

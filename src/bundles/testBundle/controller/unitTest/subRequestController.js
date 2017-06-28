@@ -9,7 +9,7 @@
  *
  */
 
-nodefony.registerController("subrequest", function(){
+module.exports = nodefony.registerController("subrequest", function(){
 
 	var subRequestController = class subRequestController extends nodefony.controller {
 
@@ -19,7 +19,7 @@ nodefony.registerController("subrequest", function(){
 
 
 		indexAction (){
-		
+
 			return this.render("testBundle:unitTest:subrequest.html.twig", {title:"sub-request"});
 		}
 
@@ -39,4 +39,3 @@ nodefony.registerController("subrequest", function(){
 	}
 	return subRequestController ;
 });
-

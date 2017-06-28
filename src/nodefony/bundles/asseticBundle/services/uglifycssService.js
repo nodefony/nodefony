@@ -7,22 +7,22 @@
  */
 
 
-nodefony.registerService("uglifycss", function(){
+module.exports = nodefony.registerService("uglifycss", function(){
 
 
 	var uglifyjs2 = class uglifyjs2 extends nodefony.Service {
 
 		constructor (kernel, container){
-			
+
 			super( "uglifycss" ,container, container.get("notificationsCenter") );
 			this.kernel = kernel ;
 			this.engine = require("uglifycss") ;
-		
+
 		}
 
 		filter (file  ,done){
 			switch (nodefony.typeOf( file.path ) ){
-				
+
 				case "string" :
 					try {
 						var path = [file.path];
@@ -34,7 +34,7 @@ nodefony.registerService("uglifycss", function(){
 				break;
 				default :
 					return done(  new Error("Service  uglifycss FILTER bad path type  ") , null);
-				
+
 			}
 		}
 	};

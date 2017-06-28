@@ -171,7 +171,9 @@ nodefony.register("Bundle", function(){
 						config = true ;
 					break;
 					default:
-						throw new Error ("Bad Config watcher ");
+                        this.logger("NO CONFIG WATCHER  " ,"WARNING");
+                        return ;
+						//throw new Error ("Bad Config watcher ");
 				}
 				// controllers
 				if ( controllers ){

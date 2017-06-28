@@ -1,6 +1,6 @@
 
 
-nodefony.registerController("default", function(){
+module.exports = nodefony.registerController("default", function(){
 
 		/**
 		 *	The class is a **`default` CONTROLLER** .

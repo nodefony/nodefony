@@ -5,7 +5,7 @@
  */
 
 
-nodefony.registerCommand("Sequelize",function(){
+module.exports = nodefony.registerCommand("Sequelize",function(){
 
 	var sequelizeCmd = class sequelizeCmd  extends nodefony.cliWorker {
 
@@ -16,7 +16,7 @@ nodefony.registerCommand("Sequelize",function(){
 			var arg = command[0].split(":");
 			this.ormService = this.container.get("sequelize");
 			switch ( arg[1] ){
-				case "generate" : 
+				case "generate" :
 					switch( arg[2 ]){
 						case "entities" :
 							var force = false ;
@@ -50,11 +50,11 @@ nodefony.registerCommand("Sequelize",function(){
 							});
 						break;
 					}
-				break;	
-				case "fixtures" : 
+				break;
+				case "fixtures" :
 					switch( arg[2 ]){
 						case 'load':
-							this.ormService.listen(this, "onOrmReady",(service) => {	
+							this.ormService.listen(this, "onOrmReady",(service) => {
 								var bundles = this.ormService.kernel.bundles;
 								this.tabPromise = [];
 								for(var bundle in bundles){
@@ -84,7 +84,7 @@ nodefony.registerCommand("Sequelize",function(){
 
 								Promise.all(actions)
 								.catch( (e) => {
-									this.logger(e, "ERROR");	
+									this.logger(e, "ERROR");
 									this.terminate(1);
 								})
 								.then( () => {
@@ -104,19 +104,19 @@ nodefony.registerCommand("Sequelize",function(){
 					this.ormService.listen(this, "onOrmReady",function(/*service*/){
 						switch( arg[2 ]){
 							case "sql":
-								var db = command[1];	
+								var db = command[1];
 								var conn = this.ormService.getConnection(db);
 								if ( ! conn){
 									this.logger("CONNECTION : "+db +" NOT FOUND" , "ERROR");
 									this.terminate(1);
-									return ;	
+									return ;
 								}
-								var sql = command[2];	
+								var sql = command[2];
 								this.logger("CONNECTION : " + db + " \nEXECUTE REQUEST  : "+sql , "INFO");
 								conn.query(sql)
 								.catch( (error) => {
 									this.logger(error, "ERROR");
-									this.terminate(1);	
+									this.terminate(1);
 								})
 								.then( (result) => {
 									//console.log(result[0])
@@ -142,13 +142,13 @@ nodefony.registerCommand("Sequelize",function(){
 								if ( ! conn){
 									this.logger("ENTITY : "+entity +" NOT FOUND" , "ERROR");
 									this.terminate(1);
-									return ;	
+									return ;
 								}
 								this.logger( "ENTITY :"+ entity +" \nEXECUTE findAll   " , "INFO");
 								conn.findAll()
 								.catch( (error) => {
 									this.logger(error, "ERROR");
-									this.terminate(1);	
+									this.terminate(1);
 								})
 								.then( (result) => {
 									//var attribute = result[0].$options.attributes ;
@@ -187,5 +187,4 @@ nodefony.registerCommand("Sequelize",function(){
 		},
 		worker:sequelizeCmd
 	};
-});		
-
+});

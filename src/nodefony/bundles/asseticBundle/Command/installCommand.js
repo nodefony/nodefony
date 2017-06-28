@@ -6,16 +6,14 @@
  *
  */
 
-nodefony.registerCommand("assets",function(){
+module.exports = nodefony.registerCommand("assets",function(){
 
-	
-	
 	var Asset = class Asset extends nodefony.cliWorker {
 
 		constructor (container, command/*, options*/){
 
 			super( "assets", container, container.get("notificationsCenter") );
-				
+
 			var arg = command[0].split(":");
 			switch( arg[0] ){
 				case "assets" :
@@ -24,7 +22,7 @@ nodefony.registerCommand("assets",function(){
 							try {
 								this.assetInstall();
 							}catch(e){
-								this.logger(e, "ERROR")	
+								this.logger(e, "ERROR")
 							}
 							this.terminate(0)
 						break;

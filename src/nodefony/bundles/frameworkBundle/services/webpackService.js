@@ -10,7 +10,7 @@ const webpackMerge = require('webpack-merge'); // used to merge webpack configs
 const ExtractTextPluginCss = require('extract-text-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-nodefony.registerService("webpack", function(){
+module.exports = nodefony.registerService("webpack", function(){
 
 	var babelRule  = function(basename){
 		return {
@@ -221,7 +221,7 @@ nodefony.registerService("webpack", function(){
 					break;
 				}
 
-				var compiler =  webpack( config );
+					var compiler =  webpack( config );
 				if ( this.kernel.type === "CONSOLE" ){
 					return  compiler;
 				}
@@ -283,6 +283,10 @@ nodefony.registerService("webpack", function(){
 
 			if ( this.production ){
 				myConf.watch = false ;
+			}else{
+				if ( nodefony.typeOf(myConf.entry) === "array"  ){
+					myConf.entry.unshift("webpack-dev-server/client?https://"+this.host+"/");
+				}
 			}
 
 			try {
@@ -290,9 +294,13 @@ nodefony.registerService("webpack", function(){
 				if ( this.kernel.type === "CONSOLE" ){
 					return  compiler;
 				}
-
 			}catch(e){
 				throw e ;
+			}
+
+			var sokjsCompiler = null ;
+			if ( this.sockjs && compiler ) {
+				sokjsCompiler = this.sockjs.addCompiler( compiler, basename );
 			}
 
 			if ( ! ( basename  in this.kernel.bundlesCore ) ){

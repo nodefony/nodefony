@@ -5,7 +5,7 @@
 
 var Url = require("url");
 
-nodefony.registerCommand("Monitoring",function(){
+module.exports = nodefony.registerCommand("Monitoring",function(){
 
 	var monitoring = class monitoring  extends nodefony.cliWorker {
 
@@ -36,7 +36,7 @@ nodefony.registerCommand("Monitoring",function(){
 								url.protocol = "http:";
 								url.href = "http://"+url.href;
 							}else{
-								proto = url.protocol.replace(":", "");	
+								proto = url.protocol.replace(":", "");
 							}
 							this.serverLoad.handleConnection({
 								type: proto,
@@ -57,21 +57,21 @@ nodefony.registerCommand("Monitoring",function(){
 			}
 		}
 
-		
-		
+
+
 		send (data/*, encodage*/){
 			var message = JSON.parse(data) ;
 			if ( message.message === "END LOAD TEST" ){
 				this.displayTable( message  );
 				this.logger(data, "INFO");
 			}else{
-				this.logger(data, "INFO");	
+				this.logger(data, "INFO");
 			}
 		}
 
 		close (code){
 			if (code){
-				return this.terminate(code);	
+				return this.terminate(code);
 			}
 			return this.terminate(0);
 		}
@@ -99,11 +99,11 @@ nodefony.registerCommand("Monitoring",function(){
 				}
 			}
 			var head = [
-				"Average By Requests ( ms )", 
+				"Average By Requests ( ms )",
 				"Average Requests By Seconde",
 				"Total Time (s)",
 				"Average By Concurences (s)",
-				"Average CPU (%)"	
+				"Average CPU (%)"
 			];
 			super.displayTable([obj], {
 				head:head,
@@ -120,5 +120,4 @@ nodefony.registerCommand("Monitoring",function(){
 		},
 		worker:monitoring
 	};
-});		
-
+});

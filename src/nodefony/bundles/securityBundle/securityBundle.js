@@ -3,7 +3,7 @@
  *
  *
  */
-nodefony.registerBundle ("security", function(){
+module.exports =  nodefony.registerBundle ("security", function(){
 
 	var security = class security extends nodefony.Bundle {
 
@@ -13,15 +13,12 @@ nodefony.registerBundle ("security", function(){
 			nodefony.security = {
 				factory:{},
 				providers:{},
-				tokens:{}		  
+				tokens:{}
 			};
 
-			// load bundle library 
+			// load bundle library
 			this.autoLoader.loadDirectory(this.path+"/core");
 		}
 	};
 	return security;
 });
-
-
-

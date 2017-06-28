@@ -1,0 +1,20 @@
+{% extends "./layout.html.twig" %}
+
+{% block title %}
+    OAUHT2 ACCOUNT
+{% endblock %}
+
+{% block body %}
+<p>Hi {{ user.name }}!</p>
+<p><b>{{ client.name }}</b> is requesting access to your account.</p>
+<p>Do you approve?</p>
+
+<form action="{{ path('oauth-decision') }}" method="post">
+  <input name="transaction_id" type="hidden" value="{{ transactionId }}" />
+  <div>
+    <input type="submit" value="Allow" id="allow" />
+    <input type="submit" value="Deny" name="cancel" id="deny" />
+  </div>
+</form>
+
+{% endblock %}

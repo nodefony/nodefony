@@ -4,18 +4,18 @@ var cheerio = require('cheerio');
 
 
 
-nodefony.registerService("webCrawler", function(){
+module.exports = nodefony.registerService("webCrawler", function(){
 
 
 
 	var makeRequestHttp = function(link, context ,callback){
 
 		this.logger("REQUEST : " + link, "INFO");
-		var myurl = url.parse( link ) 
+		var myurl = url.parse( link )
 		if (  ! this.settingsHttps ) {
 			this.settingsHttps =  this.get("httpsServer").settings ;
 		}
-		// cookie session 
+		// cookie session
 		var headers = {}
 		if ( context.session ){
 			headers["Cookie"] = context.session.name+"="+context.session.id ;
@@ -26,11 +26,11 @@ nodefony.registerService("webCrawler", function(){
 			path:myurl.path,
   			method: 'GET',
 			headers:headers
-		}	
+		}
 		var wrapper = http.request ;
 		//console.log(options)
 
-		// https 
+		// https
 		if (myurl.protocol === "https:"){
 			// keepalive if multiple request in same socket
 			var keepAliveAgent = new https.Agent({ keepAlive: true });
@@ -47,9 +47,9 @@ nodefony.registerService("webCrawler", function(){
 		}else{
 			// keepalive
 			var keepAliveAgent = new http.Agent({ keepAlive: true });
-			options.agent = keepAliveAgent;	
+			options.agent = keepAliveAgent;
 		}
-	
+
 		var req = wrapper(options, (res) => {
 			var bodyRaw = "";
 			res.setEncoding('utf8');
@@ -66,7 +66,7 @@ nodefony.registerService("webCrawler", function(){
 
 		req.on('error', (e) => {
 			this.logger('Problem with request: ' + e.message, "ERROR");
-			
+
 		});
 
 		req.end();
@@ -78,9 +78,9 @@ nodefony.registerService("webCrawler", function(){
 		pageObject.links = [];
 
 		if ( /^\//.test( crawlUrl ) ){
-			pageObject.url = this.protocol + this.base + crawlUrl ;	
+			pageObject.url = this.protocol + this.base + crawlUrl ;
 		}else{
-			pageObject.url = crawlUrl;	
+			pageObject.url = crawlUrl;
 		}
 
 		var $ = cheerio.load(body,{
@@ -96,12 +96,12 @@ nodefony.registerService("webCrawler", function(){
 				return ;
 			}
 			if ( /^\//.test( elem.attribs.href ) ){
-				var href = url.parse( this.protocol + this.base + elem.attribs.href )	
+				var href = url.parse( this.protocol + this.base + elem.attribs.href )
 			}else{
 				if ( elem.attribs.href ){
 					var href = url.parse( elem.attribs.href	)
 				}else{
-					var href = null ;	
+					var href = null ;
 				}
 			}
 			if ( href ){
@@ -113,7 +113,7 @@ nodefony.registerService("webCrawler", function(){
 
 
 	var myLoop = function(link, context, finish, recurse){
-		
+
 		if (  this.crawled[ link ] ){
 			if ( this.crawled[ link ].page ){
 				finish(null, this.crawled)
@@ -121,12 +121,12 @@ nodefony.registerService("webCrawler", function(){
 			}
 		}
 		makeRequestHttp.call(this, link , context, (error, pageObject) => {
-			
+
 			if ( error  ){ return }
-			
+
 			this.crawled[ pageObject.url ] = [];
 			this.crawled[ pageObject.url ]["page"] = pageObject ;
-			
+
 			async.eachSeries(pageObject.links, (item, cb) => {
 				if (item.linkUrl){
 					// test if the url actually points to the same domain
@@ -139,7 +139,7 @@ nodefony.registerService("webCrawler", function(){
 				cb(null);
 			}, (error) => {
 				if ( ! error ){
-					
+
 					for( var i= 0 ; i < this.crawled[pageObject.url].length ; i++  ){
 						//console.log( this.crawled[pageObject.url] )
 						if (this.crawled[pageObject.url][i] in this.crawled){
@@ -148,7 +148,7 @@ nodefony.registerService("webCrawler", function(){
 							recurse++ ;
 							this.crawled[ this.crawled[pageObject.url][i] ]  = [];
 							myLoop.call(this, this.crawled[pageObject.url][i], context, () => {
-								recurse-- ;	
+								recurse-- ;
 								if ( recurse === 0 ){
 									//console.log("FINISH")
 									finish(error, this.crawled)
@@ -162,9 +162,9 @@ nodefony.registerService("webCrawler", function(){
 					//console.log( "FINISH 2" )
 					finish(error, this.crawled)
 				}
-			});	
+			});
 		})
-		
+
 	}
 
 	var webCrawler = class webCrawler extends nodefony.Service {
@@ -176,10 +176,10 @@ nodefony.registerService("webCrawler", function(){
 			this.kernel = kernel ;
 			this.crawled = {};
 			this.elastic = null ;
-		
+
 			this.listen(this, "onReady", () => {
 				this.elastic = this.kernel.getBundle("documentation").elastic;
-			})	
+			})
 		}
 
 		logger (pci, severity, msgid,  msg){
@@ -208,7 +208,7 @@ nodefony.registerService("webCrawler", function(){
 					var obj = {} ;
 					try {
 						for ( var page in crawled){
-							
+
 							if ( crawled &&   crawled[page] && crawled[page].page && crawled[page].page.selector ){
 								var text = crawled[page].page.selector("body").text() ;
 								if ( ! text ){
@@ -222,11 +222,11 @@ nodefony.registerService("webCrawler", function(){
 										text : "..." + text.substring( index - 100 , index + 100 ) + "..." ,
 										title: crawled[page].page.title
 									}
-								}	
-							}	
+								}
+							}
 						}
 					}catch(e){
-						this.logger(e, "ERROR");	
+						this.logger(e, "ERROR");
 					}
 					callback(obj)
 				},recurse);
@@ -239,4 +239,3 @@ nodefony.registerService("webCrawler", function(){
 
 
 });
-

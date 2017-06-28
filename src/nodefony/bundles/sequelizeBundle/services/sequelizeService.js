@@ -1,8 +1,8 @@
-nodefony.registerService("sequelize", function(){
+module.exports = nodefony.registerService("sequelize", function(){
 
 
 	var error = function(err){
-		
+
 		if (this.state !== "DISCONNECTED"){
 			this.orm.kernel.fire('onError', err, this);
 		}
@@ -26,9 +26,9 @@ nodefony.registerService("sequelize", function(){
 	};
 
 	/*
-	 * 
+	 *
 	 * CLASS LIBRARY CONNECTION
-	 * 
+	 *
 	 */
 	var connectionDB = class connectionDB {
 
@@ -41,28 +41,28 @@ nodefony.registerService("sequelize", function(){
 			this.intervalId = null;
 			this.connect(type, options);
 		}
-		
+
 		setConnection (db){
 			if(! db){
 				throw new Error("Cannot create class connection without db native");
 			}
 			this.db = db;
-			
+
 			this.orm.notificationsCenter.fire("onConnect", this.name, this.db );
 			this.state = "CONNECTED";
 		}
-		
+
 		getConnection (){
 			return this.db;
 		}
-		
+
 		connect (type, config){
 			if ( this.orm.debug ){
 				config.options.logging = (value) => {
 					this.logger(value, "DEBUG");
 				};
 			}else{
-				config.options.logging = false;	
+				config.options.logging = false;
 			}
 			var conn = null ;
 			try {
@@ -71,17 +71,17 @@ nodefony.registerService("sequelize", function(){
 						config.options.storage = process.cwd() + config.dbname;
 					break;
 				}
-				conn = new this.orm.engine(config.dbname, config.username, config.password, config.options );	
+				conn = new this.orm.engine(config.dbname, config.username, config.password, config.options );
 				this.logger(this.name + " :  CONNECT to database "+ type+" : " +config.dbname, "DEBUG");
 				process.nextTick( ()  => {
 					this.setConnection(conn);
 				});
 			}catch(err){
-				error.call(this, err);	
+				error.call(this, err);
 				this.orm.fire('onErrorConnection', this.name, conn, this.orm);
 			}
 		}
-			
+
 		logger (pci, severity, msgid,  msg){
 			if (! msgid) {msgid = "SERVICE sequelize CONNECTION";}
 			return this.orm.logger(pci, severity, msgid,  msg);
@@ -89,9 +89,9 @@ nodefony.registerService("sequelize", function(){
 	};
 
 	/*
-	 * 
+	 *
 	 * CLASS SERVICE sequelize
-	 * 
+	 *
 	 */
 	var sequelize = class sequelize extends nodefony.orm {
 
@@ -103,7 +103,7 @@ nodefony.registerService("sequelize", function(){
 		}
 
 		boot (){
-			super.boot();	
+			super.boot();
 			this.kernel.listen(this, 'onBoot', (/*kernel*/) => {
 				this.settings = this.container.getParameters("bundles.sequelize");
 				this.debug = this.settings.debug ;
@@ -114,42 +114,41 @@ nodefony.registerService("sequelize", function(){
 				}else{
 					process.nextTick( () => {
 						this.fire('onOrmReady', this);
-					});	
+					});
 				}
-			});	
+			});
 		}
 
 		createConnection (name, config){
 			//var url;
-			// ORM2 CHECK 	
+			// ORM2 CHECK
 			/*switch(config.driver){
 				case 'mysql':
 					url = "mysql://" + config.user + ":" + config.password + "@" + config.host + ":" + config.port + "/" + config.database;
 					break;
-					
+
 				case 'sqlite':
 					url = config;
 					//url = "sqlite://" + process.cwd() + config.dbname;
 					break;
-					
+
 				case 'mongodb':
 					url = "mongodb://" + (false ? '' : config.user + ":" + config.password) + '@' + config.host + ":" + config.port + "/" + config.database;
 				break;
-				
+
 				case 'postgres':
 					url = "postgres://" + config.user + ":" + config.password + "@" + config.host + "/" + config.database;
 				break;
-				
-				default: 
+
+				default:
 					throw {
 						message: "driver (" + config.driver + ") not exist"
 					}
 			}*/
-			return this.connections[name] = new connectionDB( name, config.driver, config, this );		
+			return this.connections[name] = new connectionDB( name, config.driver, config, this );
 		}
 	};
 
 	return sequelize ;
 
 });
-

@@ -6,31 +6,31 @@
  *
  */
 
-nodefony.registerCommand("encoders",function(){
+module.exports = nodefony.registerCommand("encoders",function(){
 
 	var encoders = class encoders extends nodefony.cliWorker {
 
 		constructor(container, command/*, options*/){
-		
+
 			super( "encoders", container, container.get("notificationsCenter") );
 
 			var arg = command[0].split(":");
 			var realm = null ;
 			switch ( arg[1] ){
-				case "Digest" : 
+				case "Digest" :
 					if (command[1] && command[2] && command[3]){
 						var security = this.container.get("security");
 						var context = command[1];
 						if (  ! security.securedAreas[context] ){
 							this.logger("firewall "+ context +" not exits", "ERROR");
 							this.terminate(1);
-							return; 
+							return;
 						}
-						var user = command[2] ; 
-						var passwd = command[3] ; 
-						if (command[4]){ 
+						var user = command[2] ;
+						var passwd = command[3] ;
+						if (command[4]){
 							realm = command[4] ;
-						}else{ 
+						}else{
 							realm = security.securedAreas[context].factory.settings.realm ; //  //this.container.getParameters("kernel").system.domain+":"+this.container.getParameters("kernel").system.httpsPort;
 						}
 						this.logger("FIREWALL = " + security.securedAreas[context].name);
@@ -40,7 +40,7 @@ nodefony.registerCommand("encoders",function(){
 
 					}else{
 						this.logger(new Error("encoders:MD5 must have login password arguments"), "ERROR");
-					
+
 					}
 				break;
 			}
@@ -53,7 +53,6 @@ nodefony.registerCommand("encoders",function(){
 		commands:{
 			md5:["encoders:Digest firewall login password [realm]" ,"Generate encoding keys digest MD5 Example : ./console encoders:Digest secured_area login password"],
 		},
-		worker:encoders	
+		worker:encoders
 	};
 });
-

@@ -5,7 +5,7 @@ try {
 }
 const useragent = require('useragent');
 
-nodefony.registerBundle ("monitoring", function(){
+module.exports = nodefony.registerBundle ("monitoring", function(){
 
 	/**
 	 *	The class is a **`monitoring` BUNDLE** .

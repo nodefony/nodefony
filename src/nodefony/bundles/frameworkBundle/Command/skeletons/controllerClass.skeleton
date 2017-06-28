@@ -2,7 +2,7 @@
 
 {% block body %}
 
-nodefony.registerController("{{name}}", function(){
+module.exports = nodefony.registerController("{{name}}", function(){
 
 		/**
 		 *	The class is a **`{{name}}` CONTROLLER** .
@@ -28,7 +28,7 @@ nodefony.registerController("{{name}}", function(){
 			indexAction (){
 				// markdown read and parse readme.md
 				try {
-					var path = "{{location}}/{{bundleName}}/readme.md";	
+					var path = "{{location}}/{{bundleName}}/readme.md";
 					var file = new nodefony.fileClass(path);
 					var res = this.htmlMdParser(file.content(file.encoding),{
 						linkify: true,

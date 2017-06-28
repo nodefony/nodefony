@@ -10,7 +10,7 @@ var Querystring = require('querystring');
 var BlueBird = require("bluebird");
 
 
-nodefony.registerService("router", function(){
+module.exports = nodefony.registerService("router", function(){
 
 
 

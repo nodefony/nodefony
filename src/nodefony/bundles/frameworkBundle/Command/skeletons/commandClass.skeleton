@@ -3,32 +3,32 @@
 {% block body %}
 
 
-nodefony.registerCommand("{{name}}",function(){
+module.exports = nodefony.registerCommand("{{name}}",function(){
 
 	var {{name}} = class {{name}} extends nodefony.cliWorker {
 
 		constructor(container, command, options){
 
 			constructor(container, command, options){
-				
+
 				super( "{{name}}", container, container.get("notificationsCenter") );
 
 				var arg = command[0].split(":");
 				switch ( arg[1] ){
-					case "example" : 
+					case "example" :
 						// test command arguments
 
 						if ( command[1] ){
-							this.logger("ARGUMENT 1 = " + command[1]) 
+							this.logger("ARGUMENT 1 = " + command[1])
 						}else{
 							this.showHelp();
 						}
 						if ( command[2] ){
-							this.logger("ARGUMENT 2 = " +command[2]) 
+							this.logger("ARGUMENT 2 = " +command[2])
 						}else{
 							this.showHelp();
 						}
-						
+
 					break;
 					default:
 						this.logger(arg[1] + " : Not find ","ERROR")

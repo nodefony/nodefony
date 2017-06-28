@@ -4,7 +4,7 @@
  *
  */
 
-nodefony.registerCommand("generate",function(){
+module.exports = nodefony.registerCommand("generate",function(){
 
 	/*
  	 *	Bundle generator

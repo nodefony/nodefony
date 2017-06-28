@@ -5,7 +5,7 @@
 //var https = require('https');
 //var nodedomain = require('domain');
 
-nodefony.registerService("https", function(){
+module.exports = nodefony.registerService("https", function(){
 
 	var Https = class Https extends nodefony.Service {
 
@@ -79,23 +79,23 @@ nodefony.registerService("https", function(){
 				for (var ele in this.options ){
 					switch ( ele ){
 						case "keyPath" :
-							this.logger( " READ CERTIFICATE KEY : "+this.options[ele], "DEBUG"); 
+							this.logger( " READ CERTIFICATE KEY : "+this.options[ele], "DEBUG");
 						break;
 						case "certPath" :
-							this.logger( " READ CERTIFICATE CERT : "+this.options[ele], "DEBUG"); 
+							this.logger( " READ CERTIFICATE CERT : "+this.options[ele], "DEBUG");
 						break;
 						case "caPath" :
 							if ( this.options[ele] ){
-								this.logger( " READ CERTIFICATE CA : "+this.options[ele], "DEBUG"); 
+								this.logger( " READ CERTIFICATE CA : "+this.options[ele], "DEBUG");
 							}else{
-								this.logger( " NO CERTIFICATE CA : "+this.options[ele], "WARNING");	
+								this.logger( " NO CERTIFICATE CA : "+this.options[ele], "WARNING");
 							}
 						break;
 					}
 				}
 			}catch(e){
 				this.logger(e);
-				throw e ;	
+				throw e ;
 			}
 
 			this.options = nodefony.extend(this.options, this.settings.certificats.options);
@@ -122,9 +122,9 @@ nodefony.registerService("https", function(){
 				this.server.maxHeadersCount = this.settings.maxHeadersCount;
 			}
 
-			
 
-			// LISTEN ON PORT 
+
+			// LISTEN ON PORT
 			this.server.listen(this.port, this.domain, () => {
 				this.logger(this.type+"  Server is listening on DOMAIN : https://"+this.domain+":"+this.port , "INFO");
 				this.ready = true ;
@@ -145,8 +145,8 @@ nodefony.registerService("https", function(){
     						}, 1000);
 					break;
 					default :
-						this.logger( new Error(httpError), "CRITIC" );	
-				}	
+						this.logger( new Error(httpError), "CRITIC" );
+				}
 			});
 
 			this.server.on("clientError",(e, socket) => {

@@ -6,7 +6,7 @@
  *
  */
 
-nodefony.register("Route", function(){
+module.exports = nodefony.register("Route", function(){
 
 	var decode = function(str) {
 		try {

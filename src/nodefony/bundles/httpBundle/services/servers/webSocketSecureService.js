@@ -6,8 +6,8 @@
 //var WebSocketServer = require('websocket');
 //var nodedomain = require('domain');
 
-nodefony.registerService("websocketSecure", function(){
-	
+module.exports = nodefony.registerService("websocketSecure", function(){
+
 	// https://github.com/Worlize/WebSocket-Node/wiki/Documentation
 
 	var websocket = class websocket extends nodefony.Service {
@@ -28,7 +28,7 @@ nodefony.registerService("websocketSecure", function(){
 			if (! msgid) {msgid = "SERVICE WEBSOCKET SECURE ";}
 			return this.syslog.logger(pci, severity, msgid,  msg);
 		}
-	
+
 		createServer (http/*, settings*/){
 
 			this.bundle.listen(this, "onServersReady", function(type){
@@ -39,7 +39,7 @@ nodefony.registerService("websocketSecure", function(){
 						this.websocketServer =  new WebSocketServer.server(nodefony.extend({}, this.settings, {
 							httpServer: http
 						}));
-						
+
 						this.websocketServer.on('request', (request) => {
 							return this.httpKernel.onWebsocketRequest(request, this.type);
 						});
@@ -59,7 +59,7 @@ nodefony.registerService("websocketSecure", function(){
 						return this.websocketServer;
 					}catch(e){
 						this.logger(e);
-						throw e ;	
+						throw e ;
 					}
 				}
 			});

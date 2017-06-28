@@ -7,13 +7,13 @@
  *
  */
 
-nodefony.registerCommand("router",function(){
+module.exports = nodefony.registerCommand("router",function(){
 
 
 	var router = class router extends nodefony.cliWorker {
 
 		constructor(container, command/*, options*/ ){
-		
+
 			super( "router", container, container.get("notificationsCenter") );
 
 			this.router = this.container.get("router");
@@ -22,7 +22,7 @@ nodefony.registerCommand("router",function(){
 			var arg = command[0].split(":");
 			//Array.prototype.shift.call(arg)
 			switch ( arg[1] ){
-				case "generate" : 
+				case "generate" :
 					switch ( arg[2] ){
 						case "routes":
 							this.getRoutes(null, true);
@@ -60,7 +60,7 @@ nodefony.registerCommand("router",function(){
 					ele = [ele];
 				}
 				try {
-					this.displayTable("ROUTES",ele);	
+					this.displayTable("ROUTES",ele);
 				}catch(e){
 					console.log(e);
 				}
@@ -70,7 +70,7 @@ nodefony.registerCommand("router",function(){
 
 		displayTable (titre, ele, firstMatch){
 			var head = [
-				"NB", 
+				"NB",
 				"ROUTE",
 				"PATH",
 				//"VARIABLES",
@@ -108,7 +108,7 @@ nodefony.registerCommand("router",function(){
 				}
 				table.push(tab);
 			}
-			console.log(table.toString());	
+			console.log(table.toString());
 			return table;
 		}
 
@@ -123,8 +123,8 @@ nodefony.registerCommand("router",function(){
 				var pattern = routes[i].pattern ;
 				var res = myUrl.pathname.match(pattern);
 				if (res){
-					tab.push(routes[i]);	
-				}	
+					tab.push(routes[i]);
+				}
 			}
 			if (tab.length){
 				tab[0].firstMatch = "*";

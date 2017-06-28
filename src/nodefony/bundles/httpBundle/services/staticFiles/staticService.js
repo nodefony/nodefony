@@ -7,14 +7,14 @@
 //var static = require('node-static');
 
 
-nodefony.registerService("statics", function(){
+module.exports = nodefony.registerService("statics", function(){
 
 
 	var defaultStatic = {
-		cache :true,	
+		cache :true,
 		maxAge: 96*60*60
 	};
-	
+
 	var Static = class Static extends nodefony.Service {
 
 		constructor ( container, options){
@@ -36,7 +36,7 @@ nodefony.registerService("statics", function(){
 			this.listen(this, "onBoot",() => {
 				this.settings = nodefony.extend({}, defaultStatic ,this.container.getParameters("bundles.http").statics.settings, options);
 				if (this.settings.cache){
-					this.server.use(this.connect.staticCache());	
+					this.server.use(this.connect.staticCache());
 				}
 				this.initStaticFiles();
 			});
@@ -82,19 +82,19 @@ nodefony.registerService("statics", function(){
 					var res = this.serviceLess.handle(request, response, type, (err, dest) => {
 						this.server.handle(request, response, () => {
 							response.setHeader("Content-Type", "text/html");
-							callback.apply(this, arguments);	
-						});	
+							callback.apply(this, arguments);
+						});
 					});
-					if (res) {return ;} 
+					if (res) {return ;}
 				}catch(e){
-					this.logger(e, "ERROR");	
+					this.logger(e, "ERROR");
 				}
 			}*/
 			this.server.handle(request, response, () => {
-				callback.apply(this, arguments);	
+				callback.apply(this, arguments);
 			});
 		}
-		
+
 		handle (request, response, callback){
 			request.path = request.url;
 			this.serve(request, response, callback );
@@ -102,4 +102,3 @@ nodefony.registerService("statics", function(){
 	};
 	return Static;
 });
-

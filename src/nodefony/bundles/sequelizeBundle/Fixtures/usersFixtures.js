@@ -1,8 +1,8 @@
 
-nodefony.registerFixture("users", function(){
+module.exports = nodefony.registerFixture("users", function(){
 
 	var userPromise = function(resolve, reject){
-		 
+
 		var user = this.getEntity("user");
 
 		var tab = [{
@@ -48,8 +48,8 @@ nodefony.registerFixture("users", function(){
 
 		var connection = this.getConnection("nodefony");
 		switch ( connection.options.dialect ){
-		
-			case "mysql" : 
+
+			case "mysql" :
 				connection.query('SET FOREIGN_KEY_CHECKS = 0')
 				.then( () => {
 			 		return user.sync({ force: false });
@@ -85,11 +85,11 @@ nodefony.registerFixture("users", function(){
 
 				.then(function(){
 					this.logger("Database synchronised  " ,"INFO");
-					
+
 					return Sequelize.Promise.map( tab, function(obj) {
 						return user.findOrCreate({where: {username: obj.username}, defaults:obj});
 					})
-					
+
 				}.bind(this))
 				.spread(function(ele){
 					for (var i = 0 ; i< arguments.length ;i++){

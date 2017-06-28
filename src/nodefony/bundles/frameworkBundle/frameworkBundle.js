@@ -3,7 +3,7 @@
  *
  *
  */
-nodefony.registerBundle ("framework", function(){
+module.exports = nodefony.registerBundle ("framework", function(){
 
 	var framework = class framework extends nodefony.Bundle {
 

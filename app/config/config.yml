@@ -47,7 +47,7 @@ lang:
 #        views:			true
 #        translations:          true
 #
-watch:				false
+watch:				true
 
 
 ##########
@@ -58,12 +58,12 @@ watch:				false
 #
 webpack:
   entry:
-    main:                       "./js/app.js"
+    app:                       "./js/app.js"
   watch:                        false
   devtool:                      "source-map"
   output:
-    filename:                   "./assets/js/app.js"
-    library:                    "app"
+    filename:                   "./assets/js/[name].js"
+    library:                    "[name]"
     libraryTarget:              "umd"
 
 
@@ -77,7 +77,7 @@ webpack:
 monitoringBundle:
   debugBar:                     true
   storage:
-    active:                     true
+    active:                     false
     requests:                   orm
 
 

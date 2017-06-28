@@ -1,7 +1,7 @@
 /*
  *	The MIT License (MIT)
- *	
- *	Copyright (c) 2015/2015  | 
+ *
+ *	Copyright (c) 2015/2015  |
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the 'Software'), to deal
@@ -22,7 +22,7 @@
  *	THE SOFTWARE.
  */
 
-nodefony.registerBundle ("sequelize", function(){
+module.exports = nodefony.registerBundle ("sequelize", function(){
 
 	/**
 	 *	The class is a **`sequelize` BUNDLE** .
@@ -32,26 +32,26 @@ nodefony.registerBundle ("sequelize", function(){
 	 *	@constructor
 	 *	@param {class} kernel
 	 *	@param {class} container
-	 *	
+	 *
 	 */
 	var sequelize = class sequelize  extends nodefony.Bundle {
 
 		constructor (name, kernel, container){
 
 			super( name, kernel, container);
-			// load bundle library 
+			// load bundle library
 			this.autoLoader.loadDirectory(this.path+"/core");
-			
+
 			/*
-		 	*	If you want kernel wait sequelizeBundle event <<onReady>> 
+		 	*	If you want kernel wait sequelizeBundle event <<onReady>>
 		 	*
-		 	*      this.waitBundleReady = true ; 
-		 	*/	
-			this.waitBundleReady = true ; 
+		 	*      this.waitBundleReady = true ;
+		 	*/
+			this.waitBundleReady = true ;
 
 			var service =  this.get("sequelize");
 			service.listen(this, "onOrmReady",() => {
-				this.fire("onReady", this, service);	
+				this.fire("onReady", this, service);
 			});
 		}
 	};

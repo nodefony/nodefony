@@ -1,6 +1,6 @@
 
 
-nodefony.registerCommand("unitTest", function(){
+module.exports = nodefony.registerCommand("unitTest", function(){
 
 	var unitTest = class unitTest extends nodefony.cliWorker {
 
@@ -14,7 +14,7 @@ nodefony.registerCommand("unitTest", function(){
 
 			this.serviceUnitTest = this.container.get("unitTest");
 			this.serviceUnitTest.consoleMochaInit();
-					
+
 			var tests = [];
 
 			if(arg[2] === 'all'){
@@ -27,7 +27,7 @@ nodefony.registerCommand("unitTest", function(){
 				var testName = command[1];
 				bundleName = bundleName.replace('Bundle', '');
 				if (bundleName === "nodefony" ){
-					this.serviceUnitTest.getNodefonyTestFiles( testName, tests);	
+					this.serviceUnitTest.getNodefonyTestFiles( testName, tests);
 				}else{
 					this.serviceUnitTest.getBundlesTestFiles( bundleName, testName , tests);
 				}
@@ -38,7 +38,7 @@ nodefony.registerCommand("unitTest", function(){
 					case "list" :
 						switch( arg[2] ){
 							case "all":
-							case "bundle" : 
+							case "bundle" :
 								var bundleName = '';
 								for(var i = 0; i < tests.length ; i++){
 									if ( bundleName !== tests[i].bundle){
@@ -55,9 +55,9 @@ nodefony.registerCommand("unitTest", function(){
 					case "launch" :
 						switch( arg[2 ]){
 
-							case "single" :								
+							case "single" :
 							case "all":
-							case "bundle" : 
+							case "bundle" :
 								//console.log(tests)
 								this.serviceUnitTest.mochaAddTest(tests);
 								this.serviceUnitTest.mochaRunTest( (failures) => {
@@ -76,7 +76,7 @@ nodefony.registerCommand("unitTest", function(){
 				}
 			});
 		}
-	};	
+	};
 	return {
 		name: "unitTest",
 		commands: {

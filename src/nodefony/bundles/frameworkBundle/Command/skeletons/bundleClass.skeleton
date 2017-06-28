@@ -1,7 +1,7 @@
 {% extends "./licence.cecill-b.skeleton" %}
 
 {% block body %}
-nodefony.registerBundle ("{{name}}", function(){
+module.exports = nodefony.registerBundle ("{{name}}", function(){
 
 	/**
 	 *	The class is a **`{{name}}` BUNDLE** .

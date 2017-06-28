@@ -7,14 +7,14 @@
  *
  *
  */
-nodefony.registerService("translation", function(){
+module.exports = nodefony.registerService("translation", function(){
 
 	var translate = {};
-	
+
 	/*
  	 *
  	 *
- 	 *	PULGIN READER 
+ 	 *	PULGIN READER
  	 *
  	 *
  	 */
@@ -29,7 +29,7 @@ nodefony.registerService("translation", function(){
 			}
 			if(callback) {callback(JSON.parse(file));}
 		};
-		
+
 		var getObjectTransYml = function(file, callback, parser){
 			if (parser){
 				file = this.render(file, parser.data, parser.options);
@@ -49,25 +49,25 @@ nodefony.registerService("translation", function(){
 		var func = context.container.get("reader").loadPlugin("translating", pluginReader);
 		return function(result, locale, domain){
 			return func(result, context.nodeReader.bind(context, locale, domain));
-		};	
+		};
 	};
 
 	var reg = /^(..){1}_?(..)?$/;
 
-	var langs = [];	
+	var langs = [];
 
 	var i18n = class i18n extends nodefony.Service {
 
 		constructor ( container, type ){
 
 			super("I18N", container, container.get("notificationsCenter") );
-			
+
 			this.defaultLocale = this.getParameters("kernel.system.locale") ;
 			this.langs = langs;
-			this.requestType = type; 
+			this.requestType = type;
 			this.engineTemplate = this.get("templating");
 			this.setParameters("translate", translate);
-			this.defaultDomain = "messages"; 
+			this.defaultDomain = "messages";
 			this.reader = reader(this);
 		}
 
@@ -76,7 +76,7 @@ nodefony.registerService("translation", function(){
 				langs.push({
 					name:config[ele],
 					value:ele
-				});	
+				});
 			}
 			return langs;
 		}
@@ -89,7 +89,7 @@ nodefony.registerService("translation", function(){
 		 	this.listen(this, "onBoot", () => {
 				var dl =  this.getParameters("bundles.App").App.locale;
 				if ( dl ){
-					this.defaultLocale = dl ; 
+					this.defaultLocale = dl ;
 				}
 				this.getFileLocale(dl);
 				this.logger("default Local APPLICATION ==> " + this.defaultLocale ,"DEBUG");
@@ -99,7 +99,7 @@ nodefony.registerService("translation", function(){
 		 	});
 
 			translate[this.defaultLocale] = {};
-			
+
 		}
 
 		trans (value, args){
@@ -127,22 +127,22 @@ nodefony.registerService("translation", function(){
 		nodeReader (locale, domain, value){
 			if ( locale ){
 				if( !translate[locale] ){
-					translate[locale] = {} ;//nodefony.extend(true, {}, translate[this.defaultLocale]);	
+					translate[locale] = {} ;//nodefony.extend(true, {}, translate[this.defaultLocale]);
 				}
 			}
 			if ( domain ){
 				if( !translate[locale][domain] ){
 					translate[locale][domain] = nodefony.extend(true, {}, translate[this.defaultLocale][domain]);
 				}
-				nodefony.extend(true, translate[locale][domain], value);		
+				nodefony.extend(true, translate[locale][domain], value);
 			}else{
-				nodefony.extend(true, translate[locale], value);	
+				nodefony.extend(true, translate[locale], value);
 			}
 		}
 
 		getFileLocale (locale){
 			for (var bundle in this.kernel.bundles){
-				this.kernel.bundles[bundle].registerI18n(locale);	
+				this.kernel.bundles[bundle].registerI18n(locale);
 			}
 		}
 
@@ -157,27 +157,31 @@ nodefony.registerService("translation", function(){
 		getLang (context){
 			var Lang = null ;
 			if ( ! context.session ){
-				Lang = this.getParameters("query.request").lang;
-				if ( Lang ){
-					this.defaultLocale = Lang;	
+				if ( this.getParameters("query.request") ){
+					Lang = this.getParameters("query.request").lang;
+					if ( Lang ){
+						this.defaultLocale = Lang;
+					}
 				}
 			}else{
-				var queryGetlang = this.getParameters("query.request").lang ;
-				if (context.user){
-					if ( queryGetlang ){
-						Lang  = queryGetlang ;
+				if ( this.getParameters("query.request") ){
+					var queryGetlang = this.getParameters("query.request").lang ;
+					if (context.user){
+						if ( queryGetlang ){
+							Lang  = queryGetlang ;
+						}else{
+							Lang  = context.session.get("lang") || context.user.lang;
+						}
 					}else{
-						Lang  = context.session.get("lang") || context.user.lang;
+						Lang =  queryGetlang || context.session.get("lang");
 					}
-				}else{
-					Lang =  queryGetlang || context.session.get("lang");
-				}
-				var res = reg.exec( Lang || this.defaultLocale ) ;
-				if ( res ){
-					if (res[2]){
-						this.defaultLocale = res[0];	
-					}else{
-						this.defaultLocale = res[1]+"_"+res[1] ;	
+					var res = reg.exec( Lang || this.defaultLocale ) ;
+					if ( res ){
+						if (res[2]){
+							this.defaultLocale = res[0];
+						}else{
+							this.defaultLocale = res[1]+"_"+res[1] ;
+						}
 					}
 				}
 				context.session.set("lang",this.defaultLocale );
@@ -186,7 +190,7 @@ nodefony.registerService("translation", function(){
 				this.getFileLocale(this.defaultLocale);
 			}else{
 				if ( ! this.getParameters("translate."+this.defaultLocale+"."+this.defaultDomain) ){
-					this.getFileLocale(this.defaultLocale);	
+					this.getFileLocale(this.defaultLocale);
 				}
 			}
 		}
@@ -203,5 +207,3 @@ nodefony.registerService("translation", function(){
 
 	return i18n;
 });
-
-

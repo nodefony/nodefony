@@ -1,6 +1,6 @@
 
 
-nodefony.registerController("logout", function(){
+module.exports = nodefony.registerController("logout", function(){
 
 	var logoutController = class logoutController extends nodefony.controller {
 
@@ -9,12 +9,12 @@ nodefony.registerController("logout", function(){
 		}
 
 		logoutAction (){
-			
+
 			if ( this.context.session ){
 				var security = this.context.session.getMetaBag("security") ;
 				if ( ! security ){
 					this.context.session.invalidate() ;
-					return this.redirect( "/" , null, true);	
+					return this.redirect( "/" , null, true);
 				}
 				switch ( security.factory){
 					case "passport-basic" :
@@ -31,7 +31,7 @@ nodefony.registerController("logout", function(){
 								this.getResponse().statusCode = 401 ;
 								this.notificationsCenter.fire("onResponse", this.getResponse() , this.context);
 								return ;
-							}	
+							}
 							return this.redirect( "/" , null, true);
 							this.notificationsCenter.fire("onResponse", this.getResponse() , this.context);
 						});
@@ -42,11 +42,11 @@ nodefony.registerController("logout", function(){
 					this.context.session.invalidate() ;
 					if ( formlogin ){
 						return this.redirect( formlogin , null, true);
-					}	
+					}
 				}catch(e){
 					this.logger(e,"ERROR");
 					this.context.session.invalidate() ;
-					return this.redirect( "/" , null, true);	
+					return this.redirect( "/" , null, true);
 				}
 			}
 

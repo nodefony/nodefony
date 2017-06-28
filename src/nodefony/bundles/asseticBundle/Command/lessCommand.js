@@ -6,13 +6,13 @@
  *
  */
 
-nodefony.registerCommand("less",function(){
+module.exports = nodefony.registerCommand("less",function(){
 
 
 	var Less = class Less extends nodefony.cliWorker {
 
 		constructor(container, command/*, options*/){
-			
+
 			super( "less", container );
 
 			this.engine = require("less");

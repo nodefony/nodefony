@@ -4,7 +4,7 @@ try {
 	console.trace(e);
 }
 
-nodefony.registerController("git", function(){
+module.exports = nodefony.registerController("git", function(){
 
 
 	var gitController = class gitController  extends nodefony.controller {

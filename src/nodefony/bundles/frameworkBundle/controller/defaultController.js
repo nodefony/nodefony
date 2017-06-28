@@ -9,7 +9,7 @@
  *
  **/
 
-nodefony.registerController("framework", function(){
+module.exports = nodefony.registerController("framework", function(){
 
 
 		var frameworkController = class frameworkController extends nodefony.controller {

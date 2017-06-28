@@ -3,7 +3,7 @@ var net = require('net');
 var pm2 = require('pm2');
 
 
-nodefony.registerService("monitoring", function(){
+module.exports = nodefony.registerService("monitoring", function(){
 
 
 	var connection = class connection  {
@@ -24,7 +24,7 @@ nodefony.registerService("monitoring", function(){
 	var monitoring = class monitoring extends nodefony.Service {
 
 		constructor( realTime, container, kernel ){
-		
+
 			super("MONITORING", container, kernel.notificationsCenter );
 
 			this.realTime = realTime ;
@@ -79,19 +79,19 @@ nodefony.registerService("monitoring", function(){
 							if (this.connections && this.connections[conn.id] )
 								this.syslog.unListen("onLog", this.connections[conn.id]["listener"]);
 						}
-						return; 
+						return;
 					}
 					var ele ={
 						pdu:pdu
-					} 
-					conn.write(JSON.stringify(ele));	
+					}
+					conn.write(JSON.stringify(ele));
 				};
 
 				/*this.connections[conn.id]["listener"]  = this.syslog.listenWithConditions(this,{
 					severity:{
 						data:"INFO"
-					}		
-				},callback);*/	
+					}
+				},callback);*/
 
 				pm2.connect( () => {
 					this.logger("CONNECT PM2 REALTIME MONITORING", "DEBUG");
@@ -117,16 +117,16 @@ nodefony.registerService("monitoring", function(){
 										pm_uptime:list[i]["pm2_env"].pm_uptime,
 										status:list[i]["pm2_env"].status
 									}
-								}); 	
+								});
 							}
 						}
 						if (closed || this.stopped ){
 							clearInterval( pm2Interval );
-							return ;	
+							return ;
 						}
-						conn.write(JSON.stringify(clusters));	
+						conn.write(JSON.stringify(clusters));
 					});
-					
+
 				}, 1000);
 
 				//SESSIONS  INTERVAL
@@ -134,10 +134,10 @@ nodefony.registerService("monitoring", function(){
 
 
 				//REQUESTS  INTERVAL
-				
+
 					//WEBSOCKET OPEN
 					//WEBSOCKET CLOSE
-					//HTTP 
+					//HTTP
 
 				socket.on('end',() => {
 					closed = true ;
@@ -153,7 +153,7 @@ nodefony.registerService("monitoring", function(){
 
 				socket.on("data",(buffer) => {
 					try {
-						console.log( buffer.toString() )	
+						console.log( buffer.toString() )
 					}catch(e){
 						this.logger("message :" + buffer.toString() + " error : "+e.message,"ERROR")
 					}
@@ -182,23 +182,23 @@ nodefony.registerService("monitoring", function(){
     						}, 1000);
 					break;
 					default :
-						this.logger( new Error(httpError) ,"CRITIC");	
+						this.logger( new Error(httpError) ,"CRITIC");
 				}
 			})
 
 			/*
- 		 	*	LISTEN ON DOMAIN 
+ 		 	*	LISTEN ON DOMAIN
  		 	*/
 			this.server.listen(this.port, this.domain, () => {
 				this.logger("Create server MONITORING listen on Domain : "+this.domain+" Port : "+this.port, "INFO");
-			});	
-				
+			});
+
 			/*
  		 	*  KERNEL EVENT TERMINATE
- 		 	*/ 
+ 		 	*/
 			this.kernel.listen(this, "onTerminate", () => {
 				this.stopServer();
-			})	
+			})
 		};
 
 		stopServer (){
@@ -208,7 +208,7 @@ nodefony.registerService("monitoring", function(){
 				if ( this.connections[i]["listener"] ){
 					this.syslog.unListen("onLog", this.connections[i]["listener"]);
 				}
-				this.connections[i].socket.end();	
+				this.connections[i].socket.end();
 				var id = this.connections[i].id;
 				delete this.connections[id];
 			}
@@ -223,6 +223,6 @@ nodefony.registerService("monitoring", function(){
 		};
 	};
 
-	return monitoring; 
+	return monitoring;
 
 });

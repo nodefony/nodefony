@@ -9,7 +9,7 @@
  *
  */
 "use strict;"
-nodefony.register("appKernel",function(){
+module.exports = nodefony.register("appKernel",function(){
 
 	var appKernel = class appKernel extends nodefony.kernel {
 

@@ -1,6 +1,6 @@
 //var dns = require('dns');
 
-nodefony.registerController("api", function(){
+module.exports = nodefony.registerController("api", function(){
 
 	var dataTableParsing = function(query, results){
 		var dataTable = {
@@ -8,7 +8,7 @@ nodefony.registerController("api", function(){
 			recordsTotal:results.count,
 			recordsFiltered: ( query.search.value !== "" ? results.rows.length : results.count ) ,
 			data:[]
-		}; 
+		};
 		for (var i = 0 ; i < results.rows.length  ; i++){
 			var payload= {};
 			payload.uid = results.rows[i].id ;
@@ -34,7 +34,7 @@ nodefony.registerController("api", function(){
 			recordsTotal: results.recordsTotal || results.count,
 			recordsFiltered:  results.count  ,
 			data:[]
-		}; 
+		};
 
 		for (var i = 0 ; i < results.rows.length  ; i++){
 			var payload= {};
@@ -54,7 +54,7 @@ nodefony.registerController("api", function(){
 
 	/**
 	*
-	*	@method 
+	*	@method
 	*
 	*/
 	var finderSession = function(Path , Result , finish){
@@ -68,10 +68,10 @@ nodefony.registerController("api", function(){
 				// sort
 				var resTmp = files ;
 				for ( var i = 0 ; i < Result.options.order.length ; i++){
-					
-					var colonm = Result.options.order[i][0] ; 
+
+					var colonm = Result.options.order[i][0] ;
 					var direction = Result.options.order[i][1]
-					var callback = null ; 
+					var callback = null ;
 					switch ( colonm ){
 						case "updatedAt" :
 							if ( direction  === "desc"){
@@ -105,10 +105,10 @@ nodefony.registerController("api", function(){
 									var obj2 = JSON.parse( b.content() ) ;
 									return parseInt (obj1.user_id , 10)  - parseInt (obj2.user_id , 10)
 								}
-							}	
+							}
 						break;
 						default:
-									
+
 							if ( direction  === "desc"){
 								var callback = function(a,b){
 									var obj1 = JSON.parse( a.content() ) ;
@@ -126,7 +126,7 @@ nodefony.registerController("api", function(){
 									return 0;
 								}
 							}
-							
+
 					}
 					resTmp = files.sort(callback);
 				}
@@ -139,13 +139,13 @@ nodefony.registerController("api", function(){
 					content.updatedAt = mtime ;
 					content.session_id =file.name ;
 					content.context = path.basename(file.dirname() ) ;
-					Result.rows.push(  content )  ;	
+					Result.rows.push(  content )  ;
 				})
 				Result.count = nbTotal ;
 				finish(error, Result);
 			}
 		});
-		return finder;	
+		return finder;
 	}
 
 	/**
@@ -154,9 +154,9 @@ nodefony.registerController("api", function(){
 		*	@main api
 		*	@class api
 		*	@constructor
-		*	@param {class} container   
+		*	@param {class} container
 		*	@param {class} context
-		*	
+		*
 		*/
 	var apiController =  class apiController extends nodefony.controller {
 
@@ -165,7 +165,7 @@ nodefony.registerController("api", function(){
 		}
 
 		renderRest (data, async){
-		
+
 			var context = this.getContext() ;
 			var type = context.request.queryGet.format || context.request.headers["X-FORMAT"] || "" ;
 
@@ -174,10 +174,10 @@ nodefony.registerController("api", function(){
 				response.setStatusCode(data.code) ;
 			}
 			switch( type.toLowerCase() ){
-				case "application/xml" : 
-				case "text/xml" : 
-				case "xml" : 
-					response.setHeader('Content-Type' , "application/xml"); 
+				case "application/xml" :
+				case "text/xml" :
+				case "xml" :
+					response.setHeader('Content-Type' , "application/xml");
 					if (async){
 						return this.renderAsync('monitoringBundle:api:api.xml.twig',data);
 					}else{
@@ -199,13 +199,13 @@ nodefony.registerController("api", function(){
 
 			//var response = this.getResponse() ;
 			//response.setHeader('Content-Type' , "application/json");
-			
+
 			if ( async ){
 				return this.renderJsonAsync(data);
 				//return 	this.getResponse( JSON.stringify(data) , data.code, {'Content-Type' : "application/json"})
 			}else{
 				return this.renderJson(data);
-					
+
 			}
 		}
 
@@ -232,7 +232,7 @@ nodefony.registerController("api", function(){
 			var serviceParam = this.container.getParameters("services") ;
 			var services = {}
 			for (var service in serviceParam){
-				var ele = serviceParam[service] ; 
+				var ele = serviceParam[service] ;
 				services[service] = {};
 				services[service].name = service;
 				if (ele){
@@ -241,18 +241,18 @@ nodefony.registerController("api", function(){
 					for (var inj in ele.injections){
 						var esc = i === 0 ? "" : " , ";
 						inject += esc+inj;
-						i++;	
+						i++;
 					}
-					services[service].run = "CONFIG"	
+					services[service].run = "CONFIG"
 					services[service].scope = ele.scope === "container" ? "Default container" :	ele.scope ;
 					services[service].calls = ele.calls	;
 					services[service].injections = inject;
 					services[service].properties = ele.properties;
 					services[service].orderInjections = ele.orderArguments ? true : false;
 				}else{
-					services[service].run = "KERNEL"	
-					services[service].scope = "KERNEL container"	
-				}		
+					services[service].run = "KERNEL"
+					services[service].scope = "KERNEL container"
+				}
 			}
 			return this.renderRest({
 				code:200,
@@ -269,10 +269,10 @@ nodefony.registerController("api", function(){
 		*/
 		syslogAction (message){
 			switch ( this.request.method ){
-			
+
 				case "WEBSOCKET" :
 					if (message){
-						// MESSAGES 
+						// MESSAGES
 						this.logger( message.utf8Data , "INFO");
 					}else{
 						var callback = function( pdu ){
@@ -283,7 +283,7 @@ nodefony.registerController("api", function(){
 						this.context.listen(this, "onClose" , () => {
 							this.kernel.syslog.unListen("onLog", callback);
 						});
-					}	
+					}
 				break;
 				default:
 					return this.renderRest({
@@ -317,16 +317,16 @@ nodefony.registerController("api", function(){
 					var requestEntity = bundle.requestEntity ;
 					if (this.query.type && this.query.type === "dataTable"){
 
-						var options = { 
-							offset: parseInt( this.query.start, 10), 
+						var options = {
+							offset: parseInt( this.query.start, 10),
 							limit: parseInt ( this.query.length ,10)
-						};	
+						};
 						if (this.query.order.length){
 							options.order = [];
 							for ( var i = 0 ; i < this.query.order.length ; i++){
 								var tab = []
-								tab.push( this.query.columns[ parseInt( this.query.order[i].column , 10 ) ].name ) ;	
-								tab.push( this.query.order[i].dir ) ;	
+								tab.push( this.query.columns[ parseInt( this.query.order[i].column , 10 ) ].name ) ;
+								tab.push( this.query.order[i].dir ) ;
 								options.order.push(tab);
 							}
 						}
@@ -373,7 +373,7 @@ nodefony.registerController("api", function(){
 								return this.renderDatatable(result);
 							}catch(e){
 								throw e ;
-							}	
+							}
 						})
 						.catch((error) => {
 							if (error){
@@ -383,7 +383,7 @@ nodefony.registerController("api", function(){
 									message:"internal error",
 									data:error
 								},true);
-							}	
+							}
 						})
 					}else{
 						return requestEntity.findAll()
@@ -395,7 +395,7 @@ nodefony.registerController("api", function(){
 									ret["uid"] = results[i].id ;
 									ret["payload"] = JSON.parse( results[i].data ) ;
 									ret["timeStamp"] = results[i].createdAt ;
-									ele.push(ret);	
+									ele.push(ret);
 								}
 								return this.renderRest({
 									code:200,
@@ -415,7 +415,7 @@ nodefony.registerController("api", function(){
 									message:"internal error",
 									data:error
 								},true);
-							}	
+							}
 						})
 					}
 				break;
@@ -462,7 +462,7 @@ nodefony.registerController("api", function(){
 						data:JSON.stringify(pdu)
 					});
  				break;
-				case "orm":	
+				case "orm":
 					var requestEntity = bundle.requestEntity ;
 					return requestEntity.findOne({where:{id:uid}})
 					.then( ( result) =>  {
@@ -516,28 +516,28 @@ nodefony.registerController("api", function(){
 		configAction (){
 			var http = this.get("httpServer");
 			if ( http && http.ready){
-				var httpConfig = {	
+				var httpConfig = {
 					port:http.port,
 					ready:http.ready,
 					domain:http.domain,
-					config:http.settings	
+					config:http.settings
 				}
 			}else{
-				var httpConfig = null ;	
+				var httpConfig = null ;
 			}
-				
+
 			var https = this.get("httpsServer");
 			if ( https && https.ready ){
-				var httpsConfig = {	
+				var httpsConfig = {
 					port:https.port,
 					ready:https.ready,
 					domain:https.domain,
-					config:https.settings	
+					config:https.settings
 				}
 			}else{
-				var httpsConfig = null ;	
+				var httpsConfig = null ;
 			}
-			
+
 			var websocket = this.get("websocketServer");
 			if ( websocket && websocket.ready ){
 				var config = nodefony.extend({}, websocket.websocketServer.config ) ;
@@ -549,7 +549,7 @@ nodefony.registerController("api", function(){
 					config:config
 				};
 			}else{
-				var websocketConfig = null ;	
+				var websocketConfig = null ;
 			}
 
 			var websockets = this.get("websocketServerSecure");
@@ -561,10 +561,10 @@ nodefony.registerController("api", function(){
 					ready:websockets.ready,
 					domain:websockets.domain,
 					config:configs
-					
+
 				}
 			}else{
-				var websocketSecureConfig = null ;	
+				var websocketSecureConfig = null ;
 			}
 
 			//console.log(util.inspect(websocket.websocketServer, {depth:1}) )
@@ -611,8 +611,8 @@ nodefony.registerController("api", function(){
 				//console.log(ele)
 				//console.log(router.routes[ele])
 				var bun = router.routes[i].defaults.controller.split(":");
-				//console.log(bun[0]);	
-				//console.log(bundleName+"Bundle");	
+				//console.log(bun[0]);
+				//console.log(bundleName+"Bundle");
 				if( bun[0] === bundleName+"Bundle"){
 					routing.push( router.routes[i] );
 				}
@@ -626,7 +626,7 @@ nodefony.registerController("api", function(){
 					}
 				}
 			}
-					
+
 			var security  = this.get("security");
 
 			return this.renderRest({
@@ -664,13 +664,13 @@ nodefony.registerController("api", function(){
 					code:404,
 			        	type:"ERROR",
 			        	message:"Service realtime not found",
-				}); 
+				});
 			}
 			switch(name){
 				case "connections":
 					var obj ={connections:{}};
 					for (var connect in service.connections.connections){
-						var conn = service.connections.connections[connect]; 
+						var conn = service.connections.connections[connect];
 							obj.connections[connect] = {
 								remote:conn.remote,
 								nbClients:Object.keys(conn.clients).length
@@ -698,12 +698,12 @@ nodefony.registerController("api", function(){
 			        		message:"not found",
 					});
 			}
-			
+
 		}
 
 		/**
 		*
-		*	@method 
+		*	@method
 		*
 		*/
 		usersAction (name){
@@ -723,9 +723,9 @@ nodefony.registerController("api", function(){
 				});
 			})
 		}
-		
+
 		sessionsAction (){
-			// timeout 
+			// timeout
 			this.getResponse().setTimeout(5000);
 			var sessionServices = this.get("sessions") ;
 			var storage = sessionServices.settings.handler ;
@@ -736,14 +736,14 @@ nodefony.registerController("api", function(){
 						rows:[],
 						options:{}
 					};
-					myResults.options.offset =  parseInt( this.query.start, 10) ; 
+					myResults.options.offset =  parseInt( this.query.start, 10) ;
 					myResults.options.limit =  parseInt ( this.query.length ,10) ;
 					if (this.query.order.length){
 						myResults.options.order = [];
 						for ( var i = 0 ; i < this.query.order.length ; i++){
 							var tab = []
-							tab.push( this.query.columns[ parseInt( this.query.order[i].column , 10 ) ].name ) ;	
-							tab.push( this.query.order[i].dir ) ;	
+							tab.push( this.query.columns[ parseInt( this.query.order[i].column , 10 ) ].name ) ;
+							tab.push( this.query.order[i].dir ) ;
 							myResults.options.order.push(tab);
 						}
 					}
@@ -768,33 +768,33 @@ nodefony.registerController("api", function(){
 
 					if (this.query.type && this.query.type === "dataTable"){
 
-						var options = { 
-							offset: parseInt( this.query.start, 10), 
+						var options = {
+							offset: parseInt( this.query.start, 10),
 							limit: parseInt ( this.query.length ,10),
 							include: [userEntity]
-						};	
+						};
 						if (this.query.order.length){
 							options.order = [];
 							for ( var i = 0 ; i < this.query.order.length ; i++){
 								var tab = []
-								tab.push( this.query.columns[ parseInt( this.query.order[i].column , 10 ) ].name ) ;	
-								tab.push( this.query.order[i].dir ) ;	
+								tab.push( this.query.columns[ parseInt( this.query.order[i].column , 10 ) ].name ) ;
+								tab.push( this.query.order[i].dir ) ;
 								options.order.push(tab);
 							}
 						}
-					
+
 						return sessionEntity.findAndCountAll(options)
 						.then( (results) => {
 							try{
 								var dataTable = dataTableSessionParsing.call(this, this.query, results);
-								//var res = JSON.stringify(dataTable); 
+								//var res = JSON.stringify(dataTable);
 							}catch(e){
 								return this.renderRest({
 									code:500,
 									type:"ERROR",
 									message:"internal error",
 									data:e
-								},true);	
+								},true);
 							}
 							return this.renderDatatable(dataTable);
 						})
@@ -806,8 +806,8 @@ nodefony.registerController("api", function(){
 									message:"internal error",
 									data:error
 								},true);
-							}	
-						})	
+							}
+						})
 					}
 				break;
 				case "session.storage.memcached":
@@ -833,7 +833,7 @@ nodefony.registerController("api", function(){
 						message:"OK",
 						data:JSON.stringify(list)
 					}, true);
-				});	
+				});
 			});
 		}
 
@@ -844,7 +844,7 @@ nodefony.registerController("api", function(){
 					code:404,
 			        	type:"ERROR",
 			        	message:"Service security not found"
-				}); 
+				});
 			}
 
 			var ele ={
@@ -854,7 +854,7 @@ nodefony.registerController("api", function(){
 				factories:[]
 			}
 			for (var factory in nodefony.security.factory){
-				ele.factories.push(factory)		
+				ele.factories.push(factory)
 			}
 
 			for (var provider in service.providers){

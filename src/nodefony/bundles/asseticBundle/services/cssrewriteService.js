@@ -7,7 +7,7 @@
  */
 
 
-nodefony.registerService("cssrewrite", function(){
+module.exports = nodefony.registerService("cssrewrite", function(){
 
 
 	var cssrewrite = class cssrewrite extends nodefony.Service{
@@ -15,7 +15,7 @@ nodefony.registerService("cssrewrite", function(){
 
 			super("cssrewrite", container , container.get("notificationsCenter") );
 			this.kernel = kernel ;
-		
+
 		}
 
 		filter (path , file){
@@ -44,7 +44,7 @@ nodefony.registerService("cssrewrite", function(){
 								result+=line ;
 							}
 						})
-								
+
 						return result ;
 					}catch(error){
 						throw error ;
@@ -52,7 +52,7 @@ nodefony.registerService("cssrewrite", function(){
 				break;
 				default :
 					throw  new Error("Service  cssrewrite FILTER bad path type  ");
-				
+
 			}
 		}
 	};

@@ -6,7 +6,7 @@
  *
  */
 
-nodefony.registerService("firewall", function(){
+module.exports = nodefony.registerService("firewall", function(){
 
 	var pluginReader = function(){
 

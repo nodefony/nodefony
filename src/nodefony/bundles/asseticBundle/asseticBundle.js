@@ -4,15 +4,15 @@
  *
  */
 
-nodefony.registerBundle ("assetic", function(){
+module.exports = nodefony.registerBundle ("assetic", function(){
 
 	var assetic = class assetic extends nodefony.Bundle {
 
 		constructor (name, kernel, container){
-			
+
 			super(name, kernel, container );
 
-			// load bundle library 
+			// load bundle library
 			this.autoLoader.loadDirectory(this.path+"/core");
 			this.container = container ;
 			this.rootDir =  kernel.rootDir ;
@@ -36,14 +36,14 @@ nodefony.registerBundle ("assetic", function(){
 			switch( obj.root ){
 				case "/" :
 					try {
-						return  new nodefony.fileClass(this.webDir+file);	
+						return  new nodefony.fileClass(this.webDir+file);
 					}catch(e){
 						throw e ;
 					}
 				break;
 				case "" :
 					var tmpObj = path.parse( template );
-					try {	
+					try {
 						this.logger("BLOCK "+type+" RELATIVE PATH  Template : " + template + " RELATIVE PATH  : "+ file,"DEBUG");
 						return  new nodefony.fileClass( tmpObj.dir+"/"+file );
 					}catch(e){
@@ -52,7 +52,7 @@ nodefony.registerBundle ("assetic", function(){
 			}
 			throw new Error(" Can't define path " + file +" in template :" + template );
 		}
-		
+
 		generateFileName (files, template, type){
 			var ino ="";
 			var tab = [];
@@ -62,13 +62,13 @@ nodefony.registerBundle ("assetic", function(){
 					files[i] = files[i].slice(0, -1);
 				}
 				try {
-					file = this.checkPath( files[i], template , type) ; 
+					file = this.checkPath( files[i], template , type) ;
 				}catch(e){
 					this.kernel.logger(e, "ERROR");
 					continue ;
 				}
 				tab.push(file) ;
-				ino+=file.stats.ino ; 
+				ino+=file.stats.ino ;
 			}
 			return 	{
 				hash : crypto.createHash('md5').update(ino).digest("hex") ,
@@ -82,11 +82,11 @@ nodefony.registerBundle ("assetic", function(){
 				output = "/assets/"+type+"/"+ret.hash+"_assetic."+type ;
 			}
 			if (this.kernelType === "CONSOLE"){
-				this.kernel.logger("GENERATE FILE : " + output ,"INFO" );	
+				this.kernel.logger("GENERATE FILE : " + output ,"INFO" );
 			}
 			try {
 				return  {
-					name:output,	
+					name:output,
 					files:ret.files
 				};
 			}catch(e){
@@ -109,14 +109,14 @@ nodefony.registerBundle ("assetic", function(){
 							//TODO multiple filter
 							for ( var j=0 ; j < myFilters.length ; j++ ){
 								if (this.kernelType === "CONSOLE"){
-									this.kernel.logger("FILE : " + files[i].path + " FILTER : "+myFilters[j].name,"INFO" );	
+									this.kernel.logger("FILE : " + files[i].path + " FILTER : "+myFilters[j].name,"INFO" );
 								}
 								myFilters[j].filter.call(myFilters[j], files[i] ,function(e, myData){
 									if ( e) {
 										throw e ;
 									}
 									data += myData ;
-										
+
 								}) ;
 							}
 						}else{
@@ -155,7 +155,7 @@ nodefony.registerBundle ("assetic", function(){
 											return reject(e);
 										}else{
 											//logger( "APPLY FILTER ASSETIC : " + name, "DEBUG");
-											resolve(mydata);	
+											resolve(mydata);
 											return mydata ;
 										}
 									}.bind(this))
@@ -169,7 +169,7 @@ nodefony.registerBundle ("assetic", function(){
 									resolve(mydata);
 									return mydata ;
 								}catch(e){
-									return reject(e);	
+									return reject(e);
 								}
 							}) );
 						}
@@ -200,7 +200,7 @@ nodefony.registerBundle ("assetic", function(){
 		}*/
 
 		genetateFile ( block , type, template){
-			var files = [];  
+			var files = [];
 			var filters = [];
 			var output = "";
 			var reg = null ;
@@ -312,7 +312,7 @@ nodefony.registerBundle ("assetic", function(){
 			var that = this ;
 
 			this.engineTwig.extend( (Twig) => {
-				
+
     				Twig.exports.extendTag({
         				// unique name for tag type
         				type: "javascripts",
@@ -324,12 +324,12 @@ nodefony.registerBundle ("assetic", function(){
         				open: true,
         				compile:  function (token)  {
             					var expression = token.match.input;
-						
+
 						var res = expression.replace(/javascripts/, "");
 						res = res.replace(/\s/g, "\n");
 						res = res.split("\n" );
 						res = res.filter(function(e){
- 						       	return ( e === 0  || e ) ;  
+ 						       	return ( e === 0  || e ) ;
 						});
 
 						try {
@@ -375,10 +375,10 @@ nodefony.registerBundle ("assetic", function(){
 			/*this.engineTwig.extendFunction("stylesheets", function(value, times) {
 				console.log(arguments)
 			});*/
-			
+
 			var that = this ;
 			this.engineTwig.extend( (Twig) => {
-				
+
     				Twig.exports.extendTag({
         				// unique name for tag type
         				type: "stylesheets",
@@ -390,12 +390,12 @@ nodefony.registerBundle ("assetic", function(){
         				open: true,
         				compile: function (token) {
             					var expression = token.match.input ;
-						
+
 						var res = expression.replace(/stylesheets/, "");
 						res = res.replace(/\s/g, "\n");
 						res = res.split("\n" );
 						res = res.filter(function(e){
- 						       	return (e === 0 || e ); 
+ 						       	return (e === 0 || e );
 						});
 						try {
 							res = that.genetateFile( res , "css", this.path);
@@ -440,5 +440,3 @@ nodefony.registerBundle ("assetic", function(){
 
 	return assetic;
 });
-
-

@@ -7,7 +7,7 @@
  */
 var Sequelize =require("sequelize");
 
-nodefony.registerEntity("requests", function(){
+module.exports = nodefony.registerEntity("requests", function(){
 
 	var requests = function(db/*, ormService*/){
 

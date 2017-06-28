@@ -1,6 +1,8 @@
 const fs = require("fs");
 const vm = require("vm");
 const path = require("path");
+const Module = require("module");
+const shell = require("shelljs");
 
 module.exports = function(){
 
@@ -13,7 +15,7 @@ module.exports = function(){
 	context.__filename = __filename ;
 
 	context.nodefony = require("./core");
-  context.path = require("path");
+  	context.path = require("path");
 	context.fs = require("fs")
 	context.yaml = require("js-yaml");
 	context.util = require('util');
@@ -29,8 +31,9 @@ module.exports = function(){
 	context.Promise = require('promise');
 	context.clc = require('cli-color');
 	context.shell = require("shelljs");
-
-
+	context.twig = require("twig");
+	context.crypto = require("crypto");
+	context.BlueBird = require("BlueBird");
 
 	/**
 	 *  Nodefony autoloader
@@ -73,6 +76,10 @@ module.exports = function(){
 			this.setEnv();
 		}
 
+		createContext (sandbox){
+			return  vm.createContext(sandbox);
+		}
+
 		setEnv (environment){
 			this.environment = environment;
 			switch( this.environment ){
@@ -98,13 +105,38 @@ module.exports = function(){
 			return require(file);
 		}
 
+		// Native extension for .js
+		extensions (module, filename) {
+  			var content = fs.readFileSync(filename, 'utf8');
+  			return module._compile(content, filename);
+		}
+
+		compile (module, file){
+			let filename = Module._resolveFilename(file, module, false);
+			let myModule = new Module(filename, module ) ;
+			Module._cache[filename] = myModule;
+			myModule.paths = Module._nodeModulePaths(path.dirname(filename));
+			myModule.filename = filename;
+			let res = this.extensions(myModule, filename) ;
+			myModule.loaded = true;
+			return myModule.exports  || res ;
+		}
+
 		/**
  	 	* @method load
 	 	*
 	 	* @param {String} file Path to file
 	 	*
  	 	*/
-		load (file, force, cd){
+		load (file){
+			try {
+				return this.compile(module, file);
+			}catch(e){
+				throw e ;
+			}
+		}
+
+		/*load (file, force, cd){
 			if (file in cache &&  force !== true){
 				this.logger( file, "WARNING","AUTOLOADER ALREADY LOADED ADD FORCE TO RELOAD ");
 				context.__dirname = path.dirname(file);
@@ -133,24 +165,22 @@ module.exports = function(){
 					if ( force ){
 						if (this.syslog) {this.logger(file, "WARNING","AUTOLOADER RELOAD FORCE");}
 					}
-					if ( cd ){
-						shell.cd(path.dirname(file))
+
+					if ( true ){
+						return this.compile(module, file);
 					}
-					context.__dirname = path.dirname(file);
-					context.__filename = file;
-					context.require.main.id = file ;
-					context.require.main.filename = file;
-					var res = cache[file].runInContext(context, {
+
+					var newContext = this.createContext(context) ;
+					newContext.__dirname = path.dirname(file);
+					newContext.__filename = file;
+					var res = cache[file].runInContext( newContext, {
 							filename:file,
 							lineOffset:this.lineOffset,
 							columnOffset:this.columnOffset,
-					    timeout:this.timeout,
+					    	timeout:this.timeout,
 							displayErrors:this.displayError,
 							breakOnSigint:true
 					});
-					if ( cd){
-						shell.cd(this.dirname)
-				  }
 					return res ;
 				}catch(e){
 					console.trace(e);
@@ -159,7 +189,7 @@ module.exports = function(){
 			}else{
 				throw new Error("AUTOLOADER file :"+file+" not exist !!!!");
 			}
-		}
+		}*/
 
 		deleteCache (){
 			for ( var ele in cache ){
@@ -222,7 +252,7 @@ module.exports = function(){
 
 		autoloadEach (ele){
 			if ( regJs.exec(ele.path) ){
-				this.load.call(context, ele.path);
+				this.load.call(this, ele.path);
 				//this.logger("AUTOLOAD : "+ele.name, "DEBUG");
 			}
 		}

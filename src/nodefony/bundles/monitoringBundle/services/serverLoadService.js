@@ -4,7 +4,7 @@ var request = require("request");
 var os = require("os");
 
 
-nodefony.registerService("serverLoad", function(){
+module.exports = nodefony.registerService("serverLoad", function(){
 
 
 	var  cpuAverage = function() {
@@ -12,7 +12,7 @@ nodefony.registerService("serverLoad", function(){
 		var totalTick = 0 ;
 
 		var cpus = os.cpus();
-		
+
 
 		//Loop through CPU cores
 		for ( var i = 0 ; i < cpus.length ; i++) {
@@ -32,8 +32,8 @@ nodefony.registerService("serverLoad", function(){
 	}
 
 	var cpuInit = function(){
-		var start = cpuAverage.call(this);		
-			
+		var start = cpuAverage.call(this);
+
 		return () => {
 			var end = cpuAverage.call(this);
 
@@ -43,7 +43,7 @@ nodefony.registerService("serverLoad", function(){
 			dif.total = end.total - start.total ;
 
 			dif.percent = 100 - ~~(100 * dif.idle / dif.total);
-			
+
 			this.cpu.push(dif);
 			return dif ;
 
@@ -61,21 +61,21 @@ nodefony.registerService("serverLoad", function(){
 		}
 
 		addTimeAverage (tab){
-			var status = {} ;	
+			var status = {} ;
 			var time = 0 ;
 
 			for (var i= 0 ; i< tab.length ; i++){
 				time += tab[i].time ;
 				if (tab[i].statusCode in this.statusCode ){
-					this.statusCode[tab[i].statusCode] += 1 ;	
+					this.statusCode[tab[i].statusCode] += 1 ;
 				}else{
-					this.statusCode[tab[i].statusCode] = 1	
+					this.statusCode[tab[i].statusCode] = 1
 				}
 
 				if (tab[i].statusCode in status ){
-					status[tab[i].statusCode] += 1 ;	
+					status[tab[i].statusCode] += 1 ;
 				}else{
-					status[tab[i].statusCode] = 1	
+					status[tab[i].statusCode] = 1
 				}
 			}
 			var res = time / tab.length ;
@@ -110,7 +110,7 @@ nodefony.registerService("serverLoad", function(){
 			 	idle += this.cpu[i].idle;
 			 	total += this.cpu[i].total;
 			 	percent += this.cpu[i].percent;
-			}	
+			}
 
 			return {
 				idle : ( ( idle / this.cpu.length )  ).toFixed(2) ,
@@ -136,7 +136,7 @@ nodefony.registerService("serverLoad", function(){
 			this.sid = options.sid ;
 
 			this.httpsSettings =  this.manager.get("httpsServer").settings ;
-			this.rootDir = this.manager.kernel.rootDir ; 
+			this.rootDir = this.manager.kernel.rootDir ;
 			this.stopChain = false ;
 			this.running = false ;
 
@@ -147,7 +147,7 @@ nodefony.registerService("serverLoad", function(){
 			};
 
 			if ( this.httpsSettings.certificats.ca ){
-				this.agentOptions["ca"] = fs.readFileSync(this.rootDir+this.httpsSettings.certificats.ca) ;	
+				this.agentOptions["ca"] = fs.readFileSync(this.rootDir+this.httpsSettings.certificats.ca) ;
 			}*/
 
 			this.agentOptions = {
@@ -160,10 +160,10 @@ nodefony.registerService("serverLoad", function(){
 			var tab = [] ;
 			var cpu = cpuInit.call(this.averaging);
 			for ( var i = 0 ; i < this.concurrence ; i++){
-				tab.push( this.HttpRequest( ) );		
-			}	
+				tab.push( this.HttpRequest( ) );
+			}
 
-			var myResult = null ; 
+			var myResult = null ;
 
 			this.running = true ;
 
@@ -181,12 +181,12 @@ nodefony.registerService("serverLoad", function(){
 			})
 			.then((result) => {
 				//console.log(result)
-				//this.manager.logger( "PROMISE HTTP THEN" , "DEBUG");	
+				//this.manager.logger( "PROMISE HTTP THEN" , "DEBUG");
 				myResult = result ;
 				var stop = new Date().getTime();
 				if ( result ){
 					var addTimeAverage  = this.averaging.addTimeAverage( result );
-					var time = ( stop - start ); 
+					var time = ( stop - start );
 					this.averaging.total += time ;
 					var sec =   time / 1000 ;
 					var nbRequestSec = this.concurrence /  addTimeAverage.average    ;
@@ -217,10 +217,10 @@ nodefony.registerService("serverLoad", function(){
 							percentEnd: 100 ,
 							nbResquest: this.nbRequestSent,
 							running: this.running,
-							cpu: this.averaging.cpuAverage(), 
+							cpu: this.averaging.cpuAverage(),
 							//prototcol:prototcol
 						}) );
-						this.context.close();	
+						this.context.close();
 					}
 				}
 			})
@@ -230,7 +230,7 @@ nodefony.registerService("serverLoad", function(){
 		}
 
 		HttpRequest (){
-		
+
 			var options = {
 				url: this.options.url,
 				method:this.options.method || "GET" ,
@@ -252,11 +252,11 @@ nodefony.registerService("serverLoad", function(){
 				options.jar = j ;
 			}
 
-			var promise = new Promise( (resolve, reject) => { 
-				
+			var promise = new Promise( (resolve, reject) => {
+
 				var start = new Date().getTime() ;
 				request(options, (error, response, body) => {
-					var stop = new Date().getTime() ;	
+					var stop = new Date().getTime() ;
 					this.nbRequestSent+=1 ;
 					//console.log(this.nbRequestSent);
 					if (error){
@@ -285,13 +285,13 @@ nodefony.registerService("serverLoad", function(){
 			this.stopChain = true ;
 			delete this.manager.connections[sid];
 		};
-		
+
 		handleMessage (message){
 			if ( ! message ) return ;
 			switch ( message.action ){
 				case "stop" :
 					this.stop(this.sid);
-				break;	
+				break;
 				default:
 					return ;
 			}
@@ -324,14 +324,14 @@ nodefony.registerService("serverLoad", function(){
 					if (message.sid ){
 						this.connections[message.sid].handleMessage(message);
 						return ;
-					}	
-				break;      
+					}
+				break;
 				default:
 					if (message.query){
 						var obj = QS.parse(message.query) ;
 						this.loadHTTP( context,  obj );
 					}else{
-						this.loadHTTP( context,  message );	
+						this.loadHTTP( context,  message );
 					}
 			}
 		}

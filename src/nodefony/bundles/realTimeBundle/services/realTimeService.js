@@ -3,7 +3,7 @@ var net = require('net');
 var dgram = require('dgram');
 var shortId = require('shortid');
 
-nodefony.registerService("realTime", function(){
+module.exports = nodefony.registerService("realTime", function(){
 
 	/*
 	 *
@@ -72,7 +72,7 @@ nodefony.registerService("realTime", function(){
 					if ( client === clientId ){
 						return this.connections[connection].clients[client];
 					}
-				}	
+				}
 			}
 			return null;
 		}
@@ -91,28 +91,28 @@ nodefony.registerService("realTime", function(){
 
 		removeAllClientConnection (){
 			for (var ele in this.connections ){
-			
+
 			}
 		}
 	};
 
 	/**
 	 *	The class is a **`realTime` SERVICE** .
-	 *	@module NODEFONY 
+	 *	@module NODEFONY
 	 *	@main NODEFONY
 	 *	@class realTime
 	 *	@constructor
-	 *	
+	 *
 	 */
 	var settingsSyslog = {
 		moduleName:"REALTIME",
 		defaultSeverity:"INFO"
 	};
- 
+
 	var cleanConnection = function(cliendID, disconnect, context){
 		try {
 			if ( this.connections.connections[cliendID] ){
-				var connectionID = this.connections.connections[cliendID].id ; 
+				var connectionID = this.connections.connections[cliendID].id ;
 				if ( ! connectionID){
 					return ;
 				}
@@ -134,15 +134,15 @@ nodefony.registerService("realTime", function(){
 			if ( pass ){
 				this.connections.connections[connectionID].mustClose = true ;
 			}else{
-				this.connections.removeConnection(connectionID);	
-				this.logger("REMOVE ID connection : "+connectionID, "INFO");	
+				this.connections.removeConnection(connectionID);
+				this.logger("REMOVE ID connection : "+connectionID, "INFO");
 			}
 		}catch(e){
 			this.logger(e,"ERROR")
-		}	
+		}
 	};
 
-	
+
 	var realTime = class realTime extends nodefony.syslog {
 
 		constructor( container, kernel ){
@@ -174,7 +174,7 @@ nodefony.registerService("realTime", function(){
 			this.listenWithConditions(this,{
 				severity:{
 					data:"CRITIC,ERROR,DEBUG,INFO"
-				}		
+				}
 			},function(pdu){
 				this.kernel.logger(pdu);
 			});
@@ -188,7 +188,7 @@ nodefony.registerService("realTime", function(){
 		getServices (){
 			return this.services ;
 		}
-		
+
 		onHandshake (message, connectionId, ipClient){
 			var advice = this.settings.system.reconnect.handshake ;
 			var response = this.protocol.handshakeResponse(message, advice,{address:ipClient}) ;
@@ -197,7 +197,7 @@ nodefony.registerService("realTime", function(){
 			return this.protocol.send(response) ;
 		}
 
-		onSubscribe (message, data, context){ 
+		onSubscribe (message, data, context){
 			var name = message.subscription.split("/")[2] ;
 			var serv = this.services[name] ;
 			if (!serv ){
@@ -231,7 +231,7 @@ nodefony.registerService("realTime", function(){
 						}.bind(this));*/
 
 
-						//console.log(client)	
+						//console.log(client)
 						client.connect(serv.port, serv.domain , () => {
 							try {
 								if (data){
@@ -242,16 +242,16 @@ nodefony.registerService("realTime", function(){
 								//message.data = id;
 								message.clientId = id ;
 								//console.log(client)
-								this.logger("SUBCRIBE SERVICE TCP : " + name +" ID = "+id, "INFO");	
+								this.logger("SUBCRIBE SERVICE TCP : " + name +" ID = "+id, "INFO");
 							}catch(e){
 								if (id){
-									this.connections.removeClient(client);	
+									this.connections.removeClient(client);
 								}
 								message.successful = false ;
-								this.logger("SUBCRIBE SERVICE TCP: " + name +" ID = "+id + " "+e,"ERROR");	
+								this.logger("SUBCRIBE SERVICE TCP: " + name +" ID = "+id + " "+e,"ERROR");
 							}
 							this.send(context, this.protocol.send( message ) );
-						})	
+						})
 
 						client.on("data", (buffer) => {
 							//console.log(buffer)
@@ -322,8 +322,8 @@ nodefony.registerService("realTime", function(){
 											//console.log(connection.disconnect)
 											this.send( connection.context, connection.disconnect );
 										}
-										this.connections.removeConnection(connection.id);	
-										this.logger("REMOVE ID connection : "+connection.id, "INFO");	
+										this.connections.removeConnection(connection.id);
+										this.logger("REMOVE ID connection : "+connection.id, "INFO");
 									}
 								}
 							}
@@ -346,7 +346,7 @@ nodefony.registerService("realTime", function(){
 					});
 
 					client.write = function(message, callback){
-						this.send(message, 0, message.length ,serv.port, serv.domain, callback ) ;	
+						this.send(message, 0, message.length ,serv.port, serv.domain, callback ) ;
 					}.bind(client);
 
 					client.bind({
@@ -357,7 +357,7 @@ nodefony.registerService("realTime", function(){
 
 					client.on("listening",  () => {
 						var address = client.address();
-							
+
 						var id = this.connections.setClient(message.clientId, client);
 						message.successful = true ;
 						//message.data = id;
@@ -377,15 +377,15 @@ nodefony.registerService("realTime", function(){
 						this.send(context, this.protocol.send( message ) );
 
 					});
-					
-									
+
+
 					// Listen for messages from client
 					client.on('message',  (buffer, rinfo) => {
 						this.logger("MESSAGE UDP : "+ buffer.toString(), "DEBUG");
 						this.send( context , this.protocol.publishMessage( message.subscription, buffer.toString(), message.clientId ) );
 					});
 
-					client.on("close", (error) => { 
+					client.on("close", (error) => {
 						//console.log("close client");
 						if (error){
 							this.logger("CANNOT CONNECT SERVICE : " + name , "ERROR");
@@ -408,16 +408,16 @@ nodefony.registerService("realTime", function(){
 										//console.log(connection.disconnect)
 										this.send( connection.context, connection.disconnect );
 									}
-									this.connections.removeConnection(connection.id);	
-									this.logger("REMOVE ID connection : "+connection.id, "INFO");	
+									this.connections.removeConnection(connection.id);
+									this.logger("REMOVE ID connection : "+connection.id, "INFO");
 								}
 							}
 						}
 						//client.destroy();
 						client = null ;
-					}); 
+					});
 
-					client.on("error",  (error) => { 
+					client.on("error",  (error) => {
 						//FIXME other error socket
 						switch (error.code){
 							case "ECONNREFUSED" :
@@ -464,7 +464,7 @@ nodefony.registerService("realTime", function(){
 					default:
 				}
 			}catch(e){
-				this.logger("UNSUBCRIBE  : "+ e , "ERROR");	
+				this.logger("UNSUBCRIBE  : "+ e , "ERROR");
 			}
 		}
 
@@ -472,14 +472,14 @@ nodefony.registerService("realTime", function(){
 			var advice = this.settings.system.reconnect.connect ;
 			var response = this.protocol.connectResponse(message, advice, {address:ipClient});
 			response.data = this.getServices();
-			return  this.protocol.send(response) ;	
+			return  this.protocol.send(response) ;
 		}
 
 		onDisconnect (message, context){
 			var response = this.protocol.disconnectResponse(message);
 			cleanConnection.call(this, message.clientId, this.protocol.send(response) , context );
 			//return this.protocol.send(response);
-			//return this.send( context, this.protocol.send(response) );	
+			//return this.send( context, this.protocol.send(response) );
 		}
 
 		onPublish (message){
@@ -489,17 +489,17 @@ nodefony.registerService("realTime", function(){
 					try {
 						client.write(message.data);
 						return this.protocol.publishResponse(message.subscription, message.id );
-					}catch (e){					
+					}catch (e){
 						return this.protocol.publishResponse(message.subscription, message.id, false );
 					}
 				}else{
-					var error = this.protocol.errorResponse(500, message.subscription+","+message.id, "no message " );	
+					var error = this.protocol.errorResponse(500, message.subscription+","+message.id, "no message " );
 					return this.protocol.publishResponse(message.subscription, message.id, error );
 				}
 			}else{
 				var error = this.protocol.errorResponse(404, message.subscription+","+message.id, "Unknown Channel" );
 				return this.protocol.publishResponse(message.subscription, message.id, error );
-			}	
+			}
 		}
 
 		onError ( error, connection){
@@ -516,12 +516,12 @@ nodefony.registerService("realTime", function(){
 				case "HTTPS":
 					return this.onMessage(message, context);
 			}
-		}	
-		
+		}
+
 		onMessage (message, context ){
 			switch (nodefony.typeOf(message) ) {
 				case "string" :
- 			       	var ret = null ;	
+ 			       	var ret = null ;
 			        	try {
 						this.protocol.parser(message, (err, mess) => {
 							if (err){
@@ -531,7 +531,7 @@ nodefony.registerService("realTime", function(){
 								//throw err ;
 								return ret;
 							}
-							ret = this.onMessage(mess, context) ;	
+							ret = this.onMessage(mess, context) ;
 						});
 					}catch(e){
 						message.error = this.protocol.errorResponse(500, message.clientId+","+message.channel,"bad Request  "+ message) ;
@@ -547,19 +547,19 @@ nodefony.registerService("realTime", function(){
 								//var remoteAddress = context.request.domain
 								var obj = {
 									remoteAddress : context.remoteAddress || context.request.remoteAddress,
-									host:url.parse(context.request.headers.host)	
+									host:url.parse(context.request.headers.host)
 								};
 								//console.log(remoteAddress + " : " + context.request.domain)
-								var connectionId = this.connections.setConnection(context, obj) ; 
+								var connectionId = this.connections.setConnection(context, obj) ;
 								var res = this.onHandshake(message, connectionId, JSON.stringify(obj) ) ;
-								
+
 								this.logger("CONNECT ID connection  : "+ connectionId  , "INFO")
 								return this.send( context, res )
 							break;
 							case "/meta/connect":
 								var obj = {
 									remoteAddress : context.remoteAddress,
-									host:url.parse(context.request.origin)	
+									host:url.parse(context.request.origin)
 								};
 								var connectionId = this.connections.setConnection(context, obj) ;
 								cleanConnection.call(this, message.clientId);
@@ -580,7 +580,7 @@ nodefony.registerService("realTime", function(){
 								return this.onSubscribe(this.protocol.subscribeResponse(message ), message.data, context );
 							break;
 							case "/meta/unsubscribe":
-								return this.onUnSubscribe( this.protocol.unsubscribeResponse(message) ,message.data, context ); 
+								return this.onUnSubscribe( this.protocol.unsubscribeResponse(message) ,message.data, context );
 							break;
 							default:
 								// /some/channel
@@ -588,7 +588,7 @@ nodefony.registerService("realTime", function(){
 						}
 					}catch(e){
 						message.error = this.protocol.errorResponse(500, message.clientId+","+message.channel,"bad Request  "+ message) ;
-						return this.send( context , this.protocol.send(message));	
+						return this.send( context , this.protocol.send(message));
 					}
 				break;
 				case "array" :
@@ -628,4 +628,3 @@ nodefony.registerService("realTime", function(){
 	return realTime;
 
 });
-

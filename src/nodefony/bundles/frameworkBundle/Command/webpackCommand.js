@@ -3,13 +3,13 @@
  *
  *
  */
-nodefony.registerCommand("webpack",function(){
+module.exports = nodefony.registerCommand("webpack",function(){
 
 
 	var webpack = class webpack extends nodefony.cliWorker {
 
 		constructor(container, command/*, options*/){
-			
+
 			super( "webpack", container, container.get("notificationsCenter") );
 
 			this.config = this.container.getParameters("bundles.App");
@@ -17,12 +17,12 @@ nodefony.registerCommand("webpack",function(){
 			var arg = command[0].split(":");
 			switch ( arg[1] ){
 				case "dump" :
-					try { 
-						this.webpackCompile();	
+					try {
+						this.webpackCompile();
 					}catch(e){
 						this.terminate(1);
 						return ;
-					}	
+					}
 				break;
 				default:
 					this.showHelp();
@@ -36,7 +36,7 @@ nodefony.registerCommand("webpack",function(){
 					if ( this.kernel.bundles[bundle].webpackCompiler ){
 						this.kernel.bundles[bundle].compileWebpack();
 					}
-				}	
+				}
 			});
 		}
 	};

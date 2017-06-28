@@ -7,7 +7,7 @@
  */
 
 
-nodefony.registerService("uglifyjs2", function(){
+module.exports = nodefony.registerService("uglifyjs2", function(){
 
 
 	var uglifyjs2 = class uglifyjs2 extends nodefony.Service {

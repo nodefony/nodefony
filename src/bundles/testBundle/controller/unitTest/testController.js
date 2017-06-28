@@ -9,7 +9,7 @@
  *
  */
 
-nodefony.registerController("test", function(){
+module.exports = nodefony.registerController("test", function(){
 
 
 	var testController = class testController extends nodefony.controller {
@@ -17,10 +17,10 @@ nodefony.registerController("test", function(){
 		constructor(container, context){
 			super(container, context);
 		};
-		
+
 		/**
  	 	*
- 	 	*	Routing 
+ 	 	*	Routing
  	 	*
  	 	*/
 
@@ -72,7 +72,7 @@ nodefony.registerController("test", function(){
 				message:status.message,
 				generateUrl:generate
 			});
-			
+
 		}
 
 		/**
@@ -88,10 +88,10 @@ nodefony.registerController("test", function(){
 				generateUrl:generate,
 				query:this.query
 			});
-			
+
 		}
 	};
-	
+
 	return testController;
 
 });

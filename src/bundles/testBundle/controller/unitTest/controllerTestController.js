@@ -13,7 +13,7 @@ var querystring = require('querystring');
 var blueBird = require("bluebird");
 
 
-nodefony.registerController("controllerTest", function(){
+module.exports = nodefony.registerController("controllerTest", function(){
 
 
 	var controllerTest = class controllerTest extends nodefony.controller {
@@ -21,10 +21,10 @@ nodefony.registerController("controllerTest", function(){
 		constructor(container, context){
 			super(container, context);
 		}
-		
+
 		/**
  	 	*
- 	 	*	redirectAction 
+ 	 	*	redirectAction
  	 	*
  	 	*/
 		redirectAction(status){
@@ -33,7 +33,7 @@ nodefony.registerController("controllerTest", function(){
 			var headers = {};
 			if (this.queryPost ){
 				if (this.queryPost.status){
-					status = this.queryPost.status ;	
+					status = this.queryPost.status ;
 				}
 				if (this.queryPost.url){
 					var size = Object.keys(this.queryGet).length;
@@ -52,7 +52,7 @@ nodefony.registerController("controllerTest", function(){
 
 		/**
  	 	*
- 	 	*	requestAction 
+ 	 	*	requestAction
  	 	*
  	 	*/
 		requestAction(){
@@ -66,7 +66,7 @@ nodefony.registerController("controllerTest", function(){
 
 		/**
  	 	 *
- 	 	 *	promiseAction 
+ 	 	 *	promiseAction
  	 	 *
  	 	 */
 		promiseAction(action){
@@ -104,7 +104,7 @@ nodefony.registerController("controllerTest", function(){
 				case "promise13" :
 					return  this.promise13();
 				default :
-					return this.createNotFoundException("Promise action not found");	
+					return this.createNotFoundException("Promise action not found");
 			}
 		}
 
@@ -129,13 +129,13 @@ nodefony.registerController("controllerTest", function(){
 					resolve( myFunc2() );
 				}, 500)
 			}).then( (...args) => {
-				return this.renderJsonAsync(...args);	
+				return this.renderJsonAsync(...args);
 			})
 		}
 
 		/**
  	 	 *
- 	 	 *	promise  
+ 	 	 *	promise
  	 	 *
  	 	 */
 		promise2(){
@@ -148,15 +148,15 @@ nodefony.registerController("controllerTest", function(){
 					setTimeout( () =>{
 						resolve({status:200, data:ele});
 					}, 500)
-				})	
+				})
 			}).then( (ele) => {
-				return this.renderJsonAsync(ele);	
+				return this.renderJsonAsync(ele);
 			})
 		}
 
 		/**
  	 	 *
- 	 	 *	promise json 
+ 	 	 *	promise json
  	 	 *
  	 	 */
 		promise3(){
@@ -175,7 +175,7 @@ nodefony.registerController("controllerTest", function(){
 					}, 500)
 				})
 			}
-		
+
 			return Promise.all( [myFunc(), myFunc2()] ).then((data)=>{
 				return this.renderJson(data)
 			});
@@ -184,11 +184,11 @@ nodefony.registerController("controllerTest", function(){
 
 		/**
  	 	 *
- 	 	 *	promise json 
+ 	 	 *	promise json
  	 	 *
  	 	 */
 		promise4(){
-			
+
 			var myFunc = () => {
 				return new Promise ( (resolve, reject) =>{
 					setTimeout( () =>{
@@ -204,7 +204,7 @@ nodefony.registerController("controllerTest", function(){
 					}, 500)
 				})
 			}
-		
+
 			return Promise.all( [myFunc(), myFunc2()] ).then((data)=>{
 				return this.renderJson(data)
 				/*return this.renderResponse( JSON.stringify( data ) , 200 , {
@@ -215,11 +215,11 @@ nodefony.registerController("controllerTest", function(){
 
 		/**
  	 	 *
- 	 	 *	promise reject 
+ 	 	 *	promise reject
  	 	 *
  	 	 */
 		promise5(){
-			
+
 			var myFunc = () => {
 				return new Promise ( (resolve, reject) =>{
 					setTimeout( () =>{
@@ -235,7 +235,7 @@ nodefony.registerController("controllerTest", function(){
 					}, 500)
 				})
 			}
-		
+
 			return Promise.all( [myFunc(), myFunc2()] ).then((data)=>{
 				return this.renderJson(data)
 				/*return this.renderResponse( JSON.stringify( data ) , 200 , {
@@ -249,7 +249,7 @@ nodefony.registerController("controllerTest", function(){
 
 		/**
  	 	 *
- 	 	 *	promise reject 
+ 	 	 *	promise reject
  	 	 *
  	 	 */
 		promise6(){
@@ -277,7 +277,7 @@ nodefony.registerController("controllerTest", function(){
 
 		/**
  	 	 *
- 	 	 *	promise reject 
+ 	 	 *	promise reject
  	 	 *
  	 	 */
 		promise7(){
@@ -291,9 +291,9 @@ nodefony.registerController("controllerTest", function(){
 					setTimeout( () =>{
 						reject({status:500, data:ele});
 					}, 500)
-				})	
+				})
 			}).then( (ele) => {
-				return this.renderJson(ele);	
+				return this.renderJson(ele);
 			})
 			.catch((data) => {
 				this.getResponse().setStatusCode(data.status);
@@ -303,7 +303,7 @@ nodefony.registerController("controllerTest", function(){
 
 		/**
  	 	 *
- 	 	 *	promise throw 
+ 	 	 *	promise throw
  	 	 *
  	 	 */
 		promise8(){
@@ -312,9 +312,9 @@ nodefony.registerController("controllerTest", function(){
 					resolve( {status:500, data:{foo:"bar"} } );
 				}, 500)
 			}).then( (ele) => {
-				throw ele;	
+				throw ele;
 			}).then( (ele) => {
-				return this.renderJson(ele);	
+				return this.renderJson(ele);
 			})
 			.catch((data) => {
 				this.getResponse().setStatusCode(data.status);
@@ -323,7 +323,7 @@ nodefony.registerController("controllerTest", function(){
 		}
 		/**
  	 	 *
- 	 	 *	promise throw 
+ 	 	 *	promise throw
  	 	 *
  	 	 */
 		promise88(){
@@ -332,9 +332,9 @@ nodefony.registerController("controllerTest", function(){
 					resolve( {status:500, data:{foo:"bar"} } );
 				}, 500)
 			}).then( (ele) => {
-				notDefinded;	
+				notDefinded;
 			}).then( (ele) => {
-				return this.renderJson(ele);	
+				return this.renderJson(ele);
 			})
 			.catch((data) => {
 				this.getResponse().setStatusCode(500);
@@ -344,7 +344,7 @@ nodefony.registerController("controllerTest", function(){
 
 		/**
  	 	 *
- 	 	 *	promise sequelise 
+ 	 	 *	promise sequelise
  	 	 *
  	 	 */
 		promise9(){
@@ -356,7 +356,7 @@ nodefony.registerController("controllerTest", function(){
   				}
 			})
 			.then( (ele) => {
-				return this.renderJson({status:200,data:ele});	
+				return this.renderJson({status:200,data:ele});
 			})
 			.catch((data) => {
 				this.getResponse().setStatusCode(500);
@@ -366,7 +366,7 @@ nodefony.registerController("controllerTest", function(){
 
 		/**
  	 	 *
- 	 	 *	promise sequelise 
+ 	 	 *	promise sequelise
  	 	 *
  	 	 */
 		promise10(){
@@ -386,12 +386,12 @@ nodefony.registerController("controllerTest", function(){
 					}],*/
 					where: {
 						//user_id: ele[0].id
-						session_id:this.getSession() ? this.getSession().id : 0 
+						session_id:this.getSession() ? this.getSession().id : 0
 					}
-				})	
+				})
 			})
 			.then( (ele) => {
-				return this.renderJson(ele);	
+				return this.renderJson(ele);
 			})
 			.catch((data) => {
 				this.getResponse().setStatusCode(500);
@@ -401,7 +401,7 @@ nodefony.registerController("controllerTest", function(){
 
 		/**
  	 	 *
- 	 	 *	promise sequelise 
+ 	 	 *	promise sequelise
  	 	 *
  	 	 */
 		promise11(){
@@ -426,7 +426,7 @@ nodefony.registerController("controllerTest", function(){
 		}
 		/**
  	 	 *
- 	 	 *	promise sequelise 
+ 	 	 *	promise sequelise
  	 	 *
  	 	 */
 		promise12(){
@@ -451,7 +451,7 @@ nodefony.registerController("controllerTest", function(){
 		}
 		/**
  	 	 *
- 	 	 *	promise sequelise 
+ 	 	 *	promise sequelise
  	 	 *
  	 	 */
 		promise13(){
@@ -478,13 +478,13 @@ nodefony.registerController("controllerTest", function(){
 
 
 
-	
+
 
 
 
 		/**
  	 	 *
- 	 	 *	promiseAction 
+ 	 	 *	promiseAction
  	 	 *
  	 	 */
 		exceptionAction(action){
@@ -511,6 +511,6 @@ nodefony.registerController("controllerTest", function(){
 		}
 
 
-	}	
+	}
 	return controllerTest;
 });
