@@ -1,10 +1,17 @@
 #!/usr/bin/env node
 
 const util = require("util");
+const emoji = require('node-emoji')
+
+
 
 // nodefony
 const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
 
+
+for (var i = 0 ; i< 10; i++){
+  console.log( emoji.random().emoji );
+}
 /*
 // SYSLOG
 var sys = new nodefony.syslog();

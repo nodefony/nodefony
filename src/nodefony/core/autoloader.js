@@ -33,7 +33,6 @@ module.exports = function(){
 	context.shell = require("shelljs");
 	context.twig = require("twig");
 	context.crypto = require("crypto");
-	context.BlueBird = require("BlueBird");
 
 	/**
 	 *  Nodefony autoloader
