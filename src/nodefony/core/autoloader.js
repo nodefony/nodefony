@@ -15,7 +15,7 @@ module.exports = function(){
 	context.__filename = __filename ;
 
 	context.nodefony = require("./core");
-  	context.path = require("path");
+  context.path = require("path");
 	context.fs = require("fs")
 	context.yaml = require("js-yaml");
 	context.util = require('util');
@@ -33,6 +33,7 @@ module.exports = function(){
 	context.shell = require("shelljs");
 	context.twig = require("twig");
 	context.crypto = require("crypto");
+	context.BlueBird = require("bluebird");
 
 	/**
 	 *  Nodefony autoloader

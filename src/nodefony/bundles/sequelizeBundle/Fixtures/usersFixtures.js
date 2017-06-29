@@ -1,4 +1,4 @@
-
+const Sequelize = require("sequelize");
 module.exports = nodefony.registerFixture("users", function(){
 
 	var userPromise = function(resolve, reject){
