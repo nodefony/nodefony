@@ -77,7 +77,7 @@ startup:
 start:
 	./node_modules/pm2/bin/pm2 update
 	./nodefony_pm2 $(APP_NAME)
-	./node_modules/pm2/bin/pm2 --lines 10 logs
+	./node_modules/pm2/bin/pm2 --lines 1 logs
 
 stop:
 	./node_modules/pm2/bin/pm2 stop $(APP_NAME)

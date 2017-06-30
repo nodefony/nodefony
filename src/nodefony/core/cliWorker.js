@@ -1,16 +1,9 @@
-/*
- *
- *
- *
- *
- *
- */
 var Table = require('cli-table');
 const spawn = require('child_process').spawn;
 const spawnSync = require('child_process').spawnSync;
+const emoji = require('node-emoji');
 
-
-nodefony.register("cliWorker", function(){
+module.exports = nodefony.register("cliWorker", function(){
 
 	const red   = clc.red.bold;
 	const cyan   = clc.cyan.bold;
@@ -199,6 +192,13 @@ nodefony.register("cliWorker", function(){
 					}
 				};
 			}
+		}
+
+		getEmoji (name){
+			if (name){
+				return emoji.get(name);
+			}
+			return emoji.random().emoji ;
 		}
 
 		reset (){

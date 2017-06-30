@@ -1,12 +1,7 @@
-/*
- *
- *
- *
- *
- */
+
 const nodefony_version = require( path.join ("..", "..", "..", "package.json") ).version;
 
-nodefony.register("kernel", function(){
+module.exports = nodefony.register("kernel", function(){
 
 	/**
 	 *	@event onTerminate
@@ -86,11 +81,11 @@ nodefony.register("kernel", function(){
 	 */
 	var kernel = class kernel extends nodefony.Service {
 
-		constructor (environment, debug, autoLoader, type, options){
+		constructor (environment, debug, type, options){
 
 			super( "KERNEL" , null, null , nodefony.extend( {}, defaultOptions,  options) );
 			this.setParameters("bundles", {} ) ;
-			this.autoLoader = autoLoader;
+			this.autoLoader = nodefony.autoloader;
 			this.autoLoader.setKernel(this);
 
 			this.rootDir = process.cwd();

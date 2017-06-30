@@ -1,17 +1,23 @@
 #!/usr/bin/env node
 
-const util = require("util");
-const emoji = require('node-emoji')
-
-
-
+//const util = require("util");
+//const emoji = require('node-emoji')
 // nodefony
-const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
+//const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
 
 
-for (var i = 0 ; i< 10; i++){
+var start =  new Date().getTime();
+for (var i =0 ; i < 1000000 ; i++){
+  require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
+}
+var stop = new Date().getTime();
+
+console.log( (stop - start) / 1000 );
+/*for (var i = 0 ; i< 10; i++){
   console.log( emoji.random().emoji );
 }
+console.log( emoji.get("hourglass") );
+*/
 /*
 // SYSLOG
 var sys = new nodefony.syslog();

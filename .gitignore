@@ -1,4 +1,4 @@
-#Ignore directory 
+#Ignore directory
 /tmp/*
 /web/*
 
@@ -15,6 +15,7 @@ app/Resources/databases/*
 node_modules/**
 **/node_modules/**
 npm-debug.log
+yarn-error.log
 *.[oa]
 
 config/certificates/**/*

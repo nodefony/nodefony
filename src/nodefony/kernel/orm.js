@@ -1,14 +1,5 @@
-/*
- *
- *
- *	ORM CLASS 
- *
- *
- */
 
-
-
-nodefony.register("orm", function(){
+module.exports = nodefony.register("orm", function(){
 
 
 	var settingsSyslog = {
@@ -17,7 +8,7 @@ nodefony.register("orm", function(){
 		moduleName:"ORM",
 		defaultSeverity:"ERROR"
 	};
-	
+
 	//var connectionNotification = 0;
 	var connectionMonitor = function(name, db, orm){
 		this.connectionNotification ++;
@@ -27,11 +18,11 @@ nodefony.register("orm", function(){
 			});
 		}
 	};
-	
+
 	var Orm = class Orm  extends nodefony.Service {
 
 		constructor (name, container, kernel, autoLoader){
-			
+
 			super( name, container );
 
 			if (( this.kernel.debug === false && this.debug === true) || this.debug === undefined ){
@@ -45,12 +36,12 @@ nodefony.register("orm", function(){
 			this.connections = {};
 			this.connectionNotification = 0 ;
 		}
-		
+
 		boot (){
-			
+
 			this.listen(this, "onReadyConnection", connectionMonitor);
-			this.listen(this, "onErrorConnection", connectionMonitor);		
-			
+			this.listen(this, "onErrorConnection", connectionMonitor);
+
 			this.kernel.listen(this, 'onBoot', (kernel) => {
 				var callback = null ;
 				for (var bundle in kernel.bundles){
@@ -71,7 +62,7 @@ nodefony.register("orm", function(){
 									try {
 										this.entities[Name] = Enti.entity.call(this, db, this);
 										this.logger(this.name+" REGISTER ENTITY : "+Name+" PROVIDE BUNDLE : "+Bundle,"DEBUG");
-										return Enti ;		
+										return Enti ;
 									}catch(e){
 										this.logger(e);
 									}
@@ -99,24 +90,24 @@ nodefony.register("orm", function(){
 		}
 
 		initializeLog (){
-			
+
 			var red, blue, green, reset;
 			red   = '\x1B[31m';
 			blue  = '\x1B[34m';
 			green = '\x1B[32m';
 			reset = '\x1B[0m';
-			
+
 			var syslog =  new nodefony.syslog(settingsSyslog);
-			
+
 			// CRITIC ERROR
 			syslog.listenWithConditions(this,{
 				severity:{
 					data:"CRITIC,ERROR"
-				}		
+				}
 			},(pdu) => {
 				this.kernel.cli.normalizeLog(pdu);
 			});
-				
+
 			if (this.kernel.environment === "dev"){
 				// INFO DEBUG
 				var data ="";
@@ -128,7 +119,7 @@ nodefony.register("orm", function(){
 				syslog.listenWithConditions(this,{
 					severity:{
 						data:data
-					}		
+					}
 				},(pdu) =>{
 					this.kernel.cli.normalizeLog(pdu);
 				});
@@ -136,7 +127,7 @@ nodefony.register("orm", function(){
 				syslog.listenWithConditions(this,{
 					severity:{
 						data:"INFO"
-					}		
+					}
 				},(pdu) =>{
 					this.kernel.cli.normalizeLog(pdu);
 				});
@@ -150,7 +141,7 @@ nodefony.register("orm", function(){
 			}
 			return null;
 		}
-		
+
 		getEntity (name){
 			if (name){
 				return this.entities[name];
@@ -159,6 +150,6 @@ nodefony.register("orm", function(){
 			}
 		}
 	};
-	
+
 	return Orm;
 });

@@ -1,14 +1,8 @@
-/*
- *
- *
- *
- *
- *
- */
+
 const mime = require('mime');
 const crypto = require('crypto');
 
-nodefony.register("fileClass", function(){
+module.exports = nodefony.register("fileClass", function(){
 
 
 	var checkPath = function (myPath){
@@ -25,7 +19,7 @@ nodefony.register("fileClass", function(){
 
 	var regHidden = /^\./;
 
-	var defautWriteOption = { 
+	var defautWriteOption = {
 		flags: 'w',
 		defaultEncoding: 'utf8'
 		//mode: 0o666
@@ -44,12 +38,12 @@ nodefony.register("fileClass", function(){
 		constructor(Path){
 			if (Path){
 				this.stats =  fs.lstatSync(Path);
-				this.type = this.checkType();	
+				this.type = this.checkType();
 				if ( this.stats.isSymbolicLink() ){
 					var res = fs.readlinkSync( Path ) ;
 					this.path = checkPath(Path, res) ;
 				}else{
-					this.path = this.getRealpath(Path) ;	
+					this.path = this.getRealpath(Path) ;
 				}
 				this.parse = path.parse(this.path);
 				this.name = this.parse.name+this.parse.ext;
@@ -95,7 +89,7 @@ nodefony.register("fileClass", function(){
 			if (! type ){
 				type = 'md5' ;
 			}
-			return crypto.createHash(type).update(this.content()).digest("hex") ; 
+			return crypto.createHash(type).update(this.content()).digest("hex") ;
 		}
 
 		getMimeType (name){
@@ -126,7 +120,7 @@ nodefony.register("fileClass", function(){
 				var tab = this.name.split('.');
 				if (tab.length > 1) { return tab.reverse()[0]; }
 			}
-			return null ; 
+			return null ;
 		}
 
 		matchType (type){
@@ -156,7 +150,7 @@ nodefony.register("fileClass", function(){
 		content (encoding){
 			var encode =  encoding ? encoding : ( this.encoding ?  this.encoding : 'utf8' ) ;
 			if (this.type === "symbolicLink"){
-				var path = fs.readlinkSync(this.path, encode);	
+				var path = fs.readlinkSync(this.path, encode);
 				return fs.readFileSync(path, encode);
 			}
 			return fs.readFileSync(this.path, encode);
@@ -165,7 +159,7 @@ nodefony.register("fileClass", function(){
 		read (encoding){
 			var encode =  encoding ? encoding : ( this.encoding ?  this.encoding : 'utf8' ) ;
 			if (this.type === "symbolicLink"){
-				var path = fs.readlinkSync(this.path, encode);	
+				var path = fs.readlinkSync(this.path, encode);
 				return fs.readFileSync(path, encode);
 			}
 			return fs.readFileSync(this.path, encode);
@@ -175,10 +169,10 @@ nodefony.register("fileClass", function(){
 			var res = this.content(encoding);
 			var nb = 0 ;
 			res.toString().split('\n').forEach(function(line){
-				callback(line, ++nb );	
+				callback(line, ++nb );
 			});
 		}
-		
+
 		write (data, options) {
 			return fs.writeFileSync( this.path, data, nodefony.extend({}, defautWriteOption ,options ) ) ;
 		}
@@ -204,4 +198,3 @@ nodefony.register("fileClass", function(){
 	return File;
 
 });
-

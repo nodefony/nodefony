@@ -1,11 +1,5 @@
-/*
- *
- *
- *
- *
- *
- */
-nodefony.register("kernelWatcher", function(){
+
+module.exports = nodefony.register("kernelWatcher", function(){
 
 	/*
 	 *

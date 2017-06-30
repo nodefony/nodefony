@@ -1,15 +1,14 @@
 const events = require('events');
 
-
-nodefony.register("notificationsCenter",function(){
+module.exports = nodefony.register("notificationsCenter",function(){
 
 	var regListenOn = /^on(.*)$/;
 	var defaultNbListeners = 20 ;
-	
+
 	var Notification = class Notification {
 
 		constructor(settings, context, nbListener) {
-			this.event = new events.EventEmitter();	
+			this.event = new events.EventEmitter();
 			this.setMaxListeners(nbListener || defaultNbListeners);
 			if (settings) {
 				this.settingsToListen(settings, context);
@@ -18,16 +17,16 @@ nodefony.register("notificationsCenter",function(){
 
 		/**
 	 	*
-	 	*	@method setMaxListeners 
+	 	*	@method setMaxListeners
 	 	*
 	 	*/
 		setMaxListeners (){
-			return this.event.setMaxListeners.apply(this.event, arguments);	
+			return this.event.setMaxListeners.apply(this.event, arguments);
 		}
 
 		/**
 	 	*
-	 	*	@method listen 
+	 	*	@method listen
 	 	*
 	 	*/
 		listen (context, eventName, callback) {
@@ -52,14 +51,14 @@ nodefony.register("notificationsCenter",function(){
 					return ContextClosure.fire.apply(ContextClosure, arguments);
 				};
 			}
-			throw new Error("notificationsCenter  callback must be a function"); 
+			throw new Error("notificationsCenter  callback must be a function");
 		}
 
 		/**
 	 	*
-	 	*	@method once 
+	 	*	@method once
 	 	*
-	 	*/ 
+	 	*/
 		once (context, eventName, callback){
 			var event = arguments[1];
 			var ContextClosure = this;
@@ -70,12 +69,12 @@ nodefony.register("notificationsCenter",function(){
 				Array.prototype.unshift.call(arguments, event);
 				return ContextClosure.fire.apply(ContextClosure, arguments);
 			};
-			//return this.event.once.apply(this.event, arguments);	
+			//return this.event.once.apply(this.event, arguments);
 		}
 
 		/**
 	 	*
-	 	*	@method fire 
+	 	*	@method fire
 	 	*
 	 	*/
 		fire () {
@@ -95,10 +94,10 @@ nodefony.register("notificationsCenter",function(){
 			return ret;
 		}
 
-		
+
 		/**
 	 	*
-	 	*	@method settingsToListen 
+	 	*	@method settingsToListen
 	 	*
 	 	*/
 		settingsToListen (localSettings, context) {
@@ -113,31 +112,31 @@ nodefony.register("notificationsCenter",function(){
 
 		/**
 	 	*
-	 	*	@method unListen 
+	 	*	@method unListen
 	 	*
 	 	*/
 		unListen (){
-			return this.event.removeListener.apply(this.event, arguments);	
+			return this.event.removeListener.apply(this.event, arguments);
 		}
 
 		/**
 	 	*
-	 	*	@method removeAllListeners 
+	 	*	@method removeAllListeners
 	 	*
-	 	*/ 
+	 	*/
 		removeAllListeners (){
-			return this.event.removeAllListeners.apply(this.event, arguments);	
+			return this.event.removeAllListeners.apply(this.event, arguments);
 		}
 	};
 	return {
 		notification:Notification,
 		/**
 		 *
-		 *	@method create 
+		 *	@method create
 		 *
 		 */
 		create: function(settings, context, nbListener) {
 			return new Notification(settings, context, nbListener);
-		}	
+		}
 	};
 });

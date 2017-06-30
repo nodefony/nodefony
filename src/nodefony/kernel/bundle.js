@@ -1,13 +1,7 @@
-/*
- *
- *
- *
- *
- *
- */
- const semver = require('semver');
 
-nodefony.register("Bundle", function(){
+const semver = require('semver');
+
+module.exports = nodefony.register("Bundle", function(){
 
 	var regBundle = /^(.*)[Bb]undle$/;
 	var regFixtures = /^(.+)Fixtures.js$/;

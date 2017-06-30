@@ -5,9 +5,9 @@
  *
  *
  */
-var xml = require('xml2js');
+const xml = require('xml2js');
 
-nodefony.register.call( nodefony.io, "protocol",function(){
+module.expors = nodefony.register.call( nodefony.io, "protocol",function(){
 
 	var parser = function(type, settings){
 		var Parser = null ;
@@ -35,7 +35,7 @@ nodefony.register.call( nodefony.io, "protocol",function(){
 						}catch(e){
 							return callback(e, null );
 						}
-					};	
+					};
 				}
 		}
 	};
@@ -58,13 +58,13 @@ nodefony.register.call( nodefony.io, "protocol",function(){
 						var base = {};
 						base[context.root] = nodefony.extend({}, context[method]);
 						nodefony.extend(true, base[context.root],  obj);
-						return Builder(base);	
+						return Builder(base);
 					};
 				}else{
 					return function(obj){
 						var base = nodefony.extend({}, context[method]);
-						nodefony.extend(true, base,  obj);	
-						return Builder(base);	
+						nodefony.extend(true, base,  obj);
+						return Builder(base);
 					};
 				}
 			break;

@@ -1,16 +1,8 @@
-/*
- *
- *
- *
- *
- *
- */
 
 var shortId = require('shortid');
 
+module.exports = nodefony.register("Container", function(){
 
-nodefony.register("Container", function(){
-	
 	var ISDefined = function(ele){
 		if (ele !== null && ele !== undefined ){
 			return true ;
@@ -23,7 +15,7 @@ nodefony.register("Container", function(){
 	};
 
 	var parseParameterString = function(str, value){
-		var ns = null ; 
+		var ns = null ;
 		switch( nodefony.typeOf(str) ){
 			case "string" :
 				return parseParameterString.call(this,str.split(".") , value);
@@ -46,7 +38,7 @@ nodefony.register("Container", function(){
 						if ( ! this[ns] && ISDefined(value) ){
 							this[ns] = {};
 						}
-						return parseParameterString.call(this[ns], str, value);	
+						return parseParameterString.call(this[ns], str, value);
 				}
 			break;
 			default:
@@ -94,7 +86,7 @@ nodefony.register("Container", function(){
 				return this.services[name];
 			}
 			return null;
-			//this.logger("GET : " + name+" don't exist", "WARNING");	
+			//this.logger("GET : " + name+" don't exist", "WARNING");
 		}
 
 		has (name){
@@ -164,8 +156,8 @@ nodefony.register("Container", function(){
 				this.logger(new Error("container parameter name must be a string"));
 				return false;
 			}
-			//return parseParameterString.call(this.protoParameters.prototype, name, null);  
-			return parseParameterString.call(this.parameters, name, null);  
+			//return parseParameterString.call(this.protoParameters.prototype, name, null);
+			return parseParameterString.call(this.parameters, name, null);
 		}
 	};
 
@@ -194,7 +186,7 @@ nodefony.register("Container", function(){
 		}
 
 		clean (){
-			this.services = null ; 
+			this.services = null ;
 			delete this.services ;
 			this.parameters = null ;
 			delete this.parameters ;
@@ -234,7 +226,7 @@ nodefony.register("Container", function(){
 		}
 
 		clean (){
-			this.services = null ; 
+			this.services = null ;
 			delete this.services ;
 			this.parameters = null ;
 			delete this.parameters ;
@@ -257,6 +249,6 @@ nodefony.register("Container", function(){
 			}
 		}
 	};
-	
+
 	return Container;
 });

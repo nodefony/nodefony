@@ -5,9 +5,9 @@
  */
 const chokidar = require('chokidar');
 
-nodefony.register("watcher", function(){
+module.exports = nodefony.register("watcher", function(){
 
-	// see Chokidar 
+	// see Chokidar
 	/*
  	 *
  	 *
@@ -15,7 +15,7 @@ nodefony.register("watcher", function(){
  	 *
  	 */
 	var defaultWatcherSettings  = {
-		
+
 		persistent:		true,
   		followSymlinks:		true,
   		cwd:			'.',
@@ -36,7 +36,7 @@ nodefony.register("watcher", function(){
 	var Watcher = class Watcher extends nodefony.Service {
 
 		constructor (Path , settings, container){
-		
+
 			super( "WATCHER", container );
 			this.chokidar = chokidar ;
 			this.watcher = null ;
@@ -46,7 +46,7 @@ nodefony.register("watcher", function(){
 				this.watch(this.path, this.settings);
 			}
 		}
-		
+
 		watch(Path, settings){
 			try {
 				if (this.watcher ){
@@ -55,7 +55,7 @@ nodefony.register("watcher", function(){
 				if ( Path ){
 					this.path = Path ;
 				}
-				
+
 				if ( this.path ){
 					this.initialize( this.path , settings);
 				}else{
@@ -91,7 +91,7 @@ nodefony.register("watcher", function(){
 				if ( removeEvents ){
 					this.removeAllListeners();
 				}
-				this.watcher = null; 
+				this.watcher = null;
 			}
 		}
 		initialize (Path, settings){

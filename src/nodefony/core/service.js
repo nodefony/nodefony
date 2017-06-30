@@ -1,5 +1,5 @@
 
-nodefony.register("Service", function(){
+module.exports = nodefony.register("Service", function(){
 
 	var settingsSyslog = {
 		//rateLimit:100,
@@ -39,7 +39,7 @@ nodefony.register("Service", function(){
 	};
 
 	const Service = class Service {
-	
+
 		constructor(name, container, notificationsCenter, options ){
 
 			if (name){
@@ -53,7 +53,7 @@ nodefony.register("Service", function(){
 				if ( container ){
 					throw new Error ("Service nodefony container not valid must be instance of nodefony.Container");
 				}
-				this.container = new nodefony.Container(); 
+				this.container = new nodefony.Container();
 				this.container.set("container", this.container);
 			}
 			var kernel =  this.container.get("kernel");
@@ -63,12 +63,12 @@ nodefony.register("Service", function(){
 			this.syslog = this.container.get("syslog");
 			if ( ! this.syslog ){
 				this.settingsSyslog = nodefony.extend({}, settingsSyslog , {
-					moduleName: this.name	
+					moduleName: this.name
 				},options.syslog || {} );
-				this.syslog = new nodefony.syslog( this.settingsSyslog );	
+				this.syslog = new nodefony.syslog( this.settingsSyslog );
 				this.set("syslog", this.syslog);
 			}else{
-				this.settingsSyslog = this.syslog.settings ;	
+				this.settingsSyslog = this.syslog.settings ;
 			}
 			if ( notificationsCenter instanceof nodefony.notificationsCenter.notification ){
 				this.notificationsCenter = notificationsCenter ;
@@ -83,8 +83,8 @@ nodefony.register("Service", function(){
 					if ( this.kernel.container !== this.container ){
 						this.set("notificationsCenter", this.notificationsCenter);
 					}
-				}	
-			}	
+				}
+			}
 		}
 
 		getName (){
@@ -104,11 +104,11 @@ nodefony.register("Service", function(){
 			this.kernel = null ;
 			delete this.kernel ;
 		}
-	
+
 		logger(pci, severity, msgid,  msg){
 			try {
 				if (! msgid) { msgid = "SERVICE " + this.name + " "; }
-				return this.syslog.logger(pci, severity, msgid,  msg);	
+				return this.syslog.logger(pci, severity, msgid,  msg);
 			}catch(e){
 				console.log(pci);
 			}
@@ -116,8 +116,8 @@ nodefony.register("Service", function(){
 
 		/**
 	 	*	@method fire
-	 	*	@param {String} event name 
-	 	*	@param {Arguments} ... arguments to inject  
+	 	*	@param {String} event name
+	 	*	@param {Arguments} ... arguments to inject
          	*/
 		fire (){
 			//this.logger(ev, "DEBUG", "EVENT KERNEL")
@@ -165,7 +165,7 @@ nodefony.register("Service", function(){
 
 		/**
 	 	*	@method setMaxListeners
-	 	*	@param nb   
+	 	*	@param nb
 	 	*/
 		setMaxListeners (){
 			return this.notificationsCenter.setMaxListeners.apply(this.notificationsCenter, arguments);
@@ -173,7 +173,7 @@ nodefony.register("Service", function(){
 
 		/**
 	 	*	@method removeListener
-	 	*	@param {Oject} eventName 
+	 	*	@param {Oject} eventName
 	 	*	@param {String} listener
          	*/
 		removeListener (){
@@ -219,7 +219,7 @@ nodefony.register("Service", function(){
 		}
 
 		has (){
-			return this.container.has.apply(this.container ,arguments);	
+			return this.container.has.apply(this.container ,arguments);
 		}
 	};
 	return Service ;

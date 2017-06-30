@@ -1,16 +1,9 @@
-/*
- *
- *
- *
- *
- *
- */
 
-nodefony.register("injection", function(){
-	
-	// plugin Reader	
+module.exports = nodefony.register("injection", function(){
+
+	// plugin Reader
 	var pluginReader = function(){
-		
+
 		var importXmlConfig = function(file, prefix, callback, parser){
 
 			if (parser){
@@ -18,7 +11,7 @@ nodefony.register("injection", function(){
 			}
 			var services = [];
 			var parameters;
-			
+
 			this.xmlParser.parseString(file, function(err, node){
 				//console.log(require('util').inspect(node, {depth: null}));
 				//console.log('\n\n');
@@ -29,18 +22,18 @@ nodefony.register("injection", function(){
 						case 'parameters' :
 							parameters = this.xmlToJson.call(this, node[key][0].parameter);
 							break;
-							
+
 						case 'services' :
 							services = this.xmlToJson.call(this, node[key][0].service);
 							break;
 					}
 				}
-				
+
 				if(callback) { nomarlizeXmlJson.call(this, services, parameters, callback);}
-				
+
 			}.bind(this));
 		};
-		
+
 		var nomarlizeXmlJson = function(services, parameters, callback){
 			for(let key in services){
 				for(let param in services[key]){
@@ -70,8 +63,8 @@ nodefony.register("injection", function(){
 							services[key].properties = values;
 							delete services[key][param];
 							break;
-							
-						case 'call': 
+
+						case 'call':
 							values = [];
 							for(let elm=0; elm < services[key][param].length; elm ++){
 								var tab = [];
@@ -102,28 +95,28 @@ nodefony.register("injection", function(){
 						break;
 					}
 				}
-			
+
 			}
 			if(callback) { renderParameters.call(this, callback, services, parameters);}
 		};
-		
+
 		var renderParameters = function(callback, services, parameters){
 			if(parameters && Object.keys(parameters).length > 0 && typeof(services) === 'object' && Object.keys(services).length > 0){
 				services = JSON.parse(this.render(JSON.stringify(services), parameters));
 			}
 			callback(services);
 		};
-		
+
 		var getServicesXML = function(file, callback, parser){
 			importXmlConfig.call(this, file, '', callback, parser);
 		};
-			
+
 		var getServicesJSON = function(file, callback, parser){
 			if (parser) { file = this.render(file, parser.data, parser.options);}
 			var json = JSON.parse(file);
 			if(callback) { renderParameters.call(this, callback, json.services, json.parameters);}
 		};
-		
+
 		var getServicesYML = function(file, callback, parser){
 			if (parser) { file = this.render(file, parser.data, parser.options); }
 			var json = yaml.load(file);
@@ -153,26 +146,26 @@ nodefony.register("injection", function(){
 			var str = this.toString() ;
 			var m = str.match(reg);
 			if ( m ){
-				// case class 
+				// case class
    	        		m = m[1].replace(/\s*/g, '');
    	        		return m.split(',');
 			}else{
-				// case function 
+				// case function
 				var reg2 = new RegExp(this.name+"\s*\((.*)\)");
 				m = str.match( reg2 ) ;
 				if ( m ){
 					m = m[1].replace(/\s*/g, '');
 					return m.split(',');
 				}else{
-					throw new Error ("Service :"+this.name+" constructor not find");	
+					throw new Error ("Service :"+this.name+" constructor not find");
 				}
 			}
    	    	};
 
    	    	var sortArguments = function(func, obj, order){
    	       		var args = (order instanceof Array ? order : getArguments.call(func));
-   	        	for (var i = 0 ; i< args.length ; i++){ 
-   	            		args[i] = obj[args[i]];   
+   	        	for (var i = 0 ; i< args.length ; i++){
+   	            		args[i] = obj[args[i]];
    	        	}
    	        	return args;
    	    	};
@@ -206,7 +199,7 @@ nodefony.register("injection", function(){
 	const Injection = class Injection extends nodefony.Service {
 
 		constructor (container){
-			
+
 			super("injection",container, container.get("notificationsCenter") );
 
 			this.kernel = this.container.get('kernel');
@@ -217,7 +210,7 @@ nodefony.register("injection", function(){
 				};
 			}(this);
 		}
-	
+
 		nodeReader (jsonServices){
 			var services = {};
 			for(var lib in jsonServices){
@@ -227,18 +220,18 @@ nodefony.register("injection", function(){
 				}
 			}
 		}
-		
+
 		startService (name, service){
 			var myOrder = service.orderArguments.toString();
 			try{
 				if(service.class){
 
 					var context = prepareExec.newWith(
-						service.class, 
-						service.injections, 
+						service.class,
+						service.injections,
 						service.orderArguments
 					);
-					
+
 					if(service.calls){
 						for(var c=0; c < service.calls.length; c++){
 							if(context[service.calls[c][0]]){
@@ -264,7 +257,7 @@ nodefony.register("injection", function(){
 				this.logger(e, 'ERROR', 'INJECTION', 'START SERVICE '+ name + ' ERROR');
 			}
 		}
-	
+
 		findInjections (injections){
 			var params = {};
 			if(injections instanceof Array){
@@ -312,7 +305,7 @@ nodefony.register("injection", function(){
 			}
 		}
 	};
-	
+
 	return Injection;
-	
+
 });

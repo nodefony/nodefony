@@ -1,27 +1,9 @@
 /**
  *
- *	@module Nodefony
+ *	@nodefony
  *
  *
  */
-/*const fs = require("fs");
-const yaml = require("js-yaml");
-const util = require('util');
-const path = require("path");
-const cluster = require('cluster');
-const url = require("url");
-const xmlParser = require('xml2js').Parser;
-const dns = require('dns');
-const async = require('async');
-const https = require('https');
-const http = require('http');
-const nodedomain = require('domain');
-const WebSocketServer = require('websocket');
-const Promise = require('promise');
-const clc = require('cli-color');
-const shell = require("shelljs");*/
-
-
 module.exports = function(){
 
 	/**

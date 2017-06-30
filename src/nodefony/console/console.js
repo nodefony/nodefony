@@ -1,16 +1,8 @@
-/*
- *
- *
- *
- *
- *
- *
- */
+
 const Getopt = require('node-getopt');
 const npm = require("npm");
 
-nodefony.register("console", function(){
-
+module.exports = nodefony.register("console", function(){
 
 	var generateHelp = function(obj, str){
 		str += this.cli.clc.cyan("nodefony")+" \n";
@@ -38,11 +30,11 @@ nodefony.register("console", function(){
 		defaultSeverity:"INFO"
 	};
 
-	var Console = class Console extends nodefony.appKernel {
+	const Console = class Console extends nodefony.appKernel {
 
-		constructor (environment, debug, loader , settings){
+		constructor (environment, debug, settings){
 			// App Kernel
-			super("CONSOLE", environment, debug, loader, nodefony.extend( settings , {
+			super("CONSOLE", environment, debug, nodefony.extend( settings , {
 				onBoot:function(){
 					if ( process.argv[2] && process.argv[2] === "npm:list" ){
 						this.listPackage(this.rootDir+"/package.json");

@@ -1,14 +1,7 @@
-/*
- *
- *
- *
- *
- *
- */
-//var Promise = require('promise');
-nodefony.register("controller", function(){
 
-	var Controller = class Controller extends nodefony.Service {
+module.exports = nodefony.register("controller", function(){
+
+	const Controller = class Controller extends nodefony.Service {
 		constructor (container, context) {
 
 			super(null , container, container.get("notificationsCenter") ) ;

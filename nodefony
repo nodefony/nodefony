@@ -10,10 +10,8 @@ try {
 }catch(e){
 	const nodefony = require(".", "src", "nodefony", "core", "autoloader");
 }
-
 process.env.BABEL_ENV = 'production';
 process.env.NODE_ENV = 'production';
-
 /*
  *
  * NODEFONY FRAMEWORK START WITH PM2
@@ -22,8 +20,7 @@ process.env.NODE_ENV = 'production';
  *
  */
 if ( process.env["MODE_START"] && process.env["MODE_START"] === "PM2"){
-
-	var kernel = new nodefony.appKernel("SERVER", "prod", false, nodefony.autoloader,{
+	var kernel = new nodefony.appKernel("SERVER", "prod", false, {
 		node_start:process.env["MODE_START"]
 	});
 	return kernel ;
@@ -76,7 +73,7 @@ if (cluster.isMaster) {
 		});
 	});
 }else {
-	const kernel = new nodefony.appKernel("SERVER", "prod", false, nodefony.autoloader,{
+	const kernel = new nodefony.appKernel("SERVER", "prod", false, {
 		node_start:process.env["MODE_START"]
 	});
 	return kernel ;

@@ -1,14 +1,5 @@
-/*
- *
- *
- *
- *
- *
- *
- *
- */
 
-nodefony.register("finder", function(){
+module.exports = nodefony.register("finder", function(){
 
 	var jsonTree =  class jsonTree extends nodefony.fileClass {
 		constructor (path, parent){
@@ -34,7 +25,7 @@ nodefony.register("finder", function(){
 				this.files = [];
 			}
 			this.json = {};
-		} 
+		}
 
 		push (file){
 			this.files.push(file);
@@ -83,7 +74,7 @@ nodefony.register("finder", function(){
 				for ( i = 0 ; i < this.files.length ; i++ ){
 					if (this.files[i].name === nodeName) {
 						if ( this.files[i].isDirectory() ){
-							path = this.files[i].path ; 
+							path = this.files[i].path ;
 							//tab.push(this.files[i]);
 						}
 					}
@@ -91,7 +82,7 @@ nodefony.register("finder", function(){
 			}
 			for ( i = 0 ; i < this.files.length ; i++ ){
 				if (this.files[i].dirName === path) {
-					tab.push(this.files[i]);	
+					tab.push(this.files[i]);
 					if ( this.files[i].isDirectory() ){
 						this.findByNode( this.files[i].name, tab, this.files[i].path);
 					}
@@ -107,9 +98,9 @@ nodefony.register("finder", function(){
 					tab.push(this.files[i]);
 				}
 			}
-			return new Result(tab);	
+			return new Result(tab);
 		}
-		
+
 		getFiles (){
 			var tab = [] ;
 			for (var i = 0 ; i < this.files.length ; i++ ){
@@ -118,7 +109,7 @@ nodefony.register("finder", function(){
 						tab.push(this.files[i]) ;
 					break;
 					case "symbolicLink":
-						var path = fs.readlinkSync( this.files[i].path );	
+						var path = fs.readlinkSync( this.files[i].path );
 						var file = this.files[i].dirName+"/"+path ;
 						if (fs.lstatSync(file).isFile() ){
 							tab.push(this.files[i]) ;
@@ -137,7 +128,7 @@ nodefony.register("finder", function(){
 						if ( casse ){
 							reg = new RegExp("^"+name+"$","i") ;
 							if ( reg.test(this.files[i].name) ){
-								return this.files[i] ;	
+								return this.files[i] ;
 							}
 						}else{
 							if (this.files[i].name === name ){
@@ -147,13 +138,13 @@ nodefony.register("finder", function(){
 					break;
 					case "symbolicLink":
 					        try {
-							var path = fs.readlinkSync( this.files[i].path );	
+							var path = fs.readlinkSync( this.files[i].path );
 							var file = this.files[i].dirName+"/"+path ;
 							if (fs.lstatSync(file).isFile() ){
 								if ( casse ){
 									reg = new RegExp("^"+name+"$","i") ;
 									if ( reg.test(this.files[i].name) ){
-										return this.files[i] ;	
+										return this.files[i] ;
 									}
 								}else{
 									if (this.files[i].name === name ){
@@ -167,7 +158,7 @@ nodefony.register("finder", function(){
 					break;
 				}
 			}
-			return null ;	
+			return null ;
 		}
 
 		forEach (callback){
@@ -202,7 +193,7 @@ nodefony.register("finder", function(){
 				return false;
 			}
 		}
-		return true;	
+		return true;
 	};
 
 
@@ -227,7 +218,7 @@ nodefony.register("finder", function(){
 
 	var find = function(file, result, depth, settings, parent){
 		try{
-				
+
 			try {
 				var res = fs.readdirSync(file.path);
 			}catch(e){
@@ -245,7 +236,7 @@ nodefony.register("finder", function(){
 					filePath = ret[1]+"/";
 				}else{
 					filePath = file.path+"/";
-				}	
+				}
 				for (var i=0 ; i < res.length ; i++){
 					var match = true ;
 					var File = filePath+res[i] ;
@@ -280,7 +271,7 @@ nodefony.register("finder", function(){
 					switch(info.type){
 						case "Directory":
 							if ( settings.recurse && depth-1 !== 0 ){
-								arguments.callee.call(this, info, result, --depth, settings, info );	
+								arguments.callee.call(this, info, result, --depth, settings, info );
 								depth++;
 							}
 						break;
@@ -303,7 +294,7 @@ nodefony.register("finder", function(){
 			this.errorParse.push(e);
 			console.log(e);
 			//this.notificationsCenter.fire("onFinish",e,null);
-			//throw e ;	
+			//throw e ;
 		}
 	};
 
@@ -327,11 +318,11 @@ nodefony.register("finder", function(){
 
 	var finder = class finder {
 
-		constructor (settings){	
+		constructor (settings){
 			this.path = [];
 			this.errorParse = [];
-			this.settings = nodefony.extend({}, defaultSettings, settings);	
-			if (this.settings.path){	
+			this.settings = nodefony.extend({}, defaultSettings, settings);
+			if (this.settings.path){
 				this.result = this.find();
 			}
 		}
@@ -367,14 +358,14 @@ nodefony.register("finder", function(){
 
 		files (){
 			return this.find({
-				match:"File"	
-			});	
+				match:"File"
+			});
 		}
 
 		directories (){
 			return this.find({
-				match:"Directory"	
-			});	
+				match:"Directory"
+			});
 		}
 
 		find ( settings ){
@@ -383,10 +374,10 @@ nodefony.register("finder", function(){
 			if (! settings ) {
 				extend = this.settings ;
 			}else{
-				extend = nodefony.extend({}, defaultSettings, settings) ;	
+				extend = nodefony.extend({}, defaultSettings, settings) ;
 			}
 
-			this.tree = extend.json ; 
+			this.tree = extend.json ;
 			if (this.tree){
 				this.wrapper = jsonTree ;
 			}else{
@@ -410,8 +401,8 @@ nodefony.register("finder", function(){
 			}
 			this.notificationsCenter.fire("onFinish",null, result) ;
 			return result;
-		}	
+		}
 	};
-		
+
 	return finder;
 });

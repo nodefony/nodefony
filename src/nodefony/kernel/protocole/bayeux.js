@@ -1,21 +1,15 @@
-/*
- *
- *	SERVER
- *
- */
 
 var shortId = require('shortid');
 
-nodefony.register.call(nodefony.io.protocol, "bayeux",function(){
-
+module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux",function(){
 
 	var defaultSettings = {
 		timestamp:true
 	}
 
-	var bayeux = class bayeux extends nodefony.io.protocol.reader {
+	const bayeux = class bayeux extends nodefony.io.protocol.reader {
 		constructor (rootName, settings){
-		
+
 			super(null, {
 				extention:"json"
 			});
@@ -23,7 +17,7 @@ nodefony.register.call(nodefony.io.protocol, "bayeux",function(){
 			this.settings = nodefony.extend({}, defaultSettings, settings )
 
 			this.supportedConnectionTypes = [];
-			
+
 			this.response = {
 				version:"1.0",
 			};
@@ -32,18 +26,18 @@ nodefony.register.call(nodefony.io.protocol, "bayeux",function(){
 
 
 		generateClientId (){
-			return shortId.generate();	
+			return shortId.generate();
 		};
 
 		generateTimestamp (){
-			return new Date().toUTCString();	
+			return new Date().toUTCString();
 		};
 
 		handshakeResponse (message, advice, ext){
-			if ( advice ) 
+			if ( advice )
 				var reconnect = "retry" ;
 			else
-				var reconnect = "none" ;	
+				var reconnect = "none" ;
 			var ele = nodefony.extend({}, this.response , {
 				channel : "/meta/handshake",
 				//clientId:this.generateClientId(),
@@ -53,13 +47,13 @@ nodefony.register.call(nodefony.io.protocol, "bayeux",function(){
 				advice:{reconnect:reconnect},
 				ext: ext || {}
 			});
-			if (this.settings.timestamp) 
-				ele.timestamp = this.generateTimestamp(); 
+			if (this.settings.timestamp)
+				ele.timestamp = this.generateTimestamp();
 			return ele;
 		};
 
 		connectResponse (message, advice, ext){
-			if ( advice ) 
+			if ( advice )
 				var reconnect = "retry" ;
 			else
 				var reconnect = "none" ;
@@ -74,9 +68,9 @@ nodefony.register.call(nodefony.io.protocol, "bayeux",function(){
 			});
 			return ele;
 		};
-		
+
 		disconnectResponse (message){
-			var ele = nodefony.extend({}, this.response , { 
+			var ele = nodefony.extend({}, this.response , {
 				channel: "/meta/disconnect",
 				clientId: message.clientId,
 				successful: true
@@ -90,7 +84,7 @@ nodefony.register.call(nodefony.io.protocol, "bayeux",function(){
 			 	clientId: message.clientId,
 			 	subscription: message.subscription,
 			 	error: ""
-			});	
+			});
 			return ele ;
 		};
 
@@ -101,18 +95,18 @@ nodefony.register.call(nodefony.io.protocol, "bayeux",function(){
 			 	subscription: message.subscription,
 			 	successful: true,
 			 	error: ""
-			});	
+			});
 			return ele ;
-		
+
 		};
-		
+
 		publishResponse (channel, id, error){
 			return this.send ( nodefony.extend({}, this.response , {
 				channel: channel,
 		        	successful: error ? false : true,
 				error:error,
 				id: id
-			}) );	
+			}) );
 		};
 
 		publishMessage (channel, data, clientId){
@@ -120,7 +114,7 @@ nodefony.register.call(nodefony.io.protocol, "bayeux",function(){
 				channel: channel,
 				data: data,
 				clientId: clientId
-			}) );	
+			}) );
 		};
 
 		errorResponse (code, channel, message){
@@ -132,13 +126,13 @@ nodefony.register.call(nodefony.io.protocol, "bayeux",function(){
 		onMessage (message){
 			switch (nodefony.typeOf(message) ) {
 				case "string" :
- 			       	var ret = null ;	
+ 			       	var ret = null ;
 					this.parser(message, (err, mess) =>{
 						if (err){
 							//console.log(err)
 							throw err ;
 						}
-						ret = this.onMessage(mess) ;	
+						ret = this.onMessage(mess) ;
 					});
 					return ret ;
 				break;
@@ -177,12 +171,11 @@ nodefony.register.call(nodefony.io.protocol, "bayeux",function(){
 		};
 
 		send (message){
-			return this.builderResponse(message)	
+			return this.builderResponse(message)
 		};
 
 	};
 
-	
 	return bayeux ;
 
 });

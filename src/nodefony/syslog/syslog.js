@@ -1,10 +1,5 @@
-/*
- *
- *
- *
- */
-nodefony.register("syslog", function(){
 
+module.exports = nodefony.register("syslog", function(){
 
    	/*
     	 * default settings
@@ -252,7 +247,7 @@ nodefony.register("syslog", function(){
 
    	var severityToString = function(severity){
        		var myint = parseInt(severity,10) ;
-		var ele = null ; 
+		var ele = null ;
        		if (! isNaN(myint)){
            		ele = sysLogSeverity[myint];
        		}else{
@@ -313,7 +308,7 @@ nodefony.register("syslog", function(){
                    				break;
                    			case "msgid":
 						if ( ! condi.operator){
-							condi.operator = "==";	
+							condi.operator = "==";
 						}
 						res = checkFormatMsgId(condi.data);
                        				if (res !== false){
@@ -323,7 +318,7 @@ nodefony.register("syslog", function(){
                                    					condi.data[res[i]] = "||";
                                					}
                            				}else{
-								condi.data = res ;	
+								condi.data = res ;
 							}
                        				}else{
                            				return false ;
@@ -568,7 +563,7 @@ nodefony.register("syslog", function(){
    		getLogStack (start, end, contition){
 			var stack = null ;
 			if (contition){
-				stack = this.getLogs(contition) ; 
+				stack = this.getLogs(contition) ;
 			}else{
 				stack = this.ringStack ;
 			}
@@ -678,7 +673,7 @@ nodefony.register("syslog", function(){
                		}
                		return st || stack;
    		}
-   		
+
    		/**
      	 	*
      	 	*    @method  listenWithConditions
@@ -696,7 +691,7 @@ nodefony.register("syslog", function(){
 			try {
 				Conditions = sanitizeConditions(conditions);
 			}catch(e){
-				throw new Error("registreNotification conditions format error: "+ e);	
+				throw new Error("registreNotification conditions format error: "+ e);
 			}
        			if (Conditions){
 				var func = (pdu) => {
@@ -715,7 +710,7 @@ nodefony.register("syslog", function(){
 		}
 
 		warning (data){
-			return this.logger(data,"WARNING");	
+			return this.logger(data,"WARNING");
 		}
 
 		info (data){
@@ -732,4 +727,3 @@ nodefony.register("syslog", function(){
 	};
 	return syslog;
 });
-

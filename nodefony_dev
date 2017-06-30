@@ -3,7 +3,6 @@ const path = require("path");
 const asciify = require('asciify');
 const fs = require("fs");
 const shell = require("shelljs");
-
 // --expose-gc --trace-gc --log-gc --trace-gc-verbose
 //--debug
 
@@ -20,18 +19,15 @@ const shell = require("shelljs");
  *	DEVELOPPEMENT
  *
  */
-
 try {
 	const nodefony = require("nodefony");
 }catch(e){
 	const nodefony = require(".", "src", "nodefony", "core", "autoloader");
 }
-
 var links = path.resolve( ".", "tmp", "assestLink" ) ;
 if ( fs.existsSync( links) ){
 	shell.rm("-Rf", links);
 }
-
 var environment = "dev" ;
 var debug = true ;
 if ( process.env["NODEFONY_DEBUG"] ){
@@ -39,13 +35,12 @@ if ( process.env["NODEFONY_DEBUG"] ){
 }
 process.env.BABEL_ENV = 'development';
 process.env.NODE_ENV = 'development';
-
 process.env["MODE_START"] = "NODEFONY_DEV" ;
 
 asciify("      NODEFONY", {font:'standard'}, function(err, res){
 	console.log('\033[31m'+res+'\033[0m');
 	// KERNEL
-	var kernel = new nodefony.appKernel("SERVER", environment, debug, nodefony.autoloader, {
+	const kernel = new nodefony.appKernel("SERVER", environment, debug, {
 		node_start:process.env["MODE_START"]
 	});
 	return kernel ;

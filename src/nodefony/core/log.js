@@ -1,14 +1,5 @@
-/*
- *
- *
- *
- *
- *
- *
- *
- */
 
-nodefony.register("log", function(){
+module.exports = nodefony.register("log", function(){
 
 
 	var defaultLog = {
@@ -21,7 +12,7 @@ nodefony.register("log", function(){
 
 	var Log = class Log {
 		constructor (filePath, settings){
-			this.path = filePath ; 
+			this.path = filePath ;
 			if (nodefony.typeOf(this.path)  !== "string" ){
 				throw new Error("filePath  must be a string");
 			}
@@ -59,7 +50,7 @@ nodefony.register("log", function(){
 					case "rename":
 						this.fire("onRename", this.path, fs.lstatSync(path));
 					break;
-				}	
+				}
 			}.bind(this));
 			return this.watcher ;
 		}
@@ -76,7 +67,7 @@ nodefony.register("log", function(){
 			if ( this.stream._writableState.ending || this.stream._writableState.ended){
 				return ;
 			}
-			//FIXME 
+			//FIXME
 			var ret = this.stream.write.apply(this.stream, arguments);
 			if ( ! ret){
 				//console.log("pass drain")

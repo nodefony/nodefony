@@ -5,25 +5,25 @@
  */
 const twig = require("twig");
 
-nodefony.registerTemplate("twig", function(){
+module.exports = nodefony.registerTemplate("twig", function(){
 
 	var twigOptions = {
 		'twig options':{
-			async: false,	
+			async: false,
 			cache:true
 		},
 		views:null
 	};
 
-	
-	var Twig = class Twig extends nodefony.templates {
+
+	const Twig = class Twig extends nodefony.templates {
 
 		constructor (container, options){
 
 			super(container, twig, options);
 
 			this.kernelSettings = this.container.getParameters("kernel");
-			this.cache = ( this.kernelSettings.environment === "dev"  ) ?  false : true ; 
+			this.cache = ( this.kernelSettings.environment === "dev"  ) ?  false : true ;
 			twig.cache( this.cache );
 			this.rootDir = this.kernel.rootDir ;
 			container.set("Twig" , this);
@@ -38,7 +38,7 @@ nodefony.registerTemplate("twig", function(){
 			option.settings = nodefony.extend(true, {}, twigOptions, {
 				views :this.rootDir,
 				'twig options':{
-					cache: this.cache 
+					cache: this.cache
 				}
 			});
 			try {
@@ -56,10 +56,10 @@ nodefony.registerTemplate("twig", function(){
 				throw e ;
 			}
 		}
-		
+
 		compile ( file , callback){
 			return this.engine.twig({
-				path: file.path,	
+				path: file.path,
 		        	async:false,
 				base:this.rootDir,
 				//precompiled:false,
@@ -83,8 +83,5 @@ nodefony.registerTemplate("twig", function(){
 
 	};
 	Twig.prototype.extention = "twig";
-	return 	Twig ;	
+	return 	Twig ;
 });
-
-
-

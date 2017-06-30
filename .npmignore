@@ -27,6 +27,7 @@
 *.db
 
 npm-debug.log
+yarn-error.log
 
 #**/assets/**
 **/tests/**
@@ -47,8 +48,3 @@ npm-debug.log
 /src/bundles
 /docker
 /tools
-
-
-
-
-
