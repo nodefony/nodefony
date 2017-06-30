@@ -124,6 +124,7 @@ sequelizeBundle:
 #       upload
 #       websocket server
 #       websocket secure server
+#       sockjs dev server ( webpack dev server like WDS) 
 #
 #
 httpBundle:
@@ -153,6 +154,9 @@ httpBundle:
     responseTimeout:              40000
   https:
     responseTimeout:              40000
+  sockjs:
+    overlay:                      true
+    hot:                          false
 
 
 ################################

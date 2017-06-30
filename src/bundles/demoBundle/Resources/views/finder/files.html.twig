@@ -1,0 +1,20 @@
+{% extends "/vendors/nodefony/bundles/frameworkBundle/Resources/views/layout.html.twig" %}
+
+
+
+
+
+{% block body %}
+
+	{{parent()}}
+
+	<div class="container">
+		<div class="row">
+			<pre>Mime : {{mime}}</pre>
+			<pre>Encoding: {{encoding}}</pre>
+			<pre>{{content}}</pre>
+
+		</div>
+	</div>
+
+{% endblock %}

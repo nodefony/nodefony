@@ -23,11 +23,19 @@ module.exports = nodefony.registerController("test", function(){
  	 	*	Routing
  	 	*
  	 	*/
-
 		myrouteAction(page, ele){
 			return this.renderJson({
 				page:page,
 				element:ele
+			});
+		}
+
+		wildcardAction(ele, ele2){
+			let pattern = this.context.originUrl.path;
+			return this.renderJson({
+				path:pattern,
+				ele:ele,
+				ele2:ele2
 			});
 		}
 

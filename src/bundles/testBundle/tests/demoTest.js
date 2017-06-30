@@ -3,10 +3,10 @@
  *
  *   MOCHA STYLE
  *
- *   In the global context you can find : 
+ *   In the global context you can find :
  *
- *	nodefony : namespace to get library  
- *	kernel :   instance of kernel who launch the test   
+ *	nodefony : namespace to get library
+ *	kernel :   instance of kernel who launch the test
  *
  */
 
@@ -19,8 +19,8 @@ const assert = require('assert');
 
 
 
-describe("BUNDLE DEMO", function(){
-	
+describe("BUNDLE TEST", function(){
+
 	describe('CONFIGURATIONS ', function(){
 
 		it("KERNEL", function(done){
@@ -31,10 +31,10 @@ describe("BUNDLE DEMO", function(){
 	});
 
 	describe('SERVER', function(){
-			
+
 
 		it("HTTP", function(done){
-				
+
 			var options = {
 				hostname: kernel.settings.system.domain,
 				port: kernel.settings.system.httpPort,
@@ -49,9 +49,9 @@ describe("BUNDLE DEMO", function(){
 				res.on('data',  (chunk) => {
 					var res = JSON.parse(chunk);
 					assert.deepStrictEqual(res, {foo:"bar",bar:"foo"});
-					done();	
+					done();
 				});
-				
+
 			})
 			request.end();
 		});
@@ -77,7 +77,7 @@ describe("BUNDLE DEMO", function(){
 				res.on('data', function (chunk) {
 					var res = JSON.parse(chunk);
 					assert.deepStrictEqual(res, {foo:"bar",bar:"foo"});
-					done();	
+					done();
 				});
 			})
 			request.end();
@@ -92,20 +92,20 @@ describe("BUNDLE DEMO", function(){
 			/* connect(url,requestedProtocols, [[[origin], headers] )*/
 			var url = 'ws://'+kernel.settings.system.domain+':'+kernel.settings.system.httpPort+'/websoket'
 			client.connect(url, null, "nodefony", null, {});
-			client.on('connect', function(connection) { 
-				//console.log( "websoket connection ok on : " + url)	
+			client.on('connect', function(connection) {
+				//console.log( "websoket connection ok on : " + url)
 				connection.on("message", (message) => {
 					//console.log(message)
-					iter++	
+					iter++
 				})
-				//connection.close(); 
+				//connection.close();
 				connection.on('close', (reasonCode, description) =>  {
 					assert.equal(iter, 9);
 					assert.equal(reasonCode, 1000);
 					assert.equal(description, "NODEFONY CONTROLLER CLOSE SOCKET");
 					done();
 				});
-			
+
 			});
 			client.on('connectFailed', function() {
 				throw new Error( "websoket client error")
@@ -125,26 +125,26 @@ describe("BUNDLE DEMO", function(){
 			try {
 				var client = new WebSocketClient();
 			}catch(e){
-				throw e; 
+				throw e;
 			}
-			
+
 			var iter = 0 ;
 
 			var url = 'wss://'+kernel.settings.system.domain+':'+kernel.settings.system.httpsPort+'/websoket'
 			client.connect(url, null, "nodefony", null, options);
-			client.on('connect', function(connection) { 
+			client.on('connect', function(connection) {
 				connection.on("message", (message) => {
 					//console.log(message)
-					iter++	
+					iter++
 				})
-				//connection.close(); 
+				//connection.close();
 				connection.on('close', (reasonCode, description) =>  {
 					assert.equal(iter, 9);
 					assert.equal(reasonCode, 1000);
 					assert.equal(description, "NODEFONY CONTROLLER CLOSE SOCKET");
 					done();
 				});
-			
+
 			});
 			client.on('connectFailed', function() {
 				throw new Error( "websoket client error")
@@ -153,4 +153,3 @@ describe("BUNDLE DEMO", function(){
 	});
 
 });
-

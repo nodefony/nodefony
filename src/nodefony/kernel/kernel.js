@@ -3,17 +3,6 @@ const nodefony_version = require( path.join ("..", "..", "..", "package.json") )
 
 module.exports = nodefony.register("kernel", function(){
 
-	/**
-	 *	@event onTerminate
-	 *
-	 *
-	 *	@event onReady
-	 */
-
-	/**
-	 *	@event onBoot
-	 */
-
 	var regBundleName = /^(.*)[Bb]undle[\.js]{0,3}$/;
 	var regBundle = /^(.*)[Bb]undle.js$/;
 
@@ -234,7 +223,6 @@ module.exports = nodefony.register("kernel", function(){
 						this.environment = result.system.debug ? "dev" : "prod" ;
 					}
 					this.initializeLog(options);
-					this.autoLoader.syslog = this.syslog;
 					// Manage Template engine
 					this.initTemplate();
 				});
@@ -305,6 +293,11 @@ module.exports = nodefony.register("kernel", function(){
 			// TEST UNIT
 			if ( this.settings.system.unitTest) {
 				bundles.push( path.resolve(this.nodefonyPath, "bundles", "unitTestBundle") );
+			}
+
+			// DEMO
+			if ( this.settings.system.demo) {
+				bundles.push( path.resolve(this.rootDir, "src", "bundles", "demoBundle") );
 			}
 
 			try {

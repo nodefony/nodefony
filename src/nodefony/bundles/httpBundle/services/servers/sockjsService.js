@@ -1,8 +1,6 @@
 const Sockjs = require('sockjs');
 
-
 module.exports = nodefony.registerService("sockjs", function(){
-
 
 	var sockCompiler = class sockServer extends nodefony.Service {
 
@@ -73,8 +71,12 @@ module.exports = nodefony.registerService("sockjs", function(){
 
 			this.compilers = {} ;
 			this.sockets =	[];
-			this.clientOverlay = true ;
-			this.hot = false ;
+			this.kernel.on("onBoot", () =>{
+				if ( this.bundle.settings.sockjs ){
+					this.clientOverlay = this.bundle.settings.sockjs.overlay || false ;
+					this.hot = this.bundle.settings.sockjs.hot || false ;
+				}
+			});
 			this.setPrefix("/sockjs-node");
 
 			if ( this.kernel.environment === "dev" ){

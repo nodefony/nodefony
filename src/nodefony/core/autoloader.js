@@ -49,6 +49,7 @@ module.exports = function(){
 		constructor() {
 			this.timeout = 20000 ;
 			this.displayError = true ;
+			this.syslog = null ;
 			this.lineOffset = 10 ;
 			this.columnOffset = 10 ;
 			this.dirname = path.resolve(  __dirname, ".." );
@@ -117,6 +118,7 @@ module.exports = function(){
 				let myModule = new Module(filename, module ) ;
 				Module._cache[filename] = myModule;
 				myModule.load(filename);
+				//this.logger("Autoload file : "+filename, "DEBUG")
 				return myModule.exports ;
 			}catch(e){
 				if ( Module._cache[filename] ){
@@ -194,6 +196,7 @@ module.exports = function(){
 
 		setKernel (kernel){
 			context.kernel = kernel;
+			this.syslog = kernel.syslog ;
 			/*kernel.listen(this, "onReady", () => {
 				if (kernel.environment === "prod"){
 					this.close();
@@ -203,6 +206,5 @@ module.exports = function(){
 	};
 
 	nodefony.autoloader = new autoload();
-	//nodefony.logger =  autoloader.logger.bind(autoloader);
 	return nodefony ;
 }();

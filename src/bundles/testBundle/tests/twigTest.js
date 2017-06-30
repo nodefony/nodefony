@@ -20,7 +20,7 @@ const assert = require('assert');
 var querystring = require("querystring");
 
 
-describe("BUNDLE DEMO", function(){
+describe("BUNDLE TEST", function(){
 
 	before(function(){
 		global.options = {

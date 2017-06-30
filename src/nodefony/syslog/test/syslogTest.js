@@ -21,12 +21,10 @@ describe("NODEFONY SYSLOG", function(){
 		});
 
 		before(function(){
-            kernel.logger("BEGIN CONTRUSTROR");
             global.myNotification = new nodefony.notificationsCenter.notification() ;
 		});
 
 		it("LIB", function(done){
-            console.log(global.myNotification)
             done();
 		});
 		it("LIB 2", function(done){
@@ -40,7 +38,6 @@ describe("NODEFONY SYSLOG", function(){
         });
 
         before(function(){
-            kernel.logger("BEGIN STACK")
         });
 
         it("100 entries ", function(done){

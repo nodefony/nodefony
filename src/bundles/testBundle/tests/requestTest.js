@@ -3,10 +3,10 @@
  *
  *   MOCHA STYLE
  *
- *   In the global context you can find : 
+ *   In the global context you can find :
  *
- *	nodefony : namespace to get library  
- *	kernel :   instance of kernel who launch the test   
+ *	nodefony : namespace to get library
+ *	kernel :   instance of kernel who launch the test
  *
  */
 
@@ -17,7 +17,7 @@ var querystring = require('querystring');
 const assert = require('assert');
 
 
-describe("BUNDLE DEMO", function(){
+describe("BUNDLE TEST", function(){
 
 	before(function(){
 		global.options = {
@@ -30,7 +30,7 @@ describe("BUNDLE DEMO", function(){
 	describe('REQUEST ', function(){
 
 		it("request-get-query", function(done){
-			global.options.path ='/test/unit/request?foo=bar&bar=foo';     
+			global.options.path ='/test/unit/request?foo=bar&bar=foo';
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 200);
 				res.setEncoding('utf8');
@@ -38,15 +38,15 @@ describe("BUNDLE DEMO", function(){
 					var res = JSON.parse(chunk);
 					assert.deepStrictEqual(res.method, "GET");
 					assert.deepStrictEqual(res.query, {foo:"bar",bar:"foo"});
-					done(); 
+					done();
 				});
 			})
 			request.end();
 		});
 
 		it("request-post-x-www-form-urlencoded", function(done){
-			global.options.path ='/test/unit/request';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/request';
+			global.options.method ='POST';
 			var data = {
 				foo:"bar",
 				bar:"foo"
@@ -66,7 +66,7 @@ describe("BUNDLE DEMO", function(){
 					assert.deepStrictEqual(res.query, data);
 					assert.deepStrictEqual(res.queryPost, data);
 					assert.deepStrictEqual(res.queryGet, {});
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
@@ -74,8 +74,8 @@ describe("BUNDLE DEMO", function(){
 		});
 
 		it("request-post-x-www-form-urlencoded-post", function(done){
-			global.options.path ='/test/unit/request?nodefony=2.0';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/request?nodefony=2.0';
+			global.options.method ='POST';
 			var data = {
 				foo:"bar",
 				bar:"foo"
@@ -95,7 +95,7 @@ describe("BUNDLE DEMO", function(){
 					assert.deepStrictEqual(res.query, nodefony.extend({},data, {nodefony:"2.0"}));
 					assert.deepStrictEqual(res.queryPost, data);
 					assert.deepStrictEqual(res.queryGet, {nodefony:"2.0"});
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
@@ -103,96 +103,96 @@ describe("BUNDLE DEMO", function(){
 		});
 
 		it("request-exception-500", function(done){
-			global.options.path ='/test/unit/exception';     
+			global.options.path ='/test/unit/exception';
 			global.options.method ='GET';
 			global.options.headers = {};
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 500);
 				assert.deepStrictEqual(res.statusMessage, "My create Exception");
-				done();	
+				done();
 			})
 			request.end();
 		});
 
 		it("request-exception-notDefined", function(done){
-			global.options.path ='/test/unit/exception/notDefined';     
+			global.options.path ='/test/unit/exception/notDefined';
 			global.options.method ='GET';
 			global.options.headers = {};
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 500);
 				assert.deepStrictEqual(res.statusMessage, "Internal Server Error");
-				done();	
+				done();
 			})
 			request.end();
 		});
 
 		it("request-exception-401", function(done){
-			global.options.path ='/test/unit/exception/401';     
+			global.options.path ='/test/unit/exception/401';
 			global.options.method ='GET';
 			global.options.headers = {};
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 401);
 				assert.deepStrictEqual(res.statusMessage, "My Unauthorized Exception");
-				done();	
+				done();
 			})
 			request.end();
 		});
 
 		it("request-exception-404", function(done){
-			global.options.path ='/test/unit/exception/404';     
+			global.options.path ='/test/unit/exception/404';
 			global.options.method ='GET';
 			global.options.headers = {};
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 404);
 				assert.deepStrictEqual(res.statusMessage, "My not found Exception");
-				done();	
+				done();
 			})
 			request.end();
 		});
 
 		it("request-exception-fire", function(done){
-			global.options.path ='/test/unit/exception/fire';     
+			global.options.path ='/test/unit/exception/fire';
 			global.options.method ='GET';
 			global.options.headers = {};
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 500);
 				assert.deepStrictEqual(res.statusMessage, "My Fire Exception");
-				done();	
+				done();
 			})
 			request.end();
 		});
 
 		it("request-exception-error", function(done){
-			global.options.path ='/test/unit/exception/error';     
+			global.options.path ='/test/unit/exception/error';
 			global.options.method ='GET';
 			global.options.headers = {};
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 500);
 				assert.deepStrictEqual(res.statusMessage, "varNotExit is not defined");
-				done();	
+				done();
 			})
 			request.end();
 		});
 
 		it("request-exception-timeout", function(done){
-			global.options.path ='/test/unit/exception/408';     
+			global.options.path ='/test/unit/exception/408';
 			global.options.method ='GET';
 			global.options.headers = {};
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 408);
 				assert.deepStrictEqual(res.statusMessage, "My Timeout Exception");
-				done();	
+				done();
 			})
 			request.end();
 		});
 		it("request-exception-action", function(done){
-			global.options.path ='/test/unit/exception/1001';     
+			global.options.path ='/test/unit/exception/1001';
 			global.options.method ='GET';
 			global.options.headers = {};
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 500);
 				assert.deepStrictEqual(res.statusMessage, "Action not found");
-				done();	
+				done();
 			})
 			request.end();
 		});

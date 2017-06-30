@@ -37,10 +37,10 @@ module.exports = nodefony.registerCommand("generate",function(){
 			type:"directory",
 			childs:[
 				Command,
-				controller.call(this, name, "controller", "defaultController", null, location, path.resolve(this.kernel.autoLoader.dirname, "bundles", "frameworkBundle", "Command", "skeletons", "controllerAngularClass.skeleton") ),
+				controller.call(this, name, "controller", "defaultController", null, location, path.resolve(this.kernel.autoLoader.dirname, "bundles", "frameworkBundle", "Command", "skeletons", "angular", "controllerClass.skeleton") ),
 				manager,
 				tests.call(this, param),
-				Resources.call(this, name, type, location, "configAngular"),
+				Resources.call(this, name, type, location, "angular"),
 				documentation.call(this, param, location),
 				core,
 				entity,
@@ -80,10 +80,10 @@ module.exports = nodefony.registerCommand("generate",function(){
 			type:"directory",
 			childs:[
 				Command,
-				controller.call(this, name, "controller", "defaultController", null, location, path.resolve(this.kernel.autoLoader.dirname, "bundles", "frameworkBundle", "Command", "skeletons", "controllerAngularClass.skeleton") ),
+				controller.call(this, name, "controller", "defaultController", null, location, path.resolve(this.kernel.autoLoader.dirname, "bundles", "frameworkBundle", "Command", "skeletons", "react","controllerClass.skeleton") ),
 				manager,
 				tests.call(this, param),
-				Resources.call(this, name, type, location, "configReact"),
+				Resources.call(this, name, type, location, "react"),
 				documentation.call(this, param, location),
 				core,
 				entity,
@@ -128,7 +128,7 @@ module.exports = nodefony.registerCommand("generate",function(){
 					controller.call(this, name, "controller" , "defaultController", null, location),
 					manager,
 					tests.call(this, param),
-					Resources.call(this, name, type, location, "config"),
+					Resources.call(this, name, type, location, ""),
 					documentation.call(this, param, location),
 					core,
 					entity,
@@ -183,7 +183,7 @@ module.exports = nodefony.registerCommand("generate",function(){
 		};
 	};
 
-	var Resources = function(name, type, location, configName){
+	var Resources = function(name, type, location, bundleType){
 		var Name = regBundle.exec(name)[1];
 		var param = {
 			name:Name,
@@ -208,12 +208,12 @@ module.exports = nodefony.registerCommand("generate",function(){
 				childs:[{
 						name:"config."+type,
 						type:"file",
-						skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/"+configName+"."+type+".skeleton" ),
+						skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/"+bundleType+"/config."+type+".skeleton" ),
 						params:param
 
 
 					},
-					routing.call(this, param, type)
+					routing.call(this, param, type, bundleType)
 				]
 			},
 			public.call(this, param),
@@ -293,11 +293,11 @@ module.exports = nodefony.registerCommand("generate",function(){
 		return obj;
 	};
 
-	var routing = function(obj, type){
+	var routing = function(obj, type, bundleType){
 		var file = {
 			name:"routing."+type,
 			type:"file",
-			skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/routing."+type+".skeleton" ),
+			skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/"+bundleType+"/routing."+type+".skeleton" ),
 			params:obj
 		};
 		return file;

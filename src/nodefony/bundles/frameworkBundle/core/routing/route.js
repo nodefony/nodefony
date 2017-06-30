@@ -137,7 +137,11 @@ module.exports = nodefony.register("Route", function(){
 					return (incl ? '(?:' : '')+(slash || '')+(incl ? '' : '(?:')+(dot || '')+'('+(capture || '[^/]+')+'))'+(opt || '');
 				}
 			});
-			pattern = pattern.replace(/([\/.])/g, '\\$1');//.replace(/\*/g, '(.+)');
+			if ( pattern[pattern.length - 1] === "*" ){
+				pattern = pattern.replace(/([\/.])/g, '\\$1').replace(/\*/g, '(.*)\/?');
+			}else{
+				pattern = pattern.replace(/([\/.])/g, '\\$1');
+			}
 			this.pattern = new RegExp('^'+pattern+'[\\/]?$', 'i');
 			return this.pattern ;
 		}

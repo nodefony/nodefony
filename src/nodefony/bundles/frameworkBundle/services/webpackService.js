@@ -36,8 +36,6 @@ module.exports = nodefony.registerService("webpack", function(){
 		};
 	};
 
-
-
 	var sassRule  = function(basename){
 		return {
         test: new RegExp(".scss$"),
