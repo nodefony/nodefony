@@ -7,7 +7,7 @@ var Url = require("url");
 
 module.exports = nodefony.registerCommand("Monitoring",function(){
 
-	var monitoring = class monitoring  extends nodefony.cliWorker {
+	var monitoring = class monitoring  extends nodefony.cliKernel {
 
 		constructor (container, command/*, options*/){
 

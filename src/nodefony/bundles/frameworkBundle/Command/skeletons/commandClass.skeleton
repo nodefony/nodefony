@@ -5,7 +5,7 @@
 
 module.exports = nodefony.registerCommand("{{name}}",function(){
 
-	var {{name}} = class {{name}} extends nodefony.cliWorker {
+	var {{name}} = class {{name}} extends nodefony.cliKernel {
 
 		constructor(container, command, options){
 

@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-const path = require("path");
-const asciify = require('asciify');
-const fs = require("fs");
-const shell = require("shelljs");
 // --expose-gc --trace-gc --log-gc --trace-gc-verbose
 //--debug
+
+const path = require("path");
+const fs = require("fs");
+const shell = require("shelljs");
 
 ///*var profiler = require('v8-profiler');
 //var heapdump = require('heapdump');
@@ -37,11 +37,9 @@ process.env.BABEL_ENV = 'development';
 process.env.NODE_ENV = 'development';
 process.env["MODE_START"] = "NODEFONY_DEV" ;
 
-asciify("      NODEFONY", {font:'standard'}, function(err, res){
-	console.log('\033[31m'+res+'\033[0m');
-	// KERNEL
-	const kernel = new nodefony.appKernel("SERVER", environment, debug, {
+// KERNEL
+const kernel = new nodefony.appKernel("SERVER", environment, debug, {
 		node_start:process.env["MODE_START"]
-	});
-	return kernel ;
 });
+
+return kernel ;

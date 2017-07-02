@@ -1,23 +1,29 @@
 #!/usr/bin/env node
-
-//const util = require("util");
-//const emoji = require('node-emoji')
+const util = require("util");
 // nodefony
-//const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
-
-
-var start =  new Date().getTime();
-for (var i =0 ; i < 1000000 ; i++){
-  require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
+try {
+  const nodefony = require("nodefony");
+}catch(e){
+  const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
 }
-var stop = new Date().getTime();
 
-console.log( (stop - start) / 1000 );
-/*for (var i = 0 ; i< 10; i++){
-  console.log( emoji.random().emoji );
+var cli = new nodefony.cli("MY CLI");
+cli.clear();
+cli.listenSyslog();
+cli.resize();
+cli.on("onResize", () => {
+  cli.logger("a");
+});
+cli.asciify("      NODEFONY CLI", {font:'standard'}, (err, res) => {
+  console.log( cli.clc.red(res) );
+});
+
+for (var i = 0 ; i< 10; i++){
+  console.log( cli.emoji.random().emoji );
 }
-console.log( emoji.get("hourglass") );
-*/
+console.log( cli.emoji.get("hourglass") );
+
+setTimeout(()=>{}, 10000);
 /*
 // SYSLOG
 var sys = new nodefony.syslog();

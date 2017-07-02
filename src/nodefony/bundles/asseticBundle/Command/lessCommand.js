@@ -9,7 +9,7 @@
 module.exports = nodefony.registerCommand("less",function(){
 
 
-	var Less = class Less extends nodefony.cliWorker {
+	var Less = class Less extends nodefony.cliKernel {
 
 		constructor(container, command/*, options*/){
 

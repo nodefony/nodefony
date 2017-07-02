@@ -42,10 +42,8 @@ module.exports = nodefony.register("console", function(){
 				},
 				syslog:settingsSysLog
 			}));
-
 			this.commands = {};
 			this.getOptsTab = [];
-
 			if ( process.argv[2] && process.argv[2] === "npm:install" ||  process.argv[2] && process.argv[2] === "npm:list" ){
 				return ;
 			}
@@ -142,8 +140,6 @@ module.exports = nodefony.register("console", function(){
 				process.nextTick( () =>{
 					func.call(this, path );
 				});
-				//func.apply(this)
-				//process.nextTick( func.bind(this) );
 			}else{
 				func.call(this, path );
 			}
@@ -245,11 +241,8 @@ module.exports = nodefony.register("console", function(){
 				this.bundles[bundle].registerCommand( this.commands );
 			}
 			this.getopts =  this.getopt(this.getOptsTab);
-
-
 			this.helpString = this.getopts.getHelp();
 			this.helpString += "\nCommands : [arguments]\n";
-
 			var bundles = {};
 			for ( let bundle in this.commands ){
 				if ( ! bundles[bundle] ){
@@ -259,7 +252,6 @@ module.exports = nodefony.register("console", function(){
 						task: []
 					};
 				}
-
 				var commands = this.commands[bundle];
 				for (var cmd in commands ){
 					var command = commands[cmd].prototype.commands;
@@ -269,7 +261,6 @@ module.exports = nodefony.register("console", function(){
 				}
 			}
 			this.getopts.setHelp( generateHelp.call(this, bundles, this.helpString) );
-			//this.getopts.setHelp(this.helpString);
 			return this.stop;
 		}
 
@@ -334,24 +325,6 @@ module.exports = nodefony.register("console", function(){
 			};
 			return res;
 		}
-
-		startTimer (name){
-			this.startTime = new Date();
-			this.logger(" BEGIN TIMER : " + name, "INFO");
-
-		}
-
-		stopTimer (name){
-			if (this.startTime){
-				this.stopTime = new Date();
-				this.time = (this.stopTime.getTime() - this.startTime.getTime());
-				this.logger( "TIMER "+ name + " execute in : "+ this.time/1000 + " s" ,"INFO" )	;
-			}else{
-				return ;
-			}
-			this.startTime = null;
-		}
 	};
-
 	return  Console;
 });

@@ -8,7 +8,7 @@
 
 module.exports = nodefony.registerCommand("encoders",function(){
 
-	var encoders = class encoders extends nodefony.cliWorker {
+	var encoders = class encoders extends nodefony.cliKernel {
 
 		constructor(container, command/*, options*/){
 

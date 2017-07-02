@@ -6,7 +6,7 @@
 module.exports = nodefony.registerCommand("webpack",function(){
 
 
-	var webpack = class webpack extends nodefony.cliWorker {
+	var webpack = class webpack extends nodefony.cliKernel {
 
 		constructor(container, command/*, options*/){
 

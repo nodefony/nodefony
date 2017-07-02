@@ -566,7 +566,7 @@ module.exports = nodefony.registerCommand("generate",function(){
 	/*
  	 *
  	 */
-	var generate = class generate extends nodefony.cliWorker {
+	var generate = class generate extends nodefony.cliKernel {
 
 		constructor(container, command/*, options*/){
 
@@ -768,7 +768,7 @@ module.exports = nodefony.registerCommand("generate",function(){
 						cwd:cwd,
 					}, ( code ) => {
 						if ( code === 1 ){
-							throw new Error ("nstall angular cli  ng new error : " +code);
+							throw new Error ("install angular cli  ng new error : " +code);
 						}
 						args = ['generate', 'module', '--spec', '--routing', '-m', 'app', realName ];
 						this.logger (" Generate Angular module : ng " + args.join(" ") );

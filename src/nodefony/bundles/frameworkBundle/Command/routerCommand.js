@@ -10,7 +10,7 @@
 module.exports = nodefony.registerCommand("router",function(){
 
 
-	var router = class router extends nodefony.cliWorker {
+	var router = class router extends nodefony.cliKernel {
 
 		constructor(container, command/*, options*/ ){
 

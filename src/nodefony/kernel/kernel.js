@@ -121,18 +121,10 @@ module.exports = nodefony.register("kernel", function(){
 			this.initializeContainer();
 
 			// cli worker
-			this.cli = new nodefony.cliWorker("CLI", this.container, this.notificationsCenter);
-			this.listen(this, "onReady" , () =>{
-				this.autoLoader.deleteCache();
-			});
-
+			this.cli = new nodefony.cliKernel("CLI", this.container, this.notificationsCenter);
 			this.cli.createDirectory( path.resolve (this.rootDir ,"tmp"), null , (file) => {
 				this.tmpDir = file ;
 			}, true );
-
-			/*this.cli.createDirectory( this.cacheLink, null , (file) => {
-				this.cacheLink = file ;
-			}, true );*/
 
 			this.listen(this, "onPostRegister" , () =>{
 				if ( this.type === "SERVER" ){
@@ -191,7 +183,10 @@ module.exports = nodefony.register("kernel", function(){
 				this.logger(err, "CRITIC");
 			});
 
-			this.boot(options);
+			this.cli.asciify("      NODEFONY", {font:'standard'}, (err, res) => {
+				this.initCluster(res);
+				this.boot(options);
+			});
 		}
 
 		/**
@@ -239,8 +234,6 @@ module.exports = nodefony.register("kernel", function(){
 				this.logger(e, "ERROR");
 				throw e ;
 			}
-
-			this.initCluster();
 
 			this.eventReadywait = 0 ;
 
@@ -451,15 +444,17 @@ module.exports = nodefony.register("kernel", function(){
 			return cluster.isMaster ;
 		}
 
-		initCluster (){
+		initCluster (ascci){
 			this.processId = process.pid ;
 			this.process = process ;
 			if (cluster.isMaster) {
-				console.log("		      \x1b[34mNODEFONY "+this.type+" CLUSTER MASTER \x1b[0mVersion : "+ this.settings.version +" PLATFORM : "+this.platform+"  PROCESS PID : "+this.processId+"\n");
+				this.cli.clear();
+				console.log( this.cli.clc.red(ascci) );
+				console.log("		      \x1b[34mNODEFONY "+this.type+" CLUSTER MASTER \x1b[0mVersion : "+ nodefony_version +" PLATFORM : "+this.platform+"  PROCESS PID : "+this.processId+"\n");
 				this.fire("onCluster", "MASTER", this,  process);
-
 			}else if (cluster.isWorker) {
-				console.log("		      \x1b[34mNODEFONY "+this.type+" CLUSTER WORKER \x1b[0mVersion : "+ this.settings.version +" PLATFORM : "+this.platform+"  PROCESS PID : "+this.processId);
+				console.log( this.cli.clc.red(ascci) );
+				console.log("		      \x1b[34mNODEFONY "+this.type+" CLUSTER WORKER \x1b[0mVersion : "+ nodefony_version +" PLATFORM : "+this.platform+"  PROCESS PID : "+this.processId);
 				this.workerId = cluster.worker.id ;
 				this.worker = cluster.worker ;
 				this.fire("onCluster", "WORKER",  this, process);

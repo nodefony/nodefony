@@ -41,7 +41,6 @@ module.exports = function(){
 	 * @module NODEFONY
 	 *
 	 */
-	let cache = {};
 	let regJs = /.*\.js$/;
 
 	let autoload = class autoload {
@@ -64,7 +63,7 @@ module.exports = function(){
 			this.load( path.resolve( this.dirname, "core", "log.js") );
 			this.load( path.resolve( this.dirname, "core", "protocol.js") );
 			this.load( path.resolve( this.dirname, "core", "watcher.js") );
-			this.load( path.resolve( this.dirname, "core", "cliWorker.js") );
+			this.load( path.resolve( this.dirname, "core", "cli.js") );
 			this.loadDirectory( path.resolve( this.dirname, "kernel"), /^tests$/ );
 			try {
 				this.load( path.resolve( this.dirname, "..", "..","..", "..", "app", "appKernel.js") )
@@ -128,16 +127,6 @@ module.exports = function(){
 			}
 		}
 
-		deleteCache (){
-			for ( let ele in cache ){
-				delete cache[ele] ;
-			}
-		}
-
-		close(){
-			this.deleteCache();
-		}
-
 		/**
  	 	* @method logger
 	 	*
@@ -197,11 +186,6 @@ module.exports = function(){
 		setKernel (kernel){
 			context.kernel = kernel;
 			this.syslog = kernel.syslog ;
-			/*kernel.listen(this, "onReady", () => {
-				if (kernel.environment === "prod"){
-					this.close();
-				}
-			});*/
 		}
 	};
 

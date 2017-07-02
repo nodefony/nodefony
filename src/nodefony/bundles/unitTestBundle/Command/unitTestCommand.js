@@ -2,7 +2,7 @@
 
 module.exports = nodefony.registerCommand("unitTest", function(){
 
-	var unitTest = class unitTest extends nodefony.cliWorker {
+	var unitTest = class unitTest extends nodefony.cliKernel {
 
 		constructor (container, command/*, options*/){
 

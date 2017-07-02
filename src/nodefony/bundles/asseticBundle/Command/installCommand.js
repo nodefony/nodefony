@@ -8,7 +8,7 @@
 
 module.exports = nodefony.registerCommand("assets",function(){
 
-	var Asset = class Asset extends nodefony.cliWorker {
+	var Asset = class Asset extends nodefony.cliKernel {
 
 		constructor (container, command/*, options*/){
 
