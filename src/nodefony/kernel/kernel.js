@@ -125,6 +125,7 @@ module.exports = nodefony.register("kernel", function(){
 			this.cli.createDirectory( path.resolve (this.rootDir ,"tmp"), null , (file) => {
 				this.tmpDir = file ;
 			}, true );
+			this.git = this.cli.setGitPath( this.rootDir );
 
 			this.listen(this, "onPostRegister" , () =>{
 				if ( this.type === "SERVER" ){

@@ -1,8 +1,3 @@
-try {
-	var Git = require("nodegit");
-}catch(e){
-	console.log(e);
-}
 const useragent = require('useragent');
 
 module.exports = nodefony.registerBundle ("monitoring", function(){
@@ -42,16 +37,19 @@ module.exports = nodefony.registerBundle ("monitoring", function(){
 			this.webpackService = this.get("webpack");
 
 			// MANAGE GIT
-			this.gitInfo = {} ;
+			this.gitInfo = {
+				currentBranch:null
+			};
 			try {
-				Git.Repository.open(this.kernel.rootDir).then( (repo) => {
-					repo.getCurrentBranch().then((reference) => {
-						this.gitInfo.currentBranch = reference.shorthand() ;
-					});
+				this.kernel.git.branch( (err, BranchSummary) => {
+					if ( err ){
+						this.logger(err, "WARNING");
+						return ;
+					}
+					this.gitInfo.currentBranch = BranchSummary.current ;
 				});
 			}catch(e){
 				this.logger(e, "WARNING");
-				this.gitInfo.currentBranch = null ;
 			}
 
 			this.kernel.listen(this, "onPreBoot", (kernel) => {
