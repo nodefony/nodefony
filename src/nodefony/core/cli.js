@@ -6,7 +6,7 @@ const simpleGit = require('simple-git');
 
 module.exports = nodefony.register( "cli", function(){
 
-  const red   = clc.red.bold;
+    const red   = clc.red.bold;
 	const cyan   = clc.cyan.bold;
 	const blue  = clc.blueBright.bold;
 	const green = clc.green;
@@ -19,7 +19,7 @@ module.exports = nodefony.register( "cli", function(){
 			case "INFO":
 				return blue(severity);
 			case "NOTICE" :
-				return red(severity);
+				return red(severity)    ;
 			case "WARNING" :
 				return yellow(severity);
 			case "ERROR" :
@@ -60,6 +60,23 @@ module.exports = nodefony.register( "cli", function(){
 		this.initUi();
 	}
 
+    listenSyslog(options){
+
+        var defaultOption = {
+            severity: {
+                operator:"<=",
+                data : "7"
+            }
+        }
+        this.syslog.listenWithConditions(this, options || defaultOption , (pdu) => {
+            var date = new Date(pdu.timeStamp) ;
+            if ( this.spinner){
+                return this.spinner.message(date.toDateString() + " " + date.toLocaleTimeString() + " " + logSeverity( pdu.severityName ) + " " + green(pdu.msgid) + " " + " : " +  pdu.payload);
+            }
+            return console.log( date.toDateString() + " " + date.toLocaleTimeString() + " " + logSeverity( pdu.severityName ) + " " + green(pdu.msgid) + " " + " : " +  pdu.payload);
+        });
+    }
+
     asciify (txt, options , callback) {
       return asciify(txt, nodefony.extend({
         font:'standard'
@@ -69,17 +86,45 @@ module.exports = nodefony.register( "cli", function(){
 	initUi () {
 		this.clc = clc ;
 		this.clui = require("clui");
-		this.Line = this.clui.Line,
-		this.Gauge = this.clui.Gauge;
-		this.Sparkline = this.clui.Sparkline;
 		this.emoji = require("node-emoji");
+        this.spinner = null ;
 		this.blankLine =  function(){
-				var myLine = new this.Line().fill() ;
+				var myLine = new this.clui.Line().fill() ;
 				return () =>{
 					myLine.output();
 				}
 		}.call(this)
 	}
+
+    createProgress (size){
+        return new this.clui.Progress(size)
+    }
+
+    createSparkline (values, suffix){
+        if ( values ){
+            try {
+                return this.clui.Sparkline(values, suffix || "");
+            }catch(e){
+                    this.logger(e, "ERROR");
+                    throw e ;
+            }
+        }
+    }
+
+    getSpinner (message, design){
+        var countdown = new this.clui.Spinner(message, design || ['⣾','⣽','⣻','⢿','⡿','⣟','⣯','⣷']);
+        return countdown ;
+    }
+
+    startSpinner (message, design){
+        this.spinner = new this.clui.Spinner(message, design || ['⣾','⣽','⣻','⢿','⡿','⣟','⣯','⣷']);
+        this.spinner.start();
+        return this.spinner ;
+    }
+    stopSpinner (message, options){
+        this.spinner.stop();
+        delete this.spinner ;
+    }
 
     getSimpleGit(gitPath){
         if ( gitPath ){
@@ -300,6 +345,10 @@ module.exports = nodefony.register( "cli", function(){
   	}
 
     terminate (code){
+  	  process.exit(code);
+  	}
+
+    quit (code){
   	  process.exit(code);
   	}
 
