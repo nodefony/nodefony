@@ -147,6 +147,7 @@ module.exports = nodefony.register("kernel", function(){
 		 	*/
 			process.on('SIGINT', () => {
 				this.logger("SIGINT", "CRITIC");
+				this.cli.clear();
 				this.fire("onSignal", "SIGINT", this);
 				this.terminate(0);
 			});
@@ -162,6 +163,7 @@ module.exports = nodefony.register("kernel", function(){
 			});
 			process.on('SIGQUIT',() =>{
 				this.logger("SIGQUIT", "CRITIC");
+				this.cli.clear();
 				this.fire("onSignal", "SIGQUIT", this);
 				this.terminate(0);
 			});
@@ -480,6 +482,12 @@ module.exports = nodefony.register("kernel", function(){
 			}
 			if (  this.environment === "dev" ){
 				this.cli.listenSyslog( this.syslog , this.debug);
+				if ( options.logSpinner ){
+					this.cli.startSpinner("kernel",['⣾','⣽','⣻','⢿','⡿','⣟','⣯','⣷'] );
+					this.on("onReady", () => {
+						this.cli.stopSpinner();
+					});
+				}
 			}else{
 				// PM2
 				if (  options.node_start === "PM2" ){
@@ -845,12 +853,11 @@ module.exports = nodefony.register("kernel", function(){
 		/**
 	 	*
 	 	*	@method terminate
-         	*/
+    */
 		terminate (code){
 			if ( code === undefined ){
 				code = 0 ;
 			}
-
 			try {
 				if ( fs.existsSync( this.cacheLink ) ){
 					try {
@@ -875,7 +882,7 @@ module.exports = nodefony.register("kernel", function(){
 				this.logStreamD.close("Close debug stream\n");
 			}
 			process.nextTick( () => {
-				this.logger("Kernel Life Cycle Terminate CODE : "+code,"INFO");
+				this.logger("NODEFONY Kernel Life Cycle Terminate CODE : "+code,"INFO");
 				process.exit(code);
 			});
 			return ;

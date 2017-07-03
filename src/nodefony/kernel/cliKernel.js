@@ -150,12 +150,12 @@ module.exports = nodefony.register("cliKernel", function(){
 				syslog = this.syslog;
 			}
 			// CRITIC ERROR
-			syslog.listenWithConditions(this,{
+			syslog.listenWithConditions(this, {
 				severity:{
 					data:"CRITIC,ERROR"
 				}
 			},(pdu) => {
-				this.normalizeLog( pdu);
+				return this.normalizeLog( pdu );
 			});
 			// INFO DEBUG
 			var data ;
@@ -169,13 +169,9 @@ module.exports = nodefony.register("cliKernel", function(){
 					data:data
 				}
 			},(pdu) => {
-				if ( pdu.msgid === "SERVER WELCOME"){
-					console.log(   '\x1b[34m' + "              \x1b[0m "+ pdu.payload);
-					return ;
-				}
-				this.normalizeLog( pdu);
+				return this.normalizeLog( pdu );
 			});
-		};
+		}
 
 		// ASSETS LINK
 		assetInstall (name){

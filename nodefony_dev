@@ -39,7 +39,8 @@ process.env["MODE_START"] = "NODEFONY_DEV" ;
 
 // KERNEL
 const kernel = new nodefony.appKernel("SERVER", environment, debug, {
-		node_start:process.env["MODE_START"]
+		node_start:process.env["MODE_START"],
+		logSpinner:false
 });
 
 return kernel ;

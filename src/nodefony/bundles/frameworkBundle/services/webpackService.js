@@ -217,11 +217,11 @@ module.exports = nodefony.registerService("webpack", function(){
 					break;
 				}
 
-					var compiler =  webpack( config );
+				var compiler =  webpack( config );
 				if ( this.kernel.type === "CONSOLE" ){
 					return  compiler;
 				}
-				if ( this.sockjs && compiler ) {
+				if ( ! this.production && this.sockjs && compiler ) {
 					this.sockjs.addCompiler(  compiler, basename);
 				}
 
