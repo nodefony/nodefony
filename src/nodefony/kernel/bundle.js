@@ -139,9 +139,13 @@ module.exports = nodefony.register("Bundle", function(){
 			this.webpackService = this.get("webpack");
 			this.webpackCompiler = null ;
 			if( this.kernel.type !== "CONSOLE"){
-				this.findWebPackConfig()
+				try {
+					this.findWebPackConfig();
+				}catch(e){
+					this.logger(e, "ERROR");
+					throw e;
+				}
 			}
-
 			this.fire( "onRegister", this);
 		}
 
@@ -249,6 +253,7 @@ module.exports = nodefony.register("Bundle", function(){
 								this.locale = result[ele] ;
 							}
 						break;
+						// deprecated
 						case /^webpack$/.test(ele) :
 								try {
 									this.webPackConfig = result[ele] || null ;
@@ -360,15 +365,21 @@ module.exports = nodefony.register("Bundle", function(){
 		}
 
     	findWebPackConfig (){
+			let res = null ;
             switch(this.settings.type){
                 case "angular":
-                    var res = this.finder.result.getFile("webpack.config.js", true) ;
-                    if ( ! res ){
-                        throw new Error("Angular bundle no webpack config file : webpack.config.js ");
-                    }
+					try {
+                    	res = this.finder.result.getFile("webpack.config.js", true) ;
+                    	if ( ! res ){
+                        	throw new Error("Angular bundle no webpack config file : webpack.config.js ");
+                    	}
+                		this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this.path , path.resolve("/", this.bundleName, "dist") , this.settings.type);
+					}catch(e){
+						throw e
+					}
                 break;
                 case "react":
-                    var file =null ;
+                    let file =null ;
                     try {
                         switch (process.env.NODE_ENV){
                             case "development" :
@@ -380,20 +391,21 @@ module.exports = nodefony.register("Bundle", function(){
                         }
                         res = new nodefony.fileClass( file );
                         process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
+                		this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this.path , path.resolve("/", this.bundleName, "dist") , this.settings.type);
                     }catch(e){
-                        throw new Error("React bundle no webpack config file : "+file ) ;
+						throw e ;
                     }
                 break;
                 default:
-                    var res = this.finder.result.getFile("webpack.config.js", true) ;
-                    if ( ! res ){
-                        return ;
-                    }
-            }
-            try {
-                this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this.path , path.resolve("/", this.bundleName, "dist") , this.settings.type);
-            }catch(e){
-                throw e ;
+					try {
+	                    res = this.finder.result.getFile("webpack."+this.kernel.environment+".config.js", true) ;
+	                    if ( ! res ){
+	                        return ;
+	                    }
+						this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this.path , this.publicPath , this.settings.type);
+					}catch(e){
+						throw e ;
+					}
             }
     	}
 

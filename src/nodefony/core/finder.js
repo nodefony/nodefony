@@ -1,7 +1,7 @@
 
 module.exports = nodefony.register("finder", function(){
 
-	var jsonTree =  class jsonTree extends nodefony.fileClass {
+	const jsonTree =  class jsonTree extends nodefony.fileClass {
 		constructor (path, parent){
 			super(path);
 			this.parent = parent ;
@@ -16,7 +16,7 @@ module.exports = nodefony.register("finder", function(){
  	 *	CLASS Result
  	 *
  	 */
-	var Result = class Result {
+	const Result = class Result {
 
 		constructor (res){
 			if (res && nodefony.typeOf(res) === "array"){
@@ -56,7 +56,7 @@ module.exports = nodefony.register("finder", function(){
 		}
 
 		sortByType (){
-			var res = this.files.sort(function(a,b){
+			let res = this.files.sort(function(a,b){
 				if ( a.type.toString() > b.type.toString()) {return 1;}
 				if (  a.type.toString() < b.type.toString()) {return -1;}
 				return 0;
@@ -68,7 +68,7 @@ module.exports = nodefony.register("finder", function(){
 		}
 
 		findByNode (nodeName, tab, path){
-			var i = null ;
+			let i = null ;
 			if ( ! tab ) {
 				tab = [];
 				for ( i = 0 ; i < this.files.length ; i++ ){
@@ -93,7 +93,7 @@ module.exports = nodefony.register("finder", function(){
 
 		getDirectories (){
 			var tab = [] ;
-			for (var i = 0 ; i < this.files.length ; i++ ){
+			for (let i = 0 ; i < this.files.length ; i++ ){
 				if (this.files[i].type === "Directory") {
 					tab.push(this.files[i]);
 				}
@@ -338,7 +338,7 @@ module.exports = nodefony.register("finder", function(){
 						throw e;
 					}
 				case this.typePath === "array" :
-					for (var i = 0 ; i < Path.length ; i++){
+					for (let i = 0 ; i < Path.length ; i++){
 						try {
 							this.path.push(new this.wrapper(Path[i], null));
 						}catch(e){
@@ -369,8 +369,8 @@ module.exports = nodefony.register("finder", function(){
 		}
 
 		find ( settings ){
-			var result = new Result();
-			var extend = null ;
+			let result = new Result();
+			let extend = null ;
 			if (! settings ) {
 				extend = this.settings ;
 			}else{
@@ -387,7 +387,7 @@ module.exports = nodefony.register("finder", function(){
 			this.in(extend.path);
 			this.notificationsCenter = nodefony.notificationsCenter.create(extend);
 			try {
-				for (var i = 0 ; i < this.path.length ; i++){
+				for (let i = 0 ; i < this.path.length ; i++){
 					if (extend.json ){
 						result.json[this.path[i].name] = this.path[i];
 						find.call(this, this.path[i], result, extend.depth, extend, this.path[i] );

@@ -1,19 +1,19 @@
 require('../css/doc.css');
 
-module.exports = function (){ 
+module.exports = function (){
 
 	/*
  	 *
- 	 *	Class Bundle App client side  
+ 	 *	Class Bundle App client side
  	 *
  	 *
  	 */
 	var Documentation = class Documentation {
-		
+
 		constructor() {
-		
+
 			$("#version").change(function(ele){
-				window.location = this.value ;	
+				window.location = this.value ;
 			});
 			$("#langs").change(function(ele){
 				window.location.href = "?lang="+this.value
@@ -45,7 +45,7 @@ module.exports = function (){
 					$.ajax({
 						url: "/documentation/search",
 						data:{
-							search:mysearch	
+							search:mysearch
 						},
 						beforeSend:function(){
 							console.log("before")
@@ -60,20 +60,20 @@ module.exports = function (){
 								if ( res ){
 									text = data[link].text.replace(res[0], "<span style='background-color:yellow' >"+res[0]+"</span>" );
 								}else{
-									continue ;	
+									continue ;
 								}
 								var li = "<li class='list-group-item'>";
 								li += "<a href='"+link+"'><span style=''>" + data[link].title +"</span></a>";
-								li += "<div>  "+text+" </div>"	
+								li += "<div>  "+text+" </div>"
 								li += "</li>";
 								ele.append(li);
 							}
 							if (! text ){
 								var li = "<li class='list-group-item'>";
-								li += "<div>  No result </div>"	
+								li += "<div>  No result </div>"
 								li += "</li>";
 								ele.append(li);
-		
+
 							}
 						},
 						complete:function(){
@@ -91,9 +91,9 @@ module.exports = function (){
 					event.preventDefault()
 					return false ;
 				}
-			});	
+			});
 		}
-	
+
 
 		index (bundle, section){
 			if (bundle === "nodefony" && section === null ){
@@ -103,13 +103,13 @@ module.exports = function (){
 						//var dt = new Date( data[i].date ) ;
 						//var date = dt.toLocaleDateString() + " " + dt.toLocaleTimeString() ;
 						var sha= data[i].sha.substr(0,7);
-						var shaLink = "https://github.com/nodefony/nodefony/commit/"+sha;
+						var shaLink = "https://github.com/nodefony/nodefony-core/commit/"+sha;
 
 						var date = new Date(data[i].date).toDateString();
 						var li = "<li class='list-group-item'>";
 						li += "<span style='background-color:blue' class='badge'>"+data[i].author+"</span>" ;
 						li += "<a href='"+shaLink+"'><span style=''>" + data[i].msg +"</span></a>";
-						li += "<div> commit on "+date+" by "+data[i].author+" </div>"	
+						li += "<div> commit on "+date+" by "+data[i].author+" </div>"
 						li += "</li>";
 						ele.append(li);
 
@@ -137,7 +137,7 @@ module.exports = function (){
 								li += "<span style='cursor:context-menu' title="+ data[i].path +"> " + stage.basename ( data[i].path ) +"</span>";
 						}
 						li += "</li>";
-						ele.append(li);	
+						ele.append(li);
 					}
 				}).fail(function() {
 					console.log( "ERROR" );
@@ -150,7 +150,7 @@ module.exports = function (){
 						var li = "<li class='list-group-item'>";
 						li += "<span style='background-color:blue' class='badge'>#"+data[i].number+"</span>" ;
 						li += "<a href='https://github.com/nodefony/nodefony/issues/"+data[i].number+"'><span style=''>" + data[i].title +"</span></a>";
-						li += "<div> opened on "+date+" by "+data[i].user.login+" </div>"	
+						li += "<div> opened on "+date+" by "+data[i].user.login+" </div>"
 						li += "</li>";
 						ele.append(li);
 					}

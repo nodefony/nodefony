@@ -14,7 +14,7 @@ module.exports = nodefony.registerService("webpack", function(){
 
 	var babelRule  = function(basename){
 		return {
-      test: new RegExp("\.es6$"),
+      		test: new RegExp("\.es6$"),
 			exclude: new RegExp("node_modules"),
 			use: [
 				{
@@ -142,14 +142,16 @@ module.exports = nodefony.registerService("webpack", function(){
 				}catch(e){
 					this.logger(e.message, "WARNING");
 				}
-				this.kernel.listen(this, "onTerminate", () =>{
-					var res = fs.readdirSync(this.pathCache);
-					if ( res && res.length ){
-						for ( var i = 0 ; i < res.length ; i++ ){
-							fs.rmdirSync( path.resolve (this.pathCache ,res[i] ) );
+				if ( ! this.production ){
+					this.kernel.listen(this, "onTerminate", () =>{
+						var res = fs.readdirSync(this.pathCache);
+						if ( res && res.length ){
+							for ( var i = 0 ; i < res.length ; i++ ){
+								fs.rmdirSync( path.resolve (this.pathCache ,res[i] ) );
+							}
 						}
-					}
-				});
+					});
+				}
 			}
 			this.sockjs =  this.get("sockjs") ;
 		}
@@ -193,10 +195,10 @@ module.exports = nodefony.registerService("webpack", function(){
 			var config = null ;
 			var basename = path.basename(Path);
 			try {
-				shell.cd(Path);
-				config = require(file.path );
 				switch (type){
 					case "angular" :
+						shell.cd(Path);
+						config = require(file.path );
 						config.output.path = path.resolve("Resources", "public", "dist") ;
 						if ( publicPath ){
 							config.output.publicPath = publicPath+"/" ;
@@ -208,6 +210,8 @@ module.exports = nodefony.registerService("webpack", function(){
 						}
 					break;
 					case "react" :
+						shell.cd(Path);
+						config = require(file.path );
 						config.output.path = path.resolve("Resources", "public", "dist") ;
 						if ( publicPath ){
 							config.output.publicPath = publicPath+"/" ;
@@ -215,6 +219,8 @@ module.exports = nodefony.registerService("webpack", function(){
 							config.output.publicPath =  "/"+path.basename(file.dirName)+"/dist/" ;
 						}
 					break;
+					default :
+						config = require( file.path );
 				}
 
 				var compiler =  webpack( config );
@@ -233,9 +239,7 @@ module.exports = nodefony.registerService("webpack", function(){
 			if ( this.production ){
 				watch = false ;
 			}
-
 			try {
-
 				var idfile = basename+"_"+file.name ;
 				if ( watch ){
 					this.logger( "WEBPACK Config  : "+ file.path +" WATCHING ENTRY POINT : \n" + util.inspect(config.entry) , "DEBUG" );
@@ -285,6 +289,7 @@ module.exports = nodefony.registerService("webpack", function(){
 				}
 			}
 
+			//console.log(myConf)
 			try {
 				var compiler =  webpack( myConf );
 				if ( this.kernel.type === "CONSOLE" ){
@@ -295,7 +300,7 @@ module.exports = nodefony.registerService("webpack", function(){
 			}
 
 			var sokjsCompiler = null ;
-			if ( this.sockjs && compiler ) {
+			if ( ! this.production && this.sockjs && compiler ) {
 				sokjsCompiler = this.sockjs.addCompiler( compiler, basename );
 			}
 

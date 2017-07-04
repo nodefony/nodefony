@@ -13,7 +13,7 @@ module.exports = nodefony.register("fileClass", function(){
 		if ( abs ){
 			return myPath ;
 		}else{
-			return process.cwd()+"/"+myPath ;
+			return path.resolve( process.cwd(), myPath ) ;
 		}
 	}
 
@@ -32,16 +32,15 @@ module.exports = nodefony.register("fileClass", function(){
  	 *
  	 *
  	 */
-	var regAbsolute = /^\//;
-
 	var File = class File {
 		constructor(Path){
 			if (Path){
+				Path = checkPath(Path);
 				this.stats =  fs.lstatSync(Path);
 				this.type = this.checkType();
 				if ( this.stats.isSymbolicLink() ){
 					var res = fs.readlinkSync( Path ) ;
-					this.path = checkPath(Path, res) ;
+					this.path = Path ;
 				}else{
 					this.path = this.getRealpath(Path) ;
 				}
@@ -100,8 +99,8 @@ module.exports = nodefony.register("fileClass", function(){
 			return mime.charsets.lookup(mimeType || this.mimeType );
 		}
 
-		getRealpath (Path, cache){
-			return  fs.realpathSync(Path, cache);
+		getRealpath (Path, options){
+			return  fs.realpathSync(Path, options );
 		}
 
 		matchName (ele){

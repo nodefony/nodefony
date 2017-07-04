@@ -4,7 +4,7 @@ const Module = require("module");
 
 module.exports = function(){
 
-	// Create Context copy library in this  see load runInThisContext
+	// Create Context copy library in context  see load runInThisContext
 	const context = vm.createContext(this)
 	context.nodefony = require("./core");
 	context.require = require;
@@ -13,7 +13,7 @@ module.exports = function(){
 	context.__dirname = __dirname ;
 	context.__filename = __filename ;
 
-  context.path = require("path");
+  	context.path = require("path");
 	context.fs = require("fs")
 	context.yaml = require("js-yaml");
 	context.util = require('util');

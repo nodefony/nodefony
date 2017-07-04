@@ -12,7 +12,13 @@
     "version": "changelog nodefony all -m"
   },
   "keywords": [
-    "Node.js"
+    "node.js",
+    "node",
+    "nodefony",
+    "framework",
+    "webpack",
+    "realtime",
+    "websocket"
   ],
   "repository": {
     "type": "git",

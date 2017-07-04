@@ -1,6 +1,6 @@
 require("../clean/js/jquery.parallax-1.1.3.js");
 require("../clean/js/jquery.sticky.js");
-require("../clean/js/smoothscroll.js");
+//require("../clean/js/smoothscroll.js");
 const WOW = require("../clean/js/wow.min.js").WOW;
 
 //css
@@ -98,10 +98,10 @@ module.exports = function (){
 				topSpacing: 0
 			});
 
-			$('body').scrollspy({
+			/*$('body').scrollspy({
 				target: '.navbar-custom',
 				offset: 70
-			})
+			})*/
 
 
 			/* ---------------------------------------------- /*

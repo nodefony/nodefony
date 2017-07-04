@@ -23,9 +23,11 @@
 
 
 ########## {{projectName}} CONFIG BUNDLE  {{ bundleName }}  ############
-name :				{{ bundleName }}
-version:			"1.0.0"
-locale :			{{ local }}
+name        : {{ bundleName }}
+version     : "1.0.0"
+type        : "nodefony"
+locale      : {{ local }}
+
 
 #
 #  WATCHERS
@@ -45,18 +47,6 @@ locale :			{{ local }}
 #
 watch:				true
 
-#
-#  WEBPACK CONFIG
-#
-webpack:
-  entry:
-    {{ name }}:				"./js/{{ name }}.js"
-  watch:                        true
-  devtool:                      "source-map"
-  output:
-    filename:                   "./assets/js/[name].js"
-    library:                    "[name]"
-    libraryTarget:              "umd"
 
 #
 #

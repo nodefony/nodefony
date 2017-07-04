@@ -183,6 +183,29 @@ module.exports = nodefony.registerCommand("generate",function(){
 		};
 	};
 
+	var webpack = function(obj, type, bundleType){
+		return {
+			name:"webpack",
+			type:"directory",
+			childs:[{
+				name:"webpack.common.js",
+				type:"file",
+				skeleton:path.resolve( this.kernel.autoLoader.dirname,"bundles/frameworkBundle/Command/skeletons/webpack/webpack.common.skeleton" ),
+				params:obj
+			},{
+				name:"webpack.dev.config.js",
+				type:"file",
+				skeleton:path.resolve( this.kernel.autoLoader.dirname,"bundles/frameworkBundle/Command/skeletons/webpack/webpack.dev.skeleton" ),
+				params:obj
+			},{
+				name:"webpack.prod.config.js",
+				type:"file",
+				skeleton:path.resolve( this.kernel.autoLoader.dirname,"bundles/frameworkBundle/Command/skeletons/webpack/webpack.prod.skeleton" ),
+				params:obj
+			}]
+		}
+	};
+
 	var Resources = function(name, type, location, bundleType){
 		var Name = regBundle.exec(name)[1];
 		var param = {
@@ -213,7 +236,9 @@ module.exports = nodefony.registerCommand("generate",function(){
 
 
 					},
-					routing.call(this, param, type, bundleType)
+					routing.call(this, param, type, bundleType),
+					webpack.call(this, param, type, bundleType)
+
 				]
 			},
 			public.call(this, param),
