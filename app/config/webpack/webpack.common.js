@@ -1,17 +1,15 @@
 const path = require("path");
 const webpack = require('webpack');
 const ExtractTextPluginCss = require('extract-text-webpack-plugin');
-const public = path.resolve(__dirname, "..", "..", "public");
-const bundleName = path.basename( path.resolve( __dirname, "..", "..", "..") );
+const public = path.resolve(__dirname, "..", "..","Resources", "public");
+const bundleName = path.basename( path.resolve( __dirname, "..", "..") );
+const webpackDevClient = "webpack-dev-server/client?https://"+kernel.hostHttps+"/";
 
 module.exports = {
     context     : public ,
     target      : "web",
     entry       : {
-      layout    : "./js/layout.js" ,
-      demo      : "./js/index.js",
-      finder    : "./js/finder/finder.js",
-      login     : "./js/login.js"
+      app       : ["./js/app.js", webpackDevClient ]
     },
     output      : {
         path    : public,
@@ -19,13 +17,10 @@ module.exports = {
         library:  "[name]",
         libraryTarget: "umd"
     },
-    externals   : {
-        jquery  : "jQuery"
-    },
     module      : {
         rules: [{
             // BABEL TRANSCODE
-          	test: new RegExp("\.es6$"),
+          	test: new RegExp("\.es6$|\.js$"),
     		exclude: new RegExp("node_modules"),
     		use: [
 				{
@@ -77,12 +72,7 @@ module.exports = {
     },
     plugins: [
         new ExtractTextPluginCss( {
-			       filename:"./assets/css/[name].css",
-		    }),
-        new webpack.ProvidePlugin({
-            "$":			"jquery",
-            "jQuery":		"jquery",
-            "window.jQuery":	"jquery"
-        })
+			filename:"./assets/css/[name].css",
+		})
     ]
 };

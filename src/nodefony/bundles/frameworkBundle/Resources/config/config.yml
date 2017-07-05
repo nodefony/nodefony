@@ -2,7 +2,6 @@
 name :				frameworkBundle
 version :			"2.0.0-beta"
 
-
 #
 #  WATCHERS
 #
@@ -19,15 +18,3 @@ version :			"2.0.0-beta"
 #        translations:          true
 #
 watch:                          false
-
-
-# webpack assets root path is ./Resources/public
-webpack:
-  entry:
-    main:                       "./js/framework.js"
-  watch:                        false
-  devtool:                      "source-map"
-  output:
-    filename:                   "./assets/js/framework.js"
-    library:                    "framework"
-    libraryTarget:              "umd"

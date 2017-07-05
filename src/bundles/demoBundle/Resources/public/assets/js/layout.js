@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
+		module.exports = factory(require("jQuery"));
 	else if(typeof define === 'function' && define.amd)
-		define([], factory);
+		define(["jQuery"], factory);
 	else if(typeof exports === 'object')
-		exports["layout"] = factory();
+		exports["layout"] = factory(require("jQuery"));
 	else
-		root["layout"] = factory();
-})(this, function() {
+		root["layout"] = factory(root["jQuery"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_0__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -43,6 +43,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -70,25 +73,22 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 16);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, exports, __webpack_require__) {
+/******/ ({
 
-__webpack_require__(1);
-
-//css
-__webpack_require__(2);
-__webpack_require__( 3);
-
-
-/***/ }),
-/* 1 */
+/***/ 0:
 /***/ (function(module, exports) {
 
-/*
+module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
+
+/***/ }),
+
+/***/ 13:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery) {/*
  * Gritter for jQuery
  * http://www.boedesign.com/
  *
@@ -508,20 +508,36 @@ __webpack_require__( 3);
 	
 })(jQuery);
 
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 2 */
+
+/***/ 16:
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(13);
+
+//css
+__webpack_require__(3);
+__webpack_require__( 7);
+
+
+/***/ }),
+
+/***/ 3:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 3 */
+
+/***/ 7:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ })
-/******/ ]);
+
+/******/ });
 });
 //# sourceMappingURL=layout.js.map

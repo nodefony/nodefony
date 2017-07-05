@@ -235,7 +235,7 @@ module.exports = nodefony.registerService("webpack", function(){
 				shell.cd(this.kernel.rootDir);
 				throw e ;
 			}
-			var watch = true ;
+			var watch = config.watch ;
 			if ( this.production ){
 				watch = false ;
 			}

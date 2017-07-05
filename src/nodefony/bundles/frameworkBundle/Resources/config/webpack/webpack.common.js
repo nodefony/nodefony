@@ -1,4 +1,4 @@
-const path = require("path");
+  const path = require("path");
 const webpack = require('webpack');
 const ExtractTextPluginCss = require('extract-text-webpack-plugin');
 const public = path.resolve(__dirname, "..", "..", "public");
@@ -8,10 +8,7 @@ module.exports = {
     context     : public ,
     target      : "web",
     entry       : {
-      layout    : "./js/layout.js" ,
-      demo      : "./js/index.js",
-      finder    : "./js/finder/finder.js",
-      login     : "./js/login.js"
+      framework : "./js/framework.js"
     },
     output      : {
         path    : public,
@@ -19,13 +16,10 @@ module.exports = {
         library:  "[name]",
         libraryTarget: "umd"
     },
-    externals   : {
-        jquery  : "jQuery"
-    },
     module      : {
         rules: [{
             // BABEL TRANSCODE
-          	test: new RegExp("\.es6$"),
+          	test: new RegExp("\.es6$|\.js$"),
     		exclude: new RegExp("node_modules"),
     		use: [
 				{
@@ -76,13 +70,8 @@ module.exports = {
     	}]
     },
     plugins: [
-        new ExtractTextPluginCss( {
-			       filename:"./assets/css/[name].css",
-		    }),
-        new webpack.ProvidePlugin({
-            "$":			"jquery",
-            "jQuery":		"jquery",
-            "window.jQuery":	"jquery"
-        })
+      new ExtractTextPluginCss( {
+			  filename:"./assets/css/[name].css",
+		  })
     ]
 };

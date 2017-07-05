@@ -47,24 +47,7 @@ lang:
 #        views:			true
 #        translations:          true
 #
-watch:				true
-
-
-##########
-#
-#  WEBPACK
-#
-# Assets root path is ./Resources/public
-#
-webpack:
-  entry:
-    app:                       "./js/app.js"
-  watch:                        false
-  devtool:                      "source-map"
-  output:
-    filename:                   "./assets/js/[name].js"
-    library:                    "[name]"
-    libraryTarget:              "umd"
+watch:				false
 
 
 ##################################
@@ -124,7 +107,7 @@ sequelizeBundle:
 #       upload
 #       websocket server
 #       websocket secure server
-#       sockjs dev server ( webpack dev server like WDS) 
+#       sockjs dev server ( webpack dev server like WDS)
 #
 #
 httpBundle:

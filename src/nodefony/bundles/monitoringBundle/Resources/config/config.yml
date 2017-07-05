@@ -33,24 +33,6 @@ debugBar:           true
 #
 watch:                          ~
 
-#
-#  WEBPACK
-#
-# Assets root path is ./Resources/public
-#
-webpack:
-  entry:
-    monitoring:                 "./js/monitoring.js"
-    debugBar:                   "./js/debugBar.js"
-  watch:                        false
-  devtool:                      "source-map"
-  externals:
-    jquery:                     "jQuery"
-  output:
-    filename:                   "./assets/js/[name].js"
-    library:                    "[name]"
-    libraryTarget:              "umd"
-
 realTimeBundle:
   services:
     monitoring:

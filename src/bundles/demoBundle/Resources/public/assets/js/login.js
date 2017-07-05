@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
+		module.exports = factory(require("jQuery"));
 	else if(typeof define === 'function' && define.amd)
-		define([], factory);
+		define(["jQuery"], factory);
 	else if(typeof exports === 'object')
-		exports["login"] = factory();
+		exports["login"] = factory(require("jQuery"));
 	else
-		root["login"] = factory();
-})(this, function() {
+		root["login"] = factory(root["jQuery"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_0__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -43,6 +43,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -70,15 +73,22 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
+/******/ 	return __webpack_require__(__webpack_require__.s = 17);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 18:
+/***/ 0:
 /***/ (function(module, exports) {
 
-module.exports = function (){
+module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
+
+/***/ }),
+
+/***/ 17:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {module.exports = function (){
 
 	var handleLoginPageChangeBackground = function() {
 		$('[data-click="change-bg"]').on('click', function() {
@@ -204,6 +214,7 @@ module.exports = function (){
 	return kernel ;
 }();
 
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ })
 

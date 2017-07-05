@@ -53,18 +53,5 @@ locale :			en_en
 watch:                          ~
 
 
-webpack:
-  entry:
-    main:                       "./js/documentation.js"
-  watch:                        false
-  devtool:                      "source-map"
-  output:
-    filename:                   "./assets/js/documentation.js"
-    library:                    "documentation"
-    libraryTarget:              "umd"
-
-
-
-
 #elasticSearch:
 #  host:                         "127.0.0.1:9200"
