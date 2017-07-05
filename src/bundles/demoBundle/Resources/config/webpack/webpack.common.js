@@ -17,10 +17,10 @@ module.exports = {
         path    : public,
         filename: "./assets/js/[name].js",
         library:  "[name]",
-        libraryTarget: "umd"
+        libraryTarget: "var"
     },
-    externals   : {
-        jquery  : "jQuery"
+    externals:{
+        "jquery": "jQuery" 
     },
     module      : {
         rules: [{
@@ -77,12 +77,7 @@ module.exports = {
     },
     plugins: [
         new ExtractTextPluginCss( {
-			       filename:"./assets/css/[name].css",
-		    }),
-        new webpack.ProvidePlugin({
-            "$":			"jquery",
-            "jQuery":		"jquery",
-            "window.jQuery":	"jquery"
-        })
+	           filename:"./assets/css/[name].css",
+		})
     ]
 };

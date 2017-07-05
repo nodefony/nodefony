@@ -71,7 +71,7 @@ module.exports = {
     },
     plugins: [
       new ExtractTextPluginCss( {
-			  filename:"./assets/css/[name].css",
-		  })
+	    filename:"./assets/css/[name].css",
+	  })
     ]
 };

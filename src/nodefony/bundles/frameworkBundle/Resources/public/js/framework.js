@@ -8,7 +8,8 @@ require("bootstrap");
 require("../less/style.less");
 
 module.exports = function (){
-	this["stage"] = stage ;
 
+	window["stage"] = stage ;
+	
 	return null;
 }();

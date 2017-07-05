@@ -3,18 +3,16 @@
  *	ENTRY POINT WEBPACK APP
  *
  */
-var stage = require("nodefony-stage");
-
+const stage = require("nodefony-stage");
 require("bootstrap");
 require('bootstrap/dist/css/bootstrap.css');
 require('font-awesome/css/font-awesome.css');
-
 require("../css/app.css");
+
 module.exports = function (){
 
 	// expose stage in gobal window object
-	this["stage"] = stage ;
-
+	window["stage"] = stage ;
 	/*
  	 *
  	 *	Class Bundle App client side
@@ -22,10 +20,7 @@ module.exports = function (){
  	 *
  	 */
 	var App = class App {
-
 		constructor() {}
-
 	};
-
 	return new App();
 }();

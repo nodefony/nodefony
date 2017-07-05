@@ -227,9 +227,6 @@ module.exports = nodefony.registerService("webpack", function(){
 				if ( this.kernel.type === "CONSOLE" ){
 					return  compiler;
 				}
-				if ( ! this.production && this.sockjs && compiler ) {
-					this.sockjs.addCompiler(  compiler, basename);
-				}
 
 			}catch(e){
 				shell.cd(this.kernel.rootDir);
@@ -238,6 +235,10 @@ module.exports = nodefony.registerService("webpack", function(){
 			var watch = config.watch ;
 			if ( this.production ){
 				watch = false ;
+			}else{
+				if ( watch && this.sockjs && compiler ){
+					this.sockjs.addCompiler(  compiler, basename);
+				}
 			}
 			try {
 				var idfile = basename+"_"+file.name ;
@@ -254,13 +255,7 @@ module.exports = nodefony.registerService("webpack", function(){
 						});
 					});
 				}else{
-					var isCore = null ;
-					try {
-						isCore = new nodefony.fileClass(path.resolve(this.kernel.rootDir + "/.core") );
-					}catch(e){
-						isCore = false ;
-					}
-					if ( (this.kernel.environment === "dev" ) && (basename in this.kernel.bundlesCore) && ( ! isCore ) ){
+					if ( (this.kernel.environment === "dev" ) && (basename in this.kernel.bundlesCore) && ( ! this.kernel.isCore ) ){
 						return compiler ;
 					}
 					this.logger( "WEBPACK BUNDLE : "+ basename +" COMPILE ENTRY POINT : \n" + util.inspect(config.entry)  );

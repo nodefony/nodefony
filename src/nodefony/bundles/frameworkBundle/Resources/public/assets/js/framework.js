@@ -33142,7 +33142,8 @@ __webpack_require__(0);
 __webpack_require__(1);
 
 module.exports = function () {
-  this["stage"] = stage;
+
+  window["stage"] = stage;
 
   return null;
 }();

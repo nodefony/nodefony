@@ -17,13 +17,10 @@ module.exports = {
         library:  "[name]",
         libraryTarget: "umd"
     },
-    externals:{
-      jquery:                     "jQuery"
-    },
     module      : {
         rules: [{
             // BABEL TRANSCODE
-          	test: new RegExp("\.es6$|\.js$"),
+          	test: new RegExp("\.es6$"),
     		exclude: new RegExp("node_modules"),
     		use: [
 				{

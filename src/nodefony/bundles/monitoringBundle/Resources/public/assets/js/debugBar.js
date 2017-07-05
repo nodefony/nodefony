@@ -73,125 +73,129 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 13);
+/******/ 	return __webpack_require__(__webpack_require__.s = 25);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 10:
+/***/ 2:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 13:
+/***/ 25:
 /***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /*
  *
  *	ENTRY POINT WEBPACK debugBar
  *
  */
-__webpack_require__(10);
+__webpack_require__(2);
 
-module.exports = function () {
-
-	var nativeBind = function () {
-		return !!Function.prototype.bind;
+module.exports = function (){
+	
+	var nativeBind = function(){
+		return (!! Function.prototype.bind)  
 	}();
 
-	if (!nativeBind) {
+	
+	if ( ! nativeBind ){
 		// bind tools
-		var setContext = function () {
+		var setContext = function(){
 
-			var mergeArg = function () {
-				if (Array.prototype.unshift) {
-					return function (tab, args) {
+			var mergeArg = function(){
+				if ( Array.prototype.unshift ){
+					return function(tab, args){
 						Array.prototype.unshift.apply(tab, args);
-					};
-				}
-				return function (tab, args) {
-					for (var i = args.length; i > 0; i--) {
-						Array.prototype.splice.call(tab, 0, 0, args[i - 1]);
 					}
-				};
-			}();
-
-			return function () {
+				}
+				return function(tab, args){
+					for ( var i = args.length ; i > 0; i-- ){
+						Array.prototype.splice.call(tab, 0, 0, args[i-1] );
+					}
+				}
+			}()
+			
+			return function(){
 				var func = this;
 				var context = Array.prototype.shift.call(arguments);
 				var args = arguments;
-				return function () {
+				return function (){
 					mergeArg(arguments, args);
-					return func.apply(context, arguments);
-				};
-			};
+					return func.apply(context, arguments)
+				}
+			}
 		}();
 		Function.prototype.bind = setContext;
 	}
 
-	var listen = function () {
-		if (document.addEventListener) {
-			return function (event, handler, capture) {
+	var listen = function(){
+		if(document.addEventListener){
+			return function(event, handler, capture){
 				this.addEventListener(event, handler, capture || false);
-				return handler;
-			};
+				return handler ;
+			}
 		}
-		return function (event, handler, capture) {
-			this.attachEvent('on' + event, handler);
-			return handler;
-		};
-	}();
+		return function(event, handler, capture){
+			this.attachEvent('on' + event, handler);			
+			return handler ;
+		}
+	}();	
 
-	var trim = function () {
+
+
+	var trim = function(){
 		// inspired  by jquery
 		// Used for trimming whitespace
-		var trimLeft = /^\s+/;
-		var trimRight = /\s+$/;
+		var trimLeft = /^\s+/ ;
+		var trimRight = /\s+$/ ;
 
-		if (String.prototype.trim) return function (text) {
-			return text == null ? "" : String.prototype.trim.call(text);
-		};
-		return function (text) {
-			return text == null ? "" : text.toString().replace(trimLeft, "").replace(trimRight, "");
-		};
+		if ( String.prototype.trim )
+			return function(text){
+				return text == null ?
+				"" :
+				String.prototype.trim.call(text);
+			}
+		return function(text){
+			return text == null ?
+				"" :
+				text.toString().replace( trimLeft, "" ).replace( trimRight, "" );
+		}
 	}();
 
+
 	// CLASS CSS
-	var addClass = function addClass(element, value) {
-		var classNames = (value || "").split(/\s+/);
-		if (element.nodeType === 1) {
-			if (!element.className) {
+	var addClass = function(element, value){
+		var classNames = (value || "").split( /\s+/ );
+		if ( element.nodeType === 1 ) {
+			if ( !element.className ) {
 				element.className = value;
 			} else {
-				var className = " " + element.className + " ",
-				    setClass = element.className;
-				for (var c = 0, cl = classNames.length; c < cl; c++) {
-					if (className.indexOf(" " + classNames[c] + " ") < 0) {
+				var className = " " + element.className + " ", setClass = element.className;
+				for ( var c = 0, cl = classNames.length; c < cl; c++ ) {
+					if ( className.indexOf( " " + classNames[c] + " " ) < 0 ) {
 						setClass += " " + classNames[c];
 					}
 				}
-				element.className = trim(setClass);
+				element.className = trim( setClass );
 			}
 		}
-	};
 
-	var removeClass = function removeClass(element, value) {
-		if (value && typeof value === "string" || value === undefined) {
+	};
+	
+	var removeClass = function(element, value){
+		if ( (value && typeof value === "string") || value === undefined ) {
 			var classNames = (value || "").split(/\s+/);
-			if (element.nodeType === 1 && element.className) {
-				if (value) {
+			if ( element.nodeType === 1 && element.className ) {
+				if ( value ) {
 					var className = (" " + element.className + " ").replace(/[\n\t]/g, " ");
-					for (var c = 0, cl = classNames.length; c < cl; c++) {
+					for ( var c = 0, cl = classNames.length; c < cl; c++ ) {
 						className = className.replace(" " + classNames[c] + " ", " ");
 					}
-					element.className = trim(className);
+					element.className = trim( className );
 				} else {
 					element.className = "";
 				}
@@ -200,76 +204,83 @@ module.exports = function () {
 	};
 
 	// HTML5 Storage
-	var browserStorage = function browserStorage(type) {
-		if (type === "local") this.data = window.localStorage;else this.data = window.sessionStorage;
+	var browserStorage = function(type){
+		if (type === "local")
+			this.data =  window.localStorage;
+		else
+			this.data =  window.sessionStorage;
 	};
-	browserStorage.prototype.get = function (key) {
+	browserStorage.prototype.get = function(key){
 		var ele = this.data.getItem(key);
-		if (ele === "" || ele === null || ele === undefined) return null;
-		if (ele && (typeof ele === "undefined" ? "undefined" : _typeof(ele)) === "object") return JSON.parse(ele.value);
+		if ( ele === "" || ele === null || ele === undefined ) return null;
+		if ( ele && typeof ele === "object")
+			return JSON.parse(ele.value);
 		return JSON.parse(ele);
 	};
-	browserStorage.prototype.set = function (key, value) {
+	browserStorage.prototype.set = function(key, value ){
 		return this.data.setItem(key, JSON.stringify(value));
 	};
-	browserStorage.prototype.unset = function (key) {
+	browserStorage.prototype.unset = function(key){
 		return this.data.removeItem(key);
 	};
-	browserStorage.prototype.clear = function () {
+	browserStorage.prototype.clear = function(){
 		return this.data.clear();
 	};
-	browserStorage.prototype.each = function () {
+	browserStorage.prototype.each = function(){
 		//TODO
 	};
 
 	// EVENTS LOAD 
-	var load = function load() {
+	var load = function(){
 		this.debugbar = document.getElementById("nodefony-container");
 		this.smallContainer = document.getElementById("nodefony-small");
 		this.nodefonyClose = document.getElementById("nodefonyClose");
 
 		var storage = new browserStorage("local");
-		var state = storage.get("nodefony_debug");
-		if (state === false) {
-			removeClass(this.smallContainer, "hidden");
-			addClass(this.debugbar, "hidden");
+		var state = storage.get("nodefony_debug") ;
+		if ( state === false){
+			removeClass( this.smallContainer, "hidden" );   
+			addClass( this.debugbar, "hidden" );
 		}
 
-		this.listen(this.nodefonyClose, "click", function (event) {
+		this.listen(this.nodefonyClose, "click", function(event){
 			//var ev = new coreEvent(event);
-			removeClass(this.smallContainer, "hidden");
-			addClass(this.debugbar, "hidden");
-			storage.set("nodefony_debug", false);
+			removeClass( this.smallContainer, "hidden" );	
+			addClass( this.debugbar, "hidden" );	
+			storage.set("nodefony_debug",false);
 			//ev.stopPropagation();
-		}.bind(this));
+		}.bind(this))
 
-		this.listen(this.smallContainer, "click", function (event) {
+		this.listen(this.smallContainer, "click", function(event){
 			//var ev = new coreEvent(event);
-			removeClass(this.debugbar, "hidden");
-			addClass(this.smallContainer, "hidden");
-			storage.set("nodefony_debug", true);
+			removeClass(  this.debugbar, "hidden" )	;
+			addClass( this.smallContainer, "hidden" );
+			storage.set("nodefony_debug",true);
 			//ev.stopPropagation();	
-		}.bind(this));
+		}.bind(this))
 	};
 
-	var Nodefony = function Nodefony() {
-		this.listen = function (element, event, handler, capture) {
-			if (element) {
-				return listen.call(element, event, handler, capture);
+
+	var Nodefony = function(){
+		this.listen = function(element, event, handler, capture){
+			if (element){
+				return 	listen.call(element, event, handler, capture)	
 			}
-		};
+		}; 
 
 		if (window.addEventListener) {
-			window.addEventListener("load", load.bind(this), false);
+			window.addEventListener("load", load.bind(this) , false);
 		} else {
-			window.attachEvent("onload", load.bind(this));
-		}
+			window.attachEvent("onload", load.bind(this) );
+		}	
+
 	};
 
 	var nodefony = new Nodefony();
-	window["nodefony"] = nodefony;
-	return nodefony;
+	window["nodefony"] = nodefony ;
+	return nodefony ;
 }();
+
 
 /***/ })
 

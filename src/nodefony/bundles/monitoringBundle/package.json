@@ -1,8 +1,9 @@
 {
 	"name": "MONITORING",
-	"version": "1.0",
-	"description": " ",
+	"version": "1.0.0",
+	"description": "nodefony monitoring",
 	"contributors": [],
+	"private": true,
 	"scripts": {},
 	"keywords": [
 		"nodefony",

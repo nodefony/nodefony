@@ -1,14 +1,5 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("jQuery"));
-	else if(typeof define === 'function' && define.amd)
-		define(["jQuery"], factory);
-	else if(typeof exports === 'object')
-		exports["login"] = factory(require("jQuery"));
-	else
-		root["login"] = factory(root["jQuery"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_0__) {
-return /******/ (function(modules) { // webpackBootstrap
+var login =
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -73,22 +64,15 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 17);
+/******/ 	return __webpack_require__(__webpack_require__.s = 16);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 0:
+/***/ 16:
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
-
-/***/ }),
-
-/***/ 17:
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function($) {module.exports = function (){
+module.exports = function (){
 
 	var handleLoginPageChangeBackground = function() {
 		$('[data-click="change-bg"]').on('click', function() {
@@ -214,10 +198,8 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
 	return kernel ;
 }();
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ })
 
 /******/ });
-});
 //# sourceMappingURL=login.js.map

@@ -90,6 +90,11 @@ module.exports = nodefony.register("kernel", function(){
 			this.type = type;
 			this.bundles = {};
 			this.bundlesCore = bundlesCore ;
+			try {
+				this.isCore = new nodefony.fileClass(path.resolve(this.rootDir + "/.core") );
+			}catch(e){
+				this.isCore = false ;
+			}
 
 			if ( environment in defaultEnvEnable ){
 				switch ( environment ){

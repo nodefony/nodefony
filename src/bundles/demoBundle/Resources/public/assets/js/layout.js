@@ -1,14 +1,5 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("jQuery"));
-	else if(typeof define === 'function' && define.amd)
-		define(["jQuery"], factory);
-	else if(typeof exports === 'object')
-		exports["layout"] = factory(require("jQuery"));
-	else
-		root["layout"] = factory(root["jQuery"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_0__) {
-return /******/ (function(modules) { // webpackBootstrap
+var layout =
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -73,22 +64,15 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 0:
+/***/ 12:
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
-
-/***/ }),
-
-/***/ 13:
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(jQuery) {/*
+/*
  * Gritter for jQuery
  * http://www.boedesign.com/
  *
@@ -508,30 +492,29 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
 	
 })(jQuery);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 
-/***/ 16:
+/***/ 15:
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(13);
+__webpack_require__(12);
 
 //css
-__webpack_require__(3);
-__webpack_require__( 7);
+__webpack_require__(2);
+__webpack_require__( 6);
 
 
 /***/ }),
 
-/***/ 3:
+/***/ 2:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 7:
+/***/ 6:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -539,5 +522,4 @@ __webpack_require__( 7);
 /***/ })
 
 /******/ });
-});
 //# sourceMappingURL=layout.js.map

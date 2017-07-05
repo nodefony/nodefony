@@ -99,19 +99,12 @@ module.exports = nodefony.register("console", function(){
 								try {
 									if ( process.argv[2] && process.argv[2] === "npm:install" ){
 										var name = this.getBundleName(file.name);
-										switch( name ){
-											case "http":
-											case "framework":
-											case "assetic":
-											case "security":
-											case "sequelize":
-											case "realTime":
-											case "monitoring":
-											case "documentation":
-											case "unitTest":
-											break;
-											default:
+										if ( file.shortName in this.bundlesCore ){
+											if ( this.isCore ){
 												this.installPackage(name, file);
+											}
+										}else{
+											this.installPackage(name, file);
 										}
 									}else{
 										this.loadBundle( file);

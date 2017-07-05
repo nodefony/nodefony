@@ -2,7 +2,7 @@
 
 {{trans_default_domain("doc")}}
 
-{% block description %} 
+{% block description %}
 	<meta name="description" content="Nodefony Documentation {{ version }}">
 {% endblock %}
 
@@ -26,13 +26,12 @@
 			{% endif %}
 		{% endif %}
 	{% endif %}
-	
+
 {% endblock %}
 
 
 {% block stylesheets %}
 
-	{{ parent() }}
 	
 	<link rel="stylesheet" href="/documentationBundle/assets/css/documentation.css" />
 
@@ -41,17 +40,16 @@
 
 {% block javascripts %}
 
-	{{ parent() }}
 
 	<script type="text/javascript" src="/documentationBundle/assets/js/documentation.js"></script>
 
-	<script> 
+	<script>
 		var bundle =  "{{ bundle }}" ;
 		var section = "{{section }}" || null  ;
-		documentation.index( bundle , section );	
+		documentation.index( bundle , section );
 	</script>
 
-	
+
 {% endblock %}
 
 
@@ -68,8 +66,8 @@
       </div>
       <div class="modal-body scroll-wrap">
 	<ul id="search" class="list-group">
-		<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>							
-	</ul> 
+		<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+	</ul>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -123,8 +121,8 @@
 						{% if ver == version %}
 							<option value="{{ver}}" selected class="active" >{{ver}}</option>
 						{% else %}
-							
-							<option value="{{path('documentation-version',{version:ver,bundle:bundle})}}" >{{ver}}</option> 
+
+							<option value="{{path('documentation-version',{version:ver,bundle:bundle})}}" >{{ver}}</option>
 						{% endif %}
 					{% endfor %}
 				   </select>
@@ -137,11 +135,11 @@
 </nav>
 
 <div class="container-fluid" style="padding-top: 70px;padding-bottom: 70px">
-		
+
 
 	<div class="row">
 		{% if bundle == "nodefony" and  section == null %}
-			
+
 			<div class="col-md-12 ">
 				{% block readme %}
 					<div class="container">
@@ -154,12 +152,12 @@
 				{% endblock %}
 
 				<hr style="margin-top:100px">
-				
+
 				<div class="row-fluid m-t-xl">
 
 					<!--div class="col-md-4">
 						<div class="panel panel-success">
-							<div class="panel-heading">Local Git Status 
+							<div class="panel-heading">Local Git Status
 								<span class="branch label label-default pull-right"></span>
 							</div>
 							<div class="panel-body" style="overflow: auto;">
@@ -171,7 +169,7 @@
 
 					<div class="col-md-6">
 						<div class="panel panel-success">
-							<div class="panel-heading">Local Recent Commits 
+							<div class="panel-heading">Local Recent Commits
 								<span class="branch label label-default pull-right"></span>
 							</div>
 							<div class="panel-body" style="overflow: auto;">
@@ -186,7 +184,7 @@
 							<div class="panel-heading">GitHub Issue Queue Activity</div>
 							<div class="panel-body" style="overflow: auto;">
 								<ul id="issues" class="list-group">
-									
+
 								</ul>
 							</div>
 						</div>
@@ -196,12 +194,12 @@
 
 		{% else %}
 			<div class="col-md-2 affix navbar-default">
-				<div class="text-primary text-center " style="margin:5px 0 10px 0 ; font-size:130%" >  
+				<div class="text-primary text-center " style="margin:5px 0 10px 0 ; font-size:130%" >
 					<a href="{{path('documentation-version',{version:version,bundle:bundle})}}">
-						{{bundle | trans() | upper}} 
+						{{bundle | trans() | upper}}
 					</a>
-						<span class="label label-success"> {{version }} </span> 
-				</div> 
+						<span class="label label-success"> {{version }} </span>
+				</div>
 				<ul class="nav nav-pills nav-stacked">
 					{{ render( controller("documentationBundle:default:subSection", version, bundle, section  )) }}
 				</ul>
@@ -236,11 +234,11 @@
 				{% endblock %}
 
 				<hr style="margin-top:100px">
-				
-			</div>		
-	
+
+			</div>
+
 		{% endif %}
-	</div>	
+	</div>
 </div>
 
 {% endblock %}
@@ -250,5 +248,3 @@
 		{{ render( controller("documentationBundle:default:footer" )) }}
 	</footer>
 {% endblock %}
-
-

@@ -2,14 +2,6 @@ i{% extends '/app/Resources/views/base.html.twig' %}
 
 {% block title %}Welcome {{kernel.name}}! {% endblock %}
 
-{% block stylesheets %}
-
-	{{ parent() }}
-
-	<!-- WEBPACK BUNDLE -->
-	<link rel='stylesheet' href='{{CDN("stylesheet")}}/app/assets/css/app.css' />
-
-{% endblock %}
 
 {% block body %}
 	<div class='container'>
@@ -72,7 +64,6 @@ i{% extends '/app/Resources/views/base.html.twig' %}
 	{{ parent() }}
 
 	<!-- WEBPACK BUNDLE -->
-	<script src='{{CDN("javascript")}}/app/assets/js/app.js'></script>
     <script src='{{CDN("javascript")}}/documentationBundle/assets/js/documentation.js'></script>
 
     <script>
