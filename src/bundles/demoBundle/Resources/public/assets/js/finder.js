@@ -1,5 +1,14 @@
-var finder =
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory(require("jQuery"));
+	else if(typeof define === 'function' && define.amd)
+		define(["jQuery"], factory);
+	else if(typeof exports === 'object')
+		exports["finder"] = factory(require("jQuery"));
+	else
+		root["finder"] = factory(root["jQuery"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_17__) {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -9195,8 +9204,9 @@ module.exports = function (){
 /* 17 */
 /***/ (function(module, exports) {
 
-module.exports = jQuery;
+module.exports = __WEBPACK_EXTERNAL_MODULE_17__;
 
 /***/ })
 /******/ ]);
+});
 //# sourceMappingURL=finder.js.map

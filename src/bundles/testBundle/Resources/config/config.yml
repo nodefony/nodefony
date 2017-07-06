@@ -46,19 +46,6 @@ locale :			en_en
 watch:				false
 
 #
-#  WEBPACK CONFIG
-#
-webpack:
-  entry:
-    test:                       "./js/test.js"
-  watch:                        false
-  devtool:                      "source-map"
-  output:
-    filename:                   "./assets/js/[name].js"
-    library:                    "[name]"
-    libraryTarget:              "umd"
-
-#
 #
 #	Insert here the bundle-specific configurations
 #

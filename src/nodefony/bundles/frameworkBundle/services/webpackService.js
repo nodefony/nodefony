@@ -196,7 +196,7 @@ module.exports = nodefony.registerService("webpack", function(){
 			let type = bundle.settings.type;
 			let publicPath = bundle.publicPath;
 			let config = null ;
-			let basename = path.basename(Path);
+			let basename = bundle.bundleName;
 			let watch = null ;
 			let compiler = null ;
 			try {
@@ -238,13 +238,13 @@ module.exports = nodefony.registerService("webpack", function(){
 				shell.cd(this.kernel.rootDir);
 				throw e ;
 			}
-
+			// WATCH
 			if ( config.watch === undefined ){
 				watch = bundle.settings.watch ;
+				config.watch = watch || false;
 			}else{
 				watch = config.watch ;
 			}
-
 			if ( this.production ){
 				watch = false ;
 			}else{
@@ -255,10 +255,12 @@ module.exports = nodefony.registerService("webpack", function(){
 			try {
 				var idfile = basename+"_"+file.name ;
 				if ( watch ){
-					this.logger( "WEBPACK Config  : "+ file.path +" WATCHING ENTRY POINT : \n" + util.inspect(config.entry) , "DEBUG" );
 					var watching = compiler.watch({
 						/* watchOptions */
 					}, (err, stats) => {
+						if (! err ){
+							this.logger( "RUN WEBPACK COMPILER : "+ basename +" COMPILE ENTRY POINT : \n" +this.displayConfigTable(config) );
+						}
 						this.loggerStat(err, stats, basename, true);
 					});
 					this.kernel.listen(this ,"onTerminate", ( ) => {
@@ -270,7 +272,7 @@ module.exports = nodefony.registerService("webpack", function(){
 					if ( (this.kernel.environment === "dev" ) && (basename in this.kernel.bundlesCore) && ( ! this.kernel.isCore ) ){
 						return compiler ;
 					}
-					this.logger( "WEBPACK BUNDLE : "+ basename +" COMPILE ENTRY POINT : \n" + util.inspect(config.entry)  );
+					//this.logger( "RUN WEBPACK COMPILER : "+ basename +" COMPILE ENTRY POINT : \n" +this.displayConfigTable(config) );
 					this.runCompiler(compiler, idfile);
 				}
 			}catch(e){
@@ -296,7 +298,6 @@ module.exports = nodefony.registerService("webpack", function(){
 				}
 			}
 
-			//console.log(myConf)
 			try {
 				var compiler =  webpack( myConf );
 				if ( this.kernel.type === "CONSOLE" ){
@@ -316,10 +317,12 @@ module.exports = nodefony.registerService("webpack", function(){
 			}
 
 			if ( myConf.watch ){
-				this.logger( "WEBPACK BUNDLE : "+ basename +" WATCHING ENTRY POINT : \n" + util.inspect(myConf.entry) , "DEBUG" );
 				var watching = compiler.watch({
 					/* watchOptions */
 				}, (err, stats) => {
+					if (! err ){
+						this.logger( "WEBPACK BUNDLE : "+ basename +" WATCHING ENTRY POINT : \n" + util.inspect(myConf.entry) , "DEBUG" );
+					}
 					this.loggerStat(err, stats, basename, true);
 				});
 				this.kernel.listen(this ,"onTerminate", ( ) => {
@@ -328,16 +331,10 @@ module.exports = nodefony.registerService("webpack", function(){
 					});
 				});
 			}else{
-				var isCore = null ;
-				try {
-					isCore = new nodefony.fileClass(path.resolve(this.kernel.rootDir + "/.core") );
-				}catch(e){
-					isCore = false ;
-				}
-				if ( (this.kernel.environment === "dev" ) && (basename in this.kernel.bundlesCore) && ( ! isCore ) ){
+				if ( (this.kernel.environment === "dev" ) && (basename in this.kernel.bundlesCore) && ( ! this.kernel.isCore ) ){
 					return compiler ;
 				}
-				this.logger( "WEBPACK BUNDLE : "+ basename +" COMPILE ENTRY POINT : \n" + util.inspect(myConf.entry)  );
+				//this.logger( "WEBPACK BUNDLE : "+ basename +" COMPILE ENTRY POINT : \n" + util.inspect(myConf.entry)  );
 				this.runCompiler(compiler, basename);
 			}
 			return compiler ;
@@ -357,10 +354,43 @@ module.exports = nodefony.registerService("webpack", function(){
 					}
 				}
 				return compiler.run( (err, stats) => {
+					this.logger( "RUN WEBPACK COMPILER : "+ bundle +" COMPILE ENTRY POINT : \n" +this.displayConfigTable(compiler.options) );
 					this.loggerStat(err, stats,  bundle);
 				});
 			}catch(e){
 				throw e ;
+			}
+		}
+
+		displayConfigTable (config){
+			let options = {
+				head:[
+					"ENTRY NAME [name]",
+					"ENTRY",
+					"OUTPUT FILE NAME",
+					"OUTPUT LIBRARY NANE",
+					"OUTPUT TARGET",
+					"PUBLIC PATH",
+					"WATCHER"
+				]
+			} ;
+			let table = this.kernel.cli.displayTable(null, options);
+			let data = [];
+			try {
+				for ( let ele in config.entry ){
+					table.push([
+						ele,
+						config.entry[ele].toString(),
+						config.output.filename ,
+						config.output.library ,
+						config.output.libraryTarget,
+						config.output.path,
+						config.watch
+					]);
+				}
+				return table.toString() ;
+			}catch(e){
+				this.logger(e, "ERROR")
 			}
 		}
 

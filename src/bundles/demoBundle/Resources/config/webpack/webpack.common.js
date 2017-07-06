@@ -17,10 +17,10 @@ module.exports = {
         path    : public,
         filename: "./assets/js/[name].js",
         library:  "[name]",
-        libraryTarget: "var"
+        libraryTarget: "umd"
     },
     externals:{
-        "jquery": "jQuery" 
+        "jquery": "jQuery"
     },
     module      : {
         rules: [{

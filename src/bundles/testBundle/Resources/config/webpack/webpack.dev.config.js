@@ -5,22 +5,9 @@ const webpackMerge = require('webpack-merge'); // used to merge webpack configs
 const public = path.resolve(__dirname, "..", ".." ,"public");
 const bundleName = path.basename( path.resolve( __dirname, "..", "..", "..") );
 const commonConfig = require("./webpack.common.js");
-const webpackDevClient = "webpack-dev-server/client?https://"+kernel.hostHttps+"/";
 
 module.exports = webpackMerge( {
-    watch       : true,
-    entry       : {
-      //{{name}}    : ["./js/{{name}}.js", webpackDevClient ],
-      {{name}}  : [ "./js/{{name}}.js" ],
-    },
-    output      : {
-      path      : public,
-      filename  : "./assets/js/[name].js",
-      library   : "[name]",
-      libraryTarget: "umd"
-    },
+    watch       : false,
     devtool     : "source-map",
-    externals   : {},
-    resolve     : {},
     plugins     : []
 }, commonConfig );

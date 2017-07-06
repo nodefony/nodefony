@@ -308,14 +308,19 @@ module.exports = nodefony.register( "cli", function(){
   		return cmd ;
   	}
 
-  	displayTable ( datas, options ){
-  		var table = new Table( nodefony.extend(true, defaultTableCli, options ) );
+  	displayTable ( datas, options , syslog){
+  		var table = new Table(  options ||  defaultTableCli  );
 
   		if ( datas ) {
   			for ( var i= 0 ;  i < datas.length ; i++ ){
   				table.push( datas[i] )
   			}
-  			console.log(table.toString());
+            if ( syslog ){
+                syslog.logger( "\n"+ table.toString()) ;
+            }else{
+  			     console.log(table.toString());
+            }
+
   		}
   		return table ;
   	}

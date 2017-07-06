@@ -42,6 +42,10 @@ module.exports = nodefony.register("kernelWatcher", function(){
 			return super.logger( payload, severity, msgid, msg );
 		}
 
+		setSockjsServer (server){
+			this.sockjs = server ;
+		}
+
 		listenWatcherController(){
 			this.on('all', (event, Path) => {
 				switch(event){
@@ -57,12 +61,24 @@ module.exports = nodefony.register("kernelWatcher", function(){
 							var name = res[1] ;
 							var file = this.cwd + "/" + Path ;
 							this.bundle.reloadWatcherControleur( name, file);
-						}catch(e){
-							this.logger(e, "ERROR");
+						}catch(error){
+							this.logger(error, "ERROR");
+							if ( this.sockjs ){
+								let myError = null ;
+								if ( error.stack ){
+									myError = error.stack.split('\n').map(function(v){ return ' -- ' + v +"</br>"; }).join('');
+								}else{
+									myError =  util.inspect(error);
+								}
+								this.sockjs.sockWrite( "error", myError );
+							}
 						}
 					break;
 					case "error" :
 						this.logger( Path, "ERROR", event );
+						if ( this.sockjs ){
+							this.sockjs.sockWrite( "error", e );
+						}
 					break;
 					case "unlinkDir" :
 						this.logger( Path, "WARNING", event );

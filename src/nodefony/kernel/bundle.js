@@ -78,6 +78,7 @@ module.exports = nodefony.register("Bundle", function(){
 				this.logger(e, "ERROR");
 			}
 
+			this.sockjs =  this.get("sockjs") ;
 			this.translation = this.get("translation");
 			this.reader = this.kernel.reader;
 
@@ -176,6 +177,7 @@ module.exports = nodefony.register("Bundle", function(){
 				// controllers
 				if ( controllers ){
 					this.watcherController = new nodefony.kernelWatcher(this.controllersPath, defaultWatcher.call(this, regController), this);
+					this.watcherController.setSockjsServer( this.sockjs );
 					this.watcherController.listenWatcherController();
 					this.kernel.on("onTerminate", () => {
 						this.logger("Watching Ended : " + this.watcherController.path, "INFO");

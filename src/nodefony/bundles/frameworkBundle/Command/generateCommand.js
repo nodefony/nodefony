@@ -184,25 +184,31 @@ module.exports = nodefony.registerCommand("generate",function(){
 	};
 
 	var webpack = function(obj, type, bundleType){
-		return {
-			name:"webpack",
-			type:"directory",
-			childs:[{
-				name:"webpack.common.js",
-				type:"file",
-				skeleton:path.resolve( this.kernel.autoLoader.dirname,"bundles/frameworkBundle/Command/skeletons/webpack/webpack.common.skeleton" ),
-				params:obj
-			},{
-				name:"webpack.dev.config.js",
-				type:"file",
-				skeleton:path.resolve( this.kernel.autoLoader.dirname,"bundles/frameworkBundle/Command/skeletons/webpack/webpack.dev.skeleton" ),
-				params:obj
-			},{
-				name:"webpack.prod.config.js",
-				type:"file",
-				skeleton:path.resolve( this.kernel.autoLoader.dirname,"bundles/frameworkBundle/Command/skeletons/webpack/webpack.prod.skeleton" ),
-				params:obj
-			}]
+		switch( bundleType ){
+			case "angular" :
+			case "react" :
+				return {} ;
+			default:
+				return {
+					name:"webpack",
+					type:"directory",
+					childs:[{
+						name:"webpack.common.js",
+						type:"file",
+						skeleton:path.resolve( this.kernel.autoLoader.dirname,"bundles/frameworkBundle/Command/skeletons/webpack/webpack.common.skeleton" ),
+						params:obj
+					},{
+						name:"webpack.dev.config.js",
+						type:"file",
+						skeleton:path.resolve( this.kernel.autoLoader.dirname,"bundles/frameworkBundle/Command/skeletons/webpack/webpack.dev.skeleton" ),
+						params:obj
+					},{
+						name:"webpack.prod.config.js",
+						type:"file",
+						skeleton:path.resolve( this.kernel.autoLoader.dirname,"bundles/frameworkBundle/Command/skeletons/webpack/webpack.prod.skeleton" ),
+						params:obj
+					}]
+				}
 		}
 	};
 
@@ -319,13 +325,12 @@ module.exports = nodefony.registerCommand("generate",function(){
 	};
 
 	var routing = function(obj, type, bundleType){
-		var file = {
+		return  {
 			name:"routing."+type,
 			type:"file",
 			skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/"+bundleType+"/routing."+type+".skeleton" ),
 			params:obj
 		};
-		return file;
 	};
 	routing.addConfigRoute = function(file, route, nameController, bundleName){
 		var routingFile = new nodefony.fileClass(file);

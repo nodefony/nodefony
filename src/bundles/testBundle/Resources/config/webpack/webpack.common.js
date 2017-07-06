@@ -3,15 +3,23 @@ const webpack = require('webpack');
 const ExtractTextPluginCss = require('extract-text-webpack-plugin');
 const public = path.resolve(__dirname, "..", "..", "public");
 const bundleName = path.basename( path.resolve( __dirname, "..", "..", "..") );
-const webpackDevClient = "webpack-dev-server/client?https://"+kernel.hostHttps+"/";
 
 module.exports = {
     context     : public ,
     target      : "web",
+    entry       : {
+      test    : "./js/test.js"
+    },
+    output      : {
+        path    : public,
+        filename: "./assets/js/[name].js",
+        library:  "[name]",
+        libraryTarget: "umd"
+    },
     module      : {
         rules: [{
             // BABEL TRANSCODE
-          	test: new RegExp("\.es6$"),
+          	test: new RegExp("\.es6$|\.js$"),
     		exclude: new RegExp("node_modules"),
     		use: [
 				{

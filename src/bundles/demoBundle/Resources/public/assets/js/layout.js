@@ -1,5 +1,14 @@
-var layout =
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["layout"] = factory();
+	else
+		root["layout"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -522,4 +531,5 @@ __webpack_require__( 6);
 /***/ })
 
 /******/ });
+});
 //# sourceMappingURL=layout.js.map

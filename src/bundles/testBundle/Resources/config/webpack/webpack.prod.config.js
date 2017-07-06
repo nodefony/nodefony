@@ -8,19 +8,8 @@ const bundleName = path.basename( path.resolve( __dirname, "..", "..", "..") );
 const commonConfig = require("./webpack.common.js");
 
 module.exports = webpackMerge( {
-    watch           : false,
-    entry           : {
-      {{name}}      : ["./js/{{name}}.js"]
-    },
-    output          : {
-        path        : public,
-        filename    : "./assets/js/[name].js",
-        library     : "[name]",
-        libraryTarget: "umd"
-    },
-    externals       : {},
-    resolve         : {},
-    plugins         :[
+    watch       : false,
+    plugins     :[
         new OptimizeCssAssetsPlugin(  {
             cssProcessorOptions: { discardComments: {removeAll: true } },
             canPrint: true
