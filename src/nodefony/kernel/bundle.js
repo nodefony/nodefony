@@ -365,18 +365,18 @@ module.exports = nodefony.register("Bundle", function(){
 		}
 
     	findWebPackConfig (){
-			let res = null ;
+					let res = null ;
             switch(this.settings.type){
                 case "angular":
-					try {
-                    	res = this.finder.result.getFile("webpack.config.js", true) ;
-                    	if ( ! res ){
-                        	throw new Error("Angular bundle no webpack config file : webpack.config.js ");
-                    	}
-                		this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this.path , path.resolve("/", this.bundleName, "dist") , this.settings.type);
-					}catch(e){
-						throw e
-					}
+									try {
+                  	res = this.finder.result.getFile("webpack.config.js", true) ;
+                  	if ( ! res ){
+                      	throw new Error("Angular bundle no webpack config file : webpack.config.js ");
+                  	}
+              		  this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this);
+									}catch(e){
+										throw e
+									}
                 break;
                 case "react":
                     let file =null ;
@@ -391,22 +391,22 @@ module.exports = nodefony.register("Bundle", function(){
                         }
                         res = new nodefony.fileClass( file );
                         process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
-                		this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this.path , path.resolve("/", this.bundleName, "dist") , this.settings.type);
+                				this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this);
                     }catch(e){
-						throw e ;
+											throw e ;
                     }
                 break;
                 default:
-					try {
+									try {
 	                    res = this.finder.result.getFile("webpack."+this.kernel.environment+".config.js", true) ;
 	                    if ( ! res ){
 	                        return ;
 	                    }
-						this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this.path , this.publicPath , this.settings.type);
-					}catch(e){
-						throw e ;
-					}
-            }
+											this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this);
+									}catch(e){
+											throw e ;
+									}
+        	}
     	}
 
 		findControllerFiles ( result ){

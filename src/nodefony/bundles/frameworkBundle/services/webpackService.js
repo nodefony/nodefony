@@ -184,7 +184,7 @@ module.exports = nodefony.registerService("webpack", function(){
 			}
 		}
 
-		loadConfigFile (file, Path, publicPath, type){
+		loadConfigFile (file, bundle){
 			try {
 				if ( ! ( file instanceof nodefony.fileClass ) ){
 					file = new nodefony.fileClass(file);
@@ -192,13 +192,19 @@ module.exports = nodefony.registerService("webpack", function(){
 			}catch(e){
 				throw e ;
 			}
-			var config = null ;
-			var basename = path.basename(Path);
+			let Path = bundle.path ;
+			let type = bundle.settings.type;
+			let publicPath = bundle.publicPath;
+			let config = null ;
+			let basename = path.basename(Path);
+			let watch = null ;
+			let compiler = null ;
 			try {
 				switch (type){
 					case "angular" :
+						publicPath = path.resolve("/", bundle.bundleName, "dist" );
 						shell.cd(Path);
-						config = require(file.path );
+						config = require( file.path );
 						config.output.path = path.resolve("Resources", "public", "dist") ;
 						if ( publicPath ){
 							config.output.publicPath = publicPath+"/" ;
@@ -210,6 +216,7 @@ module.exports = nodefony.registerService("webpack", function(){
 						}
 					break;
 					case "react" :
+						publicPath = path.resolve("/", bundle.bundleName, "dist" );
 						shell.cd(Path);
 						config = require(file.path );
 						config.output.path = path.resolve("Resources", "public", "dist") ;
@@ -223,16 +230,21 @@ module.exports = nodefony.registerService("webpack", function(){
 						config = require( file.path );
 				}
 
-				var compiler =  webpack( config );
+				compiler =  webpack( config );
 				if ( this.kernel.type === "CONSOLE" ){
-					return  compiler;
+					return compiler ;
 				}
-
 			}catch(e){
 				shell.cd(this.kernel.rootDir);
 				throw e ;
 			}
-			var watch = config.watch ;
+
+			if ( config.watch === undefined ){
+				watch = bundle.settings.watch ;
+			}else{
+				watch = config.watch ;
+			}
+
 			if ( this.production ){
 				watch = false ;
 			}else{
