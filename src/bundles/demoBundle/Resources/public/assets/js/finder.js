@@ -7,7 +7,7 @@
 		exports["finder"] = factory(require("jQuery"));
 	else
 		root["finder"] = factory(root["jQuery"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_17__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_13__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -43,9 +43,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -73,36 +70,111 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 13);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */,
 /* 1 */,
 /* 2 */,
-/* 3 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
+/* 3 */,
+/* 4 */,
+/* 5 */,
 /* 6 */,
 /* 7 */,
 /* 8 */,
 /* 9 */,
 /* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(11);
+__webpack_require__(12);
+
+__webpack_require__(14);
+__webpack_require__(15);
+__webpack_require__(16);
+
+
+module.exports = function (){
+
+	$(document).ready(function () {
+    		$('#slider').flickity({
+		});
+
+    		$('#slider').on('select.flickity', function (event, pointer) {
+        		var preview = $('#slider .is-selected').attr("data-url");
+        		var name = $('#slider .is-selected').attr("data-name");
+        		var mine = $('#slider .is-selected').attr("data-mine");
+
+        		$('#previews-container .name').empty();
+        		$('#previews-container .name').text(name);
+
+        		$('#previews-container .preview-container').empty();
+
+			switch (true){
+				case /^image/.test(mine) :
+					$('#previews-container .preview-container').append('<img class="preview" src="'+preview+'">');
+					break;
+				case /^audio/.test(mine):
+					var html = '<audio height="100%" controls="controls" prelaod="auto" >\n\
+					<source src="'+preview+'" type="'+mine+'">\n\
+                        		</audio>';
+
+					$('#previews-container .preview-container').append(html);
+				break;
+				case /^video/.test(mine) :
+					var html = '<video height="100%" controls prelaod="auto">\n\
+					<source src="'+preview+'" type="'+mine+'">\n\
+                			</video>';
+
+					$('#previews-container .preview-container').append(html);
+					/*var video = $(document.createElement("video"));
+		  			$('#previews-container .preview-container').append(video);
+		  			video.attr({
+		  			type:mine,
+		  			src:preview,
+		  			height:"100%"
+		  			});
+		  			video.get(0).load();
+		  			*/
+				break;
+				default:
+					$('#previews-container .preview-container').append('<img class="preview" src="'+preview+'">');
+			}
+    		});
+
+		$('#slider').flickity( 'select', 0 )
+
+		/*$('.gallery-cell').hover(function() {
+		 	var col = $(this).parent().children().index($(this));
+		//setTimeout(function() {$('#slider').flickity( 'select', col )}, 500);
+
+		});*/
+
+ 		$('tr').click(function () {
+	 		//setTimeout(function() {
+			//if ( dispo ){
+			var col = $(this).parent().children().index($(this));
+			$('#slider').flickity( 'select', col );
+			//}
+			//}.bind(this)
+			//, 800);
+         		//$('#slider').flickity( 'select', col )
+		});
+
+    		$(".image").fancybox({
+          		helpers: {
+              			title : {
+                  			type : 'float'
+              			}
+          		}
+      		});
+	});
+};
+
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports) {
 
 // ==================================================
@@ -4454,7 +4526,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_LOCAL_MODULE_1__, __WEBPACK_LOCAL_MODULE_1__factory, __WEBPACK_LOCAL_MODULE_1__module;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_LOCAL_MODULE_2__;var __WEBPACK_LOCAL_MODULE_3__, __WEBPACK_LOCAL_MODULE_3__factory, __WEBPACK_LOCAL_MODULE_3__module;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_LOCAL_MODULE_4__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_LOCAL_MODULE_5__;var __WEBPACK_LOCAL_MODULE_6__, __WEBPACK_LOCAL_MODULE_6__factory, __WEBPACK_LOCAL_MODULE_6__module;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_LOCAL_MODULE_7__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_LOCAL_MODULE_8__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_LOCAL_MODULE_9__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_LOCAL_MODULE_10__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_LOCAL_MODULE_11__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_LOCAL_MODULE_12__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_LOCAL_MODULE_13__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_LOCAL_MODULE_14__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_LOCAL_MODULE_15__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_LOCAL_MODULE_16__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_LOCAL_MODULE_17__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_LOCAL_MODULE_18__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_LOCAL_MODULE_20__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -4481,7 +4553,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_LO
   /*jshint strict: false */ /* globals define, module, require */
   if ( true ) {
     // AMD
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(17) ], __WEBPACK_AMD_DEFINE_RESULT__ = function( jQuery ) {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(13) ], __WEBPACK_AMD_DEFINE_RESULT__ = function( jQuery ) {
       return factory( window, jQuery );
     }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -9107,104 +9179,28 @@ return Flickity;
 
 
 /***/ }),
-/* 12 */,
 /* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(10);
-__webpack_require__(11);
-
-__webpack_require__(5);
-__webpack_require__(4);
-__webpack_require__(3);
-
-
-module.exports = function (){
-
-	$(document).ready(function () {
-    		$('#slider').flickity({
-		});
-
-    		$('#slider').on('select.flickity', function (event, pointer) {
-        		var preview = $('#slider .is-selected').attr("data-url");
-        		var name = $('#slider .is-selected').attr("data-name");
-        		var mine = $('#slider .is-selected').attr("data-mine");
-
-        		$('#previews-container .name').empty();
-        		$('#previews-container .name').text(name);
-
-        		$('#previews-container .preview-container').empty();
-
-			switch (true){
-				case /^image/.test(mine) :
-					$('#previews-container .preview-container').append('<img class="preview" src="'+preview+'">');
-					break;
-				case /^audio/.test(mine):
-					var html = '<audio height="100%" controls="controls" prelaod="auto" >\n\
-					<source src="'+preview+'" type="'+mine+'">\n\
-                        		</audio>';
-
-					$('#previews-container .preview-container').append(html);
-				break;
-				case /^video/.test(mine) :
-					var html = '<video height="100%" controls prelaod="auto">\n\
-					<source src="'+preview+'" type="'+mine+'">\n\
-                			</video>';
-
-					$('#previews-container .preview-container').append(html);
-					/*var video = $(document.createElement("video"));
-		  			$('#previews-container .preview-container').append(video);
-		  			video.attr({
-		  			type:mine,
-		  			src:preview,
-		  			height:"100%"
-		  			});
-		  			video.get(0).load();
-		  			*/
-				break;
-				default:
-					$('#previews-container .preview-container').append('<img class="preview" src="'+preview+'">');
-			}
-    		});
-
-		$('#slider').flickity( 'select', 0 )
-
-		/*$('.gallery-cell').hover(function() {
-		 	var col = $(this).parent().children().index($(this));
-		//setTimeout(function() {$('#slider').flickity( 'select', col )}, 500);
-
-		});*/
-
- 		$('tr').click(function () {
-	 		//setTimeout(function() {
-			//if ( dispo ){
-			var col = $(this).parent().children().index($(this));
-			$('#slider').flickity( 'select', col );
-			//}
-			//}.bind(this)
-			//, 800);
-         		//$('#slider').flickity( 'select', col )
-		});
-
-    		$(".image").fancybox({
-          		helpers: {
-              			title : {
-                  			type : 'float'
-              			}
-          		}
-      		});
-	});
-};
-
-
-/***/ }),
-/* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_17__;
+module.exports = __WEBPACK_EXTERNAL_MODULE_13__;
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

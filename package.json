@@ -1,10 +1,10 @@
 {
   "name": "nodefony",
-  "version": "2.1.5-beta",
+  "version": "2.2.0-beta",
   "description": "FRAMEWORK web developpement symfony like",
   "main": "./src/nodefony/core/autoloader.js",
   "scripts": {
-    "start": "make deploy",
+    "start": "./nodefony_dev",
     "stop": "make stop",
     "kill": "make kill",
     "outdated": "npm outdated --deph=0",
@@ -83,7 +83,7 @@
     "node-pre-gyp": "0.6.36",
     "node-sass": "4.5.3",
     "nodefony-stage": "0.1.0",
-    "npm": "5.0.4",
+    "npm": "5.1.0",
     "oauth2orize": "^1.8.0",
     "optimize-css-assets-webpack-plugin": "2.0.0",
     "passport": "0.3.2",
@@ -113,8 +113,8 @@
     "uglify-es": "3.0.23",
     "uglifycss": "0.0.27",
     "url-loader": "0.5.9",
-    "useragent": "2.1.13",
-    "webpack": "2.6.1",
+    "useragent": "2.2.0",
+    "webpack": "3.1.0",
     "webpack-merge": "4.1.0",
     "websocket": "1.0.24",
     "xml2js": "0.4.17"

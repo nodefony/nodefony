@@ -61,23 +61,20 @@ module.exports = nodefony.register("kernelWatcher", function(){
 							var name = res[1] ;
 							var file = this.cwd + "/" + Path ;
 							this.bundle.reloadWatcherControleur( name, file);
+							if ( this.sockjs ){
+								this.sockjs.sendWatcher( "change", file );
+							}
 						}catch(error){
 							this.logger(error, "ERROR");
 							if ( this.sockjs ){
-								let myError = null ;
-								if ( error.stack ){
-									myError = error.stack.split('\n').map(function(v){ return ' -- ' + v +"</br>"; }).join('');
-								}else{
-									myError =  util.inspect(error);
-								}
-								this.sockjs.sockWrite( "error", myError );
+								this.sockjs.sendWatcher( "error", error );
 							}
 						}
 					break;
 					case "error" :
 						this.logger( Path, "ERROR", event );
 						if ( this.sockjs ){
-							this.sockjs.sockWrite( "error", e );
+							this.sockjs.sendWatcher( "error", e );
 						}
 					break;
 					case "unlinkDir" :

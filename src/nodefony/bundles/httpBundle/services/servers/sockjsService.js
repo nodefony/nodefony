@@ -6,16 +6,13 @@ module.exports = nodefony.registerService("sockjs", function(){
 
 		constructor ( service , name, compiler ){
 			super( name, service.container ,service.notificationsCenter   );
-
 			this.service = service ;
-
 			this.clientStats = {
 				errorDetails: true
 			}
 			this.stats = null ;
 			if ( compiler ){
 				this.compiler = compiler ;
-
 				//this.listen( this, "onCreateSockServer", () => {
 					this.compiler.plugin("compile", () => {
 						this.sockWrite( "invalid");
@@ -31,7 +28,6 @@ module.exports = nodefony.registerService("sockjs", function(){
 						}
 					});
 				//});
-
 			}
 		}
 
@@ -61,7 +57,6 @@ module.exports = nodefony.registerService("sockjs", function(){
 			return this.service.sockWrite(type, data, connection);
 		}
 	}
-
 
 	var sockjsService = class sockjsService extends nodefony.Service {
 
@@ -105,7 +100,6 @@ module.exports = nodefony.registerService("sockjs", function(){
 		}
 
 		createServer (service ,protocol){
-
 			try {
 				this.logger(" Create sockjs server :   "+ service.type);
 				this[protocol] = Sockjs.createServer({
@@ -118,11 +112,9 @@ module.exports = nodefony.registerService("sockjs", function(){
 				});
 				this[protocol].on('connection', (conn) => {
 					if(!conn) return;
-
 					this.sockets.push(conn);
-
 					conn.on("close", () => {
-						this.logger(" CLOSE " + this.name , "DEBUG");
+						this.logger(" Close Connection " + this.name , "DEBUG");
 						const connIndex = this.sockets.indexOf(conn);
 						if(connIndex >= 0) {
 							this.sockets.splice(connIndex, 1);
@@ -134,20 +126,34 @@ module.exports = nodefony.registerService("sockjs", function(){
 					if (this.hot){
 						this.sockWrite("hot", null, conn );
 					}
-
 					for( var compiler  in this.compilers ){
 						if ( this.compilers[compiler].stats){
 							//this.compilers[compiler].sendStats(this.compilers[compiler].stats, true, conn);
 						}
 					}
-
 				});
-
 				this[protocol].installHandlers(service.server);
 				return this[protocol] ;
 			}catch(e){
 				this.logger(e, "ERROR");
 				throw e;
+			}
+		}
+
+		sendWatcher (type, data, force){
+			switch(type){
+				case "error" :
+					let myError = null ;
+					if ( data.stack ){
+						myError = data.stack ;
+					}else{
+						myError =  util.inspect(data);
+					}
+					return this.sockWrite("errors", [myError]);
+				case "change" :
+					return this.sockWrite("content-changed");
+				default:
+				 	return ;
 			}
 		}
 
