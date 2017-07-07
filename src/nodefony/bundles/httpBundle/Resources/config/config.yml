@@ -45,7 +45,7 @@ https:
 
 #
 #       SERVERS WEBSOCKET
-#
+#       ALL OPTIONS IN https://github.com/theturtle32/WebSocket-Node/blob/master/docs/WebSocketServer.md#server-config-options
 #
 websocket:
   keepaliveInterval:            20000
@@ -54,6 +54,13 @@ websocket:
 websocketSecure:
   keepaliveInterval:            20000
   keepaliveGracePeriod:         10000
+
+sockjs:
+    overlay:                      true
+    hot:                          false
+    protocol:                     https
+    websocket:                    true
+    prefix:                       "/sockjs-node"
 
 #
 #       SERVERS STACTIC FILES

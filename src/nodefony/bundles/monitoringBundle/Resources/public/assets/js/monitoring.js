@@ -41133,4 +41133,3 @@ The plugin also adds four public methods:
 /***/ })
 /******/ ]);
 });
-//# sourceMappingURL=monitoring.js.map

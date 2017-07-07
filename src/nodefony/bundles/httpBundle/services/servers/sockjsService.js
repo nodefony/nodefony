@@ -1,5 +1,7 @@
 const Sockjs = require('sockjs');
 
+const defaultPrefix = "/sockjs-node";
+
 module.exports = nodefony.registerService("sockjs", function(){
 
 	var sockCompiler = class sockServer extends nodefony.Service {
@@ -70,9 +72,11 @@ module.exports = nodefony.registerService("sockjs", function(){
 				if ( this.bundle.settings.sockjs ){
 					this.clientOverlay = this.bundle.settings.sockjs.overlay || false ;
 					this.hot = this.bundle.settings.sockjs.hot || false ;
+					this.websocket = this.bundle.settings.sockjs.websocket  ;
+					this.protocol = this.bundle.settings.sockjs.protocol.toLowerCase()  ;
+					this.setPrefix(this.bundle.settings.sockjs.prefix || defaultPrefix );
 				}
 			});
-			this.setPrefix("/sockjs-node");
 
 			if ( this.kernel.environment === "dev" ){
 				this.bundle.listen(this, 'onCreateServer', (type, service) => {
@@ -80,8 +84,11 @@ module.exports = nodefony.registerService("sockjs", function(){
 					switch ( type ){
 						case "HTTP":
 						case "HTTPS":
-							this.createServer(service, type.toLowerCase());
-							//this.fire("onCreateSockServer", server , service);
+							let proto = type.toLowerCase() ;
+							if ( proto === this.protocol ){
+								this.createServer(service, proto);
+								this.fire("onCreateSockServer", this[proto] , service);
+							}
 						break;
 					}
 				});

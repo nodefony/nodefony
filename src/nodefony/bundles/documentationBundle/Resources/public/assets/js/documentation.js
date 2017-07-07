@@ -202,7 +202,7 @@ module.exports = function () {
 						}
 					}).fail(function () {
 						console.log("ERROR");
-					}
+					});
 
 					/*$.get("/api/git/getStatus",function(data){
      	var ele = $("#status");
@@ -229,7 +229,7 @@ module.exports = function () {
      	console.log( "ERROR" );
      });*/
 
-					);$.get("https://api.github.com/repos/nodefony/nodefony/issues?state=open", function (data) {
+					$.get("https://api.github.com/repos/nodefony/nodefony/issues?state=open", function (data) {
 						var ele = $("#issues");
 						for (var i = 0; i < data.length; i++) {
 							var date = new Date(data[i].created_at).toDateString();
@@ -35737,4 +35737,3 @@ __webpack_require__(14)
 /***/ })
 /******/ ]);
 });
-//# sourceMappingURL=documentation.js.map

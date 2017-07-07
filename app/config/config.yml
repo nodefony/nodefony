@@ -15,13 +15,13 @@
 #
 #     APP CONFIG
 name :                          AppBundle
-version:                        2.0.0-beta
+version:                        1.0.0
 locale :                        en_en
 
 
 App:
-  projectName:                  "nodefony"
-  projectYear:                  2016
+  projectName:                  "DEMO"
+  projectYear:                  2017
   locale:                       "en_en"
   authorName:                   "admin"
   authorMail:                   "admin@nodefony.com"
@@ -111,6 +111,15 @@ sequelizeBundle:
 #
 #
 httpBundle:
+  http:
+    responseTimeout:              40000
+  https:
+    responseTimeout:              40000
+  sockjs:
+      overlay:                      true
+      hot:                          false
+      protocol:                     https
+      websocket:                    true
   statics:
     settings:
       cache :                     false
@@ -133,13 +142,7 @@ httpBundle:
           location:               127.0.0.1
           port:                   11211
           weight:                 1
-  http:
-    responseTimeout:              40000
-  https:
-    responseTimeout:              40000
-  sockjs:
-    overlay:                      true
-    hot:                          false
+
 
 
 ################################

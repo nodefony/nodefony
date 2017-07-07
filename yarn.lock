@@ -1448,9 +1448,9 @@ changelog-maker@*:
     pkg-to-id "~0.0.3"
     split2 "~2.1.1"
 
-changelog@1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/changelog/-/changelog-1.3.0.tgz#51b7e174917281135854e1235c6c5c27e179ae5b"
+changelog@1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/changelog/-/changelog-1.3.1.tgz#ed3c2ee061c3e8bb751e300aaf2458b7e9534d6e"
   dependencies:
     chalk "1.1.3"
     cli "1.0.1"
@@ -5486,9 +5486,9 @@ no-case@^2.2.0:
   dependencies:
     lower-case "^1.1.1"
 
-node-emoji@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/node-emoji/-/node-emoji-1.5.1.tgz#fd918e412769bf8c448051238233840b2aff16a1"
+node-emoji@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/node-emoji/-/node-emoji-1.6.1.tgz#7d2f0a8fd11237cba0ddcef3bdc015dc50b011f9"
   dependencies:
     string.prototype.codepointat "^0.2.0"
 
