@@ -1,17 +1,22 @@
 #!/usr/bin/env node
 // --expose-gc --trace-gc --log-gc --trace-gc-verbose
 //--debug
-
 const path = require("path");
 const fs = require("fs");
 const shell = require("shelljs");
+
+process.env.BABEL_ENV = 'development';
+process.env.NODE_ENV = 'development';
+process.env.MODE_START = "NODEFONY_DEV" ;
+
+let environment = "dev" ;
+let debug = true ;
 
 ///*var profiler = require('v8-profiler');
 //var heapdump = require('heapdump');
 //heapdump.writeSnapshot(process.cwd()+'/tmp/' + Date.now() + '.heapsnapshot', function(err, filename) {
 //	console.log('heapdump written to', filename);
 //});*/
-
 /*
  *
  * NODEFONY FRAMEWORK
@@ -24,18 +29,13 @@ try {
 }catch(e){
 	const nodefony = require(".", "src", "nodefony", "core", "autoloader");
 }
-var links = path.resolve( ".", "tmp", "assestLink" ) ;
+var links = path.resolve( ".", "tmp", "assestLink" );
 if ( fs.existsSync( links) ){
 	shell.rm("-Rf", links);
 }
-var environment = "dev" ;
-var debug = true ;
 if ( process.env["NODEFONY_DEBUG"] ){
 	debug = process.env["NODEFONY_DEBUG"] ;
 }
-process.env.BABEL_ENV = 'development';
-process.env.NODE_ENV = 'development';
-process.env["MODE_START"] = "NODEFONY_DEV" ;
 
 // KERNEL
 const kernel = new nodefony.appKernel("SERVER", environment, debug, {

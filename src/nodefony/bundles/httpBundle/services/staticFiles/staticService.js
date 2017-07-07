@@ -4,8 +4,6 @@
  *
  *
  */
-//var static = require('node-static');
-
 
 module.exports = nodefony.registerService("statics", function(){
 

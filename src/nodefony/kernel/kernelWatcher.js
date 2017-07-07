@@ -116,10 +116,16 @@ module.exports = nodefony.register("kernelWatcher", function(){
 							}
 						}catch(e){
 							this.logger(e, "ERROR", event);
+							if ( this.sockjs ){
+								this.sockjs.sendWatcher( "error", e );
+							}
 						}
 					break;
 					case "error" :
 						this.logger( Path, "ERROR", event );
+						if ( this.sockjs ){
+							this.sockjs.sendWatcher( "error", e );
+						}
 					break;
 					case "unlinkDir" :
 						this.logger( Path, "INFO", event );

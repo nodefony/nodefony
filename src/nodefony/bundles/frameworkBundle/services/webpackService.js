@@ -134,6 +134,9 @@ module.exports = nodefony.registerService("webpack", function(){
 			this.defaultConfig = defaultConfig.call(this, "nodefony");
 			this.pathCache = path.resolve(this.kernel.rootDir, "tmp", "webpack") ;
 			this.host = this.kernel.hostHttps ;
+			this.webpack = webpack ;
+			this.version = this.getWebpackVersion()
+
 			if ( this.production ){
 				try {
 					if ( ! fs.existsSync( this.pathCache ) ){
@@ -154,6 +157,10 @@ module.exports = nodefony.registerService("webpack", function(){
 				}
 			}
 			this.sockjs =  this.get("sockjs") ;
+		}
+
+		getWebpackVersion (){
+			return process.env["WEBPACK_VERSION"];
 		}
 
 		loggerStat (err, stats, bundle , watcher){

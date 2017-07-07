@@ -11,7 +11,8 @@ module.exports = {
       layout    : "./js/layout.js" ,
       demo      : "./js/index.js",
       finder    : "./js/finder/finder.js",
-      login     : "./js/login.js"
+      login     : "./js/login.js",
+      audio     : "./webaudio/js/mix2.js"
     },
     output      : {
         path    : public,
