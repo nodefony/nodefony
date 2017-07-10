@@ -349,7 +349,7 @@ module.exports = nodefony.registerService("webpack", function(){
 
 		runCompiler (compiler, bundle){
 			try {
-				if ( this.production ){
+				if ( this.production && ( process.argv[2] && process.argv[2] !== "webpack:dump" ) ){
 					var pathCache = path.resolve( this.pathCache, bundle );
 					if ( fs.existsSync( pathCache ) ){
 						return ;

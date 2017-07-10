@@ -33,7 +33,7 @@ module.exports = nodefony.registerCommand("webpack",function(){
 		webpackCompile (){
 			this.listen( this, "onReady" , () => {
 				for ( var bundle in this.kernel.bundles ){
-					if ( this.kernel.bundles[bundle].webpackCompiler ){
+					if ( this.kernel.bundles[bundle].webpackCompiler ||  this.kernel.bundles[bundle].webpackCompilerFile ){
 						this.kernel.bundles[bundle].compileWebpack();
 					}
 				}

@@ -84,7 +84,6 @@ module.exports = nodefony.register("kernel", function(){
 			this.publicPath = path.resolve( this.rootDir, "web");
 			this.cacheLink = path.resolve (this.rootDir ,"tmp", "assestLink" ) ;
 
-
 			this.platform = process.platform ;
 			this.typeCluster = this.clusterIsMaster() ? "master" : "worker" ;
 			this.type = type;
@@ -127,7 +126,8 @@ module.exports = nodefony.register("kernel", function(){
 
 			// cli worker
 			this.cli = new nodefony.cliKernel("CLI", this.container, this.notificationsCenter, {
-				asciify:false
+				asciify			: false,
+				autoLogger		: false
 			});
 			this.cli.createDirectory( path.resolve (this.rootDir ,"tmp"), null , (file) => {
 				this.tmpDir = file ;
@@ -145,52 +145,6 @@ module.exports = nodefony.register("kernel", function(){
 						}
 					}
 				}
-			});
-
-			/**
-		 	*	@signals
-		 	*
-		 	*	onTerminate
-		 	*/
-			process.on('SIGINT', () => {
-				this.logger("SIGINT", "CRITIC");
-				this.cli.clear();
-				this.fire("onSignal", "SIGINT", this);
-				this.terminate(0);
-			});
-			process.on('SIGTERM', () => {
-				this.logger("SIGTERM", "CRITIC");
-				this.fire("onSignal", "SIGTERM", this);
-				this.terminate(0);
-			});
-			process.on('SIGHUP', () => {
-				this.logger("SIGHUP", "CRITIC");
-				this.fire("onSignal", "SIGHUP", this);
-				this.terminate(0);
-			});
-			process.on('SIGQUIT',() =>{
-				this.logger("SIGQUIT", "CRITIC");
-				this.cli.clear();
-				this.fire("onSignal", "SIGQUIT", this);
-				this.terminate(0);
-			});
-
-			/**
-		 	*	@promise
-		 	*
-		 	*
-		 	*/
-			const unhandledRejections = new Map();
-			process.on('rejectionHandled', (promise) => {
-				this.logger("PROMISE REJECTION EVENT ", "CRITIC");
-				unhandledRejections.delete(promise);
-			});
-			process.on('unhandledRejection', (reason, promise) => {
-				this.logger("WARNING  !!! PROMISE CHAIN BREAKING : "+ reason, "CRITIC");
-				unhandledRejections.set(promise, reason);
-			});
-			process.on('uncaughtException', (err) => {
-				this.logger(err, "CRITIC");
 			});
 
 			this.cli.asciify("      NODEFONY", {font:'standard'}, (err, res) => {

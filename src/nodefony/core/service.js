@@ -18,26 +18,6 @@ module.exports = nodefony.register("Service", function(){
 	const green = clc.green;
 	const yellow = clc.yellow.bold;
 
-	var logSeverity = function(severity) {
-		switch(severity){
-			case "DEBUG":
-				return cyan(severity);
-			case "INFO":
-				return blue(severity);
-			case "NOTICE" :
-				return red(severity);
-			case "WARNING" :
-				return yellow(severity);
-			case "ERROR" :
-			case "CRITIC":
-			case "ALERT":
-			case "EMERGENCY":
-				return red(severity);
-			default:
-				return cyan(severity);
-		}
-	};
-
 	const Service = class Service {
 
 		constructor(name, container, notificationsCenter, options ){
@@ -84,6 +64,26 @@ module.exports = nodefony.register("Service", function(){
 						this.set("notificationsCenter", this.notificationsCenter);
 					}
 				}
+			}
+		}
+
+		static logSeverity (severity){
+			switch(severity){
+				case "DEBUG":
+					return cyan(severity);
+				case "INFO":
+					return blue(severity);
+				case "NOTICE" :
+					return red(severity);
+				case "WARNING" :
+					return yellow(severity);
+				case "ERROR" :
+				case "CRITIC":
+				case "ALERT":
+				case "EMERGENCY":
+					return red(severity);
+				default:
+					return cyan(severity);
 			}
 		}
 
@@ -147,7 +147,7 @@ module.exports = nodefony.register("Service", function(){
 			}
 			this.syslog.listenWithConditions(this, options || defaultOption , (pdu) => {
 				var date = new Date(pdu.timeStamp) ;
-				console.log( date.toDateString() + " " + date.toLocaleTimeString() + " " + logSeverity( pdu.severityName ) + " " + green(pdu.msgid) + " " + " : " +  pdu.payload);
+				console.log( date.toDateString() + " " + date.toLocaleTimeString() + " " + Service.logSeverity( pdu.severityName ) + " " + green(pdu.msgid) + " " + " : " +  pdu.payload);
 			});
 		}
 

@@ -139,7 +139,7 @@ module.exports = nodefony.register("Bundle", function(){
 			// WEBPACK SERVICE
 			this.webpackService = this.get("webpack");
 			this.webpackCompiler = null ;
-			if( this.kernel.type !== "CONSOLE"){
+			if( this.kernel.type !== "CONSOLE" || ( process.argv[2] && process.argv[2] === "webpack:dump" ) ){
 				try {
 					this.findWebPackConfig();
 				}catch(e){
@@ -342,6 +342,13 @@ module.exports = nodefony.register("Bundle", function(){
 			if ( this.webpackCompiler ){
 				try {
 					return this.webpackService.runCompiler( this.webpackCompiler, this.name);
+				}catch(e){
+					throw e ;
+				}
+			}
+			if ( this.webpackCompilerFile ){
+				try {
+					return this.webpackService.runCompiler( this.webpackCompilerFile, this.name);
 				}catch(e){
 					throw e ;
 				}
