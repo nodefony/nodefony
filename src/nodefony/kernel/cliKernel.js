@@ -121,8 +121,8 @@ module.exports = nodefony.register("cliKernel", function(){
 	 */
 	var cliKernel = class cliKernel extends nodefony.cli {
 
-		constructor (name, container, notificationsCenter){
-			super( name, container, notificationsCenter);
+		constructor (name, container, notificationsCenter, options){
+			super( name, container, notificationsCenter, options);
 			this.publicDirectory = this.kernel.rootDir+"/web/";
 			this.twig = twig ;
 			this.twigOptions = {

@@ -9,7 +9,7 @@ module.exports = nodefony.register("Service", function(){
 	};
 
 	var defaultOptions = {
-		nbListener:20
+		nbListeners:20
 	};
 
 	const red   = clc.red.bold;
@@ -45,7 +45,7 @@ module.exports = nodefony.register("Service", function(){
 			if (name){
 				this.name = name ;
 			}
-			options = nodefony.extend(true, {}, defaultOptions, options) ;
+			this.options = nodefony.extend(true, {}, defaultOptions, options) ;
 
 			if ( container instanceof nodefony.Container  ){
 				this.container = container ;
@@ -64,7 +64,7 @@ module.exports = nodefony.register("Service", function(){
 			if ( ! this.syslog ){
 				this.settingsSyslog = nodefony.extend({}, settingsSyslog , {
 					moduleName: this.name
-				},options.syslog || {} );
+				},this.options.syslog || {} );
 				this.syslog = new nodefony.syslog( this.settingsSyslog );
 				this.set("syslog", this.syslog);
 			}else{
@@ -76,7 +76,7 @@ module.exports = nodefony.register("Service", function(){
 				if ( notificationsCenter ){
 					throw new Error ("Service nodefony notificationsCenter not valid must be instance of nodefony.notificationsCenter.notification");
 				}
-				this.notificationsCenter = nodefony.notificationsCenter.create(options, this, options.nbListener);
+				this.notificationsCenter = nodefony.notificationsCenter.create(this.options, this, this.options.nbListeners);
 				if (! this.kernel ){
 					this.set("notificationsCenter", this.notificationsCenter);
 				}else{

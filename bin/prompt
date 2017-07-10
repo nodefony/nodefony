@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+// nodefony
+try {
+  const nodefony = require("nodefony");
+}catch(e){
+  const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
+}
+var Rx = require('rxjs/Rx');
+
+
+
+var cli =  new nodefony.cli("Fabio", null, null, {});
+/*prompt.inquirer.prompt(["SURNAME ?"]).then(function (answers) {
+    // Use user feedback for... whatever!!
+    console.log(answers)
+    return true ;
+});*/
+var prompts = new Rx.Subject();
+//cli.inquirer.prompt(prompts);
+
+// At some point in the future, push new questions
+prompts.onNext({ /* question... */ });
+prompts.onNext({ /* question... */ });
+
+// When you're done
+prompts.onCompleted();

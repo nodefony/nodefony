@@ -3,6 +3,7 @@ const asciify = require('asciify');
 const spawn = require('child_process').spawn;
 const spawnSync = require('child_process').spawnSync;
 const simpleGit = require('simple-git');
+const inquirer = require('inquirer');
 
 module.exports = nodefony.register( "cli", function(){
 
@@ -42,28 +43,35 @@ module.exports = nodefony.register( "cli", function(){
   		style: {head: ['cyan'], border: ['grey']}
   };
 
-  const niceBytes = function (x){
-  		var units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
-    		    n = parseInt(x, 10) || 0,
-    		    l = 0;
-  		while(n >= 1024){
-      			n = n/1024;
-      			l++;
-  		}
-  		return(n.toFixed(n >= 10 || l < 1 ? 0 : 1) + ' ' + units[l]);
-	};
-	nodefony.niceBytes = niceBytes ;
+  const defaultOptions = {
+    asciify : true
+  };
 
   const CLI = class CLI extends nodefony.Service {
 
-  	constructor (name, container, notificationsCenter){
-  		super( name, container, notificationsCenter);
+  	constructor (name, container, notificationsCenter, options ){
+      options = nodefony.extend(defaultOptions, options);
+  		super( name, container, notificationsCenter, options);
       this.wrapperLog = console.log ;
+      this.inquirer =inquirer ;
    		this.initUi();
+      if ( name  && this.options.asciify ){
+        this.asciify("      "+name , {
+          font: this.options.font || "standard"
+        },(err, data) =>{
+          console.log( blue(data) );
+        });
+      }
   	}
 
+    getFonts(){
+      asciify.getFonts( (err, fonts) => {
+        fonts.forEach( this.logger  );
+      });
+    }
+
     listenSyslog(options){
-        var defaultOption = {
+        let defaultOption = {
             severity: {
                 operator:"<=",
                 data : "7"
@@ -325,8 +333,15 @@ module.exports = nodefony.register( "cli", function(){
   		return table ;
   	}
 
-    niceBytes (x){
-  	     return niceBytes(x);
+    static niceBytes (x){
+      let units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+             n = parseInt(x, 10) || 0,
+             l = 0;
+       while(n >= 1024){
+             n = n/1024;
+             l++;
+       }
+       return(n.toFixed(n >= 10 || l < 1 ? 0 : 1) + ' ' + units[l]);
   	}
 
     getEmoji (name){
@@ -374,6 +389,6 @@ module.exports = nodefony.register( "cli", function(){
         this.startTime = null;
   	}
   };
-
+  nodefony.niceBytes = CLI.niceBytes ;
   return CLI ;
 });

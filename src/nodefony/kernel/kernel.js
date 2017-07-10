@@ -47,14 +47,14 @@ module.exports = nodefony.register("kernel", function(){
 	};
 
 	var defaultEnvEnable = {
-		dev:		true,
-		development:	true,
-		prod:		true,
-		production:	true,
+		dev					:	true,
+		development	:	true,
+		prod				:	true,
+		production	:	true
 	};
 
 	var defaultOptions = {
-		nbListener:30
+		nbListeners:40
 	};
 	/**
 	 *	KERKEL class
@@ -126,7 +126,9 @@ module.exports = nodefony.register("kernel", function(){
 			this.initializeContainer();
 
 			// cli worker
-			this.cli = new nodefony.cliKernel("CLI", this.container, this.notificationsCenter);
+			this.cli = new nodefony.cliKernel("CLI", this.container, this.notificationsCenter, {
+				asciify:false
+			});
 			this.cli.createDirectory( path.resolve (this.rootDir ,"tmp"), null , (file) => {
 				this.tmpDir = file ;
 			}, true );
@@ -457,11 +459,11 @@ module.exports = nodefony.register("kernel", function(){
 			this.process = process ;
 			if (cluster.isMaster) {
 				this.cli.clear();
-				console.log( this.cli.clc.red(ascci) );
+				console.log( this.cli.clc.blue(ascci) );
 				console.log("		      \x1b[34mNODEFONY "+this.type+" CLUSTER MASTER \x1b[0mVersion : "+ nodefony_version +" PLATFORM : "+this.platform+"  PROCESS PID : "+this.processId+"\n");
 				this.fire("onCluster", "MASTER", this,  process);
 			}else if (cluster.isWorker) {
-				console.log( this.cli.clc.red(ascci) );
+				console.log( this.cli.clc.blue(ascci) );
 				console.log("		      \x1b[34mNODEFONY "+this.type+" CLUSTER WORKER \x1b[0mVersion : "+ nodefony_version +" PLATFORM : "+this.platform+"  PROCESS PID : "+this.processId);
 				this.workerId = cluster.worker.id ;
 				this.worker = cluster.worker ;
@@ -840,16 +842,16 @@ module.exports = nodefony.register("kernel", function(){
 			for ( var ele in memory ){
 				switch (ele ){
 					case "rss" :
-						this.logger( (message || ele )  + " ( Resident Set Size ) PID ( "+this.processId+" ) : " + this.cli.niceBytes( memory[ele] ) , "INFO", "MEMORY " + ele) ;
+						this.logger( (message || ele )  + " ( Resident Set Size ) PID ( "+this.processId+" ) : " + nodefony.cli.niceBytes( memory[ele] ) , "INFO", "MEMORY " + ele) ;
 					break;
 					case "heapTotal" :
-						this.logger( (message || ele ) + " ( Total Size of the Heap ) PID ( "+this.processId+" ) : " + this.cli.niceBytes( memory[ele] ) , "INFO","MEMORY " + ele) ;
+						this.logger( (message || ele ) + " ( Total Size of the Heap ) PID ( "+this.processId+" ) : " + nodefony.cli.niceBytes( memory[ele] ) , "INFO","MEMORY " + ele) ;
 					break;
 					case "heapUsed" :
-						this.logger( (message || ele ) + " ( Heap actually Used ) PID ( "+this.processId+" ) : " + this.cli.niceBytes( memory[ele] ) , "INFO", "MEMORY " + ele) ;
+						this.logger( (message || ele ) + " ( Heap actually Used ) PID ( "+this.processId+" ) : " + nodefony.cli.niceBytes( memory[ele] ) , "INFO", "MEMORY " + ele) ;
 					break;
 					case "external" :
-						this.logger( (message || ele ) + " PID ( "+this.processId+" ) : " + this.cli.niceBytes( memory[ele] ) , "INFO", "MEMORY " + ele) ;
+						this.logger( (message || ele ) + " PID ( "+this.processId+" ) : " + nodefony.cli.niceBytes( memory[ele] ) , "INFO", "MEMORY " + ele) ;
 					break;
 				}
 			}

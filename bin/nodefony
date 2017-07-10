@@ -2,7 +2,6 @@
 var path = require("path");
 var arg = process.argv.slice(2)[0];
 
-
 switch ( arg ){
 	case "app" :
 		try {
