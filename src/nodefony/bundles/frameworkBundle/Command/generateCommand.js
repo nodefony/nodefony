@@ -243,8 +243,8 @@ module.exports = nodefony.registerCommand("generate",function(){
 
 					},
 					routing.call(this, param, type, bundleType),
-					webpack.call(this, param, type, bundleType)
-
+					webpack.call(this, param, type, bundleType),
+					security.call(this, param, type, bundleType)
 				]
 			},
 			public.call(this, param),
@@ -346,6 +346,15 @@ module.exports = nodefony.registerCommand("generate",function(){
 				throw e;
 			}
 		});
+	};
+
+	var security  = function(obj, type, bundleType){
+		return  {
+			name:"security."+type,
+			type:"file",
+			skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/"+bundleType+"/security."+type+".skeleton" ),
+			params:obj
+		};
 	};
 
 	var service = function(obj, type){
