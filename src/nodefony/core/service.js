@@ -52,6 +52,9 @@ module.exports = nodefony.register("Service", function(){
 			}
 			if ( notificationsCenter instanceof nodefony.notificationsCenter.notification ){
 				this.notificationsCenter = notificationsCenter ;
+				if (options){
+						this.notificationsCenter.settingsToListen(options, this) ;
+				}
 			}else{
 				if ( notificationsCenter ){
 					throw new Error ("Service nodefony notificationsCenter not valid must be instance of nodefony.notificationsCenter.notification");

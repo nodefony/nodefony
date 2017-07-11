@@ -10,9 +10,9 @@ module.exports = nodefony.registerCommand("assets",function(){
 
 	var Asset = class Asset extends nodefony.cliKernel {
 
-		constructor (container, command/*, options*/){
+		constructor (container, command, options){
 
-			super( "assets", container, container.get("notificationsCenter") );
+			super( "assets", container, container.get("notificationsCenter") , options);
 
 			var arg = command[0].split(":");
 			switch( arg[0] ){

@@ -12,9 +12,9 @@ module.exports = nodefony.registerCommand("router",function(){
 
 	var router = class router extends nodefony.cliKernel {
 
-		constructor(container, command/*, options*/ ){
+		constructor(container, command, options ){
 
-			super( "router", container, container.get("notificationsCenter") );
+			super( "router", container, container.get("notificationsCenter"), options );
 
 			this.router = this.container.get("router");
 

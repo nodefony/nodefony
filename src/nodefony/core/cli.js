@@ -18,62 +18,88 @@ module.exports = nodefony.register( "cli", function(){
   const unhandledRejections = new Map();
 
   const defaultOptions = {
-    asciify : true,
-    color: blue,
-    signals: true,
-    autoLogger:true,
+    asciify     : true,
+    clear       : true,
+    color       : blue,
+    signals     : true,
+    autoLogger  : true,
+    resize      : false,
     promiseRejection:true
   };
 
   const CLI = class CLI extends nodefony.Service {
 
   	constructor (name, container, notificationsCenter, options ){
-      options = nodefony.extend(defaultOptions, options);
-  	  super( name, container, notificationsCenter, options);
+
+      switch (arguments.length){
+        case 0 :
+            options = nodefony.extend({}, defaultOptions);
+            super( "CLI", null, null, options);
+        break;
+        case 1 :
+            options = nodefony.extend({}, defaultOptions);
+            super( name, null, null, options);
+        break;
+        case 2 :
+            if (  container instanceof nodefony.Container ){
+                options = nodefony.extend({}, defaultOptions);
+                super( name, container, null, options);
+            }else{
+              if (typeof container === "object" &&  container !== null ){
+                  options = nodefony.extend({}, defaultOptions, container);
+                  super( name, null, null, options);
+              }else{
+                  options = nodefony.extend({}, defaultOptions);
+                  super( name, container, null, options);
+              }
+            }
+        break;
+        default :
+            options = nodefony.extend({}, defaultOptions, options);
+            super( name, container, notificationsCenter, options);
+      }
       this.wrapperLog = console.log ;
       this.inquirer = inquirer ;
    	  this.initUi();
       if ( this.options.autoLogger ){
           this.listenSyslog();
       }
-      if ( name  && this.options.asciify ){
-        this.asciify("      " + name ,{
-          font: this.options.font || "standard"
-        },(err, data) =>{
-            let color = this.options.color || blue ;
-            console.log( color(data) );
-        });
-      }
+
       /**
       *	@signals
-      *
-      *	onTerminate
       */
       if ( this.options.signals ) {
           process.on('SIGINT', () => {
+              this.blankLine();
+              this.wrapperLog = console.log ;
               this.logger("SIGINT", "CRITIC");
               //this.clear();
               this.fire("onSignal", "SIGINT", this);
               this.terminate(0);
           });
           process.on('SIGTERM', () => {
+              this.blankLine();
+              this.wrapperLog = console.log ;
               this.logger("SIGTERM", "CRITIC");
               this.fire("onSignal", "SIGTERM", this);
               this.terminate(0);
           });
           process.on('SIGHUP', () => {
+              this.blankLine();
+              this.wrapperLog = console.log ;
               this.logger("SIGHUP", "CRITIC");
               this.fire("onSignal", "SIGHUP", this);
               this.terminate(0);
           });
           process.on('SIGQUIT',() =>{
+              this.blankLine();
+              this.wrapperLog = console.log ;
               this.logger("SIGQUIT", "CRITIC");
               //this.clear();
               this.fire("onSignal", "SIGQUIT", this);
               this.terminate(0);
           });
       }
-
       /**
       *	@promiseRejection
       */
@@ -90,6 +116,42 @@ module.exports = nodefony.register( "cli", function(){
               this.logger(err, "CRITIC");
           });
       }
+      /**
+       *    ASCIIFY
+       */
+      if ( name  && this.options.asciify ){
+        this.asciify("      " + name ,{
+            font: this.options.font || "standard"
+            },(err, data) =>{
+                if (this.options.clear ){
+                    this.clear();
+                }
+                let color = this.options.color || blue ;
+                console.log( color(data) );
+                if ( err ){
+                    throw err ;
+                }
+                this.fire("onStart", this);
+        });
+      }else{
+        this.fire("onStart", this);
+      }
+    }
+
+    initUi () {
+  		this.clc = clc ;
+  		this.clui = require("clui");
+  		this.emoji = require("node-emoji");
+        this.spinner = null ;
+  		this.blankLine =  function(){
+  				var myLine = new this.clui.Line().fill() ;
+  				return () =>{
+  					myLine.output();
+  				}
+  		}.call(this);
+        if (this.options.resize ){
+            this.resize();
+        }
   	}
 
     getFonts(){
@@ -115,19 +177,6 @@ module.exports = nodefony.register( "cli", function(){
         font:'standard'
       }, options) , callback) ;
     }
-
-  	initUi () {
-  		this.clc = clc ;
-  		this.clui = require("clui");
-  		this.emoji = require("node-emoji");
-          this.spinner = null ;
-  		this.blankLine =  function(){
-  				var myLine = new this.clui.Line().fill() ;
-  				return () =>{
-  					myLine.output();
-  				}
-  		}.call(this)
-  	}
 
     createProgress (size){
         return new this.clui.Progress(size)
@@ -182,7 +231,8 @@ module.exports = nodefony.register( "cli", function(){
         this.wrapperLog = console.log ;
       }
     	return this.wrapperLog( date.toDateString() + " " + date.toLocaleTimeString() + " " + nodefony.Service.logSeverity( pdu.severityName ) + " " + green(pdu.msgid) + " " + " : " + message);
-	  }
+	}
+
   	displayTable ( datas, options , syslog){
   		var table = new Table(  options ||  defaultTableCli  );
 

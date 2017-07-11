@@ -9,9 +9,9 @@ module.exports = nodefony.registerCommand("Monitoring",function(){
 
 	var monitoring = class monitoring  extends nodefony.cliKernel {
 
-		constructor (container, command/*, options*/){
+		constructor (container, command, options){
 
-			super( "Monitoring", container, container.get("notificationsCenter") );
+			super( "Monitoring", container, container.get("notificationsCenter"), options );
 
 			var arg = command[0].split(":");
 			switch ( arg[1] ){

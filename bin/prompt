@@ -6,13 +6,16 @@ try {
   const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
 }
 
-var cli =  new nodefony.cli("CLI", null, null, {});
+var cli =  new nodefony.cli("CLI", null, null, {
+    onStart:(cli) =>{
+        cli.inquirer.prompt(questions).then(function (answers) {
+          console.log('\nOrder receipt:');
+          console.log(JSON.stringify(answers, null, '  '));
+        });
+    }
+});
 
-console.log("PASS")
 
-setTimeout(()=>{} , 80000000)
-
-/*
 // https://github.com/SBoudrias/Inquirer.js/tree/master/examples
 var questions = [
   {
@@ -97,8 +100,3 @@ var questions = [
     }
   }
 ];
-
-cli.inquirer.prompt(questions).then(function (answers) {
-  console.log('\nOrder receipt:');
-  console.log(JSON.stringify(answers, null, '  '));
-});*/

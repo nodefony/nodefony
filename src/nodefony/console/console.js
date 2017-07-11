@@ -40,7 +40,9 @@ module.exports = nodefony.register("console", function(){
 						this.listPackage(this.rootDir+"/package.json");
 					}
 				},
-				syslog:settingsSysLog
+				syslog:settingsSysLog,
+				onStart:() =>{
+				}
 			}));
 			this.commands = {};
 			this.getOptsTab = [];
@@ -87,7 +89,7 @@ module.exports = nodefony.register("console", function(){
 	 	*	@method registerBundles
 	 	*	@param {String} path
 	 	*	@param {Function} callbackFinish
-    */
+    	*/
 		registerBundles (path, callbackFinish, nextick){
 			var func = ( Path ) => {
 				try{
@@ -153,10 +155,10 @@ module.exports = nodefony.register("console", function(){
 						ele.push([
 							data.dependencies[pack].name,
 							data.dependencies[pack].version,
-							data.dependencies[pack].description
+							data.dependencies[pack].description || ""
 						]);
 					}
-					this.logger( "NPM NODEFONY PACKAGES", "INFO")
+					this.logger( "NPM NODEFONY PACKAGES", "INFO");
 					var headers = [
 						"NAME",
 						"VERSION",
@@ -269,7 +271,13 @@ module.exports = nodefony.register("console", function(){
 							var worker = this.commands[bundle][cmd];
 							if (worker){
 								try {
-									ret = new worker(this.container, this.cliParse.argv , this.cliParse.options );
+									ret = new worker(this.container, this.cliParse.argv , {
+										asciify     : true,
+										clear       : true,
+										signals     : false,
+										autoLogger  : false,
+										promiseRejection:false
+									} );
 								}catch(e){
 									throw e ;
 								}

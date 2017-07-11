@@ -607,7 +607,7 @@ module.exports = nodefony.registerCommand("generate",function(){
  	 */
 	var generate = class generate extends nodefony.cliKernel {
 
-		constructor(container, command/*, options*/){
+		constructor(container, command, options){
 
 			super( "generate", container, container.get("notificationsCenter") );
 

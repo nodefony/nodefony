@@ -4,9 +4,9 @@ module.exports = nodefony.registerCommand("unitTest", function(){
 
 	var unitTest = class unitTest extends nodefony.cliKernel {
 
-		constructor (container, command/*, options*/){
+		constructor (container, command, options){
 
-			super( "unitTest", container, container.get("notificationsCenter") );
+			super( "unitTest", container, container.get("notificationsCenter") , options);
 
 			var arg = command[0].split(":");
 			command.shift();

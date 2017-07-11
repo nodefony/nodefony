@@ -9,9 +9,9 @@ module.exports = nodefony.registerCommand("Sequelize",function(){
 
 	var sequelizeCmd = class sequelizeCmd  extends nodefony.cliKernel {
 
-		constructor (container, command/*, options*/){
+		constructor (container, command, options){
 
-			super( "Sequelize", container, container.get("notificationsCenter") );
+			super( "Sequelize", container, container.get("notificationsCenter"), options );
 
 			var arg = command[0].split(":");
 			this.ormService = this.container.get("sequelize");

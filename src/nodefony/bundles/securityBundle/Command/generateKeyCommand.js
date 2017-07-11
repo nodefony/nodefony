@@ -10,9 +10,9 @@ module.exports = nodefony.registerCommand("encoders",function(){
 
 	var encoders = class encoders extends nodefony.cliKernel {
 
-		constructor(container, command/*, options*/){
+		constructor(container, command, options){
 
-			super( "encoders", container, container.get("notificationsCenter") );
+			super( "encoders", container, container.get("notificationsCenter") , options);
 
 			var arg = command[0].split(":");
 			var realm = null ;

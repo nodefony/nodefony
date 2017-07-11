@@ -211,6 +211,7 @@ module.exports = nodefony.registerService("webpack", function(){
 					case "angular" :
 						publicPath = path.resolve("/", bundle.bundleName, "dist" );
 						shell.cd(Path);
+						console.log(file.path)
 						config = require( file.path );
 						config.output.path = path.resolve("Resources", "public", "dist") ;
 						if ( publicPath ){
@@ -349,7 +350,7 @@ module.exports = nodefony.registerService("webpack", function(){
 
 		runCompiler (compiler, bundle){
 			try {
-				if ( this.production && ( process.argv[2] && process.argv[2] !== "webpack:dump" ) ){
+				if ( this.production && ( process.argv[2] && ( process.argv[2] !== "webpack:dump" ) ) ){
 					var pathCache = path.resolve( this.pathCache, bundle );
 					if ( fs.existsSync( pathCache ) ){
 						return ;

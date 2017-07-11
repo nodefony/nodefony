@@ -8,9 +8,9 @@ module.exports = nodefony.registerCommand("webpack",function(){
 
 	var webpack = class webpack extends nodefony.cliKernel {
 
-		constructor(container, command/*, options*/){
+		constructor(container, command, options){
 
-			super( "webpack", container, container.get("notificationsCenter") );
+			super( "webpack", container, container.get("notificationsCenter"), options );
 
 			this.config = this.container.getParameters("bundles.App");
 			this.configKernel = this.container.getParameters("kernel");

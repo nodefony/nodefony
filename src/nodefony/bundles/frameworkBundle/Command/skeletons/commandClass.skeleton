@@ -11,7 +11,7 @@ module.exports = nodefony.registerCommand("{{name}}",function(){
 
 			constructor(container, command, options){
 
-				super( "{{name}}", container, container.get("notificationsCenter") );
+				super( "{{name}}", container, container.get("notificationsCenter"), options);
 
 				var arg = command[0].split(":");
 				switch ( arg[1] ){

@@ -113,6 +113,7 @@ module.exports = nodefony.register("kernel", function(){
 			this.debug = debug || false;
 			this.booted = false;
 			this.ready = false;
+			this.start = false ;
 
 			this.nodefonyPath = this.autoLoader.dirname;
 			this.settings = null;
@@ -125,10 +126,22 @@ module.exports = nodefony.register("kernel", function(){
 			this.initializeContainer();
 
 			// cli worker
-			this.cli = new nodefony.cliKernel("CLI", this.container, this.notificationsCenter, {
-				asciify			: false,
-				autoLogger		: false
-			});
+			try {
+				this.cli = new nodefony.cliKernel("      NODEFONY", this.container, this.notificationsCenter, {
+					autoLogger		: false,
+					onStart			: ( cli ) => {
+						if ( ! this.start ){
+							this.initCluster();
+							this.boot(options);
+							this.start = true ;
+						}
+					}
+				});
+			}catch(e){
+				console.trace(e)
+				throw e ;
+			}
+
 			this.cli.createDirectory( path.resolve (this.rootDir ,"tmp"), null , (file) => {
 				this.tmpDir = file ;
 			}, true );
@@ -147,10 +160,10 @@ module.exports = nodefony.register("kernel", function(){
 				}
 			});
 
-			this.cli.asciify("      NODEFONY", {font:'standard'}, (err, res) => {
+			/*this.cli.asciify("      NODEFONY", {font:'standard'}, (err, res) => {
 				this.initCluster(res);
 				this.boot(options);
-			});
+			});*/
 		}
 
 		/**
@@ -408,16 +421,15 @@ module.exports = nodefony.register("kernel", function(){
 			return cluster.isMaster ;
 		}
 
-		initCluster (ascci){
+		initCluster (){
 			this.processId = process.pid ;
 			this.process = process ;
 			if (cluster.isMaster) {
-				this.cli.clear();
-				console.log( this.cli.clc.blue(ascci) );
+				//console.log( this.cli.clc.blue(ascci) );
 				console.log("		      \x1b[34mNODEFONY "+this.type+" CLUSTER MASTER \x1b[0mVersion : "+ nodefony_version +" PLATFORM : "+this.platform+"  PROCESS PID : "+this.processId+"\n");
 				this.fire("onCluster", "MASTER", this,  process);
 			}else if (cluster.isWorker) {
-				console.log( this.cli.clc.blue(ascci) );
+				//console.log( this.cli.clc.blue(ascci) );
 				console.log("		      \x1b[34mNODEFONY "+this.type+" CLUSTER WORKER \x1b[0mVersion : "+ nodefony_version +" PLATFORM : "+this.platform+"  PROCESS PID : "+this.processId);
 				this.workerId = cluster.worker.id ;
 				this.worker = cluster.worker ;
@@ -814,7 +826,7 @@ module.exports = nodefony.register("kernel", function(){
 		/**
 	 	*
 	 	*	@method terminate
-    */
+    	*/
 		terminate (code){
 			if ( code === undefined ){
 				code = 0 ;

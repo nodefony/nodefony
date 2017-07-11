@@ -11,9 +11,9 @@ module.exports = nodefony.registerCommand("less",function(){
 
 	var Less = class Less extends nodefony.cliKernel {
 
-		constructor(container, command/*, options*/){
+		constructor(container, command, options){
 
-			super( "less", container );
+			super( "less", container , null, options);
 
 			this.engine = require("less");
 			var arg = command[0].split(":");

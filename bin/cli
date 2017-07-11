@@ -6,6 +6,50 @@ try {
   const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
 }
 
+// CLI
+const cli = new nodefony.cli("MY CLI" , {
+    resize:true,
+    onResize: (cli)=>{
+        cli.logger("RESIZE : " + cli.getEmoji() );
+    },
+    onStart: (cli) =>{
+        cli.logger("ON START");
+        // PROMISE
+        simpleLogger(cli).then ( (cli) => {
+            // SPINNER
+            return spinner(cli, 5000);
+        })
+        .then( (cli) =>{
+            // TABLE
+            return tableExample(cli) ;
+        })
+        .then((cli) => {
+            // PROGRESS
+            return progress(cli, 20);
+        })
+        .then((cli) => {
+            // PROGRESS 2
+            return progress2(cli, 20);
+        })
+        .then( (cli) =>{
+            // Sparkline
+            return Sparkline(cli);
+        })
+        .then( (cli) =>{
+            // Sparkline 2
+            return Sparkline2(cli, 30);
+        })
+        .then( (cli) =>{
+            cli.logger("TERMINATE MY CLI : " + cli.getEmoji("checkered_flag") );
+            cli.terminate();
+        })
+        .catch( (e) =>{
+            console.log(e)
+            cli.terminate(1);
+        })
+    }
+});
+
 const simpleLogger = function(cli){
     return  new Promise( (resolve, reject) => {
         cli.logger("START simpleLogger : " + cli.getEmoji("clapper"));
@@ -144,51 +188,3 @@ const Sparkline2 = function(cli, time){
         }, time || 30);
     });
 };
-
-// CLI
-const cli = new nodefony.cli("MY CLI");
-cli.clear();
-cli.listenSyslog();
-
-// LOGGER WHEN RESIZE WINDOW
-cli.resize();
-cli.on("onResize", () => {
-  cli.logger("RESIZE : " + cli.getEmoji() );
-});
-
-cli.asciify("      "+cli.name, {font:'standard'}, (err, res) => {
-  console.log( cli.clc.red(res) );
-
-  simpleLogger(cli).then ( (cli) => {
-      // SPINNER
-      return spinner(cli, 5000);
-  })
-  .then( (cli) =>{
-      // TABLE
-      return tableExample(cli) ;
-  })
-  /*.then((cli) => {
-      // PROGRESS
-      return progress(cli, 20);
-  })*/
-  .then((cli) => {
-      // PROGRESS 2
-      return progress2(cli, 20);
-  })
-  .then( (cli) =>{
-      // Sparkline
-      return Sparkline(cli);
-  })
-  .then( (cli) =>{
-      // Sparkline 2
-      return Sparkline2(cli, 30);
-  })
-  .then( (cli) =>{
-      cli.logger("TERMINATE MY CLI : " + cli.getEmoji("checkered_flag") );
-      cli.terminate();
-  })
-  .catch( (e) =>{
-      console.log(e)
-      cli.terminate(1);
-  });
-});
