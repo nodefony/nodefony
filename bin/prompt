@@ -6,7 +6,9 @@ try {
   const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
 }
 
-var cli =  new nodefony.cli("CLI MON VIER", null, null, {});
+var cli =  new nodefony.cli("CLI", null, null, {});
+
+console.log("PASS")
 
 setTimeout(()=>{} , 80000000)
 

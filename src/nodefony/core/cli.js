@@ -31,7 +31,7 @@ module.exports = nodefony.register( "cli", function(){
       options = nodefony.extend(defaultOptions, options);
   	  super( name, container, notificationsCenter, options);
       this.wrapperLog = console.log ;
-      this.inquirer =inquirer ;
+      this.inquirer = inquirer ;
    	  this.initUi();
       if ( this.options.autoLogger ){
           this.listenSyslog();
@@ -44,7 +44,6 @@ module.exports = nodefony.register( "cli", function(){
             console.log( color(data) );
         });
       }
-
       /**
       *	@signals
       *
