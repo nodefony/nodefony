@@ -37,7 +37,7 @@ module.exports = nodefony.register("console", function(){
 			super("CONSOLE", environment, debug, nodefony.extend( settings , {
 				onBoot:function(){
 					if ( process.argv[2] && process.argv[2] === "npm:list" ){
-						this.listPackage(this.rootDir+"/package.json");
+						this.listPackage(this.rootDir);
 					}
 				},
 				syslog:settingsSysLog,
@@ -90,17 +90,19 @@ module.exports = nodefony.register("console", function(){
 	 	*	@param {String} path
 	 	*	@param {Function} callbackFinish
     	*/
-		registerBundles (path, callbackFinish, nextick){
+		registerBundles (mypath, callbackFinish, nextick){
 			var func = ( Path ) => {
 				try{
 					new nodefony.finder( {
 						path:Path,
 						recurse:false,
+						followSymLink: true,
+						exclude:/^doc$|^node_modules$/,
 						onFile:(file) => {
 							if (file.matchName(this.regBundle)){
 								try {
 									if ( process.argv[2] && process.argv[2] === "npm:install" ){
-										var name = this.getBundleName(file.name);
+										let name = this.getBundleName(file.name);
 										if ( file.shortName in this.bundlesCore ){
 											if ( this.isCore ){
 												this.installPackage(name, file);
@@ -133,44 +135,124 @@ module.exports = nodefony.register("console", function(){
 
 			if ( nextick === undefined ){
 				process.nextTick( () =>{
-					func.call(this, path );
+					func.call(this, mypath );
 				});
 			}else{
-				func.call(this, path );
+				func.call(this, mypath );
 			}
 		}
 
-		listPackage (conf){
-			conf = require(conf);
-			npm.load(conf, (error) => {
-				if (error){
-					this.logger(error,"ERROR");
-					this.terminate(1);
-					return ;
-				}
-				npm.commands.ls([], true, (error, data) =>{
-					var ele = [];
-					for (var pack in data.dependencies){
-						//this.kernel.logger(data.dependencies[pack].name + " : " + data.dependencies[pack].version + " description : " + data.dependencies[pack].description , "INFO");
-						ele.push([
-							data.dependencies[pack].name,
-							data.dependencies[pack].version,
-							data.dependencies[pack].description || ""
-						]);
-					}
-					this.logger( "NPM NODEFONY PACKAGES", "INFO");
-					var headers = [
-						"NAME",
-						"VERSION",
-						"DESCRIPTION"
-					];
-					this.cli.displayTable(ele, {
-						head: headers,
-						colWidths :[30,10,100]
+		npmList (Path, ele){
+			return new Promise ((resolve, reject) =>{
+					let config = path.resolve( Path , "package.json");
+				  shell.cd(Path);
+					let conf  = require(config);
+					this.logger( "NPM NODEFONY PACKAGES :" + config , "INFO");
+					npm.load(conf, (error, event) => {
+						if (error){
+							return reject(error)
+						}
+						event.config.localPrefix = Path;
+						event.config.globalPrefix = this.rootDir ;
+						event.localPrefix = Path ;
+						event.globalPrefix = this.rootDir ;
+						npm.commands.ls([], true, (error, data) => {
+							if (error){
+								return reject(error);
+							}
+							for (var pack in data.dependencies){
+								ele.push([
+									data.dependencies[pack].name,
+									data.dependencies[pack].version,
+									data.dependencies[pack]._where || ""
+								]);
+							}
+							return resolve(ele);
+						});
 					});
-					this.terminate(0);
+			});
+		}
+
+		listPackage(conf){
+			let tab = [] ;
+			let mypromise = this.npmList(conf, tab) ;
+			for (let bundle in  this.bundles){
+				if ( bundle+"Bundle" in  this.bundlesCore ){
+					continue ;
+				}
+				mypromise.then( this.npmList(this.bundles[bundle].path, tab) );
+			}
+			return mypromise.then((ele)=>{
+				var headers = [
+					"NAME",
+					"VERSION",
+					"WHERE"
+				];
+				this.cli.displayTable(ele, {
+					head: headers,
+					colWidths :[30,10,100]
+				});
+				this.terminate(0);
+			}).catch((error) =>{
+				this.logger(error,"ERROR");
+				this.terminate(1);
+				return ;
+			});
+		}
+
+		npmInstall(Path, prod){
+			return  new Promise ((resolve, reject) =>{
+				let conf = path.resolve( Path , "package.json");
+				shell.cd(Path);
+				let config  = require(conf);
+				this.logger("NPM :"+npm.version+  " Installing Dependencies for bundle : " + file.shortName  );
+				npm.load(config, (error, event) => {
+					if (error){
+						return reject(error)
+					}
+					event.config.localPrefix = Path;
+					event.config.globalPrefix = this.rootDir ;
+					event.localPrefix = Path ;
+					event.globalPrefix = this.rootDir ;
+					let tab = [] ;
+					for (let dep in config.dependencies ){
+							let mypackage = dep+"@"+config.dependencies[dep] ;
+							try {
+								require.resolve(dep);
+							}catch(e){
+								this.logger( "\t Dependency : " + mypackage  );
+								tab.push( mypackage );
+							}
+					}
+					if ( ! prod ){
+						for (let dep in config.devDependencies ){
+								let mypackage = dep+"@"+config.devDependencies[dep] ;
+								try {
+									require.resolve(dep);
+								}catch(e){
+									this.logger( "\t Dependency dev : " + mypackage  );
+									tab.push( mypackage );
+								};
+						}
+					}
+					if (tab.length ){
+						event.commands.install(tab, (err, data) =>{
+							if ( err ){
+								this.logger("NPM :"+npm.version+  " Installing Dependencies for bundle : " + file.shortName  , "ERROR");
+								this.logger(err, "ERROR");
+								shell.cd(this.rootDir);
+								return reject(err);
+							}
+							shell.cd(this.rootDir);
+							return resolve(data);
+						});
+					}
 				});
 			});
+		}
+
+		installPackage (name, file, prod){
+			return this.npmInstall(file.dirName, prod);
 		}
 
 		installPackage (name, file, prod){

@@ -301,10 +301,10 @@ module.exports = nodefony.register("kernel", function(){
 		}
 
 		getConfigBunbles (){
-			var config = [] ;
+			let config = [] ;
 			this.checkBundlesExist( this.settings, "Kernel Config" , this.configPath );
 			try {
-				for ( var bundle in this.settings.system.bundles){
+				for ( let bundle in this.settings.system.bundles){
 					var name = this.settings.system.bundles[bundle].replace("\.\/","").replace(/\/\//,"/") ;
 					config.push(name);
 				}
@@ -317,7 +317,7 @@ module.exports = nodefony.register("kernel", function(){
 		checkBundlesExist (yml, nameConfig, pathConfig, remove){
 			var exist = null ;
 			if (yml && yml.system && yml.system.bundles ){
-				for ( var bundle in yml.system.bundles ){
+				for ( let bundle in yml.system.bundles ){
 					try {
 						exist = fs.existsSync( path.resolve ( this.rootDir, yml.system.bundles[bundle] ) );
 					}catch(e){
@@ -619,11 +619,11 @@ module.exports = nodefony.register("kernel", function(){
 	 	*	@param {String} path
 	 	*	@param {Function} callbackFinish
          	*/
-		registerBundles (path, callbackFinish, nextick){
+		registerBundles (mypath, callbackFinish, nextick){
 			var func = function(){
 				try{
 					 return new nodefony.finder( {
-						path: path,
+						path: mypath,
 						followSymLink: true,
 						exclude:/^doc$|^node_modules$/,
 						recurse: false,
