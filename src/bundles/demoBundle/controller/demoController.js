@@ -33,6 +33,7 @@ module.exports = nodefony.registerController("demo", function(){
 			return {
 				title:"nodefony",
 				user: this.context.user,
+				version:kernel.version,
 				nodefony:kernel.settings.name + " " + kernel.settings.system.version
 			};
 			// WITH RENDER

@@ -132,7 +132,8 @@ module.exports = nodefony.registerService("webpack", function(){
 			super ("WEBPACK", container);
 			this.production = ( this.kernel.environment === "prod" ) ?  true :  false ;
 			this.defaultConfig = defaultConfig.call(this, "nodefony");
-			this.pathCache = path.resolve(this.kernel.rootDir, "tmp", "webpack") ;
+			//this.pathCache = path.resolve(this.kernel.rootDir, "tmp", "webpack") ;
+			this.pathCache = this.kernel.cacheWebpack ;
 			this.host = this.kernel.hostHttps ;
 			this.webpack = webpack ;
 			this.version = this.getWebpackVersion()
@@ -211,7 +212,6 @@ module.exports = nodefony.registerService("webpack", function(){
 					case "angular" :
 						publicPath = path.resolve("/", bundle.bundleName, "dist" );
 						shell.cd(Path);
-						console.log(file.path)
 						config = require( file.path );
 						config.output.path = path.resolve("Resources", "public", "dist") ;
 						if ( publicPath ){
@@ -280,7 +280,6 @@ module.exports = nodefony.registerService("webpack", function(){
 					if ( (this.kernel.environment === "dev" ) && (basename in this.kernel.bundlesCore) && ( ! this.kernel.isCore ) ){
 						return compiler ;
 					}
-					//this.logger( "RUN WEBPACK COMPILER : "+ basename +" COMPILE ENTRY POINT : \n" +this.displayConfigTable(config) );
 					this.runCompiler(compiler, idfile);
 				}
 			}catch(e){
@@ -342,7 +341,6 @@ module.exports = nodefony.registerService("webpack", function(){
 				if ( (this.kernel.environment === "dev" ) && (basename in this.kernel.bundlesCore) && ( ! this.kernel.isCore ) ){
 					return compiler ;
 				}
-				//this.logger( "WEBPACK BUNDLE : "+ basename +" COMPILE ENTRY POINT : \n" + util.inspect(myConf.entry)  );
 				this.runCompiler(compiler, basename);
 			}
 			return compiler ;
@@ -350,7 +348,7 @@ module.exports = nodefony.registerService("webpack", function(){
 
 		runCompiler (compiler, bundle){
 			try {
-				if ( this.production && ( process.argv[2] && ( process.argv[2] !== "webpack:dump" ) ) ){
+				if ( this.production ){
 					var pathCache = path.resolve( this.pathCache, bundle );
 					if ( fs.existsSync( pathCache ) ){
 						return ;

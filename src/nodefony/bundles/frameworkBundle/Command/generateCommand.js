@@ -609,7 +609,7 @@ module.exports = nodefony.registerCommand("generate",function(){
 
 		constructor(container, command, options){
 
-			super( "generate", container, container.get("notificationsCenter") );
+			super( "generate", container, container.get("notificationsCenter"), options );
 
 			this.config = this.container.getParameters("bundles.App");
 			this.configKernel = this.container.getParameters("kernel");
@@ -782,7 +782,6 @@ module.exports = nodefony.registerCommand("generate",function(){
 				this.logger(e, "ERROR");
 				this.terminate(1);
 			}
-
 		}
 
 		generateAngularBundle (name, Path){

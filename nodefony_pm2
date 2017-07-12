@@ -5,24 +5,14 @@ const yaml = require('js-yaml');
 const fs = require("fs");
 const path = require('path');
 const instances =  require('os').cpus().length ;
-const shell = require("shelljs");
 
-var links = path.resolve( ".", "tmp", "assestLink" ) ;
-if ( fs.existsSync( links) ){
-	console.log("DELETE TMP :" + links)
-	shell.rm("-Rf", links);
-}
 
-var webpack = path.resolve( ".", "tmp", "webpack" ) ;
-if ( fs.existsSync( webpack) ){
-	console.log("DELETE TMP :" + webpack)
-	shell.rm("-Rf", webpack);
-}
-
-var nodefonyConfig = null ;
+let nodefonyConfig = null ;
+let conf = null ;
+let exist = null ;
 try {
-	var conf = path.resolve(".", "config", "config.yml");
-	var exist = fs.existsSync( conf );
+	conf = path.resolve(".", "config", "config.yml");
+	exist = fs.existsSync( conf );
 	if (exist){
 		nodefonyConfig =  yaml.load( fs.readFileSync(conf, 'utf8' ) );
 	}
@@ -31,22 +21,22 @@ try {
 	throw e ;
 }
 
-var projectName = null ;
+let projectName = null ;
 try {
-	var app = path.resolve( "app", "config", "config.yml") ;
-	var exist = fs.existsSync( app );
+	conf = path.resolve( "app", "config", "config.yml") ;
+	exist = fs.existsSync( conf );
 	if (exist){
-		projectName = yaml.load( fs.readFileSync( app, 'utf8' ) ).App.projectName;
+		projectName = yaml.load( fs.readFileSync( conf, 'utf8' ) ).App.projectName;
 	}
 }catch(e){
 	console.trace(e)
 	throw e ;
 }
 
-var config = null ;
+let config = null ;
 try {
-	var conf = path.resolve(".", "config", "pm2.json");
-	var exist = fs.existsSync(conf);
+	conf = path.resolve(".", "config", "pm2.json");
+	exist = fs.existsSync(conf);
 	if (exist){
 		config = require(conf);
 	}
