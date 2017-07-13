@@ -1,6 +1,7 @@
 const Table = require('cli-table');
 const asciify = require('asciify');
 const inquirer = require('inquirer');
+const commander = require('commander');
 
 module.exports = nodefony.register( "cli", function(){
 
@@ -9,7 +10,10 @@ module.exports = nodefony.register( "cli", function(){
     const blue  = clc.blueBright.bold;
     const green = clc.green;
     const yellow = clc.yellow.bold;
+    const magenta = clc.magenta.bold
     const reset = '\x1b[0m';
+
+  const processName = path.basename (process.argv[1] ) || process.argv[1] || process.title ;
 
   const defaultTableCli = {
   		style: {head: ['cyan'], border: ['grey']}
@@ -18,52 +22,70 @@ module.exports = nodefony.register( "cli", function(){
   const unhandledRejections = new Map();
 
   const defaultOptions = {
+    processName : processName,
     asciify     : true,
     clear       : true,
     color       : blue,
+    commander   : true,
     signals     : true,
     autoLogger  : true,
     resize      : false,
+    version     : null,
     promiseRejection:true
   };
 
   const CLI = class CLI extends nodefony.Service {
 
   	constructor (name, container, notificationsCenter, options ){
-
       switch (arguments.length){
         case 0 :
             options = nodefony.extend({}, defaultOptions);
-            super( "CLI", null, null, options);
+            name = options.processName ;
+            super( options.processName, null, null, options);
         break;
         case 1 :
-            options = nodefony.extend({}, defaultOptions);
-            super( name, null, null, options);
+            if ( typeof name === "object" &&  name !== null ){
+                options = nodefony.extend({}, defaultOptions, name);
+                name = options.processName ;
+                super( options.processName, null, null, options);
+            }else{
+                options = nodefony.extend({}, defaultOptions);
+                name = name || options.processName ;
+                super( name  , null, null, options);
+            }
         break;
         case 2 :
             if (  container instanceof nodefony.Container ){
                 options = nodefony.extend({}, defaultOptions);
-                super( name, container, null, options);
+                name = name || options.processName ;
+                super( name , container, null, options);
             }else{
               if (typeof container === "object" &&  container !== null ){
                   options = nodefony.extend({}, defaultOptions, container);
+                  name = name || options.processName ;
                   super( name, null, null, options);
               }else{
                   options = nodefony.extend({}, defaultOptions);
+                  name = name || options.processName ;
                   super( name, container, null, options);
               }
             }
         break;
         default :
             options = nodefony.extend({}, defaultOptions, options);
+            name = name || options.processName ;
             super( name, container, notificationsCenter, options);
       }
+      process.title = this.name.replace(new RegExp("\\s","gi"),"").toLowerCase() ;
+      this.environment = process.env.NODE_ENV  || "production" ;
+      process.env.NODE_ENV = this.environment ;
+
       this.wrapperLog = console.log ;
-      this.inquirer = inquirer ;
-   	  this.initUi();
       if ( this.options.autoLogger ){
           this.listenSyslog();
       }
+   	  this.initUi();
+      this.initCommander();
 
       /**
       *	@signals
@@ -128,6 +150,13 @@ module.exports = nodefony.register( "cli", function(){
                 }
                 let color = this.options.color || blue ;
                 console.log( color(data) );
+                if ( this.options.version ){
+                    console.log("		      Version : "+ blue(this.commander.version()) +" Platform : "+green( process.platform)+" Process : "+ green(process.title)+" PID : "+process.pid+"\n");
+                }
+                if ( this.environment !== "production"){
+                    console.log( this.logEnv() )
+                }
+                this.blankLine();
                 if ( err ){
                     throw err ;
                 }
@@ -138,8 +167,26 @@ module.exports = nodefony.register( "cli", function(){
       }
     }
 
+    logEnv(){
+        return blue("			\x1b "+ this.name  )
+        + " NODE_ENV : " + magenta(this.environment);
+    }
+
+    initCommander (){
+        if ( this.options.commander ){
+          this.commander = commander ;
+          if ( this.options.version ){
+              this.setCommandVersion(this.options.version);
+          }
+          this.on("onStart", () => {
+              this.commander.parse(process.argv);
+          });
+        }
+    }
+
     initUi () {
   		this.clc = clc ;
+        this.inquirer = inquirer ;
   		this.clui = require("clui");
   		this.emoji = require("node-emoji");
         this.spinner = null ;
@@ -176,6 +223,25 @@ module.exports = nodefony.register( "cli", function(){
       return asciify(txt, nodefony.extend({
         font:'standard'
       }, options) , callback) ;
+    }
+
+    parseCommand(){
+        this.commander.parse(process.argv);
+    }
+    setCommandOption(option, description){
+        this.commander.option(option, description);
+    }
+    setCommandVersion(version){
+        this.commander.version(version);
+    }
+    setCommand(description){
+        this.commander.command(description);
+    }
+    showHelp(quit, callback){
+        if (quit){
+            return this.commander.help(callback)
+        }
+        this.commander.outputHelp(callback)
     }
 
     createProgress (size){
