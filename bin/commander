@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+// nodefony
+try {
+  const nodefony = require("nodefony");
+}catch(e){
+  const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
+}
+//process.env.NODE_ENV = "development";
+// CLI
+const cli = new nodefony.cli("COMMANDER" ,{
+    version: "1.0.0",
+    onStart: (cli) =>{
+        setTimeout(()=>{}, 8000000)
+    }
+});

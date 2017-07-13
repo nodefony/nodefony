@@ -138,8 +138,9 @@ module.exports = nodefony.register("kernel", function(){
 
 			// cli worker
 			try {
-				this.cli = new nodefony.cliKernel("      NODEFONY", this.container, this.notificationsCenter, {
+				this.cli = new nodefony.cliKernel("NODEFONY", this.container, this.notificationsCenter, {
 					autoLogger		: false,
+					version			: nodefony_version,
 					onStart			: ( cli ) => {
 						if ( ! this.start ){
 							this.initCluster();
@@ -427,16 +428,26 @@ module.exports = nodefony.register("kernel", function(){
 			return cluster.isMaster ;
 		}
 
+		logEnv(){
+			return this.cli.clc.blue("			\x1b NODEFONY " + this.type )
+			+ " Cluster : " + this.cli.clc.magenta(this.typeCluster )
+			+ " Environment : " + this.cli.clc.magenta(this.environment)
+			+ " Debug :" + this.cli.clc.magenta(this.debug)
+			+ "\n";
+		}
+
 		initCluster (){
 			this.processId = process.pid ;
 			this.process = process ;
 			if (cluster.isMaster) {
 				//console.log( this.cli.clc.blue(ascci) );
-				console.log("		      \x1b[34mNODEFONY "+this.type+" CLUSTER MASTER \x1b[0mVersion : "+ nodefony_version +" PLATFORM : "+this.platform+"  PROCESS PID : "+this.processId+"\n");
+				if (this.type != "CONSOLE"){
+					console.log(this.logEnv());
+				}
 				this.fire("onCluster", "MASTER", this,  process);
 			}else if (cluster.isWorker) {
 				//console.log( this.cli.clc.blue(ascci) );
-				console.log("		      \x1b[34mNODEFONY "+this.type+" CLUSTER WORKER \x1b[0mVersion : "+ nodefony_version +" PLATFORM : "+this.platform+"  PROCESS PID : "+this.processId);
+				console.log( this.logEnv() );
 				this.workerId = cluster.worker.id ;
 				this.worker = cluster.worker ;
 				this.fire("onCluster", "WORKER",  this, process);

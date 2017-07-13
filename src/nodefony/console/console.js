@@ -1,6 +1,7 @@
 
 const Getopt = require('node-getopt');
 const npm = require("npm");
+const Rx = require("rxjs");
 
 module.exports = nodefony.register("console", function(){
 
@@ -40,9 +41,7 @@ module.exports = nodefony.register("console", function(){
 						this.listPackage(this.rootDir);
 					}
 				},
-				syslog:settingsSysLog,
-				onStart:() =>{
-				}
+				syslog:settingsSysLog
 			}));
 			this.commands = {};
 			this.getOptsTab = [];
@@ -132,7 +131,6 @@ module.exports = nodefony.register("console", function(){
 					}
 				}
 			};
-
 			if ( nextick === undefined ){
 				process.nextTick( () =>{
 					func.call(this, mypath );
@@ -161,11 +159,13 @@ module.exports = nodefony.register("console", function(){
 								return reject(error);
 							}
 							for (var pack in data.dependencies){
-								ele.push([
-									data.dependencies[pack].name,
-									data.dependencies[pack].version,
-									data.dependencies[pack]._where || ""
-								]);
+								if ( data.dependencies[pack].name ){
+									ele.push([
+										data.dependencies[pack].name,
+										data.dependencies[pack].version,
+										data.dependencies[pack]._where || ""
+									]);
+								}
 							}
 							return resolve(ele);
 						});
@@ -200,12 +200,77 @@ module.exports = nodefony.register("console", function(){
 			});
 		}
 
-		npmInstall(Path, prod){
-			return  new Promise ((resolve, reject) =>{
+		// OBSERVER
+		/*npmInstall(Path, prod){
+			return Rx.Observable.create(observer => {
 				let conf = path.resolve( Path , "package.json");
 				shell.cd(Path);
-				let config  = require(conf);
-				this.logger("NPM :"+npm.version+  " Installing Dependencies for bundle : " + file.shortName  );
+				let config = null ;
+				try {
+					config  = require(conf);
+					this.logger(conf, "INFO");
+				}catch(e){
+					this.logger(e, "ERROR");
+					return observer.onError(e);
+				}
+				this.logger("NPM : "+npm.version+  " Installing Dependencies for bundle : " +  Path );
+				npm.load(config, (error, event) => {
+					if (error){
+						return observer.onError(error)
+					}
+					event.config.localPrefix = Path;
+					event.config.globalPrefix = this.rootDir ;
+					event.localPrefix = Path ;
+					event.globalPrefix = this.rootDir ;
+					let tab = [] ;
+					for (let dep in config.dependencies ){
+							let mypackage = dep+"@"+config.dependencies[dep] ;
+							try {
+								require.resolve(dep);
+							}catch(e){
+								this.logger( "\t Dependency : " + mypackage  );
+								tab.push( mypackage );
+							}
+					}
+					if ( ! prod ){
+						for (let dep in config.devDependencies ){
+								let mypackage = dep+"@"+config.devDependencies[dep] ;
+								try {
+									require.resolve(dep);
+								}catch(e){
+									this.logger( "\t Dependency dev : " + mypackage  );
+									tab.push( mypackage );
+								};
+						}
+					}
+					if (tab.length ){
+						event.commands.install(tab, (err, data) =>{
+							if ( err ){
+								this.logger("NPM :"+npm.version+  " Installing Dependencies for bundle : " + file.shortName  , "ERROR");
+								this.logger(err, "ERROR");
+								shell.cd(this.rootDir);
+								return observer.onError(err);
+							}
+							shell.cd(this.rootDir);
+							return observer.onNext(data);
+						});
+					}
+				});
+			});
+		}*/
+		// PROMISE
+		/*npmInstall(Path, prod){
+			return  new Promise ( (resolve, reject) =>{
+				let conf = path.resolve( Path , "package.json");
+				shell.cd(Path);
+				try {
+					let config  = require(conf);
+					this.logger(conf, "INFO");
+				}catch(e){
+					this.logger(e, "ERROR");
+					return reject(e);
+				}
+				this.logger("NPM : "+npm.version+  " Installing Dependencies for bundle : " + file.shortName  );
 				npm.load(config, (error, event) => {
 					if (error){
 						return reject(error)
@@ -249,11 +314,25 @@ module.exports = nodefony.register("console", function(){
 					}
 				});
 			});
-		}
+		}*/
 
-		installPackage (name, file, prod){
-			return this.npmInstall(file.dirName, prod);
+		/*installPackage (name, file, prod){
+			if (  ! this.promiseInstall ){
+				return this.promiseInstall = this.npmInstall(file.dirName, prod) ;
+			}else{
+				return this.promiseInstall.then( this.npmInstall(file.dirName, prod) );
+			}
 		}
+		installPackage (name, file, prod){
+			if (  ! this.observerInstall ){
+				console.log("CREATE ONCE observerInstall  " + name);
+				this.observerInstall = [] ;
+				return this.observerInstall.push( this.npmInstall(file.dirName, prod) ) ;
+			}else{
+				console.log("CREATE observerInstall " + name)
+				return  this.observerInstall.push(  this.npmInstall(file.dirName, prod) );
+			}
+		}*/
 
 		installPackage (name, file, prod){
 			try {

@@ -382,7 +382,7 @@ module.exports = nodefony.register("cliKernel", function(){
 	  	}
 
 	    spawn (command , args, options, close){
-	  		var cmd = null ;
+	  		let cmd = null ;
 	  		try {
 	  			cmd = spawn(command , args, options);
 
@@ -399,6 +399,7 @@ module.exports = nodefony.register("cliKernel", function(){
 	  				}
 	  			});
 	  			cmd.on('error', (err) => {
+					console.log(err)
 	  				this.logger(err, "ERROR");
 	  				this.terminate(1);
 	  			})
@@ -410,8 +411,9 @@ module.exports = nodefony.register("cliKernel", function(){
 	  	}
 
 	  	spawnSync (command , args, options){
+			let cmd = null ;
 	  		try {
-	  			var cmd = spawnSync(command, args, options);
+	  			cmd = spawnSync(command, args, options);
 	  			if ( cmd.output[2].toString() ){
 	  				this.logger( cmd.output[2].toString() ,"ERROR");
 	  			}else{
