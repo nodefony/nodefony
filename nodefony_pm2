@@ -35,7 +35,7 @@ try {
 
 let config = null ;
 try {
-	conf = path.resolve(".", "config", "pm2.json");
+	conf = path.resolve(".", "config", "pm2.config.js");
 	exist = fs.existsSync(conf);
 	if (exist){
 		config = require(conf);
@@ -47,18 +47,20 @@ try {
 
 if ( ! config ){
 	config = nodefonyConfig.system.PM2 ;
+	config.script = "nodefony" ;
+	config.env =  {
+		NODE_ENV : "production",
+		MODE_START : "PM2"
+	};
 }
-config.script = "nodefony" ;
-config.env =  {
-	NODE_ENV : "production",
-	MODE_START : "PM2"
-};
-config.cwd = process.cwd();
-config.name = projectName || "nodefony" ;
+
+//config.cwd = process.cwd();
+//config.name = projectName || "nodefony" ;
 
 if ( ! config.instances ){
-	config.instances = instances ;
+	//config.instances = instances ;
 }
+		console.log(config)
 pm2.connect(true, () => {
 		pm2.start(config, (err, apps) =>  {
   		if (err){
