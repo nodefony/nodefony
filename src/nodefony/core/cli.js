@@ -5,13 +5,13 @@ const commander = require('commander');
 
 module.exports = nodefony.register( "cli", function(){
 
-    const red   = clc.red.bold;
-    const cyan   = clc.cyan.bold;
-    const blue  = clc.blueBright.bold;
-    const green = clc.green;
-    const yellow = clc.yellow.bold;
-    const magenta = clc.magenta.bold
-    const reset = '\x1b[0m';
+  const red   = clc.red.bold;
+  const cyan   = clc.cyan.bold;
+  const blue  = clc.blueBright.bold;
+  const green = clc.green;
+  const yellow = clc.yellow.bold;
+  const magenta = clc.magenta.bold
+  const reset = '\x1b[0m';
 
   const processName = path.basename (process.argv[1] ) || process.argv[1] || process.title ;
 
@@ -23,6 +23,7 @@ module.exports = nodefony.register( "cli", function(){
 
   const defaultOptions = {
     processName : processName,
+    autostart   : true,
     asciify     : true,
     clear       : true,
     color       : blue,
@@ -154,16 +155,20 @@ module.exports = nodefony.register( "cli", function(){
                     console.log("		      Version : "+ blue(this.commander.version()) +" Platform : "+green( process.platform)+" Process : "+ green(process.title)+" PID : "+process.pid+"\n");
                 }
                 if ( this.environment !== "production"){
-                    console.log( this.logEnv() )
+                    //console.log( this.logEnv() )
                 }
                 this.blankLine();
                 if ( err ){
                     throw err ;
                 }
-                this.fire("onStart", this);
+                if ( this.options.autostart){
+                  this.fire("onStart", this);
+                }
         });
       }else{
-        this.fire("onStart", this);
+        if ( this.options.autostart){
+          this.fire("onStart", this);
+        }
       }
     }
 
@@ -226,22 +231,22 @@ module.exports = nodefony.register( "cli", function(){
     }
 
     parseCommand(){
-        this.commander.parse(process.argv);
+        return this.commander.parse( process.argv );
     }
-    setCommandOption(option, description){
-        this.commander.option(option, description);
+    setCommandOption(option, description,  callback){
+        return this.commander.option(option, description, callback);
     }
     setCommandVersion(version){
-        this.commander.version(version);
+        return this.commander.version(version);
     }
-    setCommand(description){
-        this.commander.command(description);
+    setCommand(command,  description, options){
+        return this.commander.command(command, description, options);
     }
     showHelp(quit, callback){
         if (quit){
-            return this.commander.help(callback)
+            return this.commander.help(callback);
         }
-        this.commander.outputHelp(callback)
+        return this.commander.outputHelp(callback);
     }
 
     createProgress (size){

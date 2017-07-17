@@ -60,7 +60,6 @@ if ( ! config ){
 if ( ! config.instances ){
 	//config.instances = instances ;
 }
-		console.log(config)
 pm2.connect(true, () => {
 		pm2.start(config, (err, apps) =>  {
   		if (err){

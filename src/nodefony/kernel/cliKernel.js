@@ -142,7 +142,7 @@ module.exports = nodefony.register("cliKernel", function(){
 		}
 
 		showHelp (){
-			return this.kernel.showHelp() ;
+			return super.showHelp();
 		}
 		logger(pci, severity, msgid,  msg){
 			try {
