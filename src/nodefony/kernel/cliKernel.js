@@ -1,6 +1,7 @@
 const spawn = require('child_process').spawn;
 const spawnSync = require('child_process').spawnSync;
 const simpleGit = require('simple-git');
+const npm = require("npm");
 
 module.exports = nodefony.register("cliKernel", function(){
 
@@ -139,6 +140,88 @@ module.exports = nodefony.register("cliKernel", function(){
 					cache: false
 				}
 			};
+			this.commands = {};
+		}
+
+
+		loadCommand (){
+			switch ( this.commander.args[0] ){
+				case "npm:install":
+					return true
+				break;
+				case "npm:list":
+					this.listPackage(this.kernel.rootDir);
+					return true ;
+				break;
+			}
+			this.stop = false;
+			for ( let bundle in this.kernel.bundles ){
+				this.kernel.bundles[bundle].registerCommand( this.commands );
+			}
+			this.bundles = {};
+			for ( let bundle in this.commands ){
+				if ( ! this.bundles[bundle] ){
+					var name = this.clc.cyan(bundle)+" \n" ;
+					this.bundles[bundle] = {
+						name : name,
+						task: []
+					};
+				}
+				var commands = this.commands[bundle];
+				for (var cmd in commands ){
+					var command = commands[cmd].prototype.commands;
+					for (var task in command){
+						this.bundles[bundle].task.push( command[task] );
+					}
+				}
+			}
+			this.commander.on('--help', () => {
+				console.log( this.generateHelp.call(this, this.bundles, "") );
+			});
+			return this.stop;
+		}
+
+		matchCommand (){
+			this.cliParse =  this.commander.args ;
+			let ret = null;
+			let err = null ;
+			if (this.cliParse.length){
+				var ele = this.cliParse[0].split(":");
+				if (ele.length){
+					var cmd = ele[0];
+					for (var bundle in this.commands  ){
+						if (cmd in this.commands[bundle]){
+							let worker = this.commands[bundle][cmd];
+							if (worker){
+								try {
+									ret = new worker(this.container, this.cliParse , {
+										processName : cmd,
+										asciify     : true,
+										clear       : true,
+										signals     : false,
+										autoLogger  : false,
+										promiseRejection:false
+									} );
+								}catch(e){
+									throw e ;
+								}
+							}else{
+								this.showHelp();
+								throw new Error("Worker : ")+ cmd +" not exist" ;
+							}
+							return ret;
+						}
+					}
+					err =  "COMMAND : "+ this.cliParse[0] +" not exist" ;
+				}else{
+					err = "BAD FORMAT ARGV : "+ this.cliParse[0] ;
+				}
+			}
+			this.showHelp();
+			if( err) {
+				this.logger( err ,"ERROR");
+			}
+			return ;
 		}
 
 		showHelp (){
@@ -151,13 +234,6 @@ module.exports = nodefony.register("cliKernel", function(){
 			}catch(e){
 				console.log(pci);
 			}
-		}
-
-		terminate (code){
-			if ( this.kernel ) {
-				return this.kernel.terminate(code);
-			}
-			process.exit(code);
 		}
 
 		getSimpleGit(gitPath){
@@ -276,7 +352,6 @@ module.exports = nodefony.register("cliKernel", function(){
 			}
 			return child ;
 		}
-
 
 	    getSizeDirectory (dir, exclude){
 	  		try {
@@ -427,6 +502,168 @@ module.exports = nodefony.register("cliKernel", function(){
 	  		}
 	  		return cmd ;
 	  	}
+
+		listPackage(conf){
+			let tab = [] ;
+			let mypromise = this.npmList(conf, tab) ;
+			for (let bundle in  this.kernel.bundles){
+				if ( bundle+"Bundle" in  this.kernel.bundlesCore ){
+					continue ;
+				}
+				mypromise.then( this.npmList(this.kernel.bundles[bundle].path, tab) );
+			}
+			return mypromise.then((ele)=>{
+				var headers = [
+					"NAME",
+					"VERSION",
+					"DESCRIPTION",
+					"BUNDLES"
+				];
+				this.displayTable(ele, {
+					head: headers,
+					colWidths :[30,10,100,20]
+				});
+				this.terminate(0);
+			}).catch((error) =>{
+				this.logger(error,"ERROR");
+				this.terminate(1);
+				return ;
+			});
+		}
+
+		npmList (Path, ele){
+			return new Promise ((resolve, reject) =>{
+				  	shell.cd(Path);
+					let conf = null ;
+					let config = null ;
+					try {
+						config = path.resolve( Path , "package.json");
+						conf  = require(config);
+					}catch(e){
+						this.logger("NPM NODEFONY PACKAGES package.json not find in : "+ Path ,"INFO");
+						return resolve(ele) ;
+					}
+					this.logger( "NPM NODEFONY PACKAGES :" + config , "INFO");
+					npm.load(conf, (error, event) => {
+						if (error){
+							return reject(error)
+						}
+						event.config.localPrefix = Path;
+						event.config.globalPrefix = this.rootDir ;
+						event.localPrefix = Path ;
+						event.globalPrefix = this.rootDir ;
+						npm.commands.ls([], true, (error, data) => {
+							if (error){
+								return reject(error);
+							}
+							try {
+								for (var pack in data.dependencies){
+									if ( data.dependencies[pack].name ){
+										ele.push([
+											data.dependencies[pack].name,
+											data.dependencies[pack].version,
+											data.dependencies[pack].description || "",
+											path.basename( data.dependencies[pack]._where ) || ""
+										]);
+									}
+								}
+							}catch(e){
+								return reject(e);
+							}
+							return resolve(ele);
+						});
+					});
+			});
+		}
+
+		installPackage (name, file, prod){
+			try {
+				var conf = new nodefony.fileClass(file.dirName+"/package.json");
+				var config = require(conf.path);
+				npm.load( config ,(error, event) => {
+					if (error){
+						this.logger(error, "ERROR");
+						this.terminate(1);
+					}
+					shell.cd(file.dirName)
+					event.config.localPrefix = file.dirName;
+					event.config.globalPrefix = this.kernel.rootDir ;
+					event.localPrefix = file.dirName ;
+					event.globalPrefix = this.kernel.rootDir ;
+					//npm.config.set('localPrefix', file.dirName);
+					//npm.config.set('globalPrefix', this.rootDir);
+					var tab = [] ;
+					this.logger("NPM :"+npm.version+  " Installing Dependencies for bundle : " + file.shortName  );
+					for (let dep in config.dependencies ){
+							let mypackage = dep+"@"+config.dependencies[dep] ;
+							try {
+								require.resolve(dep);
+							}catch(e){
+								this.logger( "\t Dependency : " + mypackage  );
+								tab.push( mypackage );
+							}
+					}
+					if ( ! prod ){
+						for (let dep in config.devDependencies ){
+								let mypackage = dep+"@"+config.devDependencies[dep] ;
+								try {
+									require.resolve(dep);
+								}catch(e){
+									this.logger( "\t Dependency dev : " + mypackage  );
+									tab.push( mypackage );
+								};
+						}
+					}
+					if (tab.length ){
+						event.commands.install(tab, (err, data) =>{
+							if ( err ){
+								this.logger("NPM :"+npm.version+  " Installing Dependencies for bundle : " + file.shortName  , "ERROR");
+								this.logger(err, "ERROR");
+							}
+						});
+					}
+				});
+			}catch(e){
+				if (e.code !== "ENOENT"){
+					this.logger("Install Package BUNDLE : "+ name +":"+e,"ERROR");
+					shell.cd(this.kernel.rootDir);
+					throw e ;
+				}
+			}
+			shell.cd(this.kernel.rootDir);
+		}
+
+		generateHelp (obj, str){
+			this.blankLine();
+			str += "\n  Command : " + "\n\n";
+			str += this.clc.cyan("nodefony")+" \n";
+			str += this.clc.green("\tdev")+"							 	 Run Nodefony Development Server  \n";
+			str += this.clc.green("\tprod")+"							 	 Run Nodefony Preprod Server \n";
+			str += this.clc.green("\tpm2")+"							 	 Run Nodefony Production Server ( PM2 mode ) \n";
+			str += this.clc.green("\tapp")+"							 	 Get Nodefony App name  \n";
+			str += this.clc.green("\tnpm:install")+"							 Install all NPM framework packages\n";
+			str += this.clc.green("\tnpm:list")+"							 List all NPM installed packages \n";
+			for (var ele in obj){
+				if (obj[ele].name ){
+					str +=  obj[ele].name;
+				}
+				for (var cmd in obj[ele].task ){
+					str +=  this.clc.green("\t"+ obj[ele].task[cmd][0]);
+					var length =  obj[ele].task[cmd][0].length;
+					var size = 65 - length ;
+					for (var i = 0 ; i< size ; i++) { str +=" "; }
+					str += obj[ele].task[cmd][1]+"\n";
+				}
+			}
+			return str;
+		}
+
+		terminate (code){
+			if ( this.kernel ) {
+				return this.kernel.terminate(code);
+			}
+			process.exit(code);
+		}
 	};
 	return cliKernel ;
 });

@@ -14,8 +14,8 @@ module.exports = nodefony.registerCommand("webpack",function(){
 
 			this.config = this.container.getParameters("bundles.App");
 			this.configKernel = this.container.getParameters("kernel");
-			var arg = command[0].split(":");
-			switch ( arg[1] ){
+			let cmd = command[0].split(":");
+			switch ( cmd[1] ){
 				case "dump" :
 					try {
 						this.webpackCompile();
@@ -47,6 +47,6 @@ module.exports = nodefony.registerCommand("webpack",function(){
 		commands:{
 			dump:["webpack:dump" ,"Compile webpack for all bundles "]
 		},
-		worker:webpack
+		cli:webpack
 	};
 });

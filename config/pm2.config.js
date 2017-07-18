@@ -4,6 +4,7 @@ module.exports = {
   apps : [{
     name                : "nodefony",
     script              : "./nodefony",
+    args                : "pm2",
     watch               : false,
     exec_mode		        : "cluster",
     instances           : cpu,
@@ -16,11 +17,13 @@ module.exports = {
     merge_logs          : true,
     env: {
       "NODE_ENV"        : "development",
-      "MODE_START"      : "PM2"
+      "MODE_START"      : "PM2",
+      "NODEFONY_DEBUG"  : true
     },
     env_production : {
        "NODE_ENV"       : "production",
-       "MODE_START"     : "PM2"
+       "MODE_START"     : "PM2",
+       "NODEFONY_DEBUG" : false
     }
   }]
 }

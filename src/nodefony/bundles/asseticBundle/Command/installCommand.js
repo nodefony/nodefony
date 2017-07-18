@@ -14,10 +14,10 @@ module.exports = nodefony.registerCommand("assets",function(){
 
 			super( "assets", container, container.get("notificationsCenter") , options);
 
-			var arg = command[0].split(":");
-			switch( arg[0] ){
+			let cmd = command[0].split(":");
+			switch( cmd[0] ){
 				case "assets" :
-					switch ( arg[1] ){
+					switch ( cmd[1] ){
 						case "install" :
 							try {
 								this.assetInstall();
@@ -66,9 +66,8 @@ module.exports = nodefony.registerCommand("assets",function(){
 		commands:{
 			install:["assets:install" ,"Installs bundles web assets link under a public web directory "],
 			dump:["assets:dump" ,"Dump  all bundles web assets under a public web directory "]
-			//watch:["assetic:watch" ,"Installs bundles web assets under a public web directory "]
 		},
-		worker:Asset
+		cli:Asset
 	};
 
 });

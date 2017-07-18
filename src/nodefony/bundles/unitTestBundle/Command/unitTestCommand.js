@@ -8,8 +8,9 @@ module.exports = nodefony.registerCommand("unitTest", function(){
 
 			super( "unitTest", container, container.get("notificationsCenter") , options);
 
-			var arg = command[0].split(":");
-			command.shift();
+			let cmd = command[0].split(":");
+			//command.shift();
+			let args = command[1];
 			var bundles = this.kernel.bundles;
 
 			this.serviceUnitTest = this.container.get("unitTest");
@@ -17,14 +18,14 @@ module.exports = nodefony.registerCommand("unitTest", function(){
 
 			var tests = [];
 
-			if(arg[2] === 'all'){
+			if(cmd[2] === 'all'){
 				this.serviceUnitTest.getNodefonyTestFiles( null, tests);
 				for(var bundle in bundles){
 					this.serviceUnitTest.getBundlesTestFiles( bundle, null, tests);
 				}
-			} else if(arg[2] === 'bundle'){
-				var bundleName = command[0];
-				var testName = command[1];
+			} else if(cmd[2] === 'bundle'){
+				var bundleName = args[0];
+				var testName = args[1];
 				bundleName = bundleName.replace('Bundle', '');
 				if (bundleName === "nodefony" ){
 					this.serviceUnitTest.getNodefonyTestFiles( testName, tests);
@@ -34,9 +35,9 @@ module.exports = nodefony.registerCommand("unitTest", function(){
 			}
 
 			this.listen(this, 'onReady', (/*kernel*/) => {
-				switch ( arg[1] ){
+				switch ( cmd[1] ){
 					case "list" :
-						switch( arg[2] ){
+						switch( cmd[2] ){
 							case "all":
 							case "bundle" :
 								var bundleName = '';
@@ -53,8 +54,7 @@ module.exports = nodefony.registerCommand("unitTest", function(){
 						this.terminate(1);
 						break;
 					case "launch" :
-						switch( arg[2 ]){
-
+						switch( cmd[2] ){
 							case "single" :
 							case "all":
 							case "bundle" :
@@ -70,7 +70,7 @@ module.exports = nodefony.registerCommand("unitTest", function(){
 						}
 						break;
 					default:
-						this.logger(new Error("unitTest   "+command[1] +" bad format"), "ERROR");
+						this.logger(new Error("unitTest   "+cmd[1] +" bad format"), "ERROR");
 						this.showHelp();
 						this.terminate(1);
 				}
@@ -82,9 +82,9 @@ module.exports = nodefony.registerCommand("unitTest", function(){
 		commands: {
 			listAll: ["unitTest:list:all", "List all unit tests"],
 			listBundle: ["unitTest:list:bundle bundleName", "List all bundle unit tests"],
-			launchAll: ["unitTest:launch:all", "Launch all tests Example : ./console unitTest:launch:all"],
-			launchBundle: ["unitTest:launch:bundle bundleName { testfile }", "Launch bundle tests Example: ./console unitTest:launch:bundle demoBundle responseTest.js"],
+			launchAll: ["unitTest:launch:all", "Launch all tests Example : nodefony unitTest:launch:all"],
+			launchBundle: ["unitTest:launch:bundle bundleName { testfile }", "Launch bundle tests Example: nodefony unitTest:launch:bundle demoBundle responseTest.js"],
 		},
-		worker: unitTest
+		cli: unitTest
 	};
 });

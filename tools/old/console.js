@@ -71,18 +71,6 @@ module.exports = nodefony.register("console", function(){
 			});
 		}
 
-		initializeLog ( settings ) {
-			this.cli.listenSyslog(this.syslog, this.debug);
-		}
-
-		/**
-	 	*	@method logger
-         	*/
-		logger (pci, severity, msgid,  msg){
-			if (! msgid) { msgid = "CONSOLE " ;}
-			return this.syslog.logger(pci, severity, msgid,  msg);
-		}
-
 		/**
 	 	*	register Bundle
 	 	*	@method registerBundles
@@ -458,6 +446,7 @@ module.exports = nodefony.register("console", function(){
 			}
 			return this.showHelp();
 		}
+
 
 		showHelp (){
 			return this.getopts.showHelp();

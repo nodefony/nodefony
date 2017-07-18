@@ -16,9 +16,9 @@ module.exports = nodefony.registerCommand("less",function(){
 			super( "less", container , null, options);
 
 			this.engine = require("less");
-			var arg = command[0].split(":");
+			let cmd = command[0].split(":");
 
-			switch ( arg[1] ){
+			switch ( cmd[1] ){
 				case "render" :
 				break;
 				default:
@@ -34,7 +34,7 @@ module.exports = nodefony.registerCommand("less",function(){
 			//render:["less:render" ,"Less CSS compilateur "],
 			//compile:["less:compile" ,"Less CSS compilateur "],
 		},
-		worker:Less
+		cli:Less
 	};
 
 });

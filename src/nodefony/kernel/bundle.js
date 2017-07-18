@@ -716,15 +716,15 @@ module.exports = nodefony.register("Bundle", function(){
 					if ( ! store[this.name] ){
 						store[this.name] = {};
 					}
-					if (command.worker){
+					if (command.cli){
 						if ( command.commands ){
-							command.worker.prototype.commands = command.commands ;
-							store[this.name][name] = command.worker ;
+							command.cli.prototype.commands = command.commands ;
+							store[this.name][name] = command.cli ;
 						}else{
 							throw new Error("Command : "+name+"BAD FORMAT commands ");
 						}
 					}else{
-						throw new Error("Command : "+name+" WORKER COMMAND NOT FIND");
+						throw new Error("Command : "+name+" CLI NOT FIND");
 					}
 				}
 			});

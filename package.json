@@ -83,7 +83,6 @@
     "mocha": "3.4.2",
     "mysql2": "1.3.6",
     "node-emoji": "1.7.0",
-    "node-getopt": "0.2.3",
     "node-pre-gyp": "0.6.36",
     "node-sass": "4.5.3",
     "nodefony-stage": "0.1.0",

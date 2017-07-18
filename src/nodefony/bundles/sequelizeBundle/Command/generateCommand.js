@@ -13,14 +13,15 @@ module.exports = nodefony.registerCommand("Sequelize",function(){
 
 			super( "Sequelize", container, container.get("notificationsCenter"), options );
 
-			var arg = command[0].split(":");
+			let cmd = command[0].split(":");
+			let args = command[1] ;
 			this.ormService = this.container.get("sequelize");
-			switch ( arg[1] ){
+			switch ( cmd[1] ){
 				case "generate" :
-					switch( arg[2 ]){
+					switch( cmd[2]){
 						case "entities" :
 							var force = false ;
-							if (command[1] === "force"){
+							if (args[0] === "force"){
 								force= true ;
 							}
 							var tab =[];
@@ -52,7 +53,7 @@ module.exports = nodefony.registerCommand("Sequelize",function(){
 					}
 				break;
 				case "fixtures" :
-					switch( arg[2 ]){
+					switch( cmd[2]){
 						case 'load':
 							this.ormService.listen(this, "onOrmReady",(service) => {
 								var bundles = this.ormService.kernel.bundles;
@@ -102,16 +103,16 @@ module.exports = nodefony.registerCommand("Sequelize",function(){
 					break;
 				case "query" :
 					this.ormService.listen(this, "onOrmReady",function(/*service*/){
-						switch( arg[2 ]){
+						switch(  cmd[2]){
 							case "sql":
-								var db = command[1];
+								var db = args[0];
 								var conn = this.ormService.getConnection(db);
 								if ( ! conn){
 									this.logger("CONNECTION : "+db +" NOT FOUND" , "ERROR");
 									this.terminate(1);
 									return ;
 								}
-								var sql = command[2];
+								var sql = args[1];
 								this.logger("CONNECTION : " + db + " \nEXECUTE REQUEST  : "+sql , "INFO");
 								conn.query(sql)
 								.catch( (error) => {
@@ -135,9 +136,9 @@ module.exports = nodefony.registerCommand("Sequelize",function(){
 				break;
 				case "entity" :
 					this.ormService.listen(this, "onOrmReady",function(/*service*/){
-						switch( arg[2 ]){
+						switch( cmd[2]){
 							case "findAll" :
-								var entity = command[1];
+								var entity = args[0];
 								var conn = this.ormService.getEntity(entity);
 								if ( ! conn){
 									this.logger("ENTITY : "+entity +" NOT FOUND" , "ERROR");
@@ -179,12 +180,12 @@ module.exports = nodefony.registerCommand("Sequelize",function(){
 			//fixture:["Sequelize:fixture:load bundleName:fixtureName" ,"Load a specific data fixture to your database"],
 			//entity:["Sequelize:generate:entity connectionName entityName" ,"Generate an Entity"],
 			//entity2:["Sequelize:generate:bundleEntity bundleName:entityName" ,"Generate Bundle Entity"],
-			entities:["Sequelize:generate:entities [force]" ,"Generate All Entities force to delete table if exist  example : ./console Sequelize:generate:entities force "],
+			entities:["Sequelize:generate:entities [force]" ,"Generate All Entities force to delete table if exist  example : nodefony Sequelize:generate:entities force "],
 			//create:["Sequelize:database:create" ,"Create a database"],
 			//show:["Sequelize:entity:show" ,"show  Entities"],
-			sql:["Sequelize:query:sql connectionName SQL" ,"query sql in database connection  example : ./console  Sequelize:query:sql nodefony  'select * from users'"],
+			sql:["Sequelize:query:sql connectionName SQL" ,"query sql in database connection  example : nodefony  Sequelize:query:sql nodefony  'select * from users'"],
 			entity:["Sequelize:entity:findAll entity " ,"query findAll ENTITY"]
 		},
-		worker:sequelizeCmd
+		cli:sequelizeCmd
 	};
 });

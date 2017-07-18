@@ -70,7 +70,7 @@ module.exports = function(){
 			}catch(e){
 				this.load( path.resolve( this.dirname,  "app", "appKernel.js") );
 			}
-			this.load( path.resolve( this.dirname, "console", "console.js") );
+			//this.load( path.resolve( this.dirname, "console", "console.js") );
 			this.syslog = null;
 			this.setEnv();
 		}

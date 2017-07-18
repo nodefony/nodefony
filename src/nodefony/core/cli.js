@@ -133,6 +133,7 @@ module.exports = nodefony.register( "cli", function(){
           });
           process.on('unhandledRejection', (reason, promise) => {
               this.logger("WARNING  !!! PROMISE CHAIN BREAKING : "+ reason, "CRITIC");
+              console.trace(reason);
               unhandledRejections.set(promise, reason);
           });
           process.on('uncaughtException', (err) => {
@@ -151,8 +152,9 @@ module.exports = nodefony.register( "cli", function(){
                 }
                 let color = this.options.color || blue ;
                 console.log( color(data) );
+                let version =  this.commander ? this.commander.version() : ( this.options.version || "1.0.1" ) ;
                 if ( this.options.version ){
-                    console.log("		      Version : "+ blue(this.commander.version()) +" Platform : "+green( process.platform)+" Process : "+ green(process.title)+" PID : "+process.pid+"\n");
+                    console.log("		      Version : "+ blue(version) +" Platform : "+green( process.platform)+" Process : "+ green(process.title)+" PID : "+process.pid+"\n");
                 }
                 if ( this.environment !== "production"){
                     //console.log( this.logEnv() )
@@ -184,7 +186,7 @@ module.exports = nodefony.register( "cli", function(){
               this.setCommandVersion(this.options.version);
           }
           this.on("onStart", () => {
-              this.commander.parse(process.argv);
+              //this.commander.parse(process.argv);
           });
         }
     }
@@ -237,7 +239,9 @@ module.exports = nodefony.register( "cli", function(){
         return this.commander.option(option, description, callback);
     }
     setCommandVersion(version){
-        return this.commander.version(version);
+        if (typeof this.commander.version === "function"){
+            return this.commander.version(version);
+        }
     }
     setCommand(command,  description, options){
         return this.commander.command(command, description, options);

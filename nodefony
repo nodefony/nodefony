@@ -1,64 +1,236 @@
 #!/usr/bin/env node
+const path = require("path");
 const cluster = require('cluster');
-
+const pm2 = require('pm2');
+const yaml = require('js-yaml');
+const fs = require("fs");
+const instances =  require('os').cpus().length ;
 try {
-	const nodefony = require("nodefony");
+  const nodefony = require("nodefony");
 }catch(e){
-	const nodefony = require(".", "src", "nodefony", "core", "autoloader");
-}
-process.env.BABEL_ENV = 'production';
-process.env.NODE_ENV = 'production';
-
-/*
- *
- * NODEFONY FRAMEWORK START WITH PM2
- *
- *	PRODUCTION
- *
- */
-if ( process.env["MODE_START"] && process.env["MODE_START"] === "PM2"){
-	var kernel = new nodefony.appKernel("SERVER", "prod", false, {
-		node_start:process.env["MODE_START"]
-	});
-	return kernel ;
+  const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
 }
 
-/*
- *
- * NODEFONY FRAMEWORK START
- *
- *	PRODUCTION ( preprod )
- *
- */
-process.env["MODE_START"] = "NODEFONY" ;
-if (cluster.isMaster) {
+var nodefony_version = require( path.resolve( "package.json") ).version;
 
-	var nbProc = require('os').cpus().length;
-	for (var i=0 ; i < nbProc; i++){
-		cluster.fork();
+let command  = null ;
+let args = null ;
+let commander = null ;
+let type = null ;
+let debug = false ;
+let kernel = null ;
+let environment = "production" ;
+
+if (process.env.MODE_START && process.env.MODE_START === "PM2"){
+    return  new nodefony.appKernel("SERVER", environment, false, {});
+}
+
+let start = function(cmd, args, commander){
+	if ( cmd ){
+		cmd = cmd.toLowerCase();
+	}else{
+		cmd ="cli"
 	}
-	cluster.on('disconnect', function(worker) {
-		console.error('disconnect!');
-	});
-	cluster.on('fork', (worker) => {
-		let wid = worker.id ;
-		worker.on('message', (msg) => {
-			if ( msg && msg.worker === wid ){
-				return ;
-			}
-			Object.keys(cluster.workers).forEach(function(id) {
-				if ( id != wid){
-					//console.log("CLUSTER SEND FROM  "+ wid + " to " + id)
-					cluster.workers[id].send(nodefony.extend(msg, {
-						worker:wid,
-					}));
-				}
-			});
+	switch ( cmd ){
+		case "dev":
+		case "development":
+			environment = "dev" ;
+        	type= "SERVER";
+			process.env.MODE_START = "NODEFONY_DEV" ;
+			kernel = new nodefony.appKernel(type, environment, debug,  {});
+		break;
+		case "production":
+		case "prod":
+			environment = "prod" ;
+        	type= "SERVER";
+			process.env.MODE_START = "NODEFONY" ;
+			prodStart.call(this, type, environment, debug,  {});
+		break;
+		case "pm2":
+            type= "SERVER";
+            environment = "prod" ;
+            if (process.env.MODE_START && process.env.MODE_START === "PM2"){
+                kernel = new nodefony.appKernel(type, environment, false, {});
+            }else{
+        	  process.env.MODE_START = "PM2_START" ;
+			  pm2Start.call(this);
+            }
+		break;
+        case "app" :
+    		try {
+    			let config = yaml.load( fs.readFileSync( path.resolve( "app", "config", "config.yml"), 'utf8' ) );
+    			return process.stdout.write( config.App.projectName );
+    		}catch(e){
+    			return process.stdout.write( "nodefony" );
+    		}
+        case "version" :
+    		try {
+    			return process.stdout.write( nodefony_version );
+    		}catch(e){
+    			throw e ;
+    		}
+    	case "config" :
+    		var config = yaml.load( fs.readFileSync( path.resolve( "app", "config", "config.yml"), 'utf8' ) );
+    		return  process.stdout.write( JSON.stringify(config, null, '\t') );
+    	case "check-version" :
+    		const semver = require('semver');
+    		var res = semver.valid(nodefony_version);
+    		if ( res ){
+    				return  process.stdout.write(res) ;
+    		}
+    		throw new Error ("Not valid version : " + nodefony_version +" check  http://semver.org ");
+		default :
+			environment = "prod" ;
+			type= "CONSOLE";
+			process.env.MODE_START = "NODEFONY_CONSOLE";
+			kernel = new nodefony.appKernel(type, environment, debug,  {});
+	}
+};
+
+let prodStart = function( type, environment, debug,  options ){
+    if (cluster.isMaster) {
+      for (var i=0 ; i < instances; i++){
+        cluster.fork();
+      }
+      cluster.on('disconnect', function(worker) {
+        console.error('disconnect!');
+      });
+      cluster.on('fork', (worker) => {
+        let wid = worker.id ;
+        worker.on('message', (msg) => {
+          if ( msg && msg.worker === wid ){
+            return ;
+          }
+          Object.keys(cluster.workers).forEach(function(id) {
+            if ( id != wid){
+              //console.log("CLUSTER SEND FROM  "+ wid + " to " + id)
+              cluster.workers[id].send(nodefony.extend(msg, {
+                worker:wid,
+              }));
+            }
+          });
+        });
+      });
+    }else {
+      kernel = new nodefony.appKernel(type, environment, debug,  options);
+    }
+};
+
+let pm2Start = function (){
+    let nodefonyConfig = null ;
+    let conf = null ;
+    let exist = null ;
+    try {
+    	conf = path.resolve(".", "config", "config.yml");
+    	exist = fs.existsSync( conf );
+    	if (exist){
+    		nodefonyConfig =  yaml.load( fs.readFileSync(conf, 'utf8' ) );
+    	}
+    }catch(e){
+    	console.trace(e)
+    	throw e ;
+    }
+
+    let projectName = null ;
+    try {
+    	conf = path.resolve( "app", "config", "config.yml") ;
+    	exist = fs.existsSync( conf );
+    	if (exist){
+    		projectName = yaml.load( fs.readFileSync( conf, 'utf8' ) ).App.projectName;
+    	}
+    }catch(e){
+    	console.trace(e)
+    	throw e ;
+    }
+
+    let config = null ;
+    try {
+    	conf = path.resolve(".", "config", "pm2.config.js");
+    	exist = fs.existsSync(conf);
+    	if (exist){
+    		config = require(conf);
+    	}
+    }catch(e){
+    	console.trace(e)
+    	throw e ;
+    }
+    if ( ! config ){
+    	config = nodefonyConfig.system.PM2 ;
+    	config.script = "./nodefony" ;
+        config.args = "pm2"
+    	config.env =  {
+    		NODE_ENV : "production",
+    		MODE_START : "PM2"
+    	};
+    }
+    if ( projectName ){
+        config.name = projectName ;
+    }
+    pm2.connect(true, () => {
+        pm2.start(config, (err, apps) =>  {
+            if (err){
+                this.logger(err.stack || err, "ERROR");
+                this.terminate(1);
+            }
+            try {
+                let table = null ;
+                table = this.displayTable(null, {
+                    head: [
+                        "APP NAME",
+                        "ID",
+                        "STATUS",
+                        "RESTART"
+                    ],
+                    colWidths: [ 30, 15, 20, 15 ]
+                });
+                apps.forEach ( (ele) =>{
+                    //console.log(ele.pm2_env)
+                    table.push([
+                        ele.pm2_env.name,
+                        ele.pm2_env.pm_id,
+                        ele.pm2_env.status,
+                        ele.pm2_env.restart_time
+                    ]);
+                } );
+                console.log( table.toString() );
+                console.log(" To see all logs use the command  make logs ");
+                console.log(" Or use PM2  pm2 --lines 1000 logs ");
+                process.nextTick( () => {
+                    this.terminate(0);
+				});
+            }catch(e){
+                this.logger(e, "ERROR");
+                this.terminate(1);
+            }
+            //this.terminate(0);
+        });
+    });
+};
+
+const cli = new nodefony.cli("CLI", {
+	asciify:false,
+    signals:false,
+    promiseRejection:false,
+    version:nodefony_version,
+	onStart:(cli) => {
+		cli.commander.arguments('<cmd> [args...]')
+		.action(function (cmd, args, commander) {
+			command = cmd;
+			args = args;
 		});
-	});
-}else {
-	const kernel = new nodefony.appKernel("SERVER", "prod", false, {
-		node_start:process.env["MODE_START"]
-	});
-	return kernel ;
-}
+		cli.setCommandOption('-d, --debug ', 'Nodefony debug' );
+		cli.setCommandOption('-h, --help ', 'Nodefony help' );
+		cli.setCommandOption('-v, --version ', 'Nodefony version' );
+		cli.commander.parse(process.argv);
+		if (!! cli.commander.debug){
+			debug = true ;
+		}
+        if (!! cli.commander.help){
+			debug = false ;
+		}
+		return start.call(cli, command, args, commander)
+	}
+});
+
+module.exports = cli ;
+return cli;

@@ -13,20 +13,21 @@ module.exports = nodefony.registerCommand("Monitoring",function(){
 
 			super( "Monitoring", container, container.get("notificationsCenter"), options );
 
-			var arg = command[0].split(":");
-			switch ( arg[1] ){
+			let cmd = command[0].split(":");
+			let args = command[1] ;
+			switch ( cmd[1] ){
 				case "test":
 					this.serverLoad = this.container.get("serverLoad");
 					var proto = null ;
 					var url = null ;
 					var nb = null ;
 					var concurence = null ;
-					switch( arg[2]){
+					switch( cmd[2]){
 						case "load":
 							try {
-								url = Url.parse( command[1] );
-								nb = parseInt( command[2] ,10 );
-								concurence = parseInt( command[3] ,10 );
+								url = Url.parse( args[0] );
+								nb = parseInt( args[1] ,10 );
+								concurence = parseInt( args[2] ,10 );
 							}catch(e){
 								this.showHelp();
 								this.terminate(1);
@@ -56,8 +57,6 @@ module.exports = nodefony.registerCommand("Monitoring",function(){
 				this.terminate(0);
 			}
 		}
-
-
 
 		send (data/*, encodage*/){
 			var message = JSON.parse(data) ;
@@ -116,8 +115,8 @@ module.exports = nodefony.registerCommand("Monitoring",function(){
 	return {
 		name:"Monitoring",
 		commands:{
-			Test:["Monitoring:test:load URL [nbRequests] [concurence]" ,"load test example ./console Monitoring:test:load http://localhost:5151/demo 10000 100 "],
+			Test:["Monitoring:test:load URL [nbRequests] [concurence]" ,"load test example : nodefony Monitoring:test:load http://localhost:5151/demo 10000 100 "],
 		},
-		worker:monitoring
+		cli:monitoring
 	};
 });

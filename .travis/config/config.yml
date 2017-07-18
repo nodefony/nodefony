@@ -1,5 +1,5 @@
 #
-#        nodefony APP CONFIG YAML FILE 
+#        nodefony APP CONFIG YAML FILE
 #
 # This file is YAML  FILE
 # ---
@@ -9,19 +9,17 @@
 #   standard for all programming languages.
 #
 
-
-
 #
 #  FRAMEWORK NODEFONY
 #
-#     APP CONFIG  
+#     APP CONFIG
 name :                          AppBundle
 locale :                        en_en
 version :                       "Beta"
 
 App:
-  projectName:                  "nodefony" 
-  projectYear:                  2017 
+  projectName:                  "nodefony"
+  projectYear:                  2017
   locale:                       "en_en"
   authorName:                   "admin"
   authorMail:                   "admin@nodefony.com"
@@ -31,32 +29,17 @@ lang:
   fr_fr:                        "français"
 
 #
-#  WEBPACK
+#       OVERRIDE  BUNDLE SEQUELIZE
 #
-# Assets root path is ./Resources/public
-#
-webpack:
-  entry:
-    main:                       "./js/app.js"
-  watch:                        false
-  devtool:                      "source-map"
-  output:
-    filename:                   "./assets/js/app.js"
-    library:                    "app"
-    libraryTarget:              "umd"
-
-#
-#       OVERRIDE  BUNDLE SEQUELIZE  
-#       
 #       see SEQUELIZE BUNDLE config for more options
 #
 #       Nodefony Database Management
 #
 #       By default nodefony create  connector name nodefony ( driver sqlite )
-#       for manage Sessions / User 
+#       for manage Sessions / User
 #
 #
-#       here create new databases connectors 
+#       here create new databases connectors
 #
 #
 sequelizeBundle:
@@ -83,11 +66,11 @@ sequelizeBundle:
 monitoringBundle:
   debugBar:                     true
   storage:
-    active:                     true                      
+    active:                     true
     requests:                   orm
-  
+
 #
-#       OVERRIDE BUNDLE REALTIME 
+#       OVERRIDE BUNDLE REALTIME
 #
 #       see REALTIME BUNDLE config for more options
 #
@@ -97,28 +80,28 @@ realTimeBundle:
     monitoring:
       type:                       tcp
       port:                       1318
-      domain:                     localhost 
+      domain:                     localhost
 
 #
-#       OVERRIDE BUNDLE HTTP 
+#       OVERRIDE BUNDLE HTTP
 #
 #       see HTTP BUNDLE config for more options
-#       
+#
 #       // SERVICES
 #       statics files
 #       session
 #       http server
 #       https server
-#       upload 
-#       websocket server 
-#       websocket secure server 
+#       upload
+#       websocket server
+#       websocket secure server
 #
 #
 httpBundle:
   statics:
     settings:
-      cache :                     false	
-      maxAge:                     0 
+      cache :                     false
+      maxAge:                     0
     web:
       path:                       "/web/"
       maxage:                     0                     #30*24*60*60*1000
@@ -126,14 +109,14 @@ httpBundle:
     tmp_dir:                      "tmp/upload"
     #max_filesize:                 100000               #in Bytes
   session:
-    start:                        false                          # autostart || false 
+    start:                        false                          # autostart || false
     handler:                      session.storage.sequelize      # session.storage.files | session.storage.sequelize | session.storage.memcached
     #save_path:                    "./tmp/sessions"              # for session.storage.files only
     cookie:
-      maxAge:                     0                              # like cookie_lifetime php  =>seconde 
+      maxAge:                     0                              # like cookie_lifetime php  =>seconde
     memcached:
-      servers:                      
-        nodefony: 
+      servers:
+        nodefony:
           location:               127.0.0.1
           port:                   11211
           weight:                 1
@@ -141,5 +124,3 @@ httpBundle:
     responseTimeout:              40000
   https:
     responseTimeout:              40000
-    
-

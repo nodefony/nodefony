@@ -71,18 +71,66 @@ module.exports = nodefony.register("kernel", function(){
 	const kernel = class kernel extends nodefony.Service {
 
 		constructor (environment, debug, type, options){
-
 			super( "KERNEL" , null, null , nodefony.extend( {}, defaultOptions,  options) );
-			this.version = nodefony_version ;
-			this.setParameters("bundles", {} ) ;
+			//Autoloader
 			this.autoLoader = nodefony.autoloader;
 			this.autoLoader.setKernel(this);
-
+			this.set("autoLoader",this.autoLoader);
+			this.version = nodefony_version ;
+			this.platform = process.platform ;
+			this.type = type;
+			this.debug = debug || false;
+			this.booted = false;
+			this.ready = false;
+			this.started = false ;
+			this.settings = null;
+			this.regBundle = regBundle;
+			this.node_start = process.env["MODE_START"] || this.options.node_start  ;
+			this.bundles = {};
+			this.eventReadywait = 0 ;
+			this.setParameters("bundles", {} );
+			this.bundlesCore = bundlesCore
+			// Paths
 			this.rootDir = process.cwd();
 			this.appPath = path.resolve( this.rootDir, "app");
 			this.configPath = path.resolve( this.rootDir, "config", "config.yml") ;
 			this.generateConfigPath = path.resolve( this.rootDir, "config", "generatedConfig.yml") ;
 			this.publicPath = path.resolve( this.rootDir, "web");
+			this.nodefonyPath = this.autoLoader.dirname;
+			//core repository
+			try {
+				this.isCore = new nodefony.fileClass(path.resolve(this.rootDir + "/.core") );
+			}catch(e){
+				this.isCore = false ;
+			}
+			;
+			// Manage Kernel Container
+			this.set("kernel", this);
+			// Manage Reader
+			this.reader = new nodefony.Reader(this.container);
+			this.set("reader",this.reader);
+			// Manage Injections
+			this.injection = new nodefony.injection(this.container);
+			this.set("injection", this.injection);
+			// SERVERS
+			this.initServers();
+			// cli worker
+			try {
+				this.cli = new nodefony.cliKernel("NODEFONY", this.container, this.notificationsCenter, {
+					autoLogger		: false,
+					version			: this.version,
+					onStart			: ( cli ) => {
+						this.start(environment);
+					}
+				});
+			}catch(e){
+				console.trace(e)
+				throw e ;
+			}
+			this.cli.createDirectory( path.resolve (this.rootDir ,"tmp"), null , (file) => {
+				this.tmpDir = file ;
+			}, true );
+			this.git = this.cli.setGitPath( this.rootDir );
 
 			this.cacheLink = path.resolve (this.rootDir ,"tmp", "assestLink" ) ;
 			if ( fs.existsSync( this.cacheLink) ){
@@ -94,71 +142,6 @@ module.exports = nodefony.register("kernel", function(){
 				console.log("DELETE TMP :" + this.cacheWebpack)
 				shell.rm("-Rf", this.cacheWebpack);
 			}
-
-			this.platform = process.platform ;
-			this.typeCluster = this.clusterIsMaster() ? "master" : "worker" ;
-			this.type = type;
-			this.bundles = {};
-			this.bundlesCore = bundlesCore ;
-			try {
-				this.isCore = new nodefony.fileClass(path.resolve(this.rootDir + "/.core") );
-			}catch(e){
-				this.isCore = false ;
-			}
-
-			if ( environment in defaultEnvEnable ){
-				switch ( environment ){
-					case "dev" :
-					case "development" :
-						this.environment = "dev";
-						process.env.NODE_ENV = "development";
-					break;
-					case "prod" :
-					case "production" :
-						this.environment = "prod";
-						process.env.NODE_ENV = "production";
-					break;
-				}
-			}
-
-			this.debug = debug || false;
-			this.booted = false;
-			this.ready = false;
-			this.start = false ;
-
-			this.nodefonyPath = this.autoLoader.dirname;
-			this.settings = null;
-			this.regBundle = regBundle;
-
-			this.options = options ;
-			this.node_start = options.node_start ;
-
-			// Manage Container
-			this.initializeContainer();
-
-			// cli worker
-			try {
-				this.cli = new nodefony.cliKernel("NODEFONY", this.container, this.notificationsCenter, {
-					autoLogger		: false,
-					version			: nodefony_version,
-					onStart			: ( cli ) => {
-						if ( ! this.start ){
-							this.initCluster();
-							this.boot(options);
-							this.start = true ;
-						}
-					}
-				});
-			}catch(e){
-				console.trace(e)
-				throw e ;
-			}
-
-			this.cli.createDirectory( path.resolve (this.rootDir ,"tmp"), null , (file) => {
-				this.tmpDir = file ;
-			}, true );
-			this.git = this.cli.setGitPath( this.rootDir );
-
 			this.listen(this, "onPostRegister" , () =>{
 				if ( this.type === "SERVER" ){
 					if ( ! fs.existsSync( this.cacheLink ) ){
@@ -169,26 +152,80 @@ module.exports = nodefony.register("kernel", function(){
 							this.logger(e,"WARNING");
 						}
 					}
+				}else{
+					try {
+						var ret = this.cli.loadCommand();
+						if (ret)	{
+							return ;
+						}
+					}catch(e){
+						this.logger(e, "ERROR");
+						this.terminate(1);
+						return ;
+					}
+					process.nextTick( ()=> {
+						try {
+							this.cli.matchCommand();
+						}catch(e){
+							this.logger(e,  "ERROR");
+							this.terminate(1);
+						}
+					});
 				}
 			});
 		}
 
-		/**
-	 	*	@method boot
-         	*/
-		boot (options){
+		start(environment){
+			if ( ! this.started ){
+				// Environment
+				this.setEnv(environment);
+				// config
+				this.readKernelConfig()
+				// Clusters
+				this.initCluster();
+				// Manage Template engine
+				this.initTemplate();
+				// Boot
+				this.boot();
+				this.started = true ;
+			}
+		}
 
-			// Manage Reader
-			this.reader = new nodefony.Reader(this.container);
-			this.set("reader",this.reader);
-			this.set("autoLoader",this.autoLoader);
+		setEnv (environment){
+			if ( environment in defaultEnvEnable ){
+				switch ( environment ){
+					case "dev" :
+					case "development" :
+						this.environment = "dev";
+						process.env.NODE_ENV = "development";
+						process.env.BABEL_ENV = 'development';
+					break;
+					case "prod" :
+					case "production" :
+					default:
+						this.environment = "prod";
+						process.env.NODE_ENV = "production";
+						process.env.BABEL_ENV = 'production';
+				}
+			}
+		}
 
+		logEnv(){
+			return this.cli.clc.blue("			\x1b NODEFONY " + this.type )
+			+ " Cluster : " + this.cli.clc.magenta(this.typeCluster )
+			+ " Environment : " + this.cli.clc.magenta(this.environment)
+			+ " Debug :" + this.cli.clc.magenta(this.debug)
+			+ "\n";
+		}
+
+		readKernelConfig(){
 			try {
 				this.reader.readConfig(this.configPath, (result) => {
 					this.settings = result;
 					this.settings.name = "NODEFONY";
-					this.settings.version = nodefony_version;
+					this.settings.version = this.version;
 					this.settings.environment = this.environment ;
+					this.settings.debug = this.debug ;
 					this.setParameters("kernel", this.settings);
 					this.httpPort = result.system.httpPort || null;
 					this.httpsPort = result.system.httpsPort || null;
@@ -197,13 +234,8 @@ module.exports = nodefony.register("kernel", function(){
 					this.hostHttp = this.hostname +":"+this.httpPort ;
 					this.hostHttps = this.hostname +":"+this.httpsPort ;
 					this.domainAlias = result.system.domainAlias ;
-					// manage LOG
-					if (this.environment === "prod"){
-						this.environment = result.system.debug ? "dev" : "prod" ;
-					}
-					this.initializeLog(options);
-					// Manage Template engine
-					this.initTemplate();
+					this.initializeLog();
+
 				});
 				if ( ! this.settings.system.bundles ){
 					this.settings.system.bundles = {} ;
@@ -218,16 +250,12 @@ module.exports = nodefony.register("kernel", function(){
 				this.logger(e, "ERROR");
 				throw e ;
 			}
+		}
 
-			this.eventReadywait = 0 ;
-
-			// Manage Injections
-			this.injection = new nodefony.injection(this.container);
-			this.set("injection", this.injection);
-
-			// SERVERS
-			this.initServers();
-
+		/**
+	 	*	@method boot
+         	*/
+		boot (){
 			/*
  		 	*	BUNDLES
  		 	*/
@@ -427,23 +455,14 @@ module.exports = nodefony.register("kernel", function(){
 		clusterIsMaster(){
 			return cluster.isMaster ;
 		}
-
-		logEnv(){
-			return this.cli.clc.blue("			\x1b NODEFONY " + this.type )
-			+ " Cluster : " + this.cli.clc.magenta(this.typeCluster )
-			+ " Environment : " + this.cli.clc.magenta(this.environment)
-			+ " Debug :" + this.cli.clc.magenta(this.debug)
-			+ "\n";
-		}
-
 		initCluster (){
+			this.typeCluster = this.clusterIsMaster() ? "master" : "worker" ;
 			this.processId = process.pid ;
 			this.process = process ;
 			if (cluster.isMaster) {
-				//console.log( this.cli.clc.blue(ascci) );
-				if (this.type != "CONSOLE"){
+				//if (this.type != "CONSOLE"){
 					console.log(this.logEnv());
-				}
+				//}
 				this.fire("onCluster", "MASTER", this,  process);
 			}else if (cluster.isWorker) {
 				//console.log( this.cli.clc.blue(ascci) );
@@ -454,7 +473,6 @@ module.exports = nodefony.register("kernel", function(){
 				process.on("message" , this.listen(this, "onMessage" ) );
 			}
 		}
-
 		sendMessage (message){
 			return process.send({
 				type : 'process:msg',
@@ -465,14 +483,17 @@ module.exports = nodefony.register("kernel", function(){
 		/**
 	 	*	@method initializeLog
          	*/
-		initializeLog (options){
+		initializeLog (){
+			if (this.type === "CONSOLE"){
+				return this.cli.listenSyslog(this.syslog, this.debug);
+			}
 
 			if ( ! this.settings.system.log.active ){
 				return ;
 			}
 			if (  this.environment === "dev" ){
 				this.cli.listenSyslog( this.syslog , this.debug);
-				if ( options.logSpinner ){
+				if ( this.options.logSpinner ){
 					this.cli.startSpinner("kernel",['⣾','⣽','⣻','⢿','⡿','⣟','⣯','⣷'] );
 					this.on("onReady", () => {
 						this.cli.stopSpinner();
@@ -480,59 +501,11 @@ module.exports = nodefony.register("kernel", function(){
 				}
 			}else{
 				// PM2
-				if (  options.node_start === "PM2" ){
-					this.cli.listenSyslog( this.syslog , this.debug );
-					return ;
+				if (  this.options.node_start === "PM2" ){
+					return this.cli.listenSyslog( this.syslog , this.debug );
 				}
-
-				if ( this.settings.system.log.file ){
-					/*this.logStream = new nodefony.log(this.rootDir+this.settings.system.log.error,{
-						rotate:this.settings.system.log.rotate
-					});
-					this.syslog.listenWithConditions(this,{
-						severity:{
-							data:"CRITIC,ERROR"
-						}
-					},function(pdu){
-						var pay = pdu.payload ? (pdu.payload.stack || pdu.payload) : "Error undefined" ;
-						var reg = new RegExp("\\[32m");
-						var line = pdu.severityName +" SYSLOG "  + pdu.msgid +  " " + pdu.msg+" : "+ pay.replace(reg,"");
-						this.logStream.logger( new Date(pdu.timeStamp) + " " +line +"\n" );
-					});
-					var data ;
-					this.logStreamD = new nodefony.log(this.rootDir+this.settings.system.log.messages,{
-						rotate:this.settings.system.log.rotate
-					});
-					if ( this.debug ){
-						data = "INFO,DEBUG,WARNING" ;
-					}else{
-						data = "INFO" ;
-					}
-					this.syslog.listenWithConditions(this,{
-						severity:{
-							data:data
-						}
-					},function(pdu){
-						if ( pdu.msgid === "SERVER WELCOME"){
-							console.log(  pdu.payload);
-							return ;
-						}
-						if (! pdu.payload ) { return ; }
-						var reg = new RegExp("\\[32m");
-						var line = pdu.severityName +" SYSLOG "  + pdu.msgid +  " : "+ pdu.payload.replace(reg,"");
-						this.logStreamD.logger( new Date(pdu.timeStamp) + " " +line +"\n" );
-					});*/
-				}else{
-					this.cli.listenSyslog( this.syslog , this.debug );
-				}
+				return this.cli.listenSyslog( this.syslog , this.debug );
 			}
-		}
-
-		/**
-	 	*	@method initializeContainer
-         	*/
-		initializeContainer (){
-			this.set("kernel", this);
 		}
 
 		/**
@@ -555,7 +528,7 @@ module.exports = nodefony.register("kernel", function(){
 	 	*	@method logger
          	*/
 		logger (pci, severity, msgid,  msg){
-			if (! msgid) { msgid = this.cli.clc.magenta("KERNEL ");}
+			if (! msgid) { msgid = this.cli.clc.magenta(this.type + " ");}
 			return this.syslog.logger(pci, severity, msgid,  msg);
 		}
 
@@ -641,10 +614,22 @@ module.exports = nodefony.register("kernel", function(){
 						exclude:/^doc$|^node_modules$/,
 						recurse: false,
 						onFile:(file) => {
-							if ( file.matchName(this.regBundle) ){
+							if (file.matchName(this.regBundle)){
 								try {
-									this.loadBundle(file);
+									if ( this.cli.commander && this.cli.commander.args && this.cli.commander.args[0]  === "npm:install" ){
+										let name = this.getBundleName(file.name);
+										if ( file.shortName in this.bundlesCore ){
+											if ( this.isCore ){
+												this.cli.installPackage(name, file, true);
+											}
+										}else{
+											this.cli.installPackage(name, file, false );
+										}
+									}else{
+										this.loadBundle( file);
+									}
 								}catch(e){
+									console.trace(e);
 									this.logger(e, "ERROR");
 								}
 							}
@@ -652,7 +637,14 @@ module.exports = nodefony.register("kernel", function(){
 						onFinish:callbackFinish || this.initializeBundles.bind(this)
 					});
 				}catch(e){
-					this.logger(e, "ERROR");
+					this.logger(e, "ERROR")
+					this.logger("GLOBAL CONFIG REGISTER : ","INFO");
+					this.logger(this.configBundle,"INFO");
+					var gene = this.readGeneratedConfig();
+					if ( gene ){
+						this.logger("GENERATED CONFIG REGISTER file ./config/GeneratedConfig.yml : ","INFO");
+						this.logger( gene  , "INFO" );
+					}
 				}
 			};
 			if ( nextick === undefined ){

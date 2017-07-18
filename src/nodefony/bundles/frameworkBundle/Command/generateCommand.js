@@ -613,23 +613,24 @@ module.exports = nodefony.registerCommand("generate",function(){
 
 			this.config = this.container.getParameters("bundles.App");
 			this.configKernel = this.container.getParameters("kernel");
-			var arg = command[0].split(":");
-			switch ( arg[1] ){
+			let cmd = command[0].split(":");
+			let args = command[1] ;
+			switch ( cmd[1] ){
 				case "bundle" :
 					if ( command[1] ){
 						try {
-							if (  ! arg[2] ){
-								this.generateBundle(command[1], command[2]);
-								this.installBundle(command[1], command[2]);
+							if (  ! cmd[2] ){
+								this.generateBundle(args[0], args[1]);
+								this.installBundle(args[0], args[1]);
 								this.terminate(0);
 								return ;
 							}else{
-								switch ( arg[2] ){
+								switch ( cmd[2] ){
 									case "angular" :
-										this.generateAngularBundle(command[1], command[2]);
+										this.generateAngularBundle(args[0], args[1]);
 									break ;
 									case "react" :
-										this.generateReactBundle(command[1], command[2]);
+										this.generateReactBundle(args[0], args[1]);
 									break;
 								}
 							}
@@ -654,7 +655,7 @@ module.exports = nodefony.registerCommand("generate",function(){
 						break;
 						case 3:
 							try {
-								this.generateController( command[1], command[2]);
+								this.generateController( args[0], args[1]);
 							}catch(e){
 								this.terminate(1);
 								return ;
@@ -664,7 +665,7 @@ module.exports = nodefony.registerCommand("generate",function(){
 				break;
 				case "command" :
 					try{
-						this.generateCommand(command[1], command[2]);
+						this.generateCommand(args[0], args[1]);
 					}catch(e){
 						this.terminate(1);
 						return ;
@@ -880,13 +881,13 @@ module.exports = nodefony.registerCommand("generate",function(){
 	return {
 		name:"generate",
 		commands:{
-			bundle:["generate:bundle nameBundle path" ,"Generate a nodefony Bundle  Example : ./console generate:bundle myBundle ./src/bundles"],
-			bundleAngular:["generate:bundle:angular nameBundle path" ,"Generate a Angular Bundle  Example : ./console generate:bundle:angular myBundle ./src/bundles"],
-			bundleReact:["generate:bundle:react nameBundle path" ,"Generate a React Bundle Example : ./console generate:bundle:react myBundle ./src/bundles"],
-			controller:["generate:controller  nameController bundlePath" ,"Generate a controller Example : ./console generate:controller myController ./src/bundles/myBundle"],
+			bundle:["generate:bundle nameBundle path" ,"Generate a nodefony Bundle  Example : nodefony generate:bundle myBundle ./src/bundles"],
+			bundleAngular:["generate:bundle:angular nameBundle path" ,"Generate a Angular Bundle  Example : nodefony generate:bundle:angular myBundle ./src/bundles"],
+			bundleReact:["generate:bundle:react nameBundle path" ,"Generate a React Bundle Example : nodefony generate:bundle:react myBundle ./src/bundles"],
+			controller:["generate:controller  nameController bundlePath" ,"Generate a controller Example : nodefony generate:controller myController ./src/bundles/myBundle"],
 			command:["generate:command nameCommand path" ,"Generate a command js file in bundle path"],
 			//service:["generate:service nameService path" ,"Generate a service js file in bundle path"]
 		},
-		worker:generate
+		cli:generate
 	};
 });

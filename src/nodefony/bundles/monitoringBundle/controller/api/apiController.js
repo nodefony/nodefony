@@ -579,7 +579,7 @@ module.exports = nodefony.registerController("api", function(){
 				data:JSON.stringify({
 					kernel:this.kernel.settings,
 					debug:this.kernel.debug,
-					node_start:this.kernel.options.node_start,
+					node_start:this.kernel.node_start,
 					App:bundleApp.settings,
 					debug:this.kernel.debug,
 					nodejs:process.versions,
