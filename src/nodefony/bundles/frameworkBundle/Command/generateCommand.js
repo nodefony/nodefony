@@ -628,7 +628,13 @@ module.exports = nodefony.registerCommand("generate",function(){
 							}else{
 								switch ( cmd[2] ){
 									case "angular" :
-										this.generateAngularBundle(args[0], args[1]);
+										let generateAngularCli = require("./angular/angularCli.js");
+										try {
+											new generateAngularCli( args[0], args[1] , this, interactive);
+										}catch(e){
+											throw e ;
+										}
+										//this.generateAngularBundle(args[0], args[1]);
 									break ;
 									case "react" :
 										this.generateReactBundle(args[0], args[1]);
