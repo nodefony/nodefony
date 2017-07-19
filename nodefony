@@ -35,7 +35,7 @@ let start = function(cmd, args, commander){
 		case "dev":
 		case "development":
 			environment = "dev" ;
-        	type= "SERVER";
+      type= "SERVER";
 			process.env.MODE_START = "NODEFONY_DEV" ;
 			kernel = new nodefony.appKernel(type, environment, debug,  {});
 		break;
@@ -208,7 +208,7 @@ let pm2Start = function (){
 };
 
 const cli = new nodefony.cli("CLI", {
-	asciify:false,
+	  asciify:false,
     signals:false,
     promiseRejection:false,
     version:nodefony_version,
@@ -221,12 +221,10 @@ const cli = new nodefony.cli("CLI", {
 		cli.setCommandOption('-d, --debug ', 'Nodefony debug' );
 		cli.setCommandOption('-h, --help ', 'Nodefony help' );
 		cli.setCommandOption('-v, --version ', 'Nodefony version' );
+		cli.setCommandOption('-i, --interactive ', 'Nodefony cli Interactive Mode' );
 		cli.commander.parse(process.argv);
 		if (!! cli.commander.debug){
 			debug = true ;
-		}
-        if (!! cli.commander.help){
-			debug = false ;
 		}
 		return start.call(cli, command, args, commander)
 	}

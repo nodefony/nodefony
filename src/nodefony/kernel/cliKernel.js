@@ -143,7 +143,6 @@ module.exports = nodefony.register("cliKernel", function(){
 			this.commands = {};
 		}
 
-
 		loadCommand (){
 			switch ( this.commander.args[0] ){
 				case "npm:install":

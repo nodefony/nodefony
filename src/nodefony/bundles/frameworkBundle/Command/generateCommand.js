@@ -615,6 +615,7 @@ module.exports = nodefony.registerCommand("generate",function(){
 			this.configKernel = this.container.getParameters("kernel");
 			let cmd = command[0].split(":");
 			let args = command[1] ;
+			let interactive = command[2].interactive
 			switch ( cmd[1] ){
 				case "bundle" :
 					if ( command[1] ){
@@ -673,7 +674,7 @@ module.exports = nodefony.registerCommand("generate",function(){
 				break;
 				case "service" :
 					try {
-						this.generateService();
+						this.generateService(interactive);
 					}catch(e){
 						this.terminate(1);
 						return ;
@@ -873,8 +874,42 @@ module.exports = nodefony.registerCommand("generate",function(){
 			}
 		}
 
-		generateService (){
-
+		generateService (interactive, name, Path){
+			let ele = null;
+			let work = null ;
+			if ( interactive ){
+				let questions  = [{
+					type: 'input',
+			    name: 'name',
+			    message: 'Enter service name',
+			    validate:  (value) => {
+						if( value ){
+							return true
+						}
+						this.blankLine();
+						 this.logger("Name service is mandatory !!", "ERROR");
+						return false ;
+			    }}
+				];
+				work = this.inquirer.prompt(questions);
+			}else{
+				work  = new Promise( ( resolve, reject) => {
+					if( ! name) {
+						reject( "Name service is mandatory !!" );
+					}
+					return resolve(  {
+						name:name,
+						path:Path
+					});
+				});
+			}
+			work.then((answers) => {
+				ele = answers ;
+				this.logger( ele );
+			}).catch((e) =>{
+				this.logger(e,"ERROR");
+				this.terminate(1);
+			});
 		}
 	};
 
@@ -886,7 +921,7 @@ module.exports = nodefony.registerCommand("generate",function(){
 			bundleReact:["generate:bundle:react nameBundle path" ,"Generate a React Bundle Example : nodefony generate:bundle:react myBundle ./src/bundles"],
 			controller:["generate:controller  nameController bundlePath" ,"Generate a controller Example : nodefony generate:controller myController ./src/bundles/myBundle"],
 			command:["generate:command nameCommand path" ,"Generate a command js file in bundle path"],
-			//service:["generate:service nameService path" ,"Generate a service js file in bundle path"]
+			service:["generate:service nameService path" ,"Generate a service js file in bundle path"]
 		},
 		cli:generate
 	};
