@@ -138,7 +138,7 @@ system:
 ## <a name="cli"></a>Command Line Interface
 ```bash
 $./nodefony -h            
-_   _    ___    ____    _____   _____    ___    _   _  __   __
+ _   _    ___    ____    _____   _____    ___    _   _  __   __
 | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
 |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
 | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |  
@@ -248,17 +248,17 @@ Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : INSTALL ASSETS LINK IN WEB P
 └─────────┴───────────────────┴────────────────────────────────────────────┴───────────┴────────────────┘
 Wed Jul 19 2017 15:22:12 INFO CONSOLE   : NODEFONY Kernel Life Cycle Terminate CODE : 0
 ```
-#### Now helleBundle is auto-insert in framework with watcher active and auto-config Webpack Module bundler:
+#### Now helleBundle is auto-insert in framework with watcher active and auto-config Webpack Module bundler
 
-### watcher :
+### watchers :
 
-       The bundle generation engine build bundle config with  node.js watcher configuration
+#### The bundle generation engine build bundle config with  node.js watcher configuration
 
-       In developement mode  is very usefull to auto-reload files as controllers , views , routing , translations
+#### In developement mode  is very usefull to auto-reload files as controllers , views , routing , translations
 
-       without having to reboot the server.
+#### without having to reboot the server.
 
-       You can see helloBundle config   : vim  ./src/bundles/helloBundle/Resources/config/config.yml
+You can see helloBundle config   : vim  ./src/bundles/helloBundle/Resources/config/config.yml
 ```yml
 ########## nodefony CONFIG BUNDLE  helloBundle  ############
 name :                          helloBundle
@@ -285,15 +285,15 @@ watch:                          true
 ```
 ### Webpack Module bundler :
 
-      The bundle generation engine build bundle config with a predefined webpack configuration
+#### The bundle generation engine build bundle config with a predefined webpack configuration
 
-      In this way webpack is very usefull to manage all assets of bundle
+#### In this way webpack is very usefull to manage all assets of bundle
 
-      In developement mode watch  is very usefull to auto-compile webpack module bundle
+#### In developement mode watch  is very usefull to auto-compile webpack module bundle
 
-      without having to reboot the server
+#### without having to reboot the server
 
-      You can see helloBundle config webpack : vim  ./src/bundles/helloBundle/Resources/config/webpack/webpack-dev.config.js
+You can see helloBundle config webpack : vim  ./src/bundles/helloBundle/Resources/config/webpack/webpack-dev.config.js
 ```js
 const path = require("path");
 const webpack = require('webpack');
