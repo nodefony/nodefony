@@ -6,13 +6,13 @@ try {
   const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
 }
 
-
-const cli = new nodefony.cli("Commander", {
-  onStart:() => {
-
-  }
+const cli = new nodefony.cli("CLI", {
+    resize:true,
+    onStart:(cli) => {}
+    },
+    onResize:()=>{
+    }
 });
-
 
 module.exports = cli ;
 return cli;

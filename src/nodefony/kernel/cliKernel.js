@@ -176,6 +176,7 @@ module.exports = nodefony.register("cliKernel", function(){
 			}
 			this.commander.on('--help', () => {
 				console.log( this.generateHelp.call(this, this.bundles, "") );
+				this.terminate();
 			});
 			return this.stop;
 		}

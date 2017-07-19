@@ -5611,10 +5611,6 @@ node-fetch-npm@^2.0.1:
     json-parse-helpfulerror "^1.0.3"
     safe-buffer "^5.0.1"
 
-node-getopt@0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/node-getopt/-/node-getopt-0.2.3.tgz#69abbc7e5400600d1dacf00db8cb79b5487e924b"
-
 node-gyp@^3.3.1, node-gyp@~3.6.2:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/node-gyp/-/node-gyp-3.6.2.tgz#9bfbe54562286284838e750eac05295853fa1c60"
@@ -8591,6 +8587,13 @@ uglify-es@^3.0.25:
     commander "~2.9.0"
     source-map "~0.5.1"
 
+"uglify-es@git://github.com/mishoo/UglifyJS2#harmony":
+  version "3.0.25"
+  resolved "git://github.com/mishoo/UglifyJS2#91f8b57b3ef22f91b755a0e5f95f5b5aa24ed74c"
+  dependencies:
+    commander "~2.9.0"
+    source-map "~0.5.1"
+
 uglify-js@3.0.x:
   version "3.0.17"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.0.17.tgz#d228cd55c2df9b3d2f53f147568cb4cc4a72cc06"
@@ -8601,6 +8604,15 @@ uglify-js@3.0.x:
 uglify-js@^2.8.29, uglify-js@^2.8.5:
   version "2.8.29"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.8.29.tgz#29c5733148057bb4e1f75df35b7a9cb72e6a59dd"
+  dependencies:
+    source-map "~0.5.1"
+    yargs "~3.10.0"
+  optionalDependencies:
+    uglify-to-browserify "~1.0.0"
+
+"uglify-js@git://github.com/mishoo/UglifyJS2#harmony-v2.8.22":
+  version "2.8.22"
+  resolved "git://github.com/mishoo/UglifyJS2#278577f3cb75e72320564805ee91be63e5f9c806"
   dependencies:
     source-map "~0.5.1"
     yargs "~3.10.0"

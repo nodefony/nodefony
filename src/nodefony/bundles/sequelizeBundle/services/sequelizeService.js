@@ -42,14 +42,14 @@ module.exports = nodefony.registerService("sequelize", function(){
 			this.connect(type, options);
 		}
 
-		setConnection (db){
+		setConnection (db, config){
 			if(! db){
 				throw new Error("Cannot create class connection without db native");
 			}
 			this.db = db;
-
 			this.orm.notificationsCenter.fire("onConnect", this.name, this.db );
 			this.state = "CONNECTED";
+			this.logger(this.type + " CONNECT  database "+ this.name+" : " +config.dbname, "DEBUG");
 		}
 
 		getConnection (){
@@ -64,7 +64,7 @@ module.exports = nodefony.registerService("sequelize", function(){
 			}else{
 				config.options.logging = false;
 			}
-			var conn = null ;
+			let conn = null ;
 			try {
 				switch(type){
 					case "sqlite" :
@@ -72,14 +72,24 @@ module.exports = nodefony.registerService("sequelize", function(){
 					break;
 				}
 				conn = new this.orm.engine(config.dbname, config.username, config.password, config.options );
-				this.logger(this.name + " :  CONNECT to database "+ type+" : " +config.dbname, "DEBUG");
 				process.nextTick( ()  => {
-					this.setConnection(conn);
+					this.setConnection(conn, config);
 				});
 			}catch(err){
 				error.call(this, err);
 				this.orm.fire('onErrorConnection', this.name, conn, this.orm);
 			}
+			this.orm.kernel.listen(this, 'onPostReady', (/*kernel*/) => {
+				conn
+				.authenticate()
+				.then( () => {
+					this.logger('Sequelise Connection : '+this.name +' has been established successfully.', "DEBUG");
+				})
+				.catch( err => {
+					this.logger('Unable to connect to the database:', err , "ERROR");
+				});
+			});
+			return conn ;
 		}
 
 		logger (pci, severity, msgid,  msg){
@@ -117,6 +127,7 @@ module.exports = nodefony.registerService("sequelize", function(){
 					});
 				}
 			});
+
 		}
 
 		createConnection (name, config){

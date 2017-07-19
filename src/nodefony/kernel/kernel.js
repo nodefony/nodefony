@@ -711,9 +711,7 @@ module.exports = nodefony.register("kernel", function(){
 	 	*	@method initializeBundles
          	*/
 		initializeBundles (){
-
 			this.app = this.initApplication();
-
 			this.logger("\x1B[33m EVENT KERNEL onPostRegister\x1b[0m", "DEBUG");
 			this.fire("onPostRegister", this);
 
@@ -845,24 +843,15 @@ module.exports = nodefony.register("kernel", function(){
 				}
 				this.fire("onTerminate", this, code);
 			}catch(e){
+				this.logger(e,"ERROR");
 				console.trace(e);
 				code = 1;
-				process.nextTick( () => {
-					this.logger("Kernel Life Cycle Terminate CODE : "+code,"INFO");
-				});
-				this.logger(e,"ERROR");
-			}
-			if (this.logStream){
-				this.logStream.close("Close error stream\n");
-			}
-			if (this.logStreamD){
-				this.logStreamD.close("Close debug stream\n");
 			}
 			process.nextTick( () => {
 				this.logger("NODEFONY Kernel Life Cycle Terminate CODE : "+code,"INFO");
 				process.exit(code);
 			});
-			return ;
+			return code;
 		}
 	};
 	return kernel ;
