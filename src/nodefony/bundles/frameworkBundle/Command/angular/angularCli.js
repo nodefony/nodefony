@@ -135,8 +135,9 @@ let angularCli = class angularCli extends nodefony.Service {
         return new Promise ( (resolve, reject) => {
             let args = ['new', '-v', '-sg', this.bundleName+"Bundle"] ;
             this.logger ("install angular cli : ng "+ args.join(" ") );
+            let cmd = null ;
             try{
-                let cmd = this.cli.spawn(this.ng, args, {
+                cmd = this.cli.spawn(this.ng, args, {
                     cwd:this.tmp,
                 }, ( code ) => {
                     if ( code === 1 ){
@@ -157,8 +158,9 @@ let angularCli = class angularCli extends nodefony.Service {
         return new Promise ( (resolve, reject) => {
             let args = ['generate', 'module', '--spec', '--routing', '-m', 'app', this.bundleName ];
             this.logger (" Generate Angular module : ng " + args.join(" ") + " in " + dir );
+            let cmd = null ;
             try {
-                this.cli.spawn(this.ng, args, {
+                cmd = this.cli.spawn(this.ng, args, {
                     cwd: dir
                 }, ( code ) => {
                     if (code === 1 ){
@@ -179,21 +181,28 @@ let angularCli = class angularCli extends nodefony.Service {
         return new Promise ( (resolve, reject) => {
             let args = ["eject", "--environment", "dev", "-dev"] ;
             this.logger (" eject  webpack config angular : ng " + args.join(" "));
-            this.cli.spawn(this.ng, args, {
-                cwd: dir
-            } ,(code) => {
-                if ( code === 1 ){
-                    this.cleanTmp();
-                    return reject( new Error ("ng eject error : " +code) ) ;
-                }
-                try {
-                    this.moveToRealPath();
-                }catch(e){
-                    this.cleanTmp();
-                    return reject( e ) ;
-                }
-                return resolve( path.resolve( this.bundlePath , this.bundleName+"Bundle" ));
-            });
+            let cmd = null ;
+            try{
+                cmd = this.cli.spawn(this.ng, args, {
+                    cwd: dir
+                } ,(code) => {
+                    if ( code === 1 ){
+                        this.cleanTmp();
+                        return reject( new Error ("ng eject error : " +code) ) ;
+                    }
+                    try {
+                        this.moveToRealPath();
+                    }catch(e){
+                        this.cleanTmp();
+                        return reject( e ) ;
+                    }
+                    return resolve( path.resolve( this.bundlePath , this.bundleName+"Bundle" ));
+                });
+            }catch(e){
+                this.cleanTmp();
+                this.logger("ng generate module ","ERROR");
+                return reject(e);
+            }
         });
     }
 
@@ -203,9 +212,10 @@ let angularCli = class angularCli extends nodefony.Service {
             if ( argv ){
                 tab = tab.concat(argv) ;
             }
+            let cmd = null ;
             try {
               this.logger("npm install in " + cwd );
-              this.cli.spawn("npm", tab, {
+              cmd = this.cli.spawn("npm", tab, {
                   cwd:cwd
               } , (code) => {
                   if ( code === 1 ){

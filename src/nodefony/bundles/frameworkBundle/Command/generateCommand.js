@@ -632,7 +632,6 @@ module.exports = nodefony.registerCommand("generate",function(){
 										try {
 											let ngCli = new generateAngularCli( this );
 											ngCli.generateNgProject(args[0], args[1] , interactive).then( (obj) =>{
-												console.log(obj);
 												try {
 													var file = new nodefony.fileClass(obj.path);
 													angularBundle.call(this, file, obj.name, "yml", obj.path, true);
@@ -647,7 +646,6 @@ module.exports = nodefony.registerCommand("generate",function(){
 										}catch(e){
 											throw e ;
 										}
-										//this.generateAngularBundle(args[0], args[1]);
 									break ;
 									case "react" :
 										this.generateReactBundle(args[0], args[1]);
@@ -828,41 +826,7 @@ module.exports = nodefony.registerCommand("generate",function(){
 		}
 
 		generateService (interactive, name, Path){
-			let ele = null;
-			let work = null ;
-			if ( interactive ){
-				let questions  = [{
-					type: 'input',
-			    name: 'name',
-			    message: 'Enter service name',
-			    validate:  (value) => {
-						if( value ){
-							return true
-						}
-						this.blankLine();
-						 this.logger("Name service is mandatory !!", "ERROR");
-						return false ;
-			    }}
-				];
-				work = this.inquirer.prompt(questions);
-			}else{
-				work  = new Promise( ( resolve, reject) => {
-					if( ! name) {
-						reject( "Name service is mandatory !!" );
-					}
-					return resolve(  {
-						name:name,
-						path:Path
-					});
-				});
-			}
-			work.then((answers) => {
-				ele = answers ;
-				this.logger( ele );
-			}).catch((e) =>{
-				this.logger(e,"ERROR");
-				this.terminate(1);
-			});
+			
 		}
 	};
 
@@ -873,8 +837,8 @@ module.exports = nodefony.registerCommand("generate",function(){
 			bundleAngular:["generate:bundle:angular nameBundle path" ,"Generate a Angular Bundle  Example : nodefony generate:bundle:angular myBundle ./src/bundles"],
 			bundleReact:["generate:bundle:react nameBundle path" ,"Generate a React Bundle Example : nodefony generate:bundle:react myBundle ./src/bundles"],
 			controller:["generate:controller  nameController bundlePath" ,"Generate a controller Example : nodefony generate:controller myController ./src/bundles/myBundle"],
-			command:["generate:command nameCommand path" ,"Generate a command js file in bundle path"],
-			service:["generate:service nameService path" ,"Generate a service js file in bundle path"]
+			command:["generate:command nameCommand path" ,"Generate a command js file in bundle path"]
+			//service:["generate:service nameService path" ,"Generate a service js file in bundle path"]
 		},
 		cli:generate
 	};
