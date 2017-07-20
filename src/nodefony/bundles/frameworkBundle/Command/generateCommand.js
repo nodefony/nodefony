@@ -631,7 +631,7 @@ module.exports = nodefony.registerCommand("generate",function(){
 										let generateAngularCli = require("./angular/angularCli.js");
 										try {
 											let ngCli = new generateAngularCli( this );
-											ngCli.generateNgProject(args[0], args[1] , interactive).then( (obj) =>{
+											ngCli.generateProject(args[0], args[1] , interactive).then( (obj) =>{
 												try {
 													var file = new nodefony.fileClass(obj.path);
 													angularBundle.call(this, file, obj.name, "yml", obj.path, true);
@@ -648,7 +648,25 @@ module.exports = nodefony.registerCommand("generate",function(){
 										}
 									break ;
 									case "react" :
-										this.generateReactBundle(args[0], args[1]);
+										let generateReactCli = require("./react/reactCli.js");
+										try {
+											let reactCli = new generateReactCli( this );
+											reactCli.generateProject(args[0], args[1] , interactive).then( (obj) =>{
+												try {
+													var file = new nodefony.fileClass(obj.path);
+													reactBundle.call(this, file, obj.name, "yml", obj.path, true);
+													this.installBundle(obj.name, obj.path);
+													this.terminate(code);
+												}catch(e){
+													throw e;
+												}
+											}).catch( (e) => {
+													throw e ;
+											});
+										}catch(e){
+											throw e ;
+										}
+										//this.generateReactBundle(args[0], args[1]);
 									break;
 								}
 							}
@@ -826,7 +844,7 @@ module.exports = nodefony.registerCommand("generate",function(){
 		}
 
 		generateService (interactive, name, Path){
-			
+
 		}
 	};
 

@@ -4,7 +4,7 @@
   "description": "FRAMEWORK web developpement symfony like",
   "main": "./src/nodefony/core/autoloader.js",
   "scripts": {
-    "start": "./nodefony dev",
+    "start": "./nodefony -d dev",
     "stop": "make stop",
     "prod": "make start",
     "kill": "make kill",

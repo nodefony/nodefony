@@ -77,7 +77,7 @@ let angularCli = class angularCli extends nodefony.Service {
         process.env.NODE_ENV = "development";
     }
 
-    generateNgProject (name, Path, interactive){
+    generateProject (name, Path, interactive){
         let project = null ;
         this.interactive =  interactive ;
         if ( this.interactive ){
@@ -88,7 +88,7 @@ let angularCli = class angularCli extends nodefony.Service {
             this.cwd = path.resolve( this.bundlePath, name);
             this.logger("GENERATE Angular Bundle : " + this.bundleName +" LOCATION : " +  this.bundlePath);
             project = new Promise ( (resolve, reject) => {
-                return resolve ( path.resolve( this.bundlePath , this.bundleName+"Bundle" ) );
+                return resolve ( [] );
             });
         }
         return project
@@ -200,7 +200,7 @@ let angularCli = class angularCli extends nodefony.Service {
                 });
             }catch(e){
                 this.cleanTmp();
-                this.logger("ng generate module ","ERROR");
+                this.logger("ng eject ","ERROR");
                 return reject(e);
             }
         });
