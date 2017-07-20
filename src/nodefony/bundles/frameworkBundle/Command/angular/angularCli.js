@@ -18,13 +18,15 @@ let angularCli = class angularCli extends nodefony.Service {
         this.ng = this.getNgPath()
         this.tmp = this.setTmpDir( path.resolve( "/", "tmp") ) ;
         this.setEnv();
-        this.generateNgProject();
-        this.cwd = path.resolve( this.bundlePath, name)
-
+        this.cwd = path.resolve( this.bundlePath, name);
+        this.npm = this.getNpmPath();
     }
 
     getNgPath (){
         return path.resolve ( process.cwd(), "node_modules", ".bin", "ng" ) ;
+    }
+    getNpmPath (){
+        return path.resolve ( process.cwd(), "node_modules", ".bin", "npm" ) ;
     }
 
     setBundleName (name){
@@ -50,24 +52,26 @@ let angularCli = class angularCli extends nodefony.Service {
         process.env.NODE_ENV = "development";
     }
 
-    generateNgProject (){
+    generateNgProject (name, Path){
         this.logger("GENERATE Angular Bundle : " + this.bundleName +" LOCATION : " +  this.bundlePath);
         let project = null ;
         if ( this.interactive ){
             project = this.generateInteractive();
         }else{
             project = new Promise ( (resolve, reject) => {
-                return {}
+                resolve ({})
             });
         }
         return project
-        .then( this.generateNgNew(this.tmp) )
-        .then( this.npmInstall(this.tmp+"/"+this.bundleName+"Bundle") )
-        .then( this.generateNgModule() )
-        .then( this.ejectNg() )
-        .catch((e) => {
-            this.logger(e, "ERROR");
-            throw e ;
+        .then( this.generateNgNew() )
+        .then( this.npmInstall( path.resolve( this.tmp, this.bundleName+"Bundle") ) )
+        //.then( this.generateNgModule() )
+        //.then( this.ejectNg() )
+        .then( () => {
+          resolve( {
+            name:name,
+            path:Path
+          });
         });
     }
 
@@ -78,24 +82,28 @@ let angularCli = class angularCli extends nodefony.Service {
         });
     }
 
-    generateNgNew( cwd, argv ){
+    moveToRealPath (){
+      return shell.mv(path.resolve ( this.tmp ,this.bundleName+"Bundle"), this.path+"/");
+    }
+
+    generateNgNew( argv ){
         return new Promise ( (resolve, reject) => {
             this.logger("ng new");
             try{
-                let args =  ['new', '-v', '-sg', this.bundleName+"Bundle"] ;
-                console.log(cwd)
+                let args = argv || ['new', '-v', '-sg', this.bundleName+"Bundle"] ;
                 this.logger ("install angular cli : ng "+ args.join(" ") );
                 this.cli.spawn(this.ng, args, {
-                    cwd:cwd,
+                    cwd:this.tmp,
                 }, ( code ) => {
-                    console.log("pass")
                     if ( code === 1 ){
                         return reject( new Error ("install angular cli  ng new error : " +code) );
                     }
+                    this.moveToRealPath();
                     return resolve();
                 });
             }catch(e){
-                return reject (e);
+                this.logger("ng new ","ERROR");
+                return reject(e);
             }
         });
     }
@@ -116,17 +124,21 @@ let angularCli = class angularCli extends nodefony.Service {
     }
 
     npmInstall (cwd){
-        console.log(cwd)
         return new Promise ( (resolve, reject) => {
             this.logger("npm install");
-            this.cli.spawn("npm", ["install"], {
-                cwd:cwd
-            } , (code) => {
-                if ( code === 1 ){
-                    return reject (  new Error ("nmp install error : " +code) );
-                }
-                return resolve(true);
-            });
+            try {
+              this.cli.spawn("npm", ["install"], {
+                  cwd:cwd
+              } , (code) => {
+                  if ( code === 1 ){
+                      return reject (  new Error ("nmp install error : " +code) );
+                  }
+                  return resolve(true);
+              });
+            }catch(e){
+              this.logger("npm install ","ERROR");
+              return reject(e);
+            }
         });
     }
 };

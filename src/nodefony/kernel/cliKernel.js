@@ -462,10 +462,16 @@ module.exports = nodefony.register("cliKernel", function(){
 	  			cmd = spawn(command , args, options);
 
 	  			cmd.stdout.on('data', (data) => {
-	  				this.logger(data.toString());
+						let str = data.toString() ;
+						if ( str ){
+	  					this.logger(str);
+						}
 	  			});
 	  			cmd.stderr.on('data', (data) => {
-	  				this.logger(data.toString(), "ERROR");
+						let str = data.toString() ;
+						if ( str ){
+	  					this.logger(str, "ERROR");
+						}
 	  			});
 	  			cmd.on('close', (code) => {
 	  				this.logger(`child process exited with code ${code}`);
@@ -474,9 +480,9 @@ module.exports = nodefony.register("cliKernel", function(){
 	  				}
 	  			});
 	  			cmd.on('error', (err) => {
-					console.log(err)
+						console.log(err)
 	  				this.logger(err, "ERROR");
-	  				this.terminate(1);
+	  				//this.terminate(1);
 	  			})
 	  		}catch(e){
 	  			this.logger(e, "ERROR");

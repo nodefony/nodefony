@@ -630,7 +630,20 @@ module.exports = nodefony.registerCommand("generate",function(){
 									case "angular" :
 										let generateAngularCli = require("./angular/angularCli.js");
 										try {
-											new generateAngularCli( args[0], args[1] , this, interactive);
+											let ngCli = new generateAngularCli( args[0], args[1] , this, interactive);
+											ngCli.generateNgProject(args[0], args[1] ).then( (obj) =>{
+												console.log(obj);
+												try {
+													var file = new nodefony.fileClass(obj.path);
+													angularBundle.call(this, file, obj.name, "yml", obj.path, true);
+													this.installBundle(obj.name, obj.path);
+													this.terminate(code);
+												}catch(e){
+													throw e;
+												}
+											}).catch( (e) => {
+													throw e ;
+											});
 										}catch(e){
 											throw e ;
 										}
