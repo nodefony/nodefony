@@ -21,7 +21,7 @@ nodefony.register.call(nodefony.io, "MultipartParser",function(){
 		}
 
 		parse (request){
-		
+
 			if ( !  request.rawContentType.boundary ){
 				throw new Error('multiPartParser  : Bad content-type header, no multipart boundary');
 
@@ -32,7 +32,7 @@ nodefony.register.call(nodefony.io, "MultipartParser",function(){
 
 			var s = null;
 			if ( isRaw ) {
-				s = request.body.toString('binary') ;	
+				s = request.body.toString('binary') ;
 			} else {
 				s = request.body;
 			}
@@ -41,15 +41,15 @@ nodefony.register.call(nodefony.io, "MultipartParser",function(){
 			var parts = s.split(new RegExp(boundary));
 			//var partsByName = {post: {}, file: {}};
 
-			// loop boundaries  
+			// loop boundaries
 			for (var i = 1; i < parts.length - 1; i++) {
 				var obj = this.parseBoundary( parts[i], isRaw ) ;
 				var name = obj.headers.filename ;
 				if( obj.headers.filename ){
 					this.file[name] = obj ;
-	        		} else {
-					this.post[name] = obj ;
-	        		}
+	        	} else {
+					this.post[obj.headers.name] = obj.data;
+	        	}
 			}
 		}
 
