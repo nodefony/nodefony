@@ -459,6 +459,7 @@ module.exports = nodefony.register("cliKernel", function(){
 	    spawn (command , args, options, close){
 	  		let cmd = null ;
 	  		try {
+				this.logger("Run Spawn : " + command + " "+ args.join(" ") );
 	  			cmd = spawn(command , args, options);
 
 	  			cmd.stdout.on('data', (data) => {
@@ -480,9 +481,8 @@ module.exports = nodefony.register("cliKernel", function(){
 	  				}
 	  			});
 	  			cmd.on('error', (err) => {
-						console.log(err)
 	  				this.logger(err, "ERROR");
-	  				//this.terminate(1);
+	  				this.terminate(1);
 	  			})
 	  		}catch(e){
 	  			this.logger(e, "ERROR");

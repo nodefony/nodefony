@@ -630,8 +630,8 @@ module.exports = nodefony.registerCommand("generate",function(){
 									case "angular" :
 										let generateAngularCli = require("./angular/angularCli.js");
 										try {
-											let ngCli = new generateAngularCli( args[0], args[1] , this, interactive);
-											ngCli.generateNgProject(args[0], args[1] ).then( (obj) =>{
+											let ngCli = new generateAngularCli( this );
+											ngCli.generateNgProject(args[0], args[1] , interactive).then( (obj) =>{
 												console.log(obj);
 												try {
 													var file = new nodefony.fileClass(obj.path);
@@ -799,72 +799,6 @@ module.exports = nodefony.registerCommand("generate",function(){
 				});
 				process.stdin.pipe(create.stdin) ;
 
-			}catch(e){
-				this.logger(e, "ERROR");
-				this.terminate(1);
-			}
-		}
-
-		generateAngularBundle (name, Path){
-			this.logger("GENERATE Angular Bundle : " + name +" LOCATION : " +  path.resolve(Path));
-			var ng = process.cwd()+'/node_modules/.bin/ng' ;
-			var realPath = path.resolve( this.kernel.rootDir ,  path.resolve(Path)  );
-			var cwd = path.resolve( "/", "tmp") ;
-			process.env.NODE_ENV = "development";
-			var realName = null ;
-			var res = regBundle.exec(name);
-			if ( res ){
-				realName = res[1] ;
-			}else{
-				throw new Error("Bad bundle name");
-			}
-			var args = null ;
-			try {
-					//args = ['new', '-v', '-sg','--routing', name] ;
-					args = ['new', '-v', '-sg', name] ;
-					this.logger ("install angular cli : ng "+ args.join(" ") );
-					this.spawn(ng, args, {
-						cwd:cwd,
-					}, ( code ) => {
-						if ( code === 1 ){
-							throw new Error ("install angular cli  ng new error : " +code);
-						}
-						args = ['generate', 'module', '--spec', '--routing', '-m', 'app', realName ];
-						this.logger (" Generate Angular module : ng " + args.join(" ") );
-						this.spawn(ng, args, {
-							cwd: path.resolve( cwd, name)
-						}, ( code ) => {
-							if ( code === 1 ){
-								throw new Error ("ng generate module error code : " +code);
-							}
-							args = ["eject", "--environment", "dev", "-dev"] ;
-							this.logger (" eject  webpack config angular : ng " + args.join(" "));
-							this.spawn(ng, args, {
-								cwd: path.resolve( cwd, name)
-							} ,(code) => {
-								if ( code === 1 ){
-									throw new Error ("ng eject error : " +code);
-								}
-								shell.mv( cwd+"/"+name, realPath+"/");
-								this.logger (" npm install ");
-								this.spawn("npm", ["install"], {
-									cwd:path.resolve( realPath, name)
-								} , (code) => {
-									if ( code === 1 ){
-										throw new Error ("nmp install error : " +code);
-									}
-									try {
-										var file = new nodefony.fileClass(Path);
-										angularBundle.call(this, file, name, "yml", path.resolve(Path), true);
-										this.installBundle(name, Path);
-										this.terminate(code);
-									}catch(e){
-										throw e;
-									}
-								});
-							});
-						});
-					});
 			}catch(e){
 				this.logger(e, "ERROR");
 				this.terminate(1);

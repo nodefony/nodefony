@@ -1,25 +1,49 @@
 
 const regBundle = /^(.*)[Bb]undle$/;
 
-const intervativeQuestion = [{
-
-}];
+const intervativeQuestion = function (cli) {
+    return [{
+        type: 'input',
+        name: 'name',
+        message: 'Enter Bundle Name',
+        validate:  (value) => {
+            try {
+                cli.cli.blankLine();
+                cli.setBundleName(value);
+                return true ;
+            }catch(e){
+                return e.message ;
+            }
+        }
+    },{
+        type: 'input',
+        name: 'path',
+        message: 'Enter Bundle Path',
+        validate:  (value) => {
+            try {
+                cli.cli.blankLine();
+                cli.setBundlePath(value);
+                return true ;
+            }catch(e){
+                return e.message ;
+            }
+        }
+    }];
+}
 
 
 let angularCli = class angularCli extends nodefony.Service {
 
-    constructor(name, Path, cli, interactive){
+    constructor( cli ){
         super("Angular Cli" , cli.container, cli.notificationsCenter);
-        this.bundleName = this.setBundleName( name ) ;
-        this.bundlePath = this.setBundlePath(Path) ;
-        this.interactive =  interactive ;
         this.cli = cli ;
         this.inquirer = this.cli.inquirer;
         this.ng = this.getNgPath()
         this.tmp = this.setTmpDir( path.resolve( "/", "tmp") ) ;
-        this.setEnv();
-        this.cwd = path.resolve( this.bundlePath, name);
         this.npm = this.getNpmPath();
+        this.setEnv();
+        this.bundleName = null ;
+        this.bundlePath = null ;
     }
 
     getNgPath (){
@@ -33,15 +57,16 @@ let angularCli = class angularCli extends nodefony.Service {
         let realName = null ;
         let res = regBundle.exec(name);
         if ( res ){
-            realName = res[1] ;
+            this.bundleName = res[1] ;
         }else{
             throw new Error("Bad bundle name :" + name);
         }
-        return realName ;
+        return this.bundleName ;
     }
 
     setBundlePath (Path){
-        return path.resolve( this.kernel.rootDir ,  path.resolve(Path)  );
+        this.bundlePath =  path.resolve( this.kernel.rootDir ,  path.resolve(Path)  );
+        return this.bundlePath ;
     }
 
     setTmpDir (Path){
@@ -52,90 +77,145 @@ let angularCli = class angularCli extends nodefony.Service {
         process.env.NODE_ENV = "development";
     }
 
-    generateNgProject (name, Path){
-        this.logger("GENERATE Angular Bundle : " + this.bundleName +" LOCATION : " +  this.bundlePath);
+    generateNgProject (name, Path, interactive){
         let project = null ;
+        this.interactive =  interactive ;
         if ( this.interactive ){
             project = this.generateInteractive();
         }else{
+            this.bundleName = this.setBundleName( name ) ;
+            this.bundlePath = this.setBundlePath( Path ) ;
+            this.cwd = path.resolve( this.bundlePath, name);
+            this.logger("GENERATE Angular Bundle : " + this.bundleName +" LOCATION : " +  this.bundlePath);
             project = new Promise ( (resolve, reject) => {
-                resolve ({})
+                return resolve ( path.resolve( this.bundlePath , this.bundleName+"Bundle" ) );
             });
         }
         return project
-        .then( this.generateNgNew() )
-        .then( this.npmInstall( path.resolve( this.tmp, this.bundleName+"Bundle") ) )
-        //.then( this.generateNgModule() )
-        //.then( this.ejectNg() )
-        .then( () => {
-          resolve( {
+        .then( (ele) => {
+            return this.generateNgNew(ele);
+        })
+        .then( (dir) => {
+            return this.npmInstall(dir);
+        })
+        .then( (dir) => {
+            return this.npmInstall(dir, "@ngtools/webpack");
+        })
+        .then( (dir) => {
+            return this.generateNgModule(dir);
+        } )
+        .then( (dir) => {
+            return this.ejectNg(dir);
+        } )
+        .then( (dir) => {
+            return this.npmInstall(dir);
+        })
+        .then( (dir) => {
+          return  {
             name:name,
             path:Path
-          });
+          };
         });
     }
 
     generateInteractive(){
         this.logger("Interactive Mode");
-        return new Promise ( (resolve, reject) => {
-            return resolve();
-        });
+        return  this.inquirer.prompt( intervativeQuestion(this) );
     }
 
     moveToRealPath (){
-      return shell.mv(path.resolve ( this.tmp ,this.bundleName+"Bundle"), this.path+"/");
+      return shell.mv(path.resolve( this.tmp ,this.bundleName+"Bundle"), this.bundlePath );
+    }
+
+    cleanTmp (){
+
     }
 
     generateNgNew( argv ){
         return new Promise ( (resolve, reject) => {
-            this.logger("ng new");
+            let args = ['new', '-v', '-sg', this.bundleName+"Bundle"] ;
+            this.logger ("install angular cli : ng "+ args.join(" ") );
             try{
-                let args = argv || ['new', '-v', '-sg', this.bundleName+"Bundle"] ;
-                this.logger ("install angular cli : ng "+ args.join(" ") );
-                this.cli.spawn(this.ng, args, {
+                let cmd = this.cli.spawn(this.ng, args, {
                     cwd:this.tmp,
                 }, ( code ) => {
                     if ( code === 1 ){
+                        this.cleanTmp();
                         return reject( new Error ("install angular cli  ng new error : " +code) );
                     }
-                    this.moveToRealPath();
-                    return resolve();
+                    return resolve( path.resolve( this.tmp, this.bundleName+"Bundle" ) );
                 });
             }catch(e){
                 this.logger("ng new ","ERROR");
+                this.cleanTmp();
                 return reject(e);
             }
         });
     }
-    generateNgModule(){
-        this.logger("ng module");
+
+    generateNgModule( dir ){
         return new Promise ( (resolve, reject) => {
-            return resolve();
-
-        });
-    }
-
-    ejectNg(){
-        this.logger("ng eject");
-        return new Promise ( (resolve, reject) => {
-            return resolve();
-
-        });
-    }
-
-    npmInstall (cwd){
-        return new Promise ( (resolve, reject) => {
-            this.logger("npm install");
+            let args = ['generate', 'module', '--spec', '--routing', '-m', 'app', this.bundleName ];
+            this.logger (" Generate Angular module : ng " + args.join(" ") + " in " + dir );
             try {
-              this.cli.spawn("npm", ["install"], {
+                this.cli.spawn(this.ng, args, {
+                    cwd: dir
+                }, ( code ) => {
+                    if (code === 1 ){
+                        this.cleanTmp();
+                        return reject( new Error ("ng generate module error code : " +code) );
+                    }
+                    return resolve(dir);
+                });
+            }catch(e){
+                this.cleanTmp();
+                this.logger("ng generate module ","ERROR");
+                return reject(e);
+            }
+        });
+    }
+
+    ejectNg(dir){
+        return new Promise ( (resolve, reject) => {
+            let args = ["eject", "--environment", "dev", "-dev"] ;
+            this.logger (" eject  webpack config angular : ng " + args.join(" "));
+            this.cli.spawn(this.ng, args, {
+                cwd: dir
+            } ,(code) => {
+                if ( code === 1 ){
+                    this.cleanTmp();
+                    return reject( new Error ("ng eject error : " +code) ) ;
+                }
+                try {
+                    this.moveToRealPath();
+                }catch(e){
+                    this.cleanTmp();
+                    return reject( e ) ;
+                }
+                return resolve( path.resolve( this.bundlePath , this.bundleName+"Bundle" ));
+            });
+        });
+    }
+
+    npmInstall (cwd , argv){
+        return new Promise ( (resolve, reject) => {
+            let tab = ["install"] ;
+            if ( argv ){
+                tab = tab.concat(argv) ;
+            }
+            try {
+              this.logger("npm install in " + cwd );
+              this.cli.spawn("npm", tab, {
                   cwd:cwd
               } , (code) => {
                   if ( code === 1 ){
+                      this.cleanTmp();
                       return reject (  new Error ("nmp install error : " +code) );
                   }
-                  return resolve(true);
+                  return resolve(cwd);
               });
             }catch(e){
+              this.cleanTmp();
               this.logger("npm install ","ERROR");
               return reject(e);
             }
