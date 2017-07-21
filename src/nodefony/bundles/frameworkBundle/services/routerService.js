@@ -141,7 +141,7 @@ module.exports = nodefony.registerService("router", function(){
 			this.context = this.get("context") ;
 			this.defaultLang= null ;
 			this.bypassFirewall = false ;
-
+			this.exception = null ;
 		}
 
 		match (route, context){
@@ -470,14 +470,18 @@ module.exports = nodefony.registerService("router", function(){
 				try {
 					var res = resolver.match(route, context);
 					if ( res ){
-						break ;
+						return resolver;
 					}
 				}catch(e){
-					if (e && e.type && e.type === "domain"){
+					if (e && e.type && ( e.type === "domain" || e.type === "method" ) ){
+						resolver.exception = e ;
 						continue ;
 					}
 					throw e ;
 				}
+			}
+			if (resolver.exception ){
+				throw resolver.exception ;
 			}
 			return resolver;
 		}

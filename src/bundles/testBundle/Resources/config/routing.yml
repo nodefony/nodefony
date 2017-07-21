@@ -174,3 +174,15 @@ subrequest:
   defaults:     {"controller": "testBundle:subRequest:index" }
   requirements:
     method:     GET
+
+myroute-requirement-method-get:
+  pattern:      /requirement/method
+  defaults:     {"controller": "testBundle:test:requirementMethod"}
+  requirements:
+    method:     GET
+
+myroute-requirement-method-post:
+  pattern:      /requirement/method
+  defaults:     {"controller": "testBundle:test:requirementMethod"}
+  requirements:
+    method:     POST

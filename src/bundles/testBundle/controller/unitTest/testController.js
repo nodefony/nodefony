@@ -30,6 +30,17 @@ module.exports = nodefony.registerController("test", function(){
 			});
 		}
 
+		requirementMethodAction(page, ele){
+			console.log(this.context.resolver.exception);
+			return this.renderJson({
+				method:this.context.method,
+				query:this.query,
+				queryPost:this.queryPost,
+				queryGet:this.queryGet,
+				resolver:this.context.resolver.exception
+			});
+		}
+
 		wildcardAction(ele, ele2){
 			let pattern = this.context.originUrl.path;
 			return this.renderJson({
