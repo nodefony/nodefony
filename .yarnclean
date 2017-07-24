@@ -4,12 +4,6 @@ test
 tests
 powered-test
 
-# asset directories
-docs
-doc
-website
-images
-assets
 
 # examples
 example
