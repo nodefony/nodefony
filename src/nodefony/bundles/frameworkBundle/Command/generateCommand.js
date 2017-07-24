@@ -636,7 +636,7 @@ module.exports = nodefony.registerCommand("generate",function(){
 													var file = new nodefony.fileClass(obj.path);
 													angularBundle.call(this, file, obj.name, "yml", obj.path, true);
 													this.installBundle(obj.name, obj.path);
-													this.terminate(code);
+													this.terminate(0);
 												}catch(e){
 													throw e;
 												}
@@ -656,7 +656,7 @@ module.exports = nodefony.registerCommand("generate",function(){
 													var file = new nodefony.fileClass(obj.path);
 													reactBundle.call(this, file, obj.name, "yml", obj.path, true);
 													this.installBundle(obj.name, obj.path);
-													this.terminate(code);
+													this.terminate(0);
 												}catch(e){
 													throw e;
 												}
@@ -666,7 +666,6 @@ module.exports = nodefony.registerCommand("generate",function(){
 										}catch(e){
 											throw e ;
 										}
-										//this.generateReactBundle(args[0], args[1]);
 									break;
 								}
 							}
@@ -766,58 +765,6 @@ module.exports = nodefony.registerCommand("generate",function(){
 			}catch (e){
 				this.logger(e, "ERROR");
 				throw e ;
-			}
-		}
-
-		generateReactBundle (name, Path ){
-			this.logger("GENERATE React Bundle : " + name +" LOCATION : " +  path.resolve(Path));
-			var react = process.cwd()+'/node_modules/.bin/create-react-app' ;
-			var realPath = path.resolve( this.kernel.rootDir ,  path.resolve(Path)  );
-			//var cwd = path.resolve( Path) ;
-			var cwd = path.resolve( "/", "tmp") ;
-			process.env.NODE_ENV = "development";
-			var realName = null ;
-			var res = regBundle.exec(name);
-			if ( res ){
-				realName = res[1] ;
-			}else{
-				throw new Error("Bad bundle name");
-			}
-			var args = null ;
-			try {
-				args = [name] ;
-				this.logger ("install react cli  create-react-app "+ args.join(" ") );
-				var create = this.spawn(react, args, {
-					cwd:cwd
-				}, ( code ) => {
-					if ( code === 1 ){
-						throw new Error ("install react cli create-react-app  new error : " +code);
-					}
-					args = ['run', 'eject'];
-					this.logger (" React eject : npm " + args.join(" ") );
-					var eject = this.spawn("npm", args, {
-						cwd: path.resolve( cwd, name)
-					}, ( code ) => {
-						shell.mv( path.resolve( cwd, name), realPath+"/");
-						try {
-							var file = new nodefony.fileClass(Path);
-							reactBundle.call(this, file, name, "yml", path.resolve(Path), true);
-							this.logger( "ln -s " +  path.resolve( realPath, name, "public")  + " " + path.resolve( realPath, name, "Resources", "public", "dist"));
-							//shell.mv( path.resolve( realPath, name, "public"), path.resolve( realPath, name, "Resources", "public", "dist") );
-							shell.cp('-Rf', path.resolve( realPath, name, "public") , path.resolve( realPath, name, "Resources", "public", "dist"));
-							this.installBundle(name, Path);
-							this.terminate(code);
-						}catch(e){
-							throw e;
-						}
-					});
-					process.stdin.pipe(eject.stdin) ;
-				});
-				process.stdin.pipe(create.stdin) ;
-
-			}catch(e){
-				this.logger(e, "ERROR");
-				this.terminate(1);
 			}
 		}
 
