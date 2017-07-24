@@ -8,7 +8,7 @@ const instances =  require('os').cpus().length ;
 try {
   const nodefony = require("nodefony");
 }catch(e){
-  const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
+  const nodefony = require( path.resolve( "src", "nodefony", "core", "autoloader"));
 }
 
 var nodefony_version = require( path.resolve( "package.json") ).version;

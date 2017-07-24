@@ -16,13 +16,13 @@ module.exports = nodefony.registerService("httpKernel", function(){
  	 */
 	const httpKernel = class httpKernel extends nodefony.Service {
 
-		constructor (container, serverStatic ){
+		constructor (container, serverStatics ){
 
 			var kernel = container.get("kernel");
 			super("httpKernel", container, kernel.notificationsCenter );
 			this.kernel = kernel;
 			this.reader = this.container.get("reader");
-			this.serverStatic = serverStatic;
+			this.serverStatic = serverStatics;
 			this.engineTemplate = this.container.get("templating");
 
 			this.domain = this.kernel.domain;

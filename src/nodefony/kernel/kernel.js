@@ -14,8 +14,8 @@ module.exports = nodefony.register("kernel", function(){
 					this.logger("\x1B[33m EVENT KERNEL READY\x1b[0m", "DEBUG");
 					this.fire("onReady", this);
 					this.ready = true ;
-					this.fire("onPostReady", this);
 					this.logger("\x1B[33m EVENT KERNEL POST READY\x1b[0m", "DEBUG");
+					this.fire("onPostReady", this);
 					if ( this.type === "SERVER" ){
 						if (  global && global.gc ){
 							this.memoryUsage("MEMORY POST READY ") ;

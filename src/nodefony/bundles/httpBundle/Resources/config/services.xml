@@ -5,7 +5,7 @@
     	xsi:schemaLocation="http://nodefony.com/schema/dic/services http://nodefony.com/schema/dic/services/services-1.0.xsd">
 
     	<parameters>
-        	<parameter key="serverStatic">statics</parameter>
+        	<parameter key="serverStatics">serverStatics</parameter>
         	<parameter key="httpKernel">httpKernel</parameter>
         	<parameter key="httpServer">http</parameter>
         	<parameter key="httpsServer">https</parameter>
@@ -17,14 +17,14 @@
     	</parameters>
 
     	<services>
-		<service id="serverStatic" class="{{serverStatic}}">
-            		<argument type="service" id="container" />
-            		<argument type="paramaters" id="options" />
-        	</service>
+            <service id="serverStatics" class="{{serverStatics}}">
+                <argument type="service" id="container" />
+                <argument type="paramaters" id="options" />
+            </service>
 
 		<service id="httpKernel" class="{{httpKernel}}">
             		<argument type="service" id="container" />
-            		<argument type="service" id="serverStatic" />
+            		<argument type="service" id="serverStatics" />
 			<call method="boot"></call>
         	</service>
 
@@ -62,7 +62,7 @@
             		<argument type="service" id="httpServer" />
             		<argument type="service" id="httpsServer" />
         	</service>
-	
+
 
 		<!--service id="request" scope="request" synthetic="true" synchronized="true" /-->
 

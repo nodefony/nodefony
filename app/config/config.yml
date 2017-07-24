@@ -121,12 +121,13 @@ httpBundle:
       protocol:                     https
       websocket:                    true
   statics:
-    settings:
-      cache :                     false
+    defaultOptions:
+      cacheControl :              true
       maxAge:                     0
     web:
-      path:                       "/web/"
-      maxage:                     0                             #30*24*60*60*1000
+      path:                       "web"
+      options:
+        maxAge:                   0                             #30*24*60*60*1000
   upload:
     tmp_dir:                      "tmp/upload"
     #max_filesize:                 100000                       #in Bytes

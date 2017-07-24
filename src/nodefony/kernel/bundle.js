@@ -367,7 +367,7 @@ module.exports = nodefony.register("Bundle", function(){
 						Class.prototype.bundle = this ;
 						this.logger("Register Service : "+res[0] , "DEBUG");
 					}else{
-						this.logger("Register Service : "+name +"  error Service bad format");
+						this.logger("Bundle Register Service : "+ ele.path +"  error Service bad format " +typeof Class, "ERROR");
 					}
 				}
 			});
