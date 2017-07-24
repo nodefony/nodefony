@@ -165,6 +165,33 @@ module.exports = nodefony.registerService("realTime", function(){
 
 		}
 
+		createSocket(type ){
+      type = type.toUpperCase();
+      switch(type){
+        case "TCP":
+          return this.socketTcp();
+        break;
+        case "UDP":
+          return this.socketUdp();
+        break;
+        case "UNIX":
+          return this.socketUnix();
+        break;
+      }
+    }
+
+		socketTcp(){
+
+    }
+
+    socketUdp(){
+
+    }
+
+    socketUnix(){
+
+    }
+
 		registerService (name, definition){
 			this.services[name] = definition;
 			return 	this.services[name];
