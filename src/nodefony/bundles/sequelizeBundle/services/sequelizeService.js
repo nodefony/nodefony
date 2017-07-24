@@ -86,7 +86,7 @@ module.exports = nodefony.registerService("sequelize", function(){
 					this.logger('Sequelise Connection : '+this.name +' has been established successfully.', "DEBUG");
 				})
 				.catch( err => {
-					this.logger('Unable to connect to the database:', err , "ERROR");
+					this.logger('Unable to connect to the database : '+ err , "ERROR");
 				});
 			});
 			return conn ;
