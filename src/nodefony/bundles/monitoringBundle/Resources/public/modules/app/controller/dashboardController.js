@@ -1,30 +1,30 @@
 /**
- * 
+ *
  */
 stage.registerController("dashboardController", function() {
 
 	/**
-	 * 
+	 *
 	 */
 
 	var controller = class controller  extends stage.Controller {
 
 		constructor(name, container, module) {
 
-			super(name, container, module);	
+			super(name, container, module);
 			this.config = this.module.config;
 
 			this.kernel.listen(this, "onReady", function(){
-				this.serverSyslog = this.get("serverSyslog");	
+				this.serverSyslog = this.get("serverSyslog");
 			});
 
 			this.kernel.listen(this, "onRouteChange",(newRoute ,lastRoute) => {
 				if (lastRoute.id === "dashboard" ){
 					//console.log("QUIT DASHBOARD");
-					this.serverSyslog.unListen("onLog", this.eventRealTime);	
-					this.serverSyslog.unListen("onLog", this.eventSyslog);	
-					this.serverSyslog.unListen("onLog", this.eventHttp);	
-					//this.serverSyslog.unListen("onLog", this.eventGraph);	
+					this.serverSyslog.unListen("onLog", this.eventRealTime);
+					this.serverSyslog.unListen("onLog", this.eventSyslog);
+					this.serverSyslog.unListen("onLog", this.eventHttp);
+					//this.serverSyslog.unListen("onLog", this.eventGraph);
 					delete this.eventRealTime ;
 					delete this.eventSyslog ;
 					delete this.eventHttp ;
@@ -32,9 +32,9 @@ stage.registerController("dashboardController", function() {
 				}
 			});
 		}
-		
+
 		/**
-	 	* 
+	 	*
 	 	*/
 		syslogWidget (ele, pdu) {
 			var param = {
@@ -62,17 +62,17 @@ stage.registerController("dashboardController", function() {
 					break;
 				}
 			}else{
-				var ele = $("#syslog");	
-				this.render(ele, this.renderPartial("appModule::activity", {param:param}));	
+				var ele = $("#syslog");
+				this.render(ele, this.renderPartial("appModule::activity", {param:param}));
 				this.eventSyslog = this.module.serverSyslog.listenWithConditions(this, contitions, function(pdu){
 					pdu.timeago = jQuery.timeago(pdu.timeStamp)
 					this.syslogWidget(ele, pdu);
-				});	
+				});
 			}
 		}
 
 		/**
-	 	* 
+	 	*
 	 	*/
 		realtimeWidget (ele){
 			var param = {
@@ -89,17 +89,17 @@ stage.registerController("dashboardController", function() {
 				var last = this.module.serverSyslog.getLogStack(-5,null, contitions) ;
 				this.render(ele, this.renderPartial("appModule::activity", {syslog:last.reverse(),param:param}));
 			}else{
-				var ele = $("#realtime");	
-				this.render(ele, this.renderPartial("appModule::activity", {param:param}));	
+				var ele = $("#realtime");
+				this.render(ele, this.renderPartial("appModule::activity", {param:param}));
 				this.eventRealTime = this.module.serverSyslog.listenWithConditions(this, contitions, function(pdu){
 					pdu.timeago = jQuery.timeago(pdu.timeStamp)
 					this.realtimeWidget(ele);
-				});	
+				});
 			}
 		}
 
 		/**
-	 	* 
+	 	*
 	 	*/
 		httpWidget (ele){
 			var param = {
@@ -119,29 +119,29 @@ stage.registerController("dashboardController", function() {
 				var last = this.module.serverSyslog.getLogStack(-5, null, contitions) ;
 				this.render(ele, this.renderPartial("appModule::activity", {syslog:last.reverse(),param:param}));
 			}else{
-				var ele = $("#http");	
-				this.render(ele, this.renderPartial("appModule::activity", {param:param}));	
+				var ele = $("#http");
+				this.render(ele, this.renderPartial("appModule::activity", {param:param}));
 				this.eventHttp = this.module.serverSyslog.listenWithConditions(this, contitions, function(pdu){
 					pdu.timeago = jQuery.timeago(pdu.timeStamp)
 					this.httpWidget(ele, pdu);
-				});	
+				});
 			}
-		
+
 		}
 
 
 		/**
-	 	* 
+	 	*
 	 	*/
-		indexAction () {	
-			this.nbRequest = 0 ;	
+		indexAction () {
+			this.nbRequest = 0 ;
 			this.nbWebsoket = 0 ;
 			var layout = null;
 			var realtime  = this.get("realtime");
 			if ( ! realtime.subscribedService.monitoring){
-				realtime.subscribe("monitoring")	
+				realtime.subscribe("monitoring")
 			}
-			
+
 			switch (this.config.content.dashboard["@layout"]) {
 				// standard layout
 				case "standard":
@@ -197,7 +197,7 @@ stage.registerController("dashboardController", function() {
 			/*$.ajax("/nodefony/api/services",{
 				success:function(data, status, xhr){
 					try {
-						
+
 						$("#nbServices").html(Object.keys(data.response.data).length);
 					}catch(e){
 						this.logger(e, "ERROR");
@@ -220,7 +220,7 @@ stage.registerController("dashboardController", function() {
 				var configEle = ele.find(".config");
 				for (var name in conf.config ){
 					configEle.append('<li class="list-group-item">'+name+'<span class="badge">'+conf.config[name]+'</span></li>');
-				}	
+				}
 			}
 
 			$.ajax("/nodefony/api/config",{
@@ -249,9 +249,9 @@ stage.registerController("dashboardController", function() {
 									var ele = $("#WEBSOCKET_SECURE");
 								}
 							break;
-						} 
+						}
 						if ( conf ){
-							manageWidgetServer(ele, conf )	
+							manageWidgetServer(ele, conf )
 						}
 					}
 					// Manage kernel config
@@ -264,7 +264,7 @@ stage.registerController("dashboardController", function() {
 								ele.append('<li class="list-group-item">'+sys+'<span class="badge">'+data.response.data.kernel.system[sys]+'</span></li>');
 							break;
 						}
-						
+
 					}
 
 					// Manage app config
@@ -288,7 +288,7 @@ stage.registerController("dashboardController", function() {
 						var eleDirectories = ele.find(".directories");
 						var statics = data.response.data.App.httpBundle.statics ;
 						for (var ele in  statics){
-							if ( ele === "settings" ){
+							if ( ele === "defaultOptions" ){
 								for (var conf in  statics[ele] ){
 									eleSetting.prepend('<li class="list-group-item">'+conf+'<span class="badge">'+statics[ele][conf]+'</span></li>');
 								}
@@ -296,11 +296,21 @@ stage.registerController("dashboardController", function() {
 								var html = ' <a href="" class="list-group-item "> ' ;
 								html += '<h4 class="list-group-item-heading" style="color:blue"> Static route: '+ele+'</h4>';
 								for (var conf in  statics[ele] ){
-									html += ' <p class="list-group-item-text">'+conf+'<span class="badge pull-right">'+statics[ele][conf]+'</span></p>';
-								}	
+									if ( typeof statics[ele][conf]  !== "string" ){
+										html += "<ul>" ;
+											for (var opt in statics[ele][conf] ){
+												html +="<li>"+opt;
+												html += '<span class="badge pull-right">'+statics[ele][conf][opt]+'</span>'
+												html += "</li>";
+											}
+										html += "</ul>";
+									}else{
+										html += ' <p class="list-group-item-text">'+conf+'<span class="badge pull-right">'+statics[ele][conf]+'</span></p>';
+									}
+								}
 								html +='</a>' ;
 								eleDirectories.prepend(html);
-							}		
+							}
 						}
 					}
 
@@ -308,14 +318,14 @@ stage.registerController("dashboardController", function() {
 					var ele = $("#STATE");
 					if ( data.response.data.node_start ){
 						ele.find(".running").text(data.response.data.node_start)
-					}	
-					if ( data.response.data.kernel.environment ){
-						ele.find(".environment").text(data.response.data.kernel.environment)	
 					}
-					
-					ele.find(".debug").text(data.response.data.debug)	
+					if ( data.response.data.kernel.environment ){
+						ele.find(".environment").text(data.response.data.kernel.environment)
+					}
 
-					// MANAGE NODEFONY STATE CDN 
+					ele.find(".debug").text(data.response.data.debug)
+
+					// MANAGE NODEFONY STATE CDN
 					//console.log(data.response.data.App.asseticBundle.CDN  )
 					if ( data.response.data.App.asseticBundle && data.response.data.App.asseticBundle.CDN ) {
 						var ele = $("#CDN");
@@ -323,38 +333,33 @@ stage.registerController("dashboardController", function() {
 						ele.find(".ready").text("ACTIVE")
 						if ( data.response.data.App.asseticBundle.CDN.javascripts ){
 							var javascript = ele.find(".javascripts");
-							javascript.text(data.response.data.App.asseticBundle.CDN.javascripts)	
+							javascript.text(data.response.data.App.asseticBundle.CDN.javascripts)
 						}
 						if ( data.response.data.App.asseticBundle.CDN.stylesheets ){
 							var stylesheets = ele.find(".stylesheets");
-							stylesheets.text(data.response.data.App.asseticBundle.CDN.stylesheets)	
+							stylesheets.text(data.response.data.App.asseticBundle.CDN.stylesheets)
 						}
 					}
-
-					
-
-
 				},
 				error:(xhr,stats,  error) => {
 					this.logger(error, "ERROR");
 				}
-			
-			});
 
+			});
 
 			$.ajax("/nodefony/api/pm2/status",{
 				success:(data, status, xhr) => {
 					try {
 						//console.log(data)
-						$("#widget-pm2Status").show();	
+						$("#widget-pm2Status").show();
 						var pm2_service = this.get("pm2_graph");
-							
+
 						pm2_service.createTable( $("#pm2-status") );
 						pm2_service.updateTable($("#pm2-status"), data.response.data);
-						
+
 
 						for (var i= 0 ; i < data.response.data.length ; i++){
-							
+
 							// GRAPH
 							var row = $(document.createElement('div'));
 							row.addClass("row");
@@ -365,7 +370,7 @@ stage.registerController("dashboardController", function() {
 							left.addClass("col-md-2");
 							left.append('<h3 class="text-center"> '+data.response.data[i].name+' </h3>')
 							left.append('<h4 class="text-center"> <a href="#">Cluster <span class="badge">'+id+'</span></a> </h4>')
-							
+
 							row.append(left);
 
 							// center CANVAS
@@ -377,9 +382,9 @@ stage.registerController("dashboardController", function() {
 							canvas.attr("height", 100) ;
 							center.append(canvas);
 							row.append(center);
-							
+
 							// right
-							var memory = parseFloat( data.response.data[i].monit.memory / 1000000 ).toFixed(2) ; 
+							var memory = parseFloat( data.response.data[i].monit.memory / 1000000 ).toFixed(2) ;
 							var right = $(document.createElement('div'));
 							right.addClass("col-md-2");
 							right.append('<h3>Memory <span id="pm2Memory_'+id+'" class="badge bg-danger  text-md">'+ memory +'</span></h3>');
@@ -388,7 +393,7 @@ stage.registerController("dashboardController", function() {
 
 							$('#widget-pm2').append(row);
 							canvas.attr("width",  center.width() ) ;
-						 	
+
 							var smoothie = new SmoothieChart({
 								millisPerPixel:100,
 								minValue:0,
@@ -432,6 +437,6 @@ stage.registerController("dashboardController", function() {
 			//this.serviceWidget();
 		}
 	};
-	
+
 	return controller;
 });
