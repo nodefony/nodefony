@@ -456,6 +456,26 @@ module.exports = nodefony.register("cliKernel", function(){
 	  		}
 	  	}
 
+		existsSync(Path, mode){
+			if ( ! Path ){
+				throw new Error ("existsSync no path found");
+			}
+			if ( ! mode ){
+				mode = fs.constants.R_OK | fs.constants.W_OK ;
+			}
+			return fs.accessSync(Path, mode);
+		}
+
+		exists(Path, mode, callback){
+			if ( ! Path ){
+				throw new Error ("exists no path found");
+			}
+			if ( ! mode ){
+				mode = fs.constants.R_OK | fs.constants.W_OK ;
+			}
+			return fs.access(Path, mode, callback);
+		}
+
 	    spawn (command , args, options, close){
 	  		let cmd = null ;
 	  		try {

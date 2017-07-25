@@ -226,6 +226,7 @@ module.exports = nodefony.registerService("webpack", function(){
 					case "react" :
 						publicPath = path.resolve("/", bundle.bundleName, "dist" );
 						shell.cd(Path);
+						process.env.PUBLIC_URL = publicPath ;
 						config = require(file.path );
 						config.output.path = path.resolve("Resources", "public", "dist") ;
 						if ( publicPath ){
@@ -237,7 +238,6 @@ module.exports = nodefony.registerService("webpack", function(){
 					default :
 						config = require( file.path );
 				}
-
 				compiler =  webpack( config );
 				if ( this.kernel.type === "CONSOLE" ){
 					return compiler ;
@@ -248,8 +248,9 @@ module.exports = nodefony.registerService("webpack", function(){
 			}
 			// WATCH
 			if ( config.watch === undefined ){
-				watch = bundle.settings.watch ;
-				config.watch = watch || false;
+				//watch = bundle.settings.watch ;
+				//config.watch = watch || false;
+				config.watch = undefined ;
 			}else{
 				watch = config.watch ;
 			}
@@ -391,7 +392,7 @@ module.exports = nodefony.registerService("webpack", function(){
 						config.output.library ,
 						config.output.libraryTarget,
 						config.output.path,
-						config.watch
+						config.watch || ""
 					]);
 				}
 				return table.toString() ;

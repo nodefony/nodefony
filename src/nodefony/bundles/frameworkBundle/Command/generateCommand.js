@@ -239,8 +239,6 @@ module.exports = nodefony.registerCommand("generate",function(){
 						type:"file",
 						skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/"+bundleType+"/config."+type+".skeleton" ),
 						params:param
-
-
 					},
 					routing.call(this, param, type, bundleType),
 					webpack.call(this, param, type, bundleType),
@@ -656,6 +654,10 @@ module.exports = nodefony.registerCommand("generate",function(){
 													var file = new nodefony.fileClass(obj.path);
 													reactBundle.call(this, file, obj.name, "yml", obj.path, true);
 													this.installBundle(obj.name, obj.path);
+													let src = path.resolve( reactCli.bundlePath, reactCli.bundleName+"bundle", "public") ;
+													let dest = path.resolve( reactCli.bundlePath, reactCli.bundleName+"bundle", "Resources", "public", "dist");
+													this.logger( "ln -s " +  src  + " " + dest);
+						                            shell.ln('-sf', src , dest );
 													this.terminate(0);
 												}catch(e){
 													throw e;

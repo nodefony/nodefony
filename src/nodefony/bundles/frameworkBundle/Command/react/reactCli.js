@@ -80,9 +80,20 @@ const reactCli = class reactCli extends nodefony.Service {
     setTmpDir (Path){
         return Path ;
     }
-    
-    cleanTmp (){
 
+    cleanTmp (){
+        try {
+            let tmpDir = path.resolve( this.tmp, this.bundleName+"bundle" ) ;
+            this.cli.existsSync( tmpDir );
+            try {
+                shell.rm('-rf', tmpDir);
+            }catch(e){
+                this.logger(e,"ERROR");
+                throw e ;
+            }
+        }catch(e){
+            return ;
+        }
     }
 
     generateProject (name, Path, interactive){
@@ -139,7 +150,11 @@ const reactCli = class reactCli extends nodefony.Service {
     }
 
     moveToRealPath (){
-      return shell.mv(path.resolve( this.tmp ,this.bundleName+"bundle"), this.bundlePath );
+        try {
+            return shell.mv(path.resolve( this.tmp ,this.bundleName+"bundle"), this.bundlePath );
+        }catch(e){
+            throw e ;
+        }
     }
 
     ejectReact(dir){
@@ -157,9 +172,6 @@ const reactCli = class reactCli extends nodefony.Service {
                     }
                     try {
                         this.moveToRealPath();
-                        this.logger( "ln -s " +  path.resolve( this.bundlePath, this.bundleName+"bundle", "public")  + " " + path.resolve( this.bundlePath, this.bundleName+"bundle", "Resources", "public", "dist"));
-                        //shell.mv( path.resolve( realPath, name, "public"), path.resolve( realPath, name, "Resources", "public", "dist") );
-                        shell.cp('-Rf', path.resolve( this.bundlePath, this.bundleName+"bundle", "public") , path.resolve( this.bundlePath, this.bundleName+"bundle", "Resources", "public", "dist"));
                     }catch(e){
                         this.cleanTmp();
                         return reject( e ) ;

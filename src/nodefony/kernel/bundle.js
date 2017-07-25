@@ -60,7 +60,6 @@ module.exports = nodefony.register("Bundle", function(){
 	var Bundle = class Bundle extends nodefony.Service {
 
 		constructor (name , kernel , container){
-
 			super( name, container );
 			this.logger("\x1b[36m REGISTER BUNDLE : "+this.name+"   \x1b[0m","DEBUG",this.kernel.cli.clc.magenta("KERNEL") );
 			this.bundleName = path.basename(this.path);
@@ -151,6 +150,9 @@ module.exports = nodefony.register("Bundle", function(){
 		}
 
 		initWatchers(){
+			if ( ! this.settings.watch ){
+				return ;
+			}
 			var controllers = false ;
 			var views = false ;
 			var i18n = false ;
@@ -164,13 +166,13 @@ module.exports = nodefony.register("Bundle", function(){
 						config = this.settings.watch.config ;
 					break;
 					case "boolean":
-						controllers = true ;
-						views = true ;
-						i18n = true ;
-						config = true ;
+						controllers = this.settings.watch ;
+						views = this.settings.watch  ;
+						i18n = this.settings.watch  ;
+						config = this.settings.watch  ;
 					break;
 					default:
-                        this.logger("NO CONFIG WATCHER  " ,"WARNING");
+                        this.logger("BAD CONFIG WATCHER  " ,"WARNING");
                         return ;
 						//throw new Error ("Bad Config watcher ");
 				}
@@ -214,7 +216,6 @@ module.exports = nodefony.register("Bundle", function(){
 			}catch(e){
 				throw e ;
 			}
-			this.logger("KERNEL WATCHER","INFO");
 		}
 
 		parseConfig (result){

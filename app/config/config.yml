@@ -117,7 +117,7 @@ httpBundle:
     responseTimeout:              40000
   sockjs:
       overlay:                      true
-      hot:                          false
+      hot:                          true
       protocol:                     https
       websocket:                    true
   statics:

@@ -128,7 +128,18 @@ let angularCli = class angularCli extends nodefony.Service {
     }
 
     cleanTmp (){
-
+        try {
+            let tmpDir = path.resolve( this.tmp, this.bundleName+"bundle" ) ;
+            this.cli.existsSync( tmpDir );
+            try {
+                shell.rm('-rf', tmpDir);
+            }catch(e){
+                this.logger(e,"ERROR");
+                throw e ;
+            }
+        }catch(e){
+            return ;
+        }
     }
 
     generateNgNew( argv ){
