@@ -15,7 +15,6 @@ var nodefony_version = require( path.resolve( "package.json") ).version;
 
 let command  = null ;
 let args = null ;
-let commander = null ;
 let type = null ;
 let debug = false ;
 let kernel = null ;
@@ -25,7 +24,7 @@ if (process.env.MODE_START && process.env.MODE_START === "PM2"){
     return  new nodefony.appKernel("SERVER", environment, false, {});
 }
 
-let start = function(cmd, args, commander){
+let start = function(cmd, args){
 	if ( cmd ){
 		cmd = cmd.toLowerCase();
 	}else{
@@ -34,13 +33,15 @@ let start = function(cmd, args, commander){
 	switch ( cmd ){
 		case "dev":
 		case "development":
+            manageCache(this);
 			environment = "dev" ;
-      type= "SERVER";
+            type= "SERVER";
 			process.env.MODE_START = "NODEFONY_DEV" ;
 			kernel = new nodefony.appKernel(type, environment, debug,  {});
 		break;
 		case "production":
 		case "prod":
+            manageCache(this);
 			environment = "prod" ;
         	type= "SERVER";
 			process.env.MODE_START = "NODEFONY" ;
@@ -52,6 +53,7 @@ let start = function(cmd, args, commander){
             if (process.env.MODE_START && process.env.MODE_START === "PM2"){
                 kernel = new nodefony.appKernel(type, environment, false, {});
             }else{
+              manageCache(this);
         	  process.env.MODE_START = "PM2_START" ;
 			  pm2Start.call(this);
             }
@@ -80,6 +82,7 @@ let start = function(cmd, args, commander){
     		}
     		throw new Error ("Not valid version : " + nodefony_version +" check  http://semver.org ");
 		default :
+            manageCache(this);
 			environment = "prod" ;
 			type= "CONSOLE";
 			process.env.MODE_START = "NODEFONY_CONSOLE";
@@ -207,8 +210,21 @@ let pm2Start = function (){
     });
 };
 
+let manageCache = function (cli) {
+    let cacheLink = path.resolve (process.cwd() ,"tmp", "assestLink" ) ;
+    if ( fs.existsSync( cacheLink) ){
+        cli.logger("DELETE TMP LINK :" + cacheLink);
+        shell.rm("-Rf", this.cacheLink);
+    }
+    let cacheWebpack = path.resolve(process.cwd(), "tmp", "webpack" ) ;
+    if ( fs.existsSync( cacheWebpack) ){
+        cli.logger("DELETE TMP :" + cacheWebpack)
+        shell.rm("-Rf", cacheWebpack);
+    }
+}
+
 const cli = new nodefony.cli("CLI", {
-	  asciify:false,
+	asciify:false,
     signals:false,
     promiseRejection:false,
     version:nodefony_version,
@@ -226,7 +242,8 @@ const cli = new nodefony.cli("CLI", {
 		if (!! cli.commander.debug){
 			debug = true ;
 		}
-		return start.call(cli, command, args, commander)
+
+		return start.call(cli, command, args)
 	}
 });
 

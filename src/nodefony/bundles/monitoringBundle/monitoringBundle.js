@@ -191,16 +191,19 @@ module.exports = nodefony.registerBundle ("monitoring", function(){
 							state:this.orm.connections[connection].state,
 							name:this.orm.connections[connection].name,
 							type:this.orm.connections[connection].type,
-							db:{
+							db:{}
+						} ;
+						if ( this.orm.connections[connection].db ){
+							ORM.connections[connection].db = {
 								config:this.orm.connections[connection].db.config,
 								options:this.orm.connections[connection].db.options,
 								models:{}
 							}
-						} ;
-						for (var model in this.orm.connections[connection].db.models){
-							ORM.connections[connection].db.models[model] ={
-								name:model
-							};
+							for (var model in this.orm.connections[connection].db.models){
+								ORM.connections[connection].db.models[model] ={
+									name:model
+								};
+							}
 						}
 					}
 

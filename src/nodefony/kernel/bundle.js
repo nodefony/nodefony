@@ -342,14 +342,14 @@ module.exports = nodefony.register("Bundle", function(){
 		compileWebpack (){
 			if ( this.webpackCompiler ){
 				try {
-					return this.webpackService.runCompiler( this.webpackCompiler, this.name);
+					return this.webpackService.runCompiler( this.webpackCompiler, this.name, this.name, this.webpackCompile.name);
 				}catch(e){
 					throw e ;
 				}
 			}
 			if ( this.webpackCompilerFile ){
 				try {
-					return this.webpackService.runCompiler( this.webpackCompilerFile, this.name);
+					return this.webpackService.runCompiler( this.webpackCompilerFile, this.name+"_"+this.webpackCompilerFile.name, this.name, this.webpackCompilerFile.name);
 				}catch(e){
 					throw e ;
 				}
@@ -383,7 +383,7 @@ module.exports = nodefony.register("Bundle", function(){
                   	if ( ! res ){
                       	throw new Error("Angular bundle no webpack config file : webpack.config.js ");
                   	}
-              		  this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this);
+              		this.webpackCompilerFile = this.webpackService.loadConfigFile( res, this);
 									}catch(e){
 										throw e
 									}

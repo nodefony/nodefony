@@ -32,6 +32,7 @@ module.exports = nodefony.register( "cli", function(){
     autoLogger  : true,
     resize      : false,
     version     : null,
+    pid         : false,
     promiseRejection:true
   };
 
@@ -80,7 +81,10 @@ module.exports = nodefony.register( "cli", function(){
       process.title = this.name.replace(new RegExp("\\s","gi"),"").toLowerCase() ;
       this.environment = process.env.NODE_ENV  || "production" ;
       process.env.NODE_ENV = this.environment ;
-
+      this.pid = "" ;
+      if ( this.options.pid ){
+          this.setPid();
+      }
       this.wrapperLog = console.log ;
       if ( this.options.autoLogger ){
           this.listenSyslog();
@@ -133,7 +137,7 @@ module.exports = nodefony.register( "cli", function(){
           });
           process.on('unhandledRejection', (reason, promise) => {
               this.logger("WARNING  !!! PROMISE CHAIN BREAKING : "+ reason, "CRITIC");
-              console.trace(reason);
+              console.trace(promise);
               unhandledRejections.set(promise, reason);
           });
           process.on('uncaughtException', (err) => {
@@ -172,6 +176,10 @@ module.exports = nodefony.register( "cli", function(){
           this.fire("onStart", this);
         }
       }
+    }
+
+    setPid(){
+        this.pid = process.pid ;
     }
 
     logEnv(){
@@ -305,7 +313,7 @@ module.exports = nodefony.register( "cli", function(){
       if ( ! this.wrapperLog ){
         this.wrapperLog = console.log ;
       }
-    	return this.wrapperLog( date.toDateString() + " " + date.toLocaleTimeString() + " " + nodefony.Service.logSeverity( pdu.severityName ) + " " + green(pdu.msgid) + " " + " : " + message);
+      return this.wrapperLog( this.pid +" "+ date.toDateString() + " " + date.toLocaleTimeString() + " " + nodefony.Service.logSeverity( pdu.severityName ) + " " + green(pdu.msgid) + " " + " : " + message);
 	}
 
   	displayTable ( datas, options , syslog){

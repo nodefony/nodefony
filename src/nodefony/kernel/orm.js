@@ -2,14 +2,6 @@
 module.exports = nodefony.register("orm", function(){
 
 
-	var settingsSyslog = {
-		//rateLimit:100,
-		//burstLimit:10,
-		moduleName:"ORM",
-		defaultSeverity:"ERROR"
-	};
-
-	//var connectionNotification = 0;
 	var connectionMonitor = function(name, db, orm){
 		this.connectionNotification ++;
 		if(Object.keys(orm.settings.connectors).length === this.connectionNotification){
@@ -28,8 +20,6 @@ module.exports = nodefony.register("orm", function(){
 			if (( this.kernel.debug === false && this.debug === true) || this.debug === undefined ){
 				this.debug = this.kernel.debug ;
 			}
-			this.syslog = this.initializeLog();
-			this.container.set("syslog.orm",this.syslog);
 			this.entities = {};
 			this.definitions = {};
 			this.autoLoader = autoLoader;
@@ -89,50 +79,9 @@ module.exports = nodefony.register("orm", function(){
 			});
 		}
 
-		initializeLog (){
-
-			var red, blue, green, reset;
-			red   = '\x1B[31m';
-			blue  = '\x1B[34m';
-			green = '\x1B[32m';
-			reset = '\x1B[0m';
-
-			var syslog =  new nodefony.syslog(settingsSyslog);
-
-			// CRITIC ERROR
-			syslog.listenWithConditions(this,{
-				severity:{
-					data:"CRITIC,ERROR"
-				}
-			},(pdu) => {
-				this.kernel.cli.normalizeLog(pdu);
-			});
-
-			if (this.kernel.environment === "dev"){
-				// INFO DEBUG
-				var data ="";
-				if ( this.debug ) {
-					data = "INFO,DEBUG" ;
-				}else{
-					data = "INFO";
-				}
-				syslog.listenWithConditions(this,{
-					severity:{
-						data:data
-					}
-				},(pdu) =>{
-					this.kernel.cli.normalizeLog(pdu);
-				});
-			}else{
-				syslog.listenWithConditions(this,{
-					severity:{
-						data:"INFO"
-					}
-				},(pdu) =>{
-					this.kernel.cli.normalizeLog(pdu);
-				});
-			}
-			return syslog;
+		logger (pci, severity, msgid,  msg){
+			if (! msgid) { msgid = this.kernel.cli.clc.magenta(this.name + " ");}
+			return this.syslog.logger(pci, severity, msgid,  msg);
 		}
 
 		getConnection (name){

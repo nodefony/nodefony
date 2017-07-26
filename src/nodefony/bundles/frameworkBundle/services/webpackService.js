@@ -164,7 +164,7 @@ module.exports = nodefony.registerService("webpack", function(){
 			return process.env["WEBPACK_VERSION"];
 		}
 
-		loggerStat (err, stats, bundle , watcher){
+		loggerStat (err, stats, bundle , file, watcher){
 			if (err){
 				throw err
 			}
@@ -175,9 +175,9 @@ module.exports = nodefony.registerService("webpack", function(){
 			}else{
 				if (bundle){
 					if ( watcher ){
-						this.logger( "WATCHING BUNDLE : " + bundle,"INFO");
+						this.logger( "WATCHING BUNDLE : " + bundle +" " + file,"INFO");
 					}else{
-						this.logger( "COMPILE BUNDLE : " + bundle,"INFO");
+						this.logger( "COMPILE SUCCESS BUNDLE : " + bundle +" " + file,"INFO");
 					}
 				}
 				if ( watcher ){
@@ -238,6 +238,7 @@ module.exports = nodefony.registerService("webpack", function(){
 					default :
 						config = require( file.path );
 				}
+				config.name = file.name || basename  ;
 				compiler =  webpack( config );
 				if ( this.kernel.type === "CONSOLE" ){
 					return compiler ;
@@ -270,7 +271,7 @@ module.exports = nodefony.registerService("webpack", function(){
 						if (! err ){
 							this.logger( "RUN WEBPACK COMPILER : "+ basename +" COMPILE ENTRY POINT : \n" +this.displayConfigTable(config) );
 						}
-						this.loggerStat(err, stats, basename, true);
+						this.loggerStat(err, stats, basename, file.name, true);
 					});
 					this.kernel.listen(this ,"onTerminate", ( ) => {
 						watching.close(() => {
@@ -281,7 +282,7 @@ module.exports = nodefony.registerService("webpack", function(){
 					if ( (this.kernel.environment === "dev" ) && (basename in this.kernel.bundlesCore) && ( ! this.kernel.isCore ) ){
 						return compiler ;
 					}
-					this.runCompiler(compiler, idfile);
+					this.runCompiler(compiler, idfile, basename, file.name );
 				}
 			}catch(e){
 				shell.cd(this.kernel.rootDir);
@@ -305,7 +306,7 @@ module.exports = nodefony.registerService("webpack", function(){
 					myConf.entry.unshift("webpack-dev-server/client?https://"+this.host+"/");
 				}
 			}
-
+			myConf.name =  basename  ;
 			try {
 				var compiler =  webpack( myConf );
 				if ( this.kernel.type === "CONSOLE" ){
@@ -331,7 +332,7 @@ module.exports = nodefony.registerService("webpack", function(){
 					if (! err ){
 						this.logger( "WEBPACK BUNDLE : "+ basename +" WATCHING ENTRY POINT : \n" + util.inspect(myConf.entry) , "DEBUG" );
 					}
-					this.loggerStat(err, stats, basename, true);
+					this.loggerStat(err, stats, basename, basename,true);
 				});
 				this.kernel.listen(this ,"onTerminate", ( ) => {
 					watching.close(() => {
@@ -342,15 +343,15 @@ module.exports = nodefony.registerService("webpack", function(){
 				if ( (this.kernel.environment === "dev" ) && (basename in this.kernel.bundlesCore) && ( ! this.kernel.isCore ) ){
 					return compiler ;
 				}
-				this.runCompiler(compiler, basename);
+				this.runCompiler(compiler, basename, basename);
 			}
 			return compiler ;
 		}
 
-		runCompiler (compiler, bundle){
+		runCompiler (compiler, id, bundle, file){
 			try {
 				if ( this.production ){
-					var pathCache = path.resolve( this.pathCache, bundle );
+					var pathCache = path.resolve( this.pathCache, id );
 					if ( fs.existsSync( pathCache ) ){
 						return ;
 					}
@@ -360,9 +361,12 @@ module.exports = nodefony.registerService("webpack", function(){
 
 					}
 				}
-				return compiler.run( (err, stats) => {
-					this.logger( "RUN WEBPACK COMPILER : "+ bundle +" COMPILE ENTRY POINT : \n" +this.displayConfigTable(compiler.options) );
-					this.loggerStat(err, stats,  bundle);
+				return new Promise ( (resolve, reject) => {
+					this.logger( "RUN WEBPACK COMPILER : "+ file +" COMPILE ENTRY POINT : \n" +this.displayConfigTable(compiler.options) );
+					compiler.run( (err, stats) => {
+						this.loggerStat(err, stats, bundle, file);
+						return resolve(err, stats);
+					});
 				});
 			}catch(e){
 				throw e ;

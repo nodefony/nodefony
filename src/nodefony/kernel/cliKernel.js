@@ -272,7 +272,7 @@ module.exports = nodefony.register("cliKernel", function(){
 					data:data
 				}
 			},(pdu) => {
-				return this.normalizeLog( pdu );
+				return this.normalizeLog( pdu , this.cluster);
 			});
 		}
 

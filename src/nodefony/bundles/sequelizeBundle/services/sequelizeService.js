@@ -49,7 +49,11 @@ module.exports = nodefony.registerService("sequelize", function(){
 			this.db = db;
 			this.orm.notificationsCenter.fire("onConnect", this.name, this.db );
 			this.state = "CONNECTED";
-			this.logger(this.type + " CONNECT  database "+ this.name+" : " +config.dbname, "DEBUG");
+			let severity = "INFO";
+			if ( this.orm.kernel.type === "CONSOLE"  ){
+				severity = "DEBUG";
+			}
+			this.logger( ' Sequelise Connection : '+this.name +' has been established successfully  Type =' + this.type + "  Database = "+config.dbname, severity);
 		}
 
 		getConnection (){
@@ -73,22 +77,21 @@ module.exports = nodefony.registerService("sequelize", function(){
 				}
 				conn = new this.orm.engine(config.dbname, config.username, config.password, config.options );
 				process.nextTick( ()  => {
-					this.setConnection(conn, config);
+					conn
+					.authenticate()
+					.then( () => {
+						this.setConnection(conn, config);
+					})
+					.catch( err => {
+						this.logger('Unable to connect to the database : '+ err , "ERROR");
+						error.call(this, err);
+						this.orm.fire('onErrorConnection', this.name, conn, this.orm)
+					});
 				});
 			}catch(err){
 				error.call(this, err);
 				this.orm.fire('onErrorConnection', this.name, conn, this.orm);
 			}
-			this.orm.kernel.listen(this, 'onPostReady', (/*kernel*/) => {
-				conn
-				.authenticate()
-				.then( () => {
-					this.logger('Sequelise Connection : '+this.name +' has been established successfully.', "DEBUG");
-				})
-				.catch( err => {
-					this.logger('Unable to connect to the database : '+ err , "ERROR");
-				});
-			});
 			return conn ;
 		}
 
@@ -108,7 +111,6 @@ module.exports = nodefony.registerService("sequelize", function(){
 		constructor (container, kernel, autoLoader){
 			super("sequelize", container, kernel, autoLoader );
 			this.engine = require('sequelize');
-			this.connections = {};
 			this.boot();
 		}
 

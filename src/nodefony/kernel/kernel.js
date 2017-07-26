@@ -103,7 +103,8 @@ module.exports = nodefony.register("kernel", function(){
 			}catch(e){
 				this.isCore = false ;
 			}
-			;
+			this.typeCluster = this.clusterIsMaster() ? "master" : "worker" ;
+
 			// Manage Kernel Container
 			this.set("kernel", this);
 			// Manage Reader
@@ -114,11 +115,13 @@ module.exports = nodefony.register("kernel", function(){
 			this.set("injection", this.injection);
 			// SERVERS
 			this.initServers();
+
 			// cli worker
 			try {
 				this.cli = new nodefony.cliKernel("NODEFONY", this.container, this.notificationsCenter, {
 					autoLogger		: false,
 					version			: this.version,
+					pid				: this.typeCluster === "worker" ? true : false ,
 					onStart			: ( cli ) => {
 						this.start(environment);
 					}
@@ -133,15 +136,7 @@ module.exports = nodefony.register("kernel", function(){
 			this.git = this.cli.setGitPath( this.rootDir );
 
 			this.cacheLink = path.resolve (this.rootDir ,"tmp", "assestLink" ) ;
-			if ( fs.existsSync( this.cacheLink) ){
-				console.log("DELETE TMP LINK :" + this.cacheLink);
-				shell.rm("-Rf", this.cacheLink);
-			}
 			this.cacheWebpack = path.resolve(this.rootDir, "tmp", "webpack" ) ;
-			if ( fs.existsSync( this.cacheWebpack) ){
-				console.log("DELETE TMP :" + this.cacheWebpack)
-				shell.rm("-Rf", this.cacheWebpack);
-			}
 			this.listen(this, "onPostRegister" , () =>{
 				if ( this.type === "SERVER" ){
 					if ( ! fs.existsSync( this.cacheLink ) ){
@@ -456,16 +451,13 @@ module.exports = nodefony.register("kernel", function(){
 			return cluster.isMaster ;
 		}
 		initCluster (){
-			this.typeCluster = this.clusterIsMaster() ? "master" : "worker" ;
+
 			this.processId = process.pid ;
 			this.process = process ;
 			if (cluster.isMaster) {
-				//if (this.type != "CONSOLE"){
-					console.log(this.logEnv());
-				//}
+				console.log(this.logEnv());
 				this.fire("onCluster", "MASTER", this,  process);
 			}else if (cluster.isWorker) {
-				//console.log( this.cli.clc.blue(ascci) );
 				console.log( this.logEnv() );
 				this.workerId = cluster.worker.id ;
 				this.worker = cluster.worker ;

@@ -513,7 +513,7 @@ module.exports = nodefony.registerService("sessions", function(){
 			var storage =  eval("nodefony."+this.settings.handler) ;
 			if (storage){
 				this.storage = new storage(this) ;
-				this.listen(this, "onReady",function(){
+				this.listen(this, "onOrmReady",function(){
 					this.storage.open("default");
 				});
 			}else{

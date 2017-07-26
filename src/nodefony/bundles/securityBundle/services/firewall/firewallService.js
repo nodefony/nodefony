@@ -111,20 +111,13 @@ module.exports = nodefony.registerService("firewall", function(){
 			this.defaultTarget = "/" ;
 			this.alwaysUseDefaultTarget = false ;
 
-			this.firewall.listen(this, "onReady",() => {
+			this.firewall.listen(this, "onOrmReady",() => {
 				try {
 					if ( this.providerName in this.firewall.providers){
 						this.provider = this.firewall.providers[ this.providerName ].Class ;
 					}
-					/*else{
-						throw new Error ("PROVIDER : "+this.providerName +" NOT registered " );
-					}
-					if ( ! this.provider ){
-						throw new Error ( "PROVIDER CLASS: "+this.providerName +" CLASS NOT registered  check config file  ");
-					}*/
 					if ( this.factory ){
 						this.logger(" FACTORY : "+ this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
-						// throw new Error( "FACTORY : " + this.factoryName + " CLASS NOT registered check config file " );
 					}
 				}catch(e){
 					this.logger(this.name +"  "+e, "ERROR");
