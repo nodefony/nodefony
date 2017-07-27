@@ -84,6 +84,7 @@ module.exports = nodefony.registerService("sequelize", function(){
 					})
 					.catch( err => {
 						this.logger('Unable to connect to the database : '+ err , "ERROR");
+						console.dir(config);
 						error.call(this, err);
 						this.orm.fire('onErrorConnection', this.name, conn, this.orm)
 					});
@@ -133,32 +134,11 @@ module.exports = nodefony.registerService("sequelize", function(){
 		}
 
 		createConnection (name, config){
-			//var url;
-			// ORM2 CHECK
-			/*switch(config.driver){
-				case 'mysql':
-					url = "mysql://" + config.user + ":" + config.password + "@" + config.host + ":" + config.port + "/" + config.database;
-					break;
-
-				case 'sqlite':
-					url = config;
-					//url = "sqlite://" + process.cwd() + config.dbname;
-					break;
-
-				case 'mongodb':
-					url = "mongodb://" + (false ? '' : config.user + ":" + config.password) + '@' + config.host + ":" + config.port + "/" + config.database;
-				break;
-
-				case 'postgres':
-					url = "postgres://" + config.user + ":" + config.password + "@" + config.host + "/" + config.database;
-				break;
-
-				default:
-					throw {
-						message: "driver (" + config.driver + ") not exist"
-					}
-			}*/
-			return this.connections[name] = new connectionDB( name, config.driver, config, this );
+			try {
+				return this.connections[name] = new connectionDB( name, config.driver, config, this );
+			}catch(e){
+				throw e ;
+			}
 		}
 	};
 

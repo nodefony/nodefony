@@ -21,7 +21,8 @@ let kernel = null ;
 let environment = "production" ;
 
 if (process.env.MODE_START && process.env.MODE_START === "PM2"){
-    return  new nodefony.appKernel("SERVER", environment, false, {});
+    module.exports  =  new nodefony.appKernel("SERVER", environment, false, {});
+    return ;
 }
 
 let start = function(cmd, args){
@@ -247,5 +248,4 @@ const cli = new nodefony.cli("CLI", {
 	}
 });
 
-module.exports = cli ;
-return cli;
+module.exports = kernel || cli ;

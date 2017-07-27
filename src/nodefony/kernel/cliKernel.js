@@ -149,7 +149,9 @@ module.exports = nodefony.register("cliKernel", function(){
 					return true
 				break;
 				case "npm:list":
-					this.listPackage(this.kernel.rootDir);
+					this.on("onBoot", () =>{
+						this.listPackage(this.kernel.rootDir);
+					});
 					return true ;
 				break;
 			}
@@ -529,9 +531,14 @@ module.exports = nodefony.register("cliKernel", function(){
 	  		return cmd ;
 	  	}
 
-		listPackage(conf){
+		listPackage(Path){
 			let tab = [] ;
-			let mypromise = this.npmList(conf, tab) ;
+			let mypromise = null ;
+			try {
+				mypromise = this.npmList(Path, tab) ;
+			}catch(e){
+				throw e ;
+			}
 			for (let bundle in  this.kernel.bundles){
 				if ( bundle+"Bundle" in  this.kernel.bundlesCore ){
 					continue ;
@@ -553,13 +560,16 @@ module.exports = nodefony.register("cliKernel", function(){
 			}).catch((error) =>{
 				this.logger(error,"ERROR");
 				this.terminate(1);
-				return ;
 			});
 		}
 
 		npmList (Path, ele){
 			return new Promise ((resolve, reject) =>{
-				  	shell.cd(Path);
+					try {
+				  		shell.cd(Path);
+					}catch(e){
+						reject(e);
+					}
 					let conf = null ;
 					let config = null ;
 					try {
@@ -567,11 +577,13 @@ module.exports = nodefony.register("cliKernel", function(){
 						conf  = require(config);
 					}catch(e){
 						this.logger("NPM NODEFONY PACKAGES package.json not find in : "+ Path ,"INFO");
+						shell.cd(this.kernel.rootDir);
 						return resolve(ele) ;
 					}
 					this.logger( "NPM NODEFONY PACKAGES :" + config , "INFO");
 					npm.load(conf, (error, event) => {
 						if (error){
+							shell.cd(this.kernel.rootDir);
 							return reject(error)
 						}
 						event.config.localPrefix = Path;
@@ -580,6 +592,7 @@ module.exports = nodefony.register("cliKernel", function(){
 						event.globalPrefix = this.rootDir ;
 						npm.commands.ls([], true, (error, data) => {
 							if (error){
+								shell.cd(this.kernel.rootDir);
 								return reject(error);
 							}
 							try {
@@ -594,8 +607,10 @@ module.exports = nodefony.register("cliKernel", function(){
 									}
 								}
 							}catch(e){
+								shell.cd(this.kernel.rootDir);
 								return reject(e);
 							}
+							shell.cd(this.kernel.rootDir);
 							return resolve(ele);
 						});
 					});
@@ -683,6 +698,20 @@ module.exports = nodefony.register("cliKernel", function(){
 			}
 			return str;
 		}
+
+		listenRejection (){
+	        process.on('rejectionHandled', (promise) => {
+	            this.logger("PROMISE REJECTION EVENT ", "CRITIC");
+	            this.unhandledRejections.delete(promise);
+	        });
+	        process.on('unhandledRejection', (reason, promise) => {
+	            this.logger("WARNING  !!! PROMISE CHAIN BREAKING : "+ reason, "WARNING");
+	            this.unhandledRejections.set(promise, reason);
+				if( this.kernel.type === "SERVER" ){
+	            	console.trace(promise);
+				}
+	        });
+	    }
 
 		terminate (code){
 			if ( this.kernel ) {

@@ -608,14 +608,20 @@ module.exports = nodefony.register("kernel", function(){
 						onFile:(file) => {
 							if (file.matchName(this.regBundle)){
 								try {
-									if ( this.cli.commander && this.cli.commander.args && this.cli.commander.args[0]  === "npm:install" ){
-										let name = this.getBundleName(file.name);
-										if ( file.shortName in this.bundlesCore ){
-											if ( this.isCore ){
-												this.cli.installPackage(name, file, true);
-											}
-										}else{
-											this.cli.installPackage(name, file, false );
+									if ( this.cli.commander && this.cli.commander.args && this.cli.commander.args[0]  ){
+										switch ( this.cli.commander.args[0]  ){
+											case "npm:install" :
+												let name = this.getBundleName(file.name);
+												if ( file.shortName in this.bundlesCore ){
+													if ( this.isCore ){
+														this.cli.installPackage(name, file, true);
+													}
+												}else{
+													this.cli.installPackage(name, file, false );
+												}
+											break;
+											default:
+												this.loadBundle( file);
 										}
 									}else{
 										this.loadBundle( file);

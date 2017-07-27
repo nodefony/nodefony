@@ -15,7 +15,7 @@ module.exports = webpackMerge( {
             canPrint: true
         }),
         new webpack.optimize.UglifyJsPlugin({
-                minimize: true
+            minimize: true
         })
     ]
 }, commonConfig );

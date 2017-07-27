@@ -20,7 +20,7 @@ module.exports = {
     module      : {
         rules: [{
             // BABEL TRANSCODE
-          	test: new RegExp("\.es6$"),
+            test: new RegExp("\.es6$|\.js$"),
     		exclude: new RegExp("node_modules"),
     		use: [
 				{

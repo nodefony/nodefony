@@ -511,7 +511,7 @@ module.exports = nodefony.register("syslog", function(){
                        					pdu = createPDU.call(this, payload, severity, this.settings.moduleName, msgid, msg);
                    				}
                				}catch(e){
-						console.trace(e);
+						        console.trace(e);
                    				this.invalid++;
                    				return "INVALID";
                				}

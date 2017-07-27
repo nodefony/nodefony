@@ -19,7 +19,6 @@ module.exports = nodefony.register( "cli", function(){
   		style: {head: ['cyan'], border: ['grey']}
   };
 
-  const unhandledRejections = new Map();
 
   const defaultOptions = {
     processName : processName,
@@ -79,13 +78,15 @@ module.exports = nodefony.register( "cli", function(){
             super( name, container, notificationsCenter, options);
       }
       process.title = this.name.replace(new RegExp("\\s","gi"),"").toLowerCase() ;
-      this.environment = process.env.NODE_ENV  || "production" ;
+      this.environment = process.env.NODE_ENV  || "production";
       process.env.NODE_ENV = this.environment ;
+      this.unhandledRejections = new Map();
       this.pid = "" ;
       if ( this.options.pid ){
           this.setPid();
       }
       this.wrapperLog = console.log ;
+      this.timers = {};
       if ( this.options.autoLogger ){
           this.listenSyslog();
       }
@@ -126,23 +127,15 @@ module.exports = nodefony.register( "cli", function(){
               this.fire("onSignal", "SIGQUIT", this);
               this.terminate(0);
           });
+          process.on('uncaughtException', (err) => {
+              this.logger(err, "CRITIC");
+          });
       }
       /**
       *	@promiseRejection
       */
       if (this.options.promiseRejection){
-          process.on('rejectionHandled', (promise) => {
-              this.logger("PROMISE REJECTION EVENT ", "CRITIC");
-              unhandledRejections.delete(promise);
-          });
-          process.on('unhandledRejection', (reason, promise) => {
-              this.logger("WARNING  !!! PROMISE CHAIN BREAKING : "+ reason, "CRITIC");
-              console.trace(promise);
-              unhandledRejections.set(promise, reason);
-          });
-          process.on('uncaughtException', (err) => {
-              this.logger(err, "CRITIC");
-          });
+            this.listenRejection()
       }
       /**
        *    ASCIIFY
@@ -176,6 +169,18 @@ module.exports = nodefony.register( "cli", function(){
           this.fire("onStart", this);
         }
       }
+    }
+
+    listenRejection (){
+        process.on('rejectionHandled', (promise) => {
+            this.logger("PROMISE REJECTION EVENT ", "CRITIC");
+            this.unhandledRejections.delete(promise);
+        });
+        process.on('unhandledRejection', (reason, promise) => {
+            this.logger("WARNING  !!! PROMISE CHAIN BREAKING : "+ reason, "WARNING");
+            console.trace(promise);
+            this.unhandledRejections.set(promise, reason);
+        });
     }
 
     setPid(){
@@ -296,7 +301,7 @@ module.exports = nodefony.register( "cli", function(){
     normalizeLog  (pdu){
     	let date = new Date(pdu.timeStamp) ;
     	if (  pdu.payload === "" || pdu.payload === undefined ){
-    		console.log( date.toDateString() + " " + date.toLocaleTimeString() + " " + nodefony.Service.logSeverity( pdu.severityName ) + " " + green( pdu.msgid) + " " + " : " + "logger message empty !!!!");
+    		console.error( date.toDateString() + " " + date.toLocaleTimeString() + " " + nodefony.Service.logSeverity( pdu.severityName ) + " " + green( pdu.msgid) + " " + " : " + "logger message empty !!!!");
     		console.trace(pdu);
     		return 	;
     	}
@@ -373,19 +378,40 @@ module.exports = nodefony.register( "cli", function(){
   	}
 
     startTimer (name){
-      this.startTime = new Date();
-      this.logger(" BEGIN TIMER : " + name, "INFO");
+        if (name in this.timers ){
+            throw new Error("Timer : " + name +" already exist !! stopTimer to clear");
+        }
+        try {
+            this.logger("BEGIN TIMER : " + name, "INFO");
+            this.timers[name] = name ;
+            return console.time(name);
+        }catch (e){
+            if (name in this.timers ){
+                delete this.timers[name];
+            }
+            throw e ;
+        }
     }
 
   	stopTimer (name){
-        if (this.startTime){
-  	     this.stopTime = new Date();
-  	     this.time = (this.stopTime.getTime() - this.startTime.getTime());
-  	     this.logger( "TIMER "+ name + " execute in : "+ this.time/1000 + " s" ,"INFO" )	;
-        }else{
-  	     return ;
+        if (! name ){
+            for (let timer in  this.timers ){
+                this.stopTimer(this.timers[timer])
+            }
         }
-        this.startTime = null;
+        try {
+            if ( name in this.timers ){
+                this.logger("END TIMER : " + name, "INFO");
+                delete this.timers[name];
+                return console.timeEnd(name);
+            }
+            throw  new Error("Timer : " + name +" not exist !! startTimer before");
+        }catch(e){
+            if (name in this.timers ){
+                delete this.timers[name];
+            }
+            throw e ;
+        }
   	}
   };
   nodefony.niceBytes = CLI.niceBytes ;

@@ -93,8 +93,13 @@ templating                      : twig
 
 #
 # ENGINE ORM
-#
 #       SEQUELIZE
-#
-#
 orm                             : sequelize
+
+#
+# NODE.JS PACKAGE MANAGER
+#
+#       npm
+#       yarn
+#
+packageManager                  : npm

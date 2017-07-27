@@ -241,6 +241,7 @@ module.exports = nodefony.registerService("webpack", function(){
 				config.name = file.name || basename  ;
 				compiler =  webpack( config );
 				if ( this.kernel.type === "CONSOLE" ){
+					shell.cd(this.kernel.rootDir);
 					return compiler ;
 				}
 			}catch(e){
@@ -249,9 +250,9 @@ module.exports = nodefony.registerService("webpack", function(){
 			}
 			// WATCH
 			if ( config.watch === undefined ){
-				//watch = bundle.settings.watch ;
-				//config.watch = watch || false;
-				config.watch = undefined ;
+				watch = bundle.settings.watch ;
+				config.watch = watch || false;
+				//config.watch = undefined ;
 			}else{
 				watch = config.watch ;
 			}
@@ -280,6 +281,7 @@ module.exports = nodefony.registerService("webpack", function(){
 					});
 				}else{
 					if ( (this.kernel.environment === "dev" ) && (basename in this.kernel.bundlesCore) && ( ! this.kernel.isCore ) ){
+						shell.cd(this.kernel.rootDir);
 						return compiler ;
 					}
 					this.runCompiler(compiler, idfile, basename, file.name );
