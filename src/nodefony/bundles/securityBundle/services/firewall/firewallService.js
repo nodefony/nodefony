@@ -111,7 +111,7 @@ module.exports = nodefony.registerService("firewall", function(){
 			this.defaultTarget = "/" ;
 			this.alwaysUseDefaultTarget = false ;
 
-			this.firewall.listen(this, "onOrmReady",() => {
+			this.firewall.listen(this, "onReady",() => {
 				try {
 					if ( this.providerName in this.firewall.providers){
 						this.provider = this.firewall.providers[ this.providerName ].Class ;

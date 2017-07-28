@@ -19,6 +19,7 @@ let type = null ;
 let debug = false ;
 let kernel = null ;
 let environment = "production" ;
+"use strict;"
 
 if (process.env.MODE_START && process.env.MODE_START === "PM2"){
     module.exports  =  new nodefony.appKernel("SERVER", environment, false, {});

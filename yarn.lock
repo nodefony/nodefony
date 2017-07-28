@@ -2,12 +2,12 @@
 # yarn lockfile v1
 
 
-"@angular/cli@^1.2.5":
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-1.2.5.tgz#d73460a754a81b334421344841100c8665276a81"
+"@angular/cli@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-1.2.6.tgz#76ee20f72342d9b61e1a2554f567c99e67dcf14b"
   dependencies:
     "@ngtools/json-schema" "1.1.0"
-    "@ngtools/webpack" "1.5.4"
+    "@ngtools/webpack" "1.5.5"
     autoprefixer "^6.5.3"
     chalk "^2.0.1"
     circular-dependency-plugin "^3.0.0"
@@ -73,11 +73,10 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@ngtools/json-schema/-/json-schema-1.1.0.tgz#c3a0c544d62392acc2813a42c8a0dc6f58f86922"
 
-"@ngtools/webpack@1.5.4":
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-1.5.4.tgz#a281c95c07dba44c95c6a234d657880285af0ddd"
+"@ngtools/webpack@1.5.5":
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-1.5.5.tgz#d6e2a933184015653de3be33d38437fdd81009e7"
   dependencies:
-    enhanced-resolve "3.3.0"
     loader-utils "^1.0.2"
     magic-string "^0.22.3"
     source-map "^0.5.6"
@@ -2566,15 +2565,6 @@ end-of-stream@^1.0.0, end-of-stream@^1.1.0:
   resolved "https://registry.yarnpkg.com/end-of-stream/-/end-of-stream-1.4.0.tgz#7a90d833efda6cfa6eac0f4949dbb0fad3a63206"
   dependencies:
     once "^1.4.0"
-
-enhanced-resolve@3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-3.3.0.tgz#950964ecc7f0332a42321b673b38dc8ff15535b3"
-  dependencies:
-    graceful-fs "^4.1.2"
-    memory-fs "^0.4.0"
-    object-assign "^4.0.1"
-    tapable "^0.2.5"
 
 enhanced-resolve@^3.0.0:
   version "3.1.0"
