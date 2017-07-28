@@ -130,22 +130,26 @@ module.exports = nodefony.register("Bundle", function(){
 				this.parseConfig(result);
 			});
 
-			// WATCHERS
-			if ( this.kernel.environment === "dev" && this.settings.watch && this.kernel.type !== "CONSOLE" ){
-				this.initWatchers();
-			}
-
 			// WEBPACK SERVICE
 			this.webpackService = this.get("webpack");
 			this.webpackCompiler = null ;
-			if( this.kernel.type !== "CONSOLE" || ( process.argv[2] && process.argv[2] === "webpack:dump" ) ){
-				try {
-					this.findWebPackConfig();
-				}catch(e){
-					this.logger(e, "ERROR");
-					throw e;
+
+			this.kernel.on("onBoot", () =>{
+				// WATCHERS
+				if ( this.kernel.environment === "dev" && this.settings.watch && this.kernel.type !== "CONSOLE" ){
+					this.initWatchers();
 				}
-			}
+				// WEBPACK
+				if( this.kernel.type !== "CONSOLE" || ( process.argv[2] && process.argv[2] === "webpack:dump" ) ){
+					try {
+						this.findWebPackConfig();
+					}catch(e){
+						this.logger(e, "ERROR");
+						throw e;
+					}
+				}
+			})
+
 			this.fire( "onRegister", this);
 		}
 
@@ -190,6 +194,7 @@ module.exports = nodefony.register("Bundle", function(){
 				if ( views ){
 					this.watcherView = new nodefony.kernelWatcher( this.viewsPath, defaultWatcher.call(this, this.regTemplateExt), this);
 					this.watcherView.listenWatcherView();
+					this.watcherView.setSockjsServer( this.sockjs );
 					this.kernel.on("onTerminate", () => {
 						this.logger("Watching Ended : " + this.watcherView.path, "INFO");
 						this.watcherView.close();
@@ -199,6 +204,7 @@ module.exports = nodefony.register("Bundle", function(){
 				if ( i18n ){
 					this.watcherI18n = new nodefony.kernelWatcher( this.i18nPath, defaultWatcher.call(this, regI18nFile), this);
 					this.watcherI18n.listenWatcherI18n();
+					this.watcherI18n.setSockjsServer( this.sockjs );
 					this.kernel.on("onTerminate", () => {
 						this.logger("Watching Ended : " + this.watcherI18n.path, "INFO");
 						this.watcherI18n.close();

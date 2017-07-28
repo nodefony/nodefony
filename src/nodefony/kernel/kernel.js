@@ -680,9 +680,9 @@ module.exports = nodefony.register("kernel", function(){
 				if (result){
 					this.bundles.App.parseConfig(result);
 					this.bundles.App.configPath = path.resolve( this.bundles.App.path, "config");
-					if ( this.environment === "dev" && this.type !== "CONSOLE" ){
+					/*if ( this.environment === "dev" && this.type !== "CONSOLE" ){
 						this.bundles.App.initWatchers();
-					}
+					}*/
 				}
 			});
 			// OVERRIDE VIEWS BUNDLE in APP DIRECTORY

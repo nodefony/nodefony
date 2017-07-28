@@ -56,9 +56,9 @@ module.exports = nodefony.register("kernelWatcher", function(){
 					case "change" :
 						this.logger( Path, "INFO", event );
 						try {
-							var basename = path.basename(Path) ;
-							var res = this.bundle.regController.exec( basename );
-							var name = res[1] ;
+							let basename = path.basename(Path) ;
+							let res = this.bundle.regController.exec( basename );
+							let name = res[1] ;
 							var file = this.cwd + "/" + Path ;
 							this.bundle.reloadWatcherControleur( name, file);
 							if ( this.sockjs ){
@@ -107,12 +107,15 @@ module.exports = nodefony.register("kernelWatcher", function(){
 						this.logger( Path, "INFO", event );
 						var file = this.cwd + "/" + Path ;
 						try{
-							var fileClass = new nodefony.fileClass(file);
-							var ele = this.bundle.recompileTemplate(fileClass);
+							let fileClass = new nodefony.fileClass(file);
+							let ele = this.bundle.recompileTemplate(fileClass);
 							if ( ele.basename === "." ){
 								this.logger("RECOMPILE Template : '"+this.bundle.name+"Bundle:"+""+":"+ele.name + "'", "INFO", event);
 							}else{
 								this.logger("RECOMPILE Template : '"+this.bundle.name+"Bundle:"+ele.basename+":"+ele.name + "'", "INFO",event );
+							}
+							if ( this.sockjs ){
+								this.sockjs.sendWatcher( "change", file );
 							}
 						}catch(e){
 							this.logger(e, "ERROR", event);
@@ -133,7 +136,7 @@ module.exports = nodefony.register("kernelWatcher", function(){
 					case "unlink" :
 						this.logger( Path, "INFO", event );
 						var file = this.cwd + "/" + Path ;
-						var parse = path.parse(file)  ;
+						let parse = path.parse(file)  ;
 						if ( parse.ext === "."+this.bundle.serviceTemplate.extention ){
 							var name = parse.name ;
 							var directory = path.basename(parse.dir);
@@ -173,6 +176,9 @@ module.exports = nodefony.register("kernelWatcher", function(){
 							var domain = fileClass.match[1] ;
 							var Locale = fileClass.match[2] ;
 							this.bundle.translation.reader(fileClass.path, Locale, domain);
+							if ( this.sockjs ){
+								this.sockjs.sendWatcher( "change", file );
+							}
 						}catch(e){
 							this.logger(e, "ERROR", event);
 						}

@@ -1,6 +1,4 @@
-{% extends "/app/Resources/views/base.html.twig" %}
-
-
+{% extends "../layouts/layout.html.twig" %}
 
 {% block title %} WEB AUDIO API ( MIX ){% endblock %}
 
@@ -11,7 +9,6 @@
 	<!-- WEBPACK BUNDLE -->
 	<link rel='stylesheet' href='{{CDN("stylesheet")}}/demoBundle/assets/css/audio.css' />
 
-
 {% endblock %}
 
 {% block javascripts %}
@@ -20,7 +17,6 @@
 
 	<!-- WEBPACK BUNDLE -->
 	<script src='{{CDN("javascript")}}/demoBundle/assets/js/audio.js'></script>
-
 
 	<script type="text/javascript">
 		var kernel = new stage.appKernel(null, "dev", {

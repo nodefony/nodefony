@@ -1,4 +1,4 @@
 home:
   pattern:  /
   defaults:
-    controller: "AppBundle:default:index"
+    controller: "AppBundle:app:index"
