@@ -250,9 +250,8 @@ module.exports = nodefony.registerService("webpack", function(){
 			}
 			// WATCH
 			if ( config.watch === undefined ){
-				watch = bundle.settings.watch ;
+				watch = bundle.webpackWatch ;
 				config.watch = watch || false;
-				//config.watch = undefined ;
 			}else{
 				watch = config.watch ;
 			}

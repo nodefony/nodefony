@@ -259,7 +259,7 @@ module.exports = nodefony.register("kernel", function(){
 			var bundles = [];
 			bundles.push( path.resolve(this.nodefonyPath, "bundles", "httpBundle") );
 			bundles.push( path.resolve(this.nodefonyPath, "bundles", "frameworkBundle") );
-			bundles.push( path.resolve(this.nodefonyPath, "bundles", "asseticBundle") );
+			//bundles.push( path.resolve(this.nodefonyPath, "bundles", "asseticBundle") );
 
 			// FIREWALL
 			if (this.settings.system.security){

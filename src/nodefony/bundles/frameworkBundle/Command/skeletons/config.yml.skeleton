@@ -6,7 +6,7 @@
 #
 #  Copyright © {{ projectYear }}/{{ projectYearNow }}        {{authorName}} | {{authorEmail}}
 #
-# ===============================================================================
+#===============================================================================
 #
 #        GENERATE BY {{projectName}} BUILDER YAML FILE
 #
@@ -17,9 +17,6 @@
 # What It Is: YAML is a human friendly data serialization
 #   standard for all programming languages.
 #
-#
-#
-
 
 
 ########## {{projectName}} CONFIG BUNDLE  {{ bundleName }}  ############
@@ -40,12 +37,12 @@ locale      : {{ local }}
 #      watch:			true
 #    or
 #      watch:
-#        controller:		true
-#        config:                true		# only  routing.yml
-#        views:			true
-#        translations:          true
-#
-watch:				true
+#        controller     :	true
+#        config         : true		# only  routing.yml
+#        views          :	true
+#        translations   : true
+#        webpack        : true
+watch       : true
 
 
 #

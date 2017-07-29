@@ -81,8 +81,9 @@ module.exports = nodefony.register("Bundle", function(){
 			this.translation = this.get("translation");
 			this.reader = this.kernel.reader;
 
-			// assets
+			// webpack
 			this.webPackConfig = null ;
+			this.webpackWatch = false ;
 
 			// controllers
 			this.controllersPath = path.resolve( this.path, "controller") ;
@@ -157,28 +158,30 @@ module.exports = nodefony.register("Bundle", function(){
 			if ( ! this.settings.watch ){
 				return ;
 			}
-			var controllers = false ;
-			var views = false ;
-			var i18n = false ;
-			var config = false ;
+			let controllers = false ;
+			let views = false ;
+			let i18n = false ;
+			let config = false ;
+			let webpack = false ;
 			try {
 				switch ( typeof this.settings.watch   ){
 					case "object":
-						controllers = this.settings.watch.controllers ;
-						views = this.settings.watch.views ;
-						i18n = this.settings.watch.translations ;
-						config = this.settings.watch.config ;
+						controllers = this.settings.watch.controllers || false ;
+						views = this.settings.watch.views || false ;
+						i18n = this.settings.watch.translations || false ;
+						config = this.settings.watch.config || false ;
+						this.webpackWatch = this.settings.watch.webpack || false ;
 					break;
 					case "boolean":
-						controllers = this.settings.watch ;
-						views = this.settings.watch  ;
-						i18n = this.settings.watch  ;
-						config = this.settings.watch  ;
+						controllers = this.settings.watch || false ;
+						views = this.settings.watch  || false ;
+						i18n = this.settings.watch  || false ;
+						config = this.settings.watch || false ;
+						this.webpackWatch = this.settings.watch || false ;
 					break;
 					default:
-                        this.logger("BAD CONFIG WATCHER  " ,"WARNING");
-                        return ;
-						//throw new Error ("Bad Config watcher ");
+          	this.logger("BAD CONFIG WATCHER  " ,"WARNING");
+            return ;
 				}
 				// controllers
 				if ( controllers ){

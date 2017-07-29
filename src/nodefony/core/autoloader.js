@@ -5,7 +5,7 @@ const Module = require("module");
 module.exports = function(){
 
 	// Create Context copy library in context  see load runInThisContext
-	const context = vm.createContext(this)
+	const context = vm.createContext(this);
 	context.nodefony = require("./core");
 	context.require = require;
 	context.module = module ;
@@ -13,7 +13,7 @@ module.exports = function(){
 	context.__dirname = __dirname ;
 	context.__filename = __filename ;
 
-  	context.path = require("path");
+  context.path = require("path");
 	context.fs = require("fs")
 	context.yaml = require("js-yaml");
 	context.util = require('util');
@@ -52,10 +52,9 @@ module.exports = function(){
 			this.lineOffset = 10 ;
 			this.columnOffset = 10 ;
 			this.dirname = path.resolve(  __dirname, ".." );
-			//this.load( path.resolve( this.dirname, "core", "core.js") );
 			this.load( path.resolve( this.dirname, "core", "container.js") );
 			this.load( path.resolve( this.dirname, "core", "notificationsCenter.js") );
-			this.load( path.resolve( this.dirname, "core", "../syslog/syslog.js") );
+			this.load( path.resolve( this.dirname, "core", "syslog.js") );
 			this.load( path.resolve( this.dirname, "core", "service.js") );
 			this.load( path.resolve( this.dirname, "core", "fileClass.js") );
 			this.load( path.resolve( this.dirname, "core", "finder.js") );
@@ -64,13 +63,13 @@ module.exports = function(){
 			this.load( path.resolve( this.dirname, "core", "protocol.js") );
 			this.load( path.resolve( this.dirname, "core", "watcher.js") );
 			this.load( path.resolve( this.dirname, "core", "cli.js") );
+			this.loadDirectory( path.resolve( this.dirname, "core", "protocols"), /^tests$/ );
 			this.loadDirectory( path.resolve( this.dirname, "kernel"), /^tests$/ );
 			try {
 				this.load( path.resolve( this.dirname, "..", "..","..", "..", "app", "appKernel.js") )
 			}catch(e){
 				this.load( path.resolve( this.dirname,  "app", "appKernel.js") );
 			}
-			//this.load( path.resolve( this.dirname, "console", "console.js") );
 			this.syslog = null;
 			this.setEnv();
 		}
@@ -103,7 +102,7 @@ module.exports = function(){
 		/**
  	 	* @method load
 	 	*
-	 	* @param {String} file Path to file
+	 	* @param {String} file Path to load
 	 	*
  	 	*/
 		load (file, force){
