@@ -99,7 +99,7 @@ module.exports = nodefony.register("kernel", function(){
 			this.nodefonyPath = this.autoLoader.dirname;
 			//core repository
 			try {
-				this.isCore = new nodefony.fileClass(path.resolve(this.rootDir + "/.core") );
+				this.isCore = new nodefony.fileClass(path.resolve(this.rootDir , ".core") );
 			}catch(e){
 				this.isCore = false ;
 			}
