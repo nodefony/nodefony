@@ -5,17 +5,17 @@ const npm = require("npm");
 
 module.exports = nodefony.register("cliKernel", function(){
 
-	var createFile = function (Path, skeleton, parse, params, callback){
+	var createFile = function (myPath, skeleton, parse, params, callback){
 		if ( skeleton ){
 			buildSkeleton.call(this, skeleton, parse, params,(error, result) => {
 				if (error){
 					this.logger(error, "ERROR");
 				}else{
 					try {
-						fs.writeFileSync(Path, result,{
+						fs.writeFileSync(myPath, result,{
 							mode:"777"
 						});
-						callback( new nodefony.fileClass(Path) );
+						callback( new nodefony.fileClass(myPath) );
 					}catch(e){
 						throw e	;
 					}
@@ -24,10 +24,10 @@ module.exports = nodefony.register("cliKernel", function(){
 		}else{
 			var data = "/* generate by nodefony */";
 			try {
-				fs.writeFileSync(Path, data,{
+				fs.writeFileSync(myPath, data,{
 					mode:"777"
 				});
-				callback( new nodefony.fileClass(Path) );
+				callback( new nodefony.fileClass(myPath) );
 			}catch(e){
 				throw e	;
 			}
@@ -56,18 +56,18 @@ module.exports = nodefony.register("cliKernel", function(){
 		return skelete;
 	};
 
-	var createAssetDirectory = function (Path, callback){
-		this.logger("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : "+ Path);
+	var createAssetDirectory = function (myPath, callback){
+		this.logger("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : "+ myPath);
 		try {
-			if ( fs.existsSync(Path) ){
-				return callback( fs.statSync(Path) );
+			if ( fs.existsSync(myPath) ){
+				return callback( fs.statSync(myPath) );
 			}
-			throw new Error( Path +" don' exist") ;
+			throw new Error( myPath +" don' exist") ;
 		}catch(e){
-			this.logger("Create directory : "+ Path);
-			fs.mkdir(Path, (e) => {
+			this.logger("Create directory : "+ myPath);
+			fs.mkdir(myPath, (e) => {
     				if(!e || (e && e.code === 'EEXIST')){
-        				callback( fs.statSync(Path) );
+        				callback( fs.statSync(myPath) );
     				} else {
         				this.logger(e,"ERROR");
     				}
@@ -386,9 +386,9 @@ module.exports = nodefony.register("cliKernel", function(){
 	  		var i, totalSizeBytes= 0;
 	  		var dirSize = null ;
 	  		for (i=0; i<files.length; i++) {
-	  			var Path = dir+"/"+files[i] ;
+	  			let myPath = dir+"/"+files[i] ;
 	  			try {
-	  				stat = fs.lstatSync(Path);
+	  				stat = fs.lstatSync(myPath);
 	  			}catch(e){
 	  				return 	totalSizeBytes ;
 	  			}
@@ -399,12 +399,12 @@ module.exports = nodefony.register("cliKernel", function(){
 	  					}
 	  				break;
 	  				case stat.isDirectory() :
-	  					dirSize = this.getSizeDirectory(Path, exclude);
+	  					dirSize = this.getSizeDirectory(myPath, exclude);
 	  					totalSizeBytes += dirSize;
 	  				break;
 	  				case stat.isSymbolicLink() :
 	  					//console.log("isSymbolicLink")
-	  					dirSize = this.getSizeDirectory(fs.realpathSync(Path), exclude);
+	  					dirSize = this.getSizeDirectory(fs.realpathSync(myPath), exclude);
 	  					totalSizeBytes += dirSize;
 	  				break;
 	  			}
@@ -438,17 +438,17 @@ module.exports = nodefony.register("cliKernel", function(){
 	  		}
 	  	}
 
-	    createDirectory (Path, mode, callback, force){
+	    createDirectory (myPath, mode, callback, force){
 	  		try {
-	  			fs.mkdirSync(Path, mode);
-	  			var file = new nodefony.fileClass(Path);
+	  			fs.mkdirSync(myPath, mode);
+	  			var file = new nodefony.fileClass(myPath);
 	  			callback( file );
 	  			return file ;
 	  		}catch(e){
 	  			switch ( e.code ){
 	  				case "EEXIST" :
 	  					if ( force ){
-	  						var file = new nodefony.fileClass(Path);
+	  						var file = new nodefony.fileClass(myPath);
 	  						callback( file );
 	  						return file ;
 	  					}
@@ -458,24 +458,24 @@ module.exports = nodefony.register("cliKernel", function(){
 	  		}
 	  	}
 
-		existsSync(Path, mode){
-			if ( ! Path ){
+		existsSync(myPath, mode){
+			if ( ! myPath ){
 				throw new Error ("existsSync no path found");
 			}
 			if ( ! mode ){
 				mode = fs.constants.R_OK | fs.constants.W_OK ;
 			}
-			return fs.accessSync(Path, mode);
+			return fs.accessSync(myPath, mode);
 		}
 
-		exists(Path, mode, callback){
-			if ( ! Path ){
+		exists(myPath, mode, callback){
+			if ( ! myPath ){
 				throw new Error ("exists no path found");
 			}
 			if ( ! mode ){
 				mode = fs.constants.R_OK | fs.constants.W_OK ;
 			}
-			return fs.access(Path, mode, callback);
+			return fs.access(myPath, mode, callback);
 		}
 
 	    spawn (command , args, options, close){
@@ -531,11 +531,11 @@ module.exports = nodefony.register("cliKernel", function(){
 	  		return cmd ;
 	  	}
 
-		listPackage(Path){
+		listPackage(myPath){
 			let tab = [] ;
 			let mypromise = null ;
 			try {
-				mypromise = this.npmList(Path, tab) ;
+				mypromise = this.npmList(myPath, tab) ;
 			}catch(e){
 				throw e ;
 			}
@@ -563,20 +563,20 @@ module.exports = nodefony.register("cliKernel", function(){
 			});
 		}
 
-		npmList (Path, ele){
+		npmList (myPath, ele){
 			return new Promise ((resolve, reject) =>{
 					try {
-				  		shell.cd(Path);
+				  		shell.cd(myPath);
 					}catch(e){
 						reject(e);
 					}
 					let conf = null ;
 					let config = null ;
 					try {
-						config = path.resolve( Path , "package.json");
+						config = path.resolve( myPath , "package.json");
 						conf  = require(config);
 					}catch(e){
-						this.logger("NPM NODEFONY PACKAGES package.json not find in : "+ Path ,"INFO");
+						this.logger("NPM NODEFONY PACKAGES package.json not find in : "+ myPath ,"INFO");
 						shell.cd(this.kernel.rootDir);
 						return resolve(ele) ;
 					}
@@ -586,9 +586,9 @@ module.exports = nodefony.register("cliKernel", function(){
 							shell.cd(this.kernel.rootDir);
 							return reject(error)
 						}
-						event.config.localPrefix = Path;
+						event.config.localPrefix = myPath;
 						event.config.globalPrefix = this.rootDir ;
-						event.localPrefix = Path ;
+						event.localPrefix = myPath ;
 						event.globalPrefix = this.rootDir ;
 						npm.commands.ls([], true, (error, data) => {
 							if (error){
