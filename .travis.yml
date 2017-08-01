@@ -27,6 +27,7 @@ before_script:
 
 before_install:
   - sudo apt-get install nginx -y
+  - sudo apt-get install nodejs-legacy
   - mysql -e "create database IF NOT EXISTS nodefony;" -uroot
   - mysql -e "GRANT ALL ON nodefony.* TO 'travis'@'localhost';"
   - "curl -L https://raw.githubusercontent.com/nodefony/nodefony-core/dev/.travis/bin/install.sh | /bin/sh"
