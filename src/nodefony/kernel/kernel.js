@@ -1,5 +1,6 @@
 
 const nodefony_version = require( path.join ("..", "..", "..", "package.json") ).version;
+const os = require('os');
 
 module.exports = nodefony.register("kernel", function(){
 
@@ -22,7 +23,7 @@ module.exports = nodefony.register("kernel", function(){
 							setTimeout(()=>{
 								global.gc();
 								this.memoryUsage("EXPOSE GARBADGE COLLECTOR ON START") ;
-							},5000);
+							},20000);
 						}else{
 							this.memoryUsage("MEMORY POST READY ");
 						}
@@ -78,6 +79,8 @@ module.exports = nodefony.register("kernel", function(){
 			this.set("autoLoader",this.autoLoader);
 			this.version = nodefony_version ;
 			this.platform = process.platform ;
+			this.uptime = new Date().getTime();
+			this.numberCpu = os.cpus().length ;
 			this.type = type;
 			this.debug = debug || false;
 			this.booted = false;
@@ -804,7 +807,8 @@ module.exports = nodefony.register("kernel", function(){
 		}
 
 		memoryUsage (message){
-			let memory =  process.memoryUsage() ;
+			//let memory =  process.memoryUsage() ;
+			let memory = this.stats().memory
 			for ( var ele in memory ){
 				switch (ele ){
 					case "rss" :
@@ -821,6 +825,19 @@ module.exports = nodefony.register("kernel", function(){
 					break;
 				}
 			}
+		}
+
+		stats(){
+			let stat = {
+				memory:{}
+				//cpu:process.cpuUsage()
+			}
+
+			let memory = process.memoryUsage();
+			for ( let ele in memory ){
+				stat.memory[ele] =  memory[ele] ;
+			}
+			return stat ;
 		}
 
 		/**

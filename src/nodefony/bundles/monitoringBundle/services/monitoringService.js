@@ -1,10 +1,23 @@
 
-var net = require('net');
-var pm2 = require('pm2');
-
+const net = require('net');
+const pm2 = require('pm2');
+const os = require('os');
 
 module.exports = nodefony.registerService("monitoring", function(){
 
+	let _totalCpuTime = function (cpu) {
+	  // millis
+	  if (!cpu || !cpu.times) return 0;
+	  const { user, nice, sys, idle, irq } = cpu.times;
+
+	  return user + nice + sys + idle + irq;
+	}
+
+	let totalCpusTime = function(cpus) {
+		if (cpus){
+	  		return cpus.map(_totalCpuTime).reduce((a, b) => a + b, 0);
+		}
+	}
 
 	var connection = class connection  {
 
@@ -35,6 +48,7 @@ module.exports = nodefony.registerService("monitoring", function(){
 			this.port = 1318;
 			this.server = null;
 			this.syslog = kernel.syslog ;
+			this.node_start = this.kernel.node_start;
 
 			this.listen(this, "onReady" ,() => {
                                 this.name = this.container.getParameters("bundles.App.App.projectName") || "nodefony" ;
@@ -69,6 +83,7 @@ module.exports = nodefony.registerService("monitoring", function(){
 				this.logger("CONNECT TO SERVICE MONITORING FROM : "+socket.remoteAddress, "INFO");
 
 				var closed = false ;
+				var interval = null ;
 				var conn = new connection(socket);
 				this.connections.push(conn) ;
 				this.connections[conn.id] = this.connections[this.connections.length-1];
@@ -87,57 +102,76 @@ module.exports = nodefony.registerService("monitoring", function(){
 					conn.write(JSON.stringify(ele));
 				};
 
-				/*this.connections[conn.id]["listener"]  = this.syslog.listenWithConditions(this,{
-					severity:{
-						data:"INFO"
-					}
-				},callback);*/
-
-				pm2.connect( () => {
-					this.logger("CONNECT PM2 REALTIME MONITORING", "DEBUG");
-				});
-
-				// PM2 REALTIME
-				var pm2Interval = setInterval( () => {
-					pm2.describe(this.name, (err, list) => {
-						var clusters = {
-							pm2:[],
-							name:this.name
-						}
-						if ( list ){
-							for ( var i = 0 ; i <  list.length ; i++){
-								clusters.pm2.push({
-									monit:list[i].monit,
-									name:list[i].name,
-									pid:list[i].pid,
-									pm_id:list[i].pm_id,
-									pm2_env:{
-										exec_mode:list[i]["pm2_env"].exec_mode,
-										restart_time:list[i]["pm2_env"].restart_time,
-										pm_uptime:list[i]["pm2_env"].pm_uptime,
-										status:list[i]["pm2_env"].status
+				switch ( this.node_start ){
+					case "PM2" :
+						pm2.connect( () => {
+							this.logger("CONNECT PM2 REALTIME MONITORING", "DEBUG");
+							// PM2 REALTIME
+							interval = setInterval( () => {
+								pm2.describe(this.name, (err, list) => {
+									var clusters = {
+										pm2:[],
+										name:this.name
 									}
+									if ( list ){
+										for ( var i = 0 ; i <  list.length ; i++){
+											clusters.pm2.push({
+												monit:list[i].monit,
+												name:list[i].name,
+												pid:list[i].pid,
+												pm_id:list[i].pm_id,
+												pm2_env:{
+													exec_mode:list[i]["pm2_env"].exec_mode,
+													restart_time:list[i]["pm2_env"].restart_time,
+													pm_uptime:list[i]["pm2_env"].pm_uptime,
+													status:list[i]["pm2_env"].status
+												}
+											});
+										}
+									}
+									if (closed || this.stopped ){
+										clearInterval( interval );
+										return ;
+									}
+									conn.write(JSON.stringify(clusters));
 								});
+							}, 1000);
+						});
+					break;
+					case "NODEFONY_DEV":
+						let cpuUsage = null ;
+						let cpus = null ;
+						interval = setInterval( () => {
+							let stats = this.kernel.stats();
+							let cpu =  this.getCpuUsage(cpuUsage , cpus);
+							cpuUsage = cpu.cpuUsage ;
+							cpus = cpu.cpus ;
+							var clusters = {
+								pm2:[],
+								name:this.name
 							}
-						}
-						if (closed || this.stopped ){
-							clearInterval( pm2Interval );
-							return ;
-						}
-						conn.write(JSON.stringify(clusters));
-					});
-
-				}, 1000);
-
-				//SESSIONS  INTERVAL
-					//CONTEXT
-
-
-				//REQUESTS  INTERVAL
-
-					//WEBSOCKET OPEN
-					//WEBSOCKET CLOSE
-					//HTTP
+							let ele = {
+								monit:{
+									memory: stats.memory.rss,
+									cpu: cpu.percent
+								},
+								name:this.name,
+								pid:this.kernel.processId,
+								pm_id:"",
+								pm2_env:{
+									exec_mode:"development",
+									restart_time:0,
+									pm_uptime:this.kernel.uptime,
+									status:"online"
+								}
+							}
+							clusters.pm2.push(ele);
+							conn.write(JSON.stringify(clusters));
+						}, 1000 );
+					break;
+					case "NODEFONY":
+					break;
+				}
 
 				socket.on('end',() => {
 					closed = true ;
@@ -145,7 +179,7 @@ module.exports = nodefony.registerService("monitoring", function(){
 						if (this.connections && this.connections[conn.id] && this.connections[conn.id]["listener"] )
 							this.syslog.unListen("onLog", this.connections[conn.id]["listener"]);
 					}
-					clearInterval( pm2Interval );
+					clearInterval( interval );
 					this.logger("CLOSE CONNECTION TO SERVICE MONITORING FROM : "+socket.remoteAddress + " ID :" +conn.id, "INFO");
 					socket.end();
 					delete this.connections[conn.id];
@@ -158,7 +192,6 @@ module.exports = nodefony.registerService("monitoring", function(){
 						this.logger("message :" + buffer.toString() + " error : "+e.message,"ERROR")
 					}
 				});
-
 			});
 
 			/*
@@ -200,6 +233,33 @@ module.exports = nodefony.registerService("monitoring", function(){
 				this.stopServer();
 			})
 		};
+
+		getCpuUsage(startUsage, cpus){
+		  //let now = Date.now()
+		  //while (Date.now() - now < 500);
+
+		  let elapUsage = null ;
+		  if (! startUsage ){
+			  elapUsage = process.cpuUsage();
+		  }else{
+			  elapUsage = process.cpuUsage(startUsage);
+		  }
+
+		  let newCpus = os.cpus();
+		  let newStartUsage = process.cpuUsage();
+
+		  let elapCpuTimeMs = totalCpusTime(newCpus) - totalCpusTime(cpus || newCpus );
+
+		  let elapUserMS = elapUsage.user / 1000; // microseconds to milliseconds
+		  let elapSystMS = elapUsage.system / 1000;
+		  let cpuPercent = (100 * (elapUserMS + elapSystMS) / elapCpuTimeMs).toFixed(1) ;
+
+		  return {
+			  percent:cpuPercent,
+			  cpuUsage:newStartUsage,
+			  cpus:newCpus
+		  } ;
+		}
 
 		stopServer (){
 			this.stopped = true ;

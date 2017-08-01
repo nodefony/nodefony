@@ -822,19 +822,54 @@ module.exports = nodefony.registerController("api", function(){
 		}
 
 		pm2Action (action){
-			var pm2 = require("pm2");
-			var name = this.getParameters("bundles.App.App.projectName") || "nodefony" ;
-			pm2.connect(true, () =>  {
-				this.logger("CONNECT PM2", "DEBUG")
-				pm2.describe(name, (err, list) => {
-					this.renderRest({
+			switch ( this.kernel.node_start){
+				case "PM2" :
+					var pm2 = require("pm2");
+					var name = this.getParameters("bundles.App.App.projectName") || "nodefony" ;
+					pm2.connect(true, () =>  {
+						this.logger("CONNECT PM2", "DEBUG")
+						pm2.describe(name, (err, list) => {
+							this.renderRest({
+								code:200,
+								type:"SUCCESS",
+								message:"OK",
+								data:JSON.stringify(list)
+							}, true);
+						});
+					});
+				break ;
+				case "NODEFONY_DEV" :
+					let monitoring = this.get("monitoring");
+					let ele = {
+						monit:{
+							memory: 0,
+							cpu: 0
+						},
+						name: monitoring.name,
+						pid: this.kernel.processId,
+						pm_id:"",
+						pm2_env:{
+							exec_mode:"development",
+							restart_time:0,
+							pm_uptime:this.kernel.uptime,
+							status:"online"
+						}
+					}
+					return this.renderRest({
 						code:200,
 						type:"SUCCESS",
 						message:"OK",
-						data:JSON.stringify(list)
+						data:JSON.stringify([ele])
 					}, true);
-				});
-			});
+				break ;
+				default:
+					return this.renderRest({
+						code:200,
+						type:"SUCCESS",
+						message:"OK",
+						data:JSON.stringify([])
+					}, true);
+			}
 		}
 
 		securityAction (action){

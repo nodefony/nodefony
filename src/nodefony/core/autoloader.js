@@ -66,9 +66,9 @@ module.exports = function(){
 			this.loadDirectory( path.resolve( this.dirname, "core", "protocols"), /^tests$/ );
 			this.loadDirectory( path.resolve( this.dirname, "kernel"), /^tests$/ );
 			try {
-				this.load( path.resolve( this.dirname, "..", "..","..", "..", "app", "appKernel.js") )
+				this.load( path.resolve( this.dirname, "..", "..","..", "..", "app", "appKernel.js") );
 			}catch(e){
-				this.load( path.resolve( this.dirname,  "app", "appKernel.js") );
+				this.load( path.resolve( this.dirname, "..", "..", "app", "appKernel.js") );
 			}
 			this.syslog = null;
 			this.setEnv();
