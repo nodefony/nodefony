@@ -5,19 +5,26 @@
 	<h1><strong>NODEFONY CONFIGURATION</strong> </h1>
 	<h2>Differents Nodefony configurations Files </h2>
 	<div class="doc2" >
-		Nodefony manage differents config files that you can find throughout your development. 
+		Nodefony manage differents config files that you can find throughout your development.
 	</div>
 
 	<h3> Global Configuration  : <code>config.yml</code> </h3>
 	<h3> Routing Configuration  : <code>routing.yml</code> </h3>
 	<h3> Services Configuration  : <code>services.xml</code> </h3>
 	<h3> Firewall Configuration  : <code>security.yml</code> </h3>
+	<h3> Webpack Configuration  :</h3>
+	<h3>
+		<ul>
+			<li><code>webpack/webpack.common.js</code> </li>
+			<li><code>webpack/webpack.dev.config.js</code> </li>
+			<li><code>webpack/webpack.prod.config.js </code></li>
+		</ul>
+	</h3>
 
-
-	
+	</br>
 
 	<div class="doc3">
-			
+
 		<div class="alert alert-danger" role="alert">
 			<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 			<span class="sr-only">Error:</span>
@@ -31,21 +38,22 @@
 			<pre>
 #
 #  WATCHERS
-#    
-#    watchers Listen to changes, deletion, renaming of files and directories 
-#    of different components
-#       
-#    For watch all components 
-# 
-#      watch:			true
-#    or 
-#      watch:
-#        controller:		true
-#        config:                true   	# only  routing.yml
-#        views:			true
-#        translations:          true
 #
-watch:				true
+#    watchers Listen to changes, deletion, renaming of files and directories
+#    of different components
+#
+#    For watch all components
+#
+#      watch			: true
+#    or
+#      watch:
+#        controller		: true
+#        config			: true   	# only  routing.yml
+#        views			: true
+#        translations   : true
+#        webpack		: true
+#
+watch					: true
 			</pre>
 		</div>
 
@@ -56,14 +64,14 @@ watch:				true
 	<a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle, queryString:{'subsection':'bundle'} })}}"> <button type="button" class="btn btn-primary">Bundles Configuration</button></a>
 
 </div>
-		
+
 	<h2> Global Configuration  : <code>config.yml</code> </h2>
 
 	<div class="doc2">
 		<p>
-			This file manage the global paramaters of an entity :  <br> 
+			This file manage the global paramaters of an entity :  <br>
 
-			<ul> 
+			<ul>
 				<li>config.yml in root path manage framework configuration <code>./config/config.yml</code></li>
 				<li>config.yml in app bundle manage Application configuration <code>./app/config/config.yml</code> </li>
 				<li>config.yml in bundles manage bundle configuration <code>./src/bundles/demoBundle/Ressources/config/config.yml</code></li>
@@ -71,26 +79,26 @@ watch:				true
 		</p>
 		<h4>How to use this parameters : </h4>
 		<div class="doc4">
-			There are different ways to access these configuration variables 
-			<ul> 
+			There are different ways to access these configuration variables
+			<ul>
 				</li>
 				<li>In controller By Kernel Service Container <code> this.getParameters("bundles.App") </code>
 				<pre>
 nodefony.registerController("default", function(){
-		
-	var defaultController = class defaultController extends nodefony.controller {
+
+	let defaultController = class defaultController extends nodefony.controller {
 
 		constructor(container, context){
 			super(container, context);
 		};
-		
+
 		indexAction (version){
 			// GET config bundle App
-			<strong> var bundleAppSettings = this.getParameters("bundles.App") ;</strong>
-			//// GET config bundle http
-			<strong> var bundleHttpSettings = this.getParameters("bundles.http") ;</strong>
-			
-			return this.renderJson(bundleAppSettings);		
+			<strong> let bundleAppSettings = this.getParameters("bundles.App") ;</strong>
+			// GET config bundle http
+			<strong> let bundleHttpSettings = this.getParameters("bundles.http") ;</strong>
+
+			return this.renderJson(bundleAppSettings);
 		};
 	};
 
@@ -98,41 +106,39 @@ nodefony.registerController("default", function(){
 });
 				</pre>
 				</li>
-				<li>In Kernel you can find  <code> this.settings </code> with framework configuration 
+				<li>In Kernel you can find  <code> this.settings </code> with framework configuration
 				<pre>
 
 indexAction (version){
 	// GET kernel service and get config
-	var kernelGlobalSettings = this.get("kernel").settings ;
-	
-	return this.renderJson(kernelGlobalSettings);		
+	<strong>let kernelGlobalSettings = this.kernel.settings ;</strong>
+
+	return this.renderJson(kernelGlobalSettings);
 };
 				</pre>
 				</li>
-				<li>In Bundle you can find <code> this.settings </code> with bundle configuration  
+				<li>In Bundle you can find <code> this.settings </code> with bundle configuration
 				<pre>
 indexAction (version){
 	// GET kernel service , get demo bundle  config
-	var demoBundleGlobalSettings = this.get("kernel").getBundle("demo").settings ;
-	
-	return this.renderJson(demoBundleGlobalSettings);		
+	<strong>let demoBundleGlobalSettings = this.kernel.getBundle("demo").settings ;</strong>
+
+	return this.renderJson(demoBundleGlobalSettings);
 };
 
 				</pre>
-				<li>Everywhere you can find global variables by Kernel Service Container  
+				<li>Everywhere you can find config variables by Kernel Service Container
 					<pre>
 nodefony.registerService("myService", function(){
 
-	var myService = class myService {
+	let myService = class myService extends nodefony.Service {
 
-		constructor (kernel, container)
-			this.kernel = kernel ;
-			this.container = container ;
-			this.name = "myService";
+		constructor (kernel)
+			super("myService", kernel.container, kernel.notificationsCenter );
 		};
 
 		myFunction (){
-			<strong>var kernelGlobalSettings = this.container.getParameters("kernel") ;</strong>
+			<strong>let kernelSettings = this.kernel.settings ;</strong>
 		};
 	};
 
@@ -143,19 +149,16 @@ nodefony.registerService("myService", function(){
 			</ul>
 		</div>
 	</div>
-	
-	
-<h2> Routing Configuration  :  <code>routing.yml</code>   
-	<a href="{{ path('documentation-section',{section:'routing', version:'Default', bundle:'framework' })}}"> <button type="button" class="btn btn-primary">Routing</button></a>
 
+<h2> Routing Configuration  :  <code>routing.yml</code>
+	<a href="{{ path('documentation-section',{section:'routing', version:'Default', bundle:'framework' })}}"> <button type="button" class="btn btn-primary">Routing</button></a>
 </h2>
 <h2> Security Configuration  :  <code>security.yml</code>
 	<a href="{{ path('documentation-section',{section:'configuration', version:'Default', bundle:'security' })}}"> <button type="button" class="btn btn-primary">Firewall</button></a>
-	
-</h2> 
-
+</h2>
 <h2> Service Configuration  :  <code>service.xml</code>
 	<a href="{{ path('documentation-section',{section:'service', version:version, bundle:bundle })}}"> <button type="button" class="btn btn-primary">Services</button></a>
-	
-</h2> 
-
+</h2>
+<h2> Webpack Configurations  :  <code>webpack/...</code>
+	<a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:'nodefony' ,queryString:{'subsection':'webpack' } })}}"> <button type="button" class="btn btn-primary">Webpack</button></a>
+</h2>

@@ -200,6 +200,7 @@ CLI Generate new bundle :    generate:bundle nameBundle path
 
 ```bash
 $ ./nodefony generate:bundle helloBundle src/bundles
+
 Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : GENERATE bundle : helloBundle LOCATION : /Users/cci/repository/nodefony/src/bundles
 Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :helloBundle
 Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :Command

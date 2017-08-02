@@ -36,7 +36,7 @@
 
 
 
-<h2 name="system">Clone sources from github :</h2> 
+<h2 name="system">Clone sources from github :</h2>
 <div class="doc2">
 	<pre>
 $ git clone https://github.com/nodefony/nodefony.git
@@ -48,18 +48,17 @@ $ cd nodefony
 <h2 name="system">Build Nodefony Sources :</h2>
 <div class="doc2">
 <p>
-	This part consist to call differents targets of Makefile <a href="{{ path('documentation-section',{section:'installation', version:version, bundle:bundle,queryString:{'subsection':'makefile'} })}}">(see Makefile documentation) </a><br> 
+	This part consist to call differents targets of Makefile <a href="{{ path('documentation-section',{section:'installation', version:version, bundle:bundle,queryString:{'subsection':'makefile'} })}}">(see Makefile documentation) </a><br>
 
 	This tagets do multiple tasks as : <br>
-	<ul>	
+	<ul>
 		<li> Create some framework directories </li>
 		<li> Install Framework dependences  of NPM package manager ( see package.json )</li>
 		<li> Install Bundles dependences of NPM package manager ( see package.json in bundle directory )</li>
-		<li> Create Assets link in public directory </li>
 		<li> Create Nodefony Database (manage sessions, monotoring ,users)</li>
-	</ul>	
+	</ul>
 
-</p>	 
+</p>
 
 <pre>
 
@@ -68,11 +67,25 @@ $ make build
 </pre>
 
 <p>
-	<strong>Console when you build nodefony framework :  </strong>	
+	<strong>Console when you build nodefony framework :  </strong>
 </p>
 <pre style="height:500px">
 ###########  CREATE FRAMEWORK REPOSITORY ###########
 
+make certificates ;
+NODEFONY   PLATFORM : Darwin   NODE VERSION : v8.2.1
+#########################################
+#         NODEFONY CERTIFICATES         #
+#########################################
+
+...
+./config/certificates/ca_intermediate/certs/server.nodefony.cert.pem: OK
+./config/certificates/ca_intermediate/certs/client.nodefony.cert.pem: OK
+Modulus=BA1D80A4F4DE53A526891654218A57121E9EF6655B6EC0999247D909F3C532C96F10B68795D5005C05B1BA07CB057E8BA2A9B9F74A10A1235E4005062BA75EC78F8A2789585D4F45082717F29A0E8790BB317ADEE2F4C0CB167027ED76284A71C24A662CA4197FFAE576E19E8894A7E85C8D77EDEAFF2B74744F16E33C8B72CBCA4C40D3FBC90E1E5218678BD86DEE4ED75E518E845B84D2F5F853EC51829DE0BDCBCD45369716B84224B554F30078E23702FF9B982280A351FC210E72667FB9D3BFC3E25B16CF2635B61B063F2AE953FDEAFB5D229CFA27DE03EE136D87C29282FA8B712EF376A527CE7B2484FC8D702E60B5AEA73096B15BDAC25C923EDD2D
+Modulus=BA1D80A4F4DE53A526891654218A57121E9EF6655B6EC0999247D909F3C532C96F10B68795D5005C05B1BA07CB057E8BA2A9B9F74A10A1235E4005062BA75EC78F8A2789585D4F45082717F29A0E8790BB317ADEE2F4C0CB167027ED76284A71C24A662CA4197FFAE576E19E8894A7E85C8D77EDEAFF2B74744F16E33C8B72CBCA4C40D3FBC90E1E5218678BD86DEE4ED75E518E845B84D2F5F853EC51829DE0BDCBCD45369716B84224B554F30078E23702FF9B982280A351FC210E72667FB9D3BFC3E25B16CF2635B61B063F2AE953FDEAFB5D229CFA27DE03EE136D87C29282FA8B712EF376A527CE7B2484FC8D702E60B5AEA73096B15BDAC25C923EDD2D
+Modulus=BA1D80A4F4DE53A526891654218A57121E9EF6655B6EC0999247D909F3C532C96F10B68795D5005C05B1BA07CB057E8BA2A9B9F74A10A1235E4005062BA75EC78F8A2789585D4F45082717F29A0E8790BB317ADEE2F4C0CB167027ED76284A71C24A662CA4197FFAE576E19E8894A7E85C8D77EDEAFF2B74744F16E33C8B72CBCA4C40D3FBC90E1E5218678BD86DEE4ED75E518E845B84D2F5F853EC51829DE0BDCBCD45369716B84224B554F30078E23702FF9B982280A351FC210E72667FB9D3BFC3E25B16CF2635B61B063F2AE953FDEAFB5D229CFA27DE03EE136D87C29282FA8B712EF376A527CE7B2484FC8D702E60B5AEA73096B15BDAC25C923EDD2D
+
+make npm ;
 #####################################################
 #         NODE.JS  INSTALLATION			    #
 #####################################################
@@ -82,261 +95,108 @@ npm install
 ⸨░░░░░░░░░░░░░░░░░░⸩ ...
 
 
+
 #########################################
 #       NODEFONY INSTALL BUNDLES        #
 #########################################
 
-./console npm:install
-              _   _    ___    ____    _____   _____    ___    _   _  __   __
-             | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
-             |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V / 
-             | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |  
-             |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|  
-                                                                            
+ ./nodefony npm:install
 
-		      NODEFONY CONSOLE CLUSTER MASTER Version : 2.0.2-beta PLATFORM : darwin  PROCESS PID : 46917
+               _   _    ___    ____    _____   _____    ___    _   _  __   __
+              | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
+              |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
+              | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |
+              |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|
 
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE http dependence : memcached@2.2.2
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE http dependence : qs@6.3.0
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE assetic dependence : less@2.7.1
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE assetic dependence : uglify-js@2.7.4
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE assetic dependence : uglifycss@0.0.25
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE security dependence : passport@0.3.2
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE security dependence : passport-http@0.3.0
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE security dependence : passport-local@1.0.0
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE security dependence : passport-nodefony@2.0.2
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE security dependence : passport-google-oauth@1.0.0
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE security dependence : passport-github2@0.1.10
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE security dependence : passport-ldapauth@0.6.0
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE monitoring dependence : request@2.79.0
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE monitoring dependence : useragent@2.1.9
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE sequelize dependence : sequelize@3.28.0
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE documentation dependence : cheerio@0.22.0
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE documentation dependence : elasticsearch@12.1.0
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE unitTest dependence : mocha@3.2.0
-Fri Dec 23 2016 16:57:53 INFO CONSOLE   : INSTALL BUNDLE unitTest dependence : tunnel@0.0.4
+
+ 		      Version : 3.0.0-beta Platform : darwin Process : nodefony PID : 85919
+
+
+ 			NODEFONY CONSOLE Cluster : master Environment : prod Debug :false
+
+Wed Aug 02 2017 09:48:56 INFO SERVICE CLI KERNEL  : NPM :5.3.0 Installing Dependencies for bundle : demoBundle
 
 ⸨░░░░░░░░░░░░░░░░░░⸩ ...
 
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : memcached@2.2.2 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : qs@6.3.0 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : less@2.7.1 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : uglify-js@2.7.4 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : uglifycss@0.0.25 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : passport@0.3.2 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : passport-http@0.3.0 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : passport-local@1.0.0 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : passport-nodefony@2.0.2 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : passport-google-oauth@1.0.0 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : passport-github2@0.1.10 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : passport-ldapauth@0.6.0 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : request@2.79.0 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : useragent@2.1.9 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : sequelize@3.28.0 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : cheerio@0.22.0 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : elasticsearch@12.1.0 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : mocha@3.2.0 installed successfully in nodefony
-Fri Dec 23 2016 16:57:54 INFO CONSOLE   : tunnel@0.0.4 installed successfully in nodefony
+
+./nodefony Sequelize:generate:entities
+ ____                                  _   _
+/ ___|    ___    __ _   _   _    ___  | | (_)  ____   ___
+\___ \   / _ \  / _` | | | | |  / _ \ | | | | |_  /  / _ \
+ ___) | |  __/ | (_| | | |_| | |  __/ | | | |  / /  |  __/
+|____/   \___|  \__, |  \__,_|  \___| |_| |_| /___|  \___|
+                   |_|
 
 
-./console assets:install 
-              _   _    ___    ____    _____   _____    ___    _   _  __   __
-             | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
-             |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V / 
-             | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |  
-             |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|  
-                                                                            
-
-		      NODEFONY CONSOLE CLUSTER MASTER Version : Alpha PLATFORM : darwin  PROCESS PID : 78348
-
-.-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------.
-|                                                               INSTALL LINK IN /web TOTAL SIZE : 50569.413 ko                                                                |
-|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|    BUNDLE     |                                     DESTINATION PATH                                     |                    SOURCE PATH                    |     SIZE     |
-|---------------|------------------------------------------------------------------------------------------|---------------------------------------------------|--------------|
-| framework     | /Users/cci/repository/nodefony/src/nodefony/bundles/frameworkBundle/Resources/public     | /Users/cci/repository/nodefony/web//framework     | 10236.255 ko |
-| monitoring    | /Users/cci/repository/nodefony/src/nodefony/bundles/monitoringBundle/Resources/public    | /Users/cci/repository/nodefony/web//monitoring    | 2043.949 ko  |
-| users         | /Users/cci/repository/nodefony/src/nodefony/bundles/usersBundle/Resources/public         | /Users/cci/repository/nodefony/web//users         | 4.104 ko     |
-| webRtc        | /Users/cci/repository/nodefony/src/experimental/webRtcBundle/Resources/public            | /Users/cci/repository/nodefony/web//webRtc        | 133.191 ko   |
-| webAudioApi   | /Users/cci/repository/nodefony/src/experimental/webAudioApiBundle/Resources/public       | /Users/cci/repository/nodefony/web//webAudioApi   | 27868.08 ko  |
-| documentation | /Users/cci/repository/nodefony/src/nodefony/bundles/documentationBundle/Resources/public | /Users/cci/repository/nodefony/web//documentation | 1938.566 ko  |
-| demo          | /Users/cci/repository/nodefony/src/bundles/demoBundle/Resources/public                   | /Users/cci/repository/nodefony/web//demo          | 7817.444 ko  |
-| App           | /Users/cci/repository/nodefony/app//Resources/public                                     | /Users/cci/repository/nodefony/web//App           | 3.718 ko     |
-'-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------'
-
-make sequelize
-./console Sequelize:generate:entities
-              _   _    ___    ____    _____   _____    ___    _   _  __   __
-             | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
-             |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V / 
-             | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |  
-             |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|  
-                                                                            
-
-		      NODEFONY CONSOLE CLUSTER MASTER Version : Alpha PLATFORM : darwin  PROCESS PID : 78369
-
-DATABASE SYNC : nodefony
-Executing (default): CREATE TABLE IF NOT EXISTS `requests` (`id` INTEGER auto_increment , `url` TEXT, `route` VARCHAR(255), `method` VARCHAR(255), `state` VARCHAR(255), `protocole` VARCHAR(255), `username` VARCHAR(255), `data` TEXT, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
-Executing (default): SHOW INDEX FROM `requests`
-Executing (default): CREATE TABLE IF NOT EXISTS `users` (`id` INTEGER auto_increment , `username` VARCHAR(255) NOT NULL UNIQUE, `password` VARCHAR(255), `enabled` TINYINT(1) DEFAULT true, `credentialsNonExpired` TINYINT(1) DEFAULT true, `accountNonLocked` TINYINT(1) DEFAULT true, `email` VARCHAR(255) UNIQUE, `name` VARCHAR(255), `surname` VARCHAR(255), `lang` VARCHAR(255) DEFAULT 'en_en', `roles` VARCHAR(255) DEFAULT 'ADMIN', `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, UNIQUE `users_username_unique` (`username`), UNIQUE `users_email_unique` (`email`), PRIMARY KEY (`id`)) ENGINE=InnoDB;
-Executing (default): SHOW INDEX FROM `users`
-Executing (default): CREATE TABLE IF NOT EXISTS `sessions` (`session_id` VARCHAR(255) , `context` VARCHAR(255) DEFAULT 'default', `Attributes` TEXT, `flashBag` TEXT, `metaBag` TEXT, `createdAt` DATETIME, `updatedAt` DATETIME NOT NULL, `user_id` INTEGER, PRIMARY KEY (`session_id`), FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE) ENGINE=InnoDB;
-Executing (default): SHOW INDEX FROM `sessions`
-DATABASE :nodefony CONNECTION : nodefony CREATE ALL TABLES
+Wed Aug 02 2017 09:44:48 INFO SERVICE CLI KERNEL  : DATABASE  : sqlite CONNECTION : nodefony
+Wed Aug 02 2017 09:44:48 INFO SERVICE CLI KERNEL  : DATABASE SYNC : nodefony
+Executing (default): CREATE TABLE IF NOT EXISTS `clients` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` VARCHAR(255) NOT NULL UNIQUE, `clientId` VARCHAR(255) NOT NULL, `clientSecret` VARCHAR(255) NOT NULL, `isTrusted` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, UNIQUE (`name`));
+Executing (default): PRAGMA INDEX_LIST(`clients`)
+Executing (default): PRAGMA INDEX_INFO(`sqlite_autoindex_clients_1`)
+Executing (default): CREATE TABLE IF NOT EXISTS `users` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `username` VARCHAR(255) NOT NULL UNIQUE, `password` VARCHAR(255), `provider` VARCHAR(255) DEFAULT 'nodefony', `enabled` TINYINT(1) DEFAULT 1, `credentialsNonExpired` TINYINT(1) DEFAULT 1, `accountNonLocked` TINYINT(1) DEFAULT 1, `email` VARCHAR(255), `name` VARCHAR(255), `surname` VARCHAR(255), `lang` VARCHAR(255) DEFAULT 'en_en', `roles` VARCHAR(255) DEFAULT 'ADMIN', `gender` VARCHAR(255), `displayName` VARCHAR(255), `url` VARCHAR(255), `image` VARCHAR(255), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, UNIQUE (`username`));
+Executing (default): PRAGMA INDEX_LIST(`users`)
+Executing (default): PRAGMA INDEX_INFO(`sqlite_autoindex_users_1`)
+Executing (default): CREATE TABLE IF NOT EXISTS `sessions` (`session_id` VARCHAR(255) NOT NULL, `context` VARCHAR(255) DEFAULT 'default' NOT NULL, `Attributes` TEXT, `flashBag` TEXT, `metaBag` TEXT, `createdAt` DATETIME, `updatedAt` DATETIME NOT NULL, `user_id` INTEGER REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE, PRIMARY KEY (`session_id`, `context`));
+Executing (default): PRAGMA INDEX_LIST(`sessions`)
+Executing (default): PRAGMA INDEX_INFO(`sqlite_autoindex_sessions_1`)
+Executing (default): CREATE TABLE IF NOT EXISTS `requests` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `remoteAddress` VARCHAR(255), `userAgent` VARCHAR(255), `url` TEXT, `route` VARCHAR(255), `method` VARCHAR(255), `state` VARCHAR(255), `protocole` VARCHAR(255), `username` VARCHAR(255), `data` TEXT, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL);
+Executing (default): PRAGMA INDEX_LIST(`requests`)
+Wed Aug 02 2017 09:44:48 INFO SERVICE CLI KERNEL  : DATABASE :/app/Resources/databases/nodefony.db CONNECTION : nodefony CREATE ALL TABLES
+Wed Aug 02 2017 09:44:48 INFO CONSOLE   : NODEFONY Kernel Life Cycle Terminate CODE : 0
+./nodefony Sequelize:fixtures:load
+Wed Aug 02 2017 09:44:49 INFO SERVICE CLI   : DELETE TMP :/Users/cci/repository/nodefony-core/tmp/webpack
 
 
 ./console Sequelize:fixtures:load
-              _   _    ___    ____    _____   _____    ___    _   _  __   __
-             | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
-             |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V / 
-             | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |  
-             |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|  
-                                                                            
-
-		      NODEFONY CONSOLE CLUSTER MASTER Version : Alpha PLATFORM : darwin  PROCESS PID : 78372
-
-LOAD FIXTURES BUNDLE : users
-LOAD FIXTURE ENTITY : user CONNECTIONS : nodefony
-Wed Oct 05 2016 12:43:07 INFO SERVICE sequelize  : Database synchronised  
-Wed Oct 05 2016 12:43:08 INFO SERVICE sequelize  : ALREADY EXIST USER : admin
-Wed Oct 05 2016 12:43:08 INFO SERVICE sequelize  : ALREADY EXIST USER : cci
-Wed Oct 05 2016 12:43:08 INFO SERVICE sequelize  : ALREADY EXIST USER : 1000
-Wed Oct 05 2016 12:43:08 INFO SERVICE sequelize  : ALREADY EXIST USER : 2000
-Wed Oct 05 2016 12:43:08 INFO SERVICE sequelize  : ALREADY EXIST USER : 3000
-LOAD FIXTURE ENTITY : user SUCCESS
 
 
-./console router:generate:routes
-              _   _    ___    ____    _____   _____    ___    _   _  __   __
-             | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
-             |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V / 
-             | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |  
-             |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|  
-                                                                            
+              ____                                  _   _
+             / ___|    ___    __ _   _   _    ___  | | (_)  ____   ___
+             \___ \   / _ \  / _` | | | | |  / _ \ | | | | |_  /  / _ \
+              ___) | |  __/ | (_| | | |_| | |  __/ | | | |  / /  |  __/
+             |____/   \___|  \__, |  \__,_|  \___| |_| |_| /___|  \___|
+                                |_|
 
-		      NODEFONY CONSOLE CLUSTER MASTER Version : 2.0.2-beta PLATFORM : darwin  PROCESS PID : 46888
 
-.-------------------------------------------------------------------------------------------------------------------------------------------------------.
-|                                                                        ROUTES                                                                         |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| NB |                 ROUTE                 |                    PATH                     |       BUNDLE        | CONTROLLER |       ACTION        |   |
-|----|---------------------------------------|---------------------------------------------|---------------------|------------|---------------------|---|
-|  1 | realSecure                            | /secure/realtime                            |   realTimeBundle    | default    | index               |   |
-|  2 | real                                  | /realtime                                   |   realTimeBundle    | default    | index               |   |
-|  3 | monitoring-index                      | /nodefony                                   |  monitoringBundle   | default    | index               |   |
-|  4 | monitoring-module                     | /nodefony/{module}                          |  monitoringBundle   | default    | index               |   |
-|  5 | monitoring-realtime                   | /nodefony/monitoring/realtime               |  monitoringBundle   | default    | realTime            |   |
-|  6 | monitoring-routes                     | /nodefony/api/routes                        |  monitoringBundle   | api        | routes              |   |
-|  7 | monitoring-route                      | /nodefony/api/route/{name}                  |  monitoringBundle   | api        | routes              |   |
-|  8 | monitoring-services                   | /nodefony/api/services                      |  monitoringBundle   | api        | services            |   |
-|  9 | monitoring-service                    | /nodefony/api/service/{name}                |  monitoringBundle   | api        | services            |   |
-| 10 | monitoring-syslog                     | /nodefony/api/syslog                        |  monitoringBundle   | api        | syslog              |   |
-| 11 | monitoring-requests                   | /nodefony/api/requests                      |  monitoringBundle   | api        | requests            |   |
-| 12 | monitoring-request                    | /nodefony/api/request/{uid}                 |  monitoringBundle   | api        | request             |   |
-| 13 | monitoring-config                     | /nodefony/api/config                        |  monitoringBundle   | api        | config              |   |
-| 14 | monitoring-bundle                     | /nodefony/api/config/{bundleName}           |  monitoringBundle   | api        | bundle              |   |
-| 15 | monitoring-real                       | /nodefony/api/realtime/{name}               |  monitoringBundle   | api        | realtime            |   |
-| 16 | monitoring-users                      | /nodefony/api/users                         |  monitoringBundle   | api        | users               |   |
-| 17 | monitoring-sessions                   | /nodefony/api/sessions                      |  monitoringBundle   | api        | sessions            |   |
-| 18 | monitoring-pm2                        | /nodefony/api/pm2/{action}                  |  monitoringBundle   | api        | pm2                 |   |
-| 19 | monitoring-security                   | /nodefony/api/security                      |  monitoringBundle   | api        | security            |   |
-| 20 | monitoring-test-load                  | /nodefony/test/load                         |  monitoringBundle   | default    | testLoad            |   |
-| 21 | logout                                | /logout                                     |     usersBundle     | default    | logout              |   |
-| 22 | documentation                         | /documentation                              | documentationBundle | default    | index               |   |
-| 23 | documentation-search                  | /documentation/search                       | documentationBundle | default    | search              |   |
-| 24 | documentation-default                 | /documentation/{version}                    | documentationBundle | default    | index               |   |
-| 25 | documentation-version                 | /documentation/{version}/{bundle}           | documentationBundle | default    | version             |   |
-| 26 | documentation-section                 | /documentation/{version}/{bundle}/{section} | documentationBundle | default    | version             |   |
-| 27 | documentation-git-getMostRecentCommit | /api/git/getMostRecentCommit                | documentationBundle | git        | getMostRecentCommit |   |
-| 28 | documentation-git-getStatus           | /api/git/getStatus                          | documentationBundle | git        | getStatus           |   |
-| 29 | documentation-git-getBranch           | /api/git/getCurrentBranch                   | documentationBundle | git        | getCurrentBranch    |   |
-| 30 | unitTest                              | /unitTest                                   |   unitTestBundle    | default    | index               |   |
-| 31 | home                                  | /                                           |     demoBundle      | demo       | index               |   |
-| 32 | documentation                         | /documentation                              |     demoBundle      | demo       | readme              |   |
-| 33 | subscribe                             | /subscribe                                  |     usersBundle     | default    | login               |   |
-| 34 | loginAll                              | /login/{type}                               |     demoBundle      | login      | login               |   |
-| 35 | demoSecure                            | /demo/secure                                |   frameworkBundle   | default    | 401                 |   |
-| 36 | adduser                               | /adduser                                    |     demoBundle      | demo       | addUser             |   |
-| 37 | demoLogout                            | /logout                                     |     usersBundle     | default    | logout              |   |
-| 38 | saslArea                              | /demo                                       |   frameworkBundle   | default    | 401                 |   |
-| 39 | localArea                             | /local                                      |   frameworkBundle   | default    | 401                 |   |
-| 40 | basicArea                             | /basic                                      |   frameworkBundle   | default    | 401                 |   |
-| 41 | digestArea                            | /digest                                     |   frameworkBundle   | default    | 401                 |   |
-| 42 | googleArea                            | /auth/google                                |   frameworkBundle   | default    | 401                 |   |
-| 43 | googleCallBackArea                    | /auth/google/callback                       |   frameworkBundle   | default    | 401                 |   |
-| 44 | githubArea                            | /auth/github                                |   frameworkBundle   | default    | 401                 |   |
-| 45 | githubCallBackArea                    | /auth/github/callback                       |   frameworkBundle   | default    | 401                 |   |
-| 46 | upload                                | /upload                                     |     demoBundle      | demo       | indexUpload         |   |
-| 47 | uploadFile                            | /fileupload                                 |     demoBundle      | demo       | upload              |   |
-| 48 | orm                                   | /sequelize                                  |     demoBundle      | demo       | sequelize           |   |
-| 49 | sql                                   | /query/sql                                  |     demoBundle      | demo       | querySql            |   |
-| 50 | sqlJoin                               | /query/join                                 |     demoBundle      | demo       | querySqlJoin        |   |
-| 51 | syscall                               | /syscall                                    |     demoBundle      | demo       | syscall             |   |
-| 52 | httpRequest                           | /httpRequest                                |     demoBundle      | demo       | httpRequest         |   |
-| 53 | xmlResponse                           | /xmlResponse                                |     demoBundle      | demo       | rawResponseSync     |   |
-| 54 | xmlAsyncResponse                      | /xmlAsyncResponse                           |     demoBundle      | demo       | rawResponseAsync    |   |
-| 55 | indexReal                             | /demo/realtime                              |     demoBundle      | demo       | indexRealTime       |   |
-| 56 | finder                                | /finder                                     |     demoBundle      | finder     | index               |   |
-| 57 | download                              | /download                                   |     demoBundle      | finder     | download            |   |
-| 58 | websoket                              | /websoket                                   |     demoBundle      | demo       | websoket            |   |
-| 59 | json                                  | /json                                       |     demoBundle      | demo       | json                |   |
-| 60 | redirect                              | /redirect                                   |     demoBundle      | demo       | redirectGoogle      |   |
-| 61 | myroute                               | /myroute                                    |     demoBundle      | demo       | myroute             |   |
-| 62 | myroute2                              | /myroute/{page}/{elements}                  |     demoBundle      | demo       | myroute             |   |
-| 63 | home                                  | /                                           | documentationBundle | default    | index               |   |
-'-------------------------------------------------------------------------------------------------------------------------------------------------------'
-Fri Dec 23 2016 16:52:54 INFO CONSOLE   : Kernel Life Cycle Terminate CODE : 0
-
-./console router:match:url /
-              _   _    ___    ____    _____   _____    ___    _   _  __   __
-             | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
-             |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V / 
-             | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |  
-             |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|  
-                                                                            
-
-		      NODEFONY CONSOLE CLUSTER MASTER Version : 2.0.2-beta PLATFORM : darwin  PROCESS PID : 46893
-
-Fri Dec 23 2016 16:54:15 INFO CONSOLE   : URL TO CHECK : /
-.-----------------------------------------------------------------------------.
-|                                MATCH URL : /                                |
-|-----------------------------------------------------------------------------|
-| NB | ROUTE | PATH |       BUNDLE        | CONTROLLER | ACTION | FIRST MATCH |
-|----|-------|------|---------------------|------------|--------|-------------|
-|  1 | home  | /    |     demoBundle      | demo       | index  | *           |
-|  2 | home  | /    | documentationBundle | default    | index  |             |
-'-----------------------------------------------------------------------------'
-Fri Dec 23 2016 16:54:15 INFO CONSOLE   : Kernel Life Cycle Terminate CODE : 0
+ Wed Aug 02 2017 09:50:14 INFO SERVICE CLI KERNEL  : LOAD FIXTURES BUNDLE : sequelize
+ Wed Aug 02 2017 09:50:14 INFO SERVICE CLI KERNEL  : LOAD FIXTURE ENTITY : user CONNECTIONS : nodefony
+ Wed Aug 02 2017 09:50:14 INFO sequelize   : Database synchronised
+ Wed Aug 02 2017 09:50:14 INFO sequelize   : ALREADY EXIST USER : anonymous
+ Wed Aug 02 2017 09:50:14 INFO sequelize   : ALREADY EXIST USER : admin
+ Wed Aug 02 2017 09:50:14 INFO sequelize   : ALREADY EXIST USER : 1000
+ Wed Aug 02 2017 09:50:14 INFO sequelize   : ALREADY EXIST USER : 2000
+ Wed Aug 02 2017 09:50:14 INFO sequelize   : ALREADY EXIST USER : 3000
+ Wed Aug 02 2017 09:50:14 INFO SERVICE CLI KERNEL  : LOAD FIXTURE ENTITY :  SUCCESS
+ Wed Aug 02 2017 09:50:14 INFO CONSOLE   : NODEFONY Kernel Life Cycle Terminate CODE : 0
+success nodefony sequelize !
 	</pre>
 
 <p>
-	
+
 	<strong>Example files system after Build The repository :  </strong>
 </p>
 
 <pre>
 
 $ ls -l
-
-total 152
--rw-r--r--    1 staff  staff    22K 30 nov  2015 LICENSE.txt
--rw-r--r--    1 staff  staff   5,4K 30 nov 15:14 Makefile
--rw-r--r--    1 staff  staff    17K 22 nov 21:09 README.md
-drwxr-xr-x    9 staff  staff   306B 29 nov 19:04 app
-drwxr-xr-x    7 staff  staff   238B 23 nov 19:17 bin
-drwxr-xr-x    6 staff  staff   204B 18 nov 23:19 config
--rwxr-xr-x    1 staff  staff   576B 24 nov 22:17 console
-lrwxr-xr-x    1 staff  staff    16B 18 nov 23:19 doc -> src/nodefony/doc
-drwxr-xr-x  410 staff  staff    14K 30 nov 20:05 node_modules
--rwxr-xr-x    1 staff  staff   1,4K 24 nov 22:16 nodefony
--rwxr-xr-x    1 staff  staff   686B 24 nov 22:16 nodefony_dev
--rwxr-xr-x    1 staff  staff   1,2K 30 nov 15:24 nodefony_pm2
--rw-r--r--    1 staff  staff   1,2K 29 nov 22:47 package.json
-drwxr-xr-x    7 staff  staff   238B 18 nov 23:19 src
-drwxr-xr-x    6 staff  staff   204B 30 nov 13:08 tmp
-drwxr-xr-x    7 staff  staff   238B 28 nov 18:53 tools
-drwxr-xr-x    4 staff  staff   136B 18 nov 23:19 vendors
-drwxr-xr-x   18 staff  staff   612B 30 nov 20:05 web
+total 1880
+-rw-r--r--     1 cci  staff       0 27 jul 18:37 CHANGELOG.md
+-rw-r--r--     1 cci  staff   22696 27 jul 18:37 LICENSE.txt
+-rw-r--r--     1 cci  staff    7126 31 jul 10:01 Makefile
+-rw-r--r--     1 cci  staff   72938 19 jul 16:04 README.md
+drwxr-xr-x     9 cci  staff     306 18 jul 12:57 app
+drwxr-xr-x     7 cci  staff     238 31 jul 14:30 bin
+drwxr-xr-x     7 cci  staff     238  2 aoû 09:46 config
+drwxr-xr-x     6 cci  staff     204 27 jul 18:40 docker
+drwxr-xr-x  1069 cci  staff   36346  2 aoû 09:48 node_modules
+-rwxr-xr-x     1 cci  staff    7737 31 jul 17:19 nodefony
+-rw-r--r--     1 cci  staff  536495  2 aoû 09:48 package-lock.json
+-rw-r--r--     1 cci  staff    1370 31 jul 10:14 package.json
+drwxr-xr-x     4 cci  staff     136 31 jul 17:32 src
+drwxr-xr-x     5 cci  staff     170  2 aoû 09:50 tmp
+drwxr-xr-x     7 cci  staff     238 27 jul 18:40 tools
+drwxr-xr-x     9 cci  staff     306  2 aoû 09:46 web
+-rw-r--r--     1 cci  staff  306697 31 jul 10:26 yarn.lock
 </pre>
 </div>
 
@@ -344,6 +204,65 @@ drwxr-xr-x   18 staff  staff   612B 30 nov 20:05 web
 <h2 >References  :</h2>
 <div class="doc2">
 
+    <p>
+    	Try nodefony Command Line Interface
+    </p>
+    <pre>
+         _   _    ___    ____    _____   _____    ___    _   _  __   __
+        | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
+        |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
+        | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |
+        |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|
+
+
+         Version : 3.0.0-beta Platform : darwin Process : nodefony PID : 86371
+
+
+       NODEFONY CONSOLE Cluster : master Environment : prod Debug :false
+
+Usage: nodefony [options] <cmd> [args...]
+
+Options:
+
+-d, --debug         Nodefony debug
+-h, --help          Nodefony help
+-v, --version       Nodefony version
+-i, --interactive   Nodefony cli Interactive Mode
+
+Command :
+
+nodefony
+    dev							 	 Run Nodefony Development Server
+    prod							 	 Run Nodefony Preprod Server
+    pm2							 	 Run Nodefony Production Server ( PM2 mode )
+    app							 	 Get Nodefony App name
+    npm:install							 Install all NPM framework packages
+    npm:list							 List all NPM installed packages
+framework
+    generate:bundle nameBundle path                                  Generate a nodefony Bundle  Example : nodefony generate:bundle myBundle ./src/bundles
+    generate:bundle:angular nameBundle path                          Generate a Angular Bundle  Example : nodefony generate:bundle:angular myBundle ./src/bundles
+    generate:bundle:react nameBundle path                            Generate a React Bundle Example : nodefony generate:bundle:react myBundle ./src/bundles
+    generate:controller  nameController bundlePath                   Generate a controller Example : nodefony generate:controller myController ./src/bundles/myBundle
+    generate:command nameCommand path                                Generate a command js file in bundle path
+    router:generate:routes                                           Generate all routes
+    router:generate:route routeName                                  Generate one route Example : nodefony router:generate:route home
+    router:match:url url                                             Get route who match url Example : nodefony router:match:url /nodefony
+    webpack:dump                                                     Compile webpack for all bundles
+security
+    encoders:Digest firewall login password [realm]                  Generate encoding keys digest MD5 Example : nodefony encoders:Digest secured_area login password
+sequelize
+    Sequelize:fixtures:load                                          Load data fixtures to your database
+    Sequelize:generate:entities [force]                              Generate All Entities force to delete table if exist  example : nodefony Sequelize:generate:entities force
+    Sequelize:query:sql connectionName SQL                           query sql in database connection  example : nodefony  Sequelize:query:sql nodefony  'select * from users'
+    Sequelize:entity:findAll entity                                  query findAll ENTITY
+monitoring
+    Monitoring:test:load URL [nbRequests] [concurence]               load test example : nodefony Monitoring:test:load http://localhost:5151/demo 10000 100
+unitTest
+    unitTest:list:all                                                List all unit tests
+    unitTest:list:bundle bundleName                                  List all bundle unit tests
+    unitTest:launch:all                                              Launch all tests Example : nodefony unitTest:launch:all
+    unitTest:launch:bundle bundleName { testfile }                   Launch bundle tests Example: nodefony unitTest:launch:bundle demoBundle responseTest.js
+    </pre>
 
 <p>
 	Dependencies will be automatically installed by Makefile
@@ -351,64 +270,59 @@ drwxr-xr-x   18 staff  staff   612B 30 nov 20:05 web
 
 
 <pre>
-./console npm:list
-              _   _    ___    ____    _____   _____    ___    _   _  __   __
-             | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
-             |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V / 
-             | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |  
-             |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|  
-                                                                            
+./nodefony npm:list
+ _   _    ___    ____    _____   _____    ___    _   _  __   __
+| \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
+|  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
+| |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |
+|_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|
 
-		      NODEFONY CONSOLE CLUSTER MASTER Version : 2.0.2-beta PLATFORM : darwin  PROCESS PID : 46896
 
-.------------------------------------------------------------------------------------------------------------------------------------------------------.
-|                                                                NPM NODEFONY PACKAGES                                                                 |
-|------------------------------------------------------------------------------------------------------------------------------------------------------|
-|         NAME          | VERSION |                                                    DESCRIPTION                                                     |
-|-----------------------|---------|--------------------------------------------------------------------------------------------------------------------|
-| cheerio               | 0.22.0  | Tiny, fast, and elegant implementation of core jQuery designed specifically for the server                         |
-| elasticsearch         | 12.1.0  | The official low-level Elasticsearch client for Node.js and the browser.                                           |
-| less                  | 2.7.1   | Leaner CSS                                                                                                         |
-| memcached             | 2.2.2   | A fully featured Memcached API client, supporting both single and clustered Memcached servers through consiste ... |
-| passport              | 0.3.2   | Simple, unobtrusive authentication for Node.js.                                                                    |
-| passport-github2      | 0.1.10  | GitHub authentication strategy for Passport.                                                                       |
-| passport-google-oauth | 1.0.0   | Google (OAuth) authentication strategies for Passport.                                                             |
-| passport-http         | 0.3.0   | HTTP Basic and Digest authentication strategies for Passport.                                                      |
-| passport-ldapauth     | 0.6.0   | LDAP authentication strategy for Passport                                                                          |
-| passport-local        | 1.0.0   | Local username and password authentication strategy for Passport.                                                  |
-| passport-nodefony     | 2.0.2   | Passport strategy wrapper for nodefony framework                                                                   |
-| qs                    | 6.3.0   | A querystring parser that supports nesting and arrays, with a depth limit                                          |
-| sequelize             | 3.28.0  | Multi dialect ORM for Node.JS/io.js                                                                                |
-| tunnel                | 0.0.4   | Node HTTP/HTTPS Agents for tunneling proxies                                                                       |
-| uglify-js             | 2.7.4   | JavaScript parser, mangler/compressor and beautifier toolkit                                                       |
-| uglifycss             | 0.0.25  | Port of YUI CSS Compressor to NodeJS                                                                               |
-| useragent             | 2.1.9   | Fastest, most accurate & effecient user agent string parser, uses Browserscope's research for parsing              |
-| yallist               | 2.0.0   | Yet Another Linked List                                                                                            |
-| ascii-table           | 0.0.9   | Easy tables for your console data                                                                                  |
-| asciify               | 1.3.5   | Plain text awesomizer. A hybrid npm module and CLI for turning plain text into ascii art.                          |
-| connect               | 2.30.2  | High performance middleware framework                                                                              |
-| cookie                | 0.3.1   | HTTP server cookie parsing and serialization                                                                       |
-| js-yaml               | 3.7.0   | YAML 1.2 parser and serializer                                                                                     |
-| jshint                | 2.9.4   | Static analysis tool for JavaScript                                                                                |
-| markdown-it           | 8.2.2   | Markdown-it - modern pluggable markdown parser.                                                                    |
-| mime                  | 1.3.4   | A comprehensive library for mime-type mapping                                                                      |
-| mkdirp                | 0.5.1   | Recursively mkdir, like `mkdir -p`                                                                                 |
-| mysql                 | 2.12.0  | A node.js driver for mysql. It is written in JavaScript, does not require compiling, and is 100% MIT licensed.     |
-| node-getopt           | 0.2.3   | featured command line args parser                                                                                  |
-| node-pre-gyp          | 0.6.32  | Node.js native addon binary install tool                                                                           |
-| nodegit               | 0.16.0  | Node.js libgit2 asynchronous native bindings                                                                       |
-| npm                   | 4.0.5   | a package manager for JavaScript                                                                                   |
-| npmi                  | 2.0.1   | Gives a simplier API to npm install (programatically installs stuffs)                                              |
-| pm2                   | 2.2.2   | Production process manager for Node.JS applications with a built-in load balancer.                                 |
-| promise               | 7.1.1   | Bare bones Promises/A+ implementation                                                                              |
-| shortid               | 2.2.6   | Amazingly short non-sequential url-friendly unique id generator.                                                   |
-| sqlite3               | 3.1.8   | Asynchronous, non-blocking SQLite3 bindings                                                                        |
-| twig                  | 0.10.3  | JS port of the Twig templating language.                                                                           |
-| websocket             | 1.0.23  | Websocket Client & Server Library implementing the WebSocket protocol as specified in RFC 6455.                    |
-| xml2js                | 0.4.17  | Simple XML to JavaScript object converter.                                                                         |
-'------------------------------------------------------------------------------------------------------------------------------------------------------'
-Fri Dec 23 2016 16:55:24 INFO CONSOLE   : Kernel Life Cycle Terminate CODE : 0
+ Version : 3.0.0-beta Platform : darwin Process : nodefony PID : 86275
 
+NODEFONY CONSOLE Cluster : master Environment : prod Debug :false
+
+Wed Aug 02 2017 10:00:38 INFO SERVICE CLI KERNEL  : NPM NODEFONY PACKAGES :/Users/cci/repository/nodefony/package.json
+Wed Aug 02 2017 10:00:38 INFO SERVICE CLI KERNEL  : NPM NODEFONY PACKAGES :/Users/cci/repository/nodefony/src/bundles/demoBundle/package.json
+Wed Aug 02 2017 10:00:38 INFO SERVICE CLI KERNEL  : NPM NODEFONY PACKAGES :/Users/cci/repository/nodefony/app/package.json
+┌──────────────────────────────┬──────────┬────────────────────────────────────────────────────────────────────────────────────────────────────┬────────────────────┐
+│ NAME                         │ VERSION  │ DESCRIPTION                                                                                        │ BUNDLES            │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ babel-core                   │ 6.25.0   │ Babel compiler core.                                                                               │ nodefony           │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ babel-loader                 │ 7.1.1    │ babel module loader for webpack                                                                    │ nodefony           │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ babel-preset-es2015          │ 6.24.1   │ Babel preset for all es2015 plugins.                                                               │ nodefony           │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ bootstrap                    │ 3.3.7    │ The most popular front-end framework for developing responsive, mobile first projects on the web.  │ nodefony           │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ css-loader                   │ 0.28.4   │ css loader module for webpack                                                                      │ nodefony           │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ extract-text-webpack-plugin  │ 3.0.0    │ Extract text from bundle into a file.                                                              │ nodefony           │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ file-loader                  │ 0.11.2   │ file loader module for webpack                                                                     │ nodefony           │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ font-awesome                 │ 4.7.0    │ The iconic font and CSS framework                                                                  │ nodefony           │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ js-yaml                      │ 3.9.1    │ YAML 1.2 parser and serializer                                                                     │ nodefony           │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ nodefony                     │ 3.0.0-b… │ Nodefony Node.js full-stack web framework                                                          │ nodefony           │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ nodefony-stage               │ 0.1.1    │ Client Side Nodefony web developpement                                                             │ nodefony           │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ pm2                          │ 2.6.1    │ Production process manager for Node.JS applications with a built-in load balancer.                 │ nodefony           │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ uglify-es                    │ 3.0.27   │ JavaScript parser, mangler/compressor and beautifier toolkit for ES6+                              │ nodefony           │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ webpack                      │ 3.4.1    │ Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, … │ nodefony           │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ webpack-dev-server           │ 2.6.1    │ Serves a webpack app. Updates the browser on changes.                                              │ nodefony           │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ webpack-merge                │ 4.1.0    │ Variant of merge that's useful for webpack configuration                                           │ nodefony           │
+├──────────────────────────────┼──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
+│ xml2js                       │ 0.4.17   │ Simple XML to JavaScript object converter.                                                         │ nodefony           │
+└──────────────────────────────┴──────────┴────────────────────────────────────────────────────────────────────────────────────────────────────┴────────────────────┘
+Wed Aug 02 2017 10:00:46 INFO CONSOLE   : NODEFONY Kernel Life Cycle Terminate CODE : 0
 </pre>
 </div>
 

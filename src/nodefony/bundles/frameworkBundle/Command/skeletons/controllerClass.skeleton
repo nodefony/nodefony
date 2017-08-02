@@ -14,7 +14,7 @@ module.exports = nodefony.registerController("{{name}}", function(){
 		 *	@param {class} context
 		 *
 		 */
-		var {{controllerName}} = class {{controllerName}} extends nodefony.controller {
+		let {{controllerName}} = class {{controllerName}} extends nodefony.controller {
 
 			constructor (container, context){
 				super(container, context);

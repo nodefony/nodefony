@@ -175,18 +175,7 @@ $ make build
         rejectUnauthorized      : false
 
   bundles:
-    hello                       : "src/bundles/helloBundle"
-
-  PM2:
-    exec_mode		        : "cluster"
-    max_memory_restart	        : "1024M"
-    autorestart		        : true
-    max_restarts		: 10
-    watch			: false
-    log_file                    : "tmp/nodefony.log"
-    out_file                    : "tmp/nodefony.out.log"
-    error_file                  : "tmp/nodefony.error.log"
-    merge_logs                  : true
+    hello                       : "src/bundles/demoBundle"
 
   log:
     active                      : true
@@ -223,7 +212,7 @@ CDN                             : ~
 
 # Run Appliation in DEV mode
 
-$ ./nodefony_dev
+$ ./nodefony dev
 
 	</pre>
 </div>
