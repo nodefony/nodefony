@@ -153,7 +153,6 @@ module.exports = nodefony.register("cliKernel", function(){
 						this.listPackage(this.kernel.rootDir);
 					});
 					return true ;
-				break;
 			}
 			this.stop = false;
 			for ( let bundle in this.kernel.bundles ){
@@ -280,7 +279,7 @@ module.exports = nodefony.register("cliKernel", function(){
 
 		// ASSETS LINK
 		assetInstall (name){
-			var table = this.displayTable(null, {
+			let table = this.displayTable(null, {
 				head:[
 					"BUNDLES",
 					"DESTINATION PATH",
@@ -288,7 +287,7 @@ module.exports = nodefony.register("cliKernel", function(){
 					"SIZE",
 					"ASSETS COMPILE"
 				]
-			})
+			});
 			createAssetDirectory.call(this, this.publicDirectory, () => {
 				parseAssetsBundles.call(this, table, name);
 				console.log(table.toString());
@@ -356,6 +355,7 @@ module.exports = nodefony.register("cliKernel", function(){
 		}
 
 	    getSizeDirectory (dir, exclude){
+				let stat = null ;
 	  		try {
 	  			if ( exclude ){
 	  				var basename = path.basename(dir);
@@ -363,7 +363,7 @@ module.exports = nodefony.register("cliKernel", function(){
 	  					return 0 ;
 	  				}
 	  			}
-	  			var stat = fs.lstatSync(dir);
+	  			stat = fs.lstatSync(dir);
 	  		}catch(e){
 	  			this.logger(e, "WARNING");
 	  			return 0 ;
@@ -372,7 +372,6 @@ module.exports = nodefony.register("cliKernel", function(){
 	  		switch (true){
 	  			case stat.isFile() :
 	  				throw  new Error ( dir+" is not a directory");
-	  			break;
 	  			case stat.isDirectory() :
 	  				files = fs.readdirSync(dir);
 	  			break;
@@ -439,16 +438,17 @@ module.exports = nodefony.register("cliKernel", function(){
 	  	}
 
 	    createDirectory (myPath, mode, callback, force){
+				let file = null ;
 	  		try {
 	  			fs.mkdirSync(myPath, mode);
-	  			var file = new nodefony.fileClass(myPath);
+	  			file = new nodefony.fileClass(myPath);
 	  			callback( file );
 	  			return file ;
 	  		}catch(e){
 	  			switch ( e.code ){
 	  				case "EEXIST" :
 	  					if ( force ){
-	  						var file = new nodefony.fileClass(myPath);
+	  						file = new nodefony.fileClass(myPath);
 	  						callback( file );
 	  						return file ;
 	  					}
@@ -505,7 +505,7 @@ module.exports = nodefony.register("cliKernel", function(){
 	  			cmd.on('error', (err) => {
 	  				this.logger(err, "ERROR");
 	  				this.terminate(1);
-	  			})
+	  			});
 	  		}catch(e){
 	  			this.logger(e, "ERROR");
 	  			throw e;
@@ -584,7 +584,7 @@ module.exports = nodefony.register("cliKernel", function(){
 					npm.load(conf, (error, event) => {
 						if (error){
 							shell.cd(this.kernel.rootDir);
-							return reject(error)
+							return reject(error);
 						}
 						event.config.localPrefix = myPath;
 						event.config.globalPrefix = this.rootDir ;
@@ -626,7 +626,7 @@ module.exports = nodefony.register("cliKernel", function(){
 						this.logger(error, "ERROR");
 						this.terminate(1);
 					}
-					shell.cd(file.dirName)
+					shell.cd(file.dirName);
 					event.config.localPrefix = file.dirName;
 					event.config.globalPrefix = this.kernel.rootDir ;
 					event.localPrefix = file.dirName ;
@@ -652,11 +652,11 @@ module.exports = nodefony.register("cliKernel", function(){
 								}catch(e){
 									this.logger( "\t Dependency dev : " + mypackage  );
 									tab.push( mypackage );
-								};
+								}
 						}
 					}
 					if (tab.length ){
-						event.commands.install(tab, (err, data) =>{
+						event.commands.install(tab, (err/*, data*/) =>{
 							if ( err ){
 								this.logger("NPM :"+npm.version+  " Installing Dependencies for bundle : " + file.shortName  , "ERROR");
 								this.logger(err, "ERROR");

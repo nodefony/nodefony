@@ -5,13 +5,13 @@ const commander = require('commander');
 
 module.exports = nodefony.register( "cli", function(){
 
-  const red   = clc.red.bold;
-  const cyan   = clc.cyan.bold;
+  //const red   = clc.red.bold;
+  //const cyan   = clc.cyan.bold;
   const blue  = clc.blueBright.bold;
   const green = clc.green;
-  const yellow = clc.yellow.bold;
+  //const yellow = clc.yellow.bold;
   const magenta = clc.magenta.bold
-  const reset = '\x1b[0m';
+  const reset = clc.reset; // '\x1b[0m';
 
   const processName = path.basename (process.argv[1] ) || process.argv[1] || process.title ;
 
@@ -135,7 +135,7 @@ module.exports = nodefony.register( "cli", function(){
       *	@promiseRejection
       */
       if (this.options.promiseRejection){
-            this.listenRejection()
+            this.listenRejection();
       }
       /**
        *    ASCIIFY
@@ -214,7 +214,7 @@ module.exports = nodefony.register( "cli", function(){
   				var myLine = new this.clui.Line().fill() ;
   				return () =>{
   					myLine.output();
-  				}
+  				};
   		}.call(this);
         if (this.options.resize ){
             this.resize();
@@ -233,7 +233,7 @@ module.exports = nodefony.register( "cli", function(){
                 operator:"<=",
                 data : "7"
             }
-        }
+        };
         return this.syslog.listenWithConditions(this, options || defaultOption , (pdu) => {
           return this.normalizeLog(pdu) ;
         });
@@ -267,7 +267,7 @@ module.exports = nodefony.register( "cli", function(){
     }
 
     createProgress (size){
-        return new this.clui.Progress(size)
+        return new this.clui.Progress(size);
     }
 
     createSparkline (values, suffix){
@@ -292,7 +292,7 @@ module.exports = nodefony.register( "cli", function(){
         this.spinner.start();
         return this.spinner ;
     }
-    stopSpinner (message, options){
+    stopSpinner (/*message, options*/){
         this.spinner.stop();
         this.wrapperLog = console.log ;
         delete this.spinner ;
@@ -310,7 +310,7 @@ module.exports = nodefony.register( "cli", function(){
     		case "object" :
     			switch (true){
     				default:
-    					message = util.inspect(message)
+    					message = util.inspect(message);
     			}
     		break;
     		default:
@@ -326,7 +326,7 @@ module.exports = nodefony.register( "cli", function(){
 
   		if ( datas ) {
   			for ( var i= 0 ;  i < datas.length ; i++ ){
-  				table.push( datas[i] )
+  				table.push( datas[i] );
   			}
             if ( syslog ){
                 syslog.logger( "\n"+ table.toString()) ;
@@ -360,7 +360,7 @@ module.exports = nodefony.register( "cli", function(){
   	}
 
   	reset (){
-  			process.stdout.write(this.clc.reset);
+  			process.stdout.write(reset);
   	}
 
   	resize (){
@@ -396,7 +396,7 @@ module.exports = nodefony.register( "cli", function(){
   	stopTimer (name){
         if (! name ){
             for (let timer in  this.timers ){
-                this.stopTimer(this.timers[timer])
+                this.stopTimer(this.timers[timer]);
             }
         }
         try {

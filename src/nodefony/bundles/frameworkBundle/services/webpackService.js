@@ -12,7 +12,7 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = nodefony.registerService("webpack", function(){
 
-	var babelRule  = function(basename){
+	var babelRule  = function(/*basename*/){
 		return {
       		test: new RegExp("\.es6$"),
 			exclude: new RegExp("node_modules"),
@@ -27,7 +27,7 @@ module.exports = nodefony.registerService("webpack", function(){
 		};
 	};
 
-	var cssRule  = function(basename, production){
+	var cssRule  = function(/*basename, production*/){
 		return {
 			test: new RegExp("\.css$"),
 			use: ExtractTextPluginCss.extract({
@@ -36,7 +36,7 @@ module.exports = nodefony.registerService("webpack", function(){
 		};
 	};
 
-	var sassRule  = function(basename){
+	var sassRule  = function(/*basename*/){
 		return {
         test: new RegExp(".scss$"),
         use: [
@@ -51,7 +51,7 @@ module.exports = nodefony.registerService("webpack", function(){
     };
 	};
 
-	var lessRule  = function(basename){
+	var lessRule  = function(/*basename*/){
 		return {
 			test: new RegExp("\.less$"),
 			use: ExtractTextPluginCss.extract({
@@ -91,10 +91,11 @@ module.exports = nodefony.registerService("webpack", function(){
         };
 
 	var defaultConfig = function(name, Path){
+		let basename = null ;
 		if ( Path ){
-			var basename = path.basename(Path);
+			basename = path.basename(Path);
 		}else{
-			var basename ="assets";
+			basename ="assets";
 		}
 		var public = Path ? path.resolve( Path, "Resources", "public") : null;
 		var devtool = this.production ? false : 'source-map' ;
@@ -136,7 +137,7 @@ module.exports = nodefony.registerService("webpack", function(){
 			this.pathCache = this.kernel.cacheWebpack ;
 			this.host = this.kernel.hostHttps ;
 			this.webpack = webpack ;
-			this.version = this.getWebpackVersion()
+			this.version = this.getWebpackVersion();
 
 			if ( this.production ){
 				try {
@@ -161,17 +162,17 @@ module.exports = nodefony.registerService("webpack", function(){
 		}
 
 		getWebpackVersion (){
-			return process.env["WEBPACK_VERSION"];
+			return process.env.WEBPACK_VERSION;
 		}
 
 		loggerStat (err, stats, bundle , file, watcher){
 			if (err){
-				throw err
+				throw err;
 			}
 			const info = stats.toJson();
 			var error = stats.hasErrors();
 			if ( error ) {
-				this.logger(info.errors ,"ERROR")
+				this.logger(info.errors ,"ERROR");
 			}else{
 				if (bundle){
 					if ( watcher ){
@@ -187,7 +188,7 @@ module.exports = nodefony.registerService("webpack", function(){
 					}), "INFO");
 				}
 				if (stats.hasWarnings()) {
-					this.logger(info.warnings ,"WARNING")
+					this.logger(info.warnings ,"WARNING");
 				}
 			}
 		}
@@ -308,8 +309,9 @@ module.exports = nodefony.registerService("webpack", function(){
 				}
 			}
 			myConf.name =  basename  ;
+			let compiler = null ;
 			try {
-				var compiler =  webpack( myConf );
+				compiler =  webpack( myConf );
 				if ( this.kernel.type === "CONSOLE" ){
 					return  compiler;
 				}
@@ -317,7 +319,7 @@ module.exports = nodefony.registerService("webpack", function(){
 				throw e ;
 			}
 
-			var sokjsCompiler = null ;
+			let sokjsCompiler = null ;
 			if ( ! this.production && this.sockjs && compiler ) {
 				sokjsCompiler = this.sockjs.addCompiler( compiler, basename );
 			}
@@ -362,7 +364,7 @@ module.exports = nodefony.registerService("webpack", function(){
 
 					}
 				}
-				return new Promise ( (resolve, reject) => {
+				return new Promise ( (resolve/*, reject*/) => {
 					this.logger( "RUN WEBPACK COMPILER : "+ file +" COMPILE ENTRY POINT : \n" +this.displayConfigTable(compiler.options) );
 					compiler.run( (err, stats) => {
 						this.loggerStat(err, stats, bundle, file);
@@ -387,7 +389,6 @@ module.exports = nodefony.registerService("webpack", function(){
 				]
 			} ;
 			let table = this.kernel.cli.displayTable(null, options);
-			let data = [];
 			try {
 				for ( let ele in config.entry ){
 					table.push([
@@ -402,7 +403,7 @@ module.exports = nodefony.registerService("webpack", function(){
 				}
 				return table.toString() ;
 			}catch(e){
-				this.logger(e, "ERROR")
+				this.logger(e, "ERROR");
 			}
 		}
 
@@ -426,10 +427,10 @@ module.exports = nodefony.registerService("webpack", function(){
 				throw e;
 			}
 		}
+
 		getProgressPlugin (handler){
 			//function handler(percentage, msg) {/* ... */}
-			return new webpack.ProgressPlugin(handler)
-
+			return new webpack.ProgressPlugin(handler);
 		}
 	}
 

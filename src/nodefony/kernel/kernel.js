@@ -88,11 +88,11 @@ module.exports = nodefony.register("kernel", function(){
 			this.started = false ;
 			this.settings = null;
 			this.regBundle = regBundle;
-			this.node_start = process.env["MODE_START"] || this.options.node_start  ;
+			this.node_start = process.env.MODE_START || this.options.node_start  ;
 			this.bundles = {};
 			this.eventReadywait = 0 ;
 			this.setParameters("bundles", {} );
-			this.bundlesCore = bundlesCore
+			this.bundlesCore = bundlesCore;
 			// Paths
 			this.rootDir = process.cwd();
 			this.appPath = path.resolve( this.rootDir, "app");
@@ -125,12 +125,12 @@ module.exports = nodefony.register("kernel", function(){
 					autoLogger		: false,
 					version			: this.version,
 					pid				: this.typeCluster === "worker" ? true : false ,
-					onStart			: ( cli ) => {
+					onStart			: ( /*cli*/ ) => {
 						this.start(environment);
 					}
 				});
 			}catch(e){
-				console.trace(e)
+				console.trace(e);
 				throw e ;
 			}
 			this.cli.createDirectory( path.resolve (this.rootDir ,"tmp"), null , (file) => {
@@ -178,7 +178,7 @@ module.exports = nodefony.register("kernel", function(){
 				// Environment
 				this.setEnv(environment);
 				// config
-				this.readKernelConfig()
+				this.readKernelConfig();
 				// Clusters
 				this.initCluster();
 				// Manage Template engine
@@ -198,8 +198,6 @@ module.exports = nodefony.register("kernel", function(){
 						process.env.NODE_ENV = "development";
 						process.env.BABEL_ENV = 'development';
 					break;
-					case "prod" :
-					case "production" :
 					default:
 						this.environment = "prod";
 						process.env.NODE_ENV = "production";
@@ -586,7 +584,7 @@ module.exports = nodefony.register("kernel", function(){
 							this.bundles[name].listen(this,"onReady", waitingBundle);
 						}
 					}else{
-						throw new Error ( "Bundle " + name + " Class is not a function")
+						throw new Error ( "Bundle " + name + " Class is not a function");
 					}
 				}
 			}catch(e){
@@ -638,7 +636,7 @@ module.exports = nodefony.register("kernel", function(){
 						onFinish:callbackFinish || this.initializeBundles.bind(this)
 					});
 				}catch(e){
-					this.logger(e, "ERROR")
+					this.logger(e, "ERROR");
 					this.logger("GLOBAL CONFIG REGISTER : ","INFO");
 					this.logger(this.configBundle,"INFO");
 					var gene = this.readGeneratedConfig();
@@ -808,7 +806,7 @@ module.exports = nodefony.register("kernel", function(){
 
 		memoryUsage (message){
 			//let memory =  process.memoryUsage() ;
-			let memory = this.stats().memory
+			let memory = this.stats().memory;
 			for ( var ele in memory ){
 				switch (ele ){
 					case "rss" :
@@ -831,8 +829,7 @@ module.exports = nodefony.register("kernel", function(){
 			let stat = {
 				memory:{}
 				//cpu:process.cpuUsage()
-			}
-
+			};
 			let memory = process.memoryUsage();
 			for ( let ele in memory ){
 				stat.memory[ele] =  memory[ele] ;
