@@ -11,11 +11,11 @@
 	<div class="doc3">
 		<p>
 			In Resources directory bundles you can find a 'views' directory  <br>
-			
+
 		<p>
 		<pre>
 src/nodefony/bundles/documentationBundle/Resources/
-│   
+│  
 └── views
     ├── index.html.twig
     ├── layouts
@@ -24,7 +24,7 @@ src/nodefony/bundles/documentationBundle/Resources/
     ├── navDocBundle.html.twig
     └── navDoc.html.twig
 
-		</pre>		
+		</pre>
 	</div>
 
 	<h3>Template Naming  </h3>
@@ -32,8 +32,8 @@ src/nodefony/bundles/documentationBundle/Resources/
 		<p>
 			Framework Registred Template as pattern <strong> 'bundle:directory:filename'</strong> <br>
 		</p>
-	
-		View Pattern format  : <strong>documentationBundle::index.html.twig</strong> 
+
+		View Pattern format  : <strong>documentationBundle::index.html.twig</strong>
 		<table border="1" class="table">
 			<colgroup>
 				<col width="25%">
@@ -65,14 +65,14 @@ src/nodefony/bundles/documentationBundle/Resources/
 
 		<div class="alert  alert-info" role="alert">
 			<ul>
-				<li>In Developement mode :  Nodefony kernel reload files, recompile and parse Templates who are use in request</li> 
+				<li>In Developement mode :  Nodefony kernel watcher autoreload files, recompile and parse Templates who change </li>
 				<li>In Production mode :    Nodefony kernel cache all Templates compilations and just parse the compiled template with dynamics variables  </li>
 			</ul>
-			
+
 		</div>
 		<pre>
 
-LOG WHEN NODEFONY START : 
+LOG WHEN NODEFONY START :
 
 Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : Register Template : 'documentationBundle::index.html'
 Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : COMPILE Template : 'documentationBundle::index.html'
@@ -86,11 +86,11 @@ Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : Register Template : 'docu
 Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : COMPILE Template : 'documentationBundle::navDocBundle.html'
 
 
-LOG WHEN CALL CONTROLLER IN DEVELOPMENT MODE:
+LOG WHEN FILE CHANGE IN DEVELOPMENT MODE:
 
-Tue Jan 24 2017 17:51:40 INFO HTTPS REQUEST  : REQUEST GET FROM : 127.0.0.1 HOST : localhost:5152 URL :/documentation/Beta/framework/view
-Tue Jan 24 2017 17:51:40 WARNING AUTOLOADER RELOAD FORCE  : /Users/cci/repository/nodefony/src/nodefony/bundles/documentationBundle/controller/defaultController.js
-		</pre>		
+Thu Aug 03 2017 16:40:15 INFO WATCHER EVENT change  : BUNDLE App Resources/views/base.html.twig
+Thu Aug 03 2017 16:40:15 INFO WATCHER EVENT change  : BUNDLE App RECOMPILE Template : 'AppBundle::base.html'
+		</pre>
 
 	</div>
 
@@ -98,12 +98,12 @@ Tue Jan 24 2017 17:51:40 WARNING AUTOLOADER RELOAD FORCE  : /Users/cci/repositor
 	<h2>Nodefony template </h2>
 	<div class="doc2">
 		<p>
-		Nodefony use <a href="https://github.com/twigjs/twig.js" >twig.js</a>  : JS port of the Twig templating language of symfony framework See more <a href="http://twig.sensiolabs.org/">( twig.sensiolabs.org )</a>. 
+		Nodefony use <a href="https://github.com/twigjs/twig.js" >twig.js</a>  : JS port of the Twig templating language of symfony framework See more <a href="http://twig.sensiolabs.org/">( twig.sensiolabs.org )</a>.
 		<p>
-		
+
 
 	</div>
-	
+
 
 	<h3> Base Template bundle app </h3>
 	<div class="doc3">
@@ -111,11 +111,11 @@ Tue Jan 24 2017 17:51:40 WARNING AUTOLOADER RELOAD FORCE  : /Users/cci/repositor
 			Nodefony has a Base Template in Bundle Application  <code>./app/Resources/views/base.html.twig</code>
 		</p>
 		<pre>
-			<code> 
+			<code>
 &lt;!DOCTYPE html>
 &lt;html&gt;
     &lt;head&gt;
-	&#123;% block meta %&#125; 
+	&#123;% block meta %&#125;
 		&lt;meta charset="utf-8"&gt;
 		&lt;meta http-equiv="content-type" content="text/html; charset=UTF-8"&gt;
 		&lt;meta http-equiv="X-UA-Compatible" content="IE=edge"&gt;
@@ -138,9 +138,9 @@ Tue Jan 24 2017 17:51:40 WARNING AUTOLOADER RELOAD FORCE  : /Users/cci/repositor
 
 	<p>
 	You can see  differents Twig block    <code>meta</code> <code>title</code>  <code>stylesheets</code>  <code>body</code> <code>footer</code>  <code>javascripts</code>
-		
+
 	</p>
-	
+
 	</div>
 
 	<h3> Example Template Inheritance and Layouts </h3>
@@ -153,32 +153,6 @@ Tue Jan 24 2017 17:51:40 WARNING AUTOLOADER RELOAD FORCE  : /Users/cci/repositor
 <strong>&#123% extends "/app/Resources/views/base.html.twig" %&#125</strong>
 
 &#123% block title %&#125 &#123&#123 title &#125&#125 &#123% endblock %&#125
-
-&#123% block stylesheets %&#125
-	&#123% stylesheets  output="/demoBundle/assets/css/layout.css" filter="?uglifycss" 
-	    "/frameworkBundle/vendors/bootstrap/css/bootstrap.css"
-	    "/frameworkBundle/vendors/bootstrap/css/bootstrap-theme.css"
-            "/frameworkBundle/vendors/font-awesome/css/font-awesome.min.css"
-            "/demoBundle/clean/assets/css/style.css"
-        %&#125
-            &ltlink rel="stylesheet" href="&#123&#123 asset_url &#125&#125" /&gt
-        &#123% endstylesheets %&#125
-&#123% endblock %&#125
-
-&#123% block javascripts %&#125
-	&#123% javascripts output='/demoBundle/assets/js/layout.js' filter='?uglifyjs2'
-		'/frameworkBundle/vendors/jquery/jquery-2.1.4.min.js'
-		"/frameworkBundle/vendors/bootstrap/js/bootstrap.js"
-		"/vendors/stage/stage.js" 
-		"/vendors/stage/function.js" 
-		"/vendors/stage/notificationsCenter.js" 
-		"/vendors/stage/syslog/syslog.js" 
-		"/vendors/stage/io/io.js" 
-		"/vendors/stage/xml.js" 
-	%&#125
-		&ltscript type="text/javascript" src="&#123&#123 asset_url &#125&#125"&gt&lt/script&gt
-	&#123% endjavascripts %&#125
-&#123% endblock %&#125
 
 &#123% block body %&#125
 	&ltheader class="header"&gt
@@ -199,7 +173,7 @@ Tue Jan 24 2017 17:51:40 WARNING AUTOLOADER RELOAD FORCE  : /Users/cci/repositor
 	</p>
 
 	<pre>
-<strong> &#123% extends "src/bundles/demoBundle/Resources/views/layouts/layout.html.twig" %&#125</strong>
+<strong> &#123% extends "../layouts/layout.html.twig" %&#125</strong>
 
 &#123% block title %&#125 ORM  &#123% endblock %&#125
 
@@ -220,7 +194,7 @@ Tue Jan 24 2017 17:51:40 WARNING AUTOLOADER RELOAD FORCE  : /Users/cci/repositor
 	&ltscript&gt
 		$(document).ready(function()&#123
 
-			$("table").DataTable()	
+			$("table").DataTable()
 		&#125)
 	&lt/script&gt
 &#123% endblock %&#125

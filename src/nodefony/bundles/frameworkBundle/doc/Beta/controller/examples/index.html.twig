@@ -7,7 +7,7 @@
 <div class="doc2 ">
 
 <p>
-	Example of controller actions to different use cases : 
+	Example of controller actions to different use cases :
 	<ul>
 		<li><a href="#rawRender">Simple Render html</a></li>
 		<li><a href="#simpleTemplate">Simple Render Template</a></li>
@@ -21,7 +21,7 @@
 		<li><a href="#redirect">Redirecting</a></li>
 		<li><a href="#redirect">Forwarding</a></li>
 		<li><a href="#redirect">Generating URL</a></li>
-	</ul>	
+	</ul>
 </p>
 
 </div>
@@ -37,7 +37,7 @@
   				<li role="presentation" class="active"><a data-target="#routing" data-toggle="tab">Routing</a></li>
   				<li role="presentation" ><a data-target="#controler" data-toggle="tab">Controller</a></li>
   				<li role="presentation" ><a data-target="#result" data-toggle="tab">Result</a></li>
-			</ul>	
+			</ul>
 			<div class="tab-content ">
 				<div id="routing" class="tab-pane active">
 					<br>
@@ -45,10 +45,10 @@
 					URL : <code> http://localhost:5151/doc/demo/html/nodefony </code>
 					</p>
 					<pre>
-documentation-demo: 
+documentation-demo:
   pattern:  /doc/demo/html/{name}
   defaults: {controller: "documentationBundle:demo:html", "name":"nodefony"}
-					</pre>	
+					</pre>
 
 				</div>
 
@@ -56,12 +56,12 @@ documentation-demo:
 					<p>
 					</p>
 					<pre>
-nodefony.registerController("demo", function(){
+module.exports = nodefony.registerController("demo", function(){
 		/*
 		 *	Class controller name
-		 *	 
-		 */ 
-		var demoController = class demoController extends nodefony.controller {
+		 *
+		 */
+		let demoController = class demoController extends nodefony.controller {
 			/*
 			 *	CONSTRUCTOR
 			 */
@@ -103,7 +103,7 @@ nodefony.registerController("demo", function(){
   				<li role="presentation" ><a data-target="#controler1" data-toggle="tab">Controller</a></li>
   				<li role="presentation" ><a data-target="#twig1" data-toggle="tab">Twig</a></li>
   				<li role="presentation" ><a data-target="#result1" data-toggle="tab">Result</a></li>
-			</ul>	
+			</ul>
 
 			<div class="tab-content ">
 				<div id="routing1" class="tab-pane active">
@@ -112,22 +112,22 @@ nodefony.registerController("demo", function(){
 					URL : <code> http://localhost:5151/doc/demo/render/nodefony </code>
 					</p>
 					<pre>
-documentation-demo-render: 
+documentation-demo-render:
   pattern:  /doc/demo/render/{name}
   defaults: {controller: "documentationBundle:demo:render", "name":"nodefony"}
-					</pre>	
+					</pre>
 				</div>
 
 				<div id="controler1" class="tab-pane ">
 					<p>
 					</p>
 					<pre>
-nodefony.registerController("demo", function(){
+module.exports = nodefony.registerController("demo", function(){
 		/*
 		 *	Class controller name
-		 *	 
-		 */ 
-		var demoController = class demoController extends nodefony.controller {
+		 *
+		 */
+		let demoController = class demoController extends nodefony.controller {
 			/*
 			 *	CONSTRUCTOR
 			 */
@@ -174,38 +174,38 @@ nodefony.registerController("demo", function(){
   				<li role="presentation" class="active"><a data-target="#routing2" data-toggle="tab">Routing</a></li>
   				<li role="presentation" ><a data-target="#controler2" data-toggle="tab">Controller</a></li>
   				<li role="presentation" ><a data-target="#twig2" data-toggle="tab">Twig</a></li>
-			</ul>	
+			</ul>
 
 			<div class="tab-content ">
-				
+
 				<div id="routing2" class="tab-pane active">
 					<br>
 					<p>
 					URL : <code> http://localhost:5151/query/join </code>
 					</p>
 					<pre>
-sqlJoin: 
+sqlJoin:
   pattern:  /query/join
   defaults: {"controller": "demoBundle:demo:querySqlJoin"}
-  requirements: 
-    method: GET	
-					</pre>	
+  requirements:
+    method: GET
+					</pre>
 
 				</div>
 
 				<div id="controler2" class="tab-pane ">
 					<p>
 						<div class="alert alert-warning" role="alert">
-						For database data rendering ,  The controller's Action function must return a Promise Object 
+						For database data rendering ,  The controller's Action function must return a Promise Object
 						</div>
 					</p>
 					<pre>
-nodefony.registerController("demo", function(){
+module.exports = nodefony.registerController("demo", function(){
 		/*
 		 *	Class controller name
-		 *	 
-		 */ 
-		var demoController = class demoController extends nodefony.controller {
+		 *
+		 */
+		let demoController = class demoController extends nodefony.controller {
 			/*
 			 *	CONSTRUCTOR
 			 */
@@ -279,7 +279,7 @@ nodefony.registerController("demo", function(){
 &#123% endif %&#125
 					</pre>
 				</div>
-	
+
 			</div>
 		</div>
 	</div>
@@ -294,10 +294,10 @@ nodefony.registerController("demo", function(){
   				<li role="presentation" class="active"><a data-target="#routing3" data-toggle="tab">Routing</a></li>
   				<li role="presentation" ><a data-target="#controler3" data-toggle="tab">Controller</a></li>
   				<li role="presentation" ><a data-target="#logger3" data-toggle="tab">Logger</a></li>
-			</ul>	
+			</ul>
 
 			<div class="tab-content ">
-				
+
 				<div id="routing3" class="tab-pane active">
 					<br>
 					<p>
@@ -305,28 +305,28 @@ nodefony.registerController("demo", function(){
 					</p>
 
 					<pre>
-websoket: 
+websoket:
   pattern:  /websoket
   defaults: {"controller": "demoBundle:demo:websoket"}
   requirements:
     method:     GET,WEBSOCKET
-					</pre>	
+					</pre>
 
 				</div>
 
 				<div id="controler3" class="tab-pane ">
 					<p>
 						<div class="alert alert-warning" role="alert">
-						To use websocket you must understand Nodefony Request Context  
+						To use websocket you must understand Nodefony Request Context
 						</div>
 					</p>
 					<pre>
-nodefony.registerController("demo", function(){
+module.exports = nodefony.registerController("demo", function(){
 	/*
 	*	Class controller name
-	*	 
-	*/ 
-	var demoController = class demoController extends nodefony.controller {
+	*
+	*/
+	let demoController = class demoController extends nodefony.controller {
 		/*
 		*	CONSTRUCTOR
 		*/
@@ -348,12 +348,12 @@ nodefony.registerController("demo", function(){
 						// LOG  MESSAGE CLIENT IN TERMINAL
 						this.logger( message.utf8Data , "INFO");
 					}else{
-						// PREPARE  PUSH MESSAGES SERVER 
+						// PREPARE  PUSH MESSAGES SERVER
 						// SEND MESSAGES TO CLIENTS
 						var i = 0 ;
 						var id = setInterval(() => {
 							var mess = "I am a  message "+ i +"\n" ;
-							<strong> // You can use context to send data 
+							<strong> // You can use context to send data
 							context.send(mess);
 							//  or call controller method ( renderResponse , render , renderJson )
 							this.renderResponse(mess);</strong>
@@ -371,7 +371,7 @@ nodefony.registerController("demo", function(){
 						// Event websocket close by client
 						<strong>context.listen</strong>(this, "onClose" , function(){
 							if (id){
-								clearInterval(id);	
+								clearInterval(id);
 							}
 						})
 					}
@@ -389,7 +389,7 @@ nodefony.registerController("demo", function(){
 
 				<div id="logger3" class="tab-pane">
 					<br>
-					
+
 					<pre>
 
 <strong>/* YOU CAN SHOW LOG IN TERMINAL */</strong>
@@ -425,7 +425,7 @@ Thu Oct 06 2016 15:49:19 INFO REQUEST WEBSOCKET SECURE  : Thu Oct 06 2016 15:49:
 			<ul class="nav nav-tabs">
   				<li role="presentation" class="active"><a data-target="#routing4" data-toggle="tab">Routing</a></li>
   				<li role="presentation" ><a data-target="#controler4" data-toggle="tab">Controller</a></li>
-			</ul>	
+			</ul>
 			<div class="tab-content ">
 				<div id="routing4" class="tab-pane active">
 					<br>
@@ -433,19 +433,19 @@ Thu Oct 06 2016 15:49:19 INFO REQUEST WEBSOCKET SECURE  : Thu Oct 06 2016 15:49:
 					URL : <code> http://localhost:5151/json </code>
 					</p>
 					<pre>
-json: 
+json:
   pattern:  /json
   defaults: {"controller": "demoBundle:demo:json"}
-					</pre>	
+					</pre>
 				</div>
 				<div id="controler4" class="tab-pane ">
 					<pre>
-nodefony.registerController("demo", function(){
+module.exports = nodefony.registerController("demo", function(){
 		/*
 		 *	Class controller name
-		 *	 
-		 */ 
-		var demoController = class demoController extends nodefony.controller {
+		 *
+		 */
+		let demoController = class demoController extends nodefony.controller {
 			/*
 			 *	CONSTRUCTOR
 			 */
@@ -483,7 +483,7 @@ nodefony.registerController("demo", function(){
 			<ul class="nav nav-tabs">
   				<li role="presentation" class="active"><a data-target="#routing6" data-toggle="tab">Routing</a></li>
   				<li role="presentation" ><a data-target="#controler6" data-toggle="tab">Controller</a></li>
-			</ul>	
+			</ul>
 			<div class="tab-content ">
 				<div id="routing6" class="tab-pane active">
 					<br>
@@ -491,22 +491,22 @@ nodefony.registerController("demo", function(){
 					URL : <code> http://localhost:5151/xml </code>
 					</p>
 					<pre>
-xmlResponse: 
+xmlResponse:
   pattern:  /xml
   defaults: {"controller": "demoBundle:demo:xml"}
-  requirements: 
+  requirements:
     method: GET
 
-					</pre>	
+					</pre>
 				</div>
 				<div id="controler6" class="tab-pane ">
 					<pre>
-nodefony.registerController("demo", function(){
+module.exports = nodefony.registerController("demo", function(){
 		/*
 		 *	Class controller name
-		 *	 
-		 */ 
-		var demoController = class demoController extends nodefony.controller {
+		 *
+		 */
+		let demoController = class demoController extends nodefony.controller {
 			/*
 			 *	CONSTRUCTOR
 			 */
@@ -518,9 +518,8 @@ nodefony.registerController("demo", function(){
 		 	*
 		 	*/
 			xmlAction (){
-				var kernel = this.get("kernel") ;
-				var settings = kernel.settings ;
-				var content = '&lt;xml&gt;&lt;nodefony&gt;\
+				let settings = this.kernel.settings ;
+				let content = '&lt;xml&gt;&lt;nodefony&gt;\
 					&lt;kernel name="'+settings.name+'" version="'+settings.system.version+'"&gt;\
 						&lt;server type="HTTP" port="'+settings.system.httpPort+'"&gt;&lt;/server&gt;\
 						&lt;server type="HTTPS" port="'+settings.system.httpsPort+'"&gt;&lt;/server&gt;\
@@ -552,7 +551,7 @@ nodefony.registerController("demo", function(){
 			<ul class="nav nav-tabs">
   				<li role="presentation" class="active"><a data-target="#routing5" data-toggle="tab">Routing</a></li>
   				<li role="presentation" ><a data-target="#controler5" data-toggle="tab">Controller</a></li>
-			</ul>	
+			</ul>
 			<div class="tab-content ">
 				<div id="routing5" class="tab-pane active">
 					<br>
@@ -560,21 +559,21 @@ nodefony.registerController("demo", function(){
 					URL : <code> http://localhost:5151/download </code>
 					</p>
 					<pre>
-download: 
+download:
   pattern:  /download
   defaults: {"controller": "demoBundle:finder:download"}
-  requirements: 
-    method: GET	
-					</pre>	
+  requirements:
+    method: GET
+					</pre>
 				</div>
 				<div id="controler5" class="tab-pane ">
 					<pre>
-nodefony.registerController("finder", function(){
+module.exports = nodefony.registerController("finder", function(){
 		/*
 		 *	Class controller name
-		 *	 
-		 */ 
-		var finderController = class finderController extends nodefony.controller {
+		 *
+		 */
+		let finderController = class finderController extends nodefony.controller {
 			/*
 			 *	CONSTRUCTOR
 			 */
@@ -586,10 +585,8 @@ nodefony.registerController("finder", function(){
 		 	*
 		 	*/
 			downloadAction (){
-				var kernel = this.get('kernel') ;
-
-				var filePath = kernel.rootDir + '/README.md';
-				return <strong>this.renderFileDownload</strong>(filePath); 
+				var filePath = this.kernel.rootDir + '/README.md';
+				return <strong>this.renderFileDownload</strong>(filePath);
 			}
 		};
 		// RETURN  class
@@ -611,7 +608,7 @@ nodefony.registerController("finder", function(){
 			<ul class="nav nav-tabs">
   				<li role="presentation" class="active"><a data-target="#routing7" data-toggle="tab">Routing</a></li>
   				<li role="presentation" ><a data-target="#controler7" data-toggle="tab">Controller</a></li>
-			</ul>	
+			</ul>
 			<div class="tab-content ">
 				<div id="routing7" class="tab-pane active">
 					<br>
@@ -619,22 +616,22 @@ nodefony.registerController("finder", function(){
 					URL : <code> http://localhost:5151/rendermedia </code>
 					</p>
 					<pre>
-render-media: 
+render-media:
   pattern:  /rendermedia
   defaults: {"controller": "demoBundle:demo:mediaStream"}
-  requirements: 
+  requirements:
     method: GET
 
-					</pre>	
+					</pre>
 				</div>
 				<div id="controler7" class="tab-pane ">
 					<pre>
-nodefony.registerController("demo", function(){
+module.exports = nodefony.registerController("demo", function(){
 		/*
 		 *	Class controller name
-		 *	 
-		 */ 
-		var demoController = class demoController extends nodefony.controller {
+		 *
+		 */
+		let demoController = class demoController extends nodefony.controller {
 			/*
 			 *	CONSTRUCTOR
 			 */
@@ -646,10 +643,9 @@ nodefony.registerController("demo", function(){
 		 	*
 		 	*/
 			mediaStreamAction (){
-				var kernel = this.get('kernel') ;
-				var filePath = kernel.rootDir + '/app/Resources/medias/myAudio.mp3';
+				var filePath = this.kernel.rootDir + '/app/Resources/medias/myAudio.mp3';
 				var file = new nodefony.fileClass(filePath);
-				return <strong>this.renderMediaStream</strong>(file); 
+				return <strong>this.renderMediaStream</strong>(file);
 			}
 		}
 		// RETURN  class
@@ -671,7 +667,7 @@ nodefony.registerController("demo", function(){
 			<ul class="nav nav-tabs">
   				<li role="presentation" class="active"><a data-target="#routing8" data-toggle="tab">Routing</a></li>
   				<li role="presentation" ><a data-target="#controler8" data-toggle="tab">Controller</a></li>
-			</ul>	
+			</ul>
 			<div class="tab-content ">
 				<div id="routing8" class="tab-pane active">
 					<br>
@@ -679,21 +675,21 @@ nodefony.registerController("demo", function(){
 					URL : <code> http://localhost:5151/fileupload </code>
 					</p>
 					<pre>
-uploadFile: 
+uploadFile:
   pattern:  /fileupload
   defaults: {"controller": "demoBundle:demo:upload"}
-  requirements: 
+  requirements:
     method: POST
-					</pre>	
+					</pre>
 				</div>
 				<div id="controler8" class="tab-pane ">
 					<pre>
-nodefony.registerController("demo", function(){
+module.exports = nodefony.registerController("demo", function(){
 		/*
 		 *	Class controller name
-		 *	 
-		 */ 
-		var demoController = class demoController extends nodefony.controller {
+		 *
+		 */
+		let demoController = class demoController extends nodefony.controller {
 			/*
 			 *	CONSTRUCTOR
 			 */
@@ -706,12 +702,12 @@ nodefony.registerController("demo", function(){
 		 	*/
 			uploadAction (){
 				var files = this.<strong>getParameters</strong>("query.files");
-				var path =  this.get("kernel").rootDir+"/src/bundles/demoBundle/Resources/images" ;	
+				var myPath =  path.resolve( this.kernel.rootDir, "src", "bundles", "demoBundle", "Resources", "images");
 				for (var file in files){
 					if( files[file].error ){
 						throw files[file].error ;
 					}
-					files[file].<strong>move</strong>(path);
+					files[file].<strong>move</strong>(myPath);
 					//console.log( files[file].getExtention() )
 					//console.log( files[file].getMimeType() )
 					//console.log( files[file].realName() )
@@ -725,11 +721,11 @@ nodefony.registerController("demo", function(){
 					}
 					for (var file in files){
 						var name = files[file].realName();
-						res.files.push(path+"/"+name);
+						res.files.push(myPath+"/"+name);
 						var meta = {
 							date : new Date(),
 							extention:files[file].getExtention(),
-							file:path+"/"+name,
+							file:myPath+"/"+name,
 							name:name,
 							old_name:files[file].name,
 							size:files[file].stats.size,
@@ -739,12 +735,12 @@ nodefony.registerController("demo", function(){
 						res.metas.push(meta);
 					}
 					return this.renderResponse(
-						JSON.stringify(res), 
-						200, 
+						JSON.stringify(res),
+						200,
 						{'Content-Type': 'application/json; charset=utf-8'}
 					);
 				}
-			}	
+			}
 		}
 		// RETURN  class
 		return demoController;
@@ -765,40 +761,40 @@ nodefony.registerController("demo", function(){
   				<li role="presentation" class="active"><a data-target="#redirect1" data-toggle="tab">Redirect</a></li>
   				<li role="presentation" ><a data-target="#forward" data-toggle="tab">Forward</a></li>
   				<li role="presentation" ><a data-target="#genarate" data-toggle="tab">generateUrl</a></li>
-			</ul>	
+			</ul>
 			<div class="tab-content ">
 				<div id="redirect1" class="tab-pane active">
 					<br>
 					<p>
-					
+
 					</p>
 					<pre>
 redirectGoogleAction (){
 	// status 301 or 302
 	return <strong>this.redirect</strong>("http://google.com");
 };
-					</pre>	
+					</pre>
 				</div>
 				<div id="forward" class="tab-pane">
 					<br>
 					<p>
-					
+
 					</p>
 					<pre>
 forwardAction (){
-	var docBundle = this.get("kernel").getBundles("documentation"); 
+	var docBundle = this.kernel.getBundles("documentation");
 	if (  docBundle ){
 		return <strong>this.forward</strong>("documentationBundle:default:navDoc");
 	}
-	return this.render('demoBundle:Default:navDoc.html.twig');	
-}	
-					</pre>	
+	return this.render('demoBundle:Default:navDoc.html.twig');
+}
+					</pre>
 				</div>
 				<div id="genarate" class="tab-pane ">
 					<pre>
 generateUrlAction (){
 	// absolute
-	return this.redirect ( <strong>this.generateUrl</strong>("user", {name:"cci"}, true) );	
+	return this.redirect ( <strong>this.generateUrl</strong>("user", {name:"cci"}, true) );
 
 	// relative
 	return this.redirect ( <strong>this.generateUrl</strong>("user", {name:"cci"} );
@@ -810,4 +806,3 @@ generateUrlAction (){
 		</div>
 	</div>
 </div>
-

@@ -4,7 +4,7 @@
   <h1><strong>CONTROLLERS</strong> </h1>
 	<div class="alert alert-info" role="alert">
 		<strong>
-		CONTROLLERS Nodefony  </br> 
+		CONTROLLERS Nodefony  </br>
 		</strong>
 	</div>
 	<p>
@@ -103,35 +103,34 @@ total 32
 
 
 	<pre>
-nodefony.<strong>registerController</strong>("name", function(){
+module.exports = nodefony.<strong>registerController</strong>("name", function(){
 		/*
-		 *	closure private space 
+		 *	closure private space
 		 */
-		var tab = [1,2,3,4];
-		var myFuntion = function(){
+		let tab = [1,2,3,4];
+		let myFuntion = function(){
 			return tab ;
 		}
-		
+
 		/*
 		 *	Class controller name
-		 *	 
-		 */ 
-		var <strong>myController</strong> = class myController extends nodefony.controller {
+		 *
+		 */
+		let <strong>myController</strong> = class myController extends nodefony.controller {
 			/*
 			 *	CONSTRUCTOR
 			 */
 			constructor (container, context){
 				super(container, context);
 			};
-				
+
 			/*
 		 	*	Action controller
-		 	*	( action render public  ) 
+		 	*	( action render public  )
 		 	*
 		 	*/
 			<strong>indexAction</strong>(){
-				var kernel = this.get("kernel") ;
-				var settings = kernel.settings ;
+				var settings = this.kernel.settings ;
 				var html = '&lt;html&gt;&lt;body&gt;Nodefony version : '+settings.system.version+'&lt;/body&gt;&lt;/html&gt;';
 				return this.renderResponse(html);
 			};
@@ -147,26 +146,26 @@ nodefony.<strong>registerController</strong>("name", function(){
 
 <div class="doc2 ">
 	<p>
-		The nodefony core router find routes with pattern <code>'nameBundle:controller:<strong>action</strong>'</code> Example : demoBundle:default:index <br> 
-		For the router find the controller's action functions.  <br>    
+		The nodefony core router find routes with pattern <code>'nameBundle:controller:<strong>action</strong>'</code> Example : demoBundle:default:index <br>
+		For the router find the controller's action functions.  <br>
 		The name of function must finish  by '...Action' <code>'indexAction'</code>
-	</p>	
+	</p>
 	<pre>
 /*
- *	Action index in controller default  
+ *	Action index in controller default
  *
  */
 index<strong>Action</strong> (){
 	...
 };
 	</pre>
-	
+
 </div>
 
 
 <h2 name="data" id="data">Rendering Datas :</h2>
 <div class="doc2 ">
-	
+
 	There are 2 differents ways to render datas (or templates)  in the actions of the controllers
 
 	<div  class="panel panel-info">
@@ -176,7 +175,7 @@ index<strong>Action</strong> (){
   				<li role="presentation" class="active"><a data-target="#renderingS" data-toggle="tab">rendering</a></li>
   				<li role="presentation" ><a data-target="#examples1" data-toggle="tab">Examples</a></li>
   				<li role="presentation" ><a data-target="#" data-toggle="tab"></a></li>
-			</ul>	
+			</ul>
 			<div class="tab-content ">
 				<div id="renderingS" class="tab-pane active">
 					<br>
@@ -184,14 +183,14 @@ index<strong>Action</strong> (){
 						For Synchrone data rendering ,  The controller's Action  method <strong> must return a Response Class , Promise Class or  Object </strong>
 					</div>
 					<p>
-						The controller give somme tools to render Synchrone data : 
+						The controller give somme tools to render Synchrone data :
 						<ul>
 							<li> renderResponse </li>
 							<li> render </li>
 							<li> renderJson </li>
 						</ul>
 					</p>
-						
+
 				</div>
 				<div id="examples1" class="tab-pane">
 					<br>
@@ -200,8 +199,7 @@ index<strong>Action</strong> (){
  *	RENDER RAW DATA WITH renderResponse
  */
 indexAction (){
-	var kernel = this.get("kernel") ;
-	var settings = kernel.settings ;
+	var settings = this.kernel.settings ;
 	var html = '&lt;html&gt;&lt;body&gt;Nodefony version : '+settings.system.version+'&lt;/body&gt;&lt;/html&gt;';
 	<strong>return this.renderResponse(html);</strong>
 };
@@ -213,30 +211,28 @@ indexAction (){
  *	RENDER TWIG TEMPLATE with render
  */
 indexAction (){
-	var kernel = this.get("kernel") ;
 	<strong>return this.render("demoBundle:Default:index.html.twig",{
-		settings:kernel.settings	
+		settings:this.kernel.settings
 	});</strong>
-	
+
 };
 					</pre>
 
 					<pre>
 /*
- *	RENDER TWIG TEMPLATE AUTO with object 
+ *	RENDER TWIG TEMPLATE AUTO with object
  */
 indexAction (){
-	var kernel = this.get("kernel") ;
 	<strong>return {
-		settings:kernel.settings	
+		settings:this.kernel.settings
 	}</strong>
 };
 					</pre>
-	
+
 				</div>
 				<div id="" class="tab-pane ">
 					<br>
-					
+
 				</div>
 			</div>
 		</div>
@@ -250,7 +246,7 @@ indexAction (){
   				<li role="presentation" class="active"><a data-target="#renderingA" data-toggle="tab">rendering</a></li>
   				<li role="presentation" ><a data-target="#examples2" data-toggle="tab">Examples</a></li>
   				<li role="presentation" ><a data-target="#" data-toggle="tab"></a></li>
-			</ul>	
+			</ul>
 			<div class="tab-content ">
 				<div id="renderingA" class="tab-pane active">
 					<br>
@@ -258,30 +254,29 @@ indexAction (){
 						<div class="alert alert-warning" role="alert">
 							For Asynchrone data rendering ,  The controller's Action  method <strong> must  not return a value </strong>
 						</div>
-						The controller give somme tools to render Asynchrone data : 
+						The controller give somme tools to render Asynchrone data :
 							<ul>
 								<li> renderResponse </li>
 								<li> renderAsync </li>
 								<li> renderJsonAsync </li>
 							</ul>
 						The  framework  wait an event of other entity of framework ( orm database , syscall )
-						
+
 					</p>
 				</div>
 				<div id="examples2" class="tab-pane">
 					<br>
-					
+
 					<pre>
 /*
  *	RENDER RAW DATA
  */
 rawResponseAsyncAction(){
-	var kernel = this.get("kernel") ;
-	var settings = kernel.settings ;
+	var settings = this.kernel.settings ;
 
-	// SYSCALL async 
+	// SYSCALL async
 	var childHost =  <strong>exec</strong>('hostname', (error, stdout, stderr) => {
-		var hostname = stdout ;	
+		var hostname = stdout ;
 
 		var content = '&lt;xml&gt;'&lt;nodefony&gt;\
 			'&lt;kernel name="'+settings.name+'" version="'+settings.system.version+'"&gt;\
@@ -300,11 +295,11 @@ rawResponseAsyncAction(){
 };
 
 					</pre>
-	
+
 				</div>
 				<div id="" class="tab-pane ">
 					<br>
-					
+
 				</div>
 			</div>
 		</div>
@@ -322,13 +317,13 @@ rawResponseAsyncAction(){
   				<li role="presentation" class="active"><a data-target="#context1" data-toggle="tab">CONTEXT</a></li>
   				<li role="presentation" ><a data-target="#http" data-toggle="tab">HTTP</a></li>
   				<li role="presentation" ><a data-target="#websoket" data-toggle="tab">WEBSOCKET</a></li>
-			</ul>	
+			</ul>
 			<div class="tab-content ">
 				<div id="context1" class="tab-pane active">
 					<br>
 					<p>
 					In controller the actions can have  two execution contexts. <br>
-					When a request comes,  the nodefony core instantiates a  context Class ( http or websocket )	
+					When a request comes,  the nodefony core instantiates a  context Class ( http or websocket )
 					</p>
 					<pre>
 /*
@@ -337,7 +332,7 @@ rawResponseAsyncAction(){
 */
 indexAction (){
 
-	// two methods to detect the  request type by context or by method 
+	// two methods to detect the  request type by context or by method
 
 	// FIRST with getContext
 	<strong>var context = this.getContext();</strong>
@@ -358,7 +353,7 @@ indexAction (){
 			throw new Error(" Bad Context")
 	}
 
-	// SECOND with getMethod 
+	// SECOND with getMethod
 	<strong>var method = this.getMethod();</strong>
 	switch( method ){
 		<strong>case "GET" :</strong>
@@ -377,7 +372,7 @@ indexAction (){
 			throw new Error(" METHOD NOT ALLOWED")
 	}
 };
-					</pre>	
+					</pre>
 				</div>
 
 				<div id="http" class="tab-pane">
@@ -416,9 +411,9 @@ user: [Object],
 url: 'https://nodefony.com:5152/demo/json',
 remoteAddress: '192.168.100.71',
 extendTwig: [Object],
-profiling: [Object] 
+profiling: [Object]
 <strong>}</strong>
-					</pre>	
+					</pre>
 				</div>
 				<div id="websoket" class="tab-pane ">
 				<br>
@@ -456,7 +451,7 @@ remoteAdress: '192.168.100.71',
 resolver: [Object],
 notificationsCenter: [Object],
 extendTwig: [Object],
-profiling: [Object] 
+profiling: [Object]
 <strong>}</strong>
 					</pre>
 				</div>
@@ -475,7 +470,7 @@ profiling: [Object]
   				<li role="presentation" class="active"><a data-target="#container" data-toggle="tab">Container</a></li>
   				<li role="presentation" ><a data-target="#services" data-toggle="tab">Services</a></li>
   				<li role="presentation" ><a data-target="#paramater" data-toggle="tab">Parameters</a></li>
-			</ul>	
+			</ul>
 			<div class="tab-content ">
 				<div id="container" class="tab-pane active">
 					<br>
@@ -494,23 +489,23 @@ profiling: [Object]
 							<li> this.setParameters() </li>
 						</ul>
 					</p>
-						
+
 				</div>
 				<div id="services" class="tab-pane">
 					<br>
 					<p>
-					
+
 					</p>
 					<pre>
 // GET SETTINGS services HTTPS SERVER
 var settingsHttps =  <strong>this.get</strong>("httpsServer").settings ;
 
-// GET I18n services 
+// GET I18n services
 var translateService = <strong>this.get</strong>("translation");
 
-// GET sessions services 
-var sessionsService = <strong>this.get</strong>("sessions");	
-					</pre>	
+// GET sessions services
+var sessionsService = <strong>this.get</strong>("sessions");
+					</pre>
 				</div>
 				<div id="paramater" class="tab-pane ">
 					<br>
@@ -520,14 +515,14 @@ var sessionsService = <strong>this.get</strong>("sessions");
 // get  asseticBundle globals settings
 this.getParameters("bundles.assetic")
 
-// LOG  
-{ 
+// LOG
+{
 	name: 'asseticBundle',
 	locale: 'en_en',
 	version: '1.0',
 	less: { optimization: 0, compress: true, cache: true, async: false },
 	coffescript: null,
-	CDN: { stylesheets: null, javascripts: null } 
+	CDN: { stylesheets: null, javascripts: null }
 }
 					</pre>
 				</div>
@@ -536,7 +531,7 @@ this.getParameters("bundles.assetic")
 	</div>
 
 
-	
+
 </div>
 
 
@@ -558,15 +553,15 @@ this.getParameters("bundles.assetic")
   				<li role="presentation" class="active"><a data-target="#request" data-toggle="tab">request</a></li>
   				<li role="presentation" ><a data-target="#paramater1" data-toggle="tab">Parameters</a></li>
   				<li role="presentation" ><a data-target="#" data-toggle="tab"></a></li>
-			</ul>	
+			</ul>
 			<div class="tab-content ">
 				<div id="request" class="tab-pane active">
 					<br>
 					<p>
-					
+
 					</p>
 					<pre>
-//  DUMP Request 
+//  DUMP Request
 
 var resquest = this.getRequest();
 console.log(resquest);
@@ -593,16 +588,16 @@ console.log(resquest);
   dataSize: 0,
   body: &lt;Buffer&gt;
 <strong>}</strong>
-					</pre>	
+					</pre>
 				</div>
 				<div id="paramater1" class="tab-pane">
 					<br>
 					<h4>Query String :</h4>
 						<pre>
-// Get query string from container service : 
+// Get query string from container service :
 var queryString  = this.getParameters("query.get");
 
-// Get query string from Class request 
+// Get query string from Class request
 var request = this.getRequest();
 var queryString = request.queryGet ;
 						</pre>
@@ -615,7 +610,7 @@ var post = this.getParameters("query.post");
 var request = this.getRequest();
 var postData = request.queryPost ;
 						</pre>
-					<h4>Files Data : ( upload )</h4> 
+					<h4>Files Data : ( upload )</h4>
 						<pre>
 // Get Files data from container service :
 var queryFile = this.getParameters("query.files");
@@ -636,25 +631,25 @@ var query = request.query ;
 						</pre>
 					<h4>Request Body  :</h4>
 						<pre>
-// Get body from Class Request 
+// Get body from Class Request
 var request = this.getRequest();
 var body = request.body ;
 						</pre>
 
 					<h4>Request Cookies  :</h4>
 						<div class="alert alert-warning" role="alert">
-							You can find Cookies in context !!!  
+							You can find Cookies in context !!!
 						</div>
 						<pre>
 var context = this.getContext();
 var cookies = context.cookies ;
 						</pre>
-	
+
 				</div>
 				<div id="" class="tab-pane ">
 					<br>
 					<p>
-					
+
 					</p>
 					<pre>
 
@@ -663,7 +658,7 @@ var cookies = context.cookies ;
 			</div>
 		</div>
 	</div>
-	
+
 
 
 	<div  class="panel panel-info">
@@ -673,14 +668,14 @@ var cookies = context.cookies ;
   				<li role="presentation" class="active"><a data-target="#Response" data-toggle="tab">Response</a></li>
   				<li role="presentation" ><a data-target="#paramater2" data-toggle="tab">Parameters</a></li>
   				<li role="presentation" ><a data-target="#" data-toggle="tab"></a></li>
-			</ul>	
+			</ul>
 			<div class="tab-content ">
 				<div id="Response" class="tab-pane active">
 					<br>
 					<p>
 					</p>
 					<pre>
-// DUMP Response 
+// DUMP Response
 
 var response = this.getResponse();
 console.log(response);
@@ -695,26 +690,26 @@ console.log(response);
   headers: {},
   ended: false,
   statusCode: 200,
-  timeout: 40000 
+  timeout: 40000
 <strong>}</strong>
-					</pre>	
+					</pre>
 				</div>
 				<div id="paramater2" class="tab-pane">
 					<br>
 					<h4>Response Set Timeout :</h4>
 					<pre>
-// response Timeout  when the time is up the framework makes the 408 response  
+// response Timeout  when the time is up the framework makes the 408 response
 this.getResponse().<strong>setTimeout</strong>(5000)
 					</pre>
 					<h4>Response Set Headers :</h4>
 					<pre>
 
-// with setHeader	
+// with setHeader
 this.getResponse().<strong>setHeader</strong>("Content-Type", "text/html; charset=utf-8");
 
 //or with setHeaders
 this.getResponse().<strong>setHeaders</strong>({
-	"Content-Type" :"text/html; charset=utf-8"	
+	"Content-Type" :"text/html; charset=utf-8"
 })
 					</pre>
 					<h4>Response Set StatusCode :</h4>
@@ -738,12 +733,12 @@ var cookieDefaultSettings = {
 var cookie = new nodefony.cookies.cookie("COOKIE NAME", "cookie value" , cookieDefaultSettings);
 this.getResponse().<strong>addCookie</strong>(cookie);
 					</pre>
-	
+
 				</div>
 				<div id="" class="tab-pane ">
 					<br>
 					<p>
-					
+
 					</p>
 					<pre>
 
@@ -761,18 +756,15 @@ this.getResponse().<strong>addCookie</strong>(cookie);
 <div class="doc2 ">
 	<pre>
 indexAction (){
-	var kernel = this.get("kernel") ;
-	var settings = kernel.settings ;
+	var settings = this.kernel.settings ;
 	<strong>this.logger( "Nodefony version : Alpha" , "INFO");</strong>
 	var html = '&lt;html&gt;&lt;body&gt;Nodefony version : '+settings.system.version+'&lt;/body&gt;&lt;/html&gt;';
 	return this.renderResponse(html);
 };
 
-// IN TERMINAL 
+// IN TERMINAL
 
 Thu Oct 06 2016 15:49:10 <strong>INFO CONTROLER demo</strong>   : Nodefony version : Alpha
 
 	</pre>
 </div>
-
-
