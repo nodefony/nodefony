@@ -30,7 +30,6 @@ module.exports = nodefony.registerCommand("{{name}}",function(){
 						}else{
 							this.showHelp();
 						}
-
 					break;
 					default:
 						this.logger(cmd[1] + " : Not find ","ERROR")
@@ -44,7 +43,7 @@ module.exports = nodefony.registerCommand("{{name}}",function(){
 	return {
 		name:"{{name}}",
 		commands:{
-			id:["{{name}}:example myArg1 myArg2" ,"documentation command  to see in showHelp() "],
+			id:["{{name}}:example myArg1 myArg2" ,"documentation command to see in showHelp() "],
 		},
 		cli:{{name}}
 	}
