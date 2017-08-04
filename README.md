@@ -132,7 +132,8 @@ system:
       options:
         rejectUnauthorized      : false
 
-  bundles                       : ~                      
+  bundles                       :
+    demo                        : "src/bundles/demoBundle"                 
 ```
 
 ## <a name="cli"></a>Command Line Interface
@@ -268,19 +269,20 @@ locale :                        en_en
 
 #
 #  WATCHERS
-#    
+#
 #    watchers Listen to changes, deletion, renaming of files and directories
 #    of different components
-#       
+#
 #    For watch all components
 #
-#      watch:                   true
+#      watch:			true
 #    or
 #      watch:
-#        controller:            true
-#        config:                true
-#        views:                 true
-#        translations:          true
+#        controller:	true
+#        config:        true		# only  routing.yml
+#        views:			true
+#        translations:  true
+#        webpack:       true
 #
 watch:                          true
 ```
@@ -305,9 +307,7 @@ const commonConfig = require("./webpack.common.js");
 const webpackDevClient = "webpack-dev-server/client?https://"+kernel.hostHttps+"/";
 
 module.exports = webpackMerge( {
-    watch       : true,
     entry       : {
-      //hello    : ["./js/hello.js", webpackDevClient ],
       hello  : [ "./js/hello.js" ],
     },
     output      : {

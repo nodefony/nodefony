@@ -14,7 +14,7 @@ module.exports = nodefony.registerController("{{name}}", function(){
 		 *	@param {class} context
 		 *
 		 */
-		var {{controllerName}} = class {{controllerName}} extends nodefony.controller {
+		let {{controllerName}} = class {{controllerName}} extends nodefony.controller {
 
 			constructor (container, context){
 				super(container, context);
@@ -27,12 +27,12 @@ module.exports = nodefony.registerController("{{name}}", function(){
 		 	*/
 			indexAction (){
 				try {
-        	var index = path.resolve( this.bundle.publicPath, "dist", "index.html");
-          var file = new nodefony.fileClass(index);
-          return this.renderResponse(file.content(file.encoding));
-        }catch(e){
-        	throw e ;
-        }
+		    		let index = path.resolve( this.bundle.publicPath, "dist", "index.html");
+		      		let file = new nodefony.fileClass(index);
+		      		return this.renderResponse(file.content(file.encoding));
+        		}catch(e){
+        			throw e ;
+        		}
 			}
 		};
 		return {{controllerName}};

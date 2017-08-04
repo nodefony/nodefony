@@ -8,9 +8,7 @@ const commonConfig = require("./webpack.common.js");
 const webpackDevClient = "webpack-dev-server/client?https://"+kernel.hostHttps+"/";
 
 module.exports = webpackMerge( {
-    //watch       : true,
     entry       : {
-      //{{name}}    : ["./js/{{name}}.js", webpackDevClient ],
       {{name}}  : [ "./js/{{name}}.js" ],
     },
     output      : {

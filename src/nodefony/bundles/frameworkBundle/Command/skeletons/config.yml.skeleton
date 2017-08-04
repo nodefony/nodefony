@@ -37,9 +37,9 @@ locale      : {{ local }}
 #      watch:			true
 #    or
 #      watch:
-#        controller     :	true
+#        controller     : true
 #        config         : true		# only  routing.yml
-#        views          :	true
+#        views          : true
 #        translations   : true
 #        webpack        : true
 watch       : true

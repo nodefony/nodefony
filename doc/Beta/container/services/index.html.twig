@@ -12,30 +12,22 @@
 	</p>
 
 </div>
-	
+
 <h2 > You can see here :</h2>
 
 <p>
 	<ul>
-		<li> <a href="#location">Location Services</a></li>	
-		<li> <a href="#file">File Services</a></li>	
+		<li> <a href="#location">Location Services</a></li>
+		<li> <a href="#file">File Services</a></li>
 		<li> <a href="#service"> Services Usage</a></li>
 	</ul>
 <p>
 
 
-
-
-
-
-		
-
 <h2  id="location">Location  Services:</h2>
-
-
 <div class="doc2">
 	<p>
-		You can find or add controllers in bundle repository under <code>services</code> directory .		
+		You can find or add service in bundle repository under <code>services</code> directory .
 
 	</p>
 
@@ -53,41 +45,9 @@ drwxr-xr-x  5 cci  staff   170 10 oct 09:37 doc
 -rwxr-xr-x  1 cci  staff   706 22 sep 10:56 readme.md
 drwxr-xr-x  3 cci  staff   102 12 oct 14:42 <strong>services</strong>
 drwxr-xr-x  2 cci  staff    68 20 jui 11:07 tests
-
-
 	</pre>
 </div>
 
-
-<h2 name="file" id="file"> File Services   :<h2>
-<h3>File Services  :</h3>
-<div class="doc3 ">
-
-<p>
-	The name of file must finish by <strong>'...Service.js'</strong>  example : <code> name<strong>Service.js</strong></code><br>
-	Exemple httpBundle : 
-</p>
-
-	<pre>
-$ ll src/nodefony/bundles/httpBundle/services
-├── kernel
-│   └── httpKernelService.js
-├── servers
-│   ├── httpService.js
-│   ├── httpsService.js
-│   ├── webSocketSecureService.js
-│   └── websocketService.js
-├── sessions
-│   └── sessionsService.js
-├── staticFiles
-│   ├── staticService.js
-│   └── staticsService.js.old
-└── upload
-    └── uploadService.js
-	</pre>
-
-
-</div>
 
 <h3>Autoloader  :</h3>
 <div class="doc3 ">
@@ -114,50 +74,95 @@ $ ll src/nodefony/bundles/httpBundle/services
 
 <h3>Class Service  :</h3>
 <div class="doc3 ">
-
 <p>
+    The name of file must finish by <strong>'...Service.js'</strong>  example : <code> name<strong>Service.js</strong></code><br>
 	Nodefony core has a method <strong>registerService</strong> which must return class as a  Closure. <br>
 </p>
+	<pre>
+module.exports = nodefony.<strong>registerService</strong>("name", function(){
+    /*
+     *	closure private space
+     */
+    var tab = [1,2,3,4];
+    var myFuntion = function(){
+    	return tab ;
+    }
 
+    /*
+     *	Class service name
+     *	constructor
+     */
+    var <strong>nameService</strong> = class <strong>nameService</strong> extends nodefony.Service {
+
+    	/*
+     	*	constructor  service
+     	*/
+    	constructor (kernel, injection2){
+            super("nameService", kernel.container, kernel.notificationsCenter);
+            this.injection2 = injection2 ;
+    	};
+
+    	/*
+     	*	Method  service
+     	*/
+    	runTask (){
+    	};
+    };
+    // RETURN  class
+    return <strong>nameService;</strong>
+});
+	</pre>
+</div>
+
+<h3>Configuration Service  :</h3>
+<div class="doc3 ">
+<p>
+    Now the injection service can manage this service to instanciate   , inject dependencies ( kernel, injection2 ...).<br>
+</p>
+<pre>
+&lt;?xml version="1.0" ?&gt;
+
+&lt;container xmlns="http://nodefony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://nodefony.com/schema/dic/services http://nodefony.com/schema/dic/services/services-1.0.xsd"&gt;
+
+    &lt;services&gt;
+        &lt;service id="name" class="nameService"&gt;
+                &lt;argument type="service" id="kernel" /&gt;
+                &lt;argument type="service" id="injection2" /&gt;
+        &lt;/service&gt;
+
+    &lt;/services&gt;
+&lt;/container&gt;
+</pre>
+</div>
+
+
+<h2 name="file" id="file"> Example Services bundle core  http  :<h2>
+<h3>File Services  :</h3>
+<div class="doc3 ">
+
+<p>
+	The name of file must finish by <strong>'...Service.js'</strong>  example : <code> name<strong>Service.js</strong></code><br>
+	Exemple httpBundle :
+</p>
 
 	<pre>
-nodefony.<strong>registerService</strong>("name", function(){
-
-		/*
-		 *	closure private space 
-		 */
-		var tab = [1,2,3,4];
-		var myFuntion = function(){
-			return tab ;
-		}
-		
-		/*
-		 *	Class service name
-		 *	constructor 
-		 */ 
-		var <strong>nameService</strong> = class <strong>nameService</strong> {
-
-			/*
-		 	*	constructor  service
-		 	*/	
-			constructor (injection1, injection2){
-				this.injection1 = injection1 ;
-				this.injection2 = injection2 ;
-			};
-			
-			/*
-		 	*	Method  service
-		 	*/
-			runTask (){
-				var kernel = this.get("kernel") ;
-				var settings = kernel.settings ;
-			};
-		};
-		
-		
-		// RETURN  class
-		return <strong>nameService;</strong>
-});
+$ ll src/nodefony/bundles/httpBundle/services
+├── kernel
+│   └── httpKernelService.js
+├── servers
+│   ├── httpService.js
+│   ├── httpsService.js
+│   ├── webSocketSecureService.js
+│   └── websocketService.js
+├── sessions
+│   └── sessionsService.js
+├── staticFiles
+│   ├── staticService.js
+│   └── staticsService.js.old
+└── upload
+    └── uploadService.js
 	</pre>
 
 </div>
@@ -165,12 +170,9 @@ nodefony.<strong>registerService</strong>("name", function(){
 
 <h3>Configuration Service  :</h3>
 <div class="doc3 ">
-
 	<p>
-		Now the injection service can manage this service to instanciate   , inject dependancies ( injection1, injection2 ...).<br>	
 		Exemple httpBundle  : <code>services.xml</code>
-	</p> 
-
+	</p>
 	<pre>
 &lt;?xml version="1.0" ?&gt;
 
@@ -178,7 +180,6 @@ nodefony.<strong>registerService</strong>("name", function(){
     	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     	xsi:schemaLocation="http://nodefony.com/schema/dic/services http://nodefony.com/schema/dic/services/services-1.0.xsd"&gt;
 
-    	
     	&lt;services&gt;
 		&lt;service id="serverStatic" class="statics"&gt;
             		&lt;argument type="service" id="container" /&gt;
@@ -230,11 +231,11 @@ nodefony.<strong>registerService</strong>("name", function(){
 <div class="doc3 ">
 
 <p>
-	When starting all service are registred in Global Container : 
+	When starting all service are registred in Global Container :
 </p>
-	
+
 	<pre>
-Wed Oct 19 2016 14:57:08 DEBUG KERNEL  :  REGISTER BUNDLE : http   
+Wed Oct 19 2016 14:57:08 DEBUG KERNEL  :  REGISTER BUNDLE : http
 Wed Oct 19 2016 14:57:08 DEBUG AUTOLOADER LOAD  : /Users/cci/repository/nodefony/src/nodefony/bundles/httpBundle/services/kernel/httpKernelService.js
 Wed Oct 19 2016 14:57:08 DEBUG AUTOLOADER LOAD  : /Users/cci/repository/nodefony/src/nodefony/bundles/httpBundle/services/servers/httpService.js
 Wed Oct 19 2016 14:57:08 DEBUG AUTOLOADER LOAD  : /Users/cci/repository/nodefony/src/nodefony/bundles/httpBundle/services/servers/httpsService.js
@@ -268,14 +269,13 @@ Wed Oct 19 2016 14:57:08 DEBUG SERVICE INJECTION  : START SERVICE upload( httpKe
 		<p>
 			To use service you must pass by Services Container  :<br>
 			Example to use service in action controller : <br>
-			The controller core have <strong>get</strong> method to find a service  
+			The controller core have <strong>get</strong> method to find a service
 		</p>
 
 		<pre>
 footerAction (){
-	// get kernel service
-	<strong>var kernel = this.get("kernel");</strong>
-	var version =  kernel.settings.system.version ;
+	// get sessions service
+	<strong>let sessionService = this.get("sessions");</strong>
 
 	// get translation  service
 	<strong>var translateService = this.get("translation");</strong>
@@ -287,5 +287,3 @@ footerAction (){
 		</pre>
 	</div>
 </div>
-
-
