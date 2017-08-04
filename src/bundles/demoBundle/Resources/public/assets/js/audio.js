@@ -70,17 +70,19 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 19);
+/******/ 	return __webpack_require__(__webpack_require__.s = 34);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ (function(module, exports) {
 
 module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
 
 /***/ }),
-/* 1 */
+
+/***/ 1:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1732,33 +1734,17 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
 
 
 /***/ }),
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */,
-/* 12 */,
-/* 13 */,
-/* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */,
-/* 18 */,
-/* 19 */
+
+/***/ 34:
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(20);
-__webpack_require__(21);
+__webpack_require__(35);
+__webpack_require__(36);
 __webpack_require__(1);
 __webpack_require__(1);
 
-__webpack_require__(22);
-__webpack_require__(23);
+__webpack_require__(37);
+__webpack_require__(38);
 
 module.exports =  function(){
 
@@ -2134,7 +2120,8 @@ module.exports =  function(){
 
 
 /***/ }),
-/* 20 */
+
+/***/ 35:
 /***/ (function(module, exports) {
 
 // Copyright 2006 Google Inc.
@@ -3064,7 +3051,8 @@ if (!document.createElement('canvas').getContext) {
 
 
 /***/ }),
-/* 21 */
+
+/***/ 36:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!jQuery Knob*/
@@ -3875,17 +3863,21 @@ if (!document.createElement('canvas').getContext) {
 
 
 /***/ }),
-/* 22 */
+
+/***/ 37:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 23 */
+
+/***/ 38:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ })
-/******/ ]);
+
+/******/ });
 });
+//# sourceMappingURL=audio.js.map

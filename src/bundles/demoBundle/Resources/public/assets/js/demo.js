@@ -1,3 +1,499 @@
-!function(t,e){"object"==typeof exports&&"object"==typeof module?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.demo=e():t.demo=e()}(this,function(){return function(t){function e(i){if(n[i])return n[i].exports;var o=n[i]={i:i,l:!1,exports:{}};return t[i].call(o.exports,o,o.exports,e),o.l=!0,o.exports}var n={};return e.m=t,e.c=n,e.d=function(t,n,i){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:i})},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=6)}([,,,,,,function(t,e,n){n(7),n(8);const i=n(9).WOW;n(10),n(11),t.exports=function(){return stage.appKernel.prototype.initializeLog=function(t){return this.syslog.listenWithConditions(this,{severity:{data:"ERROR,INFO"}},function(t){t.payload.stack?console.error("SYSLOG "+t.severityName+" "+t.msgid+" "+new Date(t.timeStamp)+" "+t.msg+" : "+t.payload.stack):$.gritter.add({title:"NODEFONY "+t.severityName,text:t.payload,image:"/frameworkBundle/images/nodefony-logo.png",class_name:"gritter-light"})}),this.syslog.listenWithConditions(this,{severity:{data:"CRITIC,WARNING,DEBUG "}},function(t){switch(t.severityName){case"CRITIC":console.error("SYSLOG "+t.severityName+" "+t.msgid+" "+new Date(t.timeStamp)+" "+t.msg+" : "+t.payload);break;case"WARNING":console.warn("SYSLOG "+t.severityName+" "+t.msgid+" "+new Date(t.timeStamp)+" "+t.msg+" : "+t.payload);break;case"DEBUG":console.log("SYSLOG "+t.severityName+" "+t.msgid+" "+new Date(t.timeStamp)+" "+t.msg+" : "+t.payload)}}),this.syslog},window.appKernel=new stage.appKernel("dev",{debug:!0,router:!1,location:!1,onLoad:function(){$("#status").fadeOut(),$("#preloader").delay(300).fadeOut("slow")},onBoot:function(){},onReady:function(){},onDomLoad:function(){var t=$("#error").html();t&&($("#error").remove(),this.logger(t,"ERROR"));var e=$("#adduser").html();e&&($("#adduser").remove(),this.logger(e,"INFO")),$(".header").sticky({topSpacing:0}),$(window).scroll(function(){$(this).scrollTop()>100?$(".scroll-up").fadeIn():$(".scroll-up").fadeOut()}),$(".screen-height").height($(window).height()),$(window).resize(function(){$(".screen-height").height($(window).height())}),/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)?$("#home").css({"background-attachment":"scroll"}):$("#home").parallax("50%",.1),new i({mobile:!1}).init()}}),appKernel}},function(t,e){!function(t){var e=t(window),n=e.height();e.resize(function(){n=e.height()}),t.fn.parallax=function(i,o,r){function s(){var r=e.scrollTop();c.each(function(){var e=t(this),s=e.offset().top;s+a(e)<r||s>r+n||c.css("backgroundPosition",i+" "+Math.round((l-r)*o)+"px")})}var a,l,c=t(this);c.each(function(){l=c.offset().top}),a=r?function(t){return t.outerHeight(!0)}:function(t){return t.height()},(arguments.length<1||null===i)&&(i="50%"),(arguments.length<2||null===o)&&(o=.1),(arguments.length<3||null===r)&&(r=!0),e.bind("scroll",s).resize(s),s()}}(jQuery)},function(t,e){!function(t){var e={topSpacing:0,bottomSpacing:0,className:"is-sticky",wrapperClassName:"sticky-wrapper",center:!1,getWidthFrom:"",responsiveWidth:!1},n=t(window),i=t(document),o=[],r=n.height(),s=function(){for(var e=n.scrollTop(),s=i.height(),a=s-r,l=e>a?a-e:0,c=0;c<o.length;c++){var u=o[c];if(e<=u.stickyWrapper.offset().top-u.topSpacing-l)null!==u.currentTop&&(u.stickyElement.css("position","").css("top",""),u.stickyElement.trigger("sticky-end",[u]).parent().removeClass(u.className),u.currentTop=null);else{var h=s-u.stickyElement.outerHeight()-u.topSpacing-u.bottomSpacing-e-l;h<0?h+=u.topSpacing:h=u.topSpacing,u.currentTop!=h&&(u.stickyElement.css("position","fixed").css("top",h),void 0!==u.getWidthFrom&&u.stickyElement.css("width",t(u.getWidthFrom).width()),u.stickyElement.trigger("sticky-start",[u]).parent().addClass(u.className),u.currentTop=h)}}},a=function(){r=n.height();for(var e=0;e<o.length;e++){var i=o[e];void 0!==i.getWidthFrom&&!0===i.responsiveWidth&&i.stickyElement.css("width",t(i.getWidthFrom).width())}},l={init:function(n){var i=t.extend({},e,n);return this.each(function(){var e=t(this),n=e.attr("id"),r=t("<div></div>").attr("id",n+"-sticky-wrapper").addClass(i.wrapperClassName);e.wrapAll(r),i.center&&e.parent().css({width:e.outerWidth(),marginLeft:"auto",marginRight:"auto"}),"right"==e.css("float")&&e.css({float:"none"}).parent().css({float:"right"});var s=e.parent();s.css("height",e.outerHeight()),o.push({topSpacing:i.topSpacing,bottomSpacing:i.bottomSpacing,stickyElement:e,currentTop:null,stickyWrapper:s,className:i.className,getWidthFrom:i.getWidthFrom,responsiveWidth:i.responsiveWidth})})},update:s,unstick:function(e){return this.each(function(){for(var e=t(this),n=-1,i=0;i<o.length;i++)o[i].stickyElement.get(0)==e.get(0)&&(n=i);-1!=n&&(o.splice(n,1),e.unwrap(),e.removeAttr("style"))})}};window.addEventListener?(window.addEventListener("scroll",s,!1),window.addEventListener("resize",a,!1)):window.attachEvent&&(window.attachEvent("onscroll",s),window.attachEvent("onresize",a)),t.fn.sticky=function(e){return l[e]?l[e].apply(this,Array.prototype.slice.call(arguments,1)):"object"!=typeof e&&e?void t.error("Method "+e+" does not exist on jQuery.sticky"):l.init.apply(this,arguments)},t.fn.unstick=function(e){return l[e]?l[e].apply(this,Array.prototype.slice.call(arguments,1)):"object"!=typeof e&&e?void t.error("Method "+e+" does not exist on jQuery.sticky"):l.unstick.apply(this,arguments)},t(function(){setTimeout(s,0)})}(jQuery)},function(t,e){/*! WOW - v0.1.9 - 2014-05-10
-* Copyright (c) 2014 Matthieu Aussaguel; Licensed MIT */
-(function(){var t,e,n=function(t,e){return function(){return t.apply(e,arguments)}};t=function(){function t(){}return t.prototype.extend=function(t,e){var n,i;for(n in t)null!=(i=t[n])&&(e[n]=i);return e},t.prototype.isMobile=function(t){return/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(t)},t}(),e=this.WeakMap||(e=function(){function t(){this.keys=[],this.values=[]}return t.prototype.get=function(t){var e,n,i,o;for(o=this.keys,e=n=0,i=o.length;i>n;e=++n)if(o[e]===t)return this.values[e]},t.prototype.set=function(t,e){var n,i,o,r;for(r=this.keys,n=i=0,o=r.length;o>i;n=++i)if(r[n]===t)return void(this.values[n]=e);return this.keys.push(t),this.values.push(e)},t}()),this.WOW=function(){function i(t){null==t&&(t={}),this.scrollCallback=n(this.scrollCallback,this),this.scrollHandler=n(this.scrollHandler,this),this.start=n(this.start,this),this.scrolled=!0,this.config=this.util().extend(t,this.defaults),this.animationNameCache=new e}return i.prototype.defaults={boxClass:"wow",animateClass:"animated",offset:0,mobile:!0},i.prototype.init=function(){var t;return this.element=window.document.documentElement,"interactive"===(t=document.readyState)||"complete"===t?this.start():document.addEventListener("DOMContentLoaded",this.start)},i.prototype.start=function(){var t,e,n,i;if(this.boxes=this.element.getElementsByClassName(this.config.boxClass),this.boxes.length){if(this.disabled())return this.resetStyle();for(i=this.boxes,e=0,n=i.length;n>e;e++)t=i[e],this.applyStyle(t,!0);return window.addEventListener("scroll",this.scrollHandler,!1),window.addEventListener("resize",this.scrollHandler,!1),this.interval=setInterval(this.scrollCallback,50)}},i.prototype.stop=function(){return window.removeEventListener("scroll",this.scrollHandler,!1),window.removeEventListener("resize",this.scrollHandler,!1),null!=this.interval?clearInterval(this.interval):void 0},i.prototype.show=function(t){return this.applyStyle(t),t.className=t.className+" "+this.config.animateClass},i.prototype.applyStyle=function(t,e){var n,i,o;return i=t.getAttribute("data-wow-duration"),n=t.getAttribute("data-wow-delay"),o=t.getAttribute("data-wow-iteration"),this.animate(function(r){return function(){return r.customStyle(t,e,i,n,o)}}(this))},i.prototype.animate=function(){return"requestAnimationFrame"in window?function(t){return window.requestAnimationFrame(t)}:function(t){return t()}}(),i.prototype.resetStyle=function(){var t,e,n,i,o;for(i=this.boxes,o=[],e=0,n=i.length;n>e;e++)t=i[e],o.push(t.setAttribute("style","visibility: visible;"));return o},i.prototype.customStyle=function(t,e,n,i,o){return e&&this.cacheAnimationName(t),t.style.visibility=e?"hidden":"visible",n&&this.vendorSet(t.style,{animationDuration:n}),i&&this.vendorSet(t.style,{animationDelay:i}),o&&this.vendorSet(t.style,{animationIterationCount:o}),this.vendorSet(t.style,{animationName:e?"none":this.cachedAnimationName(t)}),t},i.prototype.vendors=["moz","webkit"],i.prototype.vendorSet=function(t,e){var n,i,o,r;r=[];for(n in e)i=e[n],t[""+n]=i,r.push(function(){var e,r,s,a;for(s=this.vendors,a=[],e=0,r=s.length;r>e;e++)o=s[e],a.push(t[""+o+n.charAt(0).toUpperCase()+n.substr(1)]=i);return a}.call(this));return r},i.prototype.vendorCSS=function(t,e){var n,i,o,r,s,a;for(i=window.getComputedStyle(t),n=i.getPropertyCSSValue(e),a=this.vendors,r=0,s=a.length;s>r;r++)o=a[r],n=n||i.getPropertyCSSValue("-"+o+"-"+e);return n},i.prototype.animationName=function(t){var e;try{e=this.vendorCSS(t,"animation-name").cssText}catch(n){e=window.getComputedStyle(t).getPropertyValue("animation-name")}return"none"===e?"":e},i.prototype.cacheAnimationName=function(t){return this.animationNameCache.set(t,this.animationName(t))},i.prototype.cachedAnimationName=function(t){return this.animationNameCache.get(t)},i.prototype.scrollHandler=function(){return this.scrolled=!0},i.prototype.scrollCallback=function(){var t;return this.scrolled&&(this.scrolled=!1,this.boxes=function(){var e,n,i,o;for(i=this.boxes,o=[],e=0,n=i.length;n>e;e++)(t=i[e])&&(this.isVisible(t)?this.show(t):o.push(t));return o}.call(this),!this.boxes.length)?this.stop():void 0},i.prototype.offsetTop=function(t){for(var e;void 0===t.offsetTop;)t=t.parentNode;for(e=t.offsetTop;t=t.offsetParent;)e+=t.offsetTop;return e},i.prototype.isVisible=function(t){var e,n,i,o,r;return n=t.getAttribute("data-wow-offset")||this.config.offset,r=window.pageYOffset,o=r+this.element.clientHeight-n,i=this.offsetTop(t),e=i+t.clientHeight,o>=i&&e>=r},i.prototype.util=function(){return this._util||(this._util=new t)},i.prototype.disabled=function(){return!this.config.mobile&&this.util().isMobile(navigator.userAgent)},i}()}).call(this)},function(t,e){},function(t,e){}])});
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["demo"] = factory();
+	else
+		root["demo"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 22);
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ 22:
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(23);
+__webpack_require__(24);
+
+//css
+__webpack_require__( 25);
+__webpack_require__ (26);
+
+/**
+ * * * * *
+ * KERNEL *
+ * * * * *
+ */
+module.exports = function (){
+	//== overload Kernel logger
+	stage.appKernel.prototype.initializeLog = function(settings){
+
+		this.syslog.listenWithConditions(this,{
+			severity:{
+				data:"ERROR,INFO"
+			}
+		},function(pdu){
+			if (pdu.payload.stack ){
+					console.error( "SYSLOG " + pdu.severityName +" " + pdu.msgid + " "+new Date(pdu.timeStamp) + " " + pdu.msg+" : "+  pdu.payload.stack);
+			}else{
+				$.gritter.add({
+					title: "NODEFONY " + pdu.severityName ,
+					text: pdu.payload,
+					image: '/frameworkBundle/images/nodefony-logo.png',
+					class_name:"gritter-light"
+
+				});
+			}
+		});
+
+		this.syslog.listenWithConditions(this,{
+			severity:{
+				data:"CRITIC,WARNING,DEBUG "
+			}
+		},function(pdu){
+			switch( pdu.severityName){
+				case "CRITIC" :
+					console.error( "SYSLOG " + pdu.severityName +" " + pdu.msgid + " "+new Date(pdu.timeStamp) + " " + pdu.msg+" : "+ pdu.payload);
+				break;
+				case "WARNING" :
+					console.warn ("SYSLOG " + pdu.severityName +" " + pdu.msgid + " "+new Date(pdu.timeStamp) + " " + pdu.msg+" : "+ pdu.payload);
+				break;
+				case "DEBUG" :
+					console.log( "SYSLOG " + pdu.severityName +" " + pdu.msgid + " "+new Date(pdu.timeStamp) + " " + pdu.msg+" : "+ pdu.payload);
+				break;
+			}
+		});
+
+		return this.syslog ;
+	}
+
+	window["appKernel"]  = new stage.appKernel( "dev", {
+		debug: true,
+	        router:false,
+		location:false,
+		onLoad:function(){
+
+			/* ---------------------------------------------- /*
+		 	*		Preloader
+			/* ---------------------------------------------- */
+			$('#status').fadeOut();
+			$('#preloader').delay(300).fadeOut('slow');
+
+		},
+
+		onBoot:function() {
+
+		},
+		onReady: function() {
+		},
+
+		onDomLoad: function() {
+
+			var error = $("#error").html();
+			if (error) {
+				$("#error").remove();
+				this.logger(error, "ERROR" ) ;
+			}
+
+			var adduser = $("#adduser").html();
+			if (adduser) {
+				$("#adduser").remove();
+				this.logger(adduser, "INFO" ) ;
+			}
+
+
+			/* ---------------------------------------------- /*
+		 	* Navbar
+			/* ---------------------------------------------- */
+
+			$('.header').sticky({
+				topSpacing: 0
+			});
+
+			/*$('body').scrollspy({
+				target: '.navbar-custom',
+				offset: 70
+			})*/
+
+
+			/* ---------------------------------------------- /*
+		 	* Smooth scroll / Scroll To Top
+			/* ---------------------------------------------- */
+
+			/*$('a[href*=#]').bind("click", function(e){
+
+				var anchor = $(this);
+				$('html, body').stop().animate({
+					scrollTop: $(anchor.attr('href')).offset().top
+				}, 1000);
+				e.preventDefault();
+			});*/
+
+			$(window).scroll(function() {
+				if ($(this).scrollTop() > 100) {
+					$('.scroll-up').fadeIn();
+				} else {
+					$('.scroll-up').fadeOut();
+				}
+			});
+
+			/* ---------------------------------------------- /*
+		 	* Home BG
+			/* ---------------------------------------------- */
+
+			$(".screen-height").height($(window).height());
+
+			$(window).resize(function(){
+				$(".screen-height").height($(window).height());
+			});
+
+			if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
+				$('#home').css({'background-attachment': 'scroll'});
+			} else {
+				$('#home').parallax('50%', 0.1);
+				//$('#demo').parallax('50%', 0.1);
+			}
+			
+		}
+	});
+
+	return appKernel ;
+};
+
+
+/***/ }),
+
+/***/ 23:
+/***/ (function(module, exports) {
+
+/*
+Plugin: jQuery Parallax
+Version 1.1.3
+Author: Ian Lunn
+Twitter: @IanLunn
+Author URL: http://www.ianlunn.co.uk/
+Plugin URL: http://www.ianlunn.co.uk/plugins/jquery-parallax/
+
+Dual licensed under the MIT and GPL licenses:
+http://www.opensource.org/licenses/mit-license.php
+http://www.gnu.org/licenses/gpl.html
+*/
+
+(function( $ ){
+	var $window = $(window);
+	var windowHeight = $window.height();
+
+	$window.resize(function () {
+		windowHeight = $window.height();
+	});
+
+	$.fn.parallax = function(xpos, speedFactor, outerHeight) {
+		var $this = $(this);
+		var getHeight;
+		var firstTop;
+		var paddingTop = 0;
+
+		//get the starting position of each element to have parallax applied to it
+		$this.each(function(){
+		    firstTop = $this.offset().top;
+		});
+
+		if (outerHeight) {
+			getHeight = function(jqo) {
+				return jqo.outerHeight(true);
+			};
+		} else {
+			getHeight = function(jqo) {
+				return jqo.height();
+			};
+		}
+
+		// setup defaults if arguments aren't specified
+		if (arguments.length < 1 || xpos === null) xpos = "50%";
+		if (arguments.length < 2 || speedFactor === null) speedFactor = 0.1;
+		if (arguments.length < 3 || outerHeight === null) outerHeight = true;
+
+		// function to be called whenever the window is scrolled or resized
+		function update(){
+			var pos = $window.scrollTop();
+
+			$this.each(function(){
+				var $element = $(this);
+				var top = $element.offset().top;
+				var height = getHeight($element);
+
+				// Check if totally above or totally below viewport
+				if (top + height < pos || top > pos + windowHeight) {
+					return;
+				}
+
+				$this.css('backgroundPosition', xpos + " " + Math.round((firstTop - pos) * speedFactor) + "px");
+			});
+		}
+
+		$window.bind('scroll', update).resize(update);
+		update();
+	};
+})(jQuery);
+
+/***/ }),
+
+/***/ 24:
+/***/ (function(module, exports) {
+
+// Sticky Plugin v1.0.0 for jQuery
+// =============
+// Author: Anthony Garand
+// Improvements by German M. Bravo (Kronuz) and Ruud Kamphuis (ruudk)
+// Improvements by Leonardo C. Daronco (daronco)
+// Created: 2/14/2011
+// Date: 2/12/2012
+// Website: http://labs.anthonygarand.com/sticky
+// Description: Makes an element on the page stick on the screen as you scroll
+//       It will only set the 'top' and 'position' of your element, you
+//       might need to adjust the width in some cases.
+
+(function($) {
+  var defaults = {
+      topSpacing: 0,
+      bottomSpacing: 0,
+      className: 'is-sticky',
+      wrapperClassName: 'sticky-wrapper',
+      center: false,
+      getWidthFrom: '',
+      responsiveWidth: false
+    },
+    $window = $(window),
+    $document = $(document),
+    sticked = [],
+    windowHeight = $window.height(),
+    scroller = function() {
+      var scrollTop = $window.scrollTop(),
+        documentHeight = $document.height(),
+        dwh = documentHeight - windowHeight,
+        extra = (scrollTop > dwh) ? dwh - scrollTop : 0;
+
+      for (var i = 0; i < sticked.length; i++) {
+        var s = sticked[i],
+          elementTop = s.stickyWrapper.offset().top,
+          etse = elementTop - s.topSpacing - extra;
+
+        if (scrollTop <= etse) {
+          if (s.currentTop !== null) {
+            s.stickyElement
+              .css('position', '')
+              .css('top', '');
+            s.stickyElement.trigger('sticky-end', [s]).parent().removeClass(s.className);
+            s.currentTop = null;
+          }
+        }
+        else {
+          var newTop = documentHeight - s.stickyElement.outerHeight()
+            - s.topSpacing - s.bottomSpacing - scrollTop - extra;
+          if (newTop < 0) {
+            newTop = newTop + s.topSpacing;
+          } else {
+            newTop = s.topSpacing;
+          }
+          if (s.currentTop != newTop) {
+            s.stickyElement
+              .css('position', 'fixed')
+              .css('top', newTop);
+
+            if (typeof s.getWidthFrom !== 'undefined') {
+              s.stickyElement.css('width', $(s.getWidthFrom).width());
+            }
+
+            s.stickyElement.trigger('sticky-start', [s]).parent().addClass(s.className);
+            s.currentTop = newTop;
+          }
+        }
+      }
+    },
+    resizer = function() {
+      windowHeight = $window.height();
+
+      for (var i = 0; i < sticked.length; i++) {
+        var s = sticked[i];
+        if (typeof s.getWidthFrom !== 'undefined' && s.responsiveWidth === true) {
+          s.stickyElement.css('width', $(s.getWidthFrom).width());
+        }
+      }
+    },
+    methods = {
+      init: function(options) {
+        var o = $.extend({}, defaults, options);
+        return this.each(function() {
+          var stickyElement = $(this);
+
+          var stickyId = stickyElement.attr('id');
+          var wrapperId = stickyId ? stickyId + '-' + defaults.wrapperClassName : defaults.wrapperClassName
+          var wrapper = $('<div></div>')
+            .attr('id', stickyId + '-sticky-wrapper')
+            .addClass(o.wrapperClassName);
+          stickyElement.wrapAll(wrapper);
+
+          if (o.center) {
+            stickyElement.parent().css({width:stickyElement.outerWidth(),marginLeft:"auto",marginRight:"auto"});
+          }
+
+          if (stickyElement.css("float") == "right") {
+            stickyElement.css({"float":"none"}).parent().css({"float":"right"});
+          }
+
+          var stickyWrapper = stickyElement.parent();
+          stickyWrapper.css('height', stickyElement.outerHeight());
+          sticked.push({
+            topSpacing: o.topSpacing,
+            bottomSpacing: o.bottomSpacing,
+            stickyElement: stickyElement,
+            currentTop: null,
+            stickyWrapper: stickyWrapper,
+            className: o.className,
+            getWidthFrom: o.getWidthFrom,
+            responsiveWidth: o.responsiveWidth
+          });
+        });
+      },
+      update: scroller,
+      unstick: function(options) {
+        return this.each(function() {
+          var unstickyElement = $(this);
+
+          var removeIdx = -1;
+          for (var i = 0; i < sticked.length; i++)
+          {
+            if (sticked[i].stickyElement.get(0) == unstickyElement.get(0))
+            {
+                removeIdx = i;
+            }
+          }
+          if(removeIdx != -1)
+          {
+            sticked.splice(removeIdx,1);
+            unstickyElement.unwrap();
+            unstickyElement.removeAttr('style');
+          }
+        });
+      }
+    };
+
+  // should be more efficient than using $window.scroll(scroller) and $window.resize(resizer):
+  if (window.addEventListener) {
+    window.addEventListener('scroll', scroller, false);
+    window.addEventListener('resize', resizer, false);
+  } else if (window.attachEvent) {
+    window.attachEvent('onscroll', scroller);
+    window.attachEvent('onresize', resizer);
+  }
+
+  $.fn.sticky = function(method) {
+    if (methods[method]) {
+      return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+    } else if (typeof method === 'object' || !method ) {
+      return methods.init.apply( this, arguments );
+    } else {
+      $.error('Method ' + method + ' does not exist on jQuery.sticky');
+    }
+  };
+
+  $.fn.unstick = function(method) {
+    if (methods[method]) {
+      return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+    } else if (typeof method === 'object' || !method ) {
+      return methods.unstick.apply( this, arguments );
+    } else {
+      $.error('Method ' + method + ' does not exist on jQuery.sticky');
+    }
+
+  };
+  $(function() {
+    setTimeout(scroller, 0);
+  });
+})(jQuery);
+
+/***/ }),
+
+/***/ 25:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 26:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ })
+
+/******/ });
+});
+//# sourceMappingURL=demo.js.map

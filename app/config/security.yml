@@ -5,7 +5,9 @@ security:
     #  FIREWALL strategy
     #  when change security context (multi firewalls areas)
     #
-    session_fixation_strategy:  migrate  # Strategy can be : none, migrate, invalidate
+    #  Strategy can be : none, migrate, invalidate
+    #
+    session_fixation_strategy:  migrate
 
     #
     #  FIREWALL  AREAS
