@@ -2,8 +2,8 @@ const events = require('events');
 
 module.exports = nodefony.register("notificationsCenter",function(){
 
-	var regListenOn = /^on(.*)$/;
-	var defaultNbListeners = 20 ;
+	const regListenOn = /^on(.*)$/;
+	const defaultNbListeners = 20 ;
 
 	var Notification = class Notification {
 
@@ -30,8 +30,8 @@ module.exports = nodefony.register("notificationsCenter",function(){
 	 	*
 	 	*/
 		listen (context, eventName, callback) {
-			var event = arguments[1];
-			var ContextClosure = this;
+			let event = arguments[1];
+			let ContextClosure = this;
 			if (  typeof(callback ) === 'function'  || callback instanceof Function ){
 				this.event.addListener(eventName, callback.bind(context));
 			}
@@ -42,8 +42,8 @@ module.exports = nodefony.register("notificationsCenter",function(){
 		}
 
 		on (eventName, callback) {
-			var event = arguments[1];
-			var ContextClosure = this;
+			let event = arguments[1];
+			let ContextClosure = this;
 			if ( typeof(callback ) === 'function'  || callback instanceof Function ){
 				this.event.addListener(eventName, callback);
 				return function() {
@@ -60,8 +60,8 @@ module.exports = nodefony.register("notificationsCenter",function(){
 	 	*
 	 	*/
 		once (context, eventName, callback){
-			var event = arguments[1];
-			var ContextClosure = this;
+			let event = arguments[1];
+			let ContextClosure = this;
 			if ( typeof(callback ) === 'function'  || callback instanceof Function ){
 				this.event.once(eventName, callback.bind(context));
 			}
@@ -78,7 +78,6 @@ module.exports = nodefony.register("notificationsCenter",function(){
 	 	*
 	 	*/
 		fire () {
-			var ret = false;
 			try {
 				return this.event.emit.apply(this.event, arguments);
 			} catch (e) {
@@ -91,7 +90,6 @@ module.exports = nodefony.register("notificationsCenter",function(){
 					throw e ;
 				}
 			}
-			return ret;
 		}
 
 
@@ -101,7 +99,7 @@ module.exports = nodefony.register("notificationsCenter",function(){
 	 	*
 	 	*/
 		settingsToListen (localSettings, context) {
-			for (var i in localSettings) {
+			for (let i in localSettings) {
 				var res = regListenOn.exec(i);
 				if (!res){
 					continue;

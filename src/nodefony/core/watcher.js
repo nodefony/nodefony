@@ -9,31 +9,31 @@ module.exports = nodefony.register("watcher", function(){
 
 	// see Chokidar
 	/*
- 	 *
- 	 *
- 	 *
- 	 *
- 	 */
-	var defaultWatcherSettings  = {
+	*
+	*
+	*
+	*
+	*/
+	const defaultWatcherSettings  = {
 
 		persistent:		true,
-  		followSymlinks:		true,
-  		cwd:			'.',
+		followSymlinks:		true,
+		cwd:			'.',
 		//useFsEvents:		true,
-  		usePolling:		true,
-  		interval:		100,
-  		binaryInterval:		300,
-  		//alwaysStat:		false,
-  		//depth:		99,
-  		//awaitWriteFinish:	{
-    		//	stabilityThreshold: 2000,
-    		//	pollInterval: 100
-  		//},
-  		//ignorePermissionErrors: false,
-  		atomic:			true // or a custom 'atomicity delay', in milliseconds (default 100)
+		usePolling:		true,
+		interval:		100,
+		binaryInterval:		300,
+		//alwaysStat:		false,
+		//depth:		99,
+		//awaitWriteFinish:	{
+		//	stabilityThreshold: 2000,
+		//	pollInterval: 100
+		//},
+		//ignorePermissionErrors: false,
+		atomic:			true // or a custom 'atomicity delay', in milliseconds (default 100)
 	};
 
-	var Watcher = class Watcher extends nodefony.Service {
+	const Watcher = class Watcher extends nodefony.Service {
 
 		constructor (Path , settings, container){
 
@@ -102,8 +102,7 @@ module.exports = nodefony.register("watcher", function(){
 				this.watcher.on('all', (event, Path) => {
 					this.fire("all", event, Path );
 					try {
-						//var stats = fs.lstatSync(Path)
-						var stats = null ;
+						let stats = null ;
 						event = event.charAt(0).toUpperCase() + event.slice(1);
 						this.fire("on"+event, Path, stats, this.watcher );
 					}catch(e){

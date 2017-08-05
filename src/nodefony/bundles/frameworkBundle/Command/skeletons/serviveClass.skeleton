@@ -14,7 +14,7 @@ module.exports = nodefony.registerService("{{name}}", function(){
 	 *
 	 */
 
-	var {{name}} = class {{name}} extends nodefony.Service {
+	const {{name}} = class {{name}} extends nodefony.Service {
 
 		constructor(){
 			super("{{name}}");

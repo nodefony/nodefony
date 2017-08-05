@@ -512,7 +512,7 @@ module.exports = nodefony.register("kernel", function(){
 	 	*	@method initTemplate
          	*/
 		initTemplate (){
-			var classTemplate = this.getTemplate(this.settings.templating);
+			let classTemplate = this.getTemplate(this.settings.templating);
 			this.templating = new classTemplate(this.container, this.settings[this.settings.templating]);
 			this.set("templating", this.templating );
 		}
@@ -521,8 +521,8 @@ module.exports = nodefony.register("kernel", function(){
 	 	*	@method logger
          	*/
 		logger (pci, severity, msgid,  msg){
-			if (! msgid) { msgid = this.cli.clc.magenta(this.type + " ");}
-			return this.syslog.logger(pci, severity, msgid,  msg);
+			if (! msgid) { msgid = this.cli.clc.magenta("KERNEL " +this.type + " ");}
+			return super.logger(pci, severity, msgid,  msg);
 		}
 
 		/**

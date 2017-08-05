@@ -36,7 +36,7 @@ module.exports = nodefony.register("Service", function(){
 				this.container = new nodefony.Container();
 				this.container.set("container", this.container);
 			}
-			var kernel =  this.container.get("kernel");
+			let kernel =  this.container.get("kernel");
 			if ( kernel ){
 				this.kernel = kernel ;
 			}

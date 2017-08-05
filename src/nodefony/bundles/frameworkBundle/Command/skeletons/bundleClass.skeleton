@@ -13,7 +13,7 @@ module.exports = nodefony.registerBundle ("{{name}}", function(){
 	 *	@param {class} container
 	 *
 	 */
-	let {{name}} = class {{name}}  extends nodefony.Bundle {
+	const {{name}} = class {{name}}  extends nodefony.Bundle {
 
 		constructor (name, kernel, container){
 

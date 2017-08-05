@@ -5,31 +5,26 @@
  *
  *
  */
-
 nodefony.register.call(nodefony.context, "http", function(){
 
-	/*
- 	 *
- 	 *
- 	 *
- 	 *
- 	 */
-	var Http = class Http extends nodefony.Service {
+	const Http = class Http extends nodefony.Service {
 
 		constructor (container, request, response, type){
 
 			super ("httpContext", container);
 			this.type = type;
+			this.set("context", this);
+			this.kernelHttp = this.get("httpKernel");
 			//I18n
 			this.translation = new nodefony.services.translation( container, type );
 			this.set("translation", this.translation );
 			this.protocol = ( type === "HTTPS" ) ? "https" : "http" ;
 			this.resolver = null ;
 			this.nbCallController = 0 ;
-			this.request = new nodefony.Request( request, container, type);
-			this.response = new nodefony.Response( response, container, type);
+			this.request = new nodefony.Request( request, this);
+			this.response = new nodefony.Response( response, container);
 			this.isRedirect = false ;
-			this.sended = false ; 
+			this.sended = false ;
 			this.method = this.request.getMethod() ;
 			this.isAjax = this.request.isAjax() ;
 			this.secureArea = null ;
@@ -40,15 +35,14 @@ nodefony.register.call(nodefony.context, "http", function(){
 					bundles:{}
 				} ;
 			}
-			this.kernelHttp = this.get("httpKernel");
-			this.domain =  this.getHostName();  
+			this.domain =  this.getHostName();
 			this.router = this.get("router");
-		  	
+
 			this.url =url.format(this.request.url);
 			if ( this.request.url.port ){
 				this.port =  this.request.url.port;
 			}else{
-				this.port = this.protocol === "https" ?  443 : 80 ;    
+				this.port = this.protocol === "https" ?  443 : 80 ;
 			}
 
 			try {
@@ -56,35 +50,28 @@ nodefony.register.call(nodefony.context, "http", function(){
 			}catch(e){
 				this.originUrl = url.parse( this.url );
 			}
-			
+
 			this.validDomain = this.isValidDomain() ;
-			this.crossDomain = null; 
+			this.crossDomain = null;
 
 			this.logger( ( this.isAjax ? " AJAX REQUEST " : "REQUEST ") +request.method +" FROM : "+ this.request.remoteAddress +" HOST : "+request.headers.host+" URL :"+request.url, "INFO");
 
-			// session 
+			// session
 			this.session = null;
 			this.sessionService = this.get("sessions");
-			this.sessionAutoStart = this.sessionService.settings.start ; 
+			this.sessionAutoStart = this.sessionService.settings.start ;
 
 			//parse cookies
 			this.cookies = {};
 			this.parseCookies();
 			this.cookieSession = this.getCookieSession( this.sessionService.settings.name );
-			
+
 			this.security = null ;
 			this.user = null ;
-			
-			this.remoteAddress = this.request.remoteAddress ; 
+
+			this.remoteAddress = this.request.remoteAddress ;
 
 			this.promise = null ;
-
-			// LISTEN EVENTS KERNEL 
-			//this.listen(this, "onView", (result/*, context, view, param*/) => {
-			//	if ( this.response ){
-			//		this.response.body = result;
-			//	}
-			//});
 
 			this.once( this, "onRequest" , this.handle );
 			this.once(this, "onResponse", this.send);
@@ -92,7 +79,7 @@ nodefony.register.call(nodefony.context, "http", function(){
 				this.fire("onError", this.container, {
 					status:408,
 					message:new Error("Timeout :" + this.url)
-				} );	
+				} );
 				//context.clean();
 			} );
 
@@ -103,12 +90,12 @@ nodefony.register.call(nodefony.context, "http", function(){
 					this.type = request.headers["x-forwarded-proto"].toUpperCase();
 				}
 				this.proxy = {
-					proxyServer	: request.headers["x-forwarded-server"],	
+					proxyServer	: request.headers["x-forwarded-server"],
 					proxyProto	: request.headers["x-forwarded-proto"],
 					proxyPort	: request.headers["x-forwarded-port"],
 					proxyFor	: request.headers["x-forwarded-for"],
-					proxyHost	: request.headers["x-forwarded-host"],	
-					proxyVia	: request.headers.via 
+					proxyHost	: request.headers["x-forwarded-host"],
+					proxyVia	: request.headers.via
 				};
 				this.logger( "PROXY REQUEST x-forwarded VIA : " + this.proxy.proxyVia , "DEBUG");
 			}
@@ -119,7 +106,7 @@ nodefony.register.call(nodefony.context, "http", function(){
 			if (this.cookies[name] ){
 				return this.cookies[name];
 			}
-			return null;	
+			return null;
 		}
 
 		isValidDomain (){
@@ -169,33 +156,33 @@ nodefony.register.call(nodefony.context, "http", function(){
 				controller:	this.controller.bind(this),
 				trans:		this.translation.trans.bind(this.translation),
 				getLocale:	this.translation.getLocale.bind(this.translation),
-				trans_default_domain:function(){
+				trans_default_domain:() => {
 						this.translation.trans_default_domain.apply(this.translation, arguments) ;
-				}.bind(this),
+				},
 				getTransDefaultDomain:this.translation.getTransDefaultDomain.bind(this.translation),
-				CDN:function(type, nb){
-					var cdn = this.kernelHttp.getCDN.call(this.kernelHttp, type, nb);
+				CDN:(type, nb) => {
+					let cdn = this.kernelHttp.getCDN.call(this.kernelHttp, type, nb);
 					if ( cdn ){
-						return context.request.url.protocol+"//"+cdn ; 
+						return context.request.url.protocol+"//"+cdn ;
 					}
 					return "";
-				}.bind(this)
+				}
 			});
 		}
 
 		controller (pattern, data ){
-			var container = this.kernelHttp.container.enterScope("subRequest");
+			let container = this.kernelHttp.container.enterScope("subRequest");
 			container.set("context", this) ;
 			container.set("translation", this.translation );
-			var control = null ;
-			var resolver = null ;
+			let control = null ;
+			let resolver = null ;
 			try {
 				resolver = this.router.resolveName(this.container, pattern);
 			}catch(e){
-				return this.notificationsCenter.fire("onError", this.container, e );	
+				return this.fire("onError", this.container, e );
 			}
 			if ( ! resolver.resolve) {
-				return this.notificationsCenter.fire("onError", this.container, {
+				return this.fire("onError", this.container, {
 					status:404,
 					error:"PATTERN : " + pattern,
 					message:"not Found"
@@ -203,19 +190,19 @@ nodefony.register.call(nodefony.context, "http", function(){
 			}
 			try {
 				control = new resolver.controller( container, this );
-				control.response = new nodefony.Response( null, container, this.type); 
+				control.response = new nodefony.Response( null, container);
 				if ( data ){
 					Array.prototype.shift.call( arguments );
 					for ( var i = 0 ; i< arguments.length ; i++){
-						resolver.variables.push(arguments[i]);	
+						resolver.variables.push(arguments[i]);
 					}
 				}
 			}catch(e){
-				return this.notificationsCenter.fire("onError", this.container, e );	
+				return this.fire("onError", this.container, e );
 			}
 			return {
 				resolver:resolver,
-				controller:control,	
+				controller:control,
 				response:resolver.action.apply(control, resolver.variables)
 			};
 		}
@@ -285,11 +272,11 @@ nodefony.register.call(nodefony.context, "http", function(){
 					this.resolver = this.router.resolve(this.container,  this);
 				}
 				//WARNING EVENT KERNEL
-				this.kernel.fire("onRequest", this, this.resolver);	
+				this.kernel.fire("onRequest", this, this.resolver);
 				if (this.resolver.resolve) {
-					var ret = this.resolver.callController(data);
+					let ret = this.resolver.callController(data);
 					// timeout response after  callController (to change timeout in action )
-					if (this.response.response){ 
+					if (this.response.response){
 						this.response.response.setTimeout(this.response.timeout, () => {
 							this.timeoutExpired = true ;
 							this.fire("onTimeout", this);
@@ -307,9 +294,9 @@ nodefony.register.call(nodefony.context, "http", function(){
 				});
 			}catch(e){
 				/*
- 			 	*	ERROR IN CONTROLLER 
+ 			 	*	ERROR IN CONTROLLER
  			 	*/
-				this.fire("onError", this.container, e);		
+				this.fire("onError", this.container, e);
 			}
 		}
 
@@ -330,11 +317,11 @@ nodefony.register.call(nodefony.context, "http", function(){
 			delete this.security ;
 			this.promise = null ;
 			delete this.promise ;
-			this.translation = null ; 
+			this.translation = null ;
 			delete this.translation ;
 			this.cookies = null ;
 			delete this.cookies ;
-			this.cookieSession = null ; 
+			this.cookieSession = null ;
 			delete this.cookieSession ;
 			this.resolver = null ;
 			delete this.resolver ;
@@ -348,11 +335,11 @@ nodefony.register.call(nodefony.context, "http", function(){
 		}
 
 		getUser (){
-			return this.user || null ; 	
+			return this.user || null ;
 		}
 
 		send (/*response, context*/){
-			
+
 			if ( this.sended ){
 				return ;
 			}
@@ -360,7 +347,7 @@ nodefony.register.call(nodefony.context, "http", function(){
 			// cookies
 			this.response.setCookies();
 			/*
- 			* HTTP WRITE HEAD  
+ 			* HTTP WRITE HEAD
  			*/
 			this.response.writeHead();
 
@@ -370,11 +357,11 @@ nodefony.register.call(nodefony.context, "http", function(){
 					//console.log("FIRE onSaveSession")
 					if (  ! this.storage ){
 						if ( this.profiling ){
-							this.fire("onSendMonitoring", this.response, this);	
+							this.fire("onSendMonitoring", this.response, this);
 						}
 						/*
  	 					* WRITE RESPONSE
- 	 					*/  
+ 	 					*/
 						this.response.write();
 						// END REQUEST
 						return this.close();
@@ -386,11 +373,11 @@ nodefony.register.call(nodefony.context, "http", function(){
 
 			if (  ! this.storage ){
 				if ( this.profiling ){
-					this.fire("onSendMonitoring", this.response, this);	
+					this.fire("onSendMonitoring", this.response, this);
 				}
 				/*
  	 			* WRITE RESPONSE
- 	 			*/  
+ 	 			*/
 				this.response.write();
 				// END REQUEST
 				return this.close();
@@ -399,7 +386,7 @@ nodefony.register.call(nodefony.context, "http", function(){
 		}
 
 		flush (data, encoding){
-			return this.response.flush(data, encoding);	
+			return this.response.flush(data, encoding);
 		}
 
 		close (){
@@ -408,25 +395,25 @@ nodefony.register.call(nodefony.context, "http", function(){
 			// END REQUEST
 			this.response.end();
 		}
-	
+
 		logger (pci, severity, msgid,  msg){
 			if (! msgid) {msgid = this.type + " REQUEST";}
-			return this.syslog.logger(pci, severity, msgid,  msg);
+			return super.logger(pci, severity, msgid,  msg);
 		}
 
 		getRequest (){
-			return this.request;	
+			return this.request;
 		}
 
 		getResponse (){
-			return this.response;	
+			return this.response;
 		}
 
 		redirect (Url, status, headers){
-			var res = null ;
+			let res = null ;
 			if (typeof Url === "object"){
 				res = this.response.redirect(url.format(Url), status, headers);
-			}else{	
+			}else{
 				res = this.response.redirect(Url, status, headers );
 			}
 			//this.logger("REDIRECT : "+Url,"DEBUG");
@@ -435,11 +422,11 @@ nodefony.register.call(nodefony.context, "http", function(){
 		}
 
 		redirectHttps ( status, headers){
-			
+
 			if ( this.session ){
 				this.session.setFlashBag("redirect" , "HTTPS" );
 			}
-			var urlExtend = null ;
+			let urlExtend = null ;
 			if( this.proxy ){
 				urlExtend = {
 					protocol:	"https",
@@ -449,13 +436,13 @@ nodefony.register.call(nodefony.context, "http", function(){
 			}else{
 				urlExtend = {
 					protocol:	"https",
-					port:		this.kernelHttp.httpsPort || 443 ,	
+					port:		this.kernelHttp.httpsPort || 443 ,
 					href:		"",
 					host:		""
 				}  ;
 			}
-			var urlChange = nodefony.extend({}, this.request.url , urlExtend );
-			var newUrl  = url.format(urlChange);
+			let urlChange = nodefony.extend({}, this.request.url , urlExtend );
+			let newUrl  = url.format(urlChange);
 			return this.redirect( newUrl, status , headers);
 		}
 
@@ -470,15 +457,15 @@ nodefony.register.call(nodefony.context, "http", function(){
 				case "Error":
 					if ( typeof xjson.message === "object" ){
 						this.response.headers["X-Json"] = JSON.stringify(xjson.message);
-						return xjson.message;	
+						return xjson.message;
 					}else{
 						this.response.headers["X-Json"] = xjson.message;
-						return {error:xjson.message};	
+						return {error:xjson.message};
 					}
 				break;
 			}
 		}
-		
+
 		addCookie (cookie){
 			if ( cookie instanceof nodefony.cookies.cookie ){
 				this.cookies[cookie.name] = cookie;
@@ -487,12 +474,12 @@ nodefony.register.call(nodefony.context, "http", function(){
 					message:"",
 					error:"Response addCookies not valid cookies"
 				};
-			}	
+			}
 		}
 
 		parseCookies (){
 			return  nodefony.cookies.cookiesParser(this);
 		}
 	};
-	return Http; 
+	return Http;
 });

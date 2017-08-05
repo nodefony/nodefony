@@ -3,19 +3,19 @@ var shortId = require('shortid');
 
 module.exports = nodefony.register("Container", function(){
 
-	var ISDefined = function(ele){
+	let ISDefined = function(ele){
 		if (ele !== null && ele !== undefined ){
 			return true ;
 		}
 		return false;
 	};
 
-	var generateId = function(){
+	let generateId = function(){
 		return shortId.generate();
 	};
 
 	var parseParameterString = function(str, value){
-		var ns = null ;
+		let ns = null ;
 		switch( nodefony.typeOf(str) ){
 			case "string" :
 				return parseParameterString.call(this,str.split(".") , value);
@@ -59,13 +59,13 @@ module.exports = nodefony.register("Container", function(){
 			this.scope = {};
 			this.services = new this.protoService();
 			if (services && typeof services === "object"){
-				for (var service in services){
+				for (let service in services){
 					this.set(service, services[service]);
 				}
 			}
 			this.parameters = new this.protoParameters();
 			if (parameters && typeof parameters === "object"){
-				for (var parameter in parameters){
+				for (let parameter in parameters){
 					this.set(parameter, parameters[parameter]);
 				}
 			}
@@ -101,20 +101,20 @@ module.exports = nodefony.register("Container", function(){
 		}
 
 		enterScope (name){
-			var sc = new Scope(name, this);
+			let sc = new Scope(name, this);
 			this.scope[name][sc.id] = sc ;
 			return sc;
 		}
 
 		enterScopeExtended (name){
-			var sc = new ExtendedScope(name, this);
+			let sc = new ExtendedScope(name, this);
 			this.scope[name][sc.id] = sc ;
 			return sc;
 		}
 
 		leaveScope (scope){
 			if ( this.scope[scope.name] ){
-				var sc = this.scope[scope.name][scope.id];
+				let sc = this.scope[scope.name][scope.id];
 				if (sc){
 					sc.clean();
 					//console.log("pass leaveScope "+ scope.id)
@@ -127,7 +127,7 @@ module.exports = nodefony.register("Container", function(){
 
 		removeScope (name){
 			if ( this.scope[name] ){
-				for( var scope in this.scope[name] ){
+				for( let scope in this.scope[name] ){
 					this.leaveScope(this.scope[name][scope]) ;
 				}
 				delete this.scope[name] ;
@@ -170,14 +170,13 @@ module.exports = nodefony.register("Container", function(){
 	var Scope = class Scope extends Container {
 
 		constructor( name, parent){
-    			super();
-    			this.name = name;
+			super();
+			this.name = name;
 			this.parent = parent;
-    			this.services = new parent.protoService();
-    			this.parameters = new parent.protoParameters();
-    			this.scope = parent.scope;
+			this.services = new parent.protoService();
+			this.parameters = new parent.protoParameters();
+			this.scope = parent.scope;
 			this.id = generateId();
-
 		}
 
 		set (name, obj){
@@ -210,12 +209,12 @@ module.exports = nodefony.register("Container", function(){
 	var ExtendedScope = class ExtendedScope extends Container {
 
 		constructor (name, parent){
-    			super();
-    			this.name = name;
+			super();
+			this.name = name;
 			this.parent = parent;
-    			this.services = new parent.protoService();
-    			this.parameters = new parent.protoParameters();
-    			this.scope = parent.scope;
+			this.services = new parent.protoService();
+			this.parameters = new parent.protoParameters();
+			this.scope = parent.scope;
 			this.id = generateId();
 
 			this.protoService = function(){};
@@ -233,7 +232,6 @@ module.exports = nodefony.register("Container", function(){
 			this.protoService = null ;
 			this.protoParameters = null ;
 		}
-
 
 		set (name, obj){
     			this.services[name] = obj ;
