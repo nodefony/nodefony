@@ -118,10 +118,11 @@ module.exports = nodefony.registerService("sequelize", function(){
 		boot (){
 			super.boot();
 			this.kernel.listen(this, 'onBoot', (/*kernel*/) => {
-				this.settings = this.container.getParameters("bundles.sequelize");
+				this.settings = this.getParameters("bundles.sequelize");
 				this.debug = this.settings.debug ;
 				if ( this.settings.connectors && Object.keys(this.settings.connectors).length ){
-					for(var name in this.settings.connectors){
+					this.kernel.listen( this, "onReady", this.displayTable );
+					for(let name in this.settings.connectors){
 						this.createConnection(name, this.settings.connectors[name]);
 					}
 				}else{
@@ -130,7 +131,36 @@ module.exports = nodefony.registerService("sequelize", function(){
 					});
 				}
 			});
+		}
 
+
+		displayTable (){
+			this.logger("DATABASES CONNECTORS LIST : ") ;
+			let options = {
+					head:[
+							"NAME CONNECTOR",
+							"NAME DATABASE",
+							"DRIVER",
+					]
+			} ;
+			let table = this.kernel.cli.displayTable(null, options);
+			let tab = [];
+			for (let dbname in this.settings.connectors){
+				let conn = ["","",""];
+				conn[0] = dbname;
+				for (let data in this.settings.connectors[dbname]){
+					switch (data){
+						case "dbname" :
+							conn[1] = this.settings.connectors[dbname][data];
+						break;
+						case "driver" :
+							conn[2] = this.settings.connectors[dbname][data];
+						break;
+					}
+				}
+				table.push(conn);
+			}
+			console.log( table.toString() );
 		}
 
 		createConnection (name, config){

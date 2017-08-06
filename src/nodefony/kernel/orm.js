@@ -2,7 +2,7 @@
 module.exports = nodefony.register("orm", function(){
 
 
-	var connectionMonitor = function(name, db, orm){
+	let connectionMonitor = function(name, db, orm){
 		this.connectionNotification ++;
 		if(Object.keys(orm.settings.connectors).length === this.connectionNotification){
 			process.nextTick(function () {
@@ -11,7 +11,7 @@ module.exports = nodefony.register("orm", function(){
 		}
 	};
 
-	var Orm = class Orm  extends nodefony.Service {
+	const Orm = class Orm  extends nodefony.Service {
 
 		constructor (name, container, kernel, autoLoader){
 
@@ -33,11 +33,11 @@ module.exports = nodefony.register("orm", function(){
 			this.listen(this, "onErrorConnection", connectionMonitor);
 
 			this.kernel.listen(this, 'onBoot', (kernel) => {
-				var callback = null ;
-				for (var bundle in kernel.bundles){
+				let callback = null ;
+				for (let bundle in kernel.bundles){
 					if ( Object.keys(kernel.bundles[bundle].entities).length  ){
-						for (var entity in kernel.bundles[bundle].entities ){
-							var ele = kernel.bundles[bundle].entities[entity] ;
+						for (let entity in kernel.bundles[bundle].entities ){
+							let ele = kernel.bundles[bundle].entities[entity] ;
 							if (ele.type !== this.name){
 								continue;
 							}
@@ -45,9 +45,9 @@ module.exports = nodefony.register("orm", function(){
 								this.definitions[ele.connection] = [];
 							}
 							callback = (enti, bundle, name) => {
-								var Enti = enti;
-								var Name = name ;
-								var Bundle = bundle ;
+								let Enti = enti;
+								let Name = name ;
+								let Bundle = bundle ;
 								return (db) => {
 									try {
 										this.entities[Name] = Enti.entity.call(this, db, this);
@@ -67,7 +67,7 @@ module.exports = nodefony.register("orm", function(){
 
 			this.listen(this, "onConnect" , (name, db) => {
 				if (name in this.definitions){
-					for( var i =0 ; i < this.definitions[name].length ; i++){
+					for( let i =0 ; i < this.definitions[name].length ; i++){
 						this.definitions[name][i](db);
 					}
 				}
@@ -81,7 +81,7 @@ module.exports = nodefony.register("orm", function(){
 
 		logger (pci, severity, msgid,  msg){
 			if (! msgid) { msgid = this.kernel.cli.clc.magenta(this.name + " ");}
-			return this.syslog.logger(pci, severity, msgid,  msg);
+			return super.logger(pci, severity, msgid,  msg);
 		}
 
 		getConnection (name){

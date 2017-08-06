@@ -108,7 +108,7 @@ module.exports = nodefony.registerService("firewall", function(){
 			this.defaultTarget = "/" ;
 			this.alwaysUseDefaultTarget = false ;
 
-			this.listen(this, "onReady",() => {
+			this.listen(this, "onOrmReady",() => {
 				try {
 					if ( this.providerName in this.firewall.providers){
 						this.provider = this.firewall.providers[ this.providerName ].Class ;
@@ -386,7 +386,7 @@ module.exports = nodefony.registerService("firewall", function(){
 			this.providers = {};
 			this.sessionStrategy = "invalidate" ;
 			// listen KERNEL EVENTS
-			this.listen(this, "onBoot",() => {
+			this.listen(this, "onPreBoot",() => {
 				this.sessionService = this.get("sessions");
 				this.orm = this.get(this.kernel.settings.orm);
 			});
@@ -680,7 +680,6 @@ module.exports = nodefony.registerService("firewall", function(){
 									case "context" :
 										if ( param[config] ){
 											this.listen(this, "onBoot",function(context, contextSecurity){
-												//console.log( this.sessionService );
 												contextSecurity.setContextSession(context);
 												this.sessionService.addContextSession(context);
 											}.bind(this, param[config], area));
@@ -706,14 +705,14 @@ module.exports = nodefony.registerService("firewall", function(){
 					case "access_control" :
 					break;
 					case "providers" :
-						for ( var provider in obj[ele] ){
+						for ( let provider in obj[ele] ){
 							this.providers[provider] = {
 								name:null,
 								Class:null,
 								type:null
 							};
-							for (var pro in obj[ele][provider] ){
-								var element = obj[ele][provider] ;
+							for (let pro in obj[ele][provider] ){
+								let element = obj[ele][provider] ;
 								switch (pro){
 									case "memory" :
 										for (let mapi in element[pro]){
@@ -732,9 +731,9 @@ module.exports = nodefony.registerService("firewall", function(){
 										}
 									break;
 									case "class" :
-										var myClass = null;
-										var property = null ;
-										var manager_name = null ;
+										let myClass = null;
+										let property = null ;
+										let manager_name = null ;
 
 										for(let api in element[pro]){
 											switch(api){
@@ -766,7 +765,7 @@ module.exports = nodefony.registerService("firewall", function(){
 										}
 									break;
 									case "entity" :
-										this.listen(this, "onBoot", () => {
+										this.listen(this, "onPreBoot", () => {
 											this.orm.listen(this, "onOrmReady", function(){
 												let ent = this.orm.getEntity(element[pro].name);
 												if (! ent){
