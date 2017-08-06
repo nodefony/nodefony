@@ -270,7 +270,7 @@ module.exports = nodefony.registerService("webpack", function(){
 						/* watchOptions */
 					}, (err, stats) => {
 						if (! err ){
-							this.logger( "RUN WEBPACK COMPILER : "+ basename +" COMPILE ENTRY POINT : \n" +this.displayConfigTable(config) );
+							this.logger( "RUN WEBPACK COMPILER : "+ basename +" COMPILE ENTRY POINT : \n" +this.displayConfigTable(config) ,"DEBUG");
 						}
 						this.loggerStat(err, stats, basename, file.name, true);
 					});
@@ -365,7 +365,7 @@ module.exports = nodefony.registerService("webpack", function(){
 					}
 				}
 				return new Promise ( (resolve/*, reject*/) => {
-					this.logger( "RUN WEBPACK COMPILER : "+ file +" COMPILE ENTRY POINT : \n" +this.displayConfigTable(compiler.options) );
+					this.logger( "RUN WEBPACK COMPILER : "+ file +" COMPILE ENTRY POINT : \n" +this.displayConfigTable(compiler.options) ,"DEBUG");
 					compiler.run( (err, stats) => {
 						this.loggerStat(err, stats, bundle, file);
 						return resolve(err, stats);

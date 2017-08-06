@@ -135,7 +135,6 @@ module.exports = nodefony.registerService("sequelize", function(){
 
 
 		displayTable (){
-			this.logger("DATABASES CONNECTORS LIST : ") ;
 			let options = {
 					head:[
 							"NAME CONNECTOR",
@@ -160,7 +159,7 @@ module.exports = nodefony.registerService("sequelize", function(){
 				}
 				table.push(conn);
 			}
-			console.log( table.toString() );
+			this.logger ( "DATABASES CONNECTORS LIST  : \n" + table.toString(), "DEBUG" );
 		}
 
 		createConnection (name, config){

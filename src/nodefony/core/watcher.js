@@ -98,7 +98,7 @@ module.exports = nodefony.register("watcher", function(){
 			try {
 				this.watcher =  this.chokidar.watch(Path, nodefony.extend(true, {}, this.settings, settings) );
 				this.fire("onInitialize", this.watcher , Path);
-				super.logger("INITIALISE WATCHING  PATH : " + Path , "INFO");
+				super.logger("INITIALISE WATCHING  PATH : " + Path , "DEBUG");
 				this.watcher.on('all', (event, Path) => {
 					this.fire("all", event, Path );
 					try {

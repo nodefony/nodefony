@@ -57,7 +57,7 @@ module.exports = nodefony.register("cliKernel", function(){
 	};
 
 	var createAssetDirectory = function (myPath, callback){
-		this.logger("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : "+ myPath);
+		this.logger("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : "+ myPath, "DEBUG");
 		try {
 			if ( fs.existsSync(myPath) ){
 				return callback( fs.statSync(myPath) );
@@ -112,7 +112,7 @@ module.exports = nodefony.register("cliKernel", function(){
 			}
 		}
 		try {
-			this.logger("INSTALL LINK IN /web TOTAL SIZE : " + nodefony.niceBytes( this.getSizeDirectory( this.publicDirectory ,/^docs$|^tests|^node_modules|^assets$/ )) );
+			this.logger("INSTALL LINK IN /web TOTAL SIZE : " + nodefony.niceBytes( this.getSizeDirectory( this.publicDirectory ,/^docs$|^tests|^node_modules|^assets$/ )), "DEBUG" );
 		}catch(e){
 			this.logger(e, "WARNING");
 		}
@@ -290,7 +290,7 @@ module.exports = nodefony.register("cliKernel", function(){
 			});
 			createAssetDirectory.call(this, this.publicDirectory, () => {
 				parseAssetsBundles.call(this, table, name);
-				console.log(table.toString());
+				this.logger("\n" + table.toString() ,"DEBUG");
 			});
 		}
 
