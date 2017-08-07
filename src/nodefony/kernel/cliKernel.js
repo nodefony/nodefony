@@ -5,7 +5,7 @@ const npm = require("npm");
 
 module.exports = nodefony.register("cliKernel", function(){
 
-	var createFile = function (myPath, skeleton, parse, params, callback){
+	let createFile = function (myPath, skeleton, parse, params, callback){
 		if ( skeleton ){
 			buildSkeleton.call(this, skeleton, parse, params,(error, result) => {
 				if (error){
@@ -22,7 +22,7 @@ module.exports = nodefony.register("cliKernel", function(){
 				}
 			});
 		}else{
-			var data = "/* generate by nodefony */";
+			let data = "/* generate by nodefony */";
 			try {
 				fs.writeFileSync(myPath, data,{
 					mode:"777"
@@ -34,8 +34,8 @@ module.exports = nodefony.register("cliKernel", function(){
 		}
 	};
 
-	var buildSkeleton = function(skeleton, parse, obj, callback){
-		var skelete = null ;
+	let buildSkeleton = function(skeleton, parse, obj, callback){
+		let skelete = null ;
 		try {
 			skelete = new nodefony.fileClass(skeleton);
 			if (skelete.type === "File"){
@@ -56,7 +56,7 @@ module.exports = nodefony.register("cliKernel", function(){
 		return skelete;
 	};
 
-	var createAssetDirectory = function (myPath, callback){
+	let createAssetDirectory = function (myPath, callback){
 		this.logger("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : "+ myPath, "DEBUG");
 		try {
 			if ( fs.existsSync(myPath) ){
@@ -75,11 +75,11 @@ module.exports = nodefony.register("cliKernel", function(){
 		}
 	};
 
-	var parseAssetsBundles = function (table, Name){
-		var bundles = this.kernel.getBundles();
-		var result = null ;
-		let name =null;
-		let srcpath =null;
+	let parseAssetsBundles = function (table, Name){
+		let bundles = this.kernel.getBundles();
+		let result = null ;
+		let name = null;
+		let srcpath = null;
 		for ( let bundle in bundles ){
 			if (Name && Name !== bundle){
 				continue;
@@ -93,8 +93,8 @@ module.exports = nodefony.register("cliKernel", function(){
 				name = bundles[bundle].bundleName ;
 				srcpath = path.resolve ( bundles[bundle].path, "Resources", "public");
 				this.createSymlink(srcpath, this.publicDirectory+name, (Srcpath, dstpath) => {
-					var size = "not Defined";
-					var sizeAssets = "not Defined";
+					let size = "not Defined";
+					let sizeAssets = "not Defined";
 					try {
 						size = nodefony.niceBytes( this.getSizeDirectory(Srcpath, /^docs$|^tests|^node_modules|^assets$/ ) ) ;
 						sizeAssets = nodefony.niceBytes( this.getSizeDirectory(path.resolve (Srcpath, "assets") ) ) ;
@@ -127,7 +127,7 @@ module.exports = nodefony.register("cliKernel", function(){
 	 *	CLI KERNEL
 	 *
 	 */
-	var cliKernel = class cliKernel extends nodefony.cli {
+	const cliKernel = class cliKernel extends nodefony.cli {
 
 		constructor (name, container, notificationsCenter, options){
 			super( name, container, notificationsCenter, options);
@@ -167,9 +167,9 @@ module.exports = nodefony.register("cliKernel", function(){
 						task: []
 					};
 				}
-				var commands = this.commands[bundle];
+				let commands = this.commands[bundle];
 				for (var cmd in commands ){
-					var command = commands[cmd].prototype.commands;
+					let command = commands[cmd].prototype.commands;
 					for (var task in command){
 						this.bundles[bundle].task.push( command[task] );
 					}
@@ -189,8 +189,8 @@ module.exports = nodefony.register("cliKernel", function(){
 			if (this.cliParse.length){
 				var ele = this.cliParse[0].split(":");
 				if (ele.length){
-					var cmd = ele[0];
-					for (var bundle in this.commands  ){
+					let cmd = ele[0];
+					for (let bundle in this.commands  ){
 						if (cmd in this.commands[bundle]){
 							let worker = this.commands[bundle][cmd];
 							if (worker){
@@ -262,7 +262,7 @@ module.exports = nodefony.register("cliKernel", function(){
 				return this.normalizeLog( pdu );
 			});
 			// INFO DEBUG
-			var data ;
+			let data = null ;
 			if ( debug ){
 				data = "INFO,DEBUG,WARNING" ;
 			}else{
@@ -295,16 +295,16 @@ module.exports = nodefony.register("cliKernel", function(){
 		}
 
 		build (obj, parent, force){
-			var child = null;
+			let child = null;
 			switch ( nodefony.typeOf(obj) ){
 				case "array" :
-					for (var i = 0 ; i < obj.length ; i++){
+					for (let i = 0 ; i < obj.length ; i++){
 						this.build(obj[i], parent, force);
 					}
 				break;
 				case "object" :
-					for (var ele in obj ){
-						var value = obj[ele];
+					for (let ele in obj ){
+						let value = obj[ele];
 						switch (ele){
 							case "name" :
 								var name = value;
@@ -358,7 +358,7 @@ module.exports = nodefony.register("cliKernel", function(){
 				let stat = null ;
 	  		try {
 	  			if ( exclude ){
-	  				var basename = path.basename(dir);
+	  				let basename = path.basename(dir);
 	  				if ( basename.match(exclude) ){
 	  					return 0 ;
 	  				}
@@ -368,7 +368,7 @@ module.exports = nodefony.register("cliKernel", function(){
 	  			this.logger(e, "WARNING");
 	  			return 0 ;
 	  		}
-	  		var files = null ;
+	  		let files = null ;
 	  		switch (true){
 	  			case stat.isFile() :
 	  				throw  new Error ( dir+" is not a directory");
@@ -382,9 +382,9 @@ module.exports = nodefony.register("cliKernel", function(){
 	  				throw  new Error ( dir+" is not a directory");
 	  		}
 
-	  		var i, totalSizeBytes= 0;
-	  		var dirSize = null ;
-	  		for (i=0; i<files.length; i++) {
+	  		let totalSizeBytes = 0;
+	  		let dirSize = null ;
+	  		for (let i = 0; i<files.length; i++) {
 	  			let myPath = dir+"/"+files[i] ;
 	  			try {
 	  				stat = fs.lstatSync(myPath);
@@ -412,7 +412,7 @@ module.exports = nodefony.register("cliKernel", function(){
 	  	}
 
 	    createSymlink (srcpath, dstpath, callback){
-	  		var res= null ;
+	  		let res= null ;
 	  		try {
 	  			res = fs.statSync(srcpath);
 	  			try{
@@ -546,7 +546,7 @@ module.exports = nodefony.register("cliKernel", function(){
 				mypromise.then( this.npmList(this.kernel.bundles[bundle].path, tab) );
 			}
 			return mypromise.then((ele)=>{
-				var headers = [
+				let headers = [
 					"NAME",
 					"VERSION",
 					"DESCRIPTION",
@@ -619,8 +619,8 @@ module.exports = nodefony.register("cliKernel", function(){
 
 		installPackage (name, file, prod){
 			try {
-				var conf = new nodefony.fileClass(file.dirName+"/package.json");
-				var config = require(conf.path);
+				let conf = new nodefony.fileClass(file.dirName+"/package.json");
+				let config = require(conf.path);
 				npm.load( config ,(error, event) => {
 					if (error){
 						this.logger(error, "ERROR");
@@ -633,7 +633,7 @@ module.exports = nodefony.register("cliKernel", function(){
 					event.globalPrefix = this.kernel.rootDir ;
 					//npm.config.set('localPrefix', file.dirName);
 					//npm.config.set('globalPrefix', this.rootDir);
-					var tab = [] ;
+					let tab = [] ;
 					this.logger("NPM :"+npm.version+  " Installing Dependencies for bundle : " + file.shortName  );
 					for (let dep in config.dependencies ){
 							let mypackage = dep+"@"+config.dependencies[dep] ;
@@ -690,11 +690,11 @@ module.exports = nodefony.register("cliKernel", function(){
 				}
 				for (var cmd in obj[ele].task ){
 					str +=  this.clc.green("\t"+ obj[ele].task[cmd][0]);
-					var length =  obj[ele].task[cmd][0].length;
-					var size = 65 - length ;
-					for (var i = 0 ; i< size ; i++) { str +=" "; }
-					str += obj[ele].task[cmd][1]+"\n";
-				}
+					let length =  obj[ele].task[cmd][0].length;
+					let size = 65 - length ;
+					for (let i = 0 ; i< size ; i++) { str +=" "; }
+						str += obj[ele].task[cmd][1]+"\n";
+					}
 			}
 			return str;
 		}

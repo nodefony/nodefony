@@ -11,12 +11,11 @@ module.exports = nodefony.registerService("httpKernel", function(){
 
 		constructor (container, serverStatics ){
 
-			var kernel = container.get("kernel");
-			super("httpKernel", container, kernel.notificationsCenter );
-			this.kernel = kernel;
-			this.reader = this.container.get("reader");
+			super("httpKernel", container, container.get("notificationsCenter") );
+			this.reader = this.get("reader");
 			this.serverStatic = serverStatics;
-			this.engineTemplate = this.container.get("templating");
+			this.engineTemplate = this.get("templating");
+
 
 			this.domain = this.kernel.domain;
 			this.httpPort = this.kernel.httpPort;
@@ -47,6 +46,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
 					HTTP:this.bundleSettings.http.responseTimeout,
 					HTTPS:this.bundleSettings.https.responseTimeout
 				};
+				this.translation = this.get("translation");
 			});
 
 			this.listen(this, "onClientError", (e, socket) => {

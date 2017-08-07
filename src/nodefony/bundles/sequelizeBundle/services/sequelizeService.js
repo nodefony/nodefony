@@ -133,7 +133,6 @@ module.exports = nodefony.registerService("sequelize", function(){
 			});
 		}
 
-
 		displayTable (){
 			let options = {
 					head:[

@@ -16,8 +16,9 @@ nodefony.register.call(nodefony.context, "http", function(){
 			this.set("context", this);
 			this.kernelHttp = this.get("httpKernel");
 			//I18n
-			this.translation = new nodefony.services.translation( container, type );
+			this.translation = this.kernelHttp.translation.createTranslation(this);
 			this.set("translation", this.translation );
+
 			this.protocol = ( type === "HTTPS" ) ? "https" : "http" ;
 			this.resolver = null ;
 			this.nbCallController = 0 ;
@@ -151,15 +152,13 @@ nodefony.register.call(nodefony.context, "http", function(){
 					environment:	this.kernel.environment,
 					debug:		this.kernel.debug
 				},
-				getFlashBag:	this.flashTwig.bind(this),
-				render:		this.render.bind(this),
-				controller:	this.controller.bind(this),
-				trans:		this.translation.trans.bind(this.translation),
-				getLocale:	this.translation.getLocale.bind(this.translation),
-				trans_default_domain:() => {
-						this.translation.trans_default_domain.apply(this.translation, arguments) ;
-				},
-				getTransDefaultDomain:this.translation.getTransDefaultDomain.bind(this.translation),
+				getFlashBag		:	this.flashTwig.bind(this),
+				render				:	this.render.bind(this),
+				controller		:	this.controller.bind(this),
+				trans					:	this.translation.trans.bind(this.translation),
+				getLocale			:	this.translation.getLocale.bind(this.translation),
+				trans_default_domain : this.translation.trans_default_domain.bind(this.translation),
+				getTransDefaultDomain	: this.translation.getTransDefaultDomain.bind(this.translation),
 				CDN:(type, nb) => {
 					let cdn = this.kernelHttp.getCDN.call(this.kernelHttp, type, nb);
 					if ( cdn ){
@@ -249,7 +248,6 @@ nodefony.register.call(nodefony.context, "http", function(){
 		}
 
 		handle (data){
-
 			this.setParameters("query.get", this.request.queryGet );
 			if (this.request.queryPost  ){
 				this.setParameters("query.post", this.request.queryPost );
@@ -258,12 +256,10 @@ nodefony.register.call(nodefony.context, "http", function(){
 				this.setParameters("query.files", this.request.queryFile );
 			}
 			this.setParameters("query.request", this.request.query );
-
 			/*
  		 	*	TRANSLATION
  		 	*/
-			this.translation.handle( this);
-
+			this.translation.handle();
 			/*
  		 	*	TRY resolve
  		 	*/

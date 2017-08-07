@@ -1,5 +1,5 @@
 
-var shortId = require('shortid');
+const shortId = require('shortid');
 
 module.exports = nodefony.register("Container", function(){
 
@@ -14,35 +14,35 @@ module.exports = nodefony.register("Container", function(){
 		return shortId.generate();
 	};
 
-	var parseParameterString = function(str, value){
+	let parseParameterString = function(str, value){
 		let ns = null ;
 		switch( nodefony.typeOf(str) ){
 			case "string" :
-				return parseParameterString.call(this,str.split(".") , value);
+			return parseParameterString.call(this,str.split(".") , value);
 			case "array" :
-				switch(str.length){
-					case 1 :
-						ns = Array.prototype.shift.call(str);
-						if ( ! this[ns] ){
-							this[ns] = value;
-						}else{
-							if ( ISDefined(value) ){
-								this[ns] = value ;
-							}else{
-								return this[ns];
-							}
-						}
-						return value ;
-					default :
-						ns = Array.prototype.shift.call(str);
-						if ( ! this[ns] && ISDefined(value) ){
-							this[ns] = {};
-						}
-						return parseParameterString.call(this[ns], str, value);
+			switch(str.length){
+				case 1 :
+				ns = Array.prototype.shift.call(str);
+				if ( ! this[ns] ){
+					this[ns] = value;
+				}else{
+					if ( ISDefined(value) ){
+						this[ns] = value ;
+					}else{
+						return this[ns];
+					}
 				}
+				return value ;
+				default :
+				ns = Array.prototype.shift.call(str);
+				if ( ! this[ns] && ISDefined(value) ){
+					this[ns] = {};
+				}
+				return parseParameterString.call(this[ns], str, value);
+			}
 			break;
 			default:
-				return false;
+			return false;
 		}
 	};
 
@@ -51,7 +51,7 @@ module.exports = nodefony.register("Container", function(){
  	 *	CONTAINER CLASS
  	 *
  	 */
-	var Container = class Container {
+	const Container = class Container {
 
 		constructor (services, parameters){
 			this.protoService = function(){};
@@ -72,7 +72,7 @@ module.exports = nodefony.register("Container", function(){
 		}
 
 		logger (pci, severity, msgid,  msg){
-			var syslog = this.get("syslog");
+			let syslog = this.get("syslog");
 			if (! msgid) { msgid = "CONTAINER SERVICES "; }
 			return syslog.logger(pci, severity, msgid,  msg);
 		}
@@ -167,7 +167,7 @@ module.exports = nodefony.register("Container", function(){
  	 *
  	 */
 
-	var Scope = class Scope extends Container {
+	const Scope = class Scope extends Container {
 
 		constructor( name, parent){
 			super();
@@ -180,8 +180,8 @@ module.exports = nodefony.register("Container", function(){
 		}
 
 		set (name, obj){
-    			this.services[name] = obj ;
-    			return super.set(name, obj);
+			this.services[name] = obj ;
+			return super.set(name, obj);
 		}
 
 		clean (){
@@ -206,7 +206,7 @@ module.exports = nodefony.register("Container", function(){
  	 *	ExtendedScope CLASS
  	 *
  	 */
-	var ExtendedScope = class ExtendedScope extends Container {
+	const ExtendedScope = class ExtendedScope extends Container {
 
 		constructor (name, parent){
 			super();
@@ -234,8 +234,8 @@ module.exports = nodefony.register("Container", function(){
 		}
 
 		set (name, obj){
-    			this.services[name] = obj ;
-    			return super.set(name, obj);
+			this.services[name] = obj ;
+			return super.set(name, obj);
 		}
 
 		setParameters (name, str){
@@ -247,6 +247,5 @@ module.exports = nodefony.register("Container", function(){
 			}
 		}
 	};
-
 	return Container;
 });

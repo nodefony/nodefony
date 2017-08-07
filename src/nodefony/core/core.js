@@ -13,7 +13,7 @@ module.exports = function(){
 	 *	@module Nodefony
 	 *
 	 */
-	var Nodefony = class Nodefony {
+	const Nodefony = class Nodefony {
 
 		constructor() {
 			this.io = {};
@@ -45,17 +45,16 @@ module.exports = function(){
          	*	@return {String} type of value
 	 	*/
 		typeOf (value){
-			var t = typeof value;
+			let t = typeof value;
 			if (t === 'object'){
-
 				if (value === null ) {return null;}
 
 				if ( this.isArray( value ) ){
 					return "array";
 				}
 				if ( this.isFunction( value ) ) {
-        				return 'function';
-      				}
+					return 'function';
+				}
 				if (value instanceof Date ){
 					return "date";
 				}
@@ -73,10 +72,10 @@ module.exports = function(){
 				}
 			} else {
 				if (t === 'function' && typeof value.call === 'undefined') {
-    					return 'object';
+					return 'object';
 				}
 			}
-  			return t;
+			return t;
 		}
 
 		/**
@@ -85,12 +84,11 @@ module.exports = function(){
 	 	*
  	 	*/
 		extend (){
-
-			var options, name, src, copy, copyIsArray, clone,
-				target = arguments[ 0 ] || {},
-				i = 1,
-				length = arguments.length,
-				deep = false;
+			let options, name, src, copy, copyIsArray, clone,
+			target = arguments[ 0 ] || {},
+			i = 1,
+			length = arguments.length,
+			deep = false;
 
 			// Handle a deep copy situation
 			if ( typeof target === "boolean" ) {
@@ -109,37 +107,29 @@ module.exports = function(){
 				i--;
 			}
 			for ( ; i < length; i++ ) {
-
 				// Only deal with non-null/undefined values
 				if ( ( options = arguments[ i ] ) !== null ) {
-
 					// Extend the base object
 					for ( name in options ) {
 						src = target[ name ];
 						copy = options[ name ];
-
 						// Prevent never-ending loop
 						if ( target === copy ) {
 							continue;
 						}
-
 						// Recurse if we're merging plain objects or arrays
 						var bool = this.typeOf( copy );
 						if ( deep && copy && ( bool === "object" ||
-							( copyIsArray = (bool === "array") ) ) ) {
-
+						( copyIsArray = (bool === "array") ) ) ) {
 							if ( copyIsArray ) {
 								copyIsArray = false;
 								clone = src && bool === "array" ? src : [];
-
 							} else {
 								clone = src && bool === "object" ? src : {};
 							}
-
 							// Never move original objects, clone them
 							target[ name ] = this.extend( deep, clone, copy );
-
-						// Don't bring in undefined values
+							// Don't bring in undefined values
 						} else if ( copy !== undefined ) {
 							target[ name ] = copy;
 						}
@@ -151,14 +141,14 @@ module.exports = function(){
 		}
 
 		/**
- 	 	*  Register Nodefony Library element
-	 	*  @method register
-	 	*  @param {String} name
-	 	*  @param {Function} closure
-	 	*
- 	 	*/
+		*  Register Nodefony Library element
+		*  @method register
+		*  @param {String} name
+		*  @param {Function} closure
+		*
+		*/
 		register (name, closure){
-			var register = null ;
+			let register = null ;
 			if (typeof closure === "function") {
 				// exec closure
 				register = closure(this, name);
@@ -250,7 +240,6 @@ module.exports = function(){
 		registerFixture (name, closure){
 			if (typeof closure === "function" ){
 				return  closure();
-				//return this.fixtures[name] = closure();
 			}
 			throw new Error( "Register fixtures : "+ name +"  error fixtures bad format" );
 		}
@@ -265,11 +254,9 @@ module.exports = function(){
 		registerCommand (name, closure){
 			if (typeof closure === "function" ){
 				return  closure();
-				//return this.commands[name] = closure();
 			}
 			throw new Error( "Register commands : "+ name +"  error commands bad format" );
 		}
 	};
-
 	return  new Nodefony() ;
 }();

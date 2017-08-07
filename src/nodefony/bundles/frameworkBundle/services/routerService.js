@@ -6,15 +6,15 @@
  *
  */
 
-var Querystring = require('querystring');
-var BlueBird = require("bluebird");
+const Querystring = require('querystring');
+const BlueBird = require("bluebird");
 
 
 module.exports = nodefony.registerService("router", function(){
 
 
 
-	var isPromise = function (obj) {
+	const isPromise = function (obj) {
   		return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
 	}
 	/*
@@ -24,9 +24,9 @@ module.exports = nodefony.registerService("router", function(){
  	 *
  	 *
  	 */
-	var pluginReader = function(){
+	const pluginReader = function(){
 
-		var importXmlConfig = function(xml, prefix, callback, parser){
+		let importXmlConfig = function(xml, prefix, callback, parser){
 			if (parser){
 				xml = this.render(xml, parser.data, parser.options);
 			}
@@ -67,19 +67,18 @@ module.exports = nodefony.registerService("router", function(){
 			}
 		};
 
-		var normalizeXmlJson = function(routes, callback){
-			for(var route in routes){
-				for(var param in routes[route]){
+		let normalizeXmlJson = function(routes, callback){
+			for(let route in routes){
+				for(let param in routes[route]){
 					if(['pattern', 'host'].indexOf(param) >= 0){
 						routes[route][param] = routes[route][param][0];
 					} else {
-
 						if(routes[route][param] instanceof Array){
-							var args = {};
-							for(var elm=0; elm < routes[route][param].length; elm ++){
+							let args = {};
+							for(let elm=0; elm < routes[route][param].length; elm ++){
 								//console.log(routes[route][param][elm])
 								//console.log(route)
-								for(var sparam in routes[route][param][elm]){
+								for(let sparam in routes[route][param][elm]){
 									//console.log(sparam)
 									args[sparam] = routes[route][param][elm][sparam];
 								}
@@ -93,18 +92,18 @@ module.exports = nodefony.registerService("router", function(){
 			if(callback) { callback(routes); }
 		};
 
-		var getObjectRoutesXML = function(file, callback, parser){
+		let getObjectRoutesXML = function(file, callback, parser){
 			importXmlConfig.call(this, file, '', callback, parser);
 		};
 
-		var getObjectRoutesJSON = function(file, callback, parser){
+		let getObjectRoutesJSON = function(file, callback, parser){
 			if (parser){
 				file = this.render(file, parser.data, parser.options);
 			}
 			if(callback) { callback(JSON.parse(file)); }
 		};
 
-		var getObjectRoutesYml = function(file, callback, parser){
+		let getObjectRoutesYml = function(file, callback, parser){
 			if (parser){
 				file = this.render(file, parser.data, parser.options);
 			}
@@ -119,19 +118,16 @@ module.exports = nodefony.registerService("router", function(){
 		};
 	}();
 
-
-
 	/*
  	 *
  	 * CLASS RESOLVER
  	 *
  	 *
  	 */
-	var regAction =/^(.+)Action$/;
+	const regAction =/^(.+)Action$/;
 	nodefony.Resolver  = class Resolver extends nodefony.Service {
 
 		constructor (container, router){
-
 			super("resolver" , container, container.get("notificationsCenter") ) ;
 			this.router = router ;
 			this.resolve = false;
@@ -146,7 +142,7 @@ module.exports = nodefony.registerService("router", function(){
 
 		match (route, context){
 			try {
-				var match = route.match(context);
+				let match = route.match(context);
 				if ( match ){
 					this.variables = match;
 					this.request = context.request.request;
@@ -154,7 +150,6 @@ module.exports = nodefony.registerService("router", function(){
 					this.parsePathernController(route.defaults.controller);
 					this.bypassFirewall = route.bypassFirewall ;
 					this.defaultLang = route.defaultLang ;
-
 				}
 				return match;
 			}catch(e){
@@ -167,10 +162,10 @@ module.exports = nodefony.registerService("router", function(){
 		}
 
 		getAction (name){
-			var obj = Object.getOwnPropertyNames(this.controller.prototype) ;
-			for (var i= 0 ; i < obj.length ; i++ ){ //  func in obj ){
+			let obj = Object.getOwnPropertyNames(this.controller.prototype) ;
+			for (let i= 0 ; i < obj.length ; i++ ){ //  func in obj ){
 				if (typeof this.controller.prototype[obj[i]] === "function"){
-					var res = regAction.exec(obj[i]);
+					let res = regAction.exec(obj[i]);
 					if (res){
 						if ( res[1] === name){
 							return this.controller.prototype[obj[i]];
@@ -185,7 +180,7 @@ module.exports = nodefony.registerService("router", function(){
 
 		parsePathernController (name){
 			if ( name && typeof name === "string" ){
-				var tab = name.split(":");
+				let tab = name.split(":");
 				this.bundle = this.kernel.getBundle( this.kernel.getBundleName(tab[0]) );
 				if ( this.bundle ){
 					if (this.kernel.environment === "dev" && ! this.context.autoloadCache.bundles[this.bundle.name]){
@@ -217,7 +212,7 @@ module.exports = nodefony.registerService("router", function(){
 
 		getDefaultView (controller, action){
 			//FIXME .html ???
-			var res = this.bundle.name+"Bundle"+":"+controller+":"+action+".html."+this.get("templating").extention;
+			let res = this.bundle.name+"Bundle"+":"+controller+":"+action+".html."+this.get("templating").extention;
 			return res ;
 		}
 
@@ -241,7 +236,7 @@ module.exports = nodefony.registerService("router", function(){
 				return ;
 			}
 			try {
-				var controller = new this.controller( this.container, this.context );
+				let controller = new this.controller( this.container, this.context );
 				this.set("controller", controller );
 				if ( data ){
 					this.variables.push(data);
@@ -313,16 +308,16 @@ module.exports = nodefony.registerService("router", function(){
 		}
 	};
 
-	var generateQueryString = function(obj, name){
+	let generateQueryString = function(obj, name){
 		if ( obj._keys ){delete obj._keys ;}
-		var size = ( Object.keys(obj).length ) ;
+		let size = ( Object.keys(obj).length ) ;
 		if ( ! size ) { return "" ; }
-		var str = "?";
+		let str = "?";
 		if ( nodefony.typeOf(obj) !== "object" || obj === null){
 			this.logger("BAD arguments queryString in route varaibles :" + name ,"WARNING");
 			return "";
 		}
-		var iter = 0 ;
+		let iter = 0 ;
 		for (let ele in obj){
 			iter++ ;
 			str += Querystring.escape( ele ) + "=" + Querystring.escape( obj[ele] )   ;
@@ -333,10 +328,9 @@ module.exports = nodefony.registerService("router", function(){
 		return str ;
 	};
 
-	var Router = class Router extends nodefony.Service {
+	const Router = class Router extends nodefony.Service {
 
 		constructor (container){
-
 			super("router", container , container.get("notificationsCenter"));
 			this.routes = [];
 			this.reader = function(context){
@@ -350,49 +344,47 @@ module.exports = nodefony.registerService("router", function(){
 				try {
 					return this.generatePath( name, variables, host);
 				}catch(e){
-					this.logger(e.error, "ERROR");
+					this.logger(e, "ERROR");
 					throw {
 						status:500,
 						error:e.error
 					};
 				}
 			});
-			//this.syslog = this.container.get("syslog");
 		}
 
 		generatePath (name, variables, host){
-			var route =  this.getRoute(name) ;
-			var queryString = variables ? variables.queryString : null ;
+			let route =  this.getRoute(name) ;
+			let queryString = variables ? variables.queryString : null ;
 			if (! route ){
 				throw {error:"no route to host  "+ name};
 			}
-			var path = route.path;
+			let mypath = route.path;
 			if ( route.variables.length ){
-				for ( var i = 0 ; i < route.variables.length ; i++){
-					var ele = route.variables[i] ;
+				for ( let i = 0 ; i < route.variables.length ; i++){
+					let ele = route.variables[i] ;
 					if ( variables[ ele ]){
-						path = path.replace("{"+ele+"}",  variables[ele]);
+						mypath = mypath.replace("{"+ele+"}",  variables[ele]);
 					}else{
 						if ( route.defaults[ ele ] ){
-							path = path.replace("{"+ele+"}",  route.defaults[ ele ] );
+							mypath = mypath.replace("{"+ele+"}",  route.defaults[ ele ] );
 						}else{
-							var txt = "";
-							for (var i= 0 ; i < route.variables.length ;i++ ){
+							let txt = "";
+							for (let i= 0 ; i < route.variables.length ;i++ ){
 								txt += "{"+route.variables[i]+"} ";
 							}
 							throw {error:"router generate path route "+ name + " must have variable "+ txt};
-							//throw {error:"router generate path route "+ name + " don't  have variable "+ ele};
 						}
 					}
 				}
 			}
 			if ( queryString ){
-				path += generateQueryString.call(this, variables.queryString, name);
+				mypath += generateQueryString.call(this, variables.queryString, name);
 			}
 			if (host){
-				return host+path ;
+				return host+mypath ;
 			}
-			return path ;
+			return mypath ;
 
 		}
 
@@ -415,15 +407,15 @@ module.exports = nodefony.registerService("router", function(){
 		}
 
 		setRoute (name, route){
-			var myroute = null ;
+			let myroute = null ;
 			if ( route instanceof nodefony.Route){
 				myroute = route;
 			}else{
 				myroute = this.createRoute(route);
 			}
-			var hash = myroute.generateId();
-			var index = null ;
-			var same = false ;
+			let hash = myroute.generateId();
+			let index = null ;
+			let same = false ;
 			if ( this.routes[name] ){
 				index = this.routes[name].index ;
 				if ( this.routes[name].hash ===  hash){
@@ -464,12 +456,10 @@ module.exports = nodefony.registerService("router", function(){
 		}
 
 		resolve (container, context){
-			var resolver = new nodefony.Resolver(container, this);
-			for (var i = 0; i<this.routes.length; i++){
-				var route = this.routes[i];
+			let resolver = new nodefony.Resolver(container, this);
+			for (let i = 0; i < this.routes.length; i++){
 				try {
-					var res = resolver.match(route, context);
-					if ( res ){
+					if ( resolver.match( this.routes[i], context) ){
 						return resolver;
 					}
 				}catch(e){
@@ -488,7 +478,7 @@ module.exports = nodefony.registerService("router", function(){
 
 		resolveName (container, name){
 			try {
-				var resolver = new nodefony.Resolver(container, this);
+				let resolver = new nodefony.Resolver(container, this);
 				resolver.parsePathernController(name);
 				return resolver;
 			}catch(e){
@@ -502,16 +492,16 @@ module.exports = nodefony.registerService("router", function(){
 
 		logger (pci, severity, msgid,  msg){
 			if (! msgid) { msgid = "SERVICE ROUTER";}
-			return this.syslog.logger(pci, severity, msgid,  msg);
+			return super.logger(pci, severity, msgid,  msg);
 		}
 
 		removeRoutes( filePath ){
-			for (var i = 0; i<this.routes.length; i++){
+			for (let i = 0; i<this.routes.length; i++){
 				//console.log( this.routes[i].name +" : "+this.routes[i].filePath)
 				if ( this.routes[i].filePath === filePath ){
 					this.logger( "DELETE ROUTE : " + this.routes[i].name )
-					var index = this.routes[i].index ;
-					var name = this.routes[i].name ;
+					let index = this.routes[i].index ;
+					let name = this.routes[i].name ;
 					delete this.routes[index-1] ;
 					delete this.routes[name] ;
 				}
@@ -519,13 +509,11 @@ module.exports = nodefony.registerService("router", function(){
 		}
 
 		nodeReader (filePath , obj){
-			//console.log(require('util').inspect(obj, {depth: null}));
-			for (var route in obj){
-				var name = route ;
-				var newRoute = new nodefony.Route(route);
+			for (let route in obj){
+				let newRoute = new nodefony.Route(route);
 				newRoute.filePath = filePath ;
-				for ( var ele in obj[route] ){
-					var arg = obj[route][ele];
+				for ( let ele in obj[route] ){
+					let arg = obj[route][ele];
 					switch ( ele ){
 						case "pattern" :
 							newRoute.setPattern(arg);
@@ -556,8 +544,7 @@ module.exports = nodefony.registerService("router", function(){
 					}
 				}
 				newRoute.compile();
-				//this.addRoute(name, newRoute);
-				this.setRoute(name, newRoute);
+				this.setRoute(route, newRoute);
 			}
 		}
 	};
