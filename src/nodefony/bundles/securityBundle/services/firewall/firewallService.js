@@ -5,20 +5,19 @@
  *
  *
  */
-
 module.exports = nodefony.registerService("firewall", function(){
 
 	let pluginReader = function(){
 
 		let replaceKey = function(key){
-			var tab = ['firewall', 'user', 'encoder'];
+			let tab = ['firewall', 'user', 'encoder'];
 			return (tab.indexOf(key) >= 0 ? key + 's' : key);
 		};
 
 		let arrayToObject = function(tab){
-			var obj = {};
-			for(var i = 0; i < tab.length; i++){
-				for(var key in tab[i]){
+			let obj = {};
+			for(let i = 0; i < tab.length; i++){
+				for(let key in tab[i]){
 					if(tab[i].name && key !== 'name'){
 						if(!obj[tab[i].name]){
 							obj[tab[i].name] = {};
@@ -28,7 +27,7 @@ module.exports = nodefony.registerService("firewall", function(){
 					} else if(key === 'rule'){
 						obj = tab[i][key];
 					} else {
-						var value = (tab[i][key] instanceof Array ? arrayToObject(tab[i][key]) : tab[i][key]);
+						let value = (tab[i][key] instanceof Array ? arrayToObject(tab[i][key]) : tab[i][key]);
 						if(value && value.class && value.algorithm){
 							value[value.class] = value.algorithm;
 							delete value.class;
@@ -48,7 +47,7 @@ module.exports = nodefony.registerService("firewall", function(){
 			}
 			let config = {};
 			this.xmlParser.parseString(xml, function(err, node){
-				for(var key in node){
+				for(let key in node){
 					switch(key){
 						case 'config':
 							config = arrayToObject(node[key]);
@@ -142,66 +141,50 @@ module.exports = nodefony.registerService("firewall", function(){
 			switch ( context.type ){
 				case "HTTP" :
 				case "HTTPS" :
-					if (this.formLogin) {
-						if (e.message){
-							this.logger(e.message, "DEBUG");
-						}else{
-							this.logger(e, "DEBUG");
-						}
-						if ( e && e.status ){
-							context.response.setStatusCode( e.status, e.message ) ;
-						}else{
-							context.response.setStatusCode( 401 ) ;
-						}
-						if ( ( context.request.url.pathname !==  this.formLogin ) && ( context.request.url.pathname !== this.checkLogin ) && ( ! this.alwaysUseDefaultTarget ) ){
-							var target_path = null ;
-							var area = context.session.getMetaBag("area") ;
-							if (area &&  area !== this.name){
-								context.session.clearFlashBag("default_target_path" );
-							}else{
-								target_path = context.session.getFlashBag("default_target_path" ) ;
-							}
-							if ( ! target_path ){
-								context.session.setFlashBag("default_target_path", context.request.url.pathname ) ;
-							}else{
-								context.session.setFlashBag("default_target_path", target_path ) ;
-							}
-							context.session.setMetaBag("area", this.name );
-						}
-						context.resolver = this.overrideURL(context, this.formLogin);
-						if ( !  context.resolver.resolve ){
-							return context.fire("onError",context.container, {
-								status:401,
-								message:"Form Login route : " + this.formLogin + " this route not exist. Check Security config file"
-							});
-						}
-						if (! context.isAjax ){
-							if ( e.message !== "Unauthorized" ){
-								context.session.setFlashBag("session", {
-									error:e.message
-								});
-							}
-						}else{
-							context.setXjson(e);
-						}
-						context.fire("onRequest");
+				if (this.formLogin) {
+					if (e.message){
+						this.logger(e.message, "DEBUG");
 					}else{
-						if (e.status){
-							context.fire("onError",context.container, {
-								status:e.status,
-								message:e.message
-							});
+						this.logger(e, "DEBUG");
+					}
+					if ( e && e.status ){
+						context.response.setStatusCode( e.status, e.message ) ;
+					}else{
+						context.response.setStatusCode( 401 ) ;
+					}
+					if ( ( context.request.url.pathname !==  this.formLogin ) && ( context.request.url.pathname !== this.checkLogin ) && ( ! this.alwaysUseDefaultTarget ) ){
+						let target_path = null ;
+						let area = context.session.getMetaBag("area") ;
+						if (area &&  area !== this.name){
+							context.session.clearFlashBag("default_target_path" );
 						}else{
-							context.fire("onError",context.container, {
-								status:500,
-								message:e
+							target_path = context.session.getFlashBag("default_target_path" ) ;
+						}
+						if ( ! target_path ){
+							context.session.setFlashBag("default_target_path", context.request.url.pathname ) ;
+						}else{
+							context.session.setFlashBag("default_target_path", target_path ) ;
+						}
+						context.session.setMetaBag("area", this.name );
+					}
+					context.resolver = this.overrideURL(context, this.formLogin);
+					if ( !  context.resolver.resolve ){
+						return context.fire("onError",context.container, {
+							status:401,
+							message:"Form Login route : " + this.formLogin + " this route not exist. Check Security config file"
+						});
+					}
+					if (! context.isAjax ){
+						if ( e.message !== "Unauthorized" ){
+							context.session.setFlashBag("session", {
+								error:e.message
 							});
 						}
+					}else{
+						context.setXjson(e);
 					}
-				break;
-				case "WEBSOCKET":
-				case "WEBSOCKET SECURE":
-					//console.trace(e);
+					context.fire("onRequest");
+				}else{
 					if (e.status){
 						context.fire("onError",context.container, {
 							status:e.status,
@@ -213,6 +196,22 @@ module.exports = nodefony.registerService("firewall", function(){
 							message:e
 						});
 					}
+				}
+				break;
+				case "WEBSOCKET":
+				case "WEBSOCKET SECURE":
+				//console.trace(e);
+				if (e.status){
+					context.fire("onError",context.container, {
+						status:e.status,
+						message:e.message
+					});
+				}else{
+					context.fire("onError",context.container, {
+						status:500,
+						message:e
+					});
+				}
 				break;
 			}
 			return e ;
@@ -228,7 +227,7 @@ module.exports = nodefony.registerService("firewall", function(){
 						}
 						this.token = token ;
 						//if ( ! context.session.strategyNone ){
-							context.session.migrate();
+						context.session.migrate();
 						//}
 						let userFull = context.user.dataValues ;
 						delete userFull.password ;
@@ -354,11 +353,11 @@ module.exports = nodefony.registerService("firewall", function(){
 	};
 
 	/*
- 	 *
- 	 *	CLASS FIREWALL
- 	 *
- 	 *
- 	 */
+	*
+	*	CLASS FIREWALL
+	*
+	*
+	*/
 
 	const optionStrategy ={
 		migrate:true,
@@ -394,10 +393,10 @@ module.exports = nodefony.registerService("firewall", function(){
 				switch (context.type){
 					case "HTTP" :
 					case "HTTPS" :
-						return this.handleHttp(context) ;
+					return this.handleHttp(context) ;
 					case "WEBSOCKET" :
 					case "WEBSOCKET SECURE" :
-						return this.handleWebsoket(context) ;
+					return this.handleWebsoket(context) ;
 				}
 			});
 		}
@@ -516,7 +515,7 @@ module.exports = nodefony.registerService("firewall", function(){
 			}else{
 				try {
 					if ( context.sessionAutoStart === "autostart" ){
-					 	this.sessionService.start(context, "default").then( ( session ) => {
+						this.sessionService.start(context, "default").then( ( session ) => {
 							//this.logger("AUTOSTART SESSION NO SECURE AREA","DEBUG");
 							if ( ! ( session instanceof nodefony.Session ) ){
 								throw new Error("SESSION START session storage ERROR");
@@ -527,7 +526,7 @@ module.exports = nodefony.registerService("firewall", function(){
 								context.fire("onError", context.container, error );
 								return context ;
 							}
-					 	}).catch( (error) => {
+						}).catch( (error) => {
 							context.fire("onError", context.container, error );
 							return context ;
 						});
@@ -538,7 +537,7 @@ module.exports = nodefony.registerService("firewall", function(){
 									throw new Error("SESSION START session storage ERROR");
 								}
 								try {
-									var meta = session.getMetaBag("security");
+									let meta = session.getMetaBag("security");
 									if ( meta ){
 										context.user = meta.userFull ;
 									}
@@ -566,27 +565,27 @@ module.exports = nodefony.registerService("firewall", function(){
 
 		handle ( context, request, response, session){
 			try {
-				var next = null ;
+				let next = null ;
 				context.crossDomain = context.isCrossDomain() ;
 				//CROSS DOMAIN //FIXME width callback handle for async response
 				if (  context.security && context.crossDomain ){
 					next = context.security.handleCrossDomain(context, request, response) ;
 					switch (next){
 						case 204 :
-							return 204;
+						return 204;
 						case 401 :
-							this.logger("\x1b[31m CROSS DOMAIN Unauthorized \x1b[0mREQUEST REFERER : " + context.originUrl.href ,"ERROR");
-							context.notificationsCenter.fire("onError",context.container, {
-								status:next,
-								message:"crossDomain Unauthorized "
-							});
-							return 401;
+						this.logger("\x1b[31m CROSS DOMAIN Unauthorized \x1b[0mREQUEST REFERER : " + context.originUrl.href ,"ERROR");
+						context.notificationsCenter.fire("onError",context.container, {
+							status:next,
+							message:"crossDomain Unauthorized "
+						});
+						return 401;
 						case 200 :
-							this.logger("\x1b[34m CROSS DOMAIN  \x1b[0mREQUEST REFERER : " + context.originUrl.href ,"DEBUG");
+						this.logger("\x1b[34m CROSS DOMAIN  \x1b[0mREQUEST REFERER : " + context.originUrl.href ,"DEBUG");
 						break;
 					}
 				}
-				var meta = session.getMetaBag("security");
+				let meta = session.getMetaBag("security");
 				if ( meta ){
 					context.user = meta.userFull ;
 				}
@@ -594,17 +593,6 @@ module.exports = nodefony.registerService("firewall", function(){
 					if ( ! meta ){
 						return context.security.handle( context, request, response);
 					}
-					/*context.security.provider.loadUserByUsername( meta.user ,function(error, user){
-						if (error){
-							return context.notificationsCenter.fire("onError", context.container, error );
-						}
-						context.user = user ;
-						try {
-							return context.notificationsCenter.fire("onRequest", context.container, request, response );
-						}catch(e){
-							return context.notificationsCenter.fire("onError", context.container, e );
-						}
-					}.bind(this)) ;*/
 				}
 				context.notificationsCenter.fire("onRequest");
 				return context ;
@@ -633,159 +621,158 @@ module.exports = nodefony.registerService("firewall", function(){
 			for (let ele in obj){
 				switch (ele){
 					case "firewalls" :
-						for ( let firewall in obj[ele] ){
-							let param = obj[ele][firewall];
-							let area = this.addSecuredArea(firewall);
-							for (var config in param){
-								switch (config){
-									case "pattern":
-										area.setPattern(param[config]);
-									break;
-									case "anonymous":
-									break;
+					for ( let firewall in obj[ele] ){
+						let param = obj[ele][firewall];
+						let area = this.addSecuredArea(firewall);
+						for (let config in param){
+							switch (config){
+								case "pattern":
+								area.setPattern(param[config]);
+								break;
+								case "anonymous":
+								break;
 
-									case "crossDomain":
-										area.setCrossDomain(param[config]);
-									break;
-									case "form_login":
-										if (param[config].login_path){
-											area.setFormLogin(param[config].login_path);
-										}
-										if (param[config].check_path){
-											area.setCheckLogin(param[config].check_path);
-										}
-										if (param[config].default_target_path){
-											area.setDefaultTarget(param[config].default_target_path);
-										}
-										if (param[config].always_use_default_target_path){
-											area.setAlwaysUseDefaultTarget(param[config].always_use_default_target_path);
-										}
-									break;
-									case "remember_me":
-										//TODO
-									break;
-									case "logout":
-										//TODO
-									break;
-									case "stateless":
-										//TODO
-									break;
-									case "redirectHttps":
-										area.setRedirectHttps(param[config]);
-									break;
-									case "provider" :
-										var myprovider = param[config] ;
-										area.setProvider(myprovider);
-									break;
-									case "context" :
-										if ( param[config] ){
-											this.listen(this, "onBoot",function(context, contextSecurity){
-												contextSecurity.setContextSession(context);
-												this.sessionService.addContextSession(context);
-											}.bind(this, param[config], area));
-										}
-									break;
-									default:
-										if ( config in nodefony.security.factory ){
-											area.setFactory(config, param[config]);
-										}else{
-											area.factoryName = config ;
-											this.logger("FACTORY : "+config +" not found in nodefony namespace","ERROR");
-										}
+								case "crossDomain":
+								area.setCrossDomain(param[config]);
+								break;
+								case "form_login":
+								if (param[config].login_path){
+									area.setFormLogin(param[config].login_path);
+								}
+								if (param[config].check_path){
+									area.setCheckLogin(param[config].check_path);
+								}
+								if (param[config].default_target_path){
+									area.setDefaultTarget(param[config].default_target_path);
+								}
+								if (param[config].always_use_default_target_path){
+									area.setAlwaysUseDefaultTarget(param[config].always_use_default_target_path);
+								}
+								break;
+								case "remember_me":
+								//TODO
+								break;
+								case "logout":
+								//TODO
+								break;
+								case "stateless":
+								//TODO
+								break;
+								case "redirectHttps":
+								area.setRedirectHttps( param[config] );
+								break;
+								case "provider" :
+								area.setProvider( param[config] );
+								break;
+								case "context" :
+								if ( param[config] ){
+									this.listen(this, "onBoot",function(context, contextSecurity){
+										contextSecurity.setContextSession(context);
+										this.sessionService.addContextSession(context);
+									}.bind(this, param[config], area));
+								}
+								break;
+								default:
+								if ( config in nodefony.security.factory ){
+									area.setFactory(config, param[config]);
+								}else{
+									area.factoryName = config ;
+									this.logger("FACTORY : "+config +" not found in nodefony namespace","ERROR");
 								}
 							}
 						}
+					}
 					break;
 					case "session_fixation_strategy":
-						this.listen(this, "onBoot",function(strategy){
-							this.setSessionStrategy(strategy);
-							this.sessionService.setSessionStrategy(this.sessionStrategy);
-						}.bind(this ,obj[ele]));
+					this.listen(this, "onBoot",function(strategy){
+						this.setSessionStrategy(strategy);
+						this.sessionService.setSessionStrategy(this.sessionStrategy);
+					}.bind(this ,obj[ele]));
 					break;
 					case "access_control" :
 					break;
 					case "providers" :
-						for ( let provider in obj[ele] ){
-							this.providers[provider] = {
-								name:null,
-								Class:null,
-								type:null
-							};
-							for (let pro in obj[ele][provider] ){
-								let element = obj[ele][provider] ;
-								switch (pro){
-									case "memory" :
-										for (let mapi in element[pro]){
-											switch (mapi){
-												case "users":
-													this.providers[provider] = {
-														name:provider,
-														Class:new nodefony.usersProvider(provider, element[pro][mapi]),
-														type:pro
-													};
-													this.logger(" Register Provider  : "+provider + " API " +this.providers[provider].name, "DEBUG");
-												break;
-												default:
-													this.logger("Provider API : "+mapi +" Not exist");
-											}
-										}
-									break;
-									case "class" :
-										let myClass = null;
-										let property = null ;
-										let manager_name = null ;
-
-										for(let api in element[pro]){
-											switch(api){
-												case "name":
-													myClass = nodefony[ element[pro][api] ];
-												break;
-												case "property":
-													property =  element[pro][api];
-												break;
-												case "manager_name":
-													manager_name = element[pro][api] ;
-												break;
-											}
-										}
-										if (myClass){
-											if (manager_name && manager_name !== "~"){
-												this.providers[manager_name] ={
-													name:manager_name,
-													Class:new myClass(property),
-													type:pro
-												};
-											}else{
-												this.providers[provider] = {
-													name:manager_name,
-													Class:new myClass(property),
-													type:pro
-												};
-											}
-										}
-									break;
-									case "entity" :
-										this.listen(this, "onPreBoot", () => {
-											this.orm.listen(this, "onOrmReady", function(){
-												let ent = this.orm.getEntity(element[pro].name);
-												if (! ent){
-													this.logger("ENTITY PROVIDER : "+ provider+ " not found","ERROR");
-													return ;
-												}
-												this.providers[provider] = {
-													name:provider,
-													Class:ent,
-													type:pro
-												};
-												this.logger(" Register Provider  : "+provider + " ENTITY " +element[pro].name, "DEBUG");
-											});
-										});
-									break;
-									default:
-										this.logger("Provider type :"+pro+" not define ");
+					for ( let provider in obj[ele] ){
+						this.providers[provider] = {
+							name:null,
+							Class:null,
+							type:null
+						};
+						for (let pro in obj[ele][provider] ){
+							let element = obj[ele][provider] ;
+							switch (pro){
+								case "memory" :
+								for (let mapi in element[pro]){
+									switch (mapi){
+										case "users":
+										this.providers[provider] = {
+											name:provider,
+											Class:new nodefony.usersProvider(provider, element[pro][mapi]),
+											type:pro
+										};
+										this.logger(" Register Provider  : "+provider + " API " +this.providers[provider].name, "DEBUG");
+										break;
+										default:
+										this.logger("Provider API : "+mapi +" Not exist");
+									}
 								}
+								break;
+								case "class" :
+								let myClass = null;
+								let property = null ;
+								let manager_name = null ;
+
+								for(let api in element[pro]){
+									switch(api){
+										case "name":
+										myClass = nodefony[ element[pro][api] ];
+										break;
+										case "property":
+										property =  element[pro][api];
+										break;
+										case "manager_name":
+										manager_name = element[pro][api] ;
+										break;
+									}
+								}
+								if (myClass){
+									if (manager_name && manager_name !== "~"){
+										this.providers[manager_name] ={
+											name:manager_name,
+											Class:new myClass(property),
+											type:pro
+										};
+									}else{
+										this.providers[provider] = {
+											name:manager_name,
+											Class:new myClass(property),
+											type:pro
+										};
+									}
+								}
+								break;
+								case "entity" :
+								this.listen(this, "onPreBoot", () => {
+									this.orm.listen(this, "onOrmReady", function(){
+										let ent = this.orm.getEntity(element[pro].name);
+										if (! ent){
+											this.logger("ENTITY PROVIDER : "+ provider+ " not found","ERROR");
+											return ;
+										}
+										this.providers[provider] = {
+											name:provider,
+											Class:ent,
+											type:pro
+										};
+										this.logger(" Register Provider  : "+provider + " ENTITY " +element[pro].name, "DEBUG");
+									});
+								});
+								break;
+								default:
+								this.logger("Provider type :"+pro+" not define ");
 							}
 						}
+					}
 					break;
 				}
 			}

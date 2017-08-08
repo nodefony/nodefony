@@ -10,17 +10,13 @@ module.exports = nodefony.registerService("httpKernel", function(){
 	const httpKernel = class httpKernel extends nodefony.Service {
 
 		constructor (container, serverStatics ){
-
 			super("httpKernel", container, container.get("notificationsCenter") );
 			this.reader = this.get("reader");
 			this.serverStatic = serverStatics;
 			this.engineTemplate = this.get("templating");
-
-
 			this.domain = this.kernel.domain;
 			this.httpPort = this.kernel.httpPort;
 			this.httpsPort = this.kernel.httpsPort;
-
 			this.container.addScope("request");
 			this.container.addScope("subRequest");
 			this.listen(this, "onServerRequest" , (request, response, type, domain) => {
@@ -48,31 +44,26 @@ module.exports = nodefony.registerService("httpKernel", function(){
 				};
 				this.translation = this.get("translation");
 			});
-
 			this.listen(this, "onClientError", (e, socket) => {
 				this.logger(e, "ERROR", "HTTP KERNEL SOCKET CLIENT ERROR");
 				socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 			});
-
-		}
-
-		boot (){
 		}
 
 		compileAlias (){
-			var str = "";
+			let str = "";
 			if ( ! this.kernel.domainAlias ){
 				str = "^"+this.kernel.domain+"$" ;
 				this.regAlias = new RegExp(str);
 				return ;
 			}
 			try {
-				var alias = [] ;
+				let alias = [] ;
 				switch ( nodefony.typeOf( this.kernel.domainAlias ) ){
 					case "string" :
 						alias = this.kernel.domainAlias.split(" ");
 						Array.prototype.unshift.call(alias,  "^"+this.kernel.domain+"$" );
-						for ( var i = 0 ; i <alias.length ;i++ ){
+						for ( let i = 0 ; i <alias.length ;i++ ){
 							if (i === 0){
 								str = alias[i];
 							}else{
@@ -81,10 +72,10 @@ module.exports = nodefony.registerService("httpKernel", function(){
 						}
 					break;
 					case "object" :
-						var first = true;
-						for ( var myAlias in this.kernel.domainAlias ){
+						let first = true;
+						for ( let myAlias in this.kernel.domainAlias ){
 							if ( first ){
-								var first = false;
+								first = false;
 								str = this.kernel.domainAlias[myAlias] ;
 							}else{
 								str += "|"+ this.kernel.domainAlias[myAlias] ;
@@ -93,7 +84,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
 					break;
 					case "array" :
 						str = "^"+this.kernel.domain+"$" ;
-						for ( var i = 0 ; i < this.kernel.domainAlias.length ;i++ ){
+						for ( let i = 0 ; i < this.kernel.domainAlias.length ;i++ ){
 							str += "|"+ this.kernel.domainAlias[i] ;
 						}
 					break;
@@ -208,7 +199,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
 
 		getBundleView (objPattern){
 			try {
-				var myBundle = this.kernel.getBundle( this.kernel.getBundleName(objPattern.bundle) );
+				let myBundle = this.kernel.getBundle( this.kernel.getBundleName(objPattern.bundle) );
 				if (! myBundle ){
 					throw new Error("BUNDLE :" + bundle +"NOT exist");
 				}
@@ -220,7 +211,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
 
 		getBundleTemplate (objPattern){
 			try {
-				var myBundle = this.kernel.getBundle( this.kernel.getBundleName(objPattern.bundle) );
+				let myBundle = this.kernel.getBundle( this.kernel.getBundleName(objPattern.bundle) );
 				if (! myBundle ){
 					throw new Error("BUNDLE :" + bundle +"NOT exist");
 				}
@@ -232,8 +223,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
 
 		getView ( name ){
 			try {
-				var parse = this.parseViewPattern( name );
-				return this.getBundleView(parse);
+				return this.getBundleView( this.parseViewPattern( name ) );
 			}catch (e){
 				throw e;
 			}
@@ -241,8 +231,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
 
 		getTemplate ( name ){
 			try {
-				var parse = this.parseViewPattern( name );
-				return this.getBundleTemplate(parse);
+				return this.getBundleTemplate( this.parseViewPattern( name ) );
 			}catch (e){
 				throw e;
 			}
@@ -250,11 +239,11 @@ module.exports = nodefony.registerService("httpKernel", function(){
 
 		logger (pci, severity, msgid,  msg){
 			if (! msgid) { msgid = "HTTP KERNEL ";}
-			return this.syslog.logger(pci, severity, msgid,  msg);
+			return super.logger(pci, severity, msgid,  msg);
 		}
 
 		checkValidDomain (context){
-			var next = null ;
+			let next = null ;
 			if ( context.validDomain ){
 				next =  200 ;
 			}else{
@@ -284,8 +273,8 @@ module.exports = nodefony.registerService("httpKernel", function(){
 		}
 
 		onError (container, error){
-			var myError = null ;
-			var context = container.get('context');
+			let myError = null ;
+			let context = container.get('context');
 			if (  error ){
 				if ( error.stack ){
 					myError =  error.stack;
@@ -305,7 +294,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
 			if ( (! context ) ||  ( ! context.response ) ){
  				return 	;
 			}
-			var resolver= null ;
+			let resolver= null ;
 			switch ( nodefony.typeOf(error) ){
 				case "object" :
 					if ( !  error.status ) {
@@ -388,7 +377,6 @@ module.exports = nodefony.registerService("httpKernel", function(){
 			let context = new nodefony.context.http(container, request, response, type);
 			let resolver = null ;
 			let next = null ;
-			//container.set("context", context);
 			//response events
 			context.response.response.on("finish",() => {
 				//console.log("FINISH")
@@ -403,7 +391,6 @@ module.exports = nodefony.registerService("httpKernel", function(){
 				type = null ;
 				next = null ;
 			});
-
 			//request events
 			context.listen(this, "onError", this.onError);
 
@@ -467,10 +454,10 @@ module.exports = nodefony.registerService("httpKernel", function(){
 		}
 
 		handleWebsocket (container, request, response, type){
-			var context = new nodefony.context.websocket(container, request, response, type);
+			let context = new nodefony.context.websocket(container, request, response, type);
 			container.set("context", context);
-			var resolver = null ;
-			var next = null ;
+			let resolver = null ;
+			let next = null ;
 
 			context.listen(this,"onClose" , (reasonCode, description) => {
 				context.fire("onFinish", context, reasonCode, description);
@@ -484,9 +471,8 @@ module.exports = nodefony.registerService("httpKernel", function(){
 				resolver = null ;
 			});
 
-
 			// DOMAIN VALID
-			var next = this.checkValidDomain(context) ;
+			next = this.checkValidDomain(context) ;
 			if ( next !== 200){
 				return ;
 			}
@@ -533,9 +519,9 @@ module.exports = nodefony.registerService("httpKernel", function(){
 		}
 
 		onErrorWebsoket (container, error){
-			var myError = null ;
+			let myError = null ;
 			if ( ! error ){
- 		       		error = {status:500,
+				error = {status:500,
 					message:"nodefony undefined error "
 				};
 			}else{
@@ -554,8 +540,9 @@ module.exports = nodefony.registerService("httpKernel", function(){
 		setCDN(){
 			return  this.kernel.settings.CDN ;
 		}
+
 		getCDN(type, nb){
-			var wish = 0 ;
+			let wish = 0 ;
 			if ( nb ){
 				try {
 					wish = parseInt(wish,10);
@@ -566,33 +553,33 @@ module.exports = nodefony.registerService("httpKernel", function(){
 			}
 			switch ( typeof this.cdn ){
 				case "object":
-					if ( ! this.cdn ){
-						return "";
-					}
-					if (this.cdn.global ){
-						return this.cdn.global ;
-					}
-					if ( ! type ){
-						var txt = "CDN ERROR getCDN bad argument type  ";
-						this.logger(txt, "ERROR");
-						throw new Error (txt);
-					}
-					if (type in this.cdn ) {
-						if ( this.cdn[type][wish] ){
-							return this.cdn[type][wish];
-						}
-					}
+				if ( ! this.cdn ){
 					return "";
-				case "string":
-					return this.cdn || "" ;
-				break;
-				default:
-					var txt = "CDN CONFIG ERROR ";
+				}
+				if (this.cdn.global ){
+					return this.cdn.global ;
+				}
+				if ( ! type ){
+					let txt = "CDN ERROR getCDN bad argument type  ";
 					this.logger(txt, "ERROR");
 					throw new Error (txt);
-
+				}
+				if (type in this.cdn ) {
+					if ( this.cdn[type][wish] ){
+						return this.cdn[type][wish];
+					}
+				}
+				return "";
+				case "string":
+				return this.cdn || "" ;
+				break;
+				default:
+				let txt = "CDN CONFIG ERROR ";
+				this.logger(txt, "ERROR");
+				throw new Error (txt);
 			}
 		}
+
 	};
 	return httpKernel ;
 });
