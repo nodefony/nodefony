@@ -1,0 +1,163 @@
+<div class="page-header">
+  <h1>Nodefony start in <strong>PM2 Management </strong>mode</h1>
+</div>
+
+
+<div class="doc2 jumbotron">
+
+<p>
+	<strong><h2>MODE  PM2 Management </h2></strong>
+
+	This mode is the good  way  to deploy Application in prodution  <br>
+	<ul>
+		<li> Use nodefony in clusters mode  </li>
+		<li> Detach process from terminal </li>
+	</ul>
+</p>
+
+
+</div>
+
+<h3>PM2     <a href="http://pm2.keymetrics.io/">pm2.keymetrics.io</a> </h3>
+
+<h3>Configration PM2 in Nodefony      <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle, queryString:{'subsection':'framework'} })}}#pm2">PM2 Configuration </a> </h3>
+
+
+<h2>Location :</h2>
+<div class="doc2">
+	<p>
+		In nodefony Root directory you can find executable file <code>nodefony pm2</code>
+	</p>
+
+	<pre>
+$ ls -l
+total 2000
+-rw-r--r--     1 cci  staff    1052 29 mai 10:35 CHANGELOG.md
+-rw-r--r--     1 cci  staff   22696 18 avr 10:55 LICENSE.txt
+-rw-r--r--     1 cci  staff    7126 31 jul 10:01 Makefile
+-rw-r--r--     1 cci  staff   72939  2 aoû 14:57 README.md
+drwxr-xr-x     9 cci  staff     306 18 jul 12:57 app
+drwxr-xr-x     7 cci  staff     238 31 jul 14:30 bin
+drwxr-xr-x     7 cci  staff     238  2 aoû 09:40 config
+drwxr-xr-x     3 cci  staff     102 18 avr 10:55 doc
+drwxr-xr-x     6 cci  staff     204 24 avr 10:14 docker
+drwxr-xr-x  1086 cci  staff   36924  2 aoû 09:44 node_modules
+-rwxr-xr-x     1 cci  staff    7737  2 aoû 11:04 <strong>nodefony</strong>
+-rw-r--r--     1 cci  staff  578497  1 aoû 16:44 package-lock.json
+-rw-r--r--     1 cci  staff    3583  1 aoû 10:23 package.json
+drwxr-xr-x     4 cci  staff     136  9 mai 10:05 src
+drwxr-xr-x     9 cci  staff     306  2 aoû 17:36 tmp
+drwxr-xr-x    10 cci  staff     340 17 jul 17:44 tools
+drwxr-xr-x    18 cci  staff     612  2 aoû 17:36 web
+-rw-r--r--     1 cci  staff  318873  1 aoû 10:23 yarn.lock
+	</pre>
+</div>
+
+<h2>Run :</h2>
+<div class="doc2 ">
+
+<p>
+	<div class="alert alert-warning" role="alert">
+		 !! Use make to launch nodefony in PM2 Management
+	</div>
+	To launch nodefony in PM2 Management mode :
+</p>
+	<pre>
+$ <strong>make start</strong>
+
+NODEFONY 3.0.0-beta  PLATFORM : Darwin   NODE VERSION : v8.2.1   APPLICATION : nodefony   DEBUG : 0
+
+./node_modules/pm2/bin/pm2 update
+[PM2] Spawning PM2 daemon with pm2_home=/Users/cci/.pm2
+[PM2] PM2 Successfully daemonized
+Be sure to have the latest version by doing `npm install pm2@latest -g` before doing this procedure.
+[PM2] Saving current process list...
+[PM2] Stopping PM2...
+[PM2][WARN] No process found
+[PM2] All processes have been stopped and deleted
+[PM2] PM2 stopped
+[PM2] Spawning PM2 daemon with pm2_home=/Users/cci/.pm2
+[PM2] Restoring processes located in /Users/cci/.pm2/dump.pm2
+>>>>>>>>>> PM2 updated
+ Use `pm2 show <id|name>` to get more details about an app
+./nodefony pm2
+┌──────────────────────────────┬───────────────┬────────────────────┬───────────────┐
+│ APP NAME                     │ ID            │ STATUS             │ RESTART       │
+├──────────────────────────────┼───────────────┼────────────────────┼───────────────┤
+│ nodefony                     │ 0             │ online             │ 0             │
+├──────────────────────────────┼───────────────┼────────────────────┼───────────────┤
+│ nodefony                     │ 1             │ online             │ 0             │
+├──────────────────────────────┼───────────────┼────────────────────┼───────────────┤
+│ nodefony                     │ 2             │ online             │ 0             │
+├──────────────────────────────┼───────────────┼────────────────────┼───────────────┤
+│ nodefony                     │ 3             │ online             │ 0             │
+└──────────────────────────────┴───────────────┴────────────────────┴───────────────┘
+ To see all logs use the command  make logs
+ Or use PM2  pm2 --lines 1000 logs
+	</pre>
+</div>
+
+
+<h2>Stop :</h2>
+<div class="doc2 ">
+
+<p>
+	To stop nodefony in PM2 Management mode :
+</p>
+	<pre>
+$ <strong>make stop</strong>
+
+[PM2] Applying action stopProcessId on app [nodefony](ids: 0,1,2,3)
+2016-10-05 16:07:34: Stopping app:nodefony id:0
+2016-10-05 16:07:34: Stopping app:nodefony id:1
+2016-10-05 16:07:34: Stopping app:nodefony id:2
+2016-10-05 16:07:34: Stopping app:nodefony id:3
+2016-10-05 16:07:34: App name:nodefony id:0 disconnected
+2016-10-05 16:07:34: App name:nodefony id:2 disconnected
+2016-10-05 16:07:34: App name:nodefony id:3 disconnected
+2016-10-05 16:07:34: App [nodefony] with id [0] and pid [79304], exited with code [0] via signal [SIGINT]
+2016-10-05 16:07:34: App name:nodefony id:1 disconnected
+2016-10-05 16:07:34: App [nodefony] with id [1] and pid [79305], exited with code [0] via signal [SIGINT]
+2016-10-05 16:07:35: App [nodefony] with id [2] and pid [79310], exited with code [0] via signal [SIGINT]
+2016-10-05 16:07:35: App [nodefony] with id [3] and pid [79319], exited with code [0] via signal [SIGINT]
+[PM2] [nodefony](0) ✓
+[PM2] [nodefony](2) ✓
+[PM2] [nodefony](3) ✓
+[PM2] [nodefony](1) ✓
+┌──────────┬────┬─────────┬─────┬─────────┬─────────┬────────┬─────┬────────┬──────────┐
+│ App name │ id │ mode    │ pid │ status  │ restart │ uptime │ cpu │ mem    │ watching │
+├──────────┼────┼─────────┼─────┼─────────┼─────────┼────────┼─────┼────────┼──────────┤
+│ nodefony │ 0  │ cluster │ 0   │ stopped │ 0       │ 0      │ 0%  │ 0 B    │ disabled │
+│ nodefony │ 1  │ cluster │ 0   │ stopped │ 0       │ 0      │ 0%  │ 0 B    │ disabled │
+│ nodefony │ 2  │ cluster │ 0   │ stopped │ 0       │ 0      │ 0%  │ 0 B    │ disabled │
+│ nodefony │ 3  │ cluster │ 0   │ stopped │ 0       │ 0      │ 0%  │ 0 B    │ disabled │
+└──────────┴────┴─────────┴─────┴─────────┴─────────┴────────┴─────┴────────┴──────────┘
+ Use `pm2 show <id|name>` to get more details about an app
+
+	</pre>
+</div>
+
+
+
+<h2>Kill :</h2>
+<div class="doc2 ">
+
+<p>
+	To kill nodefony in PM2 Management mode :
+
+</p>
+	<pre>
+$ <strong>make kill</strong>
+
+NODEFONY 3.0.0-beta  PLATFORM : Darwin   NODE VERSION : v8.2.1   APPLICATION : nodefony   DEBUG : 0
+./node_modules/pm2/bin/pm2 kill
+[PM2] Stopping PM2...
+[PM2] Applying action deleteProcessId on app [all](ids: 0,1,2,3)
+[PM2] [nodefony](0) ✓
+[PM2] [nodefony](1) ✓
+[PM2] [nodefony](2) ✓
+[PM2] [nodefony](3) ✓
+[PM2] All processes have been stopped and deleted
+[PM2] PM2 stopped
+	</pre>
+</div>

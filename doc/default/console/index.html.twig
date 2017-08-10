@@ -1,0 +1,68 @@
+{{trans_default_domain("doc")}}
+
+<h1> {{ "COMMAND-LINE INTERFACE (CLI)" | trans() }}</h1>
+
+
+<p>
+	NODEFONY provides a command-line interface
+</p>
+
+
+<pre>
+$ <strong>./nodefony -h</strong>
+   _   _    ___    ____    _____   _____    ___    _   _  __   __
+  | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
+  |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
+  | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |
+  |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|
+
+
+   Version : 3.0.0-beta Platform : darwin Process : nodefony PID : 26212
+
+ NODEFONY CONSOLE Cluster : master Environment : prod Debug :false
+
+Usage: nodefony [options] <cmd> [args...]
+
+Options:
+
+-d, --debug         Nodefony debug
+-h, --help          Nodefony help
+-v, --version       Nodefony version
+-i, --interactive   Nodefony cli Interactive Mode
+
+Command :
+
+nodefony
+	dev							 	 Run Nodefony Development Server
+	prod							 	 Run Nodefony Preprod Server
+	pm2							 	 Run Nodefony Production Server ( PM2 mode )
+	app							 	 Get Nodefony App name
+	npm:install							 Install all NPM framework packages
+	npm:list							 List all NPM installed packages
+framework
+	generate:bundle nameBundle path                                  Generate a nodefony Bundle  Example : nodefony generate:bundle myBundle ./src/bundles
+	generate:bundle:angular nameBundle path                          Generate a Angular Bundle  Example : nodefony generate:bundle:angular myBundle ./src/bundles
+	generate:bundle:react nameBundle path                            Generate a React Bundle Example : nodefony generate:bundle:react myBundle ./src/bundles
+	generate:controller  nameController bundlePath                   Generate a controller Example : nodefony generate:controller myController ./src/bundles/myBundle
+	generate:command nameCommand path                                Generate a command js file in bundle path
+	router:generate:routes                                           Generate all routes
+	router:generate:route routeName                                  Generate one route Example : nodefony router:generate:route home
+	router:match:url url                                             Get route who match url Example : nodefony router:match:url /nodefony
+	webpack:dump                                                     Compile webpack for all bundles
+security
+	encoders:Digest firewall login password [realm]                  Generate encoding keys digest MD5 Example : nodefony encoders:Digest secured_area login password
+sequelize
+	Sequelize:fixtures:load                                          Load data fixtures to your database
+	Sequelize:generate:entities [force]                              Generate All Entities force to delete table if exist  example : nodefony Sequelize:generate:entities force
+	Sequelize:query:sql connectionName SQL                           query sql in database connection  example : nodefony  Sequelize:query:sql nodefony  'select * from users'
+	Sequelize:entity:findAll entity                                  query findAll ENTITY
+monitoring
+	Monitoring:test:load URL [nbRequests] [concurence]               load test example : nodefony Monitoring:test:load http://localhost:5151/demo 10000 100
+unitTest
+	unitTest:list:all                                                List all unit tests
+	unitTest:list:bundle bundleName                                  List all bundle unit tests
+	unitTest:launch:all                                              Launch all tests Example : nodefony unitTest:launch:all
+	unitTest:launch:bundle bundleName { testfile }                   Launch bundle tests Example: nodefony unitTest:launch:bundle demoBundle responseTest.js
+
+Thu Aug 03 2017 14:44:30 INFO CONSOLE   : NODEFONY Kernel Life Cycle Terminate CODE : 0
+</pre>

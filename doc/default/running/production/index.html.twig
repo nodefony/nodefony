@@ -1,0 +1,187 @@
+<div class="page-header">
+  <h1>Nodefony start in <strong>production </strong>mode</h1>
+</div>
+
+
+<div class="doc2 jumbotron">
+
+<p>
+	<strong><h2>MODE  production </h2></strong>
+
+	This mode can be useful if you want to check the proper functioning of the production environment <br>
+	we might call  <strong> pre-production </strong> mode
+	<ul>
+		<li>  Use Node Clusters </li>
+		<li>  Use caches control (views , controller ...) </li>
+		<li>  Use Webpack config in production mode (uglyfyjs, uglyfycss ...) </li>
+	</ul>
+</p>
+
+</div>
+
+<h2>Location :</h2>
+<div class="doc2">
+	<p>
+		In nodefony Root directory you can find executable file <code>nodefony</code>
+	</p>
+
+	<pre>
+$ ls -l
+
+total 136
+-rw-r--r--    1 cci  staff  22696 19 nov  2015 LICENSE
+-rw-r--r--    1 cci  staff   2538  5 oct 11:19 Makefile
+-rw-r--r--    1 cci  staff  12964 22 sep 11:42 README.md
+drwxr-xr-x    9 cci  staff    306 22 sep 14:28 app
+drwxr-xr-x    4 cci  staff    136 22 jui 13:57 bin
+drwxr-xr-x    5 cci  staff    170  4 oct 10:16 config
+-rwxr-xr-x    1 cci  staff    513 22 jui 13:57 console
+lrwxr-xr-x    1 cci  staff     16 22 sep 11:37 doc
+drwxr-xr-x  291 cci  staff   9894  5 oct 12:42 node_modules
+-rwxr-xr-x    1 cci  staff   1360 22 jui 13:57 <strong>nodefony</strong>
+-rwxr-xr-x    1 cci  staff    552 22 jui 13:57 nodefony_dev
+-rwxr-xr-x    1 cci  staff   1178  5 sep 11:14 nodefony_pm2
+-rw-r--r--    1 cci  staff   1102  5 sep 11:14 package.json
+drwxr-xr-x    7 cci  staff    238 22 jui 12:09 src
+drwxr-xr-x    3 cci  staff    102  5 oct 12:40 tmp
+drwxr-xr-x    7 cci  staff    238 22 jui 13:57 vendors
+drwxr-xr-x   17 cci  staff    578  5 oct 12:42 web
+
+	</pre>
+</div>
+
+<h2>Run :</h2>
+<div class="doc2 ">
+
+<p>
+	To launch nodefony in production mode (clusters) here you can see here 4 clusters:
+</p>
+	<pre>
+$ <strong>./nodefony prod</strong>
+              _   _    ___    ____    _____   _____    ___    _   _  __   __
+             | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
+             |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
+             | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |
+             |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|
+
+
+             Version : 3.0.0-beta Platform : darwin Process : nodefony PID : 19738
+             Version : 3.0.0-beta Platform : darwin Process : nodefony PID : 19739
+             Version : 3.0.0-beta Platform : darwin Process : nodefony PID : 19740
+             Version : 3.0.0-beta Platform : darwin Process : nodefony PID : 19741
+
+ 19740 Thu Aug 03 2017 10:45:13 INFO SERVICE CLI KERNEL  : INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : /Users/cci/repository/nodefony-core/web/
+ 19740 Thu Aug 03 2017 10:45:13 INFO SERVICE CLI KERNEL  : INSTALL LINK IN /web TOTAL SIZE : 2.6 MB
+ ┌───────────────┬───────────────────────────┬─────────────────────────────────────────────────────────────┬───────────┬────────────────┐
+ │ BUNDLES       │ DESTINATION PATH          │ SOURCE PATH                                                 │ SIZE      │ ASSETS COMPILE │
+ ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
+ │ framework     │ ./web/frameworkBundle     │ ./src/nodefony/bundles/frameworkBundle/Resources/public     │ 1.2 MB    │ 2.4 MB         │
+ ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
+ │ security      │ ./web/securityBundle      │ ./src/nodefony/bundles/securityBundle/Resources/public      │ 1.9 KB    │ 0 bytes        │
+ ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
+ │ monitoring    │ ./web/monitoringBundle    │ ./src/nodefony/bundles/monitoringBundle/Resources/public    │ 719 KB    │ 4.1 MB         │
+ ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
+ │ documentation │ ./web/documentationBundle │ ./src/nodefony/bundles/documentationBundle/Resources/public │ 644 KB    │ 3.5 MB         │
+ ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
+ │ unitTest      │ ./web/unitTestBundle      │ ./src/nodefony/bundles/unitTestBundle/Resources/public      │ 0 bytes   │ 0 bytes        │
+ ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
+ │ test          │ ./web/testBundle          │ ./src/bundles/testBundle/Resources/public                   │ 394 bytes │ 7.5 KB         │
+ ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
+ │ App           │ ./web/app                 │ ./app/Resources/public                                      │ 3.8 KB    │ 1.8 MB         │
+ └───────────────┴───────────────────────────┴─────────────────────────────────────────────────────────────┴───────────┴────────────────┘
+ 19741 Thu Aug 03 2017 10:45:14 INFO SERVICE WEBPACK   : RUN WEBPACK COMPILER : webpack.prod.config.js COMPILE ENTRY POINT :
+ ┌───────────────────┬───────────────────┬───────────────────────┬─────────────────────┬───────────────┬───────────────────────────────────────────────────────────────────────────────────────────┬─────────┐
+ │ ENTRY NAME [name] │ ENTRY             │ OUTPUT FILE NAME      │ OUTPUT LIBRARY NANE │ OUTPUT TARGET │ PUBLIC PATH                                                                               │ WATCHER │
+ ├───────────────────┼───────────────────┼───────────────────────┼─────────────────────┼───────────────┼───────────────────────────────────────────────────────────────────────────────────────────┼─────────┤
+ │ framework         │ ./js/framework.js │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/frameworkBundle/Resources/public │         │
+ └───────────────────┴───────────────────┴───────────────────────┴─────────────────────┴───────────────┴───────────────────────────────────────────────────────────────────────────────────────────┴─────────┘
+ 19739 Thu Aug 03 2017 10:45:14 INFO SERVICE WEBPACK   : RUN WEBPACK COMPILER : webpack.prod.config.js COMPILE ENTRY POINT :
+ ┌───────────────────┬────────────────────┬───────────────────────┬─────────────────────┬───────────────┬────────────────────────────────────────────────────────────────────────────────────────────┬─────────┐
+ │ ENTRY NAME [name] │ ENTRY              │ OUTPUT FILE NAME      │ OUTPUT LIBRARY NANE │ OUTPUT TARGET │ PUBLIC PATH                                                                                │ WATCHER │
+ ├───────────────────┼────────────────────┼───────────────────────┼─────────────────────┼───────────────┼────────────────────────────────────────────────────────────────────────────────────────────┼─────────┤
+ │ monitoring        │ ./js/monitoring.js │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/monitoringBundle/Resources/public │         │
+ ├───────────────────┼────────────────────┼───────────────────────┼─────────────────────┼───────────────┼────────────────────────────────────────────────────────────────────────────────────────────┼─────────┤
+ │ debugBar          │ ./js/debugBar.js   │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/monitoringBundle/Resources/public │         │
+ └───────────────────┴────────────────────┴───────────────────────┴─────────────────────┴───────────────┴────────────────────────────────────────────────────────────────────────────────────────────┴─────────┘
+ 19738 Thu Aug 03 2017 10:45:14 INFO SERVICE WEBPACK   : RUN WEBPACK COMPILER : webpack.prod.config.js COMPILE ENTRY POINT :
+ ┌───────────────────┬───────────────────────┬───────────────────────┬─────────────────────┬───────────────┬───────────────────────────────────────────────────────────────────────────────────────────────┬─────────┐
+ │ ENTRY NAME [name] │ ENTRY                 │ OUTPUT FILE NAME      │ OUTPUT LIBRARY NANE │ OUTPUT TARGET │ PUBLIC PATH                                                                                   │ WATCHER │
+ ├───────────────────┼───────────────────────┼───────────────────────┼─────────────────────┼───────────────┼───────────────────────────────────────────────────────────────────────────────────────────────┼─────────┤
+ │ documentation     │ ./js/documentation.js │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/documentationBundle/Resources/public │         │
+ └───────────────────┴───────────────────────┴───────────────────────┴─────────────────────┴───────────────┴───────────────────────────────────────────────────────────────────────────────────────────────┴─────────┘
+ 19739 Thu Aug 03 2017 10:45:14 INFO SERVICE WEBPACK   : RUN WEBPACK COMPILER : webpack.prod.config.js COMPILE ENTRY POINT :
+ ┌───────────────────┬──────────────┬───────────────────────┬─────────────────────┬───────────────┬─────────────────────────────────────────────────────────────────────────────┬─────────┐
+ │ ENTRY NAME [name] │ ENTRY        │ OUTPUT FILE NAME      │ OUTPUT LIBRARY NANE │ OUTPUT TARGET │ PUBLIC PATH                                                                 │ WATCHER │
+ ├───────────────────┼──────────────┼───────────────────────┼─────────────────────┼───────────────┼─────────────────────────────────────────────────────────────────────────────┼─────────┤
+ │ test              │ ./js/test.js │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/bundles/testBundle/Resources/public │         │
+ └───────────────────┴──────────────┴───────────────────────┴─────────────────────┴───────────────┴─────────────────────────────────────────────────────────────────────────────┴─────────┘
+ 19739 Thu Aug 03 2017 10:45:14 INFO SERVICE WEBPACK   : RUN WEBPACK COMPILER : webpack.prod.config.js COMPILE ENTRY POINT :
+ ┌───────────────────┬───────────────────────────────────────────────────────────────┬───────────────────────┬─────────────────────┬───────────────┬──────────────────────────────────────────────────────────┬─────────┐
+ │ ENTRY NAME [name] │ ENTRY                                                         │ OUTPUT FILE NAME      │ OUTPUT LIBRARY NANE │ OUTPUT TARGET │ PUBLIC PATH                                              │ WATCHER │
+ ├───────────────────┼───────────────────────────────────────────────────────────────┼───────────────────────┼─────────────────────┼───────────────┼──────────────────────────────────────────────────────────┼─────────┤
+ │ app               │ ./js/app.js,webpack-dev-server/client?https://localhost:5152/ │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/app/Resources/public │         │
+ └───────────────────┴───────────────────────────────────────────────────────────────┴───────────────────────┴─────────────────────┴───────────────┴──────────────────────────────────────────────────────────┴─────────┘
+ 19739 Thu Aug 03 2017 10:45:15 INFO SERVICE sequelize CONNECTION  :  Sequelise Connection : nodefony has been established successfully  Type =sqlite  Database = /app/Resources/databases/nodefony.db
+ 19739 Thu Aug 03 2017 10:45:15 INFO BUNDLE MONITORING  : ADD DEBUG BAR MONITORING
+ 19739 Thu Aug 03 2017 10:45:15 INFO SERVICE STATICS   : Listen Server static rootDir  ==> /Users/cci/repository/nodefony-core/web
+ 19739 Thu Aug 03 2017 10:45:15 INFO MEMORY rss  : MEMORY POST READY  ( Resident Set Size ) PID ( 19739 ) : 162 MB
+ 19739 Thu Aug 03 2017 10:45:15 INFO MEMORY heapTotal  : MEMORY POST READY  ( Total Size of the Heap ) PID ( 19739 ) : 127 MB
+ 19739 Thu Aug 03 2017 10:45:15 INFO MEMORY heapUsed  : MEMORY POST READY  ( Heap actually Used ) PID ( 19739 ) : 100 MB
+ 19739 Thu Aug 03 2017 10:45:15 INFO MEMORY external  : MEMORY POST READY  PID ( 19739 ) : 139 KB
+ 19741 Thu Aug 03 2017 10:45:15 INFO SERVICE sequelize CONNECTION  :  Sequelise Connection : nodefony has been established successfully  Type =sqlite  Database = /app/Resources/databases/nodefony.db
+ 19739 Thu Aug 03 2017 10:45:15 INFO SERVICE MONITORING   : Create server MONITORING listen on Domain : localhost Port : 1318
+ 19739 Thu Aug 03 2017 10:45:15 INFO SERVICE HTTP   : HTTP  Server is listening on DOMAIN : http://localhost:5151
+ 19739 Thu Aug 03 2017 10:45:15 INFO SERVICE WEBSOCKET   :  Server is listening on DOMAIN : ws://localhost:5151
+ 19739 Thu Aug 03 2017 10:45:15 INFO SERVICE HTTPS   : HTTPS  Server is listening on DOMAIN : https://localhost:5152
+ 19739 Thu Aug 03 2017 10:45:15 INFO SERVICE WEBSOCKET SECURE   :  Server  is listening on DOMAIN : wss://localhost:5152
+ 19741 Thu Aug 03 2017 10:45:15 INFO BUNDLE MONITORING  : ADD DEBUG BAR MONITORING
+ 19741 Thu Aug 03 2017 10:45:15 INFO SERVICE STATICS   : Listen Server static rootDir  ==> /Users/cci/repository/nodefony-core/web
+ 19738 Thu Aug 03 2017 10:45:15 INFO SERVICE sequelize CONNECTION  :  Sequelise Connection : nodefony has been established successfully  Type =sqlite  Database = /app/Resources/databases/nodefony.db
+ 19741 Thu Aug 03 2017 10:45:15 INFO MEMORY rss  : MEMORY POST READY  ( Resident Set Size ) PID ( 19741 ) : 167 MB
+ 19741 Thu Aug 03 2017 10:45:15 INFO MEMORY heapTotal  : MEMORY POST READY  ( Total Size of the Heap ) PID ( 19741 ) : 128 MB
+ 19741 Thu Aug 03 2017 10:45:15 INFO MEMORY heapUsed  : MEMORY POST READY  ( Heap actually Used ) PID ( 19741 ) : 100 MB
+ 19741 Thu Aug 03 2017 10:45:15 INFO MEMORY external  : MEMORY POST READY  PID ( 19741 ) : 139 KB
+ 19738 Thu Aug 03 2017 10:45:15 INFO BUNDLE MONITORING  : ADD DEBUG BAR MONITORING
+ 19738 Thu Aug 03 2017 10:45:15 INFO SERVICE STATICS   : Listen Server static rootDir  ==> /Users/cci/repository/nodefony-core/web
+ 19738 Thu Aug 03 2017 10:45:15 INFO MEMORY rss  : MEMORY POST READY  ( Resident Set Size ) PID ( 19738 ) : 168 MB
+ 19738 Thu Aug 03 2017 10:45:15 INFO MEMORY heapTotal  : MEMORY POST READY  ( Total Size of the Heap ) PID ( 19738 ) : 128 MB
+ 19738 Thu Aug 03 2017 10:45:15 INFO MEMORY heapUsed  : MEMORY POST READY  ( Heap actually Used ) PID ( 19738 ) : 100 MB
+ 19738 Thu Aug 03 2017 10:45:15 INFO MEMORY external  : MEMORY POST READY  PID ( 19738 ) : 139 KB
+ 19741 Thu Aug 03 2017 10:45:15 INFO SERVICE MONITORING   : Create server MONITORING listen on Domain : localhost Port : 1318
+ 19741 Thu Aug 03 2017 10:45:15 INFO SERVICE HTTP   : HTTP  Server is listening on DOMAIN : http://localhost:5151
+ 19741 Thu Aug 03 2017 10:45:15 INFO SERVICE WEBSOCKET   :  Server is listening on DOMAIN : ws://localhost:5151
+ 19738 Thu Aug 03 2017 10:45:15 INFO SERVICE MONITORING   : Create server MONITORING listen on Domain : localhost Port : 1318
+ 19738 Thu Aug 03 2017 10:45:15 INFO SERVICE HTTP   : HTTP  Server is listening on DOMAIN : http://localhost:5151
+ 19738 Thu Aug 03 2017 10:45:15 INFO SERVICE WEBSOCKET   :  Server is listening on DOMAIN : ws://localhost:5151
+ 19741 Thu Aug 03 2017 10:45:15 INFO SERVICE HTTPS   : HTTPS  Server is listening on DOMAIN : https://localhost:5152
+ 19738 Thu Aug 03 2017 10:45:15 INFO SERVICE HTTPS   : HTTPS  Server is listening on DOMAIN : https://localhost:5152
+ 19738 Thu Aug 03 2017 10:45:15 INFO SERVICE WEBSOCKET SECURE   :  Server  is listening on DOMAIN : wss://localhost:5152
+ 19741 Thu Aug 03 2017 10:45:15 INFO SERVICE WEBSOCKET SECURE   :  Server  is listening on DOMAIN : wss://localhost:5152
+ 19740 Thu Aug 03 2017 10:45:15 INFO SERVICE sequelize CONNECTION  :  Sequelise Connection : nodefony has been established successfully  Type =sqlite  Database = /app/Resources/databases/nodefony.db
+ 19740 Thu Aug 03 2017 10:45:15 INFO BUNDLE MONITORING  : ADD DEBUG BAR MONITORING
+ 19740 Thu Aug 03 2017 10:45:15 INFO SERVICE STATICS   : Listen Server static rootDir  ==> /Users/cci/repository/nodefony-core/web
+ 19740 Thu Aug 03 2017 10:45:15 INFO MEMORY rss  : MEMORY POST READY  ( Resident Set Size ) PID ( 19740 ) : 166 MB
+ 19740 Thu Aug 03 2017 10:45:15 INFO MEMORY heapTotal  : MEMORY POST READY  ( Total Size of the Heap ) PID ( 19740 ) : 127 MB
+ 19740 Thu Aug 03 2017 10:45:15 INFO MEMORY heapUsed  : MEMORY POST READY  ( Heap actually Used ) PID ( 19740 ) : 103 MB
+ 19740 Thu Aug 03 2017 10:45:15 INFO MEMORY external  : MEMORY POST READY  PID ( 19740 ) : 138 KB
+ 19740 Thu Aug 03 2017 10:45:15 INFO SERVICE HTTP   : HTTP  Server is listening on DOMAIN : http://localhost:5151
+ 19740 Thu Aug 03 2017 10:45:15 INFO SERVICE WEBSOCKET   :  Server is listening on DOMAIN : ws://localhost:5151
+ 19740 Thu Aug 03 2017 10:45:15 INFO SERVICE MONITORING   : Create server MONITORING listen on Domain : localhost Port : 1318
+ 19740 Thu Aug 03 2017 10:45:15 INFO SERVICE HTTPS   : HTTPS  Server is listening on DOMAIN : https://localhost:5152
+ 19740 Thu Aug 03 2017 10:45:15 INFO SERVICE WEBSOCKET SECURE   :  Server  is listening on DOMAIN : wss://localhost:5152
+ 19739 Thu Aug 03 2017 10:45:21 INFO SERVICE WEBPACK   : COMPILE SUCCESS BUNDLE : testBundle webpack.prod.config.js
+ 19739 Thu Aug 03 2017 10:45:37 INFO SERVICE WEBPACK   : COMPILE SUCCESS BUNDLE : app webpack.prod.config.js
+	</pre>
+</div>
+
+<h2>Stop :</h2>
+<div class="doc2 ">
+
+<p>
+	To stop nodefony in production mode :
+</p>
+	<pre>
+$ &lt;ctrl-c&gt;
+
+	</pre>
+</div>
