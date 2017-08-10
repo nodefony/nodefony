@@ -3,19 +3,19 @@ module.exports = nodefony.register("controller", function(){
 
 	const Controller = class Controller extends nodefony.Service {
 		constructor (container, context) {
-
 			super(null , container, container.get("notificationsCenter") ) ;
 			this.name= "CONTROLER "+this.name ;
 			this.context = context;
-			this.sessionService = this.get("sessions");
-			this.query = context.request.query ;
-			this.queryFile = context.request.queryFile;
-			this.queryGet = context.request.queryGet;
-			this.queryPost = context.request.queryPost;
-			this.serviceTemplating = this.get('templating') ;
-			this.httpKernel = this.get("httpKernel") ;
 			this.response = this.context.response ;
 			this.request = this.context.request ;
+			this.query = this.request.query ;
+			this.queryFile = this.request.queryFile;
+			this.queryGet = this.request.queryGet;
+			this.queryPost = this.request.queryPost;
+			this.sessionService = this.get("sessions");
+			this.serviceTemplating = this.get('templating') ;
+			this.httpKernel = this.get("httpKernel") ;
+			this.router = this.get("router");
 		}
 
 		getRequest (){
@@ -46,7 +46,7 @@ module.exports = nodefony.register("controller", function(){
 		}
 
 		getFlashBag (key){
-			var session = this.getSession() ;
+			let session = this.getSession() ;
 			if (session){
 				return session.getFlashBag(key) ;
 			}else{
@@ -56,7 +56,7 @@ module.exports = nodefony.register("controller", function(){
 		}
 
 		setFlashBag (key, value){
-			var session = this.getSession() ;
+			let session = this.getSession() ;
 			if (session){
 				return session.setFlashBag(key, value) ;
 			}else{
@@ -65,12 +65,12 @@ module.exports = nodefony.register("controller", function(){
 		}
 
 		getORM (){
-			var defaultOrm = this.kernel.settings.orm ;
+			let defaultOrm = this.kernel.settings.orm ;
 			return this.get(defaultOrm);
 		}
 
 		renderResponse (data, status , headers ){
-			var res = this.getResponse(data);
+			let res = this.getResponse(data);
 			if (! res ){
 				this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK","WARNING");
 				return ;
@@ -106,14 +106,14 @@ module.exports = nodefony.register("controller", function(){
 		}
 
 		renderJsonSync ( obj , status , headers){
-			var data = null ;
+			let data = null ;
 			try {
 				data = JSON.stringify( obj ) ;
 			}catch(e){
 				this.logger(e,"ERROR");
 				throw e	;
 			}
-			var response = this.getResponse(data);
+			let response = this.getResponse(data);
 			if (! response ){
 				this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK","WARNING");
 				return ;
@@ -135,12 +135,12 @@ module.exports = nodefony.register("controller", function(){
 				return this.renderViewAsync(view, param);
 
 			}catch(e){
-			 	this.fire("onError", this.context.container, e);
+				this.fire("onError", this.context.container, e);
 			}
 		}
 
 		renderSync (view, param){
-			var response = this.getResponse() ;
+			let response = this.getResponse() ;
 			if (! response ){
 				this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK","WARNING");
 				return ;
@@ -149,8 +149,8 @@ module.exports = nodefony.register("controller", function(){
 				this.renderView(view, param);
 
 			}catch(e){
-			 	this.fire("onError", this.context.container, e);
-			 	return ;
+				this.fire("onError", this.context.container, e);
+				return ;
 			}
 			return response ;
 		}
@@ -170,10 +170,10 @@ module.exports = nodefony.register("controller", function(){
 
 		renderViewAsync (view, param){
 			try {
-				var extendParam = this.context.extendTwig(param, this.context );
+				let extendParam = this.context.extendTwig(param, this.context );
 				return new Promise ( (resolve, reject) =>{
-					var templ = null ;
-					var res = null ;
+					let templ = null ;
+					let res = null ;
 					try {
 						templ = this.httpKernel.getTemplate(view);
 					}catch(e){
@@ -197,10 +197,9 @@ module.exports = nodefony.register("controller", function(){
 		}
 
 		renderView (view, param ){
-			var res = null;
-			var templ = null ;
-			var View = null ;
-			var extendParam = this.context.extendTwig(param, this.context);
+			let res = null;
+			let templ = null ;
+			let extendParam = this.context.extendTwig(param, this.context);
 			try {
 				templ = this.httpKernel.getTemplate(view);
 			}catch(e){
@@ -220,8 +219,8 @@ module.exports = nodefony.register("controller", function(){
 		}
 
 		renderRawView (path, param ){
-			var res = null;
-			var extendParam = this.context.extendTwig(param, this.context);
+			let res = null;
+			let extendParam = this.context.extendTwig(param, this.context);
 			try{
 				this.serviceTemplating.renderFile(path, extendParam, (error, result) => {
 					if (error || result === undefined){
@@ -237,7 +236,7 @@ module.exports = nodefony.register("controller", function(){
 							throw e ;
 						}
 					}
- 				});
+				});
 			}catch(e){
 				throw e ;
 			}
@@ -246,7 +245,7 @@ module.exports = nodefony.register("controller", function(){
 
 		renderFileDownload (file, options, headers){
 			//console.log("renderFileDownload :" + file.path)
-			var File = null ;
+			let File = null ;
 			if (file instanceof nodefony.fileClass ){
 				File = file;
 			}else{
@@ -259,17 +258,16 @@ module.exports = nodefony.register("controller", function(){
 			if (File.type !== "File"){
 				throw new Error("renderMediaStream bad type for  :" +  file);
 			}
-			var length = File.stats.size ;
-			var head = nodefony.extend({
+			let length = File.stats.size ;
+			let head = nodefony.extend({
 				'Content-Disposition': 'attachment; filename="'+File.name+'"',
 				'Content-Length':length,
 				"Expires": "0",
 				'Content-Description': 'File Transfer',
 				'Content-Type': File.mimeType
 			}, headers || {});
-			var response = this.getResponse();
-			//var request = this.getRequest().request;
-			var fileStream = null ;
+			let response = this.getResponse();
+			let fileStream = null ;
 
 			try {
 				fileStream = fs.createReadStream(File.path, options );
@@ -301,7 +299,7 @@ module.exports = nodefony.register("controller", function(){
 						this.logger(e, "ERROR");
 						throw e ;
 					}
-        			}
+				}
 				response.end();
 			});
 			fileStream.on("close", () => {
@@ -323,7 +321,7 @@ module.exports = nodefony.register("controller", function(){
 
 		renderMediaStream (file , options, headers){
 			//console.log("renderMediaStream :" + file.path)
-			var File = null ;
+			let File = null ;
 			if (file instanceof nodefony.fileClass ){
 				File = file;
 			}else{
@@ -337,22 +335,22 @@ module.exports = nodefony.register("controller", function(){
 				throw new Error("renderMediaStreambad type for  :" +  file);
 			}
 			if ( ! options ) {options = {};}
-			var request = this.getRequest();
-			var requestHeaders = request.headers ;
-			var range = requestHeaders.range;
-			var length = File.stats.size ;
-			var code = null ;
-			var head = null ;
-			var value = null ;
+			let request = this.getRequest();
+			let requestHeaders = request.headers ;
+			let range = requestHeaders.range;
+			let length = File.stats.size ;
+			let code = null ;
+			let head = null ;
+			let value = null ;
 			if ( range ) {
 				//console.log("HEADER = " + range);
-				var parts = range.replace(/bytes=/, "").split("-");
+				let parts = range.replace(/bytes=/, "").split("-");
 				//console.log(parts)
-				var partialstart = parts[0];
-				var partialend = parts[1];
-				var start = parseInt(partialstart, 10);
-				var end = partialend ? parseInt(partialend, 10) : length - 1;
-				var chunksize = (end - start) + 1;
+				let partialstart = parts[0];
+				let partialend = parts[1];
+				let start = parseInt(partialstart, 10);
+				let end = partialend ? parseInt(partialend, 10) : length - 1;
+				let chunksize = (end - start) + 1;
 				//console.log("start :" + start) ;
 				//console.log("end :" + end) ;
 				value = nodefony.extend(options , {
@@ -377,8 +375,8 @@ module.exports = nodefony.register("controller", function(){
 				code = 200 ;
 			}
 			// streamFile
-			var response = this.getResponse();
-			var fileStream = null ;
+			let response = this.getResponse();
+			let fileStream = null ;
 			try {
 				fileStream = fs.createReadStream(File.path, value ? nodefony.extend( options, value) : options);
 			}catch(e){
@@ -409,7 +407,7 @@ module.exports = nodefony.register("controller", function(){
 						this.logger(e, "ERROR");
 						throw e ;
 					}
-        			}
+				}
 				response.end();
 			});
 			fileStream.on("close", () => {
@@ -423,7 +421,7 @@ module.exports = nodefony.register("controller", function(){
 					fs.close(fileStream.fd);
 				}
 				response.end();
-		 	});
+			});
 			fileStream.on("error", (error) =>{
 				this.logger(error,"ERROR");
 				response.end();
@@ -464,7 +462,7 @@ module.exports = nodefony.register("controller", function(){
 		}
 
 		forward (name, param){
-			var resolver = this.get("router").resolveName(this.container, name);
+			let resolver = this.router.resolveName(this.context, name);
 			return resolver.callController(param );
 		}
 
@@ -485,21 +483,20 @@ module.exports = nodefony.register("controller", function(){
 		}
 
 		generateUrl (name, variables, absolute){
+			let host = null ;
 			if (absolute){
-				var context = this.getContext();
-				var host = context.request.url.protocol+"//"+context.request.url.host;
+				host = this.context.request.url.protocol+"//"+this.context.request.url.host;
 				absolute = host;
 			}
-			var router = this.get("router");
 			try {
-				return router.generatePath.call(router, name, variables, absolute);
+				return this.router.generatePath.call(this.router, name, variables, absolute);
 			}catch(e){
 				throw e ;
 			}
 		}
 
 		htmlMdParser (content, options){
-			var markdown  = require('markdown-it')(nodefony.extend({
+			let markdown  = require('markdown-it')(nodefony.extend({
 				html: true
 			},options));
 			try {
@@ -509,6 +506,5 @@ module.exports = nodefony.register("controller", function(){
 			}
 		}
 	};
-
 	return Controller;
 });

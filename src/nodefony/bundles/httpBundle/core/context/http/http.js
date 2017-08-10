@@ -176,7 +176,7 @@ nodefony.register.call(nodefony.context, "http", function(){
 			let control = null ;
 			let resolver = null ;
 			try {
-				resolver = this.router.resolveName(this.container, pattern);
+				resolver = this.router.resolveName(this, pattern);
 			}catch(e){
 				return this.fire("onError", this.container, e );
 			}
@@ -192,7 +192,7 @@ nodefony.register.call(nodefony.context, "http", function(){
 				control.response = new nodefony.Response( null, container);
 				if ( data ){
 					Array.prototype.shift.call( arguments );
-					for ( var i = 0 ; i< arguments.length ; i++){
+					for ( let i = 0 ; i< arguments.length ; i++){
 						resolver.variables.push(arguments[i]);
 					}
 				}
@@ -216,7 +216,7 @@ nodefony.register.call(nodefony.context, "http", function(){
 				case subRequest.response instanceof Promise :
 				case subRequest.response instanceof BlueBird :
 					if ( subRequest.controller.response.body === ""){
-						var txt = "nodefony TWIG function render can't resolve async Call in Twig Template " ;
+						let txt = "nodefony TWIG function render can't resolve async Call in Twig Template " ;
 						this.logger(txt,"ERROR");
 						return txt;
 					}
@@ -265,7 +265,7 @@ nodefony.register.call(nodefony.context, "http", function(){
  		 	*/
 			try {
 				if (!  this.resolver ){
-					this.resolver = this.router.resolve(this.container,  this);
+					this.resolver = this.router.resolve( this );
 				}
 				//WARNING EVENT KERNEL
 				this.kernel.fire("onRequest", this, this.resolver);

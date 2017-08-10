@@ -108,17 +108,17 @@ module.exports = nodefony.registerService("httpKernel", function(){
 
 		isCrossDomain (context){
 			// request origin
-			var URL = context.originUrl ;
-			var hostnameOrigin = URL.hostname ;
-			var portOrigin = URL.port ;
+			let URL = context.originUrl ;
+			let hostnameOrigin = URL.hostname ;
+			let portOrigin = URL.port ;
 
 			// request server
-			var requestProto = context.protocol ;
-			var requestPort = context.port ;
-			var protocolOrigin = null ;
+			let requestProto = context.protocol ;
+			let requestPort = context.port ;
+			let protocolOrigin = null ;
 
 			if ( context.session ){
-				var redirect = 	context.session.getFlashBag("redirect");
+				let redirect = 	context.session.getFlashBag("redirect");
 				if ( redirect ){
 					return false  ;
 				}
@@ -184,7 +184,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
 
 		parseViewPattern( pattern ){
 			if ( pattern && typeof pattern === "string"){
-				var tab = pattern.split(":");
+				let tab = pattern.split(":");
 				if (tab.length !== 3){
 					throw new Error("Not valid Pattern View bundle:directory:filename ==> " + pattern );
 				}
@@ -309,19 +309,19 @@ module.exports = nodefony.registerService("httpKernel", function(){
 			}
 			switch (error.status){
 				case 404:
-					resolver = this.router.resolveName(container, "frameworkBundle:default:404");
+					resolver = this.router.resolveName(context, "frameworkBundle:default:404");
 				break;
 				case 401:
-					resolver = this.router.resolveName(container, "frameworkBundle:default:401");
+					resolver = this.router.resolveName(context, "frameworkBundle:default:401");
 				break;
 				case 403:
-					resolver = this.router.resolveName(container, "frameworkBundle:default:403");
+					resolver = this.router.resolveName(context, "frameworkBundle:default:403");
 				break;
 				case 408:
-					resolver = this.router.resolveName(container, "frameworkBundle:default:timeout");
+					resolver = this.router.resolveName(context, "frameworkBundle:default:timeout");
 				break;
 				default:
-					resolver = this.router.resolveName(container, "frameworkBundle:default:exceptions");
+					resolver = this.router.resolveName(context, "frameworkBundle:default:exceptions");
 					error.status = 500 ;
 			}
 			context.response.setStatusCode(error.status || 500, error.message ) ;
@@ -402,7 +402,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
 
 			// FRONT ROUTER
 			try {
-				resolver  = this.router.resolve(container, context);
+				resolver  = this.router.resolve( context );
 			}catch(e){
 				return context.fire("onError", container, e );
 			}
@@ -479,7 +479,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
 
 			// FRONT ROUTER
 			try {
-				resolver  = this.router.resolve(container, context);
+				resolver  = this.router.resolve(context);
 			}catch(e){
 				return context.notificationsCenter.fire("onError", container, e );
 			}

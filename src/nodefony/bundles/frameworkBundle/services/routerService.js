@@ -1,18 +1,7 @@
-/*
- *
- *
- *
- *
- *
- */
-
 const Querystring = require('querystring');
 const BlueBird = require("bluebird");
 
-
 module.exports = nodefony.registerService("router", function(){
-
-
 
 	const isPromise = function (obj) {
   		return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
@@ -127,14 +116,14 @@ module.exports = nodefony.registerService("router", function(){
 	const regAction =/^(.+)Action$/;
 	nodefony.Resolver  = class Resolver extends nodefony.Service {
 
-		constructor (container, router){
-			super("resolver" , container, container.get("notificationsCenter") ) ;
+		constructor (context, router){
+			super("resolver" , context.container, context.notificationsCenter ) ;
 			this.router = router ;
 			this.resolve = false;
 			this.defaultAction = null;
 			this.defaultView = null;
 			this.variables = [];
-			this.context = this.get("context") ;
+			this.context = context ;//this.get("context") ;
 			this.defaultLang= null ;
 			this.bypassFirewall = false ;
 			this.exception = null ;
@@ -217,12 +206,6 @@ module.exports = nodefony.registerService("router", function(){
 		}
 
 		getController (name){
-			/* DELETE By WATCHER SPECIFICATION
-			if (this.kernel.environment === "dev" && ! this.context.autoloadCache.bundles[this.bundle.name].controllers[name]){
-				this.context.autoloadCache.bundles[this.bundle.name].controllers[name] = true ;
-				this.bundle.reloadController(name, this.container);
-			}
-			*/
 			return this.bundle.controllers[name];
 		}
 
@@ -241,9 +224,7 @@ module.exports = nodefony.registerService("router", function(){
 				if ( data ){
 					this.variables.push(data);
 				}
-				var result =  this.action.apply(controller, this.variables);
-
-				return this.returnController(result);
+				return this.returnController( this.action.apply(controller, this.variables) );
 			}catch(e){
 				throw e;
 			}
@@ -253,56 +234,56 @@ module.exports = nodefony.registerService("router", function(){
 			switch (true){
 				case result instanceof nodefony.Response :
 				case result instanceof nodefony.wsResponse :
-					return this.fire("onResponse", result, this.context);
+				return this.fire("onResponse", result, this.context);
 				break ;
 				case result instanceof Promise :
 				case result instanceof BlueBird :
 				case isPromise(result) :
-					if ( this.context.promise ){
-						return this.context.promise.then(result);
+				if ( this.context.promise ){
+					return this.context.promise.then(result);
+				}
+				this.context.promise = result ;
+				return this.context.promise.then( (myResult) => {
+					switch (true){
+						case myResult instanceof nodefony.Response :
+						case myResult instanceof nodefony.wsResponse :
+						case myResult instanceof Promise :
+						case myResult instanceof BlueBird :
+						break;
+						default:
+						if ( myResult ){
+							this.context.response.body = myResult;
+						}
 					}
-					this.context.promise = result ;
-					return this.context.promise.then( (myResult) => {
-						switch (true){
-							case myResult instanceof nodefony.Response :
-							case myResult instanceof nodefony.wsResponse :
-							case myResult instanceof Promise :
-							case myResult instanceof BlueBird :
-							break;
-							default:
-								if ( myResult ){
-									this.context.response.body = myResult;
-								}
-						}
-						try {
-							return this.fire("onResponse", this.context.response, this.context);
-						}catch(e){
-							if (this.context.response.response.headersSent ||  this.context.timeoutExpired ){
-								return ;
-							}
-							return this.fire("onError", this.context.container, e);
-						}
-					}).catch((e)=>{
-						if (this.context.response.response.headersSent || this.context.timeoutExpired ){
+					try {
+						return this.fire("onResponse", this.context.response, this.context);
+					}catch(e){
+						if (this.context.response.response.headersSent ||  this.context.timeoutExpired ){
 							return ;
 						}
-						this.context.promise = null ;
 						return this.fire("onError", this.context.container, e);
-					});
-				case nodefony.typeOf(result) === "object" :
-					if ( this.defaultView ){
-						return this.returnController( this.get("controller").render(this.defaultView, result ) );
-					}else{
-						throw {
-							status:500,
-							message:"default view not exist"
-						};
 					}
+				}).catch((e)=>{
+					if (this.context.response.response.headersSent || this.context.timeoutExpired ){
+						return ;
+					}
+					this.context.promise = null ;
+					return this.fire("onError", this.context.container, e);
+				});
+				case nodefony.typeOf(result) === "object" :
+				if ( this.defaultView ){
+					return this.returnController( this.get("controller").render(this.defaultView, result ) );
+				}else{
+					throw {
+						status:500,
+						message:"default view not exist"
+					};
+				}
 				break;
 				default:
-					this.context.waitAsync = true ;
-					//this.logger("WAIT ASYNC RESPONSE FOR ROUTE : "+this.route.name ,"DEBUG")
-					// CASE async controller wait fire onResponse by other entity
+				this.context.waitAsync = true ;
+				//this.logger("WAIT ASYNC RESPONSE FOR ROUTE : "+this.route.name ,"DEBUG")
+				// CASE async controller wait fire onResponse by other entity
 			}
 			return result ;
 		}
@@ -385,7 +366,6 @@ module.exports = nodefony.registerService("router", function(){
 				return host+mypath ;
 			}
 			return mypath ;
-
 		}
 
 		/*addRoute (name , route){
@@ -455,8 +435,8 @@ module.exports = nodefony.registerService("router", function(){
 			return this.routes;
 		}
 
-		resolve (container, context){
-			let resolver = new nodefony.Resolver(container, this);
+		resolve ( context ){
+			let resolver = new nodefony.Resolver(context, this);
 			for (let i = 0; i < this.routes.length; i++){
 				try {
 					if ( resolver.match( this.routes[i], context) ){
@@ -476,9 +456,9 @@ module.exports = nodefony.registerService("router", function(){
 			return resolver;
 		}
 
-		resolveName (container, name){
+		resolveName (context, name){
 			try {
-				let resolver = new nodefony.Resolver(container, this);
+				let resolver = new nodefony.Resolver(context, this);
 				resolver.parsePathernController(name);
 				return resolver;
 			}catch(e){
@@ -516,31 +496,31 @@ module.exports = nodefony.registerService("router", function(){
 					let arg = obj[route][ele];
 					switch ( ele ){
 						case "pattern" :
-							newRoute.setPattern(arg);
+						newRoute.setPattern(arg);
 						break;
 						case "host" :
-							newRoute.setHostname(arg);
+						newRoute.setHostname(arg);
 						break;
 						case "firewalls" :
-							newRoute.setFirewallConfigRoute(arg);
+						newRoute.setFirewallConfigRoute(arg);
 						break;
 						case "defaults" :
-							for (let ob in arg){
-								newRoute.addDefault(ob, arg[ob] );
-							}
+						for (let ob in arg){
+							newRoute.addDefault(ob, arg[ob] );
+						}
 						break;
 						case "requirements" :
-							for (let ob in arg){
-								newRoute.addRequirement(ob, arg[ob] );
-							}
+						for (let ob in arg){
+							newRoute.addRequirement(ob, arg[ob] );
+						}
 						break;
 						case "options" :
-							for (let ob in arg){
-								newRoute.addOptions(ob, arg[ob] );
-							}
+						for (let ob in arg){
+							newRoute.addOptions(ob, arg[ob] );
+						}
 						break;
 						default:
-							this.logger(" Tag : "+ele+ " not exist in routings definition");
+						this.logger(" Tag : "+ele+ " not exist in routings definition");
 					}
 				}
 				newRoute.compile();

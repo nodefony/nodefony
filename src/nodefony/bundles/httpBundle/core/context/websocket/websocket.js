@@ -1,15 +1,7 @@
-/*
- *
- *
- *
- *
- *
- */
 
 nodefony.register.call(nodefony.context, "websocket", function(){
 
-
-	var onClose = function(reasonCode, description){
+	const onClose = function(reasonCode, description){
 		if ( ! this.request ){
 			this.logger( new Date() + ' Connection Websocket CLOSE : ' + this.connection.remoteAddress +" PID :" +process.pid + " " +reasonCode +" " + description , "INFO");
 
@@ -30,7 +22,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 	};
 
 
-	var websocket = class websocket extends nodefony.Service {
+	const websocket = class websocket extends nodefony.Service {
 
 		constructor (container, request, response ,type){
 
@@ -120,23 +112,18 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 
 			//case proxy
 			this.proxy = null ;
-                        if ( this.request.httpRequest.headers["x-forwarded-for"] ){
-                                this.proxy = {
-                                        proxyServer     : this.request.httpRequest.headers["x-forwarded-server"],
-                                        proxyProto      : this.request.httpRequest.headers["x-forwarded-proto"],
-                                        proxyPort       : this.request.httpRequest.headers["x-forwarded-port"],
-                                        proxyFor        : this.request.httpRequest.headers["x-forwarded-for"],
-                                        proxyHost       : this.request.httpRequest.headers["x-forwarded-host"],
-                                        proxyVia        : this.request.httpRequest.headers.via
-                                };
-                                this.logger( "PROXY WEBSOCKET REQUEST x-forwarded VIA : " + this.proxy.proxyVia , "DEBUG");
-                        }
+			if ( this.request.httpRequest.headers["x-forwarded-for"] ){
+				this.proxy = {
+					proxyServer     : this.request.httpRequest.headers["x-forwarded-server"],
+					proxyProto      : this.request.httpRequest.headers["x-forwarded-proto"],
+					proxyPort       : this.request.httpRequest.headers["x-forwarded-port"],
+					proxyFor        : this.request.httpRequest.headers["x-forwarded-for"],
+					proxyHost       : this.request.httpRequest.headers["x-forwarded-host"],
+					proxyVia        : this.request.httpRequest.headers.via
+				};
+				this.logger( "PROXY WEBSOCKET REQUEST x-forwarded VIA : " + this.proxy.proxyVia , "DEBUG");
+			}
 			this.crossDomain = this.isCrossDomain() ;
-
-			/* // assembleFragments:false
- 		 	* this.connection.on('frame', function(webSocketFrame) {
-				console.log(webSocketFrame.binaryPayload.toString())
-			}.bind(this));*/
 		}
 
 		getCookieSession ( name){
@@ -239,7 +226,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 			let control = null ;
 			let resolver = null ;
 			try {
-				resolver = this.router.resolveName(this.container, pattern);
+				resolver = this.router.resolveName(this, pattern);
 			}catch(e){
 				return this.fire("onError", this.container, e );
 			}
@@ -275,38 +262,34 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 			switch (true){
 				case subRequest.response instanceof nodefony.Response :
 				case subRequest.response instanceof nodefony.wsResponse :
-					return subRequest.response.body;
+				return subRequest.response.body;
 				case subRequest.response instanceof Promise :
 				case subRequest.response instanceof BlueBird :
-					if ( subRequest.controller.response.body === ""){
-						var txt = "nodefony TWIG function render can't resolve async Call in Twig Template " ;
-						this.logger(txt,"ERROR");
-						return txt;
-					}
-					/*subRequest.response.then((result) =>{
-						console.log(result)
-						subRequest.controller.response.body = result ;
-					});*/
-					return subRequest.controller.response.body;
+				if ( subRequest.controller.response.body === ""){
+					let txt = "nodefony TWIG function render can't resolve async Call in Twig Template " ;
+					this.logger(txt,"ERROR");
+					return txt;
+				}
+				return subRequest.controller.response.body;
 				case nodefony.typeOf(subRequest.response) === "object":
-					if ( subRequest.resolver.defaultView ){
-						 return this.render( {
-							resolver:subRequest.resolver,
-							controller:subRequest.controller,
-							response:subRequest.controller.render(subRequest.resolver.defaultView, subRequest.response )
-						 } );
-					}else{
-						throw {
-							status:500,
-							message:"default view not exist"
-						};
-					}
+				if ( subRequest.resolver.defaultView ){
+					return this.render( {
+						resolver:subRequest.resolver,
+						controller:subRequest.controller,
+						response:subRequest.controller.render(subRequest.resolver.defaultView, subRequest.response )
+					} );
+				}else{
+					throw {
+						status:500,
+						message:"default view not exist"
+					};
+				}
 				break;
 				case typeof subRequest.response === "string" :
-					return subRequest.response ;
+				return subRequest.response ;
 				default:
-					this.logger("nodefony TWIG function render can't resolve async Call in Twig Template ","WARNING");
-					return this.response.body ;
+				this.logger("nodefony TWIG function render can't resolve async Call in Twig Template ","WARNING");
+				return this.response.body ;
 			}
 
 		}
@@ -315,7 +298,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 			this.response.body = message ;
 			try {
 				if ( ! this.resolver ){
-					this.resolver = this.router.resolve(this.container,  this);
+					this.resolver = this.router.resolve( this );
 				}else{
 					try {
 						this.resolver.match(this.resolver.route,  this)	;
@@ -340,7 +323,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 			this.translation.handle( );
 			try {
 				if ( ! this.resolver ){
-					this.resolver  = this.router.resolve(this.container,  this);
+					this.resolver  = this.router.resolve(this);
 				}else{
 					try {
 						this.resolver.match(this.resolver.route,  this)	;
@@ -375,7 +358,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 		}
 
 		send (data, type){
-			var myData = null ;
+			let myData = null ;
 			if ( this.response ){
 				if ( data instanceof nodefony.wsResponse ){
 					myData = this.response.body ;
@@ -394,6 +377,5 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 			}
 		}
 	};
-
 	return websocket;
 });
