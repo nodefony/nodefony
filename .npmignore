@@ -34,16 +34,10 @@ yarn-error.log
 
 
 /Makefile
-/console
-/nodefony
-/nodefony_dev
-/nodefony_pm2
-
 /node_modules
 /config
 /app
 /tmp
-/bin
 /web
 /src/bundles
 /docker

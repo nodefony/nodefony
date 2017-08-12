@@ -127,7 +127,7 @@
     "uglifycss": "0.0.27",
     "url-loader": "0.5.9",
     "useragent": "2.2.1",
-    "webpack": "^3.5.3",
+    "webpack": "^3.5.4",
     "webpack-dev-server": "^2.7.1",
     "webpack-merge": "4.1.0",
     "websocket": "1.0.24",

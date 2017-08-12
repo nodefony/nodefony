@@ -1,10 +1,10 @@
 /*
- *
- *
- *
- *
- *
- */
+*
+*
+*
+*
+*
+*/
 module.exports = nodefony.registerService("firewall", function(){
 
 	let pluginReader = function(){
@@ -50,8 +50,8 @@ module.exports = nodefony.registerService("firewall", function(){
 				for(let key in node){
 					switch(key){
 						case 'config':
-							config = arrayToObject(node[key]);
-							break;
+						config = arrayToObject(node[key]);
+						break;
 					}
 				}
 			});
@@ -314,8 +314,8 @@ module.exports = nodefony.registerService("firewall", function(){
 		}
 
 		match (request){
-      	let url = request.url ? request.url.pathname : ( request.resourceURL ? request.resourceURL.pathname : null ) ;
-        return this.pattern.exec(url);
+			let url = request.url ? request.url.pathname : ( request.resourceURL ? request.resourceURL.pathname : null ) ;
+			return this.pattern.exec(url);
 		}
 
 		setPattern (pattern){
