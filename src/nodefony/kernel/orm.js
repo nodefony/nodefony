@@ -5,7 +5,8 @@ module.exports = nodefony.register("orm", function(){
 	let connectionMonitor = function(name, db, orm){
 		this.connectionNotification ++;
 		if(Object.keys(orm.settings.connectors).length === this.connectionNotification){
-			process.nextTick(function () {
+			process.nextTick( () => {
+				orm.logger('onOrmReady', "DEBUG", "EVENTS ORM");
 				orm.fire('onOrmReady', orm);
 			});
 		}
@@ -28,7 +29,6 @@ module.exports = nodefony.register("orm", function(){
 		}
 
 		boot (){
-
 			this.listen(this, "onReadyConnection", connectionMonitor);
 			this.listen(this, "onErrorConnection", connectionMonitor);
 

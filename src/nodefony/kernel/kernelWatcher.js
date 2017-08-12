@@ -2,22 +2,22 @@
 module.exports = nodefony.register("kernelWatcher", function(){
 
 	/*
-	 *
-	 *	WATCHER
-	 *
-	 */
-	var defaultWatcherSettings  = {
+	*
+	*	WATCHER
+	*
+	*/
+	const defaultWatcherSettings  = {
 		persistent: true,
-  		followSymlinks: true,
-  		alwaysStat: false,
-  		depth: 50,
+		followSymlinks: true,
+		alwaysStat: false,
+		depth: 50,
 		//usePolling: true,
-  		//interval: 100,
-  		//binaryInterval: 300,
-  		atomic: true // or a custom 'atomicity delay', in milliseconds (default 100)
+		//interval: 100,
+		//binaryInterval: 300,
+		atomic: true // or a custom 'atomicity delay', in milliseconds (default 100)
 	};
 
-	var Watcher = class Watcher extends nodefony.watcher {
+	const Watcher = class Watcher extends nodefony.watcher {
 		constructor (Path , settings, bundle){
 
 			super( Path , nodefony.extend(true, {}, defaultWatcherSettings, settings), bundle.container );
@@ -31,7 +31,7 @@ module.exports = nodefony.register("kernelWatcher", function(){
 
 		logger (  payload, severity, msgid, msg  ){
 			if ( typeof payload  === "string"){
-				var txt = "\x1b[36m";
+				let txt = "\x1b[36m";
 				if ( this.bundle ){
 					txt += "BUNDLE "+ this.bundle.name + "\x1b[0m ";
 				}
@@ -48,48 +48,52 @@ module.exports = nodefony.register("kernelWatcher", function(){
 
 		listenWatcherController(){
 			this.on('all', (event, Path) => {
+				let basename = null ;
+				let res = null ;
+				let name = null ;
+				let file = null ;
 				switch(event){
 					case "addDir" :
-						this.logger( Path, "WARNING", event );
+					this.logger( Path, "WARNING", event );
 					break;
 					case "add" :
 					case "change" :
-						this.logger( Path, "INFO", event );
-						try {
-							let basename = path.basename(Path) ;
-							let res = this.bundle.regController.exec( basename );
-							let name = res[1] ;
-							var file = this.cwd + "/" + Path ;
-							this.bundle.reloadWatcherControleur( name, file);
-							if ( this.sockjs ){
-								this.sockjs.sendWatcher( "change", file );
-							}
-						}catch(error){
-							this.logger(error, "ERROR");
-							if ( this.sockjs ){
-								this.sockjs.sendWatcher( "error", error );
-							}
+					this.logger( Path, "INFO", event );
+					try {
+						basename = path.basename(Path) ;
+						res = this.bundle.regController.exec( basename );
+						name = res[1] ;
+						file = this.cwd + "/" + Path ;
+						this.bundle.reloadWatcherControleur( name, file);
+						if ( this.sockjs ){
+							this.sockjs.sendWatcher( "change", file );
 						}
+					}catch(error){
+						this.logger(error, "ERROR");
+						if ( this.sockjs ){
+							this.sockjs.sendWatcher( "error", error );
+						}
+					}
 					break;
 					case "error" :
-						this.logger( Path, "ERROR", event );
-						if ( this.sockjs ){
-							this.sockjs.sendWatcher( "error", e );
-						}
+					this.logger( Path, "ERROR", event );
+					if ( this.sockjs ){
+						this.sockjs.sendWatcher( "error", e );
+					}
 					break;
 					case "unlinkDir" :
-						this.logger( Path, "WARNING", event );
+					this.logger( Path, "WARNING", event );
 					break;
 					case "unlink" :
-						this.logger( Path, "WARNING", event );
-						var basename = path.basename(Path) ;
-						var res = this.bundle.regController.exec( basename );
-						var name = res[1] ;
-						if ( this.bundle.controllers[name] ){
-							this.logger( "REMOVE CONTROLLER : " +  Path, "INFO", event );
-							delete this.bundle.controllers[name] ;
-							this.bundle.controllers[name] = null ;
-						}
+					this.logger( Path, "WARNING", event );
+					basename = path.basename(Path) ;
+					res = this.bundle.regController.exec( basename );
+					name = res[1] ;
+					if ( this.bundle.controllers[name] ){
+						this.logger( "REMOVE CONTROLLER : " +  Path, "INFO", event );
+						delete this.bundle.controllers[name] ;
+						this.bundle.controllers[name] = null ;
+					}
 					break;
 				}
 				this.fire(event, this.watcher , Path);
@@ -98,62 +102,63 @@ module.exports = nodefony.register("kernelWatcher", function(){
 
 		listenWatcherView(){
 			this.on('all', (event, Path) => {
+				let file = null ;
 				switch( event ){
 					case "addDir" :
-						this.logger( Path, "INFO", event );
+					this.logger( Path, "INFO", event );
 					break;
 					case "add" :
 					case "change" :
-						this.logger( Path, "INFO", event );
-						var file = this.cwd + "/" + Path ;
-						try{
-							let fileClass = new nodefony.fileClass(file);
-							let ele = this.bundle.recompileTemplate(fileClass);
-							if ( ele.basename === "." ){
-								this.logger("RECOMPILE Template : '"+this.bundle.name+"Bundle:"+""+":"+ele.name + "'", "INFO", event);
-							}else{
-								this.logger("RECOMPILE Template : '"+this.bundle.name+"Bundle:"+ele.basename+":"+ele.name + "'", "INFO",event );
-							}
-							if ( this.sockjs ){
-								this.sockjs.sendWatcher( "change", file );
-							}
-						}catch(e){
-							this.logger(e, "ERROR", event);
-							if ( this.sockjs ){
-								this.sockjs.sendWatcher( "error", e );
-							}
+					this.logger( Path, "INFO", event );
+					file = this.cwd + "/" + Path ;
+					try{
+						let fileClass = new nodefony.fileClass(file);
+						let ele = this.bundle.recompileTemplate(fileClass);
+						if ( ele.basename === "." ){
+							this.logger("RECOMPILE Template : '"+this.bundle.name+"Bundle:"+""+":"+ele.name + "'", "INFO", event);
+						}else{
+							this.logger("RECOMPILE Template : '"+this.bundle.name+"Bundle:"+ele.basename+":"+ele.name + "'", "INFO",event );
 						}
-					break;
-					case "error" :
-						this.logger( Path, "ERROR", event );
+						if ( this.sockjs ){
+							this.sockjs.sendWatcher( "change", file );
+						}
+					}catch(e){
+						this.logger(e, "ERROR", event);
 						if ( this.sockjs ){
 							this.sockjs.sendWatcher( "error", e );
 						}
+					}
+					break;
+					case "error" :
+					this.logger( Path, "ERROR", event );
+					if ( this.sockjs ){
+						this.sockjs.sendWatcher( "error", e );
+					}
 					break;
 					case "unlinkDir" :
-						this.logger( Path, "INFO", event );
+					this.logger( Path, "INFO", event );
 					break;
 					case "unlink" :
-						this.logger( Path, "INFO", event );
-						var file = this.cwd + "/" + Path ;
-						let parse = path.parse(file)  ;
-						if ( parse.ext === "."+this.bundle.serviceTemplate.extention ){
-							var name = parse.name ;
-							var directory = path.basename(parse.dir);
-							if (directory !== "views"){
-								if ( this.bundle.views[directory]){
-									if ( this.bundle.views[directory][name] ){
-										delete	this.bundle.views[directory][name];
-										this.logger( "REMOVE TEMPLATE : " +  file, "INFO", event );
-									}
-								}
-							}else{
-								if ( this.bundle.views["."][name] ){
-									delete this.bundle.views["."][name] ;
+					this.logger( Path, "INFO", event );
+					file = this.cwd + "/" + Path ;
+					let parse = path.parse(file)  ;
+					if ( parse.ext === "."+this.bundle.serviceTemplate.extention ){
+						var name = parse.name ;
+						var directory = path.basename(parse.dir);
+						if (directory !== "views"){
+							if ( this.bundle.views[directory]){
+								if ( this.bundle.views[directory][name] ){
+									delete	this.bundle.views[directory][name];
 									this.logger( "REMOVE TEMPLATE : " +  file, "INFO", event );
 								}
 							}
+						}else{
+							if ( this.bundle.views["."][name] ){
+								delete this.bundle.views["."][name] ;
+								this.logger( "REMOVE TEMPLATE : " +  file, "INFO", event );
+							}
 						}
+					}
 					break;
 				}
 				this.fire(event, this.watcher , Path);
@@ -162,77 +167,77 @@ module.exports = nodefony.register("kernelWatcher", function(){
 
 		listenWatcherI18n(){
 			this.on('all', (event, Path) => {
+				let file = null ;
 				switch( event ){
 					case "addDir" :
-						this.logger( Path, "INFO", event );
+					this.logger( Path, "INFO", event );
 					break;
 					case "add" :
 					case "change" :
-						this.logger( Path, "INFO", event );
-						var file = this.cwd + "/" + Path ;
-						try{
-							var fileClass = new nodefony.fileClass(file);
-							fileClass.matchName(this.bundle.regI18nFile);
-							var domain = fileClass.match[1] ;
-							var Locale = fileClass.match[2] ;
-							this.bundle.translation.reader(fileClass.path, Locale, domain);
-							if ( this.sockjs ){
-								this.sockjs.sendWatcher( "change", file );
-							}
-						}catch(e){
-							this.logger(e, "ERROR", event);
+					this.logger( Path, "INFO", event );
+					file = this.cwd + "/" + Path ;
+					try{
+						var fileClass = new nodefony.fileClass(file);
+						fileClass.matchName(this.bundle.regI18nFile);
+						let domain = fileClass.match[1] ;
+						let Locale = fileClass.match[2] ;
+						this.bundle.translation.reader(fileClass.path, Locale, domain);
+						if ( this.sockjs ){
+							this.sockjs.sendWatcher( "change", file );
 						}
+					}catch(e){
+						this.logger(e, "ERROR", event);
+					}
 					break;
 					case "error" :
-						this.logger( Path, "ERROR", event );
+					this.logger( Path, "ERROR", event );
 					break;
 					case "unlinkDir" :
-						this.logger( Path, "INFO", event );
+					this.logger( Path, "INFO", event );
 					break;
 					case "unlink" :
-						this.logger( Path, "INFO", event );
+					this.logger( Path, "INFO", event );
 					break;
 				}
 			});
 		}
 		listenWatcherConfig(){
 			this.on('all', (event, Path) => {
+				let file = null ;
 				switch( event ){
 					case "addDir" :
-						this.logger( Path, "INFO", event );
+					this.logger( Path, "INFO", event );
 					break;
 					case "add" :
 					case "change" :
-						this.logger( Path, "INFO", event );
-						var file = this.cwd + "/" + Path ;
-						try{
-							var fileClass = new nodefony.fileClass(file);
-							this.router.reader(fileClass.path);
-						}catch(e){
-							this.logger(e, "ERROR", event);
-						}
+					this.logger( Path, "INFO", event );
+					file = this.cwd + "/" + Path ;
+					try{
+						var fileClass = new nodefony.fileClass(file);
+						this.router.reader(fileClass.path);
+					}catch(e){
+						this.logger(e, "ERROR", event);
+					}
 					break;
 					case "error" :
-						this.logger( Path, "ERROR", event );
+					this.logger( Path, "ERROR", event );
 					break;
 					case "unlinkDir" :
-						this.logger( Path, "INFO", event );
+					this.logger( Path, "INFO", event );
 					break;
 					case "unlink" :
-						this.logger( Path, "INFO", event );
-						/*var file = this.cwd + "/" + Path ;
-						try{
-							var fileClass = new nodefony.fileClass(file);
-							this.router.removeRoutes(fileClass.path);
-						}catch(e){
-							this.logger(e, "ERROR", event);
-						}*/
-					break;
-				}
-			});
+					this.logger( Path, "INFO", event );
+					/*file = this.cwd + "/" + Path ;
+					try{
+					var fileClass = new nodefony.fileClass(file);
+					this.router.removeRoutes(fileClass.path);
+				}catch(e){
+				this.logger(e, "ERROR", event);
+			}*/
+			break;
 		}
-	};
-
-	return Watcher ;
-
+	});
+}
+};
+return Watcher ;
 });

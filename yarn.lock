@@ -2,12 +2,21 @@
 # yarn lockfile v1
 
 
-"@angular/cli@^1.2.7":
-  version "1.2.7"
-  resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-1.2.7.tgz#dd20e8b0da24af5359077c05a6944823cb764132"
+"@angular-devkit/build-optimizer@0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/build-optimizer/-/build-optimizer-0.0.13.tgz#cf397af76abe899aa909d4a735106694ca1f08cf"
   dependencies:
+    loader-utils "^1.1.0"
+    source-map "^0.5.6"
+    typescript "^2.3.3"
+
+"@angular/cli@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-1.3.0.tgz#140fe698508a8c023b4b7da01c0cc063cf711018"
+  dependencies:
+    "@angular-devkit/build-optimizer" "0.0.13"
     "@ngtools/json-schema" "1.1.0"
-    "@ngtools/webpack" "1.5.5"
+    "@ngtools/webpack" "1.6.0"
     autoprefixer "^6.5.3"
     chalk "^2.0.1"
     circular-dependency-plugin "^3.0.0"
@@ -20,22 +29,22 @@
     ember-cli-normalize-entity-name "^1.0.0"
     ember-cli-string-utils "^1.0.0"
     exports-loader "^0.6.3"
-    extract-text-webpack-plugin "^2.1.0"
+    extract-text-webpack-plugin "3.0.0"
     file-loader "^0.10.0"
     fs-extra "^4.0.0"
     get-caller-file "^1.0.0"
     glob "^7.0.3"
     heimdalljs "^0.2.4"
     heimdalljs-logger "^0.1.9"
-    html-webpack-plugin "^2.19.0"
+    html-webpack-plugin "^2.29.0"
     inflection "^1.7.0"
     inquirer "^3.0.0"
     isbinaryfile "^3.0.0"
     istanbul-instrumenter-loader "^2.0.0"
     karma-source-map-support "^1.2.0"
     less "^2.7.2"
-    less-loader "^4.0.2"
-    license-webpack-plugin "^0.4.2"
+    less-loader "^4.0.5"
+    license-webpack-plugin "^0.5.1"
     lodash "^4.11.1"
     memory-fs "^0.4.1"
     minimatch "^3.0.3"
@@ -48,7 +57,7 @@
     raw-loader "^0.5.1"
     resolve "^1.1.7"
     rsvp "^3.0.17"
-    rxjs "^5.0.1"
+    rxjs "^5.4.2"
     sass-loader "^6.0.3"
     script-loader "^0.7.0"
     semver "^5.1.0"
@@ -59,13 +68,13 @@
     stylus "^0.54.5"
     stylus-loader "^3.0.1"
     temp "0.8.3"
-    typescript ">=2.0.0 <2.4.0"
+    typescript ">=2.0.0 <2.5.0"
     url-loader "^0.5.7"
     walk-sync "^0.3.1"
-    webpack "~2.4.0"
-    webpack-dev-middleware "^1.10.2"
-    webpack-dev-server "~2.4.5"
-    webpack-merge "^2.4.0"
+    webpack "~3.4.1"
+    webpack-dev-middleware "^1.11.0"
+    webpack-dev-server "~2.5.1"
+    webpack-merge "^4.1.0"
     zone.js "^0.8.14"
   optionalDependencies:
     node-sass "^4.3.0"
@@ -74,9 +83,9 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@ngtools/json-schema/-/json-schema-1.1.0.tgz#c3a0c544d62392acc2813a42c8a0dc6f58f86922"
 
-"@ngtools/webpack@1.5.5":
-  version "1.5.5"
-  resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-1.5.5.tgz#d6e2a933184015653de3be33d38437fdd81009e7"
+"@ngtools/webpack@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-1.6.0.tgz#6262f110283fcbfefa2ad45bc79c2c855c3963bb"
   dependencies:
     loader-utils "^1.0.2"
     magic-string "^0.22.3"
@@ -194,15 +203,11 @@ agentkeepalive@^3.3.0:
   dependencies:
     humanize-ms "^1.2.1"
 
-ajv-keywords@^1.1.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-1.5.1.tgz#314dd0a4b3368fad3dfcdc54ede6171b886daf3c"
-
 ajv-keywords@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-2.1.0.tgz#a296e17f7bfae7c1ce4f7e0de53d29cb32162df0"
 
-ajv@^4.7.0, ajv@^4.9.1:
+ajv@^4.9.1:
   version "4.11.8"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-4.11.8.tgz#82ffb02b29e662ae53bdc20af15947706739c536"
   dependencies:
@@ -1427,9 +1432,9 @@ chalk@~0.3.0:
     ansi-styles "~0.2.0"
     has-color "~0.1.0"
 
-changelog-maker@*:
-  version "2.2.5"
-  resolved "https://registry.yarnpkg.com/changelog-maker/-/changelog-maker-2.2.5.tgz#99ee4dbed3a70c5f68254dac948bacae747d9f94"
+changelog-maker@^2.2.6:
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/changelog-maker/-/changelog-maker-2.2.6.tgz#1ebc141fa8e57439bdf6cd581dee514cbd3e22ba"
   dependencies:
     async "~2.1.5"
     bl "~1.2.0"
@@ -1913,9 +1918,9 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-create-react-app@^1.3.3:
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/create-react-app/-/create-react-app-1.3.3.tgz#037b42e6fe227663ea546f962555042de0fffc30"
+create-react-app@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/create-react-app/-/create-react-app-1.4.0.tgz#656b6d3262934f41b43a26ce7728bd441d6c0654"
   dependencies:
     chalk "^1.1.1"
     commander "^2.9.0"
@@ -2494,9 +2499,9 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
-elasticsearch@13.2.0:
-  version "13.2.0"
-  resolved "https://registry.yarnpkg.com/elasticsearch/-/elasticsearch-13.2.0.tgz#6542368ef8dee00aa55ced57485f04330a8d7899"
+elasticsearch@^13.3.1:
+  version "13.3.1"
+  resolved "https://registry.yarnpkg.com/elasticsearch/-/elasticsearch-13.3.1.tgz#c530aea9afb17ea91c3d0a56f1f111ba49bc9239"
   dependencies:
     agentkeepalive "^2.2.0"
     chalk "^1.0.0"
@@ -2557,7 +2562,7 @@ end-of-stream@^1.0.0, end-of-stream@^1.1.0:
   dependencies:
     once "^1.4.0"
 
-enhanced-resolve@^3.0.0, enhanced-resolve@^3.4.0:
+enhanced-resolve@^3.4.0:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-3.4.1.tgz#0421e339fd71419b3da13d129b3979040230476e"
   dependencies:
@@ -2888,16 +2893,7 @@ extglob@^0.3.1:
   dependencies:
     is-extglob "^1.0.0"
 
-extract-text-webpack-plugin@^2.1.0:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/extract-text-webpack-plugin/-/extract-text-webpack-plugin-2.1.2.tgz#756ef4efa8155c3681833fbc34da53b941746d6c"
-  dependencies:
-    async "^2.1.2"
-    loader-utils "^1.0.2"
-    schema-utils "^0.3.0"
-    webpack-sources "^1.0.1"
-
-extract-text-webpack-plugin@^3.0.0:
+extract-text-webpack-plugin@3.0.0, extract-text-webpack-plugin@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/extract-text-webpack-plugin/-/extract-text-webpack-plugin-3.0.0.tgz#90caa7907bc449f335005e3ac7532b41b00de612"
   dependencies:
@@ -3737,7 +3733,7 @@ html-minifier@^3.2.3:
     relateurl "0.2.x"
     uglify-js "3.0.x"
 
-html-webpack-plugin@^2.19.0:
+html-webpack-plugin@^2.29.0:
   version "2.30.1"
   resolved "https://registry.yarnpkg.com/html-webpack-plugin/-/html-webpack-plugin-2.30.1.tgz#7f9c421b7ea91ec460f56527d78df484ee7537d5"
   dependencies:
@@ -4641,7 +4637,7 @@ ldapjs@^1.0.1:
   optionalDependencies:
     dtrace-provider "^0.7.0"
 
-less-loader@4.0.5, less-loader@^4.0.2:
+less-loader@4.0.5, less-loader@^4.0.5:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/less-loader/-/less-loader-4.0.5.tgz#ae155a7406cac6acd293d785587fcff0f478c4dd"
   dependencies:
@@ -4675,9 +4671,9 @@ libnpx@~9.2.0:
     y18n "^3.2.1"
     yargs "^8.0.2"
 
-license-webpack-plugin@^0.4.2:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/license-webpack-plugin/-/license-webpack-plugin-0.4.3.tgz#f9d88d4ebc04407a0061e8ccac26571f88e51a16"
+license-webpack-plugin@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/license-webpack-plugin/-/license-webpack-plugin-0.5.1.tgz#68d8af103486a9c4ebceddb7ed5d3bd61f383be4"
   dependencies:
     object-assign "^4.1.0"
 
@@ -5780,9 +5776,9 @@ oauth-sign@~0.8.1:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.8.2.tgz#46a6ab7f0aead8deae9ec0565780b7d4efeb9d43"
 
-oauth2orize@^1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/oauth2orize/-/oauth2orize-1.8.0.tgz#f2ddc0115d635d0480746249c00f0ea1a9c51ba8"
+oauth2orize@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/oauth2orize/-/oauth2orize-1.9.0.tgz#36e8e004eea65c72be861db125204fad8b79ce6a"
   dependencies:
     debug "2.x.x"
     uid2 "0.0.x"
@@ -6139,9 +6135,9 @@ passport-strategy@1.x.x, passport-strategy@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
 
-passport@0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/passport/-/passport-0.3.2.tgz#9dd009f915e8fe095b0124a01b8f82da07510102"
+passport@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/passport/-/passport-0.4.0.tgz#c5095691347bd5ad3b5e180238c3914d16f05811"
   dependencies:
     passport-strategy "1.x.x"
     pause "0.0.1"
@@ -7319,9 +7315,15 @@ rx-lite@*, rx-lite@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-4.0.8.tgz#0b1e11af8bc44836f04a6407e92da42467b79444"
 
-rxjs@^5.0.1, rxjs@^5.4.2:
+rxjs@^5.4.2:
   version "5.4.2"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.4.2.tgz#2a3236fcbf03df57bae06fd6972fd99e5c08fcf7"
+  dependencies:
+    symbol-observable "^1.0.1"
+
+rxjs@^5.4.3:
+  version "5.4.3"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.4.3.tgz#0758cddee6033d68e0fd53676f0f3596ce3d483f"
   dependencies:
     symbol-observable "^1.0.1"
 
@@ -7467,9 +7469,9 @@ seq-queue@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/seq-queue/-/seq-queue-0.0.5.tgz#d56812e1c017a6e4e7c3e3a37a1da6d78dd3c93e"
 
-sequelize@^4.4.2:
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.4.2.tgz#95292e0a752e2586ec92a0e72362b76e4fcb8eae"
+sequelize@^4.4.3:
+  version "4.4.3"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.4.3.tgz#f9785524d1c7d2c1cd309f024476ec5897933690"
   dependencies:
     bluebird "^3.4.6"
     cls-bluebird "^2.0.1"
@@ -7701,10 +7703,6 @@ sorted-union-stream@~2.1.3:
 source-list-map@^0.1.7:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-0.1.8.tgz#c550b2ab5427f6b3f21f5afead88c4f5587b2106"
-
-source-list-map@^1.1.1:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-1.1.2.tgz#9889019d1024cce55cdc069498337ef6186a11a1"
 
 source-list-map@^2.0.0:
   version "2.0.0"
@@ -8048,7 +8046,7 @@ supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
 
-supports-color@^3.1.0, supports-color@^3.1.1, supports-color@^3.2.3:
+supports-color@^3.1.1, supports-color@^3.2.3:
   version "3.2.3"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-3.2.3.tgz#65ac0504b3954171d8a64946b2ae3cbb8a5f54f6"
   dependencies:
@@ -8076,7 +8074,7 @@ symbol-observable@^1.0.1:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.0.4.tgz#29bf615d4aa7121bdd898b22d4b3f9bc4e2aa03d"
 
-tapable@^0.2.7, tapable@~0.2.5:
+tapable@^0.2.7:
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-0.2.8.tgz#99372a5c999bf2df160afc0d74bed4f47948cd22"
 
@@ -8343,9 +8341,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-"typescript@>=2.0.0 <2.4.0":
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.3.4.tgz#3d38321828231e434f287514959c37a82b629f42"
+"typescript@>=2.0.0 <2.5.0", typescript@^2.3.3:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.4.2.tgz#f8395f85d459276067c988aa41837a8f82870844"
 
 uc.micro@^1.0.1, uc.micro@^1.0.3:
   version "1.0.3"
@@ -8365,7 +8363,7 @@ uglify-js@3.0.x:
     commander "~2.11.0"
     source-map "~0.5.1"
 
-uglify-js@^2.8.29, uglify-js@^2.8.5:
+uglify-js@^2.8.29:
   version "2.8.29"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.8.29.tgz#29c5733148057bb4e1f75df35b7a9cb72e6a59dd"
   dependencies:
@@ -8733,7 +8731,7 @@ ware@^1.2.0:
   dependencies:
     wrap-fn "^0.1.0"
 
-watchpack@^1.3.1, watchpack@^1.4.0:
+watchpack@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.4.0.tgz#4a1472bcbb952bd0a9bb4036801f954dfb39faac"
   dependencies:
@@ -8753,7 +8751,7 @@ wcwidth@^1.0.0:
   dependencies:
     defaults "^1.0.3"
 
-webpack-dev-middleware@^1.10.2, webpack-dev-middleware@^1.11.0:
+webpack-dev-middleware@^1.11.0:
   version "1.12.0"
   resolved "https://registry.yarnpkg.com/webpack-dev-middleware/-/webpack-dev-middleware-1.12.0.tgz#d34efefb2edda7e1d3b5dbe07289513219651709"
   dependencies:
@@ -8791,46 +8789,37 @@ webpack-dev-server@^2.7.1:
     webpack-dev-middleware "^1.11.0"
     yargs "^6.0.0"
 
-webpack-dev-server@~2.4.5:
-  version "2.4.5"
-  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-2.4.5.tgz#31384ce81136be1080b4b4cde0eb9b90e54ee6cf"
+webpack-dev-server@~2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-2.5.1.tgz#a02e726a87bb603db5d71abb7d6d2649bf10c769"
   dependencies:
     ansi-html "0.0.7"
+    bonjour "^3.5.0"
     chokidar "^1.6.0"
     compression "^1.5.2"
     connect-history-api-fallback "^1.3.0"
+    del "^3.0.0"
     express "^4.13.3"
     html-entities "^1.2.0"
     http-proxy-middleware "~0.17.4"
+    internal-ip "^1.2.0"
     opn "4.0.2"
     portfinder "^1.0.9"
+    selfsigned "^1.9.1"
     serve-index "^1.7.2"
     sockjs "0.3.18"
     sockjs-client "1.1.2"
     spdy "^3.4.1"
     strip-ansi "^3.0.0"
     supports-color "^3.1.1"
-    webpack-dev-middleware "^1.10.2"
+    webpack-dev-middleware "^1.11.0"
     yargs "^6.0.0"
 
-webpack-merge@4.1.0:
+webpack-merge@4.1.0, webpack-merge@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/webpack-merge/-/webpack-merge-4.1.0.tgz#6ad72223b3e0b837e531e4597c199f909361511e"
   dependencies:
     lodash "^4.17.4"
-
-webpack-merge@^2.4.0:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/webpack-merge/-/webpack-merge-2.6.1.tgz#f1d801d2c5d39f83ffec9f119240b3e3be994a1c"
-  dependencies:
-    lodash "^4.17.4"
-
-webpack-sources@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-0.2.3.tgz#17c62bfaf13c707f9d02c479e0dcdde8380697fb"
-  dependencies:
-    source-list-map "^1.1.1"
-    source-map "~0.5.3"
 
 webpack-sources@^1.0.1:
   version "1.0.1"
@@ -8839,9 +8828,9 @@ webpack-sources@^1.0.1:
     source-list-map "^2.0.0"
     source-map "~0.5.3"
 
-webpack@^3.5.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.5.1.tgz#b749ee3d2b5a118dad53e8e41585b3f71e75499a"
+webpack@^3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.5.3.tgz#e68653963bda146e212832c04a4d8041d2b4b8c8"
   dependencies:
     acorn "^5.0.0"
     acorn-dynamic-import "^2.0.0"
@@ -8866,31 +8855,32 @@ webpack@^3.5.1:
     webpack-sources "^1.0.1"
     yargs "^8.0.2"
 
-webpack@~2.4.0:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-2.4.1.tgz#15a91dbe34966d8a4b99c7d656efd92a2e5a6f6a"
+webpack@~3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.4.1.tgz#4c3f4f3fb318155a4db0cb6a36ff05c5697418f4"
   dependencies:
     acorn "^5.0.0"
     acorn-dynamic-import "^2.0.0"
-    ajv "^4.7.0"
-    ajv-keywords "^1.1.1"
+    ajv "^5.1.5"
+    ajv-keywords "^2.0.0"
     async "^2.1.2"
-    enhanced-resolve "^3.0.0"
+    enhanced-resolve "^3.4.0"
+    escope "^3.6.0"
     interpret "^1.0.0"
     json-loader "^0.5.4"
     json5 "^0.5.1"
     loader-runner "^2.3.0"
-    loader-utils "^0.2.16"
+    loader-utils "^1.1.0"
     memory-fs "~0.4.1"
     mkdirp "~0.5.0"
     node-libs-browser "^2.0.0"
     source-map "^0.5.3"
-    supports-color "^3.1.0"
-    tapable "~0.2.5"
-    uglify-js "^2.8.5"
-    watchpack "^1.3.1"
-    webpack-sources "^0.2.3"
-    yargs "^6.0.0"
+    supports-color "^4.2.1"
+    tapable "^0.2.7"
+    uglifyjs-webpack-plugin "^0.4.6"
+    watchpack "^1.4.0"
+    webpack-sources "^1.0.1"
+    yargs "^8.0.2"
 
 webrtc-adapter@3.3.4:
   version "3.3.4"

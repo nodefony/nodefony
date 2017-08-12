@@ -92,8 +92,8 @@ module.exports = nodefony.registerService("firewall", function(){
 	// context security
 	const securedArea = class securedArea extends nodefony.Service {
 
-		constructor( name, container, firewall ){
-			super(name, container , firewall.notificationsCenter );
+		constructor( name, firewall ){
+			super(name, firewall.container , firewall.notificationsCenter );
 			this.firewall = firewall ;
 			this.router = this.get("router") ;
 			this.sessionContext = "default" ;
@@ -107,7 +107,7 @@ module.exports = nodefony.registerService("firewall", function(){
 			this.defaultTarget = "/" ;
 			this.alwaysUseDefaultTarget = false ;
 
-			this.listen(this, "onOrmReady",() => {
+			this.listen(this, "onReady",() => {
 				try {
 					if ( this.providerName in this.firewall.providers){
 						this.provider = this.firewall.providers[ this.providerName ].Class ;
@@ -297,7 +297,7 @@ module.exports = nodefony.registerService("firewall", function(){
 		overrideURL (context, myUrl ){
 			context.method = "GET" ;
 			context.request.url = url.parse( url.resolve(context.request.url, myUrl) ) ;
-			return this.router.resolve(context.container, context);
+			return this.router.resolve( context );
 		}
 
 		redirectHttps (context){
@@ -780,7 +780,7 @@ module.exports = nodefony.registerService("firewall", function(){
 
 		addSecuredArea (name){
 			if ( ! this.securedAreas[name] ){
-				this.securedAreas[name] = new securedArea(name, this.container, this) ;
+				this.securedAreas[name] = new securedArea(name, this) ;
 				this.logger("ADD security context : " + name, "DEBUG" );
 				return this.securedAreas[name];
 			}else{

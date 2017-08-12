@@ -1,7 +1,7 @@
+
 module.exports = nodefony.registerService("sequelize", function(){
 
-
-	var error = function(err){
+	const error = function(err){
 
 		if (this.state !== "DISCONNECTED"){
 			this.orm.kernel.fire('onError', err, this);
@@ -30,7 +30,7 @@ module.exports = nodefony.registerService("sequelize", function(){
 	 * CLASS LIBRARY CONNECTION
 	 *
 	 */
-	var connectionDB = class connectionDB {
+	const connectionDB = class connectionDB {
 
 		constructor (name, type, options, orm){
 			this.state = "DISCONNECTED";
@@ -107,7 +107,7 @@ module.exports = nodefony.registerService("sequelize", function(){
 	 * CLASS SERVICE sequelize
 	 *
 	 */
-	var sequelize = class sequelize extends nodefony.orm {
+	const sequelize = class sequelize extends nodefony.orm {
 
 		constructor (container, kernel, autoLoader){
 			super("sequelize", container, kernel, autoLoader );
@@ -127,6 +127,7 @@ module.exports = nodefony.registerService("sequelize", function(){
 					}
 				}else{
 					process.nextTick( () => {
+						this.logger('onOrmReady', "DEBUG", "EVENTS SEQUELIZE");
 						this.fire('onOrmReady', this);
 					});
 				}
