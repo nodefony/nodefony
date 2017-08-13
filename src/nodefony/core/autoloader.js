@@ -1,6 +1,7 @@
 const vm = require("vm");
 const path = require("path");
 const Module = require("module");
+const fs = require('fs');
 
 module.exports = function(){
 
@@ -13,7 +14,7 @@ module.exports = function(){
 	context.__dirname = __dirname ;
 	context.__filename = __filename ;
 
-  context.path = require("path");
+	context.path = require("path");
 	context.fs = require("fs")
 	context.yaml = require("js-yaml");
 	context.util = require('util');
@@ -34,44 +35,70 @@ module.exports = function(){
 	context.BlueBird = require("bluebird");
 
 	/**
-	 *  Nodefony autoloader
-	 *
-	 * @class autoload
-	 * @constructor
-	 * @module NODEFONY
-	 *
-	 */
-	let regJs = /.*\.js$/;
+	*  Nodefony autoloader
+	*
+	* @class autoload
+	* @constructor
+	* @module NODEFONY
+	*
+	*/
+	const regJs = /.*\.js$/;
 
-	let autoload = class autoload {
+	const autoload = class autoload {
 
 		constructor() {
+			this.versions = this.getVersion();
 			this.timeout = 20000 ;
 			this.displayError = true ;
 			this.syslog = null ;
 			this.lineOffset = 10 ;
 			this.columnOffset = 10 ;
 			this.dirname = path.resolve(  __dirname, ".." );
-			this.load( path.resolve( this.dirname, "core", "container.js") );
-			this.load( path.resolve( this.dirname, "core", "notificationsCenter.js") );
-			this.load( path.resolve( this.dirname, "core", "syslog.js") );
-			this.load( path.resolve( this.dirname, "core", "service.js") );
-			this.load( path.resolve( this.dirname, "core", "fileClass.js") );
-			this.load( path.resolve( this.dirname, "core", "finder.js") );
-			this.load( path.resolve( this.dirname, "core", "reader.js") );
-			this.load( path.resolve( this.dirname, "core", "log.js") );
-			this.load( path.resolve( this.dirname, "core", "protocol.js") );
-			this.load( path.resolve( this.dirname, "core", "watcher.js") );
-			this.load( path.resolve( this.dirname, "core", "cli.js") );
-			this.loadDirectory( path.resolve( this.dirname, "core", "protocols"), /^tests$/ );
-			this.loadDirectory( path.resolve( this.dirname, "kernel"), /^tests$/ );
 			try {
-				this.load( path.resolve( this.dirname, "..", "..","..", "..", "app", "appKernel.js") );
+				this.load( path.resolve( this.dirname, "core", "container.js") );
+				this.load( path.resolve( this.dirname, "core", "notificationsCenter.js") );
+				this.load( path.resolve( this.dirname, "core", "syslog.js") );
+				this.load( path.resolve( this.dirname, "core", "service.js") );
+				this.load( path.resolve( this.dirname, "core", "fileClass.js") );
+				this.load( path.resolve( this.dirname, "core", "finder.js") );
+				this.load( path.resolve( this.dirname, "core", "reader.js") );
+				this.load( path.resolve( this.dirname, "core", "log.js") );
+				this.load( path.resolve( this.dirname, "core", "protocol.js") );
+				this.load( path.resolve( this.dirname, "core", "watcher.js") );
+				this.load( path.resolve( this.dirname, "core", "cli.js") );
+				this.loadDirectory( path.resolve( this.dirname, "core", "protocols"), /^tests$/ );
+				this.loadDirectory( path.resolve( this.dirname, "kernel"), /^tests$/ );
+				this.loadAppKernel();
 			}catch(e){
-				this.load( path.resolve( this.dirname, "..", "..", "app", "appKernel.js") );
+				throw e ;
 			}
 			this.syslog = null;
 			this.setEnv();
+		}
+
+		getVersion (){
+			return process.versions ;
+		}
+
+		isElectron (){
+			return this.versions.electron || null ;
+		}
+
+		loadAppKernel (){
+			let appKernelPath = path.resolve( this.dirname, "..", "..","..", "..", "app", "appKernel.js");
+			try {
+				let stat = fs.statSync(appKernelPath);
+				if (! stat){
+					appKernelPath = path.resolve( this.dirname, "..", "..", "app", "appKernel.js");
+				}
+			}catch(e){
+				appKernelPath = path.resolve( this.dirname, "..", "..", "app", "appKernel.js");
+			}
+			try {
+				this.load( appKernelPath );
+			}catch(e){
+				throw e ;
+			}
 		}
 
 		createContext (sandbox){
@@ -84,35 +111,35 @@ module.exports = function(){
 				case "production":
 				case "prod":
 				case "PROD":
-					this.environment = "prod";
-					this.dataCache = true;
+				this.environment = "prod";
+				this.dataCache = true;
 				break;
 				case "development":
 				case "dev":
 				case "DEV":
-					this.environment = "dev";
-					this.dataCache = false;
+				this.environment = "dev";
+				this.dataCache = false;
 				break;
 				default:
-					this.environment = "prod";
-					this.dataCache = true;
+				this.environment = "prod";
+				this.dataCache = true;
 			}
 		}
 
 		/**
- 	 	* @method load
-	 	*
-	 	* @param {String} file Path to load
-	 	*
- 	 	*/
+		* @method load
+		*
+		* @param {String} file Path to load
+		*
+		*/
 		load (file, force){
 			let filename = null ;
 			try {
 				filename = Module._resolveFilename(file, module, false);
 				let cachedModule = Module._cache[filename];
-	  		if (cachedModule && ! force ) {
-	    		return cachedModule.exports;
-	  		}
+				if (cachedModule && ! force ) {
+					return cachedModule.exports;
+				}
 				let myModule = new Module(filename, module ) ;
 				Module._cache[filename] = myModule;
 				myModule.load(filename);
@@ -127,13 +154,13 @@ module.exports = function(){
 		}
 
 		/**
- 	 	* @method logger
-	 	*
-	 	* @param {void} payload payload for log. protocole controle information
- 	 	* @param {Number || String} severity severity syslog like.
- 	 	* @param {String} msgid informations for message. example(Name of function for debug)
- 	 	* @param {String} msg  message to add in log. example (I18N)
- 	 	*/
+		* @method logger
+		*
+		* @param {void} payload payload for log. protocole controle information
+		* @param {Number || String} severity severity syslog like.
+		* @param {String} msgid informations for message. example(Name of function for debug)
+		* @param {String} msg  message to add in log. example (I18N)
+		*/
 		logger (pci, severity, msgid,  msg){
 			if (this.syslog){
 				if (! msgid){ msgid = "AUTOLOADER  ";}
@@ -143,11 +170,11 @@ module.exports = function(){
 		}
 
 		/**
- 	 	* @method loadDirectory
-	 	*
-	 	* @param {String} path Path to directory to autoload
-	 	*
- 	 	*/
+		* @method loadDirectory
+		*
+		* @param {String} path Path to directory to autoload
+		*
+		*/
 		loadDirectory (path, exclude){
 			let finder = null ;
 			let settings = {
