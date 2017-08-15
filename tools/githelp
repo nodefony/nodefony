@@ -12,7 +12,7 @@ $ git push origin :refs/tags/release01
 // ADD REMOTE BRANCH
 git push -u origin <branch_name>
 
-// TRACK REMOTE BRANCH 
+// TRACK REMOTE BRANCH
 $ git branch --track name origin/dev
 $ git checkout -b dev --track  origin/dev
 
@@ -25,6 +25,7 @@ $ git update-index --assume-unchanged file
 // SSH add key
 $ eval "$(ssh-agent -s)"
 $ ssh-add -K ~/.ssh/my_github_key/id_rsa
+
 
 
 // submodules
@@ -58,3 +59,10 @@ git branch -d myBranch
 git push origin --delete <branch_name>
 //or
 git push origin :<branch_name>
+
+// add github project
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/nodefony/nodefony-project.git
+git push -u origin master
