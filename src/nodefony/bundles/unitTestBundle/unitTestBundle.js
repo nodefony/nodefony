@@ -56,7 +56,7 @@ module.exports = nodefony.registerBundle ("unitTest", function(){
 			super(name, kernel, container);
 
 			// load bundle library
-			this.autoLoader.loadDirectory(this.path+"/core");
+			//this.autoLoader.loadDirectory(this.path+"/core");
 
 
 			/*

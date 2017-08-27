@@ -5463,9 +5463,9 @@ mv@~2:
     ncp "~2.0.0"
     rimraf "~2.4.0"
 
-mysql2@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/mysql2/-/mysql2-1.4.1.tgz#53267ea0a43df850aee4e0bc993e7563c37ff552"
+mysql2@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/mysql2/-/mysql2-1.4.2.tgz#b5e04009fd6d63f00755253df88540a2532640b2"
   dependencies:
     cardinal "1.0.0"
     denque "^1.1.1"

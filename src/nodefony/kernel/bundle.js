@@ -729,7 +729,8 @@ module.exports = nodefony.register("Bundle", function(){
 					exclude: /^docs$|^tests|^node_modules|^assets$/
 				});
 			}catch(e){
-				this.logger(e,"ERROR");
+				throw e ;
+				//this.logger(e,"ERROR");
 			}
 			return res.result;
 		}

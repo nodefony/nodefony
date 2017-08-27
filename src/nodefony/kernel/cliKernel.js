@@ -365,7 +365,7 @@ module.exports = nodefony.register("cliKernel", function(){
 	  			}
 	  			stat = fs.lstatSync(dir);
 	  		}catch(e){
-	  			this.logger(e, "WARNING");
+	  			//this.logger(e, "WARNING");
 	  			return 0 ;
 	  		}
 	  		let files = null ;

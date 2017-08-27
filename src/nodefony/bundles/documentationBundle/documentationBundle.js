@@ -119,7 +119,7 @@ module.exports = nodefony.registerBundle ("documentation", function(){
 
 			super(name, kernel, container);
 			// load bundle library
-			this.autoLoader.loadDirectory(this.path+"/core");
+			//this.autoLoader.loadDirectory(this.path+"/core");
 
 			this.elasticReady = false ;
 			this.elastic = null ;
