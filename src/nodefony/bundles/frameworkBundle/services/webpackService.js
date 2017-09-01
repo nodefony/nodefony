@@ -264,9 +264,10 @@ module.exports = nodefony.registerService("webpack", function(){
 				}
 			}
 			try {
-				var idfile = basename+"_"+file.name ;
+				let idfile = basename+"_"+file.name ;
+				let watching = null ;
 				if ( watch ){
-					var watching = compiler.watch({
+					watching = compiler.watch({
 						/* watchOptions */
 					}, (err, stats) => {
 						if (! err ){
@@ -328,8 +329,9 @@ module.exports = nodefony.registerService("webpack", function(){
 				this.logger( "WEBPACK BUNDLE : " +  basename +" WATCHING : "+ myConf.watch );
 			}
 
+			let watching = null ;
 			if ( myConf.watch ){
-				var watching = compiler.watch({
+				watching = compiler.watch({
 					/* watchOptions */
 				}, (err, stats) => {
 					if (! err ){

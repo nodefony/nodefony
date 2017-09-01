@@ -1,14 +1,9 @@
-
 var request = require('request');
 var cheerio = require('cheerio');
 
-
-
 module.exports = nodefony.registerService("webCrawler", function(){
 
-
-
-	var makeRequestHttp = function(link, context ,callback){
+	const makeRequestHttp = function(link, context ,callback){
 
 		this.logger("REQUEST : " + link, "INFO");
 		var myurl = url.parse( link )
@@ -72,7 +67,7 @@ module.exports = nodefony.registerService("webCrawler", function(){
 		req.end();
 	}
 
-	var parseLink = function(crawlUrl, body, callback){
+	let parseLink = function(crawlUrl, body, callback){
 
 		var pageObject = {};
 		pageObject.links = [];
@@ -112,7 +107,7 @@ module.exports = nodefony.registerService("webCrawler", function(){
 	}
 
 
-	var myLoop = function(link, context, finish, recurse){
+	const myLoop = function(link, context, finish, recurse){
 
 		if (  this.crawled[ link ] ){
 			if ( this.crawled[ link ].page ){
@@ -164,14 +159,13 @@ module.exports = nodefony.registerService("webCrawler", function(){
 				}
 			});
 		})
+	};
 
-	}
-
-	var webCrawler = class webCrawler extends nodefony.Service {
+	const webCrawler = class webCrawler extends nodefony.Service {
 
 		constructor (container, kernel){
 
-			super("webCrawler", container, container.get("notificationsCenter") );
+			super("WEBCRAWLER", container, container.get("notificationsCenter") );
 
 			this.kernel = kernel ;
 			this.crawled = {};
@@ -180,12 +174,6 @@ module.exports = nodefony.registerService("webCrawler", function(){
 			this.listen(this, "onReady", () => {
 				this.elastic = this.kernel.getBundle("documentation").elastic;
 			})
-		}
-
-		logger (pci, severity, msgid,  msg){
-			//var syslog = this.container.get("syslog");
-			if (! msgid) msgid = "SERVICE WEB CRAWLER";
-			return this.syslog.logger(pci, severity, msgid,  msg);
 		}
 
 		siteAll (urlBase, search ,context, callback ){
@@ -200,7 +188,6 @@ module.exports = nodefony.registerService("webCrawler", function(){
 
 			if ( this.elastic ){
 				myLoop.call(this, urlBase, context, function(error, crawled){
-					console.log("PASSS")
 				});
 			}else{
 				myLoop.call(this, urlBase, context, (error, crawled) => {
@@ -233,9 +220,5 @@ module.exports = nodefony.registerService("webCrawler", function(){
 			}
 		};
 	};
-
-
 	return webCrawler
-
-
 });

@@ -16,7 +16,6 @@ module.exports = nodefony.registerController("default", function(){
 
 			constructor(container, context){
 				super(container, context);
-				this.kernel = this.get("kernel") ;
 				this.defaultVersion = this.kernel.settings.version;
 			}
 
@@ -258,9 +257,7 @@ module.exports = nodefony.registerController("default", function(){
 			}
 
 			navDocBundleAction (){
-
 				var bundles = this.kernel.bundles ;
-
 				var directory = [] ;
 				for ( var bundle in bundles ) {
 					directory.push(bundles[bundle]);
@@ -322,26 +319,23 @@ module.exports = nodefony.registerController("default", function(){
 			}
 
 			searchAction (){
-
-				var url = this.generateUrl("documentation-version",{
+				let url = this.generateUrl("documentation-version",{
 					bundle:"nodefony",
-					version:"Beta"
+					version:"default"
 				}, true)
 
-				var request = this.getRequest();
-				var context = this.getContext();
+				let request = this.getRequest();
+				let context = this.getContext();
 				//console.log(request.url.host)
-				var query = request.query ;
+				let query = request.query ;
 				if (query.search ){
-					var webCrawler = this.get("webCrawler");
-
+					let webCrawler = this.get("webCrawler");
 					webCrawler.siteAll(url, query.search, context, (data) =>{
 						this.renderJsonAsync(data);
 					});
 				}else{
 					this.renderJsonAsync({});
 				}
-
 			}
 		};
 
