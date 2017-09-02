@@ -33,7 +33,7 @@ module.exports = nodefony.registerCommand("webpack",function(){
 		webpackCompile (){
 			this.listen( this, "onReady" , () => {
 				let promiseWebpack= null ;
-				for ( var bundle in this.kernel.bundles ){
+				for ( let bundle in this.kernel.bundles ){
 					if ( this.kernel.bundles[bundle].webpackCompiler ||  this.kernel.bundles[bundle].webpackCompilerFile ){
 						if ( promiseWebpack ){
 							promiseWebpack.then( this.kernel.bundles[bundle].compileWebpack() );
@@ -45,7 +45,7 @@ module.exports = nodefony.registerCommand("webpack",function(){
 				if ( promiseWebpack ){
 					promiseWebpack.then((err, stats) => {
 						process.nextTick( () => {
-							this.terminate(0);
+							//this.terminate(0);
 						});
 					});
 				}else{

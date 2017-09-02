@@ -15,6 +15,7 @@ nodefony.register.call(nodefony.context, "http", function(){
 			this.type = type;
 			this.set("context", this);
 			this.kernelHttp = this.get("httpKernel");
+			this.isElectron = this.kernel.isElectron ;
 			//I18n
 			this.translation = this.kernelHttp.translation.createTranslation(this);
 			this.set("translation", this.translation );

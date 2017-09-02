@@ -78,6 +78,7 @@ module.exports = nodefony.register("kernel", function(){
 			this.set("autoLoader",this.autoLoader);
 			this.version = nodefony_version ;
 			this.platform = process.platform ;
+			this.isElectron = this.autoLoader.isElectron() || false ;
 			this.uptime = new Date().getTime();
 			this.numberCpu = os.cpus().length ;
 			this.type = type;
