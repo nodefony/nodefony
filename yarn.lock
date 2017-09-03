@@ -7725,9 +7725,9 @@ silent-error@^1.0.0:
   dependencies:
     debug "^2.2.0"
 
-simple-git@^1.76.0:
-  version "1.76.0"
-  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-1.76.0.tgz#bfa9287559d30fb60bbef5a370e0a3f3895c8fee"
+simple-git@^1.77.0:
+  version "1.77.0"
+  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-1.77.0.tgz#526537470b946e5f6f93d103ef54b46949600939"
   dependencies:
     debug "^2.6.7"
 
