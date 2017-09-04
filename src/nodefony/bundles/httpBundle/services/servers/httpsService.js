@@ -1,13 +1,6 @@
-/*
- * New node file
- */
-
-//var https = require('https');
-//var nodedomain = require('domain');
-
 module.exports = nodefony.registerService("https", function(){
 
-	var Https = class Https extends nodefony.Service {
+	const Https = class Https extends nodefony.Service {
 
 		constructor (httpKernel , security, options){
 
@@ -18,7 +11,7 @@ module.exports = nodefony.registerService("https", function(){
 			this.domain = this.httpKernel.kernel.settings.system.domain ;
 			this.firewall =  security ;
 			this.ready = false ;
-			this.settings = this.kernel.settings.system.servers || null ;
+			//this.settings = this.kernel.settings.system.servers || null ;
 
 			this.key = null ;
 			this.cert = null ;
@@ -49,15 +42,15 @@ module.exports = nodefony.registerService("https", function(){
 		}
 
 		getCertificats (){
-			var bundleOptions = this.getParameters("bundles.http").https.certificats || null ;
-			var opt = nodefony.extend( true, {
+			//var bundleOptions = this.getParameters("bundles.http").https.certificats || null ;
+			let opt = nodefony.extend( true, {
 				keyPath: this.kernel.checkPath(this.settings.certificats.key),
 				certPath: this.kernel.checkPath(this.settings.certificats.cert),
 				caPath: this.kernel.checkPath(this.settings.certificats.ca),
 				key: null,
 				cert: null,
 				ca: null
-			},bundleOptions ) ;
+			},this.settings ) ;
 			try {
 				this.key = fs.readFileSync(opt.keyPath) ;
 				opt.key = this.key ;
@@ -74,9 +67,11 @@ module.exports = nodefony.registerService("https", function(){
 		}
 
 		createServer (){
+			this.settings = this.getParameters("bundles.http").https || null ;
+			this.settings.certificats = nodefony.extend(true, {}, this.settings.certificats, this.kernel.settings.system.servers.certificats ) ;
 			try {
 				this.options = this.getCertificats();
-				for (var ele in this.options ){
+				for (let ele in this.options )	{
 					switch ( ele ){
 						case "keyPath" :
 							this.logger( " READ CERTIFICATE KEY : "+this.options[ele], "DEBUG");
@@ -97,8 +92,6 @@ module.exports = nodefony.registerService("https", function(){
 				this.logger(e);
 				throw e ;
 			}
-
-			this.options = nodefony.extend(this.options, this.settings.certificats.options);
 
 			try {
 				this.server = https.createServer(this.options);
@@ -132,7 +125,7 @@ module.exports = nodefony.registerService("https", function(){
 			});
 
 			this.server.on("error",(error) => {
-				var httpError = "server HTTPS Error : "+error.errno;
+				let httpError = "server HTTPS Error : "+error.errno;
 				switch (error.errno){
 					case "ENOTFOUND":
 						this.logger( new Error(httpError+" CHECK DOMAIN IN /etc/hosts unable to connect to : "+this.domain), "CRITIC");

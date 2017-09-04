@@ -1,17 +1,10 @@
-/*
- * New node file
- */
-
-//var http = require('http');
-//var nodedomain = require('domain');
-
 module.exports = nodefony.registerService("http", function(){
 
-	var Http = class Http extends nodefony.Service {
+	const Http = class Http extends nodefony.Service {
 
 		constructor (httpKernel , security, options ){
 
-			super( "http", httpKernel.container, httpKernel.notificationsCenter , options  );
+			super( "HTTP", httpKernel.container, httpKernel.notificationsCenter , options  );
 
 			this.httpKernel = httpKernel ;
 			this.port = this.httpKernel.kernel.httpPort ;
@@ -36,11 +29,6 @@ module.exports = nodefony.registerService("http", function(){
 					}
 				});
 			});
-		}
-
-		logger (pci, severity, msgid,  msg){
-			if (! msgid) { msgid = "SERVICE HTTP ";}
-			return this.syslog.logger(pci, severity, msgid,  msg);
 		}
 
 		createZone (request, response){
@@ -90,7 +78,7 @@ module.exports = nodefony.registerService("http", function(){
 			});
 
 			this.server.on("error",(error) => {
-				var httpError = "server HTTP Error : "+error.errno;
+				let httpError = "server HTTP Error : "+error.errno;
 				switch (error.errno){
 					case "ENOTFOUND":
 						this.logger( new Error(httpError+" CHECK DOMAIN IN /etc/hosts unable to connect to : "+this.domain), "CRITIC");

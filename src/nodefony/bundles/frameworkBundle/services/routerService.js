@@ -340,7 +340,7 @@ module.exports = nodefony.registerService("router", function(){
 			if (! route ){
 				throw {error:"no route to host  "+ name};
 			}
-			let mypath = route.path;
+			let mypath = route.path.replace(/(.*)\*$/,"\$1");
 			if ( route.variables.length ){
 				for ( let i = 0 ; i < route.variables.length ; i++){
 					let ele = route.variables[i] ;
