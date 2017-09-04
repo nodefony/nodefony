@@ -42,7 +42,7 @@ module.exports = nodefony.registerService("https", function(){
 		}
 
 		getCertificats (){
-			//var bundleOptions = this.getParameters("bundles.http").https.certificats || null ;
+			var bundleOptions = this.getParameters("bundles.http").https.certificats || null ;
 			let opt = nodefony.extend( true, {
 				keyPath: this.kernel.checkPath(this.settings.certificats.key),
 				certPath: this.kernel.checkPath(this.settings.certificats.cert),
@@ -50,7 +50,7 @@ module.exports = nodefony.registerService("https", function(){
 				key: null,
 				cert: null,
 				ca: null
-			},this.settings ) ;
+			}, bundleOptions) ;
 			try {
 				this.key = fs.readFileSync(opt.keyPath) ;
 				opt.key = this.key ;
