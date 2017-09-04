@@ -42,6 +42,8 @@ module.exports = nodefony.registerService("https", function(){
 		}
 
 		getCertificats (){
+			this.settings = this.getParameters("bundles.http").https || null ;
+			this.settings.certificats = nodefony.extend(true, {}, this.settings.certificats, this.kernel.settings.system.servers.certificats ) ;
 			var bundleOptions = this.getParameters("bundles.http").https.certificats || null ;
 			let opt = nodefony.extend( true, {
 				keyPath: this.kernel.checkPath(this.settings.certificats.key),
@@ -67,8 +69,8 @@ module.exports = nodefony.registerService("https", function(){
 		}
 
 		createServer (){
-			this.settings = this.getParameters("bundles.http").https || null ;
-			this.settings.certificats = nodefony.extend(true, {}, this.settings.certificats, this.kernel.settings.system.servers.certificats ) ;
+			//this.settings = this.getParameters("bundles.http").https || null ;
+			//this.settings.certificats = nodefony.extend(true, {}, this.settings.certificats, this.kernel.settings.system.servers.certificats ) ;
 			try {
 				this.options = this.getCertificats();
 				for (let ele in this.options )	{
