@@ -4,7 +4,7 @@ module.exports = nodefony.registerService("https", function(){
 
 		constructor (httpKernel , security, options){
 
-			super( "https", httpKernel.container, httpKernel.notificationsCenter , options  );
+			super( "HTTPS", httpKernel.container, httpKernel.notificationsCenter , options  );
 
 			this.httpKernel = httpKernel;
 			this.port = this.httpKernel.kernel.httpsPort ;
@@ -34,11 +34,6 @@ module.exports = nodefony.registerService("https", function(){
 					}
 				});
 			});
-		}
-
-		logger (pci, severity, msgid,  msg){
-			if (! msgid) {msgid = "SERVICE HTTPS ";}
-			return this.syslog.logger(pci, severity, msgid,  msg);
 		}
 
 		getCertificats (){
@@ -104,10 +99,8 @@ module.exports = nodefony.registerService("https", function(){
 			}
 
 			this.server.on("request", ( request, response ) => {
-
 				this.httpKernel.onHttpRequest(request, response, this.type);
 			} );
-
 
 			if (this.settings.timeout){
 				this.server.timeout = this.settings.timeout;
@@ -116,8 +109,6 @@ module.exports = nodefony.registerService("https", function(){
 			if (this.settings.maxHeadersCount ){
 				this.server.maxHeadersCount = this.settings.maxHeadersCount;
 			}
-
-
 
 			// LISTEN ON PORT
 			this.server.listen(this.port, this.domain, () => {

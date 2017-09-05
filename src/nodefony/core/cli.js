@@ -13,7 +13,13 @@ module.exports = nodefony.register( "cli", function(){
   const magenta = clc.magenta.bold
   const reset = clc.reset; // '\x1b[0m';
 
-  const processName = path.basename (process.argv[1] ) || process.argv[1] || process.title ;
+  let processName = null ;
+  if ( process.argv &&  process.argv[1] ){
+      processName = path.basename ( process.argv[1] );
+  }else{
+      processName =  process.title || "nodefony" ;
+  }
+  //const processName = path.basename (process.argv[1] ) || process.argv[1] || process.title ;
 
   const defaultTableCli = {
   		style: {head: ['cyan'], border: ['grey']}
