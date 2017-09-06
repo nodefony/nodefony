@@ -6,9 +6,9 @@
 require("../css/debugBar.css");
 
 module.exports = function (){
-	
+
 	var nativeBind = function(){
-		return (!! Function.prototype.bind)  
+		return (!! Function.prototype.bind)
 	}();
 
 	
@@ -28,7 +28,7 @@ module.exports = function (){
 					}
 				}
 			}()
-			
+
 			return function(){
 				var func = this;
 				var context = Array.prototype.shift.call(arguments);
@@ -50,10 +50,10 @@ module.exports = function (){
 			}
 		}
 		return function(event, handler, capture){
-			this.attachEvent('on' + event, handler);			
+			this.attachEvent('on' + event, handler);
 			return handler ;
 		}
-	}();	
+	}();
 
 
 
@@ -95,7 +95,7 @@ module.exports = function (){
 		}
 
 	};
-	
+
 	var removeClass = function(element, value){
 		if ( (value && typeof value === "string") || value === undefined ) {
 			var classNames = (value || "").split(/\s+/);
@@ -140,7 +140,7 @@ module.exports = function (){
 		//TODO
 	};
 
-	// EVENTS LOAD 
+	// EVENTS LOAD
 	var load = function(){
 		this.debugbar = document.getElementById("nodefony-container");
 		this.smallContainer = document.getElementById("nodefony-small");
@@ -149,14 +149,14 @@ module.exports = function (){
 		var storage = new browserStorage("local");
 		var state = storage.get("nodefony_debug") ;
 		if ( state === false){
-			removeClass( this.smallContainer, "hidden" );   
+			removeClass( this.smallContainer, "hidden" );
 			addClass( this.debugbar, "hidden" );
 		}
 
 		this.listen(this.nodefonyClose, "click", function(event){
 			//var ev = new coreEvent(event);
-			removeClass( this.smallContainer, "hidden" );	
-			addClass( this.debugbar, "hidden" );	
+			removeClass( this.smallContainer, "hidden" );
+			addClass( this.debugbar, "hidden" );
 			storage.set("nodefony_debug",false);
 			//ev.stopPropagation();
 		}.bind(this))
@@ -166,7 +166,7 @@ module.exports = function (){
 			removeClass(  this.debugbar, "hidden" )	;
 			addClass( this.smallContainer, "hidden" );
 			storage.set("nodefony_debug",true);
-			//ev.stopPropagation();	
+			//ev.stopPropagation();
 		}.bind(this))
 	};
 
@@ -174,15 +174,15 @@ module.exports = function (){
 	var Nodefony = function(){
 		this.listen = function(element, event, handler, capture){
 			if (element){
-				return 	listen.call(element, event, handler, capture)	
+				return 	listen.call(element, event, handler, capture)
 			}
-		}; 
+		};
 
 		if (window.addEventListener) {
 			window.addEventListener("load", load.bind(this) , false);
 		} else {
 			window.attachEvent("onload", load.bind(this) );
-		}	
+		}
 
 	};
 

@@ -29,6 +29,7 @@ system:
   monitoring                    : true
   documentation                 : true
   unitTest                      : true
+  demo                          : true
   locale                        : "en_en"
 
   servers:
@@ -45,17 +46,6 @@ system:
 
   bundles:
     test                        : "src/bundles/testBundle"
-
-  PM2:
-    exec_mode		            : "cluster"
-    max_memory_restart	        : "1024M"
-    autorestart		            : true
-    max_restarts		        : 10
-    watch			            : false
-    log_file                    : "tmp/nodefony.log"
-    out_file                    : "tmp/nodefony.out.log"
-    error_file                  : "tmp/nodefony.error.log"
-    merge_logs                  : true
 
   log:
     active                      : true
@@ -92,8 +82,13 @@ templating                      : twig
 
 #
 # ENGINE ORM
-#
 #       SEQUELIZE
-#
-#
 orm                             : sequelize
+
+#
+# NODE.JS PACKAGE MANAGER
+#
+#       npm
+#       yarn
+#
+packageManager                  : npm

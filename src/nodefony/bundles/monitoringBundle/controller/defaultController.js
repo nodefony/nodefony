@@ -1,5 +1,5 @@
 
-nodefony.registerController("default", function(){
+module.exports = nodefony.registerController("default", function(){
 
 		/**
 		 *	The class is a **`default` CONTROLLER** .
@@ -7,9 +7,9 @@ nodefony.registerController("default", function(){
 		 *	@main NODEFONY
 		 *	@class default
 		 *	@constructor
-		 *	@param {class} container   
+		 *	@param {class} container
 		 *	@param {class} context
-		 *	
+		 *
 		 */
 		var defaultController = class defaultController extends nodefony.controller {
 
@@ -19,13 +19,13 @@ nodefony.registerController("default", function(){
 
 			/**
 		 	*
-		 	*	 index 
+		 	*	 index
 		 	*
 		 	*/
 			indexAction (module){
 				var kernel = this.get("kernel") ;
 				if (module){
-					this.getResponse().setHeader('Content-Type' , "application/xml"); 
+					this.getResponse().setHeader('Content-Type' , "application/xml");
 					if (module === "app"){
 						var bundles = function(){
 							var obj = {};
@@ -34,7 +34,7 @@ nodefony.registerController("default", function(){
 									name:kernel.bundles[bundle].name,
 									version:kernel.bundles[bundle].settings.version,
 									config:this.container.getParameters("bundles."+bundle)
-								};	
+								};
 							}
 							return obj;
 						}.call(this);
@@ -44,14 +44,14 @@ nodefony.registerController("default", function(){
 							user:this.context.user
 						});
 					}
-					return this.render('monitoringBundle::'+module+'.xml.twig');	
+					return this.render('monitoringBundle::'+module+'.xml.twig');
 				}else{
 					return this.render('monitoringBundle::index.html.twig', {environment:kernel.environment,debug:kernel.debug});
 				}
 			}
 
 			/**
- 			* 
+ 			*
  			*
  			*
  			*
@@ -63,7 +63,7 @@ nodefony.registerController("default", function(){
 					case "GET" :
 						return this.getResponse("PING");
 					case "POST" :
-						return realtime.handleConnection(this.getParameters("query").request, context );	
+						return realtime.handleConnection(this.getParameters("query").request, context );
 					case "WEBSOCKET" :
 						if (message){
 							realtime.handleConnection(message.utf8Data, context );
@@ -75,7 +75,7 @@ nodefony.registerController("default", function(){
 			}
 
 			/**
- 		 	* 
+ 		 	*
  		 	*
  		 	*
  		 	*
@@ -94,6 +94,6 @@ nodefony.registerController("default", function(){
 				}
 			}
 		};
-		
+
 		return defaultController;
 });

@@ -1,6 +1,5 @@
 
-
-nodefony.register("Service", function(){
+module.exports = nodefony.register("Service", function(){
 
 	var settingsSyslog = {
 		//rateLimit:100,
@@ -10,17 +9,23 @@ nodefony.register("Service", function(){
 	};
 
 	var defaultOptions = {
-		nbListener:20
+		nbListeners:20
 	};
 
+	const red   = clc.red.bold;
+	const cyan   = clc.cyan.bold;
+	const blue  = clc.blueBright.bold;
+	const green = clc.green;
+	const yellow = clc.yellow.bold;
+
 	const Service = class Service {
-	
+
 		constructor(name, container, notificationsCenter, options ){
 
 			if (name){
 				this.name = name ;
 			}
-			options = nodefony.extend( {}, defaultOptions, options) ;
+			this.options = nodefony.extend(true, {}, defaultOptions, options) ;
 
 			if ( container instanceof nodefony.Container  ){
 				this.container = container ;
@@ -28,35 +33,61 @@ nodefony.register("Service", function(){
 				if ( container ){
 					throw new Error ("Service nodefony container not valid must be instance of nodefony.Container");
 				}
-				this.container = new nodefony.Container(); 
+				this.container = new nodefony.Container();
 				this.container.set("container", this.container);
 			}
-			this.kernel = this.container.get("kernel");
+			let kernel =  this.container.get("kernel");
+			if ( kernel ){
+				this.kernel = kernel ;
+			}
 			this.syslog = this.container.get("syslog");
 			if ( ! this.syslog ){
 				this.settingsSyslog = nodefony.extend({}, settingsSyslog , {
-					moduleName: this.name	
-				},options.syslog || {} );
-				this.syslog = new nodefony.syslog( this.settingsSyslog );	
+					moduleName: this.name
+				},this.options.syslog || {} );
+				this.syslog = new nodefony.syslog( this.settingsSyslog );
 				this.set("syslog", this.syslog);
 			}else{
-				this.settingsSyslog = this.syslog.settings ;	
+				this.settingsSyslog = this.syslog.settings ;
 			}
 			if ( notificationsCenter instanceof nodefony.notificationsCenter.notification ){
 				this.notificationsCenter = notificationsCenter ;
+				if (options){
+						this.notificationsCenter.settingsToListen(options, this) ;
+				}
 			}else{
 				if ( notificationsCenter ){
 					throw new Error ("Service nodefony notificationsCenter not valid must be instance of nodefony.notificationsCenter.notification");
 				}
-				this.notificationsCenter = nodefony.notificationsCenter.create(options, this, options.nbListener);
+				this.notificationsCenter = nodefony.notificationsCenter.create(this.options, this, this.options.nbListeners);
 				if (! this.kernel ){
 					this.set("notificationsCenter", this.notificationsCenter);
 				}else{
 					if ( this.kernel.container !== this.container ){
 						this.set("notificationsCenter", this.notificationsCenter);
 					}
-				}	
-			}	
+				}
+			}
+		}
+
+		static logSeverity (severity){
+			switch(severity){
+				case "DEBUG":
+					return cyan(severity);
+				case "INFO":
+					return blue(severity);
+				case "NOTICE" :
+					return red(severity);
+				case "WARNING" :
+					return yellow(severity);
+				case "ERROR" :
+				case "CRITIC":
+				case "ALERT":
+				case "EMERGENCY":
+					return red(severity);
+				default:
+					return cyan(severity);
+			}
 		}
 
 		getName (){
@@ -76,11 +107,11 @@ nodefony.register("Service", function(){
 			this.kernel = null ;
 			delete this.kernel ;
 		}
-	
+
 		logger(pci, severity, msgid,  msg){
 			try {
 				if (! msgid) { msgid = "SERVICE " + this.name + " "; }
-				return this.syslog.logger(pci, severity, msgid,  msg);	
+				return this.syslog.logger(pci, severity, msgid,  msg);
 			}catch(e){
 				console.log(pci);
 			}
@@ -88,8 +119,8 @@ nodefony.register("Service", function(){
 
 		/**
 	 	*	@method fire
-	 	*	@param {String} event name 
-	 	*	@param {Arguments} ... arguments to inject  
+	 	*	@param {String} event name
+	 	*	@param {Arguments} ... arguments to inject
          	*/
 		fire (){
 			//this.logger(ev, "DEBUG", "EVENT KERNEL")
@@ -109,6 +140,19 @@ nodefony.register("Service", function(){
 			return this.notificationsCenter.on.apply(this.notificationsCenter, arguments);
 		}
 
+		listenSyslog(options){
+
+			var defaultOption = {
+				severity: {
+					operator:"<=",
+					data : "7"
+				}
+			}
+			this.syslog.listenWithConditions(this, options || defaultOption , (pdu) => {
+				var date = new Date(pdu.timeStamp) ;
+				console.log( date.toDateString() + " " + date.toLocaleTimeString() + " " + Service.logSeverity( pdu.severityName ) + " " + green(pdu.msgid) + " " + " : " +  pdu.payload);
+			});
+		}
 
 		/**
 	 	*	@method once
@@ -124,7 +168,7 @@ nodefony.register("Service", function(){
 
 		/**
 	 	*	@method setMaxListeners
-	 	*	@param nb   
+	 	*	@param nb
 	 	*/
 		setMaxListeners (){
 			return this.notificationsCenter.setMaxListeners.apply(this.notificationsCenter, arguments);
@@ -132,7 +176,7 @@ nodefony.register("Service", function(){
 
 		/**
 	 	*	@method removeListener
-	 	*	@param {Oject} eventName 
+	 	*	@param {Oject} eventName
 	 	*	@param {String} listener
          	*/
 		removeListener (){
@@ -178,7 +222,7 @@ nodefony.register("Service", function(){
 		}
 
 		has (){
-			return this.container.has.apply(this.container ,arguments);	
+			return this.container.has.apply(this.container ,arguments);
 		}
 	};
 	return Service ;

@@ -4,7 +4,7 @@
 <div id="nodefony-container" style="z-index:100000" >
 	<ul class="pull-left">
 		<li> <img class="logo" src="/frameworkBundle/images/nodefony-logo.png"> </li>
-		<li> <label class="label"> <a target="blank"  href='{{path("monitoring-index")}}'>NODEFONY </label><label class="label label-default" >{{kernelSettings.system.version}}</label> </a>
+		<li> <label class="label"> <a target="blank"  href='{{path("monitoring-index")}}'>NODEFONY </label><label class="label " >{{kernelSettings.system.version}}</label> </a>
 			<div class="details">
 				<ul>
 					<li><label style="color:#999">CONFIG</label></li>
@@ -13,7 +13,7 @@
 							<li><label>{{ key | capitalize }}</label><span class="label label-success">{{value}}</span></li>
 						{% endif %}
 					{% endfor %}
-					<li><label>Debug</label><span class="label label-success">{{debug}}</span></li>	
+					<li><label>Debug</label><span class="label label-success">{{debug}}</span></li>
 					<li><label>Git Branch</label><span class="label label-success">{{git.currentBranch}}</span></li>
 
 					<li class="separator"> </li>
@@ -27,21 +27,21 @@
 					<li><label style="color:#999">SERVERS</label></li>
 					{% for key, value in kernelSettings.servers %}
 						<li><label>{{ key  }}</label><span class="label label-success">{{value}}</span></li>
-					{% endfor %}	
-						
+					{% endfor %}
+
 				</ul>
 			</div>
 		</li>
 
 		<li class="separator"></li>
 
-		<li> <img  src="/monitoringBundle/images/nodejs_logo.png"> 
+		<li> <img  src="/monitoringBundle/images/nodejs_logo.png">
 			<div class="details">
 				<ul>
 					{% for key, value in node %}
 						<li><label>{{ key | capitalize }}</label><span class="label label-success">{{value}}</span></li>
 					{% endfor %}
-					
+
 				</ul>
 			</div>
 		</li>
@@ -57,14 +57,14 @@
 			<div class="details">
 				<ul>
 					<li>
-						<strong><a style="color:#999" target="blank" href='{{path("monitoring-index")}}#/config/App'> 
+						<strong><a style="color:#999" target="blank" href='{{path("monitoring-index")}}#/config/App'>
 							APP</a></strong>
 					</li>
 					{% for key, value in appSettings %}
 						<li><label>{{ key | capitalize }}</label><span class="label label-success">{{value}}</span></li>
 					{% endfor %}
 					<li class="separator"> </li>
-	
+
 					<li><label style="color:#999">BUNDLES</label></li>
 					{% for key, value in bundles %}
 						{% if key != "App"  %}
@@ -82,20 +82,20 @@
 							<li><label>Stylesheet </label><span class="label label-success"> {{cdn.global}}</span></li>
 							<li><label>Image </label><span class="label label-success"> {{cdn.global}} </span></li>
 							<li><label>font </label><span class="label label-success"> {{cdn.global}} </span></li>
-						
-						{% else %}	
+
+						{% else %}
 							<li><label>Javascript </label><span class="label label-success">{% if cdn.javascript %} {{cdn.javascript}} {% else %} Inactive {% endif %} </span></li>
 							<li><label>Stylesheet </label><span class="label label-success">{% if cdn.stylesheet %} {{cdn.stylesheet}} {% else %} Inactive {% endif %}</span></li>
 							<li><label>Image </label><span class="label label-success">{% if cdn.image %} {{cdn.image}} {% else %} Inactive {% endif %}</span></li>
 							<li><label>Font </label><span class="label label-success">{% if cdn.font %} {{cdn.font}} {% else %} Inactive {% endif %}</span></li>
 
-						{% endif %}	
+						{% endif %}
 					{% else %}
 						<li><label>Javascript </label><span class="label label-success"> Inactive  </span></li>
 						<li><label>Stylesheet </label><span class="label label-success"> Inactive </span></li>
 						<li><label>Image </label><span class="label label-success"> Inactive </span></li>
 						<li><label>font </label><span class="label label-success"> Inactive </span></li>
-					{% endif %}	
+					{% endif %}
 				</ul>
 			</div>
 
@@ -103,7 +103,7 @@
 
 		<li class="separator"></li>
 
-		<li >	
+		<li >
 			<label class="label" ><a target="blank" href='{{path("monitoring-index")}}#/services'>SERVICES</a></label>
 			<label class="label label-default" >{{nbServices}}</label>
 			<div class="details">
@@ -152,11 +152,11 @@
 
 		<li class="separator"></li>
 
-		<li >	
+		<li >
 			<label class="label" >
 				{% if id %}
 					<a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=securityNav'> FIREWALL</a>
-				{% else %} 
+				{% else %}
 					 FIREWALL
 				{% endif %}
 
@@ -201,7 +201,7 @@
 							<li><label >Provider </label><span >{{value.provider}}</span></li>
 							<li><label >Context Session</label><span >{{value.context}}</span></li>
 							<li class="separator"></li>
-						{% endfor %}	
+						{% endfor %}
 					</ul>
 				</div>
 			{% endif %}
@@ -209,7 +209,7 @@
 
 		<li class="separator"></li>
 
-		<li >	
+		<li >
 			<label class="label label-default">
 				{% if id %}
 					<a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=request'>{{routeur.pattern}}<a>
@@ -231,7 +231,7 @@
 							{% if route.variables | length %}
 								<label class="label" style="color:#999">Variables :</label>
 								{% for key, value in route.variables %}
-									<li><label>{{varialblesName[key]}}</label><span class="label label-success">{{value}}</span></li>	
+									<li><label>{{varialblesName[key]}}</label><span class="label label-success">{{value}}</span></li>
 								{% endfor %}
 							{% endif %}
 						{% else %}
@@ -239,10 +239,10 @@
 						{% endif %}
 					{% endfor %}
 					<li class="separator"></li>
-					
+
 					<li><label style="color:#999">TRANSLATION</label></li>
 					<li><label>Local</label><span class="label label-success">{{locale.default}}</span></li>
-					<li><label>Domain</label><span class="label label-success">{{getTransDefaultDomain()}}</span></li>	
+					<li><label>Domain</label><span class="label label-success">{{getTransDefaultDomain()}}</span></li>
 
 				</ul>
 			</div>
@@ -253,15 +253,15 @@
 
 			{% if proxy %}
 				<label class="label label-default" >PROXY</label>
-			{% endif %}	
+			{% endif %}
 			<label class="label label-success" >{{ request.protocol }}</label>
-			{% if id %}	
+			{% if id %}
 				<label class="label" ><a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}'>REQUEST</a></label>
 			{% else %}
 				<label class="label" >REQUEST</label>
 			{% endif %}
-			
-			
+
+
 			<label class="label label-default" >{{ request.method }}</label>
 			{% if request.crossDomain %}
 				<label class="label label-default" >Cross Domain</label>
@@ -276,7 +276,7 @@
 							<li><label>Remote Address</label><span>{{value}}</span></li>
 							<li class="separator"></li>
 						{% endif %}
-							
+
 						{% if key == "headers" %}
 							{% if id %}
 								<li><label class="label" ><a style="color:#999" target="blank" href='{{path("monitoring-index")}}#/request/{{id}}'>SHOW HEADERS</a></label></li>
@@ -308,7 +308,7 @@
 						{% for key, value in proxy %}
 							<li><label>{{ key  }}</label><span >{{value}}</span></li>
 						{% endfor %}
-					{% endif %}	
+					{% endif %}
 
 					{% if session %}
 						<li class="separator"></li>
@@ -347,7 +347,7 @@
 							</span>
 						</li>
 					{% endif %}
-	
+
 				</ul>
 			</div>
 
@@ -357,7 +357,7 @@
 		<li class="separator"></li>
 
 		<li>
-			{% if id %}	
+			{% if id %}
 				<label class="label" ><a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=response'>RESPONSE</a></label>
 			{% else %}
 				<label class="label" >RESPONSE</label>
@@ -370,7 +370,7 @@
 						{% if key == "statuscode" %}
 							<li><label>{{ key | capitalize }}</label><span class="label label-success">{{value}} {{response.message}}</span></li>
 						{% else %}
-							
+
 							{% if key != "headers" %}
 								<li><label>{{ key | capitalize }}</label><span class="label label-success">{{value}}</span></li>
 							{% else %}
@@ -385,7 +385,7 @@
 							{% endif %}
 						{% endif %}
 					{% endfor %}
-						
+
 				</ul>
 			</div>
 		</li>
@@ -395,7 +395,6 @@
 	</ul>
 	<ul class="pull-right">
 		<li> <img id="nodefonyClose" src="/monitoringBundle/images/window-close.ico">
-
 	</ul>
 </div>
 
@@ -405,4 +404,3 @@
 
 <!-- WEBPACK BUNDLE -->
 <script src="{{CDN('javascript')}}/monitoringBundle/assets/js/debugBar.js"></script>
-

@@ -1,12 +1,5 @@
-/*
- *
- *
- *
- *
- *
- */
 
-nodefony.register("templates", function(){
+module.exports = nodefony.register("templates", function(){
 
 	var Template = class Template extends nodefony.Service {
 
@@ -15,7 +8,7 @@ nodefony.register("templates", function(){
 			this.settings = options;
 			this.engine = engine;
 		}
-		
+
 		getEngine (){
 			return this.engine;
 		}

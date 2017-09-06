@@ -2,24 +2,24 @@
  * New node file
  */
 
-nodefony.registerService("sessions", function(){
+module.exports = nodefony.registerService("sessions", function(){
 
 
 	var algorithm = 'aes-256-ctr';
 	var password = 'd6F3Efeq';
 
-	
+
 	var checkSecureReferer = function(){
 		var host = null ;
 		switch (this.context.type ){
 			case "HTTP" :
 			case "HTTPS" :
 				host = this.context.request.request.headers.host ;
-			break;	
+			break;
 			case "WEBSOCKET":
 			case "WEBSOCKET SECURE":
 				host = this.context.request.httpRequest.headers.host ;
-			break;	
+			break;
 		}
 		var meta = this.getMetaBag( "host" );
 		if ( host === meta ){
@@ -30,7 +30,7 @@ nodefony.registerService("sessions", function(){
 				meta :meta ,
 				host :host
 			};
-		}	
+		}
 	};
 
 	var setMetasSession = function(){
@@ -43,9 +43,9 @@ nodefony.registerService("sessions", function(){
 		this.setMetaBag("host", this.context.getHost() );
 		var ua = this.context.getUserAgent() ;
 		if ( ua ){
-			this.setMetaBag("user_agent",ua );	
+			this.setMetaBag("user_agent",ua );
 		}else{
-			this.setMetaBag("user_agent","Not Defined" );	
+			this.setMetaBag("user_agent","Not Defined" );
 		}
 	};
 
@@ -69,10 +69,10 @@ nodefony.registerService("sessions", function(){
 			this.setName(name);
 			this.id = null ;
 			this.settings = settings ;
-			this.storage = storage ;	
+			this.storage = storage ;
 			this.context = null ;
 			this.contextSession = "default" ;
-			this.lifetime =  this.settings.cookie.maxAge; 
+			this.lifetime =  this.settings.cookie.maxAge;
 			this.saved = false ;
 			this.flashBag = {};
 		}
@@ -80,9 +80,9 @@ nodefony.registerService("sessions", function(){
 		set (name, object){
 			//console.log(name)
 			//console.log(object)
-			return super.set(name, object);	
-		} 
-	
+			return super.set(name, object);
+		}
+
 		encrypt  (text){
 			var cipher = crypto.createCipher(algorithm, password);
 			var crypted = cipher.update(text,'utf8','hex');
@@ -99,11 +99,11 @@ nodefony.registerService("sessions", function(){
 
 		create (lifetime, id){
 			this.id = id || this.setId();
-			setMetasSession.call(this);	
+			setMetasSession.call(this);
 			this.manager.logger("NEW SESSION CREATE : "+ this.id);
 			this.cookieSession = this.setCookieSession(lifetime) ;
 			this.status = "active" ;
-			return this ;	
+			return this ;
 		}
 
 		start (context, contextSession){
@@ -112,9 +112,9 @@ nodefony.registerService("sessions", function(){
 				contextSession = this.contextSession ;
 			}
 			if (this.settings.use_only_cookies){
-				this.applyTranId = 0;	
+				this.applyTranId = 0;
 			}else{
-				this.applyTranId = this.settings.use_trans_sid ;	
+				this.applyTranId = this.settings.use_trans_sid ;
 			}
 			try {
 				var ret = this.checkStatus() ;
@@ -127,14 +127,14 @@ nodefony.registerService("sessions", function(){
 						return this.start(context, contextSession);
 					default :
 						return this.getSession(contextSession);
-				}	
+				}
 			}catch(e){
 				return new Promise((resolve, reject)=>{
 					return reject(e);
-				})	
+				})
 			}
 		}
-		
+
 		checkStatus(){
 			switch (this.status){
 				case "active":
@@ -154,7 +154,7 @@ nodefony.registerService("sessions", function(){
 				break;
 				default:
 					return true ;
-				
+
 			}
 		}
 
@@ -162,9 +162,9 @@ nodefony.registerService("sessions", function(){
 			if (this.settings.use_cookies){
 				if (this.context.cookieSession){
 					this.id = this.getId(this.context.cookieSession.value);
-					this.cookieSession = this.context.cookieSession;	
+					this.cookieSession = this.context.cookieSession;
 				}
-				this.applyTranId = 0 ;	
+				this.applyTranId = 0 ;
 			}
 			if ( (! this.settings.use_only_cookies) && (! this.id) ){
 				if ( this.name in this.context.request.query ){
@@ -177,12 +177,12 @@ nodefony.registerService("sessions", function(){
 				return new Promise ((resolve, reject)=>{
 					this.clear();
 					return resolve( this.create( this.lifetime, null) );
-				})	
-			}	
+				})
+			}
 		}
 
 		checkChangeContext(contextSession){
-			// change context session 
+			// change context session
 			if ( contextSession && this.contextSession !== contextSession ){
 				switch(this.strategy){
 					case "migrate":
@@ -238,12 +238,12 @@ nodefony.registerService("sessions", function(){
 				return this;
 			}).catch((error) =>{
 				if (error){
-					this.manager.logger("SESSION ==> "+this.name + " : "+this.id + " " +error, "ERROR");	
+					this.manager.logger("SESSION ==> "+this.name + " : "+this.id + " " +error, "ERROR");
 					if ( ! this.strategyNone ){
 						this.invalidate();
 					}
 					return error;
-				}	
+				}
 			});
 		}
 
@@ -261,15 +261,15 @@ nodefony.registerService("sessions", function(){
 			if (this.lifetime === 0 ) {
 				/*if ( lastUsed && lastUsed + ( this.settings.gc_maxlifetime * 1000 ) < now ){
 					this.manager.logger("SESSION INVALIDE gc_maxlifetime    ==> " + this.name + " : "+ this.id, "WARNING");
-					return false ;	
+					return false ;
 				}*/
-				return true ;	
-			} 
+				return true ;
+			}
 			if ( lastUsed && lastUsed + ( this.lifetime * 1000 ) < now ){
 				this.manager.logger("SESSION INVALIDE lifetime   ==> " + this.name + " : "+ this.id, "WARNING");
 				return false;
 			}
-			return true ;	
+			return true ;
 		}
 
 		attributes (){
@@ -285,7 +285,7 @@ nodefony.registerService("sessions", function(){
 		}
 
 		getMetaBag (key){
-			
+
 			return this.getParameters(key);
 		}
 
@@ -297,7 +297,7 @@ nodefony.registerService("sessions", function(){
 				delete  this.flashBag[key] ;
 				return res ;
 			}
-			return null ;	
+			return null ;
 		}
 
 		setFlashBag (key, value){
@@ -305,7 +305,7 @@ nodefony.registerService("sessions", function(){
 				throw new Error ("FlashBag key must be define : " + key);
 			}
 			if ( ! value ){
-				this.logger("ADD FlashBag  : " + key  + " value not defined ","WARNING");	
+				this.logger("ADD FlashBag  : " + key  + " value not defined ","WARNING");
 			}else{
 				this.logger("ADD FlashBag : " + key ,"DEBUG");
 			}
@@ -350,7 +350,7 @@ nodefony.registerService("sessions", function(){
 				flashBag:this.flashBag,
 				user_id:user
 			};
-			return  obj ;		
+			return  obj ;
 		}
 
 		deSerialize (obj){
@@ -369,7 +369,7 @@ nodefony.registerService("sessions", function(){
 
 		remove (){
 			try {
-				return this.storage.destroy( this.id, this.contextSession);	
+				return this.storage.destroy( this.id, this.contextSession);
 			}catch(e){
 				this.manager.logger(e, "ERROR");
 				throw e;
@@ -379,7 +379,7 @@ nodefony.registerService("sessions", function(){
 		destroy (){
 			this.clear();
 			this.remove();
-			return true ;	
+			return true ;
 		}
 
 		clear (){
@@ -423,10 +423,10 @@ nodefony.registerService("sessions", function(){
 					hash = crypto.createHash('sha1');
 				break;
 				default:
-					hash = crypto.createHash('md5');	
+					hash = crypto.createHash('md5');
 			}
 			var res =  hash.update(concat).digest("hex");
-			
+
 			return this.encrypt(res+":"+ this.contextSession );
 		}
 
@@ -443,7 +443,7 @@ nodefony.registerService("sessions", function(){
 							throw new Error ( "SAVE SESSION ERROR context already deleted " ) ;
 					}else{
 						this.saved = true ;
-						this.context.fire("onSaveSession", this); 
+						this.context.fire("onSaveSession", this);
 						return this ;
 					}
 				}).catch( (error) => {
@@ -452,19 +452,19 @@ nodefony.registerService("sessions", function(){
 					this.saved = false ;
 					return error ;
 				})
-					
+
 			}catch(e){
 				this.manager.logger(" SESSION ERROR : "+e,"ERROR");
-				this.saved = false ;	
+				this.saved = false ;
 			}
 		}
 
 		getName (){
-			return this.name ;	
+			return this.name ;
 		}
 
 		setName (name){
-			this.name = name || this.settings.name ;	
+			this.name = name || this.settings.name ;
 		}
 
 		randomValueHex (len) {
@@ -472,13 +472,13 @@ nodefony.registerService("sessions", function(){
 				.toString('hex') // convert to hexadecimal format
 				.slice(0,len);   // return required number of characters
 		}
-		
+
 		getRemoteAddress (){
 			//var request = this.context.request ;
-			return this.context.getRemoteAddress() ; 
+			return this.context.getRemoteAddress() ;
 		}
 	};
-	nodefony.Session = Session ; 
+	nodefony.Session = Session ;
 
 	/*
  	 *
@@ -493,7 +493,7 @@ nodefony.registerService("sessions", function(){
 			super( "sessions", httpKernel.container, httpKernel.notificationsCenter   );
 
 			this.httpKernel = httpKernel;
-			this.firewall = security ; 
+			this.firewall = security ;
 			this.kernel = httpKernel.kernel;
 			this.sessionStrategy = "none" ;
 			this.listen(this, "onBoot",() => {
@@ -504,7 +504,7 @@ nodefony.registerService("sessions", function(){
 
 			this.listen(this, "onTerminate",() => {
 				if ( this.storage ){
-					this.storage.close();	
+					this.storage.close();
 				}
 			});
 		}
@@ -513,7 +513,7 @@ nodefony.registerService("sessions", function(){
 			var storage =  eval("nodefony."+this.settings.handler) ;
 			if (storage){
 				this.storage = new storage(this) ;
-				this.listen(this, "onReady",function(){
+				this.listen(this, "onOrmReady",function(){
 					this.storage.open("default");
 				});
 			}else{
@@ -522,7 +522,7 @@ nodefony.registerService("sessions", function(){
 			}
 			return this.storage;
 		}
-	
+
 		logger (pci, severity, msgid,  msg){
 			//var syslog = this.container.get("syslog");
 			if (! msgid) {msgid = "SERVICE SESSIONS";}
@@ -539,7 +539,7 @@ nodefony.registerService("sessions", function(){
 				}
 			}
 			if ( this.probaGarbage() ){
-				this.storage.gc(this.settings.gc_maxlifetime, sessionContext);	
+				this.storage.gc(this.settings.gc_maxlifetime, sessionContext);
 			}
 			var inst = this.createSession(this.defaultSessionName, this.settings );
 			return  inst.start(context, sessionContext).then( (session) => {
@@ -551,15 +551,15 @@ nodefony.registerService("sessions", function(){
 				context.listen(session, "onSend",function(){
 					this.setMetaBag("lastUsed", new Date() );
 					if ( ! this.saved ){
-						this.save(context.user ? context.user.id : null, sessionContext);	
+						this.save(context.user ? context.user.id : null, sessionContext);
 					}
 				});
 				return session ;
 			}).catch((err) => {
-				return err ;	
+				return err ;
 			});
 		}
-	
+
 		createSession (name, settings){
 			var session = new Session(name, settings, this.storage, this);
 			return session ;
@@ -582,7 +582,7 @@ nodefony.registerService("sessions", function(){
 			var divisor = parseInt( this.settings.gc_divisor, 10 ) ;
 			if (proba > 0){
 				var rand = Math.random() ;
-				var random = parseInt( divisor * ( rand === 1 ? Math.random() :  rand ) , 10 ) ; 
+				var random = parseInt( divisor * ( rand === 1 ? Math.random() :  rand ) , 10 ) ;
 				if (random < proba ){
 					return true ;
 				}

@@ -1,6 +1,6 @@
 var Mocha = require('mocha') ;
 
-nodefony.registerService("unitTest", function(){
+module.exports = nodefony.registerService("unitTest", function(){
 
 
 	var regFile = /^(.*)Test\.js$/;
@@ -12,12 +12,12 @@ nodefony.registerService("unitTest", function(){
 
 			super("unitTest", kernel.container, kernel.notificationsCenter ) ;
 			this.kernel = kernel ;
-			this.bundles = kernel.bundles; 
+			this.bundles = kernel.bundles;
 
 		}
 
 		consoleMochaInit (){
-			
+
 			this.settingMocha = this.kernel.getBundle("unitTest").settings.mocha.nodefony;
 			this.mocha = new Mocha(this.settingMocha.console);
 			this.mocha.suite.on('pre-require',  (context)  => {
@@ -79,9 +79,8 @@ nodefony.registerService("unitTest", function(){
 					}
 				}
 			}
-		} 
-	}; 
+		}
+	};
 
 	return test ;
 });
-

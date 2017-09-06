@@ -1,0 +1,64 @@
+#!/usr/bin/env node
+const cluster = require('cluster');
+
+try {
+	const nodefony = require("nodefony");
+}catch(e){
+	const nodefony = require(".", "src", "nodefony", "core", "autoloader");
+}
+process.env.BABEL_ENV = 'production';
+process.env.NODE_ENV = 'production';
+
+/*
+ *
+ * NODEFONY FRAMEWORK START WITH PM2
+ *
+ *	PRODUCTION
+ *
+ */
+if ( process.env["MODE_START"] && process.env["MODE_START"] === "PM2"){
+	var kernel = new nodefony.appKernel("SERVER", "prod", false, {
+		node_start:process.env["MODE_START"]
+	});
+	return kernel ;
+}
+
+/*
+ *
+ * NODEFONY FRAMEWORK START
+ *
+ *	PRODUCTION ( preprod )
+ *
+ */
+process.env["MODE_START"] = "NODEFONY" ;
+if (cluster.isMaster) {
+
+	var nbProc = require('os').cpus().length;
+	for (var i=0 ; i < nbProc; i++){
+		cluster.fork();
+	}
+	cluster.on('disconnect', function(worker) {
+		console.error('disconnect!');
+	});
+	cluster.on('fork', (worker) => {
+		let wid = worker.id ;
+		worker.on('message', (msg) => {
+			if ( msg && msg.worker === wid ){
+				return ;
+			}
+			Object.keys(cluster.workers).forEach(function(id) {
+				if ( id != wid){
+					//console.log("CLUSTER SEND FROM  "+ wid + " to " + id)
+					cluster.workers[id].send(nodefony.extend(msg, {
+						worker:wid,
+					}));
+				}
+			});
+		});
+	});
+}else {
+	const kernel = new nodefony.appKernel("SERVER", "prod", false, {
+		node_start:process.env["MODE_START"]
+	});
+	return kernel ;
+}

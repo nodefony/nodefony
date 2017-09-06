@@ -3,7 +3,7 @@
  *	ENTRY POINT WEBPACK DEMO BUNLDE
  *
  *
- *  Add your assets here with require  to an integration in webpack  bundle    
+ *  Add your assets here with require  to an integration in webpack  bundle
  *
  *  require('jquery');
  *  require('../css/mycss.css')
@@ -11,16 +11,16 @@
  */
 require("../css/{{ name }}.css");
 
-module.exports = function (){ 
+module.exports = function (){
 
 	/*
  	 *	Class
 	 *
-	 *	Namespace {{ name }} client side 
+	 *	Namespace {{ name }} client side
  	 *
  	 */
-	var {{ name }} = class {{ name }} {
-	
+	const {{ name }} = class {{ name }} {
+
 		constructor() {
 		}
 	};

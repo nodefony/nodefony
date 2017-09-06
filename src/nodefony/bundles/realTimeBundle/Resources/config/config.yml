@@ -23,7 +23,6 @@
 ########## NODEFONY CONFIG BUNDLE  realTimeBundle  ############
 name :				realTimeBundle
 locale :			en_en
-version :           "2.0.0-beta"
 
 
 system:

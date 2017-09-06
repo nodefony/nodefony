@@ -1,13 +1,13 @@
 /*
- *  
- *   
+ *
+ *
  *    	ENTITY SESSIONS sequelize
- *     
- *      
+ *
+ *
  */
 var Sequelize =require("sequelize");
 
-nodefony.registerEntity("session", function(){
+module.exports = nodefony.registerEntity("session", function(){
 
 	var Session = function(db,  ormService ){
 		var model = db.define("session", {
@@ -19,7 +19,7 @@ nodefony.registerEntity("session", function(){
 					return this.setDataValue('Attributes', JSON.stringify(value) );
 				},
 				get:function(value){
-					var val  = this.getDataValue(value);	
+					var val  = this.getDataValue(value);
 					return  JSON.parse(val) ;
 				}
 			},
@@ -29,7 +29,7 @@ nodefony.registerEntity("session", function(){
 					return this.setDataValue('flashBag', JSON.stringify(value) );
 				},
 				get:function(value){
-					var val  = this.getDataValue(value);	
+					var val  = this.getDataValue(value);
 					return  JSON.parse(val) ;
 				}
 			},
@@ -39,24 +39,23 @@ nodefony.registerEntity("session", function(){
 					return this.setDataValue('metaBag', JSON.stringify(value) );
 				},
 				get:function(value){
-					var val  = this.getDataValue(value);	
+					var val  = this.getDataValue(value);
 					return  JSON.parse(val) ;
 				}
 			},
 			createdAt	: { type: Sequelize.DATE, defaultValue:Sequelize.NOW }
 		},{
-			logging:false,
-			classMethods: {
-				fetchAll:function(callback){
-					this.findAll().then(function(result){
-                                                return callback(null, result)
-                                        }).catch(function(error){
-                                                if (error)
-                                                        return callback(error, null);
-                                        });
-				}
-			}
+			logging:false
 		});
+
+		model.fetchAll = function(callback){
+			return this.findAll().then(function(result){
+					return callback(null, result)
+			}).catch(function(error){
+					if (error)
+							return callback(error, null);
+			});
+		}
 
 		ormService.listen(this, 'onReadyConnection', function(connectionName, db, ormService){
 			if(connectionName == 'nodefony'){
@@ -66,8 +65,7 @@ nodefony.registerEntity("session", function(){
 				}else{
 					throw "ENTITY ASSOCIATION user NOT AVAILABLE"
 				}
-	
-			}	
+			}
 		});
 
 		return model;
@@ -79,7 +77,3 @@ nodefony.registerEntity("session", function(){
 		entity:Session
 	};
 });
-
-
-
-	

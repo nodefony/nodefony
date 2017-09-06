@@ -1,14 +1,7 @@
-/*
- *
- *
- *
- *
- *
- */
 
-nodefony.register("Reader", function(){
+module.exports = nodefony.register("Reader", function(){
 
-	var defaultSetting = {
+	let defaultSetting = {
 		parserXml:{
 			//explicitCharkey: true,
 			explicitArray: true,
@@ -16,25 +9,25 @@ nodefony.register("Reader", function(){
 			mergeAttrs: true
 		},
 		readFile:{
-			encoding: 'utf8'	
+			encoding: 'utf8'
 		},
 		twig:{
 			'twig options':{
-				async: false,	
+				async: false,
 				cache:true
 			},
-			views:null	
+			views:null
 		},
 		parse:false
 	};
 
-	var load = function(name, pathFile ){
-		var mypath = pathFile ;
-		var ext = path.extname(pathFile);
-		var plug = this.plugins[name];
+	let load = function(name, pathFile ){
+		let mypath = pathFile ;
+		let ext = path.extname(pathFile);
+		let plug = this.plugins[name];
 		Array.prototype.shift.call(arguments);
-		var file = Array.prototype.shift.call(arguments);
-		var txt = this.readFileSync(file);
+		let file = Array.prototype.shift.call(arguments);
+		let txt = this.readFileSync(file);
 		Array.prototype.unshift.call(arguments, txt);
 
 		try{
@@ -67,59 +60,53 @@ nodefony.register("Reader", function(){
  	 *	@class Reader
  	 *	@constructor
  	 *
- 	 *	@example 
+ 	 *	@example
  	 *		var container = new nodefony.Container();
 	 *		var reader = new nodefony.Reader(container, settings);
  	 *
  	 */
-	var Reader = class Reader {
+	const Reader = class Reader {
 
 		constructor (container, localSettings){
 			this.settings = nodefony.extend(true, {}, defaultSetting, localSettings);
 			this.plugins = {};
 			this.container = container;
 			this.xmlParser = new xmlParser( this.settings.parserXml );
-			this.engine = require("twig") ; 
-			/**
- 		 	* @method  readConfig
- 		 	*
- 		 	*
- 		 	*/
+			this.engine = require("twig") ;
 			this.readConfig = this.loadPlugin("config", this.pluginConfig);
-			//this.pluginConfig = this.pluginConfig();
 		}
-	
+
 		pluginConfig (){
-	
-			var json = function(file, callback, parser){
+
+			let json = function(file, callback, parser){
 				if (parser){
-					file = this.render(file, parser.data, parser.options);	
+					file = this.render(file, parser.data, parser.options);
 				}
 				try{
-					var json = JSON.parse(file);
+					let json = JSON.parse(file);
 					if(callback) {callback(json);}
 				} catch(e){
 					throw(e);
 				}
 			};
-			var yml = function(file, callback, parser){
+			let yml = function(file, callback, parser){
 				if (parser){
-					file = this.render(file, parser.data, parser.options);	
+					file = this.render(file, parser.data, parser.options);
 				}
 				try{
-					var json = yaml.load(file);
-					if(callback) {callback(json);}	
+					let json = yaml.load(file);
+					if(callback) {callback(json);}
 				} catch(e){
 					throw(e);
 				}
 			};
-			var xml = function(file, callback, parser){
+			let xml = function(file, callback, parser){
 				if (parser){
-					file = this.render(file, parser.data, parser.options);	
+					file = this.render(file, parser.data, parser.options);
 				}
 				this.xmlParser.parseString(file, (error, node) => {
 					if(error) {throw(error);}
-					if( callback ) {callback( this.xmlToJson(node) );}	
+					if( callback ) {callback( this.xmlToJson(node) );}
 				});
 			};
 			return {
@@ -142,7 +129,7 @@ nodefony.register("Reader", function(){
 		/**
  	 	*	@method render
  	 	*
- 	 	*/	
+ 	 	*/
 		render (str, data){
 			return this.engine.twig({data:str}).render(data);
 		}
@@ -153,13 +140,13 @@ nodefony.register("Reader", function(){
  	 	*/
 		loadPlugin (name, plugin){
 			this.plugins[name] = plugin;
-			var context = this;
+			let context = this;
 			return function(){
 				Array.prototype.unshift.call(arguments, name);
 				return load.apply(context, arguments);
 			};
 		}
-		
+
 		/**
  	 	*	@method logger
  	 	*
@@ -175,14 +162,14 @@ nodefony.register("Reader", function(){
  	 	*
  	 	*/
 		xmlToJson (node){
-			var json = {};		
-			if(node instanceof Array){	
-					
-				for(var key = 0 ; key < node.length; key++) {	
-					var param = null ;	
-					if(node[key] instanceof Object){					
-						if(node[key].id){						
-							json[node[key].id] = {};						
+			let json = {};
+			if(node instanceof Array){
+
+				for(let key = 0 ; key < node.length; key++) {
+					var param = null ;
+					if(node[key] instanceof Object){
+						if(node[key].id){
+							json[node[key].id] = {};
 							for(param in node[key]){
 								if(param !== 'id'){
 									if(node[key][param] instanceof Array){
@@ -199,10 +186,10 @@ nodefony.register("Reader", function(){
 									}
 								}
 							}
-							
-						} else if(node[key].key && node[key]._){						
-							json[node[key].key] = node[key]._;						
-						} else if(node[key].key && !node[key]._){						
+
+						} else if(node[key].key && node[key]._){
+							json[node[key].key] = node[key]._;
+						} else if(node[key].key && !node[key]._){
 							for(param in node[key]){
 								if(param !== 'key'){
 									json[node[key].key] = {};
@@ -212,28 +199,24 @@ nodefony.register("Reader", function(){
 							}
 						} else {
 							return node;
-						}					
+						}
 					} else {
 						return node;
 					}
-				}			
-				return json;			
-			} else if(node instanceof Object){		
-					
+				}
+				return json;
+			} else if(node instanceof Object){
+
 				for(var mykey in node){
 					json[mykey] = this.xmlToJson(node[mykey]);
-				}			
-				return json;			
+				}
+				return json;
 			} else {
 				return node;
 			}
 			return json;
 		}
-
 	};
-
 	Reader.prototype.pluginConfig = Reader.prototype.pluginConfig();
-
 	return Reader;
-
 });

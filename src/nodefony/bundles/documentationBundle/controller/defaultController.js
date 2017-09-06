@@ -1,6 +1,6 @@
 
 
-nodefony.registerController("default", function(){
+module.exports = nodefony.registerController("default", function(){
 
 		/**
 		 *	The class is a **`default` CONTROLLER** .
@@ -8,15 +8,14 @@ nodefony.registerController("default", function(){
 		 *	@main App
 		 *	@class default
 		 *	@constructor
-		 *	@param {class} container   
+		 *	@param {class} container
 		 *	@param {class} context
-		 *	
+		 *
 		 */
 		var defaultController = class defaultController extends nodefony.controller {
 
 			constructor(container, context){
 				super(container, context);
-				this.kernel = this.get("kernel") ;
 				this.defaultVersion = this.kernel.settings.version;
 			}
 
@@ -39,12 +38,12 @@ nodefony.registerController("default", function(){
 						if ( file ){
 						var res = this.htmlMdParser(file.content(file.encoding),{
 							linkify: true,
-							typographer: true	
+							typographer: true
 						});
 						return this.render("documentationBundle::index.html.twig",{bundle:"nodefony", readme:res, version:defaultVersion});
 					}
 					}catch(e){
-						this.logger(e,"ERROR");	
+						this.logger(e,"ERROR");
 					}
 				}
 				var myUrl = this.generateUrl("documentation-version",{
@@ -59,9 +58,9 @@ nodefony.registerController("default", function(){
 				var Path = null ;
 				var finder  = null ;
 				if (this.query.subsection){
-					subsection = this.query.subsection ;	
+					subsection = this.query.subsection ;
 				}else{
-					subsection = section ;	
+					subsection = section ;
 				}
 
 				if ( ! bundle ) bundle = "nodefony" ;
@@ -112,12 +111,12 @@ nodefony.registerController("default", function(){
 				var myUrl  = null ;
 
 				if (this.query.subsection){
-					subsection = this.query.subsection ;	
+					subsection = this.query.subsection ;
 				}else{
-					subsection = "" ;	
+					subsection = "" ;
 				}
 
-				if ( ! bundle ) bundle = "nodefony" ; 
+				if ( ! bundle ) bundle = "nodefony" ;
 				if ( bundle === "nodefony" ){
 					Path = path.resolve( this.kernel.nodefonyPath, "../../");
 					var bundles = this.kernel.bundles ;
@@ -140,7 +139,7 @@ nodefony.registerController("default", function(){
 					}
 				}
 
-				// get all version 
+				// get all version
 				var finderVersion  = new nodefony.finder( {
 					path: path.resolve( Path, "doc"),
 					recurse: false
@@ -151,7 +150,7 @@ nodefony.registerController("default", function(){
 					all.push(ele.name)
 				});
 
-				// manage link 
+				// manage link
 				var findPath = null ;
 				try {
 					if ( version ){
@@ -169,13 +168,23 @@ nodefony.registerController("default", function(){
 					}
 					findPath = new nodefony.fileClass(findPath);
 				}catch(e){
-					myUrl = this.generateUrl("documentation-version",{
-						bundle:"nodefony",
-						version:"Beta"
-					})
-					return this.redirect(myUrl);
+					findPath = path.resolve( Path, "doc","Default" ) ;
+					try {
+						findPath = new nodefony.fileClass(findPath);
+						myUrl = this.generateUrl("documentation-version",{
+							bundle:bundle,
+							version:"Default"
+						})
+						return this.redirect(myUrl)
+					}catch(e){
+						myUrl = this.generateUrl("documentation-version",{
+							bundle:"nodefony",
+							version:"Beta"
+						})
+						return this.redirect(myUrl);
+					}
 				}
-								
+
 				finder  = new nodefony.finder( {
 					path:findPath,
 					recurse:false,
@@ -190,18 +199,18 @@ nodefony.registerController("default", function(){
 						//twig
 						var file = result.getFile("index.html.twig" , true);
 						if ( file ){
-							var res = this.renderRawView(file,{bundle:bundle, readme:res, version:version, section:section, allVersions:all,subsection:subsection} ); 
+							var res = this.renderRawView(file,{bundle:bundle, readme:res, version:version, section:section, allVersions:all,subsection:subsection} );
 							return this.render("documentationBundle::index.html.twig",{bundle:bundle, readme:res, version:version, section:section, allVersions:all,subsection:subsection});
 						}
 					}
 					// MD
 					var file = result.getFile("readme.md" , true )
 					if (  ! file ){
-						return this.render("documentationBundle::index.html.twig",{bundle:bundle, version:version, section:section, allVersions:all,subsection:subsection}); 
+						return this.render("documentationBundle::index.html.twig",{bundle:bundle, version:version, section:section, allVersions:all,subsection:subsection});
 					}
 					var res = this.htmlMdParser(file.content(file.encoding),{
 						linkify: true,
-						typographer: true	
+						typographer: true
 					});
 					return this.render("documentationBundle::index.html.twig",{bundle:bundle, readme:res, version:version, section:section, allVersions:all,subsection:subsection});
 				}else{
@@ -209,7 +218,7 @@ nodefony.registerController("default", function(){
 					if ( !  force ){
 						var file = result.getFile("index.html.twig" , true)
 						if ( file ){
-							var res = this.renderRawView(file, {bundle:bundle, readme:res, version:version, section:section, allVersions:all,subsection:subsection, bundles:directoryBundles }); 
+							var res = this.renderRawView(file, {bundle:bundle, readme:res, version:version, section:section, allVersions:all,subsection:subsection, bundles:directoryBundles });
 							return this.render("documentationBundle::index.html.twig",{bundle:bundle, readme:res, version:version, section:section, allVersions:all,subsection:subsection,bundles:directoryBundles});
 						}
 					}
@@ -218,7 +227,7 @@ nodefony.registerController("default", function(){
 					if ( file ){
 						var res = this.htmlMdParser(file.content(file.encoding),{
 							linkify: true,
-							typographer: true	
+							typographer: true
 						});
 						return this.render("documentationBundle::index.html.twig",{bundle:bundle, readme:res, version:version, section:section, allVersions:all,subsection:subsection});
 					}else{
@@ -228,7 +237,7 @@ nodefony.registerController("default", function(){
 			}
 
 			navDocAction (){
-				
+
 				var finder  = new nodefony.finder( {
 					path: path.resolve( this.kernel.nodefonyPath,"../../", "doc"),
 					recurse: false,
@@ -243,20 +252,18 @@ nodefony.registerController("default", function(){
 				})
 
 				return this.renderView("documentationBundle::navDoc.html.twig",{
-					versions : versions	
+					versions : versions
 				})
 			}
 
 			navDocBundleAction (){
-				
 				var bundles = this.kernel.bundles ;
-
 				var directory = [] ;
 				for ( var bundle in bundles ) {
 					directory.push(bundles[bundle]);
 				}
 				return this.renderView("documentationBundle::navDocBundle.html.twig",{
-					versions : directory	
+					versions : directory
 				})
 			}
 
@@ -276,9 +283,9 @@ nodefony.registerController("default", function(){
 				var langOptions = "";
 				for (var ele in langs ){
 					if (locale === langs[ele].value){
-						langOptions += '<option value="'+langs[ele].value+'" selected >'+langs[ele].name+'</option>' ;	
+						langOptions += '<option value="'+langs[ele].value+'" selected >'+langs[ele].name+'</option>' ;
 					}else{
-						langOptions += '<option value="'+langs[ele].value+'" >'+langs[ele].name+'</option>';	
+						langOptions += '<option value="'+langs[ele].value+'" >'+langs[ele].name+'</option>';
 					}
 				}
 				var html = '<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">\
@@ -308,30 +315,27 @@ nodefony.registerController("default", function(){
 				   	</div>\
 				   	</div>\
 				   	</div>'
-			 	return this.getResponse(html);	
+			 	return this.getResponse(html);
 			}
-			
+
 			searchAction (){
-
-				var url = this.generateUrl("documentation-version",{
+				let url = this.generateUrl("documentation-version",{
 					bundle:"nodefony",
-					version:"Beta"
+					version:"default"
 				}, true)
-				
-				var request = this.getRequest();
-				var context = this.getContext();
-				//console.log(request.url.host)
-				var query = request.query ;
-				if (query.search ){
-					var webCrawler = this.get("webCrawler");
 
+				let request = this.getRequest();
+				let context = this.getContext();
+				//console.log(request.url.host)
+				let query = request.query ;
+				if (query.search ){
+					let webCrawler = this.get("webCrawler");
 					webCrawler.siteAll(url, query.search, context, (data) =>{
 						this.renderJsonAsync(data);
 					});
 				}else{
-					this.renderJsonAsync({});	
+					this.renderJsonAsync({});
 				}
-			
 			}
 		};
 

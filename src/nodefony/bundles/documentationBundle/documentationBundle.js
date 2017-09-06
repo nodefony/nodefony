@@ -1,6 +1,6 @@
 var elasticsearch = require('elasticsearch');
 
-nodefony.registerBundle ("documentation", function(){
+module.exports = nodefony.registerBundle ("documentation", function(){
 
 	var classElasticLog = class classElasticLog {
 		constructor (config){
@@ -66,7 +66,7 @@ nodefony.registerBundle ("documentation", function(){
 				if ( ele && ele !== "undefined" ){
 					try {
 						var str = JSON.stringify(ele) ;
-						var res = data + " : "  + str ? str : "" ;	
+						var res = data + " : "  + str ? str : "" ;
 					}catch(e){
 						var res = data ;
 					}
@@ -102,7 +102,7 @@ nodefony.registerBundle ("documentation", function(){
 			}
 		};
 	};
-	
+
 	/**
 	 *	The class is a **`documentation` BUNDLE** .
 	 *	@module App
@@ -111,25 +111,25 @@ nodefony.registerBundle ("documentation", function(){
 	 *	@constructor
 	 *	@param {class} kernel
 	 *	@param {class} container
-	 *	
+	 *
 	 */
 	var documentation = class documentation extends nodefony.Bundle {
 
 		constructor (name, kernel, container){
 
 			super(name, kernel, container);
-			// load bundle library 
-			this.autoLoader.loadDirectory(this.path+"/core");
+			// load bundle library
+			//this.autoLoader.loadDirectory(this.path+"/core");
 
-			this.elasticReady = false ; 
+			this.elasticReady = false ;
 			this.elastic = null ;
 
 			/*
-		 	*	If you want kernel wait documentationBundle event <<onReady>> 
+		 	*	If you want kernel wait documentationBundle event <<onReady>>
 		 	*
-		 	*      this.waitBundleReady = true ; 
-		 	*/	
-			
+		 	*      this.waitBundleReady = true ;
+		 	*/
+
 
 			if ( this.settings.elasticSearch && this.settings.elasticSearch.host ){
 
@@ -137,29 +137,29 @@ nodefony.registerBundle ("documentation", function(){
 				classElasticLog.prototype.logger = (pci, severity, msgid,  msg) => {
 					var syslog = this.container.get("syslog");
 					if (! msgid) msgid = "ELASTIC SEARCH ";
-					return syslog.logger(pci, severity, msgid,  msg)	
+					return syslog.logger(pci, severity, msgid,  msg)
 				};
 
 				this.elastic = new elasticsearch.Client({
 					host: this.settings.elasticSearch.host,
-					log: classElasticLog.bind(this) 
+					log: classElasticLog.bind(this)
 				});
 				this.pingElastic((error) => {
 					if (error) {
 						this.logger(" elasticsearch cluster is down!", "ERROR") ;
-						this.elasticReady = false ; 
+						this.elasticReady = false ;
 						this.fire("onReady", this, this.elastic);
 					} else {
 						this.logger(" elasticsearch cluster is UP!", "DEBUG") ;
-						this.elasticReady = true ;  
+						this.elasticReady = true ;
 						this.fire("onReady", this, this.elastic);
 
-						
+
 						this.createIndexElastic((error, response) => {
 							if (error){
 								return this.log(error);
 							}
-							this.elastic.transport.log.debug("INDEX DOCUMENTATION NODEFONY OK " ) ;	
+							this.elastic.transport.log.debug("INDEX DOCUMENTATION NODEFONY OK " ) ;
 							//this.elastic.transport.log("CREATE")
 						})
 					}

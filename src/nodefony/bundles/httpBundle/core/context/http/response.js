@@ -8,43 +8,37 @@
  *
  */
 
-nodefony.register("Response",function(){
+module.exports = nodefony.register("Response",function(){
 
-	var Response = class Response {
+	const Response = class Response  {
 
-		constructor (response, container, type){
-			this.container = container ;
+		constructor (response, container){
 			if (response instanceof  http.ServerResponse){
 				this.response = response;
 			}
+			this.context = container.get('context') ;
+			this.container = container ;
 			this.container.get("notificationsCenter").listen(this,"onView", this.setBody);
 			//BODY
 			this.body = "";
 			this.encoding = this.setEncoding('utf8');
-
 			//cookies
 			this.cookies = {};
-
 			// struct headers
 			this.headers = {};
 			this.statusCode = null ;
 			this.statusMessage = null ;
-
 			this.ended = false ;
-
-			// default http code 
+			// default http code
 			this.setStatusCode(200, null);
-
 			//timeout default
-			var settings = this.container.getParameters("bundles.http");
-			this.timeout = type === "HTTP" ? settings.http.responseTimeout : settings.https.responseTimeout ;
-
+			this.timeout = this.context.kernelHttp.responseTimeout[this.context.type] ;
 			//default Content-Type to implicit headers
 			this.setHeader("Content-Type", "text/html; charset=utf-8");
 		}
 
 		clean (){
-			this.response = null  ;	
+			this.response = null  ;
 			delete this.response ;
 			this.cookies = null  ;
 			delete this.cookies   ;
@@ -66,37 +60,40 @@ nodefony.register("Response",function(){
 					message:"",
 					error:"Response addCookies not valid cookies"
 				};
-			}	
+			}
 		}
 
 		setCookies (){
-			for (var cook in this.cookies){
-				this.setCookie(this.cookies[cook]);	
+			for (let cook in this.cookies){
+				this.setCookie(this.cookies[cook]);
 			}
 		}
 
 		setCookie (cookie){
 			//this.response.on('header', function(){
 				this.logger("ADD COOKIE ==> " + cookie.serialize(), "DEBUG");
-				this.setHeader('Set-Cookie', cookie.serialize());
+				return this.setHeader('Set-Cookie', cookie.serialize());
 			//}.bind(this))
 		}
 
 		logger (pci, severity, msgid,  msg){
-			var syslog = this.container.get("syslog");
-			if (! msgid) { msgid = "HTTP RESPONSE"; }
-			return syslog.logger(pci, severity, msgid,  msg);
+			if (! msgid) { msgid = this.context.type + " RESPONSE "; }
+			return this.context.logger(pci, severity, msgid,  msg);
 		}
 
 		//ADD INPLICIT HEADER
 		setHeader (name, value){
 			if ( this.response ){
-				this.response.setHeader(name, value);
+				return this.response.setHeader(name, value);
 			}
 		}
-		
+
 		setHeaders (obj){
-			nodefony.extend(this.headers, obj);
+			return nodefony.extend(this.headers, obj);
+		}
+
+		addTrailers (obj){
+			return response.addTrailers(obj);
 		}
 
 		setEncoding (encoding){
@@ -108,7 +105,7 @@ nodefony.register("Response",function(){
 			if (message){
 				this.statusMessage = message ;
 				if (this.response){
-					this.response.statusMessage = this.statusMessage;		
+					this.response.statusMessage = this.statusMessage;
 				}
 			}
 		}
@@ -139,7 +136,7 @@ nodefony.register("Response",function(){
 				break;
 				case "object" :
 				case "array" :
-					this.body = JSON.stringify(ele); 
+					this.body = JSON.stringify(ele);
 				break;
 				default:
 					this.body = ele;
@@ -159,7 +156,7 @@ nodefony.register("Response",function(){
 					throw e;
 				}
 			}else{
-				throw new Error("Headers already sent !!");	
+				throw new Error("Headers already sent !!");
 			}
 		}
 
@@ -169,7 +166,7 @@ nodefony.register("Response",function(){
 				this.headers['Transfer-Encoding'] = 'chunked' ;
 				this.writeHead();
 			}
-			return this.response.write( data , encoding);
+			return this.response.write( ( data || this.body ) , ( encoding || this.encoding ) );
 		}
 
 		write (){
@@ -182,11 +179,10 @@ nodefony.register("Response",function(){
 		end (data, encoding){
 			if ( this.response ){
 				this.ended = true ;
-				var ret = this.response.end(data, encoding);
-				return ret ;
+				return this.response.end(data, encoding);
 			}
 			return null ;
-		}	
+		}
 
 		redirect (url, status, headers ){
 			if ( headers ){
@@ -207,7 +203,7 @@ nodefony.register("Response",function(){
 			}else{
 				this.setStatusCode( 302 );
 			}
-			this.setHeader("Location", url);		
+			this.setHeader("Location", url);
 			return this;
 		}
 	};

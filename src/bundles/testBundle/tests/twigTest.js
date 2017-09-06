@@ -3,10 +3,10 @@
  *
  *   MOCHA STYLE
  *
- *   In the global context you can find : 
+ *   In the global context you can find :
  *
- *	nodefony : namespace to get library  
- *	kernel :   instance of kernel who launch the test   
+ *	nodefony : namespace to get library
+ *	kernel :   instance of kernel who launch the test
  *
  */
 
@@ -17,9 +17,10 @@ var WebSocketClient = require('websocket').client;
 
 const assert = require('assert');
 
+var querystring = require("querystring");
 
 
-describe("BUNDLE DEMO", function(){
+describe("BUNDLE TEST", function(){
 
 	before(function(){
 		global.options = {
@@ -36,14 +37,14 @@ describe("BUNDLE DEMO", function(){
 			global.options.path ='/test/unit/twig/render';
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 408);
-				done(); 
+				done();
 			})
 			request.end();
 		});
-		
+
 		it("render", function(done){
-			global.options.path ='/test/unit/twig/render';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/twig/render';
+			global.options.method ='POST';
 			var data = {
 				type:"render",
 			};
@@ -59,15 +60,15 @@ describe("BUNDLE DEMO", function(){
 				res.on('data',  (chunk) => {
 					var ret = JSON.parse(chunk);
 					assert.deepStrictEqual(ret.response.data, data);
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
 			request.end();
 		});
 		it("renderSync", function(done){
-			global.options.path ='/test/unit/twig/render';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/twig/render';
+			global.options.method ='POST';
 			var data = {
 				type:"renderSync",
 			};
@@ -83,15 +84,15 @@ describe("BUNDLE DEMO", function(){
 				res.on('data',  (chunk) => {
 					var ret = JSON.parse(chunk);
 					assert.deepStrictEqual(ret.response.data, data);
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
 			request.end();
 		});
 		it("renderAsync", function(done){
-			global.options.path ='/test/unit/twig/render';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/twig/render';
+			global.options.method ='POST';
 			var data = {
 				type:"renderAsync",
 			};
@@ -107,15 +108,15 @@ describe("BUNDLE DEMO", function(){
 				res.on('data',  (chunk) => {
 					var ret = JSON.parse(chunk);
 					assert.deepStrictEqual(ret.response.data, data);
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
 			request.end();
 		});
 		it("renderJson", function(done){
-			global.options.path ='/test/unit/twig/render';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/twig/render';
+			global.options.method ='POST';
 			var data = {
 				type:"renderJson",
 			};
@@ -131,15 +132,15 @@ describe("BUNDLE DEMO", function(){
 				res.on('data',  (chunk) => {
 					var ret = JSON.parse(chunk);
 					assert.deepStrictEqual(ret.response.data, data);
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
 			request.end();
 		});
 		it("renderJsonSync", function(done){
-			global.options.path ='/test/unit/twig/render';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/twig/render';
+			global.options.method ='POST';
 			var data = {
 				type:"renderJsonSync",
 			};
@@ -155,15 +156,15 @@ describe("BUNDLE DEMO", function(){
 				res.on('data',  (chunk) => {
 					var ret = JSON.parse(chunk);
 					assert.deepStrictEqual(ret.response.data, data);
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
 			request.end();
 		});
 		it("renderJsonAsync", function(done){
-			global.options.path ='/test/unit/twig/render';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/twig/render';
+			global.options.method ='POST';
 			var data = {
 				type:"renderJsonAsync",
 			};
@@ -179,15 +180,15 @@ describe("BUNDLE DEMO", function(){
 				res.on('data',  (chunk) => {
 					var ret = JSON.parse(chunk);
 					assert.deepStrictEqual(ret.response.data, data);
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
 			request.end();
 		});
 		it("renderJsonAsyncTimeOut", function(done){
-			global.options.path ='/test/unit/twig/render';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/twig/render';
+			global.options.method ='POST';
 			var data = {
 				type:"renderJsonAsyncTimeOut",
 			};
@@ -200,15 +201,15 @@ describe("BUNDLE DEMO", function(){
 				assert.equal(res.statusCode, 408);
 				res.setEncoding('utf8');
 				res.on('data',  (chunk) => {
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
 			request.end();
 		});
 		it("renderObject", function(done){
-			global.options.path ='/test/unit/twig/render';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/twig/render';
+			global.options.method ='POST';
 			var data = {
 				type:"renderOject",
 			};
@@ -222,7 +223,7 @@ describe("BUNDLE DEMO", function(){
 				res.setEncoding('utf8');
 				res.on('data',  (chunk) => {
 					assert.deepStrictEqual(chunk, '"<h1>NODEFONY REQUEST :renderOject </h1>"\n\n');
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
@@ -239,7 +240,7 @@ describe("BUNDLE DEMO", function(){
 			global.options.headers = {};
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 500);
-				done(); 
+				done();
 			})
 			request.end();
 		});
@@ -249,38 +250,38 @@ describe("BUNDLE DEMO", function(){
 				return {
 					response : {
  			       			code: 200,
-						reason: { 
-							type: type, 
-							message: message 
+						reason: {
+							type: type,
+							message: message
 						},
-						data: { type: type } 
+						data: { type: type }
 					}
-				}	
+				}
 			}
 			return {
 				response : {
  			       		code: 200,
-					reason: { 
-						type: type, 
+					reason: {
+						type: type,
 						message: {
 							response :{
 								code: 200,
-								reason: { 
-									type: type, 
+								reason: {
+									type: type,
 									message:""
 								},
 								data: { type: type }
 							}
 						}
 					},
-					data: { type: type } 
+					data: { type: type }
 				}
 			}
 		}
 
 		it("render", function(done){
-			global.options.path ='/test/unit/twig/extend';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/twig/extend';
+			global.options.method ='POST';
 			var data = {
 				type:"render",
 			};
@@ -295,15 +296,15 @@ describe("BUNDLE DEMO", function(){
 				res.on('data',  (chunk) => {
 					var ret = JSON.parse(chunk);
 					assert.deepStrictEqual(ret, resultJson("render"));
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
 			request.end();
 		});
 		it("renderTorenderSync", function(done){
-			global.options.path ='/test/unit/twig/extend';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/twig/extend';
+			global.options.method ='POST';
 			var data = {
 				type:"renderTorenderSync",
 			};
@@ -318,7 +319,7 @@ describe("BUNDLE DEMO", function(){
 				res.on('data',  (chunk) => {
 					var ret = JSON.parse(chunk);
 					assert.deepStrictEqual(ret, resultJson("renderSync"));
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
@@ -326,8 +327,8 @@ describe("BUNDLE DEMO", function(){
 		});
 
 		it("renderSync", function(done){
-			global.options.path ='/test/unit/twig/extend';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/twig/extend';
+			global.options.method ='POST';
 			var data = {
 				type:"renderSync",
 			};
@@ -342,15 +343,15 @@ describe("BUNDLE DEMO", function(){
 				res.on('data',  (chunk) => {
 					var ret = JSON.parse(chunk);
 					assert.deepStrictEqual(ret, resultJson("renderSync"));
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
 			request.end();
 		});
 		it("renderSyncTorender", function(done){
-			global.options.path ='/test/unit/twig/extend';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/twig/extend';
+			global.options.method ='POST';
 			var data = {
 				type:"renderSyncTorender",
 			};
@@ -365,16 +366,16 @@ describe("BUNDLE DEMO", function(){
 				res.on('data',  (chunk) => {
 					var ret = JSON.parse(chunk);
 					assert.deepStrictEqual(ret, resultJson("render"));
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
 			request.end();
 		});
-		
+
 		it("renderAsyncToSync", function(done){
-			global.options.path ='/test/unit/twig/extend';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/twig/extend';
+			global.options.method ='POST';
 			var data = {
 				type:"renderAsyncToSync",
 			};
@@ -389,7 +390,7 @@ describe("BUNDLE DEMO", function(){
 				res.on('data',  (chunk) => {
 					var ret = JSON.parse(chunk);
 					assert.deepStrictEqual(ret, resultJson("renderSync"));
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
@@ -397,8 +398,8 @@ describe("BUNDLE DEMO", function(){
 		});
 
 		it("renderAsyncToRender", function(done){
-			global.options.path ='/test/unit/twig/extend';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/twig/extend';
+			global.options.method ='POST';
 			var data = {
 				type:"renderAsyncToRender",
 			};
@@ -413,7 +414,7 @@ describe("BUNDLE DEMO", function(){
 				res.on('data',  (chunk) => {
 					var ret = JSON.parse(chunk);
 					assert.deepStrictEqual(ret, resultJson("render"));
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
@@ -421,8 +422,8 @@ describe("BUNDLE DEMO", function(){
 		});
 
 //		it("renderSyncToAsync", function(done){
-//			global.options.path ='/test/unit/twig/extend';     
-//			global.options.method ='POST';   
+//			global.options.path ='/test/unit/twig/extend';
+//			global.options.method ='POST';
 //			var data = {
 //				type:"renderSyncToAsync",
 //			};
@@ -436,7 +437,7 @@ describe("BUNDLE DEMO", function(){
 //				res.setEncoding('utf8');
 //				res.on('data',  (chunk) => {
 //					assert.throws( ()=>{ JSON.parse(chunk)} )
-//					done(); 
+//					done();
 //				});
 //			})
 //			request.write(post_data);
@@ -444,8 +445,8 @@ describe("BUNDLE DEMO", function(){
 //		});
 
 		it("renderToOject", function(done){
-			global.options.path ='/test/unit/twig/extend';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/twig/extend';
+			global.options.method ='POST';
 			var data = {
 				type:"renderToOject",
 			};
@@ -462,7 +463,7 @@ describe("BUNDLE DEMO", function(){
 					var ret = JSON.parse(chunk);
 					//console.log(ret)
 					assert.deepStrictEqual(ret, resultJson("renderOject", "<h1>NODEFONY REQUEST :renderOject </h1>"));
-					done(); 
+					done();
 				});
 			})
 			request.write(post_data);
@@ -473,22 +474,22 @@ describe("BUNDLE DEMO", function(){
 	describe('TWIG WEBSOCKET', function(){
 
 		it("WEBSOCKET", function(done){
-			var url =  global.options.urlws ;	
+			var url =  global.options.urlws ;
 			var options = nodefony.extend({}, global.options, {
-				url:url+"/test/unit/twig/websocket"	
+				url:url+"/test/unit/twig/websocket"
 			});
 			var client = new WebSocketClient();
 			client.connect(options.url, null, "nodefony", null, {});
-			client.on('connect', function(connection) { 
+			client.on('connect', function(connection) {
 				assert(connection.connected);
 				connection.on("message", (message) => {
 					var res = JSON.parse(message.utf8Data) ;
 					switch ( res.type ){
 						case "START" :
-							assert.deepStrictEqual(res.message, "CONNECTED");	
+							assert.deepStrictEqual(res.message, "CONNECTED");
 							try {
 								connection.sendUTF( JSON.stringify({
-									type:"TWIG-RENDER"	
+									type:"TWIG-RENDER"
 								}));
 							}catch(e){
 								this.logger(e,"ERROR");
@@ -500,7 +501,7 @@ describe("BUNDLE DEMO", function(){
 							}) );
 						break;
 						case "STOP" :
-							assert.deepStrictEqual(res.response.reason.message.type, "RENDER");	
+							assert.deepStrictEqual(res.response.reason.message.type, "RENDER");
 							connection.close();
 						break;
 					}
@@ -515,4 +516,3 @@ describe("BUNDLE DEMO", function(){
 		});
 	})
 });
-

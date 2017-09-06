@@ -17,7 +17,7 @@ nodefony.register.call( nodefony.io, "cors", function(){
 		"Access-Control-Allow-Headers":			"ETag, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date",
 		"Access-Control-Expose-Headers":		"WWW-Authenticate, X-Json, X-Requested-With",
 		"Access-Control-Max-Age":			10,
-		"Access-Control-Allow-Credentials":		true		
+		"Access-Control-Allow-Credentials":		true
 	};
 
 	var cors = class cors {
@@ -27,28 +27,49 @@ nodefony.register.call( nodefony.io, "cors", function(){
 			this.header = {};
 			for (var ele in settings){
 				switch (ele){
+					case "Allow-Origin":
 					case "allow-origin":
 						if (settings[ele] === "*"){
 							this.allowMatch = new RegExp(".*");
 						}else{
-							if (typeof settings[ele] === "object"){
-								var str = "";	
-								var i = 0;
-								for (var name in settings[ele]){
-									if (i === 0) 
-										str = settings[ele][name];
-									else
-										str += "|"+ settings[ele][name] ;	
-									i++;
-								}
-								if (str)
-									this.allowMatch = new RegExp(str);
+							switch ( nodefony.typeOf( settings[ele] ) ){
+								case "object" :
+									var str = "";
+									let i = 0;
+									for (var name in settings[ele]){
+										if (i === 0)
+											str = settings[ele][name];
+										else
+											str += "|"+ settings[ele][name] ;
+										i++;
+									}
+									if (str){
+										this.allowMatch = new RegExp(str);
+									}
+								break;
+								case "array":
+									var str = "";
+									for ( let i = 0 ; i < settings[ele].length ; i++ ){
+										if (i === 0){
+											str = settings[ele][i];
+										}else{
+											str += "|"+ settings[ele][i] ;
+										}
+									}
+									if (str){
+										this.allowMatch = new RegExp(str);
+									}
+								break;
+								case "string":
+									this.allowMatch = new RegExp( settings[ele] );
+								break;
 							}
 						}
-					break;	
+					break;
 					case "Access-Control":
+					case "access-control":
 						nodefony.extend(this.header, headersCorsDefaults, settings[ele] )
-					break;	
+					break;
 				}
 			}
 		}
@@ -60,6 +81,8 @@ nodefony.register.call( nodefony.io, "cors", function(){
 				var res = this.allowMatch.exec(origin) ;
 				if (! res )
 					return  401;
+			}else{
+				return  401;
 			}
 			this.header["Access-Control-Allow-Origin"] = origin ;
 			response.setHeaders( this.header);
@@ -76,4 +99,3 @@ nodefony.register.call( nodefony.io, "cors", function(){
 	return cors;
 
 });
-

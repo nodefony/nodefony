@@ -1,0 +1,40 @@
+{% extends "../licence.cecill-b.skeleton" %}
+
+{% block body %}
+
+module.exports = nodefony.registerController("{{name}}", function(){
+
+		/**
+		 *	The class is a **`{{name}}` CONTROLLER** .
+		 *	@module {{module}}
+		 *	@main {{module}}
+		 *	@class {{name}}
+		 *	@constructor
+		 *	@param {class} container
+		 *	@param {class} context
+		 *
+		 */
+		const {{controllerName}} = class {{controllerName}} extends nodefony.controller {
+
+			constructor (container, context){
+				super(container, context);
+			}
+
+			/**
+		 	*
+		 	*	@method indexAction
+		 	*
+		 	*/
+			indexAction (){
+				try {
+        	let index = path.resolve( this.bundle.publicPath, "dist", "index.html");
+          let file = new nodefony.fileClass(index);
+          return this.renderResponse(file.content(file.encoding));
+        }catch(e){
+        	throw e ;
+        }
+			}
+		};
+		return {{controllerName}};
+});
+{% endblock %}

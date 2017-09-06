@@ -1,34 +1,19 @@
 /**
  *
- *	@module Nodefony
+ *	@nodefony
  *
  *
  */
-const yaml = require("js-yaml");
-const util = require('util');	
-const path = require("path");
-const fs = require("fs");
-const cluster = require('cluster');
-const url = require("url");
-const xmlParser = require('xml2js').Parser;
-const dns = require('dns');
-const async = require('async');
-const https = require('https');
-const http = require('http');
-const nodedomain = require('domain');
-const WebSocketServer = require('websocket');
-const Promise = require('promise');
-
-var nodefony = function(){
+module.exports = function(){
 
 	/**
 	 *	The class is a **`Nodefony Nodefony `** .
 	 *	@class Nodefony
 	 *	@constructor
 	 *	@module Nodefony
-	 *	
+	 *
 	 */
-	var Nodefony = class Nodefony {
+	const Nodefony = class Nodefony {
 
 		constructor() {
 			this.io = {};
@@ -39,6 +24,7 @@ var nodefony = function(){
 			this.bundles={};
 			this.templatings={};
 			this.services= {};
+			this.isRegExp = require('lodash.isregexp');
 		}
 
 		isFunction  (it) {
@@ -49,15 +35,9 @@ var nodefony = function(){
 			return Object.prototype.toString.call(it) === '[object Array]';
 		}
 
-		/**
-	 	*	@method require
-	 	*/
-		require (){ } 
-
-		/**
-	 	*	@method provide
-	 	*/
-		provide (){ } 
+		isRegExp (it){
+			return isRegExp(it);
+		}
 
 		/**
 	 	*	@method typeOf
@@ -65,19 +45,21 @@ var nodefony = function(){
          	*	@return {String} type of value
 	 	*/
 		typeOf (value){
-			var t = typeof value;
+			let t = typeof value;
 			if (t === 'object'){
-
 				if (value === null ) {return null;}
 
 				if ( this.isArray( value ) ){
 					return "array";
 				}
 				if ( this.isFunction( value ) ) {
-        				return 'function';
-      				}
+					return 'function';
+				}
 				if (value instanceof Date ){
 					return "date";
+				}
+				if ( this.isRegExp (value) ){
+					return "RegExp" ;
 				}
 				if ( value.callee ){
 					return "arguments";
@@ -90,24 +72,23 @@ var nodefony = function(){
 				}
 			} else {
 				if (t === 'function' && typeof value.call === 'undefined') {
-    					return 'object';
+					return 'object';
 				}
 			}
-  			return t;
+			return t;
 		}
-	
+
 		/**
- 	 	* extend jquery for nodejs only 
+ 	 	* extend jquery for nodejs only
 	 	* @method extend
 	 	*
  	 	*/
 		extend (){
-
-			var options, name, src, copy, copyIsArray, clone,
-				target = arguments[ 0 ] || {},
-				i = 1,
-				length = arguments.length,
-				deep = false;
+			let options, name, src, copy, copyIsArray, clone,
+			target = arguments[ 0 ] || {},
+			i = 1,
+			length = arguments.length,
+			deep = false;
 
 			// Handle a deep copy situation
 			if ( typeof target === "boolean" ) {
@@ -126,37 +107,29 @@ var nodefony = function(){
 				i--;
 			}
 			for ( ; i < length; i++ ) {
-
 				// Only deal with non-null/undefined values
 				if ( ( options = arguments[ i ] ) !== null ) {
-
 					// Extend the base object
 					for ( name in options ) {
 						src = target[ name ];
 						copy = options[ name ];
-
 						// Prevent never-ending loop
 						if ( target === copy ) {
 							continue;
 						}
-
 						// Recurse if we're merging plain objects or arrays
-						var bool = this.typeOf( copy ); 
+						var bool = this.typeOf( copy );
 						if ( deep && copy && ( bool === "object" ||
-							( copyIsArray = (bool === "array") ) ) ) {
-
+						( copyIsArray = (bool === "array") ) ) ) {
 							if ( copyIsArray ) {
 								copyIsArray = false;
 								clone = src && bool === "array" ? src : [];
-
 							} else {
 								clone = src && bool === "object" ? src : {};
 							}
-
 							// Never move original objects, clone them
 							target[ name ] = this.extend( deep, clone, copy );
-
-						// Don't bring in undefined values
+							// Don't bring in undefined values
 						} else if ( copy !== undefined ) {
 							target[ name ] = copy;
 						}
@@ -168,16 +141,16 @@ var nodefony = function(){
 		}
 
 		/**
- 	 	*  Register Nodefony Library element
-	 	*  @method register
-	 	*  @param {String} name
-	 	*  @param {Function} closure
-	 	*
- 	 	*/	
+		*  Register Nodefony Library element
+		*  @method register
+		*  @param {String} name
+		*  @param {Function} closure
+		*
+		*/
 		register (name, closure){
-			var register = null ;
+			let register = null ;
 			if (typeof closure === "function") {
-				// exec closure 
+				// exec closure
 				register = closure(this, name);
 			} else {
 				register = closure;
@@ -186,7 +159,7 @@ var nodefony = function(){
 		}
 
 		/**
- 	 	*  Register Nodefony Bundle 
+ 	 	*  Register Nodefony Bundle
 	 	*  @method registerBundle
 	 	*  @param {String} name
 	 	*  @param {Function} closure
@@ -194,7 +167,7 @@ var nodefony = function(){
  	 	*/
 		registerBundle (name, closure){
 			if (typeof closure === "function" ){
-				return this.bundles[name] = closure();	
+				return this.bundles[name] = closure();
 			}
 			throw new Error( "Register bundle : "+ name +"  error bundle bad format" );
 		}
@@ -226,7 +199,7 @@ var nodefony = function(){
 		}
 
 		/**
- 	 	*  Register Nodefony service 
+ 	 	*  Register Nodefony service
 	 	*  @method registerService
 	 	*  @param {String} name
 	 	*  @param {Function} closure
@@ -243,7 +216,7 @@ var nodefony = function(){
 		}
 
 		/**
- 	 	*  Register Nodefony entity 
+ 	 	*  Register Nodefony entity
 	 	*  @method registerEntity
 	 	*  @param {String} name
 	 	*  @param {Function} closure
@@ -256,9 +229,9 @@ var nodefony = function(){
 			}
 			throw new Error( "Register Entity : "+ name +"  error Entity bad format" );
 		}
-		
+
 		/**
- 	 	*  Register Nodefony fixture 
+ 	 	*  Register Nodefony fixture
 	 	*  @method registerFixture
 	 	*  @param {String} name
 	 	*  @param {Function} closure
@@ -267,13 +240,12 @@ var nodefony = function(){
 		registerFixture (name, closure){
 			if (typeof closure === "function" ){
 				return  closure();
-				//return this.fixtures[name] = closure();
 			}
 			throw new Error( "Register fixtures : "+ name +"  error fixtures bad format" );
 		}
 
 		/**
- 	 	*  Register Nodefony command 
+ 	 	*  Register Nodefony command
 	 	*  @method registerCommand
 	 	*  @param {String} name
 	 	*  @param {Function} closure
@@ -282,11 +254,9 @@ var nodefony = function(){
 		registerCommand (name, closure){
 			if (typeof closure === "function" ){
 				return  closure();
-				//return this.commands[name] = closure();	
 			}
 			throw new Error( "Register commands : "+ name +"  error commands bad format" );
-		}	
+		}
 	};
-	
-	return new Nodefony();
+	return  new Nodefony() ;
 }();

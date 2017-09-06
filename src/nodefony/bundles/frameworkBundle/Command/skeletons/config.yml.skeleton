@@ -6,7 +6,7 @@
 #
 #  Copyright © {{ projectYear }}/{{ projectYearNow }}        {{authorName}} | {{authorEmail}}
 #
-# ===============================================================================
+#===============================================================================
 #
 #        GENERATE BY {{projectName}} BUILDER YAML FILE
 #
@@ -17,15 +17,14 @@
 # What It Is: YAML is a human friendly data serialization
 #   standard for all programming languages.
 #
-#
-#
-
 
 
 ########## {{projectName}} CONFIG BUNDLE  {{ bundleName }}  ############
-name :				{{ bundleName }}
-version:			"1.0.0"
-locale :			{{ local }}
+name        : {{ bundleName }}
+version     : "1.0.0"
+type        : "nodefony"
+locale      : {{ local }}
+
 
 #
 #  WATCHERS
@@ -38,25 +37,13 @@ locale :			{{ local }}
 #      watch:			true
 #    or
 #      watch:
-#        controller:		true
-#        config:                true		# only  routing.yml
-#        views:			true
-#        translations:          true
-#
-watch:				true
+#        controller     : true
+#        config         : true		# only  routing.yml
+#        views          : true
+#        translations   : true
+#        webpack        : true
+watch       : true
 
-#
-#  WEBPACK CONFIG
-#
-webpack:
-  entry:
-    {{ name }}:				"./js/{{ name }}.js"
-  watch:                        true
-  devtool:                      "source-map"
-  output:
-    filename:                   "./assets/js/[name].js"
-    library:                    "[name]"
-    libraryTarget:              "umd"
 
 #
 #

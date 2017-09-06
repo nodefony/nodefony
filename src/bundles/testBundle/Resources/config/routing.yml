@@ -1,14 +1,14 @@
 #
 #
-#	ROUTING BUNDLE testBundle 
+#	ROUTING BUNDLE testBundle
 #
 #===============================================================================
 #
-#  Copyright © 2016/2017         | 
+#  Copyright © 2016/2017         |
 #
 # ===============================================================================
 #
-#        GENERATE BY nodefony BUILDER YAML FILE 
+#        GENERATE BY nodefony BUILDER YAML FILE
 #
 # This file is YAML  FILE
 # ---
@@ -31,17 +31,17 @@
 
 ########## nodefony ROUTING  testBundle  ############
 
-test: 
+test:
   pattern:  /test
   defaults: {"controller": "testBundle:default:index"}
 
-json: 
+json:
   pattern:  /json
   defaults: {"controller": "testBundle:default:json"}
 
 
 ### WEBSOCKET ###
-websoket: 
+websoket:
   pattern:  /websoket
   defaults: {"controller": "testBundle:default:websoket"}
   requirements:
@@ -64,6 +64,26 @@ myroute2:
   requirements:
     method:     GET
     page:       "^\\d\\d$"
+
+myroute-*:
+  pattern:      /wildcard/*
+  defaults:     {"controller": "testBundle:test:wildcard"}
+
+myroute-*1:
+  pattern:      /wildcard1*
+  defaults:     {"controller": "testBundle:test:wildcard"}
+
+myroute-*2:
+  pattern:      /wildcard2/{*}
+  defaults:     {"controller": "testBundle:test:wildcard"}
+
+myroute-*3:
+  pattern:      /wildcard3/{*}/route2
+  defaults:     {"controller": "testBundle:test:wildcard"}
+
+myroute-*4:
+  pattern:      /wildcard4/{*}/route2/{*}/test
+  defaults:     {"controller": "testBundle:test:wildcard"}
 
 response-status:
   pattern:      /test/unit/response/status/{st}
@@ -154,3 +174,15 @@ subrequest:
   defaults:     {"controller": "testBundle:subRequest:index" }
   requirements:
     method:     GET
+
+myroute-requirement-method-get:
+  pattern:      /requirement/method
+  defaults:     {"controller": "testBundle:test:requirementMethod"}
+  requirements:
+    method:     GET
+
+myroute-requirement-method-post:
+  pattern:      /requirement/method
+  defaults:     {"controller": "testBundle:test:requirementMethod"}
+  requirements:
+    method:     POST

@@ -3,51 +3,51 @@
  *
  *   MOCHA STYLE
  *
- *   In the global context you can find : 
+ *   In the global context you can find :
  *
- *	nodefony : namespace to get library  
- *	kernel :   instance of kernel who launch the test   
+ *	nodefony : namespace to get library
+ *	kernel :   instance of kernel who launch the test
  *
  *
- *   	
+ *
  */
 
 const assert = require('assert');
 
 var http = require("http");
 
-describe("BUNDLE test", function(){
-	
+describe("BUNDLE TEST", function(){
+
 
 	describe('CORE', function(){
-	
+
 
 		beforeEach(function(){
 		})
-		
+
 		before(function(){
 		})
-		
-		// EXAMPLE  NODEFONY 
+
+		// EXAMPLE  NODEFONY
 		it("NAMESPACE LOADED", function(done){
 			// check nodefony namespace
 			assert.equal( typeof nodefony, "object" );
-			// check instance kernel 
+			// check instance kernel
 			assert.equal( kernel instanceof nodefony.kernel, true)
 			done();
 		});
 	});
-	
+
 	describe('ROUTE', function(){
 
 
 		beforeEach(function(){
 		})
-		
+
 		before(function(){
 		})
 
-		
+
 		it("ROUTE test ", function(done){
 			var options = {
 				hostname: kernel.settings.system.domain,
@@ -61,9 +61,9 @@ describe("BUNDLE test", function(){
 				assert.equal(res.headers.server, "nodefony");
 				res.setEncoding('utf8');
 				res.on('data', function (chunk) {
-					done();	
+					done();
 				});
-				
+
 			})
 			request.end();
 

@@ -6,9 +6,9 @@
  */
 var shortId = require('shortid');
 
-nodefony.registerService("upload", function(){
+module.exports = nodefony.registerService("upload", function(){
 
-	var uploadedFile =  class uploadedFile extends nodefony.fileClass { 
+	var uploadedFile =  class uploadedFile extends nodefony.fileClass {
 
 		constructor (tmpName, myPath, dataFile, service) {
 
@@ -22,7 +22,7 @@ nodefony.registerService("upload", function(){
 			this.name = this.headers.name ;
 			this.filename = this.headers.filename ;
 			this.error = null ;
-		} 
+		}
 
 		move (target){
 			var inst = null ;
@@ -36,7 +36,7 @@ nodefony.registerService("upload", function(){
 						return inst ;
 					}
 				}
-				var dirname = path.dirname(target) ; 
+				var dirname = path.dirname(target) ;
 				if ( fs.existsSync(dirname) ){
 					inst = super.move(target);
 					//delete this.serviceUpload[this.tmpName];
@@ -65,7 +65,7 @@ nodefony.registerService("upload", function(){
 	};
 
 	var upload = class upload  extends nodefony.Service {
-		 
+
 		constructor( httpKernel ) {
 
 			super( "upload", httpKernel.container, httpKernel.notificationsCenter );
@@ -83,7 +83,7 @@ nodefony.registerService("upload", function(){
 				}
 				var res = fs.existsSync(this.path);
 				if (! res ){
-					// create directory 
+					// create directory
 					this.logger("create directory FOR UPLOAD FILE " + this.path, "DEBUG");
 					try {
 						res = fs.mkdirSync(this.path);
@@ -96,25 +96,25 @@ nodefony.registerService("upload", function(){
 
 		createUploadFile (request, dataFile){
 
-			if ( dataFile.data.length > this.config.max_filesize ){ 
+			if ( dataFile.data.length > this.config.max_filesize ){
 				var uploadfile = new uploadedFile(null , null, dataFile, this);
 				uploadfile.error = "File Upload size exceeded ,File "+ uploadfile.filename +" : "+ uploadfile.lenght+ " size must be less than " +this.config.max_filesize + " Bytes " ;
 				return uploadfile ;
-			}else{	
+			}else{
 				return this.createTmpFile(request, dataFile);
 			}
-		} 
+		}
 
 		createTmpFile (request, dataFile){
 			// create tmp file
 			//var path = this.path + "/" +queryFile.headers.name ;
-			// Generate ID 
+			// Generate ID
 			var id = this.generateId();
 			var name = id +"_"+dataFile.headers.filename ;
 			var myPath =  this.path + "/" + name ;
 			var res = fs.existsSync(myPath);
 			if (! res ){
-				// create tmp file  
+				// create tmp file
 				this.logger("ID : "+ id +" Create TMP FILE UPLOAD  " + myPath, "DEBUG");
 				try {
 					res = fs.writeFileSync(myPath, dataFile.data, {encoding: 'binary'});

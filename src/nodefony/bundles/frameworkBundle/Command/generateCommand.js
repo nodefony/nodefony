@@ -4,14 +4,103 @@
  *
  */
 
-nodefony.registerCommand("generate",function(){
+module.exports = nodefony.registerCommand("generate",function(){
 
 	/*
  	 *	Bundle generator
  	 *
  	 */
-	var regBundle = /^(.*)Bundle$/;
-	var bundle = function(Path , name, type, location){
+	var regBundle = /^(.*)[Bb]undle$/;
+	var regController = /^(.*)Controller$/;
+
+	var angularBundle = function(Path , name, type, location, force){
+		var realName = null ;
+		var res = regBundle.exec(name);
+		if ( res ){
+			realName = res[1] ;
+		}else{
+			throw new Error("Bad bundle name");
+		}
+		var param = {
+			bundleName: name,
+			name: realName,
+			module:this.config.App.projectName,
+			projectName:this.config.App.projectName,
+			authorName:this.config.App.authorName,
+			authorEmail:this.config.App.authorMail,
+			projectYear:this.config.App.projectYear,
+			projectYearNow:	new Date().getFullYear()
+		};
+
+		return this.build( {
+			name:name,
+			type:"directory",
+			childs:[
+				Command,
+				controller.call(this, name, "controller", "defaultController", null, location, path.resolve(this.kernel.autoLoader.dirname, "bundles", "frameworkBundle", "Command", "skeletons", "angular", "controllerClass.skeleton") ),
+				manager,
+				tests.call(this, param),
+				Resources.call(this, name, type, location, "angular"),
+				documentation.call(this, param, location),
+				core,
+				entity,
+		       	{
+					name:name+".js",
+					type:"file",
+					skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles", "frameworkBundle", "Command", "skeletons", "bundleClass.skeleton"),
+					params:param
+		       	},{
+					name:"readme.md",
+					type:"file"
+		       	}]
+		}, Path , force);
+	};
+
+	var reactBundle = function(Path , name, type, location, force){
+		var realName = null ;
+		var res = regBundle.exec(name);
+		if ( res ){
+			realName = res[1] ;
+		}else{
+			throw new Error("Bad bundle name");
+		}
+		var param = {
+			bundleName: name,
+			name: realName,
+			module:this.config.App.projectName,
+			projectName:this.config.App.projectName,
+			authorName:this.config.App.authorName,
+			authorEmail:this.config.App.authorMail,
+			projectYear:this.config.App.projectYear,
+			projectYearNow:	new Date().getFullYear()
+		};
+
+		return this.build( {
+			name:name,
+			type:"directory",
+			childs:[
+				Command,
+				controller.call(this, name, "controller", "defaultController", null, location, path.resolve(this.kernel.autoLoader.dirname, "bundles", "frameworkBundle", "Command", "skeletons", "react","controllerClass.skeleton") ),
+				manager,
+				tests.call(this, param),
+				Resources.call(this, name, type, location, "react"),
+				documentation.call(this, param, location),
+				core,
+				entity,
+		       	{
+					name:name+".js",
+					type:"file",
+					skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles", "frameworkBundle", "Command", "skeletons", "bundleClass.skeleton"),
+					params:param
+		       	},{
+					name:"readme.md",
+					type:"file"
+		       	}]
+		}, Path , force);
+
+	}
+
+	var nodefonyBundle = function(Path , name, type, location, force){
 
 		var realName = null ;
 		var res = regBundle.exec(name);
@@ -36,17 +125,17 @@ nodefony.registerCommand("generate",function(){
 				type:"directory",
 				childs:[
 					Command,
-					controller.call(this, name, "controller" ,"defaultController",null,location),
+					controller.call(this, name, "controller" , "defaultController", null, location),
 					manager,
 					tests.call(this, param),
-					Resources.call(this, name, type, location),
+					Resources.call(this, name, type, location, ""),
 					documentation.call(this, param, location),
 					core,
 					entity,
 					{
 						name:name+".js",
 						type:"file",
-						skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/bundleClass.skeleton"),
+						skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles","frameworkBundle","Command","skeletons","bundleClass.skeleton"),
 						params:param
 					},{
 						name:"readme.md",
@@ -58,16 +147,14 @@ nodefony.registerCommand("generate",function(){
 					},{
 						name:"package.json",
 						type:"file",
-						skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/package.skeleton"),
+						skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles","frameworkBundle","Command","skeletons","package.skeleton"),
 						params:param
 					}
 				]
-			}, Path );
+			}, Path , force);
 	};
 
-
 	var documentation = function(param, location){
-		
 		return {
 			name:"doc",
 			type:"directory",
@@ -80,9 +167,9 @@ nodefony.registerCommand("generate",function(){
 						type:"file",
 						skeleton:path.resolve( this.kernel.autoLoader.dirname,"bundles/frameworkBundle/Command/skeletons/readme.skeleton" ),
 						params:nodefony.extend(param, {
-							path:location 
+							path:location
 						})
-					}]	
+					}]
 				},
 				{
 					name:"Default",
@@ -96,9 +183,37 @@ nodefony.registerCommand("generate",function(){
 		};
 	};
 
-	
-	var Resources = function(name, type, location){
-		var Name = /(.*)Bundle/.exec(name)[1];
+	var webpack = function(obj, type, bundleType){
+		switch( bundleType ){
+			case "angular" :
+			case "react" :
+				return {} ;
+			default:
+				return {
+					name:"webpack",
+					type:"directory",
+					childs:[{
+						name:"webpack.common.js",
+						type:"file",
+						skeleton:path.resolve( this.kernel.autoLoader.dirname,"bundles/frameworkBundle/Command/skeletons/webpack/webpack.common.skeleton" ),
+						params:obj
+					},{
+						name:"webpack.dev.config.js",
+						type:"file",
+						skeleton:path.resolve( this.kernel.autoLoader.dirname,"bundles/frameworkBundle/Command/skeletons/webpack/webpack.dev.skeleton" ),
+						params:obj
+					},{
+						name:"webpack.prod.config.js",
+						type:"file",
+						skeleton:path.resolve( this.kernel.autoLoader.dirname,"bundles/frameworkBundle/Command/skeletons/webpack/webpack.prod.skeleton" ),
+						params:obj
+					}]
+				}
+		}
+	};
+
+	var Resources = function(name, type, location, bundleType){
+		var Name = regBundle.exec(name)[1];
 		var param = {
 			name:Name,
 			title:Name,
@@ -112,7 +227,7 @@ nodefony.registerCommand("generate",function(){
 			domain:this.configKernel.system.domain,
 			location:location
 		};
-		
+
 		return {
 			name:"Resources",
 			type:"directory",
@@ -122,12 +237,12 @@ nodefony.registerCommand("generate",function(){
 				childs:[{
 						name:"config."+type,
 						type:"file",
-						skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/config."+type+".skeleton" ),
+						skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/"+bundleType+"/config."+type+".skeleton" ),
 						params:param
-							
-						
 					},
-					routing.call(this, param, type)
+					routing.call(this, param, type, bundleType),
+					webpack.call(this, param, type, bundleType),
+					security.call(this, param, type, bundleType)
 				]
 			},
 			public.call(this, param),
@@ -146,10 +261,10 @@ nodefony.registerCommand("generate",function(){
 		}]
 	};
 
-		
 
-	var viewString = function(param){ 
-		
+
+	var viewString = function(param){
+
 		return "{% extends '/app/Resources/views/base.html.twig' %}\n\
 \n\
 {% block title %}Welcome {{kernel.name}}! {% endblock %}\n\
@@ -166,6 +281,11 @@ nodefony.registerCommand("generate",function(){
 {% block body %}\n\
 	<div class='container'>\n\
 		<div class='row'>\n\
+			<img class='displayed' src='"+param.CDN_image+"/frameworkBundle/images/nodefony-logo-white.png'>\n\
+		</div>\n\
+	</div>\n\
+	<div class='container'>\n\
+		<div class='row displayed'>\n\
 			{{readme}}\n\
 		</div>\n\
 	</div>\n\
@@ -180,7 +300,7 @@ nodefony.registerCommand("generate",function(){
 \n\
 {% endblock %}";
 	};
-		
+
 	var views = function(directory, name, params){
 		var obj = {
 			name:directory,
@@ -188,6 +308,7 @@ nodefony.registerCommand("generate",function(){
 		};
 		params["CDN_stylesheet"] = '{{CDN("stylesheet")}}';
 		params["CDN_javascript"] = '{{CDN("javascript")}}';
+		params["CDN_image"] = '{{CDN("image")}}';
 
 		params["myview"] = viewString(params);
 		var file = [{
@@ -196,19 +317,18 @@ nodefony.registerCommand("generate",function(){
 			parse:true,
 			skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/bundleView.skeleton" ),
 			params:	params || {}
-		}]; 
+		}];
 		obj.childs = file;
 		return obj;
 	};
 
-	var routing = function(obj, type){
-		var file = {
+	var routing = function(obj, type, bundleType){
+		return  {
 			name:"routing."+type,
 			type:"file",
-			skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/routing."+type+".skeleton" ),
-			params:obj	
+			skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/"+bundleType+"/routing."+type+".skeleton" ),
+			params:obj
 		};
-		return file;
 	};
 	routing.addConfigRoute = function(file, route, nameController, bundleName){
 		var routingFile = new nodefony.fileClass(file);
@@ -221,9 +341,18 @@ nodefony.registerCommand("generate",function(){
 					mode:"777"
 				});
 			}catch(e){
-				throw e;	
+				throw e;
 			}
 		});
+	};
+
+	var security  = function(obj, type, bundleType){
+		return  {
+			name:"security."+type,
+			type:"file",
+			skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/"+bundleType+"/security."+type+".skeleton" ),
+			params:obj
+		};
 	};
 
 	var service = function(obj, type){
@@ -231,13 +360,13 @@ nodefony.registerCommand("generate",function(){
 			name:"service."+type,
 			type:"file",
 			skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/service."+type+".skeleton" ),
-			params:obj	
+			params:obj
 		}];
 		return file;
 	};
 
 	service.addConfigService = function(){
-	
+
 	};
 
 	var manager = {
@@ -250,7 +379,7 @@ nodefony.registerCommand("generate",function(){
 	};
 
 	var tests = function(param){
-		
+
 		return {
 			name:"tests",
 			type:"directory",
@@ -383,8 +512,8 @@ nodefony.registerCommand("generate",function(){
 	 *	controller generator
 	 *
 	 */
-	
-	var controller = function(bundleName, directory, controllerName, viewDir, location){
+
+	var controller = function(bundleName, directory, controllerName, viewDir, location, skeleton){
 		var res = regController.exec(controllerName);
 		var realName = null ;
 		if ( res ){
@@ -392,16 +521,25 @@ nodefony.registerCommand("generate",function(){
 		}else{
 			throw new Error("Bad controller name");
 		}
-	
+
 		var obj = {
 			name:directory,
 			type:"directory"
 		};
-		var nameBundle = /^(.*)Bundle$/.exec(bundleName)[1];
+		var nameBundle = null ;
+		try {
+			var nameBundle = regBundle.exec(bundleName)[1];
+		}catch(e){
+			throw e ;
+		}
+
+		if ( ! skeleton ){
+			skeleton = path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/controllerClass.skeleton" );
+		}
 		var file  = [{
 			name:controllerName+".js",
 			type:"file",
-			skeleton:path.resolve( this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/controllerClass.skeleton"),
+			skeleton:skeleton,
 			params:{
 				bundleName: bundleName,
 				smallName:nameBundle,
@@ -448,7 +586,7 @@ nodefony.registerCommand("generate",function(){
 		var bundleDirectoryController = new nodefony.fileClass(bundlePath.path+"/controller");
 		var bundleDirectoryview = new nodefony.fileClass(bundlePath.path+"/Resources/views");
 		//var bundleDirectoryConfig = new nodefony.fileClass(bundlePath.path+"/Resources/config");
-		var name = /^(.*)Bundle$/.exec(bundleName)[1];
+		var name = regBundle.exec(bundleName)[1];
 		try {
 			this.build(controller.call(this, bundlePath.name, directory, controllerName, directory), bundleDirectoryController );
 			this.build(views.call(this, directory, "index.html.twig",{name:name,bundleName:bundleName}) ,bundleDirectoryview );
@@ -461,71 +599,90 @@ nodefony.registerCommand("generate",function(){
 		}
 	};
 
-	var regController = /^(.*)Controller$/;
 
 	/*
  	 *
  	 */
-	var generate = class generate extends nodefony.cliWorker {
+	var generate = class generate extends nodefony.cliKernel {
 
-		constructor(container, command/*, options*/){
-			
-			super( "generate", container, container.get("notificationsCenter") );
+		constructor(container, command, options){
+
+			super( "generate", container, container.get("notificationsCenter"), options );
 
 			this.config = this.container.getParameters("bundles.App");
 			this.configKernel = this.container.getParameters("kernel");
-			var arg = command[0].split(":");
-			switch ( arg[1] ){
-				case "bundle" : 
+			let cmd = command[0].split(":");
+			let args = command[1] ;
+			let interactive = command[2].interactive
+			switch ( cmd[1] ){
+				case "bundle" :
 					if ( command[1] ){
 						try {
-							this.generateBundle(command[1], command[2]);
+							if (  ! cmd[2] ){
+								this.generateBundle(args[0], args[1]);
+								this.installBundle(args[0], args[1]);
+								this.terminate(0);
+								return ;
+							}else{
+								switch ( cmd[2] ){
+									case "angular" :
+										let generateAngularCli = require("./angular/angularCli.js");
+										try {
+											let ngCli = new generateAngularCli( this );
+											ngCli.generateProject(args[0], args[1] , interactive).then( (obj) =>{
+												try {
+													var file = new nodefony.fileClass(obj.path);
+													angularBundle.call(this, file, obj.name, "yml", obj.path, true);
+													this.installBundle(obj.name, obj.path);
+													this.terminate(0);
+												}catch(e){
+													throw e;
+												}
+											}).catch( (e) => {
+													throw e ;
+											});
+										}catch(e){
+											throw e ;
+										}
+									break ;
+									case "react" :
+										let generateReactCli = require("./react/reactCli.js");
+										try {
+											let reactCli = new generateReactCli( this );
+											reactCli.generateProject(args[0], args[1] , interactive).then( (obj) =>{
+												try {
+													var file = new nodefony.fileClass(obj.path);
+													reactBundle.call(this, file, obj.name, "yml", obj.path, true);
+													this.installBundle(obj.name, obj.path);
+													let src = path.resolve( reactCli.bundlePath, reactCli.bundleName+"bundle", "public") ;
+													let dest = path.resolve( reactCli.bundlePath, reactCli.bundleName+"bundle", "Resources", "public", "dist");
+													this.logger( "ln -s " +  src  + " " + dest);
+						                            shell.ln('-sf', src , dest );
+													this.terminate(0);
+												}catch(e){
+													throw e;
+												}
+											}).catch( (e) => {
+													throw e ;
+											});
+										}catch(e){
+											throw e ;
+										}
+									break;
+								}
+							}
 						}catch(e){
+							this.logger(e, "ERROR");
 							this.terminate(1);
 							return ;
 						}
 					}else{
 						this.showHelp();
 						this.terminate(1);
-					}
-
-					try {
-						var name = command[1].match(regBundle)[1];
-						var json = this.kernel.readGeneratedConfig();
-						var bundleFile =  command[2]+"/"+command[1]+"/"+command[1]+".js" ;
-						var bundlePath = command[2]+"/"+command[1] ;
-						if (json){
-							if ( json.system && json.system.bundles ){
-								json.system.bundles[ name ]= bundlePath ;
-							}else{
-								if ( json.system ){
-									json.system.bundles = {};
-								}else{
-									json.system ={
-										bundles:{}	
-									};	
-								}
-								json.system.bundles[ name ] = bundlePath ;
-							}
-						}else{
-							var json = {
-								system:{
-									bundles:{}
-								}
-							} ;
-							json.system.bundles[ name ] = bundlePath ;
-						}
-						fs.writeFileSync( this.kernel.generateConfigPath, yaml.safeDump(json),{encoding:'utf8'} )
-						var file = new nodefony.fileClass( bundleFile );
-						this.kernel.loadBundle(file);
-						this.assetInstall(name);
-					}catch(e){
-						this.logger(e, "ERROR");
-						this.terminate(1);
 						return ;
 					}
 				break;
-				case "controller" : 
+				case "controller" :
 					switch (command.length){
 						case 1:
 							this.showHelp();
@@ -535,7 +692,7 @@ nodefony.registerCommand("generate",function(){
 						break;
 						case 3:
 							try {
-								this.generateController( command[1], command[2]);
+								this.generateController( args[0], args[1]);
 							}catch(e){
 								this.terminate(1);
 								return ;
@@ -543,19 +700,17 @@ nodefony.registerCommand("generate",function(){
 						break;
 					}
 				break;
-				case "command" : 
-					console.log("GENERATE command");
+				case "command" :
 					try{
-						this.generateCommand(command[1], command[2]);	
+						this.generateCommand(args[0], args[1]);
 					}catch(e){
 						this.terminate(1);
 						return ;
 					}
 				break;
-				case "service" : 
-					console.log("GENERATE service");
-					try { 
-						this.generateService();	
+				case "service" :
+					try {
+						this.generateService(interactive);
 					}catch(e){
 						this.terminate(1);
 						return ;
@@ -563,16 +718,52 @@ nodefony.registerCommand("generate",function(){
 				break;
 				default:
 					this.showHelp();
+					this.terminate(0);
 			}
-			this.terminate(0);
-
+			//this.terminate(0);
 		}
 
-		generateBundle (name, Path){	
-			this.logger("GENERATE bundle : " + name +" LOCATION : " + Path);
+		installBundle (bundleName, Path){
 			try {
-				var file = new nodefony.fileClass(Path);
-				return bundle.call(this, file, name, "yml", Path);
+				var name = bundleName.match(regBundle)[1];
+				var json = this.kernel.readGeneratedConfig();
+				var bundleFile =  Path+"/"+bundleName+"/"+bundleName+".js" ;
+				var bundlePath = Path+"/"+bundleName ;
+				if (json){
+					if ( json.system && json.system.bundles ){
+						json.system.bundles[ name ]= bundlePath ;
+					}else{
+						if ( json.system ){
+							json.system.bundles = {};
+						}else{
+							json.system ={
+								bundles:{}
+							};
+						}
+						json.system.bundles[ name ] = bundlePath ;
+					}
+				}else{
+					var json = {
+						system:{
+							bundles:{}
+						}
+					} ;
+					json.system.bundles[ name ] = bundlePath ;
+				}
+				fs.writeFileSync( this.kernel.generateConfigPath, yaml.safeDump(json),{encoding:'utf8'} )
+				var file = new nodefony.fileClass( bundleFile );
+				this.kernel.loadBundle(file);
+				this.assetInstall(name);
+			}catch(e){
+				throw e ;
+			}
+		}
+
+		generateBundle (name, Path){
+			this.logger("GENERATE bundle : " + name +" LOCATION : " + path.resolve(Path) );
+			try {
+				var file = new nodefony.fileClass(path.resolve(Path));
+				return nodefonyBundle.call(this, file, name, "yml", path.resolve(Path));
 			}catch (e){
 				this.logger(e, "ERROR");
 				throw e ;
@@ -588,13 +779,9 @@ nodefony.registerCommand("generate",function(){
 				this.logger(e, "ERROR");
 				throw e ;
 			}
-
-		
 		}
 
-		
 		generateCommand (name, Path){
-			
 			this.logger("GENERATE Command : " + name +" LOCATION : " + Path+"Command");
 			try {
 				var file = new nodefony.fileClass( Path);
@@ -603,26 +790,23 @@ nodefony.registerCommand("generate",function(){
 				this.logger(e, "ERROR");
 				throw e ;
 			}
-		
 		}
 
-		generateService (){
-		
-		}
+		generateService (interactive, name, Path){
 
+		}
 	};
-
 
 	return {
 		name:"generate",
 		commands:{
-			bundle:["generate:bundle nameBundle path" ,"Generate a Bundle directory in path directory Example : ./console generate:bundle myprojectBundle ./src/bundles"],
-			controller:["generate:controller  nameController path" ,"Generate a controller js file in bundle path Example : ./console generate:controller myController src/nodefony/bundles/myBundle"],
-			command:["generate:command nameCommand path" ,"Generate a command js file in bundle path"],
+			bundle:["generate:bundle nameBundle path" ,"Generate a nodefony Bundle  Example : nodefony generate:bundle myBundle ./src/bundles"],
+			bundleAngular:["generate:bundle:angular nameBundle path" ,"Generate a Angular Bundle  Example : nodefony generate:bundle:angular myBundle ./src/bundles"],
+			bundleReact:["generate:bundle:react nameBundle path" ,"Generate a React Bundle Example : nodefony generate:bundle:react myBundle ./src/bundles"],
+			controller:["generate:controller  nameController bundlePath" ,"Generate a controller Example : nodefony generate:controller myController ./src/bundles/myBundle"],
+			command:["generate:command nameCommand path" ,"Generate a command js file in bundle path"]
 			//service:["generate:service nameService path" ,"Generate a service js file in bundle path"]
 		},
-		worker:generate
+		cli:generate
 	};
 });
-
-

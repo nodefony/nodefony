@@ -1,11 +1,6 @@
-try {
-	var Git = require("nodegit");
-}catch(e){
-	console.log(e);
-}
 const useragent = require('useragent');
 
-nodefony.registerBundle ("monitoring", function(){
+module.exports = nodefony.registerBundle ("monitoring", function(){
 
 	/**
 	 *	The class is a **`monitoring` BUNDLE** .
@@ -15,7 +10,7 @@ nodefony.registerBundle ("monitoring", function(){
 	 *	@constructor
 	 *	@param {class} kernel
 	 *	@param {class} container
-	 *	
+	 *
 	 */
 	var monitoring = class monitoring extends nodefony.Bundle {
 
@@ -23,14 +18,14 @@ nodefony.registerBundle ("monitoring", function(){
 
 			super(name, kernel, container);
 
-			// load bundle library 
+			// load bundle library
 			//this.autoLoader.loadDirectory(this.path+"/core");
-				
+
 			/*
-		 	*	If you want kernel wait monitoringBundle event <<onReady>> 
+		 	*	If you want kernel wait monitoringBundle event <<onReady>>
 		 	*
-		 	*      this.waitBundleReady = true ; 
-		 	*/	
+		 	*      this.waitBundleReady = true ;
+		 	*/
 			if (this.kernel.type === "CONSOLE"){
 				return ;
 			}
@@ -40,18 +35,21 @@ nodefony.registerBundle ("monitoring", function(){
 
 			this.httpKernel = this.container.get("httpKernel");
 			this.webpackService = this.get("webpack");
-			
+
 			// MANAGE GIT
-			this.gitInfo = {} ;
+			this.gitInfo = {
+				currentBranch:null
+			};
 			try {
-				Git.Repository.open(this.kernel.rootDir).then( (repo) => {
-					repo.getCurrentBranch().then((reference) => {
-						this.gitInfo.currentBranch = reference.shorthand() ;	
-					});	
+				this.kernel.git.branch( (err, BranchSummary) => {
+					if ( err ){
+						this.logger(err, "WARNING");
+						return ;
+					}
+					this.gitInfo.currentBranch = BranchSummary.current ;
 				});
 			}catch(e){
 				this.logger(e, "WARNING");
-				this.gitInfo.currentBranch = null ;	
 			}
 
 			this.kernel.listen(this, "onPreBoot", (kernel) => {
@@ -90,12 +88,12 @@ nodefony.registerBundle ("monitoring", function(){
 				if ( this.settings.storage.active ){
 					this.storageProfiling = this.settings.storage.requests ;
 				}else{
-					this.storageProfiling = null ;	
+					this.storageProfiling = null ;
 				}
 
 				var ormName = this.kernel.settings.orm ;
 				this.orm = this.get(ormName);
-				this.requestEntity = this.orm.getEntity("requests"); 
+				this.requestEntity = this.orm.getEntity("requests");
 
 				this.kernelSetting = nodefony.extend(true, {}, this.kernel.settings, {
 					templating: this.kernel.settings.templating + " " + this.templating.version,
@@ -113,7 +111,7 @@ nodefony.registerBundle ("monitoring", function(){
 					wss:this.kernelSetting.system.servers.wss
 				};
 				delete this.kernelSetting.system.servers;
-				
+
 				for(var bund in kernel.bundles ){
 					this.infoBundles[bund] = {} ;
 					this.infoBundles[bund].waitBundleReady = kernel.bundles[bund].waitBundleReady;
@@ -122,7 +120,7 @@ nodefony.registerBundle ("monitoring", function(){
 						this.infoBundles[bund].version = kernel.bundles[bund].settings.version;
 					}else{
 						this.infoBundles[bund].version = "1.0" ;
-					}	
+					}
 				}
 				//console.log(this.infoBundles);
 				for(var event in this.kernel.notificationsCenter.event._events ){
@@ -157,8 +155,8 @@ nodefony.registerBundle ("monitoring", function(){
 					this.syslogContext = new nodefony.syslog({
 						moduleName:"CONTEXT",
 						maxStack: 50,
-						defaultSeverity:"INFO"	
-					}); 
+						defaultSeverity:"INFO"
+					});
 					this.env = this.kernel.environment ;
 					this.app = this.getParameters("bundles.App").App ;
 					this.node = process.versions ;
@@ -193,16 +191,19 @@ nodefony.registerBundle ("monitoring", function(){
 							state:this.orm.connections[connection].state,
 							name:this.orm.connections[connection].name,
 							type:this.orm.connections[connection].type,
-							db:{
+							db:{}
+						} ;
+						if ( this.orm.connections[connection].db ){
+							ORM.connections[connection].db = {
 								config:this.orm.connections[connection].db.config,
 								options:this.orm.connections[connection].db.options,
 								models:{}
 							}
-						} ;
-						for (var model in this.orm.connections[connection].db.models){
-							ORM.connections[connection].db.models[model] ={
-								name:model
-							};
+							for (var model in this.orm.connections[connection].db.models){
+								ORM.connections[connection].db.models[model] ={
+									name:model
+								};
+							}
 						}
 					}
 
@@ -213,7 +214,7 @@ nodefony.registerBundle ("monitoring", function(){
 						},
 						translation:{
 							defaultLocale:this.translation.defaultLocale,
-							defaultDomain: this.domain	
+							defaultDomain: this.domain
 						},
 						session:{
 							storage:this.sessionService.settings.handler,
@@ -221,7 +222,7 @@ nodefony.registerBundle ("monitoring", function(){
 						},
 						ORM:ORM,
 						templating:templating
-					}; 
+					};
 					this.security = function(){
 						var obj = {};
 						var firewall = this.container.get("security");
@@ -235,24 +236,24 @@ nodefony.registerBundle ("monitoring", function(){
 								obj[area].context = firewall.securedAreas[area].sessionContext;
 							}
 						}
-						return obj ; 
-					}.call(this);	
+						return obj ;
+					}.call(this);
 				}
-			}); 
+			});
 
 			this.kernel.listen(this, "onServerRequest",(request/*, response, logString, d*/) => {
-				request.nodefony_time = new Date().getTime();	
+				request.nodefony_time = new Date().getTime();
 			});
 
 
 			this.kernel.listen(this, "onRequest",this.onRequest );
-		}		
+		}
 
 		onRequest (context) {
 			context.profiling = null ;
 			var agent = null ;
 			var tmp = null ;
-			var myUserAgent  = null; 
+			var myUserAgent  = null;
 			context.storage = this.isMonitoring(context) ;
 
 			if ( ! context.storage  ){
@@ -276,7 +277,7 @@ nodefony.registerBundle ("monitoring", function(){
 						client[ele] = 	tmp[ele];
 					}
 					if (ele === "version"){
-						client[ele] = tmp[ele];	
+						client[ele] = tmp[ele];
 					}
 				}
 				myUserAgent  ={
@@ -314,7 +315,7 @@ nodefony.registerBundle ("monitoring", function(){
 					name:context.resolver.route.name,
 					uri:context.resolver.route.path,
 					variables:context.resolver.variables,
-					pattern:context.resolver.route.pattern.toString(),	
+					pattern:context.resolver.route.pattern.toString(),
 					defaultView:context.resolver.defaultView
 				},
 				varialblesName:context.resolver.route.variables,
@@ -322,7 +323,7 @@ nodefony.registerBundle ("monitoring", function(){
 				environment:this.env,
 				debug:this.kernel.debug,
 				appSettings:this.app,
-				queryPost:  context.request.queryPost ,	
+				queryPost:  context.request.queryPost ,
 				queryGet:  context.request.queryGet ,
 				protocole:  context.type ,
 				cookies:  context.cookies ,
@@ -359,10 +360,21 @@ nodefony.registerBundle ("monitoring", function(){
 			var secu = null ;
 			if ( context.security ){
 				secu = context.session.getMetaBag("security");
+				var token = null ;
+				var factory = null ;
+				if ( context.security.factory ){
+					token = context.security.factory.token ;
+					factory = context.security.factory.name ;
+				}else{
+					if (secu ){
+						token = secu.tokenName ;
+					}
+				}
+
 				context.profiling.context_secure = {
 					name: context.security.name ,
-					factory : context.security.factory.name,
-					token:secu  ? secu.tokenName : context.security.factory.token,
+					factory : factory,
+					token:token,
 					user:context.user
 				};
 			}else{
@@ -375,10 +387,10 @@ nodefony.registerBundle ("monitoring", function(){
 						user:context.user
 					};
 				}else{
-					context.profiling.context_secure = null ;	
+					context.profiling.context_secure = null ;
 				}
 			}
-				
+
 			if ( context.resolver.route.defaults ) {
 				var tab = context.resolver.route.defaults.controller.split(":") ;
 				var contr   =    ( tab[1] ? tab[1] : "default" );
@@ -405,7 +417,7 @@ nodefony.registerBundle ("monitoring", function(){
 					context:context.session.contextSession
 				};
 			}
-			
+
 			if ( context.request.queryFile ){
 				context.profiling.queryFile = {};
 				for (let ele in context.request.queryFile){
@@ -418,7 +430,7 @@ nodefony.registerBundle ("monitoring", function(){
 				}
 			}
 			context.profiling.context = {
-				type:context.type,	
+				type:context.type,
 				isAjax:context.isAjax,
 				secureArea:context.secureArea,
 				domain:context.domain,
@@ -473,15 +485,15 @@ nodefony.registerBundle ("monitoring", function(){
 				content:content,
 				"content-type":context.request.contentType
 			};
-			context.profiling.response = {	
+			context.profiling.response = {
 				statusCode:context.response.statusCode,
 				message:context.response.response.statusMessage,
 				size:context.response.body.length ,
 				encoding:context.response.encoding,
 				"content-type":context.response.response.getHeader('content-type')
 			};
-			
-			context.listen(this, "onSendMonitoring",this.onSendMonitoring );	
+
+			context.listen(this, "onSendMonitoring",this.onSendMonitoring );
 		}
 
 		websocketRequest (context){
@@ -492,7 +504,7 @@ nodefony.registerBundle ("monitoring", function(){
 				if ( conf === "httpServer"){
 					continue ;
 				}
-				configServer[conf] = context.request.serverConfig[conf];	
+				configServer[conf] = context.request.serverConfig[conf];
 			}
 
 			//console.log(context.request.remoteAddress)
@@ -510,16 +522,16 @@ nodefony.registerBundle ("monitoring", function(){
 				if ( conf === "httpServer"){
 					continue ;
 				}
-				config[conf] = 	context.response.config[conf];	
+				config[conf] = 	context.response.config[conf];
 			}
 			context.profiling.response = {
-				statusCode:context.response.statusCode,	
+				statusCode:context.response.statusCode,
 				connection:"WEBSOCKET",
 				config:config,
 				webSocketVersion:context.response.webSocketVersion,
 				message:[],
 			};
-				
+
 			context.listen(this,"onMessage", (message, Context, direction ) => {
 				var ele = {
 					date:new Date().toTimeString(),
@@ -533,9 +545,9 @@ nodefony.registerBundle ("monitoring", function(){
 					}
 				}else{
 					context.profiling.response.message.length = 0 ;
-					context.profiling.response.message.push( ele ) ;	
+					context.profiling.response.message.push( ele ) ;
 				}
-				if ( context.storage ){	
+				if ( context.storage ){
 					this.updateProfile(context,(error/*, result*/) => {
 						if (error){
 							this.kernel.logger(error);
@@ -543,10 +555,10 @@ nodefony.registerBundle ("monitoring", function(){
 					});
 				}
 			});
-			
+
 			context.listen(this, "onFinish", (/*Context, reasonCode, description*/ ) => {
 				if ( context.profiling ){
-					context.profiling.response.statusCode = context.connection.state  ;	
+					context.profiling.response.statusCode = context.connection.state  ;
 				}
 				if ( context.storage ){
 					this.updateProfile(context, (error/*, result*/) => {
@@ -554,11 +566,11 @@ nodefony.registerBundle ("monitoring", function(){
 							this.kernel.logger(error);
 						}
 						if (context){
-							delete context.profiling ;	
+							delete context.profiling ;
 						}
 					});
 				}
-			});	
+			});
 
 			if ( context.storage ){
 				this.saveProfile(context, (error/*, result*/) => {
@@ -566,7 +578,7 @@ nodefony.registerBundle ("monitoring", function(){
 						this.kernel.logger(error);
 					}
 				});
-			}	
+			}
 		}
 
 
@@ -578,7 +590,7 @@ nodefony.registerBundle ("monitoring", function(){
 				size:response.body ? response.body.length : null ,
 				encoding:response.encoding,
 				"content-type":response.response.getHeader('content-type'),
-				headers:response.response._headers	
+				headers:response.response._headers
 			};
 			if ( context.storage ){
 				this.saveProfile(context, (error/*, res*/) => {
@@ -594,20 +606,20 @@ nodefony.registerBundle ("monitoring", function(){
 									var result = this.debugView.render( context.extendTwig(context.profiling, context) );
 									response.body = response.body.replace("</body>",result+"\n </body>") ;
 								}catch(e){
-									throw e ;	
+									throw e ;
 								}
 							}else{
 								//context.setXjson(context.profiling);
 							}
 						}else{
-							//context.setXjson(context.profiling);	
+							//context.setXjson(context.profiling);
 						}
 					}
 					context.profiling = null ;
 					delete context.profiling ;
 					/*
  	 				*  WRITE RESPONSE
- 	 				*/  
+ 	 				*/
 					if ( context && context.response ){
 						context.response.write();
 						// END REQUEST
@@ -618,7 +630,7 @@ nodefony.registerBundle ("monitoring", function(){
 						throw new Error ("MONITORING CAN SAVE REQUEST") ;
 					}
 					if ( ( ! context ) ||  ( ! context.response ) ){
-						throw new Error ("MONITORING REQUEST ALREADY SENDED !!! ") ;	
+						throw new Error ("MONITORING REQUEST ALREADY SENDED !!! ") ;
 					}
 				});
 			}else{
@@ -629,13 +641,13 @@ nodefony.registerBundle ("monitoring", function(){
 								var result = this.debugView.render( context.extendTwig(context.profiling, context) );
 								response.body = response.body.replace("</body>",result+"\n </body>") ;
 							}catch(e){
-								throw e ;	
+								throw e ;
 							}
 						}else{
 							//context.setXjson(context.profiling);
 						}
 					}else{
-						//context.setXjson(context.profiling);	
+						//context.setXjson(context.profiling);
 					}
 				}
 				context.profiling = null ;
@@ -698,7 +710,7 @@ nodefony.registerBundle ("monitoring", function(){
 					break;
 					default:
 						callback(new Error("No PROFILING"), null);
-				}	
+				}
 			}
 		}
 
@@ -713,16 +725,16 @@ nodefony.registerBundle ("monitoring", function(){
 						return ;
 					case "orm":
 						var user = null ;
-						var data = null ;	
+						var data = null ;
 						//console.log(context.profiling)
 						// DATABASE ENTITY
 						if ( context.profiling.context_secure ){
-							user = context.profiling.context_secure.user ? context.profiling.context_secure.user.username : "anonymous" ; 
+							user = context.profiling.context_secure.user ? context.profiling.context_secure.user.username : "anonymous" ;
 						}else{
-							user = "none" ;	
+							user = "none" ;
 						}
 						try {
-							data = JSON.stringify(context.profiling); 
+							data = JSON.stringify(context.profiling);
 						}catch(e){
 							this.kernel.logger("JSON.stringify  :"  ,"ERROR");
 							console.trace(e);
@@ -737,7 +749,7 @@ nodefony.registerBundle ("monitoring", function(){
 							state		: context.profiling.response.statusCode,
 							protocole	: context.profiling.context.type,
 							username	: user,
-							data		: data 
+							data		: data
 						},{isNewRecord:true})
 						.then((request) => {
 							this.kernel.logger("ORM REQUEST SAVE ID :" + request.id ,"DEBUG");

@@ -9,7 +9,7 @@
  *
  */
 
-nodefony.registerController("twig", function(){
+module.exports = nodefony.registerController("twig", function(){
 
 
 	var twigController = class testController extends nodefony.controller {
@@ -22,7 +22,7 @@ nodefony.registerController("twig", function(){
 			var response = this.getResponse();
 			var status = response.getStatus();
 			switch (this.query.type ){
-				case "render" : 
+				case "render" :
 					return this.render("testBundle:unitTest:rest.json.twig", {
 						code:status.code,
 						type:this.query.type,
@@ -53,7 +53,7 @@ nodefony.registerController("twig", function(){
 							reason:{
 								type:this.query.type,
 								message:""
-							}, 	
+							},
 							data:this.query
 						}
 					}
@@ -65,7 +65,7 @@ nodefony.registerController("twig", function(){
 							reason:{
 								type:this.query.type,
 								message:""
-							}, 	
+							},
 							data:this.query
 						}
 					}
@@ -77,7 +77,7 @@ nodefony.registerController("twig", function(){
 							reason:{
 								type:this.query.type,
 								message:""
-							}, 	
+							},
 							data:this.query
 						}
 					}
@@ -93,7 +93,7 @@ nodefony.registerController("twig", function(){
 							reason:{
 								type:this.query.type,
 								message:""
-							}, 	
+							},
 							data:this.query
 						}
 					}
@@ -102,17 +102,17 @@ nodefony.registerController("twig", function(){
 					}, 2000);
 				break;
 				case "renderOject" :
-					return this.query ; 
+					return this.query ;
 				default :
 					this.context.response.setTimeout(1000);
-			}	
+			}
 		}
 
 		extendAction (){
 			var response = this.getResponse();
 			var status = response.getStatus();
 			switch ( this.query.type ){
-				case "render" : 
+				case "render" :
 					return this.render("testBundle:unitTest:render.json.twig", {
 						code:status.code,
 						type:this.query.type,
@@ -120,7 +120,7 @@ nodefony.registerController("twig", function(){
 						data:JSON.stringify(this.query)
 					});
 				case "renderTorenderSync" :
- 				       this.query.type = "renderSync"	
+ 				       this.query.type = "renderSync"
 					return this.render("testBundle:unitTest:render.json.twig", {
 						code:status.code,
 						type:this.query.type,
@@ -206,19 +206,19 @@ nodefony.registerController("twig", function(){
 							res = JSON.parse( message.utf8Data) ;
 						}else{
 							if (typeof message === "string"){
-								res = JSON.parse(message);	
+								res = JSON.parse(message);
 							}else{
 								res = message ;
 							}
 						}
 					}catch(e){
-						throw e ;	
+						throw e ;
 					}
 					switch (res.type){
 						case "START":
 							var result = obj("TWIG-RENDER", null,this.context.connection.connected) ;
 							return this.renderJson(result) ;
-						break;	
+						break;
 						case "TWIG-RENDER":
 							return this.render("testBundle:unitTest:websocket.json.twig", {
 								code:this.context.connection.connected,
@@ -237,11 +237,11 @@ nodefony.registerController("twig", function(){
 							return this.context.connection.close()
 						break;
 					}
-				}	
+				}
 			}
 			throw new Error("HTTP context not defined WEBSOCKET  ");
 		}
 	};
-	
+
 	return twigController;
 });

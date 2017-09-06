@@ -10,9 +10,9 @@ VERSION := $(subst v,,$(subst .,,$(NODE_VERSION)))
 #$(error $(VERSION))
 VERSION := $(shell expr $(VERSION) )
 
-APP_NAME := $(shell bin/nodefony app 2>/dev/null )
+APP_NAME := $(shell ./nodefony app 2>/dev/null )
 
-NODEFONY_VERSION := $(shell bin/nodefony version 2>/dev/null )
+NODEFONY_VERSION := $(shell ./nodefony version 2>/dev/null )
 
 LINE := NODEFONY $(NODEFONY_VERSION)  PLATFORM : $(DISTRIB)   NODE VERSION : $(NODE_VERSION)   APPLICATION : $(APP_NAME)   DEBUG : $(VERBOSE)
 $(info $(LINE))
@@ -20,19 +20,17 @@ $(info $(LINE))
 all:  npm install
 
 install:
-
 	@echo "";
 	@echo "#########################################" ;
 	@echo "#      NODEFONY INSTALL BUNDLES         #" ;
 	@echo "#########################################" ;
 	@echo "";
-
 	@if [ $(VERBOSE) = 0 ] ; then \
-		echo "./console npm:install";\
-		./console npm:install ;\
+		echo "./nodefony npm:install";\
+		./nodefony npm:install ;\
 	else \
-		echo "./.console_dev npm:install";\
-		./.console_dev npm:install ;\
+		echo "./nodefony -d npm:install";\
+		./nodefony -d npm:install ;\
 	fi \
 
 build:
@@ -44,6 +42,8 @@ build:
 
 	make clean ;
 
+	make certificates ;
+
 	make npm ;
 
 	make install && echo "success nodefony install !" || echo "failure nodefony install !" ;
@@ -51,22 +51,20 @@ build:
 	make sequelize && echo "success nodefony sequelize !" || echo "failure nodefony sequelize !" ;
 
 	@if [ $(VERBOSE) = 0 ] ; then \
-		echo "./console router:generate:routes";\
-		./console router:generate:routes ;\
-		echo "./console router:match:url /";\
-		./console router:match:url /\
-		echo "./console npm:list";\
-		./console npm:list ;\
+		echo "./nodefony router:generate:routes";\
+		./nodefony router:generate:routes ;\
+		echo "./nodefony router:match:url /";\
+		./nodefony router:match:url /\
+		echo "./nodefony npm:list";\
+		./nodefony npm:list ;\
 	else \
-		echo "./.console_dev router:generate:routes";\
-		./.console_dev router:generate:routes ;\
-		echo "./console router:match:url /";\
-		./console router:match:url /\
-		echo "./.console_dev npm:list";\
-		./.console_dev npm:list ;\
+		echo "./nodefony -d router:generate:routes";\
+		./nodefony -d router:generate:routes ;\
+		echo "./nodefony -d router:match:url /";\
+		./nodefony -d router:match:url /\
+		echo "./nodefony -d npm:list";\
+		./nodefony -d npm:list ;\
 	fi \
-
-	make certificates ;
 
 #
 # PM2 MANAGEMENT PRODUCTION
@@ -76,8 +74,8 @@ startup:
 
 start:
 	./node_modules/pm2/bin/pm2 update
-	./nodefony_pm2
-	./node_modules/pm2/bin/pm2 --lines 20 logs
+	./nodefony pm2
+	./node_modules/pm2/bin/pm2 --lines 1 logs
 
 stop:
 	./node_modules/pm2/bin/pm2 stop $(APP_NAME)
@@ -118,8 +116,8 @@ npm:
 
 	@if [  -f package.json  ] ; then \
 		if [ $(VERBOSE) = 0 ] ; then \
-			echo "npm -s install" ;\
-			npm -s install  ;\
+			echo "npm  install" ;\
+			npm  install  ;\
 		else \
 			echo "npm -ddd install" ;\
 			npm -ddd install  ;\
@@ -142,10 +140,9 @@ list:
 	@echo "" ;
 	npm ls --depth=0
 
-
-deploy:  asset
+deploy:
 	./node_modules/pm2/bin/pm2 update
-	./nodefony_pm2
+	./nodefony pm2
 
 webpack:
 	@echo "";
@@ -153,26 +150,7 @@ webpack:
 	@echo "#     NODEFONY WEBPACK COMPILE          #" ;
 	@echo "#########################################" ;
 	@echo "";
-	./console webpack:dump ;\
-
-asset:
-	@echo "";
-	@echo "#########################################" ;
-	@echo "#            NODEFONY ASSETS            #" ;
-	@echo "#########################################" ;
-	@echo "";
-
-	@if [ $(VERBOSE) = 0 ] ; then \
-		echo "./console assets:install" ;\
-		./console assets:install ;\
-		echo "./console assets:dump" ;\
-		./console assets:dump ;\
-	else \
-		echo "./.console_dev assets:install" ;\
-		./.console_dev assets:install ;\
-		echo "./.console_dev assets:dump" ;\
-		./.console_dev assets:dump ;\
-	fi \
+	./nodefony webpack:dump ;\
 
 framework:
 	@echo "";
@@ -238,8 +216,8 @@ framework:
 	fi
 
 sequelize:
-	./console Sequelize:generate:entities
-	./console Sequelize:fixtures:load
+	./nodefony Sequelize:generate:entities
+	./nodefony Sequelize:fixtures:load
 
 clean:
 	@if [ -e  node_modules ] ; then \

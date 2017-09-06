@@ -1,14 +1,19 @@
 ########## NODEFONY CONFIG BUNDLE  frameworkBundle  ############
 name :				frameworkBundle
-version :			"2.0.0-beta"
 
-# webpack assets root path is ./Resources/public
-webpack:
-  entry:
-    main:                       "./js/framework.js"
-  watch:                        false
-  devtool:                      "source-map"
-  output:
-    filename:                   "./assets/js/framework.js"
-    library:                    "framework"
-    libraryTarget:              "umd"
+#
+#  WATCHERS
+#
+#    watchers Listen to changes, deletion, renaming of files and directories
+#    of different components
+#
+#    For watch all components
+#
+#      watch:			true
+#    or
+#      watch:
+#        controller:		true
+#        views:			true
+#        translations:          true
+#
+watch:                          false

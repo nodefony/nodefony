@@ -5,10 +5,10 @@
 //var WebSocketServer = require('websocket');
 //var nodedomain = require('domain');
 
-nodefony.registerService("websocket", function(){
-	
+module.exports = nodefony.registerService("websocket", function(){
+
 	// https://github.com/Worlize/WebSocket-Node/wiki/Documentation
-	
+
 	var websocket = class websocket extends nodefony.Service {
 
 		constructor (httpKernel, security, options){
@@ -22,7 +22,7 @@ nodefony.registerService("websocket", function(){
 			this.ready = false ;
 			this.type = "WEBSOCKET";
 		}
-	
+
 		logger (pci, severity, msgid,  msg){
 			if (! msgid) {msgid = "SERVICE WEBSOCKET ";}
 			return this.syslog.logger(pci, severity, msgid,  msg);
@@ -39,21 +39,8 @@ nodefony.registerService("websocket", function(){
 							httpServer: http
 						}));
 
-											
 						this.websocketServer.on('request', (request) => {
-							/*var d = nodedomain.create();
-							d.on('error', (er) => {
-								if ( d.container ){
-									this.httpKernel.onErrorWebsoket( d.container, er.stack);
-								}else{
-									this.logger(er.stack, "ERROR");
-								}
-							});
-							d.add(request);
-							d.run( () => {
-								this.fire("onServerRequest", request, null, this.type, d);
-							});*/
-							this.fire("onServerRequest", request, null, this.type);
+							return this.httpKernel.onWebsocketRequest(request, this.type);
 						} );
 
 						this.kernel.listen(this, "onTerminate",() => {
@@ -67,16 +54,16 @@ nodefony.registerService("websocket", function(){
 							this.ready = true ;
 							this.logger(" Server is listening on DOMAIN : ws://"+this.domain+":"+this.port , "INFO");
 						}
-
+						this.bundle.fire("onServersReady", this.type, this);
 						return this.websocketServer;
 					}catch(e){
 						this.logger(e);
-						throw e ;	
+						throw e ;
 					}
 				}
 			});
 		}
 	};
-	
+
 	return websocket;
 });

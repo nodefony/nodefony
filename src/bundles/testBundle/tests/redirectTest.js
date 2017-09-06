@@ -3,10 +3,10 @@
  *
  *   MOCHA STYLE
  *
- *   In the global context you can find : 
+ *   In the global context you can find :
  *
- *	nodefony : namespace to get library  
- *	kernel :   instance of kernel who launch the test   
+ *	nodefony : namespace to get library
+ *	kernel :   instance of kernel who launch the test
  *
  */
 
@@ -17,7 +17,7 @@ var querystring = require('querystring');
 
 const assert = require('assert');
 
-describe("BUNDLE DEMO", function(){
+describe("BUNDLE TEST", function(){
 
 	before(function(){
 		global.options = {
@@ -31,30 +31,30 @@ describe("BUNDLE DEMO", function(){
 	describe('REDIRECT ', function(){
 
 		it("controller-redirect-302", function(done){
-			global.options.path ='/test/unit/redirect';     
+			global.options.path ='/test/unit/redirect';
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 302);
 				assert.equal(res.statusMessage, "Found");
 				assert.equal(res.headers.location, "/");
-					done(); 
+					done();
 			})
 			request.end();
 		});
 
 		it("controller-redirect-301", function(done){
-			global.options.path ='/test/unit/redirect/301?foo=bar';     
+			global.options.path ='/test/unit/redirect/301?foo=bar';
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 301);
 				assert.equal(res.statusMessage, "Moved Permanently");
 				assert.equal(res.headers.location, "/");
-					done(); 
+					done();
 			})
 			request.end();
 		});
 
 		it("controller-redirect-post-absolute", function(done){
-			global.options.path ='/test/unit/redirect';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/redirect';
+			global.options.method ='POST';
 			var post_data = querystring.stringify({
 				url:"http://google.com",
 				status:301,
@@ -67,15 +67,15 @@ describe("BUNDLE DEMO", function(){
 				assert.equal(res.statusCode, 301);
 				assert.equal(res.statusMessage, "Moved Permanently");
 				assert.equal(res.headers.location, "http://google.com");
-					done(); 
+					done();
 			})
 			request.write(post_data);
 			request.end();
 		});
 
 		it("controller-redirect-post-", function(done){
-			global.options.path ='/test/unit/redirect';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/redirect';
+			global.options.method ='POST';
 			var post_data = querystring.stringify({
 				url:"bar/foo",
 				status:301,
@@ -88,16 +88,16 @@ describe("BUNDLE DEMO", function(){
 				assert.equal(res.statusCode, 301);
 				assert.equal(res.statusMessage, "Moved Permanently");
 				assert.equal(res.headers.location, "bar/foo");
-				done(); 
+				done();
 			})
 			request.write(post_data);
 			request.end();
 		});
 
-		
+
 		it("controller-redirect-post-301", function(done){
-			global.options.path ='/test/unit/redirect';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/redirect';
+			global.options.method ='POST';
 			var post_data = querystring.stringify({
 				url:"/foo/bar",
 				status:301,
@@ -110,15 +110,15 @@ describe("BUNDLE DEMO", function(){
 				assert.equal(res.statusCode, 301);
 				assert.equal(res.statusMessage, "Moved Permanently");
 				assert.equal(res.headers.location, "/foo/bar");
-					done(); 
+					done();
 			})
 			request.write(post_data);
 			request.end();
 		});
 
 		it("controller-redirect-post-302", function(done){
-			global.options.path ='/test/unit/redirect?bar=foo';     
-			global.options.method ='POST';   
+			global.options.path ='/test/unit/redirect?bar=foo';
+			global.options.method ='POST';
 			var post_data = querystring.stringify({
 				url:"/ping",
 				status:301,
@@ -131,7 +131,7 @@ describe("BUNDLE DEMO", function(){
 				assert.equal(res.statusCode, 301);
 				assert.equal(res.statusMessage, "Moved Permanently");
 				assert.equal(res.headers.location, "/ping?bar=foo");
-					done(); 
+					done();
 			})
 			request.write(post_data);
 			request.end();

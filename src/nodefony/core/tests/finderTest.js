@@ -22,7 +22,7 @@ describe("NODEFONY CORE FINDER", function(){
 		before(function(){
 			try {
 				global.finder = new nodefony.finder({
-					path:kernel.rootDir
+					//path:kernel.rootDir
 				});
 			}catch(e){
 				throw e;

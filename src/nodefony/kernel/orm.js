@@ -1,62 +1,43 @@
-/*
- *
- *
- *	ORM CLASS 
- *
- *
- */
+
+module.exports = nodefony.register("orm", function(){
 
 
-
-nodefony.register("orm", function(){
-
-
-	var settingsSyslog = {
-		//rateLimit:100,
-		//burstLimit:10,
-		moduleName:"ORM",
-		defaultSeverity:"ERROR"
-	};
-	
-	//var connectionNotification = 0;
-	var connectionMonitor = function(name, db, orm){
+	let connectionMonitor = function(name, db, orm){
 		this.connectionNotification ++;
 		if(Object.keys(orm.settings.connectors).length === this.connectionNotification){
-			process.nextTick(function () {
+			process.nextTick( () => {
+				orm.logger('onOrmReady', "DEBUG", "EVENTS ORM");
 				orm.fire('onOrmReady', orm);
 			});
 		}
 	};
-	
-	var Orm = class Orm  extends nodefony.Service {
+
+	const Orm = class Orm  extends nodefony.Service {
 
 		constructor (name, container, kernel, autoLoader){
-			
+
 			super( name, container );
 
 			if (( this.kernel.debug === false && this.debug === true) || this.debug === undefined ){
 				this.debug = this.kernel.debug ;
 			}
-			this.syslog = this.initializeLog();
-			this.container.set("syslog.orm",this.syslog);
 			this.entities = {};
 			this.definitions = {};
 			this.autoLoader = autoLoader;
 			this.connections = {};
 			this.connectionNotification = 0 ;
 		}
-		
+
 		boot (){
-			
 			this.listen(this, "onReadyConnection", connectionMonitor);
-			this.listen(this, "onErrorConnection", connectionMonitor);		
-			
+			this.listen(this, "onErrorConnection", connectionMonitor);
+
 			this.kernel.listen(this, 'onBoot', (kernel) => {
-				var callback = null ;
-				for (var bundle in kernel.bundles){
+				let callback = null ;
+				for (let bundle in kernel.bundles){
 					if ( Object.keys(kernel.bundles[bundle].entities).length  ){
-						for (var entity in kernel.bundles[bundle].entities ){
-							var ele = kernel.bundles[bundle].entities[entity] ;
+						for (let entity in kernel.bundles[bundle].entities ){
+							let ele = kernel.bundles[bundle].entities[entity] ;
 							if (ele.type !== this.name){
 								continue;
 							}
@@ -64,14 +45,14 @@ nodefony.register("orm", function(){
 								this.definitions[ele.connection] = [];
 							}
 							callback = (enti, bundle, name) => {
-								var Enti = enti;
-								var Name = name ;
-								var Bundle = bundle ;
+								let Enti = enti;
+								let Name = name ;
+								let Bundle = bundle ;
 								return (db) => {
 									try {
 										this.entities[Name] = Enti.entity.call(this, db, this);
 										this.logger(this.name+" REGISTER ENTITY : "+Name+" PROVIDE BUNDLE : "+Bundle,"DEBUG");
-										return Enti ;		
+										return Enti ;
 									}catch(e){
 										this.logger(e);
 									}
@@ -86,7 +67,7 @@ nodefony.register("orm", function(){
 
 			this.listen(this, "onConnect" , (name, db) => {
 				if (name in this.definitions){
-					for( var i =0 ; i < this.definitions[name].length ; i++){
+					for( let i =0 ; i < this.definitions[name].length ; i++){
 						this.definitions[name][i](db);
 					}
 				}
@@ -98,50 +79,9 @@ nodefony.register("orm", function(){
 			});
 		}
 
-		initializeLog (){
-			
-			var red, blue, green, reset;
-			red   = '\x1B[31m';
-			blue  = '\x1B[34m';
-			green = '\x1B[32m';
-			reset = '\x1B[0m';
-			
-			var syslog =  new nodefony.syslog(settingsSyslog);
-			
-			// CRITIC ERROR
-			syslog.listenWithConditions(this,{
-				severity:{
-					data:"CRITIC,ERROR"
-				}		
-			},(pdu) => {
-				this.kernel.cli.normalizeLog(pdu);
-			});
-				
-			if (this.kernel.environment === "dev"){
-				// INFO DEBUG
-				var data ="";
-				if ( this.debug ) {
-					data = "INFO,DEBUG" ;
-				}else{
-					data = "INFO";
-				}
-				syslog.listenWithConditions(this,{
-					severity:{
-						data:data
-					}		
-				},(pdu) =>{
-					this.kernel.cli.normalizeLog(pdu);
-				});
-			}else{
-				syslog.listenWithConditions(this,{
-					severity:{
-						data:"INFO"
-					}		
-				},(pdu) =>{
-					this.kernel.cli.normalizeLog(pdu);
-				});
-			}
-			return syslog;
+		logger (pci, severity, msgid,  msg){
+			if (! msgid) { msgid = this.kernel.cli.clc.magenta(this.name + " ");}
+			return super.logger(pci, severity, msgid,  msg);
 		}
 
 		getConnection (name){
@@ -150,7 +90,7 @@ nodefony.register("orm", function(){
 			}
 			return null;
 		}
-		
+
 		getEntity (name){
 			if (name){
 				return this.entities[name];
@@ -159,6 +99,6 @@ nodefony.register("orm", function(){
 			}
 		}
 	};
-	
+
 	return Orm;
 });

@@ -1,22 +1,18 @@
 /*
- *
- *
- *	PASSPORT LOCAL  FACTORY
- *
- *
- */
-try{
-	var passport = require('passport');
-	var LocalStrategy = require('passport-local').Strategy;
-	var nodefonyPassport = require("passport-nodefony");
-}catch(e){
-	this.logger(e);
-}
+*
+*
+*	PASSPORT LOCAL  FACTORY
+*
+*
+*/
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const nodefonyPassport = require("passport-nodefony");
 
 
 nodefony.register.call(nodefony.security.factory, "passport-local",function(){
 
-	var Factory =  class Factory {
+	const Factory =  class Factory {
 
 		constructor(contextSecurity,  settings){
 			this.name = this.getKey();
@@ -24,9 +20,9 @@ nodefony.register.call(nodefony.security.factory, "passport-local",function(){
 			this.settings = settings ;
 
 			this.passport = passport ;
-		
+
 			this.passport.framework( nodefonyPassport(this) );
-			
+
 			this.strategy = this.getStrategy(this.settings) ;
 
 			this.passport.use(this.strategy);
@@ -34,24 +30,24 @@ nodefony.register.call(nodefony.security.factory, "passport-local",function(){
 
 		getStrategy (options){
 			return  new LocalStrategy(options, (username, password, done) => {
-					this.contextSecurity.logger("TRY AUTHORISATION "+ this.name+" : "+username ,"DEBUG");
-					// get passwd 
-					this.contextSecurity.provider.getUserPassword(username, (error, passwd) => {
-							if ( error ){
-								return done(error, false, { message: 'Incorrect username.' });
-							}
-							if ( passwd !== password ){
-								return done(null, false, { message: 'Incorrect password.' });
-							}
-							this.contextSecurity.provider.loadUserByUsername(username, (error, result) => {
-								if ( error ){
-									return done(error, null)
-								}
-								return done( null, result )
-								
-							});
+				this.contextSecurity.logger("TRY AUTHORISATION "+ this.name+" : "+username ,"DEBUG");
+				// get passwd
+				this.contextSecurity.provider.getUserPassword(username, (error, passwd) => {
+					if ( error ){
+						return done(error, false, { message: 'Incorrect username.' });
+					}
+					if ( passwd !== password ){
+						return done(null, false, { message: 'Incorrect password.' });
+					}
+					this.contextSecurity.provider.loadUserByUsername(username, (error, result) => {
+						if ( error ){
+							return done(error, null)
+						}
+						return done( null, result )
+
 					});
-			});	
+				});
+			});
 		}
 
 		getKey (){
@@ -59,20 +55,20 @@ nodefony.register.call(nodefony.security.factory, "passport-local",function(){
 		};
 
 		getPosition (){
-			return "http";	
+			return "http";
 		};
 
 		handle ( context, callback){
 			this.contextSecurity.logger("HANDLE AUTHORISATION "+this.getKey() ,"DEBUG");
-			
-			this.passport.authenticate('local', { 
-				session: false, 
+
+			this.passport.authenticate('local', {
+				session: false,
 			})(context, (error, res) => {
 				if ( res  ){
-					context.user = res ;	
+					context.user = res ;
 					this.contextSecurity.logger("AUTHORISATION "+this.getKey()+" SUCCESSFULLY : " + res.username ,"INFO");
 				}
-				var token = {
+				let token = {
 					name:this.getKey(),
 					user:res
 				}

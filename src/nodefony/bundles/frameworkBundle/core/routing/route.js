@@ -6,9 +6,9 @@
  *
  */
 
-nodefony.register("Route", function(){
+module.exports = nodefony.register("Route", function(){
 
-	var decode = function(str) {
+	const decode = function(str) {
 		try {
 			return decodeURIComponent(str);
 		} catch(err) {
@@ -20,20 +20,20 @@ nodefony.register("Route", function(){
  	 *	CLASS ROUTE
  	 *
  	 */
-	const regRoute = /(\/)?(\.)?\{([^}]+)\}(?:\(([^)]*)\))?(\?)?/g ; 
+	const regRoute = /(\/)?(\.)?\{([^}]+)\}(?:\(([^)]*)\))?(\?)?/g ;
 
-	var Route = class Route {
+	const Route = class Route {
 		constructor (name, obj){
-			this.name = name ; 
-			this.path  = null; 
-			this.host= null;                     	
-			this.defaults= {};     
-            		this.requirements= {};
-			//TODO 	
-            		this.options= {};
+			this.name = name ;
+			this.path  = null;
+			this.host= null;
+			this.defaults= {};
+			this.requirements= {};
+			//TODO
+			this.options= {};
 
 			//TODO http | websocket
-            		this.schemes= null;      
+			this.schemes= null;
 			//TODO with obj
 			if ( obj ){
 				this.setName(obj.id);
@@ -49,7 +49,7 @@ nodefony.register("Route", function(){
 
 		generateId(){
 			//console.log(  "GENERATE : " + JSON.stringify(this) );
-			this.hash = crypto.createHash("md5").update(JSON.stringify(this)).digest("hex") ;	
+			this.hash = crypto.createHash("md5").update(JSON.stringify(this)).digest("hex") ;
 			return this.hash ;
 		}
 
@@ -60,11 +60,11 @@ nodefony.register("Route", function(){
 		setPattern (pattern){
 			this.path = pattern;
 		}
-		
+
 		setHostname (hostname){
 			this.host = hostname;
 		}
-		
+
 		addDefault (key , value){
 			this.defaults[key] = value;
 		}
@@ -91,9 +91,9 @@ nodefony.register("Route", function(){
 		setMethods (){}
 		setHost (){}
 		setSchemes (){}*/
-		
+
 		checkDefaultParameters ( variable ){
-			for( var def in this.defaults ){
+			for( let def in this.defaults ){
 				switch ( def ){
 					case "controller" :
 						continue ;
@@ -103,7 +103,7 @@ nodefony.register("Route", function(){
 						}
 				}
 			}
-			return false ;	
+			return false ;
 		}
 
 		hydrateDefaultParameters ( res ){
@@ -112,11 +112,11 @@ nodefony.register("Route", function(){
 					if (  this.defaults[ this.variables[i] ] ){
 						if (res[i+1] === "" ){
 							res[i+1] = this.defaults[ this.variables[i] ];
-						}	
+						}
 					}
-				}	
+				}
 			}else{
-				for( var def in this.defaults ){
+				for( let def in this.defaults ){
 					switch ( def ){
 						case "controller" :
 							continue ;
@@ -124,12 +124,12 @@ nodefony.register("Route", function(){
 							res.push( this.defaults[def] );
 					}
 				}
-			}	
-		}	
-		
+			}
+		}
+
 		compile (){
-			var pattern = this.path.replace( regRoute, (match, slash, dot, key, capture, opt, offset)  => {
-				var incl = (this.path[match.length+offset] || '/') === '/';
+			let pattern = this.path.replace( regRoute, (match, slash, dot, key, capture, opt, offset)  => {
+				let incl = (this.path[match.length+offset] || '/') === '/';
 				this.variables.push(key);
 				if( this.checkDefaultParameters(key) ){
 					return (incl ? '(?:' : '')+(slash ? slash+"?" : '')+(incl ? '' : '(?:')+(dot || '')+'('+(capture || '[^/]*')+'))'+(opt || '');
@@ -137,50 +137,45 @@ nodefony.register("Route", function(){
 					return (incl ? '(?:' : '')+(slash || '')+(incl ? '' : '(?:')+(dot || '')+'('+(capture || '[^/]+')+'))'+(opt || '');
 				}
 			});
-			pattern = pattern.replace(/([\/.])/g, '\\$1');//.replace(/\*/g, '(.+)');
+			if ( pattern[pattern.length - 1] === "*" ){
+				pattern = pattern.replace(/([\/.])/g, '\\$1').replace(/\*/g, '(.*)\/?');
+			}else{
+				pattern = pattern.replace(/([\/.])/g, '\\$1');
+			}
 			this.pattern = new RegExp('^'+pattern+'[\\/]?$', 'i');
 			return this.pattern ;
 		}
 
 		match (context){
-			var myUrl = context.request.url.pathname ;
-			var res = myUrl.match(this.pattern);
+			let myUrl = context.request.url.pathname ;
+			let res = myUrl.match(this.pattern);
 			if (!res) {
 				return res;
 			}
 			try {
 				this.hydrateDefaultParameters( res );
 			}catch(e){
-				throw  e  ;	
+				throw  e  ;
 			}
-
 			//check requierments
 			try {
-				this.matchRequirements(context) ;	
+				this.matchRequirements(context) ;
 			}catch(e){
 				throw  e  ;
 			}
 			//check Hostname
 			try {
-				this.matchHostname(context) ;	
+				this.matchHostname(context) ;
 			}catch(e){
 				throw  e  ;
 			}
-
-			//check options
-			/*try {
-				this.matchOptions(context) ;	
-			}catch(e){
-				throw  e  ;
-			}*/
-
-			var map = [];
+			let map = [];
 			try {
 				res.slice(1).forEach( (param, i)  => {
-					var k = this.variables[i] || 'wildcard';
+					let k = this.variables[i] || 'wildcard';
 					param = param && decode(param);
-					var req = this.getRequirement(k);
-					var result = null ;
+					let req = this.getRequirement(k);
+					let result = null ;
 					if ( req ){
 						if ( req instanceof RegExp){
 							result = req.test(param) ;
@@ -192,7 +187,7 @@ nodefony.register("Route", function(){
 							throw {BreakException:"Requirement Exception variable : " + k +" ==> " +param +" doesn't match with " + req};
 						}
 					}
-					var index = map.push( param );
+					let index = map.push( param );
 					map[k] = map[index-1] ;
 				});
 			}catch(e){
@@ -201,7 +196,6 @@ nodefony.register("Route", function(){
 				}
 				throw e ;
 			}
-
 			if ( map && map.wildcard) {
 				map['*'] = map.wildcard;
 			}
@@ -223,8 +217,9 @@ nodefony.register("Route", function(){
 					return true;
 				}
 				throw {
-					message:	"Domain "+ context.domain +" Unauthorized",
-					status:		401
+					type		: "domain",
+					message		: "Domain "+ context.domain +" Unauthorized",
+					status		: 401
 				};
 			}
 			return true ;
@@ -232,56 +227,49 @@ nodefony.register("Route", function(){
 
 		matchRequirements (context){
 			if ( this.hasRequirements() ){
-				for(var i  in this.requirements ){
+				for(let i  in this.requirements ){
 					switch (i){
 						case "method":
-							switch ( typeof this.requirements[i] ){
-								case "string" :
-									var req = this.requirements[i].replace(/\s/g,"").toUpperCase();
-									if (req.split(",").lastIndexOf(context.method) < 0){
-										throw {
-											message:	"Method "+ context.method +" Unauthorized",
-											status:		401	
-										};
-									}
-								break ;
-								case "object" :
-									if (  this.requirements[i].indexOf(context.method) < 0 ){
-										if ( this.requirements[i].indexOf( context.method.toLowerCase() ) < 0  ){
-											throw {
-												message:	"Method "+ context.method +" Unauthorized",
-												status:		401	
-											};
-										}
-									}
-								break;
-								default:
-									throw new Error ("Bad config route method : " + this.requirements[i] );	
-							}	
-							
-						break;
-						case "domain":
-							if (context.domain !== this.requirements[i]){
+						switch ( typeof this.requirements[i] ){
+							case "string" :
+							let req = this.requirements[i].replace(/\s/g,"").toUpperCase();
+							if (req.split(",").lastIndexOf(context.method) < 0){
 								throw {
-									message:	"Domain "+ context.domain +" Unauthorized",
+									type: "method",
+									message:	"Method "+ context.method +" Unauthorized",
 									status:		401
 								};
 							}
+							break ;
+							case "object" :
+							if (  this.requirements[i].indexOf(context.method) < 0 ){
+								if ( this.requirements[i].indexOf( context.method.toLowerCase() ) < 0  ){
+									throw {
+										type: "method",
+										message:	"Method "+ context.method +" Unauthorized",
+										status:		401
+									};
+								}
+							}
+							break;
+							default:
+							throw new Error ("Bad config route method : " + this.requirements[i] );
+						}
+						break;
+						case "domain":
+						if (context.domain !== this.requirements[i]){
+							throw {
+								type		: "domain",
+								message		: "Domain "+ context.domain +" Unauthorized",
+								status		: 401
+							};
+						}
 						break;
 					}
 				}
 			}
 			return true;
 		}
-
-		/*matchOptions (context){
-			var testOpt = true ;	
-			for(var i  in this.options ){
-				
-			}
-			return testOpt;
-		}*/
 	};
-
 	return Route;
 });

@@ -1,15 +1,15 @@
 /*
- *  
- *   
- *    
+ *
+ *
+ *
  *     	CONTROLLER default
- *      
- *      
- *        
- *         
+ *
+ *
+ *
+ *
  **/
 
-nodefony.registerController("framework", function(){
+module.exports = nodefony.registerController("framework", function(){
 
 
 		var frameworkController = class frameworkController extends nodefony.controller {
@@ -21,7 +21,7 @@ nodefony.registerController("framework", function(){
 			indexAction (){
 				return this.render('frameworkBundle::index.html.twig',{title:"WEB nodefony FRAMEWORK"});
 			}
-			
+
 			["404Action"] (message){
 				this.getResponse().setStatusCode(404);
 				this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
@@ -45,7 +45,7 @@ nodefony.registerController("framework", function(){
 				//var res = nodefony.extend( {url:this.context.url}, error);
 				var ele = {
 					title:"Exception",
-					exception: error 
+					exception: error
 				};
 				this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
 				return this.render('frameworkBundle::exception.html.twig', ele );
@@ -57,7 +57,7 @@ nodefony.registerController("framework", function(){
 					exception:util.inspect( exp.exception )
 				};
 				this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
-				return this.render('frameworkBundle::exception.html.twig', nodefony.extend(ele, exp) );	
+				return this.render('frameworkBundle::exception.html.twig', nodefony.extend(ele, exp) );
 			}
 
 			timeoutAction (exp){
@@ -66,7 +66,7 @@ nodefony.registerController("framework", function(){
 					exception:util.inspect( exp.exception )
 				};
 				this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
-				return this.render('frameworkBundle::timeout.html.twig', nodefony.extend(ele, exp) );	
+				return this.render('frameworkBundle::timeout.html.twig', nodefony.extend(ele, exp) );
 			}
 
 
@@ -85,7 +85,7 @@ nodefony.registerController("framework", function(){
 						for (var inj in ele.injections){
 							var esc = i === 0 ? "" : " , ";
 							inject += esc+inj;
-							i++;	
+							i++;
 						}
 						services[service].run = "CONFIG";
 						services[service].scope = ele.scope === "container" ? "Default container" :	ele.scope ;
@@ -94,10 +94,10 @@ nodefony.registerController("framework", function(){
 						services[service].properties = ele.properties;
 						services[service].orderInjections = ele.orderArguments ? true : false;
 					}else{
-						services[service].run = "KERNEL";	
+						services[service].run = "KERNEL";
 						services[service].scope = "KERNEL container";
-					
-					}		
+
+					}
 				}
 				//console.log(services)
 				var obj = {
@@ -115,7 +115,7 @@ nodefony.registerController("framework", function(){
 						}
 					}
 					if (options.renderView){
-						return this.renderView('frameworkBundle::system.html.twig',obj );	
+						return this.renderView('frameworkBundle::system.html.twig',obj );
 					}
 				}else{
 					return this.render('frameworkBundle::system.html.twig',obj );
@@ -128,7 +128,7 @@ nodefony.registerController("framework", function(){
 				var file = new nodefony.fileClass(path);
 				var res = this.htmlMdParser(file.content(),{
 					linkify: true,
-					typographer: true	
+					typographer: true
 				});
 				return  this.render('frameworkBundle::md.html.twig',{
 						html:res

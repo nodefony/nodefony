@@ -1,18 +1,10 @@
-/*
- *
- *
- *
- *
- *
- */
 
 nodefony.register.call(nodefony.context, "websocket", function(){
 
-
-	var onClose = function(reasonCode, description){
+	const onClose = function(reasonCode, description){
 		if ( ! this.request ){
 			this.logger( new Date() + ' Connection Websocket CLOSE : ' + this.connection.remoteAddress +" PID :" +process.pid + " " +reasonCode +" " + description , "INFO");
-		
+
 		}else{
 			this.logger( new Date() + ' Connection Websocket CLOSE : ' + this.connection.remoteAddress +" PID :" +process.pid + " ORIGIN : "+this.request.origin  +" " +reasonCode +" " + description , "INFO");
 		}
@@ -24,40 +16,42 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 				this.logger( new Date() + ' ERROR  Websocket CLOSE : ' + this.connection.remoteAddress +" PID :" +process.pid + " ORIGIN : "+this.request.origin  +" " +e , "ERROR");
 			}
 		}else{
-			this.fire("onClose", reasonCode, description, this.connection);	
-		}	
+			this.fire("onClose", reasonCode, description, this.connection);
+		}
 		this.kernel.container.leaveScope(this.container);
 	};
 
 
-	var websocket = class websocket extends nodefony.Service {
+	const websocket = class websocket extends nodefony.Service {
 
 		constructor (container, request, response ,type){
 
 			super ("websocketContext", container);
 			this.type = type ;
 			this.protocol = ( type === "WEBSOCKET SECURE" ) ? "wss" : "ws" ;
+			this.acceptedProtocol = null ;
 
+			this.kernelHttp = this.get("httpKernel");
 			//I18n
-			this.translation = new nodefony.services.translation( container, type );
+			this.translation = this.kernelHttp.translation.createTranslation(this);
 			this.set("translation", this.translation );
-			
+
 			//this.container = container;
 			this.kernel = this.container.get("kernel") ;
 			if ( this.kernel.environment === "dev" ){
 				this.autoloadCache = {
 					bundles:{}
 				} ;
-			}	
+			}
 			this.kernelHttp = this.container.get("httpKernel");
-			this.request = request ; 
+			this.request = request ;
 			this.method = "WEBSOCKET";
 			this.request.method = "WEBSOCKET";
 
 			this.remoteAddress = this.request.remoteAddress ;
 			this.origin = request.origin;
-			//TODO acceptProtocol header sec-websocket-protocol   
-			this.connection = request.accept(null, this.origin);
+			//TODO acceptProtocol header sec-websocket-protocol
+			this.connection = request.accept(this.acceptedProtocol, this.origin);
 			this.response = new nodefony.wsResponse( this.connection ,container , type);
 
 			this.request.url = url.parse( this.protocol+"://" + this.request.host ) ;
@@ -67,15 +61,15 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 			this.request.url.pathname = this.request.resourceURL.pathname;
 			this.request.url.path = this.request.resourceURL.path;
 
-			this.url =  url.format( this.request.url ) ; 
-			this.port = this.request.url.port ; 
-			this.domain = this.request.url.hostname ; 
+			this.url =  url.format( this.request.url ) ;
+			this.port = this.request.url.port ;
+			this.domain = this.request.url.hostname ;
 			this.router = this.get("router");
-			
+
 			try{
-				this.originUrl = url.parse( request.origin ); 
+				this.originUrl = url.parse( request.origin );
 			}catch(e){
-				this.originUrl = url.parse( this.url );	
+				this.originUrl = url.parse( this.url );
 			}
 
 			this.secureArea = null ;
@@ -84,7 +78,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 
 			this.logger(  "REQUEST " +request.method +" FROM : "+ this.remoteAddress +" HOST : "+this.domain+" URL : "+this.url, "INFO");
 
-			// session 
+			// session
 			this.session = null;
 			this.sessionService = this.get("sessions");
 			this.sessionAutoStart = this.sessionService.settings.start ;
@@ -100,7 +94,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 			this.resolver = null ;
 			this.nbCallController = 0 ;
 
-			// LISTEN EVENTS  
+			// LISTEN EVENTS
 			this.listen(this, "onView", (result) => {
 				if ( this.response ){
 					this.response.body = result;
@@ -110,38 +104,33 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 			this.listen(this, "onRequest", this.handle);
 			this.listen(this, "onError", this.handleError);
 
-			// LISTEN EVENTS SOCKET	
+			// LISTEN EVENTS SOCKET
 
 			this.connection.on('message', this.handleMessage.bind(this) );
 
-			this.connection.on('close', onClose.bind(this) ); 
+			this.connection.on('close', onClose.bind(this) );
 
-			//case proxy 
-			this.proxy = null ; 
-                        if ( this.request.httpRequest.headers["x-forwarded-for"] ){
-                                this.proxy = {
-                                        proxyServer     : this.request.httpRequest.headers["x-forwarded-server"],
-                                        proxyProto      : this.request.httpRequest.headers["x-forwarded-proto"],
-                                        proxyPort       : this.request.httpRequest.headers["x-forwarded-port"],
-                                        proxyFor        : this.request.httpRequest.headers["x-forwarded-for"],
-                                        proxyHost       : this.request.httpRequest.headers["x-forwarded-host"],
-                                        proxyVia        : this.request.httpRequest.headers.via
-                                };
-                                this.logger( "PROXY WEBSOCKET REQUEST x-forwarded VIA : " + this.proxy.proxyVia , "DEBUG");
-                        }
+			//case proxy
+			this.proxy = null ;
+			if ( this.request.httpRequest.headers["x-forwarded-for"] ){
+				this.proxy = {
+					proxyServer     : this.request.httpRequest.headers["x-forwarded-server"],
+					proxyProto      : this.request.httpRequest.headers["x-forwarded-proto"],
+					proxyPort       : this.request.httpRequest.headers["x-forwarded-port"],
+					proxyFor        : this.request.httpRequest.headers["x-forwarded-for"],
+					proxyHost       : this.request.httpRequest.headers["x-forwarded-host"],
+					proxyVia        : this.request.httpRequest.headers.via
+				};
+				this.logger( "PROXY WEBSOCKET REQUEST x-forwarded VIA : " + this.proxy.proxyVia , "DEBUG");
+			}
 			this.crossDomain = this.isCrossDomain() ;
-
-			/* // assembleFragments:false 
- 		 	* this.connection.on('frame', function(webSocketFrame) {
-				console.log(webSocketFrame.binaryPayload.toString())
-			}.bind(this));*/
 		}
-		
+
 		getCookieSession ( name){
 			if (this.cookies[name] ){
 				return this.cookies[name];
 			}
-			return null;	
+			return null;
 		}
 
 		isValidDomain (){
@@ -161,7 +150,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 		}
 
 		getHostName (){
-			return this.domain ; 
+			return this.domain ;
 			//return this.originUrl.hostname ;
 		}
 
@@ -174,7 +163,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 		}
 
 		getUser (){
-			return this.user || null ; 	
+			return this.user || null ;
 		}
 
 		addCookie (cookie){
@@ -185,7 +174,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 					message:"",
 					error:"Response addCookies not valid cookies"
 				};
-			}	
+			}
 		}
 
 		parseCookies (){
@@ -216,33 +205,33 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 		extendTwig ( param ){
 			return nodefony.extend( {}, param, {
 				nodefony:{
-					url:this.request.url
+					url:this.request.url,
+					environment:	this.kernel.environment,
+					debug:		this.kernel.debug
 				},
 				getFlashBag:	this.flashTwig.bind(this),
 				render:		this.render.bind(this),
 				controller:	this.controller.bind(this),
 				trans:		this.translation.trans.bind(this.translation),
 				getLocale:	this.translation.getLocale.bind(this.translation),
-				trans_default_domain:function(){
-						this.translation.trans_default_domain.apply(this.translation, arguments) ;
-				}.bind(this),
-				getTransDefaultDomain:this.translation.getTransDefaultDomain.bind(this.translation)	
+				trans_default_domain : this.translation.trans_default_domain.bind(this.translation),
+				getTransDefaultDomain:this.translation.getTransDefaultDomain.bind(this.translation)
 			})
 		}
 
 		controller (pattern, data){
-			var container = this.kernelHttp.container.enterScope("subRequest");
+			let container = this.kernelHttp.container.enterScope("subRequest");
 			container.set("context", this) ;
 			container.set("translation", this.translation );
-			var control = null ;
-			var resolver = null ;
+			let control = null ;
+			let resolver = null ;
 			try {
-				resolver = this.router.resolveName(this.container, pattern);
+				resolver = this.router.resolveName(this, pattern);
 			}catch(e){
-				return this.notificationsCenter.fire("onError", this.container, e );	
+				return this.fire("onError", this.container, e );
 			}
 			if ( ! resolver.resolve) {
-				return this.notificationsCenter.fire("onError", this.container, {
+				return this.fire("onError", this.container, {
 					status:404,
 					error:"PATTERN : " + pattern,
 					message:"not Found"
@@ -250,21 +239,21 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 			}
 			try {
 				control = new resolver.controller( container, this );
-				control.response = new nodefony.Response( null, container, this.type); 
+				control.response = new nodefony.Response( null, container, this.type);
 				if ( data ){
 					Array.prototype.shift.call( arguments );
-					for ( var i = 0 ; i< arguments.length ; i++){
-						resolver.variables.push(arguments[i]);	
+					for ( let i = 0 ; i< arguments.length ; i++){
+						resolver.variables.push(arguments[i]);
 					}
 				}
 			}catch(e){
-				return this.notificationsCenter.fire("onError", this.container, e );	
+				return this.fire("onError", this.container, e );
 			}
 			return {
 				resolver:resolver,
-				controller:control,	
+				controller:control,
 				response:resolver.action.apply(control, resolver.variables)
-			};	
+			};
 		}
 
 		render (subRequest){
@@ -273,38 +262,34 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 			switch (true){
 				case subRequest.response instanceof nodefony.Response :
 				case subRequest.response instanceof nodefony.wsResponse :
-					return subRequest.response.body;
+				return subRequest.response.body;
 				case subRequest.response instanceof Promise :
 				case subRequest.response instanceof BlueBird :
-					if ( subRequest.controller.response.body === ""){
-						var txt = "nodefony TWIG function render can't resolve async Call in Twig Template " ;
-						this.logger(txt,"ERROR");
-						return txt;
-					}
-					/*subRequest.response.then((result) =>{
-						console.log(result)
-						subRequest.controller.response.body = result ;
-					});*/
-					return subRequest.controller.response.body;
+				if ( subRequest.controller.response.body === ""){
+					let txt = "nodefony TWIG function render can't resolve async Call in Twig Template " ;
+					this.logger(txt,"ERROR");
+					return txt;
+				}
+				return subRequest.controller.response.body;
 				case nodefony.typeOf(subRequest.response) === "object":
-					if ( subRequest.resolver.defaultView ){
-						 return this.render( {
-							resolver:subRequest.resolver,
-							controller:subRequest.controller,
-							response:subRequest.controller.render(subRequest.resolver.defaultView, subRequest.response )
-						 } );
-					}else{
-						throw {
-							status:500,
-							message:"default view not exist"
-						};
-					}
+				if ( subRequest.resolver.defaultView ){
+					return this.render( {
+						resolver:subRequest.resolver,
+						controller:subRequest.controller,
+						response:subRequest.controller.render(subRequest.resolver.defaultView, subRequest.response )
+					} );
+				}else{
+					throw {
+						status:500,
+						message:"default view not exist"
+					};
+				}
 				break;
 				case typeof subRequest.response === "string" :
-					return subRequest.response ;
+				return subRequest.response ;
 				default:
-					this.logger("nodefony TWIG function render can't resolve async Call in Twig Template ","WARNING");
-					return this.response.body ;
+				this.logger("nodefony TWIG function render can't resolve async Call in Twig Template ","WARNING");
+				return this.response.body ;
 			}
 
 		}
@@ -313,13 +298,13 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 			this.response.body = message ;
 			try {
 				if ( ! this.resolver ){
-					this.resolver = this.router.resolve(this.container,  this);
+					this.resolver = this.router.resolve( this );
 				}else{
 					try {
 						this.resolver.match(this.resolver.route,  this)	;
 					}catch(e){
 						this.request.reject();
-						this.fire("onError", this.container, e);	
+						this.fire("onError", this.container, e);
 						return ;
 					}
 				}
@@ -330,24 +315,24 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 					this.request.reject();
 				}
 			}catch(e){
-				this.fire("onError", this.container, e);	
-			}	
+				this.fire("onError", this.container, e);
+			}
 		}
 
 		handle (data){
-			this.translation.handle( this );
+			this.translation.handle( );
 			try {
 				if ( ! this.resolver ){
-					this.resolver  = this.router.resolve(this.container,  this);
+					this.resolver  = this.router.resolve(this);
 				}else{
 					try {
 						this.resolver.match(this.resolver.route,  this)	;
 					}catch(e){
 						this.request.reject();
 						this.fire("onError", this.container, e);
-						return ;	
+						return ;
 					}
-					//this.resolver.match(this.resolver.route,  this);	
+					//this.resolver.match(this.resolver.route,  this);
 				}
 				//WARNING EVENT KERNEL
 				this.kernel.fire("onRequest", this, this.resolver);
@@ -357,14 +342,14 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 					this.request.reject();
 				}
 			}catch(e){
-				this.fire("onError", this.container, e);	
-			}		
+				this.fire("onError", this.container, e);
+			}
 		}
 
 		handleError (container, error){
 			this.logger("Message : "+error.message, "ERROR");
 			//return onClose.call(this, error.status, error.message );
-		} 
+		}
 
 		logger (pci, severity, msgid,  msg){
 			if (! msgid) { msgid = "REQUEST "+this.type ;}
@@ -373,7 +358,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 		}
 
 		send (data, type){
-			var myData = null ;
+			let myData = null ;
 			if ( this.response ){
 				if ( data instanceof nodefony.wsResponse ){
 					myData = this.response.body ;
@@ -385,13 +370,12 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 			}
 			return null ;
 		}
-	
+
 		close (reasonCode, description ){
 			if ( this.connection ){
 				this.connection.close(reasonCode, description);
 			}
 		}
 	};
-
 	return websocket;
 });

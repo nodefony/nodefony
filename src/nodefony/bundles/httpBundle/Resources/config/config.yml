@@ -22,7 +22,6 @@
 
 ########## NODEFONY CONFIG BUNDLE  httpBundle  ############
 name :				httpBundle
-version :			"2.0.0-beta"
 watch:                          false
 
 
@@ -45,7 +44,7 @@ https:
 
 #
 #       SERVERS WEBSOCKET
-#
+#       ALL OPTIONS IN https://github.com/theturtle32/WebSocket-Node/blob/master/docs/WebSocketServer.md#server-config-options
 #
 websocket:
   keepaliveInterval:            20000
@@ -54,6 +53,13 @@ websocket:
 websocketSecure:
   keepaliveInterval:            20000
   keepaliveGracePeriod:         10000
+
+sockjs:
+    overlay:                      true
+    hot:                          false
+    protocol:                     https
+    websocket:                    true
+    prefix:                       "/sockjs-node"
 
 #
 #       SERVERS STACTIC FILES
@@ -66,12 +72,13 @@ websocketSecure:
 #                 maxage:                     30*24*60*60*1000 # override default maxage
 #
 statics:
-  settings:
-    cache :                     true
-    maxAge:                     96*60*60
+  defaultOptions:
+    cacheControl            : true
+    maxAge                  : 96*60*60
   web:
-    path:                       "/web/"
-    maxage:                     30*24*60*60*1000
+    path                    : "web"
+    options:
+      maxAge                : 30*24*60*60*1000
 
 #
 #

@@ -7,14 +7,12 @@
  *
  *
  */
-//var url = require("url")
-//var qs = require('querystring');
-var QS = require('qs');
+const QS = require('qs');
 
-nodefony.register("Request",function(){
+module.exports = nodefony.register("Request",function(){
 
-	var settingsXml = {};
-	var parserRequestBody = function(){
+	let settingsXml = {};
+	let parserRequestBody = function(){
 		//var contentType = this.contentType ? this.contentType : "application/x-www-form-urlencoded";
 		switch ( this.request.method ){
 			case "POST":
@@ -33,15 +31,15 @@ nodefony.register("Request",function(){
 								throw err ;
 							}
 							this.queryPost = result ;
-						});	
+						});
 					break;
 					case "multipart/form-data":
-						var service = this.container.get("upload");
-						var res = new nodefony.io.MultipartParser(this);
+						let service = this.context.get("upload");
+						let res = new nodefony.io.MultipartParser(this);
 						this.queryPost = res.post ;
 						var queryFile = res.file ;
 						if (Object.keys(queryFile).length ) {
-							for(var file in queryFile){
+							for(let file in queryFile){
 								this.queryFile[file] = service.createUploadFile(this, queryFile[file]);
 							}
 						}
@@ -61,13 +59,13 @@ nodefony.register("Request",function(){
 		}
 	};
 
-	var Request  = class Request {
-		constructor (request, container){
+	const Request  = class Request {
 
-			this.container = container ;
+		constructor (request, context){
+			this.context = context ;
 			this.request = request;
 			this.headers = 	request.headers ;
-			this.host = this.getHost() ; 
+			this.host = this.getHost() ;
 			this.hostname = this.getHostName(this.host) ;
 			this.sUrl = this.getFullUrl( request );
 			this.url = this.getUrl(this.sUrl) ;
@@ -76,12 +74,10 @@ nodefony.register("Request",function(){
 			}else{
 				this.url.query = {} ;
 			}
-			this.queryPost = {}; 
-			this.queryFile = {}; 
+			this.queryPost = {};
+			this.queryFile = {};
 			this.queryGet = this.url.query;
-			
 			this.query = this.url.query;
-			
 			this.method = this.getMethod() ;
 			this.rawContentType = {} ;
 			this.contentType = this.getContentType(this.request);
@@ -90,9 +86,8 @@ nodefony.register("Request",function(){
 			this.remoteAddress = this.getRemoteAddress();
 			this.data = [];
 			this.dataSize = 0;
-
 			this.request.on('data',  (data) => {
-				this.data.push(data); 
+				this.data.push(data);
 				this.dataSize+= data.length;
 			});
 
@@ -109,12 +104,10 @@ nodefony.register("Request",function(){
 								this.query = this.queryPost ;
 							}else{
 								 this.query = nodefony.extend( {},  this.query, this.queryPost);
-								//nodefony.extend( this.query, this.queryFile);
 							}
 						break;
 						default:
 							this.query = nodefony.extend({},  this.query, this.queryPost);
-							//nodefony.extend( this.query, this.queryFile);
 					}
 				}catch(e){
 					console.trace(e);
@@ -128,7 +121,6 @@ nodefony.register("Request",function(){
 
 		getHost (){
 			return this.request.headers.host ;
-			//return this.url.host ;
 		}
 
 		getHostName (host){
@@ -138,12 +130,11 @@ nodefony.register("Request",function(){
 			if ( host ){
 				return host.split(":")[0] ;
 			}
-			return  this.getHost().split(":")[0] ; 
+			return  this.getHost().split(":")[0] ;
 		}
 
-
 		getUserAgent (){
-			return this.request.headers['user-agent'];	
+			return this.request.headers['user-agent'];
 		}
 
 		getMethod (){
@@ -154,7 +145,7 @@ nodefony.register("Request",function(){
 			this.data = null ;
 			delete this.data ;
 			this.body = null ;
-			delete  this.body ; 
+			delete  this.body ;
 			this.queryPost = null ;
 			delete	this.queryPost ;
 			this.queryFile = null;
@@ -165,8 +156,9 @@ nodefony.register("Request",function(){
 			delete  this.query ;
 			this.request = null ;
 			delete  this.request ;
-			this.container = null ;
-			delete this.container ;
+			//this.container = null ;
+			//delete this.container ;
+			//super.clean();
 		}
 
 		/*acceptLanguage (request){
@@ -179,39 +171,37 @@ nodefony.register("Request",function(){
 				if ( tab[i] ){
 					var ele = tab[i].split(",");
 					console.log(ele);
-				}	
+				}
 			}
 		}*/
 
 		logger (pci, severity, msgid,  msg){
-			var syslog = this.container.get("syslog");
-			if (! msgid) { msgid = "HTTP REQUEST  ";}
-			return syslog.logger(pci, severity, msgid,  msg);
+			if (! msgid) { msgid = this.context.type + " REQUEST ";}
+			return this.context.logger(pci, severity, msgid,  msg);
 		}
 
 		getContentType ( request ){
 			if ( request.headers["content-type"] ){
-				var tab = request.headers["content-type"].split(";") ;
+				let tab = request.headers["content-type"].split(";") ;
 				if (tab.length > 1){
-					for (var i = 1 ; i<tab.length ;i++){
+					for (let i = 1 ; i<tab.length ;i++){
 						if (typeof tab[i] === "string"){
-							var ele = tab[i].split("=");
-							var key = ele[0].replace(" ","");
-							this.rawContentType[key]= ele[1]; 
+							let ele = tab[i].split("=");
+							let key = ele[0].replace(" ","");
+							this.rawContentType[key]= ele[1];
 						}else{
 							continue ;
 						}
-
 					}
 				}
 				this.extentionContentType = request.headers["content-type"] ;
-				return  tab[0];		
+				return  tab[0];
 			}
 			return null;
 		}
 
 		getCharset ( request ){
-			var charset = null ;
+			let charset = null ;
 			if ( request.headers["content-type"] ){
 				charset = request.headers["content-type"].split(";")[1];
 				if (charset){
@@ -220,7 +210,7 @@ nodefony.register("Request",function(){
 					charset = "utf8" ;
 				}
 			}
-			return  charset || "utf8" ; 
+			return  charset || "utf8" ;
 		}
 
 		getDomain (){
@@ -234,7 +224,7 @@ nodefony.register("Request",function(){
 				return this.headers['x-forwarded-for'] ;
 			}
 			if ( this.request.connection && this.request.connection.remoteAddress ){
-				return this.request.connection.remoteAddress ; 
+				return this.request.connection.remoteAddress ;
 			}
 			if ( this.request.socket && this.request.socket.remoteAddress ){
 				return this.request.socket.remoteAddress ;
@@ -275,5 +265,3 @@ nodefony.register("Request",function(){
 
 	return Request;
 });
-
-

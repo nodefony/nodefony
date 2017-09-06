@@ -1,15 +1,14 @@
 const events = require('events');
 
+module.exports = nodefony.register("notificationsCenter",function(){
 
-nodefony.register("notificationsCenter",function(){
+	const regListenOn = /^on(.*)$/;
+	const defaultNbListeners = 20 ;
 
-	var regListenOn = /^on(.*)$/;
-	var defaultNbListeners = 20 ;
-	
 	var Notification = class Notification {
 
 		constructor(settings, context, nbListener) {
-			this.event = new events.EventEmitter();	
+			this.event = new events.EventEmitter();
 			this.setMaxListeners(nbListener || defaultNbListeners);
 			if (settings) {
 				this.settingsToListen(settings, context);
@@ -18,22 +17,22 @@ nodefony.register("notificationsCenter",function(){
 
 		/**
 	 	*
-	 	*	@method setMaxListeners 
+	 	*	@method setMaxListeners
 	 	*
 	 	*/
 		setMaxListeners (){
-			return this.event.setMaxListeners.apply(this.event, arguments);	
+			return this.event.setMaxListeners.apply(this.event, arguments);
 		}
 
 		/**
 	 	*
-	 	*	@method listen 
+	 	*	@method listen
 	 	*
 	 	*/
 		listen (context, eventName, callback) {
-			var event = arguments[1];
-			var ContextClosure = this;
-			if ( callback instanceof Function ){
+			let event = arguments[1];
+			let ContextClosure = this;
+			if (  typeof(callback ) === 'function'  || callback instanceof Function ){
 				this.event.addListener(eventName, callback.bind(context));
 			}
 			return function() {
@@ -43,43 +42,42 @@ nodefony.register("notificationsCenter",function(){
 		}
 
 		on (eventName, callback) {
-			var event = arguments[1];
-			var ContextClosure = this;
-			if ( callback instanceof Function ){
+			let event = arguments[1];
+			let ContextClosure = this;
+			if ( typeof(callback ) === 'function'  || callback instanceof Function ){
 				this.event.addListener(eventName, callback);
 				return function() {
 					Array.prototype.unshift.call(arguments, event);
 					return ContextClosure.fire.apply(ContextClosure, arguments);
 				};
 			}
-			throw new Error("notificationsCenter  callback must be a function"); 
+			throw new Error("notificationsCenter  callback must be a function");
 		}
 
 		/**
 	 	*
-	 	*	@method once 
+	 	*	@method once
 	 	*
-	 	*/ 
+	 	*/
 		once (context, eventName, callback){
-			var event = arguments[1];
-			var ContextClosure = this;
-			if ( callback instanceof Function ){
+			let event = arguments[1];
+			let ContextClosure = this;
+			if ( typeof(callback ) === 'function'  || callback instanceof Function ){
 				this.event.once(eventName, callback.bind(context));
 			}
 			return function() {
 				Array.prototype.unshift.call(arguments, event);
 				return ContextClosure.fire.apply(ContextClosure, arguments);
 			};
-			//return this.event.once.apply(this.event, arguments);	
+			//return this.event.once.apply(this.event, arguments);
 		}
 
 		/**
 	 	*
-	 	*	@method fire 
+	 	*	@method fire
 	 	*
 	 	*/
 		fire () {
-			var ret = false;
 			try {
 				return this.event.emit.apply(this.event, arguments);
 			} catch (e) {
@@ -92,17 +90,16 @@ nodefony.register("notificationsCenter",function(){
 					throw e ;
 				}
 			}
-			return ret;
 		}
 
-		
+
 		/**
 	 	*
-	 	*	@method settingsToListen 
+	 	*	@method settingsToListen
 	 	*
 	 	*/
 		settingsToListen (localSettings, context) {
-			for (var i in localSettings) {
+			for (let i in localSettings) {
 				var res = regListenOn.exec(i);
 				if (!res){
 					continue;
@@ -113,31 +110,31 @@ nodefony.register("notificationsCenter",function(){
 
 		/**
 	 	*
-	 	*	@method unListen 
+	 	*	@method unListen
 	 	*
 	 	*/
 		unListen (){
-			return this.event.removeListener.apply(this.event, arguments);	
+			return this.event.removeListener.apply(this.event, arguments);
 		}
 
 		/**
 	 	*
-	 	*	@method removeAllListeners 
+	 	*	@method removeAllListeners
 	 	*
-	 	*/ 
+	 	*/
 		removeAllListeners (){
-			return this.event.removeAllListeners.apply(this.event, arguments);	
+			return this.event.removeAllListeners.apply(this.event, arguments);
 		}
 	};
 	return {
 		notification:Notification,
 		/**
 		 *
-		 *	@method create 
+		 *	@method create
 		 *
 		 */
 		create: function(settings, context, nbListener) {
 			return new Notification(settings, context, nbListener);
-		}	
+		}
 	};
 });

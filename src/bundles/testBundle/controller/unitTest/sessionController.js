@@ -13,7 +13,7 @@ var querystring = require('querystring');
 var blueBird = require("bluebird");
 
 
-nodefony.registerController("session", function(){
+module.exports = nodefony.registerController("session", function(){
 
 
 	var sessionTest = class sessionTest extends nodefony.controller {
@@ -22,16 +22,16 @@ nodefony.registerController("session", function(){
 			super(container, context);
 			this.sessionService = this.get("sessions");
 		}
-		
+
 		/**
  	 	*
- 	 	*	sessionAction 
+ 	 	*	sessionAction
  	 	*
  	 	*/
 		sessionAction(type, message){
 
 			if ( message ){
-				return this.renderResponse(message.utf8Data);	
+				return this.renderResponse(message.utf8Data);
 			}
 			switch(type){
 				case "start" :
@@ -42,7 +42,7 @@ nodefony.registerController("session", function(){
 							contextSession:session.contextSession,
 							strategy:session.strategy,
 							name:session.name
-						})	
+						})
 					}).catch( (e) =>{
 						throw e ;
 					});
@@ -58,7 +58,7 @@ nodefony.registerController("session", function(){
 							contextSession:session.contextSession,
 							strategy:session.strategy,
 							name:session.name
-						})	
+						})
 					}).catch( (e) =>{
 						throw e ;
 					});
@@ -74,7 +74,7 @@ nodefony.registerController("session", function(){
 							contextSession:session.contextSession,
 							strategy:session.strategy,
 							name:session.name
-						})	
+						})
 					}).catch( (e) =>{
 						throw e ;
 					});
@@ -85,11 +85,11 @@ nodefony.registerController("session", function(){
 					}
 					return this.renderJson({
 						id: id || null
-					})	
-							
+					})
+
 			}
 		}
 	};
-	
+
 	return sessionTest;
 });

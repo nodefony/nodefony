@@ -5,28 +5,29 @@
 
 var Url = require("url");
 
-nodefony.registerCommand("Monitoring",function(){
+module.exports = nodefony.registerCommand("Monitoring",function(){
 
-	var monitoring = class monitoring  extends nodefony.cliWorker {
+	var monitoring = class monitoring  extends nodefony.cliKernel {
 
-		constructor (container, command/*, options*/){
+		constructor (container, command, options){
 
-			super( "Monitoring", container, container.get("notificationsCenter") );
+			super( "Monitoring", container, container.get("notificationsCenter"), options );
 
-			var arg = command[0].split(":");
-			switch ( arg[1] ){
+			let cmd = command[0].split(":");
+			let args = command[1] ;
+			switch ( cmd[1] ){
 				case "test":
 					this.serverLoad = this.container.get("serverLoad");
 					var proto = null ;
 					var url = null ;
 					var nb = null ;
 					var concurence = null ;
-					switch( arg[2]){
+					switch( cmd[2]){
 						case "load":
 							try {
-								url = Url.parse( command[1] );
-								nb = parseInt( command[2] ,10 );
-								concurence = parseInt( command[3] ,10 );
+								url = Url.parse( args[0] );
+								nb = parseInt( args[1] ,10 );
+								concurence = parseInt( args[2] ,10 );
 							}catch(e){
 								this.showHelp();
 								this.terminate(1);
@@ -36,7 +37,7 @@ nodefony.registerCommand("Monitoring",function(){
 								url.protocol = "http:";
 								url.href = "http://"+url.href;
 							}else{
-								proto = url.protocol.replace(":", "");	
+								proto = url.protocol.replace(":", "");
 							}
 							this.serverLoad.handleConnection({
 								type: proto,
@@ -57,21 +58,19 @@ nodefony.registerCommand("Monitoring",function(){
 			}
 		}
 
-		
-		
 		send (data/*, encodage*/){
 			var message = JSON.parse(data) ;
 			if ( message.message === "END LOAD TEST" ){
 				this.displayTable( message  );
 				this.logger(data, "INFO");
 			}else{
-				this.logger(data, "INFO");	
+				this.logger(data, "INFO");
 			}
 		}
 
 		close (code){
 			if (code){
-				return this.terminate(code);	
+				return this.terminate(code);
 			}
 			return this.terminate(0);
 		}
@@ -99,11 +98,11 @@ nodefony.registerCommand("Monitoring",function(){
 				}
 			}
 			var head = [
-				"Average By Requests ( ms )", 
+				"Average By Requests ( ms )",
 				"Average Requests By Seconde",
 				"Total Time (s)",
 				"Average By Concurences (s)",
-				"Average CPU (%)"	
+				"Average CPU (%)"
 			];
 			super.displayTable([obj], {
 				head:head,
@@ -116,9 +115,8 @@ nodefony.registerCommand("Monitoring",function(){
 	return {
 		name:"Monitoring",
 		commands:{
-			Test:["Monitoring:test:load URL [nbRequests] [concurence]" ,"load test example ./console Monitoring:test:load http://localhost:5151/demo 10000 100 "],
+			Test:["Monitoring:test:load URL [nbRequests] [concurence]" ,"load test example : nodefony Monitoring:test:load http://localhost:5151/demo 10000 100 "],
 		},
-		worker:monitoring
+		cli:monitoring
 	};
-});		
-
+});

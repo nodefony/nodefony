@@ -3,10 +3,10 @@
  *
  *   MOCHA STYLE
  *
- *   In the global context you can find : 
+ *   In the global context you can find :
  *
- *	nodefony : namespace to get library  
- *	kernel :   instance of kernel who launch the test   
+ *	nodefony : namespace to get library
+ *	kernel :   instance of kernel who launch the test
  *
  */
 
@@ -19,7 +19,7 @@ const assert = require('assert');
 
 
 
-describe("BUNDLE DEMO", function(){
+describe("BUNDLE TEST", function(){
 
 
 	before(function(){
@@ -34,7 +34,7 @@ describe("BUNDLE DEMO", function(){
 	describe('RESPONSE ', function(){
 
 		it("status200", function(done){
-			global.options.path ='/test/unit/response/status/200';  
+			global.options.path ='/test/unit/response/status/200';
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 200);
 				assert.equal(res.statusMessage, "OK");
@@ -43,14 +43,14 @@ describe("BUNDLE DEMO", function(){
 					var res = JSON.parse(chunk);
 					assert.deepStrictEqual(res.code, 200);
 					assert.deepStrictEqual(res.message, "OK");
-					done();	
+					done();
 				});
 			})
 			request.end();
 		});
 
 		it("status500", function(done){
-			global.options.path ='/test/unit/response/status/500';  
+			global.options.path ='/test/unit/response/status/500';
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 500);
 				assert.equal(res.statusMessage, "Internal Server Error");
@@ -59,14 +59,14 @@ describe("BUNDLE DEMO", function(){
 					var res = JSON.parse(chunk);
 					assert.deepStrictEqual(res.code, 500);
 					assert.deepStrictEqual(res.message, "Internal Server Error");
-					done();	
+					done();
 				});
 			})
 			request.end();
 		});
 
 		it("status404", function(done){
-			global.options.path ='/test/unit/response/status/404';  
+			global.options.path ='/test/unit/response/status/404';
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 404);
 				assert.equal(res.statusMessage, "Not Found");
@@ -75,14 +75,14 @@ describe("BUNDLE DEMO", function(){
 					var res = JSON.parse(chunk);
 					assert.deepStrictEqual(res.code, 404);
 					assert.deepStrictEqual(res.message, "Not Found");
-					done();	
+					done();
 				});
 			})
 			request.end();
 		});
 
 		it("messageFoo", function(done){
-			global.options.path ='/test/unit/response/status/200/foo';  
+			global.options.path ='/test/unit/response/status/200/foo';
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 200);
 				assert.equal(res.statusMessage, "foo");
@@ -91,14 +91,14 @@ describe("BUNDLE DEMO", function(){
 					var res = JSON.parse(chunk);
 					assert.deepStrictEqual(res.code, 200);
 					assert.deepStrictEqual(res.message, "foo");
-					done();	
+					done();
 				});
 			})
 			request.end();
 		});
 
 		it("messageNotFound", function(done){
-			global.options.path ='/test/unit/response/status/401/userNotFound';  
+			global.options.path ='/test/unit/response/status/401/userNotFound';
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 401);
 				assert.equal(res.statusMessage, "userNotFound");
@@ -107,13 +107,13 @@ describe("BUNDLE DEMO", function(){
 					var res = JSON.parse(chunk);
 					assert.deepStrictEqual(res.code, 401);
 					assert.deepStrictEqual(res.message, "userNotFound");
-					done();	
+					done();
 				});
 			})
 			request.end();
 		});
 		it("messageNull", function(done){
-			global.options.path ='/test/unit/response/status/404/null';  
+			global.options.path ='/test/unit/response/status/404/null';
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 404);
 				assert.equal(res.statusMessage, "Not Found");
@@ -124,13 +124,13 @@ describe("BUNDLE DEMO", function(){
 					assert.deepStrictEqual(res.code, 404);
 					assert.deepStrictEqual(res.message, "Not Found");
 					assert.deepStrictEqual(res.generateUrl, "/test/unit/response/status/404/bar");
-					done();	
+					done();
 				});
 			})
 			request.end();
 		});
 		it("message408", function(done){
-			global.options.path ='/test/unit/response/status/408?foo=bar';  
+			global.options.path ='/test/unit/response/status/408?foo=bar';
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 408);
 				assert.equal(res.statusMessage, "Request Timeout");
@@ -141,14 +141,14 @@ describe("BUNDLE DEMO", function(){
 					assert.deepStrictEqual(res.code, 408);
 					assert.deepStrictEqual(res.message, "Request Timeout");
 					assert.deepStrictEqual(res.generateUrl, "/test/unit/response/status/408");
-					done();	
+					done();
 				});
 			})
 			request.end();
 		});
 
 		it("queryString-simple", function(done){
-			global.options.path ='/test/unit/response/query?foo=bar';  
+			global.options.path ='/test/unit/response/query?foo=bar';
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 200);
 				assert.equal(res.statusMessage, "OK");
@@ -157,14 +157,14 @@ describe("BUNDLE DEMO", function(){
 					var res = JSON.parse(chunk);
 					assert.deepStrictEqual(res.query, {foo:"bar"});
 					assert.deepStrictEqual(res.generateUrl, "/test/unit/response/query/foo/bar?foo=bar");
-					done();	
+					done();
 				});
 			})
 			request.end();
 		});
 
 		it("queryString-multiple", function(done){
-			global.options.path ='/test/unit/response/query?foo=bar&bar=foo';     
+			global.options.path ='/test/unit/response/query?foo=bar&bar=foo';
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 200);
 				assert.equal(res.statusMessage, "OK");
@@ -173,14 +173,14 @@ describe("BUNDLE DEMO", function(){
 					var res = JSON.parse(chunk);
 					assert.deepStrictEqual(res.query, {foo:"bar",bar:"foo"});
 					assert.deepStrictEqual(res.generateUrl, "/test/unit/response/query/foo/bar?foo=bar&bar=foo");
-					done(); 
+					done();
 				});
 			})
 			request.end();
 		});
 
 		it("queryString-withVariable", function(done){
-			global.options.path ='/test/unit/response/query/myvar1/myvar2?foo=bar&bar=foo&ele=null';     
+			global.options.path ='/test/unit/response/query/myvar1/myvar2?foo=bar&bar=foo&ele=null';
 			var request = http.request(global.options,function(res) {
 				assert.equal(res.statusCode, 200);
 				assert.equal(res.statusMessage, "OK");
@@ -189,7 +189,7 @@ describe("BUNDLE DEMO", function(){
 					var res = JSON.parse(chunk);
 					assert.deepStrictEqual(res.query, {foo:"bar",bar:"foo",ele:'null'});
 					assert.deepStrictEqual(res.generateUrl, "/test/unit/response/query/myvar1/myvar2?foo=bar&bar=foo&ele=null");
-					done(); 
+					done();
 				});
 			})
 			request.end();

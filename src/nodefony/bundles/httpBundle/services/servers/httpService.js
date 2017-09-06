@@ -1,17 +1,10 @@
-/*
- * New node file
- */
+module.exports = nodefony.registerService("http", function(){
 
-//var http = require('http');
-//var nodedomain = require('domain');
-
-nodefony.registerService("http", function(){
-	
-	var Http = class Http extends nodefony.Service {
+	const Http = class Http extends nodefony.Service {
 
 		constructor (httpKernel , security, options ){
 
-			super( "http", httpKernel.container, httpKernel.notificationsCenter , options  );
+			super( "HTTP", httpKernel.container, httpKernel.notificationsCenter , options  );
 
 			this.httpKernel = httpKernel ;
 			this.port = this.httpKernel.kernel.httpPort ;
@@ -38,11 +31,6 @@ nodefony.registerService("http", function(){
 			});
 		}
 
-		logger (pci, severity, msgid,  msg){
-			if (! msgid) { msgid = "SERVICE HTTP ";}
-			return this.syslog.logger(pci, severity, msgid,  msg);
-		}
-
 		createZone (request, response){
 
 			require("zone").enable();
@@ -57,48 +45,22 @@ nodefony.registerService("http", function(){
 				this.logger(err);
 			});
 		}
-	
-		createServer (/*port, domain*/){
+
+		createServer (){
 			this.settings = this.getParameters("bundles.http").http || null ;
 
-			this.server = http.createServer((request, response) => {
-				response.setHeader("Server", "nodefony");
-				if ( this.kernel.settings.system.statics ){
-					this.httpKernel.serverStatic.handle(request, response , () => {
-						//this.createZone(request, response);
-						/*var d = nodedomain.create();
-						d.on('error', (er) => {
-							if ( d.container ){
-								this.httpKernel.onError( d.container, er.stack,  "ERROR");
-							}else{
-								this.logger(er.stack, "ERROR");
-							}
-						});
-						d.add(request);
-						d.add(response);
-						d.run(() => {
-							this.fire("onServerRequest", request, response, this.type, d);
-						});*/
-						this.fire("onServerRequest", request, response, this.type);
-					});
-				}else{
-					/*var d = nodedomain.create();
-					d.on('error', (er) => {
-						if ( d.container ){
-							this.httpKernel.onError( d.container, er.stack);
-						}else{
-							this.logger(er.stack, "ERROR");
-						}
-					});
-					d.add(request);
-					d.add(response);
-					d.run( () => {
-						this.fire("onServerRequest", request, response, this.type, d);
-					});*/	
-					this.fire("onServerRequest", request, response, this.type);
-				}
-			});
-			
+			try {
+				this.server = http.createServer();
+				this.bundle.fire("onCreateServer", this.type, this);
+			}catch(e){
+				this.logger(e, "CRITIC");
+				throw e ;
+			}
+
+			this.server.on("request", ( request, response ) => {
+				this.httpKernel.onHttpRequest(request, response, this.type);
+			} );
+
 			if (this.settings.timeout){
 				this.server.timeout = this.settings.timeout;
 			}
@@ -107,7 +69,8 @@ nodefony.registerService("http", function(){
 				this.server.maxHeadersCount = this.settings.maxHeadersCount;
 			}
 
-			// LISTEN ON PORT 
+
+			// LISTEN ON PORT
 			this.server.listen(this.port, this.domain, () => {
 				this.logger(this.type+"  Server is listening on DOMAIN : http://"+this.domain+":"+this.port , "INFO");
 				this.ready = true ;
@@ -115,7 +78,7 @@ nodefony.registerService("http", function(){
 			});
 
 			this.server.on("error",(error) => {
-				var httpError = "server HTTP Error : "+error.errno;
+				let httpError = "server HTTP Error : "+error.errno;
 				switch (error.errno){
 					case "ENOTFOUND":
 						this.logger( new Error(httpError+" CHECK DOMAIN IN /etc/hosts unable to connect to : "+this.domain), "CRITIC");
@@ -128,8 +91,8 @@ nodefony.registerService("http", function(){
     						}, 1000);
 					break;
 					default :
-						this.logger( new Error(httpError) ,"CRITIC", "SERVICE HTTPS");	
-				}	
+						this.logger( new Error(httpError) ,"CRITIC", "SERVICE HTTPS");
+				}
 			});
 
 			this.listen(this, "onTerminate",() => {
@@ -142,7 +105,6 @@ nodefony.registerService("http", function(){
 
 			this.server.on("clientError",(e, socket) =>{
 				this.fire("onClientError", e, socket);
-				socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 			});
 
 			return this.server;

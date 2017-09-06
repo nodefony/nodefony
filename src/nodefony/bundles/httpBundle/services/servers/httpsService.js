@@ -1,24 +1,17 @@
-/*
- * New node file
- */
+module.exports = nodefony.registerService("https", function(){
 
-//var https = require('https');
-//var nodedomain = require('domain');
-
-nodefony.registerService("https", function(){
-
-	var Https = class Https extends nodefony.Service {
+	const Https = class Https extends nodefony.Service {
 
 		constructor (httpKernel , security, options){
 
-			super( "https", httpKernel.container, httpKernel.notificationsCenter , options  );
+			super( "HTTPS", httpKernel.container, httpKernel.notificationsCenter , options  );
 
 			this.httpKernel = httpKernel;
 			this.port = this.httpKernel.kernel.httpsPort ;
 			this.domain = this.httpKernel.kernel.settings.system.domain ;
 			this.firewall =  security ;
 			this.ready = false ;
-			this.settings = this.kernel.settings.system.servers || null ;
+			//this.settings = this.kernel.settings.system.servers || null ;
 
 			this.key = null ;
 			this.cert = null ;
@@ -43,21 +36,18 @@ nodefony.registerService("https", function(){
 			});
 		}
 
-		logger (pci, severity, msgid,  msg){
-			if (! msgid) {msgid = "SERVICE HTTPS ";}
-			return this.syslog.logger(pci, severity, msgid,  msg);
-		}
-
 		getCertificats (){
+			this.settings = this.getParameters("bundles.http").https || null ;
+			this.settings.certificats = nodefony.extend(true, {}, this.settings.certificats, this.kernel.settings.system.servers.certificats ) ;
 			var bundleOptions = this.getParameters("bundles.http").https.certificats || null ;
-			var opt = nodefony.extend( true, {
+			let opt = nodefony.extend( true, {
 				keyPath: this.kernel.checkPath(this.settings.certificats.key),
 				certPath: this.kernel.checkPath(this.settings.certificats.cert),
 				caPath: this.kernel.checkPath(this.settings.certificats.ca),
 				key: null,
 				cert: null,
 				ca: null
-			},bundleOptions ) ;
+			}, bundleOptions) ;
 			try {
 				this.key = fs.readFileSync(opt.keyPath) ;
 				opt.key = this.key ;
@@ -72,70 +62,45 @@ nodefony.registerService("https", function(){
 			}
 			return opt ;
 		}
-	
-		createServer (/*port, domain*/){
+
+		createServer (){
+			//this.settings = this.getParameters("bundles.http").https || null ;
+			//this.settings.certificats = nodefony.extend(true, {}, this.settings.certificats, this.kernel.settings.system.servers.certificats ) ;
 			try {
 				this.options = this.getCertificats();
-				for (var ele in this.options ){
+				for (let ele in this.options )	{
 					switch ( ele ){
 						case "keyPath" :
-							this.logger( " READ CERTIFICATE KEY : "+this.options[ele], "DEBUG"); 
+							this.logger( " READ CERTIFICATE KEY : "+this.options[ele], "DEBUG");
 						break;
 						case "certPath" :
-							this.logger( " READ CERTIFICATE CERT : "+this.options[ele], "DEBUG"); 
+							this.logger( " READ CERTIFICATE CERT : "+this.options[ele], "DEBUG");
 						break;
 						case "caPath" :
 							if ( this.options[ele] ){
-								this.logger( " READ CERTIFICATE CA : "+this.options[ele], "DEBUG"); 
+								this.logger( " READ CERTIFICATE CA : "+this.options[ele], "DEBUG");
 							}else{
-								this.logger( " NO CERTIFICATE CA : "+this.options[ele], "WARNING");	
+								this.logger( " NO CERTIFICATE CA : "+this.options[ele], "WARNING");
 							}
 						break;
 					}
 				}
 			}catch(e){
 				this.logger(e);
-				throw e ;	
+				throw e ;
 			}
 
-			this.options = nodefony.extend(this.options, this.settings.certificats.options);
+			try {
+				this.server = https.createServer(this.options);
+				this.bundle.fire("onCreateServer", this.type, this);
+			}catch(e){
+				this.logger(e, "CRITIC");
+				throw e ;
+			}
 
-			this.server = https.createServer(this.options, (request, response) => {
-				response.setHeader("Server", "nodefony");
-				if (  this.kernel.settings.system.statics ){
-					this.httpKernel.serverStatic.handle(request, response , () => {
-						/*var d = nodedomain.create();
-						d.on('error', (er) => {
-							if ( d.container ){
-								this.httpKernel.onError( d.container, er.stack);
-							}else{
-								this.logger(er.stack , "ERROR", "SERVICE HTTPS");
-							}
-						});
-						d.add(request);
-						d.add(response);
-						d.run( () => {
-							this.fire("onServerRequest", request, response, this.type, d);
-						});*/
-						this.fire("onServerRequest", request, response, this.type);
-					});
-				}else{
-					/*var d = nodedomain.create();
-					d.on('error', (er) => {
-						if ( d.container ){
-							this.httpKernel.onError( d.container, er.stack);
-						}else{
-							this.logger(er.stack,"ERROR");
-						}
-					});
-					d.add(request);
-					d.add(response);
-					d.run( () => {
-						this.fire("onServerRequest", request, response, this.type, d);
-					});*/	
-					this.fire("onServerRequest", request, response, this.type);
-				}
-			});
+			this.server.on("request", ( request, response ) => {
+				this.httpKernel.onHttpRequest(request, response, this.type);
+			} );
 
 			if (this.settings.timeout){
 				this.server.timeout = this.settings.timeout;
@@ -145,7 +110,7 @@ nodefony.registerService("https", function(){
 				this.server.maxHeadersCount = this.settings.maxHeadersCount;
 			}
 
-			// LISTEN ON PORT 
+			// LISTEN ON PORT
 			this.server.listen(this.port, this.domain, () => {
 				this.logger(this.type+"  Server is listening on DOMAIN : https://"+this.domain+":"+this.port , "INFO");
 				this.ready = true ;
@@ -153,7 +118,7 @@ nodefony.registerService("https", function(){
 			});
 
 			this.server.on("error",(error) => {
-				var httpError = "server HTTPS Error : "+error.errno;
+				let httpError = "server HTTPS Error : "+error.errno;
 				switch (error.errno){
 					case "ENOTFOUND":
 						this.logger( new Error(httpError+" CHECK DOMAIN IN /etc/hosts unable to connect to : "+this.domain), "CRITIC");
@@ -166,13 +131,12 @@ nodefony.registerService("https", function(){
     						}, 1000);
 					break;
 					default :
-						this.logger( new Error(httpError), "CRITIC" );	
-				}	
+						this.logger( new Error(httpError), "CRITIC" );
+				}
 			});
 
 			this.server.on("clientError",(e, socket) => {
 				this.fire("onClientError", e, socket);
-				socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 			});
 
 			this.listen(this, "onTerminate", () => {

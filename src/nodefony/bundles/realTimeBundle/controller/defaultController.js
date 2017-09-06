@@ -9,7 +9,7 @@
  *
  **/
 
-nodefony.registerController("default", function(){
+module.exports = nodefony.registerController("default", function(){
 
 	var realTimeController =  class realTimeController extends nodefony.controller {
 
@@ -18,7 +18,7 @@ nodefony.registerController("default", function(){
 		};
 
 		/**
- 		* 
+ 		*
  		*
  		**/
 		indexAction (message){
@@ -29,7 +29,7 @@ nodefony.registerController("default", function(){
 					return this.getResponse("PING");
 				break;
 				case "POST" :
-					return realtime.handleConnection(this.getParameters("query").request, context );	
+					return realtime.handleConnection(this.getParameters("query").request, context );
 				break;
 				case "WEBSOCKET" :
 					if (message){
