@@ -193,6 +193,28 @@ module.exports = nodefony.registerService("webpack", function(){
 			}
 		}
 
+		checkNotEmptyEntry(config){
+			let size = null ;
+			switch ( nodefony.typeOf(config.entry) ){
+				case 'object':
+					size = Object.keys(config.entry).length ;
+					if ( size === 0 ){
+						return false;
+					}
+					return true ;
+				case "array"  :
+				case "string" :
+					size = config.entry.length ;
+					if ( size === 0 ){
+						return false;
+					}
+					return true ;
+				default :
+				console.trace(config);
+				throw new Error ("Webpack Entry configuration  that does not match the API schema");
+			}
+		}
+
 		loadConfigFile (file, bundle){
 			try {
 				if ( ! ( file instanceof nodefony.fileClass ) ){
@@ -240,6 +262,16 @@ module.exports = nodefony.registerService("webpack", function(){
 						config = require( file.path );
 				}
 				config.name = file.name || basename  ;
+				try {
+					let ret = this.checkNotEmptyEntry( config );
+					if ( ! ret ){
+						this.logger("Empty entry webpack bundle :  "+ bundle.bundleName ,"WARNING")
+						return null ;
+					}
+				}catch(e){
+					shell.cd(this.kernel.rootDir);
+					throw e ;
+				}
 				compiler =  webpack( config );
 				if ( this.kernel.type === "CONSOLE" ){
 					shell.cd(this.kernel.rootDir);

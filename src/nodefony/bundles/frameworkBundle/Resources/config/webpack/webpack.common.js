@@ -7,9 +7,6 @@ const bundleName = path.basename( path.resolve( __dirname, "..", "..", "..") );
 module.exports = {
     context     : public ,
     target      : "web",
-    entry       : {
-      framework : "./js/framework.js"
-    },
     output      : {
         path    : public,
         filename: "./assets/js/[name].js",

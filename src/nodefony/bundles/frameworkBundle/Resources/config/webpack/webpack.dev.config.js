@@ -10,5 +10,8 @@ const webpackDevClient = "webpack-dev-server/client?https://"+kernel.hostHttps+"
 module.exports = webpackMerge( {
     watch       : false,
     devtool     : "source-map",
+    entry       : {
+        framework : ["./js/framework.js", webpackDevClient]
+    },
     plugins     :[]
 }, commonConfig );

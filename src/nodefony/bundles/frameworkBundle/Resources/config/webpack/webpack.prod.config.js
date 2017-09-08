@@ -11,6 +11,9 @@ const UglifyEsPlugin = require('uglify-es-webpack-plugin');
 
 module.exports = webpackMerge( {
     watch       : false,
+    entry       : {
+        framework : ["./js/framework.js"]
+    },
     plugins     :[
         new OptimizeCssAssetsPlugin(  {
             cssProcessorOptions: { discardComments: {removeAll: true } },
