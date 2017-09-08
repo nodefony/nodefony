@@ -1,6 +1,6 @@
 {
   "name": "nodefony",
-  "version": "3.0.0-beta",
+  "version": "3.0.1-beta",
   "description": "Nodefony Node.js full-stack web framework",
   "main": "./src/nodefony/core/autoloader.js",
   "scripts": {

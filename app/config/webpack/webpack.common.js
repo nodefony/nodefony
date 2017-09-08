@@ -3,13 +3,12 @@ const webpack = require('webpack');
 const ExtractTextPluginCss = require('extract-text-webpack-plugin');
 const public = path.resolve(__dirname, "..", "..","Resources", "public");
 const bundleName = path.basename( path.resolve( __dirname, "..", "..") );
-const webpackDevClient = "webpack-dev-server/client?https://"+kernel.hostHttps+"/";
 
 module.exports = {
     context     : public ,
     target      : "web",
     entry       : {
-      app       : ["./js/app.js", webpackDevClient ]
+      app       : ["./js/app.js" ]
     },
     output      : {
         path    : public,

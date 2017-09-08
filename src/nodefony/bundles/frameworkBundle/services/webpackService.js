@@ -250,6 +250,8 @@ module.exports = nodefony.registerService("webpack", function(){
 						publicPath = path.resolve("/", bundle.bundleName, "dist" );
 						shell.cd(Path);
 						process.env.PUBLIC_URL = publicPath ;
+						process.env.HOST = this.kernel.hostHttps ;
+						process.env.HTTPS = true ;
 						config = require(file.path );
 						config.output.path = path.resolve("Resources", "public", "dist") ;
 						if ( publicPath ){
