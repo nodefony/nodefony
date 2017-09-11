@@ -5,12 +5,12 @@
 module.exports = nodefony.registerService("sessions", function(){
 
 
-	var algorithm = 'aes-256-ctr';
-	var password = 'd6F3Efeq';
+	const algorithm = 'aes-256-ctr';
+	const password = 'd6F3Efeq';
 
 
-	var checkSecureReferer = function(){
-		var host = null ;
+	const checkSecureReferer = function(){
+		let host = null ;
 		switch (this.context.type ){
 			case "HTTP" :
 			case "HTTPS" :
@@ -21,7 +21,7 @@ module.exports = nodefony.registerService("sessions", function(){
 				host = this.context.request.httpRequest.headers.host ;
 			break;
 		}
-		var meta = this.getMetaBag( "host" );
+		let meta = this.getMetaBag( "host" );
 		if ( host === meta ){
 			return host ;
 		}else{
@@ -33,15 +33,15 @@ module.exports = nodefony.registerService("sessions", function(){
 		}
 	};
 
-	var setMetasSession = function(){
-		var time = new Date() ;
+	const setMetasSession = function(){
+		let time = new Date() ;
 		this.setMetaBag("lifetime", this.settings.cookie.maxAge );
 		this.setMetaBag("context", this.contextSession );
 		this.setMetaBag("request", this.context.type );
 		this.setMetaBag("created", time );
 		this.setMetaBag("remoteAddress", this.context.getRemoteAddress() );
 		this.setMetaBag("host", this.context.getHost() );
-		var ua = this.context.getUserAgent() ;
+		let ua = this.context.getUserAgent() ;
 		if ( ua ){
 			this.setMetaBag("user_agent",ua );
 		}else{
@@ -53,7 +53,7 @@ module.exports = nodefony.registerService("sessions", function(){
  	 *
  	 *	CLASS SESSION
  	 */
-	var Session = class Session extends nodefony.Container {
+	const Session = class Session extends nodefony.Container {
 
 		constructor (name, settings, storage, manager ){
 			super();
@@ -84,15 +84,15 @@ module.exports = nodefony.registerService("sessions", function(){
 		}
 
 		encrypt  (text){
-			var cipher = crypto.createCipher(algorithm, password);
-			var crypted = cipher.update(text,'utf8','hex');
+			let cipher = crypto.createCipher(algorithm, password);
+			let crypted = cipher.update(text,'utf8','hex');
 			crypted += cipher.final('hex');
 			return crypted;
 		}
 
 		decrypt  (text){
-			var decipher = crypto.createDecipher(algorithm, password);
-			var dec = decipher.update(text,'hex','utf8');
+			let decipher = crypto.createDecipher(algorithm, password);
+			let dec = decipher.update(text,'hex','utf8');
 			dec += decipher.final('utf8');
 			return dec;
 		}
@@ -117,7 +117,7 @@ module.exports = nodefony.registerService("sessions", function(){
 				this.applyTranId = this.settings.use_trans_sid ;
 			}
 			try {
-				var ret = this.checkStatus() ;
+				let ret = this.checkStatus() ;
 				switch (ret){
 					case false :
 						return new Promise((resolve, reject)=>{
@@ -256,8 +256,8 @@ module.exports = nodefony.registerService("sessions", function(){
 					return false ;
 				}
 			}
-			var lastUsed = new Date( this.getMetaBag("lastUsed")).getTime();
-			var now = new Date().getTime() ;
+			let lastUsed = new Date( this.getMetaBag("lastUsed")).getTime();
+			let now = new Date().getTime() ;
 			if (this.lifetime === 0 ) {
 				/*if ( lastUsed && lastUsed + ( this.settings.gc_maxlifetime * 1000 ) < now ){
 					this.manager.logger("SESSION INVALIDE gc_maxlifetime    ==> " + this.name + " : "+ this.id, "WARNING");
@@ -291,7 +291,7 @@ module.exports = nodefony.registerService("sessions", function(){
 
 		getFlashBag (key){
 			//this.logger("GET FlashBag : " + key ,"WARNING")
-			var res = this.flashBag[key];
+			let res = this.flashBag[key];
 			if ( res ){
 				this.logger("Delete FlashBag : " + key ,"WARNING");
 				delete  this.flashBag[key] ;
@@ -331,20 +331,20 @@ module.exports = nodefony.registerService("sessions", function(){
 		}
 
 		setCookieSession ( leftTime){
-			var settings = null ;
+			let settings = null ;
 			if (leftTime){
 				settings = nodefony.extend( {}, this.settings.cookie);
 				settings.maxAge = leftTime;
 			}else{
 				settings = this.settings.cookie ;
 			}
-			var cookie = new nodefony.cookies.cookie(this.name, this.id, settings);
+			let cookie = new nodefony.cookies.cookie(this.name, this.id, settings);
 			this.context.response.addCookie(cookie);
 			return cookie ;
 		}
 
 		serialize (user){
-			var obj = {
+			let obj = {
 				Attributes:this.protoService.prototype,
 				metaBag:this.protoParameters.prototype,
 				flashBag:this.flashBag,
@@ -355,14 +355,14 @@ module.exports = nodefony.registerService("sessions", function(){
 
 		deSerialize (obj){
 			//var obj = JSON.parse(data);
-			for (var attr in obj.Attributes){
+			for (let attr in obj.Attributes){
 				this.set(attr, obj.Attributes[attr]);
 			}
-			for (var meta in obj.metaBag){
+			for (let meta in obj.metaBag){
 				//console.log(meta + " : " + obj.metaBag[meta])
 				this.setMetaBag(meta, obj.metaBag[meta]);
 			}
-			for (var flash in obj.flashBag){
+			for (let flash in obj.flashBag){
 				this.setFlashBag(flash, obj.flashBag[flash]);
 			}
 		}
@@ -411,10 +411,10 @@ module.exports = nodefony.registerService("sessions", function(){
 		}
 
 		setId (){
-			var ip = this.context.remoteAddress || this.getRemoteAddress(this.context) ;
-			var date = new Date().getTime();
-			var concat = ip + date + this.randomValueHex(16) + Math.random() * 10 ;
-			var hash = null ;
+			let ip = this.context.remoteAddress || this.getRemoteAddress(this.context) ;
+			let date = new Date().getTime();
+			let concat = ip + date + this.randomValueHex(16) + Math.random() * 10 ;
+			let hash = null ;
 			switch(this.settings.hash_function){
 				case "md5":
 					hash = crypto.createHash('md5');
@@ -425,13 +425,13 @@ module.exports = nodefony.registerService("sessions", function(){
 				default:
 					hash = crypto.createHash('md5');
 			}
-			var res =  hash.update(concat).digest("hex");
+			let res =  hash.update(concat).digest("hex");
 
 			return this.encrypt(res+":"+ this.contextSession );
 		}
 
 		getId (value){
-			var res = this.decrypt(value);
+			let res = this.decrypt(value);
 			this.contextSession =  res.split(':')[1];
 			return value ;
 		}
@@ -486,12 +486,10 @@ module.exports = nodefony.registerService("sessions", function(){
  	 *
  	 *
  	 */
-	var SessionsManager = class SessionsManager  extends nodefony.Service {
+	const SessionsManager = class SessionsManager  extends nodefony.Service {
 
 		constructor ( security, httpKernel){
-
-			super( "sessions", httpKernel.container, httpKernel.notificationsCenter   );
-
+			super( "SESSIONS", httpKernel.container, httpKernel.notificationsCenter   );
 			this.httpKernel = httpKernel;
 			this.firewall = security ;
 			this.kernel = httpKernel.kernel;
@@ -501,7 +499,6 @@ module.exports = nodefony.registerService("sessions", function(){
 				this.defaultSessionName = this.settings.name ;
 				this.initializeStorage();
 			});
-
 			this.listen(this, "onTerminate",() => {
 				if ( this.storage ){
 					this.storage.close();
@@ -510,10 +507,10 @@ module.exports = nodefony.registerService("sessions", function(){
 		}
 
 		initializeStorage (){
-			var storage =  eval("nodefony."+this.settings.handler) ;
+			let storage =  eval("nodefony."+this.settings.handler) ;
 			if (storage){
 				this.storage = new storage(this) ;
-				this.listen(this, "onOrmReady",function(){
+				this.listen(this, "onReady",function(){
 					this.storage.open("default");
 				});
 			}else{
@@ -521,12 +518,6 @@ module.exports = nodefony.registerService("sessions", function(){
 				this.logger("SESSION HANDLER STORAGE NOT FOUND :" + this.settings.handler,"ERROR");
 			}
 			return this.storage;
-		}
-
-		logger (pci, severity, msgid,  msg){
-			//var syslog = this.container.get("syslog");
-			if (! msgid) {msgid = "SERVICE SESSIONS";}
-			return this.syslog.logger(pci, severity || "DEBUG", msgid,  msg);
 		}
 
 		start (context, sessionContext){
@@ -541,7 +532,7 @@ module.exports = nodefony.registerService("sessions", function(){
 			if ( this.probaGarbage() ){
 				this.storage.gc(this.settings.gc_maxlifetime, sessionContext);
 			}
-			var inst = this.createSession(this.defaultSessionName, this.settings );
+			let inst = this.createSession(this.defaultSessionName, this.settings );
 			return  inst.start(context, sessionContext).then( (session) => {
 				if ( ! session ){
 					throw new Error( "SESSION START session storage ERROR")
@@ -561,8 +552,11 @@ module.exports = nodefony.registerService("sessions", function(){
 		}
 
 		createSession (name, settings){
-			var session = new Session(name, settings, this.storage, this);
-			return session ;
+			try {
+				return new Session(name, settings, this.storage, this);
+			}catch(e){
+				throw e ;
+			}
 		}
 
 		addContextSession (context){
@@ -578,11 +572,11 @@ module.exports = nodefony.registerService("sessions", function(){
 		}
 
 		probaGarbage  (){
-			var proba = parseInt( this.settings.gc_probability, 10 ) ;
-			var divisor = parseInt( this.settings.gc_divisor, 10 ) ;
+			let proba = parseInt( this.settings.gc_probability, 10 ) ;
+			let divisor = parseInt( this.settings.gc_divisor, 10 ) ;
 			if (proba > 0){
-				var rand = Math.random() ;
-				var random = parseInt( divisor * ( rand === 1 ? Math.random() :  rand ) , 10 ) ;
+				let rand = Math.random() ;
+				let random = parseInt( divisor * ( rand === 1 ? Math.random() :  rand ) , 10 ) ;
 				if (random < proba ){
 					return true ;
 				}

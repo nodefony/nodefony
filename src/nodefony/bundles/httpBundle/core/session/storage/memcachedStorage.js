@@ -12,25 +12,26 @@ nodefony.register.call(nodefony.session.storage, "memcached",function(){
 
 
 	var checkClient = function(contextSession){
+		let client = null ;
 		if ( contextSession ){
 			if ( this.clients[contextSession] ){
-				var client = this.clients[contextSession] ;
+				client = this.clients[contextSession] ;
 			}else{
-				throw ("client Mencahe not found error context : " + contextSession);
+				throw ("client Memcached not found error context : " + contextSession);
 			}
 		}else{
 			if ( this.clients["default"] ){
-				var client = this.clients["default"] ;
+				client = this.clients["default"] ;
 			}else{
-				throw("client Mencahe not found error context ", null) ;
+				throw("client Memcached not found error context ", null) ;
 			}
 		}
 		return client ;
 	}
 
 	var memcacheGC = function(client, msMaxlifetime ){
-		
-		
+
+
 	};
 
 
@@ -46,11 +47,11 @@ nodefony.register.call(nodefony.session.storage, "memcached",function(){
 
 			for (var server in this.settings.servers ){
 				var port = this.settings.servers[server].port ? this.settings.servers[server].port : 11211 ;
-				var host = this.settings.servers[server].location ; 
-				var weight = this.settings.servers[server].weight ? this.settings.servers[server].weight : 1 ; 
+				var host = this.settings.servers[server].location ;
+				var weight = this.settings.servers[server].weight ? this.settings.servers[server].weight : 1 ;
 				this.servers[ host+":"+port ] = weight ;
 			}
-		};
+		}
 
 		logger (pci, severity, msgid,  msg){
 			var syslog = this.manager ;
@@ -70,7 +71,7 @@ nodefony.register.call(nodefony.session.storage, "memcached",function(){
 			this.clients[contextSession] = 	new Memcached( this.servers, nodefony.extend({}, this.options ,{
 				namespace:contextSession
 			}) );
-			
+
 			/*this.clients[contextSession].stats(function(error, stats){
 				this.stats = stats ;
 			}.bind(this));*/
@@ -79,7 +80,7 @@ nodefony.register.call(nodefony.session.storage, "memcached",function(){
 				if ( details.failures){
 					this.logger(details.message, "ERROR");
 				}else{
-					this.logger(details.message, "INFO");	
+					this.logger(details.message, "INFO");
 				}
 			});
 
@@ -91,7 +92,7 @@ nodefony.register.call(nodefony.session.storage, "memcached",function(){
 				this.logger("Total downtime caused by server " + details.server + " :" + details.totalDownTime + "ms", "INFO");
 			});
 
-			this.gc(this.gc_maxlifetime, contextSession); 
+			this.gc(this.gc_maxlifetime, contextSession);
 
 			return true;
 		}
@@ -116,8 +117,8 @@ nodefony.register.call(nodefony.session.storage, "memcached",function(){
 						this.logger(" context : "+contextSession +" ID : "+ id + " DESTROY ERROR", "ERROR");
 						return reject(err) ;
 					}
-					
-					client.del(id,  (err) => { 
+
+					client.del(id,  (err) => {
 						if (err){
 							this.logger(" context : "+contextSession +" ID : "+ id + " DESTROY ERROR", "ERROR");
 							return reject (err) ;
@@ -141,7 +142,7 @@ nodefony.register.call(nodefony.session.storage, "memcached",function(){
 			}
 		}
 
-	
+
 		read ( id, contextSession , callback){
 			return new Promise ( (resolve, reject) =>{
 				var client = null ;
@@ -163,15 +164,15 @@ nodefony.register.call(nodefony.session.storage, "memcached",function(){
 						}
 					});
 				}catch(e){
-					this.logger( e,"ERROR");	
+					this.logger( e,"ERROR");
 					return reject( e );
-				}	
+				}
 			} );
 		}
 
 		write (id, serialize, contextSession, callback){
 			return new Promise ( ( resolve, reject ) => {
-				var client = null ; 
+				var client = null ;
 				try {
 					client = checkClient.call(this, contextSession);
 				}catch(e){
@@ -187,23 +188,23 @@ nodefony.register.call(nodefony.session.storage, "memcached",function(){
 							try {
 								client.replace(id, JSON.stringify(serialize) , this.gc_maxlifetime, function(err, result){
 									if (err){
-										return reject(err) ;	
+										return reject(err) ;
 									}
 									return resolve(serialize);
 								})
 							}catch(e){
-								return reject (e) ;	
+								return reject (e) ;
 							}
 						}else{
 							try {
 								client.set(id, JSON.stringify(serialize) , this.gc_maxlifetime ,function(err, result){
 									if (err){
-										return reject(err);	
+										return reject(err);
 									}
-									return resolve(serialize) ;	
+									return resolve(serialize) ;
 								})
 							}catch(e){
-								return reject (e) ;	
+								return reject (e) ;
 							}
 						}
 					});
@@ -216,6 +217,3 @@ nodefony.register.call(nodefony.session.storage, "memcached",function(){
 	};
 	return memcachedSessionStorage ;
 });
-
-
-

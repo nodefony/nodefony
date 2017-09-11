@@ -815,7 +815,7 @@ module.exports = nodefony.registerController("api", function(){
 						code:500,
 						type:"ERROR",
 						message:"session.storage.memcached webservice not implemented",
-						data:error
+						data:""
 					});
 				break;
 			}
