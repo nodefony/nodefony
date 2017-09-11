@@ -67,24 +67,28 @@ module.exports = nodefony.register("finder", function(){
 			return this ;
 		}
 
-		findByNode (nodeName, tab, path){
+		findByNode (nodeName, tab, Path){
 			let i = null ;
+			if (! Path ){
+				Path = [];
+			}
 			if ( ! tab ) {
 				tab = [];
 				for ( i = 0 ; i < this.files.length ; i++ ){
 					if (this.files[i].name === nodeName) {
 						if ( this.files[i].isDirectory() ){
-							path = this.files[i].path ;
-							//tab.push(this.files[i]);
+							Path.push( this.files[i].path ) ;
 						}
 					}
 				}
 			}
-			for ( i = 0 ; i < this.files.length ; i++ ){
-				if (this.files[i].dirName === path) {
-					tab.push(this.files[i]);
-					if ( this.files[i].isDirectory() ){
-						this.findByNode( this.files[i].name, tab, this.files[i].path);
+			if ( Path.length  ){
+				for ( i = 0 ; i < this.files.length ; i++ ){
+					if (  Path.indexOf( this.files[i].dirName ) !== -1  ) {
+						tab.push(this.files[i]);
+						if ( this.files[i].isDirectory() ){
+							this.findByNode( this.files[i].name, tab, [this.files[i].path] );
+						}
 					}
 				}
 			}

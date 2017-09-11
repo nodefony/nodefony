@@ -683,7 +683,7 @@ module.exports = nodefony.register("kernel", function(){
 					let result = this.bundles.App.resourcesFiles.findByNode(bundle+"Bundle");
 					if ( result.length() ){
 						try {
-							this.logger("\x1b[32m APP OVERRIDING\x1b[0m views for bundle : "+bundle, "DEBUG");
+							this.logger("\x1b[32m APP OVERRIDING\x1b[0m views for bundle : "+bundle, "WARNING");
 							this.bundles[bundle].registerViews(result);
 							this.bundles[bundle].registerI18n(null, result);
 						}catch(e){
