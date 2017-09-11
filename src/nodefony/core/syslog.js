@@ -207,8 +207,8 @@ module.exports = nodefony.register("syslog", function(){
     return res;
   };
 
-  var checkFormatDate = function(ele){
-    var res = false;
+  const checkFormatDate = function(ele){
+    let res = false;
     switch ( nodefony.typeOf(ele) ){
       case "date":
       res = ele.getTime();
@@ -222,8 +222,8 @@ module.exports = nodefony.register("syslog", function(){
     return res;
   };
 
-  var checkFormatMsgId = function(ele){
-    var res = false;
+  const checkFormatMsgId = function(ele){
+    let res = false;
     switch ( nodefony.typeOf(ele) ){
       case "string":
       res = ele.split(/,| /);
@@ -242,9 +242,9 @@ module.exports = nodefony.register("syslog", function(){
     return res;
   };
 
-  var severityToString = function(severity){
-    var myint = parseInt(severity,10) ;
-    var ele = null ;
+  const severityToString = function(severity){
+    let myint = parseInt(severity,10) ;
+    let ele = null ;
     if (! isNaN(myint)){
       ele = sysLogSeverity[myint];
     }else{
@@ -257,7 +257,7 @@ module.exports = nodefony.register("syslog", function(){
   };
 
 
-  var sanitizeConditions = function(settingsCondition){
+  const sanitizeConditions = function(settingsCondition){
     let res = true;
     if (nodefony.typeOf(settingsCondition) !== "object" ){
       return false;
@@ -288,7 +288,7 @@ module.exports = nodefony.register("syslog", function(){
               condi.data = {};
               if (nodefony.typeOf(res) === "array"){
                 for (let i = 0 ; i < res.length; i++){
-                  var mySeverity = severityToString(res[i]) ;
+                  let mySeverity = severityToString(res[i]) ;
                   if (mySeverity){
                     condi.data[mySeverity] = sysLogSeverity[mySeverity];
                   }else{
@@ -600,7 +600,7 @@ module.exports = nodefony.register("syslog", function(){
         }
         if (Conditions){
           for (let i = 0 ; i<myStack.length; i++){
-            var res = myFuncCondition(Conditions,myStack[i]);
+            let res = myFuncCondition(Conditions,myStack[i]);
             if (res){
               tab.push(myStack[i]);
             }
@@ -692,7 +692,7 @@ module.exports = nodefony.register("syslog", function(){
         }
         if (Conditions){
           let func = (pdu) => {
-            var res = myFuncCondition(Conditions, pdu);
+            let res = myFuncCondition(Conditions, pdu);
             if (res){
               callback.call( context || this, pdu);
             }

@@ -10,7 +10,7 @@ module.exports = nodefony.register( "cli", function(){
   const blue  = clc.blueBright.bold;
   const green = clc.green;
   //const yellow = clc.yellow.bold;
-  const magenta = clc.magenta.bold
+  const magenta = clc.magenta.bold;
   const reset = clc.reset; // '\x1b[0m';
 
   let processName = null ;
@@ -194,8 +194,7 @@ module.exports = nodefony.register( "cli", function(){
     }
 
     logEnv(){
-      return blue("			\x1b "+ this.name  )
-      + " NODE_ENV : " + magenta(this.environment);
+      return blue("			\x1b "+ this.name  ) + " NODE_ENV : " + magenta(this.environment);
     }
 
     initCommander (){

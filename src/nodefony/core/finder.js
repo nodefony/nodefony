@@ -13,9 +13,9 @@ module.exports = nodefony.register("finder", function(){
 	};
 
 	/*
- 	 *	CLASS Result
- 	 *
- 	 */
+	*  CLASS Result
+	*
+	*/
 	const Result = class Result {
 
 		constructor (res){
@@ -44,7 +44,7 @@ module.exports = nodefony.register("finder", function(){
 		}
 
 		sortByName (){
-			var res = this.files.sort(function(a,b){
+			let res = this.files.sort(function(a,b){
 				if ( a.name.toString() > b.name.toString()) {return 1;}
 				if (  a.name.toString() < b.name.toString()) {return -1;}
 				return 0;
@@ -96,7 +96,7 @@ module.exports = nodefony.register("finder", function(){
 		}
 
 		getDirectories (){
-			var tab = [] ;
+			let tab = [] ;
 			for (let i = 0 ; i < this.files.length ; i++ ){
 				if (this.files[i].type === "Directory") {
 					tab.push(this.files[i]);
@@ -106,18 +106,18 @@ module.exports = nodefony.register("finder", function(){
 		}
 
 		getFiles (){
-			var tab = [] ;
-			for (var i = 0 ; i < this.files.length ; i++ ){
+			let tab = [] ;
+			for (let i = 0 ; i < this.files.length ; i++ ){
 				switch( this.files[i].type ){
 					case "File":
-						tab.push(this.files[i]) ;
+					tab.push(this.files[i]) ;
 					break;
 					case "symbolicLink":
-						var path = fs.readlinkSync( this.files[i].path );
-						var file = this.files[i].dirName+"/"+path ;
-						if (fs.lstatSync(file).isFile() ){
-							tab.push(this.files[i]) ;
-						}
+					let path = fs.readlinkSync( this.files[i].path );
+					let file = this.files[i].dirName+"/"+path ;
+					if (fs.lstatSync(file).isFile() ){
+						tab.push(this.files[i]) ;
+					}
 					break;
 				}
 			}
@@ -125,40 +125,40 @@ module.exports = nodefony.register("finder", function(){
 		}
 
 		getFile (name, casse){
-			var reg = null ;
-			for (var i = 0 ; i < this.files.length ; i++ ){
+			let reg = null ;
+			for (let i = 0 ; i < this.files.length ; i++ ){
 				switch( this.files[i].type ){
 					case "File":
-						if ( casse ){
-							reg = new RegExp("^"+name+"$","i") ;
-							if ( reg.test(this.files[i].name) ){
-								return this.files[i] ;
-							}
-						}else{
-							if (this.files[i].name === name ){
-								return this.files[i] ;
-							}
+					if ( casse ){
+						reg = new RegExp("^"+name+"$","i") ;
+						if ( reg.test(this.files[i].name) ){
+							return this.files[i] ;
 						}
+					}else{
+						if (this.files[i].name === name ){
+							return this.files[i] ;
+						}
+					}
 					break;
 					case "symbolicLink":
-					        try {
-							var path = fs.readlinkSync( this.files[i].path );
-							var file = this.files[i].dirName+"/"+path ;
-							if (fs.lstatSync(file).isFile() ){
-								if ( casse ){
-									reg = new RegExp("^"+name+"$","i") ;
-									if ( reg.test(this.files[i].name) ){
-										return this.files[i] ;
-									}
-								}else{
-									if (this.files[i].name === name ){
-										return this.files[i] ;
-									}
+					try {
+						let path = fs.readlinkSync( this.files[i].path );
+						let file = this.files[i].dirName+"/"+path ;
+						if (fs.lstatSync(file).isFile() ){
+							if ( casse ){
+								reg = new RegExp("^"+name+"$","i") ;
+								if ( reg.test(this.files[i].name) ){
+									return this.files[i] ;
+								}
+							}else{
+								if (this.files[i].name === name ){
+									return this.files[i] ;
 								}
 							}
-						}catch(e){
-							continue ;
 						}
+					}catch(e){
+						continue ;
+					}
 					break;
 				}
 			}
@@ -170,9 +170,9 @@ module.exports = nodefony.register("finder", function(){
 		}
 
 		match (reg){
-			var tab = [] ;
-			for (var i = 0 ; i < this.files.length ; i++ ){
-				var res =  this.files[i].matchName(reg) ;
+			let tab = [] ;
+			for (let i = 0 ; i < this.files.length ; i++ ){
+				let res =  this.files[i].matchName(reg) ;
 				if ( res ) {
 					tab.push(this.files[i]);
 				}
@@ -183,10 +183,10 @@ module.exports = nodefony.register("finder", function(){
 
 
 	/*
- 	 *	CLASS Finder
- 	 *
- 	 */
-	var checkMatch = function(file, settings){
+	*  CLASS Finder
+	*
+	*/
+	const checkMatch = function(file, settings){
 		if ( settings.match ){
 			if ( file.matchName(settings.match) ){
 				return true;
@@ -201,7 +201,7 @@ module.exports = nodefony.register("finder", function(){
 	};
 
 
-	var checkExclude = function(file, settings){
+	const checkExclude = function(file, settings){
 		if ( file.matchName( settings.exclude ) ){
 			return true ;
 		}
@@ -211,7 +211,7 @@ module.exports = nodefony.register("finder", function(){
 		return false;
 	};
 
-	var checkHidden = function(file, settings){
+	const checkHidden = function(file, settings){
 		if ( ! settings.seeHidden  ){
 			if ( file.isHidden() ){
 				return true;
@@ -220,31 +220,31 @@ module.exports = nodefony.register("finder", function(){
 		return false ;
 	};
 
-	var find = function(file, result, depth, settings, parent){
+	const find = function(file, result, depth, settings, parent){
+		let res = null ;
 		try{
-
 			try {
-				var res = fs.readdirSync(file.path);
+				res = fs.readdirSync(file.path);
 			}catch(e){
 				if (file.type ==="symbolicLink" && settings.followSymLink && depth-1 !== 0){
-					var res = fs.readlinkSync(file.path)
+					res = fs.readlinkSync(file.path);
 				}else{
 					throw e ;
 				}
 			}
 
 			if (res && res.length){
-				var ret = regSlash.exec(file.path);
-				var filePath = null ;
- 				if (ret){
+				let ret = regSlash.exec(file.path);
+				let filePath = null ;
+				if (ret){
 					filePath = ret[1]+"/";
 				}else{
 					filePath = file.path+"/";
 				}
-				for (var i=0 ; i < res.length ; i++){
-					var match = true ;
-					var File = filePath+res[i] ;
-					var info = new this.wrapper( File , parent);
+				for (let i = 0 ; i < res.length ; i++){
+					let match = true ;
+					let File = filePath+res[i] ;
+					let info = new this.wrapper( File , parent);
 					if (! settings.seeHidden){
 						if ( checkHidden.call(this, info, settings) ) {
 							if (parent && parent.children){
@@ -274,18 +274,18 @@ module.exports = nodefony.register("finder", function(){
 					}
 					switch(info.type){
 						case "Directory":
-							if ( settings.recurse && depth-1 !== 0 ){
-								arguments.callee.call(this, info, result, --depth, settings, info );
-								depth++;
-							}
+						if ( settings.recurse && depth-1 !== 0 ){
+							arguments.callee.call(this, info, result, --depth, settings, info );
+							depth++;
+						}
 						break;
 						case "symbolicLink" :
-							if (settings.followSymLink && depth-1 !== 0){
-								var obj = new this.wrapper(info.path, info);
-								if ( obj.isDirectory() ){
-									arguments.callee.call(this, obj, result, settings.depth, settings, parent);
-								}
+						if (settings.followSymLink && depth-1 !== 0){
+							let obj = new this.wrapper(info.path, info);
+							if ( obj.isDirectory() ){
+								arguments.callee.call(this, obj, result, settings.depth, settings, parent);
 							}
+						}
 						break;
 					}
 
@@ -303,7 +303,7 @@ module.exports = nodefony.register("finder", function(){
 	};
 
 
-	var defaultSettings = {
+	const defaultSettings = {
 		path:null,
 		sync:true,
 		recurse:true,
@@ -318,9 +318,9 @@ module.exports = nodefony.register("finder", function(){
 	};
 
 
-	var regSlash = /^(.*)\/$/g;
+	const regSlash = /^(.*)\/$/g;
 
-	var finder = class finder {
+	const finder = class finder {
 
 		constructor (settings){
 			this.path = [];
@@ -335,28 +335,29 @@ module.exports = nodefony.register("finder", function(){
 			this.typePath = nodefony.typeOf(Path);
 			switch ( true ){
 				case this.typePath === "string" :
-					try{
-						this.path.push(new this.wrapper(Path, null));
-						return this;
-					}catch(e){
-						throw e;
-					}
-				case this.typePath === "array" :
-					for (let i = 0 ; i < Path.length ; i++){
-						try {
-							this.path.push(new this.wrapper(Path[i], null));
-						}catch(e){
-							throw e;
-						}
-					}
+				try{
+					this.path.push(new this.wrapper(Path, null));
 					return this;
-				case Path instanceof  nodefony.fileClass :
-					try{
-						this.path.push(new this.wrapper(Path.path, null));
-						return this;
+				}catch(e){
+					throw e;
+				}
+				break;
+				case this.typePath === "array" :
+				for (let i = 0 ; i < Path.length ; i++){
+					try {
+						this.path.push(new this.wrapper(Path[i], null));
 					}catch(e){
 						throw e;
 					}
+				}
+				return this;
+				case Path instanceof  nodefony.fileClass :
+				try{
+					this.path.push(new this.wrapper(Path.path, null));
+					return this;
+				}catch(e){
+					throw e;
+				}
 			}
 		}
 
@@ -385,7 +386,7 @@ module.exports = nodefony.register("finder", function(){
 			if (this.tree){
 				this.wrapper = jsonTree ;
 			}else{
-				this.wrapper = 	nodefony.fileClass ;
+				this.wrapper =   nodefony.fileClass ;
 			}
 
 			this.in(extend.path);

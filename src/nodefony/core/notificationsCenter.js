@@ -5,7 +5,7 @@ module.exports = nodefony.register("notificationsCenter",function(){
 	const regListenOn = /^on(.*)$/;
 	const defaultNbListeners = 20 ;
 
-	var Notification = class Notification {
+	const Notification = class Notification {
 
 		constructor(settings, context, nbListener) {
 			this.event = new events.EventEmitter();
@@ -16,19 +16,19 @@ module.exports = nodefony.register("notificationsCenter",function(){
 		}
 
 		/**
-	 	*
-	 	*	@method setMaxListeners
-	 	*
-	 	*/
+		*
+		*  @method setMaxListeners
+		*
+		*/
 		setMaxListeners (){
 			return this.event.setMaxListeners.apply(this.event, arguments);
 		}
 
 		/**
-	 	*
-	 	*	@method listen
-	 	*
-	 	*/
+		*
+		*  @method listen
+		*
+		*/
 		listen (context, eventName, callback) {
 			let event = arguments[1];
 			let ContextClosure = this;
@@ -55,10 +55,10 @@ module.exports = nodefony.register("notificationsCenter",function(){
 		}
 
 		/**
-	 	*
-	 	*	@method once
-	 	*
-	 	*/
+		*
+		*  @method once
+		*
+		*/
 		once (context, eventName, callback){
 			let event = arguments[1];
 			let ContextClosure = this;
@@ -73,10 +73,10 @@ module.exports = nodefony.register("notificationsCenter",function(){
 		}
 
 		/**
-	 	*
-	 	*	@method fire
-	 	*
-	 	*/
+		*
+		*  @method fire
+		*
+		*/
 		fire () {
 			try {
 				return this.event.emit.apply(this.event, arguments);
@@ -94,13 +94,13 @@ module.exports = nodefony.register("notificationsCenter",function(){
 
 
 		/**
-	 	*
-	 	*	@method settingsToListen
-	 	*
-	 	*/
+		*
+		*  @method settingsToListen
+		*
+		*/
 		settingsToListen (localSettings, context) {
 			for (let i in localSettings) {
-				var res = regListenOn.exec(i);
+				let res = regListenOn.exec(i);
 				if (!res){
 					continue;
 				}
@@ -109,19 +109,19 @@ module.exports = nodefony.register("notificationsCenter",function(){
 		}
 
 		/**
-	 	*
-	 	*	@method unListen
-	 	*
-	 	*/
+		*
+		*  @method unListen
+		*
+		*/
 		unListen (){
 			return this.event.removeListener.apply(this.event, arguments);
 		}
 
 		/**
-	 	*
-	 	*	@method removeAllListeners
-	 	*
-	 	*/
+		*
+		*  @method removeAllListeners
+		*
+		*/
 		removeAllListeners (){
 			return this.event.removeAllListeners.apply(this.event, arguments);
 		}
@@ -129,10 +129,10 @@ module.exports = nodefony.register("notificationsCenter",function(){
 	return {
 		notification:Notification,
 		/**
-		 *
-		 *	@method create
-		 *
-		 */
+		*
+		*  @method create
+		*
+		*/
 		create: function(settings, context, nbListener) {
 			return new Notification(settings, context, nbListener);
 		}

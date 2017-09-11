@@ -17,7 +17,7 @@ module.exports = nodefony.register("cliKernel", function(){
 						});
 						callback( new nodefony.fileClass(myPath) );
 					}catch(e){
-						throw e	;
+						throw e  ;
 					}
 				}
 			});
@@ -29,7 +29,7 @@ module.exports = nodefony.register("cliKernel", function(){
 				});
 				callback( new nodefony.fileClass(myPath) );
 			}catch(e){
-				throw e	;
+				throw e  ;
 			}
 		}
 	};
@@ -66,11 +66,11 @@ module.exports = nodefony.register("cliKernel", function(){
 		}catch(e){
 			this.logger("Create directory : "+ myPath);
 			fs.mkdir(myPath, (e) => {
-    				if(!e || (e && e.code === 'EEXIST')){
-        				callback( fs.statSync(myPath) );
-    				} else {
-        				this.logger(e,"ERROR");
-    				}
+				if(!e || (e && e.code === 'EEXIST')){
+					callback( fs.statSync(myPath) );
+				} else {
+					this.logger(e,"ERROR");
+				}
 			});
 		}
 	};
@@ -123,10 +123,10 @@ module.exports = nodefony.register("cliKernel", function(){
 		return regHidden.test(name);
 	};
 	/*
-	 *
-	 *	CLI KERNEL
-	 *
-	 */
+	*
+	*  CLI KERNEL
+	*
+	*/
 	const cliKernel = class cliKernel extends nodefony.cli {
 
 		constructor (name, container, notificationsCenter, options){
@@ -146,13 +146,12 @@ module.exports = nodefony.register("cliKernel", function(){
 		loadCommand (){
 			switch ( this.commander.args[0] ){
 				case "npm:install":
-					return true
-				break;
+				return true;
 				case "npm:list":
-					this.on("onBoot", () =>{
-						this.listPackage(this.kernel.rootDir);
-					});
-					return true ;
+				this.on("onBoot", () =>{
+					this.listPackage(this.kernel.rootDir);
+				});
+				return true ;
 			}
 			this.stop = false;
 			for ( let bundle in this.kernel.bundles ){
@@ -238,16 +237,16 @@ module.exports = nodefony.register("cliKernel", function(){
 		}
 
 		getSimpleGit(gitPath){
-	        if ( gitPath ){
-	            return simpleGit( gitPath );
-	        }
-	        return simpleGit ;
-	    }
+			if ( gitPath ){
+				return simpleGit( gitPath );
+			}
+			return simpleGit ;
+		}
 
-	    setGitPath (gitPath){
-	        this.git = this.getSimpleGit( gitPath );
-	        return this.git ;
-	    }
+		setGitPath (gitPath){
+			this.git = this.getSimpleGit( gitPath );
+			return this.git ;
+		}
 
 		listenSyslog (syslog, debug){
 			if ( ! syslog ){
@@ -298,427 +297,427 @@ module.exports = nodefony.register("cliKernel", function(){
 			let child = null;
 			switch ( nodefony.typeOf(obj) ){
 				case "array" :
-					for (let i = 0 ; i < obj.length ; i++){
-						this.build(obj[i], parent, force);
-					}
+				for (let i = 0 ; i < obj.length ; i++){
+					this.build(obj[i], parent, force);
+				}
 				break;
 				case "object" :
-					for (let ele in obj ){
-						let value = obj[ele];
-						switch (ele){
-							case "name" :
-								var name = value;
-							break;
-							case "type" :
-								switch(value){
-									case "directory":
-										child = this.createDirectory(parent.path+"/"+name, "777", (ele) => {
-											if ( force ){
-												this.logger("Force Create Directory :" + ele.name  );
-											}else{
-												this.logger("Create Directory :" + ele.name );
-											}
-										} , force );
-									break;
-									case "file":
-										createFile.call(this, parent.path+"/"+name, obj.skeleton, obj.parse, obj.params, (ele) =>{
-											this.logger("Create File      :" + ele.name);
-										});
-									break;
-									case "symlink":
-										if ( force ){
-											shell.ln('-sf', parent.path+"/"+obj.params.source , parent.path+"/"+obj.params.dest);
-										}else{
-											shell.ln('-s', parent.path+"/"+obj.params.source , parent.path+"/"+obj.params.dest);
-										}
-										this.logger("Create symbolic link :" + obj.name);
-										/*fs.symlink ( parent.path+"/"+obj.params.source, parent.path+"/"+obj.params.dest , obj.params.type || "file", (ele) => {
-											this.logger("Create symbolic link :" + ele.name);
-										} );*/
-									break;
+				for (let ele in obj ){
+					let value = obj[ele];
+					switch (ele){
+						case "name" :
+						var name = value;
+						break;
+						case "type" :
+						switch(value){
+							case "directory":
+							child = this.createDirectory(parent.path+"/"+name, "777", (ele) => {
+								if ( force ){
+									this.logger("Force Create Directory :" + ele.name  );
+								}else{
+									this.logger("Create Directory :" + ele.name );
 								}
+							} , force );
 							break;
-							case "childs" :
-								try {
-									this.build(value, child);
-								}catch(e){
-									this.logger(e, "ERROR");
-								}
+							case "file":
+							createFile.call(this, parent.path+"/"+name, obj.skeleton, obj.parse, obj.params, (ele) =>{
+								this.logger("Create File      :" + ele.name);
+							});
 							break;
-						}
+							case "symlink":
+							if ( force ){
+								shell.ln('-sf', parent.path+"/"+obj.params.source , parent.path+"/"+obj.params.dest);
+							}else{
+								shell.ln('-s', parent.path+"/"+obj.params.source , parent.path+"/"+obj.params.dest);
+							}
+							this.logger("Create symbolic link :" + obj.name);
+							/*fs.symlink ( parent.path+"/"+obj.params.source, parent.path+"/"+obj.params.dest , obj.params.type || "file", (ele) => {
+							this.logger("Create symbolic link :" + ele.name);
+						} );*/
+						break;
 					}
-				break;
-				default:
-					this.logger("generate build error arguments : "+ ele, "ERROR" );
-			}
-			return child ;
-		}
-
-	    getSizeDirectory (dir, exclude){
-				let stat = null ;
-	  		try {
-	  			if ( exclude ){
-	  				let basename = path.basename(dir);
-	  				if ( basename.match(exclude) ){
-	  					return 0 ;
-	  				}
-	  			}
-	  			stat = fs.lstatSync(dir);
-	  		}catch(e){
-	  			//this.logger(e, "WARNING");
-	  			return 0 ;
-	  		}
-	  		let files = null ;
-	  		switch (true){
-	  			case stat.isFile() :
-	  				throw  new Error ( dir+" is not a directory");
-	  			case stat.isDirectory() :
-	  				files = fs.readdirSync(dir);
-	  			break;
-	  			case stat.isSymbolicLink() :
-	  				files = fs.realpathSync(dir);
-	  			break;
-	  			default:
-	  				throw  new Error ( dir+" is not a directory");
-	  		}
-
-	  		let totalSizeBytes = 0;
-	  		let dirSize = null ;
-	  		for (let i = 0; i<files.length; i++) {
-	  			let myPath = dir+"/"+files[i] ;
-	  			try {
-	  				stat = fs.lstatSync(myPath);
-	  			}catch(e){
-	  				return 	totalSizeBytes ;
-	  			}
-	  			switch (true){
-	  				case stat.isFile() :
-	  					if (!  isHiddenFile(files[i] ) ){
-	  						totalSizeBytes += stat.size;
-	  					}
-	  				break;
-	  				case stat.isDirectory() :
-	  					dirSize = this.getSizeDirectory(myPath, exclude);
-	  					totalSizeBytes += dirSize;
-	  				break;
-	  				case stat.isSymbolicLink() :
-	  					//console.log("isSymbolicLink")
-	  					dirSize = this.getSizeDirectory(fs.realpathSync(myPath), exclude);
-	  					totalSizeBytes += dirSize;
-	  				break;
-	  			}
-	  		}
-	  		return totalSizeBytes ;
-	  	}
-
-	    createSymlink (srcpath, dstpath, callback){
-	  		let res= null ;
-	  		try {
-	  			res = fs.statSync(srcpath);
-	  			try{
-	  				// LINK
-	  				res = fs.lstatSync(dstpath);
-	  				if ( res ){ fs.unlinkSync(dstpath) ;}
-	  			}catch(e){
-	  				//console.log("PASS CATCH")
-	  				//console.log(e ,"ERROR")
-	  			}
-	  			//console.log(srcpath+" : "+ dstpath);
-	  			res = fs.symlink(srcpath, dstpath, (e) => {
-	  					if(!e || (e && e.code === 'EEXIST')){
-	  					callback(srcpath, dstpath);
-	  					} else {
-	    					this.logger(e,"ERROR");
-	  					}
-	  			});
-	  			callback(srcpath, dstpath);
-	  		}catch(e){
-	  			this.logger("FILE :"+srcpath +" not exist: "+e,"ERROR");
-	  		}
-	  	}
-
-	    createDirectory (myPath, mode, callback, force){
-				let file = null ;
-	  		try {
-	  			fs.mkdirSync(myPath, mode);
-	  			file = new nodefony.fileClass(myPath);
-	  			callback( file );
-	  			return file ;
-	  		}catch(e){
-	  			switch ( e.code ){
-	  				case "EEXIST" :
-	  					if ( force ){
-	  						file = new nodefony.fileClass(myPath);
-	  						callback( file );
-	  						return file ;
-	  					}
-	  				break;
-	  			}
-	  			throw e ;
-	  		}
-	  	}
-
-		existsSync(myPath, mode){
-			if ( ! myPath ){
-				throw new Error ("existsSync no path found");
-			}
-			if ( ! mode ){
-				mode = fs.constants.R_OK | fs.constants.W_OK ;
-			}
-			return fs.accessSync(myPath, mode);
-		}
-
-		exists(myPath, mode, callback){
-			if ( ! myPath ){
-				throw new Error ("exists no path found");
-			}
-			if ( ! mode ){
-				mode = fs.constants.R_OK | fs.constants.W_OK ;
-			}
-			return fs.access(myPath, mode, callback);
-		}
-
-	    spawn (command , args, options, close){
-	  		let cmd = null ;
-	  		try {
-				this.logger("Run Spawn : " + command + " "+ args.join(" ") );
-	  			cmd = spawn(command , args, options);
-
-	  			cmd.stdout.on('data', (data) => {
-						let str = data.toString() ;
-						if ( str ){
-	  					this.logger(str);
-						}
-	  			});
-	  			cmd.stderr.on('data', (data) => {
-						let str = data.toString() ;
-						if ( str ){
-	  					this.logger(str, "ERROR");
-						}
-	  			});
-	  			cmd.on('close', (code) => {
-	  				this.logger(`child process exited with code ${code}`);
-	  				if ( close ){
-	  					close( code);
-	  				}
-	  			});
-	  			cmd.on('error', (err) => {
-	  				this.logger(err, "ERROR");
-	  				this.terminate(1);
-	  			});
-	  		}catch(e){
-	  			this.logger(e, "ERROR");
-	  			throw e;
-	  		}
-	  		return cmd ;
-	  	}
-
-	  	spawnSync (command , args, options){
-			let cmd = null ;
-	  		try {
-	  			cmd = spawnSync(command, args, options);
-	  			if ( cmd.output[2].toString() ){
-	  				this.logger( cmd.output[2].toString() ,"ERROR");
-	  			}else{
-	  				if ( cmd.output[1].toString() ){
-	  					this.logger( cmd.output[1].toString() );
-	  				}
-	  			}
-	  		}catch(e){
-	  			this.logger(e, "ERROR");
-	  			throw e;
-	  		}
-	  		return cmd ;
-	  	}
-
-		listPackage(myPath){
-			let tab = [] ;
-			let mypromise = null ;
-			try {
-				mypromise = this.npmList(myPath, tab) ;
-			}catch(e){
-				throw e ;
-			}
-			for (let bundle in  this.kernel.bundles){
-				if ( bundle+"Bundle" in  this.kernel.bundlesCore ){
-					continue ;
+					break;
+					case "childs" :
+					try {
+						this.build(value, child);
+					}catch(e){
+						this.logger(e, "ERROR");
+					}
+					break;
 				}
-				mypromise.then( this.npmList(this.kernel.bundles[bundle].path, tab) );
 			}
-			return mypromise.then((ele)=>{
-				let headers = [
-					"NAME",
-					"VERSION",
-					"DESCRIPTION",
-					"BUNDLES"
-				];
-				this.displayTable(ele, {
-					head: headers,
-					colWidths :[30,10,100,20]
-				});
-				this.terminate(0);
-			}).catch((error) =>{
-				this.logger(error,"ERROR");
+			break;
+			default:
+			this.logger("generate build error arguments : ", "ERROR" );
+		}
+		return child ;
+	}
+
+	getSizeDirectory (dir, exclude){
+		let stat = null ;
+		try {
+			if ( exclude ){
+				let basename = path.basename(dir);
+				if ( basename.match(exclude) ){
+					return 0 ;
+				}
+			}
+			stat = fs.lstatSync(dir);
+		}catch(e){
+			//this.logger(e, "WARNING");
+			return 0 ;
+		}
+		let files = null ;
+		switch (true){
+			case stat.isFile() :
+			throw  new Error ( dir+" is not a directory");
+			case stat.isDirectory() :
+			files = fs.readdirSync(dir);
+			break;
+			case stat.isSymbolicLink() :
+			files = fs.realpathSync(dir);
+			break;
+			default:
+			throw  new Error ( dir+" is not a directory");
+		}
+
+		let totalSizeBytes = 0;
+		let dirSize = null ;
+		for (let i = 0; i<files.length; i++) {
+			let myPath = dir+"/"+files[i] ;
+			try {
+				stat = fs.lstatSync(myPath);
+			}catch(e){
+				return   totalSizeBytes ;
+			}
+			switch (true){
+				case stat.isFile() :
+				if (!  isHiddenFile(files[i] ) ){
+					totalSizeBytes += stat.size;
+				}
+				break;
+				case stat.isDirectory() :
+				dirSize = this.getSizeDirectory(myPath, exclude);
+				totalSizeBytes += dirSize;
+				break;
+				case stat.isSymbolicLink() :
+				//console.log("isSymbolicLink")
+				dirSize = this.getSizeDirectory(fs.realpathSync(myPath), exclude);
+				totalSizeBytes += dirSize;
+				break;
+			}
+		}
+		return totalSizeBytes ;
+	}
+
+	createSymlink (srcpath, dstpath, callback){
+		let res= null ;
+		try {
+			res = fs.statSync(srcpath);
+			try{
+				// LINK
+				res = fs.lstatSync(dstpath);
+				if ( res ){ fs.unlinkSync(dstpath) ;}
+			}catch(e){
+				//console.log("PASS CATCH")
+				//console.log(e ,"ERROR")
+			}
+			//console.log(srcpath+" : "+ dstpath);
+			res = fs.symlink(srcpath, dstpath, (e) => {
+				if(!e || (e && e.code === 'EEXIST')){
+					callback(srcpath, dstpath);
+				} else {
+					this.logger(e,"ERROR");
+				}
+			});
+			callback(srcpath, dstpath);
+		}catch(e){
+			this.logger("FILE :"+srcpath +" not exist: "+e,"ERROR");
+		}
+	}
+
+	createDirectory (myPath, mode, callback, force){
+		let file = null ;
+		try {
+			fs.mkdirSync(myPath, mode);
+			file = new nodefony.fileClass(myPath);
+			callback( file );
+			return file ;
+		}catch(e){
+			switch ( e.code ){
+				case "EEXIST" :
+				if ( force ){
+					file = new nodefony.fileClass(myPath);
+					callback( file );
+					return file ;
+				}
+				break;
+			}
+			throw e ;
+		}
+	}
+
+	existsSync(myPath, mode){
+		if ( ! myPath ){
+			throw new Error ("existsSync no path found");
+		}
+		if ( ! mode ){
+			mode = fs.constants.R_OK | fs.constants.W_OK ;
+		}
+		return fs.accessSync(myPath, mode);
+	}
+
+	exists(myPath, mode, callback){
+		if ( ! myPath ){
+			throw new Error ("exists no path found");
+		}
+		if ( ! mode ){
+			mode = fs.constants.R_OK | fs.constants.W_OK ;
+		}
+		return fs.access(myPath, mode, callback);
+	}
+
+	spawn (command , args, options, close){
+		let cmd = null ;
+		try {
+			this.logger("Run Spawn : " + command + " "+ args.join(" ") );
+			cmd = spawn(command , args, options);
+
+			cmd.stdout.on('data', (data) => {
+				let str = data.toString() ;
+				if ( str ){
+					this.logger(str);
+				}
+			});
+			cmd.stderr.on('data', (data) => {
+				let str = data.toString() ;
+				if ( str ){
+					this.logger(str, "ERROR");
+				}
+			});
+			cmd.on('close', (code) => {
+				this.logger(`child process exited with code ${code}`);
+				if ( close ){
+					close( code);
+				}
+			});
+			cmd.on('error', (err) => {
+				this.logger(err, "ERROR");
 				this.terminate(1);
 			});
+		}catch(e){
+			this.logger(e, "ERROR");
+			throw e;
 		}
+		return cmd ;
+	}
 
-		npmList (myPath, ele){
-			return new Promise ((resolve, reject) =>{
-					try {
-				  		shell.cd(myPath);
-					}catch(e){
-						reject(e);
-					}
-					let conf = null ;
-					let config = null ;
-					try {
-						config = path.resolve( myPath , "package.json");
-						conf  = require(config);
-					}catch(e){
-						this.logger("NPM NODEFONY PACKAGES package.json not find in : "+ myPath ,"INFO");
-						shell.cd(this.kernel.rootDir);
-						return resolve(ele) ;
-					}
-					this.logger( "NPM NODEFONY PACKAGES :" + config , "INFO");
-					npm.load(conf, (error, event) => {
-						if (error){
-							shell.cd(this.kernel.rootDir);
-							return reject(error);
-						}
-						event.config.localPrefix = myPath;
-						event.config.globalPrefix = this.rootDir ;
-						event.localPrefix = myPath ;
-						event.globalPrefix = this.rootDir ;
-						npm.commands.ls([], true, (error, data) => {
-							if (error){
-								shell.cd(this.kernel.rootDir);
-								return reject(error);
-							}
-							try {
-								for (var pack in data.dependencies){
-									if ( data.dependencies[pack].name ){
-										ele.push([
-											data.dependencies[pack].name,
-											data.dependencies[pack].version,
-											data.dependencies[pack].description || "",
-											path.basename( data.dependencies[pack]._where ) || ""
-										]);
-									}
-								}
-							}catch(e){
-								shell.cd(this.kernel.rootDir);
-								return reject(e);
-							}
-							shell.cd(this.kernel.rootDir);
-							return resolve(ele);
-						});
-					});
+	spawnSync (command , args, options){
+		let cmd = null ;
+		try {
+			cmd = spawnSync(command, args, options);
+			if ( cmd.output[2].toString() ){
+				this.logger( cmd.output[2].toString() ,"ERROR");
+			}else{
+				if ( cmd.output[1].toString() ){
+					this.logger( cmd.output[1].toString() );
+				}
+			}
+		}catch(e){
+			this.logger(e, "ERROR");
+			throw e;
+		}
+		return cmd ;
+	}
+
+	listPackage(myPath){
+		let tab = [] ;
+		let mypromise = null ;
+		try {
+			mypromise = this.npmList(myPath, tab) ;
+		}catch(e){
+			throw e ;
+		}
+		for (let bundle in  this.kernel.bundles){
+			if ( bundle+"Bundle" in  this.kernel.bundlesCore ){
+				continue ;
+			}
+			mypromise.then( this.npmList(this.kernel.bundles[bundle].path, tab) );
+		}
+		return mypromise.then((ele)=>{
+			let headers = [
+				"NAME",
+				"VERSION",
+				"DESCRIPTION",
+				"BUNDLES"
+			];
+			this.displayTable(ele, {
+				head: headers,
+				colWidths :[30,10,100,20]
 			});
-		}
+			this.terminate(0);
+		}).catch((error) =>{
+			this.logger(error,"ERROR");
+			this.terminate(1);
+		});
+	}
 
-		installPackage (name, file, prod){
+	npmList (myPath, ele){
+		return new Promise ((resolve, reject) =>{
 			try {
-				let conf = new nodefony.fileClass(file.dirName+"/package.json");
-				let config = require(conf.path);
-				npm.load( config ,(error, event) => {
+				shell.cd(myPath);
+			}catch(e){
+				reject(e);
+			}
+			let conf = null ;
+			let config = null ;
+			try {
+				config = path.resolve( myPath , "package.json");
+				conf  = require(config);
+			}catch(e){
+				this.logger("NPM NODEFONY PACKAGES package.json not find in : "+ myPath ,"INFO");
+				shell.cd(this.kernel.rootDir);
+				return resolve(ele) ;
+			}
+			this.logger( "NPM NODEFONY PACKAGES :" + config , "INFO");
+			npm.load(conf, (error, event) => {
+				if (error){
+					shell.cd(this.kernel.rootDir);
+					return reject(error);
+				}
+				event.config.localPrefix = myPath;
+				event.config.globalPrefix = this.rootDir ;
+				event.localPrefix = myPath ;
+				event.globalPrefix = this.rootDir ;
+				npm.commands.ls([], true, (error, data) => {
 					if (error){
-						this.logger(error, "ERROR");
-						this.terminate(1);
+						shell.cd(this.kernel.rootDir);
+						return reject(error);
 					}
-					shell.cd(file.dirName);
-					event.config.localPrefix = file.dirName;
-					event.config.globalPrefix = this.kernel.rootDir ;
-					event.localPrefix = file.dirName ;
-					event.globalPrefix = this.kernel.rootDir ;
-					//npm.config.set('localPrefix', file.dirName);
-					//npm.config.set('globalPrefix', this.rootDir);
-					let tab = [] ;
-					this.logger("NPM :"+npm.version+  " Installing Dependencies for bundle : " + file.shortName  );
-					for (let dep in config.dependencies ){
-							let mypackage = dep+"@"+config.dependencies[dep] ;
-							try {
-								require.resolve(dep);
-							}catch(e){
-								this.logger( "\t Dependency : " + mypackage  );
-								tab.push( mypackage );
+					try {
+						for (var pack in data.dependencies){
+							if ( data.dependencies[pack].name ){
+								ele.push([
+									data.dependencies[pack].name,
+									data.dependencies[pack].version,
+									data.dependencies[pack].description || "",
+									path.basename( data.dependencies[pack]._where ) || ""
+								]);
 							}
+						}
+					}catch(e){
+						shell.cd(this.kernel.rootDir);
+						return reject(e);
 					}
-					if ( ! prod ){
-						for (let dep in config.devDependencies ){
-								let mypackage = dep+"@"+config.devDependencies[dep] ;
-								try {
-									require.resolve(dep);
-								}catch(e){
-									this.logger( "\t Dependency dev : " + mypackage  );
-									tab.push( mypackage );
-								}
+					shell.cd(this.kernel.rootDir);
+					return resolve(ele);
+				});
+			});
+		});
+	}
+
+	installPackage (name, file, prod){
+		try {
+			let conf = new nodefony.fileClass(file.dirName+"/package.json");
+			let config = require(conf.path);
+			npm.load( config ,(error, event) => {
+				if (error){
+					this.logger(error, "ERROR");
+					this.terminate(1);
+				}
+				shell.cd(file.dirName);
+				event.config.localPrefix = file.dirName;
+				event.config.globalPrefix = this.kernel.rootDir ;
+				event.localPrefix = file.dirName ;
+				event.globalPrefix = this.kernel.rootDir ;
+				//npm.config.set('localPrefix', file.dirName);
+				//npm.config.set('globalPrefix', this.rootDir);
+				let tab = [] ;
+				this.logger("NPM :"+npm.version+  " Installing Dependencies for bundle : " + file.shortName  );
+				for (let dep in config.dependencies ){
+					let mypackage = dep+"@"+config.dependencies[dep] ;
+					try {
+						require.resolve(dep);
+					}catch(e){
+						this.logger( "\t Dependency : " + mypackage  );
+						tab.push( mypackage );
+					}
+				}
+				if ( ! prod ){
+					for (let dep in config.devDependencies ){
+						let mypackage = dep+"@"+config.devDependencies[dep] ;
+						try {
+							require.resolve(dep);
+						}catch(e){
+							this.logger( "\t Dependency dev : " + mypackage  );
+							tab.push( mypackage );
 						}
 					}
-					if (tab.length ){
-						event.commands.install(tab, (err/*, data*/) =>{
-							if ( err ){
-								this.logger("NPM :"+npm.version+  " Installing Dependencies for bundle : " + file.shortName  , "ERROR");
-								this.logger(err, "ERROR");
-							}
-						});
-					}
-				});
-			}catch(e){
-				if (e.code !== "ENOENT"){
-					this.logger("Install Package BUNDLE : "+ name +":"+e,"ERROR");
-					shell.cd(this.kernel.rootDir);
-					throw e ;
 				}
-			}
-			shell.cd(this.kernel.rootDir);
-		}
-
-		generateHelp (obj, str){
-			this.blankLine();
-			str += "\n  Command : " + "\n\n";
-			str += this.clc.cyan("nodefony")+" \n";
-			str += this.clc.green("\tdev")+"							 	 Run Nodefony Development Server  \n";
-			str += this.clc.green("\tprod")+"							 	 Run Nodefony Preprod Server \n";
-			str += this.clc.green("\tpm2")+"							 	 Run Nodefony Production Server ( PM2 mode ) \n";
-			str += this.clc.green("\tapp")+"							 	 Get Nodefony App name  \n";
-			str += this.clc.green("\tnpm:install")+"							 Install all NPM framework packages\n";
-			str += this.clc.green("\tnpm:list")+"							 List all NPM installed packages \n";
-			for (var ele in obj){
-				if (obj[ele].name ){
-					str +=  obj[ele].name;
+				if (tab.length ){
+					event.commands.install(tab, (err/*, data*/) =>{
+						if ( err ){
+							this.logger("NPM :"+npm.version+  " Installing Dependencies for bundle : " + file.shortName  , "ERROR");
+							this.logger(err, "ERROR");
+						}
+					});
 				}
-				for (var cmd in obj[ele].task ){
-					str +=  this.clc.green("\t"+ obj[ele].task[cmd][0]);
-					let length =  obj[ele].task[cmd][0].length;
-					let size = 65 - length ;
-					for (let i = 0 ; i< size ; i++) { str +=" "; }
-						str += obj[ele].task[cmd][1]+"\n";
-					}
+			});
+		}catch(e){
+			if (e.code !== "ENOENT"){
+				this.logger("Install Package BUNDLE : "+ name +":"+e,"ERROR");
+				shell.cd(this.kernel.rootDir);
+				throw e ;
 			}
-			return str;
 		}
+		shell.cd(this.kernel.rootDir);
+	}
 
-		listenRejection (){
-	        process.on('rejectionHandled', (promise) => {
-	            this.logger("PROMISE REJECTION EVENT ", "CRITIC");
-	            this.unhandledRejections.delete(promise);
-	        });
-	        process.on('unhandledRejection', (reason, promise) => {
-	            this.logger("WARNING  !!! PROMISE CHAIN BREAKING : "+ reason, "WARNING");
-	            this.unhandledRejections.set(promise, reason);
-				if( this.kernel.type === "SERVER" ){
-	            	console.trace(promise);
-				}
-	        });
-	    }
-
-		terminate (code){
-			if ( this.kernel ) {
-				return this.kernel.terminate(code);
+	generateHelp (obj, str){
+		this.blankLine();
+		str += "\n  Command : " + "\n\n";
+		str += this.clc.cyan("nodefony")+" \n";
+		str += this.clc.green("\tdev")+"                  Run Nodefony Development Server  \n";
+		str += this.clc.green("\tprod")+"                  Run Nodefony Preprod Server \n";
+		str += this.clc.green("\tpm2")+"                  Run Nodefony Production Server ( PM2 mode ) \n";
+		str += this.clc.green("\tapp")+"                  Get Nodefony App name  \n";
+		str += this.clc.green("\tnpm:install")+"               Install all NPM framework packages\n";
+		str += this.clc.green("\tnpm:list")+"               List all NPM installed packages \n";
+		for (var ele in obj){
+			if (obj[ele].name ){
+				str +=  obj[ele].name;
 			}
-			process.exit(code);
+			for (var cmd in obj[ele].task ){
+				str +=  this.clc.green("\t"+ obj[ele].task[cmd][0]);
+				let length =  obj[ele].task[cmd][0].length;
+				let size = 65 - length ;
+				for (let i = 0 ; i< size ; i++) { str +=" "; }
+				str += obj[ele].task[cmd][1]+"\n";
+			}
 		}
-	};
-	return cliKernel ;
+		return str;
+	}
+	
+	listenRejection (){
+		process.on('rejectionHandled', (promise) => {
+			this.logger("PROMISE REJECTION EVENT ", "CRITIC");
+			this.unhandledRejections.delete(promise);
+		});
+		process.on('unhandledRejection', (reason, promise) => {
+			this.logger("WARNING  !!! PROMISE CHAIN BREAKING : "+ reason, "WARNING");
+			this.unhandledRejections.set(promise, reason);
+			if( this.kernel.type === "SERVER" ){
+				console.trace(promise);
+			}
+		});
+	}
+
+	terminate (code){
+		if ( this.kernel ) {
+			return this.kernel.terminate(code);
+		}
+		process.exit(code);
+	}
+};
+return cliKernel ;
 });

@@ -33,16 +33,16 @@ module.exports = nodefony.register("Reader", function(){
 		try{
 			switch (ext){
 				case ".xml":
-					return plug.xml.apply(this, arguments);
+				return plug.xml.apply(this, arguments);
 				case ".json":
-					return plug.json.apply(this, arguments);
+				return plug.json.apply(this, arguments);
 				case ".yml":
 				case ".yaml":
-					return plug.yml.apply(this, arguments);
+				return plug.yml.apply(this, arguments);
 				case ".js":
-					return plug.annotations.apply(this, arguments);
+				return plug.annotations.apply(this, arguments);
 				default:
-					this.logger("DROP FILE : "+mypath+" NO PLUGIN FIND", "WARNING");
+				this.logger("DROP FILE : "+mypath+" NO PLUGIN FIND", "WARNING");
 			}
 		} catch(e){
 			console.trace(e);
@@ -55,16 +55,16 @@ module.exports = nodefony.register("Reader", function(){
 	};
 
 	/**
- 	 *	Reader node js
- 	 *
- 	 *	@class Reader
- 	 *	@constructor
- 	 *
- 	 *	@example
- 	 *		var container = new nodefony.Container();
-	 *		var reader = new nodefony.Reader(container, settings);
- 	 *
- 	 */
+	*  Reader node js
+	*
+	*  @class Reader
+	*  @constructor
+	*
+	*  @example
+	*    var container = new nodefony.Container();
+	*    var reader = new nodefony.Reader(container, settings);
+	*
+	*/
 	const Reader = class Reader {
 
 		constructor (container, localSettings){
@@ -127,17 +127,17 @@ module.exports = nodefony.register("Reader", function(){
 		}
 
 		/**
- 	 	*	@method render
- 	 	*
- 	 	*/
+		*  @method render
+		*
+		*/
 		render (str, data){
 			return this.engine.twig({data:str}).render(data);
 		}
 
 		/**
- 	 	*	@method loadPlugin
- 	 	*
- 	 	*/
+		*  @method loadPlugin
+		*
+		*/
 		loadPlugin (name, plugin){
 			this.plugins[name] = plugin;
 			let context = this;
@@ -148,19 +148,19 @@ module.exports = nodefony.register("Reader", function(){
 		}
 
 		/**
- 	 	*	@method logger
- 	 	*
- 	 	*/
+		*  @method logger
+		*
+		*/
 		logger (pci, severity, msgid,  msg){
-			var syslog = this.container.get("syslog");
+			let syslog = this.container.get("syslog");
 			if (! msgid) {msgid = "READER ";}
 			return syslog.logger(pci, severity, msgid,  msg);
 		}
 
 		/**
- 	 	*	@method xmlToJson
- 	 	*
- 	 	*/
+		*  @method xmlToJson
+		*
+		*/
 		xmlToJson (node){
 			let json = {};
 			if(node instanceof Array){
