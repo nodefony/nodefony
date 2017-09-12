@@ -87,7 +87,7 @@
     "memcached": "2.2.2",
     "mime": "^1.4.0",
     "mkdirp": "0.5.1",
-    "mocha": "^3.5.1",
+    "mocha": "^3.5.3",
     "mysql2": "^1.4.2",
     "node-emoji": "^1.8.1",
     "node-pre-gyp": "^0.6.37",

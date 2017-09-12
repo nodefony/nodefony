@@ -1,0 +1,15 @@
+{% extends "./layout.json.twig" %}
+
+{% block body %}
+"server":"nodefony",
+"code":408,
+"url":"{{ url }}",
+"bundle":"{{ bundle }}",
+"controller":"{{ Controller }}",
+{% if exception.message %}
+"message":"{{  exception.message or "Response Timeout"  }}"
+{% else  %}
+"message":"{{ exception|json_encode() or "Response Timeout"  }}"
+{% endif %}
+
+{% endblock %}

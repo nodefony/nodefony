@@ -1,0 +1,13 @@
+{% extends "./layout.json.twig" %}
+
+{% block body %}
+"server":"nodefony",
+"code":403,
+"url":"{{ url }}",
+{% if exception.message %}
+"message":"{{  exception.message or "Forbidden"  }}"
+{% else %}
+"message":"{{ message or "Forbidden"  }}"
+{% endif %}
+
+{% endblock %}

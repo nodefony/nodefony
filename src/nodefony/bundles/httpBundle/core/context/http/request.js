@@ -37,7 +37,7 @@ module.exports = nodefony.register("Request",function(){
 						let service = this.context.get("upload");
 						let res = new nodefony.io.MultipartParser(this);
 						this.queryPost = res.post ;
-						var queryFile = res.file ;
+						let queryFile = res.file ;
 						if (Object.keys(queryFile).length ) {
 							for(let file in queryFile){
 								this.queryFile[file] = service.createUploadFile(this, queryFile[file]);
@@ -59,12 +59,67 @@ module.exports = nodefony.register("Request",function(){
 		}
 	};
 
+	const acceptParser  = function(acc){
+		if ( ! acc ){
+			return [{ type: new RegExp(".*"), subtype: new RegExp(".*") }];
+		}
+		let obj = {};
+		try{
+			let types = acc.split(",");
+			for (let i = 0 ; i < types.length ;i++){
+				let type = types[i].split(";");
+				let mine = type.shift();
+				let dec = mine.split("/");
+				let ele1 = dec.shift();
+				let ele2 = dec.shift() ;
+				obj[mine] = {
+					type :  new RegExp( ele1 === "*" ? ".*" :  ele1 ),
+					subtype: new RegExp(  ele2 === "*" ? ".*" :  ele2)
+				};
+				for(let j = 0 ; j < type.length ; j++){
+					let params = type[j].split("=");
+					let name = params.shift();
+					obj[mine][name] = params.shift();
+				}
+			}
+			// sort
+			let tab = [] ;
+			let qvalue = [];
+			for ( let ele in obj){
+				let line = obj[ele];
+				if (line.q){
+					qvalue.push( obj[ele] )
+				}else{
+					tab.push( obj[ele] );
+				}
+			}
+			if( qvalue.length ){
+				return tab.concat( qvalue.sort( (a, b)=>{
+					if (a.q > b.q )
+						return -1;
+					if (a.q < b.q)
+						return 1;
+					return 0;
+				}) ) ;
+			}
+			return tab ;
+		}catch(e){
+				throw e ;
+		}
+	}
+
 	const Request  = class Request {
 
 		constructor (request, context){
 			this.context = context ;
 			this.request = request;
 			this.headers = 	request.headers ;
+			try {
+				this.accept = acceptParser(this.headers.accept);
+				this.acceptHtml = this.accepts("html");
+			}catch(e){
+				this.logger(e,"WARNING");
+			}
 			this.host = this.getHost() ;
 			this.hostname = this.getHostName(this.host) ;
 			this.sUrl = this.getFullUrl( request );
@@ -119,6 +174,40 @@ module.exports = nodefony.register("Request",function(){
 			});
 		}
 
+		accepts(Type){
+			let parse = null;
+			let subtype = "*" ;
+			let type = "*" ;
+			try {
+				if ( Type ){
+					parse = Type.split("/");
+				}
+				if ( parse ){
+					switch ( parse.length ){
+						case 1 :
+							subtype = parse.shift();
+						break;
+						case 2 :
+							type = parse.shift();
+							subtype = parse.shift();
+						break;
+						default:
+							throw new Error("request accepts method bad type format");
+					}
+				}
+				for( let i = 0 ; i < this.accept.length ; i++ ){
+					let line = this.accept[i];
+					if ( ( type === "*" || line.type.test(type) ) && ( subtype === "*" ||  line.subtype.test(subtype) )	 ){
+						return true ;
+					}
+					continue ;
+				}
+				return false ;
+			}catch(e){
+				throw e ;
+			}
+		}
+
 		getHost (){
 			return this.request.headers.host ;
 		}
@@ -156,6 +245,8 @@ module.exports = nodefony.register("Request",function(){
 			delete  this.query ;
 			this.request = null ;
 			delete  this.request ;
+			this.accept = null ;
+			delete  this.accept ;
 			//this.container = null ;
 			//delete this.container ;
 			//super.clean();

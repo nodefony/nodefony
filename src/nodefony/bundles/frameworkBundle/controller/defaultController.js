@@ -19,71 +19,89 @@ module.exports = nodefony.registerController("framework", function(){
 			}
 
 			indexAction (){
+				if (this.context.isJson){
+					return this.render('frameworkBundle::index.json.twig',{title:"WEB nodefony FRAMEWORK"});
+				}
 				return this.render('frameworkBundle::index.html.twig',{title:"WEB nodefony FRAMEWORK"});
 			}
 
 			["404Action"] (message){
 				this.getResponse().setStatusCode(404);
-				this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
+				if (this.context.isJson){
+					return this.render('frameworkBundle::404.json.twig', nodefony.extend( {url:this.context.url}, message) );
+				}
+				//this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
 				return this.render('frameworkBundle::404.html.twig', nodefony.extend( {url:this.context.url}, message) );
 			}
 
 			["401Action"] (error){
-				var res = nodefony.extend( {url:this.context.url}, error);
+				let res = nodefony.extend( {url:this.context.url}, error);
 				this.getResponse().setStatusCode(401);
-				this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
+				if (this.context.isJson){
+					return this.render('frameworkBundle::401.json.twig', res );
+				}
+				//this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
 				return this.render('frameworkBundle::401.html.twig', res );
 			}
 
 			["403Action"] (error){
-				var res = nodefony.extend( {url:this.context.url}, error);
-				this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
+				let res = nodefony.extend( {url:this.context.url}, error);
+				this.getResponse().setStatusCode(403);
+				if (this.context.isJson){
+					return this.render('frameworkBundle::403.json.twig', res );
+				}
+				//this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
 				return this.render('frameworkBundle::403.html.twig', res );
 			}
 
 			["500Action"] (error){
-				//var res = nodefony.extend( {url:this.context.url}, error);
-				var ele = {
+				let ele = {
 					title:"Exception",
 					exception: error
 				};
-				this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
+				if (this.context.isJson){
+					return this.render('frameworkBundle::exception.json.twig', ele );
+				}
+				//this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
 				return this.render('frameworkBundle::exception.html.twig', ele );
 			}
 
 			exceptionsAction (exp){
-				var ele = {
+				let ele = {
 					title:"Exception",
 					exception:util.inspect( exp.exception )
 				};
-				this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
+				if (this.context.isJson){
+					return this.render('frameworkBundle::exception.json.twig', nodefony.extend(ele, exp) );
+				}
+				//this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
 				return this.render('frameworkBundle::exception.html.twig', nodefony.extend(ele, exp) );
 			}
 
 			timeoutAction (exp){
-				var ele = {
+				let ele = {
 					title:"Timeout",
 					exception:util.inspect( exp.exception )
 				};
-				this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
+				if (this.context.isJson){
+					return this.render('frameworkBundle::timeout.json.twig', nodefony.extend(ele, exp) );
+				}
+				//this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
 				return this.render('frameworkBundle::timeout.html.twig', nodefony.extend(ele, exp) );
 			}
 
 
 			systemAction (options){
-				var router = this.get("router");
-				//var kernel = this.get("kernel");
-				//var injection = this.get("injection");
-				var services = {};
-				for (var service in nodefony.services){
-					var ele = this.container.getParameters("services."+service);
+				let services = {};
+				for (let service in nodefony.services){
+					let ele = this.container.getParameters("services."+service);
 					services[service] = {};
 					services[service].name = service;
 					if (ele){
-						var inject = "";
-						var i = 0;
-						for (var inj in ele.injections){
-							var esc = i === 0 ? "" : " , ";
+						let inject = "";
+						let i = 0;
+						for (let inj in ele.injections){
+							let esc = i === 0 ? "" : " , ";
 							inject += esc+inj;
 							i++;
 						}
@@ -99,9 +117,8 @@ module.exports = nodefony.registerController("framework", function(){
 
 					}
 				}
-				//console.log(services)
-				var obj = {
-					routes:router.routes,
+				let obj = {
+					routes:this.router.routes,
 					kernel:this.getParameters("kernel"),
 					services:services
 				};

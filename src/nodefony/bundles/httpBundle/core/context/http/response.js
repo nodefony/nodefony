@@ -33,8 +33,7 @@ module.exports = nodefony.register("Response",function(){
 			this.setStatusCode(200, null);
 			//timeout default
 			this.timeout = this.context.kernelHttp.responseTimeout[this.context.type] ;
-			//default Content-Type to implicit headers
-			this.setHeader("Content-Type", "text/html; charset=utf-8");
+			
 		}
 
 		clean (){

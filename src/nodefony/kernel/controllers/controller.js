@@ -64,6 +64,10 @@ module.exports = nodefony.register("controller", function(){
 			}
 		}
 
+		setContextJson(){
+			this.context.isJson = true ;
+		}
+
 		getORM (){
 			let defaultOrm = this.kernel.settings.orm ;
 			return this.get(defaultOrm);

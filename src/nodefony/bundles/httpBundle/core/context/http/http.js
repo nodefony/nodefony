@@ -24,11 +24,15 @@ nodefony.register.call(nodefony.context, "http", function(){
 			this.resolver = null ;
 			this.nbCallController = 0 ;
 			this.request = new nodefony.Request( request, this);
-			this.response = new nodefony.Response( response, container);
-			this.isRedirect = false ;
-			this.sended = false ;
 			this.method = this.request.getMethod() ;
 			this.isAjax = this.request.isAjax() ;
+			this.isHtml = this.request.acceptHtml ;
+			this.response = new nodefony.Response( response, container);
+			this.setDefaultContentType();
+
+			this.isRedirect = false ;
+			this.sended = false ;
+
 			this.secureArea = null ;
 			this.showDebugBar = true ;
 			this.timeoutExpired = false ;
@@ -460,6 +464,17 @@ nodefony.register.call(nodefony.context, "http", function(){
 						return {error:xjson.message};
 					}
 				break;
+			}
+		}
+
+		setDefaultContentType (){
+			if ( this.isHtml ){
+				this.response.setHeader("Content-Type", "text/html; charset=utf-8");
+			}else{
+				if ( this.request.accepts("json") ){
+					this.isJson = true ;
+					this.response.setHeader("Content-Type", "application/json; charset=utf-8");
+				}
 			}
 		}
 
