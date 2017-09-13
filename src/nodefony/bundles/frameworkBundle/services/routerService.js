@@ -4,15 +4,15 @@ const BlueBird = require("bluebird");
 module.exports = nodefony.registerService("router", function(){
 
 	const isPromise = function (obj) {
-  		return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
-	}
+		return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
+	};
 	/*
- 	 *
- 	 *
- 	 *	ROUTER
- 	 *
- 	 *
- 	 */
+	*
+	*
+	*  ROUTER
+	*
+	*
+	*/
 	const pluginReader = function(){
 
 		let importXmlConfig = function(xml, prefix, callback, parser){
@@ -26,26 +26,26 @@ module.exports = nodefony.registerService("router", function(){
 				for(var key in node){
 					switch(key){
 						case 'route':
-							if(prefix){
-								for( let skey in node[key]){
-									node[key][skey].id = prefix.replace('/', '_') + '_' + node[key][skey].id;
-									if ( node[key][skey].id.charAt(0) === '_'){
-										node[key][skey].id = node[key][skey].id.slice(1);
-									}
-									node[key][skey].pattern = prefix + node[key][skey].pattern;
+						if(prefix){
+							for( let skey in node[key]){
+								node[key][skey].id = prefix.replace('/', '_') + '_' + node[key][skey].id;
+								if ( node[key][skey].id.charAt(0) === '_'){
+									node[key][skey].id = node[key][skey].id.slice(1);
 								}
+								node[key][skey].pattern = prefix + node[key][skey].pattern;
 							}
-							routes = routes.concat(node[key]);
-							break;
+						}
+						routes = routes.concat(node[key]);
+						break;
 						case 'import':
 
-							/*
-							 * TODO PROBLEME DE LOAD DE FICHIER: path + getReaderFunc
-							 */
-							for( let skey in node[key]){
-								routes = routes.concat(importXmlConfig.call(this, '/' + node[key][skey].resource, (node[key][skey].prefix ? node[key][skey].prefix : '')));
-							}
-							break;
+						/*
+						* TODO PROBLEME DE LOAD DE FICHIER: path + getReaderFunc
+						*/
+						for( let skey in node[key]){
+							routes = routes.concat(importXmlConfig.call(this, '/' + node[key][skey].resource, (node[key][skey].prefix ? node[key][skey].prefix : '')));
+						}
+						break;
 					}
 				}
 			});
@@ -108,11 +108,11 @@ module.exports = nodefony.registerService("router", function(){
 	}();
 
 	/*
- 	 *
- 	 * CLASS RESOLVER
- 	 *
- 	 *
- 	 */
+	*
+	* CLASS RESOLVER
+	*
+	*
+	*/
 	const regAction =/^(.+)Action$/;
 	nodefony.Resolver  = class Resolver extends nodefony.Service {
 
@@ -235,7 +235,6 @@ module.exports = nodefony.registerService("router", function(){
 				case result instanceof nodefony.Response :
 				case result instanceof nodefony.wsResponse :
 				return this.fire("onResponse", result, this.context);
-				break ;
 				case result instanceof Promise :
 				case result instanceof BlueBird :
 				case isPromise(result) :
@@ -369,164 +368,164 @@ module.exports = nodefony.registerService("router", function(){
 		}
 
 		/*addRoute (name , route){
-			if (route instanceof nodefony.Route){
-				this.routes[name] = route;
-			}else{
-				var routeC = this.createRoute(route);
-				this.routes[name] = routeC;
-			}
-			this.logger("ADD Route : "+route.path + "   ===> "+route.defaults.controller, "DEBUG");
-		};*/
+		if (route instanceof nodefony.Route){
+		this.routes[name] = route;
+	}else{
+	var routeC = this.createRoute(route);
+	this.routes[name] = routeC;
+}
+this.logger("ADD Route : "+route.path + "   ===> "+route.defaults.controller, "DEBUG");
+};*/
 
-		getRoute (name){
-			if (this.routes[name]){
-				return this.routes[name];
+getRoute (name){
+	if (this.routes[name]){
+		return this.routes[name];
+	}
+	this.logger("Route name: "+name +" not exist");
+	return null ;
+}
+
+setRoute (name, route){
+	let myroute = null ;
+	if ( route instanceof nodefony.Route){
+		myroute = route;
+	}else{
+		myroute = this.createRoute(route);
+	}
+	let hash = myroute.generateId();
+	let index = null ;
+	let same = false ;
+	if ( this.routes[name] ){
+		index = this.routes[name].index ;
+		if ( this.routes[name].hash ===  hash){
+			same = true ;
+		}else{
+			if ( this.routes[name].filePath !== myroute.filePath ){
+				same = true;
 			}
-			this.logger("Route name: "+name +" not exist");
-			return null ;
+			//console.log("index old route : " + index )
+			this.logger("ROUTE HAS SAME NAME : "+ name + " path : "+myroute.path + " controller : "+myroute.defaults.controller, "WARNING");
 		}
-
-		setRoute (name, route){
-			let myroute = null ;
-			if ( route instanceof nodefony.Route){
-				myroute = route;
-			}else{
-				myroute = this.createRoute(route);
-			}
-			let hash = myroute.generateId();
-			let index = null ;
-			let same = false ;
-			if ( this.routes[name] ){
-				index = this.routes[name].index ;
-				if ( this.routes[name].hash ===  hash){
-					same = true ;
-				}else{
-					if ( this.routes[name].filePath !== myroute.filePath ){
-						same = true;
-					}
-					//console.log("index old route : " + index )
-					this.logger("ROUTE HAS SAME NAME : "+ name + " path : "+myroute.path + " controller : "+myroute.defaults.controller, "WARNING");
-				}
-			}
-			if ( index === null ){
-				index = this.routes.push(myroute);
-				myroute.index = index ;
-				this.routes[name] = this.routes[index-1];
-				this.logger("ADD ROUTE : "+ name+ " path :"  + myroute.path + " controller "+ myroute.defaults.controller, "DEBUG");
-			}else{
-				if ( ! same ){
-					myroute.index = index ;
-					//console.log("new Index " + myroute.index )
-					delete this.routes[index-1] ;
-					this.routes[index-1] = myroute ;
-					delete this.routes[name] ;
-					this.routes[name] = this.routes[index-1];
-					this.logger("REPLACE ROUTE : "+ name+" path : " + myroute.path + " controller "+ myroute.defaults.controller, "WARNING");
-				}else{
-					myroute.index = index ;
-				}
-			}
+	}
+	if ( index === null ){
+		index = this.routes.push(myroute);
+		myroute.index = index ;
+		this.routes[name] = this.routes[index-1];
+		this.logger("ADD ROUTE : "+ name+ " path :"  + myroute.path + " controller "+ myroute.defaults.controller, "DEBUG");
+	}else{
+		if ( ! same ){
+			myroute.index = index ;
+			//console.log("new Index " + myroute.index )
+			delete this.routes[index-1] ;
+			this.routes[index-1] = myroute ;
+			delete this.routes[name] ;
+			this.routes[name] = this.routes[index-1];
+			this.logger("REPLACE ROUTE : "+ name+" path : " + myroute.path + " controller "+ myroute.defaults.controller, "WARNING");
+		}else{
+			myroute.index = index ;
 		}
+	}
+}
 
-		getRoutes (name){
-			if (name){
-				return this.routes[name];
-			}
-			return this.routes;
-		}
+getRoutes (name){
+	if (name){
+		return this.routes[name];
+	}
+	return this.routes;
+}
 
-		resolve ( context ){
-			let resolver = new nodefony.Resolver(context, this);
-			for (let i = 0; i < this.routes.length; i++){
-				try {
-					if ( resolver.match( this.routes[i], context) ){
-						return resolver;
-					}
-				}catch(e){
-					if (e && e.type && ( e.type === "domain" || e.type === "method" ) ){
-						resolver.exception = e ;
-						continue ;
-					}
-					throw e ;
-				}
-			}
-			if (resolver.exception ){
-				throw resolver.exception ;
-			}
-			return resolver;
-		}
-
-		resolveName (context, name){
-			try {
-				let resolver = new nodefony.Resolver(context, this);
-				resolver.parsePathernController(name);
+resolve ( context ){
+	let resolver = new nodefony.Resolver(context, this);
+	for (let i = 0; i < this.routes.length; i++){
+		try {
+			if ( resolver.match( this.routes[i], context) ){
 				return resolver;
-			}catch(e){
-				throw e ;
 			}
+		}catch(e){
+			if (e && e.type && ( e.type === "domain" || e.type === "method" ) ){
+				resolver.exception = e ;
+				continue ;
+			}
+			throw e ;
 		}
+	}
+	if (resolver.exception ){
+		throw resolver.exception ;
+	}
+	return resolver;
+}
 
-		createRoute (obj){
-			return new nodefony.Route(obj);
+resolveName (context, name){
+	try {
+		let resolver = new nodefony.Resolver(context, this);
+		resolver.parsePathernController(name);
+		return resolver;
+	}catch(e){
+		throw e ;
+	}
+}
+
+createRoute (obj){
+	return new nodefony.Route(obj);
+}
+
+logger (pci, severity, msgid,  msg){
+	if (! msgid) { msgid = "SERVICE ROUTER";}
+	return super.logger(pci, severity, msgid,  msg);
+}
+
+removeRoutes( filePath ){
+	for (let i = 0; i<this.routes.length; i++){
+		//console.log( this.routes[i].name +" : "+this.routes[i].filePath)
+		if ( this.routes[i].filePath === filePath ){
+			this.logger( "DELETE ROUTE : " + this.routes[i].name );
+			let index = this.routes[i].index ;
+			let name = this.routes[i].name ;
+			delete this.routes[index-1] ;
+			delete this.routes[name] ;
 		}
+	}
+}
 
-		logger (pci, severity, msgid,  msg){
-			if (! msgid) { msgid = "SERVICE ROUTER";}
-			return super.logger(pci, severity, msgid,  msg);
-		}
-
-		removeRoutes( filePath ){
-			for (let i = 0; i<this.routes.length; i++){
-				//console.log( this.routes[i].name +" : "+this.routes[i].filePath)
-				if ( this.routes[i].filePath === filePath ){
-					this.logger( "DELETE ROUTE : " + this.routes[i].name )
-					let index = this.routes[i].index ;
-					let name = this.routes[i].name ;
-					delete this.routes[index-1] ;
-					delete this.routes[name] ;
+nodeReader (filePath , obj){
+	for (let route in obj){
+		let newRoute = new nodefony.Route(route);
+		newRoute.filePath = filePath ;
+		for ( let ele in obj[route] ){
+			let arg = obj[route][ele];
+			switch ( ele ){
+				case "pattern" :
+				newRoute.setPattern(arg);
+				break;
+				case "host" :
+				newRoute.setHostname(arg);
+				break;
+				case "firewalls" :
+				newRoute.setFirewallConfigRoute(arg);
+				break;
+				case "defaults" :
+				for (let ob in arg){
+					newRoute.addDefault(ob, arg[ob] );
 				}
-			}
-		}
-
-		nodeReader (filePath , obj){
-			for (let route in obj){
-				let newRoute = new nodefony.Route(route);
-				newRoute.filePath = filePath ;
-				for ( let ele in obj[route] ){
-					let arg = obj[route][ele];
-					switch ( ele ){
-						case "pattern" :
-						newRoute.setPattern(arg);
-						break;
-						case "host" :
-						newRoute.setHostname(arg);
-						break;
-						case "firewalls" :
-						newRoute.setFirewallConfigRoute(arg);
-						break;
-						case "defaults" :
-						for (let ob in arg){
-							newRoute.addDefault(ob, arg[ob] );
-						}
-						break;
-						case "requirements" :
-						for (let ob in arg){
-							newRoute.addRequirement(ob, arg[ob] );
-						}
-						break;
-						case "options" :
-						for (let ob in arg){
-							newRoute.addOptions(ob, arg[ob] );
-						}
-						break;
-						default:
-						this.logger(" Tag : "+ele+ " not exist in routings definition");
-					}
+				break;
+				case "requirements" :
+				for (let ob in arg){
+					newRoute.addRequirement(ob, arg[ob] );
 				}
-				newRoute.compile();
-				this.setRoute(route, newRoute);
+				break;
+				case "options" :
+				for (let ob in arg){
+					newRoute.addOptions(ob, arg[ob] );
+				}
+				break;
+				default:
+				this.logger(" Tag : "+ele+ " not exist in routings definition");
 			}
 		}
-	};
-	return Router;
+		newRoute.compile();
+		this.setRoute(route, newRoute);
+	}
+}
+};
+return Router;
 });

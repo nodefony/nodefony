@@ -4,6 +4,8 @@
 "server":"nodefony",
 "code":403,
 "url":"{{ url }}",
+"bundle":"{{ bundle }}",
+"controller":"{{ Controller }}",
 {% if exception.message %}
 "message":"{{  exception.message or "Forbidden"  }}"
 {% else %}

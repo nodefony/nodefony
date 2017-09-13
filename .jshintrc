@@ -35,6 +35,8 @@
       "zone":		true,
       "it":		true,
       "describe":	true,
+      "before":	true,
+      "BlueBird":true,
       "twig": true,
       "shell":true,
       "clc":true
