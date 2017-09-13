@@ -3,8 +3,8 @@
 {% block body %}
 "server":"nodefony",
 "code":401,
-"bundle":"{{ bundle }}",
-"controller":"{{ Controller }}",
-"url":"{{ url }}",
-"message":"{{  exception.message or "Unauthorized"  }}"
+"bundle":"{{ error.bundle }}",
+"controller":"{{ error.controller }}",
+"url":"{{ error.url }}",
+"message":"{{  error.message or "Unauthorized"  }}"
 {% endblock %}

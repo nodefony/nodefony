@@ -81,12 +81,10 @@ nodefony.register.call(nodefony.context, "http", function(){
 
       this.once( this, "onRequest" , this.handle );
       this.once(this, "onResponse", this.send);
-      this.once( this, "onTimeout" , (/*context*/) => {
-        this.fire("onError", this.container, {
-          status:408,
-          message:new Error("Timeout :" + this.url)
-        } );
-        //context.clean();
+      this.once( this, "onTimeout" , () => {
+          let error = new Error("");
+          error.code = 408 ;
+        this.fire("onError", this.container, error );
       } );
 
       //case proxy
@@ -186,11 +184,9 @@ nodefony.register.call(nodefony.context, "http", function(){
         return this.fire("onError", this.container, e );
       }
       if ( ! resolver.resolve) {
-        return this.fire("onError", this.container, {
-          status:404,
-          error:"PATTERN : " + pattern,
-          message:"not Found"
-        });
+          let error = new Error(pattern);
+          error.code = 404;
+        return this.fire("onError", this.container,  error);
       }
       try {
         control = new resolver.controller( container, this );
@@ -288,11 +284,9 @@ nodefony.register.call(nodefony.context, "http", function(){
         /*
           *  NOT FOUND
           */
-        this.fire("onError", this.container, {
-          status:404,
-          error:"URI :" + this.request.url,
-          message:"Not Found"
-        });
+          let error = new Error("");
+          error.code = 404;
+          this.fire("onError", this.container, error);
       }catch(e){
         /*
           *  ERROR IN CONTROLLER

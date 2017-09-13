@@ -185,6 +185,17 @@ describe("BUNDLE TEST", function(){
 			})
 			request.end();
 		});
+		it("request-exception-timeout2", function(done){
+			global.options.path ='/test/unit/exception/timeout';
+			global.options.method ='GET';
+			global.options.headers = {};
+			var request = http.request(global.options,function(res) {
+				assert.equal(res.statusCode, 408);
+				assert.deepStrictEqual(res.statusMessage, "Request Timeout");
+				done();
+			})
+			request.end();
+		});
 		it("request-exception-action", function(done){
 			global.options.path ='/test/unit/exception/1001';
 			global.options.method ='GET';

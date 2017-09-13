@@ -3,6 +3,6 @@
 {% block body %}
 "server":"nodefony",
 "code":404,
-"url":"{{ url }}",
-"message":"{{  message or "Not Found"  }}"
+"url":"{{ error.url }}",
+"message":"{{  error.message or "Not Found"  }}"
 {% endblock %}

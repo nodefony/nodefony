@@ -140,10 +140,14 @@ module.exports = nodefony.registerController("default", function(){
 				}
 
 				// get all version
-				var finderVersion  = new nodefony.finder( {
-					path: path.resolve( Path, "doc"),
-					recurse: false
-				});
+				try {
+					var finderVersion  = new nodefony.finder( {
+						path: path.resolve( Path, "doc"),
+						recurse: false
+					});
+				}catch(e){
+					 throw e ;
+				}
 				var directory  = finderVersion.result.getDirectories();
 				var all = [];
 				directory.forEach(function(ele , index){

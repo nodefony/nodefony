@@ -33,7 +33,7 @@ module.exports = nodefony.register("Response",function(){
 			this.setStatusCode(200, null);
 			//timeout default
 			this.timeout = this.context.kernelHttp.responseTimeout[this.context.type] ;
-			
+
 		}
 
 		clean (){
@@ -55,10 +55,7 @@ module.exports = nodefony.register("Response",function(){
 			if ( cookie instanceof nodefony.cookies.cookie ){
 				this.cookies[cookie.name] = cookie;
 			}else{
-				throw {
-					message:"",
-					error:"Response addCookies not valid cookies"
-				};
+				throw new Error("Response addCookies not valid cookies");
 			}
 		}
 
@@ -144,11 +141,18 @@ module.exports = nodefony.register("Response",function(){
 		}
 
 		writeHead (statusCode, headers){
+			let st = statusCode || this.statusCode ;
+			if (typeof st !== "number" ){
+				let ret  = parseInt(st, 10);
+				if ( isNaN(ret) ){
+					throw new Error("Invalid status code: NaN");
+	            }
+			}
 			if ( ! this.response.headersSent ){
 				this.response.statusMessage = this.statusMessage || http.STATUS_CODES[this.statusCode] ;
 				try {
 					return this.response.writeHead(
-						statusCode || this.statusCode,
+						st,
 						headers || this.headers
 					);
 				}catch(e){

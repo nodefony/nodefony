@@ -475,13 +475,6 @@ module.exports = nodefony.registerController("controllerTest", function(){
 			});
 		}
 
-
-
-
-
-
-
-
 		/**
  	 	 *
  	 	 *	promiseAction
@@ -505,6 +498,9 @@ module.exports = nodefony.registerController("controllerTest", function(){
 					return this.notificationsCenter.fire("onError", this.container, null);
 				case "fire" :
 					return this.notificationsCenter.fire("onError", this.container, new Error("My Fire Exception"));
+				case "timeout" :
+						this.response.setTimeout(1000);
+					return ;
 				default :
 					throw new Error("Action not found")
 			}

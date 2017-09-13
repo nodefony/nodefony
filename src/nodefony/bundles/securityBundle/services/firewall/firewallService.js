@@ -7,7 +7,7 @@
 */
 module.exports = nodefony.registerService("firewall", function(){
 
-	let pluginReader = function(){
+	const pluginReader = function(){
 
 		let replaceKey = function(key){
 			let tab = ['firewall', 'user', 'encoder'];
@@ -138,6 +138,7 @@ module.exports = nodefony.registerService("firewall", function(){
 		}
 
 		handleError (context, e){
+			let error = null ;
 			switch ( context.type ){
 				case "HTTP" :
 				case "HTTPS" :
@@ -169,10 +170,9 @@ module.exports = nodefony.registerService("firewall", function(){
 					}
 					context.resolver = this.overrideURL(context, this.formLogin);
 					if ( !  context.resolver.resolve ){
-						return context.fire("onError",context.container, {
-							status:401,
-							message:"Form Login route : " + this.formLogin + " this route not exist. Check Security config file"
-						});
+						error = new Error("Form Login route : " + this.formLogin + " this route not exist. Check Security config file");
+						error.code = 401 ;
+						return context.fire("onError",context.container, error);
 					}
 					if (! context.isAjax ){
 						if ( e.message !== "Unauthorized" ){
@@ -186,31 +186,22 @@ module.exports = nodefony.registerService("firewall", function(){
 					context.fire("onRequest");
 				}else{
 					if (e.status){
-						context.fire("onError",context.container, {
-							status:e.status,
-							message:e.message
-						});
+						error = new Error(e.message);
+						error.code = e.status ;
+						context.fire("onError",context.container, error);
 					}else{
-						context.fire("onError",context.container, {
-							status:500,
-							message:e
-						});
+						context.fire("onError",context.container, e);
 					}
 				}
 				break;
 				case "WEBSOCKET":
 				case "WEBSOCKET SECURE":
-				//console.trace(e);
 				if (e.status){
-					context.fire("onError",context.container, {
-						status:e.status,
-						message:e.message
-					});
+					error = new Error(e.message);
+					error.code = e.status ;
+					context.fire("onError",context.container, error);
 				}else{
-					context.fire("onError",context.container, {
-						status:500,
-						message:e
-					});
+					context.fire("onError",context.container, e);
 				}
 				break;
 			}
@@ -420,8 +411,10 @@ module.exports = nodefony.registerService("firewall", function(){
 						if ( ! ( session instanceof nodefony.Session ) ){
 							throw new Error("SESSION START session storage ERROR");
 						}
-						if (  context.type === "HTTP" &&  context.container.get("httpsServer").ready &&  context.security.redirect_Https ){
-							return context.security.redirectHttps(context);
+						if (  context.type === "HTTP" &&  context.container.get("httpsServer").ready  ){
+							if ( context.security.redirect_Https ){
+								return context.security.redirectHttps(context);
+							}
 						}
 						try {
 							return this.handle(context, request, response, session);
@@ -575,10 +568,9 @@ module.exports = nodefony.registerService("firewall", function(){
 						return 204;
 						case 401 :
 						this.logger("\x1b[31m CROSS DOMAIN Unauthorized \x1b[0mREQUEST REFERER : " + context.originUrl.href ,"ERROR");
-						context.notificationsCenter.fire("onError",context.container, {
-							status:next,
-							message:"crossDomain Unauthorized "
-						});
+						let error = new Error("CROSS DOMAIN Unauthorized REQUEST REFERER : " + context.originUrl.href );
+						error.code = next ;
+						context.notificationsCenter.fire("onError",context.container, error);
 						return 401;
 						case 200 :
 						this.logger("\x1b[34m CROSS DOMAIN  \x1b[0mREQUEST REFERER : " + context.originUrl.href ,"DEBUG");

@@ -257,10 +257,9 @@ module.exports = nodefony.registerService("httpKernel", function(){
             case "HTTP":
             case "HTTPS":
               this.logger("\x1b[31m  DOMAIN Unauthorized \x1b[0mREQUEST DOMAIN : " + context.domain ,"ERROR");
-              context.notificationsCenter.fire("onError",context.container, {
-                status:next,
-                message:"Domain : "+context.domain+" Unauthorized "
-              });
+              let error = new Error("Domain : "+context.domain+" Unauthorized ");
+              error.code = next ;
+              context.notificationsCenter.fire("onError",context.container, error);
             break;
             case "WEBSOCKET":
             case "WEBSOCKET SECURE":
@@ -275,44 +274,41 @@ module.exports = nodefony.registerService("httpKernel", function(){
     onError (container, error){
       let myError = null ;
       let context = container.get('context');
-      if (  error ){
-        if ( error.stack ){
-          myError =  error.stack;
-          this.logger(error, "ERROR");
-          if (error.message ){
-            this.logger(util.inspect(error.message), "ERROR");
+      if ( error ){
+          switch ( nodefony.typeOf(error) ){
+              case "object" :
+              myError = new Error("");
+              myError.message = error ;
+              if (  error.status ) {
+                  myError.code = error.status ;
+              }else{
+                  myError.code = context.response.getStatusCode() ;
+              }
+              break;
+              case "string" :
+              error = new Error(error);
+              error.code = context.response.getStatusCode() ;
+              break;
+              case "Error" :
+              if ( ! error.code ){
+                  error.code = context.response.getStatusCode() ;
+              }
+              break;
+              default:
+              myError = new Error("");
+              myError.message = error ;
+              myError.code = context.response.getStatusCode() ;
           }
-          if( context.isHtml ){
-            myError = myError.split('\n').map(function(v){ return ' -- ' + v +"</br>"; }).join('');
-          }
-        }else{
-          myError =  error;
-          this.logger(util.inspect(error),"ERROR");
-        }
       }else{
-        error = {
-          status : null
-        };
+          error = new Error("");
+          error.code = context.response.getStatusCode() || 500;
       }
+
       if ( (! context ) ||  ( ! context.response ) ){
          return   ;
       }
       let resolver= null ;
-      switch ( nodefony.typeOf(error) ){
-        case "object" :
-          if ( !  error.status ) {
-            error.status = context.response.getStatusCode() ;
-          }
-        break;
-        case "string" :
-          console.trace(error);
-          error = new Error(error);
-          error.status = context.response.getStatusCode() ;
-        break;
-        default:
-          error.status = context.response.getStatusCode() ;
-      }
-      switch (error.status){
+      switch (error.code){
         case 404:
           resolver = this.router.resolveName(context, "frameworkBundle:default:404");
         break;
@@ -327,22 +323,37 @@ module.exports = nodefony.registerService("httpKernel", function(){
         break;
         default:
           resolver = this.router.resolveName(context, "frameworkBundle:default:exceptions");
-          if (error.status <= 200 ){
-            error.status = 500 ;
+          if (error.code < 400 ){
+            error.code = 500 ;
           }
       }
-      context.response.setStatusCode(error.status || 500, error.message ) ;
 
       if (error.xjson){
         if ( context.setXjson ){
           context.setXjson(error.xjson);
         }
       }
-      resolver.callController( {
-        exception:myError || error,
-        Controller: container.get("controller") ? container.get("controller").name : null,
-        bundle:container.get("bundle") ? container.get("bundle").name : null
-      });
+      let exception = myError || error ;
+      exception.bundle = container.get("bundle") ? container.get("bundle").name : "" ;
+      exception.controller =  container.get("controller") ? container.get("controller").name : "" ;
+      exception.url = context.url || "" ;
+      this.logger(exception, "ERROR");
+      if ( typeof exception.code !== "number"){
+          let ret  = parseInt(exception.code, 10);
+          if ( isNaN(ret) ){
+              exception.code = 500 ;
+          }
+      }
+      if ( ! exception.message ){
+         exception.message =  http.STATUS_CODES[exception.code];
+      }
+      context.response.setStatusCode(exception.code || 500, exception.message ) ;
+      try {
+          return resolver.callController( exception );
+      }catch(e){
+          this.logger(e, "ERROR");
+          return ;
+      }
     }
 
     onHttpRequest(request, response, type){
@@ -414,11 +425,9 @@ module.exports = nodefony.registerService("httpKernel", function(){
       if (resolver.resolve) {
         context.resolver = resolver ;
       }else{
-        return context.fire("onError", container, {
-          status:404,
-          error:"URI :" + context.url,
-          message:"not Found"
-        });
+          let error = new Error("Not Found");
+          error.code = 404;
+        return context.fire("onError", container, error);
       }
 
       if ( ( ! this.firewall ) || resolver.bypassFirewall ){
@@ -492,11 +501,9 @@ module.exports = nodefony.registerService("httpKernel", function(){
       if (resolver.resolve) {
         context.resolver = resolver ;
       }else{
-        return context.notificationsCenter.fire("onError", container, {
-          status:404,
-          error:"URI :" + request.url,
-          message:"not Found"
-        });
+        let error = new Error("");
+        error.code = 404;
+        return context.notificationsCenter.fire("onError", container, error);
       }
 
       if ( ( ! this.firewall ) || resolver.bypassFirewall ){

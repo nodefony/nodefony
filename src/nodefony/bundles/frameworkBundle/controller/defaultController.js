@@ -25,69 +25,52 @@ module.exports = nodefony.registerController("framework", function(){
 				return this.render('frameworkBundle::index.html.twig',{title:"WEB nodefony FRAMEWORK"});
 			}
 
-			["404Action"] (message){
+			["404Action"] (error){
 				this.getResponse().setStatusCode(404);
 				if (this.context.isJson){
-					return this.render('frameworkBundle::404.json.twig', nodefony.extend( {url:this.context.url}, message) );
+					return this.render('frameworkBundle::404.json.twig', {error:error} );
 				}
-				//this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
-				return this.render('frameworkBundle::404.html.twig', nodefony.extend( {url:this.context.url}, message) );
+				return this.render('frameworkBundle::404.html.twig', {error:error} );
 			}
 
 			["401Action"] (error){
-				let res = nodefony.extend( {url:this.context.url}, error);
 				this.getResponse().setStatusCode(401);
 				if (this.context.isJson){
-					return this.render('frameworkBundle::401.json.twig', res );
+					return this.render('frameworkBundle::401.json.twig', {error:error} );
 				}
 				//this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
-				return this.render('frameworkBundle::401.html.twig', res );
+				return this.render('frameworkBundle::401.html.twig', {error:error} );
 			}
 
 			["403Action"] (error){
-				let res = nodefony.extend( {url:this.context.url}, error);
 				this.getResponse().setStatusCode(403);
 				if (this.context.isJson){
-					return this.render('frameworkBundle::403.json.twig', res );
+					return this.render('frameworkBundle::403.json.twig', {error:error} );
 				}
-				//this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
-				return this.render('frameworkBundle::403.html.twig', res );
+				return this.render('frameworkBundle::403.html.twig', {error:error} );
 			}
 
 			["500Action"] (error){
-				let ele = {
-					title:"Exception",
-					exception: error
-				};
+				this.getResponse().setStatusCode(500);
 				if (this.context.isJson){
-					return this.render('frameworkBundle::exception.json.twig', ele );
+					return this.render('frameworkBundle::exception.json.twig', {error:error} );
 				}
-				//this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
-				return this.render('frameworkBundle::exception.html.twig', ele );
+				return this.render('frameworkBundle::exception.html.twig', {error:error} );
 			}
 
-			exceptionsAction (exp){
-				let ele = {
-					title:"Exception",
-					exception:util.inspect( exp.exception )
-				};
+			exceptionsAction (error){
 				if (this.context.isJson){
-					return this.render('frameworkBundle::exception.json.twig', nodefony.extend(ele, exp) );
+					return this.render('frameworkBundle::exception.json.twig', {error:error} );
 				}
-				//this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
-				return this.render('frameworkBundle::exception.html.twig', nodefony.extend(ele, exp) );
+				return this.render('frameworkBundle::exception.html.twig', {error:error} );
 			}
 
-			timeoutAction (exp){
-				let ele = {
-					title:"Timeout",
-					exception:util.inspect( exp.exception )
-				};
+			timeoutAction (error){
 				if (this.context.isJson){
-					return this.render('frameworkBundle::timeout.json.twig', nodefony.extend(ele, exp) );
+					return this.render('frameworkBundle::timeout.json.twig', {error:error} );
 				}
 				//this.context.response.setHeaders({"Content-Type": "text/html; charset=utf-8"});
-				return this.render('frameworkBundle::timeout.html.twig', nodefony.extend(ele, exp) );
+				return this.render('frameworkBundle::timeout.html.twig', {error:error} );
 			}
 
 

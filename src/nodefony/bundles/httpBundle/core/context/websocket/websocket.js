@@ -170,10 +170,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 			if ( cookie instanceof nodefony.cookies.cookie ){
 				this.cookies[cookie.name] = cookie;
 			}else{
-				throw {
-					message:"",
-					error:"Response addCookies not valid cookies"
-				};
+				throw new Error("Response addCookies not valid cookies");
 			}
 		}
 
@@ -231,11 +228,9 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 				return this.fire("onError", this.container, e );
 			}
 			if ( ! resolver.resolve) {
-				return this.fire("onError", this.container, {
-					status:404,
-					error:"PATTERN : " + pattern,
-					message:"not Found"
-				});
+				let error = new Error(pattern);
+				error.code = 404;
+				return this.fire("onError", this.container, error);
 			}
 			try {
 				control = new resolver.controller( container, this );
@@ -279,10 +274,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 						response:subRequest.controller.render(subRequest.resolver.defaultView, subRequest.response )
 					} );
 				}else{
-					throw {
-						status:500,
-						message:"default view not exist"
-					};
+					throw new Error("default view not exist");
 				}
 				break;
 				case typeof subRequest.response === "string" :

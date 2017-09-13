@@ -3,13 +3,8 @@
 {% block body %}
 "server":"nodefony",
 "code":500,
-"url":"{{ url }}",
-"bundle":"{{ bundle }}",
-"controller":"{{ Controller }}",
-{% if exception.message %}
-"message":"{{  exception.message or "Internal Server Error"  }}"
-{% else  %}
-"message":"{{ exception|json_encode() or "Internal Server Error"  }}"
-{% endif %}
-
+"url":"{{ error.url }}",
+"bundle":"{{ error.bundle }}",
+"controller":"{{ error.controller }}",
+"message":"{{  error.message or "Internal Server Error"  }}"
 {% endblock %}

@@ -29,7 +29,7 @@ nodefony.register("wsResponse",function(){
 
 			// struct headers
 			this.headers = {};
-			this.type = "utf8" ; 
+			this.type = "utf8" ;
 		}
 
 		logger (pci, severity, msgid,  msg){
@@ -45,7 +45,7 @@ nodefony.register("wsResponse",function(){
 				break;
 				case "object" :
 				case "array" :
-					this.body = JSON.stringify(ele); 
+					this.body = JSON.stringify(ele);
 				break;
 				default:
 					this.body = ele;
@@ -68,7 +68,7 @@ nodefony.register("wsResponse",function(){
 		}
 
 		clean (){
-			delete this.connection ;	
+			delete this.connection ;
 			delete this.body ;
 		}
 
@@ -76,10 +76,7 @@ nodefony.register("wsResponse",function(){
 			if ( cookie instanceof nodefony.cookies.cookie ){
 				this.cookies[cookie.name] = cookie;
 			}else{
-				throw {
-					message:"",
-					error:"Response addCookies not valid cookies"
-				};
+				throw new Error("Response addCookies not valid cookies");
 			}	
 		}
 
@@ -88,7 +85,7 @@ nodefony.register("wsResponse",function(){
 		}
 
 		setStatusCode (status, message){
-			
+
 		}
 
 		getStatus (){
@@ -97,7 +94,7 @@ nodefony.register("wsResponse",function(){
 
 		setCookies (){
 			for (var cook in this.cookies){
-				this.setCookie(this.cookies[cook]);	
+				this.setCookie(this.cookies[cook]);
 			}
 		}
 
@@ -110,7 +107,7 @@ nodefony.register("wsResponse",function(){
 		setHeader (name, value){
 			this.response.setHeader(name, value);
 		}
-		
+
 		setHeaders (obj){
 			nodefony.extend(this.headers, obj);
 		}
