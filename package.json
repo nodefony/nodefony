@@ -11,7 +11,7 @@
     "build": "make build",
     "outdated": "npm outdated --deph=0",
     "test": "./nodefony unitTest:launch:all",
-    "version": "changelog nodefony all -m"
+    "version": "gren --username=nodefony  --repo=nodefony-core --tags=all --action changelog --data-source=commits --override --generate"
   },
   "bin": {
     "nodefony": "./nodefony"
@@ -85,7 +85,7 @@
     "lodash.isregexp": "^4.0.1",
     "markdown-it": "^8.4.0",
     "memcached": "2.2.2",
-    "mime": "^1.4.0",
+    "mime": "^2.0.1",
     "mkdirp": "0.5.1",
     "mocha": "^3.5.3",
     "mysql2": "^1.4.2",
@@ -130,16 +130,17 @@
     "url-loader": "0.5.9",
     "useragent": "2.2.1",
     "webpack": "^3.5.6",
-    "webpack-dev-server": "^2.8.0",
+    "webpack-dev-server": "^2.8.1",
     "webpack-merge": "4.1.0",
     "websocket": "1.0.24",
     "xml2js": "^0.4.19",
-    "yarn": "^1.0.0"
+    "yarn": "^1.0.2"
   },
   "devDependencies": {
     "bithound": "1.7.0",
     "changelog": "^1.4.0",
     "changelog-maker": "^2.2.6",
+    "github-release-notes": "^0.9.0",
     "jshint": "2.9.5"
   },
   "author": "cci <christophe.camensuli@gmail.com>",

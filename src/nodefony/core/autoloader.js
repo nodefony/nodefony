@@ -80,6 +80,14 @@ module.exports = function(){
     getVersion (){
       return process.versions ;
     }
+    
+    fileExist(file){
+      try {
+        fs.statSync(file);
+      }catch(e){
+        throw e ;
+      }
+    }
 
     isElectron (){
       return this.versions.electron || null ;
@@ -88,19 +96,24 @@ module.exports = function(){
     loadAppKernel (){
       let appKernelPath = path.resolve( this.dirname, "..", "..","..", "..", "app", "appKernel.js");
       try {
-        let stat = fs.statSync(appKernelPath);
-        if (! stat){
-          appKernelPath = path.resolve( this.dirname, "..", "..", "app", "appKernel.js");
-        }
+        this.fileExist(appKernelPath);
       }catch(e){
         appKernelPath = path.resolve( this.dirname, "..", "..", "app", "appKernel.js");
+        try {
+          this.fileExist(appKernelPath);
+        }catch(e){
+          appKernelPath = null ;
+        }
       }
       try {
-        this.load( appKernelPath );
+        if(appKernelPath) {
+          this.load( appKernelPath );
+        }
       }catch(e){
         throw e ;
       }
     }
+
 
     createContext (sandbox){
       return  vm.createContext(sandbox);

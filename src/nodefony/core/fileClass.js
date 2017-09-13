@@ -45,7 +45,8 @@ module.exports = nodefony.register("fileClass", function(){
         this.shortName = this.parse.name ;
         if (this.type === "File"){
           this.mimeType = this.getMimeType(this.name);
-          this.encoding = this.getCharset();
+          this.encoding = "UTF-8"; //this.getCharset();
+          this.extention = this.getExtension(this.mimeType);
         }
         this.dirName = this.parse.dir;
         this.match = null;
@@ -87,12 +88,20 @@ module.exports = nodefony.register("fileClass", function(){
     }
 
     getMimeType (name){
-      return  mime.lookup(name);
+      return  mime.getType(name || this.name );
     }
 
-    getCharset (mimeType){
-      return mime.charsets.lookup(mimeType || this.mimeType );
+    getExtension(mimeType){
+      return  mime.getExtension(mimeType || this.mimeType);
     }
+
+    getExtention(mimeType){
+      return  mime.getExtension(mimeType || this.mimeType);
+    }
+
+    /*getCharset (mimeType){
+      //return mime.charsets.lookup(mimeType || this.mimeType );
+    }*/
 
     getRealpath (Path, options){
       return  fs.realpathSync(Path, options );
@@ -107,14 +116,6 @@ module.exports = nodefony.register("fileClass", function(){
         return true;
       }
       return false;
-    }
-
-    getExtention (){
-      if ( this.isFile ){
-        let tab = this.name.split('.');
-        if (tab.length > 1) { return tab.reverse()[0]; }
-      }
-      return null ;
     }
 
     matchType (type){

@@ -708,7 +708,7 @@ module.exports = nodefony.registerController("demo", function(){
 						throw files[file].error ;
 					}
 					files[file].<strong>move</strong>(myPath);
-					//console.log( files[file].getExtention() )
+					//console.log( files[file].getExtension() )
 					//console.log( files[file].getMimeType() )
 					//console.log( files[file].realName() )
 				}
@@ -724,7 +724,7 @@ module.exports = nodefony.registerController("demo", function(){
 						res.files.push(myPath+"/"+name);
 						var meta = {
 							date : new Date(),
-							extention:files[file].getExtention(),
+							extension:files[file].getExtension(),
 							file:myPath+"/"+name,
 							name:name,
 							old_name:files[file].name,

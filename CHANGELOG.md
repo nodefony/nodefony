@@ -1,41 +1,81 @@
-2.1.4-beta / 2017-05-08
-=======================
+# Changelog
 
-  * update Dependencies
-  * add tools
-  * manage log pm2 on production start
-  * Add testBundle in repository | better management starter prod
-  * debug travis
+## v3.0.0 (06/09/2017)
+- webpack dump for realease
+- add remote submodule
+- migration demoBundle in submodule
+- debug https testunits
+- debug https server config
+- debug server https config extend , idebug route *
+- debug es6 minify
+- debug serach doc | update deps
+- update deps | autoloader appkernel
+- updtae webpack
+- update deps | debug firewall events
+- debug  transalation
+- debug connectors databases
+- doc
+- footer css
+- doc
+- debug bar
+- delete expose gc
+- debug travis
+- debug monitoring dev
+- link nodefony core
+- check nodefony trunk
+- clean and optimize
+- debug sockjs reload i18n views
+- debug fireawall
+- debug transcode | optimize
+- debug optimize framework
+- debug generate command | update webpack
+- travis debug
+- debug travis mysql user
+- new statics file server
+- routing continue find method requirement
+- add new react cli generate
+- debug boundary  multipart post
+- generate angular bundle new angular cli
+- angular cli command
+- angular cli class
+- update readme
+- debug cli
+- cli prompt test
+- update travis config
+- update package.json
+- migration one script
+- cli process name management
+- pm2 config file
+- debug compile webpack prod
+- update outdated | cli npm list promise
+- new design cli worker
+- cross domain firewall config add type config allow origin
+- debug dump webpack | manage cli better
+- manage options service | new cli
+- isockjs in config | update deps
+- add audio demo
+- add NDS sockjs  on controller framework
+- add nodefony controller sockjs message
+- webpack config filesytem debug
+- debug webpack config fle system
+- migration webpack file
+- add webpack config in file system
+- cli spinner
+- manage clui in cli.js
+- delete nodegit for simpleGit
+- redesign cli
+- add demo bundle in core | add routing with *
 
-2.1.3-beta / 2017-04-29
-=======================
+---
 
-  * debug logger | pm2
+## v2.1.4 (08/05/2017)
+- update Dependencies
+- add tools
+- manage log pm2 on production start
+- Add testBundle in repository | better management starter prod
+- debug travis
 
-2.1.2-beta / 2017-04-28
-=======================
+---
 
-  * Merge branch 'master' of github.com:nodefony/nodefony-core
-  * debug deps | clean monitoring
-
-2.1.1-beta / 2017-04-22
-=======================
-
-  * debug extendTwig for CDN builtin
-  * session service return in setter attributes
-
-2.1.0-beta / 2017-04-18
-=======================
-
-  * update deps
-  * update path resolve
-  * clean npmi install nodefony madatory bundle
-  * clean repo
-  * debug multi webpack compiliations with clusters
-  * add minimize assets in production mode
-  * update repo
-  * debug build travis
-  * debug webcrawler
-  * update travis config
-  * migration nodefony i Build nodefony-core with npm package issue nodefony [#22](https://github.com/nodefony/nodefony-core/issues/22)
-  * initial commit
+## v2.1.3 (29/04/2017)
+- debug logger | pm2
