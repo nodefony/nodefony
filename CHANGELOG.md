@@ -1,5 +1,26 @@
 # Changelog
 
+## v3.0.1 (14/09/2017)
+- webpack dump
+- add details connectors sequelize
+- debug sequelize mysql Sequelize.STRING(126).BINARY
+- update outdated
+- debug node6
+- debug acces nofony without app for cli usage
+- clean error stack
+- unit test accept header
+- add detect accept request json for rest api style
+- clean core
+- update sequelize version
+- debug finder findByNode
+- travis tempo
+- debug memcached session
+- debug config app webpack
+- update deps | webpack new framework HMR from error 500 400
+- update webpack version
+
+---
+
 ## v3.0.0 (06/09/2017)
 - webpack dump for realease
 - add remote submodule
@@ -12,11 +33,12 @@
 - update deps | autoloader appkernel
 - updtae webpack
 - update deps | debug firewall events
-- debug  transalation
+- update dep | clean repo
+- clean repo | debug  transalation
+- clean log
 - debug connectors databases
 - doc
 - footer css
-- doc
 - debug bar
 - delete expose gc
 - debug travis
@@ -38,7 +60,6 @@
 - generate angular bundle new angular cli
 - angular cli command
 - angular cli class
-- update readme
 - debug cli
 - cli prompt test
 - update travis config
@@ -50,6 +71,7 @@
 - update outdated | cli npm list promise
 - new design cli worker
 - cross domain firewall config add type config allow origin
+- update deps
 - debug dump webpack | manage cli better
 - manage options service | new cli
 - isockjs in config | update deps
