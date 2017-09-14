@@ -3,6 +3,7 @@
 {% block body %}
 "server":"nodefony",
 "code":403,
+"pdu":"{{ error.pdu or null }}",
 "url":"{{error.url }}",
 "bundle":"{{ error.bundle }}",
 "controller":"{{ error.controller }}",

@@ -337,6 +337,18 @@ module.exports = nodefony.registerService("httpKernel", function(){
       exception.bundle = container.get("bundle") ? container.get("bundle").name : "" ;
       exception.controller =  container.get("controller") ? container.get("controller").name : "" ;
       exception.url = context.url || "" ;
+      if ( context.isJson ){
+          try {
+              exception.pdu = JSON.stringify(new nodefony.PDU( {
+                  bundle:exception.bundle,
+                  controller:exception.controller,
+                  url:exception.url,
+                  stack:exception.stack
+              },"ERROR"));
+          }catch(e){
+              this.logger(e, "WARNING");
+          }
+      }
       this.logger(exception, "ERROR");
       if ( typeof exception.code !== "number"){
           let ret  = parseInt(exception.code, 10);

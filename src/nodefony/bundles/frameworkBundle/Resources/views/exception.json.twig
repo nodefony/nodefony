@@ -4,6 +4,7 @@
 "server":"nodefony",
 "code":500,
 "url":"{{ error.url }}",
+"pdu":"{{ error.pdu or null }}",
 "bundle":"{{ error.bundle }}",
 "controller":"{{ error.controller }}",
 "message":"{{  error.message or "Internal Server Error"  }}"

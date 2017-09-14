@@ -39,6 +39,9 @@ json:
   pattern:  /json
   defaults: {"controller": "testBundle:default:json"}
 
+rest:
+  pattern:  /rest
+  defaults: {"controller": "testBundle:default:rest"}
 
 ### WEBSOCKET ###
 websoket:
