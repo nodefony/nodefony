@@ -97,7 +97,7 @@ module.exports = nodefony.registerService("webpack", function(){
 			}else{
 				basename ="assets";
 			}
-			let public = Path ? path.resolve( Path, "Resources", "public") : null;
+			let publicPath = Path ? path.resolve( Path, "Resources", "public") : null;
 			let devtool = this.production ? false : 'source-map' ;
 			let rules = [babelRule(basename), cssRule(basename, this.production), fontsRule(basename), imagesRule(basename), sassRule(basename),  lessRule(basename)] ;
 			let plugins = [];
@@ -110,12 +110,12 @@ module.exports = nodefony.registerService("webpack", function(){
 			}
 			return {
 				// Configuration Object
-				context:  public ,
+				context:  publicPath ,
 				target:    "web",
 				watch:    true,
 				devtool:  devtool,
 				output:    {
-					path:  public
+					path:  publicPath
 				},
 				externals:  {},
 				resolve:  {},
