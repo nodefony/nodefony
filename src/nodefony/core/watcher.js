@@ -45,7 +45,9 @@ module.exports = nodefony.register("watcher", function(){
     watch(Path, settings){
       try {
         if (this.watcher ){
-          throw new Error ("Already watching  : " + Path);
+          let error = new Error("Already watching  : " + Path);
+          this.fire("onError", error );
+          throw error;
         }
         if ( Path ){
           this.path = Path ;
@@ -54,10 +56,13 @@ module.exports = nodefony.register("watcher", function(){
         if ( this.path ){
           this.initialize( this.path , settings);
         }else{
-          throw new Error ("WATCHER no path  ");
+          let error = new Error ("WATCHER no path");
+          this.fire("onError", error );
+          throw error ;
         }
         return this.watcher ;
       }catch(e){
+        this.fire("onError", e);
         throw e ;
       }
     }
@@ -66,6 +71,7 @@ module.exports = nodefony.register("watcher", function(){
       try {
         return this.watcher.unwatch(file);
       }catch(e){
+        this.fire("onError", e);
         this.logger(e,"ERROR");
         throw e ;
       }
@@ -101,12 +107,14 @@ module.exports = nodefony.register("watcher", function(){
             event = event.charAt(0).toUpperCase() + event.slice(1);
             this.fire("on"+event, Path, stats, this.watcher );
           }catch(e){
+            this.fire("onError", e);
             this.logger(e, "ERROR");
             throw e ;
           }
         });
         return this.watcher ;
       }catch(e){
+        this.fire("onError", e);
         throw e ;
       }
     }
