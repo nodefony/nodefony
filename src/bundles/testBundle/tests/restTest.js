@@ -39,6 +39,7 @@ describe("BUNDLE TEST", function(){
           let res = JSON.parse(chunk);
           assert.deepStrictEqual(res.server, "nodefony");
           assert.deepStrictEqual(res.message, "Not Found");
+          assert.ok(res.pdu);
           done();
         });
       });
@@ -56,6 +57,7 @@ describe("BUNDLE TEST", function(){
           assert.deepStrictEqual(res.controller, "rest");
           assert.deepStrictEqual(res.bundle, "test");
           assert.deepStrictEqual(res.message, "Unauthorized");
+          assert.ok(res.pdu);
           done();
         });
       });
@@ -73,6 +75,7 @@ describe("BUNDLE TEST", function(){
 					assert.deepStrictEqual(res.controller, "rest");
           assert.deepStrictEqual(res.bundle, "test");
           assert.deepStrictEqual(res.message, "Forbidden");
+          assert.ok(res.pdu);
           done();
         });
       });

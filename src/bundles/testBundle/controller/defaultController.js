@@ -88,7 +88,7 @@ module.exports = nodefony.registerController("default", function(){
 		}
 
 		restAction(){
-			let error = new Error("SBBOB");
+			let error = new Error("API");
 			error.pdu = JSON.stringify( new nodefony.PDU(error.message,"ERROR","MONGODB","USERNOTFOUND") );
 			throw error ;
 		}
