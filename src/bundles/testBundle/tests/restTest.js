@@ -11,9 +11,9 @@
  */
 
 const http = require("http");
-const https = require("https");
-const WebSocketClient = require('websocket').client;
-const querystring = require('querystring');
+//const https = require("https");
+//const WebSocketClient = require('websocket').client;
+//const querystring = require('querystring');
 const assert = require('assert');
 
 
