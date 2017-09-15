@@ -457,12 +457,13 @@ module.exports = nodefony.registerService("firewall", function(){
 										context.fire("onRequest");
 										return context ;
 									}catch(error){
-										context.fire("onError", context.container, error );
-										return context ;
+										throw error ;
+										//context.fire("onError", context.container, error );
+										//return context ;
 									}
 								}).catch((error)=>{
 									context.fire("onError", context.container, error );
-									return context ;
+									throw context ;
 								});
 							}else{
 								context.fire("onRequest");
@@ -471,7 +472,7 @@ module.exports = nodefony.registerService("firewall", function(){
 						}
 					}catch(e){
 						context.fire("onError", context.container, e );
-						return context ;
+						throw e ;
 					}
 				}
 			});
@@ -516,12 +517,13 @@ module.exports = nodefony.registerService("firewall", function(){
 							try {
 								return this.handle(context, request, response, session);
 							}catch(error){
-								context.fire("onError", context.container, error );
-								return context ;
+								throw error ;
+								//context.fire("onError", context.container, error );
+								//return context ;
 							}
 						}).catch( (error) => {
 							context.fire("onError", context.container, error );
-							return context ;
+							throw error ;
 						});
 					}else{
 						if (context.cookieSession){
@@ -538,11 +540,11 @@ module.exports = nodefony.registerService("firewall", function(){
 									return context ;
 								}catch(error){
 									context.fire("onError", context.container, error );
-									return context ;
+									throw error ;
 								}
 							}).catch( (error) => {
 								context.fire("onError", context.container, error );
-								return context;
+								throw  error;
 							});
 						}else{
 							context.fire("onRequest");

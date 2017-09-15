@@ -400,71 +400,68 @@ module.exports = nodefony.registerService("httpKernel", function(){
       }
     }
 
-
     handleHttp (container, request, response, type){
-      let context = new nodefony.context.http(container, request, response, type);
-      let resolver = null ;
-      let next = null ;
-      //response events
-      context.response.response.on("finish",() => {
-        //console.log("FINISH")
-        context.fire("onFinish", context);
-        this.container.leaveScope(container);
-        context.clean();
-        context = null ;
-        request = null ;
-        response = null ;
-        container = null ;
-        resolver = null ;
-        type = null ;
-        next = null ;
-      });
-      //request events
-      context.listen(this, "onError", this.onError);
-
-      // DOMAIN VALID
-      next = this.checkValidDomain(context) ;
-      if ( next !== 200){
-        return ;
-      }
-
-      // FRONT ROUTER
-      try {
-        resolver  = this.router.resolve( context );
-      }catch(e){
-        return context.fire("onError", container, e );
-      }
-      if (resolver.resolve) {
-        context.resolver = resolver ;
-      }else{
-          let error = new Error("Not Found");
-          error.code = 404;
-        return context.fire("onError", container, error);
-      }
-
-      if ( ( ! this.firewall ) || resolver.bypassFirewall ){
-        request.on('end', () => {
-          try {
-            if ( context.sessionAutoStart === "autostart" ){
-              this.sessionService.start(context, "default").then((session) =>{
-                if ( ! ( session instanceof nodefony.Session) ){
-                  throw new Error("SESSION START session storage ERROR");
-                }
-                this.logger("AUTOSTART SESSION","DEBUG");
-                context.fire("onRequest");
-              }).catch( (error) =>{
-                return error;
-              });
-            }else{
-              context.fire("onRequest");
-            }
-          }catch(e){
-            context.fire("onError", container, e );
-          }
+        let context = new nodefony.context.http(container, request, response, type);
+        let resolver = null ;
+        let next = null ;
+        //response events
+        context.response.response.on("finish",() => {
+            //console.log("FINISH")
+            context.fire("onFinish", context);
+            this.container.leaveScope(container);
+            context.clean();
+            context = null ;
+            request = null ;
+            response = null ;
+            container = null ;
+            resolver = null ;
+            type = null ;
+            next = null ;
         });
-        return ;
-      }
-      this.fire("onSecurity", context);
+        //request events
+        context.listen(this, "onError", this.onError);
+
+        // DOMAIN VALID
+        next = this.checkValidDomain(context) ;
+        if ( next !== 200){
+            return ;
+        }
+        try {
+            // FRONT ROUTER
+            resolver  = this.router.resolve( context );
+            if (resolver.resolve) {
+                context.resolver = resolver ;
+            }else{
+                let error = new Error("Not Found");
+                error.code = 404;
+                throw error ;
+            }
+            if ( ( ! this.firewall ) || resolver.bypassFirewall ){
+                request.on('end', () => {
+                    try {
+                        if ( context.sessionAutoStart === "autostart" ){
+                            this.sessionService.start(context, "default").then((session) =>{
+                                if ( ! ( session instanceof nodefony.Session) ){
+                                    throw new Error("SESSION START session storage ERROR");
+                                }
+                                this.logger("AUTOSTART SESSION","DEBUG");
+                                context.fire("onRequest");
+                            }).catch( (error) =>{
+                                throw error;
+                            });
+                        }else{
+                            context.fire("onRequest");
+                        }
+                    }catch(e){
+                        return context.fire("onError", container, e );
+                    }
+                });
+                return ;
+            }
+            this.fire("onSecurity", context);
+        }catch(e){
+            return context.fire("onError", container, e );
+        }
     }
 
     onWebsocketRequest (request, type){
@@ -480,66 +477,63 @@ module.exports = nodefony.registerService("httpKernel", function(){
     }
 
     handleWebsocket (container, request, response, type){
-      let context = new nodefony.context.websocket(container, request, response, type);
-      container.set("context", context);
-      let resolver = null ;
-      let next = null ;
+        let context = new nodefony.context.websocket(container, request, response, type);
+        container.set("context", context);
+        let resolver = null ;
+        let next = null ;
 
-      context.listen(this,"onClose" , (reasonCode, description) => {
-        context.fire("onFinish", context, reasonCode, description);
-        context.clean();
-        context = null ;
-        request = null ;
-        response = null ;
-        container = null ;
-        type = null ;
-        next = null ;
-        resolver = null ;
-      });
+        context.listen(this,"onClose" , (reasonCode, description) => {
+            context.fire("onFinish", context, reasonCode, description);
+            context.clean();
+            context = null ;
+            request = null ;
+            response = null ;
+            container = null ;
+            type = null ;
+            next = null ;
+            resolver = null ;
+        });
 
-      // DOMAIN VALID
-      next = this.checkValidDomain(context) ;
-      if ( next !== 200){
-        return ;
-      }
-
-      // FRONT ROUTER
-      try {
-        resolver  = this.router.resolve(context);
-      }catch(e){
-        return context.notificationsCenter.fire("onError", container, e );
-      }
-
-      if (resolver.resolve) {
-        context.resolver = resolver ;
-      }else{
-        let error = new Error("");
-        error.code = 404;
-        return context.notificationsCenter.fire("onError", container, error);
-      }
-
-      if ( ( ! this.firewall ) || resolver.bypassFirewall ){
-        try {
-          if ( context.sessionAutoStart === "autostart" ){
-            this.sessionService.start(context, "default").then((session) =>{
-              if ( ! (session instanceof nodefony.Session ) ){
-                throw new Error("SESSION START session storage ERROR");
-              }
-              this.logger("AUTOSTART SESSION","DEBUG");
-              context.notificationsCenter.fire("onRequest");
-            }).catch( (error) =>{
-              return error;
-            });
-          }else{
-            context.notificationsCenter.fire("onRequest");
-          }
-        }catch(e){
-          context.notificationsCenter.fire("onError", container, e );
+        // DOMAIN VALID
+        next = this.checkValidDomain(context) ;
+        if ( next !== 200){
+            return ;
         }
-        return ;
-      }
-      this.fire("onSecurity", context);
-      return ;
+
+        try {
+            // FRONT ROUTER
+            resolver  = this.router.resolve(context);
+            if (resolver.resolve) {
+                context.resolver = resolver ;
+            }else{
+                let error = new Error("");
+                error.code = 404;
+                throw error ;
+            }
+            if ( ( ! this.firewall ) || resolver.bypassFirewall ){
+                try {
+                    if ( context.sessionAutoStart === "autostart" ){
+                        this.sessionService.start(context, "default").then((session) =>{
+                            if ( ! (session instanceof nodefony.Session ) ){
+                                throw new Error("SESSION START session storage ERROR");
+                            }
+                            this.logger("AUTOSTART SESSION","DEBUG");
+                            context.notificationsCenter.fire("onRequest");
+                        }).catch( (error) =>{
+                            return error;
+                        });
+                    }else{
+                        context.notificationsCenter.fire("onRequest");
+                    }
+                }catch(e){
+                    context.notificationsCenter.fire("onError", container, e );
+                }
+                return ;
+            }
+            this.fire("onSecurity", context);
+        }catch(e){
+            return context.notificationsCenter.fire("onError", container, e );
+        }
     }
 
     onErrorWebsoket (container, error){
