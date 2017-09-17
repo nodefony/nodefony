@@ -2,7 +2,7 @@
 nodefony.register.call(nodefony.context, "websocket", function(){
 
   const onClose = function(reasonCode, description){
-    console.log("PASS :" + reasonCode + " " + description );
+    //console.log("PASS :" + reasonCode + " " + description );
     if ( ! this.request ){
       this.logger('CLOSE : ' + this.connection.remoteAddress  + " " +reasonCode +" " + description , "INFO");
     }else{

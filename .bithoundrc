@@ -1,29 +1,31 @@
 {
-	"ignore": [
-		"**/node_modules/**",
-		"**/public/**",
-		"**/experimental/**",
-    		"**/config/**",
-    		"**/vendors/**",
-    		"**/web/**",
-    		"**/doc/**",
-    		"**/images/**",
-    		"**/translations/**",
-    		"**/bin/**"
-	],
-	"test": [
-		"**/test/**",
+  "ignore": [
+    "**/node_modules/**",
+    "**/public/**",
+    "**/experimental/**",
+    "**/config/**",
+    "**/vendors/**",
+    "**/web/**",
+    "**/doc/**",
+    "**/images/**",
+    "**/translations/**",
+    "**/bin/**",
+		"/tools/**",
 		"**/tests/**"
-	],
-	"dependencies": {
-		"unused-ignores": [
-			"jshint"
-		],
-		"mute": [
-			"connect"
-		]
-	},
-	"critics": {
-		"wc": { "limit": 6000 }
-	}
+  ],
+  "test": [
+    "**/test/**",
+    "**/tests/**"
+  ],
+  "dependencies": {
+    "unused-ignores": [
+      "jshint"
+    ],
+    "mute": [
+      "connect"
+    ]
+  },
+  "critics": {
+    "wc": { "limit": 6000 }
+  }
 }

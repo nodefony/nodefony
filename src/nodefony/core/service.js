@@ -25,8 +25,12 @@ module.exports = nodefony.register("Service", function(){
       if (name){
         this.name = name ;
       }
-      this.options = nodefony.extend(true, {}, defaultOptions, options) ;
-
+      if ( options ){
+        this.options = nodefony.extend(true, {}, defaultOptions, options) ;
+      }else{
+        //optimize
+        this.options ={nbListeners:20} ;
+      }
       if ( container instanceof nodefony.Container  ){
         this.container = container ;
       }else{

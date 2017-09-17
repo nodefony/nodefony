@@ -85,7 +85,11 @@ module.exports = nodefony.register("Response",function(){
     }
 
     setHeaders (obj){
-      return nodefony.extend(this.headers, obj);
+      if( !Object.keys(this.headers).length ){
+          return  obj ;
+      }else{
+        return nodefony.extend(this.headers, obj);
+      }
     }
 
     addTrailers (obj){
