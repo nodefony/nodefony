@@ -22,7 +22,7 @@
 
 ########## NODEFONY CONFIG BUNDLE  httpBundle  ############
 name :				httpBundle
-watch:                          false
+watch:        false
 
 
 #
@@ -49,10 +49,12 @@ https:
 websocket:
   keepaliveInterval:            20000
   keepaliveGracePeriod:         10000
+  closeTimeout:                 5000
 
 websocketSecure:
   keepaliveInterval:            20000
   keepaliveGracePeriod:         10000
+  closeTimeout:                 5000
 
 sockjs:
     overlay:                      true

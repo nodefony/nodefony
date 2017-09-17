@@ -1,14 +1,14 @@
 /*
- *
- *
- *
- *
- */
-var shortId = require('shortid');
+*
+*
+*
+*
+*/
+const shortId = require('shortid');
 
 module.exports = nodefony.registerService("upload", function(){
 
-	var uploadedFile =  class uploadedFile extends nodefony.fileClass {
+	const uploadedFile =  class uploadedFile extends nodefony.fileClass {
 
 		constructor (tmpName, myPath, dataFile, service) {
 
@@ -25,7 +25,7 @@ module.exports = nodefony.registerService("upload", function(){
 		}
 
 		move (target){
-			var inst = null ;
+			let inst = null ;
 			try {
 				if (fs.existsSync(target) ){
 					var newFile = new nodefony.fileClass(target);
@@ -64,15 +64,13 @@ module.exports = nodefony.registerService("upload", function(){
 		}
 	};
 
-	var upload = class upload  extends nodefony.Service {
+	const upload = class upload  extends nodefony.Service {
 
 		constructor( httpKernel ) {
 
 			super( "upload", httpKernel.container, httpKernel.notificationsCenter );
-
 			this.httpKernel = httpKernel ;
 			this.kernel = this.httpKernel.kernel ;
-			//this.syslog = this.container.get("syslog");
 
 			this.listen(this,"onBoot" , () => {
 				this.config = this.container.getParameters("bundles.http").upload;
@@ -81,7 +79,7 @@ module.exports = nodefony.registerService("upload", function(){
 				}else{
 					this.path = this.kernel.rootDir+"/"+this.config.tmp_dir;
 				}
-				var res = fs.existsSync(this.path);
+				let res = fs.existsSync(this.path);
 				if (! res ){
 					// create directory
 					this.logger("create directory FOR UPLOAD FILE " + this.path, "DEBUG");
@@ -95,9 +93,8 @@ module.exports = nodefony.registerService("upload", function(){
 		}
 
 		createUploadFile (request, dataFile){
-
 			if ( dataFile.data.length > this.config.max_filesize ){
-				var uploadfile = new uploadedFile(null , null, dataFile, this);
+				let uploadfile = new uploadedFile(null , null, dataFile, this);
 				uploadfile.error = "File Upload size exceeded ,File "+ uploadfile.filename +" : "+ uploadfile.lenght+ " size must be less than " +this.config.max_filesize + " Bytes " ;
 				return uploadfile ;
 			}else{
@@ -109,10 +106,10 @@ module.exports = nodefony.registerService("upload", function(){
 			// create tmp file
 			//var path = this.path + "/" +queryFile.headers.name ;
 			// Generate ID
-			var id = this.generateId();
-			var name = id +"_"+dataFile.headers.filename ;
-			var myPath =  this.path + "/" + name ;
-			var res = fs.existsSync(myPath);
+			let id = this.generateId();
+			let name = id +"_"+dataFile.headers.filename ;
+			let myPath =  this.path + "/" + name ;
+			let res = fs.existsSync(myPath);
 			if (! res ){
 				// create tmp file
 				this.logger("ID : "+ id +" Create TMP FILE UPLOAD  " + myPath, "DEBUG");

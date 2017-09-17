@@ -10,7 +10,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
   const httpKernel = class httpKernel extends nodefony.Service {
 
     constructor (container, serverStatics ){
-      super("httpKernel", container, container.get("notificationsCenter") );
+      super("HTTP KERNEL", container, container.get("notificationsCenter") );
       this.reader = this.get("reader");
       this.serverStatic = serverStatics;
       this.engineTemplate = this.get("templating");
@@ -45,7 +45,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
         this.translation = this.get("translation");
       });
       this.listen(this, "onClientError", (e, socket) => {
-        this.logger(e, "ERROR", "HTTP KERNEL SOCKET CLIENT ERROR");
+        this.logger(e, "WARNING", "SOCKET CLIENT ERROR");
         socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
       });
     }
@@ -237,11 +237,6 @@ module.exports = nodefony.registerService("httpKernel", function(){
       }
     }
 
-    logger (pci, severity, msgid,  msg){
-      if (! msgid) { msgid = "HTTP KERNEL ";}
-      return super.logger(pci, severity, msgid,  msg);
-    }
-
     checkValidDomain (context){
       let next = null ;
       if ( context.validDomain ){
@@ -259,11 +254,10 @@ module.exports = nodefony.registerService("httpKernel", function(){
               this.logger("\x1b[31m  DOMAIN Unauthorized \x1b[0mREQUEST DOMAIN : " + context.domain ,"ERROR");
               let error = new Error("Domain : "+context.domain+" Unauthorized ");
               error.code = next ;
-              context.notificationsCenter.fire("onError",context.container, error);
-            break;
+              throw error ;
             case "WEBSOCKET":
             case "WEBSOCKET SECURE":
-              context.close(3001,  "DOMAIN Unauthorized "+ context.domain );
+              context.close(3001, "DOMAIN Unauthorized "+ context.domain );
             break;
           }
         break;
@@ -349,21 +343,17 @@ module.exports = nodefony.registerService("httpKernel", function(){
               this.logger(e, "WARNING");
           }
       }
-      this.logger(exception, "ERROR");
-      if ( typeof exception.code !== "number"){
-          let ret  = parseInt(exception.code, 10);
-          if ( isNaN(ret) ){
-              exception.code = 500 ;
-          }
-      }
-      if ( ! exception.message ){
-         exception.message =  http.STATUS_CODES[exception.code];
-      }
-      context.response.setStatusCode(exception.code || 500, exception.message ) ;
+      let st = context.response.setStatusCode(exception.code || 500, exception.message ) ;
+      exception.code = st.code ;
+      exception.message = st.message ;
+      this.logger(exception, "ERROR", context.method);
       try {
-          return resolver.callController( exception );
+          resolver.callController( exception );
+          if (context.method === "WEBSOCKET" ){
+            context.close(exception.code, exception.message);
+          }
       }catch(e){
-          this.logger(e, "ERROR");
+          this.logger(e, "ERROR", context.method);
           return ;
       }
     }
@@ -402,6 +392,8 @@ module.exports = nodefony.registerService("httpKernel", function(){
 
     handleHttp (container, request, response, type){
         let context = new nodefony.context.http(container, request, response, type);
+        //request events
+        context.listen(this, "onError", this.onError);
         let resolver = null ;
         let next = null ;
         //response events
@@ -418,15 +410,13 @@ module.exports = nodefony.registerService("httpKernel", function(){
             type = null ;
             next = null ;
         });
-        //request events
-        context.listen(this, "onError", this.onError);
 
-        // DOMAIN VALID
-        next = this.checkValidDomain(context) ;
-        if ( next !== 200){
-            return ;
-        }
         try {
+            // DOMAIN VALID
+            next = this.checkValidDomain(context) ;
+            if ( next !== 200){
+                return ;
+            }
             // FRONT ROUTER
             resolver  = this.router.resolve( context );
             if (resolver.resolve) {
@@ -467,7 +457,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
     onWebsocketRequest (request, type){
       if ( request.resourceURL.path && this.sockjs && request.resourceURL.path.match( this.sockjs.regPrefix ) ){
         this.logger("websocket drop to sockjs : " +request.resourceURL.path, "DEBUG");
-        //var connection = request.accept(null, request.origin);
+        //let connection = request.accept(null, request.origin);
         //connection.drop(1006, 'TCP connection lost before handshake completed.', false);
         request = null ;
         //connection = null ;
@@ -479,6 +469,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
     handleWebsocket (container, request, response, type){
         let context = new nodefony.context.websocket(container, request, response, type);
         container.set("context", context);
+        context.listen(this, "onError", this.onError);
         let resolver = null ;
         let next = null ;
 
@@ -494,13 +485,12 @@ module.exports = nodefony.registerService("httpKernel", function(){
             resolver = null ;
         });
 
-        // DOMAIN VALID
-        next = this.checkValidDomain(context) ;
-        if ( next !== 200){
-            return ;
-        }
-
         try {
+            // DOMAIN VALID
+            next = this.checkValidDomain(context) ;
+            if ( next !== 200){
+                return ;
+            }
             // FRONT ROUTER
             resolver  = this.router.resolve(context);
             if (resolver.resolve) {
@@ -518,21 +508,21 @@ module.exports = nodefony.registerService("httpKernel", function(){
                                 throw new Error("SESSION START session storage ERROR");
                             }
                             this.logger("AUTOSTART SESSION","DEBUG");
-                            context.notificationsCenter.fire("onRequest");
+                            context.fire("onRequest");
                         }).catch( (error) =>{
                             return error;
                         });
                     }else{
-                        context.notificationsCenter.fire("onRequest");
+                        context.fire("onRequest");
                     }
                 }catch(e){
-                    context.notificationsCenter.fire("onError", container, e );
+                    context.fire("onError", container, e );
                 }
                 return ;
             }
             this.fire("onSecurity", context);
         }catch(e){
-            return context.notificationsCenter.fire("onError", container, e );
+            return context.fire("onError", container, e );
         }
     }
 

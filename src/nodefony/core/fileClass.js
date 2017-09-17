@@ -100,94 +100,94 @@ module.exports = nodefony.register("fileClass", function(){
     }
 
     /*getCharset (mimeType){
-      //return mime.charsets.lookup(mimeType || this.mimeType );
-    }*/
+    //return mime.charsets.lookup(mimeType || this.mimeType );
+  }*/
 
-    getRealpath (Path, options){
-      return  fs.realpathSync(Path, options );
-    }
+  getRealpath (Path, options){
+    return  fs.realpathSync(Path, options );
+  }
 
-    matchName (ele){
-      if (nodefony.typeOf(ele) === "RegExp" ){
-        this.match = ele.exec(this.name);
-        return this.match;
-      }
-      if (ele === this.name){
-        return true;
-      }
-      return false;
+  matchName (ele){
+    if (nodefony.typeOf(ele) === "RegExp" ){
+      this.match = ele.exec(this.name);
+      return this.match;
     }
+    if (ele === this.name){
+      return true;
+    }
+    return false;
+  }
 
-    matchType (type){
-      return type === this.type;
-    }
+  matchType (type){
+    return type === this.type;
+  }
 
-    isFile (){
-      return this.type === "File";
-    }
+  isFile (){
+    return this.type === "File";
+  }
 
-    isDirectory (){
-      return this.type === "Directory";
-    }
+  isDirectory (){
+    return this.type === "Directory";
+  }
 
-    isSymbolicLink (){
-      return this.type === "symbolicLink";
-    }
+  isSymbolicLink (){
+    return this.type === "symbolicLink";
+  }
 
-    dirname (){
-      return path.dirname(this.path);
-    }
+  dirname (){
+    return path.dirname(this.path);
+  }
 
-    isHidden (){
-      return regHidden.test(this.name);
-    }
+  isHidden (){
+    return regHidden.test(this.name);
+  }
 
-    content (encoding){
-      let encode =  encoding ? encoding : ( this.encoding ?  this.encoding : 'utf8' ) ;
-      if (this.type === "symbolicLink"){
-        let Path = fs.readlinkSync(this.path, encode);
-        return fs.readFileSync(Path, encode);
-      }
-      return fs.readFileSync(this.path, encode);
+  content (encoding){
+    let encode =  encoding ? encoding : ( this.encoding ?  this.encoding : 'utf8' ) ;
+    if (this.type === "symbolicLink"){
+      let Path = fs.readlinkSync(this.path, encode);
+      return fs.readFileSync(Path, encode);
     }
+    return fs.readFileSync(this.path, encode);
+  }
 
-    read (encoding){
-      let encode =  encoding ? encoding : ( this.encoding ?  this.encoding : 'utf8' ) ;
-      if (this.type === "symbolicLink"){
-        let Path = fs.readlinkSync(this.path, encode);
-        return fs.readFileSync(Path, encode);
-      }
-      return fs.readFileSync(this.path, encode);
+  read (encoding){
+    let encode =  encoding ? encoding : ( this.encoding ?  this.encoding : 'utf8' ) ;
+    if (this.type === "symbolicLink"){
+      let Path = fs.readlinkSync(this.path, encode);
+      return fs.readFileSync(Path, encode);
     }
+    return fs.readFileSync(this.path, encode);
+  }
 
-    readByLine (callback, encoding){
-      let res = this.content(encoding);
-      let nb = 0 ;
-      res.toString().split('\n').forEach(function(line){
-        callback(line, ++nb );
-      });
-    }
+  readByLine (callback, encoding){
+    let res = this.content(encoding);
+    let nb = 0 ;
+    res.toString().split('\n').forEach(function(line){
+      callback(line, ++nb );
+    });
+  }
 
-    write (data, options) {
-      return fs.writeFileSync( this.path, data, nodefony.extend({}, defautWriteOption ,options ) ) ;
-    }
+  write (data, options) {
+    return fs.writeFileSync( this.path, data, nodefony.extend({}, defautWriteOption ,options ) ) ;
+  }
 
-    move (target){
-      try {
-        fs.renameSync(this.path, target);
-        return new File(target);
-      }catch(e){
-        throw e;
-      }
+  move (target){
+    try {
+      fs.renameSync(this.path, target);
+      return new File(target);
+    }catch(e){
+      throw e;
     }
+  }
 
-    unlink (){
-      try {
-        fs.unlinkSync(this.path);
-      }catch(e){
-        throw e;
-      }
+  unlink (){
+    try {
+      fs.unlinkSync(this.path);
+    }catch(e){
+      throw e;
     }
-  };
-  return File;
+  }
+};
+return File;
 });

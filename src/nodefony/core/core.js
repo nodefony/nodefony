@@ -1,18 +1,18 @@
 /**
- *
- *  @nodefony
- *
- *
- */
+*
+*  @nodefony
+*
+*
+*/
 module.exports = function(){
 
   /**
-   *  The class is a **`Nodefony Nodefony `** .
-   *  @class Nodefony
-   *  @constructor
-   *  @module Nodefony
-   *
-   */
+  *  The class is a **`Nodefony Nodefony `** .
+  *  @class Nodefony
+  *  @constructor
+  *  @module Nodefony
+  *
+  */
   const Nodefony = class Nodefony {
 
     constructor() {
@@ -40,10 +40,10 @@ module.exports = function(){
     }
 
     /**
-     *  @method typeOf
-     *  @param  value
-           *  @return {String} type of value
-     */
+    *  @method typeOf
+    *  @param  value
+    *  @return {String} type of value
+    */
     typeOf (value){
       let t = typeof value;
       if (t === 'object'){
@@ -79,10 +79,10 @@ module.exports = function(){
     }
 
     /**
-      * extend jquery for nodejs only
-     * @method extend
-     *
-      */
+    * extend jquery for nodejs only
+    * @method extend
+    *
+    */
     extend (){
       let options, name, src, copy, copyIsArray, clone,
       target = arguments[ 0 ] || {},
@@ -159,12 +159,12 @@ module.exports = function(){
     }
 
     /**
-      *  Register Nodefony Bundle
-     *  @method registerBundle
-     *  @param {String} name
-     *  @param {Function} closure
-     *
-      */
+    *  Register Nodefony Bundle
+    *  @method registerBundle
+    *  @param {String} name
+    *  @param {Function} closure
+    *
+    */
     registerBundle (name, closure){
       if (typeof closure === "function" ){
         return this.bundles[name] = closure();
@@ -173,12 +173,12 @@ module.exports = function(){
     }
 
     /**
-      *  Register Nodefony controller
-     *  @method registerController
-     *  @param {String} name
-     *  @param {Function} closure
-     *
-      */
+    *  Register Nodefony controller
+    *  @method registerController
+    *  @param {String} name
+    *  @param {Function} closure
+    *
+    */
     registerController (name, closure){
       if (typeof closure === "function" ){
         //controller.prototype.name = name ;
@@ -188,23 +188,23 @@ module.exports = function(){
     }
 
     /**
-      *  Register Nodefony Template
-     *  @method registerTemplate
-     *  @param {String} name
-     *  @param {Function} closure
-     *
-      */
+    *  Register Nodefony Template
+    *  @method registerTemplate
+    *  @param {String} name
+    *  @param {Function} closure
+    *
+    */
     registerTemplate (name, closure){
       return this.templatings[name] = closure();
     }
 
     /**
-      *  Register Nodefony service
-     *  @method registerService
-     *  @param {String} name
-     *  @param {Function} closure
-     *
-      */
+    *  Register Nodefony service
+    *  @method registerService
+    *  @param {String} name
+    *  @param {Function} closure
+    *
+    */
     registerService (name, closure){
       if ( name in this.services ){
         throw new Error( "Service name : "+ name +" already exit in application !!! ");
@@ -216,12 +216,12 @@ module.exports = function(){
     }
 
     /**
-      *  Register Nodefony entity
-     *  @method registerEntity
-     *  @param {String} name
-     *  @param {Function} closure
-     *
-      */
+    *  Register Nodefony entity
+    *  @method registerEntity
+    *  @param {String} name
+    *  @param {Function} closure
+    *
+    */
     registerEntity (name, closure){
       if (typeof closure === "function" ){
         return  closure();
@@ -231,26 +231,26 @@ module.exports = function(){
     }
 
     /**
-      *  Register Nodefony fixture
-     *  @method registerFixture
-     *  @param {String} name
-     *  @param {Function} closure
-     *
-      */
+    *  Register Nodefony fixture
+    *  @method registerFixture
+    *  @param {String} name
+    *  @param {Function} closure
+    *
+    */
     registerFixture (name, closure){
       if (typeof closure === "function" ){
         return  closure();
       }
       throw new Error( "Register fixtures : "+ name +"  error fixtures bad format" );
     }
-
+    
     /**
-      *  Register Nodefony command
-     *  @method registerCommand
-     *  @param {String} name
-     *  @param {Function} closure
-     *
-      */
+    *  Register Nodefony command
+    *  @method registerCommand
+    *  @param {String} name
+    *  @param {Function} closure
+    *
+    */
     registerCommand (name, closure){
       if (typeof closure === "function" ){
         return  closure();

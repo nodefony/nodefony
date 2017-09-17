@@ -1,4 +1,3 @@
-
 const vm = require("vm");
 const path = require("path");
 const Module = require("module");
@@ -14,7 +13,7 @@ module.exports = function(){
   context.exports = exports ;
   context.__dirname = __dirname ;
   context.__filename = __filename ;
-
+  
   context.path = require("path");
   context.fs = require("fs");
   context.yaml = require("js-yaml");
@@ -80,7 +79,7 @@ module.exports = function(){
     getVersion (){
       return process.versions ;
     }
-    
+
     fileExist(file){
       try {
         fs.statSync(file);

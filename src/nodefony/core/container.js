@@ -46,10 +46,10 @@ module.exports = nodefony.register("Container", function(){
   };
 
   /*
-    *
-    *  CONTAINER CLASS
-    *
-    */
+  *
+  *  CONTAINER CLASS
+  *
+  */
   const Container = class Container {
 
     constructor (services, parameters){
@@ -161,10 +161,10 @@ module.exports = nodefony.register("Container", function(){
   };
 
   /*
-    *
-    *  SCOPE CLASS
-    *
-    */
+  *
+  *  SCOPE CLASS
+  *
+  */
 
   const Scope = class Scope extends Container {
 
@@ -201,10 +201,10 @@ module.exports = nodefony.register("Container", function(){
   };
 
   /*
-    *
-    *  ExtendedScope CLASS
-    *
-    */
+  *
+  *  ExtendedScope CLASS
+  *
+  */
   const ExtendedScope = class ExtendedScope extends Container {
 
     constructor (name, parent){

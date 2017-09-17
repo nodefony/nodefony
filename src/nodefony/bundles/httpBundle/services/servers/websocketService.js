@@ -1,19 +1,13 @@
-/*
- * New node file
- */
-
-//var WebSocketServer = require('websocket');
-//var nodedomain = require('domain');
 
 module.exports = nodefony.registerService("websocket", function(){
 
 	// https://github.com/Worlize/WebSocket-Node/wiki/Documentation
 
-	var websocket = class websocket extends nodefony.Service {
+	const websocket = class websocket extends nodefony.Service {
 
 		constructor (httpKernel, security, options){
 
-			super( "websocket", httpKernel.container, httpKernel.notificationsCenter , options  );
+			super( "SERVER WEBSOCKET", httpKernel.container, httpKernel.notificationsCenter , options  );
 
 			this.httpKernel = httpKernel;
 			this.port = this.httpKernel.kernel.httpPort ;
@@ -21,11 +15,6 @@ module.exports = nodefony.registerService("websocket", function(){
 			this.firewall =  security ;
 			this.ready = false ;
 			this.type = "WEBSOCKET";
-		}
-
-		logger (pci, severity, msgid,  msg){
-			if (! msgid) {msgid = "SERVICE WEBSOCKET ";}
-			return this.syslog.logger(pci, severity, msgid,  msg);
 		}
 
 		createServer (http){

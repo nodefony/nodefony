@@ -11,35 +11,35 @@ module.exports = nodefony.registerService("sockjs", function(){
 			this.service = service ;
 			this.clientStats = {
 				errorDetails: true
-			}
+			};
 			this.stats = null ;
 			if ( compiler ){
 				this.compiler = compiler ;
 				//this.listen( this, "onCreateSockServer", () => {
-					this.compiler.plugin("compile", () => {
-						this.sockWrite( "invalid");
-					});
-					this.compiler.plugin("invalid", () => {
-						this.sockWrite( "invalid");
-					});
-					this.compiler.plugin("done", (stats) => {
-						var ret = this.sendStats( stats.toJson(this.clientStats));
-						this.stats = stats;
-						if ( ret !== "errors"){
-							this.sockWrite( "content-changed");
-						}
-					});
+				this.compiler.plugin("compile", () => {
+					this.sockWrite( "invalid");
+				});
+				this.compiler.plugin("invalid", () => {
+					this.sockWrite( "invalid");
+				});
+				this.compiler.plugin("done", (stats) => {
+					var ret = this.sendStats( stats.toJson(this.clientStats));
+					this.stats = stats;
+					if ( ret !== "errors"){
+						this.sockWrite( "content-changed");
+					}
+				});
 				//});
 			}
 		}
 
 		sendStats (stats, force, connection) {
 			if(!force &&
-					stats &&
-					(!stats.errors || stats.errors.length === 0) &&
-					stats.assets &&
-					stats.assets.every((asset) => !asset.emitted)
-			  ){
+				stats &&
+				(!stats.errors || stats.errors.length === 0) &&
+				stats.assets &&
+				stats.assets.every((asset) => !asset.emitted)
+			){
 				return this.sockWrite( "still-ok", null,connection );
 			}
 			this.sockWrite( "hash", stats.hash, connection);
@@ -47,7 +47,7 @@ module.exports = nodefony.registerService("sockjs", function(){
 				this.sockWrite( "errors", stats.errors, connection);
 				return "errors" ;
 			}else{
- 			    if(stats.warnings && stats.warnings.length > 0){
+				if(stats.warnings && stats.warnings.length > 0){
 					return this.sockWrite( "warnings", stats.warnings, connection);
 				}else{
 					return this.sockWrite( "ok", null,connection);
@@ -58,7 +58,7 @@ module.exports = nodefony.registerService("sockjs", function(){
 		sockWrite(type, data, connection){
 			return this.service.sockWrite(type, data, connection);
 		}
-	}
+	};
 
 	var sockjsService = class sockjsService extends nodefony.Service {
 
@@ -67,7 +67,7 @@ module.exports = nodefony.registerService("sockjs", function(){
 			super( "sockjs", httpKernel.container, httpKernel.notificationsCenter );
 
 			this.compilers = {} ;
-			this.sockets =	[];
+			this.sockets =  [];
 			this.kernel.on("onBoot", () =>{
 				if ( this.bundle.settings.sockjs ){
 					this.clientOverlay = this.bundle.settings.sockjs.overlay || false ;
@@ -84,11 +84,11 @@ module.exports = nodefony.registerService("sockjs", function(){
 					switch ( type ){
 						case "HTTP":
 						case "HTTPS":
-							let proto = type.toLowerCase() ;
-							if ( proto === this.protocol ){
-								this.createServer(service, proto);
-								this.fire("onCreateSockServer", this[proto] , service);
-							}
+						let proto = type.toLowerCase() ;
+						if ( proto === this.protocol ){
+							this.createServer(service, proto);
+							this.fire("onCreateSockServer", this[proto] , service);
+						}
 						break;
 					}
 				});
@@ -114,11 +114,11 @@ module.exports = nodefony.registerService("sockjs", function(){
 					//websocket:false,
 					prefix: this.prefix,
 					log: (severity, line)  => {
-						this.logger( line, severity.toUpperCase() )
+						this.logger( line, severity.toUpperCase() );
 					}
 				});
 				this[protocol].on('connection', (conn) => {
-					if(!conn) return;
+					if(!conn) {return;}
 					this.sockets.push(conn);
 					conn.on("close", () => {
 						this.logger(" Close Connection " + this.name , "DEBUG");
@@ -147,20 +147,20 @@ module.exports = nodefony.registerService("sockjs", function(){
 			}
 		}
 
-		sendWatcher (type, data, force){
+		sendWatcher (type, data/*, force*/){
 			switch(type){
 				case "error" :
-					let myError = null ;
-					if ( data.stack ){
-						myError = data.stack ;
-					}else{
-						myError =  util.inspect(data);
-					}
-					return this.sockWrite("errors", [myError]);
+				let myError = null ;
+				if ( data.stack ){
+					myError = data.stack ;
+				}else{
+					myError =  util.inspect(data);
+				}
+				return this.sockWrite("errors", [myError]);
 				case "change" :
-					return this.sockWrite("content-changed");
+				return this.sockWrite("content-changed");
 				default:
-				 	return ;
+				return ;
 			}
 		}
 
@@ -185,7 +185,7 @@ module.exports = nodefony.registerService("sockjs", function(){
 				throw e ;
 			}
 		}
-	}
+	};
 
 	return sockjsService ;
 });

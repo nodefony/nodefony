@@ -15,14 +15,14 @@ module.exports = nodefony.register( "cli", function(){
 
   let processName = null ;
   if ( process.argv &&  process.argv[1] ){
-      processName = path.basename ( process.argv[1] );
+    processName = path.basename ( process.argv[1] );
   }else{
-      processName =  process.title || "nodefony" ;
+    processName =  process.title || "nodefony" ;
   }
   //const processName = path.basename (process.argv[1] ) || process.argv[1] || process.title ;
 
   const defaultTableCli = {
-  		style: {head: ['cyan'], border: ['grey']}
+    style: {head: ['cyan'], border: ['grey']}
   };
 
 
@@ -100,7 +100,7 @@ module.exports = nodefony.register( "cli", function(){
       this.initCommander();
 
       /**
-      *	@signals
+      *  @signals
       */
       if ( this.options.signals ) {
         process.on('SIGINT', () => {
@@ -138,7 +138,7 @@ module.exports = nodefony.register( "cli", function(){
         });
       }
       /**
-      *	@promiseRejection
+      *  @promiseRejection
       */
       if (this.options.promiseRejection){
         this.listenRejection();
@@ -157,7 +157,7 @@ module.exports = nodefony.register( "cli", function(){
           console.log( color(data) );
           let version =  this.commander ? this.commander.version() : ( this.options.version || "1.0.1" ) ;
           if ( this.options.version ){
-            console.log("		      Version : "+ blue(version) +" Platform : "+green( process.platform)+" Process : "+ green(process.title)+" PID : "+process.pid+"\n");
+            console.log("          Version : "+ blue(version) +" Platform : "+green( process.platform)+" Process : "+ green(process.title)+" PID : "+process.pid+"\n");
           }
           if ( this.environment !== "production"){
             //console.log( this.logEnv() )
@@ -194,7 +194,7 @@ module.exports = nodefony.register( "cli", function(){
     }
 
     logEnv(){
-      return blue("			\x1b "+ this.name  ) + " NODE_ENV : " + magenta(this.environment);
+      return blue("      \x1b "+ this.name  ) + " NODE_ENV : " + magenta(this.environment);
     }
 
     initCommander (){
@@ -308,7 +308,7 @@ module.exports = nodefony.register( "cli", function(){
       if (  pdu.payload === "" || pdu.payload === undefined ){
         console.error( date.toDateString() + " " + date.toLocaleTimeString() + " " + nodefony.Service.logSeverity( pdu.severityName ) + " " + green( pdu.msgid) + " " + " : " + "logger message empty !!!!");
         console.trace(pdu);
-        return 	;
+        return   ;
       }
       let message = pdu.payload;
       switch( typeof message ){

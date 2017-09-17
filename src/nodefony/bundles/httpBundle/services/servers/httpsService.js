@@ -4,7 +4,7 @@ module.exports = nodefony.registerService("https", function(){
 
 		constructor (httpKernel , security, options){
 
-			super( "HTTPS", httpKernel.container, httpKernel.notificationsCenter , options  );
+			super( "SERVER HTTPS", httpKernel.container, httpKernel.notificationsCenter , options  );
 
 			this.httpKernel = httpKernel;
 			this.port = this.httpKernel.kernel.httpsPort ;

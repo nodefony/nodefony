@@ -64,7 +64,7 @@ module.exports = nodefony.register("syslog", function(){
   * @return {PDU}
   */
   let guid = 0;
-	nodefony.PDU = class PDU {
+  nodefony.PDU = class PDU {
     constructor(pci, severity, moduleName, msgid, msg, date ) {
       /* timeStamp @type Date*/
       this.timeStamp = new Date(date).getTime() || new Date().getTime();
@@ -722,5 +722,5 @@ module.exports = nodefony.register("syslog", function(){
         return this.logger(data,"NOTICE");
       }
     };
-	return syslog;
-});
+    return syslog;
+  });

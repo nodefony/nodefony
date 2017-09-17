@@ -53,7 +53,7 @@ module.exports = nodefony.register("Service", function(){
       if ( notificationsCenter instanceof nodefony.notificationsCenter.notification ){
         this.notificationsCenter = notificationsCenter ;
         if (options){
-            this.notificationsCenter.settingsToListen(options, this) ;
+          this.notificationsCenter.settingsToListen(options, this) ;
         }
       }else{
         if ( notificationsCenter ){
@@ -73,20 +73,20 @@ module.exports = nodefony.register("Service", function(){
     static logSeverity (severity){
       switch(severity){
         case "DEBUG":
-          return cyan(severity);
+        return cyan(severity);
         case "INFO":
-          return blue(severity);
+        return blue(severity);
         case "NOTICE" :
-          return red(severity);
+        return red(severity);
         case "WARNING" :
-          return yellow(severity);
+        return yellow(severity);
         case "ERROR" :
         case "CRITIC":
         case "ALERT":
         case "EMERGENCY":
-          return red(severity);
+        return red(severity);
         default:
-          return cyan(severity);
+        return cyan(severity);
       }
     }
 
@@ -118,21 +118,21 @@ module.exports = nodefony.register("Service", function(){
     }
 
     /**
-     *  @method fire
-     *  @param {String} event name
-     *  @param {Arguments} ... arguments to inject
-           */
+    *  @method fire
+    *  @param {String} event name
+    *  @param {Arguments} ... arguments to inject
+    */
     fire (){
       //this.logger(ev, "DEBUG", "EVENT KERNEL")
       return this.notificationsCenter.fire.apply(this.notificationsCenter, arguments);
     }
 
     /**
-     *  @method listen
-     *  @param {Oject} context
-     *  @param {String} eventName
-     *  @param {Function} listener
-           */
+    *  @method listen
+    *  @param {Oject} context
+    *  @param {String} eventName
+    *  @param {Function} listener
+    */
     listen (){
       return this.notificationsCenter.listen.apply(this.notificationsCenter, arguments);
     }
@@ -155,45 +155,45 @@ module.exports = nodefony.register("Service", function(){
     }
 
     /**
-     *  @method once
-     *  @param {Oject} context
-     *  @param {String} eventName
-     *  @param {Function} listener
+    *  @method once
+    *  @param {Oject} context
+    *  @param {String} eventName
+    *  @param {Function} listener
 
-           */
+    */
     once (){
       //this.logger(ev, "DEBUG", "EVENT KERNEL")
       return this.notificationsCenter.once.apply(this.notificationsCenter, arguments);
     }
 
     /**
-     *  @method setMaxListeners
-     *  @param nb
-     */
+    *  @method setMaxListeners
+    *  @param nb
+    */
     setMaxListeners (){
       return this.notificationsCenter.setMaxListeners.apply(this.notificationsCenter, arguments);
     }
 
     /**
-     *  @method removeListener
-     *  @param {Oject} eventName
-     *  @param {String} listener
-           */
+    *  @method removeListener
+    *  @param {Oject} eventName
+    *  @param {String} listener
+    */
     removeListener (){
       return this.notificationsCenter.unListen.apply(this.notificationsCenter, arguments);
     }
 
     /**
-     *  @method removeAllListeners
-           */
+    *  @method removeAllListeners
+    */
     removeAllListeners (){
       return this.notificationsCenter.removeAllListeners.apply(this.notificationsCenter, arguments);
     }
 
     /**
-      *  @method get
-      *  @param {String} name of service
-            */
+    *  @method get
+    *  @param {String} name of service
+    */
     get (name){
       if (this.container){
         return this.container.get(name);
@@ -202,10 +202,10 @@ module.exports = nodefony.register("Service", function(){
     }
 
     /**
-     *  @method set
-     *  @param {String} name of service
-     *  @param {Object} instance of service
-           */
+    *  @method set
+    *  @param {String} name of service
+    *  @param {Object} instance of service
+    */
     set (name, obj){
       if (this.container){
         return this.container.set(name, obj);

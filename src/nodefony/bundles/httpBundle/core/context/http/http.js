@@ -1,17 +1,10 @@
-/*
- *
- *
- *
- *
- *
- */
 nodefony.register.call(nodefony.context, "http", function(){
 
   const Http = class Http extends nodefony.Service {
 
     constructor (container, request, response, type){
 
-      super ("httpContext", container);
+      super ("HTTP CONTEXT", container);
       this.type = type;
       this.set("context", this);
       this.kernelHttp = this.get("httpKernel");
@@ -28,6 +21,7 @@ nodefony.register.call(nodefony.context, "http", function(){
       this.isAjax = this.request.isAjax() ;
       this.isHtml = this.request.acceptHtml ;
       this.response = new nodefony.Response( response, container);
+      this.isJson = false ;
       this.setDefaultContentType();
 
       this.isRedirect = false ;
@@ -36,11 +30,7 @@ nodefony.register.call(nodefony.context, "http", function(){
       this.secureArea = null ;
       this.showDebugBar = true ;
       this.timeoutExpired = false ;
-      if ( this.kernel.environment === "dev" ){
-        this.autoloadCache = {
-          bundles:{}
-        } ;
-      }
+
       this.domain =  this.getHostName();
       this.router = this.get("router");
 
@@ -60,7 +50,7 @@ nodefony.register.call(nodefony.context, "http", function(){
       this.validDomain = this.isValidDomain() ;
       this.crossDomain = null;
 
-      this.logger( ( this.isAjax ? " AJAX REQUEST " : "REQUEST ") +request.method +" FROM : "+ this.request.remoteAddress +" HOST : "+request.headers.host+" URL :"+request.url, "INFO");
+      this.logger("FROM : "+ this.request.remoteAddress + " URL : "+this.url /*request.headers.host+request.url*/, "INFO", ( this.isAjax ? this.type+" REQUEST AJAX "+ this.method : this.type+" REQUEST "+this.method )  );
 
       // session
       this.session = null;
@@ -78,12 +68,13 @@ nodefony.register.call(nodefony.context, "http", function(){
       this.remoteAddress = this.request.remoteAddress ;
 
       this.promise = null ;
+      this.timeoutid = null ;
 
       this.once( this, "onRequest" , this.handle );
       this.once(this, "onResponse", this.send);
       this.once( this, "onTimeout" , () => {
-          let error = new Error("");
-          error.code = 408 ;
+        let error = new Error("");
+        error.code = 408 ;
         this.fire("onError", this.container, error );
       } );
 
@@ -184,8 +175,8 @@ nodefony.register.call(nodefony.context, "http", function(){
         return this.fire("onError", this.container, e );
       }
       if ( ! resolver.resolve) {
-          let error = new Error(pattern);
-          error.code = 404;
+        let error = new Error(pattern);
+        error.code = 404;
         return this.fire("onError", this.container,  error);
       }
       try {
@@ -213,279 +204,280 @@ nodefony.register.call(nodefony.context, "http", function(){
       switch (true){
         case subRequest.response instanceof nodefony.Response :
         case subRequest.response instanceof nodefony.wsResponse :
-          return subRequest.response.body;
+        return subRequest.response.body;
         case subRequest.response instanceof Promise :
         case subRequest.response instanceof BlueBird :
-          if ( subRequest.controller.response.body === ""){
-            let txt = "nodefony TWIG function render can't resolve async Call in Twig Template " ;
-            this.logger(txt,"ERROR");
-            return txt;
-          }
-          /*subRequest.response.then((result) =>{
-            console.log(result)
-            subRequest.controller.response.body = result ;
-          });*/
-          return subRequest.controller.response.body;
-        case nodefony.typeOf(subRequest.response) === "object":
-          if ( subRequest.resolver.defaultView ){
-             return this.render( {
-              resolver:subRequest.resolver,
-              controller:subRequest.controller,
-              response:subRequest.controller.render(subRequest.resolver.defaultView, subRequest.response )
-             } );
-          }else{
-            throw {
-              status:500,
-              message:"default view not exist"
-            };
-          }
-        break;
-        case typeof subRequest.response === "string" :
-          return subRequest.response ;
-        default:
-          this.logger("nodefony TWIG function render can't resolve async Call in Twig Template ","WARNING");
-          return this.response.body ;
-      }
-    }
-
-    handle (data){
-      this.setParameters("query.get", this.request.queryGet );
-      if (this.request.queryPost  ){
-        this.setParameters("query.post", this.request.queryPost );
-      }
-      if (this.request.queryFile  ){
-        this.setParameters("query.files", this.request.queryFile );
-      }
-      this.setParameters("query.request", this.request.query );
-      /*
-        *  TRANSLATION
-        */
-      this.translation.handle();
-      /*
-        *  TRY resolve
-        */
-      try {
-        if (!  this.resolver ){
-          this.resolver = this.router.resolve( this );
+        if ( subRequest.controller.response.body === ""){
+          let txt = "nodefony TWIG function render can't resolve async Call in Twig Template " ;
+          this.logger(txt,"ERROR");
+          return txt;
         }
-        //WARNING EVENT KERNEL
-        this.kernel.fire("onRequest", this, this.resolver);
-        if (this.resolver.resolve) {
-          let ret = this.resolver.callController(data);
-          // timeout response after  callController (to change timeout in action )
-          if (this.response.response){
-            this.response.response.setTimeout(this.response.timeout, () => {
-              this.timeoutExpired = true ;
-              this.fire("onTimeout", this);
-            });
-          }
-          return ret ;
-        }
-        /*
-          *  NOT FOUND
-          */
-          let error = new Error("");
-          error.code = 404;
-          this.fire("onError", this.container, error);
-      }catch(e){
-        /*
-          *  ERROR IN CONTROLLER
-          */
-        this.fire("onError", this.container, e);
-      }
-    }
-
-    clean (){
-      this.request.clean();
-      this.response.clean();
-      this.request = null ;
-      this.response = null ;
-      delete this.response ;
-      delete this.request ;
-      this.session = null  ;
-      delete this.session ;
-      this.proxy = null;
-      delete this.proxy ;
-      this.user = null ;
-      delete this.user ;
-      this.security= null ;
-      delete this.security ;
-      this.promise = null ;
-      delete this.promise ;
-      this.translation = null ;
-      delete this.translation ;
-      this.cookies = null ;
-      delete this.cookies ;
-      this.cookieSession = null ;
-      delete this.cookieSession ;
-      this.resolver = null ;
-      delete this.resolver ;
-      this.kernelHttp = null ;
-      delete this.kernelHttp ;
-      this.router = null ;
-      delete this.router ;
-      this.autoloadCache = null ;
-      delete this.autoloadCache ;
-      super.clean();
-    }
-
-    getUser (){
-      return this.user || null ;
-    }
-
-    send (/*response, context*/){
-
-      if ( this.sended ){
-        return ;
-      }
-      this.sended = true ;
-      // cookies
-      this.response.setCookies();
-      /*
-       * HTTP WRITE HEAD
-       */
-      this.response.writeHead();
-
-      this.fire("onSend", this.response, this);
-      if ( this.session ){
-        this.once(this, "onSaveSession" , ( /*session*/ ) => {
-          //console.log("FIRE onSaveSession")
-          if (  ! this.storage ){
-            if ( this.profiling ){
-              this.fire("onSendMonitoring", this.response, this);
-            }
-            /*
-              * WRITE RESPONSE
-              */
-            this.response.write();
-            // END REQUEST
-            return this.close();
-          }
-          this.fire("onSendMonitoring", this.response, this);
-        });
-        return ;
-      }
-
-      if (  ! this.storage ){
-        if ( this.profiling ){
-          this.fire("onSendMonitoring", this.response, this);
-        }
-        /*
-          * WRITE RESPONSE
-          */
-        this.response.write();
-        // END REQUEST
-        return this.close();
-      }
-      this.fire("onSendMonitoring", this.response, this);
-    }
-
-    flush (data, encoding){
-      return this.response.flush(data, encoding);
-    }
-
-    close (){
-      //console.trace("CLOSE")
-      this.fire("onClose", this);
-      // END REQUEST
-      this.response.end();
-    }
-
-    logger (pci, severity, msgid,  msg){
-      if (! msgid) {msgid = this.type + " REQUEST";}
-      return super.logger(pci, severity, msgid,  msg);
-    }
-
-    getRequest (){
-      return this.request;
-    }
-
-    getResponse (){
-      return this.response;
-    }
-
-    redirect (Url, status, headers){
-      let res = null ;
-      if (typeof Url === "object"){
-        res = this.response.redirect(url.format(Url), status, headers);
-      }else{
-        res = this.response.redirect(Url, status, headers );
-      }
-      //this.logger("REDIRECT : "+Url,"DEBUG");
-      this.isRedirect = true ;
-      this.send(res, this);
-    }
-
-    redirectHttps ( status, headers){
-
-      if ( this.session ){
-        this.session.setFlashBag("redirect" , "HTTPS" );
-      }
-      let urlExtend = null ;
-      if( this.proxy ){
-        urlExtend = {
-          protocol:  "https",
-          href:    "",
-          host:    ""
-        }  ;
-      }else{
-        urlExtend = {
-          protocol:  "https",
-          port:    this.kernelHttp.httpsPort || 443 ,
-          href:    "",
-          host:    ""
-        }  ;
-      }
-      let urlChange = nodefony.extend({}, this.request.url , urlExtend );
-      let newUrl  = url.format(urlChange);
-      return this.redirect( newUrl, status , headers);
-    }
-
-    setXjson ( xjson){
-      switch ( nodefony.typeOf(xjson) ){
-        case "object":
-          this.response.headers["X-Json"] = JSON.stringify(xjson);
-          return xjson;
-        case "string":
-          this.response.headers["X-Json"] = xjson;
-          return JSON.parse(xjson);
-        case "Error":
-          if ( typeof xjson.message === "object" ){
-            this.response.headers["X-Json"] = JSON.stringify(xjson.message);
-            return xjson.message;
-          }else{
-            this.response.headers["X-Json"] = xjson.message;
-            return {error:xjson.message};
-          }
-        break;
-      }
-    }
-
-    setDefaultContentType (){
-      if ( this.isHtml ){
-        this.response.setHeader("Content-Type", "text/html; charset=utf-8");
-      }else{
-        if ( this.request.accepts("json") ){
-          this.isJson = true ;
-          this.response.setHeader("Content-Type", "application/json; charset=utf-8");
-        }
-      }
-    }
-
-    addCookie (cookie){
-      if ( cookie instanceof nodefony.cookies.cookie ){
-        this.cookies[cookie.name] = cookie;
+        /*subRequest.response.then((result) =>{
+        console.log(result)
+        subRequest.controller.response.body = result ;
+      });*/
+      return subRequest.controller.response.body;
+      case nodefony.typeOf(subRequest.response) === "object":
+      if ( subRequest.resolver.defaultView ){
+        return this.render( {
+          resolver:subRequest.resolver,
+          controller:subRequest.controller,
+          response:subRequest.controller.render(subRequest.resolver.defaultView, subRequest.response )
+        } );
       }else{
         throw {
-          message:"",
-          error:"Response addCookies not valid cookies"
+          status:500,
+          message:"default view not exist"
         };
       }
+      break;
+      case typeof subRequest.response === "string" :
+      return subRequest.response ;
+      default:
+      this.logger("nodefony TWIG function render can't resolve async Call in Twig Template ","WARNING");
+      return this.response.body ;
+    }
+  }
+
+  handle (data){
+    this.setParameters("query.get", this.request.queryGet );
+    if (this.request.queryPost  ){
+      this.setParameters("query.post", this.request.queryPost );
+    }
+    if (this.request.queryFile  ){
+      this.setParameters("query.files", this.request.queryFile );
+    }
+    this.setParameters("query.request", this.request.query );
+
+    try {
+      /*
+      *  TRANSLATION
+      */
+      this.translation.handle();
+      /*
+      *  TRY resolve
+      */
+      if (!  this.resolver ){
+        this.resolver = this.router.resolve( this );
+      }
+      //WARNING EVENT KERNEL
+      this.kernel.fire("onRequest", this, this.resolver);
+      if (this.resolver.resolve) {
+        let ret = this.resolver.callController(data);
+        // timeout response after  callController (to change timeout in action )
+        if (this.response.response){
+          this.timeoutid = this.response.response.setTimeout(this.response.timeout, () => {
+            this.timeoutExpired = true ;
+            this.fire("onTimeout", this);
+          });
+        }
+        return ret ;
+      }
+      /*
+      *  NOT FOUND
+      */
+      let error = new Error("");
+      error.code = 404;
+      throw error ;
+      //this.fire("onError", this.container, error);
+    }catch(e){
+      /*
+      *  ERROR IN CONTROLLER
+      */
+      //throw e ;
+      this.fire("onError", this.container, e);
+    }
+  }
+
+  clean (){
+    if ( this.timeoutid !== null ){
+      clearTimeout(this.timeoutid);
+    }
+    this.request.clean();
+    this.response.clean();
+    this.request = null ;
+    this.response = null ;
+    delete this.response ;
+    delete this.request ;
+    this.session = null  ;
+    delete this.session ;
+    this.proxy = null;
+    delete this.proxy ;
+    this.user = null ;
+    delete this.user ;
+    this.security= null ;
+    delete this.security ;
+    this.promise = null ;
+    delete this.promise ;
+    this.translation = null ;
+    delete this.translation ;
+    this.cookies = null ;
+    delete this.cookies ;
+    this.cookieSession = null ;
+    delete this.cookieSession ;
+    this.resolver = null ;
+    delete this.resolver ;
+    this.kernelHttp = null ;
+    delete this.kernelHttp ;
+    this.router = null ;
+    delete this.router ;
+    super.clean();
+  }
+
+  getUser (){
+    return this.user || null ;
+  }
+
+  send (/*response, context*/){
+    if ( this.sended ){
+      return ;
+    }
+    this.sended = true ;
+    // cookies
+    this.response.setCookies();
+    /*
+    * HTTP WRITE HEAD
+    */
+    this.response.writeHead();
+    this.fire("onSend", this.response, this);
+
+    if ( this.session ){
+      this.once(this, "onSaveSession" , ( /*session*/ ) => {
+        //console.log("FIRE onSaveSession")
+        if (  ! this.storage ){
+          if ( this.profiling ){
+            this.fire("onSendMonitoring", this.response, this);
+          }
+          /*
+          * WRITE RESPONSE
+          */
+          this.response.write();
+          // END REQUEST
+          return this.close();
+        }
+        this.fire("onSendMonitoring", this.response, this);
+      });
+      return ;
     }
 
-    parseCookies (){
-      return  nodefony.cookies.cookiesParser(this);
+    if (  ! this.storage ){
+      if ( this.profiling ){
+        this.fire("onSendMonitoring", this.response, this);
+      }
+      /*
+      * WRITE RESPONSE
+      */
+      this.response.write();
+      // END REQUEST
+      return this.close();
     }
-  };
-  return Http;
+    this.fire("onSendMonitoring", this.response, this);
+  }
+
+  flush (data, encoding){
+    return this.response.flush(data, encoding);
+  }
+
+  close (){
+    this.fire("onClose", this);
+    // END REQUEST
+    this.response.end();
+  }
+
+  logger (pci, severity, msgid,  msg){
+    if (! msgid) {msgid = this.type + " REQUEST";}
+    return super.logger(pci, severity, msgid,  msg);
+  }
+
+  getRequest (){
+    return this.request;
+  }
+
+  getResponse (){
+    return this.response;
+  }
+
+  redirect (Url, status, headers){
+    let res = null ;
+    if (typeof Url === "object"){
+      res = this.response.redirect(url.format(Url), status, headers);
+    }else{
+      res = this.response.redirect(Url, status, headers );
+    }
+    this.isRedirect = true ;
+    this.send(res, this);
+  }
+
+  redirectHttps ( status, headers){
+
+    if ( this.session ){
+      this.session.setFlashBag("redirect" , "HTTPS" );
+    }
+    let urlExtend = null ;
+    if( this.proxy ){
+      urlExtend = {
+        protocol:  "https",
+        href:    "",
+        host:    ""
+      }  ;
+    }else{
+      urlExtend = {
+        protocol:  "https",
+        port:    this.kernelHttp.httpsPort || 443 ,
+        href:    "",
+        host:    ""
+      }  ;
+    }
+    let urlChange = nodefony.extend({}, this.request.url , urlExtend );
+    let newUrl  = url.format(urlChange);
+    return this.redirect( newUrl, status , headers);
+  }
+
+  setXjson ( xjson){
+    switch ( nodefony.typeOf(xjson) ){
+      case "object":
+      this.response.headers["X-Json"] = JSON.stringify(xjson);
+      return xjson;
+      case "string":
+      this.response.headers["X-Json"] = xjson;
+      return JSON.parse(xjson);
+      case "Error":
+      if ( typeof xjson.message === "object" ){
+        this.response.headers["X-Json"] = JSON.stringify(xjson.message);
+        return xjson.message;
+      }else{
+        this.response.headers["X-Json"] = xjson.message;
+        return {error:xjson.message};
+      }
+      break;
+    }
+  }
+
+  setDefaultContentType (){
+    if ( this.isHtml ){
+      this.response.setHeader("Content-Type", "text/html; charset=utf-8");
+    }else{
+      if ( this.request.accepts("json") ){
+        this.isJson = true ;
+        this.response.setHeader("Content-Type", "application/json; charset=utf-8");
+      }
+    }
+  }
+
+  addCookie (cookie){
+    if ( cookie instanceof nodefony.cookies.cookie ){
+      this.cookies[cookie.name] = cookie;
+    }else{
+      throw {
+        message:"",
+        error:"Response addCookies not valid cookies"
+      };
+    }
+  }
+
+  parseCookies (){
+    return  nodefony.cookies.cookiesParser(this);
+  }
+};
+return Http;
 });

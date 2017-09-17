@@ -14,7 +14,7 @@ module.exports = nodefony.registerService("websocketSecure", function(){
 
 		constructor ( httpKernel, security, options ){
 
-			super( "websocketSecure", httpKernel.container, httpKernel.notificationsCenter , options  );
+			super( "SERVER WEBSOCKET SECURE", httpKernel.container, httpKernel.notificationsCenter , options  );
 
 			this.httpKernel = httpKernel;
 			this.port = this.httpKernel.kernel.httpsPort ;
@@ -22,11 +22,6 @@ module.exports = nodefony.registerService("websocketSecure", function(){
 			this.firewall =  security ;
 			this.ready = false ;
 			this.type = "WEBSOCKET SECURE";
-		}
-
-		logger (pci, severity, msgid,  msg){
-			if (! msgid) {msgid = "SERVICE WEBSOCKET SECURE ";}
-			return this.syslog.logger(pci, severity, msgid,  msg);
 		}
 
 		createServer (http/*, settings*/){

@@ -8576,9 +8576,16 @@ uglify-es-webpack-plugin@^0.10.0:
     uglify-es "^3.0.10"
     webpack-sources "^0.2.3"
 
-uglify-es@^3.0.10, uglify-es@^3.0.28:
+uglify-es@^3.0.10:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.1.0.tgz#b4ca636bde6467e82a061ea7f2c124899d82bd2c"
+  dependencies:
+    commander "~2.11.0"
+    source-map "~0.5.1"
+
+uglify-es@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.1.1.tgz#27615a1203cd0b351d8b5bda743ac92ed482b826"
   dependencies:
     commander "~2.11.0"
     source-map "~0.5.1"

@@ -4,7 +4,7 @@ module.exports = nodefony.registerService("http", function(){
 
 		constructor (httpKernel , security, options ){
 
-			super( "HTTP", httpKernel.container, httpKernel.notificationsCenter , options  );
+			super( "SERVER HTTP", httpKernel.container, httpKernel.notificationsCenter , options  );
 
 			this.httpKernel = httpKernel ;
 			this.port = this.httpKernel.kernel.httpPort ;
