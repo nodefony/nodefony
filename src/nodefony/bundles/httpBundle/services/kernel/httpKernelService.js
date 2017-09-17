@@ -26,14 +26,11 @@ module.exports = nodefony.registerService("httpKernel", function(){
           throw e ;
         }
       });
-      this.firewall = null ;
-      this.listen(this, "onReady", () => {
-        this.firewall = this.get("security") ;
-        this.router = this.get("router") ;
-        this.cdn = this.setCDN();
-      });
+
       // listen KERNEL EVENTS
       this.listen(this, "onBoot",() =>{
+        this.firewall = this.get("security") ;
+        this.router = this.get("router") ;
         this.sessionService = this.get("sessions");
         this.compileAlias();
         this.sockjs = this.get("sockjs");
@@ -43,7 +40,13 @@ module.exports = nodefony.registerService("httpKernel", function(){
           HTTPS:this.bundleSettings.https.responseTimeout
         };
         this.translation = this.get("translation");
+        this.cdn = this.setCDN();
       });
+
+      /*this.listen(this, "onReady", () => {
+        console.log(this.cdn);
+      });*/
+
       this.listen(this, "onClientError", (e, socket) => {
         this.logger(e, "WARNING", "SOCKET CLIENT ERROR");
         socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
@@ -586,7 +589,6 @@ module.exports = nodefony.registerService("httpKernel", function(){
         throw new Error (txt);
       }
     }
-
   };
   return httpKernel ;
 });

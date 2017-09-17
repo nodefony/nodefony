@@ -1,59 +1,30 @@
 #
 #
-#	ROUTING BUNDLE testBundle
+#  ROUTING BUNDLE testBundle
 #
-#===============================================================================
-#
-#  Copyright © 2016/2017         |
-#
-# ===============================================================================
-#
-#        GENERATE BY nodefony BUILDER YAML FILE
-#
-# This file is YAML  FILE
-# ---
-# YAML: YAML Ain't Markup Language
-#
-# What It Is: YAML is a human friendly data serialization
-#   standard for all programming languages.
-#
-# YAML Resources:
-#   YAML 1.2 (3rd Edition): http://yaml.org/spec/1.2/spec.html
-#   YAML 1.1 (2nd Edition): http://yaml.org/spec/1.1/
-#   YAML 1.0 (1st Edition): http://yaml.org/spec/1.0/
-#   YAML Trac Wiki: http://trac.yaml.org/
-#   YAML Mailing List: yaml-core@lists.sourceforge.net
-#   YAML IRC Channel: "#yaml on irc.freenode.net"
-#   YAML Cookbook (Ruby): http://yaml4r.sourceforge.net/cookbook/ (local)
-#   YAML Reference Parser: http://yaml.org/ypaste/
-
-
-
 ########## nodefony ROUTING  testBundle  ############
 
 test:
   pattern:  /test
   defaults: {"controller": "testBundle:default:index"}
 
-json:
+test-json:
   pattern:  /json
   defaults: {"controller": "testBundle:default:json"}
 
-rest:
+test-rest:
   pattern:  /rest
   defaults: {"controller": "testBundle:default:rest"}
 
 ### WEBSOCKET ###
-websoket:
+test-websoket:
   pattern:  /websoket
   defaults: {"controller": "testBundle:default:websoket"}
   requirements:
     method:
       - WEBSOCKET
 
-
 ## UNIT TEST
-
 myroute:
   pattern:      /myroute
   defaults:     {"controller": "testBundle:test:myroute","page":51,"elements":"defaultValue"}
@@ -197,3 +168,28 @@ rest-401:
 rest-403:
   pattern:      /test/unit/rest/403
   defaults:     {"controller": "testBundle:rest:403"}
+
+# LOGIN
+test-login:
+  pattern:      /test/login
+  defaults:     {"controller": "testBundle:login:index"}
+test-logout:
+  pattern:      /test/logout
+  defaults:     {"controller": "testBundle:login:logout"}
+
+# FIREWALL
+test-sasl-area:
+  pattern:      /test/firewall/sasl
+  defaults:     {"controller": "testBundle:firewall:sasl"}
+
+test-basic-area:
+  pattern:      /test/firewall/basic
+  defaults:     {"controller": "testBundle:firewall:basic"}
+
+test-digest-area:
+  pattern:      /test/firewall/digest
+  defaults:     {"controller": "testBundle:firewall:digest"}
+
+test-local-area:
+  pattern:      /test/firewall/local
+  defaults:     {"controller": "testBundle:firewall:local"}

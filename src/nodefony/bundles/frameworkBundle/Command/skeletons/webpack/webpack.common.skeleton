@@ -1,5 +1,5 @@
 const path = require("path");
-const webpack = require('webpack');
+//const webpack = require('webpack');
 const ExtractTextPluginCss = require('extract-text-webpack-plugin');
 const public = path.resolve(__dirname, "..", "..", "public");
 const bundleName = path.basename( path.resolve( __dirname, "..", "..", "..") );
@@ -17,7 +17,7 @@ module.exports = {
 				{
 					loader: 'babel-loader',
 					options: {
-						presets: ['es2015']
+						presets: ['env']
 					}
 				}
             ]
