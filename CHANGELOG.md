@@ -1,5 +1,20 @@
 # Changelog
 
+## v3.0.2 (18/09/2017)
+- update outdated
+- websocket error framework
+- debug response http setHeaders
+- optimize extend
+- update babel in webpack | add firewall test
+- websocket  force json context
+- clean error management request | update pm2
+- update webpack version
+- add error event in watcher
+- debug error stack context json
+- add syslog pdu in context json  framework
+
+---
+
 ## v3.0.1 (14/09/2017)
 - webpack dump
 - add details connectors sequelize
