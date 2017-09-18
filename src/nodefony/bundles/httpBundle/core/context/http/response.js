@@ -86,7 +86,7 @@ module.exports = nodefony.register("Response",function(){
 
     setHeaders (obj){
       if( !Object.keys(this.headers).length ){
-          return  obj ;
+          return  this.headers = obj ;
       }else{
         return nodefony.extend(this.headers, obj);
       }

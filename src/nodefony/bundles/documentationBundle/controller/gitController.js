@@ -1,17 +1,17 @@
 
 module.exports = nodefony.registerController("git", function(){
 
-	var gitController = class gitController  extends nodefony.controller {
+	const gitController = class gitController  extends nodefony.controller {
 
 		constructor(container, context){
 			super(container, context);
 			this.git = this.kernel.git ;
-		};
+		}
 
 		getStatusAction (){
 			var tab = [] ;
 			try {
-				Git.Repository.open(this.get("kernel").rootDir).then((repo)  => {
+				this.git.Repository.open(this.get("kernel").rootDir).then((repo)  => {
 
 					repo.getStatus().then( (statuses) => {
 						statuses.forEach( (file) => {
@@ -19,16 +19,18 @@ module.exports = nodefony.registerController("git", function(){
 								path:file.path(),
 								type:file.status()
 							};
-							tab.push(obj)
+							tab.push(obj);
 						});
 						this.renderJsonAsync(tab);
-					})
-
+					});
 				})
 				.catch( (err) =>  {
+					if (err){
+						throw err ;
+					}
 					this.renderJsonAsync(tab);
 				}).done(function () {
-	  				//console.log('Finished');
+					//console.log('Finished');
 				});
 			}catch(e){
 				throw e ;
@@ -48,11 +50,10 @@ module.exports = nodefony.registerController("git", function(){
 		}
 
 		getMostRecentCommitAction (){
-
 			var tab = [] ;
 			this.git.log( (err, ListLogSummary) => {
 				if ( err ){
-						throw err ;
+					throw err ;
 				}
 				for (var i = 0; i < 10; i++) {
 					tab.push({
@@ -60,10 +61,10 @@ module.exports = nodefony.registerController("git", function(){
 						msg:ListLogSummary.all[i].message,
 						author:ListLogSummary.all[i].author_name,
 						date:ListLogSummary.all[i].date
-					})
+					});
 				}
 				this.renderJsonAsync(tab);
-        	});
+			});
 		}
 	};
 

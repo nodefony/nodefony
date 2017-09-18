@@ -1,0 +1,53 @@
+#!/usr/bin/env node
+
+try {
+  const nodefony = require("nodefony");
+}catch(e){
+  const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
+}
+
+const defaultObj = {
+    ele:true,
+    ele2:()=>{},
+    ele3:{
+        foo:"bar"
+    }
+};
+
+const extend1 = function(cli, obj, nb){
+    cli.startTimer("extend1");
+    let res = null ;
+    for (let i = 0 ; i < nb  ;i++){
+        res = nodefony.extend(true,{},defaultObj,  obj);
+    }
+    console.log(res);
+    return cli.stopTimer("extend1");
+};
+const extend2 = function(cli, obj, nb){
+    cli.startTimer("extend2");
+    let res = null ;
+    for (let i = 0 ; i < nb ;i++){
+        res = nodefony.extend2(true,{},defaultObj,  obj);
+    }
+    console.log(res);
+    return cli.stopTimer("extend2");
+};
+
+
+const cli = new nodefony.cli("LOAD TEST EXTEND JQUERY", {
+    resize:true,
+    onStart:(cli) => {
+        let ele = {
+            ele:true,
+            ele3:{
+                bar:"foo",
+                foo:"foo"
+            }
+        };
+        extend1(cli, ele, 1000000);
+        extend2(cli, ele, 1000000);
+    }
+});
+
+module.exports = cli ;
+return cli;

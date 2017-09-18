@@ -97,11 +97,11 @@ module.exports = function(){
     }
 
     /**
-    * extend jquery for nodejs only
+    * new extend jquery for nodejs only
     * @method extend
     *
     */
-    extend () {
+    /*extend2 () {
       let options, name, src, copy, copyIsArray, clone,
       target = arguments[ 0 ] || {},
       i = 1,
@@ -154,8 +154,8 @@ module.exports = function(){
       }
       // Return the modified object
       return target;
-    }
-    /*extend (){
+  }*/
+    extend (){
       let options, name, src, copy, copyIsArray, clone,
       target = arguments[ 0 ] || {},
       i = 1,
@@ -210,7 +210,7 @@ module.exports = function(){
       }
       // Return the modified object
       return target;
-    }*/
+    }
 
     /**
     *  Register Nodefony Library element
