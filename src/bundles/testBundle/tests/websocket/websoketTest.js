@@ -39,14 +39,16 @@ describe("BUNDLE TEST", function(){
       client.on('connect', function(connection) {
         assert(connection.connected);
         connection.on("message", (message) => {
-          console.log(message);
           let res = JSON.parse(message.utf8Data) ;
-          console.log(res);
+          assert.deepStrictEqual(res.server , "nodefony");
+          assert.deepStrictEqual(res.code , 404);
+          assert.deepStrictEqual(res.url , options.url);
+          assert.deepStrictEqual(res.message , "Not Found");
         });
-        connection.on('close', (/*reasonCode, description*/) => {
-          //assert.deepStrictEqual(reasonCode , 3404);
-          //assert.deepStrictEqual(description , "Not Found");
-          setTimeout(done,1000);
+        connection.on('close', (reasonCode, description) => {
+          assert.deepStrictEqual(reasonCode , 3404);
+          assert.deepStrictEqual(description , "Not Found");
+          done();
         });
       });
       client.on('connectFailed', function() {

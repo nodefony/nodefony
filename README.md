@@ -25,8 +25,9 @@ Nodefony features :
 - Cross-Origin Resource Sharing ([CORS](https://www.w3.org/TR/cors/))
 - Production Management ([PM2](https://github.com/Unitech/pm2/))
 - RealTime API (Bayeux Protocol)
-- Translations ()
+- Translations
 - CLI (Command Line Interface)
+- Unit Test Api in framework context ([MOCHA](https://mochajs.org/))
 
 Nodefony assimilates into the ecosystem of node.js with services like :
 - [WEBPACK](https://webpack.js.org/) Module bundler for assets management of application .

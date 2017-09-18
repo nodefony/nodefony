@@ -22,12 +22,12 @@ module.exports = nodefony.registerController("websocket", function(){
         *
         */
         ["401Action"](message){
-          if (message){
-						// LOG  MESSAGE CLIENT IN TERMINAL
-						this.logger( message.utf8Data , "INFO");
-					}else{
-            return this.createUnauthorizedException();
-          }
+            if (message){
+                // LOG  MESSAGE CLIENT IN TERMINAL
+                this.logger( message.utf8Data , "INFO");
+            }else{
+                return this.createUnauthorizedException();
+            }
         }
 
         ["403Action"](){

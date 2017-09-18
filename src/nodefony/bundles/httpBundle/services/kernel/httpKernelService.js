@@ -39,6 +39,10 @@ module.exports = nodefony.registerService("httpKernel", function(){
           HTTP:this.bundleSettings.http.responseTimeout,
           HTTPS:this.bundleSettings.https.responseTimeout
         };
+        this.closeTimeOutWs = {
+            WS:this.bundleSettings.websocket.closeTimeout,
+            WSS:this.bundleSettings.websocketSecure.closeTimeout
+        };
         this.translation = this.get("translation");
         this.cdn = this.setCDN();
       });
@@ -353,7 +357,9 @@ module.exports = nodefony.registerService("httpKernel", function(){
       try {
           resolver.callController( exception );
           if (context.method === "WEBSOCKET" ){
-            context.close(exception.code, exception.message);
+              setTimeout (() =>{
+                  context.drop(exception.code, exception.message);
+              }, ( context.type === "WEBSOCKET" ? this.closeTimeOutWs.WS : this.closeTimeOutWs.WSS ) );
           }
       }catch(e){
           this.logger(e, "ERROR", context.method);

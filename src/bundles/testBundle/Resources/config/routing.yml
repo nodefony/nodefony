@@ -23,6 +23,12 @@ test-websoket:
   requirements:
     method:
       - WEBSOCKET
+test-websoket-404:
+  pattern:  /test/websocket
+  defaults: {"controller": "testBundle:default:websoket"}
+  requirements:
+      method:
+          - WEBSOCKET
 
 ## UNIT TEST
 myroute:
