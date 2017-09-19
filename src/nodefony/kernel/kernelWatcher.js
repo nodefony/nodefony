@@ -62,9 +62,13 @@ module.exports = nodefony.register("kernelWatcher", function(){
           try {
             basename = path.basename(Path) ;
             res = this.bundle.regController.exec( basename );
-            name = res[1] ;
-            file = this.cwd + "/" + Path ;
-            this.bundle.reloadWatcherControleur( name, file);
+            if ( res ){
+              name = res[1] ;
+              file = this.cwd + "/" + Path ;
+              this.bundle.reloadWatcherControleur( name, file);
+            }else{
+              this.bundle.reloadWatcherControleur( null, Path);
+            }
             if ( this.sockjs ){
               this.sockjs.sendWatcher( "change", file );
             }

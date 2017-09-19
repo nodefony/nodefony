@@ -170,7 +170,8 @@ module.exports = nodefony.register("Bundle", function(){
                 }
                 // controllers
                 if ( controllers ){
-                    this.watcherController = new nodefony.kernelWatcher(this.controllersPath, defaultWatcher.call(this, regController), this);
+                    let regJs = new RegExp(".*\.js$|.*\.es6$|.*\.es7$");
+                    this.watcherController = new nodefony.kernelWatcher(this.controllersPath, defaultWatcher.call(this, regJs), this);
                     this.watcherController.setSockjsServer( this.sockjs );
                     this.watcherController.listenWatcherController();
                     this.kernel.on("onTerminate", () => {
@@ -207,6 +208,8 @@ module.exports = nodefony.register("Bundle", function(){
                         this.watcherConfig.close();
                     });
                 }
+                //entities
+
             }catch(e){
                 throw e ;
             }
@@ -452,6 +455,27 @@ module.exports = nodefony.register("Bundle", function(){
 
         reloadWatcherControleur ( name, Path){
             try {
+              if (name === null ){
+                let tab = [];
+                this.controllerFiles.forEach((ele)=> {
+                  ele.matchName(regController);
+                    if (ele.match){
+                      let parse = path.parse(Path);
+                      let reg = "require\(.*"+parse.base+"\)";
+                      //console.log( ele.content().match(new RegExp(reg) ) );
+                      if(ele.content().match( new RegExp(reg) ) ){
+                        //console.log( ele.match[1]);
+                        tab.push({
+                          name:ele.match[1],
+                          Path:ele.path
+                        });
+                        //console.log(tab);
+                      }
+                    return ;
+                  }
+                  return ;
+                });
+              }else{
                 if ( this.controllers[name] ){
                     delete this.controllers[name] ;
                     this.controllers[name] = null ;
@@ -464,6 +488,7 @@ module.exports = nodefony.register("Bundle", function(){
                 }else{
                     throw new Error("Register Controller : "+name +"  error Controller closure bad format ");
                 }
+              }
             }catch(e){
                 throw e ;
             }
