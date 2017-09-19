@@ -39,6 +39,8 @@
       "BlueBird":true,
       "twig": true,
       "shell":true,
-      "clc":true
+      "clc":true,
+      "notDefinded":true,
+      "varNotExit":true
     }
 }

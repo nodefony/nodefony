@@ -221,11 +221,12 @@ setEnv (environment){
 }
 
 logEnv(){
-  return this.cli.clc.blue("      \x1b NODEFONY " + this.type )
-  + " Cluster : " + this.cli.clc.magenta(this.typeCluster )
-  + " Environment : " + this.cli.clc.magenta(this.environment)
-  + " Debug :" + this.cli.clc.magenta(this.debug)
-  + "\n";
+  let txt = this.cli.clc.blue("      \x1b NODEFONY " + this.type );
+  txt += " Cluster : " + this.cli.clc.magenta(this.typeCluster ) ;
+  txt += " Cluster : " + this.cli.clc.magenta(this.typeCluster );
+  txt += " Environment : " + this.cli.clc.magenta(this.environment);
+  txt += " Debug :" + this.cli.clc.magenta(this.debug) + "\n";
+  return  txt ; 
 }
 
 readKernelConfig(){
