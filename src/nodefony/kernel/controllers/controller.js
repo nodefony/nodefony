@@ -16,6 +16,7 @@ module.exports = nodefony.register("controller", function(){
       this.serviceTemplating = this.get('templating') ;
       this.httpKernel = this.get("httpKernel") ;
       this.router = this.get("router");
+      this.method = this.getMethod();
     }
 
     getRequest (){

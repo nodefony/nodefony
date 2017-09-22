@@ -73,7 +73,7 @@ nodefony.register.call(nodefony.context, "http", function(){
       this.once( this, "onRequest" , this.handle );
       this.once(this, "onResponse", this.send);
       this.once( this, "onTimeout" , () => {
-        let error = new Error("");
+        let error = new Error();
         error.code = 408 ;
         this.fire("onError", this.container, error );
       } );

@@ -39,7 +39,6 @@ nodefony.register.call(nodefony.context, "websocket", function(){
       this.request.method = "WEBSOCKET";
       this.remoteAddress = this.request.remoteAddress ;
       this.origin = request.origin;
-      //TODO acceptProtocol header sec-websocket-protocol
       this.connection = request.accept(this.acceptedProtocol, this.origin);
       this.response = new nodefony.wsResponse( this.connection ,container , type);
 
@@ -328,6 +327,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
           myData = data ;
         }
         this.fire("onMessage", myData, this, "SEND") ;
+        this.fire("onSend", this.response, this);
         return this.response.send(myData, type );
       }
       return null ;

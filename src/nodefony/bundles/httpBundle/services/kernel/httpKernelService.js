@@ -278,7 +278,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
       if ( error ){
           switch ( nodefony.typeOf(error) ){
               case "object" :
-              myError = new Error("");
+              myError = new Error();
               myError.message = error ;
               if (  error.status ) {
                   myError.code = error.status ;
@@ -296,7 +296,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
               }
               break;
               default:
-              myError = new Error("");
+              myError = new Error();
               myError.message = error ;
               myError.code = context.response.getStatusCode() ;
           }
@@ -505,7 +505,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
             if (resolver.resolve) {
                 context.resolver = resolver ;
             }else{
-                let error = new Error("");
+                let error = new Error();
                 error.code = 404;
                 throw error ;
             }

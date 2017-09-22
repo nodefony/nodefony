@@ -7,7 +7,6 @@ const bundleName = path.basename( path.resolve( __dirname, "..", "..", "..") );
 const commonConfig = require("./webpack.common.js");
 
 module.exports = webpackMerge( {
-    watch       : false,
     devtool     : "source-map",
     plugins     : []
 }, commonConfig );

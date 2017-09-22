@@ -6,10 +6,12 @@ const ele = class ele {
     this.name = name;
   }
 
-  toString(){
-    return this.name + " !!!";
+  toJson(){
+    return {
+        name:this.name
+    };
   }
 };
 
-  return new ele("cci3") ;
-};
+return new ele("lib6") ;
+}();

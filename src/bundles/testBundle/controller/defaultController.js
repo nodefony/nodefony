@@ -35,6 +35,7 @@
 *    knowledge of the CeCILL-B license and that you accept its terms.
 *
 */
+const lib = require("./lib.js");
 
 
 
@@ -74,6 +75,11 @@ module.exports = nodefony.registerController("default", function(){
 			}catch(e){
 				return this.forward("frameworkBundle:default:system",{view: "testBundle::index.html.twig",bundle:this.getParameters("bundles.test")});
 			}
+		}
+
+		watcherAction (){
+			console.log(lib.toJson())
+			return this.renderJson(lib.toJson());
 		}
 
 		/**

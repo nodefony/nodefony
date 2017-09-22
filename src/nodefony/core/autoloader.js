@@ -13,7 +13,7 @@ module.exports = function(){
   context.exports = exports ;
   context.__dirname = __dirname ;
   context.__filename = __filename ;
-  
+
   context.path = require("path");
   context.fs = require("fs");
   context.yaml = require("js-yaml");
@@ -153,9 +153,14 @@ module.exports = function(){
         if (cachedModule && ! force ) {
           return cachedModule.exports;
         }
+        if (cachedModule && force){
+            delete Module._cache[filename];
+        }
         let myModule = new Module(filename, module ) ;
         Module._cache[filename] = myModule;
+
         myModule.load(filename);
+
         //this.logger("Autoload file : "+filename, "DEBUG")
         return myModule.exports ;
       }catch(e){

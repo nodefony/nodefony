@@ -401,7 +401,7 @@ module.exports = nodefony.registerService("firewall", function(){
         }
         if (  context.security ){
           context.sessionAutoStart = "firewall" ;
-          this.sessionService.start(context, context.security.sessionContext).then( ( session ) => {
+          return this.sessionService.start(context, context.security.sessionContext).then( ( session ) => {
             if ( ! ( session instanceof nodefony.Session ) ){
               throw new Error("SESSION START session storage ERROR");
             }
@@ -425,7 +425,7 @@ module.exports = nodefony.registerService("firewall", function(){
         }else{
           try {
             if ( context.sessionAutoStart === "autostart" ){
-              this.sessionService.start(context, "default").then( ( session) => {
+              return this.sessionService.start(context, "default").then( ( session) => {
                 if ( ! ( session instanceof nodefony.Session ) ){
                   throw new Error("SESSION START session storage ERROR");
                 }
@@ -439,7 +439,7 @@ module.exports = nodefony.registerService("firewall", function(){
               });
             }else{
               if (context.cookieSession){
-                this.sessionService.start(context, null).then( ( session) => {
+                return this.sessionService.start(context, null).then( ( session) => {
                   if ( ! ( session instanceof nodefony.Session ) ){
                     throw new Error("SESSION START session storage ERROR");
                   }
@@ -480,7 +480,7 @@ module.exports = nodefony.registerService("firewall", function(){
       }
       if (  context.security ){
         context.sessionAutoStart = "firewall" ;
-        this.sessionService.start(context, context.security.sessionContext).then( ( session ) => {
+        return this.sessionService.start(context, context.security.sessionContext).then( ( session ) => {
           if ( ! ( session instanceof nodefony.Session ) ){
             throw new Error("SESSION START session storage ERROR");
           }
@@ -497,7 +497,7 @@ module.exports = nodefony.registerService("firewall", function(){
       }else{
         try {
           if ( context.sessionAutoStart === "autostart" ){
-            this.sessionService.start(context, "default").then( ( session ) => {
+            return this.sessionService.start(context, "default").then( ( session ) => {
               //this.logger("AUTOSTART SESSION NO SECURE AREA","DEBUG");
               if ( ! ( session instanceof nodefony.Session ) ){
                 throw new Error("SESSION START session storage ERROR");
@@ -515,7 +515,7 @@ module.exports = nodefony.registerService("firewall", function(){
             });
           }else{
             if (context.cookieSession){
-              this.sessionService.start(context, null).then( ( session) => {
+              return this.sessionService.start(context, null).then( ( session) => {
                 if ( ! ( session instanceof nodefony.Session ) ){
                   throw new Error("SESSION START session storage ERROR");
                 }

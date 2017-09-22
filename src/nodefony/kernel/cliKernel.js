@@ -481,7 +481,7 @@ module.exports = nodefony.register("cliKernel", function(){
 		let cmd = null ;
 		try {
 			this.logger("Run Spawn : " + command + " "+ args.join(" ") );
-			cmd = spawn(command , args, options);
+			cmd = spawn(command , args, options || {});
 
 			cmd.stdout.on('data', (data) => {
 				let str = data.toString() ;
@@ -697,7 +697,7 @@ module.exports = nodefony.register("cliKernel", function(){
 		}
 		return str;
 	}
-	
+
 	listenRejection (){
 		process.on('rejectionHandled', (promise) => {
 			this.logger("PROMISE REJECTION EVENT ", "CRITIC");

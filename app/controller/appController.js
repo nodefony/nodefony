@@ -1,5 +1,3 @@
-//const lib = require("./lib.js")();
-
 module.exports = nodefony.registerController("app", function(){
 
     /**
@@ -14,6 +12,7 @@ module.exports = nodefony.registerController("app", function(){
 
       constructor (container, context){
         super(container, context);
+        
       }
 
       /**

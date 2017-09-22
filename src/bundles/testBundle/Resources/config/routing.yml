@@ -16,6 +16,10 @@ test-rest:
   pattern:  /rest
   defaults: {"controller": "testBundle:default:rest"}
 
+test-watcher:
+    pattern:  /test/watcher
+    defaults: {"controller": "testBundle:default:watcher"}
+
 ### WEBSOCKET ###
 test-websoket:
   pattern:  /websoket

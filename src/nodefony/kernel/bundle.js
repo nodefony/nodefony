@@ -31,6 +31,82 @@ module.exports = nodefony.register("Bundle", function(){
         return false;
     };
 
+
+    const recObj = class recObj {
+            constructor(container){
+                this.container = container || {};
+                this.checked = {};
+            }
+            isChecked(ele){
+                if (ele in this.checked){
+                    return true ;
+                }
+                return false;
+            }
+            setChecked(ele){
+                this.checked[ele] = true ;
+            }
+            set(ele, val){
+                return this.container[ele] = val ;
+            }
+            get(ele){
+                return this.container[ele] ;
+            }
+            length(){
+                return Object.keys(this.container).length ;
+            }
+    };
+    const recursiveFindRequire = function(files, reg, Path, obj){
+        if ( ! obj ){
+            obj = new recObj();
+        }
+        files.forEach((ele) => {
+            //this.logger('Search Require in  :' + ele.name );
+            if ( ele.type === "Directory" ){
+                return ;
+            }
+            let parse = null;
+            if (typeof Path === "string"){
+                parse = path.parse(Path);
+            }else{
+                parse = Path;
+            }
+            ele.matchName(reg);
+            let regRequire = new RegExp("require\\(\\s*[\"'][./]*/"+parse.base+"[\"']\\s*\\)");
+            if (ele.match){
+                // case controller
+                if( ele.content().match( new RegExp(regRequire) ) ){
+                    if (  obj.get( ele.match[1] ) ){
+                        return;
+                    }
+                    obj.set( ele.match[1] , {
+                        name:ele.match[1],
+                        path:ele.path,
+                    });
+                }
+                return;
+            }else{
+                //simple file
+                let newParse = path.parse(ele.path) ;
+                if ( parse.base !== newParse.base ){
+                    obj.setChecked( ele.path) ;
+                    return ;
+                }
+                if (  ! obj.isChecked(ele.path) ){
+                    this.loadFile( ele.path , true);
+                    this.logger("loadFile :" + ele.name);
+                    if( ele.content().match( new RegExp(regRequire) ) ){
+                        obj.setChecked( ele.path) ;
+                        return recursiveFindRequire.call(this, files, reg, newParse, obj );
+                    }
+                    return;
+                }
+                return;
+            }
+        });
+        return obj;
+    };
+
     const defaultWatcher = function ( reg /*, settings*/){
         return {
             ignoreInitial: true,
@@ -456,45 +532,44 @@ module.exports = nodefony.register("Bundle", function(){
         reloadWatcherControleur ( name, Path){
             try {
               if (name === null ){
-                let tab = [];
-                this.controllerFiles.forEach((ele)=> {
-                  ele.matchName(regController);
-                    if (ele.match){
-                      let parse = path.parse(Path);
-                      let reg = "require\(.*"+parse.base+"\)";
-                      //console.log( ele.content().match(new RegExp(reg) ) );
-                      if(ele.content().match( new RegExp(reg) ) ){
-                        //console.log( ele.match[1]);
-                        tab.push({
-                          name:ele.match[1],
-                          Path:ele.path
-                        });
-                        //console.log(tab);
-                      }
-                    return ;
-                  }
-                  return ;
-                });
+                let res = recursiveFindRequire.call(this, this.controllerFiles, regController, Path);
+                //console.log(res);
+                //console.log( res.length() ) ;
+                console.log(res.checked);
+                if( res.length() ){
+                    for (let control in res.container){
+                        this.reloadController ( res.container[control].name, res.container[control].path);
+                    }
+                    for (let file in res.checked){
+                        this.loadFile( file, true);
+                    }
+                }
               }else{
-                if ( this.controllers[name] ){
-                    delete this.controllers[name] ;
-                    this.controllers[name] = null ;
-                }
-                let Class = this.loadFile( Path, true);
-                if (typeof Class === "function" ){
-                    Class.prototype.name = name;
-                    Class.prototype.bundle = this;
-                    this.controllers[name] = Class ;
-                }else{
-                    throw new Error("Register Controller : "+name +"  error Controller closure bad format ");
-                }
+                this.reloadController(name, Path);
               }
             }catch(e){
                 throw e ;
             }
         }
 
-        reloadController ( nameC ){
+        reloadController(name, Path){
+            if ( this.controllers[name] ){
+                delete this.controllers[name] ;
+                this.controllers[name] = null ;
+            }
+            let Class = this.loadFile( Path, true);
+            this.logger("Reload Controller : " + name);
+            if (typeof Class === "function" ){
+                Class.prototype.name = name;
+                Class.prototype.bundle = this;
+                this.controllers[name] = Class ;
+            }else{
+                throw new Error("Reload Controller : "+name +"  error Controller closure bad format ");
+            }
+            return Class ;
+        }
+
+        reloadControllers ( nameC ){
             if ( ! nameC ) { return ; }
             let controller = this.finder.result.findByNode("controller");
             try {
