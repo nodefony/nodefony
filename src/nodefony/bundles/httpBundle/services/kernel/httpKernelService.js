@@ -19,9 +19,9 @@ module.exports = nodefony.registerService("httpKernel", function(){
       this.httpsPort = this.kernel.httpsPort;
       this.container.addScope("request");
       this.container.addScope("subRequest");
-      this.listen(this, "onServerRequest" , (request, response, type, domain) => {
+      this.listen(this, "onServerRequest" , (request, response, type) => {
         try {
-          this.handle(request, response, type, domain);
+          this.handle(request, response, type);
         }catch(e){
           throw e ;
         }
@@ -46,10 +46,6 @@ module.exports = nodefony.registerService("httpKernel", function(){
         this.translation = this.get("translation");
         this.cdn = this.setCDN();
       });
-
-      /*this.listen(this, "onReady", () => {
-        console.log(this.cdn);
-      });*/
 
       this.listen(this, "onClientError", (e, socket) => {
         this.logger(e, "WARNING", "SOCKET CLIENT ERROR");
@@ -130,7 +126,6 @@ module.exports = nodefony.registerService("httpKernel", function(){
           return false  ;
         }
       }
-
       //console.log( "prototcol ::::" + URL.protocol )
       if ( ! portOrigin ){
         if (URL.protocol === "http:" ){
@@ -275,38 +270,59 @@ module.exports = nodefony.registerService("httpKernel", function(){
     onError (container, error){
       let myError = null ;
       let context = container.get('context');
-      if ( error ){
-          switch ( nodefony.typeOf(error) ){
-              case "object" :
-              myError = new Error();
-              myError.message = error ;
-              if (  error.status ) {
-                  myError.code = error.status ;
-              }else{
-                  myError.code = context.response.getStatusCode() ;
-              }
-              break;
-              case "string" :
-              error = new Error(error);
-              error.code = context.response.getStatusCode() ;
-              break;
-              case "Error" :
-              if ( ! error.code ){
-                  error.code = context.response.getStatusCode() ;
-              }
-              break;
-              default:
-              myError = new Error();
-              myError.message = error ;
-              myError.code = context.response.getStatusCode() ;
-          }
-      }else{
-          error = new Error("");
-          error.code = context.response.getStatusCode() || 500;
+      if ( ! context ){
+        this.logger(error,'ERROR');
       }
-
-      if ( (! context ) ||  ( ! context.response ) ){
-         return   ;
+      if ( error ){
+        switch ( nodefony.typeOf(error) ){
+            case "object" :
+            myError = new Error();
+            myError.message = error ;
+            if (  error.status ) {
+                myError.code = error.status ;
+            }else{
+                if ( context.response ){
+                  myError.code = context.response.getStatusCode() ;
+                }else{
+                  myError.code = (context.method === "WEBSOCKET") ? 1006 : 500 ;
+                }
+            }
+            break;
+            case "string" :
+            error = new Error(error);
+            if ( context.response ){
+              error.code = context.response.getStatusCode() ;
+            }else{
+              error.code = (context.method === "WEBSOCKET") ? 1006 : 500 ;
+            }
+            break;
+            case "Error" :
+            if ( ! error.code ){
+              if ( context.response ){
+                error.code = context.response.getStatusCode() ;
+              }else{
+                if ( ! error.code ){
+                  error.code  = (context.method === "WEBSOCKET") ? 1006 : 500 ;
+                }
+              }
+            }
+            break;
+            default:
+            myError = new Error();
+            myError.message = error ;
+            if ( context.response ){
+              myError.code = context.response.getStatusCode() ;
+            }else{
+              myError.code = (context.method === "WEBSOCKET") ? 1006 : 500 ;
+            }
+        }
+      }else{
+          error = new Error();
+          if ( context.response ){
+            error.code = context.response.getStatusCode() ;
+          }else{
+            error.code = (context.method === "WEBSOCKET") ? 1006 : 500 ;
+          }
       }
       let resolver= null ;
       switch (error.code){
@@ -325,7 +341,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
         default:
           resolver = this.router.resolveName(context, "frameworkBundle:default:exceptions");
           if (error.code < 400 ){
-            error.code = 500 ;
+            error.code = (context.method === "WEBSOCKET") ? 1006 : 500 ;
           }
       }
 
@@ -350,10 +366,28 @@ module.exports = nodefony.registerService("httpKernel", function(){
               this.logger(e, "WARNING");
           }
       }
-      let st = context.response.setStatusCode(exception.code || 500, exception.message ) ;
-      exception.code = st.code ;
-      exception.message = st.message ;
+      if (context.response ){
+        let st = context.response.setStatusCode(exception.code || 500, exception.message ) ;
+        exception.code = st.code ;
+        exception.message = st.message ;
+      }else{
+        this.logger(exception, "ERROR", context.method);
+        if ( context.method === "WEBSOCKET"){
+          // hanshake error ;
+          context.connect( context.acceptedProtocol );
+          setTimeout (() =>{
+              context.drop(exception.code, exception.message);
+          }, ( context.type === "WEBSOCKET" ? this.closeTimeOutWs.WS : this.closeTimeOutWs.WSS ) );
+          //context.drop(exception.code, exception.message);
+          //context.request.reject(exception.code, exception.message);
+          //context.fire("onClose", exception.code, exception.message);
+          return ;
+        }
+        context.fire("onFinish", context, exception.code, exception.message);
+        return   ;
+      }
       this.logger(exception, "ERROR", context.method);
+
       try {
           resolver.callController( exception );
           if (context.method === "WEBSOCKET" ){
@@ -385,17 +419,17 @@ module.exports = nodefony.registerService("httpKernel", function(){
       }
     }
 
-    handle (request, response, type, domain){
+    handle (request, response, type){
       // SCOPE REQUEST ;
       let container = this.container.enterScope("request");
-      if ( domain ) { domain.container = container ; }
+      //if ( domain ) { domain.container = container ; }
       switch (type){
         case "HTTP" :
         case "HTTPS" :
-          return this.handleHttp(container, request, response, type, domain);
+          return this.handleHttp(container, request, response, type);
         case "WEBSOCKET" :
         case "WEBSOCKET SECURE" :
-          return this.handleWebsocket(container, request, response, type, domain);
+          return this.handleWebsocket(container, request, type);
       }
     }
 
@@ -407,7 +441,6 @@ module.exports = nodefony.registerService("httpKernel", function(){
         let next = null ;
         //response events
         context.response.response.on("finish",() => {
-            //console.log("FINISH")
             context.fire("onFinish", context);
             this.container.leaveScope(container);
             context.clean();
@@ -475,8 +508,8 @@ module.exports = nodefony.registerService("httpKernel", function(){
       this.fire("onServerRequest", request, null, type);
     }
 
-    handleWebsocket (container, request, response, type){
-        let context = new nodefony.context.websocket(container, request, response, type);
+    handleWebsocket (container, request, type){
+        let context = new nodefony.context.websocket(container, request, type);
         container.set("context", context);
         context.listen(this, "onError", this.onError);
         let resolver = null ;
@@ -487,7 +520,6 @@ module.exports = nodefony.registerService("httpKernel", function(){
             context.clean();
             context = null ;
             request = null ;
-            response = null ;
             container = null ;
             type = null ;
             next = null ;
@@ -495,16 +527,18 @@ module.exports = nodefony.registerService("httpKernel", function(){
         });
 
         try {
-            // DOMAIN VALID
-            next = this.checkValidDomain(context) ;
-            if ( next !== 200){
-                return ;
-            }
             // FRONT ROUTER
             resolver  = this.router.resolve(context);
             if (resolver.resolve) {
                 context.resolver = resolver ;
+                context.connect(resolver.acceptedProtocol);
+                // DOMAIN VALID
+                next = this.checkValidDomain(context) ;
+                if ( next !== 200){
+                    return ;
+                }
             }else{
+                context.connect(resolver.acceptedProtocol);
                 let error = new Error();
                 error.code = 404;
                 throw error ;
@@ -533,25 +567,6 @@ module.exports = nodefony.registerService("httpKernel", function(){
         }catch(e){
             return context.fire("onError", container, e );
         }
-    }
-
-    onErrorWebsoket (container, error){
-      let myError = null ;
-      if ( ! error ){
-        error = {status:500,
-          message:"nodefony undefined error "
-        };
-      }else{
-        if ( error.stack ){
-          myError =  error.stack;
-          this.logger(myError);
-          myError = myError.split('\n').map(function(v){ return ' -- ' + v +"</br>"; }).join('');
-
-        }else{
-          myError =  error;
-          this.logger(util.inspect(error));
-        }
-      }
     }
 
     setCDN(){

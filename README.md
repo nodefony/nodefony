@@ -18,7 +18,7 @@ Nodefony features :
 - HMR hot module Replacement  (auto-reload controller views routing in developement mode)
 - Notion of real-time context in Action Controller (websocket).
 - Notion of synchronous or asynchronous execution in Action Controller (Promise).
-- Services containers (Design Patterns)
+- Services Containers, Dependency Injection (Design Patterns)
 - Sessions Manager (ORM, memcached)
 - Authentication Manager (Digest, Basic, oAuth, Local, ldap)
 - Firewall ( Application Level )
@@ -27,6 +27,7 @@ Nodefony features :
 - RealTime API (Bayeux Protocol)
 - Translations
 - CLI (Command Line Interface)
+- Monitororing , Debug Bar 
 - Unit Test Api in framework context ([MOCHA](https://mochajs.org/))
 
 Nodefony assimilates into the ecosystem of node.js with services like :

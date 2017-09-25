@@ -216,11 +216,10 @@ module.exports = nodefony.register("Route", function(){
 				if ( this.host === context.domain){
 					return true;
 				}
-				throw {
-					type		: "domain",
-					message		: "Domain "+ context.domain +" Unauthorized",
-					status		: 401
-				};
+				let error = new Error("Domain "+ context.domain +" Unauthorized");
+				error.code = 401 ;
+				error.type = "domain";
+				throw error ;
 			}
 			return true ;
 		}
@@ -234,21 +233,19 @@ module.exports = nodefony.register("Route", function(){
 							case "string" :
 							let req = this.requirements[i].replace(/\s/g,"").toUpperCase();
 							if (req.split(",").lastIndexOf(context.method) < 0){
-								throw {
-									type: "method",
-									message:	"Method "+ context.method +" Unauthorized",
-									status:		401
-								};
+								let error = new Error("Method "+ context.method +" Unauthorized");
+								error.code = 401 ;
+								error.type = "method";
+								throw error ;
 							}
 							break ;
 							case "object" :
 							if (  this.requirements[i].indexOf(context.method) < 0 ){
 								if ( this.requirements[i].indexOf( context.method.toLowerCase() ) < 0  ){
-									throw {
-										type: "method",
-										message:	"Method "+ context.method +" Unauthorized",
-										status:		401
-									};
+									let error = new Error("Method "+ context.method +" Unauthorized");
+									error.code = 401 ;
+									error.type = "method";
+									throw error ;
 								}
 							}
 							break;
@@ -258,12 +255,24 @@ module.exports = nodefony.register("Route", function(){
 						break;
 						case "domain":
 						if (context.domain !== this.requirements[i]){
-							throw {
-								type		: "domain",
-								message		: "Domain "+ context.domain +" Unauthorized",
-								status		: 401
-							};
+							let error = new Error("Domain "+ context.domain +" Unauthorized");
+							error.code = 401 ;
+							error.type = "domain";
+							throw error ;
 						}
+						break;
+						case "protocol":
+							switch (context.method){
+								case "WEBSOCKET" :
+									//console.log("this.requirements[i]" +this.requirements[i]);
+									if ( context.acceptedProtocol  !== this.requirements[i] ){
+										let error = new Error("Protocol "+ context.acceptedProtocol +" Unauthorized");
+										error.code = 1002 ;
+										error.type = "protocol";
+										throw error ;
+									}
+								break;
+							}
 						break;
 					}
 				}

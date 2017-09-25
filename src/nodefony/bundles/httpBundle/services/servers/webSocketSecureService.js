@@ -30,10 +30,9 @@ module.exports = nodefony.registerService("websocketSecure", function(){
 				if ( type === "HTTPS"){
 					try {
 						this.settings = this.getParameters("bundles.http").websocketSecure || {} ;
-
-						this.websocketServer =  new WebSocketServer.server(nodefony.extend({}, this.settings, {
-							httpServer: http
-						}));
+						let conf =  nodefony.extend(true , {}, this.settings);
+						conf.httpServer = http ;
+						this.websocketServer =  new WebSocketServer.server(conf);
 
 						this.websocketServer.on('request', (request) => {
 							return this.httpKernel.onWebsocketRequest(request, this.type);

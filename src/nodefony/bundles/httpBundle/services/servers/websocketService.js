@@ -23,11 +23,9 @@ module.exports = nodefony.registerService("websocket", function(){
 				if ( type === "HTTP"){
 					try {
 						this.settings = this.getParameters("bundles.http").websocket || {} ;
-
-						this.websocketServer =  new WebSocketServer.server(nodefony.extend({}, this.settings, {
-							httpServer: http
-						}));
-
+						let conf =  nodefony.extend(true , {}, this.settings);
+						conf.httpServer = http ;
+						this.websocketServer =  new WebSocketServer.server(conf);
 						this.websocketServer.on('request', (request) => {
 							return this.httpKernel.onWebsocketRequest(request, this.type);
 						} );

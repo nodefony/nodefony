@@ -23,11 +23,10 @@ nodefony.register.call(nodefony.context, "websocket", function(){
 
   const websocket = class websocket extends nodefony.Service {
 
-    constructor (container, request, response ,type){
+    constructor (container, request, type){
       super ("WEBSOCKET CONTEXT", container);
       this.type = type ;
       this.protocol = ( type === "WEBSOCKET SECURE" ) ? "wss" : "ws" ;
-      this.acceptedProtocol = null ;
       this.isJson = true ;
       this.kernelHttp = this.get("httpKernel");
       //I18n
@@ -35,12 +34,13 @@ nodefony.register.call(nodefony.context, "websocket", function(){
       this.set("translation", this.translation );
       this.kernelHttp = this.container.get("httpKernel");
       this.request = request ;
+      this.acceptedProtocol = request.httpRequest.headers["sec-websocket-protocol"] || null ;
       this.method = "WEBSOCKET";
       this.request.method = "WEBSOCKET";
       this.remoteAddress = this.request.remoteAddress ;
       this.origin = request.origin;
-      this.connection = request.accept(this.acceptedProtocol, this.origin);
-      this.response = new nodefony.wsResponse( this.connection ,container , type);
+      //this.connection = request.accept(this.acceptedProtocol, this.origin);
+      //this.response = new nodefony.wsResponse( this.connection ,container , type);
 
       this.request.url = url.parse( this.protocol+"://" + this.request.host ) ;
       this.request.url.hash = this.request.resourceURL.hash ;
@@ -82,8 +82,8 @@ nodefony.register.call(nodefony.context, "websocket", function(){
       this.listen(this, "onResponse", this.send);
       this.listen(this, "onRequest", this.handle);
       // LISTEN EVENTS SOCKET
-      this.connection.on('message', this.handleMessage.bind(this) );
-      this.connection.on('close', onClose.bind(this) );
+      //this.connection.on('message', this.handleMessage.bind(this) );
+      //this.connection.on('close', onClose.bind(this) );
       //case proxy
       this.proxy = null ;
       if ( this.request.httpRequest.headers["x-forwarded-for"] ){
@@ -98,6 +98,15 @@ nodefony.register.call(nodefony.context, "websocket", function(){
         this.logger( "PROXY WEBSOCKET REQUEST x-forwarded VIA : " + this.proxy.proxyVia , "DEBUG");
       }
       this.crossDomain = this.isCrossDomain() ;
+    }
+
+    connect(acceptedProtocol){
+      this.connection = this.request.accept(acceptedProtocol || null, this.origin);
+      this.response = new nodefony.wsResponse( this.connection ,this.container , this.type);
+      this.logger("Connection origin : "+ this.originUrl.host +" Protocol : " + acceptedProtocol || "Not Defined" , "DEBUG");
+      // LISTEN EVENTS SOCKET
+      this.connection.on('message', this.handleMessage.bind(this) );
+      this.connection.on('close', onClose.bind(this) );
     }
 
     getCookieSession ( name){
@@ -155,7 +164,9 @@ nodefony.register.call(nodefony.context, "websocket", function(){
     clean (){
       //delete this.request ;
       this.request = null ;
-      this.response.clean();
+      if ( this.response ){
+        this.response.clean();
+      }
       //delete  this.response ;
       this.response = null ;
       //delete   this.notificationsCenter ;

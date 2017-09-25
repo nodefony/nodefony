@@ -28,26 +28,31 @@ describe("BUNDLE TEST", function(){
     };
   });
 
-  describe(' WEBSOCKET', function(){
-    it("404", function(done){
+  describe('CORS WEBSOCKET', function(){
+
+
+    it("protocol", function(done){
       var url =  global.options.urlws ;
       var options = nodefony.extend({}, global.options, {
-        url:url+"/test/unit/websocket"
+        url:url+"/test/unit/websocket/cors"
       });
       var client = new WebSocketClient();
-      client.connect(options.url, null, "nodefony", null, {});
+      client.connect(options.url, 'Sip',"https://localhost:5152" ,null,{});
       client.on('connect', function(connection) {
         assert(connection.connected);
         connection.on("message", (message) => {
           let res = JSON.parse(message.utf8Data) ;
-          assert.deepStrictEqual(res.server , "nodefony");
-          assert.deepStrictEqual(res.code , 404);
-          assert.deepStrictEqual(res.url , options.url);
-          assert.deepStrictEqual(res.message , "Not Found");
+          console.log(res);
+          assert.deepStrictEqual(res.protocol , 'sip');
+          assert.deepStrictEqual(res.origin.host , 'localhost:5152');
+          assert.deepStrictEqual(res.origin.hostname , 'localhost');
+          assert.deepStrictEqual(res.origin.port , '5152');
+          assert.deepStrictEqual(res.origin.protocol , 'https:');
+          connection.close();
         });
         connection.on('close', (reasonCode, description) => {
-          assert.deepStrictEqual(reasonCode , 3404);
-          assert.deepStrictEqual(description , "Not Found");
+          assert.deepStrictEqual(reasonCode , 1000);
+          assert.deepStrictEqual(description , "Normal connection closure");
           done();
         });
       });
@@ -56,32 +61,22 @@ describe("BUNDLE TEST", function(){
       });
     });
 
-    it("bad protocol", function(done){
-      var url =  global.options.urlws ;
-      var options = nodefony.extend({}, global.options, {
-        url:url+"/test/unit/websocket/protocol"
-      });
-      var client = new WebSocketClient();
-      client.connect(options.url, 'telnete',"localhost" ,null,{});
-      client.on('connectFailed', function() {
-        done();
-      });
-    });
     it("protocol", function(done){
       var url =  global.options.urlws ;
       var options = nodefony.extend({}, global.options, {
-        url:url+"/test/unit/websocket/protocol"
+        url:url+"/test/unit/websocket/cors"
       });
       var client = new WebSocketClient();
-      client.connect(options.url, 'telnet',"https://localhost:5152" ,null,{});
+      client.connect(options.url, 'Sip',"https://nodefony.com" ,null,{});
       client.on('connect', function(connection) {
         assert(connection.connected);
         connection.on("message", (message) => {
           let res = JSON.parse(message.utf8Data) ;
-          assert.deepStrictEqual(res.protocol , 'telnet');
-          assert.deepStrictEqual(res.origin.host , 'localhost:5152');
-          assert.deepStrictEqual(res.origin.hostname , 'localhost');
-          assert.deepStrictEqual(res.origin.port , '5152');
+          console.log(res);
+          assert.deepStrictEqual(res.protocol , 'sip');
+          assert.deepStrictEqual(res.origin.host , 'nodefony.com');
+          assert.deepStrictEqual(res.origin.hostname , 'nodefony.com');
+          assert.deepStrictEqual(res.origin.port , 443);
           assert.deepStrictEqual(res.origin.protocol , 'https:');
           connection.close();
         });

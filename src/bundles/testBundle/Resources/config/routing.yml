@@ -34,6 +34,30 @@ test-websoket-404:
       method:
           - WEBSOCKET
 
+test-websoket-protocol:
+  pattern:  /test/unit/websocket/protocol
+  defaults: {"controller": "testBundle:websocket:protocol"}
+  requirements:
+      method:
+          - WEBSOCKET
+      protocol: "telnet"
+
+test-websoket-protocol-sip:
+  pattern:  /test/unit/websocket/protocol
+  defaults: {"controller": "testBundle:websocket:protocolSip"}
+  requirements:
+      method:
+          - WEBSOCKET
+      protocol: "sip"
+
+test-websoket-cors:
+  pattern:  /test/unit/websocket/cors
+  defaults: {"controller": "testBundle:websocket:cors"}
+  requirements:
+      method:
+          - WEBSOCKET
+      protocol: "Sip"
+
 ## UNIT TEST
 myroute:
   pattern:      /myroute

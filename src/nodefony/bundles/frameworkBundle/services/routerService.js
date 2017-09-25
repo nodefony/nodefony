@@ -126,6 +126,7 @@ module.exports = nodefony.registerService("router", function(){
       this.context = context ;//this.get("context") ;
       this.defaultLang= null ;
       this.bypassFirewall = false ;
+      this.acceptedProtocol = null ;
       this.exception = null ;
     }
 
@@ -139,6 +140,9 @@ module.exports = nodefony.registerService("router", function(){
           this.parsePathernController(route.defaults.controller);
           this.bypassFirewall = route.bypassFirewall ;
           this.defaultLang = route.defaultLang ;
+          if (route.requirements.protocol){
+            this.acceptedProtocol = route.requirements.protocol.toLowerCase();
+          }
         }
         return match;
       }catch(e){
@@ -427,7 +431,7 @@ module.exports = nodefony.registerService("router", function(){
             return resolver;
           }
         }catch(e){
-          if (e && e.type && ( e.type === "domain" || e.type === "method" ) ){
+          if (e && e.type && ( e.type === "domain" || e.type === "method" || e.type === "protocol" ) ){
             resolver.exception = e ;
             continue ;
           }

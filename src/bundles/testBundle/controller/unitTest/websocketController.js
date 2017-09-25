@@ -35,6 +35,26 @@ module.exports = nodefony.registerController("websocket", function(){
             throw new Error();
         }
 
+        protocolAction(){
+          //console.log(this.context.request)
+          return this.renderJson({
+            protocol:this.context.acceptedProtocol,
+            origin:this.context.originUrl
+          });
+        }
+        protocolSipAction(){
+          return this.protocolAction();
+        }
+
+        corsAction(){
+          console.log(this.context.isCrossDomain());
+          return this.renderJson({
+            crossDomain:this.context.isCrossDomain(),
+            protocol:this.context.acceptedProtocol,
+            origin:this.context.originUrl
+          });
+        }
+
     };
 
     return websocketController;

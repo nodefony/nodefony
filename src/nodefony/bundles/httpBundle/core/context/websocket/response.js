@@ -19,9 +19,15 @@ nodefony.register("wsResponse",function(){
       this.connection = connection ;
       this.body = "";
       this.statusCode = 1000;
-      this.statusMessage = this.connection.state ;
-      this.config = this.connection.config ;
-      this.webSocketVersion = this.connection.webSocketVersion ;
+      if ( this.connection ){
+        this.statusMessage = this.connection.state ;
+        this.config = this.connection.config ;
+        this.webSocketVersion = this.connection.webSocketVersion ;
+      }else{
+        this.statusMessage = "closed" ;
+        this.config = null ;
+        this.webSocketVersion = null;
+      }
       //cookies
       this.cookies = {};
       this.encoding = this.setEncoding('utf8');

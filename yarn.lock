@@ -2255,6 +2255,12 @@ debug@2, debug@2.6.8, debug@2.x.x, debug@^2.1.2, debug@^2.2.0, debug@^2.4.1, deb
   dependencies:
     ms "2.0.0"
 
+debug@2.6.9:
+  version "2.6.9"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
+  dependencies:
+    ms "2.0.0"
+
 debuglog@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/debuglog/-/debuglog-1.0.1.tgz#aa24ffb9ac3df9a2351837cfb2d279360cd78492"
@@ -5805,7 +5811,7 @@ node-modules-path@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/node-modules-path/-/node-modules-path-1.0.1.tgz#40096b08ce7ad0ea14680863af449c7c75a5d1c8"
 
-node-pre-gyp@^0.6.36, node-pre-gyp@~0.6.37:
+node-pre-gyp@^0.6.36:
   version "0.6.37"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.6.37.tgz#3c872b236b2e266e4140578fe1ee88f693323a05"
   dependencies:
@@ -5820,7 +5826,7 @@ node-pre-gyp@^0.6.36, node-pre-gyp@~0.6.37:
     tar "^2.2.1"
     tar-pack "^3.4.0"
 
-node-pre-gyp@^0.6.38:
+node-pre-gyp@^0.6.38, node-pre-gyp@~0.6.38:
   version "0.6.38"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.6.38.tgz#e92a20f83416415bb4086f6d1fb78b3da73d113d"
   dependencies:
@@ -7648,9 +7654,9 @@ resumer@~0.0.0:
   dependencies:
     through "~2.3.4"
 
-retry-as-promised@^2.0.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/retry-as-promised/-/retry-as-promised-2.3.0.tgz#27bf5ccd999932b31665696825cf3630c27c562d"
+retry-as-promised@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/retry-as-promised/-/retry-as-promised-2.3.1.tgz#f75059183f9730771c09bad1eed57537931cbc9d"
   dependencies:
     bluebird "^3.4.6"
     debug "^2.2.0"
@@ -7845,11 +7851,11 @@ send@0.15.4:
     range-parser "~1.2.0"
     statuses "~1.3.1"
 
-send@0.15.5:
-  version "0.15.5"
-  resolved "https://registry.yarnpkg.com/send/-/send-0.15.5.tgz#32ef6c8d820c9756597c3174b8c9dd51e3319be2"
+send@0.15.6:
+  version "0.15.6"
+  resolved "https://registry.yarnpkg.com/send/-/send-0.15.6.tgz#20f23a9c925b762ab82705fe2f9db252ace47e34"
   dependencies:
-    debug "2.6.8"
+    debug "2.6.9"
     depd "~1.1.1"
     destroy "~1.0.4"
     encodeurl "~1.0.1"
@@ -7867,9 +7873,9 @@ seq-queue@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/seq-queue/-/seq-queue-0.0.5.tgz#d56812e1c017a6e4e7c3e3a37a1da6d78dd3c93e"
 
-sequelize@^4.10.0:
-  version "4.10.0"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.10.0.tgz#23874a2405a14366045a2a785d247c030abec6e9"
+sequelize@^4.10.3:
+  version "4.10.3"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.10.3.tgz#6ae049ac2b190d14e38fcc9e1998be2a188ff0bb"
   dependencies:
     bluebird "^3.4.6"
     cls-bluebird "^2.0.1"
@@ -7881,7 +7887,7 @@ sequelize@^4.10.0:
     lodash "^4.17.1"
     moment "^2.13.0"
     moment-timezone "^0.5.4"
-    retry-as-promised "^2.0.0"
+    retry-as-promised "^2.3.1"
     semver "^5.0.1"
     terraformer-wkt-parser "^1.1.2"
     toposort-class "^1.0.1"
@@ -7910,14 +7916,14 @@ serve-static@1.12.4:
     parseurl "~1.3.1"
     send "0.15.4"
 
-serve-static@^1.12.5:
-  version "1.12.5"
-  resolved "https://registry.yarnpkg.com/serve-static/-/serve-static-1.12.5.tgz#693a54118216f0310105c7180e5fdd6a50f654a5"
+serve-static@^1.12.6:
+  version "1.12.6"
+  resolved "https://registry.yarnpkg.com/serve-static/-/serve-static-1.12.6.tgz#b973773f63449934da54e5beba5e31d9f4211577"
   dependencies:
     encodeurl "~1.0.1"
     escape-html "~1.0.3"
     parseurl "~1.3.2"
-    send "0.15.5"
+    send "0.15.6"
 
 set-blocking@^2.0.0, set-blocking@~2.0.0:
   version "2.0.0"
@@ -8198,12 +8204,12 @@ sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
 
-sqlite3@^3.1.11:
-  version "3.1.11"
-  resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-3.1.11.tgz#84421b181b3e9f4939b7a3d712263d7946cfc96d"
+sqlite3@^3.1.12:
+  version "3.1.12"
+  resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-3.1.12.tgz#2b3a14b17162e39e8aa6e1e2487a41d0795396d8"
   dependencies:
     nan "~2.7.0"
-    node-pre-gyp "~0.6.37"
+    node-pre-gyp "~0.6.38"
 
 sqlstring@^2.2.0:
   version "2.2.0"
@@ -8803,9 +8809,9 @@ uglify-es@^3.0.10:
     commander "~2.11.0"
     source-map "~0.5.1"
 
-uglify-es@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.1.1.tgz#27615a1203cd0b351d8b5bda743ac92ed482b826"
+uglify-es@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.1.2.tgz#b22cfca950f0632092aff42bb46979d83b5ec6f5"
   dependencies:
     commander "~2.11.0"
     source-map "~0.5.1"
