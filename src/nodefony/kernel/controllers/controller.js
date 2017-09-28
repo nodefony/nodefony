@@ -434,18 +434,21 @@ module.exports = nodefony.register("controller", function(){
     }
 
     createNotFoundException (message){
-      this.response.setStatusCode(404) ;
-      this.fire("onError", this.container, message );
+        let error = new Error(message);
+        error.code = 404 ;
+        this.fire("onError", this.container, error );
     }
 
     createUnauthorizedException (message){
-      this.response.setStatusCode(401) ;
-      this.fire("onError", this.container, message );
+        let error = new Error(message);
+        error.code = 401 ;
+        this.fire("onError", this.container, error );
     }
 
     createException (message){
-      this.response.setStatusCode(500) ;
-      this.fire("onError", this.container, message );
+        let error = new Error(message);
+        error.code = 500 ;
+        this.fire("onError", this.container, error );
     }
 
     redirect (url ,status, headers){

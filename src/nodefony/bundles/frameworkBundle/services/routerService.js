@@ -431,11 +431,11 @@ module.exports = nodefony.registerService("router", function(){
             return resolver;
           }
         }catch(e){
-          if (e && e.type && ( e.type === "domain" || e.type === "method" || e.type === "protocol" ) ){
+          //if (e && e.type && ( e.type === "domain" || e.type === "method" || e.type === "protocol" ) ){
             resolver.exception = e ;
             continue ;
-          }
-          throw e ;
+          //}
+          //throw e ;
         }
       }
       if (resolver.exception ){

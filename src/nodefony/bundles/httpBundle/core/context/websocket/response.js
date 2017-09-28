@@ -127,9 +127,6 @@ nodefony.register("wsResponse",function(){
             message =  http.STATUS_CODES[this.statusCode];
           }
       }
-      if( status < 1000 ){
-        this.statusCode = status + 3000 ;
-      }
       this.statusMessage = message || null  ;
       return {
         code : this.statusCode ,

@@ -21,18 +21,20 @@ module.exports = nodefony.registerController("websocket", function(){
         *  Routing
         *
         */
-        ["401Action"](message){
-            if (message){
-                // LOG  MESSAGE CLIENT IN TERMINAL
-                this.logger( message.utf8Data , "INFO");
-            }else{
-                return this.createUnauthorizedException();
+        websocketAction(code){
+            switch (code){
+                case "404" :
+                    return this.createNotFoundException() ;
+                case "403" :
+                    this.response.setStatusCode(403) ;
+                    throw new Error();
+                case "401" :
+                    return this.createUnauthorizedException();
+                case "500" :
+                    throw new Error("My Error");
+                default:
+                    return this.createNotFoundException() ;
             }
-        }
-
-        ["403Action"](){
-            this.response.setStatusCode(403) ;
-            throw new Error();
         }
 
         protocolAction(){

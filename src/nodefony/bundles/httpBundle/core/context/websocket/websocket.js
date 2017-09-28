@@ -296,6 +296,7 @@ nodefony.register.call(nodefony.context, "websocket", function(){
     }
 
     handle (data){
+      this.connect(this.resolver.acceptedProtocol)
       try {
         this.translation.handle( );
         if ( ! this.resolver ){

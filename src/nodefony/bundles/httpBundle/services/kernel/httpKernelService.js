@@ -250,7 +250,11 @@ module.exports = nodefony.registerService("httpKernel", function(){
         case 200 :
           return next ;
         default:
-          switch ( context.type ){
+            this.logger("\x1b[31m  DOMAIN Unauthorized \x1b[0mREQUEST DOMAIN : " + context.domain ,"ERROR");
+            let error = new Error("Domain : "+context.domain+" Unauthorized ");
+            error.code = next ;
+            throw error ;
+          /*switch ( context.type ){
             case "HTTP":
             case "HTTPS":
               this.logger("\x1b[31m  DOMAIN Unauthorized \x1b[0mREQUEST DOMAIN : " + context.domain ,"ERROR");
@@ -261,8 +265,7 @@ module.exports = nodefony.registerService("httpKernel", function(){
             case "WEBSOCKET SECURE":
               context.close(3001, "DOMAIN Unauthorized "+ context.domain );
             break;
-          }
-        break;
+        }*/
       }
       return next ;
     }
@@ -299,7 +302,12 @@ module.exports = nodefony.registerService("httpKernel", function(){
             case "Error" :
             if ( ! error.code ){
               if ( context.response ){
-                error.code = context.response.getStatusCode() ;
+                   let er = context.response.getStatusCode() ;
+                   if (er === 1000 || er === 200){
+                       error.code =  500 ;
+                   }else{
+                       error.code = er ;
+                   }
               }else{
                 if ( ! error.code ){
                   error.code  = (context.method === "WEBSOCKET") ? 1006 : 500 ;
@@ -317,15 +325,17 @@ module.exports = nodefony.registerService("httpKernel", function(){
             }
         }
       }else{
-          error = new Error();
+          myError = new Error();
+          myError.message = error ;
           if ( context.response ){
-            error.code = context.response.getStatusCode() ;
+            myError.code = context.response.getStatusCode() ;
           }else{
-            error.code = (context.method === "WEBSOCKET") ? 1006 : 500 ;
+            myError.code = (context.method === "WEBSOCKET") ? 1006 : 500 ;
           }
       }
+      let exception = myError || error ;
       let resolver= null ;
-      switch (error.code){
+      switch (exception.code){
         case 404:
           resolver = this.router.resolveName(context, "frameworkBundle:default:404");
         break;
@@ -340,17 +350,16 @@ module.exports = nodefony.registerService("httpKernel", function(){
         break;
         default:
           resolver = this.router.resolveName(context, "frameworkBundle:default:exceptions");
-          if (error.code < 400 ){
-            error.code = (context.method === "WEBSOCKET") ? 1006 : 500 ;
+          if (exception.code < 400 ){
+            exception.code = (context.method === "WEBSOCKET") ? 1006 : 500 ;
           }
       }
 
-      if (error.xjson){
+      if (exception.xjson){
         if ( context.setXjson ){
-          context.setXjson(error.xjson);
+          context.setXjson(exception.xjson);
         }
       }
-      let exception = myError || error ;
       exception.bundle = container.get("bundle") ? container.get("bundle").name : "" ;
       exception.controller =  container.get("controller") ? container.get("controller").name : "" ;
       exception.url = context.url || "" ;
@@ -367,33 +376,35 @@ module.exports = nodefony.registerService("httpKernel", function(){
           }
       }
       if (context.response ){
-        let st = context.response.setStatusCode(exception.code || 500, exception.message ) ;
+        let st = context.response.setStatusCode(exception.code , exception.message ) ;
         exception.code = st.code ;
         exception.message = st.message ;
       }else{
         this.logger(exception, "ERROR", context.method);
         if ( context.method === "WEBSOCKET"){
           // hanshake error ;
-          context.connect( context.acceptedProtocol );
-          setTimeout (() =>{
-              context.drop(exception.code, exception.message);
-          }, ( context.type === "WEBSOCKET" ? this.closeTimeOutWs.WS : this.closeTimeOutWs.WSS ) );
-          //context.drop(exception.code, exception.message);
-          //context.request.reject(exception.code, exception.message);
-          //context.fire("onClose", exception.code, exception.message);
+          context.request.reject(exception.code, exception.message);
+          context.fire("onClose", exception.code, exception.message);
           return ;
         }
         context.fire("onFinish", context, exception.code, exception.message);
-        return   ;
+        return ;
       }
       this.logger(exception, "ERROR", context.method);
 
       try {
           resolver.callController( exception );
           if (context.method === "WEBSOCKET" ){
-              setTimeout (() =>{
+              if ( exception.code < 3000 ){
+                  exception.code +=3000 ;
+              }
+              context.close(exception.code, exception.message);
+              /*setTimeout (() =>{
+                  if ( exception.code < 3000 ){
+                      exception.code +=3000 ;
+                  }
                   context.drop(exception.code, exception.message);
-              }, ( context.type === "WEBSOCKET" ? this.closeTimeOutWs.WS : this.closeTimeOutWs.WSS ) );
+              }, ( context.type === "WEBSOCKET" ? this.closeTimeOutWs.WS : this.closeTimeOutWs.WSS ) );*/
           }
       }catch(e){
           this.logger(e, "ERROR", context.method);
@@ -531,15 +542,13 @@ module.exports = nodefony.registerService("httpKernel", function(){
             resolver  = this.router.resolve(context);
             if (resolver.resolve) {
                 context.resolver = resolver ;
-                context.connect(resolver.acceptedProtocol);
                 // DOMAIN VALID
                 next = this.checkValidDomain(context) ;
                 if ( next !== 200){
                     return ;
                 }
             }else{
-                context.connect(resolver.acceptedProtocol);
-                let error = new Error();
+                let error = new Error("Not Found");
                 error.code = 404;
                 throw error ;
             }

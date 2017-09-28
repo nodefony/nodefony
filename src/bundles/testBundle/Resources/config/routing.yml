@@ -27,15 +27,16 @@ test-websoket:
   requirements:
     method:
       - WEBSOCKET
-test-websoket-404:
-  pattern:  /test/websocket
-  defaults: {"controller": "testBundle:default:websoket"}
+test-websoket-code:
+  pattern:  /test/unit/websocket/{code}
+  defaults: {"controller": "testBundle:websocket:websocket"}
   requirements:
+      code:       "^\\d{3}$"
       method:
           - WEBSOCKET
 
 test-websoket-protocol:
-  pattern:  /test/unit/websocket/protocol
+  pattern:  /test/unit/websocket/protocol/telnet
   defaults: {"controller": "testBundle:websocket:protocol"}
   requirements:
       method:
@@ -43,7 +44,7 @@ test-websoket-protocol:
       protocol: "telnet"
 
 test-websoket-protocol-sip:
-  pattern:  /test/unit/websocket/protocol
+  pattern:  /test/unit/websocket/protocol/sip
   defaults: {"controller": "testBundle:websocket:protocolSip"}
   requirements:
       method:
