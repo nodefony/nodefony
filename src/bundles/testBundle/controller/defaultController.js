@@ -38,7 +38,6 @@
 const lib = require("./lib.js");
 
 
-
 module.exports = nodefony.registerController("default", function(){
 
 	/**
