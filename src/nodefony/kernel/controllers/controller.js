@@ -1,298 +1,303 @@
-
-module.exports = nodefony.register("controller", function(){
+module.exports = nodefony.register("controller", function() {
 
   const Controller = class Controller extends nodefony.Service {
-    constructor (container, context) {
-      super(null , container, container.get("notificationsCenter") ) ;
-      this.name= this.name ;
+    constructor(container, context) {
+      super(null, container, container.get("notificationsCenter"));
+      this.name = this.name;
       this.context = context;
-      this.response = this.context.response ;
-      this.request = this.context.request ;
-      this.query = this.request.query ;
+      this.response = this.context.response;
+      this.request = this.context.request;
+      this.query = this.request.query;
       this.queryFile = this.request.queryFile;
       this.queryGet = this.request.queryGet;
       this.queryPost = this.request.queryPost;
       this.sessionService = this.get("sessions");
-      this.serviceTemplating = this.get('templating') ;
-      this.httpKernel = this.get("httpKernel") ;
+      this.serviceTemplating = this.get('templating');
+      this.httpKernel = this.get("httpKernel");
       this.router = this.get("router");
       this.method = this.getMethod();
     }
 
-    getRequest (){
+    getRequest() {
       return this.request;
     }
 
-    getResponse (content){
-      if ( content){
-        this.response.setBody( content );
+    getResponse(content) {
+      if (content) {
+        this.response.setBody(content);
       }
       return this.response;
     }
 
-    getContext (){
-      return this.context ;
+    getContext() {
+      return this.context;
     }
 
-    getMethod (){
-      return this.context.getMethod() ;
+    getMethod() {
+      return this.context.getMethod();
     }
 
-    startSession (sessionContext){
-      return  this.sessionService.start(this.context, sessionContext || "default") ;
+    startSession(sessionContext) {
+      return this.sessionService.start(this.context, sessionContext || "default");
     }
 
-    getSession (){
-      return this.context.session || null ;
+    getSession() {
+      return this.context.session ||  null;
     }
 
-    getFlashBag (key){
-      let session = this.getSession() ;
-      if (session){
-        return session.getFlashBag(key) ;
-      }else{
+    getFlashBag(key) {
+      let session = this.getSession();
+      if (session) {
+        return session.getFlashBag(key);
+      } else {
         this.logger("getFlashBag session not started !", "ERROR");
-        return null ;
+        return null;
       }
     }
 
-    setFlashBag (key, value){
-      let session = this.getSession() ;
-      if (session){
-        return session.setFlashBag(key, value) ;
-      }else{
-        return null ;
+    setFlashBag(key, value) {
+      let session = this.getSession();
+      if (session) {
+        return session.setFlashBag(key, value);
+      } else {
+        return null;
       }
     }
 
-    setContextJson(){
-      this.context.isJson = true ;
+    setContextJson() {
+      this.context.isJson = true;
     }
 
-    getORM (){
-      let defaultOrm = this.kernel.settings.orm ;
+    getORM() {
+      let defaultOrm = this.kernel.settings.orm;
       return this.get(defaultOrm);
     }
 
-    renderResponse (data, status , headers ){
+    renderResponse(data, status, headers) {
       let res = this.getResponse(data);
-      if (! res ){
-        this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK","WARNING");
-        return ;
+      if (!res) {
+        this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "WARNING");
+        return;
       }
       //this.fire("onView", data, this.context );
-      if (headers && typeof headers === "object" ){ res.setHeaders(headers);}
-      if (status){ res.setStatusCode(status);}
-      this.fire("onResponse", res , this.context);
-      return res ;
+      if (headers && typeof headers === "object") {
+        res.setHeaders(headers);
+      }
+      if (status) {
+        res.setStatusCode(status);
+      }
+      this.fire("onResponse", res, this.context);
+      return res;
     }
 
-    renderJson ( obj , status , headers){
-      return new Promise ( (resolve, reject) =>{
+    renderJson(obj, status, headers) {
+      return new Promise((resolve, reject) => {
         try {
-          resolve( this.renderJsonSync(obj , status , headers) );
-        }catch(e){
+          resolve(this.renderJsonSync(obj, status, headers));
+        } catch (e) {
           reject(e);
         }
       });
     }
 
-    renderJsonAsync (obj , status , headers){
-      return this.renderJson(obj , status , headers).then( (result) => {
-        this.fire("onResponse", this.response,  this.context );
-        return result ;
-      }).catch((e)=>{
-        if (this.response.response.headersSent || this.context.timeoutExpired ){
-          return ;
+    renderJsonAsync(obj, status, headers) {
+      return this.renderJson(obj, status, headers).then((result) => {
+        this.fire("onResponse", this.response, this.context);
+        return result;
+      }).catch((e) => {
+        if (this.response.response.headersSent || this.context.timeoutExpired) {
+          return;
         }
-        this.context.promise = null ;
+        this.context.promise = null;
         this.fire("onError", this.context.container, e);
       });
     }
 
-    renderJsonSync ( obj , status , headers){
-      let data = null ;
+    renderJsonSync(obj, status, headers) {
+      let data = null;
       try {
-        data = JSON.stringify( obj ) ;
-      }catch(e){
-        this.logger(e,"ERROR");
-        throw e  ;
+        data = JSON.stringify(obj);
+      } catch (e) {
+        this.logger(e, "ERROR");
+        throw e;
       }
       let response = this.getResponse(data);
-      if (! response ){
-        this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK","WARNING");
-        return ;
+      if (!response) {
+        this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "WARNING");
+        return;
       }
       //this.fire("onView", data, this.context );
-      response.setHeaders(nodefony.extend( {}, {
-        'Content-Type': "text/json ; charset="+ this.response.encoding
-      }, headers ));
-      if (status){ response.setStatusCode(status);}
-      return response ;
+      response.setHeaders(nodefony.extend({}, {
+        'Content-Type': "text/json ; charset=" + this.response.encoding
+      }, headers));
+      if (status) {
+        response.setStatusCode(status);
+      }
+      return response;
     }
 
-    render (view, param){
-      if ( ! this.response ){
-        this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK","ERROR");
-        return ;
+    render(view, param) {
+      if (!this.response) {
+        this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "ERROR");
+        return;
       }
       try {
         return this.renderViewAsync(view, param);
 
-      }catch(e){
+      } catch (e) {
         this.fire("onError", this.context.container, e);
       }
     }
 
-    renderSync (view, param){
-      let response = this.getResponse() ;
-      if (! response ){
-        this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK","WARNING");
-        return ;
+    renderSync(view, param) {
+      let response = this.getResponse();
+      if (!response) {
+        this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "WARNING");
+        return;
       }
       try {
         this.renderView(view, param);
 
-      }catch(e){
+      } catch (e) {
         this.fire("onError", this.context.container, e);
-        return ;
+        return;
       }
-      return response ;
+      return response;
     }
 
-    renderAsync (view, param){
-      return this.render(view, param).then( (result) => {
-        this.fire("onResponse", this.response,  this.context );
-        return result ;
-      }).catch((e)=>{
-        if (this.response.response.headersSent || this.context.timeoutExpired ){
-          return ;
+    renderAsync(view, param) {
+      return this.render(view, param).then((result) => {
+        this.fire("onResponse", this.response, this.context);
+        return result;
+      }).catch((e) => {
+        if (this.response.response.headersSent || this.context.timeoutExpired) {
+          return;
         }
-        this.context.promise = null ;
+        this.context.promise = null;
         this.fire("onError", this.context.container, e);
       });
     }
 
-    renderViewAsync (view, param){
+    renderViewAsync(view, param) {
       try {
-        let extendParam = this.context.extendTwig(param, this.context );
-        return new Promise ( (resolve, reject) =>{
-          let templ = null ;
-          let res = null ;
+        let extendParam = this.context.extendTwig(param, this.context);
+        return new Promise((resolve, reject) => {
+          let templ = null;
+          let res = null;
           try {
             templ = this.httpKernel.getTemplate(view);
-          }catch(e){
-            return reject( e );
+          } catch (e) {
+            return reject(e);
           }
           try {
-            res = templ.render(extendParam) ;
+            res = templ.render(extendParam);
             try {
-              this.fire("onView", res, this.context, templ.path , param);
-              return resolve( res );
-            }catch(e){
-              return reject( e );
+              this.fire("onView", res, this.context, templ.path, param);
+              return resolve(res);
+            } catch (e) {
+              return reject(e);
             }
-          }catch(e){
-            return reject( e ) ;
+          } catch (e) {
+            return reject(e);
           }
         });
-      }catch(e){
-        throw e ;
+      } catch (e) {
+        throw e;
       }
     }
 
-    renderView (view, param ){
+    renderView(view, param) {
       let res = null;
-      let templ = null ;
+      let templ = null;
       let extendParam = this.context.extendTwig(param, this.context);
       try {
         templ = this.httpKernel.getTemplate(view);
-      }catch(e){
-        throw e ;
+      } catch (e) {
+        throw e;
       }
       try {
-        res = templ.render(extendParam) ;
+        res = templ.render(extendParam);
         try {
-          this.fire("onView", res, this.context, null , param);
-        }catch(e){
-          throw e ;
+          this.fire("onView", res, this.context, null, param);
+        } catch (e) {
+          throw e;
         }
-      }catch(e){
-        throw e ;
-      }
-      return res ;
-    }
-
-    renderRawView (path, param ){
-      let res = null;
-      let extendParam = this.context.extendTwig(param, this.context);
-      try{
-        this.serviceTemplating.renderFile(path, extendParam, (error, result) => {
-          if (error || result === undefined){
-            if ( ! error ){
-              error = new Error("ERROR PARSING TEMPLATE :" + path.path);
-            }
-            throw error ;
-          }else{
-            try {
-              this.fire("onView", result, this.context, path , param);
-              res = result;
-            }catch(e){
-              throw e ;
-            }
-          }
-        });
-      }catch(e){
-        throw e ;
+      } catch (e) {
+        throw e;
       }
       return res;
     }
 
-    renderFileDownload (file, options, headers){
+    renderRawView(path, param) {
+      let res = null;
+      let extendParam = this.context.extendTwig(param, this.context);
+      try {
+        this.serviceTemplating.renderFile(path, extendParam, (error, result) => {
+          if (error || result === undefined) {
+            if (!error) {
+              error = new Error("ERROR PARSING TEMPLATE :" + path.path);
+            }
+            throw error;
+          } else {
+            try {
+              this.fire("onView", result, this.context, path, param);
+              res = result;
+            } catch (e) {
+              throw e;
+            }
+          }
+        });
+      } catch (e) {
+        throw e;
+      }
+      return res;
+    }
+
+    renderFileDownload(file, options, headers) {
       //console.log("renderFileDownload :" + file.path)
-      let File = null ;
-      if (file instanceof nodefony.fileClass ){
+      let File = null;
+      if (file instanceof nodefony.fileClass) {
         File = file;
-      }else{
-        if ( typeof file  === "string"){
-          File  = new nodefony.fileClass(file);
-        }else{
+      } else {
+        if (typeof file === "string") {
+          File = new nodefony.fileClass(file);
+        } else {
           throw new Error("File argument bad type for renderFileDownload :" + typeof file);
         }
       }
-      if (File.type !== "File"){
-        throw new Error("renderMediaStream bad type for  :" +  file);
+      if (File.type !== "File") {
+        throw new Error("renderMediaStream bad type for  :" + file);
       }
-      let length = File.stats.size ;
+      let length = File.stats.size;
       let head = nodefony.extend({
-        'Content-Disposition': 'attachment; filename="'+File.name+'"',
-        'Content-Length':length,
+        'Content-Disposition': 'attachment; filename="' + File.name + '"',
+        'Content-Length': length,
         "Expires": "0",
         'Content-Description': 'File Transfer',
         'Content-Type': File.mimeType
       }, headers || {});
       let response = this.getResponse();
-      let fileStream = null ;
+      let fileStream = null;
 
       try {
-        fileStream = fs.createReadStream(File.path, options );
-      }catch(e){
+        fileStream = fs.createReadStream(File.path, options);
+      } catch (e) {
         this.logger(e, "ERROR");
-        throw e ;
+        throw e;
       }
-      fileStream.on("open",() => {
+      fileStream.on("open", () => {
         try {
           response.response.writeHead(200, head);
           fileStream.pipe(response.response, {
             // auto end response
-            end:false
+            end: false
           });
-        }catch(e){
+        } catch (e) {
           this.logger(e, "ERROR");
-          throw e ;
+          throw e;
         }
       });
-      fileStream.on("end",() => {
+      fileStream.on("end", () => {
         if (fileStream) {
           try {
             fileStream.unpipe(response.response);
@@ -300,9 +305,9 @@ module.exports = nodefony.register("controller", function(){
               //console.log("CLOSE")
               fs.close(fileStream.fd);
             }
-          }catch(e){
+          } catch (e) {
             this.logger(e, "ERROR");
-            throw e ;
+            throw e;
           }
         }
         response.end();
@@ -311,43 +316,45 @@ module.exports = nodefony.register("controller", function(){
         response.end();
       });
       response.response.on('close', () => {
-        if (fileStream.fd){
+        if (fileStream.fd) {
           fileStream.unpipe(response.response);
           fs.close(fileStream.fd);
         }
         response.end();
       });
-      fileStream.on("error", (error) =>{
+      fileStream.on("error", (error) => {
         this.logger(error, "ERROR");
         response.end();
-        throw error ;
+        throw error;
       });
     }
 
-    renderMediaStream (file , options, headers){
+    renderMediaStream(file, options, headers) {
       //console.log("renderMediaStream :" + file.path)
-      let File = null ;
-      if (file instanceof nodefony.fileClass ){
+      let File = null;
+      if (file instanceof nodefony.fileClass) {
         File = file;
-      }else{
-        if ( typeof file  === "string"){
-          File  = new nodefony.fileClass(file);
-        }else{
+      } else {
+        if (typeof file === "string") {
+          File = new nodefony.fileClass(file);
+        } else {
           throw new Error("File argument bad type for renderMediaStream :" + typeof file);
         }
       }
-      if (File.type !== "File"){
-        throw new Error("renderMediaStreambad type for  :" +  file);
+      if (File.type !== "File") {
+        throw new Error("renderMediaStreambad type for  :" + file);
       }
-      if ( ! options ) {options = {};}
+      if (!options) {
+        options = {};
+      }
       let request = this.getRequest();
-      let requestHeaders = request.headers ;
+      let requestHeaders = request.headers;
       let range = requestHeaders.range;
-      let length = File.stats.size ;
-      let code = null ;
-      let head = null ;
-      let value = null ;
-      if ( range ) {
+      let length = File.stats.size;
+      let code = null;
+      let head = null;
+      let value = null;
+      if (range) {
         //console.log("HEADER = " + range);
         let parts = range.replace(/bytes=/, "").split("-");
         //console.log(parts)
@@ -358,9 +365,9 @@ module.exports = nodefony.register("controller", function(){
         let chunksize = (end - start) + 1;
         //console.log("start :" + start) ;
         //console.log("end :" + end) ;
-        value = nodefony.extend(options , {
-          start:start,
-          end:end
+        value = nodefony.extend(options, {
+          start: start,
+          end: end
         });
         //console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
         head = nodefony.extend({
@@ -370,35 +377,35 @@ module.exports = nodefony.register("controller", function(){
           'Content-Type': File.mimeType
         }, headers);
 
-        code = 206 ;
-      }else{
+        code = 206;
+      } else {
         head = nodefony.extend({
           'Content-Type': File.mimeType,
-          'Content-Length':length,
-          'Content-Disposition' : ' inline; filename="'+File.name+'"'
-        },headers);
-        code = 200 ;
+          'Content-Length': length,
+          'Content-Disposition': ' inline; filename="' + File.name + '"'
+        }, headers);
+        code = 200;
       }
       // streamFile
       let response = this.getResponse();
-      let fileStream = null ;
+      let fileStream = null;
       try {
-        fileStream = fs.createReadStream(File.path, value ? nodefony.extend( options, value) : options);
-      }catch(e){
+        fileStream = fs.createReadStream(File.path, value ? nodefony.extend(options, value) : options);
+      } catch (e) {
         this.logger(e, "ERROR");
-        throw e ;
+        throw e;
       }
       //console.log(head);
-      fileStream.on("open", () =>{
+      fileStream.on("open", () => {
         try {
           response.response.writeHead(code, head);
           fileStream.pipe(response.response, {
             // auto end response
-            end:false
+            end: false
           });
-        }catch(e){
+        } catch (e) {
           this.logger(e, "ERROR");
-          throw e ;
+          throw e;
         }
       });
       fileStream.on("end", () => {
@@ -408,9 +415,9 @@ module.exports = nodefony.register("controller", function(){
             if (fileStream.fd) {
               fs.close(fileStream.fd);
             }
-          }catch(e){
+          } catch (e) {
             this.logger(e, "ERROR");
-            throw e ;
+            throw e;
           }
         }
         response.end();
@@ -421,94 +428,94 @@ module.exports = nodefony.register("controller", function(){
 
       response.response.on('close', () => {
         //console.log("close response")
-        if (fileStream.fd){
+        if (fileStream.fd) {
           fileStream.unpipe(response.response);
           fs.close(fileStream.fd);
         }
         response.end();
       });
-      fileStream.on("error", (error) =>{
-        this.logger(error,"ERROR");
+      fileStream.on("error", (error) => {
+        this.logger(error, "ERROR");
         response.end();
       });
     }
 
-    createNotFoundException (message){
-        let error = new Error(message);
-        error.code = 404 ;
-        this.fire("onError", this.container, error );
+    createNotFoundException(message) {
+      let error = new Error(message);
+      error.code = 404;
+      this.fire("onError", this.container, error);
     }
 
-    createUnauthorizedException (message){
-        let error = new Error(message);
-        error.code = 401 ;
-        this.fire("onError", this.container, error );
+    createUnauthorizedException(message) {
+      let error = new Error(message);
+      error.code = 401;
+      this.fire("onError", this.container, error);
     }
 
-    createException (message){
-        let error = new Error(message);
-        error.code = 500 ;
-        this.fire("onError", this.container, error );
+    createException(message) {
+      let error = new Error(message);
+      error.code = 500;
+      this.fire("onError", this.container, error);
     }
 
-    redirect (url ,status, headers){
-      if (! url ){
+    redirect(url, status, headers) {
+      if (!url) {
         throw new Error("Redirect error no url !!!");
       }
-      this.context.isRedirect = true ;
+      this.context.isRedirect = true;
       try {
         this.context.redirect(url, status, headers);
-      }catch(e){
-        throw e ;
+      } catch (e) {
+        throw e;
       }
     }
 
-    redirectHttps (status){
-      return this.context.redirectHttps( status || 301 ) ;
+    redirectHttps(status) {
+      return this.context.redirectHttps(status || 301);
     }
 
-    forward (name, param){
+    forward(name, param) {
       let resolver = this.router.resolveName(this.context, name);
-      return resolver.callController(param );
+      return resolver.callController(param);
     }
 
-    getUser (){
+    getUser() {
       return this.context.getUser();
     }
 
-    isAjax (){
+    isAjax() {
       return this.getRequest().isAjax();
     }
 
-    hideDebugBar (){
+    hideDebugBar() {
       this.context.showDebugBar = false;
     }
 
-    getRoute (){
+    getRoute() {
       return this.context.resolver.getRoute();
     }
 
-    generateUrl (name, variables, absolute){
-      let host = null ;
-      if (absolute){
-        host = this.context.request.url.protocol+"//"+this.context.request.url.host;
+    generateUrl(name, variables, absolute) {
+      let host = null;
+      if (absolute) {
+        host = this.context.request.url.protocol + "//" + this.context.request.url.host;
         absolute = host;
       }
       try {
         return this.router.generatePath.call(this.router, name, variables, absolute);
-      }catch(e){
-        throw e ;
+      } catch (e) {
+        throw e;
       }
     }
 
-    htmlMdParser (content, options){
-      let markdown  = require('markdown-it')(nodefony.extend({
+    htmlMdParser(content, options) {
+      let markdown = require('markdown-it')(nodefony.extend({
         html: true
-      },options));
+      }, options));
       try {
         return markdown.render(content);
-      }catch (e){
-        throw e ;
+      } catch (e) {
+        throw e;
       }
     }
   };

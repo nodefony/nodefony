@@ -3,109 +3,112 @@ const asciify = require('asciify');
 const inquirer = require('inquirer');
 const commander = require('commander');
 
-module.exports = nodefony.register( "cli", function(){
+module.exports = nodefony.register("cli", function() {
 
   //const red   = clc.red.bold;
   //const cyan   = clc.cyan.bold;
-  const blue  = clc.blueBright.bold;
+  const blue = clc.blueBright.bold;
   const green = clc.green;
   //const yellow = clc.yellow.bold;
   const magenta = clc.magenta.bold;
   const reset = clc.reset; // '\x1b[0m';
 
-  let processName = null ;
-  if ( process.argv &&  process.argv[1] ){
-    processName = path.basename ( process.argv[1] );
-  }else{
-    processName =  process.title || "nodefony" ;
+  let processName = null;
+  if (process.argv && process.argv[1]) {
+    processName = path.basename(process.argv[1]);
+  } else {
+    processName =  process.title || "nodefony";
   }
   //const processName = path.basename (process.argv[1] ) || process.argv[1] || process.title ;
 
   const defaultTableCli = {
-    style: {head: ['cyan'], border: ['grey']}
+    style: {
+      head: ['cyan'],
+      border: ['grey']
+    }
   };
 
 
   const defaultOptions = {
-    processName : processName,
-    autostart   : true,
-    asciify     : true,
-    clear       : true,
-    color       : blue,
-    commander   : true,
-    signals     : true,
-    autoLogger  : true,
-    resize      : false,
-    version     : null,
-    pid         : false,
-    promiseRejection:true
+    processName: processName,
+    autostart: true,
+    asciify: true,
+    clear: true,
+    color: blue,
+    commander: true,
+    signals: true,
+    autoLogger: true,
+    resize: false,
+    version: null,
+    pid: false,
+    promiseRejection: true
   };
 
   const CLI = class CLI extends nodefony.Service {
 
-    constructor (name, container, notificationsCenter, options ){
-      switch (arguments.length){
-        case 0 :
-        options = nodefony.extend({}, defaultOptions);
-        name = options.processName ;
-        super( options.processName, null, null, options);
-        break;
-        case 1 :
-        if ( typeof name === "object" &&  name !== null ){
-          options = nodefony.extend({}, defaultOptions, name);
-          name = options.processName ;
-          super( options.processName, null, null, options);
-        }else{
+    constructor(name, container, notificationsCenter, options) {
+      switch (arguments.length) {
+        case 0:
           options = nodefony.extend({}, defaultOptions);
-          name = name || options.processName ;
-          super( name  , null, null, options);
-        }
-        break;
-        case 2 :
-        if (  container instanceof nodefony.Container ){
-          options = nodefony.extend({}, defaultOptions);
-          name = name || options.processName ;
-          super( name , container, null, options);
-        }else{
-          if (typeof container === "object" &&  container !== null ){
-            options = nodefony.extend({}, defaultOptions, container);
-            name = name || options.processName ;
-            super( name, null, null, options);
-          }else{
+          name = options.processName;
+          super(options.processName, null, null, options);
+          break;
+        case 1:
+          if (typeof name === "object" && name !== null) {
+            options = nodefony.extend({}, defaultOptions, name);
+            name = options.processName;
+            super(options.processName, null, null, options);
+          } else {
             options = nodefony.extend({}, defaultOptions);
-            name = name || options.processName ;
-            super( name, container, null, options);
+            name = name || options.processName;
+            super(name, null, null, options);
           }
-        }
-        break;
-        default :
-        options = nodefony.extend({}, defaultOptions, options);
-        name = name || options.processName ;
-        super( name, container, notificationsCenter, options);
+          break;
+        case 2:
+          if (container instanceof nodefony.Container) {
+            options = nodefony.extend({}, defaultOptions);
+            name = name || options.processName;
+            super(name, container, null, options);
+          } else {
+            if (typeof container === "object" && container !== null) {
+              options = nodefony.extend({}, defaultOptions, container);
+              name = name || options.processName;
+              super(name, null, null, options);
+            } else {
+              options = nodefony.extend({}, defaultOptions);
+              name = name || options.processName;
+              super(name, container, null, options);
+            }
+          }
+          break;
+        default:
+          options = nodefony.extend({}, defaultOptions, options);
+          name = name || options.processName;
+          super(name, container, notificationsCenter, options);
       }
-      process.title = this.name.replace(new RegExp("\\s","gi"),"").toLowerCase() ;
-      this.environment = process.env.NODE_ENV  || "production";
-      process.env.NODE_ENV = this.environment ;
+      process.title = this.name.replace(new RegExp("\\s", "gi"), "").toLowerCase();
+      this.environment = process.env.NODE_ENV || "production";
+      process.env.NODE_ENV = this.environment;
       this.unhandledRejections = new Map();
-      this.pid = "" ;
-      if ( this.options.pid ){
+      this.pid = "";
+      if (this.options.pid) {
         this.setPid();
       }
-      this.wrapperLog = console.log ;
+      this.wrapperLog = console.log;
       this.timers = {};
-      if ( this.options.autoLogger ){
+      if (this.options.autoLogger) {
         this.listenSyslog();
       }
       this.initUi();
       this.initCommander();
 
       /**
-      *  @signals
-      */
-      if ( this.options.signals ) {
+       *  @signals
+       */
+      if (this.options.signals) {
         process.on('SIGINT', () => {
           this.blankLine();
-          this.wrapperLog = console.log ;
+          this.wrapperLog = console.log;
           this.logger("SIGINT", "CRITIC");
           //this.clear();
           this.fire("onSignal", "SIGINT", this);
@@ -113,21 +116,21 @@ module.exports = nodefony.register( "cli", function(){
         });
         process.on('SIGTERM', () => {
           this.blankLine();
-          this.wrapperLog = console.log ;
+          this.wrapperLog = console.log;
           this.logger("SIGTERM", "CRITIC");
           this.fire("onSignal", "SIGTERM", this);
           this.terminate(0);
         });
         process.on('SIGHUP', () => {
           this.blankLine();
-          this.wrapperLog = console.log ;
+          this.wrapperLog = console.log;
           this.logger("SIGHUP", "CRITIC");
           this.fire("onSignal", "SIGHUP", this);
           this.terminate(0);
         });
-        process.on('SIGQUIT',() =>{
+        process.on('SIGQUIT', () => {
           this.blankLine();
-          this.wrapperLog = console.log ;
+          this.wrapperLog = console.log;
           this.logger("SIGQUIT", "CRITIC");
           //this.clear();
           this.fire("onSignal", "SIGQUIT", this);
@@ -138,69 +141,69 @@ module.exports = nodefony.register( "cli", function(){
         });
       }
       /**
-      *  @promiseRejection
-      */
-      if (this.options.promiseRejection){
+       *  @promiseRejection
+       */
+      if (this.options.promiseRejection) {
         this.listenRejection();
       }
       /**
-      *    ASCIIFY
-      */
-      if ( name  && this.options.asciify ){
-        this.asciify("      " + name ,{
+       *    ASCIIFY
+       */
+      if (name && this.options.asciify) {
+        this.asciify("      " + name, {
           font: this.options.font || "standard"
-        },(err, data) =>{
-          if (this.options.clear ){
+        }, (err, data) => {
+          if (this.options.clear) {
             this.clear();
           }
-          let color = this.options.color || blue ;
-          console.log( color(data) );
-          let version =  this.commander ? this.commander.version() : ( this.options.version || "1.0.1" ) ;
-          if ( this.options.version ){
-            console.log("          Version : "+ blue(version) +" Platform : "+green( process.platform)+" Process : "+ green(process.title)+" PID : "+process.pid+"\n");
+          let color = this.options.color ||  blue;
+          console.log(color(data));
+          let version = this.commander ? this.commander.version() : (this.options.version || "1.0.1");
+          if (this.options.version) {
+            console.log("          Version : " + blue(version) + " Platform : " + green(process.platform) + " Process : " + green(process.title) + " PID : " + process.pid + "\n");
           }
-          if ( this.environment !== "production"){
+          if (this.environment !== "production") {
             //console.log( this.logEnv() )
           }
           this.blankLine();
-          if ( err ){
-            throw err ;
+          if (err) {
+            throw err;
           }
-          if ( this.options.autostart){
+          if (this.options.autostart) {
             this.fire("onStart", this);
           }
         });
-      }else{
-        if ( this.options.autostart){
+      } else {
+        if (this.options.autostart) {
           this.fire("onStart", this);
         }
       }
     }
 
-    listenRejection (){
+    listenRejection() {
       process.on('rejectionHandled', (promise) => {
         this.logger("PROMISE REJECTION EVENT ", "CRITIC");
         this.unhandledRejections.delete(promise);
       });
       process.on('unhandledRejection', (reason, promise) => {
-        this.logger("WARNING  !!! PROMISE CHAIN BREAKING : "+ reason, "WARNING");
+        this.logger("WARNING  !!! PROMISE CHAIN BREAKING : " + reason, "WARNING");
         console.trace(promise);
         this.unhandledRejections.set(promise, reason);
       });
     }
 
-    setPid(){
-      this.pid = process.pid ;
+    setPid() {
+      this.pid = process.pid;
     }
 
-    logEnv(){
-      return blue("      \x1b "+ this.name  ) + " NODE_ENV : " + magenta(this.environment);
+    logEnv() {
+      return blue("      \x1b " + this.name) + " NODE_ENV : " + magenta(this.environment);
     }
 
-    initCommander (){
-      if ( this.options.commander ){
-        this.commander = commander ;
-        if ( this.options.version ){
+    initCommander() {
+      if (this.options.commander) {
+        this.commander = commander;
+        if (this.options.version) {
           this.setCommandVersion(this.options.version);
         }
         this.on("onStart", () => {
@@ -209,215 +212,214 @@ module.exports = nodefony.register( "cli", function(){
       }
     }
 
-    initUi () {
-      this.clc = clc ;
-      this.inquirer = inquirer ;
+    initUi() {
+      this.clc = clc;
+      this.inquirer = inquirer;
       this.clui = require("clui");
       this.emoji = require("node-emoji");
-      this.spinner = null ;
-      this.blankLine =  function(){
-        var myLine = new this.clui.Line().fill() ;
-        return () =>{
+      this.spinner = null;
+      this.blankLine = function() {
+        var myLine = new this.clui.Line().fill();
+        return () => {
           myLine.output();
         };
       }.call(this);
-      if (this.options.resize ){
+      if (this.options.resize) {
         this.resize();
       }
     }
 
-    getFonts(){
-      asciify.getFonts( (err, fonts) => {
-        fonts.forEach( this.logger  );
+    getFonts() {
+      asciify.getFonts((err, fonts) => {
+        fonts.forEach(this.logger);
       });
     }
 
-    listenSyslog(options){
+    listenSyslog(options) {
       let defaultOption = {
         severity: {
-          operator:"<=",
-          data : "7"
+          operator: "<=",
+          data: "7"
         }
       };
-      return this.syslog.listenWithConditions(this, options || defaultOption , (pdu) => {
-        return this.normalizeLog(pdu) ;
+      return this.syslog.listenWithConditions(this, options || defaultOption, (pdu) => {
+        return this.normalizeLog(pdu);
       });
     }
 
-    asciify (txt, options , callback) {
+    asciify(txt, options, callback) {
       return asciify(txt, nodefony.extend({
-        font:'standard'
-      }, options) , callback) ;
+        font: 'standard'
+      }, options), callback);
     }
 
-    parseCommand(){
-      return this.commander.parse( process.argv );
+    parseCommand() {
+      return this.commander.parse(process.argv);
     }
-    setCommandOption(option, description,  callback){
+    setCommandOption(option, description, callback) {
       return this.commander.option(option, description, callback);
     }
-    setCommandVersion(version){
-      if (typeof this.commander.version === "function"){
+    setCommandVersion(version) {
+      if (typeof this.commander.version === "function") {
         return this.commander.version(version);
       }
     }
-    setCommand(command,  description, options){
+    setCommand(command, description, options) {
       return this.commander.command(command, description, options);
     }
-    showHelp(quit, callback){
-      if (quit){
+    showHelp(quit, callback) {
+      if (quit) {
         return this.commander.help(callback);
       }
       return this.commander.outputHelp(callback);
     }
 
-    createProgress (size){
+    createProgress(size) {
       return new this.clui.Progress(size);
     }
 
-    createSparkline (values, suffix){
-      if ( values ){
+    createSparkline(values, suffix) {
+      if (values) {
         try {
           return this.clui.Sparkline(values, suffix || "");
-        }catch(e){
+        } catch (e) {
           this.logger(e, "ERROR");
-          throw e ;
+          throw e;
         }
       }
     }
 
-    getSpinner (message, design){
-      var countdown = new this.clui.Spinner(message, design || null );
-      return countdown ;
+    getSpinner(message, design) {
+      var countdown = new this.clui.Spinner(message, design || null);
+      return countdown;
     }
 
-    startSpinner (message, design){
-      this.spinner = new this.clui.Spinner(message, design || null );
-      this.wrapperLog = this.spinner.message ;
+    startSpinner(message, design) {
+      this.spinner = new this.clui.Spinner(message, design ||  null);
+      this.wrapperLog = this.spinner.message;
       this.spinner.start();
-      return this.spinner ;
+      return this.spinner;
     }
-    stopSpinner (/*message, options*/){
+    stopSpinner( /*message, options*/ ) {
       this.spinner.stop();
-      this.wrapperLog = console.log ;
-      delete this.spinner ;
+      this.wrapperLog = console.log;
+      delete this.spinner;
     }
 
-    normalizeLog  (pdu){
-      let date = new Date(pdu.timeStamp) ;
-      if (  pdu.payload === "" || pdu.payload === undefined ){
-        console.error( date.toDateString() + " " + date.toLocaleTimeString() + " " + nodefony.Service.logSeverity( pdu.severityName ) + " " + green( pdu.msgid) + " " + " : " + "logger message empty !!!!");
+    normalizeLog(pdu) {
+      let date = new Date(pdu.timeStamp);
+      if (pdu.payload === "" || pdu.payload === undefined) {
+        console.error(date.toDateString() + " " + date.toLocaleTimeString() + " " + nodefony.Service.logSeverity(pdu.severityName) + " " + green(pdu.msgid) + " " + " : " + "logger message empty !!!!");
         console.trace(pdu);
-        return   ;
+        return;
       }
       let message = pdu.payload;
-      switch( typeof message ){
-        case "object" :
-        switch (true){
-          default:
-          message = util.inspect(message);
-        }
-        break;
+      switch (typeof message) {
+        case "object":
+          switch (true) {
+            default: message = util.inspect(message);
+          }
+          break;
         default:
       }
-      if ( ! this.wrapperLog ){
-        this.wrapperLog = console.log ;
+      if (!this.wrapperLog) {
+        this.wrapperLog = console.log;
       }
-      return this.wrapperLog( this.pid +" "+ date.toDateString() + " " + date.toLocaleTimeString() + " " + nodefony.Service.logSeverity( pdu.severityName ) + " " + green(pdu.msgid) + " " + " : " + message);
+      return this.wrapperLog(this.pid + " " + date.toDateString() + " " + date.toLocaleTimeString() + " " + nodefony.Service.logSeverity(pdu.severityName) + " " + green(pdu.msgid) + " " + " : " + message);
     }
 
-    displayTable ( datas, options , syslog){
-      let table = new Table(  options ||  defaultTableCli  );
-      if ( datas ) {
-        for ( var i= 0 ;  i < datas.length ; i++ ){
-          table.push( datas[i] );
+    displayTable(datas, options, syslog) {
+      let table = new Table(options || defaultTableCli);
+      if (datas) {
+        for (var i = 0; i < datas.length; i++) {
+          table.push(datas[i]);
         }
-        if ( syslog ){
-          syslog.logger( "\n"+ table.toString()) ;
-        }else{
+        if (syslog) {
+          syslog.logger("\n" + table.toString());
+        } else {
           console.log(table.toString());
         }
       }
-      return table ;
+      return table;
     }
 
-    static niceBytes (x){
+    static niceBytes(x) {
       let units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
-      n = parseInt(x, 10) || 0,
-      l = 0;
-      while(n >= 1024){
-        n = n/1024;
+        n = parseInt(x, 10) || 0,
+        l = 0;
+      while (n >= 1024) {
+        n = n / 1024;
         l++;
       }
-      return(n.toFixed(n >= 10 || l < 1 ? 0 : 1) + ' ' + units[l]);
+      return (n.toFixed(n >= 10 || l < 1 ? 0 : 1) + ' ' + units[l]);
     }
 
-    getEmoji (name){
-      if (name){
+    getEmoji(name) {
+      if (name) {
         return this.emoji.get(name);
       }
-      return this.emoji.random().emoji ;
+      return this.emoji.random().emoji;
     }
 
-    clear (){
+    clear() {
       this.clui.Clear();
     }
 
-    reset (){
+    reset() {
       process.stdout.write(reset);
     }
 
-    resize (){
+    resize() {
       process.stdout.on('resize', () => {
         this.fire("onResize", this);
       });
     }
 
-    terminate (code){
+    terminate(code) {
       process.exit(code);
     }
 
-    quit (code){
+    quit(code) {
       process.exit(code);
     }
 
-    startTimer (name){
-      if (name in this.timers ){
-        throw new Error("Timer : " + name +" already exist !! stopTimer to clear");
+    startTimer(name) {
+      if (name in this.timers) {
+        throw new Error("Timer : " + name + " already exist !! stopTimer to clear");
       }
       try {
         this.logger("BEGIN TIMER : " + name, "INFO");
-        this.timers[name] = name ;
+        this.timers[name] = name;
         return console.time(name);
-      }catch (e){
-        if (name in this.timers ){
+      } catch (e) {
+        if (name in this.timers) {
           delete this.timers[name];
         }
-        throw e ;
+        throw e;
       }
     }
 
-    stopTimer (name){
-      if (! name ){
-        for (let timer in  this.timers ){
+    stopTimer(name) {
+      if (!name) {
+        for (let timer in this.timers) {
           this.stopTimer(this.timers[timer]);
         }
       }
       try {
-        if ( name in this.timers ){
+        if (name in this.timers) {
           this.logger("END TIMER : " + name, "INFO");
           delete this.timers[name];
           return console.timeEnd(name);
         }
-        throw  new Error("Timer : " + name +" not exist !! startTimer before");
-      }catch(e){
-        if (name in this.timers ){
+        throw new Error("Timer : " + name + " not exist !! startTimer before");
+      } catch (e) {
+        if (name in this.timers) {
           delete this.timers[name];
         }
-        throw e ;
+        throw e;
       }
     }
   };
-  nodefony.niceBytes = CLI.niceBytes ;
-  return CLI ;
+  nodefony.niceBytes = CLI.niceBytes;
+  return CLI;
 });

@@ -36,6 +36,7 @@
       "it":		true,
       "describe":	true,
       "before":	true,
+      "beforeEach": true,
       "BlueBird":true,
       "twig": true,
       "shell":true,

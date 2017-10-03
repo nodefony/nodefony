@@ -1,160 +1,163 @@
-
-module.exports = nodefony.register("Service", function(){
+module.exports = nodefony.register("Service", function() {
 
   const settingsSyslog = {
     //rateLimit:100,
     //burstLimit:10,
-    moduleName:"SERVICE ",
-    defaultSeverity:"INFO"
+    moduleName: "SERVICE ",
+    defaultSeverity: "INFO"
   };
 
   const defaultOptions = {
-    nbListeners:20
+    nbListeners: 20
   };
 
-  const red   = clc.red.bold;
-  const cyan   = clc.cyan.bold;
-  const blue  = clc.blueBright.bold;
+  const red = clc.red.bold;
+  const cyan = clc.cyan.bold;
+  const blue = clc.blueBright.bold;
   const green = clc.green;
   const yellow = clc.yellow.bold;
 
   const Service = class Service {
 
-    constructor(name, container, notificationsCenter, options ){
+    constructor(name, container, notificationsCenter, options) {
 
-      if (name){
-        this.name = name ;
+      if (name) {
+        this.name = name;
       }
-      if ( options ){
-        this.options = nodefony.extend(true, {}, defaultOptions, options) ;
-      }else{
+      if (options) {
+        this.options = nodefony.extend(true, {}, defaultOptions, options);
+      } else {
         //optimize
-        this.options ={nbListeners:20} ;
+        this.options = {
+          nbListeners: 20
+        };
       }
-      if ( container instanceof nodefony.Container  ){
-        this.container = container ;
-      }else{
-        if ( container ){
-          throw new Error ("Service nodefony container not valid must be instance of nodefony.Container");
+      if (container instanceof nodefony.Container) {
+        this.container = container;
+      } else {
+        if (container) {
+          throw new Error("Service nodefony container not valid must be instance of nodefony.Container");
         }
         this.container = new nodefony.Container();
         this.container.set("container", this.container);
       }
-      let kernel =  this.container.get("kernel");
-      if ( kernel ){
-        this.kernel = kernel ;
+      let kernel = this.container.get("kernel");
+      if (kernel) {
+        this.kernel = kernel;
       }
       this.syslog = this.container.get("syslog");
-      if ( ! this.syslog ){
-        this.settingsSyslog = nodefony.extend({}, settingsSyslog , {
+      if (!this.syslog) {
+        this.settingsSyslog = nodefony.extend({}, settingsSyslog, {
           moduleName: this.name
-        },this.options.syslog || {} );
-        this.syslog = new nodefony.syslog( this.settingsSyslog );
+        }, this.options.syslog || {});
+        this.syslog = new nodefony.syslog(this.settingsSyslog);
         this.set("syslog", this.syslog);
-      }else{
-        this.settingsSyslog = this.syslog.settings ;
+      } else {
+        this.settingsSyslog = this.syslog.settings;
       }
-      if ( notificationsCenter instanceof nodefony.notificationsCenter.notification ){
-        this.notificationsCenter = notificationsCenter ;
-        if (options){
-          this.notificationsCenter.settingsToListen(options, this) ;
+      if (notificationsCenter instanceof nodefony.notificationsCenter.notification) {
+        this.notificationsCenter = notificationsCenter;
+        if (options) {
+          this.notificationsCenter.settingsToListen(options, this);
         }
-      }else{
-        if ( notificationsCenter ){
-          throw new Error ("Service nodefony notificationsCenter not valid must be instance of nodefony.notificationsCenter.notification");
+      } else {
+        if (notificationsCenter) {
+          throw new Error("Service nodefony notificationsCenter not valid must be instance of nodefony.notificationsCenter.notification");
         }
         this.notificationsCenter = nodefony.notificationsCenter.create(this.options, this, this.options.nbListeners);
-        if (! this.kernel ){
+        if (!this.kernel) {
           this.set("notificationsCenter", this.notificationsCenter);
-        }else{
-          if ( this.kernel.container !== this.container ){
+        } else {
+          if (this.kernel.container !== this.container) {
             this.set("notificationsCenter", this.notificationsCenter);
           }
         }
       }
     }
 
-    static logSeverity (severity){
-      switch(severity){
+    static logSeverity(severity) {
+      switch (severity) {
         case "DEBUG":
-        return cyan(severity);
+          return cyan(severity);
         case "INFO":
-        return blue(severity);
-        case "NOTICE" :
-        return red(severity);
-        case "WARNING" :
-        return yellow(severity);
-        case "ERROR" :
+          return blue(severity);
+        case "NOTICE":
+          return red(severity);
+        case "WARNING":
+          return yellow(severity);
+        case "ERROR":
         case "CRITIC":
         case "ALERT":
         case "EMERGENCY":
-        return red(severity);
+          return red(severity);
         default:
-        return cyan(severity);
+          return cyan(severity);
       }
     }
 
-    getName (){
+    getName() {
       return this.name;
     }
 
-    clean(){
-      this.settingsSyslog = null ;
-      delete this.settingsSyslog ;
-      this.syslog = null  ;
-      delete this.syslog ;
+    clean() {
+      this.settingsSyslog = null;
+      delete this.settingsSyslog;
+      this.syslog = null;
+      delete this.syslog;
       this.removeAllListeners();
-      this.notificationsCenter = null ;
-      delete this.notificationsCenter ;
-      this.container = null ;
-      delete this.container ;
-      this.kernel = null ;
-      delete this.kernel ;
+      this.notificationsCenter = null;
+      delete this.notificationsCenter;
+      this.container = null;
+      delete this.container;
+      this.kernel = null;
+      delete this.kernel;
     }
 
-    logger(pci, severity, msgid,  msg){
+    logger(pci, severity, msgid, msg) {
       try {
-        if (! msgid) { msgid = "SERVICE " + this.name + " "; }
-        return this.syslog.logger(pci, severity, msgid,  msg);
-      }catch(e){
+        if (!msgid) {
+          msgid = "SERVICE " + this.name + " ";
+        }
+        return this.syslog.logger(pci, severity, msgid, msg);
+      } catch (e) {
         console.log(pci);
       }
     }
 
     /**
-    *  @method fire
-    *  @param {String} event name
-    *  @param {Arguments} ... arguments to inject
-    */
-    fire (){
+     *  @method fire
+     *  @param {String} event name
+     *  @param {Arguments} ... arguments to inject
+     */
+    fire() {
       //this.logger(ev, "DEBUG", "EVENT KERNEL")
       return this.notificationsCenter.fire.apply(this.notificationsCenter, arguments);
     }
 
     /**
-    *  @method listen
-    *  @param {Oject} context
-    *  @param {String} eventName
-    *  @param {Function} listener
-    */
-    listen (){
+     *  @method listen
+     *  @param {Oject} context
+     *  @param {String} eventName
+     *  @param {Function} listener
+     */
+    listen() {
       return this.notificationsCenter.listen.apply(this.notificationsCenter, arguments);
     }
-    on (){
+    on() {
       return this.notificationsCenter.on.apply(this.notificationsCenter, arguments);
     }
 
-    listenSyslog(options){
+    listenSyslog(options) {
 
       let defaultOption = {
         severity: {
-          operator:"<=",
-          data : "7"
+          operator: "<=",
+          data: "7"
         }
       };
-      this.syslog.listenWithConditions(this, options || defaultOption , (pdu) => {
-        let date = new Date(pdu.timeStamp) ;
-        console.log( date.toDateString() + " " + date.toLocaleTimeString() + " " + Service.logSeverity( pdu.severityName ) + " " + green(pdu.msgid) + " " + " : " +  pdu.payload);
+      this.syslog.listenWithConditions(this, options || defaultOption, (pdu) => {
+        let date = new Date(pdu.timeStamp);
+        console.log(date.toDateString() + " " + date.toLocaleTimeString() + " " + Service.logSeverity(pdu.severityName) + " " + green(pdu.msgid) + " " + " : " + pdu.payload);
       });
     }
 
@@ -165,69 +168,69 @@ module.exports = nodefony.register("Service", function(){
     *  @param {Function} listener
 
     */
-    once (){
+    once() {
       //this.logger(ev, "DEBUG", "EVENT KERNEL")
       return this.notificationsCenter.once.apply(this.notificationsCenter, arguments);
     }
 
     /**
-    *  @method setMaxListeners
-    *  @param nb
-    */
-    setMaxListeners (){
+     *  @method setMaxListeners
+     *  @param nb
+     */
+    setMaxListeners() {
       return this.notificationsCenter.setMaxListeners.apply(this.notificationsCenter, arguments);
     }
 
     /**
-    *  @method removeListener
-    *  @param {Oject} eventName
-    *  @param {String} listener
-    */
-    removeListener (){
+     *  @method removeListener
+     *  @param {Oject} eventName
+     *  @param {String} listener
+     */
+    removeListener() {
       return this.notificationsCenter.unListen.apply(this.notificationsCenter, arguments);
     }
 
     /**
-    *  @method removeAllListeners
-    */
-    removeAllListeners (){
+     *  @method removeAllListeners
+     */
+    removeAllListeners() {
       return this.notificationsCenter.removeAllListeners.apply(this.notificationsCenter, arguments);
     }
 
     /**
-    *  @method get
-    *  @param {String} name of service
-    */
-    get (name){
-      if (this.container){
+     *  @method get
+     *  @param {String} name of service
+     */
+    get(name) {
+      if (this.container) {
         return this.container.get(name);
       }
       return null;
     }
 
     /**
-    *  @method set
-    *  @param {String} name of service
-    *  @param {Object} instance of service
-    */
-    set (name, obj){
-      if (this.container){
+     *  @method set
+     *  @param {String} name of service
+     *  @param {Object} instance of service
+     */
+    set(name, obj) {
+      if (this.container) {
         return this.container.set(name, obj);
       }
       return null;
     }
 
-    getParameters (){
-      return this.container.getParameters.apply(this.container , arguments);
+    getParameters() {
+      return this.container.getParameters.apply(this.container, arguments);
     }
 
-    setParameters (){
-      return this.container.setParameters.apply(this.container ,arguments);
+    setParameters() {
+      return this.container.setParameters.apply(this.container, arguments);
     }
 
-    has (){
-      return this.container.has.apply(this.container ,arguments);
+    has() {
+      return this.container.has.apply(this.container, arguments);
     }
   };
-  return Service ;
+  return Service;
 });

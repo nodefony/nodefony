@@ -1,28 +1,28 @@
-module.exports = nodefony.register("realtimeService", function(){
+module.exports = nodefony.register("realtimeService", function() {
 
 
   const realtime = class realtime extends nodefony.Service {
 
-    constructor(name, container, notificationsCenter, options ){
+    constructor(name, container, notificationsCenter, options) {
 
       super(name, container, notificationsCenter, options);
       this.realTime = this.get("realTime");
 
     }
 
-    createServer(type){
+    createServer() {
 
     }
 
-    startServer(){
+    startServer() {
 
     }
 
-    stopServer(){
+    stopServer() {
 
     }
-    
+
   };
-  return realtime ;
+  return realtime;
 
 });

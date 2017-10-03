@@ -1,23 +1,23 @@
 const chokidar = require('chokidar');
 
-module.exports = nodefony.register("watcher", function(){
+module.exports = nodefony.register("watcher", function() {
 
   // see Chokidar
   /*
-  *
-  *
-  *
-  *
-  */
-  const defaultWatcherSettings  = {
+   *
+   *
+   *
+   *
+   */
+  const defaultWatcherSettings = {
 
-    persistent:    true,
-    followSymlinks:    true,
-    cwd:      '.',
+    persistent: true,
+    followSymlinks: true,
+    cwd: '.',
     //useFsEvents:    true,
-    usePolling:    true,
-    interval:    100,
-    binaryInterval:    300,
+    usePolling: true,
+    interval: 100,
+    binaryInterval: 300,
     //alwaysStat:    false,
     //depth:    99,
     //awaitWriteFinish:  {
@@ -25,100 +25,100 @@ module.exports = nodefony.register("watcher", function(){
     //  pollInterval: 100
     //},
     //ignorePermissionErrors: false,
-    atomic:      true // or a custom 'atomicity delay', in milliseconds (default 100)
+    atomic: true // or a custom 'atomicity delay', in milliseconds (default 100)
   };
 
   const Watcher = class Watcher extends nodefony.Service {
 
-    constructor (Path , settings, container){
+    constructor(Path, settings, container) {
 
-      super( "WATCHER", container );
-      this.chokidar = chokidar ;
-      this.watcher = null ;
-      this.path = Path ;
-      this.settings =  nodefony.extend(true, {}, defaultWatcherSettings, settings);
-      if ( this.path ){
+      super("WATCHER", container);
+      this.chokidar = chokidar;
+      this.watcher = null;
+      this.path = Path;
+      this.settings = nodefony.extend(true, {}, defaultWatcherSettings, settings);
+      if (this.path) {
         this.watch(this.path, this.settings);
       }
     }
 
-    watch(Path, settings){
+    watch(Path, settings) {
       try {
-        if (this.watcher ){
+        if (this.watcher) {
           let error = new Error("Already watching  : " + Path);
-          this.fire("onError", error );
+          this.fire("onError", error);
           throw error;
         }
-        if ( Path ){
-          this.path = Path ;
+        if (Path) {
+          this.path = Path;
         }
 
-        if ( this.path ){
-          this.initialize( this.path , settings);
-        }else{
-          let error = new Error ("WATCHER no path");
-          this.fire("onError", error );
-          throw error ;
+        if (this.path) {
+          this.initialize(this.path, settings);
+        } else {
+          let error = new Error("WATCHER no path");
+          this.fire("onError", error);
+          throw error;
         }
-        return this.watcher ;
-      }catch(e){
+        return this.watcher;
+      } catch (e) {
         this.fire("onError", e);
-        throw e ;
+        throw e;
       }
     }
 
-    unwatch( file ){
+    unwatch(file) {
       try {
         return this.watcher.unwatch(file);
-      }catch(e){
+      } catch (e) {
         this.fire("onError", e);
-        this.logger(e,"ERROR");
-        throw e ;
+        this.logger(e, "ERROR");
+        throw e;
       }
     }
 
-    getWatched(file){
-      if ( ! file ){
-        if ( this.watcher ){
-          return  this.watcher.getWatched();
+    getWatched(file) {
+      if (!file) {
+        if (this.watcher) {
+          return this.watcher.getWatched();
         }
       }
     }
 
-    close(removeEvents){
-      if ( this.watcher){
+    close(removeEvents) {
+      if (this.watcher) {
         this.watcher.close();
-        this.fire("onClose", this.watcher );
-        if ( removeEvents ){
+        this.fire("onClose", this.watcher);
+        if (removeEvents) {
           this.removeAllListeners();
         }
         this.watcher = null;
       }
     }
-    initialize (Path, settings){
+    initialize(Path, settings) {
       try {
-        this.watcher =  this.chokidar.watch(Path, nodefony.extend(true, {}, this.settings, settings) );
-        this.fire("onInitialize", this.watcher , Path);
-        super.logger("INITIALISE WATCHING  PATH : " + Path , "DEBUG");
+        this.watcher = this.chokidar.watch(Path, nodefony.extend(true, {}, this.settings, settings));
+        this.fire("onInitialize", this.watcher, Path);
+        super.logger("INITIALISE WATCHING  PATH : " + Path, "DEBUG");
         this.watcher.on('all', (event, Path) => {
-          this.fire("all", event, Path );
+          this.fire("all", event, Path);
           try {
-            let stats = null ;
+            let stats = null;
             event = event.charAt(0).toUpperCase() + event.slice(1);
-            this.fire("on"+event, Path, stats, this.watcher );
-          }catch(e){
+            this.fire("on" + event, Path, stats, this.watcher);
+          } catch (e) {
             this.fire("onError", e);
             this.logger(e, "ERROR");
-            throw e ;
+            throw e;
           }
         });
-        return this.watcher ;
-      }catch(e){
+        return this.watcher;
+      } catch (e) {
         this.fire("onError", e);
-        throw e ;
+        throw e;
       }
     }
   };
 
-  return Watcher ;
+  return Watcher;
 });

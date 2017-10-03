@@ -4,49 +4,52 @@
  *
  *
  */
-var ejs = require("ejs")
+const ejs = require("ejs");
 
 
-nodefony.registerTemplate("ejs" ,function(){
-
-
-
-	var Ejs = function(container, options){
-
-		this.mother = this.$super;
-		this.mother.constructor(container, ejs, options);
-
-	}
-	Ejs.prototype.extention = "ejs"
+module.exports = nodefony.registerTemplate("ejs" ,function(){
 
 
 
-	Ejs.prototype.renderFile = function(){
-		return this.engine.renderFile.apply(this.engine, arguments);
+	const Ejs = class Ejs extends nodefony.template {
+
+    constructor(container, options) {
+      super(container, ejs, options);
+      this.kernelSettings = this.container.getParameters("kernel");
+      this.cache = (this.kernelSettings.environment === "dev") ? false : true;
+
+      this.rootDir = this.kernel.rootDir;
+      container.set("ejs", this);
+      this.version = ejs.VERSION;
+      this.name = "ejs";
+    }
+
+    renderFile (){
+  		return this.engine.renderFile.apply(this.engine, arguments);
+  	}
+
+    render(view, para){
+      const Render = this.compile(view)
+      try {
+        return Render(param);
+      }catch(e){
+        console.log(e)
+        //this.logger(e);
+      }
+    }
+
+    renderResponse(view, param, response){
+
+    }
+
+    compile(str){
+      return 	this.engine.compile(str, this.settings);
+    }
+
 	};
 
+  Ejs.prototype.extention = "ejs";
 
-	Ejs.prototype.render = function(view, param){
-		var Render = this.compile(view)
-		try {
-			return Render(param);
-		}catch(e){
-			console.log(e)
-			//this.logger(e);
-		}
-	};
+	return 	Ejs ;
 
-	Ejs.prototype.renderResponse = function(view, param, response){
-		//console.log(arguments);	
-	
-	};
-
-	Ejs.prototype.compile = function(str){
-		return 	this.engine.compile(str, this.settings);
-	}
-
-			
-	return 	Ejs.herite(nodefony.templates)
-		
 });
-
