@@ -1,4 +1,4 @@
-module.exports = nodefony.register("templates", function() {
+module.exports = nodefony.register("templates", function () {
 
   const Template = class Template extends nodefony.Service {
 

@@ -1,6 +1,6 @@
 const chokidar = require('chokidar');
 
-module.exports = nodefony.register("watcher", function() {
+module.exports = nodefony.register("watcher", function () {
 
   // see Chokidar
   /*

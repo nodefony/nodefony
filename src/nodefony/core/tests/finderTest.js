@@ -11,14 +11,14 @@
  */
 const assert = require('assert');
 
-describe("NODEFONY CORE FINDER", function() {
+describe("NODEFONY CORE FINDER", function () {
 
-  describe('CONTRUSTROR ', function() {
+  describe('CONTRUSTROR ', function () {
 
 
-    beforeEach(function() {});
+    beforeEach(function () {});
 
-    before(function() {
+    before(function () {
       try {
         global.finder = new nodefony.finder({
           //path:kernel.rootDir
@@ -28,16 +28,16 @@ describe("NODEFONY CORE FINDER", function() {
       }
     });
 
-    it("LIB LOADED", function(done) {
+    it("LIB LOADED", function (done) {
       assert.equal(typeof nodefony.finder, "function");
       done();
     });
 
-    it("NEW", function(done) {
+    it("NEW", function (done) {
       var finder = null;
       assert.equal(typeof nodefony.finder, "function");
 
-      assert.throws(function() {
+      assert.throws(function () {
         finder = new nodefony.finder({
           path: "path not found "
         });
@@ -49,11 +49,11 @@ describe("NODEFONY CORE FINDER", function() {
 
     });
 
-    it("PARSE ROOTDIR", function(done) {
+    it("PARSE ROOTDIR", function (done) {
 
       var res = finder.find({
         recurse: false,
-        onFinish: function(error, result) {
+        onFinish: function (error, result) {
           //console.log("RESULT length :" + result.length());
           done();
         }
@@ -61,11 +61,11 @@ describe("NODEFONY CORE FINDER", function() {
 
     });
 
-    it("RESULT JSON", function(done) {
+    it("RESULT JSON", function (done) {
       var res = finder.find({
         recurse: false,
         json: true,
-        onFinish: function(error, result) {
+        onFinish: function (error, result) {
           //console.log("RESULT length :" + result.length());
           //console.log(result.json.nodefony.children.web)
         }
@@ -75,7 +75,7 @@ describe("NODEFONY CORE FINDER", function() {
         path: kernel.rootDir,
         json: true,
         recurse: true,
-        onFinish: function(error, result) {
+        onFinish: function (error, result) {
           //console.log("RESULT length :" + result.length());
           //console.log(result.json.nodefony.children.web)
           done();

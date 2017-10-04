@@ -7,9 +7,9 @@ const stage = require("nodefony-stage");
 require("bootstrap");
 require("../less/style.less");
 
-module.exports = function (){
+module.exports = function () {
 
-	window["stage"] = stage ;
-	
-	return null;
+  window.stage = stage;
+
+  return null;
 }();

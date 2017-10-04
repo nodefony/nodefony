@@ -36,41 +36,41 @@
  *
  */
 
-module.exports = nodefony.registerController("demo", function(){
+module.exports = nodefony.registerController("demo", function () {
 
-	/**
-	*	The class is a **`demo` CONTROLLER** .
-	*	@module demo
-	*	@main demo
-	*	@class demo
-	*	@constructor
-	*	@param {class} container
-	*	@param {class} context
-	*
-	*/
-	var demoController = class demoController extends nodefony.controller {
+  /**
+   *	The class is a **`demo` CONTROLLER** .
+   *	@module demo
+   *	@main demo
+   *	@class demo
+   *	@constructor
+   *	@param {class} container
+   *	@param {class} context
+   *
+   */
+  const demoController = class demoController extends nodefony.controller {
 
-		constructor (container, context){
-			super(container, context);
-		}
+    constructor(container, context) {
+      super(container, context);
+    }
 
-		/**
-		*	@method htmlAction
-		*/
-		htmlAction (name){
-			return this.renderResponse('<h1>'+name+'</h1>');
-		}
+    /**
+     *	@method htmlAction
+     */
+    htmlAction(name) {
+      return this.renderResponse('<h1>' + name + '</h1>');
+    }
 
-		/**
-		*	@method renderAction
-		*/
-		renderAction (name){
+    /**
+     *	@method renderAction
+     */
+    renderAction(name) {
 
-			return this.render('documentationBundle:demo:index.html.twig', {
-				name:name,
-			});
+      return this.render('documentationBundle:demo:index.html.twig', {
+        name: name,
+      });
 
-		}
-	};
-	return demoController;
+    }
+  };
+  return demoController;
 });

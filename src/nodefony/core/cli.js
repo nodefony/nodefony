@@ -3,7 +3,7 @@ const asciify = require('asciify');
 const inquirer = require('inquirer');
 const commander = require('commander');
 
-module.exports = nodefony.register("cli", function() {
+module.exports = nodefony.register("cli", function () {
 
   //const red   = clc.red.bold;
   //const cyan   = clc.cyan.bold;
@@ -48,43 +48,43 @@ module.exports = nodefony.register("cli", function() {
 
     constructor(name, container, notificationsCenter, options) {
       switch (arguments.length) {
-        case 0:
-          options = nodefony.extend({}, defaultOptions);
+      case 0:
+        options = nodefony.extend({}, defaultOptions);
+        name = options.processName;
+        super(options.processName, null, null, options);
+        break;
+      case 1:
+        if (typeof name === "object" && name !== null) {
+          options = nodefony.extend({}, defaultOptions, name);
           name = options.processName;
           super(options.processName, null, null, options);
-          break;
-        case 1:
-          if (typeof name === "object" && name !== null) {
-            options = nodefony.extend({}, defaultOptions, name);
-            name = options.processName;
-            super(options.processName, null, null, options);
-          } else {
-            options = nodefony.extend({}, defaultOptions);
+        } else {
+          options = nodefony.extend({}, defaultOptions);
+          name = name || options.processName;
+          super(name, null, null, options);
+        }
+        break;
+      case 2:
+        if (container instanceof nodefony.Container) {
+          options = nodefony.extend({}, defaultOptions);
+          name = name || options.processName;
+          super(name, container, null, options);
+        } else {
+          if (typeof container === "object" && container !== null) {
+            options = nodefony.extend({}, defaultOptions, container);
             name = name || options.processName;
             super(name, null, null, options);
-          }
-          break;
-        case 2:
-          if (container instanceof nodefony.Container) {
+          } else {
             options = nodefony.extend({}, defaultOptions);
             name = name || options.processName;
             super(name, container, null, options);
-          } else {
-            if (typeof container === "object" && container !== null) {
-              options = nodefony.extend({}, defaultOptions, container);
-              name = name || options.processName;
-              super(name, null, null, options);
-            } else {
-              options = nodefony.extend({}, defaultOptions);
-              name = name || options.processName;
-              super(name, container, null, options);
-            }
           }
-          break;
-        default:
-          options = nodefony.extend({}, defaultOptions, options);
-          name = name || options.processName;
-          super(name, container, notificationsCenter, options);
+        }
+        break;
+      default:
+        options = nodefony.extend({}, defaultOptions, options);
+        name = name || options.processName;
+        super(name, container, notificationsCenter, options);
       }
       process.title = this.name.replace(new RegExp("\\s", "gi"), "").toLowerCase();
       this.environment = process.env.NODE_ENV || "production";
@@ -218,7 +218,7 @@ module.exports = nodefony.register("cli", function() {
       this.clui = require("clui");
       this.emoji = require("node-emoji");
       this.spinner = null;
-      this.blankLine = function() {
+      this.blankLine = function () {
         var myLine = new this.clui.Line().fill();
         return () => {
           myLine.output();
@@ -315,12 +315,12 @@ module.exports = nodefony.register("cli", function() {
       }
       let message = pdu.payload;
       switch (typeof message) {
-        case "object":
-          switch (true) {
-            default: message = util.inspect(message);
-          }
-          break;
-        default:
+      case "object":
+        switch (true) {
+          default: message = util.inspect(message);
+        }
+        break;
+      default:
       }
       if (!this.wrapperLog) {
         this.wrapperLog = console.log;

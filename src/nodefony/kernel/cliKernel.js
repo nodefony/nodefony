@@ -3,9 +3,9 @@ const spawnSync = require('child_process').spawnSync;
 const simpleGit = require('simple-git');
 const npm = require("npm");
 
-module.exports = nodefony.register("cliKernel", function() {
+module.exports = nodefony.register("cliKernel", function () {
 
-  let createFile = function(myPath, skeleton, parse, params, callback) {
+  let createFile = function (myPath, skeleton, parse, params, callback) {
     if (skeleton) {
       buildSkeleton.call(this, skeleton, parse, params, (error, result) => {
         if (error) {
@@ -34,7 +34,7 @@ module.exports = nodefony.register("cliKernel", function() {
     }
   };
 
-  let buildSkeleton = function(skeleton, parse, obj, callback) {
+  let buildSkeleton = function (skeleton, parse, obj, callback) {
     let skelete = null;
     try {
       skelete = new nodefony.fileClass(skeleton);
@@ -56,7 +56,7 @@ module.exports = nodefony.register("cliKernel", function() {
     return skelete;
   };
 
-  let createAssetDirectory = function(myPath, callback) {
+  let createAssetDirectory = function (myPath, callback) {
     this.logger("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : " + myPath, "DEBUG");
     try {
       if (fs.existsSync(myPath)) {
@@ -75,7 +75,7 @@ module.exports = nodefony.register("cliKernel", function() {
     }
   };
 
-  let parseAssetsBundles = function(table, Name) {
+  let parseAssetsBundles = function (table, Name) {
     let bundles = this.kernel.getBundles();
     let result = null;
     let name = null;
@@ -119,7 +119,7 @@ module.exports = nodefony.register("cliKernel", function() {
   };
 
   const regHidden = /^\./;
-  const isHiddenFile = function(name) {
+  const isHiddenFile = function (name) {
     return regHidden.test(name);
   };
   /*
@@ -145,13 +145,13 @@ module.exports = nodefony.register("cliKernel", function() {
 
     loadCommand() {
       switch (this.commander.args[0]) {
-        case "npm:install":
-          return true;
-        case "npm:list":
-          this.on("onBoot", () => {
-            this.listPackage(this.kernel.rootDir);
-          });
-          return true;
+      case "npm:install":
+        return true;
+      case "npm:list":
+        this.on("onBoot", () => {
+          this.listPackage(this.kernel.rootDir);
+        });
+        return true;
       }
       this.stop = false;
       for (let bundle in this.kernel.bundles) {
@@ -298,59 +298,59 @@ module.exports = nodefony.register("cliKernel", function() {
     build(obj, parent, force) {
       let child = null;
       switch (nodefony.typeOf(obj)) {
-        case "array":
-          for (let i = 0; i < obj.length; i++) {
-            this.build(obj[i], parent, force);
-          }
-          break;
-        case "object":
-          for (let ele in obj) {
-            let value = obj[ele];
-            switch (ele) {
-              case "name":
-                var name = value;
-                break;
-              case "type":
-                switch (value) {
-                  case "directory":
-                    child = this.createDirectory(parent.path + "/" + name, "777", (ele) => {
-                      if (force) {
-                        this.logger("Force Create Directory :" + ele.name);
-                      } else {
-                        this.logger("Create Directory :" + ele.name);
-                      }
-                    }, force);
-                    break;
-                  case "file":
-                    createFile.call(this, parent.path + "/" + name, obj.skeleton, obj.parse, obj.params, (ele) => {
-                      this.logger("Create File      :" + ele.name);
-                    });
-                    break;
-                  case "symlink":
-                    if (force) {
-                      shell.ln('-sf', parent.path + "/" + obj.params.source, parent.path + "/" + obj.params.dest);
-                    } else {
-                      shell.ln('-s', parent.path + "/" + obj.params.source, parent.path + "/" + obj.params.dest);
-                    }
-                    this.logger("Create symbolic link :" + obj.name);
-                    /*fs.symlink ( parent.path+"/"+obj.params.source, parent.path+"/"+obj.params.dest , obj.params.type || "file", (ele) => {
+      case "array":
+        for (let i = 0; i < obj.length; i++) {
+          this.build(obj[i], parent, force);
+        }
+        break;
+      case "object":
+        for (let ele in obj) {
+          let value = obj[ele];
+          switch (ele) {
+          case "name":
+            var name = value;
+            break;
+          case "type":
+            switch (value) {
+            case "directory":
+              child = this.createDirectory(parent.path + "/" + name, "777", (ele) => {
+                if (force) {
+                  this.logger("Force Create Directory :" + ele.name);
+                } else {
+                  this.logger("Create Directory :" + ele.name);
+                }
+              }, force);
+              break;
+            case "file":
+              createFile.call(this, parent.path + "/" + name, obj.skeleton, obj.parse, obj.params, (ele) => {
+                this.logger("Create File      :" + ele.name);
+              });
+              break;
+            case "symlink":
+              if (force) {
+                shell.ln('-sf', parent.path + "/" + obj.params.source, parent.path + "/" + obj.params.dest);
+              } else {
+                shell.ln('-s', parent.path + "/" + obj.params.source, parent.path + "/" + obj.params.dest);
+              }
+              this.logger("Create symbolic link :" + obj.name);
+              /*fs.symlink ( parent.path+"/"+obj.params.source, parent.path+"/"+obj.params.dest , obj.params.type || "file", (ele) => {
 							this.logger("Create symbolic link :" + ele.name);
 						} );*/
-                    break;
-                }
-                break;
-              case "childs":
-                try {
-                  this.build(value, child);
-                } catch (e) {
-                  this.logger(e, "ERROR");
-                }
-                break;
+              break;
             }
+            break;
+          case "childs":
+            try {
+              this.build(value, child);
+            } catch (e) {
+              this.logger(e, "ERROR");
+            }
+            break;
           }
-          break;
-        default:
-          this.logger("generate build error arguments : ", "ERROR");
+        }
+        break;
+      default:
+        this.logger("generate build error arguments : ", "ERROR");
       }
       return child;
     }
@@ -371,16 +371,16 @@ module.exports = nodefony.register("cliKernel", function() {
       }
       let files = null;
       switch (true) {
-        case stat.isFile():
-          throw new Error(dir + " is not a directory");
-        case stat.isDirectory():
-          files = fs.readdirSync(dir);
-          break;
-        case stat.isSymbolicLink():
-          files = fs.realpathSync(dir);
-          break;
-        default:
-          throw new Error(dir + " is not a directory");
+      case stat.isFile():
+        throw new Error(dir + " is not a directory");
+      case stat.isDirectory():
+        files = fs.readdirSync(dir);
+        break;
+      case stat.isSymbolicLink():
+        files = fs.realpathSync(dir);
+        break;
+      default:
+        throw new Error(dir + " is not a directory");
       }
 
       let totalSizeBytes = 0;
@@ -393,20 +393,20 @@ module.exports = nodefony.register("cliKernel", function() {
           return totalSizeBytes;
         }
         switch (true) {
-          case stat.isFile():
-            if (!isHiddenFile(files[i])) {
-              totalSizeBytes += stat.size;
-            }
-            break;
-          case stat.isDirectory():
-            dirSize = this.getSizeDirectory(myPath, exclude);
-            totalSizeBytes += dirSize;
-            break;
-          case stat.isSymbolicLink():
-            //console.log("isSymbolicLink")
-            dirSize = this.getSizeDirectory(fs.realpathSync(myPath), exclude);
-            totalSizeBytes += dirSize;
-            break;
+        case stat.isFile():
+          if (!isHiddenFile(files[i])) {
+            totalSizeBytes += stat.size;
+          }
+          break;
+        case stat.isDirectory():
+          dirSize = this.getSizeDirectory(myPath, exclude);
+          totalSizeBytes += dirSize;
+          break;
+        case stat.isSymbolicLink():
+          //console.log("isSymbolicLink")
+          dirSize = this.getSizeDirectory(fs.realpathSync(myPath), exclude);
+          totalSizeBytes += dirSize;
+          break;
         }
       }
       return totalSizeBytes;
@@ -449,13 +449,13 @@ module.exports = nodefony.register("cliKernel", function() {
         return file;
       } catch (e) {
         switch (e.code) {
-          case "EEXIST":
-            if (force) {
-              file = new nodefony.fileClass(myPath);
-              callback(file);
-              return file;
-            }
-            break;
+        case "EEXIST":
+          if (force) {
+            file = new nodefony.fileClass(myPath);
+            callback(file);
+            return file;
+          }
+          break;
         }
         throw e;
       }

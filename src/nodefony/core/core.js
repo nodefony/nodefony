@@ -4,7 +4,7 @@
  *
  *
  */
-module.exports = function() {
+module.exports = function () {
 
   /**
    *  The class is a **`Nodefony Nodefony `** .

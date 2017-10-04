@@ -1,9 +1,9 @@
-module.exports = nodefony.register("injection", function() {
+module.exports = nodefony.register("injection", function () {
 
   // plugin Reader
-  const pluginReader = function() {
+  const pluginReader = function () {
 
-    const importXmlConfig = function(file, prefix, callback, parser) {
+    const importXmlConfig = function (file, prefix, callback, parser) {
 
       if (parser) {
         file = this.render(file, parser.data, parser.options);
@@ -22,13 +22,13 @@ module.exports = nodefony.register("injection", function() {
         }
         for (var key in node) {
           switch (key) {
-            case 'parameters':
-              parameters = this.xmlToJson.call(this, node[key][0].parameter);
-              break;
+          case 'parameters':
+            parameters = this.xmlToJson.call(this, node[key][0].parameter);
+            break;
 
-            case 'services':
-              services = this.xmlToJson.call(this, node[key][0].service);
-              break;
+          case 'services':
+            services = this.xmlToJson.call(this, node[key][0].service);
+            break;
           }
         }
         if (callback) {
@@ -37,65 +37,65 @@ module.exports = nodefony.register("injection", function() {
       });
     };
 
-    const nomarlizeXmlJson = function(services, parameters, callback) {
+    const nomarlizeXmlJson = function (services, parameters, callback) {
       for (let key in services) {
         for (let param in services[key]) {
           let values = null;
           switch (param) {
-            case 'argument':
-              values = [];
-              for (let elm = 0; elm < services[key][param].length; elm++) {
-                if (services[key][param][elm].type && services[key][param][elm].id) {
-                  if (services[key][param][elm].type == 'service') {
-                    values.push('@' + services[key][param][elm].id);
-                  }
+          case 'argument':
+            values = [];
+            for (let elm = 0; elm < services[key][param].length; elm++) {
+              if (services[key][param][elm].type && services[key][param][elm].id) {
+                if (services[key][param][elm].type == 'service') {
+                  values.push('@' + services[key][param][elm].id);
                 }
               }
-              services[key]['arguments'] = values;
-              delete services[key][param];
-              break;
-            case 'property':
-              values = {};
-              for (let elm = 0; elm < services[key][param].length; elm++) {
-                if (services[key][param][elm].type && services[key][param][elm].id && services[key][param][elm].name) {
-                  if (services[key][param][elm].type == 'service') {
-                    values[services[key][param][elm].name] = '@' + services[key][param][elm].id;
-                  }
+            }
+            services[key]['arguments'] = values;
+            delete services[key][param];
+            break;
+          case 'property':
+            values = {};
+            for (let elm = 0; elm < services[key][param].length; elm++) {
+              if (services[key][param][elm].type && services[key][param][elm].id && services[key][param][elm].name) {
+                if (services[key][param][elm].type == 'service') {
+                  values[services[key][param][elm].name] = '@' + services[key][param][elm].id;
                 }
               }
-              services[key].properties = values;
-              delete services[key][param];
-              break;
+            }
+            services[key].properties = values;
+            delete services[key][param];
+            break;
 
-            case 'call':
-              values = [];
-              for (let elm = 0; elm < services[key][param].length; elm++) {
-                let tab = [];
-                for (let sparam in services[key][param][elm]) {
-                  switch (sparam) {
-                    case 'method':
-                      tab[0] = services[key][param][elm][sparam];
-                      break;
-                    case 'argument':
-                      let args = [];
-                      for (let selem = 0; selem < services[key][param][elm][sparam].length; selem++) {
-                        if (services[key][param][elm][sparam][selem].type && services[key][param][elm][sparam][selem].id) {
-                          if (services[key][param][elm][sparam][selem].type == 'service') {
-                            args.push('@' + services[key][param][elm][sparam][selem].id);
-                          }
-                        }
+          case 'call':
+            values = [];
+            for (let elm = 0; elm < services[key][param].length; elm++) {
+              let tab = [];
+              for (let sparam in services[key][param][elm]) {
+                switch (sparam) {
+                case 'method':
+                  tab[0] = services[key][param][elm][sparam];
+                  break;
+                case 'argument':
+                  let args = [];
+                  for (let selem = 0; selem < services[key][param][elm][sparam].length; selem++) {
+                    if (services[key][param][elm][sparam][selem].type && services[key][param][elm][sparam][selem].id) {
+                      if (services[key][param][elm][sparam][selem].type == 'service') {
+                        args.push('@' + services[key][param][elm][sparam][selem].id);
                       }
-                      tab[1] = args;
-                      break;
+                    }
                   }
+                  tab[1] = args;
+                  break;
                 }
-                values.push(tab);
               }
-              services[key].calls = values;
-              delete services[key][param];
-              break;
-            case 'scope':
-              break;
+              values.push(tab);
+            }
+            services[key].calls = values;
+            delete services[key][param];
+            break;
+          case 'scope':
+            break;
           }
         }
 
@@ -105,18 +105,18 @@ module.exports = nodefony.register("injection", function() {
       }
     };
 
-    var renderParameters = function(callback, services, parameters) {
-      if (parameters && Object.keys(parameters).length > 0 && typeof(services) === 'object' && Object.keys(services).length > 0) {
+    var renderParameters = function (callback, services, parameters) {
+      if (parameters && Object.keys(parameters).length > 0 && typeof (services) === 'object' && Object.keys(services).length > 0) {
         services = JSON.parse(this.render(JSON.stringify(services), parameters));
       }
       callback(services);
     };
 
-    var getServicesXML = function(file, callback, parser) {
+    var getServicesXML = function (file, callback, parser) {
       importXmlConfig.call(this, file, '', callback, parser);
     };
 
-    var getServicesJSON = function(file, callback, parser) {
+    var getServicesJSON = function (file, callback, parser) {
       if (parser) {
         file = this.render(file, parser.data, parser.options);
       }
@@ -126,7 +126,7 @@ module.exports = nodefony.register("injection", function() {
       }
     };
 
-    var getServicesYML = function(file, callback, parser) {
+    var getServicesYML = function (file, callback, parser) {
       if (parser) {
         file = this.render(file, parser.data, parser.options);
       }
@@ -145,9 +145,9 @@ module.exports = nodefony.register("injection", function() {
   }();
 
   // tools exec
-  var prepareExec = function() {
+  var prepareExec = function () {
 
-    var getValues = function() {
+    var getValues = function () {
       var args = [];
       for (var key in this) {
         args.push(this[key]);
@@ -157,7 +157,7 @@ module.exports = nodefony.register("injection", function() {
 
     var reg = /constructor\s*\((.*)\)/;
     //var reg2 = /function\s*\((.*)\)/ ;
-    var getArguments = function() {
+    var getArguments = function () {
       var str = this.toString();
       var m = str.match(reg);
       if (m) {
@@ -177,7 +177,7 @@ module.exports = nodefony.register("injection", function() {
       }
     };
 
-    var sortArguments = function(func, obj, order) {
+    var sortArguments = function (func, obj, order) {
       var args = (order instanceof Array ? order : getArguments.call(func));
       for (var i = 0; i < args.length; i++) {
         args[i] = obj[args[i]];
@@ -186,7 +186,7 @@ module.exports = nodefony.register("injection", function() {
     };
 
     return {
-      "newWith": function(Class, obj, order) {
+      "newWith": function (Class, obj, order) {
         order = order || false;
         var tab = (order ? sortArguments(Class, obj, order) : getValues.call(obj));
         Array.prototype.unshift.call(tab, Class);
@@ -197,7 +197,7 @@ module.exports = nodefony.register("injection", function() {
           throw e;
         }
       },
-      "callWith": function(func, tab) {
+      "callWith": function (func, tab) {
         func.apply(this, sortArguments(func, tab));
       },
       getArguments: getArguments
@@ -218,9 +218,9 @@ module.exports = nodefony.register("injection", function() {
       super("injection", container, container.get("notificationsCenter"));
 
       this.kernel = this.container.get('kernel');
-      this.reader = function(context) {
+      this.reader = function (context) {
         var func = context.get("reader").loadPlugin("injection", pluginReader);
-        return function(result, parser) {
+        return function (result, parser) {
           return func(result, context.nodeReader.bind(context), parser);
         };
       }(this);
@@ -278,15 +278,15 @@ module.exports = nodefony.register("injection", function() {
       if (injections instanceof Array) {
         for (let elm = 0; elm < injections.length; elm++) {
           switch (injections[elm][0]) {
-            case '@':
-              try {
-                var name = injections[elm].substring(1);
-                let service = this.get(name);
-                params[name] = service;
-              } catch (e) {
-                //this.logger('Instance service (' + name + ') doesn\'t exist !!!');
-              }
-              break;
+          case '@':
+            try {
+              var name = injections[elm].substring(1);
+              let service = this.get(name);
+              params[name] = service;
+            } catch (e) {
+              //this.logger('Instance service (' + name + ') doesn\'t exist !!!');
+            }
+            break;
           }
         }
       }

@@ -1,4 +1,4 @@
-module.exports = nodefony.register("realtimeService", function() {
+module.exports = nodefony.register("realtimeService", function () {
 
 
   const realtime = class realtime extends nodefony.Service {

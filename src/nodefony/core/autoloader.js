@@ -3,7 +3,7 @@ const path = require("path");
 const Module = require("module");
 const fs = require('fs');
 
-module.exports = function() {
+module.exports = function () {
 
   // Create Context copy library in context  see load runInThisContext
   const context = vm.createContext(this);
@@ -121,21 +121,21 @@ module.exports = function() {
     setEnv(environment) {
       this.environment = environment;
       switch (this.environment) {
-        case "production":
-        case "prod":
-        case "PROD":
-          this.environment = "prod";
-          this.dataCache = true;
-          break;
-        case "development":
-        case "dev":
-        case "DEV":
-          this.environment = "dev";
-          this.dataCache = false;
-          break;
-        default:
-          this.environment = "prod";
-          this.dataCache = true;
+      case "production":
+      case "prod":
+      case "PROD":
+        this.environment = "prod";
+        this.dataCache = true;
+        break;
+      case "development":
+      case "dev":
+      case "DEV":
+        this.environment = "dev";
+        this.dataCache = false;
+        break;
+      default:
+        this.environment = "prod";
+        this.dataCache = true;
       }
     }
 

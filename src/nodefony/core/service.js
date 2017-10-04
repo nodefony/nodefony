@@ -1,4 +1,4 @@
-module.exports = nodefony.register("Service", function() {
+module.exports = nodefony.register("Service", function () {
 
   const settingsSyslog = {
     //rateLimit:100,
@@ -77,21 +77,21 @@ module.exports = nodefony.register("Service", function() {
 
     static logSeverity(severity) {
       switch (severity) {
-        case "DEBUG":
-          return cyan(severity);
-        case "INFO":
-          return blue(severity);
-        case "NOTICE":
-          return red(severity);
-        case "WARNING":
-          return yellow(severity);
-        case "ERROR":
-        case "CRITIC":
-        case "ALERT":
-        case "EMERGENCY":
-          return red(severity);
-        default:
-          return cyan(severity);
+      case "DEBUG":
+        return cyan(severity);
+      case "INFO":
+        return blue(severity);
+      case "NOTICE":
+        return red(severity);
+      case "WARNING":
+        return yellow(severity);
+      case "ERROR":
+      case "CRITIC":
+      case "ALERT":
+      case "EMERGENCY":
+        return red(severity);
+      default:
+        return cyan(severity);
       }
     }
 

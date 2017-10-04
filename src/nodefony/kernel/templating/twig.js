@@ -5,7 +5,7 @@
  */
 const twig = require("twig");
 
-module.exports = nodefony.registerTemplate("twig", function() {
+module.exports = nodefony.registerTemplate("twig", function () {
 
   const twigOptions = {
     'twig options': {

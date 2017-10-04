@@ -1,6 +1,6 @@
-module.exports = nodefony.register("orm", function() {
+module.exports = nodefony.register("orm", function () {
 
-  const connectionMonitor = function(name, db, orm) {
+  const connectionMonitor = function (name, db, orm) {
     this.connectionNotification++;
     if (Object.keys(orm.settings.connectors).length === this.connectionNotification) {
       process.nextTick(() => {

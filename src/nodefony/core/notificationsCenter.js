@@ -1,6 +1,6 @@
 const events = require('events');
 
-module.exports = nodefony.register("notificationsCenter", function() {
+module.exports = nodefony.register("notificationsCenter", function () {
 
   const regListenOn = /^on(.*)$/;
   const defaultNbListeners = 20;
@@ -32,10 +32,10 @@ module.exports = nodefony.register("notificationsCenter", function() {
     listen(context, eventName, callback) {
       let event = arguments[1];
       let ContextClosure = this;
-      if (typeof(callback) === 'function' || callback instanceof Function) {
+      if (typeof (callback) === 'function' || callback instanceof Function) {
         this.event.addListener(eventName, callback.bind(context));
       }
-      return function() {
+      return function () {
         Array.prototype.unshift.call(arguments, event);
         return ContextClosure.fire.apply(ContextClosure, arguments);
       };
@@ -44,9 +44,9 @@ module.exports = nodefony.register("notificationsCenter", function() {
     on(eventName, callback) {
       let event = arguments[1];
       let ContextClosure = this;
-      if (typeof(callback) === 'function' || callback instanceof Function) {
+      if (typeof (callback) === 'function' || callback instanceof Function) {
         this.event.addListener(eventName, callback);
-        return function() {
+        return function () {
           Array.prototype.unshift.call(arguments, event);
           return ContextClosure.fire.apply(ContextClosure, arguments);
         };
@@ -62,10 +62,10 @@ module.exports = nodefony.register("notificationsCenter", function() {
     once(context, eventName, callback) {
       let event = arguments[1];
       let ContextClosure = this;
-      if (typeof(callback) === 'function' || callback instanceof Function) {
+      if (typeof (callback) === 'function' || callback instanceof Function) {
         this.event.once(eventName, callback.bind(context));
       }
-      return function() {
+      return function () {
         Array.prototype.unshift.call(arguments, event);
         return ContextClosure.fire.apply(ContextClosure, arguments);
       };
@@ -125,7 +125,7 @@ module.exports = nodefony.register("notificationsCenter", function() {
      *  @method create
      *
      */
-    create: function(settings, context, nbListener) {
+    create: function (settings, context, nbListener) {
       return new Notification(settings, context, nbListener);
     }
   };

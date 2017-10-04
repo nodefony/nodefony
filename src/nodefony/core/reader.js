@@ -1,4 +1,4 @@
-module.exports = nodefony.register("Reader", function() {
+module.exports = nodefony.register("Reader", function () {
 
   let defaultSetting = {
     parserXml: {
@@ -20,7 +20,7 @@ module.exports = nodefony.register("Reader", function() {
     parse: false
   };
 
-  let load = function(name, pathFile) {
+  let load = function (name, pathFile) {
     let mypath = pathFile;
     let ext = path.extname(pathFile);
     let plug = this.plugins[name];
@@ -31,17 +31,17 @@ module.exports = nodefony.register("Reader", function() {
 
     try {
       switch (ext) {
-        case ".xml":
-          return plug.xml.apply(this, arguments);
-        case ".json":
-          return plug.json.apply(this, arguments);
-        case ".yml":
-        case ".yaml":
-          return plug.yml.apply(this, arguments);
-        case ".js":
-          return plug.annotations.apply(this, arguments);
-        default:
-          this.logger("DROP FILE : " + mypath + " NO PLUGIN FIND", "WARNING");
+      case ".xml":
+        return plug.xml.apply(this, arguments);
+      case ".json":
+        return plug.json.apply(this, arguments);
+      case ".yml":
+      case ".yaml":
+        return plug.yml.apply(this, arguments);
+      case ".js":
+        return plug.annotations.apply(this, arguments);
+      default:
+        this.logger("DROP FILE : " + mypath + " NO PLUGIN FIND", "WARNING");
       }
     } catch (e) {
       console.trace(e);
@@ -77,7 +77,7 @@ module.exports = nodefony.register("Reader", function() {
 
     pluginConfig() {
 
-      let json = function(file, callback, parser) {
+      let json = function (file, callback, parser) {
         if (parser) {
           file = this.render(file, parser.data, parser.options);
         }
@@ -90,7 +90,7 @@ module.exports = nodefony.register("Reader", function() {
           throw (e);
         }
       };
-      let yml = function(file, callback, parser) {
+      let yml = function (file, callback, parser) {
         if (parser) {
           file = this.render(file, parser.data, parser.options);
         }
@@ -103,7 +103,7 @@ module.exports = nodefony.register("Reader", function() {
           throw (e);
         }
       };
-      let xml = function(file, callback, parser) {
+      let xml = function (file, callback, parser) {
         if (parser) {
           file = this.render(file, parser.data, parser.options);
         }
@@ -150,7 +150,7 @@ module.exports = nodefony.register("Reader", function() {
     loadPlugin(name, plugin) {
       this.plugins[name] = plugin;
       let context = this;
-      return function() {
+      return function () {
         Array.prototype.unshift.call(arguments, name);
         return load.apply(context, arguments);
       };

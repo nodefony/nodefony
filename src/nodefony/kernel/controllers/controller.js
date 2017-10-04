@@ -1,4 +1,4 @@
-module.exports = nodefony.register("controller", function() {
+module.exports = nodefony.register("controller", function () {
 
   const Controller = class Controller extends nodefony.Service {
     constructor(container, context) {

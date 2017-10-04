@@ -1,6 +1,6 @@
 const semver = require('semver');
 
-module.exports = nodefony.register("Bundle", function() {
+module.exports = nodefony.register("Bundle", function () {
 
   const regBundle = /^(.*)[Bb]undle$/;
   const regFixtures = /^(.+)Fixtures.js$/;
@@ -11,7 +11,7 @@ module.exports = nodefony.register("Bundle", function() {
   const regI18nFile = /^(.*)\.(.._..)\.(.*)$/;
   const regConfigFile = /^routing\..*$/;
 
-  const checkIngnoreFile = function(string, basename) {
+  const checkIngnoreFile = function (string, basename) {
     let file = null;
     try {
       file = new nodefony.fileClass(string);
@@ -55,7 +55,7 @@ module.exports = nodefony.register("Bundle", function() {
       return Object.keys(this.container).length;
     }
   };
-  const recursiveFindRequire = function(files, reg, Path, obj) {
+  const recursiveFindRequire = function (files, reg, Path, obj) {
     if (!obj) {
       obj = new recObj();
     }
@@ -106,7 +106,7 @@ module.exports = nodefony.register("Bundle", function() {
     return obj;
   };
 
-  const defaultWatcher = function(reg /*, settings*/ ) {
+  const defaultWatcher = function (reg /*, settings*/ ) {
     return {
       ignoreInitial: true,
       ignored: [
@@ -225,23 +225,23 @@ module.exports = nodefony.register("Bundle", function() {
       let config = false;
       try {
         switch (typeof this.settings.watch) {
-          case "object":
-            controllers = this.settings.watch.controllers || false;
-            views = this.settings.watch.views || false;
-            i18n = this.settings.watch.translations || false;
-            config = this.settings.watch.config || false;
-            this.webpackWatch = this.settings.watch.webpack || false;
-            break;
-          case "boolean":
-            controllers = this.settings.watch || false;
-            views = this.settings.watch || false;
-            i18n = this.settings.watch || false;
-            config = this.settings.watch || false;
-            this.webpackWatch = this.settings.watch || false;
-            break;
-          default:
-            this.logger("BAD CONFIG WATCHER  ", "WARNING");
-            return;
+        case "object":
+          controllers = this.settings.watch.controllers || false;
+          views = this.settings.watch.views || false;
+          i18n = this.settings.watch.translations || false;
+          config = this.settings.watch.config || false;
+          this.webpackWatch = this.settings.watch.webpack || false;
+          break;
+        case "boolean":
+          controllers = this.settings.watch || false;
+          views = this.settings.watch || false;
+          i18n = this.settings.watch || false;
+          config = this.settings.watch || false;
+          this.webpackWatch = this.settings.watch || false;
+          break;
+        default:
+          this.logger("BAD CONFIG WATCHER  ", "WARNING");
+          return;
         }
         // controllers
         if (controllers) {
@@ -296,53 +296,53 @@ module.exports = nodefony.register("Bundle", function() {
         for (let ele in result) {
           let ext = null;
           switch (true) {
-            case regBundle.test(ele):
-              let name = regBundle.exec(ele);
-              config = this.getParameters("bundles." + name[1]);
-              if (config) {
-                ext = nodefony.extend(true, {}, config, result[ele]);
-                this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name[1], "WARNING");
-              } else {
-                ext = result[ele];
-                this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name[1] + " BUT BUNDLE " + name[1] + " NOT YET REGISTERED ", "WARNING");
+          case regBundle.test(ele):
+            let name = regBundle.exec(ele);
+            config = this.getParameters("bundles." + name[1]);
+            if (config) {
+              ext = nodefony.extend(true, {}, config, result[ele]);
+              this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name[1], "WARNING");
+            } else {
+              ext = result[ele];
+              this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name[1] + " BUT BUNDLE " + name[1] + " NOT YET REGISTERED ", "WARNING");
+            }
+            if (this.kernel.bundles[name[1]]) {
+              this.kernel.bundles[name[1]].settings = ext;
+              this.setParameters("bundles." + name[1], this.kernel.bundles[name[1]].settings);
+            } else {
+              this.setParameters("bundles." + name[1], ext || {});
+            }
+            break;
+          case /^version$/.test(ele):
+            try {
+              let res = semver.valid(result[ele]);
+              if (!res) {
+                this.logger("Bad Bundle Semantic Versioning  : " + result[ele] + " Check  http://semver.org ", "WARNING");
               }
-              if (this.kernel.bundles[name[1]]) {
-                this.kernel.bundles[name[1]].settings = ext;
-                this.setParameters("bundles." + name[1], this.kernel.bundles[name[1]].settings);
-              } else {
-                this.setParameters("bundles." + name[1], ext || {});
+            } catch (e) {
+              this.logger(e, "ERROR");
+            }
+            break;
+          case /^locale$/.test(ele):
+            if (result[ele]) {
+              this.locale = result[ele];
+            }
+            break;
+            // deprecated
+          case /^webpack$/.test(ele):
+            try {
+              this.webPackConfig = result[ele] || null;
+              if (this.webPackConfig) {
+                this.kernel.listen(this, "onPostRegister", () => {
+                  if (this.webpackService) {
+                    this.webpackCompiler = this.webpackService.loadConfig(this.webPackConfig, this.path);
+                  }
+                });
               }
-              break;
-            case /^version$/.test(ele):
-              try {
-                let res = semver.valid(result[ele]);
-                if (!res) {
-                  this.logger("Bad Bundle Semantic Versioning  : " + result[ele] + " Check  http://semver.org ", "WARNING");
-                }
-              } catch (e) {
-                this.logger(e, "ERROR");
-              }
-              break;
-            case /^locale$/.test(ele):
-              if (result[ele]) {
-                this.locale = result[ele];
-              }
-              break;
-              // deprecated
-            case /^webpack$/.test(ele):
-              try {
-                this.webPackConfig = result[ele] || null;
-                if (this.webPackConfig) {
-                  this.kernel.listen(this, "onPostRegister", () => {
-                    if (this.webpackService) {
-                      this.webpackCompiler = this.webpackService.loadConfig(this.webPackConfig, this.path);
-                    }
-                  });
-                }
-              } catch (e) {
-                throw e;
-              }
-              break;
+            } catch (e) {
+              throw e;
+            }
+            break;
           }
         }
         config = this.getParameters("bundles." + this.name);
@@ -448,45 +448,45 @@ module.exports = nodefony.register("Bundle", function() {
     findWebPackConfig() {
       let res = null;
       switch (this.settings.type) {
-        case "angular":
-          try {
-            res = this.finder.result.getFile("webpack.config.js", true);
-            if (!res) {
-              throw new Error("Angular bundle no webpack config file : webpack.config.js ");
-            }
-            this.webpackCompilerFile = this.webpackService.loadConfigFile(res, this);
-          } catch (e) {
-            throw e;
+      case "angular":
+        try {
+          res = this.finder.result.getFile("webpack.config.js", true);
+          if (!res) {
+            throw new Error("Angular bundle no webpack config file : webpack.config.js ");
           }
-          break;
-        case "react":
-          let file = null;
-          try {
-            switch (process.env.NODE_ENV) {
-              case "development":
-                file = path.resolve(this.path, "config", "webpack.config.dev.js");
-                break;
-              case "production":
-                file = path.resolve(this.path, "config", "webpack.config.prod.js");
-                break;
-            }
-            res = new nodefony.fileClass(file);
-            process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
-            this.webpackCompilerFile = this.webpackService.loadConfigFile(res, this);
-          } catch (e) {
-            throw e;
+          this.webpackCompilerFile = this.webpackService.loadConfigFile(res, this);
+        } catch (e) {
+          throw e;
+        }
+        break;
+      case "react":
+        let file = null;
+        try {
+          switch (process.env.NODE_ENV) {
+          case "development":
+            file = path.resolve(this.path, "config", "webpack.config.dev.js");
+            break;
+          case "production":
+            file = path.resolve(this.path, "config", "webpack.config.prod.js");
+            break;
           }
-          break;
-        default:
-          try {
-            res = this.finder.result.getFile("webpack." + this.kernel.environment + ".config.js", true);
-            if (!res) {
-              return;
-            }
-            this.webpackCompilerFile = this.webpackService.loadConfigFile(res, this);
-          } catch (e) {
-            throw e;
+          res = new nodefony.fileClass(file);
+          process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
+          this.webpackCompilerFile = this.webpackService.loadConfigFile(res, this);
+        } catch (e) {
+          throw e;
+        }
+        break;
+      default:
+        try {
+          res = this.finder.result.getFile("webpack." + this.kernel.environment + ".config.js", true);
+          if (!res) {
+            return;
           }
+          this.webpackCompilerFile = this.webpackService.loadConfigFile(res, this);
+        } catch (e) {
+          throw e;
+        }
       }
     }
 

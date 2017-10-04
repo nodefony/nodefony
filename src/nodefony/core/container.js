@@ -1,47 +1,47 @@
 const shortId = require('shortid');
 
-module.exports = nodefony.register("Container", function() {
+module.exports = nodefony.register("Container", function () {
 
-  let ISDefined = function(ele) {
+  let ISDefined = function (ele) {
     if (ele !== null && ele !== undefined) {
       return true;
     }
     return false;
   };
 
-  let generateId = function() {
+  let generateId = function () {
     return shortId.generate();
   };
 
-  let parseParameterString = function(str, value) {
+  let parseParameterString = function (str, value) {
     let ns = null;
     switch (nodefony.typeOf(str)) {
-      case "string":
-        return parseParameterString.call(this, str.split("."), value);
-      case "array":
-        switch (str.length) {
-          case 1:
-            ns = Array.prototype.shift.call(str);
-            if (!this[ns]) {
-              this[ns] = value;
-            } else {
-              if (ISDefined(value)) {
-                this[ns] = value;
-              } else {
-                return this[ns];
-              }
-            }
-            return value;
-          default:
-            ns = Array.prototype.shift.call(str);
-            if (!this[ns] && ISDefined(value)) {
-              this[ns] = {};
-            }
-            return parseParameterString.call(this[ns], str, value);
+    case "string":
+      return parseParameterString.call(this, str.split("."), value);
+    case "array":
+      switch (str.length) {
+      case 1:
+        ns = Array.prototype.shift.call(str);
+        if (!this[ns]) {
+          this[ns] = value;
+        } else {
+          if (ISDefined(value)) {
+            this[ns] = value;
+          } else {
+            return this[ns];
+          }
         }
-        break;
+        return value;
       default:
-        return false;
+        ns = Array.prototype.shift.call(str);
+        if (!this[ns] && ISDefined(value)) {
+          this[ns] = {};
+        }
+        return parseParameterString.call(this[ns], str, value);
+      }
+      break;
+    default:
+      return false;
     }
   };
 
@@ -53,8 +53,8 @@ module.exports = nodefony.register("Container", function() {
   const Container = class Container {
 
     constructor(services, parameters) {
-      this.protoService = function() {};
-      this.protoParameters = function() {};
+      this.protoService = function () {};
+      this.protoParameters = function () {};
       this.scope = {};
       this.services = new this.protoService();
       if (services && typeof services === "object") {
@@ -218,10 +218,10 @@ module.exports = nodefony.register("Container", function() {
       this.scope = parent.scope;
       this.id = generateId();
 
-      this.protoService = function() {};
+      this.protoService = function () {};
       this.protoService.prototype = nodefony.extend({}, this.parent.protoService.prototype);
 
-      this.protoParameters = function() {};
+      this.protoParameters = function () {};
       this.protoParameters.prototype = nodefony.extend({}, this.parent.protoParameters.prototype);
     }
 

@@ -42,6 +42,8 @@
       "shell":true,
       "clc":true,
       "notDefinded":true,
-      "varNotExit":true
+      "varNotExit":true,
+      "window":true,
+      "document":true
     }
 }

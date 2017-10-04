@@ -1,30 +1,29 @@
+module.exports = nodefony.registerController("oauth", function () {
 
-module.exports = nodefony.registerController("oauth", function(){
+  var oauthController = class oauthController extends nodefony.controller {
 
-	var oauthController = class oauthController extends nodefony.controller {
+    constructor(container, context) {
+      super(container, context);
 
-		constructor(container, context){
-			super(container, context);
+      this.oauth2Server = this.get("oauth2");
+    }
 
-			this.oauth2Server = this.get("oauth2");
-		}
+    tokenAction() {
+      return this.renderResponse("oauth2");
 
-		tokenAction (){
-			return this.renderResponse("oauth2");
+    }
+    loginAction() {
+      return this.render("securityBundle::login.html.twig");
+    }
 
-		}
-		loginAction(){
-			return this.render("securityBundle::login.html.twig");
-		}
+    accountAction() {
+      return this.render("securityBundle::account.html.twig");
+    }
 
-		accountAction(){
-			return this.render("securityBundle::account.html.twig");
-		}
+    decisionAction() {
+      return this.render("securityBundle::decision.html.twig");
 
-		decisionAction(){
-			return this.render("securityBundle::decision.html.twig");
-
-		}
-	}
-	return oauthController ;
+    }
+  };
+  return oauthController;
 });

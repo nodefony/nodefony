@@ -1,4 +1,4 @@
-module.exports = nodefony.register("log", function() {
+module.exports = nodefony.register("log", function () {
 
   const defaultLog = {
     rotate: false,
@@ -43,14 +43,14 @@ module.exports = nodefony.register("log", function() {
 
     watch(path) {
       this.watcher = fs.watch(path);
-      this.watcher.on("change", function(event /*, filename*/ ) {
+      this.watcher.on("change", function (event /*, filename*/ ) {
         switch (event) {
-          case "change":
-            this.fire("onChange", this.path, fs.lstatSync(path));
-            break;
-          case "rename":
-            this.fire("onRename", this.path, fs.lstatSync(path));
-            break;
+        case "change":
+          this.fire("onChange", this.path, fs.lstatSync(path));
+          break;
+        case "rename":
+          this.fire("onRename", this.path, fs.lstatSync(path));
+          break;
         }
       }.bind(this));
       return this.watcher;
@@ -78,7 +78,7 @@ module.exports = nodefony.register("log", function() {
     }
 
     close(txt) {
-      this.stream.end(txt, "UTF8", function() {
+      this.stream.end(txt, "UTF8", function () {
         fs.unwatchFile(this.path);
         this.fire("onClose", this.stream);
       }.bind(this));

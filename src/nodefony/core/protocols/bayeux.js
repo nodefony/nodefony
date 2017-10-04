@@ -1,6 +1,6 @@
 const shortId = require('shortid');
 
-module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function() {
+module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function () {
 
   const defaultSettings = {
     timestamp: true
@@ -32,12 +32,12 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
     }
 
     handshakeResponse(message, advice, ext) {
-			let reconnect = null ;
-      if (advice){
+      let reconnect = null;
+      if (advice) {
         reconnect = "retry";
-      }else{
+      } else {
         reconnect = "none";
-			}
+      }
       var ele = nodefony.extend({}, this.response, {
         channel: "/meta/handshake",
         //clientId:this.generateClientId(),
@@ -49,19 +49,19 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
         },
         ext: ext || {}
       });
-      if (this.settings.timestamp){
+      if (this.settings.timestamp) {
         ele.timestamp = this.generateTimestamp();
-			}
+      }
       return ele;
     }
 
     connectResponse(message, advice, ext) {
-			let reconnect = null ;
-      if (advice){
+      let reconnect = null;
+      if (advice) {
         reconnect = "retry";
-      }else{
+      } else {
         reconnect = "none";
-			}
+      }
       let ele = nodefony.extend({}, this.response, {
         channel: "/meta/connect",
         successful: true,
@@ -131,41 +131,41 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
 
     onMessage(message) {
       switch (nodefony.typeOf(message)) {
-        case "string":
-          var ret = null;
-          this.parser(message, (err, mess) => {
-            if (err) {
-              //console.log(err)
-              throw err;
-            }
-            ret = this.onMessage(mess);
-          });
-          return ret;
-        case "object":
-          switch (message.channel) {
-            case "/meta/handshake":
-              return this.send(this.handshakeResponse(message));
-            case "/meta/connect":
-              return this.send(this.connectResponse(message));
-            case "/meta/disconnect":
-              return this.send(this.disconnectResponse(message));
-            case "/meta/subscribe":
-              return this.send(this.subscribeResponse(message));
-            case "/meta/unsubscribe":
-              return this.send(this.unsubscribeResponse(message));
-            default:
-              return this.send(this.publishResponse(message));
-              // /some/channel
+      case "string":
+        var ret = null;
+        this.parser(message, (err, mess) => {
+          if (err) {
+            //console.log(err)
+            throw err;
           }
-          break;
-        case "array":
-          var tab = [];
-          for (var i = 0; i < message.length; i++) {
-            tab.push(this.onMessage(message[i]));
-          }
-          return this.send(tab);
+          ret = this.onMessage(mess);
+        });
+        return ret;
+      case "object":
+        switch (message.channel) {
+        case "/meta/handshake":
+          return this.send(this.handshakeResponse(message));
+        case "/meta/connect":
+          return this.send(this.connectResponse(message));
+        case "/meta/disconnect":
+          return this.send(this.disconnectResponse(message));
+        case "/meta/subscribe":
+          return this.send(this.subscribeResponse(message));
+        case "/meta/unsubscribe":
+          return this.send(this.unsubscribeResponse(message));
         default:
-          throw new Error("BAYEUX message bad format ");
+          return this.send(this.publishResponse(message));
+          // /some/channel
+        }
+        break;
+      case "array":
+        var tab = [];
+        for (var i = 0; i < message.length; i++) {
+          tab.push(this.onMessage(message[i]));
+        }
+        return this.send(tab);
+      default:
+        throw new Error("BAYEUX message bad format ");
       }
     }
 
