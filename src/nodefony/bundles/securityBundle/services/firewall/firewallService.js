@@ -96,7 +96,7 @@ module.exports = nodefony.registerService("firewall", function () {
             this.firewall = firewall;
             this.router = this.get("router");
             this.sessionContext = "default";
-            this.crossDomain = null;
+            this.cors = null;
             this.pattern = ".*";
             this.factory = null;
             this.provider = null;
@@ -131,7 +131,7 @@ module.exports = nodefony.registerService("firewall", function () {
         handleCrossDomain(context) {
             if (context.crossDomain) {
                 if (this.crossDomain) {
-                    return this.crossDomain.match(context.request, context.response);
+                    return this.cors.match(context.request, context.response);
                 } else {
                     return 401;
                 }
@@ -314,8 +314,9 @@ module.exports = nodefony.registerService("firewall", function () {
             this.pattern = new RegExp(pattern);
         }
 
-        setCrossDomain(crossSettings) {
-            this.crossDomain = new nodefony.io.cors(crossSettings);
+        setCors(crossSettings) {
+            this.cors = this.firewall.corsManager.createCors(crossSettings);
+            return this.cors;
         }
 
         setFormLogin(route) {
@@ -358,17 +359,18 @@ module.exports = nodefony.registerService("firewall", function () {
 
     const Firewall = class Firewall extends nodefony.Service {
 
-        constructor(container, kernel) {
-
+        constructor(container, kernel, cors) {
             super("firewall", container, kernel.notificationsCenter);
+            this.corsManager = cors;
             this.reader = function (context) {
                 let func = context.get("reader").loadPlugin("security", pluginReader);
                 return function (result) {
                     try {
                         return func(result, context.nodeReader.bind(context));
                     } catch (e) {
-                        context.logger(e.message, "ERROR");
-                        console.trace(e);
+                        throw e;
+                        //context.logger(e.message, "ERROR");
+                        //console.trace(e);
                     }
                 };
             }(this);
@@ -551,7 +553,7 @@ module.exports = nodefony.registerService("firewall", function () {
                 context.crossDomain = context.isCrossDomain();
                 //CROSS DOMAIN //FIXME width callback handle for async response
                 if (context.security && context.crossDomain) {
-                    next = context.security.handleCrossDomain(context, request, response);
+                    next = context.security.handleCrossDomain(context);
                     switch (next) {
                     case 204:
                         return 204;
@@ -613,7 +615,7 @@ module.exports = nodefony.registerService("firewall", function () {
                                 break;
 
                             case "crossDomain":
-                                area.setCrossDomain(param[config]);
+                                area.setCors(param[config]);
                                 break;
                             case "form_login":
                                 if (param[config].login_path) {

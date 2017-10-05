@@ -29,7 +29,7 @@ system:
   monitoring                    : true
   documentation                 : true
   unitTest                      : true
-  demo                          : false
+  demo                          : true
   locale                        : "en_en"
 
   servers:

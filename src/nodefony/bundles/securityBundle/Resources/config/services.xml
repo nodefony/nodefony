@@ -1,31 +1,32 @@
 <?xml version="1.0" ?>
 
-<container xmlns="http://nodefony.com/schema/dic/services"
-    	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    	xsi:schemaLocation="http://nodefony.com/schema/dic/services http://nodefony.com/schema/dic/services/services-1.0.xsd">
+<container xmlns="http://nodefony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nodefony.com/schema/dic/services http://nodefony.com/schema/dic/services/services-1.0.xsd">
 
-    	<parameters>
-		<parameter key="firewall">firewall</parameter>
-		<parameter key="oauth2">oauth2</parameter>
-		<parameter key="cors">cors</parameter>
-    	</parameters>
+    <parameters>
+        <parameter key="firewall">firewall</parameter>
+        <parameter key="oauth2">oauth2</parameter>
+        <parameter key="cors">cors</parameter>
+    </parameters>
 
-    	<services>
-		<service id="security" class="{{firewall}}">
-            		<argument type="service" id="container" />
-            		<argument type="service" id="kernel" />
-        	</service>
-
-		<service id="oauth2" class="{{oauth2}}">
-            		<argument type="service" id="container" />
-            		<argument type="service" id="kernel" />
-        	</service>
+    <services>
 
         <service id="cors" class="{{cors}}">
-                <argument type="service" id="container" />
-            	<argument type="service" id="kernel" />
+            <argument type="service" id="container"/>
+            <argument type="service" id="httpKernel"/>
+        </service>
+
+        <service id="security" class="{{firewall}}">
+            <argument type="service" id="container"/>
+            <argument type="service" id="kernel"/>
+            <argument type="service" id="cors"/>
+        </service>
+
+        <service id="oauth2" class="{{oauth2}}">
+            <argument type="service" id="container"/>
+            <argument type="service" id="kernel"/>
         </service>
 
 
-	</services>
+
+    </services>
 </container>
