@@ -12,9 +12,9 @@
 #
 # This file is YAML  FILE
 # ---
-# YAML: YAML Ain't Markup Language
+# YAML:         YAML Ain't Markup Language
 #
-# What It Is: YAML is a human friendly data serialization
+# What It Is:   YAML is a human friendly data serialization
 #   standard for all programming languages.
 #
 # YAML Resources:
@@ -36,6 +36,6 @@ locale :			en_en
 mocha:
   nodefony:
     console:
-      ui: 'bdd'
+      ui:       'bdd'
       reporter: 'list'          # spec | list
-      timeout: 20000
+      timeout:  20000

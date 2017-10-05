@@ -12,9 +12,9 @@
 #
 # This file is YAML  FILE
 # ---
-# YAML: YAML Ain't Markup Language
+# YAML:        YAML Ain't Markup Language
 #
-# What It Is: YAML is a human friendly data serialization
+# What It Is:  YAML is a human friendly data serialization
 #   standard for all programming languages.
 #
 # YAML Resources:
@@ -33,15 +33,15 @@
 name :				sequelizeBundle
 locale :			en_en
 
-debug:  true
+debug:         true
 
 connectors:
   nodefony:
-    driver: sqlite
-    dbname: "/app/Resources/databases/nodefony.db"
+    driver:    sqlite
+    dbname:    "/app/Resources/databases/nodefony.db"
     options:
       dialect: sqlite
       pool:
-        max: 5
-        min: 0
-        idle: 10000
+        max:   5
+        min:   0
+        idle:  10000

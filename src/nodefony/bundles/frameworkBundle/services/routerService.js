@@ -348,7 +348,7 @@ module.exports = nodefony.registerService("router", function () {
     }
 
     generatePath(name, variables, host) {
-      let route = this.getRoute(name);
+      let route = this.getRoute(name.replace(/\s/, ""));
       let queryString = variables ? variables.queryString : null;
       if (!route) {
         throw {

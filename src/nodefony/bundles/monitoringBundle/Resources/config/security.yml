@@ -6,9 +6,9 @@ security:
 #           provider:                   nodefony
 #           form_login:
 #             check_path:               /nodefony
-#             login_path:               /demo/login  
+#             login_path:               /demo/login
 #             default_target_path:      /
-           #FACTORY (strategy) AUTHENTICATION
+#           FACTORY (strategy) AUTHENTICATION
 #           passport-digest:
 #             private_key:              "Les sanglots longs Des violons De l’automne Blessent mon cœur D’une langueur Monotone."
 #             realm:                    "nodefony"
@@ -17,5 +17,3 @@ security:
 #           anonymous:                  ~
 #           context:                    ~
 #           stateless:                  false           #TODO
-          
-

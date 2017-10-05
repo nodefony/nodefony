@@ -208,7 +208,8 @@ module.exports = nodefony.register("Response", function () {
           break;
         }
       }
-      if (status == "301") {
+      status = parseInt(status, 10);
+      if (status === 301) {
         this.setStatusCode(status);
       } else {
         this.setStatusCode(302);

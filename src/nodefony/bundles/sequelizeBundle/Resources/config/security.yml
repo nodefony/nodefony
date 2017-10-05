@@ -6,4 +6,4 @@ security:
     providers:
       nodefony:
         entity:
-          name:   "user"
+          name: "user"

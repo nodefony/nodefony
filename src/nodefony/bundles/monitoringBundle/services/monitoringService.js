@@ -1,288 +1,295 @@
-
 const net = require('net');
 const pm2 = require('pm2');
 const os = require('os');
 
-module.exports = nodefony.registerService("monitoring", function(){
+module.exports = nodefony.registerService("monitoring", function () {
 
-	let _totalCpuTime = function (cpu) {
-	  // millis
-	  if (!cpu || !cpu.times) return 0;
-	  const { user, nice, sys, idle, irq } = cpu.times;
+  const _totalCpuTime = function (cpu) {
+    // millis
+    if (!cpu || !cpu.times) {
+      return 0;
+    }
+    const {
+      user,
+      nice,
+      sys,
+      idle,
+      irq
+    } = cpu.times;
 
-	  return user + nice + sys + idle + irq;
-	}
+    return user + nice + sys + idle + irq;
+  };
 
-	let totalCpusTime = function(cpus) {
-		if (cpus){
-	  		return cpus.map(_totalCpuTime).reduce((a, b) => a + b, 0);
-		}
-	}
+  const totalCpusTime = function (cpus) {
+    if (cpus) {
+      return cpus.map(_totalCpuTime).reduce((a, b) => a + b, 0);
+    }
+  };
 
-	var connection = class connection  {
+  const connection = class connection {
 
-		 constructor(socket){
-			this.socket = socket ;
-			this.id = socket._handle.fd+"_"+socket.server._connectionKey;
-			this.readable = socket.readable ;
-			this.writable = socket.writable;
-		};
+    constructor(socket) {
+      this.socket = socket;
+      this.id = socket._handle.fd + "_" + socket.server._connectionKey;
+      this.readable = socket.readable;
+      this.writable = socket.writable;
+    }
+    write(data) {
+      this.socket.write(data);
+    }
+  };
 
+  const monitoring = class monitoring extends nodefony.Service {
 
-		write (data){
-			this.socket.write(data);
-		};
-	};
+    constructor(realTime, container, kernel) {
 
-	var monitoring = class monitoring extends nodefony.Service {
+      super("MONITORING", container, kernel.notificationsCenter);
 
-		constructor( realTime, container, kernel ){
+      this.realTime = realTime;
+      this.kernel = kernel;
+      this.status = "disconnect";
+      this.connections = [];
+      this.domain = kernel.domain;
+      this.port = 1318;
+      this.server = null;
+      this.syslog = kernel.syslog;
+      this.node_start = this.kernel.node_start;
 
-			super("MONITORING", container, kernel.notificationsCenter );
+      this.listen(this, "onReady", () => {
+        this.name = this.container.getParameters("bundles.App.App.projectName") || "nodefony";
+        this.port = this.container.getParameters("bundles.realTime.services.monitoring.port") || 1318;
+        if (this.realTime && this.kernel.type === "SERVER") {
+          this.createServer();
+        }
+      });
+    }
 
-			this.realTime = realTime ;
-			this.kernel = kernel ;
-			this.status = "disconnect";
-			this.connections= [];
-			this.domain = kernel.domain;
-			this.port = 1318;
-			this.server = null;
-			this.syslog = kernel.syslog ;
-			this.node_start = this.kernel.node_start;
+    logger(pci, severity, msgid) {
+      if (!msgid) {
+        msgid = "SERVICE MONITORING ";
+      }
+      if (this.realTime) {
+        this.realTime.logger(pci, severity, msgid);
+      } else {
+        this.kernel.logger(pci, severity, msgid);
+      }
+    }
 
-			this.listen(this, "onReady" ,() => {
-                                this.name = this.container.getParameters("bundles.App.App.projectName") || "nodefony" ;
-                                this.port = this.container.getParameters("bundles.realTime.services.monitoring.port") || 1318;
-                                if( this.realTime  &&  this.kernel.type === "SERVER" ){
-                                        this.createServer();
-                                }
-                        })
-		};
+    createServer() {
+      this.server = net.createServer({
+        allowHalfOpen: true
+      }, (socket) => {
+        socket.write("");
+        this.stopped = false;
+      });
 
-		logger (pci, severity, msgid,  msg){
-			if (! msgid) msgid = "SERVICE MONITORING ";
-			if ( this.realTime )
-				this.realTime.logger(pci, severity,msgid);
-			else
-				this.kernel.logger(pci, severity,msgid);
-		};
+      /*
+       *	EVENT CONNECTIONS
+       */
+      this.server.on("connection", (socket) => {
+        this.logger("CONNECT TO SERVICE MONITORING FROM : " + socket.remoteAddress, "INFO");
 
-		createServer (){
+        let closed = false;
+        let interval = null;
+        let conn = new connection(socket);
+        this.connections.push(conn);
+        this.connections[conn.id] = this.connections[this.connections.length - 1];
 
-			this.server = net.createServer({
-				allowHalfOpen : true
-			}, (socket) => {
-				socket.write("");
-				this.stopped = false ;
-			});
+        /*let callback = function (pdu) {
+          if (closed || this.stopped) {
+            if (this.syslog) {
+              if (this.connections && this.connections[conn.id]) {
+                this.syslog.unListen("onLog", this.connections[conn.id].listener);
+              }
+            }
+            return;
+          }
+          let ele = {
+            pdu: pdu
+          };
+          conn.write(JSON.stringify(ele));
+        };*/
 
-			/*
- 		 	*	EVENT CONNECTIONS
- 		 	*/
-			this.server.on("connection",(socket) => {
-				this.logger("CONNECT TO SERVICE MONITORING FROM : "+socket.remoteAddress, "INFO");
+        switch (this.node_start) {
+        case "PM2":
+          pm2.connect(() => {
+            this.logger("CONNECT PM2 REALTIME MONITORING", "DEBUG");
+            // PM2 REALTIME
+            interval = setInterval(() => {
+              pm2.describe(this.name, (err, list) => {
+                let clusters = {
+                  pm2: [],
+                  name: this.name
+                };
+                if (list) {
+                  for (let i = 0; i < list.length; i++) {
+                    clusters.pm2.push({
+                      monit: list[i].monit,
+                      name: list[i].name,
+                      pid: list[i].pid,
+                      pm_id: list[i].pm_id,
+                      pm2_env: {
+                        exec_mode: list[i].pm2_env.exec_mode,
+                        restart_time: list[i].pm2_env.restart_time,
+                        pm_uptime: list[i].pm2_env.pm_uptime,
+                        status: list[i].pm2_env.status
+                      }
+                    });
+                  }
+                }
+                if (closed || this.stopped) {
+                  clearInterval(interval);
+                  return;
+                }
+                conn.write(JSON.stringify(clusters));
+              });
+            }, 1000);
+          });
+          break;
+        case "NODEFONY_DEV":
+          let cpuUsage = null;
+          let cpus = null;
+          interval = setInterval(() => {
+            let stats = this.kernel.stats();
+            let cpu = this.getCpuUsage(cpuUsage, cpus);
+            cpuUsage = cpu.cpuUsage;
+            cpus = cpu.cpus;
+            let clusters = {
+              pm2: [],
+              name: this.name
+            };
+            let ele = {
+              monit: {
+                memory: stats.memory.rss,
+                cpu: cpu.percent
+              },
+              name: this.name,
+              pid: this.kernel.processId,
+              pm_id: "",
+              pm2_env: {
+                exec_mode: "development",
+                restart_time: 0,
+                pm_uptime: this.kernel.uptime,
+                status: "online"
+              }
+            };
+            clusters.pm2.push(ele);
+            conn.write(JSON.stringify(clusters));
+          }, 1000);
+          break;
+        case "NODEFONY":
+          break;
+        }
 
-				var closed = false ;
-				var interval = null ;
-				var conn = new connection(socket);
-				this.connections.push(conn) ;
-				this.connections[conn.id] = this.connections[this.connections.length-1];
+        socket.on('end', () => {
+          closed = true;
+          if (this.syslog) {
+            if (this.connections && this.connections[conn.id] && this.connections[conn.id].listener) {
+              this.syslog.unListen("onLog", this.connections[conn.id].listener);
+            }
+          }
+          clearInterval(interval);
+          this.logger("CLOSE CONNECTION TO SERVICE MONITORING FROM : " + socket.remoteAddress + " ID :" + conn.id, "INFO");
+          socket.end();
+          delete this.connections[conn.id];
+        });
 
-				var callback = function(pdu){
-					if (closed || this.stopped ){
-						if ( this.syslog ){
-							if (this.connections && this.connections[conn.id] )
-								this.syslog.unListen("onLog", this.connections[conn.id]["listener"]);
-						}
-						return;
-					}
-					var ele ={
-						pdu:pdu
-					}
-					conn.write(JSON.stringify(ele));
-				};
+        socket.on("data", (buffer) => {
+          try {
+            console.log(buffer.toString());
+          } catch (e) {
+            this.logger("message :" + buffer.toString() + " error : " + e.message, "ERROR");
+          }
+        });
+      });
 
-				switch ( this.node_start ){
-					case "PM2" :
-						pm2.connect( () => {
-							this.logger("CONNECT PM2 REALTIME MONITORING", "DEBUG");
-							// PM2 REALTIME
-							interval = setInterval( () => {
-								pm2.describe(this.name, (err, list) => {
-									var clusters = {
-										pm2:[],
-										name:this.name
-									}
-									if ( list ){
-										for ( var i = 0 ; i <  list.length ; i++){
-											clusters.pm2.push({
-												monit:list[i].monit,
-												name:list[i].name,
-												pid:list[i].pid,
-												pm_id:list[i].pm_id,
-												pm2_env:{
-													exec_mode:list[i]["pm2_env"].exec_mode,
-													restart_time:list[i]["pm2_env"].restart_time,
-													pm_uptime:list[i]["pm2_env"].pm_uptime,
-													status:list[i]["pm2_env"].status
-												}
-											});
-										}
-									}
-									if (closed || this.stopped ){
-										clearInterval( interval );
-										return ;
-									}
-									conn.write(JSON.stringify(clusters));
-								});
-							}, 1000);
-						});
-					break;
-					case "NODEFONY_DEV":
-						let cpuUsage = null ;
-						let cpus = null ;
-						interval = setInterval( () => {
-							let stats = this.kernel.stats();
-							let cpu =  this.getCpuUsage(cpuUsage , cpus);
-							cpuUsage = cpu.cpuUsage ;
-							cpus = cpu.cpus ;
-							var clusters = {
-								pm2:[],
-								name:this.name
-							}
-							let ele = {
-								monit:{
-									memory: stats.memory.rss,
-									cpu: cpu.percent
-								},
-								name:this.name,
-								pid:this.kernel.processId,
-								pm_id:"",
-								pm2_env:{
-									exec_mode:"development",
-									restart_time:0,
-									pm_uptime:this.kernel.uptime,
-									status:"online"
-								}
-							}
-							clusters.pm2.push(ele);
-							conn.write(JSON.stringify(clusters));
-						}, 1000 );
-					break;
-					case "NODEFONY":
-					break;
-				}
+      /*
+       *	EVENT CLOSE
+       */
+      this.server.on("close", ( /*socket*/ ) => {
+        this.stopped = true;
+        this.logger("SHUTDOWN server MONITORING listen on Domain : " + this.domain + " Port : " + this.port, "INFO");
+      });
 
-				socket.on('end',() => {
-					closed = true ;
-					if ( this.syslog ){
-						if (this.connections && this.connections[conn.id] && this.connections[conn.id]["listener"] )
-							this.syslog.unListen("onLog", this.connections[conn.id]["listener"]);
-					}
-					clearInterval( interval );
-					this.logger("CLOSE CONNECTION TO SERVICE MONITORING FROM : "+socket.remoteAddress + " ID :" +conn.id, "INFO");
-					socket.end();
-					delete this.connections[conn.id];
-				});
+      /*
+       *	EVENT ERROR
+       */
+      this.server.on("error", (error) => {
+        let httpError = error.errno;
+        switch (error.errno) {
+        case "EADDRINUSE":
+          this.logger(new Error(httpError + " " + this.domain + " Port : " + this.port + " ==> " + error), "CRITIC");
+          setTimeout(() => {
+            this.server.close();
+          }, 1000);
+          break;
+        default:
+          this.logger(new Error(httpError), "CRITIC");
+        }
+      });
 
-				socket.on("data",(buffer) => {
-					try {
-						console.log( buffer.toString() )
-					}catch(e){
-						this.logger("message :" + buffer.toString() + " error : "+e.message,"ERROR")
-					}
-				});
-			});
+      /*
+       *	LISTEN ON DOMAIN
+       */
+      this.server.listen(this.port, this.domain, () => {
+        this.logger("Create server MONITORING listen on Domain : " + this.domain + " Port : " + this.port, "INFO");
+      });
 
-			/*
- 		 	*	EVENT CLOSE
- 		 	*/
-			this.server.on("close",(socket) => {
-				this.stopped = true ;
-				this.logger("SHUTDOWN server MONITORING listen on Domain : "+this.domain+" Port : "+this.port, "INFO");
-			});
+      /*
+       *  KERNEL EVENT TERMINATE
+       */
+      this.kernel.listen(this, "onTerminate", () => {
+        this.stopServer();
+      });
+    }
 
-			/*
- 		 	*	EVENT ERROR
- 		 	*/
-			this.server.on("error",(error) => {
-				var httpError = error.errno;
-				switch (error.errno){
-					case "EADDRINUSE":
-						this.logger( new Error(httpError + " " +this.domain+" Port : "+this.port +" ==> " + error) ,"CRITIC");
-						setTimeout(() => {
-      							this.server.close();
-    						}, 1000);
-					break;
-					default :
-						this.logger( new Error(httpError) ,"CRITIC");
-				}
-			})
+    getCpuUsage(startUsage, cpus) {
+      //let now = Date.now()
+      //while (Date.now() - now < 500);
 
-			/*
- 		 	*	LISTEN ON DOMAIN
- 		 	*/
-			this.server.listen(this.port, this.domain, () => {
-				this.logger("Create server MONITORING listen on Domain : "+this.domain+" Port : "+this.port, "INFO");
-			});
+      let elapUsage = null;
+      if (!startUsage) {
+        elapUsage = process.cpuUsage();
+      } else {
+        elapUsage = process.cpuUsage(startUsage);
+      }
 
-			/*
- 		 	*  KERNEL EVENT TERMINATE
- 		 	*/
-			this.kernel.listen(this, "onTerminate", () => {
-				this.stopServer();
-			})
-		};
+      let newCpus = os.cpus();
+      let newStartUsage = process.cpuUsage();
 
-		getCpuUsage(startUsage, cpus){
-		  //let now = Date.now()
-		  //while (Date.now() - now < 500);
+      let elapCpuTimeMs = totalCpusTime(newCpus) - totalCpusTime(cpus || newCpus);
 
-		  let elapUsage = null ;
-		  if (! startUsage ){
-			  elapUsage = process.cpuUsage();
-		  }else{
-			  elapUsage = process.cpuUsage(startUsage);
-		  }
+      let elapUserMS = elapUsage.user / 1000; // microseconds to milliseconds
+      let elapSystMS = elapUsage.system / 1000;
+      let cpuPercent = (100 * (elapUserMS + elapSystMS) / elapCpuTimeMs).toFixed(1);
 
-		  let newCpus = os.cpus();
-		  let newStartUsage = process.cpuUsage();
+      return {
+        percent: cpuPercent,
+        cpuUsage: newStartUsage,
+        cpus: newCpus
+      };
+    }
 
-		  let elapCpuTimeMs = totalCpusTime(newCpus) - totalCpusTime(cpus || newCpus );
-
-		  let elapUserMS = elapUsage.user / 1000; // microseconds to milliseconds
-		  let elapSystMS = elapUsage.system / 1000;
-		  let cpuPercent = (100 * (elapUserMS + elapSystMS) / elapCpuTimeMs).toFixed(1) ;
-
-		  return {
-			  percent:cpuPercent,
-			  cpuUsage:newStartUsage,
-			  cpus:newCpus
-		  } ;
-		}
-
-		stopServer (){
-			this.stopped = true ;
-			for (var i = 0 ; i < this.connections.length ; i++){
-				this.logger("CLOSE CONNECTIONS SERVICE REALTIME : " + this.name);
-				if ( this.connections[i]["listener"] ){
-					this.syslog.unListen("onLog", this.connections[i]["listener"]);
-				}
-				this.connections[i].socket.end();
-				var id = this.connections[i].id;
-				delete this.connections[id];
-			}
-			this.connections.length = 0 ;
-			if (this.server){
-				try {
-					this.server.close();
-				}catch(e){
-					this.logger(e, "ERROR")
-				}
-			}
-		};
-	};
-
-	return monitoring;
-
+    stopServer() {
+      this.stopped = true;
+      for (let i = 0; i < this.connections.length; i++) {
+        this.logger("CLOSE CONNECTIONS SERVICE REALTIME : " + this.name);
+        if (this.connections[i].listener) {
+          this.syslog.unListen("onLog", this.connections[i].listener);
+        }
+        this.connections[i].socket.end();
+        let id = this.connections[i].id;
+        delete this.connections[id];
+      }
+      this.connections.length = 0;
+      if (this.server) {
+        try {
+          this.server.close();
+        } catch (e) {
+          this.logger(e, "ERROR");
+        }
+      }
+    }
+  };
+  return monitoring;
 });

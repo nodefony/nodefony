@@ -5,76 +5,89 @@
  *
  *
  */
-var Sequelize =require("sequelize");
+const Sequelize = require("sequelize");
 
-module.exports = nodefony.registerEntity("session", function(){
+module.exports = nodefony.registerEntity("session", function () {
 
-    var Session = function(db,  ormService ){
-        var model = db.define("session", {
-            session_id    : {type:  Sequelize.STRING(126).BINARY, primaryKey: true },
-            context        : {type:  Sequelize.STRING(126).BINARY, defaultValue: "default",primaryKey: true },
-            Attributes    : {
-                type:  Sequelize.TEXT,
-                set:function( value ){
-                    return this.setDataValue('Attributes', JSON.stringify(value) );
-                },
-                get:function(value){
-                    var val  = this.getDataValue(value);
-                    return  JSON.parse(val) ;
-                }
-            },
-            flashBag    : {
-                type:  Sequelize.TEXT,
-                set:function( value ){
-                    return this.setDataValue('flashBag', JSON.stringify(value) );
-                },
-                get:function(value){
-                    var val  = this.getDataValue(value);
-                    return  JSON.parse(val) ;
-                }
-            },
-            metaBag        : {
-                type:  Sequelize.TEXT,
-                set:function( value ){
-                    return this.setDataValue('metaBag', JSON.stringify(value) );
-                },
-                get:function(value){
-                    var val  = this.getDataValue(value);
-                    return  JSON.parse(val) ;
-                }
-            },
-            createdAt    : { type: Sequelize.DATE, defaultValue:Sequelize.NOW }
-        },{
-            logging:false
-        });
+  const Session = function (db, ormService) {
+    var model = db.define("session", {
+      session_id: {
+        type: Sequelize.STRING(126).BINARY,
+        primaryKey: true
+      },
+      context: {
+        type: Sequelize.STRING(126).BINARY,
+        defaultValue: "default",
+        primaryKey: true
+      },
+      Attributes: {
+        type: Sequelize.TEXT,
+        set: function (value) {
+          return this.setDataValue('Attributes', JSON.stringify(value));
+        },
+        get: function (value) {
+          var val = this.getDataValue(value);
+          return JSON.parse(val);
+        }
+      },
+      flashBag: {
+        type: Sequelize.TEXT,
+        set: function (value) {
+          return this.setDataValue('flashBag', JSON.stringify(value));
+        },
+        get: function (value) {
+          let val = this.getDataValue(value);
+          return JSON.parse(val);
+        }
+      },
+      metaBag: {
+        type: Sequelize.TEXT,
+        set: function (value) {
+          return this.setDataValue('metaBag', JSON.stringify(value));
+        },
+        get: function (value) {
+          let val = this.getDataValue(value);
+          return JSON.parse(val);
+        }
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW
+      }
+    }, {
+      logging: false
+    });
 
-        model.fetchAll = function(callback){
-            return this.findAll().then(function(result){
-                    return callback(null, result);
-            }).catch(function(error){
-                    if (error){
-                            return callback(error, null);
-                    }
-            });
-        };
-
-        ormService.listen(this, 'onReadyConnection', function(connectionName, db, ormService){
-            if(connectionName === 'nodefony'){
-                var user = ormService.getEntity("user");
-                if ( user){
-                    model.belongsTo(user, {  foreignKey: 'user_id'  ,constraints: false});
-                }else{
-                    throw "ENTITY ASSOCIATION user NOT AVAILABLE";
-                }
-            }
-        });
-
-        return model;
+    model.fetchAll = function (callback) {
+      return this.findAll().then(function (result) {
+        return callback(null, result);
+      }).catch(function (error) {
+        if (error) {
+          return callback(error, null);
+        }
+      });
     };
 
-    return {
-        type:"sequelize",
-        connection : "nodefony",
-        entity:Session
-    };
+    ormService.listen(this, 'onReadyConnection', function (connectionName, db, ormService) {
+      if (connectionName === 'nodefony') {
+        let user = ormService.getEntity("user");
+        if (user) {
+          model.belongsTo(user, {
+            foreignKey: 'user_id',
+            constraints: false
+          });
+        } else {
+          throw "ENTITY ASSOCIATION user NOT AVAILABLE";
+        }
+      }
+    });
+
+    return model;
+  };
+
+  return {
+    type: "sequelize",
+    connection: "nodefony",
+    entity: Session
+  };
 });
