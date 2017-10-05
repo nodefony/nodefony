@@ -68,14 +68,14 @@ nodefony.register.call(nodefony.security.factory, "passport-basic", function () 
 
     handle(context, callback) {
 
-      this.passport.authenticate('basic', {
+      return this.passport.authenticate('basic', {
         session: false,
       })(context, (error, res) => {
         if (res) {
           context.user = res;
           this.contextSecurity.logger("AUTHORISATION " + this.getKey() + " SUCCESSFULLY : " + res.username, "INFO");
         }
-        var token = {
+        let token = {
           name: "Basic",
           user: res
         };
