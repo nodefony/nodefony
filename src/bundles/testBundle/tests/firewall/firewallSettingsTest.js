@@ -112,7 +112,7 @@ describe("BUNDLE TEST", function () {
             //console.log(global.firewall.securedAreas["test-local-area"] );
             let local = global.firewall.securedAreas["test-local-area"];
             assert.deepStrictEqual(local.sessionContext, "default");
-            assert.deepStrictEqual(local.redirect_Https, true);
+            assert.deepStrictEqual(local.redirect_Https, false);
             assert.deepStrictEqual(local.providerName, "nodefony");
             assert(local.provider);
             assert.deepStrictEqual(local.alwaysUseDefaultTarget, false);

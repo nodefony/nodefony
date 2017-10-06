@@ -57,7 +57,7 @@ test-websoket-cors:
   requirements:
       method:
           - WEBSOCKET
-      protocol: "Sip"
+      protocol: "sip"
 
 ## UNIT TEST
 myroute:
@@ -207,7 +207,7 @@ rest-403:
 # LOGIN
 test-login:
   pattern:      /test/login
-  defaults:     {"controller": "testBundle:login:index"}
+  defaults:     {"controller": "testBundle:login:login"}
 test-logout:
   pattern:      /test/logout
   defaults:     {"controller": "testBundle:login:logout"}
@@ -227,4 +227,13 @@ test-digest-area:
 
 test-local-area:
   pattern:      /test/firewall/local
-  defaults:     {"controller": "testBundle:firewall:local"}
+  defaults:     {"controller": "testBundle:cors:http"}
+
+#CORS
+test-cors-settings:
+  pattern:      /test/unit/cors/http/{area}
+  defaults:     {"controller": "testBundle:cors:http"}
+
+test-cors-http:
+  pattern:      /test/firewall/local/cors/http
+  defaults:     {"controller": "testBundle:cors:http"}

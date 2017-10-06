@@ -1,13 +1,5 @@
 module.exports = nodefony.registerService("cors", function () {
 
-    /*const headersCorsDefaults = {
-        "Access-Control-Allow-Methods": "GET",
-        "Access-Control-Allow-Headers": "ETag, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date",
-        "Access-Control-Expose-Headers": "WWW-Authenticate, X-Json, X-Requested-With",
-        "Access-Control-Max-Age": 10,
-        "Access-Control-Allow-Credentials": true
-    };*/
-
     const readConfig = function readConfig(settings) {
         for (let ele in settings) {
             let str = null;
@@ -71,26 +63,37 @@ module.exports = nodefony.registerService("cors", function () {
             this.headers = {};
             readConfig.call(this, settings);
         }
-        match(request, response) {
-            var URL = url.parse(request.headers.referer || request.headers.origin ||  request.url.href);
-            var origin = URL.protocol + "//" + URL.host;
+        match(context) {
+            let request = context.request;
+            let response = context.response;
+            let URL = null;
+            if (context.method === "WEBSOCKET") {
+                URL = request.origin;
+                //console.log(context.originUrl)
+            } else {
+                URL = url.parse(request.headers.referer || request.headers.origin ||  request.url.href);
+                //console.log(context.originUrl)
+            }
+
+            let origin = URL.protocol + "//" + URL.host;
             if (this.allowMatch) {
-                var res = this.allowMatch.exec(origin);
+                let res = this.allowMatch.exec(origin);
                 if (!res) {
                     return 401;
                 }
+                response.setHeaders(nodefony.extend({
+                    "Access-Control-Allow-Origin": origin
+                }, this.headers));
+                if (request.method.toUpperCase() === "OPTIONS") {
+                    response.statusCode = 204;
+                    response.writeHead();
+                    response.flush();
+                    return 204;
+                }
+                return 200;
             } else {
                 return 401;
             }
-            this.headers["Access-Control-Allow-Origin"] = origin;
-            response.setHeaders(this.headers);
-            if (request.method.toUpperCase() === "OPTIONS") {
-                response.statusCode = 204;
-                response.writeHead();
-                response.flush();
-                return 204;
-            }
-            return 200;
         }
     };
 
@@ -107,9 +110,10 @@ module.exports = nodefony.registerService("cors", function () {
         }
 
         createCors(settings) {
-            let ext = nodefony.extend({}, this.settings, settings);
-            //console.log(ext)
-            return new Cors(ext);
+            if (!settings) {
+                return new Cors(this.settings);
+            }
+            return new Cors(settings);
         }
 
         isCrossDomain(context) {
