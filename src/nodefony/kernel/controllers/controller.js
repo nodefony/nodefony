@@ -441,18 +441,33 @@ module.exports = nodefony.register("controller", function () {
     }
 
     createNotFoundException(message) {
+      if (message instanceof Error) {
+        message.code = 404;
+        this.fire("onError", this.container, message);
+        return;
+      }
       let error = new Error(message);
       error.code = 404;
       this.fire("onError", this.container, error);
     }
 
     createUnauthorizedException(message) {
+      if (message instanceof Error) {
+        message.code = 401;
+        this.fire("onError", this.container, message);
+        return;
+      }
       let error = new Error(message);
       error.code = 401;
       this.fire("onError", this.container, error);
     }
 
     createException(message) {
+      if (message instanceof Error) {
+        message.code = 500;
+        this.fire("onError", this.container, message);
+        return;
+      }
       let error = new Error(message);
       error.code = 500;
       this.fire("onError", this.container, error);

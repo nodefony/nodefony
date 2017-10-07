@@ -71,6 +71,7 @@ security:
             crossDomain:
                 allow-origin:
                   - "http://mycrossdomain.com:5151"
+                  - "ws://mycrossdomain.com:5151"
                 Access-Control:
                   Access-Control-Allow-Methods:
                    - GET
