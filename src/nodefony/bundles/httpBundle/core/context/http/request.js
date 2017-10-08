@@ -247,8 +247,6 @@ module.exports = nodefony.register("Request", function () {
       //super.clean();
     }
 
-
-
     logger(pci, severity, msgid, msg) {
       if (!msgid) {
         msgid = this.context.type + " REQUEST ";

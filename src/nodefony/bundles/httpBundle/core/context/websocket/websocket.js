@@ -75,8 +75,8 @@ nodefony.register.call(nodefony.context, "websocket", function () {
         }
       });
       this.listen(this, "onResponse", this.send);
-      this.listen(this, "onRequest", this.handle);
-      this.listen(this, "connect", () => {
+      this.once(this, "onRequest", this.handle);
+      this.once(this, "connect", () => {
         this.connect(this.resolver.acceptedProtocol);
       });
       //case proxy

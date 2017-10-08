@@ -106,7 +106,7 @@ module.exports = nodefony.registerService("firewall", function () {
       this.defaultTarget = "/";
       this.alwaysUseDefaultTarget = false;
 
-      this.listen(this, "onReady", () => {
+      this.once(this, "onReady", () => {
         try {
           if (this.providerName in this.firewall.providers) {
             this.provider = this.firewall.providers[this.providerName].Class;
@@ -190,6 +190,9 @@ module.exports = nodefony.registerService("firewall", function () {
           } else {
             context.isJson = true;
             context.setXjson(e);
+            error = new Error(e.message);
+            error.code = e.status;
+            return context.fire("onError", context.container, error);
           }
           return context.fire("onRequest");
         } else {
@@ -219,7 +222,7 @@ module.exports = nodefony.registerService("firewall", function () {
     handle(context) {
       try {
         if (this.factory) {
-          this.factory.handle(context, (error, token) => {
+          return this.factory.handle(context, (error, token) => {
             if (error) {
               return this.handleError(context, error);
             }
@@ -265,7 +268,6 @@ module.exports = nodefony.registerService("firewall", function () {
       } catch (e) {
         this.handleError(context, e);
       }
-      return context;
     }
 
     // Factory
@@ -382,7 +384,7 @@ module.exports = nodefony.registerService("firewall", function () {
       this.providers = {};
       this.sessionStrategy = "invalidate";
       // listen KERNEL EVENTS
-      this.listen(this, "onPreBoot", () => {
+      this.once(this, "onPreBoot", () => {
         this.sessionService = this.get("sessions");
         this.orm = this.get(this.kernel.settings.orm);
       });
@@ -634,7 +636,7 @@ module.exports = nodefony.registerService("firewall", function () {
                 break;
               case "context":
                 if (param[config]) {
-                  this.listen(this, "onBoot", function (context, contextSecurity) {
+                  this.once(this, "onBoot", function (context, contextSecurity) {
                     contextSecurity.setContextSession(context);
                     this.sessionService.addContextSession(context);
                   }.bind(this, param[config], area));
@@ -652,7 +654,7 @@ module.exports = nodefony.registerService("firewall", function () {
           }
           break;
         case "session_fixation_strategy":
-          this.listen(this, "onBoot", function (strategy) {
+          this.once(this, "onBoot", function (strategy) {
             this.setSessionStrategy(strategy);
             this.sessionService.setSessionStrategy(this.sessionStrategy);
           }.bind(this, obj[ele]));
@@ -720,8 +722,8 @@ module.exports = nodefony.registerService("firewall", function () {
                 }
                 break;
               case "entity":
-                this.listen(this, "onPreBoot", () => {
-                  this.orm.listen(this, "onOrmReady", function () {
+                this.once(this, "onPreBoot", () => {
+                  this.orm.once(this, "onOrmReady", function () {
                     let ent = this.orm.getEntity(element[pro].name);
                     if (!ent) {
                       this.logger("ENTITY PROVIDER : " + provider + " not found", "ERROR");

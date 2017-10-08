@@ -27,7 +27,7 @@ module.exports = nodefony.registerService("httpKernel", function () {
       });
 
       // listen KERNEL EVENTS
-      this.listen(this, "onBoot", () => {
+      this.once(this, "onBoot", () => {
         this.firewall = this.get("security");
         this.router = this.get("router");
         this.sessionService = this.get("sessions");
@@ -369,7 +369,7 @@ module.exports = nodefony.registerService("httpKernel", function () {
     handleHttp(container, request, response, type) {
       let context = new nodefony.context.http(container, request, response, type);
       //request events
-      context.listen(this, "onError", this.onError);
+      context.once(this, "onError", this.onError);
       let resolver = null;
       let next = null;
       //response events
@@ -447,14 +447,14 @@ module.exports = nodefony.registerService("httpKernel", function () {
       context.listen(this, "onError", this.onError);
       let resolver = null;
       let next = null;
-      context.listen(this, 'onConnect', (context) => {
+      context.once(this, 'onConnect', (context) => {
         if (this.firewall) {
           if (!resolver.bypassFirewall) {
             this.fire("onSecurity", context);
           }
         }
       });
-      context.listen(this, 'onFinish', (context) => {
+      context.once(this, 'onFinish', (context) => {
         this.container.leaveScope(container);
         context.clean();
         context = null;

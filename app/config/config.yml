@@ -50,7 +50,6 @@ lang:
 #
 watch:				true
 
-
 ##################################
 #
 #       OVERRIDE BUNDLE MONITORING
@@ -63,7 +62,6 @@ monitoringBundle:
   storage:
     active:                     false
     requests:                   orm
-
 
 ##################################
 #
@@ -95,7 +93,6 @@ sequelizeBundle:
 #        dialect:       mysql
 #        host:          localhost
 #        port:          '3306'
-
 
 ############################
 #
@@ -147,8 +144,6 @@ httpBundle:
           location:               127.0.0.1
           port:                   11211
           weight:                 1
-
-
 
 ################################
 #

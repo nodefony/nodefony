@@ -23,7 +23,6 @@ module.exports = nodefony.register("Response", function () {
       //this.setStatusCode(200, null);
       //timeout default
       this.timeout = this.context.kernelHttp.responseTimeout[this.context.type];
-
     }
 
     clean() {
