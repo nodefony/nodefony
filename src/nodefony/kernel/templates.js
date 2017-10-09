@@ -1,23 +1,22 @@
-
-module.exports = nodefony.register("templates", function(){
+module.exports = nodefony.register("templates", function () {
 
   const Template = class Template extends nodefony.Service {
 
-    constructor (container, engine, options){
-      super("TEMPLATE", container , container.get("notificationsCenter") );
+    constructor(container, engine, options) {
+      super("TEMPLATE", container, container.get("notificationsCenter"));
       this.settings = options;
       this.engine = engine;
     }
 
-    getEngine (){
+    getEngine() {
       return this.engine;
     }
 
-    extendFunction (){
+    extendFunction() {
       this.logger("extendFunction You must redefine this function in engine templating");
     }
 
-    extendFilter (){
+    extendFilter() {
       this.logger("extendFilter You must redefine this function in engine templating");
     }
   };

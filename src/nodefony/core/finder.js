@@ -1,11 +1,10 @@
+module.exports = nodefony.register("finder", function () {
 
-module.exports = nodefony.register("finder", function(){
-
-  const jsonTree =  class jsonTree extends nodefony.fileClass {
-    constructor (path, parent){
+  const jsonTree = class jsonTree extends nodefony.fileClass {
+    constructor(path, parent) {
       super(path);
-      this.parent = parent ;
-      if ( this.parent !== null && this.parent.children){
+      this.parent = parent;
+      if (this.parent !== null && this.parent.children) {
         this.parent.children.push(this);
       }
       this.children = [];
@@ -13,81 +12,89 @@ module.exports = nodefony.register("finder", function(){
   };
 
   /*
-  *  CLASS Result
-  *
-  */
+   *  CLASS Result
+   *
+   */
   const Result = class Result {
 
-    constructor (res){
-      if (res && nodefony.typeOf(res) === "array"){
+    constructor(res) {
+      if (res && nodefony.typeOf(res) === "array") {
         this.files = res;
-      }else{
+      } else {
         this.files = [];
       }
       this.json = {};
     }
 
-    push (file){
+    push(file) {
       this.files.push(file);
     }
 
-    length (){
+    length() {
       return this.files.length;
     }
 
-    slice (offset, limit){
-      return new Result( Array.prototype.slice.call(this.files, offset, limit) ) ;
+    slice(offset, limit) {
+      return new Result(Array.prototype.slice.call(this.files, offset, limit));
     }
 
-    sort (callback){
-      return new Result( Array.prototype.sort.call(this.files, callback) ) ;
+    sort(callback) {
+      return new Result(Array.prototype.sort.call(this.files, callback));
     }
 
-    sortByName (){
-      let res = this.files.sort(function(a,b){
-        if ( a.name.toString() > b.name.toString()) {return 1;}
-        if (  a.name.toString() < b.name.toString()) {return -1;}
+    sortByName() {
+      let res = this.files.sort(function (a, b) {
+        if (a.name.toString() > b.name.toString()) {
+          return 1;
+        }
+        if (a.name.toString() < b.name.toString()) {
+          return -1;
+        }
         return 0;
       });
-      if (res){
+      if (res) {
         return new Result(res);
       }
-      return this ;
+      return this;
     }
 
-    sortByType (){
-      let res = this.files.sort(function(a,b){
-        if ( a.type.toString() > b.type.toString()) {return 1;}
-        if (  a.type.toString() < b.type.toString()) {return -1;}
+    sortByType() {
+      let res = this.files.sort(function (a, b) {
+        if (a.type.toString() > b.type.toString()) {
+          return 1;
+        }
+        if (a.type.toString() < b.type.toString()) {
+          return -1;
+        }
         return 0;
       });
-      if (res){
+      if (res) {
         return new Result(res);
       }
-      return this ;
+      return this;
     }
 
-    findByNode (nodeName, tab, Path){
-      let i = null ;
-      if (! Path ){
+    findByNode(nodeName, tab, Path) {
+      let i = null;
+      if (!Path) {
         Path = [];
       }
-      if ( ! tab ) {
+      if (!tab) {
         tab = [];
-        for ( i = 0 ; i < this.files.length ; i++ ){
+        for (i = 0; i < this.files.length; i++) {
           if (this.files[i].name === nodeName) {
-            if ( this.files[i].isDirectory() ){
-              Path.push( this.files[i].path ) ;
+            if (this.files[i].isDirectory()) {
+              Path.push(this.files[i].path);
             }
           }
         }
       }
-      if ( Path.length  ){
-        for ( i = 0 ; i < this.files.length ; i++ ){
-          if (  Path.indexOf( this.files[i].dirName ) !== -1  ) {
+      if (Path.length) {
+        for (i = 0; i < this.files.length; i++) {
+          if (Path.indexOf(this.files[i].dirName) !== -1) {
             tab.push(this.files[i]);
-            if ( this.files[i].isDirectory() ){
-              this.findByNode( this.files[i].name, tab, [this.files[i].path] );
+            if (this.files[i].isDirectory()) {
+              this.findByNode(this.files[i].name, tab, [this.files[i].path]);
             }
           }
         }
@@ -95,9 +102,9 @@ module.exports = nodefony.register("finder", function(){
       return new Result(tab);
     }
 
-    getDirectories (){
-      let tab = [] ;
-      for (let i = 0 ; i < this.files.length ; i++ ){
+    getDirectories() {
+      let tab = [];
+      for (let i = 0; i < this.files.length; i++) {
         if (this.files[i].type === "Directory") {
           tab.push(this.files[i]);
         }
@@ -105,18 +112,18 @@ module.exports = nodefony.register("finder", function(){
       return new Result(tab);
     }
 
-    getFiles (){
-      let tab = [] ;
-      for (let i = 0 ; i < this.files.length ; i++ ){
-        switch( this.files[i].type ){
-          case "File":
-          tab.push(this.files[i]) ;
+    getFiles() {
+      let tab = [];
+      for (let i = 0; i < this.files.length; i++) {
+        switch (this.files[i].type) {
+        case "File":
+          tab.push(this.files[i]);
           break;
-          case "symbolicLink":
-          let path = fs.readlinkSync( this.files[i].path );
-          let file = this.files[i].dirName+"/"+path ;
-          if (fs.lstatSync(file).isFile() ){
-            tab.push(this.files[i]) ;
+        case "symbolicLink":
+          let path = fs.readlinkSync(this.files[i].path);
+          let file = this.files[i].dirName + "/" + path;
+          if (fs.lstatSync(file).isFile()) {
+            tab.push(this.files[i]);
           }
           break;
         }
@@ -124,56 +131,56 @@ module.exports = nodefony.register("finder", function(){
       return new Result(tab);
     }
 
-    getFile (name, casse){
-      let reg = null ;
-      for (let i = 0 ; i < this.files.length ; i++ ){
-        switch( this.files[i].type ){
-          case "File":
-          if ( casse ){
-            reg = new RegExp("^"+name+"$","i") ;
-            if ( reg.test(this.files[i].name) ){
-              return this.files[i] ;
+    getFile(name, casse) {
+      let reg = null;
+      for (let i = 0; i < this.files.length; i++) {
+        switch (this.files[i].type) {
+        case "File":
+          if (casse) {
+            reg = new RegExp("^" + name + "$", "i");
+            if (reg.test(this.files[i].name)) {
+              return this.files[i];
             }
-          }else{
-            if (this.files[i].name === name ){
-              return this.files[i] ;
+          } else {
+            if (this.files[i].name === name) {
+              return this.files[i];
             }
           }
           break;
-          case "symbolicLink":
+        case "symbolicLink":
           try {
-            let path = fs.readlinkSync( this.files[i].path );
-            let file = this.files[i].dirName+"/"+path ;
-            if (fs.lstatSync(file).isFile() ){
-              if ( casse ){
-                reg = new RegExp("^"+name+"$","i") ;
-                if ( reg.test(this.files[i].name) ){
-                  return this.files[i] ;
+            let path = fs.readlinkSync(this.files[i].path);
+            let file = this.files[i].dirName + "/" + path;
+            if (fs.lstatSync(file).isFile()) {
+              if (casse) {
+                reg = new RegExp("^" + name + "$", "i");
+                if (reg.test(this.files[i].name)) {
+                  return this.files[i];
                 }
-              }else{
-                if (this.files[i].name === name ){
-                  return this.files[i] ;
+              } else {
+                if (this.files[i].name === name) {
+                  return this.files[i];
                 }
               }
             }
-          }catch(e){
-            continue ;
+          } catch (e) {
+            continue;
           }
           break;
         }
       }
-      return null ;
+      return null;
     }
 
-    forEach (callback){
+    forEach(callback) {
       return this.files.forEach(callback);
     }
 
-    match (reg){
-      let tab = [] ;
-      for (let i = 0 ; i < this.files.length ; i++ ){
-        let res =  this.files[i].matchName(reg) ;
-        if ( res ) {
+    match(reg) {
+      let tab = [];
+      for (let i = 0; i < this.files.length; i++) {
+        let res = this.files[i].matchName(reg);
+        if (res) {
           tab.push(this.files[i]);
         }
       }
@@ -183,16 +190,16 @@ module.exports = nodefony.register("finder", function(){
 
 
   /*
-  *  CLASS Finder
-  *
-  */
-  const checkMatch = function(file, settings){
-    if ( settings.match ){
-      if ( file.matchName(settings.match) ){
+   *  CLASS Finder
+   *
+   */
+  const checkMatch = function (file, settings) {
+    if (settings.match) {
+      if (file.matchName(settings.match)) {
         return true;
-      }else{
-        if ( file.matchType(settings.match) ){
-          return settings.match ;
+      } else {
+        if (file.matchType(settings.match)) {
+          return settings.match;
         }
         return false;
       }
@@ -201,88 +208,88 @@ module.exports = nodefony.register("finder", function(){
   };
 
 
-  const checkExclude = function(file, settings){
-    if ( file.matchName( settings.exclude ) ){
-      return true ;
+  const checkExclude = function (file, settings) {
+    if (file.matchName(settings.exclude)) {
+      return true;
     }
-    if ( file.matchType(settings.exclude) ){
-      return true ;
+    if (file.matchType(settings.exclude)) {
+      return true;
     }
     return false;
   };
 
-  const checkHidden = function(file, settings){
-    if ( ! settings.seeHidden  ){
-      if ( file.isHidden() ){
+  const checkHidden = function (file, settings) {
+    if (!settings.seeHidden) {
+      if (file.isHidden()) {
         return true;
       }
     }
-    return false ;
+    return false;
   };
 
-  const find = function(file, result, depth, settings, parent){
-    let res = null ;
-    try{
+  const find = function (file, result, depth, settings, parent) {
+    let res = null;
+    try {
       try {
         res = fs.readdirSync(file.path);
-      }catch(e){
-        if (file.type ==="symbolicLink" && settings.followSymLink && depth-1 !== 0){
+      } catch (e) {
+        if (file.type === "symbolicLink" && settings.followSymLink && depth - 1 !== 0) {
           res = fs.readlinkSync(file.path);
-        }else{
-          throw e ;
+        } else {
+          throw e;
         }
       }
 
-      if (res && res.length){
+      if (res && res.length) {
         let ret = regSlash.exec(file.path);
-        let filePath = null ;
-        if (ret){
-          filePath = ret[1]+"/";
-        }else{
-          filePath = file.path+"/";
+        let filePath = null;
+        if (ret) {
+          filePath = ret[1] + "/";
+        } else {
+          filePath = file.path + "/";
         }
-        for (let i = 0 ; i < res.length ; i++){
-          let match = true ;
-          let File = filePath+res[i] ;
-          let info = new this.wrapper( File , parent);
-          if (! settings.seeHidden){
-            if ( checkHidden.call(this, info, settings) ) {
-              if (parent && parent.children){
+        for (let i = 0; i < res.length; i++) {
+          let match = true;
+          let File = filePath + res[i];
+          let info = new this.wrapper(File, parent);
+          if (!settings.seeHidden) {
+            if (checkHidden.call(this, info, settings)) {
+              if (parent && parent.children) {
                 parent.children.pop();
               }
               continue;
             }
           }
-          if ( settings.exclude ){
-            if ( checkExclude.call(this, info, settings) ){
-              if (parent && parent.children){
+          if (settings.exclude) {
+            if (checkExclude.call(this, info, settings)) {
+              if (parent && parent.children) {
                 parent.children.pop();
               }
               continue;
             }
           }
-          if (settings.match){
-            match =  checkMatch.call(this, info, settings) ;
+          if (settings.match) {
+            match = checkMatch.call(this, info, settings);
           }
-          if (match){
+          if (match) {
             result.push(info);
-            this.notificationsCenter.fire("on"+info.type, info, this);
-          }else{
-            if (parent && parent.children){
+            this.notificationsCenter.fire("on" + info.type, info, this);
+          } else {
+            if (parent && parent.children) {
               parent.children.pop();
             }
           }
-          switch(info.type){
-            case "Directory":
-            if ( settings.recurse && depth-1 !== 0 ){
-              arguments.callee.call(this, info, result, --depth, settings, info );
+          switch (info.type) {
+          case "Directory":
+            if (settings.recurse && depth - 1 !== 0) {
+              arguments.callee.call(this, info, result, --depth, settings, info);
               depth++;
             }
             break;
-            case "symbolicLink" :
-            if (settings.followSymLink && depth-1 !== 0){
+          case "symbolicLink":
+            if (settings.followSymLink && depth - 1 !== 0) {
               let obj = new this.wrapper(info.path, info);
-              if ( obj.isDirectory() ){
+              if (obj.isDirectory()) {
                 arguments.callee.call(this, obj, result, settings.depth, settings, parent);
               }
             }
@@ -293,7 +300,7 @@ module.exports = nodefony.register("finder", function(){
         }
       }
       return result;
-    }catch(e){
+    } catch (e) {
       this.notificationsCenter.fire("onError", e);
       this.errorParse.push(e);
       console.log(e);
@@ -304,17 +311,17 @@ module.exports = nodefony.register("finder", function(){
 
 
   const defaultSettings = {
-    path:null,
-    sync:true,
-    recurse:true,
-    depth:-1,
-    onFinish:null,
-    onFile:null,
-    seeHidden:false,
+    path: null,
+    sync: true,
+    recurse: true,
+    depth: -1,
+    onFinish: null,
+    onFile: null,
+    seeHidden: false,
     match: null,
     exclude: null,
-    followSymLink:false,
-    json:false
+    followSymLink: false,
+    json: false
   };
 
 
@@ -322,89 +329,89 @@ module.exports = nodefony.register("finder", function(){
 
   const finder = class finder {
 
-    constructor (settings){
-      this.path = [];
-      this.errorParse = [];
-      this.settings = nodefony.extend({}, defaultSettings, settings);
-      if (this.settings.path){
-        this.result = this.find();
-      }
-    }
-
-    in (Path){
-      this.typePath = nodefony.typeOf(Path);
-      switch ( true ){
-        case this.typePath === "string" :
-        try{
-          this.path.push(new this.wrapper(Path, null));
-          return this;
-        }catch(e){
-          throw e;
+    constructor(settings) {
+        this.path = [];
+        this.errorParse = [];
+        this.settings = nodefony.extend({}, defaultSettings, settings);
+        if (this.settings.path) {
+          this.result = this.find();
         }
-        break;
-        case this.typePath === "array" :
-        for (let i = 0 ; i < Path.length ; i++){
+      }
+
+      in (Path) {
+        this.typePath = nodefony.typeOf(Path);
+        switch (true) {
+        case this.typePath === "string":
           try {
-            this.path.push(new this.wrapper(Path[i], null));
-          }catch(e){
+            this.path.push(new this.wrapper(Path, null));
+            return this;
+          } catch (e) {
+            throw e;
+          }
+          break;
+        case this.typePath === "array":
+          for (let i = 0; i < Path.length; i++) {
+            try {
+              this.path.push(new this.wrapper(Path[i], null));
+            } catch (e) {
+              throw e;
+            }
+          }
+          return this;
+        case Path instanceof nodefony.fileClass:
+          try {
+            this.path.push(new this.wrapper(Path.path, null));
+            return this;
+          } catch (e) {
             throw e;
           }
         }
-        return this;
-        case Path instanceof  nodefony.fileClass :
-        try{
-          this.path.push(new this.wrapper(Path.path, null));
-          return this;
-        }catch(e){
-          throw e;
-        }
       }
-    }
 
-    files (){
+    files() {
       return this.find({
-        match:"File"
+        match: "File"
       });
     }
 
-    directories (){
+    directories() {
       return this.find({
-        match:"Directory"
+        match: "Directory"
       });
     }
 
-    find ( settings ){
+    find(settings) {
       let result = new Result();
-      let extend = null ;
-      if (! settings ) {
-        extend = this.settings ;
-      }else{
-        extend = nodefony.extend({}, defaultSettings, settings) ;
+      let extend = null;
+      if (!settings) {
+        extend = this.settings;
+      } else {
+        extend = nodefony.extend({}, defaultSettings, settings);
       }
 
-      this.tree = extend.json ;
-      if (this.tree){
-        this.wrapper = jsonTree ;
-      }else{
-        this.wrapper =   nodefony.fileClass ;
+      this.tree = extend.json;
+      if (this.tree) {
+        this.wrapper = jsonTree;
+      } else {
+        this.wrapper = nodefony.fileClass;
       }
 
       this.in(extend.path);
       this.notificationsCenter = nodefony.notificationsCenter.create(extend);
       try {
-        for (let i = 0 ; i < this.path.length ; i++){
-          if (extend.json ){
+        for (let i = 0; i < this.path.length; i++) {
+          if (extend.json) {
             result.json[this.path[i].name] = this.path[i];
-            find.call(this, this.path[i], result, extend.depth, extend, this.path[i] );
-          }else{
-            find.call(this, this.path[i], result, extend.depth, extend, null );
+            find.call(this, this.path[i], result, extend.depth, extend, this.path[i]);
+          } else {
+            find.call(this, this.path[i], result, extend.depth, extend, null);
           }
         }
-      }catch(e){
-        this.notificationsCenter.fire("onFinish",e,null);
+      } catch (e) {
+        this.notificationsCenter.fire("onFinish", e, null);
         throw e;
       }
-      this.notificationsCenter.fire("onFinish",null, result) ;
+      this.notificationsCenter.fire("onFinish", null, result);
       return result;
     }
   };

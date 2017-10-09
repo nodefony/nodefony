@@ -1,16 +1,22 @@
 {% extends "./layout.html.twig" %}
 {% block bodyContent %}
-	<div class="col-lg-12">
-		<div class="jumbotron bg-danger m-t-xxl">
-			<h1> Framework  Exception  </h1>
-			<h2>The following error occurred:</h2>
-			<p>url : {{ error.url }}</p>
-			<p>bundle : {{ error.bundle }}</p>
-			<p>controller : {{ error.controller }}</p>
-			<p>Message : {{ error.message }}</p>
-			<pre>
+  <div class="col-lg-12">
+    <div class="jumbotron bg-danger m-t-xxl">
+      <h1>
+        Framework Exception
+      </h1>
+      <h2>The following error occurred:</h2>
+      <p>url :
+        {{ error.url }}</p>
+      <p>bundle :
+        {{ error.bundle }}</p>
+      <p>controller :
+        {{ error.controller }}</p>
+      <p>Message :
+        {{ error.message }}</p>
+      <pre>
 			{{ error.stack  }}
 			</pre>
-		</div>
-	</div>
+    </div>
+  </div>
 {% endblock %}

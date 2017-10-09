@@ -16,6 +16,10 @@ test-rest:
   pattern:  /rest
   defaults: {"controller": "testBundle:default:rest"}
 
+test-watcher:
+    pattern:  /test/watcher
+    defaults: {"controller": "testBundle:default:watcher"}
+
 ### WEBSOCKET ###
 test-websoket:
   pattern:  /websoket
@@ -23,12 +27,37 @@ test-websoket:
   requirements:
     method:
       - WEBSOCKET
-test-websoket-404:
-  pattern:  /test/websocket
-  defaults: {"controller": "testBundle:default:websoket"}
+test-websoket-code:
+  pattern:  /test/unit/websocket/{code}
+  defaults: {"controller": "testBundle:websocket:websocket"}
+  requirements:
+      code:       "^\\d{3}$"
+      method:
+          - WEBSOCKET
+
+test-websoket-protocol:
+  pattern:  /test/unit/websocket/protocol/telnet
+  defaults: {"controller": "testBundle:websocket:protocol"}
   requirements:
       method:
           - WEBSOCKET
+      protocol: "telnet"
+
+test-websoket-protocol-sip:
+  pattern:  /test/unit/websocket/protocol/sip
+  defaults: {"controller": "testBundle:websocket:protocolSip"}
+  requirements:
+      method:
+          - WEBSOCKET
+      protocol: "sip"
+
+test-websoket-cors:
+  pattern:  /test/unit/websocket/cors
+  defaults: {"controller": "testBundle:websocket:cors"}
+  requirements:
+      method:
+          - WEBSOCKET
+      protocol: "sip"
 
 ## UNIT TEST
 myroute:
@@ -178,7 +207,7 @@ rest-403:
 # LOGIN
 test-login:
   pattern:      /test/login
-  defaults:     {"controller": "testBundle:login:index"}
+  defaults:     {"controller": "testBundle:login:login"}
 test-logout:
   pattern:      /test/logout
   defaults:     {"controller": "testBundle:login:logout"}
@@ -198,4 +227,13 @@ test-digest-area:
 
 test-local-area:
   pattern:      /test/firewall/local
-  defaults:     {"controller": "testBundle:firewall:local"}
+  defaults:     {"controller": "testBundle:cors:http"}
+
+#CORS
+test-cors-settings:
+  pattern:      /test/unit/cors/http/{area}
+  defaults:     {"controller": "testBundle:cors:http"}
+
+test-cors-http:
+  pattern:      /test/firewall/local/cors/http/{area}
+  defaults:     {"controller": "testBundle:cors:http"}

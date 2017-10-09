@@ -1,79 +1,79 @@
 const xml = require('xml2js');
 
-module.expors = nodefony.register.call( nodefony.io, "protocol",function(){
+module.expors = nodefony.register.call(nodefony.io, "protocol", function () {
 
-  const parser = function(type, settings){
-    let Parser = null ;
-    switch(type){
-      case "xml" :
-      Parser = new xml.Parser( settings );
-      return function(value, callback){
+  const parser = function (type, settings) {
+    let Parser = null;
+    switch (type) {
+    case "xml":
+      Parser = new xml.Parser(settings);
+      return function (value, callback) {
         return Parser.parseString(value, callback);
       };
-      case "json":
-      Parser = JSON.parse ;
+    case "json":
+      Parser = JSON.parse;
       let context = this;
-      if (context.root){
-        return function(value, callback){
+      if (context.root) {
+        return function (value, callback) {
           try {
-            return callback(null, Parser(value)[context.root] );
-          }catch(e){
-            return callback(e, null );
+            return callback(null, Parser(value)[context.root]);
+          } catch (e) {
+            return callback(e, null);
           }
         };
-      }else{
-        return function(value, callback){
+      } else {
+        return function (value, callback) {
           try {
             return callback(null, Parser(value));
-          }catch(e){
-            return callback(e, null );
+          } catch (e) {
+            return callback(e, null);
           }
         };
       }
     }
   };
 
-  const builder = function(method, type){
-    let Builder = null ;
-    switch(type){
-      case "xml" :
+  const builder = function (method, type) {
+    let Builder = null;
+    switch (type) {
+    case "xml":
       Builder = new xml.Builder({
-        rootName:this.root
+        rootName: this.root
       });
-      return function(obj){
+      return function (obj) {
         return Builder.buildObject(obj);
       };
-      case "json":
-      Builder = JSON.stringify ;
+    case "json":
+      Builder = JSON.stringify;
       let context = this;
-      if (context.root){
-        return function(obj){
+      if (context.root) {
+        return function (obj) {
           let base = {};
           base[context.root] = nodefony.extend({}, context[method]);
-          nodefony.extend(true, base[context.root],  obj);
+          nodefony.extend(true, base[context.root], obj);
           return Builder(base);
         };
-      }else{
-        return function(obj){
+      } else {
+        return function (obj) {
           let base = nodefony.extend({}, context[method]);
-          nodefony.extend(true, base,  obj);
+          nodefony.extend(true, base, obj);
           return Builder(base);
         };
       }
       break;
     }
-    return null ;
+    return null;
   };
 
   const defaultSettingsProtocol = {
-    extention : "json",
-    xml : {}
+    extention: "json",
+    xml: {}
   };
 
   const protocol = class protocol {
 
-    constructor (rootName, settings){
-      this.settings = nodefony.extend(true, {}, defaultSettingsProtocol, settings );
+    constructor(rootName, settings) {
+      this.settings = nodefony.extend(true, {}, defaultSettingsProtocol, settings);
       this.root = rootName;
       this.extention = this.settings.extention;
       this.request = {};

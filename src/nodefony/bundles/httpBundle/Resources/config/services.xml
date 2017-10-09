@@ -1,8 +1,6 @@
 <?xml version="1.0" ?>
 
-<container xmlns="http://nodefony.com/schema/dic/services"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://nodefony.com/schema/dic/services http://nodefony.com/schema/dic/services/services-1.0.xsd">
+<container xmlns="http://nodefony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nodefony.com/schema/dic/services http://nodefony.com/schema/dic/services/services-1.0.xsd">
 
   <parameters>
     <parameter key="serverStatics">serverStatics</parameter>
@@ -18,49 +16,49 @@
 
   <services>
     <service id="serverStatics" class="{{serverStatics}}">
-      <argument type="service" id="container" />
-      <argument type="paramaters" id="options" />
+      <argument type="service" id="container"/>
+      <argument type="paramaters" id="options"/>
     </service>
 
     <service id="httpKernel" class="{{httpKernel}}">
-      <argument type="service" id="container" />
-      <argument type="service" id="serverStatics" />
+      <argument type="service" id="container"/>
+      <argument type="service" id="serverStatics"/>
     </service>
 
     <service id="httpServer" class="{{httpServer}}">
-      <argument type="service" id="httpKernel" />
-      <argument type="service" id="security" />
+      <argument type="service" id="httpKernel"/>
+      <argument type="service" id="security"/>
     </service>
 
     <service id="httpsServer" class="{{httpsServer}}">
-      <argument type="service" id="httpKernel" />
-      <argument type="service" id="security" />
+      <argument type="service" id="httpKernel"/>
+      <argument type="service" id="security"/>
     </service>
 
     <service id="websocketServer" class="{{websocketServer}}">
-      <argument type="service" id="httpKernel" />
-      <argument type="service" id="security" />
+      <argument type="service" id="httpKernel"/>
+      <argument type="service" id="security"/>
     </service>
 
     <service id="websocketServerSecure" class="{{websocketServerSecure}}">
-      <argument type="service" id="httpKernel" />
-      <argument type="service" id="security" />
+      <argument type="service" id="httpKernel"/>
+      <argument type="service" id="security"/>
     </service>
 
     <service id="sessions" class="{{sessions}}">
-      <argument type="service" id="security" />
-      <argument type="service" id="httpKernel" />
+      <argument type="service" id="security"/>
+      <argument type="service" id="httpKernel"/>
     </service>
 
     <service id="upload" class="{{upload}}">
-      <argument type="service" id="httpKernel" />
+      <argument type="service" id="httpKernel"/>
     </service>
 
     <service id="sockjs" class="{{sockjs}}">
-      <argument type="service" id="httpKernel" />
-      <argument type="service" id="httpServer" />
-      <argument type="service" id="httpsServer" />
+      <argument type="service" id="httpKernel"/>
+      <argument type="service" id="httpServer"/>
+      <argument type="service" id="httpsServer"/>
     </service>
-    
+
   </services>
 </container>

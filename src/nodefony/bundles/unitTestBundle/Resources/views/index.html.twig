@@ -1,30 +1,31 @@
 {% extends '/app/Resources/views/base.html.twig' %}
 
-{% block title %}Welcome {{kernel.name}}! {% endblock %}
+{% block title %}Welcome
+  {{kernel.name}}!
+{% endblock %}
 
 {% block stylesheets %}
 
-        {{ parent() }}
+  {{ parent() }}
 
-        <!-- WEBPACK BUNDLE -->
-        <link rel='stylesheet' href='{{CDN("stylesheet")}}/unitTestBundle/assets/css/unitTest.css' />
+  <!-- WEBPACK BUNDLE -->
+  <link rel='stylesheet' href='{{CDN("stylesheet")}}/unitTestBundle/assets/css/unitTest.css'/>
 
 {% endblock %}
 
 {% block body %}
-        <div class='container'>
-                <div class='row'>
-                        {{readme}}
-                </div>
-        </div>
+  <div class='container'>
+    <div class='row'>
+      {{readme}}
+    </div>
+  </div>
 {% endblock %}
 
 {% block javascripts %}
 
-        {{ parent() }}
+  {{ parent() }}
 
-        <!-- WEBPACK BUNDLE -->
-        <script src='{{CDN("javascript")}}/unitTestBundle/assets/js/unitTest.js'></script>
+  <!-- WEBPACK BUNDLE -->
+  <script src='{{CDN("javascript")}}/unitTestBundle/assets/js/unitTest.js'></script>
 
 {% endblock %}
-

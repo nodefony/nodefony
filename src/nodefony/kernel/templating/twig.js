@@ -1,87 +1,87 @@
 /*
-*
-*  TWIG WRAPPER
-*
-*/
+ *
+ *  TWIG WRAPPER
+ *
+ */
 const twig = require("twig");
 
-module.exports = nodefony.registerTemplate("twig", function(){
+module.exports = nodefony.registerTemplate("twig", function () {
 
   const twigOptions = {
-    'twig options':{
+    'twig options': {
       async: false,
-      cache:true
+      cache: true
     },
-    views:null
+    views: null
   };
 
 
   const Twig = class Twig extends nodefony.templates {
 
-    constructor (container, options){
+    constructor(container, options) {
 
       super(container, twig, options);
 
       this.kernelSettings = this.container.getParameters("kernel");
-      this.cache = ( this.kernelSettings.environment === "dev"  ) ?  false : true ;
-      twig.cache( this.cache );
-      this.rootDir = this.kernel.rootDir ;
-      container.set("Twig" , this);
-      this.version = twig.VERSION ;
-      this.name = "Twig" ;
+      this.cache = (this.kernelSettings.environment === "dev") ? false : true;
+      twig.cache(this.cache);
+      this.rootDir = this.kernel.rootDir;
+      container.set("Twig", this);
+      this.version = twig.VERSION;
+      this.name = "Twig";
     }
 
-    renderFile (file, option, callback){
-      if (! option) {
+    renderFile(file, option, callback) {
+      if (!option) {
         option = {};
       }
       option.settings = nodefony.extend(true, {}, twigOptions, {
-        views :this.rootDir,
-        'twig options':{
+        views: this.rootDir,
+        'twig options': {
           cache: this.cache
         }
       });
       try {
         return this.engine.renderFile(file.path, option, callback);
-      }catch(e){
+      } catch (e) {
         callback(e, null);
       }
     }
 
-    render (view, param){
+    render(view, param) {
       var Render = this.compile(view);
       try {
         return Render(param);
-      }catch(e){
-        throw e ;
+      } catch (e) {
+        throw e;
       }
     }
 
-    compile ( file , callback){
+    compile(file, callback) {
       return this.engine.twig({
         path: file.path,
-        async:false,
-        base:this.rootDir,
+        async: false,
+        base: this.rootDir,
         //precompiled:false,
-        name:file.name,
-        load:(template) => {
+        name: file.name,
+        load: (template) => {
           callback(null, template);
         },
-        error:(error) => {
+        error: (error) => {
           callback(error, null);
         }
       });
     }
 
-    extendFunction (){
+    extendFunction() {
       return twig.extendFunction.apply(twig, arguments);
     }
 
-    extendFilter (){
+    extendFilter() {
       return twig.extendFilter.apply(twig, arguments);
     }
 
   };
   Twig.prototype.extention = "twig";
-  return   Twig ;
+  return Twig;
 });

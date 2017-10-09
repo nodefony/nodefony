@@ -228,7 +228,6 @@ describe("BUNDLE TEST", function(){
 			client.on('connect', function(connection) {
 				//console.log(connection)
 				//FIXME try to get cookies with websocket client ????
-
 				connection.on("message", (message) => {
 
 					var res = JSON.parse( message.utf8Data ) ;
@@ -251,8 +250,8 @@ describe("BUNDLE TEST", function(){
 					connection.sendUTF( JSON.stringify({foo:"bar"}) );
 				}, 500);
 			});
-			client.on('connectFailed', function() {
-				throw new Error( "websoket client error");
+			client.on('connectFailed', function(error) {
+				throw new Error( error);
 			});
 			client.connect(options.url, null, "nodefony", null, {});
 

@@ -36,9 +36,14 @@
       "it":		true,
       "describe":	true,
       "before":	true,
+      "beforeEach": true,
       "BlueBird":true,
       "twig": true,
       "shell":true,
-      "clc":true
+      "clc":true,
+      "notDefinded":true,
+      "varNotExit":true,
+      "window":true,
+      "document":true
     }
 }
