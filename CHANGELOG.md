@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.0.3 (09/10/2017)
+- [readme](https://api.github.com/repos/nodefony/nodefony-core/git/commits/9a2bfcc55368f19c945643ddbbc6391cf6dceb37) - @cci
+- [debug error stack](https://api.github.com/repos/nodefony/nodefony-core/git/commits/8498fd8b8550a9ed66b335fa0131e86d508d3a36) - @CAMENSULI Christophe
+- [debug error websocket](https://api.github.com/repos/nodefony/nodefony-core/git/commits/f5bb2058b07c60968768ddce7185fcabd281ee56) - @CAMENSULI Christophe
+- [CORS WEBSOCKET](https://api.github.com/repos/nodefony/nodefony-core/git/commits/c372340cf914896ea30321a78adbdc4acf8527ed) - @cci
+- [CORS in service](https://api.github.com/repos/nodefony/nodefony-core/git/commits/0358bc42b60835741f79a393d94bd2c5f65d69e8) - @cci
+- [debug firewall auth](https://api.github.com/repos/nodefony/nodefony-core/git/commits/8815bf7763ee07ba65bfd5a545360705befc9dd5) - @cci
+- [debug websocket error](https://api.github.com/repos/nodefony/nodefony-core/git/commits/813cf6f1df4095f95ce1109627bd3c703a1f8164) - @cci
+- [websocket error framework](https://api.github.com/repos/nodefony/nodefony-core/git/commits/bb048168113a6cb0d6c03ef8dc5f0914acb2d8fe) - @cci
+- [try watcher on require in controller directory](https://api.github.com/repos/nodefony/nodefony-core/git/commits/65aefb4c3929e7f5d75e148cd1cb991c6b5ae8fd) - @cci
+- [watcher recurse on require controller](https://api.github.com/repos/nodefony/nodefony-core/git/commits/ae937e7dc5339afe260f6f76c0b4d09938c00062) - @cci
+- [pull request](https://api.github.com/repos/nodefony/nodefony-core/git/commits/d4240334c67eabb4961d77980f49ef57dfd6ebf6) - @cci
+
+
 ## v3.0.2 (18/09/2017)
 - [clean bin nodefony](https://api.github.com/repos/nodefony/nodefony-core/git/commits/828502eafc30decc3e71aa5a89eeae0dc3ee147c) - @cci
 - [websocket error framework](https://api.github.com/repos/nodefony/nodefony-core/git/commits/240301d0ed394c0caf02c0d472ae1e281fb3c893) - @cci
