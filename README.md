@@ -27,7 +27,7 @@ Nodefony features :
 - RealTime API (Bayeux Protocol)
 - Translations
 - CLI (Command Line Interface)
-- Monitororing , Debug Bar 
+- Monitororing , Debug Bar
 - Unit Test Api in framework context ([MOCHA](https://mochajs.org/))
 
 Nodefony assimilates into the ecosystem of node.js with services like :
@@ -271,6 +271,14 @@ Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : INSTALL ASSETS LINK IN WEB P
 └─────────┴───────────────────┴────────────────────────────────────────────┴───────────┴────────────────┘
 Wed Jul 19 2017 15:22:12 INFO CONSOLE   : NODEFONY Kernel Life Cycle Terminate CODE : 0
 ```
+### Start Servers to check new Bundle hello:
+```bash
+$ ./nodefony -d dev
+
+# TO STOP
+$ <ctrl-c>
+```
+
 #### Now helleBundle is auto-insert in framework with watcher active and auto-config Webpack Module bundler
 
 ### watchers :
@@ -342,14 +350,6 @@ module.exports = webpackMerge( {
     resolve     : {},
     plugins     : []
 }, commonConfig );
-```
-### Start Servers to check new Bundle hello:
-```bash
-$ make
-$ ./nodefony -d dev
-
-# TO STOP
-$ <ctrl-c>
 ```
 
 ### <a name="start_prod"></a>Start Production Mode
