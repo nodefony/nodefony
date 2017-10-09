@@ -11,7 +11,7 @@
     "build": "make build",
     "outdated": "npm outdated --deph=0",
     "test": "./nodefony unitTest:launch:all",
-    "version": "gren --username=nodefony  --repo=nodefony-core --tags=all --action changelog --data-source=commits --override --generate"
+    "version": "gren changelog --username=nodefony  --repo=nodefony-core --tags=all --data-source=commits --override --generate"
   },
   "bin": {
     "nodefony": "./nodefony"
