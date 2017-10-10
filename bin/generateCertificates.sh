@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 # inspired by https://jamielinux.com/docs/openssl-certificate-authority/index.html
 
 ROOT_DIR="./config/certificates"
