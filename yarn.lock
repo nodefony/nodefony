@@ -4778,8 +4778,8 @@ less@^2.7.2:
     source-map "^0.5.3"
 
 less@^3.0.0-alpha.3:
-  version "3.0.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/less/-/less-3.0.0-alpha.3.tgz#d3da9234fd16e60a47d6291e772e65a841ec8410"
+  version "3.0.0-pre.4"
+  resolved "https://registry.yarnpkg.com/less/-/less-3.0.0-pre.4.tgz#67507b12e6dc93746f73d231ae38e3c043f1e380"
   optionalDependencies:
     errno "^0.1.1"
     graceful-fs "^4.1.2"

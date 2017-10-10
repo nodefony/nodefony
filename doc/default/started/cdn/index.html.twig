@@ -1,0 +1,164 @@
+{{trans_default_domain("doc")}}
+
+<div class="page-header">
+  <h1>
+    CDN
+  </h1>
+</div>
+
+<h2>We can use Nginx to test render static files as CDN
+</h2>
+<div class="doc2">
+  <h4>
+    Example nginx configuration :
+  </h4>
+
+  <pre>
+server {
+  listen       80;
+  listen       443 ssl;
+  server_name  <b>statics.domain.com</b>;
+
+  ssl_certificate  /path_to_nodefony/config/certificates/nodefony.fr/fullchain.pem;
+  ssl_certificate_key /path_to_nodefony/config/certificates/nodefony.fr/privkey.pem;
+  ssl_trusted_certificate /path_to_nodefony/config/certificates/nodefony.fr/fullchain.pem;
+
+  location ~* \.(gif|jpg|jpeg|png|wmv|avi|mpg|mpeg|mp4|webm|htm|html|js|css|mp3|swf|ico|flv|woff.?|ttf)$ {
+    access_log off;
+    root /path_to_nodefony/web;
+    expires 7d;
+    add_header access-control-allow-origin  *;
+  }
+}
+  </pre>
+</div>
+<div class="doc2">
+  <h4>
+    Example nodefony CDN configuration : ./config/config.yml
+  </h4>
+  <pre>
+system:
+  domain                        : localhost             # nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
+  domainAlias:                                          # domainAlias string only <<regexp>>   example ".*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$"
+    - "^127.0.0.1$"
+  httpPort                      : 5151
+  httpsPort                     : 5152
+  <b>statics                       : false</b>
+  security                      : true
+  realtime                      : true
+  monitoring                    : true
+  documentation                 : true
+  unitTest                      : true
+  demo                          : true
+  locale                        : "en_en"
+
+  servers:
+    http                        : true
+    https                       : true
+    ws                          : true
+    wss                         : true
+    certificats:
+      key                       : "config/certificates/server/privkey.pem"
+      cert                      : "config/certificates/server/fullchain.pem"
+      ca                        : "config/certificates/ca/nodefony-root-ca.crt.pem"
+      options:
+        rejectUnauthorized      : false
+
+  bundles:
+    test                        : "src/bundles/testBundle"
+
+  log:
+    active                      : true
+
+#
+#       ASSETS CDN
+#
+#       You set cdn with string
+#       CDN :   cdn.nodefony.com
+#       or
+#       CDN:
+#          global: cdn.nodefony.com
+#       or
+#       CDN:
+#         stylesheet:
+#           - cdn.nodefony.com
+#         javascript:
+#           - cdn.nodefony.com
+#         image:
+#           - cdn.nodefony.com
+#           - cdn.nodefony.fr
+#         font:
+#           - cdn.nodefony.com
+#
+<b>CDN :
+  global: statics.domain.com</b>
+
+#
+# ENGINE TEMPLATE
+#
+#       TWIG
+#       https://github.com/justjohn/twig.js
+#
+templating                      : twig
+
+#
+# ENGINE ORM
+#       SEQUELIZE
+orm                             : sequelize
+
+#
+# NODE.JS PACKAGE MANAGER
+#
+#       npm
+#       yarn
+#
+packageManager                  : npm
+
+  </pre>
+</div>
+
+<h2>Use CDN In views
+</h2>
+<div class="doc2">
+  <h4>
+    Example base.html.twig :
+  </h4>
+
+  <pre>
+&lthtml&gt
+  &lthead&gt
+&#123% block head %&#125 &#123% endblock %&#125
+&#123% block meta %&#125
+	&ltmeta charset="utf-8"&gt
+	&ltmeta http-equiv="content-type" content="text/html; charset=UTF-8"&gt
+	&ltmeta http-equiv="X-UA-Compatible" content="IE=edge"&gt
+	&ltmeta name="viewport" content="width=device-width, initial-scale=1"&gt
+	&ltmeta name="generator" content="Nodefony (https://nodefony.net)"&gt
+	&ltmeta name="keywords" content="web,Framework,realtime,node.js,symfony,javascript,npm,linux"&gt
+	&ltlink rel="manifest" href="/app/manifest.json"&gt
+&#123% endblock %&#125
+
+&#123% block description %&#125
+	&ltmeta name="description" content="Node.js full-stack web framework Symfony Like"&gt
+&#123% endblock %&#125
+
+      &lttitle&gt&#123% block title %&#125NODEFONY&#123% endblock %&#125&lt/title&gt
+
+      &#123% block stylesheets %&#125
+	&lt!-- WEBPACK BUNDLE --&gt
+	&ltlink rel="stylesheet" href="&#123&#123<b>CDN('stylesheet')</b>&#125&#125/app/assets/css/app.css" /&gt
+&#123% endblock %&#125
+
+  &lt/head&gt
+  &ltbody&gt
+&#123% block body %&#125&#123% endblock %&#125
+&#123% block footer %&#125&#123% endblock %&#125
+      &#123% block javascripts %&#125
+	&lt!-- WEBPACK BUNDLE --&gt
+	&ltscript type="text/javascript" src="&#123&#123<b>CDN('javascript')</b>&#125&#125/app/assets/js/app.js"&gt&lt/script&gt
+&#123% endblock %&#125
+  &lt/body&gt
+&lt/html&gt
+
+	</pre>
+</div>

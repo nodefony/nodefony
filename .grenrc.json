@@ -1,0 +1,17 @@
+{
+    "dataSource": "commits",
+    "username":"nodefony",
+    "repo":"nodefony-core",
+    "tags":"all",
+    "action":"changelog",
+    "template": {
+        "commit": "- [{{message}}]({{url}}) s-soo @{{author}}",
+        "issue": "- {{labels}} {{name}} [{{text}}]({{url}})",
+        "label": "[**{{label}}**]",
+        "noLabel": "closed",
+        "group": "\n#### {{heading}}\n",
+        "changelogTitle": "# Changelog\n\n",
+        "release": "## {{release}} ({{date}})\n{{body}}",
+        "releaseSeparator": "\n---\n\n"
+    }
+}

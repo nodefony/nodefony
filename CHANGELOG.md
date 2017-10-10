@@ -2,8 +2,8 @@
 
 ## v3.0.3 (09/10/2017)
 - [readme](https://api.github.com/repos/nodefony/nodefony-core/git/commits/9a2bfcc55368f19c945643ddbbc6391cf6dceb37) - @cci
-- [debug error stack](https://api.github.com/repos/nodefony/nodefony-core/git/commits/8498fd8b8550a9ed66b335fa0131e86d508d3a36) - @CAMENSULI Christophe
-- [debug error websocket](https://api.github.com/repos/nodefony/nodefony-core/git/commits/f5bb2058b07c60968768ddce7185fcabd281ee56) - @CAMENSULI Christophe
+- [debug error stack](https://api.github.com/repos/nodefony/nodefony-core/git/commits/8498fd8b8550a9ed66b335fa0131e86d508d3a36) - @cci
+- [debug error websocket](https://api.github.com/repos/nodefony/nodefony-core/git/commits/f5bb2058b07c60968768ddce7185fcabd281ee56) - @cci
 - [CORS WEBSOCKET](https://api.github.com/repos/nodefony/nodefony-core/git/commits/c372340cf914896ea30321a78adbdc4acf8527ed) - @cci
 - [CORS in service](https://api.github.com/repos/nodefony/nodefony-core/git/commits/0358bc42b60835741f79a393d94bd2c5f65d69e8) - @cci
 - [debug firewall auth](https://api.github.com/repos/nodefony/nodefony-core/git/commits/8815bf7763ee07ba65bfd5a545360705befc9dd5) - @cci

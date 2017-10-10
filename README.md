@@ -88,14 +88,24 @@ You can follow Nodefony build on travis at **[https://travis-ci.org/nodefony/nod
 
    npm will be automatically installed by Node.js
 
-#### System :
-- LINUX ( Checked )
+#### Operating Systems : **[Install Node.js via Package](https://nodejs.org/en/download/package-manager)**
 
-  -  **[Install Node.js via Package](https://nodejs.org/en/download/package-manager)**
+- LINUX
+  - debian (Checked, tested)
+  - RASPBIAN Raspberry Pi (Checked)
 
-- MACOS ( Checked )
+- FreeBSD (Checked)
+  - pkg install bash rsync gmake gcc6
+    setenv CC /usr/local/bin/gcc
+    setenv CXX /usr/local/bin/g++
+    link pythonX.X python
+    link make gmake  
 
-- ~~WINDOWS ( Unchecked )~~
+- ~~ OpenBSD ( not Checked yet )~~
+
+- MACOS ( Checked ,tested)
+
+- ~~WINDOWS ( not ported yet )~~
 
 - EMBEDDED SYSTEM ( Very difficult : large memory footprint )  
 
