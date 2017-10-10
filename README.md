@@ -84,7 +84,7 @@ You can follow Nodefony build on travis at **[https://travis-ci.org/nodefony/nod
 
 -  **[Node.js](https://nodejs.org/)** ® is a Platform built on Chrome's JavaScript runtime ( >= 6 )
 
--  **[npm](https://www.npmjs.com/)**  is the Package Manager for javascript application
+-  **[npm](https://www.npmjs.com/)** or **[yarn](https://yarnpkg.com/lang/en/)**  Packages Manager for javascript application
 
    npm will be automatically installed by Node.js
 
@@ -96,12 +96,12 @@ You can follow Nodefony build on travis at **[https://travis-ci.org/nodefony/nod
 
 - FreeBSD (Checked)
   - pkg install bash rsync gmake gcc6
-    setenv CC /usr/local/bin/gcc
-    setenv CXX /usr/local/bin/g++
-    link pythonX.X python
-    link make gmake  
+  - setenv CC /usr/local/bin/gcc
+  - setenv CXX /usr/local/bin/g++
+  - link pythonX.X python
+  - link make gmake  
 
-- ~~ OpenBSD ( not Checked yet )~~
+- ~~ OpenBSD ( not Checked yet ) ~~
 
 - MACOS ( Checked ,tested)
 
