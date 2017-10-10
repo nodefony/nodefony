@@ -434,7 +434,11 @@ module.exports = nodefony.registerService("webpack", function () {
     getUglifyJsPlugin(config) {
       try {
         return new webpack.optimize.UglifyJsPlugin(nodefony.extend(true, {}, {
-          minimize: this.production
+          uglifyOptions: {
+            warnings: true,
+            compress: true
+          },
+          parallel: true
         }, config));
       } catch (e) {
         throw e;
