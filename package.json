@@ -43,7 +43,8 @@
   ],
   "os": [
     "darwin",
-    "linux"
+    "linux",
+    "openbsd"
   ],
   "engines": {
     "node": ">=6"
