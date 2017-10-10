@@ -44,7 +44,7 @@
   "os": [
     "darwin",
     "linux",
-    "openbsd"
+    "freebsd"
   ],
   "engines": {
     "node": ">=6"
