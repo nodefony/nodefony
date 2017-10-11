@@ -23,8 +23,8 @@ module.exports = nodefony.registerController("default", function () {
      *
      */
     indexAction(version) {
-      var defaultVersion = null;
-      var force = this.query.force;
+      let defaultVersion = null;
+      let force = this.query.force;
       if (!version) {
         defaultVersion = this.defaultVersion;
       } else {
@@ -32,9 +32,9 @@ module.exports = nodefony.registerController("default", function () {
       }
       if (force) {
         try {
-          var file = new nodefony.fileClass(this.kernel.rootDir + "/README.md");
+          let file = new nodefony.fileClass(this.kernel.rootDir + "/README.md");
           if (file) {
-            var res = this.htmlMdParser(file.content(file.encoding), {
+            let res = this.htmlMdParser(file.content(file.encoding), {
               linkify: true,
               typographer: true
             });
@@ -48,7 +48,7 @@ module.exports = nodefony.registerController("default", function () {
           this.logger(e, "ERROR");
         }
       }
-      var myUrl = this.generateUrl("documentation-version", {
+      let myUrl = this.generateUrl("documentation-version", {
         bundle: "nodefony",
         version: defaultVersion
       });
@@ -56,9 +56,9 @@ module.exports = nodefony.registerController("default", function () {
     }
 
     subSectionAction(version, bundle, section) {
-      var subsection = null;
-      var Path = null;
-      var finder = null;
+      let subsection = null;
+      let Path = null;
+      let finder = null;
       if (this.query.subsection) {
         subsection = this.query.subsection;
       } else {
@@ -94,14 +94,14 @@ module.exports = nodefony.registerController("default", function () {
           throw "404";
         }
       } catch (e) {
-        var myUrl = this.generateUrl("documentation-version", {
+        let myUrl = this.generateUrl("documentation-version", {
           bundle: "nodefony",
           version: this.defaultVersion
         });
         return this.redirect(myUrl);
       }
-      var directory = finder.result.getDirectories();
-      var sections = [];
+      let directory = finder.result.getDirectories();
+      let sections = [];
       directory.forEach(function (ele) {
         sections.push(ele.name);
       });
@@ -135,7 +135,7 @@ module.exports = nodefony.registerController("default", function () {
       }
       if (bundle === "nodefony") {
         Path = path.resolve(this.kernel.nodefonyPath, "../../");
-        var bundles = this.kernel.bundles;
+        let bundles = this.kernel.bundles;
         if (!section) {
           directoryBundles = [];
           for (var myBundle in bundles) {
@@ -183,22 +183,22 @@ module.exports = nodefony.registerController("default", function () {
             findPath = path.resolve(Path, "doc", version);
           }
         } else {
-          findPath = path.resolve(Path, "doc", "Beta");
+          findPath = path.resolve(Path, "doc", "default");
         }
         findPath = new nodefony.fileClass(findPath);
       } catch (e) {
-        findPath = path.resolve(Path, "doc", "Default");
+        findPath = path.resolve(Path, "doc", "default");
         try {
           findPath = new nodefony.fileClass(findPath);
           myUrl = this.generateUrl("documentation-version", {
             bundle: bundle,
-            version: "Default"
+            version: "default"
           });
           return this.redirect(myUrl);
         } catch (e) {
           myUrl = this.generateUrl("documentation-version", {
             bundle: "nodefony",
-            version: "Beta"
+            version: "default"
           });
           return this.redirect(myUrl);
         }
@@ -313,15 +313,15 @@ module.exports = nodefony.registerController("default", function () {
 
     navDocAction() {
 
-      var finder = new nodefony.finder({
+      let finder = new nodefony.finder({
         path: path.resolve(this.kernel.nodefonyPath, "../../", "doc"),
         recurse: false,
       });
 
-      var directory = finder.result.getDirectories();
+      let directory = finder.result.getDirectories();
       //console.log(directory)
 
-      var versions = [];
+      let versions = [];
       directory.forEach(function (ele) {
         versions.push(ele.name);
       });
@@ -332,9 +332,9 @@ module.exports = nodefony.registerController("default", function () {
     }
 
     navDocBundleAction() {
-      var bundles = this.kernel.bundles;
-      var directory = [];
-      for (var bundle in bundles) {
+      let bundles = this.kernel.bundles;
+      let directory = [];
+      for (let bundle in bundles) {
         directory.push(bundles[bundle]);
       }
       return this.renderView("documentationBundle::navDocBundle.html.twig", {
@@ -349,21 +349,21 @@ module.exports = nodefony.registerController("default", function () {
      *
      */
     footerAction() {
-      var translateService = this.get("translation");
-      var version = this.kernel.settings.version;
-      var path = this.generateUrl("home");
-      var year = new Date().getFullYear();
-      var langs = translateService.getLangs();
-      var locale = translateService.getLocale();
-      var langOptions = "";
-      for (var ele in langs) {
+      let translateService = this.get("translation");
+      let version = this.kernel.settings.version;
+      let path = this.generateUrl("home");
+      let year = new Date().getFullYear();
+      let langs = translateService.getLangs();
+      let locale = translateService.getLocale();
+      let langOptions = "";
+      for (let ele in langs) {
         if (locale === langs[ele].value) {
           langOptions += '<option value="' + langs[ele].value + '" selected >' + langs[ele].name + '</option>';
         } else {
           langOptions += '<option value="' + langs[ele].value + '" >' + langs[ele].name + '</option>';
         }
       }
-      var html = '<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">\
+      let html = '<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">\
              <div class"container-fluid">\
              <div class="navbar-header">\
              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#footer-collapse">\

@@ -9,22 +9,22 @@ const commonConfig = require("./webpack.common.js");
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = webpackMerge({
-    watch: false,
-    plugins: [
-        new OptimizeCssAssetsPlugin({
-            cssProcessorOptions: {
-                discardComments: {
-                    removeAll: true
-                }
-            },
-            canPrint: true
-        }),
-        new UglifyJsPlugin({
-            uglifyOptions: {
-                warnings: true,
-                compress: true
-            },
-            parallel: true
-        })
-    ]
+  watch: false,
+  plugins: [
+    new OptimizeCssAssetsPlugin({
+      cssProcessorOptions: {
+        discardComments: {
+          removeAll: true
+        }
+      },
+      canPrint: true
+    }),
+    new UglifyJsPlugin({
+      uglifyOptions: {
+        warnings: true,
+        compress: true
+      },
+      parallel: true
+    })
+  ]
 }, commonConfig);

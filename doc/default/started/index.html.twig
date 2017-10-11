@@ -62,9 +62,9 @@ Change in Location : <code>./config/config.yml</code>   :
 #
 #
 system:
-  domain                        : localhost                             # nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
-  domainAlias:                                                          # domainAlias string only regex  example .*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$
-    - "^127.0.0.1$"
+  domain                        : mydomain.com        	# nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
+  domainAlias:                                          # domainAlias string only regex  example .*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$
+    - "^www.mydomain.com$"
   httpPort                      : 5151
   httpsPort                     : 5152
 
