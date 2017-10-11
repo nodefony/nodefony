@@ -38,7 +38,7 @@ server {
   }
   location / {
     root /path_to_nodefony/web ;
-    proxy_pass <b>localhost:5151</b>;
+    proxy_pass <b>http://localhost:5151</b>;
     proxy_http_version 1.1;
     proxy_pass_header Server;
     proxy_set_header Upgrade $http_upgrade;

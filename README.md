@@ -96,10 +96,10 @@ You can follow Nodefony build on travis at **[https://travis-ci.org/nodefony/nod
 
 - FreeBSD (Checked)
   - pkg install bash rsync gmake gcc6
-  - setenv CC /usr/local/bin/gcc
-  - setenv CXX /usr/local/bin/g++
-  - link pythonX.X python
-  - link make gmake  
+  - setenv CC "/usr/local/bin/gcc"
+  - setenv CXX "/usr/local/bin/g++"
+  - cd /usr/local/bin/ ;ln -s pythonx.x python
+  - replace make by gmake
 
 - ~~ OpenBSD ( not Checked yet ) ~~
 
