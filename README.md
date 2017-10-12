@@ -54,7 +54,7 @@ You can follow Nodefony build on travis at **[https://travis-ci.org/nodefony/nod
 ##  **Resources for Newcomers**
 
 #### -  **[Nodefony Demo](https://nodefony.net)**  
-#### -  **[Nodefony Documentation](https://nodefony.net/documentation)**  
+#### -  **[Nodefony Documentation](https://nodefony.net/documentation/default/nodefony)**
 #### -  **[Nodefony Monitoring](https://nodefony.net/nodefony)**
 
 #### Documentation in progress !!
@@ -418,7 +418,7 @@ Monitoring in progress !!!
 - [PM2](https://github.com/Unitech/PM2/blob/master/ADVANCED_README.md)
 - [WEBPACK](https://webpack.js.org/)
 
-More informations [Documentation](https://nodefony.net/documentation)
+More informations  **[Nodefony Documentation](https://nodefony.net/documentation/default/nodefony)**
 
 ## <a name="authors"></a>Authors
 
