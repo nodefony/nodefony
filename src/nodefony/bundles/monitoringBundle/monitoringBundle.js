@@ -246,17 +246,21 @@ module.exports = nodefony.registerBundle("monitoring", function () {
     }
 
     onRequest(context) {
+      if (this.kernel.environment === "prod" && !this.settings.forceDebugBarProd) {
+        return;
+      }
+      if (!context.storage) {
+        if (!this.settings.debugBar) {
+          return;
+        }
+      }
       context.profiling = null;
       let agent = null;
       let tmp = null;
       let myUserAgent = null;
       context.storage = this.isMonitoring(context);
 
-      if (!context.storage) {
-        if (!this.settings.debugBar) {
-          return;
-        }
-      }
+
 
       try {
         if (context.request.headers) {
@@ -292,8 +296,6 @@ module.exports = nodefony.registerBundle("monitoring", function () {
           is: null
         };
       }
-
-      //var settingsAssetic = context.container.getParameters("bundles.assetic") ;
 
       let trans = context.get("translation");
       context.profiling = {

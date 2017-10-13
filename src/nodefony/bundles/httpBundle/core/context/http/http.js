@@ -128,7 +128,8 @@ nodefony.register.call(nodefony.context, "http", function () {
         nodefony: {
           url: this.request.url,
           environment: this.kernel.environment,
-          debug: this.kernel.debug
+          debug: this.kernel.debug,
+          local: this.translation.defaultLocale.substr(0, 2)
         },
         getFlashBag: this.flashTwig.bind(this),
         render: this.render.bind(this),
