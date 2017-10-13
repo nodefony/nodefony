@@ -182,14 +182,15 @@ module.exports = nodefony.register("Response", function () {
                 this.headers['Transfer-Encoding'] = 'chunked';
                 this.writeHead();
             }
+            return this.write(data, encoding);
+        }
+
+        write(data, encoding) {
             return this.response.write((data || this.body), (encoding || this.encoding));
         }
 
-        write() {
-            if (this.encoding) {
-                return this.response.write(this.body + "\n", this.encoding);
-            }
-            return this.response.write(this.body + "\n");
+        writeContinue() {
+            return this.response.writeContinue();
         }
 
         end(data, encoding) {
