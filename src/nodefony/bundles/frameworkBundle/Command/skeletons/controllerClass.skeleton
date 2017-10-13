@@ -36,7 +36,7 @@ module.exports = nodefony.registerController("{{name}}", function(){
 					});
 					return this.render("{{bundleName}}:{{directory}}:index.html.twig",{readme:res});
 				}catch(e){
-					return this.forward("frameworkBundle:default:system",{view: "{{bundleName}}:{{directory}}:index.html.twig",bundle:this.getParameters("bundles.{{smallName}}")});
+					throw e;
 				}
 			}
 		};
