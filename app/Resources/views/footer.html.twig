@@ -1,19 +1,26 @@
-<footer class="footer-nodfony">
+<footer class="footer-nodefony">
 
     <div class="footer-left">
-        <p  class="footer-company-name" href="{{ path('home') }}" >
+        <p class="footer-company-name" href="{{ path('home') }}">
 
-            <strong> NODEFONY {{version}}  ©</strong> {{year}}
+            <strong>
+                NODEFONY
+                {{version}}
+                ©</strong>
+            {{year}}
         </p>
     </div>
 
     <div class="footer-right">
         <select class="nodefony-select" id="langs">
             {% for opt in langs %}
-                {% if locale ==  opt.value %}
-                    <option value="{{ opt.value}}" selected > {{ opt.name }} </option>
+                {% if locale == opt.value %}
+                    <option value="{{ opt.value}}" selected>
+                        {{ opt.name }}
+                    </option>
                 {% else %}
-                    <option value="{{ opt.value}}"> {{ opt.name }}</option>
+                    <option value="{{ opt.value}}">
+                        {{ opt.name }}</option>
                 {% endif %}
             {% endfor %}
         </select>
@@ -21,7 +28,7 @@
 
     <script>
         document.getElementById("langs").addEventListener("change", function(e) {
-            window.location.href = "?lang="+this.value
+            window.location.href = "?lang=" + this.value
             e.preventDefault();
         });
     </script>
