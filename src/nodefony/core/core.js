@@ -65,10 +65,13 @@ module.exports = function () {
     typeOf(value) {
       let t = typeof value;
       if (t === 'object') {
+
         if (value === null) {
           return null;
         }
-
+        if (Buffer.isBuffer(value)) {
+          return "buffer";
+        }
         if (this.isArray(value)) {
           return "array";
         }

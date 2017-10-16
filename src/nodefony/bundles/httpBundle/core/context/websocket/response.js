@@ -37,9 +37,6 @@ nodefony.register("wsResponse", function () {
 
     setBody(ele) {
       switch (nodefony.typeOf(ele)) {
-      case "string":
-        this.body = ele;
-        break;
       case "object":
       case "array":
         this.body = JSON.stringify(ele);
@@ -47,7 +44,11 @@ nodefony.register("wsResponse", function () {
       default:
         this.body = ele;
       }
-      return ele;
+      return this.body;
+    }
+
+    getLength(ele) {
+      return Buffer.byteLength(ele);
     }
 
     send(data, type) {
