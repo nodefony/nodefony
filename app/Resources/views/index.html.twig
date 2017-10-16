@@ -25,9 +25,14 @@
 	{% endif %}
 </h1>
 {% if readme %}
-<div class='row displayed'>
-	{{readme}}
+<div class="container-fluid">
+	<div class='row displayed'>
+		<div>
+			{{readme}}
+		</div>
+	</div>
 </div>
+
 {% endif %}
 {% endblock %}
 
