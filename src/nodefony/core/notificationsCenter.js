@@ -30,20 +30,19 @@ module.exports = nodefony.register("notificationsCenter", function () {
          *
          */
         listen(context, eventName, callback) {
+            let event = arguments[1];
+            let ContextClosure = this;
             if (typeof (callback) === 'function' || callback instanceof Function) {
-                let event = arguments[1];
-                let ContextClosure = this;
                 this.event.addListener(eventName, callback.bind(context));
-                return function () {
-                    Array.prototype.unshift.call(arguments, event);
-                    return ContextClosure.fire.apply(ContextClosure, arguments);
-                };
             }
-            throw new Error("notificationsCenter listen method callback must be a function");
+            return function () {
+                Array.prototype.unshift.call(arguments, event);
+                return ContextClosure.fire.apply(ContextClosure, arguments);
+            };
         }
 
         on(eventName, callback) {
-            let event = arguments[1];
+            let event = arguments[0];
             let ContextClosure = this;
             if (typeof (callback) === 'function' || callback instanceof Function) {
                 this.event.addListener(eventName, callback);
@@ -61,7 +60,7 @@ module.exports = nodefony.register("notificationsCenter", function () {
          *
          */
         once(eventName, callback) {
-            let event = arguments[1];
+            let event = arguments[0];
             let ContextClosure = this;
             if (typeof (callback) === 'function' || callback instanceof Function) {
                 this.event.once(eventName, callback);

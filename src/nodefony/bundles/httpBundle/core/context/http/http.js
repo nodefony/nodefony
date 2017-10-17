@@ -58,7 +58,7 @@ nodefony.register.call(nodefony.context, "http", function () {
             this.once("onRequest", this.handle.bind(this));
             this.once("onResponse", this.send.bind(this));
             this.once("onTimeout", () => {
-                let error = new Error();
+                let error = new Error("Request Timeout");
                 error.code = 408;
                 this.fire("onError", this.container, error);
             });
