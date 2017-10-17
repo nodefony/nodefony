@@ -41,7 +41,7 @@ Nodefony 3  adds the following features :
 - ~~[React](https://github.com/facebookincubator/create-react-app) Bundle Generator ( Soon an React Project can be merge into a Nodefony Bundle )~~
 - [SockJS](https://github.com/sockjs) Server ( Like WDS 'Webpack Dev Server' and HMR management )
 - New cli Management (Command Line Interface )
-- [Electron](https://github.com/nodefony/nodefony-electron) Experimental Nodefony Electron  ( Now an Electron Context can be use in Nodefony Project  )
+- ~~[Electron](https://github.com/nodefony/nodefony-electron) Experimental Nodefony Electron  ( Now an Electron Context can be use in Nodefony Project  )~~
 
 Now in this version  3 Beta,  Nodefony is evolved to a stable version without major fundamental changes.
 
@@ -91,7 +91,7 @@ You can follow Nodefony build on travis at **[https://travis-ci.org/nodefony/nod
 #### Operating Systems : **[Install Node.js via Package](https://nodejs.org/en/download/package-manager)**
 
 - LINUX
-  - debian (Checked, tested)
+  - debian (Checked, Tested)
   - RASPBIAN Raspberry Pi (Checked)
 
 - FreeBSD (Checked)
@@ -101,11 +101,11 @@ You can follow Nodefony build on travis at **[https://travis-ci.org/nodefony/nod
   - cd /usr/local/bin/ ;ln -s pythonx.x python
   - replace make by gmake
 
-- ~~ OpenBSD ( not Checked yet ) ~~
+- ~~OpenBSD (Not Checked yet )~~
 
-- MACOS ( Checked ,tested)
+- MACOS (Checked, Tested)
 
-- ~~WINDOWS ( not ported yet )~~
+- ~~WINDOWS (Not ported yet )~~
 
 - EMBEDDED SYSTEM ( Very difficult : large memory footprint )  
 

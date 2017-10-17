@@ -91,14 +91,10 @@ security:
                   Access-Control-Allow-Credentials: true
                   Access-Control-Max-Age:           10
 
-        test-jwt-area:
-            pattern:                                ^/test/firewall/jwt
-            provider:                               nodefony
-            form_login:
-              login_path:                           /test/login
-              default_target_path:                  /
-              check_path:                           /test/firewall/jwt
-            context:                                jwt
+        test-api-area:
+            pattern:                                ^/test/firewall/api
+            stateless:                              true
+            anonymous:                              true
 
         # passport-local  DEMO SECURITY AREA
         #google_area:
