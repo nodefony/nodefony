@@ -55,9 +55,9 @@ nodefony.register.call(nodefony.context, "http", function () {
             this.remoteAddress = this.request.remoteAddress;
             this.promise = null;
             this.timeoutid = null;
-            this.once(this, "onRequest", this.handle);
-            this.once(this, "onResponse", this.send);
-            this.once(this, "onTimeout", () => {
+            this.once("onRequest", this.handle.bind(this));
+            this.once("onResponse", this.send.bind(this));
+            this.once("onTimeout", () => {
                 let error = new Error();
                 error.code = 408;
                 this.fire("onError", this.container, error);
@@ -309,7 +309,7 @@ nodefony.register.call(nodefony.context, "http", function () {
             this.response.writeHead();
             this.fire("onSend", this.response, this);
             if (this.session) {
-                this.once(this, "onSaveSession", ( /*session*/ ) => {
+                this.once("onSaveSession", ( /*session*/ ) => {
                     //console.log("FIRE onSaveSession")
                     if ( !this.storage) {
                         if (this.profiling) {

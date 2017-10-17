@@ -106,7 +106,7 @@ module.exports = nodefony.registerService("firewall", function () {
             this.defaultTarget = "/";
             this.alwaysUseDefaultTarget = false;
 
-            this.once(this, "onReady", () => {
+            this.once("onReady", () => {
                 try {
                     if (this.providerName in this.firewall.providers) {
                         this.provider = this.firewall.providers[this.providerName].Class;
@@ -391,13 +391,13 @@ module.exports = nodefony.registerService("firewall", function () {
             this.providers = {};
             this.sessionStrategy = "invalidate";
             // listen KERNEL EVENTS
-            this.once(this, "onPreBoot", () => {
+            this.once("onPreBoot", () => {
                 this.sessionService = this.get("sessions");
                 this.orm = this.get(this.kernel.settings.orm);
 
             });
 
-            this.once(this, "onPostRegister", () => {
+            this.once("onPostRegister", () => {
                 this.settings = this.kernel.getBundle("security").settings.headers;
             });
 
@@ -653,10 +653,10 @@ module.exports = nodefony.registerService("firewall", function () {
                                 break;
                             case "context":
                                 if (param[config]) {
-                                    this.once(this, "onBoot", function (context, contextSecurity) {
-                                        contextSecurity.setContextSession(context);
-                                        this.sessionService.addContextSession(context);
-                                    }.bind(this, param[config], area));
+                                    this.once("onBoot", () => {
+                                        area.setContextSession(param[config]);
+                                        this.sessionService.addContextSession(param[config]);
+                                    });
                                 }
                                 break;
                             default:
@@ -671,10 +671,10 @@ module.exports = nodefony.registerService("firewall", function () {
                     }
                     break;
                 case "session_fixation_strategy":
-                    this.once(this, "onBoot", function (strategy) {
-                        this.setSessionStrategy(strategy);
+                    this.once("onBoot", () => {
+                        this.setSessionStrategy(obj[ele]);
                         this.sessionService.setSessionStrategy(this.sessionStrategy);
-                    }.bind(this, obj[ele]));
+                    });
                     break;
                 case "access_control":
                     break;
@@ -739,8 +739,8 @@ module.exports = nodefony.registerService("firewall", function () {
                                 }
                                 break;
                             case "entity":
-                                this.once(this, "onPreBoot", () => {
-                                    this.orm.once(this, "onOrmReady", function () {
+                                this.once("onPreBoot", () => {
+                                    this.orm.once("onOrmReady", () => {
                                         let ent = this.orm.getEntity(element[pro].name);
                                         if (!ent) {
                                             this.logger("ENTITY PROVIDER : " + provider + " not found", "ERROR");

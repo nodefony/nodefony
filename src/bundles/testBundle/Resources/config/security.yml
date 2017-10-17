@@ -66,7 +66,7 @@ security:
               passwordField:                        'passwd'
             logout:                                 /test/logout
             anonymous:                              ~
-            context:                                ~
+            context:                                local
             redirectHttps:                          false
             crossDomain:
                 allow-origin:
@@ -90,6 +90,15 @@ security:
                    - X-Json
                   Access-Control-Allow-Credentials: true
                   Access-Control-Max-Age:           10
+
+        test-jwt-area:
+            pattern:                                ^/test/firewall/jwt
+            provider:                               nodefony
+            form_login:
+              login_path:                           /test/login
+              default_target_path:                  /
+              check_path:                           /test/firewall/jwt
+            context:                                jwt
 
         # passport-local  DEMO SECURITY AREA
         #google_area:
