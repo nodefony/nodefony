@@ -105,6 +105,8 @@ module.exports = nodefony.registerService("firewall", function () {
             this.redirect_Https = false;
             this.defaultTarget = "/";
             this.alwaysUseDefaultTarget = false;
+            this.stateLess = false;
+            this.anonymous = true;
 
             this.once("onReady", () => {
                 try {
@@ -161,7 +163,7 @@ module.exports = nodefony.registerService("firewall", function () {
                     } else {
                         context.response.setStatusCode(401);
                     }
-                    if ((context.request.url.pathname !== this.formLogin) && (context.request.url.pathname !== this.checkLogin) && (!this.alwaysUseDefaultTarget)) {
+                    if (context.session && (context.request.url.pathname !== this.formLogin) && (context.request.url.pathname !== this.checkLogin) && (!this.alwaysUseDefaultTarget)) {
                         let target_path = null;
                         let area = context.session.getMetaBag("area");
                         if (area && area !== this.name) {
@@ -189,7 +191,7 @@ module.exports = nodefony.registerService("firewall", function () {
                         return context.fire("onError", context.container, error);
                     }
                     if (!context.isAjax) {
-                        if (e.message !== "Unauthorized") {
+                        if (context.session && e.message !== "Unauthorized") {
                             context.session.setFlashBag("session", {
                                 error: e.message
                             });
@@ -295,6 +297,14 @@ module.exports = nodefony.registerService("firewall", function () {
             return this.factory;
         }
 
+        setStateLess(state) {
+            this.stateLess = state;
+        }
+
+        setAnonymous(val) {
+            this.anonymous = val;
+        }
+
         setProvider(provider, type) {
             this.providerName = provider;
             this.providerType = type;
@@ -396,22 +406,26 @@ module.exports = nodefony.registerService("firewall", function () {
                 this.orm = this.get(this.kernel.settings.orm);
 
             });
-
             this.once("onPostRegister", () => {
                 this.settings = this.kernel.getBundle("security").settings.headers;
             });
 
+            /*this.once("onPostReady", () => {
+                console.log(this.get("httpsServer").ready)
+            });*/
+
             this.listen(this, "onSecurity", (context) => {
                 switch (context.type) {
-                case "HTTP":
-                    context.response.setHeaders(this.settings.http);
-                    return this.handleHttp(context);
                 case "HTTPS":
-                    context.response.setHeaders(this.settings.https);
-                    return this.handleHttp(context);
-                case "WEBSOCKET":
+                case "HTTP":
+                    context.response.setHeaders(this.settings[context.protocol]);
+                    context.request.request.on('end', () => {
+                        return this.handle(context);
+                    });
+                    return;
                 case "WEBSOCKET SECURE":
-                    return this.handleWebsoket(context);
+                case "WEBSOCKET":
+                    return this.handle(context);
                 }
             });
         }
@@ -427,147 +441,78 @@ module.exports = nodefony.registerService("firewall", function () {
             return false;
         }
 
-        handleHttp(context) {
-            context.request.request.on('end', () => {
-                try {
-                    if (this.isSecure(context)) {
-                        context.sessionAutoStart = "firewall";
-                        return this.sessionService.start(context, context.security.sessionContext).then((session) => {
-                            if (!(session instanceof nodefony.Session)) {
-                                throw new Error("SESSION START session storage ERROR");
-                            }
-                            if (context.type === "HTTP" && context.container.get("httpsServer").ready) {
-                                if (context.security.redirect_Https) {
-                                    return context.security.redirectHttps(context);
-                                }
-                            }
-                            return this.handle(context, session);
-                        }).catch((error) => {
-                            // break exception in promise catch !
-                            context.fire("onError", context.container, error);
-                            return error;
-                        });
-                    } else {
-                        if (context.sessionAutoStart === "autostart") {
-                            return this.sessionService.start(context, "default").then((session) => {
-                                if (!(session instanceof nodefony.Session)) {
-                                    throw new Error("SESSION START session storage ERROR");
-                                }
-                                return this.handle(context, session);
-                            }).catch((error) => {
-                                context.fire("onError", context.container, error);
-                                return error;
-                            });
-                        } else {
-                            if (context.cookieSession) {
-                                return this.sessionService.start(context, null).then((session) => {
-                                    if (!(session instanceof nodefony.Session)) {
-                                        throw new Error("SESSION START session storage ERROR");
-                                    }
-                                    try {
-                                        let meta = session.getMetaBag("security");
-                                        if (meta) {
-                                            context.user = meta.userFull;
-                                        }
-                                        context.fire("onRequest");
-                                        return context;
-                                    } catch (error) {
-                                        throw error;
-                                    }
-                                }).catch((error) => {
-                                    context.fire("onError", context.container, error);
-                                    return error;
-                                });
-                            } else {
-                                context.fire("onRequest");
-                                return context;
-                            }
+        handle(context) {
+            try {
+                /*if (!context.cookieSession && !context.security.anonymous) {
+                    let error = new Error();
+                    error.code = 401;
+                    return context.security.handleError(context, error);
+                }*/
+                let sessionContext = null;
+                if (this.isSecure(context)) {
+                    try {
+                        let cross = this.handleCrossDomain(context);
+                        if (cross === 204) {
+                            return;
+                        }
+                    } catch (error) {
+                        throw error;
+                    }
+                    context.sessionAutoStart = "firewall";
+                    sessionContext = context.security.sessionContext;
+                    if (context.type === "HTTP" && context.container.get("httpsServer").ready) {
+                        if (context.security.redirect_Https) {
+                            return context.security.redirectHttps(context);
                         }
                     }
-                } catch (error) {
-                    context.fire("onError", context.container, error);
-                }
-            });
-        }
-
-        handleWebsoket(context) {
-            try {
-                if (this.isSecure(context)) {
-                    context.sessionAutoStart = "firewall";
-                    return this.sessionService.start(context, context.security.sessionContext).then((session) => {
-                        if (!(session instanceof nodefony.Session)) {
-                            throw new Error("SESSION START session storage ERROR");
-                        }
-                        return this.handle(context, session);
-                    }).catch((error) => {
-                        context.fire("onError", context.container, error);
-                        return error;
-                    });
                 } else {
                     if (context.sessionAutoStart === "autostart") {
-                        return this.sessionService.start(context, "default").then((session) => {
-                            if (!(session instanceof nodefony.Session)) {
-                                throw new Error("SESSION START session storage ERROR");
-                            }
-                            try {
-                                return this.handle(context, session);
-                            } catch (error) {
-                                throw error;
-                            }
-                        }).catch((error) => {
-                            context.fire("onError", context.container, error);
-                            return error;
-                        });
+                        sessionContext = "default";
                     } else {
                         if (context.cookieSession) {
-                            return this.sessionService.start(context, null).then((session) => {
-                                if (!(session instanceof nodefony.Session)) {
-                                    throw new Error("SESSION START session storage ERROR");
-                                }
-                                try {
-                                    let meta = session.getMetaBag("security");
-                                    if (meta) {
-                                        context.user = meta.userFull;
-                                    }
-                                    context.fire("onRequest");
-                                    return context;
-                                } catch (error) {
-                                    throw error;
-                                }
-                            }).catch((error) => {
-                                context.fire("onError", context.container, error);
-                                return error;
-                            });
+                            sessionContext = null;
                         } else {
                             context.fire("onRequest");
                             return context;
                         }
                     }
                 }
+                return this.sessionService.start(context, sessionContext).then((session) => {
+                    if (!(session instanceof nodefony.Session)) {
+                        throw new Error("SESSION START session storage ERROR");
+                    }
+                    return this.handleStateFull(context, session);
+                }).catch((error) => {
+                    // break exception in promise catch !
+                    context.fire("onError", context.container, error);
+                    return error;
+                });
             } catch (error) {
                 context.fire("onError", context.container, error);
             }
         }
 
-        handle(context, session) {
-            try {
-                let next = null;
-                context.crossDomain = context.isCrossDomain();
-                if (context.security && context.crossDomain) {
-
-                    next = context.security.handleCrossDomain(context);
-                    switch (next) {
-                    case 204:
-                        return 204;
-                    case 401:
-                        let error = new Error("CROSS DOMAIN Unauthorized REQUEST REFERER : " + context.originUrl.href);
-                        error.code = next;
-                        throw error;
-                    case 200:
-                        this.logger("\x1b[34m CROSS DOMAIN  \x1b[0mREQUEST REFERER : " + context.originUrl.href, "DEBUG");
-                        break;
-                    }
+        handleCrossDomain(context) {
+            let next = null;
+            context.crossDomain = context.isCrossDomain();
+            if (context.security && context.crossDomain) {
+                next = context.security.handleCrossDomain(context);
+                switch (next) {
+                case 204:
+                    return 204;
+                case 401:
+                    let error = new Error("CROSS DOMAIN Unauthorized REQUEST REFERER : " + context.originUrl.href);
+                    error.code = next;
+                    throw error;
+                case 200:
+                    this.logger("\x1b[34m CROSS DOMAIN  \x1b[0mREQUEST REFERER : " + context.originUrl.href, "DEBUG");
+                    break;
                 }
+            }
+        }
+
+        handleStateFull(context, session) {
+            try {
                 let meta = session.getMetaBag("security");
                 if (meta) {
                     context.user = meta.userFull;
@@ -617,8 +562,8 @@ module.exports = nodefony.registerService("firewall", function () {
                                 area.setPattern(param[config]);
                                 break;
                             case "anonymous":
+                                area.setAnonymous(param[config]);
                                 break;
-
                             case "crossDomain":
                                 area.setCors(param[config]);
                                 break;
@@ -643,7 +588,7 @@ module.exports = nodefony.registerService("firewall", function () {
                                 //TODO
                                 break;
                             case "stateless":
-                                //TODO
+                                area.setStateLess(param[config]);
                                 break;
                             case "redirectHttps":
                                 area.setRedirectHttps(param[config]);

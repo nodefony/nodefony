@@ -65,7 +65,7 @@ security:
               usernameField:                        'email'
               passwordField:                        'passwd'
             logout:                                 /test/logout
-            anonymous:                              ~
+            anonymous:                              false
             context:                                local
             redirectHttps:                          false
             crossDomain:

@@ -133,9 +133,9 @@ httpBundle:
     tmp_dir:                    "tmp/upload"
     #max_filesize:              100000                        # In Bytes
   session:
-    start:                      false                         # autostart || false
-    handler:                    session.storage.sequelize     # session.storage.files | session.storage.sequelize | session.storage.memcached
-    #save_path:                 "./tmp/sessions"              # for session.storage.files only
+    start:                        false                         # autostart || false
+    handler:                      sequelize                     # files | sequelize | memcached  "nodefony.session.storage"
+    #save_path:                    "./tmp/sessions"             # for session.storage.files only
     cookie:
       maxAge:                   0                             # like cookie_lifetime php  =>seconde
       secure:                   false                         # Set true for https site only see https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/Set-Cookie

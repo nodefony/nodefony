@@ -1,5 +1,5 @@
 ########## NODEFONY CONFIG BUNDLE  httpBundle  ############
-name :				httpBundle
+name :				      httpBundle
 watch:                    false
 
 headers:
@@ -82,7 +82,7 @@ session:
   start:                  "autostart"            #"autostart"
   use_strict_mode:        true
   name:                   "nodefony"
-  handler:                session.storage.files
+  handler:                files
   save_path:              "/tmp/sessions"
   gc_probability:         1
   gc_divisor:             100
