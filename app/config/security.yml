@@ -17,4 +17,8 @@ security:
     #
     #  FIREWALL  PROVIDER
     #
-    providers: ~
+    #providers: ~
+    providers:
+      nodefony:
+        entity:
+          name: "user"

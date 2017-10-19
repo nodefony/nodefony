@@ -430,6 +430,11 @@
                     roles</label>
                   <span class="label black">{{context_secure.user.roles}}</span>
                 </li>
+                <li>
+                  <label >
+                    firewall</label>
+                  <span class="label black">{{context_secure.firewall}}</span>
+                </li>
               {% else %}
                 <li>
                   <label >
@@ -477,13 +482,13 @@
 
       <li class="separator"></li>
 
-      <li >
+      <li >@
         <label class="label label-default">
           {% if id %}
-            <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=request'>{{routeur.pattern}}
+            <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=request'>{{route.name}}
               <a>
               {% else %}
-                {{routeur.pattern}}
+                 {{route.name}}
               {% endif %}
             </label>
             <div class="details">
@@ -492,12 +497,12 @@
                   <label style="color:#999">ROUTER SERVICE</label>
                 </li>
                 <li>
-                  <label>Bundle</label>
-                  <span class="label label-success">{{routeur.bundle}}</span>
+                  <label>Pattern</label>
+                  <span class="label label-default">{{routeur.pattern}}</span>
                 </li>
                 <li>
-                  <label>Pattern</label>
-                  <span class="label label-success">{{routeur.pattern}}</span>
+                  <label>Bundle</label>
+                  <span class="label label-success">{{routeur.bundle}}</span>
                 </li>
                 <li>
                   <label>Controller</label>
