@@ -1,6 +1,33 @@
 # Security
 security:
     firewalls:
+        # main
+        test-main-area:
+            pattern:                                ^/test/firewall/anonymous
+            anonymous:                              ~
+            crossDomain:
+                allow-origin:
+                  - "http://mycrossdomain.com:5151"
+                  - "ws://mycrossdomain.com:5151"
+                Access-Control:
+                  Access-Control-Allow-Methods:
+                   - GET
+                  Access-Control-Allow-Headers:
+                    - Authorization
+                    - X-CSRF-Token
+                    - X-Requested-With
+                    - Accept
+                    - Accept-Version
+                    - Content-Length
+                    - Content-MD5
+                    - Content-Type
+                    - Date
+                  Access-Control-Expose-Headers:
+                   - WWW-Authenticate
+                   - X-Json
+                  Access-Control-Allow-Credentials: true
+                  Access-Control-Max-Age:           10
+
         # SASL SECURITY AREA
         test-sasl-area:
             pattern:                                ^/test/firewall/test
@@ -22,10 +49,8 @@ security:
                   Access-Control-Max-Age:           10
             remember_me:                            false           #TODO
             logout:                                 /test/logout
-            anonymous:                              ~
-            context:                                ~
-            stateless:                              false           #TODO
-            #redirectHttps:                         true
+            context:                                sasl
+            redirectHttps:                          true
 
         # passport-basic  BASIC SECURITY AREA
         test-basic-area:
@@ -37,8 +62,6 @@ security:
             passport-basic:
               realm:                                "nodefony"
             logout:                                 /test/logout
-            anonymous:                              ~
-            context:                                ~
 
         # passport-digest  DIGEST SECURITY AREA
         test-digest-area:
@@ -50,8 +73,6 @@ security:
             passport-digest:
               realm:                                "nodefony"
             logout:                                 /test/logout
-            anonymous:                              ~
-            context:                                ~
 
         # passport-local  LOCAL SECURITY AREA
         test-local-area:
@@ -65,7 +86,6 @@ security:
               usernameField:                        'email'
               passwordField:                        'passwd'
             logout:                                 /test/logout
-            anonymous:                              false
             context:                                local
             redirectHttps:                          false
             crossDomain:
@@ -91,13 +111,16 @@ security:
                   Access-Control-Allow-Credentials: true
                   Access-Control-Max-Age:           10
 
+        # REST API STATELESS
         test-api-area:
             pattern:                                ^/test/firewall/api
             stateless:                              true
-            anonymous:                              true
+            anonymous:                              ~
+            context:                                api
 
         # passport-local  DEMO SECURITY AREA
-        #google_area:
+        #  Management credentials :                 https://console.developers.google.com/apis
+        # google_area:
         #    pattern:                               ^/auth/google
         #    provider:                              nodefony
         #    form_login:
@@ -109,7 +132,6 @@ security:
         #      callbackURL:                         "https://nodefony.com/auth/google/callback"
         #      scopes:                              ["profile","email"]
         #    logout:                                /logout
-        #    anonymous:                             ~
         #    context:                               google
         #    redirectHttps:                         true
         #    crossDomain:
@@ -124,7 +146,6 @@ security:
 
 
         # passport-github2  DEMO SECURITY AREA
-        #  Management credentials :                 https://console.developers.google.com/apis
         #github_area:
         #    pattern:                               ^/auth/github
         #    provider:                              nodefony
@@ -137,7 +158,6 @@ security:
         #      callbackURL:                         "https://nodefony.com/auth/github/callback"
         #      scopes:                              [ "user:email" ]
         #    logout:                                /logout
-        #    anonymous:                             ~
         #    context:                               github
         #    redirectHttps:                         true
         #    crossDomain:

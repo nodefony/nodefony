@@ -63,15 +63,10 @@ statics:
     options:
       maxAge                : 30*24*60*60*1000
 
-#
-#
+########################
 #       SESSIONS MANAGER
-#
-#               WARNING !!
-#               IF YOU USE FIREWALL NODEFONY FIREWALL AUTO START SESSION
-#
 #               name            : cookies session name
-#               handler         : session.storage.files | session.storage.sequelize | session.storage.memcached
+#               handler         : files | sequelize | memcached
 #
 #
 #               MEMCACHED

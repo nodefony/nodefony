@@ -193,6 +193,7 @@ module.exports = nodefony.registerService("sessions", function () {
                             return this.create(this.lifetime, null);
                         }
                         this.manager.logger("STRATEGY MIGRATE SESSION ==> " + this.name + " : " + this.id, "DEBUG");
+                        this.migrated = true;
                         this.remove();
                         this.contextSession = contextSession;
                         return this.create(this.lifetime, null);

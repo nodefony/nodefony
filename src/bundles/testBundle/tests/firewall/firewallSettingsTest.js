@@ -42,8 +42,8 @@ describe("BUNDLE TEST", function () {
         it("test-sasl-area", (done) => {
             assert(global.firewall.securedAreas["test-sasl-area"]);
             let sasl = global.firewall.securedAreas["test-sasl-area"];
-            assert.deepStrictEqual(sasl.sessionContext, "default");
-            assert.deepStrictEqual(sasl.redirect_Https, false);
+            assert.deepStrictEqual(sasl.sessionContext, "sasl");
+            assert.deepStrictEqual(sasl.redirect_Https, true);
             assert.deepStrictEqual(sasl.providerName, "nodefony");
             assert(sasl.provider);
             assert.deepStrictEqual(sasl.alwaysUseDefaultTarget, false);
