@@ -511,13 +511,19 @@ module.exports = nodefony.register("controller", function () {
     }
 
     generateUrl(name, variables, absolute) {
-      let host = null;
-      if (absolute) {
-        host = this.context.request.url.protocol + "//" + this.context.request.url.host;
-        absolute = host;
-      }
       try {
-        return this.router.generatePath.call(this.router, name, variables, absolute);
+        if (absolute) {
+          return this.context.generateAbsoluteUrl(name, variables);
+        }
+        return this.context.generateUrl(name, variables, null);
+      } catch (e) {
+        throw e;
+      }
+    }
+
+    generateAbsoluteUrl(name, variables) {
+      try {
+        return this.context.generateAbsoluteUrl(name, variables);
       } catch (e) {
         throw e;
       }
