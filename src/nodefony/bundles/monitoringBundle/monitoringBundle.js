@@ -602,7 +602,7 @@ module.exports = nodefony.registerBundle("monitoring", function () {
             if (!context.isAjax && context.showDebugBar /*&& context.profiling.route.name !== "monitoring"*/ ) {
               if (response && typeof response.body === "string" && response.body.indexOf("</body>") > 0) {
                 try {
-                  let result = this.debugView.render(context.extendTwig(context.profiling, context));
+                  let result = this.debugView.render(this.httpKernel.extendTwig(context.profiling, context));
                   response.body = response.body.replace("</body>", result + "\n </body>");
                 } catch (e) {
                   throw e;
@@ -637,7 +637,7 @@ module.exports = nodefony.registerBundle("monitoring", function () {
           if (!context.isAjax && context.showDebugBar /*&& context.profiling.route.name !== "monitoring"*/ ) {
             if (response && typeof response.body === "string" && response.body.indexOf("</body>") > 0) {
               try {
-                let result = this.debugView.render(context.extendTwig(context.profiling, context));
+                let result = this.debugView.render(this.httpKernel.extendTwig(context.profiling, context));
                 response.body = response.body.replace("</body>", result + "\n </body>");
               } catch (e) {
                 throw e;

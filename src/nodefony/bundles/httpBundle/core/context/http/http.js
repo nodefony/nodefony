@@ -124,40 +124,6 @@ nodefony.register.call(nodefony.context, "http", function () {
       return null;
     }
 
-    extendTwig(param, context) {
-      return nodefony.extend({}, param, {
-        nodefony: {
-          url: this.request.url,
-          environment: this.kernel.environment,
-          debug: this.kernel.debug,
-          local: this.translation.defaultLocale.substr(0, 2)
-        },
-        getFlashBag: this.flashTwig.bind(this),
-        render: this.render.bind(this),
-        controller: this.controller.bind(this),
-        trans: this.translation.trans.bind(this.translation),
-        getLocale: this.translation.getLocale.bind(this.translation),
-        trans_default_domain: this.translation.trans_default_domain.bind(this.translation),
-        getTransDefaultDomain: this.translation.getTransDefaultDomain.bind(this.translation),
-        CDN: (type, nb) => {
-          let cdn = this.kernelHttp.getCDN.call(this.kernelHttp, type, nb);
-          if (cdn) {
-            return context.request.url.protocol + "//" + cdn;
-          }
-          return "";
-        },
-        absolute_url: this.generateAbsoluteUrl.bind(this)
-      });
-    }
-
-    generateUrl(name, variables, host) {
-      try {
-        return this.router.generatePath.call(this.router, name, variables, host);
-      } catch (e) {
-        throw e;
-      }
-    }
-
     generateAbsoluteUrl(name, variables) {
       try {
         let host = this.request.url.protocol + "//" + this.request.url.host;

@@ -179,29 +179,35 @@ module.exports = nodefony.register("controller", function () {
     }
 
     renderViewAsync(view, param) {
+      let extendParam = null;
       try {
-        let extendParam = this.context.extendTwig(param, this.context);
+        extendParam = this.httpKernel.extendTwig(param, this.context);
         return new Promise((resolve, reject) => {
           let templ = null;
           let res = null;
           try {
             templ = this.httpKernel.getTemplate(view);
           } catch (e) {
+            extendParam = null;
             return reject(e);
           }
           try {
             res = templ.render(extendParam);
             try {
               this.fire("onView", res, this.context, templ.path, param);
+              extendParam = null;
               return resolve(res);
             } catch (e) {
+              extendParam = null;
               return reject(e);
             }
           } catch (e) {
+            extendParam = null;
             return reject(e);
           }
         });
       } catch (e) {
+        extendParam = null;
         throw e;
       }
     }
@@ -209,10 +215,11 @@ module.exports = nodefony.register("controller", function () {
     renderView(view, param) {
       let res = null;
       let templ = null;
-      let extendParam = this.context.extendTwig(param, this.context);
+      let extendParam = this.httpKernel.extendTwig(param, this.context);
       try {
         templ = this.httpKernel.getTemplate(view);
       } catch (e) {
+        extendParam = null;
         throw e;
       }
       try {
@@ -220,36 +227,43 @@ module.exports = nodefony.register("controller", function () {
         try {
           this.fire("onView", res, this.context, null, param);
         } catch (e) {
+          extendParam = null;
           throw e;
         }
       } catch (e) {
+        extendParam = null;
         throw e;
       }
+      extendParam = null;
       return res;
     }
 
     renderRawView(path, param) {
       let res = null;
-      let extendParam = this.context.extendTwig(param, this.context);
+      let extendParam = this.httpKernel.extendTwig(param, this.context);
       try {
         this.serviceTemplating.renderFile(path, extendParam, (error, result) => {
           if (error || result === undefined) {
             if (!error) {
               error = new Error("ERROR PARSING TEMPLATE :" + path.path);
             }
+            extendParam = null;
             throw error;
           } else {
             try {
               this.fire("onView", result, this.context, path, param);
               res = result;
             } catch (e) {
+              extendParam = null;
               throw e;
             }
           }
         });
       } catch (e) {
+        extendParam = null;
         throw e;
       }
+      extendParam = null;
       return res;
     }
 
@@ -515,7 +529,7 @@ module.exports = nodefony.register("controller", function () {
         if (absolute) {
           return this.context.generateAbsoluteUrl(name, variables);
         }
-        return this.context.generateUrl(name, variables, null);
+        return this.httpKernel.generateUrl(name, variables, null);
       } catch (e) {
         throw e;
       }

@@ -7743,9 +7743,9 @@ seq-queue@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/seq-queue/-/seq-queue-0.0.5.tgz#d56812e1c017a6e4e7c3e3a37a1da6d78dd3c93e"
 
-sequelize@^4.15.0:
-  version "4.15.0"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.15.0.tgz#110e79f67c3a44098517fcbcf030c5ce6f89cf14"
+sequelize@^4.15.2:
+  version "4.15.2"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.15.2.tgz#1fa2fd7fa67cf72c4fa6c824f989c76165fdbffa"
   dependencies:
     bluebird "^3.4.6"
     cls-bluebird "^2.0.1"
@@ -8720,12 +8720,19 @@ uc.micro@^1.0.1, uc.micro@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.3.tgz#7ed50d5e0f9a9fb0a573379259f2a77458d50192"
 
-uglify-es@^3.0.24, uglify-es@^3.1.3:
+uglify-es@^3.0.24:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.1.3.tgz#a21eeb149cb120a1f8302563689e19496550780b"
   dependencies:
     commander "~2.11.0"
     source-map "~0.5.1"
+
+uglify-es@^3.1.5:
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.1.5.tgz#63bae0fd4f9feeda417fee7c0ff685a673819683"
+  dependencies:
+    commander "~2.11.0"
+    source-map "~0.6.1"
 
 uglify-js@3.1.x:
   version "3.1.4"

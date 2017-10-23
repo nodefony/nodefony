@@ -60,7 +60,7 @@ watch:                true
 monitoringBundle:
   debugBar:                     true
   storage:
-    active:                     false
+    active:                     true
     requests:                   orm
 
 ##################################

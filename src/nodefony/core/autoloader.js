@@ -61,7 +61,6 @@ module.exports = function () {
         this.load(path.resolve(this.dirname, "core", "service.js"));
         this.load(path.resolve(this.dirname, "core", "fileClass.js"));
         this.load(path.resolve(this.dirname, "core", "finder.js"));
-        this.load(path.resolve(this.dirname, "core", "reader.js"));
         this.load(path.resolve(this.dirname, "core", "log.js"));
         this.load(path.resolve(this.dirname, "core", "protocol.js"));
         this.load(path.resolve(this.dirname, "core", "watcher.js"));

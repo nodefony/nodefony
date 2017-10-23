@@ -1,5 +1,4 @@
 const Querystring = require('querystring');
-const BlueBird = require("bluebird");
 
 module.exports = nodefony.registerService("router", function () {
 
@@ -108,11 +107,18 @@ module.exports = nodefony.registerService("router", function () {
       }
     };
 
+    let javascript = function (obj, callback) {
+      try {
+        callback(obj);
+      } catch (e) {
+        throw e;
+      }
+    };
     return {
       xml: getObjectRoutesXML,
       json: getObjectRoutesJSON,
       yml: getObjectRoutesYml,
-      annotation: null
+      javascript: javascript
     };
   }();
 

@@ -59,40 +59,6 @@ test-websoket-cors:
           - WEBSOCKET
       protocol: "sip"
 
-## UNIT TEST
-myroute:
-  pattern:      /myroute
-  defaults:     {"controller": "testBundle:test:myroute","page":51,"elements":"defaultValue"}
-  requirements:
-    method:     GET
-    page:       "^\\d\\d$"
-
-myroute2:
-  pattern:      /myroute/{page}/{elements}
-  defaults:     {"controller": "testBundle:test:myroute","page":13,"elements":"myRouteDefaultValue"}
-  requirements:
-    method:     GET
-    page:       "^\\d\\d$"
-
-myroute-*:
-  pattern:      /wildcard/*
-  defaults:     {"controller": "testBundle:test:wildcard"}
-
-myroute-*1:
-  pattern:      /wildcard1*
-  defaults:     {"controller": "testBundle:test:wildcard"}
-
-myroute-*2:
-  pattern:      /wildcard2/{*}
-  defaults:     {"controller": "testBundle:test:wildcard"}
-
-myroute-*3:
-  pattern:      /wildcard3/{*}/route2
-  defaults:     {"controller": "testBundle:test:wildcard"}
-
-myroute-*4:
-  pattern:      /wildcard4/{*}/route2/{*}/test
-  defaults:     {"controller": "testBundle:test:wildcard"}
 
 response-status:
   pattern:      /test/unit/response/status/{st}
@@ -144,65 +110,12 @@ request-exception:
       - GET
       - POST
 
-twig-render:
-  pattern:      /test/unit/twig/render
-  defaults:     {"controller": "testBundle:twig:render"}
-  requirements:
-    method:
-      - GET
-      - POST
-
-twig-extend:
-  pattern:      /test/unit/twig/extend
-  defaults:     {"controller": "testBundle:twig:extend"}
-  requirements:
-    method:
-      - GET
-      - POST
-
-twig-websocket:
-  pattern:      /test/unit/twig/websocket
-  defaults:     {"controller": "testBundle:twig:websocket"}
-  requirements:
-    method:
-      - GET
-      - POST
-      - WEBSOCKET
-
-session:
-  pattern:      /test/unit/session/{type}
-  defaults:     {"controller": "testBundle:session:session" , "type":"callback"}
-  requirements:
-    method:
-      - GET
-      - POST
-      - WEBSOCKET
-
 subrequest:
   pattern:      /test/unit/subrequest
   defaults:     {"controller": "testBundle:subRequest:index" }
   requirements:
     method:     GET
 
-myroute-requirement-method-get:
-  pattern:      /requirement/method
-  defaults:     {"controller": "testBundle:test:requirementMethod"}
-  requirements:
-    method:     GET
-
-myroute-requirement-method-post:
-  pattern:      /requirement/method
-  defaults:     {"controller": "testBundle:test:requirementMethod"}
-  requirements:
-    method:     POST
-
-rest-401:
-  pattern:      /test/unit/rest/401
-  defaults:     {"controller": "testBundle:rest:401"}
-
-rest-403:
-  pattern:      /test/unit/rest/403
-  defaults:     {"controller": "testBundle:rest:403"}
 
 # LOGIN
 test-login:
@@ -211,29 +124,3 @@ test-login:
 test-logout:
   pattern:      /test/logout
   defaults:     {"controller": "testBundle:login:logout"}
-
-# FIREWALL
-test-sasl-area:
-  pattern:      /test/firewall/sasl
-  defaults:     {"controller": "testBundle:firewall:sasl"}
-
-test-basic-area:
-  pattern:      /test/firewall/basic
-  defaults:     {"controller": "testBundle:firewall:basic"}
-
-test-digest-area:
-  pattern:      /test/firewall/digest
-  defaults:     {"controller": "testBundle:firewall:digest"}
-
-test-local-area:
-  pattern:      /test/firewall/local
-  defaults:     {"controller": "testBundle:cors:http"}
-
-#CORS
-test-cors-settings:
-  pattern:      /test/unit/cors/http/{area}
-  defaults:     {"controller": "testBundle:cors:http"}
-
-test-cors-http:
-  pattern:      /test/firewall/local/cors/http/{area}
-  defaults:     {"controller": "testBundle:cors:http"}
