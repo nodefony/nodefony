@@ -12,5 +12,11 @@ module.exports = {
     defaults: {
       controller: "testBundle:cors:http"
     }
+  },
+  "test-cors-session-http": {
+    pattern: "/test/firewall/cors/session/{protocol}",
+    defaults: {
+      controller: "testBundle:cors:protocolSession"
+    }
   }
 };
