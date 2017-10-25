@@ -15,7 +15,7 @@ var http = require("http");
 //var WebSocketClient = require('websocket').client;
 var querystring = require('querystring');
 const assert = require('assert');
-
+var request = require('request');
 
 describe("BUNDLE TEST", function () {
 
@@ -27,7 +27,7 @@ describe("BUNDLE TEST", function () {
         };
     });
 
-    describe('REQUEST ', function () {
+    /*describe('REQUEST ', function () {
 
         it("request-get-query", function (done) {
             global.options.path = '/test/unit/request?foo=bar&bar=foo';
@@ -214,8 +214,113 @@ describe("BUNDLE TEST", function () {
             });
             request.end();
         });
+    });
+
+    describe('REQUEST FORM DATA', () => {
+        it("request-post-formData", function (done) {
+            global.options.path = '/test/unit/request/multipart';
+            request.post("http://" + global.options.hostname + ":" + global.options.port + global.options.path, {
+                    form: {
+                        key: 'value',
+                        myval: "ézézézézézézézézézézézézé@@@@ê",
+                        "myval-special": "ézézézézézézézézézézézézé@@@@ê",
+                        "myval-spécial": "ézézézézézézé<<<<<>>>>>zézézézézézé@@@@ê",
+                        "ézézézézézézézézézézézézé@@@@ê": "ézézézézézézé<<<<<>>>>>zézézézézézé@@@@ê"
+                    }
+                },
+                (err, httpResponse, body) => {
+                    if (err) {
+                        throw err;
+                    }
+                    let json = JSON.parse(body);
+                    assert.deepStrictEqual(json.query.key, "value");
+                    assert.deepStrictEqual(json.query.myval, "ézézézézézézézézézézézézé@@@@ê");
+                    assert.deepStrictEqual(json.query["myval-special"], "ézézézézézézézézézézézézé@@@@ê");
+                    assert.deepStrictEqual(json.query["myval-spécial"], "ézézézézézézé<<<<<>>>>>zézézézézézé@@@@ê");
+                    assert.deepStrictEqual(json.query["ézézézézézézézézézézézézé@@@@ê"], "ézézézézézézé<<<<<>>>>>zézézézézézé@@@@ê");
+                    done();
+                }
+            );
+        });
+    });*/
+
+    describe('REQUEST MULTIPART FORM DATA', function () {
+        it("request-post-multiparts", function (done) {
+            let formData = {
+                // Pass a simple key-value pair
+                my_field: 'ézézézézézézé<<<<<>>>>>zézézézézézé@@@@ê',
+                "myval-spécial": 'ézézézézézézézézézézézézé@@@@ê',
+                // Pass data via Buffers
+                my_buffer: new Buffer([1, 2, 3]),
+                // Pass data via Streams
+                my_file: fs.createReadStream(path.resolve("..", __dirname, "images", "pdf.png")),
+                custom_filé: {
+                    value: "ézézézézézézézézézézézézé@@@@ê",
+                    options: {
+                        filename: 'topsecrêt.txt',
+                        contentType: 'plain/text'
+                    }
+                }
+            };
+            global.options.path = '/test/unit/request/multipart';
+            request.post({
+                url: "http://" + global.options.hostname + ":" + global.options.port + global.options.path,
+                formData: formData
+            }, function optionalCallback(err, httpResponse, body) {
+                if (err) {
+                    throw err;
+                }
+                let json = JSON.parse(body);
+                console.log(json)
+                assert.deepStrictEqual(json.query.my_field, "ézézézézézézé<<<<<>>>>>zézézézézézé@@@@ê");
+                assert.deepStrictEqual(json.query.my_buffer, new Buffer([1, 2, 3]).toString());
+                assert.deepStrictEqual(json.query["myval-spécial"], "ézézézézézézézézézézézézé@@@@ê");
+                console.log(body);
+                done();
+            });
+        });
 
 
-
+        /*it("request-post-multiparts", function (done) {
+            global.options.path = '/test/unit/request/multipart';
+            var options = {
+                method: 'POST',
+                url: "http://" + global.options.hostname + ":" + global.options.port + global.options.path,
+                headers: {
+                    'Accept': 'application/json'
+                },
+                multipart: {
+                    chunked: false,
+                    //preambleCRLF: true,
+                    //postambleCRLF: true,
+                    data: [{
+                            'content-type': 'application/json',
+                            body: JSON.stringify({
+                                foo: 'bar',
+                                _attachments: {
+                                    'message.txt': {
+                                        follows: true,
+                                        length: 18,
+                                        'content_type': 'text/plain'
+                                    }
+                                }
+                            })
+                        },
+                        {
+                            body: 'I am an attachment'
+                        }, {
+                            body: new Buffer([1, 2, 3]),
+                        }
+                    ]
+                }
+            };
+            request(options, (error, response, body) => {
+                if (error) {
+                    throw error;
+                }
+                console.log('Upload successful!  Server responded with:', body);
+                done();
+            });
+        });*/
     });
 });

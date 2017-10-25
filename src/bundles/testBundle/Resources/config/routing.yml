@@ -94,6 +94,13 @@ request-data:
       - GET
       - POST
 
+request-multi-part:
+  pattern:      /test/unit/request/multipart
+  defaults:     {"controller": "testBundle:multipart:requestMultiPart"}
+  requirements:
+    method:
+      - POST
+
 request-promise:
   pattern:      /test/unit/promise/{action}
   defaults:     {"controller": "testBundle:controllerTest:promise", "action":"promise"}
