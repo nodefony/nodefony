@@ -1638,6 +1638,10 @@ cli-cursor@^2.1.0:
   dependencies:
     restore-cursor "^2.0.0"
 
+cli-spinners@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/cli-spinners/-/cli-spinners-1.1.0.tgz#f1847b168844d917a671eb9d147e3df497c90d06"
+
 cli-table-redemption@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/cli-table-redemption/-/cli-table-redemption-1.0.1.tgz#0359d8c34df74980029d76dff071a05a127c4fdd"
@@ -3016,9 +3020,9 @@ extract-text-webpack-plugin@3.0.0:
     schema-utils "^0.3.0"
     webpack-sources "^1.0.1"
 
-extract-text-webpack-plugin@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/extract-text-webpack-plugin/-/extract-text-webpack-plugin-3.0.1.tgz#605a8893faca1dd49bb0d2ca87493f33fd43d102"
+extract-text-webpack-plugin@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/extract-text-webpack-plugin/-/extract-text-webpack-plugin-3.0.2.tgz#5f043eaa02f9750a9258b78c0a6e0dc1408fb2f7"
   dependencies:
     async "^2.4.1"
     loader-utils "^1.1.0"
@@ -3431,16 +3435,18 @@ github-api@^3.0.0:
     js-base64 "^2.1.9"
     utf8 "^2.1.1"
 
-github-release-notes@^0.12.1:
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/github-release-notes/-/github-release-notes-0.12.1.tgz#78c82c9d531a94041df8bdfb104699b110e3abf1"
+github-release-notes@^0.12.2:
+  version "0.12.2"
+  resolved "https://registry.yarnpkg.com/github-release-notes/-/github-release-notes-0.12.2.tgz#a1403a70c1a1dbffe1b135dde148d83c7f2397ca"
   dependencies:
+    babel-runtime "^6.26.0"
     chalk "^2.1.0"
     commander "^2.11.0"
     connectivity "^1.0.0"
     github-api "^3.0.0"
     minimist "^1.2.0"
     object-assign-deep "^0.3.1"
+    ora "^1.3.0"
     require-yaml "0.0.1"
 
 "gkt@https://tgz.pm2.io/gkt-1.0.0.tgz":
@@ -5141,6 +5147,12 @@ lodash@^4.0.0, lodash@^4.11.1, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.1, l
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
+log-symbols@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/log-symbols/-/log-symbols-1.0.2.tgz#376ff7b58ea3086a0f09facc74617eca501e1a18"
+  dependencies:
+    chalk "^1.0.0"
+
 logalot@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/logalot/-/logalot-2.1.0.tgz#5f8e8c90d304edf12530951a5554abb8c5e3f552"
@@ -6161,6 +6173,15 @@ optipng-bin@^3.0.0:
     bin-build "^2.0.0"
     bin-wrapper "^3.0.0"
     logalot "^2.0.0"
+
+ora@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/ora/-/ora-1.3.0.tgz#80078dd2b92a934af66a3ad72a5b910694ede51a"
+  dependencies:
+    chalk "^1.1.1"
+    cli-cursor "^2.1.0"
+    cli-spinners "^1.0.0"
+    log-symbols "^1.0.2"
 
 ordered-read-streams@^0.3.0:
   version "0.3.0"
@@ -7771,9 +7792,9 @@ seq-queue@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/seq-queue/-/seq-queue-0.0.5.tgz#d56812e1c017a6e4e7c3e3a37a1da6d78dd3c93e"
 
-sequelize@^4.17.2:
-  version "4.17.2"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.17.2.tgz#c2f725087c3101f60c8caca952e6f5dbd5527bb7"
+sequelize@^4.18.0:
+  version "4.18.0"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.18.0.tgz#ed49d7c8ae898c5495a46fdc9d618d94ddcf1749"
   dependencies:
     bluebird "^3.4.6"
     cls-bluebird "^2.0.1"

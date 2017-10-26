@@ -138,7 +138,7 @@ module.exports = nodefony.register("Request", function () {
         this.url.query = {};
       }
       this.queryPost = {};
-      this.queryFile = {};
+      this.queryFile = [];
       this.queryGet = this.url.query;
       this.query = this.url.query;
       try {
@@ -147,7 +147,6 @@ module.exports = nodefony.register("Request", function () {
       } catch (e) {
         this.logger(e, "WARNING");
       }
-
       this.rawContentType = {};
       this.contentType = this.getContentType(this.request);
       this.charset = this.getCharset(this.request);
@@ -159,7 +158,6 @@ module.exports = nodefony.register("Request", function () {
         //this.data.push(data);
         this.dataSize += data.length;
       });
-
       try {
         if (this.method in parse) {
           this.parserRequest();
@@ -175,12 +173,25 @@ module.exports = nodefony.register("Request", function () {
       }
     }
 
+    createFileUpload(name, file, maxSize) {
+      if (file.size > maxSize) {
+        throw new Error('maxFileSize exceeded, received ' + file.size + ' bytes of file data for : ' + file.name);
+      }
+      let fileUpload = this.context.uploadService.createUploadFile(file);
+      let index = this.queryFile.push(fileUpload);
+      name = name || file.name;
+      if (name !== "null" || "undefined") {
+        this.queryFile[name] = this.queryFile[index - 1];
+      }
+      return fileUpload;
+    }
+
     parserRequest() {
-      this.formidable = new formidable.IncomingForm({
-        uploadDir: this.context.uploadService.path,
-        maxFileSize: this.context.uploadService.max_filesize,
-        multiples: true
+      let opt = nodefony.extend(this.context.requestSettings, {
+        encoding: this.charset
       });
+      this.formidable = new formidable.IncomingForm(opt);
+
       this.formidable.parse(this.request, (err, fields, files) => {
         if (err) {
           this.context.fire("onError", this.context.container, err);
@@ -189,9 +200,9 @@ module.exports = nodefony.register("Request", function () {
         this.queryPost = fields;
         try {
           this.query = nodefony.extend({}, this.query, this.queryPost);
-        } catch (e) {
-          this.context.fire("onError", this.context.container, e);
-          return e;
+        } catch (err) {
+          this.context.fire("onError", this.context.container, err);
+          return err;
         }
         if (Object.keys(files).length) {
           for (let file in files) {
@@ -199,13 +210,21 @@ module.exports = nodefony.register("Request", function () {
               if (reg.exec(file)) {
                 if (nodefony.isArray(files[file])) {
                   for (let multifiles in files[file]) {
-                    this.queryFile[files[file][multifiles].name] = this.context.uploadService.createUploadFile(files[file][multifiles]);
+                    this.createFileUpload(multifiles, files[file][multifiles], opt.maxFileSize);
                   }
                 } else {
-                  this.queryFile[files[file].name] = this.context.uploadService.createUploadFile(files[file]);
+                  if (files[file].name) {
+                    this.createFileUpload(file, files[file], opt.maxFileSize);
+                  }
                 }
               } else {
-                this.queryFile[file] = this.context.uploadService.createUploadFile(files[file]);
+                if (nodefony.isArray(files[file])) {
+                  for (let multifiles in files[file]) {
+                    this.createFileUpload(multifiles, files[file][multifiles], opt.maxFileSize);
+                  }
+                } else {
+                  this.createFileUpload(file, files[file], opt.maxFileSize);
+                }
               }
             } catch (err) {
               this.context.fire("onError", this.context.container, err);
@@ -214,14 +233,6 @@ module.exports = nodefony.register("Request", function () {
           }
         }
         this.context.fire("onRequestEnd", this);
-
-        //console.log("QUERY")
-        //console.log(this.query)
-        //console.log("QUERY POST")
-        //console.log(this.queryPost)
-        //console.log("QUERY FILE")
-        //console.log(this.queryFile)
-
       });
     }
 

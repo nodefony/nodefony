@@ -7,9 +7,11 @@ headers:
   https:                  ~
 
 request:
-  uploadDir:                  "tmp/upload"
-  maxFileSize:                100000
-  multiples:                  true
+  uploadDir:              "/tmp"
+  maxFileSize:            10485760      # 10MB
+  multiples:              true
+  maxFieldsSize:          2097152       # 2MB
+  maxFields:              1000
 #
 #       SERVERS HTTP
 #
@@ -104,11 +106,3 @@ session:
     options:
       debug:              false
       timeout:            5000
-
-#
-#       UPLOAD SERVICE CONFIG
-#
-#
-upload:
-  tmp_dir:                "tmp/upload"
-  max_filesize:           10485760                # 10Mbits
