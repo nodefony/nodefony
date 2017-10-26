@@ -83,12 +83,12 @@ monitoringBundle:
 #
 sequelizeBundle:
   debug:                        false
-#  connectors:
+#  connectors  :
 #    nodefony:
 #      driver:                  mysql
 #      dbname:                  'nodefony'
-#      username:                'username'
-#      password:                'password'
+#      username:                'nodefony'
+#      password:                'nodefony'
 #      options:
 #        dialect:               mysql
 #        host:                  localhost
@@ -129,6 +129,10 @@ httpBundle:
       path:                     "web"
       options:
         maxAge:                 0                             #30*24*60*60*1000
+  request:
+    uploadDir:                  "tmp/upload"
+    maxFileSize:                100000
+    multiples:                  true
   upload:
     tmp_dir:                    "tmp/upload"
     #max_filesize:              100000                        # In Bytes

@@ -6,6 +6,10 @@ headers:
   http:                   ~
   https:                  ~
 
+request:
+  uploadDir:                  "tmp/upload"
+  maxFileSize:                100000
+  multiples:                  true
 #
 #       SERVERS HTTP
 #
