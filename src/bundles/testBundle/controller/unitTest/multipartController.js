@@ -18,6 +18,11 @@ module.exports = nodefony.registerController("multipart", function () {
     }
 
     requestMultiPartAction() {
+
+      /*console.dir(this.queryFile, {
+        //depth: null,
+        colors: true
+      });*/
       return this.renderJson({
         query: this.query,
         get: this.queryGet,

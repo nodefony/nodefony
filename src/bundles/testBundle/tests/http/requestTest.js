@@ -242,6 +242,71 @@ describe("BUNDLE TEST", function () {
         }
       );
     });
+    it("request-query-post-formData", function (done) {
+      global.options.path = '/test/unit/request/multipart';
+      request.post("http://" + global.options.hostname + ":" + global.options.port + global.options.path, {
+          body: '{"foo":"bar","fôo":"bâr"}',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        },
+        (err, httpResponse, body) => {
+          if (err) {
+            throw err;
+          }
+          let json = JSON.parse(body);
+          assert.deepStrictEqual(json.post.foo, "bar");
+          assert.deepStrictEqual(json.post["fôo"], "bâr");
+          assert.deepStrictEqual(json.query.foo, "bar");
+          assert.deepStrictEqual(json.query["fôo"], "bâr");
+          assert(nodefony.isArray(json.file));
+          done();
+        }
+      );
+    });
+    it("request-xml-post-formData", function (done) {
+      global.options.path = '/test/unit/request/multipart';
+      let xml = '<xml><nodefony>\
+        <kernel name="' + kernel.settings.name + '" version="' + kernel.settings.version + '">\
+          <server type="HTTP" port="' + kernel.settings.system.httpPort + '">http</server>\
+          <server type="HTTPS" port="' + kernel.settings.system.httpsPort + '">https</server>\
+        </kernel>\
+      </nodefony></xml>';
+      request.post("http://" + global.options.hostname + ":" + global.options.port + global.options.path, {
+          body: xml,
+          headers: {
+            'Content-Type': 'text/xml',
+            'Accept': 'application/json'
+          }
+        },
+        (err, httpResponse, body) => {
+          if (err) {
+            throw err;
+          }
+          let json = JSON.parse(body);
+          assert(nodefony.isArray(json.file));
+          done();
+        }
+      );
+    });
+    it("request-query-post-formData", function (done) {
+      global.options.path = '/test/unit/request/multipart';
+      request.post("http://" + global.options.hostname + ":" + global.options.port + global.options.path, {
+          body: 'mtText&ààààà',
+          headers: {
+            'Content-Type': 'plain/text',
+            'Accept': 'application/json'
+          },
+        },
+        (err, httpResponse, body) => {
+          if (err) {
+            throw err;
+          }
+          //let json = JSON.parse(body);
+          done();
+        }
+      );
+    });
   });
 
   describe('REQUEST MULTIPART FORM DATA', function () {
@@ -271,7 +336,6 @@ describe("BUNDLE TEST", function () {
           throw err;
         }
         let json = JSON.parse(body);
-        //console.log(json)
         assert.deepStrictEqual(json.query.my_field, "ézézézézézézé<<<<<>>>>>zézézézézézé@@@@ê");
         assert.deepStrictEqual(json.query.my_buffer, new Buffer([1, 2, 3]).toString());
         assert.deepStrictEqual(json.query["myval-spécial"], "ézézézézézézézézézézézézé@@@@ê");
@@ -318,12 +382,12 @@ describe("BUNDLE TEST", function () {
           throw error;
         }
         let json = JSON.parse(body);
-        //console.log(json)
         assert.deepStrictEqual(json.query.foo, "bar");
         assert.deepStrictEqual(json.query["fôo"], "bâr");
         assert.deepStrictEqual(json.get.foo, "bar");
         assert.deepStrictEqual(json.get["fôo"], "bâr");
         assert.deepStrictEqual(json.post, {});
+        assert.deepStrictEqual(json.file.length, 4);
         done();
       });
     });
