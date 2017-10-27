@@ -744,11 +744,11 @@ module.exports = nodefony.registerController("api", function () {
 
     sessionsAction() {
       // timeout
-      this.getResponse().setTimeout(5000);
+      //this.getResponse().setTimeout(5000);
       let sessionServices = this.get("sessions");
       let storage = sessionServices.settings.handler;
       switch (storage) {
-      case "session.storage.files":
+      case "files":
         let myResults = {
           count: 0,
           rows: [],
@@ -778,7 +778,7 @@ module.exports = nodefony.registerController("api", function () {
           return this.renderDatatable(dataTable, true);
         });
         break;
-      case "session.storage.sequelize":
+      case "sequelize":
         let orm = this.getORM();
         let sessionEntity = orm.getEntity("session");
         let userEntity = orm.getEntity("user");
@@ -786,7 +786,9 @@ module.exports = nodefony.registerController("api", function () {
           let options = {
             offset: parseInt(this.query.start, 10),
             limit: parseInt(this.query.length, 10),
-            include: [userEntity]
+            include: [{
+              model: userEntity
+            }]
           };
           if (this.query.order.length) {
             options.order = [];
@@ -823,9 +825,28 @@ module.exports = nodefony.registerController("api", function () {
                 }, true);
               }
             });
+        } else {
+          sessionEntity.findAndCountAll()
+            .then((results) => {
+              let pdu = new nodefony.PDU({
+                code: 200,
+                data: JSON.stringify(results)
+              });
+              return this.renderJsonAsync(pdu);
+            })
+            .catch((error) => {
+              if (error) {
+                return this.renderRest({
+                  code: 500,
+                  type: "ERROR",
+                  message: "internal error",
+                  data: error
+                }, true);
+              }
+            });
         }
         break;
-      case "session.storage.memcached":
+      case "memcached":
         return this.renderRest({
           code: 500,
           type: "ERROR",

@@ -70,7 +70,7 @@ module.exports = nodefony.register("syslog", function () {
       /* uid */
       this.uid = ++guid;
       /* severity */
-      this.severity = translateSeverity(severity);
+      this.severity = translateSeverity(severity) || translateSeverity("INFO");
       /* severityName */
       this.severityName = sysLogSeverity[this.severity];
       /* typePayload */
@@ -81,7 +81,7 @@ module.exports = nodefony.register("syslog", function () {
        */
       this.payload = pci;
       /* moduleName */
-      this.moduleName = moduleName;
+      this.moduleName = moduleName || "nodefony";
       /* msgid */
       this.msgid = msgid || "";
       /* msg */
