@@ -138,6 +138,7 @@ module.exports = nodefony.register("Bundle", function () {
       super(name, container);
       this.logger("\x1b[36m REGISTER BUNDLE : " + this.name + "   \x1b[0m", "DEBUG", this.kernel.cli.clc.magenta("KERNEL"));
       this.bundleName = path.basename(this.path);
+      this.location = path.dirname(this.path);
       this.publicPath = path.resolve(this.path, "Resources", "public");
       this.environment = this.kernel.environment;
       this.waitBundleReady = false;

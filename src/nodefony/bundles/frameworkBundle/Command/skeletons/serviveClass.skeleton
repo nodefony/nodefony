@@ -2,7 +2,6 @@
 
 {% block body %}
 
-
 module.exports = nodefony.registerService("{{name}}", function(){
 
 	/**
@@ -13,7 +12,6 @@ module.exports = nodefony.registerService("{{name}}", function(){
 	 *	@constructor
 	 *
 	 */
-
 	const {{name}} = class {{name}} extends nodefony.Service {
 
 		constructor(){

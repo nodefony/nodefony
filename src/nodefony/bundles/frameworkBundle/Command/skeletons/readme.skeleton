@@ -4,7 +4,7 @@
 ```yaml
 system:
   bundles:
-    {{name}}: {{path}}/{{bundleName}}
+    {{name}}: {{location}}/{{bundleName}}
 ```
 
 #### For a durable usage you can add this permanently in ./config/config.yml
@@ -44,7 +44,7 @@ system:
   locale                        : "en_en"
 
   bundles:
-    {{name}}                        : {{path}}/{{bundleName}}
+    {{name}}                        : {{location}}/{{bundleName}}
 ```
 
 

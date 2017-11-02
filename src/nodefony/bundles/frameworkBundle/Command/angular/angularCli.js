@@ -1,5 +1,3 @@
-const regBundle = /^(.*)[Bb]undle$/;
-
 const intervativeQuestion = function (cli) {
   return [{
     type: 'input',
@@ -30,12 +28,12 @@ const intervativeQuestion = function (cli) {
   }];
 };
 
-
 let angularCli = class angularCli extends nodefony.Service {
 
-  constructor(cli) {
-    super("Angular Cli", cli.container, cli.notificationsCenter);
-    this.cli = cli;
+  constructor(builder) {
+    super("Angular Cli", builder.cli.container, builder.cli.notificationsCenter);
+    this.cli = builder.cli;
+    this.builder = builder;
     this.inquirer = this.cli.inquirer;
     this.ng = this.getNgPath();
     this.tmp = this.setTmpDir(path.resolve("/", "tmp"));
@@ -52,22 +50,6 @@ let angularCli = class angularCli extends nodefony.Service {
     return path.resolve(process.cwd(), "node_modules", ".bin", "npm");
   }
 
-  setBundleName(name) {
-    //let realName = null ;
-    let res = regBundle.exec(name);
-    if (res) {
-      this.bundleName = res[1];
-    } else {
-      throw new Error("Bad bundle name :" + name);
-    }
-    return this.bundleName;
-  }
-
-  setBundlePath(Path) {
-    this.bundlePath = path.resolve(this.kernel.rootDir, path.resolve(Path));
-    return this.bundlePath;
-  }
-
   setTmpDir(Path) {
     return Path;
   }
@@ -82,10 +64,11 @@ let angularCli = class angularCli extends nodefony.Service {
     if (this.interactive) {
       project = this.generateInteractive();
     } else {
-      this.bundleName = this.setBundleName(name);
-      this.bundlePath = this.setBundlePath(Path);
-      this.cwd = path.resolve(this.bundlePath, name);
-      this.logger("GENERATE Angular Bundle : " + this.bundleName + " LOCATION : " + this.bundlePath);
+      this.builder.checkPath(name, Path);
+      this.bundleName = this.builder.shortName;
+      this.location = this.builder.location.path;
+      this.cwd = this.builder.bundlePath;
+      this.logger("GENERATE Angular Bundle : " + this.bundleName + " LOCATION : " + this.location);
       project = new Promise((resolve) => {
         return resolve([]);
       });
@@ -97,9 +80,9 @@ let angularCli = class angularCli extends nodefony.Service {
       .then((dir) => {
         return this.npmInstall(dir);
       })
-      .then((dir) => {
-        return this.npmInstall(dir, "@ngtools/webpack");
-      })
+      //.then((dir) => {
+      //  return this.npmInstall(dir, "@ngtools/webpack");
+      //})
       .then((dir) => {
         return this.generateNgModule(dir);
       })
@@ -110,10 +93,7 @@ let angularCli = class angularCli extends nodefony.Service {
         return this.npmInstall(dir);
       })
       .then(( /*dir*/ ) => {
-        return {
-          name: name,
-          path: Path
-        };
+        return this.builder;
       });
   }
 
@@ -123,7 +103,7 @@ let angularCli = class angularCli extends nodefony.Service {
   }
 
   moveToRealPath() {
-    return shell.mv(path.resolve(this.tmp, this.bundleName + "Bundle"), this.bundlePath);
+    return shell.mv(path.resolve(this.tmp, this.bundleName + "Bundle"), this.location);
   }
 
   cleanTmp() {
@@ -183,7 +163,7 @@ let angularCli = class angularCli extends nodefony.Service {
             this.cleanTmp();
             return reject(e);
           }
-          return resolve(path.resolve(this.bundlePath, this.bundleName + "Bundle"));
+          return resolve(path.resolve(this.location, this.bundleName + "Bundle"));
           //return resolve(dir);
         });
       } catch (e) {

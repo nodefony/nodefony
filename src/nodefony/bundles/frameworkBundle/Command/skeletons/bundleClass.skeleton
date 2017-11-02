@@ -21,7 +21,7 @@ module.exports = nodefony.registerBundle ("{{name}}", function(){
 			super( name, kernel, container );
 
 			// Load core bundle library
-			this.autoLoader.loadDirectory( path.resolve( this.path, "core" ) );
+			this.autoLoader.loadDirectory( path.resolve( this.path, "src" ) );
 
 		 /*
 		 	*	If you want kernel wait {{bundleName}} event <<onReady>>

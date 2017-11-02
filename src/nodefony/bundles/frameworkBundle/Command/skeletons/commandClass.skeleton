@@ -3,11 +3,9 @@
 {% block body %}
 
 
-module.exports = nodefony.registerCommand("{{name}}",function(){
+module.exports = nodefony.registerCommand("{{name}}",() => {
 
 	const {{name}} = class {{name}} extends nodefony.cliKernel {
-
-		constructor(container, command, options){
 
 			constructor(container, command, options){
 
@@ -37,8 +35,7 @@ module.exports = nodefony.registerCommand("{{name}}",function(){
 				}
 				this.terminate();
 			}
-		}
-	};
+		};
 
 	return {
 		name:"{{name}}",

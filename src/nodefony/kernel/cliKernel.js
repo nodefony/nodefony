@@ -5,37 +5,6 @@ const npm = require("npm");
 
 module.exports = nodefony.register("cliKernel", function () {
 
-  let createFile = function (myPath, skeleton, parse, params, callback) {
-    if (skeleton) {
-      this.buildSkeleton(skeleton, parse, params, (error, result) => {
-        if (error) {
-          this.logger(error, "ERROR");
-        } else {
-          try {
-            fs.writeFileSync(myPath, result, {
-              mode: "777"
-            });
-            callback(new nodefony.fileClass(myPath));
-          } catch (e) {
-            throw e;
-          }
-        }
-      });
-    } else {
-      let data = "/* generate by nodefony */";
-      try {
-        fs.writeFileSync(myPath, data, {
-          mode: "777"
-        });
-        callback(new nodefony.fileClass(myPath));
-      } catch (e) {
-        throw e;
-      }
-    }
-  };
-
-
-
   let createAssetDirectory = function (myPath, callback) {
     this.logger("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : " + myPath, "DEBUG");
     try {
@@ -112,14 +81,6 @@ module.exports = nodefony.register("cliKernel", function () {
     constructor(name, container, notificationsCenter, options) {
       super(name, container, notificationsCenter, options);
       this.publicDirectory = this.kernel.rootDir + "/web/";
-      this.twig = twig;
-      this.twigOptions = {
-        views: this.kernel.rootDir,
-        'twig options': {
-          async: false,
-          cache: false
-        }
-      };
       this.commands = {};
     }
 
@@ -279,87 +240,6 @@ module.exports = nodefony.register("cliKernel", function () {
       });
     }
 
-    build(obj, parent, force) {
-      let child = null;
-      switch (nodefony.typeOf(obj)) {
-      case "array":
-        for (let i = 0; i < obj.length; i++) {
-          this.build(obj[i], parent, force);
-        }
-        break;
-      case "object":
-        for (let ele in obj) {
-          let value = obj[ele];
-          switch (ele) {
-          case "name":
-            var name = value;
-            break;
-          case "type":
-            switch (value) {
-            case "directory":
-              child = this.createDirectory(parent.path + "/" + name, "777", (ele) => {
-                if (force) {
-                  this.logger("Force Create Directory :" + ele.name);
-                } else {
-                  this.logger("Create Directory :" + ele.name);
-                }
-              }, force);
-              break;
-            case "file":
-              createFile.call(this, parent.path + "/" + name, obj.skeleton, obj.parse, obj.params, (ele) => {
-                this.logger("Create File      :" + ele.name);
-              });
-              break;
-            case "symlink":
-              if (force) {
-                shell.ln('-sf', parent.path + "/" + obj.params.source, parent.path + "/" + obj.params.dest);
-              } else {
-                shell.ln('-s', parent.path + "/" + obj.params.source, parent.path + "/" + obj.params.dest);
-              }
-              this.logger("Create symbolic link :" + obj.name);
-              /*fs.symlink ( parent.path+"/"+obj.params.source, parent.path+"/"+obj.params.dest , obj.params.type || "file", (ele) => {
-							this.logger("Create symbolic link :" + ele.name);
-						} );*/
-              break;
-            }
-            break;
-          case "childs":
-            try {
-              this.build(value, child);
-            } catch (e) {
-              this.logger(e, "ERROR");
-            }
-            break;
-          }
-        }
-        break;
-      default:
-        this.logger("generate build error arguments : ", "ERROR");
-      }
-      return child;
-    }
-
-    buildSkeleton(skeleton, parse, obj, callback) {
-      let skelete = null;
-      try {
-        skelete = new nodefony.fileClass(skeleton);
-        if (skelete.type === "File") {
-          if (parse !== false) {
-            obj.settings = this.twigOptions;
-            this.twig.renderFile(skelete.path, obj, callback);
-          } else {
-            callback(null, fs.readFileSync(skelete.path, {
-              encoding: 'utf8'
-            }));
-          }
-        } else {
-          throw new Error(" skeleton must be file !!! : " + skelete.path);
-        }
-      } catch (e) {
-        this.logger(e, "ERROR");
-      }
-      return skelete;
-    }
 
     getSizeDirectory(dir, exclude) {
       let stat = null;
