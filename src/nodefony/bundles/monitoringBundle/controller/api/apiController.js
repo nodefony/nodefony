@@ -40,7 +40,7 @@ module.exports = nodefony.registerController("api", function () {
       payload.createdAt = results.rows[i].createdAt;
       payload.updatedAt = results.rows[i].updatedAt;
       payload.user = results.rows[i].user ? results.rows[i].user : {
-        username: "Anonymous"
+        username: ""
       };
       payload.user_id = results.rows[i].user_id;
       payload.Attributes = results.rows[i].Attributes;

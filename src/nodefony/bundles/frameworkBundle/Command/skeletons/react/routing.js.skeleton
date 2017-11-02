@@ -1,0 +1,20 @@
+/*
+ *
+ *	ROUTING BUNDLE {{ bundleName }}
+ *
+ * ===============================================================================
+ *
+ *   Copyright © {{ projectYear }}/{{ projectYearNow }}        {{authorName}} | {{authorEmail}}
+ *
+ * ===============================================================================
+ * {{projectName}} ROUTING  {{ bundleName }}
+ *
+ */
+ module.exports = {
+   {{name}}: {
+     pattern: "/{{name}}*",
+     defaults: {
+       controller: "{{ bundleName }}:default:index"
+     }
+   }
+ };

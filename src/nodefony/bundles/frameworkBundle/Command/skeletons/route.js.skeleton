@@ -1,0 +1,8 @@
+/*
+ *	ROUTING BUNDLE {{ bundleName }}
+ *
+ *        GENERATED
+ *         ROUTING
+ */
+
+module.exports = {{routes}};

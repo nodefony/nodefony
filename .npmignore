@@ -23,6 +23,8 @@
 .jshintignore
 .gitmodules
 .bithoundrc
+.grenrc.json
+
 
 *.db
 

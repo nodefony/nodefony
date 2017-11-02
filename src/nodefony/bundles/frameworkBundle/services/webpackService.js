@@ -166,7 +166,7 @@ module.exports = nodefony.registerService("webpack", function () {
       } else {
         if (bundle) {
           if (watcher) {
-            this.logger("WATCHING BUNDLE : " + bundle + " " + file, "INFO");
+            this.logger("Bundle : " + bundle + " WATCHER IN CONFIG   ", "INFO");
           } else {
             this.logger("COMPILE SUCCESS BUNDLE : " + bundle + " " + file, "INFO");
           }
@@ -220,6 +220,7 @@ module.exports = nodefony.registerService("webpack", function () {
       let basename = bundle.bundleName;
       let watch = null;
       let compiler = null;
+      let watchOptions = {};
       try {
         switch (type) {
         case "angular":
@@ -249,6 +250,14 @@ module.exports = nodefony.registerService("webpack", function () {
           } else {
             config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
           }
+          watchOptions = {
+            ignored: new RegExp(
+              `^(?!${path
+              .normalize(Path + '/')
+              .replace(/[\\]+/g, '\\\\')}).+[\\\\/]node_modules[\\\\/]`,
+              'g'
+            )
+          };
           break;
         default:
           config = require(file.path);
@@ -264,6 +273,7 @@ module.exports = nodefony.registerService("webpack", function () {
           shell.cd(this.kernel.rootDir);
           throw e;
         }
+        //console.log(config)
         compiler = webpack(config);
         if (this.kernel.type === "CONSOLE") {
           shell.cd(this.kernel.rootDir);
@@ -291,9 +301,7 @@ module.exports = nodefony.registerService("webpack", function () {
         let idfile = basename + "_" + file.name;
         let watching = null;
         if (watch) {
-          watching = compiler.watch({
-            /* watchOptions */
-          }, (err, stats) => {
+          watching = compiler.watch(watchOptions, (err, stats) => {
             if (!err) {
               this.logger("RUN WEBPACK COMPILER : " + basename + " COMPILE ENTRY POINT : \n" + this.displayConfigTable(config), "DEBUG");
             }

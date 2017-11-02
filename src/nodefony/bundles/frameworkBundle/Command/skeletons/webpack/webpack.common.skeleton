@@ -1,13 +1,30 @@
 const path = require("path");
 //const webpack = require('webpack');
+const public = path.resolve(__dirname, "..", "public");
+const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
 const ExtractTextPluginCss = require('extract-text-webpack-plugin');
-const public = path.resolve(__dirname, "..", "..", "public");
-const bundleName = path.basename(path.resolve(__dirname, "..", "..", ".."));
-//const webpackDevClient = "webpack-dev-server/client?https://" + kernel.hostHttps + "/";
+const webpackMerge = require('webpack-merge');
+let config = null;
+if (kernel.environment === "dev") {
+  config = require("./webpack/webpack.dev.config.js");
+} else {
+  config = require("./webpack/webpack.prod.config.js");
+}
 
-module.exports = {
+module.exports = webpackMerge({
   context: public,
   target: "web",
+  entry       : {
+    {{name}}  : [ "./js/{{name}}.js" ]
+  },
+  output: {
+    path: public,
+    filename: "./assets/js/[name].js",
+    library: "[name]",
+    libraryTarget: "umd"
+  },
+  externals: {},
+  resolve: {},
   module: {
     rules: [{
       // BABEL TRANSCODE
@@ -64,4 +81,4 @@ module.exports = {
       filename: "./assets/css/[name].css",
     })
   ]
-};
+}, config);

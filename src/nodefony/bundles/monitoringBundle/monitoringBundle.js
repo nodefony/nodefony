@@ -466,8 +466,8 @@ module.exports = nodefony.registerBundle("monitoring", function () {
       case "application/json":
       case "text/json":
       case "application/x-www-form-urlencoded":
-        //content = context.request.body.toString(context.request.charset);
-        content = context.request.query.toString();
+        content = context.request.data.toString(context.request.charset);
+        //content = context.request.query.toString();
         break;
       default:
         content = null;
@@ -728,9 +728,9 @@ module.exports = nodefony.registerBundle("monitoring", function () {
           //console.log(context.profiling)
           // DATABASE ENTITY
           if (context.profiling.context_secure) {
-            user = context.profiling.context_secure.user ? context.profiling.context_secure.user.username : "anonymous";
+            user = context.profiling.context_secure.user ? context.profiling.context_secure.user.username : "";
           } else {
-            user = "none";
+            user = "";
           }
           try {
             data = JSON.stringify(context.profiling);

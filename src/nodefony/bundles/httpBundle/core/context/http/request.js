@@ -5,38 +5,46 @@ module.exports = nodefony.register("Request", function () {
 
   // ARRAY PHP LIKE
   const reg = /(.*)[\[][\]]$/;
-
   const settingsXml = {};
 
-  const parserXml = class parserXml {
+  const parser = class parser {
     constructor(request) {
-      this.charset = "utf8";
-      this.data = Buffer.from('', this.charset);
       this.request = request;
-      this.bytesWritten = 0;
-      this.xmlParser = new xmlParser(settingsXml);
       this.request.request.on("data", (data) => {
         this.write(data);
       });
       this.request.request.on("end", () => {
-        this.xmlParser.parseString(this.data.toString(this.charset), (err, result) => {
-          if (err) {
-            throw err;
-          }
-          this.request.queryPost = result;
-          this.request.context.fire("onRequestEnd", this.request);
-        });
+        this.parse();
       });
     }
-
     write(buffer) {
-      if (this.data.length >= this.bytesWritten + buffer.length) {
-        buffer.copy(this.data, this.bytesWritten);
+      if (this.request.data.length >= (this.request.dataSize + buffer.length)) {
+        buffer.copy(this.request.data, this.request.dataSize);
       } else {
-        this.data = Buffer.concat([this.data, buffer]);
+        this.request.data = Buffer.concat([this.request.data, buffer]);
       }
-      this.bytesWritten += buffer.length;
+      this.request.dataSize += buffer.length;
       return buffer.length;
+    }
+    parse() {
+      this.request.context.fire("onRequestEnd", this.request);
+    }
+  };
+
+  const parserXml = class parserXml extends parser {
+    constructor(request) {
+      super(request);
+      this.xmlParser = new xmlParser(settingsXml);
+    }
+    parse() {
+      this.xmlParser.parseString(this.request.data.toString(this.charset), (err, result) => {
+        if (err) {
+          this.request.context.fire("onError", this.request.context.container, err);
+          throw err;
+        }
+        this.request.queryPost = result;
+        super.parse();
+      });
     }
   };
 
@@ -116,7 +124,7 @@ module.exports = nodefony.register("Request", function () {
       } else {
         this.url.query = {};
       }
-      this.formidable = null;
+      this.parser = null;
       this.queryPost = {};
       this.queryFile = [];
       this.queryGet = this.url.query;
@@ -134,8 +142,8 @@ module.exports = nodefony.register("Request", function () {
       this.remoteAddress = this.getRemoteAddress();
 
       this.dataSize = 0;
+      this.data = Buffer.from([], this.charset);
       this.request.on('data', (data) => {
-        //this.data.push(data);
         this.dataSize += data.length;
       });
       try {
@@ -176,8 +184,8 @@ module.exports = nodefony.register("Request", function () {
         let opt = nodefony.extend(this.context.requestSettings, {
           encoding: this.charset
         });
-        this.formidable = new formidable.IncomingForm(opt);
-        this.formidable.parse(this.request, (err, fields, files) => {
+        this.parser = new formidable.IncomingForm(opt);
+        this.parser.parse(this.request, (err, fields, files) => {
           if (err) {
             this.request.on("end", () => {
               this.context.fire("onError", this.context.container, err);
@@ -281,12 +289,12 @@ module.exports = nodefony.register("Request", function () {
     }
 
     clean() {
-      //this.data = null;
-      //delete this.data;
+      this.data = null;
+      delete this.data;
       //this.body = null;
       //delete this.body;
-      this.formidable = null;
-      delete this.formidable;
+      this.parser = null;
+      delete this.parser;
       this.queryPost = null;
       delete this.queryPost;
       this.queryFile = null;

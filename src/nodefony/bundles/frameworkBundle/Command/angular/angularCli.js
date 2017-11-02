@@ -177,7 +177,14 @@ let angularCli = class angularCli extends nodefony.Service {
             this.cleanTmp();
             return reject(new Error("ng generate module error code : " + code));
           }
-          return resolve(dir);
+          try {
+            this.moveToRealPath();
+          } catch (e) {
+            this.cleanTmp();
+            return reject(e);
+          }
+          return resolve(path.resolve(this.bundlePath, this.bundleName + "Bundle"));
+          //return resolve(dir);
         });
       } catch (e) {
         this.cleanTmp();
@@ -200,13 +207,8 @@ let angularCli = class angularCli extends nodefony.Service {
             this.cleanTmp();
             return reject(new Error("ng eject error : " + code));
           }
-          try {
-            this.moveToRealPath();
-          } catch (e) {
-            this.cleanTmp();
-            return reject(e);
-          }
-          return resolve(path.resolve(this.bundlePath, this.bundleName + "Bundle"));
+          return resolve(dir);
+          //return resolve(path.resolve(this.bundlePath, this.bundleName + "Bundle"));
         });
       } catch (e) {
         this.cleanTmp();

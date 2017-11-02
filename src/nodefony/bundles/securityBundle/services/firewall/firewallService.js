@@ -107,7 +107,6 @@ module.exports = nodefony.registerService("firewall", function () {
       this.alwaysUseDefaultTarget = false;
       this.stateLess = false;
       this.anonymous = false;
-
       this.once("onReady", () => {
         try {
           if (this.providerName in this.firewall.providers) {
@@ -267,6 +266,8 @@ module.exports = nodefony.registerService("firewall", function () {
             let target_path = context.session.getFlashBag("default_target_path");
             if (context.user.lang) {
               context.session.set("lang", context.user.lang);
+            } else {
+              context.session.set("lang", context.translation.defaultLocale);
             }
             let target = null;
             if (target_path) {
@@ -522,14 +523,9 @@ module.exports = nodefony.registerService("firewall", function () {
             }
           }
         } else {
-          if (context.sessionAutoStart === "autostart") {
-            sessionContext = "default";
-          } else {
-            if (context.cookieSession) {
-              sessionContext = null;
-            } else {
-              return context.fire("onRequest");
-            }
+          sessionContext = null;
+          if (!context.cookieSession) {
+            return context.fire("onRequest");
           }
         }
         return this.sessionService.start(context, sessionContext).then((session) => {
@@ -772,7 +768,7 @@ module.exports = nodefony.registerService("firewall", function () {
       if (!msgid) {
         msgid = "\x1b[36mSERVICE FIREWALL\x1b[0m";
       }
-      return this.syslog.logger(pci, severity, msgid, msg);
+      return super.logger(pci, severity, msgid, msg);
     }
   };
   return Firewall;

@@ -7,7 +7,7 @@ module.exports = nodefony.register("cliKernel", function () {
 
   let createFile = function (myPath, skeleton, parse, params, callback) {
     if (skeleton) {
-      buildSkeleton.call(this, skeleton, parse, params, (error, result) => {
+      this.buildSkeleton(skeleton, parse, params, (error, result) => {
         if (error) {
           this.logger(error, "ERROR");
         } else {
@@ -34,27 +34,7 @@ module.exports = nodefony.register("cliKernel", function () {
     }
   };
 
-  let buildSkeleton = function (skeleton, parse, obj, callback) {
-    let skelete = null;
-    try {
-      skelete = new nodefony.fileClass(skeleton);
-      if (skelete.type === "File") {
-        if (parse !== false) {
-          obj.settings = this.twigOptions;
-          this.twig.renderFile(skelete.path, obj, callback);
-        } else {
-          callback(null, fs.readFileSync(skelete.path, {
-            encoding: 'utf8'
-          }));
-        }
-      } else {
-        throw new Error(" skeleton must be file !!! : " + skelete.path);
-      }
-    } catch (e) {
-      this.logger(e, "ERROR");
-    }
-    return skelete;
-  };
+
 
   let createAssetDirectory = function (myPath, callback) {
     this.logger("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : " + myPath, "DEBUG");
@@ -267,7 +247,11 @@ module.exports = nodefony.register("cliKernel", function () {
       if (debug) {
         data = "INFO,DEBUG,WARNING";
       } else {
-        data = "INFO";
+        if (this.kernel.type === "SERVER" && this.kernel.environment === "dev") {
+          data = "INFO,WARNING";
+        } else {
+          data = "INFO";
+        }
       }
       syslog.listenWithConditions(this, {
         severity: {
@@ -353,6 +337,28 @@ module.exports = nodefony.register("cliKernel", function () {
         this.logger("generate build error arguments : ", "ERROR");
       }
       return child;
+    }
+
+    buildSkeleton(skeleton, parse, obj, callback) {
+      let skelete = null;
+      try {
+        skelete = new nodefony.fileClass(skeleton);
+        if (skelete.type === "File") {
+          if (parse !== false) {
+            obj.settings = this.twigOptions;
+            this.twig.renderFile(skelete.path, obj, callback);
+          } else {
+            callback(null, fs.readFileSync(skelete.path, {
+              encoding: 'utf8'
+            }));
+          }
+        } else {
+          throw new Error(" skeleton must be file !!! : " + skelete.path);
+        }
+      } catch (e) {
+        this.logger(e, "ERROR");
+      }
+      return skelete;
     }
 
     getSizeDirectory(dir, exclude) {

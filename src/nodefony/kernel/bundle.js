@@ -479,7 +479,8 @@ module.exports = nodefony.register("Bundle", function () {
         break;
       default:
         try {
-          res = this.finder.result.getFile("webpack." + this.kernel.environment + ".config.js", true);
+          //res = this.finder.result.getFile("webpack." + this.kernel.environment + ".config.js", true);
+          res = this.finder.result.getFile("webpack.js", true);
           if (!res) {
             return;
           }

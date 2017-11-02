@@ -177,19 +177,13 @@ module.exports = nodefony.registerCommand("generate", function () {
 
   const webpack = function (obj, type, bundleType) {
     switch (bundleType) {
-    case "angular":
-    case "react":
-      return {};
-    default:
-      return {
+      //case "angular":
+      //case "react":
+      //  return {};
+      default: return {
         name: "webpack",
         type: "directory",
         childs: [{
-          name: "webpack.common.js",
-          type: "file",
-          skeleton: path.resolve(this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/webpack/webpack.common.skeleton"),
-          params: obj
-        }, {
           name: "webpack.dev.config.js",
           type: "file",
           skeleton: path.resolve(this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/webpack/webpack.dev.skeleton"),
@@ -231,8 +225,13 @@ module.exports = nodefony.registerCommand("generate", function () {
               type: "file",
               skeleton: path.resolve(this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/" + bundleType + "/config." + type + ".skeleton"),
               params: param
+            }, {
+              name: "webpack.js",
+              type: "file",
+              skeleton: path.resolve(this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/webpack/webpack.common.skeleton"),
+              params: param
             },
-            routing.call(this, param, type, bundleType),
+            routing.call(this, param, "js", bundleType),
             webpack.call(this, param, type, bundleType),
             security.call(this, param, type, bundleType)
           ]
@@ -254,40 +253,28 @@ module.exports = nodefony.registerCommand("generate", function () {
   };
 
   const viewString = function (param) {
-
     return "{% extends '/app/Resources/views/base.html.twig' %}\n\
 \n\
 {% block title %}Welcome {{kernel.name}}! {% endblock %}\n\
-\n\
 {% block stylesheets %}\n\
-\n\
   {{ parent() }}\n\
-\n\
   <!-- WEBPACK BUNDLE -->\n\
   <link rel='stylesheet' href='" + param.CDN_stylesheet + "/" + param.bundleName + "/assets/css/" + param.name + ".css' />\n\
-\n\
 {% endblock %}\n\
-\n\
 {% block body %}\n\
-  <div class='container'>\n\
-    <div class='row'>\n\
       <img class='displayed' src='" + param.CDN_image + "/frameworkBundle/images/nodefony-logo-white.png'>\n\
-    </div>\n\
-  </div>\n\
-  <div class='container'>\n\
-    <div class='row displayed'>\n\
-      {{readme}}\n\
-    </div>\n\
-  </div>\n\
+      <h1 class='success'>\n\
+        <a href='{{url('documentation')}}'>\n\
+          <strong style='font-size:45px'>NODEFONY</strong>\n\
+        </a>\n\
+        <p>{{trans('welcome')}} " + param.name + "</p>\n\
+      </h1>\n\
 {% endblock %}\n\
 \n\
 {% block javascripts %}\n\
-\n\
   {{ parent() }}\n\
-\n\
   <!-- WEBPACK BUNDLE -->\n\
   <script src='" + param.CDN_javascript + "/" + param.bundleName + "/assets/js/" + param.name + ".js'></script>\n\
-\n\
 {% endblock %}";
   };
 
@@ -312,6 +299,8 @@ module.exports = nodefony.registerCommand("generate", function () {
     return obj;
   };
 
+
+  // ROUTING
   const routing = function (obj, type, bundleType) {
     return {
       name: "routing." + type,
@@ -320,24 +309,53 @@ module.exports = nodefony.registerCommand("generate", function () {
       params: obj
     };
   };
-  routing.addConfigRoute = function (file, route, nameController, bundleName) {
-    var routingFile = new nodefony.fileClass(file);
-    this.buildSkeleton(path.resolve(this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/route.yml.skeleton"), true, {
-      controller: nameController,
-      name: route.name,
-      bundleName: bundleName
-    }, function (error, data) {
-      if (error) {
-        throw error;
-      }
-      try {
-        fs.writeFileSync(routingFile.path, routingFile.content() + data, {
-          mode: "777"
-        });
-      } catch (e) {
-        throw e;
-      }
-    });
+  routing.addConfigRoute = function (file, type, route, nameController, bundleName, bundle) {
+    let routingFile = new nodefony.fileClass(file);
+    switch (type) {
+    case "js":
+      let json = require(routingFile.path);
+      json[route.name] = {
+        pattern: "/" + bundle + "/" + route.name,
+        defaults: {
+          controller: bundleName + ":" + nameController + ":index"
+        }
+      };
+      this.buildSkeleton(path.resolve(this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/route." + type + ".skeleton"), true, {
+        routes: JSON.stringify(json, null, 2)
+      }, function (error, data) {
+        if (error) {
+          throw error;
+        }
+        try {
+          fs.writeFileSync(routingFile.path, data, {
+            mode: "777"
+          });
+        } catch (e) {
+          throw e;
+        }
+      });
+      break;
+    case "yml":
+      this.buildSkeleton(path.resolve(this.kernel.autoLoader.dirname, "bundles/frameworkBundle/Command/skeletons/route." + type + ".skeleton"), true, {
+        controller: nameController,
+        name: route.name,
+        bundleName: bundleName
+      }, function (error, data) {
+        if (error) {
+          throw error;
+        }
+        try {
+          fs.writeFileSync(routingFile.path, routingFile.content() + data, {
+            mode: "777"
+          });
+        } catch (e) {
+          throw e;
+        }
+      });
+      break;
+    default:
+      throw new Error("Type generator don't exist");
+    }
   };
 
   const security = function (obj, type, bundleType) {
@@ -554,7 +572,6 @@ module.exports = nodefony.registerCommand("generate", function () {
   const controllers = function (bundlePath, controllerName, type) {
     let res = regController.exec(controllerName);
     let realName = null;
-    let directory = null;
     let bundleName = null;
     if (res) {
       realName = res[1];
@@ -568,31 +585,24 @@ module.exports = nodefony.registerCommand("generate", function () {
     } else {
       throw new Error("Bad bundle name");
     }
-    res = regController.exec(controllerName);
-    if (res) {
-      directory = res[1];
-    } else {
-      throw new Error("Bad Controller name");
-    }
+
     let bundleDirectoryController = new nodefony.fileClass(bundlePath.path + "/controller");
     let bundleDirectoryview = new nodefony.fileClass(bundlePath.path + "/Resources/views");
-    //var bundleDirectoryConfig = new nodefony.fileClass(bundlePath.path+"/Resources/config");
     let name = regBundle.exec(bundleName)[1];
     try {
-      this.build(controller.call(this, bundlePath.name, directory, controllerName, directory), bundleDirectoryController);
-      this.build(views.call(this, directory, "index.html.twig", {
+      this.build(controller.call(this, bundlePath.name, realName, controllerName, realName), bundleDirectoryController);
+      this.build(views.call(this, realName, "index.html.twig", {
         name: name,
         bundleName: bundleName
       }), bundleDirectoryview);
-      var route = new nodefony.Route(realName);
+      let route = new nodefony.Route(realName);
       route.addDefault("controller", bundleName + ":" + realName + ":index");
       //console.log(route)
-      routing.addConfigRoute.call(this, bundlePath.path + "/Resources/config/routing." + type, route, controllerName, bundleName);
+      routing.addConfigRoute.call(this, bundlePath.path + "/Resources/config/routing." + type, type, route, realName, bundleName, name);
     } catch (e) {
       this.logger(e, "ERROR");
     }
   };
-
 
   /*
    *
@@ -662,6 +672,11 @@ module.exports = nodefony.registerCommand("generate", function () {
                 } catch (e) {
                   throw e;
                 }
+                break;
+              case "test":
+                let generater = require("./generate/bundle.js");
+                let project = new generater.bundle(this, "js");
+                project.build(args[0], args[1]);
                 break;
               }
             }
@@ -771,7 +786,7 @@ module.exports = nodefony.registerCommand("generate", function () {
       this.logger("GENERATE controller : " + name + " BUNDLE LOCATION : " + Path);
       try {
         let file = new nodefony.fileClass(Path);
-        return controllers.call(this, file, name, "yml");
+        return controllers.call(this, file, name, "js");
       } catch (e) {
         this.logger(e, "ERROR");
         throw e;

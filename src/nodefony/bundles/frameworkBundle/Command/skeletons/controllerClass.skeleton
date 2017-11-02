@@ -26,15 +26,8 @@ module.exports = nodefony.registerController("{{name}}", function(){
 		 	*
 		 	*/
 			indexAction (){
-				// markdown read and parse readme.md
 				try {
-					let path = "{{location}}/{{bundleName}}/readme.md";
-					let file = new nodefony.fileClass(path);
-					let res = this.htmlMdParser(file.content(file.encoding),{
-						linkify: true,
-						typographer: true
-					});
-					return this.render("{{bundleName}}:{{directory}}:index.html.twig",{readme:res});
+					return this.render("{{bundleName}}:{{directory}}:index.html.twig",{name:"{{bundleName}}"});
 				}catch(e){
 					throw e;
 				}
