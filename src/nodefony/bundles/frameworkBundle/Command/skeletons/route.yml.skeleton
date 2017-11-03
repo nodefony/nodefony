@@ -3,7 +3,6 @@
 # AUTOGENERATE ROUTE CONTROLLER {{controller}}
 #
 
-{{name}}: 
-  pattern:  /{{name}}
-  defaults: {controller: "{{ bundleName }}:{{name}}:index"}
-
+{{controller}}:
+  pattern:  /{{prefix}}/{{controller}}
+  defaults: {controller: "{{ bundleName }}:{{controller}}:index"}

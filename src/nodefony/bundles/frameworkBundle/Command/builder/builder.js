@@ -48,8 +48,13 @@ const Builder = class Builder {
     let child = null;
     switch (nodefony.typeOf(obj)) {
     case "array":
-      for (let i = 0; i < obj.length; i++) {
-        this.build(obj[i], parent, force);
+      try {
+        for (let i = 0; i < obj.length; i++) {
+          this.build(obj[i], parent, force);
+        }
+      } catch (e) {
+        this.logger(e, "ERROR");
+        throw e;
       }
       break;
     case "object":
@@ -62,26 +67,41 @@ const Builder = class Builder {
         case "type":
           switch (value) {
           case "directory":
-            child = this.cli.createDirectory(parent.path + "/" + name, "777", (ele) => {
-              if (force) {
-                this.logger("Force Create Directory :" + ele.name);
-              } else {
-                this.logger("Create Directory :" + ele.name);
-              }
-            }, force);
+            try {
+              child = this.cli.createDirectory(parent.path + "/" + name, "777", (ele) => {
+                if (force) {
+                  this.logger("Force Create Directory :" + ele.name);
+                } else {
+                  this.logger("Create Directory :" + ele.name);
+                }
+              }, force);
+            } catch (e) {
+              this.logger(e, "ERROR");
+              throw e;
+            }
             break;
           case "file":
-            this.createFile(parent.path + "/" + name, obj.skeleton, obj.parse, obj.params, (ele) => {
-              this.logger("Create File      :" + ele.name);
-            });
+            try {
+              this.createFile(parent.path + "/" + name, obj.skeleton, obj.parse, obj.params, (ele) => {
+                this.logger("Create File      :" + ele.name);
+              });
+            } catch (e) {
+              this.logger(e, "ERROR");
+              throw e;
+            }
             break;
           case "symlink":
-            if (force) {
-              shell.ln('-sf', parent.path + "/" + obj.params.source, parent.path + "/" + obj.params.dest);
-            } else {
-              shell.ln('-s', parent.path + "/" + obj.params.source, parent.path + "/" + obj.params.dest);
+            try {
+              if (force) {
+                shell.ln('-sf', parent.path + "/" + obj.params.source, parent.path + "/" + obj.params.dest);
+              } else {
+                shell.ln('-s', parent.path + "/" + obj.params.source, parent.path + "/" + obj.params.dest);
+              }
+              this.logger("Create symbolic link :" + obj.name);
+            } catch (e) {
+              this.logger(e, "ERROR");
+              throw e;
             }
-            this.logger("Create symbolic link :" + obj.name);
             /*fs.symlink ( parent.path+"/"+obj.params.source, parent.path+"/"+obj.params.dest , obj.params.type || "file", (ele) => {
             this.logger("Create symbolic link :" + ele.name);
           } );*/
@@ -93,6 +113,7 @@ const Builder = class Builder {
             this.build(value, child);
           } catch (e) {
             this.logger(e, "ERROR");
+            throw e;
           }
           break;
         }

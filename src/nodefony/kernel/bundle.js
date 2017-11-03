@@ -112,6 +112,7 @@ module.exports = nodefony.register("Bundle", function () {
       ignored: [
         (string) => {
           let basename = path.basename(string);
+
           let file = checkIngnoreFile(string, basename);
           if (file === true) {
             return true;

@@ -40,7 +40,7 @@ module.exports = nodefony.registerCommand("{{name}}",() => {
 	return {
 		name:"{{name}}",
 		commands:{
-			id:["{{name}}:example myArg1 myArg2" ,"documentation command to see in showHelp() "],
+			id:["{{name}}:example myArg1 myArg2" ,"example  ./nodefony {{name}}:example myarg1 myarg2"],
 		},
 		cli:{{name}}
 	}

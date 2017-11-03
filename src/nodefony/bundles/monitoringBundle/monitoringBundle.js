@@ -635,18 +635,27 @@ module.exports = nodefony.registerBundle("monitoring", function () {
       } else {
         if (!context.timeoutExpired) {
           if (!context.isAjax && context.showDebugBar /*&& context.profiling.route.name !== "monitoring"*/ ) {
-            if (response && typeof response.body === "string" && response.body.indexOf("</body>") > 0) {
-              try {
-                let result = this.debugView.render(this.httpKernel.extendTwig(context.profiling, context));
-                response.body = response.body.replace("</body>", result + "\n </body>");
-              } catch (e) {
-                throw e;
+            if (response) {
+              let bool = true;
+              let xml = (response.getHeader('content-type').indexOf("xml") >= 0);
+              switch (true) {
+              case response.body instanceof Buffer:
+                response.body = response.body.toString(response.encoding);
+                break;
+              case (typeof response.body === "string"):
+                break;
+              default:
+                bool = false;
               }
-            } else {
-              //context.setXjson(context.profiling);
+              if ((!xml) && bool && (response.body.indexOf("</body>") >= 0)) {
+                try {
+                  let result = this.debugView.render(this.httpKernel.extendTwig(context.profiling, context));
+                  response.body = response.body.replace("</body>", result + "\n </body>");
+                } catch (e) {
+                  throw e;
+                }
+              }
             }
-          } else {
-            //context.setXjson(context.profiling);
           }
         }
         context.profiling = null;

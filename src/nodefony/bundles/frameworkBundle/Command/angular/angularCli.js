@@ -6,7 +6,6 @@ const intervativeQuestion = function (cli) {
     validate: (value) => {
       try {
         cli.cli.blankLine();
-        cli.setBundleName(value);
         return true;
       } catch (e) {
         return e.message;
@@ -19,7 +18,6 @@ const intervativeQuestion = function (cli) {
     validate: (value) => {
       try {
         cli.cli.blankLine();
-        cli.setBundlePath(value);
         return true;
       } catch (e) {
         return e.message;

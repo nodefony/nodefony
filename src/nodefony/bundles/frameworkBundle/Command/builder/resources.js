@@ -1,6 +1,3 @@
-const routing = require("./routing.js");
-
-
 const Config = class Config {
   constructor(cli, builder) {
     this.cli = cli;
@@ -9,7 +6,7 @@ const Config = class Config {
     this.params = builder.params;
     this.bundleType = builder.bundleType;
     this.skeletonPath = builder.skeletonPath;
-    this.routing = new routing(this.cli, builder);
+    this.routing = builder.routing; //new routing(this.cli, builder);
     this.configSkeleton = path.resolve(this.skeletonPath, this.bundleType, "config.yml.skeleton");
     this.webpackSkeleton = path.resolve(this.skeletonPath, "webpack", "webpack.common.skeleton");
   }
@@ -75,6 +72,7 @@ const Resources = class Resources {
     this.params = builder.params;
     this.bundleType = builder.bundleType;
     this.skeletonPath = builder.skeletonPath;
+    this.routing = builder.routing;
     this.config = new Config(this.cli, this);
     this.view = builder.view;
     this.translation = builder.translation;

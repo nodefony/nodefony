@@ -45,7 +45,7 @@ module.exports = nodefony.register("Reader", function () {
       case ".js":
       case ".es6":
       case ".es7":
-        Array.prototype.unshift.call(arguments, this.loader.load(file));
+        Array.prototype.unshift.call(arguments, this.loader.load(file, true));
         return plug.javascript.apply(this, arguments);
       default:
         this.logger("DROP FILE : " + mypath + " NO PLUGIN FIND", "WARNING");

@@ -82,6 +82,10 @@ module.exports = nodefony.register("Response", function () {
       return this.headers;
     }
 
+    getHeader(name) {
+      return this.response.getHeader(name);
+    }
+
     addTrailers(obj) {
       return this.response.addTrailers(obj);
     }

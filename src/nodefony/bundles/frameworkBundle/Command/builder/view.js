@@ -5,7 +5,7 @@ const View = class View {
     this.params = builder.params;
     this.bundleType = builder.bundleType;
     this.skeletonPath = builder.skeletonPath;
-    this.name = "views";
+    this.directory = "views";
     this.skeletonView = path.resolve(this.skeletonPath, "bundleView.skeleton");
   }
   createBuilder(location, name) {

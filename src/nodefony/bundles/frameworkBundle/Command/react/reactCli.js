@@ -8,7 +8,6 @@ const intervativeQuestion = function (cli) {
     validate: (value) => {
       try {
         cli.cli.blankLine();
-        cli.setBundleName(value);
         return true;
       } catch (e) {
         return e.message;
@@ -21,7 +20,6 @@ const intervativeQuestion = function (cli) {
     validate: (value) => {
       try {
         cli.cli.blankLine();
-        cli.setBundlePath(value);
         return true;
       } catch (e) {
         return e.message;
@@ -33,9 +31,10 @@ const intervativeQuestion = function (cli) {
 
 const reactCli = class reactCli extends nodefony.Service {
 
-  constructor(cli) {
-    super("React Cli", cli.container, cli.notificationsCenter);
-    this.cli = cli;
+  constructor(builder) {
+    super("React Cli", builder.cli.container, builder.cli.notificationsCenter);
+    this.cli = builder.cli;
+    this.builder = builder;
     this.inquirer = this.cli.inquirer;
     this.react = this.getReactPath();
     this.tmp = this.setTmpDir(path.resolve("/", "tmp"));
@@ -43,22 +42,6 @@ const reactCli = class reactCli extends nodefony.Service {
     this.setEnv();
     this.bundleName = null;
     this.bundlePath = null;
-  }
-
-  setBundleName(name) {
-    //let realName = null ;
-    let res = regBundle.exec(name);
-    if (res) {
-      this.bundleName = res[1];
-    } else {
-      throw new Error("Bad bundle name :" + name);
-    }
-    return this.bundleName;
-  }
-
-  setBundlePath(Path) {
-    this.bundlePath = path.resolve(this.kernel.rootDir, path.resolve(Path));
-    return this.bundlePath;
   }
 
   getReactPath() {
@@ -102,10 +85,11 @@ const reactCli = class reactCli extends nodefony.Service {
     if (this.interactive) {
       project = this.generateInteractive();
     } else {
-      this.bundleName = this.setBundleName(name);
-      this.bundlePath = this.setBundlePath(Path);
-      this.cwd = path.resolve(this.bundlePath, name);
-      this.logger("GENERATE React Bundle : " + this.bundleName + " LOCATION : " + this.bundlePath);
+      this.builder.checkPath(name, Path);
+      this.bundleName = this.builder.shortName;
+      this.location = this.builder.location.path;
+      this.cwd = this.builder.bundlePath;
+      this.logger("GENERATE React Bundle : " + this.bundleName + " LOCATION : " + this.location);
       project = new Promise((resolve) => {
         return resolve([]);
       });
@@ -151,7 +135,7 @@ const reactCli = class reactCli extends nodefony.Service {
 
   moveToRealPath() {
     try {
-      return shell.mv(path.resolve(this.tmp, this.bundleName + "bundle"), this.bundlePath);
+      return shell.mv(path.resolve(this.tmp, this.bundleName + "bundle"), this.location);
     } catch (e) {
       throw e;
     }
@@ -176,7 +160,7 @@ const reactCli = class reactCli extends nodefony.Service {
             this.cleanTmp();
             return reject(e);
           }
-          return resolve(path.resolve(this.bundlePath, this.bundleName + "bundle"));
+          return resolve(path.resolve(this.location, this.bundleName + "bundle"));
         });
         process.stdin.pipe(cmd.stdin);
       } catch (e) {
