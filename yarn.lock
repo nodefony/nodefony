@@ -3449,9 +3449,9 @@ github-api@^3.0.0:
     js-base64 "^2.1.9"
     utf8 "^2.1.1"
 
-github-release-notes@^0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/github-release-notes/-/github-release-notes-0.13.0.tgz#4333e7a3c8374caac6d3b6bfcf2b091395092078"
+github-release-notes@^0.13.1:
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/github-release-notes/-/github-release-notes-0.13.1.tgz#8ce8bbd6b3586a6f5f611d79b5985181797872d5"
   dependencies:
     babel-runtime "^6.26.0"
     chalk "^2.1.0"
@@ -4727,6 +4727,10 @@ karma-source-map-support@^1.2.0:
   resolved "https://registry.yarnpkg.com/karma-source-map-support/-/karma-source-map-support-1.2.0.tgz#1bf81e7bb4b089627ab352ec4179e117c406a540"
   dependencies:
     source-map-support "^0.4.1"
+
+killable@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/killable/-/killable-1.0.0.tgz#da8b84bd47de5395878f95d64d02f2449fe05e6b"
 
 kind-of@^2.0.1:
   version "2.0.1"
@@ -6057,9 +6061,9 @@ oauth-sign@~0.8.1, oauth-sign@~0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.8.2.tgz#46a6ab7f0aead8deae9ec0565780b7d4efeb9d43"
 
-oauth2orize@^1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/oauth2orize/-/oauth2orize-1.10.0.tgz#e0cd655c836df9e0c42db5d456d86aa6284fe588"
+oauth2orize@^1.11.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/oauth2orize/-/oauth2orize-1.11.0.tgz#793cef251d45ebdeac32ae40a8b6814faab1d483"
   dependencies:
     debug "2.x.x"
     uid2 "0.0.x"
@@ -9211,9 +9215,9 @@ webpack-dev-middleware@^1.11.0, webpack-dev-middleware@~1.12.0:
     range-parser "^1.0.3"
     time-stamp "^2.0.0"
 
-webpack-dev-server@^2.9.3:
-  version "2.9.3"
-  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-2.9.3.tgz#f0554e88d129e87796a6f74a016b991743ca6f81"
+webpack-dev-server@^2.9.4:
+  version "2.9.4"
+  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-2.9.4.tgz#7883e61759c6a4b33e9b19ec4037bd4ab61428d1"
   dependencies:
     ansi-html "0.0.7"
     array-includes "^3.0.3"
@@ -9229,6 +9233,7 @@ webpack-dev-server@^2.9.3:
     import-local "^0.1.1"
     internal-ip "1.2.0"
     ip "^1.1.5"
+    killable "^1.0.0"
     loglevel "^1.4.1"
     opn "^5.1.0"
     portfinder "^1.0.9"

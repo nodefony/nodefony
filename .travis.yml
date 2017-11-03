@@ -1,16 +1,17 @@
-language: node_js
+language:        node_js
 
 os:
   - linux
 #  - osx
 
-dist: trusty
+dist:            trusty
 
-sudo: true
+sudo:            true
 
 node_js:
   - "6"
   - "8"
+  - "9"
 
 services:
   - mysql
@@ -43,12 +44,12 @@ addons:
   hosts:
     - nodefony.com
   apt:
-    sources: [ 'ubuntu-toolchain-r-test']
-    packages: ['libstdc++6']
+    sources:     [ 'ubuntu-toolchain-r-test']
+    packages:    ['libstdc++6']
 
-install: true
+install:         true
 
-test: true
+test:            true
 
 notifications:
   webhooks:
