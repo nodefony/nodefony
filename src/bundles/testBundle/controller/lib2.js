@@ -1,17 +1,17 @@
-module.exports = function(){
+module.exports = function () {
 
-const ele = class ele {
+  const ele = class ele {
 
-  constructor(name){
-    this.name = name;
-  }
+    constructor(name) {
+      this.name = name;
+    }
 
-  toJson(){
-    return {
-        name:this.name
-    };
-  }
-};
+    toJson() {
+      return {
+        name: this.name
+      };
+    }
+  };
 
-return new ele("lib6") ;
+  return new ele("lib5152");
 }();

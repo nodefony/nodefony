@@ -259,8 +259,6 @@ module.exports = nodefony.registerBundle("monitoring", function () {
       let myUserAgent = null;
       context.storage = this.isMonitoring(context);
 
-
-
       try {
         if (context.request.headers) {
           agent = useragent.parse(context.request.headers['user-agent']);
@@ -389,7 +387,6 @@ module.exports = nodefony.registerBundle("monitoring", function () {
           context.profiling.context_secure = null;
         }
       }
-
       if (context.resolver.route.defaults) {
         let tab = context.resolver.route.defaults.controller.split(":");
         let contr = (tab[1] ? tab[1] : "default");
@@ -397,7 +394,8 @@ module.exports = nodefony.registerBundle("monitoring", function () {
           bundle: context.resolver.bundle.name + "Bundle",
           action: tab[2] + "Action",
           pattern: context.resolver.route.defaults.controller,
-          Controller: contr + "Controller"
+          Controller: contr + "Controller",
+          file: path.basename(path.resolve(context.resolver.route.filePath))
         };
       }
       if (context.proxy) {

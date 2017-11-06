@@ -157,10 +157,7 @@ module.exports = function () {
         }
         let myModule = new Module(filename, module);
         Module._cache[filename] = myModule;
-
         myModule.load(filename);
-
-        //this.logger("Autoload file : "+filename, "DEBUG")
         return myModule.exports;
       } catch (e) {
         if (Module._cache[filename]) {

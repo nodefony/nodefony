@@ -1,6 +1,5 @@
 const lib = require("./lib.js");
 
-
 module.exports = nodefony.registerController("default", function () {
 
   /**
@@ -11,19 +10,24 @@ module.exports = nodefony.registerController("default", function () {
    *    @constructor
    *    @param {class} container
    *    @param {class} context
-   *
+   *    @Route("/test")
    */
-  var defaultController = class defaultController extends nodefony.controller {
+  const defaultController = class defaultController extends nodefony.controller {
 
     constructor(container, context) {
       super(container, context);
     }
 
     /**
-     *
-     *    @method indexAction
-     *
+     *    @Route("/", name="annotation", defaults={"id" = 1},requirements={"id" = "\d+"})
+     *    @Method({"GET", "POST"})
      */
+    annotationAction(id) {
+      this.render("testBundle::index.html.twig", {
+        id: id
+      });
+    }
+
     indexAction() {
       // markdown read and parse readme.md
       try {

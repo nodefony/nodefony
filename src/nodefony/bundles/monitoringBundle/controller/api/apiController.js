@@ -620,12 +620,7 @@ module.exports = nodefony.registerController("api", function () {
       //console.log(router)
       let routing = [];
       for (let i = 0; i < router.routes.length; i++) {
-        //console.log(ele)
-        //console.log(router.routes[ele])
-        let bun = router.routes[i].defaults.controller.split(":");
-        //console.log(bun[0]);
-        //console.log(bundleName+"Bundle");
-        if (bun[0] === bundleName + "Bundle") {
+        if (router.routes[i].bundle === bundleName) {
           routing.push(router.routes[i]);
         }
       }

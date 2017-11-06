@@ -1,4 +1,5 @@
 const semver = require('semver');
+const Module = require("module");
 
 module.exports = nodefony.register("Bundle", function () {
 
@@ -9,7 +10,8 @@ module.exports = nodefony.register("Bundle", function () {
   const regCommand = /^(.+)Command.js$/;
   const regEntity = /^(.+)Entity.js$/;
   const regI18nFile = /^(.*)\.(.._..)\.(.*)$/;
-  const regConfigFile = /^routing\..*$/;
+  const regConfigFile = /^(.*)\..*$/;
+  const regRoutingFile = /^(routing)\..*$/;
 
   const checkIngnoreFile = function (string, basename) {
     let file = null;
@@ -30,20 +32,30 @@ module.exports = nodefony.register("Bundle", function () {
     return false;
   };
 
-
-  const recObj = class recObj {
-    constructor(container) {
-      this.container = container ||  {};
-      this.checked = {};
-    }
-    isChecked(ele) {
-      if (ele in this.checked) {
-        return true;
+  const moduleFindDependencies = class moduleFindDependencies {
+    constructor(Path, type, bundle) {
+      this.container =   {};
+      this.bundle = bundle;
+      this.childs = [];
+      this.type = type;
+      switch (type) {
+      case "controller":
+        this.path = this.bundle.controllersPath;
+        this.reg = regController;
+        this.loader = this.bundle.loadController;
+        break;
+      case "routing":
+        this.path = this.bundle.configPath;
+        this.reg = regRoutingFile;
+        this.loader = this.bundle.reloadRouting;
+        break;
+      default:
+        throw new Error("moduleFindDependencies type not valid : " + type);
       }
-      return false;
-    }
-    setChecked(ele) {
-      this.checked[ele] = true;
+      this.cache = Module._cache;
+      if (Path) {
+        this.findRequire(Path);
+      }
     }
     set(ele, val) {
       return this.container[ele] = val;
@@ -51,59 +63,53 @@ module.exports = nodefony.register("Bundle", function () {
     get(ele) {
       return this.container[ele];
     }
+    setChild(path) {
+      this.childs.push(path);
+    }
     length() {
       return Object.keys(this.container).length;
     }
-  };
-  const recursiveFindRequire = function (files, reg, Path, obj) {
-    if (!obj) {
-      obj = new recObj();
+    findRequire(Path, check) {
+      if (check === undefined) {
+        check = true;
+      }
+      for (let module in this.cache) {
+        if (this.cache[module].filename.indexOf(this.path) >= 0) {
+          let basename = path.basename(this.cache[module].filename);
+          if (check && this.cache[module].filename.indexOf(Path) >= 0) {
+            if (path.basename(Path) === basename) {
+              this.setChild(this.cache[module].filename);
+            }
+          }
+          if (this.cache[module].children.length) {
+            for (let child in this.cache[module].children) {
+              if (this.cache[module].children[child].filename.indexOf(Path) >= 0) {
+                let res = this.reg.exec(basename);
+                if (res) {
+                  this.set(res[1], this.cache[module].filename);
+                  return this;
+                } else {
+                  this.setChild(this.cache[module].filename);
+                  return this.findRequire(this.cache[module].filename, false);
+                }
+              }
+            }
+          }
+        }
+      }
+      return this;
     }
-    files.forEach((ele) => {
-      //this.logger('Search Require in  :' + ele.name );
-      if (ele.type === "Directory") {
-        return;
-      }
-      let parse = null;
-      if (typeof Path === "string") {
-        parse = path.parse(Path);
-      } else {
-        parse = Path;
-      }
-      ele.matchName(reg);
-      let regRequire = new RegExp("require\\(\\s*[\"'][./]*/" + parse.base + "[\"']\\s*\\)");
-      if (ele.match) {
-        // case controller
-        if (ele.content().match(new RegExp(regRequire))) {
-          if (obj.get(ele.match[1])) {
-            return;
-          }
-          obj.set(ele.match[1], {
-            name: ele.match[1],
-            path: ele.path,
-          });
+    reload() {
+      if (this.length()) {
+        for (let i = 0; i < this.childs.length; i++) {
+          this.bundle.logger("Reload " + this.type + " Dependency : " + this.childs[i]);
+          this.bundle.loadFile(this.childs[i], true);
         }
-        return;
-      } else {
-        //simple file
-        let newParse = path.parse(ele.path);
-        if (parse.base !== newParse.base) {
-          obj.setChecked(ele.path);
-          return;
+        for (let control in this.container) {
+          this.loader.call(this.bundle, control, this.container[control], true);
         }
-        if ( !obj.isChecked(ele.path)) {
-          this.loadFile(ele.path, true);
-          this.logger("loadFile :" + ele.name);
-          if (ele.content().match(new RegExp(regRequire))) {
-            obj.setChecked(ele.path);
-            return recursiveFindRequire.call(this, files, reg, newParse, obj);
-          }
-          return;
-        }
-        return;
       }
-    });
-    return obj;
+    }
   };
 
   const defaultWatcher = function (reg /*, settings*/ ) {
@@ -196,6 +202,9 @@ module.exports = nodefony.register("Bundle", function () {
       this.kernel.readConfig.call(this, null, this.resourcesFiles.findByNode("config"), (result) => {
         this.parseConfig(result);
       });
+      // router
+      this.router = this.get("router");
+      this.regRoutingFile = regRoutingFile;
       // WEBPACK SERVICE
       this.webpackService = this.get("webpack");
       this.webpackCompiler = null;
@@ -280,6 +289,7 @@ module.exports = nodefony.register("Bundle", function () {
         if (config) {
           this.watcherConfig = new nodefony.kernelWatcher(this.configPath, defaultWatcher.call(this, regConfigFile), this);
           this.watcherConfig.listenWatcherConfig();
+          this.watcherConfig.setSockjsServer(this.sockjs);
           this.kernel.on("onTerminate", () => {
             this.logger("Watching Ended : " + this.watcherConfig.path, "INFO");
             this.watcherConfig.close();
@@ -287,6 +297,21 @@ module.exports = nodefony.register("Bundle", function () {
         }
         //entities
 
+      } catch (e) {
+        throw e;
+      }
+    }
+
+    reloadRouting(name, Path) {
+      try {
+        if (name === null) {
+          let find = new moduleFindDependencies(Path, "routing", this);
+          find.reload();
+        } else {
+          let fileClass = new nodefony.fileClass(Path);
+          this.logger("Reload Routing : " + Path);
+          this.router.reader(fileClass.path, this.name);
+        }
       } catch (e) {
         throw e;
       }
@@ -508,7 +533,6 @@ module.exports = nodefony.register("Bundle", function () {
       }
       return this.controllerFiles;
     }
-
     registerControllers(result) {
       if (result) {
         this.controllerFiles = result;
@@ -518,62 +542,51 @@ module.exports = nodefony.register("Bundle", function () {
           let res = this.regController.exec(ele.name);
           if (res) {
             let name = res[1];
-            let Class = this.loadFile(ele.path, false);
-            if (typeof Class === "function") {
-              Class.prototype.name = name;
-              Class.prototype.bundle = this;
-              this.controllers[name] = Class;
-              this.logger("Register Controller : '" + name + "'", "DEBUG");
-            } else {
-              this.logger("Bundle " + this.name + " Register Controller : " + name + "  error Controller closure bad format", "ERROR");
-              console.trace("Bundle " + this.name + " Register Controller : " + name + "  error Controller closure bad format");
-            }
+            this.loadController(name, ele.path, false);
           }
         });
       }
     }
-
     reloadWatcherControleur(name, Path) {
       try {
         if (name === null) {
-          let res = recursiveFindRequire.call(this, this.controllerFiles, regController, Path);
-          //console.log(res);
-          //console.log( res.length() ) ;
-          console.log(res.checked);
-          if (res.length()) {
-            for (let control in res.container) {
-              this.reloadController(res.container[control].name, res.container[control].path);
-            }
-            for (let file in res.checked) {
-              this.loadFile(file, true);
-            }
-          }
+          let find = new moduleFindDependencies(Path, "controller", this);
+          find.reload();
         } else {
-          this.reloadController(name, Path);
+          this.loadController(name, Path, true);
         }
       } catch (e) {
         throw e;
       }
     }
-
-    reloadController(name, Path) {
+    loadController(name, Path, force) {
       if (this.controllers[name]) {
         delete this.controllers[name];
         this.controllers[name] = null;
       }
-      let Class = this.loadFile(Path, true);
-      this.logger("Reload Controller : " + name);
-      if (typeof Class === "function") {
-        Class.prototype.name = name;
-        Class.prototype.bundle = this;
-        this.controllers[name] = Class;
-      } else {
-        throw new Error("Reload Controller : " + name + "  error Controller closure bad format ");
+      let Class = null;
+      try {
+        Class = this.loadFile(Path, force);
+        if (typeof Class === "function") {
+          Class.prototype.name = name;
+          Class.prototype.bundle = this;
+          this.controllers[name] = Class;
+          Class.prototype.annotation = null;
+          let severity = "DEBUG";
+          if (force) {
+            severity = "INFO";
+          }
+          this.logger("Load Controller : '" + name + "'", severity);
+        } else {
+          throw new Error("Bundle " + this.name + " Load Controller : " + Path + " Controller closure bad format ");
+        }
+      } catch (e) {
+        throw e;
       }
       return Class;
     }
 
-    reloadControllers(nameC) {
+    /*reloadControllers(nameC) {
       if (!nameC) {
         return;
       }
@@ -593,7 +606,7 @@ module.exports = nodefony.register("Bundle", function () {
         }
         throw e;
       }
-    }
+    }*/
 
     findViewFiles(result) {
       let views = null;

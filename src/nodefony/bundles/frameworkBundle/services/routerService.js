@@ -363,8 +363,8 @@ module.exports = nodefony.registerService("router", function () {
       this.routes = [];
       this.reader = function (context) {
         var func = context.container.get("reader").loadPlugin("routing", pluginReader);
-        return function (result) {
-          return func(result, context.nodeReader.bind(context, result));
+        return function (file, bundle) {
+          return func(file, context.nodeReader.bind(context, file, bundle));
         };
       }(this);
       this.engineTemplate = this.get("templating");
@@ -539,10 +539,11 @@ module.exports = nodefony.registerService("router", function () {
       }
     }
 
-    nodeReader(filePath, obj) {
+    nodeReader(filePath, bundle, obj) {
       for (let route in obj) {
         let newRoute = new nodefony.Route(route);
         newRoute.filePath = filePath;
+        newRoute.bundle = bundle;
         for (let ele in obj[route]) {
           let arg = obj[route][ele];
           switch (ele) {
@@ -570,12 +571,23 @@ module.exports = nodefony.registerService("router", function () {
               newRoute.addOptions(ob, arg[ob]);
             }
             break;
+          case "resource":
+            newRoute.addResource(arg);
+            break;
+          case "type":
+            newRoute.addType(arg);
+            break;
           default:
-            this.logger(" Tag : " + ele + " not exist in routings definition");
+            this.logger(" Tag : " + ele + " not exist in routings definition : " + route, "WARNING");
           }
         }
-        newRoute.compile();
-        this.setRoute(route, newRoute);
+        try {
+          newRoute.compile();
+          this.setRoute(route, newRoute);
+        } catch (e) {
+          this.logger(e, "ERROR");
+          continue;
+        }
       }
     }
   };

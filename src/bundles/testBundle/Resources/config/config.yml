@@ -20,8 +20,6 @@
 #
 #
 
-
-
 ########## nodefony CONFIG BUNDLE  testBundle  ############
 name :				testBundle
 locale :			en_en
@@ -38,9 +36,9 @@ locale :			en_en
 #    or
 #      watch:
 #        controller:		true
-#        config:                true		# only  routing.yml
+#        config: true		# only  routing.yml
 #        views:			true
-#        translations:          true
+#        translations: true
 #
 watch:				true
 

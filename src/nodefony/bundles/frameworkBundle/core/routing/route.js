@@ -77,6 +77,14 @@ module.exports = nodefony.register("Route", function () {
       this.options[key] = value;
     }
 
+    addResource(file) {
+      this.resource = file;
+    }
+
+    addType(type) {
+      this.type = type;
+    }
+
     /*setPath (){}
     setRequirements (){}
     setOptions (){}
@@ -120,6 +128,9 @@ module.exports = nodefony.register("Route", function () {
     }
 
     compile() {
+      if (!this.path) {
+        return;
+      }
       let pattern = this.path.replace(regRoute, (match, slash, dot, key, capture, opt, offset) => {
         let incl = (this.path[match.length + offset] || '/') === '/';
         this.variables.push(key);
@@ -139,8 +150,7 @@ module.exports = nodefony.register("Route", function () {
     }
 
     match(context) {
-      let myUrl = context.request.url.pathname;
-      let res = myUrl.match(this.pattern);
+      let res = context.request.url.pathname.match(this.pattern);
       if (!res) {
         return res;
       }

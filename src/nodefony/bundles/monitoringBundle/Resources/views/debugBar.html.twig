@@ -311,6 +311,7 @@
                 <label>Version</label>
                 <span >{{services.ORM.version}}</span>
               </li>
+              <li class="separator"></li>
               <label style="color:#999">DATABASES CONNECTIONS :
               </label>
               {% for key, value in services.ORM.connections %}
@@ -488,7 +489,7 @@
             <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=request'>{{route.name}}
               <a>
               {% else %}
-                 {{route.name}}
+                {{route.name}}
               {% endif %}
             </label>
             <div class="details">
@@ -512,10 +513,23 @@
                   <label>Action</label>
                   <span class="label label-success">{{routeur.action}}</span>
                 </li>
+                <li>
+                  <label>File</label>
+                  <span class="label label-success">{{routeur.file}}</span>
+                </li>
                 <li class="separator"></li>
                 <li>
                   <label style="color:#999">ROUTE</label>
                 </li>
+                {% for key, value in route %}
+                  {% if key != "variables" %}
+                    <li>
+                      <label>{{ key | capitalize }}</label>
+                      <span class="label label-success">{{value}}</span>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+
                 {% for key, value in route %}
                   {% if key == "variables" %}
                     {% if route.variables | length %}
@@ -527,15 +541,9 @@
                         </li>
                       {% endfor %}
                     {% endif %}
-                  {% else %}
-                    <li>
-                      <label>{{ key | capitalize }}</label>
-                      <span class="label label-success">{{value}}</span>
-                    </li>
                   {% endif %}
                 {% endfor %}
                 <li class="separator"></li>
-
                 <li>
                   <label style="color:#999">TRANSLATION</label>
                 </li>
@@ -655,121 +663,121 @@
                     <span >
                       {% for key, value in session.metas %}
                         {% if key == "lifetime" %}
-                        <li>
-                          <label style="margin-left:20px" class="label  label-default">{{ key  }}</label>
-                          <span style="margin-left:20px">{{value}}</span>
-                        </li>
-                      {% endif %}
-                      {% if key == "created" %}
-                        <li>
-                          <label style="margin-left:20px" class="label  label-default">{{ key  }}</label>
-                          <span style="margin-left:20px">{{value|date("d/m/Y g:ia")}}</span>
-                        </li>
-                      {% endif %}
-                      {% if key == "lastUsed" %}
-                        <li>
-                          <label style="margin-left:20px" class="label  label-default">{{ key  }}</label>
-                          <span style="margin-left:20px">{{value|date('d/m/Y g:ia')}}</span>
-                        </li>
-                      {% endif %}
-                      {% if key == "context" %}
-                        <li>
-                          <label style="margin-left:20px" class="label  label-default">{{ key  }}</label>
-                          <span style="margin-left:20px">{{value}}</span>
-                        </li>
-                      {% endif %}
-                    {% endfor %}
-                  </span>
-                </li>
-                <li>
-                  <label>Attributes</label>
-                  <span>
-                    {% for key, value in session.attributes %}
-                    <li>
-                      <label style="margin-left:20px" class="label  label-default">{{ key  }}</label>
-                      <span style="margin-left:20px">{{value}}</span>
-                    </li>
-                  {% endfor %}
-                </span>
-              </li>
-              <li>
-                <label>Flashes</label>
-                <span>
-                  {% for key, value in session.flashes %}
-                  <li>
-                    <label style="margin-left:20px" class="label  label-default">{{ key  }}</label>
-                    <span style="margin-left:20px">{{value}}</span>
+                          <li>
+                            <label style="margin-left:20px" class="label  label-default">{{ key  }}</label>
+                            <span style="margin-left:20px">{{value}}</span>
+                          </li>
+                        {% endif %}
+                        {% if key == "created" %}
+                          <li>
+                            <label style="margin-left:20px" class="label  label-default">{{ key  }}</label>
+                            <span style="margin-left:20px">{{value|date("d/m/Y g:ia")}}</span>
+                          </li>
+                        {% endif %}
+                        {% if key == "lastUsed" %}
+                          <li>
+                            <label style="margin-left:20px" class="label  label-default">{{ key  }}</label>
+                            <span style="margin-left:20px">{{value|date('d/m/Y g:ia')}}</span>
+                          </li>
+                        {% endif %}
+                        {% if key == "context" %}
+                          <li>
+                            <label style="margin-left:20px" class="label  label-default">{{ key  }}</label>
+                            <span style="margin-left:20px">{{value}}</span>
+                          </li>
+                        {% endif %}
+                      {% endfor %}
+                    </span>
                   </li>
-                {% endfor %}
-              </span>
-            </li>
-          {% endif %}
+                  <li>
+                    <label>Attributes</label>
+                    <span>
+                      {% for key, value in session.attributes %}
+                        <li>
+                          <label style="margin-left:20px" class="label  label-default">{{ key  }}</label>
+                          <span style="margin-left:20px">{{value}}</span>
+                        </li>
+                      {% endfor %}
+                    </span>
+                  </li>
+                  <li>
+                    <label>Flashes</label>
+                    <span>
+                      {% for key, value in session.flashes %}
+                        <li>
+                          <label style="margin-left:20px" class="label  label-default">{{ key  }}</label>
+                          <span style="margin-left:20px">{{value}}</span>
+                        </li>
+                      {% endfor %}
+                    </span>
+                  </li>
+                {% endif %}
 
-        </ul>
-      </div>
+              </ul>
+            </div>
 
-    </li>
+          </li>
 
-    <li class="separator"></li>
+          <li class="separator"></li>
 
-    <li>
-      {% if id %}
-        <label class="label">
-          <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=response'>RESPONSE</a>
-        </label>
-      {% else %}
-        <label class="label">RESPONSE</label>
-      {% endif %}
-      <label class="label label-success">{{ response.statusCode }}</label>
-      <label class="label label-success">{{ timeRequest }}</label>
-      <div class="details">
-        <ul>
-          {% for key, value in response %}
-            {% if key == "statuscode" %}
-              <li>
-                <label>{{ key | capitalize }}</label>
-                <span class="label label-success">{{value}}
-                  {{response.message}}</span>
-              </li>
+          <li>
+            {% if id %}
+              <label class="label">
+                <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=response'>RESPONSE</a>
+              </label>
             {% else %}
+              <label class="label">RESPONSE</label>
+            {% endif %}
+            <label class="label label-success">{{ response.statusCode }}</label>
+            <label class="label label-success">{{ timeRequest }}</label>
+            <div class="details">
+              <ul>
+                {% for key, value in response %}
+                  {% if key == "statuscode" %}
+                    <li>
+                      <label>{{ key | capitalize }}</label>
+                      <span class="label label-success">{{value}}
+                        {{response.message}}</span>
+                    </li>
+                  {% else %}
 
-              {% if key != "headers" %}
-                <li>
-                  <label>{{ key | capitalize }}</label>
-                  <span class="label label-success">{{value}}</span>
-                </li>
-              {% else %}
-                <li class="separator"></li>
-                <li>
-                  <label style="color:#999">HEADERS</label>
-                </li>
+                    {% if key != "headers" %}
+                      <li>
+                        <label>{{ key | capitalize }}</label>
+                        <span class="label label-success">{{value}}</span>
+                      </li>
+                    {% else %}
+                      <li class="separator"></li>
+                      <li>
+                        <label style="color:#999">HEADERS</label>
+                      </li>
 
-                {% for header, val in response["headers"] %}
-                  <li>
-                    <label>{{ header | capitalize }}</label>
-                    <span class="label label-success">{{val}}</span>
-                  </li>
+                      {% for header, val in response["headers"] %}
+                        <li>
+                          <label>{{ header | capitalize }}</label>
+                          <span class="label label-success">{{val}}</span>
+                        </li>
+                      {% endfor %}
+
+                    {% endif %}
+                  {% endif %}
                 {% endfor %}
 
-              {% endif %}
-            {% endif %}
-          {% endfor %}
+              </ul>
+            </div>
+          </li>
 
+          <li class="separator"></li>
+        </ul>
+        <ul class="pull-right">
+          <li>
+            <img id="nodefonyClose" src="/monitoringBundle/images/window-close.ico">
         </ul>
       </div>
-    </li>
 
-    <li class="separator"></li>
-  </ul>
-  <ul class="pull-right">
-    <li>
-      <img id="nodefonyClose" src="/monitoringBundle/images/window-close.ico">
-  </ul>
-</div>
+      <div id="nodefony-small" class='hidden logo' style="z-index:100001">
+        <img src="/frameworkBundle/images/nodefony-logo.png">
+      </div>
 
-<div id="nodefony-small" class='hidden logo' style="z-index:100001">
-  <img src="/frameworkBundle/images/nodefony-logo.png">
-</div>
-
-<!-- WEBPACK BUNDLE -->
-<script src="{{CDN('javascript')}}/monitoringBundle/assets/js/debugBar.js"></script>
+      <!-- WEBPACK BUNDLE -->
+      <script src="{{CDN('javascript')}}/monitoringBundle/assets/js/debugBar.js"></script>

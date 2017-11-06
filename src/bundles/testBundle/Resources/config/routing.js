@@ -13,5 +13,13 @@ module.exports = nodefony.extend(firewall, sessions, cors, rest, twig, routes, {
     defaults: {
       controller: "AppBundle:app:index"
     }
+  },
+  "resource-test": {
+    resource: "controller/defaultController.js",
+    type: "annotation"
+  },
+  "resource-test-directory": {
+    resource: "controller/unitTest",
+    type: "annotation"
   }
 });
