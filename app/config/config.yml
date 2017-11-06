@@ -52,9 +52,11 @@ monitoringBundle:
 ##################################
 #  OVERRIDE  BUNDLE SEQUELIZE
 #
-#       see SEQUELIZE BUNDLE config for more options
+#       @see SEQUELIZE BUNDLE config for more options
+#       @more options http://docs.sequelizejs.com/class/lib/sequelize.js~Sequelize.html
 #
 #       Nodefony Database Management
+#        dialect : 'mysql'|'sqlite'|'postgres'|'mssql'
 #
 #       By default nodefony create  connector name nodefony ( driver sqlite )
 #       for manage Sessions / Users / Requests
@@ -67,16 +69,17 @@ monitoringBundle:
 #       make sequelize
 #
 sequelizeBundle:
-  debug:                         false
-#  connectors  :
+  debug:        false
+#  connectors:
 #    nodefony:
-#      driver:                   mysql
-#      dbname:                   'nodefony'
-#      username:                 'nodefony'
-#      password:                 'nodefony'
-#        dialect:                mysql
-#        host:                   localhost
-#        port:                   '3306'
+#      driver:          mysql
+#      dbname:          'nodefony'
+#      username:        'nodefony'
+#      password:        'nodefony'
+#      options:
+#        dialect:       mysql
+#        host:          localhost
+#        port:          '3306'
 
 ############################
 #  OVERRIDE BUNDLE HTTP

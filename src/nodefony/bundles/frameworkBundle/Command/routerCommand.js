@@ -78,24 +78,26 @@ module.exports = nodefony.registerCommand("router", function () {
         head: head
       });
       for (var i = 0; i < ele.length; i++) {
-        var detail = ele[i].defaults.controller.split(":");
-        var tab = [
-          i + 1,
-          ele[i].name,
-          ele[i].path,
-          //ele[i].variables,
-          //ele[i].host|| "",
-          detail[0],
-          detail[1],
-          detail[2]
-          //util.inspect( ele[i].options)
-          //ele[i].schemes|| "",
-          //ele[i].pattern,
-        ];
-        if (firstMatch) {
-          tab.push(ele[i].firstMatch);
+        if (ele[i].defaults.controller) {
+          var detail = ele[i].defaults.controller.split(":");
+          var tab = [
+            i + 1,
+            ele[i].name,
+            ele[i].path,
+            //ele[i].variables,
+            //ele[i].host|| "",
+            detail[0],
+            detail[1],
+            detail[2]
+            //util.inspect( ele[i].options)
+            //ele[i].schemes|| "",
+            //ele[i].pattern,
+          ];
+          if (firstMatch) {
+            tab.push(ele[i].firstMatch);
+          }
+          table.push(tab);
         }
-        table.push(tab);
       }
       console.log(table.toString());
       return table;

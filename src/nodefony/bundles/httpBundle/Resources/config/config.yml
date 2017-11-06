@@ -22,7 +22,7 @@ queryString:
 
 #
 #       SERVERS HTTP
-#       @see : https://nodejs.org/dist/latest-v8.x/docs/api/http.html#http_class_http_server
+#       @see :            https://nodejs.org/dist/latest-v8.x/docs/api/http.html#http_class_http_server
 #
 http:
   maxHeadersCount:        null
@@ -87,22 +87,22 @@ statics:
 #
 
 session:
-  start:                  "autostart"            #"autostart"
+  start:                  "autostart"         #"autostart"
   use_strict_mode:        true
   name:                   "nodefony"
-  handler:                files
+  handler:                files               # files | sequelize | memcached  "nodefony.session.storage"
   save_path:              "/tmp/sessions"
   gc_probability:         1
   gc_divisor:             100
   gc_maxlifetime:         1440
-  hash_function:          "md5"           # sha1
+  hash_function:          "md5"               # sha1
   use_cookies:            true
   use_only_cookies:       true
   referer_check:          false
   cookie:
-    maxAge:               0               # like cookie_lifetime   =>seconde
-    httpOnly:             true            # don't see by script (javascript)
-    secure:               false           # https only
+    maxAge:               0                   # like cookie_lifetime   =>seconde
+    httpOnly:             true                # don't see by script (javascript)
+    secure:               false               # https only
     signed:               false
   memcached:
     servers:
