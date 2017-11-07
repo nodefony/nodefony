@@ -18,7 +18,7 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
         if (date > myDate) {
           continue;
         }
-        return results[i].destroy({
+        results[i].destroy({
           force: true
         }).then((session) => {
 
