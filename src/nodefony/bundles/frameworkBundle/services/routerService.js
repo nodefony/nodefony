@@ -14,7 +14,7 @@ module.exports = nodefony.registerService("router", function () {
    */
   const pluginReader = function () {
 
-    let importXmlConfig = function (xml, prefix, callback, parser) {
+    const importXmlConfig = function (xml, prefix, callback, parser) {
       if (parser) {
         xml = this.render(xml, parser.data, parser.options);
       }
@@ -58,7 +58,7 @@ module.exports = nodefony.registerService("router", function () {
       }
     };
 
-    let normalizeXmlJson = function (routes, callback) {
+    const normalizeXmlJson = function (routes, callback) {
       for (let route in routes) {
         for (let param in routes[route]) {
           if (['pattern', 'host'].indexOf(param) >= 0) {
@@ -85,11 +85,11 @@ module.exports = nodefony.registerService("router", function () {
       }
     };
 
-    let getObjectRoutesXML = function (file, callback, parser) {
+    const getObjectRoutesXML = function (file, bundle, callback, parser) {
       importXmlConfig.call(this, file, '', callback, parser);
     };
 
-    let getObjectRoutesJSON = function (file, callback, parser) {
+    const getObjectRoutesJSON = function (file, bundle, callback, parser) {
       if (parser) {
         file = this.render(file, parser.data, parser.options);
       }
@@ -98,7 +98,7 @@ module.exports = nodefony.registerService("router", function () {
       }
     };
 
-    let getObjectRoutesYml = function (file, callback, parser) {
+    const getObjectRoutesYml = function (file, bundle, callback, parser) {
       if (parser) {
         file = this.render(file, parser.data, parser.options);
       }
@@ -107,18 +107,29 @@ module.exports = nodefony.registerService("router", function () {
       }
     };
 
-    let javascript = function (obj, callback) {
+    /*const javascript = function (file, bundle, callback) {
       try {
-        callback(obj);
+        return callback(this.loader.load(file, true));
       } catch (e) {
         throw e;
       }
     };
+
+    const annotations = function (file, bundle, callback) {
+      console.log(arguments)
+      try {
+        return callback(file);
+      } catch (e) {
+        throw e;
+      }
+    };*/
+
     return {
       xml: getObjectRoutesXML,
       json: getObjectRoutesJSON,
-      yml: getObjectRoutesYml,
-      javascript: javascript
+      yml: getObjectRoutesYml
+      //javascript: javascript,
+      //annotations: annotations
     };
   }();
 
@@ -364,7 +375,7 @@ module.exports = nodefony.registerService("router", function () {
       this.reader = function (context) {
         var func = context.container.get("reader").loadPlugin("routing", pluginReader);
         return function (file, bundle) {
-          return func(file, context.nodeReader.bind(context, file, bundle));
+          return func(file, bundle, context.nodeReader.bind(context, file, bundle));
         };
       }(this);
       this.engineTemplate = this.get("templating");
