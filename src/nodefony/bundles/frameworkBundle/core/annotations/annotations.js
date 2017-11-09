@@ -1,5 +1,5 @@
-const comments = require('parse-comments');
-const commentParser = require("comment-parser"); //JSDoc-like
+const Comments = require('parse-comments');
+//const commentParser = require("comment-parser"); //JSDoc-like
 
 module.exports = nodefony.register("Annotations", function () {
 
@@ -225,7 +225,7 @@ module.exports = nodefony.register("Annotations", function () {
     }
 
     // https://github.com/yavorskiy/comment-parser
-    jsDocParser(fileContent) {
+    /*jsDocParser(fileContent) {
       return new Promise((resolve, reject) => {
         try {
           return resolve(commentParser(fileContent));
@@ -234,12 +234,12 @@ module.exports = nodefony.register("Annotations", function () {
           return reject(e);
         }
       });
-    }
+    }*/
 
     parseComments(fileContent) {
       return new Promise((resolve, reject) => {
         try {
-          return resolve(comments(fileContent))
+          return resolve(Comments(fileContent))
             .catch((e) => {
               reject(e);
             });
