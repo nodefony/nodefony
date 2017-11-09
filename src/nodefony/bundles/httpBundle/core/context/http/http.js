@@ -83,6 +83,10 @@ nodefony.register.call(nodefony.context, "http", function () {
       }
       this.crossDomain = this.isCrossDomain();
     }
+    /*fire(name) {
+      console.log(name)
+      return super.fire.apply(this, arguments);
+    }*/
 
     getCookieSession(name) {
       if (this.cookies[name]) {
@@ -153,7 +157,7 @@ nodefony.register.call(nodefony.context, "http", function () {
         return this.fire("onError", this.container, error);
       }
       try {
-        control = new resolver.controller(container, this);
+        control = resolver.newController(container, this); //new resolver.controller(container, this);
         control.response = new nodefony.Response(null, container);
         if (data) {
           Array.prototype.shift.call(arguments);

@@ -6,25 +6,29 @@ nodefony.register("wsResponse", function () {
 
     constructor(connection, container) {
       this.container = container;
-      //this.kernel = this.container.get("kernel") ;
-      this.connection = connection;
-      this.body = "";
-      this.statusCode = 1000;
-      if (this.connection) {
-        this.statusMessage = this.connection.state;
-        this.config = this.connection.config;
-        this.webSocketVersion = this.connection.webSocketVersion;
+      if (connection) {
+        this.setConnection(connection);
       } else {
         this.statusMessage = "closed";
         this.config = null;
         this.webSocketVersion = null;
       }
+      this.body = "";
+      this.statusCode = 1000;
       //cookies
       this.cookies = {};
       this.encoding = this.setEncoding('utf8');
       // struct headers
       this.headers = {};
       this.type = "utf8";
+    }
+
+    setConnection(connection) {
+      this.connection = connection;
+      this.statusMessage = this.connection.state;
+      this.config = this.connection.config;
+      this.webSocketVersion = this.connection.webSocketVersion;
+      return connection;
     }
 
     logger(pci, severity, msgid, msg) {
