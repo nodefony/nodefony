@@ -1,5 +1,3 @@
-const comments = require('js-comments');
-
 module.exports = nodefony.register("Reader", function () {
 
   let defaultSetting = {
