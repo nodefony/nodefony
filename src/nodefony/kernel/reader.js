@@ -1,3 +1,5 @@
+const Annotations = require("./annotations/annotations.js");
+
 module.exports = nodefony.register("Reader", function () {
 
   let defaultSetting = {
@@ -108,10 +110,7 @@ module.exports = nodefony.register("Reader", function () {
       this.engine = require("twig");
       this.readConfig = this.loadPlugin("config", this.pluginConfig);
       this.loader = this.container.get("autoLoader");
-      this.kernel.on("onBoot", () => {
-        this.router = this.container.get("router");
-        this.annotations = new nodefony.Annotations(container, this.notificationsCenter);
-      });
+      this.annotations = new Annotations(container, this.notificationsCenter);
 
     }
 
@@ -164,7 +163,7 @@ module.exports = nodefony.register("Reader", function () {
         }
       };
 
-      const annotations = function (file, bundle, callback) {
+      /*const annotations = function (file, bundle, callback) {
         try {
           return this.readFile(file)
             .then((fileContent) => {
@@ -186,6 +185,9 @@ module.exports = nodefony.register("Reader", function () {
         } catch (e) {
           throw e;
         }
+      };*/
+      const annotations = function (file) {
+        throw new Error("Annotation is not defined for this file " + file);
       };
 
       return {

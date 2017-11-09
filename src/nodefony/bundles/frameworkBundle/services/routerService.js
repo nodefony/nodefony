@@ -107,29 +107,35 @@ module.exports = nodefony.registerService("router", function () {
       }
     };
 
-    /*const javascript = function (file, bundle, callback) {
+    const annotations = function (file, bundle, callback) {
       try {
-        return callback(this.loader.load(file, true));
+        return this.readFile(file)
+          .then((fileContent) => {
+            return this.annotations.parseController(fileContent, bundle, file)
+              .then((obj) => {
+                if (obj && Object.keys(obj).length) {
+                  callback(obj);
+                }
+              })
+              .catch((e) => {
+                this.logger(file, "ERROR");
+                this.logger(e, "ERROR");
+              });
+          })
+          .catch((e) => {
+            this.logger(file, "ERROR");
+            this.logger(e, "ERROR");
+          });
       } catch (e) {
         throw e;
       }
     };
 
-    const annotations = function (file, bundle, callback) {
-      console.log(arguments)
-      try {
-        return callback(file);
-      } catch (e) {
-        throw e;
-      }
-    };*/
-
     return {
       xml: getObjectRoutesXML,
       json: getObjectRoutesJSON,
-      yml: getObjectRoutesYml
-      //javascript: javascript,
-      //annotations: annotations
+      yml: getObjectRoutesYml,
+      annotations: annotations
     };
   }();
 

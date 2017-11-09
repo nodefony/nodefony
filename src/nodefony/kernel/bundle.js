@@ -202,12 +202,14 @@ module.exports = nodefony.register("Bundle", function () {
       this.kernel.readConfig.call(this, null, this.resourcesFiles.findByNode("config"), (result) => {
         this.parseConfig(result);
       });
-      // router
-      this.router = this.get("router");
+
       this.regRoutingFile = regRoutingFile;
       // WEBPACK SERVICE
       this.webpackService = this.get("webpack");
       this.webpackCompiler = null;
+
+      // router
+      this.router = this.get("router");
       this.kernel.on("onBoot", () => {
         // WATCHERS
         if (this.kernel.environment === "dev" && this.settings.watch && this.kernel.type !== "CONSOLE") {
@@ -310,7 +312,9 @@ module.exports = nodefony.register("Bundle", function () {
         } else {
           let fileClass = new nodefony.fileClass(Path);
           this.logger("Reload Routing : " + Path);
-          this.router.reader(fileClass.path, this.name);
+          if (this.router) {
+            this.router.reader(fileClass.path, this.name);
+          }
         }
       } catch (e) {
         throw e;
@@ -577,7 +581,7 @@ module.exports = nodefony.register("Bundle", function () {
             severity = "INFO";
           }
           this.logger("Load " + name + " Controller : '" + Path + "'", severity);
-          if (true /*Class.prototype.annotation*/ ) {
+          if (this.router && true /*Class.prototype.annotation*/ ) {
             this.router.reader(Path, this.name);
           }
         } else {
