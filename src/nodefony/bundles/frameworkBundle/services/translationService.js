@@ -14,7 +14,7 @@ module.exports = nodefony.registerService("translation", function () {
   const pluginReader = function () {
     // TODO
     let getObjectTransXML = function () {};
-    let getObjectTransJSON = function (file, callback, parser) {
+    let getObjectTransJSON = function (file, bundle, callback, parser) {
       if (parser) {
         file = this.render(file, parser.data, parser.options);
       }
@@ -22,7 +22,7 @@ module.exports = nodefony.registerService("translation", function () {
         callback(JSON.parse(file));
       }
     };
-    let getObjectTransYml = function (file, callback, parser) {
+    let getObjectTransYml = function (file, bundle, callback, parser) {
       if (parser) {
         file = this.render(file, parser.data, parser.options);
       }
@@ -40,8 +40,8 @@ module.exports = nodefony.registerService("translation", function () {
 
   const reader = function (service) {
     let func = service.get("reader").loadPlugin("translating", pluginReader);
-    return function (result, locale, domain) {
-      return func(result, service.nodeReader.bind(service, locale, domain));
+    return function (result, bundle, locale, domain) {
+      return func(result, bundle, service.nodeReader.bind(service, locale, domain));
     };
   };
 

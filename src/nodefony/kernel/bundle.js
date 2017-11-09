@@ -507,7 +507,7 @@ module.exports = nodefony.register("Bundle", function () {
       default:
         try {
           //res = this.finder.result.getFile("webpack." + this.kernel.environment + ".config.js", true);
-          res = this.finder.result.getFile("webpack.js", true);
+          res = this.finder.result.getFile("webpack.config.js", true);
           if (!res) {
             return;
           }
@@ -576,7 +576,10 @@ module.exports = nodefony.register("Bundle", function () {
           if (force) {
             severity = "INFO";
           }
-          this.logger("Load Controller : '" + name + "'", severity);
+          this.logger("Load " + name + " Controller : '" + Path + "'", severity);
+          if (true /*Class.prototype.annotation*/ ) {
+            this.router.reader(Path, this.name);
+          }
         } else {
           throw new Error("Bundle " + this.name + " Load Controller : " + Path + " Controller closure bad format ");
         }
@@ -798,7 +801,7 @@ module.exports = nodefony.register("Bundle", function () {
       files.getFiles().forEach((file) => {
         let domain = file.match[1];
         let Locale = file.match[2];
-        this.translation.reader(file.path, Locale, domain);
+        this.translation.reader(file.path, this.name, Locale, domain);
       });
     }
 

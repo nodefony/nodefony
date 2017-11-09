@@ -53,7 +53,7 @@ module.exports = nodefony.registerController("api", function () {
 
   /**
    *
-   *    @method
+   *    @method finderSession
    *
    */
   const finderSession = function (Path, Result, finish) {
@@ -716,7 +716,7 @@ module.exports = nodefony.registerController("api", function () {
 
     /**
      *
-     *    @method
+     *    @method usersAction
      *
      */
     usersAction() {

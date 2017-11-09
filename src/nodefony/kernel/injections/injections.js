@@ -105,18 +105,18 @@ module.exports = nodefony.register("injection", function () {
       }
     };
 
-    var renderParameters = function (callback, services, parameters) {
+    const renderParameters = function (callback, services, parameters) {
       if (parameters && Object.keys(parameters).length > 0 && typeof (services) === 'object' && Object.keys(services).length > 0) {
         services = JSON.parse(this.render(JSON.stringify(services), parameters));
       }
       callback(services);
     };
 
-    var getServicesXML = function (file, callback, parser) {
+    const getServicesXML = function (file, bundle, callback, parser) {
       importXmlConfig.call(this, file, '', callback, parser);
     };
 
-    var getServicesJSON = function (file, callback, parser) {
+    const getServicesJSON = function (file, bundle, callback, parser) {
       if (parser) {
         file = this.render(file, parser.data, parser.options);
       }
@@ -126,7 +126,7 @@ module.exports = nodefony.register("injection", function () {
       }
     };
 
-    var getServicesYML = function (file, callback, parser) {
+    const getServicesYML = function (file, bundle, callback, parser) {
       if (parser) {
         file = this.render(file, parser.data, parser.options);
       }
@@ -220,8 +220,8 @@ module.exports = nodefony.register("injection", function () {
       this.kernel = this.container.get('kernel');
       this.reader = function (context) {
         var func = context.get("reader").loadPlugin("injection", pluginReader);
-        return function (result, parser) {
-          return func(result, context.nodeReader.bind(context), parser);
+        return function (result, bundle, parser) {
+          return func(result, bundle, context.nodeReader.bind(context), parser);
         };
       }(this);
     }

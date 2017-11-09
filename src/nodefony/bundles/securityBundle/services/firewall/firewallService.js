@@ -457,7 +457,7 @@ module.exports = nodefony.registerService("firewall", function () {
           context.once('onRequestEnd', () => {
             return this.handle(context);
           });
-          return;
+          break;
         case "WEBSOCKET SECURE":
         case "WEBSOCKET":
           return this.handle(context);
@@ -523,7 +523,6 @@ module.exports = nodefony.registerService("firewall", function () {
             }
           }
         } else {
-          sessionContext = null;
           if (!context.cookieSession) {
             return context.fire("onRequest");
           }

@@ -21,7 +21,7 @@ const Config = class Config {
           skeleton: this.configSkeleton,
           params: this.params
         }, {
-          name: "webpack.js",
+          name: "webpack.config.js",
           type: "file",
           skeleton: this.webpackSkeleton,
           params: this.params
@@ -51,12 +51,12 @@ const Config = class Config {
       name: "webpack",
       type: "directory",
       childs: [{
-        name: "webpack.dev.config." + this.type,
+        name: "webpack.dev.config.js",
         type: "file",
         skeleton: this.devSkeleton,
         params: this.params
       }, {
-        name: "webpack.prod.config." + this.type,
+        name: "webpack.prod.config.js",
         type: "file",
         skeleton: this.prodSkeleton,
         params: this.params

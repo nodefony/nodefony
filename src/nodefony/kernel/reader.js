@@ -1,3 +1,5 @@
+const comments = require('js-comments');
+
 module.exports = nodefony.register("Reader", function () {
 
   let defaultSetting = {
@@ -23,8 +25,13 @@ module.exports = nodefony.register("Reader", function () {
   let load = function (name, pathFile) {
     let mypath = pathFile;
     let ext = path.extname(pathFile);
+    let basename = path.basename(pathFile);
     let plug = this.plugins[name];
-    Array.prototype.shift.call(arguments);
+    if (!plug) {
+      this.logger("DROP FILE : " + mypath + " NO PLUGIN FIND : " + name, "WARNING");
+      return null;
+    }
+    let myName = Array.prototype.shift.call(arguments);
     let file = Array.prototype.shift.call(arguments);
     let txt = null;
     try {
@@ -32,7 +39,12 @@ module.exports = nodefony.register("Reader", function () {
       case ".xml":
         txt = this.readFileSync(file);
         Array.prototype.unshift.call(arguments, txt);
-        return plug.xml.apply(this, arguments);
+        if (plug.xml) {
+          return plug.xml.apply(this, arguments);
+        } else {
+          return this.pluginConfig.xml.apply(this, arguments);
+        }
+        break;
       case ".json":
         txt = this.readFileSync(file);
         Array.prototype.unshift.call(arguments, txt);
@@ -41,14 +53,34 @@ module.exports = nodefony.register("Reader", function () {
       case ".yaml":
         txt = this.readFileSync(file);
         Array.prototype.unshift.call(arguments, txt);
-        return plug.yml.apply(this, arguments);
+        if (plug.yml) {
+          return plug.yml.apply(this, arguments);
+        } else {
+          return this.pluginConfig.yml.apply(this, arguments);
+        }
+        break;
       case ".js":
       case ".es6":
       case ".es7":
-        Array.prototype.unshift.call(arguments, this.loader.load(file, true));
-        return plug.javascript.apply(this, arguments);
+        Array.prototype.unshift.call(arguments, file);
+        switch (true) {
+        case new RegExp("^(.+)Controller.js$").test(basename):
+          if (plug.annotations) {
+            return plug.annotations.apply(this, arguments);
+          } else {
+            return this.pluginConfig.annotations.apply(this, arguments);
+          }
+          break;
+        default:
+          if (plug.javascript) {
+            return plug.javascript.apply(this, arguments);
+          } else {
+            return this.pluginConfig.javascript.apply(this, arguments);
+          }
+        }
+        break;
       default:
-        this.logger("DROP FILE : " + mypath + " NO PLUGIN FIND", "WARNING");
+        this.logger("DROP FILE : " + mypath + " PLUGIN " + myName + " NO EXTENTION FIND : " + ext, "WARNING");
       }
     } catch (e) {
       throw e;
@@ -67,9 +99,10 @@ module.exports = nodefony.register("Reader", function () {
    *    var reader = new nodefony.Reader(container, settings);
    *
    */
-  const Reader = class Reader {
+  const Reader = class Reader extends nodefony.Service {
 
     constructor(container, localSettings) {
+      super("READER", container);
       this.settings = nodefony.extend(true, {}, defaultSetting, localSettings);
       this.plugins = {};
       this.container = container;
@@ -77,11 +110,15 @@ module.exports = nodefony.register("Reader", function () {
       this.engine = require("twig");
       this.readConfig = this.loadPlugin("config", this.pluginConfig);
       this.loader = this.container.get("autoLoader");
+      this.kernel.on("onBoot", () => {
+        this.router = this.container.get("router");
+        this.annotations = new nodefony.Annotations(container, this.notificationsCenter);
+      });
+
     }
 
     pluginConfig() {
-
-      let json = function (file, callback, parser) {
+      const json = function (file, bundle, callback, parser) {
         if (parser) {
           file = this.render(file, parser.data, parser.options);
         }
@@ -94,7 +131,7 @@ module.exports = nodefony.register("Reader", function () {
           throw (e);
         }
       };
-      let yml = function (file, callback, parser) {
+      const yml = function (file, bundle, callback, parser) {
         if (parser) {
           file = this.render(file, parser.data, parser.options);
         }
@@ -107,7 +144,7 @@ module.exports = nodefony.register("Reader", function () {
           throw (e);
         }
       };
-      let xml = function (file, callback, parser) {
+      const xml = function (file, bundle, callback, parser) {
         if (parser) {
           file = this.render(file, parser.data, parser.options);
         }
@@ -121,12 +158,64 @@ module.exports = nodefony.register("Reader", function () {
         });
       };
 
+      const javascript = function (file, bundle, callback) {
+        try {
+          return callback(this.loader.load(file, true));
+        } catch (e) {
+          throw e;
+        }
+      };
+
+      const annotations = function (file, bundle, callback) {
+        try {
+          return this.readFile(file)
+            .then((fileContent) => {
+              return this.annotations.parseController(fileContent, bundle, file)
+                .then((obj) => {
+                  if (obj && Object.keys(obj).length) {
+                    callback(obj);
+                  }
+                })
+                .catch((e) => {
+                  this.logger(file, "ERROR");
+                  this.logger(e, "ERROR");
+                });
+            })
+            .catch((e) => {
+              this.logger(file, "ERROR");
+              this.logger(e, "ERROR");
+            });
+        } catch (e) {
+          throw e;
+        }
+      };
+
       return {
         xml: xml,
         json: json,
         yml: yml,
-        javascript: null
+        javascript: javascript,
+        annotations: annotations
       };
+    }
+
+    readFile(file, localSettings) {
+      if (!file) {
+        throw new Error("READE no file path in readFile");
+      }
+      return new Promise((resolve, reject) => {
+        try {
+          fs.readFile(file, nodefony.extend({}, this.settings.readFile, localSettings), (err, data) => {
+            if (err) {
+              return reject(err);
+            }
+            return resolve(data);
+          });
+        } catch (e) {
+          this.logger(e, "ERROR");
+          return reject(e);
+        }
+      });
     }
 
     readFileSync(file, localSettings) {
@@ -159,18 +248,6 @@ module.exports = nodefony.register("Reader", function () {
         Array.prototype.unshift.call(arguments, name);
         return load.apply(context, arguments);
       };
-    }
-
-    /**
-     *  @method logger
-     *
-     */
-    logger(pci, severity, msgid, msg) {
-      let syslog = this.container.get("syslog");
-      if (!msgid) {
-        msgid = "READER ";
-      }
-      return syslog.logger(pci, severity, msgid, msg);
     }
 
     /**

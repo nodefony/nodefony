@@ -82,7 +82,7 @@ module.exports = nodefony.register("Annotations", function () {
                   ele.comment = comments[i][comment].content;
                   res = regAction.exec(comments[i][comment].code);
                   ele.defaultNameAction = res[1];
-                  ele.patternController += res[1]
+                  ele.patternController += res[1];
                   break;
                 }
                 break;
@@ -249,7 +249,8 @@ module.exports = nodefony.register("Annotations", function () {
       });
     }
 
-    parseController(fileContent, bundle) {
+    parseController(fileContent, bundle, file) {
+      this.logger("Bundle " + bundle + " Parse Controller Annotation : " + file, "DEBUG");
       return new Promise((resolve, reject) => {
         try {
           return this.parseComments(fileContent)

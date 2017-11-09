@@ -231,7 +231,7 @@ module.exports = nodefony.register("kernel", function () {
 
     readKernelConfig() {
       try {
-        this.reader.readConfig(this.configPath, (result) => {
+        this.reader.readConfig(this.configPath, this.name, (result) => {
           this.settings = result;
           this.settings.name = "NODEFONY";
           this.settings.version = this.version;
@@ -756,7 +756,7 @@ module.exports = nodefony.register("kernel", function () {
           case /^config\..*$/.test(ele.name):
             try {
               this.logger(name + " CONFIG LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
-              this.reader.readConfig(ele.path, callback);
+              this.reader.readConfig(ele.path, this.name, callback);
             } catch (e) {
               this.logger(util.inspect(e), "ERROR", "BUNDLE " + name + " CONFIG :" + ele.name);
             }
@@ -778,7 +778,7 @@ module.exports = nodefony.register("kernel", function () {
           case /^services\..*$/.test(ele.name):
             try {
               this.logger(name + " SERVICE LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
-              this.get("injection").reader(ele.path);
+              this.get("injection").reader(ele.path, this.name);
             } catch (e) {
               this.logger(util.inspect(e), "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG SERVICE :" + ele.name);
             }
@@ -788,7 +788,7 @@ module.exports = nodefony.register("kernel", function () {
               let firewall = this.get("security");
               if (firewall) {
                 this.logger(name + " SECURITY LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
-                firewall.reader(ele.path);
+                firewall.reader(ele.path, this.name);
               } else {
                 this.logger(name + " SECURITY LOAD FILE :" + ele.path + " BUT SERVICE NOT READY", "WARNING");
               }

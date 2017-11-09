@@ -3,15 +3,9 @@ const lib = require("./lib.js");
 module.exports = nodefony.registerController("default", function () {
 
   /**
-   *    The class is a **`default` CONTROLLER** .
-   *    @module nodefony
-   *    @main nodefony
-   *    @class default
-   *    @constructor
-   *    @param {class} container
-   *    @param {class} context
    *    @Route("/test")
    */
+
   const defaultController = class defaultController extends nodefony.controller {
 
     constructor(container, context) {
@@ -19,11 +13,19 @@ module.exports = nodefony.registerController("default", function () {
     }
 
     /**
-     *    @Route("/", name="annotation", defaults={"id" = 1},requirements={"id" = "\d+"})
-     *    @Method({"GET", "POST"})
+     *   @Route ("/zguegue", name="")
+     *   @Method ({"GET"})
      */
     annotationAction(id) {
-      this.render("testBundle::index.html.twig", {
+      return this.render("testBundle::index.html.twig");
+    }
+
+    /**
+     *    @Route ("/sboob/{id}", name="annotation2", defaults={"id" = 5},requirements={"id" = "\d+"})
+     *    @Method ({"GET", "POST"})
+     */
+    annotation2Action(id) {
+      return this.render("testBundle::index.html.twig", {
         id: id
       });
     }
@@ -48,6 +50,9 @@ module.exports = nodefony.registerController("default", function () {
       }
     }
 
+    /**
+     *
+     */
     watcherAction() {
       return this.renderJson(lib.toJson());
     }
@@ -110,9 +115,7 @@ module.exports = nodefony.registerController("default", function () {
         throw new Error("REALTIME METHOD NOT ALLOWED");
       }
     }
-
   };
-
 
   return defaultController;
 });
