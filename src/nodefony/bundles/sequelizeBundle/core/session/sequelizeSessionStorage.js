@@ -31,6 +31,7 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
           }
         });
       }
+      return results;
       //this.manager.logger("DB SESSIONS STORAGE context : "+ ( contextSession || "default" ) +" GARBADGE COLLECTOR ==> "+ nbSessionsDelete + " DELETED")
     }).catch((error) => {
       //console.trace(error);

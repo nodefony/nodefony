@@ -5,17 +5,23 @@ module.exports = nodefony.register("controller", function () {
       super(null, container, container.get("notificationsCenter"));
       this.name = this.name;
       this.context = context;
-      this.response = this.context.response;
-      this.request = this.context.request;
-      this.query = this.request.query;
-      this.queryFile = this.request.queryFile;
-      this.queryGet = this.request.queryGet;
-      this.queryPost = this.request.queryPost;
-      this.sessionService = this.get("sessions");
-      this.serviceTemplating = this.get('templating');
       this.httpKernel = this.get("httpKernel");
       this.router = this.get("router");
+      this.serviceTemplating = this.get('templating');
+      this.sessionService = this.get("sessions");
       this.method = this.getMethod();
+      this.response = this.context.response;
+      this.request = this.context.request;
+      this.response = this.context.response;
+      this.queryGet = this.request.queryGet;
+      this.query = this.request.query;
+      this.queryFile = this.request.queryFile;
+      this.queryPost = this.request.queryPost;
+      this.on("onRequestEnd", () => {
+        this.query = this.request.query;
+        this.queryFile = this.request.queryFile;
+        this.queryPost = this.request.queryPost;
+      });
     }
 
     getRequest() {

@@ -380,14 +380,16 @@ module.exports = nodefony.registerService("httpKernel", function () {
           this.logger(e, "WARNING");
         }
       }
+      if (context.method === "WEBSOCKET" && context.response && !context.response.connection) {
+        context.request.reject(exception.code ? exception.code : null, exception.message);
+        this.logger(exception, "ERROR", context.method);
+        context.fire("onFinish", context);
+      }
       if (context.response) {
         let st = context.response.setStatusCode(exception.code, exception.message);
         exception.code = st.code;
         exception.message = st.message;
       } else {
-        if (context.method === "WEBSOCKET") {
-          context.request.reject(exception.code ? exception.code : null, exception.message);
-        }
         this.logger(exception, "ERROR", context.method);
         context.fire("onFinish", context);
         return;
@@ -474,6 +476,7 @@ module.exports = nodefony.registerService("httpKernel", function () {
         resolver = this.router.resolve(context);
         if (resolver.resolve) {
           context.resolver = resolver;
+          resolver.newController(container, context);
         } else {
           let error = new Error("Not Found");
           error.code = 404;
@@ -544,15 +547,16 @@ module.exports = nodefony.registerService("httpKernel", function () {
       });
 
       try {
+        // DOMAIN VALID
+        next = this.checkValidDomain(context);
+        if (next !== 200) {
+          return context;
+        }
         // FRONT ROUTER
         resolver = this.router.resolve(context);
         if (resolver.resolve) {
           context.resolver = resolver;
-          // DOMAIN VALID
-          next = this.checkValidDomain(context);
-          if (next !== 200) {
-            return context;
-          }
+          resolver.newController(container, context);
         } else {
           let error = new Error("Not Found");
           error.code = 404;

@@ -258,7 +258,10 @@ module.exports = nodefony.registerService("router", function () {
         return;
       }
       try {
-        let controller = this.newController(this.container, this.context);
+        let controller = this.get("controller");
+        if (!controller) {
+          controller = this.newController(this.container, this.context);
+        }
         if (data) {
           this.variables.push(data);
         }
@@ -270,7 +273,7 @@ module.exports = nodefony.registerService("router", function () {
 
     newController(container, context) {
       let controller = new this.controller(container || this.container, context || this.context);
-      this.set("controller", controller);
+      container.set("controller", controller);
       return controller;
     }
 
