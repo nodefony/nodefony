@@ -26,7 +26,6 @@ module.exports = nodefony.register("Route", function () {
 
       //TODO http | websocket
       this.schemes = null;
-      //TODO with obj
       if (obj) {
         this.setName(obj.id);
         this.setPattern(obj.pattern);
@@ -37,6 +36,7 @@ module.exports = nodefony.register("Route", function () {
       this.bypassFirewall = false;
       this.defaultLang = null;
       this.hash = null;
+      this.prefix = "";
     }
 
     generateId() {
@@ -55,6 +55,10 @@ module.exports = nodefony.register("Route", function () {
 
     setHostname(hostname) {
       this.host = hostname;
+    }
+
+    setPrefix(prefix) {
+      this.prefix = prefix;
     }
 
     addDefault(key, value) {
@@ -77,13 +81,13 @@ module.exports = nodefony.register("Route", function () {
       this.options[key] = value;
     }
 
-    addResource(file) {
+    /*addResource(file) {
       this.resource = file;
     }
 
     addType(type) {
       this.type = type;
-    }
+    }*/
 
     /*setPath (){}
     setRequirements (){}
@@ -131,8 +135,9 @@ module.exports = nodefony.register("Route", function () {
       if (!this.path) {
         return;
       }
-      let pattern = this.path.replace(regRoute, (match, slash, dot, key, capture, opt, offset) => {
-        let incl = (this.path[match.length + offset] || '/') === '/';
+      const pathPrefix = this.prefix + this.path.replace("//", "/");
+      let pattern = pathPrefix.replace(regRoute, (match, slash, dot, key, capture, opt, offset) => {
+        let incl = (pathPrefix[match.length + offset] || '/') === '/';
         this.variables.push(key);
         if (this.checkDefaultParameters(key)) {
           return (incl ? '(?:' : '') + (slash ? slash + "?" : '') + (incl ? '' : '(?:') + (dot || '') + '(' + (capture || '[^/]*') + '))' + (opt || '');
@@ -216,7 +221,7 @@ module.exports = nodefony.register("Route", function () {
     }
 
     matchHostname(context) {
-      if (this.host !== null) {
+      if (this.host) {
         if (this.host === context.domain) {
           return true;
         }

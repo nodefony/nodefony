@@ -155,7 +155,7 @@ module.exports = nodefony.register("Reader", function () {
         });
       };
 
-      const javascript = function (file, bundle, callback) {
+      const javascript = function (file, bundle, parser, callback) {
         try {
           return callback(this.loader.load(file, true));
         } catch (e) {
@@ -163,29 +163,6 @@ module.exports = nodefony.register("Reader", function () {
         }
       };
 
-      /*const annotations = function (file, bundle, callback) {
-        try {
-          return this.readFile(file)
-            .then((fileContent) => {
-              return this.annotations.parseController(fileContent, bundle, file)
-                .then((obj) => {
-                  if (obj && Object.keys(obj).length) {
-                    callback(obj);
-                  }
-                })
-                .catch((e) => {
-                  this.logger(file, "ERROR");
-                  this.logger(e, "ERROR");
-                });
-            })
-            .catch((e) => {
-              this.logger(file, "ERROR");
-              this.logger(e, "ERROR");
-            });
-        } catch (e) {
-          throw e;
-        }
-      };*/
       const annotations = function (file) {
         throw new Error("Annotation is not defined for this file " + file);
       };

@@ -13,7 +13,6 @@ module.exports = nodefony.registerService("router", function () {
    *
    */
   const pluginReader = function () {
-
     const importXmlConfig = function (xml, prefix, callback, parser) {
       if (parser) {
         xml = this.render(xml, parser.data, parser.options);
@@ -85,11 +84,11 @@ module.exports = nodefony.registerService("router", function () {
       }
     };
 
-    const getObjectRoutesXML = function (file, bundle, callback, parser) {
+    const getObjectRoutesXML = function (file, bundle, parser, callback) {
       importXmlConfig.call(this, file, '', callback, parser);
     };
 
-    const getObjectRoutesJSON = function (file, bundle, callback, parser) {
+    const getObjectRoutesJSON = function (file, bundle, parser, callback) {
       if (parser) {
         file = this.render(file, parser.data, parser.options);
       }
@@ -98,7 +97,7 @@ module.exports = nodefony.registerService("router", function () {
       }
     };
 
-    const getObjectRoutesYml = function (file, bundle, callback, parser) {
+    const getObjectRoutesYml = function (file, bundle, parser, callback) {
       if (parser) {
         file = this.render(file, parser.data, parser.options);
       }
@@ -107,11 +106,11 @@ module.exports = nodefony.registerService("router", function () {
       }
     };
 
-    const annotations = function (file, bundle, callback) {
+    const annotations = function (file, bundle, parser, callback) {
       try {
         return this.readFile(file)
           .then((fileContent) => {
-            return this.annotations.parseController(fileContent, bundle, file)
+            return this.annotations.parseController(fileContent, bundle, file, parser)
               .then((obj) => {
                 if (obj && Object.keys(obj).length) {
                   callback(obj);
@@ -383,8 +382,8 @@ module.exports = nodefony.registerService("router", function () {
       this.routes = [];
       this.reader = function (context) {
         var func = context.container.get("reader").loadPlugin("routing", pluginReader);
-        return function (file, bundle) {
-          return func(file, bundle, context.nodeReader.bind(context, file, bundle));
+        return function (file, bundle, parser) {
+          return func(file, bundle, parser, context.nodeReader.bind(context, file, bundle));
         };
       }(this);
       this.engineTemplate = this.get("templating");
@@ -586,19 +585,11 @@ module.exports = nodefony.registerService("router", function () {
               newRoute.addRequirement(ob, arg[ob]);
             }
             break;
-          case "options":
-            for (let ob in arg) {
-              newRoute.addOptions(ob, arg[ob]);
-            }
-            break;
-          case "resource":
-            newRoute.addResource(arg);
-            break;
-          case "type":
-            newRoute.addType(arg);
+          case "prefix":
+            newRoute.setPrefix(arg);
             break;
           default:
-            this.logger(" Tag : " + ele + " not exist in routings definition : " + route, "WARNING");
+            this.logger(" Tag : " + ele + " not exist in routings definition Route : " + route + " File : " + newRoute.filePath, "WARNING");
           }
         }
         try {

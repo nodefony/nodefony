@@ -5,29 +5,10 @@ module.exports = nodefony.registerController("default", function () {
   /**
    *    @Route("/test")
    */
-
   const defaultController = class defaultController extends nodefony.controller {
 
     constructor(container, context) {
       super(container, context);
-    }
-
-    /**
-     *   @Route ("/zguegue", name="")
-     *   @Method ({"GET"})
-     */
-    annotationAction(id) {
-      return this.render("testBundle::index.html.twig");
-    }
-
-    /**
-     *    @Route ("/sboob/{id}", name="annotation2", defaults={"id" = 5},requirements={"id" = "\d+"})
-     *    @Method ({"GET", "POST"})
-     */
-    annotation2Action(id) {
-      return this.render("testBundle::index.html.twig", {
-        id: id
-      });
     }
 
     indexAction() {
