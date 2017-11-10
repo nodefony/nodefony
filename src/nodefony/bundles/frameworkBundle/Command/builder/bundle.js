@@ -17,7 +17,7 @@ const Bundle = class Bundle extends Builder {
   constructor(cli, type, bundleType) {
     super(cli);
     this.type = type;
-    this.bundleType = bundleType;
+    this.bundleType = bundleType || "";
     this.params = {
       module: this.cli.config.App.projectName,
       projectName: this.cli.config.App.projectName,

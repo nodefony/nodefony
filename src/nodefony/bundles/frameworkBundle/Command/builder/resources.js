@@ -12,7 +12,7 @@ const Config = class Config {
   }
 
   createBuilder() {
-    return {
+    let obj = {
       name: this.name,
       type: "directory",
       childs: [{
@@ -20,17 +20,21 @@ const Config = class Config {
           type: "file",
           skeleton: this.configSkeleton,
           params: this.params
-        }, {
-          name: "webpack.config.js",
-          type: "file",
-          skeleton: this.webpackSkeleton,
-          params: this.params
         },
         this.routing.createBuilder(),
-        this.createWebpackConfig(),
         this.createSecurityConfig("yml")
       ]
     };
+    if (this.bundleType === "") {
+      obj.childs.push({
+        name: "webpack.config.js",
+        type: "file",
+        skeleton: this.webpackSkeleton,
+        params: this.params
+      });
+      obj.childs.push(this.createWebpackConfig());
+    }
+    return obj;
   }
 
   createSecurityConfig(type) {
