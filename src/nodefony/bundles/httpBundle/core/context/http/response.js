@@ -168,11 +168,19 @@ module.exports = nodefony.register("Response", function () {
       }
     }
 
+    flushHeaders() {
+      try {
+        return this.response.flushHeaders();
+      } catch (e) {
+        throw e;
+      }
+    }
+
     flush(data, encoding) {
       if (!this.response.headersSent) {
         this.setHeader('Transfer-Encoding', 'chunked');
         this.headers['Transfer-Encoding'] = 'chunked';
-        this.writeHead();
+        this.flushHeaders();
       }
       return this.write(data, encoding);
     }

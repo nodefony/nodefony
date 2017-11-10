@@ -2,32 +2,35 @@ const lib = require("./lib.js");
 
 module.exports = nodefony.registerController("default", function () {
 
+
+  const flush = function (context, i) {
+    context.flush("sboob : " + i);
+    console.log("sboob : " + i);
+  };
+
   /**
-   *    @Route("/test")
    */
   const defaultController = class defaultController extends nodefony.controller {
 
     constructor(container, context) {
       super(container, context);
+      /*let i = 0;
+      //flush(this.context, i);
+      let interval = setInterval(() => {
+        //flush(this.context, i++);
+      }, 1);
+      this.context.on("onRequestEnd", () => {
+        clearInterval(interval);
+        console.log("pass onrequestEnd");
+      });*/
+
     }
 
     indexAction() {
-      // markdown read and parse readme.md
       try {
-        var path = this.get("kernel").rootDir + "/src/bundles//testBundle/readme.md";
-        var file = new nodefony.fileClass(path);
-        var res = this.htmlMdParser(file.content(file.encoding), {
-          linkify: true,
-          typographer: true
-        });
-        return this.render("testBundle::index.html.twig", {
-          readme: res
-        });
+        return this.render("testBundle::index.html.twig");
       } catch (e) {
-        return this.forward("frameworkBundle:default:system", {
-          view: "testBundle::index.html.twig",
-          bundle: this.getParameters("bundles.test")
-        });
+        throw e;
       }
     }
 
