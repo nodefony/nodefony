@@ -1,16 +1,14 @@
-module.exports = nodefony.registerController("default", function () {
-
   /**
    *	The class is a **`default` CONTROLLER** .
    *	@module NODEFONY
    *	@main NODEFONY
-   *	@class default
+   *	@class defaultController
    *	@constructor
    *	@param {class} container
    *	@param {class} context
    *
    */
-  const defaultController = class defaultController extends nodefony.controller {
+  module.exports = class defaultController extends nodefony.controller {
 
     constructor(container, context) {
       super(container, context);
@@ -84,5 +82,3 @@ module.exports = nodefony.registerController("default", function () {
       }
     }
   };
-  return defaultController;
-});

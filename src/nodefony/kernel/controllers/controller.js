@@ -3,7 +3,6 @@ module.exports = nodefony.register("controller", function () {
   const Controller = class Controller extends nodefony.Service {
     constructor(container, context) {
       super(null, container, container.get("notificationsCenter"));
-      this.name = this.name;
       this.context = context;
       this.httpKernel = this.get("httpKernel");
       this.router = this.get("router");

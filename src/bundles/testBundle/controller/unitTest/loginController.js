@@ -1,31 +1,15 @@
-/*
- *
- *
- *
- *  CONTROLLER test unit
- *
- *
- *
- *
- */
+module.exports = class loginController extends nodefony.controller {
 
-module.exports = nodefony.registerController("login", function () {
+  constructor(container, context) {
+    super(container, context);
+  }
 
-    const loginController = class loginController extends nodefony.controller {
-
-        constructor(container, context) {
-            super(container, context);
-        }
-
-        loginAction() {
-            return this.renderJson(this.getRoute());
-        }
+  loginAction() {
+    return this.renderJson(this.getRoute());
+  }
 
 
-        logoutAction() {
-            return this.renderJson({});
-        }
-    };
-
-    return loginController;
-});
+  logoutAction() {
+    return this.renderJson({});
+  }
+};

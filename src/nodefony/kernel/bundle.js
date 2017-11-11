@@ -6,6 +6,7 @@ module.exports = nodefony.register("Bundle", function () {
   const regBundle = /^(.*)[Bb]undle$/;
   const regFixtures = /^(.+)Fixtures.js$/;
   const regController = /^(.+)Controller.js$/;
+  const regClassController = /^(.+)Controller$/;
   const regService = /^(.+)Service.js$/;
   const regCommand = /^(.+)Command.js$/;
   const regEntity = /^(.+)Entity.js$/;
@@ -571,8 +572,16 @@ module.exports = nodefony.register("Bundle", function () {
       let Class = null;
       try {
         Class = this.loadFile(Path, force);
+        let res = regClassController.exec(Class.name);
+        if (res) {
+          name = res[1];
+        } else {
+          this.logger("Controller Bad Class name :" + Class.name + " file : " + Path, "ERROR");
+          this.logger("Controller take the file name  !!! " + name, "WARNING");
+        }
         if (typeof Class === "function") {
           Class.prototype.name = name;
+          Class.prototype.path = Path;
           Class.prototype.bundle = this;
           this.controllers[name] = Class;
           Class.prototype.annotation = null;

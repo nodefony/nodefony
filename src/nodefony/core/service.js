@@ -28,9 +28,7 @@ module.exports = nodefony.register("Service", function () {
         this.options = nodefony.extend(true, {}, defaultOptions, options);
       } else {
         //optimize
-        this.options = {
-          nbListeners: 20
-        };
+        this.options = nodefony.extend(true, {}, defaultOptions);
       }
       if (container instanceof nodefony.Container) {
         this.container = container;
@@ -148,7 +146,6 @@ module.exports = nodefony.register("Service", function () {
     }
 
     listenSyslog(options) {
-
       let defaultOption = {
         severity: {
           operator: "<=",
@@ -163,7 +160,6 @@ module.exports = nodefony.register("Service", function () {
 
     /**
     *  @method once
-    *  @param {Oject} context
     *  @param {String} eventName
     *  @param {Function} listener
 

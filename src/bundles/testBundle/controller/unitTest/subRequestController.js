@@ -1,41 +1,29 @@
-/*
- *
- *
- *
- *	CONTROLLER test unit
- *
- *
- *
- *
- */
+module.exports = class subRequestController extends nodefony.controller {
 
-module.exports = nodefony.registerController("subrequest", function(){
+  constructor(container, context) {
+    super(container, context);
+  }
 
-	var subRequestController = class subRequestController extends nodefony.controller {
+  indexAction() {
 
-		constructor(container, context){
-			super(container, context);
-		};
+    return this.render("testBundle:unitTest:subrequest.html.twig", {
+      title: "sub-request"
+    });
+  }
 
+  subAction() {
+    //console.log("PASS")
+    return this.renderResponse("<h1>SUB-REQUEST</h1>");
+  }
 
-		indexAction (){
-
-			return this.render("testBundle:unitTest:subrequest.html.twig", {title:"sub-request"});
-		}
-
-		subAction(){
-			//console.log("PASS")
-			return this.renderResponse("<h1>SUB-REQUEST</h1>");
-		}
-
-		sub2Action(){
-			//console.log("PASS2")
-			return this.renderResponse("<h1>SUB-REQUEST-2</h1>");
-		}
-		sub3Action(){
-			//console.log("PASS3")
-			return this.renderJson({foo:"bar"});
-		}
-	}
-	return subRequestController ;
-});
+  sub2Action() {
+    //console.log("PASS2")
+    return this.renderResponse("<h1>SUB-REQUEST-2</h1>");
+  }
+  sub3Action() {
+    //console.log("PASS3")
+    return this.renderJson({
+      foo: "bar"
+    });
+  }
+};

@@ -1,19 +1,17 @@
 {% extends "./licence.cecill-b.skeleton" %}
-
 {% block body %}
-module.exports = nodefony.registerBundle ("{{name}}", function(){
-
 	/**
 	 *	The class is a **`{{name}}` BUNDLE** .
 	 *	@module {{module}}
 	 *	@main {{module}}
-	 *	@class {{name}}
+	 *	@class {{bundleName}}
 	 *	@constructor
+	 *	@param {string} name
 	 *	@param {class} kernel
 	 *	@param {class} container
 	 *
 	 */
-	const {{name}} = class {{name}}  extends nodefony.Bundle {
+	module.exports = class {{bundleName}}  extends nodefony.Bundle {
 
 		constructor (name, kernel, container){
 
@@ -31,6 +29,4 @@ module.exports = nodefony.registerBundle ("{{name}}", function(){
 
 		}
 	};
-	return {{name}};
-});
 {% endblock %}

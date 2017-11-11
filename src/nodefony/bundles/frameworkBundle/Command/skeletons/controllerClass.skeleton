@@ -1,38 +1,33 @@
 {% extends "./licence.cecill-b.skeleton" %}
 
 {% block body %}
+/**
+ *	The class is a **`{{controllerName}}` CONTROLLER** .
+ *	@module {{module}}
+ *	@main {{module}}
+ *	@class {{controllerName}}
+ *	@constructor
+ *	@param {class} container
+ *	@param {class} context
+ *
+ */
+module.exports = class {{controllerName}} extends nodefony.controller {
 
-module.exports = nodefony.registerController("{{controllerShortName}}", function(){
+	constructor (container, context){
+		super(container, context);
+	}
 
-		/**
-		 *	The class is a **`{{controllerName}}` CONTROLLER** .
-		 *	@module {{module}}
-		 *	@main {{module}}
-		 *	@class {{controllerName}}
-		 *	@constructor
-		 *	@param {class} container
-		 *	@param {class} context
-		 *
-		 */
-		const {{controllerName}} = class {{controllerName}} extends nodefony.controller {
-
-			constructor (container, context){
-				super(container, context);
-			}
-
-			/**
-		 	*
-		 	*	@method indexAction
-		 	*
-		 	*/
-			indexAction (){
-				try {
-					return this.render("{{bundleName}}:{{directory}}:index.html.twig",{name:"{{controllerShortName}}"});
-				}catch(e){
-					throw e;
-				}
-			}
-		};
-		return {{controllerName}};
-});
+	/**
+ 	*
+ 	*	@method indexAction
+ 	*
+ 	*/
+	indexAction (){
+		try {
+			return this.render("{{bundleName}}:{{directory}}:index.html.twig",{name:"{{controllerShortName}}"});
+		}catch(e){
+			throw e;
+		}
+	}
+};
 {% endblock %}

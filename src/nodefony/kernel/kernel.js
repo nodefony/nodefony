@@ -3,8 +3,9 @@ const os = require('os');
 
 module.exports = nodefony.register("kernel", function () {
 
-  const regBundleName = /^(.*)[Bb]undle[\.js]{0,3}$/;
-  const regBundle = /^(.*)[Bb]undle.js$/;
+  const regBundleName = /^(.+)[Bb]undle[\.js]{0,3}$/;
+  const regBundle = /^(.+)[Bb]undle.js$/;
+  const regClassBundle = /^(.+)[Bb]undle$/;
 
   const waitingBundle = function () {
     this.eventReadywait -= 1;
@@ -554,17 +555,37 @@ module.exports = nodefony.register("kernel", function () {
      *  @param {String} str
      */
     getBundleName(str) {
-      let ret = regBundleName.exec(str);
-      if (ret) {
-        return ret[1];
+      let ret = null;
+      switch (typeof str) {
+      case "string":
+        ret = regBundleName.exec(str);
+        if (ret) {
+          return ret[1];
+        }
+        throw new Error("Bundle Bad Name :" + str);
+      case "function":
+        ret = regClassBundle.exec(str.name);
+        if (ret) {
+          return ret[1];
+        }
+        throw new Error("Bundle Bad Name :" + str.name);
+      default:
+        throw new Error("Bundle Bad Name :" + str);
       }
-      throw new Error("Bundle Bad Name :" + str);
+    }
+
+    getBundleClass(file, force) {
+      try {
+        return this.autoLoader.load(file.path, force);
+      } catch (e) {
+        throw e;
+      }
     }
 
     loadBundle(file) {
       try {
-        let name = this.getBundleName(file.name);
-        let Class = this.autoLoader.load(file.path, false);
+        let Class = this.getBundleClass(file, true);
+        let name = this.getBundleName(Class);
         if (Class) {
           if (typeof Class === "function") {
             Class.prototype.path = file.dirName;
@@ -609,7 +630,9 @@ module.exports = nodefony.register("kernel", function () {
                   if (this.cli.commander && this.cli.commander.args && this.cli.commander.args[0]) {
                     switch (this.cli.commander.args[0]) {
                     case "npm:install":
-                      let name = this.getBundleName(file.name);
+                      //let name = this.getBundleName(file.name);
+                      let Class = this.getBundleClass(file, true);
+                      let name = this.getBundleName(Class);
                       if (file.shortName in this.bundlesCore) {
                         if (this.isCore) {
                           this.cli.installPackage(name, file, true);
@@ -665,7 +688,7 @@ module.exports = nodefony.register("kernel", function () {
      *  @method initApplication
      */
     initApplication() {
-      let App = class App extends nodefony.Bundle {
+      let App = class AppBundle extends nodefony.Bundle {
         constructor(name, myKernel, myContainer) {
           super(name, myKernel, myContainer);
         }

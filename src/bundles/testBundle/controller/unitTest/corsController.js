@@ -1,45 +1,29 @@
-/*
- *
- *
- *
- *  CONTROLLER test unit
- *
- *
- *
- *
- */
+module.exports = class corsController extends nodefony.controller {
 
-module.exports = nodefony.registerController("cors", function () {
+  constructor(container, context) {
+    super(container, context);
+  }
+  httpAction(area) {
+    let firewall = this.get("security");
+    return this.renderJson(firewall.securedAreas[area].cors.headers);
+  }
 
-  const corsController = class corsController extends nodefony.controller {
-
-    constructor(container, context) {
-      super(container, context);
-    }
-    httpAction(area) {
-      let firewall = this.get("security");
-      return this.renderJson(firewall.securedAreas[area].cors.headers);
-    }
-
-    protocolSessionAction(protocol) {
-      switch (protocol) {
-      case "start":
-        return this.sessionService.start(this.context).then((session) => {
-          return this.renderJson({
-            id: session.id,
-            cross: this.context.crossDomain
-          });
-        });
-      case "http":
+  protocolSessionAction(protocol) {
+    switch (protocol) {
+    case "start":
+      return this.sessionService.start(this.context).then((session) => {
         return this.renderJson({
-          id: this.context.session.id,
+          id: session.id,
           cross: this.context.crossDomain
         });
-      default:
-        throw new Error("protocol " + protocol + " not defined");
-      }
+      });
+    case "http":
+      return this.renderJson({
+        id: this.context.session.id,
+        cross: this.context.crossDomain
+      });
+    default:
+      throw new Error("protocol " + protocol + " not defined");
     }
-  };
-
-  return corsController;
-});
+  }
+};

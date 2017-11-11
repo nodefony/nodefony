@@ -1,18 +1,14 @@
-module.exports = nodefony.registerBundle("unitTest", function () {
+module.exports = class unitTestBundle extends nodefony.Bundle {
 
-  const unitTest = class unitTest extends nodefony.Bundle {
+  constructor(name, kernel, container) {
 
-    constructor(name, kernel, container) {
-
-      super(name, kernel, container);
-      // load bundle library
-      //this.autoLoader.loadDirectory(this.path+"/core");
-      /*
-       *	If you want kernel wait unitTestBundle event <<onReady>>
-       *
-       *      this.waitBundleReady = true ;
-       */
-    }
-  };
-  return unitTest;
-});
+    super(name, kernel, container);
+    // load bundle library
+    //this.autoLoader.loadDirectory(this.path+"/core");
+    /*
+     *	If you want kernel wait unitTestBundle event <<onReady>>
+     *
+     *      this.waitBundleReady = true ;
+     */
+  }
+};
