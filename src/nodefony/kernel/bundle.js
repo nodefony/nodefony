@@ -469,6 +469,7 @@ module.exports = nodefony.register("Bundle", function () {
           let Class = this.loadFile(ele.path);
           if (typeof Class === "function") {
             Class.prototype.bundle = this;
+            //nodefony.services[Class.name] = Class;
             this.logger("Register Service : " + res[0], "DEBUG");
           } else {
             this.logger("Bundle Register Service : " + ele.path + "  error Service bad format " + typeof Class, "ERROR");

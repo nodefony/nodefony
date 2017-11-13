@@ -145,9 +145,9 @@ module.exports = nodefony.register("injection", function () {
   }();
 
   // tools exec
-  var prepareExec = function () {
+  const prepareExec = function () {
 
-    var getValues = function () {
+    const getValues = function () {
       var args = [];
       for (var key in this) {
         args.push(this[key]);
@@ -155,9 +155,9 @@ module.exports = nodefony.register("injection", function () {
       return args;
     };
 
-    var reg = /constructor\s*\((.*)\)/;
+    const reg = /constructor\s*\((.*)\)/;
     //var reg2 = /function\s*\((.*)\)/ ;
-    var getArguments = function () {
+    const getArguments = function () {
       var str = this.toString();
       var m = str.match(reg);
       if (m) {
@@ -177,7 +177,7 @@ module.exports = nodefony.register("injection", function () {
       }
     };
 
-    var sortArguments = function (func, obj, order) {
+    const sortArguments = function (func, obj, order) {
       var args = (order instanceof Array ? order : getArguments.call(func));
       for (var i = 0; i < args.length; i++) {
         args[i] = obj[args[i]];
@@ -188,7 +188,7 @@ module.exports = nodefony.register("injection", function () {
     return {
       "newWith": function (Class, obj, order) {
         order = order || false;
-        var tab = (order ? sortArguments(Class, obj, order) : getValues.call(obj));
+        let tab = (order ? sortArguments(Class, obj, order) : getValues.call(obj));
         Array.prototype.unshift.call(tab, Class);
         try {
           return new(Function.prototype.bind.apply(Class, tab));
@@ -201,7 +201,6 @@ module.exports = nodefony.register("injection", function () {
         func.apply(this, sortArguments(func, tab));
       },
       getArguments: getArguments
-
     };
   }();
 
@@ -217,7 +216,6 @@ module.exports = nodefony.register("injection", function () {
 
       super("injection", container, container.get("notificationsCenter"));
 
-      this.kernel = this.container.get('kernel');
       this.reader = function (context) {
         var func = context.get("reader").loadPlugin("injection", pluginReader);
         return function (result, bundle, parser) {
@@ -302,11 +300,11 @@ module.exports = nodefony.register("injection", function () {
     }
 
     setService(name, service) {
-      var Class = nodefony.services[service.class[0]];
+      const Class = nodefony.services[service.class[0]];
       if (!Class) {
         throw new Error("Service Name " + name + " class not found");
       }
-      var order = prepareExec.getArguments.call(Class);
+      let order = prepareExec.getArguments.call(Class);
       if (order[0] === "") {
         order = false;
       }
