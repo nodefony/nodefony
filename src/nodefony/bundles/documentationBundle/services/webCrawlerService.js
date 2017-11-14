@@ -1,233 +1,229 @@
 //var request = require('request');
 const cheerio = require('cheerio');
 
-module.exports = nodefony.registerService("webCrawler", function () {
+const makeRequestHttp = function (link, context, callback) {
 
-  const makeRequestHttp = function (link, context, callback) {
-
-    this.logger("REQUEST : " + link, "INFO");
-    let myurl = url.parse(link);
-    if (!this.settingsHttps) {
-      this.settingsHttps = this.get("httpsServer").settings;
-    }
-    // cookie session
-    var headers = {};
-    if (context.session) {
-      headers.Cookie = context.session.name + "=" + context.session.id;
-    }
-    var options = {
-      hostname: myurl.hostname,
-      port: myurl.port,
-      path: myurl.path,
-      method: 'GET',
-      headers: headers
-    };
-    let wrapper = http.request;
-    //console.log(options)
-    let keepAliveAgent = null;
-    // https
-    if (myurl.protocol === "https:") {
-      // keepalive if multiple request in same socket
-      keepAliveAgent = new https.Agent({
-        keepAlive: true
-      });
-
-      // certificat
-      nodefony.extend(options, {
-        key: fs.readFileSync(this.kernel.rootDir + "/" + this.settingsHttps.certificats.key),
-        cert: fs.readFileSync(this.kernel.rootDir + "/" + this.settingsHttps.certificats.cert),
-        rejectUnauthorized: false,
-        requestCert: true,
-        agent: keepAliveAgent
-      });
-      wrapper = https.request;
-    } else {
-      // keepalive
-      keepAliveAgent = new http.Agent({
-        keepAlive: true
-      });
-      options.agent = keepAliveAgent;
-    }
-
-    var req = wrapper(options, (res) => {
-      var bodyRaw = "";
-      res.setEncoding('utf8');
-      res.on('data', (chunk) => {
-        //this.logger( chunk, "DEBUG");
-        bodyRaw += chunk;
-      });
-
-      res.on('end', () => {
-        parseLink.call(this, link, bodyRaw, callback);
-      });
-
-    });
-
-    req.on('error', (e) => {
-      this.logger('Problem with request: ' + e.message, "ERROR");
-
-    });
-
-    req.end();
+  this.logger("REQUEST : " + link, "INFO");
+  let myurl = url.parse(link);
+  if (!this.settingsHttps) {
+    this.settingsHttps = this.get("httpsServer").settings;
+  }
+  // cookie session
+  var headers = {};
+  if (context.session) {
+    headers.Cookie = context.session.name + "=" + context.session.id;
+  }
+  var options = {
+    hostname: myurl.hostname,
+    port: myurl.port,
+    path: myurl.path,
+    method: 'GET',
+    headers: headers
   };
-
-  let parseLink = function (crawlUrl, body, callback) {
-
-    var pageObject = {};
-    pageObject.links = [];
-
-    if (/^\//.test(crawlUrl)) {
-      pageObject.url = this.protocol + this.base + crawlUrl;
-    } else {
-      pageObject.url = crawlUrl;
-    }
-
-    var $ = cheerio.load(body, {
-      ignoreWhitespace: true
+  let wrapper = http.request;
+  //console.log(options)
+  let keepAliveAgent = null;
+  // https
+  if (myurl.protocol === "https:") {
+    // keepalive if multiple request in same socket
+    keepAliveAgent = new https.Agent({
+      keepAlive: true
     });
-    pageObject.title = $('title').text();
-    pageObject.selector = $;
 
-    // find link
-    $('a').each((i, elem) => {
-      //console.log(elem.attribs.href)
-      if (elem.attribs.href === "#" || elem.attribs.href === "/") {
-        return;
-      }
-      let href = null;
-      if (/^\//.test(elem.attribs.href)) {
-        href = url.parse(this.protocol + this.base + elem.attribs.href);
+    // certificat
+    nodefony.extend(options, {
+      key: fs.readFileSync(this.kernel.rootDir + "/" + this.settingsHttps.certificats.key),
+      cert: fs.readFileSync(this.kernel.rootDir + "/" + this.settingsHttps.certificats.cert),
+      rejectUnauthorized: false,
+      requestCert: true,
+      agent: keepAliveAgent
+    });
+    wrapper = https.request;
+  } else {
+    // keepalive
+    keepAliveAgent = new http.Agent({
+      keepAlive: true
+    });
+    options.agent = keepAliveAgent;
+  }
+
+  var req = wrapper(options, (res) => {
+    var bodyRaw = "";
+    res.setEncoding('utf8');
+    res.on('data', (chunk) => {
+      //this.logger( chunk, "DEBUG");
+      bodyRaw += chunk;
+    });
+
+    res.on('end', () => {
+      parseLink.call(this, link, bodyRaw, callback);
+    });
+
+  });
+
+  req.on('error', (e) => {
+    this.logger('Problem with request: ' + e.message, "ERROR");
+
+  });
+
+  req.end();
+};
+
+let parseLink = function (crawlUrl, body, callback) {
+
+  var pageObject = {};
+  pageObject.links = [];
+
+  if (/^\//.test(crawlUrl)) {
+    pageObject.url = this.protocol + this.base + crawlUrl;
+  } else {
+    pageObject.url = crawlUrl;
+  }
+
+  var $ = cheerio.load(body, {
+    ignoreWhitespace: true
+  });
+  pageObject.title = $('title').text();
+  pageObject.selector = $;
+
+  // find link
+  $('a').each((i, elem) => {
+    //console.log(elem.attribs.href)
+    if (elem.attribs.href === "#" || elem.attribs.href === "/") {
+      return;
+    }
+    let href = null;
+    if (/^\//.test(elem.attribs.href)) {
+      href = url.parse(this.protocol + this.base + elem.attribs.href);
+    } else {
+      if (elem.attribs.href) {
+        href = url.parse(elem.attribs.href);
       } else {
-        if (elem.attribs.href) {
-          href = url.parse(elem.attribs.href);
-        } else {
-          href = null;
-        }
-      }
-      if (href) {
-        pageObject.links.push({
-          linkText: $(elem).text(),
-          linkUrl: href
-        });
-      }
-    });
-    callback(null, pageObject);
-  };
-
-
-  const myLoop = function (link, context, finish, recurse) {
-
-    if (this.crawled[link]) {
-      if (this.crawled[link].page) {
-        finish(null, this.crawled);
-        return;
+        href = null;
       }
     }
-    makeRequestHttp.call(this, link, context, (error, pageObject) => {
+    if (href) {
+      pageObject.links.push({
+        linkText: $(elem).text(),
+        linkUrl: href
+      });
+    }
+  });
+  callback(null, pageObject);
+};
 
-      if (error) {
-        return;
-      }
 
-      this.crawled[pageObject.url] = [];
-      this.crawled[pageObject.url].page = pageObject;
+const myLoop = function (link, context, finish, recurse) {
 
-      async.eachSeries(pageObject.links, (item, cb) => {
-        if (item.linkUrl) {
-          // test if the url actually points to the same domain
-          if (item.linkUrl.host === this.base) {
-            if (!item.linkUrl.hash) {
-              this.crawled[pageObject.url].push(item.linkUrl.href);
-            }
+  if (this.crawled[link]) {
+    if (this.crawled[link].page) {
+      finish(null, this.crawled);
+      return;
+    }
+  }
+  makeRequestHttp.call(this, link, context, (error, pageObject) => {
+
+    if (error) {
+      return;
+    }
+
+    this.crawled[pageObject.url] = [];
+    this.crawled[pageObject.url].page = pageObject;
+
+    async.eachSeries(pageObject.links, (item, cb) => {
+      if (item.linkUrl) {
+        // test if the url actually points to the same domain
+        if (item.linkUrl.host === this.base) {
+          if (!item.linkUrl.hash) {
+            this.crawled[pageObject.url].push(item.linkUrl.href);
           }
         }
-        cb(null);
-      }, (error) => {
-        if (!error) {
+      }
+      cb(null);
+    }, (error) => {
+      if (!error) {
 
-          for (var i = 0; i < this.crawled[pageObject.url].length; i++) {
-            //console.log( this.crawled[pageObject.url] )
-            if (this.crawled[pageObject.url][i] in this.crawled) {
-              continue;
-            } else {
-              recurse++;
-              this.crawled[this.crawled[pageObject.url][i]] = [];
-              myLoop.call(this, this.crawled[pageObject.url][i], context, () => {
-                recurse--;
-                if (recurse === 0) {
-                  //console.log("FINISH")
-                  finish(error, this.crawled);
-                }
-              }, 0);
+        for (var i = 0; i < this.crawled[pageObject.url].length; i++) {
+          //console.log( this.crawled[pageObject.url] )
+          if (this.crawled[pageObject.url][i] in this.crawled) {
+            continue;
+          } else {
+            recurse++;
+            this.crawled[this.crawled[pageObject.url][i]] = [];
+            myLoop.call(this, this.crawled[pageObject.url][i], context, () => {
+              recurse--;
+              if (recurse === 0) {
+                //console.log("FINISH")
+                finish(error, this.crawled);
+              }
+            }, 0);
 
-            }
           }
         }
-        if (recurse === 0) {
-          //console.log( "FINISH 2" )
-          finish(error, this.crawled);
-        }
-      });
+      }
+      if (recurse === 0) {
+        //console.log( "FINISH 2" )
+        finish(error, this.crawled);
+      }
     });
-  };
+  });
+};
 
-  const webCrawler = class webCrawler extends nodefony.Service {
+module.exports = class webCrawler extends nodefony.Service {
 
-    constructor(container, kernel) {
+  constructor(container, kernel) {
 
-      super("WEBCRAWLER", container, container.get("notificationsCenter"));
+    super("WEBCRAWLER", container, container.get("notificationsCenter"));
 
-      this.kernel = kernel;
-      this.crawled = {};
-      this.elastic = null;
+    this.kernel = kernel;
+    this.crawled = {};
+    this.elastic = null;
 
-      this.listen(this, "onReady", () => {
-        this.elastic = this.kernel.getBundle("documentation").elastic;
-      });
-    }
+    this.listen(this, "onReady", () => {
+      this.elastic = this.kernel.getBundle("documentation").elastic;
+    });
+  }
 
-    siteAll(urlBase, search, context, callback) {
+  siteAll(urlBase, search, context, callback) {
 
-      //console.log(urlBase)
-      var recurse = 0;
-      var Link = url.parse(urlBase);
+    //console.log(urlBase)
+    var recurse = 0;
+    var Link = url.parse(urlBase);
 
-      this.base = Link.host;
+    this.base = Link.host;
 
-      this.protocol = Link.protocol ? Link.protocol + "//" : 'http://';
+    this.protocol = Link.protocol ? Link.protocol + "//" : 'http://';
 
-      if (this.elastic) {
-        myLoop.call(this, urlBase, context, function ( /*error, crawled*/ ) {});
-      } else {
-        myLoop.call(this, urlBase, context, (error, crawled) => {
-          //console.log(crawled)
-          var obj = {};
-          try {
-            for (var page in crawled) {
+    if (this.elastic) {
+      myLoop.call(this, urlBase, context, function ( /*error, crawled*/ ) {});
+    } else {
+      myLoop.call(this, urlBase, context, (error, crawled) => {
+        //console.log(crawled)
+        var obj = {};
+        try {
+          for (var page in crawled) {
 
-              if (crawled && crawled[page] && crawled[page].page && crawled[page].page.selector) {
-                var text = crawled[page].page.selector("body").text();
-                if (!text) {
-                  continue;
-                }
-                //var index = text.indexOf(search) ;
-                let reg = new RegExp(search, 'gi');
-                let index = text.search(reg);
-                if (index !== -1) {
-                  obj[crawled[page].page.url] = {
-                    text: "..." + text.substring(index - 100, index + 100) + "...",
-                    title: crawled[page].page.title
-                  };
-                }
+            if (crawled && crawled[page] && crawled[page].page && crawled[page].page.selector) {
+              var text = crawled[page].page.selector("body").text();
+              if (!text) {
+                continue;
+              }
+              //var index = text.indexOf(search) ;
+              let reg = new RegExp(search, 'gi');
+              let index = text.search(reg);
+              if (index !== -1) {
+                obj[crawled[page].page.url] = {
+                  text: "..." + text.substring(index - 100, index + 100) + "...",
+                  title: crawled[page].page.title
+                };
               }
             }
-          } catch (e) {
-            this.logger(e, "ERROR");
           }
-          callback(obj);
-        }, recurse);
-      }
+        } catch (e) {
+          this.logger(e, "ERROR");
+        }
+        callback(obj);
+      }, recurse);
     }
-  };
-  return webCrawler;
-});
+  }
+};

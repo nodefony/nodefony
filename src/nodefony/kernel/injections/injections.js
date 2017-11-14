@@ -2,9 +2,7 @@ module.exports = nodefony.register("injection", function () {
 
   // plugin Reader
   const pluginReader = function () {
-
     const importXmlConfig = function (file, prefix, callback, parser) {
-
       if (parser) {
         file = this.render(file, parser.data, parser.options);
       }
@@ -20,7 +18,7 @@ module.exports = nodefony.register("injection", function () {
         if (!node) {
           return node;
         }
-        for (var key in node) {
+        for (let key in node) {
           switch (key) {
           case 'parameters':
             parameters = this.xmlToJson.call(this, node[key][0].parameter);
@@ -36,7 +34,6 @@ module.exports = nodefony.register("injection", function () {
         }
       });
     };
-
     const nomarlizeXmlJson = function (services, parameters, callback) {
       for (let key in services) {
         for (let param in services[key]) {
@@ -98,117 +95,236 @@ module.exports = nodefony.register("injection", function () {
             break;
           }
         }
-
       }
       if (callback) {
         renderParameters.call(this, callback, services, parameters);
       }
     };
-
     const renderParameters = function (callback, services, parameters) {
       if (parameters && Object.keys(parameters).length > 0 && typeof (services) === 'object' && Object.keys(services).length > 0) {
         services = JSON.parse(this.render(JSON.stringify(services), parameters));
       }
       callback(services);
     };
-
-    const getServicesXML = function (file, bundle, callback, parser) {
+    const getServicesXML = function (file, bundle, parser, callback) {
       importXmlConfig.call(this, file, '', callback, parser);
     };
-
-    const getServicesJSON = function (file, bundle, callback, parser) {
+    const getServicesJSON = function (file, bundle, parser, callback) {
       if (parser) {
         file = this.render(file, parser.data, parser.options);
       }
-      var json = JSON.parse(file);
+      let json = JSON.parse(file);
       if (callback) {
         renderParameters.call(this, callback, json.services, json.parameters);
       }
     };
-
-    const getServicesYML = function (file, bundle, callback, parser) {
+    const getServicesYML = function (file, bundle, parser, callback) {
       if (parser) {
         file = this.render(file, parser.data, parser.options);
       }
-      var json = yaml.load(file);
+      let json = yaml.load(file);
       if (callback) {
         renderParameters.call(this, callback, json.services, json.parameters);
       }
     };
-
+    const javascript = function (file, bundle, parser, callback) {
+      try {
+        callback(this.loader.load(file, true));
+      } catch (e) {
+        throw e;
+      }
+    };
     return {
       xml: getServicesXML,
       json: getServicesJSON,
       yml: getServicesYML,
-      annotation: null
+      javascript: javascript
     };
   }();
 
-  // tools exec
-  const prepareExec = function () {
-
-    const getValues = function () {
-      var args = [];
-      for (var key in this) {
-        args.push(this[key]);
+  const regService = new RegExp("^(.+)Service$");
+  const reg = /constructor\s*\((.*)\)/;
+  /**
+   * CLASS INJECTOR
+   */
+  const Injector = class Injector extends nodefony.Service {
+    constructor(name, service, container) {
+      super(name, container);
+      this.services = nodefony.services;
+      try {
+        this.Class = this.getServiceClass(service);
+        this.className = this.getServiceName(this.Class);
+        this.classArgs = Injector.getArguments.call(this.Class);
+        this.injections = this.findInjections(service.arguments);
+        this.calls = this.getServiceCall(service);
+        this.setParameters("services." + this.name, {
+          class: this.Class,
+          name: this.name,
+          orderArguments: false,
+          calls: service.calls
+        });
+      } catch (e) {
+        this.logger(e, "ERROR");
+        throw e;
       }
-      return args;
-    };
+    }
 
-    const reg = /constructor\s*\((.*)\)/;
-    //var reg2 = /function\s*\((.*)\)/ ;
-    const getArguments = function () {
-      var str = this.toString();
-      var m = str.match(reg);
+    getServiceClass(service) {
+      let Class = null;
+      switch (nodefony.typeOf(service.class)) {
+      case "array":
+        Class = this.services[service.class[0]];
+        break;
+      case "function":
+        Class = service.class;
+        break;
+      case "string":
+        Class = this.services[service.class];
+        break;
+      default:
+        throw new Error("Service Name " + this.className + " bad Class");
+      }
+      if (!Class) {
+        throw new Error("Service Name " + this.className + " class not found");
+      }
+      return Class;
+    }
+
+    getServiceName(Class) {
+      if (Class) {
+        let res = regService.exec(Class.name);
+        if (res) {
+          return res[1];
+        }
+        return Class.name;
+      }
+    }
+
+    getServiceCall(service) {
+      let ele = null;
+      if (service.calls) {
+        ele = {};
+        for (let i = 0; i < service.calls.length; i++) {
+          let method = null;
+          let args = null;
+          switch (nodefony.typeOf(service.calls[i])) {
+          case "array":
+            method = service.calls[i][0];
+            args = service.calls[i][1];
+            break;
+          case "object":
+            method = service.calls[i].method;
+            args = service.calls[i].arguments;
+            break;
+          default:
+            this.logger(service.calls, 'ERROR');
+            throw new Error("Service bad Calls config ");
+          }
+          ele[method] = this.findInjections(args);
+        }
+      }
+      return ele;
+    }
+
+    startService() {
+      try {
+        let instance = this.reflect();
+        this.set(this.name, instance);
+        if (this.calls) {
+          for (let call in this.calls) {
+            if (instance[call]) {
+              this.call(instance, instance[call], this.calls[call]);
+            } else {
+              this.logger('Method ' + call + ' in service ' + this.name + ' not found', "ERROR");
+              continue;
+            }
+          }
+        }
+        instance.logger('STARTED ', 'DEBUG');
+        return instance;
+      } catch (e) {
+        this.logger(e, "ERROR");
+        throw e;
+      }
+    }
+
+    static getArguments() {
+      let str = this.toString();
+      let m = str.match(reg);
       if (m) {
         // case class
-        m = m[1].replace(/\s*/g, '');
+        m = m[1].replace(/\s/g, '');
         return m.split(',');
       } else {
         // case function
-        var reg2 = new RegExp(this.name + "\s*\((.*)\)");
-        m = str.match(reg2);
+        m = str.match(new RegExp(this.name + "\s*\((.*)\)"));
         if (m) {
-          m = m[1].replace(/\s*/g, '');
+          m = m[1].replace(/\s/g, '');
           return m.split(',');
         } else {
           throw new Error("Service :" + this.name + " constructor not find");
         }
       }
-    };
+    }
 
-    const sortArguments = function (func, obj, order) {
-      var args = (order instanceof Array ? order : getArguments.call(func));
-      for (var i = 0; i < args.length; i++) {
-        args[i] = obj[args[i]];
+    reflect() {
+      try {
+        return Reflect.construct(this.Class, this.injections);
+      } catch (e) {
+        console.log("ERRROR SERVICE CLASS " + this.name + " " + e.message, "ERROR");
+        throw e;
       }
-      return args;
-    };
+    }
 
-    return {
-      "newWith": function (Class, obj, order) {
-        order = order || false;
-        let tab = (order ? sortArguments(Class, obj, order) : getValues.call(obj));
-        Array.prototype.unshift.call(tab, Class);
-        try {
-          return new(Function.prototype.bind.apply(Class, tab));
-        } catch (e) {
-          console.log("ERRROR SERVICE CLASS " + Class.name + " " + e.message, "ERROR");
-          throw e;
+    /*static reflectEs5(Class, args) {
+      try {
+        Array.prototype.unshift.call(args, Class);
+        return new(Function.prototype.bind.apply(Class, args));
+      } catch (e) {
+        console.log("ERRROR SERVICE CLASS " + Class.name + " " + e.message, "ERROR");
+        throw e;
+      }
+    }*/
+    call(context, func, args) {
+      try {
+        func.apply(context, args);
+      } catch (e) {
+        throw e;
+      }
+    }
+
+    findInjections(args) {
+      let tab = [];
+      if (args instanceof Array) {
+        for (let elm = 0; elm < args.length; elm++) {
+          switch (nodefony.typeOf(args[elm])) {
+          case "string":
+            let name = null;
+            switch (args[elm][0]) {
+            case '@':
+              name = args[elm].substring(1);
+              let service = this.get(name);
+              if (service) {
+                tab.push(service);
+              } else {
+                this.logger("Injection Service  : " + name + " not found !!", "ERROR");
+              }
+              break;
+            default:
+              tab.push(args[elm]);
+            }
+            break;
+          default:
+            tab.push(args[elm]);
+          }
         }
-      },
-      "callWith": function (func, tab) {
-        func.apply(this, sortArguments(func, tab));
-      },
-      getArguments: getArguments
-    };
-  }();
+      }
+      return tab;
+    }
+  };
 
   /*
-   *
-   *  CALSS INJECTION
-   *
-   *
+   *  CLASS INJECTION
    */
   const Injection = class Injection extends nodefony.Service {
 
@@ -217,112 +333,34 @@ module.exports = nodefony.register("injection", function () {
       super("injection", container, container.get("notificationsCenter"));
 
       this.reader = function (context) {
-        var func = context.get("reader").loadPlugin("injection", pluginReader);
+        const func = context.get("reader").loadPlugin("injection", pluginReader);
         return function (result, bundle, parser) {
-          return func(result, bundle, context.nodeReader.bind(context), parser);
+          return func(result, bundle, parser, context.nodeReader.bind(context));
         };
       }(this);
     }
 
     nodeReader(jsonServices) {
-      var services = {};
-      for (var lib in jsonServices) {
+      for (let lib in jsonServices) {
         if (jsonServices[lib].class) {
-          services[lib] = this.setService(lib, jsonServices[lib]);
-          this.startService(lib, services[lib]);
+          try {
+            let injector = this.setInjector(lib, jsonServices[lib]);
+            injector.startService();
+          } catch (e) {
+            throw e;
+          }
         }
       }
     }
 
-    startService(name, service) {
-      var myOrder = service.orderArguments.toString();
+    setInjector(name, service) {
       try {
-        if (service.class) {
-
-          var context = prepareExec.newWith(
-            service.class,
-            service.injections,
-            service.orderArguments
-          );
-
-          if (service.calls) {
-            for (var c = 0; c < service.calls.length; c++) {
-              if (context[service.calls[c][0]]) {
-                prepareExec.callWith.call(context, context[service.calls[c][0]], this.findInjections(service.calls[c][1]));
-              } else {
-                this.logger('call Method ' + service.call[c][0] + ' in service ' + name + ' not found');
-                return;
-              }
-            }
-          }
-          if (service.properties) {
-            for (var p in service.properties) {
-              if (service.properties[p][0] === '@') {
-                context[p] = this.get(service.properties[p].substring(1));
-              }
-            }
-          }
-          this.set(name, context);
-          var funclog = name + (myOrder !== "false" ? '( ' + myOrder + ' )' : '()');
-          this.logger('START SERVICE ' + funclog, 'DEBUG');
-        }
+        return new Injector(name, service, this.container);
       } catch (e) {
-        this.logger(e, 'ERROR', 'INJECTION', 'START SERVICE ' + name + ' ERROR');
+        throw e;
       }
     }
 
-    findInjections(injections) {
-      var params = {};
-      if (injections instanceof Array) {
-        for (let elm = 0; elm < injections.length; elm++) {
-          switch (injections[elm][0]) {
-          case '@':
-            try {
-              var name = injections[elm].substring(1);
-              let service = this.get(name);
-              params[name] = service;
-            } catch (e) {
-              //this.logger('Instance service (' + name + ') doesn\'t exist !!!');
-            }
-            break;
-          }
-        }
-      }
-      return params;
-    }
-
-    logger(pci, severity, msgid, msg) {
-      //var syslog = this.container.get("syslog");
-      if (!msgid) {
-        msgid = "SERVICE INJECTION";
-      }
-      return this.syslog.logger(pci, severity, msgid, msg);
-    }
-
-    setService(name, service) {
-      const Class = nodefony.services[service.class[0]];
-      if (!Class) {
-        throw new Error("Service Name " + name + " class not found");
-      }
-      let order = prepareExec.getArguments.call(Class);
-      if (order[0] === "") {
-        order = false;
-      }
-      if (Class) {
-        return this.setParameters("services." + name, {
-          class: Class,
-          name: name,
-          orderArguments: order,
-          injections: this.findInjections(service.arguments),
-          calls: service.calls,
-          properties: service.properties,
-          scope: service.scope ? service.scope : "container"
-          //synthetic: /true/i.test(service.synthetic)
-        });
-      } else {
-        this.logger(service.class + ' never registred');
-      }
-    }
   };
   return Injection;
 });

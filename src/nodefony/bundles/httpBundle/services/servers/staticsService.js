@@ -1,67 +1,62 @@
 const serveStatic = require('serve-static');
 
-module.exports = nodefony.registerService("serverStatics", () => {
+const defaultStatic = {
+  cacheControl: true,
+  maxAge: 96 * 60 * 60
+};
 
-  const defaultStatic = {
-    cacheControl: true,
-    maxAge: 96 * 60 * 60
-  };
+module.exports = class serverStatics extends nodefony.Service {
 
-  const Static = class Static extends nodefony.Service {
-
-    constructor(container, options) {
-      super("SERVER STATICS", container, container.get("notificationsCenter"));
-      this.type = this.kernel.type;
-      if (this.type !== "SERVER") {
-        return;
-      }
-
-      this.environment = this.kernel.environment;
-      this.listen(this, "onBoot", () => {
-        this.settings = this.getParameters("bundles.http").statics;
-        this.global = nodefony.extend({}, defaultStatic, this.settings.defaultOptions, options);
-        this.initStaticFiles();
-      });
-      this.serveStatic = serveStatic;
-      this.mime = this.serveStatic.mime;
-      this.servers = {};
+  constructor(container, options) {
+    super("SERVER STATICS", container, container.get("notificationsCenter"));
+    this.type = this.kernel.type;
+    if (this.type !== "SERVER") {
+      return;
     }
 
-    initStaticFiles() {
-      for (let staticRoot in this.settings) {
-        if (staticRoot === "defaultOptions") {
-          continue;
-        }
-        let path = this.settings[staticRoot].path;
-        path = this.kernel.checkPath(path);
-        this.addDirectory(path, this.settings[staticRoot].options);
-      }
-    }
+    this.environment = this.kernel.environment;
+    this.listen(this, "onBoot", () => {
+      this.settings = this.getParameters("bundles.http").statics;
+      this.global = nodefony.extend({}, defaultStatic, this.settings.defaultOptions, options);
+      this.initStaticFiles();
+    });
+    this.serveStatic = serveStatic;
+    this.mime = this.serveStatic.mime;
+    this.servers = {};
+  }
 
-    addDirectory(path, options) {
-      if (!path) {
-        throw new Error("Static file path not Defined ");
+  initStaticFiles() {
+    for (let staticRoot in this.settings) {
+      if (staticRoot === "defaultOptions") {
+        continue;
       }
-      this.kernel.on("onPostReady", () => {
-        this.logger("Listen Server static rootDir  ==> " + path, "INFO");
-      });
-      let opt = nodefony.extend({}, this.global, options);
-      if (opt.maxAge && typeof opt.maxAge === "string") {
-        opt.maxAge = eval(opt.maxAge);
-      }
-      let server = this.serveStatic(path, opt);
-      this.servers[path] = server;
-      return server;
+      let path = this.settings[staticRoot].path;
+      path = this.kernel.checkPath(path);
+      this.addDirectory(path, this.settings[staticRoot].options);
     }
+  }
 
-    handle(request, response, next) {
-      let type = this.mime.lookup(request.url);
-      response.setHeader("Content-Type", type);
-      for (let server in this.servers) {
-        this.servers[server](request, response, next);
-      }
+  addDirectory(path, options) {
+    if (!path) {
+      throw new Error("Static file path not Defined ");
     }
-  };
+    this.kernel.on("onPostReady", () => {
+      this.logger("Listen Server static rootDir  ==> " + path, "INFO");
+    });
+    let opt = nodefony.extend({}, this.global, options);
+    if (opt.maxAge && typeof opt.maxAge === "string") {
+      opt.maxAge = eval(opt.maxAge);
+    }
+    let server = this.serveStatic(path, opt);
+    this.servers[path] = server;
+    return server;
+  }
 
-  return Static;
-});
+  handle(request, response, next) {
+    let type = this.mime.lookup(request.url);
+    response.setHeader("Content-Type", type);
+    for (let server in this.servers) {
+      this.servers[server](request, response, next);
+    }
+  }
+};

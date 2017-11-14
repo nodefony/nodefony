@@ -1,42 +1,30 @@
-const Sequelize = require("Sequelize");
 nodefony.register.call(nodefony.session.storage, "sequelize", function () {
 
-  const Op = Sequelize.Op;
-  const finderGC2 = function (msMaxlifetime, contextSession) {
+  const finderGC = function (msMaxlifetime, contextSession) {
     let mydate = new Date(new Date() - msMaxlifetime);
-    return this.entity.findAll({
-      /*where: {
-        [Op.and]: [{
-          context: {
-            [Op.eq]: contextSession
-          }
-        }, {
-          updatedAt: {
-            [Op.eq]: mydate
-          }
-        }]
-      }*/
-      where: {
-        context: contextSession,
-        updatedAt: {
-          [Op.gt]: mydate
-        }
+    let query = {};
+    query.attributes = ['context', 'updatedAt', 'session_id'];
+    query.force = true;
+    query.where = {
+      context: contextSession,
+      updatedAt: {
+        $lt: mydate
       }
-    }).then((results) => {
-      for (let i = 0; i < results.length; i++) {
-        let session = results[i];
-        this.manager.logger(" GARBADGE COLLECTOR SESSION context : " + session.context + " ID : " + session.session_id + " DELETED");
-      }
-      this.manager.logger("Context : " + (contextSession || "default") + " GARBADGE COLLECTOR ==> " + results.length + " DELETED")
+    };
+    /*query.logging = (value) => {
+      return this.manager.logger(value);
+    };*/
+    return this.entity.destroy(query).then((results) => {
+      this.manager.logger("Context : " + (contextSession || "default") + " GARBADGE COLLECTOR ==> " + results + "  DELETED", "DEBUG");
       return results;
     }).catch((error) => {
-      //console.trace(error);
+      this.manager.logger(error, "ERROR");
       throw error;
     });
 
   };
 
-  const finderGC = function (msMaxlifetime, contextSession) {
+  /*const finderGC2 = function (msMaxlifetime, contextSession) {
     let nbSessionsDelete = 0;
     let myDate = new Date().getTime() - msMaxlifetime;
     return this.entity.findAll({
@@ -73,7 +61,7 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
       //console.trace(error);
       throw error;
     });
-  };
+  };*/
 
   const dbSessionStorage = class dbSessionStorage {
 

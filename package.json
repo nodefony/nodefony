@@ -122,7 +122,7 @@
     "serve-static": "^1.13.1",
     "shelljs": "^0.7.8",
     "shortid": "2.2.8",
-    "simple-git": "^1.81.1",
+    "simple-git": "^1.82.0",
     "sockjs": "^0.3.18",
     "sqlite3": "^3.1.13",
     "style-loader": "^0.19.0",
