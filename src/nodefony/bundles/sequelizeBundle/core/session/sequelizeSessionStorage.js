@@ -1,4 +1,40 @@
+const Sequelize = require("Sequelize");
 nodefony.register.call(nodefony.session.storage, "sequelize", function () {
+
+  const Op = Sequelize.Op;
+  const finderGC2 = function (msMaxlifetime, contextSession) {
+    let mydate = new Date(new Date() - msMaxlifetime);
+    return this.entity.findAll({
+      /*where: {
+        [Op.and]: [{
+          context: {
+            [Op.eq]: contextSession
+          }
+        }, {
+          updatedAt: {
+            [Op.eq]: mydate
+          }
+        }]
+      }*/
+      where: {
+        context: contextSession,
+        updatedAt: {
+          [Op.gt]: mydate
+        }
+      }
+    }).then((results) => {
+      for (let i = 0; i < results.length; i++) {
+        let session = results[i];
+        this.manager.logger(" GARBADGE COLLECTOR SESSION context : " + session.context + " ID : " + session.session_id + " DELETED");
+      }
+      this.manager.logger("Context : " + (contextSession || "default") + " GARBADGE COLLECTOR ==> " + results.length + " DELETED")
+      return results;
+    }).catch((error) => {
+      //console.trace(error);
+      throw error;
+    });
+
+  };
 
   const finderGC = function (msMaxlifetime, contextSession) {
     let nbSessionsDelete = 0;
