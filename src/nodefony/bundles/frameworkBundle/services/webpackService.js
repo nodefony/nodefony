@@ -120,12 +120,12 @@ module.exports = class webpack extends nodefony.Service {
 
   constructor(container) {
     super("WEBPACK", container);
+    this.webpack = Webpack;
     this.production = (this.kernel.environment === "prod") ? true : false;
     this.defaultConfig = defaultConfig.call(this, "nodefony");
     //this.pathCache = path.resolve(this.kernel.rootDir, "tmp", "webpack") ;
     this.pathCache = this.kernel.cacheWebpack;
     this.host = this.kernel.hostHttps;
-    this.webpack = Webpack;
     this.version = this.getWebpackVersion();
 
     if (this.production) {
@@ -440,7 +440,7 @@ module.exports = class webpack extends nodefony.Service {
 
   getUglifyJsPlugin(config) {
     try {
-      return new webpack.optimize.UglifyJsPlugin(nodefony.extend(true, {}, {
+      return new this.webpack.optimize.UglifyJsPlugin(nodefony.extend(true, {}, {
         uglifyOptions: {
           warnings: true,
           compress: true

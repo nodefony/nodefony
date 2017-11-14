@@ -15,7 +15,11 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
       return this.manager.logger(value);
     };*/
     return this.entity.destroy(query).then((results) => {
-      this.manager.logger("Context : " + (contextSession || "default") + " GARBADGE COLLECTOR ==> " + results + "  DELETED", "DEBUG");
+      let severity = "DEBUG";
+      if (results) {
+        severity = "INFO";
+      }
+      this.manager.logger("Context : " + (contextSession || "default") + " GARBADGE COLLECTOR ==> " + results + "  DELETED", severity);
       return results;
     }).catch((error) => {
       this.manager.logger(error, "ERROR");

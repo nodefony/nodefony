@@ -205,9 +205,6 @@ module.exports = nodefony.register("Bundle", function () {
       });
 
       this.regRoutingFile = regRoutingFile;
-      // WEBPACK SERVICE
-      this.webpackService = this.get("webpack");
-      this.webpackCompiler = null;
 
       // router
       this.router = this.get("router");
@@ -216,7 +213,9 @@ module.exports = nodefony.register("Bundle", function () {
         if (this.kernel.environment === "dev" && this.settings.watch && this.kernel.type !== "CONSOLE") {
           this.initWatchers();
         }
-        // WEBPACK
+        // WEBPACK SERVICE
+        this.webpackService = this.get("webpack");
+        this.webpackCompiler = null;
         if (this.kernel.type !== "CONSOLE" || (process.argv[2] && process.argv[2] === "webpack:dump")) {
           try {
             this.findWebPackConfig();
