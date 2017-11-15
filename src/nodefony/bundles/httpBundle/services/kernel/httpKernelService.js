@@ -447,6 +447,7 @@ module.exports = class httpKernel extends nodefony.Service {
     //request events
     context.once("onError", this.onError.bind(this));
     let resolver = null;
+    let controller = null;
     let next = null;
     //response events
     context.response.response.on("finish", () => {
@@ -474,7 +475,10 @@ module.exports = class httpKernel extends nodefony.Service {
       resolver = this.router.resolve(context);
       if (resolver.resolve) {
         context.resolver = resolver;
-        resolver.newController(container, context);
+        controller = resolver.newController(container, context);
+        if (controller.sessionAutoStart) {
+          context.sessionAutoStart = controller.sessionAutoStart;
+        }
       } else {
         let error = new Error("Not Found");
         error.code = 404;
@@ -483,18 +487,19 @@ module.exports = class httpKernel extends nodefony.Service {
       if ((!this.firewall) || resolver.bypassFirewall) {
         context.once('onRequestEnd', () => {
           try {
-            if (context.sessionAutoStart === "autostart") {
-              this.sessionService.start(context, "default").then((session) => {
+            if (context.sessionAutoStart) {
+              return this.sessionService.start(context, context.sessionAutoStart).then((session) => {
                 if (!(session instanceof nodefony.Session)) {
                   throw new Error("SESSION START session storage ERROR");
                 }
                 this.logger("AUTOSTART SESSION", "DEBUG");
                 context.fire("onRequest");
+                return session;
               }).catch((error) => {
                 throw error;
               });
             } else {
-              context.fire("onRequest");
+              return context.fire("onRequest");
             }
           } catch (e) {
             return context.fire("onError", container, e);
@@ -506,6 +511,10 @@ module.exports = class httpKernel extends nodefony.Service {
     } catch (e) {
       return context.fire("onError", container, e);
     }
+  }
+
+  startSession(context, sessionContext) {
+
   }
 
   onWebsocketRequest(request, type) {
@@ -562,8 +571,8 @@ module.exports = class httpKernel extends nodefony.Service {
       }
       if ((!this.firewall) || resolver.bypassFirewall) {
         try {
-          if (context.sessionAutoStart === "autostart") {
-            this.sessionService.start(context, "default").then((session) => {
+          if (context.sessionAutoStart) {
+            this.sessionService.start(context, context.sessionAutoStart).then((session) => {
               if (!(session instanceof nodefony.Session)) {
                 throw new Error("SESSION START session storage ERROR");
               }

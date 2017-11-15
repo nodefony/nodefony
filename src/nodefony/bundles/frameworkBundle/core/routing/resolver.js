@@ -14,7 +14,7 @@ module.exports = nodefony.register("Resolver", function () {
   const Resolver = class Resolver extends nodefony.Service {
 
     constructor(context, router) {
-      super("resolver", context.container, context.notificationsCenter);
+      super("RESOLVER", context.container, context.notificationsCenter);
       this.router = router;
       this.resolve = false;
       this.defaultAction = null;
@@ -126,13 +126,6 @@ module.exports = nodefony.register("Resolver", function () {
 
     getController(name) {
       return this.bundle.controllers[name];
-    }
-
-    logger(pci, severity, msgid, msg) {
-      if (!msgid) {
-        msgid = "SERVICE RESOLVER";
-      }
-      return this.syslog.logger(pci, severity, msgid, msg);
     }
 
     callController(data) {

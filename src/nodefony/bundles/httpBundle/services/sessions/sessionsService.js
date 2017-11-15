@@ -15,6 +15,7 @@ module.exports = class sessions extends nodefony.Service {
     this.listen(this, "onBoot", () => {
       this.settings = this.container.getParameters("bundles.http").session;
       this.defaultSessionName = this.settings.name;
+      this.sessionAutoStart = this.setAutoStart(this.settings.start);
       this.initializeStorage();
     });
     this.listen(this, "onTerminate", () => {
@@ -22,6 +23,24 @@ module.exports = class sessions extends nodefony.Service {
         this.storage.close();
       }
     });
+  }
+
+  setAutoStart(setting) {
+    switch (setting) {
+    case true:
+    case "":
+    case undefined:
+      return "default";
+    case false:
+    case null:
+      return null;
+    default:
+      if (typeof setting === "string") {
+        return setting;
+      }
+
+      throw new Error("Session start settings config error : " + setting);
+    }
   }
 
   initializeStorage() {
@@ -47,6 +66,7 @@ module.exports = class sessions extends nodefony.Service {
         });
       }
     }
+    sessionContext = this.setAutoStart(sessionContext);
     if (this.probaGarbage()) {
       this.storage.gc(this.settings.gc_maxlifetime, sessionContext);
     }

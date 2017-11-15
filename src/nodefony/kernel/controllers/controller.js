@@ -16,6 +16,7 @@ module.exports = nodefony.register("controller", function () {
       this.query = this.request.query;
       this.queryFile = this.request.queryFile;
       this.queryPost = this.request.queryPost;
+      this.sessionAutoStart = null;
       this.on("onRequestEnd", () => {
         this.query = this.request.query;
         this.queryFile = this.request.queryFile;
@@ -43,7 +44,11 @@ module.exports = nodefony.register("controller", function () {
     }
 
     startSession(sessionContext) {
-      return this.sessionService.start(this.context, sessionContext || "default");
+      if (!this.context.requestEnded) {
+        this.sessionAutoStart = this.sessionService.setAutoStart(sessionContext);
+      } else {
+        return this.sessionService.start(this.context, sessionContext);
+      }
     }
 
     getSession() {

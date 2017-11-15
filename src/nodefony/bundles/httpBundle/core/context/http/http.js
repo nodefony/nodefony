@@ -18,6 +18,10 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.nbCallController = 0;
       this.uploadService = this.get("upload");
       this.request = new nodefony.Request(request, this);
+      this.requestEnded = false;
+      this.once("onRequestEnd", () => {
+        this.requestEnded = true;
+      });
       this.method = this.request.getMethod();
       this.isAjax = this.request.isAjax();
       this.isHtml = this.request.acceptHtml;
@@ -48,7 +52,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       // session
       this.session = null;
       this.sessionService = this.get("sessions");
-      this.sessionAutoStart = this.sessionService.settings.start;
+      this.sessionAutoStart = this.sessionService.sessionAutoStart;
       //parse cookies
       this.cookies = {};
       this.parseCookies();
@@ -430,10 +434,9 @@ nodefony.register.call(nodefony.context, "http", function () {
       if (cookie instanceof nodefony.cookies.cookie) {
         this.cookies[cookie.name] = cookie;
       } else {
-        throw {
-          message: "",
-          error: "Response addCookies not valid cookies"
-        };
+        let error = new Error("addCookie cookie not valid !!");
+        this.logger(cookie, "ERROR");
+        throw error;
       }
     }
 

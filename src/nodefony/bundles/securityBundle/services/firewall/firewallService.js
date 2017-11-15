@@ -206,7 +206,7 @@ module.exports = class security extends nodefony.Service {
         throw error;
       }
       if (context.security) {
-        context.sessionAutoStart = "firewall";
+        context.sessionAutoStart = context.security.sessionContext;
         sessionContext = context.security.sessionContext;
         if (context.type === "HTTP" && this.httpsReady) {
           if (context.security.redirect_Https) {
@@ -214,8 +214,19 @@ module.exports = class security extends nodefony.Service {
           }
         }
       } else {
-        if (!context.cookieSession) {
+        if (!context.cookieSession && !context.sessionAutoStart) {
           return context.fire("onRequest");
+        } else {
+          return this.sessionService.start(context, context.sessionAutoStart).then((session) => {
+            if (!(session instanceof nodefony.Session)) {
+              throw new Error("SESSION START session storage ERROR");
+            }
+            return context.fire("onRequest");
+          }).catch((error) => {
+            // break exception in promise catch !
+            context.fire("onError", context.container, error);
+            return error;
+          });
         }
       }
       return this.sessionService.start(context, sessionContext).then((session) => {

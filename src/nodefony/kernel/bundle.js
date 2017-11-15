@@ -189,7 +189,7 @@ module.exports = nodefony.register("Bundle", function () {
       try {
         this.resourcesFiles = this.finder.result.findByNode("Resources");
       } catch (e) {
-        console.trace(e);
+        this.logger(e, "ERROR");
         this.logger("Bundle " + this.name + " Resources directory not found", "WARNING");
       }
       // I18n
@@ -198,6 +198,8 @@ module.exports = nodefony.register("Bundle", function () {
       this.watcherI18n = null;
       this.regI18nFile = regI18nFile;
       // Register Service
+      this.servicesPath = path.resolve(this.path, "services");
+      this.watcherServices = null;
       this.registerServices();
       // read config files
       this.kernel.readConfig.call(this, null, this.resourcesFiles.findByNode("config"), (result) => {
@@ -236,6 +238,8 @@ module.exports = nodefony.register("Bundle", function () {
       let views = false;
       let i18n = false;
       let config = false;
+      let services = false;
+      let entities = false;
       try {
         switch (typeof this.settings.watch) {
         case "object":
@@ -298,7 +302,7 @@ module.exports = nodefony.register("Bundle", function () {
           });
         }
         //entities
-
+        //services
       } catch (e) {
         throw e;
       }
@@ -357,21 +361,6 @@ module.exports = nodefony.register("Bundle", function () {
           case /^locale$/.test(ele):
             if (result[ele]) {
               this.locale = result[ele];
-            }
-            break;
-            // deprecated
-          case /^webpack$/.test(ele):
-            try {
-              this.webPackConfig = result[ele] || null;
-              if (this.webPackConfig) {
-                this.kernel.listen(this, "onPostRegister", () => {
-                  if (this.webpackService) {
-                    this.webpackCompiler = this.webpackService.loadConfig(this.webPackConfig, this.path);
-                  }
-                });
-              }
-            } catch (e) {
-              throw e;
             }
             break;
           }
@@ -486,7 +475,7 @@ module.exports = nodefony.register("Bundle", function () {
           if (!res) {
             throw new Error("Angular bundle no webpack config file : webpack.config.js ");
           }
-          this.webpackCompilerFile = this.webpackService.loadConfigFile(res, this);
+          this.webpackCompilerFile = this.webpackService.loadConfig(res, this);
         } catch (e) {
           throw e;
         }
@@ -504,19 +493,18 @@ module.exports = nodefony.register("Bundle", function () {
           }
           res = new nodefony.fileClass(file);
           process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
-          this.webpackCompilerFile = this.webpackService.loadConfigFile(res, this);
+          this.webpackCompilerFile = this.webpackService.loadConfig(res, this);
         } catch (e) {
           throw e;
         }
         break;
       default:
         try {
-          //res = this.finder.result.getFile("webpack." + this.kernel.environment + ".config.js", true);
           res = this.finder.result.getFile("webpack.config.js", true);
           if (!res) {
             return;
           }
-          this.webpackCompilerFile = this.webpackService.loadConfigFile(res, this);
+          this.webpackCompilerFile = this.webpackService.loadConfig(res, this);
         } catch (e) {
           throw e;
         }
@@ -601,28 +589,6 @@ module.exports = nodefony.register("Bundle", function () {
       }
       return Class;
     }
-
-    /*reloadControllers(nameC) {
-      if (!nameC) {
-        return;
-      }
-      let controller = this.finder.result.findByNode("controller");
-      try {
-        controller.forEach((ele) => {
-          let res = this.regController.exec(ele.name);
-          if (res && res[1] === nameC) {
-            let name = res[1];
-            this.reloadWatcherControleur(name, ele.path);
-            throw "BREAK";
-          }
-        });
-      } catch (e) {
-        if (e === "BREAK") {
-          return;
-        }
-        throw e;
-      }
-    }*/
 
     findViewFiles(result) {
       let views = null;
@@ -823,7 +789,6 @@ module.exports = nodefony.register("Bundle", function () {
      *  COMMAND
      *
      */
-
     registerCommand(store) {
       // find i18n files
       this.commandFiles = this.finder.result.findByNode("Command");

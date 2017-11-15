@@ -1,119 +1,5 @@
 const Webpack = require("webpack");
-const webpackMerge = require('webpack-merge'); // used to merge webpack configs
-const ExtractTextPluginCss = require('extract-text-webpack-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-
-const babelRule = function ( /*basename*/ ) {
-  return {
-    test: new RegExp("\.es6$"),
-    exclude: new RegExp("node_modules"),
-    use: [{
-      loader: 'babel-loader',
-      options: {
-        presets: ['es2015']
-      }
-    }]
-  };
-};
-
-const cssRule = function ( /*basename, production*/ ) {
-  return {
-    test: new RegExp("\.css$"),
-    use: ExtractTextPluginCss.extract({
-      use: 'css-loader'
-    })
-  };
-};
-
-const sassRule = function ( /*basename*/ ) {
-  return {
-    test: new RegExp(".scss$"),
-    use: [{
-      loader: 'style-loader'
-    }, {
-      loader: 'css-loader'
-    }, {
-      loader: 'sass-loader'
-    }]
-  };
-};
-
-const lessRule = function ( /*basename*/ ) {
-  return {
-    test: new RegExp("\.less$"),
-    use: ExtractTextPluginCss.extract({
-      use: [
-        //'style-loader',
-        //'css-loader' ,
-        "raw-loader",
-        {
-          loader: 'less-loader',
-          options: {
-            //strictMath: true,
-            //noIeCompat: true
-          }
-        }
-      ]
-    })
-  };
-};
-
-/*
- * File loader for supporting fonts, for example, in CSS files.
- */
-const fontsRule = function (basename) {
-  return {
-    test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
-    use: 'file-loader?name=[name].[ext]&publicPath=/' + basename + '&outputPath=/assets/fonts/',
-  };
-};
-
-/*
- * File loader for supporting images, for example, in CSS files.
- */
-const imagesRule = function (basename) {
-  return {
-    test: new RegExp("\.(jpg|png|gif)$"),
-    use: 'file-loader?name=[name].[ext]&publicPath=/' + basename + '&outputPath=/assets/images/'
-  };
-};
-
-const defaultConfig = function (name, Path) {
-  let basename = null;
-  if (Path) {
-    basename = path.basename(Path);
-  } else {
-    basename = "assets";
-  }
-  let publicPath = Path ? path.resolve(Path, "Resources", "public") : null;
-  let devtool = this.production ? false : 'source-map';
-  let rules = [babelRule(basename), cssRule(basename, this.production), fontsRule(basename), imagesRule(basename), sassRule(basename), lessRule(basename)];
-  let plugins = [];
-  plugins.push(new ExtractTextPluginCss({
-    filename: "./assets/css/" + name + ".css",
-  }));
-  if (this.production && this.kernel.type !== "CONSOLE") {
-    plugins.push(this.getUglifyJsPlugin());
-    plugins.push(this.getOptimizeCssPlugin());
-  }
-  return {
-    // Configuration Object
-    context: publicPath,
-    target: "web",
-    watch: true,
-    devtool: devtool,
-    output: {
-      path: publicPath
-    },
-    externals: {},
-    resolve: {},
-    module: {
-      rules: rules
-    },
-    plugins: plugins
-  };
-};
 
 //https://webpack.js.org/api/node/
 module.exports = class webpack extends nodefony.Service {
@@ -122,8 +8,6 @@ module.exports = class webpack extends nodefony.Service {
     super("WEBPACK", container);
     this.webpack = Webpack;
     this.production = (this.kernel.environment === "prod") ? true : false;
-    this.defaultConfig = defaultConfig.call(this, "nodefony");
-    //this.pathCache = path.resolve(this.kernel.rootDir, "tmp", "webpack") ;
     this.pathCache = this.kernel.cacheWebpack;
     this.host = this.kernel.hostHttps;
     this.version = this.getWebpackVersion();
@@ -204,7 +88,7 @@ module.exports = class webpack extends nodefony.Service {
     }
   }
 
-  loadConfigFile(file, bundle) {
+  loadConfig(file, bundle) {
     try {
       if (!(file instanceof nodefony.fileClass)) {
         file = new nodefony.fileClass(file);
@@ -326,62 +210,6 @@ module.exports = class webpack extends nodefony.Service {
     return compiler;
   }
 
-  loadConfig(config, Path) {
-    let basename = path.basename(Path);
-    let name = config.output ? config.output.library : "index";
-    let myConf = webpackMerge(defaultConfig.call(this, name, Path), config);
-
-    if (this.production) {
-      myConf.watch = false;
-    } else {
-      if (nodefony.typeOf(myConf.entry) === "array") {
-        myConf.entry.unshift("webpack-dev-server/client?https://" + this.host + "/");
-      }
-    }
-    myConf.name = basename;
-    let compiler = null;
-    try {
-      compiler = webpack(myConf);
-      if (this.kernel.type === "CONSOLE") {
-        return compiler;
-      }
-    } catch (e) {
-      throw e;
-    }
-
-    let sokjsCompiler = null;
-    if (!this.production && this.sockjs && compiler) {
-      sokjsCompiler = this.sockjs.addCompiler(compiler, basename);
-    }
-
-    if (!(basename in this.kernel.bundlesCore)) {
-      this.logger("WEBPACK BUNDLE : " + basename + " WATCHING : " + myConf.watch);
-    }
-
-    let watching = null;
-    if (myConf.watch) {
-      watching = compiler.watch({
-        /* watchOptions */
-      }, (err, stats) => {
-        if (!err) {
-          this.logger("WEBPACK BUNDLE : " + basename + " WATCHING ENTRY POINT : \n" + util.inspect(myConf.entry), "DEBUG");
-        }
-        this.loggerStat(err, stats, basename, basename, true);
-      });
-      this.kernel.listen(this, "onTerminate", () => {
-        watching.close(() => {
-          this.logger("Watching Ended  " + myConf.context + " : " + util.inspect(myConf.entry), "INFO");
-        });
-      });
-    } else {
-      if ((this.kernel.environment === "dev") && (basename in this.kernel.bundlesCore) && (!this.kernel.isCore)) {
-        return compiler;
-      }
-      this.runCompiler(compiler, basename, basename);
-    }
-    return compiler;
-  }
-
   runCompiler(compiler, id, bundle, file) {
     try {
       if (this.production) {
@@ -436,39 +264,5 @@ module.exports = class webpack extends nodefony.Service {
     } catch (e) {
       this.logger(e, "ERROR");
     }
-  }
-
-  getUglifyJsPlugin(config) {
-    try {
-      return new this.webpack.optimize.UglifyJsPlugin(nodefony.extend(true, {}, {
-        uglifyOptions: {
-          warnings: true,
-          compress: true
-        },
-        parallel: true
-      }, config));
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  getOptimizeCssPlugin(config) {
-    try {
-      return new OptimizeCssAssetsPlugin(nodefony.extend(true, {}, {
-        cssProcessorOptions: {
-          discardComments: {
-            removeAll: true
-          }
-        },
-        canPrint: true
-      }, config));
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  getProgressPlugin(handler) {
-    //function handler(percentage, msg) {/* ... */}
-    return new webpack.ProgressPlugin(handler);
   }
 };

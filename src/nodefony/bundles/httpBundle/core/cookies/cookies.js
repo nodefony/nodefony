@@ -191,11 +191,17 @@ nodefony.register("cookies", function () {
     }
 
     unsign(val, secret) {
-      if ('string' !== typeof val) {
-        throw new TypeError('cookie required');
+      if (val && 'string' !== typeof val) {
+        throw new Error('unsign cookie value bad type !! ');
       }
-      if ('string' !== typeof secret) {
-        throw new TypeError('secret required');
+      if (secret && 'string' !== typeof secret) {
+        throw new Error('unsign cookie secret bad type');
+      }
+      if (!val) {
+        val = this.value;
+      }
+      if (!secret) {
+        secret = this.settings.secret;
       }
       let str = val.slice(0, val.lastIndexOf('.'));
       return this.sign(str, secret) === val ? str : false;

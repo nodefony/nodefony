@@ -27,6 +27,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       this.protocol = (type === "WEBSOCKET SECURE") ? "wss" : "ws";
       this.isJson = true;
       this.kernelHttp = this.get("httpKernel");
+      this.requestEnded = true;
       this.response = new nodefony.wsResponse(null, this.container, this.type);
       //I18n
       this.translation = this.kernelHttp.translation.createTranslation(this);
@@ -60,7 +61,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       // session
       this.session = null;
       this.sessionService = this.get("sessions");
-      this.sessionAutoStart = this.sessionService.settings.start;
+      this.sessionAutoStart = this.sessionService.sessionAutoStart;
       //parse cookies
       this.cookies = {};
       this.parseCookies();

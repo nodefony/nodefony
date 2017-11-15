@@ -87,7 +87,7 @@ statics:
 #
 
 session:
-  start:                  "autostart"         #"autostart"
+  start:                  false               # false || true || Name Session Context 
   use_strict_mode:        true
   name:                   "nodefony"
   handler:                files               # files | sequelize | memcached  "nodefony.session.storage"

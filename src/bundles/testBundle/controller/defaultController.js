@@ -1,8 +1,8 @@
 const lib = require("./lib.js");
 
 const flush = function (context, i) {
-  context.flush("sboob : " + i);
-  console.log("sboob : " + i);
+  context.flush("flush : " + i);
+  console.log("flush : " + i);
 };
 
 /**
@@ -11,6 +11,10 @@ module.exports = class defaultController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
+    // start session for all actions
+    this.startSession();
+
+
     /*let i = 0;
     //flush(this.context, i);
     let interval = setInterval(() => {
@@ -20,6 +24,16 @@ module.exports = class defaultController extends nodefony.controller {
       clearInterval(interval);
       console.log("pass onrequestEnd");
     });*/
+
+    /*let cookie = new nodefony.cookies.cookie("sboob", JSON.stringify({
+      "foo": "bar"
+    }), {
+      signed: true,
+      secure: true,
+      path: "/test"
+    });*/
+    //this.response.addCookie(cookie);
+    //console.log(this.context.cookies.sboob.unsign());
 
   }
 
@@ -60,7 +74,6 @@ module.exports = class defaultController extends nodefony.controller {
    *    DEMO WEBSOCKET
    */
   websoketAction(message) {
-    var context = this.getContext();
 
     switch (this.getMethod()) {
     case "WEBSOCKET":
@@ -74,7 +87,7 @@ module.exports = class defaultController extends nodefony.controller {
         var id = setInterval(() => {
           var mess = "I am a  message " + i + "\n";
           this.logger("SEND TO CLIENT :" + mess, "INFO");
-          //context.send(mess);
+          //this.context.send(mess);
           this.renderResponse(mess);
           i++;
         }, 1000);
@@ -82,7 +95,7 @@ module.exports = class defaultController extends nodefony.controller {
         setTimeout(() => {
           clearInterval(id);
           // close reason , descripton
-          context.close(1000, "NODEFONY CONTROLLER CLOSE SOCKET");
+          this.context.close(1000, "NODEFONY CONTROLLER CLOSE SOCKET");
           id = null;
         }, 10000);
         this.context.listen(this, "onClose", () => {
