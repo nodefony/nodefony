@@ -444,6 +444,7 @@ module.exports = class httpKernel extends nodefony.Service {
       return this.handleHttp(container, request, response, type);
     case "WEBSOCKET":
     case "WEBSOCKET SECURE":
+    case "WEBSOCKET2":
       return this.handleWebsocket(container, request, type);
     }
   }

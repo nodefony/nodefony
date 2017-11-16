@@ -106,7 +106,7 @@ module.exports = class http2Server extends nodefony.Service {
     });
 
     this.server.on('stream', (stream, hearder) => {
-      console.log("pass stream ")
+      //console.log("pass stream ")
       //this.httpKernel.onHttp2Request(request, response, this.type);
     });
 
@@ -117,5 +117,34 @@ module.exports = class http2Server extends nodefony.Service {
       this.bundle.fire("onServersReady", this.type, this);
     });
 
+    this.server.on("error", (error) => {
+      let httpError = "server HTTP2 Error : " + error.errno;
+      switch (error.errno) {
+      case "ENOTFOUND":
+        this.logger(new Error(httpError + " CHECK DOMAIN IN /etc/hosts unable to connect to : " + this.domain), "CRITIC");
+        break;
+      case "EADDRINUSE":
+        this.logger(new Error("Domain : " + this.domain + " Port : " + this.port + " ==> " + error), "CRITIC");
+        setTimeout(() => {
+          this.server.close();
+        }, 1000);
+        break;
+      default:
+        this.logger(new Error(httpError), "CRITIC");
+      }
+    });
+
+    this.server.on("clientError", (e, socket) => {
+      this.fire("onClientError", e, socket);
+    });
+
+    this.listen(this, "onTerminate", () => {
+      if (this.server) {
+        this.server.close(() => {
+          this.logger(" SHUTDOWN HTTP2  Server is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
+        });
+      }
+    });
+    return this.server;
   }
 };

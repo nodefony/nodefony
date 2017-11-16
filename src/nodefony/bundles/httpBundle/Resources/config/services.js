@@ -27,6 +27,10 @@ module.exports = {
     class: nodefony.services.websocketServerSecure,
     arguments: ["@httpKernel"]
   },
+  websocket2Server: {
+    class: nodefony.services.websocket2Server,
+    arguments: ["@httpKernel"]
+  },
   sessions: {
     class: nodefony.services.sessions,
     arguments: ["@httpKernel"]
