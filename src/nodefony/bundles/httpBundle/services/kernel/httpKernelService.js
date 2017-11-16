@@ -513,9 +513,6 @@ module.exports = class httpKernel extends nodefony.Service {
     }
   }
 
-  startSession(context, sessionContext) {
-
-  }
 
   onWebsocketRequest(request, type) {
     if (request.resourceURL.path && this.sockjs && request.resourceURL.path.match(this.sockjs.regPrefix)) {
@@ -535,6 +532,7 @@ module.exports = class httpKernel extends nodefony.Service {
     context.listen(this, "onError", this.onError);
     let resolver = null;
     let next = null;
+    let controller = null;
     context.once('onConnect', (context) => {
       if (this.firewall) {
         if (!resolver.bypassFirewall) {
@@ -563,7 +561,10 @@ module.exports = class httpKernel extends nodefony.Service {
       resolver = this.router.resolve(context);
       if (resolver.resolve) {
         context.resolver = resolver;
-        resolver.newController(container, context);
+        controller = resolver.newController(container, context);
+        if (controller.sessionAutoStart) {
+          context.sessionAutoStart = controller.sessionAutoStart;
+        }
       } else {
         let error = new Error("Not Found");
         error.code = 404;

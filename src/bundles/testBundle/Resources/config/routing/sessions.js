@@ -1,5 +1,5 @@
 module.exports = {
-  session: {
+  /*session: {
     pattern: "/test/unit/session/{type}",
     defaults: {
       controller: "testBundle:session:session",
@@ -8,5 +8,5 @@ module.exports = {
     requirements: {
       method: ["GET", "POST", "WEBSOCKET"]
     }
-  }
+  }*/
 };

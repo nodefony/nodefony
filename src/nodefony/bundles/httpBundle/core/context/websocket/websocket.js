@@ -27,7 +27,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       this.protocol = (type === "WEBSOCKET SECURE") ? "wss" : "ws";
       this.isJson = true;
       this.kernelHttp = this.get("httpKernel");
-      this.requestEnded = true;
+      this.requestEnded = false;
       this.response = new nodefony.wsResponse(null, this.container, this.type);
       //I18n
       this.translation = this.kernelHttp.translation.createTranslation(this);
@@ -102,6 +102,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       this.response.setConnection(this.connection);
       //this.response = new nodefony.wsResponse(this.connection, this.container, this.type);
       this.connection.on('close', onClose.bind(this));
+      this.requestEnded = true;
       this.fire("onConnect", this, this.connection);
       this.logger("Connection origin : " + this.originUrl.host + " Protocol : " + acceptedProtocol || "Not Defined", "DEBUG");
       // LISTEN EVENTS SOCKET
