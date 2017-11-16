@@ -388,8 +388,8 @@ module.exports = class httpKernel extends nodefony.Service {
       exception.code = st.code;
       exception.message = st.message;
     } else {
-      this.logger(exception, "ERROR", context.method);
       context.fire("onFinish", context);
+      this.logger(exception, "ERROR", context.method);
       return;
     }
     this.logger(exception, "ERROR", context.method);
