@@ -241,6 +241,7 @@ module.exports = nodefony.register("kernel", function () {
           this.setParameters("kernel", this.settings);
           this.httpPort = result.system.httpPort || null;
           this.httpsPort = result.system.httpsPort || null;
+          this.http2Port = result.system.http2Port || null;
           this.domain = result.system.domain || null;
           this.hostname = result.system.domain || null;
           this.hostHttp = this.hostname + ":" + this.httpPort;
@@ -421,6 +422,7 @@ module.exports = nodefony.register("kernel", function () {
           // create HTTP server
           let http = null;
           let https = null;
+          let http2 = null;
           try {
             if (this.settings.system.servers.http) {
               http = this.get("httpServer").createServer();
@@ -436,6 +438,10 @@ module.exports = nodefony.register("kernel", function () {
             // create WEBSOCKET SECURE server
             if (this.settings.system.servers.wss) {
               this.get("websocketServerSecure").createServer(https);
+            }
+            // create HTTP2 server
+            if (this.settings.system.servers.http2) {
+              this.get("http2Server").createServer();
             }
           } catch (e) {
             this.logger(e, "ERROR");

@@ -436,6 +436,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     switch (context.type) {
     case "HTTP":
     case "HTTPS":
+    case "HTTP2":
       this.httpRequest(context);
       break;
     case "WEBSOCKET":

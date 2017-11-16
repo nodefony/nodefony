@@ -3,7 +3,7 @@ nodefony.register.call(nodefony.context, "http", function () {
   const Http = class Http extends nodefony.Service {
 
     constructor(container, request, response, type) {
-      super("HTTP CONTEXT", container);
+      super(type + " CONTEXT", container);
       this.type = type;
       this.set("context", this);
       this.kernelHttp = this.get("httpKernel");
@@ -13,11 +13,15 @@ nodefony.register.call(nodefony.context, "http", function () {
       //I18n
       this.translation = this.kernelHttp.translation.createTranslation(this);
       this.set("translation", this.translation);
-      this.protocol = (type === "HTTPS") ? "https" : "http";
+      this.protocol = (type === "HTTPS" || type === "HTTP2") ? "https" : "http";
       this.resolver = null;
       this.nbCallController = 0;
       this.uploadService = this.get("upload");
-      this.request = new nodefony.Request(request, this);
+      if (this.type === "HTTP2") {
+        this.request = new nodefony.Request2(request, this);
+      } else {
+        this.request = new nodefony.Request(request, this);
+      }
       this.requestEnded = false;
       this.once("onRequestEnd", () => {
         this.requestEnded = true;

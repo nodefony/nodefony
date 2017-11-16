@@ -25,6 +25,7 @@ module.exports = function () {
   context.async = require('async');
   context.https = require('https');
   context.http = require('http');
+  context.http2 = require('http2');
   context.nodedomain = require('domain');
   context.WebSocketServer = require('websocket');
   context.Promise = require('promise');

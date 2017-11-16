@@ -137,6 +137,9 @@ module.exports = class security extends nodefony.Service {
       case "HTTP":
         this.httpReady = this.get("httpServer").ready;
         break;
+      case "HTTP2":
+        this.httpsReady = this.get("http2Server").ready;
+        break;
       }
     });
 
@@ -144,6 +147,7 @@ module.exports = class security extends nodefony.Service {
       switch (context.type) {
       case "HTTPS":
       case "HTTP":
+      case "HTTP2":
         context.response.setHeaders(this.settings[context.protocol]);
         context.once('onRequestEnd', () => {
           return this.handle(context);

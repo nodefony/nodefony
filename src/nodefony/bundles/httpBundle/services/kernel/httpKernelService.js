@@ -34,7 +34,8 @@ module.exports = class httpKernel extends nodefony.Service {
       this.bundleSettings = this.getParameters("bundles.http");
       this.responseTimeout = {
         HTTP: this.bundleSettings.http.responseTimeout,
-        HTTPS: this.bundleSettings.https.responseTimeout
+        HTTPS: this.bundleSettings.https.responseTimeout,
+        HTTP2: this.bundleSettings.http2.responseTimeout
       };
       this.closeTimeOutWs = {
         WS: this.bundleSettings.websocket.closeTimeout,
@@ -428,6 +429,10 @@ module.exports = class httpKernel extends nodefony.Service {
     }
   }
 
+  onHttp2Request(stream, headers, type) {
+    this.fire("onServerRequest", stream, headers, type);
+  }
+
   handle(request, response, type) {
     // SCOPE REQUEST ;
     let container = this.container.enterScope("request");
@@ -435,6 +440,7 @@ module.exports = class httpKernel extends nodefony.Service {
     switch (type) {
     case "HTTP":
     case "HTTPS":
+    case "HTTP2":
       return this.handleHttp(container, request, response, type);
     case "WEBSOCKET":
     case "WEBSOCKET SECURE":
@@ -443,7 +449,12 @@ module.exports = class httpKernel extends nodefony.Service {
   }
 
   handleHttp(container, request, response, type) {
-    let context = new nodefony.context.http(container, request, response, type);
+    let context = null;
+    if (type === "HTTP2") {
+      context = new nodefony.context.http(container, request, response, type);
+    } else {
+      context = new nodefony.context.http2(container, request, response, type);
+    }
     //request events
     context.once("onError", this.onError.bind(this));
     let resolver = null;

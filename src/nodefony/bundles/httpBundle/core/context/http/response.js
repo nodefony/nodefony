@@ -3,7 +3,7 @@ module.exports = nodefony.register("Response", function () {
   const Response = class Response {
 
     constructor(response, container) {
-      if (response instanceof http.ServerResponse) {
+      if (response instanceof http.ServerResponse || response instanceof http2.Http2ServerResponse) {
         this.response = response;
       }
       this.context = container.get('context');

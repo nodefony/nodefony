@@ -8,6 +8,7 @@ system:
     - "^127.0.0.1$"
   httpPort                      : 5151
   httpsPort                     : 5152
+  http2Port                     : 5153
   statics                       : true
   security                      : true
   realtime                      : true
@@ -19,6 +20,7 @@ system:
   servers:
     http                        : true
     https	                      : true
+    http2	                      : true
     ws			                    : true
     wss			                    : true
     certificats:
