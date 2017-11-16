@@ -23,7 +23,7 @@ describe("BUNDLE TEST", function () {
       if (global.startSesion === false) {
         var url = global.options.url;
         var options = nodefony.extend({}, global.options, {
-          url: url + "/test/unit/session"
+          url: url + "/test/unit/session/none"
         });
         request(options, (error, res, body) => {
           if (error) {
@@ -56,12 +56,12 @@ describe("BUNDLE TEST", function () {
             throw e;
           }
         }
-        var res = JSON.parse(body);
-        assert.deepStrictEqual(res.id, id);
-        assert.deepStrictEqual(res.name, "nodefony");
-        assert.deepStrictEqual(res.strategy, "migrate");
-        assert.deepStrictEqual(res.contextSession, "default");
-        assert.deepStrictEqual(res.status, "active");
+        let ret = JSON.parse(body);
+        assert.deepStrictEqual(ret.id, id);
+        assert.deepStrictEqual(ret.name, "nodefony");
+        assert.deepStrictEqual(ret.strategy, "migrate");
+        assert.deepStrictEqual(ret.contextSession, "default");
+        assert.deepStrictEqual(ret.status, "active");
         done();
       });
     });
@@ -82,13 +82,13 @@ describe("BUNDLE TEST", function () {
             throw e;
           }
         }
-        var res = JSON.parse(body);
-        assert.deepStrictEqual(res.id, id);
-        assert.notEqual(res.oldId, id);
-        assert.deepStrictEqual(res.name, "nodefony");
-        assert.deepStrictEqual(res.strategy, "migrate");
-        assert.deepStrictEqual(res.contextSession, "default");
-        assert.deepStrictEqual(res.status, "active");
+        let ret = JSON.parse(body);
+        assert.deepStrictEqual(ret.id, id);
+        assert.notEqual(ret.oldId, id);
+        assert.deepStrictEqual(ret.name, "nodefony");
+        assert.deepStrictEqual(ret.strategy, "migrate");
+        assert.deepStrictEqual(ret.contextSession, "default");
+        assert.deepStrictEqual(ret.status, "active");
         done();
       });
     });
@@ -109,13 +109,13 @@ describe("BUNDLE TEST", function () {
             throw e;
           }
         }
-        var res = JSON.parse(body);
-        assert.deepStrictEqual(res.id, id);
-        assert.notEqual(res.oldId, id);
-        assert.deepStrictEqual(res.name, "nodefony");
-        assert.deepStrictEqual(res.strategy, "migrate");
-        assert.deepStrictEqual(res.contextSession, "default");
-        assert.deepStrictEqual(res.status, "active");
+        let ret = JSON.parse(body);
+        assert.deepStrictEqual(ret.id, id);
+        assert.notEqual(ret.oldId, id);
+        assert.deepStrictEqual(ret.name, "nodefony");
+        assert.deepStrictEqual(ret.strategy, "migrate");
+        assert.deepStrictEqual(ret.contextSession, "default");
+        assert.deepStrictEqual(ret.status, "active");
         done();
       });
     });
@@ -126,7 +126,7 @@ describe("BUNDLE TEST", function () {
     it("WEBSOCKET", function (done) {
       var url = global.options.urlws;
       var options = nodefony.extend({}, global.options, {
-        url: url + "/test/unit/session"
+        url: url + "/test/unit/session/none"
       });
       var client = new WebSocketClient();
       client.connect(options.url, null, "nodefony", null, {});
@@ -195,7 +195,6 @@ describe("BUNDLE TEST", function () {
         //FIXME try to get cookies with websocket client ????
 
         connection.on("message", (message) => {
-
           var res = JSON.parse(message.utf8Data);
           if (res.foo) {
             return connection.close();

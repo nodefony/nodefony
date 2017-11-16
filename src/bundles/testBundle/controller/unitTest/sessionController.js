@@ -1,22 +1,30 @@
-//var querystring = require('querystring');
-//var blueBird = require("bluebird");
-
+/**
+ *    @Route ("/test/unit")
+ */
 module.exports = class sessionController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
     this.sessionService = this.get("sessions");
+    let route = this.getRoute();
+    let type = this.context.resolver.variables.type;
+    if ((route.name === "test-session") && (type !== "start" && type !== "none")) {
+      this.startSession();
+    }
   }
 
   /**
-   *
-   *	sessionAction
+   *    @Route ("/session/{type}",
+   *      name="test-session",
+   *      defaults={"type" = "callback"})
+   *    @Method ({"GET", "POST", "WEBSOCKET"})
    *
    */
   sessionAction(type, message) {
     if (message) {
       return this.renderResponse(message.utf8Data);
     }
+    let oldId = null;
     switch (type) {
     case "start":
       return this.sessionService.start(this.context).then((session) => {
@@ -31,42 +39,34 @@ module.exports = class sessionController extends nodefony.controller {
         throw e;
       });
     case "invalidate":
-      return this.sessionService.start(this.context).then((session) => {
-        var oldId = session.id;
-        session.invalidate();
-        return this.renderJson({
-          id: session.id,
-          oldId: oldId,
-          status: session.status,
-          contextSession: session.contextSession,
-          strategy: session.strategy,
-          name: session.name
-        });
-      }).catch((e) => {
-        throw e;
+      oldId = this.context.session.id;
+      this.context.session.invalidate();
+      return this.renderJson({
+        id: this.context.session.id,
+        oldId: oldId,
+        status: this.context.session.status,
+        contextSession: this.context.session.contextSession,
+        strategy: this.context.session.strategy,
+        name: this.context.session.name
       });
+
     case "migrate":
-      return this.sessionService.start(this.context).then((session) => {
-        var oldId = session.id;
-        session.migrate();
-        return this.renderJson({
-          id: session.id,
-          oldId: oldId,
-          status: session.status,
-          contextSession: session.contextSession,
-          strategy: session.strategy,
-          name: session.name
-        });
-      }).catch((e) => {
-        throw e;
+      oldId = this.context.session.id;
+      this.context.session.migrate();
+      return this.renderJson({
+        id: this.context.session.id,
+        oldId: oldId,
+        status: this.context.session.status,
+        contextSession: this.context.session.contextSession,
+        strategy: this.context.session.strategy,
+        name: this.context.session.name
       });
     default:
-      let id = null;
       if (this.context.session) {
-        id = this.context.session.id;
+        oldId = this.context.session.id;
       }
       return this.renderJson({
-        id: id
+        id: oldId
       });
     }
   }

@@ -21,26 +21,28 @@ module.exports = nodefony.register("Route", function () {
       this.host = null;
       this.defaults = {};
       this.requirements = {};
-      //TODO
-      this.options = {};
-
-      //TODO http | websocket
-      this.schemes = null;
-      if (obj) {
-        this.setName(obj.id);
-        this.setPattern(obj.pattern);
-        this.compile();
-      }
       this.variables = [];
       this.pattern = null;
       this.bypassFirewall = false;
       this.defaultLang = null;
       this.hash = null;
       this.prefix = "";
+
+      //TODO
+      this.options = {};
+      //TODO http | websocket
+      this.schemes = null;
+
+      if (obj) {
+        this.setName(obj.id);
+        this.setPrefix(obj.prefix);
+        this.setPattern(obj.pattern);
+        this.setHostname(obj.host);
+        this.compile();
+      }
     }
 
     generateId() {
-      //console.log(  "GENERATE : " + JSON.stringify(this) );
       this.hash = crypto.createHash("md5").update(JSON.stringify(this)).digest("hex");
       return this.hash;
     }
@@ -50,15 +52,23 @@ module.exports = nodefony.register("Route", function () {
     }
 
     setPattern(pattern) {
-      this.path = pattern;
+      if (pattern) {
+        this.path = this.prefix + pattern;
+      } else {
+        this.path = this.prefix + this.path;
+      }
+      return this.path;
     }
 
     setHostname(hostname) {
-      this.host = hostname;
+      this.host = hostname ||  null;
     }
 
     setPrefix(prefix) {
       this.prefix = prefix;
+      if (this.path) {
+        this.setPattern();
+      }
     }
 
     addDefault(key, value) {
@@ -135,7 +145,7 @@ module.exports = nodefony.register("Route", function () {
       if (!this.path) {
         return;
       }
-      const pathPrefix = this.prefix + this.path.replace("//", "/");
+      const pathPrefix = this.path.replace("//", "/");
       let pattern = pathPrefix.replace(regRoute, (match, slash, dot, key, capture, opt, offset) => {
         let incl = (pathPrefix[match.length + offset] || '/') === '/';
         this.variables.push(key);

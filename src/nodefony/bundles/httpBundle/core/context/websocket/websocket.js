@@ -27,7 +27,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       this.protocol = (type === "WEBSOCKET SECURE") ? "wss" : "ws";
       this.isJson = true;
       this.kernelHttp = this.get("httpKernel");
-      this.requestEnded = true;
+      this.requestEnded = false;
       this.response = new nodefony.wsResponse(null, this.container, this.type);
       //I18n
       this.translation = this.kernelHttp.translation.createTranslation(this);
@@ -102,6 +102,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       this.response.setConnection(this.connection);
       //this.response = new nodefony.wsResponse(this.connection, this.container, this.type);
       this.connection.on('close', onClose.bind(this));
+      this.requestEnded = true;
       this.fire("onConnect", this, this.connection);
       this.logger("Connection origin : " + this.originUrl.host + " Protocol : " + acceptedProtocol || "Not Defined", "DEBUG");
       // LISTEN EVENTS SOCKET
@@ -166,11 +167,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       if (this.response) {
         this.response.clean();
       }
-      //delete  this.response ;
       this.response = null;
-      //delete   this.notificationsCenter ;
-      this.notificationsCenter = null;
-      //delete this.cookies ;
       this.cookies = null;
       if (this.translation) {
         delete this.translation;
@@ -178,6 +175,16 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       if (this.cookieSession) {
         delete this.cookieSession;
       }
+      if (this.resolver) {
+        this.resolver.clean();
+      }
+      this.resolver = null;
+      delete this.resolver;
+      this.kernelHttp = null;
+      delete this.kernelHttp;
+      this.router = null;
+      delete this.router;
+      //super.clean();
     }
 
     flashTwig(key) {
