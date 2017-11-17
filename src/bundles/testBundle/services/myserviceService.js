@@ -1,3 +1,4 @@
+const myClass = require("./myDeps.js");
 module.exports = class myservice extends nodefony.Service {
 
   constructor(container, router, httpKernel, domain) {
@@ -10,6 +11,7 @@ module.exports = class myservice extends nodefony.Service {
     this.ele = null;
     this.ele2 = null;
     this.ele3 = null;
+    this.myClass = new myClass("cci@gmail.com");
   }
 
   boot(domain, ele, https) {
@@ -22,4 +24,10 @@ module.exports = class myservice extends nodefony.Service {
     this.ele3 = ele3;
     this.http = ele4;
   }
+
+  clean() {
+    this.clean = true;
+    super.clean();
+  }
+
 };

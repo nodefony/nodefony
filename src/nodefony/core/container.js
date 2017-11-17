@@ -53,8 +53,8 @@ module.exports = nodefony.register("Container", function () {
   const Container = class Container {
 
     constructor(services, parameters) {
-      this.protoService = function () {};
-      this.protoParameters = function () {};
+      this.protoService = function protoService() {};
+      this.protoParameters = function protoParameters() {};
       this.scope = {};
       this.services = new this.protoService();
       if (services && typeof services === "object") {
@@ -72,8 +72,12 @@ module.exports = nodefony.register("Container", function () {
 
     logger(pci, severity, msgid, msg) {
       let syslog = this.get("syslog");
+      if (!syslog) {
+        console.log(pci);
+        return;
+      }
       if (!msgid) {
-        msgid = "CONTAINER SERVICES ";
+        msgid = "SERVICES CONTAINER ";
       }
       return syslog.logger(pci, severity, msgid, msg);
     }
@@ -87,7 +91,23 @@ module.exports = nodefony.register("Container", function () {
         return this.services[name];
       }
       return null;
-      //this.logger("GET : " + name+" don't exist", "WARNING");
+    }
+
+    remove(name) {
+      if (this.get(name)) {
+        delete this.services[name];
+        if (this.protoService.prototype[name]) {
+          delete this.protoService.prototype[name];
+        }
+        for (let scope in this.scope) {
+          let subScopes = this.scope[scope];
+          for (let subScope in subScopes) {
+            subScopes[subScope].remove(name);
+          }
+        }
+        return true;
+      }
+      return false;
     }
 
     has(name) {
