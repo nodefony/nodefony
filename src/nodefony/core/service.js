@@ -216,6 +216,19 @@ module.exports = nodefony.register("Service", function () {
       return null;
     }
 
+    remove(name) {
+      if (this.container) {
+        let ele = this.get(name);
+        if (ele) {
+          if (ele instanceof nodefony.Service) {
+            ele.clean();
+          }
+          this.container.remove(name);
+        }
+      }
+      return false;
+    }
+
     getParameters() {
       return this.container.getParameters.apply(this.container, arguments);
     }

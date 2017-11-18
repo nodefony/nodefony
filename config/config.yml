@@ -34,6 +34,8 @@ system:
   bundles:
     test                        : "src/bundles/testBundle"
 
+  #################
+  # SYSLOG NODEFONY
   log:
     active                      : true
 

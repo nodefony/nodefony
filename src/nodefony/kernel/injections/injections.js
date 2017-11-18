@@ -152,15 +152,18 @@ module.exports = nodefony.register("injection", function () {
       super(name, container);
       this.services = nodefony.services;
       try {
-        this.Class = this.getServiceClass(service);
-        this.className = this.getServiceName(this.Class);
+        this.getServiceClass(service);
+        this.getServiceName(this.Class);
         this.classArgs = Injector.getArguments.call(this.Class);
         this.injections = this.findInjections(service.arguments);
         this.calls = this.getServiceCall(service);
         this.setParameters("services." + this.name, {
           class: this.Class,
           name: this.name,
-          orderArguments: false,
+          scope: this.container.id,
+          //className: this.className,
+          //orderArguments: false,
+          injections: service.arguments,
           calls: service.calls
         });
       } catch (e) {
@@ -187,17 +190,24 @@ module.exports = nodefony.register("injection", function () {
       if (!Class) {
         throw new Error("Service Name " + this.className + " class not found");
       }
-      return Class;
+      return this.Class = Class;
     }
 
     getServiceName(Class) {
+      let name = null;
       if (Class) {
-        let res = regService.exec(Class.name);
-        if (res) {
-          return res[1];
-        }
-        return Class.name;
+        name = Class.name;
+      } else {
+        name = this.Class.name;
       }
+      if (name) {
+        let res = regService.exec(name);
+        if (res) {
+          return this.className = res[1];
+        }
+        return this.className = name;
+      }
+      return null;
     }
 
     getServiceCall(service) {
@@ -226,7 +236,7 @@ module.exports = nodefony.register("injection", function () {
       return ele;
     }
 
-    startService() {
+    startService(restart) {
       try {
         let instance = this.reflect();
         this.set(this.name, instance);
@@ -240,10 +250,24 @@ module.exports = nodefony.register("injection", function () {
             }
           }
         }
-        instance.logger('STARTED ', 'DEBUG');
+        let log = "STARTED";
+        if (restart) {
+          log = "RESTARTED";
+        }
+        instance.logger(log, 'DEBUG');
         return instance;
       } catch (e) {
         this.logger(e, "ERROR");
+        throw e;
+      }
+    }
+
+    restartService() {
+      this.logger("RESTART : " + this.name, "INFO");
+      try {
+        this.remove(this.name);
+        return this.startService(true);
+      } catch (e) {
         throw e;
       }
     }
@@ -271,7 +295,7 @@ module.exports = nodefony.register("injection", function () {
       try {
         return Reflect.construct(this.Class, this.injections);
       } catch (e) {
-        console.log("ERRROR SERVICE CLASS " + this.name + " " + e.message, "ERROR");
+        this.logger("ERRROR SERVICE CLASS " + this.name + " " + e.message, "ERROR");
         throw e;
       }
     }
@@ -329,8 +353,8 @@ module.exports = nodefony.register("injection", function () {
   const Injection = class Injection extends nodefony.Service {
 
     constructor(container) {
-
       super("injection", container, container.get("notificationsCenter"));
+      this.injectors = {};
 
       this.reader = function (context) {
         const func = context.get("reader").loadPlugin("injection", pluginReader);
@@ -355,10 +379,24 @@ module.exports = nodefony.register("injection", function () {
 
     setInjector(name, service) {
       try {
-        return new Injector(name, service, this.container);
+        let injector = new Injector(name, service, this.container);
+        if (this.kernel.environment === "dev" && this.kernel.type !== "CONSOLE") {
+          if (this.injectors[name]) {
+            this.logger("Service name : " + name + " Already exist ", "WARNING");
+          }
+          this.injectors[name] = injector;
+        }
+        return injector;
       } catch (e) {
         throw e;
       }
+    }
+
+    getInjector(name) {
+      if (this.injectors[name]) {
+        return this.injectors[name];
+      }
+      return null;
     }
 
   };

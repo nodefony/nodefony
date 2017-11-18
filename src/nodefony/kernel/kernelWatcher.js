@@ -6,26 +6,25 @@ module.exports = nodefony.register("kernelWatcher", function () {
    *
    */
   const defaultWatcherSettings = {
-    persistent: true,
+    persistent: false,
     followSymlinks: true,
     alwaysStat: false,
     depth: 50,
     //usePolling: true,
-    //interval: 100,
+    //interval: 500,
     //binaryInterval: 300,
+    awaitWriteFinish: true,
     atomic: true // or a custom 'atomicity delay', in milliseconds (default 100)
   };
 
   const Watcher = class Watcher extends nodefony.watcher {
     constructor(Path, settings, bundle) {
-
       super(Path, nodefony.extend(true, {}, defaultWatcherSettings, settings), bundle.container);
-
       if (bundle) {
         this.bundle = bundle;
         this.cwd = bundle.path;
       }
-      //this.router = this.get("router");
+      this.injectionService = this.get("injection");
     }
 
     logger(payload, severity, msgid, msg) {
@@ -282,6 +281,57 @@ module.exports = nodefony.register("kernelWatcher", function () {
         }catch(e){
         this.logger(e, "ERROR", event);
       }*/
+          break;
+        }
+      });
+    }
+    listenWatcherServices() {
+      this.on('all', (event, Path) => {
+        switch (event) {
+        case "addDir":
+          this.logger(Path, "INFO", event);
+          this.logger("Reboot Server to add services ", "WARNING");
+          break;
+        case "add":
+          this.logger(Path, "INFO", event);
+          this.logger("Reboot Server to add services ", "WARNING");
+          break;
+        case "change":
+          try {
+            this.logger(Path, "INFO", event);
+            let file = this.cwd + "/" + Path;
+            let basename = path.basename(file);
+            switch (true) {
+              // service
+            case this.bundle.regService.test(basename):
+              let File = new nodefony.fileClass(file);
+              this.bundle.reloadWatcherService(File, file, true);
+              break;
+            default:
+              this.bundle.reloadWatcherService(null, file);
+            }
+            if (this.sockjs) {
+              this.sockjs.sendWatcher("change", file);
+            }
+          } catch (e) {
+            this.logger(e, "ERROR");
+            if (this.sockjs) {
+              this.sockjs.sendWatcher("error", e);
+            }
+          }
+          break;
+        case "error":
+          this.logger(Path, "ERROR", event);
+          if (this.sockjs) {
+            this.sockjs.sendWatcher("error", Path);
+          }
+          break;
+        case "unlinkDir":
+          this.logger(Path, "INFO", event);
+          break;
+        case "unlink":
+          this.logger(Path, "INFO", event);
+          this.logger("Reboot Server to delete services ", "WARNING");
           break;
         }
       });

@@ -168,10 +168,7 @@ module.exports = class router extends nodefony.Service {
         return this.generatePath(name, variables, host);
       } catch (e) {
         this.logger(e, "ERROR");
-        throw {
-          status: 500,
-          error: e.error
-        };
+        return null;
       }
     });
     this.engineTemplate.extendFunction("url", (name, variables, host) => {
@@ -179,50 +176,47 @@ module.exports = class router extends nodefony.Service {
         return this.generatePath(name, variables, host);
       } catch (e) {
         this.logger(e, "ERROR");
-        throw {
-          status: 500,
-          error: e.error
-        };
+        return null;
       }
     });
   }
 
   generatePath(name, variables, host) {
-    let route = this.getRoute(name.replace(/\s/g, ""));
-    let queryString = variables ? variables.queryString : null;
-    if (!route) {
-      throw {
-        error: "no route to host  " + name
-      };
-    }
-    let mypath = route.path.replace(/(.*)\*$/, "\$1");
-    if (route.variables.length) {
-      for (let i = 0; i < route.variables.length; i++) {
-        let ele = route.variables[i];
-        if (variables[ele]) {
-          mypath = mypath.replace("{" + ele + "}", variables[ele]);
-        } else {
-          if (route.defaults[ele]) {
-            mypath = mypath.replace("{" + ele + "}", route.defaults[ele]);
+    try {
+      let route = this.getRoute(name.replace(/\s/g, ""));
+      let queryString = variables ? variables.queryString : null;
+      if (!route) {
+        throw new Error("No route to host " + name);
+      }
+      let mypath = route.path.replace(/(.*)\*$/, "\$1");
+      if (route.variables.length) {
+        for (let i = 0; i < route.variables.length; i++) {
+          let ele = route.variables[i];
+          if (variables[ele]) {
+            mypath = mypath.replace("{" + ele + "}", variables[ele]);
           } else {
-            let txt = "";
-            for (let i = 0; i < route.variables.length; i++) {
-              txt += "{" + route.variables[i] + "} ";
+            if (route.defaults[ele]) {
+              mypath = mypath.replace("{" + ele + "}", route.defaults[ele]);
+            } else {
+              let txt = "";
+              for (let i = 0; i < route.variables.length; i++) {
+                txt += "{" + route.variables[i] + "} ";
+              }
+              throw new Error("router generate path route " + name + " must have variable " + txt);
             }
-            throw {
-              error: "router generate path route " + name + " must have variable " + txt
-            };
           }
         }
       }
+      if (queryString) {
+        mypath += generateQueryString.call(this, variables.queryString, name);
+      }
+      if (host) {
+        return host + mypath;
+      }
+      return mypath;
+    } catch (e) {
+      throw e;
     }
-    if (queryString) {
-      mypath += generateQueryString.call(this, variables.queryString, name);
-    }
-    if (host) {
-      return host + mypath;
-    }
-    return mypath;
   }
 
   getRoute(name) {

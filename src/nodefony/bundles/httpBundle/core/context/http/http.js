@@ -89,7 +89,9 @@ nodefony.register.call(nodefony.context, "http", function () {
         };
         this.logger("PROXY REQUEST x-forwarded VIA : " + this.proxy.proxyVia, "DEBUG");
       }
-      this.crossDomain = this.isCrossDomain();
+      if (this.security) {
+        this.crossDomain = this.isCrossDomain();
+      }
     }
     /*fire(name) {
       console.log(name)

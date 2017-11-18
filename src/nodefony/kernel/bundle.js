@@ -50,6 +50,11 @@ module.exports = nodefony.register("Bundle", function () {
         this.reg = regRoutingFile;
         this.loader = this.bundle.reloadRouting;
         break;
+      case "service":
+        this.path = this.bundle.servicesPath;
+        this.reg = regService;
+        this.loader = this.bundle.reloadService;
+        break;
       default:
         throw new Error("moduleFindDependencies type not valid : " + type);
       }
@@ -119,7 +124,6 @@ module.exports = nodefony.register("Bundle", function () {
       ignored: [
         (string) => {
           let basename = path.basename(string);
-
           let file = checkIngnoreFile(string, basename);
           if (file === true) {
             return true;
@@ -141,7 +145,6 @@ module.exports = nodefony.register("Bundle", function () {
    *  BUNDLE CLASS
    */
   const Bundle = class Bundle extends nodefony.Service {
-
     constructor(name, kernel, container) {
       super(name, container);
       this.logger("\x1b[36m REGISTER BUNDLE : " + this.name + "   \x1b[0m", "DEBUG", this.kernel.cli.clc.magenta("KERNEL"));
@@ -162,6 +165,7 @@ module.exports = nodefony.register("Bundle", function () {
       }
       this.sockjs = this.get("sockjs");
       this.translation = this.get("translation");
+      this.injectionService = this.get("injection");
       this.reader = this.kernel.reader;
       // webpack
       this.webPackConfig = null;
@@ -200,6 +204,7 @@ module.exports = nodefony.register("Bundle", function () {
       // Register Service
       this.servicesPath = path.resolve(this.path, "services");
       this.watcherServices = null;
+      this.regService = regService;
       this.registerServices();
       // read config files
       this.kernel.readConfig.call(this, null, this.resourcesFiles.findByNode("config"), (result) => {
@@ -240,6 +245,7 @@ module.exports = nodefony.register("Bundle", function () {
       let config = false;
       let services = false;
       let entities = false;
+      let regJs = new RegExp(".*\.js$|.*\.es6$|.*\.es7$");
       try {
         switch (typeof this.settings.watch) {
         case "object":
@@ -247,6 +253,7 @@ module.exports = nodefony.register("Bundle", function () {
           views = this.settings.watch.views || false;
           i18n = this.settings.watch.translations || false;
           config = this.settings.watch.config || false;
+          services = this.settings.watch.services || false;
           this.webpackWatch = this.settings.watch.webpack || false;
           break;
         case "boolean":
@@ -254,6 +261,7 @@ module.exports = nodefony.register("Bundle", function () {
           views = this.settings.watch || false;
           i18n = this.settings.watch || false;
           config = this.settings.watch || false;
+          services = false;
           this.webpackWatch = this.settings.watch || false;
           break;
         default:
@@ -262,7 +270,6 @@ module.exports = nodefony.register("Bundle", function () {
         }
         // controllers
         if (controllers) {
-          let regJs = new RegExp(".*\.js$|.*\.es6$|.*\.es7$");
           this.watcherController = new nodefony.kernelWatcher(this.controllersPath, defaultWatcher.call(this, regJs), this);
           this.watcherController.setSockjsServer(this.sockjs);
           this.watcherController.listenWatcherController();
@@ -301,8 +308,18 @@ module.exports = nodefony.register("Bundle", function () {
             this.watcherConfig.close();
           });
         }
-        //entities
         //services
+        if (services) {
+          this.watcherService = new nodefony.kernelWatcher(this.servicesPath, defaultWatcher.call(this, regJs), this);
+          this.watcherService.listenWatcherServices();
+          this.watcherService.setSockjsServer(this.sockjs);
+          this.kernel.on("onTerminate", () => {
+            this.logger("Watching Ended : " + this.watcherService.path, "INFO");
+            this.watcherService.close();
+          });
+        }
+        //entities
+
       } catch (e) {
         throw e;
       }
@@ -453,17 +470,68 @@ module.exports = nodefony.register("Bundle", function () {
       services.forEach((ele) => {
         let res = regService.exec(ele.name);
         if (res) {
-          //let name = res[1] ;
-          let Class = this.loadFile(ele.path, true);
-          if (typeof Class === "function") {
-            Class.prototype.bundle = this;
-            nodefony.services[Class.name] = Class;
-            this.logger("Register Service : " + Class.name, "DEBUG");
-          } else {
-            this.logger("Bundle Register Service : " + ele.path + "  error Service bad format " + typeof Class, "ERROR");
+          try {
+            this.loadService(ele);
+          } catch (e) {
+            this.logger(e, "ERROR");
           }
         }
       });
+    }
+    loadService(ele, force) {
+      try {
+        let Class = this.loadFile(ele.path, force);
+        if (typeof Class === "function") {
+          Class.prototype.bundle = this;
+          if (force) {
+            if (nodefony.services[Class.name]) {
+              delete nodefony.services[Class.name];
+            }
+          }
+          nodefony.services[Class.name] = Class;
+          this.logger("Register Service : " + Class.name, "DEBUG");
+          return Class;
+        } else {
+          throw new Error("Bundle Register Service : " + ele.path + "  error Service bad format " + typeof Class);
+        }
+      } catch (e) {
+        throw e;
+      }
+    }
+
+    reloadService(name, Path, force) {
+      try {
+        let File = new nodefony.fileClass(Path);
+        this.reloadWatcherService(File, Path, force);
+      } catch (e) {
+        throw e;
+      }
+    }
+
+    reloadWatcherService(File, Path, force) {
+      try {
+        if (File) {
+          let Class = this.loadService(File, force);
+          let injector = this.injectionService.getInjector(Class.name);
+          if (injector) {
+            injector.getServiceClass({
+              class: Class
+            });
+            injector.getServiceName();
+            injector.restartService();
+          } else {
+            let error = new Error(Class.name + " Service is not found or not register reboot server or check config file ");
+            throw error;
+          }
+        } else {
+          if (File === null) {
+            let find = new moduleFindDependencies(Path, "service", this);
+            find.reload();
+          }
+        }
+      } catch (e) {
+        throw e;
+      }
     }
 
     findWebPackConfig() {

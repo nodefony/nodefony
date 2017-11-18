@@ -86,17 +86,17 @@ module.exports = class apiController extends nodefony.controller {
       services[service] = {};
       services[service].name = service;
       if (ele) {
-        let inject = "";
+        /*let inject = "";
         let i = 0;
         for (let inj in ele.injections) {
           let esc = i === 0 ? "" : " , ";
           inject += esc + inj;
           i++;
-        }
-        services[service].run = "CONFIG";
+        }*/
+        services[service].run = "INJECTOR";
         services[service].scope = ele.scope === "container" ? "Default container" : ele.scope;
         services[service].calls = ele.calls;
-        services[service].injections = inject;
+        services[service].injections = ele.injections; //inject;
         services[service].properties = ele.properties;
         services[service].orderInjections = ele.orderArguments ? true : false;
       } else {
@@ -104,6 +104,7 @@ module.exports = class apiController extends nodefony.controller {
         services[service].scope = "KERNEL container";
       }
     }
+
     return this.renderRest({
       code: 200,
       type: "SUCCESS",
