@@ -160,7 +160,10 @@ module.exports = nodefony.register("injection", function () {
         this.setParameters("services." + this.name, {
           class: this.Class,
           name: this.name,
-          orderArguments: false,
+          scope: this.container.id,
+          //className: this.className,
+          //orderArguments: false,
+          injections: service.arguments,
           calls: service.calls
         });
       } catch (e) {
