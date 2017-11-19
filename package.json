@@ -93,7 +93,7 @@
     "mocha": "^4.0.1",
     "mysql2": "^1.5.1",
     "node-emoji": "^1.8.1",
-    "node-pre-gyp": "^0.6.38",
+    "node-pre-gyp": "^0.6.39",
     "node-sass": "^4.7.1",
     "nodefony-stage": "^0.1.1",
     "npm": "5.5.1",

@@ -5818,7 +5818,7 @@ node-modules-path@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/node-modules-path/-/node-modules-path-1.0.1.tgz#40096b08ce7ad0ea14680863af449c7c75a5d1c8"
 
-node-pre-gyp@^0.6.36, node-pre-gyp@^0.6.38, node-pre-gyp@~0.6.38:
+node-pre-gyp@^0.6.36, node-pre-gyp@^0.6.39, node-pre-gyp@~0.6.38:
   version "0.6.39"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.6.39.tgz#c00e96860b23c0e1420ac7befc5044e1d78d8649"
   dependencies:
