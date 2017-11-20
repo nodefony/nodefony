@@ -36,10 +36,10 @@
 <h2 name="location" id="location">Routing Location :</h2>
 <div class="doc2">
 	<p>
-		You can find routing configuration in bundle repository under <code>Resources/config/routing.yml</code> directory.
+		You can find routing configuration in bundle repository under <code>Resources/config/</code> directory.
 
 		<div class="alert alert-warning" role="alert">
-			Nodefony <strong>Route Annotations</strong> in files controller is not implemented ! </br>
+			Nodefony <strong>Route Annotations</strong> in files controller is now implemented ! </br>
 		</div>
 
 	</p>
@@ -49,25 +49,63 @@ $ ll src/nodefony/bundles/documentationBundle/Resources/config/
 
 total 24
 -rwxr-xr-x  1 cci  staff  1060 10 oct 09:37 config.yml
--rwxr-xr-x  1 cci  staff  2036 10 oct 09:37 <strong>routing.yml</strong>
--rw-r--r--  1 cci  staff   536 10 oct 09:37 services.xml
-
+-rwxr-xr-x  1 cci  staff  2036 10 oct 09:37 <strong>routing.js</strong>
+-rw-r--r--  1 cci  staff   536 10 oct 09:37 services.js
+...
 	</pre>
 </div>
 
 
-<h2 name="autoload" id="autoload">Autoloader  :</h2>
-<h3>File  routing.yml  :</h3>
-<div class="doc3 ">
-
-<p>
-	The nodefony Autoloader  load  configuration file in <code>Resources/config</code> directory which match with <strong>'routing.yml'</strong> <br>
-
-</p>
-
-	<pre>
-##########  ROUTING  documentationBundle  ############
-
+<div  class="panel panel-info">
+	<div class="panel-heading"><strong>Autoloader Routing files</strong>  </div>
+	<div class="panel-body ">
+		<ul class="nav nav-tabs">
+						<li role="presentation" class="active"><a data-target="#js" data-toggle="tab">routing.js</a></li>
+						<li role="presentation" ><a data-target="#yml" data-toggle="tab">routing.yml</a></li>
+						<li role="presentation" ><a data-target="#annotations" data-toggle="tab">Annotations</a></li>
+		</ul>
+		<div class="tab-content ">
+			<div id="js" class="tab-pane active">
+				<h3>File  routing.js  :</h3>
+				<div class="doc3 ">
+					<p>
+						The nodefony Autoloader  load  configuration file in <code>Resources/config</code> directory which match with <strong>'routing.js'</strong> <br>
+					</p>
+				</div>
+				<pre>
+module.exports = {
+	home:{
+		pattern:  "/home",
+		defaults: {
+			controller: "appBundle:default:index"
+		},
+		requirements: {
+			method: ["GET"]
+		}
+	},
+	myroute: {
+		pattern: "/myroute/{page}/{elements}",
+		defaults: {
+			controller: "appBundle:default:myroute",
+			page: 13,
+			elements: "myDefaultValue"
+		},
+		requirements: {
+			method: ["GET"],
+			page: /^\d\d$/
+		}
+	}
+};
+				</pre>
+			</div>
+			<div id="yml" class="tab-pane">
+				<h3>File  routing.yml  :</h3>
+				<div class="doc3 ">
+				<p>
+					The nodefony Autoloader  load  configuration file in <code>Resources/config</code> directory which match with <strong>'routing.yml'</strong> <br>
+				</p>
+				</div>
+					<pre>
 documentation:
   pattern:  /documentation
   defaults: {controller: "documentationBundle:default:index"}
@@ -102,8 +140,64 @@ documentation-git-getStatus:
 documentation-git-getBranch:
   pattern:  /api/git/getCurrentBranch
   defaults: {controller: "documentationBundle:git:getCurrentBranch"}
-	</pre>
+					</pre>
+			</div>
+			<div id="annotations" class="tab-pane">
+				<h3>File  annotationController.js  :</h3>
+				<div class="doc3 ">
+				<p>
+					The nodefony Autoloader Parse Annotations in  Controller File'</strong> <br>
+				</p>
+				</div>
+				<pre>
+/**
+ *    @Route ("/test/annotate")
+ *    @Host ("nodefony.com")
+ */
+module.exports = class annotationController extends nodefony.controller {
 
+  constructor(container, context) {
+    super(container, context);
+  }
+
+  /**
+   *   @Route ("/requirements", name="test-annotation-requirements", defaults={"id" = 5},requirements={"id" = "\d+"})
+   *   @Method ({"GET","WEBSOCKET"})
+   */
+  annotationAction(id) {
+    return this.render("testBundle::index.html.twig", {
+      id: id
+    });
+  }
+
+  /**
+   *    @Method ({ "POST", "PUT", "DELETE"})
+   *    @Route ("/noname/{id}", name="", defaults={"id" = 5},requirements={"id" = "\d+"})
+   */
+  annotation2Action(id) {
+    return this.render("testBundle::index.html.twig", {
+      id: id
+    });
+  }
+
+  /**
+   *    @Method ({"GET", "POST"})
+   *    @Route ("/block/{id}",
+   *      name="test-annotation-block",
+   *      defaults={"id" = 5},
+   *      requirements={"id" = "\d+"})
+   *
+   */
+  annotation3Action(id) {
+    return this.render("testBundle::index.html.twig", {
+      id: id
+    });
+  }
+};
+				</pre>
+			</div>
+		</div>
+	</div>
 </div>
 
 <h3>Starting Log   :</h3>
@@ -146,24 +240,70 @@ Tue Oct 11 2016 13:12:05 DEBUG SERVICE INJECTION  : START SERVICE webCrawler( co
   	  		<div class="doc3">
   		  		<div class="alert alert-warning" role="alert">
   			  		<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-					In  Developement mode When you <strong>edit routing.yml </strong> kernel watcher listen this file  </br>
+					In  Developement mode When you <strong>edit routing Files </strong> kernel watcher reload config  </br>
 
   		  		</div>
   	  		</div>
-
 			<p>
 	  		Location : <code>Resources/config/routing.yml</code>
 			</p>
 			<pre>
 routeName:
-  pattern:	pattern
-  defaults:	{controller: "nameBundle:controller:action"}
-  requirements:
-    method:	GET,DELETE,POST,PUT,WEBSOCKET
-  host:		domain.com
-  firewalls:
-    bypass:     true
-
+	pattern:	pattern
+	defaults:	{controller: "nameBundle:controller:action"}
+	prefix: 	test
+	requirements:
+		method:	GET,DELETE,POST,PUT,WEBSOCKET
+	host:		domain.com
+	firewalls:
+		bypass:     true
+			</pre>
+			<p>
+	  		Location : <code>Resources/config/routing.js</code>
+			</p>
+			<pre>
+routeName:{
+	pattern:	"pattern",
+	prefix:		"test",
+	defaults:	{
+		controller: "nameBundle:controller:action"
+	},
+	requirements:{
+		method:	["GET","DELETE","POST","PUT","WEBSOCKET"],
+	},
+	host:		"domain.com",
+	firewalls:{
+		bypass:     true
+	}
+}
+			</pre>
+			<p>
+	  		Location : <code>controller/controllerController.js</code>
+			</p>
+			<pre>
+/**
+*    @Route ("/test")
+*    @Host ("nodefony.com")
+*/
+module.exports = class controllerController extends nodefony.controller {
+	constructor(container, context) {
+		super(container, context);
+	}
+	/**
+	*
+	*    @Route ("pattern",
+	*      name="routeName",
+	*      defaults={"id" = 5},
+	*      requirements={"id" = "\d+"})
+	*		@Method ({"GET","DELETE","POST","PUT","WEBSOCKET"})
+	*
+	*/
+	actionAction(id) {
+		return this.render("appBundle::index.html.twig", {
+			id: id
+		});
+	}
+}
 			</pre>
 
 		</div>
@@ -226,7 +366,7 @@ routeName:
 						<li>WEBSOCKET</li>
 					</ul>
 				</td>
-		  		<td>String</td>
+		  		<td>String, Array</td>
 		  		<td><span class="badge">All</span></td>
 	  		</tr>
 
@@ -255,9 +395,6 @@ routeName:
 					<span class="badge">false</span>
 				</td>
 	  		</tr>
-
-
-
 
 	  		</tbody>
   		</table>
@@ -326,37 +463,31 @@ documentation-version:
 		<code>documentationBundle/controller/defaultController.js</code> :
 	</p>
 	<pre>
-module.exports = nodefony.registerController("default", function(){
+module.exports =  class defaultController extends nodefony.controller {
 
-
-	let defaultController = class defaultController extends nodefony.controller {
-
-		constructor  (container, context){
-			super(container, context);
-		};
-
-		indexAction (<strong>version</strong>){
-
-			if( ! version ){
-				var defaultVersion = this.kernel.settings.version;
-			}else{
-				var defaultVersion = version ;
-			}
-			var url = this.<strong>generateUrl</strong>("documentation-version",{
-				<strong>bundle:"nodefony",
-				version:defaultVersion</strong>
-			})
-			return this.redirect(url);
-
-		};
-
-		versionAction (<strong>version, bundle</strong>){
-			...
-		};
+	constructor  (container, context){
+		super(container, context);
 	};
 
-	return defaultController;
-});
+	indexAction (<strong>version</strong>){
+
+		if( ! version ){
+			var defaultVersion = this.kernel.settings.version;
+		}else{
+			var defaultVersion = version ;
+		}
+		var url = this.<strong>generateUrl</strong>("documentation-version",{
+			<strong>bundle:"nodefony",
+			version:defaultVersion</strong>
+		})
+		return this.redirect(url);
+
+	};
+
+	versionAction (<strong>version, bundle</strong>){
+		...
+	};
+};
 	</pre>
 
 </div>
@@ -411,59 +542,52 @@ demo-websoket:
 		<code>demoBundle/controller/websocketController.js</code> :
 	</p>
 	<pre>
-module.exports = nodefony.registerController("websocket", function(){
+module.exports = class websocketController extends nodefony.controller {
 
-	let websocketController = class websocketController extends nodefony.controller {
-
-		constructor (container, context){
-			super(container, context);
-		};
-
-		indexAction (<strong>message</strong>){
-
-			var context = this.getContext();
-
-			switch( <strong>this.getMethod()</strong> ){
-				case "GET" :
-					return this.render('demoBundle:Default:websocket.html.twig',{name:"websoket"});
-				break;
-				case "WEBSOCKET" :
-					if (<strong>message</strong>){
-						// MESSAGES CLIENT
-						this.logger( message.utf8Data , "INFO");
-					}else{
-						// PREPARE  PUSH MESSAGES SERVER
-						// SEND MESSAGES TO CLIENTS
-						var i = 0 ;
-						var id = setInterval( () => {
-							var mess = "I am a  message "+ i +"\n" ;
-							context.send(mess);
-							this.logger( "SEND TO CLIENT :" + mess , "INFO");
-							i++
-						}, 1000);
-
-						setTimeout( () => {
-							clearInterval(id);
-							// close reason , descripton
-							context.close(1000, "NODEFONY CONTROLLER CLOSE SOCKET");
-							id = null ;
-						}, 10000);
-						this.context.listen(this, "onClose" , () => {
-							if (id){
-								clearInterval(id);
-							}
-						})
-					}
-				break;
-				default :
-					throw new Error(" METHOD NOT ALLOWED")
-			}
-		};
+	constructor (container, context){
+		super(container, context);
 	};
 
-	return websocketController;
-});
+	indexAction (<strong>message</strong>){
+
+		var context = this.getContext();
+
+		switch( <strong>this.getMethod()</strong> ){
+			case "GET" :
+				return this.render('demoBundle:Default:websocket.html.twig',{name:"websoket"});
+			break;
+			case "WEBSOCKET" :
+				if (<strong>message</strong>){
+					// MESSAGES CLIENT
+					this.logger( message.utf8Data , "INFO");
+				}else{
+					// PREPARE  PUSH MESSAGES SERVER
+					// SEND MESSAGES TO CLIENTS
+					var i = 0 ;
+					var id = setInterval( () => {
+						var mess = "I am a  message "+ i +"\n" ;
+						context.send(mess);
+						this.logger( "SEND TO CLIENT :" + mess , "INFO");
+						i++
+					}, 1000);
+
+					setTimeout( () => {
+						clearInterval(id);
+						// close reason , descripton
+						context.close(1000, "NODEFONY CONTROLLER CLOSE SOCKET");
+						id = null ;
+					}, 10000);
+					this.context.listen(this, "onClose" , () => {
+						if (id){
+							clearInterval(id);
+						}
+					})
+				}
+			break;
+			default :
+				throw new Error(" METHOD NOT ALLOWED")
+		}
+	};
+};
 	</pre>
-
-
 </div>

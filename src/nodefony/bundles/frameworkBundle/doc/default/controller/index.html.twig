@@ -96,47 +96,35 @@ total 32
 
 <h3>Class Controller  :</h3>
 <div class="doc3 ">
-
-<p>
-	Nodefony core has a method <strong>registerController</strong> which must return class as a  Closure. <br>
-</p>
-
-
 	<pre>
-module.exports = nodefony.<strong>registerController</strong>("name", function(){
-		/*
-		 *	closure private space
-		 */
-		let tab = [1,2,3,4];
-		let myFuntion = function(){
-			return tab ;
-		}
+const tab = [1,2,3,4];
+const myFuntion = function(){
+	return tab ;
+}
+/*
+ *	Class myController
+ *
+ */
+module.exports = class <strong>myController</strong> extends nodefony.controller {
+	/*
+	 *	CONSTRUCTOR
+	 */
+	constructor (container, context){
+		super(container, context);
+	};
 
-		/*
-		 *	Class controller name
-		 *
-		 */
-		let <strong>myController</strong> = class myController extends nodefony.controller {
-			/*
-			 *	CONSTRUCTOR
-			 */
-			constructor (container, context){
-				super(container, context);
-			};
+	/*
+ 	*	Action controller
+ 	*	( action render public  )
+ 	*
+ 	*/
+	<strong>indexAction</strong>(){
+		let settings = this.kernel.settings ;
+		let html = '&lt;html&gt;&lt;body&gt;Nodefony version : '+settings.system.version+'&lt;/body&gt;&lt;/html&gt;';
+		return this.renderResponse(html);
+	};
+};
 
-			/*
-		 	*	Action controller
-		 	*	( action render public  )
-		 	*
-		 	*/
-			<strong>indexAction</strong>(){
-				var settings = this.kernel.settings ;
-				var html = '&lt;html&gt;&lt;body&gt;Nodefony version : '+settings.system.version+'&lt;/body&gt;&lt;/html&gt;';
-				return this.renderResponse(html);
-			};
-		};
-		// RETURN  class
-		return <strong>myController;</strong>
 });
 	</pre>
 

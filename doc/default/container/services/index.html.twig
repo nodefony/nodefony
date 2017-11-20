@@ -76,41 +76,35 @@ drwxr-xr-x  2 cci  staff    68 20 jui 11:07 tests
 <div class="doc3 ">
 <p>
     The name of file must finish by <strong>'...Service.js'</strong>  example : <code> name<strong>Service.js</strong></code><br>
-	Nodefony core has a method <strong>registerService</strong> which must return class as a  Closure. <br>
 </p>
 	<pre>
-module.exports = nodefony.<strong>registerService</strong>("name", function(){
-    /*
-     *	closure private space
-     */
-    var tab = [1,2,3,4];
-    var myFuntion = function(){
-    	return tab ;
-    }
+const tab = [1,2,3,4];
+const myFuntion = function(){
+	return tab ;
+}
 
-    /*
-     *	Class service name
-     *	constructor
-     */
-    var <strong>nameService</strong> = class <strong>nameService</strong> extends nodefony.Service {
+/*
+ *	Class service name
+ *	constructor
+ */
+module.exports = class <strong>name</strong> extends nodefony.Service {
 
-    	/*
-     	*	constructor  service
-     	*/
-    	constructor (kernel, injection2){
-            super("nameService", kernel.container, kernel.notificationsCenter);
-            this.injection2 = injection2 ;
-    	};
+	/*
+ 	*	constructor  service
+ 	*/
+	constructor (kernel, injection2){
+        super("nameService", kernel.container, kernel.notificationsCenter);
+        this.injection2 = injection2 ;
+	};
 
-    	/*
-     	*	Method  service
-     	*/
-    	runTask (){
-    	};
-    };
-    // RETURN  class
-    return <strong>nameService;</strong>
-});
+	/*
+ 	*	Method  service
+ 	*/
+	runTask (domain){
+    console.log(domain);
+	};
+};
+
 	</pre>
 </div>
 
@@ -119,21 +113,18 @@ module.exports = nodefony.<strong>registerService</strong>("name", function(){
 <p>
     Now the injection service can manage this service to instanciate   , inject dependencies ( kernel, injection2 ...).<br>
 </p>
+<code> Ressources/config/<strong>services.js</strong></code><br>
 <pre>
-&lt;?xml version="1.0" ?&gt;
-
-&lt;container xmlns="http://nodefony.com/schema/dic/services"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://nodefony.com/schema/dic/services http://nodefony.com/schema/dic/services/services-1.0.xsd"&gt;
-
-    &lt;services&gt;
-        &lt;service id="name" class="nameService"&gt;
-                &lt;argument type="service" id="kernel" /&gt;
-                &lt;argument type="service" id="injection2" /&gt;
-        &lt;/service&gt;
-
-    &lt;/services&gt;
-&lt;/container&gt;
+module.exports = {
+  name: {
+    class: nodefony.services.name,
+    arguments: ["@kernel", "@injection2"],
+    calls: [{
+      method: "runTask",
+      arguments: [kernel.domain]
+    }]
+  }
+};
 </pre>
 </div>
 
@@ -171,58 +162,47 @@ $ ll src/nodefony/bundles/httpBundle/services
 <h3>Configuration Service  :</h3>
 <div class="doc3 ">
 	<p>
-		Exemple httpBundle  : <code>services.xml</code>
+		Exemple httpBundle  : <code>services.js</code>
 	</p>
 	<pre>
-&lt;?xml version="1.0" ?&gt;
-
-&lt;container xmlns="http://nodefony.com/schema/dic/services"
-    	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    	xsi:schemaLocation="http://nodefony.com/schema/dic/services http://nodefony.com/schema/dic/services/services-1.0.xsd"&gt;
-
-    	&lt;services&gt;
-		&lt;service id="serverStatic" class="statics"&gt;
-            		&lt;argument type="service" id="container" /&gt;
-            		&lt;argument type="paramaters" id="options" /&gt;
-        	&lt;/service&gt;
-
-		&lt;service id="httpKernel" class="httpKernel"&gt;
-            		&lt;argument type="service" id="container" /&gt;
-            		&lt;argument type="service" id="serverStatic" /&gt;
-			&lt;call method="boot"&gt;&lt;/call&gt;
-        	&lt;/service&gt;
-
-        	&lt;service id="httpServer" class="http"&gt;
-            		&lt;argument type="service" id="httpKernel" /&gt;
-            		&lt;argument type="service" id="security" /&gt;
-        	&lt;/service&gt;
-
-		&lt;service id="httpsServer" class="https"&gt;
-            		&lt;argument type="service" id="httpKernel" /&gt;
-            		&lt;argument type="service" id="security" /&gt;
-        	&lt;/service&gt;
-
-		&lt;service id="websocketServer" class="websocket"&gt;
-            		&lt;argument type="service" id="httpKernel" /&gt;
-            		&lt;argument type="service" id="security" /&gt;
-        	&lt;/service&gt;
-
-		&lt;service id="websocketServerSecure" class="websocketSecure"&gt;
-            		&lt;argument type="service" id="httpKernel" /&gt;
-            		&lt;argument type="service" id="security" /&gt;
-        	&lt;/service&gt;
-
-		&lt;service id="sessions" class="sessions"&gt;
-            		&lt;argument type="service" id="security" /&gt;
-            		&lt;argument type="service" id="httpKernel" /&gt;
-        	&lt;/service&gt;
-
-		&lt;service id="upload" class="upload"&gt;
-            		&lt;argument type="service" id="httpKernel" /&gt;
-        	&lt;/service&gt;
-
-	&lt;/services&gt;
-&lt;/container&gt;
+module.exports = {
+  serverStatics: {
+    class: nodefony.services.serverStatics,
+    arguments: ["@container"]
+  },
+  httpKernel: {
+    class: nodefony.services.httpKernel,
+    arguments: ["@container", "@serverStatics"]
+  },
+  httpServer: {
+    class: nodefony.services.httpServer,
+    arguments: ["@httpKernel"]
+  },
+  httpsServer: {
+    class: nodefony.services.httpsServer,
+    arguments: ["@httpKernel"]
+  },
+  websocketServer: {
+    class: nodefony.services.websocketServer,
+    arguments: ["@httpKernel"]
+  },
+  websocketServerSecure: {
+    class: nodefony.services.websocketServerSecure,
+    arguments: ["@httpKernel"]
+  },
+  sessions: {
+    class: nodefony.services.sessions,
+    arguments: ["@httpKernel"]
+  },
+  upload: {
+    class: nodefony.services.upload,
+    arguments: ["@httpKernel"]
+  },
+  sockjs: {
+    class: nodefony.services.sockjs,
+    arguments: ["@httpKernel", "@httpServer", "@httpsServer"]
+  },
+};
 	</pre>
 
 </div>
