@@ -221,7 +221,7 @@ module.exports = class security extends nodefony.Service {
             if (!(session instanceof nodefony.Session)) {
               throw new Error("SESSION START session storage ERROR");
             }
-            return context.fire("onRequest");
+            return this.handleStateFull(context, session);
           }).catch((error) => {
             // break exception in promise catch !
             context.fire("onError", context.container, error);
