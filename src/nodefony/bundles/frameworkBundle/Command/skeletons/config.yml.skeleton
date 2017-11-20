@@ -34,14 +34,15 @@ locale      : {{ local }}
 #
 #    For watch all components
 #
-#      watch:			true
+#      watch:			true            # by default services false !  
 #    or
 #      watch:
-#        controller     : true
-#        config         : true		# only  routing.yml
+#        controllers     : true
+#        config         : true		# only  routing
 #        views          : true
 #        translations   : true
 #        webpack        : true
+#        services       : true
 watch       : true
 
 

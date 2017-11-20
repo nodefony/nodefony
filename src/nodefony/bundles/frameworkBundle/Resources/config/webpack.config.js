@@ -19,7 +19,8 @@ module.exports = webpackMerge({
     path: public,
     filename: "./assets/js/[name].js",
     library: "[name]",
-    libraryTarget: "umd"
+    libraryTarget: "umd",
+    publicPath: "/" + bundleName
   },
   module: {
     rules: [{

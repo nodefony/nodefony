@@ -56,29 +56,24 @@ documentation-demo:
 					<p>
 					</p>
 					<pre>
-module.exports = nodefony.registerController("demo", function(){
-		/*
-		 *	Class controller name
-		 *
-		 */
-		let demoController = class demoController extends nodefony.controller {
-			/*
-			 *	CONSTRUCTOR
-			 */
-			constructor (container, context){
-				super(container, context);
-			}
-			/*
-		 	*	Action controller
-		 	*
-		 	*/
-			htmlAction (name){
-				return <strong>this.renderResponse</strong>('&lt;h1&gt;'+name+'&lt;/h1&gt;');
-			}
-		};
-		// RETURN  class
-		return demoController;
-});
+/*
+ *	Class demoController
+ */
+module.exports = class demoController extends nodefony.controller {
+	/*
+	 *	CONSTRUCTOR
+	 */
+	constructor (container, context){
+		super(container, context);
+	}
+	/*
+ 	*	Action controller
+ 	*
+ 	*/
+	htmlAction (name){
+		return <strong>this.renderResponse</strong>('&lt;h1&gt;'+name+'&lt;/h1&gt;');
+	}
+};
 					</pre>
 				</div>
 
@@ -122,31 +117,27 @@ documentation-demo-render:
 					<p>
 					</p>
 					<pre>
-module.exports = nodefony.registerController("demo", function(){
-		/*
-		 *	Class controller name
-		 *
-		 */
-		let demoController = class demoController extends nodefony.controller {
-			/*
-			 *	CONSTRUCTOR
-			 */
-			constructor (container, context){
-				super(container, context);
-			}
-			/*
-		 	*	Action controller
-		 	*
-		 	*/
-			renderAction (name){
-				return this.render('documentationBundle:demo:index.html.twig', {
-					name:name,
-				});
-			}
-		};
-		// RETURN  class
-		return demoController;
-});
+/*
+ *	Class demoController
+ *
+ */
+module.exports = class demoController extends nodefony.controller {
+	/*
+	 *	CONSTRUCTOR
+	 */
+	constructor (container, context){
+		super(container, context);
+	}
+	/*
+ 	*	Action controller
+ 	*
+ 	*/
+	renderAction (name){
+		return this.render('documentationBundle:demo:index.html.twig', {
+			name:name,
+		});
+	}
+};
 					</pre>
 				</div>
 				<div id="twig1" class="tab-pane">
@@ -200,40 +191,36 @@ sqlJoin:
 						</div>
 					</p>
 					<pre>
-module.exports = nodefony.registerController("demo", function(){
-		/*
-		 *	Class controller name
-		 *
-		 */
-		let demoController = class demoController extends nodefony.controller {
-			/*
-			 *	CONSTRUCTOR
-			 */
-			constructor (container, context){
-				super(container, context);
-			}
-			/*
-		 	*	Action controller
-		 	*/
-			querySqlJoinAction (){
-				var orm = this.getORM() ;
-				var nodefonyDb = orm.getConnection("nodefony") ;
+/*
+ *	Class demoController
+ *
+ */
+module.exports = class demoController extends nodefony.controller {
+	/*
+	 *	CONSTRUCTOR
+	 */
+	constructor (container, context){
+		super(container, context);
+	}
+	/*
+ 	*	Action controller
+ 	*/
+	querySqlJoinAction (){
+		let orm = this.getORM() ;
+		let nodefonyDb = orm.getConnection("nodefony") ;
 
-				return nodefonyDb.query('SELECT * FROM sessions S LEFT JOIN users U on U.id = S.user_id ')
-				.then((result) => {
-					var joins = result[0];
-					for (var i = 0 ; i < joins.length ; i++){
-						joins[i].metaBag = JSON.parse( joins[i].metaBag );
-					}
-					return this.render('demoBundle:orm:orm.html.twig', {
-						joins:joins,
-					});
-				})
+		return nodefonyDb.query('SELECT * FROM sessions S LEFT JOIN users U on U.id = S.user_id ')
+		.then((result) => {
+			let joins = result[0];
+			for (let i = 0 ; i < joins.length ; i++){
+				joins[i].metaBag = JSON.parse( joins[i].metaBag );
 			}
-		};
-		// RETURN  class
-		return demoController;
-});
+			return this.render('demoBundle:orm:orm.html.twig', {
+				joins:joins,
+			});
+		})
+	}
+};
 					</pre>
 				</div>
 				<div id="twig2" class="tab-pane">
@@ -321,69 +308,64 @@ websoket:
 						</div>
 					</p>
 					<pre>
-module.exports = nodefony.registerController("demo", function(){
+/*
+*	Class demoController
+*
+*/
+module.exports = class demoController extends nodefony.controller {
 	/*
-	*	Class controller name
+	*	CONSTRUCTOR
+	*/
+	constructor (container, context){
+		super(container, context);
+	}
+	/*
+	*	Action controller
 	*
 	*/
-	let demoController = class demoController extends nodefony.controller {
-		/*
-		*	CONSTRUCTOR
-		*/
-		constructor (container, context){
-			super(container, context);
-		}
-		/*
-		*	Action controller
-		*
-		*/
-		websoketAction (message){
-			<strong>var context = this.getContext();</strong>
-			switch( this.getMethod() ){
-				case "GET" :
-					return this.render('demoBundle:Default:websocket.html.twig',{name:"websoket"});
-				break;
-				<strong>case "WEBSOCKET" :</strong>
-					if (message){
-						// LOG  MESSAGE CLIENT IN TERMINAL
-						this.logger( message.utf8Data , "INFO");
-					}else{
-						// PREPARE  PUSH MESSAGES SERVER
-						// SEND MESSAGES TO CLIENTS
-						var i = 0 ;
-						var id = setInterval(() => {
-							var mess = "I am a  message "+ i +"\n" ;
-							<strong> // You can use context to send data
-							context.send(mess);
-							//  or call controller method ( renderResponse , render , renderJson )
-							this.renderResponse(mess);</strong>
-							// LOG  MESSAGE SENDING IN TERMINAL
-							this.logger( "SEND TO CLIENT :" + mess , "INFO");
-							i++
-						}, 1000);
+	websoketAction (message){
+		switch( this.getMethod() ){
+			case "GET" :
+				return this.render('demoBundle:Default:websocket.html.twig',{name:"websoket"});
+			break;
+			<strong>case "WEBSOCKET" :</strong>
+				if (message){
+					// LOG  MESSAGE CLIENT IN TERMINAL
+					this.logger( message.utf8Data , "INFO");
+				}else{
+					// PREPARE  PUSH MESSAGES SERVER
+					// SEND MESSAGES TO CLIENTS
+					let i = 0 ;
+					let id = setInterval(() => {
+						let mess = "I am a  message "+ i +"\n" ;
+						<strong> // You can use context to send data
+						this.context.send(mess);
+						//  or call controller method ( renderResponse , render , renderJson )
+						this.renderResponse(mess);</strong>
+						// LOG  MESSAGE SENDING IN TERMINAL
+						this.logger( "SEND TO CLIENT :" + mess , "INFO");
+						i++
+					}, 1000);
 
-						setTimeout(function(){
+					setTimeout(function(){
+						clearInterval(id);
+						// close reason , descripton
+						<strong>this.context.close(1000, "NODEFONY CONTROLLER CLOSE SOCKET");</strong>
+						id = null ;
+					}, 10000);
+					// Event websocket close by client
+					<strong>this.context.listen</strong>(this, "onClose" , function(){
+						if (id){
 							clearInterval(id);
-							// close reason , descripton
-							<strong>context.close(1000, "NODEFONY CONTROLLER CLOSE SOCKET");</strong>
-							id = null ;
-						}, 10000);
-						// Event websocket close by client
-						<strong>context.listen</strong>(this, "onClose" , function(){
-							if (id){
-								clearInterval(id);
-							}
-						})
-					}
-				break;
-				default :
-					throw new Error(" METHOD NOT ALLOWED")
-			}
+						}
+					})
+				}
+			break;
+			default :
+				throw new Error(" METHOD NOT ALLOWED")
 		}
-	};
-	// RETURN  class
-	return demoController;
-});
+	}
+};
 					</pre>
 				</div>
 
@@ -440,32 +422,28 @@ json:
 				</div>
 				<div id="controler4" class="tab-pane ">
 					<pre>
-module.exports = nodefony.registerController("demo", function(){
-		/*
-		 *	Class controller name
-		 *
-		 */
-		let demoController = class demoController extends nodefony.controller {
-			/*
-			 *	CONSTRUCTOR
-			 */
-			constructor (container, context){
-				super(container, context);
-			}
-			/*
-		 	*	Action controller
-		 	*
-		 	*/
-			jsonAction (){
-				return <strong>this.renderJson</strong>({
-					foo:"bar",
-					bar:"foo"
-				});
-			}
-		};
-		// RETURN  class
-		return demoController;
-});
+/*
+ *	Class demoController
+ *
+ */
+module.exports = class demoController extends nodefony.controller {
+	/*
+	 *	CONSTRUCTOR
+	 */
+	constructor (container, context){
+		super(container, context);
+	}
+	/*
+ 	*	Action controller
+ 	*
+ 	*/
+	jsonAction (){
+		return <strong>this.renderJson</strong>({
+			foo:"bar",
+			bar:"foo"
+		});
+	}
+};
 					</pre>
 				</div>
 			</div>
@@ -501,38 +479,34 @@ xmlResponse:
 				</div>
 				<div id="controler6" class="tab-pane ">
 					<pre>
-module.exports = nodefony.registerController("demo", function(){
-		/*
-		 *	Class controller name
-		 *
-		 */
-		let demoController = class demoController extends nodefony.controller {
-			/*
-			 *	CONSTRUCTOR
-			 */
-			constructor (container, context){
-				super(container, context);
-			}
-			/*
-		 	*	Action controller
-		 	*
-		 	*/
-			xmlAction (){
-				let settings = this.kernel.settings ;
-				let content = '&lt;xml&gt;&lt;nodefony&gt;\
-					&lt;kernel name="'+settings.name+'" version="'+settings.system.version+'"&gt;\
-						&lt;server type="HTTP" port="'+settings.system.httpPort+'"&gt;&lt;/server&gt;\
-						&lt;server type="HTTPS" port="'+settings.system.httpsPort+'"&gt;&lt;/server&gt;\
-					&lt;/kernel&gt;\
-				&lt;/nodefony&gt;&lt;/xml&gt;';
-				return this.renderResponse(content, 200 , {
-					"content-type" :"Application/xml"
-				});
-			}
-		};
-		// RETURN  class
-		return demoController;
-});
+/*
+ *	Class demoController
+ *
+ */
+module.exports = class demoController extends nodefony.controller {
+	/*
+	 *	CONSTRUCTOR
+	 */
+	constructor (container, context){
+		super(container, context);
+	}
+	/*
+ 	*	Action controller
+ 	*
+ 	*/
+	xmlAction (){
+		let settings = this.kernel.settings ;
+		let content = '&lt;xml&gt;&lt;nodefony&gt;\
+			&lt;kernel name="'+settings.name+'" version="'+settings.system.version+'"&gt;\
+				&lt;server type="HTTP" port="'+settings.system.httpPort+'"&gt;&lt;/server&gt;\
+				&lt;server type="HTTPS" port="'+settings.system.httpsPort+'"&gt;&lt;/server&gt;\
+			&lt;/kernel&gt;\
+		&lt;/nodefony&gt;&lt;/xml&gt;';
+		return this.renderResponse(content, 200 , {
+			"content-type" :"Application/xml"
+		});
+	}
+};
 					</pre>
 				</div>
 			</div>
@@ -568,30 +542,26 @@ download:
 				</div>
 				<div id="controler5" class="tab-pane ">
 					<pre>
-module.exports = nodefony.registerController("finder", function(){
-		/*
-		 *	Class controller name
-		 *
-		 */
-		let finderController = class finderController extends nodefony.controller {
-			/*
-			 *	CONSTRUCTOR
-			 */
-			constructor (container, context){
-				super(container, context);
-			}
-			/*
-		 	*	Action controller
-		 	*
-		 	*/
-			downloadAction (){
-				var filePath = this.kernel.rootDir + '/README.md';
-				return <strong>this.renderFileDownload</strong>(filePath);
-			}
-		};
-		// RETURN  class
-		return finderController;
-});
+/*
+ *	Class finderController
+ *
+ */
+module.exports = class finderController extends nodefony.controller {
+	/*
+	 *	CONSTRUCTOR
+	 */
+	constructor (container, context){
+		super(container, context);
+	}
+	/*
+ 	*	Action controller
+ 	*
+ 	*/
+	downloadAction (){
+		let filePath = this.kernel.rootDir + '/README.md';
+		return <strong>this.renderFileDownload</strong>(filePath);
+	}
+};
 					</pre>
 				</div>
 			</div>
@@ -626,31 +596,27 @@ render-media:
 				</div>
 				<div id="controler7" class="tab-pane ">
 					<pre>
-module.exports = nodefony.registerController("demo", function(){
-		/*
-		 *	Class controller name
-		 *
-		 */
-		let demoController = class demoController extends nodefony.controller {
-			/*
-			 *	CONSTRUCTOR
-			 */
-			constructor (container, context){
-				super(container, context);
-			}
-			/*
-		 	*	Action controller
-		 	*
-		 	*/
-			mediaStreamAction (){
-				var filePath = this.kernel.rootDir + '/app/Resources/medias/myAudio.mp3';
-				var file = new nodefony.fileClass(filePath);
-				return <strong>this.renderMediaStream</strong>(file);
-			}
-		}
-		// RETURN  class
-		return demoController;
-});
+/*
+ *	Class demoController
+ *
+ */
+module.exports = class demoController extends nodefony.controller {
+	/*
+	 *	CONSTRUCTOR
+	 */
+	constructor (container, context){
+		super(container, context);
+	}
+	/*
+ 	*	Action controller
+ 	*
+ 	*/
+	mediaStreamAction (){
+		let filePath = this.kernel.rootDir + '/app/Resources/medias/myAudio.mp3';
+		let file = new nodefony.fileClass(filePath);
+		return <strong>this.renderMediaStream</strong>(file);
+	}
+}
 					</pre>
 				</div>
 			</div>
@@ -684,67 +650,63 @@ uploadFile:
 				</div>
 				<div id="controler8" class="tab-pane ">
 					<pre>
-module.exports = nodefony.registerController("demo", function(){
-		/*
-		 *	Class controller name
-		 *
-		 */
-		let demoController = class demoController extends nodefony.controller {
-			/*
-			 *	CONSTRUCTOR
-			 */
-			constructor (container, context){
-				super(container, context);
+/*
+ *	Class demoController
+ *
+ */
+module.exports = class demoController extends nodefony.controller {
+	/*
+	 *	CONSTRUCTOR
+	 */
+	constructor (container, context){
+		super(container, context);
+	}
+	/*
+ 	*	Action controller
+ 	*
+ 	*/
+	uploadAction (){
+		let files = this.<strong>getParameters</strong>("query.files");
+		let myPath =  path.resolve( this.kernel.rootDir, "src", "bundles", "demoBundle", "Resources", "images");
+		for (let file in files){
+			if( files[file].error ){
+				throw files[file].error ;
 			}
-			/*
-		 	*	Action controller
-		 	*
-		 	*/
-			uploadAction (){
-				var files = this.<strong>getParameters</strong>("query.files");
-				var myPath =  path.resolve( this.kernel.rootDir, "src", "bundles", "demoBundle", "Resources", "images");
-				for (var file in files){
-					if( files[file].error ){
-						throw files[file].error ;
-					}
-					files[file].<strong>move</strong>(myPath);
-					//console.log( files[file].getExtension() )
-					//console.log( files[file].getMimeType() )
-					//console.log( files[file].realName() )
-				}
-				if ( ! this.isAjax() ){
-					return this.redirect ( this.generateUrl("finder") );
-				}else{
-					var res = {
-						"files": [],
-						"metas": []
-					}
-					for (var file in files){
-						var name = files[file].realName();
-						res.files.push(myPath+"/"+name);
-						var meta = {
-							date : new Date(),
-							extension:files[file].getExtension(),
-							file:myPath+"/"+name,
-							name:name,
-							old_name:files[file].name,
-							size:files[file].stats.size,
-							size2:files[file].stats.size,
-							type:files[file].getMimeType().split("/")
-						}
-						res.metas.push(meta);
-					}
-					return this.renderResponse(
-						JSON.stringify(res),
-						200,
-						{'Content-Type': 'application/json; charset=utf-8'}
-					);
-				}
-			}
+			files[file].<strong>move</strong>(myPath);
+			//console.log( files[file].getExtension() )
+			//console.log( files[file].getMimeType() )
+			//console.log( files[file].realName() )
 		}
-		// RETURN  class
-		return demoController;
-});
+		if ( ! this.isAjax() ){
+			return this.redirect ( this.generateUrl("finder") );
+		}else{
+			let res = {
+				"files": [],
+				"metas": []
+			}
+			for (let file in files){
+				let name = files[file].realName();
+				res.files.push(myPath+"/"+name);
+				let meta = {
+					date : new Date(),
+					extension:files[file].getExtension(),
+					file:myPath+"/"+name,
+					name:name,
+					old_name:files[file].name,
+					size:files[file].stats.size,
+					size2:files[file].stats.size,
+					type:files[file].getMimeType().split("/")
+				}
+				res.metas.push(meta);
+			}
+			return this.renderResponse(
+				JSON.stringify(res),
+				200,
+				{'Content-Type': 'application/json; charset=utf-8'}
+			);
+		}
+	}
+};
 					</pre>
 				</div>
 			</div>
@@ -782,7 +744,7 @@ redirectGoogleAction (){
 					</p>
 					<pre>
 forwardAction (){
-	var docBundle = this.kernel.getBundles("documentation");
+	let docBundle = this.kernel.getBundles("documentation");
 	if (  docBundle ){
 		return <strong>this.forward</strong>("documentationBundle:default:navDoc");
 	}

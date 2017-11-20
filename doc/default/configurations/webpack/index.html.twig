@@ -21,20 +21,22 @@
 Location : <code>src/bundles/helloBundle/Resources/config/webpack</code>
 <pre>
 $ ls -l ./src/bundles/helloBundle/Resources/config
-total 24
--rw-r--r--  1 cci  staff  3944 31 jul 10:01 config.yml
--rw-r--r--  1 cci  staff    70 28 jul 14:24 routing.yml
--rw-r--r--  1 cci  staff   302 25 jul 17:43 security.yml
-drwxr-xr-x  5 cci  staff   170 19 jul 11:30 <strong>webpack</strong>
+total 32
+-rwxr-xr-x  1 cci  staff  1289 20 nov 11:24 config.yml
+-rwxr-xr-x  1 cci  staff   477 20 nov 11:24 routing.js
+-rwxr-xr-x  1 cci  staff   728 20 nov 11:24 security.yml
+<strong>drwxr-xr-x  4 cci  staff   136 20 nov 11:24 webpack
+-rwxr-xr-x  1 cci  staff  2119 20 nov 11:24 webpack.config.js</strong>
 
 helloBundle/config/
 ├── config.yml
-├── routing.yml
+├── routing.js
 ├── security.yml
-└── webpack
-    <strong>├── webpack.common.js
-    ├── webpack.dev.config.js
-    └── webpack.prod.config.js</strong>
+├── services.js
+├── webpack
+│   ├── webpack.dev.config.js
+│   └── webpack.prod.config.js
+└── webpack.config.js
 </pre>
 </div>
 
@@ -64,7 +66,7 @@ helloBundle/config/
     </div>
     <div class="panel-body ">
         <ul class="nav nav-tabs">
-            <li role="presentation" class="active"><a data-target="#common" data-toggle="tab">webpack.common.js</a></li>
+            <li role="presentation" class="active"><a data-target="#common" data-toggle="tab">webpack.config.js</a></li>
             <li role="presentation" ><a data-target="#dev" data-toggle="tab">webpack.dev.config.js</a></li>
             <li role="presentation" ><a data-target="#prod" data-toggle="tab">webpack.prod.config.js</a></li>
             <li role="presentation" ><a data-target="#index" data-toggle="tab">index.html.twig</a></li>
@@ -74,140 +76,132 @@ helloBundle/config/
         <div class="tab-content ">
             <div id="common" class="tab-pane active">
                 </br>
-                <p>Location : <code>src/bundles/helloBundle/Resources/config/webpack/webpack.common.js</code></p>
+                <p>Location : <code>src/bundles/helloBundle/Resources/config/webpack.config.js</code></p>
                 <pre>
 const path = require("path");
-const webpack = require('webpack');
+const public = path.resolve(__dirname, "..", "public");
+const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
 const ExtractTextPluginCss = require('extract-text-webpack-plugin');
-const public = path.resolve(__dirname, "..", "..", "public");
-const bundleName = path.basename( path.resolve( __dirname, "..", "..", "..") );
+const webpackMerge = require('webpack-merge');
+let config = null;
+if (kernel.environment === "dev") {
+  config = require("./webpack/webpack.dev.config.js");
+} else {
+  config = require("./webpack/webpack.prod.config.js");
+}
 
-module.exports = {
-    context     : public ,
-    target      : "web",
-    module      : {
-        rules: [{
-            // BABEL TRANSCODE
-          	test: new RegExp("\.es6$"),
-    		exclude: new RegExp("node_modules"),
-    		use: [
-				{
-					loader: 'babel-loader',
-					options: {
-						presets: ['es2015']
-					}
-				}
-            ]
-    		},{
-                // CSS EXTRACT
-    			test: new RegExp("\.css$"),
-    			use: ExtractTextPluginCss.extract({
-    				use: 'css-loader'
-    			})
-    		},{
-                // SASS
-                test: new RegExp(".scss$"),
-                use: [{
-                        loader: 'style-loader'
-                    },{
-                        loader: 'css-loader'
-                    },{
-                        loader: 'sass-loader'
-                    }
-                ]
-            },{
-    			test: new RegExp("\.less$"),
-    			use: ExtractTextPluginCss.extract({
-    				use: [
-    					"raw-loader",
-    					{
-    						loader:	'less-loader',
-    						options: {
-    							//strictMath: true,
-    							//noIeCompat: true
-    						}
-    				}]
-    			})
-    		},{
-                // FONTS
-    			test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
-    			use: 'file-loader?name=[name].[ext]&publicPath=/'+bundleName+'&outputPath=/assets/fonts/',
-    		},{
-                // IMAGES
-    			test: new RegExp("\.(jpg|png|gif)$"),
-      		    use: 'file-loader?name=[name].[ext]&publicPath=/'+bundleName+'&outputPath=/assets/images/'
-    	}]
-    },
-    plugins: [
-        new ExtractTextPluginCss( {
-			filename:"./assets/css/[name].css",
-		})
-    ]
-};
+module.exports = webpackMerge({
+  context: public,
+  target: "web",
+  entry       : {
+    hello  : [ "./js/hello.js" ]
+  },
+  output: {
+    path: public,
+    filename: "./assets/js/[name].js",
+    library: "[name]",
+    libraryTarget: "umd"
+  },
+  externals: {},
+  resolve: {},
+  module: {
+    rules: [{
+      // BABEL TRANSCODE
+      test: new RegExp("\.es6$"),
+      exclude: new RegExp("node_modules"),
+      use: [{
+        loader: 'babel-loader',
+        options: {
+          presets: ['env']
+        }
+      }]
+    }, {
+      // CSS EXTRACT
+      test: new RegExp("\.css$"),
+      use: ExtractTextPluginCss.extract({
+        use: 'css-loader'
+      })
+    }, {
+      // SASS
+      test: new RegExp(".scss$"),
+      use: [{
+        loader: 'style-loader'
+      }, {
+        loader: 'css-loader'
+      }, {
+        loader: 'sass-loader'
+      }]
+    }, {
+      test: new RegExp("\.less$"),
+      use: ExtractTextPluginCss.extract({
+        use: [
+          "raw-loader",
+          {
+            loader: 'less-loader',
+            options: {
+              //strictMath: true,
+              //noIeCompat: true
+            }
+          }
+        ]
+      })
+    }, {
+      // FONTS
+      test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
+      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '&outputPath=/assets/fonts/',
+    }, {
+      // IMAGES
+      test: new RegExp("\.(jpg|png|gif)$"),
+      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '&outputPath=/assets/images/'
+    }]
+  },
+  plugins: [
+    new ExtractTextPluginCss({
+      filename: "./assets/css/[name].css",
+    })
+  ]
+}, config);
                 </pre>
             </div>
             <div id="dev" class="tab-pane">
                 </br>
                 <p>Location : <code>src/bundles/helloBundle/Resources/config/webpack/webpack.dev.config.js</code></p>
                 <pre>
-const path = require("path");
-const webpack = require('webpack');
-const ExtractTextPluginCss = require('extract-text-webpack-plugin');
-const webpackMerge = require('webpack-merge'); // used to merge webpack configs
-const public = path.resolve(__dirname, "..", ".." ,"public");
-const commonConfig = require("./webpack.common.js");
-
-module.exports = webpackMerge( {
-    entry       : {
-      hello  : [ "./js/hello.js" ],
-    },
-    output      : {
-      path      : public,
-      filename  : "./assets/js/[name].js",
-      library   : "[name]",
-      libraryTarget: "umd"
-    },
-    devtool     : "source-map",
-    externals   : {},
-    resolve     : {},
-    plugins     : []
-}, commonConfig );
+// WEBPACK DEV CONFIGURATION
+module.exports = {
+  devtool: "source-map",
+  resolve: {},
+  plugins: []
+};
                 </pre>
             </div>
-            <div id="prod" class="tab-pane">
+						<div id="prod" class="tab-pane">
                 </br>
                 <p>Location : <code>src/bundles/helloBundle/Resources/config/webpack/webpack.prod.config.js</code></p>
                 <pre>
-const path = require("path");
-const webpack = require('webpack');
-const ExtractTextPluginCss = require('extract-text-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const webpackMerge = require('webpack-merge'); // used to merge webpack configs
-const public = path.resolve(__dirname, "..", ".." ,"public");
-const commonConfig = require("./webpack.common.js");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports = webpackMerge( {
-    entry           : {
-      hello      : ["./js/hello.js"]
-    },
-    output          : {
-        path        : public,
-        filename    : "./assets/js/[name].js",
-        library     : "[name]",
-        libraryTarget: "umd"
-    },
-    externals       : {},
-    resolve         : {},
-    plugins         :[
-        new OptimizeCssAssetsPlugin(  {
-            cssProcessorOptions: { discardComments: {removeAll: true } },
-            canPrint: true
-        }),
-        new webpack.optimize.UglifyJsPlugin({
-                minimize: true
-        })
-    ]
-}, commonConfig );
+module.exports = {
+  watch: false,
+  plugins: [
+    new OptimizeCssAssetsPlugin({
+      cssProcessorOptions: {
+        discardComments: {
+          removeAll: true
+        }
+      },
+      canPrint: true
+    }),
+    new UglifyJsPlugin({
+      uglifyOptions: {
+        warnings: true,
+        compress: true
+      },
+      parallel: true
+    })
+  ]
+};
                 </pre>
             </div>
             <div id="index" class="tab-pane">

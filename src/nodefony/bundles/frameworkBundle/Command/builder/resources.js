@@ -22,7 +22,8 @@ const Config = class Config {
           params: this.params
         },
         this.routing.createBuilder(),
-        this.createSecurityConfig("yml")
+        this.createSecurityConfig("yml"),
+        this.createServicesConfig()
       ]
     };
     if (this.bundleType === "") {
@@ -44,6 +45,16 @@ const Config = class Config {
       name: name,
       type: "file",
       skeleton: this.skeletonSecurity,
+      params: this.params
+    };
+  }
+  createServicesConfig() {
+    let name = "services.js";
+    this.skeletonServices = path.resolve(this.skeletonPath, this.bundleType, "services.js.skeleton");
+    return {
+      name: name,
+      type: "file",
+      skeleton: this.skeletonServices,
       params: this.params
     };
   }

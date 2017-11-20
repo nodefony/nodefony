@@ -306,41 +306,27 @@ hello:
 				</div>
 				<div id="controler4" class="tab-pane ">
 					<pre>
-module.exports = nodefony.registerController("default", function(){
+module.exports = class defaultController extends nodefony.controller {
 
-    /**
-     *	The class is a **`default` CONTROLLER** .
-     *	@module nodefony
-     *	@main nodefony
-     *	@class default
-     *	@constructor
-     *	@param {class} container
-     *	@param {class} context
-     *
-     */
-    let defaultController = class defaultController extends nodefony.controller {
+	constructor (container, context){
+		super(container, context);
+	}
 
-    	constructor (container, context){
-    		super(container, context);
-    	}
-
-    	/**
-     	*
-     	*	@method indexAction
-     	*
-     	*/
-    	indexAction (){
-    		try {
-    	           let index = path.resolve( this.bundle.publicPath, "dist", "index.html");
-                   let file = new nodefony.fileClass(index);
-                   return this.renderResponse( file.content(file.encoding) );
-            }catch(e){
-    	           throw e ;
-            }
-    	}
-    };
-   return defaultController;
-});
+	/**
+ 	*
+ 	*	@method indexAction
+ 	*
+ 	*/
+	indexAction (){
+		try {
+	           let index = path.resolve( this.bundle.publicPath, "dist", "index.html");
+               let file = new nodefony.fileClass(index);
+               return this.renderResponse( file.content(file.encoding) );
+        }catch(e){
+	           throw e ;
+        }
+	}
+};
 					</pre>
 				</div>
                 <div id="index4" class="tab-pane">

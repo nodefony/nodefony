@@ -24,20 +24,24 @@
 Location : <code>./app/config</code>
 <pre>
 $ ls -l ./app/config
-total 24
--rw-r--r--  1 cci  staff  3944 31 jul 10:01 config.yml
--rw-r--r--  1 cci  staff    70 28 jul 14:24 routing.yml
--rw-r--r--  1 cci  staff   302 25 jul 17:43 security.yml
-drwxr-xr-x  5 cci  staff   170 19 jul 11:30 webpack
+total 48
+-rw-r--r--  1 cci  staff  5952 15 nov 11:35 config.yml
+-rw-r--r--  1 cci  staff   138 23 oct 09:51 routing.js
+-rw-r--r--  1 cci  staff   411  2 nov 09:41 security.yml
+-rw-r--r--  1 cci  staff    21 14 nov 18:20 services.js
+drwxr-xr-x  4 cci  staff   136  2 nov 09:41 webpack
+-rw-r--r--  1 cci  staff  2140  2 nov 09:41 webpack.config.js
 
 app/config/
 ├── config.yml
-├── routing.yml
+├── routing.js
 ├── security.yml
-└── webpack
-    ├── webpack.common.js
-    ├── webpack.dev.config.js
-    └── webpack.prod.config.js
+├── services.js
+├── webpack
+│   ├── webpack.dev.config.js
+│   └── webpack.prod.config.js
+└── webpack.config.js
+
 </pre>
 </div>
 
@@ -59,152 +63,195 @@ app/config/
   		  </div>
   	  </div>
 
-
 	  Location : <code>./app/config/config.yml</code>
-    	  <pre>
-  #####################
-  #
-  #  FRAMEWORK NODEFONY
-  #
-  #     APP CONFIG
-  name :                          AppBundle
-  version:                        1.0.0
-  locale :                        en_en
+    <pre>
+######################
+#  NODEFONY APP CONFIG
+#
+#   @here You can OVERRIDE all Bundles Configurations
+#
+name :                           AppBundle
+version:                         1.0.0
+locale :                         en_en
+App:
+  projectName:                   "nodefony"
+  projectYear:                   2017
+  locale:                        "en_en"
+  authorName:                    "admin"
+  authorMail:                    "admin@nodefony.com"
 
+lang:
+  en_en:                         "english"
+  fr_fr:                         "français"
 
-  App:
-    projectName:                  "nodefony"
-    projectYear:                  2017
-    locale:                       "en_en"
-    authorName:                   "admin"
-    authorMail:                   "admin@nodefony.com"
+##################################
+#  WATCHERS
+#
+#    watchers Listen to changes, deletion, renaming of files and directories
+#    of different components
+#
+#    For watch all components
+#
+#      watch:                    true
+#    or
+#      watch:
+#        controller:             true
+#        config:                 true        # only  routing.yml
+#        views:                  true
+#        translations:           true
+#        webpack:                true
+#
+watch:                           true
 
-  lang:
-    en_en:                        "english"
-    fr_fr:                        "français"
+##################################
+#  OVERRIDE BUNDLE MONITORING
+#
+#    see MONITORING BUNDLE config for more options
+#
+#
+monitoringBundle:
+  debugBar:                      true
+  forceDebugBarProd:             false
+  storage:
+    active:                      false
+    requests:                    orm
 
+##################################
+#  OVERRIDE  BUNDLE SEQUELIZE
+#
+#       @see SEQUELIZE BUNDLE config for more options
+#       @more options http://docs.sequelizejs.com/class/lib/sequelize.js~Sequelize.html
+#
+#       Nodefony Database Management
+#        dialect :               'mysql'|'sqlite'|'postgres'|'mssql'
+#
+#       By default nodefony create  connector name nodefony ( driver sqlite )
+#       for manage Sessions / Users / Requests
+#
+#       For mysql/mariadb create database nodefony before
+#       Mysql > CREATE DATABASE nodefony;
+#
+#       Here create new databases connectors
+#       and use for sync connectors :
+#       make sequelize
+#
+sequelizeBundle:
+  debug:                         false
+#  connectors:
+#    nodefony:
+#      driver:                   mysql
+#      dbname:                   'nodefony'
+#      username:                 'nodefony'
+#      password:                 'nodefony'
+#      options:
+#        dialect:                mysql
+#        host:                   localhost
+#        port:                   '3306'
 
-  #
-  #  WATCHERS
-  #
-  #    watchers Listen to changes, deletion, renaming of files and directories
-  #    of different components
-  #
-  #    For watch all components
-  #
-  #      watch:			true
-  #    or
-  #      watch:
-  #        controller:		true
-  #        config:        true		# only  routing.yml
-  #        views:			    true
-  #        translations:  true
-  #        webpack:       true
-  #
-  watch:				true
+############################
+#  OVERRIDE BUNDLE HTTP
+#
+#       see HTTP BUNDLE config for more options
+#
+#       query string parser
+#       form-data multipart parser
+#       upload
+#       statics files
+#       session
+#       http server
+#       https server
+#       upload
+#       websocket server
+#       websocket secure server
+#       sockjs dev server ( webpack dev server like WDS)
+#
+#
+httpBundle:
+  # For more options parser formidable @see : https://github.com/felixge/node-formidable
+  request:
+    uploadDir:                   "/tmp"                        # temporing file upload system
+    maxFileSize:                 2097152                        # In Bytes
+    maxFieldsSize:               2097152                       # 2MB
+    maxFields:                   1000                          # 0 for unlimited
+  # For more options parser QS @see : https://github.com/ljharb/qs
+  queryString:
+    parameterLimit:              1000
+    delimiter:                   "&"
+  # Server @see :                https://nodejs.org/dist/latest-v8.x/docs/api/http.html#http_class_http_server
+  http:
+    responseTimeout:             40000
+  https:
+    responseTimeout:             40000
+  sockjs:
+      overlay:                   true
+      hot:                       true
+      protocol:                  https
+      websocket:                 true
+  statics:
+    defaultOptions:
+      cacheControl :             true
+      maxAge:                    0
+    web:
+      path:                      "web"
+      options:
+        maxAge:                  0                             #30*24*60*60*1000
+  session:
+    start:                       false                 # false || true || Name Session Context
+    name:                        "nodefony"
+    handler:                     sequelize             # files | sequelize | memcached  "nodefony.session.storage"
+    #save_path:                  "./tmp/sessions"      # for session.storage.files only
+    use_strict_mode:             true
+    gc_probability:              1
+    gc_divisor:                  100
+    gc_maxlifetime:              1440
+    use_cookies:                 true
+    use_only_cookies:            true
+    referer_check:               false
+    cookie:
+      maxAge:                    0                     # like cookie_lifetime php  =>seconde
+      secure:                    false                 # Set true for https site only see https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/Set-Cookie
+    memcached:
+      servers:
+        nodefony:
+          location:              127.0.0.1
+          port:                  11211
+          weight:                1
 
-
-  ##################################
-  #
-  #       OVERRIDE BUNDLE MONITORING
-  #
-  #       see MONITORING BUNDLE config for more options
-  #
-  #
-  monitoringBundle:
-    debugBar:                     true
-    storage:
-      active:                     false
-      requests:                   orm
-
-
-  ##################################
-  #
-  #       OVERRIDE  BUNDLE SEQUELIZE
-  #
-  #       see SEQUELIZE BUNDLE config for more options
-  #
-  #       Nodefony Database Management
-  #
-  #       By default nodefony create  connector name nodefony ( driver sqlite )
-  #       for manage Sessions / User
-  #
-  #
-  #       here create new databases connectors
-  #
-  #
-  sequelizeBundle:
-    debug:        false
-    connectors:
-      nodefony:
-        driver:          mysql
-        dbname:          'nodefony'
-        username:        'username'
-        password:        'password'
-        options:
-          dialect:       mysql
-          host:          localhost
-          port:          '3306'
-
-
-  ############################
-  #
-  #       OVERRIDE BUNDLE HTTP
-  #
-  #       see HTTP BUNDLE config for more options
-  #
-  #       // SERVICES
-  #       statics files
-  #       session
-  #       http server
-  #       https server
-  #       upload
-  #       websocket server
-  #       websocket secure server
-  #       sockjs dev server ( webpack dev server like WDS)
-  #
-  #
-  httpBundle:
+#######################
+#  OVERRIDE SECURITY BUNDLE
+#
+#   HEADERS SECURITY
+#
+#    Content-Security-Policy
+#    Strict-Transport-Security
+#     ...
+#    Manage and Clean hsts in chrome
+#     chrome://net-internals/#hsts
+#
+securityBundle:
+  headers:
     http:
-      responseTimeout:              40000
-    https:
-      responseTimeout:              40000
-    sockjs:
-        overlay:                      true
-        hot:                          true
-        protocol:                     https
-        websocket:                    true
-    statics:
-      defaultOptions:
-        cacheControl :              true
-        maxAge:                     0
-      web:
-        path:                       "web"
-        options:
-          maxAge:                   0                             #30*24*60*60*1000
-    upload:
-      tmp_dir:                      "tmp/upload"
-      #max_filesize:                 100000                       #in Bytes
-    session:
-      start:                        false                         # autostart || false
-      handler:                      session.storage.sequelize     # session.storage.files | session.storage.sequelize | session.storage.memcached
-      #save_path:                    "./tmp/sessions"             # for session.storage.files only
-      cookie:
-        maxAge:                     0                             # like cookie_lifetime php  =>seconde
+     #Strict-Transport-Security: "max-age=31536000; includeSubDomains; preload"
+     X-Frame-Options:            "SAMEORIGIN"
+     X-Content-Type-Options:     "nosniff"
+    https           :
+     #Strict-Transport-Security: "max-age=31536000; includeSubDomains; preload"
+     X-Frame-Options:            "SAMEORIGIN"
+     X-Content-Type-Options:     "nosniff"
 
-  ################################
-  #
-  #       OVERRIDE BUNDLE REALTIME
-  #
-  #       see REALTIME BUNDLE config for more options
-  #
-  #
-  realTimeBundle:
-    services:
-      monitoring:
-        type:                       tcp
-        port:                       1318
-        domain:                     localhost
+################################
+#  OVERRIDE BUNDLE REALTIME
+#
+#       see REALTIME BUNDLE config for more options
+#
+#
+realTimeBundle:
+  services:
+    monitoring:
+      type:                      tcp
+      port:                      1318
+      domain:                    localhost
+
 	  </pre>
   </div>
 
@@ -293,12 +340,17 @@ app/config/
   <!-- Default panel contents -->
   <div class="panel-heading"> Application Routing Configuration </div>
   <div class="panel-body">
-	  <p>Location : <code>./app/config/routing.yml</code></p>
+	  <p>Location : <code>./app/config/routing.js</code></p>
 	  <pre>
-home:
-  pattern:  /
-  defaults:
-    controller: "AppBundle:app:index"
+module.exports = {
+  // HOME
+  home: {
+    pattern: "/",
+    defaults: {
+      controller: "AppBundle:app:index"
+    }
+  }
+};
 	  </pre>
   </div>
 </div>
@@ -337,7 +389,6 @@ security:
 </div>
 </div>
 
-
 <h2 id="webpack" >Configuration Webpack <span class="badge">FILE</span> </h2>
 
 <div class="doc2">
@@ -345,133 +396,131 @@ security:
 	  <!-- Default panel contents -->
 	  <div class="panel-heading"> Bundle Webpack Configuration </div>
 	  <div class="panel-body">
-		  <p>Location : <code>./app/config/webpack/webpack.common.js</code></p>
+		  <p>Location : <code>./app/config/webpack.config.js</code></p>
 		  <pre>
 const path = require("path");
-const webpack = require('webpack');
 const ExtractTextPluginCss = require('extract-text-webpack-plugin');
-const public = path.resolve(__dirname, "..", "..","Resources", "public");
-const bundleName = path.basename( path.resolve( __dirname, "..", "..") );
-const webpackDevClient = "webpack-dev-server/client?https://"+kernel.hostHttps+"/";
+const public = path.resolve(__dirname, "..", "Resources", "public");
+const bundleName = path.basename(path.resolve(__dirname, ".."));
+const webpackMerge = require('webpack-merge');
 
-module.exports = {
-  context     : public ,
-  target      : "web",
-  entry       : {
-    app       : ["./js/app.js", webpackDevClient ]
+let config = null;
+if (kernel.environment === "dev") {
+  config = require("./webpack/webpack.dev.config.js");
+} else {
+  config = require("./webpack/webpack.prod.config.js");
+}
+
+module.exports = webpackMerge(config, {
+  context: public,
+  target: "web",
+  //watch: false,
+  entry: {
+    app: ["./js/app.js"]
   },
-  output      : {
-      path    : public,
-      filename: "./assets/js/[name].js",
-      library:  "[name]",
-      libraryTarget: "umd"
+  output: {
+    path: public,
+    filename: "./assets/js/[name].js",
+    library: "[name]",
+    libraryTarget: "umd"
   },
-  externals: {
-  },
-  resolve:{
-  },
-  module      : {
-      rules: [{
-          // BABEL TRANSCODE
-        	test: new RegExp("\.es6$|\.js$"),
-  		exclude: new RegExp("node_modules"),
-  		use: [
-				{
-					loader: 'babel-loader',
-					options: {
-						presets: ['es2015']
-					}
-				}
-          ]
-  		},{
-              // CSS EXTRACT
-  			test: new RegExp("\.css$"),
-  			use: ExtractTextPluginCss.extract({
-  				use: 'css-loader'
-  			})
-  		},{
-              // SASS
-              test: new RegExp(".scss$"),
-              use: [{
-                      loader: 'style-loader'
-                  },{
-                      loader: 'css-loader'
-                  },{
-                      loader: 'sass-loader'
-                  }
-              ]
-          },{
-  			test: new RegExp("\.less$"),
-  			use: ExtractTextPluginCss.extract({
-  				use: [
-  					"raw-loader",
-  					{
-  						loader:	'less-loader',
-  						options: {
-  							//strictMath: true,
-  							//noIeCompat: true
-  						}
-  				}]
-  			})
-  		},{
-              // FONTS
-  			test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
-  			use: 'file-loader?name=[name].[ext]&publicPath=/'+bundleName+'&outputPath=/assets/fonts/',
-  		},{
-              // IMAGES
-  			test: new RegExp("\.(jpg|png|gif)$"),
-    		    use: 'file-loader?name=[name].[ext]&publicPath=/'+bundleName+'&outputPath=/assets/images/'
-  	}]
+  externals: {},
+  resolve: {},
+  module: {
+    rules: [{
+      // BABEL TRANSCODE
+      test: new RegExp("\.es6$|\.js$"),
+      exclude: new RegExp("node_modules"),
+      use: [{
+        loader: 'babel-loader',
+        options: {
+          presets: ['env']
+        }
+      }]
+    }, {
+      // CSS EXTRACT
+      test: new RegExp("\.css$"),
+      use: ExtractTextPluginCss.extract({
+        use: 'css-loader'
+      })
+    }, {
+      // SASS
+      test: new RegExp(".scss$"),
+      use: [{
+        loader: 'style-loader'
+      }, {
+        loader: 'css-loader'
+      }, {
+        loader: 'sass-loader'
+      }]
+    }, {
+      test: new RegExp("\.less$"),
+      use: ExtractTextPluginCss.extract({
+        use: [
+          "raw-loader",
+          {
+            loader: 'less-loader',
+            options: {
+              //strictMath: true,
+              //noIeCompat: true
+            }
+          }
+        ]
+      })
+    }, {
+      // FONTS
+      test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
+      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '&outputPath=/assets/fonts/',
+    }, {
+      // IMAGES
+      test: new RegExp("\.(jpg|png|gif)$"),
+      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '&outputPath=/assets/images/'
+    }]
   },
   plugins: [
-    new ExtractTextPluginCss( {
-			filename:"./assets/css/[name].css"
-	})
+    new ExtractTextPluginCss({
+      filename: "./assets/css/[name].css",
+    })
   ]
-};
+});
 		  </pre>
 		  <p>Location : <code>./app/config/webpack/webpack.dev.config.js</code></p>
+			<p> App add  HRM config  ( Hot Module Replacement ) </p>
 		  <pre>
-const path = require("path");
-const webpack = require('webpack');
-const ExtractTextPluginCss = require('extract-text-webpack-plugin');
-const webpackMerge = require('webpack-merge'); // used to merge webpack configs
-const public = path.resolve(__dirname, "..", ".." ,"public");
-const bundleName = path.basename( path.resolve( __dirname, "..", "..", "..") );
-const commonConfig = require("./webpack.common.js");
-const webpackDevClient = "webpack-dev-server/client?https://"+kernel.hostHttps+"/";
-
-module.exports = webpackMerge( {
-  //watch       : false,
-  devtool     : "source-map",
-  plugins     :[]
-}, commonConfig );
-
+const webpackDevClient = "webpack-dev-server/client?https://" + kernel.hostHttps + "/";
+module.exports = {
+  entry: {
+    app: [webpackDevClient]
+  },
+  devtool: "source-map",
+  plugins: []
+};
 		  </pre>
-		  <p>Location : <code>./app/config/webpack/webpack.prod.config.js</code></p>
-		  <pre>
-const path = require("path");
-const webpack = require('webpack');
-const ExtractTextPluginCss = require('extract-text-webpack-plugin');
+			<p>Location : <code>./app/config/webpack/webpack.prod.config.js</code></p>
+			<pre>
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const webpackMerge = require('webpack-merge'); // used to merge webpack configs
-const public = path.resolve(__dirname, "..", ".." ,"public");
-const bundleName = path.basename( path.resolve( __dirname, "..", "..", "..") );
-const commonConfig = require("./webpack.common.js");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports = webpackMerge( {
-  watch       : false,
-  plugins     :[
-      new OptimizeCssAssetsPlugin(  {
-          cssProcessorOptions: { discardComments: {removeAll: true } },
-          canPrint: true
-      }),
-      new webpack.optimize.UglifyJsPlugin({
-              minimize: true
-      })
+module.exports = {
+  watch: false,
+  plugins: [
+    new OptimizeCssAssetsPlugin({
+      cssProcessorOptions: {
+        discardComments: {
+          removeAll: true
+        }
+      },
+      canPrint: true
+    }),
+    new UglifyJsPlugin({
+      uglifyOptions: {
+        warnings: true,
+        compress: true
+      },
+      parallel: true
+    })
   ]
-}, commonConfig );
-
+};
 		  </pre>
 	  </div>
 	</div>

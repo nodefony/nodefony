@@ -2,8 +2,6 @@
 
 {% block body %}
 
-module.exports = nodefony.registerService("{{name}}", function(){
-
 	/**
 	 *	The class is a **`{{name}}` SERVICE** .
 	 *	@module {{module}}
@@ -12,17 +10,12 @@ module.exports = nodefony.registerService("{{name}}", function(){
 	 *	@constructor
 	 *
 	 */
-	const {{name}} = class {{name}} extends nodefony.Service {
+	module.exports = class {{name}} extends nodefony.Service {
 
 		constructor(){
 			super("{{name}}");
 		}
 
 	};
-
-	return {{name}};
-
-});
-
 
 {% endblock %}
