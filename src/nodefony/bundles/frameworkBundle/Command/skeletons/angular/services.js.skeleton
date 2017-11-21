@@ -1,0 +1,8 @@
+module.exports = {
+  /**
+   * {{name}}: {
+   *  class: nodefony.services.{{name}},
+   *  arguments: ["@container"]
+   *}
+  }*/
+};
