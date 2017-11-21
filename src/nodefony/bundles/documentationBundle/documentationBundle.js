@@ -63,7 +63,7 @@ module.exports = class documentationBundle extends nodefony.Bundle {
         }
       });
     } else {
-      this.logger("ELASTIC SEARCH DISABLED : webcrawler search in memory !!  try to install elastic server  ", "WARNING");
+      //this.logger("ELASTIC SEARCH DISABLED : webcrawler search in memory !!  try to install elastic server  ", "WARNING");
     }
   }
 

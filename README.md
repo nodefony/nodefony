@@ -202,7 +202,6 @@ nodefony
 framework
     generate:bundle nameBundle path                                  Generate a nodefony Bundle  Example : nodefony generate:bundle myBundle ./src/bundles
     generate:bundle:angular nameBundle path                          Generate a Angular Bundle  Example : nodefony generate:bundle:angular myBundle ./src/bundles
-    generate:bundle:react nameBundle path                            Generate a React Bundle Example : nodefony generate:bundle:react myBundle ./src/bundles
     generate:controller  nameController bundlePath                   Generate a controller Example : nodefony generate:controller myController ./src/bundles/myBundle
     generate:command nameCommand path                                Generate a command js file in bundle path
     generate:service nameService path                                Generate a service js file in bundle path
@@ -233,53 +232,53 @@ CLI Generate new bundle :    generate:bundle nameBundle path
 ```bash
 $ ./nodefony generate:bundle helloBundle src/bundles
 
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : GENERATE bundle : helloBundle LOCATION : /Users/cci/repository/nodefony/src/bundles
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :helloBundle
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :Command
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :controller
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create File      :defaultController.js
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :services
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :tests
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create File      :helloBundleTest.js
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :Resources
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :config
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create File      :config.yml
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create File      :routing.yml
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :webpack
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create File      :webpack.common.js
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create File      :webpack.dev.config.js
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create File      :webpack.prod.config.js
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create File      :security.yml
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :public
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :js
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create File      :hello.js
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :css
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create File      :hello.css
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :images
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :assets
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :js
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :css
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :fonts
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :images
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :translations
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :views
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create File      :index.html.twig
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :doc
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :1.0
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create File      :readme.md
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create symbolic link :Default
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :core
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create Directory :Entity
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create File      :helloBundle.js
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create symbolic link :readme.md
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : Create File      :package.json
-Wed Jul 19 2017 15:22:12 INFO SERVICE CLI KERNEL  : INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : /Users/cci/repository/nodefony-core/web/
+Mon Nov 20 2017 16:42:01 INFO SERVICE CLI KERNEL  : GENERATE bundle : helloBundle LOCATION : /Users/cci/repository/nodefony-core/src/bundles
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :helloBundle
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :controller
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :defaultController.js
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :Resources
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :config
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :config.yml
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :routing.js
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :security.yml
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :services.js
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :webpack.config.js
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :webpack
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :webpack.dev.config.js
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :webpack.prod.config.js
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :public
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :js
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :hello.js
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :css
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :hello.css
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :images
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :assets
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :js
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :css
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :fonts
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :images
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :translations
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :views
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :index.html.twig
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :tests
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :helloTest.js
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :Command
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :helloCommand.js
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :services
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :doc
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :default
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :readme.md
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :helloBundle.js
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :readme.md
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :src
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :Entity
+ Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :package.json
 ┌─────────┬───────────────────┬────────────────────────────────────────────┬───────────┬────────────────┐
 │ BUNDLES │ DESTINATION PATH  │ SOURCE PATH                                │ SIZE      │ ASSETS COMPILE │
 ├─────────┼───────────────────┼────────────────────────────────────────────┼───────────┼────────────────┤
 │ hello   │ ./web/helloBundle │ ./src/bundles/helloBundle/Resources/public │ 483 bytes │ 0 bytes        │
 └─────────┴───────────────────┴────────────────────────────────────────────┴───────────┴────────────────┘
-Wed Jul 19 2017 15:22:12 INFO CONSOLE   : NODEFONY Kernel Life Cycle Terminate CODE : 0
+ Mon Nov 20 2017 16:42:01 INFO KERNEL CONSOLE   : NODEFONY Kernel Life Cycle Terminate CODE : 0
 ```
 ### Start Servers to check new Bundle hello:
 ```bash
@@ -318,10 +317,11 @@ locale :                        en_en
 #    or
 #      watch:
 #        controller:	true
-#        config:        true		# only  routing.yml
+#        config:        true		# only  routing
 #        views:         true
 #        translations:  true
 #        webpack:       true
+#        services:      true
 #
 watch:                          true
 ```
@@ -335,31 +335,91 @@ watch:                          true
 
 #### without having to reboot the server
 
-You can see helloBundle config webpack : vim  ./src/bundles/helloBundle/Resources/config/webpack/webpack-dev.config.js
+You can see helloBundle config webpack : vim  ./src/bundles/helloBundle/Resources/config/webpack.config.js
 ```js
 const path = require("path");
-const webpack = require('webpack');
+const public = path.resolve(__dirname, "..", "public");
+const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
 const ExtractTextPluginCss = require('extract-text-webpack-plugin');
-const webpackMerge = require('webpack-merge'); // used to merge webpack configs
-const public = path.resolve(__dirname, "..", ".." ,"public");
-const commonConfig = require("./webpack.common.js");
-const webpackDevClient = "webpack-dev-server/client?https://"+kernel.hostHttps+"/";
+const webpackMerge = require('webpack-merge');
+let config = null;
+if (kernel.environment === "dev") {
+  config = require("./webpack/webpack.dev.config.js");
+} else {
+  config = require("./webpack/webpack.prod.config.js");
+}
 
-module.exports = webpackMerge( {
-    entry       : {
-      hello  : [ "./js/hello.js" ],
-    },
-    output      : {
-      path      : public,
-      filename  : "./assets/js/[name].js",
-      library   : "[name]",
-      libraryTarget: "umd"
-    },
-    devtool     : "source-map",
-    externals   : {},
-    resolve     : {},
-    plugins     : []
-}, commonConfig );
+module.exports = webpackMerge({
+  context: public,
+  target: "web",
+  entry       : {
+    hello  : [ "./js/hello.js" ]
+  },
+  output: {
+    path: public,
+    filename: "./assets/js/[name].js",
+    library: "[name]",
+    libraryTarget: "umd"
+  },
+  externals: {},
+  resolve: {},
+  module: {
+    rules: [{
+      // BABEL TRANSCODE
+      test: new RegExp("\.es6$"),
+      exclude: new RegExp("node_modules"),
+      use: [{
+        loader: 'babel-loader',
+        options: {
+          presets: ['env']
+        }
+      }]
+    }, {
+      // CSS EXTRACT
+      test: new RegExp("\.css$"),
+      use: ExtractTextPluginCss.extract({
+        use: 'css-loader'
+      })
+    }, {
+      // SASS
+      test: new RegExp(".scss$"),
+      use: [{
+        loader: 'style-loader'
+      }, {
+        loader: 'css-loader'
+      }, {
+        loader: 'sass-loader'
+      }]
+    }, {
+      test: new RegExp("\.less$"),
+      use: ExtractTextPluginCss.extract({
+        use: [
+          "raw-loader",
+          {
+            loader: 'less-loader',
+            options: {
+              //strictMath: true,
+              //noIeCompat: true
+            }
+          }
+        ]
+      })
+    }, {
+      // FONTS
+      test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
+      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '&outputPath=/assets/fonts/',
+    }, {
+      // IMAGES
+      test: new RegExp("\.(jpg|png|gif)$"),
+      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '&outputPath=/assets/images/'
+    }]
+  },
+  plugins: [
+    new ExtractTextPluginCss({
+      filename: "./assets/css/[name].css",
+    })
+  ]
+}, config);
 ```
 
 ### <a name="start_prod"></a>Start Production Mode

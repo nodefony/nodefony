@@ -4,7 +4,7 @@
  *
  */
 const stage = require("nodefony-stage");
-//require("bootstrap");
+require("bootstrap");
 require("../less/style.less");
 require('font-awesome/css/font-awesome.css');
 //require("../vendors/jquery.timeago/jquery.timeago.js");
