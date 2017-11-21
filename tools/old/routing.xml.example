@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- XML CONFIG FOR EXAMPLE -->
+<routes xmlns="http://nodefony.com/schema/routing" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nodefony.com/schema/routing http://nodefony.com/schema/routing/routing-1.0.xsd">
+
+	<!-- REALTIME -->
+	<route id="indexReal" pattern="/demo/realtime">
+		<default key="controller">demoBundle:demo:indexRealTime</default>
+		<requirement key="method">GET</requirement>
+	</route>
+
+
+	<!-- myroute -->
+	<route id="myroute" pattern="/myroute/{page}/{elements}">
+		<default key="controller">demoBundle:demo:myroute</default>
+		<default key="page">13</default>
+		<default key="elements">myRouteDefaultValue</default>
+		<requirement key="page">^\d\d$</requirement>
+	</route>
+
+	<!-- TODO -->
+	<!--  <import resource="routing2.xml" prefix="/prefix" />
+	<import resource="routing3.xml" hostname_pattern="hello.example.com" />  -->
+
+</routes>

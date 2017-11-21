@@ -31,6 +31,23 @@ module.exports = nodefony.register("Request", function () {
     }
   };
 
+  const parserQs = class parserQs extends parser {
+    constructor(request) {
+      super(request);
+      this.queryStringParser = this.request.context.queryStringParser || {};
+    }
+    parse() {
+      try {
+        this.request.queryPost = QS.parse(this.request.data.toString(this.charset), this.queryStringParser);
+        this.request.query = nodefony.extend({}, this.request.query, this.request.queryPost);
+        super.parse();
+      } catch (err) {
+        this.request.context.fire("onError", this.request.context.container, err);
+        throw err;
+      }
+    }
+  };
+
   const parserXml = class parserXml extends parser {
     constructor(request) {
       super(request);
@@ -180,6 +197,9 @@ module.exports = nodefony.register("Request", function () {
       case "text/xml":
         this.parser = new parserXml(this);
         break;
+      case "application/x-www-form-urlencoded":
+        this.parser = new parserQs(this);
+        break;
       default:
         let opt = nodefony.extend(this.context.requestSettings, {
           encoding: this.charset
@@ -190,6 +210,7 @@ module.exports = nodefony.register("Request", function () {
             this.request.on("end", () => {
               this.context.fire("onError", this.context.container, err);
             });
+            return;
           }
           try {
             this.queryPost = fields;
