@@ -109,18 +109,18 @@ module.exports = nodefony.register("kernel", function () {
       }
       this.typeCluster = this.clusterIsMaster() ? "master" : "worker";
 
-      // Manage Kernel Container
-      this.set("kernel", this);
-      // Manage Reader
-      this.reader = new nodefony.Reader(this.container);
-      this.set("reader", this.reader);
-      // Manage Injections
-      this.injection = new nodefony.injection(this.container);
-      this.set("injection", this.injection);
-      // SERVERS
-      this.initServers();
-      // cli worker
       try {
+        // Manage Kernel Container
+        this.set("kernel", this);
+        // Manage Reader
+        this.reader = new nodefony.Reader(this.container);
+        this.set("reader", this.reader);
+        // Manage Injections
+        this.injection = new nodefony.injection(this.container);
+        this.set("injection", this.injection);
+        // SERVERS
+        this.initServers();
+        // cli worker
         this.cli = new nodefony.cliKernel("NODEFONY", this.container, this.notificationsCenter, {
           autoLogger: false,
           version: this.version,
@@ -129,17 +129,16 @@ module.exports = nodefony.register("kernel", function () {
             this.start(environment);
           }
         });
+        this.cli.createDirectory(path.resolve(this.rootDir, "tmp"), null, (file) => {
+          this.tmpDir = file;
+        }, true);
+        this.git = this.cli.setGitPath(this.rootDir);
+        this.cacheLink = path.resolve(this.rootDir, "tmp", "assestLink");
+        this.cacheWebpack = path.resolve(this.rootDir, "tmp", "webpack");
       } catch (e) {
         console.trace(e);
         throw e;
       }
-      this.cli.createDirectory(path.resolve(this.rootDir, "tmp"), null, (file) => {
-        this.tmpDir = file;
-      }, true);
-      this.git = this.cli.setGitPath(this.rootDir);
-
-      this.cacheLink = path.resolve(this.rootDir, "tmp", "assestLink");
-      this.cacheWebpack = path.resolve(this.rootDir, "tmp", "webpack");
       this.once("onPostRegister", () => {
         if (this.type === "SERVER") {
           if (!fs.existsSync(this.cacheLink)) {

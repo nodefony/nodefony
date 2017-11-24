@@ -74,7 +74,7 @@ module.exports = nodefony.registerCommand("router", function () {
       if (firstMatch) {
         head.push("FIRST MATCH");
       }
-      var table = super.displayTable(null, {
+      let table = super.displayTable(null, {
         head: head
       });
       for (var i = 0; i < ele.length; i++) {
