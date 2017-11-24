@@ -259,6 +259,7 @@ module.exports = nodefony.register("kernel", function () {
           }
         }
       } catch (e) {
+        console.trace(e);
         this.logger(e, "ERROR");
         throw e;
       }
