@@ -2,18 +2,18 @@ const shortId = require('shortid');
 
 module.exports = nodefony.register("Container", function () {
 
-  let ISDefined = function (ele) {
+  const ISDefined = function (ele) {
     if (ele !== null && ele !== undefined) {
       return true;
     }
     return false;
   };
 
-  let generateId = function () {
+  const generateId = function () {
     return shortId.generate();
   };
 
-  let parseParameterString = function (str, value) {
+  const parseParameterString = function (str, value) {
     let ns = null;
     switch (nodefony.typeOf(str)) {
     case "string":
@@ -41,7 +41,7 @@ module.exports = nodefony.register("Container", function () {
       }
       break;
     default:
-      return false;
+      return this; //nodefony.extend(true, this, this.prototype);
     }
   };
 
@@ -66,7 +66,7 @@ module.exports = nodefony.register("Container", function () {
       this.parameters = new this.protoParameters();
       if (parameters && typeof parameters === "object") {
         for (let parameter in parameters) {
-          this.set(parameter, parameters[parameter]);
+          this.setParameters(parameter, parameters[parameter]);
         }
       }
     }
@@ -161,7 +161,7 @@ module.exports = nodefony.register("Container", function () {
         this.logger(new Error("setParameters : container parameter name must be a string"));
         return false;
       }
-      if (!ISDefined(str)) {
+      if (str === undefined) {
         this.logger(new Error("setParameters : " + name + " container parameter value must be define"));
         return false;
       }
@@ -174,10 +174,10 @@ module.exports = nodefony.register("Container", function () {
     }
 
     getParameters(name) {
-      if (typeof name !== "string") {
+      /*if (typeof name !== "string") {
         this.logger(new Error("container parameter name must be a string"));
         return false;
-      }
+      }*/
       //return parseParameterString.call(this.protoParameters.prototype, name, null);
       return parseParameterString.call(this.parameters, name, null);
     }

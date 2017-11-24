@@ -7,7 +7,6 @@ module.exports = nodefony.register("controller", function () {
       this.httpKernel = this.get("httpKernel");
       this.router = this.get("router");
       this.serviceTemplating = this.get('templating');
-      this.sessionService = this.get("sessions");
       this.method = this.getMethod();
       this.response = this.context.response;
       this.request = this.context.request;
@@ -17,7 +16,7 @@ module.exports = nodefony.register("controller", function () {
       this.queryFile = this.request.queryFile;
       this.queryPost = this.request.queryPost;
       this.sessionAutoStart = null;
-      this.on("onRequestEnd", () => {
+      this.once("onRequestEnd", () => {
         this.query = this.request.query;
         this.queryFile = this.request.queryFile;
         this.queryPost = this.request.queryPost;
@@ -44,10 +43,11 @@ module.exports = nodefony.register("controller", function () {
     }
 
     startSession(sessionContext) {
+      let sessionService = this.get("sessions");
       if (!this.context.requestEnded) {
-        this.sessionAutoStart = this.sessionService.setAutoStart(sessionContext);
+        this.sessionAutoStart = sessionService.setAutoStart(sessionContext);
       } else {
-        return this.sessionService.start(this.context, sessionContext);
+        return sessionService.start(this.context, sessionContext);
       }
     }
 
