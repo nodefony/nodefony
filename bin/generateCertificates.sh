@@ -177,5 +177,5 @@ openssl x509 -noout -modulus -in $ROOT_DIR/server/fullchain.pem
 echo "####################";
 echo "#       HAPROXY    #";
 echo "####################";
-rsync -a $ROOT_DIR/server/fullchain.pem $ROOT_DIR/haproxy/fullchain.pem
-cat $ROOT_DIR/server/fullchain.pem >> $ROOT_DIR/haproxy/fullchain.pem
+
+cat $ROOT_DIR/server/fullchain.pem $ROOT_DIR/server/privkey.pem > $ROOT_DIR/server/haproxy.pem
