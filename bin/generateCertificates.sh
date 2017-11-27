@@ -4,7 +4,7 @@
 ROOT_DIR="./config/certificates"
 CONF_DIR="./config/openssl"
 mkdir -p $ROOT_DIR
-mkdir -p $ROOT_DIR/{client,server,ca}
+mkdir -p $ROOT_DIR/{client,server,ca,haproxy}
 
 echo "###################################";
 echo "#   ROOT CA CERTIFICATS           #";
@@ -173,3 +173,9 @@ openssl verify -CAfile $ROOT_CA_INTERMEDIATE/certs/ca-chain.cert.pem \
 openssl rsa -noout -modulus -in $ROOT_DIR/server/privkey.pem
 openssl req -noout -modulus -in $ROOT_CA_INTERMEDIATE/csr/nodefony.csr.pem
 openssl x509 -noout -modulus -in $ROOT_DIR/server/fullchain.pem
+
+echo "####################";
+echo "#       HAPROXY    #";
+echo "####################";
+rsync -a $ROOT_DIR/server/fullchain.pem $ROOT_DIR/haproxy/fullchain.pem
+cat $ROOT_DIR/server/fullchain.pem >> $ROOT_DIR/haproxy/fullchain.pem
