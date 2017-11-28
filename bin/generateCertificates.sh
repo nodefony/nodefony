@@ -4,7 +4,7 @@
 ROOT_DIR="./config/certificates"
 CONF_DIR="./config/openssl"
 mkdir -p $ROOT_DIR
-mkdir -p $ROOT_DIR/{client,server,ca,haproxy}
+mkdir -p $ROOT_DIR/{client,server,ca}
 
 echo "###################################";
 echo "#   ROOT CA CERTIFICATS           #";
