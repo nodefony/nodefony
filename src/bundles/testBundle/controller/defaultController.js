@@ -38,7 +38,9 @@ module.exports = class defaultController extends nodefony.controller {
 
   indexAction() {
     try {
-      return this.render("testBundle::index.html.twig");
+      return this.render("testBundle::index.html.twig", {
+        lib: lib.toJson()
+      });
     } catch (e) {
       throw e;
     }

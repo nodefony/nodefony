@@ -70,7 +70,7 @@ module.exports = nodefony.register("kernelWatcher", function () {
             default:
               this.bundle.reloadWatcherControleur(null, Path, file);
             }
-            if (res && this.sockjs) {
+            if (this.sockjs) {
               this.sockjs.sendWatcher("change", file);
             }
           } catch (error) {
