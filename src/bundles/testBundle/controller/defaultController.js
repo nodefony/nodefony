@@ -14,7 +14,6 @@ module.exports = class defaultController extends nodefony.controller {
     // start session for all actions
     this.startSession();
 
-
     /*let i = 0;
     //flush(this.context, i);
     let interval = setInterval(() => {
@@ -39,10 +38,40 @@ module.exports = class defaultController extends nodefony.controller {
 
   indexAction() {
     try {
-      return this.render("testBundle::index.html.twig");
+      return this.render("testBundle::index.html.twig", {
+        lib: lib.toJson()
+      });
     } catch (e) {
       throw e;
     }
+  }
+
+  /**
+   *    @Method ({"GET"})
+   *    @Route ("/test/session/attributes",
+   *      name="test-session-attributes")
+   *
+   */
+  sessionAction() {
+    let ele = this.context.session.get("ele");
+    if (ele) {
+      return this.renderJson({
+        ele: ele,
+        param: this.context.session.getParameters("ele"),
+        params: this.context.session.getParameters(),
+        conxtext: this.context.session.getParameters("context")
+      });
+    }
+    this.context.session.set("ele", this.kernel.domain);
+    this.context.session.setParameters("ele.foo.bar", this.kernel.domain);
+    this.context.session.setParameters("ele.ola", this.kernel.domain);
+    return this.renderJson({
+      type: "create",
+      ele: this.context.session.get("ele"),
+      param: this.context.session.getParameters("ele"),
+      params: this.context.session.getParameters(),
+      conxtext: this.context.session.getParameters("context")
+    });
   }
 
   /**

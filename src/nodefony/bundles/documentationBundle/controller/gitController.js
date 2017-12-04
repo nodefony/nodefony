@@ -52,7 +52,11 @@ module.exports = class gitController extends nodefony.controller {
       if (err) {
         throw err;
       }
-      for (let i = 0; i < 10; i++) {
+      let nb = ListLogSummary.all.length;
+      if (nb > 10) {
+        nb = 10;
+      }
+      for (let i = 0; i < nb; i++) {
         tab.push({
           sha: ListLogSummary.all[i].hash,
           msg: ListLogSummary.all[i].message,

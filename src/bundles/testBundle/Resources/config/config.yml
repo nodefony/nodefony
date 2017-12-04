@@ -41,7 +41,7 @@ locale :			en_en
 #        translations: true
 #
 watch:
-  controller:		true
+  controllers:		true
   config:       true
   views:			  true
   translations: true

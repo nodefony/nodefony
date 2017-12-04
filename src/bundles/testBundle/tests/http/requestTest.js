@@ -109,6 +109,60 @@ describe("BUNDLE TEST", function () {
       request.end();
     });
 
+    it("request-post-x-www-form-urlencoded-post2", function (done) {
+      global.options.path = '/test/unit/request?nodefony=2.0';
+      global.options.method = 'POST';
+      let data = {
+        "foo[ele]": "bar",
+        "foo[ele2]": "bar2",
+        "foo[ele3]": "bar3",
+        "foo[ele4]": "bar4",
+        "bar[ele]": "foo",
+        "bar[ele1]": "foo",
+        "bar[ele2]": "foo2",
+        "bar[ele2][foo]": "foo2"
+      };
+      let dataObject = {
+        foo: {
+          ele: 'bar',
+          ele2: 'bar2',
+          ele3: 'bar3',
+          ele4: 'bar4'
+        },
+        bar: {
+          ele: 'foo',
+          ele1: 'foo',
+          ele2: ['foo2', {
+            foo: 'foo2'
+          }]
+        }
+      };
+      let post_data = querystring.stringify(data);
+      global.options.headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': Buffer.byteLength(post_data)
+      };
+      var request = http.request(global.options, function (res) {
+        assert.equal(res.statusCode, 200);
+        assert.equal(res.statusMessage, "OK");
+        res.setEncoding('utf8');
+        res.on('data', (chunk) => {
+          let res = JSON.parse(chunk);
+          assert.deepStrictEqual(res.method, "POST");
+          assert.deepStrictEqual(res.query, nodefony.extend({}, dataObject, {
+            nodefony: "2.0"
+          }));
+          assert.deepStrictEqual(res.queryPost, dataObject);
+          assert.deepStrictEqual(res.queryGet, {
+            nodefony: "2.0"
+          });
+          done();
+        });
+      });
+      request.write(post_data);
+      request.end();
+    });
+
     it("request-exception-500", function (done) {
       global.options.path = '/test/unit/exception';
       global.options.method = 'GET';

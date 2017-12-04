@@ -31,8 +31,8 @@ module.exports = function () {
         this.speakToText();
         // init textToSpeak
         //this.textToSpeak("Les sanglots longs Des violons De l’automne Blessent mon cœur D’une langueur Monotone.");
-        console.log($("#version").html().replace(/^\s*|\s*$/g, ''))
         this.textToSpeak($("#version").html().replace(/^\s*|\s*$/g, ''));
+        //this.textToSpeak($("#french").html().replace(/^\s*|\s*$/g, ''));
       });
     }
 
