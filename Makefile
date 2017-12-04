@@ -179,6 +179,9 @@ framework:
 	@if [ ! -d bin ] ; then  \
 		mkdir bin ;\
 	fi
+	@if [ ! -d app/Resources/databases ] ; then  \
+		mkdir -p app/Resources/databases ;\
+	fi
 	@if [ ! -d web ] ; then  \
 		mkdir web ;\
 	fi
