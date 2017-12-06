@@ -78,9 +78,9 @@ let angularCli = class angularCli extends nodefony.Service {
       .then((dir) => {
         return this.npmInstall(dir);
       })
-      //.then((dir) => {
-      //  return this.npmInstall(dir, "@ngtools/webpack");
-      //})
+      .then((dir) => {
+        return this.npmInstall(dir, "@ngtools/webpack");
+      })
       .then((dir) => {
         return this.generateNgModule(dir);
       })
