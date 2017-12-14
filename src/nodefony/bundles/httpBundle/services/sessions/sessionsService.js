@@ -44,7 +44,15 @@ module.exports = class sessions extends nodefony.Service {
   }
 
   initializeStorage() {
-    let storage = nodefony.session.storage[this.settings.handler];
+    let storage = null;
+    switch (this.settings.handler) {
+    case "orm":
+    case "ORM":
+      storage = nodefony.session.storage[this.kernel.getOrm()];
+      break;
+    default:
+      storage = nodefony.session.storage[this.settings.handler];
+    }
     if (storage) {
       this.storage = new storage(this);
       this.listen(this, "onReady", function () {

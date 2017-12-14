@@ -85,12 +85,11 @@ statics:
 #         MEMCACHED
 #          https://github.com/3rd-Eden/memcached
 #
-
 session:
-  start:                  false               # false || true || Name Session Context 
+  start:                  false               # false || true || Name Session Context
   use_strict_mode:        true
   name:                   "nodefony"
-  handler:                files               # files | sequelize | memcached  "nodefony.session.storage"
+  handler:                files               # files | orm | memcached  "nodefony.session.storage"
   save_path:              "/tmp/sessions"
   gc_probability:         1
   gc_divisor:             100

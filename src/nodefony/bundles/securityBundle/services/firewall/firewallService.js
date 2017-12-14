@@ -422,7 +422,7 @@ module.exports = class security extends nodefony.Service {
               }
               break;
             case "entity":
-              this.once("onPreBoot", () => {
+              this.once("onBoot", () => {
                 this.orm.once("onOrmReady", () => {
                   let ent = this.orm.getEntity(element[pro].name);
                   if (!ent) {

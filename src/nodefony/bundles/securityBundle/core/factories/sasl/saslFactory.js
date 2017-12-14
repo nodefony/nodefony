@@ -108,6 +108,7 @@ nodefony.register.call(nodefony.security.factory, "sasl", function () {
         });
 
       } catch (e) {
+        this.contextSecurity.logger(e, "ERROR");
         response.headers["WWW-Authenticate"] = this.generateResponse(token);
         callback(e, null);
       }

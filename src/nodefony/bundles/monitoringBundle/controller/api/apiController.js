@@ -607,7 +607,7 @@ module.exports = class apiController extends nodefony.controller {
         return this.renderDatatable(dataTable, true);
       });
       break;
-    case "sequelize":
+    case "orm":
       let orm = this.getORM();
       let sessionEntity = orm.getEntity("session");
       let userEntity = orm.getEntity("user");

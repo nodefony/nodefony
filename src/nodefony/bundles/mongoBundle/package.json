@@ -1,0 +1,23 @@
+{
+    "name": "mongoBundle",
+    "version": "1.0.0",
+    "description": "nodefony mongodb ",
+    "author": "cci ccamensuli@gmail.com",
+    "scripts": {},
+    "private": true,
+    "keywords": [
+        "nodefony",
+        "javascript"
+    ],
+    "repository": {},
+    "dependencies": {
+        "mongodb": "^2.2.33",
+        "mongoose": "^4.13.6"
+    },
+    "devDependencies": {},
+    "license": "CECILL-B",
+    "readmeFilename": "README.md",
+    "contributors": [
+        {}
+    ]
+}

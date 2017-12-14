@@ -58,12 +58,12 @@ module.exports = nodefony.registerCommand("Sequelize", function () {
         switch (cmd[2]) {
         case 'load':
           this.ormService.listen(this, "onOrmReady", (service) => {
-            var bundles = this.ormService.kernel.bundles;
+            let bundles = this.ormService.kernel.bundles;
             this.tabPromise = [];
-            for (var bundle in bundles) {
-              var fixtures = bundles[bundle].getFixtures();
+            for (let bundle in bundles) {
+              let fixtures = bundles[bundle].getFixtures();
               if (Object.keys(fixtures).length) {
-                for (var fixture in fixtures) {
+                for (let fixture in fixtures) {
                   if (fixtures[fixture].type === "sequelize") {
                     this.logger("LOAD FIXTURES BUNDLE : " + bundles[bundle].name, "INFO");
                     service.getConnection(fixtures[fixture].connection);
@@ -76,12 +76,11 @@ module.exports = nodefony.registerCommand("Sequelize", function () {
                   }
                 }
               }
-
             }
           });
           this.kernel.listen(this, "onPostReady", ( /*service*/ ) => {
 
-            var actions = this.tabPromise.map(function (ele) {
+            let actions = this.tabPromise.map(function (ele) {
               return new Promise(ele);
             });
 

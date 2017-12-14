@@ -26,7 +26,7 @@ system:
       cert                      : "config/certificates/server/fullchain.pem"
       ca                        : "config/certificates/ca/nodefony-root-ca.crt.pem"
       options:
-        rejectUnauthorized      : false
+        rejectUnauthorized      : true
 
   bundles:
     test                        : "src/bundles/testBundle"
@@ -67,7 +67,8 @@ templating                      : twig
 
 ############
 # ENGINE ORM
-#       SEQUELIZE
+#       sequelize || mongoose
+#orm                             : mongoose
 orm                             : sequelize
 
 #########################

@@ -180,26 +180,57 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
           };
         }
 
-        for (let connection in this.orm.connections) {
-          ORM.connections[connection] = {
-            state: this.orm.connections[connection].state,
-            name: this.orm.connections[connection].name,
-            type: this.orm.connections[connection].type,
-            db: {}
-          };
-          if (this.orm.connections[connection].db) {
-            ORM.connections[connection].db = {
-              config: this.orm.connections[connection].db.config,
-              options: this.orm.connections[connection].db.options,
-              models: {}
+        switch (ORM.name) {
+        case "sequelize":
+          for (let connection in this.orm.connections) {
+            ORM.connections[connection] = {
+              state: this.orm.connections[connection].state,
+              name: this.orm.connections[connection].name,
+              type: this.orm.connections[connection].type,
+              db: {}
             };
-            for (let model in this.orm.connections[connection].db.models) {
-              ORM.connections[connection].db.models[model] = {
-                name: model
+            if (this.orm.connections[connection].db) {
+              ORM.connections[connection].db = {
+                config: this.orm.connections[connection].db.config,
+                options: this.orm.connections[connection].db.options,
+                models: {}
               };
+              for (let model in this.orm.connections[connection].db.models) {
+                ORM.connections[connection].db.models[model] = {
+                  name: model
+                };
+              }
             }
           }
+          break;
+        case "mongoose":
+          for (let connection in this.orm.connections) {
+            ORM.connections[connection] = {
+              state: this.orm.connections[connection].states[this.orm.connections[connection]._readyState],
+              name: this.orm.connections[connection].name,
+              type: "mongodb",
+              db: {}
+            };
+            let options = {
+              host: this.orm.connections[connection].host + ":" + this.orm.connections[connection].port
+            };
+
+            if (this.orm.connections[connection]) {
+              ORM.connections[connection].db = {
+                config: this.orm.connections[connection].config,
+                options: options,
+                models: {}
+              };
+              for (let model in this.orm.connections[connection].models) {
+                ORM.connections[connection].db.models[model] = {
+                  name: model
+                };
+              }
+            }
+          }
+          break;
         }
+
 
         this.service = {
           upload: {
