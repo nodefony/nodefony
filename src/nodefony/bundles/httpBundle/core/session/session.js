@@ -381,8 +381,7 @@ nodefony.register("Session", function () {
 
     destroy() {
       this.clear();
-      this.remove();
-      return true;
+      return this.remove();
     }
 
     clear() {

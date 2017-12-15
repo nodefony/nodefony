@@ -5,7 +5,7 @@ module.exports = nodefony.register("Bundle", function () {
 
   const regBundle = /^(.*)[Bb]undle$/;
   const regFixtures = /^(.+)Fixtures.js$/;
-  const regController = /^(.+)Controller.js$/;
+  const regController = /^(.+)Controller\.[m]?js$/;
   const regClassController = /^(.+)Controller$/;
   const regService = /^(.+)Service.js$/;
   const regCommand = /^(.+)Command.js$/;
