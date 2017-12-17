@@ -244,7 +244,7 @@ module.exports = nodefony.register("Bundle", function () {
       let i18n = false;
       let config = false;
       let services = false;
-      let entities = false;
+      //let entities = false;
       let regJs = new RegExp(".*\.js$|.*\.es6$|.*\.es7$");
       try {
         switch (typeof this.settings.watch) {

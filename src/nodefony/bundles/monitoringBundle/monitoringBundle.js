@@ -779,34 +779,62 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         try {
           data = JSON.stringify(context.profiling);
         } catch (e) {
-          this.kernel.logger("JSON.stringify  :", "ERROR");
-          console.trace(e);
+          this.kernel.logger(e, "ERROR");
+          return;
         }
-        this.requestEntity.create({
-            id: null,
-            remoteAddress: context.profiling.context.remoteAddress,
-            userAgent: context.profiling.userAgent.toString,
-            url: context.profiling.request.url,
-            route: context.profiling.route.name,
-            method: context.profiling.request.method,
-            state: context.profiling.response.statusCode,
-            protocole: context.profiling.context.type,
-            username: user,
-            data: data
-          }, {
-            isNewRecord: true
-          })
-          .then((request) => {
-            this.kernel.logger("ORM REQUEST SAVE ID :" + request.id, "DEBUG");
-            if (context && context.profiling) {
-              context.profiling.id = request.id;
-            }
-            callback(null, request);
-          }).catch((error) => {
-            console.log(error);
-            this.kernel.logger(error);
-            callback(error, null);
-          });
+        switch (this.kernel.getOrm()) {
+        case "sequelize":
+          this.requestEntity.create({
+              id: null,
+              remoteAddress: context.profiling.context.remoteAddress,
+              userAgent: context.profiling.userAgent.toString,
+              url: context.profiling.request.url,
+              route: context.profiling.route.name,
+              method: context.profiling.request.method,
+              state: context.profiling.response.statusCode,
+              protocole: context.profiling.context.type,
+              username: user,
+              data: data
+            }, {
+              isNewRecord: true
+            })
+            .then((request) => {
+              this.kernel.logger("ORM REQUEST SAVE ID :" + request.id, "DEBUG");
+              if (context && context.profiling) {
+                context.profiling.id = request.id;
+              }
+              callback(null, request);
+            }).catch((error) => {
+              this.kernel.logger(error, "ERROR");
+              callback(error, null);
+            });
+          break;
+        case "mongoose":
+          this.requestEntity.create({
+              id: null,
+              remoteAddress: context.profiling.context.remoteAddress,
+              userAgent: context.profiling.userAgent.toString,
+              url: context.profiling.request.url,
+              route: context.profiling.route.name,
+              method: context.profiling.request.method,
+              state: context.profiling.response.statusCode,
+              protocole: context.profiling.context.type,
+              username: user,
+              data: data
+            })
+            .then((request) => {
+              this.kernel.logger("ORM REQUEST SAVE ID :" + request._id, "DEBUG");
+              if (context && context.profiling) {
+                context.profiling.id = request.id;
+              }
+              callback(null, request);
+            })
+            .catch((error) => {
+              this.kernel.logger(error, "ERROR");
+              callback(error, null);
+            });
+          break;
+        }
         break;
       default:
         callback(new Error("No PROFILING"), null);

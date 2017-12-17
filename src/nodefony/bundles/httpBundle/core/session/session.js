@@ -396,7 +396,6 @@ nodefony.register("Session", function () {
       this.clearFlashBags();
     }
 
-
     invalidate(lifetime, id) {
       this.manager.logger("INVALIDATE SESSION ==>" + this.name + " : " + this.id, "DEBUG");
       if (!lifetime) {

@@ -1,6 +1,5 @@
 ########## nodefony CONFIG BUNDLE  mongoBundle  ############
 name        :              mongoBundle
-version     :              "1.0.0"
 type        :              "nodefony"
 locale      :              en_en
 
@@ -22,24 +21,18 @@ locale      :              en_en
 #        translations   :  true
 #        webpack        :  true
 #        services       :  true
-watch       :
-  controllers    :         false
-  config         :         false
-  views          :         false
-  translations   :         false
-  webpack        :         false
-  services       :         true
+watch       :              false
 
 mongoose:
   debug:                   false
   connectors:
     nodefony:
       host:                "127.0.0.1"
-      port:                11211
+      port:                27017
       dbname:              "nodefony"
       settings:
-        user:              "nodefony"
-        pass:              "nodefony"
+        user:              ""
+        pass:              ""
         reconnectTries:    1000
         reconnectInterval: 10
         autoReconnect:     true

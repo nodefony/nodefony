@@ -76,6 +76,7 @@ module.exports = nodefony.register("controller", function () {
 
     setContextJson() {
       this.context.isJson = true;
+      this.context.response.setHeader("Content-Type", "application/json; charset=utf-8");
     }
 
     getORM() {
