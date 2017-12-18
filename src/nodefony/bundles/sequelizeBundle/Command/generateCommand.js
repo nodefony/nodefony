@@ -24,21 +24,45 @@ module.exports = nodefony.registerCommand("Sequelize", function () {
             force = true;
           }
           var tab = [];
+
           this.ormService.listen(this, "onReadyConnection", (connectionName, connection /*, service*/ ) => {
             this.logger("DATABASE  : " + connection.options.dialect + " CONNECTION : " + connectionName, "INFO");
+
             tab.push(new Promise((resolve, reject) => {
               this.logger("DATABASE SYNC : " + connectionName);
-              connection.sync({
-                force: force,
-                logging: this.logger,
-                hooks: true
-              }).then((db) => {
-                this.logger("DATABASE :" + db.config.database + " CONNECTION : " + connectionName + " CREATE ALL TABLES", "INFO");
-                resolve(connectionName);
-              }).catch((error) => {
-                this.logger("DATABASE :" + connection.config.database + " CONNECTION : " + connectionName + " : " + error, "ERROR");
-                reject(error);
-              });
+              switch (connection.options.dialect) {
+              case "sqlite":
+                connection.sync({
+                  force: force,
+                  logging: this.logger,
+                  hooks: true
+                }).then((db) => {
+                  this.logger("DATABASE :" + db.config.database + " CONNECTION : " + connectionName + " CREATE ALL TABLES", "INFO");
+                  resolve(connectionName);
+                }).catch((error) => {
+                  this.logger("DATABASE :" + connection.config.database + " CONNECTION : " + connectionName + " : " + error, "ERROR");
+                  reject(error);
+                });
+                break;
+              case "mysql":
+                connection.query('SET FOREIGN_KEY_CHECKS = 0', null, {
+                    raw: true
+                  })
+                  .then(() => {
+                    connection.sync({
+                      force: force,
+                      logging: this.logger,
+                      hooks: true
+                    }).then((db) => {
+                      this.logger("DATABASE :" + db.config.database + " CONNECTION : " + connectionName + " CREATE ALL TABLES", "INFO");
+                      resolve(connectionName);
+                    }).catch((error) => {
+                      this.logger("DATABASE :" + connection.config.database + " CONNECTION : " + connectionName + " : " + error, "ERROR");
+                      reject(error);
+                    });
+                  });
+                break;
+              }
             }));
           });
           this.ormService.listen(this, "onOrmReady", ( /*service*/ ) => {
