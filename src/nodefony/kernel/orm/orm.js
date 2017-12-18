@@ -20,8 +20,8 @@ module.exports = nodefony.register("orm", function () {
         this.debug = this.kernel.debug;
       }
       this.entities = {};
-      this.definitions = {};
-      this.autoLoader = autoLoader;
+      //this.definitions = {};
+      //this.autoLoader = autoLoader;
       this.connections = {};
       this.connectionNotification = 0;
     }
@@ -30,7 +30,7 @@ module.exports = nodefony.register("orm", function () {
       this.listen(this, "onReadyConnection", connectionMonitor);
       this.listen(this, "onErrorConnection", connectionMonitor);
 
-      this.kernel.listen(this, 'onBoot', (kernel) => {
+      /*this.kernel.listen(this, 'onBoot', (kernel) => {
         let callback = null;
         for (let bundle in kernel.bundles) {
           if (Object.keys(kernel.bundles[bundle].entities).length) {
@@ -61,14 +61,14 @@ module.exports = nodefony.register("orm", function () {
             }
           }
         }
-      });
+      });*/
 
       this.listen(this, "onConnect", (name, db) => {
-        if (name in this.definitions) {
+        /*if (name in this.definitions) {
           for (let i = 0; i < this.definitions[name].length; i++) {
             this.definitions[name][i](db);
           }
-        }
+        }*/
         try {
           this.fire("onReadyConnection", name, db, this);
         } catch (e) {
@@ -96,6 +96,25 @@ module.exports = nodefony.register("orm", function () {
         return this.entities[name];
       } else {
         return this.entities;
+      }
+    }
+
+    setEntity(entity) {
+      if (!entity) {
+        throw new Error(this.name + " setEntity : entity  is null ");
+      }
+      if (!(entity instanceof nodefony.Entity)) {
+        throw new Error(this.name + " setEntity  : not instance of nodefony.Entity");
+      }
+      if (this.entities[entity.name]) {
+        throw new Error(this.name + " setEntity  : Entity Already exist " + entity.name);
+      }
+      if (!entity.model) {
+        throw new Error(this.name + " setEntity  : Bundle : " + entity.bundle.name + " Model is undefined in Entity : " + entity.name);
+      }
+      this.entities[entity.name] = entity.model;
+      if (this.kernel.type === "SERVER") {
+        this.logger(" REGISTER ENTITY : " + entity.name + " PROVIDE BUNDLE : " + entity.bundle.name, "INFO");
       }
     }
   };

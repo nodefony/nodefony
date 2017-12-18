@@ -1,66 +1,74 @@
 const Sequelize = require("sequelize");
 
-module.export = class test extends nodefony.Entity {
+const schema = {
+  session_id: {
+    type: Sequelize.STRING(126).BINARY,
+    primaryKey: true
+  },
+  context: {
+    type: Sequelize.STRING(126).BINARY,
+    defaultValue: "default",
+    primaryKey: true
+  },
+  Attributes: {
+    type: Sequelize.TEXT,
+    set: function (value) {
+      return this.setDataValue('Attributes', JSON.stringify(value));
+    },
+    get: function (value) {
+      var val = this.getDataValue(value);
+      return JSON.parse(val);
+    }
+  },
+  flashBag: {
+    type: Sequelize.TEXT,
+    set: function (value) {
+      return this.setDataValue('flashBag', JSON.stringify(value));
+    },
+    get: function (value) {
+      let val = this.getDataValue(value);
+      return JSON.parse(val);
+    }
+  },
+  metaBag: {
+    type: Sequelize.TEXT,
+    set: function (value) {
+      return this.setDataValue('metaBag', JSON.stringify(value));
+    },
+    get: function (value) {
+      let val = this.getDataValue(value);
+      return JSON.parse(val);
+    }
+  },
+  createdAt: {
+    type: Sequelize.DATE,
+    defaultValue: Sequelize.NOW
+  },
+  updatedAt: {
+    type: Sequelize.DATE,
+    defaultValue: Sequelize.NOW
+  }
+};
 
+module.exports = class test extends nodefony.Entity {
 
   constructor(bundle) {
     /*
-     *  orm
-     *  connection
+     *   @param bundle instance
+     *   @param Entity name
+     *   @param orm name
+     *   @param connection name
      */
-    super("sequelize", "nodefony");
+    super(bundle, "test", "sequelize", "nodefony");
+    this.on("onConnect", (name, db) => {
+      this.model = this.registerModel(db);
+      this.orm.setEntity(this);
+    });
+
   }
 
-  registerModel(db, orm) {
-    let model = db.define("session", {
-      session_id: {
-        type: Sequelize.STRING(126).BINARY,
-        primaryKey: true
-      },
-      context: {
-        type: Sequelize.STRING(126).BINARY,
-        defaultValue: "default",
-        primaryKey: true
-      },
-      Attributes: {
-        type: Sequelize.TEXT,
-        set: function (value) {
-          return this.setDataValue('Attributes', JSON.stringify(value));
-        },
-        get: function (value) {
-          var val = this.getDataValue(value);
-          return JSON.parse(val);
-        }
-      },
-      flashBag: {
-        type: Sequelize.TEXT,
-        set: function (value) {
-          return this.setDataValue('flashBag', JSON.stringify(value));
-        },
-        get: function (value) {
-          let val = this.getDataValue(value);
-          return JSON.parse(val);
-        }
-      },
-      metaBag: {
-        type: Sequelize.TEXT,
-        set: function (value) {
-          return this.setDataValue('metaBag', JSON.stringify(value));
-        },
-        get: function (value) {
-          let val = this.getDataValue(value);
-          return JSON.parse(val);
-        }
-      },
-      createdAt: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW
-      }
-    }, {
+  registerModel(db) {
+    let model = db.define(this.name, schema, {
       logging: false
     });
 
@@ -73,6 +81,15 @@ module.export = class test extends nodefony.Entity {
         }
       });
     };
+    let user = this.orm.getEntity("user");
+    if (user) {
+      model.belongsTo(user, {
+        foreignKey: 'user_id',
+        constraints: false
+      });
+    } else {
+      throw "ENTITY ASSOCIATION user NOT AVAILABLE";
+    }
     return model;
   }
 };

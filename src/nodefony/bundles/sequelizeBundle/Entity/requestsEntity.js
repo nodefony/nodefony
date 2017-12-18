@@ -7,55 +7,64 @@
  */
 const Sequelize = require("sequelize");
 
-module.exports = nodefony.registerEntity("requests", function () {
 
-  const requests = function (db /*, ormService*/ ) {
+const schema = {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  remoteAddress: {
+    type: Sequelize.STRING
+  },
+  userAgent: {
+    type: Sequelize.STRING
+  },
+  url: {
+    type: Sequelize.TEXT
+  },
+  route: {
+    type: Sequelize.STRING
+  },
+  method: {
+    type: Sequelize.STRING
+  },
+  state: {
+    type: Sequelize.STRING
+  },
+  protocole: {
+    type: Sequelize.STRING
+  },
+  username: {
+    type: Sequelize.STRING
+  },
+  data: {
+    type: Sequelize.TEXT
+  }
+};
 
-    const model = db.define("requests", {
-      id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-      },
-      remoteAddress: {
-        type: Sequelize.STRING
-      },
-      userAgent: {
-        type: Sequelize.STRING
-      },
-      url: {
-        type: Sequelize.TEXT
-      },
-      route: {
-        type: Sequelize.STRING
-      },
-      method: {
-        type: Sequelize.STRING
-      },
-      state: {
-        type: Sequelize.STRING
-      },
-      protocole: {
-        type: Sequelize.STRING
-      },
-      username: {
-        type: Sequelize.STRING
-      },
-      data: {
-        type: Sequelize.TEXT
-      },
+
+module.exports = class requests extends nodefony.Entity {
+
+  constructor(bundle) {
+    /*
+     *   @param bundle instance
+     *   @param Entity name
+     *   @param orm name
+     *   @param connection name
+     */
+    super(bundle, "requests", "sequelize", "nodefony");
+    this.on("onConnect", (name, db) => {
+      this.model = this.registerModel(db);
+      this.orm.setEntity(this);
     });
 
-    /*ormService.listen(this, 'onReadyConnection', function(connectionName, db, ormService){
-        if(connectionName == 'nodefony'){
+  }
 
-        }
-    });*/
-    return model;
-  };
-  return {
-    type: "sequelize",
-    connection: "nodefony",
-    entity: requests
-  };
-});
+  registerModel(db) {
+    return db.define(this.name, schema, {
+      logging: false
+    });
+  }
+
+};

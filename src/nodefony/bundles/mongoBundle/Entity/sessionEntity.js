@@ -1,44 +1,58 @@
 //const Mongoose = require('mongoose');
 const Schema = require('mongoose').Schema;
 
-module.exports = nodefony.registerEntity("session", function () {
+const schema = {
+  session_id: {
+    type: String,
+    index: true,
+    unique: true,
+  },
+  context: {
+    type: String,
+    default: "default"
+  },
+  user_id: {
+    type: "ObjectId",
+  },
+  Attributes: {
+    type: Object,
+    default: {}
+  },
+  flashBag: {
+    type: Object,
+    default: {}
+  },
+  metaBag: {
+    type: Object,
+    default: {}
+  }
+};
 
-  const Session = function (db /*, ormService*/ ) {
+module.exports = class session extends nodefony.Entity {
 
-    let schema = new Schema({
-      session_id: {
-        type: String,
-        index: true,
-        unique: true,
-      },
-      context: {
-        type: String,
-        default: "default"
-      },
-      user_id: {
-        type: "ObjectId",
-      },
-      Attributes: {
-        type: Object,
-        default: {}
-      },
-      flashBag: {
-        type: Object,
-        default: {}
-      },
-      metaBag: {
-        type: Object,
-        default: {}
-      }
-    }, {
+  constructor(bundle) {
+    /*
+     *   @param bundle instance
+     *   @param Entity name
+     *   @param orm name
+     *   @param connection name
+     */
+    super(bundle, "session", "mongoose", "nodefony");
+    this.once("onConnect", (name, db) => {
+      this.model = this.registerModel(db);
+      this.orm.setEntity(this);
+    });
+  }
+
+  registerModel(db) {
+    let mySchema = new Schema(schema, {
       collection: 'sessions',
       timestamps: {
         createdAt: 'createdAt',
         updatedAt: 'updatedAt'
       }
     });
-
-    schema.statics.fetchAll = function (callback) {
+    mySchema.statics.fetchAll = function (callback) {
       return this.findAll().then(function (result) {
         return callback(null, result);
       }).catch(function (error) {
@@ -47,14 +61,6 @@ module.exports = nodefony.registerEntity("session", function () {
         }
       });
     };
-
-    return db.model('session', schema);
-  };
-
-  return {
-    type: "mongoose",
-    connection: "nodefony",
-    entity: Session
-  };
-
-});
+    return db.model(this.name, mySchema);
+  }
+};
