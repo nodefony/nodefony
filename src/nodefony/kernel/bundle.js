@@ -916,12 +916,18 @@ module.exports = nodefony.register("Bundle", function () {
           if (res) {
             let name = res[1];
             let Class = this.loadFile(file.path);
-            if (typeof Class.entity === "function") {
+            if (Class.entity && typeof Class.entity === "function") {
               Class.entity.prototype.bundle = this;
               this.entities[name] = Class;
               this.logger("LOAD ENTITY : " + file.name, "DEBUG");
             } else {
-              this.logger("Register ENTITY : " + name + "  error ENTITY bad format");
+              try {
+                Class.prototype.bundle = this;
+                this.entities[Class.name] = new Class(this);
+                this.logger("LOAD ENTITY  " + Class.name + " : " + file.name, "DEBUG");
+              } catch (e) {
+                throw e;
+              }
             }
           }
         });

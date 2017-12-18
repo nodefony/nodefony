@@ -52,7 +52,7 @@ module.exports = nodefony.register("orm", function () {
                     this.logger(this.name + " REGISTER ENTITY : " + Name + " PROVIDE BUNDLE : " + Bundle, "DEBUG");
                     return Enti;
                   } catch (e) {
-                    this.logger(e);
+                    this.logger(e, "ERROR");
                   }
                 };
               };
