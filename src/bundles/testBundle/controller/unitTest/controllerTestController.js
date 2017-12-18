@@ -9,6 +9,8 @@ module.exports = class controllerTestController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
+    this.orm = this.getORM();
+    this.ormName = this.kernel.getOrm();
   }
 
   /**
@@ -387,13 +389,24 @@ module.exports = class controllerTestController extends nodefony.controller {
    *
    */
   promise9() {
-    var orm = this.getORM();
-    var userEntity = orm.getEntity("user");
-    return userEntity.findOne({
+    //var orm = this.getORM();
+    var userEntity = this.orm.getEntity("user");
+    let query = null;
+    switch (this.ormName) {
+    case "sequelize":
+      query = {
         where: {
           username: "admin"
         }
-      })
+      };
+      break;
+    case "mongoose":
+      query = {
+        username: "admin"
+      };
+      break;
+    }
+    return userEntity.findOne(query)
       .then((ele) => {
         return this.renderJson({
           status: 200,
@@ -415,25 +428,38 @@ module.exports = class controllerTestController extends nodefony.controller {
    *
    */
   promise10() {
-    var orm = this.getORM();
-    var userEntity = orm.getEntity("user");
-    var sessionEntity = orm.getEntity("session");
-    return userEntity.findOne({
+    //var orm = this.getORM();
+    var userEntity = this.orm.getEntity("user");
+    var sessionEntity = this.orm.getEntity("session");
+    let query = null;
+    let query2 = null;
+    switch (this.ormName) {
+    case "sequelize":
+      query = {
         where: {
           username: "anonymous"
         }
-      })
+      };
+      query2 = {
+        where: {
+          //user_id: ele[0].id
+          session_id: this.getSession() ? this.getSession().id : 0
+        }
+      };
+      break;
+    case "mongoose":
+      query = {
+        username: "anonymous"
+      };
+      query2 = {
+        //user_id: ele[0].id
+        session_id: this.getSession() ? this.getSession().id : 0
+      };
+      break;
+    }
+    return userEntity.findOne(query)
       .then(() => {
-        return sessionEntity.findOne({
-          /*include: [{
-            model: userEntity,
-            //where: { username: null }
-          }],*/
-          where: {
-            //user_id: ele[0].id
-            session_id: this.getSession() ? this.getSession().id : 0
-          }
-        });
+        return sessionEntity.findOne(query2);
       })
       .then((ele) => {
         return this.renderJson(ele);
@@ -453,14 +479,25 @@ module.exports = class controllerTestController extends nodefony.controller {
    *
    */
   promise11() {
-    var orm = this.getORM();
-    var userEntity = orm.getEntity("user");
+    //var orm = this.getORM();
+    var userEntity = this.orm.getEntity("user");
     //var sessionEntity = orm.getEntity("session") ;
-    return userEntity.findOne({
+    let query = null;
+    switch (this.ormName) {
+    case "sequelize":
+      query = {
         where: {
           username: "admin"
         }
-      })
+      };
+      break;
+    case "mongoose":
+      query = {
+        username: "admin"
+      };
+      break;
+    }
+    return userEntity.findOne(query)
       .then((ele) => {
         return ele;
       })
@@ -484,14 +521,25 @@ module.exports = class controllerTestController extends nodefony.controller {
    *
    */
   promise12() {
-    var orm = this.getORM();
-    var userEntity = orm.getEntity("user");
+    //var orm = this.getORM();
+    var userEntity = this.orm.getEntity("user");
     //var sessionEntity = orm.getEntity("session") ;
-    return userEntity.findOne({
+    let query = null;
+    switch (this.ormName) {
+    case "sequelize":
+      query = {
         where: {
           username: "admin"
         }
-      })
+      };
+      break;
+    case "mongoose":
+      query = {
+        username: "admin"
+      };
+      break;
+    }
+    return userEntity.findOne(query)
       .then((ele) => {
         throw ele;
       })
@@ -518,11 +566,22 @@ module.exports = class controllerTestController extends nodefony.controller {
     var orm = this.getORM();
     var userEntity = orm.getEntity("user");
     //var sessionEntity = orm.getEntity("session") ;
-    return userEntity.findOne({
+    let query = null;
+    switch (this.ormName) {
+    case "sequelize":
+      query = {
         where: {
           username: "admin"
         }
-      })
+      };
+      break;
+    case "mongoose":
+      query = {
+        username: "admin"
+      };
+      break;
+    }
+    return userEntity.findOne(query)
       .then(() => {
         notDefinded;
       })
