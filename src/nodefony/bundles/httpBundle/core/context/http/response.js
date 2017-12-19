@@ -186,10 +186,14 @@ module.exports = nodefony.register("Response", function () {
     }
 
     write(data, encoding) {
-      if (data) {
-        return this.response.write(this.setBody(data), (encoding || this.encoding));
+      try {
+        if (data) {
+          return this.response.write(this.setBody(data), (encoding || this.encoding));
+        }
+        return this.response.write(this.body, (encoding || this.encoding));
+      } catch (e) {
+        throw e;
       }
-      return this.response.write(this.body, (encoding || this.encoding));
     }
 
     writeContinue() {

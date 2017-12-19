@@ -40,7 +40,7 @@ module.exports = class websocketServer extends nodefony.Service {
           this.bundle.fire("onServersReady", this.type, this);
           return this.websocketServer;
         } catch (e) {
-          this.logger(e);
+          this.logger(e, "ERROR");
           throw e;
         }
       }

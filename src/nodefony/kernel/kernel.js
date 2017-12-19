@@ -96,6 +96,7 @@ module.exports = nodefony.register("kernel", function () {
       this.bundlesCore = bundlesCore;
       // Paths
       this.rootDir = process.cwd();
+      this.bundlesPath = path.resolve(this.rootDir, "src", "bundles");
       this.appPath = path.resolve(this.rootDir, "app");
       this.configPath = path.resolve(this.rootDir, "config", "config.yml");
       this.generateConfigPath = path.resolve(this.rootDir, "config", "generatedConfig.yml");
@@ -285,6 +286,9 @@ module.exports = nodefony.register("kernel", function () {
       case "sequelize":
         bundles.push(path.resolve(this.nodefonyPath, "bundles", "sequelizeBundle"));
         break;
+      case "mongoose":
+        bundles.push(path.resolve(this.nodefonyPath, "bundles", "mongoBundle"));
+        break;
       default:
         this.logger(new Error("nodefony can't load ORM : " + this.settings.orm), "WARNING");
       }
@@ -324,6 +328,10 @@ module.exports = nodefony.register("kernel", function () {
       } catch (e) {
         this.logger(e, "ERROR");
       }
+    }
+
+    getOrm() {
+      return this.settings.orm;
     }
 
     checkPath(myPath) {

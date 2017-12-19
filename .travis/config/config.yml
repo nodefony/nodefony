@@ -67,17 +67,17 @@ monitoringBundle:
 #       make sequelize
 #
 sequelizeBundle:
-  debug:        false
+  debug:                         false
   connectors:
     nodefony:
-      driver:          mysql
-      dbname:          'nodefony'
-      username:        'travis'
-      password:        ''
+      driver:                    mysql
+      dbname:                    'nodefony'
+      username:                  'travis'
+      password:                  ''
       options:
-        dialect:       mysql
-        host:          127.0.0.1
-        port:          '3306'
+        dialect:                 mysql
+        host:                    127.0.0.1
+        port:                    '3306'
 
 ############################
 #  OVERRIDE BUNDLE HTTP
@@ -129,7 +129,7 @@ httpBundle:
   session:
     start:                       false                 # autostart || false
     name:                        "nodefony"
-    handler:                     sequelize             # files | sequelize | memcached  "nodefony.session.storage"
+    handler:                     orm                   # files | orm | memcached  "nodefony.session.storage"
     #save_path:                  "./tmp/sessions"      # for session.storage.files only
     use_strict_mode:             true
     gc_probability:              1

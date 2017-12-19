@@ -5,7 +5,7 @@ module.exports = nodefony.register("Bundle", function () {
 
   const regBundle = /^(.*)[Bb]undle$/;
   const regFixtures = /^(.+)Fixtures.js$/;
-  const regController = /^(.+)Controller.js$/;
+  const regController = /^(.+)Controller\.[m]?js$/;
   const regClassController = /^(.+)Controller$/;
   const regService = /^(.+)Service.js$/;
   const regCommand = /^(.+)Command.js$/;
@@ -244,7 +244,7 @@ module.exports = nodefony.register("Bundle", function () {
       let i18n = false;
       let config = false;
       let services = false;
-      let entities = false;
+      //let entities = false;
       let regJs = new RegExp(".*\.js$|.*\.es6$|.*\.es7$");
       try {
         switch (typeof this.settings.watch) {
@@ -916,13 +916,20 @@ module.exports = nodefony.register("Bundle", function () {
           if (res) {
             let name = res[1];
             let Class = this.loadFile(file.path);
-            if (typeof Class.entity === "function") {
+            if (Class.entity && typeof Class.entity === "function") {
               Class.entity.prototype.bundle = this;
               this.entities[name] = Class;
               this.logger("LOAD ENTITY : " + file.name, "DEBUG");
             } else {
-              this.logger("Register ENTITY : " + name + "  error ENTITY bad format");
+              try {
+                this.entities[Class.name] = new Class(this);
+                this.logger("LOAD ENTITY  " + Class.name + " : " + file.name, "DEBUG");
+              } catch (e) {
+                throw e;
+              }
             }
+          } else {
+            this.logger("Drop Entity file " + file.name, "WARNING");
           }
         });
       }

@@ -203,7 +203,7 @@ module.exports = class sequelize extends nodefony.orm {
       }
       table.push(conn);
     }
-    this.logger("DATABASES CONNECTORS LIST  : \n" + table.toString(), "DEBUG");
+    this.logger("ORM CONNECTORS LIST  : \n" + table.toString(), "DEBUG");
   }
 
   createConnection(name, config) {

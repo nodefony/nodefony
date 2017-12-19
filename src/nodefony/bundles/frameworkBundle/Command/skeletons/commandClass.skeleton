@@ -1,8 +1,6 @@
 {% extends "./licence.cecill-b.skeleton" %}
 
 {% block body %}
-
-
 module.exports = nodefony.registerCommand("{{name}}",() => {
 
 	const {{name}} = class {{name}} extends nodefony.cliKernel {
@@ -30,8 +28,8 @@ module.exports = nodefony.registerCommand("{{name}}",() => {
 						}
 					break;
 					default:
-						this.logger(cmd[1] + " : Not find ","ERROR")
-						this.showHelp()
+						this.logger(cmd[1] + " : Not found ","ERROR");
+						this.showHelp();
 				}
 				this.terminate();
 			}
@@ -43,7 +41,7 @@ module.exports = nodefony.registerCommand("{{name}}",() => {
 			id:["{{name}}:example myArg1 myArg2" ,"example  ./nodefony {{name}}:example myarg1 myarg2"],
 		},
 		cli:{{name}}
-	}
+	};
 });
 
 {% endblock %}

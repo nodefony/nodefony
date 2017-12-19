@@ -381,8 +381,7 @@ nodefony.register("Session", function () {
 
     destroy() {
       this.clear();
-      this.remove();
-      return true;
+      return this.remove();
     }
 
     clear() {
@@ -396,7 +395,6 @@ nodefony.register("Session", function () {
       this.parameters = new this.protoParameters();
       this.clearFlashBags();
     }
-
 
     invalidate(lifetime, id) {
       this.manager.logger("INVALIDATE SESSION ==>" + this.name + " : " + this.id, "DEBUG");

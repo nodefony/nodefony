@@ -1,64 +1,84 @@
-/*
- *
- *
- *        ENTITY SESSIONS sequelize
- *
- *
- */
 const Sequelize = require("sequelize");
 
-module.exports = nodefony.registerEntity("session", function () {
+const schema = {
+  session_id: {
+    type: Sequelize.STRING(126).BINARY,
+    primaryKey: true
+  },
+  context: {
+    type: Sequelize.STRING(126).BINARY,
+    defaultValue: "default",
+    primaryKey: true
+  },
+  Attributes: {
+    type: Sequelize.TEXT,
+    set: function (value) {
+      return this.setDataValue('Attributes', JSON.stringify(value));
+    },
+    get: function (value) {
+      var val = this.getDataValue(value);
+      return JSON.parse(val);
+    }
+  },
+  flashBag: {
+    type: Sequelize.TEXT,
+    set: function (value) {
+      return this.setDataValue('flashBag', JSON.stringify(value));
+    },
+    get: function (value) {
+      let val = this.getDataValue(value);
+      return JSON.parse(val);
+    }
+  },
+  metaBag: {
+    type: Sequelize.TEXT,
+    set: function (value) {
+      return this.setDataValue('metaBag', JSON.stringify(value));
+    },
+    get: function (value) {
+      let val = this.getDataValue(value);
+      return JSON.parse(val);
+    }
+  },
+  createdAt: {
+    type: Sequelize.DATE,
+    defaultValue: Sequelize.NOW
+  },
+  updatedAt: {
+    type: Sequelize.DATE,
+    defaultValue: Sequelize.NOW
+  }
+};
 
-  const Session = function (db, ormService) {
-    var model = db.define("session", {
-      session_id: {
-        type: Sequelize.STRING(126).BINARY,
-        primaryKey: true
-      },
-      context: {
-        type: Sequelize.STRING(126).BINARY,
-        defaultValue: "default",
-        primaryKey: true
-      },
-      Attributes: {
-        type: Sequelize.TEXT,
-        set: function (value) {
-          return this.setDataValue('Attributes', JSON.stringify(value));
-        },
-        get: function (value) {
-          var val = this.getDataValue(value);
-          return JSON.parse(val);
-        }
-      },
-      flashBag: {
-        type: Sequelize.TEXT,
-        set: function (value) {
-          return this.setDataValue('flashBag', JSON.stringify(value));
-        },
-        get: function (value) {
-          let val = this.getDataValue(value);
-          return JSON.parse(val);
-        }
-      },
-      metaBag: {
-        type: Sequelize.TEXT,
-        set: function (value) {
-          return this.setDataValue('metaBag', JSON.stringify(value));
-        },
-        get: function (value) {
-          let val = this.getDataValue(value);
-          return JSON.parse(val);
-        }
-      },
-      createdAt: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW
+module.exports = class session extends nodefony.Entity {
+
+  constructor(bundle) {
+    /*
+     *   @param bundle instance
+     *   @param Entity name
+     *   @param orm name
+     *   @param connection name
+     */
+    super(bundle, "session", "sequelize", "nodefony");
+    this.on("onConnect", (name, db) => {
+      this.model = this.registerModel(db);
+      this.orm.setEntity(this);
+    });
+    this.orm.on("onOrmReady", ( /*orm*/ ) => {
+      let user = this.orm.getEntity("user");
+      if (user) {
+        this.model.belongsTo(user, {
+          foreignKey: 'user_id',
+          constraints: false
+        });
+      } else {
+        throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
       }
-    }, {
+    });
+  }
+
+  registerModel(db) {
+    let model = db.define(this.name, schema, {
       logging: false
     });
 
@@ -72,26 +92,6 @@ module.exports = nodefony.registerEntity("session", function () {
       });
     };
 
-    ormService.listen(this, 'onReadyConnection', function (connectionName, db, ormService) {
-      if (connectionName === 'nodefony') {
-        let user = ormService.getEntity("user");
-        if (user) {
-          model.belongsTo(user, {
-            foreignKey: 'user_id',
-            constraints: false
-          });
-        } else {
-          throw "ENTITY ASSOCIATION user NOT AVAILABLE";
-        }
-      }
-    });
-
     return model;
-  };
-
-  return {
-    type: "sequelize",
-    connection: "nodefony",
-    entity: Session
-  };
-});
+  }
+};

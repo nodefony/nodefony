@@ -1,0 +1,38 @@
+########## nodefony CONFIG BUNDLE  mongoBundle  ############
+name        :              mongoBundle
+type        :              "nodefony"
+locale      :              en_en
+
+
+#
+#  WATCHERS
+#
+#    watchers Listen to changes, deletion, renaming of files and directories
+#    of different components
+#
+#    For watch all components
+#
+#      watch:			true            # by default services false !
+#    or
+#      watch:
+#        controllers     : true
+#        config         :  true		# only  routing
+#        views          :  true
+#        translations   :  true
+#        webpack        :  true
+#        services       :  true
+watch       :              false
+
+mongoose:
+  debug:                   false
+  connectors:
+    nodefony:
+      host:                "127.0.0.1"
+      port:                27017
+      dbname:              "nodefony"
+      settings:
+        user:              ""
+        pass:              ""
+        reconnectTries:    1000
+        reconnectInterval: 10
+        autoReconnect:     true

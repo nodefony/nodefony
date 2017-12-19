@@ -12,6 +12,7 @@ module.exports = class apiController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
+    this.setContextJson();
   }
 
   renderRest(data, async) {
@@ -154,6 +155,7 @@ module.exports = class apiController extends nodefony.controller {
   requestsAction() {
     let bundle = this.get("kernel").getBundles("monitoring");
     let storageProfiling = bundle.settings.storage.requests;
+    let ormName = this.kernel.getOrm();
     switch (storageProfiling) {
     case "syslog":
       let syslog = bundle.syslogContext;
@@ -165,108 +167,177 @@ module.exports = class apiController extends nodefony.controller {
       });
     case "orm":
       let requestEntity = bundle.requestEntity;
-      if (this.query.type && this.query.type === "dataTable") {
-
-        let options = {
-          offset: parseInt(this.query.start, 10),
-          limit: parseInt(this.query.length, 10)
-        };
-        if (this.query.order.length) {
-          options.order = [];
-          for (var i = 0; i < this.query.order.length; i++) {
-            var tab = [];
-            tab.push(this.query.columns[parseInt(this.query.order[i].column, 10)].name);
-            tab.push(this.query.order[i].dir);
-            options.order.push(tab);
+      switch (ormName) {
+      case "sequelize":
+        if (this.query.type && this.query.type === "dataTable") {
+          let options = {
+            offset: parseInt(this.query.start, 10),
+            limit: parseInt(this.query.length, 10)
+          };
+          if (this.query.order.length) {
+            options.order = [];
+            for (var i = 0; i < this.query.order.length; i++) {
+              var tab = [];
+              tab.push(this.query.columns[parseInt(this.query.order[i].column, 10)].name);
+              tab.push(this.query.order[i].dir);
+              options.order.push(tab);
+            }
           }
+          if (this.query.search.value !== "") {
+            options.where = {
+              $or: [{
+                username: {
+                  $like: "%" + this.query.search.value + "%"
+                }
+              }, {
+                url: {
+                  $like: "%" + this.query.search.value + "%"
+                }
+              }, {
+                route: {
+                  $like: "%" + this.query.search.value + "%"
+                }
+              }, {
+                method: {
+                  $like: "%" + this.query.search.value + "%"
+                }
+              }, {
+                state: {
+                  $like: "%" + this.query.search.value + "%"
+                }
+              }, {
+                protocole: {
+                  $like: "%" + this.query.search.value + "%"
+                }
+              }]
+            };
+          }
+          return requestEntity.findAndCountAll(options)
+            .then((results) => {
+              try {
+                var dataTable = dataTableParsing.call(this, this.query, results);
+                return dataTable;
+              } catch (e) {
+                throw e;
+              }
+            })
+            .then((result) => {
+              try {
+                return this.renderDatatable(result);
+              } catch (e) {
+                throw e;
+              }
+            })
+            .catch((error) => {
+              if (error) {
+                return this.renderRest({
+                  code: 500,
+                  type: "ERROR",
+                  message: "internal error",
+                  data: error
+                }, true);
+              }
+            });
+        } else {
+          return requestEntity.findAll()
+            .then((results) => {
+              try {
+                let ele = [];
+                for (let i = 0; i < results.length; i++) {
+                  let ret = {};
+                  ret.uid = results[i].id;
+                  ret.payload = JSON.parse(results[i].data);
+                  ret.timeStamp = results[i].createdAt;
+                  ele.push(ret);
+                }
+                return this.renderRest({
+                  code: 200,
+                  type: "SUCCESS",
+                  message: "OK",
+                  data: JSON.stringify(ele)
+                }, true);
+              } catch (e) {
+                throw e;
+              }
+            })
+            .catch((error) => {
+              if (error) {
+                return this.renderRest({
+                  code: 500,
+                  type: "ERROR",
+                  message: "internal error",
+                  data: error
+                }, true);
+              }
+            });
         }
+        break;
+      case "mongoose":
+        let requests = {
+          rows: null,
+          count: 0
+        };
+        let sort = {};
+        if (this.query.order.length) {
+          for (let i = 0; i < this.query.order.length; i++) {
+            let name = this.query.columns[parseInt(this.query.order[i].column, 10)].name;
+            let dir = this.query.order[i].dir;
+            sort[name] = dir === "desc" ? -1 : 1;
+          }
+        } else {
+          sort.createdAt = -1;
+        }
+        let options = null;
         if (this.query.search.value !== "") {
-          options.where = {
+          options = {
             $or: [{
               username: {
-                $like: "%" + this.query.search.value + "%"
+                $regex: this.query.search.value
               }
             }, {
               url: {
-                $like: "%" + this.query.search.value + "%"
+                $regex: this.query.search.value
               }
             }, {
               route: {
-                $like: "%" + this.query.search.value + "%"
+                $regex: this.query.search.value
               }
             }, {
               method: {
-                $like: "%" + this.query.search.value + "%"
+                $regex: this.query.search.value
               }
             }, {
               state: {
-                $like: "%" + this.query.search.value + "%"
+                $regex: this.query.search.value
               }
             }, {
               protocole: {
-                $like: "%" + this.query.search.value + "%"
+                $regex: this.query.search.value
               }
             }]
           };
         }
-        return requestEntity.findAndCountAll(options)
-          .then((results) => {
-            try {
-              var dataTable = dataTableParsing.call(this, this.query, results);
-              return dataTable;
-            } catch (e) {
-              throw e;
-            }
-          })
+        return requestEntity.find(options)
+          .sort(sort)
+          .skip(parseInt(this.query.start, 10))
+          .limit(parseInt(this.query.length, 10))
           .then((result) => {
-            try {
-              return this.renderDatatable(result);
-            } catch (e) {
-              throw e;
-            }
+            requests.rows = result;
+            return requestEntity.count();
+          }).then((result) => {
+            requests.count = result;
+            let dataTable = dataTableParsing.call(this, this.query, requests);
+            return this.renderDatatable(dataTable);
           })
-          .catch((error) => {
-            if (error) {
-              return this.renderRest({
-                code: 500,
-                type: "ERROR",
-                message: "internal error",
-                data: error
-              }, true);
-            }
+          .catch(e => {
+            throw e;
           });
-      } else {
-        return requestEntity.findAll()
-          .then((results) => {
-            try {
-              let ele = [];
-              for (let i = 0; i < results.length; i++) {
-                let ret = {};
-                ret.uid = results[i].id;
-                ret.payload = JSON.parse(results[i].data);
-                ret.timeStamp = results[i].createdAt;
-                ele.push(ret);
-              }
-              return this.renderRest({
-                code: 200,
-                type: "SUCCESS",
-                message: "OK",
-                data: JSON.stringify(ele)
-              }, true);
-            } catch (e) {
-              throw e;
-            }
-          })
-          .catch((error) => {
-            if (error) {
-              return this.renderRest({
-                code: 500,
-                type: "ERROR",
-                message: "internal error",
-                data: error
-              }, true);
-            }
-          });
+      default:
+        return this.renderRest({
+          code: 500,
+          type: "ERROR",
+          message: "Orm not defined :" + ormName,
+        }, true);
       }
       break;
     default:
@@ -287,6 +358,7 @@ module.exports = class apiController extends nodefony.controller {
   requestAction(uid) {
     let bundle = this.get("kernel").getBundles("monitoring");
     let storageProfiling = bundle.settings.storage.requests;
+    let ormName = this.kernel.getOrm();
     switch (storageProfiling) {
     case "syslog":
       let syslog = bundle.syslogContext;
@@ -313,42 +385,81 @@ module.exports = class apiController extends nodefony.controller {
       });
     case "orm":
       let requestEntity = bundle.requestEntity;
-      return requestEntity.findOne({
-          where: {
-            id: uid
-          }
-        })
-        .then((result) => {
-          if (result) {
-            let ret = {};
-            ret.uid = result.id;
-            ret.payload = JSON.parse(result.data);
-            ret.timeStamp = result.createdAt;
-            return this.renderRest({
-              code: 200,
-              type: "SUCCESS",
-              message: "OK",
-              data: JSON.stringify(ret)
-            });
-          } else {
-            return this.renderRest({
-              code: 404,
-              type: "ERROR",
-              message: "not found",
-              data: JSON.stringify(null)
-            });
-          }
-        })
-        .catch((error) => {
-          if (error) {
-            return this.renderRest({
-              code: 500,
-              type: "ERROR",
-              message: "internal error",
-              data: error
-            });
-          }
-        });
+      switch (ormName) {
+      case "sequelize":
+        return requestEntity.findOne({
+            where: {
+              id: uid
+            }
+          })
+          .then((result) => {
+            if (result) {
+              let ret = {};
+              ret.uid = result.id;
+              ret.payload = JSON.parse(result.data);
+              ret.timeStamp = result.createdAt;
+              return this.renderRest({
+                code: 200,
+                type: "SUCCESS",
+                message: "OK",
+                data: JSON.stringify(ret)
+              });
+            } else {
+              return this.renderRest({
+                code: 404,
+                type: "ERROR",
+                message: "not found",
+                data: JSON.stringify(null)
+              });
+            }
+          })
+          .catch((error) => {
+            if (error) {
+              return this.renderRest({
+                code: 500,
+                type: "ERROR",
+                message: "internal error",
+                data: error
+              });
+            }
+          });
+      case "mongoose":
+        return requestEntity.findOne({
+            _id: uid
+          })
+          .then((result) => {
+            if (result) {
+              let ret = {};
+              ret.uid = result.id;
+              ret.payload = JSON.parse(result.data);
+              ret.timeStamp = result.createdAt;
+              return this.renderRest({
+                code: 200,
+                type: "SUCCESS",
+                message: "OK",
+                data: JSON.stringify(ret)
+              });
+            } else {
+              return this.renderRest({
+                code: 404,
+                type: "ERROR",
+                message: "not found",
+                data: JSON.stringify(null)
+              });
+            }
+          })
+          .catch((error) => {
+            if (error) {
+              return this.renderRest({
+                code: 500,
+                type: "ERROR",
+                message: "internal error",
+                data: error
+              });
+            }
+          });
+      }
+      break;
     default:
       return this.renderRest({
         code: 500,
@@ -497,7 +608,6 @@ module.exports = class apiController extends nodefony.controller {
    *
    */
   realtimeAction(name) {
-
     let service = this.get("realTime");
     if (!service) {
       return this.renderRest({
@@ -554,21 +664,46 @@ module.exports = class apiController extends nodefony.controller {
    *
    */
   usersAction() {
-
     let orm = this.getORM();
-
-    let nodefonyDb = orm.getConnection("nodefony");
-
-    //var users = null ;
-    return nodefonyDb.query('SELECT id,username,name,surname,lang,provider FROM users')
-      .then((result) => {
+    let nameOrm = this.kernel.getOrm();
+    switch (nameOrm) {
+    case "sequelize":
+      let nodefonyDb = orm.getConnection("nodefony");
+      //var users = null ;
+      return nodefonyDb.query('SELECT username,name,surname,lang,provider FROM users')
+        .then((result) => {
+          return this.renderRest({
+            code: 200,
+            type: "SUCCESS",
+            message: "OK",
+            data: JSON.stringify(result[0])
+          });
+        });
+    case "mongoose":
+      let users = orm.getEntity("user");
+      return users.find({}, {
+        username: 1,
+        name: 1,
+        surname: 1,
+        lang: 1,
+        provider: 1
+      }).then((result) => {
         return this.renderRest({
           code: 200,
           type: "SUCCESS",
           message: "OK",
-          data: JSON.stringify(result[0])
+          data: JSON.stringify(result)
         });
+      }).catch((e) => {
+        throw e;
       });
+
+    }
+    return this.renderRest({
+      code: 500,
+      type: "ERROR",
+      message: "orm not implemented"
+    });
   }
 
   sessionsAction() {
@@ -607,71 +742,107 @@ module.exports = class apiController extends nodefony.controller {
         return this.renderDatatable(dataTable, true);
       });
       break;
-    case "sequelize":
+    case "orm":
       let orm = this.getORM();
+      let ormName = this.kernel.getOrm();
       let sessionEntity = orm.getEntity("session");
       let userEntity = orm.getEntity("user");
-      if (this.query.type && this.query.type === "dataTable") {
-        let options = {
-          offset: parseInt(this.query.start, 10),
-          limit: parseInt(this.query.length, 10),
-          include: [{
-            model: userEntity
-          }]
-        };
-        if (this.query.order.length) {
-          options.order = [];
-          for (let i = 0; i < this.query.order.length; i++) {
-            let tab = [];
-            tab.push(this.query.columns[parseInt(this.query.order[i].column, 10)].name);
-            tab.push(this.query.order[i].dir);
-            options.order.push(tab);
-          }
-        }
-        return sessionEntity.findAndCountAll(options)
-          .then((results) => {
-            let dataTable = null;
-            try {
-              dataTable = dataTableSessionParsing.call(this, this.query, results);
-              //var res = JSON.stringify(dataTable);
-            } catch (e) {
-              return this.renderRest({
-                code: 500,
-                type: "ERROR",
-                message: "internal error",
-                data: e
-              }, true);
+      switch (ormName) {
+      case "sequelize":
+        if (this.query.type && this.query.type === "dataTable") {
+          let options = {
+            offset: parseInt(this.query.start, 10),
+            limit: parseInt(this.query.length, 10),
+            include: [{
+              model: userEntity
+            }]
+          };
+          if (this.query.order.length) {
+            options.order = [];
+            for (let i = 0; i < this.query.order.length; i++) {
+              let tab = [];
+              tab.push(this.query.columns[parseInt(this.query.order[i].column, 10)].name);
+              tab.push(this.query.order[i].dir);
+              options.order.push(tab);
             }
+          }
+          return sessionEntity.findAndCountAll(options)
+            .then((results) => {
+              let dataTable = null;
+              try {
+                dataTable = dataTableSessionParsing.call(this, this.query, results);
+                //var res = JSON.stringify(dataTable);
+              } catch (e) {
+                return this.renderRest({
+                  code: 500,
+                  type: "ERROR",
+                  message: "internal error",
+                  data: e
+                }, true);
+              }
+              return this.renderDatatable(dataTable);
+            })
+            .catch((error) => {
+              if (error) {
+                return this.renderRest({
+                  code: 500,
+                  type: "ERROR",
+                  message: "internal error",
+                  data: error
+                }, true);
+              }
+            });
+        } else {
+          return sessionEntity.findAndCountAll()
+            .then((results) => {
+              let pdu = new nodefony.PDU({
+                code: 200,
+                data: JSON.stringify(results)
+              });
+              return this.renderJsonAsync(pdu);
+            })
+            .catch((error) => {
+              if (error) {
+                return this.renderRest({
+                  code: 500,
+                  type: "ERROR",
+                  message: "internal error",
+                  data: error
+                }, true);
+              }
+            });
+        }
+        break;
+      case "mongoose":
+        let sessions = {
+          rows: null,
+          count: 0
+        };
+        let sort = {};
+        if (this.query.order.length) {
+          for (let i = 0; i < this.query.order.length; i++) {
+            let name = this.query.columns[parseInt(this.query.order[i].column, 10)].name;
+            let dir = this.query.order[i].dir;
+            sort[name] = dir === "desc" ? -1 : 1;
+          }
+        } else {
+          sort.createdAt = -1;
+        }
+        return sessionEntity.find({}, {})
+          .populate('user_id', "username")
+          .sort(sort)
+          .skip(parseInt(this.query.start, 10))
+          .limit(parseInt(this.query.length, 10))
+          .then((result) => {
+            sessions.rows = result;
+            return sessionEntity.count();
+          }).then((result) => {
+            sessions.count = result;
+            let dataTable = dataTableSessionParsing.call(this, this.query, sessions);
             return this.renderDatatable(dataTable);
           })
-          .catch((error) => {
-            if (error) {
-              return this.renderRest({
-                code: 500,
-                type: "ERROR",
-                message: "internal error",
-                data: error
-              }, true);
-            }
-          });
-      } else {
-        sessionEntity.findAndCountAll()
-          .then((results) => {
-            let pdu = new nodefony.PDU({
-              code: 200,
-              data: JSON.stringify(results)
-            });
-            return this.renderJsonAsync(pdu);
-          })
-          .catch((error) => {
-            if (error) {
-              return this.renderRest({
-                code: 500,
-                type: "ERROR",
-                message: "internal error",
-                data: error
-              }, true);
-            }
+          .catch(e => {
+            throw e;
           });
       }
       break;
@@ -817,16 +988,27 @@ const dataTableSessionParsing = function (query, results) {
     recordsFiltered: results.count,
     data: []
   };
-
+  let ormName = this.kernel.getOrm();
   for (let i = 0; i < results.rows.length; i++) {
     let payload = {};
+    let user = null;
+    switch (ormName) {
+    case "sequelize":
+      user = results.rows[i].user ? results.rows[i].user : {
+        username: ""
+      };
+      break;
+    case "mongoose":
+      user = results.rows[i].user_id ? results.rows[i].user_id : {
+        username: ""
+      };
+      break;
+    }
     payload.session_id = results.rows[i].session_id;
     payload.context = results.rows[i].context;
     payload.createdAt = results.rows[i].createdAt;
     payload.updatedAt = results.rows[i].updatedAt;
-    payload.user = results.rows[i].user ? results.rows[i].user : {
-      username: ""
-    };
+    payload.user = user;
     payload.user_id = results.rows[i].user_id;
     payload.Attributes = results.rows[i].Attributes;
     payload.flashBag = results.rows[i].flashBag;

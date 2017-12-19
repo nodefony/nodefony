@@ -40,7 +40,7 @@ module.exports = nodefony.register("SecuredArea", function () {
           }
         } catch (e) {
           this.logger(this.name + "  " + e, "ERROR");
-          throw e;
+          //throw e;
         }
       });
     }
