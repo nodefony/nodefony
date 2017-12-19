@@ -829,7 +829,7 @@ module.exports = class apiController extends nodefony.controller {
           sort.createdAt = -1;
         }
         return sessionEntity.find({}, {})
-          .populate('user', 'username')
+          .populate('user_id', "username")
           .sort(sort)
           .skip(parseInt(this.query.start, 10))
           .limit(parseInt(this.query.length, 10))
@@ -988,16 +988,27 @@ const dataTableSessionParsing = function (query, results) {
     recordsFiltered: results.count,
     data: []
   };
-
+  let ormName = this.kernel.getOrm();
   for (let i = 0; i < results.rows.length; i++) {
     let payload = {};
+    let user = null;
+    switch (ormName) {
+    case "sequelize":
+      user = results.rows[i].user ? results.rows[i].user : {
+        username: ""
+      };
+      break;
+    case "mongoose":
+      user = results.rows[i].user_id ? results.rows[i].user_id : {
+        username: ""
+      };
+      break;
+    }
     payload.session_id = results.rows[i].session_id;
     payload.context = results.rows[i].context;
     payload.createdAt = results.rows[i].createdAt;
     payload.updatedAt = results.rows[i].updatedAt;
-    payload.user = results.rows[i].user ? results.rows[i].user : {
-      username: ""
-    };
+    payload.user = user;
     payload.user_id = results.rows[i].user_id;
     payload.Attributes = results.rows[i].Attributes;
     payload.flashBag = results.rows[i].flashBag;

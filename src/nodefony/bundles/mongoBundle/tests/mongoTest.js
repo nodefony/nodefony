@@ -18,16 +18,16 @@ describe("BUNDLE mongo", function () {
 
   describe('CORE', function () {
 
-    beforeEach(function () {})
+    beforeEach(function () {});
 
-    before(function () {})
+    before(function () {});
 
     // EXAMPLE  NODEFONY
     it("NAMESPACE LOADED", function (done) {
       // check nodefony namespace
       assert.equal(typeof nodefony, "object");
       // check instance kernel
-      assert.equal(kernel instanceof nodefony.kernel, true)
+      assert.equal(kernel instanceof nodefony.kernel, true);
       done();
     });
   });
