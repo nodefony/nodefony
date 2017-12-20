@@ -102,8 +102,9 @@ sequelizeBundle:
 #        port:                   32772
 #        dbname:                 "nodefony"
 #        settings:
-#          user:                 ""
-#          pass:                 ""
+#          user:                 "nodefony"
+#          pass:                 "nodefony"
+#          authSource:           "admin"
 #          reconnectTries:       1000
 #          reconnectInterval:    10
 #          autoReconnect:        true

@@ -12,8 +12,8 @@ Nodefony is not an exhaustive port of symfony !
 Nodefony features :
 - Servers  ([http(s)](https://nodejs.org/dist/latest-v8.x/docs/api/https.html), [websocket(s)](https://github.com/theturtle32/WebSocket-Node), statics, sockjs)
 - Dynamics routing
-- ORM ([Sequelize](http://docs.sequelizejs.com/))
-- Simple Databases connection (mongo, redis ...)
+- ORM ([Sequelize](http://docs.sequelizejs.com/), [mongoose](http://mongoosejs.com/index.html))
+- Simple Databases connection (mongo, ...)
 - MVC templating ([Twig](https://github.com/twigjs/twig.js))
 - HMR hot module Replacement  (auto-reload controller views routing in developement mode)
 - Notion of real-time context in Action Controller (websocket).

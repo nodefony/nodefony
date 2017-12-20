@@ -5,8 +5,12 @@ if [ "$DB" = "mysql" ]
 then
 	echo "NODEFONY TRAVIS ENVIRONEMENT MYSQL ACTIVE " ;
 	cp .travis/config/config.yml app/config/config.yml ;
-else
-	echo "NODEFONY TRAVIS ENVIRONEMENT SQLITE ACTIVE " ;
+fi
+
+if [ "$DB" = "mongodb" ]
+then
+	cp .travis/config/configMongo.yml config/config.yml ;
+	echo "NODEFONY TRAVIS ENVIRONEMENT MONGODB ACTIVE " ;
 fi
 
 cat /etc/hosts

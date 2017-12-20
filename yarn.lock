@@ -5984,16 +5984,20 @@ node-status-codes@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/node-status-codes/-/node-status-codes-1.0.0.tgz#5ae5541d024645d32a58fcddc9ceecea7ae3ac2f"
 
-nodefony-stage@0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/nodefony-stage/-/nodefony-stage-0.1.1.tgz#44e99f5a6ee2b6bc1a974ff3711c24dbbcbb3c21"
+nodefony-stage@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/nodefony-stage/-/nodefony-stage-0.1.2.tgz#bb76d9022abd3dbcc5aba25cf393ea8a6c21e076"
   dependencies:
     ascii-table "0.0.9"
     asciify "1.3.5"
+    babel-core "6.26.0"
+    babel-preset-env "1.6.1"
     jquery "3.2.1"
+    opn "^5.1.0"
     shortid "2.2.8"
-    twig "1.10.4"
-    webrtc-adapter "3.3.4"
+    twig "1.10.5"
+    uglifyjs-webpack-plugin "^1.1.4"
+    webrtc-adapter "^6.0.3"
 
 "nopt@2 || 3", nopt@~3.0.1:
   version "3.0.6"
@@ -7925,6 +7929,12 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^2.0.0"
     inherits "^2.0.1"
 
+rtcpeerconnection-shim@^1.1.13:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/rtcpeerconnection-shim/-/rtcpeerconnection-shim-1.2.4.tgz#5b178f57d35fe88e423c50d28d7507ececc9f3b2"
+  dependencies:
+    sdp "^2.2.0"
+
 run-async@^2.2.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/run-async/-/run-async-2.3.0.tgz#0371ab4ae0bdd720d4166d7dfda64ff7a445a6c0"
@@ -8007,9 +8017,9 @@ scss-tokenizer@^0.2.3:
     js-base64 "^2.1.8"
     source-map "^0.4.2"
 
-sdp@^1.5.0:
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/sdp/-/sdp-1.5.4.tgz#8e038f6ddb14bd765ae1f4b5216e12094511e0d0"
+sdp@^2.2.0, sdp@^2.3.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/sdp/-/sdp-2.5.0.tgz#b15a0b1dfd0a38f6a8c780e58f8c8fe73c29ffe5"
 
 seek-bzip@^1.0.3:
   version "1.0.5"
@@ -9029,14 +9039,6 @@ tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
 
-twig@1.10.4:
-  version "1.10.4"
-  resolved "https://registry.yarnpkg.com/twig/-/twig-1.10.4.tgz#2ebad1e7e38c02b9cc772934822da1163d4ad4a1"
-  dependencies:
-    locutus "^2.0.5"
-    minimatch "3.0.x"
-    walk "2.3.x"
-
 twig@1.10.5:
   version "1.10.5"
   resolved "https://registry.yarnpkg.com/twig/-/twig-1.10.5.tgz#c13e574f871b91db4fcc8df2c12ecf1ecfeac52e"
@@ -9664,11 +9666,12 @@ webpack@~3.8.1:
     webpack-sources "^1.0.1"
     yargs "^8.0.2"
 
-webrtc-adapter@3.3.4:
-  version "3.3.4"
-  resolved "https://registry.yarnpkg.com/webrtc-adapter/-/webrtc-adapter-3.3.4.tgz#19cbb7e7674033385eec723bd7ab8f5e6a7300b5"
+webrtc-adapter@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/webrtc-adapter/-/webrtc-adapter-6.0.3.tgz#850ab1649099922086c2c038c87c10c46d0c42cc"
   dependencies:
-    sdp "^1.5.0"
+    rtcpeerconnection-shim "^1.1.13"
+    sdp "^2.3.0"
 
 websocket-driver@>=0.5.1:
   version "0.7.0"
