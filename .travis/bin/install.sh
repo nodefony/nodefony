@@ -10,7 +10,6 @@ fi
 if [ "$DB" = "mongodb" ]
 then
 	cp .travis/config/configMongo.yml config/config.yml ;
-  make mongoose
 	echo "NODEFONY TRAVIS ENVIRONEMENT MONGODB ACTIVE " ;
 fi
 
@@ -18,6 +17,10 @@ cat /etc/hosts
 
 #configuring the system
 make build
+if [ "$DB" = "mongodb" ]
+then
+  make mongoose
+fi
 
 if [ "$DB" = "mysql" ]
 then
