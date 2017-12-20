@@ -451,10 +451,6 @@ module.exports = nodefony.register("kernel", function () {
             if (this.settings.system.servers.http2) {
               http2 = this.get("http2Server").createServer();
             }
-            // create websocket2Server server
-            if (this.settings.system.servers.wss2) {
-              this.get("websocket2Server").createServer(http2);
-            }
           } catch (e) {
             this.logger(e, "ERROR");
             console.error(e);
