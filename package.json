@@ -140,7 +140,6 @@
     "yarn": "1.3.2"
   },
   "devDependencies": {
-    "bithound": "1.7.0",
     "editorconfig": "^0.15.0",
     "github-release-notes": "^0.14.1",
     "jshint": "2.9.5"

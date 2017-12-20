@@ -17,10 +17,12 @@ services:
   - mysql
   - memcached
   - elasticsearch
+  - mongodb
 
 env:
   - DB=sqlite
   - DB=mysql
+  - DB=mongodb
 
 before_script:
   - sleep 30
