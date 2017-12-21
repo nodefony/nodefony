@@ -17,6 +17,10 @@ cat /etc/hosts
 
 #configuring the system
 make build
+if [ "$DB" = "mongodb" ]
+then
+  make mongoose
+fi
 
 if [ "$DB" = "mysql" ]
 then

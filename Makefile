@@ -222,6 +222,9 @@ sequelize:
 	./nodefony Sequelize:generate:entities
 	./nodefony Sequelize:fixtures:load
 
+mongoose:
+	./nodefony mongo:fixtures:load
+
 clean:
 	@if [ -e  node_modules ] ; then \
 		echo ""; \
