@@ -148,7 +148,7 @@ module.exports = class security extends nodefony.Service {
       case "HTTPS":
       case "HTTP":
       case "HTTP2":
-        context.response.setHeaders(this.settings[context.protocol]);
+        context.response.setHeaders(this.settings[context.scheme]);
         context.once('onRequestEnd', () => {
           return this.handle(context);
         });

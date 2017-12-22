@@ -74,6 +74,7 @@ module.exports = nodefony.register("SecuredArea", function () {
       switch (context.type) {
       case "HTTP":
       case "HTTPS":
+      case "HTTP2":
         if (this.formLogin) {
           if (e.message) {
             this.logger(e.message, "DEBUG");

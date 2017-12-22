@@ -83,6 +83,7 @@ module.exports = class sockjs extends nodefony.Service {
         switch (type) {
         case "HTTP":
         case "HTTPS":
+        case "HTTP2":
           let proto = type.toLowerCase();
           if (proto === this.protocol) {
             this.createServer(service, proto);

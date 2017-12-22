@@ -12,6 +12,7 @@ nodefony.register("Session", function () {
     switch (this.context.type) {
     case "HTTP":
     case "HTTPS":
+    case "HTTP2":
       host = this.context.request.request.headers.host;
       break;
     case "WEBSOCKET":

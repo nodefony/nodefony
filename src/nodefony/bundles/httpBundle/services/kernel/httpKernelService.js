@@ -429,10 +429,6 @@ module.exports = class httpKernel extends nodefony.Service {
     }
   }
 
-  onHttp2Request(stream, headers, type) {
-    this.fire("onServerRequest", stream, headers, type);
-  }
-
   handle(request, response, type) {
     // SCOPE REQUEST ;
     let container = this.container.enterScope("request");
@@ -444,17 +440,17 @@ module.exports = class httpKernel extends nodefony.Service {
       return this.handleHttp(container, request, response, type);
     case "WEBSOCKET":
     case "WEBSOCKET SECURE":
-    case "WEBSOCKET2":
       return this.handleWebsocket(container, request, type);
     }
   }
 
   handleHttp(container, request, response, type) {
     let context = null;
-    if (type === "HTTP2") {
+    try {
       context = new nodefony.context.http(container, request, response, type);
-    } else {
-      context = new nodefony.context.http2(container, request, response, type);
+    } catch (e) {
+      this.logger(e, "ERROR");
+      throw e;
     }
     //request events
     context.once("onError", this.onError.bind(this));

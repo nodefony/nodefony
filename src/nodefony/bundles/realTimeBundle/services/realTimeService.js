@@ -536,6 +536,7 @@ module.exports = class realTime extends nodefony.syslog {
       return this.onMessage(message, context);
     case "HTTP":
     case "HTTPS":
+    case "HTTP2":
       return this.onMessage(message, context);
     }
   }
@@ -626,6 +627,7 @@ module.exports = class realTime extends nodefony.syslog {
       switch (connection.type) {
       case "HTTP":
       case "HTTPS":
+      case "HTTP2":
         connection.response.body = message;
         connection.response.setHeader("Content-Type", "application/json");
         //return connection.response ;

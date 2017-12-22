@@ -38,7 +38,7 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
       } else {
         reconnect = "none";
       }
-      var ele = nodefony.extend({}, this.response, {
+      let ele = nodefony.extend({}, this.response, {
         channel: "/meta/handshake",
         //clientId:this.generateClientId(),
         supportedConnectionTypes: ["websocket"],
@@ -77,7 +77,7 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
     }
 
     disconnectResponse(message) {
-      var ele = nodefony.extend({}, this.response, {
+      let ele = nodefony.extend({}, this.response, {
         channel: "/meta/disconnect",
         clientId: message.clientId,
         successful: true
@@ -86,7 +86,7 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
     }
 
     subscribeResponse(message) {
-      var ele = nodefony.extend({}, this.response, {
+      let ele = nodefony.extend({}, this.response, {
         channel: "/meta/subscribe",
         clientId: message.clientId,
         subscription: message.subscription,

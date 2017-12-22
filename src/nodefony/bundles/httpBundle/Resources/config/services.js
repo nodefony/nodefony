@@ -15,10 +15,10 @@ module.exports = {
     class: nodefony.services.httpsServer,
     arguments: ["@httpKernel"]
   },
-  http2Server: {
+  /*http2Server: {
     class: nodefony.services.http2Server,
     arguments: ["@httpKernel", "@httpsServer"]
-  },
+  },*/
   websocketServer: {
     class: nodefony.services.websocketServer,
     arguments: ["@httpKernel"]

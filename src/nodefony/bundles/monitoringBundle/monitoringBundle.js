@@ -472,7 +472,6 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       break;
     case "WEBSOCKET":
     case "WEBSOCKET SECURE":
-    case "WEBSOCKET2":
       this.websocketRequest(context);
       break;
     }

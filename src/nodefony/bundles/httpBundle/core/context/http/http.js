@@ -13,7 +13,8 @@ nodefony.register.call(nodefony.context, "http", function () {
       //I18n
       this.translation = this.kernelHttp.translation.createTranslation(this);
       this.set("translation", this.translation);
-      this.protocol = (type === "HTTPS" || type === "HTTP2") ? "https" : "http";
+      this.protocol = (type === "HTTP2") ? "2.0" : "1.1";
+      this.scheme = (type === "HTTPS" || type === "HTTP2") ? "https" : "http";
       this.resolver = null;
       this.nbCallController = 0;
       this.uploadService = this.get("upload");
@@ -43,7 +44,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       if (this.request.url.port) {
         this.port = this.request.url.port;
       } else {
-        this.port = this.protocol === "https" ? 443 : 80;
+        this.port = this.scheme === "https" ? 443 : 80;
       }
       try {
         this.originUrl = url.parse(this.request.headers.origin);

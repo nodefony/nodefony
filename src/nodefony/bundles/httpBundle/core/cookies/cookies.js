@@ -25,6 +25,7 @@ nodefony.register("cookies", function () {
     switch (context.type) {
     case "HTTP":
     case "HTTPS":
+    case "HTTP2":
       if (context.request.request && context.request.request.headers.cookie) {
         cookies = context.request.request.headers.cookie;
       }

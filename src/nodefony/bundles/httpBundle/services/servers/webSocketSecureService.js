@@ -16,7 +16,7 @@ module.exports = class websocketServerSecure extends nodefony.Service {
   createServer(http /*, settings*/ ) {
 
     this.bundle.listen(this, "onServersReady", function (type) {
-      if (type === "HTTPS") {
+      if (type === "HTTPS" || type === "HTTP2") {
         try {
           this.settings = this.getParameters("bundles.http").websocketSecure || {};
           let conf = nodefony.extend(true, {}, this.settings);

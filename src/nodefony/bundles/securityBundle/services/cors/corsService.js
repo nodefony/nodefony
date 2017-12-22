@@ -115,7 +115,7 @@ module.exports = class cors extends nodefony.Service {
     let portOrigin = parseInt(URL.port, 10);
 
     // request server
-    let requestProto = context.protocol;
+    let requestProto = context.scheme;
     let requestPort = parseInt(context.port, 10);
     let protocolOrigin = null;
 

@@ -429,15 +429,19 @@ module.exports = nodefony.register("kernel", function () {
         this.once("onPostReady", () => {
           // create HTTP server
           let http = null;
-          let https = null;
+          //let https = null;
           let http2 = null;
           try {
             if (this.settings.system.servers.http) {
               http = this.get("httpServer").createServer();
             }
+            // create HTTP2 server
+            if (this.settings.system.servers.https) {
+              http2 = this.get("httpsServer").createServer();
+            }
             // create HTTPS server
             if (this.settings.system.servers.https) {
-              https = this.get("httpsServer").createServer();
+              //https = this.get("httpsServer").createServer();
             }
             // create WEBSOCKET server
             if (this.settings.system.servers.ws) {
@@ -445,12 +449,9 @@ module.exports = nodefony.register("kernel", function () {
             }
             // create WEBSOCKET SECURE server
             if (this.settings.system.servers.wss) {
-              this.get("websocketServerSecure").createServer(https);
+              this.get("websocketServerSecure").createServer(http2);
             }
-            // create HTTP2 server
-            if (this.settings.system.servers.http2) {
-              http2 = this.get("http2Server").createServer();
-            }
+
           } catch (e) {
             this.logger(e, "ERROR");
             console.error(e);

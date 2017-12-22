@@ -88,7 +88,7 @@ module.exports = class httpServer extends nodefony.Service {
         }, 1000);
         break;
       default:
-        this.logger(new Error(httpError), "CRITIC", "SERVICE HTTPS");
+        this.logger(new Error(httpError), "CRITIC", "SERVICE HTTP");
       }
     });
 

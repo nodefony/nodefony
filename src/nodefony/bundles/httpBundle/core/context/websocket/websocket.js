@@ -25,6 +25,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       super("WEBSOCKET CONTEXT", container);
       this.type = type;
       this.protocol = (type === "WEBSOCKET SECURE") ? "wss" : "ws";
+      this.scheme = (type === "WEBSOCKET SECURE") ? "wss" : "ws";
       this.isJson = true;
       this.kernelHttp = this.get("httpKernel");
       this.requestEnded = false;
@@ -39,7 +40,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       this.request.method = "WEBSOCKET";
       this.remoteAddress = this.request.remoteAddress;
       this.origin = request.origin;
-      this.request.url = url.parse(this.protocol + "://" + this.request.host);
+      this.request.url = url.parse(this.scheme + "://" + this.request.host);
       this.request.url.hash = this.request.resourceURL.hash;
       this.request.url.search = this.request.resourceURL.search;
       this.request.url.query = this.request.resourceURL.query;

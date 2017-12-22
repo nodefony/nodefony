@@ -217,6 +217,9 @@ framework:
 		echo " copy robots.txt " ;\
 		cp app/Resources/public/robots.txt web/ ;\
 	fi
+	@if [ ! -d app/Resources/databases ] ; then  \
+		mkdir app/Resources/databases ;\
+	fi
 
 sequelize:
 	./nodefony Sequelize:generate:entities
