@@ -111,10 +111,12 @@ module.exports = class webpack extends nodefony.Service {
         shell.cd(Path);
         config = require(file.path);
         config.output.path = path.resolve("Resources", "public", "dist");
-        if (publicPath) {
-          config.output.publicPath = publicPath + "/";
-        } else {
-          config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
+        if (config.output.publicPath === undefined) {
+          if (publicPath) {
+            config.output.publicPath = publicPath + "/";
+          } else {
+            config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
+          }
         }
         if (!this.production) {
           config.entry.main.unshift("webpack-dev-server/client?https://" + this.host + "/");
