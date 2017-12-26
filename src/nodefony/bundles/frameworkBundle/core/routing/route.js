@@ -65,7 +65,11 @@ module.exports = nodefony.register("Route", function () {
     }
 
     setPrefix(prefix) {
-      this.prefix = prefix;
+      if (prefix === "/") {
+        this.prefix = "";
+      } else {
+        this.prefix = prefix;
+      }
       if (this.path) {
         this.setPattern();
       }

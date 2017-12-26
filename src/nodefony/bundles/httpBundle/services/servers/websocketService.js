@@ -1,4 +1,5 @@
 // https://github.com/Worlize/WebSocket-Node/wiki/Documentation
+const WebSocketServer = require('websocket');
 
 module.exports = class websocketServer extends nodefony.Service {
 
@@ -35,7 +36,7 @@ module.exports = class websocketServer extends nodefony.Service {
 
           if (this.websocketServer) {
             this.ready = true;
-            this.logger(" Server is listening on DOMAIN : ws://" + this.domain + ":" + this.port, "INFO");
+            this.logger("Listening on DOMAIN : ws://" + this.domain + ":" + this.port, "INFO");
           }
           this.bundle.fire("onServersReady", this.type, this);
           return this.websocketServer;

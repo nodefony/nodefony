@@ -349,7 +349,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       appSettings: this.app,
       queryPost: context.request.queryPost,
       queryGet: context.request.queryGet,
-      protocole: context.type,
+      protocole: context.scheme,
       cookies: context.cookies,
       events: {},
       twig: [],
@@ -462,12 +462,12 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       domain: context.domain,
       url: context.url,
       remoteAddress: context.remoteAddress,
-      crossDomain: context.crossDomain
+      crossDomain: context.crossDomain,
+      protocol: context.protocol
     };
     switch (context.type) {
     case "HTTP":
     case "HTTPS":
-    case "HTTP2":
       this.httpRequest(context);
       break;
     case "WEBSOCKET":
@@ -503,7 +503,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     context.profiling.request = {
       url: context.url,
       method: context.request.method,
-      protocol: context.type,
+      protocol: context.scheme,
       remoteAddress: context.request.remoteAddress,
       queryPost: context.request.queryPost,
       queryGet: context.request.queryGet,
@@ -540,7 +540,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       url: context.url,
       headers: context.request.httpRequest.headers,
       method: context.request.httpRequest.method,
-      protocol: context.type,
+      protocol: context.scheme,
       remoteAddress: context.request.remoteAddress,
       serverConfig: configServer,
     };
@@ -793,7 +793,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
               route: context.profiling.route.name,
               method: context.profiling.request.method,
               state: context.profiling.response.statusCode,
-              protocole: context.profiling.context.type,
+              protocole: context.profiling.context.scheme,
               username: user,
               data: data
             }, {
@@ -819,7 +819,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
               route: context.profiling.route.name,
               method: context.profiling.request.method,
               state: context.profiling.response.statusCode,
-              protocole: context.profiling.context.type,
+              protocole: context.profiling.context.scheme,
               username: user,
               data: data
             })

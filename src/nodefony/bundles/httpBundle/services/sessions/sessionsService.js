@@ -86,10 +86,10 @@ module.exports = class sessions extends nodefony.Service {
       context.session = session;
       session.setMetaBag("url", url.parse(context.url));
       if (context.method !== "WEBSOCKET") {
-        context.listen(session, "onSend", function () {
-          this.setMetaBag("lastUsed", new Date());
-          if (!this.saved) {
-            this.save(context.user ? context.user.id : null, sessionContext);
+        context.once("onSend", () => {
+          session.setMetaBag("lastUsed", new Date());
+          if (!session.saved) {
+            session.save(context.user ? context.user.id : null, sessionContext);
           }
         });
       }

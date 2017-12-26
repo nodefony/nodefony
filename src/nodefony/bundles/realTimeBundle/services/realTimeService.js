@@ -550,7 +550,6 @@ module.exports = class realTime extends nodefony.syslog {
           if (err) {
             message.error = this.protocol.errorResponse(500, message.clientId + "," + message.channel, "bad Request  " + message);
             ret = this.send(context, this.protocol.send(message));
-
             //throw err ;
             return ret;
           }
@@ -568,11 +567,10 @@ module.exports = class realTime extends nodefony.syslog {
         let res = null;
         switch (message.channel) {
         case "/meta/handshake":
-          //var remoteAddress = context.request.remoteAddress
-          //var remoteAddress = context.request.domain
+          let host = context.request.host || context.request.headers.host;
           obj = {
             remoteAddress: context.remoteAddress ||  context.request.remoteAddress,
-            host: url.parse(context.request.headers.host)
+            host: url.parse(host)
           };
           //console.log(remoteAddress + " : " + context.request.domain)
           connectionId = this.connections.setConnection(context, obj);

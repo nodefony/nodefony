@@ -1,3 +1,5 @@
+const WebSocketServer = require('websocket');
+const http = require("http");
 nodefony.register("wsResponse", function () {
 
   const CLOSE_DESCRIPTIONS = WebSocketServer.connection.CLOSE_DESCRIPTIONS;

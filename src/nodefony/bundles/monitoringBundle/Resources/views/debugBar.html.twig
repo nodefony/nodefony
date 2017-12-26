@@ -76,6 +76,18 @@
         </ul>
       </div>
     </li>
+    <li class="separator"></li>
+    <li>
+      <span class="label label-success">{{context.protocol}}</span>
+      <div class="details">
+        <ul>
+          <li>
+            <label>HTTP</label>
+            <span class="label label-success">{{context.protocol}}</span>
+          </li>
+        </ul>
+      </div>
+    </li>
 
     <li class="separator"></li>
 
@@ -566,7 +578,7 @@
             {% if proxy %}
               <label class="label label-default">PROXY</label>
             {% endif %}
-            <label class="label label-success">{{ request.protocol }}</label>
+            <label class="label label-success">{{ request.protocol | upper }}</label>
             {% if id %}
               <label class="label">
                 <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}'>REQUEST</a>

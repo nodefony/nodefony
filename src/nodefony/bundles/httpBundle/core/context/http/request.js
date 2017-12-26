@@ -146,6 +146,7 @@ module.exports = nodefony.register("Request", function () {
       this.queryFile = [];
       this.queryGet = this.url.query;
       this.query = this.url.query;
+      this.origin = this.headers.origin;
       try {
         this.accept = acceptParser(this.headers.accept);
         this.acceptHtml = this.accepts("html");

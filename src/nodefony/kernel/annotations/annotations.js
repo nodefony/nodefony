@@ -1,5 +1,5 @@
 const Comments = require('parse-comments');
-
+const regController = /^(.+)Controller$/;
 module.exports = nodefony.register("Annotations", function () {
 
   //const regSpace = new RegExp("^[\\s]*(@.*)[\\s]*$");
@@ -42,13 +42,32 @@ module.exports = nodefony.register("Annotations", function () {
       this.router = this.annotation.router;
       this.path = pathFile;
       this.routings = [];
-      this.bundleShortName = bundle;
-      this.bundleName = bundle + "Bundle";
-      this.patternController = this.bundleName + ":";
+      this.bundle = bundle;
+      this.bundleName = this.bundle.bundleName;
+      this.bundleShortName = this.bundle.name;
+      this.patternController = this.setPatternController(pathFile);
       this.obj = {};
       this.host = null;
       this.prefix = null;
     }
+
+    setPatternController(file) {
+      let myClass = null;
+      let nameController = null;
+      try {
+        myClass = require(file);
+        let res = regController.exec(myClass.name);
+        if (res) {
+          nameController = res[1];
+        } else {
+          throw new Error("Bad controller name annotation");
+        }
+      } catch (e) {
+        throw e;
+      }
+      return this.bundleName + ":" + nameController + ":";
+    }
+
     parse(comments) {
       if (comments) {
         try {
@@ -72,7 +91,7 @@ module.exports = nodefony.register("Annotations", function () {
                   }
                   res = regClass.exec(comments[i][comment].code);
                   this.defaultNameController = res[1].replace(/\s/, "");
-                  this.patternController += this.defaultNameController + ":";
+                  //this.patternController += this.defaultNameController + ":";
                   break;
                 case regAction.test(comments[i][comment].code):
                   ele.type = "Action";
@@ -199,7 +218,6 @@ module.exports = nodefony.register("Annotations", function () {
     }
   };
 
-
   const Annotation = class Annotation extends nodefony.Service {
 
     constructor(container) {
@@ -222,7 +240,6 @@ module.exports = nodefony.register("Annotations", function () {
     }
 
     parseController(fileContent, bundle, file) {
-
       return new Promise((resolve, reject) => {
         try {
           return this.parseComments(fileContent)
@@ -240,7 +257,7 @@ module.exports = nodefony.register("Annotations", function () {
 
     parseAnnotationsRouting(comments, bundle, file) {
       try {
-        let annotations = new annotationRouting(this, bundle);
+        let annotations = new annotationRouting(this, this.kernel.getBundle(bundle), file);
         annotations.parse(comments);
         if (Object.keys(annotations.obj).length) {
           this.logger("Bundle " + bundle + " Parse Controller Annotation : " + file, "DEBUG");
@@ -254,7 +271,6 @@ module.exports = nodefony.register("Annotations", function () {
         throw e;
       }
     }
-
   };
 
   return Annotation;

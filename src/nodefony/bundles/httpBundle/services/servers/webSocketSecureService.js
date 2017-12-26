@@ -1,4 +1,5 @@
 // https://github.com/Worlize/WebSocket-Node/wiki/Documentation
+const WebSocketServer = require('websocket');
 
 module.exports = class websocketServerSecure extends nodefony.Service {
 
@@ -16,7 +17,7 @@ module.exports = class websocketServerSecure extends nodefony.Service {
   createServer(http /*, settings*/ ) {
 
     this.bundle.listen(this, "onServersReady", function (type) {
-      if (type === "HTTPS" || type === "HTTP2") {
+      if (type === "HTTPS") {
         try {
           this.settings = this.getParameters("bundles.http").websocketSecure || {};
           let conf = nodefony.extend(true, {}, this.settings);
@@ -36,7 +37,7 @@ module.exports = class websocketServerSecure extends nodefony.Service {
 
           if (this.websocketServer) {
             this.ready = true;
-            this.logger(" Server  is listening on DOMAIN : wss://" + this.domain + ":" + this.port, "INFO");
+            this.logger("Listening on DOMAIN : wss://" + this.domain + ":" + this.port, "INFO");
           }
           this.bundle.fire("onServersReady", this.type, this);
           return this.websocketServer;

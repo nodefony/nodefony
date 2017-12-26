@@ -1,9 +1,9 @@
+const http = require("http");
+
 module.exports = class httpServer extends nodefony.Service {
 
   constructor(httpKernel, options) {
-
     super("SERVER HTTP", httpKernel.container, httpKernel.notificationsCenter, options);
-
     this.httpKernel = httpKernel;
     this.port = this.httpKernel.kernel.httpPort;
     this.domain = this.httpKernel.kernel.settings.system.domain;
@@ -11,7 +11,6 @@ module.exports = class httpServer extends nodefony.Service {
     this.type = "HTTP";
     this.address = null;
     this.family = null;
-
     this.listen(this, "onBoot", function () {
       this.bundle = this.kernel.getBundles("http");
       this.bundle.listen(this, "onServersReady", function (type) {
@@ -26,21 +25,6 @@ module.exports = class httpServer extends nodefony.Service {
         }
       });
     });
-  }
-
-  createZone(request, response) {
-
-    require("zone").enable();
-    zone.create(() => {
-        this.fire("onServerRequest", request, response, this.type, zone);
-      })
-      .then(() => {
-        // Runs when succesful
-        this.logger("ZONE SUCCES", "INFO");
-      })
-      .catch((err) => {
-        this.logger(err);
-      });
   }
 
   createServer() {
@@ -69,33 +53,32 @@ module.exports = class httpServer extends nodefony.Service {
 
     // LISTEN ON PORT
     this.server.listen(this.port, this.domain, () => {
-      this.logger(this.type + "  Server is listening on DOMAIN : http://" + this.domain + ":" + this.port, "INFO");
+      this.logger("Listening on DOMAIN : http://" + this.domain + ":" + this.port, "INFO");
       this.ready = true;
       this.bundle.fire("onServersReady", this.type, this);
     });
 
     this.server.on("error", (error) => {
-      let httpError = "server HTTP Error : " + error.errno;
+      let httpError = this.type + "server Error : " + error.errno;
       switch (error.errno) {
       case "ENOTFOUND":
         this.logger(new Error(httpError + " CHECK DOMAIN IN /etc/hosts unable to connect to : " + this.domain), "CRITIC");
         break;
       case "EADDRINUSE":
-        //this.logger( new Error(httpError+" port HTTP in use check other servers : "), "CRITIC") ;
         this.logger(new Error("Domain : " + this.domain + " Port : " + this.port + " ==> " + error), "CRITIC");
         setTimeout(() => {
           this.server.close();
         }, 1000);
         break;
       default:
-        this.logger(new Error(httpError), "CRITIC", "SERVICE HTTP");
+        this.logger(new Error(httpError), "CRITIC");
       }
     });
 
     this.listen(this, "onTerminate", () => {
       if (this.server) {
         this.server.close(() => {
-          this.logger(" SHUTDOWN HTTP Server is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
+          this.logger(this.type + " SHUTDOWN Server is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
         });
       }
     });

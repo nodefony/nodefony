@@ -47,7 +47,7 @@ nodefony.register.call(nodefony.context, "http", function () {
         this.port = this.scheme === "https" ? 443 : 80;
       }
       try {
-        this.originUrl = url.parse(this.request.headers.origin);
+        this.originUrl = url.parse(this.request.origin);
       } catch (e) {
         this.originUrl = url.parse(this.url);
       }
