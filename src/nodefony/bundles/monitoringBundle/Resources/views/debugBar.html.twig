@@ -76,18 +76,22 @@
         </ul>
       </div>
     </li>
-    <li class="separator"></li>
-    <li>
-      <span class="label label-success">{{context.protocol}}</span>
-      <div class="details">
-        <ul>
-          <li>
-            <label>HTTP</label>
-            <span class="label label-success">{{context.protocol}}</span>
-          </li>
-        </ul>
-      </div>
-    </li>
+    {% if context.protocol == "2.0" %}
+      <li class="separator"></li>
+      <li>
+        <img style="border-radius: 50%" alt="HTTP2" src="/monitoringBundle/images/http2.png">
+        <div class="details">
+          <ul>
+            <li>
+              <label>
+                HTTP Protocol
+              </label>
+              <span class="label label-success">{{context.protocol}}</span>
+            </li>
+          </ul>
+        </div>
+      </li>
+    {% endif %}
 
     <li class="separator"></li>
 

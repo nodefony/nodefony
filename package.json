@@ -129,7 +129,7 @@
     "twig": "1.10.5",
     "uglify-es": "^3.3.2",
     "uglifycss": "0.0.27",
-    "uglifyjs-webpack-plugin": "^1.1.4",
+    "uglifyjs-webpack-plugin": "^1.1.5",
     "url-loader": "0.6.2",
     "useragent": "2.2.1",
     "webpack": "^3.10.0",
