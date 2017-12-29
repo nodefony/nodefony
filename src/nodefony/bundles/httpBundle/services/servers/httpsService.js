@@ -72,8 +72,12 @@ module.exports = class httpsServer extends nodefony.Service {
     if (this.kernel.settings.system.servers.protocol in protocol) {
       this.protocol = this.kernel.settings.system.servers.protocol;
     } else {
-      this.logger(this.kernel.settings.system.servers.protocol + " not implemented ", 'WARNING');
-      throw new Error("HTTP protocol error ");
+      if (this.kernel.settings.system.servers.protocol) {
+        this.logger(this.kernel.settings.system.servers.protocol + " not implemented ", 'WARNING');
+      } else {
+        this.logger("BAD config servers https protocol not defined !! check framework config", 'WARNING');
+      }
+      this.protocol = "1.1";
     }
     if (!http2) {
       this.protocol = "1.1";

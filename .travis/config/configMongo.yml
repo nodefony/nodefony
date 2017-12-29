@@ -17,6 +17,7 @@ system:
   demo                          : true
   locale                        : "en_en"
   servers:
+    protocol                    : "2.0"
     http                        : true
     https	                      : true
     ws			                    : true
