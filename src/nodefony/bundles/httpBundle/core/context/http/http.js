@@ -20,8 +20,10 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.uploadService = this.get("upload");
       if (this.type === "HTTP2") {
         this.request = new nodefony.Request2(request, this);
+        this.response = new nodefony.Response2(response, container);
       } else {
         this.request = new nodefony.Request(request, this);
+        this.response = new nodefony.Response(response, container);
       }
       this.requestEnded = false;
       this.once("onRequestEnd", () => {
@@ -30,7 +32,6 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.method = this.request.getMethod();
       this.isAjax = this.request.isAjax();
       this.isHtml = this.request.acceptHtml;
-      this.response = new nodefony.Response(response, container);
       this.isJson = false;
       this.setDefaultContentType();
       this.isRedirect = false;
@@ -169,7 +170,11 @@ nodefony.register.call(nodefony.context, "http", function () {
       }
       try {
         control = resolver.newController(container, this); //new resolver.controller(container, this);
-        control.response = new nodefony.Response(null, container);
+        if (this.type === "HTTP2") {
+          control.response = new nodefony.Response2(null, container);
+        } else {
+          control.response = new nodefony.Response(null, container);
+        }
         if (data) {
           Array.prototype.shift.call(arguments);
           for (let i = 0; i < arguments.length; i++) {
@@ -191,6 +196,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.kernelHttp.container.leaveScope(subRequest.controller.container);
       switch (true) {
       case subRequest.response instanceof nodefony.Response:
+      case subRequest.response instanceof nodefony.Response2:
       case subRequest.response instanceof nodefony.wsResponse:
         return subRequest.response.body;
       case subRequest.response instanceof Promise:

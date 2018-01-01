@@ -160,6 +160,29 @@ module.exports = nodefony.register("fileClass", function () {
       return fs.readFileSync(this.path, encode);
     }
 
+    readAsync(encoding) {
+      let encode = encoding ? encoding : (this.encoding ? this.encoding : 'utf8');
+      if (this.type === "symbolicLink") {
+        return new Promise((resolve, reject) => {
+          let Path = fs.readlinkSync(this.path, encode);
+          return fs.readFileSync(Path, encode, (error, data) => {
+            if (error) {
+              return reject(error);
+            }
+            return resolve(data);
+          });
+        });
+      }
+      return new Promise((resolve, reject) => {
+        return fs.readFile(this.path, encode, (error, data) => {
+          if (error) {
+            return reject(error);
+          }
+          return resolve(data);
+        });
+      });
+    }
+
     readByLine(callback, encoding) {
       let res = this.content(encoding);
       let nb = 0;

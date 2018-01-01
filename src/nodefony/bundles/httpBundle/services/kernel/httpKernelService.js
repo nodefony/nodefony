@@ -35,7 +35,7 @@ module.exports = class httpKernel extends nodefony.Service {
       this.responseTimeout = {
         HTTP: this.bundleSettings.http.responseTimeout,
         HTTPS: this.bundleSettings.https.responseTimeout,
-        HTTP2: this.bundleSettings.http2.responseTimeout
+        HTTP2: this.bundleSettings.https.responseTimeout
       };
       this.closeTimeOutWs = {
         WS: this.bundleSettings.websocket.closeTimeout,

@@ -84,6 +84,14 @@ module.exports = nodefony.register("controller", function () {
       return this.get(defaultOrm);
     }
 
+    push(ele, options) {
+      try {
+        return this.response.push(ele, options);
+      } catch (e) {
+        throw e;
+      }
+    }
+
     renderResponse(data, status, headers) {
       let res = this.getResponse(data);
       if (!res) {

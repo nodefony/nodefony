@@ -1,12 +1,9 @@
 module.exports = nodefony.register("Request2", function () {
 
-
-
   const Request = class Request2 extends nodefony.Request {
 
     constructor(request, context) {
       super(request, context);
-
     }
 
     getHost() {
@@ -32,8 +29,6 @@ module.exports = nodefony.register("Request2", function () {
         return 'http://' + this.host + this.headers[":path"];
       }
     }
-
   };
-
   return Request;
 });
