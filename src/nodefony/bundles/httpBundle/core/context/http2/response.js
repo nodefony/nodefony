@@ -1,8 +1,15 @@
+const http = require("http");
 let http2 = null;
 let HTTP2_HEADER_PATH = null;
+let HTTP2_HEADER_LINK = null;
+let HTTP2_HEADER_STATUS = null;
+let HTTP2_HEADER_CONTENT_TYPE = null;
 try {
   http2 = require("http2");
   HTTP2_HEADER_PATH = http2.constants.HTTP2_HEADER_PATH;
+  HTTP2_HEADER_LINK = http2.constants.HTTP2_HEADER_LINK;
+  HTTP2_HEADER_STATUS = http2.constants.HTTP2_HEADER_STATUS;
+  HTTP2_HEADER_CONTENT_TYPE = http2.constants.HTTP2_HEADER_CONTENT_TYPE;
 } catch (e) {}
 
 module.exports = nodefony.register("Response2", () => {
@@ -14,8 +21,51 @@ module.exports = nodefony.register("Response2", () => {
       this.stream = null;
       if (response && response.stream.pushAllowed) {
         this.stream = response.stream;
+        this.streamId = this.stream.id;
       }
     }
+
+    //ADD INPLICIT HEADER
+    setHeader(name, value) {
+      if (this.stream) {
+        if (name) {
+          let obj = {};
+          obj[name] = value;
+          nodefony.extend(this.headers, obj);
+          return obj;
+        }
+      } else {
+        return super.setHeader(name, value);
+      }
+    }
+
+    writeHead(statusCode, headers) {
+      if (this.stream) {
+        if (statusCode) {
+          this.setStatusCode(statusCode);
+        }
+        if (!this.stream.headersSent) {
+          try {
+            if (this.context.method === "HEAD") {
+              this.setHeader('Content-Length', this.getLength());
+            }
+            this.headers[HTTP2_HEADER_STATUS] = this.statusCode;
+            return this.stream.respond(
+              headers || this.headers, {
+                endStream: false,
+              }
+            );
+          } catch (e) {
+            throw e;
+          }
+        } else {
+          throw new Error("Headers already sent !!");
+        }
+      } else {
+        return super.writeHead(statusCode, headers);
+      }
+    }
+
     write(data, encoding) {
       if (this.stream) {
         try {
@@ -27,27 +77,21 @@ module.exports = nodefony.register("Response2", () => {
           throw e;
         }
       } else {
-        try {
-          if (data) {
-            return this.response.write(this.setBody(data), (encoding || this.encoding));
-          }
-          return this.response.write(this.body, (encoding || this.encoding));
-        } catch (e) {
-          throw e;
-        }
+        return super.write(data, encoding);
       }
     }
 
     end(data, encoding) {
-      if (this.response) {
+      if (this.stream) {
         this.ended = true;
-        if (this.stream) {
-          return this.stream.end(data, encoding);
-        } else {
-          return this.response.end(data, encoding);
-        }
+        return this.stream.end(data, encoding);
+      } else {
+        return super.end(data, encoding);
       }
-      return null;
+    }
+
+    getStatusMessage() {
+      return this.statusMessage || http.STATUS_CODES[this.statusCode];
     }
 
     push(ele, headers, options) {
@@ -62,11 +106,19 @@ module.exports = nodefony.register("Response2", () => {
             }, headers);
             let myOptions = nodefony.extend({
               onError: (err) => {
-                console.log(err);
+                this.logger(err, "ERROR");
               }
+              /*,
+              statCheck: (stat, headers) => {
+              this.logger(stat, "INFO");
+              this.logger(headers, "INFO");
+              }*/
             }, options);
             return this.stream.pushStream({
-              [HTTP2_HEADER_PATH]: file.path
+              [HTTP2_HEADER_PATH]: myheaders.path
+            }, {
+              exclusive: true,
+              parent: this.streamId
             }, (pushStream) => {
               try {
                 this.logger(">>Pushing : " + file.path, "INFO", "HTTP2 Pushing");
@@ -76,12 +128,6 @@ module.exports = nodefony.register("Response2", () => {
                 reject(e);
               }
             });
-            /*return this.response.createPushResponse(myheaders, (error, Http2ServerResponse) => {
-              console.log(file.content())
-              Http2ServerResponse.write(file.content(), file.encoding);
-              //pushStream.respondWithFile(file.path, myheaders, myOptions);
-              return resolve(file);
-            });*/
           } catch (e) {
             return reject(e);
           }

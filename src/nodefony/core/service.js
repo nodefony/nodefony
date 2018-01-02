@@ -129,7 +129,9 @@ module.exports = nodefony.register("Service", function () {
      */
     fire() {
       //this.logger(ev, "DEBUG", "EVENT KERNEL")
-      return this.notificationsCenter.fire.apply(this.notificationsCenter, arguments);
+      if (this.notificationsCenter) {
+        return this.notificationsCenter.fire.apply(this.notificationsCenter, arguments);
+      }
     }
 
     /**

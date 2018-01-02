@@ -450,7 +450,9 @@ nodefony.register("Session", function () {
             throw new Error("SAVE SESSION ERROR context already deleted ");
           } else {
             this.saved = true;
-            this.context.fire("onSaveSession", this);
+            if (this.context) {
+              this.context.fire("onSaveSession", this);
+            }
             return this;
           }
         }).catch((error) => {

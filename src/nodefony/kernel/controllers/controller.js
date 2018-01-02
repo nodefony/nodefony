@@ -23,6 +23,13 @@ module.exports = nodefony.register("controller", function () {
       });
     }
 
+    logger(pci, severity, msgid, msg) {
+      if (!msgid) {
+        msgid = "BUNDLE : " + this.bundle.name.toUpperCase() + " Controller : " + this.name;
+      }
+      return super.logger(pci, severity, msgid, msg);
+    }
+
     getRequest() {
       return this.request;
     }
@@ -84,9 +91,20 @@ module.exports = nodefony.register("controller", function () {
       return this.get(defaultOrm);
     }
 
-    push(ele, options) {
+    push(asset, headers, options) {
+      let assetPublic = null;
+      if (!headers) {
+        headers = {};
+        assetPublic = asset.replace(this.bundle.publicPath, "/" + this.bundle.bundleName);
+        headers.path = assetPublic;
+      } else {
+        if (!headers.path) {
+          assetPublic = asset.replace(this.bundle.publicPath, "/" + this.bundle.bundleName);
+          headers.path = assetPublic;
+        }
+      }
       try {
-        return this.response.push(ele, options);
+        return this.response.push(asset, headers, options);
       } catch (e) {
         throw e;
       }

@@ -79,7 +79,7 @@
     "font-awesome": "4.7.0",
     "formidable": "1.1.1",
     "img-loader": "2.0.0",
-    "inquirer": "^4.0.1",
+    "inquirer": "^4.0.2",
     "jquery": "3.2.1",
     "js-yaml": "3.10.0",
     "less": "3.0.0-alpha.3",

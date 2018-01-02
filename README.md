@@ -35,6 +35,7 @@ Nodefony assimilates into the ecosystem of node.js with services like :
 - [WATCHER](https://nodejs.org/docs/latest/api/fs.html#fs_fs_watch_filename_options_listener) node.js for auto reload-files in developement mode .
 - [PM2](http://pm2.keymetrics.io/) Production Process Manager for Node.js .
 - [Passport](http://passportjs.org/) Simple, unobtrusive authentication for Node.js .
+- [HTTP2](https://nodejs.org/api/http2.html)  http2 ready node module provides an implementation of the HTTP/2 (push server ready).
 
 Nodefony 3  adds the following features :
 - [Angular](https://github.com/angular/angular-cli) Bundle Generator ( Now an Angular Project can be merge into a Nodefony Bundle )
