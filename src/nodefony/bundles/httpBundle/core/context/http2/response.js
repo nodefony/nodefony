@@ -19,7 +19,7 @@ module.exports = nodefony.register("Response2", () => {
     constructor(response, container) {
       super(response, container);
       this.stream = null;
-      if (response && response.stream.pushAllowed) {
+      if (response) {
         this.stream = response.stream;
         this.streamId = this.stream.id;
       }
@@ -95,7 +95,7 @@ module.exports = nodefony.register("Response2", () => {
     }
 
     push(ele, headers, options) {
-      if (this.stream) {
+      if (this.stream /*&& this.stream.pushAllowed*/ ) {
         return new Promise((resolve, reject) => {
           try {
             let file = new nodefony.fileClass(ele);
