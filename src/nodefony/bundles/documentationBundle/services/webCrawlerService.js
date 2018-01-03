@@ -1,5 +1,7 @@
 //var request = require('request');
 const cheerio = require('cheerio');
+const http = require('http');
+const https = require('https');
 
 const makeRequestHttp = function (link, context, callback) {
 

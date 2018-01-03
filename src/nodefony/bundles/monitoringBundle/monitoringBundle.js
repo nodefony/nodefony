@@ -53,6 +53,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     this.kernel.listen(this, "onPreBoot", (kernel) => {
 
       this.templating = this.get("templating");
+      this.frameworkBundle = this.kernel.getBundle("framework");
 
       this.infoKernel.events = {};
       for (let event in kernel.notificationsCenter.event._events) {
@@ -644,6 +645,9 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
                 try {
                   let result = this.debugView.render(this.httpKernel.extendTwig(context.profiling, context));
                   response.body = response.body.replace("</body>", result + "\n </body>");
+                  if (context.type === "HTTP2") {
+                    this.pushAsset(context);
+                  }
                 } catch (e) {
                   throw e;
                 }
@@ -688,6 +692,9 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
               try {
                 let result = this.debugView.render(this.httpKernel.extendTwig(context.profiling, context));
                 response.body = response.body.replace("</body>", result + "\n </body>");
+                if (context.type === "HTTP2") {
+                  this.pushAsset(context);
+                }
               } catch (e) {
                 throw e;
               }
@@ -698,6 +705,27 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       context.profiling = null;
       delete context.profiling;
     }
+  }
+
+  pushAsset(context) {
+    context.response.push(path.resolve(this.publicPath, "assets", "js", "debugBar.js"), {
+      path: "/" + this.bundleName + "/assets/js/debugBar.js"
+    });
+    context.response.push(path.resolve(this.publicPath, "assets", "css", "debugBar.css"), {
+      path: "/" + this.bundleName + "/assets/css/debugBar.css"
+    });
+    context.response.push(path.resolve(this.publicPath, "images", "http2.png"), {
+      path: "/" + this.bundleName + "/images/http2.png"
+    });
+    context.response.push(path.resolve(this.publicPath, "images", "nodejs_logo.png"), {
+      path: "/" + this.bundleName + "/images/nodejs_logo.png"
+    });
+    context.response.push(path.resolve(this.publicPath, "images", "window-close.ico"), {
+      path: "/" + this.bundleName + "/images/window-close.ico"
+    });
+    context.response.push(path.resolve(this.frameworkBundle.publicPath, "images", "nodefony-logo.png"), {
+      path: "/" + this.frameworkBundle.bundleName + "/images/nodefony-logo.png"
+    });
   }
 
   onView(result, context, view, viewParam) {

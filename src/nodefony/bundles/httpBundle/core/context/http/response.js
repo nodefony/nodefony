@@ -152,13 +152,14 @@ module.exports = nodefony.register("Response", function () {
         this.setStatusCode(statusCode);
       }
       if (!this.response.headersSent) {
-        this.response.statusMessage = this.statusMessage;
+        //this.response.statusMessage = this.statusMessage;
         try {
           if (this.context.method === "HEAD") {
             this.setHeader('Content-Length', this.getLength());
           }
           return this.response.writeHead(
             this.statusCode,
+            this.statusMessage,
             headers || this.headers
           );
         } catch (e) {

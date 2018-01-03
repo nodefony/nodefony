@@ -121,7 +121,7 @@ module.exports = nodefony.register("Response2", () => {
               parent: this.streamId
             }, (pushStream) => {
               try {
-                this.logger(">>Pushing : " + file.path, "INFO", "HTTP2 Pushing");
+                this.logger(">>Pushing : " + file.path, "DEBUG", "HTTP2 Pushing");
                 pushStream.respondWithFile(file.path, myheaders, myOptions);
                 resolve(pushStream);
               } catch (e) {
