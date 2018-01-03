@@ -12,6 +12,7 @@ const sockCompiler = class sockCompiler extends nodefony.Service {
       errorDetails: true
     };
     this.stats = null;
+
     if (compiler) {
       this.compiler = compiler;
       //this.listen( this, "onCreateSockServer", () => {
@@ -83,10 +84,15 @@ module.exports = class sockjs extends nodefony.Service {
         switch (type) {
         case "HTTP":
         case "HTTPS":
-        case "HTTP2":
           let proto = type.toLowerCase();
           if (proto === this.protocol) {
             this.createServer(service, proto);
+            if (type === "HTTP") {
+              this.websocketServer = this.get("websocketServer");
+            }
+            if (type === "HTTPS") {
+              this.websocketServer = this.get("websocketServerSecure");
+            }
             this.fire("onCreateSockServer", this[proto], service);
           }
           break;
@@ -121,9 +127,13 @@ module.exports = class sockjs extends nodefony.Service {
         if (!conn) {
           return;
         }
+        this.fire("onConnection", conn, this[protocol]);
         this.sockets.push(conn);
         conn.on("close", () => {
           this.logger(" Close Connection " + this.name, "DEBUG");
+          if (this.websocketServer) {
+            this.websocketServer.removePendingRequests(conn.url);
+          }
           const connIndex = this.sockets.indexOf(conn);
           if (connIndex >= 0) {
             this.sockets.splice(connIndex, 1);

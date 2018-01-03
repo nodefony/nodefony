@@ -47,4 +47,18 @@ module.exports = class websocketServer extends nodefony.Service {
       }
     });
   }
+
+  removePendingRequests(url) {
+    if (url && this.websocketServer) {
+      this.websocketServer.pendingRequests.forEach((request, index) => {
+        if (request.httpRequest.url === url) {
+          try {
+            request.emit('requestResolved', request);
+            request.emit('requestRejected', request);
+            this.websocketServer.pendingRequests.splice(index, 1);
+          } catch (e) {}
+        }
+      });
+    }
+  }
 };

@@ -183,22 +183,21 @@ module.exports = nodefony.register("kernel", function () {
         this.initCluster();
         // Manage Template engine
         this.initTemplate();
-
         // Boot
         /*if ( this.options.logSpinner ){
-        this.cli.startSpinner("kernel",['⣾','⣽','⣻','⢿','⡿','⣟','⣯','⣷'] );
-        //this.cli.startSpinner("Kernel Boot Nodefony");
-        this.logger("Kernel Boot Nodefony");
-        this.on("onPostReady", () => {
-        setTimeout( () => {
-        this.cli.stopSpinner();
-      },15000);
-    });
-  }
-  setTimeout(()=>{
-  this.boot();
-  this.started = true ;
-}, 2000);*/
+          this.cli.startSpinner("kernel",['⣾','⣽','⣻','⢿','⡿','⣟','⣯','⣷'] );
+          //this.cli.startSpinner("Kernel Boot Nodefony");
+          this.logger("Kernel Boot Nodefony");
+          this.on("onPostReady", () => {
+            setTimeout( () => {
+              this.cli.stopSpinner();
+            },15000);
+          });
+        }
+        setTimeout(()=>{
+          this.boot();
+          this.started = true ;
+        }, 2000);*/
         this.boot();
         this.started = true;
       }

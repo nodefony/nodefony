@@ -521,7 +521,6 @@ module.exports = class httpKernel extends nodefony.Service {
     }
   }
 
-
   onWebsocketRequest(request, type) {
     if (request.resourceURL.path && this.sockjs && request.resourceURL.path.match(this.sockjs.regPrefix)) {
       this.logger("websocket drop to sockjs : " + request.resourceURL.path, "DEBUG");
