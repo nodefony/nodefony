@@ -180,7 +180,6 @@ module.exports = nodefony.register("controller", function () {
       }
       try {
         return this.renderViewAsync(view, param);
-
       } catch (e) {
         this.fire("onError", this.context.container, e);
       }
@@ -194,7 +193,6 @@ module.exports = nodefony.register("controller", function () {
       }
       try {
         this.renderView(view, param);
-
       } catch (e) {
         this.fire("onError", this.context.container, e);
         return;
@@ -304,21 +302,30 @@ module.exports = nodefony.register("controller", function () {
       return res;
     }
 
+    getFile(file) {
+      try {
+        let File = null;
+        if (file instanceof nodefony.fileClass) {
+          File = file;
+        } else {
+          if (typeof file === "string") {
+            File = new nodefony.fileClass(file);
+          } else {
+            throw new Error("File argument bad type for getFile :" + typeof file);
+          }
+        }
+        if (File.type !== "File") {
+          throw new Error("getFile bad type for  :" + file);
+        }
+        return File;
+      } catch (e) {
+        throw e;
+      }
+    }
+
     renderFileDownload(file, options, headers) {
       //console.log("renderFileDownload :" + file.path)
-      let File = null;
-      if (file instanceof nodefony.fileClass) {
-        File = file;
-      } else {
-        if (typeof file === "string") {
-          File = new nodefony.fileClass(file);
-        } else {
-          throw new Error("File argument bad type for renderFileDownload :" + typeof file);
-        }
-      }
-      if (File.type !== "File") {
-        throw new Error("renderMediaStream bad type for  :" + file);
-      }
+      let File = this.getFile(file);
       let length = File.stats.size;
       let head = nodefony.extend({
         'Content-Disposition': 'attachment; filename="' + File.name + '"',
@@ -327,9 +334,7 @@ module.exports = nodefony.register("controller", function () {
         'Content-Description': 'File Transfer',
         'Content-Type': File.mimeType
       }, headers || {});
-      let response = this.getResponse();
       let fileStream = null;
-
       try {
         fileStream = fs.createReadStream(File.path, options);
       } catch (e) {
@@ -338,8 +343,8 @@ module.exports = nodefony.register("controller", function () {
       }
       fileStream.on("open", () => {
         try {
-          response.response.writeHead(200, head);
-          fileStream.pipe(response.response, {
+          this.response.response.writeHead(200, head);
+          fileStream.pipe(this.response.response, {
             // auto end response
             end: false
           });
@@ -351,9 +356,8 @@ module.exports = nodefony.register("controller", function () {
       fileStream.on("end", () => {
         if (fileStream) {
           try {
-            fileStream.unpipe(response.response);
+            fileStream.unpipe(this.response.response);
             if (fileStream.fd) {
-              //console.log("CLOSE")
               fs.close(fileStream.fd);
             }
           } catch (e) {
@@ -361,46 +365,31 @@ module.exports = nodefony.register("controller", function () {
             throw e;
           }
         }
-        response.end();
+        this.response.end();
       });
       fileStream.on("close", () => {
-        response.end();
+        this.response.end();
       });
-      response.response.on('close', () => {
+      this.response.response.on('close', () => {
         if (fileStream.fd) {
-          fileStream.unpipe(response.response);
+          fileStream.unpipe(this.response.response);
           fs.close(fileStream.fd);
         }
-        response.end();
+        this.response.end();
       });
       fileStream.on("error", (error) => {
         this.logger(error, "ERROR");
-        response.end();
+        this.response.end();
         throw error;
       });
     }
 
     renderMediaStream(file, options, headers) {
-      //console.log("renderMediaStream :" + file.path)
-      let File = null;
-      if (file instanceof nodefony.fileClass) {
-        File = file;
-      } else {
-        if (typeof file === "string") {
-          File = new nodefony.fileClass(file);
-        } else {
-          throw new Error("File argument bad type for renderMediaStream :" + typeof file);
-        }
-      }
-      if (File.type !== "File") {
-        throw new Error("renderMediaStreambad type for  :" + file);
-      }
+      let File = this.getFile(file);
       if (!options) {
         options = {};
       }
-      let request = this.getRequest();
-      let requestHeaders = request.headers;
-      let range = requestHeaders.range;
+      let range = this.request.headers.range;
       let length = File.stats.size;
       let code = null;
       let head = null;
@@ -427,7 +416,6 @@ module.exports = nodefony.register("controller", function () {
           'Content-Length': chunksize,
           'Content-Type': File.mimeType
         }, headers);
-
         code = 206;
       } else {
         head = nodefony.extend({
@@ -438,7 +426,6 @@ module.exports = nodefony.register("controller", function () {
         code = 200;
       }
       // streamFile
-      let response = this.getResponse();
       let fileStream = null;
       try {
         fileStream = fs.createReadStream(File.path, value ? nodefony.extend(options, value) : options);
@@ -449,8 +436,8 @@ module.exports = nodefony.register("controller", function () {
       //console.log(head);
       fileStream.on("open", () => {
         try {
-          response.response.writeHead(code, head);
-          fileStream.pipe(response.response, {
+          this.response.response.writeHead(code, head);
+          fileStream.pipe(this.response.response, {
             // auto end response
             end: false
           });
@@ -462,7 +449,7 @@ module.exports = nodefony.register("controller", function () {
       fileStream.on("end", () => {
         if (fileStream) {
           try {
-            fileStream.unpipe(response.response);
+            fileStream.unpipe(this.response.response);
             if (fileStream.fd) {
               fs.close(fileStream.fd);
             }
@@ -471,23 +458,21 @@ module.exports = nodefony.register("controller", function () {
             throw e;
           }
         }
-        response.end();
+        this.response.end();
       });
       fileStream.on("close", () => {
-        response.end();
+        this.response.end();
       });
-
-      response.response.on('close', () => {
-        //console.log("close response")
+      this.response.response.on('close', () => {
         if (fileStream.fd) {
-          fileStream.unpipe(response.response);
+          fileStream.unpipe(this.response.response);
           fs.close(fileStream.fd);
         }
-        response.end();
+        this.response.end();
       });
       fileStream.on("error", (error) => {
         this.logger(error, "ERROR");
-        response.end();
+        this.response.end();
       });
     }
 
