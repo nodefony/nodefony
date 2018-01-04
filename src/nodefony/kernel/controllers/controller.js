@@ -323,6 +323,79 @@ module.exports = nodefony.register("controller", function () {
       }
     }
 
+    streamFile(file, headers, options) {
+      try {
+        this.response.streamFile = fs.createReadStream(this.getFile(file).path, options);
+      } catch (e) {
+        this.logger(e, "ERROR");
+        throw e;
+      }
+      this.response.streamFile.on("open", () => {
+        //console.log("open")
+        try {
+          this.response.response.writeHead(this.response.statusCode, headers);
+          this.response.streamFile.pipe(this.response.response, {
+            // auto end response
+            end: false
+          });
+        } catch (e) {
+          this.logger(e, "ERROR");
+          throw e;
+        }
+      });
+      this.response.streamFile.on("end", () => {
+        //console.log("end")
+        if (this.response.streamFile) {
+          try {
+            if (this.response.streamFile) {
+              this.response.streamFile.unpipe(this.response.response);
+              if (this.response.streamFile.fd) {
+                fs.close(this.response.streamFile.fd);
+              }
+            }
+          } catch (e) {
+            this.logger(e, "ERROR");
+            throw e;
+          }
+        }
+        if (!this.response.ended) {
+          this.response.end();
+        }
+      });
+
+      this.response.streamFile.on("close", () => {
+        //console.log("close")
+        if (this.response.streamFile) {
+          this.response.streamFile.unpipe(this.response.response);
+          if (this.response.streamFile.fd) {
+            fs.close(this.response.streamFile.fd);
+          }
+        }
+        if (!this.response.ended) {
+          this.response.end();
+        }
+      });
+      this.response.streamFile.on("error", (error) => {
+        this.logger(error, "ERROR");
+        if (!this.response.ended) {
+          this.response.end();
+        }
+        throw error;
+      });
+      this.response.response.on('close', () => {
+        if (this.response.streamFile) {
+          this.response.streamFile.unpipe(this.response.response);
+          if (this.response.streamFile.fd) {
+            fs.close(this.response.streamFile.fd);
+          }
+        }
+        if (!this.response.ended) {
+          this.response.end();
+        }
+      });
+      return this.response.streamFile;
+    }
+
     renderFileDownload(file, options, headers) {
       //console.log("renderFileDownload :" + file.path)
       let File = this.getFile(file);
@@ -334,54 +407,11 @@ module.exports = nodefony.register("controller", function () {
         'Content-Description': 'File Transfer',
         'Content-Type': File.mimeType
       }, headers || {});
-      let fileStream = null;
       try {
-        fileStream = fs.createReadStream(File.path, options);
+        this.streamFile(File, head, options);
       } catch (e) {
-        this.logger(e, "ERROR");
         throw e;
       }
-      fileStream.on("open", () => {
-        try {
-          this.response.response.writeHead(200, head);
-          fileStream.pipe(this.response.response, {
-            // auto end response
-            end: false
-          });
-        } catch (e) {
-          this.logger(e, "ERROR");
-          throw e;
-        }
-      });
-      fileStream.on("end", () => {
-        if (fileStream) {
-          try {
-            fileStream.unpipe(this.response.response);
-            if (fileStream.fd) {
-              fs.close(fileStream.fd);
-            }
-          } catch (e) {
-            this.logger(e, "ERROR");
-            throw e;
-          }
-        }
-        this.response.end();
-      });
-      fileStream.on("close", () => {
-        this.response.end();
-      });
-      this.response.response.on('close', () => {
-        if (fileStream.fd) {
-          fileStream.unpipe(this.response.response);
-          fs.close(fileStream.fd);
-        }
-        this.response.end();
-      });
-      fileStream.on("error", (error) => {
-        this.logger(error, "ERROR");
-        this.response.end();
-        throw error;
-      });
     }
 
     renderMediaStream(file, options, headers) {
@@ -389,9 +419,9 @@ module.exports = nodefony.register("controller", function () {
       if (!options) {
         options = {};
       }
+      this.response.setEncoding("binary");
       let range = this.request.headers.range;
       let length = File.stats.size;
-      let code = null;
       let head = null;
       let value = null;
       if (range) {
@@ -416,64 +446,20 @@ module.exports = nodefony.register("controller", function () {
           'Content-Length': chunksize,
           'Content-Type': File.mimeType
         }, headers);
-        code = 206;
+        this.response.setStatusCode(206);
       } else {
         head = nodefony.extend({
           'Content-Type': File.mimeType,
           'Content-Length': length,
           'Content-Disposition': ' inline; filename="' + File.name + '"'
         }, headers);
-        code = 200;
       }
       // streamFile
-      let fileStream = null;
       try {
-        fileStream = fs.createReadStream(File.path, value ? nodefony.extend(options, value) : options);
+        this.streamFile(File, head, options);
       } catch (e) {
-        this.logger(e, "ERROR");
         throw e;
       }
-      //console.log(head);
-      fileStream.on("open", () => {
-        try {
-          this.response.response.writeHead(code, head);
-          fileStream.pipe(this.response.response, {
-            // auto end response
-            end: false
-          });
-        } catch (e) {
-          this.logger(e, "ERROR");
-          throw e;
-        }
-      });
-      fileStream.on("end", () => {
-        if (fileStream) {
-          try {
-            fileStream.unpipe(this.response.response);
-            if (fileStream.fd) {
-              fs.close(fileStream.fd);
-            }
-          } catch (e) {
-            this.logger(e, "ERROR");
-            throw e;
-          }
-        }
-        this.response.end();
-      });
-      fileStream.on("close", () => {
-        this.response.end();
-      });
-      this.response.response.on('close', () => {
-        if (fileStream.fd) {
-          fileStream.unpipe(this.response.response);
-          fs.close(fileStream.fd);
-        }
-        this.response.end();
-      });
-      fileStream.on("error", (error) => {
-        this.logger(error, "ERROR");
-        this.response.end();
-      });
     }
 
     createNotFoundException(message) {

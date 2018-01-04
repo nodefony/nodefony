@@ -578,27 +578,31 @@ module.exports = class apiController extends nodefony.controller {
         };
       }
     }
-
+    let entities = {};
+    for (let entity in bundle.entities) {
+      entities.name = entity;
+    }
+    let ele = {
+      config: bundle.settings,
+      routing: routing,
+      services: null,
+      security: null,
+      bundleName: bundle.name,
+      views: views,
+      entities: entities,
+      fixtures: bundle.fixtures,
+      controllers: bundle.controllers,
+      events: bundle.notificationsCenter._events,
+      waitBundleReady: bundle.waitBundleReady,
+      locale: bundle.locale,
+      files: bundle.resourcesFiles.files
+    };
     //let security  = this.get("security");
     return this.renderRest({
       code: 200,
       type: "SUCCESS",
       message: "OK",
-      data: JSON.stringify({
-        config: bundle.settings,
-        routing: routing,
-        services: null,
-        security: null,
-        bundleName: bundle.name,
-        views: views,
-        entities: bundle.entities,
-        fixtures: bundle.fixtures,
-        controllers: bundle.controllers,
-        events: bundle.notificationsCenter._events,
-        waitBundleReady: bundle.waitBundleReady,
-        locale: bundle.locale,
-        files: bundle.resourcesFiles.files
-      })
+      data: JSON.stringify(ele)
     });
   }
 

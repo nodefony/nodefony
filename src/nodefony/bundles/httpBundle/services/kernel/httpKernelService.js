@@ -458,8 +458,15 @@ module.exports = class httpKernel extends nodefony.Service {
     let controller = null;
     let next = null;
     //response events
-    context.response.response.on("finish", () => {
+    context.response.response.once("finish", () => {
+      if (context.finished) {
+        return;
+      }
+      if (!context) {
+        return;
+      }
       context.fire("onFinish", context);
+      context.finished = true;
       this.container.leaveScope(container);
       if (context) {
         context.clean();

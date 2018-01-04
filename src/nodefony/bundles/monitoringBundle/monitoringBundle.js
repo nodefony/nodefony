@@ -56,20 +56,20 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       this.frameworkBundle = this.kernel.getBundle("framework");
 
       this.infoKernel.events = {};
-      for (let event in kernel.notificationsCenter.event._events) {
+      for (let event in kernel.notificationsCenter._events) {
         switch (event) {
         case "onPreBoot":
           this.infoKernel.events[event] = {
             fire: kernel.preboot,
             nb: 1,
-            listeners: kernel.notificationsCenter.event._events[event].length
+            listeners: kernel.notificationsCenter._events[event].length
           };
           break;
         default:
           this.infoKernel.events[event] = {
             fire: false,
             nb: 0,
-            listeners: kernel.notificationsCenter.event._events[event].length
+            listeners: kernel.notificationsCenter._events[event].length
           };
           kernel.listen(this, event, () => {
             this.infoKernel.events[event].fire = true;
@@ -121,18 +121,18 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         }
       }
       //console.log(this.infoBundles);
-      for (let event in this.kernel.notificationsCenter.event._events) {
+      for (let event in this.kernel.notificationsCenter._events) {
         switch (event) {
         case "onReady":
           this.infoKernel.events[event] = {
             fire: kernel.ready,
             nb: 0,
-            listeners: this.kernel.notificationsCenter.event._events[event].length
+            listeners: this.kernel.notificationsCenter._events[event].length
           };
           break;
         default:
           this.infoKernel.events[event] = nodefony.extend(true, this.infoKernel.events[event], {
-            listeners: this.kernel.notificationsCenter.event._events[event].length
+            listeners: this.kernel.notificationsCenter._events[event].length
           });
         }
       }
@@ -360,18 +360,18 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       },
       userAgent: myUserAgent
     };
-    for (let event in context.notificationsCenter.event._events) {
+    for (let event in context.notificationsCenter._events) {
       if (event === "onRequest") {
         context.profiling.events[event] = {
           fire: true,
           nb: 1,
-          listeners: context.notificationsCenter.event._events[event].length
+          listeners: context.notificationsCenter._events[event].length
         };
       } else {
         context.profiling.events[event] = {
           fire: false,
           nb: 0,
-          listeners: context.notificationsCenter.event._events[event].length
+          listeners: context.notificationsCenter._events[event].length
         };
       }
       context.listen(context, event, () => {

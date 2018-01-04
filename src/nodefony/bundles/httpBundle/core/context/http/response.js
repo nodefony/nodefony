@@ -20,6 +20,7 @@ module.exports = nodefony.register("Response", function () {
       this.statusCode = 200;
       this.statusMessage = null;
       this.ended = false;
+      this.streamFile = null;
       // default http code
       //this.setStatusCode(200, null);
       //timeout default
@@ -35,6 +36,8 @@ module.exports = nodefony.register("Response", function () {
       delete this.headers;
       this.body = null;
       delete this.body;
+      //this.streamFile = null;
+      //delete this.streamFile;
     }
 
     setTimeout(ms) {
