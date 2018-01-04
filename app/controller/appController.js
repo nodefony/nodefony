@@ -10,12 +10,12 @@ module.exports = class appController extends nodefony.controller {
       this.push(path.resolve(this.bundle.publicPath, "assets", "css", "app.css"), {
         path: "/app/assets/css/app.css"
       }).catch((e) => {
-        this.logger(e, "ERROR");
+        this.logger(e.message, "WARNING");
       });
       this.push(path.resolve(this.bundle.publicPath, "assets", "js", "app.js"), {
         path: "/app/assets/js/app.js"
       }).catch((e) => {
-        this.logger(e, "ERROR");
+        this.logger(e.message, "WARNING");
       });
     }
   }

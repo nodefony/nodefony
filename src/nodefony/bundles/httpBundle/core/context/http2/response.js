@@ -95,9 +95,9 @@ module.exports = nodefony.register("Response2", () => {
     }
 
     push(ele, headers, options) {
-      if (this.stream /*&& this.stream.pushAllowed*/ ) {
-        return new Promise((resolve, reject) => {
-          try {
+      return new Promise((resolve, reject) => {
+        try {
+          if (this.stream && this.stream.pushAllowed) {
             let file = new nodefony.fileClass(ele);
             let myheaders = nodefony.extend({
               'content-length': file.stats.size,
@@ -128,13 +128,15 @@ module.exports = nodefony.register("Response2", () => {
                 reject(e);
               }
             });
-          } catch (e) {
-            return reject(e);
+          } else {
+            let warn = new Error("HTTP/2 client has disabled push streams !! ");
+            this.logger(warn, "WARNING");
+            return reject(warn);
           }
-        });
-      } else {
-        throw new Error("HTTP2 response stream not allowed !! ");
-      }
+        } catch (e) {
+          return reject(e);
+        }
+      });
     }
   };
 
