@@ -23,6 +23,8 @@ module.exports = nodefony.register("Response2", () => {
         this.stream = response.stream;
         this.streamId = this.stream.id;
       }
+      //this.userAgent = this.context.getUserAgent();
+      //this.isSafari = this.userAgent ? this.userAgent.includes('Safari') : false;
     }
 
     //ADD INPLICIT HEADER
@@ -130,7 +132,7 @@ module.exports = nodefony.register("Response2", () => {
             });
           } else {
             let warn = new Error("HTTP/2 client has disabled push streams !! ");
-            this.logger(warn, "WARNING");
+            this.logger(warn.message, "DEBUG");
             return reject(warn);
           }
         } catch (e) {
