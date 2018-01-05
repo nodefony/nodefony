@@ -156,6 +156,7 @@ system:
   locale                        : "en_en"
 
   servers:
+    protocol                    : "2.0"             #  2.0 || 1.1
     http                        : true
     https	                : true
     ws			        : true
@@ -364,63 +365,50 @@ module.exports = webpackMerge({
   },
   externals: {},
   resolve: {},
-  module: {
-    rules: [{
-      // BABEL TRANSCODE
-      test: new RegExp("\.es6$"),
-      exclude: new RegExp("node_modules"),
-      use: [{
-        loader: 'babel-loader',
-        options: {
-          presets: ['env']
-        }
-      }]
-    }, {
-      // CSS EXTRACT
-      test: new RegExp("\.css$"),
-      use: ExtractTextPluginCss.extract({
-        use: 'css-loader'
-      })
-    }, {
-      // SASS
-      test: new RegExp(".scss$"),
-      use: [{
-        loader: 'style-loader'
-      }, {
-        loader: 'css-loader'
-      }, {
-        loader: 'sass-loader'
-      }]
-    }, {
-      test: new RegExp("\.less$"),
-      use: ExtractTextPluginCss.extract({
-        use: [
-          "raw-loader",
-          {
-            loader: 'less-loader',
-            options: {
-              //strictMath: true,
-              //noIeCompat: true
-            }
-          }
-        ]
-      })
-    }, {
-      // FONTS
-      test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '&outputPath=/assets/fonts/',
-    }, {
-      // IMAGES
-      test: new RegExp("\.(jpg|png|gif)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '&outputPath=/assets/images/'
-    }]
-  },
-  plugins: [
-    new ExtractTextPluginCss({
-      filename: "./assets/css/[name].css",
-    })
-  ]
-}, config);
+  module: {...}
+});  
+```
+
+### Example controller  : ./helloBundle/controller/defaultController.js
+```js
+module.exports = class defaultController extends nodefony.controller {
+	constructor (container, context){
+		super(container, context);
+	}
+
+	indexAction (){
+		try {
+			return this.render("helloBundle::index.html.twig",{name:"default"});
+		}catch(e){
+			throw e;
+		}
+	}
+};
+```
+
+### Example view  (twig) : ./helloBundle/Resources/views/index.html.twig
+```twig
+% extends '/app/Resources/views/base.html.twig' %}
+{% block title %}Welcome {{kernel.name}}! {% endblock %}
+{% block stylesheets %}
+  {{ parent() }}
+  <!-- WEBPACK BUNDLE -->
+  <link rel='stylesheet' href='{{CDN("stylesheet")}}/helloBundle/assets/css/hello.css' />
+{% endblock %}
+{% block body %}
+      <img class='displayed' src='{{CDN("image")}}/frameworkBundle/images/nodefony-logo-white.png'>
+      <h1 class='success'>
+        <a href='{{url('documentation')}}'>
+          <strong style='font-size:45px'>NODEFONY</strong>
+        </a>
+        <p>{{trans('welcome')}} hello</p>
+      </h1>
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  <!-- WEBPACK BUNDLE -->
+  <script src='{{CDN("javascript")}}/helloBundle/assets/js/hello.js'></script>
+{% endblock %}
 ```
 
 ### <a name="start_prod"></a>Start Production Mode
