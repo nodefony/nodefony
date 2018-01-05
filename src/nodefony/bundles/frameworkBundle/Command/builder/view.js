@@ -31,7 +31,7 @@ const View = class View {
   generateTwig() {
     return "{% extends '/app/Resources/views/base.html.twig' %}\n\
 \n\
-{% block title %}Welcome {{kernel.name}}! {% endblock %}\n\
+{% block title %}Welcome {{name}}! {% endblock %}\n\
 {% block stylesheets %}\n\
   {{ parent() }}\n\
   <!-- WEBPACK BUNDLE -->\n\
@@ -43,7 +43,7 @@ const View = class View {
         <a href='{{url('documentation')}}'>\n\
           <strong style='font-size:45px'>NODEFONY</strong>\n\
         </a>\n\
-        <p>{{trans('welcome')}} " + this.params.name + "</p>\n\
+        <p>{{trans('welcome')}} {{name}}</p>\n\
       </h1>\n\
 {% endblock %}\n\
 {% block javascripts %}\n\

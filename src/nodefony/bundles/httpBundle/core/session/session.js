@@ -418,7 +418,7 @@ nodefony.register("Session", function () {
     }
 
     setId() {
-      let ip = this.context.remoteAddress || this.getRemoteAddress(this.context);
+      let ip = this.context.getRemoteAddress();
       let date = new Date().getTime();
       let concat = ip + date + this.randomValueHex(16) + Math.random() * 10;
       let hash = null;
@@ -483,10 +483,6 @@ nodefony.register("Session", function () {
         .slice(0, len); // return required number of characters
     }
 
-    getRemoteAddress() {
-      //var request = this.context.request ;
-      return this.context.getRemoteAddress();
-    }
   };
 
   return Session;

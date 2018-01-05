@@ -515,13 +515,13 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       content: content,
       "content-type": context.request.contentType
     };
-    context.profiling.response = {
+    /*context.profiling.response = {
       statusCode: context.response.statusCode,
       message: context.response.response.statusMessage,
       size: nodefony.cli.niceBytes(context.response.body.length),
       encoding: context.response.encoding,
-      "content-type": context.response.response.getHeader('content-type')
-    };
+      "content-type": context.response.contentType
+    };*/
     context.listen(this, "onSendMonitoring", this.onSendMonitoring);
   }
 
@@ -618,8 +618,8 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       message: response.response.statusMessage,
       size: response.body ? nodefony.cli.niceBytes(response.body.length) : null,
       encoding: response.encoding,
-      "content-type": response.response.getHeader('content-type'),
-      headers: response.response._headers
+      "content-type": response.getHeader('content-type'),
+      headers: response.getHeaders()
     };
     if (context.storage) {
       this.saveProfile(context, (error /*, res*/ ) => {

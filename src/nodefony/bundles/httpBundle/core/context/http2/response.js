@@ -27,12 +27,12 @@ module.exports = nodefony.register("Response2", () => {
       //this.isSafari = this.userAgent ? this.userAgent.includes('Safari') : false;
     }
 
-    //ADD INPLICIT HEADER
     setHeader(name, value) {
       if (this.stream) {
         if (name) {
           let obj = {};
           obj[name] = value;
+          //this.stream.additionalHeaders(obj);
           nodefony.extend(this.headers, obj);
           return obj;
         }
@@ -42,6 +42,7 @@ module.exports = nodefony.register("Response2", () => {
     }
 
     writeHead(statusCode, headers) {
+
       if (this.stream) {
         if (statusCode) {
           this.setStatusCode(statusCode);
@@ -49,9 +50,10 @@ module.exports = nodefony.register("Response2", () => {
         if (!this.stream.headersSent) {
           try {
             if (this.context.method === "HEAD") {
-              this.setHeader('Content-Length', this.getLength());
+              this.setHeader('content-length', this.getLength());
             }
             this.headers[HTTP2_HEADER_STATUS] = this.statusCode;
+            //console.log(headers || this.headers)
             return this.stream.respond(
               headers || this.headers, {
                 endStream: false,

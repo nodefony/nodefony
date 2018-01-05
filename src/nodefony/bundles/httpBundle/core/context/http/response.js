@@ -1,4 +1,5 @@
 const http = require("http");
+const mime = require('mime');
 module.exports = nodefony.register("Response", function () {
 
   const Response = class Response {
@@ -25,6 +26,7 @@ module.exports = nodefony.register("Response", function () {
       //this.setStatusCode(200, null);
       //timeout default
       this.timeout = this.context.kernelHttp.responseTimeout[this.context.type];
+      this.contentType = null;
     }
 
     clean() {
@@ -42,6 +44,19 @@ module.exports = nodefony.register("Response", function () {
 
     setTimeout(ms) {
       this.timeout = ms;
+    }
+
+    setContentType(type, encoding) {
+      let myType = this.getMimeType(type);
+      if (!myType) {
+        this.logger("Content-Type not valid !!! " + type, "WARNING");
+      }
+      this.contentType = myType;
+      return this.setHeader("content-type", myType + " ; charset=" + (encoding ||  this.encoding));
+    }
+
+    getMimeType(name) {
+      return mime.getType(name);
     }
 
     addCookie(cookie) {
@@ -88,6 +103,10 @@ module.exports = nodefony.register("Response", function () {
 
     getHeader(name) {
       return this.response.getHeader(name);
+    }
+
+    getHeaders() {
+      return this.response._headers;
     }
 
     addTrailers(obj) {

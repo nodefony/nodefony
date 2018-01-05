@@ -1,10 +1,6 @@
-{% extends "./licence.cecill-b.skeleton" %}
 
 {% block body %}
 /**
- *	The class is a **`{{controllerName}}` CONTROLLER** .
- *	@module {{module}}
- *	@main {{module}}
  *	@class {{controllerName}}
  *	@constructor
  *	@param {class} container
@@ -18,13 +14,15 @@ module.exports = class {{controllerName}} extends nodefony.controller {
 	}
 
 	/**
- 	*
- 	*	@method indexAction
- 	*
- 	*/
+ 	 *
+ 	 *	@method indexAction
+ 	 *
+ 	 */
 	indexAction (){
 		try {
-			return this.render("{{bundleName}}:{{directory}}:index.html.twig",{name:"{{controllerShortName}}"});
+			return this.render("{{bundleName}}:{{directory}}:index.html.twig", {
+				name:"{{bundleName}}"
+			});
 		}catch(e){
 			throw e;
 		}

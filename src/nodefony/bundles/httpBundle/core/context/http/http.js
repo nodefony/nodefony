@@ -247,10 +247,10 @@ nodefony.register.call(nodefony.context, "http", function () {
         if (!this.resolver) {
           this.resolver = this.router.resolve(this);
         }
-        //WARNING EVENT KERNEL
-        this.kernel.fire("onRequest", this, this.resolver);
         if (this.resolver.resolve) {
           let ret = this.resolver.callController(data);
+          //WARNING EVENT KERNEL
+          this.kernel.fire("onRequest", this, this.resolver);
           // timeout response after  callController (to change timeout in action )
           if (this.response.response) {
             this.timeoutid = this.response.response.setTimeout(this.response.timeout, () => {
@@ -434,11 +434,13 @@ nodefony.register.call(nodefony.context, "http", function () {
 
     setDefaultContentType() {
       if (this.isHtml) {
-        this.response.setHeader("Content-Type", "text/html; charset=utf-8");
+        this.response.setContentType("html", "utf-8");
+        //this.response.setHeader("Content-Type", "text/html; charset=utf-8");
       } else {
         if (this.request.accepts("json")) {
           this.isJson = true;
-          this.response.setHeader("Content-Type", "application/json; charset=utf-8");
+          //this.response.setHeader("Content-Type", "application/json; charset=utf-8");
+          this.response.setContentType("json", "utf-8");
         }
       }
     }

@@ -290,7 +290,7 @@ $ ./nodefony -d dev
 $ <ctrl-c>
 ```
 
-#### Now helleBundle is auto-insert in framework with watcher active and auto-config Webpack Module bundler
+#### Now helloBundle is auto-insert in framework with watcher active and auto-config Webpack Module bundler
 
 ### watchers :
 
@@ -369,41 +369,47 @@ module.exports = webpackMerge({
 });  
 ```
 
-### Example controller  : ./helloBundle/controller/defaultController.js
+### Example controller  : ./src/bundles/helloBundle/controller/defaultController.js
 ```js
 module.exports = class defaultController extends nodefony.controller {
 	constructor (container, context){
 		super(container, context);
 	}
 
-	indexAction (){
-		try {
-			return this.render("helloBundle::index.html.twig",{name:"default"});
-		}catch(e){
-			throw e;
-		}
-	}
+  indexAction() {
+    try {
+      return this.render("helloBundle::index.html.twig", {
+        name: "helloBundle"
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
 };
 ```
 
-### Example view  (twig) : ./helloBundle/Resources/views/index.html.twig
+### Example view  (twig) : ./src/bundles/helloBundle/Resources/views/index.html.twig
 ```twig
-% extends '/app/Resources/views/base.html.twig' %}
-{% block title %}Welcome {{kernel.name}}! {% endblock %}
+{% extends '/app/Resources/views/base.html.twig' %}
+
+{% block title %}Welcome {{name}}! {% endblock %}
+
 {% block stylesheets %}
   {{ parent() }}
   <!-- WEBPACK BUNDLE -->
   <link rel='stylesheet' href='{{CDN("stylesheet")}}/helloBundle/assets/css/hello.css' />
 {% endblock %}
+
 {% block body %}
       <img class='displayed' src='{{CDN("image")}}/frameworkBundle/images/nodefony-logo-white.png'>
       <h1 class='success'>
         <a href='{{url('documentation')}}'>
           <strong style='font-size:45px'>NODEFONY</strong>
         </a>
-        <p>{{trans('welcome')}} hello</p>
+        <p>{{trans('welcome')}} {{name}}</p>
       </h1>
 {% endblock %}
+
 {% block javascripts %}
   {{ parent() }}
   <!-- WEBPACK BUNDLE -->

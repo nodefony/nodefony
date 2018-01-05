@@ -111,20 +111,19 @@ module.exports = nodefony.register("controller", function () {
     }
 
     renderResponse(data, status, headers) {
-      let res = this.getResponse(data);
-      if (!res) {
+      if (!this.response) {
         this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "WARNING");
         return;
       }
       //this.fire("onView", data, this.context );
       if (headers && typeof headers === "object") {
-        res.setHeaders(headers);
+        this.response.setHeaders(headers);
       }
       if (status) {
-        res.setStatusCode(status);
+        this.response.setStatusCode(status);
       }
-      this.fire("onResponse", res, this.context);
-      return res;
+      this.fire("onResponse", this.response, this.context);
+      return this.response;
     }
 
     renderJson(obj, status, headers) {
@@ -158,19 +157,18 @@ module.exports = nodefony.register("controller", function () {
         this.logger(e, "ERROR");
         throw e;
       }
-      let response = this.getResponse(data);
-      if (!response) {
+      if (!this.response) {
         this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "WARNING");
         return;
       }
       //this.fire("onView", data, this.context );
-      response.setHeaders(nodefony.extend({}, {
+      this.response.setHeaders(nodefony.extend({}, {
         'Content-Type': "text/json ; charset=" + this.response.encoding
       }, headers));
       if (status) {
-        response.setStatusCode(status);
+        this.response.setStatusCode(status);
       }
-      return response;
+      return this.response;
     }
 
     render(view, param) {
@@ -186,8 +184,7 @@ module.exports = nodefony.register("controller", function () {
     }
 
     renderSync(view, param) {
-      let response = this.getResponse();
-      if (!response) {
+      if (!this.response) {
         this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "WARNING");
         return;
       }
@@ -197,7 +194,7 @@ module.exports = nodefony.register("controller", function () {
         this.fire("onError", this.context.container, e);
         return;
       }
-      return response;
+      return this.response;
     }
 
     renderAsync(view, param) {
@@ -214,10 +211,10 @@ module.exports = nodefony.register("controller", function () {
     }
 
     renderViewAsync(view, param) {
-      let extendParam = null;
-      try {
-        extendParam = this.httpKernel.extendTwig(param, this.context);
-        return new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
+        let extendParam = null;
+        try {
+          extendParam = this.httpKernel.extendTwig(param, this.context);
           let templ = null;
           let res = null;
           try {
@@ -240,11 +237,11 @@ module.exports = nodefony.register("controller", function () {
             extendParam = null;
             return reject(e);
           }
-        });
-      } catch (e) {
-        extendParam = null;
-        throw e;
-      }
+        } catch (e) {
+          extendParam = null;
+          throw e;
+        }
+      });
     }
 
     renderView(view, param) {
