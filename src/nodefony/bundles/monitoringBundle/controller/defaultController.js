@@ -16,7 +16,7 @@
 
     indexAction(module) {
       if (module) {
-        this.getResponse().setHeader('Content-Type', "application/xml");
+        this.response.setHeader('Content-Type', "application/xml");
         if (module === "app") {
           let bundles = function () {
             let obj = {};

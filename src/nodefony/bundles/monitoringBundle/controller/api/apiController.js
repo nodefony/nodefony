@@ -17,18 +17,15 @@ module.exports = class apiController extends nodefony.controller {
 
   renderRest(data, async) {
 
-    let context = this.getContext();
-    let type = context.request.queryGet.format || context.request.headers["X-FORMAT"] || "";
-
-    let response = this.getResponse();
+    let type = this.context.request.queryGet.format || this.context.request.headers["X-FORMAT"] || "";
     if (data.code) {
-      response.setStatusCode(data.code);
+      this.response.setStatusCode(data.code);
     }
     switch (type.toLowerCase()) {
     case "application/xml":
     case "text/xml":
     case "xml":
-      response.setHeader('Content-Type', "application/xml");
+      this.response.setHeader('content-type', "application/xml");
       if (async) {
         return this.renderAsync('monitoringBundle:api:api.xml.twig', data);
       } else {
@@ -36,7 +33,7 @@ module.exports = class apiController extends nodefony.controller {
       }
       break;
     default:
-      response.setHeader('Content-Type', "application/json");
+      this.response.setHeader('content-type', "application/json");
       if (async) {
         return this.renderAsync('monitoringBundle:api:api.json.twig', data);
       } else {
@@ -46,17 +43,10 @@ module.exports = class apiController extends nodefony.controller {
   }
 
   renderDatatable(data, async) {
-    //var context = this.getContext() ;
-
-    //var response = this.getResponse() ;
-    //response.setHeader('Content-Type' , "application/json");
-
     if (async) {
       return this.renderJsonAsync(data);
-      //return     this.getResponse( JSON.stringify(data) , data.code, {'Content-Type' : "application/json"})
     } else {
       return this.renderJson(data);
-
     }
   }
 

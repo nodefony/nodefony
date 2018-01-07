@@ -133,7 +133,7 @@
     "url-loader": "0.6.2",
     "useragent": "2.2.1",
     "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.9.7",
+    "webpack-dev-server": "^2.10.0",
     "webpack-merge": "4.1.1",
     "websocket": "1.0.25",
     "xml2js": "0.4.19",

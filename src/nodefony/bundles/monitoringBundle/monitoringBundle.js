@@ -610,7 +610,6 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     }
   }
 
-
   onSendMonitoring(response, context) {
     context.profiling.timeRequest = (new Date().getTime()) - (context.request.request.nodefony_time) + " ms";
     context.profiling.response = {
@@ -618,7 +617,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       message: response.response.statusMessage,
       size: response.body ? nodefony.cli.niceBytes(response.body.length) : null,
       encoding: response.encoding,
-      "content-type": response.getHeader('content-type'),
+      "content-type": response.getHeader('Content-Type'),
       headers: response.getHeaders()
     };
     if (context.storage) {
@@ -631,7 +630,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
           if (!context.isAjax && context.showDebugBar /*&& context.profiling.route.name !== "monitoring"*/ ) {
             if (response) {
               let bool = true;
-              let xml = (response.getHeader('content-type').indexOf("xml") >= 0);
+              let xml = (response.getHeader('Content-Type').indexOf("xml") >= 0);
               switch (true) {
               case response.body instanceof Buffer:
                 response.body = response.body.toString(response.encoding);
@@ -678,7 +677,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         if (!context.isAjax && context.showDebugBar /*&& context.profiling.route.name !== "monitoring"*/ ) {
           if (response) {
             let bool = true;
-            let xml = (response.getHeader('content-type').indexOf("xml") >= 0);
+            let xml = (response.getHeader('Content-Type').indexOf("xml") >= 0);
             switch (true) {
             case response.body instanceof Buffer:
               response.body = response.body.toString(response.encoding);

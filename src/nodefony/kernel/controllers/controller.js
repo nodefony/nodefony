@@ -115,7 +115,8 @@ module.exports = nodefony.register("controller", function () {
         this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "WARNING");
         return;
       }
-      //this.fire("onView", data, this.context );
+      this.fire("onView", data, this.context);
+      //this.response.setBody(data);
       if (headers && typeof headers === "object") {
         this.response.setHeaders(headers);
       }
@@ -161,7 +162,8 @@ module.exports = nodefony.register("controller", function () {
         this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "WARNING");
         return;
       }
-      //this.fire("onView", data, this.context );
+      //this.response.setBody(data);
+      this.fire("onView", data, this.context);
       this.response.setHeaders(nodefony.extend({}, {
         'Content-Type': "text/json ; charset=" + this.response.encoding
       }, headers));

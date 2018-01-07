@@ -42,7 +42,6 @@ module.exports = nodefony.register("Response2", () => {
     }
 
     writeHead(statusCode, headers) {
-
       if (this.stream) {
         if (statusCode) {
           this.setStatusCode(statusCode);
@@ -106,7 +105,7 @@ module.exports = nodefony.register("Response2", () => {
             let myheaders = nodefony.extend({
               'content-length': file.stats.size,
               'last-modified': file.stats.mtime.toUTCString(),
-              'content-type': file.mimeType
+              'Content-Type': file.mimeType
             }, headers);
             let myOptions = nodefony.extend({
               onError: (err) => {

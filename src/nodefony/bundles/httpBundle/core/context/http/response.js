@@ -46,18 +46,7 @@ module.exports = nodefony.register("Response", function () {
       this.timeout = ms;
     }
 
-    setContentType(type, encoding) {
-      let myType = this.getMimeType(type);
-      if (!myType) {
-        this.logger("Content-Type not valid !!! " + type, "WARNING");
-      }
-      this.contentType = myType;
-      return this.setHeader("content-type", myType + " ; charset=" + (encoding ||  this.encoding));
-    }
 
-    getMimeType(name) {
-      return mime.getType(name);
-    }
 
     addCookie(cookie) {
       if (cookie instanceof nodefony.cookies.cookie) {
@@ -106,7 +95,20 @@ module.exports = nodefony.register("Response", function () {
     }
 
     getHeaders() {
-      return this.response._headers;
+      return this.response.getHeaders();
+    }
+
+    setContentType(type, encoding) {
+      let myType = this.getMimeType(type);
+      if (!myType) {
+        this.logger("Content-Type not valid !!! " + type, "WARNING");
+      }
+      this.contentType = myType;
+      return this.setHeader("Content-Type", myType + " ; charset=" + (encoding ||  this.encoding));
+    }
+
+    getMimeType(name) {
+      return mime.getType(name);
     }
 
     addTrailers(obj) {
