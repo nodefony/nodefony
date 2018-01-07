@@ -25,7 +25,7 @@ module.exports = class apiController extends nodefony.controller {
     case "application/xml":
     case "text/xml":
     case "xml":
-      this.response.setHeader('content-type', "application/xml");
+      this.response.setHeader('Content-Type', "application/xml");
       if (async) {
         return this.renderAsync('monitoringBundle:api:api.xml.twig', data);
       } else {
@@ -33,7 +33,7 @@ module.exports = class apiController extends nodefony.controller {
       }
       break;
     default:
-      this.response.setHeader('content-type', "application/json");
+      this.response.setHeader('Content-Type', "application/json");
       if (async) {
         return this.renderAsync('monitoringBundle:api:api.json.twig', data);
       } else {

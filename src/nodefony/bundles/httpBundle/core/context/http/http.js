@@ -253,10 +253,18 @@ nodefony.register.call(nodefony.context, "http", function () {
           this.kernel.fire("onRequest", this, this.resolver);
           // timeout response after  callController (to change timeout in action )
           if (this.response.response) {
-            this.timeoutid = this.response.response.setTimeout(this.response.timeout, () => {
-              this.timeoutExpired = true;
-              this.fire("onTimeout", this);
-            });
+            if (this.response.stream) {
+              this.timeoutid = this.response.stream.setTimeout(this.response.timeout, () => {
+                this.timeoutExpired = true;
+                this.fire("onTimeout", this);
+              });
+              //console.log(this.timeoutid)
+            } else {
+              this.timeoutid = this.response.response.setTimeout(this.response.timeout, () => {
+                this.timeoutExpired = true;
+                this.fire("onTimeout", this);
+              });
+            }
           }
           return ret;
         }

@@ -621,7 +621,7 @@
                       </li>
                     {% endif %}
                     {% for key, value in request.headers %}
-                      <!--li><label>{{ key | capitalize }}</label><span class="label black">{{value}}</span></li-->
+                      <!--li><label>{{ key }}</label><span class="label black">{{value}}</span></li-->
                     {% endfor %}
                   {% endif %}
                   {% if key == "queryPost" and request.queryPost is not empty %}
@@ -759,7 +759,7 @@
 
                     {% if key != "headers" %}
                       <li>
-                        <label>{{ key | capitalize }}</label>
+                        <label>{{ key  }}</label>
                         <span class="label label-success">{{value}}</span>
                       </li>
                     {% else %}
@@ -770,7 +770,7 @@
 
                       {% for header, val in response["headers"] %}
                         <li>
-                          <label>{{ header | capitalize }}</label>
+                          <label>{{ header  }}</label>
                           <span class="label label-success">{{val}}</span>
                         </li>
                       {% endfor %}

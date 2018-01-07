@@ -27,20 +27,6 @@ module.exports = nodefony.register("Response2", () => {
       //this.isSafari = this.userAgent ? this.userAgent.includes('Safari') : false;
     }
 
-    setHeader(name, value) {
-      if (this.stream) {
-        if (name) {
-          let obj = {};
-          obj[name] = value;
-          //this.stream.additionalHeaders(obj);
-          nodefony.extend(this.headers, obj);
-          return obj;
-        }
-      } else {
-        return super.setHeader(name, value);
-      }
-    }
-
     writeHead(statusCode, headers) {
       if (this.stream) {
         if (statusCode) {
@@ -49,12 +35,12 @@ module.exports = nodefony.register("Response2", () => {
         if (!this.stream.headersSent) {
           try {
             if (this.context.method === "HEAD") {
-              this.setHeader('content-length', this.getLength());
+              this.setHeader('Content-Length', this.getLength());
             }
+            this.headers = nodefony.extend(this.headers, this.response.getHeaders(), headers);
             this.headers[HTTP2_HEADER_STATUS] = this.statusCode;
-            //console.log(headers || this.headers)
             return this.stream.respond(
-              headers || this.headers, {
+              this.headers, {
                 endStream: false,
               }
             );
@@ -105,7 +91,7 @@ module.exports = nodefony.register("Response2", () => {
             let myheaders = nodefony.extend({
               'content-length': file.stats.size,
               'last-modified': file.stats.mtime.toUTCString(),
-              'Content-Type': file.mimeType
+              'Content-Type': file.mimeType || "application/octet-stream"
             }, headers);
             let myOptions = nodefony.extend({
               onError: (err) => {

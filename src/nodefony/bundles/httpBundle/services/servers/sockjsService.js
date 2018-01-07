@@ -120,7 +120,11 @@ module.exports = class sockjs extends nodefony.Service {
         //websocket:false,
         prefix: this.prefix,
         log: (severity, line) => {
-          this.logger(line, severity.toUpperCase());
+          if (severity === "error") {
+            this.logger(severity + " " + line, "ERROR");
+          } else {
+            this.logger(severity + " " + line, "DEBUG");
+          }
         }
       });
       this[protocol].on('connection', (conn) => {

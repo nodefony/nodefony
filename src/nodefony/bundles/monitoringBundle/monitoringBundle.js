@@ -612,13 +612,14 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
 
   onSendMonitoring(response, context) {
     context.profiling.timeRequest = (new Date().getTime()) - (context.request.request.nodefony_time) + " ms";
+    let headers = nodefony.extend(response.getHeaders(), response.headers);
     context.profiling.response = {
       statusCode: response.statusCode,
       message: response.response.statusMessage,
       size: response.body ? nodefony.cli.niceBytes(response.body.length) : null,
       encoding: response.encoding,
-      "content-type": response.getHeader('Content-Type'),
-      headers: response.getHeaders()
+      "content-type": headers['Content-Type'] || headers['content-type'],
+      headers: headers
     };
     if (context.storage) {
       this.saveProfile(context, (error /*, res*/ ) => {

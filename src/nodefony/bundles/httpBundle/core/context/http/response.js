@@ -182,10 +182,11 @@ module.exports = nodefony.register("Response", function () {
           if (this.context.method === "HEAD") {
             this.setHeader('Content-Length', this.getLength());
           }
+          this.headers = nodefony.extend(this.headers, headers);
           return this.response.writeHead(
             this.statusCode,
             this.statusMessage,
-            headers || this.headers
+            this.headers
           );
         } catch (e) {
           throw e;
@@ -206,7 +207,7 @@ module.exports = nodefony.register("Response", function () {
     flush(data, encoding) {
       if (!this.response.headersSent) {
         this.setHeader('Transfer-Encoding', 'chunked');
-        this.headers['Transfer-Encoding'] = 'chunked';
+        //this.headers['Transfer-Encoding'] = 'chunked';
         this.flushHeaders();
       }
       return this.write(data, encoding);
