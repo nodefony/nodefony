@@ -127,7 +127,7 @@
     "sqlite3": "3.1.13",
     "style-loader": "^0.19.1",
     "twig": "1.10.5",
-    "uglify-es": "^3.3.4",
+    "uglify-es": "^3.3.5",
     "uglifycss": "0.0.27",
     "uglifyjs-webpack-plugin": "^1.1.6",
     "url-loader": "0.6.2",

@@ -71,7 +71,7 @@ nodefony.register.call(nodefony.security.factory, "sasl", function () {
       } catch (e) {
         typeMech = this.getMechanisms(this.defaultToken);
         let token = new typeMech(request, response, this.settings);
-        response.headers["WWW-Authenticate"] = this.generateResponse(token);
+        response.setHeader("WWW-Authenticate", this.generateResponse(token));
         callback(e, null);
         return;
       }
@@ -80,7 +80,7 @@ nodefony.register.call(nodefony.security.factory, "sasl", function () {
         token = new typeMech(request, response, this.settings);
         this.contextSecurity.logger("TRY AUTHORISATION " + this.name + " " + token.name, "DEBUG");
         if (!token.authorization) {
-          response.headers["WWW-Authenticate"] = this.generateResponse(token);
+          response.setHeader("WWW-Authenticate", this.generateResponse(token));
           throw {
             status: 401,
             message: "Unauthorized"
@@ -88,14 +88,14 @@ nodefony.register.call(nodefony.security.factory, "sasl", function () {
         }
         token.checkResponse(this.contextSecurity.provider.getUserPassword.bind(this.contextSecurity.provider), (error, result) => {
           if (error) {
-            response.headers["WWW-Authenticate"] = this.generateResponse(token);
+            response.setHeader("WWW-Authenticate", this.generateResponse(token));
             callback(error, null);
             return error;
           }
           if (result === true) {
             this.contextSecurity.provider.loadUserByUsername(token.username, (error, result) => {
               if (error) {
-                response.headers["WWW-Authenticate"] = this.generateResponse(token);
+                response.setHeader("WWW-Authenticate", this.generateResponse(token));
                 callback(error, null);
                 return error;
               }
@@ -109,7 +109,7 @@ nodefony.register.call(nodefony.security.factory, "sasl", function () {
 
       } catch (e) {
         this.contextSecurity.logger(e, "ERROR");
-        response.headers["WWW-Authenticate"] = this.generateResponse(token);
+        response.setHeader("WWW-Authenticate", this.generateResponse(token));
         callback(e, null);
       }
     }

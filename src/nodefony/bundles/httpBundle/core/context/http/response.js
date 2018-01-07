@@ -46,8 +46,6 @@ module.exports = nodefony.register("Response", function () {
       this.timeout = ms;
     }
 
-
-
     addCookie(cookie) {
       if (cookie instanceof nodefony.cookies.cookie) {
         this.cookies[cookie.name] = cookie;
@@ -84,10 +82,12 @@ module.exports = nodefony.register("Response", function () {
     }
 
     setHeaders(obj) {
-      if (obj) {
-        return nodefony.extend(this.headers, obj);
+      if (obj instanceof Object) {
+        for (let head in obj) {
+          this.setHeader(head, obj[head]);
+        }
       }
-      return this.headers;
+      return this.headers = this.response.getHeaders();
     }
 
     getHeader(name) {
@@ -182,11 +182,11 @@ module.exports = nodefony.register("Response", function () {
           if (this.context.method === "HEAD") {
             this.setHeader('Content-Length', this.getLength());
           }
-          this.headers = nodefony.extend(this.headers, headers);
+          //this.headers = nodefony.extend(this.headers, this.getHeaders(), headers);
           return this.response.writeHead(
             this.statusCode,
             this.statusMessage,
-            this.headers
+            headers
           );
         } catch (e) {
           throw e;
@@ -237,6 +237,12 @@ module.exports = nodefony.register("Response", function () {
     }
 
     redirect(url, status, headers) {
+      status = parseInt(status, 10);
+      if (status === 301) {
+        this.setStatusCode(status);
+      } else {
+        this.setStatusCode(302);
+      }
       if (headers) {
         switch (nodefony.typeOf(headers)) {
         case "object":
@@ -249,12 +255,6 @@ module.exports = nodefony.register("Response", function () {
           });
           break;
         }
-      }
-      status = parseInt(status, 10);
-      if (status === 301) {
-        this.setStatusCode(status);
-      } else {
-        this.setStatusCode(302);
       }
       this.setHeader("Location", url);
       return this;

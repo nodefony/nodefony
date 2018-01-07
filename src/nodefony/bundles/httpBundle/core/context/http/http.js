@@ -331,7 +331,6 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.fire("onSend", this.response, this);
       if (this.session) {
         this.once("onSaveSession", ( /*session*/ ) => {
-          //console.log("FIRE onSaveSession")
           if ( !this.storage) {
             if (this.profiling) {
               this.fire("onSendMonitoring", this.response, this);
@@ -391,7 +390,7 @@ nodefony.register.call(nodefony.context, "http", function () {
         res = this.response.redirect(Url, status, headers);
       }
       this.isRedirect = true;
-      this.send(res, this);
+      this.send();
     }
 
     redirectHttps(status, headers) {
@@ -421,17 +420,17 @@ nodefony.register.call(nodefony.context, "http", function () {
     setXjson(xjson) {
       switch (nodefony.typeOf(xjson)) {
       case "object":
-        this.response.headers["X-Json"] = JSON.stringify(xjson);
+        this.response.setHeader("X-Json", JSON.stringify(xjson));
         return xjson;
       case "string":
-        this.response.headers["X-Json"] = xjson;
+        this.response.setHeader("X-Json", xjson);
         return JSON.parse(xjson);
       case "Error":
         if (typeof xjson.message === "object") {
-          this.response.headers["X-Json"] = JSON.stringify(xjson.message);
+          this.response.setHeader("X-Json", JSON.stringify(xjson.message));
           return xjson.message;
         } else {
-          this.response.headers["X-Json"] = xjson.message;
+          this.response.setHeader("X-Json", xjson.message);
           return {
             error: xjson.message
           };
@@ -443,11 +442,9 @@ nodefony.register.call(nodefony.context, "http", function () {
     setDefaultContentType() {
       if (this.isHtml) {
         this.response.setContentType("html", "utf-8");
-        //this.response.setHeader("Content-Type", "text/html; charset=utf-8");
       } else {
         if (this.request.accepts("json")) {
           this.isJson = true;
-          //this.response.setHeader("Content-Type", "application/json; charset=utf-8");
           this.response.setContentType("json", "utf-8");
         }
       }

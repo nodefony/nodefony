@@ -37,7 +37,7 @@ module.exports = nodefony.register("Response2", () => {
             if (this.context.method === "HEAD") {
               this.setHeader('Content-Length', this.getLength());
             }
-            this.headers = nodefony.extend(this.headers, this.response.getHeaders(), headers);
+            this.headers = nodefony.extend(this.getHeaders(), headers);
             this.headers[HTTP2_HEADER_STATUS] = this.statusCode;
             return this.stream.respond(
               this.headers, {
