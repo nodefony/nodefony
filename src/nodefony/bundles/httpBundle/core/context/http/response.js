@@ -102,6 +102,7 @@ module.exports = nodefony.register("Response", function () {
       let myType = this.getMimeType(type);
       if (!myType) {
         this.logger("Content-Type not valid !!! " + type, "WARNING");
+        myType = "application/octet-stream";
       }
       this.contentType = myType;
       return this.setHeader("Content-Type", myType + " ; charset=" + (encoding ||  this.encoding));

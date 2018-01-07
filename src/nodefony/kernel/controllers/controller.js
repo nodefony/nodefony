@@ -404,7 +404,7 @@ module.exports = nodefony.register("controller", function () {
         'Content-Length': length,
         "Expires": "0",
         'Content-Description': 'File Transfer',
-        'Content-Type': File.mimeType
+        'Content-Type': File.mimeType || "application/octet-stream",
       }, headers || {});
       try {
         this.streamFile(File, head, options);
@@ -443,12 +443,12 @@ module.exports = nodefony.register("controller", function () {
           'Content-Range': 'bytes ' + start + '-' + end + '/' + length,
           'Accept-Ranges': 'bytes',
           'Content-Length': chunksize,
-          'Content-Type': File.mimeType
+          'Content-Type': File.mimeType || "application/octet-stream"
         }, headers);
         this.response.setStatusCode(206);
       } else {
         head = nodefony.extend({
-          'Content-Type': File.mimeType,
+          'Content-Type': File.mimeType || "application/octet-stream",
           'Content-Length': length,
           'Content-Disposition': ' inline; filename="' + File.name + '"'
         }, headers);
