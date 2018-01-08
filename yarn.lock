@@ -5974,21 +5974,6 @@ mkdirp@0.5.1, mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdi
   dependencies:
     minimist "0.0.8"
 
-mocha@*:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/mocha/-/mocha-4.0.1.tgz#0aee5a95cf69a4618820f5e51fa31717117daf1b"
-  dependencies:
-    browser-stdout "1.3.0"
-    commander "2.11.0"
-    debug "3.1.0"
-    diff "3.3.1"
-    escape-string-regexp "1.0.5"
-    glob "7.1.2"
-    growl "1.10.3"
-    he "1.1.1"
-    mkdirp "0.5.1"
-    supports-color "4.4.0"
-
 mocha@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/mocha/-/mocha-4.1.0.tgz#7d86cfbcf35cb829e2754c32e17355ec05338794"
@@ -6993,11 +6978,11 @@ passport-local@1.0.0:
   dependencies:
     passport-strategy "1.x.x"
 
-passport-nodefony@2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/passport-nodefony/-/passport-nodefony-2.0.2.tgz#15878850a2469409f7f2043027b59ab6e59214a9"
+passport-nodefony@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/passport-nodefony/-/passport-nodefony-2.0.3.tgz#1ca6709f80d8cf293b80492c5a6bbccc3606d836"
   dependencies:
-    mocha "*"
+    mocha "^4.1.0"
 
 passport-oauth1@1.x.x:
   version "1.1.0"
@@ -8445,9 +8430,9 @@ seq-queue@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/seq-queue/-/seq-queue-0.0.5.tgz#d56812e1c017a6e4e7c3e3a37a1da6d78dd3c93e"
 
-sequelize@^4.29.0:
-  version "4.29.0"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.29.0.tgz#d858dacda903a5e67b7239c600fa322b83db80f6"
+sequelize@^4.29.1:
+  version "4.29.1"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.29.1.tgz#c509685795dd9c7652e6a2cc1d7f518578f4bef2"
   dependencies:
     bluebird "^3.4.6"
     cls-bluebird "^2.0.1"

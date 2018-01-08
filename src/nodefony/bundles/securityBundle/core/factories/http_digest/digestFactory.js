@@ -25,7 +25,7 @@ nodefony.register.call(nodefony.security.factory, "http_digest", function () {
       this.contextSecurity.logger("TRY AUTHORISATION " + token.name, "DEBUG");
       try {
         if (!token.authorization) {
-          context.response.headers["WWW-Authenticate"] = token.generateResponse();
+          context.response.setHeader("WWW-Authenticate", token.generateResponse());
           callback({
             status: 401,
             message: "Unauthorized"
@@ -34,14 +34,14 @@ nodefony.register.call(nodefony.security.factory, "http_digest", function () {
         }
         token.checkResponse(this.contextSecurity.provider.getUserPassword.bind(this.contextSecurity.provider), (error, result) => {
           if (error) {
-            context.response.headers["WWW-Authenticate"] = token.generateResponse();
+            context.response.setHeader("WWW-Authenticate", token.generateResponse());
             callback(error, null);
             return error;
           }
           if (result === true) {
             this.contextSecurity.provider.loadUserByUsername(token.username, (error, result) => {
               if (error) {
-                context.response.headers["WWW-Authenticate"] = token.generateResponse();
+                context.response.setHeader("WWW-Authenticate", token.generateResponse());
                 throw error;
               }
               context.user = result;
@@ -53,7 +53,7 @@ nodefony.register.call(nodefony.security.factory, "http_digest", function () {
         });
 
       } catch (e) {
-        context.response.headers["WWW-Authenticate"] = token.generateResponse();
+        context.response.setHeader("WWW-Authenticate", token.generateResponse());
         callback(e, null);
       }
     }
