@@ -372,10 +372,9 @@ module.exports = webpackMerge({
 ### Example controller  : ./src/bundles/helloBundle/controller/defaultController.js
 ```js
 module.exports = class defaultController extends nodefony.controller {
-	constructor (container, context){
-		super(container, context);
-	}
-
+  constructor (container, context){
+    super(container, context);
+  }
   indexAction() {
     try {
       return this.render("helloBundle::index.html.twig", {
