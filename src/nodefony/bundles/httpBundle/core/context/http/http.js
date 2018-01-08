@@ -18,6 +18,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.resolver = null;
       this.nbCallController = 0;
       this.uploadService = this.get("upload");
+      this.pushAllowed = false;
       if (this.type === "HTTP2") {
         this.request = new nodefony.Request2(request, this);
         this.response = new nodefony.Response2(response, container);

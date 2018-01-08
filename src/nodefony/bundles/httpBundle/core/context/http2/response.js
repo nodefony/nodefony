@@ -23,6 +23,9 @@ module.exports = nodefony.register("Response2", () => {
         this.stream = response.stream;
         this.streamId = this.stream.id;
       }
+      if (this.stream && this.stream.pushAllowed) {
+        this.context.pushAllowed = true;
+      }
       //this.userAgent = this.context.getUserAgent();
       //this.isSafari = this.userAgent ? this.userAgent.includes('Safari') : false;
     }

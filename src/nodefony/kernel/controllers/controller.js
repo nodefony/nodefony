@@ -92,21 +92,27 @@ module.exports = nodefony.register("controller", function () {
     }
 
     push(asset, headers, options) {
-      let assetPublic = null;
-      if (!headers) {
-        headers = {};
-        assetPublic = asset.replace(this.bundle.publicPath, "/" + this.bundle.bundleName);
-        headers.path = assetPublic;
-      } else {
-        if (!headers.path) {
+      if (this.context.type === "HTTP2" && this.context.pushAllowed) {
+        let assetPublic = null;
+        if (!headers) {
+          headers = {};
           assetPublic = asset.replace(this.bundle.publicPath, "/" + this.bundle.bundleName);
           headers.path = assetPublic;
+        } else {
+          if (!headers.path) {
+            assetPublic = asset.replace(this.bundle.publicPath, "/" + this.bundle.bundleName);
+            headers.path = assetPublic;
+          }
         }
-      }
-      try {
-        return this.response.push(asset, headers, options);
-      } catch (e) {
-        throw e;
+        try {
+          return this.response.push(asset, headers, options);
+        } catch (e) {
+          throw e;
+        }
+      } else {
+        return new Promise((resolve, reject) => {
+          return reject(new Error("HTTP2 Server push not pushAllowed !!!!"));
+        });
       }
     }
 

@@ -458,6 +458,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     }
     context.profiling.context = {
       type: context.type,
+      pushAllowed: context.pushAllowed,
       isAjax: context.isAjax,
       secureArea: context.secureArea,
       domain: context.domain,
