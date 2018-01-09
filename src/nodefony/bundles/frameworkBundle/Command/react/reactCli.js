@@ -1,5 +1,3 @@
-const regBundle = /^(.*)[Bb]undle$/;
-
 const intervativeQuestion = function (cli) {
   return [{
     type: 'input',
@@ -41,6 +39,7 @@ const reactCli = class reactCli extends nodefony.Service {
     this.npm = this.getNpmPath();
     this.setEnv();
     this.bundleName = null;
+    this.bundleShortName = null;
     this.bundlePath = null;
   }
 
@@ -66,7 +65,7 @@ const reactCli = class reactCli extends nodefony.Service {
 
   cleanTmp() {
     try {
-      let tmpDir = path.resolve(this.tmp, this.bundleName + "bundle");
+      let tmpDir = path.resolve(this.tmp, this.bundleName);
       this.cli.existsSync(tmpDir);
       try {
         shell.rm('-rf', tmpDir);
@@ -86,7 +85,7 @@ const reactCli = class reactCli extends nodefony.Service {
       project = this.generateInteractive();
     } else {
       this.builder.checkPath(name, Path);
-      this.bundleName = this.builder.shortName;
+      this.bundleName = this.builder.name;
       this.location = this.builder.location.path;
       this.cwd = this.builder.bundlePath;
       this.logger("GENERATE React Bundle : " + this.bundleName + " LOCATION : " + this.location);
@@ -102,16 +101,14 @@ const reactCli = class reactCli extends nodefony.Service {
         return this.ejectReact(dir);
       })
       .then(( /*dir*/ ) => {
-        return {
-          name: name,
-          path: Path
-        };
+        return this.builder;
       });
   }
 
   generateReactProject( /*argv*/ ) {
     return new Promise((resolve, reject) => {
-      let args = [this.bundleName + "bundle"];
+      //console.log(this.bundleName)
+      let args = [this.bundleName];
       this.logger("install React cli : create-react-app " + args.join(" "));
       let cmd = null;
       try {
@@ -122,7 +119,7 @@ const reactCli = class reactCli extends nodefony.Service {
             this.cleanTmp();
             return reject(new Error("install React cli  create-react-app new error : " + code));
           }
-          return resolve(path.resolve(this.tmp, this.bundleName + "bundle"));
+          return resolve(path.resolve(this.tmp, this.bundleName));
         });
         process.stdin.pipe(cmd.stdin);
       } catch (e) {
@@ -135,7 +132,7 @@ const reactCli = class reactCli extends nodefony.Service {
 
   moveToRealPath() {
     try {
-      return shell.mv(path.resolve(this.tmp, this.bundleName + "bundle"), this.location);
+      return shell.mv(path.resolve(this.tmp, this.bundleName), this.location);
     } catch (e) {
       throw e;
     }
@@ -160,7 +157,7 @@ const reactCli = class reactCli extends nodefony.Service {
             this.cleanTmp();
             return reject(e);
           }
-          return resolve(path.resolve(this.location, this.bundleName + "bundle"));
+          return resolve(path.resolve(this.location, this.bundleName));
         });
         process.stdin.pipe(cmd.stdin);
       } catch (e) {

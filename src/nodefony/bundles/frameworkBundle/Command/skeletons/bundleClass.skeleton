@@ -19,7 +19,7 @@
 			super( name, kernel, container );
 
 			// Load core bundle library
-			this.autoLoader.loadDirectory( path.resolve( this.path, "src" ) );
+			//this.autoLoader.loadDirectory( path.resolve( this.path, "src" ) );
 
 		 /*
 		 	*	If you want kernel wait {{bundleName}} event <<onReady>>

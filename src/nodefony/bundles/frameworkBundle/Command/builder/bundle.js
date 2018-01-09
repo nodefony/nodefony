@@ -61,7 +61,7 @@ const Bundle = class Bundle extends Builder {
     if (res) {
       this.shortName = res[1];
     } else {
-      throw new Error("Bad bundle name :" + this.name);
+      throw new Error("Bad bundle   name :" + this.name);
     }
     try {
       this.setPath(Path);

@@ -64,10 +64,10 @@ module.exports = nodefony.registerCommand("generate", function () {
                 project.generateProject(args[0], args[1], interactive).then((builder) => {
                   builder.build(builder.createBuilder(), builder.location, true);
                   builder.install();
-                  let src = path.resolve(project.bundlePath, project.name + "bundle", "public");
-                  let dest = path.resolve(project.bundlePath, project.name + "bundle", "Resources", "public", "dist");
-                  this.logger("ln -s " + src + " " + dest);
-                  shell.ln('-sf', src, dest);
+                  //let src = path.resolve(project.bundlePath, "public");
+                  //let dest = path.resolve(project.bundlePath, "Resources", "public", "dist");
+                  //this.logger("ln -s " + src + " " + dest);
+                  //shell.ln('-sf', src, dest);
                   this.terminate(0);
                 });
                 break;

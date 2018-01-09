@@ -63,7 +63,8 @@ let angularCli = class angularCli extends nodefony.Service {
       project = this.generateInteractive();
     } else {
       this.builder.checkPath(name, Path);
-      this.bundleName = this.builder.shortName;
+      this.bundleName = this.builder.name;
+      this.bundleShortName = this.builder.shortName;
       this.location = this.builder.location.path;
       this.cwd = this.builder.bundlePath;
       this.logger("GENERATE Angular Bundle : " + this.bundleName + " LOCATION : " + this.location);
@@ -101,12 +102,12 @@ let angularCli = class angularCli extends nodefony.Service {
   }
 
   moveToRealPath() {
-    return shell.mv(path.resolve(this.tmp, this.bundleName + "Bundle"), this.location);
+    return shell.mv(path.resolve(this.tmp, this.bundleName), this.location);
   }
 
   cleanTmp() {
     try {
-      let tmpDir = path.resolve(this.tmp, this.bundleName + "bundle");
+      let tmpDir = path.resolve(this.tmp, this.bundleName);
       this.cli.existsSync(tmpDir);
       try {
         shell.rm('-rf', tmpDir);
@@ -121,7 +122,7 @@ let angularCli = class angularCli extends nodefony.Service {
 
   generateNgNew( /*argv*/ ) {
     return new Promise((resolve, reject) => {
-      let args = ['new', '-v', '-sg', this.bundleName + "Bundle"];
+      let args = ['new', '-v', '-sg', this.bundleName];
       this.logger("install angular cli : ng " + args.join(" "));
       let cmd = null;
       try {
@@ -132,7 +133,7 @@ let angularCli = class angularCli extends nodefony.Service {
             this.cleanTmp();
             return reject(new Error("install angular cli  ng new error : " + code));
           }
-          return resolve(path.resolve(this.tmp, this.bundleName + "Bundle"));
+          return resolve(path.resolve(this.tmp, this.bundleName));
         });
       } catch (e) {
         this.logger("ng new ", "ERROR");
@@ -144,7 +145,7 @@ let angularCli = class angularCli extends nodefony.Service {
 
   generateNgModule(dir) {
     return new Promise((resolve, reject) => {
-      let args = ['generate', 'module', '--spec', '--routing', '-m', 'app', this.bundleName];
+      let args = ['generate', 'module', '--spec', '--routing', '-m', 'app', this.bundleShortName];
       this.logger(" Generate Angular module : ng " + args.join(" ") + " in " + dir);
       let cmd = null;
       try {
@@ -161,7 +162,7 @@ let angularCli = class angularCli extends nodefony.Service {
             this.cleanTmp();
             return reject(e);
           }
-          return resolve(path.resolve(this.location, this.bundleName + "Bundle"));
+          return resolve(path.resolve(this.location, this.bundleName));
           //return resolve(dir);
         });
       } catch (e) {
@@ -186,7 +187,7 @@ let angularCli = class angularCli extends nodefony.Service {
             return reject(new Error("ng eject error : " + code));
           }
           return resolve(dir);
-          //return resolve(path.resolve(this.bundlePath, this.bundleName + "Bundle"));
+          //return resolve(path.resolve(this.bundlePath, this.bundleName ));
         });
       } catch (e) {
         this.cleanTmp();
