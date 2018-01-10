@@ -52,11 +52,13 @@ websocketSecure:
   closeTimeout:           5000
 
 sockjs:
-    overlay:              true
-    hot:                  false
-    protocol:             https
-    websocket:            true
-    prefix:               "/sockjs-node"
+  overlay:                true
+  hot:                    false
+  protocol:               https
+  websocket:              true
+  prefix:                 "/sockjs-node"
+  hostname:               "localhost"
+  port:                   "5152"
 
 #
 #       SERVERS STACTIC FILES

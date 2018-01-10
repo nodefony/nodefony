@@ -148,6 +148,8 @@ httpBundle:
       hot:                       true
       protocol:                  https
       websocket:                 true
+      hostname:                  "localhost"
+      port:                      "5152"
   statics:
     defaultOptions:
       cacheControl :             true

@@ -118,7 +118,7 @@
     "rxjs": "^5.5.6",
     "sass-loader": "6.0.6",
     "semver": "5.4.1",
-    "sequelize": "^4.30.1",
+    "sequelize": "^4.31.0",
     "serve-static": "1.13.1",
     "shelljs": "0.7.8",
     "shortid": "2.2.8",

@@ -2,7 +2,6 @@ const Sockjs = require('sockjs');
 
 const defaultPrefix = "/sockjs-node";
 
-
 const sockCompiler = class sockCompiler extends nodefony.Service {
 
   constructor(service, name, compiler) {
@@ -74,6 +73,8 @@ module.exports = class sockjs extends nodefony.Service {
         this.hot = this.bundle.settings.sockjs.hot || false;
         this.websocket = this.bundle.settings.sockjs.websocket;
         this.protocol = this.bundle.settings.sockjs.protocol.toLowerCase();
+        this.hostname = this.bundle.settings.sockjs.hostname ;
+        this.port = this.bundle.settings.sockjs.port;
         this.setPrefix(this.bundle.settings.sockjs.prefix || defaultPrefix);
       }
     });

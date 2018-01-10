@@ -9,9 +9,12 @@ module.exports = class webpack extends nodefony.Service {
     this.webpack = Webpack;
     this.production = (this.kernel.environment === "prod") ? true : false;
     this.pathCache = this.kernel.cacheWebpack;
-    this.host = this.kernel.hostHttps;
+    this.socksSettings = this.kernel.getBundle("http").settings.sockjs;
+    this.host = this.socksSettings.protocol + "://" + this.socksSettings.hostname + ":" + this.socksSettings.port;
     this.version = this.getWebpackVersion();
-
+    this.nbCompiler = 0;
+    this.nbCompiled = 0;
+    this.sockjs = this.get("sockjs");
     if (this.production) {
       try {
         if (!fs.existsSync(this.pathCache)) {
@@ -31,7 +34,6 @@ module.exports = class webpack extends nodefony.Service {
         });
       }
     }
-    this.sockjs = this.get("sockjs");
   }
 
   getWebpackVersion() {
@@ -57,7 +59,8 @@ module.exports = class webpack extends nodefony.Service {
       if (watcher) {
         this.logger(stats.toString({
           // Add console colors
-          colors: true
+          colors: true,
+          verbose: true
         }), "INFO");
       }
       if (stats.hasWarnings()) {
@@ -110,7 +113,10 @@ module.exports = class webpack extends nodefony.Service {
         publicPath = path.resolve("/", bundle.bundleName, "dist");
         shell.cd(Path);
         config = require(file.path);
+        config.context = Path;
+        //if (config.output.path === undefined) {
         config.output.path = path.resolve("Resources", "public", "dist");
+        //}
         if (config.output.publicPath === undefined) {
           if (publicPath) {
             config.output.publicPath = publicPath + "/";
@@ -119,16 +125,18 @@ module.exports = class webpack extends nodefony.Service {
           }
         }
         if (!this.production) {
-          config.entry.main.unshift("webpack-dev-server/client?https://" + this.host + "/");
+          //config.entry.hmr = ["webpack-dev-server/client?" + this.host + "/"]
+          config.entry.main.unshift("webpack-dev-server/client?" + this.host + "/");
         }
         break;
       case "react":
         publicPath = path.resolve("/", bundle.bundleName, "dist");
         shell.cd(Path);
         process.env.PUBLIC_URL = publicPath;
-        process.env.HOST = this.kernel.hostHttps;
+        process.env.HOST = this.socksSettings.hostname + ":" + this.socksSettings.port;
         process.env.HTTPS = true;
         config = require(file.path);
+        config.context = Path;
         config.output.path = path.resolve("Resources", "public", "dist");
         if (publicPath) {
           config.output.publicPath = publicPath + "/";
@@ -155,17 +163,27 @@ module.exports = class webpack extends nodefony.Service {
           return null;
         }
       } catch (e) {
-        shell.cd(this.kernel.rootDir);
+        //shell.cd(this.kernel.rootDir);
         throw e;
       }
-      //console.log(config)
+      //console.log(config.name)
       compiler = this.webpack(config);
+      /*, () => {
+        //console.log(config.name)
+        this.nbCompiled++;
+        console.log("nbCompiled " + this.nbCompiled + "compiler =" + this.nbCompiler)
+        if (this.nbCompiled === this.nbCompiler) {
+          console.log("pass")
+          shell.cd(this.kernel.rootDir);
+        }
+      });*/
+      this.nbCompiler++;
       if (this.kernel.type === "CONSOLE") {
-        shell.cd(this.kernel.rootDir);
+        //shell.cd(this.kernel.rootDir);
         return compiler;
       }
     } catch (e) {
-      shell.cd(this.kernel.rootDir);
+      //shell.cd(this.kernel.rootDir);
       throw e;
     }
     // WATCH
@@ -199,16 +217,16 @@ module.exports = class webpack extends nodefony.Service {
         });
       } else {
         if ((this.kernel.environment === "dev") && (basename in this.kernel.bundlesCore) && (!this.kernel.isCore)) {
-          shell.cd(this.kernel.rootDir);
+          //shell.cd(this.kernel.rootDir);
           return compiler;
         }
         this.runCompiler(compiler, idfile, basename, file.name);
       }
     } catch (e) {
-      shell.cd(this.kernel.rootDir);
+      //shell.cd(this.kernel.rootDir);
       throw e;
     }
-    shell.cd(this.kernel.rootDir);
+    //shell.cd(this.kernel.rootDir);
     return compiler;
   }
 
