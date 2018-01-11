@@ -88,6 +88,9 @@ module.exports = nodefony.register("Response2", () => {
 
     push(ele, headers, options) {
       return new Promise((resolve, reject) => {
+        if (process.versions.node === "9.4.0") {
+          return reject(new Error("Version node 9.4.0 "));
+        }
         try {
           if (this.stream && this.stream.pushAllowed) {
             let file = new nodefony.fileClass(ele);
@@ -96,28 +99,33 @@ module.exports = nodefony.register("Response2", () => {
               'last-modified': file.stats.mtime.toUTCString(),
               'Content-Type': file.mimeType || "application/octet-stream"
             }, headers);
-            let myOptions = nodefony.extend({
-              onError: (err) => {
-                this.logger(err, "ERROR");
-              }
-              /*,
-              statCheck: (stat, headers) => {
-              this.logger(stat, "INFO");
-              this.logger(headers, "INFO");
-              }*/
-            }, options);
             return this.stream.pushStream({
               [HTTP2_HEADER_PATH]: myheaders.path
             }, {
               exclusive: true,
-              parent: this.streamId
+              //parent: this.streamId
             }, (pushStream) => {
+              let myOptions = nodefony.extend({
+                onError: (err) => {
+                  this.logger(err, "ERROR");
+                  if (err.code === 'ENOENT') {
+                    pushStream.respond({
+                      ':status': 404
+                    });
+                  } else {
+                    pushStream.respond({
+                      ':status': 500
+                    });
+                  }
+                  return reject(pushStream);
+                }
+              }, options);
               try {
-                this.logger(">>Pushing : " + file.path, "DEBUG", "HTTP2 Pushing");
+                this.logger(">> Pushing : " + file.path, "DEBUG", "HTTP2 Pushing");
                 pushStream.respondWithFile(file.path, myheaders, myOptions);
-                resolve(pushStream);
+                return resolve(pushStream);
               } catch (e) {
-                reject(e);
+                return reject(e);
               }
             });
           } else {
@@ -131,7 +139,5 @@ module.exports = nodefony.register("Response2", () => {
       });
     }
   };
-
-
   return Response2;
 });
