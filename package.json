@@ -47,7 +47,7 @@
     "freebsd"
   ],
   "engines": {
-    "node": ">=6"
+    "node": ">=6 <9.4.0"
   },
   "dependencies": {
     "@angular/cli": "^1.6.3",
@@ -68,7 +68,7 @@
     "cli-table": "0.3.1",
     "clui": "0.3.6",
     "code-context": "0.5.3",
-    "commander": "^2.12.2",
+    "commander": "^2.13.0",
     "cookie": "0.3.1",
     "core-js": "^2.5.3",
     "create-react-app": "1.4.3",
@@ -82,7 +82,7 @@
     "inquirer": "^5.0.0",
     "jquery": "3.2.1",
     "js-yaml": "3.10.0",
-    "less": "3.0.0-alpha.3",
+    "less": "^2.7.3",
     "less-loader": "4.0.5",
     "lodash": "4.17.4",
     "lodash.isregexp": "4.0.1",

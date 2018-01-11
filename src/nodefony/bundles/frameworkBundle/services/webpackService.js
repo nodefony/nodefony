@@ -163,27 +163,24 @@ module.exports = class webpack extends nodefony.Service {
           return null;
         }
       } catch (e) {
-        //shell.cd(this.kernel.rootDir);
+        shell.cd(this.kernel.rootDir);
         throw e;
       }
       //console.log(config.name)
       compiler = this.webpack(config);
-      /*, () => {
-        //console.log(config.name)
-        this.nbCompiled++;
-        console.log("nbCompiled " + this.nbCompiled + "compiler =" + this.nbCompiler)
-        if (this.nbCompiled === this.nbCompiler) {
-          console.log("pass")
-          shell.cd(this.kernel.rootDir);
-        }
-      });*/
-      this.nbCompiler++;
       if (this.kernel.type === "CONSOLE") {
-        //shell.cd(this.kernel.rootDir);
         return compiler;
       }
+      compiler.plugin("done", () => {
+        this.nbCompiled++;
+        if (this.nbCompiled === this.nbCompiler) {
+          this.fire("onWebpackFinich", this);
+          shell.cd(this.kernel.rootDir);
+        }
+      });
+      this.nbCompiler++;
     } catch (e) {
-      //shell.cd(this.kernel.rootDir);
+      shell.cd(this.kernel.rootDir);
       throw e;
     }
     // WATCH
@@ -206,7 +203,7 @@ module.exports = class webpack extends nodefony.Service {
       if (watch) {
         watching = compiler.watch(watchOptions, (err, stats) => {
           if (!err) {
-            this.logger("RUN WEBPACK COMPILER : " + basename + " COMPILE ENTRY POINT : \n" + this.displayConfigTable(config), "DEBUG");
+            this.logger("BUNDLE : " + basename + " WACTHER WEBPACK COMPILE  : \n" + this.displayConfigTable(config), "DEBUG");
           }
           this.loggerStat(err, stats, basename, file.name, true);
         });
@@ -217,16 +214,14 @@ module.exports = class webpack extends nodefony.Service {
         });
       } else {
         if ((this.kernel.environment === "dev") && (basename in this.kernel.bundlesCore) && (!this.kernel.isCore)) {
-          //shell.cd(this.kernel.rootDir);
           return compiler;
         }
         this.runCompiler(compiler, idfile, basename, file.name);
       }
     } catch (e) {
-      //shell.cd(this.kernel.rootDir);
+      shell.cd(this.kernel.rootDir);
       throw e;
     }
-    //shell.cd(this.kernel.rootDir);
     return compiler;
   }
 
@@ -239,12 +234,10 @@ module.exports = class webpack extends nodefony.Service {
         }
         try {
           fs.mkdirSync(pathCache);
-        } catch (e) {
-
-        }
+        } catch (e) {}
       }
       return new Promise((resolve /*, reject*/ ) => {
-        this.logger("RUN WEBPACK COMPILER : " + file + " COMPILE ENTRY POINT : \n" + this.displayConfigTable(compiler.options), "DEBUG");
+        this.logger("BUNDLE : " + bundle + " WEBPACK COMPILE : " + file + "\n" + this.displayConfigTable(compiler.options), "DEBUG");
         compiler.run((err, stats) => {
           this.loggerStat(err, stats,  bundle, file);
           return resolve(err, stats);

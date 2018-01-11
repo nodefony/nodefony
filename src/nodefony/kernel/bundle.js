@@ -225,7 +225,9 @@ module.exports = nodefony.register("Bundle", function () {
         this.webpackCompiler = null;
         if (this.kernel.type !== "CONSOLE" || (process.argv[2] && process.argv[2] === "webpack:dump")) {
           try {
-            this.findWebPackConfig();
+            this.kernel.on("onReady", () => {
+              this.initWebpack();
+            });
           } catch (e) {
             this.logger(e, "ERROR");
             throw e;
@@ -233,6 +235,15 @@ module.exports = nodefony.register("Bundle", function () {
         }
       });
       this.fire("onRegister", this);
+    }
+
+    initWebpack() {
+      try {
+        this.findWebPackConfig();
+      } catch (e) {
+        this.logger(e, "ERROR");
+        throw e;
+      }
     }
 
     initWatchers() {
