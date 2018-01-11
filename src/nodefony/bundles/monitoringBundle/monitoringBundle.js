@@ -283,7 +283,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         return;
       }
     }
-    context.profiling = null;
+    //context.profiling = null;
     let agent = null;
     let tmp = null;
     let myUserAgent = null;

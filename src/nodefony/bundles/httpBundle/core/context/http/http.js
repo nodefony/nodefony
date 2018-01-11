@@ -43,6 +43,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.domain = this.getHostName();
       this.router = this.get("router");
       this.url = url.format(this.request.url);
+      this.profiling = null;
       if (this.request.url.port) {
         this.port = this.request.url.port;
       } else {
@@ -248,10 +249,10 @@ nodefony.register.call(nodefony.context, "http", function () {
         if (!this.resolver) {
           this.resolver = this.router.resolve(this);
         }
+        //WARNING EVENT KERNEL
+        this.kernel.fire("onRequest", this, this.resolver);
         if (this.resolver.resolve) {
           let ret = this.resolver.callController(data);
-          //WARNING EVENT KERNEL
-          this.kernel.fire("onRequest", this, this.resolver);
           // timeout response after  callController (to change timeout in action )
           if (this.response.response) {
             if (this.response.stream) {
