@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.2.2 (12/01/2018)
+- [fix engine package.json](https://api.github.com/repos/nodefony/nodefony-core/git/commits/890dba27773fdb3c84d612a1fd2eb2d3ba08d64a) s-soo @cci
+- [CHANGELOG](https://api.github.com/repos/nodefony/nodefony-core/git/commits/c4a4fe818b072ca8861d66f34a0a644d4c24023e) s-soo @cci
+
+---
+
 ## v3.2.1 (12/01/2018)
 - [monotoring http2](https://api.github.com/repos/nodefony/nodefony-core/git/commits/396e2fa7f5d608738f775a76fe82792276f5d9fa) s-soo @cci
 - [server http2 push don't work with node 9.4.0](https://api.github.com/repos/nodefony/nodefony-core/git/commits/0131092156a35303419928c433e1dca59b1d3d19) s-soo @cci
