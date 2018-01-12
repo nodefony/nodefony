@@ -36,6 +36,8 @@ https:
   certificats:
     options:
       rejectUnauthorized: false
+http2:
+  enablePush:             true
 
 #
 #       SERVERS WEBSOCKET

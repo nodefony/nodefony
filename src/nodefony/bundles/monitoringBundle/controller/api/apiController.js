@@ -484,7 +484,8 @@ module.exports = class apiController extends nodefony.controller {
         port: https.port,
         ready: https.ready,
         domain: https.domain,
-        config: https.settings
+        config: https.settings,
+        config2: https.defaultSetting2
       };
     }
 

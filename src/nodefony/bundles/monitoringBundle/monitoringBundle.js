@@ -456,9 +456,11 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         };
       }
     }
+    let settings2 = this.get("httpsServer").defaultSetting2;
     context.profiling.context = {
       type: context.type,
       pushAllowed: context.pushAllowed,
+      pushAllow: settings2 ? settings2.enablePush : false,
       isAjax: context.isAjax,
       secureArea: context.secureArea,
       domain: context.domain,

@@ -113,6 +113,9 @@ module.exports = class httpsServer extends nodefony.Service {
         break;
       case "2.0":
         this.options.allowHTTP1 = true;
+        this.settings2 = this.getParameters("bundles.http").http2 || {};
+        let buf = http2.getPackedSettings(this.settings2);
+        this.defaultSetting2 = nodefony.extend({}, http2.getDefaultSettings(), http2.getUnpackedSettings(buf) || {});
         this.server = http2.createSecureServer(this.options);
         this.bundle.fire("onCreateServer", this.type, this);
         this.server.on("sessionError", (error) => {
@@ -121,6 +124,8 @@ module.exports = class httpsServer extends nodefony.Service {
         this.server.on("streamError", (error) => {
           this.logger(error, "ERROR", "HTTP2 stream");
         });
+
+
         break;
       default:
       }
