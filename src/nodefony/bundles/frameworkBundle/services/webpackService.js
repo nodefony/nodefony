@@ -9,8 +9,10 @@ module.exports = class webpack extends nodefony.Service {
     this.webpack = Webpack;
     this.production = (this.kernel.environment === "prod") ? true : false;
     this.pathCache = this.kernel.cacheWebpack;
-    this.socksSettings = this.kernel.getBundle("http").settings.sockjs;
-    this.host = this.socksSettings.protocol + "://" + this.socksSettings.hostname + ":" + this.socksSettings.port;
+    this.kernel.on("onBoot", () => {
+      this.socksSettings = this.kernel.getBundle("http").settings.sockjs;
+      this.host = this.socksSettings.protocol + "://" + this.socksSettings.hostname + ":" + this.socksSettings.port;
+    });
     this.version = this.getWebpackVersion();
     this.nbCompiler = 0;
     this.nbCompiled = 0;
