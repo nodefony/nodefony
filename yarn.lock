@@ -1953,7 +1953,7 @@ combined-stream@^1.0.5, combined-stream@~1.0.5:
   dependencies:
     delayed-stream "~1.0.0"
 
-commander@*, commander@^2.11.0, commander@^2.13.0, commander@^2.9.0:
+commander@*, commander@^2.11.0, commander@^2.13.0, commander@^2.9.0, commander@~2.13.0:
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
 
@@ -8441,9 +8441,9 @@ seq-queue@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/seq-queue/-/seq-queue-0.0.5.tgz#d56812e1c017a6e4e7c3e3a37a1da6d78dd3c93e"
 
-sequelize@^4.31.0:
-  version "4.31.0"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.31.0.tgz#6826bc0e8d0b31571f927ca89d956999e612fa7c"
+sequelize@^4.31.2:
+  version "4.31.2"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.31.2.tgz#4b414c39bac18ae74946ed49b300f5bc7e423462"
   dependencies:
     bluebird "^3.4.6"
     cls-bluebird "^2.0.1"
@@ -9527,11 +9527,18 @@ uc.micro@^1.0.1, uc.micro@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.3.tgz#7ed50d5e0f9a9fb0a573379259f2a77458d50192"
 
-uglify-es@^3.3.4, uglify-es@^3.3.5:
+uglify-es@^3.3.4:
   version "3.3.5"
   resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.3.5.tgz#cf7e695da81999f85196b15e2978862f13212f88"
   dependencies:
     commander "~2.12.1"
+    source-map "~0.6.1"
+
+uglify-es@^3.3.7:
+  version "3.3.7"
+  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.3.7.tgz#d1249af668666aba7cb1163e277455be9eb393cf"
+  dependencies:
+    commander "~2.13.0"
     source-map "~0.6.1"
 
 uglify-js@3.3.x:
@@ -9978,9 +9985,9 @@ webpack-dev-middleware@1.12.2, webpack-dev-middleware@^1.11.0, webpack-dev-middl
     range-parser "^1.0.3"
     time-stamp "^2.0.0"
 
-webpack-dev-server@^2.10.1:
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-2.10.1.tgz#a9768375346e62155860fe3cef3d4d641b24273e"
+webpack-dev-server@^2.11.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-2.11.0.tgz#e9d4830ab7eb16c6f92ed68b92f6089027960e1b"
   dependencies:
     ansi-html "0.0.7"
     array-includes "^3.0.3"

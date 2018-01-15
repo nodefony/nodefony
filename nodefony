@@ -14,11 +14,11 @@ try {
 } catch (e) {
   try {
     app = require('electron');
-    process.chdir(app.getAppPath());
+    process.chdir(path.normalize(app.app.getAppPath()));
     script = path.resolve(process.cwd(), "bin", "check.js");
     fs.lstatSync(script);
   } catch (e) {
-    throw new Error(process.cwd() + "Is Not a Nodefony Repository  !!  ");
+    throw new Error("Directory = " + app.getAppPath() + "Is Not a Nodefony Repository  !!  ");
   }
 }
 let nodefonyCheck = null;
@@ -282,13 +282,7 @@ if (isElectron) {
           cli.setCommandOption('-h, --help ', 'Nodefony help');
           cli.setCommandOption('-v, --version ', 'Nodefony version');
           cli.setCommandOption('-i, --interactive ', 'Nodefony cli Interactive Mode');
-          if (!command) {
-            command = "dev";
-          } else {
-            if (process.argv && process.argv[0]) {
-              cli.commander.parse(process.argv);
-            }
-          }
+          cli.commander.parse(process.argv);
           if (!!cli.commander.debug) {
             debug = true;
           }
