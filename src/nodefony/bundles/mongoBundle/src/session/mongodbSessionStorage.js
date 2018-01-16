@@ -148,7 +148,7 @@ nodefony.register.call(nodefony.session.storage, "mongoose", function () {
         .catch((error) => {
           if (error) {
             this.manager.logger(error, "ERROR");
-            throw error;
+            return error;
           }
         });
     }

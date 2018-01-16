@@ -71,7 +71,7 @@
     "commander": "^2.13.0",
     "cookie": "0.3.1",
     "core-js": "^2.5.3",
-    "create-react-app": "1.4.3",
+    "create-react-app": "^1.5.0",
     "css-loader": "^0.28.8",
     "elasticsearch": "14.0.0",
     "extract-text-webpack-plugin": "3.0.2",

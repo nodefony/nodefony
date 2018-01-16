@@ -12,8 +12,9 @@ const defaultconfigServer = {
 const defaultConfigConnection = {
   useMongoClient: true,
   reconnectTries: Number.MAX_VALUE,
-  autoReconnect: true
-
+  autoReconnect: true,
+  socketTimeoutMS: 0,
+  keepAlive: true
 };
 
 module.exports = class mongoose extends nodefony.orm {
@@ -54,7 +55,6 @@ module.exports = class mongoose extends nodefony.orm {
 
     let settings = nodefony.extend(true, {}, defaultConfigConnection, config.settings);
     settings.promiseLibrary = BlueBird;
-
     return this.engine.connect(url, settings).then((db) => {
       this.connections[name] = db;
       db.on('close', () => {
@@ -63,7 +63,8 @@ module.exports = class mongoose extends nodefony.orm {
       db.on('reconnect', () => {
         this.logger(`Reconnection to mongodb database ${name}`, 'INFO');
         this.fire('onReconnect', name, db);
-        this.createConnection(name, config);
+        //this.createConnection(name, config);
+        this.connections[name] = db;
       });
       db.on('timeout', () => {
         this.logger(`Timeout to mongodb database ${name}`, 'INFO');
@@ -73,15 +74,23 @@ module.exports = class mongoose extends nodefony.orm {
         this.logger(`ParseError on mongodb database ${name}`, 'ERROR');
         this.logger(error, 'ERROR');
       });
+      db.on('error', (error) => {
+        this.logger(`Error on mongodb database ${name}`, 'ERROR');
+        this.logger(error, 'ERROR');
+      });
       this.fire("onConnect", name, db);
       this.logger("Connect to " + name + " : " + url);
       return db;
     }).catch(error => {
       this.logger(`Cannot connect to mongodb ( ${host}:${port}/${config.dbname} )`, "ERROR");
       this.logger(error, "ERROR");
-      setTimeout(() => {
-        this.createConnection(name, config);
-      }, 5000);
+      /*if (this.timeoutid) {
+        clearTimeout(this.timeoutid);
+      }
+      this.timeoutid = setTimeout(() => {
+        this.timeoutid = null;
+        //this.createConnection(name, config);
+      }, settings.reconnectInterval * 1000);*/
     });
   }
 
