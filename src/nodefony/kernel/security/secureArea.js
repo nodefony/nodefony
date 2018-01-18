@@ -1,7 +1,5 @@
 module.exports = nodefony.register("SecuredArea", function () {
 
-
-
   // context security
   const securedArea = class securedArea extends nodefony.Service {
 
@@ -25,6 +23,8 @@ module.exports = nodefony.register("SecuredArea", function () {
         try {
           if (this.providerName in this.firewall.providers) {
             this.provider = this.firewall.providers[this.providerName].Class;
+          } else {
+            this.provider = this.firewall.providers.nodefony.Class;
           }
           if (this.factory) {
             this.logger(" FACTORY : " + this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
@@ -310,7 +310,6 @@ module.exports = nodefony.register("SecuredArea", function () {
       this.redirect_Https = value ||  false;
     }
   };
-
 
   return securedArea;
 });

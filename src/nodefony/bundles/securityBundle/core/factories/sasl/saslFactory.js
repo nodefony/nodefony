@@ -1,4 +1,4 @@
-nodefony.register.call(nodefony.security.factory, "sasl", function () {
+module.exports = nodefony.registerFactory("sasl", () => {
 
   const parseSASLAuth = function (request) {
     let str = request.headers.authorization || (request.query ? (request.query.authorization || request.query.Authorization) : null);
@@ -34,18 +34,12 @@ nodefony.register.call(nodefony.security.factory, "sasl", function () {
     }
   };
 
-  const Factory = class Factory {
+  const Factory = class saslFactory extends nodefony.Factory {
 
-    constructor(contextSecurity, settings) {
-      this.name = this.getKey();
-      this.settings = settings;
-      this.contextSecurity = contextSecurity;
-      this.token = this.getAllMechanisms();
+    constructor(security, settings) {
+      super("sasl", security, settings);
       this.defaultToken = "Digest";
-    }
-
-    getKey() {
-      return "sasl";
+      this.token = this.getAllMechanisms();
     }
 
     getPosition() {
@@ -53,65 +47,75 @@ nodefony.register.call(nodefony.security.factory, "sasl", function () {
     }
 
     handle(context, callback) {
-      let request = context.request;
-      let response = context.response;
-      let res = null;
-      try {
-        res = parseSASLAuth(request);
-      } catch (e) {
-        this.contextSecurity.logger(e.message, "WARNING");
-        request.headers.authorization = null;
-        res = {
-          mechanism: this.defaultToken
-        };
-      }
-      let typeMech = null;
-      try {
-        typeMech = this.getMechanisms(res.mechanism);
-      } catch (e) {
-        typeMech = this.getMechanisms(this.defaultToken);
-        let token = new typeMech(request, response, this.settings);
-        response.setHeader("WWW-Authenticate", this.generateResponse(token));
-        callback(e, null);
-        return;
-      }
-      let token = null;
-      try {
-        token = new typeMech(request, response, this.settings);
-        this.contextSecurity.logger("TRY AUTHORISATION " + this.name + " " + token.name, "DEBUG");
-        if (!token.authorization) {
-          response.setHeader("WWW-Authenticate", this.generateResponse(token));
-          throw {
-            status: 401,
-            message: "Unauthorized"
+      return new Promise((resolve, reject) => {
+        let request = context.request;
+        let response = context.response;
+        let res = null;
+        try {
+          res = parseSASLAuth(request);
+        } catch (e) {
+          this.logger(e.message, "WARNING");
+          request.headers.authorization = null;
+          res = {
+            mechanism: this.defaultToken
           };
         }
-        token.checkResponse(this.contextSecurity.provider.getUserPassword.bind(this.contextSecurity.provider), (error, result) => {
-          if (error) {
-            response.setHeader("WWW-Authenticate", this.generateResponse(token));
-            callback(error, null);
-            return error;
+        let typeMech = null;
+        try {
+          typeMech = this.getMechanisms(res.mechanism);
+        } catch (e) {
+          typeMech = this.getMechanisms(this.defaultToken);
+          let token = new typeMech(request, response, this.settings);
+          response.setHeader("WWW-Authenticate", this.generateResponse(token));
+          if (callback) {
+            callback(e, null);
           }
-          if (result === true) {
-            this.contextSecurity.provider.loadUserByUsername(token.username, (error, result) => {
-              if (error) {
-                response.setHeader("WWW-Authenticate", this.generateResponse(token));
+          return reject(e);
+        }
+        let token = null;
+        try {
+          token = new typeMech(request, response, this.settings);
+          this.logger("TRY AUTHORISATION " + this.name + " " + token.name, "DEBUG");
+          if (!token.authorization) {
+            //response.setHeader("WWW-Authenticate", this.generateResponse(token));
+            throw {
+              status: 401,
+              message: "Unauthorized"
+            };
+          }
+          token.checkResponse(this.security.provider.getUserPassword.bind(this.security.provider), (error, result) => {
+            if (error) {
+              response.setHeader("WWW-Authenticate", this.generateResponse(token));
+              if (callback) {
                 callback(error, null);
-                return error;
               }
-              context.user = result;
-              callback(null, token);
-              return token;
-            });
+              return reject(error);
+            }
+            if (result === true) {
+              this.security.provider.loadUserByUsername(token.username, (error, result) => {
+                if (error) {
+                  response.setHeader("WWW-Authenticate", this.generateResponse(token));
+                  callback(error, null);
+                  return error;
+                }
+                context.user = result;
+                if (callback) {
+                  callback(null, token);
+                }
+                return resolve(token);
+              });
+            }
+            return resolve(result);
+          });
+        } catch (e) {
+          this.logger(e, "ERROR");
+          response.setHeader("WWW-Authenticate", this.generateResponse(token));
+          if (callback) {
+            callback(e, null);
           }
-          return result;
-        });
-
-      } catch (e) {
-        this.contextSecurity.logger(e, "ERROR");
-        response.setHeader("WWW-Authenticate", this.generateResponse(token));
-        callback(e, null);
-      }
+          return reject(e);
+        }
+      });
     }
 
     generateResponse(token) {
@@ -121,7 +125,6 @@ nodefony.register.call(nodefony.security.factory, "sasl", function () {
         "mechanisms": token.name
       };
       line.challenge = token.generateResponse();
-
       for (let ele in line) {
         res += ele + "=" + line[ele] + ",";
       }

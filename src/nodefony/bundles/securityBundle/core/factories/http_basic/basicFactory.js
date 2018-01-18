@@ -5,7 +5,7 @@
  */
 nodefony.register.call(nodefony.security.factory, "http_basic", function () {
 
-  const Factory = class Factory {
+  const Factory = class BasicFactory {
     constructor(contextSecurity, settings) {
       this.name = this.getKey();
       this.contextSecurity = contextSecurity;

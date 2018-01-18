@@ -3,7 +3,7 @@
  */
 nodefony.register.call(nodefony.security.factory, "http_digest", function () {
 
-  const Factory = class Factory {
+  const Factory = class digestFactory {
 
     constructor(contextSecurity, settings) {
       this.name = this.getKey();

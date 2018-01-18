@@ -1,85 +1,49 @@
 /*
  *	PASSPORT DIGEST  FACTORY
  */
-
 try {
-    var passport = require('passport');
-    var DigestStrategy = require('passport-http').DigestStrategy;
-    var nodefonyPassport = require("passport-nodefony");
+  var DigestStrategy = require('passport-http').DigestStrategy;
 } catch (e) {
-    this.logger(e);
+  this.logger(e);
 }
 
 
-nodefony.register.call(nodefony.security.factory, "passport-digest", function () {
+module.exports = nodefony.registerFactory("passport-digest", () => {
 
-    const Factory = class Factory {
+  const Factory = class passportDigestFactory extends nodefony.passeportFactory {
 
-        constructor(contextSecurity, settings) {
-            this.name = this.getKey();
-            this.contextSecurity = contextSecurity;
-            this.settings = settings;
+    constructor(security, settings) {
+      super("digest", security, settings);
+    }
 
-            this.passport = passport;
+    getStrategy(options) {
 
-            this.passport.framework(nodefonyPassport(this));
+      return new DigestStrategy(options, (username, done) => {
+        this.logger("TRY AUTHORISATION " + this.name + " : " + username, "DEBUG");
+        // get passwd
+        this.security.provider.getUserPassword(username, (error, passwd) => {
+          if (error) {
+            return done(error, null);
+          }
+          this.security.provider.loadUserByUsername(username, (error, result) => {
+            if (error) {
+              return done(error, null);
+            }
+            return done(null, result, passwd);
 
-            this.strategy = this.getStrategy(this.settings);
+          });
+        });
+      });
+    }
 
-            this.passport.use(this.strategy);
+    getPosition() {
+      return "http";
+    }
 
-        }
+    generatePasswd( /*realm, user, passwd*/ ) {
 
-        getStrategy(options) {
+    }
+  };
 
-            return new DigestStrategy(options, (username, done) => {
-                this.contextSecurity.logger("TRY AUTHORISATION " + this.name + " : " + username, "DEBUG");
-                // get passwd
-                this.contextSecurity.provider.getUserPassword(username, (error, passwd) => {
-                    if (error) {
-                        return done(error, null);
-                    }
-                    this.contextSecurity.provider.loadUserByUsername(username, (error, result) => {
-                        if (error) {
-                            return done(error, null);
-                        }
-                        return done(null, result, passwd);
-
-                    });
-                });
-            });
-        }
-
-        getKey() {
-            return "passport-digest";
-        }
-
-        getPosition() {
-            return "http";
-        }
-
-        handle(context, callback) {
-            //this.contextSecurity.logger("HANDLE AUTHORISATION passport-digest ", "DEBUG");
-
-            return this.passport.authenticate('digest', {
-                session: false,
-            })(context, (error, res) => {
-                if (res) {
-                    context.user = res;
-                    this.contextSecurity.logger("AUTHORISATION " + this.getKey() + " SUCCESSFULLY : " + res.username, "INFO");
-                }
-                let token = {
-                    name: "Digest",
-                    user: res
-                };
-                return callback(error, token);
-            });
-        }
-
-        generatePasswd( /*realm, user, passwd*/ ) {
-
-        }
-    };
-
-    return Factory;
+  return Factory;
 });

@@ -115,9 +115,13 @@ security:
         test-api-area:
             pattern:                                ^/test/firewall/api
             stateless:                              true
-            anonymous:                              ~
             context:                                api
-
+            form_login:
+              login_path:                           /api/login
+            passport-jwt:
+              secretOrKey :                         'secret'
+              issuer :                              'accounts.examplesoft.com'
+              audience :                            'yoursite.net'
         #
         test-cors-area:
             pattern:                                ^/test/firewall/cors

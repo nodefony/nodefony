@@ -3,29 +3,13 @@
  * Anonymous  FACTORY
  *
  */
-nodefony.register.call(nodefony.security.factory, "anonymous", function () {
+module.exports = nodefony.registerFactory("anonymous", () => {
 
 
-  /*const User = class User {
-      constructor() {
-          this.username = "anonymous";
-          this.name = "anonymous";
-          this.surname = "anonymous";
-          this.lang = null;
-          this.roles = "ANONYMOUS";
-      }
-  };*/
-
-  const Factory = class Factory {
-    constructor(contextSecurity, settings) {
-      this.name = this.getKey();
-      this.contextSecurity = contextSecurity;
-      this.settings = settings;
+  const Factory = class anonymousFactory extends nodefony.Factory {
+    constructor(security, settings) {
+      super("anonymous", security, settings);
       this.token = "Anonymous";
-    }
-
-    getKey() {
-      return "anonymous";
     }
 
     getPosition() {
@@ -33,21 +17,31 @@ nodefony.register.call(nodefony.security.factory, "anonymous", function () {
     }
 
     handle(context, callback) {
-      try {
-        let token = new nodefony.security.tokens[this.token](context.request, context.response, this.settings);
-        this.contextSecurity.logger("TRY AUTHORISATION " + token.name, "DEBUG");
-        return this.contextSecurity.provider.loadUserByUsername(this.getKey(), (error, result) => {
-          if (error) {
-            callback(error, null);
-            return error;
+      return new Promise((resolve, reject) => {
+        try {
+          let token = new nodefony.security.tokens[this.token](context.request, context.response, this.settings);
+          this.logger("TRY AUTHORISATION " + token.name, "DEBUG");
+          return this.security.provider.loadUserByUsername(this.name, (error, result) => {
+            if (error) {
+              if (callback) {
+                callback(error, null);
+              }
+              return reject(error);
+            }
+            context.user = result;
+            if (callback) {
+              callback(null, token);
+            }
+            return resolve(result);
+          });
+        } catch (e) {
+          if (callback) {
+            callback(e, null);
           }
-          context.user = result;
-          callback(null, token);
-          return result;
-        });
-      } catch (e) {
-        callback(e, null);
-      }
+          return reject(e);
+        }
+      });
+
     }
   };
   return Factory;
