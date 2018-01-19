@@ -1,19 +1,13 @@
 /*
  *	HTTP DIGEST  FACTORY
  */
-nodefony.register.call(nodefony.security.factory, "http_digest", function () {
+module.exports = nodefony.registerFactory("http_digest", () => {
 
-  const Factory = class digestFactory {
+  const Factory = class digestFactory extends nodefony.Factory {
 
-    constructor(contextSecurity, settings) {
-      this.name = this.getKey();
-      this.contextSecurity = contextSecurity;
-      this.settings = settings;
+    constructor(security, settings) {
+      super("http_digest", security, settings);
       this.token = "Digest";
-    }
-
-    getKey() {
-      return "http_digest";
     }
 
     getPosition() {
@@ -21,41 +15,55 @@ nodefony.register.call(nodefony.security.factory, "http_digest", function () {
     }
 
     handle(context, callback) {
-      var token = new nodefony.security.tokens[this.token](context.request, context.response, this.settings);
-      this.contextSecurity.logger("TRY AUTHORISATION " + token.name, "DEBUG");
-      try {
-        if (!token.authorization) {
-          context.response.setHeader("WWW-Authenticate", token.generateResponse());
-          callback({
-            status: 401,
-            message: "Unauthorized"
-          }, null);
-          return;
-        }
-        token.checkResponse(this.contextSecurity.provider.getUserPassword.bind(this.contextSecurity.provider), (error, result) => {
-          if (error) {
+      return new Promise((resolve, reject) => {
+        let token = null;
+        try {
+          token = new nodefony.security.tokens[this.token](context.request, context.response, this.settings);
+          this.logger("TRY AUTHORISATION " + token.name, "DEBUG");
+          if (!token.authorization) {
             context.response.setHeader("WWW-Authenticate", token.generateResponse());
-            callback(error, null);
-            return error;
+            let error = new Error("Unauthorized");
+            error.code = 401;
+            if (callback) {
+              callback(error, null);
+            }
+            return reject(error);
           }
-          if (result === true) {
-            this.contextSecurity.provider.loadUserByUsername(token.username, (error, result) => {
-              if (error) {
-                context.response.setHeader("WWW-Authenticate", token.generateResponse());
-                throw error;
+          token.checkResponse(this.security.provider.getUserPassword.bind(this.security.provider), (error, result) => {
+            if (error) {
+              context.response.setHeader("WWW-Authenticate", token.generateResponse());
+              if (callback) {
+                callback(error, null);
               }
-              context.user = result;
-              callback(null, token);
-              return result;
-            });
+              return reject(error);
+            }
+            if (result === true) {
+              this.security.provider.loadUserByUsername(token.username, (error, result) => {
+                if (error) {
+                  context.response.setHeader("WWW-Authenticate", token.generateResponse());
+                  if (callback) {
+                    callback(error, null);
+                  }
+                  return reject(error);
+                }
+                console.log(result)
+                context.user = result;
+                if (callback) {
+                  callback(null, token);
+                }
+                return resolve(token);
+              });
+            }
+            return resolve(token);
+          });
+        } catch (e) {
+          context.response.setHeader("WWW-Authenticate", token.generateResponse());
+          if (callback) {
+            callback(e, null);
           }
-          return result;
-        });
-
-      } catch (e) {
-        context.response.setHeader("WWW-Authenticate", token.generateResponse());
-        callback(e, null);
-      }
+          return reject(e);
+        }
+      });
     }
 
     generatePasswd(realm, user, passwd) {

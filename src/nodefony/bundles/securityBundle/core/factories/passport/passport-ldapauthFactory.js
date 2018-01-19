@@ -16,7 +16,7 @@ module.exports = nodefony.registerFactory("passport-ldapauth", () => {
       surname: '',
       email: '',
       password: this.generatePassWd(),
-      provider: "ldap",
+      provider: this.name,
       roles: "USER",
       displayName: '',
       url: '',
@@ -66,7 +66,7 @@ module.exports = nodefony.registerFactory("passport-ldapauth", () => {
   const Factory = class Factory extends nodefony.passeportFactory {
 
     constructor(security, settings) {
-      super("passport-ldapauth", security, settings);
+      super("ldapauth", security, settings);
       this.kernel.listen(this, "onReady", function () {
         this.orm = this.get("sequelize");
         this.User = this.orm.getEntity("user");
@@ -76,7 +76,6 @@ module.exports = nodefony.registerFactory("passport-ldapauth", () => {
     }
 
     wrapperLdap(profile) {
-
       let obj = {};
       for (let name in this.profileWrapper) {
         let res = parseParameterString.call({
@@ -124,7 +123,6 @@ module.exports = nodefony.registerFactory("passport-ldapauth", () => {
     }
 
     generatePassWd() {
-      //var date = new Date().getTime();
       let buf = crypto.randomBytes(256);
       let hash = crypto.createHash('md5');
       return hash.update(buf).digest("hex");
@@ -132,26 +130,6 @@ module.exports = nodefony.registerFactory("passport-ldapauth", () => {
 
     getPosition() {
       return "http";
-    }
-
-    handle(context, callback) {
-      this.logger("HANDLE AUTHORISATION  " + this.getKey(), "DEBUG");
-      return this.passport.authenticate('ldapauth', {
-        session: false
-      })(context, (error, res) => {
-        if (error) {
-          return callback(error, null);
-        }
-        if (res) {
-          context.user = res;
-          this.logger("AUTHORISATION " + this.name + " SUCCESSFULLY : " + res.username, "INFO");
-        }
-        let token = {
-          name: "ldap",
-          user: res
-        };
-        return callback(error, token);
-      });
     }
 
     generatePasswd( /*realm, user, passwd*/ ) {}

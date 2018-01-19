@@ -64,36 +64,45 @@ module.exports = nodefony.registerFactory("passport-oauth2", () => {
     }
 
     handle(context, callback) {
-      let route = context.resolver.getRoute();
-      if (route.name === "oauth2Area") {
-        return this.passport.authenticate(this.name, {
-          scope: this.scopes
-        })(context);
-      }
-      if (route.name === "oauth2CallBackArea") {
-        return this.passport.authenticate(this.name, {
-          session: false
-        })(context, (error, res) => {
-          if (error) {
-            return callback(error, null);
-          }
-          if (res) {
-            context.user = res;
-            //this.logger("AUTHORISATION "+this.getKey()+" SUCCESSFULLY : " + res.username ,"INFO");
-          }
-          let token = {
-            name: this.name,
-            user: res
-          };
-          return callback(error, token);
-        });
-      }
-      return callback({
-        status: 401,
-        message: "PASSPORT oauth2 BAD ROUTE "
-      }, null);
+      return new Promise((resolve, reject) => {
+        let route = context.resolver.getRoute();
+        if (route.name === "oauth2Area") {
+          return this.passport.authenticate(this.name, {
+            scope: this.scopes
+          })(context);
+        }
+        if (route.name === "oauth2CallBackArea") {
+          return this.passport.authenticate(this.name, {
+            session: false
+          })(context, (error, res) => {
+            if (error) {
+              if (callback) {
+                callback(error, null);
+              }
+              return reject(error);
+            }
+            if (res) {
+              context.user = res;
+              //this.logger("AUTHORISATION "+this.getKey()+" SUCCESSFULLY : " + res.username ,"INFO");
+            }
+            let token = {
+              name: this.name,
+              user: res
+            };
+            if (callback) {
+              callback(null, token);
+            }
+            return resolve(token);
+          });
+        }
+        let error = new Error(`PASSPORT ${this.name} BAD ROUTE`);
+        error.code = 401;
+        if (callback) {
+          callback(error, null);
+        }
+        return reject(error);
+      });
     }
   };
-
   return Factory;
 });

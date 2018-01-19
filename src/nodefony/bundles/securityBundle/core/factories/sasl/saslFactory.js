@@ -21,16 +21,12 @@ module.exports = nodefony.registerFactory("sasl", () => {
           };
         }
       } catch (e) {
-        throw {
-          message: e,
-          status: 401
-        };
+        throw e;
       }
     } else {
-      throw {
-        message: " Parse SASL security challenge authorization not found",
-        status: 401
-      };
+      let error = new Error(" Parse SASL security challenge authorization not found");
+      error.code = 401;
+      throw error;
     }
   };
 
@@ -77,11 +73,9 @@ module.exports = nodefony.registerFactory("sasl", () => {
           token = new typeMech(request, response, this.settings);
           this.logger("TRY AUTHORISATION " + this.name + " " + token.name, "DEBUG");
           if (!token.authorization) {
-            //response.setHeader("WWW-Authenticate", this.generateResponse(token));
-            throw {
-              status: 401,
-              message: "Unauthorized"
-            };
+            let error = new Error("Unauthorized");
+            error.code = 401;
+            return reject(error);
           }
           token.checkResponse(this.security.provider.getUserPassword.bind(this.security.provider), (error, result) => {
             if (error) {
@@ -108,7 +102,7 @@ module.exports = nodefony.registerFactory("sasl", () => {
             return resolve(result);
           });
         } catch (e) {
-          this.logger(e, "ERROR");
+          this.logger(e, "DEBUG");
           response.setHeader("WWW-Authenticate", this.generateResponse(token));
           if (callback) {
             callback(e, null);

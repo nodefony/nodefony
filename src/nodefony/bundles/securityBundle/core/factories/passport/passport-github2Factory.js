@@ -9,7 +9,7 @@ module.exports = nodefony.registerFactory("passport-github2", () => {
   const Factory = class Factory extends nodefony.passeportFactory {
 
     constructor(security, settings) {
-      super("passport-github2", security, settings);
+      super("github", security, settings);
       this.kernel.listen(this, "onReady", () => {
         this.orm = this.security.container.get("sequelize");
         this.User = this.orm.getEntity("user");
@@ -69,34 +69,43 @@ module.exports = nodefony.registerFactory("passport-github2", () => {
     }
 
     handle(context, callback) {
-      let route = context.resolver.getRoute();
-      if (route.name === "githubArea") {
-        return this.passport.authenticate('github', {
-          scope: this.scopes
-        })(context);
-      }
-      if (route.name === "githubCallBackArea") {
-        return this.passport.authenticate('github', {
-          session: false,
-        })(context, (error, res) => {
-          if (error) {
-            return callback(error, null);
-          }
-          if (res) {
-            context.user = res;
-            //this.logger("AUTHORISATION "+this.getKey()+" SUCCESSFULLY : " + res.username ,"INFO");
-          }
-          let token = {
-            name: "github",
-            user: res
-          };
-          return callback(error, token);
-        });
-      }
-      return callback({
-        status: 401,
-        message: "PASSPORT GITHUB BAD ROUTE "
-      }, null);
+      return new Promise((resolve, reject) => {
+        let route = context.resolver.getRoute();
+        if (route.name === "githubArea") {
+          return this.passport.authenticate(this.name, {
+            scope: this.scopes
+          })(context);
+        }
+        if (route.name === "githubCallBackArea") {
+          return this.passport.authenticate(this.name, {
+            session: false,
+          })(context, (error, res) => {
+            if (error) {
+              if (callback) {
+                callback(error, null);
+              }
+              return reject(error);
+            }
+            if (res) {
+              context.user = res;
+            }
+            let token = {
+              name: this.name,
+              user: res
+            };
+            if (callback) {
+              callback(null, token);
+            }
+            return resolve(token);
+          });
+        }
+        let error = new Error(`PASSPORT ${this.name} BAD ROUTE`);
+        error.code = 401;
+        if (callback) {
+          callback(error, null);
+        }
+        return reject(error);
+      });
     }
   };
 

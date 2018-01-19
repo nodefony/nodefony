@@ -106,14 +106,14 @@ module.exports = nodefony.register("SecuredArea", function () {
           } catch (e) {
             error = new Error("Form Login route : " + this.formLogin + " this route not exist. Check Security config file");
             error.code =  500;
-            context.fire("onError", context.container, error);
-            return context;
+            return error;
+            //return context.fire("onError", context.container, error);
           }
           if (!context.resolver.resolve) {
             error = new Error("Form Login route : " + this.formLogin + " this route not exist. Check Security config file");
             error.code =  500;
-            context.fire("onError", context.container, error);
-            return context;
+            return error;
+            //return context.fire("onError", context.container, error);
           }
           if (!context.isAjax) {
             if (context.session && e.message !== "Unauthorized") {
@@ -126,18 +126,21 @@ module.exports = nodefony.register("SecuredArea", function () {
             //context.setXjson(e);
             error = new Error(e.message);
             error.code = e.status;
-            context.fire("onError", context.container, error);
-            return context;
+            return error;
+            //return context.fire("onError", context.container, error);
           }
-          context.fire("onRequest");
-          return context;
+          //context.fire("onRequest");
+          //return context;
+          return e;
         } else {
           if (e.status) {
             error = new Error(e.message);
             error.code = e.status;
-            context.fire("onError", context.container, error);
+            return error;
+            //return context.fire("onError", context.container, error);
           } else {
-            context.fire("onError", context.container, e);
+            return e;
+            //return context.fire("onError", context.container, e);
           }
         }
         break;
@@ -146,16 +149,15 @@ module.exports = nodefony.register("SecuredArea", function () {
         if (e.status) {
           error = new Error(e.message);
           error.code = e.status;
-          context.fire("onError", context.container, error);
-        } else {
-          context.fire("onError", context.container, e);
+          return error;
+          //return context.fire("onError", context.container, error);
         }
         break;
       }
-      return context;
+      return e;
     }
 
-    handle(context) {
+    /*handle(context) {
       try {
         if (this.factory) {
           return this.factory.handle(context, (error, token) => {
@@ -210,6 +212,63 @@ module.exports = nodefony.register("SecuredArea", function () {
         return this.handleError(context, e);
       }
       return context;
+    }*/
+
+    handle(context) {
+      return new Promise((resolve, reject) => {
+        try {
+          if (this.factory) {
+            return this.factory.handle(context)
+              .then((token) => {
+                context.session.migrate();
+                let userFull = null;
+                if (context.user.dataValues) {
+                  userFull = context.user.dataValues;
+                } else {
+                  userFull = context.user;
+                }
+                delete userFull.password;
+                context.session.setMetaBag("security", {
+                  firewall: this.name,
+                  user: context.user.username,
+                  userFull: userFull,
+                  factory: this.factory.name,
+                  tokenName: token.name
+                });
+                let target_path = context.session.getFlashBag("default_target_path");
+                if (context.user.lang) {
+                  context.session.set("lang", context.user.lang);
+                } else {
+                  context.session.set("lang", context.translation.defaultLocale);
+                }
+                let target = null;
+                if (target_path) {
+                  target = target_path;
+                } else {
+                  if (this.defaultTarget) {
+                    target = this.defaultTarget;
+                  }
+                }
+                context.resolver = this.overrideURL(context, target);
+                if (context.isAjax) {
+                  context.isJson = true;
+                  //return context.fire("onRequest");
+                  return resolve(context);
+                } else {
+                  return resolve(this.redirect(context, target));
+                }
+                //context.fire("onRequest");
+                return resolve(context);
+              }).catch((error) => {
+                return reject(this.handleError(context, error));
+              });
+          } else {
+            return resolve(context);
+          }
+        } catch (e) {
+          return reject(e);
+        }
+      });
     }
 
     // Factory

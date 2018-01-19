@@ -5,7 +5,6 @@
  */
 module.exports = nodefony.registerFactory("anonymous", () => {
 
-
   const Factory = class anonymousFactory extends nodefony.Factory {
     constructor(security, settings) {
       super("anonymous", security, settings);
@@ -41,7 +40,6 @@ module.exports = nodefony.registerFactory("anonymous", () => {
           return reject(e);
         }
       });
-
     }
   };
   return Factory;
