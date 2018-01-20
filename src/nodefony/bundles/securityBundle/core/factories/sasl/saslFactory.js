@@ -73,8 +73,12 @@ module.exports = nodefony.registerFactory("sasl", () => {
           token = new typeMech(request, response, this.settings);
           this.logger("TRY AUTHORISATION " + this.name + " " + token.name, "DEBUG");
           if (!token.authorization) {
+            response.setHeader("WWW-Authenticate", this.generateResponse(token));
             let error = new Error("Unauthorized");
             error.code = 401;
+            if (callback) {
+              callback(error, null);
+            }
             return reject(error);
           }
           token.checkResponse(this.security.provider.getUserPassword.bind(this.security.provider), (error, result) => {
@@ -85,21 +89,34 @@ module.exports = nodefony.registerFactory("sasl", () => {
               }
               return reject(error);
             }
-            if (result === true) {
-              this.security.provider.loadUserByUsername(token.username, (error, result) => {
+            if (result) {
+              this.security.provider.loadUserByUsername(token.username, (error, user) => {
                 if (error) {
                   response.setHeader("WWW-Authenticate", this.generateResponse(token));
                   callback(error, null);
-                  return error;
+                  return reject(error);
                 }
-                context.user = result;
-                if (callback) {
-                  callback(null, token);
+                if (user) {
+                  //context.user = res;
+                  this.logger("AUTHORISATION " + this.name + " SUCCESSFULLY : " + user.username, "INFO");
+                  let token = {
+                    name: this.name,
+                    user: user
+                  };
+                  if (callback) {
+                    callback(null, token);
+                  }
+                  return resolve(token);
                 }
-                return resolve(token);
+                return resolve(null);
               });
+            } else {
+              response.setHeader("WWW-Authenticate", this.generateResponse(token));
+              if (callback) {
+                callback(error, null);
+              }
+              return reject(error);
             }
-            return resolve(result);
           });
         } catch (e) {
           this.logger(e, "DEBUG");
@@ -113,7 +130,6 @@ module.exports = nodefony.registerFactory("sasl", () => {
     }
 
     generateResponse(token) {
-      //console.log(request)
       let res = "SASL ";
       let line = {
         "mechanisms": token.name

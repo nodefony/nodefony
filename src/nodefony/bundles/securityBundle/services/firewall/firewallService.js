@@ -203,7 +203,7 @@ module.exports = class security extends nodefony.Service {
           throw error;
         case 200:
           this.logger("\x1b[34m CROSS DOMAIN  \x1b[0mREQUEST REFERER : " + context.originUrl.href, "DEBUG");
-          break;
+          return 200;
         }
       } else {
         let error = new Error("CROSS DOMAIN Unauthorized REQUEST REFERER : " + context.originUrl.href);
@@ -219,8 +219,7 @@ module.exports = class security extends nodefony.Service {
         let sessionContext = null;
         this.isSecure(context);
         try {
-          let cross = this.handleCrossDomain(context);
-          if (cross === 204) {
+          if (this.handleCrossDomain(context) === 204) {
             return resolve();
           }
         } catch (error) {
@@ -242,7 +241,13 @@ module.exports = class security extends nodefony.Service {
               if (!(session instanceof nodefony.Session)) {
                 return reject(new Error("SESSION START session storage ERROR"));
               }
-              return resolve(this.handleStateFull(context, session));
+              return this.handleStateFull(context, session)
+                .then((ele) => {
+                  return resolve(ele);
+                })
+                .catch((error) => {
+                  return reject(error);
+                });
             }).catch((error) => {
               // break exception in promise catch !
               return reject(error);
@@ -253,7 +258,13 @@ module.exports = class security extends nodefony.Service {
           if (!(session instanceof nodefony.Session)) {
             return reject(new Error("SESSION START session storage ERROR"));
           }
-          return resolve(this.handleStateFull(context, session));
+          return this.handleStateFull(context, session)
+            .then((ele) => {
+              return resolve(ele);
+            })
+            .catch((error) => {
+              return reject(error);
+            });
         }).catch((error) => {
           // break exception in promise catch !
           return reject(error);
@@ -262,7 +273,6 @@ module.exports = class security extends nodefony.Service {
         return reject(error);
       }
     });
-
   }
 
   handleStateFull(context, session) {
@@ -273,9 +283,11 @@ module.exports = class security extends nodefony.Service {
           if (meta.user === "anonymous" && context.security && context.security.name !== meta.firewall) {
             if (!context.security.anonymous) {
               return context.security.handle(context)
+                .then((ele) => {
+                  return resolve(ele);
+                })
                 .catch((error) => {
-
-                  return reject(context.security.handleError(context, error));
+                  return reject(error);
                 });
             }
           }
@@ -291,17 +303,20 @@ module.exports = class security extends nodefony.Service {
                 }
               }
               return context.security.handle(context)
+                .then((ele) => {
+                  return resolve(ele);
+                })
                 .catch((error) => {
-                  return reject(context.security.handleError(context, error));
+                  return reject(error);
                 });
             } catch (e) {
-              return reject(context.security.handleError(context, e));
+              return reject(e);
             }
           }
         }
         return resolve(context);
       } catch (e) {
-        return reject(context.security.handleError(context, e));
+        return reject(e);
       }
     });
   }

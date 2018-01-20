@@ -37,8 +37,8 @@ module.exports = nodefony.registerFactory("http_digest", () => {
               }
               return reject(error);
             }
-            if (result === true) {
-              this.security.provider.loadUserByUsername(token.username, (error, result) => {
+            if (result) {
+              this.security.provider.loadUserByUsername(token.username, (error, user) => {
                 if (error) {
                   context.response.setHeader("WWW-Authenticate", token.generateResponse());
                   if (callback) {
@@ -46,15 +46,26 @@ module.exports = nodefony.registerFactory("http_digest", () => {
                   }
                   return reject(error);
                 }
-                console.log(result)
-                context.user = result;
-                if (callback) {
-                  callback(null, token);
+                if (user) {
+                  this.logger("AUTHORISATION " + this.name + " SUCCESSFULLY : " + user.username, "INFO");
+                  let token = {
+                    name: this.name,
+                    user: user
+                  };
+                  if (callback) {
+                    callback(null, token);
+                  }
+                  return resolve(token);
                 }
-                return resolve(token);
+                return resolve(null);
               });
+            } else {
+              context.response.setHeader("WWW-Authenticate", token.generateResponse());
+              if (callback) {
+                callback(error, null);
+              }
+              return reject(error);
             }
-            return resolve(token);
           });
         } catch (e) {
           context.response.setHeader("WWW-Authenticate", token.generateResponse());

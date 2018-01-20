@@ -170,10 +170,7 @@ nodefony.register.call(nodefony.security.tokens, "Digest", function () {
             callback(error, null);
             return;
           }
-          //console.log(userHashToCompare)
-          //console.log(this.response)
           res = this.recalculateResponse(userHashToCompare);
-          //console.log(this.recalculateResponseA1(userHashToCompare) )
           if (res === this.response) {
             this.auth = true;
             return callback(null, true);

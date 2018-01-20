@@ -30,25 +30,25 @@ module.exports = nodefony.register('passeportFactory', () => {
         try {
           this.passport.authenticate(this.name, {
             session: false,
-          })(context, (error, res) => {
+          })(context, (error, user) => {
             if (error) {
               if (callback) {
                 callback(error, null);
               }
               return reject(error);
             }
-            if (res) {
-              context.user = res;
-              this.logger("AUTHORISATION " + this.name + " SUCCESSFULLY : " + res.username, "INFO");
+            if (user) {
+              this.logger("AUTHORISATION " + this.name + " SUCCESSFULLY : " + user.username, "INFO");
+              let token = {
+                name: this.name,
+                user: user
+              };
+              if (callback) {
+                callback(null, token);
+              }
+              return resolve(token);
             }
-            let token = {
-              name: this.name,
-              user: res
-            };
-            if (callback) {
-              callback(null, token);
-            }
-            return resolve(token);
+            return resolve(null);
           });
         } catch (error) {
           if (callback) {

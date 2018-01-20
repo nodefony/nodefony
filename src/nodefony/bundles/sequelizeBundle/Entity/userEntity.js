@@ -93,9 +93,9 @@ module.exports = class user extends nodefony.Entity {
       }).then(function (user) {
         if (user) {
           if (callback) {
-            callback(null, user.password);
+            callback(null, user.get("password"));
           }
-          return user;
+          return user.get("password");
         }
         let error = new Error("User : " + username + " not Found");
         error.code = 401;
@@ -120,9 +120,9 @@ module.exports = class user extends nodefony.Entity {
         }
       }).then(function (user) {
         if (callback) {
-          callback(null, user);
+          callback(null, user.get());
         }
-        return user;
+        return user.get();
       }).catch(function (error) {
         if (error) {
           if (callback) {

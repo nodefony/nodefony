@@ -20,18 +20,25 @@ module.exports = nodefony.registerFactory("anonymous", () => {
         try {
           let token = new nodefony.security.tokens[this.token](context.request, context.response, this.settings);
           this.logger("TRY AUTHORISATION " + token.name, "DEBUG");
-          return this.security.provider.loadUserByUsername(this.name, (error, result) => {
+          this.security.provider.loadUserByUsername(this.name, (error, user) => {
             if (error) {
               if (callback) {
                 callback(error, null);
               }
               return reject(error);
             }
-            context.user = result;
-            if (callback) {
-              callback(null, token);
+            if (user) {
+              this.logger("AUTHORISATION " + this.name + " SUCCESSFULLY : " + user.username, "INFO");
+              let token = {
+                name: this.name,
+                user: user
+              };
+              if (callback) {
+                callback(null, token);
+              }
+              return resolve(token);
             }
-            return resolve(result);
+            return resolve(null);
           });
         } catch (e) {
           if (callback) {

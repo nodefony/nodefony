@@ -80,7 +80,7 @@
     "formidable": "1.1.1",
     "img-loader": "2.0.0",
     "inquirer": "^5.0.0",
-    "jquery": "3.2.1",
+    "jquery": "^3.3.0",
     "js-yaml": "3.10.0",
     "jsonwebtoken": "^8.1.0",
     "less": "^2.7.3",
@@ -143,7 +143,7 @@
   },
   "devDependencies": {
     "editorconfig": "^0.15.0",
-    "github-release-notes": "^0.14.1",
+    "github-release-notes": "^0.15.0",
     "jshint": "2.9.5"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",

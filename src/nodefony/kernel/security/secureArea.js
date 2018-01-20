@@ -107,13 +107,11 @@ module.exports = nodefony.register("SecuredArea", function () {
             error = new Error("Form Login route : " + this.formLogin + " this route not exist. Check Security config file");
             error.code =  500;
             return error;
-            //return context.fire("onError", context.container, error);
           }
           if (!context.resolver.resolve) {
             error = new Error("Form Login route : " + this.formLogin + " this route not exist. Check Security config file");
             error.code =  500;
             return error;
-            //return context.fire("onError", context.container, error);
           }
           if (!context.isAjax) {
             if (context.session && e.message !== "Unauthorized") {
@@ -127,20 +125,14 @@ module.exports = nodefony.register("SecuredArea", function () {
             error = new Error(e.message);
             error.code = e.status;
             return error;
-            //return context.fire("onError", context.container, error);
           }
-          //context.fire("onRequest");
-          //return context;
-          return e;
         } else {
           if (e.status) {
             error = new Error(e.message);
             error.code = e.status;
             return error;
-            //return context.fire("onError", context.container, error);
           } else {
             return e;
-            //return context.fire("onError", context.container, e);
           }
         }
         break;
@@ -152,67 +144,9 @@ module.exports = nodefony.register("SecuredArea", function () {
           return error;
           //return context.fire("onError", context.container, error);
         }
-        break;
+        return e;
       }
-      return e;
     }
-
-    /*handle(context) {
-      try {
-        if (this.factory) {
-          return this.factory.handle(context, (error, token) => {
-            if (error) {
-              return this.handleError(context, error);
-            }
-            this.token = token;
-            context.session.migrate();
-            let userFull = null;
-            if (context.user.dataValues) {
-              userFull = context.user.dataValues;
-            } else {
-              userFull = context.user;
-            }
-            delete userFull.password;
-            context.session.setMetaBag("security", {
-              firewall: this.name,
-              user: context.user.username,
-              userFull: userFull,
-              factory: this.factory.name,
-              tokenName: this.token.name
-            });
-            let target_path = context.session.getFlashBag("default_target_path");
-            if (context.user.lang) {
-              context.session.set("lang", context.user.lang);
-            } else {
-              context.session.set("lang", context.translation.defaultLocale);
-            }
-            let target = null;
-            if (target_path) {
-              target = target_path;
-            } else {
-              if (this.defaultTarget) {
-                target = this.defaultTarget;
-              }
-            }
-            context.resolver = this.overrideURL(context, target);
-            if (context.isAjax) {
-              context.isJson = true;
-              return context.fire("onRequest");
-            } else {
-              return this.redirect(context, target);
-            }
-            context.fire("onRequest");
-            return context;
-          });
-        } else {
-          context.fire("onRequest");
-          return context;
-        }
-      } catch (e) {
-        return this.handleError(context, e);
-      }
-      return context;
-    }*/
 
     handle(context) {
       return new Promise((resolve, reject) => {
@@ -220,21 +154,21 @@ module.exports = nodefony.register("SecuredArea", function () {
           if (this.factory) {
             return this.factory.handle(context)
               .then((token) => {
-                context.session.migrate();
-                let userFull = null;
-                if (context.user.dataValues) {
-                  userFull = context.user.dataValues;
-                } else {
-                  userFull = context.user;
+                try {
+                  context.session.migrate();
+                  context.user = token.user;
+                  let userFull = token.user;
+                  delete userFull.password;
+                  context.session.setMetaBag("security", {
+                    firewall: this.name,
+                    user: context.user.username,
+                    userFull: userFull,
+                    factory: this.factory.name,
+                    tokenName: context.user.name
+                  });
+                } catch (e) {
+                  return reject(e);
                 }
-                delete userFull.password;
-                context.session.setMetaBag("security", {
-                  firewall: this.name,
-                  user: context.user.username,
-                  userFull: userFull,
-                  factory: this.factory.name,
-                  tokenName: token.name
-                });
                 let target_path = context.session.getFlashBag("default_target_path");
                 if (context.user.lang) {
                   context.session.set("lang", context.user.lang);
@@ -252,15 +186,20 @@ module.exports = nodefony.register("SecuredArea", function () {
                 context.resolver = this.overrideURL(context, target);
                 if (context.isAjax) {
                   context.isJson = true;
-                  //return context.fire("onRequest");
                   return resolve(context);
                 } else {
                   return resolve(this.redirect(context, target));
                 }
-                //context.fire("onRequest");
                 return resolve(context);
               }).catch((error) => {
-                return reject(this.handleError(context, error));
+                if (context.isAjax) {
+                  context.isJson = true;
+                }
+                let res = context.security.handleError(context, error);
+                if (res) {
+                  return reject(res);
+                }
+                return resolve(context);
               });
           } else {
             return resolve(context);
