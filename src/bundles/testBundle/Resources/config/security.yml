@@ -28,30 +28,6 @@ security:
                   Access-Control-Allow-Credentials: true
                   Access-Control-Max-Age:           10
 
-        # SASL SECURITY AREA
-        test-sasl-area:
-            pattern:                                ^/test/firewall/test
-            provider:                               nodefony
-            form_login:
-              login_path:                           /test/login
-              default_target_path:                  /
-              check_path:                           /test/firewall/check
-            sasl:
-              private_key:                          "Les sanglots longs Des violons De l’automne Blessent mon cœur D’une langueur Monotone."
-              realm:                                "nodefony"
-            crossDomain:
-                allow-origin:                       "*"
-                Access-Control:
-                  Access-Control-Allow-Methods:     "GET, POST, PUT, DELETE, OPTIONS"
-                  Access-Control-Allow-Headers:     "ETag, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date"
-                  Access-Control-Allow-Credentials: true
-                  Access-Control-Expose-Headers:    "WWW-Authenticate ,X-Json"
-                  Access-Control-Max-Age:           10
-            remember_me:                            false           #TODO
-            logout:                                 /test/logout
-            context:                                sasl
-            redirectHttps:                          true
-
         # passport-basic  BASIC SECURITY AREA
         test-basic-area:
             pattern:                                ^/test/firewall/basic

@@ -25,8 +25,8 @@ nodefony.register.call(nodefony.security.tokens, "Digest", function () {
     for (let i = 0; i < head.length; i++) {
       var res = reg.exec(head[i]);
       if (res && res[1]) {
-        if (res[1] === "cnonce") {
-          this[res[1]] = res[2];
+        if (res[1] === "response") {
+          this.token = res[2];
         } else {
           this[res[1]] = res[2];
         }
@@ -75,21 +75,13 @@ nodefony.register.call(nodefony.security.tokens, "Digest", function () {
     return MD5.update(A2).digest("hex");
   };
 
-  const Digest = class Digest {
+  const Digest = class Digest extends nodefony.Token {
 
     constructor(request, response, options) {
-      this.name = "Digest";
-      if (!arguments.length) {
-        return this.generatePasswd;
-      }
-      this.settings = nodefony.extend({}, settingsDigest, options);
-      this.auth = false;
+      super("Digest", request, response, nodefony.extend({}, settingsDigest, options));
       this.authorization = request.headers.authorization || (request.query ? request.query.authorization : null);
-      this.host = request.headers.host;
       this.secret = this.host + ":" + request.headers["user-agent"] + ":" + (request.headers.referer || request.remoteAddress);
-      this.request = request;
-      this.response = response;
-      this.method = request.method;
+      this.token = null;
     }
 
     generateNonce() {
@@ -118,7 +110,7 @@ nodefony.register.call(nodefony.security.tokens, "Digest", function () {
     }
 
 
-    /*recalculateResponse (A1){
+    /*recalculateToken (A1){
     	var uri = this["digest-uri"] || this.uri ;
     	var A2 = generateA2(this.method, uri ,null,this.qop );
     	//var res = responseDigest(A1, this.nonce, this.nc, new Buffer(this.cnonce, 'base64').toString('ascii'), this.qop, A2) ;
@@ -126,7 +118,7 @@ nodefony.register.call(nodefony.security.tokens, "Digest", function () {
     	return res;
     };*/
 
-    recalculateResponse(passwd) {
+    recalculateToken(passwd) {
       var A1 = generateA1(this.username, this.settings.realm, passwd);
       var uri = this["digest-uri"] || this.uri;
       var A2 = generateA2(this.method, uri, null, this.qop);
@@ -134,7 +126,7 @@ nodefony.register.call(nodefony.security.tokens, "Digest", function () {
       return res;
     }
 
-    generateResponse() {
+    generateToken() {
       this.nonce = this.generateNonce();
       let line = "";
       let obj = {
@@ -155,23 +147,25 @@ nodefony.register.call(nodefony.security.tokens, "Digest", function () {
       return this.name + ' ' + line;
     }
 
-    checkResponse(getUserPassword, callback) {
+    checkToken(getUserPassword, callback) {
       try {
         parseAuthorization.call(this, this.authorization);
+
         let res = this.recalculateNonce();
+        //console.log(res);
         if (!res) {
           callback({
             status: 401,
             message: "Incorrect password. "
           }, null);
         }
-        getUserPassword(this.username, (error, userHashToCompare) => {
+        return getUserPassword(this.username, (error, userHashToCompare) => {
           if (error) {
             callback(error, null);
             return;
           }
-          res = this.recalculateResponse(userHashToCompare);
-          if (res === this.response) {
+          res = this.recalculateToken(userHashToCompare);
+          if (res === this.token) {
             this.auth = true;
             return callback(null, true);
           } else {

@@ -39,28 +39,7 @@ describe("BUNDLE TEST", function () {
       assert(global.firewall.reader);
       done();
     });
-    it("test-sasl-area", (done) => {
-      assert(global.firewall.securedAreas["test-sasl-area"]);
-      let sasl = global.firewall.securedAreas["test-sasl-area"];
-      assert.deepStrictEqual(sasl.sessionContext, "sasl");
-      assert.deepStrictEqual(sasl.redirect_Https, true);
-      assert.deepStrictEqual(sasl.providerName, "nodefony");
-      assert(sasl.provider);
-      assert.deepStrictEqual(sasl.alwaysUseDefaultTarget, false);
-      assert.deepStrictEqual(sasl.factoryName, "sasl");
-      assert(sasl.factory);
-      assert(sasl.cors);
-      assert.deepStrictEqual(sasl.formLogin, "/test/login");
-      assert.deepStrictEqual(sasl.checkLogin, "/test/firewall/check");
-      assert.deepStrictEqual(sasl.regPartten, '^/test/firewall/test');
-      try {
-        let res = sasl.pattern.test("/test/firewall/test/myroute");
-        assert.ok(res);
-      } catch (e) {
-        throw e;
-      }
-      done();
-    });
+
     it("test-basic-area", (done) => {
       assert(global.firewall.securedAreas["test-basic-area"]);
       let basic = global.firewall.securedAreas["test-basic-area"];

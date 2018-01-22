@@ -81,10 +81,6 @@ module.exports = nodefony.registerFactory("passport-oauth2", () => {
               }
               return reject(error);
             }
-            if (res) {
-              context.user = res;
-              //this.logger("AUTHORISATION "+this.getKey()+" SUCCESSFULLY : " + res.username ,"INFO");
-            }
             let token = {
               name: this.name,
               user: res

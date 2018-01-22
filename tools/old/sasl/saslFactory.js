@@ -62,7 +62,7 @@ module.exports = nodefony.registerFactory("sasl", () => {
         } catch (e) {
           typeMech = this.getMechanisms(this.defaultToken);
           let token = new typeMech(request, response, this.settings);
-          response.setHeader("WWW-Authenticate", this.generateResponse(token));
+          response.setHeader("WWW-Authenticate", this.generateToken(token));
           if (callback) {
             callback(e, null);
           }
@@ -73,7 +73,7 @@ module.exports = nodefony.registerFactory("sasl", () => {
           token = new typeMech(request, response, this.settings);
           this.logger("TRY AUTHORISATION " + this.name + " " + token.name, "DEBUG");
           if (!token.authorization) {
-            response.setHeader("WWW-Authenticate", this.generateResponse(token));
+            response.setHeader("WWW-Authenticate", this.generateToken(token));
             let error = new Error("Unauthorized");
             error.code = 401;
             if (callback) {
@@ -81,9 +81,9 @@ module.exports = nodefony.registerFactory("sasl", () => {
             }
             return reject(error);
           }
-          token.checkResponse(this.security.provider.getUserPassword.bind(this.security.provider), (error, result) => {
+          token.checkToken(this.security.provider.getUserPassword.bind(this.security.provider), (error, result) => {
             if (error) {
-              response.setHeader("WWW-Authenticate", this.generateResponse(token));
+              response.setHeader("WWW-Authenticate", this.generateToken(token));
               if (callback) {
                 callback(error, null);
               }
@@ -92,7 +92,7 @@ module.exports = nodefony.registerFactory("sasl", () => {
             if (result) {
               this.security.provider.loadUserByUsername(token.username, (error, user) => {
                 if (error) {
-                  response.setHeader("WWW-Authenticate", this.generateResponse(token));
+                  response.setHeader("WWW-Authenticate", this.generateToken(token));
                   if (callback) {
                     callback(error, null);
                   }
@@ -100,19 +100,20 @@ module.exports = nodefony.registerFactory("sasl", () => {
                 }
                 if (user) {
                   this.logger("AUTHORISATION " + this.name + " SUCCESSFULLY : " + user.username, "INFO");
-                  let token = {
+                  let mytoken = {
                     name: this.name,
-                    user: user
+                    user: user,
+                    token: token
                   };
                   if (callback) {
-                    callback(null, token);
+                    callback(null, mytoken);
                   }
-                  return resolve(token);
+                  return resolve(mytoken);
                 }
                 return resolve(null);
               });
             } else {
-              response.setHeader("WWW-Authenticate", this.generateResponse(token));
+              response.setHeader("WWW-Authenticate", this.generateToken(token));
               if (callback) {
                 callback(error, null);
               }
@@ -121,7 +122,7 @@ module.exports = nodefony.registerFactory("sasl", () => {
           });
         } catch (e) {
           this.logger(e, "DEBUG");
-          response.setHeader("WWW-Authenticate", this.generateResponse(token));
+          response.setHeader("WWW-Authenticate", this.generateToken(token));
           if (callback) {
             callback(e, null);
           }
@@ -130,12 +131,12 @@ module.exports = nodefony.registerFactory("sasl", () => {
       });
     }
 
-    generateResponse(token) {
+    generateToken(token) {
       let res = "SASL ";
       let line = {
         "mechanisms": token.name
       };
-      line.challenge = token.generateResponse();
+      line.challenge = token.generateToken();
       for (let ele in line) {
         res += ele + "=" + line[ele] + ",";
       }

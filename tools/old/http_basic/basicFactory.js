@@ -1,13 +1,13 @@
 /*
- *	HTTP DIGEST  FACTORY
+ *	HTTP BASIC  FACTORY
  */
-module.exports = nodefony.registerFactory("http_digest", () => {
+module.exports = nodefony.registerFactory("http_basic", () => {
 
-  const Factory = class digestFactory extends nodefony.Factory {
+  const Factory = class BasicFactory extends nodefony.Factory {
 
     constructor(security, settings) {
-      super("http_digest", security, settings);
-      this.token = "Digest";
+      super("http_basic", security, settings);
+      this.token = "Basic";
     }
 
     getPosition() {
@@ -21,7 +21,7 @@ module.exports = nodefony.registerFactory("http_digest", () => {
           token = new nodefony.security.tokens[this.token](context.request, context.response, this.settings);
           this.logger("TRY AUTHORISATION " + token.name, "DEBUG");
           if (!token.authorization) {
-            context.response.setHeader("WWW-Authenticate", token.generateResponse());
+            context.response.setHeader("WWW-Authenticate", token.generateToken());
             let error = new Error("Unauthorized");
             error.code = 401;
             if (callback) {
@@ -29,9 +29,9 @@ module.exports = nodefony.registerFactory("http_digest", () => {
             }
             return reject(error);
           }
-          token.checkResponse(this.security.provider.getUserPassword.bind(this.security.provider), (error, result) => {
+          token.checkToken(this.security.provider.getUserPassword.bind(this.security.provider), (error, result) => {
             if (error) {
-              context.response.setHeader("WWW-Authenticate", token.generateResponse());
+              context.response.setHeader("WWW-Authenticate", token.generateToken());
               if (callback) {
                 callback(error, null);
               }
@@ -40,7 +40,7 @@ module.exports = nodefony.registerFactory("http_digest", () => {
             if (result) {
               this.security.provider.loadUserByUsername(token.username, (error, user) => {
                 if (error) {
-                  context.response.setHeader("WWW-Authenticate", token.generateResponse());
+                  context.response.setHeader("WWW-Authenticate", token.generateToken());
                   if (callback) {
                     callback(error, null);
                   }
@@ -48,19 +48,20 @@ module.exports = nodefony.registerFactory("http_digest", () => {
                 }
                 if (user) {
                   this.logger("AUTHORISATION " + this.name + " SUCCESSFULLY : " + user.username, "INFO");
-                  let token = {
+                  let mytoken = {
                     name: this.name,
-                    user: user
+                    user: user,
+                    token: token
                   };
                   if (callback) {
-                    callback(null, token);
+                    callback(null, mytoken);
                   }
-                  return resolve(token);
+                  return resolve(mytoken);
                 }
                 return resolve(null);
               });
             } else {
-              context.response.setHeader("WWW-Authenticate", token.generateResponse());
+              context.response.setHeader("WWW-Authenticate", token.generateToken());
               if (callback) {
                 callback(error, null);
               }
@@ -68,7 +69,7 @@ module.exports = nodefony.registerFactory("http_digest", () => {
             }
           });
         } catch (e) {
-          context.response.setHeader("WWW-Authenticate", token.generateResponse());
+          context.response.setHeader("WWW-Authenticate", token.generateToken());
           if (callback) {
             callback(e, null);
           }
@@ -76,12 +77,6 @@ module.exports = nodefony.registerFactory("http_digest", () => {
         }
       });
     }
-
-    generatePasswd(realm, user, passwd) {
-      var func = new nodefony.security.tokens.Digest();
-      return func(realm, user, passwd);
-    }
   };
-
   return Factory;
 });

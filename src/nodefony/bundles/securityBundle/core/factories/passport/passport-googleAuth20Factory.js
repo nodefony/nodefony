@@ -89,9 +89,6 @@ module.exports = nodefony.registerFactory("passport-google-oauth20", () => {
               }
               return reject(error);
             }
-            if (res) {
-              context.user = res;
-            }
             let token = {
               name: this.name,
               user: res

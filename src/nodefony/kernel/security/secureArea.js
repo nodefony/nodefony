@@ -157,7 +157,12 @@ module.exports = nodefony.register("SecuredArea", function () {
                 try {
                   context.session.migrate();
                   context.user = token.user;
-                  let userFull = token.user;
+                  let userFull = null;
+                  if (token.user.populate) {
+                    userFull = token.user.populate();
+                  } else {
+                    userFull = token.user.get();
+                  }
                   delete userFull.password;
                   context.session.setMetaBag("security", {
                     firewall: this.name,

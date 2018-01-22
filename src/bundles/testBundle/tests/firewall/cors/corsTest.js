@@ -48,25 +48,7 @@ describe("BUNDLE TEST", function () {
       });
       request.end();
     });
-    it("sasl-area-firewall", function (done) {
-      global.options.path = '/test/unit/cors/http/test-sasl-area';
-      let request = http.request(global.options, function (res) {
-        assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          let ret = JSON.parse(chunk);
-          assert.deepStrictEqual(ret, {
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-            "Access-Control-Allow-Headers": "ETag, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date",
-            "Access-Control-Allow-Credentials": true,
-            "Access-Control-Expose-Headers": "WWW-Authenticate ,X-Json",
-            "Access-Control-Max-Age": 10
-          });
-          done();
-        });
-      });
-      request.end();
-    });
+
   });
 
   describe('CORS CONTEXT HTTP', function () {

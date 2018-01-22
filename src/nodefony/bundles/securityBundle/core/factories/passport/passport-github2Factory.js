@@ -86,9 +86,6 @@ module.exports = nodefony.registerFactory("passport-github2", () => {
               }
               return reject(error);
             }
-            if (res) {
-              context.user = res;
-            }
             let token = {
               name: this.name,
               user: res
