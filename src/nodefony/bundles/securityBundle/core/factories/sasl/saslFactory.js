@@ -93,11 +93,12 @@ module.exports = nodefony.registerFactory("sasl", () => {
               this.security.provider.loadUserByUsername(token.username, (error, user) => {
                 if (error) {
                   response.setHeader("WWW-Authenticate", this.generateResponse(token));
-                  callback(error, null);
+                  if (callback) {
+                    callback(error, null);
+                  }
                   return reject(error);
                 }
                 if (user) {
-                  //context.user = res;
                   this.logger("AUTHORISATION " + this.name + " SUCCESSFULLY : " + user.username, "INFO");
                   let token = {
                     name: this.name,

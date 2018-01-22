@@ -103,11 +103,13 @@ sequelizeBundle:
 #        port:                   27017
 #        dbname:                 "nodefony"
 #        settings:
-#          user:                 "nodefony"
+#          user:                 ""
+#          pass:                 ""
 #          authSource:           "admin"
 #          reconnectTries:       100
 #          reconnectInterval:    5000
 #          autoReconnect:        true
+#          poolSize:             5
 
 ############################
 #  OVERRIDE BUNDLE HTTP

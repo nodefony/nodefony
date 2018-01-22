@@ -48,14 +48,14 @@ module.exports = nodefony.registerFactory("http_basic", () => {
                 }
                 if (user) {
                   this.logger("AUTHORISATION " + this.name + " SUCCESSFULLY : " + user.username, "INFO");
-                  let token = {
+                  let mytoken = {
                     name: this.name,
                     user: user
                   };
                   if (callback) {
-                    callback(null, token);
+                    callback(null, mytoken);
                   }
-                  return resolve(token);
+                  return resolve(mytoken);
                 }
                 return resolve(null);
               });

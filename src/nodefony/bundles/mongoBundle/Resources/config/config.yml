@@ -31,8 +31,8 @@ mongoose:
       port:                27017
       dbname:              "nodefony"
       settings:
-        user:              "nodefony"
-        pass:              "nodefony"
+        #user:             "nodefony"
+        #pass:             "nodefony"
         authSource:        "admin"
         reconnectTries:    100
         reconnectInterval: 5000

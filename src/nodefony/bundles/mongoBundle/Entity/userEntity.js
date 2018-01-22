@@ -94,15 +94,23 @@ module.exports = class user extends nodefony.Entity {
         username: username
       }).then(function (user) {
         if (user) {
-          return callback(null, user.password);
+          if (callback) {
+            callback(null, user.password);
+          }
+          return user.password;
         }
-        return callback({
-          status: 401,
-          message: "User : " + username + " not Found"
-        }, null);
+        let error = new Error("User : " + username + " not Found");
+        error.code = 401;
+        if (callback) {
+          callback(error, null);
+        }
+        throw error;
       }).catch(function (error) {
         if (error) {
-          return callback(error, null);
+          if (callback) {
+            callback(error, null);
+          }
+          return error;
         }
       });
     };
@@ -110,8 +118,20 @@ module.exports = class user extends nodefony.Entity {
     mySchema.statics.loadUserByUsername = function (username, callback) {
       return this.findOne({
         username: username
-      }).then(function (user) {
-        return callback(null, user);
+      }).then((user) => {
+        //throw user;
+        if (user) {
+          if (callback) {
+            callback(null, user);
+          }
+          return user;
+        }
+        let error = new Error("User : " + username + " not Found");
+        error.code = 401;
+        if (callback) {
+          callback(error, null);
+        }
+        throw error;
       }).catch(function (error) {
         if (error) {
           return callback(error, null);

@@ -119,10 +119,18 @@ module.exports = class user extends nodefony.Entity {
           username: username
         }
       }).then(function (user) {
-        if (callback) {
-          callback(null, user.get());
+        if (user) {
+          if (callback) {
+            callback(null, user.get());
+          }
+          return user.get();
         }
-        return user.get();
+        let error = new Error("User : " + username + " not Found");
+        error.code = 404;
+        if (callback) {
+          callback(error, null);
+        }
+        throw error;
       }).catch(function (error) {
         if (error) {
           if (callback) {
