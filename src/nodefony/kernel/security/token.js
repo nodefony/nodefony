@@ -2,15 +2,61 @@ module.exports = nodefony.register('Token', () => {
 
   const Token = class Token {
 
-    constructor(name, request, response, settings) {
-      this.name = name;
-      this.settings = settings;
-      this.request = request;
-      this.response = response;
-      this.host = request.headers.host;
-      this.auth = false;
+    constructor(name, role) {
+
     }
 
+    authenticate() {
+
+    }
+
+    createToken() {
+
+    }
+
+    isAnonymous() {
+
+    }
+
+    getRoles() {
+
+    }
+
+    getCredentials() {
+
+    }
+
+    getUser() {
+
+    }
+
+    setUser() {
+
+    }
+
+    getUsername() {
+
+    }
+
+    isAuthenticated() {
+
+    }
+
+    setAuthenticated() {
+
+    }
+
+    eraseCredentials() {
+
+    }
+
+    serialise() {
+
+    }
+
+    unserialise() {
+
+    }
   };
 
   return Token;

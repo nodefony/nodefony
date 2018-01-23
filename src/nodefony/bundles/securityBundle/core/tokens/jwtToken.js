@@ -9,8 +9,6 @@ nodefony.register.call(nodefony.security.tokens, "Jwt", function () {
 
   };
 
-
-
   const Jwt = class Jwt extends nodefony.Token {
     constructor(request, response, options) {
       super("jwt", request, response, nodefony.extend({}, settingsJWT, options));
