@@ -217,7 +217,11 @@ module.exports = class security extends nodefony.Service {
     return new Promise((resolve, reject) => {
       try {
         let sessionContext = null;
-        this.isSecure(context);
+        if (!this.isSecure(context)) {
+          if (!context.cookieSession && !context.sessionAutoStart) {
+            return resolve(context);
+          }
+        }
         try {
           if (this.handleCrossDomain(context) === 204) {
             return resolve();
@@ -234,25 +238,21 @@ module.exports = class security extends nodefony.Service {
             }
           }
         } else {
-          if (!context.cookieSession && !context.sessionAutoStart) {
-            return resolve(context);
-          } else {
-            return this.sessionService.start(context, context.sessionAutoStart).then((session) => {
-              if (!(session instanceof nodefony.Session)) {
-                return reject(new Error("SESSION START session storage ERROR"));
-              }
-              return this.handleStateFull(context, session)
-                .then((ele) => {
-                  return resolve(ele);
-                })
-                .catch((error) => {
-                  return reject(error);
-                });
-            }).catch((error) => {
-              // break exception in promise catch !
-              return reject(error);
-            });
-          }
+          return this.sessionService.start(context, context.sessionAutoStart).then((session) => {
+            if (!(session instanceof nodefony.Session)) {
+              return reject(new Error("SESSION START session storage ERROR"));
+            }
+            return this.handleStateFull(context, session)
+              .then((ele) => {
+                return resolve(ele);
+              })
+              .catch((error) => {
+                return reject(error);
+              });
+          }).catch((error) => {
+            // break exception in promise catch !
+            return reject(error);
+          });
         }
         return this.sessionService.start(context, sessionContext).then((session) => {
           if (!(session instanceof nodefony.Session)) {
@@ -280,23 +280,21 @@ module.exports = class security extends nodefony.Service {
       try {
         let meta = session.getMetaBag("security");
         if (meta) {
-          if (meta.user === "anonymous" && context.security && context.security.name !== meta.firewall) {
-            if (!context.security.anonymous) {
-              return context.security.handle(context)
-                .then((ele) => {
-                  return resolve(ele);
-                })
-                .catch((error) => {
-                  return reject(error);
-                });
-            }
+          if (context.security && context.security.name !== meta.firewall) {
+            return context.security.handle(context)
+              .then((ele) => {
+                return resolve(ele);
+              })
+              .catch((error) => {
+                return reject(error);
+              });
           }
           context.user = meta.userFull;
         } else {
           if (context.security) {
             try {
               if (context.method === "WEBSOCKET") {
-                if (!context.security.anonymous && context.security.factory) {
+                if (context.security.factory) {
                   let error = new Error("Unauthorized");
                   error.code = 401;
                   return reject(error);
@@ -386,7 +384,7 @@ module.exports = class security extends nodefony.Service {
               }
               break;
             default:
-              if (config in nodefony.security.factory) {
+              if (config in nodefony.security.factories) {
                 area.setFactory(config, param[config]);
               } else {
                 area.factoryName = config;

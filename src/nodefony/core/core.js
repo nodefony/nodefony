@@ -26,7 +26,7 @@ module.exports = function () {
       this.templatings = {};
       this.services = {};
       this.security = {
-        factory: {},
+        factories: {},
         providers: {},
         tokens: {}
       };
@@ -342,9 +342,21 @@ module.exports = function () {
 
     registerFactory(name, closure) {
       if (typeof closure === "function") {
-        return nodefony.security.factory[name] = closure();
+        return nodefony.security.factories[name] = closure();
       }
       throw new Error("Register Factory : " + name + "  Error Factory bad format");
+    }
+    registerToken(name, closure) {
+      if (typeof closure === "function") {
+        return nodefony.security.tokens[name] = closure();
+      }
+      throw new Error("Register Token : " + name + "  Error Token bad format");
+    }
+    registerProvider(name, closure) {
+      if (typeof closure === "function") {
+        return nodefony.security.providers[name] = closure();
+      }
+      throw new Error("Register Provider : " + name + "  Error Provider bad format");
     }
 
   };

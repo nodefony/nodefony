@@ -183,7 +183,7 @@ module.exports = function () {
         }
         return this.syslog.logger(pci, severity, msgid, msg);
       }
-      console.log(pci);
+      //console.log(pci);
     }
 
     /**
@@ -223,6 +223,7 @@ module.exports = function () {
 
     autoloadEach(ele) {
       if (regJs.exec(ele.path)) {
+        this.logger(ele.path, "DEBUG");
         this.load.call(this, ele.path);
         //this.logger("AUTOLOAD : "+ele.name, "DEBUG");
       }

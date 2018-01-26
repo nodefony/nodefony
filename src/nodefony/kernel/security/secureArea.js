@@ -23,17 +23,15 @@ module.exports = nodefony.register("SecuredArea", function () {
         try {
           if (this.providerName in this.firewall.providers) {
             this.provider = this.firewall.providers[this.providerName].Class;
-          } else {
-            this.provider = this.firewall.providers.nodefony.Class;
           }
           if (this.factory) {
             this.logger(" FACTORY : " + this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
           } else {
             if (this.anonymous) {
-              this.setFactory("anonymous");
               if (!this.provider) {
-                this.provider = this.firewall.providers.nodefony.Class;
+                this.provider = new nodefony.security.providers.anonymousProvider("anonymousProvider", this);
               }
+              this.setFactory("anonymous", this.provider);
               this.logger(" FACTORY : " + this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
             }
             this.logger(" PATTERN : " + this.pattern, "DEBUG");
@@ -219,9 +217,9 @@ module.exports = nodefony.register("SecuredArea", function () {
     setFactory(auth, options) {
       this.factoryName = auth;
       if (auth) {
-        if (auth in nodefony.security.factory) {
-          this.factory = new nodefony.security.factory[auth](this, options);
-          //this.logger("FACTORY " + auth + " registered ", "DEBUG");
+        if (auth in nodefony.security.factories) {
+          this.factory = new nodefony.security.factories[auth](this, options);
+          this.logger("FACTORY " + auth + " registered ", "DEBUG");
           return this.factory;
         } else {
           this.logger("FACTORY :" + auth + "NOT registered ", "ERROR");
@@ -249,6 +247,7 @@ module.exports = nodefony.register("SecuredArea", function () {
     }
 
     setProvider(provider, type) {
+      console.log(provider)
       this.providerName = provider;
       this.providerType = type;
     }

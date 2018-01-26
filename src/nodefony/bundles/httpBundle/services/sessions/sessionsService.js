@@ -38,7 +38,6 @@ module.exports = class sessions extends nodefony.Service {
       if (typeof setting === "string") {
         return setting;
       }
-
       throw new Error("Session start settings config error : " + setting);
     }
   }

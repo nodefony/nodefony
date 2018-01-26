@@ -1,6 +1,11 @@
 # Security
 security:
     firewalls:
+        #test-anonymous:
+        #  provider:                                nodefonyUser
+        #  pattern:                                 ^/
+        #  anonymous:                               ~
+
         # main
         test-main-area:
             pattern:                                ^/test/firewall/anonymous
@@ -92,12 +97,7 @@ security:
             pattern:                                ^/test/firewall/api
             stateless:                              true
             context:                                api
-            form_login:
-              login_path:                           /api/login
-            passport-jwt:
-              secretOrKey :                         'secret'
-              issuer :                              'accounts.examplesoft.com'
-              audience :                            'yoursite.net'
+            
         #
         test-cors-area:
             pattern:                                ^/test/firewall/cors

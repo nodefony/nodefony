@@ -19,13 +19,49 @@ module.exports = nodefony.register('Factory', () => {
       return super.logger(pci, severity, msgid, msg);
     }
 
-    handle(context, callback) {
+    handle(context, token) {
+      return this.authenticate(context, token);
+    }
+
+    authenticate(context, token) {
       return new Promise((resolve, reject) => {
-        let error = new Error(`Factory ${this.name} no handle defined `);
-        this.logger(error, "ERROR");
-        return reject(error);
+        this.logger("TRY AUTHENTICATION " + this.name, "DEBUG");
+        if (!token) {
+          try {
+            token = this.createToken(context, this.security.provider);
+            if (!this.supportsToken(token)) {
+              return reject(new Error("Factory " + this.name + " Token Unauthorized !! "));
+            }
+            return this.authenticateToken(token, this.security.provider).then((token) => {
+              return resolve(token);
+            }).catch((e) => {
+              return reject(e);
+            });
+          } catch (e) {
+            return reject(e);
+          }
+        } else {
+          try {
+            if (!this.supportsToken(token)) {
+              return reject(new Error("Factory " + this.name + " Token Unauthorized !! "));
+            }
+            return this.authenticateToken(token, this.security.provider).then((token) => {
+              return resolve(token);
+            }).catch((e) => {
+              return reject(e);
+            });
+          } catch (e) {
+            return reject(e);
+          }
+        }
       });
     }
+
+    createToken( /*context, provider*/ ) {}
+
+    supportsToken( /*token*/ ) {}
+
+    authenticateToken( /*token*/ ) {}
 
   };
 
