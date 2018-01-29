@@ -18,5 +18,4 @@ security:
       nodefony:
         entity:
           name:                "user"
-      nodefonyUser:
-        id:                    "entityUserProvider"
+          property:            username

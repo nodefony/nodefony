@@ -1,10 +1,10 @@
 # Security
 security:
     firewalls:
-        #test-anonymous:
-        #  provider:                                nodefonyUser
-        #  pattern:                                 ^/
-        #  anonymous:                               ~
+        test-anonymous:
+          provider:                                 nodefony
+          pattern:                                  ^/
+          anonymous:                                ~
 
         # main
         test-main-area:
@@ -97,7 +97,7 @@ security:
             pattern:                                ^/test/firewall/api
             stateless:                              true
             context:                                api
-            
+
         #
         test-cors-area:
             pattern:                                ^/test/firewall/cors

@@ -21,16 +21,16 @@ module.exports = nodefony.register("SecuredArea", function () {
       this.anonymous = false;
       this.once("onReady", () => {
         try {
+          console.log(this.firewall.providers)
           if (this.providerName in this.firewall.providers) {
             this.provider = this.firewall.providers[this.providerName].Class;
+          } else {
+            this.provider = this.firewall.providers.userProvider.Class;
           }
           if (this.factory) {
             this.logger(" FACTORY : " + this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
           } else {
             if (this.anonymous) {
-              if (!this.provider) {
-                this.provider = new nodefony.security.providers.anonymousProvider("anonymousProvider", this);
-              }
               this.setFactory("anonymous", this.provider);
               this.logger(" FACTORY : " + this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
             }
@@ -152,39 +152,42 @@ module.exports = nodefony.register("SecuredArea", function () {
           if (this.factory) {
             return this.factory.handle(context)
               .then((token) => {
+                let target = null;
                 try {
-                  context.session.migrate();
                   context.user = token.user;
                   let userFull = null;
-                  if (token.user.populate) {
-                    userFull = token.user.populate();
+                  if (context.user instanceof nodefony.User) {
+                    userFull = token.serialize();
                   } else {
-                    userFull = token.user.get();
+                    if (token.user.populate) {
+                      userFull = token.user.populate();
+                    } else {
+                      userFull = token.user.get();
+                    }
+                    delete userFull.password;
                   }
-                  delete userFull.password;
+                  context.session.migrate();
                   context.session.setMetaBag("security", {
                     firewall: this.name,
-                    user: context.user.username,
-                    userFull: userFull,
+                    user: userFull,
                     factory: this.factory.name,
-                    tokenName: context.user.name
+                    tokenName: token.name
                   });
+                  if (context.user.lang) {
+                    context.session.set("lang", context.user.lang);
+                  } else {
+                    context.session.set("lang", context.translation.defaultLocale);
+                  }
+                  let target_path = context.session.getFlashBag("default_target_path");
+                  if (target_path) {
+                    target = target_path;
+                  } else {
+                    if (this.defaultTarget) {
+                      target = this.defaultTarget;
+                    }
+                  }
                 } catch (e) {
                   return reject(e);
-                }
-                let target_path = context.session.getFlashBag("default_target_path");
-                if (context.user.lang) {
-                  context.session.set("lang", context.user.lang);
-                } else {
-                  context.session.set("lang", context.translation.defaultLocale);
-                }
-                let target = null;
-                if (target_path) {
-                  target = target_path;
-                } else {
-                  if (this.defaultTarget) {
-                    target = this.defaultTarget;
-                  }
                 }
                 context.resolver = this.overrideURL(context, target);
                 if (context.isAjax) {
@@ -247,7 +250,7 @@ module.exports = nodefony.register("SecuredArea", function () {
     }
 
     setProvider(provider, type) {
-      console.log(provider)
+      //console.log(provider)
       this.providerName = provider;
       this.providerType = type;
     }

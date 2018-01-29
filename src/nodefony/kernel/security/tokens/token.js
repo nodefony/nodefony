@@ -57,12 +57,22 @@ module.exports = nodefony.register('Token', () => {
       }
     }
 
-    serialise() {
-
+    serialize() {
+      if (this.user && this.user.serialize) {
+        return this.user.serialize();
+      }
+      return {};
     }
 
-    unserialise() {
-
+    unserialize(user) {
+      try {
+        if (user) {
+          return this.user.unserialize();
+        }
+      } catch (e) {
+        throw new Error("Bad User format !!");
+      }
+      throw new Error("Bad User format !!");
     }
   };
 

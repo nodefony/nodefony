@@ -12,6 +12,10 @@ module.exports = nodefony.register('Factory', () => {
       return this.name;
     }
 
+    getPosition() {
+      return "http";
+    }
+
     logger(pci, severity, msgid, msg) {
       if (!msgid) {
         msgid = `\x1b[36mFACTORY ${this.name}\x1b[0m`;
@@ -59,11 +63,19 @@ module.exports = nodefony.register('Factory', () => {
 
     createToken( /*context, provider*/ ) {}
 
-    supportsToken( /*token*/ ) {}
+    supportsToken( /*token*/ ) {
+      return true;
+    }
 
-    authenticateToken( /*token*/ ) {}
-
+    authenticateToken(token /*, provider*/ ) {
+      return new Promise((resolve, reject) => {
+        if (token) {
+          return resolve(token);
+        } else {
+          return reject(new Error("bad token in authenticateToken"));
+        }
+      });
+    }
   };
-
   return Factory;
 });

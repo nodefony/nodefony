@@ -2,12 +2,12 @@
  *	Token Anonymous
  */
 
-nodefony.register.call(nodefony.security.tokens, "anonymous", function () {
+nodefony.registerToken("anonymous", function () {
 
-  const Anonymous = class Anonymous extends nodefony.Token {
+  const Anonymous = class anonymousToken extends nodefony.Token {
 
     constructor(secret, user, roles) {
-      super("Anonymous", roles);
+      super("anonymous", roles);
       this.secret = secret;
       if (user) {
         this.setUser(new nodefony.User(user, null, roles));
@@ -15,6 +15,13 @@ nodefony.register.call(nodefony.security.tokens, "anonymous", function () {
       if (roles && roles.length) {
         this.setAuthenticated(true);
       }
+    }
+
+    unserialize(user) {
+      if (!this.user) {
+        this.setUser(new nodefony.User());
+      }
+      return super.unserialize(user);
     }
 
   };

@@ -25,6 +25,10 @@ const schema = {
     type: Boolean,
     default: true
   },
+  userNonExpired: {
+    type: Boolean,
+    default: true
+  },
   credentialsNonExpired: {
     type: Boolean,
     default: true
@@ -52,9 +56,6 @@ const schema = {
     default: 'ROLE_USER'
   },
   gender: {
-    type: String
-  },
-  displayName: {
     type: String
   },
   url: {

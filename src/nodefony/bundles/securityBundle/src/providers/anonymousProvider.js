@@ -1,9 +1,9 @@
-module.exports = nodefony.registerProvider("anonymousProvider", () => {
+module.exports = nodefony.registerProvider("anonymous", () => {
 
-  const anonymousProvider = class anonymousProvider extends nodefony.security.providers.userProvider {
+  const anonymousProvider = class anonymousProvider extends nodefony.Provider {
 
-    constructor(name, security) {
-      super(name, security);
+    constructor(security) {
+      super("anonymous", security);
       this.secret = "";
     }
 
@@ -22,6 +22,7 @@ module.exports = nodefony.registerProvider("anonymousProvider", () => {
     }
 
     authenticate(token) {
+      this.secret = token.secret;
       if (this.supports(token)) {
         throw new Error('The token is not supported by this authentication provider.');
       }

@@ -26,6 +26,10 @@ const schema = {
     type: Sequelize.BOOLEAN,
     defaultValue: true
   },
+  userNonExpired: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: true
+  },
   credentialsNonExpired: {
     type: Sequelize.BOOLEAN,
     defaultValue: true
@@ -45,10 +49,9 @@ const schema = {
   },
   roles: {
     type: Sequelize.STRING,
-    defaultValue: 'ADMIN'
+    defaultValue: 'ROLE_USER'
   },
   gender: Sequelize.STRING,
-  displayName: Sequelize.STRING,
   url: Sequelize.STRING,
   image: Sequelize.STRING
 };

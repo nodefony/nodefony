@@ -1,6 +1,6 @@
 module.exports = nodefony.registerProvider("userProvider", () => {
 
-  const Provider = class Provider extends nodefony.security.providers.userProvider {
+  const Provider = class userProvider extends nodefony.security.providers.userProvider {
 
     constructor(security, entityName) {
       super('userProvider', security, entityName);
@@ -11,12 +11,11 @@ module.exports = nodefony.registerProvider("userProvider", () => {
         this.userEntity = this.getEntity();
       }
       return this.userEntity.findOne({
-        where: {
-          username: username
-        }
-      }).then(function (user) {
+        username: username
+      }).then((user) => {
+        //throw user;
         if (user) {
-          let serialize = user.get();
+          let serialize = user.populate();
           return new nodefony.User(
             serialize.username,
             serialize.password,
@@ -43,6 +42,5 @@ module.exports = nodefony.registerProvider("userProvider", () => {
       });
     }
   };
-
   return Provider;
 });

@@ -279,17 +279,30 @@ module.exports = class security extends nodefony.Service {
     return new Promise((resolve, reject) => {
       try {
         let meta = session.getMetaBag("security");
+        let token = null;
         if (meta) {
-          if (context.security && context.security.name !== meta.firewall) {
-            return context.security.handle(context)
-              .then((ele) => {
-                return resolve(ele);
-              })
-              .catch((error) => {
-                return reject(error);
-              });
+          if (context.security) {
+            if (context.security.stateLess || context.security.name !== meta.firewall) {
+              return context.security.handle(context)
+                .then((ele) => {
+                  return resolve(ele);
+                })
+                .catch((error) => {
+                  error.code = 401;
+                  return reject(error);
+                });
+            }
+            token = context.security.factory.createToken();
+            context.user = token.user;
+          } else {
+            if (meta.tokenName) {
+              token = new nodefony.security.tokens[meta.tokenName]();
+              token.unserialize(meta.user);
+              context.user = token.user;
+            } else {
+              context.user = meta.user;
+            }
           }
-          context.user = meta.userFull;
         } else {
           if (context.security) {
             try {
@@ -305,16 +318,19 @@ module.exports = class security extends nodefony.Service {
                   return resolve(ele);
                 })
                 .catch((error) => {
+                  error.code = 401;
                   return reject(error);
                 });
             } catch (e) {
+              e.code = 401;
               return reject(e);
             }
           }
         }
         return resolve(context);
-      } catch (e) {
-        return reject(e);
+      } catch (error) {
+        error.code = 401;
+        return reject(error);
       }
     });
   }
@@ -404,6 +420,14 @@ module.exports = class security extends nodefony.Service {
         break;
       case "providers":
         for (let provider in obj[ele]) {
+          this.logger("DECLARE FIREWALL PROVIDER NAME " + provider, "DEBUG")
+          for (let pro in obj[ele][provider]) {
+            console.log(pro)
+
+          }
+          console.log(provider)
+        }
+        /*for (let provider in obj[ele]) {
           this.providers[provider] = {
             name: null,
             Class: null,
@@ -467,7 +491,7 @@ module.exports = class security extends nodefony.Service {
                 this.orm.once("onOrmReady", () => {
                   let ent = this.orm.getEntity(element[pro].name);
                   if (!ent) {
-                    this.logger("ENTITY PROVIDER : " + provider + " not found", "ERROR");
+                    this.logger("ENTITY : " + provider + " not found", "ERROR");
                     return;
                   }
                   this.providers[provider] = {
@@ -483,7 +507,7 @@ module.exports = class security extends nodefony.Service {
               this.logger("Provider type :" + pro + " not define ");
             }
           }
-        }
+        }*/
         break;
       }
     }
