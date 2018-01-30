@@ -1,11 +1,20 @@
 # Security
 security:
+    providers:
+      chain_provider:
+        chain:
+          providers:                                [in_memory, nodefony]
+      in_memory:
+        memory:
+          users:
+            anonymous: { username:                  "anonymous"  }
     firewalls:
         test-anonymous:
           provider:                                 nodefony
           pattern:                                  ^/
           anonymous:                                ~
-
+          passport-basic:
+            realm:                                  "nodefony"
         # main
         test-main-area:
             pattern:                                ^/test/firewall/anonymous

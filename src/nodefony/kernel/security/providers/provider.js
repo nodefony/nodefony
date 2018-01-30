@@ -5,6 +5,7 @@ module.exports = nodefony.register('Provider', () => {
     constructor(name, security) {
       super(name, security.container);
       this.security = security;
+
     }
 
     authenticate(token) {
@@ -14,8 +15,8 @@ module.exports = nodefony.register('Provider', () => {
       throw new Error("The token is not supported by this authentication provider " + this.name);
     }
 
-    supports(token) {
-      return false;
+    supports( /*token*/ ) {
+      return true;
     }
 
   };

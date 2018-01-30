@@ -2,10 +2,11 @@ module.exports = nodefony.register('Factory', () => {
 
   const Factory = class Factory extends nodefony.Service {
 
-    constructor(name, security, settings) {
+    constructor(name, security, settings = {}) {
       super(name, security.container, security.notificationsCenter);
-      this.settings = settings;
+      this.settings = settings ||  {};
       this.security = security;
+      this.provider = this.settings.provider ||  this.security.provider;
     }
 
     getKey() {

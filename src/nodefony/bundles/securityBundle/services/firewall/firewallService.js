@@ -117,6 +117,7 @@ module.exports = class security extends nodefony.Service {
     }(this);
     this.securedAreas = {};
     this.providers = {};
+    this.providerManager = new nodefony.providerManager(this);
     this.sessionStrategy = "invalidate";
     // listen KERNEL EVENTS
     this.once("onPreBoot", () => {
@@ -356,9 +357,9 @@ module.exports = class security extends nodefony.Service {
             case "pattern":
               area.setPattern(param[config]);
               break;
-            case "anonymous":
-              area.setAnonymous(param[config]);
-              break;
+              /*case "anonymous":
+                area.setAnonymous(param[config]);
+                break;*/
             case "crossDomain":
               area.setCors(param[config]);
               break;
@@ -400,12 +401,14 @@ module.exports = class security extends nodefony.Service {
               }
               break;
             default:
-              if (config in nodefony.security.factories) {
-                area.setFactory(config, param[config]);
-              } else {
-                area.factoryName = config;
-                this.logger("FACTORY : " + config + " not found in nodefony namespace", "ERROR");
-              }
+              this.once("onBoot", () => {
+                if (config in nodefony.security.factories) {
+                  area.setFactory(config, param[config]);
+                } else {
+                  //area.factoryName = config;
+                  this.logger("FACTORY : " + config + " not found in nodefony namespace", "ERROR");
+                }
+              });
             }
           }
         }
@@ -419,13 +422,62 @@ module.exports = class security extends nodefony.Service {
       case "access_control":
         break;
       case "providers":
-        for (let provider in obj[ele]) {
-          this.logger("DECLARE FIREWALL PROVIDER NAME " + provider, "DEBUG")
-          for (let pro in obj[ele][provider]) {
-            console.log(pro)
-
+        for (let name in obj[ele]) {
+          this.logger("DECLARE FIREWALL PROVIDER NAME " + name, "DEBUG");
+          try {
+            //console.log(obj[ele][name])
+            this.providerManager.addConfiguration(name, obj[ele][name]);
+          } catch (e) {
+            this.logger(e, "ERROR");
           }
-          console.log(provider)
+          /*let myProvider = null;
+          for (let type in obj[ele][name]) {
+            myProvider = {
+              name: name,
+              type: null,
+              class: nodefony.security.providers.userProvider,
+              property: null,
+              entity: null
+            };
+            switch (type) {
+            case "memory":
+              myProvider.type = type;
+              break;
+            case "entity":
+            case "Entity":
+              myProvider.type = type;
+              for (let provider in obj[ele][name][type]) {
+                switch (provider) {
+                case "name":
+                  myProvider.entity = obj[ele][name][type][provider];
+                  break;
+                case "id":
+                  if (obj[ele][name][type][provider] in nodefony.security.providers) {
+                    myProvider.class = nodefony.security.providers[obj[ele][name][type][provider]];
+                  }
+                  break;
+                case "property":
+                  myProvider.property = obj[ele][name][type][provider];
+                  break;
+                }
+              }
+              if (!myProvider.class) {
+                myProvider.class = nodefony.security.providers.userProvider;
+              }
+              break;
+            case "chain":
+              myProvider.type = type;
+              break;
+            case "class":
+              myProvider.type = type;
+              break;
+            default:
+              throw new Error("Bad Provider type : " + type);
+            }
+          }
+          if (myProvider.type) {
+            this.providers[name] = myProvider;
+          }*/
         }
         /*for (let provider in obj[ele]) {
           this.providers[provider] = {

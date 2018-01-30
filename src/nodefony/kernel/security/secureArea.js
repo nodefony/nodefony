@@ -10,8 +10,10 @@ module.exports = nodefony.register("SecuredArea", function () {
       this.sessionContext = "default";
       this.cors = null;
       this.pattern = /.*/;
-      this.factory = null;
-      this.provider = null;
+      this.factories = [];
+      this.nbFactories = 0;
+      this.provider = new nodefony.providerManager(firewall, this.firewall.providerManager.providers);
+      this.providerName = null;
       this.formLogin = null;
       this.checkLogin = null;
       this.redirect_Https = false;
@@ -21,18 +23,22 @@ module.exports = nodefony.register("SecuredArea", function () {
       this.anonymous = false;
       this.once("onReady", () => {
         try {
-          console.log(this.firewall.providers)
-          if (this.providerName in this.firewall.providers) {
-            this.provider = this.firewall.providers[this.providerName].Class;
+          //console.log(this.firewall.providers)
+          //console.log(this.providerName)
+          /*if (this.providerName in this.firewall.providers) {
+            let def = this.firewall.providers[this.providerName];
+            this.provider = new def.class(this, def.entity, def.property);
           } else {
-            this.provider = this.firewall.providers.userProvider.Class;
-          }
-          if (this.factory) {
-            this.logger(" FACTORY : " + this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
-          } else {
+            this.provider = new this.firewall.providers.userProvider(this, "user", {
+              username: "user"
+            });
+          }*/
+          if (!this.factories.length) {
+            //this.logger(" FACTORY : " + this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
+
             if (this.anonymous) {
-              this.setFactory("anonymous", this.provider);
-              this.logger(" FACTORY : " + this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
+              //this.setFactory("anonymous", this.provider);
+              //this.logger(" FACTORY : " + this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
             }
             this.logger(" PATTERN : " + this.pattern, "DEBUG");
           }
@@ -146,84 +152,111 @@ module.exports = nodefony.register("SecuredArea", function () {
       }
     }
 
-    handle(context) {
+    handleFactories(context, index = 1) {
       return new Promise((resolve, reject) => {
-        try {
-          if (this.factory) {
-            return this.factory.handle(context)
+        if (this.nbFactories) {
+          try {
+            this.factories[index - 1].handle(context)
               .then((token) => {
-                let target = null;
-                try {
-                  context.user = token.user;
-                  let userFull = null;
-                  if (context.user instanceof nodefony.User) {
-                    userFull = token.serialize();
-                  } else {
-                    if (token.user.populate) {
-                      userFull = token.user.populate();
-                    } else {
-                      userFull = token.user.get();
-                    }
-                    delete userFull.password;
-                  }
-                  context.session.migrate();
-                  context.session.setMetaBag("security", {
-                    firewall: this.name,
-                    user: userFull,
-                    factory: this.factory.name,
-                    tokenName: token.name
-                  });
-                  if (context.user.lang) {
-                    context.session.set("lang", context.user.lang);
-                  } else {
-                    context.session.set("lang", context.translation.defaultLocale);
-                  }
-                  let target_path = context.session.getFlashBag("default_target_path");
-                  if (target_path) {
-                    target = target_path;
-                  } else {
-                    if (this.defaultTarget) {
-                      target = this.defaultTarget;
-                    }
-                  }
-                } catch (e) {
+                return resolve(token);
+              })
+              .catch((e) => {
+                this.factories[index - 1].logger(e, "ERROR");
+                if (index === this.nbFactories) {
                   return reject(e);
                 }
-                context.resolver = this.overrideURL(context, target);
-                if (context.isAjax) {
-                  context.isJson = true;
-                  return resolve(context);
-                } else {
-                  return resolve(this.redirect(context, target));
-                }
-                return resolve(context);
-              }).catch((error) => {
-                if (context.isAjax) {
-                  context.isJson = true;
-                }
-                let res = context.security.handleError(context, error);
-                if (res) {
-                  return reject(res);
-                }
-                return resolve(context);
+                return resolve(this.handleFactories(context, ++index));
               });
-          } else {
-            return resolve(context);
+          } catch (e) {
+            return reject(e);
           }
-        } catch (e) {
-          return reject(e);
+        } else {
+          return reject(null);
         }
+      });
+    }
+
+    handle(context) {
+      return new Promise((resolve, reject) => {
+        return this.handleFactories(context)
+          .then((token) => {
+            let target = null;
+            try {
+              context.user = token.user;
+              let userFull = null;
+              if (context.user instanceof nodefony.User) {
+                userFull = token.serialize();
+              } else {
+                if (token.user.populate) {
+                  userFull = token.user.populate();
+                } else {
+                  userFull = token.user.get();
+                }
+                delete userFull.password;
+              }
+              context.session.migrate();
+              context.session.setMetaBag("security", {
+                firewall: this.name,
+                user: userFull,
+                factory: this.factory.name,
+                tokenName: token.name
+              });
+              if (context.user.lang) {
+                context.session.set("lang", context.user.lang);
+              } else {
+                context.session.set("lang", context.translation.defaultLocale);
+              }
+              let target_path = context.session.getFlashBag("default_target_path");
+              if (target_path) {
+                target = target_path;
+              } else {
+                if (this.defaultTarget) {
+                  target = this.defaultTarget;
+                }
+              }
+            } catch (e) {
+              return reject(e);
+            }
+            context.resolver = this.overrideURL(context, target);
+            if (context.isAjax) {
+              context.isJson = true;
+              return resolve(context);
+            } else {
+              return resolve(this.redirect(context, target));
+            }
+            return resolve(context);
+          })
+          .catch((error) => {
+            if (!error) {
+              return resolve(context);
+            }
+            if (context.isAjax) {
+              context.isJson = true;
+            }
+            let res = context.security.handleError(context, error);
+            if (res) {
+              return reject(res);
+            }
+            return resolve(context);
+          });
       });
     }
 
     // Factory
     setFactory(auth, options) {
-      this.factoryName = auth;
+      //this.factoryName = auth;
       if (auth) {
         if (auth in nodefony.security.factories) {
-          this.factory = new nodefony.security.factories[auth](this, options);
+          let index = null;
+          if (auth === "anonymous") {
+            index = this.factories.push(new nodefony.security.factories[auth](this, options));
+          } else {
+            this.factories.unshift(new nodefony.security.factories[auth](this, options));
+            index = 0;
+          }
+          this.nbFactories++;
           this.logger("FACTORY " + auth + " registered ", "DEBUG");
-          return this.factory;
+          return this.factories[index];
         } else {
           this.logger("FACTORY :" + auth + "NOT registered ", "ERROR");
           throw new Error("FACTORY :" + auth + "NOT registered ");
@@ -231,8 +264,26 @@ module.exports = nodefony.register("SecuredArea", function () {
       }
     }
 
-    getFactory() {
-      return this.factory;
+    getFactory(name) {
+      if (name) {
+        let index = this.factories.findIndex((factory) => {
+          return factory.name === name;
+        });
+        if (index >= 0) {
+          return this.factories[index];
+        }
+        return null;
+      }
+      return this.factories;
+    }
+
+    setProvider(provider) {
+      //console.log(provider)
+      this.providerName = provider;
+    }
+
+    getProvider() {
+      return this.provider;
     }
 
     setStateLess(state) {
@@ -247,12 +298,6 @@ module.exports = nodefony.register("SecuredArea", function () {
         return this.anonymous = true;
       }
       return this.anonymous = val || false;
-    }
-
-    setProvider(provider, type) {
-      //console.log(provider)
-      this.providerName = provider;
-      this.providerType = type;
     }
 
     overrideURL(context, myUrl) {
