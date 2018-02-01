@@ -15,6 +15,9 @@ security:
     #  FIREWALL  PROVIDER
     #
     providers:
+      anonymous:
+        anonymous:
+          provider:            anonymous
       nodefony:
         entity:
           name:                "user"

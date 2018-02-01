@@ -11,8 +11,9 @@ module.exports = nodefony.register("SecuredArea", function () {
       this.cors = null;
       this.pattern = /.*/;
       this.factories = [];
+      this.factory = null;
       this.nbFactories = 0;
-      this.provider = new nodefony.providerManager(firewall, this.firewall.providerManager.providers);
+      this.provider = null;
       this.providerName = null;
       this.formLogin = null;
       this.checkLogin = null;
@@ -25,14 +26,13 @@ module.exports = nodefony.register("SecuredArea", function () {
         try {
           //console.log(this.firewall.providers)
           //console.log(this.providerName)
-          /*if (this.providerName in this.firewall.providers) {
-            let def = this.firewall.providers[this.providerName];
-            this.provider = new def.class(this, def.entity, def.property);
+          if (this.providerName in this.firewall.providers) {
+            this.provider = this.firewall.providers[this.providerName];
           } else {
-            this.provider = new this.firewall.providers.userProvider(this, "user", {
-              username: "user"
-            });
-          }*/
+            //this.provider = new this.firewall.providers.userProvider(this, "user", {
+            //  username: "user"
+            //});
+          }
           if (!this.factories.length) {
             //this.logger(" FACTORY : " + this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
 
@@ -198,7 +198,7 @@ module.exports = nodefony.register("SecuredArea", function () {
               context.session.setMetaBag("security", {
                 firewall: this.name,
                 user: userFull,
-                factory: this.factory.name,
+                factory: context.factory,
                 tokenName: token.name
               });
               if (context.user.lang) {

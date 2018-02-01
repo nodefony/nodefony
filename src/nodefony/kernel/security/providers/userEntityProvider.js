@@ -3,7 +3,7 @@ module.exports = nodefony.registerProvider("userEntityProvider", () => {
   const userEntityProvider = class userEntityProvider extends nodefony.Provider {
 
     constructor(security, entity) {
-      super(security);
+      super("userEntityProvider", security);
 
       this.entityName = entity;
       this.orm = this.get(this.kernel.getOrm());

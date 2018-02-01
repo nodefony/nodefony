@@ -116,8 +116,8 @@ module.exports = class security extends nodefony.Service {
       };
     }(this);
     this.securedAreas = {};
-    this.providers = {};
     this.providerManager = new nodefony.providerManager(this);
+    this.providers = this.providerManager.providers;
     this.sessionStrategy = "invalidate";
     // listen KERNEL EVENTS
     this.once("onPreBoot", () => {
@@ -130,7 +130,7 @@ module.exports = class security extends nodefony.Service {
     });
 
     this.bundleHttp = this.kernel.getBundles("http");
-    this.bundleHttp.listen(this, "onServersReady", (type) => {
+    this.bundleHttp.on("onServersReady", (type) => {
       switch (type) {
       case "HTTPS":
         this.httpsReady = this.get("httpsServer").ready;
@@ -144,7 +144,7 @@ module.exports = class security extends nodefony.Service {
       }
     });
 
-    this.listen(this, "onSecurity", (context) => {
+    this.on("onSecurity", (context) => {
       switch (context.type) {
       case "HTTPS":
       case "HTTP":
@@ -293,7 +293,10 @@ module.exports = class security extends nodefony.Service {
                   return reject(error);
                 });
             }
-            token = context.security.factory.createToken();
+            let factory = context.security.getFactory(meta.factory);
+            context.factory = meta.factory;
+            token = factory.createToken();
+            token.unserialize(meta.user);
             context.user = token.user;
           } else {
             if (meta.tokenName) {
@@ -308,7 +311,7 @@ module.exports = class security extends nodefony.Service {
           if (context.security) {
             try {
               if (context.method === "WEBSOCKET") {
-                if (context.security.factory) {
+                if (context.security.factories.length) {
                   let error = new Error("Unauthorized");
                   error.code = 401;
                   return reject(error);
@@ -425,141 +428,11 @@ module.exports = class security extends nodefony.Service {
         for (let name in obj[ele]) {
           this.logger("DECLARE FIREWALL PROVIDER NAME " + name, "DEBUG");
           try {
-            //console.log(obj[ele][name])
             this.providerManager.addConfiguration(name, obj[ele][name]);
           } catch (e) {
             this.logger(e, "ERROR");
           }
-          /*let myProvider = null;
-          for (let type in obj[ele][name]) {
-            myProvider = {
-              name: name,
-              type: null,
-              class: nodefony.security.providers.userProvider,
-              property: null,
-              entity: null
-            };
-            switch (type) {
-            case "memory":
-              myProvider.type = type;
-              break;
-            case "entity":
-            case "Entity":
-              myProvider.type = type;
-              for (let provider in obj[ele][name][type]) {
-                switch (provider) {
-                case "name":
-                  myProvider.entity = obj[ele][name][type][provider];
-                  break;
-                case "id":
-                  if (obj[ele][name][type][provider] in nodefony.security.providers) {
-                    myProvider.class = nodefony.security.providers[obj[ele][name][type][provider]];
-                  }
-                  break;
-                case "property":
-                  myProvider.property = obj[ele][name][type][provider];
-                  break;
-                }
-              }
-              if (!myProvider.class) {
-                myProvider.class = nodefony.security.providers.userProvider;
-              }
-              break;
-            case "chain":
-              myProvider.type = type;
-              break;
-            case "class":
-              myProvider.type = type;
-              break;
-            default:
-              throw new Error("Bad Provider type : " + type);
-            }
-          }
-          if (myProvider.type) {
-            this.providers[name] = myProvider;
-          }*/
         }
-        /*for (let provider in obj[ele]) {
-          this.providers[provider] = {
-            name: null,
-            Class: null,
-            type: null
-          };
-          for (let pro in obj[ele][provider]) {
-            let element = obj[ele][provider];
-            switch (pro) {
-            case "memory":
-              for (let mapi in element[pro]) {
-                switch (mapi) {
-                case "users":
-                  this.providers[provider] = {
-                    name: provider,
-                    Class: new nodefony.usersProvider(provider, element[pro][mapi]),
-                    type: pro
-                  };
-                  this.logger(" Register Provider  : " + provider + " API " + this.providers[provider].name, "DEBUG");
-                  break;
-                default:
-                  this.logger("Provider API : " + mapi + " Not exist");
-                }
-              }
-              break;
-            case "class":
-              let myClass = null;
-              let property = null;
-              let manager_name = null;
-
-              for (let api in element[pro]) {
-                switch (api) {
-                case "name":
-                  myClass = nodefony[element[pro][api]];
-                  break;
-                case "property":
-                  property = element[pro][api];
-                  break;
-                case "manager_name":
-                  manager_name = element[pro][api];
-                  break;
-                }
-              }
-              if (myClass) {
-                if (manager_name && manager_name !== "~") {
-                  this.providers[manager_name] = {
-                    name: manager_name,
-                    Class: new myClass(property),
-                    type: pro
-                  };
-                } else {
-                  this.providers[provider] = {
-                    name: manager_name,
-                    Class: new myClass(property),
-                    type: pro
-                  };
-                }
-              }
-              break;
-            case "entity":
-              this.once("onBoot", () => {
-                this.orm.once("onOrmReady", () => {
-                  let ent = this.orm.getEntity(element[pro].name);
-                  if (!ent) {
-                    this.logger("ENTITY : " + provider + " not found", "ERROR");
-                    return;
-                  }
-                  this.providers[provider] = {
-                    name: provider,
-                    Class: ent,
-                    type: pro
-                  };
-                  this.logger(" Register Provider  : " + provider + " ENTITY " + element[pro].name, "DEBUG");
-                });
-              });
-              break;
-            default:
-              this.logger("Provider type :" + pro + " not define ");
-            }
-          }
-        }*/
         break;
       }
     }

@@ -67,7 +67,7 @@ module.exports = nodefony.register('Token', () => {
     unserialize(user) {
       try {
         if (user) {
-          return this.user.unserialize();
+          return this.user.unserialize(user);
         }
       } catch (e) {
         throw new Error("Bad User format !!");

@@ -36,6 +36,7 @@ module.exports = nodefony.registerFactory("anonymous", () => {
             return provider.loadUserByUsername(this.name).then((user) => {
               if (user) {
                 let mytoken = new nodefony.security.tokens.anonymous("", user.username, user.getRoles());
+                token.setAuthenticated(true);
                 this.logger("AUTHENTICATION " + mytoken.getUsername() + " SUCCESSFULLY ", "INFO");
                 return resolve(mytoken);
               }

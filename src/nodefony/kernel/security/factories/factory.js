@@ -38,6 +38,7 @@ module.exports = nodefony.register('Factory', () => {
               return reject(new Error("Factory " + this.name + " Token Unauthorized !! "));
             }
             return this.authenticateToken(token, this.security.provider).then((token) => {
+              context.factory = this.name;
               return resolve(token);
             }).catch((e) => {
               return reject(e);
@@ -51,6 +52,7 @@ module.exports = nodefony.register('Factory', () => {
               return reject(new Error("Factory " + this.name + " Token Unauthorized !! "));
             }
             return this.authenticateToken(token, this.security.provider).then((token) => {
+              context.factory = this.name;
               return resolve(token);
             }).catch((e) => {
               return reject(e);

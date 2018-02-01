@@ -6,9 +6,9 @@ module.exports = {
   security: {
     class: nodefony.services.security,
     arguments: ["@container", "@kernel", "@cors"]
-  },
-  oauth2: {
-    class: nodefony.services.oauth2,
-    arguments: ["@container", "@kernel"]
   }
+  //oauth2: {
+  //  class: nodefony.services.oauth2,
+  //  arguments: ["@container", "@kernel"]
+  //}
 };
