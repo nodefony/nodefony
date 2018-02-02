@@ -15,7 +15,7 @@ if (kernel.environment === "dev") {
 module.exports = webpackMerge({
   context: public,
   target: "web",
-  watch: false,
+  //watch: false,
   entry: {
     monitoring: "./js/monitoring.js",
     debugBar: "./js/debugBar.js"
