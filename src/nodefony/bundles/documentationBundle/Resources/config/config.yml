@@ -49,7 +49,7 @@ locale :			en_en
 #        views:			true
 #        translations: true
 #
-watch:            false
+watch:            true
 
 
 #elasticSearch:

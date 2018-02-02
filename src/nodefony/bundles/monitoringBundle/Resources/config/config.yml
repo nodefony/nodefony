@@ -31,7 +31,7 @@ forceDebugBarProd: false
 #        views:			true
 #        translations: true
 #
-watch:             ~
+watch:             true
 
 realTimeBundle:
   services:

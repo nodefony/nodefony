@@ -2,8 +2,6 @@ html {
   font-size: 14px;
 }
 
-
-
 h1{
 	color:#337ab7;
 	margin-left:0px;
@@ -57,4 +55,37 @@ hr{
 .scroll-wrap {
     max-height: 50vh;
     overflow-y: auto;
+}
+
+.bg-info-background{
+	color: #31708f;
+	background-color: #d9edf7;
+	border-color: #bce8f1;
+}
+
+.margin-card {
+	margin-bottom: 20px;
+}
+
+.badge-default {
+	background-color: #636c72;
+	color: #fff;
+}
+
+.pre-nodefony {
+	display: block;
+	padding: 9.5px;
+	margin: 0 0 10px;
+	font-size: 13px;
+	line-height: 1.42857143;
+	color: #333;
+	word-break: break-all;
+	word-wrap: break-word;
+	background-color: #f5f5f5;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.padding-card-body {
+	padding: 15px;
 }
