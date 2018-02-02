@@ -21,4 +21,4 @@ security:
       nodefony:
         entity:
           name:                "user"
-          property:            username
+          property:            "username"

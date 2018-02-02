@@ -1,9 +1,9 @@
 module.exports = nodefony.registerProvider("userProvider", () => {
 
-  const Provider = class userProvider extends nodefony.security.providers.userEntityProvider {
+  const Provider = class userProvider extends nodefony.userEntityProvider {
 
-    constructor(security, entityName) {
-      super(security, entityName);
+    constructor(security, config) {
+      super(security, config);
     }
 
     loadUserByUsername(username) {
@@ -39,7 +39,7 @@ module.exports = nodefony.registerProvider("userProvider", () => {
         error.code = 401;
         throw error;
       }).catch(function (error) {
-        return error;
+        throw error;
       });
     }
   };

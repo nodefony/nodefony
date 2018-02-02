@@ -7,53 +7,50 @@ try {
   this.logger(e);
 }
 
-module.exports = nodefony.register('passeportFactory', () => {
+module.exports = nodefony.registerFactory('passport', () => {
 
   const Factory = class passeportFactory extends nodefony.Factory {
 
-    constructor(name, security, settings) {
-      super(name, security, settings);
+    constructor(security, settings) {
+      super("passport", security, settings);
       this.passport = passport;
       this.passport.framework(nodefonyPassport(this));
-      this.strategy = this.getStrategy(this.settings);
+      this.strategy = this.settings.strategy;
+      this.strategy = this.getStrategy(this.settings.strategy);
       if (this.strategy) {
         this.passport.use(this.strategy);
       }
     }
 
-    getStrategy() {
-      throw new Error("You must define a strategy in method getStrategy !");
+    getStrategy(options) {
+
     }
 
-    handle(context, callback) {
+    createToken(context = null, provider = null) {
+      try {
+        return new nodefony.security.tokens[this.strategy.name](this.strategy, provider);
+      } catch (e) {
+        throw e;
+      }
+    }
+
+    authenticateToken(context, token) {
       return new Promise((resolve, reject) => {
         try {
-          this.passport.authenticate(this.name, {
+          this.passport.authenticate(token.name, {
             session: false,
           })(context, (error, user) => {
             if (error) {
-              if (callback) {
-                callback(error, null);
-              }
               return reject(error);
             }
             if (user) {
               this.logger("AUTHORISATION " + this.name + " SUCCESSFULLY : " + user.username, "INFO");
-              let token = {
-                name: this.name,
-                user: user
-              };
-              if (callback) {
-                callback(null, token);
-              }
+              token.setUser(user);
               return resolve(token);
             }
             return resolve(null);
           });
         } catch (error) {
-          if (callback) {
-            callback(error, null);
-          }
           return reject(error);
         }
       });

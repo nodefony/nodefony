@@ -1,18 +1,23 @@
-module.exports = nodefony.registerProvider("userEntityProvider", () => {
+module.exports = nodefony.register("userEntityProvider", () => {
 
   const userEntityProvider = class userEntityProvider extends nodefony.Provider {
 
-    constructor(security, entity) {
+    constructor(security, config) {
       super("userEntityProvider", security);
 
-      this.entityName = entity;
+      this.entityName = config.name || "user";
+      this.userProperty = config.property ||  "username";
       this.orm = this.get(this.kernel.getOrm());
       this.orm.on("onOrmReady", () => {
         this.userEntity = this.orm.getEntity(this.entityName);
+        //console.log(this.userEntity)
       });
     }
 
-    getEntity() {
+    getEntity(name) {
+      if (name) {
+        return this.orm.getEntity(name);
+      }
       return this.orm.getEntity(this.entityName);
     }
 

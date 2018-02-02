@@ -74,6 +74,8 @@ module.exports = nodefony.register('User', () => {
     serialize() {
       return {
         username: this.username,
+        name: this.name,
+        surname: this.surname,
         roles: this.roles,
         lang: this.lang,
         provider: this.provider,

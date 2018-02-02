@@ -10,11 +10,14 @@ security:
             anonymous: { username:                  "anonymous"  }
     firewalls:
         test-anonymous:
-          #provider:                                nodefony
+          provider:                                 nodefony
           pattern:                                  ^/
-          anonymous:                                ~
-          #passport-basic:
-          #  realm:                                 "nodefony"
+          #anonymous:                               ~
+          #passport:
+          #  strategy:
+          #    name:                                local
+          #    usernameField:                       'email'
+          #    passwordField:                       'passwd'
         # main
         test-main-area:
             pattern:                                ^/test/firewall/anonymous

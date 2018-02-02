@@ -28,7 +28,8 @@ module.exports = function () {
       this.security = {
         factories: {},
         providers: {},
-        tokens: {}
+        tokens: {},
+        passport: {}
       };
       this.isRegExp = require('lodash.isregexp');
     }

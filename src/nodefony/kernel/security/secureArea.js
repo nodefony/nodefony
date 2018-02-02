@@ -21,27 +21,23 @@ module.exports = nodefony.register("SecuredArea", function () {
       this.defaultTarget = null;
       this.alwaysUseDefaultTarget = false;
       this.stateLess = false;
-      this.anonymous = false;
+      //this.anonymous = false;
       this.once("onReady", () => {
         try {
-          //console.log(this.firewall.providers)
-          //console.log(this.providerName)
           if (this.providerName in this.firewall.providers) {
             this.provider = this.firewall.providers[this.providerName];
           } else {
-            //this.provider = new this.firewall.providers.userProvider(this, "user", {
-            //  username: "user"
-            //});
+            this.provider = this.firewall.providers.nodefony;
           }
-          if (!this.factories.length) {
-            //this.logger(" FACTORY : " + this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
+          //if (!this.factories.length) {
+          //this.logger(" FACTORY : " + this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
 
-            if (this.anonymous) {
-              //this.setFactory("anonymous", this.provider);
-              //this.logger(" FACTORY : " + this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
-            }
-            this.logger(" PATTERN : " + this.pattern, "DEBUG");
-          }
+          //if (this.anonymous) {
+          //this.setFactory("anonymous", this.provider);
+          //this.logger(" FACTORY : " + this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
+          //}
+          //this.logger(" PATTERN : " + this.pattern, "DEBUG");
+          //}
         } catch (e) {
           this.logger(this.name + "  " + e, "ERROR");
           //throw e;
@@ -182,9 +178,8 @@ module.exports = nodefony.register("SecuredArea", function () {
           .then((token) => {
             let target = null;
             try {
-              context.user = token.user;
               let userFull = null;
-              if (context.user instanceof nodefony.User) {
+              if (token.user instanceof nodefony.User) {
                 userFull = token.serialize();
               } else {
                 if (token.user.populate) {
@@ -194,6 +189,7 @@ module.exports = nodefony.register("SecuredArea", function () {
                 }
                 delete userFull.password;
               }
+              context.user = token.user;
               context.session.migrate();
               context.session.setMetaBag("security", {
                 firewall: this.name,
@@ -293,12 +289,12 @@ module.exports = nodefony.register("SecuredArea", function () {
       return this.stateLess = state || false;
     }
 
-    setAnonymous(val) {
+    /*setAnonymous(val) {
       if (val === null) {
         return this.anonymous = true;
       }
       return this.anonymous = val || false;
-    }
+    }*/
 
     overrideURL(context, myUrl) {
       if (myUrl) {

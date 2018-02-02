@@ -1,13 +1,14 @@
 {
-  	"name": "DOCUMENTATION",
-  	"version": "3.0.0",
-  	"description": "",
-  	"author": " ",
-  	"contributors": [],
-  	"keywords": [
-		"nodefony",
-		"javascript"
-  	],
-  	"dependencies": {
-  	}
+  "name": "DOCUMENTATION",
+  "version": "3.0.0",
+  "description": "",
+  "author": " ",
+  "contributors": [],
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "dependencies": {
+    "bootstrap": "3.3.7"
+  }
 }

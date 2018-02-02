@@ -318,8 +318,8 @@ module.exports = class security extends nodefony.Service {
                 }
               }
               return context.security.handle(context)
-                .then((ele) => {
-                  return resolve(ele);
+                .then((ctx) => {
+                  return resolve(ctx);
                 })
                 .catch((error) => {
                   error.code = 401;
