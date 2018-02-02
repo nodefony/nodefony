@@ -736,11 +736,17 @@ module.exports = nodefony.register("Bundle", function () {
       return null;
     }
 
-    recompileTemplate(file) {
+    recompileTemplate(file, force) {
       try {
         let ele = this.setView(file);
-        if (ele && this.kernel.type !== "CONSOLE") {
-          this.compileTemplate(ele.file, ele.basename, ele.name);
+        if (ele) {
+          if (force) {
+            this.compileTemplate(ele.file, ele.basename, ele.name);
+          } else {
+            if (this.kernel.type !== "CONSOLE") {
+              this.compileTemplate(ele.file, ele.basename, ele.name);
+            }
+          }
         }
         return ele;
       } catch (e) {
@@ -757,7 +763,7 @@ module.exports = nodefony.register("Bundle", function () {
       }
       return views.getFiles().forEach((file) => {
         try {
-          let ele = this.recompileTemplate(file);
+          let ele = this.recompileTemplate(file, true);
           if (ele) {
             if (ele.basename === ".") {
               this.logger("Register Template   : '" + this.name + "Bundle:" + "" + ":" + ele.name + "'", "DEBUG");

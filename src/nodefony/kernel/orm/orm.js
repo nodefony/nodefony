@@ -12,7 +12,7 @@ module.exports = nodefony.register("orm", function () {
 
   const Orm = class Orm extends nodefony.Service {
 
-    constructor(name, container, kernel, autoLoader) {
+    constructor(name, container /*, kernel, autoLoader*/ ) {
 
       super(name, container);
 

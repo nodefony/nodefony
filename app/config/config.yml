@@ -93,21 +93,23 @@ sequelizeBundle:
 #       for manage Sessions / Users
 #
 #
-mongoBundle:
-  mongoose:
-    debug:                       false
+
+#mongoBundle:
+#  mongoose:
+#    debug:                      false
 #    connectors:
 #      nodefony:
 #        host:                   "127.0.0.1"
 #        port:                   27017
 #        dbname:                 "nodefony"
 #        settings:
-#          user:                 "nodefony"
-#          pass:                 "nodefony"
+#          user:                 ""
+#          pass:                 ""
 #          authSource:           "admin"
-#          reconnectTries:       1000
-#          reconnectInterval:    10
+#          reconnectTries:       100
+#          reconnectInterval:    5000
 #          autoReconnect:        true
+#          poolSize:             5
 
 ############################
 #  OVERRIDE BUNDLE HTTP

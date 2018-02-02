@@ -130,6 +130,7 @@ module.exports = nodefony.register("Request", function () {
     constructor(request, context) {
       this.context = context;
       this.request = request;
+      this.request.body = null;
       this.headers = request.headers;
       this.method = this.getMethod();
       this.host = this.getHost();
@@ -163,6 +164,9 @@ module.exports = nodefony.register("Request", function () {
       this.data = Buffer.from([], this.charset);
       this.request.on('data', (data) => {
         this.dataSize += data.length;
+      });
+      this.context.on("onRequestEnd", () => {
+        this.request.body = this.query;
       });
       try {
         if (this.method in parse) {
@@ -313,8 +317,8 @@ module.exports = nodefony.register("Request", function () {
     clean() {
       this.data = null;
       delete this.data;
-      //this.body = null;
-      //delete this.body;
+      this.body = null;
+      delete this.body;
       this.parser = null;
       delete this.parser;
       this.queryPost = null;

@@ -387,13 +387,12 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       secu = context.session ? context.session.getMetaBag("security") : null;
       let token = null;
       let factory = null;
-      if (context.security.factory) {
-        token = context.security.factory.token;
-        factory = context.security.factory.name;
-      } else {
-        if (secu) {
-          token = secu.tokenName;
-        }
+      if (context.factory) {
+        //token = context.security.factory.token;
+        factory = context.factory;
+      }
+      if (secu) {
+        token = secu.tokenName;
       }
 
       context.profiling.context_secure = {

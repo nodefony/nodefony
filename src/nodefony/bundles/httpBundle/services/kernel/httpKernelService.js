@@ -284,7 +284,6 @@ module.exports = class httpKernel extends nodefony.Service {
       switch (nodefony.typeOf(error)) {
       case "object":
         myError = new Error();
-        myError.message = error;
         if (error.status) {
           myError.code = error.status;
         } else {
@@ -293,6 +292,11 @@ module.exports = class httpKernel extends nodefony.Service {
           } else {
             myError.code = null;
           }
+        }
+        try {
+          myError.message = JSON.stringify(error);
+        } catch (e) {
+          myError.message = e;
         }
         break;
       case "string":

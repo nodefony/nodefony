@@ -26,6 +26,10 @@ const schema = {
     type: Sequelize.BOOLEAN,
     defaultValue: true
   },
+  userNonExpired: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: true
+  },
   credentialsNonExpired: {
     type: Sequelize.BOOLEAN,
     defaultValue: true
@@ -45,10 +49,9 @@ const schema = {
   },
   roles: {
     type: Sequelize.STRING,
-    defaultValue: 'ADMIN'
+    defaultValue: 'ROLE_USER'
   },
   gender: Sequelize.STRING,
-  displayName: Sequelize.STRING,
   url: Sequelize.STRING,
   image: Sequelize.STRING
 };
@@ -92,15 +95,23 @@ module.exports = class user extends nodefony.Entity {
         }
       }).then(function (user) {
         if (user) {
-          return callback(null, user.password);
+          if (callback) {
+            callback(null, user.get("password"));
+          }
+          return user.get("password");
         }
-        return callback({
-          status: 401,
-          message: "User : " + username + " not Found"
-        }, null);
+        let error = new Error("User : " + username + " not Found");
+        error.code = 401;
+        if (callback) {
+          callback(error, null);
+        }
+        throw error;
       }).catch(function (error) {
         if (error) {
-          return callback(error, null);
+          if (callback) {
+            callback(error, null);
+          }
+          return error;
         }
       });
     };
@@ -111,10 +122,24 @@ module.exports = class user extends nodefony.Entity {
           username: username
         }
       }).then(function (user) {
-        return callback(null, user);
+        if (user) {
+          if (callback) {
+            callback(null, user);
+          }
+          return user;
+        }
+        let error = new Error("User : " + username + " not Found");
+        error.code = 404;
+        if (callback) {
+          callback(error, null);
+        }
+        throw error;
       }).catch(function (error) {
         if (error) {
-          return callback(error, null);
+          if (callback) {
+            callback(error, null);
+          }
+          return error;
         }
       });
     };

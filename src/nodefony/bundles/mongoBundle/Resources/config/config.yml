@@ -33,7 +33,7 @@ mongoose:
       settings:
         #user:             "nodefony"
         #pass:             "nodefony"
-        #authSource:       "admin"
-        reconnectTries:    1000
-        reconnectInterval: 10
+        authSource:        "admin"
+        reconnectTries:    100
+        reconnectInterval: 5000
         autoReconnect:     true

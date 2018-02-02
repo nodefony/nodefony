@@ -224,11 +224,12 @@ module.exports = class realTime extends nodefony.syslog {
       message.error = this.protocol.errorResponse(404, message.subscription, "Unknown Channel");
       return this.send(context, this.protocol.send(message));
     }
+    let client = null;
     switch (serv.type) {
     case "TCP":
     case "tcp":
       try {
-        let client = new net.Socket({
+        client = new net.Socket({
           allowHalfOpen: true,
           //highWaterMark:16384*2
           highWaterMark: 1024 * 64,
@@ -362,7 +363,7 @@ module.exports = class realTime extends nodefony.syslog {
       break;
     case "UDP":
     case "udp":
-      let client = dgram.createSocket({
+      client = dgram.createSocket({
         type: 'udp4',
         reuseAddr: true
       });
@@ -548,7 +549,7 @@ module.exports = class realTime extends nodefony.syslog {
       try {
         this.protocol.parser(message, (err, mess) => {
           if (err) {
-            message.error = this.protocol.errorResponse(500, message.clientId + "," + message.channel, "bad Request  " + message);
+            message.error = this.protocol.errorResponse(500, message.clientId + "," + message.channel, "bad Request  " + err);
             ret = this.send(context, this.protocol.send(message));
             //throw err ;
             return ret;
@@ -556,7 +557,7 @@ module.exports = class realTime extends nodefony.syslog {
           ret = this.onMessage(mess, context);
         });
       } catch (e) {
-        message.error = this.protocol.errorResponse(500, message.clientId + "," + message.channel, "bad Request  " + message);
+        message.error = this.protocol.errorResponse(500, message.clientId + "," + message.channel, "bad Request  " + e.message);
         return this.send(context, this.protocol.send(message));
       }
       return ret;
@@ -628,8 +629,8 @@ module.exports = class realTime extends nodefony.syslog {
       case "HTTP2":
         connection.response.body = message;
         connection.response.setHeader("Content-Type", "application/json");
-        //return connection.response ;
-        break;
+        return connection.response;
+        //break;
       case "WEBSOCKET":
       case "WEBSOCKET SECURE":
         connection.send(message);

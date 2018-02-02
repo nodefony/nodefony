@@ -1,9 +1,9 @@
 const lib = require("./lib.js");
 
-const flush = function (context, i) {
+/*const flush = function (context, i) {
   context.flush("flush : " + i);
   console.log("flush : " + i);
-};
+};*/
 
 /**
  */
@@ -41,6 +41,32 @@ module.exports = class defaultController extends nodefony.controller {
       return this.render("testBundle::index.html.twig", {
         lib: lib.toJson()
       });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  /**
+   *
+   *	@method loginAction
+   *  @Route ("/api/login", name="api-login")
+   */
+  loginApiAction() {
+    try {
+      return this.render("testBundle:api:login.html.twig");
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  /**
+   *
+   *	@method indexAction
+   *  @Route ("/api/token", name="api-token")
+   */
+  tokenApiAction() {
+    try {
+      return this.renderJson({});
     } catch (e) {
       throw e;
     }

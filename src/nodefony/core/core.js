@@ -25,6 +25,11 @@ module.exports = function () {
       this.bundles = {};
       this.templatings = {};
       this.services = {};
+      this.security = {
+        factories: {},
+        providers: {},
+        tokens: {}
+      };
       this.isRegExp = require('lodash.isregexp');
     }
 
@@ -334,6 +339,26 @@ module.exports = function () {
       }
       throw new Error("Register commands : " + name + "  error commands bad format");
     }
+
+    registerFactory(name, closure) {
+      if (typeof closure === "function") {
+        return nodefony.security.factories[name] = closure();
+      }
+      throw new Error("Register Factory : " + name + "  Error Factory bad format");
+    }
+    registerToken(name, closure) {
+      if (typeof closure === "function") {
+        return nodefony.security.tokens[name] = closure();
+      }
+      throw new Error("Register Token : " + name + "  Error Token bad format");
+    }
+    registerProvider(name, closure) {
+      if (typeof closure === "function") {
+        return nodefony.security.providers[name] = closure();
+      }
+      throw new Error("Register Provider : " + name + "  Error Provider bad format");
+    }
+
   };
   return new Nodefony();
 }();
