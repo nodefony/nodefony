@@ -14,7 +14,7 @@ if (kernel.environment === "dev") {
 module.exports = webpackMerge({
   context: public,
   target: "web",
-  //watch: false,
+  watch: false,
   entry: {
     documentation: "./js/documentation.js"
   },

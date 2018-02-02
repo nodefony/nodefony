@@ -2,9 +2,9 @@
 {% if  not section  %}
 	<li role="presentation" class="active"><a href="{{path('documentation-version',{version:version, bundle:bundle})}}">Home</a></li>
 {% else %}
-
+	
 	{% if section %}
-		{% if subsection == section %}
+		{% if subsection == section %}	
 			<li role="presentation" class="active"><a href="{{path('documentation-section',{section:section, version:version, bundle:bundle })}}">{{section | trans() | capitalize()}}</a></li>
 		{% else %}
 			<li role="presentation" ><a href="{{path('documentation-section',{section:section, version:version, bundle:bundle })}}">{{section | trans() | capitalize()}}</a></li>

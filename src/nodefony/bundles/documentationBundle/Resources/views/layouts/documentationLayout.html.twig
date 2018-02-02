@@ -76,45 +76,43 @@
 </div>
 
 
-<nav class="navbar navbar-expand-md bg-light fixed-top" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+
 
 	<div class="container-fluid">
 
-		<div>
-			<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#custom-collapse">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#custom-collapse">
 				<span class="sr-only">Toggle navigation</span>
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a><img alt="nodefony" style="margin-left:0px ; float:left" width="32px" height="29px" src="/frameworkBundle/images/nodefony-logo.png"><a>
-					<a class="navbar-brand text-primary" href="{{path("home")}}" style="margin-left:0px" ><strong class="text-primary">NODEFONY</strong></a>
+			<a><img alt="nodefony" style="margin-left:0px ;margin-top:10px ;float:left" width="32px" height="29px" src="/frameworkBundle/images/nodefony-logo.png"><a>
+			<a class="navbar-brand text-primary" href="{{path("home")}}" style="margin-left:0px" ><strong class="text-primary">NODEFONY</strong></a>
 		</div>
 
 		<div class="collapse navbar-collapse" id="custom-collapse">
 
-			<ul class="navbar-nav">
-				<li class="nav-item">
-					<a class="nav-link" href="{{path("monitoring-index")}}" role="button" aria-haspopup="true" aria-expanded="false">MONITORING</a>
-				</li>
-
+			<ul class="nav navbar-nav navbar-left">
+				<li class="dropdown">
+                                        <a href="{{path("monitoring-index")}}" role="button" aria-haspopup="true" aria-expanded="false">MONITORING</a>
+                                </li>
 			</ul>
+			<form class="navbar-form navbar-left" role="search">
+				<div class="form-group">
+					<input id="inputSearh" type="text" class="form-control" placeholder="Search">
+				</div>
+				<button id="buttonSearh" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+					{{ "Search" | trans() }}
+				</button>
 
-			<ul class="navbar-nav">
-				<form class="form-inline" role="search">
-					<input id="inputSearh" type="text" class="form-control mr-sm-2" placeholder="Search">
-					<button id="buttonSearh" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-                        {{ "Search" | trans() }}
-					</button>
-
-				</form>
-			</ul>
-
+			</form>
 
 
-			<ul class="navbar-nav ml-auto">
-				<a  class="navbar-brand  " href="#" ><span class="badge badge-danger"> {{ "progress" | trans() | upper()}} !! </span></a>
-				<a class="navbar-brand text-primary" href="#" ><strong class="text-primary" style="font-size:75%">GIT BRANCH</strong> <span  class="badge badge-default branch"></span></a>
+			<ul class="nav navbar-nav navbar-right ">
+				<a  class="navbar-brand  " href="#" ><span class="label label-danger"> {{ "progress" | trans() | upper()}} !! </span></a>
+				<a class="navbar-brand text-primary" href="#" ><strong class="text-primary" style="font-size:75%">GIT BRANCH</strong> <span  class="label label-default branch"></span></a>
 				<a class="navbar-brand text-primary" href="#" ><strong class="text-primary" style="font-size:75%">VERSION</strong></a>
 				<li  class="navbar-btn pull-right" style="margin-right:40px">
 				   <select id="version" name="hl" class="form-control" >
@@ -154,7 +152,7 @@
 
 				<hr style="margin-top:100px">
 
-				<div class="row col-md-12">
+				<div class="row-fluid m-t-xl">
 
 					<!--div class="col-md-4">
 						<div class="panel panel-success">
@@ -169,11 +167,11 @@
 					</div-->
 
 					<div class="col-md-6">
-						<div class="card card-success">
-							<div class="card-header card-header bg-info-background">Local Recent Commits
-								<span class="branch badge badge-default pull-right"></span>
+						<div class="panel panel-success">
+							<div class="panel-heading">Local Recent Commits
+								<span class="branch label label-default pull-right"></span>
 							</div>
-							<div class="card-block" style="overflow: auto;">
+							<div class="panel-body" style="overflow: auto;">
 								<ul id="commits">
 								</ul>
 							</div>
@@ -181,9 +179,9 @@
 					</div>
 
 					<div class="col-md-6">
-						<div class="card card-success">
-							<div class="card-header bg-info-background">GitHub Issue Queue Activity</div>
-							<div class="card-block" style="overflow: auto;">
+						<div class="panel panel-success">
+							<div class="panel-heading">GitHub Issue Queue Activity</div>
+							<div class="panel-body" style="overflow: auto;">
 								<ul id="issues" class="list-group">
 
 								</ul>

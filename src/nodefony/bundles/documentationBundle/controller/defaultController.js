@@ -359,10 +359,10 @@ module.exports = class defaultController extends nodefony.controller {
         langOptions += '<option value="' + langs[ele].value + '" >' + langs[ele].name + '</option>';
       }
     }
-    let html = '<nav class="navbar navbar-expand-md bg-light navbar-fixed-bottom" role="navigation">\
-             <div class="container-fluid col-md-12">\
+    let html = '<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">\
+             <div class"container-fluid">\
              <div class="navbar-header">\
-             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#footer-collapse">\
+             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#footer-collapse">\
              <span class="sr-only">Toggle navigation</span>\
              <span class="icon-bar"></span>\
              <span class="icon-bar"></span>\
@@ -374,9 +374,9 @@ module.exports = class defaultController extends nodefony.controller {
              </a>\
              </div>\
              <div class="collapse navbar-collapse" id="footer-collapse">\
-             <ul class="navbar-nav mr-auto">\
+             <ul class="nav navbar-nav navbar-left">\
              </ul>\
-             <ul class="navbar-nav">\
+             <ul class="nav navbar-nav navbar-right">\
              <li  class="navbar-btn pull-right" style="margin-right:40px">\
              <select id="langs"  class="form-control">\
              ' + langOptions + '\
