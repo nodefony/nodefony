@@ -12,7 +12,7 @@ security:
         test-anonymous:
           provider:                                 nodefony
           pattern:                                  ^/
-          #anonymous:                               ~
+          anonymous:                                ~
           #passport:
           #  strategy:
           #    name:                                local

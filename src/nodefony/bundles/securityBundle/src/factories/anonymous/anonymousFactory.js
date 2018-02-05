@@ -35,11 +35,11 @@ module.exports = nodefony.registerFactory("anonymous", () => {
           try {
             return provider.loadUserByUsername(this.name).then((user) => {
               if (user) {
-                let mytoken = new nodefony.security.tokens.anonymous("", user.username);
-                mytoken.setUser(user);
-                mytoken.setAuthenticated(true);
-                this.logger("AUTHENTICATION " + mytoken.getUsername() + " SUCCESSFULLY ", "INFO");
-                return resolve(mytoken);
+                //let mytoken = new nodefony.security.tokens.anonymous("", user.username);
+                token.setUser(user);
+                token.setAuthenticated(true);
+                this.logger("AUTHENTICATION " + token.getUsername() + " SUCCESSFULLY ", "INFO");
+                return resolve(token);
               }
               return reject(new Error("user not found"));
             }).catch((error) => {

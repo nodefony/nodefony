@@ -1,8 +1,6 @@
 /*
  *	Token passport-local
  */
-const LocalStrategy = require('passport-local').Strategy;
-
 nodefony.registerToken("passportLocal", function () {
 
   const passportLocal = class passportLocal extends nodefony.Token {

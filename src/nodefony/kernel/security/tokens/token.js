@@ -5,14 +5,9 @@ module.exports = nodefony.register('Token', () => {
     constructor(name, roles = []) {
       this.name = name;
       this.roles = [];
-      for (let i = 0; i < roles.length; i++) {
-        try {
-          this.roles.push(new nodefony.Role(roles[i]));
-        } catch (e) {
-          throw e;
-        }
-      }
+      this.setRoles(roles);
       this.user = null;
+      this.credentials = "";
       this.authenticated = false;
     }
 
@@ -20,8 +15,25 @@ module.exports = nodefony.register('Token', () => {
       return this.roles;
     }
 
-    getCredentials() {
+    setRoles(roles) {
+      for (let i = 0; i < roles.length; i++) {
+        try {
+          this.roles.push(new nodefony.Role(roles[i]));
+        } catch (e) {
+          throw e;
+        }
+      }
+    }
 
+    getCredentials() {
+      return this.credentials;
+    }
+
+    eraseCredentials() {
+      if (this.user instanceof nodefony.User) {
+        this.user.eraseCredentials();
+      }
+      this.credentials = "";
     }
 
     getUser() {
@@ -31,6 +43,7 @@ module.exports = nodefony.register('Token', () => {
     setUser(user) {
       if (user instanceof nodefony.User) {
         this.user = user;
+        this.setRoles(user.roles);
       } else {
         this.user = user;
       }
@@ -49,12 +62,6 @@ module.exports = nodefony.register('Token', () => {
 
     setAuthenticated(val) {
       this.authenticated = val;
-    }
-
-    eraseCredentials() {
-      if (this.user instanceof nodefony.User) {
-        return this.user.eraseCredentials();
-      }
     }
 
     serialize() {
