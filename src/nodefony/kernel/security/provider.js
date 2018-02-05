@@ -9,10 +9,16 @@ module.exports = nodefony.register('Provider', () => {
     }
 
     authenticate(token) {
-      if (token && this.supports(token)) {
-        return token;
-      }
-      throw new Error("The token is not supported by this authentication provider " + this.name);
+      return new Promise((resolve, reject) => {
+        if (token && this.supports(token)) {
+          return resolve(token);
+        }
+        return reject(new Error("The token is not supported by this authentication provider " + this.name));
+      });
+    }
+
+    refreshUser(user) {
+      return user;
     }
 
     supports( /*token*/ ) {

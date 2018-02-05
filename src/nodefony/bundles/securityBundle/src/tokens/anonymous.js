@@ -17,6 +17,10 @@ nodefony.registerToken("anonymous", function () {
       }
     }
 
+    getSecret() {
+      return this.secret;
+    }
+
     unserialize(user) {
       if (!this.user) {
         this.setUser(new nodefony.User("anonymous"));

@@ -12,9 +12,10 @@ module.exports = nodefony.register("Entity", function () {
       if (!this.orm) {
         throw new Error(this.name + " entity can't be registered  ORM not found : " + orm);
       }
-      this.orm.on('onReadyConnection', (connectionName, db /*, ormService*/ ) => {
+      this.orm.on('onConnect', (connectionName, db) => {
         if (connectionName === this.connection) {
-          this.fire("onConnect", connectionName, db);
+          this.model = this.registerModel(db);
+          this.orm.setEntity(this);
         }
       });
     }

@@ -18,27 +18,12 @@ module.exports = nodefony.registerProvider("anonymousProvider", () => {
       });
     }
 
-    refreshUser(user) {
-      return user;
-    }
-
-    authenticate(token) {
-      this.secret = token.secret;
-      if (this.supports(token)) {
-        throw new Error('The token is not supported by this authentication provider.');
-      }
-      if (this.secret !== token.getSecret()) {
-        throw new Error('The Token does not contain the expected key.');
-      }
-      return token;
-    }
-
     supports(token) {
       if (token instanceof nodefony.security.tokens.anonymous) {
-        if (this.secret === token.getSecret()) {
-          return true;
+        if (this.secret !== token.getSecret()) {
+          throw new Error('The Token does not contain the expected key.');
         }
-        return false;
+        return true;
       }
       return false;
     }

@@ -21,26 +21,20 @@ module.exports = nodefony.register("SecuredArea", function () {
       this.defaultTarget = null;
       this.alwaysUseDefaultTarget = false;
       this.stateLess = false;
-      //this.anonymous = false;
+      this.anonymous = false;
       this.once("onReady", () => {
         try {
-          if (this.providerName in this.firewall.providers) {
-            this.provider = this.firewall.providers[this.providerName];
+          if (this.providerName in this.firewall.providerManager.providers) {
+            this.provider = this.firewall.providerManager.getProvider(this.providerName);
           } else {
-            this.provider = this.firewall.providers.nodefony;
+            if (this.anonymous) {
+              this.provider = this.firewall.providerManager.getProvider("anonymous");
+            } else {
+              this.provider = this.firewall.providerManager;
+            }
           }
-          //if (!this.factories.length) {
-          //this.logger(" FACTORY : " + this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
-
-          //if (this.anonymous) {
-          //this.setFactory("anonymous", this.provider);
-          //this.logger(" FACTORY : " + this.factory.name + " PROVIDER : " + this.provider.name + " PATTERN : " + this.pattern, "DEBUG");
-          //}
-          //this.logger(" PATTERN : " + this.pattern, "DEBUG");
-          //}
         } catch (e) {
           this.logger(this.name + "  " + e, "ERROR");
-          //throw e;
         }
       });
     }
@@ -245,6 +239,7 @@ module.exports = nodefony.register("SecuredArea", function () {
         if (auth in nodefony.security.factories) {
           let index = null;
           if (auth === "anonymous") {
+            this.anonymous = true;
             index = this.factories.push(new nodefony.security.factories[auth](this, options));
           } else {
             this.factories.unshift(new nodefony.security.factories[auth](this, options));
@@ -288,13 +283,6 @@ module.exports = nodefony.register("SecuredArea", function () {
       }
       return this.stateLess = state || false;
     }
-
-    /*setAnonymous(val) {
-      if (val === null) {
-        return this.anonymous = true;
-      }
-      return this.anonymous = val || false;
-    }*/
 
     overrideURL(context, myUrl) {
       if (myUrl) {

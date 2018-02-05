@@ -60,10 +60,7 @@ module.exports = class session extends nodefony.Entity {
      *   @param connection name
      */
     super(bundle, "session", "sequelize", "nodefony");
-    this.on("onConnect", (name, db) => {
-      this.model = this.registerModel(db);
-      this.orm.setEntity(this);
-    });
+
     this.orm.on("onOrmReady", ( /*orm*/ ) => {
       let user = this.orm.getEntity("user");
       if (user) {

@@ -13,7 +13,7 @@ module.exports = nodefony.registerFactory("anonymous", () => {
 
     createToken( /*context = null, provider= null*/ ) {
       try {
-        return new nodefony.security.tokens.anonymous();
+        return new nodefony.security.tokens.anonymous('nodefony', this.name, ["ROLE_ANONYMOUS"]);
       } catch (e) {
         throw e;
       }
@@ -29,38 +29,7 @@ module.exports = nodefony.registerFactory("anonymous", () => {
       throw new Error("Factory " + this.name + " Token not valid !! ");
     }
 
-    authenticateToken(token, provider) {
-      return new Promise((resolve, reject) => {
-        if (provider) {
-          try {
-            return provider.loadUserByUsername(this.name).then((user) => {
-              if (user) {
-                //let mytoken = new nodefony.security.tokens.anonymous("", user.username);
-                token.setUser(user);
-                token.setAuthenticated(true);
-                this.logger("AUTHENTICATION " + token.getUsername() + " SUCCESSFULLY ", "INFO");
-                return resolve(token);
-              }
-              return reject(new Error("user not found"));
-            }).catch((error) => {
-              return reject(error);
-            });
-          } catch (e) {
-            return reject(e);
-          }
-        } else {
-          try {
-            let user = new nodefony.User("anonymous", null, ["ROLE_ANONYMOUS"]);
-            token.setUser(user);
-            token.setAuthenticated(true);
-            this.logger("AUTHENTICATION " + token.getUsername() + " SUCCESSFULLY : ", "INFO");
-          } catch (e) {
-            return reject(e);
-          }
-          return resolve(token);
-        }
-      });
-    }
   };
+
   return Factory;
 });

@@ -117,7 +117,6 @@ module.exports = class security extends nodefony.Service {
     }(this);
     this.securedAreas = {};
     this.providerManager = new nodefony.providerManager(this);
-    this.providers = this.providerManager.providers;
     this.sessionStrategy = "invalidate";
     // listen KERNEL EVENTS
     this.once("onPreBoot", () => {
@@ -289,7 +288,9 @@ module.exports = class security extends nodefony.Service {
                   return resolve(ele);
                 })
                 .catch((error) => {
-                  error.code = 401;
+                  if (!error.code) {
+                    error.code = 401;
+                  }
                   return reject(error);
                 });
             }
@@ -322,18 +323,20 @@ module.exports = class security extends nodefony.Service {
                   return resolve(ctx);
                 })
                 .catch((error) => {
-                  error.code = 401;
+                  if (!error.code) {
+                    error.code = 401;
+                  }
                   return reject(error);
                 });
             } catch (e) {
-              e.code = 401;
+              e.code = 500;
               return reject(e);
             }
           }
         }
         return resolve(context);
       } catch (error) {
-        error.code = 401;
+        error.code = 500;
         return reject(error);
       }
     });
@@ -360,9 +363,6 @@ module.exports = class security extends nodefony.Service {
             case "pattern":
               area.setPattern(param[config]);
               break;
-              /*case "anonymous":
-                area.setAnonymous(param[config]);
-                break;*/
             case "crossDomain":
               area.setCors(param[config]);
               break;

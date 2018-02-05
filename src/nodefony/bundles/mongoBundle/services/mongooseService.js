@@ -55,7 +55,7 @@ module.exports = class mongoose extends nodefony.orm {
 
     let settings = nodefony.extend(true, {}, defaultConfigConnection, config.settings);
     settings.promiseLibrary = BlueBird;
-    return this.engine.connect(url, settings).then((db) => {
+    return this.engine.createConnection(url, settings).then((db) => {
       this.connections[name] = db;
       db.on('close', () => {
         this.closeConnetion(name, db);

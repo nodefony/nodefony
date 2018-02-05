@@ -25,7 +25,7 @@ module.exports = nodefony.registerCommand("Sequelize", function () {
           }
           var tab = [];
 
-          this.ormService.listen(this, "onReadyConnection", (connectionName, connection /*, service*/ ) => {
+          this.ormService.listen(this, "onConnect", (connectionName, connection /*, service*/ ) => {
             this.logger("DATABASE  : " + connection.options.dialect + " CONNECTION : " + connectionName, "INFO");
 
             tab.push(new Promise((resolve, reject) => {

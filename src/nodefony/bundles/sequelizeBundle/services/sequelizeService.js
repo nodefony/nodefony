@@ -89,7 +89,7 @@ const connectionDB = class connectionDB {
       throw new Error("Cannot create class connection without db native");
     }
     this.db = db;
-    this.orm.notificationsCenter.fire("onConnect", this.name, this.db);
+    this.orm.fire("onConnect", this.name, this.db);
     this.state = "CONNECTED";
     let severity = "INFO";
     if (this.orm.kernel.type === "CONSOLE") {

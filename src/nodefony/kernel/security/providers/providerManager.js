@@ -13,7 +13,7 @@ module.exports = nodefony.register('providerManager', () => {
       return new Promise((resolve, reject) => {
         if (this.nbProviders) {
           try {
-            this.providers[index - 1].authenticate(token)
+            return this.providers[index - 1].authenticate(token)
               .then((token) => {
                 return resolve(token);
               })
@@ -43,6 +43,13 @@ module.exports = nodefony.register('providerManager', () => {
             return reject(e);
           });
       });
+    }
+
+    getProvider(name) {
+      if (this.providers[name]) {
+        return this.providers[name];
+      }
+      throw new Error(`Provider : ${name} nor found`);
     }
 
     addConfiguration(name, config) {

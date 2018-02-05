@@ -64,20 +64,34 @@ module.exports = nodefony.register('Factory', () => {
       });
     }
 
-    createToken( /*context, provider*/ ) {}
+    createToken( /* context, provider*/ ) {}
 
     supportsToken( /*token*/ ) {
       return true;
     }
 
-    authenticateToken(token /*, provider*/ ) {
-      return new Promise((resolve, reject) => {
-        if (token) {
-          return resolve(token);
-        } else {
-          return reject(new Error("bad token in authenticateToken"));
-        }
-      });
+    authenticateToken(token, provider) {
+      if (provider) {
+        return provider.authenticate(token).then((token) => {
+          return provider.loadUserByUsername(token.getUsername()).then((user) => {
+            if (user) {
+              token.setUser(user);
+              token.setAuthenticated(true);
+              this.logger(`AUTHENTICATION  ${token.getUsername()}  SUCCESSFULLY  PROVIDER ${provider.name}`, "INFO");
+              return token;
+            }
+            throw Error(`user ${token.getUsername()} not found `);
+          }).catch((error) => {
+            throw error;
+          });
+        }).catch((error) => {
+          throw error;
+        });
+      } else {
+        return new Promise((resolve, reject) => {
+          return reject(new Error(`authenticateToken Provider ${provider}`));
+        });
+      }
     }
   };
   return Factory;
