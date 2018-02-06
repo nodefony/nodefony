@@ -2,9 +2,8 @@ module.exports = nodefony.register("userEntityProvider", () => {
 
   const userEntityProvider = class userEntityProvider extends nodefony.Provider {
 
-    constructor(security, config) {
-      super("userEntityProvider", security);
-
+    constructor(manager, config) {
+      super("userEntityProvider", manager);
       this.entityName = config.name || "user";
       this.userProperty = config.property ||  "username";
       this.orm = this.get(this.kernel.getOrm());
@@ -31,7 +30,6 @@ module.exports = nodefony.register("userEntityProvider", () => {
       }
       throw new Error("refreshUser bad user type");
     }
-
   };
 
   return userEntityProvider;

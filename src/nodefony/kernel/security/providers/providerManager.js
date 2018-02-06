@@ -8,43 +8,6 @@ module.exports = nodefony.register('providerManager', () => {
       this.nbProviders = 0;
     }
 
-
-    authenticateProviders(token, index = 1) {
-      return new Promise((resolve, reject) => {
-        if (this.nbProviders) {
-          try {
-            return this.providers[index - 1].authenticate(token)
-              .then((token) => {
-                return resolve(token);
-              })
-              .catch((e) => {
-                this.providers[index - 1].logger(e, "ERROR");
-                if (index === this.nbProviders) {
-                  return reject(e);
-                }
-                return resolve(this.authenticateProviders(token, ++index));
-              });
-          } catch (e) {
-            return reject(e);
-          }
-        } else {
-          return reject(null);
-        }
-      });
-    }
-
-    authenticate(token) {
-      return new Promise((resolve, reject) => {
-        return this.authenticateProviders(token)
-          .then((token) => {
-            return resolve(token);
-          })
-          .catch((e) => {
-            return reject(e);
-          });
-      });
-    }
-
     getProvider(name) {
       if (this.providers[name]) {
         return this.providers[name];
@@ -61,7 +24,15 @@ module.exports = nodefony.register('providerManager', () => {
         this.kernel.once("onBoot", () => {
           switch (true) {
           case !!config.entity:
-            this.providers[name] = new nodefony.security.providers.userProvider(this, config.entity);
+            if (config.class) {
+              if (config.class in nodefony.security.providers) {
+                this.providers[name] = new nodefony.security.providers[config.class](this, config.entity);
+              } else {
+                this.logger(new Error(`provider class not exist : ${config.class}`), "ERROR");
+              }
+            } else {
+              this.providers[name] = new nodefony.security.providers.userProvider(this, config.entity);
+            }
             break;
           case !!config.chain:
             this.providers[name] = new nodefony.security.providers.chainProvider(this, config.chain);
@@ -71,13 +42,11 @@ module.exports = nodefony.register('providerManager', () => {
             break;
           case !!config.anonymous:
             if (config.anonymous.provider) {
-              //this.kernel.once("onBoot", () => {
               if (this.providers[config.anonymous.provider]) {
                 this.providers[name] = this.providers[config.anonymous.provider];
               } else {
                 this.providers[name] = new nodefony.security.providers.anonymousProvider(this, config.anonymous);
               }
-              //});
             } else {
               this.providers[name] = new nodefony.security.providers.anonymousProvider(this, config.anonymous);
             }
@@ -87,7 +56,6 @@ module.exports = nodefony.register('providerManager', () => {
           }
         });
       }
-      //return this.providers[name];
     }
   };
 

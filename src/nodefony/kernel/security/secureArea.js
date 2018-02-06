@@ -30,7 +30,7 @@ module.exports = nodefony.register("SecuredArea", function () {
             if (this.anonymous) {
               this.provider = this.firewall.providerManager.getProvider("anonymous");
             } else {
-              this.provider = this.firewall.providerManager;
+              this.provider = this.firewall.providerManager.getProvider("nodefony");
             }
           }
         } catch (e) {

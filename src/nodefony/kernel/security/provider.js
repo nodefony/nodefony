@@ -2,10 +2,9 @@ module.exports = nodefony.register('Provider', () => {
 
   const Provider = class Provider extends nodefony.Service {
 
-    constructor(name, security) {
-      super(name, security.container);
-      this.security = security;
-
+    constructor(name, manager) {
+      super(name, manager.container);
+      this.manager = manager;
     }
 
     authenticate(token) {

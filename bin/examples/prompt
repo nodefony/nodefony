@@ -1,24 +1,24 @@
 #!/usr/bin/env node
-// nodefony
+ // nodefony
+let nodefony = null;
 try {
-  const nodefony = require("nodefony");
-}catch(e){
-  const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
+  nodefony = require("nodefony");
+} catch (e) {
+  nodefony = require(require("path").resolve("src", "nodefony", "core", "autoloader"));
 }
 
-var cli =  new nodefony.cli("CLI", null, null, {
-    onStart:(cli) =>{
-        cli.inquirer.prompt(questions).then(function (answers) {
-          console.log('\nOrder receipt:');
-          console.log(JSON.stringify(answers, null, '  '));
-        });
-    }
+var cli = new nodefony.cli("CLI", null, null, {
+  onStart: (cli) => {
+    cli.inquirer.prompt(questions).then(function (answers) {
+      console.log('\nOrder receipt:');
+      console.log(JSON.stringify(answers, null, '  '));
+    });
+  }
 });
 
 
 // https://github.com/SBoudrias/Inquirer.js/tree/master/examples
-var questions = [
-  {
+var questions = [{
     type: 'confirm',
     name: 'toBeDelivered',
     message: 'Is this for delivery?',
@@ -60,8 +60,7 @@ var questions = [
     type: 'expand',
     name: 'toppings',
     message: 'What about the toppings?',
-    choices: [
-      {
+    choices: [{
         key: 'p',
         name: 'Pepperoni and cheese',
         value: 'PepperoniCheese'

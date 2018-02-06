@@ -5,7 +5,7 @@ module.exports = nodefony.register('User', () => {
     constructor(
       username,
       password,
-      roles = [],
+      roles = ["ROLE_USER"],
       lang = "en-en",
       provider = "",
       enabled = true,
