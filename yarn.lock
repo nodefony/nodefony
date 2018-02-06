@@ -1967,7 +1967,7 @@ combined-stream@^1.0.5, combined-stream@~1.0.5:
   dependencies:
     delayed-stream "~1.0.0"
 
-commander@*, commander@^2.11.0, commander@^2.13.0, commander@^2.9.0, commander@~2.13.0:
+commander@*, commander@^2.11.0, commander@^2.9.0, commander@~2.13.0:
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
 
@@ -1978,6 +1978,10 @@ commander@2.11.0:
 commander@2.12.2, commander@2.12.x:
   version "2.12.2"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.12.2.tgz#0f5946c427ed9ec0d91a46bb9def53e54650e555"
+
+commander@^2.14.0:
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.14.0.tgz#7b25325963e6aace20d3a9285b09379b0c2208b5"
 
 commander@~2.8.1:
   version "2.8.1"
@@ -5769,9 +5773,9 @@ loglevel@^1.4.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.1.tgz#e0fc95133b6ef276cdc8887cdaf24aa6f156f8fa"
 
-long@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/long/-/long-3.2.0.tgz#d821b7138ca1cb581c172990ef14db200b5c474b"
+long@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
 
 longest@^1.0.0, longest@^1.0.1:
   version "1.0.1"
@@ -6250,15 +6254,15 @@ mv@~2:
     ncp "~2.0.0"
     rimraf "~2.4.0"
 
-mysql2@1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/mysql2/-/mysql2-1.5.1.tgz#2411d6fb958af86b2304b7a53bc54b26e77e682b"
+mysql2@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/mysql2/-/mysql2-1.5.2.tgz#e4e073839bb10972669b240ec77061d7ff55cf59"
   dependencies:
     cardinal "1.0.0"
     denque "^1.1.1"
     generate-function "^2.0.0"
     iconv-lite "^0.4.18"
-    long "^3.2.0"
+    long "^4.0.0"
     lru-cache "^4.1.1"
     named-placeholders "1.1.1"
     object-assign "^4.1.1"
@@ -8661,9 +8665,9 @@ seq-queue@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/seq-queue/-/seq-queue-0.0.5.tgz#d56812e1c017a6e4e7c3e3a37a1da6d78dd3c93e"
 
-sequelize@^4.32.6:
-  version "4.32.6"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.32.6.tgz#39cdeb20559e4e7eade07c91514ca0cb6af5e978"
+sequelize@^4.32.7:
+  version "4.32.7"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.32.7.tgz#5f867201e1721f787eb904a50c8c73396cb5d747"
   dependencies:
     bluebird "^3.4.6"
     cls-bluebird "^2.0.1"

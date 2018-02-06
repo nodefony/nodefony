@@ -920,7 +920,6 @@ module.exports = nodefony.register("Bundle", function () {
         });
       } catch (e) {
         throw e;
-        //this.logger(e,"ERROR");
       }
       return res.result;
     }
@@ -931,19 +930,12 @@ module.exports = nodefony.register("Bundle", function () {
         this.entityFiles.getFiles().forEach((file) => {
           let res = regEntity.exec(file.name);
           if (res) {
-            let name = res[1];
             let Class = this.loadFile(file.path);
-            if (Class.entity && typeof Class.entity === "function") {
-              Class.entity.prototype.bundle = this;
-              this.entities[name] = Class;
-              this.logger("LOAD ENTITY : " + file.name, "DEBUG");
-            } else {
-              try {
-                this.entities[Class.name] = new Class(this);
-                this.logger("LOAD ENTITY  " + Class.name + " : " + file.name, "DEBUG");
-              } catch (e) {
-                throw e;
-              }
+            try {
+              this.entities[Class.name] = new Class(this);
+              this.logger("LOAD ENTITY  " + Class.name + " : " + file.name, "DEBUG");
+            } catch (e) {
+              throw e;
             }
           } else {
             this.logger("Drop Entity file " + file.name, "WARNING");

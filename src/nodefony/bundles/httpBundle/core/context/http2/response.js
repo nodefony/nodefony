@@ -1,4 +1,6 @@
 const http = require("http");
+const semver = require('semver');
+
 let http2 = null;
 let HTTP2_HEADER_PATH = null;
 let HTTP2_HEADER_LINK = null;
@@ -11,6 +13,8 @@ try {
   HTTP2_HEADER_STATUS = http2.constants.HTTP2_HEADER_STATUS;
   HTTP2_HEADER_CONTENT_TYPE = http2.constants.HTTP2_HEADER_CONTENT_TYPE;
 } catch (e) {}
+
+const version9 = semver.gt(process.versions.node, "9.3.0");
 
 module.exports = nodefony.register("Response2", () => {
 
@@ -88,8 +92,8 @@ module.exports = nodefony.register("Response2", () => {
 
     push(ele, headers, options) {
       return new Promise((resolve, reject) => {
-        if (process.versions.node === "9.4.0") {
-          return reject(new Error("Version node 9.4.0 "));
+        if (version9) {
+          return reject(new Error(`Version node ${process.versions.node}`));
         }
         try {
           if (this.stream && this.stream.pushAllowed) {
