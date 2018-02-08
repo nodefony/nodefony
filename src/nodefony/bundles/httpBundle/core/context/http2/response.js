@@ -1,4 +1,4 @@
-const http = require("http");
+//const http = require("http");
 const semver = require('semver');
 
 let http2 = null;
@@ -87,14 +87,22 @@ module.exports = nodefony.register("Response2", () => {
     }
 
     getStatusMessage() {
-      return this.statusMessage || http.STATUS_CODES[this.statusCode];
+      //return this.statusMessage || http.STATUS_CODES[this.statusCode];
+      return null;
+    }
+
+    getStatus() {
+      return {
+        code: this.getStatusCode(),
+        message: null
+      };
     }
 
     push(ele, headers, options) {
       return new Promise((resolve, reject) => {
-        if (version9) {
-          return reject(new Error(`Version node ${process.versions.node}`));
-        }
+        //if (version9) {
+        //return reject(new Error(`Version node ${process.versions.node}`));
+        //}
         try {
           if (this.stream && this.stream.pushAllowed) {
             let file = new nodefony.fileClass(ele);
@@ -107,8 +115,15 @@ module.exports = nodefony.register("Response2", () => {
               [HTTP2_HEADER_PATH]: myheaders.path
             }, {
               exclusive: true,
-              //parent: this.streamId
-            }, (pushStream) => {
+              parent: this.streamId
+            }, (err, pushStream /*, headers*/ ) => {
+              if (version9) {
+                if (err) {
+                  return reject(err);
+                }
+              } else {
+                pushStream = err;
+              }
               let myOptions = nodefony.extend({
                 onError: (err) => {
                   this.logger(err, "ERROR");
