@@ -461,6 +461,7 @@ module.exports = class httpKernel extends nodefony.Service {
     let resolver = null;
     let controller = null;
     let next = null;
+    let secure = false;
     //response events
     context.response.response.once("finish", () => {
       if (context.finished) {
@@ -498,35 +499,46 @@ module.exports = class httpKernel extends nodefony.Service {
         if (controller.sessionAutoStart) {
           context.sessionAutoStart = controller.sessionAutoStart;
         }
+        secure = this.firewall.isSecure(context);
       } else {
         let error = new Error("Not Found");
         error.code = 404;
         throw error;
       }
-      if ((!this.firewall) || resolver.bypassFirewall) {
-        context.once('onRequestEnd', () => {
-          try {
-            if (context.sessionAutoStart) {
-              return this.sessionService.start(context, context.sessionAutoStart).then((session) => {
-                if (!(session instanceof nodefony.Session)) {
-                  throw new Error("SESSION START session storage ERROR");
-                }
-                this.logger("AUTOSTART SESSION", "DEBUG");
-                context.fire("onRequest");
-                return session;
-              }).catch((error) => {
-                throw error;
-              });
-            } else {
-              return context.fire("onRequest");
-            }
-          } catch (e) {
-            return context.fire("onError", container, e);
-          }
-        });
-        return;
+      if (secure) {
+        return this.fire("onSecurity", context);
       }
-      this.fire("onSecurity", context);
+      context.once('onRequestEnd', () => {
+        try {
+          if (context.sessionAutoStart) {
+            return this.sessionService.start(context, context.sessionAutoStart).then((session) => {
+              if (!(session instanceof nodefony.Session)) {
+                throw new Error("SESSION START session storage ERROR");
+              }
+              this.logger("AUTOSTART SESSION", "DEBUG");
+              let meta = session.getMetaBag("security");
+              if (meta) {
+                let token = null;
+                if (meta.tokenName) {
+                  token = new nodefony.security.tokens[meta.tokenName]();
+                  token.unserialize(meta.user);
+                  context.user = token.user;
+                } else {
+                  context.user = meta.user || null;
+                }
+              }
+              context.fire("onRequest");
+              return session;
+            }).catch((error) => {
+              throw error;
+            });
+          } else {
+            return context.fire("onRequest");
+          }
+        } catch (e) {
+          return context.fire("onError", container, e);
+        }
+      });
     } catch (e) {
       return context.fire("onError", container, e);
     }
@@ -551,11 +563,10 @@ module.exports = class httpKernel extends nodefony.Service {
     let resolver = null;
     let next = null;
     let controller = null;
+    let secure = false;
     context.once('onConnect', (context) => {
-      if (this.firewall) {
-        if (!resolver.bypassFirewall) {
-          this.fire("onSecurity", context);
-        }
+      if (context.security) {
+        this.fire("onSecurity", context);
       }
     });
     context.once('onFinish', (context) => {
@@ -583,32 +594,32 @@ module.exports = class httpKernel extends nodefony.Service {
         if (controller.sessionAutoStart) {
           context.sessionAutoStart = controller.sessionAutoStart;
         }
+        secure = this.firewall.isSecure(context);
       } else {
         let error = new Error("Not Found");
         error.code = 404;
         throw error;
       }
-      if ((!this.firewall) || resolver.bypassFirewall) {
-        try {
-          if (context.sessionAutoStart) {
-            this.sessionService.start(context, context.sessionAutoStart).then((session) => {
-              if (!(session instanceof nodefony.Session)) {
-                throw new Error("SESSION START session storage ERROR");
-              }
-              context.fire("connect");
-            }).catch((error) => {
-              context.fire("onError", container, error);
-              return context;
-            });
-          } else {
-            context.fire("connect");
-          }
-        } catch (e) {
-          context.fire("onError", container, e);
-        }
-        return context;
+      if (secure) {
+        return context.fire("connect");
       }
-      context.fire("connect");
+      try {
+        if (context.sessionAutoStart) {
+          return this.sessionService.start(context, context.sessionAutoStart).then((session) => {
+            if (!(session instanceof nodefony.Session)) {
+              throw new Error("SESSION START session storage ERROR");
+            }
+            context.fire("connect");
+          }).catch((error) => {
+            context.fire("onError", container, error);
+            return context;
+          });
+        } else {
+          context.fire("connect");
+        }
+      } catch (e) {
+        context.fire("onError", container, e);
+      }
       return context;
     } catch (e) {
       context.fire("onError", container, e);

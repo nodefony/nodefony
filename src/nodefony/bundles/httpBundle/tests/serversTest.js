@@ -3,16 +3,16 @@
  *
  *   MOCHA STYLE
  *
- *   In the global context you can find : 
+ *   In the global context you can find :
  *
- *	nodefony : namespace to get library  
- *	kernel :   instance of kernel who launch the test   
+ *	nodefony : namespace to get library
+ *	kernel :   instance of kernel who launch the test
  *
  */
 
-var http = require("http");
-var https = require("https");
-var WebSocketClient = require('websocket').client;
+//var http = require("http");
+//var https = require("https");
+//var WebSocketClient = require('websocket').client;
 //var tunnel = require('tunnel');
 
 const assert = require('assert');
@@ -20,88 +20,87 @@ const assert = require('assert');
 const request = require("request");
 
 
-describe("NODEFONY BUNDLE HTTP", function(){
-	
-	describe('CONFIGURATIONS ', function(){
+describe("NODEFONY BUNDLE HTTP", function () {
 
-		/*it("KERNEL", function(done){
-			console.log( kernel.settings.system.version );
-			done();
-		});*/
+  describe('CONFIGURATIONS ', function () {
 
-	});
+    /*it("KERNEL", function(done){
+    	console.log( kernel.settings.system.version );
+    	done();
+    });*/
 
-	describe('WEB', function(){
-			
+  });
 
-		it("HTTP-SERVICE", function(doneHttp){
-				
-			var options = {
-  				url:  "http://"+kernel.settings.system.domain + ":" +  kernel.settings.system.httpPort  ,
-				headers: {
-					'User-Agent': 'nodefony'
-				}
-			};
-
-			request(options, (error, res/*, body*/) => {
-
-				if (error){
-					throw error ;
-				}
-				var ret = null ;
-				switch ( res.statusCode ){
-					case "302" :
-						ret = 200 ;
-					break;
-					default :
-						ret = res.statusCode ;
-				}
-				assert.equal(res.statusCode, ret );
-				assert.equal(res.headers.server, "nodefony");
-				res.setEncoding('utf8');
-				doneHttp();
-				
-			});
+  describe('WEB', function () {
 
 
-		});
+    it("HTTP-SERVICE", function (doneHttp) {
 
-		it("HTTPS-SERVICE", function(doneHttps){
+      var options = {
+        url: "http://" + kernel.settings.system.domain + ":" + kernel.settings.system.httpPort,
+        headers: {
+          'User-Agent': 'nodefony'
+        }
+      };
 
-			var service = kernel.get("httpsServer");
-			var res = service.getCertificats() ;
+      request(options, (error, res /*, body*/ ) => {
 
-			var options = {
-				url:  "https://"+kernel.settings.system.domain + ":" +  kernel.settings.system.httpsPort  ,
-				agentOptions: {
-					key: res.key,
-					cert:res.cert,
-					ca:res.ca,
-				}
-			};
-			
-			request(options, (error, res/*, body*/) => {
-				if (error){
-					throw error ;
-				}
-				var ret = null ;
-				switch ( res.statusCode ){
-					case "302" :
-						ret = 200 ;
-					break;
-					default :
-						ret = res.statusCode ;
-				}
-				assert.equal(res.statusCode, ret );
-				assert.equal(res.headers.server, "nodefony");
-				res.setEncoding('utf8');
-				doneHttps();
-				
-			});
+        if (error) {
+          throw error;
+        }
+        var ret = null;
+        switch (res.statusCode) {
+        case "302":
+          ret = 200;
+          break;
+        default:
+          ret = res.statusCode;
+        }
+        assert.equal(res.statusCode, ret);
+        assert.equal(res.headers.server, "nodefony");
+        res.setEncoding('utf8');
+        doneHttp();
 
-		});
+      });
 
-	});
+
+    });
+
+    it("HTTPS-SERVICE", function (doneHttps) {
+
+      var service = kernel.get("httpsServer");
+      var res = service.getCertificats();
+
+      var options = {
+        url: "https://" + kernel.settings.system.domain + ":" + kernel.settings.system.httpsPort,
+        agentOptions: {
+          key: res.key,
+          cert: res.cert,
+          ca: res.ca,
+        }
+      };
+
+      request(options, (error, res /*, body*/ ) => {
+        if (error) {
+          throw error;
+        }
+        var ret = null;
+        switch (res.statusCode) {
+        case "302":
+          ret = 200;
+          break;
+        default:
+          ret = res.statusCode;
+        }
+        assert.equal(res.statusCode, ret);
+        assert.equal(res.headers.server, "nodefony");
+        res.setEncoding('utf8');
+        doneHttps();
+
+      });
+
+    });
+
+  });
 
 });
-

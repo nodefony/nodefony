@@ -6,20 +6,24 @@ try {
 } catch (e) {
   this.logger(e);
 }
+//console.log(passport);
 
 module.exports = nodefony.registerFactory('passport', () => {
 
   const Factory = class passeportFactory extends nodefony.Factory {
 
-    constructor(security, settings) {
-      super("passport", security, settings);
+    constructor(name, security, settings) {
+      super(name, security, settings);
       this.passport = passport;
       this.passport.framework(nodefonyPassport(this));
-      this.strategy = this.settings.strategy;
-      this.strategy = this.getStrategy(this.settings.strategy);
-      if (this.strategy) {
+      this.strategy = this.getStrategy(this.settings);
+      if (!this.hasStrategy(this.strategy)) {
         this.passport.use(this.strategy);
       }
+    }
+
+    hasStrategy(strategy) {
+
     }
 
     getStrategy(options) {
@@ -56,5 +60,9 @@ module.exports = nodefony.registerFactory('passport', () => {
       });
     }
   };
+
+
+
+
   return Factory;
 });

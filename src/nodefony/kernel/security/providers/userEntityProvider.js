@@ -9,7 +9,6 @@ module.exports = nodefony.register("userEntityProvider", () => {
       this.orm = this.get(this.kernel.getOrm());
       this.orm.on("onOrmReady", () => {
         this.userEntity = this.orm.getEntity(this.entityName);
-        //console.log(this.userEntity)
       });
     }
 

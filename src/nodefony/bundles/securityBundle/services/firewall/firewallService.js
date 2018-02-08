@@ -156,9 +156,9 @@ module.exports = class security extends nodefony.Service {
                 return context.fire("onRequest");
               }
             })
-            .catch((error => {
+            .catch((error) => {
               return context.fire("onError", context.container, error);
-            }));
+            });
         });
         break;
       case "WEBSOCKET SECURE":
@@ -169,14 +169,17 @@ module.exports = class security extends nodefony.Service {
               return context.fire("onRequest");
             }
           })
-          .catch((error => {
+          .catch((error) => {
             return context.fire("onError", context.container, error);
-          }));
+          });
       }
     });
   }
 
   isSecure(context) {
+    if (context.resolver && context.resolver.bypassFirewall) {
+      return false;
+    }
     for (let area in this.securedAreas) {
       if (this.securedAreas[area].match(context)) {
         //FIXME PRIORITY
@@ -216,12 +219,11 @@ module.exports = class security extends nodefony.Service {
   handle(context) {
     return new Promise((resolve, reject) => {
       try {
-        let sessionContext = null;
-        if (!this.isSecure(context)) {
+        /*if (!this.isSecure(context)) {
           if (!context.cookieSession && !context.sessionAutoStart) {
             return resolve(context);
           }
-        }
+        }*/
         try {
           if (this.handleCrossDomain(context) === 204) {
             return resolve();
@@ -229,117 +231,109 @@ module.exports = class security extends nodefony.Service {
         } catch (error) {
           return reject(error);
         }
-        if (context.security) {
-          context.sessionAutoStart = context.security.sessionContext;
-          sessionContext = context.security.sessionContext;
-          if (context.type === "HTTP" && this.httpsReady) {
-            if (context.security.redirect_Https) {
-              return resolve(context.security.redirectHttps(context));
-            }
+
+        if (context.type === "HTTP" && this.httpsReady) {
+          if (context.security.redirect_Https) {
+            return resolve(context.security.redirectHttps(context));
           }
-        } else {
-          return this.sessionService.start(context, context.sessionAutoStart).then((session) => {
-            if (!(session instanceof nodefony.Session)) {
-              return reject(new Error("SESSION START session storage ERROR"));
-            }
-            return this.handleStateFull(context, session)
-              .then((ele) => {
-                return resolve(ele);
+        }
+        if (context.security.stateLess) {
+          if (context.sessionAutoStart) {
+            context.sessionAutoStart = context.security.sessionContext;
+            return this.sessionService.start(context, context.sessionAutoStart)
+              .then(( /*session*/ ) => {
+                return this.handleStateLess(context)
+                  .then((ctx) => {
+                    return resolve(ctx);
+                  })
+                  .catch((error) => {
+                    if (!error.code) {
+                      error.code = 401;
+                    }
+                    return reject(error);
+                  });
               })
               .catch((error) => {
                 return reject(error);
               });
-          }).catch((error) => {
-            // break exception in promise catch !
-            return reject(error);
-          });
-        }
-        return this.sessionService.start(context, sessionContext).then((session) => {
-          if (!(session instanceof nodefony.Session)) {
-            return reject(new Error("SESSION START session storage ERROR"));
           }
-          return this.handleStateFull(context, session)
-            .then((ele) => {
-              return resolve(ele);
+          return this.handleStateLess(context)
+            .then((ctx) => {
+              return resolve(ctx);
             })
             .catch((error) => {
+              if (!error.code) {
+                error.code = 401;
+              }
               return reject(error);
             });
-        }).catch((error) => {
-          // break exception in promise catch !
-          return reject(error);
-        });
+        }
+        context.sessionAutoStart = context.security.sessionContext;
+        return this.handleStateFull(context)
+          .then((ctx) => {
+            return resolve(ctx);
+          })
+          .catch((error) => {
+            if (!error.code) {
+              error.code = 401;
+            }
+            return reject(error);
+          });
       } catch (error) {
         return reject(error);
       }
     });
   }
 
-  handleStateFull(context, session) {
-    return new Promise((resolve, reject) => {
-      try {
-        let meta = session.getMetaBag("security");
-        let token = null;
-        if (meta) {
-          if (context.security) {
-            if (context.security.stateLess || context.security.name !== meta.firewall) {
-              return context.security.handle(context)
-                .then((ele) => {
-                  return resolve(ele);
-                })
-                .catch((error) => {
-                  if (!error.code) {
-                    error.code = 401;
-                  }
-                  return reject(error);
-                });
+  handleStateLess(context) {
+    return context.security.handle(context);
+  }
+
+  handleStateFull(context) {
+    return this.sessionService.start(context, context.sessionAutoStart)
+      .then((session) => {
+        try {
+          let meta = session.getMetaBag("security");
+          let token = null;
+          if (meta) {
+            if (context.security.name !== meta.firewall) {
+              return this.handleStateLess(context);
             }
             let factory = context.security.getFactory(meta.factory);
-            context.factory = meta.factory;
-            token = factory.createToken();
-            token.unserialize(meta.user);
-            context.user = token.user;
-          } else {
-            if (meta.tokenName) {
-              token = new nodefony.security.tokens[meta.tokenName]();
+            if (factory) {
+              context.factory = meta.factory;
+              token = factory.createToken();
               token.unserialize(meta.user);
               context.user = token.user;
-            } else {
-              context.user = meta.user;
             }
-          }
-        } else {
-          if (context.security) {
+            return context;
+          } else {
             try {
               if (context.method === "WEBSOCKET") {
-                if (context.security.factories.length) {
+                if (context.security.factories.length && !context.security.anonymous) {
                   let error = new Error("Unauthorized");
                   error.code = 401;
-                  return reject(error);
+                  throw error;
                 }
               }
-              return context.security.handle(context)
-                .then((ctx) => {
-                  return resolve(ctx);
-                })
-                .catch((error) => {
-                  if (!error.code) {
-                    error.code = 401;
-                  }
-                  return reject(error);
-                });
-            } catch (e) {
-              e.code = 500;
-              return reject(e);
+              return this.handleStateLess(context);
+            } catch (error) {
+              if (!error.code) {
+                error.code = 500;
+              }
+              throw error;
             }
           }
+        } catch (error) {
+          if (!error.code) {
+            error.code = 500;
+          }
+          throw error;
         }
-        return resolve(context);
-      } catch (error) {
-        error.code = 500;
-        return reject(error);
-      }
-    });
+      })
+      .catch((error) => {
+        throw error;
+      });
   }
 
   setSessionStrategy(strategy) {

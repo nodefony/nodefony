@@ -161,7 +161,7 @@ module.exports = nodefony.register("SecuredArea", function () {
             return reject(e);
           }
         } else {
-          return reject(null);
+          return resolve(null);
         }
       });
     }
@@ -170,6 +170,9 @@ module.exports = nodefony.register("SecuredArea", function () {
       return new Promise((resolve, reject) => {
         return this.handleFactories(context)
           .then((token) => {
+            if (!token) {
+              return resolve(context);
+            }
             let target = null;
             try {
               let userFull = null;
@@ -184,28 +187,33 @@ module.exports = nodefony.register("SecuredArea", function () {
                 delete userFull.password;
               }
               context.user = token.user;
-              context.session.migrate();
-              context.session.setMetaBag("security", {
-                firewall: this.name,
-                user: userFull,
-                factory: context.factory,
-                tokenName: token.name
-              });
-              if (context.user.lang) {
-                context.session.set("lang", context.user.lang);
-              } else {
-                context.session.set("lang", context.translation.defaultLocale);
-              }
-              let target_path = context.session.getFlashBag("default_target_path");
-              if (target_path) {
-                target = target_path;
-              } else {
-                if (this.defaultTarget) {
-                  target = this.defaultTarget;
+              if (context.session) {
+                context.session.migrate();
+                context.session.setMetaBag("security", {
+                  firewall: this.name,
+                  user: userFull,
+                  factory: context.factory,
+                  tokenName: token.name
+                });
+                if (context.user.lang) {
+                  context.session.set("lang", context.user.lang);
+                } else {
+                  context.session.set("lang", context.translation.defaultLocale);
+                }
+                let target_path = context.session.getFlashBag("default_target_path");
+                if (target_path) {
+                  target = target_path;
+                } else {
+                  if (this.defaultTarget) {
+                    target = this.defaultTarget;
+                  }
                 }
               }
             } catch (e) {
               return reject(e);
+            }
+            if (!target) {
+              return resolve(context);
             }
             context.resolver = this.overrideURL(context, target);
             if (context.isAjax) {
@@ -218,16 +226,12 @@ module.exports = nodefony.register("SecuredArea", function () {
           })
           .catch((error) => {
             if (!error) {
-              return resolve(context);
+              return reject();
             }
             if (context.isAjax) {
               context.isJson = true;
             }
-            let res = context.security.handleError(context, error);
-            if (res) {
-              return reject(res);
-            }
-            return resolve(context);
+            return reject(context.security.handleError(context, error));
           });
       });
     }

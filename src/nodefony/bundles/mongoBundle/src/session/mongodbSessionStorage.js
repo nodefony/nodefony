@@ -46,9 +46,7 @@ nodefony.register.call(nodefony.session.storage, "mongoose", function () {
       if (this.orm.kernel.type !== "CONSOLE") {
         this.gc(this.gc_maxlifetime, contextSession);
         return this.entity.count({
-          where: {
-            "context": contextSession
-          }
+          context: contextSession
         }).then((sessionCount) => {
           this.manager.logger("CONTEXT " + (contextSession ? contextSession : "default") + " MONGODB SESSIONS STORAGE  ==>  " + this.manager.settings.handler.toUpperCase() + " COUNT SESSIONS : " + sessionCount, "INFO");
         });

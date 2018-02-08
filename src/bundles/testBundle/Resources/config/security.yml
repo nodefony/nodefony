@@ -13,6 +13,7 @@ security:
           provider:                                 nodefony
           pattern:                                  ^/
           anonymous:                                ~
+          stateless:                                ~
           #passport:
           #  strategy:
           #    name:                                local
