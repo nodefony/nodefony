@@ -2221,9 +2221,9 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-create-react-app@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/create-react-app/-/create-react-app-1.5.1.tgz#e3d1e757377a20b8a48202582df820436ef5430d"
+create-react-app@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/create-react-app/-/create-react-app-1.5.2.tgz#2639e5d2f88e8777977beb6a8d9cbc04cf70091e"
   dependencies:
     chalk "^1.1.1"
     commander "^2.9.0"
@@ -8701,9 +8701,9 @@ seq-queue@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/seq-queue/-/seq-queue-0.0.5.tgz#d56812e1c017a6e4e7c3e3a37a1da6d78dd3c93e"
 
-sequelize@^4.33.1:
-  version "4.33.1"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.33.1.tgz#b679443f46b2872ceb9b0664294c99b88e5c0055"
+sequelize@^4.33.2:
+  version "4.33.2"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.33.2.tgz#1d4a090f629fb96949736baa5bbcdcbd84dc8b7c"
   dependencies:
     bluebird "^3.4.6"
     cls-bluebird "^2.0.1"

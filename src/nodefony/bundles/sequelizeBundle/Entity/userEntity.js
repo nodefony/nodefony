@@ -7,13 +7,14 @@ const Sequelize = require("sequelize");
  *
  */
 const schema = {
-  id: {
+  /*id: {
     type: Sequelize.INTEGER,
-    primaryKey: true,
+    //primaryKey: true,
     autoIncrement: true
-  },
+  },*/
   username: {
     type: Sequelize.STRING(126).BINARY,
+    primaryKey: true,
     unique: true,
     allowNull: false
   },
@@ -71,7 +72,7 @@ module.exports = class user extends nodefony.Entity {
       let session = this.orm.getEntity("session");
       if (session) {
         this.model.hasMany(session, {
-          foreignKey: 'user_id',
+          foreignKey: 'username',
           onDelete: 'CASCADE'
         });
       } else {

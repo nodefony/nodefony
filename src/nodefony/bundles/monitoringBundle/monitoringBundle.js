@@ -400,7 +400,9 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         factory: factory,
         token: token,
         user: context.user,
-        firewall: secu ? secu.firewall : null
+        firewall: secu ? secu.firewall : null,
+        state: context.security.stateLess ? "stateless" :  "statefull",
+        context: context.security.sessionContext
       };
     } else {
       secu = context.session ? context.session.getMetaBag("security") : null;

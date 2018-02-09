@@ -170,9 +170,9 @@ module.exports = nodefony.register("SecuredArea", function () {
       return new Promise((resolve, reject) => {
         return this.handleFactories(context)
           .then((token) => {
-            if (!token) {
-              return resolve(context);
-            }
+            //if (!token) {
+            //  return resolve(context);
+            //}
             let target = null;
             try {
               let userFull = null;

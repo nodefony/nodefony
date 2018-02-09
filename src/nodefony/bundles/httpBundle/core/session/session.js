@@ -352,7 +352,7 @@ nodefony.register("Session", function () {
         Attributes: this.protoService.prototype,
         metaBag: this.protoParameters.prototype,
         flashBag: this.flashBag,
-        user_id: user
+        username: user
       };
       return obj;
     }

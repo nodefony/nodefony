@@ -219,11 +219,6 @@ module.exports = class security extends nodefony.Service {
   handle(context) {
     return new Promise((resolve, reject) => {
       try {
-        /*if (!this.isSecure(context)) {
-          if (!context.cookieSession && !context.sessionAutoStart) {
-            return resolve(context);
-          }
-        }*/
         try {
           if (this.handleCrossDomain(context) === 204) {
             return resolve();
@@ -254,6 +249,9 @@ module.exports = class security extends nodefony.Service {
                   });
               })
               .catch((error) => {
+                if (!error.code) {
+                  error.code = 401;
+                }
                 return reject(error);
               });
           }

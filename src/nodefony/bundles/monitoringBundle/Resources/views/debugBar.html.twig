@@ -393,6 +393,7 @@
           {% endif %}
 
         </label>
+
         {% if context_secure %}
           <label class="label-nodefony label-success">{{context_secure.name}}</label>
           {% if context_secure.user %}
@@ -403,20 +404,35 @@
               <li>
                 <label style="color:#999">FIREWALL</label>
                 <label class="label-nodefony label-success">
-                  {{context_secure.name}}</label>
+                  {{context_secure.name}}
+                </label>
               </li>
               {% if context_secure.factory %}
                 <li>
                   <label >
                     Authentification</label>
-                  <label class="label-nodefony black">{{context_secure.factory}}</label>
+                  <span class="label-nodefony black">{{context_secure.factory}}</span>
                 </li>
               {% endif %}
+              <li>
+                <label >
+                  State</label>
+                <span class="label-nodefony black">{{context_secure.state}}</span>
+              </li>
+              <li>
+                <label >
+                  Context</label>
+                <span class="label-nodefony black">{{context_secure.context}}</span>
+              </li>
+              <li class="separator"></li>
+              <li>
+                <label style="color:#999">TOKEN</label>
+              </li>
               {% if context_secure.token %}
                 <li>
                   <label >
-                    Type</label>
-                  <label class="label-nodefony black">{{context_secure.token}}</label>
+                    Name</label>
+                  <span class="label-nodefony black">{{context_secure.token}}</span>
                 </li>
               {% endif %}
               {% if context_secure.user %}

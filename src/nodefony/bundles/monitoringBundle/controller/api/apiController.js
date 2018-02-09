@@ -824,7 +824,7 @@ module.exports = class apiController extends nodefony.controller {
           sort.createdAt = -1;
         }
         return sessionEntity.find({}, {})
-          .populate('user_id', "username")
+          //.populate('username', "username")
           .sort(sort)
           .skip(parseInt(this.query.start, 10))
           .limit(parseInt(this.query.length, 10))
@@ -994,7 +994,7 @@ const dataTableSessionParsing = function (query, results) {
       };
       break;
     case "mongoose":
-      user = results.rows[i].user_id ? results.rows[i].user_id : {
+      user = results.rows[i].username ? results.rows[i].username : {
         username: ""
       };
       break;
@@ -1004,7 +1004,7 @@ const dataTableSessionParsing = function (query, results) {
     payload.createdAt = results.rows[i].createdAt;
     payload.updatedAt = results.rows[i].updatedAt;
     payload.user = user;
-    payload.user_id = results.rows[i].user_id;
+    payload.username = results.rows[i].username;
     payload.Attributes = results.rows[i].Attributes;
     payload.flashBag = results.rows[i].flashBag;
     payload.metaBag = results.rows[i].metaBag;
@@ -1064,22 +1064,7 @@ const finderSession = function (Path, Result, finish) {
             };
           }
           break;
-        case "username":
 
-          if (direction === "desc") {
-            callback = function (a, b) {
-              obj1 = JSON.parse(a.content());
-              obj2 = JSON.parse(b.content());
-              return parseInt(obj2.user_id, 10) - parseInt(obj1.user_id, 10);
-            };
-          } else {
-            callback = function (a, b) {
-              obj1 = JSON.parse(a.content());
-              obj2 = JSON.parse(b.content());
-              return parseInt(obj1.user_id, 10) - parseInt(obj2.user_id, 10);
-            };
-          }
-          break;
         default:
           if (direction === "desc") {
             callback = function (a, b) {

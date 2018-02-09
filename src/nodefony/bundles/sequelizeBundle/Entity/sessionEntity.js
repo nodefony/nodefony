@@ -65,7 +65,7 @@ module.exports = class session extends nodefony.Entity {
       let user = this.orm.getEntity("user");
       if (user) {
         this.model.belongsTo(user, {
-          foreignKey: 'user_id',
+          foreignKey: 'username',
           constraints: false
         });
       } else {
