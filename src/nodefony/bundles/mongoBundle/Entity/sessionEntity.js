@@ -12,8 +12,10 @@ const schema = {
     default: "default"
   },
   username: {
-    type: String,
+    //type: Schema.Types.ObjectId,
     //ref: 'user'
+    type: String,
+    ref: 'user'
   },
   Attributes: {
     type: Object,

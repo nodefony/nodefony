@@ -1,24 +1,18 @@
 nodefony.register.call(nodefony.context, "http", function () {
 
-  const Http = class Http extends nodefony.Service {
+  const Http = class Http extends nodefony.Context {
 
     constructor(container, request, response, type) {
-      super(type + " CONTEXT", container);
-      this.type = type;
-      this.set("context", this);
-      this.kernelHttp = this.get("httpKernel");
+      super(container, request, response, type);
+      this.uploadService = this.get("upload");
       this.requestSettings = this.kernelHttp.bundleSettings.request;
       this.queryStringParser = this.kernelHttp.bundleSettings.queryString;
       this.isElectron = this.kernel.isElectron;
-      //I18n
-      this.translation = this.kernelHttp.translation.createTranslation(this);
-      this.set("translation", this.translation);
       this.protocol = (type === "HTTP2") ? "2.0" : "1.1";
       this.scheme = (type === "HTTPS" || type === "HTTP2") ? "https" : "http";
-      this.resolver = null;
-      this.nbCallController = 0;
-      this.uploadService = this.get("upload");
+
       this.pushAllowed = false;
+
       if (this.type === "HTTP2") {
         this.request = new nodefony.Request2(request, this);
         this.response = new nodefony.Response2(response, container);
@@ -26,7 +20,9 @@ nodefony.register.call(nodefony.context, "http", function () {
         this.request = new nodefony.Request(request, this);
         this.response = new nodefony.Response(response, container);
       }
-      this.requestEnded = false;
+      this.parseCookies();
+      this.cookieSession = this.getCookieSession(this.sessionService.settings.name);
+
       this.once("onRequestEnd", () => {
         this.requestEnded = true;
       });
@@ -37,13 +33,14 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.setDefaultContentType();
       this.isRedirect = false;
       this.sended = false;
-      this.secureArea = null;
       this.showDebugBar = true;
       this.timeoutExpired = false;
-      this.domain = this.getHostName();
-      this.router = this.get("router");
-      this.url = url.format(this.request.url);
+      this.promise = null;
+      this.timeoutid = null;
       this.profiling = null;
+
+      this.url = url.format(this.request.url);
+
       if (this.request.url.port) {
         this.port = this.request.url.port;
       } else {
@@ -54,22 +51,13 @@ nodefony.register.call(nodefony.context, "http", function () {
       } catch (e) {
         this.originUrl = url.parse(this.url);
       }
+      // domain
+      this.domain = this.getHostName();
       this.validDomain = this.isValidDomain();
-      this.crossDomain = null;
-      this.logger("FROM : " + this.request.remoteAddress + " ORIGIN : " + this.originUrl.host + " URL : " + this.url, "INFO", (this.isAjax ? this.type + " REQUEST AJAX " + this.method : this.type + " REQUEST " + this.method));
-      // session
-      this.session = null;
-      this.sessionService = this.get("sessions");
-      this.sessionAutoStart = this.sessionService.sessionAutoStart;
-      //parse cookies
-      this.cookies = {};
-      this.parseCookies();
-      this.cookieSession = this.getCookieSession(this.sessionService.settings.name);
-      this.security = null;
-      this.user = null;
       this.remoteAddress = this.request.remoteAddress;
-      this.promise = null;
-      this.timeoutid = null;
+
+      this.logger("FROM : " + this.remoteAddress + " ORIGIN : " + this.originUrl.host + " URL : " + this.url, "INFO", (this.isAjax ? this.type + " REQUEST AJAX " + this.method : this.type + " REQUEST " + this.method));
+
       this.once("onRequest", this.handle.bind(this));
       this.once("onResponse", this.send.bind(this));
       this.once("onTimeout", () => {
@@ -97,25 +85,6 @@ nodefony.register.call(nodefony.context, "http", function () {
         this.crossDomain = this.isCrossDomain();
       }
     }
-    /*fire(name) {
-      console.log(name)
-      return super.fire.apply(this, arguments);
-    }*/
-
-    getCookieSession(name) {
-      if (this.cookies[name]) {
-        return this.cookies[name];
-      }
-      return null;
-    }
-
-    isValidDomain() {
-      return this.kernelHttp.isValidDomain(this);
-    }
-
-    isCrossDomain() {
-      return this.kernelHttp.corsManager.isCrossDomain(this);
-    }
 
     getRemoteAddress() {
       return this.request.getRemoteAddress();
@@ -135,23 +104,6 @@ nodefony.register.call(nodefony.context, "http", function () {
 
     getMethod() {
       return this.request.getMethod();
-    }
-
-
-    flashTwig(key) {
-      if (this.session) {
-        return this.session.getFlashBag(key);
-      }
-      return null;
-    }
-
-    generateAbsoluteUrl(name, variables) {
-      try {
-        let host = this.request.url.protocol + "//" + this.request.url.host;
-        return this.router.generatePath.call(this.router, name, variables, host);
-      } catch (e) {
-        throw e;
-      }
     }
 
     controller(pattern, data) {
@@ -318,10 +270,6 @@ nodefony.register.call(nodefony.context, "http", function () {
       super.clean();
     }
 
-    getUser() {
-      return this.user ||  null;
-    }
-
     send( /*response, context*/ ) {
       if (this.sended) {
         return;
@@ -367,21 +315,6 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.fire("onClose", this);
       // END REQUEST
       this.response.end();
-    }
-
-    logger(pci, severity, msgid, msg) {
-      if (!msgid) {
-        msgid = this.type + " REQUEST";
-      }
-      return super.logger(pci, severity, msgid, msg);
-    }
-
-    getRequest() {
-      return this.request;
-    }
-
-    getResponse() {
-      return this.response;
     }
 
     redirect(Url, status, headers) {
@@ -452,19 +385,6 @@ nodefony.register.call(nodefony.context, "http", function () {
       }
     }
 
-    addCookie(cookie) {
-      if (cookie instanceof nodefony.cookies.cookie) {
-        this.cookies[cookie.name] = cookie;
-      } else {
-        let error = new Error("addCookie cookie not valid !!");
-        this.logger(cookie, "ERROR");
-        throw error;
-      }
-    }
-
-    parseCookies() {
-      return nodefony.cookies.cookiesParser(this);
-    }
   };
   return Http;
 });

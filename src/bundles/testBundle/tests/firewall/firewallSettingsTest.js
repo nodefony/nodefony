@@ -43,14 +43,16 @@ describe("BUNDLE TEST", function () {
     it("test-basic-area", (done) => {
       assert(global.firewall.securedAreas["test-basic-area"]);
       let basic = global.firewall.securedAreas["test-basic-area"];
+
       assert.deepStrictEqual(basic.sessionContext, "default");
       assert.deepStrictEqual(basic.redirect_Https, false);
       assert.deepStrictEqual(basic.providerName, "nodefony");
       assert(basic.provider);
       assert.deepStrictEqual(basic.alwaysUseDefaultTarget, false);
-      assert.deepStrictEqual(basic.factoryName, "passport-basic");
-      assert(basic.factory);
-      assert.deepStrictEqual(basic.factory.name, "basic");
+      assert.deepStrictEqual(basic.name, "test-basic-area");
+      assert(basic.factories.length);
+      assert.deepStrictEqual(basic.factories.length, 1);
+      assert.deepStrictEqual(basic.factories[0].name, "basic");
       assert.deepStrictEqual(basic.cors, null);
       assert.deepStrictEqual(basic.formLogin, null);
       assert.deepStrictEqual(basic.checkLogin, "/test/firewall/basic");
@@ -71,9 +73,10 @@ describe("BUNDLE TEST", function () {
       assert.deepStrictEqual(digest.providerName, "nodefony");
       assert(digest.provider);
       assert.deepStrictEqual(digest.alwaysUseDefaultTarget, false);
-      assert.deepStrictEqual(digest.factoryName, "passport-digest");
-      assert(digest.factory);
-      assert.deepStrictEqual(digest.factory.name, "digest");
+      assert.deepStrictEqual(digest.name, "test-digest-area");
+      assert(digest.factories.length);
+      assert.deepStrictEqual(digest.factories.length, 1);
+      assert.deepStrictEqual(digest.factories[0].name, "digest");
       assert.deepStrictEqual(digest.cors, null);
       assert.deepStrictEqual(digest.formLogin, null);
       assert.deepStrictEqual(digest.checkLogin, "/test/firewall/digest");
@@ -95,9 +98,10 @@ describe("BUNDLE TEST", function () {
       assert.deepStrictEqual(local.providerName, "nodefony");
       assert(local.provider);
       assert.deepStrictEqual(local.alwaysUseDefaultTarget, false);
-      assert.deepStrictEqual(local.factoryName, "passport-local");
-      assert(local.factory);
-      assert.deepStrictEqual(local.factory.name, "local");
+      assert.deepStrictEqual(local.name, "test-local-area");
+      assert(local.factories.length);
+      assert.deepStrictEqual(local.factories.length, 1);
+      assert.deepStrictEqual(local.factories[0].name, "local");
       assert(local.cors);
       assert.deepStrictEqual(local.formLogin, "/test/login");
       assert.deepStrictEqual(local.checkLogin, "/test/firewall/local");

@@ -7,11 +7,14 @@ security:
       in_memory:
         memory:
           users:
-            anonymous: { username:                  "anonymous"  }
+            anonymous:
+              username:                             "anonymous"
+              roles:                                ["ROLE_ANONYMOUS"]
+
     firewalls:
         test-anonymous:
           provider:                                 nodefony
-          pattern:                                  ^/
+          pattern:                                  ^/demo
           anonymous:                                ~
           #stateless:                               ~
           #passport:

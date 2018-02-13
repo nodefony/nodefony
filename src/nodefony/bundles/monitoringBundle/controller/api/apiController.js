@@ -824,11 +824,12 @@ module.exports = class apiController extends nodefony.controller {
           sort.createdAt = -1;
         }
         return sessionEntity.find({}, {})
-          //.populate('username', "username")
+          //.populate('username')
           .sort(sort)
           .skip(parseInt(this.query.start, 10))
           .limit(parseInt(this.query.length, 10))
           .then((result) => {
+            //console.log(result)
             sessions.rows = result;
             return sessionEntity.count();
           }).then((result) => {
@@ -994,7 +995,9 @@ const dataTableSessionParsing = function (query, results) {
       };
       break;
     case "mongoose":
-      user = results.rows[i].username ? results.rows[i].username : {
+      user = results.rows[i].username ? {
+        username: results.rows[i].username
+      } : {
         username: ""
       };
       break;

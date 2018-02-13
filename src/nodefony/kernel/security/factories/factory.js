@@ -24,14 +24,21 @@ module.exports = nodefony.register('Factory', () => {
       return super.logger(pci, severity, msgid, msg);
     }
 
-    handle(context, token) {
-      return this.authenticate(context, token);
+    handle(context) {
+      return this.authenticate(context)
+        .then(token => {
+          return token;
+        })
+        .catch(error => {
+          throw error;
+        });
     }
 
-    authenticate(context, token) {
+    authenticate(context) {
       return new Promise((resolve, reject) => {
         this.logger("TRY AUTHENTICATION " + this.name, "DEBUG");
-        if (!token) {
+        if (!this.token) {
+          let token = null;
           try {
             token = this.createToken(context, this.security.provider);
             if (!this.supportsToken(token)) {
@@ -48,10 +55,10 @@ module.exports = nodefony.register('Factory', () => {
           }
         } else {
           try {
-            if (!this.supportsToken(token)) {
+            if (!this.supportsToken(this.token)) {
               return reject(new Error("Factory " + this.name + " Token Unauthorized !! "));
             }
-            return this.authenticateToken(token, this.security.provider).then((token) => {
+            return this.authenticateToken(this.token, this.security.provider).then((token) => {
               context.factory = this.name;
               return resolve(token);
             }).catch((e) => {
@@ -76,8 +83,8 @@ module.exports = nodefony.register('Factory', () => {
           return provider.loadUserByUsername(token.getUsername()).then((user) => {
             if (user) {
               token.setUser(user);
-              token.setAuthenticated(true);
-              this.logger(`AUTHENTICATION  ${token.getUsername()}  SUCCESSFULLY  PROVIDER ${provider.name}`, "INFO");
+              //token.setAuthenticated(true);
+              //this.logger(`AUTHENTICATION  ${token.getUsername()}  SUCCESSFULLY  PROVIDER ${provider.name}`, "INFO");
               return token;
             }
             throw Error(`user ${token.getUsername()} not found `);

@@ -16,7 +16,7 @@ module.exports = nodefony.registerProvider("memoryProvider", () => {
     loadUserByUsername(username) {
       return new Promise((resolve, reject) => {
         if (username in this.users) {
-          return this.users[username];
+          return resolve(this.users[username]);
         } else {
           return reject(new Error(`Provider : ${this.name} loadUserByUsername user ${username} not Found `));
         }

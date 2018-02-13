@@ -510,7 +510,7 @@ module.exports = class httpKernel extends nodefony.Service {
       }
       context.once('onRequestEnd', () => {
         try {
-          if (context.sessionAutoStart) {
+          if (context.sessionAutoStart || context.hasSession()) {
             return this.sessionService.start(context, context.sessionAutoStart).then((session) => {
               if (!(session instanceof nodefony.Session)) {
                 throw new Error("SESSION START session storage ERROR");
@@ -545,7 +545,10 @@ module.exports = class httpKernel extends nodefony.Service {
   }
 
   onWebsocketRequest(request, type) {
-    if (request.resourceURL.path && this.sockjs && request.resourceURL.path.match(this.sockjs.regPrefix)) {
+    if (request.resourceURL.path &&
+      this.sockjs &&
+      request.resourceURL.path.match(this.sockjs.regPrefix)
+    ) {
       this.logger("websocket drop to sockjs : " + request.resourceURL.path, "DEBUG");
       //let connection = request.accept(null, request.origin);
       //connection.drop(1006, 'TCP connection lost before handshake completed.', false);
@@ -558,7 +561,6 @@ module.exports = class httpKernel extends nodefony.Service {
 
   handleWebsocket(container, request, type) {
     let context = new nodefony.context.websocket(container, request, type);
-    container.set("context", context);
     context.listen(this, "onError", this.onError);
     let resolver = null;
     let next = null;
@@ -566,8 +568,9 @@ module.exports = class httpKernel extends nodefony.Service {
     let secure = false;
     context.once('onConnect', (context) => {
       if (context.security) {
-        this.fire("onSecurity", context);
+        return this.fire("onSecurity", context);
       }
+      return context.fire("onRequest");
     });
     context.once('onFinish', (context) => {
       this.container.leaveScope(container);
@@ -604,7 +607,7 @@ module.exports = class httpKernel extends nodefony.Service {
         return context.fire("connect");
       }
       try {
-        if (context.sessionAutoStart) {
+        if (context.sessionAutoStart || context.hasSession()) {
           return this.sessionService.start(context, context.sessionAutoStart).then((session) => {
             if (!(session instanceof nodefony.Session)) {
               throw new Error("SESSION START session storage ERROR");

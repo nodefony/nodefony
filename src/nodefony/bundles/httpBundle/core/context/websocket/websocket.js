@@ -19,27 +19,21 @@ nodefony.register.call(nodefony.context, "websocket", function () {
     this.fire("onFinish", this, reasonCode, description);
   };
 
-  const websocket = class websocket extends nodefony.Service {
+  const websocket = class websocket extends nodefony.Context {
 
     constructor(container, request, type) {
-      super("WEBSOCKET CONTEXT", container);
-      this.type = type;
+      super(container, request, null, type);
+
       this.protocol = (type === "WEBSOCKET SECURE") ? "wss" : "ws";
       this.scheme = (type === "WEBSOCKET SECURE") ? "wss" : "ws";
       this.isJson = true;
-      this.kernelHttp = this.get("httpKernel");
-      this.requestEnded = false;
+      this.method = this.getMethod();
       this.response = new nodefony.wsResponse(null, this.container, this.type);
-      //I18n
-      this.translation = this.kernelHttp.translation.createTranslation(this);
-      this.set("translation", this.translation);
-      this.kernelHttp = this.container.get("httpKernel");
       this.request = request;
-      this.acceptedProtocol = request.httpRequest.headers["sec-websocket-protocol"] || null;
-      this.method = "WEBSOCKET";
-      this.request.method = "WEBSOCKET";
+      this.request.method = this.method;
       this.remoteAddress = this.request.remoteAddress;
-      this.origin = request.origin;
+      this.origin = this.request.origin;
+      this.acceptedProtocol = request.httpRequest.headers["sec-websocket-protocol"] || null;
       this.request.url = url.parse(this.scheme + "://" + this.request.host);
       this.request.url.hash = this.request.resourceURL.hash;
       this.request.url.search = this.request.resourceURL.search;
@@ -48,29 +42,21 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       this.request.url.path = this.request.resourceURL.path;
       this.url = url.format(this.request.url);
       this.port = this.request.url.port;
-      this.domain = this.request.url.hostname;
-      this.router = this.get("router");
+
+      this.parseCookies();
+      this.cookieSession = this.getCookieSession(this.sessionService.settings.name);
+
       try {
-        this.originUrl = url.parse(request.origin);
+        this.originUrl = url.parse(this.request.origin);
       } catch (e) {
         this.originUrl = url.parse(this.url);
       }
-      this.secureArea = null;
+
+      // domain
       this.domain = this.getHostName();
       this.validDomain = this.isValidDomain();
       this.logger("FROM : " + this.remoteAddress + " ORIGIN : " + this.originUrl.host + " URL : " + this.url, "INFO");
-      // session
-      this.session = null;
-      this.sessionService = this.get("sessions");
-      this.sessionAutoStart = this.sessionService.sessionAutoStart;
-      //parse cookies
-      this.cookies = {};
-      this.parseCookies();
-      this.cookieSession = this.getCookieSession(this.sessionService.settings.name);
-      this.security = null;
-      this.user = null;
-      this.resolver = null;
-      this.nbCallController = 0;
+
       // LISTEN EVENTS
       this.listen(this, "onView", (result) => {
         if (this.response) {
@@ -101,28 +87,12 @@ nodefony.register.call(nodefony.context, "websocket", function () {
     connect(acceptedProtocol) {
       this.connection = this.request.accept(acceptedProtocol || null, this.origin /*, this.request.cookies || null*/ );
       this.response.setConnection(this.connection);
-      //this.response = new nodefony.wsResponse(this.connection, this.container, this.type);
       this.connection.on('close', onClose.bind(this));
       this.requestEnded = true;
       this.fire("onConnect", this, this.connection);
       this.logger("Connection origin : " + this.originUrl.host + " Protocol : " + acceptedProtocol || "Not Defined", "DEBUG");
       // LISTEN EVENTS SOCKET
       this.connection.on('message', this.handleMessage.bind(this));
-    }
-
-    getCookieSession(name) {
-      if (this.cookies[name]) {
-        return this.cookies[name];
-      }
-      return null;
-    }
-
-    isValidDomain() {
-      return this.kernelHttp.isValidDomain(this);
-    }
-
-    isCrossDomain() {
-      return this.kernelHttp.corsManager.isCrossDomain(this);
     }
 
     getRemoteAddress() {
@@ -134,8 +104,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
     }
 
     getHostName() {
-      return this.domain;
-      //return this.originUrl.hostname ;
+      return this.request.url.hostname;
     }
 
     getUserAgent() {
@@ -144,22 +113,6 @@ nodefony.register.call(nodefony.context, "websocket", function () {
 
     getMethod() {
       return "WEBSOCKET";
-    }
-
-    getUser() {
-      return this.user ||  null;
-    }
-
-    addCookie(cookie) {
-      if (cookie instanceof nodefony.cookies.cookie) {
-        this.cookies[cookie.name] = cookie;
-      } else {
-        throw new Error("Response addCookies not valid cookies");
-      }
-    }
-
-    parseCookies() {
-      return nodefony.cookies.cookiesParser(this);
     }
 
     clean() {
@@ -186,22 +139,6 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       this.router = null;
       delete this.router;
       //super.clean();
-    }
-
-    flashTwig(key) {
-      if (this.session) {
-        return this.session.getFlashBag(key);
-      }
-      return null;
-    }
-
-    generateAbsoluteUrl(name, variables) {
-      try {
-        let host = this.request.url.protocol + "//" + this.request.url.host;
-        return this.router.generatePath.call(this.router, name, variables, host);
-      } catch (e) {
-        throw e;
-      }
     }
 
     controller(pattern, data) {
@@ -325,13 +262,6 @@ nodefony.register.call(nodefony.context, "websocket", function () {
 
     handleError(container, error) {
       this.logger("Message : " + error.message, "ERROR");
-    }
-
-    logger(pci, severity, msgid, msg) {
-      if (!msgid) {
-        msgid = this.type + " REQUEST";
-      }
-      return super.logger(pci, severity, msgid, msg);
     }
 
     send(data, type) {

@@ -80,7 +80,11 @@ module.exports = nodefony.register("SecuredArea", function () {
           } else {
             context.response.setStatusCode(401);
           }
-          if (context.session && (context.request.url.pathname !== this.formLogin) && (context.request.url.pathname !== this.checkLogin) && (!this.alwaysUseDefaultTarget)) {
+          if (context.session &&
+            (context.request.url.pathname !== this.formLogin) &&
+            (context.request.url.pathname !== this.checkLogin) &&
+            (!this.alwaysUseDefaultTarget)) {
+
             let target_path = null;
             let area = context.session.getMetaBag("area");
             if (area && area !== this.name) {
@@ -136,7 +140,6 @@ module.exports = nodefony.register("SecuredArea", function () {
           error = new Error(e.message);
           error.code = e.status;
           return error;
-          //return context.fire("onError", context.container, error);
         }
         return e;
       }
@@ -170,9 +173,6 @@ module.exports = nodefony.register("SecuredArea", function () {
       return new Promise((resolve, reject) => {
         return this.handleFactories(context)
           .then((token) => {
-            //if (!token) {
-            //  return resolve(context);
-            //}
             let target = null;
             try {
               let userFull = null;
@@ -226,19 +226,24 @@ module.exports = nodefony.register("SecuredArea", function () {
           })
           .catch((error) => {
             if (!error) {
-              return reject();
+              error = new Error("undefined Error ");
+              error.code = 401;
+              return reject(error);
             }
             if (context.isAjax) {
               context.isJson = true;
             }
-            return reject(context.security.handleError(context, error));
+            let res = context.security.handleError(context, error);
+            if (res) {
+              return reject(res);
+            }
+            return resolve(context);
           });
       });
     }
 
     // Factory
     setFactory(auth, options) {
-      //this.factoryName = auth;
       if (auth) {
         if (auth in nodefony.security.factories) {
           let index = null;
@@ -264,7 +269,7 @@ module.exports = nodefony.register("SecuredArea", function () {
         let index = this.factories.findIndex((factory) => {
           return factory.name === name;
         });
-        if (index >= 0) {
+        if (index > 0) {
           return this.factories[index];
         }
         return null;

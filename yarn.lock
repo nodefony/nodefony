@@ -248,6 +248,10 @@ ajv-keywords@^2.0.0, ajv-keywords@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-2.1.1.tgz#617997fc5f60576894c435f940d819e135b80762"
 
+ajv-keywords@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-3.1.0.tgz#ac2b27939c543e95d2c06e7f7f5c27be4aa543be"
+
 ajv@^4.9.1:
   version "4.11.8"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-4.11.8.tgz#82ffb02b29e662ae53bdc20af15947706739c536"
@@ -260,6 +264,14 @@ ajv@^5.0.0, ajv@^5.1.0, ajv@^5.1.5, ajv@~5.5.1:
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-5.5.2.tgz#73b5eeca3fab653e3d3f9422b341ad42205dc965"
   dependencies:
     co "^4.6.0"
+    fast-deep-equal "^1.0.0"
+    fast-json-stable-stringify "^2.0.0"
+    json-schema-traverse "^0.3.0"
+
+ajv@^6.1.0:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.1.1.tgz#978d597fbc2b7d0e5a5c3ddeb149a682f2abfa0e"
+  dependencies:
     fast-deep-equal "^1.0.0"
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
@@ -1871,7 +1883,7 @@ clone@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/clone/-/clone-2.1.1.tgz#d217d1e961118e3ac9a4b8bba3285553bf647cdb"
 
-cls-bluebird@^2.0.1:
+cls-bluebird@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/cls-bluebird/-/cls-bluebird-2.1.0.tgz#37ef1e080a8ffb55c2f4164f536f1919e7968aee"
   dependencies:
@@ -2478,7 +2490,7 @@ dateformat@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-2.2.0.tgz#4065e2013cf9fb916ddfd82efb506ad4c6769062"
 
-debug@*, debug@3.1.0, debug@^3, debug@^3.0, debug@^3.0.0, debug@^3.1.0:
+debug@*, debug@3.1.0, debug@^3, debug@^3.0, debug@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
   dependencies:
@@ -3731,7 +3743,7 @@ generate-object-property@^1.1.0:
   dependencies:
     is-property "^1.0.0"
 
-generic-pool@^3.1.8:
+generic-pool@^3.4.0:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/generic-pool/-/generic-pool-3.4.1.tgz#54103118d0cb279f77de7a0cc53396e6d0c12781"
 
@@ -5429,7 +5441,7 @@ less-loader@4.0.5, less-loader@^4.0.5:
     loader-utils "^1.1.0"
     pify "^2.3.0"
 
-less@^2.7.2, less@^2.7.3:
+less@^2.7.2:
   version "2.7.3"
   resolved "https://registry.yarnpkg.com/less/-/less-2.7.3.tgz#cc1260f51c900a9ec0d91fb6998139e02507b63b"
   optionalDependencies:
@@ -5437,6 +5449,19 @@ less@^2.7.2, less@^2.7.3:
     graceful-fs "^4.1.2"
     image-size "~0.5.0"
     mime "^1.2.11"
+    mkdirp "^0.5.0"
+    promise "^7.1.1"
+    request "2.81.0"
+    source-map "^0.5.3"
+
+less@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/less/-/less-3.0.0.tgz#d942ff9fe9f2c53b8b4e6b5c5f1ac434681f7aa5"
+  optionalDependencies:
+    errno "^0.1.1"
+    graceful-fs "^4.1.2"
+    image-size "~0.5.0"
+    mime "^1.4.1"
     mkdirp "^0.5.0"
     promise "^7.1.1"
     request "2.81.0"
@@ -6206,13 +6231,13 @@ mocha@^5.0.0:
     mkdirp "0.5.1"
     supports-color "4.4.0"
 
-moment-timezone@^0.5.4, moment-timezone@^0.5.x:
+moment-timezone@^0.5.14, moment-timezone@^0.5.x:
   version "0.5.14"
   resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.14.tgz#4eb38ff9538b80108ba467a458f3ed4268ccfcb1"
   dependencies:
     moment ">= 2.9.0"
 
-moment@2.x.x, "moment@>= 2.9.0", moment@^2.10.6, moment@^2.13.0, moment@^2.19:
+moment@2.x.x, "moment@>= 2.9.0", moment@^2.10.6, moment@^2.19, moment@^2.20.0:
   version "2.20.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.20.1.tgz#d6eb1a46cbcc14a2b2f9434112c1ff8907f313fd"
 
@@ -8469,7 +8494,7 @@ restore-cursor@^2.0.0:
     onetime "^2.0.0"
     signal-exit "^3.0.2"
 
-retry-as-promised@^2.3.1:
+retry-as-promised@^2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/retry-as-promised/-/retry-as-promised-2.3.2.tgz#cd974ee4fd9b5fe03cbf31871ee48221c07737b7"
   dependencies:
@@ -8701,21 +8726,21 @@ seq-queue@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/seq-queue/-/seq-queue-0.0.5.tgz#d56812e1c017a6e4e7c3e3a37a1da6d78dd3c93e"
 
-sequelize@^4.33.2:
-  version "4.33.2"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.33.2.tgz#1d4a090f629fb96949736baa5bbcdcbd84dc8b7c"
+sequelize@^4.33.4:
+  version "4.33.4"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.33.4.tgz#5581183e8bb902499ea1be96aa8585743a2b9b1c"
   dependencies:
-    bluebird "^3.4.6"
-    cls-bluebird "^2.0.1"
-    debug "^3.0.0"
+    bluebird "^3.5.0"
+    cls-bluebird "^2.1.0"
+    debug "^3.1.0"
     depd "^1.1.0"
     dottie "^2.0.0"
-    generic-pool "^3.1.8"
+    generic-pool "^3.4.0"
     inflection "1.12.0"
     lodash "^4.17.1"
-    moment "^2.13.0"
-    moment-timezone "^0.5.4"
-    retry-as-promised "^2.3.1"
+    moment "^2.20.0"
+    moment-timezone "^0.5.14"
+    retry-as-promised "^2.3.2"
     semver "^5.5.0"
     terraformer-wkt-parser "^1.1.2"
     toposort-class "^1.0.1"
@@ -10355,7 +10380,34 @@ webpack-subresource-integrity@^1.0.1:
   dependencies:
     webpack-core "^0.6.8"
 
-webpack@^3.10.0, webpack@~3.10.0:
+webpack@^3.11.0:
+  version "3.11.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.11.0.tgz#77da451b1d7b4b117adaf41a1a93b5742f24d894"
+  dependencies:
+    acorn "^5.0.0"
+    acorn-dynamic-import "^2.0.0"
+    ajv "^6.1.0"
+    ajv-keywords "^3.1.0"
+    async "^2.1.2"
+    enhanced-resolve "^3.4.0"
+    escope "^3.6.0"
+    interpret "^1.0.0"
+    json-loader "^0.5.4"
+    json5 "^0.5.1"
+    loader-runner "^2.3.0"
+    loader-utils "^1.1.0"
+    memory-fs "~0.4.1"
+    mkdirp "~0.5.0"
+    node-libs-browser "^2.0.0"
+    source-map "^0.5.3"
+    supports-color "^4.2.1"
+    tapable "^0.2.7"
+    uglifyjs-webpack-plugin "^0.4.6"
+    watchpack "^1.4.0"
+    webpack-sources "^1.0.1"
+    yargs "^8.0.2"
+
+webpack@~3.10.0:
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.10.0.tgz#5291b875078cf2abf42bdd23afe3f8f96c17d725"
   dependencies:

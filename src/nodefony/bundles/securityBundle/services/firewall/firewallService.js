@@ -297,12 +297,17 @@ module.exports = class security extends nodefony.Service {
             if (context.security.name !== meta.firewall) {
               return this.handleStateLess(context);
             }
-            let factory = context.security.getFactory(meta.factory);
+            let factory = null;
+            if (meta.factory) {
+              factory = context.security.getFactory(meta.factory);
+            }
             if (factory) {
               context.factory = meta.factory;
               token = factory.createToken();
               token.unserialize(meta.user);
               context.user = token.user;
+            } else {
+              return this.handleStateLess(context);
             }
             return context;
           } else {

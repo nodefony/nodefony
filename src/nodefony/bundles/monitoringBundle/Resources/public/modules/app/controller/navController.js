@@ -597,7 +597,7 @@ stage.registerController("navController", function () {
           },
           {
             "name": "username",
-            "data": "user"
+            "data": "user.username"
           },
           {
             "name": "metaBag",

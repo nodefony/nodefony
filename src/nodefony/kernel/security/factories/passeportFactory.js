@@ -8,7 +8,7 @@ try {
 }
 //console.log(passport);
 
-module.exports = nodefony.registerFactory('passport', () => {
+module.exports = nodefony.register('passeportFactory', () => {
 
   const Factory = class passeportFactory extends nodefony.Factory {
 
@@ -17,39 +17,22 @@ module.exports = nodefony.registerFactory('passport', () => {
       this.passport = passport;
       this.passport.framework(nodefonyPassport(this));
       this.strategy = this.getStrategy(this.settings);
-      if (!this.hasStrategy(this.strategy)) {
-        this.passport.use(this.strategy);
-      }
+      this.passport.use(this.strategy);
     }
 
-    hasStrategy(strategy) {
-
-    }
-
-    getStrategy(options) {
-
-    }
-
-    createToken(context = null, provider = null) {
-      try {
-        return new nodefony.security.tokens[this.strategy.name](this.strategy, provider);
-      } catch (e) {
-        throw e;
-      }
-    }
-
-    authenticateToken(context, token) {
+    authenticate(context) {
       return new Promise((resolve, reject) => {
         try {
-          this.passport.authenticate(token.name, {
+          this.passport.authenticate(this.name, {
             session: false,
-          })(context, (error, user) => {
+          })(context, (error, token) => {
             if (error) {
               return reject(error);
             }
-            if (user) {
-              this.logger("AUTHORISATION " + this.name + " SUCCESSFULLY : " + user.username, "INFO");
-              token.setUser(user);
+            if (token) {
+              token.setAuthenticated(true);
+              context.factory = this.name;
+              this.logger(`AUTHENTICATION  ${token.getUsername()}  SUCCESSFULLY `, "INFO");
               return resolve(token);
             }
             return resolve(null);
@@ -59,10 +42,12 @@ module.exports = nodefony.registerFactory('passport', () => {
         }
       });
     }
+
+    createToken(username, password) {
+      return new nodefony.security.tokens.userPassword(username, password);
+    }
+
   };
-
-
-
 
   return Factory;
 });

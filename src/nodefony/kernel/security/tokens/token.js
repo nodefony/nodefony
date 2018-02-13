@@ -16,11 +16,13 @@ module.exports = nodefony.register('Token', () => {
     }
 
     setRoles(roles) {
-      for (let i = 0; i < roles.length; i++) {
-        try {
-          this.roles.push(new nodefony.Role(roles[i]));
-        } catch (e) {
-          throw e;
+      if (roles && roles.length) {
+        for (let i = 0; i < roles.length; i++) {
+          try {
+            this.roles.push(new nodefony.Role(roles[i]));
+          } catch (e) {
+            throw e;
+          }
         }
       }
     }
@@ -44,6 +46,7 @@ module.exports = nodefony.register('Token', () => {
       if (user instanceof nodefony.User) {
         this.user = user;
         this.setRoles(user.roles);
+        this.credentials = this.user.password;
       } else {
         this.user = user;
       }
@@ -73,9 +76,7 @@ module.exports = nodefony.register('Token', () => {
 
     unserialize(user) {
       try {
-        if (user) {
-          return this.user.unserialize(user);
-        }
+        return this.user.unserialize(user);
       } catch (e) {
         throw new Error("Bad User format !!");
       }
