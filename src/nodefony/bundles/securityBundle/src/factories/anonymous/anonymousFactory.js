@@ -14,7 +14,7 @@ module.exports = nodefony.registerFactory("anonymous", () => {
 
     createToken( /*context = null, provider= null*/ ) {
       try {
-        return this.token = new nodefony.security.tokens.anonymous('nodefony', this.name, ["ROLE_ANONYMOUS"]);
+        return new nodefony.security.tokens.anonymous('nodefony', this.name, ["ROLE_ANONYMOUS"]);
       } catch (e) {
         throw e;
       }

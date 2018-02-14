@@ -240,31 +240,10 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.response = null;
       delete this.response;
       delete this.request;
-      this.session = null;
-      delete this.session;
       this.proxy = null;
       delete this.proxy;
-      this.user = null;
-      delete this.user;
-      this.security = null;
-      delete this.security;
       this.promise = null;
       delete this.promise;
-      this.translation = null;
-      delete this.translation;
-      this.cookies = null;
-      delete this.cookies;
-      this.cookieSession = null;
-      delete this.cookieSession;
-      if (this.resolver) {
-        this.resolver.clean();
-      }
-      this.resolver = null;
-      delete this.resolver;
-      this.kernelHttp = null;
-      delete this.kernelHttp;
-      this.router = null;
-      delete this.router;
       this.uploadService = null;
       delete this.uploadService;
       super.clean();

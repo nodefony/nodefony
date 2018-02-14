@@ -175,25 +175,15 @@ module.exports = nodefony.register("SecuredArea", function () {
           .then((token) => {
             let target = null;
             try {
-              let userFull = null;
-              if (token.user instanceof nodefony.User) {
-                userFull = token.serialize();
-              } else {
-                if (token.user.populate) {
-                  userFull = token.user.populate();
-                } else {
-                  userFull = token.user.get();
-                }
-                delete userFull.password;
-              }
               context.user = token.user;
+              context.token = token;
+
               if (context.session) {
                 context.session.migrate();
                 context.session.setMetaBag("security", {
                   firewall: this.name,
-                  user: userFull,
                   factory: context.factory,
-                  tokenName: token.name
+                  token: token.serialize()
                 });
                 if (context.user.lang) {
                   context.session.set("lang", context.user.lang);
@@ -269,12 +259,12 @@ module.exports = nodefony.register("SecuredArea", function () {
         let index = this.factories.findIndex((factory) => {
           return factory.name === name;
         });
-        if (index > 0) {
+        if (index >= 0) {
           return this.factories[index];
         }
         return null;
       }
-      return this.factories;
+      return null;
     }
 
     setProvider(provider) {

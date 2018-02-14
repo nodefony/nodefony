@@ -511,27 +511,24 @@ module.exports = class httpKernel extends nodefony.Service {
       context.once('onRequestEnd', () => {
         try {
           if (context.sessionAutoStart || context.hasSession()) {
-            return this.sessionService.start(context, context.sessionAutoStart).then((session) => {
-              if (!(session instanceof nodefony.Session)) {
-                throw new Error("SESSION START session storage ERROR");
-              }
-              this.logger("AUTOSTART SESSION", "DEBUG");
-              let meta = session.getMetaBag("security");
-              if (meta) {
-                let token = null;
-                if (meta.tokenName) {
-                  token = new nodefony.security.tokens[meta.tokenName]();
-                  token.unserialize(meta.user);
-                  context.user = token.user;
-                } else {
-                  context.user = meta.user || null;
+            return this.sessionService.start(context, context.sessionAutoStart)
+              .then((session) => {
+                if (!(session instanceof nodefony.Session)) {
+                  throw new Error("SESSION START session storage ERROR");
                 }
-              }
-              context.fire("onRequest");
-              return session;
-            }).catch((error) => {
-              throw error;
-            });
+                this.logger("AUTOSTART SESSION", "DEBUG");
+                let token = this.firewall.getSessionToken(context, session);
+                if (token) {
+                  if (!token.isAuthenticated()) {
+                    console.log("pass")
+                    this.firewall.deleteSessionToken(context, session);
+                  }
+                }
+                context.fire("onRequest");
+                return session;
+              }).catch((error) => {
+                throw error;
+              });
           } else {
             return context.fire("onRequest");
           }
@@ -608,15 +605,18 @@ module.exports = class httpKernel extends nodefony.Service {
       }
       try {
         if (context.sessionAutoStart || context.hasSession()) {
-          return this.sessionService.start(context, context.sessionAutoStart).then((session) => {
-            if (!(session instanceof nodefony.Session)) {
-              throw new Error("SESSION START session storage ERROR");
-            }
-            context.fire("connect");
-          }).catch((error) => {
-            context.fire("onError", container, error);
-            return context;
-          });
+          return this.sessionService.start(context, context.sessionAutoStart)
+            .then((session) => {
+              if (!(session instanceof nodefony.Session)) {
+                throw new Error("SESSION START session storage ERROR");
+              }
+              this.logger("AUTOSTART SESSION", "DEBUG");
+              this.firewall.getSessionToken(context, session);
+              context.fire("connect");
+            }).catch((error) => {
+              context.fire("onError", container, error);
+              return context;
+            });
         } else {
           context.fire("connect");
         }

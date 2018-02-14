@@ -45,7 +45,7 @@ module.exports = nodefony.register('Token', () => {
     setUser(user) {
       if (user instanceof nodefony.User) {
         this.user = user;
-        this.setRoles(user.roles);
+        this.setRoles(this.user.roles);
         this.credentials = this.user.password;
       } else {
         this.user = user;
@@ -68,19 +68,35 @@ module.exports = nodefony.register('Token', () => {
     }
 
     serialize() {
+      let user = null;
       if (this.user && this.user.serialize) {
-        return this.user.serialize();
+        user = this.user.serialize();
       }
-      return {};
+      return {
+        name: this.name,
+        roles: this.roles,
+        user: user,
+        authenticated: this.authenticated
+      };
     }
 
-    unserialize(user) {
+    unserialize(token) {
       try {
-        return this.user.unserialize(user);
+        for (let ele in token) {
+          switch (ele) {
+          case "user":
+            this.user.unserialize(token[ele]);
+            break;
+          case "roles":
+            this.setRoles(token[ele]);
+            break;
+          default:
+            this[ele] = token[ele];
+          }
+        }
       } catch (e) {
-        throw new Error("Bad User format !!");
+        throw e;
       }
-      throw new Error("Bad User format !!");
     }
   };
 

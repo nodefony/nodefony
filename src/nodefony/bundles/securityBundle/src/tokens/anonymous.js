@@ -21,11 +21,11 @@ nodefony.registerToken("anonymous", function () {
       return this.secret;
     }
 
-    unserialize(user) {
-      if (!this.user) {
+    unserialize(token) {
+      if (!token.user) {
         this.setUser(new nodefony.User("anonymous"));
       }
-      return super.unserialize(user);
+      return super.unserialize(token);
     }
 
   };

@@ -191,6 +191,61 @@ module.exports = class security extends nodefony.Service {
     return false;
   }
 
+  getFactory(name, area) {
+    let factory = null;
+    if (area) {
+      if (area in this.securedAreas) {
+        if (this.securedAreas[area].nbFactories) {
+          factory = this.securedAreas[area].getFactory(name);
+        }
+        if (factory) {
+          return factory;
+        }
+      }
+      return factory;
+    }
+    for (let area in this.securedAreas) {
+      if (this.securedAreas[area].nbFactories) {
+        factory = this.securedAreas[area].getFactory(name);
+      }
+      if (factory) {
+        return factory;
+      }
+    }
+    return factory;
+  }
+
+  getSessionToken(context, session) {
+    if (session) {
+      let meta = session.getMetaBag("security");
+      if (meta) {
+        let token = null;
+        let factory = null;
+        if (meta.factory) {
+          factory = this.getFactory(meta.factory, meta.firewall);
+        }
+        if (factory) {
+          token = factory.createToken();
+          token.unserialize(meta.token);
+          context.user = token.user;
+          context.token = token;
+          context.factory = meta.factory;
+          context.area = meta.firewall;
+          return token;
+        }
+      }
+    }
+    return null;
+  }
+
+  deleteSessionToken(context, session) {
+    if (session) {
+      session.setMetaBag("security", null);
+      context.token = null;
+      context.user = null;
+    }
+  }
+
   handleCrossDomain(context) {
     let next = null;
     context.crossDomain = context.isCrossDomain();
@@ -291,41 +346,24 @@ module.exports = class security extends nodefony.Service {
     return this.sessionService.start(context, context.sessionAutoStart)
       .then((session) => {
         try {
-          let meta = session.getMetaBag("security");
-          let token = null;
-          if (meta) {
-            if (context.security.name !== meta.firewall) {
-              return this.handleStateLess(context);
-            }
-            let factory = null;
-            if (meta.factory) {
-              factory = context.security.getFactory(meta.factory);
-            }
-            if (factory) {
-              context.factory = meta.factory;
-              token = factory.createToken();
-              token.unserialize(meta.user);
-              context.user = token.user;
-            } else {
-              return this.handleStateLess(context);
-            }
+          if (!(session instanceof nodefony.Session)) {
+            throw new Error("SESSION START session storage ERROR");
+          }
+          let token = this.getSessionToken(context, session);
+          if (token &&
+            token.isAuthenticated() &&
+            context.security.name === context.area
+          ) {
             return context;
           } else {
-            try {
-              if (context.method === "WEBSOCKET") {
-                if (context.security.factories.length && !context.security.anonymous) {
-                  let error = new Error("Unauthorized");
-                  error.code = 401;
-                  throw error;
-                }
+            if (context.method === "WEBSOCKET") {
+              if (context.security.factories.length && !context.security.anonymous) {
+                let error = new Error("Unauthorized");
+                error.code = 401;
+                throw error;
               }
-              return this.handleStateLess(context);
-            } catch (error) {
-              if (!error.code) {
-                error.code = 500;
-              }
-              throw error;
             }
+            return this.handleStateLess(context);
           }
         } catch (error) {
           if (!error.code) {

@@ -91,7 +91,6 @@ describe("BUNDLE TEST", function () {
     });
     it("test-local-area", (done) => {
       assert(global.firewall.securedAreas["test-local-area"]);
-      //console.log(global.firewall.securedAreas["test-local-area"] );
       let local = global.firewall.securedAreas["test-local-area"];
       assert.deepStrictEqual(local.sessionContext, "local");
       assert.deepStrictEqual(local.redirect_Https, false);

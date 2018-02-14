@@ -15,11 +15,13 @@ nodefony.registerToken("userPassword", function () {
 
     }
 
-    unserialize(user) {
+    unserialize(token) {
       if (!this.user) {
-        this.setUser(new nodefony.User(user.username));
+        if (token.user) {
+          this.setUser(new nodefony.User(token.user.username));
+        }
       }
-      return super.unserialize(user);
+      return super.unserialize(token);
     }
 
   };

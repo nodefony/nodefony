@@ -116,29 +116,13 @@ nodefony.register.call(nodefony.context, "websocket", function () {
     }
 
     clean() {
-      //delete this.request ;
       this.request = null;
+      delete this.request;
       if (this.response) {
         this.response.clean();
       }
       this.response = null;
-      this.cookies = null;
-      if (this.translation) {
-        delete this.translation;
-      }
-      if (this.cookieSession) {
-        delete this.cookieSession;
-      }
-      if (this.resolver) {
-        this.resolver.clean();
-      }
-      this.resolver = null;
-      delete this.resolver;
-      this.kernelHttp = null;
-      delete this.kernelHttp;
-      this.router = null;
-      delete this.router;
-      //super.clean();
+      super.clean();
     }
 
     controller(pattern, data) {

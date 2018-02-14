@@ -24,6 +24,7 @@ nodefony.register("Context", () => {
       this.secureArea = null;
       this.security = null;
       this.user = null;
+      this.token = null;
     }
 
     logger(pci, severity, msgid, msg) {
@@ -31,6 +32,37 @@ nodefony.register("Context", () => {
         msgid = this.type + " REQUEST";
       }
       return super.logger(pci, severity, msgid, msg);
+    }
+
+    clean() {
+      this.kernelHttp = null;
+      delete this.kernelHttp;
+      this.router = null;
+      delete this.router;
+      this.crossDomain = null;
+      delete this.crossDomain;
+      this.secureArea = null;
+      delete this.secureArea;
+      this.security = null;
+      delete this.security;
+      this.user = null;
+      delete this.user;
+      this.token = null;
+      delete this.token;
+      if (this.resolver) {
+        this.resolver.clean();
+      }
+      this.resolver = null;
+      delete this.resolver;
+      this.session = null;
+      delete this.session;
+      this.translation = null;
+      delete this.translation;
+      this.cookies = null;
+      delete this.cookies;
+      this.cookieSession = null;
+      delete this.cookieSession;
+      super.clean();
     }
 
     getRequest() {

@@ -9,14 +9,6 @@ module.exports = nodefony.register('Factory', () => {
       this.provider = this.settings.provider ||  this.security.provider;
     }
 
-    getKey() {
-      return this.name;
-    }
-
-    getPosition() {
-      return "http";
-    }
-
     logger(pci, severity, msgid, msg) {
       if (!msgid) {
         msgid = `\x1b[36mFACTORY ${this.name}\x1b[0m`;
@@ -36,7 +28,7 @@ module.exports = nodefony.register('Factory', () => {
 
     authenticate(context) {
       return new Promise((resolve, reject) => {
-        this.logger("TRY AUTHENTICATION " + this.name, "DEBUG");
+        this.logger("FACTORY AUTHENTICATION " + this.name, "DEBUG");
         if (!this.token) {
           let token = null;
           try {
@@ -83,8 +75,7 @@ module.exports = nodefony.register('Factory', () => {
           return provider.loadUserByUsername(token.getUsername()).then((user) => {
             if (user) {
               token.setUser(user);
-              //token.setAuthenticated(true);
-              //this.logger(`AUTHENTICATION  ${token.getUsername()}  SUCCESSFULLY  PROVIDER ${provider.name}`, "INFO");
+              this.logger(`TRY AUTHENTICATION  ${token.getUsername()}  PROVIDER ${provider.name}`, "DEBUG");
               return token;
             }
             throw Error(`user ${token.getUsername()} not found `);
