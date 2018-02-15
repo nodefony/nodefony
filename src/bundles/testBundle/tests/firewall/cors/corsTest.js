@@ -150,8 +150,8 @@ describe("BUNDLE TEST", function () {
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
           let ret = JSON.parse(chunk);
-          assert.deepStrictEqual(ret.id, global.session);
           assert.ok(ret.cross, "cross domain error");
+          assert.deepStrictEqual(ret.id, global.session);
           done();
         });
       });

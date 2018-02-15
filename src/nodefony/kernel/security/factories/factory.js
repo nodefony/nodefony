@@ -36,12 +36,13 @@ module.exports = nodefony.register('Factory', () => {
             if (!this.supportsToken(token)) {
               return reject(new Error("Factory " + this.name + " Token Unauthorized !! "));
             }
-            return this.authenticateToken(token, this.security.provider).then((token) => {
-              context.factory = this.name;
-              return resolve(token);
-            }).catch((e) => {
-              return reject(e);
-            });
+            return this.authenticateToken(token, this.security.provider)
+              .then((token) => {
+                context.factory = this.name;
+                return resolve(token);
+              }).catch((e) => {
+                return reject(e);
+              });
           } catch (e) {
             return reject(e);
           }
@@ -50,12 +51,13 @@ module.exports = nodefony.register('Factory', () => {
             if (!this.supportsToken(this.token)) {
               return reject(new Error("Factory " + this.name + " Token Unauthorized !! "));
             }
-            return this.authenticateToken(this.token, this.security.provider).then((token) => {
-              context.factory = this.name;
-              return resolve(token);
-            }).catch((e) => {
-              return reject(e);
-            });
+            return this.authenticateToken(this.token, this.security.provider)
+              .then((token) => {
+                context.factory = this.name;
+                return resolve(token);
+              }).catch((e) => {
+                return reject(e);
+              });
           } catch (e) {
             return reject(e);
           }
@@ -72,16 +74,17 @@ module.exports = nodefony.register('Factory', () => {
     authenticateToken(token, provider) {
       if (provider) {
         return provider.authenticate(token).then((token) => {
-          return provider.loadUserByUsername(token.getUsername()).then((user) => {
-            if (user) {
-              token.setUser(user);
-              this.logger(`TRY AUTHENTICATION  ${token.getUsername()}  PROVIDER ${provider.name}`, "DEBUG");
-              return token;
-            }
-            throw Error(`user ${token.getUsername()} not found `);
-          }).catch((error) => {
-            throw error;
-          });
+          return provider.loadUserByUsername(token.getUsername())
+            .then((user) => {
+              if (user) {
+                token.setUser(user);
+                this.logger(`TRY AUTHENTICATION  ${token.getUsername()}  PROVIDER ${provider.name}`, "DEBUG");
+                return token;
+              }
+              throw Error(`user ${token.getUsername()} not found `);
+            }).catch((error) => {
+              throw error;
+            });
         }).catch((error) => {
           throw error;
         });

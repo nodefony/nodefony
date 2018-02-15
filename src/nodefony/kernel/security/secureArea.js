@@ -174,18 +174,21 @@ module.exports = nodefony.register("SecuredArea", function () {
         return this.handleFactories(context)
           .then((token) => {
             let target = null;
+            let serialize = null;
             try {
-              context.user = token.user;
-              context.token = token;
-
+              if (token) {
+                context.user = token.user;
+                context.token = token;
+                serialize = token.serialize();
+              }
               if (context.session) {
                 context.session.migrate();
                 context.session.setMetaBag("security", {
                   firewall: this.name,
                   factory: context.factory,
-                  token: token.serialize()
+                  token: serialize
                 });
-                if (context.user.lang) {
+                if (context.user && context.user.lang) {
                   context.session.set("lang", context.user.lang);
                 } else {
                   context.session.set("lang", context.translation.defaultLocale);

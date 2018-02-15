@@ -56,7 +56,6 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.validDomain = this.isValidDomain();
       this.remoteAddress = this.request.remoteAddress;
 
-      this.logger("FROM : " + this.remoteAddress + " ORIGIN : " + this.originUrl.host + " URL : " + this.url, "INFO", (this.isAjax ? this.type + " REQUEST AJAX " + this.method : this.type + " REQUEST " + this.method));
 
       this.once("onRequest", this.handle.bind(this));
       this.once("onResponse", this.send.bind(this));

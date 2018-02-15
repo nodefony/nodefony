@@ -464,6 +464,7 @@ module.exports = class httpKernel extends nodefony.Service {
     let secure = false;
     //response events
     context.response.response.once("finish", () => {
+
       if (context.finished) {
         return;
       }
@@ -473,9 +474,16 @@ module.exports = class httpKernel extends nodefony.Service {
       context.fire("onFinish", context);
       context.finished = true;
       this.container.leaveScope(container);
-      if (context) {
-        context.clean();
-      }
+      this.logger("FROM : " +
+        context.remoteAddress +
+        " ORIGIN : " + context.originUrl.host +
+        " URL : " +
+        context.url,
+        "INFO",
+        (context.isAjax ? context.type +
+          " REQUEST AJAX " + context.method : context.type +
+          " REQUEST " + context.method));
+      context.clean();
       context = null;
       request = null;
       response = null;
@@ -516,11 +524,10 @@ module.exports = class httpKernel extends nodefony.Service {
                 if (!(session instanceof nodefony.Session)) {
                   throw new Error("SESSION START session storage ERROR");
                 }
-                this.logger("AUTOSTART SESSION", "DEBUG");
+                //this.logger("AUTOSTART SESSION", "DEBUG");
                 let token = this.firewall.getSessionToken(context, session);
                 if (token) {
                   if (!token.isAuthenticated()) {
-                    console.log("pass")
                     this.firewall.deleteSessionToken(context, session);
                   }
                 }
