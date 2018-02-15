@@ -6,7 +6,8 @@ module.exports = nodefony.register('Factory', () => {
       super(name, security.container, security.notificationsCenter);
       this.settings = settings ||  {};
       this.security = security;
-      this.provider = this.settings.provider ||  this.security.provider;
+      this.providerName = this.settings.provider || this.security.providerName;
+      this.provider = this.security.provider;
     }
 
     logger(pci, severity, msgid, msg) {
@@ -29,43 +30,27 @@ module.exports = nodefony.register('Factory', () => {
     authenticate(context) {
       return new Promise((resolve, reject) => {
         this.logger("FACTORY AUTHENTICATION " + this.name, "DEBUG");
-        if (!this.token) {
-          let token = null;
-          try {
-            token = this.createToken(context, this.security.provider);
-            if (!this.supportsToken(token)) {
-              return reject(new Error("Factory " + this.name + " Token Unauthorized !! "));
-            }
-            return this.authenticateToken(token, this.security.provider)
-              .then((token) => {
-                context.factory = this.name;
-                return resolve(token);
-              }).catch((e) => {
-                return reject(e);
-              });
-          } catch (e) {
-            return reject(e);
+        let token = null;
+        try {
+          token = this.createToken(context, this.providerName);
+          if (!this.supportsToken(token)) {
+            return reject(new Error("Factory " + this.name + " Token Unauthorized !! "));
           }
-        } else {
-          try {
-            if (!this.supportsToken(this.token)) {
-              return reject(new Error("Factory " + this.name + " Token Unauthorized !! "));
-            }
-            return this.authenticateToken(this.token, this.security.provider)
-              .then((token) => {
-                context.factory = this.name;
-                return resolve(token);
-              }).catch((e) => {
-                return reject(e);
-              });
-          } catch (e) {
-            return reject(e);
-          }
+          return this.authenticateToken(token, this.provider)
+            .then((token) => {
+              token.setFactory(this.name);
+              token.setProvider(this.providerName);
+              return resolve(token);
+            }).catch((e) => {
+              return reject(e);
+            });
+        } catch (e) {
+          return reject(e);
         }
       });
     }
 
-    createToken( /* context, provider*/ ) {}
+    createToken( /* context, providerName*/ ) {}
 
     supportsToken( /*token*/ ) {
       return true;

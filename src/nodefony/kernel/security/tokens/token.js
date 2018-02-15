@@ -9,6 +9,16 @@ module.exports = nodefony.register('Token', () => {
       this.user = null;
       this.credentials = "";
       this.authenticated = false;
+      this.factory = null;
+      this.provider = null;
+    }
+
+    setFactory(name) {
+      this.factory = name;
+    }
+
+    setProvider(name) {
+      this.provider = name;
     }
 
     getRoles() {
@@ -76,7 +86,9 @@ module.exports = nodefony.register('Token', () => {
         name: this.name,
         roles: this.roles,
         user: user,
-        authenticated: this.authenticated
+        authenticated: this.authenticated,
+        factory: this.factory,
+        provider: this.provider
       };
     }
 

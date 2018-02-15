@@ -391,7 +391,6 @@
           {% else %}
             FIREWALL
           {% endif %}
-
         </label>
 
         {% if context_secure %}
@@ -407,85 +406,65 @@
                   {{context_secure.name}}
                 </label>
               </li>
-              {% if context_secure.factory %}
+              {% if context_secure.name != "OFF" %}
                 <li>
-                  <label >
-                    Authentification</label>
-                  <span class="label-nodefony black">{{context_secure.factory}}</span>
+                  <label>
+                    Provider</label>
+                  <span class="label-nodefony black">{{context_secure.provider}}</span>
+                </li>
+                <li>
+                  <label>
+                    State</label>
+                  <span class="label-nodefony black">{{context_secure.state}}</span>
+                </li>
+                <li>
+                  <label>
+                    Context</label>
+                  <span class="label-nodefony black">{{context_secure.context}}</span>
                 </li>
               {% endif %}
-              <li>
-                <label >
-                  State</label>
-                <span class="label-nodefony black">{{context_secure.state}}</span>
-              </li>
-              <li>
-                <label >
-                  Context</label>
-                <span class="label-nodefony black">{{context_secure.context}}</span>
-              </li>
+
               <li class="separator"></li>
               <li>
                 <label style="color:#999">TOKEN</label>
               </li>
               {% if context_secure.token %}
                 <li>
-                  <label >
-                    Name</label>
-                  <span class="label-nodefony black">{{context_secure.token}}</span>
-                </li>
-              {% endif %}
-              {% if context_secure.user %}
-                <li>
-                  <label >
-                    Authenticated</label>
-                  <label class="label-nodefony black">Yes</label>
-                </li>
-                <li class="separator"></li>
-                <li>
-                  <label style="color:#999">USER</label>
+                  <label>Name</label>
+                  <span class="label-nodefony black">{{context_secure.token.name}}</span>
                 </li>
                 <li>
-                  <label >
-                    username</label>
-                  <label class="label-nodefony black">{{context_secure.user.username}}</label>
+                  <label>Factory</label>
+                  <span class="label-nodefony black">{{context_secure.token.factory}}</span>
                 </li>
                 <li>
-                  <label >
-                    Provider</label>
-                  <span class="label-nodefony black">{{context_secure.user.provider}}</span>
+                  <label>Provider</label>
+                  <span class="label-nodefony black">{{context_secure.token.provider}}</span>
                 </li>
                 <li>
-                  <label >
-                    Lang</label>
-                  <span class="label-nodefony black">{{context_secure.user.lang}}</span>
+                  <label>Authenticated</label>
+                  <label class="label-nodefony black">{{context_secure.token.authenticated}}</label>
                 </li>
-                <li>
-                  <label >
-                    name</label>
-                  <span class="label-nodefony black">{{context_secure.user.name}}</span>
-                </li>
-                <li>
-                  <label >
-                    surname</label>
-                  <span class="label-nodefony black">{{context_secure.user.surname}}</span>
-                </li>
-                <li>
-                  <label >
-                    roles</label>
-                  <span class="label-nodefony black">{{context_secure.user.roles}}</span>
-                </li>
-                <li>
-                  <label >
-                    firewall</label>
-                  <span class="label-nodefony black">{{context_secure.firewall}}</span>
-                </li>
-              {% else %}
-                <li>
-                  <label >
-                    Authenticated</label>
-                  <label class="label-nodefony black">No</label>
-                </li>
+                {% if context_secure.user %}
+                  <li>
+                    <label style="color:#999">USER</label>
+                  </li>
+                  <li>
+                    <label >
+                      username</label>
+                    <label class="label-nodefony black">{{context_secure.user.username}}</label>
+                  </li>
+                  <li>
+                    <label >
+                      Lang</label>
+                    <span class="label-nodefony black">{{context_secure.user.lang}}</span>
+                  </li>
+                  <li>
+                    <label >
+                      roles</label>
+                    <span class="label-nodefony black">{{context_secure.user.roles}}</span>
+                  </li>
+                {% endif %}
               {% endif %}
             </ul>
           </div>

@@ -382,35 +382,28 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         }
       });
     }
-    let secu = null;
+    let secu = context.session ? context.session.getMetaBag("security") : null;
     if (context.security) {
-      secu = context.session ? context.session.getMetaBag("security") : null;
       let token = null;
-      let factory = null;
-      if (context.factory) {
-        //token = context.security.factory.token;
-        factory = context.factory;
-      }
+
       if (secu) {
-        token = secu.tokenName;
+        token = secu.token;
       }
 
       context.profiling.context_secure = {
         name: context.security.name,
-        factory: factory,
+        provider: context.security.providerName,
         token: token,
         user: context.user,
-        firewall: secu ? secu.firewall : null,
+        firewall: context.security.name,
         state: context.security.stateLess ? "stateless" :  "statefull",
         context: context.security.sessionContext
       };
     } else {
-      secu = context.session ? context.session.getMetaBag("security") : null;
       if (secu) {
         context.profiling.context_secure = {
           name: "OFF",
-          factory: null,
-          token: null,
+          token: secu.token,
           user: context.user,
           firewall: secu.firewall
         };

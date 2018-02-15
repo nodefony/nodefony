@@ -8,11 +8,9 @@ nodefony.registerToken("userPassword", function () {
 
     constructor(user, passwd) {
       super("userPassword");
-
       if (user) {
         this.setUser(new nodefony.User(user, passwd));
       }
-
     }
 
     unserialize(token) {

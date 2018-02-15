@@ -15,7 +15,7 @@ module.exports = nodefony.registerFactory("passport-digest", () => {
       return new DigestStrategy(options, (username, done) => {
         this.logger("TRY AUTHORISATION " + this.name + " : " + username, "DEBUG");
         let mytoken = this.createToken(username);
-        this.authenticateToken(mytoken, this.security.provider).then((token) => {
+        this.authenticateToken(mytoken, this.provider).then((token) => {
           done(null, token, token.getCredentials());
           return token;
         }).catch((error) => {

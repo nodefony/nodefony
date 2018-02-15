@@ -151,9 +151,9 @@ module.exports = class security extends nodefony.Service {
         context.response.setHeaders(this.settings[context.scheme]);
         context.once('onRequestEnd', () => {
           return this.handle(context)
-            .then((res) => {
-              if (res) {
-                return context.fire("onRequest");
+            .then((ctx) => {
+              if (ctx) {
+                return ctx.fire("onRequest");
               }
             })
             .catch((error) => {
@@ -164,9 +164,9 @@ module.exports = class security extends nodefony.Service {
       case "WEBSOCKET SECURE":
       case "WEBSOCKET":
         return this.handle(context)
-          .then((res) => {
-            if (res) {
-              return context.fire("onRequest");
+          .then((ctx) => {
+            if (ctx) {
+              return ctx.fire("onRequest");
             }
           })
           .catch((error) => {
@@ -217,20 +217,24 @@ module.exports = class security extends nodefony.Service {
 
   getSessionToken(context, session) {
     if (session) {
+
       let meta = session.getMetaBag("security");
       if (meta) {
+        if (context.security) {
+          if (context.security.name === meta.firewall) {
+
+          }
+        }
         let token = null;
         let factory = null;
-        if (meta.factory) {
-          factory = this.getFactory(meta.factory, meta.firewall);
+        if (meta.token && meta.token.factory) {
+          factory = this.getFactory(meta.token.factory, meta.firewall);
         }
         if (factory) {
-          token = factory.createToken();
+          token = factory.createToken(context, meta.token.provider);
           token.unserialize(meta.token);
           context.user = token.user;
           context.token = token;
-          context.factory = meta.factory;
-          context.area = meta.firewall;
           return token;
         }
       }
@@ -291,7 +295,7 @@ module.exports = class security extends nodefony.Service {
           if (context.sessionAutoStart) {
             context.sessionAutoStart = context.security.sessionContext;
             return this.sessionService.start(context, context.sessionAutoStart)
-              .then(( /*session*/ ) => {
+              .then((session) => {
                 return this.handleStateLess(context)
                   .then((ctx) => {
                     return resolve(ctx);
@@ -300,6 +304,7 @@ module.exports = class security extends nodefony.Service {
                     if (!error.code) {
                       error.code = 401;
                     }
+                    session.invalidate();
                     return reject(error);
                   });
               })
@@ -351,8 +356,7 @@ module.exports = class security extends nodefony.Service {
           }
           let token = this.getSessionToken(context, session);
           if (token &&
-            token.isAuthenticated() &&
-            context.security.name === context.area
+            token.isAuthenticated()
           ) {
             return context;
           } else {
@@ -439,7 +443,7 @@ module.exports = class security extends nodefony.Service {
               }
               break;
             default:
-              this.once("onBoot", () => {
+              this.once("onReady", () => {
                 if (config in nodefony.security.factories) {
                   area.setFactory(config, param[config]);
                 } else {

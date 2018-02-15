@@ -28,8 +28,10 @@ module.exports = nodefony.register("SecuredArea", function () {
             this.provider = this.firewall.providerManager.getProvider(this.providerName);
           } else {
             if (this.anonymous) {
+              this.providerName = "anonymous";
               this.provider = this.firewall.providerManager.getProvider("anonymous");
             } else {
+              this.providerName = "nodefony";
               this.provider = this.firewall.providerManager.getProvider("nodefony");
             }
           }
@@ -185,7 +187,6 @@ module.exports = nodefony.register("SecuredArea", function () {
                 context.session.migrate();
                 context.session.setMetaBag("security", {
                   firewall: this.name,
-                  factory: context.factory,
                   token: serialize
                 });
                 if (context.user && context.user.lang) {
@@ -271,7 +272,6 @@ module.exports = nodefony.register("SecuredArea", function () {
     }
 
     setProvider(provider) {
-      //console.log(provider)
       this.providerName = provider;
     }
 

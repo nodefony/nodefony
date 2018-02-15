@@ -507,7 +507,9 @@ module.exports = class httpKernel extends nodefony.Service {
         if (controller.sessionAutoStart) {
           context.sessionAutoStart = controller.sessionAutoStart;
         }
-        secure = this.firewall.isSecure(context);
+        if (this.firewall) {
+          secure = this.firewall.isSecure(context);
+        }
       } else {
         let error = new Error("Not Found");
         error.code = 404;
@@ -525,10 +527,12 @@ module.exports = class httpKernel extends nodefony.Service {
                   throw new Error("SESSION START session storage ERROR");
                 }
                 //this.logger("AUTOSTART SESSION", "DEBUG");
-                let token = this.firewall.getSessionToken(context, session);
-                if (token) {
-                  if (!token.isAuthenticated()) {
-                    this.firewall.deleteSessionToken(context, session);
+                if (this.firewall) {
+                  let token = this.firewall.getSessionToken(context, session);
+                  if (token) {
+                    if (!token.isAuthenticated()) {
+                      this.firewall.deleteSessionToken(context, session);
+                    }
                   }
                 }
                 context.fire("onRequest");
@@ -601,7 +605,9 @@ module.exports = class httpKernel extends nodefony.Service {
         if (controller.sessionAutoStart) {
           context.sessionAutoStart = controller.sessionAutoStart;
         }
-        secure = this.firewall.isSecure(context);
+        if (this.firewall) {
+          secure = this.firewall.isSecure(context);
+        }
       } else {
         let error = new Error("Not Found");
         error.code = 404;
@@ -618,7 +624,9 @@ module.exports = class httpKernel extends nodefony.Service {
                 throw new Error("SESSION START session storage ERROR");
               }
               this.logger("AUTOSTART SESSION", "DEBUG");
-              this.firewall.getSessionToken(context, session);
+              if (this.firewall) {
+                this.firewall.getSessionToken(context, session);
+              }
               context.fire("connect");
             }).catch((error) => {
               context.fire("onError", container, error);
