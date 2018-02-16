@@ -7,7 +7,13 @@ module.exports = nodefony.register('Factory', () => {
       this.settings = settings ||  {};
       this.security = security;
       this.providerName = this.settings.provider || this.security.providerName;
-      this.provider = this.security.provider;
+      this.kernel.on("onPostReady", () => {
+        if (this.providerName && this.providerName !== this.security.providerName) {
+          this.provider = this.security.getProvider(this.providerName);
+        } else {
+          this.provider = this.security.provider;
+        }
+      });
     }
 
     logger(pci, severity, msgid, msg) {

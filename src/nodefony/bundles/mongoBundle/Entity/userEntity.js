@@ -17,10 +17,6 @@ const schema = {
   password: {
     type: String
   },
-  provider: {
-    type: String,
-    default: "nodefony"
-  },
   enabled: {
     type: Boolean,
     default: true

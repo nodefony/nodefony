@@ -528,12 +528,7 @@ module.exports = class httpKernel extends nodefony.Service {
                 }
                 //this.logger("AUTOSTART SESSION", "DEBUG");
                 if (this.firewall) {
-                  let token = this.firewall.getSessionToken(context, session);
-                  if (token) {
-                    if (!token.isAuthenticated()) {
-                      this.firewall.deleteSessionToken(context, session);
-                    }
-                  }
+                  this.firewall.getSessionToken(context, session);
                 }
                 context.fire("onRequest");
                 return session;

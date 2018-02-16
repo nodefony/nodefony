@@ -383,13 +383,11 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       });
     }
     let secu = context.session ? context.session.getMetaBag("security") : null;
+    let token = null;
+    if (context.token) {
+      token = context.token;
+    }
     if (context.security) {
-      let token = null;
-
-      if (secu) {
-        token = secu.token;
-      }
-
       context.profiling.context_secure = {
         name: context.security.name,
         provider: context.security.providerName,
@@ -408,7 +406,15 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
           firewall: secu.firewall
         };
       } else {
-        context.profiling.context_secure = null;
+        if (token) {
+          context.profiling.context_secure = {
+            name: "OFF",
+            token: token,
+            user: context.user
+          };
+        } else {
+          context.profiling.context_secure = null;
+        }
       }
     }
     if (context.resolver.route.defaults) {

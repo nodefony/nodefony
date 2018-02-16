@@ -21,7 +21,6 @@ module.exports = nodefony.registerProvider("userProvider", () => {
             serialize.password,
             serialize.roles,
             serialize.lang,
-            serialize.provider,
             serialize.enabled,
             serialize.userNonExpired,
             serialize.credentialsNonExpired,

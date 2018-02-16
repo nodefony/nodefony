@@ -19,10 +19,6 @@ const schema = {
     allowNull: false
   },
   password: Sequelize.STRING,
-  provider: {
-    type: Sequelize.STRING,
-    defaultValue: "nodefony"
-  },
   enabled: {
     type: Sequelize.BOOLEAN,
     defaultValue: true

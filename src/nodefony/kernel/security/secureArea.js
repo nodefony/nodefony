@@ -22,10 +22,19 @@ module.exports = nodefony.register("SecuredArea", function () {
       this.alwaysUseDefaultTarget = false;
       this.stateLess = false;
       this.anonymous = false;
-      this.once("onReady", () => {
+      this.once("onPostReady", () => {
         try {
-          if (this.providerName in this.firewall.providerManager.providers) {
-            this.provider = this.firewall.providerManager.getProvider(this.providerName);
+          if (this.providerName) {
+            if (this.providerName in this.firewall.providerManager.providers) {
+              this.provider = this.firewall.providerManager.getProvider(this.providerName);
+            } else {
+              if (this.anonymous) {
+                this.providerName = "anonymous";
+                this.provider = this.firewall.providerManager.getProvider("anonymous");
+              } else {
+                throw new Error(`Provider : ${this.providerName} not found in firewall ${this.name}`);
+              }
+            }
           } else {
             if (this.anonymous) {
               this.providerName = "anonymous";

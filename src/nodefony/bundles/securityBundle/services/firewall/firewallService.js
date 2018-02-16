@@ -217,12 +217,13 @@ module.exports = class security extends nodefony.Service {
 
   getSessionToken(context, session) {
     if (session) {
-
       let meta = session.getMetaBag("security");
       if (meta) {
         if (context.security) {
-          if (context.security.name === meta.firewall) {
-
+          if (context.security.name !== meta.firewall) {
+            if (meta.token.factory === "anonymous") {
+              return null;
+            }
           }
         }
         let token = null;
@@ -233,6 +234,12 @@ module.exports = class security extends nodefony.Service {
         if (factory) {
           token = factory.createToken(context, meta.token.provider);
           token.unserialize(meta.token);
+          if (token) {
+            if (!token.isAuthenticated()) {
+              this.deleteSessionToken(context, session);
+              return null;
+            }
+          }
           context.user = token.user;
           context.token = token;
           return token;

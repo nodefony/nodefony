@@ -7,7 +7,6 @@ module.exports = nodefony.register('User', () => {
       password,
       roles = ["ROLE_USER"],
       lang = "en-en",
-      provider = "",
       enabled = true,
       userNonExpired = true,
       credentialsNonExpired = true,
@@ -27,7 +26,6 @@ module.exports = nodefony.register('User', () => {
       this.roles = roles;
       this.lang = lang;
       this.enabled = enabled;
-      this.provider = provider;
       this.accountNonExpired = userNonExpired;
       this.credentialsNonExpired = credentialsNonExpired;
       this.accountNonLocked = accountNonLocked;
@@ -78,7 +76,6 @@ module.exports = nodefony.register('User', () => {
         surname: this.surname,
         roles: this.roles,
         lang: this.lang,
-        provider: this.provider,
         enabled: this.enabled,
         accountNonExpired: this.accountNonExpired,
         credentialsNonExpired: this.credentialsNonExpired,

@@ -13,15 +13,10 @@ security:
 
     firewalls:
         test-anonymous:
-          provider:                                 nodefony
+          #provider:                                nodefony
           pattern:                                  ^/demo
           anonymous:                                ~
-          #stateless:                               ~
-          #passport:
-          #  strategy:
-          #    name:                                local
-          #    usernameField:                       'email'
-          #    passwordField:                       'passwd'
+          stateless:                                ~
         # main
         test-main-area:
             pattern:                                ^/test/firewall/anonymous

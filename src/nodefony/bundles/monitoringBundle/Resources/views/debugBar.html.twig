@@ -604,6 +604,9 @@
             {% endif %}
             <div class="details">
               <ul>
+                <li>
+                  <label style="color:#999">REQUEST</label>
+                </li>
                 {% for key, value in request %}
                   {% if key == "url" %}
                     <li>
@@ -755,6 +758,9 @@
             <label class="label-nodefony label-success">{{ timeRequest }}</label>
             <div class="details">
               <ul>
+                <li>
+                  <label style="color:#999">RESPONSE</label>
+                </li>
                 {% for key, value in response %}
                   {% if key == "statuscode" %}
                     <li>

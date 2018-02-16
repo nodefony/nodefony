@@ -55,7 +55,7 @@ module.exports = nodefony.register("kernel", function () {
   };
 
   const defaultOptions = {
-    nbListeners: 40
+    nbListeners: 60
   };
   /**
    *  KERKEL class
