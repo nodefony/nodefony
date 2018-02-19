@@ -117,7 +117,7 @@ nodefony.register("Context", () => {
       }
     }
 
-    flashTwig(key) {
+    getFlashBag(key) {
       if (this.session) {
         return this.session.getFlashBag(key);
       }

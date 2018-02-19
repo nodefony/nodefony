@@ -165,7 +165,7 @@ module.exports = nodefony.register("Request", function () {
       this.request.on('data', (data) => {
         this.dataSize += data.length;
       });
-      this.context.on("onRequestEnd", () => {
+      this.context.once("onRequestEnd", () => {
         this.request.body = this.query;
       });
       try {

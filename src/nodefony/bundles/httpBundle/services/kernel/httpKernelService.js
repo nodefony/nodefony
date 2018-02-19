@@ -167,7 +167,7 @@ module.exports = class httpKernel extends nodefony.Service {
     }
   }
 
-  extendTwig(param, context) {
+  extendTemplate(param, context) {
     return nodefony.extend({}, param, {
       nodefony: {
         url: context.request.url,
@@ -175,7 +175,7 @@ module.exports = class httpKernel extends nodefony.Service {
         debug: this.kernel.debug,
         local: context.translation.defaultLocale.substr(0, 2)
       },
-      getFlashBag: context.flashTwig.bind(context),
+      getFlashBag: context.getFlashBag.bind(context),
       render: context.render.bind(context),
       controller: context.controller.bind(context),
       trans: context.translation.trans.bind(context.translation),
@@ -464,7 +464,6 @@ module.exports = class httpKernel extends nodefony.Service {
     let secure = false;
     //response events
     context.response.response.once("finish", () => {
-
       if (context.finished) {
         return;
       }
@@ -474,15 +473,7 @@ module.exports = class httpKernel extends nodefony.Service {
       context.fire("onFinish", context);
       context.finished = true;
       this.container.leaveScope(container);
-      this.logger("FROM : " +
-        context.remoteAddress +
-        " ORIGIN : " + context.originUrl.host +
-        " URL : " +
-        context.url,
-        "INFO",
-        (context.isAjax ? context.type +
-          " REQUEST AJAX " + context.method : context.type +
-          " REQUEST " + context.method));
+
       context.clean();
       context = null;
       request = null;
@@ -515,6 +506,15 @@ module.exports = class httpKernel extends nodefony.Service {
         error.code = 404;
         throw error;
       }
+      this.logger("FROM : " +
+        context.remoteAddress +
+        " ORIGIN : " + context.originUrl.host +
+        " URL : " +
+        context.url,
+        "INFO",
+        (context.isAjax ? context.type +
+          " REQUEST AJAX " + context.method : context.type +
+          " REQUEST " + context.method));
       if (secure) {
         return this.fire("onSecurity", context);
       }

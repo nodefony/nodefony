@@ -83,8 +83,8 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
 
       this.debugView = this.httpKernel.getTemplate("monitoringBundle::debugBar.html.twig");
 
-      if (this.settings.storage.active) {
-        this.storageProfiling = this.settings.storage.requests;
+      if (this.settings.profiler.active) {
+        this.storageProfiling = this.settings.profiler.storage;
       } else {
         this.storageProfiling = null;
       }
@@ -646,7 +646,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
               }
               if ((!xml) && bool && (response.body.indexOf("</body>") >= 0)) {
                 try {
-                  let result = this.debugView.render(this.httpKernel.extendTwig(context.profiling, context));
+                  let result = this.debugView.render(this.httpKernel.extendTemplate(context.profiling, context));
                   response.body = response.body.replace("</body>", result + "\n </body>");
                   if (context.type === "HTTP2") {
                     this.pushAsset(context);
@@ -693,7 +693,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
             }
             if ((!xml) && bool && (response.body.indexOf("</body>") >= 0)) {
               try {
-                let result = this.debugView.render(this.httpKernel.extendTwig(context.profiling, context));
+                let result = this.debugView.render(this.httpKernel.extendTemplate(context.profiling, context));
                 response.body = response.body.replace("</body>", result + "\n </body>");
                 if (context.type === "HTTP2") {
                   this.pushAsset(context);
@@ -744,22 +744,16 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
   }
 
   isMonitoring(context) {
-    /*var stop = this.storageProfiling && this.settings.debugBar ;
-    if( ! stop){
-    	return false;
-    } */
-
     if (!context.resolver.route) {
       return false;
     }
     if (context.resolver.route.name.match(/^monitoring-/)) {
       return false;
     }
-
     if (!context.resolver.resolve) {
       return false;
     }
-    return this.settings.storage.active;
+    return this.settings.profiler.active;
   }
 
   updateProfile(context, callback) {

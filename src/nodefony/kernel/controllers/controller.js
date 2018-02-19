@@ -222,7 +222,7 @@ module.exports = nodefony.register("controller", function () {
       return new Promise((resolve, reject) => {
         let extendParam = null;
         try {
-          extendParam = this.httpKernel.extendTwig(param, this.context);
+          extendParam = this.httpKernel.extendTemplate(param, this.context);
           let templ = null;
           let res = null;
           try {
@@ -255,7 +255,7 @@ module.exports = nodefony.register("controller", function () {
     renderView(view, param) {
       let res = null;
       let templ = null;
-      let extendParam = this.httpKernel.extendTwig(param, this.context);
+      let extendParam = this.httpKernel.extendTemplate(param, this.context);
       try {
         templ = this.httpKernel.getTemplate(view);
       } catch (e) {
@@ -280,7 +280,7 @@ module.exports = nodefony.register("controller", function () {
 
     renderRawView(path, param) {
       let res = null;
-      let extendParam = this.httpKernel.extendTwig(param, this.context);
+      let extendParam = this.httpKernel.extendTemplate(param, this.context);
       try {
         this.serviceTemplating.renderFile(path, extendParam, (error, result) => {
           if (error || result === undefined) {

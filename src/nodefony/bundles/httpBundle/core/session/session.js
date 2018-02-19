@@ -35,7 +35,7 @@ nodefony.register("Session", function () {
   const setMetasSession = function () {
     let time = new Date();
     this.setMetaBag("lifetime", this.settings.cookie.maxAge);
-    this.setMetaBag("context", this.contextSession);
+    this.setMetaBag("context", this.contextSession || null);
     this.setMetaBag("request", this.context.type);
     this.setMetaBag("created", time);
     this.setMetaBag("remoteAddress", this.context.getRemoteAddress());
@@ -47,7 +47,6 @@ nodefony.register("Session", function () {
       this.setMetaBag("user_agent", "Not Defined");
     }
   };
-
 
   const Session = class Session extends nodefony.Container {
 
@@ -334,6 +333,15 @@ nodefony.register("Session", function () {
       }
     }
 
+    deleteCookieSession() {
+      let settings = nodefony.extend({}, this.settings.cookie);
+      let cookie = new nodefony.cookies.cookie(this.name, "", settings);
+      this.context.response.setCookie(cookie);
+      this.cookieSession = null;
+      this.context.cookieSession = null;
+      return cookie;
+    }
+
     setCookieSession(leftTime) {
       let settings = null;
       if (leftTime) {
@@ -371,18 +379,23 @@ nodefony.register("Session", function () {
       }
     }
 
-    remove() {
+    remove(cookieDelete) {
       try {
-        return this.storage.destroy(this.id, this.contextSession);
+        let res = this.storage.destroy(this.id, this.contextSession);
+        if (cookieDelete) {
+          this.deleteCookieSession();
+          this.saved = true;
+        }
+        return res;
       } catch (e) {
         this.manager.logger(e, "ERROR");
         throw e;
       }
     }
 
-    destroy() {
+    destroy(cookieDelete) {
       this.clear();
-      return this.remove();
+      return this.remove(cookieDelete);
     }
 
     clear() {
@@ -412,7 +425,7 @@ nodefony.register("Session", function () {
         lifetime = this.lifetime;
       }
       if (destroy) {
-        this.remove();
+        this.remove(destroy);
       }
       return this.create(lifetime, id);
     }

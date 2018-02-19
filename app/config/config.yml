@@ -45,9 +45,9 @@ watch:                           true
 monitoringBundle:
   debugBar:                      true
   forceDebugBarProd:             false
-  storage:
+  profiler:
     active:                      false
-    requests:                    orm
+    storage:                     orm
 
 ##################################
 #  OVERRIDE  BUNDLE SEQUELIZE

@@ -55,8 +55,6 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.domain = this.getHostName();
       this.validDomain = this.isValidDomain();
       this.remoteAddress = this.request.remoteAddress;
-
-
       this.once("onRequest", this.handle.bind(this));
       this.once("onResponse", this.send.bind(this));
       this.once("onTimeout", () => {

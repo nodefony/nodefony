@@ -9,11 +9,11 @@ module.exports = class sessions extends nodefony.Service {
   constructor(httpKernel) {
     super("SESSIONS", httpKernel.container, httpKernel.notificationsCenter);
     this.httpKernel = httpKernel;
-    //this.firewall = security;
-    this.kernel = httpKernel.kernel;
     this.sessionStrategy = "none";
     this.listen(this, "onBoot", () => {
       this.settings = this.container.getParameters("bundles.http").session;
+      this.proba = parseInt(this.settings.gc_probability, 10);
+      this.divisor = parseInt(this.settings.gc_divisor, 10);
       this.defaultSessionName = this.settings.name;
       this.sessionAutoStart = this.setAutoStart(this.settings.start);
       this.initializeStorage();
@@ -119,12 +119,10 @@ module.exports = class sessions extends nodefony.Service {
   }
 
   probaGarbage() {
-    let proba = parseInt(this.settings.gc_probability, 10);
-    let divisor = parseInt(this.settings.gc_divisor, 10);
-    if (proba > 0) {
+    if (this.proba > 0) {
       let rand = Math.random();
-      let random = parseInt(divisor * (rand === 1 ? Math.random() : rand), 10);
-      if (random < proba) {
+      let random = parseInt(this.divisor * (rand === 1 ? Math.random() : rand), 10);
+      if (random < this.proba) {
         return true;
       }
     }
