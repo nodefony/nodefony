@@ -5,9 +5,7 @@
   <ul class="pull-left">
     <li>
       <img class="logo" src="/frameworkBundle/images/nodefony-logo.png">
-    </li>
-    <li>
-      <label class="label">
+      <label class="label nodefony-responsive-md">
         <a target="blank" href='{{path("monitoring-index")}}'>NODEFONY
         </a>
       </label>
@@ -107,13 +105,11 @@
 
     <li class="separator"></li>
 
-    <li >
-      <label class="label">
+    <li>
+      <label class="label nodefony-responsive-sm">
         <a target="blank" href='{{path("monitoring-index")}}#/config/App'>{{appSettings.projectName}}
-          :
+          :</a></label>
           <label class="label label-default">{{environment}}</label>
-
-        </label>
         <div class="details">
           <ul>
             <li>
@@ -270,7 +266,7 @@
       <li class="separator"></li>
 
       <li >
-        <label class="label">
+        <label class="label nodefony-responsive-md">
           <a target="blank" href='{{path("monitoring-index")}}#/services'>SERVICES</a>
         </label>
         <label class="label label-default">{{nbServices}}</label>
@@ -384,12 +380,12 @@
       <li class="separator"></li>
 
       <li >
-        <label class="label">
+        <label class="label nodefony-responsive-sm">
           {% if id %}
             <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=securityNav'>
               FIREWALL</a>
           {% else %}
-            FIREWALL
+           <label class="nodefony-responsive-sm"> FIREWALL </label>
           {% endif %}
 
         </label>
@@ -512,7 +508,7 @@
       <li class="separator"></li>
 
       <li >@
-        <label class="label label-default">
+        <label class="label label-default nodefony-responsive-md">
           {% if id %}
             <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=request'>{{route.name}}
               <a>
@@ -596,18 +592,18 @@
             {% endif %}
             <label class="label label-success">{{ request.protocol | upper }}</label>
             {% if id %}
-              <label class="label">
+              <label class="label nodefony-responsive-md">
                 <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}'>REQUEST</a>
               </label>
             {% else %}
-              <label class="label">REQUEST</label>
+              <label class="label nodefony-responsive-md">REQUEST</label>
             {% endif %}
 
             <label class="label label-default">{{ request.method }}</label>
             {% if request.crossDomain %}
               <label class="label label-default">Cross Domain</label>
             {% endif %}
-            <div class="details">
+            <div class="details details-request">
               <ul>
                 {% for key, value in request %}
                   {% if key == "url" %}
@@ -750,15 +746,15 @@
 
           <li>
             {% if id %}
-              <label class="label">
+              <label class="label nodefony-responsive-md">
                 <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=response'>RESPONSE</a>
               </label>
             {% else %}
-              <label class="label">RESPONSE</label>
+              <label class="label nodefony-responsive-md">RESPONSE</label>
             {% endif %}
-            <label class="label label-success">{{ response.statusCode }}</label>
+            <label class="label label-success nodefony-responsive-sm">{{ response.statusCode }}</label>
             <label class="label label-success">{{ timeRequest }}</label>
-            <div class="details">
+            <div class="details nodefony-response-details">
               <ul>
                 {% for key, value in response %}
                   {% if key == "statuscode" %}
