@@ -6,6 +6,58 @@
  *
  */
 
+#nodefony-container ul li .nodefony-responsive-md {
+	display: inline;
+}
+
+@media (max-width: 1200px) {
+	#nodefony-container ul li .nodefony-responsive-md {
+		display: none;
+	}
+
+	#nodefony-container ul li .details-request {
+		margin-left: -150px;
+	}
+	#nodefony-container ul li .nodefony-response-details {
+		margin-left: -150px;
+	}
+
+}
+
+@media (max-width: 790px) {
+	#nodefony-container ul li.separator {
+		margin-left: 4px!important;
+		margin-right: 4px!important;
+	}
+	#nodefony-container ul li .details-request {
+		margin-left: -150px;
+		overflow-x: auto !important;
+		max-width: 350px !important;
+	}
+
+	#nodefony-container ul li .nodefony-response-details {
+		margin-left: -150px;
+	}
+	}
+
+@media (max-width: 620px) {
+	#nodefony-container ul li .nodefony-responsive-sm {
+		display: none;
+	}
+	#nodefony-container ul li.separator {
+		margin-left: 2px!important;
+		margin-right: 2px!important;
+	}
+	#nodefony-container ul li .details-request {
+		margin-left: -100px;
+		overflow-x: auto !important;
+		max-width: 320px !important;
+	}
+
+	#nodefony-container ul li .nodefony-response-details {
+		margin-left: -100px;
+	}
+}
 
 #nodefony-container {
 	position:		fixed;
@@ -19,6 +71,7 @@
 	padding:		0px 0px;
 	font-family:		"Source Sans Pro",Helvetica,Arial,sans-serif;
 	font-size:		14px;
+	height: 30px;
 }
 
 #nodefony-container .label {
@@ -61,20 +114,19 @@
 }
 
 #nodefony-container ul li .details {
-	overflow-y:		auto;
+	overflow:		auto;
 	background-color:	#FFF;
 	border:			solid 1px #bbb;
 	color:			#2f2f2f;
 	position:		absolute;
 	bottom:			31px;
-	margin-left:		-11px;
 	border-radius:		4px 4px 0 0;
 	border-bottom-width:	0;
 	padding:		9px 0;
 	display:		none;
 	font-size:		12px;
-	max-height:		600px;
-	mim-width:		200px;
+	max-height:		500px;
+	max-width: 		500px;
 }
 
 #nodefony-container ul li .details ul {
@@ -130,7 +182,6 @@
 
 #nodefony-container ul li img.logo{
 	vertical-align: middle;
-	margin-right:		10px;
 	height:			27px;
 }
 
@@ -155,8 +206,10 @@
 	text-decoration:	none;
 	font-size:		0.9em;
 }
-#nodefony-container  li a:hover {
-}
+/*#nodefony-container ul li :hover {
+	background: rgba(119, 119, 119, 0.5);
+
+}*/
 
 #nodefony-small {
 	position:		fixed;
@@ -179,4 +232,10 @@
 
 .hidden {
 	display:		none;
+}
+
+#nodefony-container li {
+	display:		inline;
+	float:			left;
+	line-height:		30px;
 }
