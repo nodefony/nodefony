@@ -21,7 +21,7 @@ module.exports = nodefony.register('providerManager', () => {
         return null;
       }
       if (config) {
-        this.kernel.once("onBoot", () => {
+        this.kernel.prependOnceListener("onBoot", () => {
           switch (true) {
           case !!config.entity:
             if (config.class) {

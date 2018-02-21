@@ -490,6 +490,9 @@ module.exports = class httpKernel extends nodefony.Service {
       if (next !== 200) {
         return;
       }
+      if (this.firewall) {
+        secure = this.firewall.isSecure(context);
+      }
       // FRONT ROUTER
       resolver = this.router.resolve(context);
       if (resolver.resolve) {
@@ -498,10 +501,10 @@ module.exports = class httpKernel extends nodefony.Service {
         if (controller.sessionAutoStart) {
           context.sessionAutoStart = controller.sessionAutoStart;
         }
-        if (this.firewall) {
-          secure = this.firewall.isSecure(context);
-        }
       } else {
+        if (secure) {
+          return this.fire("onSecurity", context);
+        }
         let error = new Error("Not Found");
         error.code = 404;
         throw error;

@@ -13,11 +13,23 @@ module.exports = class logoutController extends nodefony.controller {
         return this.redirect("/", null, true);
       }
       if (this.context.token) {
-        switch (this.context.token.factory) {
+        this.request.request.headers.authorization = "";
+        this.response.setHeader("authorization", "");
+        try {
+          let formlogin = this.firewall.getSecuredArea(security.firewall).formLogin;
+          this.context.session.destroy(true);
+          if (formlogin) {
+            return this.redirect(formlogin, null, true);
+          }
+          return this.redirect("/", null, true);
+        } catch (e) {
+          this.logger(e, "ERROR");
+          this.context.session.destroy(true);
+          return this.redirect("/", null, true);
+        }
+        /*switch (this.context.token.factory) {
         case "basic":
         case "digest":
-          this.request.request.headers.authorization = "";
-          this.response.setHeader("authorization", "");
           let factory = this.firewall.getSecuredArea(security.firewall).getFactory(this.context.token.factory);
           factory.handle(this.context)
             .then(() => {
@@ -28,21 +40,8 @@ module.exports = class logoutController extends nodefony.controller {
               this.context.session.destroy(true);
               return this.createUnauthorizedException();
             });
-          break;
         default:
-          try {
-            let formlogin = this.firewall.getSecuredArea(security.firewall).formLogin;
-            this.context.session.destroy(true);
-            if (formlogin) {
-              return this.redirect(formlogin, null, true);
-            }
-            return this.redirect("/", null, true);
-          } catch (e) {
-            this.logger(e, "ERROR");
-            this.context.session.destroy(true);
-            return this.redirect("/", null, true);
-          }
-        }
+      }*/
       }
     }
     return this.redirect("/", null, true);

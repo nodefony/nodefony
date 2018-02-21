@@ -25,16 +25,29 @@ module.exports = nodefony.register('Token', () => {
       return this.roles;
     }
 
+    hasRole(name) {
+      for (let role in this.roles) {
+        if (this.roles[role].role === name) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     setRoles(roles) {
       switch (nodefony.typeOf(roles)) {
       case "string":
-        this.roles.push(new nodefony.Role(roles));
+        if (!this.hasRole(roles)) {
+          this.roles.push(new nodefony.Role(roles));
+        }
         break;
       case "array":
         if (roles && roles.length) {
           for (let i = 0; i < roles.length; i++) {
             try {
-              this.roles.push(new nodefony.Role(roles[i]));
+              if (!this.hasRole(roles[i])) {
+                this.roles.push(new nodefony.Role(roles[i]));
+              }
             } catch (e) {
               throw e;
             }
@@ -105,6 +118,8 @@ module.exports = nodefony.register('Token', () => {
       try {
         for (let ele in token) {
           switch (ele) {
+          case "name":
+            break;
           case "user":
             this.user.unserialize(token[ele]);
             break;

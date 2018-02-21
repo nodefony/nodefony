@@ -13,10 +13,10 @@ security:
 
     firewalls:
         test-anonymous:
-          #provider:                                nodefony
+          provider:                                 nodefony
           pattern:                                  ^/demo
           anonymous:                                ~
-          stateless:                                ~
+          #stateless:                               ~
         # main
         test-main-area:
             pattern:                                ^/test/firewall/anonymous
@@ -53,7 +53,7 @@ security:
               check_path:                           /test/firewall/basic
             passport-basic:
               realm:                                "nodefony"
-            logout:                                 /test/logout
+            logout:                                 /logout
 
         # passport-digest  DIGEST SECURITY AREA
         test-digest-area:
@@ -64,20 +64,19 @@ security:
               check_path:                           /test/firewall/digest
             passport-digest:
               realm:                                "nodefony"
-            logout:                                 /test/logout
+            logout:                                 /logout
 
         # passport-local  LOCAL SECURITY AREA
         test-local-area:
             pattern:                                ^/test/firewall/local
             provider:                               nodefony
             form_login:
-              login_path:                           /test/login
-              default_target_path:                  /
-              check_path:                           /test/firewall/local
+              login_path:                           /login
+              check_path:                           /login/jwt
             passport-local:
-              usernameField:                        'email'
+              usernameField:                        'username'
               passwordField:                        'passwd'
-            logout:                                 /test/logout
+            logout:                                 /logout
             context:                                local
             redirectHttps:                          false
             crossDomain:
@@ -108,6 +107,12 @@ security:
             pattern:                                ^/test/firewall/api
             stateless:                              true
             context:                                api
+            provider:                               nodefony
+            form_login:
+              login_path:                           /test/firewall/local
+            passport-jwt:
+              secretOrKey:                          "Les sanglots longs Des violons De l’automne Blessent mon cœur D’une langueur Monotone."
+              jwtFromRequest:                       "cookies"
 
         #
         test-cors-area:
@@ -135,7 +140,7 @@ security:
                 Access-Control-Allow-Credentials:   true
                 Access-Control-Max-Age:             10
 
-        # passport-local  DEMO SECURITY AREA
+        # google_area  DEMO SECURITY AREA
         #  Management credentials :                 https://console.developers.google.com/apis
         # google_area:
         #    pattern:                               ^/auth/google

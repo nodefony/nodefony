@@ -1,11 +1,3 @@
-let passport = null;
-let nodefonyPassport = null;
-try {
-  passport = require('passport');
-  nodefonyPassport = require("passport-nodefony");
-} catch (e) {
-  this.logger(e);
-}
 //console.log(passport);
 
 module.exports = nodefony.register('passeportFactory', () => {
@@ -14,8 +6,7 @@ module.exports = nodefony.register('passeportFactory', () => {
 
     constructor(name, security, settings) {
       super(name, security, settings);
-      this.passport = passport;
-      this.passport.framework(nodefonyPassport(this));
+      this.passport = security.firewall.passport;
       this.strategy = this.getStrategy(this.settings);
       this.passport.use(this.strategy);
     }

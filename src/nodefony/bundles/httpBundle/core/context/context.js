@@ -124,6 +124,21 @@ nodefony.register("Context", () => {
       return null;
     }
 
+    setCookie(cookie) {
+      if (cookie) {
+        return this.response.addCookie(cookie);
+      }
+    }
+
+    createCookie(name, value, settings) {
+      try {
+        let cookie = new nodefony.cookies.cookie(name, value, settings);
+        return this.setCookie(cookie);
+      } catch (e) {
+        throw e;
+      }
+    }
+
   };
   return Context;
 });

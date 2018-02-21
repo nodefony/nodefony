@@ -11,7 +11,7 @@ module.exports = nodefony.register("SecuredArea", function () {
       this.cors = null;
       this.pattern = /.*/;
       this.factories = [];
-      this.factory = null;
+      //this.factory = null;
       this.nbFactories = 0;
       this.provider = null;
       this.providerName = null;
@@ -22,7 +22,7 @@ module.exports = nodefony.register("SecuredArea", function () {
       this.alwaysUseDefaultTarget = false;
       this.stateLess = false;
       this.anonymous = false;
-      this.once("onPostReady", () => {
+      this.prependOnceListener("onReady", () => {
         try {
           if (this.providerName) {
             if (this.providerName in this.firewall.providerManager.providers) {
@@ -111,7 +111,8 @@ module.exports = nodefony.register("SecuredArea", function () {
             context.session.setMetaBag("area", this.name);
           }
           try {
-            context.resolver = this.overrideURL(context, this.formLogin);
+            //context.resolver = this.overrideURL(context, this.formLogin);
+            return this.redirect(context, this.formLogin);
           } catch (e) {
             error = new Error("Form Login route : " + this.formLogin + " this route not exist. Check Security config file");
             error.code =  500;
@@ -184,19 +185,17 @@ module.exports = nodefony.register("SecuredArea", function () {
       return new Promise((resolve, reject) => {
         return this.handleFactories(context)
           .then((token) => {
-            let target = null;
-            let serialize = null;
+            let target = this.defaultTarget;
             try {
               if (token) {
                 context.user = token.user;
                 context.token = token;
-                serialize = token.serialize();
               }
               if (context.session) {
                 context.session.migrate();
                 context.session.setMetaBag("security", {
                   firewall: this.name,
-                  token: serialize
+                  token: token.serialize()
                 });
                 if (context.user && context.user.lang) {
                   context.session.set("lang", context.user.lang);
@@ -206,19 +205,28 @@ module.exports = nodefony.register("SecuredArea", function () {
                 let target_path = context.session.getFlashBag("default_target_path");
                 if (target_path) {
                   target = target_path;
-                } else {
-                  if (this.defaultTarget) {
-                    target = this.defaultTarget;
-                  }
                 }
               }
             } catch (e) {
               return reject(e);
             }
+            if (this.checkLogin) {
+              try {
+                context.resolver = this.overrideURL(context, this.checkLogin);
+                //context.resolver = this.router.resolveName(context, this.checkLogin);
+                return resolve(context);
+              } catch (e) {
+                throw e;
+              }
+            }
             if (!target) {
               return resolve(context);
             }
-            context.resolver = this.overrideURL(context, target);
+            try {
+              context.resolver = this.overrideURL(context, target);
+            } catch (e) {
+              throw e;
+            }
             if (context.isAjax) {
               context.isJson = true;
               return resolve(context);

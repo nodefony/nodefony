@@ -6,9 +6,12 @@ module.exports = nodefony.register('Factory', () => {
       super(name, security.container, security.notificationsCenter);
       this.settings = settings ||  {};
       this.security = security;
-      this.providerName = this.settings.provider || this.security.providerName;
-      this.kernel.on("onPostReady", () => {
-        if (this.providerName && this.providerName !== this.security.providerName) {
+      this.providerName = this.settings.provider;
+      this.kernel.once("onPostReady", () => {
+        if (!this.providerName) {
+          this.providerName = this.security.providerName;
+        }
+        if (this.providerName !== this.security.providerName) {
           this.provider = this.security.getProvider(this.providerName);
         } else {
           this.provider = this.security.provider;

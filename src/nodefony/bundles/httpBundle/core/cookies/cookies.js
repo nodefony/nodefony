@@ -35,6 +35,7 @@ nodefony.register("cookies", function () {
           co = new Cookie(cookie, obj[cookie]);
           context.addCookie(co);
         }
+        context.request.request.cookies = context.cookies;
       }
       break;
     case "WEBSOCKET":

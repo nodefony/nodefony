@@ -1,3 +1,12 @@
+let passport = null;
+let nodefonyPassport = null;
+try {
+  passport = require('passport');
+  nodefonyPassport = require("passport-nodefony");
+} catch (e) {
+  this.logger(e);
+}
+
 const pluginReader = function () {
 
   let replaceKey = function (key) {
@@ -104,6 +113,7 @@ module.exports = class security extends nodefony.Service {
 
   constructor(container, kernel, cors) {
     super("firewall", container, kernel.notificationsCenter);
+    this.passport = passport.framework(nodefonyPassport(this));
     this.corsManager = cors;
     this.reader = function (context) {
       let func = context.get("reader").loadPlugin("security", pluginReader);
@@ -122,7 +132,6 @@ module.exports = class security extends nodefony.Service {
     this.once("onPreBoot", () => {
       this.sessionService = this.get("sessions");
       this.orm = this.get(this.kernel.settings.orm);
-
     });
     this.once("onPostRegister", () => {
       this.settings = this.kernel.getBundle("security").settings.headers;
@@ -362,9 +371,7 @@ module.exports = class security extends nodefony.Service {
             throw new Error("SESSION START session storage ERROR");
           }
           let token = this.getSessionToken(context, session);
-          if (token &&
-            token.isAuthenticated()
-          ) {
+          if (token) {
             return context;
           } else {
             if (context.method === "WEBSOCKET") {
@@ -450,7 +457,7 @@ module.exports = class security extends nodefony.Service {
               }
               break;
             default:
-              this.once("onReady", () => {
+              this.once("onBoot", () => {
                 if (config in nodefony.security.factories) {
                   area.setFactory(config, param[config]);
                 } else {

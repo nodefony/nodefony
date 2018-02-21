@@ -325,9 +325,30 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     }
 
     let trans = context.get("translation");
+    let route = null;
+    let varialblesName = null;
+    if (context.resolver.route) {
+      route = {
+        name: context.resolver.route.name,
+        uri: context.resolver.route.path,
+        variables: context.resolver.variables,
+        pattern: context.resolver.route.pattern.toString(),
+        defaultView: context.resolver.defaultView
+      };
+      varialblesName = context.resolver.route.variables;
+
+    } else {
+      route = {
+        name: "undefined",
+        uri: "undefined",
+        variables: context.resolver.variables,
+        pattern: "undefined",
+        defaultView: context.resolver.defaultView
+      };
+    }
     context.profiling = {
       id: null,
-      bundle: context.resolver.bundle.name,
+      bundle: context.resolver.bundle ? context.resolver.bundle.name : "undefined",
       bundles: this.bundles,
       cdn: this.cdn,
       pwd: process.env.PWD,
@@ -336,14 +357,8 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       git: this.gitInfo,
       nbServices: this.nbServices,
       security: this.security,
-      route: {
-        name: context.resolver.route.name,
-        uri: context.resolver.route.path,
-        variables: context.resolver.variables,
-        pattern: context.resolver.route.pattern.toString(),
-        defaultView: context.resolver.defaultView
-      },
-      varialblesName: context.resolver.route.variables,
+      route: route,
+      varialblesName: varialblesName,
       kernelSettings: this.kernelSetting,
       environment: this.env,
       debug: this.kernel.debug,
@@ -417,7 +432,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         }
       }
     }
-    if (context.resolver.route.defaults) {
+    if (context.resolver.route && context.resolver.route.defaults) {
       let tab = context.resolver.route.defaults.controller.split(":");
       let contr = (tab[1] ? tab[1] : "default");
       context.profiling.routeur = {

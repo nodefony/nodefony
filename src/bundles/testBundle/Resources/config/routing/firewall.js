@@ -2,12 +2,6 @@
 
 module.exports = {
 
-  "test-sasl-area": {
-    pattern: "/test/firewall/sasl",
-    defaults: {
-      controller: "testBundle:firewall:sasl"
-    }
-  },
   "test-basic-area": {
     pattern: "/test/firewall/basic",
     defaults: {
@@ -23,7 +17,7 @@ module.exports = {
   "test-local-area": {
     pattern: "/test/firewall/local",
     defaults: {
-      controller: "testBundle:cors:http"
+      controller: "testBundle:firewall:local"
     }
   }
 };

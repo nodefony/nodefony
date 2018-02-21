@@ -196,6 +196,41 @@ module.exports = nodefony.register("Service", function () {
     }
 
     /**
+     *  @method prependOnceListener
+     */
+    prependOnceListener() {
+      return this.notificationsCenter.prependOnceListener.apply(this.notificationsCenter, arguments);
+    }
+
+    /**
+     *  @method prependListener
+     */
+    prependListener() {
+      return this.notificationsCenter.prependListener.apply(this.notificationsCenter, arguments);
+    }
+
+    /**
+     *  @method getMaxListeners
+     */
+    getMaxListeners() {
+      return this.notificationsCenter.getMaxListeners.apply(this.notificationsCenter, arguments);
+    }
+
+    /**
+     *  @method listenerCount
+     */
+    listenerCount() {
+      return this.notificationsCenter.listenerCount.apply(this.notificationsCenter, arguments);
+    }
+
+    /**
+     *  @method listenerCount
+     */
+    listeners() {
+      return this.notificationsCenter.listeners.apply(this.notificationsCenter, arguments);
+    }
+
+    /**
      *  @method get
      *  @param {String} name of service
      */

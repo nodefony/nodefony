@@ -9,9 +9,6 @@ module.exports = nodefony.registerFactory("anonymous", () => {
 
     constructor(security, settings) {
       super("anonymous", security, settings);
-      if (!this.settings.provider) {
-
-      }
     }
 
     createToken( /*context = null, providerName= null*/ ) {

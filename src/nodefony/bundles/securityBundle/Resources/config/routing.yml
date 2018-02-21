@@ -12,7 +12,7 @@
 #
 # This file is YAML  FILE
 # ---
-# YAML: YAML Ain't Markup Language
+# YAML:     YAML Ain't Markup Language
 #
 # What It Is: YAML is a human friendly data serialization
 #   standard for all programming languages.
@@ -31,18 +31,14 @@
 
 ##########  ROUTING  securityBundle  ############
 
-oauth-token:
-  pattern:  /oauth/token
-  defaults: {"controller": "securityBundle:oauth:token"}
+login:
+  pattern:  /login
+  defaults: {"controller": "securityBundle:login:login"}
 
-oauth-login:
-  pattern:  /oauth/login
-  defaults: {"controller": "securityBundle:oauth:login"}
+login-jwt:
+  pattern:  /login/jwt
+  defaults: {"controller": "securityBundle:login:jwt"}
 
-oauth-account:
-  pattern:  /oauth/account
-  defaults: {"controller": "securityBundle:oauth:account"}
-
-oauth-decision:
-  pattern:  /oauth/decision
-  defaults: {"controller": "securityBundle:oauth:decision"}
+logout:
+  pattern:  /logout
+  defaults: {"controller": "securityBundle:logout:logout"}

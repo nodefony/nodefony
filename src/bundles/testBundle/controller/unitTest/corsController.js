@@ -2,10 +2,11 @@ module.exports = class corsController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
+    this.firewall = this.get("security");
   }
+
   httpAction(area) {
-    let firewall = this.get("security");
-    return this.renderJson(firewall.securedAreas[area].cors.headers);
+    return this.renderJson(this.firewall.securedAreas[area].cors.headers);
   }
 
   protocolSessionAction(protocol) {
