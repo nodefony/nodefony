@@ -381,12 +381,14 @@
     <li class="separator"></li>
 
     <li >
-      <label class="label nodefony-responsive-sm">
+      <label class="label-nodefony nodefony-responsive-sm">
         {% if id %}
+          <label class="label-nodefony nodefony-responsive-sm">
           <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=securityNav'>
             FIREWALL</a>
+          </label>
         {% else %}
-          <label class="nodefony-responsive-sm">
+          <label class="label-nodefony nodefony-responsive-sm">
             FIREWALL
           </label>
         {% endif %}
@@ -680,7 +682,7 @@
                   <label >{{session.name}}</label>
                 </li>
                 <li>
-                  <label>Token</label>
+                  <label>ID</label>
                   <span class="label-nodefony label-success">{{session.id}}</span>
                 </li>
                 <li>
