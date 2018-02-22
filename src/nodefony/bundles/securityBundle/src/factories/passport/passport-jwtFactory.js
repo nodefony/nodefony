@@ -6,7 +6,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 
 const cookiesExtractor = function (req) {
   var token = null;
-  if (req && req.cookies) {
+  if (req && req.cookies && req.cookies.jwt) {
     token = req.cookies.jwt.value;
   }
   return token;

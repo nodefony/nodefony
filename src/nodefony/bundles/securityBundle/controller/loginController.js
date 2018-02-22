@@ -44,6 +44,4 @@ module.exports = class loginController extends nodefony.controller {
       token: jeton
     }));
   }
-
-
 };
