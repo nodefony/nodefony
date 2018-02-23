@@ -255,11 +255,21 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
           if (firewall) {
             for (let area in firewall.securedAreas) {
               //console.log(firewall.securedAreas[area])
+              let myfactory = firewall.securedAreas[area].factories.length ? firewall.securedAreas[area].factories : null;
+              let factory = null;
+              if (myfactory) {
+                factory = myfactory.map((fac) => {
+                  return fac.name;
+                }).join();
+              } else {
+                factory = "none";
+              }
               obj[area] = {};
               obj[area].pattern = firewall.securedAreas[area].regPartten;
-              obj[area].factory = firewall.securedAreas[area].factory ? firewall.securedAreas[area].factory.name : null;
-              obj[area].provider = firewall.securedAreas[area].provider ? firewall.securedAreas[area].provider.name : null;
+              obj[area].factory = factory;
+              obj[area].provider = firewall.securedAreas[area].provider ? firewall.securedAreas[area].providerName : null;
               obj[area].context = firewall.securedAreas[area].sessionContext;
+              obj[area].state = firewall.securedAreas[area].stateLess ? "stateless" : "statefull";
             }
           }
           return obj;

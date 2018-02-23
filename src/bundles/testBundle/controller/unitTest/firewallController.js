@@ -17,4 +17,8 @@ module.exports = class firewallController extends nodefony.controller {
     return this.renderJson(this.context.security.cors.headers);
   }
 
+  apiAction() {
+    return this.renderJson(this.context.security.cors.headers);
+  }
+
 };

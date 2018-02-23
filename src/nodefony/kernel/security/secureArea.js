@@ -222,16 +222,18 @@ module.exports = nodefony.register("SecuredArea", function () {
             if (!target) {
               return resolve(context);
             }
-            try {
+            /*try {
               context.resolver = this.overrideURL(context, target);
             } catch (e) {
               throw e;
-            }
+            }*/
             if (context.isAjax) {
               context.isJson = true;
+              context.resolver = this.overrideURL(context, target);
               return resolve(context);
             } else {
               return resolve(this.redirect(context, target));
+              //return resolve(context);
             }
             return resolve(context);
           })
@@ -305,7 +307,7 @@ module.exports = nodefony.register("SecuredArea", function () {
 
     overrideURL(context, myUrl) {
       if (myUrl) {
-        context.method = "GET";
+        //context.method = "GET";
         context.request.url = url.parse(url.resolve(context.request.url, myUrl));
       }
       return this.router.resolve(context);
@@ -319,9 +321,9 @@ module.exports = nodefony.register("SecuredArea", function () {
     redirect(context, url) {
       if (url) {
         // no cache
-        return context.redirect(url, 301, true);
+        return context.redirect(url, 302, true);
       }
-      return context.redirect(context.request.url, 301, true);
+      return context.redirect(context.request.url, 302, true);
     }
 
     match(context) {

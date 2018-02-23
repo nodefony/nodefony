@@ -2,8 +2,8 @@
 name :				securityBundle
 
 headers:
-    http:                   ~
-    https:                  ~
+    http:                               ~
+    https:                              ~
 
 #
 #  WATCHERS

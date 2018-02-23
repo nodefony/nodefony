@@ -22,7 +22,6 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
       this.manager.logger("Context : " + (contextSession || "default") + " GARBADGE COLLECTOR ==> " + results + "  DELETED", severity);
       return results;
     }).catch((error) => {
-      this.manager.logger(error, "ERROR");
       throw error;
     });
 
@@ -124,7 +123,6 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
             });
           }
         }).catch((error) => {
-          this.manager.logger("DB DESTROY SESSION context : " + contextSession + " ID : " + id, "ERROR");
           throw error;
         });
     }
@@ -204,16 +202,14 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
               isNewRecord: true
             })
             .then((session) => {
-              this.manager.logger("ADD SESSION : " + session.session_id + " username :" + (session.username ? session.username : ""), "DEBUG");
+              this.manager.logger("ADD SESSION : " + session.session_id + (session.username ? " username :" + session.username : ""), "DEBUG");
               return session;
             }).catch((error) => {
-              this.manager.logger(error);
               throw error;
             });
         }
       }).catch((error) => {
         if (error) {
-          this.manager.logger(error, "ERROR");
           throw error;
         }
       });

@@ -18,6 +18,11 @@ module.exports = nodefony.register('passeportFactory', () => {
             session: false,
           })(context, (error, token) => {
             if (error) {
+              if (error.status) {
+                let err = new Error(error.message);
+                err.code = error.status;
+                return reject(err);
+              }
               return reject(error);
             }
             if (token) {

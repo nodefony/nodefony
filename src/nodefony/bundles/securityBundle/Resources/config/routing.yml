@@ -32,11 +32,11 @@
 ##########  ROUTING  securityBundle  ############
 
 login:
-  pattern:  /login
-  defaults: {"controller": "securityBundle:login:login"}
+  pattern:  /login/{type}
+  defaults: {"controller": "securityBundle:login:login","type":"local" }
 
 login-jwt:
-  pattern:  /login/jwt
+  pattern:  /test/firewall/api
   defaults: {"controller": "securityBundle:login:jwt"}
 
 logout:

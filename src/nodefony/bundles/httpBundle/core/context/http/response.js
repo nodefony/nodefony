@@ -241,6 +241,7 @@ module.exports = nodefony.register("Response", function () {
       if (status === 301) {
         this.setStatusCode(status);
       } else {
+        status = 302;
         this.setStatusCode(302);
       }
       if (headers) {
@@ -257,6 +258,7 @@ module.exports = nodefony.register("Response", function () {
         }
       }
       this.setHeader("Location", url);
+      this.logger(`REDIRECT ${status} : ${url} `, "DEBUG");
       return this;
     }
   };

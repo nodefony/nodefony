@@ -87,6 +87,14 @@ nodefony.register("Context", () => {
       return nodefony.cookies.cookiesParser(this);
     }
 
+    getSession() {
+      return this.session;
+    }
+
+    saveSession() {
+      return this.sessionService.saveSession(this);
+    }
+
     getCookieSession(name) {
       if (this.cookies[name]) {
         return this.cookies[name];

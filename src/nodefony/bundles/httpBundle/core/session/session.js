@@ -222,32 +222,33 @@ nodefony.register("Session", function () {
           });
         }
       }
-      return this.storage.start(this.id, this.contextSession).then((result) => {
-        if (result && Object.keys(result).length) {
-          this.deSerialize(result);
-          if (!this.isValidSession(result, this.context)) {
-            this.manager.logger("SESSION ==> " + this.name + " : " + this.id + "  session invalid ", "ERROR");
-            this.invalidate();
-          }
-        } else {
-          if (this.settings.use_strict_mode) {
-            if (!this.strategyNone) {
-              this.manager.logger("SESSION ==> " + this.name + " : " + this.id + " use_strict_mode ", "ERROR");
+      return this.storage.start(this.id, this.contextSession)
+        .then((result) => {
+          if (result && Object.keys(result).length) {
+            this.deSerialize(result);
+            if (!this.isValidSession(result, this.context)) {
+              this.manager.logger("SESSION ==> " + this.name + " : " + this.id + "  session invalid ", "ERROR");
               this.invalidate();
             }
+          } else {
+            if (this.settings.use_strict_mode) {
+              if (!this.strategyNone) {
+                this.manager.logger("SESSION ==> " + this.name + " : " + this.id + " use_strict_mode ", "ERROR");
+                this.invalidate();
+              }
+            }
           }
-        }
-        this.status = "active";
-        return this;
-      }).catch((error) => {
-        if (error) {
-          this.manager.logger("SESSION ==> " + this.name + " : " + this.id + " " + error, "ERROR");
-          if (!this.strategyNone) {
-            this.invalidate();
+          this.status = "active";
+          return this;
+        }).catch((error) => {
+          if (error) {
+            this.manager.logger("SESSION ==> " + this.name + " : " + this.id + " " + error, "ERROR");
+            if (!this.strategyNone) {
+              this.invalidate();
+            }
+            throw error;
           }
-          throw error;
-        }
-      });
+        });
     }
 
     isValidSession(data, context) {
@@ -457,29 +458,22 @@ nodefony.register("Session", function () {
     }
 
     save(user, sessionContext) {
-      try {
-        return this.storage.write(this.id, this.serialize(user), sessionContext).then(( /*result*/ ) => {
-          if (!this.context) {
-            throw new Error("SAVE SESSION ERROR context already deleted ");
-          } else {
-            this.saved = true;
-            if (this.context) {
-              this.context.fire("onSaveSession", this);
-            }
-            return this;
+      return this.storage.write(this.id, this.serialize(user), sessionContext).then(( /*result*/ ) => {
+        if (!this.context) {
+          throw new Error("SAVE SESSION ERROR context already deleted ");
+        } else {
+          this.saved = true;
+          if (this.context) {
+            this.context.fire("onSaveSession", this);
           }
-        }).catch((error) => {
-          //console.trace(error);
-          this.logger(error, "ERROR");
-          this.saved = false;
-          throw error;
-        });
-
-      } catch (e) {
-        this.manager.logger(" SESSION ERROR : " + e, "ERROR");
+          return this;
+        }
+      }).catch((error) => {
+        //console.trace(error);
+        //this.logger(error, "ERROR");
         this.saved = false;
-        throw e;
-      }
+        throw error;
+      });
     }
 
     getName() {

@@ -7,12 +7,19 @@ module.exports = nodefony.register('Factory', () => {
       this.settings = settings ||  {};
       this.security = security;
       this.providerName = this.settings.provider;
+      this.provider = null;
       this.kernel.once("onPostReady", () => {
         if (!this.providerName) {
-          this.providerName = this.security.providerName;
+          if (this.providerName !== false) {
+            this.providerName = this.security.providerName;
+          } else {
+            this.provider = this.providerName;
+          }
         }
         if (this.providerName !== this.security.providerName) {
-          this.provider = this.security.getProvider(this.providerName);
+          if (this.providerName) {
+            this.provider = this.security.getProvider(this.providerName);
+          }
         } else {
           this.provider = this.security.provider;
         }
@@ -83,6 +90,11 @@ module.exports = nodefony.register('Factory', () => {
           throw error;
         });
       } else {
+        if (provider === false) {
+          return new Promise((resolve) => {
+            return resolve(token);
+          });
+        }
         return new Promise((resolve, reject) => {
           return reject(new Error(`authenticateToken Provider ${provider}`));
         });

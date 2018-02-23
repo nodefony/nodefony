@@ -161,7 +161,7 @@ module.exports = class security extends nodefony.Service {
         context.once('onRequestEnd', () => {
           return this.handle(context)
             .then((ctx) => {
-              if (ctx) {
+              if (ctx && (!ctx.isRedirect)) {
                 return ctx.fire("onRequest");
               }
             })
@@ -384,6 +384,7 @@ module.exports = class security extends nodefony.Service {
             return this.handleStateLess(context);
           }
         } catch (error) {
+          console.log(error)
           if (!error.code) {
             error.code = 500;
           }

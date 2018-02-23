@@ -65,36 +65,51 @@ module.exports = class sessions extends nodefony.Service {
   }
 
   start(context, sessionContext) {
-    if (context.session) {
-      if (context.session.status === "active") {
-        this.logger("SESSION ALLREADY STARTED ==> " + context.session.name + " : " + context.session.id, "WARNING");
-        return new Promise((resolve /*, reject*/ ) => {
+    return new Promise((resolve, reject) => {
+      if (context.session) {
+        if (context.session.status === "active") {
+          this.logger("SESSION ALLREADY STARTED ==> " + context.session.name + " : " + context.session.id, "WARNING");
           return resolve(context.session);
-        });
+        }
+      }
+      try {
+        sessionContext = this.setAutoStart(sessionContext);
+        if (this.probaGarbage()) {
+          this.storage.gc(this.settings.gc_maxlifetime, sessionContext);
+        }
+        let inst = this.createSession(this.defaultSessionName, this.settings);
+        return inst.start(context, sessionContext)
+          .then((session) => {
+            if (!session) {
+              throw new Error("SESSION START session storage ERROR");
+            }
+            context.session = session;
+            session.setMetaBag("url", url.parse(context.url));
+            /*if (context.method !== "WEBSOCKET") {
+              context.once("onSend", () => {
+
+              });
+            }*/
+            return resolve(session);
+          })
+          .catch((err) => {
+            return reject(err);
+          });
+      } catch (e) {
+        return reject(e);
+      }
+    });
+  }
+
+  saveSession(context) {
+    if (context.session) {
+      if (!context.session.saved) {
+        context.session.setMetaBag("lastUsed", new Date());
+        return context.session.save(context.user ? context.user.username : null, context.session.contextSession);
       }
     }
-    sessionContext = this.setAutoStart(sessionContext);
-    if (this.probaGarbage()) {
-      this.storage.gc(this.settings.gc_maxlifetime, sessionContext);
-    }
-    let inst = this.createSession(this.defaultSessionName, this.settings);
-    return inst.start(context, sessionContext).then((session) => {
-      if (!session) {
-        throw new Error("SESSION START session storage ERROR");
-      }
-      context.session = session;
-      session.setMetaBag("url", url.parse(context.url));
-      if (context.method !== "WEBSOCKET") {
-        context.once("onSend", () => {
-          session.setMetaBag("lastUsed", new Date());
-          if (!session.saved) {
-            return session.save(context.user ? context.user.username : null, sessionContext);
-          }
-        });
-      }
-      return session;
-    }).catch((err) => {
-      throw err;
+    return new Promise((resolve) => {
+      resolve(null);
     });
   }
 
