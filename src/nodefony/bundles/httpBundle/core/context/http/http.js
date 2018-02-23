@@ -247,35 +247,49 @@ nodefony.register.call(nodefony.context, "http", function () {
     }
 
     send( /*response, context*/ ) {
-      if (this.sended) {
-        return;
-      }
-      this.sended = true;
+      this.fire("onSend", this.response, this);
+      return this.saveSession()
+        .then((session) => {
+          if (session) {
+            this.logger("SAVE SESSION ID : " + session.id, "DEBUG");
+          }
+          if (this.sended || this.finished) {
+            if (this.request && this.response) {
+              this.clean();
+            }
+            return;
+          }
+          this.writeHead();
+          return this.write();
+        })
+        .catch((error) => {
+          this.logger(error, "ERROR");
+          if (this.session) {
+            this.session.destroy(true);
+          }
+          this.writeHead();
+          this.write();
+        });
+    }
+
+    writeHead() {
       // cookies
       this.response.setCookies();
       this.response.writeHead();
-      this.fire("onSend", this.response, this);
-      if (this.session) {
-        this.once("onSaveSession", ( /*session*/ ) => {
-          if ( !this.storage) {
-            if (this.profiling) {
-              this.fire("onSendMonitoring", this.response, this);
-            }
-            /*
-             * WRITE RESPONSE
-             */
-            this.response.write();
-            // END REQUEST
-            return this.close();
-          }
-          this.fire("onSendMonitoring", this.response, this);
-        });
+    }
+
+    write() {
+      if (this.finished) {
         return;
       }
       if ( !this.storage) {
         if (this.profiling) {
           this.fire("onSendMonitoring", this.response, this);
         }
+        /*
+         * WRITE RESPONSE
+         */
+        this.sended = true;
         this.response.write();
         // END REQUEST
         return this.close();

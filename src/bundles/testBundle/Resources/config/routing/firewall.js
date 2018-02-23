@@ -19,5 +19,11 @@ module.exports = {
     defaults: {
       controller: "testBundle:firewall:local"
     }
+  },
+  "test-api-area": {
+    pattern: "/test/firewall/api",
+    defaults: {
+      controller: "testBundle:firewall:api"
+    }
   }
 };

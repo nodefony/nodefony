@@ -9,19 +9,23 @@ module.exports = class logoutController extends nodefony.controller {
     if (this.context.session) {
       var security = this.context.session.getMetaBag("security");
       if (!security) {
-        this.context.session.destroy(true);
-        return this.redirect("/", null, true);
+        this.context.session.destroy(true).then(() => {
+          return this.redirect("/", null, true);
+        });
+        return;
       }
       if (this.context.token) {
         this.request.request.headers.authorization = "";
         this.response.setHeader("authorization", "");
         try {
           let formlogin = this.firewall.getSecuredArea(security.firewall).formLogin;
-          this.context.session.destroy(true);
-          if (formlogin) {
-            return this.redirect(formlogin, null, true);
-          }
-          return this.redirect("/", null, true);
+          this.context.session.destroy(true).then(() => {
+            if (formlogin) {
+              return this.redirect(formlogin, null, true);
+            }
+            return this.redirect("/", null, true);
+          });
+          return;
         } catch (e) {
           this.logger(e, "ERROR");
           this.context.session.destroy(true);

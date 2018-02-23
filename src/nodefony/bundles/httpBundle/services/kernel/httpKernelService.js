@@ -473,7 +473,6 @@ module.exports = class httpKernel extends nodefony.Service {
       context.fire("onFinish", context);
       context.finished = true;
       this.container.leaveScope(container);
-
       context.clean();
       context = null;
       request = null;
@@ -485,6 +484,16 @@ module.exports = class httpKernel extends nodefony.Service {
     });
 
     try {
+      this.logger("FROM : " +
+        context.remoteAddress +
+        " ORIGIN : " + context.originUrl.host +
+        " URL : " +
+        context.url,
+        "INFO",
+        (context.isAjax ? context.type +
+          " REQUEST AJAX " + context.method : context.type +
+          " REQUEST " + context.method));
+
       // DOMAIN VALID
       next = this.checkValidDomain(context);
       if (next !== 200) {
@@ -509,15 +518,12 @@ module.exports = class httpKernel extends nodefony.Service {
         error.code = 404;
         throw error;
       }
-      this.logger("FROM : " +
-        context.remoteAddress +
-        " ORIGIN : " + context.originUrl.host +
-        " URL : " +
-        context.url,
-        "INFO",
-        (context.isAjax ? context.type +
-          " REQUEST AJAX " + context.method : context.type +
-          " REQUEST " + context.method));
+    } catch (e) {
+      context.once('onRequestEnd', () => {
+        return context.fire("onError", container, e);
+      });
+    }
+    try {
       if (secure) {
         return this.fire("onSecurity", context);
       }
