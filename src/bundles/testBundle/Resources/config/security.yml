@@ -72,7 +72,7 @@ security:
             provider:                               nodefony
             form_login:
               login_path:                           /login/test-local-area
-              check_path:                           /test/firewall/api
+              check_path:                           /test/firewall/local
             passport-local:
               usernameField:                        'username'
               passwordField:                        'passwd'

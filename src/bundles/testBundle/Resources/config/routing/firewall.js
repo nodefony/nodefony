@@ -25,5 +25,11 @@ module.exports = {
     defaults: {
       controller: "testBundle:firewall:api"
     }
+  },
+  "login-jwt": {
+    pattern: "/test/firewall/jwt",
+    defaults: {
+      controller: "securityBundle:login:jwt"
+    }
   }
 };

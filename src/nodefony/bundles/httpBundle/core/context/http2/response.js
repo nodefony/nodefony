@@ -18,7 +18,7 @@ const version9 = semver.gt(process.versions.node, "9.3.0");
 
 module.exports = nodefony.register("Response2", () => {
 
-  const Response2 = class Response2 extends nodefony.Response {
+  const Response2 = class http2Response extends nodefony.Response {
 
     constructor(response, container) {
       super(response, container);

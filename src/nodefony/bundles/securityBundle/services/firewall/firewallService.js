@@ -167,11 +167,13 @@ module.exports = class security extends nodefony.Service {
         context.once('onRequestEnd', () => {
           return this.handle(context)
             .then((ctx) => {
-              if (ctx && (!ctx.isRedirect)) {
-                ctx.fire("onRequest");
+              if (context === ctx) {
+                if (ctx && (!ctx.isRedirect)) {
+                  ctx.fire("onRequest");
+                }
                 return resolve(ctx);
               }
-              return resolve(context);
+              return resolve(ctx);
             })
             .catch((error) => {
               context.fire("onError", context.container, error);

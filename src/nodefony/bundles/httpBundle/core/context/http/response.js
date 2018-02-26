@@ -2,7 +2,7 @@ const http = require("http");
 const mime = require('mime');
 module.exports = nodefony.register("Response", function () {
 
-  const Response = class Response {
+  const Response = class httpResponse {
 
     constructor(response, container) {
       //if (response instanceof http.ServerResponse || response instanceof http2.Http2ServerResponse) {

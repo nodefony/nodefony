@@ -383,7 +383,9 @@ module.exports = class httpKernel extends nodefony.Service {
         this.logger(e, "WARNING");
       }
     }
-    if (context.method === "WEBSOCKET" && context.response && !context.response.connection) {
+    if (context.method === "WEBSOCKET" &&
+      context.response &&
+      !context.response.connection) {
       context.request.reject(exception.code ? exception.code : null, exception.message);
       this.logger(exception, "ERROR", context.method);
       context.fire("onFinish", context);
@@ -532,9 +534,7 @@ module.exports = class httpKernel extends nodefony.Service {
     }
     if (context.secure) {
       let res = this.firewall.handleSecurity(context);
-
       return res;
-
     }
     try {
       context.once('onRequestEnd', () => {

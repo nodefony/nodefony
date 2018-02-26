@@ -95,20 +95,16 @@ module.exports = nodefony.register("SecuredArea", function () {
           }
           if (context.session &&
             (context.request.url.pathname !== this.formLogin) &&
-            (context.request.url.pathname !== this.checkLogin) &&
-            (!this.alwaysUseDefaultTarget)) {
+            (context.request.url.pathname !== this.checkLogin)
+          ) {
 
-            let target_path = null;
             let area = context.session.getMetaBag("area");
             if (area && area !== this.name) {
               context.session.clearFlashBag("default_target_path");
-            } else {
-              target_path = context.session.getFlashBag("default_target_path");
             }
+            let target_path = context.session.getFlashBag("default_target_path");
             if (!target_path) {
               context.session.setFlashBag("default_target_path", context.request.url.pathname);
-            } else {
-              context.session.setFlashBag("default_target_path", target_path);
             }
             context.session.setMetaBag("area", this.name);
           }
@@ -204,10 +200,10 @@ module.exports = nodefony.register("SecuredArea", function () {
                 } else {
                   context.session.set("lang", context.translation.defaultLocale);
                 }
-                let target_path = context.session.getFlashBag("default_target_path");
-                if (target_path) {
-                  target = target_path;
+                if (!this.alwaysUseDefaultTarget) {
+                  target = context.session.getFlashBag("default_target_path") || this.defaultTarget;
                 }
+                context.session.clearFlashBag("default_target_path");
               }
             } catch (e) {
               return reject(e);
@@ -249,10 +245,10 @@ module.exports = nodefony.register("SecuredArea", function () {
               context.isJson = true;
             }
             let res = this.handleError(context, error);
-            if (res) {
+            if (res instanceof Error) {
               return reject(res);
             }
-            return resolve(context);
+            return resolve(res);
           });
       });
     }

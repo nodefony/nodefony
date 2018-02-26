@@ -91,6 +91,33 @@ module.exports = nodefony.register("controller", function () {
       return this.get(defaultOrm);
     }
 
+    callController(pattern, data) {
+      let resolver = null;
+      let controler = null;
+      try {
+        resolver = this.router.resolveName(this.context, pattern);
+      } catch (e) {
+        return this.fire("onError", this.container, e);
+      }
+      if (!resolver.resolve) {
+        let error = new Error(pattern);
+        error.code = 404;
+        return this.fire("onError", this.container, error);
+      }
+      try {
+        controler = resolver.newController(this.container, this);
+        if (data) {
+          Array.prototype.shift.call(arguments);
+          for (let i = 0; i < arguments.length; i++) {
+            resolver.variables.push(arguments[i]);
+          }
+        }
+        return resolver.action.apply(controler, resolver.variables);
+      } catch (e) {
+        return this.fire("onError", this.container, e);
+      }
+    }
+
     push(asset, headers, options) {
       if (this.context.type === "HTTP2" && this.context.pushAllowed) {
         let assetPublic = null;

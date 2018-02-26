@@ -6,7 +6,7 @@ module.exports = class firewallController extends nodefony.controller {
   }
 
   localAction() {
-    return this.renderJson(this.context.security.name);
+    return this.redirect("/test/firewall/jwt");
   }
 
   digestAction() {
@@ -18,7 +18,7 @@ module.exports = class firewallController extends nodefony.controller {
   }
 
   apiAction() {
-    return this.renderJson(this.context.security.cors.headers);
+    return this.renderJson(this.context.token);
   }
 
 };

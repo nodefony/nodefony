@@ -35,10 +35,6 @@ login:
   pattern:  /login/{type}
   defaults: {"controller": "securityBundle:login:login","type":"local" }
 
-login-jwt:
-  pattern:  /test/firewall/api
-  defaults: {"controller": "securityBundle:login:jwt"}
-
 logout:
   pattern:  /logout
   defaults: {"controller": "securityBundle:logout:logout"}
