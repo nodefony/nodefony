@@ -26,8 +26,8 @@ module.exports = class httpsServer extends nodefony.Service {
     this.address = null;
     this.family = null;
     this.type = "HTTPS";
-    this.listen(this, "onBoot", function () {
-      this.bundle.listen(this, "onServersReady", function (type) {
+    this.once("onBoot", () => {
+      this.bundle.on("onServersReady", (type) => {
         if (type === this.type) {
           dns.lookup(this.domain, (err, addresses, family) => {
             if (err) {
@@ -119,13 +119,11 @@ module.exports = class httpsServer extends nodefony.Service {
         this.server = http2.createSecureServer(this.options);
         this.bundle.fire("onCreateServer", this.type, this);
         this.server.on("sessionError", (error) => {
-          this.logger(error, "ERROR", "HTTP2 session");
+          this.logger(error, "ERROR", "HTTP2 Server sessionError");
         });
         this.server.on("streamError", (error) => {
-          this.logger(error, "ERROR", "HTTP2 stream");
+          this.logger(error, "ERROR", "HTTP2 Server streamError");
         });
-
-
         break;
       default:
       }
@@ -133,8 +131,6 @@ module.exports = class httpsServer extends nodefony.Service {
       this.logger(e, "CRITIC");
       throw e;
     }
-
-
 
     this.server.on('request', (request, response) => {
       const {
@@ -146,7 +142,7 @@ module.exports = class httpsServer extends nodefony.Service {
       if (alpnProtocol === "h2") {
         this.httpKernel.onHttpRequest(request, response, "HTTP2");
       } else {
-        this.httpKernel.onHttpRequest(request, response, this.type);
+        return this.httpKernel.onHttpRequest(request, response, this.type);
       }
     });
 
@@ -190,7 +186,7 @@ module.exports = class httpsServer extends nodefony.Service {
       this.fire("onClientError", e, socket);
     });
 
-    this.listen(this, "onTerminate", () => {
+    this.on("onTerminate", () => {
       if (this.server) {
         this.server.close(() => {
           this.logger(this.type + " SHUTDOWN Server is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");

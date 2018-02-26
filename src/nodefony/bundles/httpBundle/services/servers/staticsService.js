@@ -15,7 +15,7 @@ module.exports = class serverStatics extends nodefony.Service {
     }
 
     this.environment = this.kernel.environment;
-    this.listen(this, "onBoot", () => {
+    this.once("onBoot", () => {
       this.settings = this.getParameters("bundles.http").statics;
       this.global = nodefony.extend({}, defaultStatic, this.settings.defaultOptions, options);
       this.initStaticFiles();

@@ -59,7 +59,9 @@ module.exports = nodefony.register("SecuredArea", function () {
 
     handleCrossDomain(context) {
       let redirect = false;
-      if (context.security.redirect_Https && context.protocol === "https" && context.originUrl.protocol === "http:") {
+      if (context.security.redirect_Https &&
+        context.protocol === "https" &&
+        context.originUrl.protocol === "http:") {
         redirect = "https";
       }
       if (context.crossDomain) {
@@ -246,7 +248,7 @@ module.exports = nodefony.register("SecuredArea", function () {
             if (context.isAjax) {
               context.isJson = true;
             }
-            let res = context.security.handleError(context, error);
+            let res = this.handleError(context, error);
             if (res) {
               return reject(res);
             }

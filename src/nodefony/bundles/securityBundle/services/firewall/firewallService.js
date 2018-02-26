@@ -152,37 +152,48 @@ module.exports = class security extends nodefony.Service {
       }
     });
 
-    this.on("onSecurity", (context) => {
-      switch (context.type) {
-      case "HTTPS":
-      case "HTTP":
-      case "HTTP2":
-        context.response.setHeaders(this.settings[context.scheme]);
+    //this.on("onSecurity", (context) => {
+    //});
+  }
+
+  handleSecurity(context) {
+    this.fire("onSecurity", context);
+    switch (context.type) {
+    case "HTTPS":
+    case "HTTP":
+    case "HTTP2":
+      context.response.setHeaders(this.settings[context.scheme]);
+      return new Promise((resolve, reject) => {
         context.once('onRequestEnd', () => {
           return this.handle(context)
             .then((ctx) => {
               if (ctx && (!ctx.isRedirect)) {
-                return ctx.fire("onRequest");
+                ctx.fire("onRequest");
+                return resolve(ctx);
               }
+              return resolve(context);
             })
             .catch((error) => {
-              return context.fire("onError", context.container, error);
+              context.fire("onError", context.container, error);
+              return reject(error);
             });
         });
-        break;
-      case "WEBSOCKET SECURE":
-      case "WEBSOCKET":
-        return this.handle(context)
-          .then((ctx) => {
-            if (ctx) {
-              return ctx.fire("onRequest");
-            }
-          })
-          .catch((error) => {
-            return context.fire("onError", context.container, error);
-          });
-      }
-    });
+      });
+    case "WEBSOCKET SECURE":
+    case "WEBSOCKET":
+      return this.handle(context)
+        .then((ctx) => {
+          if (ctx) {
+            ctx.fire("onRequest");
+            return ctx;
+          }
+          return context;
+        })
+        .catch((error) => {
+          context.fire("onError", context.container, error);
+          return error;
+        });
+    }
   }
 
   isSecure(context) {
@@ -301,7 +312,6 @@ module.exports = class security extends nodefony.Service {
         } catch (error) {
           return reject(error);
         }
-
         if (context.type === "HTTP" && this.httpsReady) {
           if (context.security.redirect_Https) {
             return resolve(context.security.redirectHttps(context));
@@ -384,7 +394,6 @@ module.exports = class security extends nodefony.Service {
             return this.handleStateLess(context);
           }
         } catch (error) {
-          console.log(error)
           if (!error.code) {
             error.code = 500;
           }

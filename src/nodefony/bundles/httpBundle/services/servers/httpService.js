@@ -11,9 +11,9 @@ module.exports = class httpServer extends nodefony.Service {
     this.type = "HTTP";
     this.address = null;
     this.family = null;
-    this.listen(this, "onBoot", function () {
+    this.once("onBoot", () => {
       this.bundle = this.kernel.getBundles("http");
-      this.bundle.listen(this, "onServersReady", function (type) {
+      this.bundle.on("onServersReady", (type) => {
         if (type === this.type) {
           dns.lookup(this.domain, (err, addresses, family) => {
             if (err) {
@@ -29,7 +29,6 @@ module.exports = class httpServer extends nodefony.Service {
 
   createServer() {
     this.settings = this.getParameters("bundles.http").http || null;
-
     try {
       this.server = http.createServer();
       this.bundle.fire("onCreateServer", this.type, this);
@@ -75,7 +74,7 @@ module.exports = class httpServer extends nodefony.Service {
       }
     });
 
-    this.listen(this, "onTerminate", () => {
+    this.once("onTerminate", () => {
       if (this.server) {
         this.server.close(() => {
           this.logger(this.type + " SHUTDOWN Server is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");

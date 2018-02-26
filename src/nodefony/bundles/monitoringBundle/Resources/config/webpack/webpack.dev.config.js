@@ -1,5 +1,5 @@
 module.exports = {
-  //watch       : false,
+  mode: "development",
   devtool: "source-map",
   plugins: []
 };

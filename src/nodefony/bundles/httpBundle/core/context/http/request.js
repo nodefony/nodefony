@@ -27,6 +27,7 @@ module.exports = nodefony.register("Request", function () {
       return buffer.length;
     }
     parse() {
+      this.request.context.requestEnded = true;
       this.request.context.fire("onRequestEnd", this.request);
     }
   };
@@ -173,11 +174,13 @@ module.exports = nodefony.register("Request", function () {
           this.parserRequest();
         } else {
           this.request.on("end", () => {
+            this.context.requestEnded = true;
             this.context.fire("onRequestEnd", this);
           });
         }
       } catch (error) {
         this.request.on("end", () => {
+          this.context.requestEnded = true;
           this.context.fire("onError", this.context.container, error);
         });
       }
@@ -253,6 +256,7 @@ module.exports = nodefony.register("Request", function () {
               this.context.fire("onError", this.context.container, err);
             });
           }
+          this.context.requestEnded = true;
           this.context.fire("onRequestEnd", this);
         });
       }

@@ -16,13 +16,13 @@ module.exports = class httpKernel extends nodefony.Service {
     this.httpsPort = this.kernel.httpsPort;
     this.container.addScope("request");
     this.container.addScope("subRequest");
-    this.listen(this, "onServerRequest", (request, response, type) => {
+    /*this.on("onServerRequest", (request, response, type) => {
       try {
-        this.handle(request, response, type);
+        return this.handle(request, response, type);
       } catch (e) {
         throw e;
       }
-    });
+    });*/
 
     // listen KERNEL EVENTS
     this.once("onBoot", () => {
@@ -46,7 +46,7 @@ module.exports = class httpKernel extends nodefony.Service {
       this.corsManager = this.get("cors");
     });
 
-    this.listen(this, "onClientError", (e, socket) => {
+    this.on("onClientError", (e, socket) => {
       this.logger(e, "WARNING", "SOCKET CLIENT ERROR");
       socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
     });
@@ -425,11 +425,17 @@ module.exports = class httpKernel extends nodefony.Service {
     }
     response.setHeader("Server", "nodefony");
     if (this.kernel.settings.system.statics) {
-      this.serverStatic.handle(request, response, () => {
+      this.serverStatic.handle(request, response, (error) => {
+        if (error) {
+          this.logger(error, "ERROR", " STATICS SERVER");
+          return;
+        }
         this.fire("onServerRequest", request, response, type);
+        return this.handle(request, response, type);
       });
     } else {
       this.fire("onServerRequest", request, response, type);
+      return this.handle(request, response, type);
     }
   }
 
@@ -448,7 +454,27 @@ module.exports = class httpKernel extends nodefony.Service {
     }
   }
 
-  handleHttp(container, request, response, type) {
+  handleFrontController(context) {
+    let controller = null;
+    if (this.firewall) {
+      context.secure = this.firewall.isSecure(context);
+    }
+    // FRONT ROUTER
+    let resolver = this.router.resolve(context);
+    if (resolver.resolve) {
+      context.resolver = resolver;
+      controller = resolver.newController(context.container, context);
+      if (controller.sessionAutoStart) {
+        context.sessionAutoStart = controller.sessionAutoStart;
+      }
+      return controller;
+    }
+    let error = new Error("Not Found");
+    error.code = 404;
+    throw error;
+  }
+
+  createHttpContext(container, request, response, type) {
     let context = null;
     try {
       context = new nodefony.context.http(container, request, response, type);
@@ -458,10 +484,6 @@ module.exports = class httpKernel extends nodefony.Service {
     }
     //request events
     context.once("onError", this.onError.bind(this));
-    let resolver = null;
-    let controller = null;
-    let next = null;
-    let secure = false;
     //response events
     context.response.response.once("finish", () => {
       if (context.finished) {
@@ -478,12 +500,15 @@ module.exports = class httpKernel extends nodefony.Service {
       request = null;
       response = null;
       container = null;
-      resolver = null;
-      type = null;
-      next = null;
     });
+    return context;
+  }
 
+  handleHttp(container, request, response, type) {
+    let context = null;
+    let controller = null;
     try {
+      context = this.createHttpContext(container, request, response, type);
       this.logger("FROM : " +
         context.remoteAddress +
         " ORIGIN : " + context.originUrl.host +
@@ -495,38 +520,23 @@ module.exports = class httpKernel extends nodefony.Service {
           " REQUEST " + context.method));
 
       // DOMAIN VALID
-      next = this.checkValidDomain(context);
-      if (next !== 200) {
-        return;
+      if (this.checkValidDomain(context) !== 200) {
+        return context;
       }
-      if (this.firewall) {
-        secure = this.firewall.isSecure(context);
-      }
-      // FRONT ROUTER
-      resolver = this.router.resolve(context);
-      if (resolver.resolve) {
-        context.resolver = resolver;
-        controller = resolver.newController(container, context);
-        if (controller.sessionAutoStart) {
-          context.sessionAutoStart = controller.sessionAutoStart;
-        }
-      } else {
-        if (secure) {
-          return this.fire("onSecurity", context);
-        }
-        let error = new Error("Not Found");
-        error.code = 404;
-        throw error;
-      }
+      controller = this.handleFrontController(context);
+
     } catch (e) {
       context.once('onRequestEnd', () => {
         return context.fire("onError", container, e);
       });
     }
+    if (context.secure) {
+      let res = this.firewall.handleSecurity(context);
+
+      return res;
+
+    }
     try {
-      if (secure) {
-        return this.fire("onSecurity", context);
-      }
       context.once('onRequestEnd', () => {
         try {
           if (context.sessionAutoStart || context.hasSession()) {
@@ -556,6 +566,26 @@ module.exports = class httpKernel extends nodefony.Service {
     }
   }
 
+  createWebsocketContext(container, request, type) {
+    let context = new nodefony.context.websocket(container, request, type);
+    context.listen(this, "onError", this.onError);
+    context.once('onFinish', (context) => {
+      this.container.leaveScope(container);
+      context.clean();
+      context = null;
+      request = null;
+      container = null;
+      type = null;
+    });
+    context.once('onConnect', (context) => {
+      if (context.security) {
+        return this.firewall.handleSecurity(context);
+      }
+      return context.fire("onRequest");
+    });
+    return context;
+  }
+
   onWebsocketRequest(request, type) {
     if (request.resourceURL.path &&
       this.sockjs &&
@@ -569,55 +599,22 @@ module.exports = class httpKernel extends nodefony.Service {
       return;
     }
     this.fire("onServerRequest", request, null, type);
+    return this.handle(request, null, type);
   }
 
   handleWebsocket(container, request, type) {
-    let context = new nodefony.context.websocket(container, request, type);
-    context.listen(this, "onError", this.onError);
-    let resolver = null;
-    let next = null;
+    let context = this.createWebsocketContext(container, request, type);
+    this.logger("FROM : " + context.remoteAddress +
+      " ORIGIN : " + context.originUrl.host +
+      " URL : " + context.url, "INFO", type);
     let controller = null;
-    let secure = false;
-    context.once('onConnect', (context) => {
-      if (context.security) {
-        return this.fire("onSecurity", context);
-      }
-      return context.fire("onRequest");
-    });
-    context.once('onFinish', (context) => {
-      this.container.leaveScope(container);
-      context.clean();
-      context = null;
-      request = null;
-      container = null;
-      type = null;
-      next = null;
-      resolver = null;
-    });
-
     try {
       // DOMAIN VALID
-      next = this.checkValidDomain(context);
-      if (next !== 200) {
+      if (this.checkValidDomain(context) !== 200) {
         return context;
       }
-      // FRONT ROUTER
-      resolver = this.router.resolve(context);
-      if (resolver.resolve) {
-        context.resolver = resolver;
-        controller = resolver.newController(container, context);
-        if (controller.sessionAutoStart) {
-          context.sessionAutoStart = controller.sessionAutoStart;
-        }
-        if (this.firewall) {
-          secure = this.firewall.isSecure(context);
-        }
-      } else {
-        let error = new Error("Not Found");
-        error.code = 404;
-        throw error;
-      }
-      if (secure) {
+      controller = this.handleFrontController(context);
+      if (context.secure) {
         return context.fire("connect");
       }
       try {

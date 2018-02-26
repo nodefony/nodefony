@@ -16,7 +16,7 @@ module.exports = class websocketServer extends nodefony.Service {
 
   createServer(http) {
 
-    this.bundle.listen(this, "onServersReady", function (type) {
+    this.bundle.on("onServersReady", (type) => {
       if (type === "HTTP") {
         try {
           this.settings = this.getParameters("bundles.http").websocket || {};
@@ -27,7 +27,7 @@ module.exports = class websocketServer extends nodefony.Service {
             return this.httpKernel.onWebsocketRequest(request, this.type);
           });
 
-          this.kernel.listen(this, "onTerminate", () => {
+          this.kernel.once("onTerminate", () => {
             if (this.websocketServer && this.ready) {
               this.websocketServer.shutDown();
               this.logger(" SHUTDOWN WEBSOCKET Server is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");

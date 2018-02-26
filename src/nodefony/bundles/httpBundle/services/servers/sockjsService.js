@@ -67,20 +67,20 @@ module.exports = class sockjs extends nodefony.Service {
 
     this.compilers = {};
     this.sockets = [];
-    this.kernel.on("onBoot", () => {
+    this.kernel.once("onBoot", () => {
       if (this.bundle.settings.sockjs) {
         this.clientOverlay = this.bundle.settings.sockjs.overlay || false;
         this.hot = this.bundle.settings.sockjs.hot || false;
         this.websocket = this.bundle.settings.sockjs.websocket;
         this.protocol = this.bundle.settings.sockjs.protocol.toLowerCase();
-        this.hostname = this.bundle.settings.sockjs.hostname ;
+        this.hostname = this.bundle.settings.sockjs.hostname;
         this.port = this.bundle.settings.sockjs.port;
         this.setPrefix(this.bundle.settings.sockjs.prefix || defaultPrefix);
       }
     });
 
     if (this.kernel.environment === "dev") {
-      this.bundle.listen(this, 'onCreateServer', (type, service) => {
+      this.bundle.on('onCreateServer', (type, service) => {
         //this[type] = service ;
         switch (type) {
         case "HTTP":

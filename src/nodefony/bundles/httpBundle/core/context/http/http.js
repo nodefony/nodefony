@@ -10,8 +10,8 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.isElectron = this.kernel.isElectron;
       this.protocol = (type === "HTTP2") ? "2.0" : "1.1";
       this.scheme = (type === "HTTPS" || type === "HTTP2") ? "https" : "http";
-
       this.pushAllowed = false;
+      this.requestEnded = false;
 
       if (this.type === "HTTP2") {
         this.request = new nodefony.Request2(request, this);
@@ -23,9 +23,9 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.parseCookies();
       this.cookieSession = this.getCookieSession(this.sessionService.settings.name);
 
-      this.once("onRequestEnd", () => {
+      /*this.once("onRequestEnd", () => {
         this.requestEnded = true;
-      });
+      });*/
       this.method = this.request.getMethod();
       this.isAjax = this.request.isAjax();
       this.isHtml = this.request.acceptHtml;
@@ -315,7 +315,7 @@ nodefony.register.call(nodefony.context, "http", function () {
         res = this.response.redirect(Url, status, headers);
       }
       this.isRedirect = true;
-      this.send();
+      return this.send();
     }
 
     redirectHttps(status, headers) {

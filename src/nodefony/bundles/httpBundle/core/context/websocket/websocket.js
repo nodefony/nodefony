@@ -23,7 +23,6 @@ nodefony.register.call(nodefony.context, "websocket", function () {
 
     constructor(container, request, type) {
       super(container, request, null, type);
-
       this.protocol = (type === "WEBSOCKET SECURE") ? "wss" : "ws";
       this.scheme = (type === "WEBSOCKET SECURE") ? "wss" : "ws";
       this.isJson = true;
@@ -51,14 +50,11 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       } catch (e) {
         this.originUrl = url.parse(this.url);
       }
-
       // domain
       this.domain = this.getHostName();
       this.validDomain = this.isValidDomain();
-      this.logger("FROM : " + this.remoteAddress + " ORIGIN : " + this.originUrl.host + " URL : " + this.url, "INFO");
-
       // LISTEN EVENTS
-      this.listen(this, "onView", (result) => {
+      this.on("onView", (result) => {
         if (this.response) {
           this.response.body = result;
         }

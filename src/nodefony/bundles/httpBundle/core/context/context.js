@@ -25,6 +25,7 @@ nodefony.register("Context", () => {
       this.security = null;
       this.user = null;
       this.token = null;
+      this.secure = false;
     }
 
     logger(pci, severity, msgid, msg) {
