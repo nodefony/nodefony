@@ -29,7 +29,7 @@ module.exports = {
   "login-jwt": {
     pattern: "/test/firewall/jwt",
     defaults: {
-      controller: "securityBundle:login:jwt"
+      controller: "securityBundle:login:login"
     }
   }
 };

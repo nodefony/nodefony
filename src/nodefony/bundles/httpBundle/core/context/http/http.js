@@ -257,10 +257,11 @@ nodefony.register.call(nodefony.context, "http", function () {
             if (this.request && this.response) {
               this.clean();
             }
-            return;
+            return this;
           }
           this.writeHead();
-          return this.write();
+          this.write();
+          return this;
         })
         .catch((error) => {
           this.logger(error, "ERROR");
@@ -269,6 +270,7 @@ nodefony.register.call(nodefony.context, "http", function () {
           }
           this.writeHead();
           this.write();
+          return this;
         });
     }
 

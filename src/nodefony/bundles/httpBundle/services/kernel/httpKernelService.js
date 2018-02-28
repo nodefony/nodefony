@@ -529,12 +529,17 @@ module.exports = class httpKernel extends nodefony.Service {
 
     } catch (e) {
       context.once('onRequestEnd', () => {
-        return context.fire("onError", container, e);
+        context.fire("onError", container, e);
+        return context;
       });
     }
     if (context.secure) {
-      let res = this.firewall.handleSecurity(context);
-      return res;
+      /*return new Promise((resolve, reject) => {
+        return resolve(this.firewall.handleSecurity(context))
+      })*/
+      return this.firewall.handleSecurity(context);
+
+      //return res;
     }
     try {
       context.once('onRequestEnd', () => {
@@ -545,24 +550,26 @@ module.exports = class httpKernel extends nodefony.Service {
                 if (!(session instanceof nodefony.Session)) {
                   throw new Error("SESSION START session storage ERROR");
                 }
-                //this.logger("AUTOSTART SESSION", "DEBUG");
                 if (this.firewall) {
                   this.firewall.getSessionToken(context, session);
                 }
                 context.fire("onRequest");
-                return session;
+                return context;
               }).catch((error) => {
-                throw error;
+                return error;
               });
           } else {
-            return context.fire("onRequest");
+            context.fire("onRequest");
+            return context;
           }
         } catch (e) {
-          return context.fire("onError", container, e);
+          context.fire("onError", container, e);
+          return e;
         }
       });
     } catch (e) {
-      return context.fire("onError", container, e);
+      context.fire("onError", container, e);
+      return e;
     }
   }
 

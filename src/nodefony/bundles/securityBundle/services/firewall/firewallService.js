@@ -171,7 +171,6 @@ module.exports = class security extends nodefony.Service {
                 if (ctx && (!ctx.isRedirect)) {
                   ctx.fire("onRequest");
                 }
-                return resolve(ctx);
               }
               return resolve(ctx);
             })

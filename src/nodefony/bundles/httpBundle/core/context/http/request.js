@@ -126,7 +126,7 @@ module.exports = nodefony.register("Request", function () {
     DELETE: true
   };
 
-  const Request = class Request {
+  const Request = class httpRequest {
 
     constructor(request, context) {
       this.context = context;

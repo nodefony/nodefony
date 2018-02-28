@@ -68,7 +68,11 @@ module.exports = nodefony.register("Response2", () => {
           if (data) {
             return this.stream.write(this.setBody(data), (encoding || this.encoding));
           }
-          return this.stream.write(this.body, (encoding || this.encoding));
+          if (this.body) {
+            return this.stream.write(this.body, (encoding || this.encoding));
+          } else {
+            return;
+          }
         } catch (e) {
           throw e;
         }
