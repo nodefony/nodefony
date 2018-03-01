@@ -223,7 +223,6 @@ security:
           form_login:
             login_path:                             /login/ldap_area
             check_path:                             /ldap
-            default_target_path:                    /
           #CHECK ./node_modules/.bin/ldapjs-search   -u ldap://ldap-server.com -b "dc=object,dc=com" "uid=user"
           passport-ldap:
             provider:                               false

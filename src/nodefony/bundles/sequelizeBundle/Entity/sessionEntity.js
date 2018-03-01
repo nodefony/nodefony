@@ -10,6 +10,10 @@ const schema = {
     defaultValue: "default",
     primaryKey: true
   },
+  username: {
+    type: Sequelize.STRING(126).BINARY,
+    defaultValue: "",
+  },
   Attributes: {
     type: Sequelize.TEXT,
     set: function (value) {
@@ -61,17 +65,17 @@ module.exports = class session extends nodefony.Entity {
      */
     super(bundle, "session", "sequelize", "nodefony");
 
-    this.orm.on("onOrmReady", ( /*orm*/ ) => {
-      let user = this.orm.getEntity("user");
-      if (user) {
-        this.model.belongsTo(user, {
-          foreignKey: 'username',
-          constraints: false
-        });
-      } else {
-        throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
-      }
-    });
+    /*this.orm.on("onOrmReady", ( orm ) => {
+        let user = this.orm.getEntity("user");
+        if (user) {
+          this.model.belongsTo(user, {
+            foreignKey: 'username',
+            constraints: false
+          });
+        } else {
+          throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
+        }
+      });*/
   }
 
   registerModel(db) {

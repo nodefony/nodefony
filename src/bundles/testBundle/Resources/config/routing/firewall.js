@@ -26,10 +26,10 @@ module.exports = {
       controller: "testBundle:firewall:api"
     }
   },
-  "login-jwt": {
-    pattern: "/test/firewall/jwt",
+  "check-ldap": {
+    pattern: "/ldap",
     defaults: {
-      controller: "securityBundle:login:login"
+      controller: "testBundle:firewall:ldap"
     }
   }
 };

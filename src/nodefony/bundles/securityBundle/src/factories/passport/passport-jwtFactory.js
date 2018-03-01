@@ -43,7 +43,8 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
       this.getExtractor(options);
       return new JwtStrategy(options, (jwt_payload, done) => {
         this.logger("TRY AUTHORISATION " + this.name, "DEBUG");
-        let mytoken = this.createToken(jwt_payload);
+        //let mytoken = this.createToken(jwt_payload);
+        let mytoken = new nodefony.security.tokens.jwt(jwt_payload);
         this.authenticateToken(mytoken, this.provider).then((token) => {
           done(null, token);
           return token;
@@ -54,8 +55,13 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
       });
     }
 
-    createToken(payload) {
-      return new nodefony.security.tokens.jwt(payload);
+    createToken(context = null /*, providerName = null*/ ) {
+      if (context.metaSecurity) {
+        if (context.metaSecurity.token) {
+          return new nodefony.security.tokens.jwt(context.metaSecurity.token.payload);
+        }
+      }
+      return new nodefony.security.tokens.jwt();
     }
 
   };

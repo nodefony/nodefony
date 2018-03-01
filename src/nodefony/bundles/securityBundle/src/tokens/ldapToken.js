@@ -4,17 +4,22 @@
 
 nodefony.registerToken("ldap", function () {
 
-
   const defaultWrapper = function () {
     return {
       username: '',
       name: '',
       surname: '',
+      lang: '',
+      enabled: true,
+      userNonExpired: true,
+      credentialsNonExpired: true,
+      accountNonLocked: true,
       email: '',
       password: '',
       roles: ["USER"],
       displayName: '',
       url: '',
+      gender: '',
       image: ''
     };
   };
@@ -58,7 +63,6 @@ nodefony.registerToken("ldap", function () {
     }
   };
 
-
   const ldapToken = class ldapToken extends nodefony.Token {
 
     constructor(profile, wrapper) {
@@ -67,7 +71,21 @@ nodefony.registerToken("ldap", function () {
       this.profileWrapper = wrapper;
       let obj = this.wrapperLdap(this.profile);
       if (obj.username) {
-        this.setUser(new nodefony.User(obj.username));
+        this.setUser(new nodefony.User(
+          obj.username,
+          null,
+          obj.roles,
+          obj.lang,
+          obj.enabled,
+          obj.userNonExpired,
+          obj.credentialsNonExpired,
+          obj.accountNonLocked,
+          obj.name,
+          obj.surname,
+          obj.email,
+          obj.gender,
+          obj.url,
+          obj.image));
       }
     }
 
@@ -85,6 +103,18 @@ nodefony.registerToken("ldap", function () {
       }
       return nodefony.extend(defaultWrapper.call(this), obj);
     }
+
+    serialize() {
+      let serial = super.serialize();
+      serial.profile = this.profile;
+      return serial;
+    }
+
+    unserialize(token) {
+      this.profile = token.profile;
+      return super.unserialize(token);
+    }
+
 
   };
   return ldapToken;

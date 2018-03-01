@@ -23,6 +23,7 @@ nodefony.register("Context", () => {
       this.crossDomain = null;
       this.secureArea = null;
       this.security = null;
+      this.metaSecurity = null;
       this.user = null;
       this.token = null;
       this.secure = false;
@@ -46,6 +47,8 @@ nodefony.register("Context", () => {
       delete this.secureArea;
       this.security = null;
       delete this.security;
+      this.metaSecurity = null;
+      delete this.metaSecurity;
       this.user = null;
       delete this.user;
       this.token = null;
@@ -115,6 +118,10 @@ nodefony.register("Context", () => {
 
     getUser() {
       return this.user ||  null;
+    }
+
+    getToken() {
+      return this.token || null;
     }
 
     generateAbsoluteUrl(name, variables) {

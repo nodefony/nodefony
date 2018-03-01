@@ -167,6 +167,7 @@ module.exports = class security extends nodefony.Service {
         context.once('onRequestEnd', () => {
           return this.handle(context)
             .then((ctx) => {
+              //console.log(ctx instanceof nodefony.Context)
               if (context === ctx) {
                 if (ctx && (!ctx.isRedirect)) {
                   ctx.fire("onRequest");
@@ -238,23 +239,23 @@ module.exports = class security extends nodefony.Service {
 
   getSessionToken(context, session) {
     if (session) {
-      let meta = session.getMetaBag("security");
-      if (meta) {
+      context.metaSecurity = session.getMetaBag("security");
+      if (context.metaSecurity) {
         if (context.security) {
-          if (context.security.name !== meta.firewall) {
-            if (meta.token.factory === "anonymous") {
+          if (context.security.name !== context.metaSecurity.firewall) {
+            if (context.metaSecurity.token.factory === "anonymous") {
               return null;
             }
           }
         }
         let token = null;
         let factory = null;
-        if (meta.token && meta.token.factory) {
-          factory = this.getFactory(meta.token.factory, meta.firewall);
+        if (context.metaSecurity.token && context.metaSecurity.token.factory) {
+          factory = this.getFactory(context.metaSecurity.token.factory, context.metaSecurity.firewall);
         }
         if (factory) {
-          token = factory.createToken(context, meta.token.provider);
-          token.unserialize(meta.token);
+          token = factory.createToken(context, factory.providerName);
+          token.unserialize(context.metaSecurity.token);
           if (token) {
             if (!token.isAuthenticated()) {
               this.deleteSessionToken(context, session);

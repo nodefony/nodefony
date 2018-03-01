@@ -21,4 +21,8 @@ module.exports = class firewallController extends nodefony.controller {
     return this.renderJson(this.context.token);
   }
 
+  ldapAction() {
+    return this.redirect("/");
+  }
+
 };

@@ -552,6 +552,10 @@ module.exports = nodefony.register("controller", function () {
       return this.context.getUser();
     }
 
+    getToken() {
+      return this.context.getToken();
+    }
+
     isAjax() {
       return this.getRequest().isAjax();
     }

@@ -534,12 +534,7 @@ module.exports = class httpKernel extends nodefony.Service {
       });
     }
     if (context.secure) {
-      /*return new Promise((resolve, reject) => {
-        return resolve(this.firewall.handleSecurity(context))
-      })*/
       return this.firewall.handleSecurity(context);
-
-      //return res;
     }
     try {
       context.once('onRequestEnd', () => {
@@ -550,12 +545,18 @@ module.exports = class httpKernel extends nodefony.Service {
                 if (!(session instanceof nodefony.Session)) {
                   throw new Error("SESSION START session storage ERROR");
                 }
-                if (this.firewall) {
-                  this.firewall.getSessionToken(context, session);
+                try {
+                  if (this.firewall) {
+                    this.firewall.getSessionToken(context, session);
+                  }
+                } catch (e) {
+                  context.fire("onError", container, e);
+                  return e;
                 }
                 context.fire("onRequest");
                 return context;
               }).catch((error) => {
+                context.fire("onError", container, error);
                 return error;
               });
           } else {
@@ -631,9 +632,13 @@ module.exports = class httpKernel extends nodefony.Service {
               if (!(session instanceof nodefony.Session)) {
                 throw new Error("SESSION START session storage ERROR");
               }
-              this.logger("AUTOSTART SESSION", "DEBUG");
-              if (this.firewall) {
-                this.firewall.getSessionToken(context, session);
+              try {
+                if (this.firewall) {
+                  this.firewall.getSessionToken(context, session);
+                }
+              } catch (e) {
+                context.fire("onError", container, e);
+                return context;
               }
               context.fire("connect");
             }).catch((error) => {

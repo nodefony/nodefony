@@ -40,8 +40,14 @@ module.exports = nodefony.register('passeportFactory', () => {
       });
     }
 
-    createToken(username, password) {
-      return new nodefony.security.tokens.userPassword(username, password);
+    createToken(context = null /*, providerName = null*/ ) {
+      if (context.metaSecurity) {
+        if (context.metaSecurity.token && context.metaSecurity.token.user) {
+          return new nodefony.security.tokens.userPassword(context.metaSecurity.token.user);
+        }
+      } else {
+        return new nodefony.security.tokens.userPassword();
+      }
     }
 
   };

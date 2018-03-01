@@ -14,7 +14,8 @@ module.exports = nodefony.registerFactory("passport-basic", () => {
     getStrategy(options) {
       return new BasicStrategy(options, (username, password, done) => {
         this.logger("TRY AUTHORISATION " + this.name + " : " + username, "DEBUG");
-        let mytoken = this.createToken(username);
+        let mytoken = new nodefony.security.tokens.userPassword(username, password);
+        //let mytoken = this.createToken(username);
         this.authenticateToken(mytoken, this.provider).then((token) => {
           if (token.getCredentials() === password) {
             done(null, token);

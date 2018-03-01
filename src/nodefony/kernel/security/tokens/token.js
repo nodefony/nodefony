@@ -133,6 +133,7 @@ module.exports = nodefony.register('Token', () => {
       } catch (e) {
         throw e;
       }
+      return token;
     }
   };
 

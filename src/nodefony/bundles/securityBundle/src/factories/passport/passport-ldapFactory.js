@@ -21,7 +21,8 @@ module.exports = nodefony.registerFactory("passport-ldap", () => {
         this.logger("TRY AUTHENTICATION " + this.name + " : " + profile.uid, "DEBUG");
         if (profile) {
           this.logger("PROFILE AUTHENTICATION " + this.name + " : " + profile.displayName, "DEBUG");
-          let mytoken = this.createToken(profile, this.profileWrapper);
+          //let mytoken = this.createToken(profile);
+          let mytoken = new nodefony.security.tokens.ldap(profile, this.profileWrapper);
           this.authenticateToken(mytoken, this.provider).then((token) => {
             done(null, token);
             return token;
@@ -35,8 +36,13 @@ module.exports = nodefony.registerFactory("passport-ldap", () => {
       });
     }
 
-    createToken(profile, wrapper) {
-      return new nodefony.security.tokens.ldap(profile, wrapper);
+    createToken(context = null /*, providerName = null*/ ) {
+      if (context.metaSecurity) {
+        if (context.metaSecurity.token && context.metaSecurity.token.profile) {
+          return new nodefony.security.tokens.ldap(context.metaSecurity.token.profile, this.profileWrapper);
+        }
+      }
+      return new nodefony.security.tokens.ldap(null, this.profileWrapper);
     }
 
   };
