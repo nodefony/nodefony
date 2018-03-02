@@ -31,5 +31,11 @@ module.exports = {
     defaults: {
       controller: "testBundle:firewall:ldap"
     }
+  },
+  "check-jwt": {
+    pattern: "/test/firewall/jwt",
+    defaults: {
+      controller: "securityBundle:login:jwt"
+    }
   }
 };

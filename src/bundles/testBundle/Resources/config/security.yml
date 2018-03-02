@@ -16,7 +16,6 @@ security:
           provider:                                 nodefony
           pattern:                                  ^/demo
           anonymous:                                ~
-          #stateless:                               ~
         # main
         test-main-area:
             pattern:                                ^/test/firewall/anonymous
@@ -203,11 +202,12 @@ security:
         #           login_path:                     /login/ldap
         #           default_target_path:            /demo
         #         passport-ldapauth:
+        #           provider:                       false
         #           server:
         #             url:                          'ldap://ldad-server.com'
         #             searchBase:                   'dc=nodefony,dc=com'
         #             searchFilter:                 '(uid={{username}})'
-        #           usernameField:                  'email'
+        #           usernameField:                  'username'
         #           passwordField:                  'passwd'
         #           profile_wrapper:
         #             username:                     "profile.uid"
@@ -216,7 +216,6 @@ security:
         #             email:                        "profile.mail"
         #             displayName:                  "profile.cn"
         #         logout:                           /logout
-        #         context:                          documentation
         ldap_area:
           pattern:                                  ^/ldap
           provider:                                 nodefony

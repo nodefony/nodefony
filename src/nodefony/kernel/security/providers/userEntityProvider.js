@@ -2,8 +2,8 @@ module.exports = nodefony.register("userEntityProvider", () => {
 
   const userEntityProvider = class userEntityProvider extends nodefony.Provider {
 
-    constructor(manager, config) {
-      super("userEntityProvider", manager);
+    constructor(name, manager, config) {
+      super(name, manager);
       this.entityName = config.name || "user";
       this.userProperty = config.property ||  "username";
       this.orm = this.get(this.kernel.getOrm());
@@ -19,16 +19,6 @@ module.exports = nodefony.register("userEntityProvider", () => {
       return this.orm.getEntity(this.entityName);
     }
 
-    loadUserByUsername( /*username*/ ) {
-      throw new Error(`Provider : ${this.name} loadUserByUsername method  not defined`);
-    }
-
-    refreshUser(user) {
-      if (user instanceof nodefony.User) {
-        return this.loadUserByUsername(user.getUsername());
-      }
-      throw new Error("refreshUser bad user type");
-    }
   };
 
   return userEntityProvider;

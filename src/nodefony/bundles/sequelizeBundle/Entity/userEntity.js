@@ -64,17 +64,17 @@ module.exports = class user extends nodefony.Entity {
      */
     super(bundle, "user", "sequelize", "nodefony");
 
-    this.orm.on("onOrmReady", ( /*orm*/ ) => {
-      let session = this.orm.getEntity("session");
-      if (session) {
-        this.model.hasMany(session, {
-          foreignKey: 'username',
-          onDelete: 'CASCADE'
-        });
-      } else {
-        throw new Error("ENTITY ASSOCIATION session NOT AVAILABLE");
-      }
-    });
+    /*this.orm.on("onOrmReady", ( orm ) => {
+        let session = this.orm.getEntity("session");
+        if (session) {
+          this.model.hasMany(session, {
+            foreignKey: 'username',
+            onDelete: 'CASCADE'
+          });
+        } else {
+          throw new Error("ENTITY ASSOCIATION session NOT AVAILABLE");
+        }
+      });*/
   }
 
   registerModel(db) {

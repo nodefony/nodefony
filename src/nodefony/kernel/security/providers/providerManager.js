@@ -26,12 +26,12 @@ module.exports = nodefony.register('providerManager', () => {
           case !!config.entity:
             if (config.class) {
               if (config.class in nodefony.security.providers) {
-                this.providers[name] = new nodefony.security.providers[config.class](this, config.entity);
+                this.providers[name] = new nodefony.security.providers[config.class](name, this, config.entity);
               } else {
                 this.logger(new Error(`provider class not exist : ${config.class}`), "ERROR");
               }
             } else {
-              this.providers[name] = new nodefony.security.providers.userProvider(this, config.entity);
+              this.providers[name] = new nodefony.security.providers.userProvider(name, this, config.entity);
             }
             break;
           case !!config.chain:

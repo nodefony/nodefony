@@ -13,6 +13,7 @@ const schema = {
   username: {
     type: Sequelize.STRING(126).BINARY,
     defaultValue: "",
+    allowNull: true
   },
   Attributes: {
     type: Sequelize.TEXT,

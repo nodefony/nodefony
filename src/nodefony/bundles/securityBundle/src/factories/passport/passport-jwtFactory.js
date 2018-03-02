@@ -12,7 +12,6 @@ const cookiesExtractor = function (req) {
   return token;
 };
 
-
 module.exports = nodefony.registerFactory("passport-jwt", () => {
 
   const Factory = class Factory extends nodefony.passeportFactory {
@@ -43,9 +42,8 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
       this.getExtractor(options);
       return new JwtStrategy(options, (jwt_payload, done) => {
         this.logger("TRY AUTHORISATION " + this.name, "DEBUG");
-        //let mytoken = this.createToken(jwt_payload);
         let mytoken = new nodefony.security.tokens.jwt(jwt_payload);
-        this.authenticateToken(mytoken, this.provider).then((token) => {
+        this.authenticateToken(mytoken).then((token) => {
           done(null, token);
           return token;
         }).catch((error) => {

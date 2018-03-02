@@ -52,10 +52,10 @@ module.exports = nodefony.register('Factory', () => {
           if (!this.supportsToken(token)) {
             return reject(new Error("Factory " + this.name + " Token Unauthorized !! "));
           }
-          return this.authenticateToken(token, this.provider)
+          return this.authenticateToken(token)
             .then((token) => {
+              token.setAuthenticated(true);
               token.setFactory(this.name);
-              token.setProvider(this.providerName);
               return resolve(token);
             }).catch((e) => {
               return reject(e);
@@ -66,7 +66,15 @@ module.exports = nodefony.register('Factory', () => {
       });
     }
 
-    createToken( /* context, providerName*/ ) {}
+    createToken(context = null /*, providerName = null*/ ) {
+      if (context.metaSecurity) {
+        if (context.metaSecurity.token && context.metaSecurity.token.user) {
+          return new nodefony.security.tokens.userPassword(context.metaSecurity.token.user);
+        }
+      } else {
+        return new nodefony.security.tokens.userPassword();
+      }
+    }
 
     supportsToken( /*token*/ ) {
       return true;
@@ -74,26 +82,15 @@ module.exports = nodefony.register('Factory', () => {
 
     authenticateToken(token, provider) {
       if (provider) {
-        return provider.authenticate(token).then((token) => {
-          return provider.loadUserByUsername(token.getUsername())
-            .then((user) => {
-              if (user) {
-                token.setUser(user);
-                this.logger(`TRY AUTHENTICATION  ${token.getUsername()}  PROVIDER ${provider.name}`, "DEBUG");
-                return token;
-              }
-              throw Error(`user ${token.getUsername()} not found `);
-            }).catch((error) => {
-              throw error;
-            });
-        }).catch((error) => {
-          throw error;
-        });
+        return provider.authenticate(token);
       } else {
-        if (provider === false) {
+        if (provider === false ||  this.provider === false) {
           return new Promise((resolve) => {
             return resolve(token);
           });
+        }
+        if (this.provider) {
+          return this.provider.authenticate(token);
         }
         return new Promise((resolve, reject) => {
           return reject(new Error(`authenticateToken Provider ${provider}`));

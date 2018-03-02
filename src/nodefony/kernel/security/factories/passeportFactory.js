@@ -11,6 +11,10 @@ module.exports = nodefony.register('passeportFactory', () => {
       this.passport.use(this.strategy);
     }
 
+    getStrategy( /*options*/ ) {
+      throw new Error("Passport Factory  must redefine getStrategy method");
+    }
+
     authenticate(context) {
       return new Promise((resolve, reject) => {
         try {
@@ -28,7 +32,7 @@ module.exports = nodefony.register('passeportFactory', () => {
             if (token) {
               token.setAuthenticated(true);
               token.setFactory(this.name);
-              token.setProvider(this.providerName);
+              //token.setProvider(this.providerName);
               this.logger(`AUTHENTICATION  ${token.getUsername()}  SUCCESSFULLY `, "INFO");
               return resolve(token);
             }
@@ -38,16 +42,6 @@ module.exports = nodefony.register('passeportFactory', () => {
           return reject(error);
         }
       });
-    }
-
-    createToken(context = null /*, providerName = null*/ ) {
-      if (context.metaSecurity) {
-        if (context.metaSecurity.token && context.metaSecurity.token.user) {
-          return new nodefony.security.tokens.userPassword(context.metaSecurity.token.user);
-        }
-      } else {
-        return new nodefony.security.tokens.userPassword();
-      }
     }
 
   };

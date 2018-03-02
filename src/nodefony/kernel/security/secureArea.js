@@ -110,31 +110,29 @@ module.exports = nodefony.register("SecuredArea", function () {
           }
           try {
             //context.resolver = this.overrideURL(context, this.formLogin);
-            return this.redirect(context, this.formLogin);
-          } catch (e) {
-            error = new Error("Form Login route : " + this.formLogin + " this route not exist. Check Security config file");
-            error.code =  500;
-            return error;
-          }
-          if (!context.resolver.resolve) {
-            error = new Error("Form Login route : " + this.formLogin + " this route not exist. Check Security config file");
-            error.code =  500;
-            return error;
-          }
-          if (!context.isAjax) {
             if (context.session && e.message !== "Unauthorized") {
-              context.session.setFlashBag("session", {
+              context.session.setFlashBag("error", {
                 error: e.message
               });
             }
-          } else {
-            context.isJson = true;
-            //context.setXjson(e);
-            error = new Error(e.message);
-            error.code = e.status;
+            if (!context.isJson) {
+              return this.redirect(context, this.formLogin);
+            } else {
+              error = new Error();
+              error.code =  401;
+              return error;
+            }
+          } catch (e) {
+            error = new Error(e);
+            error.code =  500;
             return error;
           }
         } else {
+          if (context.session && e.message !== "Unauthorized") {
+            context.session.setFlashBag("error", {
+              error: e.message
+            });
+          }
           if (e.status) {
             error = new Error(e.message);
             error.code = e.status;
@@ -225,8 +223,7 @@ module.exports = nodefony.register("SecuredArea", function () {
             } catch (e) {
               throw e;
             }*/
-            if (context.isAjax) {
-              context.isJson = true;
+            if (context.isJson) {
               context.resolver = this.overrideURL(context, target);
               return resolve(context);
             } else {
@@ -240,9 +237,6 @@ module.exports = nodefony.register("SecuredArea", function () {
               error = new Error("undefined Error ");
               error.code = 401;
               return reject(error);
-            }
-            if (context.isAjax) {
-              context.isJson = true;
             }
             let res = this.handleError(context, error);
             if (res instanceof Error) {

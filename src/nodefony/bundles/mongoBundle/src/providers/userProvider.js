@@ -2,8 +2,8 @@ module.exports = nodefony.registerProvider("userProvider", () => {
 
   const Provider = class userProvider extends nodefony.userEntityProvider {
 
-    constructor(manager, entityName) {
-      super(manager, entityName);
+    constructor(name, manager, entityName) {
+      super(name, manager, entityName);
     }
 
     loadUserByUsername(username) {
