@@ -240,7 +240,6 @@ module.exports = nodefony.register("kernel", function () {
           this.setParameters("kernel", this.settings);
           this.httpPort = result.system.httpPort || null;
           this.httpsPort = result.system.httpsPort || null;
-          this.http2Port = result.system.http2Port || null;
           this.domain = result.system.domain || null;
           this.hostname = result.system.domain || null;
           this.hostHttp = this.hostname + ":" + this.httpPort;

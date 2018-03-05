@@ -11,17 +11,26 @@ module.exports = class httpServer extends nodefony.Service {
     this.type = "HTTP";
     this.address = null;
     this.family = null;
+    this.server = null;
     this.once("onBoot", () => {
       this.bundle = this.kernel.getBundles("http");
       this.bundle.on("onServersReady", (type) => {
         if (type === this.type) {
-          dns.lookup(this.domain, (err, addresses, family) => {
+          let addr = this.server.address();
+          this.domain = addr.address;
+          this.kernel.hostname = addr.address;
+          this.port = addr.port;
+          this.kernel.httpPort = addr.port;
+          this.kernel.hostHttp = this.kernel.hostname + ":" + addr.port;
+          this.family = addr.family;
+          this.logger("Listening on DOMAIN : http://" + this.domain + ":" + this.port, "INFO");
+          /*dns.lookup(this.domain, (err, addresses, family) => {
             if (err) {
               throw err;
             }
             this.address = addresses;
             this.family = family;
-          });
+          });*/
         }
       });
     });
@@ -49,10 +58,8 @@ module.exports = class httpServer extends nodefony.Service {
       this.server.maxHeadersCount = this.settings.maxHeadersCount;
     }
 
-
     // LISTEN ON PORT
     this.server.listen(this.port, this.domain, () => {
-      this.logger("Listening on DOMAIN : http://" + this.domain + ":" + this.port, "INFO");
       this.ready = true;
       this.bundle.fire("onServersReady", this.type, this);
     });

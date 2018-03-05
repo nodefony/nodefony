@@ -55,7 +55,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.domain = this.getHostName();
       this.validDomain = this.isValidDomain();
       this.remoteAddress = this.request.remoteAddress;
-      this.once("onRequest", this.handle.bind(this));
+      //this.once("onRequest", this.handle.bind(this));
       this.once("onResponse", this.send.bind(this));
       this.once("onTimeout", () => {
         let error = new Error("Request Timeout");
@@ -199,6 +199,7 @@ nodefony.register.call(nodefony.context, "http", function () {
           this.resolver = this.router.resolve(this);
         }
         //WARNING EVENT KERNEL
+        this.fire("onRequest", this, this.resolver);
         this.kernel.fire("onRequest", this, this.resolver);
         if (this.resolver.resolve) {
           let ret = this.resolver.callController(data);

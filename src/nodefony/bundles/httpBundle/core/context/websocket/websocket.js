@@ -60,7 +60,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
         }
       });
       this.listen(this, "onResponse", this.send);
-      this.once("onRequest", this.handle.bind(this));
+      //this.once("onRequest", this.handle.bind(this));
       this.once("connect", () => {
         this.connect(this.resolver.acceptedProtocol);
       });
@@ -229,6 +229,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
           }
         }
         //WARNING EVENT KERNEL
+        this.fire("onRequest", this, this.resolver);
         this.kernel.fire("onRequest", this, this.resolver);
         if (this.resolver.resolve) {
           return this.resolver.callController(data || null);

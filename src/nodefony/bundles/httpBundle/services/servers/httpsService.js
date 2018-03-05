@@ -26,16 +26,25 @@ module.exports = class httpsServer extends nodefony.Service {
     this.address = null;
     this.family = null;
     this.type = "HTTPS";
+    this.server = null;
     this.once("onBoot", () => {
       this.bundle.on("onServersReady", (type) => {
         if (type === this.type) {
-          dns.lookup(this.domain, (err, addresses, family) => {
+          let addr = this.server.address();
+          this.domain = addr.address;
+          this.kernel.hostname = addr.address;
+          this.port = addr.port;
+          this.kernel.httpsPort = addr.port;
+          this.kernel.hostHttps = this.kernel.hostname + ":" + addr.port;
+          this.family = addr.family;
+          this.logger("Listening on DOMAIN : https://" + this.domain + ":" + this.port, "INFO");
+          /*dns.lookup(this.domain, (err, addresses, family) => {
             if (err) {
               throw err;
             }
             this.address = addresses;
             this.family = family;
-          });
+          });*/
         }
       });
     });
@@ -160,7 +169,7 @@ module.exports = class httpsServer extends nodefony.Service {
 
     // LISTEN ON PORT
     this.server.listen(this.port, this.domain, () => {
-      this.logger("Listening on DOMAIN : https://" + this.domain + ":" + this.port, "INFO");
+
       this.ready = true;
       this.bundle.fire("onServersReady", this.type, this);
     });

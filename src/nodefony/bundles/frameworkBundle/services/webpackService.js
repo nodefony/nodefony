@@ -49,7 +49,11 @@ module.exports = class webpack extends nodefony.Service {
     const info = stats.toJson();
     let error = stats.hasErrors();
     if (error) {
-      this.logger(info.errors, "ERROR");
+      if (info.errors && nodefony.typeOf(info.errors) === "array") {
+        this.logger(info.errors.join("\n"), "ERROR");
+      } else {
+        this.logger(info.errors, "ERROR");
+      }
     } else {
       if (bundle) {
         if (watcher) {
@@ -109,11 +113,13 @@ module.exports = class webpack extends nodefony.Service {
     let watch = null;
     let compiler = null;
     let watchOptions = {};
+    let webpack = this.webpack;
     try {
       switch (type) {
       case "angular":
         publicPath = path.resolve("/", bundle.bundleName, "dist");
         shell.cd(Path);
+        webpack = require(path.resolve("node_modules", "webpack"));
         config = require(file.path);
         config.context = Path;
         //if (config.output.path === undefined) {
@@ -134,6 +140,7 @@ module.exports = class webpack extends nodefony.Service {
       case "react":
         publicPath = path.resolve("/", bundle.bundleName, "dist");
         shell.cd(Path);
+        webpack = require(path.resolve("node_modules", "webpack"));
         process.env.PUBLIC_URL = publicPath;
         process.env.HOST = this.socksSettings.hostname + ":" + this.socksSettings.port;
         process.env.HTTPS = true;
@@ -169,7 +176,7 @@ module.exports = class webpack extends nodefony.Service {
         throw e;
       }
       //console.log(config.name)
-      compiler = this.webpack(config);
+      compiler = webpack(config);
       if (this.kernel.type === "CONSOLE") {
         return compiler;
       }
@@ -188,7 +195,7 @@ module.exports = class webpack extends nodefony.Service {
     // WATCH
     if (config.watch === undefined) {
       watch = bundle.webpackWatch;
-      config.watch = watch ||  false;
+      config.watch = watch || false;
     } else {
       watch = config.watch;
     }
@@ -200,9 +207,8 @@ module.exports = class webpack extends nodefony.Service {
       }
     }
     try {
-      let idfile = basename + "_" + file.name;
-      let watching = null;
       if (watch) {
+        let watching = null;
         watching = compiler.watch(watchOptions, (err, stats) => {
           if (!err) {
             this.logger("BUNDLE : " + basename + " WACTHER WEBPACK COMPILE  : \n" + this.displayConfigTable(config), "DEBUG");
@@ -218,6 +224,7 @@ module.exports = class webpack extends nodefony.Service {
         if ((this.kernel.environment === "dev") && (basename in this.kernel.bundlesCore) && (!this.kernel.isCore)) {
           return compiler;
         }
+        let idfile = basename + "_" + file.name;
         this.runCompiler(compiler, idfile, basename, file.name);
       }
     } catch (e) {

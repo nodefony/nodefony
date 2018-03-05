@@ -170,7 +170,8 @@ module.exports = class security extends nodefony.Service {
               //console.log(ctx instanceof nodefony.Context)
               if (context === ctx) {
                 if (ctx && (!ctx.isRedirect)) {
-                  ctx.fire("onRequest");
+                  //ctx.fire("onRequest");
+                  return resolve(ctx.handle());
                 }
               }
               return resolve(ctx);
@@ -186,8 +187,8 @@ module.exports = class security extends nodefony.Service {
       return this.handle(context)
         .then((ctx) => {
           if (ctx) {
-            ctx.fire("onRequest");
-            return ctx;
+            //ctx.fire("onRequest");
+            return ctx.handle();
           }
           return context;
         })

@@ -553,15 +553,13 @@ module.exports = class httpKernel extends nodefony.Service {
                   context.fire("onError", container, e);
                   return e;
                 }
-                context.fire("onRequest");
-                return context;
+                return context.handle();
               }).catch((error) => {
                 context.fire("onError", container, error);
                 return error;
               });
           } else {
-            context.fire("onRequest");
-            return context;
+            return context.handle();
           }
         } catch (e) {
           context.fire("onError", container, e);
@@ -589,7 +587,7 @@ module.exports = class httpKernel extends nodefony.Service {
       if (context.security) {
         return this.firewall.handleSecurity(context);
       }
-      return context.fire("onRequest");
+      return context.handle();
     });
     return context;
   }

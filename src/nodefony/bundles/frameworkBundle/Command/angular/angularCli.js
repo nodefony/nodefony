@@ -79,9 +79,9 @@ let angularCli = class angularCli extends nodefony.Service {
       .then((dir) => {
         return this.npmInstall(dir);
       })
-      .then((dir) => {
+      /*.then((dir) => {
         return this.npmInstall(dir, "@ngtools/webpack");
-      })
+      })*/
       .then((dir) => {
         return this.generateNgModule(dir);
       })
@@ -175,7 +175,7 @@ let angularCli = class angularCli extends nodefony.Service {
 
   ejectNg(dir) {
     return new Promise((resolve, reject) => {
-      let args = ["eject", "--environment", "dev", "-dev"];
+      let args = ["eject", "--environment", "dev", "-dev", "--watch", "--verbose"];
       this.logger(" eject  webpack config angular : ng " + args.join(" "));
       let cmd = null;
       try {

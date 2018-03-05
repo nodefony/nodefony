@@ -19,6 +19,9 @@ module.exports = class websocketServer extends nodefony.Service {
     this.bundle.on("onServersReady", (type) => {
       if (type === "HTTP") {
         try {
+          let addr = http.address();
+          this.port = addr.port;
+          this.domain = addr.address;
           this.settings = this.getParameters("bundles.http").websocket || {};
           let conf = nodefony.extend(true, {}, this.settings);
           conf.httpServer = http;
@@ -36,9 +39,9 @@ module.exports = class websocketServer extends nodefony.Service {
 
           if (this.websocketServer) {
             this.ready = true;
-            this.logger("Listening on DOMAIN : ws://" + this.domain + ":" + this.port, "INFO");
           }
           this.bundle.fire("onServersReady", this.type, this);
+          this.logger("Listening on DOMAIN : ws://" + this.domain + ":" + this.port, "INFO");
           return this.websocketServer;
         } catch (e) {
           this.logger(e, "ERROR");

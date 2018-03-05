@@ -9,7 +9,7 @@ nodefony.registerToken("jwt", function () {
     constructor(jwtToken) {
       super("jwt");
       this.jwtToken = jwtToken;
-      if (jwtToken.data && jwtToken.data) {
+      if (jwtToken.data) {
         if (jwtToken.data.user) {
           this.setUser(new nodefony.User(jwtToken.data.user.username));
         }
