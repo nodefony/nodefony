@@ -317,7 +317,11 @@ module.exports = nodefony.register("cli", function () {
       switch (typeof message) {
       case "object":
         switch (true) {
-          default: message = util.inspect(message);
+        case (message instanceof Error):
+          message = message;
+          break;
+        default:
+          message = util.inspect(message);
         }
         break;
       default:

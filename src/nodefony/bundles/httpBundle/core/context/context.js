@@ -36,6 +36,84 @@ nodefony.register("Context", () => {
       return super.logger(pci, severity, msgid, msg);
     }
 
+    controller(pattern, data) {
+      let container = this.kernelHttp.container.enterScope("subRequest");
+      container.set("context", this);
+      container.set("translation", this.translation);
+      let control = null;
+      let resolver = null;
+      try {
+        resolver = this.router.resolveName(this, pattern);
+      } catch (e) {
+        return this.fire("onError", this.container, e);
+      }
+      if (!resolver.resolve) {
+        let error = new Error(pattern);
+        error.code = 404;
+        return this.fire("onError", this.container, error);
+      }
+      try {
+        control = resolver.newController(container, this); //new resolver.controller(container, this);
+        if (this.type === "HTTP2") {
+          control.response = new nodefony.Response2(null, container);
+        } else {
+          control.response = new nodefony.Response(null, container);
+        }
+        if (data) {
+          Array.prototype.shift.call(arguments);
+          for (let i = 0; i < arguments.length; i++) {
+            resolver.variables.push(arguments[i]);
+          }
+        }
+      } catch (e) {
+        return this.fire("onError", this.container, e);
+      }
+      return {
+        resolver: resolver,
+        controller: control,
+        response: resolver.action.apply(control, resolver.variables)
+      };
+    }
+
+    render(subRequest) {
+      this.removeListener("onView", subRequest.controller.response.setBody);
+      this.kernelHttp.container.leaveScope(subRequest.controller.container);
+      switch (true) {
+      case subRequest.response instanceof nodefony.Response:
+      case subRequest.response instanceof nodefony.Response2:
+      case subRequest.response instanceof nodefony.wsResponse:
+        return subRequest.response.body;
+      case subRequest.response instanceof Promise:
+      case subRequest.response instanceof BlueBird:
+        if (subRequest.controller.response.body === "") {
+          let txt = "nodefony TWIG function render can't resolve async Call in Twig Template ";
+          this.logger(txt, "ERROR");
+          return txt;
+        }
+
+        return subRequest.controller.response.body;
+      case nodefony.typeOf(subRequest.response) === "object":
+        if (subRequest.resolver.defaultView) {
+          return this.render({
+            resolver: subRequest.resolver,
+            controller: subRequest.controller,
+            response: subRequest.controller.render(subRequest.resolver.defaultView, subRequest.response)
+          });
+        } else {
+          throw {
+            status: 500,
+            message: "default view not exist"
+          };
+        }
+        break;
+      case typeof subRequest.response === "string":
+        return subRequest.response;
+      default:
+        this.logger("nodefony TWIG function render can't resolve async Call in Twig Template ", "WARNING");
+        return this.response.body;
+      }
+    }
+
     clean() {
       this.kernelHttp = null;
       delete this.kernelHttp;

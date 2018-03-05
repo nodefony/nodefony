@@ -105,6 +105,7 @@ module.exports = nodefony.register("Resolver", function () {
             if (!this.action) {
               throw new Error("Resolver " + name + " :In CONTROLLER: " + tab[1] + " ACTION  :" + tab[2] + " not exist");
             }
+            this.actionName = tab[2];
           } else {
             throw new Error("Resolver " + name + " : controller not exist :" + tab[1]);
           }
@@ -140,6 +141,7 @@ module.exports = nodefony.register("Resolver", function () {
         if (data) {
           this.variables.push(data);
         }
+        this.container.set("action", this.actionName);
         return this.returnController(this.action.apply(controller, this.variables));
       } catch (e) {
         throw e;

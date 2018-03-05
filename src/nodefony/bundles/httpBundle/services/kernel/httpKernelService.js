@@ -275,145 +275,43 @@ module.exports = class httpKernel extends nodefony.Service {
   }
 
   onError(container, error) {
-    let myError = null;
-    let context = container.get('context');
-    if (!context) {
-      this.logger(error, 'ERROR');
-    }
-    if (error) {
-      switch (nodefony.typeOf(error)) {
-      case "object":
-        myError = new Error();
-        if (error.status) {
-          myError.code = error.status;
-        } else {
-          if (context.response) {
-            myError.code = context.response.getStatusCode();
-          } else {
-            myError.code = null;
-          }
-        }
-        try {
-          myError.message = JSON.stringify(error);
-        } catch (e) {
-          myError.message = e;
-        }
-        break;
-      case "string":
-        error = new Error(error);
-        if (context.response) {
-          error.code = context.response.getStatusCode();
-        } else {
-          error.code = null;
-        }
-        break;
-      case "Error":
-        if (!error.code) {
-          if (context.response) {
-            let er = context.response.getStatusCode();
-            if (er === 1000 || er === 200) {
-              error.code = 500;
-            } else {
-              error.code = er;
-            }
-          } else {
-            if (!error.code) {
-              error.code = null;
-            }
-          }
-        }
-        break;
-      default:
-        myError = new Error();
-        myError.message = error;
-        if (context.response) {
-          myError.code = context.response.getStatusCode();
-        } else {
-          myError.code = null;
-        }
-      }
-    } else {
-      myError = new Error();
-      myError.message = error;
-      if (context.response) {
-        myError.code = context.response.getStatusCode();
-      } else {
-        myError.code = null;
-      }
-    }
-    let exception = myError || error;
-    let resolver = null;
-    switch (exception.code) {
-    case 404:
-      resolver = this.router.resolveName(context, "frameworkBundle:default:404");
-      break;
-    case 401:
-      resolver = this.router.resolveName(context, "frameworkBundle:default:401");
-      break;
-    case 403:
-      resolver = this.router.resolveName(context, "frameworkBundle:default:403");
-      break;
-    case 408:
-      resolver = this.router.resolveName(context, "frameworkBundle:default:timeout");
-      break;
-    default:
-      resolver = this.router.resolveName(context, "frameworkBundle:default:exceptions");
-      if (exception.code < 400) {
-        exception.code = 500;
-      }
-    }
-
-    if (exception.xjson) {
-      if (context.setXjson) {
-        context.setXjson(exception.xjson);
-      }
-    }
-    exception.bundle = container.get("bundle") ? container.get("bundle").name : "";
-    exception.controller = container.get("controller") ? container.get("controller").name : "";
-    exception.url = context.url || "";
-    if (context.isJson) {
-      try {
-        exception.pdu = JSON.stringify(new nodefony.PDU({
-          bundle: exception.bundle,
-          controller: exception.controller,
-          url: exception.url,
-          stack: exception.stack
-        }, "ERROR"));
-      } catch (e) {
-        this.logger(e, "WARNING");
-      }
-    }
-    if (context.method === "WEBSOCKET" &&
-      context.response &&
-      !context.response.connection) {
-      context.request.reject(exception.code ? exception.code : null, exception.message);
-      this.logger(exception, "ERROR", context.method);
-      context.fire("onFinish", context);
-    }
-    if (context.response) {
-      let st = context.response.setStatusCode(exception.code, exception.message);
-      exception.code = st.code;
-      exception.message = st.message;
-    } else {
-      context.fire("onFinish", context);
-      this.logger(exception, "ERROR", context.method);
-      return;
-    }
-    this.logger(exception, "ERROR", context.method);
+    let context = null;
+    let httpError = null;
+    let result = null;
     try {
-      resolver.callController(exception);
+      httpError = new nodefony.httpError(error, null, container);
+      context = httpError.context;
+      if (context.method === "WEBSOCKET" &&
+        context.response &&
+        !context.response.connection) {
+        context.request.reject(httpError.code ? httpError.code : null, httpError.message);
+        httpError.logger();
+        context.fire("onFinish", context);
+        return context;
+      }
+      if (!context.response) {
+        httpError.logger();
+        context.fire("onFinish", context);
+        return httpError.resolver;
+      }
+      httpError.logger();
+      result = httpError.resolver.callController(httpError);
       if (context.method === "WEBSOCKET") {
-        if (exception.code < 3000) {
-          exception.code += 3000;
+        if (httpError.code < 3000) {
+          httpError.code += 3000;
         }
-        //context.close(exception.code, exception.message);
         setTimeout(() => {
-          context.close(exception.code, exception.message);
+          context.close(httpError.code, httpError.message);
         }, 500 /*(context.type === "WEBSOCKET" ? this.closeTimeOutWs.WS : this.closeTimeOutWs.WSS)*/ );
       }
+      return result;
     } catch (e) {
-      this.logger(e, "ERROR", context.method);
-      return;
+      if (httpError) {
+        httpError.logger(e);
+      } else {
+        this.logger(e, "ERROR");
+      }
+      return context;
     }
   }
 

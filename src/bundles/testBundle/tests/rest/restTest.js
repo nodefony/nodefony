@@ -17,25 +17,27 @@ const http = require("http");
 const assert = require('assert');
 
 
-describe("BUNDLE TEST", function(){
+describe("BUNDLE TEST", function () {
 
-  before(function(){
+  before(function () {
     global.options = {
       hostname: kernel.settings.system.domain,
       port: kernel.settings.system.httpPort,
-			headers: {'Accept': 'application/json'},
+      headers: {
+        'Accept': 'application/json'
+      },
       method: 'GET'
     };
   });
 
-  describe('REST API ERROR FRAMEWORK', function(){
+  describe('REST API ERROR FRAMEWORK', function () {
 
-    it("request-404-get", function(done){
-      global.options.path ='/test/unit/rest/404?foo=bar&bar=foo';
-      let request = http.request(global.options,function(res) {
+    it("request-404-get", function (done) {
+      global.options.path = '/test/unit/rest/404?foo=bar&bar=foo';
+      let request = http.request(global.options, function (res) {
         assert.equal(res.statusCode, 404);
         res.setEncoding('utf8');
-        res.on('data',  (chunk) => {
+        res.on('data', (chunk) => {
           let res = JSON.parse(chunk);
           assert.deepStrictEqual(res.server, "nodefony");
           assert.deepStrictEqual(res.message, "Not Found");
@@ -46,34 +48,36 @@ describe("BUNDLE TEST", function(){
       request.end();
     });
 
-		it("request-401-get", function(done){
-      global.options.path ='/test/unit/rest/401?foo=bar&bar=foo';
-      let request = http.request(global.options,function(res) {
+    it("request-401-get", function (done) {
+      global.options.path = '/test/unit/rest/401?foo=bar&bar=foo';
+      let request = http.request(global.options, function (res) {
         assert.equal(res.statusCode, 401);
         res.setEncoding('utf8');
-        res.on('data',  (chunk) => {
+        res.on('data', (chunk) => {
           let res = JSON.parse(chunk);
           assert.deepStrictEqual(res.server, "nodefony");
-          assert.deepStrictEqual(res.controller, "rest");
-          assert.deepStrictEqual(res.bundle, "test");
           assert.deepStrictEqual(res.message, "Unauthorized");
           assert.ok(res.pdu);
+          assert.deepStrictEqual(res.pdu.payload.bundle, "test");
+          assert.deepStrictEqual(res.pdu.payload.controller, "rest");
+          assert.deepStrictEqual(res.pdu.payload.action, "401");
           done();
         });
       });
       request.end();
     });
 
-		it("request-403-get", function(done){
-      global.options.path ='/test/unit/rest/403?foo=bar&bar=foo';
-      let request = http.request(global.options,function(res) {
+    it("request-403-get", function (done) {
+      global.options.path = '/test/unit/rest/403?foo=bar&bar=foo';
+      let request = http.request(global.options, function (res) {
         assert.equal(res.statusCode, 403);
         res.setEncoding('utf8');
-        res.on('data',  (chunk) => {
+        res.on('data', (chunk) => {
           let res = JSON.parse(chunk);
           assert.deepStrictEqual(res.server, "nodefony");
-					assert.deepStrictEqual(res.controller, "rest");
-          assert.deepStrictEqual(res.bundle, "test");
+          assert.ok(res.pdu);
+          assert.deepStrictEqual(res.pdu.payload.bundle, "test");
+          assert.deepStrictEqual(res.pdu.payload.controller, "rest");
           assert.deepStrictEqual(res.message, "Forbidden");
           assert.ok(res.pdu);
           done();

@@ -5,8 +5,6 @@
 "code":408,
 "pdu":{{ error.pdu or null }},
 "url":"{{ error.url }}",
-"bundle":"{{ error.bundle }}",
-"controller":"{{ error.controller }}",
 "message":"{{  error.message or "Response Timeout"  }}",
 "stack":"{{ error.stack|json_encode() or null  }}"
 {% endblock %}
