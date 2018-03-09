@@ -19,7 +19,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
     this.fire("onFinish", this, reasonCode, description);
   };
 
-  const websocket = class websocket extends nodefony.Context {
+  const websocket = class websocketContext extends nodefony.Context {
 
     constructor(container, request, type) {
       super(container, request, null, type);
@@ -54,12 +54,12 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       this.domain = this.getHostName();
       this.validDomain = this.isValidDomain();
       // LISTEN EVENTS
-      this.on("onView", (result) => {
+      /*this.on("onView", (result) => {
         if (this.response) {
           this.response.body = result;
         }
-      });
-      this.listen(this, "onResponse", this.send);
+      });*/
+      //this.listen(this, "onResponse", this.send);
       //this.once("onRequest", this.handle.bind(this));
       this.once("connect", () => {
         this.connect(this.resolver.acceptedProtocol);
@@ -118,6 +118,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
         this.response.clean();
       }
       this.response = null;
+      this.container.clean();
       super.clean();
     }
 
@@ -177,16 +178,15 @@ nodefony.register.call(nodefony.context, "websocket", function () {
     }
 
     send(data, type) {
-      let myData = null;
       if (this.response) {
-        if (data instanceof nodefony.wsResponse) {
-          myData = this.response.body;
-        } else {
-          myData = data;
+        if (!data) {
+          data = this.response.body;
         }
-        this.fire("onMessage", myData, this, "SEND");
-        this.fire("onSend", this.response, this);
-        return this.response.send(myData, type);
+        if (data) {
+          this.fire("onMessage", data, this, "SEND");
+          this.fire("onSend", data, this);
+          return this.response.send(data, type);
+        }
       }
       return null;
     }

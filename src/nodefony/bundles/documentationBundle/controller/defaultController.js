@@ -322,7 +322,7 @@ module.exports = class defaultController extends nodefony.controller {
       versions.push(ele.name);
     });
 
-    return this.renderView("documentationBundle::navDoc.html.twig", {
+    return this.renderSync("documentationBundle::navDoc.html.twig", {
       versions: versions
     });
   }

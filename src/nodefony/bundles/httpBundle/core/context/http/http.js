@@ -1,6 +1,6 @@
 nodefony.register.call(nodefony.context, "http", function () {
 
-  const Http = class Http extends nodefony.Context {
+  const Http = class httpContext extends nodefony.Context {
 
     constructor(container, request, response, type) {
       super(container, request, response, type);
@@ -14,8 +14,8 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.requestEnded = false;
 
       if (this.type === "HTTP2") {
-        this.request = new nodefony.Request2(request, this);
-        this.response = new nodefony.Response2(response, container);
+        this.request = new nodefony.http2Request(request, this);
+        this.response = new nodefony.http2Response(response, container);
       } else {
         this.request = new nodefony.Request(request, this);
         this.response = new nodefony.Response(response, container);
@@ -29,7 +29,6 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.method = this.request.getMethod();
       this.isAjax = this.request.isAjax();
       this.isHtml = this.request.acceptHtml;
-      this.isJson = false;
       this.setDefaultContentType();
       this.isRedirect = false;
       this.sended = false;
@@ -56,7 +55,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.validDomain = this.isValidDomain();
       this.remoteAddress = this.request.remoteAddress;
       //this.once("onRequest", this.handle.bind(this));
-      this.once("onResponse", this.send.bind(this));
+      //this.once("onResponse", this.send.bind(this));
       this.once("onTimeout", () => {
         let error = new Error("Request Timeout");
         error.code = 408;
@@ -104,14 +103,14 @@ nodefony.register.call(nodefony.context, "http", function () {
     }
 
     handle(data) {
-      this.setParameters("query.get", this.request.queryGet);
+      /*this.setParameters("query.get", this.request.queryGet);
       if (this.request.queryPost) {
         this.setParameters("query.post", this.request.queryPost);
       }
       if (this.request.queryFile) {
         this.setParameters("query.files", this.request.queryFile);
       }
-      this.setParameters("query.request", this.request.query);
+      this.setParameters("query.request", this.request.query);*/
       try {
         this.translation.handle();
         if (!this.resolver) {
@@ -129,7 +128,6 @@ nodefony.register.call(nodefony.context, "http", function () {
                 this.timeoutExpired = true;
                 this.fire("onTimeout", this);
               });
-              //console.log(this.timeoutid)
             } else {
               this.timeoutid = this.response.response.setTimeout(this.response.timeout, () => {
                 this.timeoutExpired = true;
@@ -159,28 +157,26 @@ nodefony.register.call(nodefony.context, "http", function () {
       delete this.request;
       this.proxy = null;
       delete this.proxy;
-      this.promise = null;
-      delete this.promise;
       this.uploadService = null;
       delete this.uploadService;
+      this.container.clean();
       super.clean();
     }
 
-    send( /*response, context*/ ) {
-      this.fire("onSend", this.response, this);
+    send(data, type) {
+      if (this.sended || this.finished) {
+        return new Promise((resolve, reject) => {
+          reject(new Error("Already sended"));
+        });
+      }
       return this.saveSession()
         .then((session) => {
           if (session) {
             this.logger("SAVE SESSION ID : " + session.id, "DEBUG");
           }
-          if (this.sended || this.finished) {
-            if (this.request && this.response) {
-              this.clean();
-            }
-            return this;
-          }
+          this.fire("onSend", this.response, this);
           this.writeHead();
-          this.write();
+          this.write(data, type);
           return this;
         })
         .catch((error) => {
@@ -189,8 +185,8 @@ nodefony.register.call(nodefony.context, "http", function () {
             this.session.destroy(true);
           }
           this.writeHead();
-          this.write();
-          return this;
+          this.write(data, type);
+          return error;
         });
     }
 
@@ -200,7 +196,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.response.writeHead();
     }
 
-    write() {
+    write(data, encoding) {
       if (this.finished) {
         return;
       }
@@ -212,7 +208,7 @@ nodefony.register.call(nodefony.context, "http", function () {
          * WRITE RESPONSE
          */
         this.sended = true;
-        this.response.write();
+        this.response.send(data, encoding);
         // END REQUEST
         return this.close();
       }
@@ -296,6 +292,8 @@ nodefony.register.call(nodefony.context, "http", function () {
         }
       }
     }
+
+
 
   };
   return Http;

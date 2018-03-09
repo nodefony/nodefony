@@ -6,6 +6,7 @@ module.exports = class gitController extends nodefony.controller {
   }
 
   getStatusAction() {
+
     let tab = [];
     try {
       this.git.Repository.open(this.get("kernel").rootDir).then((repo) => {
@@ -34,6 +35,7 @@ module.exports = class gitController extends nodefony.controller {
   }
 
   getCurrentBranchAction() {
+
     this.git.branch((err, BranchSummary) => {
       if (err) {
         return this.renderJsonAsync({

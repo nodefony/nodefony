@@ -48,7 +48,7 @@ nodefony.register("wsResponse", function () {
         this.body = JSON.stringify(ele);
         break;
       default:
-        this.body = ele;
+        this.body = ele.toString();
       }
       return this.body;
     }
@@ -58,15 +58,24 @@ nodefony.register("wsResponse", function () {
     }
 
     send(data, type) {
-      switch (type) {
-      case "utf8":
-        this.connection.sendUTF(data.utf8Data);
-        break;
-      case "binary":
-        this.connection.sendBytes(data.binaryData);
-        break;
-      default:
-        this.connection.send(data);
+      if (data) {
+        switch (type) {
+        case "utf8":
+          this.connection.sendUTF(data.utf8Data);
+          break;
+        case "binary":
+          this.connection.sendBytes(data.binaryData);
+          break;
+        default:
+          this.connection.send(data);
+        }
+      } else {
+        if (this.body) {
+          if (!type) {
+            type = this.encoding;
+          }
+          return this.send(this.body);
+        }
       }
       this.body = "";
     }

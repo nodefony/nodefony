@@ -10,7 +10,7 @@ module.exports = nodefony.register("Response", function () {
       //}
       this.context = container.get('context');
       this.container = container;
-      this.container.get("notificationsCenter").listen(this, "onView", this.setBody);
+      //this.container.get("notificationsCenter").listen(this, "onView", this.setBody);
       //BODY
       this.body = "";
       this.encoding = this.setEncoding('utf8');
@@ -164,8 +164,10 @@ module.exports = nodefony.register("Response", function () {
       }
     }
 
-    setBody(ele) {
-      return this.body = Buffer.from(ele, this.encoding);
+    setBody(ele, encoding = null) {
+      //console.trace("setBody : ", ele.length)
+      console.log(ele);
+      return this.body = Buffer.from(ele, encoding || this.encoding);
     }
 
     getLength(ele) {
@@ -210,10 +212,10 @@ module.exports = nodefony.register("Response", function () {
         //this.headers['Transfer-Encoding'] = 'chunked';
         this.flushHeaders();
       }
-      return this.write(data, encoding);
+      return this.send(data, encoding);
     }
 
-    write(data, encoding) {
+    send(data, encoding) {
       try {
         if (data) {
           return this.response.write(this.setBody(data), (encoding || this.encoding));
@@ -222,6 +224,10 @@ module.exports = nodefony.register("Response", function () {
       } catch (e) {
         throw e;
       }
+    }
+
+    write(data, encoding) {
+      return this.send(data, encoding);
     }
 
     writeContinue() {

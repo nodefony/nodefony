@@ -1,6 +1,6 @@
-module.exports = nodefony.register("Request2", function () {
+module.exports = nodefony.register("http2Request", function () {
 
-  const Request = class Request2 extends nodefony.Request {
+  const Request = class http2Request extends nodefony.Request {
 
     constructor(request, context) {
       super(request, context);

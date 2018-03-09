@@ -1,5 +1,17 @@
 module.exports = nodefony.register("controller", function () {
 
+
+  const isPromise = function (obj) {
+    switch (true) {
+    case obj instanceof Promise:
+    case obj instanceof BlueBird:
+      return true;
+    default:
+      return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
+    }
+  };
+
+
   const Controller = class Controller extends nodefony.Service {
     constructor(container, context) {
       super(null, container, container.get("notificationsCenter"));
@@ -10,7 +22,6 @@ module.exports = nodefony.register("controller", function () {
       this.method = this.getMethod();
       this.response = this.context.response;
       this.request = this.context.request;
-      this.response = this.context.response;
       this.queryGet = this.request.queryGet;
       this.query = this.request.query;
       this.queryFile = this.request.queryFile;
@@ -91,33 +102,6 @@ module.exports = nodefony.register("controller", function () {
       return this.get(defaultOrm);
     }
 
-    callController(pattern, data) {
-      let resolver = null;
-      let controler = null;
-      try {
-        resolver = this.router.resolveName(this.context, pattern);
-      } catch (e) {
-        return this.fire("onError", this.container, e);
-      }
-      if (!resolver.resolve) {
-        let error = new Error(pattern);
-        error.code = 404;
-        return this.fire("onError", this.container, error);
-      }
-      try {
-        controler = resolver.newController(this.container, this);
-        if (data) {
-          Array.prototype.shift.call(arguments);
-          for (let i = 0; i < arguments.length; i++) {
-            resolver.variables.push(arguments[i]);
-          }
-        }
-        return resolver.action.apply(controler, resolver.variables);
-      } catch (e) {
-        return this.fire("onError", this.container, e);
-      }
-    }
-
     push(asset, headers, options) {
       if (this.context.type === "HTTP2" && this.context.pushAllowed) {
         let assetPublic = null;
@@ -134,11 +118,16 @@ module.exports = nodefony.register("controller", function () {
         try {
           return this.response.push(asset, headers, options);
         } catch (e) {
-          throw e;
+          return new Promise((resolve, reject) => {
+            return reject(e);
+          });
         }
       } else {
         return new Promise((resolve, reject) => {
-          return reject(new Error("HTTP2 Server push not pushAllowed !!!!"));
+          if (this.context.type !== "HTTP2") {
+            return reject(new Error(" push method must be called with HTTP2 request !!!!"));
+          }
+          return reject(new Error("HTTP2 Server push not pushAllowed"));
         });
       }
     }
@@ -148,7 +137,7 @@ module.exports = nodefony.register("controller", function () {
         this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "WARNING");
         return;
       }
-      this.fire("onView", data, this.context);
+      //this.fire("onView", data, this.context);
       //this.response.setBody(data);
       if (headers && typeof headers === "object") {
         this.response.setHeaders(headers);
@@ -156,30 +145,36 @@ module.exports = nodefony.register("controller", function () {
       if (status) {
         this.response.setStatusCode(status);
       }
-      this.fire("onResponse", this.response, this.context);
-      return this.response;
+      this.context.send(data);
     }
 
     renderJson(obj, status, headers) {
+      if (isPromise(obj)) {
+        return obj.then(result => {
+          return this.renderJsonSync(result, status, headers);
+        }).catch(error => {
+          return this.createException(error);
+        });
+      }
       return new Promise((resolve, reject) => {
         try {
-          resolve(this.renderJsonSync(obj, status, headers));
+          return resolve(this.renderJsonSync(obj, status, headers));
         } catch (e) {
-          reject(e);
+          return reject(e);
         }
       });
     }
 
     renderJsonAsync(obj, status, headers) {
       return this.renderJson(obj, status, headers).then((result) => {
-        this.fire("onResponse", this.response, this.context);
-        return result;
+        return this.context.send(result);
       }).catch((e) => {
         if (this.response.response.headersSent || this.context.timeoutExpired) {
-          return;
+          return new Promise((resolve, reject) => {
+            return reject(this);
+          });
         }
-        this.context.promise = null;
-        this.fire("onError", this.context.container, e);
+        throw e;
       });
     }
 
@@ -192,11 +187,11 @@ module.exports = nodefony.register("controller", function () {
         throw e;
       }
       if (!this.response) {
-        this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "WARNING");
-        return;
+        throw new Error("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK");
       }
       //this.response.setBody(data);
-      this.fire("onView", data, this.context);
+      //this.fire("onView", data, this.context);
+      this.response.setBody(data);
       this.response.setHeaders(nodefony.extend({}, {
         'Content-Type': "text/json ; charset=" + this.response.encoding
       }, headers));
@@ -208,78 +203,46 @@ module.exports = nodefony.register("controller", function () {
 
     render(view, param) {
       if (!this.response) {
-        this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "ERROR");
-        return;
+        throw new Error("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK");
       }
       try {
-        return this.renderViewAsync(view, param);
+        return this.renderView(view, param);
       } catch (e) {
-        this.fire("onError", this.context.container, e);
+        throw e;
       }
     }
 
     renderSync(view, param) {
       if (!this.response) {
-        this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "WARNING");
-        return;
+        throw new Error("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "WARNING");
       }
       try {
-        this.renderView(view, param);
+        this.renderViewSync(view, param);
       } catch (e) {
-        this.fire("onError", this.context.container, e);
-        return;
+        throw e;
       }
       return this.response;
     }
 
     renderAsync(view, param) {
       return this.render(view, param).then((result) => {
-        this.fire("onResponse", this.response, this.context);
-        return result;
+        return this.context.send(result);
       }).catch((e) => {
-        if (this.response.response.headersSent || this.context.timeoutExpired) {
-          return;
-        }
-        this.context.promise = null;
-        this.fire("onError", this.context.container, e);
-      });
-    }
-
-    renderViewAsync(view, param) {
-      return new Promise((resolve, reject) => {
-        let extendParam = null;
-        try {
-          extendParam = this.httpKernel.extendTemplate(param, this.context);
-          let templ = null;
-          let res = null;
-          try {
-            templ = this.httpKernel.getTemplate(view);
-          } catch (e) {
-            extendParam = null;
-            return reject(e);
-          }
-          try {
-            res = templ.render(extendParam);
-            try {
-              this.fire("onView", res, this.context, templ.path, param);
-              extendParam = null;
-              return resolve(res);
-            } catch (e) {
-              extendParam = null;
-              return reject(e);
-            }
-          } catch (e) {
-            extendParam = null;
-            return reject(e);
-          }
-        } catch (e) {
-          extendParam = null;
-          throw e;
-        }
+        throw e;
       });
     }
 
     renderView(view, param) {
+      return new Promise((resolve, reject) => {
+        try {
+          return resolve(this.renderViewSync(view, param));
+        } catch (e) {
+          return reject(e);
+        }
+      });
+    }
+
+    renderViewSync(view, param) {
       let res = null;
       let templ = null;
       let extendParam = this.httpKernel.extendTemplate(param, this.context);
@@ -293,6 +256,8 @@ module.exports = nodefony.register("controller", function () {
         res = templ.render(extendParam);
         try {
           this.fire("onView", res, this.context, null, param);
+          this.response.setBody(res);
+          return this.response;
         } catch (e) {
           extendParam = null;
           throw e;
@@ -301,12 +266,9 @@ module.exports = nodefony.register("controller", function () {
         extendParam = null;
         throw e;
       }
-      extendParam = null;
-      return res;
     }
 
     renderRawView(path, param) {
-      let res = null;
       let extendParam = this.httpKernel.extendTemplate(param, this.context);
       try {
         this.serviceTemplating.renderFile(path, extendParam, (error, result) => {
@@ -318,8 +280,9 @@ module.exports = nodefony.register("controller", function () {
             throw error;
           } else {
             try {
-              this.fire("onView", result, this.context, path, param);
-              res = result;
+              this.response.setBody(result);
+              extendParam = null;
+              return result;
             } catch (e) {
               extendParam = null;
               throw e;
@@ -330,8 +293,6 @@ module.exports = nodefony.register("controller", function () {
         extendParam = null;
         throw e;
       }
-      extendParam = null;
-      return res;
     }
 
     getFile(file) {
@@ -544,6 +505,10 @@ module.exports = nodefony.register("controller", function () {
     }
 
     forward(name, param) {
+      //let pattern = Array.prototype.shift.call(arguments);
+      //let data = Array.prototype.slice.call(arguments);
+      //let subRequest = new nodefony.subRequest(this, pattern);
+      //return subRequest.handle(data);
       let resolver = this.router.resolveName(this.context, name);
       return resolver.callController(param);
     }

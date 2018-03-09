@@ -85,10 +85,6 @@ module.exports = class sessions extends nodefony.Service {
             }
             context.session = session;
             session.setMetaBag("url", url.parse(context.url));
-            /*if (context.method !== "WEBSOCKET") {
-              context.once("onSend", () => {
-              });
-            }*/
             return resolve(session);
           })
           .catch((err) => {

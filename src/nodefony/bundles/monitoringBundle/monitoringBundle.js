@@ -53,7 +53,6 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     this.kernel.listen(this, "onPreBoot", (kernel) => {
 
       this.templating = this.get("templating");
-      this.frameworkBundle = this.kernel.getBundle("framework");
 
       this.infoKernel.events = {};
       for (let event in kernel.notificationsCenter._events) {
@@ -81,7 +80,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
 
     this.kernel.listen(this, "onPostReady", (kernel) => {
 
-      this.debugView = this.httpKernel.getTemplate("monitoringBundle::debugBar.html.twig");
+      //this.debugView = this.httpKernel.getTemplate("monitoringBundle::debugBar.html.twig");
 
       if (this.settings.profiler.active) {
         this.storageProfiling = this.settings.profiler.storage;
@@ -650,49 +649,17 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       headers: headers
     };
     if (context.storage) {
-      this.saveProfile(context, (error /*, res*/ ) => {
+      return this.saveProfile(context, (error /*, res*/ ) => {
         if (error) {
           this.kernel.logger(error);
         }
+        context.displayDebugBar();
 
-        if (!context.timeoutExpired) {
-          if (!context.isAjax && context.showDebugBar /*&& context.profiling.route.name !== "monitoring"*/ ) {
-            if (response) {
-              let bool = true;
-              let xml = (response.getHeader('Content-Type').indexOf("xml") >= 0);
-              switch (true) {
-              case response.body instanceof Buffer:
-                response.body = response.body.toString(response.encoding);
-                break;
-              case (typeof response.body === "string"):
-                break;
-              default:
-                bool = false;
-              }
-              if ((!xml) && bool && (response.body.indexOf("</body>") >= 0)) {
-                try {
-                  let result = this.debugView.render(this.httpKernel.extendTemplate(context.profiling, context));
-                  response.body = response.body.replace("</body>", result + "\n </body>");
-                  if (context.type === "HTTP2") {
-                    this.pushAsset(context);
-                  }
-                } catch (e) {
-                  throw e;
-                }
-              }
-            }
-          }
-        }
-        context.profiling = null;
-        delete context.profiling;
-        /*
-         *  WRITE RESPONSE
-         */
         if (context && context.response) {
-          context.response.write();
+          context.sended = true;
+          context.response.send();
           // END REQUEST
           return context.close();
-
         }
         if (error) {
           throw new Error("MONITORING CAN SAVE REQUEST");
@@ -702,58 +669,8 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         }
       });
     } else {
-      if (!context.timeoutExpired) {
-        if (!context.isAjax && context.showDebugBar /*&& context.profiling.route.name !== "monitoring"*/ ) {
-          if (response) {
-            let bool = true;
-            let xml = (response.getHeader('Content-Type').indexOf("xml") >= 0);
-            switch (true) {
-            case response.body instanceof Buffer:
-              response.body = response.body.toString(response.encoding);
-              break;
-            case (typeof response.body === "string"):
-              break;
-            default:
-              bool = false;
-            }
-            if ((!xml) && bool && (response.body.indexOf("</body>") >= 0)) {
-              try {
-                let result = this.debugView.render(this.httpKernel.extendTemplate(context.profiling, context));
-                response.body = response.body.replace("</body>", result + "\n </body>");
-                if (context.type === "HTTP2") {
-                  this.pushAsset(context);
-                }
-              } catch (e) {
-                throw e;
-              }
-            }
-          }
-        }
-      }
-      context.profiling = null;
-      delete context.profiling;
+      return context.displayDebugBar();
     }
-  }
-
-  pushAsset(context) {
-    context.response.push(path.resolve(this.publicPath, "assets", "js", "debugBar.js"), {
-      path: "/" + this.bundleName + "/assets/js/debugBar.js"
-    });
-    context.response.push(path.resolve(this.publicPath, "assets", "css", "debugBar.css"), {
-      path: "/" + this.bundleName + "/assets/css/debugBar.css"
-    });
-    context.response.push(path.resolve(this.publicPath, "images", "http2.png"), {
-      path: "/" + this.bundleName + "/images/http2.png"
-    });
-    context.response.push(path.resolve(this.publicPath, "images", "nodejs_logo.png"), {
-      path: "/" + this.bundleName + "/images/nodejs_logo.png"
-    });
-    context.response.push(path.resolve(this.publicPath, "images", "window-close.ico"), {
-      path: "/" + this.bundleName + "/images/window-close.ico"
-    });
-    context.response.push(path.resolve(this.frameworkBundle.publicPath, "images", "nodefony-logo.png"), {
-      path: "/" + this.frameworkBundle.bundleName + "/images/nodefony-logo.png"
-    });
   }
 
   onView(result, context, view, viewParam) {

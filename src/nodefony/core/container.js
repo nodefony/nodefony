@@ -181,6 +181,13 @@ module.exports = nodefony.register("Container", function () {
       //return parseParameterString.call(this.protoParameters.prototype, name, null);
       return parseParameterString.call(this.parameters, name, null);
     }
+
+    clean() {
+      this.services = null;
+      delete this.services;
+      this.parameters = null;
+      delete this.parameters;
+    }
   };
 
   /*
@@ -207,10 +214,8 @@ module.exports = nodefony.register("Container", function () {
     }
 
     clean() {
-      this.services = null;
-      delete this.services;
-      this.parameters = null;
-      delete this.parameters;
+      this.parent = null;
+      return super.clean();
     }
 
     setParameters(name, str) {

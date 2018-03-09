@@ -15,7 +15,7 @@ module.exports = class httpKernel extends nodefony.Service {
     this.httpPort = this.kernel.httpPort;
     this.httpsPort = this.kernel.httpsPort;
     this.container.addScope("request");
-    this.container.addScope("subRequest");
+    //this.container.addScope("subRequest");
     /*this.on("onServerRequest", (request, response, type) => {
       try {
         return this.handle(request, response, type);
@@ -44,6 +44,9 @@ module.exports = class httpKernel extends nodefony.Service {
       this.translation = this.get("translation");
       this.cdn = this.setCDN();
       this.corsManager = this.get("cors");
+      this.debugView = this.getTemplate("monitoringBundle::debugBar.html.twig");
+      this.frameworkBundle = this.kernel.getBundle("framework");
+      this.monitoringBundle = this.kernel.getBundle("monitoring");
     });
 
     this.on("onClientError", (e, socket) => {
@@ -354,9 +357,9 @@ module.exports = class httpKernel extends nodefony.Service {
     }
   }
 
-  handleFrontController(context) {
+  handleFrontController(context, checkFirewall = true) {
     let controller = null;
-    if (this.firewall) {
+    if (this.firewall && checkFirewall) {
       context.secure = this.firewall.isSecure(context);
     }
     // FRONT ROUTER

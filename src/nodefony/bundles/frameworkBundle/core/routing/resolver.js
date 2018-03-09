@@ -129,6 +129,21 @@ module.exports = nodefony.register("Resolver", function () {
       return this.bundle.controllers[name];
     }
 
+    setVariables(data) {
+      switch (nodefony.typeOf(data)) {
+      case "array":
+      case "arguments":
+        if (data.length) {
+          for (let i = 0; i < data.length; i++) {
+            this.variables.push(data[i]);
+          }
+        }
+        break;
+      default:
+        this.variables.push(data);
+      }
+    }
+
     callController(data) {
       if (this.context.isRedirect || this.context.sended) {
         return;
@@ -139,7 +154,7 @@ module.exports = nodefony.register("Resolver", function () {
           controller = this.newController(this.container, this.context);
         }
         if (data) {
-          this.variables.push(data);
+          this.setVariables(data);
         }
         this.container.set("action", this.actionName);
         return this.returnController(this.action.apply(controller, this.variables));
@@ -156,9 +171,24 @@ module.exports = nodefony.register("Resolver", function () {
 
     returnController(result) {
       switch (true) {
+      case result instanceof String:
+        this.context.response.setBody(result);
+        return this.context.send();
+      case result instanceof nodefony.subRequest:
+        switch (true) {
+        case result.result instanceof Promise:
+        case result.result instanceof BlueBird:
+        case isPromise(result.result):
+          this.returnController(result.result);
+          return this.context.send();
+        default:
+          return this.returnController(result.result);
+          //throw new Error("nodefony Twig Template Render can't resolve Async Call in Action controler ");
+        }
+        break;
       case result instanceof nodefony.Response:
       case result instanceof nodefony.wsResponse:
-        return this.fire("onResponse", result, this.context);
+        return this.context.send();
       case result instanceof Promise:
       case result instanceof BlueBird:
       case isPromise(result):
@@ -167,40 +197,29 @@ module.exports = nodefony.register("Resolver", function () {
         }
         this.context.promise = result;
         return this.context.promise.then((myResult) => {
-          switch (true) {
+          return this.returnController(myResult);
+          /*switch (true) {
+          case myResult instanceof nodefony.Context:
           case myResult instanceof nodefony.Response:
           case myResult instanceof nodefony.wsResponse:
           case myResult instanceof Promise:
           case myResult instanceof BlueBird:
-            break;
+          case myResult instanceof nodefony.subRequest:
+          case isPromise(myResult):
+            return this.returnController(myResult);
           default:
-            if (myResult) {
-              this.context.response.body = myResult;
-            }
-          }
-          try {
-            return this.fire("onResponse", this.context.response, this.context);
-          } catch (e) {
-            if (this.context.response.response.headersSent || this.context.timeoutExpired) {
-              return;
-            }
-            return this.fire("onError", this.context.container, e);
-          }
+            return this.context.send(myResult);
+          }*/
         }).catch((e) => {
-          if (this.context.response.response.headersSent || this.context.timeoutExpired) {
-            return;
-          }
-          this.context.promise = null;
-          return this.fire("onError", this.context.container, e);
+          throw e;
         });
+      case result instanceof nodefony.Context:
+        return result;
       case nodefony.typeOf(result) === "object":
         if (this.defaultView) {
           return this.returnController(this.get("controller").render(this.defaultView, result));
         } else {
-          throw {
-            status: 500,
-            message: "default view not exist"
-          };
+          throw new Error("default view not exist");
         }
         break;
       default:
@@ -208,7 +227,7 @@ module.exports = nodefony.register("Resolver", function () {
         //this.logger("WAIT ASYNC RESPONSE FOR ROUTE : "+this.route.name ,"DEBUG")
         // CASE async controller wait fire onResponse by other entity
       }
-      return result;
+      //return result;
     }
   };
   return Resolver;

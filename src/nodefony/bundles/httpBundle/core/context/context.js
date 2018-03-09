@@ -5,6 +5,7 @@ nodefony.register("Context", () => {
 
     constructor(container, request, response, type) {
       super(type + " CONTEXT", container);
+      this.container.addScope("subRequest");
       this.type = type;
       this.set("context", this);
       this.kernelHttp = this.get("httpKernel");
@@ -27,6 +28,7 @@ nodefony.register("Context", () => {
       this.user = null;
       this.token = null;
       this.secure = false;
+      this.isJson = false;
     }
 
     logger(pci, severity, msgid, msg) {
@@ -36,82 +38,15 @@ nodefony.register("Context", () => {
       return super.logger(pci, severity, msgid, msg);
     }
 
-    controller(pattern, data) {
-      let container = this.kernelHttp.container.enterScope("subRequest");
-      container.set("context", this);
-      container.set("translation", this.translation);
-      let control = null;
-      let resolver = null;
-      try {
-        resolver = this.router.resolveName(this, pattern);
-      } catch (e) {
-        return this.fire("onError", this.container, e);
-      }
-      if (!resolver.resolve) {
-        let error = new Error(pattern);
-        error.code = 404;
-        return this.fire("onError", this.container, error);
-      }
-      try {
-        control = resolver.newController(container, this); //new resolver.controller(container, this);
-        if (this.type === "HTTP2") {
-          control.response = new nodefony.Response2(null, container);
-        } else {
-          control.response = new nodefony.Response(null, container);
-        }
-        if (data) {
-          Array.prototype.shift.call(arguments);
-          for (let i = 0; i < arguments.length; i++) {
-            resolver.variables.push(arguments[i]);
-          }
-        }
-      } catch (e) {
-        return this.fire("onError", this.container, e);
-      }
-      return {
-        resolver: resolver,
-        controller: control,
-        response: resolver.action.apply(control, resolver.variables)
-      };
+
+    controller() {
+      let pattern = Array.prototype.shift.call(arguments);
+      let data = Array.prototype.slice.call(arguments);
+      return new nodefony.subRequest(this, pattern, data);
     }
 
     render(subRequest) {
-      this.removeListener("onView", subRequest.controller.response.setBody);
-      this.kernelHttp.container.leaveScope(subRequest.controller.container);
-      switch (true) {
-      case subRequest.response instanceof nodefony.Response:
-      case subRequest.response instanceof nodefony.Response2:
-      case subRequest.response instanceof nodefony.wsResponse:
-        return subRequest.response.body;
-      case subRequest.response instanceof Promise:
-      case subRequest.response instanceof BlueBird:
-        if (subRequest.controller.response.body === "") {
-          let txt = "nodefony TWIG function render can't resolve async Call in Twig Template ";
-          this.logger(txt, "ERROR");
-          return txt;
-        }
-
-        return subRequest.controller.response.body;
-      case nodefony.typeOf(subRequest.response) === "object":
-        if (subRequest.resolver.defaultView) {
-          return this.render({
-            resolver: subRequest.resolver,
-            controller: subRequest.controller,
-            response: subRequest.controller.render(subRequest.resolver.defaultView, subRequest.response)
-          });
-        } else {
-          throw {
-            status: 500,
-            message: "default view not exist"
-          };
-        }
-        break;
-      case typeof subRequest.response === "string":
-        return subRequest.response;
-      default:
-        this.logger("nodefony TWIG function render can't resolve async Call in Twig Template ", "WARNING");
-        return this.response.body;
-      }
+      return subRequest.handle();
     }
 
     clean() {
@@ -136,6 +71,8 @@ nodefony.register("Context", () => {
       }
       this.resolver = null;
       delete this.resolver;
+      this.promise = null;
+      delete this.promise;
       this.session = null;
       delete this.session;
       this.translation = null;
@@ -231,6 +168,61 @@ nodefony.register("Context", () => {
       } catch (e) {
         throw e;
       }
+    }
+
+    displayDebugBar() {
+      if (!this.isJson && this.showDebugBar) {
+        if (!this.timeoutExpired) {
+          if (this.response) {
+            let bool = true;
+            switch (true) {
+            case this.response.body instanceof Buffer:
+              this.response.body = this.response.body.toString(this.response.encoding);
+              break;
+            case (typeof this.response.body === "string"):
+              break;
+            default:
+              bool = false;
+            }
+            let xml = (this.response.getHeader('Content-Type').indexOf("xml") >= 0);
+            if ((!xml) && bool && (this.response.body.indexOf("</body>") >= 0)) {
+              try {
+                let result = this.kernelHttp.debugView.render(this.kernelHttp.extendTemplate(this.profiling, this));
+                this.response.body = this.response.body.replace("</body>", result + "\n </body>");
+                if (this.type === "HTTP2") {
+                  this.pushAsset();
+                }
+              } catch (e) {
+                throw e;
+              }
+            }
+          }
+        }
+      }
+      this.profiling = null;
+      delete this.profiling;
+    }
+    pushAsset() {
+      let publicPath = this.kernelHttp.monitoringBundle.publicPath;
+      let bundleName = this.kernelHttp.monitoringBundle.bundleName;
+      this.response.push(path.resolve(publicPath, "assets", "js", "debugBar.js"), {
+        path: "/" + bundleName + "/assets/js/debugBar.js"
+      });
+      this.response.push(path.resolve(publicPath, "assets", "css", "debugBar.css"), {
+        path: "/" + bundleName + "/assets/css/debugBar.css"
+      });
+      this.response.push(path.resolve(publicPath, "images", "http2.png"), {
+        path: "/" + bundleName + "/images/http2.png"
+      });
+      this.response.push(path.resolve(publicPath, "images", "nodejs_logo.png"), {
+        path: "/" + bundleName + "/images/nodejs_logo.png"
+      });
+      this.response.push(path.resolve(publicPath, "images", "window-close.ico"), {
+        path: "/" + bundleName + "/images/window-close.ico"
+      });
+      this.response.push(path.resolve(this.kernelHttp.frameworkBundle.publicPath, "images", "nodefony-logo.png"), {
+        path: "/" + this.kernelHttp.frameworkBundle.bundleName + "/images/nodefony-logo.png"
+      });
     }
 
   };

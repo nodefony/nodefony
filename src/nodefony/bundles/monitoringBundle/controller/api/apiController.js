@@ -27,7 +27,7 @@ module.exports = class apiController extends nodefony.controller {
     case "xml":
       this.response.setHeader('Content-Type', "application/xml");
       if (async) {
-        return this.renderAsync('monitoringBundle:api:api.xml.twig', data);
+        return this.render('monitoringBundle:api:api.xml.twig', data);
       } else {
         return this.render('monitoringBundle:api:api.xml.twig', data);
       }
@@ -35,7 +35,7 @@ module.exports = class apiController extends nodefony.controller {
     default:
       this.response.setHeader('Content-Type', "application/json");
       if (async) {
-        return this.renderAsync('monitoringBundle:api:api.json.twig', data);
+        return this.render('monitoringBundle:api:api.json.twig', data);
       } else {
         return this.render('monitoringBundle:api:api.json.twig', data);
       }
@@ -220,6 +220,7 @@ module.exports = class apiController extends nodefony.controller {
             })
             .catch((error) => {
               if (error) {
+                this.logger(error, "ERROR");
                 return this.renderRest({
                   code: 500,
                   type: "ERROR",
@@ -252,6 +253,7 @@ module.exports = class apiController extends nodefony.controller {
             })
             .catch((error) => {
               if (error) {
+                this.logger(error, "ERROR");
                 return this.renderRest({
                   code: 500,
                   type: "ERROR",
@@ -323,6 +325,7 @@ module.exports = class apiController extends nodefony.controller {
             throw e;
           });
       default:
+        this.logger("Orm not defined :" + ormName, "ERROR");
         return this.renderRest({
           code: 500,
           type: "ERROR",
@@ -331,6 +334,7 @@ module.exports = class apiController extends nodefony.controller {
       }
       break;
     default:
+      this.logger("Storage request monitoring not found", "ERROR");
       return this.renderRest({
         code: 500,
         type: "ERROR",
@@ -404,6 +408,7 @@ module.exports = class apiController extends nodefony.controller {
             }
           })
           .catch((error) => {
+            this.logger(error, "ERROR");
             if (error) {
               return this.renderRest({
                 code: 500,
@@ -440,6 +445,7 @@ module.exports = class apiController extends nodefony.controller {
           })
           .catch((error) => {
             if (error) {
+              this.logger(error, "ERROR");
               return this.renderRest({
                 code: 500,
                 type: "ERROR",
@@ -451,6 +457,7 @@ module.exports = class apiController extends nodefony.controller {
       }
       break;
     default:
+      this.logger("Storage request monitoring not found", "ERROR");
       return this.renderRest({
         code: 500,
         type: "ERROR",
@@ -725,6 +732,7 @@ module.exports = class apiController extends nodefony.controller {
       }
       finderSession(sessionServices.settings.save_path, myResults, (error /*, result*/ ) => {
         if (error) {
+          this.logger(error, "ERROR");
           return this.renderRest({
             code: 500,
             type: "ERROR",
@@ -740,16 +748,14 @@ module.exports = class apiController extends nodefony.controller {
       let orm = this.getORM();
       let ormName = this.kernel.getOrm();
       let sessionEntity = orm.getEntity("session");
-      let userEntity = orm.getEntity("user");
+      //let userEntity = orm.getEntity("user");
       switch (ormName) {
       case "sequelize":
         if (this.query.type && this.query.type === "dataTable") {
           let options = {
             offset: parseInt(this.query.start, 10),
-            limit: parseInt(this.query.length, 10),
-            include: [{
-              model: userEntity
-            }]
+            limit: parseInt(this.query.length, 10)
+
           };
           if (this.query.order.length) {
             options.order = [];
@@ -767,6 +773,7 @@ module.exports = class apiController extends nodefony.controller {
                 dataTable = dataTableSessionParsing.call(this, this.query, results);
                 //var res = JSON.stringify(dataTable);
               } catch (e) {
+                this.logger(e, "ERROR");
                 return this.renderRest({
                   code: 500,
                   type: "ERROR",
@@ -778,6 +785,7 @@ module.exports = class apiController extends nodefony.controller {
             })
             .catch((error) => {
               if (error) {
+                this.logger(error, "ERROR");
                 return this.renderRest({
                   code: 500,
                   type: "ERROR",
@@ -797,6 +805,7 @@ module.exports = class apiController extends nodefony.controller {
             })
             .catch((error) => {
               if (error) {
+                this.logger(error, "ERROR");
                 return this.renderRest({
                   code: 500,
                   type: "ERROR",
