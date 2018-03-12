@@ -170,7 +170,7 @@ nodefony.register("Context", () => {
       }
     }
 
-    displayDebugBar() {
+    displayDebugBar( /*data*/ ) {
       if (!this.isJson && this.showDebugBar) {
         if (!this.timeoutExpired) {
           if (this.response) {
@@ -222,6 +222,15 @@ nodefony.register("Context", () => {
       });
       this.response.push(path.resolve(this.kernelHttp.frameworkBundle.publicPath, "images", "nodefony-logo.png"), {
         path: "/" + this.kernelHttp.frameworkBundle.bundleName + "/images/nodefony-logo.png"
+      });
+    }
+
+    saveProfile() {
+      if (this.profiling) {
+
+      }
+      return new Promise((resolve /*, reject*/ ) => {
+        return resolve(this);
       });
     }
 

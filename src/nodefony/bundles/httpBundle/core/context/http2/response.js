@@ -62,23 +62,31 @@ module.exports = nodefony.register("http2Response", () => {
       }
     }
 
-    write(data, encoding) {
-      if (this.stream) {
-        try {
-          if (data) {
-            return this.stream.write(this.setBody(data), (encoding || this.encoding));
+    send(data, encoding) {
+      try {
+        if (this.context.isRedirect) {
+          if (!this.stream.headersSent) {
+            this.writeHead();
+            return this.end();
           }
-          if (this.body) {
-            return this.stream.write(this.body, (encoding || this.encoding));
-          } else {
-            return;
-          }
-        } catch (e) {
-          throw e;
+          return this.end();
         }
-      } else {
-        return super.write(data, encoding);
+        if (this.stream) {
+          if (data) {
+            this.setBody(data);
+          }
+          this.context.displayDebugBar();
+          return this.stream.write(this.body, (encoding || this.encoding));
+        } else {
+          return super.send(data, encoding);
+        }
+      } catch (e) {
+        throw e;
       }
+    }
+
+    write(data, encoding) {
+      return this.send(data, encoding);
     }
 
     end(data, encoding) {

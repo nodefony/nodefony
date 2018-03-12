@@ -328,7 +328,7 @@ module.exports = class httpKernel extends nodefony.Service {
     }
     response.setHeader("Server", "nodefony");
     if (this.kernel.settings.system.statics) {
-      this.serverStatic.handle(request, response, (error) => {
+      return this.serverStatic.handle(request, response, (error) => {
         if (error) {
           this.logger(error, "ERROR", " STATICS SERVER");
           return;

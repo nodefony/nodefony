@@ -58,5 +58,6 @@ module.exports = class serverStatics extends nodefony.Service {
     for (let server in this.servers) {
       this.servers[server](request, response, next);
     }
+    return response;
   }
 };

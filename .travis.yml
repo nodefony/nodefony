@@ -9,7 +9,6 @@ dist:            trusty
 sudo:            true
 
 node_js:
-  #- "6"
   - "8"
   - "9"
 

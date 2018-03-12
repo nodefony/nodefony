@@ -94,16 +94,17 @@ const Translation = class Translation extends nodefony.Service {
 
   getLang() {
     let Lang = null;
+    let query = this.context.request.query;
     if (!this.context.session) {
-      if (this.getParameters("query.request")) {
-        Lang = this.getParameters("query.request").lang;
+      if (query) {
+        Lang = query.lang;
         if (Lang) {
           this.defaultLocale = Lang;
         }
       }
     } else {
-      if (this.getParameters("query.request")) {
-        let queryGetlang = this.getParameters("query.request").lang;
+      if (query) {
+        let queryGetlang = query.lang;
         if (this.context.user) {
           if (queryGetlang) {
             Lang = queryGetlang;
@@ -113,15 +114,17 @@ const Translation = class Translation extends nodefony.Service {
         } else {
           Lang = queryGetlang || this.context.session.get("lang");
         }
-        let res = reg.exec(Lang ||  this.defaultLocale);
-        if (res) {
-          if (res[2]) {
-            this.defaultLocale = res[0];
-          } else {
-            this.defaultLocale = res[1] + "_" + res[1];
-          }
-        }
       }
+    }
+    let res = reg.exec(Lang ||  this.defaultLocale);
+    if (res) {
+      if (res[2]) {
+        this.defaultLocale = res[0];
+      } else {
+        this.defaultLocale = res[1] + "_" + res[1];
+      }
+    }
+    if (this.context.session) {
       this.context.session.set("lang", this.defaultLocale);
     }
     if (!this.service.getParameters("translate." + this.defaultLocale)) {
@@ -131,10 +134,11 @@ const Translation = class Translation extends nodefony.Service {
         this.service.getFileLocale(this.defaultLocale);
       }
     }
+    return this.defaultLocale;
   }
   handle() {
     this.service.engineTemplate.extendFilter("trans", this.trans.bind(this));
-    this.getLang();
+    return this.getLang();
   }
 };
 

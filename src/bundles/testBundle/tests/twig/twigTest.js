@@ -465,7 +465,6 @@ describe("BUNDLE TEST", function () {
         //assert.equal(res.statusCode, 200);
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
-          //console.log(chunk)
           var ret = JSON.parse(chunk);
           //console.log(ret)
           assert.deepStrictEqual(ret, resultJson("renderOject", "<h1>NODEFONY REQUEST :renderOject </h1>"));

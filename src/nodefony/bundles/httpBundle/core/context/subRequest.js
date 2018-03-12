@@ -18,6 +18,8 @@ module.exports = nodefony.register("subRequest", () => {
       this.pushAllowed = context.pushAllowed;
       this.requestEnded = context.requestEnded;
       this.uploadService = context.uploadService;
+      this.translation = context.translation;
+      this.locale = context.locale;
 
       this.request = context.request;
       this.response = context.response;

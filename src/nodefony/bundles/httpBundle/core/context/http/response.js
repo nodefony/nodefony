@@ -166,7 +166,6 @@ module.exports = nodefony.register("Response", function () {
 
     setBody(ele, encoding = null) {
       //console.trace("setBody : ", ele.length)
-      console.log(ele);
       return this.body = Buffer.from(ele, encoding || this.encoding);
     }
 
@@ -217,9 +216,17 @@ module.exports = nodefony.register("Response", function () {
 
     send(data, encoding) {
       try {
-        if (data) {
-          return this.response.write(this.setBody(data), (encoding || this.encoding));
+        if (this.context.isRedirect) {
+          if (!this.stream.headersSent) {
+            this.writeHead();
+            return this.end();
+          }
+          return this.end();
         }
+        if (data) {
+          this.setBody(data);
+        }
+        this.context.displayDebugBar();
         return this.response.write(this.body, (encoding || this.encoding));
       } catch (e) {
         throw e;
@@ -243,6 +250,7 @@ module.exports = nodefony.register("Response", function () {
     }
 
     redirect(url, status, headers) {
+      this.context.isRedirect = true;
       status = parseInt(status, 10);
       if (status === 301) {
         this.setStatusCode(status);

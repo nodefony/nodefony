@@ -149,7 +149,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
 
     handle(data) {
       try {
-        this.translation.handle();
+        this.locale = this.translation.handle();
         if (!this.resolver) {
           this.resolver = this.router.resolve(this);
         } else {

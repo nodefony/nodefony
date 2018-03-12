@@ -653,7 +653,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         if (error) {
           this.kernel.logger(error);
         }
-        context.displayDebugBar();
+        //context.displayDebugBar();
 
         if (context && context.response) {
           context.sended = true;
@@ -669,7 +669,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         }
       });
     } else {
-      return context.displayDebugBar();
+      //return context.displayDebugBar();
     }
   }
 

@@ -1,6 +1,5 @@
 module.exports = nodefony.register("controller", function () {
 
-
   const isPromise = function (obj) {
     switch (true) {
     case obj instanceof Promise:
@@ -10,7 +9,6 @@ module.exports = nodefony.register("controller", function () {
       return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
     }
   };
-
 
   const Controller = class Controller extends nodefony.Service {
     constructor(container, context) {
@@ -39,6 +37,10 @@ module.exports = nodefony.register("controller", function () {
         msgid = "BUNDLE : " + this.bundle.name.toUpperCase() + " Controller : " + this.name;
       }
       return super.logger(pci, severity, msgid, msg);
+    }
+
+    getLocale() {
+      return this.context.locale;
     }
 
     getRequest() {
@@ -138,14 +140,15 @@ module.exports = nodefony.register("controller", function () {
         return;
       }
       //this.fire("onView", data, this.context);
-      //this.response.setBody(data);
+      this.response.setBody(data);
       if (headers && typeof headers === "object") {
         this.response.setHeaders(headers);
       }
       if (status) {
         this.response.setStatusCode(status);
       }
-      this.context.send(data);
+      return this.response;
+      //return this.context.send(data);
     }
 
     renderJson(obj, status, headers) {
@@ -169,12 +172,9 @@ module.exports = nodefony.register("controller", function () {
       return this.renderJson(obj, status, headers).then((result) => {
         return this.context.send(result);
       }).catch((e) => {
-        if (this.response.response.headersSent || this.context.timeoutExpired) {
-          return new Promise((resolve, reject) => {
-            return reject(this);
-          });
-        }
-        throw e;
+        this.logger(e, "ERROR");
+        this.createException(e);
+        return e;
       });
     }
 
@@ -198,7 +198,7 @@ module.exports = nodefony.register("controller", function () {
       if (status) {
         this.response.setStatusCode(status);
       }
-      return this.response;
+      return data;
     }
 
     render(view, param) {
@@ -217,18 +217,19 @@ module.exports = nodefony.register("controller", function () {
         throw new Error("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "WARNING");
       }
       try {
-        this.renderViewSync(view, param);
+        return this.renderViewSync(view, param);
       } catch (e) {
         throw e;
       }
-      return this.response;
     }
 
     renderAsync(view, param) {
       return this.render(view, param).then((result) => {
         return this.context.send(result);
       }).catch((e) => {
-        throw e;
+        this.logger(e, "ERROR");
+        this.createException(e);
+        return e;
       });
     }
 
@@ -257,7 +258,7 @@ module.exports = nodefony.register("controller", function () {
         try {
           this.fire("onView", res, this.context, null, param);
           this.response.setBody(res);
-          return this.response;
+          return res;
         } catch (e) {
           extendParam = null;
           throw e;
@@ -492,7 +493,6 @@ module.exports = nodefony.register("controller", function () {
       if (!url) {
         throw new Error("Redirect error no url !!!");
       }
-      this.context.isRedirect = true;
       try {
         this.context.redirect(url, status, headers);
       } catch (e) {

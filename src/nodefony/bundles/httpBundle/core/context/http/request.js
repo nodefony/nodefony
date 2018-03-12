@@ -40,9 +40,9 @@ module.exports = nodefony.register("Request", function () {
     parse() {
       try {
         this.request.queryPost = QS.parse(this.request.data.toString(this.charset), this.queryStringParser);
-        this.request.context.setParameters("query.post", this.request.queryPost);
+        //this.request.context.setParameters("query.post", this.request.queryPost);
         this.request.query = nodefony.extend({}, this.request.query, this.request.queryPost);
-        this.request.context.setParameters("query.request", this.request.query);
+        //this.request.context.setParameters("query.request", this.request.query);
         super.parse();
       } catch (err) {
         this.request.context.fire("onError", this.request.context.container, err);
@@ -63,7 +63,7 @@ module.exports = nodefony.register("Request", function () {
           throw err;
         }
         this.request.queryPost = result;
-        this.request.context.setParameters("query.post", this.request.queryPost);
+        //this.request.context.setParameters("query.post", this.request.queryPost);
         super.parse();
       });
     }
@@ -149,9 +149,9 @@ module.exports = nodefony.register("Request", function () {
       this.parser = null;
       this.queryPost = {};
       this.queryFile = [];
-      this.context.setParameters("query.files", this.queryFile);
+      //this.context.setParameters("query.files", this.queryFile);
       this.queryGet = this.url.query;
-      this.context.setParameters("query.get", this.queryGet);
+      //this.context.setParameters("query.get", this.queryGet);
       this.query = this.url.query;
       this.origin = this.headers.origin;
       try {
@@ -227,9 +227,9 @@ module.exports = nodefony.register("Request", function () {
           }
           try {
             this.queryPost = fields;
-            this.context.setParameters("query.post", this.queryPost);
+            //this.context.setParameters("query.post", this.queryPost);
             this.query = nodefony.extend({}, this.query, this.queryPost);
-            this.context.setParameters("query.request", this.query);
+            //this.context.setParameters("query.request", this.query);
             if (Object.keys(files).length) {
               for (let file in files) {
                 try {

@@ -41,7 +41,7 @@ module.exports = class appController extends nodefony.controller {
     let version = this.kernel.settings.version;
     let year = new Date().getFullYear();
     let langs = translateService.getLangs();
-    let locale = translateService.getLocale();
+    let locale = this.getLocale();
     return this.render("AppBundle::footer.html.twig", {
       langs: langs,
       version: version,

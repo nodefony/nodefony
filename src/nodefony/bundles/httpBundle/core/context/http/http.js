@@ -103,16 +103,16 @@ nodefony.register.call(nodefony.context, "http", function () {
     }
 
     handle(data) {
-      /*this.setParameters("query.get", this.request.queryGet);
+      this.setParameters("query.get", this.request.queryGet);
       if (this.request.queryPost) {
         this.setParameters("query.post", this.request.queryPost);
       }
       if (this.request.queryFile) {
         this.setParameters("query.files", this.request.queryFile);
       }
-      this.setParameters("query.request", this.request.query);*/
+      this.setParameters("query.request", this.request.query);
       try {
-        this.translation.handle();
+        this.locale = this.translation.handle();
         if (!this.resolver) {
           this.resolver = this.router.resolve(this);
         }
@@ -176,8 +176,10 @@ nodefony.register.call(nodefony.context, "http", function () {
           }
           this.fire("onSend", this.response, this);
           this.writeHead();
-          this.write(data, type);
-          return this;
+          if (!this.isRedirect) {
+            return this.write(data, type);
+          }
+          return this.response.end();
         })
         .catch((error) => {
           this.logger(error, "ERROR");
@@ -226,14 +228,11 @@ nodefony.register.call(nodefony.context, "http", function () {
     }
 
     redirect(Url, status, headers) {
-      let res = null;
       if (typeof Url === "object") {
-        res = this.response.redirect(url.format(Url), status, headers);
+        return this.response.redirect(url.format(Url), status, headers);
       } else {
-        res = this.response.redirect(Url, status, headers);
+        return this.response.redirect(Url, status, headers);
       }
-      this.isRedirect = true;
-      return this.send();
     }
 
     redirectHttps(status, headers) {
@@ -292,8 +291,6 @@ nodefony.register.call(nodefony.context, "http", function () {
         }
       }
     }
-
-
 
   };
   return Http;

@@ -145,9 +145,9 @@ module.exports = nodefony.register("Resolver", function () {
     }
 
     callController(data) {
-      if (this.context.isRedirect || this.context.sended) {
+      /*if ( this.context.isRedirect || this.context.sended) {
         return;
-      }
+      }*/
       try {
         let controller = this.get("controller");
         if (!controller) {
@@ -170,10 +170,11 @@ module.exports = nodefony.register("Resolver", function () {
     }
 
     returnController(result) {
+      let type = nodefony.typeOf(result);
       switch (true) {
+      case (type === "string"):
       case result instanceof String:
-        this.context.response.setBody(result);
-        return this.context.send();
+        return this.context.send(result);
       case result instanceof nodefony.subRequest:
         switch (true) {
         case result.result instanceof Promise:
@@ -181,9 +182,10 @@ module.exports = nodefony.register("Resolver", function () {
         case isPromise(result.result):
           this.returnController(result.result);
           return this.context.send();
+          //case nodefony.typeOf(result.result) === "object":
+          //  return this.returnController(this.get("controller").renderSync(this.defaultView, result.result));
         default:
           return this.returnController(result.result);
-          //throw new Error("nodefony Twig Template Render can't resolve Async Call in Action controler ");
         }
         break;
       case result instanceof nodefony.Response:
@@ -198,36 +200,26 @@ module.exports = nodefony.register("Resolver", function () {
         this.context.promise = result;
         return this.context.promise.then((myResult) => {
           return this.returnController(myResult);
-          /*switch (true) {
-          case myResult instanceof nodefony.Context:
-          case myResult instanceof nodefony.Response:
-          case myResult instanceof nodefony.wsResponse:
-          case myResult instanceof Promise:
-          case myResult instanceof BlueBird:
-          case myResult instanceof nodefony.subRequest:
-          case isPromise(myResult):
-            return this.returnController(myResult);
-          default:
-            return this.context.send(myResult);
-          }*/
         }).catch((e) => {
           throw e;
         });
       case result instanceof nodefony.Context:
         return result;
-      case nodefony.typeOf(result) === "object":
+      case (type === "object"):
         if (this.defaultView) {
-          return this.returnController(this.get("controller").render(this.defaultView, result));
+          return this.returnController(this.get("controller").renderSync(this.defaultView, result));
         } else {
           throw new Error("default view not exist");
         }
         break;
       default:
+        if (this.context.isRedirect) {
+          return this.context.send();
+        }
         this.context.waitAsync = true;
-        //this.logger("WAIT ASYNC RESPONSE FOR ROUTE : "+this.route.name ,"DEBUG")
+        //this.logger("WAIT ASYNC RESPONSE FOR ROUTE : " + this.route.name, "DEBUG")
         // CASE async controller wait fire onResponse by other entity
       }
-      //return result;
     }
   };
   return Resolver;
