@@ -111,7 +111,11 @@ nodefony.register.call(nodefony.context, "http", function () {
         this.setParameters("query.files", this.request.queryFile);
       }
       this.setParameters("query.request", this.request.query);
+
       try {
+        if (this.isRedirect) {
+          return this.send();
+        }
         this.locale = this.translation.handle();
         if (!this.resolver) {
           this.resolver = this.router.resolve(this);

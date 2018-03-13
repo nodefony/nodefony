@@ -309,11 +309,11 @@ module.exports = nodefony.register("SecuredArea", function () {
     redirect(context, url) {
       if (url) {
         // no cache
-        context.redirect(url, 302, true);
-        return context;
+        return context.redirect(url, 302, true);
+        //return context;
       }
-      context.redirect(context.request.url, 302, true);
-      return context;
+      return context.redirect(context.request.url, 302, true);
+      //return context;
     }
 
     match(context) {

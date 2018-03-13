@@ -22,7 +22,7 @@ module.exports = class sessionController extends nodefony.controller {
    */
   sessionAction(type, message) {
     if (message) {
-      return this.renderResponse(message.utf8Data);
+      return this.context.send(message.utf8Data);
     }
     let oldId = null;
     switch (type) {

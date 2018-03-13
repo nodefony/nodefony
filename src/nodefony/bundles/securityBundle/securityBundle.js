@@ -2,8 +2,8 @@ module.exports = class securityBundle extends nodefony.Bundle {
   constructor(name, kernel, container) {
     super(name, kernel, container);
     // load bundle library
-    this.autoLoader.loadDirectory(this.path + "/src");
-    nodefony.register.call(nodefony.security.passport, () => {
+    this.autoLoader.loadDirectory(path.resolve(this.path, "src"));
+    /*nodefony.register.call(nodefony.security.passport, () => {
       return {
         local: require('passport-local').Strategy,
         oauth2: require('passport-oauth2').Strategy,
@@ -14,7 +14,7 @@ module.exports = class securityBundle extends nodefony.Bundle {
         ldapauth: require('passport-ldapauth'),
         jwt: require('passport-jwt').Strategy
       };
-    });
+    });*/
 
   }
 };

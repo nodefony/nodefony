@@ -169,12 +169,14 @@ nodefony.register("wsResponse", function () {
     }
 
     //ADD INPLICIT HEADER
-    setHeader(name, value) {
-      this.response.setHeader(name, value);
+    setHeader( /*name, value*/ ) {
+      //this.response.setHeader(name, value);
+      return true;
     }
 
-    setHeaders(obj) {
-      nodefony.extend(this.headers, obj);
+    setHeaders( /*obj*/ ) {
+      //nodefony.extend(this.headers, obj);
+      return true;
     }
   };
   return Response;

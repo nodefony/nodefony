@@ -94,9 +94,16 @@ module.exports = nodefony.register("controller", function () {
       }
     }
 
-    setContextJson() {
+    setContextJson(encoding) {
+      if (!encoding) {
+        encoding = "charset=utf-8";
+      } else {
+        encoding = "charset=" + encoding;
+      }
       this.context.isJson = true;
-      this.context.response.setHeader("Content-Type", "application/json; charset=utf-8");
+      if (this.context.method !== "websoket") {
+        this.context.response.setHeader("Content-Type", "application/json; " + encoding);
+      }
     }
 
     getORM() {
@@ -182,23 +189,23 @@ module.exports = nodefony.register("controller", function () {
       let data = null;
       try {
         data = JSON.stringify(obj);
+        if (!this.response) {
+          throw new Error("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK");
+        }
+        this.response.setBody(data);
+        this.setContextJson();
+        if (headers) {
+          this.response.setHeaders(headers);
+        }
+        if (status) {
+          this.response.setStatusCode(status);
+        }
+        return data;
       } catch (e) {
         this.logger(e, "ERROR");
         throw e;
       }
-      if (!this.response) {
-        throw new Error("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK");
-      }
-      //this.response.setBody(data);
-      //this.fire("onView", data, this.context);
-      this.response.setBody(data);
-      this.response.setHeaders(nodefony.extend({}, {
-        'Content-Type': "text/json ; charset=" + this.response.encoding
-      }, headers));
-      if (status) {
-        this.response.setStatusCode(status);
-      }
-      return data;
+
     }
 
     render(view, param) {
@@ -294,6 +301,7 @@ module.exports = nodefony.register("controller", function () {
         extendParam = null;
         throw e;
       }
+      return this.response.body;
     }
 
     getFile(file) {

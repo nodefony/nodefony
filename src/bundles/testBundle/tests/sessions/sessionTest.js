@@ -129,11 +129,11 @@ describe("BUNDLE TEST", function () {
         url: url + "/test/unit/session/none"
       });
       var client = new WebSocketClient();
-      client.connect(options.url, null, "nodefony", null, {});
+      client.connect(options.url, null, url, null, {});
       client.on('connect', function (connection) {
         connection.on("message", (message) => {
           var res = JSON.parse(message.utf8Data);
-          //assert.deepStrictEqual(res.id, null);
+          assert.deepStrictEqual(res.id, null);
           connection.close();
         });
         connection.on('close', (reasonCode, description) => {

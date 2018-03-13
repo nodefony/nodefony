@@ -199,7 +199,7 @@ module.exports = nodefony.registerController("twig", function () {
         let result = null;
         if (!message) {
           result = obj("START", "CONNECTED", this.context.connection.connected);
-          this.renderResponse(JSON.stringify(result));
+          this.context.send(JSON.stringify(result));
           return;
         } else {
           var res = null;

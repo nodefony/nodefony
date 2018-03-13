@@ -284,6 +284,7 @@ module.exports = class httpKernel extends nodefony.Service {
     try {
       httpError = new nodefony.httpError(error, null, container);
       context = httpError.context;
+      context.resolver = httpError.resolver;
       if (context.method === "WEBSOCKET" &&
         context.response &&
         !context.response.connection) {
@@ -299,6 +300,8 @@ module.exports = class httpKernel extends nodefony.Service {
       }
       httpError.logger();
       result = httpError.resolver.callController(httpError);
+      context.fire("onRequest", context, httpError.resolver);
+      this.kernel.fire("onRequest", context, httpError.resolver);
       if (context.method === "WEBSOCKET") {
         if (httpError.code < 3000) {
           httpError.code += 3000;
@@ -433,6 +436,7 @@ module.exports = class httpKernel extends nodefony.Service {
         context.fire("onError", container, e);
         return context;
       });
+      return e;
     }
     if (context.secure) {
       return this.firewall.handleSecurity(context);

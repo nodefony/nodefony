@@ -168,11 +168,14 @@ module.exports = class security extends nodefony.Service {
           return this.handle(context)
             .then((ctx) => {
               //console.log(ctx instanceof nodefony.Context)
-              if (context === ctx) {
-                //ctx.fire("onRequest");
-                return resolve(ctx.handle());
+              switch (true) {
+              case ctx instanceof nodefony.Response:
+              case ctx instanceof nodefony.wsResponse:
+              case ctx instanceof nodefony.Context:
+                return resolve(context.handle());
+              default:
+                return resolve(ctx);
               }
-              return resolve(ctx);
             })
             .catch((error) => {
               context.fire("onError", context.container, error);

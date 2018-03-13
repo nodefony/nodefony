@@ -56,6 +56,8 @@ module.exports = nodefony.register("subRequest", () => {
       this.remoteAddress = context.remoteAddress;
       this.crossDomain = context.crossDomain;
       this.proxy = context.proxy;
+      this.token = context.token;
+      this.user = context.user;
 
     }
 

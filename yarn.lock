@@ -254,13 +254,15 @@ agent-base@4, agent-base@^4.1.0:
   dependencies:
     es6-promisify "^5.0.0"
 
-agentkeepalive@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/agentkeepalive/-/agentkeepalive-2.2.0.tgz#c5d1bd4b129008f1163f236f86e5faea2026e2ef"
-
 agentkeepalive@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/agentkeepalive/-/agentkeepalive-3.3.0.tgz#6d5de5829afd3be2712201a39275fd11c651857c"
+  dependencies:
+    humanize-ms "^1.2.1"
+
+agentkeepalive@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/agentkeepalive/-/agentkeepalive-3.4.1.tgz#aa95aebc3a749bca5ed53e3880a09f5235b48f0c"
   dependencies:
     humanize-ms "^1.2.1"
 
@@ -3287,11 +3289,11 @@ ejs@^2.3.1, ejs@^2.5.7:
   version "2.5.7"
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.5.7.tgz#cc872c168880ae3c7189762fd5ffc00896c9518a"
 
-elasticsearch@^14.1.0:
-  version "14.1.0"
-  resolved "https://registry.yarnpkg.com/elasticsearch/-/elasticsearch-14.1.0.tgz#9a5e461fa3bacc1bd91411534650c63408121f81"
+elasticsearch@^14.2.0:
+  version "14.2.0"
+  resolved "https://registry.yarnpkg.com/elasticsearch/-/elasticsearch-14.2.0.tgz#ef7c6e505cb41525a0751b5156e8c0fbd1f02d62"
   dependencies:
-    agentkeepalive "^2.2.0"
+    agentkeepalive "^3.4.1"
     chalk "^1.0.0"
     lodash "2.4.2"
     lodash.get "^4.4.2"
@@ -5652,10 +5654,6 @@ isarray@1.0.0, isarray@^1.0.0, isarray@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
 
-isemail@1.x.x:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/isemail/-/isemail-1.2.0.tgz#be03df8cc3e29de4d2c5df6501263f1fa4595e9a"
-
 isexe@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
@@ -5719,15 +5717,6 @@ jackpot@>=0.0.6:
   resolved "https://registry.yarnpkg.com/jackpot/-/jackpot-0.0.6.tgz#3cff064285cbf66f4eab2593c90bce816a821849"
   dependencies:
     retry "0.6.0"
-
-joi@^6.10.1:
-  version "6.10.1"
-  resolved "https://registry.yarnpkg.com/joi/-/joi-6.10.1.tgz#4d50c318079122000fe5f16af1ff8e1917b77e06"
-  dependencies:
-    hoek "2.x.x"
-    isemail "1.x.x"
-    moment "2.x.x"
-    topo "1.x.x"
 
 jquery@^3.3.1:
   version "3.3.1"
@@ -5879,16 +5868,6 @@ jsonparse@^1.2.0:
 jsonpointer@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/jsonpointer/-/jsonpointer-4.0.1.tgz#4fd92cb34e0e9db3c89c8622ecf51f9b978c6cb9"
-
-jsonwebtoken@^7.0.0:
-  version "7.4.3"
-  resolved "https://registry.yarnpkg.com/jsonwebtoken/-/jsonwebtoken-7.4.3.tgz#77f5021de058b605a1783fa1283e99812e645638"
-  dependencies:
-    joi "^6.10.1"
-    jws "^3.1.4"
-    lodash.once "^4.0.0"
-    ms "^2.0.0"
-    xtend "^4.0.1"
 
 jsonwebtoken@^8.2.0:
   version "8.2.0"
@@ -7045,7 +7024,7 @@ moment-timezone@^0.5.14, moment-timezone@^0.5.x:
   dependencies:
     moment ">= 2.9.0"
 
-moment@2.x.x, "moment@>= 2.9.0", moment@^2.10.6, moment@^2.19, moment@^2.20.0:
+"moment@>= 2.9.0", moment@^2.10.6, moment@^2.19, moment@^2.20.0:
   version "2.20.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.20.1.tgz#d6eb1a46cbcc14a2b2f9434112c1ff8907f313fd"
 
@@ -7336,7 +7315,7 @@ node-pre-gyp@^0.8.0:
     semver "^5.3.0"
     tar "^4"
 
-node-sass@4.7.2, node-sass@^4.7.2:
+node-sass@^4.7.2:
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/node-sass/-/node-sass-4.7.2.tgz#9366778ba1469eb01438a9e8592f4262bcb6794e"
   dependencies:
@@ -8257,11 +8236,11 @@ passport-http@0.3.0:
   dependencies:
     passport-strategy "1.x.x"
 
-passport-jwt@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/passport-jwt/-/passport-jwt-3.0.1.tgz#e4f7276dad8bd251d43c6fc38883130b963272f6"
+passport-jwt@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/passport-jwt/-/passport-jwt-4.0.0.tgz#7f0be7ba942e28b9f5d22c2ebbb8ce96ef7cf065"
   dependencies:
-    jsonwebtoken "^7.0.0"
+    jsonwebtoken "^8.2.0"
     passport-strategy "^1.0.0"
 
 passport-ldapauth@2.0.0:
@@ -8503,9 +8482,9 @@ pngquant-bin@^3.0.0:
     bin-wrapper "^3.0.0"
     logalot "^2.0.0"
 
-popper.js@^1.12.9:
-  version "1.12.9"
-  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.12.9.tgz#0dfbc2dff96c451bb332edcfcfaaf566d331d5b3"
+popper.js@^1.14.1:
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.14.1.tgz#b8815e5cda6f62fc2042e47618649f75866e6753"
 
 portfinder@^1.0.9, portfinder@~1.0.12:
   version "1.0.13"
@@ -9492,6 +9471,33 @@ request@2.81.0:
     tunnel-agent "^0.6.0"
     uuid "^3.0.0"
 
+request@^2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/request/-/request-2.85.0.tgz#5a03615a47c61420b3eb99b7dba204f83603e1fa"
+  dependencies:
+    aws-sign2 "~0.7.0"
+    aws4 "^1.6.0"
+    caseless "~0.12.0"
+    combined-stream "~1.0.5"
+    extend "~3.0.1"
+    forever-agent "~0.6.1"
+    form-data "~2.3.1"
+    har-validator "~5.0.3"
+    hawk "~6.0.2"
+    http-signature "~1.2.0"
+    is-typedarray "~1.0.0"
+    isstream "~0.1.2"
+    json-stringify-safe "~5.0.1"
+    mime-types "~2.1.17"
+    oauth-sign "~0.8.2"
+    performance-now "^2.1.0"
+    qs "~6.5.1"
+    safe-buffer "^5.1.1"
+    stringstream "~0.0.5"
+    tough-cookie "~2.3.3"
+    tunnel-agent "^0.6.0"
+    uuid "^3.1.0"
+
 request@~2.79.0:
   version "2.79.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.79.0.tgz#4dfe5bf6be8b8cdc37fcf93e04b65577722710de"
@@ -9704,6 +9710,12 @@ rxjs@^5.0.0-beta.11, rxjs@^5.5.2, rxjs@^5.5.6:
   dependencies:
     symbol-observable "1.0.1"
 
+rxjs@^5.5.7:
+  version "5.5.7"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.5.7.tgz#afb3d1642b069b2fbf203903d6501d1acb4cda27"
+  dependencies:
+    symbol-observable "1.0.1"
+
 safe-buffer@5.1.1, safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.1.1, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
@@ -9878,9 +9890,9 @@ seq-queue@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/seq-queue/-/seq-queue-0.0.5.tgz#d56812e1c017a6e4e7c3e3a37a1da6d78dd3c93e"
 
-sequelize@^4.36.0:
-  version "4.36.0"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.36.0.tgz#769af2b1f0d4498efe7f229040d9524448dba4a8"
+sequelize@^4.36.1:
+  version "4.36.1"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.36.1.tgz#b94da41df27d3e5d0a446025051c8808156007be"
   dependencies:
     bluebird "^3.5.0"
     cls-bluebird "^2.1.0"
@@ -10943,12 +10955,6 @@ to-string-x@^1.4.2:
   resolved "https://registry.yarnpkg.com/to-string-x/-/to-string-x-1.4.2.tgz#7d9a2528e159a9214e668137c1e10a045abe6279"
   dependencies:
     is-symbol "^1.0.1"
-
-topo@1.x.x:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/topo/-/topo-1.1.0.tgz#e9d751615d1bb87dc865db182fa1ca0a5ef536d5"
-  dependencies:
-    hoek "2.x.x"
 
 toposort-class@^1.0.1:
   version "1.0.1"

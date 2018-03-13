@@ -142,8 +142,8 @@ module.exports = class defaultController extends nodefony.controller {
         var id = setInterval(() => {
           var mess = "I am a  message " + i + "\n";
           this.logger("SEND TO CLIENT :" + mess, "INFO");
-          //this.context.send(mess);
-          this.renderResponse(mess);
+          this.context.send(mess);
+          //this.renderResponse(mess);
           i++;
         }, 1000);
 
