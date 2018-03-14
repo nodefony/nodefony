@@ -29,6 +29,7 @@ nodefony.register("Context", () => {
       this.token = null;
       this.secure = false;
       this.isJson = false;
+      this.waitAsync = false;
     }
 
     logger(pci, severity, msgid, msg) {

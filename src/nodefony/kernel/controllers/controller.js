@@ -142,20 +142,41 @@ module.exports = nodefony.register("controller", function () {
     }
 
     renderResponse(data, status, headers) {
-      if (!this.response) {
-        this.logger("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "WARNING");
-        return;
+      return new Promise((resolve, reject) => {
+        try {
+          return resolve(this.renderResponseSync(data, status, headers));
+        } catch (e) {
+          return reject(e);
+        }
+      });
+    }
+
+    renderResponseAsync(data, status, headers) {
+      return this.renderResponse(data, status, headers)
+        .then((result) => {
+          return this.context.send(result);
+        })
+        .catch((e) => {
+          this.logger(e, "ERROR");
+          this.createException(e);
+          return e;
+        });
+    }
+
+    renderResponseSync(data, status, headers) {
+      try {
+        this.response.setBody(data);
+        if (headers) {
+          this.response.setHeaders(headers);
+        }
+        if (status) {
+          this.response.setStatusCode(status);
+        }
+        return data;
+      } catch (e) {
+        this.logger(e, "ERROR");
+        throw e;
       }
-      //this.fire("onView", data, this.context);
-      this.response.setBody(data);
-      if (headers && typeof headers === "object") {
-        this.response.setHeaders(headers);
-      }
-      if (status) {
-        this.response.setStatusCode(status);
-      }
-      return this.response;
-      //return this.context.send(data);
     }
 
     renderJson(obj, status, headers) {
