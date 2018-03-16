@@ -159,7 +159,7 @@ framework:
 	@echo "#######################################" ;
 	@echo "";
 
-	@if [ -e .git ] ; then \
+	@if [ -e .gitmodules ] ; then \
 		git submodule sync ; \
 		git submodule update --init --recursive ; \
 	fi

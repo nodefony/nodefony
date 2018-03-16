@@ -27,7 +27,7 @@ module.exports = class apiController extends nodefony.controller {
     case "xml":
       this.response.setHeader('Content-Type', "application/xml");
       if (async) {
-        return this.render('monitoringBundle:api:api.xml.twig', data);
+        return this.renderAsync('monitoringBundle:api:api.xml.twig', data);
       } else {
         return this.render('monitoringBundle:api:api.xml.twig', data);
       }
@@ -35,7 +35,7 @@ module.exports = class apiController extends nodefony.controller {
     default:
       this.response.setHeader('Content-Type', "application/json");
       if (async) {
-        return this.render('monitoringBundle:api:api.json.twig', data);
+        return this.renderAsync('monitoringBundle:api:api.json.twig', data);
       } else {
         return this.render('monitoringBundle:api:api.json.twig', data);
       }
@@ -144,7 +144,7 @@ module.exports = class apiController extends nodefony.controller {
    */
   requestsAction() {
     let bundle = this.get("kernel").getBundles("monitoring");
-    let storageProfiling = bundle.settings.storage.requests;
+    let storageProfiling = bundle.settings.profiler.storage;
     let ormName = this.kernel.getOrm();
     switch (storageProfiling) {
     case "syslog":
@@ -351,7 +351,7 @@ module.exports = class apiController extends nodefony.controller {
    */
   requestAction(uid) {
     let bundle = this.get("kernel").getBundles("monitoring");
-    let storageProfiling = bundle.settings.storage.requests;
+    let storageProfiling = bundle.settings.profiler.storage;
     let ormName = this.kernel.getOrm();
     switch (storageProfiling) {
     case "syslog":
@@ -899,14 +899,14 @@ module.exports = class apiController extends nodefony.controller {
         type: "SUCCESS",
         message: "OK",
         data: JSON.stringify([ele])
-      }, true);
+      });
     default:
       return this.renderRest({
         code: 200,
         type: "SUCCESS",
         message: "OK",
         data: JSON.stringify([])
-      }, true);
+      });
     }
   }
 

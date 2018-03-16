@@ -139,6 +139,7 @@ module.exports = nodefony.register("httpError", function () {
         if (message.xjson) {
           this.xjson = message.xjson;
         }
+        this.stack = message.stack;
         break;
       }
     }

@@ -47,6 +47,16 @@ module.exports = class httpKernel extends nodefony.Service {
       this.debugView = this.getTemplate("monitoringBundle::debugBar.html.twig");
       this.frameworkBundle = this.kernel.getBundle("framework");
       this.monitoringBundle = this.kernel.getBundle("monitoring");
+      if (this.monitoringBundle) {
+        this.profiler = this.monitoringBundle.settings.profiler;
+        this.forceDebugBarProd = this.monitoringBundle.settings.forceDebugBarProd;
+      } else {
+        this.profiler = {
+          active: false
+        };
+        this.forceDebugBarProd = false;
+      }
+
     });
 
     this.on("onClientError", (e, socket) => {

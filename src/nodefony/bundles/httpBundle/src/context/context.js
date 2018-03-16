@@ -30,6 +30,7 @@ nodefony.register("Context", () => {
       this.secure = false;
       this.isJson = false;
       this.waitAsync = false;
+      this.profiler = this.kernelHttp.profiler.active;
     }
 
     logger(pci, severity, msgid, msg) {
@@ -171,38 +172,57 @@ nodefony.register("Context", () => {
       }
     }
 
+    canDisplayBar() {
+      if (this.kernel.environment === "prod" && !this.kernelHttp.forceDebugBarProd) {
+        return false;
+      }
+      if (!this.showDebugBar) {
+        return false;
+      }
+      if (!this.response) {
+        return false;
+      }
+      if (!this.response.isHtml()) {
+        return false;
+      }
+      if (this.timeoutExpired) {
+        return false;
+      }
+      if (!this.resolver.route) {
+        return false;
+      }
+      if (!this.resolver.resolve) {
+        return false;
+      }
+      switch (true) {
+      case this.response.body instanceof Buffer:
+        this.response.body = this.response.body.toString(this.response.encoding);
+        break;
+      case (typeof this.response.body === "string"):
+        break;
+      default:
+        return false;
+      }
+      if (this.response.body.indexOf("</body>") >= 0) {
+        return this.showDebugBar;
+      }
+      return false;
+    }
+
     displayDebugBar( /*data*/ ) {
-      if (!this.isJson && this.showDebugBar) {
-        if (!this.timeoutExpired) {
-          if (this.response) {
-            let bool = true;
-            switch (true) {
-            case this.response.body instanceof Buffer:
-              this.response.body = this.response.body.toString(this.response.encoding);
-              break;
-            case (typeof this.response.body === "string"):
-              break;
-            default:
-              bool = false;
-            }
-            let xml = (this.response.getHeader('Content-Type').indexOf("xml") >= 0);
-            if ((!xml) && bool && (this.response.body.indexOf("</body>") >= 0)) {
-              try {
-                let result = this.kernelHttp.debugView.render(this.kernelHttp.extendTemplate(this.profiling, this));
-                this.response.body = this.response.body.replace("</body>", result + "\n </body>");
-                if (this.type === "HTTP2") {
-                  this.pushAsset();
-                }
-              } catch (e) {
-                throw e;
-              }
-            }
+      if (this.canDisplayBar()) {
+        try {
+          let result = this.kernelHttp.debugView.render(this.kernelHttp.extendTemplate(this.profiling, this));
+          this.response.body = this.response.body.replace("</body>", result + "\n </body>");
+          if (this.type === "HTTP2") {
+            this.pushAsset();
           }
+        } catch (e) {
+          throw e;
         }
       }
-      this.profiling = null;
-      delete this.profiling;
     }
+
     pushAsset() {
       let publicPath = this.kernelHttp.monitoringBundle.publicPath;
       let bundleName = this.kernelHttp.monitoringBundle.bundleName;

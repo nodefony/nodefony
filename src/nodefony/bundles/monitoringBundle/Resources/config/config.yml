@@ -40,7 +40,6 @@ realTimeBundle:
       port:        1318
       domain:      localhost
 
-
-storage:
+profiler:
   active:          true
-  requests:        orm           # syslog
+  storage:         orm

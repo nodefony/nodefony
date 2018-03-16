@@ -191,7 +191,7 @@ module.exports = nodefony.register("SecuredArea", function () {
                 context.session.migrate();
                 context.session.setMetaBag("security", {
                   firewall: this.name,
-                  token: token.serialize()
+                  token: token ? token.serialize() : null
                 });
                 if (context.user && context.user.lang) {
                   context.session.set("lang", context.user.lang);

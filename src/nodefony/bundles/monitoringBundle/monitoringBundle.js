@@ -284,19 +284,14 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
   }
 
   onRequest(context) {
-    if (this.kernel.environment === "prod" && !this.settings.forceDebugBarProd) {
+    if (this.kernel.environment === "prod" && !this.settings.forceDebugBarProd && !context.profiler) {
       return;
     }
-    if (!context.storage) {
-      if (!this.settings.debugBar) {
-        return;
-      }
-    }
-    //context.profiling = null;
+
     let agent = null;
     let tmp = null;
     let myUserAgent = null;
-    context.storage = this.isMonitoring(context);
+    context.profiler = this.canMonitoring(context);
 
     try {
       if (context.request.headers) {
@@ -542,13 +537,6 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       content: content,
       "content-type": context.request.contentType
     };
-    /*context.profiling.response = {
-      statusCode: context.response.statusCode,
-      message: context.response.response.statusMessage,
-      size: nodefony.cli.niceBytes(context.response.body.length),
-      encoding: context.response.encoding,
-      "content-type": context.response.contentType
-    };*/
     context.listen(this, "onSendMonitoring", this.onSendMonitoring);
   }
 
@@ -603,7 +591,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         context.profiling.response.message.length = 0;
         context.profiling.response.message.push(ele);
       }
-      if (context.storage) {
+      if (context.profiler) {
         this.updateProfile(context, (error /*, result*/ ) => {
           if (error) {
             this.kernel.logger(error);
@@ -616,7 +604,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       if (context.profiling) {
         context.profiling.response.statusCode = context.connection.state;
       }
-      if (context.storage) {
+      if (context.profiler) {
         this.updateProfile(context, (error /*, result*/ ) => {
           if (error) {
             this.kernel.logger(error);
@@ -628,7 +616,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       }
     });
 
-    if (context.storage) {
+    if (context.profiler) {
       this.saveProfile(context, (error /*, result*/ ) => {
         if (error) {
           this.kernel.logger(error);
@@ -648,13 +636,11 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       "content-type": headers['content-type'] || headers['Content-Type'],
       headers: headers
     };
-    if (context.storage) {
+    if (context.profiler) {
       return this.saveProfile(context, (error /*, res*/ ) => {
         if (error) {
-          this.kernel.logger(error);
+          this.kernel.logger(error, "ERROR");
         }
-        //context.displayDebugBar();
-
         if (context && context.response) {
           context.sended = true;
           context.response.send();
@@ -668,8 +654,6 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
           throw new Error("MONITORING REQUEST ALREADY SENDED !!! ");
         }
       });
-    } else {
-      //return context.displayDebugBar();
     }
   }
 
@@ -685,7 +669,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     });
   }
 
-  isMonitoring(context) {
+  canMonitoring(context) {
     if (!context.resolver.route) {
       return false;
     }
@@ -738,7 +722,6 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       case "orm":
         let user = null;
         let data = null;
-        //console.log(context.profiling)
         // DATABASE ENTITY
         if (context.profiling.context_secure) {
           user = context.profiling.context_secure.user ? context.profiling.context_secure.user.username : "";
@@ -753,7 +736,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         }
         switch (this.kernel.getOrm()) {
         case "sequelize":
-          this.requestEntity.create({
+          return this.requestEntity.create({
               id: null,
               remoteAddress: context.profiling.context.remoteAddress,
               userAgent: context.profiling.userAgent.toString,
@@ -772,14 +755,19 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
               if (context && context.profiling) {
                 context.profiling.id = request.id;
               }
-              callback(null, request);
+              if (callback) {
+                callback(null, request);
+              }
+              return request;
             }).catch((error) => {
               this.kernel.logger(error, "ERROR");
-              callback(error, null);
+              if (callback) {
+                callback(error, null);
+              }
+              return error;
             });
-          break;
         case "mongoose":
-          this.requestEntity.create({
+          return this.requestEntity.create({
               id: null,
               remoteAddress: context.profiling.context.remoteAddress,
               userAgent: context.profiling.userAgent.toString,
@@ -796,13 +784,18 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
               if (context && context.profiling) {
                 context.profiling.id = request.id;
               }
-              callback(null, request);
+              if (callback) {
+                callback(null, request);
+              }
+              return request;
             })
             .catch((error) => {
               this.kernel.logger(error, "ERROR");
-              callback(error, null);
+              if (callback) {
+                callback(error, null);
+              }
+              return error;
             });
-          break;
         }
         break;
       default:

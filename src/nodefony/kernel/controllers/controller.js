@@ -107,8 +107,18 @@ module.exports = nodefony.register("controller", function () {
     }
 
     getORM() {
-      let defaultOrm = this.kernel.settings.orm;
-      return this.get(defaultOrm);
+      return this.getOrm();
+    }
+
+    getOrm() {
+      return this.get(this.kernel.settings.orm);
+    }
+
+    getConnection(name) {
+      if (name) {
+        return this.getOrm().getConnection(name);
+      }
+      throw new Error("getConnection must have name");
     }
 
     push(asset, headers, options) {

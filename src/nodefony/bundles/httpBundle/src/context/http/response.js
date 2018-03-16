@@ -42,6 +42,10 @@ module.exports = nodefony.register("Response", function () {
       //delete this.streamFile;
     }
 
+    isHtml() {
+      return (mime.getExtension(this.getHeader("Content-Type")) === "html");
+    }
+
     setTimeout(ms) {
       this.timeout = ms;
     }
@@ -101,7 +105,7 @@ module.exports = nodefony.register("Response", function () {
     setContentType(type, encoding) {
       let myType = this.getMimeType(type);
       if (!myType) {
-        this.logger("Content-Type not valid !!! " + type, "WARNING");
+        this.logger("Content-Type not valid !!! : " + type, "WARNING");
         myType = "application/octet-stream";
       }
       this.contentType = myType;

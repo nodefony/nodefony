@@ -11,7 +11,6 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.protocol = (type === "HTTP2") ? "2.0" : "1.1";
       this.scheme = (type === "HTTPS" || type === "HTTP2") ? "https" : "http";
       this.pushAllowed = false;
-      this.requestEnded = false;
 
       if (this.type === "HTTP2") {
         this.request = new nodefony.http2Request(request, this);
@@ -54,8 +53,6 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.domain = this.getHostName();
       this.validDomain = this.isValidDomain();
       this.remoteAddress = this.request.remoteAddress;
-      //this.once("onRequest", this.handle.bind(this));
-      //this.once("onResponse", this.send.bind(this));
       this.once("onTimeout", () => {
         let error = new Error("Request Timeout");
         error.code = 408;
@@ -206,7 +203,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       if (this.finished) {
         return;
       }
-      if ( !this.storage) {
+      if ( !this.profiler) {
         if (this.profiling) {
           this.fire("onSendMonitoring", this.response, this);
         }
@@ -219,6 +216,7 @@ nodefony.register.call(nodefony.context, "http", function () {
         return this.close();
       }
       this.fire("onSendMonitoring", this.response, this);
+      return this;
     }
 
     flush(data, encoding) {
@@ -228,7 +226,9 @@ nodefony.register.call(nodefony.context, "http", function () {
     close() {
       this.fire("onClose", this);
       // END REQUEST
-      this.response.end();
+      this.profiling = null;
+      delete this.profiling;
+      return this.response.end();
     }
 
     redirect(Url, status, headers) {
