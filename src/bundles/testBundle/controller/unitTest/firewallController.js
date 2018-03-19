@@ -22,7 +22,7 @@ module.exports = class firewallController extends nodefony.controller {
   }
 
   ldapAction() {
-    return this.redirect("/");
+    return this.redirect("/test/firewall/jwt");
   }
 
 };

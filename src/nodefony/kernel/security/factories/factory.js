@@ -84,17 +84,12 @@ module.exports = nodefony.register('Factory', () => {
       if (provider) {
         return provider.authenticate(token);
       } else {
-        if (provider === false ||  this.provider === false) {
+        if ( !this.provider) {
           return new Promise((resolve) => {
             return resolve(token);
           });
         }
-        if (this.provider) {
-          return this.provider.authenticate(token);
-        }
-        return new Promise((resolve, reject) => {
-          return reject(new Error(`authenticateToken Provider ${provider}`));
-        });
+        return this.provider.authenticate(token);
       }
     }
   };

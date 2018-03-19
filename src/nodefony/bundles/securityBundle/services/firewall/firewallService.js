@@ -243,7 +243,7 @@ module.exports = class security extends nodefony.Service {
     if (session) {
       context.metaSecurity = session.getMetaBag("security");
       if (context.metaSecurity) {
-        if (context.security) {
+        if (context.security && context.metaSecurity.token) {
           if (context.security.name !== context.metaSecurity.firewall) {
             if (context.metaSecurity.token.factory === "anonymous") {
               return null;

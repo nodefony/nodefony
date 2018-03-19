@@ -5,21 +5,22 @@ module.exports = class appController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
+  }
+
+  indexAction() {
 
     // Example server push http2 if serverPush client is allowed
     this.push(path.resolve(this.bundle.publicPath, "assets", "css", "app.css"), {
       path: "/app/assets/css/app.css"
     }).catch((e) => {
-      this.logger(e.message, "DEBUG");
+      this.logger(e, "ERROR");
     });
     this.push(path.resolve(this.bundle.publicPath, "assets", "js", "app.js"), {
       path: "/app/assets/js/app.js"
     }).catch((e) => {
-      this.logger(e.message, "DEBUG");
+      this.logger(e, "ERROR");
     });
-  }
 
-  indexAction() {
     let core = this.kernel.isCore ? "CORE" : this.kernel.settings.version;
     let demo = this.kernel.getBundle("demo");
     let readme = null;

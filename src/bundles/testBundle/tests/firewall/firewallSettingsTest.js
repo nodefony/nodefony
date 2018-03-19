@@ -102,7 +102,7 @@ describe("BUNDLE TEST", function () {
       assert.deepStrictEqual(local.factories.length, 1);
       assert.deepStrictEqual(local.factories[0].name, "local");
       assert(local.cors);
-      assert.deepStrictEqual(local.formLogin, "/test/login");
+      assert.deepStrictEqual(local.formLogin, "/login/test-local-area");
       assert.deepStrictEqual(local.checkLogin, "/test/firewall/local");
       assert.deepStrictEqual(local.regPartten, '^/test/firewall/local');
       try {

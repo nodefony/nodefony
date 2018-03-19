@@ -40,8 +40,8 @@ module.exports = nodefony.register("SecuredArea", function () {
               this.providerName = "anonymous";
               this.provider = this.firewall.providerManager.getProvider("anonymous");
             } else {
-              this.providerName = "nodefony";
-              this.provider = this.firewall.providerManager.getProvider("nodefony");
+              //this.providerName = null; //"nodefony";
+              //this.provider = this.firewall.providerManager.getProvider("nodefony");
             }
           }
         } catch (e) {
@@ -186,6 +186,19 @@ module.exports = nodefony.register("SecuredArea", function () {
               if (token) {
                 context.user = token.user;
                 context.token = token;
+              } else {
+                if (context.session) {
+                  context.session.setMetaBag("security", {
+                    firewall: this.name,
+                    token: null
+                  });
+                  if (context.user && context.user.lang) {
+                    context.session.set("lang", context.user.lang);
+                  } else {
+                    context.session.set("lang", context.translation.defaultLocale);
+                  }
+                }
+                return resolve(context);
               }
               if (context.session) {
                 context.session.migrate();

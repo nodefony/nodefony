@@ -29,7 +29,6 @@ module.exports = nodefony.register("subRequest", () => {
       this.response = this.createResponse();
       try {
         if (this.resolver.resolve) {
-
           this.controllerInst = new this.resolver.controller(this.container, this);
           if (data) {
             this.resolver.setVariables(data);
@@ -66,7 +65,13 @@ module.exports = nodefony.register("subRequest", () => {
     }
 
     createResponse(response) {
-      return new nodefony.Response(response, this.container);
+      switch (this.type) {
+      case "HTTP2":
+        return new nodefony.http2Response(response, this.container);
+      default:
+        return new nodefony.Response(response, this.container);
+      }
+
     }
 
     clean() {

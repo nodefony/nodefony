@@ -12,11 +12,9 @@ module.exports = class corsController extends nodefony.controller {
   protocolSessionAction(protocol) {
     switch (protocol) {
     case "start":
-      return this.startSession(this.context).then((session) => {
-        return this.renderJson({
-          id: session.id,
-          cross: this.context.crossDomain
-        });
+      return this.renderJson({
+        id: this.context.session.id,
+        cross: this.context.crossDomain
       });
     case "http":
       return this.renderJson({
