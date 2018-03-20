@@ -56,11 +56,17 @@ websocketSecure:
 sockjs:
   overlay:                true
   hot:                    false
+  logLevel:               error        # none, error, warning or info
+  progress:               false
   protocol:               https
   websocket:              true
   prefix:                 "/sockjs-node"
   hostname:               "localhost"
   port:                   "5152"
+  stats :
+    cached:               false
+    cachedAssets:         false
+
 
 #
 #       SERVERS STACTIC FILES

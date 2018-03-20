@@ -135,6 +135,15 @@ module.exports = class webpack extends nodefony.Service {
         if (!this.production) {
           //config.entry.hmr = ["webpack-dev-server/client?" + this.host + "/"]
           config.entry.main.unshift("webpack-dev-server/client?" + this.host + "/");
+          watchOptions = {
+            ignoreInitial: false,
+            persistent: true,
+            followSymlinks: false,
+            depth: 0,
+            atomic: false,
+            alwaysStat: true,
+            ignorePermissionErrors: true,
+          };
         }
         break;
       case "react":

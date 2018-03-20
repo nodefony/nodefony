@@ -1,0 +1,26 @@
+{
+    "name": "WORKBOX",
+    "version": "1.0.0",
+    "description": "WORKBOX",
+    "author": "admin admin@nodefony.com",
+    "scripts": {},
+    "private": true,
+    "keywords": [
+        "nodefony",
+        "javascript",
+        "wpa",
+        "workbox"
+    ],
+    "repository": {},
+    "dependencies": {},
+    "devDependencies": {
+        "clean-webpack-plugin": "^0.1.19",
+        "html-webpack-plugin": "^3.0.7",
+        "workbox-webpack-plugin": "^3.0.0"
+    },
+    "license": "CECILL-B",
+    "readmeFilename": "README.md",
+    "contributors": [
+        {}
+    ]
+}

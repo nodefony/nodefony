@@ -1,6 +1,7 @@
 const Sockjs = require('sockjs');
 
 const defaultPrefix = "/sockjs-node";
+//const webpack = require("webpack");
 
 const sockCompiler = class sockCompiler extends nodefony.Service {
 
@@ -71,6 +72,8 @@ module.exports = class sockjs extends nodefony.Service {
       if (this.bundle.settings.sockjs) {
         this.clientOverlay = this.bundle.settings.sockjs.overlay || false;
         this.hot = this.bundle.settings.sockjs.hot || false;
+        this.progress = this.bundle.settings.sockjs.progress || false;
+        this.clientLogLevel = this.bundle.settings.sockjs.logLevel || "none";
         this.websocket = this.bundle.settings.sockjs.websocket;
         this.protocol = this.bundle.settings.sockjs.protocol.toLowerCase();
         this.hostname = this.bundle.settings.sockjs.hostname;
@@ -109,7 +112,27 @@ module.exports = class sockjs extends nodefony.Service {
 
   addCompiler(compiler, basename) {
     this.compilers[basename] = new sockCompiler(this, "SOCKJS_" + basename, compiler);
-    this.logger("Add sock-js compiler  : " + "SOCKJS_" + basename);
+    this.logger("Add sock-js compiler  : " + "SOCKJS_" + basename, "DEBUG");
+    /*if (this.progress) {
+      const progressPlugin = new webpack.ProgressPlugin((percent, msg, addInfo) => {
+        percent = Math.floor(percent * 100);
+        if (percent === 100) {
+          msg = 'Compilation completed';
+        }
+        if (addInfo) {
+          msg = `${msg} (${addInfo})`;
+        }
+        this.sockWrite('progress-update', {
+          percent,
+          msg
+        });
+      });
+      try {
+        progressPlugin.apply(compiler);
+      } catch (e) {
+        this.logger(e, "ERROR");
+      }
+    }*/
     return this.compilers[basename];
   }
 
@@ -117,7 +140,7 @@ module.exports = class sockjs extends nodefony.Service {
     try {
       this.logger(" Create sockjs server :   " + service.type);
       this[protocol] = Sockjs.createServer({
-        sockjs_url: protocol + '://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js',
+        sockjs_url: '/__webpack_dev_server__/sockjs.bundle.js',
         //websocket:false,
         prefix: this.prefix,
         log: (severity, line) => {
@@ -149,6 +172,9 @@ module.exports = class sockjs extends nodefony.Service {
         }
         if (this.hot) {
           this.sockWrite("hot", null, conn);
+        }
+        if (this.clientLogLevel) {
+          this.sockWrite("log-level", this.clientLogLevel, conn);
         }
         for (var compiler in this.compilers) {
           if (this.compilers[compiler].stats) {

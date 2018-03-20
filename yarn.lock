@@ -2291,7 +2291,7 @@ combined-stream@1.0.6, combined-stream@^1.0.5, combined-stream@~1.0.5:
   dependencies:
     delayed-stream "~1.0.0"
 
-commander@*, commander@2.15.x, commander@^2.11.0, commander@^2.15.0, commander@^2.9.0, commander@~2.15.0:
+commander@*, commander@2.15.x, commander@^2.11.0, commander@^2.9.0, commander@~2.15.0:
   version "2.15.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.15.0.tgz#ad2a23a1c3b036e392469b8012cec6b33b4c1322"
 
@@ -2302,6 +2302,10 @@ commander@2.11.0:
 commander@2.13.0, commander@~2.13.0:
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
+
+commander@^2.15.1:
+  version "2.15.1"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.15.1.tgz#df46e867d0fc2aec66a34662b406a9ccafff5b0f"
 
 commander@~2.14.1:
   version "2.14.1"
@@ -9611,9 +9615,9 @@ seq-queue@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/seq-queue/-/seq-queue-0.0.5.tgz#d56812e1c017a6e4e7c3e3a37a1da6d78dd3c93e"
 
-sequelize@^4.37.2:
-  version "4.37.2"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.37.2.tgz#8aaf8527342452958f24bfc28b5c78bc300b75df"
+sequelize@^4.37.3:
+  version "4.37.3"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.37.3.tgz#efa1946598df7e370a10f4b0d30cc23e4ddf5b2d"
   dependencies:
     bluebird "^3.5.0"
     cls-bluebird "^2.1.0"
