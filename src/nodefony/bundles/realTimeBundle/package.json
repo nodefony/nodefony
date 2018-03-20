@@ -3,13 +3,13 @@
 	"version": "3.0.0",
 	"description": "Bundle realtime ",
 	"contributors": [],
+	"private": true,
 	"scripts": {},
 	"keywords": [
 		"nodefony",
 		"javascript"
 	],
-	"dependencies": {
-	},
+	"dependencies": {},
 	"author": "cci <christophe.camensuli@gmail.com>",
 	"license": "CECILL-B"
 }

@@ -4,12 +4,12 @@
 	"description": "ORM",
 	"contributors": [],
 	"scripts": {},
+	"private": true,
 	"keywords": [
 		"nodefony",
 		"javascript"
 	],
-	"dependencies": {
-	},
+	"dependencies": {},
 	"author": "cci <christophe.camensuli@gmail.com>",
 	"license": "CECILL-B"
 }

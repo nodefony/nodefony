@@ -31,6 +31,7 @@ system:
 
   bundles:
     test                        : "src/bundles/testBundle"
+    #workbox                     : "src/bundles/workboxBundle"
 
   #################
   # SYSLOG NODEFONY

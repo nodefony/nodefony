@@ -172,6 +172,9 @@ module.exports = class webpack extends nodefony.Service {
         break;
       default:
         config = require(file.path);
+        watchOptions = {
+          ignoreInitial: true,
+        };
       }
       config.name = file.name || basename;
       try {
@@ -192,6 +195,7 @@ module.exports = class webpack extends nodefony.Service {
       compiler.plugin("done", () => {
         this.nbCompiled++;
         if (this.nbCompiled === this.nbCompiler) {
+          this.nbCompiled = 0;
           this.fire("onWebpackFinich", this);
           shell.cd(this.kernel.rootDir);
         }
@@ -217,15 +221,15 @@ module.exports = class webpack extends nodefony.Service {
     }
     try {
       if (watch) {
-        let watching = null;
-        watching = compiler.watch(watchOptions, (err, stats) => {
+        bundle.watching = null;
+        bundle.watching = compiler.watch(watchOptions, (err, stats) => {
           if (!err) {
             this.logger("BUNDLE : " + basename + " WACTHER WEBPACK COMPILE  : \n" + this.displayConfigTable(config), "DEBUG");
           }
           this.loggerStat(err, stats, basename, file.name, true);
         });
         this.kernel.listen(this, "onTerminate", () => {
-          watching.close(() => {
+          bundle.watching.close(() => {
             this.logger("Watching Ended  " + config.context + " : " + util.inspect(config.entry), "INFO");
           });
         });

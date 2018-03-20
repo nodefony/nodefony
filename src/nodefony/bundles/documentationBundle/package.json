@@ -4,6 +4,7 @@
   "description": "",
   "author": " ",
   "contributors": [],
+  "private": true,
   "keywords": [
     "nodefony",
     "javascript"

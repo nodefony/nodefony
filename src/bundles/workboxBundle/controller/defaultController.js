@@ -18,7 +18,7 @@ module.exports = class defaultController extends nodefony.controller {
    */
   indexAction() {
     try {
-      let index = new nodefony.fileClass(path.resolve(this.bundle.path, "Resources", "public", "assets", "index.html"));
+      let index = new nodefony.fileClass(path.resolve(this.bundle.path, "Resources", "public", "dist", "index.html"));
       return this.renderResponse(index.content());
     } catch (e) {
       throw e;

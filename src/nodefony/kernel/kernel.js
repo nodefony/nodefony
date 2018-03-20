@@ -648,10 +648,10 @@ module.exports = nodefony.register("kernel", function () {
                       let name = this.getBundleName(Class);
                       if (file.shortName in this.bundlesCore) {
                         if (this.isCore) {
-                          this.cli.installPackage(name, file, true);
+                          this.cli.installPackage(name, file);
                         }
                       } else {
-                        this.cli.installPackage(name, file, false);
+                        this.cli.installPackage(name, file);
                       }
                       break;
                     default:

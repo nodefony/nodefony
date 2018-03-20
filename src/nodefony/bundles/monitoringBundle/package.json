@@ -9,8 +9,7 @@
 		"nodefony",
 		"javascript"
 	],
-	"dependencies": {
-	},
+	"dependencies": {},
 	"author": "cci <christophe.camensuli@gmail.com>",
 	"license": "CECILL-B"
 }

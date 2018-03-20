@@ -13,6 +13,7 @@ module.exports = nodefony.register("Bundle", function () {
   const regI18nFile = /^(.*)\.(.._..)\.(.*)$/;
   const regConfigFile = /^(.*)\..*$/;
   const regRoutingFile = /^(routing)\..*$/;
+  const regWebpackCongig = /^(webpack)\.(dev\.|prod\.)?config\.js$/;
 
   const checkIngnoreFile = function (string, basename) {
     let file = null;
@@ -212,6 +213,7 @@ module.exports = nodefony.register("Bundle", function () {
       });
 
       this.regRoutingFile = regRoutingFile;
+      this.regWebpackCongig = regWebpackCongig;
 
       // router
       this.router = this.get("router");

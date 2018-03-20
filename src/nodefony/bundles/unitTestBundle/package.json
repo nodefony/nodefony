@@ -1,13 +1,13 @@
 {
-  	"name": "UNITTEST",
-  	"version": "1.0.0",
-  	"description": "",
-  	"author": "cci ccamensuli@gmail.com",
-  	"contributors": [],
-  	"keywords": [
-		"nodefony",
-		"javascript"
-  	],
-  	"dependencies": {
-  	}
+  "name": "UNITTEST",
+  "version": "1.0.0",
+  "description": "",
+  "author": "cci ccamensuli@gmail.com",
+  "contributors": [],
+  "private": true,
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "dependencies": {}
 }

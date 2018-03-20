@@ -5,8 +5,6 @@
  *
  *  Add your assets here with require  to an integration in webpack  bundle
  *
- *  require('jquery');
- *  require('../css/mycss.css')
  *
  */
 require("../css/workbox.css");
@@ -22,9 +20,10 @@ module.exports = function () {
   class workbox {
 
     constructor() {
+      this.name = workbox;
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('workboxBundle/workers/sw.js').then(registration => {
+          this.serviceWorker = navigator.serviceWorker.register('workboxBundle/dist/workers/service-worker.js').then(registration => {
             console.log('SW registered: ', registration);
           }).catch(registrationError => {
             console.log('SW registration failed: ', registrationError);

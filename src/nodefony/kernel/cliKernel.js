@@ -376,13 +376,13 @@ module.exports = nodefony.register("cliKernel", function () {
         cmd.stdout.on('data', (data) => {
           let str = data.toString();
           if (str) {
-            this.logger(str);
+            this.logger(`${command} stdout :  ${str}`);
           }
         });
         cmd.stderr.on('data', (data) => {
           let str = data.toString();
           if (str) {
-            this.logger(str, "ERROR");
+            this.logger(`${command} stderr :  ${str}`, "INFO");
           }
         });
         cmd.on('close', (code) => {
@@ -506,16 +506,63 @@ module.exports = nodefony.register("cliKernel", function () {
       });
     }
 
-    installPackage(name, file, prod) {
+    npmInstall(cwd, argv, env) {
+      if (env === "development" || env === "production") {
+        process.env.NODE_ENV = env;
+      } else {
+        process.env.NODE_ENV = "development";
+      }
+      return new Promise((resolve, reject) => {
+        let tab = ["install"];
+        if (argv) {
+          tab = tab.concat(argv);
+        }
+        let cmd = null;
+        try {
+          this.logger("npm install in " + cwd);
+          cmd = this.spawn("npm", tab, {
+            cwd: cwd
+          }, (code) => {
+            if (code === 1) {
+              return reject(new Error("nmp install error : " + code));
+            }
+            return resolve(cwd);
+          });
+        } catch (e) {
+          this.logger(e, "ERROR");
+          return reject(e);
+        }
+      });
+    }
+
+    /*installPackage(name, file, env) {
+      try {
+        new nodefony.fileClass(file.dirName + "/package.json");
+        return this.npmInstall(file.dirName, null, env);
+      } catch (e) {
+        if (e.code !== "ENOENT") {
+          this.logger("Install Package BUNDLE : " + name + ":", "ERROR");
+          this.logger(e, "ERROR");
+          throw e;
+        }
+      }
+    }*/
+
+    installPackage(name, file, env) {
+      if (env === "development" || env === "production") {
+        process.env.NODE_ENV = env;
+      } else {
+        process.env.NODE_ENV = "development";
+      }
       try {
         let conf = new nodefony.fileClass(file.dirName + "/package.json");
         let config = require(conf.path);
+        shell.cd(file.dirName);
         npm.load(config, (error, event) => {
           if (error) {
             this.logger(error, "ERROR");
             this.terminate(1);
           }
-          shell.cd(file.dirName);
           event.config.localPrefix = file.dirName;
           event.config.globalPrefix = this.kernel.rootDir;
           event.localPrefix = file.dirName;
@@ -526,6 +573,7 @@ module.exports = nodefony.register("cliKernel", function () {
           this.logger("NPM :" + npm.version + " Installing Dependencies for bundle : " + file.shortName);
           for (let dep in config.dependencies) {
             let mypackage = dep + "@" + config.dependencies[dep];
+            this.logger("\t Dependency : " + mypackage);
             try {
               require.resolve(dep);
             } catch (e) {
@@ -533,13 +581,13 @@ module.exports = nodefony.register("cliKernel", function () {
               tab.push(mypackage);
             }
           }
-          if (!prod) {
+          if (process.env.NODE_ENV === "development") {
             for (let dep in config.devDependencies) {
               let mypackage = dep + "@" + config.devDependencies[dep];
+              this.logger("\t Dependency dev : " + mypackage);
               try {
                 require.resolve(dep);
               } catch (e) {
-                this.logger("\t Dependency dev : " + mypackage);
                 tab.push(mypackage);
               }
             }

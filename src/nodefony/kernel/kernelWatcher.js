@@ -25,6 +25,7 @@ module.exports = nodefony.register("kernelWatcher", function () {
         this.cwd = bundle.path;
       }
       this.injectionService = this.get("injection");
+      this.webpackService = this.get("webpack");
     }
 
     logger(payload, severity, msgid, msg) {
@@ -248,6 +249,24 @@ module.exports = nodefony.register("kernelWatcher", function () {
                 this.sockjs.sendWatcher("error", e);
               }
             }
+            break;
+          case this.bundle.regWebpackCongig.test(basename):
+            let myPath = path.resolve(this.bundle.path, Path);
+            delete require.cache[myPath];
+            if (this.bundle.watching) {
+              this.bundle.watching.close(() => {
+                this.logger("CLOSE OLD WATCHER", "DEBUG", "watcher");
+                delete this.bundle.webpackCompilerFile;
+                delete this.bundle.watching;
+              });
+            }
+            let compiler = this.webpackService.loadConfig(myPath, this.bundle);
+            compiler.plugin("done", () => {
+              this.bundle.webpackCompilerFile = compiler;
+              if (this.sockjs) {
+                this.sockjs.sendWatcher("change", file);
+              }
+            });
             break;
           default:
             try {
