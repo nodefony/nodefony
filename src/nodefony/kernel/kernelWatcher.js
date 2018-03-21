@@ -260,7 +260,7 @@ module.exports = nodefony.register("kernelWatcher", function () {
                 delete this.bundle.watching;
               });
             }
-            let compiler = this.webpackService.loadConfig(myPath, this.bundle);
+            let compiler = this.webpackService.loadConfig(myPath, this.bundle, true);
             compiler.plugin("done", () => {
               this.bundle.webpackCompilerFile = compiler;
               if (this.sockjs) {

@@ -17,8 +17,9 @@ const htmlPlugin = require('html-webpack-plugin');
 const cleanPlugin = require('clean-webpack-plugin');
 const dist = path.resolve(__dirname, "..", "public", "dist");
 const workboxPlugin = require('workbox-webpack-plugin');
-const twigPlugin = require("../../src/html-webpack-plugin-twig");
-//console.log(new twigPlugin(kernel))
+
+require('require-yaml');
+const bundleConfig = require("../config/config.yml");
 
 module.exports = webpackMerge({
   context: public,
@@ -85,8 +86,11 @@ module.exports = webpackMerge({
       test: new RegExp("\.(jpg|png|gif)$"),
       use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/dist/images/" + '&outputPath=/dist/images/'
     }, {
-      test: /\.twig$/,
+      test: new RegExp("\.twig$"),
       loader: "twig-loader"
+    }, {
+      test: new RegExp("\.html$"),
+      loader: "html-loader"
     }]
   },
   plugins: [
@@ -96,17 +100,24 @@ module.exports = webpackMerge({
     new cleanPlugin([dist], {
       root: public,
       verbose: verbose,
-      watch: true,
+      watch: false,
     }),
     new htmlPlugin({
       filename: "dist/index.html",
-      //template: "../views/index.html.twig",
-      title: 'Get Started With Workbox For Webpack',
+      template: path.resolve(__dirname, "..", "templates", "index.html.twig"),
+      title: 'Nodefony Workbox For Webpack',
       cache: !verbose,
-      chunks: ['workbox']
+      inject: true,
+      compile: true,
+      minify: {
+        removeAttributeQuotes: true
+      },
+      xhtml: true,
+      chunks: ['workbox'],
+      config: bundleConfig
     }),
     new workboxPlugin.GenerateSW({
-      swDest: 'dist/workers/service-worker.js',
+      swDest: path.resolve("/", "dist", 'workers', 'service-worker.js'),
       clientsClaim: true,
       skipWaiting: true,
       chunks: ['workbox']

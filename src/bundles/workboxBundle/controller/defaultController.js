@@ -9,6 +9,7 @@ module.exports = class defaultController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
+    this.response.setHeader("Service-Worker-Allowed", true);
   }
 
   /**

@@ -1,6 +1,5 @@
 const Webpack = require("webpack");
 
-
 //https://webpack.js.org/api/node/
 module.exports = class webpack extends nodefony.Service {
 
@@ -12,6 +11,7 @@ module.exports = class webpack extends nodefony.Service {
     this.kernel.on("onBoot", () => {
       this.socksSettings = this.kernel.getBundle("http").settings.sockjs;
       this.host = this.socksSettings.protocol + "://" + this.socksSettings.hostname + ":" + this.socksSettings.port;
+      this.webPackSettings = this.kernel.getBundle("framework").settings.webpack;
     });
     this.version = this.getWebpackVersion();
     this.nbCompiler = 0;
@@ -97,7 +97,7 @@ module.exports = class webpack extends nodefony.Service {
     }
   }
 
-  loadConfig(file, bundle) {
+  loadConfig(file, bundle, reload) {
     try {
       if (!(file instanceof nodefony.fileClass)) {
         file = new nodefony.fileClass(file);
@@ -172,9 +172,9 @@ module.exports = class webpack extends nodefony.Service {
         break;
       default:
         config = require(file.path);
-        watchOptions = {
-          ignoreInitial: true,
-        };
+        watchOptions = nodefony.extend({
+          ignored: /node_modules/
+        }, this.webPackSettings.watchOptions);
       }
       config.name = file.name || basename;
       try {
@@ -188,7 +188,11 @@ module.exports = class webpack extends nodefony.Service {
         throw e;
       }
       //console.log(config.name)
+      if (config.cache === undefined) {
+        config.cache = false;
+      }
       compiler = webpack(config);
+      this.nbCompiler++;
       if (this.kernel.type === "CONSOLE") {
         return compiler;
       }
@@ -200,7 +204,6 @@ module.exports = class webpack extends nodefony.Service {
           shell.cd(this.kernel.rootDir);
         }
       });
-      this.nbCompiler++;
     } catch (e) {
       shell.cd(this.kernel.rootDir);
       throw e;

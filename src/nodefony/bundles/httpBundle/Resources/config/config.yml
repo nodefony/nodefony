@@ -56,7 +56,7 @@ websocketSecure:
 sockjs:
   overlay:                true
   hot:                    false
-  logLevel:               error        # none, error, warning or info
+  logLevel:               info        # none, error, warning or info
   progress:               false
   protocol:               https
   websocket:              true

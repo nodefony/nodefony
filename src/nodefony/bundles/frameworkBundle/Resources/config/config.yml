@@ -14,6 +14,18 @@ name :				frameworkBundle
 #      watch:
 #        controller:		true
 #        views:			true
-#        translations:          true
+#        translations:      true
 #
-watch:                          false
+watch:                      false
+
+
+webpack:
+  cache:                    false
+  watchOptions:
+    ignoreInitial:          false
+    persistent:             true
+    followSymlinks:         false
+    depth:                  0
+    atomic:                 false
+    alwaysStat:             true
+    ignorePermissionErrors: true

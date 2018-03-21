@@ -1,0 +1,32 @@
+{
+  "name": "workbox",
+  "short_name": "workbox",
+  "display": "standalone",
+  "start_url": "/workbox",
+  "description": "Node.js WPA ",
+  "default_locale": "en",
+  "background_color": "#2196F3",
+  "theme_color": "#2196F3",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "/workboxBundle/favicon.ico",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "/workboxBundle/images/nodefony-logo.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/workboxBundle/images/nodefony-logo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "developer": {
+    "name": "cci",
+    "url": "https://nodefony.net"
+  }
+}

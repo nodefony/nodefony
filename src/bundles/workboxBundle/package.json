@@ -16,6 +16,7 @@
     "devDependencies": {
         "clean-webpack-plugin": "^0.1.19",
         "html-webpack-plugin": "^3.0.7",
+        "require-yaml": "*",
         "twig-loader": "^0.3.1",
         "workbox-webpack-plugin": "^3.0.0"
     },
