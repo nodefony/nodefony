@@ -17,8 +17,8 @@ const htmlPlugin = require('html-webpack-plugin');
 const cleanPlugin = require('clean-webpack-plugin');
 const dist = path.resolve(__dirname, "..", "public", "dist");
 const workboxPlugin = require('workbox-webpack-plugin');
-
-
+const twigPlugin = require("../../src/html-webpack-plugin-twig");
+//console.log(new twigPlugin(kernel))
 
 module.exports = webpackMerge({
   context: public,
@@ -84,6 +84,9 @@ module.exports = webpackMerge({
       // IMAGES
       test: new RegExp("\.(jpg|png|gif)$"),
       use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/dist/images/" + '&outputPath=/dist/images/'
+    }, {
+      test: /\.twig$/,
+      loader: "twig-loader"
     }]
   },
   plugins: [
@@ -97,6 +100,7 @@ module.exports = webpackMerge({
     }),
     new htmlPlugin({
       filename: "dist/index.html",
+      //template: "../views/index.html.twig",
       title: 'Get Started With Workbox For Webpack',
       cache: !verbose,
       chunks: ['workbox']

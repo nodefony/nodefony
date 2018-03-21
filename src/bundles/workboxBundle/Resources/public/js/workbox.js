@@ -20,11 +20,11 @@ module.exports = function () {
   class workbox {
 
     constructor() {
-      this.name = workbox;
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           this.serviceWorker = navigator.serviceWorker.register('workboxBundle/dist/workers/service-worker.js').then(registration => {
             console.log('SW registered: ', registration);
+            return registration;
           }).catch(registrationError => {
             console.log('SW registration failed: ', registrationError);
           });
