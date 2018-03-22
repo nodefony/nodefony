@@ -7,90 +7,86 @@
  */
 
 #nodefony-container ul li .nodefony-responsive-md {
-	display: inline;
+  display: inline;
 }
 
 @media (max-width: 1200px) {
-	#nodefony-container ul li .nodefony-responsive-md {
-		display: none;
-	}
-
-	#nodefony-container ul li .details-request {
-		margin-left: -150px;
-	}
-	#nodefony-container ul li .nodefony-response-details {
-		margin-left: -150px;
-	}
-
+  #nodefony-container ul li .nodefony-responsive-md {
+    display: none;
+  }
+  #nodefony-container ul li .details-request {
+    margin-left: -150px;
+  }
+  #nodefony-container ul li .nodefony-response-details {
+    margin-left: -150px;
+  }
 }
 
 @media (max-width: 790px) {
-	#nodefony-container ul li.separator {
-		margin-left: 4px!important;
-		margin-right: 4px!important;
-	}
-	#nodefony-container ul li .details-request {
-		margin-left: -150px;
-		overflow-x: auto !important;
-		max-width: 350px !important;
-	}
-
-	#nodefony-container ul li .nodefony-response-details {
-		margin-left: -150px;
-	}
-	}
+  #nodefony-container ul li.separator {
+    margin-left: 4px !important;
+    margin-right: 4px !important;
+  }
+  #nodefony-container ul li .details-request {
+    margin-left: -150px;
+    overflow-x: auto !important;
+    max-width: 350px !important;
+  }
+  #nodefony-container ul li .nodefony-response-details {
+    margin-left: -150px;
+  }
+}
 
 @media (max-width: 620px) {
-	#nodefony-container ul li .nodefony-responsive-sm {
-		display: none;
-	}
-	#nodefony-container ul li.separator {
-		margin-left: 2px!important;
-		margin-right: 2px!important;
-	}
-	#nodefony-container ul li .details-request {
-		margin-left: -100px;
-		overflow-x: auto !important;
-		max-width: 320px !important;
-	}
-
-	#nodefony-container ul li .nodefony-response-details {
-		margin-left: -100px;
-	}
+  #nodefony-container ul li .nodefony-responsive-sm {
+    display: none;
+  }
+  #nodefony-container ul li.separator {
+    margin-left: 2px !important;
+    margin-right: 2px !important;
+  }
+  #nodefony-container ul li .details-request {
+    margin-left: -100px;
+    overflow-x: auto !important;
+    max-width: 320px !important;
+  }
+  #nodefony-container ul li .nodefony-response-details {
+    margin-left: -100px;
+  }
 }
 
 #nodefony-container {
-	position:		fixed;
-	border-radius:		 4px;
-	left:			0;
-	right:			0;
-	bottom:			0;
-	z-index:		1000000;
-	background-color:	#167b87;
-	color:			#ffffff;
-	padding:		0px 0px;
-	font-family:		"Source Sans Pro",Helvetica,Arial,sans-serif;
-	font-size:		14px;
-	height: 30px;
+  position: fixed;
+  border-radius: 4px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000000;
+  background-color: #167b87;
+  color: #ffffff;
+  padding: 0px 0px;
+  font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  height: 30px;
 }
 
 .label-nodefony {
-    display: inline;
-    margin-right: 5px;
-    font-weight: initial;
-    font-size: 12px;
-    color: rgb(255, 255, 255);
-    padding: 3px 5px;
-    border-radius: 5px;
-		color: #ffffff;
+  display: inline;
+  margin-right: 5px;
+  font-weight: initial;
+  font-size: 12px;
+  color: rgb(255, 255, 255);
+  padding: 3px 5px;
+  border-radius: 5px;
+  color: #ffffff;
 }
 
 #nodefony-container .label {
-	padding:		3px 5px;
-	border-radius:		5px;
-	margin-right:		5px;
-	font-weight:		initial;
-	font-size:		12px;
+  padding: 3px 5px;
+  border-radius: 5px;
+  margin-right: 5px;
+  font-weight: initial;
+  font-size: 12px;
 }
 
 #nodefony-container .label-default {
@@ -125,19 +121,19 @@
 }
 
 #nodefony-container ul li .details {
-	overflow:		auto;
-	background-color:	#FFF;
-	border:			solid 1px #bbb;
-	color:			#2f2f2f;
-	position:		absolute;
-	bottom:			31px;
-	border-radius:		4px 4px 0 0;
-	border-bottom-width:	0;
-	padding:		9px 0;
-	display:		none;
-	font-size:		12px;
-	max-height:		500px;
-	max-width: 		500px;
+  overflow: auto;
+  background-color: #FFF;
+  border: solid 1px #bbb;
+  color: #2f2f2f;
+  position: absolute;
+  bottom: 31px;
+  border-radius: 4px 4px 0 0;
+  border-bottom-width: 0;
+  padding: 9px 0;
+  display: none;
+  font-size: 12px;
+  max-height: 500px;
+  max-width: 500px;
 }
 
 #nodefony-container ul li .details ul {
@@ -187,9 +183,9 @@
   margin-bottom: 10px;
 }
 
-#nodefony-container ul li img.logo{
-	vertical-align: middle;
-	height:			27px;
+#nodefony-container ul li img.logo {
+  vertical-align: middle;
+  height: 27px;
 }
 
 #nodefony-container img, #nodefony-small img {
@@ -207,11 +203,12 @@
   float: left;
 }
 
-#nodefony-container  li a {
-	color:			#ffffff;
-	text-decoration:	none;
-	font-size:		0.9em;
+#nodefony-container li a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.9em;
 }
+
 /*#nodefony-container ul li :hover {
 	background: rgba(119, 119, 119, 0.5);
 
@@ -243,7 +240,7 @@
 }
 
 #nodefony-container li {
-	display:		inline;
-	float:			left;
-	line-height:		30px;
+  display: inline;
+  float: left;
+  line-height: 30px;
 }

@@ -103,8 +103,31 @@
       </li>
     {% endif %}
 
+    <li id="separator-workbox" class="separator hidden" ></li>
+    <li id="workbox" class="hidden">
+      <img style="border-radius: 50%" alt="workbox" src="/monitoringBundle/images/workbox-icon192x192.png">
+      <div class="details">
+        <ul>
+          <li>
+            <label style="color:#999">WORKBOX </label>
+          </li>
+          <li class="separator"></li>
+          <li>
+            <label>
+              Version :
+            </label>
+            <span id="workbox-version" class="label-nodefony label-success"></span>
+          </li>
+          <li>
+            <label>
+              Worker State:
+            </label>
+            <span id="workbox-state" class="label-nodefony label-success"></span>
+          </li>
+        </ul>
+      </div>
+    </li>
     <li class="separator"></li>
-
     <li>
       <label class="label nodefony-responsive-sm">
         <a target="blank" href='{{path("monitoring-index")}}#/config/App'>{{appSettings.projectName}}

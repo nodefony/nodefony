@@ -9,6 +9,8 @@
  */
 require("../css/workbox.css");
 
+
+
 module.exports = function () {
 
   /*
@@ -24,7 +26,11 @@ module.exports = function () {
         window.addEventListener('load', () => {
           this.serviceWorker = navigator.serviceWorker.register('/workboxBundle/dist/workers/service-worker.js')
             .then(registration => {
-              console.log('SW registered: ', registration);
+              if (registration) {
+                if (window.nodefony) {
+                  window.nodefony.monitoringWorkbox(registration);
+                }
+              }
               return registration;
             }).catch(registrationError => {
               console.log('SW registration failed: ', registrationError);

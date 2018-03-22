@@ -1,3 +1,15 @@
+this.addEventListener('install', () => {
+  console.log("install")
+});
+
+this.addEventListener('fetch', function (event) {
+  console.log("fetch")
+});
+
+this.addEventListener('message', function (message) {
+  console.log(message.data)
+});
+
 workbox.routing.registerRoute(
   new RegExp('.*\.js'),
   workbox.strategies.networkFirst()

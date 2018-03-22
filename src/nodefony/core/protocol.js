@@ -1,6 +1,6 @@
 const xml = require('xml2js');
 
-module.expors = nodefony.register.call(nodefony.io, "protocol", function () {
+module.exports = nodefony.register.call(nodefony.io, "protocol", function () {
 
   const parser = function (type, settings) {
     let Parser = null;
