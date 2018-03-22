@@ -118,6 +118,8 @@ module.exports = webpackMerge({
     }),
     new workboxPlugin.GenerateSW({
       swDest: path.resolve("/", "dist", 'workers', 'service-worker.js'),
+      globDirectory: path.resolve("/", "dist"),
+      importScripts: path.resolve("/", "workboxBundle", "workers", "cache-worker.js"),
       clientsClaim: true,
       skipWaiting: true,
       chunks: ['workbox']

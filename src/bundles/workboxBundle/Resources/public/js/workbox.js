@@ -22,7 +22,7 @@ module.exports = function () {
     constructor() {
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          this.serviceWorker = navigator.serviceWorker.register('workboxBundle/dist/workers/service-worker.js')
+          this.serviceWorker = navigator.serviceWorker.register('/workboxBundle/dist/workers/service-worker.js')
             .then(registration => {
               console.log('SW registered: ', registration);
               return registration;
