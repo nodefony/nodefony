@@ -27,9 +27,11 @@ module.exports = function () {
           this.serviceWorker = navigator.serviceWorker.register('/workboxBundle/dist/workers/service-worker.js')
             .then(registration => {
               if (registration) {
-                registration.pushManager.subscribe({
-                  userVisibleOnly: true
-                });
+                if (registration.active) {
+                  registration.pushManager.subscribe({
+                    userVisibleOnly: true
+                  });
+                }
                 if (window.nodefony) {
                   window.nodefony.monitoringWorkbox(registration);
                 }

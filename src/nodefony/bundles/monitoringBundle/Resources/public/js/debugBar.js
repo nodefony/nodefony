@@ -1,8 +1,3 @@
-/*
- *
- *	ENTRY POINT WEBPACK debugBar
- *
- */
 require("../css/debugBar.css");
 
 module.exports = function () {

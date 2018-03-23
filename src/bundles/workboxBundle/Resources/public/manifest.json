@@ -8,8 +8,7 @@
   "background_color": "#2196F3",
   "theme_color": "#2196F3",
   "orientation": "landscape",
-  "icons": [
-    {
+  "icons": [{
       "src": "/workboxBundle/favicon.ico",
       "type": "image/png",
       "sizes": "48x48"
@@ -28,5 +27,7 @@
   "developer": {
     "name": "cci",
     "url": "https://nodefony.net"
-  }
+  },
+  "gcm_sender_id": "my_gcm_sender_id",
+  "gcm_user_visible_only": true
 }

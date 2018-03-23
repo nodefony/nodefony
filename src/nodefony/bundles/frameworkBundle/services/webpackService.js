@@ -151,6 +151,7 @@ module.exports = class webpack extends nodefony.Service {
         shell.cd(Path);
         webpack = require(path.resolve("node_modules", "webpack"));
         process.env.PUBLIC_URL = publicPath;
+        process.env.PUBLIC_PATH = publicPath;
         process.env.HOST = this.socksSettings.hostname + ":" + this.socksSettings.port;
         process.env.HTTPS = true;
         config = require(file.path);
@@ -187,9 +188,8 @@ module.exports = class webpack extends nodefony.Service {
         shell.cd(this.kernel.rootDir);
         throw e;
       }
-      //console.log(config.name)
       if (config.cache === undefined) {
-        config.cache = false;
+        config.cache = this.webPackSettings.cache;
       }
       compiler = webpack(config);
       this.nbCompiler++;
@@ -280,7 +280,7 @@ module.exports = class webpack extends nodefony.Service {
         "ENTRY",
         "OUTPUT FILE NAME",
         "OUTPUT LIBRARY NANE",
-        "OUTPUT TARGET",
+        "LIBRARY TARGET",
         "PUBLIC PATH",
         "WATCHER"
       ]
@@ -291,10 +291,10 @@ module.exports = class webpack extends nodefony.Service {
         table.push([
           ele,
           config.entry[ele].toString(),
-          config.output.filename,
-          config.output.library,
-          config.output.libraryTarget,
-          config.output.path,
+          config.output.filename || "",
+          config.output.library || "",
+          config.output.libraryTarget || "var",
+          config.output.path || "",
           config.watch || ""
         ]);
       }

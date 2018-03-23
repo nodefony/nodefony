@@ -120,7 +120,12 @@ module.exports = webpackMerge({
       swSrc: path.resolve(__dirname, "..", "public", "workers", "service-worker.js"),
       swDest: path.resolve("/", "dist", 'workers', 'service-worker.js'),
       globDirectory: path.resolve("/", "dist"),
-      importScripts: path.resolve("/", "workboxBundle", "workers", "cache-worker.js"),
+      globPatterns: [],
+      importScripts: [
+        path.resolve("/", "workboxBundle", "workers", "nodefony-worker.js"),
+        path.resolve("/", "workboxBundle", "workers", "precache-worker.js"),
+      ],
+      importWorkboxFrom: "disabled",
       chunks: ['workbox']
     })
     /*new workboxPlugin.GenerateSW({
