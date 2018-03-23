@@ -116,14 +116,25 @@ module.exports = webpackMerge({
       chunks: ['workbox'],
       config: bundleConfig
     }),
-    new workboxPlugin.GenerateSW({
+    new workboxPlugin.InjectManifest({
+      swSrc: path.resolve(__dirname, "..", "public", "workers", "service-worker.js"),
+      swDest: path.resolve("/", "dist", 'workers', 'service-worker.js'),
+      globDirectory: path.resolve("/", "dist"),
+      importScripts: path.resolve("/", "workboxBundle", "workers", "cache-worker.js"),
+      chunks: ['workbox']
+    })
+    /*new workboxPlugin.GenerateSW({
       swDest: path.resolve("/", "dist", 'workers', 'service-worker.js'),
       globDirectory: path.resolve("/", "dist"),
       importScripts: path.resolve("/", "workboxBundle", "workers", "cache-worker.js"),
       clientsClaim: true,
       skipWaiting: true,
-      chunks: ['workbox']
-    })
+      chunks: ['workbox'],
+      runtimeCaching: [{
+        urlPattern: new RegExp('https://localhost:5152/workbox'),
+        handler: 'staleWhileRevalidate'
+      }]
+    })*/
 
   ]
 }, config);

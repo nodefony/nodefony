@@ -1,13 +1,15 @@
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.0.0/workbox-sw.js');
+
 this.addEventListener('install', () => {
-  console.log("install")
+  console.log("install");
 });
 
 this.addEventListener('fetch', function (event) {
-  console.log("fetch")
+  console.log("fetch");
 });
 
 this.addEventListener('message', function (message) {
-  console.log(message.data)
+  console.log(message.data);
 });
 
 workbox.routing.registerRoute(

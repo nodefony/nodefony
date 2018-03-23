@@ -46,6 +46,8 @@
       "window":true,
       "document":true,
       "navigator":true,
-      "workbox":true
+      "workbox":true,
+      "self":true,
+      "importScripts":true
     }
 }
