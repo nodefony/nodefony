@@ -24,14 +24,14 @@ module.exports = function () {
     constructor() {
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          this.serviceWorker = navigator.serviceWorker.register('/workboxBundle/dist/workers/service-worker.js')
+          navigator.serviceWorker.register('/workboxBundle/dist/workers/service-worker.js')
             .then(registration => {
               if (registration) {
-                if (registration.active) {
+                /*if (registration.active) {
                   registration.pushManager.subscribe({
                     userVisibleOnly: true
                   });
-                }
+                }*/
                 if (window.nodefony) {
                   window.nodefony.monitoringWorkbox(registration);
                 }

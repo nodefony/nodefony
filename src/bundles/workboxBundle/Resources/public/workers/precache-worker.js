@@ -1,12 +1,18 @@
 // list the files you want cached by the service worker
-let PRECACHE_URLS = [
-  '/workbox',
-  '/workboxBundle/images/nodefony-logo.png',
-  '/workboxBundle/images/Workbox-Logo-Grey.svg'
-];
+workbox.routing.registerRoute(
+  new RegExp('.*\.js'),
+  workbox.strategies.cacheFirst()
+);
 
-// ROUTING
-workbox.precaching.precacheAndRoute(PRECACHE_URLS);
+workbox.routing.registerRoute(
+  // Cache CSS files
+  /.*\.css/,
+  // Use cache but update in the background ASAP
+  workbox.strategies.staleWhileRevalidate({
+    // Use a custom cache name
+    cacheName: 'css-cache',
+  })
+);
 
 workbox.routing.registerRoute(
   // Cache image files

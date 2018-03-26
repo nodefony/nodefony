@@ -1,25 +1,30 @@
 const path = require("path");
+require('require-yaml');
 //const webpack = require('webpack');
-const public = path.resolve(__dirname, "..", "public");
-const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
-const ExtractTextPluginCss = require('extract-text-webpack-plugin');
-const webpackMerge = require('webpack-merge');
-let config = null;
-let verbose = false;
-if (kernel.environment === "dev") {
-  verbose = true;
-  config = require("./webpack/webpack.dev.config.js");
-} else {
-  config = require("./webpack/webpack.prod.config.js");
-}
-
 const htmlPlugin = require('html-webpack-plugin');
 const cleanPlugin = require('clean-webpack-plugin');
-const dist = path.resolve(__dirname, "..", "public", "dist");
 const workboxPlugin = require('workbox-webpack-plugin');
+const ExtractTextPluginCss = require('extract-text-webpack-plugin');
+const webpackMerge = require('webpack-merge');
 
-require('require-yaml');
-const bundleConfig = require("../config/config.yml");
+const bundlePath = path.resolve(__dirname, "..", "..");
+const bundlePathConfig = path.resolve(bundlePath, "Resources", "config");
+const bundleName = path.basename(bundlePath);
+const bundleConfig = require(path.resolve(bundlePathConfig, "config.yml"));
+const public = path.resolve(__dirname, "..", "public");
+const publicPath = path.join("/", bundleName, "/");
+const dist = path.resolve(public, "dist");
+
+let config = null;
+let verbose = false;
+
+if (kernel.environment === "dev") {
+  verbose = true;
+  config = require(path.resolve(bundlePathConfig, "webpack", "webpack.dev.config.js"));
+} else {
+  config = require(path.resolve(bundlePathConfig, "webpack", "webpack.prod.config.js"));
+}
+//console.log(path.join("dist", "js", "[name].js"))
 
 module.exports = webpackMerge({
   context: public,
@@ -29,7 +34,7 @@ module.exports = webpackMerge({
   },
   output: {
     path: public,
-    publicPath: "/" + bundleName + "/",
+    publicPath: publicPath,
     filename: "./dist/js/[name].js",
     library: "[name]"
     //libraryTarget: "umd"
@@ -104,7 +109,7 @@ module.exports = webpackMerge({
     }),
     new htmlPlugin({
       filename: "dist/index.html",
-      template: path.resolve(__dirname, "..", "templates", "index.html.twig"),
+      template: path.resolve(bundlePath, "Resources", "templates", "index.html.twig"),
       title: 'Nodefony Workbox For Webpack',
       cache: !verbose,
       inject: true,
@@ -117,29 +122,15 @@ module.exports = webpackMerge({
       config: bundleConfig
     }),
     new workboxPlugin.InjectManifest({
-      swSrc: path.resolve(__dirname, "..", "public", "workers", "service-worker.js"),
-      swDest: path.resolve("/", "dist", 'workers', 'service-worker.js'),
-      globDirectory: path.resolve("/", "dist"),
-      globPatterns: [],
+      swSrc: path.resolve(public, "workers", "service-worker.js"),
+      swDest: path.resolve(public, "dist", 'workers', 'service-worker.js'),
+      include: [/\.html$/, /\.js$/, /\.css$/],
       importScripts: [
-        path.resolve("/", "workboxBundle", "workers", "nodefony-worker.js"),
-        path.resolve("/", "workboxBundle", "workers", "precache-worker.js"),
+        //path.resolve("/", "workboxBundle", "workers", "nodefony-worker.js"),
+        //path.resolve("/", "workboxBundle", "workers", "precache-worker.js")
       ],
-      importWorkboxFrom: "disabled",
+      //importWorkboxFrom: "disabled",
       chunks: ['workbox']
     })
-    /*new workboxPlugin.GenerateSW({
-      swDest: path.resolve("/", "dist", 'workers', 'service-worker.js'),
-      globDirectory: path.resolve("/", "dist"),
-      importScripts: path.resolve("/", "workboxBundle", "workers", "cache-worker.js"),
-      clientsClaim: true,
-      skipWaiting: true,
-      chunks: ['workbox'],
-      runtimeCaching: [{
-        urlPattern: new RegExp('https://localhost:5152/workbox'),
-        handler: 'staleWhileRevalidate'
-      }]
-    })*/
-
   ]
 }, config);

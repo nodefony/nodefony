@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="{{htmlWebpackPlugin.options.config.locale}}">
   <head>
-    <title>{{htmlWebpackPlugin.options.title}} </title>
+    <title>{{htmlWebpackPlugin.options.title}}
+    </title>
     {% block head %}{% endblock %}
     {% block meta %}
       <meta charset="utf-8">
@@ -9,28 +10,27 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="generator" content="Nodefony (https://nodefony.net)">
-      <meta name="keywords" content="web,Framework,realtime,node.js,symfony,javascript,npm,linux">
+      <meta name="keywords" content="web,Framework,node.js,workbox,javascript,npm,yarn">
       <meta name="theme-color" content="#2196F3"/>
       <link rel="manifest" href="/workboxBundle/manifest.json">
     {% endblock %}
     {% block description %}
-      <meta name="description" content="Node.js full-stack web framework Symfony Like">
+      <meta name="description" content="Nodefony node.js full-stack web framework PWA (Progressive Web Application)">
     {% endblock %}
-
-    {% block stylesheets %}
-    {% endblock %}
+    {% block stylesheets %}{% endblock %}
   </head>
   <body>
     {% block body %}
       <img class='displayed' src='/workboxBundle/images/nodefony-logo.png'>
       <h1 class='success'>
-        <p> PROGRESSIVE WEB APPS </p>
+        <p>
+          PROGRESSIVE WEB APPS
+        </p>
         <img class='displayed workbox' src='/workboxBundle/images/Workbox-Logo-Grey.svg'>
         <img class='displayed workbox' src='/workboxBundle/images/webpack.svg'>
       </h1>
     {% endblock %}
     {% block footer %}{% endblock %}
-    {% block javascripts %}
-    {% endblock %}
+    {% block javascripts %}{% endblock %}
   </body>
 </html>

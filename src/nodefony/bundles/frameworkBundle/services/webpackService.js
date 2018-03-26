@@ -204,25 +204,29 @@ module.exports = class webpack extends nodefony.Service {
           shell.cd(this.kernel.rootDir);
         }
       });
+      compiler.plugin("failed", (e) => {
+        this.logger(e, "ERROR");
+      });
     } catch (e) {
+      this.logger(e, 'ERROR');
       shell.cd(this.kernel.rootDir);
       throw e;
     }
-    // WATCH
-    if (config.watch === undefined) {
-      watch = bundle.webpackWatch;
-      config.watch = watch || false;
-    } else {
-      watch = config.watch;
-    }
-    if (this.production) {
-      watch = false;
-    } else {
-      if (watch && this.sockjs && compiler) {
-        this.sockjs.addCompiler(compiler, basename);
-      }
-    }
     try {
+      // WATCH
+      if (config.watch === undefined) {
+        watch = bundle.webpackWatch;
+        config.watch = watch || false;
+      } else {
+        watch = config.watch;
+      }
+      if (this.production) {
+        watch = false;
+      } else {
+        if (watch && this.sockjs && compiler) {
+          this.sockjs.addCompiler(compiler, basename);
+        }
+      }
       if (watch) {
         bundle.watching = null;
         bundle.watching = compiler.watch(watchOptions, (err, stats) => {
