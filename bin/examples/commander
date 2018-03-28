@@ -2,17 +2,16 @@
 
 try {
   const nodefony = require("nodefony");
-}catch(e){
-  const nodefony = require(require("path").resolve( "src", "nodefony", "core", "autoloader"));
+} catch (e) {
+  const nodefony = require(require("path").resolve("src", "nodefony", "core", "autoloader"));
 }
 
 const cli = new nodefony.cli("CLI", {
-    resize:true,
-    onStart:(cli) => {}
-    },
-    onResize:()=>{
-    }
+  resize: true,
+  onStart: (cli) => {}
+},
+onResize: () => {}
 });
 
-module.exports = cli ;
+module.exports = cli;
 return cli;
