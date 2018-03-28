@@ -109,8 +109,15 @@ security:
             form_login:
               login_path:                           /test/firewall/local
             passport-jwt:
-              secretOrKey:                          "Les sanglots longs Des violons De l’automne Blessent mon cœur D’une langueur Monotone."
-              jwtFromRequest:                       "cookies"
+              algorithms:                           "RS256"
+              certificats:
+                private                             : "config/certificates/ca/private/ca.key.pem"
+                public                              : "config/certificates/ca/public/public.key.pem"
+              #secretOrKey:                         "Les sanglots longs Des violons De l’automne Blessent mon cœur D’une langueur Monotone."
+              jwtFromRequest:                       # fromCookie fromHeader
+                extractor:                          "fromCookie"
+                params:
+                  - "jwt"
 
         #
         test-cors-area:

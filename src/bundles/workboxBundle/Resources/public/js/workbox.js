@@ -35,6 +35,12 @@ module.exports = function () {
                 if (window.nodefony) {
                   window.nodefony.monitoringWorkbox(registration);
                 }
+                /*fetch('/workboxBundle/images/nodefony-logo.png').then((response) => {
+                  console.log(response)
+                });
+                fetch('/workbox').then((response) => {
+                  console.log(response)
+                });*/
               }
               return registration;
             }).catch(registrationError => {

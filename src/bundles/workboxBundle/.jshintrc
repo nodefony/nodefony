@@ -16,6 +16,7 @@
     "workbox": true,
     "self": true,
     "importScripts": true,
-    "caches": true
+    "caches": true,
+    "fetch": true
   }
 }

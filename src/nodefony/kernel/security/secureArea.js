@@ -83,11 +83,7 @@ module.exports = nodefony.register("SecuredArea", function () {
       case "HTTPS":
       case "HTTP2":
         if (this.formLogin) {
-          if (e.message) {
-            this.logger(e.message, "DEBUG");
-          } else {
-            this.logger(e, "DEBUG");
-          }
+          this.logger(e, "DEBUG");
           if (e && e.status) {
             context.response.setStatusCode(e.code, e.message);
           } else {
@@ -118,8 +114,14 @@ module.exports = nodefony.register("SecuredArea", function () {
             if (!context.isJson) {
               return this.redirect(context, this.formLogin);
             } else {
-              error = new Error();
-              error.code =  401;
+              if (e instanceof Error) {
+                if (!e.code) {
+                  e.code = 401;
+                }
+                return e;
+              }
+              error = new Error(e.message || "");
+              error.code = e.status ||  401;
               return error;
             }
           } catch (e) {

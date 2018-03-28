@@ -12,7 +12,7 @@ echo "###################################";
 ROOT_CA="$ROOT_DIR/ca"
 CONF_DIR_CA="$CONF_DIR/ca"
 
-mkdir -p $ROOT_CA/{certs,crl,newcerts,db,private}
+mkdir -p $ROOT_CA/{certs,crl,newcerts,db,private,public}
 #chmod 700 $ROOT_CA/private
 touch $ROOT_CA/db/index.txt
 touch $ROOT_CA/db/nodefony-ca.db
@@ -37,7 +37,9 @@ openssl req -config $CONF_DIR_CA/openssl.cnf \
 
 openssl x509 -noout -text -in $ROOT_CA/certs/ca.cert.pem
 
-
+openssl rsa -in $ROOT_CA/private/ca.key.pem \
+  -pubout -outform PEM \
+  -out $ROOT_CA/public/public.key.pem
 
 
 echo "###################################";

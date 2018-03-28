@@ -23,11 +23,14 @@ module.exports = class loginController extends nodefony.controller {
     if (!this.context.token) {
       return this.createUnauthorizedException();
     }
-    let secret = this.firewall.getFactory("jwt").settings.secretOrKey;
+    let factory = this.firewall.getFactory("jwt");
+    let secret = factory.getPrivateKey();
+    let algorithms = factory.getAlgorithmKey();
     const jeton = jwt.sign({
       data: this.context.token.serialize()
     }, secret, {
-      expiresIn: '1h'
+      expiresIn: '1h',
+      algorithm: algorithms
     });
     this.context.createCookie("jwt", jeton, {});
     if (this.context.session) {
