@@ -52,7 +52,7 @@ module.exports = nodefony.register("Response", function () {
 
     addCookie(cookie) {
       if (cookie instanceof nodefony.cookies.cookie) {
-        this.cookies[cookie.name] = cookie;
+        return this.cookies[cookie.name] = cookie;
       } else {
         throw new Error("Response addCookies not valid cookies");
       }

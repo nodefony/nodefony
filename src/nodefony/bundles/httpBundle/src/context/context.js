@@ -152,7 +152,8 @@ nodefony.register("Context", () => {
 
     getFlashBag(key) {
       if (this.session) {
-        return this.session.getFlashBag(key);
+        let res = this.session.getFlashBag(key);
+        return res;
       }
       return null;
     }

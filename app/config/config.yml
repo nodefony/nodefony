@@ -175,8 +175,9 @@ httpBundle:
     use_only_cookies:            true
     referer_check:               false
     cookie:
-      maxAge:                    0                     # like cookie_lifetime php  =>seconde
+      maxAge:                    0                     # like cookie_lifetime php  => secondes or ms style ('1d', "1h")
       secure:                    false                 # Set true for https site only see https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/Set-Cookie
+      httpOnly:                  true
     memcached:
       servers:
         nodefony:

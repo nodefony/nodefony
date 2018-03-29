@@ -56,7 +56,7 @@ describe("BUNDLE TEST", function () {
       assert.deepStrictEqual(basic.cors, null);
       assert.deepStrictEqual(basic.formLogin, null);
       assert.deepStrictEqual(basic.checkLogin, "/test/firewall/basic");
-      assert.deepStrictEqual(basic.regPartten, '^/test/firewall/basic');
+      assert.deepStrictEqual(basic.stringPattern, '^/test/firewall/basic');
       try {
         let res = basic.pattern.test("/test/firewall/basic/myroute");
         assert.ok(res);
@@ -80,7 +80,7 @@ describe("BUNDLE TEST", function () {
       assert.deepStrictEqual(digest.cors, null);
       assert.deepStrictEqual(digest.formLogin, null);
       assert.deepStrictEqual(digest.checkLogin, "/test/firewall/digest");
-      assert.deepStrictEqual(digest.regPartten, '^/test/firewall/digest');
+      assert.deepStrictEqual(digest.stringPattern, '^/test/firewall/digest');
       try {
         let res = digest.pattern.test("/test/firewall/digest/myroute");
         assert.ok(res);
@@ -104,7 +104,7 @@ describe("BUNDLE TEST", function () {
       assert(local.cors);
       assert.deepStrictEqual(local.formLogin, "/login/test-local-area");
       assert.deepStrictEqual(local.checkLogin, "/test/firewall/local");
-      assert.deepStrictEqual(local.regPartten, '^/test/firewall/local');
+      assert.deepStrictEqual(local.stringPattern, '^/test/firewall/local');
       try {
         let res = local.pattern.test("/test/firewall/local/myroute");
         assert.ok(res);

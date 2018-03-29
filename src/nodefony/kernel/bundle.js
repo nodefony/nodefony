@@ -156,6 +156,7 @@ module.exports = nodefony.register("Bundle", function () {
       this.waitBundleReady = false;
       this.locale = this.kernel.settings.system.locale;
       this.setParameters("bundles." + this.name, this.getParameters("bundles." + this.name) || {});
+      this.production = (this.kernel.environment === "prod") ? true : false;
       try {
         this.finder = new nodefony.finder({
           path: this.path,
@@ -237,6 +238,10 @@ module.exports = nodefony.register("Bundle", function () {
         }
       });
       this.fire("onRegister", this);
+    }
+
+    clean() {
+      delete this.webpackCompiler;
     }
 
     initWebpack() {

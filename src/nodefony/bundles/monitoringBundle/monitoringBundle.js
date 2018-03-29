@@ -264,7 +264,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
                 factory = "none";
               }
               obj[area] = {};
-              obj[area].pattern = firewall.securedAreas[area].regPartten;
+              obj[area].pattern = firewall.securedAreas[area].stringPattern;
               obj[area].factory = factory;
               obj[area].provider = firewall.securedAreas[area].provider ? firewall.securedAreas[area].providerName : null;
               obj[area].context = firewall.securedAreas[area].sessionContext;

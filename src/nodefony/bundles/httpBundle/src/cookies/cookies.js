@@ -1,4 +1,5 @@
 const cookieLib = require('cookie');
+const MS = require('ms');
 
 nodefony.register("cookies", function () {
 
@@ -149,7 +150,7 @@ nodefony.register("cookies", function () {
         return ms;
       case "string":
         try {
-          res = eval(ms);
+          res = MS(ms) / 1000;
         } catch (e) {
           res = ms;
         }

@@ -118,7 +118,6 @@ security:
                 extractor:                          "fromCookie"
                 params:
                   - "jwt"
-
         #
         test-cors-area:
             pattern:                                ^/test/firewall/cors

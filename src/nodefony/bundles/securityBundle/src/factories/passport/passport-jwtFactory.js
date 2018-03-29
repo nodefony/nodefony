@@ -3,6 +3,7 @@
  */
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
+const jwt = require('jsonwebtoken');
 
 const fromCookieExtractor = function fromCookieExtractor(nameCookie) {
   const name = nameCookie || "jwt";
@@ -23,7 +24,48 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
       super("jwt", security, settings);
       this.httpBundle = this.kernel.getBundle("http");
       this.algorithm = this.settings.algorithms || "RS256";
+      this.jwt = jwt;
+    }
 
+    getStrategy(options = {}) {
+      let opt = nodefony.extend(true, {}, options);
+      opt.jwtFromRequest = this.getExtractor(options);
+      opt.secretOrKey = this.getSecretOrKeyConfig(options.secretOrKey);
+      return new JwtStrategy(opt, (jwt_payload, done) => {
+        this.logger("TRY AUTHORISATION " + this.name, "DEBUG");
+        let mytoken = new nodefony.security.tokens.jwt(jwt_payload);
+        this.authenticateToken(mytoken).then((token) => {
+          done(null, token);
+          return token;
+        }).catch((error) => {
+          done(error, null);
+          throw error;
+        });
+      });
+    }
+
+    createToken(context = null /*, providerName = null*/ ) {
+      if (context.metaSecurity) {
+        if (context.metaSecurity.token) {
+          return new nodefony.security.tokens.jwt(context.metaSecurity.token.payload);
+        }
+      }
+      return new nodefony.security.tokens.jwt();
+    }
+
+    generateJwtToken(data = null, settings = {}) {
+      let defaultSettings = {
+        expiresIn: '1h',
+        algorithm: this.getAlgorithmKey()
+      };
+      let opt = nodefony.extend({}, defaultSettings, settings);
+      return this.jwt.sign({
+        data: data
+      }, this.getPrivateKey(), opt);
+    }
+
+    decodeJwtToken(token) {
+      return this.jwt.decode(token);
     }
 
     getCertificats(settings = {}) {
@@ -47,6 +89,10 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
 
     getPrivateKey() {
       return this.privateKey;
+    }
+
+    setPrivateKey(key) {
+      return this.privateKey = key;
     }
 
     getAlgorithmKey() {
@@ -99,32 +145,6 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
       }
       return this.publicKey;
     }
-
-    getStrategy(options) {
-      options.jwtFromRequest = this.getExtractor(options);
-      options.secretOrKey = this.getSecretOrKeyConfig(options.secretOrKey);
-      return new JwtStrategy(options, (jwt_payload, done) => {
-        this.logger("TRY AUTHORISATION " + this.name, "DEBUG");
-        let mytoken = new nodefony.security.tokens.jwt(jwt_payload);
-        this.authenticateToken(mytoken).then((token) => {
-          done(null, token);
-          return token;
-        }).catch((error) => {
-          done(error, null);
-          throw error;
-        });
-      });
-    }
-
-    createToken(context = null /*, providerName = null*/ ) {
-      if (context.metaSecurity) {
-        if (context.metaSecurity.token) {
-          return new nodefony.security.tokens.jwt(context.metaSecurity.token.payload);
-        }
-      }
-      return new nodefony.security.tokens.jwt();
-    }
-
   };
   return Factory;
 });

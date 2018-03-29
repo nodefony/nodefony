@@ -75,6 +75,15 @@ module.exports = class webpack extends nodefony.Service {
     }
   }
 
+  clean() {
+    for (let bundle in this.kernel.bundles) {
+      if (this.production) {
+        this.logger(`MEMORY clean webpack compile bundle : ${this.kernel.bundles[bundle].name}`);
+        this.kernel.bundles[bundle].clean();
+      }
+    }
+  }
+
   checkNotEmptyEntry(config) {
     let size = null;
     switch (nodefony.typeOf(config.entry)) {
@@ -202,6 +211,8 @@ module.exports = class webpack extends nodefony.Service {
           this.nbCompiled = 0;
           this.fire("onWebpackFinich", this);
           shell.cd(this.kernel.rootDir);
+
+          this.clean();
         }
       });
       compiler.plugin("failed", (e) => {

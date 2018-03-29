@@ -329,7 +329,8 @@ module.exports = nodefony.register("cli", function () {
       if (!this.wrapperLog) {
         this.wrapperLog = console.log;
       }
-      return this.wrapperLog(this.pid + " " + date.toDateString() + " " + date.toLocaleTimeString() + " " + nodefony.Service.logSeverity(pdu.severityName) + " " + green(pdu.msgid) + " " + " : " + message);
+      //return this.wrapperLog(this.pid + " " + date.toDateString() + " " + date.toLocaleTimeString() + " " + nodefony.Service.logSeverity(pdu.severityName) + " " + green(pdu.msgid) + " " + " : " + message);
+      return this.wrapperLog(`${this.pid} ${date.toDateString()} ${date.toLocaleTimeString()} ${nodefony.Service.logSeverity(pdu.severityName)} ${green(pdu.msgid)} : ${message}`);
     }
 
     displayTable(datas, options, syslog) {

@@ -7,10 +7,10 @@ module.exports = nodefony.register("httpError", function () {
       this.container = container;
       this.context = null;
       this.code = code || null;
-      this.bundle = "Not Defined";
-      this.controller = "Not Defined";
-      this.action = "Not Defined";
-      this.url = "Not Defined";
+      this.bundle = "undefined";
+      this.controller = "undefined";
+      this.action = "undefined";
+      this.url = "undefined";
       this.xjson = null;
       this.resolver = null;
       if (message) {
@@ -34,12 +34,12 @@ module.exports = nodefony.register("httpError", function () {
     }
 
     parserContainer() {
-      this.bundle = this.container.get("bundle") ? this.container.get("bundle").name : "Not Defined";
-      this.controller = this.container.get("controller") ? this.container.get("controller").name : "Not Defined";
-      this.action = this.container.get("action") ? this.container.get("action") : "Not Defined or Not Called";
+      this.bundle = this.container.get("bundle") ? this.container.get("bundle").name : "undefined";
+      this.controller = this.container.get("controller") ? this.container.get("controller").name : "undefined";
+      this.action = this.container.get("action") ? this.container.get("action") : "undefined";
       this.context = this.container.get('context');
       if (this.context) {
-        this.url = this.context.url || "Not Defined";
+        this.url = this.context.url || "undefined";
         this.method = this.context.method;
         this.scheme = this.context.scheme;
         if (!this.code && this.context.response) {
@@ -111,6 +111,19 @@ module.exports = nodefony.register("httpError", function () {
 
     parseMessage(message) {
       switch (nodefony.typeOf(message)) {
+      case "Error":
+        this.message = message.message;
+        if (message.code) {
+          this.code = message.code;
+        }
+        if (message.xjson) {
+          this.xjson = message.xjson;
+        }
+        this.stack = message.stack;
+        break;
+      case "string":
+        this.message = message;
+        break;
       case "object":
         if (message.status) {
           this.code = message.status;
@@ -128,19 +141,8 @@ module.exports = nodefony.register("httpError", function () {
           this.code = 500;
         }
         break;
-      case "string":
-        this.message = message;
-        break;
-      case "Error":
-        this.message = message.message;
-        if (message.code) {
-          this.code = message.code;
-        }
-        if (message.xjson) {
-          this.xjson = message.xjson;
-        }
-        this.stack = message.stack;
-        break;
+        //default:
+        //  this.message = message;
       }
     }
   }

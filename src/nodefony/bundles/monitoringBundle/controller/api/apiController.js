@@ -938,7 +938,7 @@ module.exports = class apiController extends nodefony.controller {
     for (let area in service.securedAreas) {
       ele.securedAreas[area] = {
         name: area,
-        regPartten: service.securedAreas[area].regPartten,
+        regPartten: service.securedAreas[area].stringPattern,
         redirect_Https: service.securedAreas[area].redirect_Https,
         sessionContext: service.securedAreas[area].sessionContext,
         provider: service.securedAreas[area].providerName,

@@ -167,7 +167,6 @@ module.exports = class security extends nodefony.Service {
         context.once('onRequestEnd', () => {
           return this.handle(context)
             .then((ctx) => {
-              //console.log(ctx instanceof nodefony.Context)
               switch (true) {
               case ctx instanceof nodefony.Response:
               case ctx instanceof nodefony.wsResponse:
@@ -195,7 +194,7 @@ module.exports = class security extends nodefony.Service {
         })
         .catch((error) => {
           context.fire("onError", context.container, error);
-          return error;
+          throw error;
         });
     }
   }

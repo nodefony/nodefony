@@ -45,12 +45,25 @@ module.exports = nodefony.register('Token', () => {
         if (roles && roles.length) {
           for (let i = 0; i < roles.length; i++) {
             try {
-              if (!this.hasRole(roles[i])) {
-                this.roles.push(new nodefony.Role(roles[i]));
-              }
+              this.setRoles(roles[i]);
             } catch (e) {
               throw e;
             }
+          }
+        }
+        break;
+      case "object":
+        if (roles instanceof nodefony.Role) {
+          if (!this.hasRole(roles.role)) {
+            this.roles.push(roles);
+          }
+        } else {
+          if (roles.role) {
+            if (!this.hasRole(roles.role)) {
+              this.roles.push(new nodefony.Role(roles.role));
+            }
+          } else {
+            throw new Error("Bad typeof roles ");
           }
         }
         break;

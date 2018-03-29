@@ -4,7 +4,7 @@
 try {
   var LdapStrategy = require('passport-ldapauth');
 } catch (e) {
-  this.logger(e);
+  this.logger(e, "ERROR");
 }
 
 module.exports = nodefony.registerFactory("passport-ldap", () => {
@@ -31,7 +31,9 @@ module.exports = nodefony.registerFactory("passport-ldap", () => {
             throw error;
           });
         } else {
-          return done(new Error("Profile Ldap error"), null);
+          let error = new Error("Profile Ldap error");
+          done(error, null);
+          throw error;
         }
       });
     }

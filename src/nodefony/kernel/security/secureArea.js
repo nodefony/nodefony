@@ -52,7 +52,7 @@ module.exports = nodefony.register("SecuredArea", function () {
 
     logger(pci, severity, msgid, msg) {
       if (!msgid) {
-        msgid = "\x1b[36mCONTEXT SECURITY \x1b[31m" + this.name + " \x1b[0m";
+        msgid = "\x1b[36mSECURE AREA \x1b[31m" + this.name + " \x1b[0m";
       }
       return super.logger(pci, severity, msgid, msg);
     }
@@ -83,7 +83,7 @@ module.exports = nodefony.register("SecuredArea", function () {
       case "HTTPS":
       case "HTTP2":
         if (this.formLogin) {
-          this.logger(e, "DEBUG");
+          this.logger(e, "ERROR");
           if (e && e.status) {
             context.response.setStatusCode(e.code, e.message);
           } else {
@@ -106,7 +106,7 @@ module.exports = nodefony.register("SecuredArea", function () {
           }
           try {
             //context.resolver = this.overrideURL(context, this.formLogin);
-            if (context.session && e.message !== "Unauthorized") {
+            if (context.session) {
               context.session.setFlashBag("error", {
                 error: e.message
               });
@@ -130,28 +130,21 @@ module.exports = nodefony.register("SecuredArea", function () {
             return error;
           }
         } else {
-          if (context.session && e.message !== "Unauthorized") {
+          this.logger(e, "ERROR");
+          if (context.session) {
             context.session.setFlashBag("error", {
               error: e.message
             });
           }
-          if (e.status) {
-            error = new Error(e.message);
-            error.code = e.status;
-            return error;
-          } else {
-            return e;
-          }
+          return e;
         }
         break;
       case "WEBSOCKET":
       case "WEBSOCKET SECURE":
-        if (e.status) {
-          error = new Error(e.message);
-          error.code = e.status;
-          return error;
-        }
-        return e;
+        this.logger(e, "ERROR");
+        error = new Error(e.message || e);
+        error.code = e.status ||  401;
+        return error;
       }
     }
 
@@ -219,7 +212,11 @@ module.exports = nodefony.register("SecuredArea", function () {
                 context.session.clearFlashBag("default_target_path");
               }
             } catch (e) {
-              return reject(e);
+              let res = this.handleError(context, e);
+              if (res instanceof Error) {
+                return reject(res);
+              }
+              return resolve(res);
             }
             if (this.checkLogin) {
               try {
@@ -244,9 +241,7 @@ module.exports = nodefony.register("SecuredArea", function () {
           })
           .catch((error) => {
             if (!error) {
-              error = new Error("undefined Error ");
-              error.code = 401;
-              return reject(error);
+              error = new Error("");
             }
             let res = this.handleError(context, error);
             if (res instanceof Error) {
@@ -337,8 +332,14 @@ module.exports = nodefony.register("SecuredArea", function () {
     }
 
     setPattern(pattern) {
-      this.regPartten = pattern;
-      this.pattern = new RegExp(pattern);
+      if (pattern instanceof RegExp) {
+        this.pattern = pattern;
+        this.stringPattern = pattern.toString();
+      } else {
+        this.stringPattern = pattern;
+        this.pattern = new RegExp(pattern);
+      }
+      return this.pattern;
     }
 
     setCors(crossSettings) {

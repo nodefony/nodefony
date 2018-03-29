@@ -1,5 +1,3 @@
-const jwt = require('jsonwebtoken');
-
 module.exports = class loginController extends nodefony.controller {
 
   constructor(container, context) {
@@ -24,19 +22,28 @@ module.exports = class loginController extends nodefony.controller {
       return this.createUnauthorizedException();
     }
     let factory = this.firewall.getFactory("jwt");
-    let secret = factory.getPrivateKey();
-    let algorithms = factory.getAlgorithmKey();
-    const jeton = jwt.sign({
-      data: this.context.token.serialize()
-    }, secret, {
-      expiresIn: '1h',
-      algorithm: algorithms
+    const jeton = factory.generateJwtToken(this.context.token.serialize(), {
+      expiresIn: '1h'
     });
-    this.context.createCookie("jwt", jeton, {});
-    if (this.context.session) {
-      this.context.session.setMetaBag("jwt", jeton);
+    let name = "jwt";
+    let conf = factory.settings.jwtFromRequest;
+    if (conf && conf.extractor === "fromCookie") {
+      if (conf.params && conf.params[0]) {
+        name = conf.params[0];
+      }
+      //let area = this.firewall.getSecuredArea("test-api-area");
+      //let myPath = area.stringPattern.replace("^", "")
+      this.context.createCookie(name, jeton, {
+        httpOnly: true,
+        secure: true,
+        maxAge: "1h"
+        //path: myPath
+      });
     }
-    return this.renderJson(nodefony.extend({}, jwt.decode(jeton), {
+    if (this.context.session) {
+      this.context.session.setMetaBag(name, jeton);
+    }
+    return this.renderJson(nodefony.extend({}, factory.decodeJwtToken(jeton), {
       token: jeton
     }));
   }
