@@ -35,7 +35,7 @@ module.exports = nodefony.register("Annotations", function () {
     return obj;
   };
 
-  const annotationRouting = class annotationRouting {
+  class annotationRouting {
 
     constructor(annotation, bundle, pathFile) {
       this.annotation = annotation;
@@ -216,9 +216,9 @@ module.exports = nodefony.register("Annotations", function () {
     toString() {
       return JSON.stringify(this.obj);
     }
-  };
+  }
 
-  const Annotation = class Annotation extends nodefony.Service {
+  class Annotation extends nodefony.Service {
 
     constructor(container) {
       super("Annotations", container);
@@ -271,7 +271,6 @@ module.exports = nodefony.register("Annotations", function () {
         throw e;
       }
     }
-  };
-
+  }
   return Annotation;
 });

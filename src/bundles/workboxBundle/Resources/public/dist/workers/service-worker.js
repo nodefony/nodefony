@@ -1,30 +1,67 @@
-/**
- * Welcome to your Workbox-powered service worker!
- *
- * You'll need to register this file in your web app and you should
- * disable HTTP caching for this file too.
- * See https://goo.gl/nhQhGp
- *
- * The rest of the code is auto-generated. Please don't update this file
- * directly; instead, make changes to your Workbox build configuration
- * and re-run your build process.
- * See https://goo.gl/2aRDsh
- */
+importScripts("/workboxBundle/precache-manifest.c1be6d6922fedeaa076d5a9632e36803.js", "https://storage.googleapis.com/workbox-cdn/releases/3.0.1/workbox-sw.js");
 
-importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.0.0/workbox-sw.js");
+workbox.setConfig({
+  debug: true
+});
+workbox.core.setLogLevel(workbox.core.LOG_LEVELS.debug);
 
-importScripts(
-  "/workboxBundle/precache-manifest.5fabdadc9b69d176206d238f98a93aa3.js"
+let PRECACHE_URLS = [
+  '/workbox',
+  '/workboxBundle/images/nodefony-logo.png',
+  '/workboxBundle/images/Workbox-Logo-Grey.svg'
+];
+workbox.precaching.precacheAndRoute(self.__precacheManifest.concat(PRECACHE_URLS));
+
+workbox.routing.registerRoute(
+  new RegExp('.*\.js'),
+  workbox.strategies.cacheFirst()
+);
+
+workbox.routing.registerRoute(
+  // Cache CSS files
+  /.*\.css/,
+  // Use cache but update in the background ASAP
+  workbox.strategies.staleWhileRevalidate({
+    // Use a custom cache name
+    cacheName: 'css-cache',
+  })
+);
+
+workbox.routing.registerRoute(
+  // Cache image files
+  /.*\.(?:png|jpg|jpeg|svg|gif)/,
+  // Use the cache if it's available
+  workbox.strategies.cacheFirst({
+    // Use a custom cache name
+    cacheName: 'image-cache',
+    plugins: [
+      new workbox.expiration.Plugin({
+        // Cache only 20 images
+        maxEntries: 20,
+        // Cache for a maximum of a week
+        maxAgeSeconds: 7 * 24 * 60 * 60,
+      })
+    ],
+  })
 );
 
 workbox.skipWaiting();
 workbox.clientsClaim();
 
-/**
- * The workboxSW.precacheAndRoute() method efficiently caches and responds to
- * requests for URLs in the manifest.
- * See https://goo.gl/S9QRab
- */
-self.__precacheManifest = [].concat(self.__precacheManifest || []);
-workbox.precaching.suppressWarnings();
-workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+// the rest below handles the installing and caching
+self.addEventListener('install', (event) => {
+  console.log('[Service Worker] Install', event);
+});
+
+self.addEventListener('activate', function (event) {
+  console.log('[ServiceWorker] Activate', event);
+  self.skipWaiting();
+});
+
+self.addEventListener('fetch', function (event) {
+  console.log('[Service Worker] Fetch', event);
+  event.respondWith(
+    caches.match(event.request)
+  );
+
+});

@@ -1,6 +1,6 @@
 module.exports = nodefony.registerProvider("chainProvider", () => {
 
-  const chainProvider = class chainProvider extends nodefony.Provider {
+  class chainProvider extends nodefony.Provider {
 
     constructor(manager, config) {
       super("chainProvider", manager);
@@ -109,7 +109,6 @@ module.exports = nodefony.registerProvider("chainProvider", () => {
       throw new Error("refreshUser bad user type");
     }
 
-  };
-
+  }
   return chainProvider;
 });

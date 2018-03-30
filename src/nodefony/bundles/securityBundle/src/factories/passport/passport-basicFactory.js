@@ -5,7 +5,7 @@ const BasicStrategy = require('passport-http').BasicStrategy;
 
 module.exports = nodefony.registerFactory("passport-basic", () => {
 
-  const Factory = class Factory extends nodefony.passeportFactory {
+  class basicFactory extends nodefony.passeportFactory {
 
     constructor(security, settings) {
       super("basic", security, settings);
@@ -30,7 +30,7 @@ module.exports = nodefony.registerFactory("passport-basic", () => {
         });
       });
     }
+  }
 
-  };
-  return Factory;
+  return basicFactory;
 });

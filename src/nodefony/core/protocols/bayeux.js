@@ -6,7 +6,7 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
     timestamp: true
   };
 
-  const bayeux = class bayeux extends nodefony.io.protocol.reader {
+  class Bayeux extends nodefony.io.protocol.reader {
     constructor(rootName, settings) {
 
       super(null, {
@@ -172,6 +172,6 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
     send(message) {
       return this.builderResponse(message);
     }
-  };
-  return bayeux;
+  }
+  return Bayeux;
 });

@@ -14,7 +14,7 @@ module.exports = function () {
    *
    */
   const myObj = {};
-  const Nodefony = class Nodefony {
+  class Nodefony {
 
     constructor() {
       this.io = {};
@@ -359,7 +359,6 @@ module.exports = function () {
       }
       throw new Error("Register Provider : " + name + "  Error Provider bad format");
     }
-
-  };
+  }
   return new Nodefony();
 }();

@@ -147,7 +147,7 @@ module.exports = nodefony.register("injection", function () {
   /**
    * CLASS INJECTOR
    */
-  const Injector = class Injector extends nodefony.Service {
+  class Injector extends nodefony.Service {
     constructor(name, service, container) {
       super(name, container);
       this.services = nodefony.services;
@@ -345,12 +345,12 @@ module.exports = nodefony.register("injection", function () {
       }
       return tab;
     }
-  };
+  }
 
   /*
    *  CLASS INJECTION
    */
-  const Injection = class Injection extends nodefony.Service {
+  class Injection extends nodefony.Service {
 
     constructor(container) {
       super("injection", container, container.get("notificationsCenter"));
@@ -398,7 +398,6 @@ module.exports = nodefony.register("injection", function () {
       }
       return null;
     }
-
-  };
+  }
   return Injection;
 });

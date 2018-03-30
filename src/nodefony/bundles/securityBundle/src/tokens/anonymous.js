@@ -4,7 +4,7 @@
 
 nodefony.registerToken("anonymous", function () {
 
-  const Anonymous = class anonymousToken extends nodefony.Token {
+  class anonymousToken extends nodefony.Token {
 
     constructor(secret, user, roles) {
       super("anonymous", roles);
@@ -27,7 +27,6 @@ nodefony.registerToken("anonymous", function () {
       }
       return super.unserialize(token);
     }
-
-  };
-  return Anonymous;
+  }
+  return anonymousToken;
 });

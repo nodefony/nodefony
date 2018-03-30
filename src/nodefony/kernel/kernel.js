@@ -69,7 +69,7 @@ module.exports = nodefony.register("kernel", function () {
    *  @param {class} autoLoader
    *
    */
-  const kernel = class kernel extends nodefony.Service {
+  class Kernel extends nodefony.Service {
 
     constructor(environment, debug, type, options) {
       super("KERNEL", null, null, nodefony.extend({}, defaultOptions, options));
@@ -898,6 +898,6 @@ module.exports = nodefony.register("kernel", function () {
       });
       return code;
     }
-  };
-  return kernel;
+  }
+  return Kernel;
 });

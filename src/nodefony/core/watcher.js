@@ -28,7 +28,7 @@ module.exports = nodefony.register("watcher", function () {
     atomic: true // or a custom 'atomicity delay', in milliseconds (default 100)
   };
 
-  const Watcher = class Watcher extends nodefony.Service {
+  class Watcher extends nodefony.Service {
 
     constructor(Path, settings, container) {
 
@@ -118,7 +118,6 @@ module.exports = nodefony.register("watcher", function () {
         throw e;
       }
     }
-  };
-
+  }
   return Watcher;
 });

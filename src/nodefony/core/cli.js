@@ -44,7 +44,7 @@ module.exports = nodefony.register("cli", function () {
     promiseRejection: true
   };
 
-  const CLI = class CLI extends nodefony.Service {
+  class CLI extends nodefony.Service {
 
     constructor(name, container, notificationsCenter, options) {
       switch (arguments.length) {
@@ -424,7 +424,7 @@ module.exports = nodefony.register("cli", function () {
         throw e;
       }
     }
-  };
+  }
   nodefony.niceBytes = CLI.niceBytes;
   return CLI;
 });

@@ -1,7 +1,6 @@
 module.exports = nodefony.register('Role', () => {
 
-  const Role = class Role {
-
+  class Role {
     constructor(role) {
       this.role = role;
     }
@@ -9,8 +8,6 @@ module.exports = nodefony.register('Role', () => {
     getRole() {
       return this.role;
     }
-
-  };
-
+  }
   return Role;
 });

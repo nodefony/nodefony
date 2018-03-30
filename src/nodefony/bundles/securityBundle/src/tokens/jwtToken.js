@@ -1,10 +1,9 @@
 /*
  *	Token jwt
  */
-
 nodefony.registerToken("jwt", function () {
 
-  const jwtToken = class jwtToken extends nodefony.Token {
+  class jwtToken extends nodefony.Token {
 
     constructor(jwtToken) {
       super("jwt");
@@ -16,7 +15,6 @@ nodefony.registerToken("jwt", function () {
         this.unserialize(jwtToken.data);
       }
     }
-
-  };
+  }
   return jwtToken;
 });

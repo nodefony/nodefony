@@ -148,6 +148,7 @@ module.exports = nodefony.register("http2Response", () => {
                       ':status': 500
                     });
                   }
+                  //pushStream.end();
                   return reject(pushStream);
                 }
               }, options);

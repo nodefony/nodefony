@@ -4,7 +4,7 @@
 
 nodefony.registerToken("userPassword", function () {
 
-  const userPasswordToken = class userPasswordToken extends nodefony.Token {
+  class userPasswordToken extends nodefony.Token {
 
     constructor(user, passwd) {
       super("userPassword");
@@ -21,7 +21,6 @@ nodefony.registerToken("userPassword", function () {
       }
       return super.unserialize(token);
     }
-
-  };
+  }
   return userPasswordToken;
 });

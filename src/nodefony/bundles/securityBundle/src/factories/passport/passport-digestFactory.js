@@ -5,12 +5,11 @@ const DigestStrategy = require('passport-http').DigestStrategy;
 
 module.exports = nodefony.registerFactory("passport-digest", () => {
 
-  const Factory = class Factory extends nodefony.passeportFactory {
+  class digestFactory extends nodefony.passeportFactory {
 
     constructor(security, settings) {
       super("digest", security, settings);
     }
-
     getStrategy(options) {
       return new DigestStrategy(options, (username, done) => {
         this.logger("TRY AUTHORISATION " + this.name + " : " + username, "DEBUG");
@@ -24,7 +23,6 @@ module.exports = nodefony.registerFactory("passport-digest", () => {
         });
       });
     }
-
-  };
-  return Factory;
+  }
+  return digestFactory;
 });

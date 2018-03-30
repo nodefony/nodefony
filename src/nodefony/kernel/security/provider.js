@@ -1,6 +1,6 @@
 module.exports = nodefony.register('Provider', () => {
 
-  const Provider = class Provider extends nodefony.Service {
+  class Provider extends nodefony.Service {
 
     constructor(name, manager) {
       super(name, manager.container);
@@ -44,8 +44,6 @@ module.exports = nodefony.register('Provider', () => {
     supports( /*token*/ ) {
       return true;
     }
-
-  };
-
+  }
   return Provider;
 });

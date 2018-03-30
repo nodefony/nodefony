@@ -5,7 +5,7 @@ const LocalStrategy = require('passport-local').Strategy;
 
 module.exports = nodefony.registerFactory("passport-local", () => {
 
-  const Factory = class Factory extends nodefony.passeportFactory {
+  const Factory = class localFactory extends nodefony.passeportFactory {
 
     constructor(security, settings) {
       super("local", security, settings);

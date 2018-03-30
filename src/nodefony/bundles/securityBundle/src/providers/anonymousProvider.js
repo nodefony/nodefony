@@ -1,6 +1,6 @@
 module.exports = nodefony.registerProvider("anonymousProvider", () => {
 
-  const anonymousProvider = class anonymousProvider extends nodefony.Provider {
+  class anonymousProvider extends nodefony.Provider {
 
     constructor(security, config) {
       super("anonymous", security);
@@ -27,7 +27,6 @@ module.exports = nodefony.registerProvider("anonymousProvider", () => {
       }
       return false;
     }
-  };
-
+  }
   return anonymousProvider;
 });

@@ -1,6 +1,6 @@
 module.exports = nodefony.register('User', () => {
 
-  const User = class User {
+  class User {
 
     constructor(
       username,
@@ -89,7 +89,6 @@ module.exports = nodefony.register('User', () => {
         }
       }
     }
-  };
-
+  }
   return User;
 });

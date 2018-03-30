@@ -99,7 +99,7 @@ module.exports = nodefony.register("Reader", function () {
    *    var reader = new nodefony.Reader(container, settings);
    *
    */
-  const Reader = class Reader extends nodefony.Service {
+  class Reader extends nodefony.Service {
 
     constructor(container, localSettings) {
       super("READER", container);
@@ -282,7 +282,7 @@ module.exports = nodefony.register("Reader", function () {
       }
       return json;
     }
-  };
+  }
   Reader.prototype.pluginConfig = Reader.prototype.pluginConfig();
   return Reader;
 });

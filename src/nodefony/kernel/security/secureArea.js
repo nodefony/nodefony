@@ -1,7 +1,7 @@
 module.exports = nodefony.register("SecuredArea", function () {
 
   // context security
-  const securedArea = class securedArea extends nodefony.Service {
+  class securedArea extends nodefony.Service {
 
     constructor(name, firewall) {
       super(name, firewall.container, firewall.notificationsCenter);
@@ -370,7 +370,6 @@ module.exports = nodefony.register("SecuredArea", function () {
     setRedirectHttps(value) {
       this.redirect_Https = value ||  false;
     }
-  };
-
+  }
   return securedArea;
 });

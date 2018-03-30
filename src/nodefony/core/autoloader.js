@@ -45,7 +45,7 @@ module.exports = function () {
    */
   const regJs = /.*\.js$/;
 
-  const autoload = class autoload {
+  class Autoload {
 
     constructor() {
       this.versions = this.getVersion();
@@ -233,8 +233,8 @@ module.exports = function () {
       context.kernel = kernel;
       this.syslog = kernel.syslog;
     }
-  };
+  }
 
-  nodefony.autoloader = new autoload();
+  nodefony.autoloader = new Autoload();
   return nodefony;
 }();

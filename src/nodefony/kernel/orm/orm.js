@@ -10,7 +10,7 @@ module.exports = nodefony.register("orm", function () {
     }
   };
 
-  const Orm = class Orm extends nodefony.Service {
+  class Orm extends nodefony.Service {
 
     constructor(name, container /*, kernel, autoLoader*/ ) {
 
@@ -68,7 +68,7 @@ module.exports = nodefony.register("orm", function () {
         this.logger(" REGISTER ENTITY : " + entity.name + " PROVIDE BUNDLE : " + entity.bundle.name, "INFO");
       }
     }
-  };
+  }
 
   return Orm;
 });

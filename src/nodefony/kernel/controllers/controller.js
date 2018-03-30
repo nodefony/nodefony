@@ -10,7 +10,7 @@ module.exports = nodefony.register("controller", function () {
     }
   };
 
-  const Controller = class Controller extends nodefony.Service {
+  class Controller extends nodefony.Service {
     constructor(container, context) {
       super(null, container, container.get("notificationsCenter"));
       this.context = context;
@@ -601,6 +601,6 @@ module.exports = nodefony.register("controller", function () {
         throw e;
       }
     }
-  };
+  }
   return Controller;
 });

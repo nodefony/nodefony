@@ -1,27 +1,23 @@
 module.exports = nodefony.register.call(nodefony.io.protocol, "json-rpc", function () {
 
-  const jsonrpc = class extends nodefony.io.protocol.reader {
+  class Jsonrpc extends nodefony.io.protocol.reader {
 
     constructor( /*rootName, settings*/ ) {
-
       super(null, {
         extention: "json"
       });
-
       this.request = {
         jsonrpc: "2.0",
         method: null,
         params: null,
         id: null
       };
-
       this.response = {
         jsonrpc: "2.0",
         result: null,
         error: null,
         id: null
       };
-
     }
 
     methodError(error, id) {
@@ -55,10 +51,8 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "json-rpc", functi
         return message;
       default:
         throw new Error("JSONRPC message bad format ");
-
       }
     }
-  };
-
-  return jsonrpc;
+  }
+  return Jsonrpc;
 });

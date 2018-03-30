@@ -1,6 +1,6 @@
 module.exports = nodefony.register("userEntityProvider", () => {
 
-  const userEntityProvider = class userEntityProvider extends nodefony.Provider {
+  class userEntityProvider extends nodefony.Provider {
 
     constructor(name, manager, config) {
       super(name, manager);
@@ -18,8 +18,6 @@ module.exports = nodefony.register("userEntityProvider", () => {
       }
       return this.orm.getEntity(this.entityName);
     }
-
-  };
-
+  }
   return userEntityProvider;
 });

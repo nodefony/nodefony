@@ -1,7 +1,7 @@
 module.exports = nodefony.register("realtimeService", function () {
 
 
-  const realtime = class realtime extends nodefony.Service {
+  class Realtime extends nodefony.Service {
 
     constructor(name, container, notificationsCenter, options) {
 
@@ -23,6 +23,6 @@ module.exports = nodefony.register("realtimeService", function () {
     }
 
   };
-  return realtime;
+  return Realtime;
 
 });

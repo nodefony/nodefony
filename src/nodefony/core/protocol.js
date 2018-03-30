@@ -70,7 +70,7 @@ module.exports = nodefony.register.call(nodefony.io, "protocol", function () {
     xml: {}
   };
 
-  const protocol = class protocol {
+  class Protocol {
 
     constructor(rootName, settings) {
       this.settings = nodefony.extend(true, {}, defaultSettingsProtocol, settings);
@@ -82,9 +82,9 @@ module.exports = nodefony.register.call(nodefony.io, "protocol", function () {
       this.builderResponse = builder.call(this, "response", this.extention, this.settings.xml);
       this.builderRequest = builder.call(this, "request", this.extention, this.settings.xml);
     }
-  };
+  }
 
   return {
-    reader: protocol
+    reader: Protocol
   };
 });

@@ -7,7 +7,7 @@ module.exports = nodefony.register("log", function () {
     maxSize: 1000000
   };
 
-  const Log = class Log {
+  class Log {
     constructor(filePath, settings) {
       this.path = filePath;
       if (nodefony.typeOf(this.path) !== "string") {
@@ -83,7 +83,6 @@ module.exports = nodefony.register("log", function () {
         this.fire("onClose", this.stream);
       }.bind(this));
     }
-  };
-
+  }
   return Log;
 });

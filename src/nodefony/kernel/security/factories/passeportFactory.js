@@ -1,8 +1,6 @@
-//console.log(passport);
-
 module.exports = nodefony.register('passeportFactory', () => {
 
-  const Factory = class passeportFactory extends nodefony.Factory {
+  class passeportFactory extends nodefony.Factory {
 
     constructor(name, security, settings) {
       super(name, security, settings);
@@ -53,8 +51,6 @@ module.exports = nodefony.register('passeportFactory', () => {
         }
       });
     }
-
-  };
-
-  return Factory;
+  }
+  return passeportFactory;
 });

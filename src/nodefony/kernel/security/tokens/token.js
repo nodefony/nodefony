@@ -1,6 +1,6 @@
 module.exports = nodefony.register('Token', () => {
 
-  const Token = class Token {
+  class Token {
 
     constructor(name, roles = []) {
       this.name = name;
@@ -148,7 +148,6 @@ module.exports = nodefony.register('Token', () => {
       }
       return token;
     }
-  };
-
+  }
   return Token;
 });

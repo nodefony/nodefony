@@ -5,7 +5,7 @@
  */
 module.exports = nodefony.registerFactory("anonymous", () => {
 
-  const Factory = class anonymousFactory extends nodefony.Factory {
+  class anonymousFactory extends nodefony.Factory {
 
     constructor(security, settings) {
       super("anonymous", security, settings);
@@ -29,7 +29,7 @@ module.exports = nodefony.registerFactory("anonymous", () => {
       throw new Error("Factory " + this.name + " Token not valid !! ");
     }
 
-  };
+  }
 
-  return Factory;
+  return anonymousFactory;
 });

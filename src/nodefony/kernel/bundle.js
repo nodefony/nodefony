@@ -145,7 +145,7 @@ module.exports = nodefony.register("Bundle", function () {
   /*
    *  BUNDLE CLASS
    */
-  const Bundle = class Bundle extends nodefony.Service {
+  class Bundle extends nodefony.Service {
     constructor(name, kernel, container) {
       super(name, container);
       this.logger("\x1b[36m REGISTER BUNDLE : " + this.name + "   \x1b[0m", "DEBUG", this.kernel.cli.clc.magenta("KERNEL"));
@@ -998,7 +998,6 @@ module.exports = nodefony.register("Bundle", function () {
       }
       return null;
     }
-  };
-
+  }
   return Bundle;
 });

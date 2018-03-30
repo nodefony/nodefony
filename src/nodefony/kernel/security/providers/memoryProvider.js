@@ -1,6 +1,6 @@
 module.exports = nodefony.registerProvider("memoryProvider", () => {
 
-  const memoryProvider = class memoryProvider extends nodefony.Provider {
+  class memoryProvider extends nodefony.Provider {
 
     constructor(security, config) {
       super("memoryProvider", security);
@@ -54,8 +54,6 @@ module.exports = nodefony.registerProvider("memoryProvider", () => {
       }
       throw new Error("refreshUser bad user type");
     }
-
-  };
-
+  }
   return memoryProvider;
 });

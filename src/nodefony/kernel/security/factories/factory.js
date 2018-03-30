@@ -1,6 +1,6 @@
 module.exports = nodefony.register('Factory', () => {
 
-  const Factory = class Factory extends nodefony.Service {
+  class Factory extends nodefony.Service {
 
     constructor(name, security, settings = {}) {
       super(name, security.container, security.notificationsCenter);
@@ -92,6 +92,6 @@ module.exports = nodefony.register('Factory', () => {
         return this.provider.authenticate(token);
       }
     }
-  };
+  }
   return Factory;
 });

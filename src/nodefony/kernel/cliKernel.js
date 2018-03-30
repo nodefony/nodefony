@@ -76,7 +76,7 @@ module.exports = nodefony.register("cliKernel", function () {
    *  CLI KERNEL
    *
    */
-  const cliKernel = class cliKernel extends nodefony.cli {
+  class cliKernel extends nodefony.cli {
 
     constructor(name, container, notificationsCenter, options) {
       super(name, container, notificationsCenter, options);
@@ -658,6 +658,6 @@ module.exports = nodefony.register("cliKernel", function () {
       }
       process.exit(code);
     }
-  };
+  }
   return cliKernel;
 });

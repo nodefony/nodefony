@@ -63,7 +63,7 @@ nodefony.registerToken("ldap", function () {
     }
   };
 
-  const ldapToken = class ldapToken extends nodefony.Token {
+  class ldapToken extends nodefony.Token {
 
     constructor(profile, wrapper) {
       super("ldap");
@@ -114,8 +114,6 @@ nodefony.registerToken("ldap", function () {
       this.profile = token.profile;
       return super.unserialize(token);
     }
-
-
-  };
+  }
   return ldapToken;
 });

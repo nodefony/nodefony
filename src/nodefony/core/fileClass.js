@@ -27,7 +27,7 @@ module.exports = nodefony.register("fileClass", function () {
    *
    *
    */
-  const File = class File {
+  class File {
     constructor(Path) {
       if (Path) {
         Path = checkPath(Path);
@@ -211,6 +211,6 @@ module.exports = nodefony.register("fileClass", function () {
         throw e;
       }
     }
-  };
+  }
   return File;
 });

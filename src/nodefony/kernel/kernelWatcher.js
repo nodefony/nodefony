@@ -17,7 +17,7 @@ module.exports = nodefony.register("kernelWatcher", function () {
     atomic: true // or a custom 'atomicity delay', in milliseconds (default 100)
   };
 
-  const Watcher = class Watcher extends nodefony.watcher {
+  class Watcher extends nodefony.watcher {
     constructor(Path, settings, bundle) {
       super(Path, nodefony.extend(true, {}, defaultWatcherSettings, settings), bundle.container);
       if (bundle) {
@@ -355,6 +355,6 @@ module.exports = nodefony.register("kernelWatcher", function () {
         }
       });
     }
-  };
+  }
   return Watcher;
 });

@@ -17,7 +17,7 @@ module.exports = nodefony.register("Service", function () {
   const green = clc.green;
   const yellow = clc.yellow.bold;
 
-  const Service = class Service {
+  class Service {
 
     constructor(name, container, notificationsCenter, options) {
 
@@ -277,6 +277,6 @@ module.exports = nodefony.register("Service", function () {
     has() {
       return this.container.has.apply(this.container, arguments);
     }
-  };
+  }
   return Service;
 });

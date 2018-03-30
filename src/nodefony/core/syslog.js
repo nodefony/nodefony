@@ -434,7 +434,7 @@ module.exports = nodefony.register("syslog", function () {
    *    @param {Object} settings The settings to extend.
    *    @return syslog
    */
-  const syslog = class syslog extends nodefony.notificationsCenter.notification {
+  class Syslog extends nodefony.notificationsCenter.notification {
 
     constructor(settings) {
 
@@ -734,6 +734,6 @@ module.exports = nodefony.register("syslog", function () {
     trace(data) {
       return this.logger(data, "NOTICE");
     }
-  };
-  return syslog;
+  }
+  return Syslog;
 });

@@ -1,6 +1,6 @@
 module.exports = nodefony.register('providerManager', () => {
 
-  const Manager = class providerManager extends nodefony.Service {
+  class providerManager extends nodefony.Service {
 
     constructor(firewall, providers = []) {
       super("providerManager", firewall.container);
@@ -57,7 +57,6 @@ module.exports = nodefony.register('providerManager', () => {
         });
       }
     }
-  };
-
-  return Manager;
+  }
+  return providerManager;
 });

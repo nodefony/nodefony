@@ -16,12 +16,10 @@ module.exports = nodefony.registerTemplate("twig", function () {
   };
 
 
-  const Twig = class Twig extends nodefony.templates {
+  class Twig extends nodefony.templates {
 
     constructor(container, options) {
-
       super(container, twig, options);
-
       this.kernelSettings = this.container.getParameters("kernel");
       this.cache = (this.kernelSettings.environment === "dev") ? false : true;
       twig.cache(this.cache);
@@ -80,8 +78,9 @@ module.exports = nodefony.registerTemplate("twig", function () {
     extendFilter() {
       return twig.extendFilter.apply(twig, arguments);
     }
+  }
 
-  };
   Twig.prototype.extention = "twig";
+
   return Twig;
 });

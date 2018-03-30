@@ -118,7 +118,7 @@ security:
                 extractor:                          "fromCookie"
                 params:
                   - "jwt"
-        #
+        # cors  DEMO SECURITY AREA
         test-cors-area:
             pattern:                                ^/test/firewall/cors
             crossDomain:
@@ -147,29 +147,28 @@ security:
         # google_area  DEMO SECURITY AREA
         #  Management credentials :                 https://console.developers.google.com/apis
         # google_area:
-        #    pattern:                               ^/auth/google
-        #    provider:                              nodefony
-        #    form_login:
-        #      default_target_path:                 /
-        #      check_path:                          /auth/google
-        #    passport-google-oauth20:
-        #      clientID:                            "clientID"
-        #      clientSecret:                        "clientSecret"
-        #      callbackURL:                         "https://nodefony.com/auth/google/callback"
-        #      scopes:                              ["profile","email"]
-        #    logout:                                /logout
-        #    context:                               google
-        #    redirectHttps:                         true
-        #    crossDomain:
-        #        allow-origin:
-        #          google:                          accounts.google.com
-        #        Access-Control:
-        #          Access-Control-Allow-Methods:    "GET, POST, PUT, DELETE, OPTIONS"
-        #          Access-Control-Allow-Headers:    "ETag, Authorization,  X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date"
-        #          Access-Control-Allow-Credentials: true
-        #          Access-Control-Expose-Headers:   "WWW-Authenticate ,X-Json"
-        #          Access-Control-Max-Age:          10
-
+        #   pattern:                                ^/auth/google
+        #   provider:                               nodefony
+        #   form_login:
+        #     default_target_path:                  /
+        #     check_path:                           /auth/google
+        #   passport-google-oauth20:
+        #     clientID:                             "clientID"
+        #     clientSecret:                         "clientSecret"
+        #     callbackURL:                          "https://nodefony.net/auth/google/callback"
+        #     scopes:                               ["profile","email"]
+        #   logout:                                 /logout
+        #   context:                                google
+        #   redirectHttps:                          true
+        #   crossDomain:
+        #       allow-origin:
+        #         google:                           accounts.google.com
+        #       Access-Control:
+        #         Access-Control-Allow-Methods:     "GET, POST, PUT, DELETE, OPTIONS"
+        #         Access-Control-Allow-Headers:     "ETag, Authorization,  X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date"
+        #         Access-Control-Allow-Credentials: true
+        #         Access-Control-Expose-Headers:    "WWW-Authenticate ,X-Json"
+        #         Access-Control-Max-Age:           10
 
         # passport-github2  DEMO SECURITY AREA
         #github_area:
@@ -205,7 +204,7 @@ security:
         #         provider:                         nodefony
         #         form_login:
         #           login_path:                     /login/ldap
-        #           default_target_path:            /demo
+        #           check_path:                     /ldap
         #         passport-ldapauth:
         #           provider:                       false
         #           server:

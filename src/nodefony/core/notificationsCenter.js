@@ -5,7 +5,7 @@ module.exports = nodefony.register("notificationsCenter", function () {
   const regListenOn = /^on(.*)$/;
   const defaultNbListeners = 20;
 
-  const Notification = class Notification extends events.EventEmitter {
+  class Notification extends events.EventEmitter {
 
     constructor(settings, context, nbListener) {
       super();
@@ -14,7 +14,6 @@ module.exports = nodefony.register("notificationsCenter", function () {
         this.settingsToListen(settings, context);
       }
     }
-
     /**
      *
      *  @method listen
@@ -31,7 +30,6 @@ module.exports = nodefony.register("notificationsCenter", function () {
         return ContextClosure.fire.apply(ContextClosure, arguments);
       };
     }
-
     /**
      *
      *  @method fire
@@ -44,7 +42,6 @@ module.exports = nodefony.register("notificationsCenter", function () {
         throw e;
       }
     }
-
     /**
      *
      *  @method settingsToListen
@@ -59,7 +56,6 @@ module.exports = nodefony.register("notificationsCenter", function () {
         this.listen(context || this, res[0], localSettings[i]);
       }
     }
-
     /**
      *
      *  @method unListen
@@ -68,15 +64,9 @@ module.exports = nodefony.register("notificationsCenter", function () {
     unListen() {
       return this.removeListener.apply(this, arguments);
     }
-
-  };
+  }
   return {
     notification: Notification,
-    /**
-     *
-     *  @method create
-     *
-     */
     create: function (settings, context, nbListener) {
       return new Notification(settings, context, nbListener);
     }

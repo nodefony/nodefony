@@ -9,7 +9,7 @@ try {
 
 module.exports = nodefony.registerFactory("passport-ldap", () => {
 
-  const Factory = class Factory extends nodefony.passeportFactory {
+  class ldapFactory extends nodefony.passeportFactory {
 
     constructor(security, settings) {
       super("ldapauth", security, settings);
@@ -46,7 +46,6 @@ module.exports = nodefony.registerFactory("passport-ldap", () => {
       }
       return new nodefony.security.tokens.ldap(null, this.profileWrapper);
     }
-
-  };
-  return Factory;
+  }
+  return ldapFactory;
 });

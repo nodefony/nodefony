@@ -50,7 +50,7 @@ module.exports = nodefony.register("Container", function () {
    *  CONTAINER CLASS
    *
    */
-  const Container = class Container {
+  class Container {
 
     constructor(services, parameters) {
       this.protoService = function protoService() {};
@@ -188,7 +188,7 @@ module.exports = nodefony.register("Container", function () {
       this.parameters = null;
       delete this.parameters;
     }
-  };
+  }
 
   /*
    *
@@ -196,7 +196,7 @@ module.exports = nodefony.register("Container", function () {
    *
    */
 
-  const Scope = class Scope extends Container {
+  class Scope extends Container {
 
     constructor(name, parent) {
       super();
@@ -226,14 +226,14 @@ module.exports = nodefony.register("Container", function () {
         return false;
       }
     }
-  };
+  }
 
   /*
    *
    *  ExtendedScope CLASS
    *
    */
-  const ExtendedScope = class ExtendedScope extends Container {
+  class ExtendedScope extends Container {
 
     constructor(name, parent) {
       super();
@@ -273,6 +273,6 @@ module.exports = nodefony.register("Container", function () {
         return false;
       }
     }
-  };
+  }
   return Container;
 });

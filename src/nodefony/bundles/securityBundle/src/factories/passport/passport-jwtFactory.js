@@ -18,7 +18,7 @@ const fromCookieExtractor = function fromCookieExtractor(nameCookie) {
 
 module.exports = nodefony.registerFactory("passport-jwt", () => {
 
-  const Factory = class Factory extends nodefony.passeportFactory {
+  class jwtFactory extends nodefony.passeportFactory {
 
     constructor(security, settings) {
       super("jwt", security, settings);
@@ -145,6 +145,6 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
       }
       return this.publicKey;
     }
-  };
-  return Factory;
+  }
+  return jwtFactory;
 });

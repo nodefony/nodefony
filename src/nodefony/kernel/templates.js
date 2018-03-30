@@ -1,6 +1,6 @@
 module.exports = nodefony.register("templates", function () {
 
-  const Template = class Template extends nodefony.Service {
+  class Template extends nodefony.Service {
 
     constructor(container, engine, options) {
       super("TEMPLATE", container, container.get("notificationsCenter"));
@@ -19,6 +19,6 @@ module.exports = nodefony.register("templates", function () {
     extendFilter() {
       this.logger("extendFilter You must redefine this function in engine templating");
     }
-  };
+  }
   return Template;
 });
