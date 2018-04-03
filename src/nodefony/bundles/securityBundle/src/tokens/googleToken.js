@@ -17,7 +17,7 @@ nodefony.registerToken("google", function () {
           name: profile.name.familyName || "",
           surname: profile.name.givenName || "",
           email: profile.emails ? profile.emails[0].value : "",
-          provider: profile.provider,
+          //provider: profile.provider,
           lang: profile._json.language,
           roles: ["USER"],
           gender: profile.gender || "",
@@ -54,6 +54,9 @@ nodefony.registerToken("google", function () {
       this.profile = token.profile;
       this.refreshToken = token.refreshToken;
       this.accessToken = token.accessToken;
+      if (!token.user) {
+        this.setUser(new nodefony.User(this.profile.displayName));
+      }
       return super.unserialize(token);
     }
   }

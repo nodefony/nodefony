@@ -70,6 +70,7 @@ security:
             pattern:                                ^/test/firewall/local
             provider:                               nodefony
             form_login:
+              default_target_path:                  /
               login_path:                           /login/test-local-area
               check_path:                           /test/firewall/local
             passport-local:

@@ -129,7 +129,6 @@ module.exports = class defaultController extends nodefony.controller {
    *    DEMO WEBSOCKET
    */
   websoketAction(message) {
-
     switch (this.getMethod()) {
     case "WEBSOCKET":
       if (message) {
@@ -146,7 +145,6 @@ module.exports = class defaultController extends nodefony.controller {
           //this.renderResponse(mess);
           i++;
         }, 1000);
-
         setTimeout(() => {
           clearInterval(id);
           // close reason , descripton

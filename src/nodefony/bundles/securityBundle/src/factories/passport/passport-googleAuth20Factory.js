@@ -29,23 +29,27 @@ module.exports = nodefony.registerFactory("passport-google-oauth20", () => {
     createToken(context = null /*, providerName = null*/ ) {
       if (context.metaSecurity) {
         if (context.metaSecurity.token) {
-          return new nodefony.security.tokens.googleToken(context.metaSecurity.token.payload);
+          return new nodefony.security.tokens.google(
+            context.metaSecurity.token.profile,
+            context.metaSecurity.token.accessToken,
+            context.metaSecurity.token.refreshToken);
         }
       }
       return new nodefony.security.tokens.google();
     }
 
     authenticate(context) {
-      if (context.url !== this.settings.callbackURL) {
+      let url = context.url.replace(context.request.url.search, "");
+      if (url !== this.settings.callbackURL) {
         return new Promise((resolve, reject) => {
-          return this.passport.authenticate(this.name, {
-            scope: this.scopes
-          })(context, (error /*, token*/ ) => {
-            if (error) {
-              return reject(error);
-            }
+          try {
+            this.passport.authenticate(this.name, {
+              scope: this.scopes
+            })(context);
             return resolve(null);
-          });
+          } catch (e) {
+            return reject(e);
+          }
         });
       }
       return super.authenticate(context);

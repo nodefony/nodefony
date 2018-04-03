@@ -41,7 +41,7 @@ module.exports = nodefony.register('passeportFactory', () => {
               token.setAuthenticated(true);
               token.setFactory(this.name);
               //token.setProvider(this.providerName);
-              this.logger(`AUTHENTICATION  ${token.getUsername()}  SUCCESSFULLY `, "INFO");
+              this.logger(`AUTHENTICATION ${token.getUsername()} SUCCESSFULLY`, "INFO");
               return resolve(token);
             }
             return resolve(null);

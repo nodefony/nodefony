@@ -22,7 +22,6 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
 
     constructor(security, settings) {
       super("jwt", security, settings);
-      this.httpBundle = this.kernel.getBundle("http");
       this.algorithm = this.settings.algorithms || "RS256";
       this.jwt = jwt;
     }
