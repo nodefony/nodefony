@@ -77,7 +77,7 @@ security:
               usernameField:                        'username'
               passwordField:                        'passwd'
             logout:                                 /logout
-            context:                                local
+            #context:                               local
             redirectHttps:                          false
             crossDomain:
                 allow-origin:
@@ -107,6 +107,7 @@ security:
             pattern:                                ^/test/firewall/api
             stateless:                              true
             #provider:                              nodefony
+            redirectHttps:                          true
             form_login:
               login_path:                           /test/firewall/local
             passport-jwt:

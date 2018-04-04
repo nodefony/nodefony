@@ -195,8 +195,10 @@ nodefony.register.call(nodefony.context, "http", function () {
 
     writeHead() {
       // cookies
-      this.response.setCookies();
-      this.response.writeHead();
+      if (this.response) {
+        this.response.setCookies();
+        this.response.writeHead();
+      }
     }
 
     write(data, encoding) {

@@ -43,9 +43,12 @@ module.exports = class loginController extends nodefony.controller {
     if (this.context.session) {
       this.context.session.setMetaBag(name, jeton);
     }
-    return this.renderJson(nodefony.extend({}, factory.decodeJwtToken(jeton), {
-      token: jeton
-    }));
+    if (this.context.isJson) {
+      return this.renderJson(nodefony.extend({}, factory.decodeJwtToken(jeton), {
+        token: jeton
+      }));
+    }
+    return this.redirect("/");
   }
 
 };

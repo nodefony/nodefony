@@ -187,7 +187,6 @@ module.exports = class security extends nodefony.Service {
       return this.handle(context)
         .then((ctx) => {
           if (ctx) {
-            //ctx.fire("onRequest");
             return ctx.handle();
           }
           return context;
@@ -207,7 +206,9 @@ module.exports = class security extends nodefony.Service {
       if (this.securedAreas[area].match(context)) {
         //FIXME PRIORITY
         context.security = this.securedAreas[area];
-        this.logger("ENTER SECURE AREA : " + context.security.name, "DEBUG");
+        let state = context.security.stateLess ? "STATELESS" : "STATEFULL";
+        let msgid = `\x1b[36mSECURE AREA ${state}\x1b[0m`;
+        context.security.logger(`ENTER SECURE AREA : ${context.security.name}`, "DEBUG", msgid);
         return true;
       }
     }

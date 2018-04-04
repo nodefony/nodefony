@@ -69,7 +69,9 @@ module.exports = nodefony.register('Factory', () => {
     createToken(context = null /*, providerName = null*/ ) {
       if (context.metaSecurity) {
         if (context.metaSecurity.token && context.metaSecurity.token.user) {
-          return new nodefony.security.tokens.userPassword(context.metaSecurity.token.user);
+          let token = new nodefony.security.tokens.userPassword(context.metaSecurity.token.user);
+          token.unserialize(context.metaSecurity.token);
+          return token;
         }
       } else {
         return new nodefony.security.tokens.userPassword();

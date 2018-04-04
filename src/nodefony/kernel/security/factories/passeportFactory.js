@@ -10,7 +10,7 @@ module.exports = nodefony.register('passeportFactory', () => {
     }
 
     getStrategy( /*options*/ ) {
-      throw new Error("Passport Factory  must redefine getStrategy method");
+      throw new Error("Passport Factory must redefine getStrategy method");
     }
 
     authenticate(context) {
@@ -40,7 +40,6 @@ module.exports = nodefony.register('passeportFactory', () => {
             if (token) {
               token.setAuthenticated(true);
               token.setFactory(this.name);
-              //token.setProvider(this.providerName);
               this.logger(`AUTHENTICATION ${token.getUsername()} SUCCESSFULLY`, "INFO");
               return resolve(token);
             }

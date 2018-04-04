@@ -43,7 +43,6 @@ describe("BUNDLE TEST", function () {
     it("test-basic-area", (done) => {
       assert(global.firewall.securedAreas["test-basic-area"]);
       let basic = global.firewall.securedAreas["test-basic-area"];
-
       assert.deepStrictEqual(basic.sessionContext, "default");
       assert.deepStrictEqual(basic.redirect_Https, false);
       assert.deepStrictEqual(basic.providerName, "nodefony");
@@ -83,30 +82,6 @@ describe("BUNDLE TEST", function () {
       assert.deepStrictEqual(digest.stringPattern, '^/test/firewall/digest');
       try {
         let res = digest.pattern.test("/test/firewall/digest/myroute");
-        assert.ok(res);
-      } catch (e) {
-        throw e;
-      }
-      done();
-    });
-    it("test-local-area", (done) => {
-      assert(global.firewall.securedAreas["test-local-area"]);
-      let local = global.firewall.securedAreas["test-local-area"];
-      assert.deepStrictEqual(local.sessionContext, "local");
-      assert.deepStrictEqual(local.redirect_Https, false);
-      assert.deepStrictEqual(local.providerName, "nodefony");
-      assert(local.provider);
-      assert.deepStrictEqual(local.alwaysUseDefaultTarget, false);
-      assert.deepStrictEqual(local.name, "test-local-area");
-      assert(local.factories.length);
-      assert.deepStrictEqual(local.factories.length, 1);
-      assert.deepStrictEqual(local.factories[0].name, "local");
-      assert(local.cors);
-      assert.deepStrictEqual(local.formLogin, "/login/test-local-area");
-      assert.deepStrictEqual(local.checkLogin, "/test/firewall/local");
-      assert.deepStrictEqual(local.stringPattern, '^/test/firewall/local');
-      try {
-        let res = local.pattern.test("/test/firewall/local/myroute");
         assert.ok(res);
       } catch (e) {
         throw e;

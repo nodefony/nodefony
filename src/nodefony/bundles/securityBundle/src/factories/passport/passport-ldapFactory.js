@@ -20,7 +20,6 @@ module.exports = nodefony.registerFactory("passport-ldap", () => {
       return new LdapStrategy(options, (profile, done) => {
         this.logger("TRY AUTHENTICATION " + this.name + " : " + profile.uid, "DEBUG");
         if (profile) {
-          this.logger("PROFILE AUTHENTICATION " + this.name + " : " + profile.displayName, "DEBUG");
           let mytoken = new nodefony.security.tokens.ldap(profile, this.profileWrapper);
           mytoken.setProvider(this.settings.server.url);
           this.authenticateToken(mytoken).then((token) => {

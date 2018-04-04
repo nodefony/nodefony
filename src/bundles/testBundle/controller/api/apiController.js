@@ -20,7 +20,9 @@ module.exports = class apiController extends nodefony.controller {
   indexAction() {
     try {
       return this.renderJson({
-        foo: "bar"
+        foo: "bar",
+        user: this.getUser(),
+        token: this.getToken()
       });
     } catch (e) {
       throw e;

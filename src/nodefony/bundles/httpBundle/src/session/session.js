@@ -183,17 +183,18 @@ nodefony.register("Session", function () {
     checkChangeContext(contextSession) {
       // change context session
       if (contextSession && this.contextSession !== contextSession) {
+        this.manager.logger(`SESSION CONTEXT CHANGE : ${this.contextSession} ==> ${contextSession}`);
         switch (this.strategy) {
         case "migrate":
           return this.storage.start(this.id, this.contextSession).then((result) => {
             this.deSerialize(result);
             if (!this.isValidSession(result, this.context)) {
-              this.manager.logger("INVALIDATE SESSION ==> " + this.name + " : " + this.id, "DEBUG");
+              this.manager.logger("INVALID SESSION ==> " + this.name + " : " + this.id, "WARNING");
               this.destroy();
               this.contextSession = contextSession;
               return this.create(this.lifetime, null);
             }
-            this.manager.logger("STRATEGY MIGRATE SESSION ==> " + this.name + " : " + this.id, "DEBUG");
+            this.manager.logger(`STRATEGY MIGRATE SESSION  ==> ${this.name} : ${this.id}`, "DEBUG");
             this.migrated = true;
             this.remove();
             this.contextSession = contextSession;

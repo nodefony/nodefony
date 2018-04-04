@@ -95,6 +95,7 @@ module.exports = nodefony.register('Token', () => {
       } else {
         this.user = user;
       }
+      return this.user;
     }
 
     getUsername() {
