@@ -226,6 +226,7 @@ module.exports = nodefony.register("Bundle", function () {
         // WEBPACK SERVICE
         this.webpackService = this.get("webpack");
         this.webpackCompiler = null;
+        this.watching = null;
         if (this.kernel.type !== "CONSOLE" || (process.argv[2] && process.argv[2] === "webpack:dump")) {
           try {
             this.kernel.on("onReady", () => {
@@ -241,12 +242,22 @@ module.exports = nodefony.register("Bundle", function () {
     }
 
     clean() {
+      this.webpackCompiler = null;
       delete this.webpackCompiler;
+      this.watching = null;
+      delete this.watching;
     }
 
     initWebpack() {
       try {
         this.findWebPackConfig();
+        this.on("onWebpackDone", (compiler, reload) => {
+          if (this.kernel.environment === "prod" || reload || !this.watching) {
+            this.logger(`MEMORY clean webpack compile bundle : ${this.name}`, "INFO");
+            this.webpackCompiler = null;
+            delete this.webpackCompiler;
+          }
+        });
       } catch (e) {
         this.logger(e, "ERROR");
         throw e;
@@ -468,14 +479,7 @@ module.exports = nodefony.register("Bundle", function () {
     compileWebpack() {
       if (this.webpackCompiler) {
         try {
-          return this.webpackService.runCompiler(this.webpackCompiler, this.name, this.name, this.webpackCompile.name);
-        } catch (e) {
-          throw e;
-        }
-      }
-      if (this.webpackCompilerFile) {
-        try {
-          return this.webpackService.runCompiler(this.webpackCompilerFile, this.name + "_" + this.webpackCompilerFile.name, this.name, this.webpackCompilerFile.name);
+          return this.webpackService.runCompiler(this.webpackCompiler, this.name + "_" + this.webpackCompiler.name, this.name, this.webpackCompiler.name);
         } catch (e) {
           throw e;
         }
@@ -496,6 +500,7 @@ module.exports = nodefony.register("Bundle", function () {
         }
       });
     }
+
     loadService(ele, force) {
       try {
         let Class = this.loadFile(ele.path, force);
@@ -561,7 +566,7 @@ module.exports = nodefony.register("Bundle", function () {
           if (!res) {
             throw new Error("Angular bundle no webpack config file : webpack.config.js ");
           }
-          this.webpackCompilerFile = this.webpackService.loadConfig(res, this);
+          this.webpackService.loadConfig(res, this);
         } catch (e) {
           throw e;
         }
@@ -579,7 +584,7 @@ module.exports = nodefony.register("Bundle", function () {
           }
           res = new nodefony.fileClass(file);
           process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
-          this.webpackCompilerFile = this.webpackService.loadConfig(res, this);
+          this.webpackService.loadConfig(res, this);
         } catch (e) {
           throw e;
         }
@@ -590,7 +595,7 @@ module.exports = nodefony.register("Bundle", function () {
           if (!res) {
             return;
           }
-          this.webpackCompilerFile = this.webpackService.loadConfig(res, this);
+          this.webpackService.loadConfig(res, this);
         } catch (e) {
           throw e;
         }

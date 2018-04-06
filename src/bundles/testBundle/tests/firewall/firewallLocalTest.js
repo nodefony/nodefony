@@ -55,6 +55,8 @@ test-local-area:
           Access-Control-Max-Age:           10
 */
 
+const myjar = request.jar();
+
 describe("BUNDLE TEST", function () {
 
   before(function () {
@@ -156,12 +158,12 @@ describe("BUNDLE TEST", function () {
       global.options.headers.Accept = "application/json";
       global.options.followRedirect = true;
       global.options.followAllRedirects = true;
-      //global.options.jar = true;
+      //global.options.jar = myjar;
       global.options.form = {
         username: "admin",
         passwd: "admin"
       };
-      request(global.options, (error, response, body) => {
+      request(global.options, (error, response /*, body*/ ) => {
         if (error) {
           throw error;
         }
@@ -178,7 +180,7 @@ describe("BUNDLE TEST", function () {
       global.options.headers.Accept = "application/json";
       global.options.followRedirect = true;
       global.options.followAllRedirects = true;
-      global.options.jar = true;
+      global.options.jar = myjar;
       global.options.form = {
         username: "admin",
         passwd: "admin"
@@ -190,9 +192,41 @@ describe("BUNDLE TEST", function () {
         assert.deepStrictEqual(response.statusCode, 200);
         let json = JSON.parse(body);
         assert(json.data);
+        global.data = json.data;
         let jwt = response.headers["set-cookie"][0];
         assert(jwt);
         assert(new RegExp("^jwt=.*$").test(jwt));
+        done();
+      });
+    });
+
+    it("Valid Token", (done) => {
+      let service = kernel.get("httpsServer");
+      let res = service.getCertificats();
+      global.options.url = "/test/firewall/api/stateless";
+      global.options.form = null;
+      global.options.method = "GET";
+      global.options.followRedirect = true;
+      global.options.baseUrl = "https://" + kernel.settings.system.domain + ":" + kernel.settings.system.httpsPort;
+      global.options.key = res.key;
+      global.options.cert = res.cert;
+      global.options.ca = res.ca;
+      request(global.options, (error, response, body) => {
+        if (error) {
+          throw error;
+        }
+        let json = JSON.parse(body);
+        // Valid token
+        let token = json.token;
+        assert.deepStrictEqual(token.name, "jwt");
+        assert.deepStrictEqual(token.authenticated, true);
+        assert.deepStrictEqual(token.factory, "jwt");
+        assert.deepStrictEqual(token.provider, null);
+        assert.deepStrictEqual(token.user, json.user);
+        assert(token.jwtToken);
+        // valid token during authenticate Local
+        assert(token.jwtToken.data);
+        assert.deepStrictEqual(token.jwtToken.data, global.data);
         done();
       });
     });

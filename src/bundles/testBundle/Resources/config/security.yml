@@ -223,11 +223,11 @@ security:
         #             displayName:                  "profile.cn"
         #         logout:                           /logout
         ldap_area:
-          pattern:                                  ^/ldap
+          pattern:                                  ^/test/firewall/ldap
           provider:                                 nodefony
           form_login:
             login_path:                             /login/ldap_area
-            check_path:                             /ldap
+            check_path:                             /test/firewall/ldap
           #CHECK ./node_modules/.bin/ldapjs-search   -u ldap://ldap-server.com -b "dc=object,dc=com" "uid=user"
           passport-ldap:
             provider:                               false

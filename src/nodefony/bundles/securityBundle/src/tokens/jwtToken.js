@@ -8,6 +8,13 @@ nodefony.registerToken("jwt", function () {
     constructor(jwtToken) {
       super("jwt");
       this.jwtToken = jwtToken;
+      if (this.jwtToken && this.jwtToken.data) {
+        if (this.jwtToken.data.user) {
+          let user = new nodefony.User(this.jwtToken.data.user.username);
+          user.unserialize(this.jwtToken.data.user);
+          this.setUser(user);
+        }
+      }
     }
     serialize() {
       let serial = super.serialize();
@@ -17,13 +24,13 @@ nodefony.registerToken("jwt", function () {
 
     unserialize(token) {
       this.jwtToken = token.jwtToken;
-      if (this.jwtToken && this.jwtToken.data) {
+      /*if (this.jwtToken && this.jwtToken.data) {
         if (this.jwtToken.data.user) {
           let user = new nodefony.User(this.jwtToken.data.user.username);
           user.unserialize(this.jwtToken.data.user);
           this.setUser(user);
         }
-      }
+      }*/
       return super.unserialize(token);
     }
   }

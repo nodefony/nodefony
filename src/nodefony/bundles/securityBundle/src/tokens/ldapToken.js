@@ -71,21 +71,9 @@ nodefony.registerToken("ldap", function () {
       this.profileWrapper = wrapper;
       let obj = this.wrapperLdap(this.profile);
       if (obj.username) {
-        this.setUser(new nodefony.User(
-          obj.username,
-          null,
-          obj.roles,
-          obj.lang,
-          obj.enabled,
-          obj.userNonExpired,
-          obj.credentialsNonExpired,
-          obj.accountNonLocked,
-          obj.name,
-          obj.surname,
-          obj.email,
-          obj.gender,
-          obj.url,
-          obj.image));
+        let user = new nodefony.User(obj.username);
+        user.unserialize(obj);
+        this.setUser(user);
       }
     }
 

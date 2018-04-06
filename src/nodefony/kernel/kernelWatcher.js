@@ -256,17 +256,16 @@ module.exports = nodefony.register("kernelWatcher", function () {
             if (this.bundle.watching) {
               this.bundle.watching.close(() => {
                 this.logger("CLOSE OLD WATCHER", "DEBUG", "watcher");
-                delete this.bundle.webpackCompilerFile;
-                delete this.bundle.watching;
+                this.bundle.clean();
+                let compiler = this.webpackService.loadConfig(myPath, this.bundle, true);
+                compiler.plugin("done", () => {
+                  if (this.sockjs) {
+                    this.sockjs.sendWatcher("change", file);
+                  }
+                });
               });
             }
-            let compiler = this.webpackService.loadConfig(myPath, this.bundle, true);
-            compiler.plugin("done", () => {
-              this.bundle.webpackCompilerFile = compiler;
-              if (this.sockjs) {
-                this.sockjs.sendWatcher("change", file);
-              }
-            });
+
             break;
           default:
             try {

@@ -3,13 +3,15 @@
  *	ENTRY POINT WEBPACK bundle APP
  *
  */
-require("../css/app.css");
+//require("../css/app.css");
+import "../css/app.css";
 
 module.exports = function () {
   /*
    *	Class Bundle App client side
    */
   const App = class App {
+
     constructor() {
       this.selectorLang = global.document.getElementById("langs");
       if (this.selectorLang) {
@@ -22,3 +24,9 @@ module.exports = function () {
   };
   return new App();
 }();
+
+/*if (module.hot) {
+  module.hot.accept('../css/app.css', function () {
+    console.log('Accepting the updated printMe module!');
+  });
+}*/

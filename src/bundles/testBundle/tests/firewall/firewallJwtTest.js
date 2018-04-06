@@ -36,15 +36,19 @@ test-api-area:
           - "jwt"
 */
 
+
 describe("BUNDLE TEST", function () {
 
   before(function () {
+    // cookies container
+    let myjar = request.jar();
     global.firewall = kernel.get("security");
     global.options = {
       baseUrl: "http://" + kernel.settings.system.domain + ":" + kernel.settings.system.httpPort,
       url: "/test/firewall/api",
       method: 'GET',
       encoding: "utf8",
+      jar: myjar,
       followRedirect: true,
       headers: {
         Accept: "application/json"
@@ -64,7 +68,7 @@ describe("BUNDLE TEST", function () {
       },
       followRedirect: true,
       followAllRedirects: true,
-      jar: true
+      jar: myjar
     };
   });
 
@@ -90,9 +94,9 @@ describe("BUNDLE TEST", function () {
     });
 
     it("Enter AREA  follow redirect https", (done) => {
-      request(global.options, (error, response, body) => {
+      request(global.options, (error /*, response, body*/ ) => {
         if (error) {
-          done()
+          done();
           return;
         }
         throw new Error("redirect https");
@@ -101,7 +105,7 @@ describe("BUNDLE TEST", function () {
 
     it("Enter AREA  redirect https", (done) => {
       global.options.followRedirect = false;
-      request(global.options, (error, response, body) => {
+      request(global.options, (error, response /*, body*/ ) => {
         if (error) {
           throw error;
         }
@@ -151,7 +155,6 @@ describe("BUNDLE TEST", function () {
     });
 
     it("Authenticate Local Area", (done) => {
-      global.options.jar = true;
       request(global.optionsLocal, (error, response, body) => {
         if (error) {
           throw error;

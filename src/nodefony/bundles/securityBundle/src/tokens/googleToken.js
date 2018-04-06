@@ -25,23 +25,14 @@ nodefony.registerToken("google", function () {
           url: profile._json.url || "",
           image: profile._json.image.url || ""
         };
-        this.setUser(new nodefony.User(
-          obj.username,
-          null,
-          obj.roles,
-          obj.lang,
-          obj.enabled,
-          obj.userNonExpired,
-          obj.credentialsNonExpired,
-          obj.accountNonLocked,
-          obj.name,
-          obj.surname,
-          obj.email,
-          obj.gender,
-          obj.url,
-          obj.image));
+        if (obj.username) {
+          let user = new nodefony.User(obj.username);
+          user.unserialize(obj);
+          this.setUser(user);
+        }
       }
     }
+
     serialize() {
       let serial = super.serialize();
       serial.profile = this.profile;
@@ -54,9 +45,6 @@ nodefony.registerToken("google", function () {
       this.profile = token.profile;
       this.refreshToken = token.refreshToken;
       this.accessToken = token.accessToken;
-      if (!token.user) {
-        this.setUser(new nodefony.User(this.profile.displayName));
-      }
       return super.unserialize(token);
     }
   }

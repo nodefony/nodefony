@@ -24,7 +24,6 @@ module.exports = function () {
   const SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
 
   const test = class test {
-
     constructor() {
       $(document).ready(() => {
         // init speakToText

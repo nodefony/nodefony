@@ -27,7 +27,7 @@ module.exports = {
     }
   },
   "check-ldap": {
-    pattern: "/ldap",
+    pattern: "/test/firewall/ldap",
     defaults: {
       controller: "testBundle:firewall:ldap"
     }

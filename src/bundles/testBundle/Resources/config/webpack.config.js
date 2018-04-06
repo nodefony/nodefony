@@ -3,6 +3,7 @@ const path = require("path");
 const ExtractTextPluginCss = require('extract-text-webpack-plugin');
 const public = path.resolve(__dirname, "..", "public");
 const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
+const publicPath = bundleName + "/";
 const webpackMerge = require('webpack-merge');
 
 let config = null;
@@ -78,6 +79,8 @@ module.exports = webpackMerge({
   plugins: [
     new ExtractTextPluginCss({
       filename: "./assets/css/[name].css",
-    })
+    }),
+    //new webpack.NamedModulesPlugin(),
+    //new webpack.HotModuleReplacementPlugin()
   ]
 }, config);
