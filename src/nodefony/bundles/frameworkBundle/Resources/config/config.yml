@@ -20,7 +20,7 @@ watch:                      false
 
 
 webpack:
-  cache:                    false
+  cache:                    true
   watchOptions:
     ignoreInitial:          false
     persistent:             true

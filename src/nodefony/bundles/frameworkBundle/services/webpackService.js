@@ -293,15 +293,17 @@ module.exports = class webpack extends nodefony.Service {
     let table = this.kernel.cli.displayTable(null, options);
     try {
       for (let ele in config.entry) {
-        table.push([
-          ele,
-          config.entry[ele].toString(),
-          config.output.filename || "",
-          config.output.library || "",
-          config.output.libraryTarget || "var",
-          config.output.path || "",
-          config.watch || ""
-        ]);
+        if (config.output) {
+          table.push([
+            ele,
+            config.entry[ele].toString(),
+            config.output.filename || "",
+            config.output.library || "",
+            config.output.libraryTarget || "var",
+            config.output.path || "",
+            config.watch || ""
+          ]);
+        }
       }
       return table.toString();
     } catch (e) {

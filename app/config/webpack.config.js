@@ -1,6 +1,7 @@
 const path = require("path");
 //const webpack = require('webpack');
 const ExtractTextPluginCss = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpackMerge = require('webpack-merge');
 
 const context = path.resolve(__dirname, "..", "Resources", "public");
@@ -18,7 +19,6 @@ if (kernel.environment === "dev") {
 module.exports = webpackMerge(config, {
   context: context,
   target: "web",
-  //watch: false,
   entry: {
     app: ["./js/app.js"]
   },
@@ -45,10 +45,15 @@ module.exports = webpackMerge(config, {
     }, {
       // CSS EXTRACT
       test: new RegExp("\.css$"),
-      use: ExtractTextPluginCss.extract({
+      use: [
+        'css-hot-loader',
+        MiniCssExtractPlugin.loader,
+        'css-loader',
+      ]
+      /*use: ExtractTextPluginCss.extract({
         fallback: "style-loader",
         use: "css-loader"
-      })
+      })*/
     }, {
       // SASS
       test: new RegExp(".scss$"),
@@ -84,8 +89,11 @@ module.exports = webpackMerge(config, {
     }]
   },
   plugins: [
-    new ExtractTextPluginCss({
+    /*new ExtractTextPluginCss({
       filename: "./css/[name].css",
-    })
+    }),*/
+    new MiniCssExtractPlugin({
+      filename: "./css/[name].css",
+    }),
   ]
 });

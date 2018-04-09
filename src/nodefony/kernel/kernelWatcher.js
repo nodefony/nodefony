@@ -253,11 +253,19 @@ module.exports = nodefony.register("kernelWatcher", function () {
           case this.bundle.regWebpackCongig.test(basename):
             let myPath = path.resolve(this.bundle.path, Path);
             delete require.cache[myPath];
+            if (!this.bundle.webpackConfigFile) {
+              return;
+            }
+            delete require.cache[this.bundle.webpackConfigFile.path];
             if (this.bundle.watching) {
               this.bundle.watching.close(() => {
                 this.logger("CLOSE OLD WATCHER", "DEBUG", "watcher");
                 this.bundle.clean();
-                let compiler = this.webpackService.loadConfig(myPath, this.bundle, true);
+                let compiler = this.webpackService.loadConfig(this.bundle.webpackConfigFile, this.bundle, true);
+                if (this.sockjs.compilers[this.bundle.bundleName]) {
+                  delete this.sockjs.compilers[this.bundle.bundleName];
+                  this.sockjs.addCompiler(compiler, this.bundle.bundleNam);
+                }
                 compiler.plugin("done", () => {
                   if (this.sockjs) {
                     this.sockjs.sendWatcher("change", file);

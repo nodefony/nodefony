@@ -591,11 +591,11 @@ module.exports = nodefony.register("Bundle", function () {
         break;
       default:
         try {
-          res = this.finder.result.getFile("webpack.config.js", true);
-          if (!res) {
+          this.webpackConfigFile = this.finder.result.getFile("webpack.config.js", true);
+          if (!this.webpackConfigFile) {
             return;
           }
-          this.webpackService.loadConfig(res, this);
+          this.webpackService.loadConfig(this.webpackConfigFile, this);
         } catch (e) {
           throw e;
         }

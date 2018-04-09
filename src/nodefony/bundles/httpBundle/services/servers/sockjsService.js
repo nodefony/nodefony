@@ -12,35 +12,31 @@ const sockCompiler = class sockCompiler extends nodefony.Service {
       errorDetails: true
     };
     this.stats = null;
-
     if (compiler) {
       this.compiler = compiler;
-      this.compiler.hooks.compile.tap('webpack-dev-server', () => {
-        this.sockWrite("invalid");
-      });
-      this.compiler.hooks.invalid.tap('webpack-dev-server', () => {
-        this.sockWrite("invalid");
-      });
-      this.compiler.hooks.done.tap('webpack-dev-server', (stats) => {
-        this.sendStats(stats.toJson(this.clientStats));
-        this.stats = stats;
-      });
-
-      //this.listen( this, "onCreateSockServer", () => {
-      /*this.compiler.plugin("compile", () => {
-        this.sockWrite("invalid");
-      });
-      this.compiler.plugin("invalid", () => {
-        this.sockWrite("invalid");
-      });
-      this.compiler.plugin("done", (stats) => {
-        var ret = this.sendStats(stats.toJson(this.clientStats));
-        this.stats = stats;
-        if (ret !== "errors") {
-          this.sockWrite("content-changed");
-        }
-      });*/
-      //});
+      if (this.compiler.hooks) {
+        this.compiler.hooks.compile.tap('webpack-dev-server', () => {
+          this.sockWrite("invalid");
+        });
+        this.compiler.hooks.invalid.tap('webpack-dev-server', () => {
+          this.sockWrite("invalid");
+        });
+        this.compiler.hooks.done.tap('webpack-dev-server', (stats) => {
+          this.sendStats(stats.toJson(this.clientStats));
+          this.stats = stats;
+        });
+      } else {
+        this.compiler.plugin("compile", () => {
+          this.sockWrite("invalid");
+        });
+        this.compiler.plugin("invalid", () => {
+          this.sockWrite("invalid");
+        });
+        this.compiler.plugin("done", (stats) => {
+          this.sendStats(stats.toJson(this.clientStats));
+          this.stats = stats;
+        });
+      }
     }
   }
 
