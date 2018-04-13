@@ -33,67 +33,82 @@ module.exports = webpackMerge(config, {
   resolve: {},
   module: {
     rules: [{
-      // BABEL TRANSCODE
-      test: new RegExp("\.es6$|\.js$"),
-      exclude: new RegExp("node_modules"),
-      use: [{
-        loader: 'babel-loader',
-        options: {
-          presets: ['env']
-        }
-      }]
-    }, {
-      // CSS EXTRACT
-      test: new RegExp("\.css$"),
-      use: [
-        'css-hot-loader',
-        MiniCssExtractPlugin.loader,
-        'css-loader',
-      ]
-      /*use: ExtractTextPluginCss.extract({
-        fallback: "style-loader",
-        use: "css-loader"
-      })*/
-    }, {
-      // SASS
-      test: new RegExp(".scss$"),
-      use: [{
-        loader: 'style-loader'
-      }, {
-        loader: 'css-loader'
-      }, {
-        loader: 'sass-loader'
-      }]
-    }, {
-      test: new RegExp("\.less$"),
-      use: ExtractTextPluginCss.extract({
-        use: [
-          "raw-loader",
-          {
-            loader: 'less-loader',
-            options: {
-              //strictMath: true,
-              //noIeCompat: true
-            }
+        // BABEL TRANSCODE
+        test: new RegExp("\.es6$|\.js$"),
+        exclude: new RegExp("node_modules"),
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            presets: ['env']
           }
+        }]
+      }, {
+        // CSS EXTRACT
+        test: new RegExp("\.css$"),
+        use: [
+          //'css-hot-loader',
+          MiniCssExtractPlugin.loader,
+          'css-loader',
         ]
-      })
-    }, {
-      // FONTS
-      test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/assets/fonts/" + '&outputPath=/fonts/',
-    }, {
-      // IMAGES
-      test: new RegExp("\.(jpg|png|gif)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/assets/images/" + '&outputPath=/images/'
-    }]
+        /*use: ExtractTextPluginCss.extract({
+          fallback: "style-loader",
+          use: "css-loader"
+        })*/
+        /*use: [
+          MiniCssExtractPlugin.loader,
+          "css-loader"
+        ]*/
+      },
+      {
+        // SASS
+        test: new RegExp(".scss$"),
+        use: [{
+          loader: 'style-loader'
+        }, {
+          loader: 'css-loader'
+        }, {
+          loader: 'sass-loader'
+        }]
+      },
+      {
+        test: new RegExp("\.less$"),
+        use: ExtractTextPluginCss.extract({
+          use: [
+            "raw-loader",
+            {
+              loader: 'less-loader',
+              options: {
+                //strictMath: true,
+                //noIeCompat: true
+              }
+            }
+          ]
+        })
+      },
+      {
+        // FONTS
+        test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
+        use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/assets/fonts/" + '&outputPath=/fonts/',
+      },
+      {
+        // IMAGES
+        test: new RegExp("\.(jpg|png|gif)$"),
+        use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/assets/images/" + '&outputPath=/images/'
+      }
+    ]
   },
   plugins: [
     /*new ExtractTextPluginCss({
       filename: "./css/[name].css",
+      allChunks: true
     }),*/
     new MiniCssExtractPlugin({
       filename: "./css/[name].css",
-    }),
-  ]
+      allChunks: true
+    })
+  ],
+  devServer: {
+    inline: true,
+    hot: false
+  }
 });

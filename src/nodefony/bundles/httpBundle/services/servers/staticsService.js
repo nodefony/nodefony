@@ -53,7 +53,8 @@ module.exports = class serverStatics extends nodefony.Service {
   }
 
   handle(request, response, next) {
-    let type = this.mime.lookup(request.url);
+    let pathname = url.parse(request.url).pathname;
+    let type = this.mime.lookup(pathname);
     response.setHeader("Content-Type", type);
     for (let server in this.servers) {
       this.servers[server](request, response, next);

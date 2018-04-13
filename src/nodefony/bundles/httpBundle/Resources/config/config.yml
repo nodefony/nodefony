@@ -54,18 +54,12 @@ websocketSecure:
   closeTimeout:           5000
 
 sockjs:
-  overlay:                true
-  hot:                    false
-  logLevel:               info        # none, error, warning or info
-  progress:               false
-  protocol:               https
-  websocket:              true
-  prefix:                 "/sockjs-node"
-  hostname:               "localhost"
-  port:                   "5152"
+  protocol                : https
+  websocket               : true
+  prefix                  : "/sockjs-node"
   stats :
-    cached:               false
-    cachedAssets:         false
+    cached                : false
+    cachedAssets          : false
 
 
 #

@@ -23,6 +23,9 @@ module.exports = function () {
   return new App();
 }();
 
+/*
+ * HMR
+ */
 if (module.hot) {
   module.hot.accept((err) => {
     if (err) {

@@ -8,6 +8,7 @@ const sockCompiler = class sockCompiler extends nodefony.Service {
   constructor(service, name, compiler) {
     super(name, service.container, service.notificationsCenter);
     this.service = service;
+    this.initsockClient = null;
     this.clientStats = {
       errorDetails: true
     };
@@ -61,6 +62,15 @@ const sockCompiler = class sockCompiler extends nodefony.Service {
       }
     }
   }
+  clean() {
+    if (this.initsockClient) {
+      try {
+        this.service.removeListener("onConnection", this.initsockClient);
+      } catch (e) {
+        throw e;
+      }
+    }
+  }
 
   sockWrite(type, data, connection) {
     return this.service.sockWrite(type, data, connection);
@@ -70,25 +80,22 @@ const sockCompiler = class sockCompiler extends nodefony.Service {
 module.exports = class sockjs extends nodefony.Service {
 
   constructor(httpKernel) {
-
     super("sockjs", httpKernel.container, httpKernel.notificationsCenter);
-
     this.compilers = {};
     this.sockets = [];
     this.kernel.once("onBoot", () => {
+      this.settings = nodefony.extend(this.bundle.settings.sockjs, kernel.settings.system.devServer);
       if (this.bundle.settings.sockjs) {
         this.clientOverlay = this.bundle.settings.sockjs.overlay || false;
         this.hot = this.bundle.settings.sockjs.hot || false;
+        this.hotOnly = this.bundle.settings.sockjs.hotOnly || false;
         this.progress = this.bundle.settings.sockjs.progress || false;
         this.clientLogLevel = this.bundle.settings.sockjs.logLevel || "none";
         this.websocket = this.bundle.settings.sockjs.websocket;
         this.protocol = this.bundle.settings.sockjs.protocol.toLowerCase();
-        this.hostname = this.bundle.settings.sockjs.hostname;
-        this.port = this.bundle.settings.sockjs.port;
         this.setPrefix(this.bundle.settings.sockjs.prefix || defaultPrefix);
       }
     });
-
     if (this.kernel.environment === "dev") {
       this.bundle.on('onCreateServer', (type, service) => {
         //this[type] = service ;
@@ -117,9 +124,27 @@ module.exports = class sockjs extends nodefony.Service {
     this.regPrefix = new RegExp('^' + this.prefix + '([/].+|[/]?)$');
   }
 
-  addCompiler(compiler, basename) {
+  addCompiler(compiler, basename, config = {}) {
     this.compilers[basename] = new sockCompiler(this, "SOCKJS_" + basename, compiler);
     this.logger("Add sock-js compiler  : " + "SOCKJS_" + basename, "DEBUG");
+    if (this.compilers[basename].initsockClient) {
+      this.removeListener("onConnection", this.compilers[basename].initsockClient);
+    }
+    this.compilers[basename].initsockClient = (conn /*, server, index*/ ) => {
+      let overlay = config.overlay || this.clientOverlay;
+      if (overlay) {
+        this.sockWrite("overlay", this.clientOverlay, conn);
+      }
+      let hot = (config.hot || config.hotOnly) ||  (this.hot || this.hotOnly);
+      if (hot) {
+        this.sockWrite("hot", null, conn);
+      }
+      let clientLogLevel = (config.clientLogLevel || this.clientLogLevel);
+      if (clientLogLevel) {
+        this.sockWrite("log-level", this.clientLogLevel, conn);
+      }
+    };
+    this.on("onConnection", this.compilers[basename].initsockClient);
     /*if (this.progress) {
       const progressPlugin = new webpack.ProgressPlugin((percent, msg, addInfo) => {
         percent = Math.floor(percent * 100);
@@ -158,12 +183,15 @@ module.exports = class sockjs extends nodefony.Service {
           }
         }
       });
+
       this[protocol].on('connection', (conn) => {
         if (!conn) {
           return;
         }
-        this.fire("onConnection", conn, this[protocol]);
-        this.sockets.push(conn);
+        if (conn.url.indexOf("xhr_streaming") < 0) {
+          let index = this.sockets.push(conn);
+          this.fire("onConnection", conn, this[protocol], index);
+        }
         conn.on("close", () => {
           this.logger(" Close Connection " + this.name, "DEBUG");
           if (this.websocketServer) {
@@ -174,20 +202,20 @@ module.exports = class sockjs extends nodefony.Service {
             this.sockets.splice(connIndex, 1);
           }
         });
-        if (this.clientOverlay) {
+        /*if (this.clientOverlay) {
           this.sockWrite("overlay", this.clientOverlay, conn);
         }
-        if (this.hot) {
+        if (this.hot || this.hotOnly) {
           this.sockWrite("hot", null, conn);
         }
         if (this.clientLogLevel) {
           this.sockWrite("log-level", this.clientLogLevel, conn);
-        }
-        for (var compiler in this.compilers) {
+        }*/
+        /*for (var compiler in this.compilers) {
           if (this.compilers[compiler].stats) {
             //this.compilers[compiler].sendStats(this.compilers[compiler].stats, true, conn);
           }
-        }
+        }*/
       });
       this[protocol].installHandlers(service.server);
       return this[protocol];

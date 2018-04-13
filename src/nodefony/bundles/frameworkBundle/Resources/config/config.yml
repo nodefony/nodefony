@@ -16,16 +16,16 @@ name :				frameworkBundle
 #        views:			true
 #        translations:      true
 #
-watch:                      false
-
+watch                     : false
 
 webpack:
-  cache:                    true
+  cache                   : true
+  outputFileSystem        : "file-system"
   watchOptions:
-    ignoreInitial:          false
-    persistent:             true
-    followSymlinks:         false
-    depth:                  0
-    atomic:                 false
-    alwaysStat:             true
+    ignoreInitial         : false
+    persistent            : true
+    followSymlinks        : false
+    depth                 : 0
+    atomic                : false
+    alwaysStat            : true
     ignorePermissionErrors: true

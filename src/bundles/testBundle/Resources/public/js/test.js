@@ -12,7 +12,6 @@
 require("../css/test.css");
 
 module.exports = function () {
-
   /*
    *	Class
    *
@@ -96,3 +95,15 @@ module.exports = function () {
 
   return new test();
 }();
+
+/*
+ * HMR
+ *
+ */
+if (module.hot) {
+  module.hot.accept((err) => {
+    if (err) {
+      console.error('Cannot apply HMR update.', err);
+    }
+  });
+}

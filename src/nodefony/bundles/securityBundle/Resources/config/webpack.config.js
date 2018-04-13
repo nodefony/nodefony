@@ -1,9 +1,13 @@
 const path = require("path");
 //const webpack = require('webpack');
-const ExtractTextPluginCss = require('extract-text-webpack-plugin');
-const public = path.resolve(__dirname, "..", "public");
-const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
 const webpackMerge = require('webpack-merge');
+const ExtractTextPluginCss = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+const context = path.resolve(__dirname, "..", "public");
+const public = path.resolve(__dirname, "..", "public", "assets");
+const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
+const publicPath = bundleName + "/assets/";
 
 let config = null;
 if (kernel.environment === "dev") {
@@ -13,7 +17,7 @@ if (kernel.environment === "dev") {
 }
 
 module.exports = webpackMerge(config, {
-  context: public,
+  context: context,
   target: "web",
   //watch: false,
   entry: {
@@ -21,7 +25,8 @@ module.exports = webpackMerge(config, {
   },
   output: {
     path: public,
-    filename: "./assets/js/[name].js",
+    publicPath: publicPath,
+    filename: "./js/[name].js",
     library: "[name]",
     libraryTarget: "umd"
   },
@@ -41,9 +46,11 @@ module.exports = webpackMerge(config, {
     }, {
       // CSS EXTRACT
       test: new RegExp("\.css$"),
-      use: ExtractTextPluginCss.extract({
-        use: 'css-loader'
-      })
+      use: [
+        //'css-hot-loader',
+        MiniCssExtractPlugin.loader,
+        'css-loader',
+      ]
     }, {
       // SASS
       test: new RegExp(".scss$"),
@@ -71,16 +78,20 @@ module.exports = webpackMerge(config, {
     }, {
       // FONTS
       test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/assets/fonts/" + '&outputPath=/assets/fonts/',
+      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/assets/fonts/" + '&outputPath=/fonts/',
     }, {
       // IMAGES
       test: new RegExp("\.(jpg|png|gif)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/assets/images/" + '&outputPath=/assets/images/'
+      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/assets/images/" + '&outputPath=/images/'
     }]
   },
   plugins: [
     new ExtractTextPluginCss({
-      filename: "./assets/css/[name].css",
+      filename: "./css/[name].css",
+    }),
+    new MiniCssExtractPlugin({
+      filename: "./css/[name].css",
+      allChunks: true
     })
   ]
 });

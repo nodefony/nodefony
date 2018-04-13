@@ -168,14 +168,15 @@ module.exports = nodefony.register("cliKernel", function () {
     showHelp() {
       return super.showHelp();
     }
+
     logger(pci, severity, msgid, msg) {
       try {
         if (!msgid) {
           msgid = "SERVICE CLI KERNEL";
         }
-        return this.syslog.logger(pci, severity, msgid, msg);
+        return super.logger(pci, severity, msgid, msg);
       } catch (e) {
-        console.log(pci);
+        console.log(e, "\n", pci);
       }
     }
 

@@ -3,7 +3,15 @@
 {% block body %}
 "server":"nodefony",
 "code":404,
-"pdu":{{ error.pdu or null }},
-"url":"{{ error.url }}",
-"message":"{{  error.message or "Not Found"  }}"
+{% if error.pdu %}
+"pdu":{{ error.pdu }},
+{% else %}
+"pdu":null,
+{% endif %}
+"url":"{{error.url }}",
+{% if error.message %}
+"message":"{{error.message }}"
+{% else %}
+"message":"Not Found"
+{% endif %}
 {% endblock %}

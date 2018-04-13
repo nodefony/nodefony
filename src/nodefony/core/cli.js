@@ -28,7 +28,6 @@ module.exports = nodefony.register("cli", function () {
     }
   };
 
-
   const defaultOptions = {
     processName: processName,
     autostart: true,
@@ -307,6 +306,7 @@ module.exports = nodefony.register("cli", function () {
     }
 
     normalizeLog(pdu) {
+      //console.log(pdu)
       let date = new Date(pdu.timeStamp);
       if (pdu.payload === "" || pdu.payload === undefined) {
         console.error(date.toDateString() + " " + date.toLocaleTimeString() + " " + nodefony.Service.logSeverity(pdu.severityName) + " " + green(pdu.msgid) + " " + " : " + "logger message empty !!!!");
@@ -318,7 +318,7 @@ module.exports = nodefony.register("cli", function () {
       case "object":
         switch (true) {
         case (message instanceof Error):
-          message = message;
+          message = message.toString();
           break;
         default:
           message = util.inspect(message);

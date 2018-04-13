@@ -1,13 +1,16 @@
-/*
- *   WEBPACK DEV CONFIGURATION
- */
-const webpackDevClient = "webpack-dev-server/client?https://" + kernel.hostHttps + "/";
+//const webpack = require('webpack');
+//const CleanWebpackPlugin = require('clean-webpack-plugin');
+//const public = path.resolve(__dirname, "..", "..", "public");
 
 module.exports = {
   mode: "development",
   devtool: "source-map",
-  entry: {
-    framework: ["./js/framework.js", webpackDevClient]
-  },
-  plugins: []
+  plugins: [
+    /*new CleanWebpackPlugin(['assets'], {
+      verbose: true,
+      root: public
+    })*/
+    //new webpack.NamedModulesPlugin(),
+    //new webpack.HotModuleReplacementPlugin()
+  ]
 };

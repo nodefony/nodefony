@@ -261,11 +261,11 @@ module.exports = nodefony.register("kernelWatcher", function () {
               this.bundle.watching.close(() => {
                 this.logger("CLOSE OLD WATCHER", "DEBUG", "watcher");
                 this.bundle.clean();
-                let compiler = this.webpackService.loadConfig(this.bundle.webpackConfigFile, this.bundle, true);
                 if (this.sockjs.compilers[this.bundle.bundleName]) {
+                  this.sockjs.compilers[this.bundle.bundleName].clean();
                   delete this.sockjs.compilers[this.bundle.bundleName];
-                  this.sockjs.addCompiler(compiler, this.bundle.bundleNam);
                 }
+                let compiler = this.webpackService.loadConfig(this.bundle.webpackConfigFile, this.bundle, true);
                 compiler.plugin("done", () => {
                   if (this.sockjs) {
                     this.sockjs.sendWatcher("change", file);

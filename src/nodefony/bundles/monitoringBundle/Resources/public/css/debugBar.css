@@ -236,7 +236,7 @@
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 #nodefony-container li {

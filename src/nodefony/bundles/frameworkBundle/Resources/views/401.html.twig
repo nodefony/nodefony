@@ -4,7 +4,7 @@
     <div class="jumbotron bg-danger m-t-xxl">
       {% if error.message %}
         <h1 class="text-shadow m-b-lg">ERROR 401 -
-          {{  error.message or  "Unauthorized" }}</h1>
+          {{  error.message  }}</h1>
       {% else %}
         <h1 class="text-shadow m-b-lg">ERROR 401 - Unauthorized !</h1>
       {% endif %}

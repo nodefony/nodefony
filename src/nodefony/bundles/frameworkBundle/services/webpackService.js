@@ -1,4 +1,5 @@
 const Webpack = require("webpack");
+//const MemoryFS = require("memory-fs");
 
 //https://webpack.js.org/api/node/
 module.exports = class webpack extends nodefony.Service {
@@ -12,10 +13,13 @@ module.exports = class webpack extends nodefony.Service {
       this.socksSettings = this.kernel.getBundle("http").settings.sockjs;
       this.host = this.socksSettings.protocol + "://" + this.socksSettings.hostname + ":" + this.socksSettings.port;
       this.webPackSettings = this.kernel.getBundle("framework").settings.webpack;
+      this.outputFileSystem = this.setFileSystem();
     });
+
     this.version = this.getWebpackVersion();
     this.nbCompiler = 0;
     this.nbCompiled = 0;
+    this.nbWatched = 0;
     this.sockjs = this.get("sockjs");
     if (this.production) {
       try {
@@ -35,6 +39,16 @@ module.exports = class webpack extends nodefony.Service {
           }
         });
       }
+    }
+  }
+
+  setFileSystem() {
+    switch (this.webPackSettings.outputFileSystem) {
+    case "memory-fs":
+      return null;
+      //return new MemoryFS();
+    default:
+      return null;
     }
   }
 
@@ -75,25 +89,50 @@ module.exports = class webpack extends nodefony.Service {
     }
   }
 
-  checkNotEmptyEntry(config) {
-    let size = null;
-    switch (nodefony.typeOf(config.entry)) {
-    case 'object':
-      size = Object.keys(config.entry).length;
-      if (size === 0) {
-        return false;
-      }
+  addDevServerEntrypoints(config, watch) {
+    if (this.production) {
       return true;
-    case "array":
-    case "string":
-      size = config.entry.length;
-      if (size === 0) {
-        return false;
+    }
+    let addEntry = false;
+    if (config.watch === undefined) {
+      addEntry = watch;
+    } else {
+      addEntry = config.watch;
+    }
+    if (addEntry) {
+      let devClient = [];
+      let options = nodefony.extend({
+        inline: this.sockjs.settings.inline,
+        hot: this.sockjs.hot,
+        hotOnly: this.sockjs.hotOnly
+      }, (config.devServer || {}));
+      if (options.inline) {
+        if (options.hotOnly) {
+          devClient.push("webpack/hot/only-dev-server");
+        } else {
+          if (options.hot) {
+            devClient.push("webpack/hot/dev-server");
+          }
+        }
+        devClient.push(`webpack-dev-server/client?${this.sockjs.protocol}://${this.kernel.hostHttps}`);
+        const prependDevClient = (entry) => {
+          switch (nodefony.typeOf(entry)) {
+          case "function":
+            return () => Promise.resolve(entry()).then(prependDevClient);
+          case 'object':
+            const entryClone = {};
+            Object.keys(entry).forEach((key) => {
+              entryClone[key] = devClient.concat(entry[key]);
+            });
+            return entryClone;
+          default:
+            return devClient.concat(entry);
+          }
+        };
+        [].concat(config).forEach((wpOpt) => {
+          wpOpt.entry = prependDevClient(wpOpt.entry);
+        });
       }
-      return true;
-    default:
-      console.trace(config);
-      throw new Error("Webpack Entry configuration  that does not match the API schema");
     }
   }
 
@@ -110,7 +149,7 @@ module.exports = class webpack extends nodefony.Service {
     let publicPath = bundle.publicPath;
     let config = null;
     let basename = bundle.bundleName;
-    let watch = null;
+    let watch = bundle.webpackWatch || false;
     //let compiler = null;
     let watchOptions = {};
     let webpack = this.webpack;
@@ -122,7 +161,7 @@ module.exports = class webpack extends nodefony.Service {
         webpack = require(path.resolve("node_modules", "webpack"));
         config = require(file.path);
         config.context = Path;
-        //if (config.output.path === undefined) {
+        //if (config  .output.path === undefined) {
         config.output.path = path.resolve("Resources", "public", "dist");
         //}
         if (config.output.publicPath === undefined) {
@@ -176,17 +215,19 @@ module.exports = class webpack extends nodefony.Service {
         watchOptions = nodefony.extend({
           ignored: /node_modules/
         }, this.webPackSettings.watchOptions);
-      }
-      config.name = file.name || basename;
-      try {
-        let ret = this.checkNotEmptyEntry(config);
-        if (!ret) {
-          this.logger("Empty entry webpack bundle :  " + bundle.bundleName, "WARNING");
-          return null;
+        try {
+          this.addDevServerEntrypoints(config, watch);
+          /*if (!ret) {
+            this.logger("Empty entry webpack bundle :  " + bundle.bundleName, "WARNING");
+            return null;
+          }*/
+        } catch (e) {
+          shell.cd(this.kernel.rootDir);
+          throw e;
         }
-      } catch (e) {
-        shell.cd(this.kernel.rootDir);
-        throw e;
+      }
+      if (!config.name) {
+        config.name = file.name || basename;
       }
       if (config.cache === undefined) {
         config.cache = this.webPackSettings.cache;
@@ -215,20 +256,26 @@ module.exports = class webpack extends nodefony.Service {
     }
     try {
       // WATCH
-      if (config.watch === undefined) {
-        watch = bundle.webpackWatch;
-        config.watch = watch || false;
-      } else {
-        watch = config.watch;
-      }
       if (this.production) {
         watch = false;
       } else {
+        if (config.watch === undefined) {
+          config.watch = watch;
+        } else {
+          watch = config.watch;
+        }
         if (watch && this.sockjs && bundle.webpackCompiler) {
-          this.sockjs.addCompiler(bundle.webpackCompiler, basename);
+          this.sockjs.addCompiler(bundle.webpackCompiler, basename, config.devServer);
         }
       }
       if (watch) {
+        if (!this.production && this.outputFileSystem) {
+          bundle.webpackCompiler.outputFileSystem = this.outputFileSystem;
+        }
+        if (this.nbWatched > 1) {
+          this.logger("Warning only 1 webpack bundle watcher can be use with nodefony framework !!! ", "WARNING");
+        }
+        this.nbWatched++;
         bundle.watching = null;
         bundle.watching = bundle.webpackCompiler.watch(watchOptions, (err, stats) => {
           if (!err) {
@@ -237,9 +284,11 @@ module.exports = class webpack extends nodefony.Service {
           this.loggerStat(err, stats, basename, file.name, true);
         });
         this.kernel.listen(this, "onTerminate", () => {
-          bundle.watching.close(() => {
-            this.logger("Watching Ended  " + config.context + " : " + util.inspect(config.entry), "INFO");
-          });
+          if (bundle.watching) {
+            bundle.watching.close(() => {
+              this.logger("Watching Ended  " + config.context + " : " + util.inspect(config.entry), "INFO");
+            });
+          }
         });
       } else {
         if ((this.kernel.environment === "dev") && (basename in this.kernel.bundlesCore) && (!this.kernel.isCore)) {

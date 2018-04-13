@@ -6,9 +6,6 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   mode: "production",
-  entry: {
-    framework: "./js/framework.js"
-  },
   plugins: [
     new OptimizeCssAssetsPlugin({
       cssProcessorOptions: {
