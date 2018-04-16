@@ -90,6 +90,7 @@ module.exports = class webpack extends nodefony.Service {
   }
 
   addDevServerEntrypoints(config, watch) {
+    let options = null;
     if (this.production) {
       return true;
     }
@@ -101,7 +102,7 @@ module.exports = class webpack extends nodefony.Service {
     }
     if (addEntry) {
       let devClient = [];
-      let options = nodefony.extend({
+      options = nodefony.extend({
         inline: this.sockjs.settings.inline,
         hot: this.sockjs.hot,
         hotOnly: this.sockjs.hotOnly
@@ -134,6 +135,7 @@ module.exports = class webpack extends nodefony.Service {
         });
       }
     }
+    return options;
   }
 
   loadConfig(file, bundle, reload) {
@@ -150,7 +152,7 @@ module.exports = class webpack extends nodefony.Service {
     let config = null;
     let basename = bundle.bundleName;
     let watch = bundle.webpackWatch || false;
-    //let compiler = null;
+    let devServer = null;
     let watchOptions = {};
     let webpack = this.webpack;
     try {
@@ -216,7 +218,7 @@ module.exports = class webpack extends nodefony.Service {
           ignored: /node_modules/
         }, this.webPackSettings.watchOptions);
         try {
-          this.addDevServerEntrypoints(config, watch);
+          devServer = this.addDevServerEntrypoints(config, watch);
           /*if (!ret) {
             this.logger("Empty entry webpack bundle :  " + bundle.bundleName, "WARNING");
             return null;
@@ -265,7 +267,7 @@ module.exports = class webpack extends nodefony.Service {
           watch = config.watch;
         }
         if (watch && this.sockjs && bundle.webpackCompiler) {
-          this.sockjs.addCompiler(bundle.webpackCompiler, basename, config.devServer);
+          this.sockjs.addCompiler(bundle.webpackCompiler, basename, devServer);
         }
       }
       if (watch) {
