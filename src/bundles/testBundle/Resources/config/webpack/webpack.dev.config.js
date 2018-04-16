@@ -9,7 +9,7 @@ module.exports = {
     new CleanWebpackPlugin(['assets'], {
       verbose: true,
       root: public
-    })
+    }),
     //new webpack.NamedModulesPlugin(),
     //new webpack.HotModuleReplacementPlugin()
   ]

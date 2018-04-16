@@ -59,7 +59,6 @@ module.exports = function () {
       //this.SpeechSynthesisUtterance.onend = function(event) { alert('Finished in ' + event.elapsedTime + ' seconds.'); }
       this.speechSynthesis.speak(this.SpeechSynthesisUtterance);
     }
-
     onresult(event) {
       let final = "";
       let interim = "";

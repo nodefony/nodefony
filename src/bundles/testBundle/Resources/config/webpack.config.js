@@ -44,18 +44,18 @@ module.exports = webpackMerge({
       // CSS EXTRACT
       test: new RegExp("\.css$"),
       use: [
-        'css-hot-loader',
+        //'css-hot-loader',
         MiniCssExtractPlugin.loader,
         'css-loader',
       ]
     }, {
       // FONTS
       test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '/assets/fonts/' + '&outputPath=/assets/fonts/',
+      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '/assets/fonts/' + '&outputPath=/fonts/',
     }, {
       // IMAGES
       test: new RegExp("\.(jpg|png|gif)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '/assets/images/' + '&outputPath=/assets/images/'
+      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '/assets/images/' + '&outputPath=/images/'
     }]
   },
   plugins: [
@@ -66,9 +66,5 @@ module.exports = webpackMerge({
       filename: "./css/[name].css",
       allChunks: true
     })
-  ],
-  devServer: {
-    inline: true,
-    hot: false
-  }
+  ]
 }, config);

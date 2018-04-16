@@ -105,7 +105,8 @@ module.exports = class webpack extends nodefony.Service {
       options = nodefony.extend({
         inline: this.sockjs.settings.inline,
         hot: this.sockjs.hot,
-        hotOnly: this.sockjs.hotOnly
+        hotOnly: this.sockjs.hotOnly,
+        watch: addEntry
       }, (config.devServer || {}));
       if (options.inline) {
         if (options.hotOnly) {

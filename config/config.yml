@@ -34,7 +34,7 @@ system:
     hotOnly                     : false
     overlay                     : true
     logLevel                    : info        # none, error, warning or info
-    progress                    : false       # not implemented
+    progress                    : false
     protocol                    : https
     websocket                   : true
 
