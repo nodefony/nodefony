@@ -16,16 +16,16 @@ Nodefony features :
 - ORM ([Sequelize](http://docs.sequelizejs.com/), [mongoose](http://mongoosejs.com/index.html))
 - Simple Databases connection (mongo, ...)
 - MVC templating ([Twig](https://github.com/twigjs/twig.js))
-- HMR hot module Replacement  (auto-reload controller views routing in developement mode)
 - Notion of real-time context in Action Controller (websocket).
 - Notion of synchronous or asynchronous execution in Action Controller (Promise).
 - Services Containers, Dependency Injection (Design Patterns)
 - Sessions Manager (ORM, memcached)
 - Authentication Manager (Digest, Basic, oAuth, Local, ldap)
-- Firewall ( Application Level )
+- WAF ( Web application firewall )
 - Cross-Origin Resource Sharing ([CORS](https://www.w3.org/TR/cors/))
 - Production Management ([PM2](https://github.com/Unitech/pm2/))
 - RealTime API ([Bayeux Protocol](http://autogrowsystems.github.io/faye-go/))
+- Webpack Assets management (Like WDS with HMR hot module Replacement)
 - Translations
 - CLI (Command Line Interface)
 - Monitororing , Debug Bar
@@ -33,21 +33,22 @@ Nodefony features :
 
 Nodefony assimilates into the ecosystem of node.js with services like :
 - [WEBPACK](https://webpack.js.org/) Module bundler for assets management of application .
+- [SockJS](https://github.com/sockjs) Server ( Like WDS 'Webpack Dev Server' and HMR management )
 - [WATCHER](https://nodejs.org/docs/latest/api/fs.html#fs_fs_watch_filename_options_listener) node.js for auto reload-files in developement mode .
 - [PM2](http://pm2.keymetrics.io/) Production Process Manager for Node.js .
 - [Passport](http://passportjs.org/) Simple, unobtrusive authentication for Node.js .
+- [Angular](https://github.com/angular/angular-cli) Experimental Bundle Generator ( Now an Angular Project can be merge into a Nodefony Bundle )
+- [React](https://github.com/facebookincubator/create-react-app) Experimental Bundle Generator ( Now an React Project can be merge into a Nodefony Bundle )
 
-Nodefony 3  adds the following features :
-- [Angular](https://github.com/angular/angular-cli) Bundle Generator ( Now an Angular Project can be merge into a Nodefony Bundle )
-- [React](https://github.com/facebookincubator/create-react-app) Bundle Generator ( Now an React Project can be merge into a Nodefony Bundle )
-- [SockJS](https://github.com/sockjs) Server ( Like WDS 'Webpack Dev Server' and HMR management )
+Nodefony 4  adds the following features :
+
 - ~~[Electron](https://github.com/nodefony/nodefony-electron) Experimental Nodefony Electron  ( Now an Electron Context can be use in Nodefony Project  )~~
 
-Now in this version  3 Beta,  Nodefony is evolved to a stable version without major fundamental changes.
+Now in this version  4 Beta,  Nodefony is evolved to a stable version without major fundamental changes.
 
 Evolution priorities up to the stable version will focus on robustness, unit testing, documentation and security.
 
-#### Now nodefony is ported with ECMAScript 6 ( Class, Inheritance ).
+#### Nodefony is ported with ECMAScript 6 ( Class, Inheritance ).
 
 You can follow Nodefony build on travis at **[https://travis-ci.org/nodefony/nodefony](https://travis-ci.org/nodefony/nodefony)**
 
@@ -141,8 +142,8 @@ Access to App with URL : http://localhost:5151
 Open **[./config/config.yml](https://github.com/nodefony/nodefony-core/blob/master/config/config.yml)**  if you want change httpPort, domain ,servers, add bundle, locale ...
 ```yml
 system:
-  domain                        : localhost                             # nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
-  domainAlias:                                                          # domainAlias string only <<regexp>>   example ".*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$"
+  domain                        : localhost             # nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
+  domainAlias:   # domainAlias string only <<regexp>>   example ".*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$"
     - "^127.0.0.1$"
   httpPort                      : 5151
   httpsPort                     : 5152
@@ -152,23 +153,31 @@ system:
   monitoring                    : true
   documentation                 : true
   unitTest                      : true
+  demo                          : true
   locale                        : "en_en"
-
   servers:
     protocol                    : "2.0"             #  2.0 || 1.1
     http                        : true
-    https	                : true
-    ws			        : true
-    wss			        : true
+    https	                      : true
+    ws			                    : true
+    wss			                    : true
     certificats:
       key                       : "config/certificates/server/privkey.pem"
       cert                      : "config/certificates/server/fullchain.pem"
       ca                        : "config/certificates/ca/nodefony-root-ca.crt.pem"
       options:
-        rejectUnauthorized      : false
-
-  bundles                       :
-    demo                        : "src/bundles/demoBundle"                 
+        rejectUnauthorized      : true
+  devServer:
+    inline                      : true
+    hot                         : false
+    hotOnly                     : false
+    overlay                     : true
+    logLevel                    : info        # none, error, warning or info
+    progress                    : false
+    protocol                    : https
+    websocket                   : true
+  bundles:
+    demo                        : "src/bundles/demoBundle"
 ```
 
 ## <a name="cli"></a>Command Line Interface
@@ -339,10 +348,16 @@ watch:                          true
 You can see helloBundle config webpack : vim  ./src/bundles/helloBundle/Resources/config/webpack.config.js
 ```js
 const path = require("path");
-const public = path.resolve(__dirname, "..", "public");
-const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
-const ExtractTextPluginCss = require('extract-text-webpack-plugin');
+const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
+const ExtractTextPluginCss = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+const context = path.resolve(__dirname, "..", "public");
+const public = path.resolve(__dirname, "..", "public", "assets");
+const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
+const publicPath = bundleName + "/assets/";
+
 let config = null;
 if (kernel.environment === "dev") {
   config = require("./webpack/webpack.dev.config.js");
@@ -351,21 +366,23 @@ if (kernel.environment === "dev") {
 }
 
 module.exports = webpackMerge({
-  context: public,
+  context: context,
   target: "web",
   entry       : {
     hello  : [ "./js/hello.js" ]
   },
   output: {
     path: public,
-    filename: "./assets/js/[name].js",
+    publicPath: publicPath,
+    filename: "./js/[name].js",
     library: "[name]",
     libraryTarget: "umd"
   },
   externals: {},
   resolve: {},
   module: {...}
-});  
+  plugins: [...]
+}, config);
 ```
 
 ### Example controller  : ./src/bundles/helloBundle/controller/defaultController.js

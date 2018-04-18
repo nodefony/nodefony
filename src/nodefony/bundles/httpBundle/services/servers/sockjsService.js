@@ -28,9 +28,8 @@ const sockCompiler = class sockCompiler extends nodefony.Service {
           this.sockWrite("invalid");
         });
         this.compiler.plugin("done", (stats) => {
-          let json = stats.toJson(this.clientStats);
-          this.sendStats(json);
-          this.stats = json;
+          this.stats = stats.toJson(this.clientStats);
+          this.sendStats(this.stats);
         });
       } else {
         this.compiler.hooks.compile.tap('webpack-dev-server', () => {
@@ -40,9 +39,8 @@ const sockCompiler = class sockCompiler extends nodefony.Service {
           this.sockWrite("invalid");
         });
         this.compiler.hooks.done.tap('webpack-dev-server', (stats) => {
-          let json = stats.toJson(this.clientStats);
-          this.sendStats(json);
-          this.stats = json;
+          this.stats = stats.toJson(this.clientStats);
+          this.sendStats(this.stats);
         });
       }
     }
@@ -188,6 +186,7 @@ module.exports = class sockjs extends nodefony.Service {
       }
       if (this.compilers[basename].stats) {
         this.compilers[basename].sendStats(this.compilers[basename].stats, false, conn);
+        this.compilers[basename].stats = null;
       }
       if (progress) {
         this.sockWrite('progress', progress, conn);

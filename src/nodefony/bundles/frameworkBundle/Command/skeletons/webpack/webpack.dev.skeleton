@@ -9,7 +9,7 @@ module.exports = {
   resolve: {},
   plugins: [
     new CleanWebpackPlugin(['assets'], {
-      verbose: true,
+      verbose: kernel.debug,
       root: public
     })
     //new webpack.NamedModulesPlugin(),

@@ -210,7 +210,7 @@ security:
         #         passport-ldapauth:
         #           provider:                       false
         #           server:
-        #             url:                          'ldap://ldad-server.com'
+        #             url:                          'ldap://ldad-server.  com'
         #             searchBase:                   'dc=nodefony,dc=com'
         #             searchFilter:                 '(uid={{username}})'
         #           usernameField:                  'username'

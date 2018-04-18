@@ -6,7 +6,7 @@ module.exports = {
   devtool: "source-map",
   plugins: [
     new CleanWebpackPlugin(['assets'], {
-      verbose: true,
+      verbose: kernel.debug,
       root: public
     })
     //new webpack.NamedModulesPlugin(),
