@@ -169,7 +169,6 @@ module.exports = class httpsServer extends nodefony.Service {
 
     // LISTEN ON PORT
     this.server.listen(this.port, this.domain, () => {
-
       this.ready = true;
       this.bundle.fire("onServersReady", this.type, this);
     });

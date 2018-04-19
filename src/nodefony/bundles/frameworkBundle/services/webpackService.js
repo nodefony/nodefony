@@ -89,10 +89,12 @@ module.exports = class webpack extends nodefony.Service {
     }
   }
 
-  addDevServerEntrypoints(config, watch) {
-    let options = null;
+  setDevServer(config, watch) {
+    let options = {
+      watch: false
+    };
     if (this.production) {
-      return true;
+      return options;
     }
     let addEntry = false;
     if (config.watch === undefined) {
@@ -101,13 +103,20 @@ module.exports = class webpack extends nodefony.Service {
       addEntry = config.watch;
     }
     if (addEntry) {
-      let devClient = [];
       options = nodefony.extend({
         inline: this.sockjs.settings.inline,
         hot: this.sockjs.hot,
         hotOnly: this.sockjs.hotOnly,
         watch: addEntry
       }, (config.devServer || {}));
+    }
+    return options;
+  }
+
+  addDevServerEntrypoints(config, watch) {
+    let options = this.setDevServer(config, watch);
+    if (options.watch) {
+      let devClient = [];
       if (options.inline) {
         if (options.hotOnly) {
           devClient.push("webpack/hot/only-dev-server");
@@ -175,8 +184,6 @@ module.exports = class webpack extends nodefony.Service {
           }
         }
         if (!this.production) {
-          //config.entry.hmr = ["webpack-dev-server/client?" + this.host + "/"]
-          config.entry.main.unshift("webpack-dev-server/client?" + this.host + "/");
           watchOptions = {
             ignoreInitial: false,
             persistent: true,
@@ -218,17 +225,15 @@ module.exports = class webpack extends nodefony.Service {
         watchOptions = nodefony.extend({
           ignored: /node_modules/
         }, this.webPackSettings.watchOptions);
-        try {
-          devServer = this.addDevServerEntrypoints(config, watch);
-          /*if (!ret) {
-            this.logger("Empty entry webpack bundle :  " + bundle.bundleName, "WARNING");
-            return null;
-          }*/
-        } catch (e) {
-          shell.cd(this.kernel.rootDir);
-          throw e;
-        }
       }
+
+      try {
+        devServer = this.addDevServerEntrypoints(config, watch);
+      } catch (e) {
+        shell.cd(this.kernel.rootDir);
+        throw e;
+      }
+
       if (!config.name) {
         config.name = file.name || basename;
       }

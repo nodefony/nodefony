@@ -318,7 +318,8 @@ module.exports = nodefony.register("cli", function () {
       case "object":
         switch (true) {
         case (message instanceof Error):
-          message = message.toString();
+          message = `${clc.red("MESSAGE :")} ${message}
+          ${clc.green("STACK :")} ${message.stack}`;
           break;
         default:
           message = util.inspect(message);
