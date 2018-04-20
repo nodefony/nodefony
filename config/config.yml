@@ -6,7 +6,6 @@ system:
   domain                        : localhost             # nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
   domainAlias:   # domainAlias string only <<regexp>>   example ".*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$"
     - "^127.0.0.1$"
-    - "^nodefony\\.com$"
   httpPort                      : 5151
   httpsPort                     : 5152
   statics                       : true

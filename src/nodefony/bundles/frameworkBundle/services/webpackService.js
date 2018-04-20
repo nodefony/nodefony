@@ -240,6 +240,7 @@ module.exports = class webpack extends nodefony.Service {
       if (config.cache === undefined) {
         config.cache = this.webPackSettings.cache;
       }
+      bundle.webPackConfig = config;
       bundle.webpackCompiler = webpack(config);
       this.nbCompiler++;
       if (this.kernel.type === "CONSOLE") {

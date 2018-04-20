@@ -12,10 +12,15 @@
       <div class="details">
         <ul>
           <li>
+            <label style="color:#0167b8">NODEFONY</label>
+            <span class="label-nodefony label-success">{{kernelSettings.version}}</span>
+          </li>
+          <li class="separator"></li>
+          <li>
             <label style="color:#999">CONFIG</label>
           </li>
           {% for key, value in kernelSettings %}
-            {% if (key != "system") and (key != "servers") %}
+            {% if (key != "system") and (key != "servers") and (key != "devServer") and (key != "version") and (key != "name")%}
               <li>
                 <label>{{ key | capitalize }}</label>
                 <span class="label-nodefony label-success">{{value}}</span>
@@ -36,7 +41,7 @@
             <label style="color:#999">CONFIG SYSTEM</label>
           </li>
           {% for key, value in kernelSettings.system %}
-            {% if key != "log" %}
+            {% if (key != "log") and (key != "devServer") %}
               <li>
                 <label>{{ key | capitalize }}</label>
                 <span class="label-nodefony label-success">{{value}}</span>
@@ -48,6 +53,16 @@
             <label style="color:#999">SERVERS</label>
           </li>
           {% for key, value in kernelSettings.servers %}
+            <li>
+              <label>{{ key  }}</label>
+              <span class="label-nodefony label-success">{{value}}</span>
+            </li>
+          {% endfor %}
+          <li class="separator"></li>
+          <li>
+            <label style="color:#999">DEV SERVERS</label>
+          </li>
+          {% for key, value in kernelSettings.system.devServer %}
             <li>
               <label>{{ key  }}</label>
               <span class="label-nodefony label-success">{{value}}</span>

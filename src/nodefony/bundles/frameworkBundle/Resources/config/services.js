@@ -15,4 +15,9 @@ module.exports = {
     class: nodefony.services.webpack,
     arguments: ["@container", "@kernel"]
   }
+  /*,
+    wds: {
+      class: nodefony.services.webpackDevServer,
+      arguments: ["@container"]
+    }*/
 };

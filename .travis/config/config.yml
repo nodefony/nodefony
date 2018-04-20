@@ -43,11 +43,22 @@ watch:                           true
 #
 #
 monitoringBundle:
-  debugBar:                      true
-  forceDebugBarProd:             true
-  storage:
-    active:                      true
-    requests:                    orm
+  debugBar                    :  true
+  forceDebugBarProd           :  false
+  profiler:
+    active                    :  false
+    storage                   :  orm
+
+##################################
+#  OVERRIDE FRAMEWORK Bundle
+#
+#    see FRAMEWORK BUNDLE config for more options
+#
+#
+frameworkBundle:
+  webpack:
+    cache                   :    true
+    outputFileSystem        :    file-system    # memory-fs not implemented yet
 
 ##################################
 #  OVERRIDE  BUNDLE SEQUELIZE
@@ -113,11 +124,8 @@ httpBundle:
     responseTimeout:             40000
   https:
     responseTimeout:             40000
-  sockjs:
-      overlay:                   true
-      hot:                       true
-      protocol:                  https
-      websocket:                 true
+  http2:
+    enablePush                :  true
   statics:
     defaultOptions:
       cacheControl :             true

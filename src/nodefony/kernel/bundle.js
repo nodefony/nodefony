@@ -218,30 +218,32 @@ module.exports = nodefony.register("Bundle", function () {
 
       // router
       this.router = this.get("router");
-      this.kernel.on("onBoot", () => {
+      this.kernel.once("onBoot", () => {
         // WATCHERS
         if (this.kernel.environment === "dev" && this.settings.watch && this.kernel.type !== "CONSOLE") {
           this.initWatchers();
         }
-        // WEBPACK SERVICE
-        this.webpackService = this.get("webpack");
-        this.webpackCompiler = null;
-        this.watching = null;
-        if (this.kernel.type !== "CONSOLE" || (process.argv[2] && process.argv[2] === "webpack:dump")) {
-          try {
-            this.kernel.on("onReady", () => {
-              this.initWebpack();
-            });
-          } catch (e) {
-            this.logger(e, "ERROR");
-            throw e;
-          }
-        }
       });
+      // WEBPACK SERVICE
+      this.webpackService = this.get("webpack");
+      this.webpackCompiler = null;
+      this.watching = null;
+      if (this.kernel.type !== "CONSOLE" || (process.argv[2] && process.argv[2] === "webpack:dump")) {
+        try {
+          this.kernel.once("onReady", () => {
+            this.initWebpack();
+          });
+        } catch (e) {
+          this.logger(e, "ERROR");
+          throw e;
+        }
+      }
       this.fire("onRegister", this);
     }
 
     clean() {
+      this.webPackConfig = null;
+      delete this.webPackConfig;
       this.webpackCompiler = null;
       delete this.webpackCompiler;
       this.watching = null;
@@ -254,6 +256,8 @@ module.exports = nodefony.register("Bundle", function () {
         this.on("onWebpackDone", (compiler, reload) => {
           if (this.kernel.environment === "prod" || reload || !this.watching) {
             this.logger(`MEMORY clean webpack compile bundle : ${this.name}`, "INFO");
+            this.webPackConfig = null;
+            delete this.webPackConfig;
             this.webpackCompiler = null;
             delete this.webpackCompiler;
           }
