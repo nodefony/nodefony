@@ -496,36 +496,15 @@ module.exports = nodefony.register("controller", function () {
     }
 
     createNotFoundException(message) {
-      if (message instanceof Error) {
-        message.code = 404;
-        this.fire("onError", this.container, message);
-        return;
-      }
-      let error = new Error(message);
-      error.code = 404;
-      this.fire("onError", this.container, error);
+      throw new nodefony.httpError(message, 404, this.container);
     }
 
     createUnauthorizedException(message) {
-      if (message instanceof Error) {
-        message.code = 401;
-        this.fire("onError", this.container, message);
-        return;
-      }
-      let error = new Error(message);
-      error.code = 401;
-      this.fire("onError", this.container, error);
+      throw new nodefony.httpError(message, 401, this.container);
     }
 
     createException(message) {
-      if (message instanceof Error) {
-        message.code = 500;
-        this.fire("onError", this.container, message);
-        return;
-      }
-      let error = new Error(message);
-      error.code = 500;
-      this.fire("onError", this.container, error);
+      throw new nodefony.httpError(message, 500, this.container);
     }
 
     redirect(url, status, headers) {

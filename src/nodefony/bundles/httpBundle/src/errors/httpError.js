@@ -1,26 +1,27 @@
 module.exports = nodefony.register("httpError", function () {
 
-  class httpError extends Error {
+  class httpError extends nodefony.Error {
 
     constructor(message, code, container) {
       super(message);
       this.container = container;
       this.context = null;
-      this.code = code || null;
       this.bundle = "undefined";
       this.controller = "undefined";
       this.action = "undefined";
       this.url = "undefined";
       this.xjson = null;
       this.resolver = null;
+      if (code) {
+        this.code = code;
+      }
       if (message) {
         this.parseMessage(message);
-      } else {
-        this.message = "Internal Server Error";
       }
       if (this.container) {
         this.parserContainer();
       }
+
     }
 
     logger(data) {
@@ -28,9 +29,9 @@ module.exports = nodefony.register("httpError", function () {
         if (data) {
           return this.context.logger.apply(this.context, arguments);
         }
-        return this.context.logger(this, "ERROR", `${clc.magenta(this.code)} ${clc.red(this.method)}`);
+        return this.context.logger(this.toString(), "ERROR", `${clc.magenta(this.code)} ${clc.red(this.method)}`);
       }
-      return console.log(this.toString());
+      return super.logger(data);
     }
 
     parserContainer() {
@@ -52,6 +53,9 @@ module.exports = nodefony.register("httpError", function () {
           this.context.setXjson(this.xjson);
         }
         if (this.context.response) {
+          if (this.message === "null") {
+            this.message = "Internal Server Error";
+          }
           let st = this.context.response.setStatusCode(this.code, this.message);
           this.code = st.code;
           this.message = st.message;

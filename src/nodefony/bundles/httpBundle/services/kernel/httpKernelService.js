@@ -292,7 +292,11 @@ module.exports = class httpKernel extends nodefony.Service {
     let httpError = null;
     let result = null;
     try {
-      httpError = new nodefony.httpError(error, null, container);
+      if (error instanceof nodefony.httpError) {
+        httpError = error;
+      } else {
+        httpError = new nodefony.httpError(error, null, container);
+      }
       context = httpError.context;
       context.resolver = httpError.resolver;
       if (context.method === "WEBSOCKET" &&

@@ -54,8 +54,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.validDomain = this.isValidDomain();
       this.remoteAddress = this.request.remoteAddress;
       this.once("onTimeout", () => {
-        let error = new Error("Request Timeout");
-        error.code = 408;
+        let error = new nodefony.httpError("Request Timeout", 408, this.container);
         this.fire("onError", this.container, error);
       });
       //case proxy

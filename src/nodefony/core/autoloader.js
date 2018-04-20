@@ -56,6 +56,7 @@ module.exports = function () {
       this.columnOffset = 10;
       this.dirname = path.resolve(__dirname, "..");
       try {
+        this.load(path.resolve(this.dirname, "core", "error.js"));
         this.load(path.resolve(this.dirname, "core", "container.js"));
         this.load(path.resolve(this.dirname, "core", "notificationsCenter.js"));
         this.load(path.resolve(this.dirname, "core", "syslog.js"));

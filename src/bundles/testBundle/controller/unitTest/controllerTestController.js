@@ -615,7 +615,8 @@ module.exports = class controllerTestController extends nodefony.controller {
       return this.createNotFoundException("My not found Exception");
     case "408":
       this.getResponse().setStatusCode(408);
-      return this.notificationsCenter.fire("onError", this.container, "My Timeout Exception");
+      throw new Error("My Timeout Exception");
+      //return this.notificationsCenter.fire("onError", this.container, "My Timeout Exception");
     case "error":
       varNotExit.defined.value;
       break;
