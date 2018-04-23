@@ -500,7 +500,7 @@ module.exports = nodefony.register("controller", function () {
     }
 
     createUnauthorizedException(message) {
-      throw new nodefony.httpError(message, 401, this.container);
+      throw new nodefony.securityError(message, 401, null, this.context);
     }
 
     createException(message) {

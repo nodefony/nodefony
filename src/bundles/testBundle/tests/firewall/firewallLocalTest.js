@@ -125,7 +125,7 @@ describe("BUNDLE TEST", function () {
         assert.deepStrictEqual(body, "");
         assert.deepStrictEqual(response.headers.location, "/login/test-local-area");
         assert.deepStrictEqual(response.statusCode, 302);
-        assert.deepStrictEqual(response.statusMessage, 'Unauthorized');
+        assert.deepStrictEqual(response.statusMessage, 'Missing credentials');
         let session = response.headers["set-cookie"][0];
         assert(session);
         done();
@@ -168,7 +168,7 @@ describe("BUNDLE TEST", function () {
           throw error;
         }
         assert.deepStrictEqual(response.statusCode, 401);
-        assert.deepStrictEqual(response.statusMessage, 'Unauthorized');
+        assert.deepStrictEqual(response.statusMessage, 'No Auth Token');
         //let session = response.headers["set-cookie"][0];
         //assert(session);
         done();

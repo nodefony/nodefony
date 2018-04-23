@@ -292,27 +292,28 @@ module.exports = class httpKernel extends nodefony.Service {
     let httpError = null;
     let result = null;
     try {
-      if (error instanceof nodefony.httpError) {
+      switch (true) {
+      case (error instanceof nodefony.securityError):
+      case (error instanceof nodefony.httpError):
         httpError = error;
-      } else {
+        break;
+      default:
         httpError = new nodefony.httpError(error, null, container);
       }
       context = httpError.context;
       context.resolver = httpError.resolver;
+      httpError.logger();
       if (context.method === "WEBSOCKET" &&
         context.response &&
         !context.response.connection) {
         context.request.reject(httpError.code ? httpError.code : null, httpError.message);
-        httpError.logger();
         context.fire("onFinish", context);
         return context;
       }
       if (!context.response) {
-        httpError.logger();
         context.fire("onFinish", context);
         return httpError.resolver;
       }
-      httpError.logger();
       result = httpError.resolver.callController(httpError);
       context.fire("onRequest", context, httpError.resolver);
       this.kernel.fire("onRequest", context, httpError.resolver);
@@ -327,7 +328,7 @@ module.exports = class httpKernel extends nodefony.Service {
       return result;
     } catch (e) {
       if (httpError) {
-        httpError.logger(e);
+        httpError.logger(e, "ERROR");
       } else {
         this.logger(e, "ERROR");
       }

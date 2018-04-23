@@ -19,7 +19,7 @@ module.exports = class loginController extends nodefony.controller {
 
   jwtAction() {
     if (!this.context.token) {
-      return this.createUnauthorizedException();
+      return this.createUnauthorizedException("No Auth Token");
     }
     let factory = this.firewall.getFactory("jwt");
     const jeton = factory.generateJwtToken(this.context.token.serialize(), {

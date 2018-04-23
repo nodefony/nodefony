@@ -20,7 +20,8 @@ module.exports = nodefony.register('passeportFactory', () => {
             session: false,
           })(context, (error, token) => {
             if (error) {
-              if (error instanceof Error) {
+              return reject(error);
+              /*if (error instanceof Error) {
                 return reject(error);
               }
               let err = null;
@@ -35,7 +36,7 @@ module.exports = nodefony.register('passeportFactory', () => {
                 return reject(err);
               }
               err = new Error(error);
-              return reject(err);
+              return reject(err);*/
             }
             if (token) {
               token.setAuthenticated(true);

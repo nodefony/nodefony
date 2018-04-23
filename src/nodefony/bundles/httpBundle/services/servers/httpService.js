@@ -65,19 +65,21 @@ module.exports = class httpServer extends nodefony.Service {
     });
 
     this.server.on("error", (error) => {
-      let httpError = this.type + "server Error : " + error.errno;
+      let myError = new nodefony.Error(error);
       switch (error.errno) {
       case "ENOTFOUND":
-        this.logger(new Error(httpError + " CHECK DOMAIN IN /etc/hosts unable to connect to : " + this.domain), "CRITIC");
+        this.logger("CHECK DOMAIN IN /etc/hosts or config unable to connect to : " + this.domain, "ERROR");
+        this.logger(myError, "CRITIC");
         break;
       case "EADDRINUSE":
-        this.logger(new Error("Domain : " + this.domain + " Port : " + this.port + " ==> " + error), "CRITIC");
+        this.logger("Domain : " + this.domain + " Port : " + this.port + " ==> ALREADY USE ", "ERROR");
+        this.logger(myError, "CRITIC");
         setTimeout(() => {
           this.server.close();
         }, 1000);
         break;
       default:
-        this.logger(new Error(httpError), "CRITIC");
+        this.logger(myError, "CRITIC");
       }
     });
 

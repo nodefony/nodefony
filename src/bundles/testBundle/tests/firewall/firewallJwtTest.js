@@ -149,7 +149,7 @@ describe("BUNDLE TEST", function () {
         assert.deepStrictEqual(body, "");
         assert.deepStrictEqual(response.headers.location, "/test/firewall/local");
         assert.deepStrictEqual(response.statusCode, 302);
-        assert.deepStrictEqual(response.statusMessage, 'Unauthorized');
+        assert.deepStrictEqual(response.statusMessage, 'No auth token');
         done();
       });
     });

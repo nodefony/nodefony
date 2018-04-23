@@ -77,13 +77,23 @@ module.exports = nodefony.register("SecuredArea", function () {
     }
 
     handleError(context, e) {
-      let error = null;
+      let securityError = null;
+      switch (true) {
+      case (e instanceof nodefony.securityError):
+        securityError = e;
+        break;
+      default:
+        securityError = new nodefony.securityError(e, null, this, context);
+      }
+      if (!securityError.code) {
+        securityError.code = 401;
+      }
+      this.logger(securityError, "ERROR");
       switch (context.type) {
       case "HTTP":
       case "HTTPS":
       case "HTTP2":
         if (this.formLogin) {
-          this.logger(e, "ERROR");
           if (e && e.status) {
             context.response.setStatusCode(e.code, e.message);
           } else {
@@ -107,40 +117,26 @@ module.exports = nodefony.register("SecuredArea", function () {
           try {
             //context.resolver = this.overrideURL(context, this.formLogin);
             if (context.session) {
-              context.session.setFlashBag("error", e.toString());
+              context.session.setFlashBag("error", securityError.toString());
             }
             if (!context.isJson) {
               return this.redirect(context, this.formLogin);
             } else {
-              if (e instanceof Error) {
-                if (!e.code) {
-                  e.code = 401;
-                }
-                return e;
-              }
-              error = new Error(e.message || "");
-              error.code = e.status ||  401;
-              return error;
+              return securityError;
             }
           } catch (e) {
-            error = new Error(e);
-            error.code =  500;
-            return error;
+            return new nodefony.securityError(e, 500, this, context);
           }
         } else {
-          this.logger(e, "ERROR");
           if (context.session) {
-            context.session.setFlashBag("error", e.toString());
+            context.session.setFlashBag("error", securityError.toString());
           }
-          return e;
+          return securityError;
         }
         break;
       case "WEBSOCKET":
       case "WEBSOCKET SECURE":
-        this.logger(e, "ERROR");
-        error = new Error(e.message || e);
-        error.code = e.status ||  401;
-        return error;
+        return securityError;
       }
     }
 
