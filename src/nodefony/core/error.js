@@ -40,12 +40,24 @@ module.exports = nodefony.register("Error", function () {
           this.stack = error.stack;
           return "SystemError";
         }
+        if (error.bytesParsed) {
+          this.bytesParsed = error.bytesParsed;
+          this.rawPacket = error.rawPacket;
+          return "ClientError";
+        }
       }
       return this.errorType;
     }
 
     toString() {
       switch (this.errorType) {
+      case "Error":
+        return `
+          ${clc.blue("Name :")} ${this.name}
+          ${clc.blue("Type :")} ${this.errorType}
+          ${clc.red("Code :")} ${this.code}
+          ${clc.red("Message :")} ${this.message}
+          ${clc.green("Stack :")} ${this.stack}`;
       case "httpError":
         return `${clc.red(this.message)}
         ${clc.blue("Name :")} ${this.name}
@@ -66,13 +78,6 @@ module.exports = nodefony.register("Error", function () {
         ${clc.blue("Address :")} ${this.address}
         ${clc.blue("Port :")} ${this.port}
         ${clc.green("Stack :")} ${this.stack}`;
-      case "Error":
-        return `
-        ${clc.blue("Name :")} ${this.name}
-        ${clc.blue("Type :")} ${this.errorType}
-        ${clc.red("Code :")} ${this.code}
-        ${clc.red("Message :")} ${this.message}
-        ${clc.green("Stack :")} ${this.stack}`;
       case "AssertionError":
         return `
         ${clc.blue("Name :")} ${this.name}
@@ -83,6 +88,15 @@ module.exports = nodefony.register("Error", function () {
         ${clc.white("Expected :")} ${this.expected}
         ${clc.white("Operator :")} ${this.operator}
         ${clc.green("Stack :")} ${this.stack}`;
+      case "ClientError":
+        return `
+            ${clc.blue("Name :")} ${this.name}
+            ${clc.blue("Type :")} ${this.errorType}
+            ${clc.red("Code :")} ${this.code}
+            ${clc.red("Message :")} ${this.message}
+            ${clc.white("BytesParsed :")} ${this.bytesParsed}
+            ${clc.white("RawPacket :")} ${this.rawPacket}
+            ${clc.green("Stack :")} ${this.stack}`;
       default:
         return `
         ${clc.blue("Name :")} ${this.name}
