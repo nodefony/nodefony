@@ -5,6 +5,14 @@ module.exports = nodefony.register('passeportFactory', () => {
     constructor(name, security, settings) {
       super(name, security, settings);
       this.passport = security.firewall.passport;
+      if (this.name in this.passport._strategies) {
+        this.logger(`Passport Strategy ${this.name} Already Defined in firewall !!!
+        ${clc.green( "Only one Factory with passport strategy type must be use in firewall config")}
+        Secure Area  : ${clc.blue(security.name)}
+        Factory  : ${clc.blue(this.name)}
+        Settings : ${clc.blue(util.inspect(this.settings))}
+        `, "WARNING");
+      }
       this.strategy = this.getStrategy(this.settings);
       this.passport.use(this.strategy);
     }
