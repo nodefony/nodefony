@@ -131,6 +131,7 @@ module.exports = class security extends nodefony.Service {
     // listen KERNEL EVENTS
     this.once("onPreBoot", () => {
       this.sessionService = this.get("sessions");
+      this.authorizationService = this.get("authorization");
       this.orm = this.get(this.kernel.settings.orm);
     });
     this.once("onPostRegister", () => {
@@ -201,6 +202,11 @@ module.exports = class security extends nodefony.Service {
   isSecure(context) {
     if (context.resolver && context.resolver.bypassFirewall) {
       return false;
+    }
+    context.accessControl = this.authorizationService.isControlledAccess(context);
+    context.isControlledAccess = (!!context.accessControl.length);
+    if (context.isControlledAccess) {
+      this.logger(`Front Controler isControlledAccess : ${context.isControlledAccess}`, "DEBUG");
     }
     for (let area in this.securedAreas) {
       if (this.securedAreas[area].match(context)) {
@@ -321,14 +327,18 @@ module.exports = class security extends nodefony.Service {
             return resolve(context.security.redirectHttps(context));
           }
         }
-        if (context.security.stateLess) {
+        if (context.security && context.security.stateLess) {
           if (context.sessionAutoStart) {
             context.sessionAutoStart = context.security.sessionContext;
             return this.sessionService.start(context, context.sessionAutoStart)
               .then((session) => {
                 return this.handleStateLess(context)
                   .then((ctx) => {
-                    return resolve(ctx);
+                    if (ctx.isControlledAccess) {
+                      return resolve(this.authorizationService.handle(ctx));
+                    } else {
+                      return resolve(ctx);
+                    }
                   })
                   .catch((error) => {
                     if (!error.code) {
@@ -347,7 +357,11 @@ module.exports = class security extends nodefony.Service {
           }
           return this.handleStateLess(context)
             .then((ctx) => {
-              return resolve(ctx);
+              if (ctx.isControlledAccess) {
+                return resolve(this.authorizationService.handle(ctx));
+              } else {
+                return resolve(ctx);
+              }
             })
             .catch((error) => {
               if (!error.code) {
@@ -356,10 +370,16 @@ module.exports = class security extends nodefony.Service {
               return reject(error);
             });
         }
-        context.sessionAutoStart = context.security.sessionContext;
+        if (context.security) {
+          context.sessionAutoStart = context.security.sessionContext;
+        }
         return this.handleStateFull(context)
           .then((ctx) => {
-            return resolve(ctx);
+            if (ctx.isControlledAccess) {
+              return resolve(this.authorizationService.handle(ctx));
+            } else {
+              return resolve(ctx);
+            }
           })
           .catch((error) => {
             if (!error.code) {
@@ -389,13 +409,16 @@ module.exports = class security extends nodefony.Service {
             return context;
           } else {
             if (context.method === "WEBSOCKET") {
-              if (context.security.factories.length && !context.security.anonymous) {
+              if (context.security && context.security.factories.length && !context.security.anonymous) {
                 let error = new Error("Unauthorized");
                 error.code = 401;
                 throw error;
               }
             }
-            return this.handleStateLess(context);
+            if (context.security) {
+              return this.handleStateLess(context);
+            }
+            return context;
           }
         } catch (error) {
           if (!error.code) {
@@ -490,6 +513,7 @@ module.exports = class security extends nodefony.Service {
         });
         break;
       case "access_control":
+        this.authorizationService.setAccessControl(obj[ele]);
         break;
       case "providers":
         for (let name in obj[ele]) {

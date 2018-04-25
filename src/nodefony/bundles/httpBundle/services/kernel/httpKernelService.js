@@ -445,7 +445,6 @@ module.exports = class httpKernel extends nodefony.Service {
         return context;
       }
       controller = this.handleFrontController(context);
-
     } catch (e) {
       context.once('onRequestEnd', () => {
         context.fire("onError", container, e);
@@ -453,7 +452,7 @@ module.exports = class httpKernel extends nodefony.Service {
       });
       return e;
     }
-    if (context.secure) {
+    if (context.secure || context.accessControl) {
       return this.firewall.handleSecurity(context);
     }
     try {
@@ -504,7 +503,7 @@ module.exports = class httpKernel extends nodefony.Service {
       type = null;
     });
     context.once('onConnect', (context) => {
-      if (context.security) {
+      if (context.security || context.accessControl) {
         return this.firewall.handleSecurity(context);
       }
       return context.handle();

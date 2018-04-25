@@ -244,3 +244,10 @@
   float: left;
   line-height: 30px;
 }
+
+#nodefony-container .padlock {
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-image: url("../images/lock-open.svg");
+}

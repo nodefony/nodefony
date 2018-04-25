@@ -303,9 +303,9 @@ module.exports = nodefony.register("finder", function () {
     } catch (e) {
       this.notificationsCenter.fire("onError", e);
       this.errorParse.push(e);
-      console.log(e);
+      //console.log(e);
       //this.notificationsCenter.fire("onFinish",e,null);
-      //throw e ;
+      throw e;
     }
   };
 

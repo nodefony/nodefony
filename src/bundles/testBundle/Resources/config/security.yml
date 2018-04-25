@@ -1,129 +1,26 @@
 # Security
 security:
-    providers:
-      chain_provider:
-        chain:
-          providers:                                [in_memory, nodefony]
-      in_memory:
-        memory:
-          users:
-            anonymous:
-              username:                             "anonymous"
-              roles:                                ["ROLE_ANONYMOUS"]
+  providers:
+    chain_provider:
+      chain:
+        providers:                                [in_memory, nodefony]
+    in_memory:
+      memory:
+        users:
+          anonymous:
+            username:                             "anonymous"
+            roles:                                ["ROLE_ANONYMOUS"]
 
-    firewalls:
-        test-anonymous:
-          provider:                                 nodefony
-          pattern:                                  ^/demo
-          anonymous:                                ~
-        # main
-        test-main-area:
-            pattern:                                ^/test/firewall/anonymous
-            anonymous:                              ~
-            crossDomain:
-                allow-origin:
-                  - "http://mycrossdomain.com:5151"
-                  - "ws://mycrossdomain.com:5151"
-                Access-Control:
-                  Access-Control-Allow-Methods:
-                   - GET
-                  Access-Control-Allow-Headers:
-                    - Authorization
-                    - X-CSRF-Token
-                    - X-Requested-With
-                    - Accept
-                    - Accept-Version
-                    - Content-Length
-                    - Content-MD5
-                    - Content-Type
-                    - Date
-                  Access-Control-Expose-Headers:
-                   - WWW-Authenticate
-                   - X-Json
-                  Access-Control-Allow-Credentials: true
-                  Access-Control-Max-Age:           10
-
-        # passport-basic  BASIC SECURITY AREA
-        test-basic-area:
-            pattern:                                ^/test/firewall/basic
-            provider:                               nodefony
-            form_login:
-              default_target_path:                  /
-              check_path:                           /test/firewall/basic
-            passport-basic:
-              realm:                                "nodefony"
-            logout:                                 /logout
-
-        # passport-digest  DIGEST SECURITY AREA
-        test-digest-area:
-            pattern:                                ^/test/firewall/digest
-            provider:                               nodefony
-            form_login:
-              default_target_path:                  /
-              check_path:                           /test/firewall/digest
-            passport-digest:
-              realm:                                "nodefony"
-            logout:                                 /logout
-
-        # passport-local  LOCAL SECURITY AREA
-        test-local-area:
-            pattern:                                ^/test/firewall/local
-            provider:                               nodefony
-            form_login:
-              default_target_path:                  /
-              login_path:                           /login/test-local-area
-              check_path:                           /test/firewall/local
-            passport-local:
-              usernameField:                        'username'
-              passwordField:                        'passwd'
-            logout:                                 /logout
-            #context:                               local
-            redirectHttps:                          false
-            crossDomain:
-                allow-origin:
-                  - "http://mycrossdomain.com:5151"
-                  - "ws://mycrossdomain.com:5151"
-                Access-Control:
-                  Access-Control-Allow-Methods:
-                   - GET
-                  Access-Control-Allow-Headers:
-                    - Authorization
-                    - X-CSRF-Token
-                    - X-Requested-With
-                    - Accept
-                    - Accept-Version
-                    - Content-Length
-                    - Content-MD5
-                    - Content-Type
-                    - Date
-                  Access-Control-Expose-Headers:
-                   - WWW-Authenticate
-                   - X-Json
-                  Access-Control-Allow-Credentials: true
-                  Access-Control-Max-Age:           10
-
-        # REST API STATELESS
-        test-api-area:
-            pattern:                                ^/test/firewall/api
-            stateless:                              true
-            #provider:                              nodefony
-            redirectHttps:                          true
-            form_login:
-              login_path:                           /test/firewall/local
-            passport-jwt:
-              algorithms:                           "RS256"
-              certificats:
-                private                             : "config/certificates/ca/private/ca.key.pem"
-                public                              : "config/certificates/ca/public/public.key.pem"
-              #secretOrKey:                         "Les sanglots longs Des violons De l’automne Blessent mon cœur D’une langueur Monotone."
-              jwtFromRequest:                       # fromCookie fromHeader
-                extractor:                          "fromCookie"
-                params:
-                  - "jwt"
-        # cors  DEMO SECURITY AREA
-        test-cors-area:
-            pattern:                                ^/test/firewall/cors
-            crossDomain:
+  firewalls:
+      test-anonymous:
+        provider:                                 nodefony
+        pattern:                                  ^/demo
+        anonymous:                                ~
+      # main
+      test-main-area:
+          pattern:                                ^/test/firewall/anonymous
+          anonymous:                              ~
+          crossDomain:
               allow-origin:
                 - "http://mycrossdomain.com:5151"
                 - "ws://mycrossdomain.com:5151"
@@ -143,105 +40,222 @@ security:
                 Access-Control-Expose-Headers:
                  - WWW-Authenticate
                  - X-Json
-                Access-Control-Allow-Credentials:   true
-                Access-Control-Max-Age:             10
+                Access-Control-Allow-Credentials: true
+                Access-Control-Max-Age:           10
 
-        # google_area  DEMO SECURITY AREA
-        #  Management credentials :                 https://console.developers.google.com/apis
-        # google_area:
-        #   pattern:                                ^/auth/google
-        #   provider:                               nodefony
-        #   form_login:
-        #     default_target_path:                  /
-        #     check_path:                           /auth/google
-        #   passport-google-oauth20:
-        #     clientID:                             "clientID"
-        #     clientSecret:                         "clientSecret"
-        #     callbackURL:                          "https://nodefony.net/auth/google/callback"
-        #     scopes:                               ["profile","email"]
-        #   logout:                                 /logout
-        #   context:                                google
-        #   redirectHttps:                          true
-        #   crossDomain:
-        #       allow-origin:
-        #         google:                           accounts.google.com
-        #       Access-Control:
-        #         Access-Control-Allow-Methods:     "GET, POST, PUT, DELETE, OPTIONS"
-        #         Access-Control-Allow-Headers:     "ETag, Authorization,  X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date"
-        #         Access-Control-Allow-Credentials: true
-        #         Access-Control-Expose-Headers:    "WWW-Authenticate ,X-Json"
-        #         Access-Control-Max-Age:           10
+      # passport-basic  BASIC SECURITY AREA
+      test-basic-area:
+          pattern:                                ^/test/firewall/basic
+          provider:                               nodefony
+          form_login:
+            default_target_path:                  /
+            check_path:                           /test/firewall/basic
+          passport-basic:
+            realm:                                "nodefony"
+          logout:                                 /logout
 
-        # passport-github2  DEMO SECURITY AREA
-        #github_area:
-        #    pattern:                               ^/auth/github
-        #    provider:                              nodefony
-        #    form_login:
-        #      default_target_path:                 /
-        #      check_path:                          /auth/github
-        #    passport-github2:
-        #      clientID:                            "clientID"
-        #      clientSecret:                        "clientSecret"
-        #      callbackURL:                         "https://nodefony.com/auth/github/callback"
-        #      scopes:                              [ "user:email" ]
-        #    logout:                                /logout
-        #    context:                               github
-        #    redirectHttps:                         true
-        #    crossDomain:
-        #        allow-origin:
-        #          github:                          github.com
-        #        Access-Control:
-        #          Access-Control-Allow-Methods:    "GET, POST, PUT, DELETE, OPTIONS"
-        #          Access-Control-Allow-Headers:    "ETag, Authorization,  X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date"
-        #          Access-Control-Allow-Credentials: true
-        #          Access-Control-Expose-Headers:   "WWW-Authenticate ,X-Json"
-        #          Access-Control-Max-Age:          10
+      # passport-digest  DIGEST SECURITY AREA
+      test-digest-area:
+          pattern:                                ^/test/firewall/digest
+          provider:                               nodefony
+          form_login:
+            default_target_path:                  /
+            check_path:                           /test/firewall/digest
+          passport-digest:
+            realm:                                "nodefony"
+          logout:                                 /logout
+
+      # passport-local  LOCAL SECURITY AREA
+      test-local-area:
+          pattern:                                ^/test/firewall/local
+          provider:                               nodefony
+          form_login:
+            default_target_path:                  /
+            login_path:                           /login/test-local-area
+            check_path:                           /test/firewall/local
+          passport-local:
+            usernameField:                        'username'
+            passwordField:                        'passwd'
+          logout:                                 /logout
+          #context:                               local
+          redirectHttps:                          false
+          crossDomain:
+              allow-origin:
+                - "http://mycrossdomain.com:5151"
+                - "ws://mycrossdomain.com:5151"
+              Access-Control:
+                Access-Control-Allow-Methods:
+                 - GET
+                Access-Control-Allow-Headers:
+                  - Authorization
+                  - X-CSRF-Token
+                  - X-Requested-With
+                  - Accept
+                  - Accept-Version
+                  - Content-Length
+                  - Content-MD5
+                  - Content-Type
+                  - Date
+                Access-Control-Expose-Headers:
+                 - WWW-Authenticate
+                 - X-Json
+                Access-Control-Allow-Credentials: true
+                Access-Control-Max-Age:           10
+
+      # REST API STATELESS
+      test-api-area:
+          pattern:                                ^/test/firewall/api
+          stateless:                              true
+          #provider:                              nodefony
+          redirectHttps:                          true
+          form_login:
+            login_path:                           /test/firewall/local
+          passport-jwt:
+            algorithms:                           "RS256"
+            certificats:
+              private                             : "config/certificates/ca/private/ca.key.pem"
+              public                              : "config/certificates/ca/public/public.key.pem"
+            #secretOrKey:                         "Les sanglots longs Des violons De l’automne Blessent mon cœur D’une langueur Monotone."
+            jwtFromRequest:                       # fromCookie fromHeader
+              extractor:                          "fromCookie"
+              params:
+                - "jwt"
+      # cors  DEMO SECURITY AREA
+      test-cors-area:
+          pattern:                                ^/test/firewall/cors
+          crossDomain:
+            allow-origin:
+              - "http://mycrossdomain.com:5151"
+              - "ws://mycrossdomain.com:5151"
+            Access-Control:
+              Access-Control-Allow-Methods:
+               - GET
+              Access-Control-Allow-Headers:
+                - Authorization
+                - X-CSRF-Token
+                - X-Requested-With
+                - Accept
+                - Accept-Version
+                - Content-Length
+                - Content-MD5
+                - Content-Type
+                - Date
+              Access-Control-Expose-Headers:
+               - WWW-Authenticate
+               - X-Json
+              Access-Control-Allow-Credentials:   true
+              Access-Control-Max-Age:             10
+
+  access_control:
+    - {
+        path:                                     ^/admin,
+        roles:                                    ROLE_ADMIN
+      }
+    - {
+        path:                                     ^/webAudioApi,
+        roles:                                    ["ROLE_ADMIN","ROLE_USER"]
+      }
+    # - {
+    #     path:                                   ^/demo,
+    #     roles:                                  ["ROLE_ANONYMOUS"]
+    #   }
+
+      # google_area  DEMO SECURITY AREA
+      #  Management credentials :                 https://console.developers.google.com/apis
+      # google_area:
+      #   pattern:                                ^/auth/google
+      #   provider:                               nodefony
+      #   form_login:
+      #     default_target_path:                  /
+      #     check_path:                           /auth/google
+      #   passport-google-oauth20:
+      #     clientID:                             "clientID"
+      #     clientSecret:                         "clientSecret"
+      #     callbackURL:                          "https://nodefony.net/auth/google/callback"
+      #     scopes:                               ["profile","email"]
+      #   logout:                                 /logout
+      #   context:                                google
+      #   redirectHttps:                          true
+      #   crossDomain:
+      #       allow-origin:
+      #         google:                           accounts.google.com
+      #       Access-Control:
+      #         Access-Control-Allow-Methods:     "GET, POST, PUT, DELETE, OPTIONS"
+      #         Access-Control-Allow-Headers:     "ETag, Authorization,  X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date"
+      #         Access-Control-Allow-Credentials: true
+      #         Access-Control-Expose-Headers:    "WWW-Authenticate ,X-Json"
+      #         Access-Control-Max-Age:           10
+
+      # passport-github2  DEMO SECURITY AREA
+      #github_area:
+      #    pattern:                               ^/auth/github
+      #    provider:                              nodefony
+      #    form_login:
+      #      default_target_path:                 /
+      #      check_path:                          /auth/github
+      #    passport-github2:
+      #      clientID:                            "clientID"
+      #      clientSecret:                        "clientSecret"
+      #      callbackURL:                         "https://nodefony.com/auth/github/callback"
+      #      scopes:                              [ "user:email" ]
+      #    logout:                                /logout
+      #    context:                               github
+      #    redirectHttps:                         true
+      #    crossDomain:
+      #        allow-origin:
+      #          github:                          github.com
+      #        Access-Control:
+      #          Access-Control-Allow-Methods:    "GET, POST, PUT, DELETE, OPTIONS"
+      #          Access-Control-Allow-Headers:    "ETag, Authorization,  X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date"
+      #          Access-Control-Allow-Credentials: true
+      #          Access-Control-Expose-Headers:   "WWW-Authenticate ,X-Json"
+      #          Access-Control-Max-Age:          10
 
 
-        # passport-ldapauth  LDAP DEMO SECURITY AREA
-        #   CHECK ./node_modules/.bin/ldapjs-search   -u ldap://ldap-server.com -b "dc=object,dc=com" "uid=user"
-        #
-        #ldap_area:
-        #         pattern:                          ^/
-        #         provider:                         nodefony
-        #         form_login:
-        #           login_path:                     /login/ldap
-        #           check_path:                     /ldap
-        #         passport-ldapauth:
-        #           provider:                       false
-        #           server:
-        #             url:                          'ldap://ldad-server.  com'
-        #             searchBase:                   'dc=nodefony,dc=com'
-        #             searchFilter:                 '(uid={{username}})'
-        #           usernameField:                  'username'
-        #           passwordField:                  'passwd'
-        #           profile_wrapper:
-        #             username:                     "profile.uid"
-        #             name:                         "profile.sn"
-        #             surname:                      "profile.givenName"
-        #             email:                        "profile.mail"
-        #             displayName:                  "profile.cn"
-        #         logout:                           /logout
+      # passport-ldapauth  LDAP DEMO SECURITY AREA
+      #   CHECK ./node_modules/.bin/ldapjs-search   -u ldap://ldap-server.com -b "dc=object,dc=com" "uid=user"
+      #
+      #ldap_area:
+      #         pattern:                          ^/
+      #         provider:                         nodefony
+      #         form_login:
+      #           login_path:                     /login/ldap
+      #           check_path:                     /ldap
+      #         passport-ldapauth:
+      #           provider:                       false
+      #           server:
+      #             url:                          'ldap://ldad-server.  com'
+      #             searchBase:                   'dc=nodefony,dc=com'
+      #             searchFilter:                 '(uid={{username}})'
+      #           usernameField:                  'username'
+      #           passwordField:                  'passwd'
+      #           profile_wrapper:
+      #             username:                     "profile.uid"
+      #             name:                         "profile.sn"
+      #             surname:                      "profile.givenName"
+      #             email:                        "profile.mail"
+      #             displayName:                  "profile.cn"
+      #         logout:                           /logout
 
-        # ldap_area:
-        #   pattern:                                ^/test/firewall/ldap
-        #   provider:                               nodefony
-        #   form_login:
-        #     login_path:                           /login/ldap_area
-        #     check_path:                           /test/firewall/ldap
-        #   #CHECK ./node_modules/.bin/ldapjs-search   -u ldap://ldap-server.com -b "dc=object,dc=com" "uid=user"
-        #   passport-ldap:
-        #     provider:                             false
-        #     server:
-        #       url:                                'ldap://control-server.efixo.com'
-        #       searchBase:                         'dc=efixo,dc=com'
-        #       searchFilter:                       '(uid={{username}})'
-        #     usernameField:                        'username'
-        #     passwordField:                        'passwd'
-        #     profile_wrapper:
-        #       username:                           "profile.uid"
-        #       name:                               "profile.sn"
-        #       surname:                            "profile.givenName"
-        #       email:                              "profile.mail"
-        #       displayName:                        "profile.cn"
-        #   logout:                                 /logout
+      # ldap_area:
+      #   pattern:                                ^/test/firewall/ldap
+      #   provider:                               nodefony
+      #   form_login:
+      #     login_path:                           /login/ldap_area
+      #     check_path:                           /test/firewall/ldap
+      #   #CHECK ./node_modules/.bin/ldapjs-search   -u ldap://ldap-server.com -b "dc=object,dc=com" "uid=user"
+      #   passport-ldap:
+      #     provider:                             false
+      #     server:
+      #       url:                                'ldap://control-server.efixo.com'
+      #       searchBase:                         'dc=efixo,dc=com'
+      #       searchFilter:                       '(uid={{username}})'
+      #     usernameField:                        'username'
+      #     passwordField:                        'passwd'
+      #     profile_wrapper:
+      #       username:                           "profile.uid"
+      #       name:                               "profile.sn"
+      #       surname:                            "profile.givenName"
+      #       email:                              "profile.mail"
+      #       displayName:                        "profile.cn"
+      #   logout:                                 /logout

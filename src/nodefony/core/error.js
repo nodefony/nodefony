@@ -52,7 +52,7 @@ module.exports = nodefony.register("Error", function () {
     toString() {
       switch (this.errorType) {
       case "Error":
-        return `
+        return ` ${clc.red(this.message)}
           ${clc.blue("Name :")} ${this.name}
           ${clc.blue("Type :")} ${this.errorType}
           ${clc.red("Code :")} ${this.code}
@@ -73,13 +73,14 @@ module.exports = nodefony.register("Error", function () {
         return `${clc.red(this.message)}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
+        ${clc.red("Message :")} ${this.message}
         ${clc.red("Ernno :")} ${this.errno}
         ${clc.blue("Syscall :")} ${this.syscall}
         ${clc.blue("Address :")} ${this.address}
         ${clc.blue("Port :")} ${this.port}
         ${clc.green("Stack :")} ${this.stack}`;
       case "AssertionError":
-        return `
+        return ` ${clc.red(this.message)}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.red("Code :")} ${this.code}
@@ -89,7 +90,7 @@ module.exports = nodefony.register("Error", function () {
         ${clc.white("Operator :")} ${this.operator}
         ${clc.green("Stack :")} ${this.stack}`;
       case "ClientError":
-        return `
+        return ` ${clc.red(this.message)}
             ${clc.blue("Name :")} ${this.name}
             ${clc.blue("Type :")} ${this.errorType}
             ${clc.red("Code :")} ${this.code}
@@ -98,7 +99,7 @@ module.exports = nodefony.register("Error", function () {
             ${clc.white("RawPacket :")} ${this.rawPacket}
             ${clc.green("Stack :")} ${this.stack}`;
       default:
-        return `
+        return ` ${clc.red(this.message)}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.red("Message :")} ${this.message}

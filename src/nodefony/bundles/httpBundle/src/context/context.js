@@ -31,6 +31,10 @@ nodefony.register("Context", () => {
       this.isJson = false;
       this.waitAsync = false;
       this.profiler = this.kernelHttp.profiler.active;
+      // Authorisation
+      this.controllAccess = null;
+      this.isControlledAccess = false;
+
     }
 
     logger(pci, severity, msgid, msg) {
@@ -83,6 +87,10 @@ nodefony.register("Context", () => {
       delete this.cookies;
       this.cookieSession = null;
       delete this.cookieSession;
+      this.controllAccess = null;
+      delete this.controllAccess;
+      this.isControlledAccess = null;
+      delete this.isControlledAccess;
       super.clean();
     }
 

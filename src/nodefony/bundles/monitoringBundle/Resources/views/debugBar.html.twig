@@ -546,7 +546,26 @@
         </div>
       {% endif %}
     </li>
-
+    {% if context.isControlledAccess %}
+    <li>
+      <div class="padlock" style="width:20px;height:20px"> </div>
+      <div class="details">
+        <ul>
+          <li>
+            <label style="color:#0167b8">Authorization</label>
+            <li class="separator"></li>
+            {% for key, value in context.accessControl %}
+            <li>
+              <label >
+                {{key|upper}}</label>
+              <label class="label-nodefony label-default">{{value}}</label>
+            </li>
+            {% endfor %}
+          </li>
+        </ul>
+      </div>
+    </li>
+    {% endif %}
     <li class="separator"></li>
 
     <li >@

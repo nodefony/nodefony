@@ -373,6 +373,8 @@ module.exports = nodefony.register("injection", function () {
           } catch (e) {
             throw e;
           }
+        } else {
+          this.logger(new Error(`${lib} class not defined check services configurations`), "WARNING");
         }
       }
     }

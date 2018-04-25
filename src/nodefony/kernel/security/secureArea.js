@@ -117,7 +117,7 @@ module.exports = nodefony.register("SecuredArea", function () {
           try {
             //context.resolver = this.overrideURL(context, this.formLogin);
             if (context.session) {
-              context.session.setFlashBag("error", securityError.toString());
+              context.session.setFlashBag("error", securityError.message);
             }
             if (!context.isJson) {
               return this.redirect(context, this.formLogin);
@@ -129,7 +129,7 @@ module.exports = nodefony.register("SecuredArea", function () {
           }
         } else {
           if (context.session) {
-            context.session.setFlashBag("error", securityError.toString());
+            context.session.setFlashBag("error", securityError.message);
           }
           return securityError;
         }

@@ -137,7 +137,7 @@ module.exports = nodefony.register("kernel", function () {
         this.cacheLink = path.resolve(this.rootDir, "tmp", "assestLink");
         this.cacheWebpack = path.resolve(this.rootDir, "tmp", "webpack");
       } catch (e) {
-        console.trace(e);
+        //console.trace(e);
         throw e;
       }
       this.once("onPostRegister", () => {
@@ -258,8 +258,8 @@ module.exports = nodefony.register("kernel", function () {
           }
         }
       } catch (e) {
-        console.trace(e);
-        this.logger(e, "ERROR");
+        //console.trace(e);
+        //this.logger(e, "ERROR");
         throw e;
       }
     }
@@ -417,8 +417,9 @@ module.exports = nodefony.register("kernel", function () {
           return null;
         }
       } catch (e) {
-        console.trace(e);
-        this.logger(e, "ERROR");
+        //console.trace(e);
+        //this.logger(e, "ERROR");
+        throw e;
       }
     }
 
@@ -449,10 +450,8 @@ module.exports = nodefony.register("kernel", function () {
             if (this.settings.system.servers.wss) {
               this.get("websocketServerSecure").createServer(http2);
             }
-
           } catch (e) {
             this.logger(e, "ERROR");
-            console.error(e);
             throw e;
           }
         });
@@ -606,8 +605,8 @@ module.exports = nodefony.register("kernel", function () {
             try {
               this.bundles[name] = new Class(name, this, this.container);
             } catch (e) {
-              this.logger(e, "ERROR");
-              console.trace(e);
+              //this.logger(e, "ERROR");
+              //console.trace(e);
               throw e;
             }
             if (this.bundles[name].waitBundleReady) {
@@ -661,8 +660,9 @@ module.exports = nodefony.register("kernel", function () {
                     this.loadBundle(file);
                   }
                 } catch (e) {
-                  console.trace(e);
-                  this.logger(e, "ERROR");
+                  //console.trace(e);
+                  //this.logger(e, "ERROR");
+                  throw e;
                 }
               }
             },
@@ -729,7 +729,7 @@ module.exports = nodefony.register("kernel", function () {
               this.bundles[bundle].registerViews(result);
               this.bundles[bundle].registerI18n(null, result);
             } catch (e) {
-              this.logger(e);
+              this.logger(e, "ERROR");
             }
           }
         }
@@ -751,8 +751,8 @@ module.exports = nodefony.register("kernel", function () {
         try {
           this.bundles[name].boot();
         } catch (e) {
-          this.logger("BUNDLE :" + name + " " + e, "ERROR");
-          console.trace(e);
+          this.logger(e, "ERROR");
+          //console.trace(e);
           continue;
         }
       }
@@ -794,7 +794,7 @@ module.exports = nodefony.register("kernel", function () {
               this.logger(name + " CONFIG LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
               this.reader.readConfig(ele.path, this.name, callback);
             } catch (e) {
-              this.logger(util.inspect(e), "ERROR", "BUNDLE " + name + " CONFIG :" + ele.name);
+              this.logger(e, "ERROR", "BUNDLE " + name + " CONFIG :" + ele.path);
             }
             break;
           case /^routing\..*$/.test(ele.name):
@@ -808,7 +808,7 @@ module.exports = nodefony.register("kernel", function () {
                 this.logger(name + " Router service not ready to LOAD FILE :" + ele.path, "WARNING", "SERVICE KERNEL READER");
               }
             } catch (e) {
-              this.logger(util.inspect(e), "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG ROUTING :" + ele.name);
+              this.logger(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG ROUTING :" + ele.path);
             }
             break;
           case /^services\..*$/.test(ele.name):
@@ -816,7 +816,7 @@ module.exports = nodefony.register("kernel", function () {
               this.logger(name + " SERVICE LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
               this.get("injection").reader(ele.path, this.name);
             } catch (e) {
-              this.logger(util.inspect(e), "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG SERVICE :" + ele.name);
+              this.logger(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG SERVICE :" + ele.path);
             }
             break;
           case /^security\..*$/.test(ele.name):
@@ -829,7 +829,7 @@ module.exports = nodefony.register("kernel", function () {
                 this.logger(name + " SECURITY LOAD FILE :" + ele.path + " BUT SERVICE NOT READY", "WARNING");
               }
             } catch (e) {
-              this.logger(util.inspect(e), "ERROR", "BUNDLE " + name + " CONFIG SECURITY :" + ele.name);
+              this.logger(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG SECURITY :" + ele.path);
             }
             break;
           }
@@ -889,7 +889,7 @@ module.exports = nodefony.register("kernel", function () {
         this.fire("onTerminate", this, code);
       } catch (e) {
         this.logger(e, "ERROR");
-        console.trace(e);
+        //console.trace(e);
         code = 1;
       }
       process.nextTick(() => {

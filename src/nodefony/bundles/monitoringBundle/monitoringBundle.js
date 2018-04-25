@@ -486,7 +486,9 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       url: context.url,
       remoteAddress: context.remoteAddress,
       crossDomain: context.crossDomain,
-      protocol: context.protocol
+      protocol: context.protocol,
+      isControlledAccess: context.isControlledAccess,
+      accessControl: context.accessControl
     };
     switch (context.type) {
     case "HTTP":

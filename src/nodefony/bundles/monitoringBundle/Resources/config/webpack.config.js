@@ -76,11 +76,11 @@ module.exports = webpackMerge({
       })
     }, {
       // FONTS
-      test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
+      test: new RegExp("\.(eot|woff2?|ttf)([\?]?.*)$"),
       use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '/assets/fonts/' + '&outputPath=/fonts/',
     }, {
       // IMAGES
-      test: new RegExp("\.(jpg|png|gif)$"),
+      test: new RegExp("\.(jpg|png|gif|svg)$"),
       use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '/assets/images/' + '&outputPath=/images/'
     }]
   },
