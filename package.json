@@ -97,7 +97,7 @@
     "mysql2": "^1.5.3",
     "node-emoji": "1.8.1",
     "node-pre-gyp": "^0.9.1",
-    "node-sass": "^4.8.3",
+    "node-sass": "^4.9.0",
     "nodefony-stage": "^0.1.8",
     "npm": "^6.0.0",
     "oauth2orize": "1.11.0",

@@ -403,8 +403,12 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     }
     let secu = context.session ? context.session.getMetaBag("security") : null;
     let token = null;
+    let tokenRoles = null;
     if (context.token) {
       token = context.token;
+      tokenRoles = token.roles.map((tok) => {
+        return tok.role;
+      }).join(" ");
     }
     if (context.security) {
       context.profiling.context_secure = {
@@ -414,22 +418,28 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         user: context.user,
         firewall: context.security.name,
         state: context.security.stateLess ? "stateless" :  "statefull",
-        context: context.security.sessionContext
+        context: context.security.sessionContext,
+        tokenRoles: tokenRoles
       };
     } else {
+      if (token) {
+        console.log();
+      }
       if (secu) {
         context.profiling.context_secure = {
           name: "OFF",
           token: secu.token,
           user: context.user,
-          firewall: secu.firewall
+          firewall: secu.firewall,
+          tokenRoles: tokenRoles
         };
       } else {
         if (token) {
           context.profiling.context_secure = {
             name: "OFF",
             token: token,
-            user: context.user
+            user: context.user,
+            tokenRoles: tokenRoles
           };
         } else {
           context.profiling.context_secure = null;

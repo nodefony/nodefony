@@ -452,7 +452,7 @@ module.exports = class httpKernel extends nodefony.Service {
       });
       return e;
     }
-    if (context.secure || context.accessControl) {
+    if (context.secure || context.isControlledAccess) {
       return this.firewall.handleSecurity(context);
     }
     try {
@@ -503,7 +503,7 @@ module.exports = class httpKernel extends nodefony.Service {
       type = null;
     });
     context.once('onConnect', (context) => {
-      if (context.security || context.accessControl) {
+      if (context.security || context.isControlledAccess) {
         return this.firewall.handleSecurity(context);
       }
       return context.handle();

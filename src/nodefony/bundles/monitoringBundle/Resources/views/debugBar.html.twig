@@ -484,6 +484,10 @@
                 <label>Authenticated</label>
                 <label class="label-nodefony black">{{context_secure.token.authenticated}}</label>
               </li>
+              <li>
+                <label>Roles</label>
+                <label class="label-nodefony black">{{context_secure.tokenRoles}}</label>
+              </li>
               {% if context_secure.user %}
                 <li>
                   <label style="color:#999">USER</label>
@@ -548,7 +552,7 @@
     </li>
     {% if context.isControlledAccess %}
     <li>
-      <div class="padlock" style="width:20px;height:20px"> </div>
+      <div class="padlock"> </div>
       <div class="details">
         <ul>
           <li>

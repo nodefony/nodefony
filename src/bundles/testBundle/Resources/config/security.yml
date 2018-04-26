@@ -147,13 +147,14 @@ security:
               Access-Control-Max-Age:             10
 
   access_control:
-    - {
-        path:                                     ^/admin,
-        roles:                                    ROLE_ADMIN
-      }
+    - { path: "^/webAudioApi", roles:             "ROLE_AUDIO"}
     - {
         path:                                     ^/webAudioApi,
-        roles:                                    ["ROLE_ADMIN","ROLE_USER"]
+        roles:                                    ["ROLE_AUDIO_LOCAL"],
+        allow_if:                                 {
+          roles:["ROLE_ADMIN"],
+          ip:["127.0.0.1"]
+        }
       }
     # - {
     #     path:                                   ^/demo,
