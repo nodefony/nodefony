@@ -93,6 +93,7 @@ nodefony.register("Session", function () {
     }
 
     create(lifetime, id) {
+      console.trace(id)
       this.id = id || this.setId();
       setMetasSession.call(this);
       this.manager.logger("NEW SESSION CREATE : " + this.id);

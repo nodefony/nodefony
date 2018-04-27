@@ -17,7 +17,7 @@
           </li>
           <li class="separator"></li>
           <li>
-            <label style="color:#999">CONFIG</label>
+            <label style="color:#0337ab">CONFIG</label>
           </li>
           {% for key, value in kernelSettings %}
             {% if (key != "system") and (key != "servers") and (key != "devServer") and (key != "version") and (key != "name")%}
@@ -38,7 +38,7 @@
 
           <li class="separator"></li>
           <li>
-            <label style="color:#999">CONFIG SYSTEM</label>
+            <label style="color:#0337ab">CONFIG SYSTEM</label>
           </li>
           {% for key, value in kernelSettings.system %}
             {% if (key != "log") and (key != "devServer") %}
@@ -50,7 +50,7 @@
           {% endfor %}
           <li class="separator"></li>
           <li>
-            <label style="color:#999">SERVERS</label>
+            <label style="color:#0337ab">SERVERS</label>
           </li>
           {% for key, value in kernelSettings.servers %}
             <li>
@@ -60,7 +60,7 @@
           {% endfor %}
           <li class="separator"></li>
           <li>
-            <label style="color:#999">DEV SERVERS</label>
+            <label style="color:#0337ab">DEV SERVERS</label>
           </li>
           {% for key, value in kernelSettings.system.devServer %}
             <li>
@@ -72,13 +72,15 @@
         </ul>
       </div>
     </li>
-
     <li class="separator"></li>
-
     <li>
       <img src="/monitoringBundle/images/nodejs_logo.png">
       <div class="details">
         <ul>
+          <li>
+            <label style="color:#0337ab">Node.js ®</label>
+          </li>
+          <li class="separator"></li>
           {% for key, value in node %}
             <li>
               <label>{{ key | capitalize }}</label>
@@ -96,11 +98,12 @@
         <div class="details">
           <ul>
             <li>
-              <label>
+              <label style="color:#0337ab">
                 HTTP Protocol
               </label>
               <span class="label-nodefony label-success">{{context.protocol}}</span>
             </li>
+            <li class="separator"></li>
             <li>
               <label>
                 Server Push Allowed
@@ -118,13 +121,14 @@
       </li>
     {% endif %}
 
-    <li id="separator-workbox" class="separator hidden" ></li>
+    <li id="separator-workbox" class="separator hidden"></li>
     <li id="workbox" class="hidden">
       <img style="border-radius: 50%" alt="workbox" src="/monitoringBundle/images/workbox-icon192x192.png">
       <div class="details">
         <ul>
           <li>
-            <label style="color:#999">WORKBOX </label>
+            <label style="color:#0337ab">WORKBOX
+            </label>
           </li>
           <li class="separator"></li>
           <li>
@@ -153,7 +157,7 @@
         <ul>
           <li>
             <strong>
-              <a style="color:#999" target="blank" href='{{path("monitoring-index")}}#/config/App'>
+              <a style="color:#0337ab" target="blank" href='{{path("monitoring-index")}}#/config/App'>
                 APP</a>
             </strong>
           </li>
@@ -166,7 +170,7 @@
           <li class="separator"></li>
 
           <li>
-            <label style="color:#999">BUNDLES</label>
+            <label style="color:#0337ab">BUNDLES</label>
           </li>
           {% for key, value in bundles %}
             {% if key != "App" %}
@@ -180,7 +184,7 @@
           {% endfor %}
           <li class="separator"></li>
           <li>
-            <label style="color:#999">ENVIRONMENT</label>
+            <label style="color:#0337ab">ENVIRONMENT</label>
           </li>
           <li>
             <label>PWD</label>
@@ -188,7 +192,7 @@
           </li>
           <li class="separator"></li>
           <li>
-            <label title="content delivery network" style="color:#999">DOMAIN CDN</label>
+            <label title="content delivery network" style="color:#0337ab">DOMAIN CDN</label>
           </li>
           {% if cdn %}
             {% if cdn.global %}
@@ -312,7 +316,7 @@
       <div class="details">
         <ul>
           <li>
-            <label style="color:#999">TRANSLATION</label>
+            <label style="color:#0337ab">TRANSLATION</label>
           </li>
           <li>
             <label>Locale Default</label>
@@ -324,7 +328,7 @@
           </li>
           <li class="separator"></li>
           <li>
-            <label style="color:#999">UPLOAD</label>
+            <label style="color:#0337ab">UPLOAD</label>
           </li>
           <li>
             <label>Temporary Directory</label>
@@ -336,7 +340,7 @@
           </li>
           <li class="separator"></li>
           <li>
-            <label style="color:#999">SESSION</label>
+            <label style="color:#0337ab">SESSION</label>
           </li>
           {% if services.session.storage == "session.storage.files" %}
             <li>
@@ -356,7 +360,7 @@
           {% if services.templating %}
             <li class="separator"></li>
             <li>
-              <label style="color:#999">TEMPLATING</label>
+              <label style="color:#0337ab">TEMPLATING</label>
               <span >{{services.templating.name}}</span>
             </li>
             <li>
@@ -367,7 +371,7 @@
           {% if services.ORM %}
             <li class="separator"></li>
             <li>
-              <label style="color:#999">ORM</label>
+              <label style="color:#0337ab">ORM</label>
               <span >{{services.ORM.name}}</span>
             </li>
             <li>
@@ -375,7 +379,7 @@
               <span >{{services.ORM.version}}</span>
             </li>
             <li class="separator"></li>
-            <label style="color:#999">DATABASES CONNECTIONS :
+            <label style="color:#0337ab">DATABASES CONNECTIONS :
             </label>
             {% for key, value in services.ORM.connections %}
               <li>
@@ -422,8 +426,8 @@
       <label class="label-nodefony nodefony-responsive-sm">
         {% if id %}
           <label class="label-nodefony nodefony-responsive-sm">
-          <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=securityNav'>
-            FIREWALL</a>
+            <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=securityNav'>
+              FIREWALL</a>
           </label>
         {% else %}
           <label class="label-nodefony nodefony-responsive-sm">
@@ -440,7 +444,7 @@
         <div class="details">
           <ul>
             <li>
-              <label style="color:#999">FIREWALL</label>
+              <label style="color:#0337ab">FIREWALL</label>
               <label class="label-nodefony label-success">
                 {{context_secure.name}}
               </label>
@@ -465,7 +469,7 @@
 
             <li class="separator"></li>
             <li>
-              <label style="color:#999">TOKEN</label>
+              <label style="color:#0337ab">TOKEN</label>
             </li>
             {% if context_secure.token %}
               <li>
@@ -490,7 +494,7 @@
               </li>
               {% if context_secure.user %}
                 <li>
-                  <label style="color:#999">USER</label>
+                  <label style="color:#0337ab">USER</label>
                 </li>
                 <li>
                   <label >
@@ -517,7 +521,7 @@
           <ul>
             {% for key, value in security %}
               <li>
-                <label style="color:#999">
+                <label style="color:#0337ab">
                   {{key|upper}}</label>
                 <label class="label-nodefony label-default">OFF</label>
               </li>
@@ -551,24 +555,23 @@
       {% endif %}
     </li>
     {% if context.isControlledAccess %}
-    <li>
-      <div class="padlock"> </div>
-      <div class="details">
-        <ul>
-          <li>
-            <label style="color:#0167b8">Authorization</label>
-            <li class="separator"></li>
-            {% for key, value in context.accessControl %}
+      <li>
+        <div class="padlock"></div>
+        <div class="details">
+          <ul>
             <li>
-              <label >
-                {{key|upper}}</label>
-              <label class="label-nodefony label-default">{{value}}</label>
+              <label style="color:#0167b8">Authorization</label>
             </li>
+            {% for key, value in context.accessControl %}
+              <li>
+                <label >
+                  {{key|upper}}</label>
+                <label class="label-nodefony label-default">{{value}}</label>
+              </li>
             {% endfor %}
-          </li>
-        </ul>
-      </div>
-    </li>
+          </ul>
+        </div>
+      </li>
     {% endif %}
     <li class="separator"></li>
 
@@ -584,7 +587,7 @@
           <div class="details">
             <ul>
               <li>
-                <label style="color:#999">ROUTER SERVICE</label>
+                <label style="color:#0337ab">ROUTER SERVICE</label>
               </li>
               <li>
                 <label>Pattern</label>
@@ -608,7 +611,7 @@
               </li>
               <li class="separator"></li>
               <li>
-                <label style="color:#999">ROUTE</label>
+                <label style="color:#0337ab">ROUTE</label>
               </li>
               {% for key, value in route %}
                 {% if key != "variables" %}
@@ -622,7 +625,7 @@
               {% for key, value in route %}
                 {% if key == "variables" %}
                   {% if route.variables | length %}
-                    <label class="label-nodefony" style="color:#999">Variables :</label>
+                    <label class="label-nodefony" style="color:#0337ab">Variables :</label>
                     {% for key, value in route.variables %}
                       <li>
                         <label>{{varialblesName[key]}}</label>
@@ -634,7 +637,7 @@
               {% endfor %}
               <li class="separator"></li>
               <li>
-                <label style="color:#999">TRANSLATION</label>
+                <label style="color:#0337ab">TRANSLATION</label>
               </li>
               <li>
                 <label>Local</label>
@@ -671,7 +674,7 @@
           <div class="details details-request">
             <ul>
               <li>
-                <label style="color:#999">REQUEST</label>
+                <label style="color:#0337ab">REQUEST</label>
               </li>
               {% for key, value in request %}
                 {% if key == "url" %}
@@ -692,7 +695,7 @@
                   {% if id %}
                     <li>
                       <label class="label-nodefony">
-                        <a style="color:#999" target="blank" href='{{path("monitoring-index")}}#/request/{{id}}'>SHOW HEADERS</a>
+                        <a style="color:#0337ab" target="blank" href='{{path("monitoring-index")}}#/request/{{id}}'>SHOW HEADERS</a>
                       </label>
                     </li>
                   {% endif %}
@@ -702,7 +705,7 @@
                 {% endif %}
                 {% if key == "queryPost" and request.queryPost is not empty %}
                   <li>
-                    <label style="color:#999">QUERY POST</label>
+                    <label style="color:#0337ab">QUERY POST</label>
                   </li>
                   {% for key, value in request.queryPost %}
                     <li>
@@ -714,7 +717,7 @@
                 {% endif %}
                 {% if key == "queryGet" and request.queryGet is not empty %}
                   <li>
-                    <label style="color:#999">QUERY GET</label>
+                    <label style="color:#0337ab">QUERY GET</label>
                   </li>
                   {% for key, value in request.queryGet %}
                     <li>
@@ -729,7 +732,7 @@
               {% if proxy %}
                 <li class="separator"></li>
                 <li>
-                  <label style="color:#999">PROXY</label>
+                  <label style="color:#0337ab">PROXY</label>
                 </li>
                 <label class="label-nodefony label-default"></label>
                 {% for key, value in proxy %}
@@ -743,7 +746,7 @@
               {% if session %}
                 <li class="separator"></li>
                 <li>
-                  <label style="color:#999">SESSION</label>
+                  <label style="color:#0337ab">SESSION</label>
                   <label >{{session.name}}</label>
                 </li>
                 <li>
@@ -825,7 +828,7 @@
           <div class="details nodefony-response-details">
             <ul>
               <li>
-                <label style="color:#999">RESPONSE</label>
+                <label style="color:#0337ab">RESPONSE</label>
               </li>
               {% for key, value in response %}
                 {% if key == "statuscode" %}
@@ -844,7 +847,7 @@
                   {% else %}
                     <li class="separator"></li>
                     <li>
-                      <label style="color:#999">HEADERS</label>
+                      <label style="color:#0337ab">HEADERS</label>
                     </li>
 
                     {% for header, val in response["headers"] %}
