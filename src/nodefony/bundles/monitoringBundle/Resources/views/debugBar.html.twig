@@ -562,13 +562,15 @@
             <li>
               <label style="color:#0167b8">Authorization</label>
             </li>
-            {% for key, value in context.accessControl %}
-              <li>
-                <label >
-                  {{key|upper}}</label>
-                <label class="label-nodefony label-default">{{value}}</label>
-              </li>
-            {% endfor %}
+            <li class="separator"></li>
+            <li>
+              <label style="color:#0337ab">Access Control</label>
+            <li>
+              <label>Roles</label>
+              <label class="label-nodefony black">{{context_secure.tokenRoles}}</label>
+            </li>
+            <li class="separator"></li>
+            
           </ul>
         </div>
       </li>

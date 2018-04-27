@@ -221,6 +221,18 @@ module.exports = class security extends nodefony.Service {
     return false;
   }
 
+  redirectHttps(context) {
+    // no cache
+    context.redirectHttps(301);
+    return context;
+  }
+
+  redirectHttp(context) {
+    // no cache
+    context.redirectHttp(301);
+    return context;
+  }
+
   getFactory(name, area) {
     let factory = null;
     if (area) {
@@ -323,8 +335,8 @@ module.exports = class security extends nodefony.Service {
           return reject(error);
         }
         if (context.type === "HTTP" && this.httpsReady) {
-          if (context.security.redirect_Https) {
-            return resolve(context.security.redirectHttps(context));
+          if (context.security && context.security.redirect_Https) {
+            return resolve(this.redirectHttps(context));
           }
         }
         if (context.security && context.security.stateLess) {

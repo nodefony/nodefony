@@ -153,6 +153,7 @@
   font-weight: bold;
   display: inline-block;
   margin: 0;
+  vertical-align: top;
 }
 
 #nodefony-container ul li .details ul li span:empty {
@@ -255,4 +256,8 @@
   margin-top: 4px;
   margin-right: 5px;
   margin-left: 10px;
+}
+
+.label-vertical-align {
+  vertical-align: top;
 }

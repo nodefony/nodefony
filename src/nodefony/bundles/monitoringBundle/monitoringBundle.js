@@ -486,6 +486,14 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       }
     }
     let settings2 = this.get("httpsServer").defaultSetting2;
+    let accessControlList = [];
+    accessControlList.push(context.accessControl.map((access) => {
+      let obj = [];
+      for (let i = 0; i < access.roles.length; i++) {
+        obj.push(access.roles[i].role);
+      }
+      return obj;
+    }));
     context.profiling.context = {
       type: context.type,
       pushAllowed: context.pushAllowed,
@@ -498,7 +506,8 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       crossDomain: context.crossDomain,
       protocol: context.protocol,
       isControlledAccess: context.isControlledAccess,
-      accessControl: context.accessControl
+      accessControl: context.accessControl,
+      accessControlList: tokenRoles
     };
     switch (context.type) {
     case "HTTP":

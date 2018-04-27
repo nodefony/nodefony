@@ -264,6 +264,30 @@ nodefony.register.call(nodefony.context, "http", function () {
       return this.redirect(newUrl, status, headers);
     }
 
+    redirectHttp(status, headers) {
+      if (this.session) {
+        this.session.setFlashBag("redirect", "HTTP");
+      }
+      let urlExtend = null;
+      if (this.proxy) {
+        urlExtend = {
+          protocol: "http",
+          href: "",
+          host: ""
+        };
+      } else {
+        urlExtend = {
+          protocol: "http",
+          port: this.kernelHttp.httpPort || 80,
+          href: "",
+          host: ""
+        };
+      }
+      let urlChange = nodefony.extend({}, this.request.url, urlExtend);
+      let newUrl = url.format(urlChange);
+      return this.redirect(newUrl, status, headers);
+    }
+
     setXjson(xjson) {
       switch (nodefony.typeOf(xjson)) {
       case "object":

@@ -28,13 +28,16 @@ module.exports = class Authorization extends nodefony.Service {
             access.setIp(config[conf]);
             break;
           case "allow_if":
-            access.setAllow(config[conf]);
+            access.setAllowIf(config[conf]);
             break;
           case "host":
             access.setHost(config[conf]);
             break;
           case "requires_channel":
             access.setScheme(config[conf]);
+            break;
+          case "method":
+            access.setMethod(config[conf]);
             break;
           default:
             throw new nodefony.Error(`Access Control Bad options config  : ${conf} in ${util.inspect(config)}`);
@@ -48,6 +51,7 @@ module.exports = class Authorization extends nodefony.Service {
       } else {
         this.logger(`Access Control no path option in ${util.inspect(config)}`, "WARNING");
       }
+      //console.log(this.accessControl)
       break;
     default:
       throw new nodefony.Error(`Access Control Bad configuration : ${util.inspect(config)}`);
@@ -59,25 +63,14 @@ module.exports = class Authorization extends nodefony.Service {
       if (context.isControlledAccess) {
         for (let i = 0; i < context.accessControl.length; i++) {
           try {
-            context.accessControl[i].handle(context);
+            let ret = context.accessControl[i].handle(context);
+            if (ret === context) {
+              return resolve(context);
+            }
           } catch (e) {
             return reject(e);
           }
         }
-        /*
-        let error = new nodefony.authorizationError("Access Control Unauthorized", 401, context);
-        let message = "";
-        let tokenRoles = context.token.getRoles();
-        let found = false;
-        for (let j = 0; j < tokenRoles.length; j++) {
-          if (this.accessControl[context.accessControl[i]].hasRole(tokenRoles[j].role)) {
-            message += ` ${tokenRoles[j].role}`;
-          } else {
-            found = true;
-          }
-        error.message = `${error.message} ${message}`;
-        return reject(new nodefony.authorizationError("Access Control Unauthorized", 401, context));
-        */
       }
       return resolve(context);
     });

@@ -304,7 +304,7 @@ module.exports = nodefony.register("SecuredArea", function () {
 
     redirectHttps(context) {
       // no cache
-      context.redirectHttps(301, true);
+      context.redirectHttps(301);
       return context;
     }
 

@@ -1,3 +1,4 @@
+const net = require("net");
 module.exports = nodefony.register("AccessControl", () => {
 
   class AccessControl {
@@ -6,10 +7,14 @@ module.exports = nodefony.register("AccessControl", () => {
       this.authorization = authorization;
       this.pattern = null;
       this.roles = [];
-      this.ip = null;
-      this.allow_if = null;
-      this.host = null;
+      this.allowRoles = [];
+      this.ip = [];
+      this.allowIp = [];
+      //this.allow_if = null;
+      this.hosts = [];
       this.requires_channel = null;
+      this.methods = [];
+      this.actived = false;
     }
 
     logger(pci, severity, msgid, msg) {
@@ -25,11 +30,13 @@ module.exports = nodefony.register("AccessControl", () => {
           throw new nodefony.Error("Access Control No context", 500);
         }
         let ret = this.checkAllowAccess(context);
-        if (ret && context.token) {
-          this.setTokenRole(context);
-          this.checkTokenRole(context);
+        if (ret === context) {
+          return context;
         }
-        return context;
+        if (ret === true && context.token) {
+          this.setTokenRole(context);
+          this.actived = true;
+        }
       } catch (e) {
         throw new nodefony.authorizationError(e, 500, context);
       }
@@ -42,6 +49,43 @@ module.exports = nodefony.register("AccessControl", () => {
       return false;
     }
 
+    checkAllowAccess(context) {
+      let ret = false;
+      try {
+        ret = this.checkScheme(context);
+        if (ret instanceof nodefony.Context) {
+          return ret;
+        }
+        ret = this.checkIp(context);
+        if (ret === false) {
+          return ret;
+        }
+        ret = this.checkMethod(context);
+        if (ret === false) {
+          return ret;
+        }
+        ret = this.checkHost(context);
+        if (ret === false) {
+          return ret;
+        }
+        // allowIf
+        ret = this.checkAllowRole(context);
+        if (ret === false) {
+          return ret;
+        }
+        ret = this.checkAllowIp(context);
+        if (ret === false) {
+          return ret;
+          //throw new nodefony.authorizationError(`Access Control Unauthorized IP
+          //  type ${net.isIP(context.request.remoteAddress)} : ${context.request.remoteAddress}`, 401, context);
+        }
+        return ret;
+      } catch (e) {
+        this.logger(e, "DEBUG");
+        return false;
+      }
+    }
+
     setMatchPattern(pattern) {
       switch (nodefony.typeOf(pattern)) {
       case "string":
@@ -51,7 +95,7 @@ module.exports = nodefony.register("AccessControl", () => {
         this.pattern = pattern;
         break;
       default:
-        throw new nodefony.Error(`Access Control Bad options config  : ${pattern} must be a String or RegExp`);
+        throw new nodefony.Error(`Access Control Bad config path : ${pattern} must be a String or RegExp`);
       }
     }
 
@@ -64,16 +108,21 @@ module.exports = nodefony.register("AccessControl", () => {
       return false;
     }
 
-    setRoles(roles) {
+    setRoles(roles, tab) {
+      if (!tab) {
+        tab = this.roles;
+      }
       switch (nodefony.typeOf(roles)) {
       case "string":
-        this.roles.push(new nodefony.Role(roles));
+        if (!this.hasRole(roles)) {
+          tab.push(new nodefony.Role(roles));
+        }
         break;
       case "array":
         if (roles && roles.length) {
           for (let i = 0; i < roles.length; i++) {
             try {
-              this.setRoles(roles[i]);
+              this.setRoles(roles[i], tab);
             } catch (e) {
               throw e;
             }
@@ -83,19 +132,19 @@ module.exports = nodefony.register("AccessControl", () => {
       case "object":
         if (roles instanceof nodefony.Role) {
           if (!this.hasRole(roles.role)) {
-            this.roles.push(roles);
+            tab.push(roles);
           }
           if (roles.role) {
             if (!this.hasRole(roles.role)) {
-              this.roles.push(new nodefony.Role(roles.role));
+              tab.push(new nodefony.Role(roles.role));
             }
           } else {
-            new nodefony.Error(`Access Control Bad options config  : ${roles} must be a String, Array or nodefony.Role`);
+            new nodefony.Error(`Access Control Bad config roles  : ${roles} must be a String, Array or nodefony.Role`);
           }
         }
         break;
       default:
-        throw new nodefony.Error(`Access Control Bad options config  : ${roles} must be a String, Array or nodefony.Role`);
+        throw new nodefony.Error(`Access Control Bad config roles : ${roles} must be a String, Array or nodefony.Role`);
       }
     }
 
@@ -110,46 +159,207 @@ module.exports = nodefony.register("AccessControl", () => {
       }
     }
 
-    checkTokenRole(context) {
-
-    }
-
-    setIp() {
-
-    }
-    checkAllowIp(context) {
-
-    }
-
-    setAllow() {
-
-    }
-
-    checkAllowAccess(context) {
-      try {
-        this.checkAllowIp(context);
-        this.checkAllowHost(context);
-        this.checkScheme(context);
+    checkAllowRole(context) {
+      if (this.allowRoles.length === 0) {
         return true;
-      } catch (e) {
-        this.logger(e, "DEBUG");
-        return false;
+      }
+      let tokenRoles = context.token.getRoles();
+      let isAllow = false;
+      for (let j = 0; j < tokenRoles.length; j++) {
+        for (let i = 0; i < this.allowRoles.length; i++) {
+          if (tokenRoles[j].role === this.allowRoles[i].role) {
+            isAllow = true;
+            break;
+          }
+        }
+      }
+      return isAllow;
+    }
+
+    setIp(ips, tab) {
+      if (!tab) {
+        tab = this.ip;
+      }
+      switch (nodefony.typeOf(ips)) {
+      case "string":
+        let type = net.isIP(ips);
+        if (type) {
+          return tab.push(ips);
+        }
+        throw new nodefony.Error(`Access Control Bad ip  type : ${ips}`);
+      case "array":
+        if (ips.length) {
+          for (let i = 0; i < ips.length; i++) {
+            try {
+              this.setIp(ips[i], tab);
+            } catch (e) {
+              throw e;
+            }
+          }
+        }
+        break;
+      default:
+        throw new nodefony.Error(`Access Control Bad config ip : ${ips}`);
       }
     }
 
-    setHost() {
+    checkIp(context) {
+      if (this.ip.length === 0) {
+        return true;
+      }
+      let ipPublic = context.request.remoteAddress;
+      let isAllow = false;
+      for (let i = 0; i < this.ip.length; i++) {
+        if (ipPublic === this.ip[i]) {
+          isAllow = true;
+          break;
+        }
+      }
+      return isAllow;
+    }
+
+    checkAllowIp(context) {
+      if (this.allowIp.length === 0) {
+        return true;
+      }
+      let ipPublic = context.request.remoteAddress;
+      let isAllow = false;
+      for (let i = 0; i < this.allowIp.length; i++) {
+        if (ipPublic === this.allowIp[i]) {
+          isAllow = true;
+          break;
+        }
+      }
+      return isAllow;
+    }
+
+    setAllowIf(conf) {
+      switch (nodefony.typeOf(conf)) {
+      case "string":
+        break;
+      case "object":
+        for (let ele in conf) {
+          switch (ele) {
+          case "roles":
+            this.setRoles(conf[ele], this.allowRoles);
+            break;
+          case "ip":
+          case "ips":
+            this.setIp(conf[ele], this.allowIp);
+            break;
+          default:
+            this.logger(`Access Control Bad config  ${ele} no defined in allow_if options`, "WARNING");
+          }
+        }
+        break;
+        //case "function":
+        //  return this.setAllowIf(conf.call(this));
+      default:
+        throw new nodefony.Error(`Access Control Bad config allow_if : ${conf}`);
+      }
 
     }
 
-    checkAllowHost(context) {
 
+
+    setHost(conf) {
+      switch (nodefony.typeOf(conf)) {
+      case "string":
+        if (this.hosts.indexOf(conf) < 0) {
+          this.hosts.push(conf);
+        }
+        break;
+      case "array":
+        if (conf.length) {
+          for (let i = 0; i < conf.length; i++) {
+            try {
+              this.setHost(conf[i]);
+            } catch (e) {
+              throw e;
+            }
+          }
+        }
+        break;
+      default:
+        throw new nodefony.Error(`Access Control Bad config hosts : ${conf} must be an Array or a String`);
+      }
     }
 
-    setScheme() {
-
+    checkHost(context) {
+      if (this.hosts.length === 0) {
+        return true;
+      }
+      let isAllow = false;
+      let requestHost = context.getHostName();
+      for (let i = 0; i < this.hosts.length; i++) {
+        if (requestHost === this.hosts[i]) {
+          isAllow = true;
+          break;
+        }
+      }
+      return isAllow;
     }
+
+    setScheme(conf) {
+      switch (conf) {
+      case "https":
+      case "http":
+        this.requires_channel = conf;
+        break;
+      default:
+        throw new nodefony.Error(`Access Control Bad config requires_channel : ${conf} must be http or https`);
+      }
+    }
+
     checkScheme(context) {
+      if (this.requires_channel) {
+        if (context.scheme !== this.requires_channel) {
+          if (this.requires_channel === "https") {
+            return this.authorization.firewall.redirectHttps(context);
+          }
+          if (this.requires_channel === "http") {
+            return this.authorization.firewall.redirectHttp(context);
+          }
+        }
+      }
+      return true;
+    }
 
+    setMethod(conf) {
+      switch (nodefony.typeOf(conf)) {
+      case "string":
+        if (this.methods.indexOf(conf) < 0) {
+          this.methods.push(conf);
+        }
+        break;
+      case "array":
+        if (conf.length) {
+          for (let i = 0; i < conf.length; i++) {
+            try {
+              this.setMethod(conf[i]);
+            } catch (e) {
+              throw e;
+            }
+          }
+        }
+        break;
+      default:
+        throw new nodefony.Error(`Access Control Bad config methd : ${conf} must be an Array or a String`);
+      }
+    }
+
+    checkMethod(context) {
+      if (this.methods.length === 0) {
+        return true;
+      }
+      let isAllow = false;
+      for (let i = 0; i < this.methods.length; i++) {
+        if (context.method === this.methods[i]) {
+          isAllow = true;
+          break;
+        }
+      }
+      return isAllow;
     }
   }
 
