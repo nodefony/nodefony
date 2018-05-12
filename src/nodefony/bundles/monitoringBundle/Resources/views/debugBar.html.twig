@@ -441,6 +441,7 @@
         {% if context_secure.user %}
           <label class="label-nodefony label-default">{{context_secure.user.username}}</label>
         {% endif %}
+
         <div class="details">
           <ul>
             <li>
@@ -449,6 +450,7 @@
                 {{context_secure.name}}
               </label>
             </li>
+
             {% if context_secure.name != "OFF" %}
               <li>
                 <label>
@@ -469,7 +471,7 @@
 
             <li class="separator"></li>
             <li>
-              <label style="color:#0337ab">TOKEN</label>
+              <label style="color:#0337ab">Token</label>
             </li>
             {% if context_secure.token %}
               <li>
@@ -488,13 +490,28 @@
                 <label>Authenticated</label>
                 <label class="label-nodefony black">{{context_secure.token.authenticated}}</label>
               </li>
-              <li>
-                <label>Roles</label>
-                <label class="label-nodefony black">{{context_secure.tokenRoles}}</label>
-              </li>
-              {% if context_secure.user %}
+              <li class="separator"></li>
+              {% if context.isControlledAccess %}
                 <li>
-                  <label style="color:#0337ab">USER</label>
+                  <label style="color:#0337ab">Authorisation</label>
+                </li>
+                <li>
+                  <label>Access Control</label>
+                  <label class="label-nodefony black">{{context_secure.tokenRoles}}</label>
+                </li>
+              {% else %}
+                <li>
+                  <label style="color:#0337ab">Authorisation</label>
+                </li>
+                <li>
+                  <label>Access Control</label>
+                  <label class="label-nodefony black">{{context_secure.tokenRoles}}</label>
+                </li>
+              {% endif %}
+              {% if context_secure.user %}
+                <li class="separator"></li>
+                <li>
+                  <label style="color:#0337ab">User</label>
                 </li>
                 <li>
                   <label >
@@ -519,9 +536,16 @@
         <label class="label-nodefony label-default">OFF</label>
         <div class="details">
           <ul>
+            <li>
+              <label style="color:#0337ab">FIREWALL</label>
+              <label class="label-nodefony label-default">
+                OFF
+              </label>
+            </li>
+            <li class="separator"></li>
             {% for key, value in security %}
               <li>
-                <label style="color:#0337ab">
+                <label style="color:#5AB155">
                   {{key|upper}}</label>
                 <label class="label-nodefony label-default">OFF</label>
               </li>
@@ -557,24 +581,9 @@
     {% if context.isControlledAccess %}
       <li>
         <div class="padlock"></div>
-        <div class="details">
-          <ul>
-            <li>
-              <label style="color:#0167b8">Authorization</label>
-            </li>
-            <li class="separator"></li>
-            <li>
-              <label style="color:#0337ab">Access Control</label>
-            <li>
-              <label>Roles</label>
-              <label class="label-nodefony black">{{context_secure.tokenRoles}}</label>
-            </li>
-            <li class="separator"></li>
-            
-          </ul>
-        </div>
       </li>
     {% endif %}
+
     <li class="separator"></li>
 
     <li >@

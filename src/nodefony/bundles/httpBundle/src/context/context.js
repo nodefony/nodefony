@@ -1,6 +1,5 @@
 nodefony.register("Context", () => {
 
-
   const Context = class Context extends nodefony.Service {
 
     constructor(container, request, response, type) {
@@ -43,7 +42,6 @@ nodefony.register("Context", () => {
       }
       return super.logger(pci, severity, msgid, msg);
     }
-
 
     controller() {
       let pattern = Array.prototype.shift.call(arguments);
@@ -158,6 +156,18 @@ nodefony.register("Context", () => {
       }
     }
 
+    is_granted(role) {
+      if (!this.token) {
+        //throw new nodefony.Error(`is_granted method No token found !! `);
+        return false;
+      }
+      if (typeof (role) === "string") {
+        return this.token.hasRole(role);
+      } else {
+        throw new nodefony.Error(`is_granted Bad role type  : ${role}`);
+      }
+    }
+
     getFlashBag(key) {
       if (this.session) {
         let res = this.session.getFlashBag(key);
@@ -224,7 +234,7 @@ nodefony.register("Context", () => {
           let result = this.kernelHttp.debugView.render(this.kernelHttp.extendTemplate(this.profiling, this));
           this.response.body = this.response.body.replace("</body>", result + "\n </body>");
           if (this.type === "HTTP2") {
-            this.pushAsset();
+            //this.pushAsset();
           }
         } catch (e) {
           throw e;

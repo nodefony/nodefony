@@ -15,7 +15,6 @@ module.exports = nodefony.registerTemplate("twig", function () {
     views: null
   };
 
-
   class Twig extends nodefony.templates {
 
     constructor(container, options) {
@@ -47,8 +46,8 @@ module.exports = nodefony.registerTemplate("twig", function () {
     }
 
     render(view, param) {
-      var Render = this.compile(view);
       try {
+        let Render = this.compile(view);
         return Render(param);
       } catch (e) {
         throw e;

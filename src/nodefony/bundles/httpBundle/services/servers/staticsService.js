@@ -9,8 +9,7 @@ module.exports = class serverStatics extends nodefony.Service {
 
   constructor(container, options) {
     super("SERVER STATICS", container, container.get("notificationsCenter"));
-    this.type = this.kernel.type;
-    if (this.type !== "SERVER") {
+    if (this.kernel.type !== "SERVER") {
       return;
     }
 
@@ -23,6 +22,11 @@ module.exports = class serverStatics extends nodefony.Service {
     this.serveStatic = serveStatic;
     this.mime = this.serveStatic.mime;
     this.servers = {};
+    this.kernel.on("onPostReady", () => {
+      for (let ele in this.servers) {
+        this.logger("Server Static RootDir  ==> " + ele, "INFO");
+      }
+    });
   }
 
   initStaticFiles() {
@@ -30,25 +34,22 @@ module.exports = class serverStatics extends nodefony.Service {
       if (staticRoot === "defaultOptions") {
         continue;
       }
-      let path = this.settings[staticRoot].path;
-      path = this.kernel.checkPath(path);
-      this.addDirectory(path, this.settings[staticRoot].options);
+      let Path = this.settings[staticRoot].path;
+      Path = this.kernel.checkPath(Path);
+      this.addDirectory(Path, this.settings[staticRoot].options);
     }
   }
 
-  addDirectory(path, options) {
-    if (!path) {
+  addDirectory(Path, options) {
+    if (!Path) {
       throw new Error("Static file path not Defined ");
     }
-    this.kernel.on("onPostReady", () => {
-      this.logger("Listen Server static rootDir  ==> " + path, "INFO");
-    });
     let opt = nodefony.extend({}, this.global, options);
-    if (opt.maxAge && typeof opt.maxAge === "string") {
-      opt.maxAge = eval(opt.maxAge);
+    if (typeof opt.maxAge === "string") {
+      opt.maxAge = parseInt(eval(opt.maxAge), 10);
     }
-    let server = this.serveStatic(path, opt);
-    this.servers[path] = server;
+    let server = this.serveStatic(Path, opt);
+    this.servers[Path] = server;
     return server;
   }
 
@@ -56,9 +57,22 @@ module.exports = class serverStatics extends nodefony.Service {
     let pathname = url.parse(request.url).pathname;
     let type = this.mime.lookup(pathname);
     response.setHeader("Content-Type", type);
+    let tab = [];
     for (let server in this.servers) {
-      this.servers[server](request, response, next);
+      let myPromise = new Promise((resolve, reject) => {
+        this.servers[server](request, response, (err) => {
+          if (err) {
+            return reject(err);
+          }
+          return resolve();
+        });
+      });
+      tab.push(myPromise);
     }
-    return response;
+    return Promise.all(tab).then(function () {
+      return next();
+    }).catch((err) => {
+      return next(err);
+    });
   }
 };

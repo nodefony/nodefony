@@ -202,7 +202,8 @@ module.exports = class httpKernel extends nodefony.Service {
         }
         return "";
       },
-      absolute_url: context.generateAbsoluteUrl.bind(context)
+      absolute_url: context.generateAbsoluteUrl.bind(context),
+      is_granted: context.is_granted.bind(context)
     });
   }
 

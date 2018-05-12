@@ -1,15 +1,17 @@
 {
-	"name": "MONITORING",
-	"version": "3.0.0",
-	"description": "nodefony monitoring",
-	"contributors": [],
-	"private": true,
-	"scripts": {},
-	"keywords": [
-		"nodefony",
-		"javascript"
-	],
-	"dependencies": {},
-	"author": "cci <christophe.camensuli@gmail.com>",
-	"license": "CECILL-B"
+  "name": "MONITORING",
+  "version": "3.0.0",
+  "description": "nodefony monitoring",
+  "contributors": [],
+  "private": true,
+  "scripts": {},
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "dependencies": {
+    "bootstrap": "=3.3.7"
+  },
+  "author": "cci <christophe.camensuli@gmail.com>",
+  "license": "CECILL-B"
 }

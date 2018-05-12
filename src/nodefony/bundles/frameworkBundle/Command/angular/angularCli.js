@@ -122,7 +122,7 @@ let angularCli = class angularCli extends nodefony.Service {
 
   generateNgNew( /*argv*/ ) {
     return new Promise((resolve, reject) => {
-      let args = ['new', '-v', '-sg', this.bundleName];
+      let args = ['new', '-v', this.bundleName];
       this.logger("install angular cli : ng " + args.join(" "));
       let cmd = null;
       try {
@@ -145,7 +145,7 @@ let angularCli = class angularCli extends nodefony.Service {
 
   generateNgModule(dir) {
     return new Promise((resolve, reject) => {
-      let args = ['generate', 'module', '--spec', '--routing', '-m', 'app', this.bundleShortName];
+      let args = ['generate', 'module', '--spec', '--routing', 'module', 'app', this.bundleShortName];
       this.logger(" Generate Angular module : ng " + args.join(" ") + " in " + dir);
       let cmd = null;
       try {

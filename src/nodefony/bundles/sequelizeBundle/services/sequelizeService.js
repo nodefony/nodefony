@@ -6,6 +6,7 @@ const error = function (err) {
     this.orm.kernel.fire('onError', err, this);
   }
   this.logger(this.name + " : ERROR CONNECTION to database " + this.name + " " + err.message, "ERROR", "CONNECTION");
+  this.logger(err, "ERROR");
   if (err.code) {
     switch (err.code) {
     case 'PROTOCOL_CONNECTION_LOST':

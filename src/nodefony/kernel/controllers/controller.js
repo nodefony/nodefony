@@ -94,6 +94,10 @@ module.exports = nodefony.register("controller", function () {
       }
     }
 
+    addFlash(key, value) {
+      return this.setFlashBag(key, value);
+    }
+
     setContextJson(encoding) {
       if (!encoding) {
         encoding = "charset=utf-8";
@@ -293,14 +297,9 @@ module.exports = nodefony.register("controller", function () {
       }
       try {
         res = templ.render(extendParam);
-        try {
-          this.fire("onView", res, this.context, null, param);
-          this.response.setBody(res);
-          return res;
-        } catch (e) {
-          extendParam = null;
-          throw e;
-        }
+        this.fire("onView", res, this.context, null, param);
+        this.response.setBody(res);
+        return res;
       } catch (e) {
         extendParam = null;
         throw e;
@@ -507,12 +506,39 @@ module.exports = nodefony.register("controller", function () {
       throw new nodefony.httpError(message, 500, this.container);
     }
 
+    createAccessDeniedException(message, code) {
+      throw new nodefony.authorizationError(message, code, this.context);
+    }
+
+    isGranted(role) {
+      try {
+        return this.context.is_granted(role);
+      } catch (e) {
+        throw new nodefony.httpError(e, 500, this.container);
+      }
+    }
+
+    is_granted(role) {
+      return this.isGranted(role);
+    }
+
     redirect(url, status, headers) {
       if (!url) {
         throw new Error("Redirect error no url !!!");
       }
       try {
         this.context.redirect(url, status, headers);
+      } catch (e) {
+        throw e;
+      }
+    }
+
+    redirectToRoute(route, variables, status, headers) {
+      if (!route) {
+        throw new Error("Redirect error no route !!!");
+      }
+      try {
+        return this.context.redirect(this.generateUrl(route, variables), status, headers);
       } catch (e) {
         throw e;
       }

@@ -536,7 +536,7 @@ module.exports = nodefony.register("cliKernel", function () {
       });
     }
 
-    /*installPackage(name, file, env) {
+    installPackage(name, file, env) {
       try {
         new nodefony.fileClass(file.dirName + "/package.json");
         return this.npmInstall(file.dirName, null, env);
@@ -547,70 +547,70 @@ module.exports = nodefony.register("cliKernel", function () {
           throw e;
         }
       }
-    }*/
-
-    installPackage(name, file, env) {
-      if (env === "development" || env === "production") {
-        process.env.NODE_ENV = env;
-      } else {
-        process.env.NODE_ENV = "development";
-      }
-      try {
-        let conf = new nodefony.fileClass(file.dirName + "/package.json");
-        let config = require(conf.path);
-        shell.cd(file.dirName);
-        npm.load(config, (error, event) => {
-          if (error) {
-            this.logger(error, "ERROR");
-            this.terminate(1);
-          }
-          event.config.localPrefix = file.dirName;
-          event.config.globalPrefix = this.kernel.rootDir;
-          event.localPrefix = file.dirName;
-          event.globalPrefix = this.kernel.rootDir;
-          //npm.config.set('localPrefix', file.dirName);
-          //npm.config.set('globalPrefix', this.rootDir);
-          let tab = [];
-          this.logger("NPM :" + npm.version + " Installing Dependencies for bundle : " + file.shortName);
-          for (let dep in config.dependencies) {
-            let mypackage = dep + "@" + config.dependencies[dep];
-            this.logger("\t Dependency : " + mypackage);
-            try {
-              require.resolve(dep);
-            } catch (e) {
-              this.logger("\t Dependency : " + mypackage);
-              tab.push(mypackage);
-            }
-          }
-          if (process.env.NODE_ENV === "development") {
-            for (let dep in config.devDependencies) {
-              let mypackage = dep + "@" + config.devDependencies[dep];
-              this.logger("\t Dependency dev : " + mypackage);
-              try {
-                require.resolve(dep);
-              } catch (e) {
-                tab.push(mypackage);
-              }
-            }
-          }
-          if (tab.length) {
-            event.commands.install(tab, (err /*, data*/ ) => {
-              if (err) {
-                this.logger("NPM :" + npm.version + " Installing Dependencies for bundle : " + file.shortName, "ERROR");
-                this.logger(err, "ERROR");
-              }
-            });
-          }
-        });
-      } catch (e) {
-        if (e.code !== "ENOENT") {
-          this.logger("Install Package BUNDLE : " + name + ":" + e, "ERROR");
-          shell.cd(this.kernel.rootDir);
-          throw e;
-        }
-      }
-      shell.cd(this.kernel.rootDir);
     }
+
+    // installPackage(name, file, env) {
+    //   if (env === "development" || env === "production") {
+    //     process.env.NODE_ENV = env;
+    //   } else {
+    //     process.env.NODE_ENV = "development";
+    //   }
+    //   try {
+    //     let conf = new nodefony.fileClass(file.dirName + "/package.json");
+    //     let config = require(conf.path);
+    //     shell.cd(file.dirName);
+    //     npm.load(config, (error, event) => {
+    //       if (error) {
+    //         this.logger(error, "ERROR");
+    //         this.terminate(1);
+    //       }
+    //       event.config.localPrefix = file.dirName;
+    //       event.config.globalPrefix = this.kernel.rootDir;
+    //       event.localPrefix = file.dirName;
+    //       event.globalPrefix = this.kernel.rootDir;
+    //       //npm.config.set('localPrefix', file.dirName);
+    //       //npm.config.set('globalPrefix', this.rootDir);
+    //       let tab = [];
+    //       this.logger("NPM :" + npm.version + " Installing Dependencies for bundle : " + file.shortName);
+    //       for (let dep in config.dependencies) {
+    //         let mypackage = dep + "@" + config.dependencies[dep];
+    //         this.logger("\t Dependency : " + mypackage);
+    //         try {
+    //           require.resolve(dep);
+    //         } catch (e) {
+    //           this.logger("\t Dependency : " + mypackage);
+    //           tab.push(mypackage);
+    //         }
+    //       }
+    //       if (process.env.NODE_ENV === "development") {
+    //         for (let dep in config.devDependencies) {
+    //           let mypackage = dep + "@" + config.devDependencies[dep];
+    //           this.logger("\t Dependency dev : " + mypackage);
+    //           try {
+    //             require.resolve(dep);
+    //           } catch (e) {
+    //             tab.push(mypackage);
+    //           }
+    //         }
+    //       }
+    //       if (tab.length) {
+    //         event.commands.install(tab, (err /*, data*/ ) => {
+    //           if (err) {
+    //             this.logger("NPM :" + npm.version + " Installing Dependencies for bundle : " + file.shortName, "ERROR");
+    //             this.logger(err, "ERROR");
+    //           }
+    //         });
+    //       }
+    //     });
+    //   } catch (e) {
+    //     if (e.code !== "ENOENT") {
+    //       this.logger("Install Package BUNDLE : " + name + ":" + e, "ERROR");
+    //       shell.cd(this.kernel.rootDir);
+    //       throw e;
+    //     }
+    //   }
+    //   shell.cd(this.kernel.rootDir);
+    // }
 
     generateHelp(obj, str) {
       this.blankLine();

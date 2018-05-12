@@ -24,7 +24,7 @@ module.exports = class defaultController extends nodefony.controller {
       console.log("pass onrequestEnd");
     });*/
 
-    /*let cookie = new nodefony.cookies.cookie("sboob", JSON.stringify({
+    /*let cookie = new nodefony.cookies.cookie("test", JSON.stringify({
       "foo": "bar"
     }), {
       signed: true,
@@ -32,14 +32,15 @@ module.exports = class defaultController extends nodefony.controller {
       path: "/test"
     });*/
     //this.response.addCookie(cookie);
-    //console.log(this.context.cookies.sboob.unsign());
+    //console.log(this.context.cookies.test.unsign());
 
   }
 
   indexAction() {
     try {
       return this.render("testBundle::index.html.twig", {
-        lib: lib.toJson()
+        lib: lib.toJson(),
+        admin: this.isGranted("ROLE_ADMIN")
       });
     } catch (e) {
       throw e;

@@ -300,7 +300,7 @@ describe("BUNDLE TEST", function () {
       request.end();
     });
 
-    it("ATTERN => POST /requirement/method", function (done) {
+    it("PATTERN => POST /requirement/method", function (done) {
       global.options.path = '/requirement/method';
       global.options.method = 'POST';
       var data = {

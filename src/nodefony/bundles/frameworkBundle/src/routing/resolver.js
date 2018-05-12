@@ -194,9 +194,9 @@ module.exports = nodefony.register("Resolver", function () {
       case result instanceof Promise:
       case result instanceof BlueBird:
       case isPromise(result):
-        if (this.context.promise) {
-          return this.context.promise.then(result);
-        }
+        //if (this.context.promise) {
+        //return this.context.promise.then(result);
+        //}
         this.context.promise = result;
         return this.context.promise.then((myResult) => {
           return this.returnController(myResult);

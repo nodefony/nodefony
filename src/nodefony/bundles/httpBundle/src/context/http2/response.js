@@ -112,9 +112,6 @@ module.exports = nodefony.register("http2Response", () => {
 
     push(ele, headers, options) {
       return new Promise((resolve, reject) => {
-        //if (version9) {
-        //return reject(new Error(`Version node ${process.versions.node}`));
-        //}
         try {
           if (this.stream && this.stream.pushAllowed) {
             let file = new nodefony.fileClass(ele);

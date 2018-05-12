@@ -153,8 +153,7 @@ security:
         path:                                     ^/webAudioApi,
         roles:                                    ["ROLE_AUDIO_ADMIN"],
         allow_if:                                 {
-          roles:["ROLE_ADMIN"],
-          ip:["127.0.0.1"]
+          roles:["ROLE_ADMIN"]
         }
       }
     # - {
