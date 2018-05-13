@@ -10,7 +10,7 @@ const defaultconfigServer = {
 };
 
 const defaultConfigConnection = {
-  useMongoClient: true,
+  //useMongoClient: true,
   reconnectTries: Number.MAX_VALUE,
   autoReconnect: true,
   socketTimeoutMS: 0,

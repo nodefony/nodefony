@@ -5,8 +5,8 @@ const error = function (err) {
   if (this.state !== "DISCONNECTED") {
     this.orm.kernel.fire('onError', err, this);
   }
-  this.logger(this.name + " : ERROR CONNECTION to database " + this.name + " " + err.message, "ERROR", "CONNECTION");
   this.logger(err, "ERROR");
+  this.logger(this.settings, "INFO", `CONFIGURATION Sequelize ${this.name}`);
   if (err.code) {
     switch (err.code) {
     case 'PROTOCOL_CONNECTION_LOST':
@@ -82,7 +82,8 @@ const connectionDB = class connectionDB {
         operatorsAliases: operatorsAliases
       }, options.options);
     }
-    this.connect(type, options);
+    this.settings = options;
+    this.connect(type, this.settings);
   }
 
   setConnection(db, config) {
@@ -96,7 +97,7 @@ const connectionDB = class connectionDB {
     if (this.orm.kernel.type === "CONSOLE") {
       severity = "DEBUG";
     }
-    this.logger(' Sequelise Connection : ' + this.name + ' has been established successfully  Type =' + this.type + "  Database = " + config.dbname, severity);
+    this.logger('Connection been established successfully Type : ' + this.type + " Database : " + config.dbname, severity);
   }
 
   getConnection() {
@@ -127,7 +128,6 @@ const connectionDB = class connectionDB {
           })
           .catch(err => {
             this.logger('Unable to connect to the database : ' + err, "ERROR");
-            console.dir(config);
             error.call(this, err);
             this.orm.fire('onErrorConnection', this.name, conn, this.orm);
           });
@@ -141,7 +141,7 @@ const connectionDB = class connectionDB {
 
   logger(pci, severity, msgid, msg) {
     if (!msgid) {
-      msgid = "SERVICE sequelize CONNECTION";
+      msgid = `CONNECTION Sequelize ${this.name}`;
     }
     return this.orm.logger(pci, severity, msgid, msg);
   }

@@ -9,8 +9,10 @@ nodefony.register.call(nodefony.session.storage, "mongoose", function () {
     };
     return this.entity.remove(where).then((results) => {
       let severity = "DEBUG";
-
-      if (results.result.n) {
+      if (!results) {
+        throw new Error("session.storage finderGC no result ");
+      }
+      if (results.n) {
         severity = "INFO";
         this.manager.logger("Context : " + (contextSession || "default") + " GARBADGE COLLECTOR ==> " + results.result.n + "  DELETED", severity);
       }

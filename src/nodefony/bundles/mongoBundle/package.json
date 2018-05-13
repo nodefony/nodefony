@@ -11,8 +11,8 @@
     ],
     "repository": {},
     "dependencies": {
-        "mongodb": "^3.0.1",
-        "mongoose": "^4.13.7"
+        "mongodb": "^3.1.0-beta4",
+        "mongoose": "^5.1.0"
     },
     "devDependencies": {},
     "license": "CECILL-B",
