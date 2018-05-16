@@ -430,9 +430,9 @@ module.exports = nodefony.register("cliKernel", function () {
         throw e;
       }
       for (let bundle in this.kernel.bundles) {
-        if (bundle + "Bundle" in this.kernel.bundlesCore) {
-          continue;
-        }
+        //if (bundle + "Bundle" in this.kernel.bundlesCore) {
+        //  continue;
+        //}
         mypromise.then(this.npmList(this.kernel.bundles[bundle].path, tab));
       }
       return mypromise.then((ele) => {

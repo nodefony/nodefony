@@ -10,6 +10,7 @@ module.exports = nodefony.registerFactory("passport-google-oauth20", () => {
     constructor(security, settings) {
       super("google", security, settings);
       this.scopes = settings.scopes || ['profile'];
+      this.provider = null;
     }
 
     getStrategy(options) {
