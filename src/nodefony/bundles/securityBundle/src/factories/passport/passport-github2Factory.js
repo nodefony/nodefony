@@ -30,13 +30,13 @@ module.exports = nodefony.registerFactory("passport-github2", () => {
     createToken(context = null /*, providerName = null*/ ) {
       if (context.metaSecurity) {
         if (context.metaSecurity.token) {
-          return new nodefony.security.tokens.google(
+          return new nodefony.security.tokens.github(
             context.metaSecurity.token.profile,
             context.metaSecurity.token.accessToken,
             context.metaSecurity.token.refreshToken);
         }
       }
-      return new nodefony.security.tokens.google();
+      return new nodefony.security.tokens.github();
     }
 
     authenticate(context) {
