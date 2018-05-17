@@ -1,29 +1,26 @@
 /*
- *	Token google
+ *	Token gitHub
  */
 
-nodefony.registerToken("google", function () {
+nodefony.registerToken("github", function () {
 
-  class googleToken extends nodefony.Token {
+  class gitHubToken extends nodefony.Token {
 
     constructor(profile, accessToken, refreshToken) {
-      super("google");
+      super("github");
       this.accessToken = accessToken;
       this.refreshToken = refreshToken;
       this.profile = profile;
       if (profile) {
         let obj = {
-          username: profile.displayName,
-          name: profile.name.familyName || "",
-          surname: profile.name.givenName || "",
+          username: profile._json.login,
+          name: profile.username || "",
+          surname: profile._json.name || "",
           email: profile.emails ? profile.emails[0].value : "",
-          //provider: profile.provider,
-          lang: profile._json.language,
           roles: ["USER"],
-          gender: profile.gender || "",
           displayName: profile.displayName,
           url: profile._json.url || "",
-          image: profile._json.image.url || ""
+          image: profile._json.avatar_url || ""
         };
         if (obj.username) {
           let user = new nodefony.User(obj.username);
@@ -48,5 +45,5 @@ nodefony.registerToken("google", function () {
       return super.unserialize(token);
     }
   }
-  return googleToken;
+  return gitHubToken;
 });
