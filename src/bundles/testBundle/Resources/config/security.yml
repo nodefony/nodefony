@@ -15,7 +15,8 @@ security:
       test-anonymous:
         provider:                                 nodefony
         pattern:                                  ^/demo
-        anonymous:                                ~
+        anonymous:
+          secret:                                 anonymous
       # main
       test-main-area:
           pattern:                                ^/test/firewall/anonymous

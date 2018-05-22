@@ -5,6 +5,14 @@ module.exports = nodefony.register('Provider', () => {
     constructor(name, manager) {
       super(name, manager.container);
       this.manager = manager;
+      this.encoder = null;
+    }
+
+    logger(pci, severity, msgid, msg) {
+      if (!msgid) {
+        msgid = "PROVIDER " + this.name;
+      }
+      return super.logger(pci, severity, msgid, msg);
     }
 
     authenticate(token) {
@@ -12,10 +20,13 @@ module.exports = nodefony.register('Provider', () => {
         if (token && this.supports(token)) {
           return this.loadUserByUsername(token.getUsername()).then((user) => {
             if (user) {
-              token.setUser(user);
-              token.setProvider(this.name);
               this.logger(`TRY AUTHENTICATION  ${token.getUsername()}  PROVIDER ${this.name}`, "DEBUG");
-              return resolve(token);
+              if (this.isPasswordValid(token.getCredentials(), user.getPassword())) {
+                token.setUser(user);
+                token.setProvider(this.name);
+                return resolve(token);
+              }
+              return reject(new Error(`user ${token.getUsername()} Incorrect password`));
             }
             return reject(new Error(`user ${token.getUsername()} not found `));
           }).catch((error) => {
@@ -30,6 +41,10 @@ module.exports = nodefony.register('Provider', () => {
       return new Promise((resolve, reject) => {
         return reject(new Error(`Provider : ${this.name} loadUserByUsername method  not defined`));
       });
+    }
+
+    isPasswordValid(raw, encoded) {
+      return encoded === raw;
     }
 
     refreshUser(user) {

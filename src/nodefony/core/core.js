@@ -25,6 +25,7 @@ module.exports = function () {
       this.bundles = {};
       this.templatings = {};
       this.services = {};
+      this.encoders = {};
       this.security = {
         factories: {},
         providers: {},
@@ -231,14 +232,12 @@ module.exports = function () {
      *
      */
     register(name, closure) {
-      let register = null;
       if (typeof closure === "function") {
         // exec closure
-        register = closure(this, name);
+        return this[name] = closure(this, name);
       } else {
-        register = closure;
+        return this[name] = closure;
       }
-      return this[name] = register;
     }
 
     /**
@@ -308,10 +307,17 @@ module.exports = function () {
     registerEntity(name, closure) {
       if (typeof closure === "function") {
         return closure();
-        //return this.entities[name] = closure();
       }
       throw new Error("Register Entity : " + name + "  error Entity bad format");
     }
+
+    registerEncoder(name, closure) {
+      if (typeof closure === "function") {
+        return this.encoders[name] = closure();
+      }
+      throw new Error("Register Encoder : " + name + "  error Encoder bad format");
+    }
+
 
     /**
      *  Register Nodefony fixture

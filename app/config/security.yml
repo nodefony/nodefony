@@ -22,3 +22,7 @@ security:
         entity:
           name:                "user"
           property:            "username"
+    encoders:
+      user :
+        algorithm:             bcrypt
+        saltRounds:            13

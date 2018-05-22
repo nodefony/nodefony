@@ -1,5 +1,5 @@
 /*
- *	Token passport-local
+ *	Token userPassword
  */
 
 nodefony.registerToken("userPassword", function () {

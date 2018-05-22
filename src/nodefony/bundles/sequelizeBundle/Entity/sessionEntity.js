@@ -1,60 +1,5 @@
 const Sequelize = require("sequelize");
 
-const schema = {
-  session_id: {
-    type: Sequelize.STRING(126).BINARY,
-    primaryKey: true
-  },
-  context: {
-    type: Sequelize.STRING(126).BINARY,
-    defaultValue: "default",
-    primaryKey: true
-  },
-  username: {
-    type: Sequelize.STRING(126).BINARY,
-    defaultValue: "",
-    allowNull: true
-  },
-  Attributes: {
-    type: Sequelize.TEXT,
-    set: function (value) {
-      return this.setDataValue('Attributes', JSON.stringify(value));
-    },
-    get: function (value) {
-      var val = this.getDataValue(value);
-      return JSON.parse(val);
-    }
-  },
-  flashBag: {
-    type: Sequelize.TEXT,
-    set: function (value) {
-      return this.setDataValue('flashBag', JSON.stringify(value));
-    },
-    get: function (value) {
-      let val = this.getDataValue(value);
-      return JSON.parse(val);
-    }
-  },
-  metaBag: {
-    type: Sequelize.TEXT,
-    set: function (value) {
-      return this.setDataValue('metaBag', JSON.stringify(value));
-    },
-    get: function (value) {
-      let val = this.getDataValue(value);
-      return JSON.parse(val);
-    }
-  },
-  createdAt: {
-    type: Sequelize.DATE,
-    defaultValue: Sequelize.NOW
-  },
-  updatedAt: {
-    type: Sequelize.DATE,
-    defaultValue: Sequelize.NOW
-  }
-};
-
 module.exports = class session extends nodefony.Entity {
 
   constructor(bundle) {
@@ -79,8 +24,65 @@ module.exports = class session extends nodefony.Entity {
       });*/
   }
 
+  getSchema() {
+    return {
+      session_id: {
+        type: Sequelize.STRING(126).BINARY,
+        primaryKey: true
+      },
+      context: {
+        type: Sequelize.STRING(126).BINARY,
+        defaultValue: "default",
+        primaryKey: true
+      },
+      username: {
+        type: Sequelize.STRING(126).BINARY,
+        defaultValue: "",
+        allowNull: true
+      },
+      Attributes: {
+        type: Sequelize.TEXT,
+        set(value) {
+          return this.setDataValue('Attributes', JSON.stringify(value));
+        },
+        get(value) {
+          var val = this.getDataValue(value);
+          return JSON.parse(val);
+        }
+      },
+      flashBag: {
+        type: Sequelize.TEXT,
+        set: function (value) {
+          return this.setDataValue('flashBag', JSON.stringify(value));
+        },
+        get(value) {
+          let val = this.getDataValue(value);
+          return JSON.parse(val);
+        }
+      },
+      metaBag: {
+        type: Sequelize.TEXT,
+        set(value) {
+          return this.setDataValue('metaBag', JSON.stringify(value));
+        },
+        get(value) {
+          let val = this.getDataValue(value);
+          return JSON.parse(val);
+        }
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW
+      }
+    };
+  }
+
   registerModel(db) {
-    let model = db.define(this.name, schema, {
+    let model = db.define(this.name, this.getSchema(), {
       logging: false
     });
 

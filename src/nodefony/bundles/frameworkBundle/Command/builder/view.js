@@ -44,6 +44,7 @@ const View = class View {
           <strong style='font-size:45px'>NODEFONY</strong>\n\
         </a>\n\
         <p>{{trans('welcome')}} {{name}}</p>\n\
+        <p>{{binding}}</p>\n\
       </h1>\n\
 {% endblock %}\n\
 {% block javascripts %}\n\

@@ -34,6 +34,15 @@ module.exports = nodefony.registerCommand("encoders", function () {
           this.logger(new Error("encoders:MD5 must have login password arguments"), "ERROR");
         }
         break;
+      case "bcrypt":
+        if (args[0]) {
+          let bcrypt = new nodefony.encoders.bcrypt(args[1]);
+          let hash = bcrypt.encodePassword(args[0]);
+          this.logger(`HASH GENERATED : ${hash}`);
+        } else {
+          throw new Error("no passwordField ");
+        }
+        break;
       }
       this.terminate(0);
     }
@@ -42,7 +51,8 @@ module.exports = nodefony.registerCommand("encoders", function () {
   return {
     name: "encoders",
     commands: {
-      md5: ["encoders:Digest firewall login password [realm]", "Generate encoding keys digest MD5 Example : nodefony encoders:Digest secured_area login password"],
+      md5: ["encoders:digest firewall login password [realm]", "Generate encoding keys digest MD5 Example : nodefony encoders:Digest secured_area login password"],
+      encodeBcrypt: ["encoders:bcrypt 'password' ['salt']", "Generate encoding password Bcrypt Example : nodefony encoders:Bcrypt 'mypassword' 13"],
     },
     cli: encoders
   };

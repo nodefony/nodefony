@@ -16,13 +16,7 @@ module.exports = nodefony.registerFactory("passport-local", () => {
         this.logger("TRY AUTHENTICATION " + this.name + " : " + username, "DEBUG");
         let mytoken = new nodefony.security.tokens.userPassword(username, password);
         this.authenticateToken(mytoken).then((token) => {
-          if (token.getCredentials() === password) {
-            done(null, token);
-          } else {
-            done(null, false, {
-              message: 'Incorrect password.'
-            });
-          }
+          done(null, token);
           return token;
         }).catch((error) => {
           done(error, null);

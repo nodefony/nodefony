@@ -31,6 +31,8 @@ const Bundle = class Bundle extends Builder {
     this.skeletonPath = path.resolve(this.cli.kernel.autoLoader.dirname, "bundles", "frameworkBundle", "Command", "skeletons");
     this.skeleton = path.resolve(this.skeletonPath, "bundleClass.skeleton");
     this.packageSkeleton = path.resolve(this.skeletonPath, "package.skeleton");
+    this.bindingSkeleton = path.resolve(this.skeletonPath, "binding", "binding.skeleton");
+    this.bindingcodeSkeleton = path.resolve(this.skeletonPath, "binding", "binding.cc.skeleton");
     this.command = new command(this.cli, this);
     this.controller = new controller(this.cli, this);
     this.service = new service(this.cli, this);
@@ -140,8 +142,14 @@ const Bundle = class Bundle extends Builder {
           name: "src",
           type: "directory",
           childs: [{
-            name: ".gitignore",
-            type: "file"
+            name: "addon",
+            type: "directory",
+            childs: [{
+              name: this.shortName + ".cc",
+              type: "file",
+              skeleton: this.bindingcodeSkeleton,
+              params: this.params
+            }]
           }]
         }, {
           name: "Entity",
@@ -155,6 +163,18 @@ const Bundle = class Bundle extends Builder {
           type: "file",
           skeleton: this.packageSkeleton,
           params: this.params
+        }, {
+          name: "binding.gyp",
+          type: "file",
+          skeleton: this.bindingSkeleton,
+          params: this.params
+        }, {
+          name: "build",
+          type: "directory",
+          childs: [{
+            name: ".gitignore",
+            type: "file"
+          }]
         }
       ]
     };

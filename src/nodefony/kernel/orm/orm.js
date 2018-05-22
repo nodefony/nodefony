@@ -44,7 +44,10 @@ module.exports = nodefony.register("orm", function () {
 
     getEntity(name) {
       if (name) {
-        return this.entities[name];
+        if (name in this.entities) {
+          return this.entities[name].model;
+        }
+        return null;
       } else {
         return this.entities;
       }
@@ -63,7 +66,7 @@ module.exports = nodefony.register("orm", function () {
       if (!entity.model) {
         throw new Error(this.name + " setEntity  : Bundle : " + entity.bundle.name + " Model is undefined in Entity : " + entity.name);
       }
-      this.entities[entity.name] = entity.model;
+      this.entities[entity.name] = entity;
       if (this.kernel.type === "SERVER") {
         this.logger(" REGISTER ENTITY : " + entity.name + " PROVIDE BUNDLE : " + entity.bundle.name, "INFO");
       }

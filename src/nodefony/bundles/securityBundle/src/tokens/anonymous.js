@@ -10,7 +10,7 @@ nodefony.registerToken("anonymous", function () {
       super("anonymous", roles);
       this.secret = secret;
       if (user) {
-        this.setUser(new nodefony.User(user, null, roles));
+        this.setUser(new nodefony.User(user, secret, roles));
       }
       if (roles && roles.length) {
         this.setAuthenticated(true);

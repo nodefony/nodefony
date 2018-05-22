@@ -432,7 +432,7 @@ module.exports = nodefony.register("Bundle", function () {
 
     logger(pci, severity, msgid, msg) {
       if (!msgid) {
-        msgid = "BUNDLE " + this.name.toUpperCase();
+        msgid = "BUNDLE " + this.name;
       }
       return super.logger(pci, severity, msgid, msg);
     }

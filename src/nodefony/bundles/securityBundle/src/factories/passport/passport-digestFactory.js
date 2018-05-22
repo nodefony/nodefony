@@ -12,7 +12,7 @@ module.exports = nodefony.registerFactory("passport-digest", () => {
     }
     getStrategy(options) {
       return new DigestStrategy(options, (username, done) => {
-        this.logger("TRY AUTHORISATION " + this.name + " : " + username, "DEBUG");
+        this.logger("TRY AUTHENTICATION " + this.name + " : " + username, "DEBUG");
         let mytoken = new nodefony.security.tokens.userPassword(username);
         this.authenticateToken(mytoken).then((token) => {
           done(null, token, token.getCredentials());

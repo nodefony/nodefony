@@ -1,5 +1,6 @@
-
 {% block body %}
+
+const addon = require('../build/Release/{{name}}.node');
 /**
  *	@class {{controllerName}}
  *	@constructor
@@ -21,7 +22,8 @@ module.exports = class {{controllerName}} extends nodefony.controller {
 	indexAction (){
 		try {
 			return this.render("{{bundleName}}:{{directory}}:index.html.twig", {
-				name:"{{bundleName}}"
+				name: "{{bundleName}}",
+        binding: addon.{{name}}()
 			});
 		}catch(e){
 			throw e;

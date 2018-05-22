@@ -7,43 +7,6 @@
  */
 const Sequelize = require("sequelize");
 
-
-const schema = {
-  id: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  remoteAddress: {
-    type: Sequelize.STRING
-  },
-  userAgent: {
-    type: Sequelize.STRING
-  },
-  url: {
-    type: Sequelize.TEXT
-  },
-  route: {
-    type: Sequelize.STRING
-  },
-  method: {
-    type: Sequelize.STRING
-  },
-  state: {
-    type: Sequelize.STRING
-  },
-  protocole: {
-    type: Sequelize.STRING
-  },
-  username: {
-    type: Sequelize.STRING
-  },
-  data: {
-    type: Sequelize.TEXT
-  }
-};
-
-
 module.exports = class requests extends nodefony.Entity {
 
   constructor(bundle) {
@@ -57,8 +20,45 @@ module.exports = class requests extends nodefony.Entity {
 
   }
 
+  getSchema() {
+    return {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
+      remoteAddress: {
+        type: Sequelize.STRING
+      },
+      userAgent: {
+        type: Sequelize.STRING
+      },
+      url: {
+        type: Sequelize.TEXT
+      },
+      route: {
+        type: Sequelize.STRING
+      },
+      method: {
+        type: Sequelize.STRING
+      },
+      state: {
+        type: Sequelize.STRING
+      },
+      protocole: {
+        type: Sequelize.STRING
+      },
+      username: {
+        type: Sequelize.STRING
+      },
+      data: {
+        type: Sequelize.TEXT
+      }
+    };
+  }
+
   registerModel(db) {
-    return db.define(this.name, schema, {
+    return db.define(this.name, this.getSchema(), {
       logging: false
     });
   }

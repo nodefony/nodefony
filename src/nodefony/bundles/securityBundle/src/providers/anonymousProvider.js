@@ -11,7 +11,7 @@ module.exports = nodefony.registerProvider("anonymousProvider", () => {
     loadUserByUsername(username) {
       return new Promise((resolve, reject) => {
         try {
-          return resolve(new nodefony.User(username, null, ["ROLE_ANONYMOUS"]));
+          return resolve(new nodefony.User(username, this.secret, ["ROLE_ANONYMOUS"]));
         } catch (e) {
           return reject(e);
         }

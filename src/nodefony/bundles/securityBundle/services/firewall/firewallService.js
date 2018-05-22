@@ -527,6 +527,29 @@ module.exports = class security extends nodefony.Service {
       case "access_control":
         this.authorizationService.setAccessControl(obj[ele]);
         break;
+      case "encoders":
+        this.orm.prependOnceListener("onOrmReady", () => {
+          for (let entity in obj[ele]) {
+            try {
+              if (entity in this.orm.entities) {
+                let myEntity = this.orm.entities[entity];
+                if (obj[ele][entity].algorithm) {
+                  let algo = obj[ele][entity].algorithm;
+                  if (algo in nodefony.encoders) {
+                    delete obj[ele][entity].algorithm;
+                    myEntity.setEncoder(new nodefony.encoders[algo](obj[ele][entity]));
+                    continue;
+                  }
+                  throw new Error(`Encoder algorithm ${algo} not registered ! `);
+                }
+                throw new Error(`In configuration Entity ${entity} Encoder algorithm not defined ! `);
+              }
+            } catch (e) {
+              throw e;
+            }
+          }
+        });
+        break;
       case "providers":
         for (let name in obj[ele]) {
           this.logger("DECLARE FIREWALL PROVIDER NAME " + name, "DEBUG");
