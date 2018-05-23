@@ -46,8 +46,12 @@ module.exports = nodefony.registerCommand("generate", function () {
               project = new generater.bundle(this, "js");
               let result = project.createBuilder(args[0], args[1]);
               project.build(result, project.location);
-              project.install();
-              this.terminate(0);
+              project.install().then(() => {
+                this.terminate(0);
+              }).catch((e) => {
+                this.logger(e, "ERROR");
+                this.terminate(0);
+              });
               return;
             } else {
               switch (cmd[2]) {

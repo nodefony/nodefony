@@ -211,6 +211,7 @@ const Bundle = class Bundle extends Builder {
       let file = new nodefony.fileClass(this.bundleFile);
       this.cli.kernel.loadBundle(file);
       this.cli.assetInstall(this.shortName);
+      return this.cli.npmInstall(this.bundlePath);
     } catch (e) {
       throw e;
     }
