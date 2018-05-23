@@ -10,7 +10,7 @@ module.exports = nodefony.registerFixture("users", function () {
       name: "anonymous",
       surname: "anonymous",
       displayName: "Anonymous",
-      password: "",
+      password: "anonymous",
       lang: "en_en",
       roles: "ROLE_ANONYMOUS"
     }, {

@@ -79,8 +79,8 @@ templating                      : twig
 ############
 # ENGINE ORM
 #       sequelize || mongoose
-#orm                             : mongoose
-orm                             : sequelize
+orm                             : mongoose
+#orm                             : sequelize
 
 #########################
 # NODE.JS PACKAGE MANAGER

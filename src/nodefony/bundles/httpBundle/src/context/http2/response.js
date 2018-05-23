@@ -126,12 +126,15 @@ module.exports = nodefony.register("http2Response", () => {
               exclusive: true,
               parent: this.streamId
             }, (err, pushStream /*, headers*/ ) => {
-              if (version9) {
+              /*if (version9) {
                 if (err) {
                   return reject(err);
                 }
               } else {
                 pushStream = err;
+              }*/
+              if (err) {
+                return reject(err);
               }
               let myOptions = nodefony.extend({
                 onError: (err) => {

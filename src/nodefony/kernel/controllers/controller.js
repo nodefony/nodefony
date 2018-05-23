@@ -148,9 +148,15 @@ module.exports = nodefony.register("controller", function () {
       } else {
         return new Promise((resolve, reject) => {
           if (this.context.type !== "HTTP2") {
-            return reject(new Error(" push method must be called with HTTP2 request !!!!"));
+            let error = `HTTP2 push : ${asset} method must be called with HTTP2 request !!!!`;
+            this.logger(error, "WARNING");
+            return resolve();
+            //return reject();
           }
-          return reject(new Error("HTTP2 Server push not pushAllowed"));
+          let error = `HTTP2 Server push : ${asset} not pushAllowed `;
+          this.logger(error, "WARNING");
+          return resolve();
+          //return reject(new Error("HTTP2 Server push not pushAllowed"));
         });
       }
     }
