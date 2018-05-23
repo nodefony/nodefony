@@ -285,6 +285,9 @@ module.exports = class security extends nodefony.Service {
           context.user = token.user;
           context.token = token;
           return token;
+        } else {
+          this.deleteSessionToken(context, session);
+          return null;
         }
       }
     }
@@ -293,7 +296,7 @@ module.exports = class security extends nodefony.Service {
 
   deleteSessionToken(context, session) {
     if (session) {
-      session.setMetaBag("security", null);
+      session.setMetaBag("security", "");
       context.token = null;
       context.user = null;
     }
