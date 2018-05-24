@@ -497,14 +497,6 @@ Access to monitoring route with URL : <http://localhost:5151/nodefony>
 
 Monitoring in progress !!!
 
-## <a name="references--thanks"></a>References / Thanks
-
-#### NPM : _Will be automatically installed by Makefile_
-
-```
-
-```
-
 **Big thanks:**
 
 **Related Links:**
