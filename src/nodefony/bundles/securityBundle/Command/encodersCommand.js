@@ -51,7 +51,7 @@ module.exports = nodefony.registerCommand("encoders", function () {
   return {
     name: "encoders",
     commands: {
-      md5: ["encoders:digest firewall login password [realm]", "Generate encoding keys digest MD5 Example : nodefony encoders:Digest secured_area login password"],
+      //md5: ["encoders:digest firewall login password [realm]", "Generate encoding keys digest MD5 Example : nodefony encoders:Digest secured_area login password"],
       encodeBcrypt: ["encoders:bcrypt 'password' ['salt']", "Generate encoding password Bcrypt Example : nodefony encoders:Bcrypt 'mypassword' 13"],
     },
     cli: encoders

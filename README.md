@@ -22,12 +22,13 @@ Nodefony features :
 -   Notion of synchronous or asynchronous execution in Action Controller (Promise).
 -   Services Containers, Dependency Injection (Design Patterns)
 -   Sessions Manager (ORM, memcached)
--   Authentication Manager (Digest, Basic, oAuth, Local, ldap)
+-   Authentication Manager (Digest, Basic, oAuth, Local, ldap, jwf)
 -   WAF ( Web application firewall )
 -   Cross-Origin Resource Sharing ([CORS](https://www.w3.org/TR/cors/))
 -   Production Management ([PM2](https://github.com/Unitech/pm2/))
 -   RealTime API ([Bayeux Protocol](http://autogrowsystems.github.io/faye-go/))
 -   Webpack Assets management (Like WDS with HMR hot module Replacement)
+-   C++ Addons (Binding in Bundle)
 -   Translations
 -   CLI (Command Line Interface)
 -   Monitororing , Debug Bar
@@ -45,7 +46,7 @@ Nodefony assimilates into the ecosystem of node.js with services like :
 
 Nodefony 4  adds the following features :
 
--   ~~[Electron](https://github.com/nodefony/nodefony-electron) Experimental Nodefony Electron  ( Now an Electron Context can be use in Nodefony Project  )~~
+-   ~~[Electron](https://github.com/nodefony/nodefony-electron) Experimental Nodefony Electron  ( Now an Electron Context can be use in Nodefony Project )~~
 
 Now in this version  4 Beta,  Nodefony is evolved to a stable version without major fundamental changes.
 
@@ -114,6 +115,8 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 -   MACOS (Checked, Tested)
 
 -   ~~WINDOWS (Not ported yet )~~
+
+-   ~~ELECTRON (Experimental Project)
 
 -   EMBEDDED SYSTEM ( Very difficult : large memory footprint )  
 

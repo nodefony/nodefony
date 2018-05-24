@@ -645,13 +645,14 @@ module.exports = nodefony.register("kernel", function () {
                       //let name = this.getBundleName(file.name);
                       let Class = this.getBundleClass(file, true);
                       let name = this.getBundleName(Class);
-                      if (file.shortName in this.bundlesCore) {
+                      /*if (file.shortName in this.bundlesCore) {
                         if (this.isCore) {
                           this.cli.installPackage(name, file);
                         }
                       } else {
                         this.cli.installPackage(name, file);
-                      }
+                      }*/
+                      this.cli.installPackage(name, file);
                       break;
                     default:
                       this.loadBundle(file);
