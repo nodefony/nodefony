@@ -175,8 +175,8 @@ system:
   servers:
     protocol                    : "2.0"             #  2.0 || 1.1
     http                        : true
-    https	                      : true
-    ws			                    : true
+    https                       : true
+    ws                          : true
     wss			                    : true
     certificats:
       key                       : "config/certificates/server/privkey.pem"
@@ -238,8 +238,8 @@ framework
     router:match:url url                                             Get route who match url Example : nodefony router:match:url /nodefony
     webpack:dump                                                     Compile webpack for all bundles
 security
-	  decoders:bcrypt password 'encoded'                               Decoded password Bcrypt Example : dencoders:Bcrypt test '$2b$10$8du22L5ki0XMH.r.FHK'
-	  encoders:bcrypt 'password' ['salt']                              Generate encoding password Bcrypt Example : nodefony encoders:Bcrypt 'mypassword' 13
+    decoders:bcrypt password 'encoded'                               Decoded password Bcrypt Example : dencoders:Bcrypt test '$2b$10$8du22L5ki0XMH.r.FHK'
+    encoders:bcrypt 'password' ['salt']                              Generate encoding password Bcrypt Example : nodefony encoders:Bcrypt 'mypassword' 13
 sequelize
     Sequelize:fixtures:load                                          Load data fixtures to your database
     Sequelize:generate:entities [force]                              Generate All Entities force to delete table if exist  example : nodefony Sequelize:generate:entities force
