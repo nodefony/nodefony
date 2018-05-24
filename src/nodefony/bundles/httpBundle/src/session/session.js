@@ -383,7 +383,6 @@ nodefony.register("Session", function () {
     remove(cookieDelete) {
       try {
         let res = this.storage.destroy(this.id, this.contextSession);
-        console.log("remove", res)
         if (cookieDelete) {
           this.deleteCookieSession();
           this.saved = true;
