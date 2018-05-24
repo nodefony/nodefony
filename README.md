@@ -46,7 +46,11 @@ Nodefony assimilates into the ecosystem of node.js with services like :
 
 Nodefony 4  adds the following features :
 
--   ~~[Electron](https://github.com/nodefony/nodefony-electron) Experimental Nodefony Electron  ( Now an Electron Context can be use in Nodefony Project )~~
+-   C++ Addons (Binding in Bundle)
+-   Authorisations
+-   HTTP2
+-   WEBPACK 4  
+
 
 Now in this version  4 Beta,  Nodefony is evolved to a stable version without major fundamental changes.
 
@@ -116,7 +120,7 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 
 -   ~~WINDOWS (Not ported yet )~~
 
--   ~~ELECTRON (Experimental Project)
+-   ~~[ELECTRON](https://github.com/nodefony/nodefony-electron) Experimental Nodefony Electron  ( Now an Electron Context can be use in Nodefony Project )~~
 
 -   EMBEDDED SYSTEM ( Very difficult : large memory footprint )  
 
@@ -234,7 +238,8 @@ framework
     router:match:url url                                             Get route who match url Example : nodefony router:match:url /nodefony
     webpack:dump                                                     Compile webpack for all bundles
 security
-    encoders:Digest firewall login password [realm]                  Generate encoding keys digest MD5 Example : nodefony encoders:Digest secured_area login password
+	  decoders:bcrypt password 'encoded'                               Decoded password Bcrypt Example : dencoders:Bcrypt test '$2b$10$8du22L5ki0XMH.r.FHK'
+	  encoders:bcrypt 'password' ['salt']                              Generate encoding password Bcrypt Example : nodefony encoders:Bcrypt 'mypassword' 13
 sequelize
     Sequelize:fixtures:load                                          Load data fixtures to your database
     Sequelize:generate:entities [force]                              Generate All Entities force to delete table if exist  example : nodefony Sequelize:generate:entities force
