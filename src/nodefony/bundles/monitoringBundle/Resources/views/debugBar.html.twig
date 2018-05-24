@@ -586,13 +586,10 @@
 
     <li class="separator"></li>
 
-    <li >@
-      <label class="label label-default nodefony-responsive-md">
+    <li ><label class="label label-default nodefony-responsive-md">@
         {% if id %}
-          <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=request'>{{route.name}}
-            <a>
-            {% else %}
-              {{route.name}}
+          <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=request'>{{route.name}}</a>
+            {% else %}{{route.name}}
             {% endif %}
           </label>
           <div class="details">

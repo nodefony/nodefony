@@ -19,7 +19,7 @@ nodefony.registerToken("google", function () {
           email: profile.emails ? profile.emails[0].value : "",
           //provider: profile.provider,
           lang: profile._json.language,
-          roles: ["USER"],
+          roles: ["ROLE_USER"],
           gender: profile.gender || "",
           displayName: profile.displayName,
           url: profile._json.url || "",

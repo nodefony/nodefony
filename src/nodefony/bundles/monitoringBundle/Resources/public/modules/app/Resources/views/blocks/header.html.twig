@@ -21,23 +21,23 @@
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right ">
-				{% if  user.displayName  %}
+				{% if  user.username  %}
 					<li style='top:12px ;margin-right: 0px' class="dropdown"  >
 					{% if  user.image and user.image != "  "  %}
 						<img style='top:12px' width="26px" height="26px" src="{{ user.image }}" alt=""></img>
 					{% else %}
-						<i class="icon fa glyphicon glyphicon-user" ></i>
+						<img style='top:12px' width="26px" height="26px" src="/frameworkBundle/images/nodefony-logo-white.png" alt=""></img>
 					{% endif %}
 					</li>
 					<li style='top:12px ;margin-right: 30px' class="dropdown">
-						<strong class="text-primary">{{user.displayName}}</strong>
+						<strong class="text-primary">{{user.username}}</strong>
 					</li>
 				{% else %}
 					<li style='top:12px ;right:20px'>
-						<strong class="text-primary"> VERSION {{version}}  ©</strong>	
+						<strong class="text-primary"> VERSION {{version}}  ©</strong>
 					</li>
 				{% endif %}
-				
+
 			</ul>
 		</div>
 
@@ -45,5 +45,3 @@
 
 </nav>
 </div>
-
-

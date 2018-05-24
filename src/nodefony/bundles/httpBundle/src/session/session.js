@@ -149,7 +149,6 @@ nodefony.register("Session", function () {
         break;
       default:
         return true;
-
       }
     }
 
@@ -194,9 +193,9 @@ nodefony.register("Session", function () {
               this.contextSession = contextSession;
               return this.create(this.lifetime, null);
             }
+            this.remove();
             this.manager.logger(`STRATEGY MIGRATE SESSION  ==> ${this.name} : ${this.id}`, "DEBUG");
             this.migrated = true;
-            this.remove();
             this.contextSession = contextSession;
             return this.create(this.lifetime, null);
           }).catch((error) => {
@@ -384,6 +383,7 @@ nodefony.register("Session", function () {
     remove(cookieDelete) {
       try {
         let res = this.storage.destroy(this.id, this.contextSession);
+        console.log("remove", res)
         if (cookieDelete) {
           this.deleteCookieSession();
           this.saved = true;

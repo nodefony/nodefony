@@ -998,7 +998,9 @@ const dataTableSessionParsing = function (query, results) {
     let user = null;
     switch (ormName) {
     case "sequelize":
-      user = results.rows[i].user ? results.rows[i].user : {
+      user = results.rows[i].username ? {
+        username: results.rows[i].username
+      } : {
         username: ""
       };
       break;

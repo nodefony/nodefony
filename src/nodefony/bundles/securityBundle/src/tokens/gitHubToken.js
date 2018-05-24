@@ -17,7 +17,7 @@ nodefony.registerToken("github", function () {
           name: profile.username || "",
           surname: profile._json.name || "",
           email: profile.emails ? profile.emails[0].value : "",
-          roles: ["USER"],
+          roles: ["ROLE_USER"],
           displayName: profile.displayName,
           url: profile._json.url || "",
           image: profile._json.avatar_url || ""

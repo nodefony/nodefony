@@ -34,7 +34,7 @@ module.exports = nodefony.register("controller", function () {
 
     logger(pci, severity, msgid, msg) {
       if (!msgid) {
-        msgid = "BUNDLE : " + this.bundle.name.toUpperCase() + " Controller : " + this.name;
+        msgid = `Controller : ${this.bundle.name}Bundle:${this.name}`;
       }
       return super.logger(pci, severity, msgid, msg);
     }
@@ -139,17 +139,22 @@ module.exports = nodefony.register("controller", function () {
           }
         }
         try {
-          return this.response.push(asset, headers, options);
+          return this.response.push(asset, headers, options)
+            .catch((error) => {
+              this.logger(`HTTP2 push error  : ${asset}`, "ERROR");
+              this.logger(error, "ERROR");
+              return error;
+            });
         } catch (e) {
           return new Promise((resolve, reject) => {
             return reject(e);
           });
         }
       } else {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve /*, reject*/ ) => {
           if (this.context.type !== "HTTP2") {
-            let error = `HTTP2 push : ${asset} method must be called with HTTP2 request !!!!`;
-            this.logger(error, "WARNING");
+            //let error = `HTTP2 push : ${asset} method must be called with HTTP2 request !!!!`;
+            //this.logger(error, "WARNING");
             return resolve();
             //return reject();
           }
