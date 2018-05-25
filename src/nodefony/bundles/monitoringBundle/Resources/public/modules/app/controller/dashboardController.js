@@ -270,6 +270,9 @@ stage.registerController("dashboardController", function () {
                 var ele = $("#WEBSOCKET_SECURE");
               }
               break;
+            case "statics":
+              conf = null;
+              break;
             }
             if (conf) {
               manageWidgetServer(ele, conf)
@@ -307,7 +310,7 @@ stage.registerController("dashboardController", function () {
             ele.find(".ready").text("ACTIVE")
             var eleSetting = ele.find(".settings");
             var eleDirectories = ele.find(".directories");
-            var statics = data.response.data.App.httpBundle.statics;
+            var statics = data.response.data.servers.statics;
             for (var ele in statics) {
               if (ele === "defaultOptions") {
                 for (var conf in statics[ele]) {

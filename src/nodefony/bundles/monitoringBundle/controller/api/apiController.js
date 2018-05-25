@@ -527,6 +527,8 @@ module.exports = class apiController extends nodefony.controller {
     //console.log(util.inspect( this.bundle, {depth:1}) )
     let bundleApp = this.kernel.getBundles("App");
 
+    let bundleHttp = this.kernel.getBundles("http");
+    //console.log(bundleHttp.settings.statics)
 
     return this.renderRest({
       code: 200,
@@ -541,6 +543,7 @@ module.exports = class apiController extends nodefony.controller {
         events: this.bundle.infoKernel.events,
         bundles: this.bundle.infoBundles,
         servers: {
+          statics: bundleHttp.settings.statics,
           http: httpConfig,
           https: httpsConfig,
           websocket: websocketConfig,

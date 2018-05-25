@@ -184,7 +184,8 @@ describe("BUNDLE TEST", function () {
         // Valid user
         let user = json.user;
         assert.deepStrictEqual(user.username, "admin");
-        assert.deepStrictEqual(user.roles, 'ROLE_ADMIN');
+        assert.deepStrictEqual(nodefony.typeOf(user.roles), "array");
+        assert.deepStrictEqual(user.roles[0], 'ROLE_ADMIN');
         assert.deepStrictEqual(user.lang, 'en_en');
         assert.deepStrictEqual(user.enabled, true);
         assert.deepStrictEqual(user.accountNonExpired, true);
