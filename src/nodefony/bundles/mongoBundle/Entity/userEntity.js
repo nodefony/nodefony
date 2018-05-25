@@ -66,8 +66,8 @@ module.exports = class user extends nodefony.Entity {
         default: "en_en"
       },
       roles: {
-        type: String,
-        default: 'ROLE_USER'
+        type: Array,
+        default: ["ROLE_USER"]
       },
       gender: {
         type: String

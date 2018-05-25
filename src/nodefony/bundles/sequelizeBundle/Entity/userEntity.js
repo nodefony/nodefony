@@ -40,13 +40,13 @@ module.exports = class user extends nodefony.Entity {
         autoIncrement: true
       },*/
       username: {
-        type: Sequelize.STRING(126).BINARY,
+        type: Sequelize.STRING(126),
         primaryKey: true,
         unique: true,
         allowNull: false
       },
       password: {
-        type: Sequelize.STRING(256).BINARY,
+        type: Sequelize.STRING(256),
         set(value) {
           let encoded = encodePassword(value);
           return this.setDataValue("password", encoded);
@@ -78,8 +78,8 @@ module.exports = class user extends nodefony.Entity {
         defaultValue: "en_en"
       },
       roles: {
-        type: Sequelize.STRING,
-        defaultValue: 'ROLE_USER'
+        type: Sequelize.JSON,
+        defaultValue: ['ROLE_USER']
       },
       gender: Sequelize.STRING,
       url: Sequelize.STRING,
