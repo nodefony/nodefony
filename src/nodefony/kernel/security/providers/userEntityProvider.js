@@ -10,7 +10,9 @@ module.exports = nodefony.register("userEntityProvider", () => {
       this.orm.on("onOrmReady", () => {
         this.userEntity = this.orm.getEntity(this.entityName);
         this.entity = this.orm.entities[this.entityName];
-        this.encoder = this.entity.getEncoder();
+        if (this.entity) {
+          this.encoder = this.entity.getEncoder();
+        }
       });
     }
 
