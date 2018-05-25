@@ -27,48 +27,45 @@ module.exports = class session extends nodefony.Entity {
   getSchema() {
     return {
       session_id: {
-        type: Sequelize.STRING(126).BINARY,
+        type: Sequelize.STRING(126),
         primaryKey: true
       },
       context: {
-        type: Sequelize.STRING(126).BINARY,
+        type: Sequelize.STRING(126),
         defaultValue: "default",
         primaryKey: true
       },
       username: {
-        type: Sequelize.STRING(126).BINARY,
+        type: Sequelize.STRING(126),
         defaultValue: "",
         allowNull: true
       },
       Attributes: {
-        type: Sequelize.TEXT,
-        set(value) {
+        type: Sequelize.JSON
+        /*set(value) {
           return this.setDataValue('Attributes', JSON.stringify(value));
         },
         get(value) {
-          var val = this.getDataValue(value);
-          return JSON.parse(val);
-        }
+          return JSON.parse(this.getDataValue(value));
+        }*/
       },
       flashBag: {
-        type: Sequelize.TEXT,
-        set: function (value) {
+        type: Sequelize.JSON
+        /*set: function (value) {
           return this.setDataValue('flashBag', JSON.stringify(value));
         },
         get(value) {
-          let val = this.getDataValue(value);
-          return JSON.parse(val);
-        }
+          return JSON.parse(this.getDataValue(value));
+        }*/
       },
       metaBag: {
-        type: Sequelize.TEXT,
-        set(value) {
+        type: Sequelize.JSON,
+        /*set(value) {
           return this.setDataValue('metaBag', JSON.stringify(value));
         },
         get(value) {
-          let val = this.getDataValue(value);
-          return JSON.parse(val);
-        }
+          return JSON.parse(this.getDataValue(value));
+        }*/
       },
       createdAt: {
         type: Sequelize.DATE,
