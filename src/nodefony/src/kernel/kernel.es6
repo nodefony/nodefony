@@ -585,48 +585,44 @@ module.exports = nodefony.register("kernel", function () {
       }
     }
 
-    getBundleClass(file /*, force*/ ) {
+    getBundleClass(Class, Path) {
       try {
-        //return this.autoLoader.load(file.path, force);
-        return require(file.path);
+        switch (true) {
+        case (Class instanceof nodefony.fileClass):
+          return this.getBundleClass(require(Class.path), require.resolve(Class.path));
+        case (typeof Class === "function"):
+          if (Class.toString().indexOf("class") >= 0) {
+            Class.prototype.path = path.dirname(Path);
+            Class.prototype.autoLoader = this.autoLoader;
+            return {
+              class: Class,
+              name: this.getBundleName(Class)
+            };
+          } else {
+            throw new Error(`getBundleClass Bad Bundle Class : ${Class.toString()} Path : ${Path}`);
+          }
+          break;
+        case (typeof Class === "string"):
+          return this.getBundleClass(require(Class), require.resolve(Class));
+        default:
+          throw new Error(`getBundleClass Bad Bundle Class : ${typeof Class} Path : ${Path}`);
+        }
       } catch (e) {
         throw e;
       }
     }
 
-    isBundleClass(ele) {
-      if (typeof ele === "function") {
-        let ts = ele.toString();
-        if (ts.indexOf("class") >= 0) {
-          return true;
-        }
-      }
-      return false;
-    }
-
     loadBundle(file) {
       try {
-        let Class = file;
-        if (!this.isBundleClass(Class)) {
-          Class = this.getBundleClass(file, true);
+        let bundle = this.getBundleClass(file);
+        try {
+          this.bundles[bundle.name] = new bundle.class(bundle.name, this, this.container);
+        } catch (e) {
+          throw e;
         }
-        let name = this.getBundleName(Class);
-        if (typeof Class === "function") {
-          Class.prototype.path = file.dirName;
-          Class.prototype.autoLoader = this.autoLoader;
-          try {
-            this.bundles[name] = new Class(name, this, this.container);
-          } catch (e) {
-            //this.logger(e, "ERROR");
-            //console.trace(e);
-            throw e;
-          }
-          if (this.bundles[name].waitBundleReady) {
-            this.eventReadywait += 1;
-            this.bundles[name].listen(this, "onReady", waitingBundle);
-          }
-        } else {
-          throw new Error("Bundle " + name + " Class is not a function");
+        if (this.bundles[bundle.name].waitBundleReady) {
+          this.eventReadywait += 1;
+          this.bundles[bundle.name].listen(this, "onReady", waitingBundle);
         }
       } catch (e) {
         throw e;
@@ -653,9 +649,7 @@ module.exports = nodefony.register("kernel", function () {
                   if (this.cli.commander && this.cli.commander.args && this.cli.commander.args[0]) {
                     switch (this.cli.commander.args[0]) {
                     case "npm:install":
-                      //let name = this.getBundleName(file.name);
-                      let Class = this.getBundleClass(file, true);
-                      let name = this.getBundleName(Class);
+                      let bundle = this.getBundleClass(file);
                       /*if (file.shortName in this.bundlesCore) {
                         if (this.isCore) {
                           this.cli.installPackage(name, file);
@@ -663,7 +657,7 @@ module.exports = nodefony.register("kernel", function () {
                       } else {
                         this.cli.installPackage(name, file);
                       }*/
-                      this.cli.installPackage(name, file);
+                      this.cli.installPackage(bundle.name, file);
                       break;
                     default:
                       this.loadBundle(file);
