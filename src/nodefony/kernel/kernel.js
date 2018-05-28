@@ -586,36 +586,48 @@ module.exports = nodefony.register("kernel", function () {
       }
     }
 
-    getBundleClass(file, force) {
+    getBundleClass(file /*, force*/ ) {
       try {
-        return this.autoLoader.load(file.path, force);
+        //return this.autoLoader.load(file.path, force);
+        return require(file.path);
       } catch (e) {
         throw e;
       }
     }
 
+    isBundleClass(ele) {
+      if (typeof ele === "function") {
+        let ts = ele.toString();
+        if (ts.indexOf("class") >= 0) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     loadBundle(file) {
       try {
-        let Class = this.getBundleClass(file, true);
+        let Class = file;
+        if (!this.isBundleClass(Class)) {
+          Class = this.getBundleClass(file, true);
+        }
         let name = this.getBundleName(Class);
-        if (Class) {
-          if (typeof Class === "function") {
-            Class.prototype.path = file.dirName;
-            Class.prototype.autoLoader = this.autoLoader;
-            try {
-              this.bundles[name] = new Class(name, this, this.container);
-            } catch (e) {
-              //this.logger(e, "ERROR");
-              //console.trace(e);
-              throw e;
-            }
-            if (this.bundles[name].waitBundleReady) {
-              this.eventReadywait += 1;
-              this.bundles[name].listen(this, "onReady", waitingBundle);
-            }
-          } else {
-            throw new Error("Bundle " + name + " Class is not a function");
+        if (typeof Class === "function") {
+          Class.prototype.path = file.dirName;
+          Class.prototype.autoLoader = this.autoLoader;
+          try {
+            this.bundles[name] = new Class(name, this, this.container);
+          } catch (e) {
+            //this.logger(e, "ERROR");
+            //console.trace(e);
+            throw e;
           }
+          if (this.bundles[name].waitBundleReady) {
+            this.eventReadywait += 1;
+            this.bundles[name].listen(this, "onReady", waitingBundle);
+          }
+        } else {
+          throw new Error("Bundle " + name + " Class is not a function");
         }
       } catch (e) {
         throw e;
