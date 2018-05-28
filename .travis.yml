@@ -30,7 +30,7 @@ before_install:
   - sudo apt-get install nodejs-legacy
   - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('nodefony') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
   - sudo mysql -e "create database IF NOT EXISTS nodefony;" -uroot -pnodefony
-  - sudo mysql -e "GRANT ALL ON nodefony.* TO 'root'@'localhost';" -uroot -pnodefony"
+  - sudo mysql -e "GRANT ALL ON nodefony.* TO 'root'@'localhost';" -uroot -pnodefony
   - sudo mysql_upgrade
   - sudo service mysql restart
   - "curl -L https://raw.githubusercontent.com/nodefony/nodefony-core/dev/.travis/bin/install.sh | /bin/sh"
