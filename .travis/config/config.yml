@@ -83,8 +83,8 @@ sequelizeBundle:
     nodefony:
       driver:                    mysql
       dbname:                    'nodefony'
-      username:                  'travis'
-      password:                  ''
+      username:                  'root'
+      password:                  'nodefony'
       options:
         dialect:                 mysql
         host:                    127.0.0.1
