@@ -1,15 +1,15 @@
 {
-	"name": "HTTP",
-	"version": "3.0.0",
-	"description": "Manager HTTP ",
-	"contributors": [],
-	"private": true,
-	"scripts": {},
-	"keywords": [
-		"nodefony",
-		"javascript"
-	],
-	"dependencies": {},
-	"author": "cci <christophe.camensuli@gmail.com>",
-	"license": "CECILL-B"
+  "name": "@nodefony/httpBundle",
+  "version": "4.0.0",
+  "description": "Manager HTTP ",
+  "contributors": [],
+  "private": true,
+  "scripts": {},
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "dependencies": {},
+  "author": "cci <christophe.camensuli@gmail.com>",
+  "license": "CECILL-B"
 }

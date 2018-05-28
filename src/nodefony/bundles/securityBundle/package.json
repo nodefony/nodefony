@@ -1,15 +1,15 @@
 {
-	"name": "SECURITY",
-	"version": "3.0.0",
-	"description": " ",
-	"contributors": [],
-	"private": true,
-	"scripts": {},
-	"keywords": [
-		"nodefony",
-		"javascript"
-	],
-	"dependencies": {},
-	"author": "cci <christophe.camensuli@gmail.com>",
-	"license": "CECILL-B"
+  "name": "@nodefony/securityBundle",
+  "version": "4.0.0",
+  "description": " ",
+  "contributors": [],
+  "private": true,
+  "scripts": {},
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "dependencies": {},
+  "author": "cci <christophe.camensuli@gmail.com>",
+  "license": "CECILL-B"
 }

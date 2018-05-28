@@ -362,9 +362,16 @@ module.exports = nodefony.register("kernel", function () {
       if (yml && yml.system && yml.system.bundles) {
         for (let bundle in yml.system.bundles) {
           try {
-            exist = fs.existsSync(path.resolve(this.rootDir, yml.system.bundles[bundle]));
+            exist = require(yml.system.bundles[bundle]);
           } catch (e) {
-            this.logger(e, "WARNING");
+            //this.logger(e, "WARNING");
+          }
+          if (!exist) {
+            try {
+              exist = fs.existsSync(path.resolve(this.rootDir, yml.system.bundles[bundle]));
+            } catch (e) {
+              this.logger(e, "WARNING");
+            }
           }
           if (!exist) {
             delete yml.system.bundles[bundle];
@@ -644,6 +651,7 @@ module.exports = nodefony.register("kernel", function () {
             exclude: /^doc$|^node_modules$/,
             recurse: false,
             onFile: (file) => {
+              //console.log(file)
               if (file.matchName(this.regBundle)) {
                 try {
                   if (this.cli.commander && this.cli.commander.args && this.cli.commander.args[0]) {

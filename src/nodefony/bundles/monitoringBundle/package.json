@@ -1,6 +1,6 @@
 {
-  "name": "MONITORING",
-  "version": "3.0.0",
+  "name": "@nodefony/monitoringBundle",
+  "version": "4.0.0",
   "description": "nodefony monitoring",
   "contributors": [],
   "private": true,

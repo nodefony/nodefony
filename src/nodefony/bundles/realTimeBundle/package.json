@@ -1,15 +1,15 @@
 {
-	"name": "nodefony-realtime",
-	"version": "3.0.0",
-	"description": "Bundle realtime ",
-	"contributors": [],
-	"private": true,
-	"scripts": {},
-	"keywords": [
-		"nodefony",
-		"javascript"
-	],
-	"dependencies": {},
-	"author": "cci <christophe.camensuli@gmail.com>",
-	"license": "CECILL-B"
+  "name": "@nodefony/realtimeBundle",
+  "version": "4.0.0",
+  "description": "Bundle realtime ",
+  "contributors": [],
+  "private": true,
+  "scripts": {},
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "dependencies": {},
+  "author": "cci <christophe.camensuli@gmail.com>",
+  "license": "CECILL-B"
 }

@@ -1,18 +1,19 @@
 {
-    "name": "{{name|upper}}",
-    "version": "1.0.0",
-    "description": "{{name|upper}}",
-    "author": "{{authorName}} {{authorEmail}}",
-    "scripts": {},
-    "private": true,
-    "keywords": [
-     "nodefony",
-     "javascript"
-    ],
-    "repository": {},
-    "dependencies": {},
-    "devDependencies": {},
-    "license": "CECILL-B",
-    "readmeFilename": "README.md",
-    "contributors": [{}]
+  "name": "{{bundleName}}",
+  "version": "1.0.0",
+  "description": "Nodefony bundle {{name}} ",
+  "author": "{{authorName}} {{authorEmail}}",
+  "main": "{{bundleName}}.js",
+  "scripts": {},
+  "private": true,
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "repository": {},
+  "dependencies": {},
+  "devDependencies": {},
+  "license": "CECILL-B",
+  "readmeFilename": "README.md",
+  "contributors": [{}]
 }

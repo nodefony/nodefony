@@ -1,23 +1,23 @@
 {
-    "name": "mongoBundle",
-    "version": "1.0.0",
-    "description": "nodefony mongodb ",
-    "author": "cci ccamensuli@gmail.com",
-    "scripts": {},
-    "private": true,
-    "keywords": [
-        "nodefony",
-        "javascript"
-    ],
-    "repository": {},
-    "dependencies": {
-        "mongodb": "^3.1.0-beta4",
-        "mongoose": "^5.1.2"
-    },
-    "devDependencies": {},
-    "license": "CECILL-B",
-    "readmeFilename": "README.md",
-    "contributors": [
-        {}
-    ]
+  "name": "@nodefony/mongoBundle",
+  "version": "4.0.0",
+  "description": "nodefony mongodb ",
+  "author": "cci ccamensuli@gmail.com",
+  "scripts": {},
+  "private": true,
+  "keywords": [
+    "nodefony",
+    "javascript",
+    "mongodb",
+    "mongoose"
+  ],
+  "repository": {},
+  "dependencies": {
+    "mongodb": "^3.1.0-beta4",
+    "mongoose": "^5.1.2"
+  },
+  "devDependencies": {},
+  "license": "CECILL-B",
+  "readmeFilename": "README.md",
+  "contributors": [{}]
 }

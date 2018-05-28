@@ -1,15 +1,15 @@
 {
-	"name": "SEQUELIZE",
-	"version": "3.0.0",
-	"description": "ORM",
-	"contributors": [],
-	"scripts": {},
-	"private": true,
-	"keywords": [
-		"nodefony",
-		"javascript"
-	],
-	"dependencies": {},
-	"author": "cci <christophe.camensuli@gmail.com>",
-	"license": "CECILL-B"
+  "name": "@nodefony/sequelizeBundle",
+  "version": "4.0.0",
+  "description": "ORM",
+  "contributors": [],
+  "scripts": {},
+  "private": true,
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "dependencies": {},
+  "author": "cci <christophe.camensuli@gmail.com>",
+  "license": "CECILL-B"
 }
