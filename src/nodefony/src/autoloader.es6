@@ -7,7 +7,7 @@ module.exports = function () {
 
   // Create Context copy library in context  see load runInThisContext
   const context = vm.createContext(this);
-  context.nodefony = require("./core");
+  context.nodefony = require("./core.es6");
   context.require = require;
   context.module = module;
   context.exports = exports;
@@ -43,7 +43,7 @@ module.exports = function () {
    * @module NODEFONY
    *
    */
-  const regJs = /.*\.js$/;
+  const regJs = /.*\.js$|.*\.es6$/;
 
   class Autoload {
 
@@ -56,19 +56,19 @@ module.exports = function () {
       this.columnOffset = 10;
       this.dirname = path.resolve(__dirname, "..");
       try {
-        this.load(path.resolve(this.dirname, "core", "error.js"));
-        this.load(path.resolve(this.dirname, "core", "container.js"));
-        this.load(path.resolve(this.dirname, "core", "notificationsCenter.js"));
-        this.load(path.resolve(this.dirname, "core", "syslog.js"));
-        this.load(path.resolve(this.dirname, "core", "service.js"));
-        this.load(path.resolve(this.dirname, "core", "fileClass.js"));
-        this.load(path.resolve(this.dirname, "core", "finder.js"));
-        this.load(path.resolve(this.dirname, "core", "log.js"));
-        this.load(path.resolve(this.dirname, "core", "protocol.js"));
-        this.load(path.resolve(this.dirname, "core", "watcher.js"));
-        this.load(path.resolve(this.dirname, "core", "cli.js"));
-        this.loadDirectory(path.resolve(this.dirname, "core", "protocols"), /^tests$/);
-        this.loadDirectory(path.resolve(this.dirname, "kernel"), /^tests$/);
+        this.load(path.resolve(this.dirname, "src", "error.es6"));
+        this.load(path.resolve(this.dirname, "src", "container.es6"));
+        this.load(path.resolve(this.dirname, "src", "notificationsCenter.es6"));
+        this.load(path.resolve(this.dirname, "src", "syslog.es6"));
+        this.load(path.resolve(this.dirname, "src", "service.es6"));
+        this.load(path.resolve(this.dirname, "src", "fileClass.es6"));
+        this.load(path.resolve(this.dirname, "src", "finder.es6"));
+        //this.load(path.resolve(this.dirname, "src", "log.js"));
+        this.load(path.resolve(this.dirname, "src", "protocol.es6"));
+        this.load(path.resolve(this.dirname, "src", "watcher.es6"));
+        this.load(path.resolve(this.dirname, "src", "cli.es6"));
+        this.loadDirectory(path.resolve(this.dirname, "src", "kernel"), /^tests$/);
+        this.loadDirectory(path.resolve(this.dirname, "src", "protocols"), /^tests$/);
         this.loadAppKernel();
       } catch (e) {
         throw e;

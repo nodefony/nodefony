@@ -1,5 +1,3 @@
-const Annotations = require("./annotations/annotations.js");
-
 module.exports = nodefony.register("Reader", function () {
 
   let defaultSetting = {
@@ -110,7 +108,7 @@ module.exports = nodefony.register("Reader", function () {
       this.engine = require("twig");
       this.readConfig = this.loadPlugin("config", this.pluginConfig);
       this.loader = this.container.get("autoLoader");
-      this.annotations = new Annotations(container, this.notificationsCenter);
+      this.annotations = new nodefony.Annotations(container, this.notificationsCenter);
 
     }
 

@@ -1,4 +1,4 @@
-const nodefony_version = require(path.join("..", "..", "..", "package.json")).version;
+const nodefony_version = require(path.join("..", "..", "..", "..", "package.json")).version;
 const os = require('os');
 
 module.exports = nodefony.register("kernel", function () {

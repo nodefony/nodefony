@@ -18,7 +18,7 @@ const checkManager = class checkManager {
       if (!this.isCore) {
         this.nodefony = require("nodefony");
       } else {
-        this.nodefony = require(path.resolve("src", "nodefony", "core", "autoloader"));
+        this.nodefony = require(path.resolve("src", "nodefony", "src", "autoloader.es6"));
       }
       if (!this.nodefony) {
         let error = new Error("Nodefony trunk is not build Run make build to install framework !!");
