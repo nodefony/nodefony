@@ -102,7 +102,7 @@
     "nodefony-stage": "^0.1.9",
     "npm": "^6.1.0",
     "oauth2orize": "1.11.0",
-    "optimize-css-assets-webpack-plugin": "^4.0.1",
+    "optimize-css-assets-webpack-plugin": "^4.0.2",
     "parse-comments": "0.4.3",
     "passport": "0.4.0",
     "passport-github2": "0.1.11",
