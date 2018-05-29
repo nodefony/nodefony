@@ -1,0 +1,16 @@
+{
+  "name": "@nodefony/core",
+  "version": "4.0.0",
+  "main": "autoloader.es6",
+  "description": "Core nodefony",
+  "contributors": [],
+  "scripts": {},
+  "private": false,
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "dependencies": {},
+  "author": "cci <christophe.camensuli@gmail.com>",
+  "license": "CECILL-B"
+}
