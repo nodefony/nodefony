@@ -54,22 +54,23 @@ module.exports = function () {
       this.syslog = null;
       this.lineOffset = 10;
       this.columnOffset = 10;
-      this.dirname = path.resolve(__dirname, "..");
+      this.dirname = path.resolve(__dirname);
       try {
-        this.load(path.resolve(this.dirname, "src", "error.es6"));
-        this.load(path.resolve(this.dirname, "src", "container.es6"));
-        this.load(path.resolve(this.dirname, "src", "notificationsCenter.es6"));
-        this.load(path.resolve(this.dirname, "src", "syslog.es6"));
-        this.load(path.resolve(this.dirname, "src", "service.es6"));
-        this.load(path.resolve(this.dirname, "src", "fileClass.es6"));
-        this.load(path.resolve(this.dirname, "src", "finder.es6"));
-        //this.load(path.resolve(this.dirname, "src", "log.js"));
-        this.load(path.resolve(this.dirname, "src", "protocol.es6"));
-        this.load(path.resolve(this.dirname, "src", "watcher.es6"));
-        this.load(path.resolve(this.dirname, "src", "cli.es6"));
-        this.loadDirectory(path.resolve(this.dirname, "src", "kernel"), /^tests$/);
-        this.loadDirectory(path.resolve(this.dirname, "src", "protocols"), /^tests$/);
-        this.loadAppKernel();
+        require(path.resolve(__dirname, "error.es6"));
+        //this.load(path.resolve(__dirname, "error.es6"));
+        require(path.resolve(__dirname, "container.es6"));
+        require(path.resolve(__dirname, "notificationsCenter.es6"));
+        require(path.resolve(__dirname, "syslog.es6"));
+        require(path.resolve(__dirname, "service.es6"));
+        require(path.resolve(__dirname, "fileClass.es6"));
+        require(path.resolve(__dirname, "finder.es6"));
+        //this.load(path.resolve(__dirname,  "log.js"));
+        require(path.resolve(__dirname, "protocol.es6"));
+        require(path.resolve(__dirname, "watcher.es6"));
+        require(path.resolve(__dirname, "cli.es6"));
+        this.loadDirectory(path.resolve(__dirname, "kernel"), /^tests$/);
+        this.loadDirectory(path.resolve(__dirname, "protocols"), /^tests$/);
+        context.nodefony.appKernel = this.loadAppKernel();
       } catch (e) {
         throw e;
       }
@@ -94,11 +95,13 @@ module.exports = function () {
     }
 
     loadAppKernel() {
-      let appKernelPath = path.resolve(this.dirname, "..", "..", "..", "..", "app", "appKernel.js");
+      //let appKernelPath = path.resolve(__dirname, "..", "..", "..", "..", "app", "appKernel.js");
+      let appKernelPath = null;
       try {
+        appKernelPath = path.resolve("app", "appKernel.js");
         this.fileExist(appKernelPath);
       } catch (e) {
-        appKernelPath = path.resolve(this.dirname, "..", "..", "app", "appKernel.js");
+        appKernelPath = path.resolve(__dirname, "..", "..", "app", "appKernel.js");
         try {
           this.fileExist(appKernelPath);
         } catch (e) {
@@ -107,8 +110,9 @@ module.exports = function () {
       }
       try {
         if (appKernelPath) {
-          this.load(appKernelPath);
+          return this.load(appKernelPath);
         }
+        return null;
       } catch (e) {
         throw e;
       }

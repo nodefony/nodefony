@@ -1,9 +1,10 @@
 {
-  "name": "@nodefony/unitTestBundle",
+  "name": "@nodefony/unittestbundle",
   "version": "4.0.0",
   "description": "",
   "author": "cci ccamensuli@gmail.com",
   "contributors": [],
+  "main": "unitTestBundle.js",
   "private": true,
   "keywords": [
     "nodefony",

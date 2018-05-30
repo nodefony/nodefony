@@ -53,21 +53,23 @@ module.exports = class unitTest extends nodefony.Service {
   }
 
   getNodefonyTestFiles(testName, tests) {
-    var finder = new nodefony.finder({
-      path: this.kernel.nodefonyPath,
-      exclude: /^bundles$|^doc$/,
-      match: regFile
-    });
-    if (finder.result.files.length) {
-      for (var i = 0; i < finder.result.files.length; i++) {
-        if (testName) {
-          if (finder.result.files[i].name === testName) {
+    if (this.kernel.isCore) {
+      const finder = new nodefony.finder({
+        path: this.kernel.nodefonyPath,
+        exclude: /^bundles$|^doc$/,
+        match: regFile
+      });
+      if (finder.result.files.length) {
+        for (var i = 0; i < finder.result.files.length; i++) {
+          if (testName) {
+            if (finder.result.files[i].name === testName) {
+              finder.result.files[i].bundle = "nodefony";
+              tests.push(finder.result.files[i]);
+            }
+          } else {
             finder.result.files[i].bundle = "nodefony";
             tests.push(finder.result.files[i]);
           }
-        } else {
-          finder.result.files[i].bundle = "nodefony";
-          tests.push(finder.result.files[i]);
         }
       }
     }

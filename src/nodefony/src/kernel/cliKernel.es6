@@ -538,7 +538,11 @@ module.exports = nodefony.register("cliKernel", function () {
 
     installPackage(name, file, env) {
       try {
-        new nodefony.fileClass(file.dirName + "/package.json");
+        if (file instanceof nodefony.fileClass) {
+          file = new nodefony.fileClass(file.dirName + "/package.json");
+        } else {
+          file = new nodefony.fileClass(path.dirname(file) + "/package.json");
+        }
         return this.npmInstall(file.dirName, null, env);
       } catch (e) {
         if (e.code !== "ENOENT") {
@@ -546,6 +550,7 @@ module.exports = nodefony.register("cliKernel", function () {
           this.logger(e, "ERROR");
           throw e;
         }
+        throw e;
       }
     }
 

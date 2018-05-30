@@ -272,42 +272,52 @@ module.exports = nodefony.register("kernel", function () {
        */
       this.configBundle = this.getConfigBunbles();
       let bundles = [];
-      bundles.push(path.resolve(this.nodefonyPath, "bundles", "httpBundle"));
-      bundles.push(path.resolve(this.nodefonyPath, "bundles", "frameworkBundle"));
+      //bundles.push(path.resolve(this.nodefonyPath, "bundles", "httpBundle"));
+      bundles.push("@nodefony/httpbundle");
+      //bundles.push(path.resolve(this.nodefonyPath, "bundles", "frameworkBundle"));
+      bundles.push("@nodefony/frameworkbundle");
       // FIREWALL
       if (this.settings.system.security) {
-        bundles.push(path.resolve(this.nodefonyPath, "bundles", "securityBundle"));
+        //bundles.push(path.resolve(this.nodefonyPath, "bundles", "securityBundle"));
+        bundles.push("@nodefony/securitybundle");
       }
       // ORM MANAGEMENT
       switch (this.settings.orm) {
       case "sequelize":
-        bundles.push(path.resolve(this.nodefonyPath, "bundles", "sequelizeBundle"));
+        //bundles.push(path.resolve(this.nodefonyPath, "bundles", "sequelizeBundle"));
+        bundles.push("@nodefony/sequelizebundle");
         break;
       case "mongoose":
-        bundles.push(path.resolve(this.nodefonyPath, "bundles", "mongoBundle"));
+        //bundles.push(path.resolve(this.nodefonyPath, "bundles", "mongoBundle"));
+        bundles.push("@nodefony/mongobundle");
         break;
       default:
         this.logger(new Error("nodefony can't load ORM : " + this.settings.orm), "WARNING");
       }
       // REALTIME
       if (this.settings.system.realtime) {
-        bundles.push(path.resolve(this.nodefonyPath, "bundles", "realTimeBundle"));
+        //bundles.push(path.resolve(this.nodefonyPath, "bundles", "realTimeBundle"));
+        bundles.push("@nodefony/realtimebundle");
       }
       // MONITORING
       if (this.settings.system.monitoring) {
-        bundles.push(path.resolve(this.nodefonyPath, "bundles", "monitoringBundle"));
+        //bundles.push(path.resolve(this.nodefonyPath, "bundles", "monitoringBundle"));
+        bundles.push("@nodefony/monitoringbundle");
       }
       // DOCUMENTATION
       if (this.settings.system.documentation) {
-        bundles.push(path.resolve(this.nodefonyPath, "bundles", "documentationBundle"));
+        //bundles.push(path.resolve(this.nodefonyPath, "bundles", "documentationBundle"));
+        bundles.push("@nodefony/documentationbundle");
       }
       // TEST UNIT
       if (this.settings.system.unitTest) {
-        bundles.push(path.resolve(this.nodefonyPath, "bundles", "unitTestBundle"));
+        //bundles.push(path.resolve(this.nodefonyPath, "bundles", "unitTestBundle"));
+        bundles.push("@nodefony/unittestbundle");
       }
       // DEMO
       if (this.settings.system.demo) {
-        bundles.push(path.resolve(this.rootDir, "src", "bundles", "demoBundle"));
+        //bundles.push(path.resolve(this.rootDir, "src", "bundles", "demoBundle"));
+        bundles.push("@nodefony/demobundle");
       }
       try {
         this.fire("onPreRegister", this);
@@ -434,19 +444,14 @@ module.exports = nodefony.register("kernel", function () {
         this.once("onPostReady", () => {
           // create HTTP server
           let http = null;
-          //let https = null;
           let http2 = null;
           try {
             if (this.settings.system.servers.http) {
               http = this.get("httpServer").createServer();
             }
-            // create HTTP2 server
+            // create HTTPS/HTTP2 server
             if (this.settings.system.servers.https) {
               http2 = this.get("httpsServer").createServer();
-            }
-            // create HTTPS server
-            if (this.settings.system.servers.https) {
-              //https = this.get("httpsServer").createServer();
             }
             // create WEBSOCKET server
             if (this.settings.system.servers.ws) {
@@ -636,74 +641,170 @@ module.exports = nodefony.register("kernel", function () {
       }
     }
 
+    /*bundleFinder(mypath, callbackFinish) {
+      try {
+        return new nodefony.finder({
+          path: mypath,
+          followSymLink: true,
+          exclude: /^doc$|^node_modules$/,
+          recurse: false,
+          onFile: (file) => {
+            //console.log(file)
+            if (file.matchName(this.regBundle)) {
+              try {
+                if (this.cli.commander && this.cli.commander.args && this.cli.commander.args[0]) {
+                  switch (this.cli.commander.args[0]) {
+                  case "npm:install":
+                    let bundle = this.getBundleClass(file);
+
+                    this.cli.installPackage(bundle.name, file);
+                    break;
+                  default:
+                    this.loadBundle(file);
+                  }
+                } else {
+                  this.loadBundle(file);
+                }
+              } catch (e) {
+                throw e;
+              }
+            }
+          },
+          onFinish: callbackFinish || this.initializeBundles.bind(this)
+        });
+      } catch (e) {
+        this.logger(e, "ERROR");
+        this.logger("GLOBAL CONFIG REGISTER : ", "INFO");
+        this.logger(this.configBundle, "INFO");
+        let gene = this.readGeneratedConfig();
+        if (gene) {
+          this.logger("GENERATED CONFIG REGISTER file ./config/GeneratedConfig.yml : ", "INFO");
+          this.logger(gene, "INFO");
+        }
+      }
+    }*/
+
+    isPathExist(Path) {
+      try {
+        let mypath = this.checkPath(Path);
+        if (fs.existsSync(mypath)) {
+          return mypath;
+        }
+      } catch (e) {
+        return false;
+      }
+    }
+
+    isConsole() {
+      return this.type === "CONSOLE";
+    }
+
+    isCommand() {
+      if (this.isConsole()) {
+        if (this.cli.commander && this.cli.commander.args && this.cli.commander.args[0]) {
+          switch (this.cli.commander.args[0]) {
+          case "npm:install":
+            return this.cli.commander.args[0];
+          default:
+            return false;
+          }
+        }
+      }
+    }
+
+    loadCommand(file) {
+      switch (this.isCommand()) {
+      case "npm:install":
+        let bundle = this.getBundleClass(file);
+        this.cli.installPackage(bundle.name, file);
+        break;
+      default:
+        this.loadBundle(file);
+      }
+    }
+
+    isBundleDirectory(dir) {
+      let directory = this.isPathExist(dir);
+      if (directory) {
+        let finder = new nodefony.finder({
+          path: directory,
+          followSymLink: true,
+          exclude: /^doc$|^node_modules$/,
+          recurse: false,
+          match: this.regBundle,
+          onFile: (file) => {
+            try {
+              this.loadCommand(file);
+            } catch (e) {
+              this.logger(e, "ERROR");
+            }
+          }
+        });
+        return finder.result.length() === 1;
+      }
+      return false;
+    }
+
+    isNodeModule(module) {
+      try {
+        return require.resolve(module);
+      } catch (e) {
+        this.logger(e, "ERROR");
+        return false;
+      }
+    }
+
     /**
      *  register Bundle
-     *  @method registerBundles
+     *  @method
      *  @param {String} path
      *  @param {Function} callbackFinish
      */
     registerBundles(mypath, callbackFinish, nextick) {
-      let func = function () {
-        try {
-          return new nodefony.finder({
-            path: mypath,
-            followSymLink: true,
-            exclude: /^doc$|^node_modules$/,
-            recurse: false,
-            onFile: (file) => {
-              //console.log(file)
-              if (file.matchName(this.regBundle)) {
-                try {
-                  if (this.cli.commander && this.cli.commander.args && this.cli.commander.args[0]) {
-                    switch (this.cli.commander.args[0]) {
-                    case "npm:install":
-                      let bundle = this.getBundleClass(file);
-                      /*if (file.shortName in this.bundlesCore) {
-                        if (this.isCore) {
-                          this.cli.installPackage(name, file);
-                        }
-                      } else {
-                        this.cli.installPackage(name, file);
-                      }*/
-                      this.cli.installPackage(bundle.name, file);
-                      break;
-                    default:
-                      this.loadBundle(file);
-                    }
-                  } else {
-                    this.loadBundle(file);
-                  }
-                } catch (e) {
-                  //console.trace(e);
-                  //this.logger(e, "ERROR");
-                  throw e;
+      switch (nodefony.typeOf(mypath)) {
+      case "array":
+        for (let i = 0; i < mypath.length; i++) {
+          let Path = this.isBundleDirectory(mypath[i]);
+          if (!Path) {
+            try {
+              Path = this.isNodeModule(mypath[i]);
+              if (Path) {
+                this.loadCommand(Path);
+              } else {
+                this.logger("GLOBAL CONFIG REGISTER : ", "INFO");
+                this.logger(this.configBundle, "INFO");
+                let gene = this.readGeneratedConfig();
+                if (gene) {
+                  this.logger("GENERATED CONFIG REGISTER file ./config/GeneratedConfig.yml : ", "INFO");
+                  this.logger(gene, "INFO");
                 }
               }
-            },
-            onFinish: callbackFinish || this.initializeBundles.bind(this)
-          });
-        } catch (e) {
-          this.logger(e, "ERROR");
-          this.logger("GLOBAL CONFIG REGISTER : ", "INFO");
-          this.logger(this.configBundle, "INFO");
-          let gene = this.readGeneratedConfig();
-          if (gene) {
-            this.logger("GENERATED CONFIG REGISTER file ./config/GeneratedConfig.yml : ", "INFO");
-            this.logger(gene, "INFO");
+            } catch (e) {
+              this.logger(e, "ERROR");
+            }
           }
         }
-      };
+        break;
+      default:
+        return;
+      }
       if (nextick === undefined) {
         process.nextTick(() => {
           try {
-            return func.call(this);
+            if (callbackFinish) {
+              return callbackFinish.call(this);
+            }
+            return this.initializeBundles();
           } catch (e) {
             this.logger(e, "ERROR");
           }
         });
       } else {
         try {
-          return func.apply(this);
+          if (callbackFinish) {
+            return callbackFinish.call(this);
+          }
+          return this.initializeBundles();
         } catch (e) {
           this.logger(e, "ERROR");
         }

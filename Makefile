@@ -254,6 +254,14 @@ clean:
 		echo ""; \
 		rm -rf web/* ; \
 	fi
+	@if [ -e  package-lock.json ] ; then \
+	echo ""; \
+	echo "###################################################" ;\
+	echo "#            CLEAN  WEB PUBLIC DIRECTOY           #" ;\
+	echo "###################################################" ;\
+	echo ""; \
+	rm -f package-lock.json ; \
+	fi
 
 	make framework ;
 

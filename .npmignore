@@ -31,8 +31,6 @@
 npm-debug.log
 yarn-error.log
 
-#**/assets/**
-**/tests/**
 
 
 /Makefile

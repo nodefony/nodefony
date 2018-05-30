@@ -1,10 +1,12 @@
 #!/usr/bin/env node
  // nodefony
+let nodefony = null;
 try {
-  const nodefony = require("nodefony");
+  nodefony = require("@nodefony/core");
 } catch (e) {
-  const nodefony = require(require("path").resolve("src", "nodefony", "core", "autoloader"));
+  nodefony = require(require("path").resolve("src", "nodefony", "autoloader.es6"));
 }
+
 
 // CLI
 const cli = new nodefony.cli("MY CLI", {
@@ -44,9 +46,9 @@ const cli = new nodefony.cli("MY CLI", {
         cli.terminate();
       })
       .catch((e) => {
-        console.log(e)
+        console.log(e);
         cli.terminate(1);
-      })
+      });
   }
 });
 
@@ -59,7 +61,7 @@ const simpleLogger = function (cli) {
     cli.blankLine();
     cli.logger("Emoji : " + cli.getEmoji(), "ERROR");
     cli.blankLine();
-    cli.logger("Emoji : " + cli.getEmoji(), "WARNING")
+    cli.logger("Emoji : " + cli.getEmoji(), "WARNING");
     cli.logger("END simpleLogger : " + cli.getEmoji("checkered_flag"));
     resolve(cli);
   });
@@ -67,7 +69,7 @@ const simpleLogger = function (cli) {
 
 const random = function (nb) {
   return Math.floor(Math.random() * nb) + 1;
-}
+};
 var severity = [
   "EMERGENCY",
   "ALERT",
@@ -109,12 +111,12 @@ const tableExample = function (cli) {
     };
     let table = cli.displayTable(null, options);
     for (let i = 0; i < 10; i++) {
-      table.push([severity[random(7)], random(100), random(200), random(300)])
+      table.push([severity[random(7)], random(100), random(200), random(300)]);
     }
     console.log(table.toString());
     let tab = [];
     for (let i = 0; i < 10; i++) {
-      tab.push([severity[random(7)], random(100), random(200), random(300)])
+      tab.push([severity[random(7)], random(100), random(200), random(300)]);
     }
     let table2 = cli.displayTable(tab, options);
     cli.logger("END TABLE : " + cli.getEmoji("checkered_flag"));
@@ -134,7 +136,7 @@ const progress = function (cli, time) {
         cli.logger("END PROGRESS : " + cli.getEmoji("checkered_flag"));
         resolve(cli);
       }
-    }, time || 50)
+    }, time || 50);
   });
 };
 

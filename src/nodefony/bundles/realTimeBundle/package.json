@@ -1,8 +1,9 @@
 {
-  "name": "@nodefony/realtimeBundle",
+  "name": "@nodefony/realtimebundle",
   "version": "4.0.0",
   "description": "Bundle realtime ",
   "contributors": [],
+  "main": "realtimeBundle.js",
   "private": true,
   "scripts": {},
   "keywords": [

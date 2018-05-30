@@ -65,7 +65,7 @@ module.exports = class defaultController extends nodefony.controller {
       bundle = "nodefony";
     }
     if (bundle === "nodefony") {
-      Path = path.resolve(this.kernel.nodefonyPath, "../../");
+      Path = path.resolve(this.kernel.nodefonyPath);
     } else {
       if (this.kernel.bundles[bundle]) {
         Path = this.kernel.bundles[bundle].path;
@@ -130,7 +130,7 @@ module.exports = class defaultController extends nodefony.controller {
       bundle = "nodefony";
     }
     if (bundle === "nodefony") {
-      Path = path.resolve(this.kernel.nodefonyPath, "../../");
+      Path = path.resolve(this.kernel.nodefonyPath);
       let bundles = this.kernel.bundles;
       if (!section) {
         directoryBundles = [];
@@ -308,9 +308,8 @@ module.exports = class defaultController extends nodefony.controller {
   }
 
   navDocAction() {
-
     let finder = new nodefony.finder({
-      path: path.resolve(this.kernel.nodefonyPath, "../../", "doc"),
+      path: path.resolve(this.kernel.nodefonyPath, "doc"),
       recurse: false,
     });
 

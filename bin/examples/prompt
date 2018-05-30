@@ -2,9 +2,9 @@
  // nodefony
 let nodefony = null;
 try {
-  nodefony = require("nodefony");
+  nodefony = require("@nodefony/core");
 } catch (e) {
-  nodefony = require(require("path").resolve("src", "nodefony", "core", "autoloader"));
+  nodefony = require(require("path").resolve("src", "nodefony", "autoloader.es6"));
 }
 
 var cli = new nodefony.cli("CLI", null, null, {

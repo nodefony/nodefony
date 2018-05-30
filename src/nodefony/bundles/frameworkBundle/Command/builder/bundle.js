@@ -28,7 +28,8 @@ const Bundle = class Bundle extends Builder {
       local: this.cli.config.App.locale,
       projectYearNow: new Date().getFullYear()
     };
-    this.skeletonPath = path.resolve(this.cli.kernel.autoLoader.dirname, "bundles", "frameworkBundle", "Command", "skeletons");
+    //this.skeletonPath = path.resolve(this.cli.kernel.autoLoader.dirname, "frameworkBundle", "Command", "skeletons");
+    this.skeletonPath = path.resolve(__dirname, "..", "skeletons");
     this.skeleton = path.resolve(this.skeletonPath, "bundleClass.skeleton");
     this.packageSkeleton = path.resolve(this.skeletonPath, "package.skeleton");
     this.bindingSkeleton = path.resolve(this.skeletonPath, "binding", "binding.skeleton");

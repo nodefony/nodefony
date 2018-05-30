@@ -3,6 +3,7 @@
   "version": "4.0.0",
   "description": "units test for nodefony framework ",
   "author": "admin admin@nodefony.com",
+  "main": "testBundle.js",
   "repository": {},
   "keywords": [
     "nodefony",

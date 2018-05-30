@@ -1,8 +1,9 @@
 {
-  "name": "@nodefony/documentationBundle",
+  "name": "@nodefony/documentationbundle",
   "version": "4.0.0",
   "description": "",
   "author": " ",
+  "main": "documentationBundle.js",
   "contributors": [],
   "private": true,
   "keywords": [

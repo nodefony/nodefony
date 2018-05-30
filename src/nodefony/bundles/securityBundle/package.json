@@ -1,10 +1,11 @@
 {
-  "name": "@nodefony/securityBundle",
+  "name": "@nodefony/securitybundle",
   "version": "4.0.0",
   "description": " ",
   "contributors": [],
   "private": true,
   "scripts": {},
+  "main": "securityBundle.js",
   "keywords": [
     "nodefony",
     "javascript"

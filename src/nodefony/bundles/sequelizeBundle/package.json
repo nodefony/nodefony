@@ -1,9 +1,10 @@
 {
-  "name": "@nodefony/sequelizeBundle",
+  "name": "@nodefony/sequelizebundle",
   "version": "4.0.0",
   "description": "ORM",
   "contributors": [],
   "scripts": {},
+  "main": "sequelizeBundle.js",
   "private": true,
   "keywords": [
     "nodefony",

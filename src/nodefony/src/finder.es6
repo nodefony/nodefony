@@ -295,8 +295,6 @@ module.exports = nodefony.register("finder", function () {
             }
             break;
           }
-
-          //
         }
       }
       return result;
@@ -413,7 +411,7 @@ module.exports = nodefony.register("finder", function () {
       this.notificationsCenter.fire("onFinish", null, result);
       return result;
     }
-  };
+  }
 
   return Finder;
 });

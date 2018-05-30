@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
+let nodefony = null;
 try {
-  const nodefony = require("nodefony");
+  nodefony = require("@nodefony/core");
 } catch (e) {
-  const nodefony = require(require("path").resolve("src", "nodefony", "core", "autoloader"));
+  nodefony = require(require("path").resolve("src", "nodefony", "autoloader.es6"));
 }
 
 const defaultObj = {
