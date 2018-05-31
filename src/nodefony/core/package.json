@@ -2,7 +2,7 @@
   "name": "@nodefony/core",
   "version": "4.0.0",
   "main": "autoloader.es6",
-  "description": "Core nodefony",
+  "description": "Nodefony Framework Core",
   "contributors": [],
   "scripts": {},
   "private": false,

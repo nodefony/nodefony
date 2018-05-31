@@ -1,7 +1,7 @@
 {
-  "name": "{{bundleName}}",
+  "name": "{{name}}-bundle",
   "version": "1.0.0",
-  "description": "Nodefony bundle {{name}} ",
+  "description": "Nodefony Framework Bundle {{name}} ",
   "author": "{{authorName}} {{authorEmail}}",
   "main": "{{bundleName}}.js",
   "scripts": {},

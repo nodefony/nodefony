@@ -3,7 +3,7 @@
  *	ENTRY POINT WEBPACK APP
  *
  */
-const stage = require("nodefony-stage");
+const stage = require("@nodefony/stage");
 require("bootstrap");
 require("../less/style.less");
 require('font-awesome/css/font-awesome.css');

@@ -1,7 +1,7 @@
 {
-  "name": "@nodefony/securitybundle",
+  "name": "@nodefony/security-bundle",
   "version": "4.0.0",
-  "description": " ",
+  "description": "Nodefony Framework Bundle Security",
   "contributors": [],
   "private": true,
   "scripts": {},

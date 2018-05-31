@@ -1,4 +1,4 @@
-const stage = require("nodefony-stage");
+const stage = require("@nodefony/stage");
 require("bootstrap");
 require('bootstrap/dist/css/bootstrap.css');
 require('font-awesome/css/font-awesome.css');

@@ -1,9 +1,10 @@
 {
-  "name": "@nodefony/workboxBundle",
+  "name": "@nodefony/workbox-bundle",
   "version": "4.0.0",
-  "description": "WORKBOX",
+  "description": "Nodefony Framework Workbox Demo",
   "author": "admin admin@nodefony.com",
   "scripts": {},
+  "main": "workboxBundle.js",
   "private": true,
   "keywords": [
     "nodefony",

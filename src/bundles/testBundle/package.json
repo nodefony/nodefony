@@ -1,7 +1,7 @@
 {
-  "name": "@nodefony/testBundle",
+  "name": "@nodefony/test-bundle",
   "version": "4.0.0",
-  "description": "units test for nodefony framework ",
+  "description": "Nodefony Framework Bundle Unit Tests",
   "author": "admin admin@nodefony.com",
   "main": "testBundle.js",
   "repository": {},

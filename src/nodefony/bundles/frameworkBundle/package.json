@@ -1,7 +1,7 @@
 {
-  "name": "@nodefony/frameworkbundle",
+  "name": "@nodefony/framework-bundle",
   "version": "4.0.0",
-  "description": "Bundle Framework ",
+  "description": "Nodefony Framework Bundle Framework ",
   "contributors": [],
   "private": true,
   "main": "frameworkBundle.js",

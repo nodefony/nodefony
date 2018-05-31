@@ -95,6 +95,9 @@ module.exports = nodefony.register("Resolver", function () {
       if (name && typeof name === "string") {
         let tab = name.split(":");
         this.bundle = this.kernel.getBundle(this.kernel.getBundleName(tab[0]));
+        if (!this.bundle) {
+          this.bundle = this.kernel.getBundle(name);
+        }
         if (this.bundle) {
           if (this.bundle.name !== "framework") {
             this.set("bundle", this.bundle);

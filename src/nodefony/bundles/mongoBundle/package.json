@@ -1,7 +1,7 @@
 {
-  "name": "@nodefony/mongobundle",
+  "name": "@nodefony/mongo-bundle",
   "version": "4.0.0",
-  "description": "nodefony mongodb ",
+  "description": "Nodefony Framework Bundle mongodb",
   "author": "cci ccamensuli@gmail.com",
   "scripts": {},
   "main": "mongoBundle.js",

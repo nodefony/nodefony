@@ -1,14 +1,15 @@
 {
-  "name": "@nodefony/httpbundle",
+  "name": "@nodefony/http-bundle",
   "version": "4.0.0",
-  "description": "Manager HTTP ",
+  "description": "Nodefony Framework Bundle HTTP ",
   "contributors": [],
   "private": true,
   "main": "httpBundle.js",
   "scripts": {},
   "keywords": [
     "nodefony",
-    "javascript"
+    "javascript",
+    "HTTP2"
   ],
   "dependencies": {},
   "author": "cci <christophe.camensuli@gmail.com>",

@@ -1,7 +1,7 @@
 {
-  "name": "@nodefony/monitoringbundle",
+  "name": "@nodefony/monitoring-bundle",
   "version": "4.0.0",
-  "description": "nodefony monitoring",
+  "description": "Nodefony Framework Bundle Monitoring",
   "contributors": [],
   "main": "monitoringBundle.js",
   "private": true,

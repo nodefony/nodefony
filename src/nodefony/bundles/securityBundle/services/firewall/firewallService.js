@@ -2,7 +2,7 @@ let passport = null;
 let nodefonyPassport = null;
 try {
   passport = require('passport');
-  nodefonyPassport = require("passport-nodefony");
+  nodefonyPassport = require("@nodefony/passport-wrapper");
 } catch (e) {
   this.logger(e);
 }

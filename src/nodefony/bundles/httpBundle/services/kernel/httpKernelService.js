@@ -431,15 +431,9 @@ module.exports = class httpKernel extends nodefony.Service {
     let controller = null;
     try {
       context = this.createHttpContext(container, request, response, type);
-      this.logger("FROM : " +
-        context.remoteAddress +
-        " ORIGIN : " + context.originUrl.host +
-        " URL : " +
-        context.url,
+      this.logger(`FROM : ${context.remoteAddress} ORIGIN : ${context.originUrl.host} URL : ${context.url}`,
         "INFO",
-        (context.isAjax ? context.type +
-          " REQUEST AJAX " + context.method : context.type +
-          " REQUEST " + context.method));
+        (context.isAjax ? `${context.type} AJAX REQUEST ${context.method}` : `${context.type} REQUEST ${context.method}`));
 
       // DOMAIN VALID
       if (this.checkValidDomain(context) !== 200) {

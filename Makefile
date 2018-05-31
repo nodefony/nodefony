@@ -142,6 +142,7 @@ list:
 
 deploy:
 	./node_modules/pm2/bin/pm2 update
+	npm  install --only=production
 	./nodefony pm2
 
 webpack:

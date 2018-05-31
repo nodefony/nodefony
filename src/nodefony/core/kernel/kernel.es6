@@ -1,9 +1,15 @@
-const nodefony_version = require(path.join("..", "..", "..", "..", "package.json")).version;
+let nodefony_version = null;
+try {
+  nodefony_version = require(path.join(require.resolve("@nodefony/core"), "package.json")).version;
+} catch (e) {
+
+  nodefony_version = require(path.join("..", "..", "..", "..", "package.json")).version;
+}
 const os = require('os');
 
 module.exports = nodefony.register("kernel", function () {
 
-  const regBundleName = /^(.+)[Bb]undle[\.js]{0,3}$/;
+  const regBundleName = /^(.+)-bundle[\.js]{0,3}$|^(.+)[Bb]undle[\.js]{0,3}$/;
   const regBundle = /^(.+)[Bb]undle.js$/;
   const regClassBundle = /^(.+)[Bb]undle$/;
 
@@ -273,23 +279,23 @@ module.exports = nodefony.register("kernel", function () {
       this.configBundle = this.getConfigBunbles();
       let bundles = [];
       //bundles.push(path.resolve(this.nodefonyPath, "bundles", "httpBundle"));
-      bundles.push("@nodefony/httpbundle");
+      bundles.push("@nodefony/http-bundle");
       //bundles.push(path.resolve(this.nodefonyPath, "bundles", "frameworkBundle"));
-      bundles.push("@nodefony/frameworkbundle");
+      bundles.push("@nodefony/framework-bundle");
       // FIREWALL
       if (this.settings.system.security) {
         //bundles.push(path.resolve(this.nodefonyPath, "bundles", "securityBundle"));
-        bundles.push("@nodefony/securitybundle");
+        bundles.push("@nodefony/security-bundle");
       }
       // ORM MANAGEMENT
       switch (this.settings.orm) {
       case "sequelize":
         //bundles.push(path.resolve(this.nodefonyPath, "bundles", "sequelizeBundle"));
-        bundles.push("@nodefony/sequelizebundle");
+        bundles.push("@nodefony/sequelize-bundle");
         break;
       case "mongoose":
         //bundles.push(path.resolve(this.nodefonyPath, "bundles", "mongoBundle"));
-        bundles.push("@nodefony/mongobundle");
+        bundles.push("@nodefony/mongo-bundle");
         break;
       default:
         this.logger(new Error("nodefony can't load ORM : " + this.settings.orm), "WARNING");
@@ -297,27 +303,27 @@ module.exports = nodefony.register("kernel", function () {
       // REALTIME
       if (this.settings.system.realtime) {
         //bundles.push(path.resolve(this.nodefonyPath, "bundles", "realTimeBundle"));
-        bundles.push("@nodefony/realtimebundle");
+        bundles.push("@nodefony/realtime-bundle");
       }
       // MONITORING
       if (this.settings.system.monitoring) {
         //bundles.push(path.resolve(this.nodefonyPath, "bundles", "monitoringBundle"));
-        bundles.push("@nodefony/monitoringbundle");
+        bundles.push("@nodefony/monitoring-bundle");
       }
       // DOCUMENTATION
       if (this.settings.system.documentation) {
         //bundles.push(path.resolve(this.nodefonyPath, "bundles", "documentationBundle"));
-        bundles.push("@nodefony/documentationbundle");
+        bundles.push("@nodefony/documentation-bundle");
       }
       // TEST UNIT
       if (this.settings.system.unitTest) {
         //bundles.push(path.resolve(this.nodefonyPath, "bundles", "unitTestBundle"));
-        bundles.push("@nodefony/unittestbundle");
+        bundles.push("@nodefony/unittests-bundle");
       }
       // DEMO
       if (this.settings.system.demo) {
         //bundles.push(path.resolve(this.rootDir, "src", "bundles", "demoBundle"));
-        bundles.push("@nodefony/demobundle");
+        bundles.push("@nodefony/demo-bundle");
       }
       try {
         this.fire("onPreRegister", this);
@@ -583,7 +589,7 @@ module.exports = nodefony.register("kernel", function () {
       case "string":
         ret = regBundleName.exec(str);
         if (ret) {
-          return ret[1];
+          return ret[1] || ret[2];
         }
         throw new Error("Bundle Bad Name :" + str);
       case "function":

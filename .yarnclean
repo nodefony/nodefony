@@ -14,7 +14,6 @@ coverage
 .nyc_output
 
 # build scripts
-Makefile
 Gulpfile.js
 Gruntfile.js
 
@@ -32,3 +31,18 @@ Gruntfile.js
 # misc
 *.gz
 *.md
+
+.git
+.github
+.travis
+.travis.yml
+.jshintrc
+.jshintignore
+.gitmodules
+.bithoundrc
+.grenrc.json
+
+
+
+npm-debug.log
+yarn-error.log
