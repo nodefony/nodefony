@@ -197,7 +197,7 @@ system:
     protocol                    : https
     websocket                   : true
   bundles:
-    demo                        : "src/bundles/hello-bundle"
+    hello-bundle                : "src/bundles/hello-bundle"
 ```
 
 ## <a name="cli"></a>Command Line Interface
@@ -210,7 +210,7 @@ system:
 
 #### Generate hello Bundle :
 
-CLI Generate new bundle :    generate:bundle nameBundle path
+CLI Generate new bundle :  $ nodefony generate:bundle name path
 
 ```bash
 $ ./nodefony generate:bundle hello
