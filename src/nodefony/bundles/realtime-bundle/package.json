@@ -1,0 +1,16 @@
+{
+  "name": "@nodefony/realtime-bundle",
+  "version": "4.0.0",
+  "description": "Nodefony Framework Bundle Realtime ",
+  "contributors": [],
+  "main": "realTimeBundle.js",
+  "private": true,
+  "scripts": {},
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "dependencies": {},
+  "author": "cci <christophe.camensuli@gmail.com>",
+  "license": "CECILL-B"
+}

@@ -1,0 +1,31 @@
+########## NODEFONY CONFIG BUNDLE  frameworkBundle  ############
+name :				framework-bundle
+
+#
+#  WATCHERS
+#
+#    watchers Listen to changes, deletion, renaming of files and directories
+#    of different components
+#
+#    For watch all components
+#
+#      watch:			true
+#    or
+#      watch:
+#        controller:		true
+#        views:			true
+#        translations:      true
+#
+watch                     : false
+
+webpack:
+  cache                   : true
+  outputFileSystem        : "file-system"
+  watchOptions:
+    ignoreInitial         : false
+    persistent            : true
+    followSymlinks        : false
+    depth                 : 0
+    atomic                : false
+    alwaysStat            : true
+    ignorePermissionErrors: true

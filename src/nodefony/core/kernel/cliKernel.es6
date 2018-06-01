@@ -24,19 +24,16 @@ module.exports = nodefony.register("cliKernel", function () {
     }
   };
 
-  let parseAssetsBundles = function (table, Name) {
+  let parseAssetsBundles = function (table) {
     let bundles = this.kernel.getBundles();
     let result = null;
     let name = null;
     let srcpath = null;
     for (let bundle in bundles) {
-      if (Name && Name !== bundle) {
-        continue;
-      }
       try {
         result = bundles[bundle].getPublicDirectory();
       } catch (e) {
-        continue;
+        this.logger(e, "ERROR");
       }
       if (result.length()) {
         name = bundles[bundle].bundleName;
@@ -225,7 +222,7 @@ module.exports = nodefony.register("cliKernel", function () {
     }
 
     // ASSETS LINK
-    assetInstall(name) {
+    assetInstall() {
       let table = this.displayTable(null, {
         head: [
           "BUNDLES",
@@ -236,7 +233,7 @@ module.exports = nodefony.register("cliKernel", function () {
         ]
       });
       createAssetDirectory.call(this, this.publicDirectory, () => {
-        parseAssetsBundles.call(this, table, name);
+        parseAssetsBundles.call(this, table);
         this.logger("\n" + table.toString(), "DEBUG");
       });
     }
@@ -269,11 +266,10 @@ module.exports = nodefony.register("cliKernel", function () {
       default:
         throw new Error(dir + " is not a directory");
       }
-
       let totalSizeBytes = 0;
       let dirSize = null;
       for (let i = 0; i < files.length; i++) {
-        let myPath = dir + "/" + files[i];
+        let myPath = dir + files[i];
         try {
           stat = fs.lstatSync(myPath);
         } catch (e) {
@@ -291,8 +287,10 @@ module.exports = nodefony.register("cliKernel", function () {
           break;
         case stat.isSymbolicLink():
           //console.log("isSymbolicLink")
-          dirSize = this.getSizeDirectory(fs.realpathSync(myPath), exclude);
-          totalSizeBytes += dirSize;
+          try {
+            dirSize = this.getSizeDirectory(fs.realpathSync(myPath), exclude);
+            totalSizeBytes += dirSize;
+          } catch (e) {}
           break;
         }
       }
