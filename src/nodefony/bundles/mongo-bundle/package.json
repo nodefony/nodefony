@@ -5,7 +5,7 @@
   "author": "cci ccamensuli@gmail.com",
   "scripts": {},
   "main": "mongoBundle.js",
-  "private": true,
+  "private": false,
   "keywords": [
     "nodefony",
     "javascript",

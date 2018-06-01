@@ -5,7 +5,7 @@
   "contributors": [],
   "scripts": {},
   "main": "sequelizeBundle.js",
-  "private": true,
+  "private": false,
   "keywords": [
     "nodefony",
     "javascript"

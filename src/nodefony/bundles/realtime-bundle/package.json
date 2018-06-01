@@ -4,7 +4,7 @@
   "description": "Nodefony Framework Bundle Realtime ",
   "contributors": [],
   "main": "realTimeBundle.js",
-  "private": true,
+  "private": false,
   "scripts": {},
   "keywords": [
     "nodefony",

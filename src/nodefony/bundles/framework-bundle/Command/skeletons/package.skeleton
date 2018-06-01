@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Nodefony Framework Bundle {{name}} ",
   "author": "{{authorName}} {{authorEmail}}",
-  "main": "{{bundleName}}.js",
+  "main": "{{name}}Bundle.js",
   "scripts": {},
   "private": true,
   "keywords": [

@@ -197,64 +197,13 @@ system:
     protocol                    : https
     websocket                   : true
   bundles:
-    demo                        : "src/bundles/demoBundle"
+    demo                        : "src/bundles/hello-bundle"
 ```
 
 ## <a name="cli"></a>Command Line Interface
 
 ```bash
-$./nodefony -h            
- _   _    ___    ____    _____   _____    ___    _   _  __   __
-| \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
-|  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
-| |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |  
-|_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|  
 
-Version : 3.0.0-beta Platform : darwin Process : nodefony PID : 15336
-
-Usage: nodefony [options] <cmd> [args...]
-
-Options:
-
--d, --debug         Nodefony debug
--h, --help          Nodefony help
--v, --version       Nodefony version
--i, --interactive   Nodefony cli Interactive Mode
-
-Command :
-
-nodefony
-    dev							 	 Run Nodefony Development Server  
-    prod							 	 Run Nodefony Preprod Server
-    pm2							 	 Run Nodefony Production Server ( PM2 mode )
-    app							 	 Get Nodefony App name  
-    npm:install							 Install all NPM framework packages
-    npm:list							 List all NPM installed packages
-framework
-    generate:bundle nameBundle path                                  Generate a nodefony Bundle  Example : nodefony generate:bundle myBundle ./src/bundles
-    generate:bundle:angular nameBundle path                          Generate a Angular Bundle  Example : nodefony generate:bundle:angular myBundle ./src/bundles
-    generate:controller  nameController bundlePath                   Generate a controller Example : nodefony generate:controller myController ./src/bundles/myBundle
-    generate:command nameCommand path                                Generate a command js file in bundle path
-    generate:service nameService path                                Generate a service js file in bundle path
-    router:generate:routes                                           Generate all routes
-    router:generate:route routeName                                  Generate one route Example : nodefony router:generate:route home
-    router:match:url url                                             Get route who match url Example : nodefony router:match:url /nodefony
-    webpack:dump                                                     Compile webpack for all bundles
-security
-    decoders:bcrypt password 'encoded'                               Decoded password Bcrypt Example : dencoders:Bcrypt test '$2b$10$8du22L5ki0XMH.r.FHK'
-    encoders:bcrypt 'password' ['salt']                              Generate encoding password Bcrypt Example : nodefony encoders:Bcrypt 'mypassword' 13
-sequelize
-    Sequelize:fixtures:load                                          Load data fixtures to your database
-    Sequelize:generate:entities [force]                              Generate All Entities force to delete table if exist  example : nodefony Sequelize:generate:entities force
-    Sequelize:query:sql connectionName SQL                           query sql in database connection  example : nodefony  Sequelize:query:sql nodefony  'select * from users'
-    Sequelize:entity:findAll entity                                  query findAll ENTITY
-monitoring
-    Monitoring:test:load URL [nbRequests] [concurence]               load test example : nodefony Monitoring:test:load http://localhost:5151/demo 10000 100
-unitTest
-    unitTest:list:all                                                List all unit tests
-    unitTest:list:bundle bundleName                                  List all bundle unit tests
-    unitTest:launch:all                                              Launch all tests Example : nodefony unitTest:launch:all
-    unitTest:launch:bundle bundleName { testfile }                   Launch bundle tests Example: nodefony unitTest:launch:bundle demoBundle responseTest.js
 ```
 
 ## <a name="bundles"></a>Get Started
@@ -264,55 +213,25 @@ unitTest
 CLI Generate new bundle :    generate:bundle nameBundle path
 
 ```bash
-$ ./nodefony generate:bundle helloBundle src/bundles
+$ ./nodefony generate:bundle hello
 
-Mon Nov 20 2017 16:42:01 INFO SERVICE CLI KERNEL  : GENERATE bundle : helloBundle LOCATION : /Users/cci/repository/nodefony-core/src/bundles
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :helloBundle
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :controller
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :defaultController.js
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :Resources
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :config
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :config.yml
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :routing.js
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :security.yml
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :services.js
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :webpack.config.js
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :webpack
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :webpack.dev.config.js
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :webpack.prod.config.js
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :public
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :js
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :hello.js
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :css
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :hello.css
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :images
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :assets
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :js
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :css
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :fonts
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :images
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :translations
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :views
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :index.html.twig
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :tests
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :helloTest.js
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :Command
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :helloCommand.js
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :services
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :doc
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :default
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :readme.md
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :helloBundle.js
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :readme.md
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :src
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create Directory :Entity
- Mon Nov 20 2017 16:42:01 INFO GENERATER  : Create File      :package.json
-┌─────────┬───────────────────┬────────────────────────────────────────────┬───────────┬────────────────┐
-│ BUNDLES │ DESTINATION PATH  │ SOURCE PATH                                │ SIZE      │ ASSETS COMPILE │
-├─────────┼───────────────────┼────────────────────────────────────────────┼───────────┼────────────────┤
-│ hello   │ ./web/helloBundle │ ./src/bundles/helloBundle/Resources/public │ 483 bytes │ 0 bytes        │
-└─────────┴───────────────────┴────────────────────────────────────────────┴───────────┴────────────────┘
- Mon Nov 20 2017 16:42:01 INFO KERNEL CONSOLE   : NODEFONY Kernel Life Cycle Terminate CODE : 0
+
+Fri Jun 01 2018 16:36:58 INFO SERVICE CLI KERNEL : GENERATE bundle : hello LOCATION : /Users/cci/repository/nodefony-core/src/bundles
+Fri Jun 01 2018 16:36:58 INFO GENERATER : Create Directory :hello-bundle
+...
+
+...
+Fri Jun 01 2018 16:36:58 INFO SERVICE CLI KERNEL : npm install in /Users/cci/repository/nodefony-core/src/bundles/hello-bundle
+Fri Jun 01 2018 16:36:58 INFO SERVICE CLI KERNEL : Run Spawn : npm install
+Fri Jun 01 2018 16:37:00 INFO SERVICE CLI KERNEL : npm stdout :  
+> hello-bundle@1.0.0 install /Users/cci/repository/nodefony-core/src/bundles/hello-bundle
+> node-gyp rebuild
+Fri Jun 01 2018 16:37:03 INFO SERVICE CLI KERNEL : npm stdout :    CXX(target) Release/obj.target/hello/src/addon/hello.o
+Fri Jun 01 2018 16:37:04 INFO SERVICE CLI KERNEL : npm stdout :    SOLINK_MODULE(target) Release/hello.node
+Fri Jun 01 2018 16:37:05 INFO SERVICE CLI KERNEL : npm stdout :  up to date in 5.188s
+Fri Jun 01 2018 16:37:05 INFO SERVICE CLI KERNEL : npm stdout :  found 0 vulnerabilities
+Fri Jun 01 2018 16:37:05 INFO SERVICE CLI KERNEL : child process exited with code 0
+Fri Jun 01 2018 16:37:05 INFO KERNEL CONSOLE  : NODEFONY Kernel Life Cycle Terminate CODE : 0
 ```
 
 ### Start Servers to check new Bundle hello:
@@ -334,11 +253,11 @@ $ <ctrl-c>
 
 #### without having to reboot the server.
 
-You can see helloBundle config   : vim  ./src/bundles/helloBundle/Resources/config/config.yml
+You can see helloBundle config   : vim  ./src/bundles/hello-bundle/Resources/config/config.yml
 
 ```yml
-########## nodefony CONFIG BUNDLE  helloBundle  ############
-name :                          helloBundle
+########## nodefony CONFIG BUNDLE  hello-bundle  ############
+name :                          hello-bundle
 version:                        "1.0.0"
 locale :                        en_en
 
@@ -373,27 +292,9 @@ watch:                          true
 
 #### without having to reboot the server
 
-You can see helloBundle config webpack : vim  ./src/bundles/helloBundle/Resources/config/webpack.config.js
+You can see helloBundle config webpack : vim  ./src/bundles/hello-bundle/Resources/config/webpack.config.js
 
 ```js
-const path = require("path");
-const webpack = require('webpack');
-const webpackMerge = require('webpack-merge');
-const ExtractTextPluginCss = require('extract-text-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
-const context = path.resolve(__dirname, "..", "public");
-const public = path.resolve(__dirname, "..", "public", "assets");
-const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
-const publicPath = bundleName + "/assets/";
-
-let config = null;
-if (kernel.environment === "dev") {
-  config = require("./webpack/webpack.dev.config.js");
-} else {
-  config = require("./webpack/webpack.prod.config.js");
-}
-
 module.exports = webpackMerge({
   context: context,
   target: "web",
@@ -410,11 +311,10 @@ module.exports = webpackMerge({
   externals: {},
   resolve: {},
   module: {...}
-  plugins: [...]
-}, config);
+});
 ```
 
-### Example controller  : ./src/bundles/helloBundle/controller/defaultController.js
+### Example controller  : ./src/bundles/hello-bundle/controller/defaultController.js
 
 ```js
 module.exports = class defaultController extends nodefony.controller {
@@ -423,8 +323,8 @@ module.exports = class defaultController extends nodefony.controller {
   }
   indexAction() {
     try {
-      return this.render("helloBundle::index.html.twig", {
-        name: "helloBundle"
+      return this.render("hello-bundle::index.html.twig", {
+        name: "hello-bundle"
       });
     } catch (e) {
       throw e;
@@ -433,7 +333,7 @@ module.exports = class defaultController extends nodefony.controller {
 };
 ```
 
-### Example view  (twig) : ./src/bundles/helloBundle/Resources/views/index.html.twig
+### Example view  (twig) : ./src/bundles/hello-bundle/Resources/views/index.html.twig
 
 ```twig
 {% extends '/app/Resources/views/base.html.twig' %}
@@ -443,11 +343,11 @@ module.exports = class defaultController extends nodefony.controller {
 {% block stylesheets %}
   {{ parent() }}
   <!-- WEBPACK BUNDLE -->
-  <link rel='stylesheet' href='{{CDN("stylesheet")}}/helloBundle/assets/css/hello.css' />
+  <link rel='stylesheet' href='{{CDN("stylesheet")}}/hello-bundle/assets/css/hello.css' />
 {% endblock %}
 
 {% block body %}
-      <img class='displayed' src='{{CDN("image")}}/frameworkBundle/images/nodefony-logo-white.png'>
+      <img class='displayed' src='{{CDN("image")}}/framework-bundle/images/nodefony-logo-white.png'>
       <h1 class='success'>
         <a href='{{url('documentation')}}'>
           <strong style='font-size:45px'>NODEFONY</strong>
@@ -459,7 +359,7 @@ module.exports = class defaultController extends nodefony.controller {
 {% block javascripts %}
   {{ parent() }}
   <!-- WEBPACK BUNDLE -->
-  <script src='{{CDN("javascript")}}/helloBundle/assets/js/hello.js'></script>
+  <script src='{{CDN("javascript")}}/hello-bundle/assets/js/hello.js'></script>
 {% endblock %}
 ```
 

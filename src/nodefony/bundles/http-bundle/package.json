@@ -3,7 +3,7 @@
   "version": "4.0.0",
   "description": "Nodefony Framework Bundle HTTP ",
   "contributors": [],
-  "private": true,
+  "private": false,
   "main": "httpBundle.js",
   "scripts": {},
   "keywords": [
