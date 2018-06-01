@@ -8,7 +8,7 @@ const documentation = require("./documentation.js");
 const View = require("./view.js");
 const Translation = require("./translation.js");
 const routing = require("./routing.js");
-const regBundle = /^(.*)[Bb]undle$/;
+//const regBundle = /^(.*)[Bb]undle$/;
 const generateReactCli = require("../react/reactCli.js");
 const generateAngularCli = require("../angular/angularCli.js");
 
@@ -17,6 +17,7 @@ const Bundle = class Bundle extends Builder {
   constructor(cli, type, bundleType) {
     super(cli);
     this.type = type;
+    this.kernel = this.cli.kernel;
     this.bundleType = bundleType || "";
     this.params = {
       module: this.cli.config.App.projectName,
@@ -56,10 +57,14 @@ const Bundle = class Bundle extends Builder {
     if (!Path) {
       Path = path.resolve("src", "bundles");
     }
+    let res = this.kernel.regBundleName.exec(this.name);
+    if (res) {
+      throw new Error("Bad bundle   name :" + this.name);
+    }
     this.cli.logger("GENERATE bundle : " + name + " LOCATION : " + path.resolve(Path));
-    this.shortName = null;
-    this.name = name;
-    let res = regBundle.exec(this.name);
+    this.shortName = name;
+    this.name = name + "-bundle";
+    res = this.kernel.regBundleName.exec(this.name);
     if (res) {
       this.shortName = res[1];
     } else {
@@ -79,11 +84,11 @@ const Bundle = class Bundle extends Builder {
       this.shortName = bundle.name;
       this.location = bundle.location;
       this.bundlePath = bundle.path;
-      this.bundleFile = path.resolve(this.bundlePath, this.name + ".js");
+      this.bundleFile = path.resolve(this.bundlePath, this.shortName + "Bundle.js");
     } else {
       this.location = new nodefony.fileClass(path.resolve(Path));
       this.bundlePath = path.resolve(this.location.path, this.name);
-      this.bundleFile = path.resolve(this.bundlePath, this.name + ".js");
+      this.bundleFile = path.resolve(this.bundlePath, this.shortName + "Bundle.js");
     }
     nodefony.extend(this.params, {
       bundleName: this.name,
@@ -131,7 +136,7 @@ const Bundle = class Bundle extends Builder {
         this.service.createBuilder(),
         this.documentation.createBuilder(),
         {
-          name: this.name + ".js",
+          name: this.shortName + "Bundle.js",
           type: "file",
           skeleton: this.skeleton,
           params: this.params
@@ -186,7 +191,7 @@ const Bundle = class Bundle extends Builder {
 
       if (json) {
         if (json.system && json.system.bundles) {
-          json.system.bundles[this.shortName] = this.bundlePath;
+          json.system.bundles[this.name] = this.bundlePath;
         } else {
           if (json.system) {
             json.system.bundles = {};
@@ -195,7 +200,7 @@ const Bundle = class Bundle extends Builder {
               bundles: {}
             };
           }
-          json.system.bundles[this.shortName] = this.bundlePath;
+          json.system.bundles[this.name] = this.bundlePath;
         }
       } else {
         json = {
@@ -203,14 +208,14 @@ const Bundle = class Bundle extends Builder {
             bundles: {}
           }
         };
-        json.system.bundles[this.shortName] = this.bundlePath;
+        json.system.bundles[this.name] = this.bundlePath;
       }
       fs.writeFileSync(this.cli.kernel.generateConfigPath, yaml.safeDump(json), {
         encoding: 'utf8'
       });
       let file = new nodefony.fileClass(this.bundleFile);
       this.cli.kernel.loadBundle(file);
-      this.cli.assetInstall(this.shortName);
+      //this.cli.assetInstall(this.name);
       return this.cli.npmInstall(this.bundlePath);
     } catch (e) {
       throw e;
@@ -249,7 +254,7 @@ const React = class React extends Bundle {
         this.service.createBuilder(),
         this.documentation.createBuilder(),
         {
-          name: this.name + ".js",
+          name: this.shortName + "Bundle.js",
           type: "file",
           skeleton: this.skeleton,
           params: this.params
@@ -293,7 +298,7 @@ const Angular = class Angular extends Bundle {
         this.service.createBuilder(),
         this.documentation.createBuilder(),
         {
-          name: this.name + ".js",
+          name: this.shortName + "Bundle.js",
           type: "file",
           skeleton: this.skeleton,
           params: this.params

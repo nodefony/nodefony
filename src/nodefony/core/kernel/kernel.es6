@@ -95,6 +95,7 @@ module.exports = nodefony.register("kernel", function () {
       this.started = false;
       this.settings = null;
       this.regBundle = regBundle;
+      this.regBundleName = regBundleName;
       this.node_start = process.env.MODE_START || this.options.node_start;
       this.bundles = {};
       this.eventReadywait = 0;

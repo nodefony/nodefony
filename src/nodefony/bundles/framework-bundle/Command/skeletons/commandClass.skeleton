@@ -3,7 +3,7 @@
 {% block body %}
 module.exports = nodefony.registerCommand("{{name}}",() => {
 
-	const {{name}} = class {{name}} extends nodefony.cliKernel {
+	class {{name}}Command extends nodefony.cliKernel {
 
 			constructor(container, command, options){
 
@@ -40,7 +40,7 @@ module.exports = nodefony.registerCommand("{{name}}",() => {
 		commands:{
 			id:["{{name}}:example myArg1 myArg2" ,"example  ./nodefony {{name}}:example myarg1 myarg2"],
 		},
-		cli:{{name}}
+		cli:{{name}}Command
 	};
 });
 

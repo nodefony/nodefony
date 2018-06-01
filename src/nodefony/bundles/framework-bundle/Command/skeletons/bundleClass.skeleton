@@ -11,7 +11,7 @@
 	 *	@param {class} container
 	 *
 	 */
-	module.exports = class {{bundleName}}  extends nodefony.Bundle {
+	module.exports = class {{name}}Bundle  extends nodefony.Bundle {
 
 		constructor (name, kernel, container){
 
@@ -22,7 +22,7 @@
 			//this.autoLoader.loadDirectory( path.resolve( this.path, "src" ) );
 
 		 /*
-		 	*	If you want kernel wait {{bundleName}} event <<onReady>>
+		 	*	If you want kernel wait {{name}} event <<onReady>>
 		 	*
 		 	*      this.waitBundleReady = true ;
 		 	*/

@@ -7,7 +7,6 @@ const generater = require("./builder/bundle.js");
 
 module.exports = nodefony.registerCommand("generate", function () {
 
-
   const service = function (obj, type) {
     let file = [{
       name: "service." + type,
@@ -21,7 +20,6 @@ module.exports = nodefony.registerCommand("generate", function () {
   service.addConfigService = function () {
 
   };
-
 
   /*
    *
@@ -68,10 +66,6 @@ module.exports = nodefony.registerCommand("generate", function () {
                 project.generateProject(args[0], args[1], interactive).then((builder) => {
                   builder.build(builder.createBuilder(), builder.location, true);
                   builder.install();
-                  //let src = path.resolve(project.bundlePath, "public");
-                  //let dest = path.resolve(project.bundlePath, "Resources", "public", "dist");
-                  //this.logger("ln -s " + src + " " + dest);
-                  //shell.ln('-sf', src, dest);
                   this.terminate(0);
                 });
                 break;
@@ -159,12 +153,10 @@ module.exports = nodefony.registerCommand("generate", function () {
   return {
     name: "generate",
     commands: {
-      bundle: ["generate:bundle nameBundle path", "Generate a nodefony Bundle  Example : nodefony generate:bundle myBundle ./src/bundles"],
-      bundleAngular: ["generate:bundle:angular nameBundle path", "Generate a Angular Bundle  Example : nodefony generate:bundle:angular myBundle ./src/bundles"],
-      bundleReact: ["generate:bundle:react nameBundle path", "Generate a React Bundle Example : nodefony generate:bundle:react myBundle ./src/bundles"],
+      bundle: ["generate:bundle name [path]", "Generate a nodefony Bundle  Example : nodefony generate:bundle name ./src/bundles"],
+      bundleAngular: ["generate:bundle:angular nameBundle [path]", "Generate a Angular Bundle  Example : nodefony generate:bundle:angular name ./src/bundles"],
+      bundleReact: ["generate:bundle:react nameBundle [path]", "Generate a React Bundle Example : nodefony generate:bundle:react name ./src/bundles"],
       controller: ["generate:controller  nameController bundlePath", "Generate a controller Example : nodefony generate:controller myController ./src/bundles/myBundle"],
-      //command: ["generate:command nameCommand path", "Generate a command js file in bundle path"]
-      //service:["generate:service nameService path" ,"Generate a service js file in bundle path"]
     },
     cli: generate
   };
