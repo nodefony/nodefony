@@ -4,14 +4,14 @@
 
 
 
-**/assets/**
+#**/assets/**
 app/Resources/public/assets/
 src/bundles/testBundle/Resources/public/assets/
 
 config/generatedConfig.yml
 
 app/Resources/databases/*
-*.db
+app/*.db
 
 node_modules/**
 **/node_modules/**
