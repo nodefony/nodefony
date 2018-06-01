@@ -154,8 +154,8 @@ module.exports = nodefony.registerCommand("generate", function () {
     name: "generate",
     commands: {
       bundle: ["generate:bundle name [path]", "Generate a nodefony Bundle  Example : nodefony generate:bundle name ./src/bundles"],
-      bundleAngular: ["generate:bundle:angular nameBundle [path]", "Generate a Angular Bundle  Example : nodefony generate:bundle:angular name ./src/bundles"],
-      bundleReact: ["generate:bundle:react nameBundle [path]", "Generate a React Bundle Example : nodefony generate:bundle:react name ./src/bundles"],
+      bundleAngular: ["generate:bundle:angular name [path]", "Generate a Angular Bundle  Example : nodefony generate:bundle:angular name ./src/bundles"],
+      bundleReact: ["generate:bundle:react name [path]", "Generate a React Bundle Example : nodefony generate:bundle:react name ./src/bundles"],
       controller: ["generate:controller  nameController bundlePath", "Generate a controller Example : nodefony generate:controller myController ./src/bundles/myBundle"],
     },
     cli: generate
