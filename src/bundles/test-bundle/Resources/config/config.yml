@@ -21,7 +21,7 @@
 #
 
 ########## nodefony CONFIG BUNDLE  testBundle  ############
-name :				testBundle
+name :				test-bundle
 locale :			en_en
 
 #

@@ -1,5 +1,5 @@
 ########## nodefony CONFIG BUNDLE  mongoBundle  ############
-name        :              mongoBundle
+name        :              mongo-bundle
 type        :              "nodefony"
 locale      :              en_en
 

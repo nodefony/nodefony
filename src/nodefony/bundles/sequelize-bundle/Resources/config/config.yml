@@ -30,7 +30,7 @@
 
 
 ########## App CONFIG BUNDLE  sequelizeBundle  ############
-name :				sequelizeBundle
+name :				sequelize-bundle
 locale :			en_en
 
 debug:         true

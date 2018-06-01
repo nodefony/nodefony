@@ -11,7 +11,7 @@
 
 
 ########## NODEFONY CONFIG BUNDLE  monitoringBundle  ############
-name :				     monitoringBundle
+name :				     monitoring-bundle
 locale :			     en_en
 debugBar:          true
 forceDebugBarProd: false

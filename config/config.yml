@@ -39,8 +39,8 @@ system:
     websocket                   : true
 
   bundles:
-    test                        : "src/bundles/testBundle"
-    #workbox                     : "src/bundles/workboxBundle"
+    test                        : "src/bundles/test-bundle"
+    #workbox                     : "src/bundles/workbox-bundle"
 
   #################
   # SYSLOG NODEFONY
