@@ -75,7 +75,7 @@ watch					: true
 			<ul>
 				<li>config.yml in root path manage framework configuration <code>./config/config.yml</code></li>
 				<li>config.yml in app bundle manage Application configuration <code>./app/config/config.yml</code> </li>
-				<li>config.yml in bundles manage bundle configuration <code>./src/bundles/demoBundle/Ressources/config/config.yml</code></li>
+				<li>config.yml in bundles manage bundle configuration <code>./src/bundles/demo-bundle/Ressources/config/config.yml</code></li>
 			</ul>
 		</p>
 		<h4>How to use this parameters : </h4>
@@ -118,9 +118,9 @@ indexAction (version){
 				<pre>
 indexAction (version){
 	// GET kernel service , get demo bundle  config
-	<strong>let demoBundleGlobalSettings = this.kernel.getBundle("demo").settings ;</strong>
+	<strong>let demo-bundleGlobalSettings = this.kernel.getBundle("demo").settings ;</strong>
 
-	return this.renderJson(demoBundleGlobalSettings);
+	return this.renderJson(demo-bundleGlobalSettings);
 };
 
 				</pre>

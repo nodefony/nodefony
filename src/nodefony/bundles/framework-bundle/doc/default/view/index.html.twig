@@ -14,7 +14,7 @@
 
 		<p>
 		<pre>
-src/nodefony/bundles/documentationBundle/Resources/
+src/nodefony/bundles/documentation-bundle/Resources/
 │  
 └── views
     ├── index.html.twig
@@ -33,7 +33,7 @@ src/nodefony/bundles/documentationBundle/Resources/
 			Framework Registred Template as pattern <strong> 'bundle:directory:filename'</strong> <br>
 		</p>
 
-		View Pattern format  : <strong>documentationBundle::index.html.twig</strong>
+		View Pattern format  : <strong>documentation-bundle::index.html.twig</strong>
 		<table border="1" class="table">
 			<colgroup>
 				<col width="25%">
@@ -50,7 +50,7 @@ src/nodefony/bundles/documentationBundle/Resources/
 			</thead>
 			<tbody valign="top">
 			<tr class="">
-				<td><code class="">documentationBundle</code></td>
+				<td><code class="">documentation-bundle</code></td>
 				<td><code class="">.</code></td>
 				<td><code class="">index.html.twig</code></td>
 			</tr>
@@ -74,16 +74,16 @@ src/nodefony/bundles/documentationBundle/Resources/
 
 LOG WHEN NODEFONY START :
 
-Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : Register Template : 'documentationBundle::index.html'
-Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : COMPILE Template : 'documentationBundle::index.html'
-Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : Register Template : 'documentationBundle:layouts:documentationLayout.html'
-Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : COMPILE Template : 'documentationBundle:layouts:documentationLayout.html'
-Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : Register Template : 'documentationBundle:layouts:navSection.html'
-Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : COMPILE Template : 'documentationBundle:layouts:navSection.html'
-Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : Register Template : 'documentationBundle::navDoc.html'
-Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : COMPILE Template : 'documentationBundle::navDoc.html'
-Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : Register Template : 'documentationBundle::navDocBundle.html'
-Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : COMPILE Template : 'documentationBundle::navDocBundle.html'
+Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : Register Template : 'documentation-bundle::index.html'
+Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : COMPILE Template : 'documentation-bundle::index.html'
+Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : Register Template : 'documentation-bundle:layouts:documentationLayout.html'
+Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : COMPILE Template : 'documentation-bundle:layouts:documentationLayout.html'
+Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : Register Template : 'documentation-bundle:layouts:navSection.html'
+Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : COMPILE Template : 'documentation-bundle:layouts:navSection.html'
+Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : Register Template : 'documentation-bundle::navDoc.html'
+Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : COMPILE Template : 'documentation-bundle::navDoc.html'
+Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : Register Template : 'documentation-bundle::navDocBundle.html'
+Mon Oct 03 2016 14:32:49 DEBUG BUNDLE DOCUMENTATION  : COMPILE Template : 'documentation-bundle::navDocBundle.html'
 
 
 LOG WHEN FILE CHANGE IN DEVELOPMENT MODE:
@@ -147,7 +147,7 @@ Thu Aug 03 2017 16:40:15 INFO WATCHER EVENT change  : BUNDLE App RECOMPILE Templ
 	<div class="doc3">
 
 		<p>
-			Example  Layout : <code>./src/bundles/demoBundle/Resources/views/layouts/layout.html.twig  </code>
+			Example  Layout : <code>./src/bundles/demo-bundle/Resources/views/layouts/layout.html.twig  </code>
 		</p>
 		<pre>
 <strong>&#123% extends "/app/Resources/views/base.html.twig" %&#125</strong>
@@ -156,20 +156,20 @@ Thu Aug 03 2017 16:40:15 INFO WATCHER EVENT change  : BUNDLE App RECOMPILE Templ
 
 &#123% block body %&#125
 	&ltheader class="header"&gt
-		&#123&#123 render( controller("demoBundle:demo:nav", login )) &#125&#125
+		&#123&#123 render( controller("demo-bundle:demo:nav", login )) &#125&#125
 	&lt/header&gt
 &#123% endblock %&#125
 
 &#123% block footer %&#125
 	&ltfooter&gt
-		&#123&#123 render( controller("demoBundle:demo:footer" )) &#125&#125
+		&#123&#123 render( controller("demo-bundle:demo:footer" )) &#125&#125
 	&lt/footer&gt
 &#123% endblock %&#125
 		</pre>
 
 
 	<p>
-		Example  extended Page  : <code>./src/bundles/demoBundle/Resources/views/orm/orm.html.twig  </code>
+		Example  extended Page  : <code>./src/bundles/demo-bundle/Resources/views/orm/orm.html.twig  </code>
 	</p>
 
 	<pre>
@@ -181,15 +181,15 @@ Thu Aug 03 2017 16:40:15 INFO WATCHER EVENT change  : BUNDLE App RECOMPILE Templ
 	<strong>&#123&#123 parent() &#125&#125</strong>
 
 	// ADD stylesheets here
-	&ltlink rel="stylesheet" href="/frameworkBundle/vendors/dataTable/css/dataTables.bootstrap.min.css" /&gt
+	&ltlink rel="stylesheet" href="/framework-bundle/vendors/dataTable/css/dataTables.bootstrap.min.css" /&gt
 
 &#123% endblock %&#125
 
 &#123% block javascripts %&#125
 	<strong>&#123&#123 parent() &#125&#125</strong>
 	// ADD javascripts files or script here
-	&ltscript type="text/javascript" src="/frameworkBundle/vendors/dataTable/js/jquery.dataTables.js"&gt&lt/script&gt
-	&ltscript type="text/javascript" src="/frameworkBundle/vendors/dataTable/js/dataTables.bootstrap.js"&gt&lt/script&gt
+	&ltscript type="text/javascript" src="/framework-bundle/vendors/dataTable/js/jquery.dataTables.js"&gt&lt/script&gt
+	&ltscript type="text/javascript" src="/framework-bundle/vendors/dataTable/js/dataTables.bootstrap.js"&gt&lt/script&gt
 
 	&ltscript&gt
 		$(document).ready(function()&#123

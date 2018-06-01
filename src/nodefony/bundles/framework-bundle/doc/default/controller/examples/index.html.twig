@@ -47,7 +47,7 @@
 					<pre>
 documentation-demo:
   pattern:  /doc/demo/html/{name}
-  defaults: {controller: "documentationBundle:demo:html", "name":"nodefony"}
+  defaults: {controller: "documentation-bundle:demo:html", "name":"nodefony"}
 					</pre>
 
 				</div>
@@ -78,7 +78,7 @@ module.exports = class demoController extends nodefony.controller {
 				</div>
 
 				<div id="result" class="tab-pane">
-					{{render( controller( "documentationBundle:demo:html", "nodefony") ) }}
+					{{render( controller( "documentation-bundle:demo:html", "nodefony") ) }}
 				</div>
 
 			</div>
@@ -109,7 +109,7 @@ module.exports = class demoController extends nodefony.controller {
 					<pre>
 documentation-demo-render:
   pattern:  /doc/demo/render/{name}
-  defaults: {controller: "documentationBundle:demo:render", "name":"nodefony"}
+  defaults: {controller: "documentation-bundle:demo:render", "name":"nodefony"}
 					</pre>
 				</div>
 
@@ -133,7 +133,7 @@ module.exports = class demoController extends nodefony.controller {
  	*
  	*/
 	renderAction (name){
-		return this.render('documentationBundle:demo:index.html.twig', {
+		return this.render('documentation-bundle:demo:index.html.twig', {
 			name:name,
 		});
 	}
@@ -147,7 +147,7 @@ module.exports = class demoController extends nodefony.controller {
 				</div>
 
 				<div id="result1" class="tab-pane">
-					{{render( controller( "documentationBundle:demo:render", "nodefony") ) }}
+					{{render( controller( "documentation-bundle:demo:render", "nodefony") ) }}
 				</div>
 
 			</div>
@@ -177,7 +177,7 @@ module.exports = class demoController extends nodefony.controller {
 					<pre>
 sqlJoin:
   pattern:  /query/join
-  defaults: {"controller": "demoBundle:demo:querySqlJoin"}
+  defaults: {"controller": "demo-bundle:demo:querySqlJoin"}
   requirements:
     method: GET
 					</pre>
@@ -215,7 +215,7 @@ module.exports = class demoController extends nodefony.controller {
 			for (let i = 0 ; i < joins.length ; i++){
 				joins[i].metaBag = JSON.parse( joins[i].metaBag );
 			}
-			return this.render('demoBundle:orm:orm.html.twig', {
+			return this.render('demo-bundle:orm:orm.html.twig', {
 				joins:joins,
 			});
 		})
@@ -294,7 +294,7 @@ module.exports = class demoController extends nodefony.controller {
 					<pre>
 websoket:
   pattern:  /websoket
-  defaults: {"controller": "demoBundle:demo:websoket"}
+  defaults: {"controller": "demo-bundle:demo:websoket"}
   requirements:
     method:     GET,WEBSOCKET
 					</pre>
@@ -326,7 +326,7 @@ module.exports = class demoController extends nodefony.controller {
 	websoketAction (message){
 		switch( this.getMethod() ){
 			case "GET" :
-				return this.render('demoBundle:Default:websocket.html.twig',{name:"websoket"});
+				return this.render('demo-bundle:Default:websocket.html.twig',{name:"websoket"});
 			break;
 			<strong>case "WEBSOCKET" :</strong>
 				if (message){
@@ -417,7 +417,7 @@ Thu Oct 06 2016 15:49:19 INFO REQUEST WEBSOCKET SECURE  : Thu Oct 06 2016 15:49:
 					<pre>
 json:
   pattern:  /json
-  defaults: {"controller": "demoBundle:demo:json"}
+  defaults: {"controller": "demo-bundle:demo:json"}
 					</pre>
 				</div>
 				<div id="controler4" class="tab-pane ">
@@ -471,7 +471,7 @@ module.exports = class demoController extends nodefony.controller {
 					<pre>
 xmlResponse:
   pattern:  /xml
-  defaults: {"controller": "demoBundle:demo:xml"}
+  defaults: {"controller": "demo-bundle:demo:xml"}
   requirements:
     method: GET
 
@@ -535,7 +535,7 @@ module.exports = class demoController extends nodefony.controller {
 					<pre>
 download:
   pattern:  /download
-  defaults: {"controller": "demoBundle:finder:download"}
+  defaults: {"controller": "demo-bundle:finder:download"}
   requirements:
     method: GET
 					</pre>
@@ -588,7 +588,7 @@ module.exports = class finderController extends nodefony.controller {
 					<pre>
 render-media:
   pattern:  /rendermedia
-  defaults: {"controller": "demoBundle:demo:mediaStream"}
+  defaults: {"controller": "demo-bundle:demo:mediaStream"}
   requirements:
     method: GET
 
@@ -643,7 +643,7 @@ module.exports = class demoController extends nodefony.controller {
 					<pre>
 uploadFile:
   pattern:  /fileupload
-  defaults: {"controller": "demoBundle:demo:upload"}
+  defaults: {"controller": "demo-bundle:demo:upload"}
   requirements:
     method: POST
 					</pre>
@@ -667,7 +667,7 @@ module.exports = class demoController extends nodefony.controller {
  	*/
 	uploadAction (){
 		let files = this.<strong>getParameters</strong>("query.files");
-		let myPath =  path.resolve( this.kernel.rootDir, "src", "bundles", "demoBundle", "Resources", "images");
+		let myPath =  path.resolve( this.kernel.rootDir, "src", "bundles", "demo-bundle", "Resources", "images");
 		for (let file in files){
 			if( files[file].error ){
 				throw files[file].error ;
@@ -746,9 +746,9 @@ redirectGoogleAction (){
 forwardAction (){
 	let docBundle = this.kernel.getBundles("documentation");
 	if (  docBundle ){
-		return <strong>this.forward</strong>("documentationBundle:default:navDoc");
+		return <strong>this.forward</strong>("documentation-bundle:default:navDoc");
 	}
-	return this.render('demoBundle:Default:navDoc.html.twig');
+	return this.render('demo-bundle:Default:navDoc.html.twig');
 }
 					</pre>
 				</div>

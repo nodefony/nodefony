@@ -46,6 +46,8 @@
     "varNotExit": true,
     "window": true,
     "document": true,
-    "navigator": true
+    "navigator": true,
+    "stage": true,
+    "$": true
   }
 }

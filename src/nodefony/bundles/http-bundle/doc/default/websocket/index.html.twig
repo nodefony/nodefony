@@ -25,7 +25,7 @@
 					<pre>
 websoket:
   pattern:  /websoket
-  defaults: {"controller": "demoBundle:demo:websoket"}
+  defaults: {"controller": "demo-bundle:demo:websoket"}
   requirements:
     method:
       - GET
@@ -61,7 +61,7 @@ module.exports = nodefony.registerController("demo", function(){
 			<strong>var context = this.getContext();</strong>
 			switch( this.getMethod() ){
 				case "GET" :
-					return this.render('demoBundle:Default:websocket.html.twig',{name:"websoket"});
+					return this.render('demo-bundle:Default:websocket.html.twig',{name:"websoket"});
 				break;
 				<strong>case "WEBSOCKET" :</strong>
 					if (message){

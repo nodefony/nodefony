@@ -75,13 +75,13 @@ $ <strong>./nodefony prod</strong>
  ┌───────────────┬───────────────────────────┬─────────────────────────────────────────────────────────────┬───────────┬────────────────┐
  │ BUNDLES       │ DESTINATION PATH          │ SOURCE PATH                                                 │ SIZE      │ ASSETS COMPILE │
  ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
- │ framework     │ ./web/frameworkBundle     │ ./src/nodefony/bundles/frameworkBundle/Resources/public     │ 1.2 MB    │ 2.4 MB         │
+ │ framework     │ ./web/framework-bundle     │ ./src/nodefony/bundles/framework-bundle/Resources/public     │ 1.2 MB    │ 2.4 MB         │
  ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
  │ security      │ ./web/securityBundle      │ ./src/nodefony/bundles/securityBundle/Resources/public      │ 1.9 KB    │ 0 bytes        │
  ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
- │ monitoring    │ ./web/monitoringBundle    │ ./src/nodefony/bundles/monitoringBundle/Resources/public    │ 719 KB    │ 4.1 MB         │
+ │ monitoring    │ ./web/monitoring-bundle    │ ./src/nodefony/bundles/monitoring-bundle/Resources/public    │ 719 KB    │ 4.1 MB         │
  ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
- │ documentation │ ./web/documentationBundle │ ./src/nodefony/bundles/documentationBundle/Resources/public │ 644 KB    │ 3.5 MB         │
+ │ documentation │ ./web/documentation-bundle │ ./src/nodefony/bundles/documentation-bundle/Resources/public │ 644 KB    │ 3.5 MB         │
  ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
  │ unitTest      │ ./web/unitTestBundle      │ ./src/nodefony/bundles/unitTestBundle/Resources/public      │ 0 bytes   │ 0 bytes        │
  ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
@@ -93,21 +93,21 @@ $ <strong>./nodefony prod</strong>
  ┌───────────────────┬───────────────────┬───────────────────────┬─────────────────────┬───────────────┬───────────────────────────────────────────────────────────────────────────────────────────┬─────────┐
  │ ENTRY NAME [name] │ ENTRY             │ OUTPUT FILE NAME      │ OUTPUT LIBRARY NANE │ OUTPUT TARGET │ PUBLIC PATH                                                                               │ WATCHER │
  ├───────────────────┼───────────────────┼───────────────────────┼─────────────────────┼───────────────┼───────────────────────────────────────────────────────────────────────────────────────────┼─────────┤
- │ framework         │ ./js/framework.js │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/frameworkBundle/Resources/public │         │
+ │ framework         │ ./js/framework.js │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/framework-bundle/Resources/public │         │
  └───────────────────┴───────────────────┴───────────────────────┴─────────────────────┴───────────────┴───────────────────────────────────────────────────────────────────────────────────────────┴─────────┘
  19739 Thu Aug 03 2017 10:45:14 INFO SERVICE WEBPACK   : RUN WEBPACK COMPILER : webpack.prod.config.js COMPILE ENTRY POINT :
  ┌───────────────────┬────────────────────┬───────────────────────┬─────────────────────┬───────────────┬────────────────────────────────────────────────────────────────────────────────────────────┬─────────┐
  │ ENTRY NAME [name] │ ENTRY              │ OUTPUT FILE NAME      │ OUTPUT LIBRARY NANE │ OUTPUT TARGET │ PUBLIC PATH                                                                                │ WATCHER │
  ├───────────────────┼────────────────────┼───────────────────────┼─────────────────────┼───────────────┼────────────────────────────────────────────────────────────────────────────────────────────┼─────────┤
- │ monitoring        │ ./js/monitoring.js │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/monitoringBundle/Resources/public │         │
+ │ monitoring        │ ./js/monitoring.js │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/monitoring-bundle/Resources/public │         │
  ├───────────────────┼────────────────────┼───────────────────────┼─────────────────────┼───────────────┼────────────────────────────────────────────────────────────────────────────────────────────┼─────────┤
- │ debugBar          │ ./js/debugBar.js   │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/monitoringBundle/Resources/public │         │
+ │ debugBar          │ ./js/debugBar.js   │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/monitoring-bundle/Resources/public │         │
  └───────────────────┴────────────────────┴───────────────────────┴─────────────────────┴───────────────┴────────────────────────────────────────────────────────────────────────────────────────────┴─────────┘
  19738 Thu Aug 03 2017 10:45:14 INFO SERVICE WEBPACK   : RUN WEBPACK COMPILER : webpack.prod.config.js COMPILE ENTRY POINT :
  ┌───────────────────┬───────────────────────┬───────────────────────┬─────────────────────┬───────────────┬───────────────────────────────────────────────────────────────────────────────────────────────┬─────────┐
  │ ENTRY NAME [name] │ ENTRY                 │ OUTPUT FILE NAME      │ OUTPUT LIBRARY NANE │ OUTPUT TARGET │ PUBLIC PATH                                                                                   │ WATCHER │
  ├───────────────────┼───────────────────────┼───────────────────────┼─────────────────────┼───────────────┼───────────────────────────────────────────────────────────────────────────────────────────────┼─────────┤
- │ documentation     │ ./js/documentation.js │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/documentationBundle/Resources/public │         │
+ │ documentation     │ ./js/documentation.js │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/documentation-bundle/Resources/public │         │
  └───────────────────┴───────────────────────┴───────────────────────┴─────────────────────┴───────────────┴───────────────────────────────────────────────────────────────────────────────────────────────┴─────────┘
  19739 Thu Aug 03 2017 10:45:14 INFO SERVICE WEBPACK   : RUN WEBPACK COMPILER : webpack.prod.config.js COMPILE ENTRY POINT :
  ┌───────────────────┬──────────────┬───────────────────────┬─────────────────────┬───────────────┬─────────────────────────────────────────────────────────────────────────────┬─────────┐

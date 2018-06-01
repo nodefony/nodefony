@@ -52,7 +52,7 @@
   "dependencies": {
     "@angular/cli": "=1.7.4",
     "@nodefony/core": "file:src/nodefony/core",
-    "@nodefony/demo-bundle": "file:src/bundles/demoBundle",
+    "@nodefony/demo-bundle": "file:src/bundles/demo-bundle",
     "@nodefony/documentation-bundle": "file:src/nodefony/bundles/documentation-bundle",
     "@nodefony/framework-bundle": "file:src/nodefony/bundles/framework-bundle",
     "@nodefony/http-bundle": "file:src/nodefony/bundles/http-bundle",

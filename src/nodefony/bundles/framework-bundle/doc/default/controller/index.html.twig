@@ -9,7 +9,7 @@
 	</div>
 	<p>
 		<center>
-			<img src="/documentationBundle/images/controller.png" />
+			<img src="/documentation-bundle/images/controller.png" />
 		</center>
 	</p>
 </div>
@@ -134,7 +134,7 @@ module.exports = class <strong>myController</strong> extends nodefony.controller
 
 <div class="doc2 ">
 	<p>
-		The nodefony core router find routes with pattern <code>'nameBundle:controller:<strong>action</strong>'</code> Example : demoBundle:default:index <br>
+		The nodefony core router find routes with pattern <code>'nameBundle:controller:<strong>action</strong>'</code> Example : demo-bundle:default:index <br>
 		For the router find the controller's action functions.  <br>
 		The name of function must finish  by '...Action' <code>'indexAction'</code>
 	</p>
@@ -199,7 +199,7 @@ indexAction (){
  *	RENDER TWIG TEMPLATE with render
  */
 indexAction (){
-	<strong>return this.render("demoBundle:Default:index.html.twig",{
+	<strong>return this.render("demo-bundle:Default:index.html.twig",{
 		settings:this.kernel.settings
 	});</strong>
 

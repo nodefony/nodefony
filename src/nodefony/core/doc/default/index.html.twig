@@ -168,7 +168,7 @@ $ make build
         rejectUnauthorized      : false
 
   bundles:
-    hello                       : "src/bundles/demoBundle"
+    hello                       : "src/bundles/demo-bundle"
 
   log:
     active                      : true
@@ -215,13 +215,13 @@ $ ./nodefony dev
 <p >
   Access to App with URL : <strong>http://localhost:5151</strong><br>
 
-  By default the nodefony clone come with a demonstration bundle named "demoBundle"
+  By default the nodefony clone come with a demonstration bundle named "demo-bundle"
 
 </p>
 </div>
 
 <center>
-  <img width="800" height="463" src="/documentationBundle/images/nodefony.png"/>
+  <img width="800" height="463" src="/documentation-bundle/images/nodefony.png"/>
 </center>
 
 <h2>SIMPLE EXAMPLES NODEFONY FRAMEWORK :  </h2>
@@ -247,7 +247,7 @@ module.exports = {
   "documentation-demo": {
     pattern: "/doc/demo/html/{name}",
     defaults: {
-      controller: "documentationBundle:demo:html",
+      controller: "documentation-bundle:demo:html",
       name:	"nodefony"
     }
   }
@@ -283,7 +283,7 @@ module.exports = class demoController extends nodefony.controller {
   </div>
 
   <div id="result" class="tab-pane">
-    {{render( controller( "documentationBundle:demo:html", "nodefony") ) }}
+    {{render( controller( "documentation-bundle:demo:html", "nodefony") ) }}
   </div>
   </div>
   </div>
@@ -313,7 +313,7 @@ module.exports = class demoController extends nodefony.controller {
   <pre>
 documentation-demo-render:
   pattern:  /doc/demo/render/{name}
-  defaults: {controller: "documentationBundle:demo:render", "name":"nodefony"}
+  defaults: {controller: "documentation-bundle:demo:render", "name":"nodefony"}
   </pre>
   </div>
 
@@ -337,7 +337,7 @@ module.exports = class demoController extends nodefony.controller {
  	*
  	*/
   renderAction (name){
-    return this.render('documentationBundle:demo:index.html.twig', {
+    return this.render('documentation-bundle:demo:index.html.twig', {
   name:name,
   });
   }
@@ -351,7 +351,7 @@ module.exports = class demoController extends nodefony.controller {
   </div>
 
   <div id="result1" class="tab-pane">
-    {{render( controller( "documentationBundle:demo:render", "nodefony") ) }}
+    {{render( controller( "documentation-bundle:demo:render", "nodefony") ) }}
   </div>
 
   </div>
@@ -381,7 +381,7 @@ module.exports = class demoController extends nodefony.controller {
   <pre>
 websoket:
   pattern:  /websoket
-  defaults: {"controller": "demoBundle:demo:websoket"}
+  defaults: {"controller": "demo-bundle:demo:websoket"}
   requirements:
     method:
       - GET
@@ -415,7 +415,7 @@ module.exports = class demoController extends nodefony.controller {
   websoketAction (message){
     switch( this.getMethod() ){
       <strong>case "GET" :</strong>
-        return this.render('demoBundle:Default:websocket.html.twig',{name:"websoket"});
+        return this.render('demo-bundle:Default:websocket.html.twig',{name:"websoket"});
       <strong>case "WEBSOCKET" :</strong>
         if (message){
           // LOG  MESSAGE CLIENT IN TERMINAL
@@ -504,7 +504,7 @@ Thu Oct 06 2016 15:49:19 INFO REQUEST WEBSOCKET SECURE  : Thu Oct 06 2016 15:49:
   <pre>
 json:
   pattern:  /json
-  defaults: {"controller": "demoBundle:demo:json"}
+  defaults: {"controller": "demo-bundle:demo:json"}
   </pre>
   </div>
   <div id="controler4" class="tab-pane ">

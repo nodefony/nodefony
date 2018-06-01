@@ -204,7 +204,7 @@
                 </span>
               </div>
               <ul class="nav nav-pills nav-stacked">
-                {{ render( controller("documentationBundle:default:subSection", version, bundle, section  )) }}
+                {{ render( controller("documentation-bundle:default:subSection", version, bundle, section  )) }}
               </ul>
               {% block section %}{% endblock %}
             </div>
@@ -265,6 +265,6 @@
 
 {% block footer %}
   <footer>
-    {{ render( controller("documentationBundle:default:footer" )) }}
+    {{ render( controller("documentation-bundle:default:footer" )) }}
   </footer>
 {% endblock %}

@@ -9,7 +9,7 @@
 	</div>
 	<p>
 		<center>
-			<img src="/documentationBundle/images/routing.png" />
+			<img src="/documentation-bundle/images/routing.png" />
 		</center>
 	</p>
 
@@ -45,7 +45,7 @@
 	</p>
 
 	<pre>
-$ ll src/nodefony/bundles/documentationBundle/Resources/config/
+$ ll src/nodefony/bundles/documentation-bundle/Resources/config/
 
 total 24
 -rwxr-xr-x  1 cci  staff  1060 10 oct 09:37 config.yml
@@ -108,38 +108,38 @@ module.exports = {
 					<pre>
 documentation:
   pattern:  /documentation
-  defaults: {controller: "documentationBundle:default:index"}
+  defaults: {controller: "documentation-bundle:default:index"}
   requirements:
     method: GET
 
 documentation-search:
   pattern:  /documentation/search
-  defaults: {controller: "documentationBundle:default:search"}
+  defaults: {controller: "documentation-bundle:default:search"}
 
 documentation-default:
   pattern:  /documentation/{version}
-  defaults: {controller: "documentationBundle:default:index"}
+  defaults: {controller: "documentation-bundle:default:index"}
 
 documentation-version:
   pattern:  /documentation/{version}/{bundle}
-  defaults: {controller: "documentationBundle:default:version"}
+  defaults: {controller: "documentation-bundle:default:version"}
 
 documentation-section:
   pattern:  /documentation/{version}/{bundle}/{section}
-  defaults: {controller: "documentationBundle:default:version"}
+  defaults: {controller: "documentation-bundle:default:version"}
 
 documentation-git-getMostRecentCommit:
   pattern:  /api/git/getMostRecentCommit
-  defaults: {controller: "documentationBundle:git:getMostRecentCommit"}
+  defaults: {controller: "documentation-bundle:git:getMostRecentCommit"}
 
 documentation-git-getStatus:
   pattern:  /api/git/getStatus
-  defaults: {controller: "documentationBundle:git:getStatus"}
+  defaults: {controller: "documentation-bundle:git:getStatus"}
 
 
 documentation-git-getBranch:
   pattern:  /api/git/getCurrentBranch
-  defaults: {controller: "documentationBundle:git:getCurrentBranch"}
+  defaults: {controller: "documentation-bundle:git:getCurrentBranch"}
 					</pre>
 			</div>
 			<div id="annotations" class="tab-pane">
@@ -208,20 +208,20 @@ module.exports = class annotationController extends nodefony.controller {
 </p>
 
 	<pre>
-Tue Oct 11 2016 13:12:04 DEBUG AUTOLOADER LOAD  : /Users/cci/repository/nodefony/src/nodefony/bundles/documentationBundle/documentationBundle.js
+Tue Oct 11 2016 13:12:04 DEBUG AUTOLOADER LOAD  : /Users/cci/repository/nodefony/src/nodefony/bundles/documentation-bundle/documentation-bundle.js
 Tue Oct 11 2016 13:12:04 DEBUG KERNEL  :  REGISTER BUNDLE : documentation
-Tue Oct 11 2016 13:12:04 DEBUG AUTOLOADER LOAD  : /Users/cci/repository/nodefony/src/nodefony/bundles/documentationBundle/services/webCrawlerService.js
-Tue Oct 11 2016 13:12:05 DEBUG SERVICE KERNEL READER  : CONFIG LOAD FILE :/Users/cci/repository/nodefony/src/nodefony/bundles/documentationBundle/Resources/config/config.yml
-Tue Oct 11 2016 13:12:05 <strong> DEBUG SERVICE KERNEL READER  : ROUTER LOAD FILE :/Users/cci/repository/nodefony/src/nodefony/bundles/documentationBundle/Resources/config/routing.yml</strong>
-Tue Oct 11 2016 13:12:05 <strong>DEBUG SERVICE ROUTER  : ADD Route : /documentation   ===> documentationBundle:default:index</strong>
-Tue Oct 11 2016 13:12:05 <strong>DEBUG SERVICE ROUTER  : ADD Route : /documentation/search   ===> documentationBundle:default:search</strong>
-Tue Oct 11 2016 13:12:05 <strong>DEBUG SERVICE ROUTER  : ADD Route : /documentation/{version}   ===> documentationBundle:default:index</strong>
-Tue Oct 11 2016 13:12:05 <strong>DEBUG SERVICE ROUTER  : ADD Route : /documentation/{version}/{bundle}   ===> documentationBundle:default:version</strong>
-Tue Oct 11 2016 13:12:05 <strong>DEBUG SERVICE ROUTER  : ADD Route : /documentation/{version}/{bundle}/{section}   ===> documentationBundle:default:version</strong>
-Tue Oct 11 2016 13:12:05 <strong>DEBUG SERVICE ROUTER  : ADD Route : /api/git/getMostRecentCommit   ===> documentationBundle:git:getMostRecentCommit</strong>
-Tue Oct 11 2016 13:12:05 <strong>DEBUG SERVICE ROUTER  : ADD Route : /api/git/getStatus   ===> documentationBundle:git:getStatus</strong>
-Tue Oct 11 2016 13:12:05 <strong>DEBUG SERVICE ROUTER  : ADD Route : /api/git/getCurrentBranch   ===> documentationBundle:git:getCurrentBranch</strong>
-Tue Oct 11 2016 13:12:05 DEBUG SERVICE KERNEL READER  : SERVICE LOAD FILE :/Users/cci/repository/nodefony/src/nodefony/bundles/documentationBundle/Resources/config/services.xml
+Tue Oct 11 2016 13:12:04 DEBUG AUTOLOADER LOAD  : /Users/cci/repository/nodefony/src/nodefony/bundles/documentation-bundle/services/webCrawlerService.js
+Tue Oct 11 2016 13:12:05 DEBUG SERVICE KERNEL READER  : CONFIG LOAD FILE :/Users/cci/repository/nodefony/src/nodefony/bundles/documentation-bundle/Resources/config/config.yml
+Tue Oct 11 2016 13:12:05 <strong> DEBUG SERVICE KERNEL READER  : ROUTER LOAD FILE :/Users/cci/repository/nodefony/src/nodefony/bundles/documentation-bundle/Resources/config/routing.yml</strong>
+Tue Oct 11 2016 13:12:05 <strong>DEBUG SERVICE ROUTER  : ADD Route : /documentation   ===> documentation-bundle:default:index</strong>
+Tue Oct 11 2016 13:12:05 <strong>DEBUG SERVICE ROUTER  : ADD Route : /documentation/search   ===> documentation-bundle:default:search</strong>
+Tue Oct 11 2016 13:12:05 <strong>DEBUG SERVICE ROUTER  : ADD Route : /documentation/{version}   ===> documentation-bundle:default:index</strong>
+Tue Oct 11 2016 13:12:05 <strong>DEBUG SERVICE ROUTER  : ADD Route : /documentation/{version}/{bundle}   ===> documentation-bundle:default:version</strong>
+Tue Oct 11 2016 13:12:05 <strong>DEBUG SERVICE ROUTER  : ADD Route : /documentation/{version}/{bundle}/{section}   ===> documentation-bundle:default:version</strong>
+Tue Oct 11 2016 13:12:05 <strong>DEBUG SERVICE ROUTER  : ADD Route : /api/git/getMostRecentCommit   ===> documentation-bundle:git:getMostRecentCommit</strong>
+Tue Oct 11 2016 13:12:05 <strong>DEBUG SERVICE ROUTER  : ADD Route : /api/git/getStatus   ===> documentation-bundle:git:getStatus</strong>
+Tue Oct 11 2016 13:12:05 <strong>DEBUG SERVICE ROUTER  : ADD Route : /api/git/getCurrentBranch   ===> documentation-bundle:git:getCurrentBranch</strong>
+Tue Oct 11 2016 13:12:05 DEBUG SERVICE KERNEL READER  : SERVICE LOAD FILE :/Users/cci/repository/nodefony/src/nodefony/bundles/documentation-bundle/Resources/config/services.xml
 Tue Oct 11 2016 13:12:05 DEBUG SERVICE INJECTION  : START SERVICE webCrawler( container,kernel )
 	</pre>
 </div>
@@ -344,7 +344,7 @@ module.exports = class controllerController extends nodefony.controller {
 		  		<td class="config-parameters">routeName.defaults.controller</td>
 		  		<td>Pattern 'nameBundle:controller:action' </td>
 		  		<td>String</td>
-		  		<td>"documentationBundle:git:getCurrentBranch"</td>
+		  		<td>"documentation-bundle:git:getCurrentBranch"</td>
 	  		</tr>
 			<tr>
 		  		<td class="config-parameters">routeName.requirement</td>
@@ -413,9 +413,9 @@ module.exports = class controllerController extends nodefony.controller {
 		<pre>
 documentation-default:
   pattern:  /documentation/{version}
-  defaults: {controller: "documentationBundle:default:index"}
+  defaults: {controller: "documentation-bundle:default:index"}
 		</pre>
-		Pattern controller format  : <strong>documentationBundle:default:index</strong>
+		Pattern controller format  : <strong>documentation-bundle:default:index</strong>
 		<table border="1" class="table">
 			<colgroup>
 				<col width="25%">
@@ -432,7 +432,7 @@ documentation-default:
 				</tr>
 			</thead>
 			<tbody valign="top">
-			<tr class=""><td><code class="">documentationBundle</code></td>
+			<tr class=""><td><code class="">documentation-bundle</code></td>
 				<td><code class="">defaultController</code></td>
 				<td><code class="">indexAction</code></td>
 				<td><code class="">indexAction( version )</code></td>
@@ -443,24 +443,24 @@ documentation-default:
 		Example : you want to match  URL like /documentation or /documentation/1.0 or 	/documentation/1.0/nodefony
 	</p>
 	<p>
-		<code>documentationBundle/Resources/config/routing.yml</code> :
+		<code>documentation-bundle/Resources/config/routing.yml</code> :
 	</p>
 	<pre>
 documentation:
   pattern:  /documentation
-  defaults: {controller: "documentationBundle:default:index"}
+  defaults: {controller: "documentation-bundle:default:index"}
 
 documentation-default:
   pattern:  /documentation/<strong>{version}</strong>
-  defaults: {controller: "documentationBundle:default:index"}
+  defaults: {controller: "documentation-bundle:default:index"}
 
 documentation-version:
   pattern:  /documentation/<strong>{version}</strong>/<strong>{bundle}</strong>
-  defaults: {controller: "documentationBundle:default:version"}
+  defaults: {controller: "documentation-bundle:default:version"}
 	</pre>
 
 	<p>
-		<code>documentationBundle/controller/defaultController.js</code> :
+		<code>documentation-bundle/controller/defaultController.js</code> :
 	</p>
 	<pre>
 module.exports =  class defaultController extends nodefony.controller {
@@ -497,15 +497,15 @@ module.exports =  class defaultController extends nodefony.controller {
 
 	<p>
 		A route is a map from a URL path to a controller : <br>
-		<code>demoBundle/Resources/config/routing.yml</code> :
+		<code>demo-bundle/Resources/config/routing.yml</code> :
 		<pre>
 demo-websoket:
   pattern:  /demo/websoket
-  defaults: {controller: "demoBundle:websocket:index"}
+  defaults: {controller: "demo-bundle:websocket:index"}
   requirements:
     method: GET,WEBSOCKET
 		</pre>
-		Pattern controller format  : <strong>demoBundle:websocket:index</strong>
+		Pattern controller format  : <strong>demo-bundle:websocket:index</strong>
 		<table border="1" class="table">
 			<colgroup>
 				<col width="25%">
@@ -522,7 +522,7 @@ demo-websoket:
 				</tr>
 			</thead>
 			<tbody valign="top">
-			<tr class=""><td><code class="">demoBundle</code></td>
+			<tr class=""><td><code class="">demo-bundle</code></td>
 				<td><code class="">websocketController</code></td>
 				<td><code class="">indexAction</code></td>
 				<td><code class="">indexAction( <strong>message</strong> )</code></td>
@@ -539,7 +539,7 @@ demo-websoket:
 				<li> URL  context http : <strong>http(s)://nodefony.com:5151(5152)/demo/websoket </strong> </li>
 			</ul>
 
-		<code>demoBundle/controller/websocketController.js</code> :
+		<code>demo-bundle/controller/websocketController.js</code> :
 	</p>
 	<pre>
 module.exports = class websocketController extends nodefony.controller {
@@ -554,7 +554,7 @@ module.exports = class websocketController extends nodefony.controller {
 
 		switch( <strong>this.getMethod()</strong> ){
 			case "GET" :
-				return this.render('demoBundle:Default:websocket.html.twig',{name:"websoket"});
+				return this.render('demo-bundle:Default:websocket.html.twig',{name:"websoket"});
 			break;
 			case "WEBSOCKET" :
 				if (<strong>message</strong>){

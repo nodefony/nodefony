@@ -95,13 +95,13 @@ Wed Aug 02 2017 17:36:54 INFO SERVICE CLI KERNEL  : INSTALL LINK IN /web TOTAL S
 ┌───────────────┬───────────────────────────┬─────────────────────────────────────────────────────────────┬───────────┬────────────────┐
 │ BUNDLES       │ DESTINATION PATH          │ SOURCE PATH                                                 │ SIZE      │ ASSETS COMPILE │
 ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
-│ framework     │ ./web/frameworkBundle     │ ./src/nodefony/bundles/frameworkBundle/Resources/public     │ 1.2 MB    │ 2.4 MB         │
+│ framework     │ ./web/framework-bundle     │ ./src/nodefony/bundles/framework-bundle/Resources/public     │ 1.2 MB    │ 2.4 MB         │
 ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
 │ security      │ ./web/securityBundle      │ ./src/nodefony/bundles/securityBundle/Resources/public      │ 1.9 KB    │ 0 bytes        │
 ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
-│ monitoring    │ ./web/monitoringBundle    │ ./src/nodefony/bundles/monitoringBundle/Resources/public    │ 719 KB    │ 4.1 MB         │
+│ monitoring    │ ./web/monitoring-bundle    │ ./src/nodefony/bundles/monitoring-bundle/Resources/public    │ 719 KB    │ 4.1 MB         │
 ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
-│ documentation │ ./web/documentationBundle │ ./src/nodefony/bundles/documentationBundle/Resources/public │ 644 KB    │ 3.5 MB         │
+│ documentation │ ./web/documentation-bundle │ ./src/nodefony/bundles/documentation-bundle/Resources/public │ 644 KB    │ 3.5 MB         │
 ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
 │ unitTest      │ ./web/unitTestBundle      │ ./src/nodefony/bundles/unitTestBundle/Resources/public      │ 0 bytes   │ 0 bytes        │
 ├───────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────┼───────────┼────────────────┤
@@ -113,21 +113,21 @@ Wed Aug 02 2017 17:36:55 INFO SERVICE WEBPACK   : RUN WEBPACK COMPILER : webpack
 ┌───────────────────┬───────────────────┬───────────────────────┬─────────────────────┬───────────────┬───────────────────────────────────────────────────────────────────────────────────────────┬─────────┐
 │ ENTRY NAME [name] │ ENTRY             │ OUTPUT FILE NAME      │ OUTPUT LIBRARY NANE │ OUTPUT TARGET │ PUBLIC PATH                                                                               │ WATCHER │
 ├───────────────────┼───────────────────┼───────────────────────┼─────────────────────┼───────────────┼───────────────────────────────────────────────────────────────────────────────────────────┼─────────┤
-│ framework         │ ./js/framework.js │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/frameworkBundle/Resources/public │         │
+│ framework         │ ./js/framework.js │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/framework-bundle/Resources/public │         │
 └───────────────────┴───────────────────┴───────────────────────┴─────────────────────┴───────────────┴───────────────────────────────────────────────────────────────────────────────────────────┴─────────┘
 Wed Aug 02 2017 17:36:55 INFO SERVICE WEBPACK   : RUN WEBPACK COMPILER : webpack.dev.config.js COMPILE ENTRY POINT :
 ┌───────────────────┬────────────────────┬───────────────────────┬─────────────────────┬───────────────┬────────────────────────────────────────────────────────────────────────────────────────────┬─────────┐
 │ ENTRY NAME [name] │ ENTRY              │ OUTPUT FILE NAME      │ OUTPUT LIBRARY NANE │ OUTPUT TARGET │ PUBLIC PATH                                                                                │ WATCHER │
 ├───────────────────┼────────────────────┼───────────────────────┼─────────────────────┼───────────────┼────────────────────────────────────────────────────────────────────────────────────────────┼─────────┤
-│ monitoring        │ ./js/monitoring.js │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/monitoringBundle/Resources/public │         │
+│ monitoring        │ ./js/monitoring.js │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/monitoring-bundle/Resources/public │         │
 ├───────────────────┼────────────────────┼───────────────────────┼─────────────────────┼───────────────┼────────────────────────────────────────────────────────────────────────────────────────────┼─────────┤
-│ debugBar          │ ./js/debugBar.js   │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/monitoringBundle/Resources/public │         │
+│ debugBar          │ ./js/debugBar.js   │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/monitoring-bundle/Resources/public │         │
 └───────────────────┴────────────────────┴───────────────────────┴─────────────────────┴───────────────┴────────────────────────────────────────────────────────────────────────────────────────────┴─────────┘
 Wed Aug 02 2017 17:36:55 INFO SERVICE WEBPACK   : RUN WEBPACK COMPILER : webpack.dev.config.js COMPILE ENTRY POINT :
 ┌───────────────────┬───────────────────────┬───────────────────────┬─────────────────────┬───────────────┬───────────────────────────────────────────────────────────────────────────────────────────────┬─────────┐
 │ ENTRY NAME [name] │ ENTRY                 │ OUTPUT FILE NAME      │ OUTPUT LIBRARY NANE │ OUTPUT TARGET │ PUBLIC PATH                                                                                   │ WATCHER │
 ├───────────────────┼───────────────────────┼───────────────────────┼─────────────────────┼───────────────┼───────────────────────────────────────────────────────────────────────────────────────────────┼─────────┤
-│ documentation     │ ./js/documentation.js │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/documentationBundle/Resources/public │         │
+│ documentation     │ ./js/documentation.js │ ./assets/js/[name].js │ [name]              │ umd           │ /Users/cci/repository/nodefony-core/src/nodefony/bundles/documentation-bundle/Resources/public │         │
 └───────────────────┴───────────────────────┴───────────────────────┴─────────────────────┴───────────────┴───────────────────────────────────────────────────────────────────────────────────────────────┴─────────┘
 Wed Aug 02 2017 17:36:55 INFO SERVICE WEBPACK   : RUN WEBPACK COMPILER : webpack.dev.config.js COMPILE ENTRY POINT :
 ┌───────────────────┬──────────────┬───────────────────────┬─────────────────────┬───────────────┬─────────────────────────────────────────────────────────────────────────────┬─────────┐
@@ -154,9 +154,9 @@ Wed Aug 02 2017 17:36:55 INFO SERVICE WEBSOCKET   :  Server is listening on DOMA
 Wed Aug 02 2017 17:36:55 INFO SERVICE HTTPS   : HTTPS  Server is listening on DOMAIN : https://localhost:5152
 Wed Aug 02 2017 17:36:55 INFO SERVICE WEBSOCKET SECURE   :  Server  is listening on DOMAIN : wss://localhost:5152
 Wed Aug 02 2017 17:37:01 INFO SERVICE WEBPACK   : COMPILE SUCCESS BUNDLE : testBundle webpack.dev.config.js
-Wed Aug 02 2017 17:37:04 INFO SERVICE WEBPACK   : COMPILE SUCCESS BUNDLE : documentationBundle webpack.dev.config.js
-Wed Aug 02 2017 17:37:04 INFO SERVICE WEBPACK   : COMPILE SUCCESS BUNDLE : frameworkBundle webpack.dev.config.js
-Wed Aug 02 2017 17:37:07 INFO SERVICE WEBPACK   : COMPILE SUCCESS BUNDLE : monitoringBundle webpack.dev.config.js
+Wed Aug 02 2017 17:37:04 INFO SERVICE WEBPACK   : COMPILE SUCCESS BUNDLE : documentation-bundle webpack.dev.config.js
+Wed Aug 02 2017 17:37:04 INFO SERVICE WEBPACK   : COMPILE SUCCESS BUNDLE : framework-bundle webpack.dev.config.js
+Wed Aug 02 2017 17:37:07 INFO SERVICE WEBPACK   : COMPILE SUCCESS BUNDLE : monitoring-bundle webpack.dev.config.js
 Wed Aug 02 2017 17:37:07 INFO SERVICE WEBPACK   : RUN WEBPACK COMPILER : app COMPILE ENTRY POINT :
 ┌───────────────────┬───────────────────────────────────────────────────────────────┬───────────────────────┬─────────────────────┬───────────────┬──────────────────────────────────────────────────────────┬─────────┐
 │ ENTRY NAME [name] │ ENTRY                                                         │ OUTPUT FILE NAME      │ OUTPUT LIBRARY NANE │ OUTPUT TARGET │ PUBLIC PATH                                              │ WATCHER │
