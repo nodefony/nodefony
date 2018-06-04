@@ -1,12 +1,11 @@
 realSecure:
-  pattern:   /secure/realtime   
-  defaults: {"controller": "realTimeBundle:default:index"}
-  requirements: 
-    method: GET,POST,WEBSOCKET
+  pattern:      /secure/realtime
+  defaults: {"controller": "realtime:default:index"}
+  requirements:
+    method:     GET,POST,WEBSOCKET
 
 real:
-  pattern:   /realtime   
-  defaults: {"controller": "realTimeBundle:default:index"}
-  requirements: 
-    method: GET,POST,WEBSOCKET
-
+  pattern:      /realtime
+  defaults: {"controller": "realtime:default:index"}
+  requirements:
+    method:     GET,POST,WEBSOCKET

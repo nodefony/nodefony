@@ -63,7 +63,7 @@
     "@nodefony/security-bundle": "file:src/nodefony/bundles/security-bundle",
     "@nodefony/sequelize-bundle": "file:src/nodefony/bundles/sequelize-bundle",
     "@nodefony/stage": "^0.1.10",
-    "@nodefony/unittests-bundle": "file:src/nodefony/bundles/unittest-bundle",
+    "@nodefony/unittests-bundle": "file:src/nodefony/bundles/unittests-bundle",
     "asciify": "1.3.5",
     "async": "^2.6.1",
     "babel-cli": "6.26.0",

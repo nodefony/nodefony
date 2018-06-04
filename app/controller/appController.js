@@ -21,7 +21,6 @@ module.exports = class appController extends nodefony.controller {
     });
     let core = this.kernel.isCore ? "CORE" : this.kernel.settings.version;
     let demo = this.kernel.getBundle("demo");
-    console.log(demo)
     let readme = null;
     try {
       readme = new nodefony.fileClass(path.resolve(this.kernel.rootDir, "readme.md"));

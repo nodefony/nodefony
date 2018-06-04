@@ -141,10 +141,16 @@ module.exports = class httpKernel extends nodefony.Service {
   }
 
   getBundleView(objPattern) {
+    let name = null;
     try {
-      let myBundle = this.kernel.getBundle(this.kernel.getBundleName(objPattern.bundle));
+      name = this.kernel.getBundleName(objPattern.bundle);
+    } catch (e) {
+      name = objPattern.bundle;
+    }
+    try {
+      let myBundle = this.kernel.getBundle(name);
       if (!myBundle) {
-        throw new Error("BUNDLE :" + objPattern.bundle + "NOT exist");
+        throw new Error("Resolver Pattern View Bundle : " + objPattern.bundle + " NOT exist");
       }
       return myBundle.getView(objPattern.directory, objPattern.file);
     } catch (e) {
@@ -153,10 +159,16 @@ module.exports = class httpKernel extends nodefony.Service {
   }
 
   getBundleTemplate(objPattern) {
+    let name = null;
     try {
-      let myBundle = this.kernel.getBundle(this.kernel.getBundleName(objPattern.bundle));
+      name = this.kernel.getBundleName(objPattern.bundle);
+    } catch (e) {
+      name = objPattern.bundle;
+    }
+    try {
+      let myBundle = this.kernel.getBundle(name);
       if (!myBundle) {
-        throw new Error("BUNDLE :" + objPattern.bundle + "NOT exist");
+        throw new Error("Resolver Pattern Template Bundle :" + objPattern.bundle + "NOT exist");
       }
       return myBundle.getTemplate(objPattern.directory, objPattern.file);
     } catch (e) {

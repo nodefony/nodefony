@@ -1,4 +1,4 @@
-module.exports = class unitTestBundle extends nodefony.Bundle {
+module.exports = class unittestsBundle extends nodefony.Bundle {
 
   constructor(name, kernel, container) {
 

@@ -94,10 +94,14 @@ module.exports = nodefony.register("Resolver", function () {
     parsePathernController(name) {
       if (name && typeof name === "string") {
         let tab = name.split(":");
-        this.bundle = this.kernel.getBundle(this.kernel.getBundleName(tab[0]));
-        if (!this.bundle) {
-          this.bundle = this.kernel.getBundle(name);
+        let myName = null;
+        try {
+          myName = this.kernel.getBundleName(tab[0]);
+        } catch (e) {
+          myName = tab[0];
         }
+        this.bundle = this.kernel.getBundle(myName);
+
         if (this.bundle) {
           if (this.bundle.name !== "framework") {
             this.set("bundle", this.bundle);
@@ -106,19 +110,19 @@ module.exports = nodefony.register("Resolver", function () {
           if (this.controller) {
             this.action = this.getAction(tab[2]);
             if (!this.action) {
-              throw new Error("Resolver " + name + " :In CONTROLLER: " + tab[1] + " ACTION  :" + tab[2] + " not exist");
+              throw new Error("Resolver Pattern Controller : " + name + " :In CONTROLLER: " + tab[1] + " ACTION  :" + tab[2] + " not exist");
             }
             this.actionName = tab[2];
           } else {
-            throw new Error("Resolver " + name + " : controller not exist :" + tab[1]);
+            throw new Error("Resolver Pattern Controller : " + name + " : controller not exist :" + tab[1]);
           }
           this.defaultView = this.getDefaultView(tab[1], tab[2]);
           this.resolve = true;
         } else {
-          throw new Error("Resolver " + name + " :bundle not exist :" + tab[0]);
+          throw new Error("Resolver Pattern Controller : " + name + " bundle not exist :" + tab[0]);
         }
       } else {
-        throw new Error("Resolver Pattern Controller " + name + " not valid");
+        throw new Error("Resolver Pattern Controller : " + name + " not valid");
       }
     }
 

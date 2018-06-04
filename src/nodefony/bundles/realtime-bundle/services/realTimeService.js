@@ -149,7 +149,7 @@ module.exports = class realTime extends nodefony.syslog {
     this.listen(this, "onError", this.onError);
     //this.listen(this, "onMessage", this.onMessage );
     this.kernel.listen(this, "onReady", () => {
-      this.settings = this.container.getParameters("bundles.realTime");
+      this.settings = this.container.getParameters("bundles.realtime");
       for (let services in this.settings.services) {
         this.registerService(services, this.settings.services[services]);
       }

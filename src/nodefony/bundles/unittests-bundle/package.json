@@ -4,7 +4,7 @@
   "description": "Nodefony Framework Bundle Unit Tests",
   "author": "cci ccamensuli@gmail.com",
   "contributors": [],
-  "main": "unitTestBundle.js",
+  "main": "unittestsBundle.js",
   "private": false,
   "keywords": [
     "nodefony",

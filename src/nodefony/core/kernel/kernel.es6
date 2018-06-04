@@ -47,10 +47,10 @@ module.exports = nodefony.register("kernel", function () {
     documentationBundle: true,
     asseticBundle: true,
     httpBundle: true,
-    realTimeBundle: true,
+    realtimeBundle: true,
     securityBundle: true,
     sequelizeBundle: true,
-    unitTestBundle: true
+    unittestBundle: true
   };
 
   const defaultEnvEnable = {
@@ -313,7 +313,7 @@ module.exports = nodefony.register("kernel", function () {
         }
         // TEST UNIT
         if (this.settings.system.unitTest) {
-          bundles.push(path.resolve(nodefonyPath, "bundles", "unittest-bundle"));
+          bundles.push(path.resolve(nodefonyPath, "bundles", "unittests-bundle"));
         }
         // DEMO
         if (this.settings.system.demo) {

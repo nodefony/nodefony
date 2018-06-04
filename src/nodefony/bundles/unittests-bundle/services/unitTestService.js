@@ -10,7 +10,7 @@ module.exports = class unitTest extends nodefony.Service {
   }
 
   consoleMochaInit() {
-    this.settingMocha = this.kernel.getBundle("unitTest").settings.mocha.nodefony;
+    this.settingMocha = this.kernel.getBundle("unittests").settings.mocha.nodefony;
     this.mocha = new Mocha(this.settingMocha.console);
     this.mocha.suite.on('pre-require', (context) => {
       context.kernel = this.kernel;
