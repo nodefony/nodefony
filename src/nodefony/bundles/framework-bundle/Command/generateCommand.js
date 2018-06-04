@@ -30,7 +30,7 @@ module.exports = nodefony.registerCommand("generate", function () {
 
       super("generate", container, container.get("notificationsCenter"), options);
 
-      this.config = this.container.getParameters("bundles.App");
+      this.config = this.container.getParameters("bundles.app");
       this.configKernel = this.container.getParameters("kernel");
       let cmd = command[0].split(":");
       let args = command[1];

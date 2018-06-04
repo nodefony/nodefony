@@ -154,7 +154,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
           defaultSeverity: "INFO"
         });
         this.env = this.kernel.environment;
-        this.app = this.getParameters("bundles.App").App;
+        this.app = this.getParameters("bundles.app").App;
         this.node = process.versions;
         this.upload = this.container.get("upload");
         this.translation = this.container.get("translation");

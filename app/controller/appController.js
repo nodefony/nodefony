@@ -21,13 +21,14 @@ module.exports = class appController extends nodefony.controller {
     });
     let core = this.kernel.isCore ? "CORE" : this.kernel.settings.version;
     let demo = this.kernel.getBundle("demo");
+    console.log(demo)
     let readme = null;
     try {
       readme = new nodefony.fileClass(path.resolve(this.kernel.rootDir, "readme.md"));
     } catch (e) {
       readme = false;
     }
-    return this.render("AppBundle::index.html.twig", {
+    return this.render("app::index.html.twig", {
       core: core,
       demo: demo ? true : false,
       user: this.context.user,
@@ -41,7 +42,7 @@ module.exports = class appController extends nodefony.controller {
     let year = new Date().getFullYear();
     let langs = translateService.getLangs();
     let locale = this.getLocale();
-    return this.render("AppBundle::footer.html.twig", {
+    return this.render("app::footer.html.twig", {
       langs: langs,
       version: version,
       year: year,

@@ -155,7 +155,7 @@ module.exports = class translation extends nodefony.Service {
 
   boot() {
     this.listen(this, "onBoot", () => {
-      let dl = this.getParameters("bundles.App").App.locale;
+      let dl = this.getParameters("bundles.app").App.locale;
       if (dl) {
         this.defaultLocale = dl;
       }
@@ -163,7 +163,7 @@ module.exports = class translation extends nodefony.Service {
       this.logger("default Local APPLICATION ==> " + this.defaultLocale, "DEBUG");
 
       this.engineTemplate.extendFunction("getLangs", this.getLangs.bind(this));
-      this.getConfigLangs(this.getParameters("bundles.App.lang"));
+      this.getConfigLangs(this.getParameters("bundles.app.lang"));
     });
     translate[this.defaultLocale] = {};
   }

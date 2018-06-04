@@ -546,7 +546,6 @@ module.exports = nodefony.register("kernel", function () {
       if (this.type === "CONSOLE") {
         return this.cli.listenSyslog(this.syslog, this.debug);
       }
-
       if (!this.settings.system.log.active) {
         return;
       }
@@ -593,6 +592,9 @@ module.exports = nodefony.register("kernel", function () {
      *  @param {String} name
      */
     getBundle(name) {
+      if (name === "App") {
+        return this.bundles.app;
+      }
       for (let ns in this.bundles) {
         if (ns === name) {
           return this.bundles[ns];
@@ -619,6 +621,9 @@ module.exports = nodefony.register("kernel", function () {
      *  @param {String} str
      */
     getBundleName(str) {
+      if (str === "app") {
+        return str;
+      }
       let ret = null;
       switch (typeof str) {
       case "string":
@@ -814,28 +819,28 @@ module.exports = nodefony.register("kernel", function () {
      *  @method initApplication
      */
     initApplication() {
-      let App = class AppBundle extends nodefony.Bundle {
+      let app = class appBundle extends nodefony.Bundle {
         constructor(name, myKernel, myContainer) {
           super(name, myKernel, myContainer);
         }
       };
-      App.prototype.path = this.appPath;
-      App.prototype.autoLoader = this.autoLoader;
-      App.prototype.settings = this.settings;
-      this.bundles.App = new App("App", this, this.container);
+      app.prototype.path = this.appPath;
+      app.prototype.autoLoader = this.autoLoader;
+      app.prototype.settings = this.settings;
+      this.bundles.app = new app("app", this, this.container);
       this.readConfigDirectory(path.resolve(this.appPath, "config"), (result) => {
         if (result) {
-          this.bundles.App.parseConfig(result);
-          this.bundles.App.configPath = path.resolve(this.bundles.App.path, "config");
+          this.bundles.app.parseConfig(result);
+          this.bundles.app.configPath = path.resolve(this.bundles.app.path, "config");
         }
       });
       // OVERRIDE VIEWS BUNDLE in APP DIRECTORY
       this.once("onBoot", () => {
         for (let bundle in this.bundles) {
-          if (bundle === "App") {
+          if (bundle === "app") {
             continue;
           }
-          let result = this.bundles.App.resourcesFiles.findByNode(bundle + "Bundle");
+          let result = this.bundles.app.resourcesFiles.findByNode(bundle + "Bundle");
           if (result.length()) {
             try {
               this.logger("\x1b[32m APP OVERRIDING\x1b[0m views for bundle : " + bundle, "WARNING");
@@ -847,7 +852,7 @@ module.exports = nodefony.register("kernel", function () {
           }
         }
       });
-      return this.bundles.App;
+      return this.bundles.app;
     }
 
     /**

@@ -7,7 +7,7 @@ module.exports = nodefony.registerCommand("webpack", function () {
 
       super("webpack", container, container.get("notificationsCenter"), options);
 
-      this.config = this.container.getParameters("bundles.App");
+      this.config = this.container.getParameters("bundles.app");
       this.configKernel = this.container.getParameters("kernel");
       let cmd = command[0].split(":");
       switch (cmd[1]) {

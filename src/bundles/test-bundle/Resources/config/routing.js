@@ -11,7 +11,7 @@ module.exports = nodefony.extend(firewall, sessions, cors, rest, twig, routes, {
   "test-merge": {
     pattern: "/test/merge",
     defaults: {
-      controller: "AppBundle:app:index"
+      controller: "app:app:index"
     }
   }
 });
