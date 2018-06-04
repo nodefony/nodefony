@@ -35,10 +35,12 @@
     "url": "https://github.com/nodefony/help/issues"
   },
   "license": "CECILL-B",
-  "licenses": [{
-    "type": "CECILL-B",
-    "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-  }],
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
   "os": [
     "darwin",
     "linux",
@@ -90,9 +92,9 @@
     "font-awesome": "4.7.0",
     "formidable": "^1.2.1",
     "img-loader": "^3.0.0",
-    "inquirer": "^5.2.0",
+    "inquirer": "^6.0.0",
     "jquery": "^3.3.1",
-    "js-yaml": "^3.11.0",
+    "js-yaml": "^3.12.0",
     "jsonwebtoken": "^8.2.1",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
@@ -129,13 +131,13 @@
     "request": "^2.87.0",
     "resolve-url-loader": "^2.3.0",
     "rxjs": "^6.2.0",
-    "sass-loader": "^7.0.1",
+    "sass-loader": "^7.0.2",
     "semver": "^5.5.0",
     "sequelize": "^4.37.9",
     "serve-static": "^1.13.2",
     "shelljs": "^0.8.2",
     "shortid": "2.2.8",
-    "simple-git": "^1.95.0",
+    "simple-git": "^1.95.1",
     "sockjs": "0.3.19",
     "sqlite3": "^4.0.0",
     "style-loader": "^0.21.0",
@@ -159,5 +161,7 @@
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md",
-  "contributors": [{}]
+  "contributors": [
+    {}
+  ]
 }

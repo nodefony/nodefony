@@ -167,7 +167,7 @@ module.exports = class router extends nodefony.Service {
       try {
         return this.generatePath(name, variables, host);
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.logger(e, "WARRING");
         return null;
       }
     });
