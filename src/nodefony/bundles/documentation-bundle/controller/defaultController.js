@@ -11,6 +11,11 @@ module.exports = class defaultController extends nodefony.controller {
   constructor(container, context) {
     super(container, context);
     this.defaultVersion = this.kernel.settings.version;
+    if (this.kernel.isCore) {
+      this.docPath = this.kernel.nodefonyCorePath;
+    } else {
+      this.docPath = this.kernel.nodefonyPath;
+    }
   }
 
   /**
@@ -65,12 +70,12 @@ module.exports = class defaultController extends nodefony.controller {
       bundle = "nodefony";
     }
     if (bundle === "nodefony") {
-      Path = path.resolve(this.kernel.nodefonyPath);
+      Path = path.resolve(this.docPath);
     } else {
       if (this.kernel.bundles[bundle]) {
         Path = this.kernel.bundles[bundle].path;
       } else {
-        Path = this.kernel.nodefonyPath;
+        Path = this.docPath;
       }
     }
     try {
@@ -130,7 +135,7 @@ module.exports = class defaultController extends nodefony.controller {
       bundle = "nodefony";
     }
     if (bundle === "nodefony") {
-      Path = path.resolve(this.kernel.nodefonyPath);
+      Path = path.resolve(this.docPath);
       let bundles = this.kernel.bundles;
       if (!section) {
         directoryBundles = [];
@@ -309,7 +314,7 @@ module.exports = class defaultController extends nodefony.controller {
 
   navDocAction() {
     let finder = new nodefony.finder({
-      path: path.resolve(this.kernel.nodefonyPath, "doc"),
+      path: path.resolve(this.docPath, "doc"),
       recurse: false,
     });
 

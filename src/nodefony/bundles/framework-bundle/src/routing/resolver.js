@@ -147,13 +147,13 @@ module.exports = nodefony.register("Resolver", function () {
       }
     }
 
-    callController(data) {
+    callController(data, reload) {
       /*if ( this.context.isRedirect || this.context.sended) {
         return;
       }*/
       try {
         let controller = this.get("controller");
-        if (!controller) {
+        if (!controller ||  reload) {
           controller = this.newController(this.container, this.context);
         }
         if (data) {

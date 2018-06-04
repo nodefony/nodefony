@@ -21,7 +21,6 @@
 
 
 ########## NODEFONY CONFIG BUNDLE  realTimeBundle  ############
-name :				realtime-bundle
 locale :			en_en
 
 system:

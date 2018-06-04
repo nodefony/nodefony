@@ -1,5 +1,4 @@
 ########## NODEFONY CONFIG BUNDLE  securityBundle  ############
-name :				security-bundle
 
 headers:
     http:                               ~

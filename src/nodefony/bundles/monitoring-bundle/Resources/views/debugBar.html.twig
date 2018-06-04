@@ -22,7 +22,7 @@
           {% for key, value in kernelSettings %}
             {% if (key != "system") and (key != "servers") and (key != "devServer") and (key != "version") and (key != "name")%}
               <li>
-                <label>{{ key | capitalize }}</label>
+                <label>{{ key }}</label>
                 <span class="label-nodefony label-success">{{value}}</span>
               </li>
             {% endif %}
@@ -43,7 +43,7 @@
           {% for key, value in kernelSettings.system %}
             {% if (key != "log") and (key != "devServer") %}
               <li>
-                <label>{{ key | capitalize }}</label>
+                <label>{{ key }}</label>
                 <span class="label-nodefony label-success">{{value}}</span>
               </li>
             {% endif %}
@@ -83,7 +83,7 @@
           <li class="separator"></li>
           {% for key, value in node %}
             <li>
-              <label>{{ key | capitalize }}</label>
+              <label>{{ key }}</label>
               <span class="label-nodefony label-success">{{value}}</span>
             </li>
           {% endfor %}
@@ -163,7 +163,7 @@
           </li>
           {% for key, value in appSettings %}
             <li>
-              <label>{{ key | capitalize }}</label>
+              <label>{{ key }}</label>
               <span class="label-nodefony label-success">{{value}}</span>
             </li>
           {% endfor %}
@@ -176,7 +176,7 @@
             {% if key != "App" %}
               <li>
                 <label>
-                  <a style="color:#2f2f2f" target="blank" href='{{path("monitoring-index")}}#/config/{{key}}'>{{ key | capitalize }}</a>
+                  <a style="color:#2f2f2f" target="blank" href='{{path("monitoring-index")}}#/config/{{key}}'>{{ key }}</a>
                 </label>
                 <span class="label-nodefony label-success">{{value.version}}</span>
               </li>
@@ -625,7 +625,7 @@
           {% for key, value in route %}
             {% if key != "variables" %}
               <li>
-                <label>{{ key | capitalize }}</label>
+                <label>{{ key }}</label>
                 <span class="label-nodefony label-success">{{value}}</span>
               </li>
             {% endif %}
@@ -842,7 +842,7 @@
           {% for key, value in response %}
             {% if key == "statuscode" %}
               <li>
-                <label>{{ key | capitalize }}</label>
+                <label>{{ key }}</label>
                 <span class="label-nodefony label-success">{{value}}
                   {{response.message}}</span>
               </li>

@@ -3,8 +3,6 @@
 #
 #   @here You can OVERRIDE all Bundles Configurations
 #
-name                        :    AppBundle
-version                     :    1.0.0
 locale                      :    en_en
 App:
   projectName               :    "nodefony"
@@ -42,7 +40,7 @@ watch                         :  false
 #    see MONITORING BUNDLE config for more options
 #
 #
-monitoringBundle:
+monitoring-bundle:
   debugBar                    :  true
   forceDebugBarProd           :  false
   profiler:
@@ -55,7 +53,7 @@ monitoringBundle:
 #    see FRAMEWORK BUNDLE config for more options
 #
 #
-frameworkBundle:
+framework-bundle:
   webpack:
     cache                   :    true
     outputFileSystem        :    file-system    # memory-fs not implemented yet
@@ -79,7 +77,7 @@ frameworkBundle:
 #       and use for sync connectors :
 #       make sequelize
 #
-sequelizeBundle:
+sequelize-bundle:
   debug                       :  false
 #  connectors:
 #    nodefony:
@@ -104,7 +102,7 @@ sequelizeBundle:
 #       for manage Sessions / Users
 #
 #
-mongoBundle:
+mongo-bundle:
  mongoose:
    debug:                        false
    connectors:
@@ -139,7 +137,7 @@ mongoBundle:
 #       sockjs dev server ( webpack dev server like WDS)
 #
 #
-httpBundle:
+http-bundle:
   # For more options parser formidable @see : https://github.com/felixge/node-formidable
   request:
     uploadDir                 :  "/tmp"                        # temporing file upload system
@@ -199,7 +197,7 @@ httpBundle:
 #    Manage and Clean hsts in chrome
 #     chrome://net-internals/#hsts
 #
-securityBundle:
+security-bundle:
   headers:
     http:
      #Strict-Transport-Security: "max-age=31536000; includeSubDomains; preload"
@@ -216,7 +214,7 @@ securityBundle:
 #       see REALTIME BUNDLE config for more options
 #       monitoring service realtime
 #
-realTimeBundle:
+realtime-bundle:
   services:
     monitoring:
       type                    :  tcp

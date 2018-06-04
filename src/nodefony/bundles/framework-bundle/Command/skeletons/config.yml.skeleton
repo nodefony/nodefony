@@ -20,8 +20,6 @@
 
 
 ########## {{projectName}} CONFIG BUNDLE  {{ bundleName }}  ############
-name        : {{ bundleName }}
-version     : "1.0.0"
 type        : "nodefony"
 locale      : {{ local }}
 

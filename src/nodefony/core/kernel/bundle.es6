@@ -1,9 +1,9 @@
-const semver = require('semver');
+//const semver = require('semver');
 const Module = require("module");
 
 module.exports = nodefony.register("Bundle", function () {
 
-  const regBundle = /^(.*)[Bb]undle$/;
+  //const regBundle = /^(.*)[Bb]undle$/;
   const regFixtures = /^(.+)Fixtures.js$/;
   const regController = /^(.+)Controller\.[m]?js$/;
   const regClassController = /^(.+)Controller$/;
@@ -157,6 +157,10 @@ module.exports = nodefony.register("Bundle", function () {
       this.locale = this.kernel.settings.system.locale;
       this.setParameters("bundles." + this.name, this.getParameters("bundles." + this.name) || {});
       this.production = (this.kernel.environment === "prod") ? true : false;
+      this.package = require(path.resolve(this.path, "package.json"));
+      this.version = this.package.version;
+      this.packageName = this.package.name;
+
       try {
         this.finder = new nodefony.finder({
           path: this.path,
@@ -381,33 +385,34 @@ module.exports = nodefony.register("Bundle", function () {
         for (let ele in result) {
           let ext = null;
           switch (true) {
-          case regBundle.test(ele):
-            let name = regBundle.exec(ele);
-            config = this.getParameters("bundles." + name[1]);
+          case this.kernel.regBundleName.test(ele):
+            let myname = this.kernel.regBundleName.exec(ele);
+            let name = myname[1] || myname[2];
+            config = this.getParameters("bundles." + name);
             if (config) {
               ext = nodefony.extend(true, {}, config, result[ele]);
-              this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name[1], "WARNING");
+              this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name, "WARNING");
             } else {
               ext = result[ele];
-              this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name[1] + " BUT BUNDLE " + name[1] + " NOT YET REGISTERED ", "WARNING");
+              this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name + " BUT BUNDLE " + name + " NOT YET REGISTERED ", "WARNING");
             }
-            if (this.kernel.bundles[name[1]]) {
-              this.kernel.bundles[name[1]].settings = ext;
-              this.setParameters("bundles." + name[1], this.kernel.bundles[name[1]].settings);
+            if (this.kernel.bundles[name]) {
+              this.kernel.bundles[name].settings = ext;
+              this.setParameters("bundles." + name, this.kernel.bundles[name].settings);
             } else {
-              this.setParameters("bundles." + name[1], ext || {});
+              this.setParameters("bundles." + name, ext || {});
             }
             break;
-          case /^version$/.test(ele):
-            try {
-              let res = semver.valid(result[ele]);
-              if (!res) {
-                this.logger("Bad Bundle Semantic Versioning  : " + result[ele] + " Check  http://semver.org ", "WARNING");
+            /*case /^version$/.test(ele):
+              try {
+                let res = semver.valid(result[ele]);
+                if (!res) {
+                  this.logger("Bad Bundle Semantic Versioning  : " + result[ele] + " Check  http://semver.org ", "WARNING");
+                }
+              } catch (e) {
+                this.logger(e, "ERROR");
               }
-            } catch (e) {
-              this.logger(e, "ERROR");
-            }
-            break;
+              break;*/
           case /^locale$/.test(ele):
             if (result[ele]) {
               this.locale = result[ele];

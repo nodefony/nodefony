@@ -565,7 +565,7 @@ module.exports = nodefony.register("controller", function () {
       //let subRequest = new nodefony.subRequest(this, pattern);
       //return subRequest.handle(data);
       let resolver = this.router.resolveName(this.context, name);
-      return resolver.callController(param);
+      return resolver.callController(param, true);
     }
 
     getUser() {

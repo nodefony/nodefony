@@ -20,8 +20,6 @@
 
 
 ########## nodefony CONFIG BUNDLE  workboxBundle  ############
-name        : workboxBundle
-version     : "1.0.0"
 type        : "nodefony"
 locale      : en_en
 
@@ -34,7 +32,7 @@ locale      : en_en
 #
 #    For watch all components
 #
-#      watch:			true            # by default services false !  
+#      watch:			true            # by default services false !
 #    or
 #      watch:
 #        controllers     : true

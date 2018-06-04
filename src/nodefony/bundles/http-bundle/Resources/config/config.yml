@@ -1,5 +1,4 @@
 ########## NODEFONY CONFIG BUNDLE  httpBundle  ############
-name :				            http-bundle
 watch:                    false
 
 headers:

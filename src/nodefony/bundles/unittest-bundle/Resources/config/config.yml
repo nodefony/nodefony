@@ -1,5 +1,4 @@
 ########## nodefony CONFIG BUNDLE  unitTestBundle  ############
-name :				unittest-bundle
 locale :			en_en
 
 mocha:

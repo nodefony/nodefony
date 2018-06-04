@@ -112,12 +112,12 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       for (let bund in kernel.bundles) {
         this.infoBundles[bund] = {};
         this.infoBundles[bund].waitBundleReady = kernel.bundles[bund].waitBundleReady;
-        this.infoBundles[bund].version = kernel.bundles[bund].settings.version;
-        if (kernel.bundles[bund].settings) {
-          this.infoBundles[bund].version = kernel.bundles[bund].settings.version;
+        this.infoBundles[bund].version = kernel.bundles[bund].version;
+        /*if (kernel.bundles[bund].settings) {
+          this.infoBundles[bund].version = kernel.bundles[bund].version;
         } else {
           this.infoBundles[bund].version = "1.0";
-        }
+        }*/
       }
       //console.log(this.infoBundles);
       for (let event in this.kernel.notificationsCenter._events) {

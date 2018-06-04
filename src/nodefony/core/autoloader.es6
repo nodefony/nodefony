@@ -35,6 +35,7 @@ module.exports = function () {
   context.crypto = require("crypto");
   context.BlueBird = require("bluebird");
 
+
   /**
    *  Nodefony autoloader
    *
@@ -117,7 +118,6 @@ module.exports = function () {
         throw e;
       }
     }
-
 
     createContext(sandbox) {
       return vm.createContext(sandbox);
