@@ -2,18 +2,18 @@ const vm = require("vm");
 const path = require("path");
 const Module = require("module");
 const fs = require('fs');
+const Nodefony = require("./core.es6")
 
 module.exports = function () {
 
   // Create Context copy library in context  see load runInThisContext
   const context = vm.createContext(this);
-  context.nodefony = require("./core.es6");
+
   context.require = require;
   context.module = module;
   context.exports = exports;
   context.__dirname = __dirname;
   context.__filename = __filename;
-
   context.path = require("path");
   context.fs = require("fs");
   context.yaml = require("js-yaml");
@@ -34,6 +34,8 @@ module.exports = function () {
   context.twig = require("twig");
   context.crypto = require("crypto");
   context.BlueBird = require("bluebird");
+  context.pm2 = require('pm2');
+  context.nodefony = new Nodefony();
 
 
   /**
@@ -238,6 +240,7 @@ module.exports = function () {
       context.kernel = kernel;
       this.syslog = kernel.syslog;
     }
+
   }
 
   nodefony.autoloader = new Autoload();

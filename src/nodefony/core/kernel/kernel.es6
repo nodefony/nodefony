@@ -1,10 +1,10 @@
-let nodefony_version = null;
+/*let nodefony_version = null;
 try {
   nodefony_version = require(path.join(require.resolve("@nodefony/core"), "package.json")).version;
 } catch (e) {
 
   nodefony_version = require(path.join("..", "..", "..", "..", "package.json")).version;
-}
+}*/
 const os = require('os');
 
 module.exports = nodefony.register("kernel", function () {
@@ -83,7 +83,7 @@ module.exports = nodefony.register("kernel", function () {
       this.autoLoader = nodefony.autoloader;
       this.autoLoader.setKernel(this);
       this.set("autoLoader", this.autoLoader);
-      this.version = nodefony_version;
+      this.version = nodefony.version;
       this.platform = process.platform;
       this.isElectron = this.autoLoader.isElectron() || false;
       this.uptime = new Date().getTime();
@@ -398,8 +398,7 @@ module.exports = nodefony.register("kernel", function () {
       this.checkBundlesExist(this.settings, "Kernel Config", this.configPath);
       try {
         for (let bundle in this.settings.system.bundles) {
-          let name = this.settings.system.bundles[bundle].replace("\.\/", "").replace(/\/\//, "/");
-          config.push(name);
+          config.push(this.settings.system.bundles[bundle]);
         }
       } catch (e) {
         throw e;
@@ -430,13 +429,13 @@ module.exports = nodefony.register("kernel", function () {
                 fs.writeFileSync(pathConfig, yaml.safeDump(yml), {
                   encoding: 'utf8'
                 });
-                this.logger(nameConfig + " : " + bundle + " Bundle don't exist", "WARNING");
+                this.logger(nameConfig + " : " + bundle + " Bundle don't exist in file : " + pathConfig, "WARNING");
                 this.logger("Update Config  : " + pathConfig);
               } catch (e) {
                 this.logger(e, "ERROR");
               }
             } else {
-              let error = new Error(nameConfig + " : " + bundle + " Bundle don't exist");
+              let error = new Error(nameConfig + " : " + bundle + " Bundle don't exist in file : " + pathConfig);
               this.logger(error, "ERROR");
               this.logger("Config file : " + pathConfig);
               this.logger(yml.system.bundles);
@@ -670,11 +669,12 @@ module.exports = nodefony.register("kernel", function () {
       }
     }
 
-    loadBundle(file) {
+    loadBundle(file, loader) {
       try {
         let bundle = this.getBundleClass(file);
         try {
           this.bundles[bundle.name] = new bundle.class(bundle.name, this, this.container);
+          this.bundles[bundle.name].loader = loader;
         } catch (e) {
           throw e;
         }
@@ -689,7 +689,8 @@ module.exports = nodefony.register("kernel", function () {
 
     isPathExist(Path) {
       try {
-        let mypath = this.checkPath(Path);
+        //let mypath = this.checkPath(Path);
+        let mypath = path.resolve(Path);
         if (fs.existsSync(mypath)) {
           return mypath;
         }
@@ -715,14 +716,14 @@ module.exports = nodefony.register("kernel", function () {
       }
     }
 
-    loadCommand(file) {
+    loadCommand(file, loader) {
       switch (this.isCommand()) {
       case "npm:install":
         let bundle = this.getBundleClass(file);
         this.cli.installPackage(bundle.name, file);
         break;
       default:
-        this.loadBundle(file);
+        this.loadBundle(file, loader);
       }
     }
 
@@ -737,7 +738,7 @@ module.exports = nodefony.register("kernel", function () {
           match: this.regBundle,
           onFile: (file) => {
             try {
-              this.loadCommand(file);
+              this.loadCommand(file, "filesystem");
             } catch (e) {
               this.logger(e, "ERROR");
             }
@@ -772,7 +773,7 @@ module.exports = nodefony.register("kernel", function () {
             try {
               Path = this.isNodeModule(mypath[i]);
               if (Path) {
-                this.loadCommand(Path);
+                this.loadCommand(Path, "package");
               } else {
                 this.logger("GLOBAL CONFIG REGISTER : ", "INFO");
                 this.logger(this.configBundle, "INFO");

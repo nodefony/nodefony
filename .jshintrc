@@ -29,6 +29,7 @@
     "url": true,
     "http": true,
     "https": true,
+    "pm2": true,
     "WebSocketServer": true,
     "nodedomain": true,
     "dns": true,

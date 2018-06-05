@@ -64,7 +64,7 @@
   <div class="panel-body" style="overflow: auto;">
   <ul>
   {% for myBundle in bundles %}
-  <li><a href="{{path('documentation-version', {version:myBundle.settings.version, bundle:myBundle.name})}}"><strong>{{myBundle.name}}</strong> <span class="label label-default pull-right">{{myBundle.settings.version}}</span></a></li>
+  <li><a href="{{path('documentation-version', {version:myBundle.version, bundle:myBundle.name})}}"><strong>{{myBundle.name}}</strong> <span class="label label-default pull-right">{{myBundle.version}}</span></a></li>
   {% endfor %}
   </ul>
   </div>

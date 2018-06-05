@@ -429,9 +429,7 @@ module.exports = nodefony.register("Bundle", function () {
           this.settings = result;
           this.setParameters("bundles." + this.name, this.settings);
         }
-        if (!this.settings.version) {
-          this.settings.version = this.kernel.version;
-        }
+        this.settings.version = this.version;
       }
     }
 

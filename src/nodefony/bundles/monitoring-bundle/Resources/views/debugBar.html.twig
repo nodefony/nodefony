@@ -13,7 +13,7 @@
         <ul>
           <li>
             <label style="color:#0167b8">NODEFONY</label>
-            <span class="label-nodefony label-success">{{kernelSettings.version}}</span>
+            <span class="label-nodefony label-default">{{kernelSettings.version}}</span>
           </li>
           <li class="separator"></li>
           <li>
@@ -79,6 +79,7 @@
         <ul>
           <li>
             <label style="color:#0337ab">Node.js ®</label>
+            <span class="label-nodefony label-default">{{node.node}}</span>
           </li>
           <li class="separator"></li>
           {% for key, value in node %}
@@ -101,7 +102,7 @@
               <label style="color:#0337ab">
                 HTTP Protocol
               </label>
-              <span class="label-nodefony label-success">{{context.protocol}}</span>
+              <span class="label-nodefony label-default">{{context.protocol}}</span>
             </li>
             <li class="separator"></li>
             <li>
@@ -157,8 +158,10 @@
         <ul>
           <li>
             <strong>
-              <a style="color:#0337ab" target="blank" href='{{path("monitoring-index")}}#/config/App'>
+              <label><a style="color:#0337ab" target="blank" href='{{path("monitoring-index")}}#/config/App'>
                 APP</a>
+              </label>
+              <span title="{{bundles.app.title}}" class="label-nodefony label-default">{{bundles.app.version}}</span>
             </strong>
           </li>
           {% for key, value in appSettings %}
@@ -173,12 +176,16 @@
             <label style="color:#0337ab">BUNDLES</label>
           </li>
           {% for key, value in bundles %}
-            {% if key != "App" %}
+            {% if key != "app" %}
               <li>
                 <label>
                   <a style="color:#2f2f2f" target="blank" href='{{path("monitoring-index")}}#/config/{{key}}'>{{ key }}</a>
                 </label>
-                <span class="label-nodefony label-success">{{value.version}}</span>
+                {% if value.loader == "package" %}
+                  <span title="{{value.title}}" class="label-nodefony label-success">{{value.version}}</span>
+                {% else %}
+                  <span title="{{value.title}}" class="label-nodefony label-default">{{value.version}}</span>
+                {% endif %}
               </li>
             {% endif %}
           {% endfor %}

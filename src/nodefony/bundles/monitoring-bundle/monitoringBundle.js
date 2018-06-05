@@ -113,11 +113,6 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         this.infoBundles[bund] = {};
         this.infoBundles[bund].waitBundleReady = kernel.bundles[bund].waitBundleReady;
         this.infoBundles[bund].version = kernel.bundles[bund].version;
-        /*if (kernel.bundles[bund].settings) {
-          this.infoBundles[bund].version = kernel.bundles[bund].version;
-        } else {
-          this.infoBundles[bund].version = "1.0";
-        }*/
       }
       //console.log(this.infoBundles);
       for (let event in this.kernel.notificationsCenter._events) {
@@ -141,9 +136,20 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         this.bundles = function () {
           let obj = {};
           for (let bundle in this.kernel.bundles) {
+            let version = null;
+            let title = null;
+            if (this.kernel.bundles[bundle].loader === "package") {
+              version = `${this.kernel.bundles[bundle].package.name}@${this.kernel.bundles[bundle].package.version}`;
+              title = this.kernel.bundles[bundle].package.description;
+            } else {
+              version = `file: ${this.kernel.bundles[bundle].bundleName}@${this.kernel.bundles[bundle].version}`;
+              title = this.kernel.bundles[bundle].path;
+            }
             obj[bundle] = {
               name: this.kernel.bundles[bundle].name,
-              version: this.infoBundles[bundle].version
+              version: version,
+              title: title,
+              loader: this.kernel.bundles[bundle].loader
             };
           }
           return obj;
