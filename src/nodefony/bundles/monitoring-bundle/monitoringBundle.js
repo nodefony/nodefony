@@ -362,6 +362,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       bundles: this.bundles,
       cdn: this.cdn,
       pwd: process.env.PWD,
+      env: process.env,
       node: this.node,
       services: this.service,
       git: this.gitInfo,

@@ -88,7 +88,20 @@
               <span class="label-nodefony label-success">{{value}}</span>
             </li>
           {% endfor %}
-
+          <li class="separator"></li>
+          <li>
+            <label style="color:#0337ab">ENVIRONMENT</label>
+          </li>
+          <li>
+            <label>PWD</label>
+            <span class="label-nodefony label-success">{{pwd}}</span>
+          </li>
+          {% for key, value in env %}
+            <li>
+              <label>{{ key }}</label>
+              <span class="label-nodefony label-success">{{value}}</span>
+            </li>
+          {% endfor %}
         </ul>
       </div>
     </li>
@@ -158,8 +171,9 @@
         <ul>
           <li>
             <strong>
-              <label><a style="color:#0337ab" target="blank" href='{{path("monitoring-index")}}#/config/App'>
-                APP</a>
+              <label>
+                <a style="color:#0337ab" target="blank" href='{{path("monitoring-index")}}#/config/App'>
+                  APP</a>
               </label>
               <span title="{{bundles.app.title}}" class="label-nodefony label-default">{{bundles.app.version}}</span>
             </strong>
@@ -189,14 +203,7 @@
               </li>
             {% endif %}
           {% endfor %}
-          <li class="separator"></li>
-          <li>
-            <label style="color:#0337ab">ENVIRONMENT</label>
-          </li>
-          <li>
-            <label>PWD</label>
-            <span class="label-nodefony label-success">{{pwd}}</span>
-          </li>
+
           <li class="separator"></li>
           <li>
             <label title="content delivery network" style="color:#0337ab">DOMAIN CDN</label>
