@@ -2,7 +2,7 @@ const vm = require("vm");
 const path = require("path");
 const Module = require("module");
 const fs = require('fs');
-const Nodefony = require("./core.es6")
+const Nodefony = require("./core.es6");
 
 module.exports = function () {
 

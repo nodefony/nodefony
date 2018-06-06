@@ -1,10 +1,3 @@
-/*let nodefony_version = null;
-try {
-  nodefony_version = require(path.join(require.resolve("@nodefony/core"), "package.json")).version;
-} catch (e) {
-
-  nodefony_version = require(path.join("..", "..", "..", "..", "package.json")).version;
-}*/
 const os = require('os');
 
 module.exports = nodefony.register("kernel", function () {
@@ -85,7 +78,7 @@ module.exports = nodefony.register("kernel", function () {
       this.set("autoLoader", this.autoLoader);
       this.version = nodefony.version;
       this.platform = process.platform;
-      this.isElectron = this.autoLoader.isElectron() || false;
+      this.isElectron = nodefony.isElectron;
       this.uptime = new Date().getTime();
       this.numberCpu = os.cpus().length;
       this.type = type;
@@ -104,17 +97,13 @@ module.exports = nodefony.register("kernel", function () {
       // Paths
       this.rootDir = process.cwd();
       this.bundlesPath = path.resolve(this.rootDir, "src", "bundles");
-      this.appPath = path.resolve(this.rootDir, "app");
-      this.configPath = path.resolve(this.rootDir, "config", "config.yml");
+      this.appPath = nodefony.appPath; // path.resolve(this.rootDir, "app");
+      this.configPath = nodefony.kernelConfigPath; //path.resolve(this.rootDir, "config", "config.yml");
       this.generateConfigPath = path.resolve(this.rootDir, "config", "generatedConfig.yml");
       this.publicPath = path.resolve(this.rootDir, "web");
       this.nodefonyPath = this.autoLoader.dirname;
       //core repository
-      try {
-        this.isCore = new nodefony.fileClass(path.resolve(this.rootDir, ".core"));
-      } catch (e) {
-        this.isCore = false;
-      }
+      this.isCore = nodefony.isCore;
       this.typeCluster = this.clusterIsMaster() ? "master" : "worker";
 
       try {
@@ -237,23 +226,22 @@ module.exports = nodefony.register("kernel", function () {
 
     readKernelConfig() {
       try {
-        this.reader.readConfig(this.configPath, this.name, (result) => {
-          this.settings = result;
-          this.settings.name = "NODEFONY";
-          this.settings.version = this.version;
-          this.settings.environment = this.environment;
-          this.settings.debug = this.debug;
-          this.setParameters("kernel", this.settings);
-          this.httpPort = result.system.httpPort || null;
-          this.httpsPort = result.system.httpsPort || null;
-          this.domain = result.system.domain || null;
-          this.hostname = result.system.domain || null;
-          this.hostHttp = this.hostname + ":" + this.httpPort;
-          this.hostHttps = this.hostname + ":" + this.httpsPort;
-          this.domainAlias = result.system.domainAlias;
-          this.initializeLog();
-
-        });
+        //this.reader.readConfig(this.configPath, this.name, (result) => {
+        this.settings = nodefony.kernelConfig;
+        this.settings.name = "NODEFONY";
+        this.settings.version = this.version;
+        this.settings.environment = this.environment;
+        this.settings.debug = this.debug;
+        this.setParameters("kernel", this.settings);
+        this.httpPort = nodefony.kernelConfig.system.httpPort || null;
+        this.httpsPort = nodefony.kernelConfig.system.httpsPort || null;
+        this.domain = nodefony.kernelConfig.system.domain || null;
+        this.hostname = nodefony.kernelConfig.system.domain || null;
+        this.hostHttp = this.hostname + ":" + this.httpPort;
+        this.hostHttps = this.hostname + ":" + this.httpsPort;
+        this.domainAlias = nodefony.kernelConfig.system.domainAlias;
+        this.initializeLog();
+        //});
         if (!this.settings.system.bundles) {
           this.settings.system.bundles = {};
         }

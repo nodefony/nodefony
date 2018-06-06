@@ -32,7 +32,7 @@ forceDebugBarProd: false
 #
 watch:             false
 
-realTimeBundle:
+realtime-bundle:
   services:
     monitoring:
       type:        tcp

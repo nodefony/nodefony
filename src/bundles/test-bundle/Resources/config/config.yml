@@ -57,7 +57,7 @@ watch:
 #	example :     create an other database connector
 #
 
-httpBundle:
+http-bundle:
   statics:
     doc:
       path                    : "doc"

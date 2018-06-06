@@ -17,7 +17,7 @@
           </li>
           <li class="separator"></li>
           <li>
-            <label style="color:#0337ab">CONFIG</label>
+            <label class="nodefony-title">CONFIG</label>
           </li>
           {% for key, value in kernelSettings %}
             {% if (key != "system") and (key != "servers") and (key != "devServer") and (key != "version") and (key != "name")%}
@@ -38,7 +38,7 @@
 
           <li class="separator"></li>
           <li>
-            <label style="color:#0337ab">CONFIG SYSTEM</label>
+            <label class="nodefony-title">CONFIG SYSTEM</label>
           </li>
           {% for key, value in kernelSettings.system %}
             {% if (key != "log") and (key != "devServer") %}
@@ -50,7 +50,7 @@
           {% endfor %}
           <li class="separator"></li>
           <li>
-            <label style="color:#0337ab">SERVERS</label>
+            <label class="nodefony-title">SERVERS</label>
           </li>
           {% for key, value in kernelSettings.servers %}
             <li>
@@ -60,7 +60,7 @@
           {% endfor %}
           <li class="separator"></li>
           <li>
-            <label style="color:#0337ab">DEV SERVERS</label>
+            <label class="nodefony-title">DEV SERVERS</label>
           </li>
           {% for key, value in kernelSettings.system.devServer %}
             <li>
@@ -78,7 +78,7 @@
       <div class="details">
         <ul>
           <li>
-            <label style="color:#0337ab">Node.js ®</label>
+            <label class="nodefony-title">Node.js ®</label>
             <span class="label-nodefony label-default">{{node.node}}</span>
           </li>
           <li class="separator"></li>
@@ -90,16 +90,12 @@
           {% endfor %}
           <li class="separator"></li>
           <li>
-            <label style="color:#0337ab">ENVIRONMENT</label>
-          </li>
-          <li>
-            <label>PWD</label>
-            <span class="label-nodefony label-success">{{pwd}}</span>
+            <label class="nodefony-title">ENVIRONMENT</label>
           </li>
           {% for key, value in env %}
             <li>
               <label>{{ key }}</label>
-              <span class="label-nodefony label-success">{{value}}</span>
+              <span title="{{value}}" class="label-nodefony label-success">{{value}}</span>
             </li>
           {% endfor %}
         </ul>
@@ -112,7 +108,7 @@
         <div class="details">
           <ul>
             <li>
-              <label style="color:#0337ab">
+              <label class="nodefony-title">
                 HTTP Protocol
               </label>
               <span class="label-nodefony label-default">{{context.protocol}}</span>
@@ -141,7 +137,7 @@
       <div class="details">
         <ul>
           <li>
-            <label style="color:#0337ab">WORKBOX
+            <label class="nodefony-title">WORKBOX
             </label>
           </li>
           <li class="separator"></li>
@@ -187,7 +183,7 @@
           <li class="separator"></li>
 
           <li>
-            <label style="color:#0337ab">BUNDLES</label>
+            <label class="nodefony-title" >BUNDLES</label>
           </li>
           {% for key, value in bundles %}
             {% if key != "app" %}
@@ -206,7 +202,7 @@
 
           <li class="separator"></li>
           <li>
-            <label title="content delivery network" style="color:#0337ab">DOMAIN CDN</label>
+            <label class="nodefony-title" title="content delivery network" >DOMAIN CDN</label>
           </li>
           {% if cdn %}
             {% if cdn.global %}
@@ -237,11 +233,9 @@
                   {{cdn.global}}
                 </span>
               </li>
-
             {% else %}
               <li>
-                <label>Javascript
-                </label>
+                <label>Javascript</label>
                 <span class="label-nodefony label-success">
                   {% if cdn.javascript %}
                     {{cdn.javascript}}
@@ -251,8 +245,7 @@
                 </span>
               </li>
               <li>
-                <label>Stylesheet
-                </label>
+                <label>Stylesheet</label>
                 <span class="label-nodefony label-success">
                   {% if cdn.stylesheet %}
                     {{cdn.stylesheet}}
@@ -330,7 +323,7 @@
       <div class="details">
         <ul>
           <li>
-            <label style="color:#0337ab">TRANSLATION</label>
+            <label class="nodefony-title" >TRANSLATION</label>
           </li>
           <li>
             <label>Locale Default</label>
@@ -342,7 +335,7 @@
           </li>
           <li class="separator"></li>
           <li>
-            <label style="color:#0337ab">UPLOAD</label>
+            <label class="nodefony-title" >UPLOAD</label>
           </li>
           <li>
             <label>Temporary Directory</label>
@@ -354,7 +347,7 @@
           </li>
           <li class="separator"></li>
           <li>
-            <label style="color:#0337ab">SESSION</label>
+            <label class="nodefony-title" >SESSION</label>
           </li>
           {% if services.session.storage == "session.storage.files" %}
             <li>
@@ -374,7 +367,7 @@
           {% if services.templating %}
             <li class="separator"></li>
             <li>
-              <label style="color:#0337ab">TEMPLATING</label>
+              <label class="nodefony-title" >TEMPLATING</label>
               <span >{{services.templating.name}}</span>
             </li>
             <li>
@@ -385,7 +378,7 @@
           {% if services.ORM %}
             <li class="separator"></li>
             <li>
-              <label style="color:#0337ab">ORM</label>
+              <label class="nodefony-title" >ORM</label>
               <span >{{services.ORM.name}}</span>
             </li>
             <li>
@@ -393,8 +386,9 @@
               <span >{{services.ORM.version}}</span>
             </li>
             <li class="separator"></li>
-            <label style="color:#0337ab">DATABASES CONNECTIONS :
-            </label>
+            <li>
+              <label class="nodefony-title" >DATABASES </label>
+            </li>
             {% for key, value in services.ORM.connections %}
               <li>
                 <label >{{key|upper}}</label>
@@ -459,7 +453,7 @@
         <div class="details">
           <ul>
             <li>
-              <label style="color:#0337ab">FIREWALL</label>
+              <label class="nodefony-title" >FIREWALL</label>
               <label class="label-nodefony label-success">
                 {{context_secure.name}}
               </label>
@@ -485,7 +479,7 @@
 
             <li class="separator"></li>
             <li>
-              <label style="color:#0337ab">Token</label>
+              <label class="nodefony-title" >Token</label>
             </li>
             {% if context_secure.token %}
               <li>
@@ -507,7 +501,7 @@
               <li class="separator"></li>
               {% if context.isControlledAccess %}
                 <li>
-                  <label style="color:#0337ab">Authorisation</label>
+                  <label class="nodefony-title" >Authorisation</label>
                 </li>
                 <li>
                   <label>Access Control</label>
@@ -515,7 +509,7 @@
                 </li>
               {% else %}
                 <li>
-                  <label style="color:#0337ab">Authorisation</label>
+                  <label class="nodefony-title" >Authorisation</label>
                 </li>
                 <li>
                   <label>Access Control</label>
@@ -525,7 +519,7 @@
               {% if context_secure.user %}
                 <li class="separator"></li>
                 <li>
-                  <label style="color:#0337ab">User</label>
+                  <label class="nodefony-title" >User</label>
                 </li>
                 <li>
                   <label >
@@ -551,7 +545,7 @@
         <div class="details">
           <ul>
             <li>
-              <label style="color:#0337ab">FIREWALL</label>
+              <label class="nodefony-title" >FIREWALL</label>
               <label class="label-nodefony label-default">
                 OFF
               </label>
@@ -610,7 +604,7 @@
       <div class="details">
         <ul>
           <li>
-            <label style="color:#0337ab">ROUTER SERVICE</label>
+            <label class="nodefony-title" >ROUTER SERVICE</label>
           </li>
           <li>
             <label>Pattern</label>
@@ -634,7 +628,7 @@
           </li>
           <li class="separator"></li>
           <li>
-            <label style="color:#0337ab">ROUTE</label>
+            <label class="nodefony-title">ROUTE</label>
           </li>
           {% for key, value in route %}
             {% if key != "variables" %}
@@ -648,7 +642,7 @@
           {% for key, value in route %}
             {% if key == "variables" %}
               {% if route.variables | length %}
-                <label class="label-nodefony" style="color:#0337ab">Variables :</label>
+                <label class="label-nodefony" class="nodefony-title">Variables :</label>
                 {% for key, value in route.variables %}
                   <li>
                     <label>{{varialblesName[key]}}</label>
@@ -660,7 +654,7 @@
           {% endfor %}
           <li class="separator"></li>
           <li>
-            <label style="color:#0337ab">TRANSLATION</label>
+            <label class="nodefony-title" >TRANSLATION</label>
           </li>
           <li>
             <label>Local</label>
@@ -697,7 +691,7 @@
       <div class="details details-request">
         <ul>
           <li>
-            <label style="color:#0337ab">REQUEST</label>
+            <label class="nodefony-title">REQUEST</label>
           </li>
           {% for key, value in request %}
             {% if key == "url" %}
@@ -718,7 +712,7 @@
               {% if id %}
                 <li>
                   <label class="label-nodefony">
-                    <a style="color:#0337ab" target="blank" href='{{path("monitoring-index")}}#/request/{{id}}'>SHOW HEADERS</a>
+                    <a class="nodefony-title" target="blank" href='{{path("monitoring-index")}}#/request/{{id}}'>SHOW HEADERS</a>
                   </label>
                 </li>
               {% endif %}
@@ -728,7 +722,7 @@
             {% endif %}
             {% if key == "queryPost" and request.queryPost is not empty %}
               <li>
-                <label style="color:#0337ab">QUERY POST</label>
+                <label class="nodefony-title">QUERY POST</label>
               </li>
               {% for key, value in request.queryPost %}
                 <li>
@@ -740,7 +734,7 @@
             {% endif %}
             {% if key == "queryGet" and request.queryGet is not empty %}
               <li>
-                <label style="color:#0337ab">QUERY GET</label>
+                <label class="nodefony-title">QUERY GET</label>
               </li>
               {% for key, value in request.queryGet %}
                 <li>
@@ -755,7 +749,7 @@
           {% if proxy %}
             <li class="separator"></li>
             <li>
-              <label style="color:#0337ab">PROXY</label>
+              <label class="nodefony-title">PROXY</label>
             </li>
             <label class="label-nodefony label-default"></label>
             {% for key, value in proxy %}
@@ -769,7 +763,7 @@
           {% if session %}
             <li class="separator"></li>
             <li>
-              <label style="color:#0337ab">SESSION</label>
+              <label class="nodefony-title">SESSION</label>
               <label >{{session.name}}</label>
             </li>
             <li>
@@ -782,26 +776,26 @@
                 {% for key, value in session.metas %}
                   {% if key == "lifetime" %}
                     <li>
-                      <label style="margin-left:20px" class="label-nodefony  label-default">{{ key  }}</label>
-                      <span style="margin-left:20px">{{value}}</span>
+                      <label style="margin:0 0 2px 20px" class="label-nodefony  label-default">{{ key  }}</label>
+                      <span style="margin:0 0 2px 20px">{{value}}</span>
                     </li>
                   {% endif %}
                   {% if key == "created" %}
                     <li>
-                      <label style="margin-left:20px" class="label-nodefony  label-default">{{ key  }}</label>
-                      <span style="margin-left:20px">{{value|date("d/m/Y g:ia")}}</span>
+                      <label style="margin:0 0 2px 20px" class="label-nodefony  label-default">{{ key  }}</label>
+                      <span style="margin:0 0 2px 20px">{{value|date("d/m/Y g:ia")}}</span>
                     </li>
                   {% endif %}
                   {% if key == "lastUsed" %}
                     <li>
-                      <label style="margin-left:20px" class="label-nodefony  label-default">{{ key  }}</label>
-                      <span style="margin-left:20px">{{value|date('d/m/Y g:ia')}}</span>
+                      <label style="margin:0 0 2px 20px" class="label-nodefony  label-default">{{ key  }}</label>
+                      <span style="margin:0 0 2px 20px">{{value|date('d/m/Y g:ia')}}</span>
                     </li>
                   {% endif %}
                   {% if key == "context" %}
                     <li>
-                      <label style="margin-left:20px" class="label-nodefony  label-default">{{ key  }}</label>
-                      <span style="margin-left:20px">{{value}}</span>
+                      <label style="margin:0 0 2px 20px" class="label-nodefony  label-default">{{ key  }}</label>
+                      <span style="margin:0 0 2px 20px">{{value}}</span>
                     </li>
                   {% endif %}
                 {% endfor %}
@@ -812,8 +806,8 @@
               <span>
                 {% for key, value in session.attributes %}
                   <li>
-                    <label style="margin-left:20px" class="label-nodefony  label-default">{{ key  }}</label>
-                    <span style="margin-left:20px">{{value}}</span>
+                    <label style="margin:0 0 2px 20px" class="label-nodefony  label-default">{{ key  }}</label>
+                    <span style="margin:0 0 2px 20px">{{value}}</span>
                   </li>
                 {% endfor %}
               </span>
@@ -823,17 +817,15 @@
               <span>
                 {% for key, value in session.flashes %}
                   <li>
-                    <label style="margin-left:20px" class="label-nodefony  label-default">{{ key  }}</label>
-                    <span style="margin-left:20px">{{value}}</span>
+                    <label style="margin:0 0 2px 20px" class="label-nodefony  label-default">{{ key  }}</label>
+                    <span style="margin:0 0 2px 20px">{{value}}</span>
                   </li>
                 {% endfor %}
               </span>
             </li>
           {% endif %}
-
         </ul>
       </div>
-
     </li>
 
     <li class="separator"></li>
@@ -851,7 +843,7 @@
       <div class="details nodefony-response-details">
         <ul>
           <li>
-            <label style="color:#0337ab">RESPONSE</label>
+            <label class="nodefony-title">RESPONSE</label>
           </li>
           {% for key, value in response %}
             {% if key == "statuscode" %}
@@ -870,7 +862,7 @@
               {% else %}
                 <li class="separator"></li>
                 <li>
-                  <label style="color:#0337ab">HEADERS</label>
+                  <label class="nodefony-title">HEADERS</label>
                 </li>
 
                 {% for header, val in response["headers"] %}

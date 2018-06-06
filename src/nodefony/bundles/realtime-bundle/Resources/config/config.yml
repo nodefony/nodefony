@@ -30,7 +30,7 @@ system:
 #  bufferSize:            650000
 
 #https://github.com/Worlize/WebSocket-Node/wiki/Documentation
-httpBundle:
+http-bundle:
   websocket:
     keepaliveInterval:    1000
     keepaliveGracePeriod: 1000

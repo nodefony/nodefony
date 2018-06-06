@@ -7,6 +7,7 @@
 //const path = require("path");
 //const fs = require("fs");
 const execSync = require('child_process').execSync;
+//const yaml = require("js-yaml");
 
 /**
  *  The class is a **`Nodefony Nodefony `** .
@@ -36,8 +37,17 @@ module.exports = class Nodefony {
     };
     this.version = this.getVersion();
     this.versions = process.versions;
+    this.kernelConfigPath = null;
+    this.appPath = null;
+    this.appConfigPath = null;
+    this.kernelConfig = null;
+    this.pm2Config = null;
+    this.appConfig = null;
+    this.projectName = "nodefony";
+
     this.isRegExp = require('lodash.isregexp');
     this.isTrunk = this.isNodefonyTrunk();
+    this.isCore = this.isCoreTrunk();
     this.isElectron = this.isElectronContext();
     this.yarn = this.checkYarn();
     this.npm = this.checkNpm();
@@ -49,6 +59,52 @@ module.exports = class Nodefony {
     //this.globalNpm = this.checkGlobalNpm();
     //this.globalYarn = this.checkGlobalYarn();
 
+    if (this.isTrunk) {
+      try {
+        this.setConfig();
+      } catch (e) {
+        throw e;
+      }
+    }
+  }
+
+  setConfig() {
+    try {
+      this.kernelConfig = this.loadYaml(this.kernelConfigPath);
+      this.appConfig = this.loadYaml(this.appConfigPath);
+      this.pm2Config = require(this.pm2ConfigPath);
+      this.projectName = this.appConfig.App.projectName;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  loadYaml(file) {
+    try {
+      return yaml.load(this.readFileSync(file));
+    } catch (e) {
+      throw (e);
+    }
+  }
+
+  readFileSync(file) {
+    try {
+      return fs.readFileSync(file, {
+        encoding: 'utf8'
+      });
+    } catch (e) {
+      this.logger(e);
+      throw e;
+    }
+  }
+
+  isCoreTrunk() {
+    try {
+      fs.lstatSync(path.resolve(".core"));
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   isFunction(it) {
@@ -329,8 +385,13 @@ module.exports = class Nodefony {
 
   isNodefonyTrunk() {
     try {
-      fs.lstatSync(path.resolve(process.cwd(), "config", "config.yml"));
-      fs.lstatSync(path.resolve(process.cwd(), "app"));
+      this.kernelConfigPath = path.resolve(process.cwd(), "config", "config.yml");
+      this.appPath = path.resolve(process.cwd(), "app");
+      this.appConfigPath = path.resolve(this.appPath, "config", "config.yml");
+      this.pm2ConfigPath = path.resolve(process.cwd(), "config", "pm2.config.js");
+      fs.lstatSync(this.kernelConfigPath);
+      fs.lstatSync(this.appPath);
+      fs.lstatSync(this.appConfigPath);
       return true;
     } catch (e) {
       return false;
@@ -419,7 +480,6 @@ module.exports = class Nodefony {
     } else {
       cmd = "cli";
     }
-
     let type = null;
     let debug = !!cli.commander.debug;
     let kernel = null;
@@ -427,7 +487,7 @@ module.exports = class Nodefony {
     switch (cmd) {
     case "dev":
     case "development":
-      nodefony.manageCache(cli);
+      this.manageCache(cli);
       environment = "dev";
       type = "SERVER";
       process.env.MODE_START = "NODEFONY_DEV";
@@ -435,7 +495,7 @@ module.exports = class Nodefony {
       break;
     case "production":
     case "prod":
-      nodefony.manageCache(cli);
+      this.manageCache(cli);
       environment = "prod";
       type = "SERVER";
       process.env.MODE_START = "NODEFONY";
@@ -447,15 +507,15 @@ module.exports = class Nodefony {
       if (process.env.MODE_START && process.env.MODE_START === "PM2") {
         kernel = new nodefony.appKernel(type, environment, false, {});
       } else {
-        nodefony.manageCache(cli);
+        this.manageCache(cli);
         process.env.MODE_START = "PM2_START";
         this.pm2Start(cli);
       }
       break;
     case "app":
       try {
-        let config = yaml.load(fs.readFileSync(path.resolve("app", "config", "config.yml"), 'utf8'));
-        return process.stdout.write(config.App.projectName);
+        //let config = yaml.load(fs.readFileSync(path.resolve("app", "config", "config.yml"), 'utf8'));
+        return process.stdout.write(this.projectName);
       } catch (e) {
         return process.stdout.write("nodefony");
       }
@@ -468,8 +528,8 @@ module.exports = class Nodefony {
       }
       break;
     case "config":
-      var config = yaml.load(fs.readFileSync(path.resolve("app", "config", "config.yml"), 'utf8'));
-      return process.stdout.write(JSON.stringify(config, null, '\t'));
+      //var config = yaml.load(fs.readFileSync(path.resolve("app", "config", "config.yml"), 'utf8'));
+      return process.stdout.write(JSON.stringify(this.appConfig, null, '\t'));
     case "check-version":
       const semver = require('semver');
       var res = semver.valid(this.version);
@@ -490,57 +550,21 @@ module.exports = class Nodefony {
    * PM2
    */
   pm2Start(cli) {
-    let nodefonyConfig = null;
-    let conf = null;
-    let exist = null;
-    try {
-      conf = path.resolve("config", "config.yml");
-      exist = fs.existsSync(conf);
-      if (exist) {
-        nodefonyConfig = yaml.load(fs.readFileSync(conf, 'utf8'));
-      }
-    } catch (e) {
-      console.trace(e);
-      throw e;
-    }
 
-    let projectName = null;
-    try {
-      conf = path.resolve("app", "config", "config.yml");
-      exist = fs.existsSync(conf);
-      if (exist) {
-        projectName = yaml.load(fs.readFileSync(conf, 'utf8')).App.projectName;
-      }
-    } catch (e) {
-      console.trace(e);
-      throw e;
-    }
-
-    let config = null;
-    try {
-      conf = path.resolve("config", "pm2.config.js");
-      exist = fs.existsSync(conf);
-      if (exist) {
-        config = require(conf);
-      }
-    } catch (e) {
-      console.trace(e);
-      throw e;
-    }
-    if (!config) {
-      config = nodefonyConfig.system.PM2;
-      config.script = "./nodefony";
-      config.args = "pm2";
-      config.env = {
+    if (!this.pm2Config) {
+      this.pm2Config = this.kernelConfig.system.PM2;
+      this.pm2Config.script = "./nodefony";
+      this.pm2Config.args = "pm2";
+      this.pm2Config.env = {
         NODE_ENV: "production",
         MODE_START: "PM2"
       };
     }
-    if (projectName) {
-      config.name = projectName;
+    if (this.projectName) {
+      this.pm2Config.name = this.projectName;
     }
     pm2.connect(true, () => {
-      pm2.start(config, (err, apps) => {
+      pm2.start(this.pm2Config, (err, apps) => {
         if (err) {
           cli.logger(err.stack || err, "ERROR");
           cli.terminate(1);
@@ -608,6 +632,5 @@ module.exports = class Nodefony {
       return new nodefony.appKernel(type, environment, debug, options);
     }
   }
-
 
 };

@@ -136,6 +136,11 @@
   max-width: 500px;
 }
 
+#nodefony-container ul li .details ul li .nodefony-title {
+  padding: 0 0 10px 0;
+  color: #0337ab;
+}
+
 #nodefony-container ul li .details ul {
   margin-left: 8px;
   margin-right: 10px;
@@ -145,7 +150,6 @@
   display: block;
   float: inherit;
   line-height: 16px;
-  padding: 3px 0;
 }
 
 #nodefony-container ul li .details ul li label {
@@ -154,13 +158,20 @@
   display: inline-block;
   margin: 0;
   vertical-align: top;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 #nodefony-container ul li .details ul li span:empty {
   display: none;
 }
 
-#nodefony-container ul li .details ul li span {}
+#nodefony-container ul li .details ul li span {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  max-width: 200px;
+}
 
 #nodefony-container ul li:hover .details {
   display: block;
