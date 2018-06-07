@@ -12,7 +12,9 @@
   ],
   "repository": {},
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "node-pre-gyp": "^0.10.0"
+  },
   "license": "CECILL-B",
   "readmeFilename": "README.md",
   "contributors": [{}]

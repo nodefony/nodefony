@@ -10,7 +10,11 @@
     "nodefony",
     "javascript"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "mysql2": "^1.5.3",
+    "sequelize": "^4.37.10",
+    "sqlite3": "^4.0.0"
+  },
   "author": "cci <christophe.camensuli@gmail.com>",
   "license": "CECILL-B"
 }

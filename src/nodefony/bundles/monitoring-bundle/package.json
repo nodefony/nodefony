@@ -11,7 +11,14 @@
     "javascript"
   ],
   "dependencies": {
-    "bootstrap": "=3.3.7"
+    "@nodefony/stage": "^0.1.10",
+    "bootstrap": "=3.3.7",
+    "font-awesome": "^4.7.0",
+    "qs": "^6.5.2",
+    "request": "^2.87.0",
+    "shortid": "^2.2.8",
+    "useragent": "^2.3.0",
+    "webpack-merge": "^4.1.2"
   },
   "author": "cci <christophe.camensuli@gmail.com>",
   "license": "CECILL-B"

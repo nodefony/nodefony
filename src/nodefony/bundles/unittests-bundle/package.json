@@ -10,5 +10,8 @@
     "nodefony",
     "javascript"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
+  }
 }

@@ -1,5 +1,4 @@
 const net = require('net');
-const pm2 = require('pm2');
 const os = require('os');
 
 const _totalCpuTime = function (cpu) {

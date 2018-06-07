@@ -9,7 +9,11 @@
     "nodefony",
     "javascript"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "request": "^2.87.0",
+    "rxjs": "^6.2.0",
+    "websocket": "^1.0.26"
+  },
   "license": "CECILL-B",
   "readmeFilename": "README.md",
   "contributors": [

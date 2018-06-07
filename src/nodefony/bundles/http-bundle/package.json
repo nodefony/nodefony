@@ -12,7 +12,16 @@
     "HTTP2"
   ],
   "dependencies": {
-    "mime": "^2.3.1"
+    "cookie": "^0.3.1",
+    "formidable": "^1.2.1",
+    "memcached": "^2.2.2",
+    "mime": "^2.3.1",
+    "mkdirp": "^0.5.1",
+    "ms": "^2.1.1",
+    "qs": "^6.5.2",
+    "serve-static": "^1.13.2",
+    "sockjs": "^0.3.19",
+    "websocket": "^1.0.26"
   },
   "author": "cci <christophe.camensuli@gmail.com>",
   "license": "CECILL-B"

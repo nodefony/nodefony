@@ -164,13 +164,19 @@ module.exports = class webpack extends nodefony.Service {
     let watch = bundle.webpackWatch || false;
     let devServer = null;
     let watchOptions = {};
-    let webpack = this.webpack;
+    shell.cd(Path);
+    let webpack = null;
+    try {
+      webpack = require(path.resolve("node_modules", "webpack"));
+    } catch (e) {
+      webpack = this.webpack;
+    }
     try {
       switch (type) {
       case "angular":
         publicPath = path.resolve("/", bundle.bundleName, "dist");
-        shell.cd(Path);
-        webpack = require(path.resolve("node_modules", "webpack"));
+        //shell.cd(Path);
+        //webpack = require(path.resolve("node_modules", "webpack"));
         config = require(file.path);
         config.context = Path;
         //if (config  .output.path === undefined) {
@@ -197,8 +203,8 @@ module.exports = class webpack extends nodefony.Service {
         break;
       case "react":
         publicPath = path.resolve("/", bundle.bundleName, "dist");
-        shell.cd(Path);
-        webpack = require(path.resolve("node_modules", "webpack"));
+        //shell.cd(Path);
+        //webpack = require(path.resolve("node_modules", "webpack"));
         process.env.PUBLIC_URL = publicPath;
         process.env.PUBLIC_PATH = publicPath;
         process.env.HOST = this.socksSettings.hostname + ":" + this.socksSettings.port;

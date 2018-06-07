@@ -258,10 +258,18 @@ clean:
 	@if [ -e  package-lock.json ] ; then \
 	echo ""; \
 	echo "###################################################" ;\
-	echo "#            CLEAN  WEB PUBLIC DIRECTOY           #" ;\
+	echo "#            CLEAN  package-lock.json              #" ;\
 	echo "###################################################" ;\
 	echo ""; \
 	rm -f package-lock.json ; \
+	fi
+	@if [ -e yarn.lock ] ; then \
+	echo ""; \
+	echo "###################################################" ;\
+	echo "#            CLEAN  yarn.lock                     #" ;\
+	echo "###################################################" ;\
+	echo ""; \
+	rm -f yarn.lock ; \
 	fi
 
 	make framework ;

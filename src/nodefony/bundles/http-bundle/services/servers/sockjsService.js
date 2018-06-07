@@ -1,7 +1,7 @@
 const Sockjs = require('sockjs');
 
 const defaultPrefix = "/sockjs-node";
-const webpack = require("webpack");
+//const webpack = require("webpack");
 
 const defaultOverlay = {
   errors: true,
@@ -13,6 +13,7 @@ const sockCompiler = class sockCompiler extends nodefony.Service {
   constructor(service, name, compiler) {
     super(name, service.container, service.notificationsCenter);
     this.service = service;
+    this.webpack = this.get("webpack");
     this.initsockClient = null;
     this.clientStats = {
       errorDetails: true
@@ -150,7 +151,7 @@ module.exports = class sockjs extends nodefony.Service {
     }
     let progress = config.progress ||  this.progress;
     if (progress && config.watch) {
-      const progressPlugin = new webpack.ProgressPlugin((percent, msg, addInfo) => {
+      const progressPlugin = new this.webpack.webpack.ProgressPlugin((percent, msg, addInfo) => {
         percent = Math.floor(percent * 100);
         if (percent === 100) {
           msg = 'Compilation completed';

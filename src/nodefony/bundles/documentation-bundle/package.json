@@ -11,6 +11,10 @@
     "javascript"
   ],
   "dependencies": {
-    "bootstrap": "=3.3.7"
+    "@nodefony/stage": "^0.1.10",
+    "bootstrap": "=3.3.7",
+    "cheerio": "^1.0.0-rc.2",
+    "elasticsearch": "^15.0.0",
+    "font-awesome": "^4.7.0"
   }
 }
