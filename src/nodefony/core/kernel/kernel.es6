@@ -35,15 +35,15 @@ module.exports = nodefony.register("kernel", function () {
   };
 
   const bundlesCore = {
-    frameworkBundle: true,
-    monitoringBundle: true,
-    documentationBundle: true,
-    asseticBundle: true,
-    httpBundle: true,
-    realtimeBundle: true,
-    securityBundle: true,
-    sequelizeBundle: true,
-    unittestBundle: true
+    "framework-bundle": true,
+    "monitoring-bundle": true,
+    "documentation-bundle": true,
+    "assetic-bundle": true,
+    "http-bundle": true,
+    "realtime-bundle": true,
+    "security-bundle": true,
+    "sequelize-bundle": true,
+    "unittest-bundle": true
   };
 
   const defaultEnvEnable = {

@@ -13,10 +13,14 @@ const nodefony = function () {
     return require(path.resolve("src", "nodefony", "core"));
   } catch (e) {
     try {
-      return require("@nodefony/core");
+      return require("nodefony");
     } catch (e) {
-      console.error("Module not found try npm install");
-      throw e;
+      try {
+        return require("@nodefony/core");
+      } catch (e) {
+        console.error("Module not found try npm install");
+        throw e;
+      }
     }
   }
 }();

@@ -11,7 +11,9 @@
     "javascript",
     "HTTP2"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "mime": "^2.3.1"
+  },
   "author": "cci <christophe.camensuli@gmail.com>",
   "license": "CECILL-B"
 }
