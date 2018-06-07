@@ -538,11 +538,21 @@ module.exports = class Nodefony {
       }
       throw new Error("Not valid version : " + this.version + " check  http://semver.org ");
     default:
-      this.manageCache(this);
       environment = "prod";
       type = "CONSOLE";
       process.env.MODE_START = "NODEFONY_CONSOLE";
-      kernel = new this.appKernel(type, environment, debug, {});
+      if (this.appKernel) {
+        this.manageCache(this);
+        kernel = new this.appKernel(type, environment, debug, {});
+      } else {
+        cli = new this.cli("NODEFONY", {
+          pid: false,
+          version: this.version,
+          onStart: (cli) => {
+            cli.logger(`${cli.getEmoji("checkered_flag")} WELCOME NODEFONY CLI ${this.version} `);
+          }
+        });
+      }
     }
   }
 
