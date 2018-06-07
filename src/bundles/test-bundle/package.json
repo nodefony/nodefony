@@ -2,9 +2,11 @@
   "name": "@nodefony/test-bundle",
   "version": "4.0.0",
   "description": "Nodefony Framework Bundle Unit Tests",
-  "author": "admin admin@nodefony.com",
   "main": "testBundle.js",
-  "repository": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nodefony/nodefony-core.git"
+  },
   "keywords": [
     "nodefony",
     "javascript"
@@ -14,9 +16,16 @@
     "rxjs": "^6.2.0",
     "websocket": "^1.0.26"
   },
-  "license": "CECILL-B",
-  "readmeFilename": "README.md",
   "contributors": [
     {}
-  ]
+  ],
+  "license": "CECILL-B",
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
+  "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
+  "readmeFilename": "README.md"
 }

@@ -2,7 +2,6 @@
   "name": "@nodefony/documentation-bundle",
   "version": "4.0.0",
   "description": "Nodefony Framework Bundle Documentation ",
-  "author": " ",
   "main": "documentationBundle.js",
   "contributors": [],
   "private": false,
@@ -16,5 +15,18 @@
     "cheerio": "^1.0.0-rc.2",
     "elasticsearch": "^15.0.0",
     "font-awesome": "^4.7.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nodefony/nodefony-core.git"
+  },
+  "license": "CECILL-B",
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
+  "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
+  "readmeFilename": "README.md"
 }

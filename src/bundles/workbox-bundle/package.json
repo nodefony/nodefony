@@ -2,7 +2,6 @@
   "name": "@nodefony/workbox-bundle",
   "version": "4.0.0",
   "description": "Nodefony Framework Workbox Demo",
-  "author": "admin admin@nodefony.com",
   "scripts": {},
   "main": "workboxBundle.js",
   "private": true,
@@ -12,7 +11,10 @@
     "wpa",
     "workbox"
   ],
-  "repository": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nodefony/nodefony-core.git"
+  },
   "dependencies": {},
   "devDependencies": {
     "clean-webpack-plugin": "^0.1.19",
@@ -21,9 +23,16 @@
     "twig-loader": "^0.3.1",
     "workbox-webpack-plugin": "^3.0.1"
   },
-  "license": "CECILL-B",
-  "readmeFilename": "README.md",
   "contributors": [
     {}
-  ]
+  ],
+  "license": "CECILL-B",
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
+  "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
+  "readmeFilename": "README.md"
 }
