@@ -1,17 +1,20 @@
 {
-  "name": "@nodefony/core",
+  "name": "nodefony",
   "version": "4.0.0",
   "main": "autoloader.es6",
   "description": "Nodefony Framework Core",
   "contributors": [],
-  "scripts": {},
+  "scripts": {
+    "nodefony": "./bin/nodefony",
+    "start": "./bin/nodefony"
+  },
   "private": false,
   "keywords": [
     "nodefony",
     "javascript"
   ],
   "bin": {
-    "nodefony": "./nodefony"
+    "nodefony": "./bin/nodefony"
   },
   "dependencies": {
     "asciify": "^1.3.5",
@@ -32,7 +35,6 @@
     "node-emoji": "^1.8.1",
     "npm": "^6.1.0",
     "parse-comments": "^0.4.3",
-    "pm2": "^2.10.4",
     "promise": "^8.0.1",
     "semver": "^5.5.0",
     "shelljs": "^0.8.2",

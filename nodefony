@@ -15,12 +15,8 @@ const nodefony = function () {
     try {
       return require("nodefony");
     } catch (e) {
-      try {
-        return require("@nodefony/core");
-      } catch (e) {
-        console.error("Module not found try npm install");
-        throw e;
-      }
+      console.error("Module not found try npm install");
+      throw e;
     }
   }
 }();

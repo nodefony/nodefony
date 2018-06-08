@@ -4,6 +4,7 @@
   "description": "Nodefony Node.js full-stack web framework",
   "main": "./src/nodefony/core/autoloader.es6",
   "scripts": {
+    "nodefony": "nodefony",
     "start": "nodefony",
     "stop": "make stop",
     "prod": "make start",
@@ -11,6 +12,7 @@
     "build": "make build",
     "outdated": "npm outdated --deph=0",
     "test": "./nodefony unitTest:launch:all",
+    "pm2": "pm2",
     "changelog": "gren changelog --username=nodefony  --repo=nodefony-core --tags=all --data-source=commits --override --generate"
   },
   "keywords": [
@@ -32,10 +34,12 @@
     "url": "https://github.com/nodefony/help/issues"
   },
   "license": "CECILL-B",
-  "licenses": [{
-    "type": "CECILL-B",
-    "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-  }],
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
   "os": [
     "darwin",
     "linux",
@@ -45,7 +49,6 @@
     "node": ">=8"
   },
   "dependencies": {
-    "@nodefony/core": "file:src/nodefony/core",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.7.0",
@@ -60,7 +63,9 @@
     "mini-css-extract-plugin": "^0.4.0",
     "node-pre-gyp": "^0.10.0",
     "node-sass": "^4.9.0",
+    "nodefony": "file:src/nodefony/core",
     "optimize-css-assets-webpack-plugin": "^4.0.2",
+    "pm2": "^2.10.4",
     "raw-loader": "^0.5.1",
     "resolve-url-loader": "^2.3.0",
     "sass-loader": "^7.0.3",
@@ -80,5 +85,7 @@
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md",
-  "contributors": [{}]
+  "contributors": [
+    {}
+  ]
 }

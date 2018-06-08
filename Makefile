@@ -26,11 +26,11 @@ install:
 	@echo "#########################################" ;
 	@echo "";
 	@if [ $(VERBOSE) = 0 ] ; then \
-		echo "./nodefony npm:install";\
-		./nodefony npm:install ;\
+		echo "nodefony npm:install";\
+		npm start npm:install ;\
 	else \
-		echo "./nodefony -d npm:install";\
-		./nodefony -d npm:install ;\
+		echo "nodefony -d npm:install";\
+		npm start -d npm:install ;\
 	fi \
 
 build:
@@ -51,19 +51,19 @@ build:
 	make sequelize && echo "success nodefony sequelize !" || echo "failure nodefony sequelize !" ;
 
 	@if [ $(VERBOSE) = 0 ] ; then \
-		echo "./nodefony router:generate:routes";\
-		./nodefony router:generate:routes ;\
-		echo "./nodefony router:match:url /";\
+		echo "nodefony router:generate:routes";\
+		npm start router:generate:routes ;\
+		echo "nodefony router:match:url /";\
 		./nodefony router:match:url /\
-		echo "./nodefony npm:list";\
+		echo "nodefony npm:list";\
 		./nodefony npm:list ;\
 	else \
-		echo "./nodefony -d router:generate:routes";\
-		./nodefony -d router:generate:routes ;\
-		echo "./nodefony -d router:match:url /";\
-		./nodefony -d router:match:url /\
-		echo "./nodefony -d npm:list";\
-		./nodefony -d npm:list ;\
+		echo "nodefony -d router:generate:routes";\
+		npm start -d router:generate:routes ;\
+		echo "nodefony -d router:match:url /";\
+		npm start -d router:match:url /\
+		echo "nodefony -d npm:list";\
+		npm start -d npm:list ;\
 	fi \
 
 #
@@ -73,9 +73,9 @@ startup:
 	./node_modules/pm2/bin/pm2 startup
 
 start:
-	./node_modules/pm2/bin/pm2 update
-	./nodefony pm2
-	./node_modules/pm2/bin/pm2 --lines 1 logs
+	npm run pm2 -- update
+	npm start pm2
+	npm run pm2 -- logs $(APP_NAME)
 
 stop:
 	./node_modules/pm2/bin/pm2 stop $(APP_NAME)
@@ -99,7 +99,7 @@ restart:
 	./node_modules/pm2/bin/pm2 restart $(APP_NAME)
 
 logs:
-	./node_modules/pm2/bin/pm2 --lines 1000 logs $(APP_NAME)
+	./node_modules/pm2/bin/pm2 logs $(APP_NAME)
 
 clean-log:
 	./node_modules/pm2/bin/pm2 flush
@@ -143,7 +143,7 @@ list:
 deploy:
 	./node_modules/pm2/bin/pm2 update
 	npm  install --only=production
-	./nodefony pm2
+	npm start pm2
 
 webpack:
 	@echo "";
@@ -151,7 +151,7 @@ webpack:
 	@echo "#     NODEFONY WEBPACK COMPILE          #" ;
 	@echo "#########################################" ;
 	@echo "";
-	./nodefony webpack:dump ;\
+	npm start webpack:dump ;\
 
 framework:
 	@echo "";
@@ -223,11 +223,11 @@ framework:
 	fi
 
 sequelize:
-	./nodefony Sequelize:generate:entities
-	./nodefony Sequelize:fixtures:load
+	npm start Sequelize:generate:entities
+	npm start Sequelize:fixtures:load
 
 mongoose:
-	./nodefony mongo:fixtures:load
+	npm start mongo:fixtures:load
 
 clean:
 	@if [ -e  node_modules ] ; then \
