@@ -1,5 +1,7 @@
-const elasticsearch = require('elasticsearch');
-
+let elasticsearch = null;
+try {
+  elasticsearch = require('elasticsearch');
+} catch (e) {}
 /**
  *	The class is a **`documentation` BUNDLE** .
  *	@module App

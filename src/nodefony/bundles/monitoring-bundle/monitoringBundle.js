@@ -1,5 +1,7 @@
-const useragent = require('useragent');
-
+let useragent = null;
+try {
+  useragent = require('useragent');
+} catch (e) {}
 /**
  *	The class is a **`monitoring` BUNDLE** .
  *	@module NODEFONY
