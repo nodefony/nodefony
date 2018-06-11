@@ -12,7 +12,7 @@ const nodefony = function () {
   try {
     return require("nodefony");
   } catch (e) {
-    console.error("Module nodefony not found try npm install");
+    console.error("Module nodefony not found try npm -g install nodefony");
     throw e;
   }
 }();
