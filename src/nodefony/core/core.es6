@@ -4,10 +4,7 @@
  *
  *
  */
-//const path = require("path");
-//const fs = require("fs");
 const execSync = require('child_process').execSync;
-//const yaml = require("js-yaml");
 
 /**
  *  The class is a **`Nodefony Nodefony `** .
@@ -26,6 +23,9 @@ module.exports = class Nodefony {
       storage: {}
     };
     this.bundles = {};
+    this.builders = {
+      bundles: null
+    };
     this.templatings = {};
     this.services = {};
     this.encoders = {};
@@ -44,7 +44,6 @@ module.exports = class Nodefony {
     this.pm2Config = null;
     this.appConfig = null;
     this.projectName = "nodefony";
-
     this.isRegExp = require('lodash.isregexp');
     this.isTrunk = this.isNodefonyTrunk();
     this.isCore = this.isCoreTrunk();
@@ -538,7 +537,15 @@ module.exports = class Nodefony {
       }
       throw new Error("Not valid version : " + this.version + " check  http://semver.org ");
     default:
-      environment = "prod";
+      if (this.appKernel) {
+        environment = "prod";
+        type = "CONSOLE";
+        process.env.MODE_START = "NODEFONY_CONSOLE";
+        this.manageCache(this);
+        return new this.appKernel(type, environment, debug, {});
+      }
+      return cli.showHelp();
+      /*environment = "prod";
       type = "CONSOLE";
       process.env.MODE_START = "NODEFONY_CONSOLE";
       if (this.appKernel) {
@@ -552,7 +559,7 @@ module.exports = class Nodefony {
             cli.logger(`${cli.getEmoji("checkered_flag")} WELCOME NODEFONY CLI ${this.version} `);
           }
         });
-      }
+      }*/
     }
   }
 

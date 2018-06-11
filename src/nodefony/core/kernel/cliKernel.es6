@@ -38,7 +38,7 @@ module.exports = nodefony.register("cliKernel", function () {
       if (result.length()) {
         name = bundles[bundle].bundleName;
         srcpath = path.resolve(bundles[bundle].path, "Resources", "public");
-        this.createSymlink(srcpath, this.publicDirectory + name, (Srcpath, dstpath) => {
+        this.createSymlink(srcpath, path.resolve(this.publicDirectory, name), (Srcpath, dstpath) => {
           let size = "not Defined";
           let sizeAssets = "not Defined";
           try {
@@ -77,7 +77,7 @@ module.exports = nodefony.register("cliKernel", function () {
 
     constructor(name, container, notificationsCenter, options) {
       super(name, container, notificationsCenter, options);
-      this.publicDirectory = this.kernel.rootDir + "/web/";
+      this.publicDirectory = path.resolve("web"); //this.kernel.rootDir + "/web/";
       this.commands = {};
     }
 
@@ -190,6 +190,9 @@ module.exports = nodefony.register("cliKernel", function () {
     }
 
     listenSyslog(syslog, debug) {
+      if (!this.kernel) {
+        return super.listenSyslog(syslog, debug);
+      }
       if (!syslog) {
         syslog = this.syslog;
       }
@@ -346,14 +349,11 @@ module.exports = nodefony.register("cliKernel", function () {
       }
     }
 
-    existsSync(myPath, mode) {
+    existsSync(myPath) {
       if (!myPath) {
         throw new Error("existsSync no path found");
       }
-      if (!mode) {
-        mode = fs.constants.R_OK | fs.constants.W_OK;
-      }
-      return fs.accessSync(myPath, mode);
+      return fs.existsSync(myPath);
     }
 
     exists(myPath, mode, callback) {
@@ -363,7 +363,10 @@ module.exports = nodefony.register("cliKernel", function () {
       if (!mode) {
         mode = fs.constants.R_OK | fs.constants.W_OK;
       }
-      return fs.access(myPath, mode, callback);
+      if (callback) {
+        return fs.access(myPath, mode, callback);
+      }
+      return fs.existsSync(myPath);
     }
 
     spawn(command, args, options, close) {
@@ -660,7 +663,7 @@ module.exports = nodefony.register("cliKernel", function () {
       if (this.kernel) {
         return this.kernel.terminate(code);
       }
-      process.exit(code);
+      return nodefony.cli.quit(code);
     }
   }
   return cliKernel;

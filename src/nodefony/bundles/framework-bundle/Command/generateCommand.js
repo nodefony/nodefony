@@ -3,8 +3,6 @@
  *
  *
  */
-const generater = require("./builder/bundle.js");
-
 module.exports = nodefony.registerCommand("generate", function () {
 
   const service = function (obj, type) {
@@ -41,7 +39,7 @@ module.exports = nodefony.registerCommand("generate", function () {
         if (command[1]) {
           try {
             if (!cmd[2]) {
-              project = new generater.bundle(this, "js");
+              project = new nodefony.builders.bundles.nodefony(this, "js");
               let result = project.createBuilder(args[0], args[1]);
               project.build(result, project.location);
               project.install().then(() => {
@@ -54,7 +52,7 @@ module.exports = nodefony.registerCommand("generate", function () {
             } else {
               switch (cmd[2]) {
               case "angular":
-                project = new generater.angular(this, "js");
+                project = new nodefony.builders.bundles.angular(this, "js");
                 project.generateProject(args[0], args[1], interactive).then((builder) => {
                   builder.build(builder.createBuilder(), builder.location, true);
                   builder.install();
@@ -62,7 +60,7 @@ module.exports = nodefony.registerCommand("generate", function () {
                 });
                 break;
               case "react":
-                project = new generater.react(this, "js");
+                project = new nodefony.builders.bundles.react(this, "js");
                 project.generateProject(args[0], args[1], interactive).then((builder) => {
                   builder.build(builder.createBuilder(), builder.location, true);
                   builder.install();
@@ -125,7 +123,7 @@ module.exports = nodefony.registerCommand("generate", function () {
 
     generateController(name, Path) {
       this.logger("GENERATE controller : " + name + " BUNDLE LOCATION : " + Path);
-      let project = new generater.bundle(this, "js");
+      let project = new nodefony.builders.bundles.nodefony(this, "js");
       let file = null;
       try {
         file = new nodefony.fileClass(Path);

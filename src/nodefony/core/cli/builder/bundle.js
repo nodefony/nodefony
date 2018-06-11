@@ -1,19 +1,17 @@
-const Builder = require("./builder.js");
-const command = require("./command.js");
-const controller = require("./controller.js");
-const service = require("./service.js");
-const tests = require("./test.js");
-const resources = require("./resources.js");
-const documentation = require("./documentation.js");
-const View = require("./view.js");
-const Translation = require("./translation.js");
-const routing = require("./routing.js");
-//const regBundle = /^(.*)[Bb]undle$/;
-const generateReactCli = require("../react/reactCli.js");
-const generateAngularCli = require("../angular/angularCli.js");
+const command = require(path.resolve(__dirname, "command.js"));
+const controller = require(path.resolve(__dirname, "controller.js"));
+const service = require(path.resolve(__dirname, "service.js"));
+const tests = require(path.resolve(__dirname, "test.js"));
+const resources = require(path.resolve(__dirname, "resources.js"));
+const documentation = require(path.resolve(__dirname, "documentation.js"));
+const View = require(path.resolve(__dirname, "view.js"));
+const Translation = require(path.resolve(__dirname, "translation.js"));
+const routing = require(path.resolve(__dirname, "routing.js"));
+const generateReactCli = require(path.resolve(__dirname, "..", "react", "reactCli.js"));
+const generateAngularCli = require(path.resolve(__dirname, "..", "angular", "angularCli.js"));
 
 // mother class bundle
-const Bundle = class Bundle extends Builder {
+const Bundle = class Bundle extends nodefony.Builder {
   constructor(cli, type, bundleType) {
     super(cli);
     this.type = type;
@@ -319,7 +317,7 @@ const Angular = class Angular extends Bundle {
 };
 
 module.exports = {
-  bundle: Nodefony,
+  nodefony: Nodefony,
   angular: Angular,
   react: React
 };

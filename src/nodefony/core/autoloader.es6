@@ -2,7 +2,7 @@ const vm = require("vm");
 const path = require("path");
 const Module = require("module");
 const fs = require('fs');
-const Nodefony = require("./core.es6");
+const Nodefony = require(path.resolve(__dirname, "core.es6"));
 
 module.exports = function () {
 
@@ -35,7 +35,6 @@ module.exports = function () {
   context.BlueBird = require("bluebird");
   context.pm2 = require('pm2');
   context.nodefony = new Nodefony();
-
 
   /**
    *  Nodefony autoloader
@@ -73,6 +72,9 @@ module.exports = function () {
         this.loadDirectory(path.resolve(__dirname, "kernel"), /^tests$/);
         this.loadDirectory(path.resolve(__dirname, "protocols"), /^tests$/);
         context.nodefony.appKernel = this.loadAppKernel();
+        context.nodefony.Builder = require(path.resolve(__dirname, "cli", "builder", "builder.js"));
+        context.nodefony.builders.bundles = require(path.resolve(__dirname, "cli", "builder", "bundle.js"));
+        context.nodefony.cliStart = require(path.resolve(__dirname, "cli", "start.js"));
       } catch (e) {
         throw e;
       }

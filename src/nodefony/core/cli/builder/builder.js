@@ -1,4 +1,4 @@
-const Builder = class Builder {
+nodefony.Builder = class Builder {
 
   constructor(cli) {
     this.cli = cli;
@@ -154,5 +154,4 @@ const Builder = class Builder {
     }
   }
 };
-
-module.exports = Builder;
+module.exports = nodefony.Builder;

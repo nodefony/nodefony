@@ -122,18 +122,20 @@ module.exports = nodefony.register("kernel", function () {
           autoLogger: false,
           version: this.version,
           pid: this.typeCluster === "worker" ? true : false,
-          onStart: ( /*cli*/ ) => {
-            this.start(environment);
+          onStart: (cli) => {
+            this.cli = cli;
+            this.cli.createDirectory(path.resolve(this.rootDir, "tmp"), null, (file) => {
+              this.tmpDir = file;
+            }, true);
+            this.git = this.cli.setGitPath(this.rootDir);
+            this.cacheLink = path.resolve(this.rootDir, "tmp", "assestLink");
+            this.cacheWebpack = path.resolve(this.rootDir, "tmp", "webpack");
+            this.start(environment, cli);
           }
         });
-        this.cli.createDirectory(path.resolve(this.rootDir, "tmp"), null, (file) => {
-          this.tmpDir = file;
-        }, true);
-        this.git = this.cli.setGitPath(this.rootDir);
-        this.cacheLink = path.resolve(this.rootDir, "tmp", "assestLink");
-        this.cacheWebpack = path.resolve(this.rootDir, "tmp", "webpack");
+
       } catch (e) {
-        //console.trace(e);
+        console.trace(e);
         throw e;
       }
       this.once("onPostRegister", () => {
@@ -172,28 +174,17 @@ module.exports = nodefony.register("kernel", function () {
     start(environment) {
       if (!this.started) {
         // Environment
-        this.setEnv(environment);
-        // config
-        this.readKernelConfig();
-        // Clusters
-        this.initCluster();
-        // Manage Template engine
-        this.initTemplate();
-        // Boot
-        /*if ( this.options.logSpinner ){
-          this.cli.startSpinner("kernel",['⣾','⣽','⣻','⢿','⡿','⣟','⣯','⣷'] );
-          //this.cli.startSpinner("Kernel Boot Nodefony");
-          this.logger("Kernel Boot Nodefony");
-          this.on("onPostReady", () => {
-            setTimeout( () => {
-              this.cli.stopSpinner();
-            },15000);
-          });
+        try {
+          this.setEnv(environment);
+          // config
+          this.readKernelConfig();
+          // Clusters
+          this.initCluster();
+          // Manage Template engine
+          this.initTemplate();
+        } catch (e) {
+          throw e;
         }
-        setTimeout(()=>{
-          this.boot();
-          this.started = true ;
-        }, 2000);*/
         this.boot();
         this.started = true;
       }
@@ -346,7 +337,6 @@ module.exports = nodefony.register("kernel", function () {
           bundles.push("@nodefony/demo-bundle");
         }
       }
-
       try {
         this.fire("onPreRegister", this);
       } catch (e) {
@@ -540,9 +530,9 @@ module.exports = nodefony.register("kernel", function () {
         this.cli.listenSyslog(this.syslog, this.debug);
       } else {
         // PM2
-        if (this.options.node_start === "PM2") {
+        /*if (this.options.node_start === "PM2") {
           return this.cli.listenSyslog(this.syslog, this.debug);
-        }
+        }*/
         return this.cli.listenSyslog(this.syslog, this.debug);
       }
     }
@@ -1001,7 +991,11 @@ module.exports = nodefony.register("kernel", function () {
       }
       process.nextTick(() => {
         this.logger("NODEFONY Kernel Life Cycle Terminate CODE : " + code, "INFO");
-        process.exit(code);
+        try {
+          nodefony.cli.quit(code);
+        } catch (e) {
+          this.logger(e, "ERROR");
+        }
       });
       return code;
     }

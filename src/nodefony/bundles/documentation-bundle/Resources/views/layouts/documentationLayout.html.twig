@@ -125,7 +125,6 @@
                     {% if ver == version %}
                       <option value="{{ver}}" selected="selected" class="active">{{ver}}</option>
                     {% else %}
-
                       <option value="{{path('documentation-version',{version:ver,bundle:bundle})}}">{{ver}}</option>
                     {% endif %}
                   {% endfor %}

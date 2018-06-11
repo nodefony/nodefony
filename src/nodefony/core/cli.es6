@@ -111,21 +111,27 @@ module.exports = nodefony.register("cli", function () {
           this.logger("SIGINT", "CRITIC");
           //this.clear();
           this.fire("onSignal", "SIGINT", this);
-          this.terminate(0);
+          process.nextTick(() => {
+            this.terminate(0);
+          });
         });
         process.on('SIGTERM', () => {
           this.blankLine();
           this.wrapperLog = console.log;
           this.logger("SIGTERM", "CRITIC");
           this.fire("onSignal", "SIGTERM", this);
-          this.terminate(0);
+          process.nextTick(() => {
+            this.terminate(0);
+          });
         });
         process.on('SIGHUP', () => {
           this.blankLine();
           this.wrapperLog = console.log;
           this.logger("SIGHUP", "CRITIC");
           this.fire("onSignal", "SIGHUP", this);
-          this.terminate(0);
+          process.nextTick(() => {
+            this.terminate(0);
+          });
         });
         process.on('SIGQUIT', () => {
           this.blankLine();
@@ -133,7 +139,9 @@ module.exports = nodefony.register("cli", function () {
           this.logger("SIGQUIT", "CRITIC");
           //this.clear();
           this.fire("onSignal", "SIGQUIT", this);
-          this.terminate(0);
+          process.nextTick(() => {
+            this.terminate(0);
+          });
         });
         process.on('uncaughtException', (err) => {
           this.logger(err, "CRITIC");
@@ -205,9 +213,9 @@ module.exports = nodefony.register("cli", function () {
         if (this.options.version) {
           this.setCommandVersion(this.options.version);
         }
-        this.on("onStart", () => {
+        /*this.on("onStart", () => {
           //this.commander.parse(process.argv);
-        });
+        });*/
       }
     }
 
@@ -382,11 +390,46 @@ module.exports = nodefony.register("cli", function () {
       });
     }
 
+    rm() {
+      try {
+        return shell.rm.apply(shell, arguments);
+      } catch (e) {
+        throw e;
+      }
+    }
+    cp() {
+      try {
+        return shell.cp.apply(shell, arguments);
+      } catch (e) {
+        throw e;
+      }
+    }
+    cd() {
+      try {
+        return shell.cd.apply(shell, arguments);
+      } catch (e) {
+        throw e;
+      }
+    }
+    mkdir() {
+      try {
+        return shell.mkdir.apply(shell, arguments);
+      } catch (e) {
+        throw e;
+      }
+    }
+
     terminate(code) {
+      if (code === 0) {
+        process.exitCode = code;
+      }
       process.exit(code);
     }
 
-    quit(code) {
+    static quit(code) {
+      if (code === 0) {
+        process.exitCode = code;
+      }
       process.exit(code);
     }
 

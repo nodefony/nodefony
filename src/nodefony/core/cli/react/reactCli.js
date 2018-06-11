@@ -26,7 +26,6 @@ const intervativeQuestion = function (cli) {
   }];
 };
 
-
 const reactCli = class reactCli extends nodefony.Service {
 
   constructor(builder) {
@@ -66,9 +65,10 @@ const reactCli = class reactCli extends nodefony.Service {
   cleanTmp() {
     try {
       let tmpDir = path.resolve(this.tmp, this.bundleName);
-      this.cli.existsSync(tmpDir);
       try {
-        shell.rm('-rf', tmpDir);
+        if (this.cli.existsSync(tmpDir)) {
+          shell.rm('-rf', tmpDir);
+        }
       } catch (e) {
         this.logger(e, "ERROR");
         throw e;
