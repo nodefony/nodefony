@@ -19,7 +19,7 @@ const nodefony = function () {
 
 if (process.env.MODE_START && process.env.MODE_START === "PM2") {
   if (nodefony.appKernel) {
-    module.exports = new nodefony.appKernel("SERVER", "production", false, {});
+    return module.exports = new nodefony.appKernel("SERVER", "production", false, {});
   }
   throw new Error("Nodefony Production no trunk detected ");
 }

@@ -54,9 +54,9 @@ build:
 		echo "nodefony router:generate:routes";\
 		npm start router:generate:routes ;\
 		echo "nodefony router:match:url /";\
-		./nodefony router:match:url /\
+		npm start router:match:url /\
 		echo "nodefony npm:list";\
-		./nodefony npm:list ;\
+		npm start npm:list ;\
 	else \
 		echo "nodefony -d router:generate:routes";\
 		npm start -d router:generate:routes ;\

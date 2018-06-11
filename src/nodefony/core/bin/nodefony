@@ -1,78 +1,42 @@
 #!/usr/bin/env node
  //--inspect-brk
-
 "use strict;";
 const path = require("path");
 const fs = require("fs");
-let command = null;
-let args = null;
 
 const nodefony = function () {
   try {
     fs.lstatSync(path.resolve(".core"));
     return require(path.resolve("src", "nodefony", "core"));
+  } catch (e) {}
+  try {
+    return require("nodefony");
   } catch (e) {
-    try {
-      return require("nodefony");
-    } catch (e) {
-      console.error("Module not found try npm install");
-      throw e;
-    }
+    console.error("Module nodefony not found try npm install");
+    throw e;
   }
 }();
 
 if (process.env.MODE_START && process.env.MODE_START === "PM2") {
-  module.exports = new nodefony.appKernel("SERVER", "production", false, {});
-  return;
+  if (nodefony.appKernel) {
+    return module.exports = new nodefony.appKernel("SERVER", "production", false, {});
+  }
+  throw new Error("Nodefony Production no trunk detected ");
 }
 
 if (nodefony.isElectron) {
   nodefony.isElectron.app.on('ready', () => {
     try {
-      // NODEFONY ELECTRON
-      new nodefony.cli("CLI", {
-        asciify: false,
-        signals: false,
-        promiseRejection: false,
-        version: nodefony.version,
-        onStart: (cli) => {
-          cli.commander.arguments('<cmd> [args...]')
-            .action(function (cmd, args /*, commander*/ ) {
-              command = cmd;
-              args = args;
-            });
-          cli.setCommandOption('-d, --debug ', 'Nodefony debug');
-          cli.setCommandOption('-h, --help ', 'Nodefony help');
-          cli.setCommandOption('-v, --version ', 'Nodefony version');
-          cli.setCommandOption('-i, --interactive ', 'Nodefony cli Interactive Mode');
-          cli.commander.parse(process.argv);
-          return nodefony.start(command, args, cli);
-        }
-      });
+      return new nodefony.cliStart();
     } catch (e) {
       throw e;
     }
   });
   module.exports = nodefony.isElectron;
 } else {
-  // NODEFONY CLI
-  module.exports = new nodefony.cli("CLI", {
-    asciify: false,
-    signals: false,
-    promiseRejection: false,
-    version: nodefony.version,
-    onStart: (cli) => {
-      cli.commander.arguments('<cmd> [args...]')
-        .action(function (cmd, args /*, commander*/ ) {
-          command = cmd;
-          args = args;
-        });
-      cli.setCommandOption('-d, --debug ', 'Nodefony debug');
-      cli.setCommandOption('-h, --help ', 'Nodefony help');
-      cli.setCommandOption('-v, --version ', 'Nodefony version');
-      cli.setCommandOption('-i, --interactive ', 'Nodefony cli Interactive Mode');
-      cli.commander.parse(process.argv);
-      return nodefony.start(command, args, cli);
-    }
-  });
+  try {
+    module.exports = new nodefony.cliStart();
+  } catch (e) {
+    throw e;
+  }
 }

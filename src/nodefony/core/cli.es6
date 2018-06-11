@@ -263,7 +263,8 @@ module.exports = nodefony.register("cli", function () {
     parseCommand() {
       return this.commander.parse(process.argv);
     }
-    setCommandOption(option, description, callback) {
+
+    setOption(option, description, callback) {
       return this.commander.option(option, description, callback);
     }
     setCommandVersion(version) {

@@ -1,10 +1,13 @@
+const blue = clc.blueBright.bold;
+const green = clc.green;
 module.exports = class cliStart extends nodefony.cli {
 
   constructor() {
-    super("NODEFONY", null, null, {
+    super("CLI", null, null, {
       asciify: false,
       autostart: false,
       signals: false,
+      clean: true,
       promiseRejection: false,
       version: nodefony.version,
     });
@@ -28,10 +31,10 @@ module.exports = class cliStart extends nodefony.cli {
           this.cmd = cmd;
           this.args = args;
         });
-      this.setCommandOption('-d, --debug ', 'Nodefony debug');
-      this.setCommandOption('-h, --help ', 'Nodefony help');
-      this.setCommandOption('-v, --version ', 'Nodefony version');
-      this.setCommandOption('-i, --interactive ', 'Nodefony cli Interactive Mode');
+      this.setOption('-d, --debug ', 'Nodefony debug');
+      this.setOption('-h, --help ', 'Nodefony help');
+      this.setOption('-v, --version ', 'Nodefony version');
+      this.setOption('-i, --interactive ', 'Nodefony cli Interactive Mode');
       this.commander.parse(process.argv);
       this.start(this.cmd, this.args);
     });
@@ -39,11 +42,13 @@ module.exports = class cliStart extends nodefony.cli {
   }
 
   start(command, args) {
-    this.logger(`WELCOME ${this.getEmoji() } `);
-    if (command) {
-      this.logger(`Command : ${command}`);
-      this.logger(`Arguments : ${args}`);
-      command = command.toLowerCase();
+    //console.log(this.commander)
+    if (command  || process.argv.slice(2).length) {
+      if (command) {
+        command = command.toLowerCase();
+      } else {
+        command = "cli";
+      }
     } else {
       command = null;
     }
@@ -55,38 +60,52 @@ module.exports = class cliStart extends nodefony.cli {
         this.showHelp();
       }
     } else {
-      return this.startQuestion(this.choices).then(() => {
-        switch (this.response.command) {
-        case "project":
-          this.projectQuestion().then(() => {
-
-          }).catch((e) => {
-            if (e.code || e.code === 0) {
-              this.logger(e, "INFO");
-              this.terminate(e.code);
-            }
-            this.logger(e, "ERROR");
-            this.terminate(e.code || 1);
-          });
-          break;
-        case "bundle":
-          break;
-        case "controller":
-          break;
-        case "help":
-          if (nodefony.isTrunk) {
-            return nodefony.start(command, args, this);
-          } else {
-            this.showHelp();
-          }
-          break;
-        case "exit":
-          this.logger("QUIT");
-          return this.terminate(0);
-        default:
-          this.terminate(1);
+      this.asciify("      " + "NODEFONY", {
+        font: "standard"
+      }, (err, data) => {
+        this.clear();
+        let color =  blue;
+        console.log(color(data));
+        let version = this.commander ? this.commander.version() : (this.options.version || "0.0.0");
+        if (this.options.version) {
+          console.log("          Version : " + blue(version) + " Platform : " + green(process.platform) + " Process : " + green(process.title) + " PID : " + process.pid + "\n");
         }
+        //this.logger(`WELCOME ${this.getEmoji() } `);
+        this.logger(`WELCOME NODEFONY CLI ${version} ${this.getEmoji("checkered_flag")}`);
+        return this.startQuestion(this.choices).then(() => {
+          switch (this.response.command) {
+          case "project":
+            this.projectQuestion().then(() => {
+
+            }).catch((e) => {
+              if (e.code || e.code === 0) {
+                this.logger(e, "INFO");
+                this.terminate(e.code);
+              }
+              this.logger(e, "ERROR");
+              this.terminate(e.code || 1);
+            });
+            break;
+          case "bundle":
+            break;
+          case "controller":
+            break;
+          case "help":
+            if (nodefony.isTrunk) {
+              return nodefony.start(command, args, this);
+            } else {
+              this.showHelp();
+            }
+            break;
+          case "exit":
+            this.logger("QUIT");
+            return this.terminate(0);
+          default:
+            this.terminate(1);
+          }
+        });
       });
+
     }
   }
 
@@ -96,21 +115,23 @@ module.exports = class cliStart extends nodefony.cli {
         type: 'list',
         name: 'command',
         message: ' Nodefony CLI : ',
-        default: 'exit',
+        default: (choices.length - 1),
         choices: choices,
         filter: (val) => {
+          this.logger(val, "INFO");
           switch (val) {
-          case `${this.generateString} project`:
+          case `${this.generateString} Project`:
             return "project";
           case `${this.generateString} Bundle`:
             return "bundle";
-          case `${this.generateString} controller`:
+          case `${this.generateString} Controller`:
             return "controller";
-          case "quit":
+          case "Quit":
             return "exit";
-          case "help":
+          case "Help":
             return "help";
           default:
+            this.logger(`command not found : ${val}`, "INFO");
             cli.terminate(1);
           }
         }

@@ -124,6 +124,10 @@ module.exports = nodefony.register("kernel", function () {
           pid: this.typeCluster === "worker" ? true : false,
           onStart: (cli) => {
             this.cli = cli;
+            if (cli && cli.commander && cli.commander.args) {
+              cli.logger(`Command : ${cli.commander.args[0]}`);
+              cli.logger(`Arguments : ${cli.commander.args[1]}`);
+            }
             this.cli.createDirectory(path.resolve(this.rootDir, "tmp"), null, (file) => {
               this.tmpDir = file;
             }, true);
@@ -133,7 +137,6 @@ module.exports = nodefony.register("kernel", function () {
             this.start(environment, cli);
           }
         });
-
       } catch (e) {
         console.trace(e);
         throw e;

@@ -1,9 +1,3 @@
-/**
- *
- *  @nodefony
- *
- *
- */
 const execSync = require('child_process').execSync;
 
 /**
@@ -474,11 +468,11 @@ module.exports = class Nodefony {
   }
 
   start(cmd, args, cli) {
-    if (cmd) {
+    /*if (cmd) {
       cmd = cmd.toLowerCase();
     } else {
       cmd = "cli";
-    }
+    }*/
     let type = null;
     let debug = !!cli.commander.debug;
     let kernel = null;
@@ -527,7 +521,6 @@ module.exports = class Nodefony {
       }
       break;
     case "config":
-      //var config = yaml.load(fs.readFileSync(path.resolve("app", "config", "config.yml"), 'utf8'));
       return process.stdout.write(JSON.stringify(this.appConfig, null, '\t'));
     case "check-version":
       const semver = require('semver');
@@ -541,7 +534,7 @@ module.exports = class Nodefony {
         environment = "prod";
         type = "CONSOLE";
         process.env.MODE_START = "NODEFONY_CONSOLE";
-        this.manageCache(this);
+        this.manageCache(cli);
         return new this.appKernel(type, environment, debug, {});
       }
       return cli.showHelp();
