@@ -1,5 +1,7 @@
 const blue = clc.blueBright.bold;
 const green = clc.green;
+const Project = require(path.resolve(__dirname, "builder", "project.js"));
+
 module.exports = class cliStart extends nodefony.cli {
 
   constructor() {
@@ -13,16 +15,20 @@ module.exports = class cliStart extends nodefony.cli {
     });
     this.response = {};
     this.generateString = "Generate Nodefony";
-    this.runString = "Run Nodefony";
-    this.choices = [
-      `${this.runString} Server Development`,
-      `${this.runString} Server Check Production`,
-      `${this.generateString} Project`,
-      `${this.generateString} Bundle`,
-      `${this.generateString} Controller`,
-      "Help",
-      "Quit"
-    ];
+    this.runString = "Start Server";
+    this.choices = [];
+    if (nodefony.isTrunk) {
+      this.choices.push(`${this.runString} Development`);
+      this.choices.push(`${this.runString} Pre-Production`);
+      this.choices.push(`${this.runString} Production`);
+      this.choices.push(`${this.generateString} Bundle`);
+      this.choices.push(`${this.generateString} Controller`);
+      this.choices.push(`${this.generateString} Project`);
+    } else {
+      this.choices.push(`${this.generateString} Project`);
+    }
+    this.choices.push("Help");
+    this.choices.push("Quit");
     this.cmd = null;
     this.args = null;
     this.on("onStart", () => {
@@ -70,13 +76,13 @@ module.exports = class cliStart extends nodefony.cli {
         if (this.options.version) {
           console.log("          Version : " + blue(version) + " Platform : " + green(process.platform) + " Process : " + green(process.title) + " PID : " + process.pid + "\n");
         }
-        //this.logger(`WELCOME ${this.getEmoji() } `);
         this.logger(`WELCOME NODEFONY CLI ${version} ${this.getEmoji("checkered_flag")}`);
         return this.startQuestion(this.choices).then(() => {
           switch (this.response.command) {
           case "project":
-            this.projectQuestion().then(() => {
-
+            let project = new Project(this);
+            project.interaction().then((res) => {
+              //console.log(res);
             }).catch((e) => {
               if (e.code || e.code === 0) {
                 this.logger(e, "INFO");
@@ -89,6 +95,25 @@ module.exports = class cliStart extends nodefony.cli {
           case "bundle":
             break;
           case "controller":
+            break;
+          case "development":
+            command = "development";
+            if (nodefony.isTrunk) {
+              return nodefony.start(command, args, this);
+            } else {
+              this.showHelp();
+            }
+            break;
+          case "production":
+            command = "pm2";
+            break;
+          case "pre-production":
+            command = "production";
+            if (nodefony.isTrunk) {
+              return nodefony.start(command, args, this);
+            } else {
+              this.showHelp();
+            }
             break;
           case "help":
             if (nodefony.isTrunk) {
@@ -115,11 +140,18 @@ module.exports = class cliStart extends nodefony.cli {
         type: 'list',
         name: 'command',
         message: ' Nodefony CLI : ',
-        default: (choices.length - 1),
+        default: 0, //(choices.length - 1),
+        pageSize: choices.length,
         choices: choices,
         filter: (val) => {
           this.logger(val, "INFO");
           switch (val) {
+          case `${this.runString} Development`:
+            return "development";
+          case `${this.runString} Production`:
+            return "production";
+          case `${this.runString} Pre-Production`:
+            return "pre-production";
           case `${this.generateString} Project`:
             return "project";
           case `${this.generateString} Bundle`:
@@ -140,27 +172,4 @@ module.exports = class cliStart extends nodefony.cli {
         return nodefony.extend(this.response, response);
       });
   }
-
-  projectQuestion() {
-    return this.inquirer.prompt([{
-        type: 'input',
-        name: 'name',
-        message: 'Enter Nodefony Project Name',
-        validate: (value) => {
-          if (value) {
-            return true;
-          }
-          return 'Please enter a valid project name';
-        }
-      }, {
-        type: 'confirm',
-        name: 'bundle',
-        message: 'Do You Want Generate Bundle?',
-        default: false
-      }])
-      .then((response) => {
-        return nodefony.extend(this.response, response);
-      });
-  }
-
 };

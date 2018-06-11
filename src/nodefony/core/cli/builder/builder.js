@@ -4,7 +4,7 @@ nodefony.Builder = class Builder {
     this.cli = cli;
     this.twig = twig;
     this.twigOptions = {
-      views: this.cli.kernel.rootDir,
+      views: process.cwd(),
       'twig options': {
         async: false,
         cache: false

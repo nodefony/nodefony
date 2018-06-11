@@ -420,6 +420,47 @@ module.exports = nodefony.register("cli", function () {
       }
     }
 
+    createDirectory(myPath, mode, callback, force) {
+      let file = null;
+      try {
+        fs.mkdirSync(myPath, mode);
+        file = new nodefony.fileClass(myPath);
+        callback(file);
+        return file;
+      } catch (e) {
+        switch (e.code) {
+        case "EEXIST":
+          if (force) {
+            file = new nodefony.fileClass(myPath);
+            callback(file);
+            return file;
+          }
+          break;
+        }
+        throw e;
+      }
+    }
+
+    existsSync(myPath) {
+      if (!myPath) {
+        throw new Error("existsSync no path found");
+      }
+      return fs.existsSync(myPath);
+    }
+
+    exists(myPath, mode, callback) {
+      if (!myPath) {
+        throw new Error("exists no path found");
+      }
+      if (!mode) {
+        mode = fs.constants.R_OK | fs.constants.W_OK;
+      }
+      if (callback) {
+        return fs.access(myPath, mode, callback);
+      }
+      return fs.existsSync(myPath);
+    }
+
     terminate(code) {
       if (code === 0) {
         process.exitCode = code;
