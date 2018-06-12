@@ -482,7 +482,8 @@ module.exports = nodefony.register("cliKernel", function () {
         try {
           this.logger("npm install in " + cwd);
           cmd = this.spawn("npm", tab, {
-            cwd: cwd
+            cwd: cwd,
+            shell: true
           }, (code) => {
             if (code === 1) {
               return reject(new Error("nmp install error : " + code));

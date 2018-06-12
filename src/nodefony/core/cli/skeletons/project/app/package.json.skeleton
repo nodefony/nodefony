@@ -1,0 +1,19 @@
+{
+  "name": "app-{{name}}",
+  "version": "1.0.0",
+  "description": "app nodefony entry point",
+  "author": "{{authorFullName}} <{{authorMail}}>",
+  "main": "appKernel.js",
+  "scripts": {},
+  "private": true,
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "repository": {},
+  "dependencies": {},
+  "devDependencies": {},
+  "license": "{{licence}}",
+  "readmeFilename": "README.md",
+  "contributors": []
+}

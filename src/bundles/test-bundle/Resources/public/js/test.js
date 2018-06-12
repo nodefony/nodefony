@@ -31,6 +31,9 @@ module.exports = function () {
         //this.textToSpeak("Les sanglots longs Des violons De l’automne Blessent mon cœur D’une langueur Monotone.");
         this.textToSpeak($("#version").html().replace(/^\s*|\s*$/g, ''));
         //this.textToSpeak($("#french").html().replace(/^\s*|\s*$/g, ''));
+        //airplay
+        //$("video").get(0).webkitShowPlaybackTargetPicker();
+
       });
     }
 

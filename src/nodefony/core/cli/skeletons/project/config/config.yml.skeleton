@@ -1,0 +1,88 @@
+#########################################################
+#  NODEFONY FRAMEWORK
+#
+#       KERNEL CONFIG
+system:
+  domain                        : {{domain}}             # nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
+  domainAlias:                                           # domainAlias string only <<regexp>>   example ".*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$"
+    - "^127.0.0.1$"
+  httpPort                      : {{portHttp}}
+  httpsPort                     : {{portHttps}}
+  statics                       : true
+  security                      : true
+  realtime                      : true
+  monitoring                    : true
+  documentation                 : true
+  unitTest                      : true
+  demo                          : true
+  locale                        : "en_en"
+  servers:
+    protocol                    : "2.0"             #  2.0 || 1.1
+    http                        : true
+    https	                      : true
+    ws			                    : true
+    wss			                    : true
+    certificats:
+      key                       : "config/certificates/server/privkey.pem"
+      cert                      : "config/certificates/server/fullchain.pem"
+      ca                        : "config/certificates/ca/nodefony-root-ca.crt.pem"
+      options:
+        rejectUnauthorized      : true
+  devServer:
+    inline                      : true
+    hot                         : false
+    hotOnly                     : false
+    overlay                     : true
+    logLevel                    : info        # none, error, warning or info
+    progress                    : false
+    protocol                    : https
+    websocket                   : true
+
+  bundles                       : ~
+
+  #################
+  # SYSLOG NODEFONY
+  log:
+    active                      : true
+
+##################
+#       ASSETS CDN
+#
+#       You set cdn with string
+#       CDN :    cdn.nodefony.com
+#       or
+#       CDN:
+#          global: cdn.nodefony.com
+#       or
+#       CDN:
+#         stylesheet:
+#           - cdn.nodefony.com
+#         javascript:
+#           - cdn.nodefony.com
+#         image:
+#           - cdn.nodefony.com
+#           - cdn.nodefony.fr
+#         font:
+#           - cdn.nodefony.com
+CDN                             : ~
+
+#################
+# ENGINE TEMPLATE
+#
+#       TWIG
+#       https://github.com/justjohn/twig.js
+#
+templating                      : twig
+
+############
+# ENGINE ORM
+#       sequelize || mongoose
+orm                             : {{orm}}
+
+#########################
+# NODE.JS PACKAGE MANAGER
+#
+#       npm
+#       yarn
+#
+packageManager                  : {{npm}}

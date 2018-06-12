@@ -1,0 +1,28 @@
+# Security
+security:
+    #
+    #  FIREWALL strategy
+    #  when change security context (multi firewalls areas)
+    #
+    #  Strategy can be :       none, migrate, invalidate
+    #
+    session_fixation_strategy: migrate
+    #
+    #  FIREWALL  AREAS
+    #
+    firewalls:                 ~
+    #
+    #  FIREWALL  PROVIDER
+    #
+    providers:
+      anonymous:
+        anonymous:
+          provider:            anonymous
+      nodefony:
+        entity:
+          name:                "user"
+          property:            "username"
+    encoders:
+      user :
+        algorithm:             bcrypt
+        saltRounds:            13

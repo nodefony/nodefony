@@ -94,6 +94,7 @@ module.exports = nodefony.register("cli", function () {
         this.setPid();
       }
       this.wrapperLog = console.log;
+      this.response = {};
       this.timers = {};
       if (this.options.autoLogger) {
         this.listenSyslog();

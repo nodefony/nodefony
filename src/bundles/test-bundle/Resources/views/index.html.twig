@@ -8,7 +8,7 @@
   {{ parent() }}
   <!-- WEBPACK BUNDLE -->
   <link rel='stylesheet' href='{{CDN("stylesheet")}}/framework-bundle/assets/css/framework.css'/>
-  <link rel='stylesheet' href='{{CDN("stylesheet")}}/testBundle/assets/css/test.css'/>
+  <link rel='stylesheet' href='{{CDN("stylesheet")}}/test-bundle/assets/css/test.css'/>
 {% endblock %}
 
 {% block body %}
@@ -33,6 +33,9 @@
       </div>
     </div>
   </div>
+  <!--div class='container'>
+    <video autoplay="true" width="200" height="200" src="/test-bundle/images/oceans-clip.mp4"></video>
+  </div-->
   <div class='container'>
     <iframe style="margin:50px 50% 50px 50px" width="560" height="315" src="https://www.youtube.com/embed/HgzGwKwLmgM?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
     <div class="row">
@@ -175,6 +178,6 @@ je ne veux pas m'arrêter du tout
   {{ parent() }}
   <!-- WEBPACK BUNDLE -->
   <script src='{{CDN("javascript")}}/framework-bundle/assets/js/framework.js'></script>
-  <script src='{{CDN("javascript")}}/testBundle/assets/js/test.js'></script>
+  <script src='{{CDN("javascript")}}/test-bundle/assets/js/test.js'></script>
 
 {% endblock %}

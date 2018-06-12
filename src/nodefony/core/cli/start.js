@@ -13,7 +13,7 @@ module.exports = class cliStart extends nodefony.cli {
       promiseRejection: false,
       version: nodefony.version,
     });
-    this.response = {};
+
     this.generateString = "Generate Nodefony";
     this.runString = "Start Server";
     this.choices = [];

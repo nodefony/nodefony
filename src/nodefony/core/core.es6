@@ -507,7 +507,6 @@ module.exports = class Nodefony {
       break;
     case "app":
       try {
-        //let config = yaml.load(fs.readFileSync(path.resolve("app", "config", "config.yml"), 'utf8'));
         return process.stdout.write(this.projectName);
       } catch (e) {
         return process.stdout.write("nodefony");
