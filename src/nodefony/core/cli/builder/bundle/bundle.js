@@ -7,8 +7,8 @@ const documentation = require(path.resolve(__dirname, "documentation.js"));
 const View = require(path.resolve(__dirname, "view.js"));
 const Translation = require(path.resolve(__dirname, "translation.js"));
 const routing = require(path.resolve(__dirname, "routing.js"));
-const generateReactCli = require(path.resolve(__dirname, "..", "react", "reactCli.js"));
-const generateAngularCli = require(path.resolve(__dirname, "..", "angular", "angularCli.js"));
+const generateReactCli = require(path.resolve(__dirname, "react", "reactBuilder.js"));
+const generateAngularCli = require(path.resolve(__dirname, "angular", "angularBuilder.js"));
 
 // mother class bundle
 const Bundle = class Bundle extends nodefony.Builder {
@@ -27,7 +27,7 @@ const Bundle = class Bundle extends nodefony.Builder {
       local: this.cli.config.App.locale,
       projectYearNow: new Date().getFullYear()
     };
-    this.skeletonPath = path.resolve(__dirname, "..", "skeletons");
+    this.skeletonPath = path.resolve(__dirname, "skeletons");
     this.skeleton = path.resolve(this.skeletonPath, "bundleClass.skeleton");
     this.packageSkeleton = path.resolve(this.skeletonPath, "package.skeleton");
     this.bindingSkeleton = path.resolve(this.skeletonPath, "binding", "binding.skeleton");

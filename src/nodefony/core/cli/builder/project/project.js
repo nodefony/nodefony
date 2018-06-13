@@ -18,7 +18,7 @@ module.exports = class generateProject extends nodefony.Builder {
       npm: 'npm'
     });
 
-    this.pathSkeleton = path.resolve(__dirname, "..", "skeletons", "project");
+    this.pathSkeleton = path.resolve(__dirname, "skeletons");
   }
 
   interaction() {

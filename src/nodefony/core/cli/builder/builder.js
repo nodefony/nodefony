@@ -101,9 +101,9 @@ nodefony.Builder = class Builder {
           case "symlink":
             try {
               if (force) {
-                shell.ln('-sf', path.resolve(parent.path, obj.params.source), path.resolve(parent.path, obj.params.dest));
+                this.cli.ln('-sf', path.resolve(parent.path, obj.params.source), path.resolve(parent.path, obj.params.dest));
               } else {
-                shell.ln('-s', path.resolve(parent.path, obj.params.source), path.resolve(parent.path, obj.params.dest));
+                this.cli.ln('-s', path.resolve(parent.path, obj.params.source), path.resolve(parent.path, obj.params.dest));
               }
               this.logger("Create symbolic link :" + obj.name);
             } catch (e) {
@@ -143,7 +143,7 @@ nodefony.Builder = class Builder {
     return child;
   }
 
-  createFile(myPath, skeleton, parse, params, callback) {
+  createFile(myPath, skeleton, parse, params = {}, callback = null) {
     if (skeleton) {
       this.buildSkeleton(skeleton, parse, params, (error, result) => {
         if (error) {
@@ -151,7 +151,7 @@ nodefony.Builder = class Builder {
         } else {
           try {
             fs.writeFileSync(myPath, result, {
-              mode: "644"
+              mode: params.mode || "644"
             });
             callback(new nodefony.fileClass(myPath));
           } catch (e) {
@@ -163,7 +163,7 @@ nodefony.Builder = class Builder {
       let data = " ";
       try {
         fs.writeFileSync(myPath, data, {
-          mode: "644"
+          mode: params.mode || "644"
         });
         callback(new nodefony.fileClass(myPath));
       } catch (e) {

@@ -1,6 +1,5 @@
 const blue = clc.blueBright.bold;
 const green = clc.green;
-const Project = require(path.resolve(__dirname, "builder", "project.js"));
 
 module.exports = class cliStart extends nodefony.cli {
 
@@ -80,7 +79,7 @@ module.exports = class cliStart extends nodefony.cli {
         return this.startQuestion(this.choices).then(() => {
           switch (this.response.command) {
           case "project":
-            let project = new Project(this);
+            let project = new nodefony.builders.Project(this);
             project.interaction().then((res) => {
               //console.log(res);
             }).catch((e) => {

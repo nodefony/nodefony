@@ -73,7 +73,8 @@ module.exports = function () {
         this.loadDirectory(path.resolve(__dirname, "protocols"), /^tests$/);
         context.nodefony.appKernel = this.loadAppKernel();
         context.nodefony.Builder = require(path.resolve(__dirname, "cli", "builder", "builder.js"));
-        context.nodefony.builders.bundles = require(path.resolve(__dirname, "cli", "builder", "bundle.js"));
+        context.nodefony.builders.bundles = require(path.resolve(__dirname, "cli", "builder", "bundle", "bundle.js"));
+        context.nodefony.builders.Project = require(path.resolve(__dirname, "cli", "builder", "project", "project.js"));
         context.nodefony.cliStart = require(path.resolve(__dirname, "cli", "start.js"));
       } catch (e) {
         throw e;
