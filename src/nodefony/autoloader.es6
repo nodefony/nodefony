@@ -2,18 +2,19 @@ const vm = require("vm");
 const path = require("path");
 const Module = require("module");
 const fs = require('fs');
-const Nodefony = require(path.resolve(__dirname, "core.es6"));
+const Nodefony = require(path.resolve(__dirname, "nodefony.es6"));
 
 module.exports = function () {
 
   // Create Context copy library in context  see load runInThisContext
   const context = vm.createContext(this);
 
-  context.require = require;
-  context.module = module;
-  context.exports = exports;
-  context.__dirname = __dirname;
-  context.__filename = __filename;
+  //console.log(module)
+  //context.require = require;
+  //context.module = module;
+  //context.exports = exports;
+  //context.__dirname = __dirname;
+  //context.__filename = __filename;
   context.path = require("path");
   context.fs = require("fs");
   context.yaml = require("js-yaml");
@@ -56,6 +57,7 @@ module.exports = function () {
       this.lineOffset = 10;
       this.columnOffset = 10;
       this.dirname = path.resolve(__dirname);
+
       try {
         require(path.resolve(__dirname, "error.es6"));
         //this.load(path.resolve(__dirname, "error.es6"));

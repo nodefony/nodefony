@@ -11,11 +11,7 @@ module.exports = class defaultController extends nodefony.controller {
   constructor(container, context) {
     super(container, context);
     this.defaultVersion = this.kernel.settings.version;
-    if (this.kernel.isCore) {
-      this.docPath = this.kernel.nodefonyCorePath;
-    } else {
-      this.docPath = this.kernel.nodefonyPath;
-    }
+    this.docPath = this.kernel.nodefonyPath;
   }
 
   /**

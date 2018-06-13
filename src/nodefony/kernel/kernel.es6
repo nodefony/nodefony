@@ -118,7 +118,7 @@ module.exports = nodefony.register("kernel", function () {
         // SERVERS
         this.initServers();
         // cli worker
-        this.cli = new nodefony.cliKernel("NODEFONY", this.container, this.notificationsCenter, {
+        this.cli = new nodefony.cliKernel(nodefony.projectName || "nodefony", this.container, this.notificationsCenter, {
           autoLogger: false,
           version: this.version,
           pid: this.typeCluster === "worker" ? true : false,
@@ -262,40 +262,40 @@ module.exports = nodefony.register("kernel", function () {
       this.configBundle = this.getConfigBunbles();
       let bundles = [];
       if (this.isCore) {
-        const nodefonyPath = path.resolve(this.rootDir, "src", "nodefony");
-        this.nodefonyCorePath = path.resolve(nodefonyPath, "core");
-        bundles.push(path.resolve(nodefonyPath, "bundles", "http-bundle"));
-        bundles.push(path.resolve(nodefonyPath, "bundles", "framework-bundle"));
+        //const nodefonyPath = path.resolve(this.rootDir, "src", "nodefony");
+        //this.nodefonyCorePath = path.resolve(this.nodefonyPath, "core");
+        bundles.push(path.resolve(this.nodefonyPath, "bundles", "http-bundle"));
+        bundles.push(path.resolve(this.nodefonyPath, "bundles", "framework-bundle"));
         // FIREWALL
         if (this.settings.system.security) {
-          bundles.push(path.resolve(nodefonyPath, "bundles", "security-bundle"));
+          bundles.push(path.resolve(this.nodefonyPath, "bundles", "security-bundle"));
         }
         // ORM MANAGEMENT
         switch (this.settings.orm) {
         case "sequelize":
-          bundles.push(path.resolve(nodefonyPath, "bundles", "sequelize-bundle"));
+          bundles.push(path.resolve(this.nodefonyPath, "bundles", "sequelize-bundle"));
           break;
         case "mongoose":
-          bundles.push(path.resolve(nodefonyPath, "bundles", "mongo-bundle"));
+          bundles.push(path.resolve(this.nodefonyPath, "bundles", "mongo-bundle"));
           break;
         default:
           this.logger(new Error("nodefony can't load ORM : " + this.settings.orm), "WARNING");
         }
         // REALTIME
         if (this.settings.system.realtime) {
-          bundles.push(path.resolve(nodefonyPath, "bundles", "realtime-bundle"));
+          bundles.push(path.resolve(this.nodefonyPath, "bundles", "realtime-bundle"));
         }
         // MONITORING
         if (this.settings.system.monitoring) {
-          bundles.push(path.resolve(nodefonyPath, "bundles", "monitoring-bundle"));
+          bundles.push(path.resolve(this.nodefonyPath, "bundles", "monitoring-bundle"));
         }
         // DOCUMENTATION
         if (this.settings.system.documentation) {
-          bundles.push(path.resolve(nodefonyPath, "bundles", "documentation-bundle"));
+          bundles.push(path.resolve(this.nodefonyPath, "bundles", "documentation-bundle"));
         }
         // TEST UNIT
         if (this.settings.system.unitTest) {
-          bundles.push(path.resolve(nodefonyPath, "bundles", "unittests-bundle"));
+          bundles.push(path.resolve(this.nodefonyPath, "bundles", "unittests-bundle"));
         }
         // DEMO
         if (this.settings.system.demo) {

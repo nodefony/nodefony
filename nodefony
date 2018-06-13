@@ -7,7 +7,7 @@ const fs = require("fs");
 const nodefony = function () {
   try {
     fs.lstatSync(path.resolve(".core"));
-    return require(path.resolve("src", "nodefony", "core"));
+    return require(path.resolve("src", "nodefony"));
   } catch (e) {}
   try {
     return require("nodefony");

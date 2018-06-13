@@ -4,7 +4,7 @@ const green = clc.green;
 module.exports = class cliStart extends nodefony.cli {
 
   constructor() {
-    super("CLI", null, null, {
+    super("nodefony", null, null, {
       asciify: false,
       autostart: false,
       signals: false,

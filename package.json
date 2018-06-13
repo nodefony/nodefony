@@ -64,7 +64,7 @@
     "mini-css-extract-plugin": "^0.4.0",
     "node-pre-gyp": "^0.10.0",
     "node-sass": "^4.9.0",
-    "nodefony": "file:src/nodefony/core",
+    "nodefony": "file:src/nodefony",
     "optimize-css-assets-webpack-plugin": "^4.0.2",
     "pm2": "^2.10.4",
     "raw-loader": "^0.5.1",
