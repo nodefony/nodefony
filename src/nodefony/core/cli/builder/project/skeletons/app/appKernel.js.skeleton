@@ -2,8 +2,7 @@
  *  ENTRY POINT FRAMEWORK APP KERNEL
  */
 "use strict;";
-
-const appKernel = class appKernel extends nodefony.kernel {
+module.exports = class appKernel extends nodefony.kernel {
   constructor(type, environment, debug, settings) {
     // kernel constructor
     try {
@@ -13,5 +12,3 @@ const appKernel = class appKernel extends nodefony.kernel {
     }
   }
 };
-
-module.exports = appKernel;

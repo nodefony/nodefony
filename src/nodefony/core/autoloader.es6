@@ -71,6 +71,7 @@ module.exports = function () {
         require(path.resolve(__dirname, "builder.es6"));
         this.loadDirectory(path.resolve(__dirname, "kernel"), /^tests$/);
         this.loadDirectory(path.resolve(__dirname, "protocols"), /^tests$/);
+        context.nodefony.cliStart = require(path.resolve(__dirname, "cli", "start.js"));
         context.nodefony.appKernel = this.loadAppKernel();
       } catch (e) {
         throw e;
@@ -96,27 +97,16 @@ module.exports = function () {
     }
 
     loadAppKernel() {
-      //let appKernelPath = path.resolve(__dirname, "..", "..", "..", "..", "app", "appKernel.js");
-      let appKernelPath = null;
       try {
-        appKernelPath = path.resolve("app", "appKernel.js");
-        this.fileExist(appKernelPath);
+        return require(path.resolve("app", "appKernel.js"));
       } catch (e) {
-        appKernelPath = path.resolve(__dirname, "..", "..", "app", "appKernel.js");
-        try {
-          this.fileExist(appKernelPath);
-        } catch (e) {
-          appKernelPath = null;
-        }
-      }
-      try {
-        if (appKernelPath) {
-          return this.load(appKernelPath);
-        }
         return null;
-      } catch (e) {
-        throw e;
       }
+      /*try {
+        return require(path.resolve(__dirname, "..", "..", "app", "appKernel.js"));
+      } catch (e) {
+        return null;
+      }*/
     }
 
     createContext(sandbox) {
