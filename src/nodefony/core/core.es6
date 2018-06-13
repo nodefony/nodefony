@@ -20,6 +20,7 @@ module.exports = class Nodefony {
     this.builders = {
       bundles: null
     };
+    this.cliStart = require(path.resolve(__dirname, "cli", "start.js"));
     this.templatings = {};
     this.services = {};
     this.encoders = {};

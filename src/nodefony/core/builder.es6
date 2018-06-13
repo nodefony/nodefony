@@ -172,4 +172,7 @@ nodefony.Builder = class Builder {
     }
   }
 };
+nodefony.builders.bundles = require(path.resolve(__dirname, "cli", "builder", "bundle", "bundle.js"));
+nodefony.builders.Project = require(path.resolve(__dirname, "cli", "builder", "project", "project.js"));
+
 module.exports = nodefony.Builder;

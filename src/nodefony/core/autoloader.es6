@@ -65,17 +65,13 @@ module.exports = function () {
         require(path.resolve(__dirname, "service.es6"));
         require(path.resolve(__dirname, "fileClass.es6"));
         require(path.resolve(__dirname, "finder.es6"));
-        //this.load(path.resolve(__dirname,  "log.js"));
         require(path.resolve(__dirname, "protocol.es6"));
         require(path.resolve(__dirname, "watcher.es6"));
         require(path.resolve(__dirname, "cli.es6"));
+        require(path.resolve(__dirname, "builder.es6"));
         this.loadDirectory(path.resolve(__dirname, "kernel"), /^tests$/);
         this.loadDirectory(path.resolve(__dirname, "protocols"), /^tests$/);
         context.nodefony.appKernel = this.loadAppKernel();
-        context.nodefony.Builder = require(path.resolve(__dirname, "cli", "builder", "builder.js"));
-        context.nodefony.builders.bundles = require(path.resolve(__dirname, "cli", "builder", "bundle", "bundle.js"));
-        context.nodefony.builders.Project = require(path.resolve(__dirname, "cli", "builder", "project", "project.js"));
-        context.nodefony.cliStart = require(path.resolve(__dirname, "cli", "start.js"));
       } catch (e) {
         throw e;
       }
