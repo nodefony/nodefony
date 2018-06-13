@@ -1,0 +1,40 @@
+{% extends './base.html.twig' %}
+{% block title %}Nodefony
+  {{core}}
+{% endblock %}
+{% block body %}
+  <img class='displayed' src='{{CDN("image")}}/framework-bundle/images/nodefony-logo-white.png'>
+  <h1 class="success">
+    <a href="{{url('documentation')}}">
+      <strong style="font-size:45px">
+        NODEFONY
+        {{core}}
+      </strong>
+    </a>
+    <p>{{trans("welcome")}}
+      {{user.username}}</p>
+    <p>
+      <a href="{{url('documentation')}}">
+        <button>
+          Documentation
+        </button>
+      </a>
+    </p>
+    {% if demo %}
+      <p>
+        <a href="{{url('demo')}}">
+          <button>
+            Demo
+          </button>
+        </a </p>
+      {% endif %}
+    </h1>
+    {% if readme %}
+      <div></div>
+    {% endif %}
+  {% endblock %}
+  {% block footer %}
+    <footer>
+      {{ render( controller("app:app:footer" )) }}
+    </footer>
+  {% endblock %}

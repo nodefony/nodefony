@@ -111,6 +111,19 @@ nodefony.Builder = class Builder {
               throw e;
             }
             break;
+          case "copy":
+            try {
+              if (obj.params && obj.params.recurse) {
+                this.cli.cp("-R", obj.path, path.resolve(parent.path, name));
+              } else {
+                this.cli.cp("-f", obj.path, path.resolve(parent.path, name));
+              }
+              this.logger("Copy             :" + obj.name);
+            } catch (e) {
+              this.logger(e, "ERROR");
+              throw e;
+            }
+            break;
           }
           break;
         case "childs":

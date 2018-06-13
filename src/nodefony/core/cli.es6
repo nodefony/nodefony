@@ -413,6 +413,13 @@ module.exports = nodefony.register("cli", function () {
         throw e;
       }
     }
+    ln() {
+      try {
+        return shell.ln.apply(shell, arguments);
+      } catch (e) {
+        throw e;
+      }
+    }
     mkdir() {
       try {
         return shell.mkdir.apply(shell, arguments);

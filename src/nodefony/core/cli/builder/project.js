@@ -128,24 +128,28 @@ module.exports = class generateProject extends nodefony.Builder {
           params: this.cli.response
         }, {
           name: "Resources",
-          type: "directory",
+          type: "copy",
+          path: path.resolve(this.pathSkeleton, "app", "Resources"),
+          params: {
+            recurse: true
+          }
         }, {
           name: "config",
           type: "directory",
           childs: [{
             name: "config.yml",
             type: "file",
-            skeleton: path.resolve(this.pathSkeleton, "app", "config.yml.skeleton"),
+            skeleton: path.resolve(this.pathSkeleton, "app", "config", "config.yml.skeleton"),
             params: this.cli.response
           }, {
             name: "routing.js",
             type: "file",
-            skeleton: path.resolve(this.pathSkeleton, "app", "routing.js.skeleton"),
+            skeleton: path.resolve(this.pathSkeleton, "app", "config", "routing.js.skeleton"),
             params: this.cli.response
           }, {
             name: "security.yml",
             type: "file",
-            skeleton: path.resolve(this.pathSkeleton, "app", "security.yml.skeleton"),
+            skeleton: path.resolve(this.pathSkeleton, "app", "config", "security.yml.skeleton"),
             params: this.cli.response
           }]
         }, {
@@ -203,10 +207,20 @@ module.exports = class generateProject extends nodefony.Builder {
           type: "file",
           skeleton: path.resolve(this.pathSkeleton, "config", "config.yml.skeleton"),
           params: this.cli.response
+        }, {
+          name: "pm2.config.js",
+          type: "file",
+          skeleton: path.resolve(this.pathSkeleton, "config", "pm2.config.js.skeleton"),
+          params: this.cli.response
         }]
       }, {
         name: "bin",
         type: "directory",
+        childs: [{
+          name: "generateCertificates.sh",
+          type: "copy",
+          path: path.resolve(this.pathSkeleton, "bin", "generateCertificates.sh")
+        }]
       }, {
         name: "src",
         type: "directory",

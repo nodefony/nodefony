@@ -1,0 +1,29 @@
+{
+  "name": "nodefony",
+  "short_name": "nodefony",
+  "display": "standalone",
+  "start_url": "/",
+  "launch_path": "/",
+  "description": "Node.js full-stack web framework WPA ",
+  "default_locale": "en",
+  "background_color": "#2196F3",
+  "theme_color": "#2196F3",
+  "orientation": "landscape",
+  "icons": [{
+      "src": "/frameworkBundle/images/favicon.ico",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "/frameworkBundle/images/nodefony-logo.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/frameworkBundle/images/nodefony-logo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "developer": {}
+}
