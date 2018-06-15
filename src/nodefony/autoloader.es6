@@ -9,7 +9,6 @@ module.exports = function () {
   // Create Context copy library in context  see load runInThisContext
   const context = vm.createContext(this);
 
-  //console.log(module)
   //context.require = require;
   //context.module = module;
   //context.exports = exports;
@@ -24,10 +23,7 @@ module.exports = function () {
   context.xmlParser = require('xml2js').Parser;
   context.dns = require('dns');
   context.async = require('async');
-  //context.http = require('http');
-  //context.http2 = require('http2');
   context.nodedomain = require('domain');
-  //context.WebSocketServer = require('websocket');
   context.Promise = require('promise');
   context.clc = require('cli-color');
   context.shell = require("shelljs");
@@ -104,11 +100,6 @@ module.exports = function () {
       } catch (e) {
         return null;
       }
-      /*try {
-        return require(path.resolve(__dirname, "..", "..", "app", "appKernel.js"));
-      } catch (e) {
-        return null;
-      }*/
     }
 
     createContext(sandbox) {

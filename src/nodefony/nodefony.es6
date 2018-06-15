@@ -11,6 +11,8 @@ const myObj = {};
 module.exports = class Nodefony {
 
   constructor() {
+    this.module = module;
+    this.require = require;
     this.io = {};
     this.context = {};
     this.session = {

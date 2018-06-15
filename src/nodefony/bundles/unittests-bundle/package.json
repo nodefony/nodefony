@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/unittests-bundle",
-  "version": "4.0.0",
+  "version": "4.0.0-beta.0",
   "description": "Nodefony Framework Bundle Unit Tests",
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "contributors": [],
@@ -19,11 +19,9 @@
     "url": "git://github.com/nodefony/nodefony-core.git"
   },
   "license": "CECILL-B",
-  "licenses": [
-    {
-      "type": "CECILL-B",
-      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-    }
-  ],
+  "licenses": [{
+    "type": "CECILL-B",
+    "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+  }],
   "readmeFilename": "README.md"
 }

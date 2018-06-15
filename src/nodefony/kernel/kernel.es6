@@ -1,4 +1,5 @@
 const os = require('os');
+module = nodefony.module;
 
 module.exports = nodefony.register("kernel", function () {
 
@@ -261,7 +262,8 @@ module.exports = nodefony.register("kernel", function () {
        */
       this.configBundle = this.getConfigBunbles();
       let bundles = [];
-      if (this.isCore) {
+      //console.log(module)
+      /*if (this.isCore) {
         //const nodefonyPath = path.resolve(this.rootDir, "src", "nodefony");
         //this.nodefonyCorePath = path.resolve(this.nodefonyPath, "core");
         bundles.push(path.resolve(this.nodefonyPath, "bundles", "http-bundle"));
@@ -301,45 +303,168 @@ module.exports = nodefony.register("kernel", function () {
         if (this.settings.system.demo) {
           bundles.push(path.resolve(this.rootDir, "src", "bundles", "demo-bundle"));
         }
-      } else {
+      } else {*/
+      let res = null;
+      try {
+        res = require.resolve("@nodefony/http-bundle");
         bundles.push("@nodefony/http-bundle");
-        bundles.push("@nodefony/framework-bundle");
-        // FIREWALL
-        if (this.settings.system.security) {
-          bundles.push("@nodefony/security-bundle");
-        }
-        // ORM MANAGEMENT
-        switch (this.settings.orm) {
-        case "sequelize":
-          bundles.push("@nodefony/sequelize-bundle");
-          break;
-        case "mongoose":
-          bundles.push("@nodefony/mongo-bundle");
-          break;
-        default:
-          this.logger(new Error("nodefony can't load ORM : " + this.settings.orm), "WARNING");
-        }
-        // REALTIME
-        if (this.settings.system.realtime) {
-          bundles.push("@nodefony/realtime-bundle");
-        }
-        // MONITORING
-        if (this.settings.system.monitoring) {
-          bundles.push("@nodefony/monitoring-bundle");
-        }
-        // DOCUMENTATION
-        if (this.settings.system.documentation) {
-          bundles.push("@nodefony/documentation-bundle");
-        }
-        // TEST UNIT
-        if (this.settings.system.unitTest) {
-          bundles.push("@nodefony/unittests-bundle");
-        }
-        // DEMO
-        if (this.settings.system.demo) {
-          bundles.push("@nodefony/demo-bundle");
+      } catch (e) {}
+      if (!res) {
+        try {
+          bundles.push(path.resolve(this.nodefonyPath, "bundles", "http-bundle"));
+        } catch (e) {
+          throw e;
         }
       }
+      res = null;
+      try {
+        res = require.resolve("@nodefony/framework-bundle");
+        bundles.push("@nodefony/framework-bundle");
+      } catch (e) {}
+      if (!res) {
+        try {
+          bundles.push(path.resolve(this.nodefonyPath, "bundles", "framework-bundle"));
+        } catch (e) {
+          throw e;
+        }
+      }
+      // FIREWALL
+      res = null;
+      if (this.settings.system.security) {
+        try {
+          res = require.resolve("@nodefony/security-bundle");
+          bundles.push("@nodefony/security-bundle");
+        } catch (e) {}
+        if (!res) {
+          try {
+            bundles.push(path.resolve(this.nodefonyPath, "bundles", "security-bundle"));
+          } catch (e) {
+            throw e;
+          }
+        }
+      }
+      // ORM MANAGEMENT
+      res = null;
+      switch (this.settings.orm) {
+      case "sequelize":
+        try {
+          res = require.resolve("@nodefony/sequelize-bundle");
+          bundles.push("@nodefony/sequelize-bundle");
+        } catch (e) {}
+        if (!res) {
+          try {
+            bundles.push(path.resolve(this.nodefonyPath, "bundles", "sequelize-bundle"));
+          } catch (e) {
+            throw e;
+          }
+        }
+        break;
+      case "mongoose":
+        try {
+          res = require.resolve("@nodefony/mongo-bundle");
+          bundles.push("@nodefony/mongo-bundle");
+        } catch (e) {}
+        if (!res) {
+          try {
+            bundles.push(path.resolve(this.nodefonyPath, "bundles", "mongo-bundle"));
+          } catch (e) {
+            throw e;
+          }
+        }
+        break;
+      default:
+        let error = new Error("nodefony can't load ORM : " + this.settings.orm);
+        this.logger(error, "ERROR");
+        throw error;
+      }
+      // REALTIME
+      res = null;
+      if (this.settings.system.realtime) {
+        try {
+          res = require.resolve("@nodefony/realtime-bundle");
+          bundles.push("@nodefony/realtime-bundle");
+        } catch (e) {}
+        if (!res) {
+          try {
+            bundles.push(path.resolve(this.nodefonyPath, "bundles", "realtime-bundle"));
+          } catch (e) {
+            throw e;
+          }
+        }
+      }
+      // MONITORING
+      res = null;
+      if (this.settings.system.monitoring) {
+        try {
+          res = require.resolve("@nodefony/monitoring-bundle");
+          bundles.push("@nodefony/monitoring-bundle");
+        } catch (e) {}
+        if (!res) {
+          try {
+            bundles.push(path.resolve(this.nodefonyPath, "bundles", "monitoring-bundle"));
+          } catch (e) {
+            throw e;
+          }
+        }
+      }
+      // DOCUMENTATION
+      res = null;
+      if (this.settings.system.documentation) {
+        try {
+          res = require.resolve("@nodefony/documentation-bundle");
+          bundles.push("@nodefony/documentation-bundle");
+        } catch (e) {}
+        if (!res) {
+          try {
+            bundles.push(path.resolve(this.nodefonyPath, "bundles", "documentation-bundle"));
+          } catch (e) {
+            throw e;
+          }
+        }
+      }
+      // TEST UNIT
+      res = null;
+      if (this.settings.system.unitTest) {
+        try {
+          res = require.resolve("@nodefony/unittests-bundle");
+          bundles.push("@nodefony/unittests-bundle");
+        } catch (e) {}
+        if (!res) {
+          try {
+            bundles.push(path.resolve(this.nodefonyPath, "bundles", "unittests-bundle"));
+          } catch (e) {
+            throw e;
+          }
+        }
+      }
+      // DEMO
+      res = null;
+      if (this.settings.system.demo) {
+        try {
+          res = require.resolve("@nodefony/demo-bundle");
+          bundles.push("@nodefony/demo-bundle");
+        } catch (e) {}
+        if (!res) {
+          try {
+            res = path.resolve(this.rootDir, "src", "bundles", "demo-bundle");
+            require.resolve(res);
+            bundles.push(res);
+          } catch (e) {
+            res = null;
+            //this.logger(e.message, "WARNING");
+          }
+        }
+        if (!res) {
+          try {
+            res = path.resolve(this.nodefonyPath, "..", "bundles", "demo-bundle");
+            require.resolve(res);
+            bundles.push(res);
+          } catch (e) {
+            this.logger(e.message, "WARNING");
+          }
+        }
+      }
+      //}
       try {
         this.fire("onPreRegister", this);
       } catch (e) {
@@ -392,7 +517,7 @@ module.exports = nodefony.register("kernel", function () {
       if (yml && yml.system && yml.system.bundles) {
         for (let bundle in yml.system.bundles) {
           try {
-            exist = require(yml.system.bundles[bundle]);
+            exist = nodefony.require(yml.system.bundles[bundle]);
           } catch (e) {
             //this.logger(e, "WARNING");
           }
@@ -422,7 +547,7 @@ module.exports = nodefony.register("kernel", function () {
               this.logger(yml.system.bundles);
             }
             try {
-              let link = path.resolve(this.publicPath, bundle + "Bundle");
+              let link = path.resolve(this.publicPath, bundle);
               let stat = fs.lstatSync(link);
               if (stat) {
                 exist = fs.existsSync(fs.readlinkSync(link));
@@ -732,7 +857,7 @@ module.exports = nodefony.register("kernel", function () {
 
     isNodeModule(module) {
       try {
-        return require.resolve(module);
+        return nodefony.require.resolve(module);
       } catch (e) {
         this.logger(e, "ERROR");
         return false;

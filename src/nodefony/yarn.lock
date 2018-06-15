@@ -1456,8 +1456,8 @@ iferr@^0.1.5:
   resolved "https://registry.yarnpkg.com/iferr/-/iferr-0.1.5.tgz#c60eed69e6d8fdb6b3104a1fcbca1c192dc5b501"
 
 iferr@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/iferr/-/iferr-1.0.0.tgz#36700e6a6d5d42e3e66b6d90fb55a018970b0aab"
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/iferr/-/iferr-1.0.1.tgz#37b878f51d1e91a12d9f84ae7fca922a64c53a54"
 
 ignore-walk@^3.0.1:
   version "3.0.1"
@@ -2883,8 +2883,8 @@ pm2@^2.10.4:
     gkt "https://tgz.pm2.io/gkt-1.0.0.tgz"
 
 pmx@^1.6:
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/pmx/-/pmx-1.6.4.tgz#45a0ebbf3c302e51b7514815f09817db79afd593"
+  version "1.6.7"
+  resolved "https://registry.yarnpkg.com/pmx/-/pmx-1.6.7.tgz#b0fc8061bc8343a4069d18e4ee4f031de0af890a"
   dependencies:
     debug "^3"
     deep-metrics "^0.0.1"
