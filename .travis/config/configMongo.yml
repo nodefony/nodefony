@@ -39,7 +39,7 @@ system:
     websocket                   : true
 
   bundles:
-    test                        : "src/bundles/testBundle"
+    test                        : "src/bundles/test-bundle"
 
   #################
   # SYSLOG NODEFONY

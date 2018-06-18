@@ -44,6 +44,10 @@ const Bundle = class Bundle extends nodefony.Builder {
 
   }
 
+  interaction() {
+    console.log("pass")
+  }
+
   checkPath(name, Path) {
     if (!name) {
       throw new Error("No bundle name");

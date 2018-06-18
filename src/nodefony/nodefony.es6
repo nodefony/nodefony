@@ -79,11 +79,17 @@ module.exports = class Nodefony {
     try {
       this.kernelConfig = this.loadYaml(this.kernelConfigPath);
       this.appConfig = this.loadYaml(this.appConfigPath);
-      this.pm2Config = require(this.pm2ConfigPath);
       this.projectName = this.appConfig.App.projectName;
     } catch (e) {
       throw e;
     }
+  }
+
+  setPm2Config() {
+    if (this.builded) {
+      this.pm2Config = require(this.pm2ConfigPath);
+    }
+    return this.pm2Config;
   }
 
   loadYaml(file) {
@@ -573,7 +579,7 @@ module.exports = class Nodefony {
    * PM2
    */
   pm2Start(cli) {
-
+    this.setPm2Config();
     if (!this.pm2Config) {
       this.pm2Config = this.kernelConfig.system.PM2;
       this.pm2Config.script = "nodefony";

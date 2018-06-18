@@ -1,6 +1,6 @@
 module.exports = class generateProject extends nodefony.Builder {
 
-  constructor(cli) {
+  constructor(cli, cmd, args) {
     super(cli);
     nodefony.extend(this.cli.response, {
       name: "myproject",
@@ -96,7 +96,7 @@ module.exports = class generateProject extends nodefony.Builder {
           return this.removePath(this.path).then((response) => {
             nodefony.extend(this.cli.response, response);
             if (response.remove) {
-              return this.createBuilder(this.cli.response.name, this.location);
+              return this.generate();
             }
             let error = new Error(`${this.path} Already exist`);
             error.code = 0;
@@ -105,167 +105,179 @@ module.exports = class generateProject extends nodefony.Builder {
             throw e;
           });
         }
-        return this.createBuilder(this.cli.response.name, this.location);
+        return this.generate();
       });
   }
 
-  createBuilder(name, location) {
-    return this.build({
-      name: name,
-      type: "directory",
-      childs: [{
-        name: "app",
+  createBuilder() {
+    try {
+      return {
+        name: this.cli.response.name,
         type: "directory",
         childs: [{
-          name: "appKernel.js",
-          type: "file",
-          skeleton: path.resolve(this.pathSkeleton, "app", "appKernel.js.skeleton"),
-          params: this.cli.response
-        }, {
-          name: "package.json",
-          type: "file",
-          skeleton: path.resolve(this.pathSkeleton, "app", "package.json.skeleton"),
-          params: this.cli.response
-        }, {
-          name: "Resources",
-          type: "copy",
-          path: path.resolve(this.pathSkeleton, "app", "Resources"),
-          params: {
-            recurse: true
-          }
-        }, {
-          name: "config",
+          name: "app",
           type: "directory",
           childs: [{
-            name: "webpack",
+            name: "appKernel.js",
+            type: "file",
+            skeleton: path.resolve(this.pathSkeleton, "app", "appKernel.js.skeleton"),
+            params: this.cli.response
+          }, {
+            name: "package.json",
+            type: "file",
+            skeleton: path.resolve(this.pathSkeleton, "app", "package.json.skeleton"),
+            params: this.cli.response
+          }, {
+            name: "Resources",
             type: "copy",
-            path: path.resolve(this.pathSkeleton, "app", "config", "webpack"),
+            path: path.resolve(this.pathSkeleton, "app", "Resources"),
             params: {
               recurse: true
             }
           }, {
-            name: "webpack.config.js",
-            type: "copy",
-            path: path.resolve(this.pathSkeleton, "app", "config", "webpack.config.js"),
+            name: "config",
+            type: "directory",
+            childs: [{
+              name: "webpack",
+              type: "copy",
+              path: path.resolve(this.pathSkeleton, "app", "config", "webpack"),
+              params: {
+                recurse: true
+              }
+            }, {
+              name: "webpack.config.js",
+              type: "copy",
+              path: path.resolve(this.pathSkeleton, "app", "config", "webpack.config.js"),
+            }, {
+              name: "config.yml",
+              type: "file",
+              skeleton: path.resolve(this.pathSkeleton, "app", "config", "config.yml.skeleton"),
+              params: this.cli.response
+            }, {
+              name: "routing.js",
+              type: "file",
+              skeleton: path.resolve(this.pathSkeleton, "app", "config", "routing.js.skeleton"),
+              params: this.cli.response
+            }, {
+              name: "security.yml",
+              type: "file",
+              skeleton: path.resolve(this.pathSkeleton, "app", "config", "security.yml.skeleton"),
+              params: this.cli.response
+            }]
+          }, {
+            name: "controller",
+            type: "directory",
+            childs: [{
+              name: "appController.js",
+              type: "file",
+              skeleton: path.resolve(this.pathSkeleton, "app", "controller", "appController.js.skeleton"),
+              params: this.cli.response
+            }]
+          }]
+        }, {
+          name: "package.json",
+          type: "file",
+          skeleton: path.resolve(this.pathSkeleton, "package.json.skeleton"),
+          params: this.cli.response
+        }, {
+          name: ".gitignore",
+          type: "file",
+          skeleton: path.resolve(this.pathSkeleton, "gitignore.skeleton"),
+          params: this.cli.response
+        }, {
+          name: ".jshintrc",
+          type: "file",
+          skeleton: path.resolve(this.pathSkeleton, "jshintrc.skeleton"),
+          params: this.cli.response
+        }, {
+          name: ".jshintignore",
+          type: "file",
+          skeleton: path.resolve(this.pathSkeleton, "jshintignore.skeleton"),
+          params: this.cli.response
+        }, {
+          name: ".editorconfig",
+          type: "file",
+          skeleton: path.resolve(this.pathSkeleton, "editorconfig.skeleton"),
+          params: this.cli.response
+        }, {
+          name: "web",
+          type: "directory",
+        }, {
+          name: "tmp",
+          type: "directory",
+        }, {
+          name: "config",
+          type: "directory",
+          childs: [{
+            name: "certificates",
+            type: "directory",
+          }, {
+            name: "openssl",
+            type: "directory",
+            childs: [{
+              name: "ca",
+              type: "directory",
+              childs: [{
+                name: "openssl.cnf",
+                type: "file",
+                skeleton: path.resolve(this.pathSkeleton, "config", "openssl", "ca", "openssl.cnf.skeleton"),
+                params: this.cli.response
+              }]
+            }, {
+              name: "ca_intermediate",
+              type: "directory",
+              childs: [{
+                name: "openssl.cnf",
+                type: "file",
+                skeleton: path.resolve(this.pathSkeleton, "config", "openssl", "ca_intermediate", "openssl.cnf.skeleton"),
+                params: this.cli.response
+              }]
+            }]
           }, {
             name: "config.yml",
             type: "file",
-            skeleton: path.resolve(this.pathSkeleton, "app", "config", "config.yml.skeleton"),
+            skeleton: path.resolve(this.pathSkeleton, "config", "config.yml.skeleton"),
             params: this.cli.response
           }, {
-            name: "routing.js",
+            name: "pm2.config.js",
             type: "file",
-            skeleton: path.resolve(this.pathSkeleton, "app", "config", "routing.js.skeleton"),
-            params: this.cli.response
-          }, {
-            name: "security.yml",
-            type: "file",
-            skeleton: path.resolve(this.pathSkeleton, "app", "config", "security.yml.skeleton"),
+            skeleton: path.resolve(this.pathSkeleton, "config", "pm2.config.js.skeleton"),
             params: this.cli.response
           }]
         }, {
-          name: "controller",
+          name: "bin",
           type: "directory",
           childs: [{
-            name: "appController.js",
+            name: "generateCertificates.sh",
             type: "file",
-            skeleton: path.resolve(this.pathSkeleton, "app", "controller", "appController.js.skeleton"),
+            chmod: 755,
+            skeleton: path.resolve(this.pathSkeleton, "bin", "generateCertificates.sh.skeleton"),
             params: this.cli.response
           }]
-        }]
-      }, {
-        name: "package.json",
-        type: "file",
-        skeleton: path.resolve(this.pathSkeleton, "package.json.skeleton"),
-        params: this.cli.response
-      }, {
-        name: ".gitignore",
-        type: "file",
-        skeleton: path.resolve(this.pathSkeleton, "gitignore.skeleton"),
-        params: this.cli.response
-      }, {
-        name: ".jshintrc",
-        type: "file",
-        skeleton: path.resolve(this.pathSkeleton, "jshintrc.skeleton"),
-        params: this.cli.response
-      }, {
-        name: ".jshintignore",
-        type: "file",
-        skeleton: path.resolve(this.pathSkeleton, "jshintignore.skeleton"),
-        params: this.cli.response
-      }, {
-        name: ".editorconfig",
-        type: "file",
-        skeleton: path.resolve(this.pathSkeleton, "editorconfig.skeleton"),
-        params: this.cli.response
-      }, {
-        name: "web",
-        type: "directory",
-      }, {
-        name: "tmp",
-        type: "directory",
-      }, {
-        name: "config",
-        type: "directory",
-        childs: [{
-          name: "certificates",
-          type: "directory",
         }, {
-          name: "openssl",
+          name: "src",
           type: "directory",
           childs: [{
-            name: "ca",
-            type: "directory",
-            childs: [{
-              name: "openssl.cnf",
-              type: "file",
-              skeleton: path.resolve(this.pathSkeleton, "config", "openssl", "ca", "openssl.cnf.skeleton"),
-              params: this.cli.response
-            }]
-          }, {
-            name: "ca_intermediate",
-            type: "directory",
-            childs: [{
-              name: "openssl.cnf",
-              type: "file",
-              skeleton: path.resolve(this.pathSkeleton, "config", "openssl", "ca_intermediate", "openssl.cnf.skeleton"),
-              params: this.cli.response
-            }]
+            name: "bundles",
+            type: "directory"
           }]
         }, {
-          name: "config.yml",
-          type: "file",
-          skeleton: path.resolve(this.pathSkeleton, "config", "config.yml.skeleton"),
-          params: this.cli.response
+          name: "doc",
+          type: "directory"
         }, {
-          name: "pm2.config.js",
+          name: "Makefile",
+          type: "copy",
+          path: path.resolve(this.pathSkeleton, "Makefile")
+        }, {
+          name: "README.md",
           type: "file",
-          skeleton: path.resolve(this.pathSkeleton, "config", "pm2.config.js.skeleton"),
+          skeleton: path.resolve(this.pathSkeleton, "README.md"),
           params: this.cli.response
         }]
-      }, {
-        name: "bin",
-        type: "directory",
-        childs: [{
-          name: "generateCertificates.sh",
-          type: "file",
-          chmod: 755,
-          skeleton: path.resolve(this.pathSkeleton, "bin", "generateCertificates.sh.skeleton"),
-          params: this.cli.response
-        }]
-      }, {
-        name: "src",
-        type: "directory",
-        childs: [{
-          name: "bundles",
-          type: "directory",
-        }]
-      }, {
-        name: "Makefile",
-        type: "copy",
-        path: path.resolve(this.pathSkeleton, "Makefile")
-      }]
-    }, location);
+      };
+    } catch (e) {
+      throw e;
+    }
   }
 
 

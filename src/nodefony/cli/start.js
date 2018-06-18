@@ -10,7 +10,7 @@ module.exports = class cliStart extends nodefony.cli {
       autostart: false,
       signals: false,
       clean: true,
-      promiseRejection: false,
+      promiseRejection: true,
       version: nodefony.version,
     });
 
@@ -94,7 +94,18 @@ module.exports = class cliStart extends nodefony.cli {
           switch (this.response.command) {
           case "project":
             let project = new nodefony.builders.Project(this);
-            project.interaction().then((res) => {
+            project.run(true)
+              .then(() => {
+                this.logger(`Generate Project complete`, "INFO");
+              }).catch((e) => {
+                if (e.code || e.code === 0) {
+                  this.logger(e, "INFO");
+                  this.terminate(e.code);
+                }
+                this.logger(e, "ERROR");
+                this.terminate(e.code || 1);
+              });
+            /*project.interaction().then((res) => {
               //console.log(res);
             }).catch((e) => {
               if (e.code || e.code === 0) {
@@ -103,7 +114,7 @@ module.exports = class cliStart extends nodefony.cli {
               }
               this.logger(e, "ERROR");
               this.terminate(e.code || 1);
-            });
+            });*/
             break;
           case "install":
             installer = new builderInstall(this);
@@ -125,6 +136,12 @@ module.exports = class cliStart extends nodefony.cli {
             }
             break;
           case "bundle":
+            command = this.setCommand("generate:bundle", "-i");
+            if (nodefony.isTrunk) {
+              return nodefony.start(command, args, this);
+            } else {
+              this.showHelp();
+            }
             break;
           case "controller":
             break;

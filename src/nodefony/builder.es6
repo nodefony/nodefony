@@ -1,8 +1,11 @@
 nodefony.Builder = class Builder {
 
-  constructor(cli) {
+  constructor(cli, cmd, args) {
     this.cli = cli;
     this.twig = twig;
+    this.cmd = cmd;
+    this.args = args;
+    this.location = path.resolve(".");
     this.twigOptions = {
       views: process.cwd(),
       'twig options': {
@@ -10,6 +13,34 @@ nodefony.Builder = class Builder {
         cache: false
       }
     };
+  }
+
+  run(interactive) {
+    if (interactive) {
+      return this.interaction();
+    } else {
+      return this.generate();
+    }
+  }
+
+  interaction() {
+    return new Promise((resolve, reject) => {
+      return reject(new Error("Builder has not interactive mode"));
+    });
+  }
+
+  generate() {
+    return new Promise((resolve, reject) => {
+      try {
+        if (this.createBuilder) {
+          this.build(this.createBuilder(), this.location);
+          return resolve(this.cli.response);
+        }
+        return reject(new Error(`Builder has not createBuilder Nothing to do !!`));
+      } catch (e) {
+        return reject(e);
+      }
+    });
   }
 
   logger(pci, severity, msgid, msg) {
