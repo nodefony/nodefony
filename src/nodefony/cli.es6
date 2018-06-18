@@ -2,6 +2,8 @@ const Table = require('cli-table');
 const asciify = require('asciify');
 const inquirer = require('inquirer');
 const commander = require('commander');
+const spawn = require('child_process').spawn;
+const spawnSync = require('child_process').spawnSync;
 
 module.exports = nodefony.register("cli", function () {
 
@@ -178,7 +180,11 @@ module.exports = nodefony.register("cli", function () {
             throw err;
           }
           if (this.options.autostart) {
-            this.fire("onStart", this);
+            try {
+              this.fire("onStart", this);
+            } catch (e) {
+              this.logger(e, "ERROR");
+            }
           }
         });
       } else {
@@ -223,6 +229,7 @@ module.exports = nodefony.register("cli", function () {
     initUi() {
       this.clc = clc;
       this.inquirer = inquirer;
+      this.prompt = inquirer.createPromptModule();
       this.clui = require("clui");
       this.emoji = require("node-emoji");
       this.spinner = null;
@@ -428,6 +435,14 @@ module.exports = nodefony.register("cli", function () {
       }
     }
 
+    chmod() {
+      try {
+        return shell.chmod.apply(shell, arguments);
+      } catch (e) {
+        throw e;
+      }
+    }
+
     createDirectory(myPath, mode, callback, force) {
       let file = null;
       try {
@@ -519,6 +534,93 @@ module.exports = nodefony.register("cli", function () {
         throw e;
       }
     }
+
+    npmInstall(cwd, argv, env) {
+      if (!cwd) {
+        cwd = path.resolve(".");
+      }
+      if (env === "development" || env === "production") {
+        process.env.NODE_ENV = env;
+      } else {
+        process.env.NODE_ENV = "development";
+      }
+      return new Promise((resolve, reject) => {
+        let tab = ["install"];
+        if (argv) {
+          tab = tab.concat(argv);
+        }
+        let cmd = null;
+        try {
+          this.logger("npm install in " + cwd);
+          cmd = this.spawn("npm", tab, {
+            cwd: cwd,
+            shell: true
+          }, (code) => {
+            if (code === 1) {
+              return reject(new Error("nmp install error : " + code));
+            }
+            return resolve(cwd);
+          });
+        } catch (e) {
+          this.logger(e, "ERROR");
+          return reject(e);
+        }
+      });
+    }
+
+    spawn(command, args, options, close) {
+      let cmd = null;
+      try {
+        this.logger("Run Spawn : " + command + " " + args.join(" "));
+        cmd = spawn(command, args, options || {});
+
+        cmd.stdout.on('data', (data) => {
+          let str = data.toString();
+          if (str) {
+            this.logger(`${command} stdout :  ${str}`);
+          }
+        });
+        cmd.stderr.on('data', (data) => {
+          let str = data.toString();
+          if (str) {
+            this.logger(`${command} stderr :  ${str}`, "INFO");
+          }
+        });
+        cmd.on('close', (code) => {
+          this.logger(`child process exited with code ${code}`);
+          if (close) {
+            close(code);
+          }
+        });
+        cmd.on('error', (err) => {
+          this.logger(err, "ERROR");
+          this.terminate(1);
+        });
+      } catch (e) {
+        this.logger(e, "ERROR");
+        throw e;
+      }
+      return cmd;
+    }
+
+    spawnSync(command, args, options) {
+      let cmd = null;
+      try {
+        cmd = spawnSync(command, args, options);
+        if (cmd.output[2].toString()) {
+          this.logger(cmd.output[2].toString(), "ERROR");
+        } else {
+          if (cmd.output[1].toString()) {
+            this.logger(cmd.output[1].toString());
+          }
+        }
+      } catch (e) {
+        this.logger(e, "ERROR");
+        throw e;
+      }
+      return cmd;
+    }
+
   }
   nodefony.niceBytes = CLI.niceBytes;
   return CLI;

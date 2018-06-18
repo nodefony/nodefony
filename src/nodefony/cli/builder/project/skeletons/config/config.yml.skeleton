@@ -25,7 +25,7 @@ system:
     certificats:
       key                       : "config/certificates/server/privkey.pem"
       cert                      : "config/certificates/server/fullchain.pem"
-      ca                        : "config/certificates/ca/nodefony-root-ca.crt.pem"
+      ca                        : "config/certificates/ca/{{name}}-root-ca.crt.pem"
       options:
         rejectUnauthorized      : true
   devServer:

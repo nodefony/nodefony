@@ -1,6 +1,6 @@
 {
-  "name": "nodefony",
-  "short_name": "nodefony",
+  "name": "{{name}}",
+  "short_name": "{{name}}",
   "display": "standalone",
   "start_url": "/",
   "launch_path": "/",

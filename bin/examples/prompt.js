@@ -2,23 +2,13 @@
  // nodefony
 let nodefony = null;
 try {
-  nodefony = require("@nodefony/core");
+  nodefony = require("nodefony");
 } catch (e) {
   nodefony = require(require("path").resolve("src", "nodefony", "autoloader.es6"));
 }
 
-var cli = new nodefony.cli("CLI", null, null, {
-  onStart: (cli) => {
-    cli.inquirer.prompt(questions).then(function (answers) {
-      console.log('\nOrder receipt:');
-      console.log(JSON.stringify(answers, null, '  '));
-    });
-  }
-});
-
-
 // https://github.com/SBoudrias/Inquirer.js/tree/master/examples
-var questions = [{
+const questions = [{
     type: 'confirm',
     name: 'toBeDelivered',
     message: 'Is this for delivery?',
@@ -99,3 +89,12 @@ var questions = [{
     }
   }
 ];
+
+const cli = new nodefony.cli("CLI", null, null, {
+  onStart: (cli) => {
+    cli.prompt(questions).then(function (answers) {
+      console.log('\nOrder receipt:');
+      console.log(JSON.stringify(answers, null, '  '));
+    });
+  }
+});

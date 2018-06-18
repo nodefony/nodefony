@@ -2,11 +2,25 @@
  // nodefony
 let nodefony = null;
 try {
-  nodefony = require("@nodefony/core");
+  nodefony = require("nodefony");
 } catch (e) {
   nodefony = require(require("path").resolve("src", "nodefony", "autoloader.es6"));
 }
 
+const simpleLogger = function (cli) {
+  return new Promise((resolve, reject) => {
+    cli.logger("START simpleLogger : " + cli.getEmoji("clapper"));
+    cli.logger("Emoji : " + cli.getEmoji());
+    cli.blankLine();
+    cli.logger("Emoji : " + cli.getEmoji(), "DEBUG");
+    cli.blankLine();
+    cli.logger("Emoji : " + cli.getEmoji(), "ERROR");
+    cli.blankLine();
+    cli.logger("Emoji : " + cli.getEmoji(), "WARNING");
+    cli.logger("END simpleLogger : " + cli.getEmoji("checkered_flag"));
+    resolve(cli);
+  });
+};
 
 // CLI
 const cli = new nodefony.cli("MY CLI", {
@@ -52,20 +66,7 @@ const cli = new nodefony.cli("MY CLI", {
   }
 });
 
-const simpleLogger = function (cli) {
-  return new Promise((resolve, reject) => {
-    cli.logger("START simpleLogger : " + cli.getEmoji("clapper"));
-    cli.logger("Emoji : " + cli.getEmoji());
-    cli.blankLine();
-    cli.logger("Emoji : " + cli.getEmoji(), "DEBUG");
-    cli.blankLine();
-    cli.logger("Emoji : " + cli.getEmoji(), "ERROR");
-    cli.blankLine();
-    cli.logger("Emoji : " + cli.getEmoji(), "WARNING");
-    cli.logger("END simpleLogger : " + cli.getEmoji("checkered_flag"));
-    resolve(cli);
-  });
-};
+
 
 const random = function (nb) {
   return Math.floor(Math.random() * nb) + 1;

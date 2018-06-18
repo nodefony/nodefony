@@ -1,7 +1,7 @@
 {
   "name": "app-{{name}}",
   "version": "1.0.0",
-  "description": "app nodefony entry point",
+  "description": "app {{name}} entry point",
   "author": "{{authorFullName}} <{{authorMail}}>",
   "main": "appKernel.js",
   "scripts": {},

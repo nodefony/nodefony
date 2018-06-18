@@ -22,7 +22,7 @@ module.exports = class generateProject extends nodefony.Builder {
   }
 
   interaction() {
-    return this.cli.inquirer.prompt([{
+    return this.cli.prompt([{
         type: 'input',
         name: 'name',
         default: this.cli.response.name,
@@ -137,6 +137,17 @@ module.exports = class generateProject extends nodefony.Builder {
           name: "config",
           type: "directory",
           childs: [{
+            name: "webpack",
+            type: "copy",
+            path: path.resolve(this.pathSkeleton, "app", "config", "webpack"),
+            params: {
+              recurse: true
+            }
+          }, {
+            name: "webpack.config.js",
+            type: "copy",
+            path: path.resolve(this.pathSkeleton, "app", "config", "webpack.config.js"),
+          }, {
             name: "config.yml",
             type: "file",
             skeleton: path.resolve(this.pathSkeleton, "app", "config", "config.yml.skeleton"),
@@ -158,7 +169,7 @@ module.exports = class generateProject extends nodefony.Builder {
           childs: [{
             name: "appController.js",
             type: "file",
-            skeleton: path.resolve(this.pathSkeleton, "controller", "appController.js.skeleton"),
+            skeleton: path.resolve(this.pathSkeleton, "app", "controller", "appController.js.skeleton"),
             params: this.cli.response
           }]
         }]
@@ -202,6 +213,25 @@ module.exports = class generateProject extends nodefony.Builder {
         }, {
           name: "openssl",
           type: "directory",
+          childs: [{
+            name: "ca",
+            type: "directory",
+            childs: [{
+              name: "openssl.cnf",
+              type: "file",
+              skeleton: path.resolve(this.pathSkeleton, "config", "openssl", "ca", "openssl.cnf.skeleton"),
+              params: this.cli.response
+            }]
+          }, {
+            name: "ca_intermediate",
+            type: "directory",
+            childs: [{
+              name: "openssl.cnf",
+              type: "file",
+              skeleton: path.resolve(this.pathSkeleton, "config", "openssl", "ca_intermediate", "openssl.cnf.skeleton"),
+              params: this.cli.response
+            }]
+          }]
         }, {
           name: "config.yml",
           type: "file",
@@ -218,8 +248,10 @@ module.exports = class generateProject extends nodefony.Builder {
         type: "directory",
         childs: [{
           name: "generateCertificates.sh",
-          type: "copy",
-          path: path.resolve(this.pathSkeleton, "bin", "generateCertificates.sh")
+          type: "file",
+          chmod: 755,
+          skeleton: path.resolve(this.pathSkeleton, "bin", "generateCertificates.sh.skeleton"),
+          params: this.cli.response
         }]
       }, {
         name: "src",
@@ -228,13 +260,17 @@ module.exports = class generateProject extends nodefony.Builder {
           name: "bundles",
           type: "directory",
         }]
+      }, {
+        name: "Makefile",
+        type: "copy",
+        path: path.resolve(this.pathSkeleton, "Makefile")
       }]
     }, location);
   }
 
 
   removePath(file) {
-    return this.cli.inquirer.prompt([{
+    return this.cli.prompt([{
       type: 'confirm',
       name: 'remove',
       message: `Do You Want Remove : ${file}?`,

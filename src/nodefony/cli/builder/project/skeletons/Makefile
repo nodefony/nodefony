@@ -75,8 +75,8 @@ startup:
 start:
 	npm run pm2 -- update
 	npm start pm2
-	#npm run pm2 -- logs $(APP_NAME)
-	npm run pm2 monit $(APP_NAME)
+	npm run pm2 -- logs $(APP_NAME)
+
 stop:
 	./node_modules/pm2/bin/pm2 stop $(APP_NAME)
 
@@ -217,6 +217,9 @@ framework:
 	@if [ ! -e web/robots.txt ] ; then  \
 		echo " copy robots.txt " ;\
 		cp app/Resources/public/robots.txt web/ ;\
+	fi
+	@if [ ! -d app/Resources/databases ] ; then  \
+		mkdir app/Resources/databases ;\
 	fi
 
 sequelize:

@@ -79,6 +79,7 @@ module.exports = nodefony.register("kernel", function () {
       this.set("autoLoader", this.autoLoader);
       this.version = nodefony.version;
       this.platform = process.platform;
+      this.projectName = nodefony.projectName;
       this.isElectron = nodefony.isElectron;
       this.uptime = new Date().getTime();
       this.numberCpu = os.cpus().length;
@@ -441,7 +442,7 @@ module.exports = nodefony.register("kernel", function () {
       res = null;
       if (this.settings.system.demo) {
         try {
-          res = require.resolve("@nodefony/demo-bundle");
+          res = nodefony.require.resolve("@nodefony/demo-bundle");
           bundles.push("@nodefony/demo-bundle");
         } catch (e) {}
         if (!res) {
@@ -456,7 +457,7 @@ module.exports = nodefony.register("kernel", function () {
         }
         if (!res) {
           try {
-            res = path.resolve(this.nodefonyPath, "..", "bundles", "demo-bundle");
+            res = path.resolve(this.nodefonyPath, "bundles", "demo-bundle");
             require.resolve(res);
             bundles.push(res);
           } catch (e) {

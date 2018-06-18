@@ -1,5 +1,6 @@
 const blue = clc.blueBright.bold;
 const green = clc.green;
+const builderInstall = require(path.resolve(__dirname, "install", "install.js"));
 
 module.exports = class cliStart extends nodefony.cli {
 
@@ -14,15 +15,23 @@ module.exports = class cliStart extends nodefony.cli {
     });
 
     this.generateString = "Generate Nodefony";
-    this.runString = "Start Server";
+    this.startString = "Start Server";
+    this.runString = "Run";
     this.choices = [];
     if (nodefony.isTrunk) {
-      this.choices.push(`${this.runString} Development`);
-      this.choices.push(`${this.runString} Pre-Production`);
-      this.choices.push(`${this.runString} Production`);
-      this.choices.push(`${this.generateString} Bundle`);
-      this.choices.push(`${this.generateString} Controller`);
-      this.choices.push(`${this.generateString} Project`);
+      if (nodefony.builded) {
+        this.choices.push(`${this.startString} Development`);
+        this.choices.push(`${this.startString} Pre-Production`);
+        this.choices.push(`${this.startString} Production`);
+        this.choices.push(`${this.generateString} Bundle`);
+        this.choices.push(`${this.generateString} Controller`);
+        //this.choices.push(`${this.generateString} Project`);
+        this.choices.push(`${this.runString} Test`);
+        this.choices.push(`Clear Framework`);
+      } else {
+        this.choices.push(`Install Framework`);
+        this.choices.push(`Clear Framework`);
+      }
     } else {
       this.choices.push(`${this.generateString} Project`);
     }
@@ -48,19 +57,23 @@ module.exports = class cliStart extends nodefony.cli {
 
   start(command, args) {
     //console.log(this.commander)
+    let myCommand = null;
     if (command  || process.argv.slice(2).length) {
       if (command) {
-        command = command.toLowerCase();
+        myCommand = command.toLowerCase();
       } else {
-        command = "cli";
+        myCommand = "cli";
       }
-    } else {
-      command = null;
     }
-    if (command) {
+    if (myCommand) {
       if (nodefony.isTrunk) {
-        return nodefony.start(command, args, this);
+        return nodefony.start(myCommand, args, this);
       } else {
+        try {
+          return nodefony.require(path.resolve(command));
+        } catch (e) {
+          this.logger(e, "ERROR");
+        }
         this.logger("No nodefony trunk detected !", "WARNING");
         this.showHelp();
       }
@@ -76,6 +89,7 @@ module.exports = class cliStart extends nodefony.cli {
           console.log("          Version : " + blue(version) + " Platform : " + green(process.platform) + " Process : " + green(process.title) + " PID : " + process.pid + "\n");
         }
         this.logger(`WELCOME NODEFONY CLI ${version} ${this.getEmoji("checkered_flag")}`);
+        let installer = null;
         return this.startQuestion(this.choices).then(() => {
           switch (this.response.command) {
           case "project":
@@ -91,32 +105,84 @@ module.exports = class cliStart extends nodefony.cli {
               this.terminate(e.code || 1);
             });
             break;
+          case "install":
+            installer = new builderInstall(this);
+            installer.install().then(() => {
+              this.logger("Install Complete");
+              this.terminate(0);
+            }).catch((e) => {
+              this.logger(e, "ERROR");
+              throw e;
+            });
+            break;
+          case "clear":
+            try {
+              installer = new builderInstall(this);
+              installer.clear();
+            } catch (e) {
+              this.logger(e, "ERROR");
+              throw e;
+            }
+            break;
           case "bundle":
             break;
           case "controller":
             break;
           case "development":
-            command = "development";
-            if (nodefony.isTrunk) {
-              return nodefony.start(command, args, this);
-            } else {
-              this.showHelp();
+            try {
+              command = this.setCommand("development");
+              if (nodefony.isTrunk) {
+                return nodefony.start(command, args, this);
+              } else {
+                this.showHelp();
+              }
+            } catch (e) {
+              this.logger(e, "ERROR");
+              throw e;
             }
             break;
           case "production":
-            command = "pm2";
+            try {
+              command = this.setCommand("pm2");
+              if (nodefony.isTrunk) {
+                return nodefony.start(command, args, this);
+              } else {
+                this.showHelp();
+              }
+            } catch (e) {
+              this.logger(e, "ERROR");
+              throw e;
+            }
             break;
           case "pre-production":
-            command = "production";
-            if (nodefony.isTrunk) {
-              return nodefony.start(command, args, this);
-            } else {
-              this.showHelp();
+            try {
+              command = this.setCommand("production");
+              if (nodefony.isTrunk) {
+                return nodefony.start(command, args, this);
+              } else {
+                this.showHelp();
+              }
+            } catch (e) {
+              this.logger(e, "ERROR");
+              throw e;
+            }
+            break;
+          case "test":
+            try {
+              if (nodefony.isTrunk) {
+                command = this.setCommand("unitTest:launch:all");
+                return nodefony.start(command, args, this);
+              } else {
+                this.showHelp();
+              }
+            } catch (e) {
+              this.logger(e, "ERROR");
+              throw e;
             }
             break;
           case "help":
             if (nodefony.isTrunk) {
-              return nodefony.start(command, args, this);
+              return nodefony.start(myCommand, args, this);
             } else {
               this.showHelp();
             }
@@ -129,13 +195,18 @@ module.exports = class cliStart extends nodefony.cli {
           }
         });
       });
-
     }
+  }
+
+  setCommand(cmd) {
+    process.argv.push(cmd);
+    this.commander.parse(process.argv);
+    return cmd;
   }
 
   startQuestion(choices) {
     let cli = this;
-    return this.inquirer.prompt([{
+    return this.prompt([{
         type: 'list',
         name: 'command',
         message: ' Nodefony CLI : ',
@@ -145,11 +216,11 @@ module.exports = class cliStart extends nodefony.cli {
         filter: (val) => {
           this.logger(val, "INFO");
           switch (val) {
-          case `${this.runString} Development`:
+          case `${this.startString} Development`:
             return "development";
-          case `${this.runString} Production`:
+          case `${this.startString} Production`:
             return "production";
-          case `${this.runString} Pre-Production`:
+          case `${this.startString} Pre-Production`:
             return "pre-production";
           case `${this.generateString} Project`:
             return "project";
@@ -157,6 +228,12 @@ module.exports = class cliStart extends nodefony.cli {
             return "bundle";
           case `${this.generateString} Controller`:
             return "controller";
+          case `${this.runString} Test`:
+            return "test";
+          case `Install Framework`:
+            return "install";
+          case `Clear Framework`:
+            return "clear";
           case "Quit":
             return "exit";
           case "Help":

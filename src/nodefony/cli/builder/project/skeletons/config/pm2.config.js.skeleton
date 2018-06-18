@@ -2,7 +2,7 @@ const cpu = require('os').cpus().length;
 const path = require("path");
 const fs = require('fs');
 const yml = require("js-yaml");
-let name = "nodefony";
+let name = "{{name}}";
 
 try {
   const config = yml.safeLoad(fs.readFileSync(path.resolve("app", "config", "config.yml"), 'utf8'));
@@ -14,7 +14,7 @@ try {
 module.exports = {
   apps: [{
     name: name,
-    script: "./nodefony",
+    script: "nodefony",
     args: "pm2",
     //node_args           : "--expose-gc",
     watch: false,
@@ -23,9 +23,9 @@ module.exports = {
     max_memory_restart: "1024M",
     autorestart: true,
     max_restarts: 10,
-    //log_file            : "./tmp/nodefony.log",
-    out_file: "./tmp/nodefony.log",
-    error_file: "./tmp/nodefony.log",
+    //log_file            : "./tmp/{{name}}.log",
+    out_file: "./tmp/{{name}}.log",
+    error_file: "./tmp/{{name}}.log",
     merge_logs: true,
     env: {
       "NODE_ENV": "development",

@@ -76,11 +76,15 @@ nodefony.Builder = class Builder {
           switch (value) {
           case "directory":
             try {
-              child = this.cli.createDirectory(path.resolve(parent.path, name), 0o755, (ele) => {
+              let directory = path.resolve(parent.path, name);
+              child = this.cli.createDirectory(directory, 0o755, (ele) => {
                 if (force) {
                   this.logger("Force Create Directory :" + ele.name);
                 } else {
                   this.logger("Create Directory :" + ele.name);
+                }
+                if (obj.chmod) {
+                  this.cli.chmod(obj.chmod, directory);
                 }
               }, force);
             } catch (e) {
@@ -90,9 +94,13 @@ nodefony.Builder = class Builder {
             break;
           case "file":
             try {
-              this.createFile(path.resolve(parent.path, name), obj.skeleton, obj.parse, obj.params, (ele) => {
+              let file = path.resolve(parent.path, name);
+              this.createFile(file, obj.skeleton, obj.parse, obj.params, (ele) => {
                 this.logger("Create File      :" + ele.name);
               });
+              if (obj.chmod) {
+                this.cli.chmod(obj.chmod, file);
+              }
             } catch (e) {
               this.logger(e, "ERROR");
               throw e;
@@ -113,12 +121,16 @@ nodefony.Builder = class Builder {
             break;
           case "copy":
             try {
+              let file = path.resolve(parent.path, name);
               if (obj.params && obj.params.recurse) {
-                this.cli.cp("-R", obj.path, path.resolve(parent.path, name));
+                this.cli.cp("-R", obj.path, file);
               } else {
-                this.cli.cp("-f", obj.path, path.resolve(parent.path, name));
+                this.cli.cp("-f", obj.path, file);
               }
               this.logger("Copy             :" + obj.name);
+              if (obj.chmod) {
+                this.cli.chmod(obj.chmod, file);
+              }
             } catch (e) {
               this.logger(e, "ERROR");
               throw e;

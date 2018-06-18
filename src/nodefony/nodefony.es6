@@ -54,13 +54,24 @@ module.exports = class Nodefony {
     }
     //this.globalNpm = this.checkGlobalNpm();
     //this.globalYarn = this.checkGlobalYarn();
+    this.builed = false;
 
     if (this.isTrunk) {
+      this.builded = this.isBuiled();
       try {
         this.setConfig();
       } catch (e) {
         throw e;
       }
+    }
+  }
+
+  isBuiled() {
+    try {
+      fs.lstatSync(path.resolve("node_modules"));
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
@@ -565,7 +576,7 @@ module.exports = class Nodefony {
 
     if (!this.pm2Config) {
       this.pm2Config = this.kernelConfig.system.PM2;
-      this.pm2Config.script = "./nodefony";
+      this.pm2Config.script = "nodefony";
       this.pm2Config.args = "pm2";
       this.pm2Config.env = {
         NODE_ENV: "production",

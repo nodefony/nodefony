@@ -1,5 +1,3 @@
-const spawn = require('child_process').spawn;
-const spawnSync = require('child_process').spawnSync;
 const simpleGit = require('simple-git');
 const npm = require("npm");
 
@@ -150,9 +148,14 @@ module.exports = nodefony.register("cliKernel", function () {
               return ret;
             }
           }
-          err = "COMMAND : " + this.cliParse[0] + " not exist";
+          try {
+            return require(path.resolve(this.cliParse[0]));
+          } catch (e) {
+            this.logger(e, "ERROR");
+          }
+          err = new Error("COMMAND : " + this.cliParse[0] + " not exist");
         } else {
-          err = "BAD FORMAT ARGV : " + this.cliParse[0];
+          err = new Error("BAD FORMAT ARGV : " + this.cliParse[0]);
         }
       }
       this.showHelp();
@@ -328,59 +331,6 @@ module.exports = nodefony.register("cliKernel", function () {
       }
     }
 
-    spawn(command, args, options, close) {
-      let cmd = null;
-      try {
-        this.logger("Run Spawn : " + command + " " + args.join(" "));
-        cmd = spawn(command, args, options || {});
-
-        cmd.stdout.on('data', (data) => {
-          let str = data.toString();
-          if (str) {
-            this.logger(`${command} stdout :  ${str}`);
-          }
-        });
-        cmd.stderr.on('data', (data) => {
-          let str = data.toString();
-          if (str) {
-            this.logger(`${command} stderr :  ${str}`, "INFO");
-          }
-        });
-        cmd.on('close', (code) => {
-          this.logger(`child process exited with code ${code}`);
-          if (close) {
-            close(code);
-          }
-        });
-        cmd.on('error', (err) => {
-          this.logger(err, "ERROR");
-          this.terminate(1);
-        });
-      } catch (e) {
-        this.logger(e, "ERROR");
-        throw e;
-      }
-      return cmd;
-    }
-
-    spawnSync(command, args, options) {
-      let cmd = null;
-      try {
-        cmd = spawnSync(command, args, options);
-        if (cmd.output[2].toString()) {
-          this.logger(cmd.output[2].toString(), "ERROR");
-        } else {
-          if (cmd.output[1].toString()) {
-            this.logger(cmd.output[1].toString());
-          }
-        }
-      } catch (e) {
-        this.logger(e, "ERROR");
-        throw e;
-      }
-      return cmd;
-    }
-
     listPackage(myPath) {
       let tab = [];
       let mypromise = null;
@@ -464,36 +414,6 @@ module.exports = nodefony.register("cliKernel", function () {
             return resolve(ele);
           });
         });
-      });
-    }
-
-    npmInstall(cwd, argv, env) {
-      if (env === "development" || env === "production") {
-        process.env.NODE_ENV = env;
-      } else {
-        process.env.NODE_ENV = "development";
-      }
-      return new Promise((resolve, reject) => {
-        let tab = ["install"];
-        if (argv) {
-          tab = tab.concat(argv);
-        }
-        let cmd = null;
-        try {
-          this.logger("npm install in " + cwd);
-          cmd = this.spawn("npm", tab, {
-            cwd: cwd,
-            shell: true
-          }, (code) => {
-            if (code === 1) {
-              return reject(new Error("nmp install error : " + code));
-            }
-            return resolve(cwd);
-          });
-        } catch (e) {
-          this.logger(e, "ERROR");
-          return reject(e);
-        }
       });
     }
 
