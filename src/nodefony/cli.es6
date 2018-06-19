@@ -163,19 +163,10 @@ module.exports = nodefony.register("cli", function () {
         this.asciify("      " + name, {
           font: this.options.font || "standard"
         }, (err, data) => {
-          if (this.options.clear) {
-            this.clear();
-          }
-          let color = this.options.color ||  blue;
-          console.log(color(data));
-          let version = this.commander ? this.commander.version() : (this.options.version || "1.0.1");
-          if (this.options.version) {
-            console.log("          Version : " + blue(version) + " Platform : " + green(process.platform) + " Process : " + green(process.title) + " PID : " + process.pid + "\n");
-          }
+          this.showBanner(data);
           if (this.environment !== "production") {
             //console.log( this.logEnv() )
           }
-          this.blankLine();
           if (err) {
             throw err;
           }
@@ -189,7 +180,11 @@ module.exports = nodefony.register("cli", function () {
         });
       } else {
         if (this.options.autostart) {
-          this.fire("onStart", this);
+          try {
+            this.fire("onStart", this);
+          } catch (e) {
+            this.logger(e, "ERROR");
+          }
         }
       }
     }
@@ -212,6 +207,19 @@ module.exports = nodefony.register("cli", function () {
 
     logEnv() {
       return blue("      \x1b " + this.name) + " NODE_ENV : " + magenta(this.environment);
+    }
+
+    showBanner(data) {
+      if (this.options.clear) {
+        this.clear();
+      }
+      let color = this.options.color ||  blue;
+      console.log(color(data));
+      let version = this.commander ? this.commander.version() : (this.options.version || "1.0.0");
+      if (this.options.version) {
+        console.log("          Version : " + blue(version) + " Platform : " + green(process.platform) + " Process : " + green(process.title) + " PID : " + process.pid + "\n");
+      }
+      this.blankLine();
     }
 
     initCommander() {
@@ -615,7 +623,7 @@ module.exports = nodefony.register("cli", function () {
           this.logger(cmd.output[2].toString(), "ERROR");
         } else {
           if (cmd.output[1].toString()) {
-            this.logger(cmd.output[1].toString());
+            this.logger(cmd.output[1].toString(), "INFO");
           }
         }
       } catch (e) {

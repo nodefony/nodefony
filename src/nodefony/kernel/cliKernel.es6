@@ -340,7 +340,7 @@ module.exports = nodefony.register("cliKernel", function () {
         throw e;
       }
       for (let bundle in this.kernel.bundles) {
-        //if (bundle + "Bundle" in this.kernel.bundlesCore) {
+        //if (this.kernel.isBundleCore(bundle) ) {
         //  continue;
         //}
         mypromise.then(this.npmList(this.kernel.bundles[bundle].path, tab));
@@ -500,12 +500,11 @@ module.exports = nodefony.register("cliKernel", function () {
 
     generateHelp(obj, str) {
       this.blankLine();
-      str += "\n  Command : " + "\n\n";
+      str += "\n  Bundles Commands : " + "\n\n";
       str += this.clc.cyan("nodefony") + " \n";
       str += this.clc.green("\tdev") + "                  Run Nodefony Development Server  \n";
       str += this.clc.green("\tprod") + "                  Run Nodefony Preprod Server \n";
       str += this.clc.green("\tpm2") + "                  Run Nodefony Production Server ( PM2 mode ) \n";
-      str += this.clc.green("\tapp") + "                  Get Nodefony App name  \n";
       str += this.clc.green("\tnpm:install") + "               Install all NPM framework packages\n";
       str += this.clc.green("\tnpm:list") + "               List all NPM installed packages \n";
       for (var ele in obj) {

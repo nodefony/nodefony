@@ -33,16 +33,16 @@ module.exports = nodefony.registerCommand("generate", function () {
       let cmd = command[0].split(":");
       let args = command[1];
       let interactive = command[2].interactive;
-      let project = null;
+      let bundle = null;
       switch (cmd[1]) {
       case "bundle":
         if (command[1]) {
           try {
             if (!cmd[2]) {
-              project = new nodefony.builders.bundles.nodefony(this, "js");
-              let result = project.createBuilder(args[0], args[1]);
-              project.build(result, project.location);
-              project.install().then(() => {
+              bundle = new nodefony.builders.bundles.nodefony(this, "js");
+              let result = bundle.createBuilder(args[0], args[1]);
+              bundle.build(result, bundle.location);
+              bundle.install().then(() => {
                 this.terminate(0);
               }).catch((e) => {
                 this.logger(e, "ERROR");
@@ -52,16 +52,16 @@ module.exports = nodefony.registerCommand("generate", function () {
             } else {
               switch (cmd[2]) {
               case "angular":
-                project = new nodefony.builders.bundles.angular(this, "js");
-                project.generateProject(args[0], args[1], interactive).then((builder) => {
+                bundle = new nodefony.builders.bundles.angular(this, "js");
+                bundle.generateProject(args[0], args[1], interactive).then((builder) => {
                   builder.build(builder.createBuilder(), builder.location, true);
                   builder.install();
                   this.terminate(0);
                 });
                 break;
               case "react":
-                project = new nodefony.builders.bundles.react(this, "js");
-                project.generateProject(args[0], args[1], interactive).then((builder) => {
+                bundle = new nodefony.builders.bundles.react(this, "js");
+                bundle.generateProject(args[0], args[1], interactive).then((builder) => {
                   builder.build(builder.createBuilder(), builder.location, true);
                   builder.install();
                   this.terminate(0);
@@ -123,20 +123,20 @@ module.exports = nodefony.registerCommand("generate", function () {
 
     generateController(name, Path) {
       this.logger("GENERATE controller : " + name + " BUNDLE LOCATION : " + Path);
-      let project = new nodefony.builders.bundles.nodefony(this, "js");
+      let bundle = new nodefony.builders.bundles.nodefony(this, "js");
       let file = null;
       try {
         file = new nodefony.fileClass(Path);
         Path = file.shortName;
       } catch (e) {}
       try {
-        project.getBundle(Path);
+        bundle.getBundle(Path);
       } catch (e) {
         this.logger(e, "ERROR");
         throw e;
       }
       try {
-        project.controller.generateController(name);
+        bundle.controller.generateController(name);
       } catch (e) {
         throw e;
       }

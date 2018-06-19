@@ -98,21 +98,24 @@ module.exports = class installProject extends nodefony.Builder {
   }
 
   clear() {
-    try {
-      let web = path.resolve("web");
-      this.removeFile(web, true);
-      let modules = path.resolve("node_modules");
-      this.removeFile(modules, true);
-      let tmp = path.resolve("tmp");
-      this.removeFile(tmp, true);
-      let npmLock = path.resolve("package-lock.json");
-      this.removeFile(npmLock);
-      let yarnLock = path.resolve("yarn.lock");
-      this.removeFile(yarnLock);
-      this.installFramework();
-    } catch (e) {
-      throw e;
-    }
+    return new Promise((resolve, reject) => {
+      try {
+        let web = path.resolve("web");
+        this.removeFile(web, true);
+        let modules = path.resolve("node_modules");
+        this.removeFile(modules, true);
+        let tmp = path.resolve("tmp");
+        this.removeFile(tmp, true);
+        let npmLock = path.resolve("package-lock.json");
+        this.removeFile(npmLock);
+        let yarnLock = path.resolve("yarn.lock");
+        this.removeFile(yarnLock);
+        this.installFramework();
+        return resolve(true);
+      } catch (e) {
+        return reject(e);
+      }
+    });
   }
 
 };

@@ -17,7 +17,7 @@ const Bundle = class Bundle extends nodefony.Builder {
     this.type = type;
     this.kernel = this.cli.kernel;
     this.bundleType = bundleType || "";
-    this.params = {
+    nodefony.extend(this.cli.response, {
       module: this.cli.config.App.projectName,
       projectName: this.cli.config.App.projectName,
       authorName: this.cli.config.App.authorName,
@@ -26,7 +26,8 @@ const Bundle = class Bundle extends nodefony.Builder {
       domain: this.cli.configKernel.system.domain,
       local: this.cli.config.App.locale,
       projectYearNow: new Date().getFullYear()
-    };
+    });
+
     this.skeletonPath = path.resolve(__dirname, "skeletons");
     this.skeleton = path.resolve(this.skeletonPath, "bundleClass.skeleton");
     this.packageSkeleton = path.resolve(this.skeletonPath, "package.skeleton");
@@ -44,9 +45,9 @@ const Bundle = class Bundle extends nodefony.Builder {
 
   }
 
-  interaction() {
-    console.log("pass")
-  }
+  /*interaction() {
+
+  }*/
 
   checkPath(name, Path) {
     if (!name) {
@@ -92,7 +93,7 @@ const Bundle = class Bundle extends nodefony.Builder {
       this.bundlePath = path.resolve(this.location.path, this.name);
       this.bundleFile = path.resolve(this.bundlePath, this.shortName + "Bundle.js");
     }
-    nodefony.extend(this.params, {
+    nodefony.extend(this.cli.response, {
       bundleName: this.name,
       name: this.shortName,
       title: this.shortName,
@@ -141,7 +142,7 @@ const Bundle = class Bundle extends nodefony.Builder {
           name: this.shortName + "Bundle.js",
           type: "file",
           skeleton: this.skeleton,
-          params: this.params
+          params: this.cli.response
         }, {
           name: "readme.md",
           type: "file"
@@ -155,7 +156,7 @@ const Bundle = class Bundle extends nodefony.Builder {
               name: this.shortName + ".cc",
               type: "file",
               skeleton: this.bindingcodeSkeleton,
-              params: this.params
+              params: this.cli.response
             }]
           }]
         }, {
@@ -169,12 +170,12 @@ const Bundle = class Bundle extends nodefony.Builder {
           name: "package.json",
           type: "file",
           skeleton: this.packageSkeleton,
-          params: this.params
+          params: this.cli.response
         }, {
           name: "binding.gyp",
           type: "file",
           skeleton: this.bindingSkeleton,
-          params: this.params
+          params: this.cli.response
         }, {
           name: "build",
           type: "directory",
@@ -259,7 +260,7 @@ const React = class React extends Bundle {
           name: this.shortName + "Bundle.js",
           type: "file",
           skeleton: this.skeleton,
-          params: this.params
+          params: this.cli.response
         }, {
           name: "readme.md",
           type: "file"
@@ -303,7 +304,7 @@ const Angular = class Angular extends Bundle {
           name: this.shortName + "Bundle.js",
           type: "file",
           skeleton: this.skeleton,
-          params: this.params
+          params: this.cli.response
         }, {
           name: "readme.md",
           type: "file"

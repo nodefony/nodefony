@@ -2,7 +2,6 @@ const Documentation = class Documentation {
   constructor(cli, builder) {
     this.cli = cli;
     this.type = builder.type;
-    this.params = builder.params;
     this.bundleType = builder.bundleType;
     this.skeletonPath = builder.skeletonPath;
     this.name = "doc";
@@ -19,7 +18,7 @@ const Documentation = class Documentation {
           name: "readme.md",
           type: "file",
           skeleton: this.skeletonDoc,
-          params: this.params
+          params: this.cli.response
         }]
       }]
     };

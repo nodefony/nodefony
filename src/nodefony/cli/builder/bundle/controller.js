@@ -5,7 +5,6 @@ const Controller = class Controller {
     this.cli = cli;
     this.builder = builder;
     this.type = builder.type;
-    this.params = builder.params;
     this.bundleType = builder.bundleType;
     this.skeletonPath = builder.skeletonPath;
     this.skeletonController = path.resolve(this.skeletonPath, this.bundleType, "controllerClass.skeleton");
@@ -13,7 +12,7 @@ const Controller = class Controller {
   }
   createBuilder(name, directory) {
     this.checkName(name);
-    nodefony.extend(this.params, {
+    nodefony.extend(this.cli.response, {
       controllerName: this.name,
       controllerShortName: this.shortName,
       directory: directory || ""
@@ -30,7 +29,7 @@ const Controller = class Controller {
       name: name + ".js",
       type: "file",
       skeleton: this.skeletonController,
-      params: this.params
+      params: this.cli.response
     };
   }
 

@@ -2,7 +2,6 @@ const Service = class Service {
   constructor(cli, builder) {
     this.cli = cli;
     this.type = builder.type;
-    this.params = builder.params;
     this.bundleType = builder.bundleType;
     this.skeletonPath = builder.skeletonPath;
     this.name = "services";

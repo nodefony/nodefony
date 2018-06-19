@@ -3,7 +3,6 @@ const Config = class Config {
     this.cli = cli;
     this.name = "config";
     this.type = builder.type;
-    this.params = builder.params;
     this.bundleType = builder.bundleType;
     this.skeletonPath = builder.skeletonPath;
     this.routing = builder.routing; //new routing(this.cli, builder);
@@ -19,7 +18,7 @@ const Config = class Config {
           name: "config.yml",
           type: "file",
           skeleton: this.configSkeleton,
-          params: this.params
+          params: this.cli.response
         },
         this.routing.createBuilder(),
         this.createSecurityConfig("yml"),
@@ -31,7 +30,7 @@ const Config = class Config {
         name: "webpack.config.js",
         type: "file",
         skeleton: this.webpackSkeleton,
-        params: this.params
+        params: this.cli.response
       });
       obj.childs.push(this.createWebpackConfig());
     }
@@ -45,7 +44,7 @@ const Config = class Config {
       name: name,
       type: "file",
       skeleton: this.skeletonSecurity,
-      params: this.params
+      params: this.cli.response
     };
   }
   createServicesConfig() {
@@ -55,7 +54,7 @@ const Config = class Config {
       name: name,
       type: "file",
       skeleton: this.skeletonServices,
-      params: this.params
+      params: this.cli.response
     };
   }
 
@@ -69,12 +68,12 @@ const Config = class Config {
         name: "webpack.dev.config.js",
         type: "file",
         skeleton: this.devSkeleton,
-        params: this.params
+        params: this.cli.response
       }, {
         name: "webpack.prod.config.js",
         type: "file",
         skeleton: this.prodSkeleton,
-        params: this.params
+        params: this.cli.response
       }]
     };
   }
@@ -84,7 +83,6 @@ const Resources = class Resources {
   constructor(cli, builder) {
     this.cli = cli;
     this.type = builder.type;
-    this.params = builder.params;
     this.bundleType = builder.bundleType;
     this.skeletonPath = builder.skeletonPath;
     this.routing = builder.routing;
@@ -114,19 +112,19 @@ const Resources = class Resources {
         name: "js",
         type: "directory",
         childs: [{
-          name: this.params.name + ".js",
+          name: this.cli.response.name + ".js",
           type: "file",
           skeleton: this.jsFileSkeleton,
-          params: this.params
+          params: this.cli.response
         }]
       }, {
         name: "css",
         type: "directory",
         childs: [{
-          name: this.params.name + ".css",
+          name: this.cli.response.name + ".css",
           type: "file",
           skeleton: this.cssFileSkeleton,
-          params: this.params
+          params: this.cli.response
         }]
       }, {
         name: "images",

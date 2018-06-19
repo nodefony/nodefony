@@ -36,16 +36,18 @@ module.exports = nodefony.register("kernel", function () {
   };
 
   const bundlesCore = {
-    "framework-bundle": true,
-    "monitoring-bundle": true,
-    "documentation-bundle": true,
-    "assetic-bundle": true,
-    "http-bundle": true,
-    "realtime-bundle": true,
-    "security-bundle": true,
-    "sequelize-bundle": true,
-    "unittest-bundle": true
+    "framework-bundle": "framework",
+    "monitoring-bundle": "monitoring",
+    "documentation-bundle": "documentation",
+    "assetic-bundle": "assetic",
+    "http-bundle": "http",
+    "realtime-bundle": "realtime",
+    "security-bundle": "security",
+    "sequelize-bundle": "sequelize",
+    "unittests-bundle": "unittests"
   };
+
+
 
   const defaultEnvEnable = {
     dev: true,
@@ -193,6 +195,18 @@ module.exports = nodefony.register("kernel", function () {
         this.boot();
         this.started = true;
       }
+    }
+
+    isBundleCore(name) {
+      if (name in bundlesCore) {
+        return true;
+      }
+      for (let bundle in bundlesCore) {
+        if (bundlesCore[bundle] === name) {
+          return true;
+        }
+      }
+      return false;
     }
 
     setEnv(environment) {
@@ -827,7 +841,15 @@ module.exports = nodefony.register("kernel", function () {
       switch (this.isCommand()) {
       case "npm:install":
         let bundle = this.getBundleClass(file);
-        this.cli.installPackage(bundle.name, file);
+        if (this.isCore) {
+          return this.cli.installPackage(bundle.name, file);
+        } else {
+          if (!this.isBundleCore(bundle.name)) {
+            return this.cli.installPackage(bundle.name, file);
+          }
+        }
+
+        //this.cli.installPackage(bundle.name, file);
         break;
       default:
         this.loadBundle(file, loader);

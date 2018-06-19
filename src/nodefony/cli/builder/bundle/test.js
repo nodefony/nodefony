@@ -2,7 +2,6 @@ const Test = class Test {
   constructor(cli, builder) {
     this.cli = cli;
     this.type = builder.type;
-    this.params = builder.params;
     this.bundleType = builder.bundleType;
     this.skeletonPath = builder.skeletonPath;
     this.name = "tests";
@@ -13,10 +12,10 @@ const Test = class Test {
       name: this.name,
       type: "directory",
       childs: [{
-        name: this.params.name + "Test.js",
+        name: this.cli.response.name + "Test.js",
         type: "file",
         skeleton: this.skeletonTest,
-        params: this.params
+        params: this.cli.response
       }]
     };
   }

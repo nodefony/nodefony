@@ -488,11 +488,6 @@ module.exports = class Nodefony {
   }
 
   start(cmd, args, cli) {
-    /*if (cmd) {
-      cmd = cmd.toLowerCase();
-    } else {
-      cmd = "cli";
-    }*/
     let type = null;
     let debug = !!cli.commander.debug;
     let kernel = null;
@@ -525,29 +520,8 @@ module.exports = class Nodefony {
         this.pm2Start(cli);
       }
       break;
-    case "app":
-      try {
-        return process.stdout.write(this.projectName);
-      } catch (e) {
-        return process.stdout.write("nodefony");
-      }
-      break;
-    case "version":
-      try {
-        return process.stdout.write(this.version);
-      } catch (e) {
-        throw e;
-      }
-      break;
     case "config":
       return process.stdout.write(JSON.stringify(this.appConfig, null, '\t'));
-    case "check-version":
-      const semver = require('semver');
-      var res = semver.valid(this.version);
-      if (res) {
-        return process.stdout.write(res);
-      }
-      throw new Error("Not valid version : " + this.version + " check  http://semver.org ");
     default:
       if (this.appKernel) {
         environment = "prod";
@@ -556,22 +530,8 @@ module.exports = class Nodefony {
         this.manageCache(cli);
         return new this.appKernel(type, environment, debug, {});
       }
+      this.logger("No nodefony trunk detected !", "ERROR");
       return cli.showHelp();
-      /*environment = "prod";
-      type = "CONSOLE";
-      process.env.MODE_START = "NODEFONY_CONSOLE";
-      if (this.appKernel) {
-        this.manageCache(this);
-        kernel = new this.appKernel(type, environment, debug, {});
-      } else {
-        cli = new this.cli("NODEFONY", {
-          pid: false,
-          version: this.version,
-          onStart: (cli) => {
-            cli.logger(`${cli.getEmoji("checkered_flag")} WELCOME NODEFONY CLI ${this.version} `);
-          }
-        });
-      }*/
     }
   }
 

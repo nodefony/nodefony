@@ -4,7 +4,6 @@ const Routing = class Routing {
     this.builder = builder;
     this.type = builder.type;
     this.bundleType = builder.bundleType;
-    this.params = builder.params;
     this.name = "routing." + this.type;
     this.skeletonPath = builder.skeletonPath;
     this.skeleton = path.resolve(this.skeletonPath, this.bundleType, "routing." + this.type + ".skeleton");
@@ -15,7 +14,7 @@ const Routing = class Routing {
       name: this.name,
       type: "file",
       skeleton: this.skeleton,
-      params: this.params
+      params: this.cli.response
     };
   }
   addConfigRoute(realName, type) {

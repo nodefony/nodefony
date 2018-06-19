@@ -1,9 +1,15 @@
 module.exports = class generateProject extends nodefony.Builder {
 
   constructor(cli, cmd, args) {
-    super(cli);
+    super(cli, cmd, args);
+    let name = null;
+    if (this.cmd === "generate") {
+      if (args[0]) {
+        name = args[0];
+      }
+    }
     nodefony.extend(this.cli.response, {
-      name: "myproject",
+      name: name ||  "myproject",
       description: "description project",
       path: path.resolve("."),
       authorFullName: "admin",
@@ -96,7 +102,7 @@ module.exports = class generateProject extends nodefony.Builder {
           return this.removePath(this.path).then((response) => {
             nodefony.extend(this.cli.response, response);
             if (response.remove) {
-              return this.generate();
+              return this.cli.response;
             }
             let error = new Error(`${this.path} Already exist`);
             error.code = 0;
@@ -105,7 +111,7 @@ module.exports = class generateProject extends nodefony.Builder {
             throw e;
           });
         }
-        return this.generate();
+        return this.cli.response;
       });
   }
 
@@ -279,7 +285,6 @@ module.exports = class generateProject extends nodefony.Builder {
       throw e;
     }
   }
-
 
   removePath(file) {
     return this.cli.prompt([{

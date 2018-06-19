@@ -2,19 +2,18 @@ const View = class View {
   constructor(cli, builder) {
     this.cli = cli;
     this.type = builder.type;
-    this.params = builder.params;
     this.bundleType = builder.bundleType;
     this.skeletonPath = builder.skeletonPath;
     this.directory = "views";
     this.skeletonView = path.resolve(this.skeletonPath, "bundleView.skeleton");
   }
   createBuilder(location, name) {
-    nodefony.extend(this.params, {
+    nodefony.extend(this.cli.response, {
       CDN_stylesheet: '{{CDN("stylesheet")}}',
       CDN_javascript: '{{CDN("javascript")}}',
       CDN_image: '{{CDN("image")}}'
     });
-    this.params.myview = this.generateTwig();
+    this.cli.response.myview = this.generateTwig();
     return {
       name: location,
       type: "directory",
@@ -23,7 +22,7 @@ const View = class View {
         type: "file",
         parse: true,
         skeleton: this.skeletonView,
-        params: this.params
+        params: this.cli.response
       }]
     };
   }
@@ -35,10 +34,10 @@ const View = class View {
 {% block stylesheets %}\n\
   {{ parent() }}\n\
   <!-- WEBPACK BUNDLE -->\n\
-  <link rel='stylesheet' href='" + this.params.CDN_stylesheet + "/" + this.params.bundleName + "/assets/css/" + this.params.name + ".css' />\n\
+  <link rel='stylesheet' href='" + this.cli.response.CDN_stylesheet + "/" + this.cli.response.bundleName + "/assets/css/" + this.cli.response.name + ".css' />\n\
 {% endblock %}\n\
 {% block body %}\n\
-      <img class='displayed' src='" + this.params.CDN_image + "/framework-bundle/images/nodefony-logo-white.png'>\n\
+      <img class='displayed' src='" + this.cli.response.CDN_image + "/framework-bundle/images/nodefony-logo-white.png'>\n\
       <h1 class='success'>\n\
         <a href='{{url('documentation')}}'>\n\
           <strong style='font-size:45px'>NODEFONY</strong>\n\
@@ -50,7 +49,7 @@ const View = class View {
 {% block javascripts %}\n\
   {{ parent() }}\n\
   <!-- WEBPACK BUNDLE -->\n\
-  <script src='" + this.params.CDN_javascript + "/" + this.params.bundleName + "/assets/js/" + this.params.name + ".js'></script>\n\
+  <script src='" + this.cli.response.CDN_javascript + "/" + this.cli.response.bundleName + "/assets/js/" + this.cli.response.name + ".js'></script>\n\
 {% endblock %}";
   }
 };

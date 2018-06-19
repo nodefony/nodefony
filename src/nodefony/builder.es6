@@ -17,7 +17,10 @@ nodefony.Builder = class Builder {
 
   run(interactive) {
     if (interactive) {
-      return this.interaction();
+      return this.interaction()
+        .then((response) => {
+          return this.generate(response);
+        });
     } else {
       return this.generate();
     }

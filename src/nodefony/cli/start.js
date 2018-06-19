@@ -1,5 +1,3 @@
-const blue = clc.blueBright.bold;
-const green = clc.green;
 const builderInstall = require(path.resolve(__dirname, "install", "install.js"));
 
 module.exports = class cliStart extends nodefony.cli {
@@ -13,8 +11,8 @@ module.exports = class cliStart extends nodefony.cli {
       promiseRejection: true,
       version: nodefony.version,
     });
-    let projectName = nodefony.projectName || "nodefony";
-    this.generateString = `Generate ${projectName}`;
+    //let projectName = nodefony.projectName || "nodefony";
+    this.generateString = `Generate`;
     this.startString = "Start Server";
     this.runString = "Run";
     this.choices = [];
@@ -25,8 +23,9 @@ module.exports = class cliStart extends nodefony.cli {
         this.choices.push(`${this.startString} Production`);
         this.choices.push(`${this.generateString} Bundle`);
         this.choices.push(`${this.generateString} Controller`);
-        //this.choices.push(`${this.generateString} Project`);
+        this.choices.push(`Webpack Dump`);
         this.choices.push(`${this.runString} Test`);
+        this.choices.push(`${this.generateString} Project`);
         this.choices.push(`Clear Framework`);
       } else {
         this.choices.push(`Install Framework`);
@@ -41,15 +40,22 @@ module.exports = class cliStart extends nodefony.cli {
     this.cmd = null;
     this.args = null;
     this.on("onStart", () => {
+      //this.commander.usage("[options] <cmd> <arg>");
       this.commander.arguments('<cmd> [args...]')
         .action((cmd, args /*, commander*/ ) => {
           this.cmd = cmd;
           this.args = args;
         });
+      if (!nodefony.isTrunk) {
+        this.commander.command(`${this.clc.cyan('generate ')} ${this.clc.reset} [projectName]`);
+        this.commander.command(this.clc.cyan('install'));
+      }
+      //this.commander.command(this.clc.cyan('check-version'));
       this.setOption('-d, --debug ', 'Nodefony debug');
       this.setOption('-h, --help ', 'Nodefony help');
       this.setOption('-v, --version ', 'Nodefony version');
       this.setOption('-i, --interactive ', 'Nodefony cli Interactive Mode');
+
       this.commander.parse(process.argv);
       this.start(this.cmd, this.args);
     });
@@ -67,150 +73,110 @@ module.exports = class cliStart extends nodefony.cli {
       }
     }
     if (myCommand) {
-      if (nodefony.isTrunk) {
-        return nodefony.start(myCommand, args, this);
-      } else {
-        try {
-          return nodefony.require(path.resolve(command));
-        } catch (e) {
-          this.logger(e, "ERROR");
+      switch (myCommand) {
+      case "generate":
+        return this.generateProject(myCommand, args, this.commander.interactive);
+      case "install":
+        if (nodefony.isTrunk) {
+          return this.installProject(myCommand, args, this.commander.interactive);
         }
-        this.logger("No nodefony trunk detected !", "WARNING");
         this.showHelp();
+        this.logger("No nodefony trunk detected !", "WARNING");
+        break;
+      case "app":
+        try {
+          return process.stdout.write(nodefony.projectName);
+        } catch (e) {
+          return process.stdout.write("nodefony");
+        }
+        break;
+      case "version":
+        try {
+          return process.stdout.write(nodefony.version);
+        } catch (e) {
+          throw e;
+        }
+        break;
+      case "check-version":
+        const semver = require('semver');
+        var res = semver.valid(nodefony.version);
+        if (res) {
+          return process.stdout.write(res);
+        }
+        throw new Error("Not valid version : " + this.version + " check  http://semver.org ");
+      default:
+        if (nodefony.isTrunk) {
+          return nodefony.start(myCommand, args, this);
+        } else {
+          try {
+            if (command) {
+              return nodefony.require(path.resolve(command));
+            }
+          } catch (e) {
+            this.logger(e, "ERROR");
+          }
+          this.showHelp();
+          //this.logger("No nodefony trunk detected !", "WARNING");
+        }
       }
     } else {
       this.asciify("      " + "NODEFONY", {
         font: "standard"
       }, (err, data) => {
-        this.clear();
-        let color =  blue;
-        console.log(color(data));
-        let version = this.commander ? this.commander.version() : (this.options.version || "0.0.0");
-        if (this.options.version) {
-          console.log("          Version : " + blue(version) + " Platform : " + green(process.platform) + " Process : " + green(process.title) + " PID : " + process.pid + "\n");
-        }
-        this.logger(`WELCOME NODEFONY CLI ${version} ${this.getEmoji("checkered_flag")}`);
-        let installer = null;
-        return this.startQuestion(this.choices).then(() => {
+        this.showBanner(data);
+        return this.interaction(this.choices).then(() => {
           switch (this.response.command) {
           case "project":
-            let project = new nodefony.builders.Project(this);
-            return project.run(true)
-              .then(() => {
-                this.logger(`Generate Project complete`, "INFO");
-              }).catch((e) => {
-                if (e.code || e.code === 0) {
-                  this.logger(e, "INFO");
-                  this.terminate(e.code);
-                }
-                this.logger(e, "ERROR");
-                this.terminate(e.code || 1);
-              });
+            return this.generateProject(null, null, true);
           case "install":
-            installer = new builderInstall(this);
-            return installer.install().then(() => {
-              this.logger("Install Complete");
-              this.terminate(0);
-            }).catch((e) => {
-              this.logger(e, "ERROR");
-              throw e;
-            });
+            return this.installProject(null, null, true);
           case "clear":
-            try {
-              installer = new builderInstall(this);
-              return installer.clear();
-            } catch (e) {
-              this.logger(e, "ERROR");
-              throw e;
-            }
-            break;
+            return this.cleanProject();
           case "certificates":
-            try {
-              installer = new builderInstall(this);
-              return installer.generateCertificates();
-            } catch (e) {
-              this.logger(e, "ERROR");
-              throw e;
-            }
+            return this.generateCertificates();
+          case "webpack":
+            command = this.setCommand("webpack:dump");
             break;
           case "bundle":
             command = this.setCommand("generate:bundle", "-i");
-            if (nodefony.isTrunk) {
-              return nodefony.start(command, args, this);
-            } else {
-              this.showHelp();
-            }
             break;
           case "controller":
             break;
           case "development":
-            try {
-              command = this.setCommand("development");
-              if (nodefony.isTrunk) {
-                return nodefony.start(command, args, this);
-              } else {
-                this.showHelp();
-              }
-            } catch (e) {
-              this.logger(e, "ERROR");
-              throw e;
-            }
+            command = this.setCommand("development");
             break;
           case "production":
-            try {
-              command = this.setCommand("pm2");
-              if (nodefony.isTrunk) {
-                return nodefony.start(command, args, this);
-              } else {
-                this.showHelp();
-              }
-            } catch (e) {
-              this.logger(e, "ERROR");
-              throw e;
-            }
+            command = this.setCommand("pm2");
             break;
           case "pre-production":
-            try {
-              command = this.setCommand("production");
-              if (nodefony.isTrunk) {
-                return nodefony.start(command, args, this);
-              } else {
-                this.showHelp();
-              }
-            } catch (e) {
-              this.logger(e, "ERROR");
-              throw e;
-            }
+            command = this.setCommand("production");
             break;
           case "test":
-            try {
-              if (nodefony.isTrunk) {
-                command = this.setCommand("unitTest:launch:all");
-                return nodefony.start(command, args, this);
-              } else {
-                this.showHelp();
-              }
-            } catch (e) {
-              this.logger(e, "ERROR");
-              throw e;
-            }
-            break;
-          case "help":
-            if (nodefony.isTrunk) {
-              return nodefony.start(myCommand, args, this);
-            } else {
-              this.showHelp();
-            }
+            command = this.setCommand("unitTest:launch:all");
             break;
           case "exit":
             this.logger("QUIT");
             return this.terminate(0);
-          default:
-            this.terminate(1);
           }
+          if (nodefony.isTrunk) {
+            try {
+              return nodefony.start(command, args, this);
+            } catch (e) {
+              this.logger(e, "ERROR");
+              throw e;
+            }
+          }
+          this.showHelp();
+          //this.logger("No nodefony trunk detected !", "WARNING");
+          this.terminate(1);
         });
       });
     }
+  }
+
+  showBanner(data) {
+    super.showBanner(data);
+    this.logger(`WELCOME NODEFONY CLI ${nodefony.version} ${this.getEmoji("checkered_flag")}`);
   }
 
   setCommand(cmd) {
@@ -219,7 +185,7 @@ module.exports = class cliStart extends nodefony.cli {
     return cmd;
   }
 
-  startQuestion(choices) {
+  interaction(choices) {
     let cli = this;
     return this.prompt([{
         type: 'list',
@@ -229,7 +195,7 @@ module.exports = class cliStart extends nodefony.cli {
         pageSize: choices.length,
         choices: choices,
         filter: (val) => {
-          this.logger(val, "INFO");
+          //this.logger(val, "INFO");
           switch (val) {
           case `${this.startString} Development`:
             return "development";
@@ -251,6 +217,8 @@ module.exports = class cliStart extends nodefony.cli {
             return "install";
           case `Clear Framework`:
             return "clear";
+          case `Webpack Dump`:
+            return "webpack";
           case "Quit":
             return "exit";
           case "Help":
@@ -265,4 +233,72 @@ module.exports = class cliStart extends nodefony.cli {
         return nodefony.extend(this.response, response);
       });
   }
+
+  generateProject(command, args, interactive = false) {
+    try {
+      let project = new nodefony.builders.Project(this, command, args);
+      return project.run(interactive)
+        .then((res) => {
+          this.logger(`Generate Project ${res.name} complete`, "INFO");
+        }).catch((e) => {
+          if (e.code || e.code === 0) {
+            this.logger(e, "INFO");
+            this.terminate(e.code);
+          }
+          this.logger(e, "ERROR");
+          this.terminate(e.code || 1);
+        });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  installProject() {
+    try {
+      let installer = new builderInstall(this);
+      return installer.install().then(() => {
+        this.logger("Install Complete");
+        this.terminate(0);
+      }).catch((e) => {
+        this.logger(e, "ERROR");
+        throw e;
+      });
+    } catch (e) {
+      this.logger(e, "ERROR");
+      throw e;
+    }
+  }
+
+  cleanProject() {
+    try {
+      let installer = new builderInstall(this);
+      return installer.clear().then(() => {
+        this.logger("Clean Project Complete");
+        this.terminate(0);
+      }).catch((e) => {
+        this.logger(e, "ERROR");
+        throw e;
+      });
+    } catch (e) {
+      this.logger(e, "ERROR");
+      throw e;
+    }
+  }
+
+  generateCertificates() {
+    try {
+      let installer = new builderInstall(this);
+      return installer.generateCertificates().then(() => {
+        this.logger("Generate Certificates Complete");
+        this.terminate(0);
+      }).catch((e) => {
+        this.logger(e, "ERROR");
+        throw e;
+      });
+    } catch (e) {
+      this.logger(e, "ERROR");
+      throw e;
+    }
+  }
+
 };

@@ -306,9 +306,14 @@ module.exports = class webpack extends nodefony.Service {
           }
         });
       } else {
-        if ((this.kernel.environment === "dev") && (basename in this.kernel.bundlesCore) && (!this.kernel.isCore)) {
-          return bundle.webpackCompiler;
+        if (!this.kernel.isCore) {
+          if (this.kernel.isBundleCore(basename)) {
+            return bundle.webpackCompiler;
+          }
         }
+        //if ((this.kernel.environment === "dev") && (basename in this.kernel.bundlesCore) && (!this.kernel.isCore)) {
+        //  return bundle.webpackCompiler;
+        //}
         let idfile = basename + "_" + file.name;
         this.runCompiler(bundle.webpackCompiler, idfile, basename, file.name);
       }

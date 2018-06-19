@@ -141,24 +141,27 @@ $ make build
 **NPM** :
 
 ```bash
-# Nodefony Global install
+# NODEFONY GLOBAL INSTALL
+
 $ sudo npm -g install nodefony
 
-# Generate Project with nodefony cli
+# GENERATE PROJECT WITH NODEFONY CLI
+
 $ nodefony
 Tue Jun 19 2018 10:10:41 INFO SERVICE nodefony  : WELCOME NODEFONY CLI 4.0.0 🏁
-
 ?  Nodefony CLI :  (Use arrow keys)
 ❯ Generate nodefony Project
 Help
 Quit
 ? Enter Nodefony Project Name (myproject)
  ...
+ ...
  Tue Jun 19 2018 10:05:42 INFO SERVICE nodefony  : myproject  complete
 
 $ cd myproject
 
-# Install Project myproject
+# INSTALL PROJECT
+
 $ nodefony
 Tue Jun 19 2018 10:10:41 INFO SERVICE nodefony  : WELCOME NODEFONY CLI 4.0.0 🏁
 
@@ -170,20 +173,21 @@ Tue Jun 19 2018 10:10:41 INFO SERVICE nodefony  : WELCOME NODEFONY CLI 4.0.0 �
   Quit
 ```
 
-## <a name="start"></a>Start Development Mode
+## <a name="start"></a>Start Server
 
 Start the server to check:
 
 ```bash
-# TO START NODEFONY IN DEVELOPMENT NODE
-
-$ ./nodefony dev
+npm start
+# OR TO START NODEFONY IN DEVELOPMENT NODE
+$ nodefony dev
 
 // debug mode
-$ ./nodefony -d dev
+$ nodefony -d dev
 ```
 
-Access to App with URL : <http://localhost:5151>
+#### Access to Secure App with URL : <https://localhost:5152>
+#### Access to App with URL : <http://localhost:5151>
 
 [![nodefony](https://raw.githubusercontent.com/nodefony/nodefony-core/master/src/nodefony/bundles/documentationBundle/Resources/public/images/nodefony.png)](https://nodefony.net)
 
