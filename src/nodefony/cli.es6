@@ -536,15 +536,15 @@ module.exports = nodefony.register("cli", function () {
     }
 
     npmInstall(cwd, argv, env) {
-      if (!cwd) {
-        cwd = path.resolve(".");
-      }
-      if (env === "development" || env === "production") {
-        process.env.NODE_ENV = env;
-      } else {
-        process.env.NODE_ENV = "development";
-      }
       return new Promise((resolve, reject) => {
+        if (!cwd) {
+          cwd = path.resolve(".");
+        }
+        if (env === "development" || env === "production") {
+          process.env.NODE_ENV = env;
+        } else {
+          process.env.NODE_ENV = "development";
+        }
         let tab = ["install"];
         if (argv) {
           tab = tab.concat(argv);
@@ -607,6 +607,10 @@ module.exports = nodefony.register("cli", function () {
       let cmd = null;
       try {
         cmd = spawnSync(command, args, options);
+        if (cmd.error) {
+          this.logger(cmd.error, "ERROR");
+          throw cmd.error;
+        }
         if (cmd.output[2].toString()) {
           this.logger(cmd.output[2].toString(), "ERROR");
         } else {

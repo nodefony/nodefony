@@ -8,15 +8,28 @@ module.exports = class installProject extends nodefony.Builder {
     return new Promise((resolve, reject) => {
       try {
         this.installFramework();
-        //this.cli.startSpinner();
-        return resolve(this.cli.npmInstall())
+        return this.cli.npmInstall()
           .then(() => {
-            //this.cli.stopSpinner();
+            return resolve(this.generateCertificates());
           }).catch((e) => {
-            //this.cli.stopSpinner();
             this.logger(e, "ERROR");
           });
       } catch (e) {
+        return reject(e);
+      }
+    });
+  }
+
+  generateCertificates() {
+    return new Promise((resolve, reject) => {
+      let cmd = null;
+      try {
+        cmd = this.cli.spawnSync(path.resolve("bin", "generateCertificates.sh"), {}, {
+          cwd: path.resolve("bin")
+        });
+        return resolve(cmd.status);
+      } catch (e) {
+        console.log(e);
         return reject(e);
       }
     });

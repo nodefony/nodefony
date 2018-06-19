@@ -13,8 +13,8 @@ module.exports = class cliStart extends nodefony.cli {
       promiseRejection: true,
       version: nodefony.version,
     });
-
-    this.generateString = "Generate Nodefony";
+    let projectName = nodefony.projectName || "nodefony";
+    this.generateString = `Generate ${projectName}`;
     this.startString = "Start Server";
     this.runString = "Run";
     this.choices = [];
@@ -30,6 +30,7 @@ module.exports = class cliStart extends nodefony.cli {
         this.choices.push(`Clear Framework`);
       } else {
         this.choices.push(`Install Framework`);
+        this.choices.push(`${this.generateString} Certificates`);
         this.choices.push(`Clear Framework`);
       }
     } else {
@@ -94,7 +95,7 @@ module.exports = class cliStart extends nodefony.cli {
           switch (this.response.command) {
           case "project":
             let project = new nodefony.builders.Project(this);
-            project.run(true)
+            return project.run(true)
               .then(() => {
                 this.logger(`Generate Project complete`, "INFO");
               }).catch((e) => {
@@ -105,31 +106,28 @@ module.exports = class cliStart extends nodefony.cli {
                 this.logger(e, "ERROR");
                 this.terminate(e.code || 1);
               });
-            /*project.interaction().then((res) => {
-              //console.log(res);
-            }).catch((e) => {
-              if (e.code || e.code === 0) {
-                this.logger(e, "INFO");
-                this.terminate(e.code);
-              }
-              this.logger(e, "ERROR");
-              this.terminate(e.code || 1);
-            });*/
-            break;
           case "install":
             installer = new builderInstall(this);
-            installer.install().then(() => {
+            return installer.install().then(() => {
               this.logger("Install Complete");
               this.terminate(0);
             }).catch((e) => {
               this.logger(e, "ERROR");
               throw e;
             });
-            break;
           case "clear":
             try {
               installer = new builderInstall(this);
-              installer.clear();
+              return installer.clear();
+            } catch (e) {
+              this.logger(e, "ERROR");
+              throw e;
+            }
+            break;
+          case "certificates":
+            try {
+              installer = new builderInstall(this);
+              return installer.generateCertificates();
             } catch (e) {
               this.logger(e, "ERROR");
               throw e;
@@ -241,6 +239,8 @@ module.exports = class cliStart extends nodefony.cli {
             return "pre-production";
           case `${this.generateString} Project`:
             return "project";
+          case `${this.generateString} Certificates`:
+            return "certificates";
           case `${this.generateString} Bundle`:
             return "bundle";
           case `${this.generateString} Controller`:
