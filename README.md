@@ -129,7 +129,7 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 
 ## <a name="install"></a>Install Framework **More Info : [ Getting Started with Nodefony ](https://nodefony.net/documentation/Beta/nodefony/started)**
 
-**Node.js** :
+**github** :
 
 ```bash
 $ git clone https://github.com/nodefony/nodefony.git
@@ -137,6 +137,37 @@ $ git clone https://github.com/nodefony/nodefony.git
 $ cd nodefony
 
 $ make build
+```
+**NPM** :
+
+```bash
+# Nodefony Global install
+$ sudo npm -g install nodefony
+
+# Generate Project with nodefony cli
+$ nodefony
+Tue Jun 19 2018 10:10:41 INFO SERVICE nodefony  : WELCOME NODEFONY CLI 4.0.0 🏁
+
+?  Nodefony CLI :  (Use arrow keys)
+❯ Generate nodefony Project
+Help
+Quit
+? Enter Nodefony Project Name (myproject)
+ ...
+ Tue Jun 19 2018 10:05:42 INFO SERVICE nodefony  : myproject  complete
+
+$ cd myproject
+
+# Install Project myproject
+$ nodefony
+Tue Jun 19 2018 10:10:41 INFO SERVICE nodefony  : WELCOME NODEFONY CLI 4.0.0 🏁
+
+?  Nodefony CLI :  (Use arrow keys)
+❯ Install myproject
+  Generate myproject Certificates
+  Clear myproject
+  Help
+  Quit
 ```
 
 ## <a name="start"></a>Start Development Mode
