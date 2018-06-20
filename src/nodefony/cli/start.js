@@ -25,7 +25,7 @@ module.exports = class cliStart extends nodefony.cli {
         this.choices.push(`${this.generateString} Controller`);
         this.choices.push(`Webpack Dump`);
         this.choices.push(`${this.runString} Test`);
-        this.choices.push(`${this.generateString} Project`);
+        this.choices.push(`${this.generateString} Certificates`);
         this.choices.push(`Clear Framework`);
       } else {
         this.choices.push(`Install Framework`);

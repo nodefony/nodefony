@@ -314,20 +314,30 @@ module.exports = nodefony.register("cli", function () {
     }
 
     getSpinner(message, design) {
-      var countdown = new this.clui.Spinner(message, design || null);
-      return countdown;
+      return new this.clui.Spinner(message, design || null);
     }
 
     startSpinner(message, design) {
-      this.spinner = new this.clui.Spinner(message, design ||  null);
-      this.wrapperLog = this.spinner.message;
-      this.spinner.start();
-      return this.spinner;
+      try {
+        this.spinner = this.getSpinner(message, design);
+        this.wrapperLog = this.spinner.message;
+        this.spinner.start();
+        return this.spinner;
+      } catch (e) {
+        this.logger(e, "ERROR");
+        throw e;
+      }
     }
     stopSpinner( /*message, options*/ ) {
-      this.spinner.stop();
-      this.wrapperLog = console.log;
-      delete this.spinner;
+      if (this.spinner) {
+        this.spinner.stop();
+        this.wrapperLog = console.log;
+        this.spinner = null;
+        delete this.spinner;
+        return true;
+      }
+      this.logger(new Error("Spinner is not started "), "ERROR");
+      return false;
     }
 
     normalizeLog(pdu) {
@@ -616,15 +626,13 @@ module.exports = nodefony.register("cli", function () {
       try {
         cmd = spawnSync(command, args, options);
         if (cmd.error) {
-          this.logger(cmd.error, "ERROR");
           throw cmd.error;
         }
-        if (cmd.output[2].toString()) {
-          this.logger(cmd.output[2].toString(), "ERROR");
-        } else {
-          if (cmd.output[1].toString()) {
-            this.logger(cmd.output[1].toString(), "INFO");
-          }
+        if (cmd.stderr) {
+          this.logger(cmd.stderr.toString(), "ERROR");
+        }
+        if (cmd.stdout) {
+          this.logger(cmd.stdout.toString(), "INFO");
         }
       } catch (e) {
         this.logger(e, "ERROR");

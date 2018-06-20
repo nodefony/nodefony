@@ -22,6 +22,9 @@ module.exports = class installProject extends nodefony.Builder {
 
   generateCertificates() {
     return new Promise((resolve, reject) => {
+      let directory = path.resolve("config", "certificates");
+      this.checkDirectoryExist(directory);
+      this.cli.rm("-rf", directory);
       let cmd = null;
       try {
         cmd = this.cli.spawnSync(path.resolve("bin", "generateCertificates.sh"), {}, {
@@ -29,7 +32,6 @@ module.exports = class installProject extends nodefony.Builder {
         });
         return resolve(cmd.status);
       } catch (e) {
-        console.log(e);
         return reject(e);
       }
     });
