@@ -25,11 +25,11 @@ fi
 
 if [ "$DB" = "mysql" ]
 then
-  ./nodefony generate:bundle generated
+  nodefony generate:bundle generated
   make deploy &
   sleep 60;
   make status &
 else
-  ./nodefony generate:bundle generated
-  ./nodefony dev &
+  nodefony generate:bundle generated
+  nodefony dev &
 fi
