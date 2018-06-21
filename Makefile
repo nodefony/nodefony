@@ -10,9 +10,9 @@ VERSION := $(subst v,,$(subst .,,$(NODE_VERSION)))
 #$(error $(VERSION))
 VERSION := $(shell expr $(VERSION) )
 
-APP_NAME := $(shell ./nodefony app 2>/dev/null )
+APP_NAME := $(shell nodefony app 2>/dev/null )
 
-NODEFONY_VERSION := $(shell ./nodefony version 2>/dev/null )
+NODEFONY_VERSION := $(shell nodefony version 2>/dev/null )
 
 LINE := NODEFONY $(NODEFONY_VERSION)  PLATFORM : $(DISTRIB)   NODE VERSION : $(NODE_VERSION)   APPLICATION : $(APP_NAME)   DEBUG : $(VERBOSE)
 $(info $(LINE))

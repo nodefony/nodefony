@@ -14,7 +14,7 @@ try {
 module.exports = {
   apps: [{
     name: name,
-    script: "./nodefony",
+    script: "nodefony",
     args: "pm2",
     //node_args           : "--expose-gc",
     watch: false,

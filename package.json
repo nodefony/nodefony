@@ -4,8 +4,8 @@
   "description": "Nodefony Node.js full-stack web framework",
   "main": "./src/nodefony/core/autoloader.es6",
   "scripts": {
-    "nodefony": "nodefony",
-    "start": "nodefony",
+    "nodefony": "src/nodefony/bin/nodefony",
+    "start": "src/nodefony/bin/nodefony",
     "stop": "make stop",
     "prod": "make start",
     "kill": "make kill",
@@ -16,6 +16,9 @@
     "changelog": "gren changelog --username=nodefony  --repo=nodefony-core --tags=all --data-source=commits --override --generate"
   },
   "private": true,
+  "bin": {
+    "nodefony": ".src/nodefony/bin/nodefony"
+  },
   "keywords": [
     "nodefony",
     "node.js",
@@ -63,7 +66,6 @@
     "mini-css-extract-plugin": "^0.4.0",
     "node-pre-gyp": "^0.10.0",
     "node-sass": "^4.9.0",
-    "nodefony": "file:src/nodefony",
     "optimize-css-assets-webpack-plugin": "^4.0.2",
     "pm2": "^2.10.4",
     "raw-loader": "^0.5.1",
@@ -72,7 +74,7 @@
     "style-loader": "^0.21.0",
     "uglify-es": "^3.3.9",
     "uglifycss": "^0.0.29",
-    "uglifyjs-webpack-plugin": "^1.2.5",
+    "uglifyjs-webpack-plugin": "^1.2.6",
     "url-loader": "^1.0.1",
     "webpack": "^4.12.0",
     "webpack-dev-server": "^3.1.4",
