@@ -16,6 +16,7 @@ fi
 cat /etc/hosts
 
 #configuring the system
+npm link src/nodefony
 make build
 if [ "$DB" = "mongodb" ]
 then
@@ -30,5 +31,5 @@ then
   make status &
 else
   ./nodefony generate:bundle generated
-    ./nodefony dev &
+  ./nodefony dev &
 fi
