@@ -51,17 +51,17 @@ build:
 	make sequelize && echo "success nodefony sequelize !" || echo "failure nodefony sequelize !" ;
 
 	@if [ $(VERBOSE) = 0 ] ; then \
-		echo "nodefony router:generate:routes";\
-		npm start router:generate:routes ;\
+		echo "nodefony router:display:routes";\
+		npm start router:display:routes ;\
 		echo "nodefony router:match:url /";\
 		npm start router:match:url /\
 		echo "nodefony npm:list";\
 		npm start npm:list ;\
 	else \
-		echo "nodefony -d router:generate:routes";\
-		npm start -d router:generate:routes ;\
-		echo "nodefony -d router:match:url /";\
-		npm start -d router:match:url /\
+		echo "nodefony -d router:display:routes";\
+		npm start -d router:display:routes ;\
+		echo "nodefony -d router:display:match /";\
+		npm start -d router:display:match /\
 		echo "nodefony -d npm:list";\
 		npm start -d npm:list ;\
 	fi \

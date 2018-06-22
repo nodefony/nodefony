@@ -36,7 +36,7 @@ module.exports = nodefony.register("cliKernel", function () {
       if (result.length()) {
         name = bundles[bundle].bundleName;
         srcpath = path.resolve(bundles[bundle].path, "Resources", "public");
-        this.createSymlink(srcpath, path.resolve(this.publicDirectory, name), (Srcpath, dstpath) => {
+        this.createSymlink(srcpath, path.resolve(this.publicPath, name), (Srcpath, dstpath) => {
           let size = "not Defined";
           let sizeAssets = "not Defined";
           try {
@@ -56,7 +56,7 @@ module.exports = nodefony.register("cliKernel", function () {
       }
     }
     try {
-      this.logger("INSTALL LINK IN /web TOTAL SIZE : " + nodefony.niceBytes(this.getSizeDirectory(this.publicDirectory, /^docs$|^tests|^node_modules|^assets$/)), "DEBUG");
+      this.logger("INSTALL LINK IN /web TOTAL SIZE : " + nodefony.niceBytes(this.getSizeDirectory(this.publicPath, /^docs$|^tests|^node_modules|^assets$/)), "DEBUG");
     } catch (e) {
       this.logger(e, "WARNING");
     }
@@ -75,11 +75,18 @@ module.exports = nodefony.register("cliKernel", function () {
 
     constructor(name, container, notificationsCenter, options) {
       super(name, container, notificationsCenter, options);
-      this.publicDirectory = path.resolve("web"); //this.kernel.rootDir + "/web/";
+      this.publicPath = this.kernel.publicPath; //path.resolve("web"); //this.kernel.rootDir + "/web/";
       this.commands = {};
+      this.classCommand = {};
+      this.parse = this.commander.args || []; //super.parseCommand();
+      this.args =   [];
+      this.command = null;
+      this.task = null;
+      this.action = null;
+      this.parseCommand();
     }
 
-    loadCommand() {
+    /*loadCommand() {
       switch (this.commander.args[0]) {
       case "npm:install":
         return true;
@@ -111,13 +118,154 @@ module.exports = nodefony.register("cliKernel", function () {
         }
       }
       this.commander.on('--help', () => {
-        console.log(this.generateHelp.call(this, this.bundles, ""));
+        console.log(this.showHelp.call(this, this.bundles, ""));
         this.terminate();
       });
       return this.stop;
+    }*/
+
+    /**
+     * PARSER
+     * command:task:action
+     */
+    parseCommand() {
+      if (this.parse.length) {
+        this.pattern = this.parse[0].split(":");
+        if (!this.pattern.length) {
+          return;
+        }
+        if (this.pattern[0]) {
+          this.command = this.pattern[0];
+        }
+        if (this.pattern[1]) {
+          this.task = this.pattern[1];
+        }
+        if (this.pattern[2]) {
+          this.action = this.pattern[2];
+        }
+        this.args = this.parse[1];
+      }
+    }
+
+    loadCommand() {
+      for (let bundle in this.kernel.bundles) {
+        if (!this.commands[bundle]) {
+          this.commands[bundle] = {};
+        }
+        if (!this.classCommand[bundle]) {
+          this.classCommand[bundle] = [];
+        }
+        try {
+          this.kernel.bundles[bundle].registerCommand(this.classCommand[bundle]);
+        } catch (e) {
+          this.logger(e, "ERROR");
+          continue;
+        }
+        for (let i = 0; i < this.classCommand[bundle].length; i++) {
+          try {
+
+            let instance = new this.classCommand[bundle][i](this, this.kernel.bundles[bundle]);
+            this.commands[bundle][instance.name] = instance;
+          } catch (e) {
+            this.logger(e, "ERROR");
+            continue;
+          }
+        }
+      }
+      /*this.commander.on('--help', () => {
+        this.terminate();
+      });*/
     }
 
     matchCommand() {
+      if (this.parse.length) {
+        for (let bundle in this.commands) {
+          if (Object.keys(this.commands[bundle]).length) {
+            if (this.command in this.commands[bundle]) {
+              let myCommand = this.commands[bundle][this.command];
+              if (!this.action) {
+                if (myCommand[this.task]) {
+                  let myAction = myCommand[this.task];
+                  try {
+                    myCommand.showBanner();
+                    this.logger(`${this.command}:${this.task}`);
+                    return myAction.apply(myCommand, this.args);
+                  } catch (e) {
+                    return myCommand.logger(e, "ERROR");
+                  }
+                }
+              }
+              if (Object.keys(this.commands[bundle][this.command].tasks).length) {
+                let myCommand = this.commands[bundle][this.command];
+                if (this.task in myCommand.tasks) {
+                  if (this.action) {
+                    let myTask = myCommand.tasks[this.task];
+                    if (myTask[this.action]) {
+                      let myAction = myTask[this.action];
+                      try {
+                        myTask.showBanner();
+                        this.logger(`${this.command}:${this.task}:${this.action}`);
+                        return myAction.apply(myCommand.tasks[this.task], this.args);
+                      } catch (e) {
+                        return myTask.logger(e, "ERROR");
+                      }
+                    } else {
+                      return myTask.showHelp();
+                    }
+                  } else {
+                    return myCommand.showHelp();
+                  }
+                } else {
+                  return myCommand.showHelp();
+                }
+              } else {
+                break;
+              }
+            } else {
+              continue;
+            }
+          } else {
+            continue;
+          }
+        }
+        try {
+          return require(path.resolve(this.command));
+        } catch (e) {
+          this.logger(e, "ERROR");
+        }
+      } else {
+        this.showHelp();
+      }
+      return;
+    }
+
+    showHelp() {
+      //super.showHelp();
+      this.blankLine();
+      console.log(`${this.clc.cyan("nodefony")} Commands : Usage   nodefony [options] <cmd> [args ...]
+
+\t${this.clc.green("dev")}                 Run Nodefony Development Server
+\t${this.clc.green("prod")}                Run Nodefony Preprod Server
+\t${this.clc.green("pm2")}                 Run Nodefony Production Server ( PM2 mode )
+\t${this.clc.green("npm:install")}         Install all NPM framework packages
+\t${this.clc.green("npm:list")}            List all NPM installed packages
+
+${this.clc.cyan("Bundles")} Commands : Usage   nodefony [options] <command:task:action> [args ...]
+`);
+      for (let bundle in this.commands) {
+        if (Object.keys(this.commands[bundle]).length) {
+          console.log(`  ${this.clc.cyan(bundle)}`);
+        } else {
+          continue;
+        }
+        for (let command in this.commands[bundle]) {
+          this.commands[bundle][command].showHelp();
+        }
+      }
+    }
+
+
+    /*matchCommand() {
       this.cliParse = this.commander.args;
       let ret = null;
       let err = null;
@@ -163,11 +311,36 @@ module.exports = nodefony.register("cliKernel", function () {
         this.logger(err, "ERROR");
       }
       return;
-    }
+    }*/
 
-    showHelp() {
+    /*showHelp() {
       return super.showHelp();
-    }
+    }*/
+    /*showHelp(obj, str) {
+      this.blankLine();
+      str += "\n  Bundles Commands : " + "\n\n";
+      str += this.clc.cyan("nodefony") + " \n";
+      str += this.clc.green("\tdev") + "                  Run Nodefony Development Server  \n";
+      str += this.clc.green("\tprod") + "                  Run Nodefony Preprod Server \n";
+      str += this.clc.green("\tpm2") + "                  Run Nodefony Production Server ( PM2 mode ) \n";
+      str += this.clc.green("\tnpm:install") + "               Install all NPM framework packages\n";
+      str += this.clc.green("\tnpm:list") + "               List all NPM installed packages \n";
+      for (var ele in obj) {
+        if (obj[ele].name) {
+          str += obj[ele].name;
+        }
+        for (var cmd in obj[ele].task) {
+          str += this.clc.green("\t" + obj[ele].task[cmd][0]);
+          let length = obj[ele].task[cmd][0].length;
+          let size = 65 - length;
+          for (let i = 0; i < size; i++) {
+            str += " ";
+          }
+          str += obj[ele].task[cmd][1] + "\n";
+        }
+      }
+      return str;
+    }*/
 
     logger(pci, severity, msgid, msg) {
       try {
@@ -238,7 +411,7 @@ module.exports = nodefony.register("cliKernel", function () {
           "ASSETS COMPILE"
         ]
       });
-      createAssetDirectory.call(this, this.publicDirectory, () => {
+      createAssetDirectory.call(this, this.publicPath, () => {
         parseAssetsBundles.call(this, table);
         this.logger("\n" + table.toString(), "DEBUG");
       });
@@ -497,32 +670,6 @@ module.exports = nodefony.register("cliKernel", function () {
     //   }
     //   shell.cd(this.kernel.rootDir);
     // }
-
-    generateHelp(obj, str) {
-      this.blankLine();
-      str += "\n  Bundles Commands : " + "\n\n";
-      str += this.clc.cyan("nodefony") + " \n";
-      str += this.clc.green("\tdev") + "                  Run Nodefony Development Server  \n";
-      str += this.clc.green("\tprod") + "                  Run Nodefony Preprod Server \n";
-      str += this.clc.green("\tpm2") + "                  Run Nodefony Production Server ( PM2 mode ) \n";
-      str += this.clc.green("\tnpm:install") + "               Install all NPM framework packages\n";
-      str += this.clc.green("\tnpm:list") + "               List all NPM installed packages \n";
-      for (var ele in obj) {
-        if (obj[ele].name) {
-          str += obj[ele].name;
-        }
-        for (var cmd in obj[ele].task) {
-          str += this.clc.green("\t" + obj[ele].task[cmd][0]);
-          let length = obj[ele].task[cmd][0].length;
-          let size = 65 - length;
-          for (let i = 0; i < size; i++) {
-            str += " ";
-          }
-          str += obj[ele].task[cmd][1] + "\n";
-        }
-      }
-      return str;
-    }
 
     listenRejection() {
       process.on('rejectionHandled', (promise) => {

@@ -893,8 +893,8 @@ module.exports = nodefony.register("Bundle", function () {
      *  COMMAND
      *
      */
-    registerCommand(store) {
-      // find i18n files
+    /*registerCommand(store) {
+      // find command files
       this.commandFiles = this.finder.result.findByNode("Command");
       let command = null;
       this.commandFiles.getFiles().forEach((file) => {
@@ -927,6 +927,30 @@ module.exports = nodefony.register("Bundle", function () {
             throw new Error("Command : " + name + " CLI NOT FIND");
           }
         }
+      });
+    }*/
+    registerCommand(store) {
+      // find command files
+      this.commandFiles = this.finder.result.findByNode("Command");
+      let command = null;
+      this.commandFiles.getFiles().forEach((file) => {
+        let res = regCommand.exec(file.name);
+        if (res) {
+          try {
+            command = this.loadFile(file.path);
+            store.push(command);
+          } catch (e) {
+            throw new Error(e + "   FILE COMMAND : " + file.path);
+          }
+          if (!command) {
+            throw new Error("Command : " + file + " BAD FORMAT");
+          }
+          let name = command.name || res[1];
+          if (!name) {
+            throw new Error("Command : " + name + "BAD FORMAT NANE ");
+          }
+        }
+
       });
     }
 

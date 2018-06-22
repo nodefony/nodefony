@@ -1,0 +1,20 @@
+class {{name}}Task extends nodefony.Task {
+
+  constructor(name, command) {
+    super(name, command);
+  }
+
+  showHelp(help = "") {
+    help += `\t${this.cli.clc.green("{{name}}:task:action myarg1 myarg2")}\t\t nodefony {{name}}:task:action myarg1 myarg2\n`;
+    console.log(help);
+    return help;
+  }
+
+  action(arg1, arg2){
+    this.logger(arg1);
+    this.logger(arg2);
+  }
+
+}
+
+module.exports = {{name}}Task;

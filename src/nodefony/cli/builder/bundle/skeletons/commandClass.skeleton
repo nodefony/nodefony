@@ -1,47 +1,12 @@
-{% extends "./licence.cecill-b.skeleton" %}
 
 {% block body %}
-module.exports = nodefony.registerCommand("{{name}}",() => {
+const {{name}}Task = require(path.resolve(__dirname, "{{name}}Task.js"));
 
-	class {{name}}Command extends nodefony.cliKernel {
-
-			constructor(container, command, options){
-
-				super( "{{name}}", container, container.get("notificationsCenter"), options);
-
-				let cmd = command[0].split(":");
-				let args = command[1];
-
-				switch ( cmd[1] ){
-					case "example" :
-						// test command arguments
-
-						if ( args[0] ){
-							this.logger("ARGUMENT 1 = " + args[0] );
-						}else{
-							this.showHelp();
-						}
-						if ( args[1] ){
-							this.logger("ARGUMENT 2 = " +args[1] );
-						}else{
-							this.showHelp();
-						}
-					break;
-					default:
-						this.logger(cmd[1] + " : Not found ","ERROR");
-						this.showHelp();
-				}
-				this.terminate();
-			}
-		};
-
-	return {
-		name:"{{name}}",
-		commands:{
-			id:["{{name}}:example myArg1 myArg2" ,"example  ./nodefony {{name}}:example myarg1 myarg2"],
-		},
-		cli:{{name}}Command
-	};
-});
-
+class {{name}}Command extends nodefony.Command {
+  constructor(cli, bundle) {
+    super("{{name}}", cli, bundle);
+    this.setTask("task", {{name}}Task);
+  }
+}
+module.exports = {{name}}Command;
 {% endblock %}

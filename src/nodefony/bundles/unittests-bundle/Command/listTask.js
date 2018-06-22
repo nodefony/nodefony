@@ -1,0 +1,55 @@
+class listTask extends nodefony.Task {
+
+  constructor(name, command) {
+    super(name, command);
+    this.serviceUnitTest = this.get("unitTest");
+    this.serviceUnitTest.consoleMochaInit();
+
+    this.tests = [];
+  }
+
+  showHelp(help = "") {
+    help += `\t${this.cli.clc.green("unitest:list:all")}\t\t List all unit tests\n`;
+    help += `\t${this.cli.clc.green("unitest:list:bundle bundleName")}\t\t List all bundle unit tests`;
+    console.log(help);
+    return help;
+  }
+
+
+  all() {
+    this.serviceUnitTest.getNodefonyTestFiles(null, this.tests);
+    for (let bundle in this.kernel.bundles) {
+      this.serviceUnitTest.getBundlesTestFiles(bundle, null, this.tests);
+    }
+    return this.onReady();
+  }
+
+  bundle(bundleName, testName) {
+    bundleName = bundleName.replace('[-][Bb]undle', '');
+    if (bundleName === "nodefony") {
+      this.serviceUnitTest.getNodefonyTestFiles(testName, this.tests);
+    } else {
+      this.serviceUnitTest.getBundlesTestFiles(bundleName, testName, this.tests);
+    }
+    return this.onReady();
+  }
+
+
+  onReady() {
+    this.kernel.listen(this, 'onReady', ( /*kernel*/ ) => {
+      let bundleName = '';
+      for (let i = 0; i < this.tests.length; i++) {
+        if (bundleName !== this.tests[i].bundle) {
+          bundleName = this.tests[i].bundle;
+          this.logger("★★★ BUNDLE : " + bundleName + " ★★★\n", "INFO");
+        }
+        this.logger("       ‣ " + this.tests[i].name, "INFO");
+      }
+      this.logger("\x1b[0m\x1b[0m", "INFO");
+    });
+  }
+
+}
+
+
+module.exports = listTask;

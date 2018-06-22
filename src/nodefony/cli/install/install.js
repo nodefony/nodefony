@@ -10,9 +10,15 @@ module.exports = class installProject extends nodefony.Builder {
         this.installFramework();
         return this.cli.npmInstall()
           .then(() => {
-            return resolve(this.generateCertificates());
+            return this.installOrm()
+              .then(() => {
+                return this.generateCertificates()
+                  .then(() => {
+                    return resolve(this.displayInfo());
+                  });
+              });
           }).catch((e) => {
-            this.logger(e, "ERROR");
+            return reject(e);
           });
       } catch (e) {
         return reject(e);
@@ -36,6 +42,7 @@ module.exports = class installProject extends nodefony.Builder {
       }
     });
   }
+
 
   installFramework() {
     try {
@@ -70,7 +77,43 @@ module.exports = class installProject extends nodefony.Builder {
     } catch (e) {
       throw e;
     }
+  }
 
+  installOrm() {
+    return new Promise((resolve, reject) => {
+      this.logger("INITIALIZE ORM");
+      return resolve();
+    });
+  }
+
+  displayInfo() {
+    return new Promise((resolve, reject) => {
+      try {
+        return this.listRouting()
+          .then(() => {
+            return this.listPackage()
+              .then((res) => {
+                return resolve(res);
+              });
+          });
+      } catch (e) {
+        return reject(e);
+      }
+    });
+  }
+
+  listPackage() {
+    return new Promise((resolve, reject) => {
+      this.logger("PACKAGES LIST ");
+      return resolve();
+    });
+  }
+
+  listRouting() {
+    return new Promise((resolve, reject) => {
+      this.logger("ROUTING LIST ");
+      return resolve();
+    });
   }
 
   checkDirectoryExist(directory) {

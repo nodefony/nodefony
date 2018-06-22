@@ -55,6 +55,7 @@ module.exports = class cliStart extends nodefony.cli {
       this.setOption('-h, --help ', 'Nodefony help');
       this.setOption('-v, --version ', 'Nodefony version');
       this.setOption('-i, --interactive ', 'Nodefony cli Interactive Mode');
+      this.setOption('-j, --json', 'Nodefony json response');
 
       this.commander.parse(process.argv);
       this.start(this.cmd, this.args);
