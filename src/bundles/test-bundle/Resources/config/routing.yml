@@ -6,30 +6,30 @@
 
 test:
   pattern:                   /test
-  defaults: {"controller":   "testBundle:default:index"}
+  defaults: {"controller":   "test:default:index"}
 
 test-json:
   pattern:                   /json
-  defaults: {"controller":   "testBundle:default:json"}
+  defaults: {"controller":   "test:default:json"}
 
 test-rest:
   pattern:                   /rest
-  defaults: {"controller":   "testBundle:default:rest"}
+  defaults: {"controller":   "test:default:rest"}
 
 test-watcher:
     pattern:                 /test/watcher
-    defaults: {"controller": "testBundle:default:watcher"}
+    defaults: {"controller": "test:default:watcher"}
 
 ### WEBSOCKET ###
 test-websoket:
   pattern:                   /websoket
-  defaults: {"controller":   "testBundle:default:websoket"}
+  defaults: {"controller":   "test:default:websoket"}
   requirements:
     method:
       - WEBSOCKET
 test-websoket-code:
   pattern:                   /test/unit/websocket/{code}
-  defaults: {"controller":   "testBundle:websocket:websocket"}
+  defaults: {"controller":   "test:websocket:websocket"}
   requirements:
       code:                  "^\\d{3}$"
       method:
@@ -37,7 +37,7 @@ test-websoket-code:
 
 test-websoket-protocol:
   pattern:                   /test/unit/websocket/protocol/telnet
-  defaults: {"controller":   "testBundle:websocket:protocol"}
+  defaults: {"controller":   "test:websocket:protocol"}
   requirements:
       method:
           - WEBSOCKET
@@ -45,7 +45,7 @@ test-websoket-protocol:
 
 test-websoket-protocol-sip:
   pattern:                   /test/unit/websocket/protocol/sip
-  defaults: {"controller":   "testBundle:websocket:protocolSip"}
+  defaults: {"controller":   "test:websocket:protocolSip"}
   requirements:
       method:
           - WEBSOCKET
@@ -53,7 +53,7 @@ test-websoket-protocol-sip:
 
 test-websoket-cors:
   pattern:                   /test/unit/websocket/cors
-  defaults: {"controller":   "testBundle:websocket:cors"}
+  defaults: {"controller":   "test:websocket:cors"}
   requirements:
       method:
           - WEBSOCKET
@@ -62,25 +62,25 @@ test-websoket-cors:
 
 response-status:
   pattern:                   /test/unit/response/status/{st}
-  defaults:     {"controller": "testBundle:test:responseStatus"}
+  defaults:     {"controller": "test:test:responseStatus"}
   requirements:
     method:                  GET
 
 response-message:
   pattern:                   /test/unit/response/status/{st}/{message}
-  defaults:     {"controller": "testBundle:test:responseMessage","message":bar}
+  defaults:     {"controller": "test:test:responseMessage","message":bar}
   requirements:
     method:                  GET
 
 response-query:
   pattern:                   /test/unit/response/query/{myVariable}/{myVariable2}
-  defaults:     {"controller": "testBundle:test:responseQuery","myVariable":foo,"myVariable2":bar}
+  defaults:     {"controller": "test:test:responseQuery","myVariable":foo,"myVariable2":bar}
   requirements:
     method:                  GET
 
 redirect-301:
   pattern:                   /test/unit/redirect/{status}
-  defaults:     {"controller": "testBundle:controllerTest:redirect","status":302}
+  defaults:     {"controller": "test:controllerTest:redirect","status":302}
   requirements:
     method:
       - GET
@@ -88,7 +88,7 @@ redirect-301:
 
 request-data:
   pattern:                   /test/unit/request
-  defaults:     {"controller": "testBundle:controllerTest:request"}
+  defaults:     {"controller": "test:controllerTest:request"}
   requirements:
     method:
       - GET
@@ -96,11 +96,11 @@ request-data:
 
 request-multi-part:
   pattern:                   /test/unit/request/multipart
-  defaults:     {"controller": "testBundle:multipart:requestMultiPart"}
+  defaults:     {"controller": "test:multipart:requestMultiPart"}
 
 request-promise:
   pattern:                   /test/unit/promise/{action}
-  defaults:     {"controller": "testBundle:controllerTest:promise", "action":"promise"}
+  defaults:     {"controller": "test:controllerTest:promise", "action":"promise"}
   requirements:
     method:
       - GET
@@ -108,7 +108,7 @@ request-promise:
 
 request-exception:
   pattern:                   /test/unit/exception/{action}
-  defaults:     {"controller": "testBundle:controllerTest:exception", "action":500}
+  defaults:     {"controller": "test:controllerTest:exception", "action":500}
   requirements:
     method:
       - GET
@@ -116,7 +116,7 @@ request-exception:
 
 subrequest:
   pattern:                   /test/unit/subrequest
-  defaults:     {"controller": "testBundle:subRequest:index" }
+  defaults:     {"controller": "test:subRequest:index" }
   requirements:
     method:                  GET
 
@@ -124,7 +124,7 @@ subrequest:
 # LOGIN
 test-login:
   pattern:                   /test/login
-  defaults:     {"controller": "testBundle:login:login"}
+  defaults:     {"controller": "test:login:login"}
 test-logout:
   pattern:                   /test/logout
-  defaults:     {"controller": "testBundle:login:logout"}
+  defaults:     {"controller": "test:login:logout"}

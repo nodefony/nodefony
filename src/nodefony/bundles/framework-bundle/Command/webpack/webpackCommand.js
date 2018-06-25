@@ -3,10 +3,10 @@ class webpackCommand extends nodefony.Command {
     super("webpack", cli, bundle);
   }
 
-  showHelp(help = "") {
-    help += `\t${this.cli.clc.green("webpack:dump")}\t Compile webpack for all bundles`;
-    console.log(help);
-    return help;
+  showHelp() {
+    this.setHelp("webpack:dump",
+      "Compile webpack for all bundles"
+    );
   }
 
   dump() {
@@ -36,11 +36,11 @@ class webpackCommand extends nodefony.Command {
       if (promiseWebpack) {
         promiseWebpack.then(( /*err, stats*/ ) => {
           process.nextTick(() => {
-            //this.terminate(0);
+            //this.cli.terminate(0);
           });
         });
       } else {
-        this.terminate(0);
+        this.cli.terminate(0);
       }
     });
   }

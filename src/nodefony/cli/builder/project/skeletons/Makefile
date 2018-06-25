@@ -10,9 +10,9 @@ VERSION := $(subst v,,$(subst .,,$(NODE_VERSION)))
 #$(error $(VERSION))
 VERSION := $(shell expr $(VERSION) )
 
-APP_NAME := $(shell ./nodefony app 2>/dev/null )
+APP_NAME := $(shell nodefony app 2>/dev/null )
 
-NODEFONY_VERSION := $(shell ./nodefony version 2>/dev/null )
+NODEFONY_VERSION := $(shell nodefony version 2>/dev/null )
 
 LINE := NODEFONY $(NODEFONY_VERSION)  PLATFORM : $(DISTRIB)   NODE VERSION : $(NODE_VERSION)   APPLICATION : $(APP_NAME)   DEBUG : $(VERBOSE)
 $(info $(LINE))
@@ -26,11 +26,11 @@ install:
 	@echo "#########################################" ;
 	@echo "";
 	@if [ $(VERBOSE) = 0 ] ; then \
-		echo "nodefony npm:install";\
-		npm start npm:install ;\
+		echo "nodefony nodefony:npm:install";\
+		npm start nodefony:npm:install ;\
 	else \
-		echo "nodefony -d npm:install";\
-		npm start -d npm:install ;\
+		echo "nodefony -d nodefony:npm:install";\
+		npm start -d nodefony:npm:install ;\
 	fi \
 
 build:
@@ -51,19 +51,19 @@ build:
 	make sequelize && echo "success nodefony sequelize !" || echo "failure nodefony sequelize !" ;
 
 	@if [ $(VERBOSE) = 0 ] ; then \
-		echo "nodefony router:generate:routes";\
-		npm start router:generate:routes ;\
-		echo "nodefony router:match:url /";\
-		npm start router:match:url /\
-		echo "nodefony npm:list";\
-		npm start npm:list ;\
+		echo "nodefony router:display:routes";\
+		npm start router:display:routes ;\
+		echo "nodefony router:display:match /";\
+		npm start router:display:match /\
+		echo "nodefony nodefony:npm:install";\
+		npm start nodefony:npm:install ;\
 	else \
-		echo "nodefony -d router:generate:routes";\
-		npm start -d router:generate:routes ;\
-		echo "nodefony -d router:match:url /";\
-		npm start -d router:match:url /\
-		echo "nodefony -d npm:list";\
-		npm start -d npm:list ;\
+		echo "nodefony -d router:display:routes";\
+		npm start -d router:display:routes ;\
+		echo "nodefony -d router:display:match /";\
+		npm start -d router:display:match /\
+		echo "nodefony -d nodefony:npm:install";\
+		npm start -d nodefony:npm:install ;\
 	fi \
 
 #
@@ -75,7 +75,8 @@ startup:
 start:
 	npm run pm2 -- update
 	npm start pm2
-	npm run pm2 -- logs $(APP_NAME)
+	#npm run pm2 -- logs $(APP_NAME)
+	npm run pm2 monit $(APP_NAME)
 
 stop:
 	./node_modules/pm2/bin/pm2 stop $(APP_NAME)
@@ -218,13 +219,10 @@ framework:
 		echo " copy robots.txt " ;\
 		cp app/Resources/public/robots.txt web/ ;\
 	fi
-	@if [ ! -d app/Resources/databases ] ; then  \
-		mkdir app/Resources/databases ;\
-	fi
 
 sequelize:
-	npm start Sequelize:generate:entities
-	npm start Sequelize:fixtures:load
+	npm start sequelize:generate:entities
+	npm start sequelize:fixtures:load
 
 mongoose:
 	npm start mongo:fixtures:load

@@ -9,11 +9,13 @@ class launchTask extends nodefony.Task {
 
   }
 
-  showHelp(help = "") {
-    help += `\t${this.cli.clc.green("unitest:launch:all")}\t\t Launch all tests Example : nodefony unitest:launch:all\n`;
-    help += `\t${this.cli.clc.green("unitest:launch:bundle bundleName [testfile]")}\t\t Launch bundle tests Example: nodefony unitest:launch:bundle demoBundle responseTest.js`;
-    console.log(help);
-    return help;
+  showHelp() {
+    this.setHelp("unitest:launch:all",
+      "Launch all tests Example : nodefony unitest:launch:all"
+    );
+    this.setHelp("unitest:launch:bundle bundleName [testfile]",
+      "Launch bundle tests Example: nodefony unitest:launch:bundle demoBundle responseTest.js"
+    );
   }
 
   all() {

@@ -12,7 +12,7 @@
     "kill": "make kill",
     "build": "make build",
     "outdated": "npm outdated --deph=0",
-    "test": "nodefony unitTest:launch:all"
+    "test": "nodefony unitest:launch:all"
   },
   "private": true,
   "keywords": [

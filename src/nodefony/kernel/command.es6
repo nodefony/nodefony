@@ -1,15 +1,16 @@
 module.exports = nodefony.register("Command", () => {
 
+
   class Command extends nodefony.Service {
 
     constructor(name, cli, bundle) {
       super(name, cli.container);
-      //this.bundle = bundle;
       this.bundleName = bundle.name;
       this.cli = cli;
       this.interactive = this.cli.commander.interactive;
       this.json = this.cli.commander.json;
       this.tasks = {};
+      this.optionsTables = this.cli.optionsTables;
     }
 
     showBanner() {
@@ -43,20 +44,29 @@ module.exports = nodefony.register("Command", () => {
     }
 
     setTask(name, task) {
-      if (task) {
-        let instance = new task(name, this);
-        if (instance instanceof nodefony.Task) {
-          return this.tasks[instance.name] = instance;
+      try {
+        if (task) {
+          let instance = new task(name, this);
+          if (instance instanceof nodefony.Task) {
+            return this.tasks[instance.name] = instance;
+          }
+          throw new Error(`Command setTask must be instance of nodefony.Task class`);
         }
-        throw new Error(``);
+        throw new Error(`Command setTask must register nodefony.Task class`);
+      } catch (e) {
+        throw e;
       }
-      throw new Error(``);
     }
 
     getTask(name) {
       return this.tasks[name];
     }
 
+    setHelp(command, descrption) {
+      this.cli.displayTable([
+        ["", this.cli.clc.green(command), descrption]
+      ], this.optionsTables);
+    }
   }
 
   return Command;

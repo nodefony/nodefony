@@ -11,7 +11,7 @@
     "kill": "make kill",
     "build": "make build",
     "outdated": "npm outdated --deph=0",
-    "test": "./nodefony unitTest:launch:all",
+    "test": "nodefony unitest:launch:all",
     "pm2": "pm2",
     "changelog": "gren changelog --username=nodefony  --repo=nodefony-core --tags=all --data-source=commits --override --generate"
   },
@@ -77,9 +77,9 @@
     "style-loader": "^0.21.0",
     "uglify-es": "^3.3.9",
     "uglifycss": "^0.0.29",
-    "uglifyjs-webpack-plugin": "^1.2.6",
+    "uglifyjs-webpack-plugin": "^1.2.7",
     "url-loader": "^1.0.1",
-    "webpack": "^4.12.0",
+    "webpack": "^4.12.1",
     "webpack-dev-server": "^3.1.4",
     "webpack-merge": "^4.1.3"
   },

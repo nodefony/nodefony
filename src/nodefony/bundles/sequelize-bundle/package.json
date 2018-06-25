@@ -13,7 +13,7 @@
   "dependencies": {
     "mysql2": "^1.5.3",
     "sequelize": "^4.38.0",
-    "sqlite3": "^4.0.0"
+    "sqlite3": "^4.0.1"
   },
   "repository": {
     "type": "git",

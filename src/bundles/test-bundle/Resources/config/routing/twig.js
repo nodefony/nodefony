@@ -2,7 +2,7 @@ module.exports = {
   "twig-render": {
     pattern: "/test/unit/twig/render",
     defaults: {
-      controller: "testBundle:twig:render"
+      controller: "test:twig:render"
     },
     requirements: {
       method: ["GET", "POST"]
@@ -11,7 +11,7 @@ module.exports = {
   "twig-extend": {
     pattern: "/test/unit/twig/extend",
     defaults: {
-      controller: "testBundle:twig:extend"
+      controller: "test:twig:extend"
     },
     requirements: {
       method: ["GET", "POST"]
@@ -20,7 +20,7 @@ module.exports = {
   "twig-websocket": {
     pattern: "/test/unit/twig/websocket",
     defaults: {
-      controller: "testBundle:twig:websocket"
+      controller: "test:twig:websocket"
     },
     requirements: {
       method: ["GET", "POST", "WEBSOCKET"]

@@ -5,10 +5,10 @@ class entityTask extends nodefony.Task {
     this.ormService = this.get("sequelize");
   }
 
-  showHelp(help = "") {
-    help += `\t${this.cli.clc.green("sequelize:entity:findAll entity")}\t\t Query findAll ENTITY`;
-    console.log(help);
-    return help;
+  showHelp() {
+    this.setHelp("sequelize:entity:findAll entity",
+      "Query findAll ENTITY"
+    );
   }
 
 

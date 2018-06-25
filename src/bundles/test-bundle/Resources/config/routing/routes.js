@@ -3,7 +3,7 @@ module.exports = {
   myroute: {
     pattern: "/myroute",
     defaults: {
-      controller: "testBundle:test:myroute",
+      controller: "test:test:myroute",
       page: 51,
       elements: "defaultValue"
     },
@@ -16,7 +16,7 @@ module.exports = {
   myroute2: {
     pattern: "/myroute/{page}/{elements}",
     defaults: {
-      controller: "testBundle:test:myroute",
+      controller: "test:test:myroute",
       page: 13,
       elements: "myRouteDefaultValue"
     },
@@ -28,37 +28,37 @@ module.exports = {
   "myroute-*": {
     pattern: "/wildcard/*",
     defaults: {
-      controller: "testBundle:test:wildcard"
+      controller: "test:test:wildcard"
     }
   },
   "myroute-*1": {
     pattern: "/wildcard1*",
     defaults: {
-      controller: "testBundle:test:wildcard"
+      controller: "test:test:wildcard"
     }
   },
   "myroute-*2": {
     pattern: "/wildcard2/{*}",
     defaults: {
-      "controller": "testBundle:test:wildcard"
+      "controller": "test:test:wildcard"
     }
   },
   "myroute-*3": {
     pattern: "/wildcard3/{*}/route2",
     defaults: {
-      "controller": "testBundle:test:wildcard"
+      "controller": "test:test:wildcard"
     }
   },
   "myroute-*4": {
     pattern: "/wildcard4/{*}/route2/{*}/test",
     defaults: {
-      "controller": "testBundle:test:wildcard"
+      "controller": "test:test:wildcard"
     }
   },
   "myroute-requirement-method-get": {
     pattern: "/requirement/method",
     defaults: {
-      controller: "testBundle:test:requirementMethod"
+      controller: "test:test:requirementMethod"
     },
     requirements: {
       method: ["GET"]
@@ -67,7 +67,7 @@ module.exports = {
   "myroute-requirement-method-post": {
     pattern: "/requirement/method",
     defaults: {
-      controller: "testBundle:test:requirementMethod"
+      controller: "test:test:requirementMethod"
     },
     requirements: {
       method: ["POST"]

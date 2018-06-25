@@ -553,11 +553,8 @@ module.exports = nodefony.register("cli", function () {
       }
     }
 
-    npmInstall(cwd, argv, env) {
+    npmInstall(cwd = path.resolve("."), argv = [], env = "production") {
       return new Promise((resolve, reject) => {
-        if (!cwd) {
-          cwd = path.resolve(".");
-        }
         if (env === "development" || env === "production") {
           process.env.NODE_ENV = env;
         } else {

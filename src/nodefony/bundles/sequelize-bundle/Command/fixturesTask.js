@@ -5,10 +5,10 @@ class fixturesTask extends nodefony.Task {
     this.ormService = this.get("sequelize");
   }
 
-  showHelp(help = "") {
-    help += `\t${this.cli.clc.green("sequelize:fixtures:load")}\t\t Load fixtures in database`;
-    console.log(help);
-    return help;
+  showHelp() {
+    this.setHelp("sequelize:fixtures:load",
+      "Load fixtures in database"
+    );
   }
 
   load() {

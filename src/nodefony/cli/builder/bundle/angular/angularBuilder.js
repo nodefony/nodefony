@@ -1,32 +1,4 @@
-const intervativeQuestion = function (cli) {
-  return [{
-    type: 'input',
-    name: 'name',
-    message: 'Enter Bundle Name',
-    validate: (value) => {
-      try {
-        cli.cli.blankLine();
-        return true;
-      } catch (e) {
-        return e.message;
-      }
-    }
-  }, {
-    type: 'input',
-    name: 'path',
-    message: 'Enter Bundle Path',
-    validate: (value) => {
-      try {
-        cli.cli.blankLine();
-        return true;
-      } catch (e) {
-        return e.message;
-      }
-    }
-  }];
-};
-
-let angularCli = class angularCli extends nodefony.Service {
+const angularCli = class angularCli extends nodefony.Service {
 
   constructor(builder) {
     super("Angular Cli", builder.cli.container, builder.cli.notificationsCenter);
@@ -56,22 +28,16 @@ let angularCli = class angularCli extends nodefony.Service {
     process.env.NODE_ENV = "development";
   }
 
-  generateProject(name, Path, interactive) {
-    let project = null;
-    this.interactive = interactive;
-    if (this.interactive) {
-      project = this.generateInteractive();
-    } else {
-      this.builder.checkPath(name, Path);
-      this.bundleName = this.builder.name;
-      this.bundleShortName = this.builder.shortName;
-      this.location = this.builder.location.path;
-      this.cwd = this.builder.bundlePath;
-      this.logger("GENERATE Angular Bundle : " + this.bundleName + " LOCATION : " + this.location);
-      project = new Promise((resolve) => {
-        return resolve([]);
-      });
-    }
+  generateProject(name, Path) {
+    this.builder.checkPath(name, Path);
+    this.bundleName = this.builder.name;
+    this.bundleShortName = this.builder.shortName;
+    this.location = this.builder.location.path;
+    this.cwd = this.builder.bundlePath;
+    this.logger("GENERATE Angular Bundle : " + this.bundleName + " LOCATION : " + this.location);
+    let project = new Promise((resolve) => {
+      return resolve([]);
+    });
     return project
       .then((ele) => {
         return this.generateNgNew(ele);
@@ -94,11 +60,6 @@ let angularCli = class angularCli extends nodefony.Service {
       .then(( /*dir*/ ) => {
         return this.builder;
       });
-  }
-
-  generateInteractive() {
-    this.logger("Interactive Mode");
-    return this.inquirer.prompt(intervativeQuestion(this));
   }
 
   moveToRealPath() {

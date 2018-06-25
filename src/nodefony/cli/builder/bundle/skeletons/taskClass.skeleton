@@ -4,10 +4,10 @@ class {{name}}Task extends nodefony.Task {
     super(name, command);
   }
 
-  showHelp(help = "") {
-    help += `\t${this.cli.clc.green("{{name}}:task:action myarg1 myarg2")}\t\t nodefony {{name}}:task:action myarg1 myarg2\n`;
-    console.log(help);
-    return help;
+  showHelp() {
+    this.setHelp("{{name}}:task:action myarg1 myarg2",
+      "nodefony {{name}}:task:action myarg1 myarg2"
+    );
   }
 
   action(arg1, arg2){

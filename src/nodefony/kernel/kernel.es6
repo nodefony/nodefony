@@ -128,10 +128,6 @@ module.exports = nodefony.register("kernel", function () {
           pid: this.typeCluster === "worker" ? true : false,
           onStart: (cli) => {
             this.cli = cli;
-            if (cli && cli.commander && cli.commander.args) {
-              cli.logger(`Command : ${cli.commander.args[0]}`);
-              cli.logger(`Arguments : ${cli.commander.args[1]}`);
-            }
             this.cli.createDirectory(path.resolve(this.rootDir, "tmp"), null, (file) => {
               this.tmpDir = file;
             }, true);
@@ -163,7 +159,7 @@ module.exports = nodefony.register("kernel", function () {
             }
           } catch (e) {
             this.logger(e, "ERROR");
-            this.terminate(1);
+            this.terminate(e.code || 1);
             return;
           }
           process.nextTick(() => {
@@ -171,7 +167,7 @@ module.exports = nodefony.register("kernel", function () {
               this.cli.matchCommand();
             } catch (e) {
               this.logger(e, "ERROR");
-              this.terminate(1);
+              this.terminate(e.code || 1);
             }
           });
         }
@@ -824,7 +820,7 @@ module.exports = nodefony.register("kernel", function () {
       return this.type === "CONSOLE";
     }
 
-    isCommand() {
+    /*isCommand() {
       if (this.isConsole()) {
         if (this.cli.commander && this.cli.commander.args && this.cli.commander.args[0]) {
           switch (this.cli.commander.args[0]) {
@@ -848,13 +844,11 @@ module.exports = nodefony.register("kernel", function () {
             return this.cli.installPackage(bundle.name, file);
           }
         }
-
-        //this.cli.installPackage(bundle.name, file);
         break;
       default:
         this.loadBundle(file, loader);
       }
-    }
+    }*/
 
     isBundleDirectory(dir) {
       let directory = this.isPathExist(dir);
@@ -867,7 +861,7 @@ module.exports = nodefony.register("kernel", function () {
           match: this.regBundle,
           onFile: (file) => {
             try {
-              this.loadCommand(file, "filesystem");
+              this.loadBundle(file, "filesystem");
             } catch (e) {
               this.logger(e, "ERROR");
             }
@@ -902,7 +896,7 @@ module.exports = nodefony.register("kernel", function () {
             try {
               Path = this.isNodeModule(mypath[i]);
               if (Path) {
-                this.loadCommand(Path, "package");
+                this.loadBundle(Path, "package");
               } else {
                 this.logger("GLOBAL CONFIG REGISTER : ", "INFO");
                 this.logger(this.configBundle, "INFO");

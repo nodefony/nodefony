@@ -5,11 +5,13 @@ class displayTask extends nodefony.Task {
     this.router = this.get("router");
   }
 
-  showHelp(help = "") {
-    help += `\t${this.cli.clc.green("router:display:routes [routeName]")}\t\t Display all routes or route  Example : nodefony router:display:route home\n`;
-    help += `\t${this.cli.clc.green("router:display:match url")}\t Get route who match url Example : nodefony router:display:match /nodefony`;
-    console.log(help);
-    return help;
+  showHelp() {
+    this.setHelp("router:display:routes [routeName]",
+      "Display all routes or route  Example : nodefony router:display:route home"
+    );
+    this.setHelp("router:display:match uri",
+      "Get route who match uri Example : nodefony router:display:match /nodefony"
+    );
   }
 
   routes(name = null) {
@@ -19,7 +21,6 @@ class displayTask extends nodefony.Task {
       throw e;
     }
   }
-
 
   match(url) {
     if (url) {
@@ -94,9 +95,9 @@ class displayTask extends nodefony.Task {
     return table;
   }
 
-  matchRoutes(Url) {
-    var myUrl = url.parse(Url);
-    this.logger("URL TO CHECK : " + Url);
+  matchRoutes(uri) {
+    let myUrl = url.parse(uri);
+    this.logger("URI TO CHECK : " + uri);
     var routes = this.getRoutes();
     var tab = [];
     for (var i = 0; i < routes.length; i++) {
@@ -108,10 +109,10 @@ class displayTask extends nodefony.Task {
     }
     if (tab.length) {
       tab[0].firstMatch = "*";
-      this.displayTable("MATCH URL : " + Url, tab, true);
+      this.displayTable("MATCH URI : " + uri, tab, true);
     } else {
-      this.logger("no routes match ", "ERROR");
       this.displayTable("no routes match GENARATE ALL ROUTE", routes);
+      this.logger(`URI : ${uri} no routes to match `, "ERROR");
     }
   }
 

@@ -67,7 +67,7 @@ module.exports = function () {
         require(path.resolve(__dirname, "watcher.es6"));
         require(path.resolve(__dirname, "cli.es6"));
         require(path.resolve(__dirname, "builder.es6"));
-        this.loadDirectory(path.resolve(__dirname, "kernel"), /^tests$/);
+        this.loadDirectory(path.resolve(__dirname, "kernel"), /^tests$|^tasks$/);
         this.loadDirectory(path.resolve(__dirname, "protocols"), /^tests$/);
         context.nodefony.cliStart = require(path.resolve(__dirname, "cli", "start.js"));
         context.nodefony.appKernel = this.loadAppKernel();

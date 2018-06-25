@@ -3,6 +3,38 @@ const npm = require("npm");
 
 module.exports = nodefony.register("cliKernel", function () {
 
+  const charsTable = {
+    'top': '',
+    'top-mid': '',
+    'top-left': '',
+    'top-right': '',
+    'bottom': '',
+    'bottom-mid': '',
+    'bottom-left': '',
+    'bottom-right': '',
+    'left': '',
+    'left-mid': '',
+    'mid': '',
+    'mid-mid': '',
+    'right': '',
+    'right-mid': '',
+    'middle': ' '
+  };
+  const styleTable = {
+    'padding-left': 0,
+    'padding-right': 0
+  };
+  const optionsTaskTables = {
+    colWidths: [8, 45, 120],
+    chars: charsTable,
+    style: styleTable
+  };
+  const optionsTitleTables = {
+    colWidths: [100],
+    chars: charsTable,
+    style: styleTable
+  };
+
   let createAssetDirectory = function (myPath, callback) {
     this.logger("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : " + myPath, "DEBUG");
     try {
@@ -75,8 +107,16 @@ module.exports = nodefony.register("cliKernel", function () {
 
     constructor(name, container, notificationsCenter, options) {
       super(name, container, notificationsCenter, options);
-      this.publicPath = this.kernel.publicPath; //path.resolve("web"); //this.kernel.rootDir + "/web/";
-      this.commands = {};
+      this.optionsTables = optionsTaskTables;
+      this.optionsTitleTables = optionsTitleTables;
+      if (this.kernel) {
+        this.publicPath = this.kernel.publicPath; //path.resolve("web"); //this.kernel.rootDir + "/web/";
+      } else {
+        this.publicPath = null;
+      }
+      this.commands = {
+        nodefony: {}
+      };
       this.classCommand = {};
       this.parse = this.commander.args || []; //super.parseCommand();
       this.args =   [];
@@ -85,44 +125,6 @@ module.exports = nodefony.register("cliKernel", function () {
       this.action = null;
       this.parseCommand();
     }
-
-    /*loadCommand() {
-      switch (this.commander.args[0]) {
-      case "npm:install":
-        return true;
-      case "npm:list":
-        this.on("onBoot", () => {
-          this.listPackage(this.kernel.rootDir);
-        });
-        return true;
-      }
-      this.stop = false;
-      for (let bundle in this.kernel.bundles) {
-        this.kernel.bundles[bundle].registerCommand(this.commands);
-      }
-      this.bundles = {};
-      for (let bundle in this.commands) {
-        if (!this.bundles[bundle]) {
-          var name = this.clc.cyan(bundle) + " \n";
-          this.bundles[bundle] = {
-            name: name,
-            task: []
-          };
-        }
-        let commands = this.commands[bundle];
-        for (var cmd in commands) {
-          let command = commands[cmd].prototype.commands;
-          for (var task in command) {
-            this.bundles[bundle].task.push(command[task]);
-          }
-        }
-      }
-      this.commander.on('--help', () => {
-        console.log(this.showHelp.call(this, this.bundles, ""));
-        this.terminate();
-      });
-      return this.stop;
-    }*/
 
     /**
      * PARSER
@@ -148,6 +150,16 @@ module.exports = nodefony.register("cliKernel", function () {
     }
 
     loadCommand() {
+      for (let cmd in nodefony.commands) {
+        try {
+          let instance = new nodefony.commands[cmd](this, this.kernel);
+          this.commands.nodefony[instance.name] = instance;
+          this.logger(`Register Command ${instance.name}`, "DEBUG", `Nodefony`);
+        } catch (e) {
+          this.logger(e, "ERROR");
+          continue;
+        }
+      }
       for (let bundle in this.kernel.bundles) {
         if (!this.commands[bundle]) {
           this.commands[bundle] = {};
@@ -163,17 +175,17 @@ module.exports = nodefony.register("cliKernel", function () {
         }
         for (let i = 0; i < this.classCommand[bundle].length; i++) {
           try {
-
             let instance = new this.classCommand[bundle][i](this, this.kernel.bundles[bundle]);
             this.commands[bundle][instance.name] = instance;
+            this.logger(`Register Command ${instance.name}`, "DEBUG", `Bundle ${bundle}`);
           } catch (e) {
             this.logger(e, "ERROR");
             continue;
           }
         }
       }
-      /*this.commander.on('--help', () => {
-        this.terminate();
+      /*this.commander.on('--help', (...args) => {
+        console.log(args)
       });*/
     }
 
@@ -205,6 +217,7 @@ module.exports = nodefony.register("cliKernel", function () {
                       try {
                         myTask.showBanner();
                         this.logger(`${this.command}:${this.task}:${this.action}`);
+                        //console.log(this.args)
                         return myAction.apply(myCommand.tasks[this.task], this.args);
                       } catch (e) {
                         return myTask.logger(e, "ERROR");
@@ -231,7 +244,8 @@ module.exports = nodefony.register("cliKernel", function () {
         try {
           return require(path.resolve(this.command));
         } catch (e) {
-          this.logger(e, "ERROR");
+          this.showHelp();
+          throw new Error(`Command : ${this.command}:${this.task}:${this.action} Not Found`);
         }
       } else {
         this.showHelp();
@@ -239,22 +253,34 @@ module.exports = nodefony.register("cliKernel", function () {
       return;
     }
 
+    setHelp(info, command, descrption, options) {
+      this.displayTable([
+        [info, this.clc.green(command), descrption]
+      ], options ||  this.optionsTables);
+    }
+
+    setTitleHelp(title, options) {
+      this.displayTable([
+        [title, "", ""]
+      ], options ||  this.optionsTitleTables);
+    }
+
     showHelp() {
-      //super.showHelp();
+      super.showHelp();
       this.blankLine();
-      console.log(`${this.clc.cyan("nodefony")} Commands : Usage   nodefony [options] <cmd> [args ...]
-
-\t${this.clc.green("dev")}                 Run Nodefony Development Server
-\t${this.clc.green("prod")}                Run Nodefony Preprod Server
-\t${this.clc.green("pm2")}                 Run Nodefony Production Server ( PM2 mode )
-\t${this.clc.green("npm:install")}         Install all NPM framework packages
-\t${this.clc.green("npm:list")}            List all NPM installed packages
-
-${this.clc.cyan("Bundles")} Commands : Usage   nodefony [options] <command:task:action> [args ...]
-`);
+      this.setHelp("", "dev", "Run Nodefony Development Server");
+      this.setHelp("", "prod", "Run Nodefony Preprod Server");
+      this.setHelp("", "pm2", "Run Nodefony Production Server ( PM2 mode )");
+      for (let cmd in this.commands.nodefony) {
+        this.commands.nodefony[cmd].showHelp();
+      }
+      this.setTitleHelp(`${this.clc.cyan("Bundles")}`);
       for (let bundle in this.commands) {
+        if (bundle === "nodefony") {
+          continue;
+        }
         if (Object.keys(this.commands[bundle]).length) {
-          console.log(`  ${this.clc.cyan(bundle)}`);
+          this.setTitleHelp(`  ${this.clc.cyan(bundle)}`);
         } else {
           continue;
         }
@@ -263,84 +289,6 @@ ${this.clc.cyan("Bundles")} Commands : Usage   nodefony [options] <command:task:
         }
       }
     }
-
-
-    /*matchCommand() {
-      this.cliParse = this.commander.args;
-      let ret = null;
-      let err = null;
-      if (this.cliParse.length) {
-        var ele = this.cliParse[0].split(":");
-        if (ele.length) {
-          let cmd = ele[0];
-          for (let bundle in this.commands) {
-            if (cmd in this.commands[bundle]) {
-              let worker = this.commands[bundle][cmd];
-              if (worker) {
-                try {
-                  ret = new worker(this.container, this.cliParse, {
-                    processName: cmd,
-                    asciify: true,
-                    clear: true,
-                    signals: false,
-                    autoLogger: false,
-                    promiseRejection: false
-                  });
-                } catch (e) {
-                  throw e;
-                }
-              } else {
-                this.showHelp();
-                throw new Error("Worker : ") + cmd + " not exist";
-              }
-              return ret;
-            }
-          }
-          try {
-            return require(path.resolve(this.cliParse[0]));
-          } catch (e) {
-            this.logger(e, "ERROR");
-          }
-          err = new Error("COMMAND : " + this.cliParse[0] + " not exist");
-        } else {
-          err = new Error("BAD FORMAT ARGV : " + this.cliParse[0]);
-        }
-      }
-      this.showHelp();
-      if (err) {
-        this.logger(err, "ERROR");
-      }
-      return;
-    }*/
-
-    /*showHelp() {
-      return super.showHelp();
-    }*/
-    /*showHelp(obj, str) {
-      this.blankLine();
-      str += "\n  Bundles Commands : " + "\n\n";
-      str += this.clc.cyan("nodefony") + " \n";
-      str += this.clc.green("\tdev") + "                  Run Nodefony Development Server  \n";
-      str += this.clc.green("\tprod") + "                  Run Nodefony Preprod Server \n";
-      str += this.clc.green("\tpm2") + "                  Run Nodefony Production Server ( PM2 mode ) \n";
-      str += this.clc.green("\tnpm:install") + "               Install all NPM framework packages\n";
-      str += this.clc.green("\tnpm:list") + "               List all NPM installed packages \n";
-      for (var ele in obj) {
-        if (obj[ele].name) {
-          str += obj[ele].name;
-        }
-        for (var cmd in obj[ele].task) {
-          str += this.clc.green("\t" + obj[ele].task[cmd][0]);
-          let length = obj[ele].task[cmd][0].length;
-          let size = 65 - length;
-          for (let i = 0; i < size; i++) {
-            str += " ";
-          }
-          str += obj[ele].task[cmd][1] + "\n";
-        }
-      }
-      return str;
-    }*/
 
     logger(pci, severity, msgid, msg) {
       try {
@@ -416,7 +364,6 @@ ${this.clc.cyan("Bundles")} Commands : Usage   nodefony [options] <command:task:
         this.logger("\n" + table.toString(), "DEBUG");
       });
     }
-
 
     getSizeDirectory(dir, exclude) {
       let stat = null;
@@ -590,17 +537,16 @@ ${this.clc.cyan("Bundles")} Commands : Usage   nodefony [options] <command:task:
       });
     }
 
-    installPackage(name, file, env) {
+    installPackage(bundle, env) {
       try {
-        if (file instanceof nodefony.fileClass) {
-          file = new nodefony.fileClass(file.dirName + "/package.json");
-        } else {
-          file = new nodefony.fileClass(path.dirname(file) + "/package.json");
+        if (bundle instanceof nodefony.Bundle) {
+          let file = new nodefony.fileClass(path.resolve(bundle.path, "package.json"));
+          return this.npmInstall(file.dirName, null, env);
         }
-        return this.npmInstall(file.dirName, null, env);
+        throw new Error("installPackage bundle must be an instance of nodefony.Bundle");
       } catch (e) {
         if (e.code !== "ENOENT") {
-          this.logger("Install Package BUNDLE : " + name + ":", "ERROR");
+          this.logger("Install Package BUNDLE : " + bundle.name + ":", "ERROR");
           this.logger(e, "ERROR");
           throw e;
         }
@@ -608,68 +554,89 @@ ${this.clc.cyan("Bundles")} Commands : Usage   nodefony [options] <command:task:
       }
     }
 
-    // installPackage(name, file, env) {
-    //   if (env === "development" || env === "production") {
-    //     process.env.NODE_ENV = env;
-    //   } else {
-    //     process.env.NODE_ENV = "development";
-    //   }
-    //   try {
-    //     let conf = new nodefony.fileClass(file.dirName + "/package.json");
-    //     let config = require(conf.path);
-    //     shell.cd(file.dirName);
-    //     npm.load(config, (error, event) => {
-    //       if (error) {
-    //         this.logger(error, "ERROR");
-    //         this.terminate(1);
-    //       }
-    //       event.config.localPrefix = file.dirName;
-    //       event.config.globalPrefix = this.kernel.rootDir;
-    //       event.localPrefix = file.dirName;
-    //       event.globalPrefix = this.kernel.rootDir;
-    //       //npm.config.set('localPrefix', file.dirName);
-    //       //npm.config.set('globalPrefix', this.rootDir);
-    //       let tab = [];
-    //       this.logger("NPM :" + npm.version + " Installing Dependencies for bundle : " + file.shortName);
-    //       for (let dep in config.dependencies) {
-    //         let mypackage = dep + "@" + config.dependencies[dep];
-    //         this.logger("\t Dependency : " + mypackage);
-    //         try {
-    //           require.resolve(dep);
-    //         } catch (e) {
-    //           this.logger("\t Dependency : " + mypackage);
-    //           tab.push(mypackage);
-    //         }
-    //       }
-    //       if (process.env.NODE_ENV === "development") {
-    //         for (let dep in config.devDependencies) {
-    //           let mypackage = dep + "@" + config.devDependencies[dep];
-    //           this.logger("\t Dependency dev : " + mypackage);
-    //           try {
-    //             require.resolve(dep);
-    //           } catch (e) {
-    //             tab.push(mypackage);
-    //           }
-    //         }
-    //       }
-    //       if (tab.length) {
-    //         event.commands.install(tab, (err /*, data*/ ) => {
-    //           if (err) {
-    //             this.logger("NPM :" + npm.version + " Installing Dependencies for bundle : " + file.shortName, "ERROR");
-    //             this.logger(err, "ERROR");
-    //           }
-    //         });
-    //       }
-    //     });
-    //   } catch (e) {
-    //     if (e.code !== "ENOENT") {
-    //       this.logger("Install Package BUNDLE : " + name + ":" + e, "ERROR");
-    //       shell.cd(this.kernel.rootDir);
-    //       throw e;
-    //     }
-    //   }
-    //   shell.cd(this.kernel.rootDir);
-    // }
+    /*readGeneratedConfig() {
+      let exist = null;
+      try {
+        exist = fs.existsSync(this.generateConfigPath);
+        if (exist) {
+          try {
+            let yml = yaml.load(fs.readFileSync(this.generateConfigPath, 'utf8'));
+            this.checkBundlesExist(yml, "Generated Config", this.generateConfigPath, true);
+            return yml;
+          } catch (e) {
+            throw e;
+          }
+        } else {
+          return null;
+        }
+      } catch (e) {
+        //console.trace(e);
+        //this.logger(e, "ERROR");
+        throw e;
+      }
+    }
+    getConfigBunbles() {
+      let config = [];
+      this.checkBundlesExist(this.settings, "Kernel Config", this.configPath);
+      try {
+        for (let bundle in this.settings.system.bundles) {
+          config.push(this.settings.system.bundles[bundle]);
+        }
+      } catch (e) {
+        throw e;
+      }
+      return config;
+    }
+
+    checkBundlesExist(yml, nameConfig, pathConfig, remove) {
+      let exist = null;
+      if (yml && yml.system && yml.system.bundles) {
+        for (let bundle in yml.system.bundles) {
+          try {
+            exist = nodefony.require(yml.system.bundles[bundle]);
+          } catch (e) {
+            //this.logger(e, "WARNING");
+          }
+          if (!exist) {
+            try {
+              exist = fs.existsSync(path.resolve(this.rootDir, yml.system.bundles[bundle]));
+            } catch (e) {
+              this.logger(e, "WARNING");
+            }
+          }
+          if (!exist) {
+            delete yml.system.bundles[bundle];
+            if (remove) {
+              try {
+                fs.writeFileSync(pathConfig, yaml.safeDump(yml), {
+                  encoding: 'utf8'
+                });
+                this.logger(nameConfig + " : " + bundle + " Bundle don't exist in file : " + pathConfig, "WARNING");
+                this.logger("Update Config  : " + pathConfig);
+              } catch (e) {
+                this.logger(e, "ERROR");
+              }
+            } else {
+              let error = new Error(nameConfig + " : " + bundle + " Bundle don't exist in file : " + pathConfig);
+              this.logger(error, "ERROR");
+              this.logger("Config file : " + pathConfig);
+              this.logger(yml.system.bundles);
+            }
+            try {
+              let link = path.resolve(this.publicPath, bundle);
+              let stat = fs.lstatSync(link);
+              if (stat) {
+                exist = fs.existsSync(fs.readlinkSync(link));
+                if (!exist) {
+                  fs.unlinkSync(link);
+                  this.logger("REMOVE LINK : " + link);
+                }
+              }
+            } catch (e) {}
+          }
+        }
+      }
+    }*/
 
     listenRejection() {
       process.on('rejectionHandled', (promise) => {

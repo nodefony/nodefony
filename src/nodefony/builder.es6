@@ -3,8 +3,8 @@ nodefony.Builder = class Builder {
   constructor(cli, cmd, args) {
     this.cli = cli;
     this.twig = twig;
-    this.cmd = cmd;
-    this.args = args;
+    this.cmd = cmd || this.cli.cmd;
+    this.args = args || this.cli.args;
     this.location = path.resolve(".");
     this.twigOptions = {
       views: process.cwd(),
@@ -29,6 +29,29 @@ nodefony.Builder = class Builder {
   interaction() {
     return new Promise((resolve, reject) => {
       return reject(new Error("Builder has not interactive mode"));
+    });
+  }
+
+  removeInteractivePath(file) {
+    return this.cli.prompt([{
+      type: 'confirm',
+      name: 'remove',
+      message: `Do You Want Remove : ${file}?`,
+      default: false
+    }]).then((response) => {
+      if (response.remove) {
+        if (!this.cli.exists(file)) {
+          throw `${file} not exist`;
+        }
+        try {
+          this.cli.rm("-rf", file);
+          return response;
+        } catch (e) {
+          throw e;
+        }
+      } else {
+        return response;
+      }
     });
   }
 

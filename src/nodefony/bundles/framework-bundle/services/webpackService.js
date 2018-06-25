@@ -65,6 +65,7 @@ module.exports = class webpack extends nodefony.Service {
     if (error) {
       if (info.errors && nodefony.typeOf(info.errors) === "array") {
         this.logger(info.errors.join("\n"), "ERROR");
+        console.trace(info.errors);
       } else {
         this.logger(info.errors, "ERROR");
       }
@@ -293,8 +294,9 @@ module.exports = class webpack extends nodefony.Service {
         this.nbWatched++;
         bundle.watching = null;
         bundle.watching = bundle.webpackCompiler.watch(watchOptions, (err, stats) => {
+          this.logger("BUNDLE : " + basename + " WACTHER WEBPACK COMPILE  ");
           if (!err) {
-            this.logger("BUNDLE : " + basename + " WACTHER WEBPACK COMPILE  : \n" + this.displayConfigTable(config), "DEBUG");
+            this.logger(this.displayConfigTable(config), "DEBUG");
           }
           this.loggerStat(err, stats, basename, file.name, true);
         });

@@ -5,37 +5,37 @@ module.exports = {
   "test-basic-area": {
     pattern: "/test/firewall/basic",
     defaults: {
-      controller: "testBundle:firewall:basic"
+      controller: "test:firewall:basic"
     }
   },
   "test-digest-area": {
     pattern: "/test/firewall/digest",
     defaults: {
-      controller: "testBundle:firewall:digest"
+      controller: "test:firewall:digest"
     }
   },
   "test-local-area": {
     pattern: "/test/firewall/local",
     defaults: {
-      controller: "testBundle:firewall:local"
+      controller: "test:firewall:local"
     }
   },
   "test-api-area": {
     pattern: "/test/firewall/api",
     defaults: {
-      controller: "testBundle:firewall:api"
+      controller: "test:firewall:api"
     }
   },
   "check-ldap": {
     pattern: "/test/firewall/ldap",
     defaults: {
-      controller: "testBundle:firewall:ldap"
+      controller: "test:firewall:ldap"
     }
   },
   "check-jwt": {
     pattern: "/test/firewall/jwt",
     defaults: {
-      controller: "securityBundle:login:jwt"
+      controller: "security:login:jwt"
     }
   }
 };

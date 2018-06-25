@@ -2,16 +2,19 @@ module.exports = class generateProject extends nodefony.Builder {
 
   constructor(cli, cmd, args) {
     super(cli, cmd, args);
-    let name = null;
+    this.name = null;
     if (this.cmd === "generate") {
       if (args[0]) {
-        name = args[0];
+        this.name = args[0] || "myproject";
+      }
+      if (args[0]) {
+        this.location = args[1] || path.resolve(".");
       }
     }
     nodefony.extend(this.cli.response, {
-      name: name ||  "myproject",
+      name: this.name ||  "myproject",
       description: "description project",
-      path: path.resolve("."),
+      path: this.location || path.resolve("."),
       authorFullName: "admin",
       authorMail: "admin@nodefony.com",
       domain: "localhost",
@@ -34,11 +37,11 @@ module.exports = class generateProject extends nodefony.Builder {
         default: this.cli.response.name,
         message: 'Enter Nodefony Project Name',
         validate: (value) => {
-          if (value) {
+          if (value && value !== "nodefony") {
             this.name = value;
             return true;
           }
-          return 'Please enter a valid project name';
+          return `${value} Unauthorised Please enter a valid project name`;
         }
       }, {
         type: 'input',
@@ -99,7 +102,7 @@ module.exports = class generateProject extends nodefony.Builder {
         this.path = path.resolve(this.location, response.name);
         if (this.cli.exists(this.path)) {
           this.logger(`${this.path} Already exist`, "WARNING");
-          return this.removePath(this.path).then((response) => {
+          return this.removeInteractivePath(this.path).then((response) => {
             nodefony.extend(this.cli.response, response);
             if (response.remove) {
               return this.cli.response;
@@ -284,29 +287,6 @@ module.exports = class generateProject extends nodefony.Builder {
     } catch (e) {
       throw e;
     }
-  }
-
-  removePath(file) {
-    return this.cli.prompt([{
-      type: 'confirm',
-      name: 'remove',
-      message: `Do You Want Remove : ${file}?`,
-      default: false
-    }]).then((response) => {
-      if (response.remove) {
-        if (!this.cli.exists(file)) {
-          throw `${file} not exist`;
-        }
-        try {
-          this.cli.rm("-rf", file);
-          return response;
-        } catch (e) {
-          throw e;
-        }
-      } else {
-        return response;
-      }
-    });
   }
 
 };

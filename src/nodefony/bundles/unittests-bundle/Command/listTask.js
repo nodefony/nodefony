@@ -8,11 +8,13 @@ class listTask extends nodefony.Task {
     this.tests = [];
   }
 
-  showHelp(help = "") {
-    help += `\t${this.cli.clc.green("unitest:list:all")}\t\t List all unit tests\n`;
-    help += `\t${this.cli.clc.green("unitest:list:bundle bundleName")}\t\t List all bundle unit tests`;
-    console.log(help);
-    return help;
+  showHelp() {
+    this.setHelp("unitest:list:all",
+      "List all unit tests"
+    );
+    this.setHelp("unitest:list:bundle bundleName",
+      "List all bundle unit tests"
+    );
   }
 
 

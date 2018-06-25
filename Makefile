@@ -26,11 +26,11 @@ install:
 	@echo "#########################################" ;
 	@echo "";
 	@if [ $(VERBOSE) = 0 ] ; then \
-		echo "nodefony npm:install";\
-		npm start npm:install ;\
+		echo "nodefony nodefony:npm:install";\
+		npm start nodefony:npm:install ;\
 	else \
-		echo "nodefony -d npm:install";\
-		npm start -d npm:install ;\
+		echo "nodefony -d nodefony:npm:install";\
+		npm start -d nodefony:npm:install ;\
 	fi \
 
 build:
@@ -53,17 +53,17 @@ build:
 	@if [ $(VERBOSE) = 0 ] ; then \
 		echo "nodefony router:display:routes";\
 		npm start router:display:routes ;\
-		echo "nodefony router:match:url /";\
-		npm start router:match:url /\
-		echo "nodefony npm:list";\
-		npm start npm:list ;\
+		echo "nodefony router:display:match /";\
+		npm start router:display:match /\
+		echo "nodefony nodefony:npm:install";\
+		npm start nodefony:npm:install ;\
 	else \
 		echo "nodefony -d router:display:routes";\
 		npm start -d router:display:routes ;\
 		echo "nodefony -d router:display:match /";\
 		npm start -d router:display:match /\
-		echo "nodefony -d npm:list";\
-		npm start -d npm:list ;\
+		echo "nodefony -d nodefony:npm:install";\
+		npm start -d nodefony:npm:install ;\
 	fi \
 
 #
@@ -77,6 +77,7 @@ start:
 	npm start pm2
 	#npm run pm2 -- logs $(APP_NAME)
 	npm run pm2 monit $(APP_NAME)
+
 stop:
 	./node_modules/pm2/bin/pm2 stop $(APP_NAME)
 
@@ -220,8 +221,8 @@ framework:
 	fi
 
 sequelize:
-	npm start Sequelize:generate:entities
-	npm start Sequelize:fixtures:load
+	npm start sequelize:generate:entities
+	npm start sequelize:fixtures:load
 
 mongoose:
 	npm start mongo:fixtures:load

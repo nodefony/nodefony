@@ -5,10 +5,10 @@ class queryTask extends nodefony.Task {
     this.ormService = this.get("sequelize");
   }
 
-  showHelp(help = "") {
-    help += `\t${this.cli.clc.green("sequelize:query:sql connectionName 'SQL'")}\t\t Query sql in database connection  example : nodefony  sequelize:query:sql nodefony  'select * from users'`;
-    console.log(help);
-    return help;
+  showHelp() {
+    this.setHelp("sequelize:query:sql connectionName 'SQL'",
+      "Query sql in database connection  example : nodefony  sequelize:query:sql nodefony  'select * from users'"
+    );
   }
 
   sql(db, sql) {

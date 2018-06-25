@@ -33,8 +33,8 @@
 
 login:
   pattern:  /login/{type}
-  defaults: {"controller": "securityBundle:login:login","type":"local" }
+  defaults: {"controller": "security:login:login","type":"local" }
 
 logout:
   pattern:  /logout
-  defaults: {"controller": "securityBundle:logout:logout"}
+  defaults: {"controller": "security:logout:logout"}

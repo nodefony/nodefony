@@ -1,5 +1,6 @@
 module.exports = nodefony.register("Task", () => {
 
+
   /**
    *
    * command:task:action
@@ -37,6 +38,13 @@ module.exports = nodefony.register("Task", () => {
     showHelp(help = "") {
       return help;
     }
+
+    setHelp(command, description) {
+      this.cli.displayTable([
+        ["", this.cli.clc.green(command), description]
+      ], this.command.optionsTables);
+    }
+
   }
 
   return Task;

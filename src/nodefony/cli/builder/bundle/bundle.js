@@ -9,6 +9,7 @@ const Translation = require(path.resolve(__dirname, "translation.js"));
 const routing = require(path.resolve(__dirname, "routing.js"));
 const generateReactCli = require(path.resolve(__dirname, "react", "reactBuilder.js"));
 const generateAngularCli = require(path.resolve(__dirname, "angular", "angularBuilder.js"));
+const regBundleName = /^(.+)-bundle[\.js]{0,3}$|^(.+)[Bb]undle[\.js]{0,3}$/;
 
 // mother class bundle
 const Bundle = class Bundle extends nodefony.Builder {
@@ -18,13 +19,13 @@ const Bundle = class Bundle extends nodefony.Builder {
     this.kernel = this.cli.kernel;
     this.bundleType = bundleType || "";
     nodefony.extend(this.cli.response, {
-      module: this.cli.config.App.projectName,
-      projectName: this.cli.config.App.projectName,
-      authorName: this.cli.config.App.authorName,
-      authorEmail: this.cli.config.App.authorMail,
-      projectYear: this.cli.config.App.projectYear,
-      domain: this.cli.configKernel.system.domain,
-      local: this.cli.config.App.locale,
+      module: this.cli.response.config.App.projectName,
+      projectName: this.cli.response.config.App.projectName,
+      authorName: this.cli.response.config.App.authorName,
+      authorEmail: this.cli.response.config.App.authorMail,
+      projectYear: this.cli.response.config.App.projectYear,
+      domain: this.cli.response.configKernel.system.domain,
+      local: this.cli.response.config.App.locale,
       projectYearNow: new Date().getFullYear()
     });
 
@@ -42,32 +43,63 @@ const Bundle = class Bundle extends nodefony.Builder {
     this.translation = new Translation(this.cli, this);
     this.resources = new resources(this.cli, this);
     this.documentation = new documentation(this.cli, this);
-
   }
 
-  /*interaction() {
-
-  }*/
+  interaction() {
+    let mypath = null;
+    if (this.cli.response.project) {
+      mypath = path.resolve(this.cli.response.path, this.cli.response.name, "src", "bundles");
+    } else {
+      mypath = path.resolve("src", "bundles");
+    }
+    return this.cli.prompt([{
+      type: 'input',
+      name: 'name',
+      default: "api",
+      message: 'Enter Bundle Name',
+      validate: (value) => {
+        if (value && value !== "nodefony") {
+          this.name = value;
+          return true;
+        }
+        return `${value} Unauthorised Please enter a valid Bundle name`;
+      }
+    }, {
+      type: 'input',
+      name: 'location',
+      default: mypath,
+      message: 'Enter Bundle Path',
+      validate: (value) => {
+        if (value) {
+          this.location = value;
+          return true;
+        }
+        return 'Please enter a valid Bundle Path';
+      }
+    }]);
+  }
 
   checkPath(name, Path) {
     if (!name) {
-      throw new Error("No bundle name");
+      if (!this.name) {
+        throw new Error("No bundle name");
+      }
+      name = this.name;
     }
     let bundle = this.checkExist(name);
     if (bundle) {
       throw new Error("Bundle already exist " + name);
     }
     if (!Path) {
+      if (this.location) {
+        Path = this.location;
+      }
       Path = path.resolve("src", "bundles");
-    }
-    let res = this.kernel.regBundleName.exec(this.name);
-    if (res) {
-      throw new Error("Bad bundle   name :" + this.name);
     }
     this.cli.logger("GENERATE bundle : " + name + " LOCATION : " + path.resolve(Path));
     this.shortName = name;
     this.name = name + "-bundle";
-    res = this.kernel.regBundleName.exec(this.name);
+    let res = regBundleName.exec(this.name);
     if (res) {
       this.shortName = res[1];
     } else {
@@ -102,19 +134,22 @@ const Bundle = class Bundle extends nodefony.Builder {
   }
 
   checkExist(name) {
-    let bundle = this.cli.kernel.getBundle(name);
-    if (bundle) {
-      return bundle;
-    }
-    try {
-      let bundleName = this.cli.kernel.getBundleName(name);
-      if (bundleName) {
-        return this.cli.kernel.getBundle(bundleName);
+    if (this.cli.kernel) {
+      let bundle = this.cli.kernel.getBundle(name);
+      if (bundle) {
+        return bundle;
       }
-      return null;
-    } catch (e) {
-      return null;
+      try {
+        let bundleName = this.cli.kernel.getBundleName(name);
+        if (bundleName) {
+          return this.cli.kernel.getBundle(bundleName);
+        }
+        return null;
+      } catch (e) {
+        return null;
+      }
     }
+    return null;
   }
 
   getBundle(name) {
@@ -191,7 +226,6 @@ const Bundle = class Bundle extends nodefony.Builder {
   install() {
     try {
       let json = this.cli.kernel.readGeneratedConfig();
-
       if (json) {
         if (json.system && json.system.bundles) {
           json.system.bundles[this.name] = this.bundlePath;
@@ -216,9 +250,14 @@ const Bundle = class Bundle extends nodefony.Builder {
       fs.writeFileSync(this.cli.kernel.generateConfigPath, yaml.safeDump(json), {
         encoding: 'utf8'
       });
-      let file = new nodefony.fileClass(this.bundleFile);
-      this.cli.kernel.loadBundle(file);
-      //this.cli.assetInstall(this.name);
+      try {
+        let file = new nodefony.fileClass(this.bundleFile);
+        this.cli.kernel.loadBundle(file);
+        //this.cli.assetInstall(this.name);
+      } catch (e) {
+        this.logger(e, "WARNING");
+      }
+
       return this.cli.npmInstall(this.bundlePath);
     } catch (e) {
       throw e;
@@ -238,14 +277,15 @@ const React = class React extends Bundle {
     super(cli, type || "js", "react");
     this.generateReactCli = new generateReactCli(this);
   }
-  generateProject(name, location, interactive) {
+  generateProject(name, location) {
     try {
-      return this.generateReactCli.generateProject(name, location, interactive);
+      return this.generateReactCli.generateProject(name, location);
     } catch (e) {
       throw e;
     }
   }
-  createBuilder() {
+  createBuilder(name, location) {
+    this.checkPath(name, location);
     return {
       name: this.name,
       type: "directory",
@@ -282,14 +322,15 @@ const Angular = class Angular extends Bundle {
     super(cli, type || "js", "angular");
     this.angularCli = new generateAngularCli(this);
   }
-  generateProject(name, location, interactive) {
+  generateProject(name, location) {
     try {
-      return this.angularCli.generateProject(name, location, interactive);
+      return this.angularCli.generateProject(name, location);
     } catch (e) {
       throw e;
     }
   }
-  createBuilder() {
+  createBuilder(name, location) {
+    this.checkPath(name, location);
     return {
       name: this.name,
       type: "directory",
@@ -321,8 +362,30 @@ const Angular = class Angular extends Bundle {
   }
 };
 
+
+const interaction = function (cli) {
+  let bundles = [];
+  for (let bundle in nodefony.builders.bundles) {
+    if (bundle !== "interaction") {
+      bundles.push(bundle);
+    }
+  }
+  return cli.prompt([{
+    type: 'list',
+    name: 'type',
+    message: 'Generate Nodefony Bundle : ',
+    default: 'nodefony',
+    choices: bundles,
+    filter: function (val) {
+      return val.toLowerCase();
+    }
+  }]);
+};
+
+
 module.exports = {
   nodefony: Nodefony,
   angular: Angular,
-  react: React
+  react: React,
+  interaction: interaction
 };

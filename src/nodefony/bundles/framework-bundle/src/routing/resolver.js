@@ -128,7 +128,7 @@ module.exports = nodefony.register("Resolver", function () {
 
     getDefaultView(controller, action) {
       //FIXME .html ???
-      let res = this.bundle.name + "Bundle" + ":" + controller + ":" + action + ".html." + this.get("templating").extention;
+      let res = this.bundle.name + ":" + controller + ":" + action + ".html." + this.get("templating").extention;
       return res;
     }
 

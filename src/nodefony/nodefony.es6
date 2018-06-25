@@ -25,6 +25,7 @@ module.exports = class Nodefony {
     this.cliStart = null;
     this.templatings = {};
     this.services = {};
+    this.commands = {};
     this.encoders = {};
     this.security = {
       factories: {},

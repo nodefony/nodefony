@@ -5,10 +5,10 @@ class generateTask extends nodefony.Task {
     this.ormService = this.get("sequelize");
   }
 
-  showHelp(help = "") {
-    help += `\t${this.cli.clc.green("sequelize:generate:entities [force]")}\t\t Generate All Entities force to delete table if exist  example : nodefony sequelize:generate:entities force`;
-    console.log(help);
-    return help;
+  showHelp() {
+    this.setHelp("sequelize:generate:entities [force]",
+      "Generate All Entities force to delete table if exist  example : nodefony sequelize:generate:entities force"
+    );
   }
 
 

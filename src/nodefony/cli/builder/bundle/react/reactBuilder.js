@@ -1,31 +1,3 @@
-const intervativeQuestion = function (cli) {
-  return [{
-    type: 'input',
-    name: 'name',
-    message: 'Enter Bundle Name',
-    validate: (value) => {
-      try {
-        cli.cli.blankLine();
-        return true;
-      } catch (e) {
-        return e.message;
-      }
-    }
-  }, {
-    type: 'input',
-    name: 'path',
-    message: 'Enter Bundle Path',
-    validate: (value) => {
-      try {
-        cli.cli.blankLine();
-        return true;
-      } catch (e) {
-        return e.message;
-      }
-    }
-  }];
-};
-
 const reactCli = class reactCli extends nodefony.Service {
 
   constructor(builder) {
@@ -53,11 +25,6 @@ const reactCli = class reactCli extends nodefony.Service {
     process.env.NODE_ENV = "development";
   }
 
-  generateInteractive() {
-    this.logger("Interactive Mode");
-    return this.inquirer.prompt(intervativeQuestion(this));
-  }
-
   setTmpDir(Path) {
     return Path;
   }
@@ -78,21 +45,16 @@ const reactCli = class reactCli extends nodefony.Service {
     }
   }
 
-  generateProject(name, Path, interactive) {
-    let project = null;
-    this.interactive = interactive;
-    if (this.interactive) {
-      project = this.generateInteractive();
-    } else {
-      this.builder.checkPath(name, Path);
-      this.bundleName = this.builder.name;
-      this.location = this.builder.location.path;
-      this.cwd = this.builder.bundlePath;
-      this.logger("GENERATE React Bundle : " + this.bundleName + " LOCATION : " + this.location);
-      project = new Promise((resolve) => {
-        return resolve([]);
-      });
-    }
+  generateProject(name, Path) {
+    this.builder.checkPath(name, Path);
+    this.bundleName = this.builder.name;
+    this.location = this.builder.location.path;
+    this.cwd = this.builder.bundlePath;
+    this.logger("GENERATE React Bundle : " + this.bundleName + " LOCATION : " + this.location);
+    let project = new Promise((resolve) => {
+      return resolve([]);
+    });
+
     return project
       .then((ele) => {
         return this.generateReactProject(ele);

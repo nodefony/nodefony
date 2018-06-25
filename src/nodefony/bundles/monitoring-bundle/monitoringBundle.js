@@ -459,7 +459,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       let tab = context.resolver.route.defaults.controller.split(":");
       let contr = (tab[1] ? tab[1] : "default");
       context.profiling.routeur = {
-        bundle: context.resolver.bundle.name + "Bundle",
+        bundle: context.resolver.bundle.name,
         action: tab[2] + "Action",
         pattern: context.resolver.route.defaults.controller,
         Controller: contr + "Controller",

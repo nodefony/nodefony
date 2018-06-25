@@ -1,6 +1,6 @@
 const builderInstall = require(path.resolve(__dirname, "install", "install.js"));
 
-module.exports = class cliStart extends nodefony.cli {
+module.exports = class cliStart extends nodefony.cliKernel {
 
   constructor() {
     super("nodefony", null, null, {
@@ -29,6 +29,7 @@ module.exports = class cliStart extends nodefony.cli {
         this.choices.push(`Clear Framework`);
       } else {
         this.choices.push(`Install Framework`);
+        this.choices.push(`${this.generateString} Bundle`);
         this.choices.push(`${this.generateString} Certificates`);
         this.choices.push(`Clear Framework`);
       }
@@ -40,23 +41,24 @@ module.exports = class cliStart extends nodefony.cli {
     this.cmd = null;
     this.args = null;
     this.on("onStart", () => {
-      //this.commander.usage("[options] <cmd> <arg>");
-      this.commander.arguments('<cmd> [args...]')
+      this.commander.usage(`<command:task:action> [args...]`);
+      this.commander.arguments(`<cmd> [args...]`)
         .action((cmd, args /*, commander*/ ) => {
           this.cmd = cmd;
           this.args = args;
         });
-      if (!nodefony.isTrunk) {
-        this.commander.command(`${this.clc.cyan('generate ')} ${this.clc.reset} [projectName]`);
-        this.commander.command(this.clc.cyan('install'));
-      }
-      //this.commander.command(this.clc.cyan('check-version'));
+      this.commander.on('--help', () => {
+        this.setTitleHelp(this.clc.cyan("nodefony"));
+        this.setHelp("", "install", "Install Nodefony Project");
+        this.setHelp("", "app", "Get Application Name");
+        this.setHelp("", "version", "Get Project Version");
+        this.setHelp("", "generate:project name [path]", "Generate Nodefony Project");
+      });
       this.setOption('-d, --debug ', 'Nodefony debug');
       this.setOption('-h, --help ', 'Nodefony help');
       this.setOption('-v, --version ', 'Nodefony version');
       this.setOption('-i, --interactive ', 'Nodefony cli Interactive Mode');
       this.setOption('-j, --json', 'Nodefony json response');
-
       this.commander.parse(process.argv);
       this.start(this.cmd, this.args);
     });
@@ -64,7 +66,6 @@ module.exports = class cliStart extends nodefony.cli {
   }
 
   start(command, args) {
-    //console.log(this.commander)
     let myCommand = null;
     if (command  || process.argv.slice(2).length) {
       if (command) {
@@ -76,10 +77,15 @@ module.exports = class cliStart extends nodefony.cli {
     if (myCommand) {
       switch (myCommand) {
       case "generate":
-        return this.generateProject(myCommand, args, this.commander.interactive);
+        try {
+          return this.generateProject(myCommand, args, this.commander.interactive);
+        } catch (e) {
+          throw e;
+        }
+        break;
       case "install":
         if (nodefony.isTrunk) {
-          return this.installProject(myCommand, args, this.commander.interactive);
+          return this.installProject();
         }
         this.showHelp();
         this.logger("No nodefony trunk detected !", "WARNING");
@@ -130,7 +136,7 @@ module.exports = class cliStart extends nodefony.cli {
           case "project":
             return this.generateProject(null, null, true);
           case "install":
-            return this.installProject(null, null, true);
+            return this.installProject();
           case "clear":
             return this.cleanProject();
           case "certificates":
@@ -139,7 +145,7 @@ module.exports = class cliStart extends nodefony.cli {
             command = this.setCommand("webpack:dump");
             break;
           case "bundle":
-            command = this.setCommand("generate:bundle", "-i");
+            command = this.setCommand("generate:bundle", ["-i"]);
             break;
           case "controller":
             break;
@@ -153,7 +159,7 @@ module.exports = class cliStart extends nodefony.cli {
             command = this.setCommand("production");
             break;
           case "test":
-            command = this.setCommand("unitTest:launch:all");
+            command = this.setCommand("unitest:launch:all");
             break;
           case "exit":
             this.logger("QUIT");
@@ -177,12 +183,12 @@ module.exports = class cliStart extends nodefony.cli {
 
   showBanner(data) {
     super.showBanner(data);
-    this.logger(`WELCOME NODEFONY CLI ${nodefony.version} ${this.getEmoji("checkered_flag")}`);
+    this.logger(`WELCOME NODEFONY CLI ${nodefony.version}`);
   }
 
-  setCommand(cmd) {
+  setCommand(cmd, args = []) {
     process.argv.push(cmd);
-    this.commander.parse(process.argv);
+    this.commander.parse(process.argv.concat(args));
     return cmd;
   }
 
@@ -241,6 +247,48 @@ module.exports = class cliStart extends nodefony.cli {
       return project.run(interactive)
         .then((res) => {
           this.logger(`Generate Project ${res.name} complete`, "INFO");
+          if (res.bundle) {
+            this.response.project = true;
+            this.response.config = {
+              App: {
+                projectName: res.name,
+                authorName: res.authorFullName,
+                authorMail: res.authorMail,
+                local: res.locale,
+                projectYear: res.year
+              }
+            };
+            this.response.configKernel = {
+              system: {
+                domain: res.domain
+              }
+            };
+            return nodefony.builders.bundles.interaction(this)
+              .then((res) => {
+                let bundle = new nodefony.builders.bundles[res.type](this, "js");
+                bundle.interaction()
+                  .then((res) => {
+                    try {
+                      let result = bundle.createBuilder(res.name, res.location);
+                      bundle.build(result, bundle.location);
+                      let cwd = path.resolve(project.location, project.name);
+                      this.cd(cwd);
+                      return this.installProject(cwd);
+                    } catch (e) {
+                      throw e;
+                    }
+                  }).catch((e) => {
+                    this.logger(e, "ERROR");
+                    throw e;
+                  });
+              }).catch((e) => {
+                this.logger(e, "ERROR");
+                throw e;
+              });
+          }
+          let cwd = path.resolve(project.location, project.name);
+          this.cd(cwd);
+          return this.installProject(cwd);
         }).catch((e) => {
           if (e.code || e.code === 0) {
             this.logger(e, "INFO");
@@ -254,10 +302,10 @@ module.exports = class cliStart extends nodefony.cli {
     }
   }
 
-  installProject() {
+  installProject(cwd = path.resolve(".")) {
     try {
       let installer = new builderInstall(this);
-      return installer.install().then(() => {
+      return installer.install(cwd).then(() => {
         this.logger("Install Complete");
         this.terminate(0);
       }).catch((e) => {
@@ -270,10 +318,10 @@ module.exports = class cliStart extends nodefony.cli {
     }
   }
 
-  cleanProject() {
+  cleanProject(cwd = path.resolve(".")) {
     try {
       let installer = new builderInstall(this);
-      return installer.clear().then(() => {
+      return installer.clear(cwd).then(() => {
         this.logger("Clean Project Complete");
         this.terminate(0);
       }).catch((e) => {
@@ -286,10 +334,10 @@ module.exports = class cliStart extends nodefony.cli {
     }
   }
 
-  generateCertificates() {
+  generateCertificates(cwd = path.resolve(".")) {
     try {
       let installer = new builderInstall(this);
-      return installer.generateCertificates().then(() => {
+      return installer.generateCertificates(cwd).then(() => {
         this.logger("Generate Certificates Complete");
         this.terminate(0);
       }).catch((e) => {

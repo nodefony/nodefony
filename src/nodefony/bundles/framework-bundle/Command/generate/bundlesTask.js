@@ -2,68 +2,141 @@ class bundlesTask extends nodefony.Task {
 
   constructor(name, command) {
     super(name, command);
-    this.cli.config = this.getParameters("bundles.app");
-    this.cli.configKernel = this.getParameters("kernel");
-  }
-
-  showHelp(help = "") {
-    help += `\t${this.cli.clc.green("generate:bundle name [path]")}\t\t Generate a nodefony Bundle  Example : nodefony generate:bundle name ./src/bundles\n`;
-    help += `\t${this.cli.clc.green("generate:bundle:angular name [path]")}\t Generate a Angular Bundle  Example : nodefony generate:bundle:angular name ./src/bundles\n`;
-    help += `\t${this.cli.clc.green("generate:bundle:react name [path]")}\t Generate a React Bundle Example : nodefony generate:bundle:react name ./src/bundles`;
-    console.log(help);
-    return help;
-  }
-
-  nodefony(name, Path) {
-    //console.log(arguments);
-    if (!name) {
-      throw new Error("No bundle name argument");
-    }
-    let bundle = null;
-    try {
-      bundle = new nodefony.builders.bundles.nodefony(this.cli, "js");
-      let result = bundle.createBuilder(name, Path);
-      bundle.build(result, bundle.location);
-    } catch (e) {
-      throw e;
-    }
-    return bundle.install().then(() => {
-      this.cli.terminate(0);
-    }).catch((e) => {
-      this.logger(e, "ERROR");
-      this.cli.terminate(0);
+    nodefony.extend(this.cli.response, {
+      config: this.getParameters("bundles.app"),
+      configKernel: this.getParameters("kernel")
     });
   }
 
-  angular(name, Path) {
-    if (!name) {
-      throw new Error("No bundle name argument");
+  showHelp() {
+    this.setHelp("generate:bundle name [path]",
+      "Generate a nodefony Bundle  Example : nodefony generate:bundle name ./src/bundles"
+    );
+    this.setHelp("generate:bundle:angular name [path]",
+      "Generate a Angular Bundle  Example : nodefony generate:bundle:angular name ./src/bundles"
+    );
+    this.setHelp("generate:bundle:react name [path]",
+      "Generate a React Bundle Example : nodefony generate:bundle:react name ./src/bundles"
+    );
+  }
+
+  nodefony(name, Path) {
+    let bundle = null;
+    try {
+      bundle = new nodefony.builders.bundles.nodefony(this.cli, "js");
+      if (this.command.interactive) {
+        return bundle.interaction()
+          .then((res) => {
+            try {
+              let result = bundle.createBuilder(res.name, res.location);
+              bundle.build(result, bundle.location);
+              return bundle.install()
+                .then(() => {
+                  this.cli.terminate(0);
+                }).catch((e) => {
+                  this.logger(e, "ERROR");
+                  this.cli.terminate(0);
+                });
+            } catch (e) {
+              throw e;
+            }
+          }).catch((e) => {
+            this.logger(e, "ERROR");
+            throw e;
+          });
+      } else {
+        let result = bundle.createBuilder(name, Path);
+        bundle.build(result, bundle.location);
+      }
+    } catch (e) {
+      throw e;
     }
+    return bundle.install()
+      .then(() => {
+        this.cli.terminate(0);
+      }).catch((e) => {
+        this.logger(e, "ERROR");
+        this.cli.terminate(0);
+      });
+  }
+
+  angular(name, Path) {
     let bundle = null;
     try {
       bundle = new nodefony.builders.bundles.angular(this.cli, "js");
-      bundle.generateProject(name, Path, this.command.interactive).then((builder) => {
-        builder.build(builder.createBuilder(), builder.location, true);
-        builder.install();
-        this.cli.terminate(0);
-      });
+      if (this.command.interactive) {
+        return bundle.interaction()
+          .then((res) => {
+            return bundle.generateProject(res.name, res.location)
+              .then((builder) => {
+                builder.build(builder.createBuilder(res.name, res.location), builder.location, true);
+                return bundle.install()
+                  .then(() => {
+                    this.cli.terminate(0);
+                  }).catch((e) => {
+                    this.logger(e, "ERROR");
+                    this.cli.terminate(0);
+                  });
+              });
+          })
+          .catch((e) => {
+            this.logger(e, "ERROR");
+            throw e;
+          });
+      } else {
+        bundle.generateProject(name, Path)
+          .then((builder) => {
+            builder.build(builder.createBuilder(name, Path), builder.location, true);
+            return bundle.install()
+              .then(() => {
+                this.cli.terminate(0);
+              }).catch((e) => {
+                this.logger(e, "ERROR");
+                this.cli.terminate(0);
+              });
+          });
+      }
     } catch (e) {
       throw e;
     }
   }
 
   react(name, Path) {
-    if (!name) {
-      throw new Error("No bundle name argument");
-    }
     let bundle = null;
     try {
       bundle = new nodefony.builders.bundles.react(this.cli, "js");
-      bundle.generateProject(name, Path, this.command.interactive).then((builder) => {
-        builder.build(builder.createBuilder(), builder.location, true);
-        builder.install();
-        this.cli.terminate(0);
-      });
+      if (this.command.interactive) {
+        return bundle.interaction()
+          .then((res) => {
+            return bundle.generateProject(res.name, res.location)
+              .then((builder) => {
+                builder.build(builder.createBuilder(res.name, res.location), builder.location, true);
+                return bundle.install()
+                  .then(() => {
+                    this.cli.terminate(0);
+                  }).catch((e) => {
+                    this.logger(e, "ERROR");
+                    this.cli.terminate(0);
+                  });
+              });
+          })
+          .catch((e) => {
+            this.logger(e, "ERROR");
+            throw e;
+          });
+      } else {
+        bundle.generateProject(name, Path)
+          .then((builder) => {
+            builder.build(builder.createBuilder(name, Path), builder.location, true);
+            return bundle.install()
+              .then(() => {
+                this.cli.terminate(0);
+              }).catch((e) => {
+                this.logger(e, "ERROR");
+                this.cli.terminate(0);
+              });
+          });
+      }
     } catch (e) {
       throw e;
     }

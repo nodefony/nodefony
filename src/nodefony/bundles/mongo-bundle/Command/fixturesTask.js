@@ -5,10 +5,8 @@ class fixturesTask extends nodefony.Task {
     this.ormService = this.get("mongoose");
   }
 
-  showHelp(help = "") {
-    help += `\t${this.cli.clc.green("mongo:fixtures:load")}\t\t Load data fixtures in database\n`;
-    console.log(help);
-    return help;
+  showHelp() {
+    this.setHelp("mongo:fixtures:load", "Load data fixtures in database");
   }
 
   load() {
