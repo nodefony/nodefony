@@ -149,7 +149,7 @@ module.exports = nodefony.register("cliKernel", function () {
       }
     }
 
-    loadCommand() {
+    loadNodefonyCommand() {
       for (let cmd in nodefony.commands) {
         try {
           let instance = new nodefony.commands[cmd](this, this.kernel);
@@ -160,6 +160,9 @@ module.exports = nodefony.register("cliKernel", function () {
           continue;
         }
       }
+    }
+
+    loadCommand() {
       for (let bundle in this.kernel.bundles) {
         if (!this.commands[bundle]) {
           this.commands[bundle] = {};
@@ -268,13 +271,17 @@ module.exports = nodefony.register("cliKernel", function () {
     showHelp() {
       super.showHelp();
       this.blankLine();
-      this.setHelp("", "dev", "Run Nodefony Development Server");
-      this.setHelp("", "prod", "Run Nodefony Preprod Server");
-      this.setHelp("", "pm2", "Run Nodefony Production Server ( PM2 mode )");
+      if (nodefony.isTrunk) {
+        this.setHelp("", "dev", "Run Nodefony Development Server");
+        this.setHelp("", "prod", "Run Nodefony Preprod Server");
+        this.setHelp("", "pm2", "Run Nodefony Production Server ( PM2 mode )");
+      }
       for (let cmd in this.commands.nodefony) {
         this.commands.nodefony[cmd].showHelp();
       }
-      this.setTitleHelp(`${this.clc.cyan("Bundles")}`);
+      if (nodefony.isTrunk) {
+        this.setTitleHelp(`${this.clc.cyan("Bundles")}`);
+      }
       for (let bundle in this.commands) {
         if (bundle === "nodefony") {
           continue;
@@ -288,6 +295,7 @@ module.exports = nodefony.register("cliKernel", function () {
           this.commands[bundle][command].showHelp();
         }
       }
+
     }
 
     logger(pci, severity, msgid, msg) {
@@ -540,8 +548,10 @@ module.exports = nodefony.register("cliKernel", function () {
     installPackage(bundle, env) {
       try {
         if (bundle instanceof nodefony.Bundle) {
-          let file = new nodefony.fileClass(path.resolve(bundle.path, "package.json"));
-          return this.npmInstall(file.dirName, null, env);
+          return this.npmInstall(bundle.path, null, env);
+        }
+        if (bundle instanceof nodefony.fileClass) {
+          return this.npmInstall(bundle.dirName, null, env);
         }
         throw new Error("installPackage bundle must be an instance of nodefony.Bundle");
       } catch (e) {

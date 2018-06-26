@@ -17,8 +17,19 @@ module.exports = class npmTask extends nodefony.Task {
     return this.cli.listPackage(this.kernel.rootDir);
   }
 
-  install(environment = "development") {
-    for (let bundle in this.kernel.bundles) {
+  install(...args) {
+    for (let i = 0; i < args.length; i++) {
+      if (args[i] instanceof nodefony.fileClass) {
+        if (this.kernel.isCore) {
+          this.cli.installPackage(args[i], this.kernel.environment);
+        } else {
+          if (!this.kernel.isBundleCore(args[i].name)) {
+            this.cli.installPackage(args[i], this.kernel.environment);
+          }
+        }
+      }
+    }
+    /*for (let bundle in this.kernel.bundles) {
       if (this.kernel.isCore) {
         this.cli.installPackage(this.kernel.bundles[bundle], environment);
       } else {
@@ -26,6 +37,6 @@ module.exports = class npmTask extends nodefony.Task {
           this.cli.installPackage(this.kernel.bundles[bundle], environment);
         }
       }
-    }
+    }*/
   }
 };

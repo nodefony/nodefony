@@ -86,6 +86,7 @@ module.exports = nodefony.register("kernel", function () {
       this.uptime = new Date().getTime();
       this.numberCpu = os.cpus().length;
       this.type = type;
+      this.console = this.isConsole();
       this.debug = debug || false;
       this.booted = false;
       this.ready = false;
@@ -141,22 +142,17 @@ module.exports = nodefony.register("kernel", function () {
         console.trace(e);
         throw e;
       }
+      if (this.console) {
+        try {
+          this.cli.loadNodefonyCommand();
+        } catch (e) {
+          throw e;
+        }
+      }
       this.once("onPostRegister", () => {
-        if (this.type === "SERVER") {
-          if (!fs.existsSync(this.cacheLink)) {
-            try {
-              fs.mkdirSync(this.cacheLink);
-              this.cli.assetInstall();
-            } catch (e) {
-              this.logger(e, "WARNING");
-            }
-          }
-        } else {
+        if (this.console) {
           try {
-            let ret = this.cli.loadCommand();
-            if (ret) {
-              return;
-            }
+            this.cli.loadCommand();
           } catch (e) {
             this.logger(e, "ERROR");
             this.terminate(e.code || 1);
@@ -170,6 +166,15 @@ module.exports = nodefony.register("kernel", function () {
               this.terminate(e.code || 1);
             }
           });
+        } else {
+          if (!fs.existsSync(this.cacheLink)) {
+            try {
+              fs.mkdirSync(this.cacheLink);
+              this.cli.assetInstall();
+            } catch (e) {
+              this.logger(e, "WARNING");
+            }
+          }
         }
       });
     }
@@ -200,6 +205,12 @@ module.exports = nodefony.register("kernel", function () {
       for (let bundle in bundlesCore) {
         if (bundlesCore[bundle] === name) {
           return true;
+        }
+      }
+      let res = regBundleName.exec(name);
+      if (res) {
+        if (res[2]) {
+          return this.isBundleCore(res[2].toLowerCase());
         }
       }
       return false;
@@ -467,11 +478,11 @@ module.exports = nodefony.register("kernel", function () {
         }
         if (!res) {
           try {
-            res = path.resolve(this.nodefonyPath, "bundles", "demo-bundle");
+            res = path.resolve(this.nodefonyPath, "..", "bundles", "demo-bundle");
             require.resolve(res);
             bundles.push(res);
           } catch (e) {
-            this.logger(e.message, "WARNING");
+            this.logger(e.message, "ERROR");
           }
         }
       }
@@ -850,6 +861,15 @@ module.exports = nodefony.register("kernel", function () {
       }
     }*/
 
+    isInstall() {
+      if (this.cli.command === "nodefony" &&
+        this.cli.task === "npm" &&
+        this.cli.action === "install") {
+        return true;
+      }
+      return false;
+    }
+
     isBundleDirectory(dir) {
       let directory = this.isPathExist(dir);
       if (directory) {
@@ -860,6 +880,10 @@ module.exports = nodefony.register("kernel", function () {
           recurse: false,
           match: this.regBundle,
           onFile: (file) => {
+            if (this.isInstall()) {
+              this.cli.args.push(file);
+              return;
+            }
             try {
               this.loadBundle(file, "filesystem");
             } catch (e) {
