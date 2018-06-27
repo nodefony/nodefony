@@ -12,33 +12,36 @@ class webpackCommand extends nodefony.Command {
   dump() {
     return new Promise((resolve, reject) => {
       this.kernel.listen(this, "onReady", () => {
-        let promiseWebpack = null;
+        let promiseWebpack = [];
         for (let bundle in this.kernel.bundles) {
           if (this.kernel.isCore) {
             if (this.kernel.bundles[bundle].webpackCompiler) {
-              if (promiseWebpack) {
+              promiseWebpack.push(this.kernel.bundles[bundle].compileWebpack());
+              /*if (promiseWebpack) {
                 promiseWebpack.then(this.kernel.bundles[bundle].compileWebpack());
               } else {
                 promiseWebpack = this.kernel.bundles[bundle].compileWebpack();
-              }
+              }*/
             }
           } else {
             if (!this.kernel.isBundleCore(bundle)) {
               if (this.kernel.bundles[bundle].webpackCompiler) {
-                if (promiseWebpack) {
+                promiseWebpack.push(this.kernel.bundles[bundle].compileWebpack());
+                /*if (promiseWebpack) {
                   promiseWebpack.then(this.kernel.bundles[bundle].compileWebpack());
                 } else {
                   promiseWebpack = this.kernel.bundles[bundle].compileWebpack();
-                }
+                }*/
               }
             }
           }
         }
-        if (promiseWebpack) {
+        return resolve(Promise.all(promiseWebpack));
+        /*if (promiseWebpack) {
           return resolve(promiseWebpack);
         } else {
           return reject(1);
-        }
+        }*/
       });
     });
 

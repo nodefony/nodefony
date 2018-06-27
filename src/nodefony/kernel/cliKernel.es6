@@ -490,9 +490,9 @@ module.exports = nodefony.register("cliKernel", function () {
 
     listPackage(myPath) {
       let tab = [];
-      let mypromise = null;
+      let mypromise = [];
       try {
-        mypromise = this.npmList(myPath, tab);
+        mypromise.push(this.npmList(myPath, tab));
       } catch (e) {
         throw e;
       }
@@ -500,16 +500,16 @@ module.exports = nodefony.register("cliKernel", function () {
         //if (this.kernel.isBundleCore(bundle) ) {
         //  continue;
         //}
-        mypromise.then(this.npmList(this.kernel.bundles[bundle].path, tab));
+        mypromise.push(this.npmList(this.kernel.bundles[bundle].path, tab));
       }
-      return mypromise.then((ele) => {
+      return Promise.all(mypromise).then((ele) => {
         let headers = [
           "NAME",
           "VERSION",
           "DESCRIPTION",
           "BUNDLES"
         ];
-        this.displayTable(ele, {
+        this.displayTable(ele[0], {
           head: headers,
           colWidths: [30, 10, 100, 20]
         });
@@ -521,7 +521,7 @@ module.exports = nodefony.register("cliKernel", function () {
       });
     }
 
-    npmList(myPath, ele) {
+    npmList(myPath, ele = []) {
       return new Promise((resolve, reject) => {
         try {
           shell.cd(myPath);

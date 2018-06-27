@@ -18,29 +18,32 @@ module.exports = class npmTask extends nodefony.Task {
   }
 
   install(...args) {
-    let mypromise = null;
+    let mypromise = [];
     for (let i = 0; i < args.length; i++) {
       if (args[i] instanceof nodefony.fileClass) {
         if (this.kernel.isCore) {
-          if (!mypromise) {
+          mypromise.push(this.cli.installPackage(args[i], this.kernel.environment));
+          /*if (!mypromise) {
             mypromise = this.cli.installPackage(args[i], this.kernel.environment);
           } else {
             mypromise.then(this.cli.installPackage(args[i], this.kernel.environment));
-          }
+          }*/
         } else {
           if (!this.kernel.isBundleCore(args[i].name)) {
-            if (!mypromise) {
+            mypromise.push(this.cli.installPackage(args[i], this.kernel.environment));
+            /*if (!mypromise) {
               mypromise = this.cli.installPackage(args[i], this.kernel.environment);
             } else {
               mypromise.then(this.cli.installPackage(args[i], this.kernel.environment));
-            }
+            }*/
           }
         }
       }
     }
-    return mypromise.then((ele) => {
-      return ele;
-    });
+    return Promise.all(mypromise);
+    /*then((ele) => {
+          return ele;
+        });*/
     /*for (let bundle in this.kernel.bundles) {
       if (this.kernel.isCore) {
         this.cli.installPackage(this.kernel.bundles[bundle], environment);
