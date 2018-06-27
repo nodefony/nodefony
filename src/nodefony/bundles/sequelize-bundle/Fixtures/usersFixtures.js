@@ -66,24 +66,24 @@ module.exports = nodefony.registerFixture("users", function () {
             });
           });
         })
-        .spread(function () {
-          for (var i = 0; i < arguments.length; i++) {
-            if (arguments[i][1]) {
-              this.logger("ADD USER : " + arguments[i][0].username, "INFO");
+        .spread((...args) => {
+          for (var i = 0; i < args.length; i++) {
+            if (args[i][1]) {
+              this.logger("ADD USER : " + args[i][0].username, "INFO");
             } else {
-              this.logger("ALREADY EXIST USER : " + arguments[i][0].username, "INFO");
+              this.logger("ALREADY EXIST USER : " + args[i][0].username, "INFO");
             }
           }
-        }.bind(this))
+        })
         .then(() => {
-          connection.query('SET FOREIGN_KEY_CHECKS = 1');
+          return connection.query('SET FOREIGN_KEY_CHECKS = 1');
         })
         .catch((error) => {
           this.logger(error);
-          reject(error);
+          return reject(error);
         })
         .done(function ( /*error, result*/ ) {
-          resolve("userEntity");
+          return resolve("userEntity");
         });
       break;
     case "sqlite":
@@ -136,15 +136,15 @@ module.exports = nodefony.registerFixture("users", function () {
             });
           });
         })
-        .spread(function () {
-          for (var i = 0; i < arguments.length; i++) {
-            if (arguments[i][1]) {
-              this.logger("ADD USER : " + arguments[i][0].username, "INFO");
+        .spread((...args) => {
+          for (var i = 0; i < args.length; i++) {
+            if (args[i][1]) {
+              this.logger("ADD USER : " + args[i][0].username, "INFO");
             } else {
-              this.logger("ALREADY EXIST USER : " + arguments[i][0].username, "INFO");
+              this.logger("ALREADY EXIST USER : " + args[i][0].username, "INFO");
             }
           }
-        }.bind(this))
+        })
         .catch((error) => {
           this.logger(error, "ERROR");
           return reject(error);

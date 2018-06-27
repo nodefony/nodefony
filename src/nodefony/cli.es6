@@ -123,7 +123,7 @@ module.exports = nodefony.register("cli", function () {
           //this.clear();
           this.fire("onSignal", "SIGINT", this);
           process.nextTick(() => {
-            this.terminate(0);
+            this.terminate();
           });
         });
         process.on('SIGTERM', () => {
@@ -132,7 +132,7 @@ module.exports = nodefony.register("cli", function () {
           this.logger("SIGTERM", "CRITIC");
           this.fire("onSignal", "SIGTERM", this);
           process.nextTick(() => {
-            this.terminate(0);
+            this.terminate();
           });
         });
         process.on('SIGHUP', () => {
@@ -141,7 +141,7 @@ module.exports = nodefony.register("cli", function () {
           this.logger("SIGHUP", "CRITIC");
           this.fire("onSignal", "SIGHUP", this);
           process.nextTick(() => {
-            this.terminate(0);
+            this.terminate();
           });
         });
         process.on('SIGQUIT', () => {
@@ -151,7 +151,7 @@ module.exports = nodefony.register("cli", function () {
           //this.clear();
           this.fire("onSignal", "SIGQUIT", this);
           process.nextTick(() => {
-            this.terminate(0);
+            this.terminate();
           });
         });
         process.on('uncaughtException', (err) => {

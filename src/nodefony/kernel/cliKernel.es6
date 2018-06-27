@@ -216,7 +216,7 @@ module.exports = nodefony.register("cliKernel", function () {
                       return ret.then(() => {
                         return this.terminate(0);
                       }).catch((e) => {
-                        return this.termite(e.code || -1);
+                        return this.terminate(e.code || -1);
                       });
                     }
                     return this.terminate(0);
@@ -241,7 +241,7 @@ module.exports = nodefony.register("cliKernel", function () {
                           return ret.then(() => {
                             return this.terminate(0);
                           }).catch((e) => {
-                            return this.termite(e.code || -1);
+                            return this.terminate(e.code || -1);
                           });
                         }
                         return this.terminate(0);
