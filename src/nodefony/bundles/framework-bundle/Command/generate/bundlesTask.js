@@ -84,7 +84,7 @@ class bundlesTask extends nodefony.Task {
             throw e;
           });
       } else {
-        bundle.generateProject(name, Path)
+        return bundle.generateProject(name, Path)
           .then((builder) => {
             builder.build(builder.createBuilder(name, Path), builder.location, true);
             return bundle.install()
@@ -125,7 +125,7 @@ class bundlesTask extends nodefony.Task {
             throw e;
           });
       } else {
-        bundle.generateProject(name, Path)
+        return bundle.generateProject(name, Path)
           .then((builder) => {
             builder.build(builder.createBuilder(name, Path), builder.location, true);
             return bundle.install()

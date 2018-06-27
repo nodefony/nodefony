@@ -1,6 +1,5 @@
 module.exports = nodefony.register("Task", () => {
 
-
   /**
    *
    * command:task:action
@@ -10,9 +9,13 @@ module.exports = nodefony.register("Task", () => {
       super(name, command.container, command.notificationsCenter);
       this.command = command;
       this.cli = this.command.cli;
+      this.json = this.command.json;
     }
 
     showBanner() {
+      if (this.json) {
+        return;
+      }
       this.cli.clear();
       this.cli.asciify(`      ${this.command.name} ${this.name}`, {}, (err, data) => {
         if (err) {
@@ -43,6 +46,10 @@ module.exports = nodefony.register("Task", () => {
       this.cli.displayTable([
         ["", this.cli.clc.green(command), description]
       ], this.command.optionsTables);
+    }
+
+    terminate(code) {
+      return this.cli.terminate(code);
     }
 
   }

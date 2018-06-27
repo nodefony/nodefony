@@ -14,6 +14,9 @@ module.exports = nodefony.register("Command", () => {
     }
 
     showBanner() {
+      if (this.json) {
+        return;
+      }
       this.cli.clear();
       this.cli.asciify("      " + this.name, {}, (err, data) => {
         if (err) {
@@ -66,6 +69,10 @@ module.exports = nodefony.register("Command", () => {
       this.cli.displayTable([
         ["", this.cli.clc.green(command), descrption]
       ], this.optionsTables);
+    }
+
+    terminate(code) {
+      return this.cli.terminate(code);
     }
   }
 

@@ -36,22 +36,26 @@ class listTask extends nodefony.Task {
     return this.onReady();
   }
 
-
   onReady() {
-    this.kernel.listen(this, 'onReady', ( /*kernel*/ ) => {
-      let bundleName = '';
-      for (let i = 0; i < this.tests.length; i++) {
-        if (bundleName !== this.tests[i].bundle) {
-          bundleName = this.tests[i].bundle;
-          this.logger("★★★ BUNDLE : " + bundleName + " ★★★\n", "INFO");
+    return new Promise((resolve, reject) => {
+      this.kernel.listen(this, 'onReady', ( /*kernel*/ ) => {
+        try {
+          let bundleName = '';
+          for (let i = 0; i < this.tests.length; i++) {
+            if (bundleName !== this.tests[i].bundle) {
+              bundleName = this.tests[i].bundle;
+              this.logger("★★★ BUNDLE : " + bundleName + " ★★★\n", "INFO");
+            }
+            this.logger("       ‣ " + this.tests[i].name, "INFO");
+          }
+          //this.logger("\x1b[0m\x1b[0m", "INFO");
+          return resolve(0);
+        } catch (e) {
+          return reject(e);
         }
-        this.logger("       ‣ " + this.tests[i].name, "INFO");
-      }
-      this.logger("\x1b[0m\x1b[0m", "INFO");
+      });
     });
   }
-
 }
-
 
 module.exports = listTask;

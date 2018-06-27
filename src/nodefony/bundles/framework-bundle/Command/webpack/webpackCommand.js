@@ -10,19 +10,11 @@ class webpackCommand extends nodefony.Command {
   }
 
   dump() {
-    this.kernel.listen(this, "onReady", () => {
-      let promiseWebpack = null;
-      for (let bundle in this.kernel.bundles) {
-        if (this.kernel.isCore) {
-          if (this.kernel.bundles[bundle].webpackCompiler) {
-            if (promiseWebpack) {
-              promiseWebpack.then(this.kernel.bundles[bundle].compileWebpack());
-            } else {
-              promiseWebpack = this.kernel.bundles[bundle].compileWebpack();
-            }
-          }
-        } else {
-          if (!this.kernel.isBundleCore(bundle)) {
+    return new Promise((resolve, reject) => {
+      this.kernel.listen(this, "onReady", () => {
+        let promiseWebpack = null;
+        for (let bundle in this.kernel.bundles) {
+          if (this.kernel.isCore) {
             if (this.kernel.bundles[bundle].webpackCompiler) {
               if (promiseWebpack) {
                 promiseWebpack.then(this.kernel.bundles[bundle].compileWebpack());
@@ -30,19 +22,26 @@ class webpackCommand extends nodefony.Command {
                 promiseWebpack = this.kernel.bundles[bundle].compileWebpack();
               }
             }
+          } else {
+            if (!this.kernel.isBundleCore(bundle)) {
+              if (this.kernel.bundles[bundle].webpackCompiler) {
+                if (promiseWebpack) {
+                  promiseWebpack.then(this.kernel.bundles[bundle].compileWebpack());
+                } else {
+                  promiseWebpack = this.kernel.bundles[bundle].compileWebpack();
+                }
+              }
+            }
           }
         }
-      }
-      if (promiseWebpack) {
-        promiseWebpack.then(( /*err, stats*/ ) => {
-          process.nextTick(() => {
-            //this.cli.terminate(0);
-          });
-        });
-      } else {
-        this.cli.terminate(0);
-      }
+        if (promiseWebpack) {
+          return resolve(promiseWebpack);
+        } else {
+          return reject(1);
+        }
+      });
     });
+
   }
 
 }

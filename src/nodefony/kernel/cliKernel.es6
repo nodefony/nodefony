@@ -126,6 +126,13 @@ module.exports = nodefony.register("cliKernel", function () {
       this.parseCommand();
     }
 
+    showBanner(data) {
+      if (this.commander && this.commander.json) {
+        return;
+      }
+      return super.showBanner(data);
+    }
+
     /**
      * PARSER
      * command:task:action
@@ -204,7 +211,15 @@ module.exports = nodefony.register("cliKernel", function () {
                   try {
                     myCommand.showBanner();
                     this.logger(`${this.command}:${this.task}`);
-                    return myAction.apply(myCommand, this.args);
+                    let ret = myAction.apply(myCommand, this.args);
+                    if (ret && nodefony.isPromise(ret)) {
+                      return ret.then(() => {
+                        return this.terminate(0);
+                      }).catch((e) => {
+                        return this.termite(e.code || -1);
+                      });
+                    }
+                    return this.terminate(0);
                   } catch (e) {
                     return myCommand.logger(e, "ERROR");
                   }
@@ -221,18 +236,29 @@ module.exports = nodefony.register("cliKernel", function () {
                         myTask.showBanner();
                         this.logger(`${this.command}:${this.task}:${this.action}`);
                         //console.log(this.args)
-                        return myAction.apply(myCommand.tasks[this.task], this.args);
+                        let ret = myAction.apply(myCommand.tasks[this.task], this.args);
+                        if (ret && nodefony.isPromise(ret)) {
+                          return ret.then(() => {
+                            return this.terminate(0);
+                          }).catch((e) => {
+                            return this.termite(e.code || -1);
+                          });
+                        }
+                        return this.terminate(0);
                       } catch (e) {
                         return myTask.logger(e, "ERROR");
                       }
                     } else {
-                      return myTask.showHelp();
+                      myTask.showHelp();
+                      return this.terminate(0);
                     }
                   } else {
-                    return myCommand.showHelp();
+                    myCommand.showHelp();
+                    return this.terminate(0);
                   }
                 } else {
-                  return myCommand.showHelp();
+                  myCommand.showHelp();
+                  return this.terminate(0);
                 }
               } else {
                 break;
@@ -253,7 +279,7 @@ module.exports = nodefony.register("cliKernel", function () {
       } else {
         this.showHelp();
       }
-      return;
+      return this.terminate(0);
     }
 
     setHelp(info, command, descrption, options) {
@@ -295,7 +321,7 @@ module.exports = nodefony.register("cliKernel", function () {
           this.commands[bundle][command].showHelp();
         }
       }
-
+      this.terminate(0);
     }
 
     logger(pci, severity, msgid, msg) {
@@ -324,6 +350,9 @@ module.exports = nodefony.register("cliKernel", function () {
     listenSyslog(syslog, debug) {
       if (!this.kernel) {
         return super.listenSyslog(syslog, debug);
+      }
+      if (this.commander.json) {
+        return;
       }
       if (!syslog) {
         syslog = this.syslog;
@@ -484,7 +513,8 @@ module.exports = nodefony.register("cliKernel", function () {
           head: headers,
           colWidths: [30, 10, 100, 20]
         });
-        this.terminate(0);
+        return ele;
+        //this.terminate(0);
       }).catch((error) => {
         this.logger(error, "ERROR");
         this.terminate(1);

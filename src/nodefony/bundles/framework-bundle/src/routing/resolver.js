@@ -6,10 +6,7 @@
  */
 module.exports = nodefony.register("Resolver", function () {
 
-  const regAction = /^(.+)Action$/;
-  const isPromise = function (obj) {
-    return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
-  };
+  const regAction = /^(.+)[Aa]ction$/;
 
   const Resolver = class Resolver extends nodefony.Service {
 
@@ -186,7 +183,7 @@ module.exports = nodefony.register("Resolver", function () {
         switch (true) {
         case result.result instanceof Promise:
         case result.result instanceof BlueBird:
-        case isPromise(result.result):
+        case nodefony.isPromise(result.result):
           this.returnController(result.result);
           return this.context.send();
           //case nodefony.typeOf(result.result) === "object":
@@ -200,7 +197,7 @@ module.exports = nodefony.register("Resolver", function () {
         return this.context.send();
       case result instanceof Promise:
       case result instanceof BlueBird:
-      case isPromise(result):
+      case nodefony.isPromise(result):
         //if (this.context.promise) {
         //return this.context.promise.then(result);
         //}

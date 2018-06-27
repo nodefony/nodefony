@@ -41,6 +41,7 @@ module.exports = nodefony.register("cli", function () {
     autoLogger: true,
     resize: false,
     version: null,
+    warning: false,
     pid: false,
     promiseRejection: true
   };
@@ -104,6 +105,13 @@ module.exports = nodefony.register("cli", function () {
       this.initUi();
       this.initCommander();
 
+      if (this.options.warning) {
+        process.on('warning', (warning) => {
+          this.logger(warning, "WARNING");
+        });
+      } else {
+        process.env.NODE_NO_WARNINGS = 1;
+      }
       /**
        *  @signals
        */

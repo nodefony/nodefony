@@ -16,6 +16,11 @@ class displayTask extends nodefony.Task {
 
   routes(name = null) {
     try {
+      if (this.command.json) {
+        let ele = this.getRoutes(name);
+        console.log(JSON.stringify(ele));
+        return this.terminate(0);
+      }
       return this.getRoutes(name, true);
     } catch (e) {
       throw e;
@@ -39,6 +44,7 @@ class displayTask extends nodefony.Task {
       }
       try {
         this.displayTable("ROUTES", ele);
+        return this.terminate(0);
       } catch (e) {
         console.log(e);
       }

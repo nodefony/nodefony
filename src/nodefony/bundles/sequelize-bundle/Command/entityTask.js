@@ -11,32 +11,32 @@ class entityTask extends nodefony.Task {
     );
   }
 
-
   findAll(entity) {
-    this.ormService.listen(this, "onOrmReady", function ( /*service*/ ) {
-      var conn = this.ormService.getEntity(entity);
-      if (!conn) {
-        this.logger("ENTITY : " + entity + " NOT FOUND", "ERROR");
-        this.cli.terminate(1);
-        return;
-      }
-      this.logger("ENTITY :" + entity + " \nEXECUTE findAll   ", "INFO");
-      conn.findAll()
-        .catch((error) => {
-          this.logger(error, "ERROR");
-          this.cli.terminate(1);
-        })
-        .then((result) => {
-          //var attribute = result[0].$options.attributes ;
-          var ele = JSON.stringify(result);
-          console.log(ele);
-        })
-        .done(() => {
-          this.cli.terminate(0);
-        });
+    return new Promise((resolve, reject) => {
+      this.ormService.listen(this, "onOrmReady", function ( /*service*/ ) {
+        var conn = this.ormService.getEntity(entity);
+        if (!conn) {
+          this.logger("ENTITY : " + entity + " NOT FOUND", "ERROR");
+          //this.cli.terminate(1);
+          return reject(1);
+        }
+        this.logger("ENTITY :" + entity + " \nEXECUTE findAll   ", "INFO");
+        resolve(conn.findAll()
+          .catch((error) => {
+            this.logger(error, "ERROR");
+            //this.cli.terminate(1);
+            return reject(1);
+          })
+          .then((result) => {
+            //var attribute = result[0].$options.attributes ;
+            var ele = JSON.stringify(result);
+            console.log(ele);
+            return resolve(ele);
+          })
+        );
+      });
     });
   }
-
 }
 
 module.exports = entityTask;

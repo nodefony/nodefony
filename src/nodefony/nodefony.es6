@@ -133,6 +133,10 @@ module.exports = class Nodefony {
     return this.isRegExp(it);
   }
 
+  isPromise(obj) {
+    return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
+  }
+
   isPlainObject(obj) {
     let proto, Ctor;
     // Detect obvious negatives
@@ -474,14 +478,14 @@ module.exports = class Nodefony {
       let cacheLink = path.resolve("tmp", "assestLink");
       if (fs.existsSync(cacheLink)) {
         if (cli && cli.logger) {
-          cli.logger("DELETE TMP LINK :" + cacheLink);
+          cli.logger("DELETE TMP LINK :" + cacheLink, "DEBUG");
         }
         shell.rm("-Rf", this.cacheLink);
       }
       let cacheWebpack = path.resolve("tmp", "webpack");
       if (fs.existsSync(cacheWebpack)) {
         if (cli && cli.logger) {
-          cli.logger("DELETE TMP :" + cacheWebpack);
+          cli.logger("DELETE TMP :" + cacheWebpack, "DEBUG");
         }
         shell.rm("-Rf", cacheWebpack);
       }
@@ -528,7 +532,7 @@ module.exports = class Nodefony {
         environment = "prod";
         type = "CONSOLE";
         process.env.MODE_START = "NODEFONY_CONSOLE";
-        this.manageCache(cli);
+        //this.manageCache(cli);
         return new this.appKernel(type, environment, debug, {});
       }
       this.logger("No nodefony trunk detected !", "ERROR");

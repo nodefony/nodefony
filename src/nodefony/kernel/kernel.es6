@@ -647,6 +647,9 @@ module.exports = nodefony.register("kernel", function () {
     initCluster() {
       this.processId = process.pid;
       this.process = process;
+      if (this.console && this.cli && this.cli.commander && this.cli.commander.json) {
+        return "";
+      }
       if (cluster.isMaster) {
         console.log(this.logEnv());
         this.fire("onCluster", "MASTER", this, process);
