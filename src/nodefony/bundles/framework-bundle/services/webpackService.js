@@ -327,26 +327,29 @@ module.exports = class webpack extends nodefony.Service {
   }
 
   runCompiler(compiler, id, bundle, file) {
-    try {
-      if (this.production) {
-        let pathCache = path.resolve(this.pathCache, id);
-        if (fs.existsSync(pathCache)) {
-          return;
+    return new Promise((resolve, reject) => {
+      try {
+        if (this.production) {
+          let pathCache = path.resolve(this.pathCache, id);
+          if (fs.existsSync(pathCache)) {
+            return resolve(true);
+          }
+          try {
+            fs.mkdirSync(pathCache);
+          } catch (e) {}
         }
-        try {
-          fs.mkdirSync(pathCache);
-        } catch (e) {}
-      }
-      return new Promise((resolve /*, reject*/ ) => {
         this.logger("BUNDLE : " + bundle + " WEBPACK COMPILE : " + file + "\n" + this.displayConfigTable(compiler.options), "DEBUG");
         compiler.run((err, stats) => {
           this.loggerStat(err, stats,  bundle, file);
-          return resolve(err, stats);
+          if (err) {
+            return reject(err);
+          }
+          return resolve(stats);
         });
-      });
-    } catch (e) {
-      throw e;
-    }
+      } catch (e) {
+        throw e;
+      }
+    });
   }
 
   displayConfigTable(config) {

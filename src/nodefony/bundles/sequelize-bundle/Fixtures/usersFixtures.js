@@ -74,6 +74,7 @@ module.exports = nodefony.registerFixture("users", function () {
               this.logger("ALREADY EXIST USER : " + args[i][0].username, "INFO");
             }
           }
+          return args;
         })
         .then(() => {
           return connection.query('SET FOREIGN_KEY_CHECKS = 1');

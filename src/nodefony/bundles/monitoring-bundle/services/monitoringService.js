@@ -53,7 +53,7 @@ module.exports = class monitoring extends nodefony.Service {
     this.node_start = this.kernel.node_start;
 
     this.listen(this, "onReady", () => {
-      this.name = this.container.getParameters("bundles.app.App.projectName") || "nodefony";
+      this.name = this.kernel.projectName || "nodefony";
       this.port = this.container.getParameters("bundles.realtime.services.monitoring.port") || 1318;
       if (this.realTime && this.kernel.type === "SERVER") {
         this.createServer();

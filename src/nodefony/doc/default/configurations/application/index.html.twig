@@ -1,28 +1,40 @@
-
 <div class="page-header">
-	<h1>Application Configuration</h1>
-	<p>
-		 Bundle Application is a special bundle in  app directory you can find a 'config' directory  <br>
+  <h1>Application Configuration</h1>
+  <p>
+    Bundle Application is a special bundle in app directory you can find a 'config' directory
+    <br>
 
-		<h2 > You can see here :</h2>
+    <h2 >
+      You can see here :</h2>
 
-		<p>
-			<ul>
-				<li><a href="#global_application">Goblal Configuration</a></li>
-				<li><a href="#routing_application">Routing Configuration</a></li>
-				<li><a href="#firewall_application">Firewall Configuration</a></li>
-				<li><a href="#webpack">Webpack Configurations</a></li>
-				<li><a href="#override">Override Configuration</a></li>
-			</ul>
-		<p>
+    <p>
+      <ul>
+        <li>
+          <a href="#global_application">Goblal Configuration</a>
+        </li>
+        <li>
+          <a href="#routing_application">Routing Configuration</a>
+        </li>
+        <li>
+          <a href="#firewall_application">Firewall Configuration</a>
+        </li>
+        <li>
+          <a href="#webpack">Webpack Configurations</a>
+        </li>
+        <li>
+          <a href="#override">Override Configuration</a>
+        </li>
+      </ul>
+      <p>
 
-	<p>
-</div>
+        <p></div>
 
-<h2>Location configurations in File System <span class="badge">Directory</span></h2>
-<div class="doc2">
-Location : <code>./app/config</code>
-<pre>
+        <h2>Location configurations in File System
+          <span class="badge">Directory</span></h2>
+        <div class="doc2">
+          Location :
+          <code>./app/config</code>
+          <pre>
 $ ls -l ./app/config
 total 48
 -rw-r--r--  1 cci  staff  5952 15 nov 11:35 config.yml
@@ -43,54 +55,58 @@ app/config/
 └── webpack.config.js
 
 </pre>
-</div>
+        </div>
 
+        <h2 id="global_application">Goblal Configuration
+          <span class="badge">File</span>
+        </h2>
 
-<h2 id="global_application" >Goblal Configuration <span class="badge">File</span> </h2>
+        <div class="doc2">
 
-<div class="doc2">
+          <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+              Application Global Configuration
+            </div>
+            <div class="panel-body">
 
-<div class="panel panel-default">
-  <!-- Default panel contents -->
-  <div class="panel-heading"> Application Global Configuration </div>
-  <div class="panel-body">
+              <div class="doc3">
+                <div class="alert alert-info" role="alert">
+                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                  Application is a Bundle with special comportement
+                  <br>
+                  This file override configuration of multiple Third-Party Bundles
+                </div>
+              </div>
 
-  	  <div class="doc3">
-  		  <div class="alert alert-info" role="alert">
-  			  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-  			  Application  is a Bundle with special comportement <br>
-			  This file override configuration of multiple Third-Party Bundles
-  		  </div>
-  	  </div>
-
-	  Location : <code>./app/config/config.yml</code>
-    <pre>
+              Location :
+              <code>./app/config/config.yml</code>
+              <pre>
 ######################
-#  NODEFONY APP CONFIG
+#  nodefony app config
 #
-#   @here You can OVERRIDE all Bundles Configurations
+#   @here you can override all bundles configurations
 #
-name :                           AppBundle
+name :                           appbundle
 version:                         1.0.0
 locale :                         en_en
-App:
-  projectName:                   "nodefony"
-  projectYear:                   2017
+app:
+  projectyear:                   2017
   locale:                        "en_en"
-  authorName:                    "admin"
-  authorMail:                    "admin@nodefony.com"
+  authorname:                    "admin"
+  authormail:                    "admin@nodefony.com"
 
 lang:
   en_en:                         "english"
   fr_fr:                         "français"
 
 ##################################
-#  WATCHERS
+#  watchers
 #
-#    watchers Listen to changes, deletion, renaming of files and directories
+#    watchers listen to changes, deletion, renaming of files and directories
 #    of different components
 #
-#    For watch all components
+#    for watch all components
 #
 #      watch:                    true
 #    or
@@ -104,38 +120,38 @@ lang:
 watch:                           true
 
 ##################################
-#  OVERRIDE BUNDLE MONITORING
+#  override bundle monitoring
 #
-#    see MONITORING BUNDLE config for more options
+#    see monitoring bundle config for more options
 #
 #
 monitoring-bundle:
-  debugBar:                      true
-  forceDebugBarProd:             false
+  debugbar:                      true
+  forcedebugbarprod:             false
   storage:
     active:                      false
     requests:                    orm
 
 ##################################
-#  OVERRIDE  BUNDLE SEQUELIZE
+#  override  bundle sequelize
 #
-#       @see SEQUELIZE BUNDLE config for more options
-#       @more options http://docs.sequelizejs.com/class/lib/sequelize.js~Sequelize.html
+#       @see sequelize bundle config for more options
+#       @more options http://docs.sequelizejs.com/class/lib/sequelize.js~sequelize.html
 #
-#       Nodefony Database Management
+#       nodefony database management
 #        dialect :               'mysql'|'sqlite'|'postgres'|'mssql'
 #
-#       By default nodefony create  connector name nodefony ( driver sqlite )
-#       for manage Sessions / Users / Requests
+#       by default nodefony create  connector name nodefony ( driver sqlite )
+#       for manage sessions / users / requests
 #
-#       For mysql/mariadb create database nodefony before
-#       Mysql > CREATE DATABASE nodefony;
+#       for mysql/mariadb create database nodefony before
+#       mysql > create database nodefony;
 #
-#       Here create new databases connectors
+#       here create new databases connectors
 #       and use for sync connectors :
 #       make sequelize
 #
-sequelizeBundle:
+sequelizebundle:
   debug:                         false
 #  connectors:
 #    nodefony:
@@ -149,9 +165,9 @@ sequelizeBundle:
 #        port:                   '3306'
 
 ############################
-#  OVERRIDE BUNDLE HTTP
+#  override bundle http
 #
-#       see HTTP BUNDLE config for more options
+#       see http bundle config for more options
 #
 #       query string parser
 #       form-data multipart parser
@@ -163,40 +179,40 @@ sequelizeBundle:
 #       upload
 #       websocket server
 #       websocket secure server
-#       sockjs dev server ( webpack dev server like WDS)
+#       sockjs dev server ( webpack dev server like wds)
 #
 #
-httpBundle:
-  # For more options parser formidable @see : https://github.com/felixge/node-formidable
+httpbundle:
+  # for more options parser formidable @see : https://github.com/felixge/node-formidable
   request:
-    uploadDir:                   "/tmp"                        # temporing file upload system
-    maxFileSize:                 2097152                        # In Bytes
-    maxFieldsSize:               2097152                       # 2MB
-    maxFields:                   1000                          # 0 for unlimited
-  # For more options parser QS @see : https://github.com/ljharb/qs
-  queryString:
-    parameterLimit:              1000
+    uploaddir:                   "/tmp"                        # temporing file upload system
+    maxfilesize:                 2097152                        # in bytes
+    maxfieldssize:               2097152                       # 2mb
+    maxfields:                   1000                          # 0 for unlimited
+  # for more options parser qs @see : https://github.com/ljharb/qs
+  querystring:
+    parameterlimit:              1000
     delimiter:                   "&"
-  # Server @see :                https://nodejs.org/dist/latest-v8.x/docs/api/http.html#http_class_http_server
+  # server @see :                https://nodejs.org/dist/latest-v8.x/docs/api/http.html#http_class_http_server
   http:
-    responseTimeout:             40000
+    responsetimeout:             40000
   https:
-    responseTimeout:             40000
+    responsetimeout:             40000
   sockjs:
       overlay:                   true
       hot:                       true
       protocol:                  https
       websocket:                 true
   statics:
-    defaultOptions:
-      cacheControl :             true
-      maxAge:                    0
+    defaultoptions:
+      cachecontrol :             true
+      maxage:                    0
     web:
       path:                      "web"
       options:
-        maxAge:                  0                             #30*24*60*60*1000
+        maxage:                  0                             #30*24*60*60*1000
   session:
-    start:                       false                 # false || true || Name Session Context
+    start:                       false                 # false || true || name session context
     name:                        "nodefony"
     handler:                     sequelize             # files | sequelize | memcached  "nodefony.session.storage"
     #save_path:                  "./tmp/sessions"      # for session.storage.files only
@@ -208,8 +224,8 @@ httpBundle:
     use_only_cookies:            true
     referer_check:               false
     cookie:
-      maxAge:                    0                     # like cookie_lifetime php  =>seconde
-      secure:                    false                 # Set true for https site only see https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/Set-Cookie
+      maxage:                    0                     # like cookie_lifetime php  =>seconde
+      secure:                    false                 # set true for https site only see https://developer.mozilla.org/fr/docs/web/http/headers/set-cookie
     memcached:
       servers:
         nodefony:
@@ -218,34 +234,34 @@ httpBundle:
           weight:                1
 
 #######################
-#  OVERRIDE SECURITY BUNDLE
+#  override security bundle
 #
-#   HEADERS SECURITY
+#   headers security
 #
-#    Content-Security-Policy
-#    Strict-Transport-Security
+#    content-security-policy
+#    strict-transport-security
 #     ...
-#    Manage and Clean hsts in chrome
+#    manage and clean hsts in chrome
 #     chrome://net-internals/#hsts
 #
-securityBundle:
+securitybundle:
   headers:
     http:
-     #Strict-Transport-Security: "max-age=31536000; includeSubDomains; preload"
-     X-Frame-Options:            "SAMEORIGIN"
-     X-Content-Type-Options:     "nosniff"
+     #strict-transport-security: "max-age=31536000; includesubdomains; preload"
+     x-frame-options:            "sameorigin"
+     x-content-type-options:     "nosniff"
     https           :
-     #Strict-Transport-Security: "max-age=31536000; includeSubDomains; preload"
-     X-Frame-Options:            "SAMEORIGIN"
-     X-Content-Type-Options:     "nosniff"
+     #strict-transport-security: "max-age=31536000; includesubdomains; preload"
+     x-frame-options:            "sameorigin"
+     x-content-type-options:     "nosniff"
 
 ################################
-#  OVERRIDE BUNDLE REALTIME
+#  override bundle realtime
 #
-#       see REALTIME BUNDLE config for more options
+#       see realtime bundle config for more options
 #
 #
-realTimeBundle:
+realtimebundle:
   services:
     monitoring:
       type:                      tcp
@@ -253,156 +269,178 @@ realTimeBundle:
       domain:                    localhost
 
 	  </pre>
-  </div>
+            </div>
 
-  <table class="table">
-	<thead>
-		<th class="config-parameters">Parameters</th>
-		<th>Description</th>
-		<th>Data Type</th>
-		<th>Example / <span class="badge">Default</span> </th>
-	</thead>
-	  <tbody>
-	  <tr>
-		  <td class="config-parameters">name</td>
-		  <td>Bundle Name</td>
-		  <td>String</td>
-		  <td>AppBundle</td>
-	  </tr>
-	  <tr>
-		  <td class="config-parameters">version</td>
-		  <td>Bundle Version </td>
-		  <td>String</td>
-		  <td>1.0</td>
-	  </tr>
-	  <tr>
-		  <td class="config-parameters">locale</td>
-		  <td>I18n Bundle locale</td>
-		  <td>String</td>
-		  <td>en_en</td>
-	  </tr>
+            <table class="table">
+              <thead>
+                <th class="config-parameters">Parameters</th>
+                <th>Description</th>
+                <th>Data Type</th>
+                <th>Example /
+                  <span class="badge">Default</span>
+                </th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="config-parameters">name</td>
+                  <td>Bundle Name</td>
+                  <td>String</td>
+                  <td>AppBundle</td>
+                </tr>
+                <tr>
+                  <td class="config-parameters">version</td>
+                  <td>Bundle Version
+                  </td>
+                  <td>String</td>
+                  <td>1.0</td>
+                </tr>
+                <tr>
+                  <td class="config-parameters">locale</td>
+                  <td>I18n Bundle locale</td>
+                  <td>String</td>
+                  <td>en_en</td>
+                </tr>
 
-	  <tr>
-		  <td class="config-parameters">App.projectName</td>
-		  <td>
-			  Name of Application (project)
-		  </td>
-		  <td>String</td>
-		  <td></span></td>
-	  </tr>
-	  <tr>
-		  <td class="config-parameters">App.projectYear</td>
-		  <td>
-			Year Application
-		  </td>
-		  <td>String</td>
-		  <td></td>
-	  </tr>
-	  <tr>
-		  <td class="config-parameters">App.locale</td>
-		  <td>
-			Application locale i18n
-		  </td>
-		  <td>String</td>
-		  <td><span class="badge">en_en</span></td>
-	  </tr>
-	  <tr>
-		  <td class="config-parameters">App.authorName</td>
-		  <td>Author </td>
-		  <td>String</td>
-		  <td></td>
-	  </tr>
-	  <tr>
-		  <td class="config-parameters">App.authorMail</td>
-		  <td>
-			  Author email
-		  </td>
-		  <td>String</td>
-		  <td></td>
-	  </tr>
-	  <tr>
-		  <td class="config-parameters">lang</td>
-		  <td>
-			  All langs enable in Application
-		  </td>
-		  <td>Object</td>
-		  <td></td>
-	  </tr>
+                <tr>
+                  <td class="config-parameters">App.projectName</td>
+                  <td>
+                    Name of Application (project)
+                  </td>
+                  <td>String</td>
+                  <td></span></td>
+              </tr>
+              <tr>
+                <td class="config-parameters">App.projectYear</td>
+                <td>
+                  Year Application
+                </td>
+                <td>String</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td class="config-parameters">App.locale</td>
+                <td>
+                  Application locale i18n
+                </td>
+                <td>String</td>
+                <td>
+                  <span class="badge">en_en</span></td>
+              </tr>
+              <tr>
+                <td class="config-parameters">App.authorName</td>
+                <td>Author
+                </td>
+                <td>String</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td class="config-parameters">App.authorMail</td>
+                <td>
+                  Author email
+                </td>
+                <td>String</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td class="config-parameters">lang</td>
+                <td>
+                  All langs enable in Application
+                </td>
+                <td>Object</td>
+                <td></td>
+              </tr>
 
-	  </tbody>
-  </table>
-  </div>
-</div>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-<h2 id="routing_application" >Application Routing Configuration <span class="badge">File</span> </h2>
-<div class="doc2">
-<div class="panel panel-default">
-  <!-- Default panel contents -->
-  <div class="panel-heading"> Application Routing Configuration </div>
-  <div class="panel-body">
-	  <p>Location : <code>./app/config/routing.js</code></p>
-	  <pre>
+      <h2 id="routing_application">Application Routing Configuration
+        <span class="badge">File</span>
+      </h2>
+      <div class="doc2">
+        <div class="panel panel-default">
+          <!-- Default panel contents -->
+          <div class="panel-heading">
+            Application Routing Configuration
+          </div>
+          <div class="panel-body">
+            <p>Location :
+              <code>./app/config/routing.js</code>
+            </p>
+            <pre>
 module.exports = {
-  // HOME
+  // home
   home: {
     pattern: "/",
     defaults: {
-      controller: "AppBundle:app:index"
+      controller: "appbundle:app:index"
     }
   }
 };
 	  </pre>
-  </div>
-</div>
-</div>
+          </div>
+        </div>
+      </div>
 
+      <h2 id="firewall_application">Application Firewall Configuration
+        <span class="badge">File</span>
+      </h2>
 
-<h2 id="firewall_application" >Application Firewall Configuration <span class="badge">File</span> </h2>
-
-<div class="doc2">
-<div class="panel panel-default">
-  <!-- Default panel contents -->
-  <div class="panel-heading"> Application Firewall Configuration </div>
-  <div class="panel-body">
-	  <p>Location : <code>./app/config/security.yml</code></p>
-	  <pre>
-# Security
+      <div class="doc2">
+        <div class="panel panel-default">
+          <!-- Default panel contents -->
+          <div class="panel-heading">
+            Application Firewall Configuration
+          </div>
+          <div class="panel-body">
+            <p>Location :
+              <code>./app/config/security.yml</code>
+            </p>
+            <pre>
+# security
 security:
 
   #
-  #  FIREWALL strategy
+  #  firewall strategy
   #  when change security context (multi firewalls areas)
   #
-  session_fixation_strategy:  migrate  # Strategy can be : none, migrate, invalidate
+  session_fixation_strategy:  migrate  # strategy can be : none, migrate, invalidate
 
   #
-  #  FIREWALL  AREAS
+  #  firewall  areas
   #
   firewalls: ~
 
   #
-  #  FIREWALL  PROVIDER
+  #  firewall  provider
   #
   providers: ~
 	  </pre>
-  </div>
-</div>
-</div>
+          </div>
+        </div>
+      </div>
 
-<h2 id="webpack" >Configuration Webpack <span class="badge">FILE</span> </h2>
+      <h2 id="webpack">Configuration Webpack
+        <span class="badge">FILE</span>
+      </h2>
 
-<div class="doc2">
-	<div class="panel panel-default">
-	  <!-- Default panel contents -->
-	  <div class="panel-heading"> Bundle Webpack Configuration </div>
-	  <div class="panel-body">
-		  <p>Location : <code>./app/config/webpack.config.js</code></p>
-		  <pre>
+      <div class="doc2">
+        <div class="panel panel-default">
+          <!-- Default panel contents -->
+          <div class="panel-heading">
+            Bundle Webpack Configuration
+          </div>
+          <div class="panel-body">
+            <p>Location :
+              <code>./app/config/webpack.config.js</code>
+            </p>
+            <pre>
 const path = require("path");
-const ExtractTextPluginCss = require('extract-text-webpack-plugin');
-const public = path.resolve(__dirname, "..", "Resources", "public");
-const bundleName = path.basename(path.resolve(__dirname, ".."));
-const webpackMerge = require('webpack-merge');
+const extracttextplugincss = require('extract-text-webpack-plugin');
+const public = path.resolve(__dirname, "..", "resources", "public");
+const bundlename = path.basename(path.resolve(__dirname, ".."));
+const webpackmerge = require('webpack-merge');
 
 let config = null;
 if (kernel.environment === "dev") {
@@ -411,7 +449,7 @@ if (kernel.environment === "dev") {
   config = require("./webpack/webpack.prod.config.js");
 }
 
-module.exports = webpackMerge(config, {
+module.exports = webpackmerge(config, {
   context: public,
   target: "web",
   //watch: false,
@@ -422,15 +460,15 @@ module.exports = webpackMerge(config, {
     path: public,
     filename: "./assets/js/[name].js",
     library: "[name]",
-    libraryTarget: "umd"
+    librarytarget: "umd"
   },
   externals: {},
   resolve: {},
   module: {
     rules: [{
-      // BABEL TRANSCODE
-      test: new RegExp("\.es6$|\.js$"),
-      exclude: new RegExp("node_modules"),
+      // babel transcode
+      test: new regexp("\.es6$|\.js$"),
+      exclude: new regexp("node_modules"),
       use: [{
         loader: 'babel-loader',
         options: {
@@ -438,14 +476,14 @@ module.exports = webpackMerge(config, {
         }
       }]
     }, {
-      // CSS EXTRACT
-      test: new RegExp("\.css$"),
-      use: ExtractTextPluginCss.extract({
+      // css extract
+      test: new regexp("\.css$"),
+      use: extracttextplugincss.extract({
         use: 'css-loader'
       })
     }, {
-      // SASS
-      test: new RegExp(".scss$"),
+      // sass
+      test: new regexp(".scss$"),
       use: [{
         loader: 'style-loader'
       }, {
@@ -454,66 +492,72 @@ module.exports = webpackMerge(config, {
         loader: 'sass-loader'
       }]
     }, {
-      test: new RegExp("\.less$"),
-      use: ExtractTextPluginCss.extract({
+      test: new regexp("\.less$"),
+      use: extracttextplugincss.extract({
         use: [
           "raw-loader",
           {
             loader: 'less-loader',
             options: {
-              //strictMath: true,
-              //noIeCompat: true
+              //strictmath: true,
+              //noiecompat: true
             }
           }
         ]
       })
     }, {
-      // FONTS
-      test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '&outputPath=/assets/fonts/',
+      // fonts
+      test: new regexp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
+      use: 'file-loader?name=[name].[ext]&publicpath=/' + bundlename + '&outputpath=/assets/fonts/',
     }, {
-      // IMAGES
-      test: new RegExp("\.(jpg|png|gif)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '&outputPath=/assets/images/'
+      // images
+      test: new regexp("\.(jpg|png|gif)$"),
+      use: 'file-loader?name=[name].[ext]&publicpath=/' + bundlename + '&outputpath=/assets/images/'
     }]
   },
   plugins: [
-    new ExtractTextPluginCss({
+    new extracttextplugincss({
       filename: "./assets/css/[name].css",
     })
   ]
 });
 		  </pre>
-		  <p>Location : <code>./app/config/webpack/webpack.dev.config.js</code></p>
-			<p> App add  HRM config  ( Hot Module Replacement ) </p>
-		  <pre>
-const webpackDevClient = "webpack-dev-server/client?https://" + kernel.hostHttps + "/";
+            <p>Location :
+              <code>./app/config/webpack/webpack.dev.config.js</code>
+            </p>
+            <p>
+              App add HRM config ( Hot Module Replacement )
+            </p>
+            <pre>
+const webpackdevclient = "webpack-dev-server/client?https://" + kernel.hosthttps + "/";
 module.exports = {
   entry: {
-    app: [webpackDevClient]
+    app: [webpackdevclient]
   },
   devtool: "source-map",
   plugins: []
 };
 		  </pre>
-			<p>Location : <code>./app/config/webpack/webpack.prod.config.js</code></p>
-			<pre>
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+            <p>Location :
+              <code>./app/config/webpack/webpack.prod.config.js</code>
+            </p>
+            <pre>
+const optimizecssassetsplugin = require('optimize-css-assets-webpack-plugin');
+const uglifyjsplugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   watch: false,
   plugins: [
-    new OptimizeCssAssetsPlugin({
-      cssProcessorOptions: {
-        discardComments: {
-          removeAll: true
+    new optimizecssassetsplugin({
+      cssprocessoroptions: {
+        discardcomments: {
+          removeall: true
         }
       },
-      canPrint: true
+      canprint: true
     }),
-    new UglifyJsPlugin({
-      uglifyOptions: {
+    new uglifyjsplugin({
+      uglifyoptions: {
         warnings: true,
         compress: true
       },
@@ -522,39 +566,42 @@ module.exports = {
   ]
 };
 		  </pre>
-	  </div>
-	</div>
-</div>
+          </div>
+        </div>
+      </div>
 
-<h2 id="override">Override GLOBAL CONFIGURATION from Third-Party Bundles :</h2>
-	<div class="doc2">
-		<p>
-			To override global configuration from Third-Party Bundles you can write in config.yml (root yaml node) the full name of bundle
-		</p>
-		<div class="alert  alert-info" role="alert">
-			WARNING to the order Registration bundles <br>
-			If you want override a config of Third-Party bundle, this one must be register before the bundle config file  who make the override
-		</div>
-		Example <code>./app/config/config.yml </code>
-		<pre>
+      <h2 id="override">Override GLOBAL CONFIGURATION from Third-Party Bundles :</h2>
+      <div class="doc2">
+        <p>
+          To override global configuration from Third-Party Bundles you can write in config.yml (root yaml node) the full name of bundle
+        </p>
+        <div class="alert  alert-info" role="alert">
+          WARNING to the order Registration bundles
+          <br>
+          If you want override a config of Third-Party bundle, this one must be register before the bundle config file who make the override
+        </div>
+        Example
+        <code>./app/config/config.yml
+        </code>
+        <pre>
 ....
 
 ##################################
 #
-#       OVERRIDE  BUNDLE SEQUELIZE
+#       override  bundle sequelize
 #
-#       see SEQUELIZE BUNDLE config for more options
+#       see sequelize bundle config for more options
 #
-#       Nodefony Database Management
+#       nodefony database management
 #
-#       By default nodefony create  connector name nodefony ( driver sqlite )
-#       for manage Sessions / User
+#       by default nodefony create  connector name nodefony ( driver sqlite )
+#       for manage sessions / user
 #
 #
 #       here create new databases connectors ( example mysql)
 #
 #
-sequelizeBundle:
+sequelizebundle:
   debug:        false
   connectors:
     nodefony:
@@ -569,21 +616,21 @@ sequelizeBundle:
 
 
 #
-#       OVERRIDE BUNDLE MONITORING
+#       override bundle monitoring
 #
-#       see MONITORING BUNDLE config for more options
+#       see monitoring bundle config for more options
 #
 #
 <strong>monitoring-bundle:</strong>
-debugBar:                     true
+debugbar:                     true
 #storage:                      false
 
 ....
 
 
-// STARTED NODEFONY SYSLOG :
-Mon Oct 03 2016 17:10:41 WARNING BUNDLE APP  :  OVERRIDING  CONFIG bundle  : sequelize
-Mon Oct 03 2016 17:10:41 WARNING BUNDLE APP  :  OVERRIDING  CONFIG bundle  : monitoring
+// started nodefony syslog :
+mon oct 03 2016 17:10:41 warning bundle app  :  overriding  config bundle  : sequelize
+mon oct 03 2016 17:10:41 warning bundle app  :  overriding  config bundle  : monitoring
 		</pre>
 
-	</div>
+      </div>

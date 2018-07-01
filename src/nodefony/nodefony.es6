@@ -44,7 +44,7 @@ module.exports = class Nodefony {
     this.projectName = "nodefony";
     this.isRegExp = require('lodash.isregexp');
     this.isTrunk = this.isNodefonyTrunk();
-    this.isCore = this.isCoreTrunk();
+    this.isCore = false;
     this.isElectron = this.isElectronContext();
     this.yarn = this.checkYarn();
     this.npm = this.checkNpm();
@@ -55,19 +55,20 @@ module.exports = class Nodefony {
     }
     //this.globalNpm = this.checkGlobalNpm();
     //this.globalYarn = this.checkGlobalYarn();
-    this.builed = false;
+    this.builded = false;
 
     if (this.isTrunk) {
-      this.builded = this.isBuiled();
+      this.builded = this.isBuilded();
       try {
         this.setConfig();
+        this.isCore = this.isCoreTrunk();
       } catch (e) {
         throw e;
       }
     }
   }
 
-  isBuiled() {
+  isBuilded() {
     try {
       fs.lstatSync(path.resolve("node_modules"));
       return true;
@@ -80,7 +81,10 @@ module.exports = class Nodefony {
     try {
       this.kernelConfig = this.loadYaml(this.kernelConfigPath);
       this.appConfig = this.loadYaml(this.appConfigPath);
-      this.projectName = this.appConfig.App.projectName;
+      this.projectPackage = require(path.resolve("package.json"));
+      this.projectVersion = this.projectPackage.version;
+      //this.projectName = this.appConfig.App.projectName;
+      this.projectName = this.projectPackage.name;
     } catch (e) {
       throw e;
     }
@@ -113,12 +117,18 @@ module.exports = class Nodefony {
   }
 
   isCoreTrunk() {
-    try {
-      fs.lstatSync(path.resolve(".core"));
-      return true;
-    } catch (e) {
-      return false;
+    if (this.isTrunk) {
+      if (this.projectPackage.name === "nodefony-core") {
+        return true;
+      }
+      try {
+        fs.lstatSync(path.resolve(".core"));
+        return true;
+      } catch (e) {
+        return false;
+      }
     }
+    return false;
   }
 
   isFunction(it) {
@@ -492,7 +502,7 @@ module.exports = class Nodefony {
     }
   }
 
-  start(cmd, args, cli) {
+  start(cmd, args, cli, options = {}) {
     let type = null;
     let debug = !!cli.commander.debug;
     let kernel = null;
@@ -504,7 +514,7 @@ module.exports = class Nodefony {
       environment = "dev";
       type = "SERVER";
       process.env.MODE_START = "NODEFONY_DEV";
-      kernel = new nodefony.appKernel(type, environment, debug, {});
+      kernel = new nodefony.appKernel(type, environment, debug, options);
       break;
     case "production":
     case "prod":
@@ -514,30 +524,151 @@ module.exports = class Nodefony {
       process.env.MODE_START = "NODEFONY";
       this.prodStart(type, environment, debug, {});
       break;
+    case "start":
     case "pm2":
       type = "SERVER";
       environment = "prod";
       if (process.env.MODE_START && process.env.MODE_START === "PM2") {
-        kernel = new nodefony.appKernel(type, environment, false, {});
+        kernel = new nodefony.appKernel(type, environment, false, options);
       } else {
         this.manageCache(cli);
         process.env.MODE_START = "PM2_START";
         this.pm2Start(cli);
       }
       break;
-    case "config":
-      return process.stdout.write(JSON.stringify(this.appConfig, null, '\t'));
+    case "stop":
+      pm2.stop(nodefony.projectName, (error, proc) => {
+        if (error) {
+          cli.logger(error, "ERROR");
+          cli.terminate(-1);
+        }
+        cli.logger(`PM2 Stop Project  ${nodefony.projectName}`);
+        this.tablePm2(cli, proc);
+        cli.terminate(0);
+      });
+      break;
+    case "kill":
+      pm2.killDaemon((error) => {
+        if (error) {
+          cli.logger(error, "ERROR");
+          cli.terminate(-1);
+        }
+        cli.logger(`Kill PM2 MANAGER`);
+        process.exit(0);
+      });
+      break;
+    case "status":
+    case "list":
+      pm2.list((error, processDescriptionList) => {
+        if (error) {
+          cli.logger(error, "ERROR");
+          cli.terminate(-1);
+        }
+        this.tablePm2(cli, processDescriptionList);
+        process.exit(0);
+      });
+      break;
+    case "clean-log":
+      pm2.flush((error, result) => {
+        if (error) {
+          cli.logger(error, "ERROR");
+          cli.terminate(-1);
+        }
+        cli.logger(`clean log ${nodefony.projectName}`);
+        this.tablePm2(cli, result);
+        process.exit(0);
+      });
+      break;
     default:
       if (this.appKernel) {
         environment = "prod";
         type = "CONSOLE";
         process.env.MODE_START = "NODEFONY_CONSOLE";
-        //this.manageCache(cli);
-        return new this.appKernel(type, environment, debug, {});
+        this.manageCache(cli);
+        return new this.appKernel(type, environment, debug, options);
       }
       this.logger("No nodefony trunk detected !", "ERROR");
       return cli.showHelp();
     }
+  }
+
+  tablePm2(cli, apps) {
+    //console.log(apps)
+    let table = null;
+    table = cli.displayTable(null, {
+      head: [
+        cli.clc.blue("App name"),
+        cli.clc.blue("id"),
+        cli.clc.blue("mode"),
+        cli.clc.blue("pid"),
+        cli.clc.blue("status"),
+        cli.clc.blue("restart"),
+        cli.clc.blue("uptime"),
+        cli.clc.blue("cpu"),
+        cli.clc.blue("memory"),
+        cli.clc.blue("user"),
+        cli.clc.blue("watching")
+      ],
+      //colWidths: [30, 15, 20, 15]
+    });
+    apps.forEach((ele) => {
+      //console.log(ele.pm2_env)
+      //console.log(ele)
+      let cpu = "-";
+      let memory = "-";
+      if (ele.monit) {
+        cpu = ele.monit.cpu + "%";
+        memory = nodefony.cli.niceBytes(ele.monit.memory);
+      }
+      let exec_mode = "-";
+      if (ele.pm2_env.exec_mode) {
+        exec_mode = ele.pm2_env.exec_mode;
+      }
+      let status = "-";
+      if (ele.status) {
+        status = ele.status;
+      }
+      if (ele.pm2_env.status) {
+        status = ele.pm2_env.status;
+      }
+      let uptime = "-";
+      if (ele.pm2_env.pm_uptime) {
+        uptime = nodefony.cli.niceUptime(ele.pm2_env.pm_uptime);
+      }
+      let restart = "-";
+      if (ele.pm2_env.restart_time) {
+        restart = ele.pm2_env.restart_time;
+      }
+      if (ele.restart_time) {
+        restart = ele.restart_time;
+      }
+      let username = "-";
+      if (ele.pm2_env.username) {
+        username = ele.pm2_env.username;
+      }
+      let watch = "-";
+      if (ele.pm2_env.watch) {
+        watch = ele.pm2_env.watch;
+      }
+      let pid = "-";
+      if (ele.pid) {
+        pid = ele.pid;
+      }
+      table.push([
+        ele.name,
+        ele.pm_id,
+        exec_mode,
+        pid,
+        status,
+        restart,
+        uptime,
+        cpu,
+        memory,
+        username,
+        watch
+      ]);
+    });
+    console.log(table.toString());
   }
 
   /*
@@ -547,47 +678,35 @@ module.exports = class Nodefony {
     this.setPm2Config();
     if (!this.pm2Config) {
       this.pm2Config = this.kernelConfig.system.PM2;
-      this.pm2Config.script = "nodefony";
-      this.pm2Config.args = "pm2";
-      this.pm2Config.env = {
+      this.pm2Config.apps[0].script = "nodefony";
+      this.pm2Config.apps[0].args = "pm2";
+      this.pm2Config.apps[0].env = {
         NODE_ENV: "production",
         MODE_START: "PM2"
       };
     }
-    if (this.projectName) {
-      this.pm2Config.name = this.projectName;
+    if (!this.pm2Config.apps[0].name) {
+      this.pm2Config.apps[0].name = this.projectName;
     }
-    pm2.connect(true, () => {
-      pm2.start(this.pm2Config, (err, apps) => {
+    //console.log(this.pm2Config)
+    pm2.connect(() => {
+      pm2.start(this.pm2Config, (err /*, apps*/ ) => {
         if (err) {
           cli.logger(err.stack || err, "ERROR");
           cli.terminate(1);
         }
         try {
-          let table = null;
-          table = cli.displayTable(null, {
-            head: [
-              "APP NAME",
-              "ID",
-              "STATUS",
-              "RESTART"
-            ],
-            colWidths: [30, 15, 20, 15]
-          });
-          apps.forEach((ele) => {
-            //console.log(ele.pm2_env)
-            table.push([
-              ele.pm2_env.name,
-              ele.pm2_env.pm_id,
-              ele.pm2_env.status,
-              ele.pm2_env.restart_time
-            ]);
-          });
-          console.log(table.toString());
-          console.log(" To see all logs use the command  make logs ");
-          console.log(" Or use PM2  pm2 --lines 1000 logs ");
           process.nextTick(() => {
-            cli.terminate(0);
+            pm2.list((err, processDescriptionList) => {
+              if (err) {
+                console.error(err);
+              }
+              this.tablePm2(cli, processDescriptionList);
+              console.log(" To see all logs use the command  make logs ");
+              console.log(" Or use PM2  pm2 --lines 1000 logs ");
+              //console.log(processDescriptionList);
+              pm2.disconnect();
+            });
           });
         } catch (e) {
           cli.logger(e, "ERROR");

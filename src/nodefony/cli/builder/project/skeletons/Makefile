@@ -26,11 +26,11 @@ install:
 	@echo "#########################################" ;
 	@echo "";
 	@if [ $(VERBOSE) = 0 ] ; then \
-		echo "nodefony nodefony:npm:install";\
-		npm start nodefony:npm:install ;\
+		echo "nodefony nodefony:bundles:install";\
+		npm start nodefony:bundles:install ;\
 	else \
-		echo "nodefony -d nodefony:npm:install";\
-		npm start -d nodefony:npm:install ;\
+		echo "nodefony -d nodefony:bundles:install";\
+		npm start -d nodefony:bundles:install ;\
 	fi \
 
 build:
@@ -55,15 +55,15 @@ build:
 		npm start router:display:routes ;\
 		echo "nodefony router:display:match /";\
 		npm start router:display:match /\
-		echo "nodefony nodefony:npm:install";\
-		npm start nodefony:npm:install ;\
+		echo "nodefony nodefony:bundles:install";\
+		npm start nodefony:bundles:install ;\
 	else \
 		echo "nodefony -d router:display:routes";\
 		npm start -d router:display:routes ;\
 		echo "nodefony -d router:display:match /";\
 		npm start -d router:display:match /\
-		echo "nodefony -d nodefony:npm:install";\
-		npm start -d nodefony:npm:install ;\
+		echo "nodefony -d nodefony:bundles:install";\
+		npm start -d nodefony:bundles:install ;\
 	fi \
 
 #

@@ -44,10 +44,10 @@ class generateTask extends nodefony.Task {
                   hooks: true
                 }).then((db) => {
                   this.logger("DATABASE :" + db.config.database + " CONNECTION : " + connectionName + " CREATE ALL TABLES", "INFO");
-                  resolve(connectionName);
+                  return resolve(connectionName);
                 }).catch((error) => {
                   this.logger("DATABASE :" + connection.config.database + " CONNECTION : " + connectionName + " : " + error, "ERROR");
-                  reject(error);
+                  return reject(error);
                 });
               });
             break;

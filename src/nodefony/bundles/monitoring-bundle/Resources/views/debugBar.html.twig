@@ -159,7 +159,7 @@
     <li class="separator"></li>
     <li>
       <label class="label nodefony-responsive-sm">
-        <a target="blank" href='{{path("monitoring-index")}}#/config/App'>{{appSettings.projectName}}
+        <a target="blank" href='{{path("monitoring-index")}}#/config/App'>{{projectName}}
           :</a>
       </label>
       <label class="label label-default">{{environment}}</label>
@@ -183,7 +183,7 @@
           <li class="separator"></li>
 
           <li>
-            <label class="nodefony-title" >BUNDLES</label>
+            <label class="nodefony-title">BUNDLES</label>
           </li>
           {% for key, value in bundles %}
             {% if key != "app" %}
@@ -202,7 +202,7 @@
 
           <li class="separator"></li>
           <li>
-            <label class="nodefony-title" title="content delivery network" >DOMAIN CDN</label>
+            <label class="nodefony-title" title="content delivery network">DOMAIN CDN</label>
           </li>
           {% if cdn %}
             {% if cdn.global %}
@@ -323,7 +323,7 @@
       <div class="details">
         <ul>
           <li>
-            <label class="nodefony-title" >TRANSLATION</label>
+            <label class="nodefony-title">TRANSLATION</label>
           </li>
           <li>
             <label>Locale Default</label>
@@ -335,7 +335,7 @@
           </li>
           <li class="separator"></li>
           <li>
-            <label class="nodefony-title" >UPLOAD</label>
+            <label class="nodefony-title">UPLOAD</label>
           </li>
           <li>
             <label>Temporary Directory</label>
@@ -347,7 +347,7 @@
           </li>
           <li class="separator"></li>
           <li>
-            <label class="nodefony-title" >SESSION</label>
+            <label class="nodefony-title">SESSION</label>
           </li>
           {% if services.session.storage == "session.storage.files" %}
             <li>
@@ -367,7 +367,7 @@
           {% if services.templating %}
             <li class="separator"></li>
             <li>
-              <label class="nodefony-title" >TEMPLATING</label>
+              <label class="nodefony-title">TEMPLATING</label>
               <span >{{services.templating.name}}</span>
             </li>
             <li>
@@ -378,7 +378,7 @@
           {% if services.ORM %}
             <li class="separator"></li>
             <li>
-              <label class="nodefony-title" >ORM</label>
+              <label class="nodefony-title">ORM</label>
               <span >{{services.ORM.name}}</span>
             </li>
             <li>
@@ -387,7 +387,8 @@
             </li>
             <li class="separator"></li>
             <li>
-              <label class="nodefony-title" >DATABASES </label>
+              <label class="nodefony-title">DATABASES
+              </label>
             </li>
             {% for key, value in services.ORM.connections %}
               <li>
@@ -453,7 +454,7 @@
         <div class="details">
           <ul>
             <li>
-              <label class="nodefony-title" >FIREWALL</label>
+              <label class="nodefony-title">FIREWALL</label>
               <label class="label-nodefony label-success">
                 {{context_secure.name}}
               </label>
@@ -479,7 +480,7 @@
 
             <li class="separator"></li>
             <li>
-              <label class="nodefony-title" >Token</label>
+              <label class="nodefony-title">Token</label>
             </li>
             {% if context_secure.token %}
               <li>
@@ -501,7 +502,7 @@
               <li class="separator"></li>
               {% if context.isControlledAccess %}
                 <li>
-                  <label class="nodefony-title" >Authorisation</label>
+                  <label class="nodefony-title">Authorisation</label>
                 </li>
                 <li>
                   <label>Access Control</label>
@@ -509,7 +510,7 @@
                 </li>
               {% else %}
                 <li>
-                  <label class="nodefony-title" >Authorisation</label>
+                  <label class="nodefony-title">Authorisation</label>
                 </li>
                 <li>
                   <label>Access Control</label>
@@ -519,7 +520,7 @@
               {% if context_secure.user %}
                 <li class="separator"></li>
                 <li>
-                  <label class="nodefony-title" >User</label>
+                  <label class="nodefony-title">User</label>
                 </li>
                 <li>
                   <label >
@@ -545,7 +546,7 @@
         <div class="details">
           <ul>
             <li>
-              <label class="nodefony-title" >FIREWALL</label>
+              <label class="nodefony-title">FIREWALL</label>
               <label class="label-nodefony label-default">
                 OFF
               </label>
@@ -604,7 +605,7 @@
       <div class="details">
         <ul>
           <li>
-            <label class="nodefony-title" >ROUTER SERVICE</label>
+            <label class="nodefony-title">ROUTER SERVICE</label>
           </li>
           <li>
             <label>Pattern</label>
@@ -642,7 +643,7 @@
           {% for key, value in route %}
             {% if key == "variables" %}
               {% if route.variables | length %}
-                <label class="label-nodefony" class="nodefony-title">Variables :</label>
+                <label class="nodefony-title">Variables :</label>
                 {% for key, value in route.variables %}
                   <li>
                     <label>{{varialblesName[key]}}</label>
@@ -654,7 +655,7 @@
           {% endfor %}
           <li class="separator"></li>
           <li>
-            <label class="nodefony-title" >TRANSLATION</label>
+            <label class="nodefony-title">TRANSLATION</label>
           </li>
           <li>
             <label>Local</label>

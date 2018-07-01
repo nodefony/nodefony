@@ -19,8 +19,8 @@ const Bundle = class Bundle extends nodefony.Builder {
     this.kernel = this.cli.kernel;
     this.bundleType = bundleType || "";
     nodefony.extend(this.cli.response, {
-      module: this.cli.response.config.App.projectName,
-      projectName: this.cli.response.config.App.projectName,
+      module: nodefony.projectName,
+      projectName: nodefony.projectName,
       authorName: this.cli.response.config.App.authorName,
       authorEmail: this.cli.response.config.App.authorMail,
       projectYear: this.cli.response.config.App.projectYear,

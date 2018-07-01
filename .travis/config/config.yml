@@ -3,11 +3,8 @@
 #
 #   @here You can OVERRIDE all Bundles Configurations
 #
-name :                           AppBundle
-version:                         1.0.0
 locale :                         en_en
 App:
-  projectName:                   "nodefony"
   projectYear:                   2017
   locale:                        "en_en"
   authorName:                    "admin"

@@ -4,6 +4,7 @@ const inquirer = require('inquirer');
 const commander = require('commander');
 const spawn = require('child_process').spawn;
 const spawnSync = require('child_process').spawnSync;
+const moment = require("moment");
 
 module.exports = nodefony.register("cli", function () {
 
@@ -284,8 +285,14 @@ module.exports = nodefony.register("cli", function () {
       }, options), callback);
     }
 
-    parseCommand() {
-      return this.commander.parse(process.argv);
+    parseCommand(argv) {
+      let ret = this.commander.parse(argv || process.argv);
+      if (this.commander.debug) {
+        this.debug = this.commander.debug;
+      } else {
+        this.debug = false;
+      }
+      return ret;
     }
 
     setOption(option, description, callback) {
@@ -402,6 +409,14 @@ module.exports = nodefony.register("cli", function () {
         l++;
       }
       return (n.toFixed(n >= 10 || l < 1 ? 0 : 1) + ' ' + units[l]);
+    }
+
+    static niceUptime(date, suffix) {
+      return moment(date).fromNow(suffix || false);
+    }
+
+    static niceDate(date, format) {
+      return moment(date).format(format);
     }
 
     getEmoji(name) {
@@ -591,26 +606,56 @@ module.exports = nodefony.register("cli", function () {
       });
     }
 
+    npmOutdated(cwd = path.resolve("."), argv = []) {
+      return new Promise((resolve, reject) => {
+        let tab = ["outdated"];
+        if (argv) {
+          tab = tab.concat(argv);
+        }
+        let cmd = null;
+        try {
+          //this.logger("npm outdated in " + cwd);
+          this.debug = true;
+          cmd = this.spawn("npm", tab, {
+            cwd: cwd,
+            shell: true
+          }, (code) => {
+            if (code === 1) {
+              return reject(new Error("nmp outdated error : " + code));
+            }
+            this.logger(`Check Outdated Packages ${cwd}`);
+            return resolve(cwd);
+          });
+        } catch (e) {
+          this.logger(e, "ERROR");
+          return reject(e);
+        }
+      });
+    }
+
     spawn(command, args, options, close) {
       let cmd = null;
       try {
-        this.logger("Run Spawn : " + command + " " + args.join(" "));
+        this.logger("Run Spawn : " + command + " " + args.join(" "), "DEBUG");
         cmd = spawn(command, args, options || {});
-
-        cmd.stdout.on('data', (data) => {
-          let str = data.toString();
-          if (str) {
-            this.logger(`${command} stdout :  ${str}`);
-          }
-        });
-        cmd.stderr.on('data', (data) => {
-          let str = data.toString();
-          if (str) {
-            this.logger(`${command} stderr :  ${str}`, "INFO");
-          }
-        });
+        if (this.debug) {
+          cmd.stdout.on('data', (data) => {
+            let str = data.toString();
+            if (str) {
+              this.logger(`${command} stdout :  ${str}`);
+            }
+          });
+          cmd.stderr.on('data', (data) => {
+            let str = data.toString();
+            if (str) {
+              this.logger(`${command} stderr :  ${str}`, "INFO");
+            }
+          });
+        }
         cmd.on('close', (code) => {
-          this.logger(`child process exited with code ${code}`);
+          if (this.debug) {
+            this.logger(`child process exited with code ${code}`, "DEBUG");
+          }
           if (close) {
             close(code);
           }

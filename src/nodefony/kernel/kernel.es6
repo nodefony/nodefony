@@ -125,7 +125,7 @@ module.exports = nodefony.register("kernel", function () {
         // cli worker
         this.cli = new nodefony.cliKernel(nodefony.projectName || "nodefony", this.container, this.notificationsCenter, {
           autoLogger: false,
-          version: this.version,
+          version: this.isCore ? this.version : nodefony.projectVersion,
           pid: this.typeCluster === "worker" ? true : false,
           onStart: (cli) => {
             this.cli = cli;
@@ -834,39 +834,9 @@ module.exports = nodefony.register("kernel", function () {
       return this.type === "CONSOLE";
     }
 
-    /*isCommand() {
-      if (this.isConsole()) {
-        if (this.cli.commander && this.cli.commander.args && this.cli.commander.args[0]) {
-          switch (this.cli.commander.args[0]) {
-          case "npm:install":
-            return this.cli.commander.args[0];
-          default:
-            return false;
-          }
-        }
-      }
-    }
-
-    loadCommand(file, loader) {
-      switch (this.isCommand()) {
-      case "npm:install":
-        let bundle = this.getBundleClass(file);
-        if (this.isCore) {
-          return this.cli.installPackage(bundle.name, file);
-        } else {
-          if (!this.isBundleCore(bundle.name)) {
-            return this.cli.installPackage(bundle.name, file);
-          }
-        }
-        break;
-      default:
-        this.loadBundle(file, loader);
-      }
-    }*/
-
     isInstall() {
       if (this.cli.command === "nodefony" &&
-        this.cli.task === "npm" &&
+        this.cli.task === "bundles" &&
         this.cli.action === "install") {
         return true;
       }

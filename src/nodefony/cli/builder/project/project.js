@@ -39,6 +39,7 @@ module.exports = class generateProject extends nodefony.Builder {
         validate: (value) => {
           if (value && value !== "nodefony") {
             this.name = value;
+            nodefony.projectName = value;
             return true;
           }
           return `${value} Unauthorised Please enter a valid project name`;

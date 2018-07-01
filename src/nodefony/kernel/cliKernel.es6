@@ -110,7 +110,7 @@ module.exports = nodefony.register("cliKernel", function () {
       this.optionsTables = optionsTaskTables;
       this.optionsTitleTables = optionsTitleTables;
       if (this.kernel) {
-        this.publicPath = this.kernel.publicPath; //path.resolve("web"); //this.kernel.rootDir + "/web/";
+        this.publicPath = this.kernel.publicPath;
       } else {
         this.publicPath = null;
       }
@@ -118,12 +118,12 @@ module.exports = nodefony.register("cliKernel", function () {
         nodefony: {}
       };
       this.classCommand = {};
-      this.parse = this.commander.args || []; //super.parseCommand();
+      this.parse = this.commander.args || [];
       this.args =   [];
       this.command = null;
       this.task = null;
       this.action = null;
-      this.parseCommand();
+      this.parseNodefonyCommand();
     }
 
     showBanner(data) {
@@ -137,7 +137,7 @@ module.exports = nodefony.register("cliKernel", function () {
      * PARSER
      * command:task:action
      */
-    parseCommand() {
+    parseNodefonyCommand() {
       if (this.parse.length) {
         this.pattern = this.parse[0].split(":");
         if (!this.pattern.length) {
@@ -198,9 +198,35 @@ module.exports = nodefony.register("cliKernel", function () {
         console.log(args)
       });*/
     }
+    getCommand(command, bundle = null) {
+      let commands = [];
+      if (!command) {
+        throw new Error("getCommand Bad command argument");
+      }
+      if (bundle) {
+        if (!this.commands[bundle]) {
+          throw new Error(`getCommand command : ${command}  Bundle : ${bundle} don't exist`);
+        } else {
+          if (this.commands[bundle][command]) {
+            return this.commands[bundle][command];
+          } else {
+            throw new Error(`getCommand command : ${command}  don't exist in Bundle ${bundle}`);
+          }
+        }
+      } else {
+        for (let bundle in this.commands) {
+          if (this.commands[bundle][command]) {
+            commands.push(this.commands[bundle][command]);
+          } else {
+            continue;
+          }
+        }
+      }
+      return commands;
+    }
 
     matchCommand() {
-      if (this.parse.length) {
+      if (this.parse.length && this.command) {
         for (let bundle in this.commands) {
           if (Object.keys(this.commands[bundle]).length) {
             if (this.command in this.commands[bundle]) {
@@ -213,9 +239,12 @@ module.exports = nodefony.register("cliKernel", function () {
                     this.logger(`${this.command}:${this.task}`);
                     let ret = myAction.apply(myCommand, this.args);
                     if (ret && nodefony.isPromise(ret)) {
-                      return ret.then(() => {
-                        return this.terminate(0);
+                      return ret.then((ele) => {
+                        if (ele) {
+                          return this.terminate(0);
+                        }
                       }).catch((e) => {
+                        this.logger(e, "ERROR");
                         return this.terminate(e.code || -1);
                       });
                     }
@@ -238,9 +267,12 @@ module.exports = nodefony.register("cliKernel", function () {
                         //console.log(this.args)
                         let ret = myAction.apply(myCommand.tasks[this.task], this.args);
                         if (ret && nodefony.isPromise(ret)) {
-                          return ret.then(() => {
-                            return this.terminate(0);
+                          return ret.then((ele) => {
+                            if (ele) {
+                              return this.terminate(0);
+                            }
                           }).catch((e) => {
+                            this.logger(e, "ERROR");
                             return this.terminate(e.code || -1);
                           });
                         }
@@ -271,6 +303,11 @@ module.exports = nodefony.register("cliKernel", function () {
           }
         }
         try {
+          if (this.command === "install") {
+            this.command = "nodefony";
+            this.task = "install";
+            return this.matchCommand();
+          }
           return require(path.resolve(this.command));
         } catch (e) {
           this.showHelp();
@@ -497,9 +534,9 @@ module.exports = nodefony.register("cliKernel", function () {
         throw e;
       }
       for (let bundle in this.kernel.bundles) {
-        //if (this.kernel.isBundleCore(bundle) ) {
-        //  continue;
-        //}
+        if ((!this.kernel.isCore) && this.kernel.isBundleCore(bundle)) {
+          continue;
+        }
         mypromise.push(this.npmList(this.kernel.bundles[bundle].path, tab));
       }
       return Promise.all(mypromise).then((ele) => {
@@ -517,7 +554,8 @@ module.exports = nodefony.register("cliKernel", function () {
         //this.terminate(0);
       }).catch((error) => {
         this.logger(error, "ERROR");
-        this.terminate(1);
+        //this.terminate(1);
+        throw error;
       });
     }
 
@@ -556,11 +594,15 @@ module.exports = nodefony.register("cliKernel", function () {
             try {
               for (var pack in data.dependencies) {
                 if (data.dependencies[pack].name) {
+                  let where = "";
+                  if (data.dependencies[pack]._where) {
+                    where = path.basename(data.dependencies[pack]._where) || "";
+                  }
                   ele.push([
                     data.dependencies[pack].name,
                     data.dependencies[pack].version,
                     data.dependencies[pack].description ||  "",
-                    path.basename(data.dependencies[pack]._where) || ""
+                    where
                   ]);
                 }
               }
@@ -587,6 +629,25 @@ module.exports = nodefony.register("cliKernel", function () {
       } catch (e) {
         if (e.code !== "ENOENT") {
           this.logger("Install Package BUNDLE : " + bundle.name + ":", "ERROR");
+          this.logger(e, "ERROR");
+          throw e;
+        }
+        throw e;
+      }
+    }
+
+    outdatedPackage(bundle) {
+      try {
+        if (bundle instanceof nodefony.Bundle) {
+          return this.npmOutdated(bundle.path, null);
+        }
+        if (bundle instanceof nodefony.fileClass) {
+          return this.npmOutdated(bundle.dirName, null);
+        }
+        throw new Error("Method outdatedPackage bundle must be an instance of nodefony.Bundle");
+      } catch (e) {
+        if (e.code !== "ENOENT") {
+          this.logger("Outdated  Package BUNDLE : " + bundle.name + ":", "ERROR");
           this.logger(e, "ERROR");
           throw e;
         }

@@ -47,11 +47,12 @@ module.exports = nodefony.registerFixture("users", function () {
     }];
 
     //const connection = this.getConnection("nodefony");
-    return user.insertMany(tab).then(() => {
-      return resolve("userEntity");
-    }).catch((e) => {
-      return reject(e);
-    });
+    return user.insertMany(tab)
+      .then((ele) => {
+        return resolve(ele);
+      }).catch((e) => {
+        return reject(e);
+      });
 
   };
 

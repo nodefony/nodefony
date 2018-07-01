@@ -46,12 +46,10 @@ class fixturesTask extends nodefony.Task {
           .catch((e) => {
             this.logger(e, "ERROR");
             return reject(e);
-            //this.cli.terminate(1);
           })
-          .then(() => {
+          .then((ele) => {
             this.logger("LOAD FIXTURE ENTITY :  SUCCESS");
-            //this.cli.terminate(0);
-            return resolve(0);
+            return resolve(ele);
           })
         );
       });

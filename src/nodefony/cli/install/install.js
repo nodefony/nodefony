@@ -4,22 +4,72 @@ module.exports = class installProject extends nodefony.Builder {
     super(cli);
   }
 
+  logger(pci, severity, msgid, msg) {
+    if (!msgid) {
+      msgid = "INSTALLER";
+    }
+    return super.logger(pci, severity, msgid, msg);
+  }
+
   install(cwd = path.resolve(".")) {
     return new Promise((resolve, reject) => {
-      try {
-        this.installFramework(cwd);
+      return this.installFramework(cwd).then(() => {
         return this.cli.npmInstall(cwd)
           .then(() => {
-            return this.installOrm()
-              .then(() => {
-                return this.generateCertificates(cwd)
-                  .then(() => {
-                    return resolve(this.displayInfo());
-                  });
+            if (nodefony.isCoreTrunk()) {
+              return this.npmLink(path.resolve("."), path.resolve("src", "nodefony")).then(() => {
+                return this.generateCertificates(cwd);
               });
-          }).catch((e) => {
+            } else {
+              return this.generateCertificates(cwd);
+            }
+          })
+          .then(() => {
+            return this.instanceKernel(cwd);
+          })
+          .catch((e) => {
             return reject(e);
           });
+      });
+    });
+  }
+
+  npmLink(cwd = path.resolve("."), argv = []) {
+    return new Promise((resolve, reject) => {
+
+      let tab = ["link"];
+      if (argv) {
+        tab = tab.concat(argv);
+      }
+      let cmd = null;
+      try {
+        this.logger("npm link " + argv);
+        cmd = this.cli.spawn("npm", tab, {
+          cwd: cwd,
+          shell: true
+        }, (code) => {
+          if (code === 1) {
+            return reject(new Error("nmp link error : " + code));
+          }
+          return resolve(cwd);
+        });
+      } catch (e) {
+        this.logger(e, "ERROR");
+        return reject(e);
+      }
+    });
+  }
+
+  instanceKernel(cwd) {
+    return new Promise((resolve, reject) => {
+      try {
+        this.cli.setCommand("nodefony:install", [cwd]);
+        nodefony.appKernel = nodefony.autoloader.loadAppKernel();
+        if (nodefony.appKernel) {
+          return nodefony.start("nodefony:install", this.cli.args, this.cli, {});
+        } else {
+          return reject(new Error("No nodefony trunk detected !"));
+        }
       } catch (e) {
         return reject(e);
       }
@@ -28,91 +78,63 @@ module.exports = class installProject extends nodefony.Builder {
 
   generateCertificates(cwd = path.resolve(".")) {
     return new Promise((resolve, reject) => {
-      let directory = path.resolve(cwd, "config", "certificates");
-      this.checkDirectoryExist(directory);
-      this.cli.rm("-rf", directory);
-      let cmd = null;
       try {
-        cmd = this.cli.spawnSync(path.resolve(cwd, "bin", "generateCertificates.sh"), {}, {
-          cwd: path.resolve("bin")
+        let directory = path.resolve(cwd, "config", "certificates");
+        this.cli.rm("-rf", directory);
+        this.checkDirectoryExist(directory);
+        this.logger(`Generate ssl certificate in : ${directory}`);
+        let cmd = null;
+        cmd = this.cli.spawn(path.resolve(cwd, "bin", "generateCertificates.sh"), [], {
+          cwd: cwd,
+          shell: true
+        }, (code) => {
+          if (code === 1) {
+            return reject(new Error("generateCertificates error : " + code));
+          }
+          return resolve(code);
         });
-        return resolve(cmd.status);
       } catch (e) {
         return reject(e);
       }
     });
   }
-
 
   installFramework(cwd = path.resolve(".")) {
-    try {
-      let tmp = path.resolve(cwd, "tmp");
-      this.checkDirectoryExist(tmp);
-      let upload = path.resolve(cwd, "tmp", "upload");
-      this.checkDirectoryExist(upload);
-      let bin = path.resolve(cwd, "bin");
-      this.checkDirectoryExist(bin);
-      let databases = path.resolve(cwd, "app", "Resources", "databases");
-      this.checkDirectoryExist(databases);
-      let web = path.resolve(cwd, "web");
-      this.checkDirectoryExist(web);
-      let js = path.resolve(cwd, "web", "js");
-      this.checkDirectoryExist(js);
-      let css = path.resolve(cwd, "web", "css");
-      this.checkDirectoryExist(css);
-      let images = path.resolve(cwd, "web", "images");
-      this.checkDirectoryExist(images);
-      let fonts = path.resolve(cwd, "web", "fonts");
-      this.checkDirectoryExist(fonts);
-      let assets = path.resolve(cwd, "web", "assets");
-      this.checkDirectoryExist(assets);
-      js = path.resolve(cwd, "web", "assets", "js");
-      this.checkDirectoryExist(js);
-      css = path.resolve(cwd, "web", "assets", "css");
-      this.checkDirectoryExist(css);
-      images = path.resolve("web", "assets", "images");
-      this.checkDirectoryExist(images);
-      fonts = path.resolve(cwd, "web", "assets", "fonts");
-      this.checkDirectoryExist(fonts);
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  installOrm() {
     return new Promise((resolve, reject) => {
-      this.logger("INITIALIZE ORM");
-      return resolve();
-    });
-  }
-
-  displayInfo() {
-    return new Promise((resolve, reject) => {
+      this.logger("Create Framework directories");
       try {
-        return this.listRouting()
-          .then(() => {
-            return this.listPackage()
-              .then((res) => {
-                return resolve(res);
-              });
-          });
+        let tmp = path.resolve(cwd, "tmp");
+        this.checkDirectoryExist(tmp);
+        let upload = path.resolve(cwd, "tmp", "upload");
+        this.checkDirectoryExist(upload);
+        let bin = path.resolve(cwd, "bin");
+        this.checkDirectoryExist(bin);
+        let databases = path.resolve(cwd, "app", "Resources", "databases");
+        this.checkDirectoryExist(databases);
+        let web = path.resolve(cwd, "web");
+        this.checkDirectoryExist(web);
+        let js = path.resolve(cwd, "web", "js");
+        this.checkDirectoryExist(js);
+        let css = path.resolve(cwd, "web", "css");
+        this.checkDirectoryExist(css);
+        let images = path.resolve(cwd, "web", "images");
+        this.checkDirectoryExist(images);
+        let fonts = path.resolve(cwd, "web", "fonts");
+        this.checkDirectoryExist(fonts);
+        let assets = path.resolve(cwd, "web", "assets");
+        this.checkDirectoryExist(assets);
+        js = path.resolve(cwd, "web", "assets", "js");
+        this.checkDirectoryExist(js);
+        css = path.resolve(cwd, "web", "assets", "css");
+        this.checkDirectoryExist(css);
+        images = path.resolve("web", "assets", "images");
+        this.checkDirectoryExist(images);
+        fonts = path.resolve(cwd, "web", "assets", "fonts");
+        this.checkDirectoryExist(fonts);
+        return resolve(true);
       } catch (e) {
         return reject(e);
       }
-    });
-  }
-
-  listPackage() {
-    return new Promise((resolve, reject) => {
-      this.logger("PACKAGES LIST ");
-      return resolve();
-    });
-  }
-
-  listRouting() {
-    return new Promise((resolve, reject) => {
-      this.logger("ROUTING LIST ");
-      return resolve();
     });
   }
 
@@ -155,8 +177,7 @@ module.exports = class installProject extends nodefony.Builder {
         this.removeFile(npmLock);
         let yarnLock = path.resolve(cwd, "yarn.lock");
         this.removeFile(yarnLock);
-        this.installFramework(cwd);
-        return resolve(true);
+        return resolve(this.installFramework(cwd));
       } catch (e) {
         return reject(e);
       }

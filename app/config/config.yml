@@ -5,7 +5,6 @@
 #
 locale                      :    en_en
 App:
-  projectName               :    "nodefony-core"
   projectYear               :    2017
   locale                    :    "en_en"
   authorName                :    "admin"

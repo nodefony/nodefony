@@ -13,39 +13,26 @@ class webpackCommand extends nodefony.Command {
     return new Promise((resolve, reject) => {
       this.kernel.listen(this, "onReady", () => {
         let promiseWebpack = [];
-        for (let bundle in this.kernel.bundles) {
-          if (this.kernel.isCore) {
-            if (this.kernel.bundles[bundle].webpackCompiler) {
-              promiseWebpack.push(this.kernel.bundles[bundle].compileWebpack());
-              /*if (promiseWebpack) {
-                promiseWebpack.then(this.kernel.bundles[bundle].compileWebpack());
-              } else {
-                promiseWebpack = this.kernel.bundles[bundle].compileWebpack();
-              }*/
-            }
-          } else {
-            if (!this.kernel.isBundleCore(bundle)) {
+        try {
+          for (let bundle in this.kernel.bundles) {
+            if (this.kernel.isCore) {
               if (this.kernel.bundles[bundle].webpackCompiler) {
                 promiseWebpack.push(this.kernel.bundles[bundle].compileWebpack());
-                /*if (promiseWebpack) {
-                  promiseWebpack.then(this.kernel.bundles[bundle].compileWebpack());
-                } else {
-                  promiseWebpack = this.kernel.bundles[bundle].compileWebpack();
-                }*/
+              }
+            } else {
+              if (!this.kernel.isBundleCore(bundle)) {
+                if (this.kernel.bundles[bundle].webpackCompiler) {
+                  promiseWebpack.push(this.kernel.bundles[bundle].compileWebpack());
+                }
               }
             }
           }
+        } catch (e) {
+          return reject(e);
         }
         return resolve(Promise.all(promiseWebpack));
-        /*if (promiseWebpack) {
-          return resolve(promiseWebpack);
-        } else {
-          return reject(1);
-        }*/
       });
     });
-
   }
-
 }
 module.exports = webpackCommand;

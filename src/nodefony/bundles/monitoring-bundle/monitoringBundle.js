@@ -376,6 +376,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       environment: this.env,
       debug: this.kernel.debug,
       appSettings: this.app,
+      projectName: this.kernel.projectName,
       queryPost: context.request.queryPost,
       queryGet: context.request.queryGet,
       protocole: context.scheme,

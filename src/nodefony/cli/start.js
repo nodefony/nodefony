@@ -21,17 +21,19 @@ module.exports = class cliStart extends nodefony.cliKernel {
         this.choices.push(`${this.startString} Development`);
         this.choices.push(`${this.startString} Pre-Production`);
         this.choices.push(`${this.startString} Production`);
+        this.choices.push(`Install`);
         this.choices.push(`${this.generateString} Bundle`);
         this.choices.push(`${this.generateString} Controller`);
         this.choices.push(`Webpack Dump`);
-        this.choices.push(`${this.runString} Test`);
         this.choices.push(`${this.generateString} Certificates`);
-        this.choices.push(`Clear Framework`);
+        this.choices.push(`${this.runString} Test`);
+        this.choices.push(`Outdated`);
+        this.choices.push(`Reset`);
       } else {
-        this.choices.push(`Install Framework`);
+        this.choices.push(`Install`);
         this.choices.push(`${this.generateString} Bundle`);
         this.choices.push(`${this.generateString} Certificates`);
-        this.choices.push(`Clear Framework`);
+        this.choices.push(`Reset`);
       }
     } else {
       this.choices.push(`${this.generateString} Project`);
@@ -59,10 +61,25 @@ module.exports = class cliStart extends nodefony.cliKernel {
       this.setOption('-v, --version ', 'Nodefony version');
       this.setOption('-i, --interactive ', 'Nodefony cli Interactive Mode');
       this.setOption('-j, --json', 'Nodefony json response');
-      this.commander.parse(process.argv);
+      this.parseCommand(process.argv);
       this.start(this.cmd, this.args);
     });
     this.fire("onStart", this);
+  }
+
+  showBanner(data) {
+    super.showBanner(data);
+    if (nodefony.projectName !== "nodefony") {
+      this.logger(`WELCOME ${nodefony.projectName.toUpperCase()} ${nodefony.projectVersion}`);
+    } else {
+      this.logger(`WELCOME NODEFONY CLI ${nodefony.version}`);
+    }
+  }
+
+  setCommand(cmd, args = []) {
+    process.argv.push(cmd);
+    this.commander.parse(process.argv.concat(args));
+    return cmd;
   }
 
   start(command, args) {
@@ -137,6 +154,9 @@ module.exports = class cliStart extends nodefony.cliKernel {
             return this.generateProject(null, null, true);
           case "install":
             return this.installProject();
+          case "exit":
+            this.logger("QUIT");
+            return this.terminate(0);
           case "clear":
             return this.cleanProject();
           case "certificates":
@@ -161,9 +181,9 @@ module.exports = class cliStart extends nodefony.cliKernel {
           case "test":
             command = this.setCommand("unitest:launch:all");
             break;
-          case "exit":
-            this.logger("QUIT");
-            return this.terminate(0);
+          case "outdated":
+            command = this.setCommand("nodefony:outdated");
+            break;
           }
           if (nodefony.isTrunk) {
             try {
@@ -181,17 +201,6 @@ module.exports = class cliStart extends nodefony.cliKernel {
     }
   }
 
-  showBanner(data) {
-    super.showBanner(data);
-    this.logger(`WELCOME NODEFONY CLI ${nodefony.version}`);
-  }
-
-  setCommand(cmd, args = []) {
-    process.argv.push(cmd);
-    this.commander.parse(process.argv.concat(args));
-    return cmd;
-  }
-
   interaction(choices) {
     let cli = this;
     return this.prompt([{
@@ -204,6 +213,10 @@ module.exports = class cliStart extends nodefony.cliKernel {
         filter: (val) => {
           //this.logger(val, "INFO");
           switch (val) {
+          case "Quit":
+            return "exit";
+          case "Help":
+            return "help";
           case `${this.startString} Development`:
             return "development";
           case `${this.startString} Production`:
@@ -221,15 +234,14 @@ module.exports = class cliStart extends nodefony.cliKernel {
           case `${this.runString} Test`:
             return "test";
           case `Install Framework`:
+          case `Install`:
             return "install";
-          case `Clear Framework`:
+          case `Reset`:
             return "clear";
           case `Webpack Dump`:
             return "webpack";
-          case "Quit":
-            return "exit";
-          case "Help":
-            return "help";
+          case `Outdated`:
+            return "outdated";
           default:
             this.logger(`command not found : ${val}`, "INFO");
             cli.terminate(1);

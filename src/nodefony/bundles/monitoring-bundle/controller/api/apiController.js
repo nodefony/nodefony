@@ -867,7 +867,7 @@ module.exports = class apiController extends nodefony.controller {
     switch (this.kernel.node_start) {
     case "PM2":
       let pm2 = require("pm2");
-      let name = this.getParameters("bundles.app.App.projectName") || "nodefony";
+      let name = this.kernel.projectName || "nodefony";
       pm2.connect(true, () => {
         this.logger("CONNECT PM2", "DEBUG");
         pm2.describe(name, (err, list) => {

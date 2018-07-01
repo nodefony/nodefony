@@ -35,16 +35,15 @@ class fixturesTask extends nodefony.Task {
           let actions = this.tabPromise.map(function (ele) {
             return new Promise(ele);
           });
-          return resolve(Promise.all(actions)
-            .catch((e) => {
-              return reject(e);
-            })
+          return Promise.all(actions)
             .then((ele) => {
               this.logger("LOAD FIXTURE ENTITY :  SUCCESS");
-              //this.cli.terminate(0);
-              return ele;
+              return resolve(ele);
             })
-          );
+            .catch((e) => {
+              return reject(e);
+            });
+
         });
       });
     });
