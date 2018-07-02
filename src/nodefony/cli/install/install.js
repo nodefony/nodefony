@@ -13,24 +13,30 @@ module.exports = class installProject extends nodefony.Builder {
 
   install(cwd = path.resolve(".")) {
     return new Promise((resolve, reject) => {
-      return this.installFramework(cwd).then(() => {
-        return this.cli.npmInstall(cwd)
-          .then(() => {
-            if (nodefony.isCoreTrunk()) {
-              return this.npmLink(path.resolve("."), path.resolve("src", "nodefony")).then(() => {
+      return this.installFramework(cwd)
+        .then(() => {
+
+          return this.cli.npmInstall(cwd)
+            .then(() => {
+              if (nodefony.isCoreTrunk()) {
+                return this.npmLink(path.resolve("."), path.resolve("src", "nodefony"))
+                  .then(() => {
+                    return this.generateCertificates(cwd);
+                  });
+              } else {
                 return this.generateCertificates(cwd);
-              });
-            } else {
-              return this.generateCertificates(cwd);
-            }
-          })
-          .then(() => {
-            return this.instanceKernel(cwd);
-          })
-          .catch((e) => {
-            return reject(e);
-          });
-      });
+              }
+            })
+            .then(() => {
+              return this.instanceKernel(cwd)
+                .then((ele) => {
+                  return resolve(ele);
+                });
+            })
+            .catch((e) => {
+              return reject(e);
+            });
+        });
     });
   }
 
@@ -63,10 +69,16 @@ module.exports = class installProject extends nodefony.Builder {
   instanceKernel(cwd) {
     return new Promise((resolve, reject) => {
       try {
+        try {
+          nodefony.checkTrunk(cwd);
+          //nodefony.appKernel = nodefony.autoloader.loadAppKernel();
+        } catch (e) {
+          return reject(e);
+        }
         this.cli.setCommand("nodefony:install", [cwd]);
-        nodefony.appKernel = nodefony.autoloader.loadAppKernel();
         if (nodefony.appKernel) {
-          return nodefony.start("nodefony:install", this.cli.args, this.cli, {});
+          nodefony.start("nodefony:install", this.cli.args, this.cli, {});
+          return resolve();
         } else {
           return reject(new Error("No nodefony trunk detected !"));
         }
@@ -82,7 +94,7 @@ module.exports = class installProject extends nodefony.Builder {
         let directory = path.resolve(cwd, "config", "certificates");
         this.cli.rm("-rf", directory);
         this.checkDirectoryExist(directory);
-        this.logger(`Generate ssl certificate in : ${directory}`);
+        this.logger(`Generate openssl certificates in : ${directory}`);
         let cmd = null;
         cmd = this.cli.spawn(path.resolve(cwd, "bin", "generateCertificates.sh"), [], {
           cwd: cwd,

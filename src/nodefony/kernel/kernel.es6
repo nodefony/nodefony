@@ -128,14 +128,19 @@ module.exports = nodefony.register("kernel", function () {
           version: this.isCore ? this.version : nodefony.projectVersion,
           pid: this.typeCluster === "worker" ? true : false,
           onStart: (cli) => {
-            this.cli = cli;
-            this.cli.createDirectory(path.resolve(this.rootDir, "tmp"), null, (file) => {
-              this.tmpDir = file;
-            }, true);
-            this.git = this.cli.setGitPath(this.rootDir);
-            this.cacheLink = path.resolve(this.rootDir, "tmp", "assestLink");
-            this.cacheWebpack = path.resolve(this.rootDir, "tmp", "webpack");
-            this.start(environment, cli);
+            try {
+              this.cli = cli;
+              this.cli.createDirectory(path.resolve(this.rootDir, "tmp"), null, (file) => {
+                this.tmpDir = file;
+              }, true);
+              this.git = this.cli.setGitPath(this.rootDir);
+              this.cacheLink = path.resolve(this.rootDir, "tmp", "assestLink");
+              this.cacheWebpack = path.resolve(this.rootDir, "tmp", "webpack");
+              this.start(environment, cli);
+            } catch (e) {
+              this.logger(e, "ERROR");
+              throw e;
+            }
           }
         });
       } catch (e) {
@@ -191,6 +196,7 @@ module.exports = nodefony.register("kernel", function () {
           // Manage Template engine
           this.initTemplate();
         } catch (e) {
+          this.logger(e, "ERROR");
           throw e;
         }
         this.boot();
@@ -245,6 +251,9 @@ module.exports = nodefony.register("kernel", function () {
       try {
         //this.reader.readConfig(this.configPath, this.name, (result) => {
         this.settings = nodefony.kernelConfig;
+        if (!nodefony.kernelConfig) {
+
+        }
         this.settings.name = "NODEFONY";
         this.settings.version = this.version;
         this.settings.environment = this.environment;
@@ -270,7 +279,7 @@ module.exports = nodefony.register("kernel", function () {
         }
       } catch (e) {
         //console.trace(e);
-        //this.logger(e, "ERROR");
+        this.logger(e, "ERROR");
         throw e;
       }
     }

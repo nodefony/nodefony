@@ -42,8 +42,9 @@ module.exports = class Nodefony {
     this.pm2Config = null;
     this.appConfig = null;
     this.projectName = "nodefony";
+    this.appKernel = null;
     this.isRegExp = require('lodash.isregexp');
-    this.isTrunk = this.isNodefonyTrunk();
+
     this.isCore = false;
     this.isElectron = this.isElectronContext();
     this.yarn = this.checkYarn();
@@ -56,32 +57,36 @@ module.exports = class Nodefony {
     //this.globalNpm = this.checkGlobalNpm();
     //this.globalYarn = this.checkGlobalYarn();
     this.builded = false;
+    this.checkTrunk();
+  }
 
+  checkTrunk(cwd = path.resolve(".")) {
+    this.isTrunk = this.isNodefonyTrunk(cwd);
     if (this.isTrunk) {
-      this.builded = this.isBuilded();
+      this.builded = this.isBuilded(cwd);
       try {
-        this.setConfig();
-        this.isCore = this.isCoreTrunk();
+        this.setConfig(cwd);
+        this.isCore = this.isCoreTrunk(cwd);
       } catch (e) {
         throw e;
       }
     }
   }
 
-  isBuilded() {
+  isBuilded(cwd = path.resolve(".")) {
     try {
-      fs.lstatSync(path.resolve("node_modules"));
+      fs.lstatSync(path.resolve(cwd, "node_modules"));
       return true;
     } catch (e) {
       return false;
     }
   }
 
-  setConfig() {
+  setConfig(cwd = path.resolve(".")) {
     try {
       this.kernelConfig = this.loadYaml(this.kernelConfigPath);
       this.appConfig = this.loadYaml(this.appConfigPath);
-      this.projectPackage = require(path.resolve("package.json"));
+      this.projectPackage = require(path.resolve(cwd, "package.json"));
       this.projectVersion = this.projectPackage.version;
       //this.projectName = this.appConfig.App.projectName;
       this.projectName = this.projectPackage.name;
@@ -111,7 +116,6 @@ module.exports = class Nodefony {
         encoding: 'utf8'
       });
     } catch (e) {
-      this.logger(e);
       throw e;
     }
   }
@@ -411,18 +415,32 @@ module.exports = class Nodefony {
     return require(path.resolve(__dirname, "package.json")).version;
   }
 
-  isNodefonyTrunk() {
+  isNodefonyTrunk(cwd = path.resolve(".")) {
     try {
-      this.kernelConfigPath = path.resolve(process.cwd(), "config", "config.yml");
-      this.appPath = path.resolve(process.cwd(), "app");
+
+      this.kernelConfigPath = path.resolve(cwd, "config", "config.yml");
+      this.appPath = path.resolve(cwd, "app");
       this.appConfigPath = path.resolve(this.appPath, "config", "config.yml");
-      this.pm2ConfigPath = path.resolve(process.cwd(), "config", "pm2.config.js");
+      this.pm2ConfigPath = path.resolve(cwd, "config", "pm2.config.js");
       fs.lstatSync(this.kernelConfigPath);
       fs.lstatSync(this.appPath);
       fs.lstatSync(this.appConfigPath);
+      if (!this.appKernel) {
+        this.appKernel = this.loadAppKernel(cwd);
+      }
+      this.isTrunk = true;
       return true;
     } catch (e) {
+      this.isTrunk = false;
       return false;
+    }
+  }
+
+  loadAppKernel(cwd = path.resolve(".")) {
+    try {
+      return require(path.resolve(cwd, "app", "appKernel.js"));
+    } catch (e) {
+      return null;
     }
   }
 

@@ -17,18 +17,21 @@ cat /etc/hosts
 
 #configuring the system
 npm link src/nodefony
-make build
-if [ "$DB" = "mongodb" ]
-then
-  make mongoose
-fi
+nodefony install
+#make build
+#if [ "$DB" = "mongodb" ]
+#then
+#  make mongoose
+#fi
 
 if [ "$DB" = "mysql" ]
 then
   nodefony generate:bundle generated
-  make deploy &
+  #make deploy &
+  nodefony pm2 &
   sleep 60;
-  make status &
+  #make status &
+  nodefony status &
 else
   nodefony generate:bundle generated
   nodefony dev &

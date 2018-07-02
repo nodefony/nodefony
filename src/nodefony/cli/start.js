@@ -11,7 +11,6 @@ module.exports = class cliStart extends nodefony.cliKernel {
       promiseRejection: true,
       version: nodefony.version,
     });
-    //let projectName = nodefony.projectName || "nodefony";
     this.generateString = `Generate`;
     this.startString = "Start Server";
     this.runString = "Run";
@@ -317,13 +316,14 @@ module.exports = class cliStart extends nodefony.cliKernel {
   installProject(cwd = path.resolve(".")) {
     try {
       let installer = new builderInstall(this);
-      return installer.install(cwd).then(() => {
-        this.logger("Install Complete");
-        this.terminate(0);
-      }).catch((e) => {
-        this.logger(e, "ERROR");
-        throw e;
-      });
+      return installer.install(cwd)
+        .then((ret) => {
+          this.logger("Install Complete");
+          return ret;
+        }).catch((e) => {
+          this.logger(e, "ERROR");
+          throw e;
+        });
     } catch (e) {
       this.logger(e, "ERROR");
       throw e;
@@ -349,13 +349,14 @@ module.exports = class cliStart extends nodefony.cliKernel {
   generateCertificates(cwd = path.resolve(".")) {
     try {
       let installer = new builderInstall(this);
-      return installer.generateCertificates(cwd).then(() => {
-        this.logger("Generate Certificates Complete");
-        this.terminate(0);
-      }).catch((e) => {
-        this.logger(e, "ERROR");
-        throw e;
-      });
+      return installer.generateCertificates(cwd)
+        .then(() => {
+          this.logger("Generate Certificates Complete");
+          return cwd;
+        }).catch((e) => {
+          this.logger(e, "ERROR");
+          throw e;
+        });
     } catch (e) {
       this.logger(e, "ERROR");
       throw e;

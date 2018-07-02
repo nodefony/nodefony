@@ -1,3 +1,4 @@
+const readline = require('readline');
 const Table = require('cli-table');
 const asciify = require('asciify');
 const inquirer = require('inquirer');
@@ -93,6 +94,7 @@ module.exports = nodefony.register("cli", function () {
       this.environment = process.env.NODE_ENV || "production";
       process.env.NODE_ENV = this.environment;
       this.unhandledRejections = new Map();
+
       this.pid = "";
       if (this.options.pid) {
         this.setPid();
@@ -196,6 +198,10 @@ module.exports = nodefony.register("cli", function () {
           }
         }
       }
+      /*this.readline = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      });*/
     }
 
     listenRejection() {
