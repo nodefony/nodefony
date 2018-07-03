@@ -21,16 +21,22 @@ module.exports = class installProject extends nodefony.Builder {
                 return this.npmLink(path.resolve("."), path.resolve("src", "nodefony"))
                   .then(() => {
                     return this.generateCertificates(cwd);
+                  }).catch((e) => {
+                    return reject(e);
                   });
               } else {
-                return this.generateCertificates(cwd);
+                return this.generateCertificates(cwd)
+                  .catch((e) => {
+                    return reject(e);
+                  });
               }
             })
             .then(() => {
               this.cli.logger("NODEFONY INSTALL");
-              return this.installNodefony(cwd).then((ele) => {
-                return resolve(ele);
-              });
+              return this.installNodefony(cwd)
+                .then((ele) => {
+                  return resolve(ele);
+                });
             })
             .catch((e) => {
               return reject(e);

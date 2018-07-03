@@ -130,13 +130,26 @@ module.exports = nodefony.register("kernel", function () {
           onStart: (cli) => {
             try {
               this.cli = cli;
+              cli.commands = {
+                nodefony: {}
+              };
+              if (this.console) {
+                try {
+                  this.cli.loadNodefonyCommand();
+                } catch (e) {
+                  throw e;
+                }
+              }
+              cli.parse = cli.commander.args || [];
+              cli.parseNodefonyCommand();
+
               this.cli.createDirectory(path.resolve(this.rootDir, "tmp"), null, (file) => {
                 this.tmpDir = file;
               }, true);
               this.git = this.cli.setGitPath(this.rootDir);
               this.cacheLink = path.resolve(this.rootDir, "tmp", "assestLink");
               this.cacheWebpack = path.resolve(this.rootDir, "tmp", "webpack");
-              this.start(environment, cli);
+              this.start(environment);
             } catch (e) {
               this.logger(e, "ERROR");
               throw e;
@@ -146,13 +159,6 @@ module.exports = nodefony.register("kernel", function () {
       } catch (e) {
         console.trace(e);
         throw e;
-      }
-      if (this.console) {
-        try {
-          this.cli.loadNodefonyCommand();
-        } catch (e) {
-          throw e;
-        }
       }
       this.once("onPostRegister", () => {
         if (this.console) {
@@ -496,6 +502,15 @@ module.exports = nodefony.register("kernel", function () {
         }
       }
       //}
+
+      if (this.isInstall()) {
+        return this.install(bundles);
+      } else {
+        return this.preRegister(bundles);
+      }
+    }
+
+    preRegister(bundles) {
       try {
         this.fire("onPreRegister", this);
       } catch (e) {
@@ -512,6 +527,39 @@ module.exports = nodefony.register("kernel", function () {
       } catch (e) {
         this.logger(e, "ERROR");
       }
+    }
+
+    install(coreBundles = []) {
+      let bundles = coreBundles.concat(this.configBundle);
+      let mypromise = [];
+      try {
+        for (let i = 0; i < bundles.length; i++) {
+          let bundleFile = null;
+          let Path = this.isNodeModule(bundles[i]);
+          if (Path) {
+            bundleFile = new nodefony.fileClass(Path);
+          } else {
+            bundleFile = new nodefony.fileClass(path.resolve(bundles[i], "package.json"));
+          }
+          if (this.isCore) {
+            mypromise.push(this.cli.installPackage(bundleFile, this.environment));
+          } else {
+            if (!this.isBundleCore(bundleFile.name)) {
+              mypromise.push(this.cli.installPackage(bundleFile, this.environment));
+            }
+          }
+        }
+      } catch (e) {
+        throw e;
+      }
+      return Promise.all(mypromise)
+        .then(() => {
+          return this.preRegister(coreBundles);
+        })
+        .catch((e) => {
+          throw e;
+        });
+
     }
 
     getOrm() {
@@ -849,6 +897,15 @@ module.exports = nodefony.register("kernel", function () {
         this.cli.action === "install") {
         return true;
       }
+      if (this.cli.command === "nodefony" &&
+        this.cli.task === "install") {
+        return true;
+      }
+      if (this.cli.command === "install") {
+        this.cli.command = "nodefony";
+        this.cli.task = "install";
+        return true;
+      }
       return false;
     }
 
@@ -862,10 +919,10 @@ module.exports = nodefony.register("kernel", function () {
           recurse: false,
           match: this.regBundle,
           onFile: (file) => {
-            if (this.isInstall()) {
+            /*if (this.isInstall()) {
               this.cli.args.push(file);
               return;
-            }
+            }*/
             try {
               this.loadBundle(file, "filesystem");
             } catch (e) {

@@ -7,23 +7,31 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
       this.setTask("bundles", require(path.resolve(__dirname, "tasks", "bundlesTask.es6")));
     }
 
+    showHelp() {
+      this.setHelp("nodefony:outdated",
+        "List Nodefony dependencies outdated"
+      );
+
+      return super.showHelp();
+    }
+
     install(cwd) {
       this.logger("INSTALL NODEFONY FRAMEWORK");
-      return this.installBundles()
+      //return this.installBundles()
+      //.then(() => {
+      return this.installOrm()
         .then(() => {
-          return this.installOrm()
-            .then(() => {
-              return this.displayInfo(cwd);
-            })
-            .catch((error) => {
-              this.logger(error, "ERROR");
-              throw error;
-            });
+          return this.displayInfo(cwd);
         })
         .catch((error) => {
           this.logger(error, "ERROR");
           throw error;
         });
+      /*})
+      .catch((error) => {
+        this.logger(error, "ERROR");
+        throw error;
+      });*/
     }
 
     installOrm(force = false) {
@@ -110,7 +118,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
       });
     }
 
-    installBundles() {
+    /*installBundles() {
       return new Promise((resolve, reject) => {
         this.logger("BUNDLES INSTALL ");
         try {
@@ -135,7 +143,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
           return reject(e);
         }
       });
-    }
+    }*/
 
     outdated() {
       return new Promise((resolve, reject) => {

@@ -109,21 +109,27 @@ module.exports = nodefony.register("cliKernel", function () {
       super(name, container, notificationsCenter, options);
       this.optionsTables = optionsTaskTables;
       this.optionsTitleTables = optionsTitleTables;
-      if (this.kernel) {
-        this.publicPath = this.kernel.publicPath;
-      } else {
-        this.publicPath = null;
-      }
-      this.commands = {
+      this.classCommand = {};
+      /*this.commands = {
         nodefony: {}
       };
-      this.classCommand = {};
       this.parse = this.commander.args || [];
+      this.parseNodefonyCommand();*/
       this.args =   [];
       this.command = null;
       this.task = null;
       this.action = null;
-      this.parseNodefonyCommand();
+      if (this.kernel) {
+        this.publicPath = this.kernel.publicPath;
+      } else {
+        this.commands = {
+          nodefony: {}
+        };
+        this.parse = this.commander.args || [];
+        this.publicPath = null;
+        this.parseNodefonyCommand();
+      }
+      //this.parseNodefonyCommand();
     }
 
     showBanner(data) {
@@ -161,7 +167,7 @@ module.exports = nodefony.register("cliKernel", function () {
         try {
           let instance = new nodefony.commands[cmd](this, this.kernel);
           this.commands.nodefony[instance.name] = instance;
-          this.logger(`Register Command ${instance.name}`, "DEBUG", `Nodefony`);
+          this.logger(`Register Command ${instance.name}`, "INFO", `Nodefony`);
         } catch (e) {
           this.logger(e, "ERROR");
           continue;
@@ -306,12 +312,6 @@ module.exports = nodefony.register("cliKernel", function () {
           }
         }
         try {
-          //console.log(this.parse);
-          if (this.command === "install") {
-            this.command = "nodefony";
-            this.task = "install";
-            return this.matchCommand();
-          }
           return require(path.resolve(this.command));
         } catch (e) {
           this.showHelp();
