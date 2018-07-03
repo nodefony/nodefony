@@ -6,6 +6,7 @@ module.exports = nodefony.register("orm", function () {
       process.nextTick(() => {
         this.logger('onOrmReady', "DEBUG", "EVENTS ORM");
         this.fire('onOrmReady', this);
+        this.ready = true;
       });
     }
   };
@@ -21,6 +22,7 @@ module.exports = nodefony.register("orm", function () {
       this.entities = {};
       this.connections = {};
       this.connectionNotification = 0;
+      this.ready = false;
     }
 
     boot() {

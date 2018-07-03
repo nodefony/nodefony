@@ -174,6 +174,7 @@ module.exports = class sequelize extends nodefony.orm {
         process.nextTick(() => {
           this.logger('onOrmReady', "DEBUG", "EVENTS SEQUELIZE");
           this.fire('onOrmReady', this);
+          this.ready = true;
         });
       }
     });

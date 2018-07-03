@@ -9,40 +9,49 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
 
     install(cwd) {
       this.logger("INSTALL NODEFONY FRAMEWORK");
-      return this.installOrm()
+      return this.installBundles()
         .then(() => {
-          return this.installBundles()
+          return this.installOrm()
             .then(() => {
-              this.displayInfo(cwd);
+              return this.displayInfo(cwd);
             })
             .catch((error) => {
-              //this.logger(error, "ERROR");
+              this.logger(error, "ERROR");
               throw error;
             });
         })
         .catch((error) => {
-          //this.logger(error, "ERROR");
+          this.logger(error, "ERROR");
           throw error;
         });
     }
 
-    installOrm() {
+    installOrm(force = false) {
       this.logger("INITIALIZE ORM");
       this.orm = this.cli.kernel.getOrm();
       switch (this.orm) {
       case "sequelize":
-        let tab = [];
-        tab.push(this.installSequelize());
-        tab.push(this.generateSequelizeFixture());
-        return Promise.all(tab);
+        //let tab = [];
+        //tab.push(this.installSequelize());
+        //tab.push(this.generateSequelizeFixture());
+        //return Promise.all(tab);
+        return this.installSequelize(force)
+          .then(() => {
+            return this.generateSequelizeFixture();
+          }).catch((e) => {
+            throw e;
+          });
       case "mongoose":
-        return this.installMongoose();
+        return this.installMongoose()
+          .catch((e) => {
+            throw e;
+          });
       default:
         throw new Error(`ORM not defined : $(this.orm)`);
       }
     }
 
-    installSequelize() {
+    installSequelize(force = false) {
       this.logger("INITIALIZE SEQUELIZE");
       return new Promise((resolve, reject) => {
         let command = null;
@@ -53,7 +62,12 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
         } catch (e) {
           return reject(e);
         }
-        return resolve(task.entities(false));
+        return task.entities(force)
+          .then((ele) => {
+            return resolve(ele);
+          }).catch((e) => {
+            return reject(e);
+          });
       });
     }
     generateSequelizeFixture() {
@@ -67,7 +81,13 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
         } catch (e) {
           return reject(e);
         }
-        return resolve(task.load());
+        return task.load()
+          .then((ele) => {
+            return resolve(ele);
+          })
+          .catch((e) => {
+            return reject(e);
+          });
       });
     }
     installMongoose() {
@@ -96,7 +116,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
         try {
           let args = [];
           for (let bundle in this.kernel.bundles) {
-            if (nodefony.isCoreTrunk()) {
+            if (nodefony.isCore) {
               this.logger(`Install Bundle :  ${this.kernel.bundles[bundle].name}`);
               args.push(this.kernel.bundles[bundle]);
             } else {
@@ -131,7 +151,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
             args.push(new nodefony.fileClass(trunk));
           }
           for (let bundle in this.kernel.bundles) {
-            if (nodefony.isCoreTrunk()) {
+            if (nodefony.isCore) {
               this.logger(`Check Outdated Bundle :  ${this.kernel.bundles[bundle].name}`);
               args.push(this.kernel.bundles[bundle]);
             } else {

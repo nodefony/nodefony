@@ -19,16 +19,20 @@ module.exports = class bundlesTask extends nodefony.Task {
 
   install(...args) {
     let mypromise = [];
-    for (let i = 0; i < args.length; i++) {
-      if (args[i] instanceof nodefony.fileClass || args[i] instanceof nodefony.Bundle) {
-        if (this.kernel.isCore) {
-          mypromise.push(this.cli.installPackage(args[i], this.kernel.environment));
-        } else {
-          if (!this.kernel.isBundleCore(args[i].name)) {
+    try {
+      for (let i = 0; i < args.length; i++) {
+        if (args[i] instanceof nodefony.fileClass || args[i] instanceof nodefony.Bundle) {
+          if (this.kernel.isCore) {
             mypromise.push(this.cli.installPackage(args[i], this.kernel.environment));
+          } else {
+            if (!this.kernel.isBundleCore(args[i].name)) {
+              mypromise.push(this.cli.installPackage(args[i], this.kernel.environment));
+            }
           }
         }
       }
+    } catch (e) {
+      throw e;
     }
     return Promise.all(mypromise);
   }

@@ -521,93 +521,95 @@ module.exports = class Nodefony {
   }
 
   start(cmd, args, cli, options = {}) {
-    let type = null;
-    let debug = !!cli.commander.debug;
-    let kernel = null;
-    let environment = false;
-    switch (cmd) {
-    case "dev":
-    case "development":
-      this.manageCache(cli);
-      environment = "dev";
-      type = "SERVER";
-      process.env.MODE_START = "NODEFONY_DEV";
-      kernel = new nodefony.appKernel(type, environment, debug, options);
-      break;
-    case "production":
-    case "prod":
-      this.manageCache(cli);
-      environment = "prod";
-      type = "SERVER";
-      process.env.MODE_START = "NODEFONY";
-      this.prodStart(type, environment, debug, {});
-      break;
-    case "start":
-    case "pm2":
-      type = "SERVER";
-      environment = "prod";
-      if (process.env.MODE_START && process.env.MODE_START === "PM2") {
-        kernel = new nodefony.appKernel(type, environment, false, options);
-      } else {
+    return new Promise((resolve, reject) => {
+      let type = null;
+      let debug = !!cli.commander.debug;
+      //let kernel = null;
+      let environment = false;
+      switch (cmd) {
+      case "dev":
+      case "development":
         this.manageCache(cli);
-        process.env.MODE_START = "PM2_START";
-        this.pm2Start(cli);
-      }
-      break;
-    case "stop":
-      pm2.stop(nodefony.projectName, (error, proc) => {
-        if (error) {
-          cli.logger(error, "ERROR");
-          cli.terminate(-1);
-        }
-        cli.logger(`PM2 Stop Project  ${nodefony.projectName}`);
-        this.tablePm2(cli, proc);
-        cli.terminate(0);
-      });
-      break;
-    case "kill":
-      pm2.killDaemon((error) => {
-        if (error) {
-          cli.logger(error, "ERROR");
-          cli.terminate(-1);
-        }
-        cli.logger(`Kill PM2 MANAGER`);
-        process.exit(0);
-      });
-      break;
-    case "status":
-    case "list":
-      pm2.list((error, processDescriptionList) => {
-        if (error) {
-          cli.logger(error, "ERROR");
-          cli.terminate(-1);
-        }
-        this.tablePm2(cli, processDescriptionList);
-        process.exit(0);
-      });
-      break;
-    case "clean-log":
-      pm2.flush((error, result) => {
-        if (error) {
-          cli.logger(error, "ERROR");
-          cli.terminate(-1);
-        }
-        cli.logger(`clean log ${nodefony.projectName}`);
-        this.tablePm2(cli, result);
-        process.exit(0);
-      });
-      break;
-    default:
-      if (this.appKernel) {
+        environment = "dev";
+        type = "SERVER";
+        process.env.MODE_START = "NODEFONY_DEV";
+        return new nodefony.appKernel(type, environment, debug, options);
+      case "production":
+      case "prod":
+        this.manageCache(cli);
         environment = "prod";
-        type = "CONSOLE";
-        process.env.MODE_START = "NODEFONY_CONSOLE";
-        this.manageCache(cli);
-        return new this.appKernel(type, environment, debug, options);
+        type = "SERVER";
+        process.env.MODE_START = "NODEFONY";
+        return resolve(this.prodStart(type, environment, debug, {}));
+      case "start":
+      case "pm2":
+        type = "SERVER";
+        environment = "prod";
+        if (process.env.MODE_START && process.env.MODE_START === "PM2") {
+          return new nodefony.appKernel(type, environment, false, options);
+        } else {
+          this.manageCache(cli);
+          process.env.MODE_START = "PM2_START";
+          return resolve(this.pm2Start(cli));
+        }
+        break;
+      case "stop":
+        pm2.stop(nodefony.projectName, (error, proc) => {
+          if (error) {
+            cli.logger(error, "ERROR");
+            cli.terminate(-1);
+          }
+          cli.logger(`PM2 Stop Project  ${nodefony.projectName}`);
+          this.tablePm2(cli, proc);
+          cli.terminate(0);
+        });
+        break;
+      case "kill":
+        pm2.killDaemon((error) => {
+          if (error) {
+            cli.logger(error, "ERROR");
+            cli.terminate(-1);
+          }
+          cli.logger(`Kill PM2 MANAGER`);
+          process.exit(0);
+        });
+        break;
+      case "status":
+      case "list":
+        pm2.list((error, processDescriptionList) => {
+          if (error) {
+            cli.logger(error, "ERROR");
+            cli.terminate(-1);
+          }
+          this.tablePm2(cli, processDescriptionList);
+          process.exit(0);
+        });
+        break;
+      case "clean-log":
+        pm2.flush((error, result) => {
+          if (error) {
+            cli.logger(error, "ERROR");
+            cli.terminate(-1);
+          }
+          cli.logger(`clean log ${nodefony.projectName}`);
+          this.tablePm2(cli, result);
+          process.exit(0);
+        });
+        break;
+      default:
+        if (this.appKernel) {
+          environment = "prod";
+          type = "CONSOLE";
+          process.env.MODE_START = "NODEFONY_CONSOLE";
+          this.manageCache(cli);
+          return new this.appKernel(type, environment, debug, options);
+        }
+        let error = new Error("No nodefony trunk detected !");
+        this.logger(error, "ERROR");
+        cli.showHelp();
+        return reject(error);
       }
-      this.logger("No nodefony trunk detected !", "ERROR");
-      return cli.showHelp();
-    }
+    });
   }
 
   tablePm2(cli, apps) {

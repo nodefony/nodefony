@@ -239,16 +239,18 @@ module.exports = nodefony.register("cliKernel", function () {
                     this.logger(`${this.command}:${this.task}`);
                     let ret = myAction.apply(myCommand, this.args);
                     if (ret && nodefony.isPromise(ret)) {
-                      return ret.then((ele) => {
-                        if (ele) {
-                          return this.terminate(0);
-                        }
-                      }).catch((e) => {
-                        this.logger(e, "ERROR");
-                        return this.terminate(e.code || -1);
-                      });
+                      return ret
+                        .then((ele) => {
+                          /*if (ele) {
+                            return this.terminate(0);
+                          }*/
+                          return ele;
+                        }).catch((e) => {
+                          this.logger(e, "ERROR");
+                          return this.terminate(e.code || -1);
+                        });
                     }
-                    return this.terminate(0);
+                    //return this.terminate(0);
                   } catch (e) {
                     return myCommand.logger(e, "ERROR");
                   }
@@ -264,19 +266,20 @@ module.exports = nodefony.register("cliKernel", function () {
                       try {
                         myTask.showBanner();
                         this.logger(`${this.command}:${this.task}:${this.action}`);
-                        //console.log(this.args)
                         let ret = myAction.apply(myCommand.tasks[this.task], this.args);
                         if (ret && nodefony.isPromise(ret)) {
-                          return ret.then((ele) => {
-                            if (ele) {
-                              return this.terminate(0);
-                            }
-                          }).catch((e) => {
-                            this.logger(e, "ERROR");
-                            return this.terminate(e.code || -1);
-                          });
+                          return ret
+                            .then((ele) => {
+                              /*if (ele) {
+                                return this.terminate(0);
+                              }*/
+                              return ele;
+                            }).catch((e) => {
+                              this.logger(e, "ERROR");
+                              return this.terminate(e.code || -1);
+                            });
                         }
-                        return this.terminate(0);
+                        //return this.terminate(0);
                       } catch (e) {
                         return myTask.logger(e, "ERROR");
                       }
@@ -303,6 +306,7 @@ module.exports = nodefony.register("cliKernel", function () {
           }
         }
         try {
+          //console.log(this.parse);
           if (this.command === "install") {
             this.command = "nodefony";
             this.task = "install";

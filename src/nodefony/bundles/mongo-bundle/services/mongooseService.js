@@ -36,6 +36,7 @@ module.exports = class mongoose extends nodefony.orm {
         process.nextTick(() => {
           this.logger('onOrmReady', "DEBUG", "EVENTS MOOGODB");
           this.fire('onOrmReady', this);
+          this.ready = true;
         });
       }
     });

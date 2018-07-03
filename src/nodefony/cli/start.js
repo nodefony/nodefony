@@ -152,7 +152,12 @@ module.exports = class cliStart extends nodefony.cliKernel {
           case "project":
             return this.generateProject(null, null, true);
           case "install":
-            return this.installProject();
+            if (nodefony.isTrunk) {
+              return this.installProject();
+            }
+            this.showHelp();
+            this.logger("No nodefony trunk detected !", "WARNING");
+            break;
           case "exit":
             this.logger("QUIT");
             return this.terminate(0);
