@@ -49,11 +49,10 @@ module.exports = class cliStart extends nodefony.cliKernel {
           this.args = args;
         });
       this.commander.on('--help', () => {
-        this.setTitleHelp(this.clc.cyan("nodefony"));
-        this.setHelp("", "install", "Install Nodefony Project");
-        //this.setHelp("", "app", "Get Application Name");
-        this.setHelp("", "version", "Get Project Version");
-        this.setHelp("", "generate:project name [path]", "Generate Nodefony Project");
+        if (!nodefony.isTrunk) {
+          this.setTitleHelp(this.clc.cyan("nodefony"));
+          this.setHelp("", "generate:project name [path]", "Generate Nodefony Project");
+        }
       });
       this.setOption('-d, --debug ', 'Nodefony debug');
       this.setOption('-h, --help ', 'Nodefony help');
@@ -177,10 +176,10 @@ module.exports = class cliStart extends nodefony.cliKernel {
             command = this.setCommand("development");
             break;
           case "production":
-            command = this.setCommand("pm2");
+            command = this.setCommand("production");
             break;
           case "pre-production":
-            command = this.setCommand("production");
+            command = this.setCommand("preprod");
             break;
           case "test":
             command = this.setCommand("unitest:launch:all");

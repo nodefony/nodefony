@@ -13,7 +13,7 @@
     "@nodefony/stage": "^0.1.10",
     "bootstrap": "=3.3.7",
     "cheerio": "^1.0.0-rc.2",
-    "elasticsearch": "^15.0.0",
+    "elasticsearch": "^15.1.1",
     "font-awesome": "^4.7.0",
     "webpack": "^4.14.0",
     "webpack-merge": "^4.1.3"

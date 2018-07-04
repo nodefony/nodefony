@@ -34,7 +34,10 @@ module.exports = class bundlesTask extends nodefony.Task {
     } catch (e) {
       throw e;
     }
-    return Promise.all(mypromise);
+    return Promise.all(mypromise).then(() => {
+      this.logger("Install success");
+    });
+
   }
 
   outdated(...args) {

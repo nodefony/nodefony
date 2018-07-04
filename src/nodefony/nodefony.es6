@@ -520,6 +520,26 @@ module.exports = class Nodefony {
     }
   }
 
+  showHelp(cli) {
+    // Servers
+    cli.setTitleHelp(`${cli.clc.cyan("Servers")}`);
+    cli.setHelp("", "dev", "Run Nodefony Development Server");
+    cli.setHelp("", "preprod", "Run Nodefony Preprod Server ( Node Clusters )");
+    cli.setHelp("", "prod", "Run Nodefony Production Server ( PM2 mode )");
+    cli.setHelp("", "stop", "Stop Nodefony Production Server ( PM2 mode )");
+    cli.setHelp("", "kill", "Kill ( PM2 mode )");
+    cli.setHelp("", "reload", "RELOAD ( PM2 mode )");
+    cli.setHelp("", "Status", "List  process ( PM2 mode )");
+    cli.setHelp("", "logs", "Stream logs  process ( PM2 mode )");
+    cli.setHelp("", "clean-log", "Remove log ( PM2 mode )");
+    // nodefony
+    cli.setTitleHelp(cli.clc.cyan("nodefony"));
+    cli.setHelp("", "install", "Install Nodefony Project");
+    //this.setHelp("", "app", "Get Application Name");
+    cli.setHelp("", "version", "Get Project Version");
+    cli.setHelp("", "generate:project name [path]", "Generate Nodefony Project");
+  }
+
   start(cmd, args, cli, options = {}) {
     return new Promise((resolve, reject) => {
       let type = null;
@@ -534,13 +554,15 @@ module.exports = class Nodefony {
         type = "SERVER";
         process.env.MODE_START = "NODEFONY_DEV";
         return new nodefony.appKernel(type, environment, debug, options);
-      case "production":
-      case "prod":
+      case "preprod":
+      case "preproduction":
         this.manageCache(cli);
         environment = "prod";
         type = "SERVER";
         process.env.MODE_START = "NODEFONY";
         return resolve(this.prodStart(type, environment, debug, {}));
+      case "production":
+      case "prod":
       case "start":
       case "pm2":
         type = "SERVER";
@@ -565,13 +587,20 @@ module.exports = class Nodefony {
         });
         break;
       case "kill":
-        pm2.killDaemon((error) => {
+        pm2.killDaemon((error, proc) => {
           if (error) {
             cli.logger(error, "ERROR");
             cli.terminate(-1);
           }
-          cli.logger(`Kill PM2 MANAGER`);
-          process.exit(0);
+          cli.logger(`Kill PM2 MANAGER success :  ${proc.success}`);
+          pm2.list((error, processDescriptionList) => {
+            if (error) {
+              cli.logger(error, "ERROR");
+              cli.terminate(-1);
+            }
+            this.tablePm2(cli, processDescriptionList);
+            process.exit(0);
+          });
         });
         break;
       case "status":
@@ -585,6 +614,10 @@ module.exports = class Nodefony {
           process.exit(0);
         });
         break;
+      case "logs":
+        cli.reset();
+        pm2.streamLogs();
+        break;
       case "clean-log":
         pm2.flush((error, result) => {
           if (error) {
@@ -596,6 +629,8 @@ module.exports = class Nodefony {
           process.exit(0);
         });
         break;
+      case "outdated":
+        return this.start(cli.setCommand("nodefony:outdated"), args, cli, options);
       default:
         if (this.appKernel) {
           environment = "prod";
@@ -722,9 +757,8 @@ module.exports = class Nodefony {
                 console.error(err);
               }
               this.tablePm2(cli, processDescriptionList);
-              console.log(" To see all logs use the command  make logs ");
+              console.log(" To see all logs use the command  nodefony logs ");
               console.log(" Or use PM2  pm2 --lines 1000 logs ");
-              //console.log(processDescriptionList);
               pm2.disconnect();
             });
           });

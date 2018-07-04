@@ -142,7 +142,6 @@ module.exports = nodefony.register("kernel", function () {
               }
               cli.parse = cli.commander.args || [];
               cli.parseNodefonyCommand();
-
               this.cli.createDirectory(path.resolve(this.rootDir, "tmp"), null, (file) => {
                 this.tmpDir = file;
               }, true);
@@ -530,21 +529,27 @@ module.exports = nodefony.register("kernel", function () {
     }
 
     install(coreBundles = []) {
-      let bundles = coreBundles.concat(this.configBundle);
+      let bundles = coreBundles.concat(this.configBundle, [this.appPath]);
       let mypromise = [];
       try {
         for (let i = 0; i < bundles.length; i++) {
           let bundleFile = null;
-          let Path = this.isNodeModule(bundles[i]);
-          if (Path) {
-            bundleFile = new nodefony.fileClass(Path);
-          } else {
+          try {
             bundleFile = new nodefony.fileClass(path.resolve(bundles[i], "package.json"));
+          } catch (e) {
+            let Path = this.isNodeModule(bundles[i]);
+            if (Path) {
+              bundleFile = new nodefony.fileClass(Path);
+            } else {
+              this.logger(e, "ERROR");
+              continue;
+            }
           }
           if (this.isCore) {
             mypromise.push(this.cli.installPackage(bundleFile, this.environment));
           } else {
-            if (!this.isBundleCore(bundleFile.name)) {
+            let dir = path.basename(bundleFile.dirName);
+            if (!this.isBundleCore(dir)) {
               mypromise.push(this.cli.installPackage(bundleFile, this.environment));
             }
           }

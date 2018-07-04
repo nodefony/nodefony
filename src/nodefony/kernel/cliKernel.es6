@@ -114,16 +114,16 @@ module.exports = nodefony.register("cliKernel", function () {
       this.command = null;
       this.task = null;
       this.action = null;
+      this.parse = this.commander.args || [];
       if (this.kernel) {
         this.publicPath = this.kernel.publicPath;
       } else {
         this.commands = {
           nodefony: {}
         };
-        this.parse = this.commander.args || [];
         this.publicPath = null;
-        this.parseNodefonyCommand();
       }
+      this.parseNodefonyCommand();
     }
 
     showBanner(data) {
@@ -138,7 +138,7 @@ module.exports = nodefony.register("cliKernel", function () {
      * command:task:action
      */
     parseNodefonyCommand() {
-      if (this.parse.length) {
+      if (this.parse && this.parse.length) {
         this.pattern = this.parse[0].split(":");
         if (!this.pattern.length) {
           return;
@@ -226,6 +226,7 @@ module.exports = nodefony.register("cliKernel", function () {
     }
 
     matchCommand() {
+      this.logger(`Parse command : ${this.command}:${this.task}:${this.action}`);
       if (this.parse.length && this.command) {
         for (let bundle in this.commands) {
           if (Object.keys(this.commands[bundle]).length) {
@@ -333,9 +334,7 @@ module.exports = nodefony.register("cliKernel", function () {
       super.showHelp();
       this.blankLine();
       if (nodefony.isTrunk) {
-        this.setHelp("", "dev", "Run Nodefony Development Server");
-        this.setHelp("", "prod", "Run Nodefony Preprod Server");
-        this.setHelp("", "pm2", "Run Nodefony Production Server ( PM2 mode )");
+        nodefony.showHelp(this);
       }
       for (let cmd in this.commands.nodefony) {
         this.commands.nodefony[cmd].showHelp();

@@ -11,14 +11,11 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
       this.setHelp("nodefony:outdated",
         "List Nodefony dependencies outdated"
       );
-
       return super.showHelp();
     }
 
     install(cwd) {
       this.logger("INSTALL NODEFONY FRAMEWORK");
-      //return this.installBundles()
-      //.then(() => {
       return this.installOrm()
         .then(() => {
           return this.displayInfo(cwd);
@@ -27,11 +24,6 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
           this.logger(error, "ERROR");
           throw error;
         });
-      /*})
-      .catch((error) => {
-        this.logger(error, "ERROR");
-        throw error;
-      });*/
     }
 
     installOrm(force = false) {
@@ -39,10 +31,6 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
       this.orm = this.cli.kernel.getOrm();
       switch (this.orm) {
       case "sequelize":
-        //let tab = [];
-        //tab.push(this.installSequelize());
-        //tab.push(this.generateSequelizeFixture());
-        //return Promise.all(tab);
         return this.installSequelize(force)
           .then(() => {
             return this.generateSequelizeFixture();
@@ -78,6 +66,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
           });
       });
     }
+
     generateSequelizeFixture() {
       this.logger("Generate Fixtures");
       return new Promise((resolve, reject) => {
@@ -117,33 +106,6 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
           });
       });
     }
-
-    /*installBundles() {
-      return new Promise((resolve, reject) => {
-        this.logger("BUNDLES INSTALL ");
-        try {
-          let args = [];
-          for (let bundle in this.kernel.bundles) {
-            if (nodefony.isCore) {
-              this.logger(`Install Bundle :  ${this.kernel.bundles[bundle].name}`);
-              args.push(this.kernel.bundles[bundle]);
-            } else {
-              if (!this.kernel.isBundleCore(bundle)) {
-                this.logger(`Install ${this.kernel.bundles[bundle].name}`);
-                args.push(this.kernel.bundles[bundle]);
-              }
-            }
-          }
-          let task = this.getTask("bundles");
-          return task.install.apply(task, args)
-            .then((ele) => {
-              return resolve(ele);
-            });
-        } catch (e) {
-          return reject(e);
-        }
-      });
-    }*/
 
     outdated() {
       return new Promise((resolve, reject) => {
