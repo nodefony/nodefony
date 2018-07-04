@@ -51,7 +51,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
       this.commander.on('--help', () => {
         this.setTitleHelp(this.clc.cyan("nodefony"));
         this.setHelp("", "install", "Install Nodefony Project");
-        this.setHelp("", "app", "Get Application Name");
+        //this.setHelp("", "app", "Get Application Name");
         this.setHelp("", "version", "Get Project Version");
         this.setHelp("", "generate:project name [path]", "Generate Nodefony Project");
       });

@@ -36,24 +36,20 @@ class launchTask extends nodefony.Task {
     return this.onReady();
   }
 
-
   onReady() {
     return new Promise((resolve, reject) => {
       this.kernel.listen(this, 'onReady', ( /*kernel*/ ) => {
         this.serviceUnitTest.mochaAddTest(this.tests);
         this.serviceUnitTest.mochaRunTest((failures) => {
           if (failures) {
-            console.log(failures)
+            console.log(failures);
             return reject(failures);
           }
-          return resolve(0);
+          resolve(true);
+          return this.terminate(0);
         });
       });
     });
-
   }
-
 }
-
-
 module.exports = launchTask;

@@ -110,11 +110,6 @@ module.exports = nodefony.register("cliKernel", function () {
       this.optionsTables = optionsTaskTables;
       this.optionsTitleTables = optionsTitleTables;
       this.classCommand = {};
-      /*this.commands = {
-        nodefony: {}
-      };
-      this.parse = this.commander.args || [];
-      this.parseNodefonyCommand();*/
       this.args =   [];
       this.command = null;
       this.task = null;
@@ -129,7 +124,6 @@ module.exports = nodefony.register("cliKernel", function () {
         this.publicPath = null;
         this.parseNodefonyCommand();
       }
-      //this.parseNodefonyCommand();
     }
 
     showBanner(data) {
