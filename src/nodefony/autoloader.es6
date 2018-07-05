@@ -23,7 +23,7 @@ module.exports = function () {
   context.xmlParser = require('xml2js').Parser;
   context.dns = require('dns');
   context.async = require('async');
-  context.nodedomain = require('domain');
+  //context.nodedomain = require('domain');
   context.Promise = require('promise');
   context.clc = require('cli-color');
   context.shell = require("shelljs");
@@ -31,6 +31,7 @@ module.exports = function () {
   context.crypto = require("crypto");
   context.BlueBird = require("bluebird");
   context.pm2 = require('pm2');
+  context.Rx = require("rxjs");
   context.nodefony = new Nodefony();
 
   /**

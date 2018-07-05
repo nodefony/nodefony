@@ -107,58 +107,14 @@ module.exports = nodefony.register("kernel", function () {
       this.generateConfigPath = path.resolve(this.rootDir, "config", "generatedConfig.yml");
       this.publicPath = path.resolve(this.rootDir, "web");
       this.nodefonyPath = this.autoLoader.dirname;
+      this.cacheLink = path.resolve(this.rootDir, "tmp", "assestLink");
+      this.cacheWebpack = path.resolve(this.rootDir, "tmp", "webpack");
+      this.tmpDir = null;
       //core repository
       this.isCore = nodefony.isCore;
       this.typeCluster = this.clusterIsMaster() ? "master" : "worker";
 
-      try {
-        // Manage Kernel Container
-        this.set("kernel", this);
-        // Manage Reader
-        this.reader = new nodefony.Reader(this.container);
-        this.set("reader", this.reader);
-        // Manage Injections
-        this.injection = new nodefony.injection(this.container);
-        this.set("injection", this.injection);
-        // SERVERS
-        this.initServers();
-        // cli worker
-        this.cli = new nodefony.cliKernel(nodefony.projectName || "nodefony", this.container, this.notificationsCenter, {
-          autoLogger: false,
-          version: this.isCore ? this.version : nodefony.projectVersion,
-          pid: this.typeCluster === "worker" ? true : false,
-          onStart: (cli) => {
-            try {
-              this.cli = cli;
-              cli.commands = {
-                nodefony: {}
-              };
-              if (this.console) {
-                try {
-                  this.cli.loadNodefonyCommand();
-                } catch (e) {
-                  throw e;
-                }
-              }
-              cli.parse = cli.commander.args || [];
-              cli.parseNodefonyCommand();
-              this.cli.createDirectory(path.resolve(this.rootDir, "tmp"), null, (file) => {
-                this.tmpDir = file;
-              }, true);
-              this.git = this.cli.setGitPath(this.rootDir);
-              this.cacheLink = path.resolve(this.rootDir, "tmp", "assestLink");
-              this.cacheWebpack = path.resolve(this.rootDir, "tmp", "webpack");
-              this.start(environment);
-            } catch (e) {
-              this.logger(e, "ERROR");
-              throw e;
-            }
-          }
-        });
-      } catch (e) {
-        console.trace(e);
-        throw e;
-      }
+      //Events
       this.once("onPostRegister", () => {
         if (this.console) {
           try {
@@ -187,6 +143,42 @@ module.exports = nodefony.register("kernel", function () {
           }
         }
       });
+
+      try {
+        // Manage Kernel Container
+        this.set("kernel", this);
+        // Manage Reader
+        this.reader = new nodefony.Reader(this.container);
+        this.set("reader", this.reader);
+        // Manage Injections
+        this.injection = new nodefony.injection(this.container);
+        this.set("injection", this.injection);
+        // SERVERS
+        this.initServers();
+        // cli worker
+        this.cli = new nodefony.cliKernel(nodefony.projectName || "nodefony", this.container, this.notificationsCenter, {
+          autoLogger: false,
+          asciify: false,
+          version: this.isCore ? this.version : nodefony.projectVersion,
+          pid: this.typeCluster === "worker" ? true : false,
+        });
+        this.cli.createDirectory(path.resolve(this.rootDir, "tmp"), null, (file) => {
+          this.tmpDir = file;
+        }, true);
+        this.git = this.cli.setGitPath(this.rootDir);
+        this.cli.showAsciify()
+          .then(() => {
+            this.cli.showBanner();
+            return this.start(environment);
+          })
+          .catch((e) => {
+            this.logger(e, "ERROR");
+            throw e;
+          });
+      } catch (e) {
+        console.trace(e);
+        throw e;
+      }
     }
 
     start(environment) {

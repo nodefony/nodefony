@@ -630,7 +630,9 @@ module.exports = class Nodefony {
         });
         break;
       case "outdated":
-        return this.start(cli.setCommand("nodefony:outdated"), args, cli, options);
+        return resolve(cli.setCommand("nodefony:outdated"));
+      case "test":
+        return resolve(cli.setCommand("unitest:launch:all"));
       default:
         if (this.appKernel) {
           environment = "prod";

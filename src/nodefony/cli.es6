@@ -1,4 +1,4 @@
-const readline = require('readline');
+//const readline = require('readline');
 const Table = require('cli-table');
 const asciify = require('asciify');
 const inquirer = require('inquirer');
@@ -38,6 +38,7 @@ module.exports = nodefony.register("cli", function () {
     asciify: true,
     clear: true,
     color: blue,
+    prompt: "default", // "default" || "rxjs"
     commander: true,
     signals: true,
     autoLogger: true,
@@ -94,7 +95,6 @@ module.exports = nodefony.register("cli", function () {
       this.environment = process.env.NODE_ENV || "production";
       process.env.NODE_ENV = this.environment;
       this.unhandledRejections = new Map();
-
       this.pid = "";
       if (this.options.pid) {
         this.setPid();
@@ -111,6 +111,7 @@ module.exports = nodefony.register("cli", function () {
       if (this.options.warning) {
         process.on('warning', (warning) => {
           this.logger(warning, "WARNING");
+          this.fire("onNodeWarning", warning, this);
         });
       } else {
         process.env.NODE_NO_WARNINGS = 1;
@@ -171,24 +172,16 @@ module.exports = nodefony.register("cli", function () {
        *    ASCIIFY
        */
       if (name && this.options.asciify) {
-        this.asciify("      " + name, {
-          font: this.options.font || "standard"
-        }, (err, data) => {
-          this.showBanner(data);
-          if (this.environment !== "production") {
-            //console.log( this.logEnv() )
-          }
-          if (err) {
-            throw err;
-          }
-          if (this.options.autostart) {
-            try {
-              this.fire("onStart", this);
-            } catch (e) {
-              this.logger(e, "ERROR");
+        this.showAsciify(name)
+          .then(() => {
+            if (this.options.autostart) {
+              try {
+                this.fire("onStart", this);
+              } catch (e) {
+                throw e;
+              }
             }
-          }
-        });
+          });
       } else {
         if (this.options.autostart) {
           try {
@@ -202,6 +195,36 @@ module.exports = nodefony.register("cli", function () {
         input: process.stdin,
         output: process.stdout
       });*/
+    }
+
+    showAsciify(name = null) {
+      if (!name) {
+        name = this.name;
+      }
+      return this.asciify(`      ${name}`, {
+          font: this.options.font || "standard"
+        })
+        .then((data) => {
+          if (this.options.clear) {
+            this.clear();
+          }
+          let color = this.options.color ||  blue;
+          console.log(color(data));
+          //this.showBanner(data);
+          return data;
+        })
+        .catch((err) => {
+          this.logger(err, "ERROR");
+          throw err;
+        });
+    }
+
+    showBanner() {
+      let version = this.commander ? this.commander.version() : (this.options.version || "1.0.0");
+      if (this.options.version) {
+        console.log("          Version : " + blue(version) + " Platform : " + green(process.platform) + " Process : " + green(process.title) + " PID : " + process.pid + "\n");
+      }
+      this.blankLine();
     }
 
     listenRejection() {
@@ -224,18 +247,7 @@ module.exports = nodefony.register("cli", function () {
       return blue("      \x1b " + this.name) + " NODE_ENV : " + magenta(this.environment);
     }
 
-    showBanner(data) {
-      if (this.options.clear) {
-        this.clear();
-      }
-      let color = this.options.color ||  blue;
-      console.log(color(data));
-      let version = this.commander ? this.commander.version() : (this.options.version || "1.0.0");
-      if (this.options.version) {
-        console.log("          Version : " + blue(version) + " Platform : " + green(process.platform) + " Process : " + green(process.title) + " PID : " + process.pid + "\n");
-      }
-      this.blankLine();
-    }
+
 
     initCommander() {
       if (this.options.commander) {
@@ -252,7 +264,13 @@ module.exports = nodefony.register("cli", function () {
     initUi() {
       this.clc = clc;
       this.inquirer = inquirer;
-      this.prompt = inquirer.createPromptModule();
+      if (this.options.prompt === "rxjs") {
+        this.prompt = new Rx.Subject();
+        let prompt = inquirer.createPromptModule();
+        prompt(this.prompt);
+      } else {
+        this.prompt = inquirer.createPromptModule();
+      }
       this.clui = require("clui");
       this.emoji = require("node-emoji");
       this.spinner = null;
@@ -286,9 +304,19 @@ module.exports = nodefony.register("cli", function () {
     }
 
     asciify(txt, options, callback) {
-      return asciify(txt, nodefony.extend({
-        font: 'standard'
-      }, options), callback);
+      return new Promise((resolve, reject) => {
+        asciify(txt, nodefony.extend({
+          font: 'standard'
+        }, options), (error, data) => {
+          if (callback && typeof callback === "function") {
+            return callback(error, data);
+          }
+          if (error) {
+            return reject(error);
+          }
+          return resolve(data);
+        });
+      });
     }
 
     parseCommand(argv) {

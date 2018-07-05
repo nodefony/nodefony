@@ -76,16 +76,10 @@ module.exports = class installProject extends nodefony.Builder {
       try {
         try {
           nodefony.checkTrunk(cwd);
-          //nodefony.appKernel = nodefony.autoloader.loadAppKernel();
         } catch (e) {
           return reject(e);
         }
         this.cli.setCommand("nodefony:install", [cwd]);
-        if (nodefony.appKernel) {
-          return nodefony.start("nodefony:install", this.cli.args, this.cli, {});
-        } else {
-          return reject(new Error("No nodefony trunk detected !"));
-        }
       } catch (e) {
         return reject(e);
       }

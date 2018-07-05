@@ -111,16 +111,22 @@ module.exports = nodefony.register("cliKernel", function () {
       this.optionsTitleTables = optionsTitleTables;
       this.classCommand = {};
       this.args =   [];
-      this.command = null;
+      this.command = {
+        nodefony: {}
+      };
       this.task = null;
       this.action = null;
       this.parse = this.commander.args || [];
       if (this.kernel) {
         this.publicPath = this.kernel.publicPath;
+        if (this.kernel.console) {
+          try {
+            this.loadNodefonyCommand();
+          } catch (e) {
+            throw e;
+          }
+        }
       } else {
-        this.commands = {
-          nodefony: {}
-        };
         this.publicPath = null;
       }
       this.parseNodefonyCommand();
@@ -157,6 +163,12 @@ module.exports = nodefony.register("cliKernel", function () {
     }
 
     loadNodefonyCommand() {
+      if (!this.commands) {
+        this.commands = {};
+      }
+      if (!this.commands.nodefony) {
+        this.commands.nodefony = {};
+      }
       for (let cmd in nodefony.commands) {
         try {
           let instance = new nodefony.commands[cmd](this, this.kernel);
@@ -170,6 +182,9 @@ module.exports = nodefony.register("cliKernel", function () {
     }
 
     loadCommand() {
+      if (!this.commands) {
+        this.commands = {};
+      }
       for (let bundle in this.kernel.bundles) {
         if (!this.commands[bundle]) {
           this.commands[bundle] = {};
@@ -336,8 +351,10 @@ module.exports = nodefony.register("cliKernel", function () {
       if (nodefony.isTrunk) {
         nodefony.showHelp(this);
       }
-      for (let cmd in this.commands.nodefony) {
-        this.commands.nodefony[cmd].showHelp();
+      if (this.commands) {
+        for (let cmd in this.commands.nodefony) {
+          this.commands.nodefony[cmd].showHelp();
+        }
       }
       if (nodefony.isTrunk) {
         this.setTitleHelp(`${this.clc.cyan("Bundles")}`);
