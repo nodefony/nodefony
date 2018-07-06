@@ -3,16 +3,15 @@ module.exports = class generateProject extends nodefony.Builder {
   constructor(cli, cmd, args) {
     super(cli, cmd, args);
     this.name = null;
-    if (this.cmd === "generate") {
+    this.location = null;
+    if (this.cmd === "generate:project") {
       if (args[0]) {
-        this.name = args[0] || "myproject";
-      }
-      if (args[0]) {
+        this.name = args[0];
         this.location = args[1] || path.resolve(".");
       }
     }
     nodefony.extend(this.cli.response, {
-      name: this.name ||  "myproject",
+      name: this.name || "myproject",
       description: "description project",
       path: this.location || path.resolve("."),
       authorFullName: "admin",

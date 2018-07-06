@@ -320,13 +320,13 @@ module.exports = nodefony.register("cli", function () {
     }
 
     parseCommand(argv) {
-      let ret = this.commander.parse(argv || process.argv);
+      this.parse = this.commander.parse(argv || process.argv);
       if (this.commander.debug) {
         this.debug = this.commander.debug;
       } else {
         this.debug = false;
       }
-      return ret;
+      return this.parse;
     }
 
     setOption(option, description, callback) {

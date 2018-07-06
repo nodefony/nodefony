@@ -614,6 +614,7 @@ module.exports = class Nodefony {
           process.exit(0);
         });
         break;
+      case "log":
       case "logs":
         cli.reset();
         pm2.streamLogs();
@@ -633,6 +634,8 @@ module.exports = class Nodefony {
         return resolve(cli.setCommand("nodefony:outdated"));
       case "test":
         return resolve(cli.setCommand("unitest:launch:all"));
+      case "help":
+        return resolve(cli.setCommand("", ["-h"]));
       default:
         if (this.appKernel) {
           environment = "prod";

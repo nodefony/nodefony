@@ -110,13 +110,13 @@ module.exports = nodefony.register("cliKernel", function () {
       this.optionsTables = optionsTaskTables;
       this.optionsTitleTables = optionsTitleTables;
       this.classCommand = {};
-      this.args =   [];
-      this.command = {
+      this.commands = {
         nodefony: {}
       };
-      this.task = null;
-      this.action = null;
-      this.parse = this.commander.args || [];
+      this.args =   [];
+      this.command = "";
+      this.task = "";
+      this.action = "";
       if (this.kernel) {
         this.publicPath = this.kernel.publicPath;
         if (this.kernel.console) {
@@ -132,6 +132,12 @@ module.exports = nodefony.register("cliKernel", function () {
       this.parseNodefonyCommand();
     }
 
+    parseCommand(argv) {
+      let res = super.parseCommand(argv);
+      this.parseNodefonyCommand();
+      return res;
+    }
+
     showBanner(data) {
       if (this.commander && this.commander.json) {
         return;
@@ -144,8 +150,8 @@ module.exports = nodefony.register("cliKernel", function () {
      * command:task:action
      */
     parseNodefonyCommand() {
-      if (this.parse && this.parse.length) {
-        this.pattern = this.parse[0].split(":");
+      if (this.commander.args && this.commander.args.length) {
+        this.pattern = this.commander.args[0].split(":");
         if (!this.pattern.length) {
           return;
         }
@@ -158,7 +164,7 @@ module.exports = nodefony.register("cliKernel", function () {
         if (this.pattern[2]) {
           this.action = this.pattern[2];
         }
-        this.args = this.parse[1];
+        this.args = this.commander.args[1];
       }
     }
 
@@ -242,7 +248,7 @@ module.exports = nodefony.register("cliKernel", function () {
 
     matchCommand() {
       this.logger(`Parse command : ${this.command}:${this.task}:${this.action}`);
-      if (this.parse.length && this.command) {
+      if (this.commander.args.length && this.command) {
         for (let bundle in this.commands) {
           if (Object.keys(this.commands[bundle]).length) {
             if (this.command in this.commands[bundle]) {
@@ -257,16 +263,13 @@ module.exports = nodefony.register("cliKernel", function () {
                     if (ret && nodefony.isPromise(ret)) {
                       return ret
                         .then((ele) => {
-                          /*if (ele) {
-                            return this.terminate(0);
-                          }*/
                           return ele;
                         }).catch((e) => {
                           this.logger(e, "ERROR");
                           return this.terminate(e.code || -1);
                         });
                     }
-                    //return this.terminate(0);
+                    return ret;
                   } catch (e) {
                     return myCommand.logger(e, "ERROR");
                   }
@@ -286,16 +289,13 @@ module.exports = nodefony.register("cliKernel", function () {
                         if (ret && nodefony.isPromise(ret)) {
                           return ret
                             .then((ele) => {
-                              /*if (ele) {
-                                return this.terminate(0);
-                              }*/
                               return ele;
                             }).catch((e) => {
                               this.logger(e, "ERROR");
                               return this.terminate(e.code || -1);
                             });
                         }
-                        //return this.terminate(0);
+                        return ret;
                       } catch (e) {
                         return myTask.logger(e, "ERROR");
                       }

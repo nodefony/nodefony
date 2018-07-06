@@ -57,13 +57,15 @@ module.exports = class cliStart extends nodefony.cliKernel {
       process.argv.pop();
     }
     process.argv.push(cmd);
-    this.commander.parse(process.argv.concat(args));
+    this.parseCommand(process.argv.concat(args));
     return cmd;
   }
 
   start(command, args, rawCommand) {
+    //console.log(this.command)
     this.started = true;
     switch (command) {
+    case "generate:project":
     case "generate":
       try {
         return this.generateProject(command, args, this.commander.interactive);
@@ -99,6 +101,13 @@ module.exports = class cliStart extends nodefony.cliKernel {
         return process.stdout.write(res);
       }
       throw new Error("Not valid version : " + this.version + " check  http://semver.org ");
+    case "help":
+      if (!nodefony.isTrunk) {
+        return this.showHelp();
+      } else {
+        this.setCommand("", ["-h"]);
+      }
+      break;
     default:
       if (nodefony.isTrunk) {
         return nodefony.start(command, args, this);
@@ -188,8 +197,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
             this.setCommand("nodefony:outdated");
             break;
           default:
-            this.showHelp();
-            this.terminate(1);
+            this.setCommand("", "-h");
           }
         });
       })
@@ -252,6 +260,13 @@ module.exports = class cliStart extends nodefony.cliKernel {
 
   generateProject(command, args, interactive = false) {
     try {
+      if (command === "generate:project") {
+        if (!args[0]) {
+          let error = new Error("Project name empty Unauthorised Please enter a valid project name ");
+          this.logger(error, "ERROR");
+          this.terminate(1);
+        }
+      }
       let project = new nodefony.builders.Project(this, command, args);
       return project.run(interactive)
         .then((res) => {
@@ -295,6 +310,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
                 throw e;
               });
           }
+
           let cwd = path.resolve(project.location, project.name);
           this.cd(cwd);
           return this.installProject(cwd);
