@@ -12,7 +12,7 @@
   ],
   "dependencies": {
     "@nodefony/passport-wrapper": "^4.0.0",
-    "bcrypt": "^2.0.1",
+    "bcrypt": "^3.0.0",
     "jsonwebtoken": "^8.3.0",
     "passport": "^0.4.0",
     "passport-github2": "^0.1.11",
