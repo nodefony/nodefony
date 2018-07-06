@@ -275,10 +275,6 @@ module.exports = class generateProject extends nodefony.Builder {
           name: "doc",
           type: "directory"
         }, {
-          name: "Makefile",
-          type: "copy",
-          path: path.resolve(this.pathSkeleton, "Makefile")
-        }, {
           name: "README.md",
           type: "file",
           skeleton: path.resolve(this.pathSkeleton, "README.md"),
