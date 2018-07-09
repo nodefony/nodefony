@@ -66,7 +66,7 @@
     "less": "^3.5.3",
     "less-loader": "^4.1.0",
     "mini-css-extract-plugin": "^0.4.1",
-    "node-pre-gyp": "^0.10.0",
+    "node-pre-gyp": "^0.10.3",
     "node-sass": "^4.9.2",
     "optimize-css-assets-webpack-plugin": "^4.0.3",
     "pm2": "^3.0.0",

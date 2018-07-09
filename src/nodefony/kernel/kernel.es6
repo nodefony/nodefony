@@ -10,12 +10,10 @@ module.exports = nodefony.register("kernel", function () {
   const waitingBundle = function () {
     this.eventReadywait -= 1;
     if (this.eventReadywait === 0 || this.eventReadywait === -1) {
+      this.fire("onReady", this);
+      this.ready = true;
       process.nextTick(() => {
         try {
-          this.logger("\x1B[33m EVENT KERNEL READY\x1b[0m", "DEBUG");
-          this.fire("onReady", this);
-          this.ready = true;
-          this.logger("\x1B[33m EVENT KERNEL POST READY\x1b[0m", "DEBUG");
           this.fire("onPostReady", this);
           if (this.type === "SERVER") {
             if (global && global.gc) {
@@ -44,6 +42,7 @@ module.exports = nodefony.register("kernel", function () {
     "realtime-bundle": "realtime",
     "security-bundle": "security",
     "sequelize-bundle": "sequelize",
+    "mongo-bundle": "mongo",
     "unittests-bundle": "unittests"
   };
 
@@ -123,20 +122,9 @@ module.exports = nodefony.register("kernel", function () {
       //Events
       this.once("onPostRegister", () => {
         if (this.console) {
-          try {
-            this.cli.loadCommand();
-          } catch (e) {
-            this.logger(e, "ERROR");
-            this.terminate(e.code || 1);
-            return;
-          }
+          this.loadCommand();
           process.nextTick(() => {
-            try {
-              this.cli.matchCommand();
-            } catch (e) {
-              this.logger(e, "ERROR");
-              this.terminate(e.code || 1);
-            }
+            return this.matchCommand();
           });
         } else {
           if (!fs.existsSync(this.cacheLink)) {
@@ -178,6 +166,35 @@ module.exports = nodefony.register("kernel", function () {
         throw e;
       }
     }
+
+    loadCommand() {
+      try {
+        return this.cli.loadCommand();
+      } catch (e) {
+        this.logger(e, "ERROR");
+        this.terminate(e.code || 1);
+        return;
+      }
+    }
+
+    matchCommand() {
+      try {
+        this.cli.matchCommand();
+        if (this.cli.promises.length) {
+          Promise.all(this.cli.promises)
+            .then((value) => {
+              return this.cli.checkReturnValue(value);
+            })
+            .catch((e) => {
+              return this.cli.checkReturnValue(e);
+            });
+        }
+      } catch (e) {
+        this.logger(e, "ERROR");
+        this.terminate(e.code || 1);
+      }
+    }
+
 
     setCli() {
       // cli worker
@@ -523,9 +540,9 @@ module.exports = nodefony.register("kernel", function () {
       try {
         this.registerBundles(bundles, () => {
           this.preboot = true;
-          this.logger("\x1B[33m EVENT KERNEL onPreBoot\x1b[0m", "DEBUG");
           this.fire("onPreBoot", this);
           this.registerBundles(this.configBundle);
+          this.fire("onRegister", this);
         }, false);
 
       } catch (e) {
@@ -729,6 +746,11 @@ module.exports = nodefony.register("kernel", function () {
       }
     }
 
+    fire() {
+      this.logger(this.cli.clc.blue(`EVENT KERNEL : ${arguments[0]} `), "DEBUG");
+      return super.fire.apply(this, arguments);
+    }
+
     sendMessage(message) {
       return process.send({
         type: 'process:msg',
@@ -921,10 +943,6 @@ module.exports = nodefony.register("kernel", function () {
           recurse: false,
           match: this.regBundle,
           onFile: (file) => {
-            /*if (this.isInstall()) {
-              this.cli.args.push(file);
-              return;
-            }*/
             try {
               this.loadBundle(file, "filesystem");
             } catch (e) {
@@ -1050,9 +1068,7 @@ module.exports = nodefony.register("kernel", function () {
      */
     initializeBundles() {
       this.app = this.initApplication();
-      this.logger("\x1B[33m EVENT KERNEL onPostRegister\x1b[0m", "DEBUG");
       this.fire("onPostRegister", this);
-
       for (let name in this.bundles) {
         this.logger("\x1b[36m INITIALIZE Bundle :  " + name.toUpperCase() + "\x1b[0m", "DEBUG");
         try {
@@ -1066,7 +1082,6 @@ module.exports = nodefony.register("kernel", function () {
       if (this.eventReadywait === 0) {
         waitingBundle.call(this);
       }
-      this.logger("\x1B[33m EVENT KERNEL BOOT\x1b[0m", "DEBUG");
       this.fire("onBoot", this);
       this.booted = true;
       return;

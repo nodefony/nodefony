@@ -118,11 +118,11 @@ module.exports = nodefony.register("cliKernel", function () {
         nodefony: {}
       };
       this.args =   [];
+      this.promises = [];
       this.command = "";
       this.task = "";
       this.action = "";
       this.publicPath = null;
-
       this.parseNodefonyCommand();
     }
 
@@ -157,7 +157,7 @@ module.exports = nodefony.register("cliKernel", function () {
 
     parseCommand(argv) {
       let res = super.parseCommand(argv);
-      this.parseNodefonyCommand();
+      //this.parseNodefonyCommand();
       return res;
     }
 
@@ -271,19 +271,17 @@ module.exports = nodefony.register("cliKernel", function () {
 
     checkReturnPromise(value) {
       if (value && nodefony.isPromise(value)) {
-        return value
-          .then((ele) => {
-            return this.checkReturnValue(ele);
-          }).catch((e) => {
-            return this.checkReturnValue(e);
-          });
+        return this.promises.push(value);
+      } else {
+        return this.checkReturnValue(value);
       }
-      return this.checkReturnValue(value);
     }
     checkReturnValue(value) {
       if (value instanceof Error) {
         this.logger(value, "ERROR");
-        return this.terminate(value.code || 1);
+        process.nextTick(() => {
+          return this.terminate(value.code || 1);
+        });
       }
       process.nextTick(() => {
         return this.terminate(0);

@@ -20,6 +20,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
       .action((cmd, args /*, commander*/ ) => {
         this.cmd = cmd.toLowerCase();
         this.args = args;
+        this.parseNodefonyCommand();
         this.start(this.cmd, this.args, cmd);
       });
     this.commander.on('--help', () => {
