@@ -4,10 +4,10 @@
 "use strict;";
 nodefony.require = require;
 module.exports = class appKernel extends nodefony.kernel {
-  constructor(type, environment, debug, settings) {
+  constructor(environment, cli, settings) {
     // kernel constructor
     try {
-      super(environment, debug, type, settings);
+      super(environment, cli, settings);
     } catch (e) {
       throw e;
     }

@@ -17,12 +17,12 @@ const nodefony = function () {
   }
 }();
 
-if (process.env.MODE_START && process.env.MODE_START === "PM2") {
+/*if (process.env.MODE_START && process.env.MODE_START === "PM2") {
   if (nodefony.appKernel) {
-    return module.exports = new nodefony.appKernel("SERVER", "production", false, {});
+    return module.exports = new nodefony.appKernel( "production", false, {});
   }
   throw new Error("Nodefony Production no trunk detected ");
-}
+}*/
 
 if (nodefony.isElectron) {
   nodefony.isElectron.app.on('ready', () => {

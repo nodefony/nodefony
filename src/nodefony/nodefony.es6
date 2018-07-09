@@ -534,41 +534,43 @@ module.exports = class Nodefony {
     cli.setHelp("", "clean-log", "Remove log ( PM2 mode )");
     // nodefony
     cli.setTitleHelp(cli.clc.cyan("nodefony"));
-    cli.setHelp("", "install", "Install Nodefony Project");
+    cli.setHelp("", "create [-i] name [path]", "Create Nodefony Project");
+    cli.setHelp("", "install", "Install Nodefony");
+    cli.setHelp("", "build", "Build Nodefony Project");
+    cli.setHelp("", "outdated", "List Nodefony dependencies outdated");
     //this.setHelp("", "app", "Get Application Name");
     cli.setHelp("", "version", "Get Project Version");
-    cli.setHelp("", "generate:project name [path]", "Generate Nodefony Project");
   }
 
   start(cmd, args, cli, options = {}) {
     return new Promise((resolve, reject) => {
-      let type = null;
-      let debug = !!cli.commander.debug;
-      //let kernel = null;
+      if (cluster.isWorker) {
+        cmd = "production";
+      }
       let environment = false;
       switch (cmd) {
       case "dev":
       case "development":
         this.manageCache(cli);
         environment = "dev";
-        type = "SERVER";
         process.env.MODE_START = "NODEFONY_DEV";
-        return new nodefony.appKernel(type, environment, debug, options);
+        cli.setType("SERVER");
+        return new nodefony.appKernel(environment, cli, options);
       case "preprod":
       case "preproduction":
         this.manageCache(cli);
         environment = "prod";
-        type = "SERVER";
         process.env.MODE_START = "NODEFONY";
-        return resolve(this.prodStart(type, environment, debug, {}));
+        cli.setType("SERVER");
+        return resolve(this.prodStart(environment, cli, options));
       case "production":
       case "prod":
       case "start":
       case "pm2":
-        type = "SERVER";
+        cli.setType("SERVER");
         environment = "prod";
         if (process.env.MODE_START && process.env.MODE_START === "PM2") {
-          return new nodefony.appKernel(type, environment, false, options);
+          return new nodefony.appKernel(environment, cli, options);
         } else {
           this.manageCache(cli);
           process.env.MODE_START = "PM2_START";
@@ -639,10 +641,10 @@ module.exports = class Nodefony {
       default:
         if (this.appKernel) {
           environment = "prod";
-          type = "CONSOLE";
+          cli.setType("CONSOLE");
           process.env.MODE_START = "NODEFONY_CONSOLE";
           this.manageCache(cli);
-          return new this.appKernel(type, environment, debug, options);
+          return new this.appKernel(environment, cli, options);
         }
         let error = new Error("No nodefony trunk detected !");
         this.logger(error, "ERROR");
@@ -775,7 +777,7 @@ module.exports = class Nodefony {
     });
   }
 
-  prodStart(type, environment, debug, options) {
+  prodStart(environment, cli, options) {
     const instances = require('os').cpus().length;
     if (cluster.isMaster) {
       for (var i = 0; i < instances; i++) {
@@ -801,7 +803,7 @@ module.exports = class Nodefony {
         });
       });
     } else {
-      return new nodefony.appKernel(type, environment, debug, options);
+      return new nodefony.appKernel(environment, cli, options);
     }
   }
 

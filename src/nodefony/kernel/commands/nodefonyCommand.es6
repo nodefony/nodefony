@@ -16,6 +16,15 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
 
     install(cwd) {
       this.logger("INSTALL NODEFONY FRAMEWORK");
+      return this.displayInfo(cwd)
+        .catch((error) => {
+          this.logger(error, "ERROR");
+          throw error;
+        });
+    }
+
+    build(cwd) {
+      this.logger("BUILD NODEFONY FRAMEWORK");
       return this.installOrm()
         .then(() => {
           return this.displayInfo(cwd);

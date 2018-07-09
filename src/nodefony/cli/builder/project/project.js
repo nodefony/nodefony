@@ -4,7 +4,7 @@ module.exports = class generateProject extends nodefony.Builder {
     super(cli, cmd, args);
     this.name = null;
     this.location = null;
-    if (this.cmd === "generate:project") {
+    if (this.cmd === "create:project" || this.cmd === "create") {
       if (args[0]) {
         this.name = args[0];
         this.location = args[1] || path.resolve(".");

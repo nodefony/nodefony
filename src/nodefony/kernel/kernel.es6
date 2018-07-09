@@ -73,8 +73,15 @@ module.exports = nodefony.register("kernel", function () {
    */
   class Kernel extends nodefony.Service {
 
-    constructor(environment, debug, type, options) {
-      super("KERNEL", null, null, nodefony.extend({}, defaultOptions, options));
+    constructor(environment, cli, options) {
+      super("KERNEL", cli.container, cli.notificationsCenter, nodefony.extend({}, defaultOptions, options));
+      this.cli = cli;
+      this.type = cli.type;
+
+      // Manage Kernel Container
+      this.set("kernel", this);
+      this.set("cli", this.cli);
+      this.debug = (!!cli.commander.debug) || false;
       //Autoloader
       this.autoLoader = nodefony.autoloader;
       this.autoLoader.setKernel(this);
@@ -85,9 +92,7 @@ module.exports = nodefony.register("kernel", function () {
       this.isElectron = nodefony.isElectron;
       this.uptime = new Date().getTime();
       this.numberCpu = os.cpus().length;
-      this.type = type;
       this.console = this.isConsole();
-      this.debug = debug || false;
       this.booted = false;
       this.ready = false;
       this.started = false;
@@ -113,6 +118,7 @@ module.exports = nodefony.register("kernel", function () {
       //core repository
       this.isCore = nodefony.isCore;
       this.typeCluster = this.clusterIsMaster() ? "master" : "worker";
+      this.cli.setKernel(this);
 
       //Events
       this.once("onPostRegister", () => {
@@ -145,8 +151,6 @@ module.exports = nodefony.register("kernel", function () {
       });
 
       try {
-        // Manage Kernel Container
-        this.set("kernel", this);
         // Manage Reader
         this.reader = new nodefony.Reader(this.container);
         this.set("reader", this.reader);
@@ -155,13 +159,7 @@ module.exports = nodefony.register("kernel", function () {
         this.set("injection", this.injection);
         // SERVERS
         this.initServers();
-        // cli worker
-        this.cli = new nodefony.cliKernel(nodefony.projectName || "nodefony", this.container, this.notificationsCenter, {
-          autoLogger: false,
-          asciify: false,
-          version: this.isCore ? this.version : nodefony.projectVersion,
-          pid: this.typeCluster === "worker" ? true : false,
-        });
+        this.setCli();
         this.cli.createDirectory(path.resolve(this.rootDir, "tmp"), null, (file) => {
           this.tmpDir = file;
         }, true);
@@ -179,6 +177,21 @@ module.exports = nodefony.register("kernel", function () {
         console.trace(e);
         throw e;
       }
+    }
+
+    setCli() {
+      // cli worker
+      /*this.cli = new nodefony.cliKernel(nodefony.projectName || "nodefony", this.container, this.notificationsCenter, {
+        autoLogger: false,
+        asciify: false,
+        version: this.isCore ? this.version : nodefony.projectVersion,
+        pid: this.typeCluster === "worker" ? true : false,
+      });*/
+      if (this.typeCluster === "worker") {
+        this.cli.setPid();
+      }
+      this.cli.setCommandVersion(this.isCore ? this.version : nodefony.projectVersion);
+      this.cli.syslog.removeAllListeners('onLog');
     }
 
     start(environment) {
@@ -554,9 +567,9 @@ module.exports = nodefony.register("kernel", function () {
           return this.preRegister(coreBundles);
         })
         .catch((e) => {
-          throw e;
+          this.logger(e, "ERROR");
+          return e;
         });
-
     }
 
     getOrm() {
@@ -733,15 +746,7 @@ module.exports = nodefony.register("kernel", function () {
       if (!this.settings.system.log.active) {
         return;
       }
-      if (this.environment === "dev") {
-        this.cli.listenSyslog(this.syslog, this.debug);
-      } else {
-        // PM2
-        /*if (this.options.node_start === "PM2") {
-          return this.cli.listenSyslog(this.syslog, this.debug);
-        }*/
-        return this.cli.listenSyslog(this.syslog, this.debug);
-      }
+      return this.cli.listenSyslog(this.syslog, this.debug);
     }
 
     /**

@@ -34,10 +34,14 @@ module.exports = class bundlesTask extends nodefony.Task {
     } catch (e) {
       throw e;
     }
-    return Promise.all(mypromise).then(() => {
-      this.logger("Install success");
-    });
-
+    return Promise.all(mypromise)
+      .then(() => {
+        this.logger("Install success");
+      })
+      .catch(e => {
+        this.logger(e, "ERROR");
+        return e;
+      });
   }
 
   outdated(...args) {
@@ -53,7 +57,11 @@ module.exports = class bundlesTask extends nodefony.Task {
         }
       }
     }
-    return Promise.all(mypromise);
+    return Promise.all(mypromise)
+      .catch(e => {
+        this.logger(e, "ERROR");
+        return e;
+      });
   }
 
 };

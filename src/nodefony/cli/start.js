@@ -6,7 +6,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
     super("nodefony", null, null, {
       asciify: false,
       autostart: false,
-      signals: false,
+      signals: true,
       clean: true,
       promiseRejection: true,
       version: nodefony.version,
@@ -25,7 +25,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
     this.commander.on('--help', () => {
       if (!nodefony.isTrunk) {
         this.setTitleHelp(this.clc.cyan("nodefony"));
-        this.setHelp("", "generate:project name [path]", "Generate Nodefony Project");
+        this.setHelp("", "create:project [-i] name [path]", "Generate Nodefony Project");
       }
     });
     this.setOption('-d, --debug ', 'Nodefony debug');
@@ -57,18 +57,24 @@ module.exports = class cliStart extends nodefony.cliKernel {
       process.argv.pop();
     }
     process.argv.push(cmd);
-    this.parseCommand(process.argv.concat(args));
-    return cmd;
+    return this.parseCommand(process.argv.concat(args));
   }
 
   start(command, args, rawCommand) {
     //console.log(this.command)
     this.started = true;
     switch (command) {
-    case "generate:project":
-    case "generate":
+    case "create:project":
+    case "create":
       try {
-        return this.generateProject(command, args, this.commander.interactive);
+        return this.createProject(command, args, this.commander.interactive);
+      } catch (e) {
+        throw e;
+      }
+      break;
+    case "build":
+      try {
+        return this.buildProject();
       } catch (e) {
         throw e;
       }
@@ -94,13 +100,6 @@ module.exports = class cliStart extends nodefony.cliKernel {
         throw e;
       }
       break;
-    case "check-version":
-      const semver = require('semver');
-      var res = semver.valid(nodefony.version);
-      if (res) {
-        return process.stdout.write(res);
-      }
-      throw new Error("Not valid version : " + this.version + " check  http://semver.org ");
     case "help":
       if (!nodefony.isTrunk) {
         return this.showHelp();
@@ -134,6 +133,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
         this.choices.push(`${this.startString} Pre-Production`);
         this.choices.push(`${this.startString} Production`);
         this.choices.push(`Install`);
+        this.choices.push(`Build`);
         this.choices.push(`${this.generateString} Bundle`);
         this.choices.push(`${this.generateString} Controller`);
         this.choices.push(`Webpack Dump`);
@@ -142,13 +142,14 @@ module.exports = class cliStart extends nodefony.cliKernel {
         this.choices.push(`Outdated`);
         this.choices.push(`Reset`);
       } else {
+        this.choices.push(`Build`);
         this.choices.push(`Install`);
         this.choices.push(`${this.generateString} Bundle`);
         this.choices.push(`${this.generateString} Certificates`);
         this.choices.push(`Reset`);
       }
     } else {
-      this.choices.push(`${this.generateString} Project`);
+      this.choices.push(`Create Nodefony Project`);
     }
     this.choices.push("Help");
     this.choices.push("Quit");
@@ -158,7 +159,9 @@ module.exports = class cliStart extends nodefony.cliKernel {
         return this.interaction(this.choices).then(() => {
           switch (this.response.command) {
           case "project":
-            return this.generateProject(null, null, true);
+            return this.createProject(null, null, true);
+          case "build":
+            return this.buildProject();
           case "install":
             if (nodefony.isTrunk) {
               return this.installProject();
@@ -228,7 +231,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
             return "production";
           case `${this.startString} Pre-Production`:
             return "pre-production";
-          case `${this.generateString} Project`:
+          case `Create Nodefony Project`:
             return "project";
           case `${this.generateString} Certificates`:
             return "certificates";
@@ -241,6 +244,8 @@ module.exports = class cliStart extends nodefony.cliKernel {
           case `Install Framework`:
           case `Install`:
             return "install";
+          case `Build`:
+            return "build";
           case `Reset`:
             return "clear";
           case `Webpack Dump`:
@@ -258,9 +263,9 @@ module.exports = class cliStart extends nodefony.cliKernel {
       });
   }
 
-  generateProject(command, args, interactive = false) {
+  createProject(command, args, interactive = false) {
     try {
-      if (command === "generate:project") {
+      if (command === "create:project") {
         if (!args[0]) {
           let error = new Error("Project name empty Unauthorised Please enter a valid project name ");
           this.logger(error, "ERROR");
@@ -270,7 +275,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
       let project = new nodefony.builders.Project(this, command, args);
       return project.run(interactive)
         .then((res) => {
-          this.logger(`Generate Project ${res.name} complete`, "INFO");
+          this.logger(`Create Project ${res.name} complete`, "INFO");
           if (res.bundle) {
             this.response.project = true;
             this.response.config = {
@@ -297,7 +302,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
                       bundle.build(result, bundle.location);
                       let cwd = path.resolve(project.location, project.name);
                       this.cd(cwd);
-                      return this.installProject(cwd);
+                      return this.buildProject(cwd);
                     } catch (e) {
                       throw e;
                     }
@@ -313,7 +318,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
 
           let cwd = path.resolve(project.location, project.name);
           this.cd(cwd);
-          return this.installProject(cwd);
+          return this.buildProject(cwd);
         }).catch((e) => {
           if (e.code || e.code === 0) {
             this.logger(e, "INFO");
@@ -333,6 +338,23 @@ module.exports = class cliStart extends nodefony.cliKernel {
       return installer.install(cwd)
         .then((ret) => {
           this.logger("Install Complete");
+          return ret;
+        }).catch((e) => {
+          this.logger(e, "ERROR");
+          throw e;
+        });
+    } catch (e) {
+      this.logger(e, "ERROR");
+      throw e;
+    }
+  }
+
+  buildProject(cwd = path.resolve(".")) {
+    try {
+      let installer = new builderInstall(this);
+      return installer.build(cwd)
+        .then((ret) => {
+          this.logger("Build Complete");
           return ret;
         }).catch((e) => {
           this.logger(e, "ERROR");

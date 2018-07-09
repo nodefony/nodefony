@@ -6,6 +6,7 @@ const commander = require('commander');
 const spawn = require('child_process').spawn;
 const spawnSync = require('child_process').spawnSync;
 const moment = require("moment");
+const semver = require('semver');
 
 module.exports = nodefony.register("cli", function () {
 
@@ -23,7 +24,6 @@ module.exports = nodefony.register("cli", function () {
   } else {
     processName =  process.title || "nodefony";
   }
-  //const processName = path.basename (process.argv[1] ) || process.argv[1] || process.title ;
 
   const defaultTableCli = {
     style: {
@@ -91,10 +91,10 @@ module.exports = nodefony.register("cli", function () {
         name = name || options.processName;
         super(name, container, notificationsCenter, options);
       }
-      process.title = this.name.replace(new RegExp("\\s", "gi"), "").toLowerCase();
       this.environment = process.env.NODE_ENV || "production";
       process.env.NODE_ENV = this.environment;
       this.unhandledRejections = new Map();
+      this.setProcessTitle();
       this.pid = "";
       if (this.options.pid) {
         this.setPid();
@@ -197,6 +197,17 @@ module.exports = nodefony.register("cli", function () {
       });*/
     }
 
+    checkVersion(version = null) {
+      if (!version) {
+        version = this.version;
+      }
+      let res = semver.valid(version);
+      if (res) {
+        return res;
+      }
+      throw new Error("Not valid version : " + version + " check  http://semver.org ");
+    }
+
     showAsciify(name = null) {
       if (!name) {
         name = this.name;
@@ -243,11 +254,18 @@ module.exports = nodefony.register("cli", function () {
       this.pid = process.pid;
     }
 
+    setProcessTitle(name) {
+      if (name) {
+        process.title = name.replace(new RegExp("\\s", "gi"), "").toLowerCase();
+      } else {
+        process.title = this.name.replace(new RegExp("\\s", "gi"), "").toLowerCase();
+      }
+      return process.title;
+    }
+
     logEnv() {
       return blue("      \x1b " + this.name) + " NODE_ENV : " + magenta(this.environment);
     }
-
-
 
     initCommander() {
       if (this.options.commander) {
@@ -298,9 +316,10 @@ module.exports = nodefony.register("cli", function () {
           data: "7"
         }
       };
-      return this.syslog.listenWithConditions(this, options || defaultOption, (pdu) => {
-        return this.normalizeLog(pdu);
-      });
+      return this.syslog.listenWithConditions(this, options || defaultOption,
+        (pdu) => {
+          return this.normalizeLog(pdu);
+        });
     }
 
     asciify(txt, options, callback) {
@@ -420,16 +439,21 @@ module.exports = nodefony.register("cli", function () {
     }
 
     displayTable(datas, options, syslog) {
-      let table = new Table(options || defaultTableCli);
-      if (datas) {
-        for (var i = 0; i < datas.length; i++) {
-          table.push(datas[i]);
+      let table = null;
+      try {
+        table = new Table(options || defaultTableCli);
+        if (datas) {
+          for (var i = 0; i < datas.length; i++) {
+            table.push(datas[i]);
+          }
+          if (syslog) {
+            syslog.logger("\n" + table.toString());
+          } else {
+            console.log(table.toString());
+          }
         }
-        if (syslog) {
-          syslog.logger("\n" + table.toString());
-        } else {
-          console.log(table.toString());
-        }
+      } catch (e) {
+        throw e;
       }
       return table;
     }
@@ -628,10 +652,7 @@ module.exports = nodefony.register("cli", function () {
             cwd: cwd,
             shell: true
           }, (code) => {
-            if (code === 1) {
-              return reject(new Error("nmp install error : " + code));
-            }
-            return resolve(cwd);
+            return resolve(code);
           });
         } catch (e) {
           this.logger(e, "ERROR");
@@ -654,11 +675,8 @@ module.exports = nodefony.register("cli", function () {
             cwd: cwd,
             shell: true
           }, (code) => {
-            if (code === 1) {
-              return reject(new Error("nmp outdated error : " + code));
-            }
             this.logger(`Check Outdated Packages ${cwd}`);
-            return resolve(cwd);
+            return resolve(code);
           });
         } catch (e) {
           this.logger(e, "ERROR");
