@@ -16,7 +16,7 @@
     "font-awesome": "^4.7.0",
     "qs": "^6.5.2",
     "request": "^2.87.0",
-    "shortid": "^2.2.10",
+    "shortid": "^2.2.11",
     "useragent": "^2.3.0",
     "webpack": "^4.15.1",
     "webpack-merge": "^4.1.3"

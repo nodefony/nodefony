@@ -4044,9 +4044,9 @@ shimmer@^1.0.0, shimmer@^1.1.0, shimmer@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/shimmer/-/shimmer-1.2.0.tgz#f966f7555789763e74d8841193685a5e78736665"
 
-shortid@^2.2.10:
-  version "2.2.10"
-  resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.10.tgz#3d296472434d5c73d31310225e6a6b2a70984495"
+shortid@^2.2.11:
+  version "2.2.11"
+  resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.11.tgz#a77896f086b0dae7fce1237e29232d2aeef5738e"
   dependencies:
     nanoid "^1.0.7"
 

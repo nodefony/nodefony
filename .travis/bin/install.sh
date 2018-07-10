@@ -17,7 +17,7 @@ cat /etc/hosts
 
 #configuring the system
 npm link src/nodefony
-nodefony install
+nodefony build
 #make build
 #if [ "$DB" = "mongodb" ]
 #then

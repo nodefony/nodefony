@@ -6,8 +6,8 @@ nanoid@^1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-1.0.7.tgz#23857a9514ae8efb7374221b923a2b92be3f74f2"
 
-shortid@^2.2.10:
-  version "2.2.10"
-  resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.10.tgz#3d296472434d5c73d31310225e6a6b2a70984495"
+shortid@^2.2.11:
+  version "2.2.11"
+  resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.11.tgz#a77896f086b0dae7fce1237e29232d2aeef5738e"
   dependencies:
     nanoid "^1.0.7"

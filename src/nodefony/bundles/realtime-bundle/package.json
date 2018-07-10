@@ -11,7 +11,7 @@
     "javascript"
   ],
   "dependencies": {
-    "shortid": "^2.2.10"
+    "shortid": "^2.2.11"
   },
   "repository": {
     "type": "git",
