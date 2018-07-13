@@ -118,7 +118,6 @@ module.exports = nodefony.register("cliKernel", function () {
         nodefony: {}
       };
       this.args =   [];
-      this.promises = [];
       this.command = "";
       this.task = "";
       this.action = "";
@@ -155,11 +154,11 @@ module.exports = nodefony.register("cliKernel", function () {
       }
     }
 
-    parseCommand(argv) {
+    /*parseCommand(argv) {
       let res = super.parseCommand(argv);
       //this.parseNodefonyCommand();
       return res;
-    }
+    }*/
 
     showBanner(data) {
       if (this.commander && this.commander.json) {
@@ -172,9 +171,19 @@ module.exports = nodefony.register("cliKernel", function () {
      * PARSER
      * command:task:action
      */
-    parseNodefonyCommand() {
-      if (this.commander.args && this.commander.args.length) {
-        this.pattern = this.commander.args[0].split(":");
+    parseNodefonyCommand(cmd, args) {
+      this.pattern = null;
+      if (cmd) {
+        this.pattern = cmd.split(":");
+        this.args = args;
+      } else {
+        if (this.commander.args && this.commander.args.length) {
+          this.pattern = this.commander.args[0].split(":");
+          this.args = this.commander.args[1];
+        }
+      }
+
+      if (this.pattern) {
         if (!this.pattern.length) {
           return;
         }
@@ -187,7 +196,6 @@ module.exports = nodefony.register("cliKernel", function () {
         if (this.pattern[2]) {
           this.action = this.pattern[2];
         }
-        this.args = this.commander.args[1];
       }
     }
 
@@ -202,7 +210,9 @@ module.exports = nodefony.register("cliKernel", function () {
         try {
           let instance = new nodefony.commands[cmd](this, this.kernel);
           this.commands.nodefony[instance.name] = instance;
-          this.logger(`Register Command ${instance.name}`, "INFO", `Nodefony`);
+          if (this.commander.debug) {
+            this.logger(`Register Command ${instance.name}`, "DEBUG", `Nodefony`);
+          }
         } catch (e) {
           this.logger(e, "ERROR");
           continue;
@@ -231,7 +241,9 @@ module.exports = nodefony.register("cliKernel", function () {
           try {
             let instance = new this.classCommand[bundle][i](this, this.kernel.bundles[bundle]);
             this.commands[bundle][instance.name] = instance;
-            this.logger(`Register Command ${instance.name}`, "DEBUG", `Bundle ${bundle}`);
+            if (this.commander.debug) {
+              this.logger(`Register Command ${instance.name}`, "DEBUG", `Bundle ${bundle}`);
+            }
           } catch (e) {
             this.logger(e, "ERROR");
             continue;
@@ -271,9 +283,12 @@ module.exports = nodefony.register("cliKernel", function () {
 
     checkReturnPromise(value) {
       if (value && nodefony.isPromise(value)) {
-        return this.promises.push(value);
+        if (this.kernel) {
+          this.kernel.promise = value;
+        }
+        return value;
       } else {
-        return this.checkReturnValue(value);
+        return value;
       }
     }
     checkReturnValue(value) {
@@ -284,13 +299,13 @@ module.exports = nodefony.register("cliKernel", function () {
         });
       }
       process.nextTick(() => {
-        return this.terminate(0);
+        //return this.terminate(0);
       });
     }
 
     matchCommand() {
       this.logger(`Parse command : ${this.command}:${this.task}:${this.action}`);
-      if (this.commander.args.length && this.command) {
+      if (this.command) {
         for (let bundle in this.commands) {
           if (Object.keys(this.commands[bundle]).length) {
             if (this.command in this.commands[bundle]) {
@@ -299,11 +314,17 @@ module.exports = nodefony.register("cliKernel", function () {
                 if (myCommand[this.task]) {
                   let myAction = myCommand[this.task];
                   try {
-                    myCommand.showBanner();
-                    this.logger(`${this.command}:${this.task}`);
-                    return this.checkReturnPromise(myAction.apply(myCommand, this.args));
+                    return myCommand.showBanner()
+                      .then(() => {
+                        this.logger(`${this.command}:${this.task} ${this.args}`);
+                        return myAction.apply(myCommand, this.args);
+                      })
+                      .catch((e) => {
+                        return Promise.reject(e);
+                      });
                   } catch (e) {
-                    return myCommand.logger(e, "ERROR");
+                    myCommand.logger(e, "ERROR");
+                    return this.terminate(1);
                   }
                 }
               }
@@ -315,11 +336,18 @@ module.exports = nodefony.register("cliKernel", function () {
                     if (myTask[this.action]) {
                       let myAction = myTask[this.action];
                       try {
-                        myTask.showBanner();
-                        this.logger(`${this.command}:${this.task}:${this.action}`);
-                        return this.checkReturnPromise(myAction.apply(myCommand.tasks[this.task], this.args));
+                        return myTask.showBanner()
+                          .then(() => {
+                            this.logger(`${this.command}:${this.task}:${this.action} ${this.args}`);
+                            return myAction.apply(myCommand.tasks[this.task], this.args);
+                          })
+                          .catch((e) => {
+                            myTask.logger(e, "ERROR");
+                            return this.terminate(1);
+                          });
                       } catch (e) {
-                        return myTask.logger(e, "ERROR");
+                        myTask.logger(e, "ERROR");
+                        return this.terminate(1);
                       }
                     } else {
                       myTask.showHelp();
@@ -565,7 +593,9 @@ module.exports = nodefony.register("cliKernel", function () {
       let tab = [];
       let mypromise = [];
       try {
-        mypromise.push(this.npmList(myPath, tab));
+        if (myPath) {
+          mypromise.push(this.npmList(myPath, tab));
+        }
       } catch (e) {
         throw e;
       }
@@ -583,11 +613,11 @@ module.exports = nodefony.register("cliKernel", function () {
             "DESCRIPTION",
             "BUNDLES"
           ];
-          return this.displayTable(ele[0], {
+          this.displayTable(ele[0], {
             head: headers,
             colWidths: [30, 10, 100, 20]
           });
-          //return ele;
+          return ele;
           //this.terminate(0);
         }).catch((error) => {
           this.logger(error, "ERROR");
@@ -801,6 +831,7 @@ module.exports = nodefony.register("cliKernel", function () {
       if (this.kernel) {
         return this.kernel.terminate(code);
       }
+      this.fire("onTerminate", this);
       return nodefony.cli.quit(code);
     }
   }

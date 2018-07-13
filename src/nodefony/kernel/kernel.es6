@@ -7,30 +7,15 @@ module.exports = nodefony.register("kernel", function () {
   const regBundle = /^(.+)[Bb]undle.js$/;
   const regClassBundle = /^(.+)[Bb]undle$/;
 
-  const waitingBundle = function () {
-    this.eventReadywait -= 1;
-    if (this.eventReadywait === 0 || this.eventReadywait === -1) {
-      this.fire("onReady", this);
-      this.ready = true;
-      process.nextTick(() => {
-        try {
-          this.fire("onPostReady", this);
-          if (this.type === "SERVER") {
-            if (global && global.gc) {
-              this.memoryUsage("MEMORY POST READY ");
-              setTimeout(() => {
-                global.gc();
-                this.memoryUsage("EXPOSE GARBADGE COLLECTOR ON START");
-              }, 20000);
-            } else {
-              this.memoryUsage("MEMORY POST READY ");
-            }
-          }
-        } catch (e) {
-          this.logger(e, "ERROR");
-        }
-      });
-    }
+  const promiseBundleReady = function () {
+    let myresolve = null;
+    let myPromise = new Promise((resolve) => {
+      myresolve = resolve;
+    });
+    this.promisesBundleReady.push(myPromise);
+    return function (bundle) {
+      return myresolve(bundle);
+    };
   };
 
   const bundlesCore = {
@@ -45,8 +30,6 @@ module.exports = nodefony.register("kernel", function () {
     "mongo-bundle": "mongo",
     "unittests-bundle": "unittests"
   };
-
-
 
   const defaultEnvEnable = {
     dev: true,
@@ -76,7 +59,7 @@ module.exports = nodefony.register("kernel", function () {
       super("KERNEL", cli.container, cli.notificationsCenter, nodefony.extend({}, defaultOptions, options));
       this.cli = cli;
       this.type = cli.type;
-
+      this.setEnv(environment);
       // Manage Kernel Container
       this.set("kernel", this);
       this.set("cli", this.cli);
@@ -100,7 +83,7 @@ module.exports = nodefony.register("kernel", function () {
       this.regBundleName = regBundleName;
       this.node_start = process.env.MODE_START || this.options.node_start;
       this.bundles = {};
-      this.eventReadywait = 0;
+      this.promisesBundleReady = [];
       this.setParameters("bundles", {});
       this.bundlesCore = bundlesCore;
       // Paths
@@ -121,12 +104,7 @@ module.exports = nodefony.register("kernel", function () {
 
       //Events
       this.once("onPostRegister", () => {
-        if (this.console) {
-          this.loadCommand();
-          process.nextTick(() => {
-            return this.matchCommand();
-          });
-        } else {
+        if (!this.console) {
           if (!fs.existsSync(this.cacheLink)) {
             try {
               fs.mkdirSync(this.cacheLink);
@@ -145,22 +123,22 @@ module.exports = nodefony.register("kernel", function () {
         // Manage Injections
         this.injection = new nodefony.injection(this.container);
         this.set("injection", this.injection);
-        // SERVERS
-        this.initServers();
         this.setCli();
         this.cli.createDirectory(path.resolve(this.rootDir, "tmp"), null, (file) => {
           this.tmpDir = file;
         }, true);
         this.git = this.cli.setGitPath(this.rootDir);
-        this.cli.showAsciify()
-          .then(() => {
-            this.cli.showBanner();
-            return this.start(environment);
-          })
-          .catch((e) => {
-            this.logger(e, "ERROR");
-            throw e;
-          });
+        if (!this.console) {
+          this.cli.showAsciify(this.projectName)
+            .then(() => {
+              this.cli.showBanner();
+              return this.start();
+            })
+            .catch((e) => {
+              this.logger(e, "ERROR");
+              throw e;
+            });
+        }
       } catch (e) {
         console.trace(e);
         throw e;
@@ -179,31 +157,14 @@ module.exports = nodefony.register("kernel", function () {
 
     matchCommand() {
       try {
-        this.cli.matchCommand();
-        if (this.cli.promises.length) {
-          Promise.all(this.cli.promises)
-            .then((value) => {
-              return this.cli.checkReturnValue(value);
-            })
-            .catch((e) => {
-              return this.cli.checkReturnValue(e);
-            });
-        }
+        return this.cli.matchCommand();
       } catch (e) {
         this.logger(e, "ERROR");
         this.terminate(e.code || 1);
       }
     }
 
-
     setCli() {
-      // cli worker
-      /*this.cli = new nodefony.cliKernel(nodefony.projectName || "nodefony", this.container, this.notificationsCenter, {
-        autoLogger: false,
-        asciify: false,
-        version: this.isCore ? this.version : nodefony.projectVersion,
-        pid: this.typeCluster === "worker" ? true : false,
-      });*/
       if (this.typeCluster === "worker") {
         this.cli.setPid();
       }
@@ -211,11 +172,9 @@ module.exports = nodefony.register("kernel", function () {
       this.cli.syslog.removeAllListeners('onLog');
     }
 
-    start(environment) {
+    start() {
       if (!this.started) {
-        // Environment
         try {
-          this.setEnv(environment);
           // config
           this.readKernelConfig();
           // Clusters
@@ -226,8 +185,8 @@ module.exports = nodefony.register("kernel", function () {
           this.logger(e, "ERROR");
           throw e;
         }
-        this.boot();
         this.started = true;
+        return this.boot();
       }
     }
 
@@ -531,25 +490,6 @@ module.exports = nodefony.register("kernel", function () {
       }
     }
 
-    preRegister(bundles) {
-      try {
-        this.fire("onPreRegister", this);
-      } catch (e) {
-        this.logger(e);
-      }
-      try {
-        this.registerBundles(bundles, () => {
-          this.preboot = true;
-          this.fire("onPreBoot", this);
-          this.registerBundles(this.configBundle);
-          this.fire("onRegister", this);
-        }, false);
-
-      } catch (e) {
-        this.logger(e, "ERROR");
-      }
-    }
-
     install(coreBundles = []) {
       let bundles = coreBundles.concat(this.configBundle, [this.appPath]);
       let mypromise = [];
@@ -582,6 +522,101 @@ module.exports = nodefony.register("kernel", function () {
       return Promise.all(mypromise)
         .then(() => {
           return this.preRegister(coreBundles);
+        })
+        .catch((e) => {
+          this.logger(e, "ERROR");
+          return e;
+        });
+    }
+
+    preRegister(bundles) {
+      try {
+        this.fire("onPreRegister", this);
+      } catch (e) {
+        this.logger(e);
+      }
+      return this.registerBundles(bundles)
+        .then((res) => {
+          this.preboot = true;
+          this.fire("onPreBoot", this);
+          this.logger(res, "DEBUG", "REGISTER BUNDLES");
+          return this.registerBundles(this.configBundle)
+            .then((res) => {
+              if (res.length) {
+                this.logger(res, "DEBUG", "REGISTER BUNDLES");
+              }
+              this.fire("onRegister", this);
+              return this.initializeBundles();
+            });
+        });
+    }
+
+    onReady() {
+      return new Promise((resolve, reject) => {
+        process.nextTick(() => {
+          try {
+            this.fire("onPostReady", this);
+            this.initServers();
+            if (this.type === "SERVER") {
+              if (global && global.gc) {
+                this.memoryUsage("MEMORY POST READY ");
+                setTimeout(() => {
+                  global.gc();
+                  this.memoryUsage("EXPOSE GARBADGE COLLECTOR ON START");
+                }, 20000);
+              } else {
+                this.memoryUsage("MEMORY POST READY ");
+              }
+              return resolve(this);
+            }
+          } catch (e) {
+            this.logger(e, "ERROR");
+            return reject(e);
+          }
+        });
+      });
+    }
+
+    /**
+     *  initialisation  all bundles
+     *  @method initializeBundles
+     */
+    initializeBundles() {
+      let tab = [];
+      try {
+        this.app = this.initApplication();
+        this.fire("onPostRegister", this);
+        if (this.console) {
+          this.loadCommand();
+
+        }
+      } catch (e) {
+        this.logger(e, "ERROR");
+        throw e;
+      }
+      for (let name in this.bundles) {
+        this.logger("\x1b[36m INITIALIZE Bundle :  " + name.toUpperCase() + "\x1b[0m", "DEBUG");
+        try {
+          tab.push(this.bundles[name].boot());
+        } catch (e) {
+          this.logger(e, "ERROR");
+          //console.trace(e);
+          continue;
+        }
+      }
+      return new Promise.all(tab)
+        .then((tab) => {
+          this.fire("onBoot", this, tab);
+          this.booted = true;
+          return new Promise.all(this.promisesBundleReady)
+            .then((bundles) => {
+              this.fire("onReady", this, bundles);
+              this.ready = true;
+              if (this.console) {
+                return this.matchCommand();
+              }
+              return this.onReady();
+            });
         })
         .catch((e) => {
           this.logger(e, "ERROR");
@@ -692,31 +727,29 @@ module.exports = nodefony.register("kernel", function () {
 
     initServers() {
       if (this.type === "SERVER") {
-        this.once("onPostReady", () => {
-          // create HTTP server
-          let http = null;
-          let http2 = null;
-          try {
-            if (this.settings.system.servers.http) {
-              http = this.get("httpServer").createServer();
-            }
-            // create HTTPS/HTTP2 server
-            if (this.settings.system.servers.https) {
-              http2 = this.get("httpsServer").createServer();
-            }
-            // create WEBSOCKET server
-            if (this.settings.system.servers.ws) {
-              this.get("websocketServer").createServer(http);
-            }
-            // create WEBSOCKET SECURE server
-            if (this.settings.system.servers.wss) {
-              this.get("websocketServerSecure").createServer(http2);
-            }
-          } catch (e) {
-            this.logger(e, "ERROR");
-            throw e;
+        // create HTTP server
+        let http = null;
+        let http2 = null;
+        try {
+          if (this.settings.system.servers.http) {
+            http = this.get("httpServer").createServer();
           }
-        });
+          // create HTTPS/HTTP2 server
+          if (this.settings.system.servers.https) {
+            http2 = this.get("httpsServer").createServer();
+          }
+          // create WEBSOCKET server
+          if (this.settings.system.servers.ws) {
+            this.get("websocketServer").createServer(http);
+          }
+          // create WEBSOCKET SECURE server
+          if (this.settings.system.servers.wss) {
+            this.get("websocketServerSecure").createServer(http2);
+          }
+        } catch (e) {
+          this.logger(e, "ERROR");
+          throw e;
+        }
       }
     }
 
@@ -890,10 +923,7 @@ module.exports = nodefony.register("kernel", function () {
         } catch (e) {
           throw e;
         }
-        if (this.bundles[bundle.name].waitBundleReady) {
-          this.eventReadywait += 1;
-          this.bundles[bundle.name].listen(this, "onReady", waitingBundle);
-        }
+        this.bundles[bundle.name].once("onReady", promiseBundleReady.call(this));
       } catch (e) {
         throw e;
       }
@@ -901,7 +931,6 @@ module.exports = nodefony.register("kernel", function () {
 
     isPathExist(Path) {
       try {
-        //let mypath = this.checkPath(Path);
         let mypath = path.resolve(Path);
         if (fs.existsSync(mypath)) {
           return mypath;
@@ -967,58 +996,38 @@ module.exports = nodefony.register("kernel", function () {
     /**
      *  register Bundle
      *  @method
-     *  @param {String} path
-     *  @param {Function} callbackFinish
+     *  @param {array} bundles
      */
-    registerBundles(mypath, callbackFinish, nextick) {
-      switch (nodefony.typeOf(mypath)) {
-      case "array":
-        for (let i = 0; i < mypath.length; i++) {
-          let Path = this.isBundleDirectory(mypath[i]);
-          if (!Path) {
-            try {
-              Path = this.isNodeModule(mypath[i]);
-              if (Path) {
-                this.loadBundle(Path, "package");
-              } else {
-                this.logger("GLOBAL CONFIG REGISTER : ", "INFO");
-                this.logger(this.configBundle, "INFO");
-                let gene = this.readGeneratedConfig();
-                if (gene) {
-                  this.logger("GENERATED CONFIG REGISTER file ./config/GeneratedConfig.yml : ", "INFO");
-                  this.logger(gene, "INFO");
+    registerBundles(bundles) {
+      return new Promise((resolve, reject) => {
+        switch (nodefony.typeOf(bundles)) {
+        case "array":
+          for (let i = 0; i < bundles.length; i++) {
+            let Path = this.isBundleDirectory(bundles[i]);
+            if (!Path) {
+              try {
+                Path = this.isNodeModule(bundles[i]);
+                if (Path) {
+                  this.loadBundle(Path, "package");
+                } else {
+                  this.logger("GLOBAL CONFIG REGISTER : ", "INFO");
+                  this.logger(this.configBundle, "INFO");
+                  let gene = this.readGeneratedConfig();
+                  if (gene) {
+                    this.logger("GENERATED CONFIG REGISTER file ./config/GeneratedConfig.yml : ", "INFO");
+                    this.logger(gene, "INFO");
+                  }
                 }
+              } catch (e) {
+                this.logger(e, "ERROR");
               }
-            } catch (e) {
-              this.logger(e, "ERROR");
             }
           }
+          return resolve(bundles);
+        default:
+          return reject(new Error("registerBundles argument bundles must be an array "));
         }
-        break;
-      default:
-        return;
-      }
-      if (nextick === undefined) {
-        process.nextTick(() => {
-          try {
-            if (callbackFinish) {
-              return callbackFinish.call(this);
-            }
-            return this.initializeBundles();
-          } catch (e) {
-            this.logger(e, "ERROR");
-          }
-        });
-      } else {
-        try {
-          if (callbackFinish) {
-            return callbackFinish.call(this);
-          }
-          return this.initializeBundles();
-        } catch (e) {
-          this.logger(e, "ERROR");
-        }
-      }
+      });
     }
 
     /**
@@ -1062,30 +1071,6 @@ module.exports = nodefony.register("kernel", function () {
       return this.bundles.app;
     }
 
-    /**
-     *  initialisation  all bundles
-     *  @method initializeBundles
-     */
-    initializeBundles() {
-      this.app = this.initApplication();
-      this.fire("onPostRegister", this);
-      for (let name in this.bundles) {
-        this.logger("\x1b[36m INITIALIZE Bundle :  " + name.toUpperCase() + "\x1b[0m", "DEBUG");
-        try {
-          this.bundles[name].boot();
-        } catch (e) {
-          this.logger(e, "ERROR");
-          //console.trace(e);
-          continue;
-        }
-      }
-      if (this.eventReadywait === 0) {
-        waitingBundle.call(this);
-      }
-      this.fire("onBoot", this);
-      this.booted = true;
-      return;
-    }
 
     /**
      *

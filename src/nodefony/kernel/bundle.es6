@@ -391,7 +391,7 @@ module.exports = nodefony.register("Bundle", function () {
             config = this.getParameters("bundles." + name);
             if (config) {
               ext = nodefony.extend(true, {}, config, result[ele]);
-              this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name, "WARNING");
+              this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name, "DEBUG");
             } else {
               ext = result[ele];
               this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name + " BUT BUNDLE " + name + " NOT YET REGISTERED ", "WARNING");
@@ -450,29 +450,32 @@ module.exports = nodefony.register("Bundle", function () {
     }
 
     boot() {
-      this.fire("onBoot", this);
-      try {
-        // Register Controller
-        this.registerControllers(this.controllerFiles);
-        // Register Views
-        this.registerViews();
-        // Register internationalisation
-        if (this.translation) {
-          this.locale = this.translation.defaultLocal;
+      return new Promise((resolve, reject) => {
+        try {
+          this.fire("onBoot", this);
+          // Register Controller
+          this.registerControllers(this.controllerFiles);
+          // Register Views
+          this.registerViews();
+          // Register internationalisation
+          if (this.translation) {
+            this.locale = this.translation.defaultLocal;
+          }
+          this.registerI18n(this.locale);
+          // Register Entity
+          this.registerEntities();
+          // Register Fixtures
+          if (this.kernel.type === "CONSOLE") {
+            this.registerFixtures();
+          }
+        } catch (e) {
+          return reject(e);
         }
-        this.registerI18n(this.locale);
-        // Register Entity
-        this.registerEntities();
-        // Register Fixtures
-        if (this.kernel.type === "CONSOLE") {
-          this.registerFixtures();
+        if (this.waitBundleReady === false) {
+          this.fire("onReady", this);
         }
-      } catch (e) {
-        throw e;
-      }
-      if (this.waitBundleReady === false) {
-        this.fire("onReady", this);
-      }
+        return resolve(this);
+      });
     }
 
     getName() {

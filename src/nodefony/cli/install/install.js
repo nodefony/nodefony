@@ -23,15 +23,11 @@ module.exports = class installProject extends nodefony.Builder {
                     return reject(e);
                   });
               } else {
-                return resolve(cwd);
+                return cwd;
               }
             })
             .then(() => {
-              this.cli.logger("NODEFONY INSTALL");
-              return this.installNodefony(cwd)
-                .then((ele) => {
-                  return resolve(ele);
-                });
+              return resolve(cwd);
             })
             .catch((e) => {
               return reject(e);
@@ -40,8 +36,15 @@ module.exports = class installProject extends nodefony.Builder {
     });
   }
 
-
   build(cwd = path.resolve(".")) {
+    return this.generateCertificates(cwd)
+      .then(() => {
+        return cwd;
+      });
+  }
+
+
+  /*build(cwd = path.resolve(".")) {
     return new Promise((resolve, reject) => {
       return this.installFramework(cwd)
         .then(() => {
@@ -50,12 +53,26 @@ module.exports = class installProject extends nodefony.Builder {
               if (nodefony.isCore) {
                 return this.npmLink(path.resolve("."), path.resolve("src", "nodefony"))
                   .then(() => {
-                    return this.generateCertificates(cwd);
+                    return this.generateCertificates(cwd)
+                      .then(() => {
+                        this.cli.logger("NODEFONY INSTALL");
+                        return this.installBundleNodefony(cwd)
+                          .catch((e) => {
+                            return reject(e);
+                          });
+                      });
                   }).catch((e) => {
                     return reject(e);
                   });
               } else {
                 return this.generateCertificates(cwd)
+                  .then(() => {
+                    this.cli.logger("NODEFONY INSTALL");
+                    return this.installBundleNodefony(cwd)
+                      .catch((e) => {
+                        return reject(e);
+                      });
+                  })
                   .catch((e) => {
                     return reject(e);
                   });
@@ -73,7 +90,7 @@ module.exports = class installProject extends nodefony.Builder {
             });
         });
     });
-  }
+  }*/
 
   npmLink(cwd = path.resolve("."), argv = []) {
     return new Promise((resolve, reject) => {
@@ -101,7 +118,7 @@ module.exports = class installProject extends nodefony.Builder {
     });
   }
 
-  installNodefony(cwd) {
+  installBundleNodefony(cwd) {
     return new Promise((resolve, reject) => {
       try {
         try {
@@ -109,7 +126,7 @@ module.exports = class installProject extends nodefony.Builder {
         } catch (e) {
           return reject(e);
         }
-        return this.cli.setCommand("nodefony:install", [cwd]);
+        return resolve(this.cli.setCommand("nodefony:bundles:install", [cwd]));
       } catch (e) {
         return reject(e);
       }

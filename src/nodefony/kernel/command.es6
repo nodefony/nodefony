@@ -5,7 +5,9 @@ module.exports = nodefony.register("Command", () => {
 
     constructor(name, cli, bundle) {
       super(name, cli.container);
-      this.bundleName = bundle.name;
+      if (bundle) {
+        this.bundleName = bundle.name;
+      }
       this.cli = cli;
       this.interactive = this.cli.commander.interactive;
       this.json = this.cli.commander.json;
@@ -14,18 +16,20 @@ module.exports = nodefony.register("Command", () => {
     }
 
     showBanner() {
-      if (this.json) {
-        return;
-      }
-      this.cli.clear();
-      this.cli.asciify("      " + this.name, {}, (err, data) => {
-        if (err) {
-          throw err;
-        }
-        let color = this.cli.clc.blueBright.bold;
-        console.log(color(data));
-        this.cli.blankLine();
-      });
+      return this.cli.asciify("      " + this.name)
+        .then((data) => {
+          if (this.json) {
+            return data;
+          }
+          this.cli.clear();
+          let color = this.cli.clc.blueBright.bold;
+          console.log(color(data));
+          this.cli.blankLine();
+          return data;
+        })
+        .catch((e) => {
+          return e;
+        });
     }
 
     logger(pci, severity, msgid, msg) {

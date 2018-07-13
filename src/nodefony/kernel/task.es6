@@ -13,18 +13,20 @@ module.exports = nodefony.register("Task", () => {
     }
 
     showBanner() {
-      if (this.json) {
-        return;
-      }
-      this.cli.clear();
-      this.cli.asciify(`      ${this.command.name} ${this.name}`, {}, (err, data) => {
-        if (err) {
-          throw err;
-        }
-        let color = this.cli.clc.blueBright.bold;
-        console.log(color(data));
-        this.cli.blankLine();
-      });
+      return this.cli.asciify(`      ${this.command.name} ${this.name}`)
+        .then((data) => {
+          if (this.json) {
+            return data;
+          }
+          this.cli.clear();
+          let color = this.cli.clc.blueBright.bold;
+          console.log(color(data));
+          this.cli.blankLine();
+          return data;
+        })
+        .catch((e) => {
+          return e;
+        });
     }
 
     logger(pci, severity, msgid, msg) {

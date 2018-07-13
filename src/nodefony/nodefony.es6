@@ -426,7 +426,7 @@ module.exports = class Nodefony {
       fs.lstatSync(this.appPath);
       fs.lstatSync(this.appConfigPath);
       if (!this.appKernel) {
-        this.appKernel = this.loadAppKernel(cwd);
+        this.loadAppKernel(cwd);
       }
       this.isTrunk = true;
       return true;
@@ -438,7 +438,7 @@ module.exports = class Nodefony {
 
   loadAppKernel(cwd = path.resolve(".")) {
     try {
-      return require(path.resolve(cwd, "app", "appKernel.js"));
+      return this.appKernel = require(path.resolve(cwd, "app", "appKernel.js"));
     } catch (e) {
       return null;
     }
@@ -543,7 +543,7 @@ module.exports = class Nodefony {
   }
 
   start(cmd, args, cli, options = {}) {
-    if (cluster.isWorker) {
+    if (cmd !== "preprod" && cluster.isWorker) {
       cmd = "production";
     }
     let environment = false;
@@ -561,7 +561,7 @@ module.exports = class Nodefony {
       environment = "prod";
       process.env.MODE_START = "NODEFONY";
       cli.setType("SERVER");
-      return this.prodStart(environment, cli, options);
+      return this.preProd(environment, cli, options);
     case "production":
     case "prod":
     case "start":
@@ -639,17 +639,18 @@ module.exports = class Nodefony {
       return cli.setCommand("", ["-h"]);
     default:
       if (cli.kernel) {
-        return cli.matchCommand();
+        return cli.kernel.matchCommand();
       }
       if (this.appKernel) {
         environment = "prod";
         cli.setType("CONSOLE");
         process.env.MODE_START = "NODEFONY_CONSOLE";
         this.manageCache(cli);
-        return new this.appKernel(environment, cli, options);
+        let kernel = new this.appKernel(environment, cli, options);
+        return kernel.start();
       }
       let error = new Error("No nodefony trunk detected !");
-      this.logger(error, "ERROR");
+      cli.logger(error, "ERROR");
       cli.showHelp();
       throw error;
     }
@@ -778,7 +779,7 @@ module.exports = class Nodefony {
     });
   }
 
-  prodStart(environment, cli, options) {
+  preProd(environment, cli, options) {
     const instances = require('os').cpus().length;
     if (cluster.isMaster) {
       for (var i = 0; i < instances; i++) {

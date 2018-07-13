@@ -17,6 +17,9 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
     install(cwd) {
       this.logger("INSTALL NODEFONY FRAMEWORK");
       return this.displayInfo(cwd)
+        .then((ele) => {
+          return ele;
+        })
         .catch((error) => {
           this.logger(error, "ERROR");
           throw error;
@@ -109,6 +112,9 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
           return reject(e);
         }
         return task.load()
+          .then((ele) => {
+            return ele;
+          })
           .catch((e) => {
             this.logger(e, "ERROR");
             return resolve(e);
@@ -129,14 +135,14 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
             this.logger(`Check Outdated nodefony :  ${trunk}`);
             args.push(new nodefony.fileClass(trunk));
           }
-          for (let bundle in this.kernel.bundles) {
+          for (let bundle in this.cli.kernel.bundles) {
             if (nodefony.isCore) {
-              this.logger(`Check Outdated Bundle :  ${this.kernel.bundles[bundle].name}`);
-              args.push(this.kernel.bundles[bundle]);
+              this.logger(`Check Outdated Bundle :  ${this.cli.kernel.bundles[bundle].name}`);
+              args.push(this.cli.kernel.bundles[bundle]);
             } else {
-              if (!this.kernel.isBundleCore(bundle)) {
-                this.logger(`Check Outdated ${this.kernel.bundles[bundle].name}`);
-                args.push(this.kernel.bundles[bundle]);
+              if (!this.cli.kernel.isBundleCore(bundle)) {
+                this.logger(`Check Outdated ${this.cli.kernel.bundles[bundle].name}`);
+                args.push(this.cli.kernel.bundles[bundle]);
               }
             }
           }
@@ -153,8 +159,15 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
 
     displayInfo(cwd) {
       return this.listRouting()
-        .then(this.matchHomeRoute("/"))
-        .then(this.listPackage(cwd));
+        .then(() => {
+          return this.matchHomeRoute("/")
+            .then(() => {
+              return this.listPackage(cwd)
+                .then(() => {
+                  return cwd;
+                });
+            });
+        });
     }
 
     listPackage(cwd) {
