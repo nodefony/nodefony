@@ -18,14 +18,6 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
 
     super(name, kernel, container);
 
-    // load bundle library
-    //this.autoLoader.loadDirectory(this.path+"/core");
-
-    /*
-     *	If you want kernel wait monitoringBundle event <<onReady>>
-     *
-     *      this.waitBundleReady = true ;
-     */
     if (this.kernel.type === "CONSOLE") {
       return;
     }
@@ -52,10 +44,8 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       this.logger(e, "WARNING");
     }
 
-    this.kernel.listen(this, "onPreBoot", (kernel) => {
-
+    this.kernel.once("onPreBoot", (kernel) => {
       this.templating = this.get("templating");
-
       this.infoKernel.events = {};
       for (let event in kernel.notificationsCenter._events) {
         switch (event) {
@@ -80,16 +70,13 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       }
     });
 
-    this.kernel.listen(this, "onPostReady", (kernel) => {
-
+    this.kernel.once("onPostReady", (kernel) => {
       //this.debugView = this.httpKernel.getTemplate("monitoringBundle::debugBar.html.twig");
-
       if (this.settings.profiler.active) {
         this.storageProfiling = this.settings.profiler.storage;
       } else {
         this.storageProfiling = null;
       }
-
       let ormName = this.kernel.settings.orm;
       this.orm = this.get(ormName);
       this.requestEntity = this.orm.getEntity("requests");
@@ -239,7 +226,6 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
           break;
         }
 
-
         this.service = {
           upload: {
             tmp_dir: this.upload.config.uploadDir,
@@ -284,7 +270,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       }
     });
 
-    this.kernel.listen(this, "onServerRequest", (request /*, response, logString, d*/ ) => {
+    this.kernel.on("onServerRequest", (request /*, response, logString, d*/ ) => {
       request.nodefony_time = new Date().getTime();
     });
 
