@@ -2,11 +2,9 @@ class launchTask extends nodefony.Task {
 
   constructor(name, command) {
     super(name, command);
-
     this.serviceUnitTest = this.get("unitTest");
     this.serviceUnitTest.consoleMochaInit();
     this.tests = [];
-
   }
 
   showHelp() {
@@ -38,16 +36,13 @@ class launchTask extends nodefony.Task {
 
   onReady() {
     return new Promise((resolve, reject) => {
-      this.kernel.listen(this, 'onReady', ( /*kernel*/ ) => {
-        this.serviceUnitTest.mochaAddTest(this.tests);
-        this.serviceUnitTest.mochaRunTest((failures) => {
-          if (failures) {
-            console.log(failures);
-            return reject(failures);
-          }
-          resolve(true);
-          return this.terminate(0);
-        });
+      this.serviceUnitTest.mochaAddTest(this.tests);
+      this.serviceUnitTest.mochaRunTest((failures) => {
+        if (failures) {
+          console.log(failures);
+          return reject(failures);
+        }
+        return resolve(true);
       });
     });
   }
