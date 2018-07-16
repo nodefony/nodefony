@@ -80,7 +80,7 @@ module.exports = nodefony.register("kernel", function () {
       this.ready = false;
       this.started = false;
       this.preRegistered = false;
-
+      this.isCore = nodefony.isCore;
       this.settings = null;
       this.regBundle = regBundle;
       this.regBundleName = regBundleName;
@@ -100,23 +100,8 @@ module.exports = nodefony.register("kernel", function () {
       this.cacheLink = path.resolve(this.rootDir, "tmp", "assestLink");
       this.cacheWebpack = path.resolve(this.rootDir, "tmp", "webpack");
       this.tmpDir = null;
-      //core repository
-      this.isCore = nodefony.isCore;
       this.typeCluster = this.clusterIsMaster() ? "master" : "worker";
       this.cli.setKernel(this);
-      //Events
-      this.once("onPostRegister", () => {
-        if (!this.console) {
-          if (!fs.existsSync(this.cacheLink)) {
-            try {
-              fs.mkdirSync(this.cacheLink);
-              this.cli.assetInstall();
-            } catch (e) {
-              this.logger(e, "WARNING");
-            }
-          }
-        }
-      });
       try {
         // Manage Reader
         this.reader = new nodefony.Reader(this.container);
@@ -130,15 +115,7 @@ module.exports = nodefony.register("kernel", function () {
         }, true);
         this.git = this.cli.setGitPath(this.rootDir);
         if (!this.console) {
-          this.cli.showAsciify(this.projectName)
-            .then(() => {
-              this.cli.showBanner();
-              return this.start();
-            })
-            .catch((e) => {
-              this.logger(e, "ERROR");
-              throw e;
-            });
+          this.start();
         }
       } catch (e) {
         console.trace(e);
@@ -148,19 +125,25 @@ module.exports = nodefony.register("kernel", function () {
 
     start() {
       if (!this.started) {
-        try {
-          // config
-          this.readKernelConfig();
-          // Clusters
-          this.initCluster();
-          // Manage Template engine
-          this.initTemplate();
-        } catch (e) {
-          this.logger(e, "ERROR");
-          throw e;
-        }
-        this.started = true;
-        return this.boot();
+        return this.cli.showAsciify(this.projectName)
+          .then(() => {
+            this.cli.showBanner();
+            try {
+              // config
+              this.readKernelConfig();
+              // Clusters
+              this.initCluster();
+              // Manage Template engine
+              this.initTemplate();
+            } catch (e) {
+              throw e;
+            }
+            this.started = true;
+            return this.boot();
+          }).catch((e) => {
+            this.logger(e, "ERROR");
+            return e;
+          });
       }
     }
 
@@ -236,11 +219,7 @@ module.exports = nodefony.register("kernel", function () {
 
     readKernelConfig() {
       try {
-        //this.reader.readConfig(this.configPath, this.name, (result) => {
         this.settings = nodefony.kernelConfig;
-        if (!nodefony.kernelConfig) {
-
-        }
         this.settings.name = "NODEFONY";
         this.settings.version = this.version;
         this.settings.environment = this.environment;
@@ -254,7 +233,6 @@ module.exports = nodefony.register("kernel", function () {
         this.hostHttps = this.hostname + ":" + this.httpsPort;
         this.domainAlias = nodefony.kernelConfig.system.domainAlias;
         this.initializeLog();
-        //});
         if (!this.settings.system.bundles) {
           this.settings.system.bundles = {};
         }
@@ -265,7 +243,6 @@ module.exports = nodefony.register("kernel", function () {
           }
         }
       } catch (e) {
-        //console.trace(e);
         this.logger(e, "ERROR");
         throw e;
       }
@@ -616,7 +593,15 @@ module.exports = nodefony.register("kernel", function () {
         this.fire("onPostRegister", this);
         if (this.console) {
           this.loadCommand();
-
+        } else {
+          if (!fs.existsSync(this.cacheLink)) {
+            try {
+              fs.mkdirSync(this.cacheLink);
+              this.cli.assetInstall();
+            } catch (e) {
+              this.logger(e, "WARNING");
+            }
+          }
         }
       } catch (e) {
         this.logger(e, "ERROR");

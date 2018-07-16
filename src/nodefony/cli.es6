@@ -1,4 +1,3 @@
-//const readline = require('readline');
 const Table = require('cli-table');
 const asciify = require('asciify');
 const inquirer = require('inquirer');
@@ -10,7 +9,7 @@ const semver = require('semver');
 
 module.exports = nodefony.register("cli", function () {
 
-  //const red   = clc.red.bold;
+  const red = clc.red.bold;
   //const cyan   = clc.cyan.bold;
   const blue = clc.blueBright.bold;
   const green = clc.green;
@@ -191,10 +190,6 @@ module.exports = nodefony.register("cli", function () {
           }
         }
       }
-      /*this.readline = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-      });*/
     }
 
     checkVersion(version = null) {
@@ -690,20 +685,26 @@ module.exports = nodefony.register("cli", function () {
       try {
         this.logger("Run Spawn : " + command + " " + args.join(" "), "DEBUG");
         cmd = spawn(command, args, options || {});
-        if (this.debug) {
-          cmd.stdout.on('data', (data) => {
-            let str = data.toString();
-            if (str) {
-              this.logger(`${command} stdout :  ${str}`);
+        //if (this.debug) {
+        cmd.stdout.on('data', (data) => {
+          let str = data.toString();
+          if (str) {
+            if (this.debug) {
+              this.logger(`${command} :\n`, "INFO", blue("STDOUT"));
             }
-          });
-          cmd.stderr.on('data', (data) => {
-            let str = data.toString();
-            if (str) {
-              this.logger(`${command} stderr :  ${str}`, "INFO");
+            process.stdout.write(str);
+          }
+        });
+        cmd.stderr.on('data', (data) => {
+          let str = data.toString();
+          if (str) {
+            if (this.debug) {
+              this.logger(`${command} :\n`, "INFO", red("STDERR"));
             }
-          });
-        }
+            process.stdout.write(str);
+          }
+        });
+        //}
         cmd.on('close', (code) => {
           if (this.debug) {
             this.logger(`child process exited with code ${code}`, "DEBUG");

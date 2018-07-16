@@ -13,7 +13,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
     });
     this.choices = [];
     this.cmd = null;
-    this.args = null;
+    this.args = [];
     this.promise = null;
     this.started = false;
     this.commander.usage(`<command:task:action> [args...]`);
@@ -22,7 +22,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
         this.cmd = cmd.toLowerCase();
         this.args = args;
         this.parseNodefonyCommand();
-        this.logger(`Parse command : ${this.command}:${this.task}:${this.action}`);
+        //this.logger(`Parse command : ${this.command}:${this.task}:${this.action}`);
         if (this.promise) {
           this.promise
             .then(() => {
@@ -97,7 +97,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
           return this.installProject()
             .then(() => {
               return this.buildProject()
-                .then((cwd) => {
+                .then(( /*cwd*/ ) => {
                   this.parseNodefonyCommand("nodefony:build", args);
                   return nodefony.start(command, args, this);
                 });
@@ -342,7 +342,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
                       bundle.build(result, bundle.location);
                       let cwd = path.resolve(project.location, project.name);
                       this.cd(cwd);
-                      return this.installProject()
+                      return this.installProject(cwd)
                         .then(() => {
                           return this.buildProject(cwd)
                             .then((cwd) => {
@@ -366,7 +366,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
 
           let cwd = path.resolve(project.location, project.name);
           this.cd(cwd);
-          return this.installProject()
+          return this.installProject(cwd)
             .then(() => {
               return this.buildProject(cwd)
                 .then((cwd) => {

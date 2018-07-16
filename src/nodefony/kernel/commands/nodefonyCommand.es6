@@ -127,12 +127,17 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
         this.logger("PACKAGES OUTDATED");
         try {
           let args = [];
+          let trunk = null;
           if (this.cli.kernel.isCore) {
-            let trunk = path.resolve(".", "package.json");
+            trunk = path.resolve(".", "package.json");
             this.logger(`Check Outdated trunk :  ${trunk}`);
             args.push(new nodefony.fileClass(trunk));
             trunk = path.resolve("src", "nodefony", "package.json");
             this.logger(`Check Outdated nodefony :  ${trunk}`);
+            args.push(new nodefony.fileClass(trunk));
+          } else {
+            trunk = path.resolve("package.json");
+            this.logger(`Check Outdated trunk :  ${trunk}`);
             args.push(new nodefony.fileClass(trunk));
           }
           for (let bundle in this.cli.kernel.bundles) {

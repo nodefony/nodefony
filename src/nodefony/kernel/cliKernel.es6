@@ -117,7 +117,7 @@ module.exports = nodefony.register("cliKernel", function () {
       this.commands = {
         nodefony: {}
       };
-      this.args =   [];
+      this.args = [];
       this.command = "";
       this.task = "";
       this.action = "";
@@ -175,11 +175,15 @@ module.exports = nodefony.register("cliKernel", function () {
       this.pattern = null;
       if (cmd) {
         this.pattern = cmd.split(":");
-        this.args = args;
+        if (args) {
+          this.args = args;
+        }
       } else {
         if (this.commander.args && this.commander.args.length) {
           this.pattern = this.commander.args[0].split(":");
-          this.args = this.commander.args[1];
+          if (this.commander.args[1]) {
+            this.args = this.commander.args[1];
+          }
         }
       }
 
