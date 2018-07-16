@@ -12,12 +12,12 @@
  *
  *        nodefony ROUTING  workboxBundle
  */
- 
+
 module.exports = {
   workbox: {
     pattern: "/workbox",
     defaults: {
-      controller: "workboxBundle:default:index"
+      controller: "workbox:default:index"
     }
   }
 };

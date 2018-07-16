@@ -45,7 +45,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
     this.commander.on('--help', () => {
       if (!nodefony.isTrunk) {
         this.setTitleHelp(this.clc.cyan("nodefony"));
-        this.setHelp("", "create:project [-i] name [path]", "Generate Nodefony Project");
+        this.setHelp("", "create [-i] name [path]", "Create New Nodefony Project");
       }
     });
     this.setOption('-d, --debug ', 'Nodefony debug');
@@ -83,7 +83,6 @@ module.exports = class cliStart extends nodefony.cliKernel {
   start(command, args, rawCommand) {
     this.started = true;
     switch (command) {
-    case "create:project":
     case "create":
       try {
         return this.createProject(command, args, this.commander.interactive);
@@ -97,8 +96,8 @@ module.exports = class cliStart extends nodefony.cliKernel {
           return this.installProject()
             .then(() => {
               return this.buildProject()
-                .then(( /*cwd*/ ) => {
-                  this.parseNodefonyCommand("nodefony:build", args);
+                .then((cwd) => {
+                  this.parseNodefonyCommand("nodefony:build", [cwd]);
                   return nodefony.start(command, args, this);
                 });
             });
@@ -305,7 +304,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
 
   createProject(command, args, interactive = false) {
     try {
-      if (command === "create:project") {
+      if (command === "create") {
         if (!args[0]) {
           let error = new Error("Project name empty Unauthorised Please enter a valid project name ");
           this.logger(error, "ERROR");
@@ -335,35 +334,40 @@ module.exports = class cliStart extends nodefony.cliKernel {
             return nodefony.builders.bundles.interaction(this)
               .then((res) => {
                 let bundle = new nodefony.builders.bundles[res.type](this, "js");
-                bundle.interaction()
-                  .then((res) => {
-                    try {
-                      let result = bundle.createBuilder(res.name, res.location);
-                      bundle.build(result, bundle.location);
-                      let cwd = path.resolve(project.location, project.name);
-                      this.cd(cwd);
-                      return this.installProject(cwd)
-                        .then(() => {
-                          return this.buildProject(cwd)
-                            .then((cwd) => {
-                              nodefony.checkTrunk(cwd);
-                              this.parseNodefonyCommand("nodefony:build", args);
-                              return nodefony.start(command, args, this);
-                            });
-                        });
-                    } catch (e) {
-                      throw e;
-                    }
+                bundle.run(interactive)
+                  .then(() => {
+                    return bundle.install()
+                      .then(() => {
+                        let cwd = path.resolve(project.location, project.name);
+                        this.cd(cwd);
+                        return this.installProject(cwd)
+                          .then(() => {
+                            return this.buildProject(cwd)
+                              .then((cwd) => {
+                                nodefony.checkTrunk(cwd);
+                                this.parseNodefonyCommand("nodefony:build", [cwd]);
+                                return nodefony.start(command, args, this);
+                              }).catch((e) => {
+                                this.logger(e, "ERROR");
+                                return e;
+                              });
+                          }).catch((e) => {
+                            this.logger(e, "ERROR");
+                            return e;
+                          });
+                      }).catch((e) => {
+                        this.logger(e, "ERROR");
+                        return e;
+                      });
                   }).catch((e) => {
                     this.logger(e, "ERROR");
-                    throw e;
+                    return e;
                   });
               }).catch((e) => {
                 this.logger(e, "ERROR");
-                throw e;
+                return e;
               });
           }
-
           let cwd = path.resolve(project.location, project.name);
           this.cd(cwd);
           return this.installProject(cwd)
@@ -371,9 +375,15 @@ module.exports = class cliStart extends nodefony.cliKernel {
               return this.buildProject(cwd)
                 .then((cwd) => {
                   nodefony.checkTrunk(cwd);
-                  this.parseNodefonyCommand("nodefony:build", args);
+                  this.parseNodefonyCommand("nodefony:build", [cwd]);
                   return nodefony.start(command, args, this);
+                }).catch((e) => {
+                  this.logger(e, "ERROR");
+                  return e;
                 });
+            }).catch((e) => {
+              this.logger(e, "ERROR");
+              return e;
             });
         }).catch((e) => {
           if (e.code || e.code === 0) {

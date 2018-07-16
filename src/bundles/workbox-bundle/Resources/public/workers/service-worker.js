@@ -5,8 +5,8 @@ workbox.core.setLogLevel(workbox.core.LOG_LEVELS.debug);
 
 let PRECACHE_URLS = [
   '/workbox',
-  '/workboxBundle/images/nodefony-logo.png',
-  '/workboxBundle/images/Workbox-Logo-Grey.svg'
+  '/workbox-bundle/images/nodefony-logo.png',
+  '/workbox-bundle/images/Workbox-Logo-Grey.svg'
 ];
 workbox.precaching.precacheAndRoute(self.__precacheManifest.concat(PRECACHE_URLS));
 

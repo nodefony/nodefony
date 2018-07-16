@@ -634,7 +634,7 @@ module.exports = nodefony.register("cliKernel", function () {
         try {
           shell.cd(myPath);
         } catch (e) {
-          reject(e);
+          return reject(e);
         }
         let conf = null;
         let config = null;

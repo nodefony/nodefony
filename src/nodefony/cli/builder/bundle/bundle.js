@@ -93,8 +93,9 @@ const Bundle = class Bundle extends nodefony.Builder {
     if (!Path) {
       if (this.location) {
         Path = this.location;
+      } else {
+        Path = path.resolve("src", "bundles");
       }
-      Path = path.resolve("src", "bundles");
     }
     this.cli.logger("GENERATE bundle : " + name + " LOCATION : " + path.resolve(Path));
     this.shortName = name;
@@ -225,10 +226,17 @@ const Bundle = class Bundle extends nodefony.Builder {
 
   install() {
     try {
-      let json = this.cli.kernel.readGeneratedConfig();
+      let json = null;
+      let configPath = null;
+      if (this.cli.kernel) {
+        json = this.cli.kernel.readGeneratedConfig();
+        configPath = this.cli.kernel.generateConfigPath;
+      } else {
+        configPath = path.resolve(this.cli.response.path, this.cli.response.projectName, "config", "generatedConfig.yml");
+      }
       if (json) {
         if (json.system && json.system.bundles) {
-          json.system.bundles[this.name] = this.bundlePath;
+          json.system.bundles[this.name] = `file:${this.bundlePath}`;
         } else {
           if (json.system) {
             json.system.bundles = {};
@@ -237,7 +245,7 @@ const Bundle = class Bundle extends nodefony.Builder {
               bundles: {}
             };
           }
-          json.system.bundles[this.name] = this.bundlePath;
+          json.system.bundles[this.name] = `file:${this.bundlePath}`;
         }
       } else {
         json = {
@@ -245,20 +253,25 @@ const Bundle = class Bundle extends nodefony.Builder {
             bundles: {}
           }
         };
-        json.system.bundles[this.name] = this.bundlePath;
+        json.system.bundles[this.name] = `file:${this.bundlePath}`;
       }
-      fs.writeFileSync(this.cli.kernel.generateConfigPath, yaml.safeDump(json), {
+      fs.writeFileSync(configPath, yaml.safeDump(json), {
         encoding: 'utf8'
       });
+
       try {
         let file = new nodefony.fileClass(this.bundleFile);
-        this.cli.kernel.loadBundle(file);
+        if (this.cli.kernel) {
+          this.cli.kernel.loadBundle(file);
+        }
         //this.cli.assetInstall(this.name);
       } catch (e) {
         this.logger(e, "WARNING");
       }
-
-      return this.cli.npmInstall(this.bundlePath);
+      if (this.cli.kernel) {
+        return this.cli.npmInstall(this.bundlePath);
+      }
+      return Promise.resolve(this.bundlePath);
     } catch (e) {
       throw e;
     }
@@ -385,7 +398,7 @@ const interaction = function (cli) {
 
 module.exports = {
   nodefony: Nodefony,
-  angular: Angular,
+  //angular: Angular,
   react: React,
   interaction: interaction
 };

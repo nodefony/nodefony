@@ -6,6 +6,7 @@ module.exports = nodefony.register("kernel", function () {
   const regBundleName = /^(.+)-bundle[\.js]{0,3}$|^(.+)[Bb]undle[\.js]{0,3}$/;
   const regBundle = /^(.+)[Bb]undle.js$/;
   const regClassBundle = /^(.+)[Bb]undle$/;
+  const regPackageFile = /^\s*file:(.*)/;
 
   const promiseBundleReady = function () {
     let myresolve = null;
@@ -248,27 +249,159 @@ module.exports = nodefony.register("kernel", function () {
       }
     }
 
-    searchPackage(name) {
+    checkPath(myPath) {
+      if (!myPath) {
+        return null;
+      }
+      let abs = path.isAbsolute(myPath);
+      if (abs) {
+        return myPath;
+      } else {
+        return path.resolve(this.rootDir, myPath);
+      }
+    }
+
+    getConfigBunbles() {
+      let config = [];
+      //this.checkBundlesExist(this.settings, "Kernel Config", this.configPath);
+      if (this.settings && this.settings.system && this.settings.system.bundles) {
+        let res = null;
+        for (let bundle in this.settings.system.bundles) {
+          try {
+            res = this.searchPackage(bundle, this.settings.system.bundles[bundle]);
+            config.push(res);
+          } catch (e) {
+            this.logger(e, "WARNING");
+            continue;
+          }
+        }
+      }
+      return config;
+    }
+
+    checkBundlesExist(yml, nameConfig, pathConfig, remove) {
+      let exist = null;
+      if (yml && yml.system && yml.system.bundles) {
+        for (let bundle in yml.system.bundles) {
+          try {
+            exist = this.searchPackage(bundle, yml.system.bundles[bundle]);
+          } catch (e) {
+            this.logger(e, "WARNING");
+          }
+          if (!exist) {
+            delete yml.system.bundles[bundle];
+            if (remove) {
+              try {
+                fs.writeFileSync(pathConfig, yaml.safeDump(yml), {
+                  encoding: 'utf8'
+                });
+                this.logger(nameConfig + " : " + bundle + " Bundle don't exist in file : " + pathConfig, "WARNING");
+                this.logger("Update Config  : " + pathConfig);
+              } catch (e) {
+                this.logger(e, "ERROR");
+              }
+            } else {
+              let error = new Error(nameConfig + " : " + bundle + " Bundle don't exist in file : " + pathConfig);
+              this.logger(error, "ERROR");
+              this.logger("Config file : " + pathConfig);
+              this.logger(yml.system.bundles);
+            }
+            try {
+              let link = path.resolve(this.publicPath, bundle);
+              let stat = fs.lstatSync(link);
+              if (stat) {
+                exist = fs.existsSync(fs.readlinkSync(link));
+                if (!exist) {
+                  fs.unlinkSync(link);
+                  this.logger("REMOVE LINK : " + link);
+                }
+              }
+            } catch (e) {}
+          }
+        }
+      }
+    }
+
+    readGeneratedConfig() {
+      let exist = null;
+      try {
+        exist = fs.existsSync(this.generateConfigPath);
+        if (exist) {
+          try {
+            let yml = yaml.load(fs.readFileSync(this.generateConfigPath, 'utf8'));
+            this.checkBundlesExist(yml, "Generated Config", this.generateConfigPath, true);
+            return yml;
+          } catch (e) {
+            throw e;
+          }
+        } else {
+          return null;
+        }
+      } catch (e) {
+        throw e;
+      }
+    }
+
+    searchPackage(name, mypath) {
       let res = null;
       let error = null;
+      if (mypath) {
+        try {
+          res = regPackageFile.exec(mypath);
+          if (res) {
+            mypath = res[1];
+          } else {
+            try {
+              if (this.cli.checkVersion(mypath)) {
+                res = nodefony.require.resolve(`${name}@${mypath}`);
+                this.logger(`Find NPM Bundle Package : ${name}@${mypath} in : ${res}`, "INFO");
+                return `${name}@${mypath}`;
+              }
+            } catch (e) {
+              error = e;
+            }
+          }
+          res = this.checkPath(mypath);
+          nodefony.require.resolve(res);
+          this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "INFO");
+          return res;
+        } catch (e) {
+          if (error) {
+            throw error;
+          }
+          throw e;
+        }
+      }
       try {
-        res = require.resolve(`@nodefony/${name}`);
-        this.logger(`find Package : @nodefony/${name} in : ${res}`, "INFO");
+        res = nodefony.require.resolve(`@nodefony/${name}`);
+        this.logger(`Find NPM Bundle Package : @nodefony/${name} in : ${res}`, "INFO");
         return `@nodefony/${name}`;
       } catch (e) {
         error = e;
       }
       try {
+        res = path.resolve(this.rootDir, "src", "bundles", name);
+        nodefony.require.resolve(res);
+        this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "INFO");
+        return res;
+      } catch (e) {}
+      try {
         res = path.resolve(this.nodefonyPath, "bundles", name);
-        //require.resolve(res);
-        this.logger(`find Core Package : ${name} in : ${res}`, "INFO");
+        nodefony.require.resolve(res);
+        this.logger(`Find Core Bundle Package : ${name} in : ${res}`, "INFO");
+        return res;
+      } catch (e) {}
+      try {
+        res = path.resolve(this.nodefonyPath, '..', '..', "src", "bundles", name);
+        nodefony.require.resolve(res);
+        this.logger(`Find Core Local Bundle Package : ${name} in : ${res}`, "INFO");
         return res;
       } catch (e) {}
       try {
         const globalPath = path.resolve(process.execPath, '..', '..', 'lib', 'node_modules', "nodefony", 'node_modules');
         res = path.resolve(globalPath, `@nodefony/${name}`);
-        //require.resolve(res);
-        this.logger(`find globalPath Package : @nodefony/${name} in : ${res}`, "INFO");
+        nodefony.require.resolve(res);
+        this.logger(`Find Global Bundle Package : @nodefony/${name} in : ${res}`, "INFO");
         return res;
       } catch (e) {
         throw error;
@@ -284,210 +417,54 @@ module.exports = nodefony.register("kernel", function () {
        */
       this.configBundle = this.getConfigBunbles();
       let bundles = [];
-      //console.log(module)
-      /*if (this.isCore) {
-        //const nodefonyPath = path.resolve(this.rootDir, "src", "nodefony");
-        //this.nodefonyCorePath = path.resolve(this.nodefonyPath, "core");
-        bundles.push(path.resolve(this.nodefonyPath, "bundles", "http-bundle"));
-        bundles.push(path.resolve(this.nodefonyPath, "bundles", "framework-bundle"));
-        // FIREWALL
-        if (this.settings.system.security) {
-          bundles.push(path.resolve(this.nodefonyPath, "bundles", "security-bundle"));
-        }
-        // ORM MANAGEMENT
-        switch (this.settings.orm) {
-        case "sequelize":
-          bundles.push(path.resolve(this.nodefonyPath, "bundles", "sequelize-bundle"));
-          break;
-        case "mongoose":
-          bundles.push(path.resolve(this.nodefonyPath, "bundles", "mongo-bundle"));
-          break;
-        default:
-          this.logger(new Error("nodefony can't load ORM : " + this.settings.orm), "WARNING");
-        }
-        // REALTIME
-        if (this.settings.system.realtime) {
-          bundles.push(path.resolve(this.nodefonyPath, "bundles", "realtime-bundle"));
-        }
-        // MONITORING
-        if (this.settings.system.monitoring) {
-          bundles.push(path.resolve(this.nodefonyPath, "bundles", "monitoring-bundle"));
-        }
-        // DOCUMENTATION
-        if (this.settings.system.documentation) {
-          bundles.push(path.resolve(this.nodefonyPath, "bundles", "documentation-bundle"));
-        }
-        // TEST UNIT
-        if (this.settings.system.unitTest) {
-          bundles.push(path.resolve(this.nodefonyPath, "bundles", "unittests-bundle"));
-        }
-        // DEMO
-        if (this.settings.system.demo) {
-          bundles.push(path.resolve(this.rootDir, "src", "bundles", "demo-bundle"));
-        }
-      } else {*/
       let res = null;
       try {
-        res = require.resolve("@nodefony/http-bundle");
-        bundles.push("@nodefony/http-bundle");
-      } catch (e) {}
-      if (!res) {
-        try {
-          bundles.push(path.resolve(this.nodefonyPath, "bundles", "http-bundle"));
-        } catch (e) {
-          throw e;
+        res = this.searchPackage("http-bundle");
+        bundles.push(res);
+        res = this.searchPackage("framework-bundle");
+        bundles.push(res);
+        if (this.settings.system.security) {
+          res = this.searchPackage("security-bundle");
+          bundles.push(res);
         }
+        switch (this.settings.orm) {
+        case "sequelize":
+          res = this.searchPackage("sequelize-bundle");
+          bundles.push(res);
+          break;
+        case "mongoose":
+          res = this.searchPackage("mongo-bundle");
+          bundles.push(res);
+          break;
+        default:
+          let error = new Error("nodefony can't load ORM : " + this.settings.orm);
+          this.logger(error, "ERROR");
+          throw error;
+        }
+        if (this.settings.system.realtime) {
+          res = this.searchPackage("realtime-bundle");
+          bundles.push(res);
+        }
+        if (this.settings.system.monitoring) {
+          res = this.searchPackage("monitoring-bundle");
+          bundles.push(res);
+        }
+        if (this.settings.system.documentation) {
+          res = this.searchPackage("documentation-bundle");
+          bundles.push(res);
+        }
+        if (this.settings.system.unitTest) {
+          res = this.searchPackage("unittests-bundle");
+          bundles.push(res);
+        }
+        if (this.settings.system.demo) {
+          res = this.searchPackage("demo-bundle");
+          bundles.push(res);
+        }
+      } catch (e) {
+        this.logger(e, "ERROR");
+        //this.terminate(1);
       }
-      res = null;
-      try {
-        res = require.resolve("@nodefony/framework-bundle");
-        bundles.push("@nodefony/framework-bundle");
-      } catch (e) {}
-      if (!res) {
-        try {
-          bundles.push(path.resolve(this.nodefonyPath, "bundles", "framework-bundle"));
-        } catch (e) {
-          throw e;
-        }
-      }
-      // FIREWALL
-      res = null;
-      if (this.settings.system.security) {
-        try {
-          res = require.resolve("@nodefony/security-bundle");
-          bundles.push("@nodefony/security-bundle");
-        } catch (e) {}
-        if (!res) {
-          try {
-            bundles.push(path.resolve(this.nodefonyPath, "bundles", "security-bundle"));
-          } catch (e) {
-            throw e;
-          }
-        }
-      }
-      // ORM MANAGEMENT
-      res = null;
-      switch (this.settings.orm) {
-      case "sequelize":
-        try {
-          res = require.resolve("@nodefony/sequelize-bundle");
-          bundles.push("@nodefony/sequelize-bundle");
-        } catch (e) {}
-        if (!res) {
-          try {
-            bundles.push(path.resolve(this.nodefonyPath, "bundles", "sequelize-bundle"));
-          } catch (e) {
-            throw e;
-          }
-        }
-        break;
-      case "mongoose":
-        try {
-          res = require.resolve("@nodefony/mongo-bundle");
-          bundles.push("@nodefony/mongo-bundle");
-        } catch (e) {}
-        if (!res) {
-          try {
-            bundles.push(path.resolve(this.nodefonyPath, "bundles", "mongo-bundle"));
-          } catch (e) {
-            throw e;
-          }
-        }
-        break;
-      default:
-        let error = new Error("nodefony can't load ORM : " + this.settings.orm);
-        this.logger(error, "ERROR");
-        throw error;
-      }
-      // REALTIME
-      res = null;
-      if (this.settings.system.realtime) {
-        try {
-          res = require.resolve("@nodefony/realtime-bundle");
-          bundles.push("@nodefony/realtime-bundle");
-        } catch (e) {}
-        if (!res) {
-          try {
-            bundles.push(path.resolve(this.nodefonyPath, "bundles", "realtime-bundle"));
-          } catch (e) {
-            throw e;
-          }
-        }
-      }
-      // MONITORING
-      res = null;
-      if (this.settings.system.monitoring) {
-        try {
-          res = require.resolve("@nodefony/monitoring-bundle");
-          bundles.push("@nodefony/monitoring-bundle");
-        } catch (e) {}
-        if (!res) {
-          try {
-            bundles.push(path.resolve(this.nodefonyPath, "bundles", "monitoring-bundle"));
-          } catch (e) {
-            throw e;
-          }
-        }
-      }
-      // DOCUMENTATION
-      res = null;
-      if (this.settings.system.documentation) {
-        try {
-          res = require.resolve("@nodefony/documentation-bundle");
-          bundles.push("@nodefony/documentation-bundle");
-        } catch (e) {}
-        if (!res) {
-          try {
-            bundles.push(path.resolve(this.nodefonyPath, "bundles", "documentation-bundle"));
-          } catch (e) {
-            throw e;
-          }
-        }
-      }
-      // TEST UNIT
-      res = null;
-      if (this.settings.system.unitTest) {
-        try {
-          res = require.resolve("@nodefony/unittests-bundle");
-          bundles.push("@nodefony/unittests-bundle");
-        } catch (e) {}
-        if (!res) {
-          try {
-            bundles.push(path.resolve(this.nodefonyPath, "bundles", "unittests-bundle"));
-          } catch (e) {
-            throw e;
-          }
-        }
-      }
-      // DEMO
-      res = null;
-      if (this.settings.system.demo) {
-        try {
-          res = nodefony.require.resolve("@nodefony/demo-bundle");
-          bundles.push("@nodefony/demo-bundle");
-        } catch (e) {}
-        if (!res) {
-          try {
-            res = path.resolve(this.rootDir, "src", "bundles", "demo-bundle");
-            require.resolve(res);
-            bundles.push(res);
-          } catch (e) {
-            res = null;
-            //this.logger(e.message, "WARNING");
-          }
-        }
-        if (!res) {
-          try {
-            res = path.resolve(this.nodefonyPath, "..", "bundles", "demo-bundle");
-            require.resolve(res);
-            bundles.push(res);
-          } catch (e) {
-            this.logger(e.message, "ERROR");
-          }
-        }
-      }
-      //}
-
       if (this.isInstall()) {
         return this.install(bundles);
       } else {
@@ -645,102 +622,6 @@ module.exports = nodefony.register("kernel", function () {
       return this.settings.orm;
     }
 
-    checkPath(myPath) {
-      if (!myPath) {
-        return null;
-      }
-      let abs = path.isAbsolute(myPath);
-      if (abs) {
-        return myPath;
-      } else {
-        return this.rootDir + "/" + myPath;
-      }
-    }
-
-    getConfigBunbles() {
-      let config = [];
-      this.checkBundlesExist(this.settings, "Kernel Config", this.configPath);
-      try {
-        for (let bundle in this.settings.system.bundles) {
-          config.push(this.settings.system.bundles[bundle]);
-        }
-      } catch (e) {
-        throw e;
-      }
-      return config;
-    }
-
-    checkBundlesExist(yml, nameConfig, pathConfig, remove) {
-      let exist = null;
-      if (yml && yml.system && yml.system.bundles) {
-        for (let bundle in yml.system.bundles) {
-          try {
-            exist = nodefony.require(yml.system.bundles[bundle]);
-          } catch (e) {
-            //this.logger(e, "WARNING");
-          }
-          if (!exist) {
-            try {
-              exist = fs.existsSync(path.resolve(this.rootDir, yml.system.bundles[bundle]));
-            } catch (e) {
-              this.logger(e, "WARNING");
-            }
-          }
-          if (!exist) {
-            delete yml.system.bundles[bundle];
-            if (remove) {
-              try {
-                fs.writeFileSync(pathConfig, yaml.safeDump(yml), {
-                  encoding: 'utf8'
-                });
-                this.logger(nameConfig + " : " + bundle + " Bundle don't exist in file : " + pathConfig, "WARNING");
-                this.logger("Update Config  : " + pathConfig);
-              } catch (e) {
-                this.logger(e, "ERROR");
-              }
-            } else {
-              let error = new Error(nameConfig + " : " + bundle + " Bundle don't exist in file : " + pathConfig);
-              this.logger(error, "ERROR");
-              this.logger("Config file : " + pathConfig);
-              this.logger(yml.system.bundles);
-            }
-            try {
-              let link = path.resolve(this.publicPath, bundle);
-              let stat = fs.lstatSync(link);
-              if (stat) {
-                exist = fs.existsSync(fs.readlinkSync(link));
-                if (!exist) {
-                  fs.unlinkSync(link);
-                  this.logger("REMOVE LINK : " + link);
-                }
-              }
-            } catch (e) {}
-          }
-        }
-      }
-    }
-
-    readGeneratedConfig() {
-      let exist = null;
-      try {
-        exist = fs.existsSync(this.generateConfigPath);
-        if (exist) {
-          try {
-            let yml = yaml.load(fs.readFileSync(this.generateConfigPath, 'utf8'));
-            this.checkBundlesExist(yml, "Generated Config", this.generateConfigPath, true);
-            return yml;
-          } catch (e) {
-            throw e;
-          }
-        } else {
-          return null;
-        }
-      } catch (e) {
-        //console.trace(e);
-        //this.logger(e, "ERROR");
-        throw e;
-      }
-    }
 
     initServers() {
       // create HTTP server

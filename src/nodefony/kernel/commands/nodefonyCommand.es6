@@ -8,9 +8,9 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
     }
 
     showHelp() {
-      this.setHelp("nodefony:outdated",
+      /*this.setHelp("nodefony:outdated",
         "List Nodefony dependencies outdated"
-      );
+      );*/
       return super.showHelp();
     }
 

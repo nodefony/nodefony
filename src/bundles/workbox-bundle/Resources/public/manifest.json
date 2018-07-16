@@ -9,17 +9,17 @@
   "theme_color": "#2196F3",
   "orientation": "landscape",
   "icons": [{
-      "src": "/workboxBundle/favicon.ico",
+      "src": "/workbox-bundle/favicon.ico",
       "type": "image/png",
       "sizes": "48x48"
     },
     {
-      "src": "/workboxBundle/images/nodefony-logo.png",
+      "src": "/workbox-bundle/images/nodefony-logo.png",
       "type": "image/png",
       "sizes": "96x96"
     },
     {
-      "src": "/workboxBundle/images/nodefony-logo.png",
+      "src": "/workbox-bundle/images/nodefony-logo.png",
       "type": "image/png",
       "sizes": "192x192"
     }

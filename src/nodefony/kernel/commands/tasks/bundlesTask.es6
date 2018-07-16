@@ -8,9 +8,9 @@ module.exports = class bundlesTask extends nodefony.Task {
     this.setHelp("nodefony:bundles:listDependencies",
       "List Nodefony dependencies"
     );
-    this.setHelp("nodefony:bundles:install [environment]",
+    /*this.setHelp("nodefony:bundles:install [environment]",
       "Install Nodefony dependencies"
-    );
+    );*/
   }
 
   listDependencies() {

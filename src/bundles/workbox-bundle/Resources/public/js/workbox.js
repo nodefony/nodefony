@@ -9,8 +9,6 @@
  */
 require("../css/workbox.css");
 
-
-
 module.exports = function () {
 
   /*
@@ -24,7 +22,7 @@ module.exports = function () {
     constructor() {
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/workboxBundle/dist/workers/service-worker.js')
+          navigator.serviceWorker.register('/workbox-bundle/dist/workers/service-worker.js')
             .then(registration => {
               if (registration) {
                 /*if (registration.active) {
@@ -35,7 +33,7 @@ module.exports = function () {
                 if (window.nodefony) {
                   window.nodefony.monitoringWorkbox(registration);
                 }
-                /*fetch('/workboxBundle/images/nodefony-logo.png').then((response) => {
+                /*fetch('/workbox-bundle/images/nodefony-logo.png').then((response) => {
                   console.log(response)
                 });
                 fetch('/workbox').then((response) => {

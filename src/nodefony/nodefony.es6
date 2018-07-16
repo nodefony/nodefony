@@ -534,7 +534,7 @@ module.exports = class Nodefony {
     cli.setHelp("", "clean-log", "Remove log ( PM2 mode )");
     // nodefony
     cli.setTitleHelp(cli.clc.cyan("nodefony"));
-    cli.setHelp("", "create [-i] name [path]", "Create Nodefony Project");
+    cli.setHelp("", "create [-i] name [path]", "Create New Nodefony Project");
     cli.setHelp("", "install", "Install Nodefony");
     cli.setHelp("", "build", "Build Nodefony Project");
     cli.setHelp("", "outdated", "List Nodefony dependencies outdated");
