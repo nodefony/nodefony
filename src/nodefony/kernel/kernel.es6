@@ -271,6 +271,33 @@ module.exports = nodefony.register("kernel", function () {
       }
     }
 
+    searchPackage(name) {
+      let res = null;
+      let error = null;
+      try {
+        res = require.resolve(`@nodefony/${name}`);
+        this.logger(`find Package : @nodefony/${name} in : ${res}`, "INFO");
+        return `@nodefony/${name}`;
+      } catch (e) {
+        error = e;
+      }
+      try {
+        res = path.resolve(this.nodefonyPath, "bundles", name);
+        //require.resolve(res);
+        this.logger(`find Core Package : ${name} in : ${res}`, "INFO");
+        return res;
+      } catch (e) {}
+      try {
+        const globalPath = path.resolve(process.execPath, '..', '..', 'lib', 'node_modules', "nodefony", 'node_modules');
+        res = path.resolve(globalPath, `@nodefony/${name}`);
+        //require.resolve(res);
+        this.logger(`find globalPath Package : @nodefony/${name} in : ${res}`, "INFO");
+        return res;
+      } catch (e) {
+        throw error;
+      }
+    }
+
     /**
      *  @method boot
      */
