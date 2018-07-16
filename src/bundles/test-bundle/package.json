@@ -13,7 +13,7 @@
   ],
   "dependencies": {
     "request": "^2.87.0",
-    "rxjs": "^6.2.1",
+    "rxjs": "^6.2.2",
     "websocket": "^1.0.26"
   },
   "contributors": [
