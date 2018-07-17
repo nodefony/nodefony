@@ -32,7 +32,9 @@ module.exports = class cliStart extends nodefony.cliKernel {
           this.promise = this.start(this.cmd, this.args, cmd);
           if (nodefony.isPromise(this.promise)) {
             return this.promise.then(() => {
-                return this.terminate(0);
+                if (!this.keepAlive) {
+                  return this.terminate(0);
+                }
               })
               .catch((e) => {
                 this.logger(e, "ERROR");
@@ -331,7 +333,43 @@ module.exports = class cliStart extends nodefony.cliKernel {
                 domain: res.domain
               }
             };
-            return nodefony.builders.bundles.interaction(this)
+            let cwd = path.resolve(project.location, project.name);
+            this.cd(cwd);
+            return this.installProject(cwd)
+              .then(() => {
+                return this.buildProject(cwd)
+                  .then((cwd) => {
+                    nodefony.checkTrunk(cwd);
+                    this.parseNodefonyCommand("nodefony:build", [cwd]);
+                    return nodefony.start(command, args, this)
+                      .then(() => {
+                        return nodefony.builders.bundles.interaction(this)
+                          .then((res) => {
+                            let bundle = new nodefony.builders.bundles[res.type](this, "js");
+                            bundle.run(interactive)
+                              .then(() => {
+                                return bundle.install();
+                              }).catch((e) => {
+                                this.logger(e, "ERROR");
+                                return e;
+                              });
+                          }).catch((e) => {
+                            this.logger(e, "ERROR");
+                            return e;
+                          });
+                      }).catch((e) => {
+                        this.logger(e, "ERROR");
+                        return e;
+                      });
+                  }).catch((e) => {
+                    this.logger(e, "ERROR");
+                    return e;
+                  });
+              }).catch((e) => {
+                this.logger(e, "ERROR");
+                return e;
+              });
+            /*return nodefony.builders.bundles.interaction(this)
               .then((res) => {
                 let bundle = new nodefony.builders.bundles[res.type](this, "js");
                 bundle.run(interactive)
@@ -366,7 +404,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
               }).catch((e) => {
                 this.logger(e, "ERROR");
                 return e;
-              });
+              });*/
           }
           let cwd = path.resolve(project.location, project.name);
           this.cd(cwd);

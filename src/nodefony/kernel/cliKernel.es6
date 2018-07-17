@@ -122,6 +122,7 @@ module.exports = nodefony.register("cliKernel", function () {
       this.task = "";
       this.action = "";
       this.publicPath = null;
+      this.keepAlive = false;
       this.parseNodefonyCommand();
     }
 
@@ -376,7 +377,13 @@ module.exports = nodefony.register("cliKernel", function () {
           }
         }
         try {
-          return require(path.resolve(this.command));
+          let res = require(path.resolve(this.command));
+          if (typeof res === "function" && res.name === "appKernel") {
+            this.keepAlive = true;
+            this.parseNodefonyCommand();
+            return nodefony.start("prod", this.args, this);
+          }
+          return res;
         } catch (e) {
           this.showHelp();
           throw new Error(`Command : ${this.command}:${this.task}:${this.action} Not Found`);

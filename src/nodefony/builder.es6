@@ -33,6 +33,28 @@ nodefony.Builder = class Builder {
     });
   }
 
+  generate(response) {
+    return new Promise((resolve, reject) => {
+      try {
+        if (this.generateProject) {
+          return this.generateProject(response.name, response.location)
+            .then((builder) => {
+              builder.build(builder.createBuilder(response.name, response.location), builder.location, true);
+              return resolve(response);
+            });
+        } else {
+          if (this.createBuilder) {
+            this.build(this.createBuilder(), this.location);
+            return resolve(this.cli.response);
+          }
+        }
+        return reject(new Error(`Builder has not createBuilder Nothing to do !!`));
+      } catch (e) {
+        return reject(e);
+      }
+    });
+  }
+
   removeInteractivePath(file) {
     return this.cli.prompt([{
       type: 'confirm',
@@ -52,20 +74,6 @@ nodefony.Builder = class Builder {
         }
       } else {
         return response;
-      }
-    });
-  }
-
-  generate() {
-    return new Promise((resolve, reject) => {
-      try {
-        if (this.createBuilder) {
-          this.build(this.createBuilder(), this.location);
-          return resolve(this.cli.response);
-        }
-        return reject(new Error(`Builder has not createBuilder Nothing to do !!`));
-      } catch (e) {
-        return reject(e);
       }
     });
   }
