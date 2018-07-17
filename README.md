@@ -179,9 +179,9 @@ Help
 Quit
 ```
 
-## <a name="start"></a>Starting Development Servers
+## <a name="start"></a>Serving a Nodefony project via a development servers
 
-**Serving a Nodefony project via a development server** :
+**Starting Development Servers** :
 
 ```bash
 $ cd myproject
@@ -193,6 +193,15 @@ $ nodefony -d dev
 # TO STOP
 $ <ctrl-c>
 ```
+**Starting Development Servers in debug mode** :
+```bash
+// debug mode
+$ nodefony -d dev
+
+# TO STOP
+$ <ctrl-c>
+```
+
 **Serving a Nodefony project via Interactive Mode** :
 
 ```bash
@@ -222,19 +231,6 @@ Help
 Quit
 ```
 
-**<a name="https"></a>Serving a Nodefony project with HTTPS**
-
-By default nodefony listen secure port in 5152
-
-During the installation process all the openssl parts were generated ( self-signed localhost certificate ).
-
-You must Add a Trusted CA in your Browser : projectname-root-ca.crt.pem
-
-You can find certificate authority (ca) here:
-
-    ./config/certificates/ca/projectname-root-ca.crt.pem
-
-
 ## <a name="start_prod"></a>Serving a Nodefony Project via a Production server :
 
 **Starting a Nodefony project with [PM2](http://pm2.keymetrics.io/)** :
@@ -254,6 +250,18 @@ $ nodefony stop
 ```bash
 $ nodefony preprod
 ```
+
+## <a name="https"></a>Serving a Nodefony project with HTTPS
+
+By default nodefony listen secure port in 5152
+
+During the installation process all the openssl parts were generated ( self-signed localhost certificate ).
+
+You must Add a Trusted CA in your Browser : projectname-root-ca.crt.pem
+
+You can find certificate authority (ca) here:
+
+    ./config/certificates/ca/projectname-root-ca.crt.pem
 
 #### Access to Secure App with URL : <https://localhost:5152>
 #### Access to App with URL : <http://localhost:5151>
@@ -304,13 +312,9 @@ system:
     hello-bundle                : "src/bundles/hello-bundle"
 ```
 
-
-
-
-
 ## <a name="bundles"></a>Get Started
 
-#### Generating Bundle  :
+### Generating Bundle  :
 
 CLI Generate new bundle : default path ./src/bundles
 
@@ -318,10 +322,25 @@ CLI Generate new bundle : default path ./src/bundles
 $ nodefony generate:bundle name path
 ```
 
-Interactive Generate new bundle
+###  Generate New Bundle Interactive
 
 ```bash
 $ nodefony
+?  Nodefony CLI :  
+  Start Server Development
+  Start Server Pre-Production
+  Start Server Production
+  Install
+  Build
+❯ Generate Bundle
+  Generate Controller
+  Webpack Dump
+  Generate Certificates
+  Run Test
+  Outdated
+  Reset
+  Help
+  Quit
 ```
 
 ### Starting Servers to check new Bundle hello:
@@ -330,6 +349,7 @@ $ nodefony
 $ nodefony dev
 ```
 Access to bundle route with URL : <http://localhost:5151/hello>
+
 Access to bundle route with URL : <https://localhost:5152/hello>
 
 #### Now hello-bundle is auto-insert in framework with watcher active and auto-config Webpack Module bundler
