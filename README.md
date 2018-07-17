@@ -94,13 +94,10 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 
 -   ###### **[GIT](http://git-scm.com/)**  is Distributed version control system
 
--   **[GNU Make](https://www.gnu.org/software/make/)**  is a Tool which controls the generation of executables
-
 -   **[Node.js](https://nodejs.org/)** ® is a Platform built on Chrome's JavaScript runtime ( >= 6 )
 
 -   **[npm](https://www.npmjs.com/)** or **[yarn](https://yarnpkg.com/lang/en/)**  Packages Manager for javascript application
 
-    npm will be automatically installed by Node.js
 
 #### Operating Systems : **[Install Node.js via Package](https://nodejs.org/en/download/package-manager)**
 
@@ -129,61 +126,133 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 
 ## <a name="install"></a>Install Framework **More Info : [ Getting Started with Nodefony ](https://nodefony.net/documentation/Beta/nodefony/started)**
 
-**github** :
+**npm** :
 
 ```bash
-$ git clone https://github.com/nodefony/nodefony.git
-
-$ cd nodefony
-
-$ make build
+$ npm -g install nodefony
 ```
-**NPM** :
+**yarn** :
 
 ```bash
-# NODEFONY GLOBAL INSTALL
+$ yarn globall add nodefony
+```
 
-$ sudo npm -g install nodefony
+**Usage** :
 
-# GENERATE PROJECT WITH NODEFONY CLI
+```bash
+$ nodefony help
 
+Usage: nodefony <command:task:action> [args...]
+
+  Options:
+    -d, --debug         Nodefony debug
+    -h, --help          Nodefony help
+    -v, --version       Nodefony version
+    -i, --interactive   Nodefony cli Interactive Mode
+    -j, --json          Nodefony json response
+
+nodefony                                                                                              
+         create [-i] name [path]                       Create New Nodefony Project  
+```
+**Generating a Nodefony project** :
+
+```bash
+$ nodefony create  myproject
+$ cd myproject
+```
+
+**Generating a Nodefony Project Interactive Mode** :
+
+```bash
 $ nodefony
-Tue Jun 19 2018 10:10:41 INFO SERVICE nodefony  : WELCOME NODEFONY CLI 4.0.0 🏁
+ _   _    ___    ____    _____   _____    ___    _   _  __   __
+| \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
+|  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
+| |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |  
+|_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|  
+
+Version : 4.0.0-beta.1 Platform : darwin Process : nodefony PID : 16368
+
 ?  Nodefony CLI :  (Use arrow keys)
-❯ Generate nodefony Project
+❯ Create Nodefony Project
 Help
 Quit
-? Enter Nodefony Project Name (myproject)
- ...
- ...
- Tue Jun 19 2018 10:05:42 INFO SERVICE nodefony  : myproject  complete
-
-$ cd myproject
-
-# INSTALL PROJECT
-
-$ nodefony
-Tue Jun 19 2018 10:10:41 INFO SERVICE nodefony  : WELCOME NODEFONY CLI 4.0.0 🏁
-
-?  Nodefony CLI :  (Use arrow keys)
-❯ Install myproject
-  Generate myproject Certificates
-  Clear myproject
-  Help
-  Quit
 ```
 
-## <a name="start"></a>Start Server
+## <a name="start"></a>Starting Development Servers
 
-Start the server to check:
+**Serving a Nodefony project via a development server** :
 
 ```bash
-npm start
-# OR TO START NODEFONY IN DEVELOPMENT NODE
+$ cd myproject
 $ nodefony dev
 
 // debug mode
 $ nodefony -d dev
+
+# TO STOP
+$ <ctrl-c>
+```
+**Serving a Nodefony project via Interactive Mode** :
+
+```bash
+$ nodefony
+ _   _    ___    ____    _____   _____    ___    _   _  __   __
+| \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
+|  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
+| |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |  
+|_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|  
+
+Version : 4.0.0-beta.1 Platform : darwin Process : nodefony PID : 16421
+
+?  Nodefony CLI :  (Use arrow keys)
+❯ Start Server Development
+Start Server Pre-Production
+Start Server Production
+Install
+Build
+Generate Bundle
+Generate Controller
+Webpack Dump
+Generate Certificates
+Run Test
+Outdated
+Reset
+Help
+Quit
+```
+
+**<a name="https"></a>Serving a Nodefony project with HTTPS**
+
+By default nodefony listen secure port in 5152
+
+During the installation process all the openssl parts were generated ( self-signed localhost certificate ).
+
+You must Add a Trusted CA in your Browser : projectname-root-ca.crt.pem
+
+You can find certificate authority (ca) here:
+
+    ./config/certificates/ca/projectname-root-ca.crt.pem
+
+
+## <a name="start_prod"></a>Serving a Nodefony Project via a Production server :
+
+**Starting a Nodefony project with [PM2](http://pm2.keymetrics.io/)** :
+```bash
+$ nodefony prod
+```
+You can see PM2 config : vim  ./config/pm2.config.js
+```bash
+# TO KILL PM2 DEAMON
+$ nodefony kill
+
+# TO STOP APPLICATION WITHOUT KILL PM2 DEAMON
+$ nodefony stop
+```
+
+**Checking a Nodefony Project Pre-Producion (cluster mode)** :
+```bash
+$ nodefony preprod
 ```
 
 #### Access to Secure App with URL : <https://localhost:5152>
@@ -191,7 +260,7 @@ $ nodefony -d dev
 
 [![nodefony](https://raw.githubusercontent.com/nodefony/nodefony-core/master/src/nodefony/bundles/documentationBundle/Resources/public/images/nodefony.png)](https://nodefony.net)
 
-## <a name="configurations"></a>Configurations Kernel
+## <a name="configurations"></a>Framework Configurations
 
 Open **[./config/config.yml](https://github.com/nodefony/nodefony-core/blob/master/config/config.yml)**  if you want change httpPort, domain ,servers, add bundle, locale ...
 
@@ -235,50 +304,35 @@ system:
     hello-bundle                : "src/bundles/hello-bundle"
 ```
 
-## <a name="cli"></a>Command Line Interface
 
-```bash
 
-```
+
 
 ## <a name="bundles"></a>Get Started
 
-#### Generate hello Bundle :
+#### Generating Bundle  :
 
-CLI Generate new bundle :  $ nodefony generate:bundle name path
-
-```bash
-$ ./nodefony generate:bundle hello
-
-
-Fri Jun 01 2018 16:36:58 INFO SERVICE CLI KERNEL : GENERATE bundle : hello LOCATION : /Users/cci/repository/nodefony-core/src/bundles
-Fri Jun 01 2018 16:36:58 INFO GENERATER : Create Directory :hello-bundle
-...
-
-...
-Fri Jun 01 2018 16:36:58 INFO SERVICE CLI KERNEL : npm install in /Users/cci/repository/nodefony-core/src/bundles/hello-bundle
-Fri Jun 01 2018 16:36:58 INFO SERVICE CLI KERNEL : Run Spawn : npm install
-Fri Jun 01 2018 16:37:00 INFO SERVICE CLI KERNEL : npm stdout :  
-> hello-bundle@1.0.0 install /Users/cci/repository/nodefony-core/src/bundles/hello-bundle
-> node-gyp rebuild
-Fri Jun 01 2018 16:37:03 INFO SERVICE CLI KERNEL : npm stdout :    CXX(target) Release/obj.target/hello/src/addon/hello.o
-Fri Jun 01 2018 16:37:04 INFO SERVICE CLI KERNEL : npm stdout :    SOLINK_MODULE(target) Release/hello.node
-Fri Jun 01 2018 16:37:05 INFO SERVICE CLI KERNEL : npm stdout :  up to date in 5.188s
-Fri Jun 01 2018 16:37:05 INFO SERVICE CLI KERNEL : npm stdout :  found 0 vulnerabilities
-Fri Jun 01 2018 16:37:05 INFO SERVICE CLI KERNEL : child process exited with code 0
-Fri Jun 01 2018 16:37:05 INFO KERNEL CONSOLE  : NODEFONY Kernel Life Cycle Terminate CODE : 0
-```
-
-### Start Servers to check new Bundle hello:
+CLI Generate new bundle : default path ./src/bundles
 
 ```bash
-$ ./nodefony -d dev
-
-# TO STOP
-$ <ctrl-c>
+$ nodefony generate:bundle name path
 ```
 
-#### Now helloBundle is auto-insert in framework with watcher active and auto-config Webpack Module bundler
+Interactive Generate new bundle
+
+```bash
+$ nodefony
+```
+
+### Starting Servers to check new Bundle hello:
+
+```bash
+$ nodefony dev
+```
+Access to bundle route with URL : <http://localhost:5151/hello>
+Access to bundle route with URL : <https://localhost:5152/hello>
+
+#### Now hello-bundle is auto-insert in framework with watcher active and auto-config Webpack Module bundler
 
 ### watchers :
 
@@ -397,35 +451,6 @@ module.exports = class defaultController extends nodefony.controller {
   <script src='{{CDN("javascript")}}/hello-bundle/assets/js/hello.js'></script>
 {% endblock %}
 ```
-
-### <a name="start_prod"></a>Start Production Mode
-
-    # TO START NODEFONY IN CLUSTER NODE PM2
-    $ make start
-
-    # TO KILL PM2 DEAMON
-    $ make kill
-
-    # TO STOP APPLICATION WITHOUT KILL PM2 DEAMON
-    $ make stop
-
-You can see PM2 config : vim  ./config/pm2.config.js
-
-Access to bundle route with URL : <http://localhost:5151/hello>
-
-## <a name="https"></a>Nodefony HTTPS Access
-
-By default nodefony listen secure port in 5152
-
-During the installation process all the openssl parts were generated ( self-signed localhost certificate ).
-
-You must Add a Trusted CA in your browser : nodefony-root-ca.crt.pem
-
-You can find certificate authority (ca) here:
-
-    ./config/certificates/ca/nodefony-root-ca.crt.pem
-
-Access  with URL : <https://localhost:5152/hello>
 
 ## <a name="monitoring"></a>Monitoring FRAMEWORK
 
