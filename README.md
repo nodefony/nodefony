@@ -131,10 +131,20 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 ```bash
 $ npm -g install nodefony
 ```
+
 **yarn** :
 
 ```bash
-$ yarn globall add nodefony
+$ yarn global add nodefony
+```
+
+[See Global install How to Prevent Permissions Errors](https://docs.npmjs.com/getting-started/fixing-npm-permissions)
+
+**Generating a Nodefony project** :
+
+```bash
+$ nodefony create  myproject
+$ cd myproject
 ```
 
 **Usage** :
@@ -153,12 +163,6 @@ Usage: nodefony <command:task:action> [args...]
 
 nodefony                                                                                              
          create [-i] name [path]                       Create New Nodefony Project  
-```
-**Generating a Nodefony project** :
-
-```bash
-$ nodefony create  myproject
-$ cd myproject
 ```
 
 **Generating a Nodefony Project Interactive Mode** :
@@ -193,13 +197,23 @@ $ nodefony -d dev
 # TO STOP
 $ <ctrl-c>
 ```
-**Starting Development Servers in debug mode** :
+**Starting Development Servers in Debug Mode (-d)** :
 ```bash
-// debug mode
 $ nodefony -d dev
 
 # TO STOP
 $ <ctrl-c>
+```
+
+**Starting Development Servers in Inspector mode (--inspect)** :
+
+[Nodejs Debugging Guide](https://nodejs.org/en/docs/guides/debugging-getting-started)
+```bash
+$ npm -g install npx
+
+$ npx --node-arg=--inspect nodefony dev
+
+# check chrome://inspect in your browser
 ```
 
 **Serving a Nodefony project via Interactive Mode** :
@@ -246,7 +260,7 @@ $ nodefony kill
 $ nodefony stop
 ```
 
-**Checking a Nodefony Project Pre-Producion (cluster mode)** :
+**Checking a Nodefony Project Pre-Production (cluster mode)** :
 ```bash
 $ nodefony preprod
 ```
@@ -257,11 +271,11 @@ By default nodefony listen secure port in 5152
 
 During the installation process all the openssl parts were generated ( self-signed localhost certificate ).
 
-You must Add a Trusted CA in your Browser : projectname-root-ca.crt.pem
+You must Add a Trusted CA in your Browser : projectName-root-ca.crt.pem
 
 You can find certificate authority (ca) here:
 
-    ./config/certificates/ca/projectname-root-ca.crt.pem
+    ./config/certificates/ca/projectName-root-ca.crt.pem
 
 #### Access to Secure App with URL : <https://localhost:5152>
 #### Access to App with URL : <http://localhost:5151>
@@ -296,7 +310,7 @@ system:
     certificats:
       key                       : "config/certificates/server/privkey.pem"
       cert                      : "config/certificates/server/fullchain.pem"
-      ca                        : "config/certificates/ca/nodefony-root-ca.crt.pem"
+      ca                        : "config/certificates/ca/projectName-root-ca.crt.pem"
       options:
         rejectUnauthorized      : true
   devServer:
@@ -309,7 +323,7 @@ system:
     protocol                    : https
     websocket                   : true
   bundles:
-    hello-bundle                : "src/bundles/hello-bundle"
+    hello-bundle                : "file:src/bundles/hello-bundle"
 ```
 
 ## <a name="bundles"></a>Get Started

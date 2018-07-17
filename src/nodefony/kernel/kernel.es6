@@ -354,7 +354,7 @@ module.exports = nodefony.register("kernel", function () {
             try {
               if (this.cli.checkVersion(mypath)) {
                 res = nodefony.require.resolve(`${name}@${mypath}`);
-                this.logger(`Find NPM Bundle Package : ${name}@${mypath} in : ${res}`, "INFO");
+                this.logger(`Find NPM Bundle Package : ${name}@${mypath} in : ${res}`, "DEBUG");
                 return `${name}@${mypath}`;
               }
             } catch (e) {
@@ -363,7 +363,7 @@ module.exports = nodefony.register("kernel", function () {
           }
           res = this.checkPath(mypath);
           nodefony.require.resolve(res);
-          this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "INFO");
+          this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "DEBUG");
           return res;
         } catch (e) {
           if (error) {
@@ -374,7 +374,7 @@ module.exports = nodefony.register("kernel", function () {
       }
       try {
         res = nodefony.require.resolve(`@nodefony/${name}`);
-        this.logger(`Find NPM Bundle Package : @nodefony/${name} in : ${res}`, "INFO");
+        this.logger(`Find NPM Bundle Package : @nodefony/${name} in : ${res}`, "DEBUG");
         return `@nodefony/${name}`;
       } catch (e) {
         error = e;
@@ -382,26 +382,26 @@ module.exports = nodefony.register("kernel", function () {
       try {
         res = path.resolve(this.rootDir, "src", "bundles", name);
         nodefony.require.resolve(res);
-        this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "INFO");
+        this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "DEBUG");
         return res;
       } catch (e) {}
       try {
         res = path.resolve(this.nodefonyPath, "bundles", name);
         nodefony.require.resolve(res);
-        this.logger(`Find Core Bundle Package : ${name} in : ${res}`, "INFO");
+        this.logger(`Find Core Bundle Package : ${name} in : ${res}`, "DEBUG");
         return res;
       } catch (e) {}
       try {
         res = path.resolve(this.nodefonyPath, '..', '..', "src", "bundles", name);
         nodefony.require.resolve(res);
-        this.logger(`Find Core Local Bundle Package : ${name} in : ${res}`, "INFO");
+        this.logger(`Find Core Local Bundle Package : ${name} in : ${res}`, "DEBUG");
         return res;
       } catch (e) {}
       try {
         const globalPath = path.resolve(process.execPath, '..', '..', 'lib', 'node_modules', "nodefony", 'node_modules');
         res = path.resolve(globalPath, `@nodefony/${name}`);
         nodefony.require.resolve(res);
-        this.logger(`Find Global Bundle Package : @nodefony/${name} in : ${res}`, "INFO");
+        this.logger(`Find Global Bundle Package : @nodefony/${name} in : ${res}`, "DEBUG");
         return res;
       } catch (e) {
         throw error;
@@ -457,13 +457,17 @@ module.exports = nodefony.register("kernel", function () {
           res = this.searchPackage("unittests-bundle");
           bundles.push(res);
         }
+      } catch (e) {
+        this.logger(e, "ERROR");
+        this.terminate(1);
+      }
+      try {
         if (this.settings.system.demo) {
           res = this.searchPackage("demo-bundle");
           bundles.push(res);
         }
       } catch (e) {
         this.logger(e, "ERROR");
-        //this.terminate(1);
       }
       if (this.isInstall()) {
         return this.install(bundles);

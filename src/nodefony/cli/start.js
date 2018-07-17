@@ -59,8 +59,12 @@ module.exports = class cliStart extends nodefony.cliKernel {
     if (!this.cmd && !process.argv.slice(2).length) {
       this.showMenu();
     } else {
-      if (!this.started) {
-        this.start(this.cmd, this.args);
+      if (this.commander.interactive) {
+        this.showMenu();
+      } else {
+        if (!this.started) {
+          this.start(this.cmd, this.args);
+        }
       }
     }
   }
@@ -369,42 +373,6 @@ module.exports = class cliStart extends nodefony.cliKernel {
                 this.logger(e, "ERROR");
                 return e;
               });
-            /*return nodefony.builders.bundles.interaction(this)
-              .then((res) => {
-                let bundle = new nodefony.builders.bundles[res.type](this, "js");
-                bundle.run(interactive)
-                  .then(() => {
-                    return bundle.install()
-                      .then(() => {
-                        let cwd = path.resolve(project.location, project.name);
-                        this.cd(cwd);
-                        return this.installProject(cwd)
-                          .then(() => {
-                            return this.buildProject(cwd)
-                              .then((cwd) => {
-                                nodefony.checkTrunk(cwd);
-                                this.parseNodefonyCommand("nodefony:build", [cwd]);
-                                return nodefony.start(command, args, this);
-                              }).catch((e) => {
-                                this.logger(e, "ERROR");
-                                return e;
-                              });
-                          }).catch((e) => {
-                            this.logger(e, "ERROR");
-                            return e;
-                          });
-                      }).catch((e) => {
-                        this.logger(e, "ERROR");
-                        return e;
-                      });
-                  }).catch((e) => {
-                    this.logger(e, "ERROR");
-                    return e;
-                  });
-              }).catch((e) => {
-                this.logger(e, "ERROR");
-                return e;
-              });*/
           }
           let cwd = path.resolve(project.location, project.name);
           this.cd(cwd);
