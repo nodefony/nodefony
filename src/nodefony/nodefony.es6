@@ -505,14 +505,14 @@ module.exports = class Nodefony {
     if (this.isTrunk) {
       let cacheLink = path.resolve("tmp", "assestLink");
       if (fs.existsSync(cacheLink)) {
-        if (cli && cli.logger) {
+        if (cli && cli.logger && cli.debug) {
           cli.logger("DELETE TMP LINK :" + cacheLink, "DEBUG");
         }
         shell.rm("-Rf", this.cacheLink);
       }
       let cacheWebpack = path.resolve("tmp", "webpack");
       if (fs.existsSync(cacheWebpack)) {
-        if (cli && cli.logger) {
+        if (cli && cli.logger && cli.debug) {
           cli.logger("DELETE TMP :" + cacheWebpack, "DEBUG");
         }
         shell.rm("-Rf", cacheWebpack);

@@ -46,7 +46,7 @@ const reactCli = class reactCli extends nodefony.Service {
     }
   }
 
-  generateProject(name, Path) {
+  generateProject(name, Path = path.resolve("src", "bundles")) {
     this.builder.checkPath(name, Path);
     this.bundleName = this.builder.name;
     this.location = this.builder.location.path;

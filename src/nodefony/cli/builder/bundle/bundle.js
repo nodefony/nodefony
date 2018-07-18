@@ -46,37 +46,43 @@ const Bundle = class Bundle extends nodefony.Builder {
   }
 
   interaction() {
-    let mypath = null;
-    if (this.cli.response.project) {
-      mypath = path.resolve(this.cli.response.path, this.cli.response.name, "src", "bundles");
-    } else {
-      mypath = path.resolve("src", "bundles");
-    }
-    return this.cli.prompt([{
-      type: 'input',
-      name: 'name',
-      default: "api",
-      message: 'Enter Bundle Name',
-      validate: (value) => {
-        if (value && value !== "nodefony") {
-          this.name = value;
-          return true;
-        }
-        return `${value} Unauthorised Please enter a valid Bundle name`;
+    return this.cli.showAsciify(this.bundleType).then(() => {
+      let mypath = null;
+      if (this.cli.response.project) {
+        mypath = path.resolve(this.cli.response.path, this.cli.response.name, "src", "bundles");
+      } else {
+        mypath = path.resolve("src", "bundles");
       }
-    }, {
-      type: 'input',
-      name: 'location',
-      default: mypath,
-      message: 'Enter Bundle Path',
-      validate: (value) => {
-        if (value) {
-          this.location = value;
-          return true;
+      return this.cli.prompt([{
+        type: 'input',
+        name: 'name',
+        default: "api",
+        message: 'Enter Bundle Name',
+        validate: (value) => {
+          if (value && value !== "nodefony") {
+            let res = this.checkExist(value);
+            if (res) {
+              return "Bundle already exist " + value;
+            }
+            this.name = value;
+            return true;
+          }
+          return `${value} Unauthorised Please enter a valid Bundle name`;
         }
-        return 'Please enter a valid Bundle Path';
-      }
-    }]);
+      }, {
+        type: 'input',
+        name: 'location',
+        default: mypath,
+        message: 'Enter Bundle Path',
+        validate: (value) => {
+          if (value) {
+            this.checkPath(this.name, value);
+            return true;
+          }
+          return 'Please enter a valid Bundle Path';
+        }
+      }]);
+    });
   }
 
   checkPath(name, Path) {
@@ -90,21 +96,15 @@ const Bundle = class Bundle extends nodefony.Builder {
     if (bundle) {
       throw new Error("Bundle already exist " + name);
     }
-    if (!Path) {
-      if (this.location) {
-        Path = this.location;
-      } else {
-        Path = path.resolve("src", "bundles");
-      }
-    }
-    this.cli.logger("GENERATE bundle : " + name + " LOCATION : " + path.resolve(Path));
+
+    //this.cli.logger("GENERATE bundle : " + name + " LOCATION : " + path.resolve(Path));
     this.shortName = name;
     this.name = name + "-bundle";
     let res = regBundleName.exec(this.name);
     if (res) {
       this.shortName = res[1];
     } else {
-      throw new Error("Bad bundle   name :" + this.name);
+      throw new Error("Bad bundle name :" + this.name);
     }
     try {
       this.setPath(Path);
@@ -122,10 +122,18 @@ const Bundle = class Bundle extends nodefony.Builder {
       this.bundlePath = bundle.path;
       this.bundleFile = path.resolve(this.bundlePath, this.shortName + "Bundle.js");
     } else {
-      this.location = new nodefony.fileClass(path.resolve(Path));
+      if (Path instanceof nodefony.fileClass) {
+        this.location = Path;
+      } else {
+        if (!Path) {
+          return this.setPath(this.location);
+        }
+        this.location = new nodefony.fileClass(Path);
+      }
       this.bundlePath = path.resolve(this.location.path, this.name);
       this.bundleFile = path.resolve(this.bundlePath, this.shortName + "Bundle.js");
     }
+    this.cli.logger("GENERATE bundle : " + this.name + " LOCATION : " + this.location.path);
     nodefony.extend(this.cli.response, {
       bundleName: this.name,
       name: this.shortName,
@@ -374,7 +382,6 @@ const Angular = class Angular extends Bundle {
     };
   }
 };
-
 
 const interaction = function (cli) {
   let bundles = [];

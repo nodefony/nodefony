@@ -28,7 +28,7 @@ const angularCli = class angularCli extends nodefony.Service {
     process.env.NODE_ENV = "development";
   }
 
-  generateProject(name, Path) {
+  generateProject(name, Path = path.resolve("src", "bundles")) {
     this.builder.checkPath(name, Path);
     this.bundleName = this.builder.name;
     this.bundleShortName = this.builder.shortName;

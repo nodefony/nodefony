@@ -386,7 +386,9 @@ module.exports = nodefony.register("cliKernel", function () {
           return res;
         } catch (e) {
           this.showHelp();
-          throw new Error(`Command : ${this.command}:${this.task}:${this.action} Not Found`);
+          if (this.command !== "help") {
+            throw new Error(`Command : ${this.command}:${this.task}:${this.action} Not Found`);
+          }
         }
       } else {
         this.showHelp();

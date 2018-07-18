@@ -265,8 +265,8 @@ module.exports = nodefony.register("kernel", function () {
       let config = [];
       //this.checkBundlesExist(this.settings, "Kernel Config", this.configPath);
       if (this.settings && this.settings.system && this.settings.system.bundles) {
-        let res = null;
         for (let bundle in this.settings.system.bundles) {
+          let res = null;
           try {
             res = this.searchPackage(bundle, this.settings.system.bundles[bundle]);
             config.push(res);
@@ -280,9 +280,9 @@ module.exports = nodefony.register("kernel", function () {
     }
 
     checkBundlesExist(yml, nameConfig, pathConfig, remove) {
-      let exist = null;
       if (yml && yml.system && yml.system.bundles) {
         for (let bundle in yml.system.bundles) {
+          let exist = null;
           try {
             exist = this.searchPackage(bundle, yml.system.bundles[bundle]);
           } catch (e) {
@@ -361,8 +361,19 @@ module.exports = nodefony.register("kernel", function () {
               error = e;
             }
           }
+          res = null;
           res = this.checkPath(mypath);
-          nodefony.require.resolve(res);
+          try {
+            nodefony.require.resolve(res);
+          } catch (e) {
+            // no main in package.json
+            let bundleName = this.getBundleName(name);
+            if (bundleName) {
+              if (!path.resolve(res, bundleName + "Bundle.js")) {
+                throw new Error(`${name} is not a Bundle Package`);
+              }
+            }
+          }
           this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "DEBUG");
           return res;
         } catch (e) {
@@ -373,6 +384,7 @@ module.exports = nodefony.register("kernel", function () {
         }
       }
       try {
+        res = null;
         res = nodefony.require.resolve(`@nodefony/${name}`);
         this.logger(`Find NPM Bundle Package : @nodefony/${name} in : ${res}`, "DEBUG");
         return `@nodefony/${name}`;
@@ -380,24 +392,28 @@ module.exports = nodefony.register("kernel", function () {
         error = e;
       }
       try {
+        res = null;
         res = path.resolve(this.rootDir, "src", "bundles", name);
         nodefony.require.resolve(res);
         this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "DEBUG");
         return res;
       } catch (e) {}
       try {
+        res = null;
         res = path.resolve(this.nodefonyPath, "bundles", name);
         nodefony.require.resolve(res);
         this.logger(`Find Core Bundle Package : ${name} in : ${res}`, "DEBUG");
         return res;
       } catch (e) {}
       try {
+        res = null;
         res = path.resolve(this.nodefonyPath, '..', '..', "src", "bundles", name);
         nodefony.require.resolve(res);
         this.logger(`Find Core Local Bundle Package : ${name} in : ${res}`, "DEBUG");
         return res;
       } catch (e) {}
       try {
+        res = null;
         const globalPath = path.resolve(process.execPath, '..', '..', 'lib', 'node_modules', "nodefony", 'node_modules');
         res = path.resolve(globalPath, `@nodefony/${name}`);
         nodefony.require.resolve(res);

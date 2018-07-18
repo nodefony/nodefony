@@ -20,7 +20,7 @@ class bundlesTask extends nodefony.Task {
     );
   }
 
-  nodefony(name, Path) {
+  nodefony(name, Path = path.resolve("src", "bundles")) {
     let bundle = null;
     try {
       bundle = new nodefony.builders.bundles.nodefony(this.cli, "js");
@@ -60,7 +60,7 @@ class bundlesTask extends nodefony.Task {
       });
   }
 
-  angular(name, Path) {
+  angular(name, Path = path.resolve("src", "bundles")) {
     let bundle = null;
     try {
       bundle = new nodefony.builders.bundles.angular(this.cli, "js");
@@ -101,7 +101,7 @@ class bundlesTask extends nodefony.Task {
     }
   }
 
-  react(name, Path) {
+  react(name, Path = path.resolve("src", "bundles")) {
     let bundle = null;
     try {
       bundle = new nodefony.builders.bundles.react(this.cli, "js");

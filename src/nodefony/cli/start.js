@@ -21,8 +21,8 @@ module.exports = class cliStart extends nodefony.cliKernel {
       .action((cmd, args /*, commander*/ ) => {
         this.cmd = cmd.toLowerCase();
         this.args = args;
+        //this.logger(`Parse command : ${this.cmd} ${this.args}`);
         this.parseNodefonyCommand();
-        //this.logger(`Parse command : ${this.command}:${this.task}:${this.action}`);
         if (this.promise) {
           this.promise
             .then(() => {
@@ -59,10 +59,11 @@ module.exports = class cliStart extends nodefony.cliKernel {
     if (!this.cmd && !process.argv.slice(2).length) {
       this.showMenu();
     } else {
-      if (this.commander.interactive) {
+      if (!this.cmd && this.commander.interactive) {
         this.showMenu();
       } else {
         if (!this.started) {
+          //this.logger(`Parse command : ${this.cmd} ${this.args}`);
           this.start(this.cmd, this.args);
         }
       }
@@ -82,7 +83,11 @@ module.exports = class cliStart extends nodefony.cliKernel {
     while (process.argv.length > 2) {
       process.argv.pop();
     }
-    process.argv.push(cmd);
+    if (cmd) {
+      process.argv.push(cmd);
+    } else {
+      return this.start(null, args);
+    }
     return this.parseCommand(process.argv.concat(args));
   }
 

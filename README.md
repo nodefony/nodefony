@@ -368,75 +368,6 @@ Access to bundle route with URL : <https://localhost:5152/hello>
 
 #### Now hello-bundle is auto-insert in framework with watcher active and auto-config Webpack Module bundler
 
-### watchers :
-
-#### The bundle generation engine build bundle config with  node.js watcher configuration
-
-#### In developement mode  is very usefull to auto-reload files as controllers , views , routing , translations
-
-#### without having to reboot the server.
-
-You can see helloBundle config   : vim  ./src/bundles/hello-bundle/Resources/config/config.yml
-
-```yml
-########## nodefony CONFIG BUNDLE  hello-bundle  ############
-name :                          hello-bundle
-version:                        "1.0.0"
-locale :                        en_en
-
-#
-#  WATCHERS
-#
-#    watchers Listen to changes, deletion, renaming of files and directories
-#    of different components
-#
-#    For watch all components
-#
-#      watch:			true
-#    or
-#      watch:
-#        controller:	true
-#        config:        true		# only  routing
-#        views:         true
-#        translations:  true
-#        webpack:       true
-#        services:      true
-#
-watch:                          true
-```
-
-### Webpack Module bundler :
-
-#### The bundle generation engine build bundle config with a predefined webpack configuration
-
-#### In this way webpack is very usefull to manage all assets of bundle
-
-#### In developement mode watch  is very usefull to auto-compile webpack module bundle
-
-#### without having to reboot the server
-
-You can see helloBundle config webpack : vim  ./src/bundles/hello-bundle/Resources/config/webpack.config.js
-
-```js
-module.exports = webpackMerge({
-  context: context,
-  target: "web",
-  entry       : {
-    hello  : [ "./js/hello.js" ]
-  },
-  output: {
-    path: public,
-    publicPath: publicPath,
-    filename: "./js/[name].js",
-    library: "[name]",
-    libraryTarget: "umd"
-  },
-  externals: {},
-  resolve: {},
-  module: {...}
-});
-```
-
 ### Example controller  : ./src/bundles/hello-bundle/controller/defaultController.js
 
 ```js
@@ -485,6 +416,76 @@ module.exports = class defaultController extends nodefony.controller {
   <script src='{{CDN("javascript")}}/hello-bundle/assets/js/hello.js'></script>
 {% endblock %}
 ```
+
+### watchers :
+
+#### The bundle generation engine build bundle config with  node.js watcher configuration
+
+#### In developement mode  is very usefull to auto-reload files as controllers , views , routing , translations
+
+#### without having to reboot the server.
+
+You can see helloBundle config   : vim  ./src/bundles/hello-bundle/Resources/config/config.yml
+
+```yml
+########## nodefony CONFIG BUNDLE  hello-bundle  ############
+name :                          hello-bundle
+version:                        "1.0.0"
+locale :                        en_en
+
+#
+#  WATCHERS
+#
+#    watchers Listen to changes, deletion, renaming of files and directories
+#    of different components
+#
+#    For watch all components
+#
+#      watch:			true
+#    or
+#      watch:
+#        controller:	true
+#        config:        true		# only  routing
+#        views:         true
+#        translations:  true
+#        webpack:       true
+#        services:      true
+#
+watch:                          true
+```
+
+### Webpack Module bundler :
+
+#### The bundle generation engine build bundle config with a predefined webpack configuration
+
+#### In this way webpack is very usefull to manage all assets of bundle
+
+#### In developement mode watch  is very usefull to auto-compile webpack module bundle
+
+#### without having to reboot the server
+
+You can see hello-bundle config webpack : vim  ./src/bundles/hello-bundle/Resources/config/webpack.config.js
+
+```js
+module.exports = webpackMerge({
+  context: context,
+  target: "web",
+  entry       : {
+    hello  : [ "./js/hello.js" ]
+  },
+  output: {
+    path: public,
+    publicPath: publicPath,
+    filename: "./js/[name].js",
+    library: "[name]",
+    libraryTarget: "umd"
+  },
+  externals: {},
+  resolve: {},
+  module: {...}
+});
+```
+
 
 ## <a name="monitoring"></a>Monitoring FRAMEWORK
 

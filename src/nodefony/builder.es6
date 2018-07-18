@@ -5,7 +5,7 @@ nodefony.Builder = class Builder {
     this.twig = twig;
     this.cmd = cmd || this.cli.cmd;
     this.args = args || this.cli.args;
-    this.location = path.resolve(".");
+    this.location = new nodefony.fileClass(path.resolve("."));
     this.twigOptions = {
       views: process.cwd(),
       'twig options': {
