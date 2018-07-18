@@ -13,7 +13,22 @@ The Nodefony project is inspired by the PHP Symfony framework, a developer can f
 
 Nodefony is not an exhaustive port of symfony !
 
-Nodefony features :
+## Table of content
+
+-   [Features](#features)
+-   [Requirements](#requirements)
+-   [Install](#install)
+-   [Start Development Mode](#start)
+-   [Start Production Mode](#start_prod)
+-   [Configurations](#configurations)
+-   [Get Started](#bundles)
+-   [HTTPS Access](#https)
+-   [References / Thanks](#references--thanks)
+-   [Authors](#authors)
+-   [License](#license)
+-   [Demo](#demo)
+
+## <a name="features"></a>Nodefony features :
 
 -   Servers  ([http(s)](https://nodejs.org/dist/latest-v8.x/docs/api/https.html), [websocket(s)](https://github.com/theturtle32/WebSocket-Node), statics, sockjs)
 -   [HTTP2](https://nodejs.org/api/http2.html)  http2 ready node module provides an implementation of the HTTP/2 (push server ready).
@@ -73,20 +88,7 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 
 #### Documentation in progress !!
 
-## **Table of content**
 
--   [Requirements](#requirements)
--   [Install](#install)
--   [Start Development Mode](#start)
--   [Configurations](#configurations)
--   [Command line Interface](#cli)
--   [Get Started](#bundles)
--   [Start Production Mode](#start_prod)
--   [HTTPS Access](#https)
--   [References / Thanks](#references--thanks)
--   [Authors](#authors)
--   [License](#license)
--   [Demo](#demo)
 
 ## <a name="requirements"></a>Requirements
 
