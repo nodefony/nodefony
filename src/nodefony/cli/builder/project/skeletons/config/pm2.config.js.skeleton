@@ -1,6 +1,7 @@
 const cpu = require('os').cpus().length;
 let name = "{{name}}";
 let script = process.argv[1] || "nodefony";
+let logFile = path.resolve("tmp", "{{name}}.log");
 
 /**
  * Application configuration section
@@ -18,9 +19,9 @@ module.exports = {
     max_memory_restart: "1024M",
     autorestart: true,
     max_restarts: 10,
-    //log_file            : "./tmp/{{name}}.log",
-    out_file: "./tmp/{{name}}.log",
-    error_file: "./tmp/{{name}}.log",
+    //log_file            : logFile,
+    out_file: logFile,
+    error_file: logFile,
     merge_logs: true,
     env: {
       "NODE_ENV": "development",
