@@ -253,7 +253,7 @@ Quit
 ```bash
 $ nodefony prod
 ```
-You can see PM2 config : vim  config/pm2.config.js
+You can see PM2 config : config/pm2.config.js
 ```bash
 # TO KILL PM2 DEAMON
 $ nodefony kill
@@ -438,7 +438,7 @@ module.exports = class defaultController extends nodefony.controller {
 
 #### without having to reboot the server.
 
-You can see hello-bundle config   : vim  src/bundles/hello-bundle/Resources/config/config.yml
+You can see hello-bundle config   : src/bundles/hello-bundle/Resources/config/config.yml
 
 ```yml
 ########## nodefony CONFIG BUNDLE  hello-bundle  ############
@@ -477,7 +477,7 @@ watch:                          true
 
 #### without having to reboot the server
 
-You can see hello-bundle config webpack : vim  src/bundles/hello-bundle/Resources/config/webpack.config.js
+You can see hello-bundle config webpack : src/bundles/hello-bundle/Resources/config/webpack.config.js
 
 ```js
 module.exports = webpackMerge({

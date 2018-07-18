@@ -15,6 +15,9 @@ fi
 
 cat /etc/hosts
 
+git submodule sync
+git submodule update --init --recursive 
+
 #configuring the system
 npm link src/nodefony
 nodefony build

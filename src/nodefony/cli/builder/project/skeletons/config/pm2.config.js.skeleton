@@ -1,5 +1,6 @@
 const cpu = require('os').cpus().length;
 let name = "{{name}}";
+let script = process.argv[1] || "nodefony";
 
 /**
  * Application configuration section
@@ -8,7 +9,7 @@ let name = "{{name}}";
 module.exports = {
   apps: [{
     name: name,
-    script: "nodefony",
+    script: script,
     args: "pm2",
     //node_args           : "--expose-gc",
     watch: false,

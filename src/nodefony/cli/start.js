@@ -73,7 +73,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
   showBanner(data) {
     super.showBanner(data);
     if (nodefony.projectName !== "nodefony") {
-      this.logger(`WELCOME ${nodefony.projectName.toUpperCase()} ${nodefony.projectVersion}`);
+      this.logger(`WELCOME PROJECT : ${nodefony.projectName.toUpperCase()} ${nodefony.projectVersion}`);
     } else {
       this.logger(`WELCOME NODEFONY CLI ${nodefony.version}`);
     }
