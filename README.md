@@ -52,7 +52,7 @@ Nodefony is not an exhaustive port of symfony !
 -   Monitororing , Debug Bar
 -   Unit Test Api in framework context ([MOCHA](https://mochajs.org/))
 
-Nodefony assimilates into the ecosystem of node.js with services like :
+**Nodefony assimilates into the ecosystem of node.js with services like** :
 
 -   [WEBPACK](https://webpack.js.org/) Module bundler for assets management of application .
 -   [SockJS](https://github.com/sockjs) Server ( Like WDS 'Webpack Dev Server' and HMR management )
@@ -62,7 +62,7 @@ Nodefony assimilates into the ecosystem of node.js with services like :
 -   [Angular](https://github.com/angular/angular-cli) Experimental Bundle Generator ( Now an Angular Project can be merge into a Nodefony Bundle )
 -   [React](https://github.com/facebookincubator/create-react-app) Experimental Bundle Generator ( Now an React Project can be merge into a Nodefony Bundle )
 
-Nodefony 4  adds the following features :
+**Nodefony 4  adds the following features** :
 
 -   C++ Addons (Binding in Bundle)
 -   Authorisations
@@ -253,7 +253,7 @@ Quit
 ```bash
 $ nodefony prod
 ```
-You can see PM2 config : vim  ./config/pm2.config.js
+You can see PM2 config : vim  config/pm2.config.js
 ```bash
 # TO KILL PM2 DEAMON
 $ nodefony kill
@@ -277,7 +277,7 @@ You must Add a Trusted CA in your Browser : projectName-root-ca.crt.pem
 
 You can find certificate authority (ca) here:
 
-    ./config/certificates/ca/projectName-root-ca.crt.pem
+    config/certificates/ca/projectName-root-ca.crt.pem
 
 #### Access to Secure App with URL : <https://localhost:5152>
 #### Access to App with URL : <http://localhost:5151>
@@ -286,7 +286,7 @@ You can find certificate authority (ca) here:
 
 ## <a name="configurations"></a>Framework Configurations
 
-Open **[./config/config.yml](https://github.com/nodefony/nodefony-core/blob/master/config/config.yml)**  if you want change httpPort, domain ,servers, add bundle, locale ...
+Open **[config/config.yml](https://github.com/nodefony/nodefony-core/blob/master/config/config.yml)**  if you want change httpPort, domain ,servers, add bundle, locale ...
 
 ```yml
 system:
@@ -330,9 +330,20 @@ system:
 
 ## <a name="bundles"></a>Get Started
 
+### Install Nodefony  :
+```
+$ npm -g install nodefony
+```
+
+### Install Project  :
+```
+$ nodefony create  myproject
+$ cd myproject
+```
+
 ### Generating Bundle  :
 
-CLI Generate new bundle : default path ./src/bundles
+CLI Generate new bundle : default path src/bundles
 
 ```bash
 $ nodefony generate:bundle name path
@@ -370,7 +381,7 @@ Access to bundle route with URL : <https://localhost:5152/hello>
 
 #### Now hello-bundle is auto-insert in framework with watcher active and auto-config Webpack Module bundler
 
-### Example controller  : ./src/bundles/hello-bundle/controller/defaultController.js
+### Example controller  : src/bundles/hello-bundle/controller/defaultController.js
 
 ```js
 module.exports = class defaultController extends nodefony.controller {
@@ -389,7 +400,7 @@ module.exports = class defaultController extends nodefony.controller {
 };
 ```
 
-### Example view  (twig) : ./src/bundles/hello-bundle/Resources/views/index.html.twig
+### Example view  (twig) : src/bundles/hello-bundle/Resources/views/index.html.twig
 
 ```twig
 {% extends '/app/Resources/views/base.html.twig' %}
@@ -427,7 +438,7 @@ module.exports = class defaultController extends nodefony.controller {
 
 #### without having to reboot the server.
 
-You can see helloBundle config   : vim  ./src/bundles/hello-bundle/Resources/config/config.yml
+You can see hello-bundle config   : vim  src/bundles/hello-bundle/Resources/config/config.yml
 
 ```yml
 ########## nodefony CONFIG BUNDLE  hello-bundle  ############
@@ -466,7 +477,7 @@ watch:                          true
 
 #### without having to reboot the server
 
-You can see hello-bundle config webpack : vim  ./src/bundles/hello-bundle/Resources/config/webpack.config.js
+You can see hello-bundle config webpack : vim  src/bundles/hello-bundle/Resources/config/webpack.config.js
 
 ```js
 module.exports = webpackMerge({
