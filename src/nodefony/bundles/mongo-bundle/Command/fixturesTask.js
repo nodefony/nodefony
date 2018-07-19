@@ -20,15 +20,16 @@ class fixturesTask extends nodefony.Task {
             return reject(e);
           });
       }
+      let tabPromise = null;
       this.ormService.listen(this, "onOrmReady", () => {
         try {
-          this.tabPromise = this.findFixtures();
+          tabPromise = this.findFixtures();
         } catch (e) {
           return reject(e);
         }
       });
       this.kernel.listen(this, "onPostReady", ( /*service*/ ) => {
-        let actions = this.tabPromise.map(function (ele) {
+        let actions = tabPromise.map(function (ele) {
           return new Promise(ele);
         });
         return Promise.all(actions)
@@ -46,8 +47,8 @@ class fixturesTask extends nodefony.Task {
 
   loadFixture() {
     return new Promise((resolve, reject) => {
-      this.tabPromise = this.findFixtures();
-      let actions = this.tabPromise.map(function (ele) {
+      let tabPromise = this.findFixtures();
+      let actions = tabPromise.map(function (ele) {
         return new Promise(ele);
       });
       return Promise.all(actions)

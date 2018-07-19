@@ -328,10 +328,11 @@ system:
 ```
 $ npm -g install nodefony
 ```
+[See Global install How to Prevent Permissions Errors](https://docs.npmjs.com/getting-started/fixing-npm-permissions)
 
 ### Install Project  :
 ```
-$ nodefony create  myproject
+$ nodefony create myproject
 $ cd myproject
 ```
 
@@ -344,6 +345,7 @@ $ nodefony generate:bundle name path
 
 #Or Generate a New Bundle Interactive
 $ nodefony
+
 ?  Nodefony CLI :  
   Start Server Development
   Start Server Pre-Production

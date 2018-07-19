@@ -28,8 +28,10 @@ $ ssh-add -K ~/.ssh/my_github_key/id_rsa
 
 
 
-// submodules
-
+/*
+ *	submodules
+ *
+ */
   // add submodules
 git submodule add https://github.com/nodefony/nodefony-stage.git ./src/stage
 
@@ -60,17 +62,42 @@ git push origin --delete <branch_name>
 //or
 git push origin :<branch_name>
 
-// add github project
+/*
+ *	add github project
+ */
 git init
 git add README.md
 git commit -m "first commit"
 git remote add origin https://github.com/nodefony/nodefony-project.git
 git push -u origin master
 
+/*
+ *	Fusionner deux dépôts git
+ */
+# On clone les dépots
+git clone projet1
+git clone projet2
+cd projet1
+
+# On ajoute le projet2 comme source dans le projet1
+git remote add projet2 ../projet2
+git fetch projet2
+
+# On liste les branches du dépôt 2
+git branch -a
+
+# On crée dans le dépôt 1 la branche à fusionner (par exemple master)
+git branch projet2-master projet2/master
+
+# On fusionne
+git merge projet2-master
+or
+git merge --allow-unrelated-histories projet2-master
+
+
 /**
 *   ADD git branch PROMT BASH
 **/
-
 parse_git_branch() {
    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }

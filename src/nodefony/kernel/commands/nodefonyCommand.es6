@@ -113,7 +113,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
         }
         return task.load()
           .then((ele) => {
-            return ele;
+            return resolve(ele);
           })
           .catch((e) => {
             this.logger(e, "ERROR");
