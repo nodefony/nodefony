@@ -79,6 +79,13 @@ module.exports = class mongoose extends nodefony.orm {
         this.logger(`Error on mongodb database ${name}`, 'ERROR');
         this.logger(error, 'ERROR');
       });
+      db.on('reconnectFailed', (error) => {
+        this.logger(`Error on mongodb database reconnect Failed ${name}`, 'ERROR');
+        this.logger(error, 'ERROR');
+      });
+      db.on('disconnected', () => {
+        this.logger(`mongodb database disconnected ${name}`, 'WARNING');
+      });
       this.fire("onConnect", name, db);
       this.logger("Connect to " + name + " : " + url);
       return db;

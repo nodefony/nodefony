@@ -1,5 +1,5 @@
 //const http = require("http");
-const semver = require('semver');
+//const semver = require('semver');
 
 let http2 = null;
 let HTTP2_HEADER_PATH = null;
@@ -14,7 +14,7 @@ try {
   HTTP2_HEADER_CONTENT_TYPE = http2.constants.HTTP2_HEADER_CONTENT_TYPE;
 } catch (e) {}
 
-const version9 = semver.gt(process.versions.node, "9.3.0");
+//const version9 = semver.gt(process.versions.node, "9.3.0");
 
 module.exports = nodefony.register("http2Response", () => {
 

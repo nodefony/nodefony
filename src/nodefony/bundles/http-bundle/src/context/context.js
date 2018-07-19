@@ -233,8 +233,8 @@ nodefony.register("Context", () => {
         try {
           let result = this.kernelHttp.debugView.render(this.kernelHttp.extendTemplate(this.profiling, this));
           this.response.body = this.response.body.replace("</body>", result + "\n </body>");
-          if (this.type === "HTTP2") {
-            //this.pushAsset();
+          if (this.type === "HTTP2" && this.pushAllowed) {
+            this.pushAsset();
           }
         } catch (e) {
           throw e;
