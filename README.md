@@ -193,18 +193,12 @@ Quit
 $ cd myproject
 $ nodefony dev
 
-// debug mode
-$ nodefony -d dev
-
 # TO STOP
 $ <ctrl-c>
 ```
 **Starting Development Servers in Debug Mode (-d)** :
 ```bash
 $ nodefony -d dev
-
-# TO STOP
-$ <ctrl-c>
 ```
 
 **Starting Development Servers in Inspector mode (--inspect)** :
@@ -341,17 +335,14 @@ $ nodefony create  myproject
 $ cd myproject
 ```
 
-### Generating Bundle  :
+### Generating a New Bundle  :
 
 CLI Generate new bundle : default path src/bundles
 
 ```bash
 $ nodefony generate:bundle name path
-```
 
-###  Generate New Bundle Interactive
-
-```bash
+#Or Generate a New Bundle Interactive
 $ nodefony
 ?  Nodefony CLI :  
   Start Server Development

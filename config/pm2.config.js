@@ -6,7 +6,6 @@ const yml = require("js-yaml");
 let name = "nodefony";
 let script = process.argv[1] || "nodefony";
 let logFile = path.resolve("tmp", "nodefony.log");
-console.log(logFile)
 
 try {
   const config = yml.safeLoad(fs.readFileSync(path.resolve("app", "config", "config.yml"), 'utf8'));
