@@ -55,8 +55,11 @@ describe("BUNDLE {{name}}", function(){
 				assert.equal(res.headers.server, "nodefony");
 				res.setEncoding('utf8');
 				res.on('data',  (chunk) => {
-					done();
+					// check result here
 				});
+        res.on('end', () => {
+          done();
+        });
 			})
 			request.end();
 		});
