@@ -9,12 +9,10 @@ module.exports = class appController extends nodefony.controller {
 
   indexAction() {
     let demo = this.kernel.getBundle("demo");
-    let readme = null;
     return this.render("app::index.html.twig", {
       demo: demo ? true : false,
       user: this.context.user,
-      name: this.kernel.projectName,
-      readme: readme ? this.htmlMdParser(readme.content()) : false
+      name: this.kernel.projectName
     });
   }
 
