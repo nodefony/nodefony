@@ -1,7 +1,6 @@
 const path = require("path");
 //const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
-const ExtractTextPluginCss = require('extract-text-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const context = path.resolve(__dirname, "..", "public");
@@ -44,11 +43,12 @@ module.exports = webpackMerge({
       }]
     }, {
       // CSS EXTRACT
-      test: new RegExp("\.css$"),
+      test: new RegExp("\.(less|css)$"),
       use: [
         //'css-hot-loader',
         MiniCssExtractPlugin.loader,
         'css-loader',
+        'less-loader'
       ]
     }, {
       // SASS
@@ -61,20 +61,6 @@ module.exports = webpackMerge({
         loader: 'sass-loader'
       }]
     }, {
-      test: new RegExp("\.less$"),
-      use: ExtractTextPluginCss.extract({
-        use: [
-          "raw-loader",
-          {
-            loader: 'less-loader',
-            options: {
-              //strictMath: true,
-              //noIeCompat: true
-            }
-          }
-        ]
-      })
-    }, {
       // FONTS
       test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
       use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '/assets/fonts/' + '&outputPath=/fonts/',
@@ -85,9 +71,6 @@ module.exports = webpackMerge({
     }]
   },
   plugins: [
-    new ExtractTextPluginCss({
-      filename: "./css/[name].css",
-    }),
     new MiniCssExtractPlugin({
       filename: "./css/[name].css",
       allChunks: true

@@ -4,8 +4,8 @@ require('require-yaml');
 const htmlPlugin = require('html-webpack-plugin');
 const cleanPlugin = require('clean-webpack-plugin');
 const workboxPlugin = require('workbox-webpack-plugin');
-const ExtractTextPluginCss = require('extract-text-webpack-plugin');
 const webpackMerge = require('webpack-merge');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const bundlePath = path.resolve(__dirname, "..", "..");
 const bundlePathConfig = path.resolve(bundlePath, "Resources", "config");
@@ -54,10 +54,13 @@ module.exports = webpackMerge({
       }]
     }, {
       // CSS EXTRACT
-      test: new RegExp("\.css$"),
-      use: ExtractTextPluginCss.extract({
-        use: 'css-loader'
-      })
+      test: new RegExp("\.(less|css)$"),
+      use: [
+        //'css-hot-loader',
+        MiniCssExtractPlugin.loader,
+        'css-loader',
+        'less-loader'
+      ]
     }, {
       // SASS
       test: new RegExp(".scss$"),
@@ -68,20 +71,6 @@ module.exports = webpackMerge({
       }, {
         loader: 'sass-loader'
       }]
-    }, {
-      test: new RegExp("\.less$"),
-      use: ExtractTextPluginCss.extract({
-        use: [
-          "raw-loader",
-          {
-            loader: 'less-loader',
-            options: {
-              //strictMath: true,
-              //noIeCompat: true
-            }
-          }
-        ]
-      })
     }, {
       // FONTS
       test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
@@ -99,8 +88,9 @@ module.exports = webpackMerge({
     }]
   },
   plugins: [
-    new ExtractTextPluginCss({
+    new MiniCssExtractPlugin({
       filename: "./dist/css/[name].css",
+      allChunks: true
     }),
     new cleanPlugin([dist], {
       root: public,
