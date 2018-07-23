@@ -526,10 +526,12 @@ module.exports = class Nodefony {
     cli.setHelp("", "dev", "Run Nodefony Development Server");
     cli.setHelp("", "preprod", "Run Nodefony Preprod Server ( Node Clusters )");
     cli.setHelp("", "prod", "Run Nodefony Production Server ( PM2 mode )");
-    cli.setHelp("", "stop", "Stop Nodefony Production Server ( PM2 mode )");
+    cli.setHelp("", "stop [name]", "Stop Nodefony Production Server ( PM2 mode )");
     cli.setHelp("", "kill", "Kill ( PM2 mode )");
-    cli.setHelp("", "reload", "RELOAD ( PM2 mode )");
-    cli.setHelp("", "Status", "List  process ( PM2 mode )");
+    cli.setHelp("", "reload [name]", "reload process ( PM2 mode )");
+    cli.setHelp("", "delete [name]", "delete process ( PM2 mode )");
+    cli.setHelp("", "restart [name]", "restart process ( PM2 mode )");
+    cli.setHelp("", "list", "list all process ( PM2 mode )");
     cli.setHelp("", "logs", "Stream logs  process ( PM2 mode )");
     cli.setHelp("", "clean-log", "Remove log ( PM2 mode )");
     // nodefony
@@ -547,6 +549,7 @@ module.exports = class Nodefony {
       cmd = "production";
     }
     let environment = false;
+    let name = nodefony.projectName;
     switch (cmd) {
     case "dev":
     case "development":
@@ -577,30 +580,75 @@ module.exports = class Nodefony {
       }
       break;
     case "stop":
-      pm2.stop(nodefony.projectName, (error, proc) => {
+      if (args.length) {
+        name = args[0];
+      }
+      pm2.stop(name, (error, proc) => {
         if (error) {
           cli.logger(error, "ERROR");
           cli.terminate(-1);
         }
-        cli.logger(`PM2 Stop Project  ${nodefony.projectName}`);
+        cli.logger(`PM2 Stop Project  ${name}`);
         this.tablePm2(cli, proc);
         cli.terminate(0);
+      });
+      break;
+    case "reload":
+      if (args.length) {
+        name = args[0];
+      }
+      pm2.reload(name, (error, proc) => {
+        if (error) {
+          cli.logger(error, "ERROR");
+          return cli.terminate(-1);
+        }
+        cli.logger(`PM2 reload Project  ${name}`);
+        this.tablePm2(cli, proc);
+        return cli.terminate(0);
+      });
+      break;
+    case "restart":
+      if (args.length) {
+        name = args[0];
+      }
+      pm2.restart(name, (error, proc) => {
+        if (error) {
+          cli.logger(error, "ERROR");
+          return cli.terminate(-1);
+        }
+        cli.logger(`PM2 reload Project  ${name}`);
+        this.tablePm2(cli, proc);
+        return cli.terminate(0);
+      });
+      break;
+    case "delete":
+      if (args.length) {
+        name = args[0];
+      }
+      pm2.delete(name, (error, proc) => {
+        if (error) {
+          cli.logger(error, "ERROR");
+          return cli.terminate(-1);
+        }
+        cli.logger(`PM2 reload Project  ${name}`);
+        this.tablePm2(cli, proc);
+        return cli.terminate(0);
       });
       break;
     case "kill":
       pm2.killDaemon((error, proc) => {
         if (error) {
           cli.logger(error, "ERROR");
-          cli.terminate(-1);
+          return cli.terminate(-1);
         }
         cli.logger(`Kill PM2 MANAGER success :  ${proc.success}`);
         pm2.list((error, processDescriptionList) => {
           if (error) {
             cli.logger(error, "ERROR");
-            cli.terminate(-1);
+            return cli.terminate(-1);
           }
           this.tablePm2(cli, processDescriptionList);
-          process.exit(0);
+          return process.exit(0);
         });
       });
       break;
@@ -609,10 +657,10 @@ module.exports = class Nodefony {
       pm2.list((error, processDescriptionList) => {
         if (error) {
           cli.logger(error, "ERROR");
-          cli.terminate(-1);
+          return cli.terminate(-1);
         }
         this.tablePm2(cli, processDescriptionList);
-        process.exit(0);
+        return process.exit(0);
       });
       break;
     case "log":
@@ -624,11 +672,11 @@ module.exports = class Nodefony {
       pm2.flush((error, result) => {
         if (error) {
           cli.logger(error, "ERROR");
-          cli.terminate(-1);
+          return cli.terminate(-1);
         }
         cli.logger(`clean log ${nodefony.projectName}`);
         this.tablePm2(cli, result);
-        process.exit(0);
+        return process.exit(0);
       });
       break;
     case "outdated":
