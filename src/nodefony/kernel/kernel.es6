@@ -171,6 +171,7 @@ module.exports = nodefony.register("kernel", function () {
       if (this.typeCluster === "worker") {
         this.cli.setPid();
       }
+      this.cli.setProcessTitle(this.projectName);
       this.cli.setCommandVersion(this.isCore ? this.version : nodefony.projectVersion);
       this.cli.syslog.removeAllListeners('onLog');
     }
