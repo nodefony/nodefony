@@ -523,14 +523,15 @@ module.exports = class Nodefony {
     // Servers
     cli.setTitleHelp(`${cli.clc.cyan("Servers")}`);
     cli.setHelp("", "dev", "Run Nodefony Development Server");
-    cli.setHelp("", "preprod", "Run Nodefony Preprod Server ( Node Clusters )");
+    cli.setHelp("", "preprod", "Run Nodefony Preprod Server ( Usefull to check Clusters Node )");
     cli.setHelp("", "prod", "Run Nodefony Production Server ( PM2 mode )");
-    cli.setHelp("", "stop [name]", "Stop Nodefony Production Server ( PM2 mode )");
-    cli.setHelp("", "kill", "Kill ( PM2 mode )");
-    cli.setHelp("", "reload [name]", "reload process ( PM2 mode )");
-    cli.setHelp("", "delete [name]", "delete process ( PM2 mode )");
-    cli.setHelp("", "restart [name]", "restart process ( PM2 mode )");
-    cli.setHelp("", "list", "list all process ( PM2 mode )");
+    cli.setTitleHelp(cli.clc.cyan("PM2 Process Manager 2"));
+    cli.setHelp("", "stop [name]", "Stop Production Project");
+    cli.setHelp("", "reload [name]", "Reload Production Project");
+    cli.setHelp("", "delete [name]", "Delete Production Project from PM2 management");
+    cli.setHelp("", "restart [name]", "Restart Production Project");
+    cli.setHelp("", "list", "List all Production Projects");
+    cli.setHelp("", "kill", "Kill PM2 daemon ");
     cli.setHelp("", "logs", "Stream logs  process ( PM2 mode )");
     cli.setHelp("", "clean-log", "Remove log ( PM2 mode )");
     // nodefony
@@ -697,8 +698,8 @@ module.exports = class Nodefony {
         return kernel.start();
       }
       let error = new Error("No nodefony trunk detected !");
-      cli.logger(error, "ERROR");
-      cli.showHelp();
+      //cli.logger(error, "ERROR");
+      //cli.showHelp();
       throw error;
     }
   }

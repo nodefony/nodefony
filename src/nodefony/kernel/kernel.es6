@@ -370,9 +370,13 @@ module.exports = nodefony.register("kernel", function () {
             // no main in package.json
             let bundleName = this.getBundleName(name);
             if (bundleName) {
-              if (!path.resolve(res, bundleName + "Bundle.js")) {
+              try {
+                nodefony.require.resolve(res, bundleName + "Bundle.js");
+              } catch (e) {
                 throw new Error(`${name} is not a Bundle Package`);
               }
+            } else {
+              throw new Error(`${name} is not a Bundle Package`);
             }
           }
           this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "DEBUG");

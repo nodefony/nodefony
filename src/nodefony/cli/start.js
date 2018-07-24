@@ -48,6 +48,13 @@ module.exports = class cliStart extends nodefony.cliKernel {
       if (!nodefony.isTrunk) {
         this.setTitleHelp(this.clc.cyan("nodefony"));
         this.setHelp("", "create [-i] name [path]", "Create New Nodefony Project");
+        this.setTitleHelp(this.clc.cyan("PM2 Process Manager 2"));
+        this.setHelp("", "stop name", "Stop Production Project");
+        this.setHelp("", "reload name", "Reload Production Project");
+        this.setHelp("", "delete name", "Delete Production Project from PM2 management");
+        this.setHelp("", "restart name", "Restart Production Project");
+        this.setHelp("", "list", "List all Production Projects ");
+        this.setHelp("", "kill", "Kill PM2 daemon ");
       }
     });
     this.setOption('-d, --debug ', 'Nodefony debug');
@@ -166,13 +173,14 @@ module.exports = class cliStart extends nodefony.cliKernel {
         return nodefony.start(command, args, this);
       } else {
         try {
-          if (rawCommand) {
-            return nodefony.require(path.resolve(rawCommand));
-          }
+          return nodefony.start(rawCommand, args, this);
+        } catch (e) {}
+        try {
+          return nodefony.require(path.resolve(rawCommand));
         } catch (e) {
           this.logger(e, "ERROR");
+          this.showHelp();
         }
-        this.showHelp();
       }
     }
   }
