@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@pm2/agent@^0.5.4":
-  version "0.5.10"
-  resolved "https://registry.yarnpkg.com/@pm2/agent/-/agent-0.5.10.tgz#96f23e37f963db9f55b99d9fb6a3edc369839171"
+"@pm2/agent@^0.5.11":
+  version "0.5.11"
+  resolved "https://registry.yarnpkg.com/@pm2/agent/-/agent-0.5.11.tgz#b84460505b37d6d2f802f79354034f5ca61023f5"
   dependencies:
     async "^2.6.0"
     eventemitter2 "^5.0.1"
@@ -17,9 +17,9 @@
     semver "^5.5.0"
     ws "^5.1.0"
 
-"@pm2/io@^2.0.2":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@pm2/io/-/io-2.1.0.tgz#30d9dab1db94d7d8dd07c72ec0a0b6869de2df07"
+"@pm2/io@~2.1.0":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@pm2/io/-/io-2.1.1.tgz#c367d72208ed6176df092f9933da699326061f86"
   dependencies:
     async "2.6.1"
     debug "3.1.0"
@@ -1530,10 +1530,6 @@ coa@~2.0.1:
 code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
-
-coffee-script@^1.12.7:
-  version "1.12.7"
-  resolved "https://registry.yarnpkg.com/coffee-script/-/coffee-script-1.12.7.tgz#c05dae0cb79591d05b3070a8433a98c9a89ccc53"
 
 collection-visit@^1.0.0:
   version "1.0.0"
@@ -5398,19 +5394,18 @@ pm2-multimeter@^0.1.2:
   dependencies:
     charm "~0.1.1"
 
-pm2@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/pm2/-/pm2-3.0.0.tgz#fbbb393bca1225ef5789114bc0c1bfe4f5c4c495"
+pm2@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/pm2/-/pm2-3.0.1.tgz#336a6ee868d36123b8523b645ca66e21b42213bc"
   dependencies:
-    "@pm2/agent" "^0.5.4"
-    "@pm2/io" "^2.0.2"
+    "@pm2/agent" "^0.5.11"
+    "@pm2/io" "~2.1.0"
     "@pm2/js-api" "^0.5.15"
     async "^2.6.1"
     blessed "^0.1.81"
     chalk "^2.4.1"
     chokidar "^2.0.4"
     cli-table-redemption "^1.0.0"
-    coffee-script "^1.12.7"
     commander "2.15.1"
     cron "^1.3"
     debug "^3.1"

@@ -113,6 +113,8 @@ module.exports = nodefony.register("cliKernel", function () {
       this.type = this.options.type;
       this.optionsTables = optionsTaskTables;
       this.optionsTitleTables = optionsTitleTables;
+      this.yarnVersion = nodefony.checkYarnVersion();
+      this.npmVersion = nodefony.checkNpmVersion();
       this.classCommand = {};
       this.commands = {
         nodefony: {}

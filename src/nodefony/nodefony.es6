@@ -44,18 +44,10 @@ module.exports = class Nodefony {
     this.projectName = "nodefony";
     this.appKernel = null;
     this.isRegExp = require('lodash.isregexp');
-
     this.isCore = false;
     this.isElectron = this.isElectronContext();
     this.yarn = this.checkYarn();
     this.npm = this.checkNpm();
-    if (!(this.npm || this.yarn)) {
-      let error = new Error("node.js Packages manager not found ");
-      console.error("Try to install npm or yarn package manager ");
-      throw error;
-    }
-    //this.globalNpm = this.checkGlobalNpm();
-    //this.globalYarn = this.checkGlobalYarn();
     this.builded = false;
     this.checkTrunk();
   }
@@ -465,38 +457,34 @@ module.exports = class Nodefony {
       return false;
     }
   }
-  checkGlobalNpm() {
+
+  checkYarnVersion() {
     let res = null;
     try {
-      res = execSync("npm list --depth 1 --global npm", {
+      res = execSync("yarn -v", {
         encoding: "utf8"
       });
       if (res) {
-        this.globalYarn = true;
-        return true;
+        return res.replace(/\s/g, "");
       }
-      this.globalYarn = false;
-      return false;
+      return null;
     } catch (e) {
-      this.globalYarn = null;
-      throw e;
+      return null;
     }
   }
-  checkGlobalYarn() {
+
+  checkNpmVersion() {
     let res = null;
     try {
-      res = execSync("npm list --depth 1 --global yarn", {
+      res = execSync("npm -v", {
         encoding: "utf8"
       });
       if (res) {
-        this.globalYarn = true;
-        return true;
+        return res.replace(/\s/g, "");
       }
-      this.globalYarn = false;
-      return false;
+      return null;
     } catch (e) {
-      this.globalYarn = null;
-      throw e;
+      return null;
     }
   }
 
