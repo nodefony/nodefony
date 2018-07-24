@@ -88,8 +88,8 @@ module.exports = class Nodefony {
       this.appConfig = this.loadYaml(this.appConfigPath);
       this.projectPackage = require(path.resolve(cwd, "package.json"));
       this.projectVersion = this.projectPackage.version;
-      //this.projectName = this.appConfig.App.projectName;
       this.projectName = this.projectPackage.name;
+      this.packageManager = this.kernelConfig.packageManager || "npm";
     } catch (e) {
       throw e;
     }
@@ -532,8 +532,8 @@ module.exports = class Nodefony {
     cli.setHelp("", "restart [name]", "Restart Production Project");
     cli.setHelp("", "list", "List all Production Projects");
     cli.setHelp("", "kill", "Kill PM2 daemon ");
-    cli.setHelp("", "logs", "Stream logs  process ( PM2 mode )");
-    cli.setHelp("", "clean-log", "Remove log ( PM2 mode )");
+    cli.setHelp("", "logs", "Stream logs process");
+    cli.setHelp("", "clean-log", "Remove logs");
     // nodefony
     cli.setTitleHelp(cli.clc.cyan("nodefony"));
     cli.setHelp("", "create [-i] name [path]", "Create New Nodefony Project");

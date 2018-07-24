@@ -13,28 +13,49 @@ class entityTask extends nodefony.Task {
 
   findAll(entity) {
     return new Promise((resolve, reject) => {
-      this.ormService.listen(this, "onOrmReady", function ( /*service*/ ) {
-        var conn = this.ormService.getEntity(entity);
-        if (!conn) {
-          this.logger("ENTITY : " + entity + " NOT FOUND", "ERROR");
-          //this.cli.terminate(1);
-          return reject(1);
-        }
-        this.logger("ENTITY :" + entity + " \nEXECUTE findAll   ", "INFO");
-        resolve(conn.findAll()
-          .catch((error) => {
+      if (this.ormService.ready) {
+        try {
+          let conn = this.ormService.getEntity(entity);
+          if (!conn) {
+            let error = new Error("ENTITY : " + entity + " NOT FOUND");
             this.logger(error, "ERROR");
-            //this.cli.terminate(1);
-            return reject(1);
-          })
-          .then((result) => {
-            //var attribute = result[0].$options.attributes ;
-            var ele = JSON.stringify(result);
-            console.log(ele);
-            return resolve(ele);
-          })
-        );
-      });
+            return reject(error);
+          }
+          this.logger("ENTITY :" + entity + " \nEXECUTE findAll   ", "INFO");
+          return conn.findAll()
+            .catch((error) => {
+              this.logger(error, "ERROR");
+              return reject(1);
+            })
+            .then((result) => {
+              let ele = JSON.stringify(result);
+              console.log(ele);
+              return resolve(ele);
+            });
+        } catch (e) {
+          return reject(e);
+        }
+      } else {
+        this.ormService.listen(this, "onOrmReady", function ( /*service*/ ) {
+          let conn = this.ormService.getEntity(entity);
+          if (!conn) {
+            let error = new Error("ENTITY : " + entity + " NOT FOUND");
+            this.logger(error, "ERROR");
+            return reject(error);
+          }
+          this.logger("ENTITY :" + entity + " \nEXECUTE findAll   ", "INFO");
+          return conn.findAll()
+            .catch((error) => {
+              this.logger(error, "ERROR");
+              return reject(error);
+            })
+            .then((result) => {
+              let ele = JSON.stringify(result);
+              console.log(ele);
+              return resolve(ele);
+            });
+        });
+      }
     });
   }
 }

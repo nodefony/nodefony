@@ -176,10 +176,16 @@ module.exports = class cliStart extends nodefony.cliKernel {
           return nodefony.start(rawCommand, args, this);
         } catch (e) {}
         try {
-          return nodefony.require(path.resolve(rawCommand));
+          if (rawCommand) {
+            return nodefony.require(path.resolve(rawCommand));
+          } else {
+            this.showHelp();
+          }
         } catch (e) {
+          this.logger("Nodefony Command Not Found ", "ERROR");
           this.logger(e, "ERROR");
           this.showHelp();
+          this.terminate(-1);
         }
       }
     }
