@@ -13,7 +13,7 @@ const nodefony = function () {
     return require("nodefony");
   } catch (e) {}
   try {
-    const globalPath = path.resolve(process.execPath, '..', '..', 'lib', 'node_modules');
+    const globalPath = path.resolve(process.argv[1], '..', '..', 'lib', 'node_modules');
     return require(path.resolve(globalPath, "nodefony"));
   } catch (e) {
     console.error(e);

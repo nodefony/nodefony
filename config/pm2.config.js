@@ -1,18 +1,9 @@
 const cpu = require('os').cpus().length;
 const path = require("path");
-const fs = require('fs');
-const yml = require("js-yaml");
 
-let name = "nodefony";
+let name = "nodefony-core";
 let script = process.argv[1] || "nodefony";
-let logFile = path.resolve("tmp", "nodefony.log");
-
-try {
-  const config = yml.safeLoad(fs.readFileSync(path.resolve("app", "config", "config.yml"), 'utf8'));
-  name = config.App.projectName;
-} catch (e) {
-  throw e;
-}
+let logFile = path.resolve("tmp", "nodefony-core.log");
 
 module.exports = {
   apps: [{

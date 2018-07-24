@@ -417,7 +417,6 @@ module.exports = class Nodefony {
 
   isNodefonyTrunk(cwd = path.resolve(".")) {
     try {
-
       this.kernelConfigPath = path.resolve(cwd, "config", "config.yml");
       this.appPath = path.resolve(cwd, "app");
       this.appConfigPath = path.resolve(this.appPath, "config", "config.yml");
@@ -616,7 +615,7 @@ module.exports = class Nodefony {
           cli.logger(error, "ERROR");
           return cli.terminate(-1);
         }
-        cli.logger(`PM2 reload Project  ${name}`);
+        cli.logger(`PM2 restart Project  ${name}`);
         this.tablePm2(cli, proc);
         return cli.terminate(0);
       });
@@ -630,7 +629,7 @@ module.exports = class Nodefony {
           cli.logger(error, "ERROR");
           return cli.terminate(-1);
         }
-        cli.logger(`PM2 reload Project  ${name}`);
+        cli.logger(`PM2 delete Project  ${name}`);
         this.tablePm2(cli, proc);
         return cli.terminate(0);
       });
@@ -790,7 +789,7 @@ module.exports = class Nodefony {
     this.setPm2Config();
     if (!this.pm2Config) {
       this.pm2Config = this.kernelConfig.system.PM2;
-      this.pm2Config.apps[0].script = "nodefony";
+      this.pm2Config.apps[0].script = process.argv[1] || "nodefony";
       this.pm2Config.apps[0].args = "pm2";
       this.pm2Config.apps[0].env = {
         NODE_ENV: "production",
@@ -798,9 +797,8 @@ module.exports = class Nodefony {
       };
     }
     if (!this.pm2Config.apps[0].name) {
-      this.pm2Config.apps[0].name = this.projectName;
+      this.pm2Config.apps[0].name = this.projectPackage.name || this.projectName;
     }
-    //console.log(this.pm2Config)
     pm2.connect(() => {
       pm2.start(this.pm2Config, (err /*, apps*/ ) => {
         if (err) {

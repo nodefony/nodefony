@@ -46,7 +46,7 @@
     "twig": "^1.12.0",
     "webpack": "^4.16.2",
     "xml2js": "^0.4.19",
-    "yarn": "^1.7.0"
+    "yarn": "1.9.1"
   },
   "repository": {
     "type": "git",
