@@ -157,12 +157,6 @@ module.exports = nodefony.register("cliKernel", function () {
       }
     }
 
-    /*parseCommand(argv) {
-      let res = super.parseCommand(argv);
-      //this.parseNodefonyCommand();
-      return res;
-    }*/
-
     showBanner(data) {
       if (this.commander && this.commander.json) {
         return;
@@ -653,11 +647,11 @@ module.exports = nodefony.register("cliKernel", function () {
           config = path.resolve(myPath, "package.json");
           conf = require(config);
         } catch (e) {
-          this.logger("NPM NODEFONY PACKAGES package.json not find in : " + myPath, "INFO");
+          this.logger("NODEFONY PACKAGES package.json not find in : " + myPath, "INFO");
           shell.cd(this.kernel.rootDir);
           return resolve(ele);
         }
-        this.logger("NPM NODEFONY PACKAGES :" + config, "INFO");
+        this.logger("NODEFONY PACKAGES :" + config, "INFO");
         npm.load(conf, (error, event) => {
           if (error) {
             shell.cd(this.kernel.rootDir);
@@ -699,12 +693,20 @@ module.exports = nodefony.register("cliKernel", function () {
     }
 
     installPackage(bundle, env) {
+      let installer = null;
+      switch (nodefony.packageManager) {
+      case 'yarn':
+        installer = this.yarnInstall;
+        break;
+      default:
+        installer = this.npmInstall;
+      }
       try {
         if (bundle instanceof nodefony.Bundle) {
-          return this.npmInstall(bundle.path, null, env);
+          return installer.call(this, bundle.path, null, env);
         }
         if (bundle instanceof nodefony.fileClass) {
-          return this.npmInstall(bundle.dirName, null, env);
+          return installer.call(this, bundle.dirName, null, env);
         }
         throw new Error("installPackage bundle must be an instance of nodefony.Bundle");
       } catch (e) {
@@ -718,20 +720,20 @@ module.exports = nodefony.register("cliKernel", function () {
     }
 
     outdatedPackage(bundle) {
+      let outdater = null;
+      switch (nodefony.packageManager) {
+      case 'yarn':
+        outdater = this.yarnOutdated;
+        break;
+      default:
+        outdater = this.npmOutdated;
+      }
       try {
         if (bundle instanceof nodefony.Bundle) {
-          return this.npmOutdated(bundle.path, null);
-          /*.catch(e => {
-            console.log(e)
-            return e;
-          });*/
+          return outdater.call(this, bundle.path, null);
         }
         if (bundle instanceof nodefony.fileClass) {
-          return this.npmOutdated(bundle.dirName, null);
-          /*.catch(e => {
-            console.log(e)
-            return e;
-          });*/
+          return outdater.call(this, bundle.dirName, null);
         }
         throw new Error("Method outdatedPackage bundle must be an instance of nodefony.Bundle");
       } catch (e) {
@@ -743,90 +745,6 @@ module.exports = nodefony.register("cliKernel", function () {
         throw e;
       }
     }
-
-    /*readGeneratedConfig() {
-      let exist = null;
-      try {
-        exist = fs.existsSync(this.generateConfigPath);
-        if (exist) {
-          try {
-            let yml = yaml.load(fs.readFileSync(this.generateConfigPath, 'utf8'));
-            this.checkBundlesExist(yml, "Generated Config", this.generateConfigPath, true);
-            return yml;
-          } catch (e) {
-            throw e;
-          }
-        } else {
-          return null;
-        }
-      } catch (e) {
-        //console.trace(e);
-        //this.logger(e, "ERROR");
-        throw e;
-      }
-    }
-    getConfigBunbles() {
-      let config = [];
-      this.checkBundlesExist(this.settings, "Kernel Config", this.configPath);
-      try {
-        for (let bundle in this.settings.system.bundles) {
-          config.push(this.settings.system.bundles[bundle]);
-        }
-      } catch (e) {
-        throw e;
-      }
-      return config;
-    }
-
-    checkBundlesExist(yml, nameConfig, pathConfig, remove) {
-      let exist = null;
-      if (yml && yml.system && yml.system.bundles) {
-        for (let bundle in yml.system.bundles) {
-          try {
-            exist = nodefony.require(yml.system.bundles[bundle]);
-          } catch (e) {
-            //this.logger(e, "WARNING");
-          }
-          if (!exist) {
-            try {
-              exist = fs.existsSync(path.resolve(this.rootDir, yml.system.bundles[bundle]));
-            } catch (e) {
-              this.logger(e, "WARNING");
-            }
-          }
-          if (!exist) {
-            delete yml.system.bundles[bundle];
-            if (remove) {
-              try {
-                fs.writeFileSync(pathConfig, yaml.safeDump(yml), {
-                  encoding: 'utf8'
-                });
-                this.logger(nameConfig + " : " + bundle + " Bundle don't exist in file : " + pathConfig, "WARNING");
-                this.logger("Update Config  : " + pathConfig);
-              } catch (e) {
-                this.logger(e, "ERROR");
-              }
-            } else {
-              let error = new Error(nameConfig + " : " + bundle + " Bundle don't exist in file : " + pathConfig);
-              this.logger(error, "ERROR");
-              this.logger("Config file : " + pathConfig);
-              this.logger(yml.system.bundles);
-            }
-            try {
-              let link = path.resolve(this.publicPath, bundle);
-              let stat = fs.lstatSync(link);
-              if (stat) {
-                exist = fs.existsSync(fs.readlinkSync(link));
-                if (!exist) {
-                  fs.unlinkSync(link);
-                  this.logger("REMOVE LINK : " + link);
-                }
-              }
-            } catch (e) {}
-          }
-        }
-      }
-    }*/
 
     listenRejection() {
       process.on('rejectionHandled', (promise) => {

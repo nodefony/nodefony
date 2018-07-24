@@ -15,7 +15,15 @@ module.exports = class installProject extends nodefony.Builder {
     return new Promise((resolve, reject) => {
       return this.installFramework(cwd)
         .then(() => {
-          return this.cli.npmInstall(cwd)
+          let installer = null;
+          switch (nodefony.packageManager) {
+          case 'yarn':
+            installer = this.cli.yarnInstall;
+            break;
+          default:
+            installer = this.cli.npmInstall;
+          }
+          return installer.call(this.cli, cwd)
             .then(() => {
               if (nodefony.isCore) {
                 return this.npmLink(path.resolve("."), path.resolve("src", "nodefony"))

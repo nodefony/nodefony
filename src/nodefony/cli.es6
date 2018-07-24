@@ -656,6 +656,33 @@ module.exports = nodefony.register("cli", function () {
       });
     }
 
+    yarnInstall(cwd = path.resolve("."), argv = [], env = "production") {
+      return new Promise((resolve, reject) => {
+        if (env === "development" || env === "production") {
+          process.env.NODE_ENV = env;
+        } else {
+          process.env.NODE_ENV = "development";
+        }
+        let tab = ["install"];
+        if (argv) {
+          tab = tab.concat(argv);
+        }
+        let cmd = null;
+        try {
+          this.logger("yarn install in " + cwd);
+          cmd = this.spawn("yarn", tab, {
+            cwd: cwd,
+            shell: true
+          }, (code) => {
+            return resolve(code);
+          });
+        } catch (e) {
+          this.logger(e, "ERROR");
+          return reject(e);
+        }
+      });
+    }
+
     npmOutdated(cwd = path.resolve("."), argv = []) {
       return new Promise((resolve, reject) => {
         let tab = ["outdated"];
@@ -665,7 +692,7 @@ module.exports = nodefony.register("cli", function () {
         let cmd = null;
         try {
           //this.logger("npm outdated in " + cwd);
-          this.debug = true;
+          //this.debug = true;
           cmd = this.spawn("npm", tab, {
             cwd: cwd,
             shell: true
@@ -679,6 +706,30 @@ module.exports = nodefony.register("cli", function () {
         }
       });
     }
+
+    yarnOutdated(cwd = path.resolve("."), argv = []) {
+      return new Promise((resolve, reject) => {
+        let tab = ["outdated"];
+        if (argv) {
+          tab = tab.concat(argv);
+        }
+        let cmd = null;
+        try {
+          //this.debug = true;
+          cmd = this.spawn("yarn", tab, {
+            cwd: cwd,
+            shell: true
+          }, (code) => {
+            this.logger(`Check Outdated Packages ${cwd}`);
+            return resolve(code);
+          });
+        } catch (e) {
+          this.logger(e, "ERROR");
+          return reject(e);
+        }
+      });
+    }
+
 
     spawn(command, args, options, close) {
       let cmd = null;
