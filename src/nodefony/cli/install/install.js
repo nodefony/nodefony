@@ -150,7 +150,7 @@ module.exports = class installProject extends nodefony.Builder {
     }
   }
 
-  removeFile(directory, recurse) {
+  removeDirectory(directory, recurse) {
     if (this.cli.exists(directory)) {
       try {
         if (recurse) {
@@ -169,15 +169,15 @@ module.exports = class installProject extends nodefony.Builder {
     return new Promise((resolve, reject) => {
       try {
         let web = path.resolve(cwd, "web");
-        this.removeFile(web, true);
+        this.removeDirectory(web, true);
         let modules = path.resolve(cwd, "node_modules");
-        this.removeFile(modules, true);
+        this.removeDirectory(modules, true);
         let tmp = path.resolve(cwd, "tmp");
-        this.removeFile(tmp, true);
+        this.removeDirectory(tmp, true);
         let npmLock = path.resolve(cwd, "package-lock.json");
-        this.removeFile(npmLock);
+        this.removeDirectory(npmLock);
         let yarnLock = path.resolve(cwd, "yarn.lock");
-        this.removeFile(yarnLock);
+        this.removeDirectory(yarnLock);
         return resolve(this.installFramework(cwd));
       } catch (e) {
         return reject(e);
