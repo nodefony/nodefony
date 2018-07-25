@@ -282,28 +282,6 @@ module.exports = nodefony.register("cliKernel", function () {
       return commands;
     }
 
-    checkReturnPromise(value) {
-      if (value && nodefony.isPromise(value)) {
-        if (this.kernel) {
-          this.kernel.promise = value;
-        }
-        return value;
-      } else {
-        return value;
-      }
-    }
-    checkReturnValue(value) {
-      if (value instanceof Error) {
-        this.logger(value, "ERROR");
-        process.nextTick(() => {
-          return this.terminate(value.code || 1);
-        });
-      }
-      process.nextTick(() => {
-        //return this.terminate(0);
-      });
-    }
-
     matchCommand() {
       this.logger(`Parse command : ${this.command}:${this.task}:${this.action}`);
       if (this.command) {
@@ -667,7 +645,7 @@ module.exports = nodefony.register("cliKernel", function () {
               return reject(error);
             }
             try {
-              for (var pack in data.dependencies) {
+              for (let pack in data.dependencies) {
                 if (data.dependencies[pack].name) {
                   let where = "";
                   if (data.dependencies[pack]._where) {

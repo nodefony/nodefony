@@ -691,13 +691,12 @@ module.exports = nodefony.register("cli", function () {
         }
         let cmd = null;
         try {
-          //this.logger("npm outdated in " + cwd);
           //this.debug = true;
           cmd = this.spawn("npm", tab, {
             cwd: cwd,
             shell: true
           }, (code) => {
-            this.logger(`Check Outdated Packages ${cwd}`);
+            this.logger(`Check Outdated Packages : ${cwd} Finished`);
             return resolve(code);
           });
         } catch (e) {
@@ -720,7 +719,7 @@ module.exports = nodefony.register("cli", function () {
             cwd: cwd,
             shell: true
           }, (code) => {
-            this.logger(`Check Outdated Packages ${cwd}`);
+            this.logger(`Check Outdated Packages ${cwd} Finished`);
             return resolve(code);
           });
         } catch (e) {
