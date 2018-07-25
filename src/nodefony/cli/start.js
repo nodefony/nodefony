@@ -368,8 +368,13 @@ module.exports = class cliStart extends nodefony.cliKernel {
                       .then(() => {
                         return nodefony.builders.bundles.interaction(this)
                           .then((res) => {
-                            let bundle = new nodefony.builders.bundles[res.type](this, "js");
-                            bundle.run(interactive)
+                            let bundle = null;
+                            try {
+                              bundle = new nodefony.builders.bundles[res.type](this, "js");
+                            } catch (e) {
+                              throw e;
+                            }
+                            return bundle.run(interactive)
                               .then(() => {
                                 return bundle.install();
                               }).catch((e) => {

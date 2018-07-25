@@ -97,14 +97,19 @@ const Bundle = class Bundle extends nodefony.Builder {
       throw new Error("Bundle already exist " + name);
     }
 
-    //this.cli.logger("GENERATE bundle : " + name + " LOCATION : " + path.resolve(Path));
     this.shortName = name;
-    this.name = name + "-bundle";
-    let res = regBundleName.exec(this.name);
+    let res = regBundleName.exec(name);
     if (res) {
       this.shortName = res[1];
+      this.name = name;
     } else {
-      throw new Error("Bad bundle name :" + this.name);
+      this.name = name + "-bundle";
+      res = regBundleName.exec(this.name);
+      if (res) {
+        this.shortName = res[1];
+      } else {
+        throw new Error("Bad bundle name :" + this.name);
+      }
     }
     try {
       this.setPath(Path);
