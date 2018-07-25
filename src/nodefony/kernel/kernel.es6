@@ -371,7 +371,7 @@ module.exports = nodefony.register("kernel", function () {
             let bundleName = this.getBundleName(name);
             if (bundleName) {
               try {
-                nodefony.require.resolve(res, bundleName + "Bundle.js");
+                nodefony.require.resolve(path.resolve(res, bundleName + "Bundle.js"));
               } catch (e) {
                 throw new Error(`${name} is not a Bundle Package`);
               }
