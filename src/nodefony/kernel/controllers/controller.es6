@@ -65,7 +65,7 @@ module.exports = nodefony.register("controller", function () {
     startSession(sessionContext) {
       let sessionService = this.get("sessions");
       if (!this.context.requestEnded) {
-        this.sessionAutoStart = sessionService.setAutoStart(sessionContext);
+        return this.sessionAutoStart = sessionService.setAutoStart(sessionContext);
       } else {
         return sessionService.start(this.context, sessionContext);
       }
@@ -107,6 +107,22 @@ module.exports = nodefony.register("controller", function () {
       this.context.isJson = true;
       if (this.context.method !== "websoket") {
         this.context.response.setHeader("Content-Type", "application/json; " + encoding);
+      }
+    }
+
+    setJsonContext() {
+      return this.setContextJson.apply(this, arguments);
+    }
+
+    setContentType(mime, encoding) {
+      if (this.context.method !== "websoket") {
+        let type = null;
+        if (encoding) {
+          type = `${mime}; ${encoding}`;
+        } else {
+          type = `${mime}`;
+        }
+        return this.context.response.setHeader("Content-Type", type);
       }
     }
 
