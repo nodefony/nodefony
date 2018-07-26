@@ -5,10 +5,10 @@ module.exports = class bundlesTask extends nodefony.Task {
   }
 
   showHelp() {
-    this.setHelp("nodefony:bundles:listDependencies",
+    /*this.setHelp("nodefony:bundles:listDependencies",
       "List Nodefony dependencies"
     );
-    /*this.setHelp("nodefony:bundles:install [environment]",
+    this.setHelp("nodefony:bundles:install [environment]",
       "Install Nodefony dependencies"
     );*/
   }

@@ -525,10 +525,11 @@ module.exports = class Nodefony {
     // nodefony
     cli.setTitleHelp(cli.clc.cyan("nodefony"));
     cli.setHelp("", "create [-i] name [path]", "Create New Nodefony Project");
-    cli.setHelp("", "install", "Install Nodefony");
-    cli.setHelp("", "build", "Build Nodefony Project");
-    cli.setHelp("", "outdated", "List Nodefony dependencies outdated");
-    //this.setHelp("", "app", "Get Application Name");
+    cli.setHelp("", "build", "Build Nodefony Framewok");
+    cli.setHelp("", "install", "Install Nodefony Project");
+    cli.setHelp("", "certificates", `Generate HTTPS Certificates  'Change default openssl configuration in config/openssl'`);
+    cli.setHelp("", "listDependencies", "List Project dependencies");
+    cli.setHelp("", "outdated", "List Project dependencies outdated");
     cli.setHelp("", "version", "Get Project Version");
   }
 
@@ -540,6 +541,7 @@ module.exports = class Nodefony {
     let name = nodefony.projectName;
     switch (cmd) {
     case "dev":
+    case "start":
     case "development":
       this.manageCache(cli);
       environment = "dev";
@@ -555,7 +557,6 @@ module.exports = class Nodefony {
       return this.preProd(environment, cli, options);
     case "production":
     case "prod":
-    case "start":
     case "pm2":
       cli.setType("SERVER");
       environment = "prod";
@@ -655,7 +656,6 @@ module.exports = class Nodefony {
     case "logs":
       let myname = null;
       let line = 20;
-      console.log(this.isTrunk)
       if (this.isTrunk) {
         myname = nodefony.projectName;
       } else {
@@ -688,6 +688,8 @@ module.exports = class Nodefony {
       return cli.setCommand("unitest:launch:all");
     case "help":
       return cli.setCommand("", ["-h"]);
+    case "listdependencies":
+      return cli.setCommand("nodefony:bundles:listDependencies");
     default:
       if (cli.kernel) {
         return cli.kernel.matchCommand();
