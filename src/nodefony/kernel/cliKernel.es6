@@ -612,36 +612,36 @@ module.exports = nodefony.register("cliKernel", function () {
         });
     }
 
-    npmList(myPath, ele = []) {
+    npmList(cwd = path.resolve("."), ele = []) {
       return new Promise((resolve, reject) => {
         try {
-          shell.cd(myPath);
+          this.cd(cwd);
         } catch (e) {
           return reject(e);
         }
         let conf = null;
         let config = null;
         try {
-          config = path.resolve(myPath, "package.json");
+          config = path.resolve(cwd, "package.json");
           conf = require(config);
         } catch (e) {
-          this.logger("NODEFONY PACKAGES package.json not find in : " + myPath, "INFO");
-          shell.cd(this.kernel.rootDir);
+          this.logger("NODEFONY PACKAGES package.json not find in : " + cwd, "INFO");
+          this.cd(this.kernel.rootDir);
           return resolve(ele);
         }
         this.logger("NODEFONY PACKAGES :" + config, "INFO");
         npm.load(conf, (error, event) => {
           if (error) {
-            shell.cd(this.kernel.rootDir);
+            this.cd(this.kernel.rootDir);
             return reject(error);
           }
-          event.config.localPrefix = myPath;
+          event.config.localPrefix = cwd;
           event.config.globalPrefix = this.rootDir;
-          event.localPrefix = myPath;
+          event.localPrefix = cwd;
           event.globalPrefix = this.rootDir;
           npm.commands.ls([], true, (error, data) => {
             if (error) {
-              shell.cd(this.kernel.rootDir);
+              this.cd(this.kernel.rootDir);
               return reject(error);
             }
             try {
@@ -660,10 +660,10 @@ module.exports = nodefony.register("cliKernel", function () {
                 }
               }
             } catch (e) {
-              shell.cd(this.kernel.rootDir);
+              this.cd(this.kernel.rootDir);
               return reject(e);
             }
-            shell.cd(this.kernel.rootDir);
+            this.cd(this.kernel.rootDir);
             return resolve(ele);
           });
         });

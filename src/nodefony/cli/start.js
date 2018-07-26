@@ -54,6 +54,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
         this.setHelp("", "delete name", "Delete Production Project from PM2 management");
         this.setHelp("", "restart name", "Restart Production Project");
         this.setHelp("", "list", "List all Production Projects ");
+        this.setHelp("", "logs [name] [nblines]", "Stream pm2 logs  [name] is project name  and [nblines] to show ");
         this.setHelp("", "kill", "Kill PM2 daemon ");
       }
     });
@@ -218,6 +219,9 @@ module.exports = class cliStart extends nodefony.cliKernel {
       }
     } else {
       this.choices.push(`Create Nodefony Project`);
+      this.choices.push(`List PM2 Production Projects`);
+      this.choices.push(`Log  PM2 Production Projects`);
+      this.choices.push(`Kill PM2 Deamon`);
     }
     this.choices.push("Help");
     this.choices.push("Quit");
@@ -262,6 +266,15 @@ module.exports = class cliStart extends nodefony.cliKernel {
               break;
             case "outdated":
               this.setCommand("nodefony:outdated");
+              break;
+            case "pm2_list":
+              this.setCommand("list");
+              break;
+            case "pm2_log":
+              this.setCommand("logs");
+              break;
+            case "pm2_kill":
+              this.setCommand("kill");
               break;
             default:
               this.setCommand("", "-h");
@@ -316,7 +329,14 @@ module.exports = class cliStart extends nodefony.cliKernel {
             return "webpack";
           case `Outdated`:
             return "outdated";
+          case `List PM2 Production Projects`:
+            return "pm2_list";
+          case `Log  PM2 Production Projects`:
+            return "pm2_log";
+          case `Kill PM2 Deamon`:
+            return "pm2_kill";
           default:
+            console.log("\n");
             this.logger(`command not found : ${val}`, "INFO");
             this.terminate(1);
           }

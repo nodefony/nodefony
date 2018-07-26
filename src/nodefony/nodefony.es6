@@ -520,7 +520,7 @@ module.exports = class Nodefony {
     cli.setHelp("", "restart [name]", "Restart Production Project");
     cli.setHelp("", "list", "List all Production Projects");
     cli.setHelp("", "kill", "Kill PM2 daemon ");
-    cli.setHelp("", "logs", "Stream logs process");
+    cli.setHelp("", "logs [name] [nblines]", "Stream pm2 logs  [name] is project name  and [nblines] to show ");
     cli.setHelp("", "clean-log", "Remove logs");
     // nodefony
     cli.setTitleHelp(cli.clc.cyan("nodefony"));
@@ -653,8 +653,18 @@ module.exports = class Nodefony {
       break;
     case "log":
     case "logs":
+      let line = 20;
+      if (args.length) {
+        name = args[0];
+        if (args[1]) {
+          line = args[1];
+        }
+      } else {
+        name = "all";
+      }
       cli.reset();
-      pm2.streamLogs();
+      cli.logger(`PM2 LOG MANAGEMENT project : ${name}  line : ${line}`, "INFO");
+      pm2.streamLogs(name, line);
       break;
     case "clean-log":
       pm2.flush((error, result) => {
