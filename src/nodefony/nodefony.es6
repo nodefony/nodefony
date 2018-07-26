@@ -653,18 +653,23 @@ module.exports = class Nodefony {
       break;
     case "log":
     case "logs":
+      let myname = null;
       let line = 20;
+      console.log(this.isTrunk)
+      if (this.isTrunk) {
+        myname = nodefony.projectName;
+      } else {
+        myname = "all";
+      }
       if (args.length) {
-        name = args[0];
+        myname = args[0];
         if (args[1]) {
           line = args[1];
         }
-      } else {
-        name = "all";
       }
       cli.reset();
-      cli.logger(`PM2 LOG MANAGEMENT project : ${name}  line : ${line}`, "INFO");
-      pm2.streamLogs(name, line);
+      cli.logger(`PM2 LOG MANAGEMENT project : ${myname}  line : ${line}`, "INFO");
+      pm2.streamLogs(myname, line);
       break;
     case "clean-log":
       pm2.flush((error, result) => {
