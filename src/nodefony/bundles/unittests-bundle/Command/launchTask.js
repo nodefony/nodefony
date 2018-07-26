@@ -39,7 +39,6 @@ class launchTask extends nodefony.Task {
       this.serviceUnitTest.mochaAddTest(this.tests);
       this.serviceUnitTest.mochaRunTest((failures) => {
         if (failures) {
-          console.log(failures);
           return reject(failures);
         }
         return resolve(true);

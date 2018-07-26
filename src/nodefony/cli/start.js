@@ -16,6 +16,8 @@ module.exports = class cliStart extends nodefony.cliKernel {
     this.args = [];
     this.promise = null;
     this.started = false;
+    this.reloadMenu = false;
+    this.keepAlive = false;
     this.commander.usage(`[options] <command:task:action> [args...]
                   [options] <command:action> [args...]
                   [options] <action> [args...]`);
@@ -23,7 +25,6 @@ module.exports = class cliStart extends nodefony.cliKernel {
       .action((cmd, args /*, commander*/ ) => {
         this.cmd = cmd.toLowerCase();
         this.args = args;
-        //this.logger(`Parse command : ${this.cmd} ${this.args}`);
         this.parseNodefonyCommand();
         if (this.promise) {
           this.promise
@@ -35,6 +36,9 @@ module.exports = class cliStart extends nodefony.cliKernel {
           if (nodefony.isPromise(this.promise)) {
             return this.promise.then(() => {
                 if (!this.keepAlive) {
+                  if (this.reloadMenu) {
+                    return this.showMenu(true, this.reloadMenu);
+                  }
                   return this.terminate(0);
                 }
               })
@@ -67,9 +71,11 @@ module.exports = class cliStart extends nodefony.cliKernel {
     this.setOption('-j, --json', 'Nodefony json response');
     this.parseCommand(process.argv);
     if (!this.cmd && !process.argv.slice(2).length) {
+      this.buildMenu();
       this.showMenu();
     } else {
       if (!this.cmd && this.commander.interactive) {
+        this.buildMenu();
         this.showMenu();
       } else {
         if (!this.started) {
@@ -195,27 +201,42 @@ module.exports = class cliStart extends nodefony.cliKernel {
     }
   }
 
-  showMenu() {
+  showMenu(noAscii = false, reload = false) {
+    if (!noAscii) {
+      return this.showAsciify("NODEFONY")
+        .then((data) => {
+          this.showBanner(data);
+          return this.runMenu(reload);
+        })
+        .catch((e) => {
+          this.logger(e, "ERROR");
+          throw e;
+        });
+    }
+    return this.runMenu(reload);
+  }
+
+  buildMenu() {
     this.generateString = `Generate`;
-    this.startString = "Start Server";
+    this.startString = "Start Servers";
     this.runString = "Run";
     if (nodefony.isTrunk) {
       if (nodefony.builded) {
         this.choices.push(`${this.startString} Development`);
         this.choices.push(`${this.startString} Pre-Production`);
         this.choices.push(`${this.startString} Production`);
-        this.choices.push(`Install`);
-        this.choices.push(`Build`);
+        this.choices.push(`Install Project`);
+        this.choices.push(`Rebuild Project`);
         this.choices.push(`${this.generateString} Bundle`);
-        this.choices.push(`${this.generateString} Controller`);
-        this.choices.push(`Webpack Dump`);
+        //this.choices.push(`${this.generateString} Controller`);
         this.choices.push(`${this.generateString} Certificates`);
         this.choices.push(`${this.runString} Test`);
         this.choices.push(`Outdated`);
+        this.choices.push(`Webpack Dump`);
         this.choices.push(`Reset`);
       } else {
-        this.choices.push(`Build`);
-        this.choices.push(`Install`);
+        this.choices.push(`Build Project`);
+        //this.choices.push(`Install`);
         this.choices.push(`${this.generateString} Bundle`);
         this.choices.push(`${this.generateString} Certificates`);
         this.choices.push(`Reset`);
@@ -228,67 +249,61 @@ module.exports = class cliStart extends nodefony.cliKernel {
     }
     this.choices.push("Help");
     this.choices.push("Quit");
-    return this.showAsciify("NODEFONY")
-      .then((data) => {
-        this.showBanner(data);
-        return this.interaction(this.choices)
-          .then(() => {
-            switch (this.response.command) {
-            case "project":
-              return this.createProject(null, null, true);
-            case "build":
-              return this.setCommand("build");
-            case "install":
-              return this.setCommand("install");
-            case "exit":
-              this.logger("QUIT");
-              return this.terminate(0);
-            case "clear":
-              return this.cleanProject();
-            case "certificates":
-              return this.generateCertificates();
-            case "webpack":
-              this.setCommand("webpack:dump");
-              break;
-            case "bundle":
-              this.setCommand("generate:bundle", ["-i"]);
-              break;
-            case "controller":
-              break;
-            case "development":
-              this.setCommand("development");
-              break;
-            case "production":
-              this.setCommand("production");
-              break;
-            case "pre-production":
-              this.setCommand("preprod");
-              break;
-            case "test":
-              this.setCommand("unitest:launch:all");
-              break;
-            case "outdated":
-              this.setCommand("nodefony:outdated");
-              break;
-            case "pm2_list":
-              this.setCommand("list");
-              break;
-            case "pm2_log":
-              this.setCommand("logs");
-              break;
-            case "pm2_kill":
-              this.setCommand("kill");
-              break;
-            default:
-              this.setCommand("", "-h");
-            }
-          });
+  }
+
+  runMenu(reload = false) {
+    return this.interaction(this.choices)
+      .then(() => {
+        this.reloadMenu = reload ||  this.reloadMenu;
+        switch (this.response.command) {
+        case "project":
+          return this.createProject(null, null, true);
+        case "build":
+          return this.setCommand("build");
+        case "install":
+          return this.setCommand("install");
+        case "exit":
+          this.logger("QUIT");
+          return this.terminate(0);
+        case "clear":
+          return this.cleanProject();
+        case "certificates":
+          this.reloadMenu = true;
+          return this.setCommand("certificates", ["-h"]);
+        case "webpack":
+          return this.setCommand("webpack:dump");
+        case "bundle":
+          return this.setCommand("generate:bundle", ["-i"]);
+        case "controller":
+          break;
+        case "development":
+          return this.setCommand("development");
+        case "production":
+          return this.setCommand("production");
+        case "pre-production":
+          return this.setCommand("preprod");
+        case "test":
+          return this.setCommand("unitest:launch:all");
+        case "outdated":
+          this.reloadMenu = true;
+          return this.setCommand("nodefony:outdated");
+        case "pm2_list":
+          return this.setCommand("list");
+        case "pm2_log":
+          return this.setCommand("logs");
+        case "pm2_kill":
+          return this.setCommand("kill");
+        default:
+          return this.setCommand("", "-h");
+        }
       })
       .catch((e) => {
         this.logger(e, "ERROR");
         throw e;
       });
   }
+
+
 
   interaction(choices) {
     return this.prompt([{
@@ -321,10 +336,13 @@ module.exports = class cliStart extends nodefony.cliKernel {
             return "controller";
           case `${this.runString} Test`:
             return "test";
-          case `Install Framework`:
           case `Install`:
+          case `Install Framework`:
+          case `Install Project`:
             return "install";
           case `Build`:
+          case `Build Project`:
+          case `Rebuild Project`:
             return "build";
           case `Reset`:
             return "clear";

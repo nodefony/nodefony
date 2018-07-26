@@ -142,34 +142,42 @@ $ yarn global add nodefony
 
 [See Global install How to Prevent Permissions Errors](https://docs.npmjs.com/getting-started/fixing-npm-permissions)
 
-**Generating a Nodefony project** :
+**Cli Usage** :
 
 ```bash
-$ nodefony create  myproject
-$ cd myproject
-```
-
-**Usage** :
-
-```bash
-$ nodefony help
-
-Usage: nodefony <command:task:action> [args...]
+$ nodefony -h
+Usage: nodefony [options] <command:task:action> [args...]
+                  [options] <command:action> [args...]
+                  [options] <action> [args...]
 
   Options:
+    -V, --version       output the version number
     -d, --debug         Nodefony debug
     -h, --help          Nodefony help
     -v, --version       Nodefony version
     -i, --interactive   Nodefony cli Interactive Mode
     -j, --json          Nodefony json response
-
+    -h, --help          output usage information
 nodefony                                                                                              
-         create [-i] name [path]                       Create New Nodefony Project  
+         create [-i] name [path]                       Create New Nodefony Project                  
+PM2 Process Manager 2                                                                                 
+         stop name                                     Stop Production Project                  
+         reload name                                   Reload Production Project                                                                            
+         delete name                                   Delete Production Project from PM2 management                  
+         restart name                                  Restart Production Project                  
+         list                                          List all Production Projects                  
+         logs [name] [nblines]                         Stream pm2 logs  [name] is project name  and [nblines] to show
+         kill                                          Kill PM2 daemon         
 ```
 
-**Generating a Nodefony Project Interactive Mode** :
+**Generating a Nodefony project** :
 
 ```bash
+#  CLI generate project name : myproject
+$ nodefony create myproject
+$ cd myproject
+
+# OR YOU CAN USE CLI INTERACTIVE MODE (nodefony without args)
 $ nodefony
  _   _    ___    ____    _____   _____    ___    _   _  __   __
 | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
@@ -181,11 +189,14 @@ Version : 4.0.0-beta.1 Platform : darwin Process : nodefony PID : 16368
 
 ?  Nodefony CLI :  (Use arrow keys)
 ❯ Create Nodefony Project
-Help
-Quit
+  List PM2 Production Projects
+  Log  PM2 Production Projects
+  Kill PM2 Deamon
+  Help
+  Quit
 ```
 
-## <a name="start"></a>Serving a Nodefony project via a development servers
+## <a name="start"></a>Serving a Nodefony project via an development server
 
 **Starting Development Servers** :
 
@@ -199,22 +210,13 @@ $ <ctrl-c>
 **Starting Development Servers in Debug Mode (-d)** :
 ```bash
 $ nodefony -d dev
+
+# TO STOP
+$ <ctrl-c>
 ```
 
-**Starting Development Servers in Inspector mode (--inspect)** :
-
-[Nodejs Debugging Guide](https://nodejs.org/en/docs/guides/debugging-getting-started)
 ```bash
-$ npm -g install npx
-
-$ npx --node-arg=--inspect nodefony dev
-
-# check chrome://inspect in your browser
-```
-
-**Serving a Nodefony project via Interactive Mode** :
-
-```bash
+# OR YOU CAN USE CLI INTERACTIVE MODE (nodefony without args)
 $ nodefony
  _   _    ___    ____    _____   _____    ___    _   _  __   __
 | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
@@ -225,9 +227,9 @@ $ nodefony
 Version : 4.0.0-beta.1 Platform : darwin Process : nodefony PID : 16421
 
 ?  Nodefony CLI :  (Use arrow keys)
-❯ Start Server Development
-Start Server Pre-Production
-Start Server Production
+❯ Start Servers Development
+Start Servers Pre-Production
+Start Servers Production
 Install
 Build
 Generate Bundle
@@ -239,6 +241,17 @@ Outdated
 Reset
 Help
 Quit
+```
+
+**Starting Development Servers in Inspector mode (--inspect)** :
+
+[Nodejs Debugging Guide](https://nodejs.org/en/docs/guides/debugging-getting-started)
+```bash
+$ npm -g install npx
+
+$ npx --node-arg=--inspect nodefony dev
+
+# check chrome://inspect in your browser
 ```
 
 ## <a name="start_prod"></a>Serving a Nodefony Project via a Production server :
@@ -263,12 +276,12 @@ $ nodefony preprod
 
 ## <a name="https"></a>Serving a Nodefony project with HTTPS
 
-By default nodefony listen secure port in 5152
+By default nodefony listen secure port in 5152 see config/config.yml
 
 During the installation process all the openssl parts were generated ( self-signed localhost certificate ).
+You can Change default openssl configuration in config/openssl
 
 You must Add a Trusted CA in your Browser : projectName-root-ca.crt.pem
-
 You can find certificate authority (ca) here:
 
     config/certificates/ca/projectName-root-ca.crt.pem
@@ -341,23 +354,22 @@ $ cd myproject
 CLI Generate new bundle : default path src/bundles
 
 ```bash
-$ nodefony generate:bundle name path
+$ nodefony generate:bundle name [path]
 
 #Or Generate a New Bundle Interactive
 $ nodefony
 
 ?  Nodefony CLI :  
-  Start Server Development
-  Start Server Pre-Production
-  Start Server Production
-  Install
-  Build
+  Start Servers Development
+  Start Servers Pre-Production
+  Start Servers Production
+  Install Project
+  Rebuild Project
 ❯ Generate Bundle
-  Generate Controller
-  Webpack Dump
   Generate Certificates
   Run Test
   Outdated
+  Webpack Dump
   Reset
   Help
   Quit
