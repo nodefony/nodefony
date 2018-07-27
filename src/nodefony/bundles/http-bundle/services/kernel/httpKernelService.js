@@ -448,8 +448,10 @@ module.exports = class httpKernel extends nodefony.Service {
         (context.isAjax ? `${context.type} AJAX REQUEST ${context.method}` : `${context.type} REQUEST ${context.method}`));
 
       // DOMAIN VALID
-      if (this.checkValidDomain(context) !== 200) {
-        return context;
+      if (this.kernel.domainCheck) {
+        if (this.checkValidDomain(context) !== 200) {
+          return context;
+        }
       }
       controller = this.handleFrontController(context);
     } catch (e) {
@@ -541,9 +543,11 @@ module.exports = class httpKernel extends nodefony.Service {
       " URL : " + context.url, "INFO", type);
     let controller = null;
     try {
-      // DOMAIN VALID
-      if (this.checkValidDomain(context) !== 200) {
-        return context;
+      if (this.kernel.domainCheck) {
+        // DOMAIN VALID
+        if (this.checkValidDomain(context) !== 200) {
+          return context;
+        }
       }
       controller = this.handleFrontController(context);
       if (context.secure) {

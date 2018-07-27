@@ -192,6 +192,15 @@ module.exports = nodefony.register("cli", function () {
       }
     }
 
+    logger(pci, severity, msgid, msg) {
+      if (!msgid) {
+        try {
+          msgid = clc.magenta(`${this.name}`);
+        } catch (e) {}
+      }
+      return super.logger(pci, severity, msgid, msg);
+    }
+
     checkVersion(version = null) {
       if (!version) {
         version = this.version;
@@ -216,7 +225,6 @@ module.exports = nodefony.register("cli", function () {
           }
           let color = this.options.color ||  blue;
           console.log(color(data));
-          //this.showBanner(data);
           return data;
         })
         .catch((err) => {
@@ -429,7 +437,6 @@ module.exports = nodefony.register("cli", function () {
       if (!this.wrapperLog) {
         this.wrapperLog = console.log;
       }
-      //return this.wrapperLog(this.pid + " " + date.toDateString() + " " + date.toLocaleTimeString() + " " + nodefony.Service.logSeverity(pdu.severityName) + " " + green(pdu.msgid) + " " + " : " + message);
       return this.wrapperLog(`${this.pid} ${date.toDateString()} ${date.toLocaleTimeString()} ${nodefony.Service.logSeverity(pdu.severityName)} ${green(pdu.msgid)} : ${message}`);
     }
 
@@ -442,7 +449,7 @@ module.exports = nodefony.register("cli", function () {
             table.push(datas[i]);
           }
           if (syslog) {
-            syslog.logger("\n" + table.toString());
+            syslog.logger(table.toString());
           } else {
             console.log(table.toString());
           }

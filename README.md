@@ -147,8 +147,8 @@ $ yarn global add nodefony
 ```bash
 $ nodefony -h
 Usage: nodefony [options] <command:task:action> [args...]
-                  [options] <command:action> [args...]
-                  [options] <action> [args...]
+                [options] <command:action> [args...]
+                [options] <action> [args...]
 
   Options:
     -V, --version       output the version number
@@ -302,6 +302,7 @@ system:
     - "^127.0.0.1$"
   httpPort                      : 5151
   httpsPort                     : 5152
+  domainCheck                   : true
   statics                       : true
   security                      : true
   realtime                      : true
@@ -503,7 +504,6 @@ module.exports = webpackMerge({
   module: {...}
 });
 ```
-
 
 ## <a name="monitoring"></a>Monitoring FRAMEWORK
 

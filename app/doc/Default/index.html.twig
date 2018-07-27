@@ -33,88 +33,36 @@
 	<pre>
 $ ll app/
 
-total 16
-drwxr-xr-x  3 cci  staff  102  6 sep 11:36 Fixtures
-drwxr-xr-x  6 cci  staff  204 11 sep 18:18 Resources
--rw-r--r--  1 cci  staff  408  2 nov 09:41 appKernel.js
-drwxr-xr-x  8 cci  staff  272 14 nov 18:20 config
-drwxr-xr-x  3 cci  staff  102 13 nov 09:48 controller
-drwxr-xr-x  3 cci  staff  102  2 nov 09:41 doc
--rw-r--r--  1 cci  staff  400  6 sep 11:36 package.json
--rw-r--r--  1 cci  staff    0  6 sep 11:36 readme.md
-
-app/
-├── Fixtures
-├── Resources
-│   ├── databases
-│   │   └── nodefony.db
-│   ├── public
-│   │   ├── assets
-│   │   │   ├── css
-│   │   │   │   ├── app.css
-│   │   │   │   └── app.css.map
-│   │   │   ├── fonts
-│   │   │   ├── images
-│   │   │   └── js
-│   │   │       ├── app.js
-│   │   │       └── app.js.map
-│   │   ├── css
-│   │   │   └── app.css
-│   │   ├── favicon.ico
-│   │   ├── images
-│   │   ├── js
-│   │   │   └── app.js
-│   │   ├── manifest.json
-│   │   ├── robots.txt
-│   │   └── sitemap.xml
-│   ├── translations
-│   │   ├── messages.en_en.yml
-│   │   └── messages.fr_fr.yml
-│   └── views
-│       ├── base.html.twig
-│       ├── footer.html.twig
-│       └── index.html.twig
-├── appKernel.js
-├── config
-│   ├── config.yml
-│   ├── routing.js
-│   ├── security.yml
-│   ├── services.js
-│   ├── webpack
-│   │   ├── webpack.dev.config.js
-│   │   └── webpack.prod.config.js
-│   └── webpack.config.js
-├── controller
-│   └── appController.js
-├── doc
-│   └── Default
-│       └── index.html.twig
-├── package.json
-└── readme.md
-
+total 32
+drwxr-xr-x  3 cci  staff  102  6 sep  2017 Fixtures
+drwxr-xr-x  7 cci  staff  238  9 avr 10:06 Resources
+-rw-r--r--  1 cci  staff  312  9 jul 09:56 appKernel.js
+drwxr-xr-x  8 cci  staff  272  2 jul 10:05 config
+drwxr-xr-x  3 cci  staff  102 12 jui 09:53 controller
+drwxr-xr-x  3 cci  staff  102 20 nov  2017 doc
+drwxr-xr-x  4 cci  staff  136 25 jul 18:30 node_modules
+-rw-r--r--  1 cci  staff   66  8 jui 09:51 package-lock.json
+-rw-r--r--  1 cci  staff  390  8 jui 09:51 package.json
+-rw-r--r--  1 cci  staff    0  6 sep  2017 readme.md
+-rw-r--r--  1 cci  staff   86 24 jul 17:29 yarn.lock
 	</pre>
 </div>
-
 
 <h2 name="config" id="config">Configuration Application  :<small> See <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:'nodefony', queryString:{'subsection':'application'} })}}">Application config</a></small> </h2>
 <div class="doc2">
 	<p>
 
 	</p>
-
 </div>
-
 
 <h2 name="entry" id="entry">Application  Entry Point   :  <code style="text-transform: initial;">appKernel.js</code> <small>see <a href="{{ path('documentation-section',{section:'running', version:version, bundle:'nodefony',queryString:{'subsection':'developement'} })}}#script">Running Nodefony Startup Script </a></small></h2>
 <div class="doc2">
-
 	<p>
 	<div class="alert alert-warning" role="alert">
 			Contrary to other bundles, App bundle has :  </br>
 			<ul>
 				<li>
 					No file pattern type :   <code>nameBundle.js</code> but  : <code> appKernel.js </code>
-
 				</li>
 			</ul>
 		</div>
@@ -123,23 +71,20 @@ app/
 		<code>./app/appKernel.js</code>
 	</p>
 	<pre>
-/**
+/*
  *  ENTRY POINT FRAMEWORK APP KERNEL
  */
 "use strict;";
-module.exports = nodefony.register("appKernel", function () {
-  const appKernel = class appKernel extends nodefony.kernel {
-    constructor(type, environment, debug, settings) {
-      // kernel constructor
-      try {
-        super(environment, debug, type, settings);
-      } catch (e) {
-        throw e;
-      }
+nodefony.require = require;
+module.exports = class appKernel extends nodefony.kernel {
+  constructor(environment, cli, settings) {
+    // kernel constructor
+    try {
+      super(environment, cli, settings);
+    } catch (e) {
+      throw e;
     }
-  };
-  return appKernel;
-});
+  }
+};
 	</pre>
-
 </div>

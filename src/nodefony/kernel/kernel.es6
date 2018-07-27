@@ -83,6 +83,7 @@ module.exports = nodefony.register("kernel", function () {
       this.preRegistered = false;
       this.isCore = nodefony.isCore;
       this.settings = null;
+      this.domainCheck = true;
       this.regBundle = regBundle;
       this.regBundleName = regBundleName;
       this.node_start = process.env.MODE_START || this.options.node_start;
@@ -234,6 +235,7 @@ module.exports = nodefony.register("kernel", function () {
         this.hostHttp = this.hostname + ":" + this.httpPort;
         this.hostHttps = this.hostname + ":" + this.httpsPort;
         this.domainAlias = nodefony.kernelConfig.system.domainAlias;
+        this.domainCheck = nodefony.kernelConfig.system.domainCheck;
         this.initializeLog();
         if (!this.settings.system.bundles) {
           this.settings.system.bundles = {};

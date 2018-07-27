@@ -282,8 +282,40 @@ module.exports = nodefony.register("cliKernel", function () {
       return commands;
     }
 
+    logCommand() {
+      let txt = "";
+      if (this.command) {
+        if (this.task) {
+          if (this.action) {
+            if (this.args.length) {
+              txt = `${this.command}:${this.task}:${this.action} ${this.args}`;
+            } else {
+              txt = `${this.command}:${this.task}:${this.action}`;
+            }
+          } else {
+            if (this.args.length) {
+              txt = `${this.command}:${this.task} ${this.args}`;
+            } else {
+              txt = `${this.command}:${this.task}`;
+            }
+          }
+        } else {
+          if (this.args.length) {
+            txt = `${this.command}: ${this.args}`;
+          } else {
+            txt = `${this.command}`;
+          }
+        }
+      } else {
+        if (this.args.length) {
+          txt = `${this.args}`;
+        }
+      }
+      this.logger(txt, "INFO", "COMMAND");
+    }
+
     matchCommand() {
-      this.logger(`Parse command : ${this.command}:${this.task}:${this.action}`);
+      //this.logCommand();
       if (this.command) {
         for (let bundle in this.commands) {
           if (Object.keys(this.commands[bundle]).length) {
@@ -295,7 +327,8 @@ module.exports = nodefony.register("cliKernel", function () {
                   try {
                     return myCommand.showBanner()
                       .then(() => {
-                        this.logger(`${this.command}:${this.task} ${this.args}`);
+                        //this.logger(`${this.command}:${this.task} ${this.args}`);
+                        this.logCommand();
                         return myAction.apply(myCommand, this.args);
                       })
                       .catch((e) => {
@@ -317,7 +350,8 @@ module.exports = nodefony.register("cliKernel", function () {
                       try {
                         return myTask.showBanner()
                           .then(() => {
-                            this.logger(`${this.command}:${this.task}:${this.action} ${this.args}`);
+                            //this.logger(`${this.command}:${this.task}:${this.action} ${this.args}`);
+                            this.logCommand();
                             return myAction.apply(myCommand.tasks[this.task], this.args);
                           })
                           .catch((e) => {
@@ -410,17 +444,6 @@ module.exports = nodefony.register("cliKernel", function () {
         }
       }
       //this.terminate(0);
-    }
-
-    logger(pci, severity, msgid, msg) {
-      try {
-        if (!msgid) {
-          msgid = "SERVICE CLI KERNEL";
-        }
-        return super.logger(pci, severity, msgid, msg);
-      } catch (e) {
-        console.log(e, "\n", pci);
-      }
     }
 
     getSimpleGit(gitPath) {

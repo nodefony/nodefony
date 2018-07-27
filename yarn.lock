@@ -1856,9 +1856,9 @@ css-declaration-sorter@^3.0.0:
     postcss "^6.0.0"
     timsort "^0.3.0"
 
-css-hot-loader@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/css-hot-loader/-/css-hot-loader-1.4.0.tgz#170e8b4bf0708a9f5cfc289e8ee0c268ab9a41bb"
+css-hot-loader@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/css-hot-loader/-/css-hot-loader-1.4.1.tgz#d6d4425aa7f65744f1bb60a70e6f7673dd660546"
   dependencies:
     loader-utils "^1.1.0"
     lodash "^4.17.5"
@@ -5394,9 +5394,9 @@ pm2-multimeter@^0.1.2:
   dependencies:
     charm "~0.1.1"
 
-pm2@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/pm2/-/pm2-3.0.2.tgz#5d1e7da5323b28fd2b1586e4f60e4e2722682299"
+pm2@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/pm2/-/pm2-3.0.3.tgz#7115ad916f68b36da3b22f1826463b767e32bcb9"
   dependencies:
     "@pm2/agent" "^0.5.11"
     "@pm2/io" "~2.1.0"

@@ -296,7 +296,7 @@ module.exports = class webpack extends nodefony.Service {
         bundle.watching = bundle.webpackCompiler.watch(watchOptions, (err, stats) => {
           this.logger("BUNDLE : " + basename + " WACTHER WEBPACK COMPILE  ");
           if (!err) {
-            this.logger(this.displayConfigTable(config), "DEBUG");
+            this.logger("\n" + this.displayConfigTable(config), "DEBUG");
           }
           this.loggerStat(err, stats, basename, file.name, true);
         });
@@ -338,7 +338,8 @@ module.exports = class webpack extends nodefony.Service {
             fs.mkdirSync(pathCache);
           } catch (e) {}
         }
-        this.logger("BUNDLE : " + bundle + " WEBPACK COMPILE : " + file + "\n" + this.displayConfigTable(compiler.options), "DEBUG");
+        this.logger("BUNDLE : " + bundle + " WEBPACK COMPILE : " + file, "DEBUG");
+        this.logger("\n" + this.displayConfigTable(compiler.options), "DEBUG");
         compiler.run((err, stats) => {
           this.loggerStat(err, stats,  bundle, file);
           if (err) {

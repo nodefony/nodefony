@@ -137,6 +137,12 @@ module.exports = class generateProject extends nodefony.Builder {
             skeleton: path.resolve(this.pathSkeleton, "app", "package.json.skeleton"),
             params: this.cli.response
           }, {
+            name: "doc",
+            type: "directory",
+            childs: [{
+
+            }]
+          }, {
             name: "Resources",
             type: "copy",
             path: path.resolve(this.pathSkeleton, "app", "Resources"),

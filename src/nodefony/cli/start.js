@@ -27,14 +27,27 @@ module.exports = class cliStart extends nodefony.cliKernel {
         this.args = args;
         this.parseNodefonyCommand();
         if (this.promise) {
-          this.promise
+          return this.promise
             .then(() => {
-              return this.start(this.cmd, this.args, cmd);
+              return this.start(this.cmd, this.args, cmd)
+                .then(() => {
+                  if (!this.keepAlive) {
+                    if (this.reloadMenu) {
+                      return this.showMenu(true, this.reloadMenu);
+                    }
+                    return this.terminate(0);
+                  }
+                })
+                .catch((e) => {
+                  this.logger(e, "ERROR");
+                  this.terminate(1);
+                });
             });
         } else {
           this.promise = this.start(this.cmd, this.args, cmd);
           if (nodefony.isPromise(this.promise)) {
-            return this.promise.then(() => {
+            return this.promise
+              .then(() => {
                 if (!this.keepAlive) {
                   if (this.reloadMenu) {
                     return this.showMenu(true, this.reloadMenu);
@@ -88,7 +101,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
   showBanner(data) {
     super.showBanner(data);
     if (nodefony.projectName !== "nodefony") {
-      this.logger(`WELCOME PROJECT : ${nodefony.projectName.toUpperCase()} ${nodefony.projectVersion}`);
+      this.logger(`WELCOME PROJECT : ${nodefony.projectName} ${nodefony.projectVersion}`);
     } else {
       this.logger(`WELCOME NODEFONY CLI ${nodefony.version}`);
     }
@@ -268,7 +281,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
         case "clear":
           return this.cleanProject();
         case "certificates":
-          this.reloadMenu = true;
+          //this.reloadMenu = true;
           return this.setCommand("certificates", ["-h"]);
         case "webpack":
           return this.setCommand("webpack:dump");
@@ -285,7 +298,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
         case "test":
           return this.setCommand("unitest:launch:all");
         case "outdated":
-          this.reloadMenu = true;
+          //this.reloadMenu = true;
           return this.setCommand("nodefony:outdated");
         case "pm2_list":
           return this.setCommand("list");

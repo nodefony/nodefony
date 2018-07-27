@@ -8,6 +8,7 @@ system:
     - "^127.0.0.1$"
   httpPort                      : {{portHttp}}
   httpsPort                     : {{portHttps}}
+  domainCheck                   : true
   statics                       : true
   security                      : true
   realtime                      : true
