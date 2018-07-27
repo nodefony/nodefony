@@ -1,6 +1,3 @@
-/*
- *
- */
 module.exports = class appController extends nodefony.controller {
 
   constructor(container, context) {

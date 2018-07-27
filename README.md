@@ -21,7 +21,7 @@ Nodefony is not an exhaustive port of symfony !
 -   [Start Development Mode](#start)
 -   [Start Production Mode](#start_prod)
 -   [Configurations](#configurations)
--   [Get Started](#bundles)
+-   [Quick Start](#bundles)
 -   [HTTPS Access](#https)
 -   [References / Thanks](#references--thanks)
 -   [Authors](#authors)
@@ -157,25 +157,27 @@ Usage: nodefony [options] <command:task:action> [args...]
     -j, --json          Nodefony json response
     -h, --help          output usage information
 nodefony                                                                                              
-         create [-i] name [path]                       Create New Nodefony Project                  
+    create [-i] name [path]                       Create New Nodefony Project                  
 PM2 Process Manager 2                                                                                 
-         stop name                                     Stop Production Project                  
-         reload name                                   Reload Production Project                                                                            
-         delete name                                   Delete Production Project from PM2 management                  
-         restart name                                  Restart Production Project                  
-         list                                          List all Production Projects                  
-         logs [name] [nblines]                         Stream pm2 logs  [name] is project name  and [nblines] to show
-         kill                                          Kill PM2 daemon         
+    stop name                                     Stop Production Project                  
+    reload name                                   Reload Production Project                                                                            
+    delete name                                   Delete Production Project from PM2 management                  
+    restart name                                  Restart Production Project                  
+    list                                          List all Production Projects                  
+    logs [name] [nblines]                         Stream pm2 logs  [name] is project name  and [nblines] to show
+    kill                                          Kill PM2 daemon         
 ```
 
 **Generating a Nodefony project** :
 
 ```bash
 #  CLI generate project name : myproject
+
 $ nodefony create myproject
 $ cd myproject
 
 # OR YOU CAN USE CLI INTERACTIVE MODE (nodefony without args)
+
 $ nodefony
  _   _    ___    ____    _____   _____    ___    _   _  __   __
 | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
@@ -199,7 +201,6 @@ Version : 4.0.0-beta.1 Platform : darwin Process : nodefony PID : 16368
 **Starting Development Servers** :
 
 ```bash
-$ cd myproject
 $ nodefony dev
 
 # TO STOP
@@ -215,6 +216,7 @@ $ <ctrl-c>
 
 ```bash
 # OR YOU CAN USE CLI INTERACTIVE MODE (nodefony without args)
+
 $ nodefony
  _   _    ___    ____    _____   _____    ___    _   _  __   __
 | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
@@ -258,8 +260,14 @@ $ npx --node-arg=--inspect nodefony dev
 ```bash
 $ nodefony prod
 ```
-You can see PM2 config : config/pm2.config.js
+Tools PM2 You can see PM2 config : config/pm2.config.js
 ```bash
+# To See log
+$ nodefony logs
+
+# To List Status of Production projects
+$ nodefony list
+
 # TO KILL PM2 DEAMON
 $ nodefony kill
 
@@ -267,17 +275,19 @@ $ nodefony kill
 $ nodefony stop
 ```
 
-**Checking a Nodefony Project Pre-Production (cluster mode)** :
+**Checking a Nodefony Project Pre-Production (Usefull to check Clusters Node)** :
 ```bash
 $ nodefony preprod
 ```
 
 ## <a name="https"></a>Serving a Nodefony project with HTTPS
 
-By default nodefony listen secure port in 5152 see config/config.yml
+By default nodefony listen secure port in 5152 @see config/config.yml
 
 During the installation process all the openssl parts were generated ( self-signed localhost certificate ).
-You can Change default openssl configuration in config/openssl
+
+You can Change default openssl configuration in :
+    config/openssl
 
 You must Add a Trusted CA in your Browser : projectName-root-ca.crt.pem
 You can find certificate authority (ca) here:
@@ -334,7 +344,7 @@ system:
     hello-bundle                : "file:src/bundles/hello-bundle"
 ```
 
-## <a name="bundles"></a>Get Started
+## <a name="bundles"></a>Quick Start
 
 ### Install Nodefony  :
 ```

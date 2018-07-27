@@ -4,7 +4,7 @@
 #       KERNEL CONFIG
 system:
   domain                        : {{domain}}             # nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
-  domainAlias:                                           # domainAlias string only <<regexp>>   example ".*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$"
+  domainAlias:   # domainAlias string only <<regexp>>   example ".*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$"
     - "^127.0.0.1$"
   httpPort                      : {{portHttp}}
   httpsPort                     : {{portHttps}}
