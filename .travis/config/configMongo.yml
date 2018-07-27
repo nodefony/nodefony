@@ -8,6 +8,7 @@ system:
     - "^127.0.0.1$"
   httpPort                      : 5151
   httpsPort                     : 5152
+  domainCheck                   : true
   statics                       : true
   security                      : true
   realtime                      : true

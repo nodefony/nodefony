@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://github.com/nodefony/nodefony-core/raw/master/src/nodefony/bundles/frameworkBundle/Resources/public/images/nodefony-logo.png"><br>
 </p>
-<h1 align="center">NODEFONY  FRAMEWORK</h1>
+<h1 align="center">NODEFONY FRAMEWORK V4</h1>
 
 [![Issues Status](https://img.shields.io/github/issues/nodefony/nodefony.svg)](https://github.com/nodefony/nodefony/issues) [![Build Status](https://travis-ci.org/nodefony/nodefony.svg?branch=master)](https://travis-ci.org/nodefony/nodefony) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/495/badge)](https://bestpractices.coreinfrastructure.org/projects/495)
 
@@ -59,7 +59,7 @@ Nodefony is not an exhaustive port of symfony !
 -   [WATCHER](https://nodejs.org/docs/latest/api/fs.html#fs_fs_watch_filename_options_listener) node.js for auto reload-files in developement mode .
 -   [PM2](http://pm2.keymetrics.io/) Production Process Manager for Node.js .
 -   [Passport](http://passportjs.org/) Simple, unobtrusive authentication for Node.js .
--   [Angular](https://github.com/angular/angular-cli) Experimental Bundle Generator ( Now an Angular Project can be merge into a Nodefony Bundle )
+-   ~~[Angular](https://github.com/angular/angular-cli) Experimental Bundle Generator ( Now an Angular Project can be merge into a Nodefony Bundle )~~
 -   [React](https://github.com/facebookincubator/create-react-app) Experimental Bundle Generator ( Now an React Project can be merge into a Nodefony Bundle )
 
 **Nodefony 4  adds the following features** :
@@ -104,12 +104,12 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 #### Operating Systems : **[Install Node.js via Package](https://nodejs.org/en/download/package-manager)**
 
 -   LINUX
-
-    -   debian (Checked, Tested)
+    -   Debian, Ubuntu (Checked, Tested)
     -   RASPBIAN Raspberry Pi (Checked)
 
--   FreeBSD (Checked)
+-   MACOS (Checked, Tested)
 
+-   FreeBSD (Checked)
     -   pkg install bash rsync gmake gcc6
     -   setenv CC "/usr/local/bin/gcc"
     -   setenv CXX "/usr/local/bin/g++"
@@ -117,8 +117,6 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
     -   replace make by gmake
 
 -   ~~OpenBSD (Not Checked yet )~~
-
--   MACOS (Checked, Tested)
 
 -   ~~WINDOWS (Not ported yet )~~
 
