@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://github.com/nodefony/nodefony-core/raw/master/src/nodefony/bundles/frameworkBundle/Resources/public/images/nodefony-logo.png"><br>
 </p>
-<h1 align="center">NODEFONY  FRAMEWORK</h1>
+<h1 align="center">NODEFONY V4</h1>
 
 [![Issues Status](https://img.shields.io/github/issues/nodefony/nodefony.svg)](https://github.com/nodefony/nodefony/issues) [![Build Status](https://travis-ci.org/nodefony/nodefony.svg?branch=master)](https://travis-ci.org/nodefony/nodefony) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/495/badge)](https://bestpractices.coreinfrastructure.org/projects/495)
 
@@ -13,7 +13,22 @@ The Nodefony project is inspired by the PHP Symfony framework, a developer can f
 
 Nodefony is not an exhaustive port of symfony !
 
-Nodefony features :
+## Table of content
+
+-   [Features](#features)
+-   [Requirements](#requirements)
+-   [Install](#install)
+-   [Start Development Mode](#start)
+-   [Start Production Mode](#start_prod)
+-   [Configurations](#configurations)
+-   [Quick Start](#bundles)
+-   [HTTPS Access](#https)
+-   [References / Thanks](#references--thanks)
+-   [Authors](#authors)
+-   [License](#license)
+-   [Demo](#demo)
+
+## <a name="features"></a>Nodefony features :
 
 -   Servers  ([http(s)](https://nodejs.org/dist/latest-v8.x/docs/api/https.html), [websocket(s)](https://github.com/theturtle32/WebSocket-Node), statics, sockjs)
 -   [HTTP2](https://nodejs.org/api/http2.html)  http2 ready node module provides an implementation of the HTTP/2 (push server ready).
@@ -37,17 +52,17 @@ Nodefony features :
 -   Monitororing , Debug Bar
 -   Unit Test Api in framework context ([MOCHA](https://mochajs.org/))
 
-Nodefony assimilates into the ecosystem of node.js with services like :
+**Nodefony assimilates into the ecosystem of node.js with services like** :
 
 -   [WEBPACK](https://webpack.js.org/) Module bundler for assets management of application .
 -   [SockJS](https://github.com/sockjs) Server ( Like WDS 'Webpack Dev Server' and HMR management )
 -   [WATCHER](https://nodejs.org/docs/latest/api/fs.html#fs_fs_watch_filename_options_listener) node.js for auto reload-files in developement mode .
 -   [PM2](http://pm2.keymetrics.io/) Production Process Manager for Node.js .
 -   [Passport](http://passportjs.org/) Simple, unobtrusive authentication for Node.js .
--   [Angular](https://github.com/angular/angular-cli) Experimental Bundle Generator ( Now an Angular Project can be merge into a Nodefony Bundle )
+-   ~~[Angular](https://github.com/angular/angular-cli) Experimental Bundle Generator ( Now an Angular Project can be merge into a Nodefony Bundle )~~
 -   [React](https://github.com/facebookincubator/create-react-app) Experimental Bundle Generator ( Now an React Project can be merge into a Nodefony Bundle )
 
-Nodefony 4  adds the following features :
+**Nodefony 4  adds the following features** :
 
 -   C++ Addons (Binding in Bundle)
 -   Authorisations
@@ -73,20 +88,7 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 
 #### Documentation in progress !!
 
-## **Table of content**
 
--   [Requirements](#requirements)
--   [Install](#install)
--   [Start Development Mode](#start)
--   [Configurations](#configurations)
--   [Command line Interface](#cli)
--   [Get Started](#bundles)
--   [Start Production Mode](#start_prod)
--   [HTTPS Access](#https)
--   [References / Thanks](#references--thanks)
--   [Authors](#authors)
--   [License](#license)
--   [Demo](#demo)
 
 ## <a name="requirements"></a>Requirements
 
@@ -94,23 +96,20 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 
 -   ###### **[GIT](http://git-scm.com/)**  is Distributed version control system
 
--   **[GNU Make](https://www.gnu.org/software/make/)**  is a Tool which controls the generation of executables
-
 -   **[Node.js](https://nodejs.org/)** ® is a Platform built on Chrome's JavaScript runtime ( >= 6 )
 
 -   **[npm](https://www.npmjs.com/)** or **[yarn](https://yarnpkg.com/lang/en/)**  Packages Manager for javascript application
 
-    npm will be automatically installed by Node.js
 
 #### Operating Systems : **[Install Node.js via Package](https://nodejs.org/en/download/package-manager)**
 
 -   LINUX
-
-    -   debian (Checked, Tested)
+    -   Debian, Ubuntu (Checked, Tested)
     -   RASPBIAN Raspberry Pi (Checked)
 
--   FreeBSD (Checked)
+-   MACOS (Checked, Tested)
 
+-   FreeBSD (Checked)
     -   pkg install bash rsync gmake gcc6
     -   setenv CC "/usr/local/bin/gcc"
     -   setenv CXX "/usr/local/bin/g++"
@@ -118,8 +117,6 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
     -   replace make by gmake
 
 -   ~~OpenBSD (Not Checked yet )~~
-
--   MACOS (Checked, Tested)
 
 -   ~~WINDOWS (Not ported yet )~~
 
@@ -129,36 +126,182 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 
 ## <a name="install"></a>Install Framework **More Info : [ Getting Started with Nodefony ](https://nodefony.net/documentation/Beta/nodefony/started)**
 
-**Node.js** :
+**npm** :
 
 ```bash
-$ git clone https://github.com/nodefony/nodefony.git
-
-$ cd nodefony
-
-$ make build
+$ npm -g install nodefony
 ```
 
-## <a name="start"></a>Start Development Mode
-
-Start the server to check:
+**yarn** :
 
 ```bash
-# TO START NODEFONY IN DEVELOPMENT NODE
-
-$ ./nodefony dev
-
-// debug mode
-$ ./nodefony -d dev
+$ yarn global add nodefony
 ```
 
-Access to App with URL : <http://localhost:5151>
+[See Global install How to Prevent Permissions Errors](https://docs.npmjs.com/getting-started/fixing-npm-permissions)
+
+**Cli Usage** :
+
+```bash
+$ nodefony -h
+Usage: nodefony [options] <command:task:action> [args...]
+                [options] <command:action> [args...]
+                [options] <action> [args...]
+
+  Options:
+    -V, --version       output the version number
+    -d, --debug         Nodefony debug
+    -h, --help          Nodefony help
+    -v, --version       Nodefony version
+    -i, --interactive   Nodefony cli Interactive Mode
+    -j, --json          Nodefony json response
+    -h, --help          output usage information
+nodefony                                                                                              
+    create [-i] name [path]                       Create New Nodefony Project                  
+PM2 Process Manager 2                                                                                 
+    stop name                                     Stop Production Project                  
+    reload name                                   Reload Production Project                                                                            
+    delete name                                   Delete Production Project from PM2 management                  
+    restart name                                  Restart Production Project                  
+    list                                          List all Production Projects                  
+    logs [name] [nblines]                         Stream pm2 logs  [name] is project name  and [nblines] to show
+    kill                                          Kill PM2 daemon         
+
+# OR YOU CAN USE CLI INTERACTIVE MODE (nodefony without args)
+
+$ nodefony
+ _   _    ___    ____    _____   _____    ___    _   _  __   __
+| \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
+|  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
+| |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |  
+|_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|  
+
+Version : 4.0.0-beta.1 Platform : darwin Process : nodefony PID : 16368
+
+?  Nodefony CLI :  (Use arrow keys)
+❯ Create Nodefony Project
+  List PM2 Production Projects
+  Log  PM2 Production Projects
+  Kill PM2 Deamon
+  Help
+  Quit
+```
+
+**Generating a Nodefony project** :
+
+```bash
+#  CLI generate project name : myproject
+
+$ nodefony create myproject
+$ cd myproject
+```
+
+## <a name="start"></a>Serving a Nodefony project via an development server
+
+**Starting Development Servers** :
+
+```bash
+$ nodefony dev
+
+# TO STOP
+$ <ctrl-c>
+```
+**Starting Development Servers in Debug Mode (-d)** :
+```bash
+$ nodefony -d dev
+
+# TO STOP
+$ <ctrl-c>
+```
+
+```bash
+# OR YOU CAN USE CLI INTERACTIVE MODE (nodefony without args)
+ _   _    ___    ____    _____   _____    ___    _   _  __   __
+| \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
+|  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
+| |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |  
+|_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|  
+
+Version : 4.0.0 Platform : linux  Process : nodefony PID : 31635
+
+Fri Jul 27 2018 17:01:11 INFO nodefony : WELCOME PROJECT : myproject 1.0.0
+
+?  Nodefony CLI :  (Use arrow keys)
+❯ Start Servers Development
+Start Servers Pre-Production
+Start Servers Production
+Install Project
+Rebuild Project
+Generate Bundle
+Generate Certificates
+Run Test
+Outdated
+Webpack Dump
+Reset
+Help
+Quit
+```
+
+**Starting Development Servers in Inspector mode (--inspect)** :
+
+[Nodejs Debugging Guide](https://nodejs.org/en/docs/guides/debugging-getting-started)
+```bash
+$ npm -g install npx
+
+$ npx --node-arg=--inspect nodefony dev
+
+# check chrome://inspect in your browser
+```
+
+## <a name="start_prod"></a>Serving a Nodefony Project via a Production server :
+
+**Starting a Nodefony project with [PM2](http://pm2.keymetrics.io/)** :
+```bash
+$ nodefony prod
+```
+Tools PM2 You can see PM2 config : config/pm2.config.js
+```bash
+# To See log
+$ nodefony logs
+
+# To List Status of Production projects
+$ nodefony list
+
+# TO KILL PM2 DEAMON
+$ nodefony kill
+
+# TO STOP APPLICATION WITHOUT KILL PM2 DEAMON
+$ nodefony stop
+```
+
+**Checking a Nodefony Project Pre-Production (Usefull to check Clusters Node)** :
+```bash
+$ nodefony preprod
+```
+
+## <a name="https"></a>Serving a Nodefony project with HTTPS
+
+By default nodefony listen secure port in 5152 @see config/config.yml
+
+During the installation process all the openssl parts were generated ( self-signed localhost certificate ).
+
+You can Change default openssl configuration in :
+
+    config/openssl
+
+You must Add a Trusted CA in your Browser : projectName-root-ca.crt.pem
+You can find certificate authority (ca) here:
+
+    config/certificates/ca/projectName-root-ca.crt.pem
+
+#### Access to Secure App with URL : <https://localhost:5152>
+#### Access to App with URL : <http://localhost:5151>
 
 [![nodefony](https://raw.githubusercontent.com/nodefony/nodefony-core/master/src/nodefony/bundles/documentationBundle/Resources/public/images/nodefony.png)](https://nodefony.net)
 
-## <a name="configurations"></a>Configurations Kernel
+## <a name="configurations"></a>Framework Configurations
 
-Open **[./config/config.yml](https://github.com/nodefony/nodefony-core/blob/master/config/config.yml)**  if you want change httpPort, domain ,servers, add bundle, locale ...
+Open **[config/config.yml](https://github.com/nodefony/nodefony-core/blob/master/config/config.yml)**  if you want change httpPort, domain ,servers, add bundle, locale ...
 
 ```yml
 system:
@@ -167,6 +310,7 @@ system:
     - "^127.0.0.1$"
   httpPort                      : 5151
   httpsPort                     : 5152
+  domainCheck                   : true
   statics                       : true
   security                      : true
   realtime                      : true
@@ -184,7 +328,7 @@ system:
     certificats:
       key                       : "config/certificates/server/privkey.pem"
       cert                      : "config/certificates/server/fullchain.pem"
-      ca                        : "config/certificates/ca/nodefony-root-ca.crt.pem"
+      ca                        : "config/certificates/ca/projectName-root-ca.crt.pem"
       options:
         rejectUnauthorized      : true
   devServer:
@@ -197,53 +341,108 @@ system:
     protocol                    : https
     websocket                   : true
   bundles:
-    hello-bundle                : "src/bundles/hello-bundle"
+    hello-bundle                : "file:src/bundles/hello-bundle"
 ```
 
-## <a name="cli"></a>Command Line Interface
+## <a name="bundles"></a>Quick Start
+
+### Install Nodefony  :
+```
+$ npm -g install nodefony
+```
+[See Global install How to Prevent Permissions Errors](https://docs.npmjs.com/getting-started/fixing-npm-permissions)
+
+### Install Project  :
+```
+$ nodefony create myproject
+$ cd myproject
+```
+
+### Generating a New Bundle  :
+
+CLI Generate new bundle : default path src/bundles
 
 ```bash
+$ nodefony generate:bundle name [path]
 
+# Or Generate a New Bundle Interactive
+$ nodefony
+
+?  Nodefony CLI :  
+  Start Servers Development
+  Start Servers Pre-Production
+  Start Servers Production
+  Install Project
+  Rebuild Project
+❯ Generate Bundle
+  Generate Certificates
+  Run Test
+  Outdated
+  Webpack Dump
+  Reset
+  Help
+  Quit
 ```
 
-## <a name="bundles"></a>Get Started
-
-#### Generate hello Bundle :
-
-CLI Generate new bundle :  $ nodefony generate:bundle name path
+### Starting Servers to check new Bundle hello:
 
 ```bash
-$ ./nodefony generate:bundle hello
+$ nodefony dev
+```
+Access to bundle route with URL : <http://localhost:5151/hello>
 
+Access to bundle route with URL : <https://localhost:5152/hello>
 
-Fri Jun 01 2018 16:36:58 INFO SERVICE CLI KERNEL : GENERATE bundle : hello LOCATION : /Users/cci/repository/nodefony-core/src/bundles
-Fri Jun 01 2018 16:36:58 INFO GENERATER : Create Directory :hello-bundle
-...
+#### Now hello-bundle is auto-insert in framework with watcher active and auto-config Webpack Module bundler
 
-...
-Fri Jun 01 2018 16:36:58 INFO SERVICE CLI KERNEL : npm install in /Users/cci/repository/nodefony-core/src/bundles/hello-bundle
-Fri Jun 01 2018 16:36:58 INFO SERVICE CLI KERNEL : Run Spawn : npm install
-Fri Jun 01 2018 16:37:00 INFO SERVICE CLI KERNEL : npm stdout :  
-> hello-bundle@1.0.0 install /Users/cci/repository/nodefony-core/src/bundles/hello-bundle
-> node-gyp rebuild
-Fri Jun 01 2018 16:37:03 INFO SERVICE CLI KERNEL : npm stdout :    CXX(target) Release/obj.target/hello/src/addon/hello.o
-Fri Jun 01 2018 16:37:04 INFO SERVICE CLI KERNEL : npm stdout :    SOLINK_MODULE(target) Release/hello.node
-Fri Jun 01 2018 16:37:05 INFO SERVICE CLI KERNEL : npm stdout :  up to date in 5.188s
-Fri Jun 01 2018 16:37:05 INFO SERVICE CLI KERNEL : npm stdout :  found 0 vulnerabilities
-Fri Jun 01 2018 16:37:05 INFO SERVICE CLI KERNEL : child process exited with code 0
-Fri Jun 01 2018 16:37:05 INFO KERNEL CONSOLE  : NODEFONY Kernel Life Cycle Terminate CODE : 0
+### Example controller  : src/bundles/hello-bundle/controller/defaultController.js
+
+```js
+module.exports = class defaultController extends nodefony.controller {
+  constructor (container, context){
+    super(container, context);
+  }
+  indexAction() {
+    try {
+      return this.render("hello-bundle::index.html.twig", {
+        name: "hello-bundle"
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+};
 ```
 
-### Start Servers to check new Bundle hello:
+### Example view  (twig) : src/bundles/hello-bundle/Resources/views/index.html.twig
 
-```bash
-$ ./nodefony -d dev
+```twig
+{% extends '/app/Resources/views/base.html.twig' %}
 
-# TO STOP
-$ <ctrl-c>
+{% block title %}Welcome {{name}}! {% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <!-- WEBPACK BUNDLE -->
+  <link rel='stylesheet' href='{{CDN("stylesheet")}}/hello-bundle/assets/css/hello.css' />
+{% endblock %}
+
+{% block body %}
+      <img class='displayed' src='{{CDN("image")}}/framework-bundle/images/nodefony-logo-white.png'>
+      <h1 class='success'>
+        <a href='{{url('documentation')}}'>
+          <strong style='font-size:45px'>NODEFONY</strong>
+        </a>
+        <p>{{trans('welcome')}} {{name}}</p>
+      </h1>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <!-- WEBPACK BUNDLE -->
+  <script src='{{CDN("javascript")}}/hello-bundle/assets/js/hello.js'></script>
+{% endblock %}
 ```
-
-#### Now helloBundle is auto-insert in framework with watcher active and auto-config Webpack Module bundler
 
 ### watchers :
 
@@ -253,7 +452,7 @@ $ <ctrl-c>
 
 #### without having to reboot the server.
 
-You can see helloBundle config   : vim  ./src/bundles/hello-bundle/Resources/config/config.yml
+You can see hello-bundle config   : src/bundles/hello-bundle/Resources/config/config.yml
 
 ```yml
 ########## nodefony CONFIG BUNDLE  hello-bundle  ############
@@ -292,7 +491,7 @@ watch:                          true
 
 #### without having to reboot the server
 
-You can see helloBundle config webpack : vim  ./src/bundles/hello-bundle/Resources/config/webpack.config.js
+You can see hello-bundle config webpack : src/bundles/hello-bundle/Resources/config/webpack.config.js
 
 ```js
 module.exports = webpackMerge({
@@ -313,84 +512,6 @@ module.exports = webpackMerge({
   module: {...}
 });
 ```
-
-### Example controller  : ./src/bundles/hello-bundle/controller/defaultController.js
-
-```js
-module.exports = class defaultController extends nodefony.controller {
-  constructor (container, context){
-    super(container, context);
-  }
-  indexAction() {
-    try {
-      return this.render("hello-bundle::index.html.twig", {
-        name: "hello-bundle"
-      });
-    } catch (e) {
-      throw e;
-    }
-  }
-};
-```
-
-### Example view  (twig) : ./src/bundles/hello-bundle/Resources/views/index.html.twig
-
-```twig
-{% extends '/app/Resources/views/base.html.twig' %}
-
-{% block title %}Welcome {{name}}! {% endblock %}
-
-{% block stylesheets %}
-  {{ parent() }}
-  <!-- WEBPACK BUNDLE -->
-  <link rel='stylesheet' href='{{CDN("stylesheet")}}/hello-bundle/assets/css/hello.css' />
-{% endblock %}
-
-{% block body %}
-      <img class='displayed' src='{{CDN("image")}}/framework-bundle/images/nodefony-logo-white.png'>
-      <h1 class='success'>
-        <a href='{{url('documentation')}}'>
-          <strong style='font-size:45px'>NODEFONY</strong>
-        </a>
-        <p>{{trans('welcome')}} {{name}}</p>
-      </h1>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-  <!-- WEBPACK BUNDLE -->
-  <script src='{{CDN("javascript")}}/hello-bundle/assets/js/hello.js'></script>
-{% endblock %}
-```
-
-### <a name="start_prod"></a>Start Production Mode
-
-    # TO START NODEFONY IN CLUSTER NODE PM2
-    $ make start
-
-    # TO KILL PM2 DEAMON
-    $ make kill
-
-    # TO STOP APPLICATION WITHOUT KILL PM2 DEAMON
-    $ make stop
-
-You can see PM2 config : vim  ./config/pm2.config.js
-
-Access to bundle route with URL : <http://localhost:5151/hello>
-
-## <a name="https"></a>Nodefony HTTPS Access
-
-By default nodefony listen secure port in 5152
-
-During the installation process all the openssl parts were generated ( self-signed localhost certificate ).
-
-You must Add a Trusted CA in your browser : nodefony-root-ca.crt.pem
-
-You can find certificate authority (ca) here:
-
-    ./config/certificates/ca/nodefony-root-ca.crt.pem
-
-Access  with URL : <https://localhost:5152/hello>
 
 ## <a name="monitoring"></a>Monitoring FRAMEWORK
 

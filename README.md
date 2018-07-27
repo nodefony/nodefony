@@ -166,15 +166,6 @@ PM2 Process Manager 2
     list                                          List all Production Projects                  
     logs [name] [nblines]                         Stream pm2 logs  [name] is project name  and [nblines] to show
     kill                                          Kill PM2 daemon         
-```
-
-**Generating a Nodefony project** :
-
-```bash
-#  CLI generate project name : myproject
-
-$ nodefony create myproject
-$ cd myproject
 
 # OR YOU CAN USE CLI INTERACTIVE MODE (nodefony without args)
 
@@ -194,6 +185,15 @@ Version : 4.0.0-beta.1 Platform : darwin Process : nodefony PID : 16368
   Kill PM2 Deamon
   Help
   Quit
+```
+
+**Generating a Nodefony project** :
+
+```bash
+#  CLI generate project name : myproject
+
+$ nodefony create myproject
+$ cd myproject
 ```
 
 ## <a name="start"></a>Serving a Nodefony project via an development server
@@ -216,28 +216,27 @@ $ <ctrl-c>
 
 ```bash
 # OR YOU CAN USE CLI INTERACTIVE MODE (nodefony without args)
-
-$ nodefony
  _   _    ___    ____    _____   _____    ___    _   _  __   __
 | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
 |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
 | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |  
 |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|  
 
-Version : 4.0.0-beta.1 Platform : darwin Process : nodefony PID : 16421
+Version : 4.0.0 Platform : linux  Process : nodefony PID : 31635
+
+Fri Jul 27 2018 17:01:11 INFO nodefony : WELCOME PROJECT : myproject 1.0.0
 
 ?  Nodefony CLI :  (Use arrow keys)
 ❯ Start Servers Development
 Start Servers Pre-Production
 Start Servers Production
-Install
-Build
+Install Project
+Rebuild Project
 Generate Bundle
-Generate Controller
-Webpack Dump
 Generate Certificates
 Run Test
 Outdated
+Webpack Dump
 Reset
 Help
 Quit
