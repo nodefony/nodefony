@@ -4,7 +4,7 @@
 ```yaml
 system:
   bundles:
-    {{name}}: {{location}}/{{bundleName}}
+    {{name}}: file:{{location}}/{{bundleName}}
 ```
 
 #### For a durable usage you can add this permanently in ./config/config.yml
@@ -35,6 +35,7 @@ system:
     - "^127.0.0.1$"
   httpPort                      : 5151
   httpsPort                     : 5152
+  domainCheck                   : true
   statics                       : true
   security                      : true
   realtime                      : true
@@ -44,7 +45,7 @@ system:
   locale                        : "en_en"
 
   bundles:
-    {{name}}                        : {{location}}/{{bundleName}}
+    {{bundleName}}                        : file:{{location}}/{{bundleName}}
 ```
 
 

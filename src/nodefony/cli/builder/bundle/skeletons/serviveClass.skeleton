@@ -1,5 +1,3 @@
-{% extends "./licence.cecill-b.skeleton" %}
-
 {% block body %}
 
 	/**

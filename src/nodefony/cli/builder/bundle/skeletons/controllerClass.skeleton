@@ -15,15 +15,15 @@ module.exports = class {{controllerName}} extends nodefony.controller {
 	}
 
 	/**
- 	 *
- 	 *	@method indexAction
- 	 *
- 	 */
+	 *
+	 *	@method indexAction
+	 *
+	 */
 	indexAction (){
 		try {
 			return this.render("{{bundleName}}:{{directory}}:index.html.twig", {
 				name: "{{bundleName}}",
-        binding: addon.{{name}}()
+				binding: addon.{{name}}()
 			});
 		}catch(e){
 			throw e;

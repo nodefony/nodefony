@@ -1,4 +1,3 @@
-
 {% block body %}
 const {{name}}Task = require(path.resolve(__dirname, "{{name}}Task.js"));
 
