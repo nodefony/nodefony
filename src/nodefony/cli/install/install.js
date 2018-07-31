@@ -51,9 +51,14 @@ module.exports = class installProject extends nodefony.Builder {
       cmd = ["install", "--force"];
       break;
     default:
-      cmd = ["rebuild"];
+      cmd = ["install"];
     }
-    return this.cli.packageManager.call(this.cli, cmd)
+    try {
+      this.cli.rm("-rf", path.resolve(cwd, "node_modules"));
+    } catch (e) {
+      throw e;
+    }
+    return this.cli.packageManager.call(this.cli, cmd, cwd)
       .then(() => {
         return cwd;
       });

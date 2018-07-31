@@ -133,10 +133,8 @@ module.exports = class cliStart extends nodefony.cliKernel {
     case "rebuild":
       try {
         if (nodefony.isTrunk) {
-          //let mycwd = null;
           return this.rebuild()
             .then((cwd) => {
-              //mycwd = cwd;
               this.parseNodefonyCommand("nodefony:rebuild", [cwd]);
               return nodefony.start(command, args, this);
             })

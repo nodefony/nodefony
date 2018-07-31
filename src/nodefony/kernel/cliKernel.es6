@@ -730,13 +730,15 @@ module.exports = nodefony.register("cliKernel", function () {
         cmd = ["install", "--force"];
         break;
       default:
-        cmd = ["rebuild"];
+        cmd = ["install"];
       }
       try {
         if (bundle instanceof nodefony.Bundle) {
+          this.rm("-rf", path.resolve(bundle.path, "node_modules"));
           return this.packageManager(cmd, bundle.path, env);
         }
         if (bundle instanceof nodefony.fileClass) {
+          this.rm("-rf", path.resolve(bundle.dirName, "node_modules"));
           return this.packageManager(cmd, bundle.dirName, env);
         }
         throw new Error("rebuildPackage bundle must be an instance of nodefony.Bundle");
