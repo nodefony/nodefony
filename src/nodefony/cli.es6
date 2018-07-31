@@ -707,7 +707,7 @@ module.exports = nodefony.register("cli", function () {
     spawn(command, args, options, close) {
       let cmd = null;
       try {
-        this.logger(`Run Spawn : ${command}  ${args.join(" ")}`, "DEBUG");
+        this.logger(`Spawn : ${command} ${args.join(" ")}`, "INFO");
         cmd = spawn(command, args, options || {});
         //if (this.debug) {
         cmd.stdout.on('data', (data) => {
@@ -731,18 +731,18 @@ module.exports = nodefony.register("cli", function () {
         //}
         cmd.on('close', (code) => {
           if (this.debug) {
-            this.logger(`child process exited with code ${code}`, "DEBUG");
+            this.logger(`Child Process exited with code ${code}`, "DEBUG");
           }
           if (close) {
             close(code);
           }
           if (code !== 0) {
-            this.logger(`Run Spawn :  + ${command}  ${args.join(" ")} Error code : ${code}`, "ERROR");
+            this.logger(`Spawn : ${command} ${args.join(" ")} Error Code : ${code}`, "ERROR");
           }
         });
         cmd.on('error', (err) => {
           this.logger(err, "ERROR");
-          throw new Error(`child process exited with error :  ${err}`);
+          throw new Error(`Child Process exited with error :  ${err}`);
           //this.terminate(1);
         });
         process.stdin.pipe(cmd.stdin);

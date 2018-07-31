@@ -879,6 +879,11 @@ module.exports = nodefony.register("kernel", function () {
         return true;
       }
       if (this.cli.command === "nodefony" &&
+        this.cli.task === "rebuild"
+      ) {
+        return true;
+      }
+      if (this.cli.command === "nodefony" &&
         this.cli.task === "install") {
         return true;
       }
