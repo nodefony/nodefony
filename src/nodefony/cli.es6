@@ -636,25 +636,32 @@ module.exports = nodefony.register("cli", function () {
       }
     }
 
-    npmInstall(cwd = path.resolve("."), argv = [], env = "production") {
+    npm(argv = [], cwd = path.resolve("."), env = null) {
+      switch (env) {
+      case "dev":
+      case "development":
+        process.env.NODE_ENV = "development";
+        break;
+      case "prod":
+      case "production":
+        process.env.NODE_ENV = "production";
+        break;
+      default:
+        process.env.NODE_ENV = this.environment;
+      }
       return new Promise((resolve, reject) => {
-        if (env === "development" || env === "production") {
-          process.env.NODE_ENV = env;
-        } else {
-          process.env.NODE_ENV = "development";
-        }
-        let tab = ["install"];
-        if (argv) {
-          tab = tab.concat(argv);
-        }
         let cmd = null;
         try {
-          this.logger("npm install in " + cwd);
-          cmd = this.spawn("npm", tab, {
+          this.debug = this.commander.debug || false;
+          cmd = this.spawn("npm", argv, {
             cwd: cwd,
             shell: true
           }, (code) => {
-            return resolve(code);
+            this.logger(`Command : npm ${argv.join(' ')} Finished cwd : ${cwd}`);
+            if (code === 0) {
+              return resolve(code);
+            }
+            return reject(new Error(`Command : npm ${argv.join(' ')}  cwd : ${cwd} Error Code : ${code}`));
           });
         } catch (e) {
           this.logger(e, "ERROR");
@@ -663,25 +670,32 @@ module.exports = nodefony.register("cli", function () {
       });
     }
 
-    yarnInstall(cwd = path.resolve("."), argv = [], env = "production") {
+    yarn(argv = [], cwd = path.resolve("."), env = null) {
+      switch (env) {
+      case "dev":
+      case "development":
+        process.env.NODE_ENV = "development";
+        break;
+      case "prod":
+      case "production":
+        process.env.NODE_ENV = "production";
+        break;
+      default:
+        process.env.NODE_ENV = this.environment;
+      }
       return new Promise((resolve, reject) => {
-        if (env === "development" || env === "production") {
-          process.env.NODE_ENV = env;
-        } else {
-          process.env.NODE_ENV = "development";
-        }
-        let tab = ["install"];
-        if (argv) {
-          tab = tab.concat(argv);
-        }
         let cmd = null;
         try {
-          this.logger("yarn install in " + cwd);
-          cmd = this.spawn("yarn", tab, {
+          this.debug = this.commander.debug || false;
+          cmd = this.spawn("yarn", argv, {
             cwd: cwd,
             shell: true
           }, (code) => {
-            return resolve(code);
+            this.logger(`Command : yarn ${argv.join(' ')} Finished cwd : ${cwd}`);
+            if (code === 0) {
+              return resolve(code);
+            }
+            return reject(new Error(`Command : yarn ${argv.join(' ')}  cwd : ${cwd} Error Code : ${code}`));
           });
         } catch (e) {
           this.logger(e, "ERROR");
@@ -689,58 +703,11 @@ module.exports = nodefony.register("cli", function () {
         }
       });
     }
-
-    npmOutdated(cwd = path.resolve("."), argv = []) {
-      return new Promise((resolve, reject) => {
-        let tab = ["outdated"];
-        if (argv) {
-          tab = tab.concat(argv);
-        }
-        let cmd = null;
-        try {
-          //this.debug = true;
-          cmd = this.spawn("npm", tab, {
-            cwd: cwd,
-            shell: true
-          }, (code) => {
-            this.logger(`Check Outdated Packages : ${cwd} Finished`);
-            return resolve(code);
-          });
-        } catch (e) {
-          this.logger(e, "ERROR");
-          return reject(e);
-        }
-      });
-    }
-
-    yarnOutdated(cwd = path.resolve("."), argv = []) {
-      return new Promise((resolve, reject) => {
-        let tab = ["outdated"];
-        if (argv) {
-          tab = tab.concat(argv);
-        }
-        let cmd = null;
-        try {
-          //this.debug = true;
-          cmd = this.spawn("yarn", tab, {
-            cwd: cwd,
-            shell: true
-          }, (code) => {
-            this.logger(`Check Outdated Packages ${cwd} Finished`);
-            return resolve(code);
-          });
-        } catch (e) {
-          this.logger(e, "ERROR");
-          return reject(e);
-        }
-      });
-    }
-
 
     spawn(command, args, options, close) {
       let cmd = null;
       try {
-        this.logger("Run Spawn : " + command + " " + args.join(" "), "DEBUG");
+        this.logger(`Run Spawn : ${command}  ${args.join(" ")}`, "DEBUG");
         cmd = spawn(command, args, options || {});
         //if (this.debug) {
         cmd.stdout.on('data', (data) => {
@@ -769,11 +736,16 @@ module.exports = nodefony.register("cli", function () {
           if (close) {
             close(code);
           }
+          if (code !== 0) {
+            this.logger(`Run Spawn :  + ${command}  ${args.join(" ")} Error code : ${code}`, "ERROR");
+          }
         });
         cmd.on('error', (err) => {
           this.logger(err, "ERROR");
-          this.terminate(1);
+          throw new Error(`child process exited with error :  ${err}`);
+          //this.terminate(1);
         });
+        process.stdin.pipe(cmd.stdin);
       } catch (e) {
         this.logger(e, "ERROR");
         throw e;
@@ -800,7 +772,6 @@ module.exports = nodefony.register("cli", function () {
       }
       return cmd;
     }
-
   }
   nodefony.niceBytes = CLI.niceBytes;
   return CLI;

@@ -2,8 +2,6 @@
 /tmp/*
 /web/*
 
-
-
 #**/assets/**
 app/Resources/public/assets/
 src/bundles/test-bundle/Resources/public/assets/
@@ -17,6 +15,11 @@ node_modules/**
 **/node_modules/**
 npm-debug.log
 yarn-error.log
+
+package-lock.json/**
+**/package-lock.json/**
+yarn.lock/**
+**/yarn.lock/**
 *.[oa]
 
 config/certificates/**/*

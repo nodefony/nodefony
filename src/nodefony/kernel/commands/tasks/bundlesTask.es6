@@ -64,4 +64,18 @@ module.exports = class bundlesTask extends nodefony.Task {
       });
   }
 
+  rebuild(...args) {
+    let mypromise = [];
+    for (let i = 0; i < args.length; i++) {
+      if (args[i] instanceof nodefony.fileClass || args[i] instanceof nodefony.Bundle) {
+        mypromise.push(this.cli.rebuildPackage(args[i]));
+      }
+    }
+    return Promise.all(mypromise)
+      .catch(e => {
+        this.logger(e, "ERROR");
+        return e;
+      });
+  }
+
 };

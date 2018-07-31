@@ -7,7 +7,6 @@ const reactCli = class reactCli extends nodefony.Service {
     this.inquirer = this.cli.inquirer;
     this.react = this.getReactPath();
     this.tmp = this.setTmpDir(path.resolve("/", "tmp"));
-    this.npm = this.getNpmPath();
     this.setEnv();
     this.bundleName = null;
     this.bundleShortName = null;
@@ -16,10 +15,6 @@ const reactCli = class reactCli extends nodefony.Service {
 
   getReactPath() {
     return path.resolve(process.cwd(), "node_modules", ".bin", "create-react-app");
-  }
-  getNpmPath() {
-    return "npm";
-    //return path.resolve(process.cwd(), "node_modules", ".bin", "npm");
   }
 
   setEnv() {
@@ -104,25 +99,22 @@ const reactCli = class reactCli extends nodefony.Service {
   ejectReact(dir) {
     return new Promise((resolve, reject) => {
       let args = ['run', 'eject'];
-      this.logger(" eject  webpack config React : npm " + args.join(" "));
-      let cmd = null;
+      this.logger(" eject  webpack config React : " + args.join(" "));
       try {
-        cmd = this.cli.spawn(this.npm, args, {
-          cwd: dir
-        }, (code) => {
-          if (code === 1) {
+        return this.cli.packageManager(args, dir)
+          .then(() => {
+            try {
+              this.moveToRealPath();
+            } catch (e) {
+              this.cleanTmp();
+              return reject(e);
+            }
+            return resolve(path.resolve(this.location, this.bundleName));
+          })
+          .catch((error) => {
             this.cleanTmp();
-            return reject(new Error("React eject error : " + code));
-          }
-          try {
-            this.moveToRealPath();
-          } catch (e) {
-            this.cleanTmp();
-            return reject(e);
-          }
-          return resolve(path.resolve(this.location, this.bundleName));
-        });
-        process.stdin.pipe(cmd.stdin);
+            return reject(new Error("React eject error : " + error));
+          });
       } catch (e) {
         this.cleanTmp();
         this.logger("React eject ", "ERROR");

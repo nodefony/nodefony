@@ -15,15 +15,7 @@ module.exports = class installProject extends nodefony.Builder {
     return new Promise((resolve, reject) => {
       return this.installFramework(cwd)
         .then(() => {
-          let installer = null;
-          switch (nodefony.packageManager) {
-          case 'yarn':
-            installer = this.cli.yarnInstall;
-            break;
-          default:
-            installer = this.cli.npmInstall;
-          }
-          return installer.call(this.cli, cwd)
+          return this.cli.packageManager.call(this.cli, ["install"], cwd, "dev")
             .then(() => {
               if (nodefony.isCore) {
                 return this.npmLink(path.resolve("."), path.resolve("src", "nodefony"))
@@ -53,7 +45,18 @@ module.exports = class installProject extends nodefony.Builder {
   }
 
   rebuild(cwd = path.resolve(".")) {
-
+    let cmd = null;
+    switch (nodefony.packageManager) {
+    case 'yarn':
+      cmd = ["install", "--force"];
+      break;
+    default:
+      cmd = ["rebuild"];
+    }
+    return this.cli.packageManager.call(this.cli, cmd)
+      .then(() => {
+        return cwd;
+      });
   }
 
   npmLink(cwd = path.resolve("."), argv = []) {
@@ -188,5 +191,4 @@ module.exports = class installProject extends nodefony.Builder {
       }
     });
   }
-
 };

@@ -8,7 +8,7 @@ const View = require(path.resolve(__dirname, "view.js"));
 const Translation = require(path.resolve(__dirname, "translation.js"));
 const routing = require(path.resolve(__dirname, "routing.js"));
 const generateReactCli = require(path.resolve(__dirname, "react", "reactBuilder.js"));
-const generateAngularCli = require(path.resolve(__dirname, "angular", "angularBuilder.js"));
+//const generateAngularCli = require(path.resolve(__dirname, "angular", "angularBuilder.js"));
 const regBundleName = /^(.+)-bundle[\.js]{0,3}$|^(.+)[Bb]undle[\.js]{0,3}$/;
 
 // mother class bundle
@@ -282,7 +282,7 @@ const Bundle = class Bundle extends nodefony.Builder {
         this.logger(e, "WARNING");
       }
       if (this.cli.kernel) {
-        return this.cli.npmInstall(this.bundlePath);
+        return this.cli.packageManager(["install"], this.bundlePath);
       }
       return Promise.resolve(this.bundlePath);
     } catch (e) {
@@ -343,7 +343,7 @@ class React extends Bundle {
   }
 }
 
-class Angular extends Bundle {
+/*class Angular extends Bundle {
   constructor(cli, type) {
     super(cli, type || "js", "angular");
     this.angularCli = new generateAngularCli(this);
@@ -386,7 +386,7 @@ class Angular extends Bundle {
       ]
     };
   }
-}
+}*/
 
 const interaction = function (cli) {
   let bundles = [];

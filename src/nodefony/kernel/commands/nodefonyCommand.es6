@@ -122,6 +122,29 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
       });
     }
 
+    rebuild() {
+      return new Promise((resolve, reject) => {
+        try {
+          let args = [];
+          for (let bundle in this.cli.kernel.bundles) {
+            this.logger(`Rebuild ${this.cli.kernel.bundles[bundle].name}`);
+            args.push(this.cli.kernel.bundles[bundle]);
+          }
+
+          let task = this.getTask("bundles");
+          return task.rebuild.apply(task, args)
+            .then((ele) => {
+              return resolve(ele);
+            })
+            .catch((error) => {
+              return reject(error);
+            });
+        } catch (e) {
+          return reject(e);
+        }
+      });
+    }
+
     outdated() {
       return new Promise((resolve, reject) => {
         this.logger("PACKAGES OUTDATED");
@@ -155,6 +178,9 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
           return task.outdated.apply(task, args)
             .then((ele) => {
               return resolve(ele);
+            })
+            .catch((error) => {
+              return reject(error);
             });
         } catch (e) {
           return reject(e);

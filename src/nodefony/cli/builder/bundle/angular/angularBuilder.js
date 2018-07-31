@@ -7,7 +7,6 @@ const angularCli = class angularCli extends nodefony.Service {
     this.inquirer = this.cli.inquirer;
     this.ng = this.getNgPath();
     this.tmp = this.setTmpDir(path.resolve("/", "tmp"));
-    this.npm = this.getNpmPath();
     this.setEnv();
     this.bundleName = null;
     this.bundlePath = null;
@@ -16,9 +15,7 @@ const angularCli = class angularCli extends nodefony.Service {
   getNgPath() {
     return path.resolve(process.cwd(), "node_modules", ".bin", "ng");
   }
-  getNpmPath() {
-    return path.resolve(process.cwd(), "node_modules", ".bin", "npm");
-  }
+
 
   setTmpDir(Path) {
     return Path;
@@ -43,10 +40,16 @@ const angularCli = class angularCli extends nodefony.Service {
         return this.generateNgNew(ele);
       })
       .then((dir) => {
-        return this.npmInstall(dir);
+        return this.cli.packageManager(["install"], dir)
+          .then((ele) => {
+            return ele;
+          }).catch((error) => {
+            this.cleanTmp();
+            return error;
+          });
       })
       /*.then((dir) => {
-        return this.npmInstall(dir, "@ngtools/webpack");
+        return this.cli.packageManager(["install","@ngtools/webpack"],dir)
       })*/
       .then((dir) => {
         return this.generateNgModule(dir);
@@ -55,7 +58,14 @@ const angularCli = class angularCli extends nodefony.Service {
         return this.ejectNg(dir);
       })
       .then((dir) => {
-        return this.npmInstall(dir);
+        return this.cli.packageManager(["install"], dir)
+          .then((ele) => {
+            return ele;
+          }).catch((error) => {
+            this.cleanTmp();
+            return error;
+          });
+
       })
       .then(( /*dir*/ ) => {
         return this.builder;
@@ -154,32 +164,6 @@ const angularCli = class angularCli extends nodefony.Service {
       } catch (e) {
         this.cleanTmp();
         this.logger("ng eject ", "ERROR");
-        return reject(e);
-      }
-    });
-  }
-
-  npmInstall(cwd, argv) {
-    return new Promise((resolve, reject) => {
-      let tab = ["install"];
-      if (argv) {
-        tab = tab.concat(argv);
-      }
-      let cmd = null;
-      try {
-        this.logger("npm install in " + cwd);
-        cmd = this.cli.spawn("npm", tab, {
-          cwd: cwd
-        }, (code) => {
-          if (code === 1) {
-            this.cleanTmp();
-            return reject(new Error("nmp install error : " + code));
-          }
-          return resolve(cwd);
-        });
-      } catch (e) {
-        this.cleanTmp();
-        this.logger("npm install ", "ERROR");
         return reject(e);
       }
     });

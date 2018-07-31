@@ -131,6 +131,33 @@ module.exports = class cliStart extends nodefony.cliKernel {
       }
       break;
     case "rebuild":
+      try {
+        if (nodefony.isTrunk) {
+          let mycwd = null;
+          return this.rebuild()
+            .then((cwd) => {
+              mycwd = cwd;
+              this.parseNodefonyCommand("nodefony:rebuild", [cwd]);
+              return nodefony.start(command, args, this);
+            })
+            .then(() => {
+              return this.installProject()
+                .then(() => {
+                  return this.buildProject()
+                    .then((cwd) => {
+                      this.parseNodefonyCommand("nodefony:build", [cwd]);
+                      return nodefony.start(command, args, this);
+                    });
+                });
+            });
+        }
+        this.showHelp();
+        this.logger("No nodefony trunk detected !", "WARNING");
+        break;
+      } catch (e) {
+        throw e;
+      }
+      break;
     case "build":
       try {
         if (nodefony.isTrunk) {
@@ -488,7 +515,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
       let installer = new builderInstall(this);
       return installer.rebuild(cwd)
         .then((ret) => {
-          this.logger("reBuild Complete");
+          this.logger(`Rebuild Complete : ${cwd}`);
           return ret;
         }).catch((e) => {
           this.logger(e, "ERROR");

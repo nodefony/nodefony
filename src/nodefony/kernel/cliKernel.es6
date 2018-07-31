@@ -125,6 +125,13 @@ module.exports = nodefony.register("cliKernel", function () {
       this.action = "";
       this.publicPath = null;
       this.keepAlive = false;
+      switch (nodefony.packageManager) {
+      case 'yarn':
+        this.packageManager = this.yarn;
+        break;
+      default:
+        this.packageManager = this.npm;
+      }
       this.parseNodefonyCommand();
     }
 
@@ -170,6 +177,9 @@ module.exports = nodefony.register("cliKernel", function () {
      */
     parseNodefonyCommand(cmd, args) {
       this.pattern = null;
+      this.command = null;
+      this.task = null;
+      this.action = null;
       if (cmd) {
         this.pattern = cmd.split(":");
         if (args) {
@@ -695,20 +705,12 @@ module.exports = nodefony.register("cliKernel", function () {
     }
 
     installPackage(bundle, env) {
-      let installer = null;
-      switch (nodefony.packageManager) {
-      case 'yarn':
-        installer = this.yarnInstall;
-        break;
-      default:
-        installer = this.npmInstall;
-      }
       try {
         if (bundle instanceof nodefony.Bundle) {
-          return installer.call(this, bundle.path, null, env);
+          return this.packageManager(["install"], bundle.path, env);
         }
         if (bundle instanceof nodefony.fileClass) {
-          return installer.call(this, bundle.dirName, null, env);
+          return this.packageManager(["install"], bundle.dirName, env);
         }
         throw new Error("installPackage bundle must be an instance of nodefony.Bundle");
       } catch (e) {
@@ -721,21 +723,21 @@ module.exports = nodefony.register("cliKernel", function () {
       }
     }
 
-    rebuildPackage(bundle, env) {
-      let builder = null;
+    rebuildPackage(bundle, env = "development") {
+      let cmd = null;
       switch (nodefony.packageManager) {
       case 'yarn':
-        builder = this.yarnRebuild;
+        cmd = ["install", "--force"];
         break;
       default:
-        builder = this.npmRebuild;
+        cmd = ["rebuild"];
       }
       try {
         if (bundle instanceof nodefony.Bundle) {
-          return builder.call(this, bundle.path, null, env);
+          return this.packageManager(cmd, bundle.path, env);
         }
         if (bundle instanceof nodefony.fileClass) {
-          return builder.call(this, bundle.dirName, null, env);
+          return this.packageManager(cmd, bundle.dirName, env);
         }
         throw new Error("rebuildPackage bundle must be an instance of nodefony.Bundle");
       } catch (e) {
@@ -749,20 +751,12 @@ module.exports = nodefony.register("cliKernel", function () {
     }
 
     outdatedPackage(bundle) {
-      let outdater = null;
-      switch (nodefony.packageManager) {
-      case 'yarn':
-        outdater = this.yarnOutdated;
-        break;
-      default:
-        outdater = this.npmOutdated;
-      }
       try {
         if (bundle instanceof nodefony.Bundle) {
-          return outdater.call(this, bundle.path, null);
+          return this.packageManager(["outdated"], bundle.path);
         }
         if (bundle instanceof nodefony.fileClass) {
-          return outdater.call(this, bundle.dirName, null);
+          return this.packageManager(["outdated"], bundle.dirName);
         }
         throw new Error("Method outdatedPackage bundle must be an instance of nodefony.Bundle");
       } catch (e) {
