@@ -492,9 +492,13 @@ module.exports = nodefony.register("kernel", function () {
       } catch (e) {
         this.logger(e, "ERROR");
       }
-      if (this.isInstall()) {
+
+      switch (this.isInstall()) {
+      case "install":
         return this.install(bundles);
-      } else {
+      case "rebuild":
+        return this.rebuild(bundles);
+      default:
         return this.preRegister(bundles);
       }
     }
@@ -524,6 +528,38 @@ module.exports = nodefony.register("kernel", function () {
               mypromise.push(this.cli.installPackage(bundleFile, this.environment));
             }
           }
+        }
+      } catch (e) {
+        throw e;
+      }
+      return Promise.all(mypromise)
+        .then(() => {
+          return this.preRegister(coreBundles);
+        })
+        .catch((e) => {
+          this.logger(e, "ERROR");
+          return e;
+        });
+    }
+
+    rebuild(coreBundles) {
+      let bundles = coreBundles.concat(this.configBundle, [this.appPath]);
+      let mypromise = [];
+      try {
+        for (let i = 0; i < bundles.length; i++) {
+          let bundleFile = null;
+          try {
+            bundleFile = new nodefony.fileClass(path.resolve(bundles[i], "package.json"));
+          } catch (e) {
+            let Path = this.isNodeModule(bundles[i]);
+            if (Path) {
+              bundleFile = new nodefony.fileClass(Path);
+            } else {
+              this.logger(e, "ERROR");
+              continue;
+            }
+          }
+          mypromise.push(this.cli.rebuildPackage(bundleFile, this.environment));
         }
       } catch (e) {
         throw e;
@@ -871,26 +907,26 @@ module.exports = nodefony.register("kernel", function () {
       if (this.cli.command === "nodefony" &&
         this.cli.task === "bundles" &&
         this.cli.action === "install") {
-        return true;
+        return "install";
       }
       if (this.cli.command === "nodefony" &&
         this.cli.task === "build"
       ) {
-        return true;
+        return "install";
       }
       if (this.cli.command === "nodefony" &&
         this.cli.task === "rebuild"
       ) {
-        return true;
+        return "rebuild";
       }
       if (this.cli.command === "nodefony" &&
         this.cli.task === "install") {
-        return true;
+        return "install";
       }
       if (this.cli.command === "install") {
         this.cli.command = "nodefony";
         this.cli.task = "install";
-        return true;
+        return "install";
       }
       return false;
     }
