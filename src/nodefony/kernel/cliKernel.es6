@@ -311,11 +311,11 @@ module.exports = nodefony.register("cliKernel", function () {
           txt = `${this.args}`;
         }
       }
-      this.logger(txt, "INFO", "COMMAND");
+      return txt;
+      //this.logger(txt, "INFO", "COMMAND");
     }
 
     matchCommand() {
-      //this.logCommand();
       if (this.command) {
         for (let bundle in this.commands) {
           if (Object.keys(this.commands[bundle]).length) {
@@ -327,8 +327,7 @@ module.exports = nodefony.register("cliKernel", function () {
                   try {
                     return myCommand.showBanner()
                       .then(() => {
-                        //this.logger(`${this.command}:${this.task} ${this.args}`);
-                        this.logCommand();
+                        this.logger(this.logCommand(), "INFO", "COMMAND");
                         return myAction.apply(myCommand, this.args);
                       })
                       .catch((e) => {
@@ -350,8 +349,7 @@ module.exports = nodefony.register("cliKernel", function () {
                       try {
                         return myTask.showBanner()
                           .then(() => {
-                            //this.logger(`${this.command}:${this.task}:${this.action} ${this.args}`);
-                            this.logCommand();
+                            this.logger(this.logCommand(), "INFO", "COMMAND");
                             return myAction.apply(myCommand.tasks[this.task], this.args);
                           })
                           .catch((e) => {
@@ -364,15 +362,18 @@ module.exports = nodefony.register("cliKernel", function () {
                       }
                     } else {
                       myTask.showHelp();
-                      return this.terminate(0);
+                      this.logger(new Error(this.logCommand() + " Action Not Found"), "ERROR", "COMMAND");
+                      return this.terminate(1);
                     }
                   } else {
                     myCommand.showHelp();
-                    return this.terminate(0);
+                    this.logger(new Error(this.logCommand() + " Action Not Found"), "ERROR", "COMMAND");
+                    return this.terminate(1);
                   }
                 } else {
                   myCommand.showHelp();
-                  return this.terminate(0);
+                  this.logger(new Error(this.logCommand() + " Task Not Found"), "ERROR", "COMMAND");
+                  return this.terminate(1);
                 }
               } else {
                 break;
@@ -713,6 +714,33 @@ module.exports = nodefony.register("cliKernel", function () {
       } catch (e) {
         if (e.code !== "ENOENT") {
           this.logger("Install Package BUNDLE : " + bundle.name + ":", "ERROR");
+          this.logger(e, "ERROR");
+          throw e;
+        }
+        throw e;
+      }
+    }
+
+    rebuildPackage(bundle, env) {
+      let builder = null;
+      switch (nodefony.packageManager) {
+      case 'yarn':
+        builder = this.yarnRebuild;
+        break;
+      default:
+        builder = this.npmRebuild;
+      }
+      try {
+        if (bundle instanceof nodefony.Bundle) {
+          return builder.call(this, bundle.path, null, env);
+        }
+        if (bundle instanceof nodefony.fileClass) {
+          return builder.call(this, bundle.dirName, null, env);
+        }
+        throw new Error("rebuildPackage bundle must be an instance of nodefony.Bundle");
+      } catch (e) {
+        if (e.code !== "ENOENT") {
+          this.logger("rebuild Package BUNDLE : " + bundle.name + ":", "ERROR");
           this.logger(e, "ERROR");
           throw e;
         }

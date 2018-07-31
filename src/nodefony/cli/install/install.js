@@ -52,6 +52,10 @@ module.exports = class installProject extends nodefony.Builder {
       });
   }
 
+  rebuild(cwd = path.resolve(".")) {
+
+  }
+
   npmLink(cwd = path.resolve("."), argv = []) {
     return new Promise((resolve, reject) => {
       let tab = ["link"];

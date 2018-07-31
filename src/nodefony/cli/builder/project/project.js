@@ -5,7 +5,7 @@ module.exports = class generateProject extends nodefony.Builder {
     this.name = null;
     this.location = null;
     if (this.cmd === "create:project" || this.cmd === "create") {
-      if (args[0]) {
+      if (args && args[0]) {
         this.name = args[0];
         this.location = args[1] || path.resolve(".");
       }
@@ -60,6 +60,16 @@ module.exports = class generateProject extends nodefony.Builder {
         default: this.cli.response.path,
         message: 'Project Path',
         validate: (value) => {
+          let myPath = null;
+          try {
+            myPath = new nodefony.fileClass(path.resolve(value));
+          } catch (e) {
+            return e.message;
+          }
+          let res = nodefony.isNodefonyTrunk(myPath.path);
+          if (res) {
+            return "You can't install project in nodefony Trunk project !";
+          }
           if (value) {
             this.location = value;
             return true;

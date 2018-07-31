@@ -48,7 +48,8 @@ nodefony.Builder = class Builder {
             return resolve(this.cli.response);
           }
         }
-        return reject(new Error(`Builder has not createBuilder Nothing to do !!`));
+        return resolve(this.cli.response);
+        //return reject(new Error(`Builder has not createBuilder Nothing to do !!`));
       } catch (e) {
         return reject(e);
       }

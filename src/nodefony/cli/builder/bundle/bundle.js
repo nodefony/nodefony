@@ -298,7 +298,7 @@ const Nodefony = class Nodefony extends Bundle {
   }
 };
 
-const React = class React extends Bundle {
+class React extends Bundle {
   constructor(cli, type) {
     super(cli, type || "js", "react");
     this.generateReactCli = new generateReactCli(this);
@@ -341,9 +341,9 @@ const React = class React extends Bundle {
       ]
     };
   }
-};
+}
 
-const Angular = class Angular extends Bundle {
+class Angular extends Bundle {
   constructor(cli, type) {
     super(cli, type || "js", "angular");
     this.angularCli = new generateAngularCli(this);
@@ -386,7 +386,7 @@ const Angular = class Angular extends Bundle {
       ]
     };
   }
-};
+}
 
 const interaction = function (cli) {
   let bundles = [];
@@ -395,6 +395,7 @@ const interaction = function (cli) {
       bundles.push(bundle);
     }
   }
+  bundles.push("Quit");
   return cli.prompt([{
     type: 'list',
     name: 'type',
@@ -402,11 +403,13 @@ const interaction = function (cli) {
     default: 'nodefony',
     choices: bundles,
     filter: function (val) {
+      if (val === "Quit") {
+        cli.terminate();
+      }
       return val.toLowerCase();
     }
   }]);
 };
-
 
 module.exports = {
   nodefony: Nodefony,

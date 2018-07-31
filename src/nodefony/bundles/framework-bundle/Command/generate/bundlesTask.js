@@ -14,10 +14,10 @@ class bundlesTask extends nodefony.Task {
     );
     /*this.setHelp("generate:bundle:angular name [path]",
       "Generate a Angular Bundle  Example : nodefony generate:bundle:angular name ./src/bundles"
-    );*/
+    );
     this.setHelp("generate:bundle:react name [path]",
       "Generate a React Bundle Example : nodefony generate:bundle:react name ./src/bundles"
-    );
+    );*/
   }
 
   nodefony(name, Path = path.resolve("src", "bundles")) {
@@ -141,7 +141,6 @@ class bundlesTask extends nodefony.Task {
       throw e;
     }
   }
-
 }
 
 module.exports = bundlesTask;

@@ -21,7 +21,14 @@ const nodefony = function () {
   }
 }();
 
+const isElectronDev = function () {
+  return process.mainModule.filename.indexOf('app.asar') === -1;
+};
+
 if (nodefony.isElectron) {
+  if (!isElectronDev()) {
+    process.chdir(nodefony.isElectron.app.getAppPath());
+  }
   nodefony.isElectron.app.on('ready', () => {
     try {
       return new nodefony.cliStart();

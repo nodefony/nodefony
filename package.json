@@ -84,7 +84,7 @@
   "devDependencies": {
     "editorconfig": "^0.15.0",
     "github-release-notes": "^0.16.0",
-    "jshint": "2.9.5"
+    "jshint": "^2.9.6"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md",
