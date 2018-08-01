@@ -661,7 +661,7 @@ module.exports = nodefony.register("cli", function () {
             if (code === 0) {
               return resolve(code);
             }
-            return reject(new Error(`Command : npm ${argv.join(' ')}  cwd : ${cwd} Error Code : ${code}`));
+            return resolve(new Error(`Command : npm ${argv.join(' ')}  cwd : ${cwd} Error Code : ${code}`));
           });
         } catch (e) {
           this.logger(e, "ERROR");
@@ -695,7 +695,7 @@ module.exports = nodefony.register("cli", function () {
             if (code === 0) {
               return resolve(code);
             }
-            return reject(new Error(`Command : yarn ${argv.join(' ')}  cwd : ${cwd} Error Code : ${code}`));
+            return resolve(new Error(`Command : yarn ${argv.join(' ')}  cwd : ${cwd} Error Code : ${code}`));
           });
         } catch (e) {
           this.logger(e, "ERROR");
