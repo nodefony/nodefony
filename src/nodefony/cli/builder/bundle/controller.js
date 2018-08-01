@@ -10,6 +10,7 @@ const Controller = class Controller {
     this.skeletonController = path.resolve(this.skeletonPath, this.bundleType, "controllerClass.skeleton");
     this.directory = "controller";
   }
+
   createBuilder(name, directory) {
     this.checkName(name);
     nodefony.extend(this.cli.response, {
@@ -57,8 +58,6 @@ const Controller = class Controller {
     } catch (e) {
       throw e;
     }
-
-
   }
 };
 

@@ -352,8 +352,8 @@ module.exports = nodefony.register("cliKernel", function () {
               if (Object.keys(this.commands[bundle][this.command].tasks).length) {
                 let myCommand = this.commands[bundle][this.command];
                 if (this.task in myCommand.tasks) {
+                  let myTask = myCommand.tasks[this.task];
                   if (this.action) {
-                    let myTask = myCommand.tasks[this.task];
                     if (myTask[this.action]) {
                       let myAction = myTask[this.action];
                       try {
@@ -376,9 +376,16 @@ module.exports = nodefony.register("cliKernel", function () {
                       return this.terminate(1);
                     }
                   } else {
-                    myCommand.showHelp();
-                    this.logger(new Error(this.logCommand() + " Action Not Found"), "ERROR", "COMMAND");
-                    return this.terminate(1);
+                    // hook run 
+                    return myTask.showBanner()
+                      .then(() => {
+                        this.logger(this.logCommand(), "INFO", "COMMAND");
+                        return myTask.run.apply(myCommand.tasks[this.task], this.args);
+                      })
+                      .catch((e) => {
+                        myTask.logger(e, "ERROR");
+                        return this.terminate(1);
+                      });
                   }
                 } else {
                   myCommand.showHelp();
@@ -386,7 +393,7 @@ module.exports = nodefony.register("cliKernel", function () {
                   return this.terminate(1);
                 }
               } else {
-                break;
+                continue;
               }
             } else {
               continue;

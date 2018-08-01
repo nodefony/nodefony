@@ -93,7 +93,19 @@ module.exports = class cliStart extends nodefony.cliKernel {
         this.showMenu();
       } else {
         if (!this.started) {
-          this.start(this.cmd, this.args);
+          this.start(this.cmd, this.args)
+            .then(() => {
+              if (!this.keepAlive) {
+                if (this.reloadMenu) {
+                  return this.showMenu(true, this.reloadMenu);
+                }
+                return this.terminate(0);
+              }
+            })
+            .catch((e) => {
+              this.logger(e, "ERROR");
+              this.terminate(1);
+            });
         }
       }
     }
@@ -186,7 +198,6 @@ module.exports = class cliStart extends nodefony.cliKernel {
               .catch((e) => {
                 this.logger(e, "ERROR");
               });
-
           });
       }
       this.showHelp();
@@ -568,6 +579,11 @@ module.exports = class cliStart extends nodefony.cliKernel {
       let installer = new builderInstall(this);
       return installer.generateCertificates(cwd)
         .then(() => {
+          let directory = path.resolve(cwd, "config", "certificates");
+          let config = path.resolve(cwd, "config", "openssl");
+          this.logger(`Certificates build with config : ${config}`);
+          let res = this.ls(directory);
+          this.logger(`See Generated Certificates in directory : ${directory} \n${res.stdout}`);
           this.logger("Generate Certificates Complete");
           return cwd;
         }).catch((e) => {

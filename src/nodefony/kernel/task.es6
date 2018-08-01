@@ -10,6 +10,7 @@ module.exports = nodefony.register("Task", () => {
       this.command = command;
       this.cli = this.command.cli;
       this.json = this.command.json;
+      this.interactive = this.command.interactive;
     }
 
     showBanner() {
@@ -27,6 +28,25 @@ module.exports = nodefony.register("Task", () => {
         .catch((e) => {
           return e;
         });
+    }
+
+    run(args) {
+      if (this.interactive) {
+        return this.interaction(args)
+          .then((response) => {
+            return this.generate(args, response);
+          });
+      } else {
+        return this.generate(args, null);
+      }
+    }
+
+    generate() {
+      return Promise.reject(new Error(`Task Class : ${this.name} error has not generate method `));
+    }
+
+    interaction() {
+      return Promise.reject(new Error(`Task Class : ${this.name} has not interaction method no interactive mode`));
     }
 
     logger(pci, severity, msgid, msg) {

@@ -32,22 +32,6 @@ class generateCommand extends nodefony.Command {
     }
   }
 
-  controller() {
-    let task = this.getTask("bundle");
-    console.log(task);
-  }
-
-  service() {
-    let task = this.getTask("service");
-    console.log(task);
-
-  }
-
-  entity() {
-    let task = this.getTask("entity");
-    console.log(task);
-  }
-
 }
 
 module.exports = generateCommand;

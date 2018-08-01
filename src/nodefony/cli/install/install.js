@@ -93,6 +93,7 @@ module.exports = class installProject extends nodefony.Builder {
     return new Promise((resolve, reject) => {
       try {
         let directory = path.resolve(cwd, "config", "certificates");
+        this.logger(`Clean certificates in : ${directory}`);
         this.cli.rm("-rf", directory);
         this.checkDirectoryExist(directory);
         this.logger(`Generate openssl certificates in : ${directory}`);
@@ -101,10 +102,10 @@ module.exports = class installProject extends nodefony.Builder {
           cwd: cwd,
           shell: true
         }, (code) => {
-          if (code === 1) {
+          if (code !== 0) {
             return reject(new Error("generateCertificates error : " + code));
           }
-          return resolve(code);
+          return resolve(cwd);
         });
       } catch (e) {
         return reject(e);

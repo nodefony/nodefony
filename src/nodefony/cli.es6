@@ -543,6 +543,13 @@ module.exports = nodefony.register("cli", function () {
         throw e;
       }
     }
+    ls() {
+      try {
+        return shell.ls.apply(shell, arguments);
+      } catch (e) {
+        throw e;
+      }
+    }
 
     createDirectory(myPath, mode, callback, force) {
       let file = null;
