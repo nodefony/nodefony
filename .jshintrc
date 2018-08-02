@@ -50,6 +50,7 @@
     "navigator": true,
     "stage": true,
     "$": true,
-    "Rx": true
+    "Rx": true,
+    "inquirer": true
   }
 }

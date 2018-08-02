@@ -25,6 +25,7 @@ module.exports = function () {
   context.async = require('async');
   //context.nodedomain = require('domain');
   context.Promise = require('promise');
+  context.inquirer = require('inquirer');
   context.clc = require('cli-color');
   context.shell = require("shelljs");
   context.twig = require("twig");

@@ -1,6 +1,6 @@
 const Table = require('cli-table');
 const asciify = require('asciify');
-const inquirer = require('inquirer');
+//const inquirer = require('inquirer');
 const commander = require('commander');
 const spawn = require('child_process').spawn;
 const spawnSync = require('child_process').spawnSync;
@@ -382,6 +382,13 @@ module.exports = nodefony.register("cli", function () {
           throw e;
         }
       }
+    }
+
+    getSeparator(sep) {
+      if (sep) {
+        return new inquirer.Separator(sep);
+      }
+      return new inquirer.Separator("--------");
     }
 
     getSpinner(message, design) {

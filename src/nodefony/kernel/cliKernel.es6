@@ -171,15 +171,19 @@ module.exports = nodefony.register("cliKernel", function () {
       return super.showBanner(data);
     }
 
+    clearNodefonyCommand() {
+      this.pattern = null;
+      this.command = null;
+      this.task = null;
+      this.action = null;
+    }
+
     /**
      * PARSER
      * command:task:action
      */
     parseNodefonyCommand(cmd, args) {
-      this.pattern = null;
-      this.command = null;
-      this.task = null;
-      this.action = null;
+      this.clearNodefonyCommand();
       if (cmd) {
         this.pattern = cmd.split(":");
         if (args) {
@@ -193,7 +197,6 @@ module.exports = nodefony.register("cliKernel", function () {
           }
         }
       }
-
       if (this.pattern) {
         if (!this.pattern.length) {
           return;
@@ -344,8 +347,8 @@ module.exports = nodefony.register("cliKernel", function () {
                         return Promise.reject(e);
                       });
                   } catch (e) {
-                    myCommand.logger(e, "ERROR");
-                    return this.terminate(1);
+                    //myCommand.logger(e, "ERROR");
+                    return Promise.reject(e);
                   }
                 }
               }
@@ -363,34 +366,37 @@ module.exports = nodefony.register("cliKernel", function () {
                             return myAction.apply(myCommand.tasks[this.task], this.args);
                           })
                           .catch((e) => {
-                            myTask.logger(e, "ERROR");
-                            return this.terminate(1);
+                            //myTask.logger(e, "ERROR");
+                            return Promise.reject(e);
                           });
                       } catch (e) {
-                        myTask.logger(e, "ERROR");
-                        return this.terminate(1);
+                        //myTask.logger(e, "ERROR");
+                        return Promise.reject(e);
                       }
                     } else {
                       myTask.showHelp();
-                      this.logger(new Error(this.logCommand() + " Action Not Found"), "ERROR", "COMMAND");
-                      return this.terminate(1);
+                      let error = new Error(this.logCommand() + " Action Not Found");
+                      this.logger(error, "ERROR", "COMMAND");
+                      return Promise.reject(error);
                     }
                   } else {
-                    // hook run 
+                    // hook run
                     return myTask.showBanner()
                       .then(() => {
                         this.logger(this.logCommand(), "INFO", "COMMAND");
-                        return myTask.run.apply(myCommand.tasks[this.task], this.args);
+                        return myTask.run.call(myCommand.tasks[this.task], this.args);
                       })
                       .catch((e) => {
-                        myTask.logger(e, "ERROR");
-                        return this.terminate(1);
+                        //myTask.logger(e, "ERROR");
+                        myTask.showHelp();
+                        return Promise.reject(e);
                       });
                   }
                 } else {
                   myCommand.showHelp();
-                  this.logger(new Error(this.logCommand() + " Task Not Found"), "ERROR", "COMMAND");
-                  return this.terminate(1);
+                  let error = new Error(this.logCommand() + " Task Not Found");
+                  this.logger(error, "ERROR", "COMMAND");
+                  return Promise.reject(error);
                 }
               } else {
                 continue;

@@ -27,6 +27,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
         this.cmd = cmd.toLowerCase();
         this.args = args;
         this.parseNodefonyCommand();
+        //console.log(`Command : ${this.cmd} Args : ${this.args}`);
         if (this.promise) {
           return this.promise
             .then(() => {
@@ -39,9 +40,14 @@ module.exports = class cliStart extends nodefony.cliKernel {
                     return this.terminate(0);
                   }
                 })
-                .catch((e) => {
-                  this.logger(e, "ERROR");
-                  this.terminate(1);
+                .catch(( /*e*/ ) => {
+                  //this.logger(e, "ERROR");
+                  if (!this.keepAlive) {
+                    if (this.reloadMenu) {
+                      return this.showMenu(true, this.reloadMenu);
+                    }
+                    return this.terminate(1);
+                  }
                 });
             });
         } else {
@@ -56,9 +62,14 @@ module.exports = class cliStart extends nodefony.cliKernel {
                   return this.terminate(0);
                 }
               })
-              .catch((e) => {
-                this.logger(e, "ERROR");
-                this.terminate(1);
+              .catch(( /*e*/ ) => {
+                //this.logger(e, "ERROR");
+                if (!this.keepAlive) {
+                  if (this.reloadMenu) {
+                    return this.showMenu(true, this.reloadMenu);
+                  }
+                  return this.terminate(1);
+                }
               });
           }
           this.promise = null;
@@ -81,6 +92,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
     this.setOption('-d, --debug ', 'Nodefony debug');
     this.setOption('-h, --help ', 'Nodefony help');
     this.setOption('-v, --version ', 'Nodefony version');
+    this.setOption('-f, --force ', 'Force disable interactive mode');
     this.setOption('-i, --interactive ', 'Nodefony cli Interactive Mode');
     this.setOption('-j, --json', 'Nodefony json response');
     this.parseCommand(process.argv);
@@ -102,9 +114,14 @@ module.exports = class cliStart extends nodefony.cliKernel {
                 return this.terminate(0);
               }
             })
-            .catch((e) => {
-              this.logger(e, "ERROR");
-              this.terminate(1);
+            .catch(( /*e*/ ) => {
+              //this.logger(e, "ERROR");
+              if (!this.keepAlive) {
+                if (this.reloadMenu) {
+                  return this.showMenu(true, this.reloadMenu);
+                }
+                return this.terminate(1);
+              }
             });
         }
       }
@@ -120,10 +137,26 @@ module.exports = class cliStart extends nodefony.cliKernel {
     }
   }
 
-  setCommand(cmd, args = []) {
+  reloadPromt(clear) {
+    if (clear) {
+      this.clear();
+    }
+    this.reloadMenu = true;
+    //this.clearCommand();
+    return Promise.resolve();
+  }
+
+  clearCommand() {
+    this.cmd = null;
+    this.args.length = 0;
+    this.clearNodefonyCommand();
     while (process.argv.length > 2) {
       process.argv.pop();
     }
+  }
+
+  setCommand(cmd, args = []) {
+    this.clearCommand();
     if (cmd) {
       process.argv.push(cmd);
     } else {
@@ -135,6 +168,8 @@ module.exports = class cliStart extends nodefony.cliKernel {
   start(command, args, rawCommand) {
     this.started = true;
     switch (command) {
+    case "showmenu":
+      return this.reloadPromt();
     case "create":
       try {
         return this.createProject(command, args, this.commander.interactive);
@@ -287,6 +322,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
       this.choices.push(`Log  PM2 Production Projects`);
       this.choices.push(`Kill PM2 Deamon`);
     }
+    this.choices.push(this.getSeparator());
     this.choices.push("Help");
     this.choices.push("Quit");
   }

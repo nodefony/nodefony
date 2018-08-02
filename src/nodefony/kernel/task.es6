@@ -35,6 +35,9 @@ module.exports = nodefony.register("Task", () => {
         return this.interaction(args)
           .then((response) => {
             return this.generate(args, response);
+          })
+          .catch((e) => {
+            return Promise.reject(e);
           });
       } else {
         return this.generate(args, null);

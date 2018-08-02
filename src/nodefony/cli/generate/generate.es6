@@ -4,11 +4,11 @@ module.exports = class generateBuilder extends nodefony.Builder {
     super(cli);
     this.choices = [];
     if (nodefony.isTrunk) {
-      this.choices.push("Generate New Nodefony Project");
       this.choices.push("Generate New Bundle");
       this.choices.push("Generate New Controller");
       this.choices.push("Generate New Service");
       this.choices.push("Generate New Entity");
+      this.choices.push("Generate New Nodefony Project");
       this.choices.push("Generate Openssl Certificates");
       this.choices.push("Generate Haproxy Configuration");
       this.choices.push("Generate Nginx Configuration");
@@ -73,12 +73,11 @@ module.exports = class generateBuilder extends nodefony.Builder {
     case "entity":
       return this.cli.setCommand("generate:entity", ["-i"]);
     case "haproxy":
-      break;
+      return this.cli.setCommand("generate:haproxy", ["-i"]);
     case "nginx":
-      break;
+      return this.cli.setCommand("generate:nginx", ["-i"]);
     case "quit":
-      this.logger("QUIT");
-      return this.cli.terminate(0);
+      return this.cli.setCommand("showmenu");
     default:
       this.logger(`Command : ${response.command} Not Found`, "ERROR");
       return this.cli.setCommand("", "-h");
