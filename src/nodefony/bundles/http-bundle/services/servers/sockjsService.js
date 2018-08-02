@@ -202,7 +202,7 @@ module.exports = class sockjs extends nodefony.Service {
       this.logger(" Create sockjs server :   " + service.type);
       this[protocol] = Sockjs.createServer({
         sockjs_url: '/__webpack_dev_server__/sockjs.bundle.js',
-        //websocket:false,
+        websocket: this.websocket,
         prefix: this.prefix,
         log: (severity, line) => {
           if (severity === "error") {
