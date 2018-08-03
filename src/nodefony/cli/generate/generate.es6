@@ -18,6 +18,17 @@ module.exports = class generateBuilder extends nodefony.Builder {
     this.choices.push("Quit");
   }
 
+  logger(pci, severity, msgid, msg) {
+    try {
+      if (!msgid) {
+        msgid = "GENERATER";
+      }
+      return this.cli.logger(pci, severity, msgid, msg);
+    } catch (e) {
+      console.log(pci);
+    }
+  }
+
   interaction() {
     return this.cli.prompt([{
         type: 'list',

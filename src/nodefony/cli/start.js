@@ -1,5 +1,15 @@
-const builderInstall = require(path.resolve(__dirname, "install", "install.js"));
-const builderGenerater = require(path.resolve(__dirname, "generate", "generate.es6"));
+let builderInstall = null;
+let builderGenerater = null;
+let builderTools = null;
+let builderPM2 = null;
+try {
+  builderInstall = require(path.resolve(__dirname, "install", "install.js"));
+  builderGenerater = require(path.resolve(__dirname, "generate", "generate.es6"));
+  builderTools = require(path.resolve(__dirname, "tools", "tools.es6"));
+  builderPM2 = require(path.resolve(__dirname, "tools", "pm2.es6"));
+} catch (e) {
+  throw e;
+}
 
 module.exports = class cliStart extends nodefony.cliKernel {
 
@@ -307,75 +317,22 @@ module.exports = class cliStart extends nodefony.cliKernel {
         this.choices.push(`Install Project`);
         this.choices.push(`Rebuild Project`);
         this.choices.push(`${this.generateString}`);
+        this.choices.push(`Tools`);
+        this.choices.push(`PM2 Tools`);
         this.choices.push(`${this.runString} Test`);
-        this.choices.push(`Outdated`);
-        this.choices.push(`Webpack Dump`);
-        this.choices.push(`Reset`);
       } else {
         this.choices.push(`Build Project`);
         this.choices.push(`${this.generateString}`);
-        this.choices.push(`Reset`);
+        this.choices.push(`Tools`);
+        this.choices.push(`PM2 Tools`);
       }
     } else {
       this.choices.push(`Create Nodefony Project`);
-      this.choices.push(`List PM2 Production Projects`);
-      this.choices.push(`Log  PM2 Production Projects`);
-      this.choices.push(`Kill PM2 Deamon`);
+      this.choices.push(`PM2 Tools`);
     }
     this.choices.push(this.getSeparator());
     this.choices.push("Help");
     this.choices.push("Quit");
-  }
-
-  runMenu(reload = false) {
-    return this.interaction(this.choices)
-      .then(() => {
-        this.reloadMenu = reload ||  this.reloadMenu;
-        switch (this.response.command) {
-        case "project":
-          return this.createProject(null, null, true);
-        case "rebuild":
-          return this.setCommand("rebuild");
-        case "build":
-          return this.setCommand("build");
-        case "install":
-          return this.setCommand("install");
-        case "generate":
-          return this.generateCli(true);
-        case "exit":
-          this.logger("QUIT");
-          return this.terminate(0);
-        case "clear":
-          return this.cleanProject();
-        case "webpack":
-          return this.setCommand("webpack:dump");
-        case "controller":
-          break;
-        case "development":
-          return this.setCommand("development");
-        case "production":
-          return this.setCommand("production");
-        case "pre-production":
-          return this.setCommand("preprod");
-        case "test":
-          return this.setCommand("unitest:launch:all");
-        case "outdated":
-          //this.reloadMenu = true;
-          return this.setCommand("nodefony:outdated");
-        case "pm2_list":
-          return this.setCommand("list");
-        case "pm2_log":
-          return this.setCommand("logs");
-        case "pm2_kill":
-          return this.setCommand("kill");
-        default:
-          return this.setCommand("", "-h");
-        }
-      })
-      .catch((e) => {
-        this.logger(e, "ERROR");
-        throw e;
-      });
   }
 
   interaction(choices) {
@@ -413,18 +370,10 @@ module.exports = class cliStart extends nodefony.cliKernel {
             return "build";
           case `Rebuild Project`:
             return "rebuild";
-          case `Reset`:
-            return "clear";
-          case `Webpack Dump`:
-            return "webpack";
-          case `Outdated`:
-            return "outdated";
-          case `List PM2 Production Projects`:
-            return "pm2_list";
-          case `Log  PM2 Production Projects`:
-            return "pm2_log";
-          case `Kill PM2 Deamon`:
-            return "pm2_kill";
+          case `PM2 Tools`:
+            return "pm2";
+          case `Tools`:
+            return "tools";
           default:
             console.log("\n");
             this.logger(`command not found : ${val}`, "INFO");
@@ -434,6 +383,46 @@ module.exports = class cliStart extends nodefony.cliKernel {
       }])
       .then((response) => {
         return nodefony.extend(this.response, response);
+      });
+  }
+
+  runMenu(reload = false) {
+    return this.interaction(this.choices)
+      .then(() => {
+        this.reloadMenu = reload ||  this.reloadMenu;
+        switch (this.response.command) {
+        case "project":
+          return this.createProject(null, null, true);
+        case "rebuild":
+          return this.setCommand("rebuild");
+        case "build":
+          return this.setCommand("build");
+        case "install":
+          return this.setCommand("install");
+        case "generate":
+          return this.generateCli(true);
+        case "pm2":
+          return this.pm2Cli(true);
+        case "tools":
+          return this.toolsCli(true);
+        case "development":
+          return this.setCommand("development");
+        case "production":
+          return this.setCommand("production");
+        case "pre-production":
+          return this.setCommand("preprod");
+        case "test":
+          return this.setCommand("unitest:launch:all");
+        case "exit":
+          this.logger("QUIT");
+          return this.terminate(0);
+        default:
+          return this.setCommand("", "-h");
+        }
+      })
+      .catch((e) => {
+        this.logger(e, "ERROR");
+        throw e;
       });
   }
 
@@ -589,24 +578,18 @@ module.exports = class cliStart extends nodefony.cliKernel {
     }
   }
 
-  cleanProject(cwd = path.resolve(".")) {
-    try {
-      let installer = new builderInstall(this);
-      return installer.clear(cwd).then(() => {
-        this.logger("Clean Project Complete");
-        this.terminate(0);
-      }).catch((e) => {
-        this.logger(e, "ERROR");
-        throw e;
-      });
-    } catch (e) {
-      this.logger(e, "ERROR");
-      throw e;
-    }
-  }
-
   generateCli(interactive) {
     let generater = new builderGenerater(this);
+    return generater.run(interactive);
+  }
+
+  toolsCli(interactive) {
+    let generater = new builderTools(this);
+    return generater.run(interactive);
+  }
+
+  pm2Cli(interactive) {
+    let generater = new builderPM2(this);
     return generater.run(interactive);
   }
 

@@ -82,7 +82,7 @@ nodefony.Builder = class Builder {
   logger(pci, severity, msgid, msg) {
     try {
       if (!msgid) {
-        msgid = "GENERATER";
+        msgid = "BUILDER";
       }
       return this.cli.logger(pci, severity, msgid, msg);
     } catch (e) {
