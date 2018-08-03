@@ -1,6 +1,9 @@
 {% block body %}
 
-const addon = require('../build/Release/{{name}}.node');
+{% if addon == true %}
+    const addon = require('../build/Release/{{name}}.node');
+{% endif %}
+
 /**
  *	@class {{controllerName}}
  *	@constructor
@@ -22,8 +25,9 @@ module.exports = class {{controllerName}} extends nodefony.controller {
 	indexAction (){
 		try {
 			return this.render("{{bundleName}}:{{directory}}:index.html.twig", {
-				name: "{{bundleName}}",
+				name: "{{bundleName}}"{% if addon == true %},
 				binding: addon.{{name}}()
+        {% endif %}
 			});
 		}catch(e){
 			throw e;

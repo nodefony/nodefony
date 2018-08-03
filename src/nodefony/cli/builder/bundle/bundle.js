@@ -26,7 +26,8 @@ const Bundle = class Bundle extends nodefony.Builder {
       projectYear: this.cli.response.config.App.projectYear,
       domain: this.cli.response.configKernel.system.domain,
       local: this.cli.response.config.App.locale,
-      projectYearNow: new Date().getFullYear()
+      projectYearNow: new Date().getFullYear(),
+      addon: false
     });
 
     this.skeletonPath = path.resolve(__dirname, "skeletons");
@@ -53,7 +54,7 @@ const Bundle = class Bundle extends nodefony.Builder {
       } else {
         mypath = path.resolve("src", "bundles");
       }
-      return this.cli.prompt([{
+      let prompt = [{
         type: 'input',
         name: 'name',
         default: "api",
@@ -81,7 +82,23 @@ const Bundle = class Bundle extends nodefony.Builder {
           }
           return 'Please enter a valid Bundle Path';
         }
-      }]);
+      }];
+
+      if (this.bundleType === "nodefony" || this.bundleType === "") {
+        prompt.push({
+          type: 'confirm',
+          name: 'addon',
+          message: `Do You Want To Build Matrice C++ addon ?`,
+          default: false
+        });
+      }
+      return this.cli.prompt(prompt)
+        .then((response) => {
+          if (response.addon) {
+            this.cli.response.addon = true;
+          }
+          return response;
+        });
     });
   }
 
@@ -138,7 +155,6 @@ const Bundle = class Bundle extends nodefony.Builder {
       this.bundlePath = path.resolve(this.location.path, this.name);
       this.bundleFile = path.resolve(this.bundlePath, this.shortName + "Bundle.js");
     }
-    this.cli.logger("GENERATE bundle : " + this.name + " LOCATION : " + this.location.path);
     nodefony.extend(this.cli.response, {
       bundleName: this.name,
       name: this.shortName,
@@ -177,7 +193,8 @@ const Bundle = class Bundle extends nodefony.Builder {
 
   createBuilder(name, location) {
     this.checkPath(name, location);
-    return {
+    this.cli.logger("GENERATE bundle : " + this.name + " LOCATION : " + this.location.path);
+    let myObject = {
       name: this.name,
       type: "directory",
       childs: [
@@ -198,16 +215,7 @@ const Bundle = class Bundle extends nodefony.Builder {
         }, {
           name: "src",
           type: "directory",
-          childs: [{
-            name: "addon",
-            type: "directory",
-            childs: [{
-              name: this.shortName + ".cc",
-              type: "file",
-              skeleton: this.bindingcodeSkeleton,
-              params: this.cli.response
-            }]
-          }]
+          childs: []
         }, {
           name: "Entity",
           type: "directory",
@@ -221,11 +229,6 @@ const Bundle = class Bundle extends nodefony.Builder {
           skeleton: this.packageSkeleton,
           params: this.cli.response
         }, {
-          name: "binding.gyp",
-          type: "file",
-          skeleton: this.bindingSkeleton,
-          params: this.cli.response
-        }, {
           name: "build",
           type: "directory",
           childs: [{
@@ -235,6 +238,25 @@ const Bundle = class Bundle extends nodefony.Builder {
         }
       ]
     };
+    if (this.cli.response.addon === true) {
+      myObject.childs.push({
+        name: "binding.gyp",
+        type: "file",
+        skeleton: this.bindingSkeleton,
+        params: this.cli.response
+      });
+      myObject.childs[8].childs.push({
+        name: "addon",
+        type: "directory",
+        childs: [{
+          name: this.shortName + ".cc",
+          type: "file",
+          skeleton: this.bindingcodeSkeleton,
+          params: this.cli.response
+        }]
+      });
+    }
+    return myObject;
   }
 
   install() {

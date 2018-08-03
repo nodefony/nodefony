@@ -40,8 +40,11 @@ class controllerTask extends nodefony.Task {
     throw new Error(`Bundle: ${name} not found`);
   }
 
-  controllerExist(bundle, nameController) {
-    return true
+  checkController(bundle, nameController) {
+    let res = this.controller.checkName(nameController);
+    if (res) {
+      throw new Error(`Name : ${nameController} Unauthorised Please enter a valid Controller name`);
+    }
   }
 
   interaction( /*args*/ ) {
@@ -75,14 +78,10 @@ class controllerTask extends nodefony.Task {
           message: `Enter Controller Name : `,
           validate: (value, response) => {
             if (value) {
-              let res = this.controller.checkName(value);
-              if (res) {
-                return `${value} Unauthorised Please enter a valid Controller name`;
-              }
               try {
-                res = this.controllerExist(response.bundle, value);
+                this.checkController(response.bundle, value);
               } catch (e) {
-                return "Controller already exist " + value;
+                return e.message;
               }
               return true;
             }
@@ -100,7 +99,7 @@ class controllerTask extends nodefony.Task {
     return new Promise((resolve, reject) => {
       try {
         if (this.interactive && response) {
-          //this.controller.generateController(response.controllerName);
+          return this.controller.generateController(response.controllerName);
         }
         if (args.length) {
           let bundle = null;
@@ -110,8 +109,8 @@ class controllerTask extends nodefony.Task {
             bundle = this.getBundle(args[1]);
           }
           if (bundle) {
-            this.controllerExist(bundle, args[0]);
-            //this.controller.generateController(args[0]);
+            this.checkController(bundle, args[0]);
+            return this.controller.generateController(args[0]);
           }
         }
         return reject(new Error("Bad Arguments"));

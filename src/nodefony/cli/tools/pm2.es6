@@ -5,9 +5,10 @@ module.exports = class pm2Builder extends nodefony.Builder {
     this.choices = [];
     if (nodefony.isTrunk) {
       this.choices.push(`List PM2 Production Projects`);
-      this.choices.push(`Log PM2 Production Projects`);
-      this.choices.push(`Stop PM2 Production Projects`);
-      this.choices.push(`Restart PM2 Production Projects`);
+      this.choices.push(`Log PM2 Production Project`);
+      this.choices.push(`Stop PM2 Production Project`);
+      this.choices.push(`Restart PM2 Production Project`);
+      this.choices.push(`Delete PM2 Production Project`);
       this.choices.push(`Kill PM2 Deamon`);
     } else {
       this.choices.push(`List PM2 Production Projects`);
@@ -41,11 +42,14 @@ module.exports = class pm2Builder extends nodefony.Builder {
           switch (val) {
           case "List PM2 Production Projects":
             return "list";
-          case "Stop PM2 Production Projects":
+          case "Stop PM2 Production Project":
             return "stop";
-          case "Restart PM2 Production Projects":
+          case "Restart PM2 Production Project":
             return "restart";
+          case "Delete PM2 Production Project":
+            return "delete";
           case "Log PM2 Production Projects":
+          case "Log PM2 Production Project":
             return "logs";
           case "Kill PM2 Deamon":
             return "kill";
@@ -65,10 +69,16 @@ module.exports = class pm2Builder extends nodefony.Builder {
 
   start(response) {
     switch (response.command) {
+    case "stop":
+      return this.cli.setCommand("stop");
+    case "restart":
+      return this.cli.setCommand("restart");
     case "list":
       return this.cli.setCommand("list");
     case "logs":
       return this.cli.setCommand("logs");
+    case "delete":
+      return this.cli.setCommand("delete");
     case "kill":
       return this.cli.setCommand("kill");
     case "quit":

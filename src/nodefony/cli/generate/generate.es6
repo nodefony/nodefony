@@ -94,5 +94,4 @@ module.exports = class generateBuilder extends nodefony.Builder {
       return this.cli.setCommand("", "-h");
     }
   }
-
 };
