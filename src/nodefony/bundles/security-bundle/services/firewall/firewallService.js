@@ -306,7 +306,7 @@ module.exports = class security extends nodefony.Service {
     let next = null;
     context.crossDomain = context.isCrossDomain();
     if (context.crossDomain) {
-      if (context.security) {
+      if (context.security && this.kernel.domainCheck) {
         next = context.security.handleCrossDomain(context);
         switch (next) {
         case 204:
@@ -320,9 +320,13 @@ module.exports = class security extends nodefony.Service {
           return 200;
         }
       } else {
-        let error = new Error("CROSS DOMAIN Unauthorized REQUEST REFERER : " + context.originUrl.href);
-        error.code = 401;
-        throw error;
+        if (this.kernel.domainCheck) {
+          let error = new Error("CROSS DOMAIN Unauthorized REQUEST REFERER : " + context.originUrl.href);
+          error.code = 401;
+          throw error;
+        } else {
+          return 200;
+        }
       }
     }
   }
