@@ -105,14 +105,15 @@ module.exports = class cliStart extends nodefony.cliKernel {
     this.setOption('-f, --force ', 'Force disable interactive mode');
     this.setOption('-i, --interactive ', 'Nodefony cli Interactive Mode');
     this.setOption('-j, --json', 'Nodefony json response');
+    let cmd = (!process.argv[2]);
     this.parseCommand(process.argv);
-    if (!this.cmd && !process.argv.slice(2).length) {
+    if (!this.cmd && !process.argv.slice(2).length && cmd) {
       this.buildMenu();
-      this.showMenu();
+      return this.showMenu();
     } else {
       if (!this.cmd && this.commander.interactive) {
         this.buildMenu();
-        this.showMenu();
+        return this.showMenu();
       } else {
         if (!this.started) {
           this.start(this.cmd, this.args)
@@ -259,7 +260,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
       if (!nodefony.isTrunk) {
         return this.showHelp();
       } else {
-        return this.setCommand("", ["-h"]);
+        return nodefony.start(command, args, this);
       }
       break;
     case "certificates":

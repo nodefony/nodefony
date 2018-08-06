@@ -702,9 +702,12 @@ module.exports = class Nodefony {
         let kernel = new this.appKernel(environment, cli, options);
         return kernel.start();
       }
+      if (cli.commander.hasOwnProperty('help')) {
+        cli.clear();
+        cli.showHelp();
+        return Promise.resolve();
+      }
       let error = new Error("No nodefony trunk detected !");
-      //cli.logger(error, "ERROR");
-      //cli.showHelp();
       throw error;
     }
   }

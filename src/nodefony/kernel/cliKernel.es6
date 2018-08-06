@@ -171,6 +171,13 @@ module.exports = nodefony.register("cliKernel", function () {
       return super.showBanner(data);
     }
 
+    showAsciify(name = null) {
+      if (this.commander && this.commander.json) {
+        return Promise.resolve();
+      }
+      return super.showAsciify(name);
+    }
+
     clearNodefonyCommand() {
       this.pattern = null;
       this.command = null;

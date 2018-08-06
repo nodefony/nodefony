@@ -180,9 +180,8 @@ Version : 4.0.0-beta.1 Platform : darwin Process : nodefony PID : 16368
 
 ?  Nodefony CLI :  (Use arrow keys)
 ❯ Create Nodefony Project
-  List PM2 Production Projects
-  Log  PM2 Production Projects
-  Kill PM2 Deamon
+  PM2 Tools
+  --------
   Help
   Quit
 ```
@@ -226,20 +225,19 @@ Version : 4.0.0 Platform : linux  Process : nodefony PID : 31635
 
 Fri Jul 27 2018 17:01:11 INFO nodefony : WELCOME PROJECT : myproject 1.0.0
 
-?  Nodefony CLI :  (Use arrow keys)
+?  Nodefony CLI :  
 ❯ Start Servers Development
-Start Servers Pre-Production
-Start Servers Production
-Install Project
-Rebuild Project
-Generate Bundle
-Generate Certificates
-Run Test
-Outdated
-Webpack Dump
-Reset
-Help
-Quit
+  Start Servers Pre-Production
+  Start Servers Production
+  Install Project
+  Rebuild Project
+  Generater
+  Tools
+  PM2 Tools
+  Run Test
+  --------
+  Help
+  Quit
 ```
 
 **Starting Development Servers in Inspector mode (--inspect)** :
