@@ -94,12 +94,15 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 
 #### On your system _you must have Installed_ :
 
--   ###### **[GIT](http://git-scm.com/)**  is Distributed version control system
+-   **[GIT](http://git-scm.com/)**  is Distributed version control system
 
 -   **[Node.js](https://nodejs.org/)** ® is a Platform built on Chrome's JavaScript runtime ( >= 6 )
 
 -   **[npm](https://www.npmjs.com/)** or **[yarn](https://yarnpkg.com/lang/en/)**  Packages Manager for javascript application
 
+-   **[OpenSSL](https://www.openssl.org/)** Toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols
+
+-   **[GNU Bash](https://www.gnu.org/software/bash/)** Bash is the GNU Project's shell
 
 #### Operating Systems : **[Install Node.js via Package](https://nodejs.org/en/download/package-manager)**
 
