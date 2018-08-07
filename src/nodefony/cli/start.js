@@ -51,7 +51,6 @@ module.exports = class cliStart extends nodefony.cliKernel {
                   }
                 })
                 .catch(( /*e*/ ) => {
-                  //this.logger(e, "ERROR");
                   if (!this.keepAlive) {
                     if (this.reloadMenu) {
                       return this.showMenu(true, this.reloadMenu);
@@ -73,7 +72,6 @@ module.exports = class cliStart extends nodefony.cliKernel {
                 }
               })
               .catch(( /*e*/ ) => {
-                //this.logger(e, "ERROR");
                 if (!this.keepAlive) {
                   if (this.reloadMenu) {
                     return this.showMenu(true, this.reloadMenu);

@@ -102,3 +102,12 @@ parse_git_branch() {
    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 export PS1="\u@\h \W\[\033[32m\]\$(parse_git_branch)\[\033[00m\] $ "
+
+/**
+*   REBASE Interactive
+*   https://delicious-insights.com/fr/articles/bien-utiliser-git-merge-et-rebase/
+**/
+git rebase --interactive b8603aca
+# change pick by edit
+git commit -a --amend --no-edit
+git rebase --continue

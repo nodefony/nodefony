@@ -44,12 +44,12 @@ module.exports = nodefony.register("Task", () => {
       }
     }
 
-    generate() {
-      return Promise.reject(new Error(`Task Class : ${this.name} error has not generate method `));
+    generate( /*args, response*/ ) {
+      return Promise.reject(new Error(`Run Task Class : ${this.name} error has not generate method `));
     }
 
-    interaction() {
-      return Promise.reject(new Error(`Task Class : ${this.name} has not interaction method no interactive mode`));
+    interaction( /*args*/ ) {
+      return Promise.reject(new Error(`Run Task Class : ${this.name} has not interaction method no interactive mode`));
     }
 
     logger(pci, severity, msgid, msg) {

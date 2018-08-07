@@ -1,0 +1,77 @@
+# MINIMAL CONFIGURATION HTTP SERVER
+
+server {
+  listen {{http_port}} http2;
+  server_name {{domain}};
+
+  set  $via  "{{domain}} NGINX $nginx_version";
+  if ($http_via) {
+    set $via  "$http_via, $via";
+  }
+
+  location / {
+    root {{publicPath}} ;
+    proxy_pass http://{{proxy_domain}}:{{proxy_http_port}};
+    proxy_http_version $server_protocol;
+    proxy_pass_header Server;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-Port $server_port;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Server $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Via  $via;
+    proxy_cache_bypass $http_upgrade;
+  }
+
+  # STATICS FILES
+  location ~ \.(js|css|png|ico|jpg|jpeg|gif|ttf|font|map|woff.?|twig|txt|html|xml|json|mp3|wmv|avi|mpg|mpeg|mp4|webm|swf|flv)$ {
+    access_log off;
+    root {{publicPath}};
+    expires 7d;
+  }
+}
+
+# MINIMAL CONFIGURATION HTTPS SERVER
+server {
+  listen      {{https_port}} ssl http2;
+  server_name {{domain}};
+
+  #add_header X-Frame-Options "SAMEORIGIN";
+
+  ssl_certificate  {{rootdir}}/config/certificates/server/fullchain.pem;
+  ssl_certificate_key {{rootdir}}/config/certificates/server/privkey.pem;
+  ssl_trusted_certificate {{rootdir}}/config/certificates/server/fullchain.pem;
+
+  set  $via  "{{domain}} NGINX $nginx_version";
+  if ($http_via) {
+    set $via  "$http_via, $via";
+  }
+
+  location / {
+    root {{publicPath}} ;
+    proxy_pass https://{{proxy_domain}}:{{proxy_https_port}};
+    proxy_http_version $server_protocol;
+    proxy_pass_header Server;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-Port $server_port ;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Server $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header  Via  $via;
+    proxy_cache_bypass $http_upgrade;
+  }
+
+  # RAPID STATICS FILES
+  location ~ \.(js|css|png|ico|jpg|jpeg|gif|ttf|font|map|woff.?|twig|txt|html|xml|json|mp3|wmv|avi|mpg|mpeg|mp4|webm|swf|flv)$ {
+    root {{publicPath}};
+    expires 7d;
+    access_log off;
+  }
+
+}

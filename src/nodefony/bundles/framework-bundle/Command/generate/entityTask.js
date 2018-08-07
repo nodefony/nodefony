@@ -6,7 +6,9 @@ class entityTask extends nodefony.Task {
   }
 
   showHelp() {
-
+    this.setHelp("generate:entity [-i]",
+      "Generate Entity"
+    );
   }
 
 }

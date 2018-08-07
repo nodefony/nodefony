@@ -90,8 +90,44 @@ nodefony.Builder = class Builder {
     }
   }
 
-  buildSkeleton(skeleton, parse, obj = {}, callback = null) {
+  buildSkeleton(skeleton, parse = false, obj = {}, callback = null) {
     let skelete = null;
+    if (!callback) {
+      return new Promise((resolve, reject) => {
+        try {
+          if (skeleton instanceof nodefony.fileClass) {
+            skelete = skeleton;
+          } else {
+            skelete = new nodefony.fileClass(skeleton);
+          }
+          if (skelete.type === "File") {
+            if (parse !== false) {
+              obj.settings = this.twigOptions;
+              this.twig.renderFile(skelete.path, obj, (error, result) => {
+                if (error) {
+                  return reject(error);
+                }
+                return resolve(result);
+              });
+            } else {
+              fs.readFile(skelete.path, {
+                encoding: 'utf8'
+              }, (error, result) => {
+                if (error) {
+                  return reject(error);
+                }
+                return resolve(result);
+              });
+            }
+          } else {
+            let error = new Error(" skeleton must be file !!! : " + skelete.path);
+            return reject(error);
+          }
+        } catch (e) {
+          return reject(e);
+        }
+      });
+    }
     try {
       if (skeleton instanceof nodefony.fileClass) {
         skelete = skeleton;
@@ -223,6 +259,36 @@ nodefony.Builder = class Builder {
   }
 
   createFile(myPath, skeleton, parse, params = {}, callback = null) {
+    if (!callback) {
+      return new Promise((resolve, reject) => {
+        if (skeleton) {
+          return this.buildSkeleton(skeleton, parse, params)
+            .then((file) => {
+              fs.writeFile(myPath, file, {
+                mode: params.mode || "644"
+              }, (err) => {
+                if (err) {
+                  return reject(err);
+                }
+                return resolve(new nodefony.fileClass(myPath));
+              });
+            })
+            .catch((e) => {
+              return reject(e);
+            });
+        } else {
+          let data = " ";
+          fs.writeFile(myPath, data, {
+            mode: params.mode || "644"
+          }, (err) => {
+            if (err) {
+              return reject(err);
+            }
+            return resolve(new nodefony.fileClass(myPath));
+          });
+        }
+      });
+    }
     if (skeleton) {
       this.buildSkeleton(skeleton, parse, params, (error, result) => {
         if (error) {

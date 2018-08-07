@@ -6,7 +6,9 @@ class serviceTask extends nodefony.Task {
   }
 
   showHelp() {
-
+    this.setHelp("generate:service [-i]",
+      "Generate Service"
+    );
   }
 
 

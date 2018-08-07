@@ -2,6 +2,8 @@ const bundlesTask = require(path.resolve(__dirname, "bundlesTask.js"));
 const controllerTask = require(path.resolve(__dirname, "controllerTask.js"));
 const serviceTask = require(path.resolve(__dirname, "serviceTask.js"));
 const entityTask = require(path.resolve(__dirname, "entityTask.js"));
+const nginxTask = require(path.resolve(__dirname, "nginxTask.js"));
+const haproxyTask = require(path.resolve(__dirname, "haproxyTask.js"));
 
 class generateCommand extends nodefony.Command {
 
@@ -11,6 +13,8 @@ class generateCommand extends nodefony.Command {
     this.setTask("controller", controllerTask);
     this.setTask("service", serviceTask);
     this.setTask("entity", entityTask);
+    this.setTask("nginx", nginxTask);
+    this.setTask("haproxy", haproxyTask);
   }
 
   bundle() {
