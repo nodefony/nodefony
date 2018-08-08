@@ -90,7 +90,7 @@ nodefony.Builder = class Builder {
     }
   }
 
-  buildSkeleton(skeleton, parse = false, obj = {}, callback = null) {
+  buildSkeleton(skeleton, parse = true, obj = {}, callback = null) {
     let skelete = null;
     if (!callback) {
       return new Promise((resolve, reject) => {
@@ -101,7 +101,7 @@ nodefony.Builder = class Builder {
             skelete = new nodefony.fileClass(skeleton);
           }
           if (skelete.type === "File") {
-            if (parse !== false) {
+            if (parse === false) {
               obj.settings = this.twigOptions;
               this.twig.renderFile(skelete.path, obj, (error, result) => {
                 if (error) {
@@ -135,7 +135,7 @@ nodefony.Builder = class Builder {
         skelete = new nodefony.fileClass(skeleton);
       }
       if (skelete.type === "File") {
-        if (parse !== false) {
+        if (parse === false) {
           obj.settings = this.twigOptions;
           this.twig.renderFile(skelete.path, obj, callback);
         } else {
@@ -258,7 +258,7 @@ nodefony.Builder = class Builder {
     return child;
   }
 
-  createFile(myPath, skeleton, parse, params = {}, callback = null) {
+  createFile(myPath, skeleton, parse = true, params = {}, callback = null) {
     if (!callback) {
       return new Promise((resolve, reject) => {
         if (skeleton) {
