@@ -16,7 +16,7 @@ class letsencryptTask extends nodefony.Task {
       rootdir: this.kernel.rootDir,
       publicPath: this.kernel.publicPath,
       domain: `${this.kernel.projectName}.com`,
-      email: this.kernel.bundles.app.configPath.authorMail,
+      email: this.kernel.bundles.app.settings.App.authorMail,
       config_file_name: this.confName,
       config_file_path: this.location,
       locationCertificates: this.locationCertificates,

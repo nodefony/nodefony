@@ -1,5 +1,9 @@
-# MINIMAL CONFIGURATION HTTP SERVER
+map $http_upgrade $connection_upgrade {
+	default upgrade;
+	''      close;
+}
 
+# MINIMAL CONFIGURATION HTTP SERVER
 server {
   listen {{http_port}} http2;
   server_name {{domain}};
@@ -12,7 +16,6 @@ server {
   location / {
     root {{publicPath}} ;
     proxy_pass http://{{proxy_domain}}:{{proxy_http_port}};
-    proxy_http_version $server_protocol;
     proxy_pass_header Server;
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection $connection_upgrade;
@@ -53,7 +56,6 @@ server {
   location / {
     root {{publicPath}} ;
     proxy_pass https://{{proxy_domain}}:{{proxy_https_port}};
-    proxy_http_version $server_protocol;
     proxy_pass_header Server;
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection $connection_upgrade;

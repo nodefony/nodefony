@@ -2,7 +2,10 @@
 rsa-key-size = 4096
 
 email = {{email}}
-domains = {{domain}}, www.nodefony.com, static.nodefony.com
+
+# multi domain separator <,> 
+#domains = nodefony.com, www.nodefony.com, static.nodefony.com
+domains = {{domain}}
 
 authenticator = webroot
 

@@ -73,7 +73,7 @@
     "raw-loader": "^0.5.1",
     "resolve-url-loader": "^2.3.0",
     "sass-loader": "^7.1.0",
-    "style-loader": "^0.22.0",
+    "style-loader": "^0.22.1",
     "uglify-es": "^3.3.9",
     "uglifycss": "^0.0.29",
     "uglifyjs-webpack-plugin": "^1.2.7",
