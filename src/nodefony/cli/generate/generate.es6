@@ -12,9 +12,11 @@ module.exports = class generateBuilder extends nodefony.Builder {
       this.choices.push("Generate Openssl Certificates");
       this.choices.push("Generate Haproxy Configuration");
       this.choices.push("Generate Nginx Configuration");
+      this.choices.push("Generate letsEncrypt Webroot Configuration");
     } else {
       this.choices.push("Generate New Nodefony Project");
     }
+    this.choices.push(this.cli.getSeparator());
     this.choices.push("Quit");
   }
 
@@ -55,6 +57,8 @@ module.exports = class generateBuilder extends nodefony.Builder {
             return "haproxy";
           case "Generate Nginx Configuration":
             return "nginx";
+          case "Generate letsEncrypt Webroot Configuration":
+            return "letsencrypt";
           case "Quit":
             return "quit";
           default:
@@ -87,6 +91,8 @@ module.exports = class generateBuilder extends nodefony.Builder {
       return this.cli.setCommand("generate:haproxy", ["-i"]);
     case "nginx":
       return this.cli.setCommand("generate:nginx", ["-i"]);
+    case "letsencrypt":
+      return this.cli.setCommand("generate:letsencrypt", ["-i"]);
     case "quit":
       return this.cli.setCommand("showmenu");
     default:

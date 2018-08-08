@@ -28,9 +28,7 @@ class nginxTask extends nodefony.Task {
 
   createConfigFile(response) {
     try {
-      if (response.config_file_path === this.location) {
-        this.cli.mkdir(response.config_file_path);
-      }
+      this.cli.mkdir("-p", response.config_file_path);
       let Path = path.resolve(response.config_file_path, response.config_file_name);
       return this.builder.createFile(Path, this.skeleton, true, response);
     } catch (e) {
@@ -89,13 +87,33 @@ class nginxTask extends nodefony.Task {
           validate: ( /*value, response*/ ) => {
             return true;
           }
+        }, {
+          type: 'input',
+          name: 'config_file_name',
+          default: this.defaultResponse.config_file_name,
+          message: `Enter Name Configuration File  : `,
+          validate: ( /*value, response*/ ) => {
+            return true;
+          }
+        }, {
+          type: 'input',
+          name: 'config_file_path',
+          default: this.defaultResponse.config_file_path,
+          message: `Enter Path Configuration File  : `,
+          validate: ( /*value, response*/ ) => {
+            return true;
+          }
         }]);
       });
   }
 
   generate(args, response) {
     let res = nodefony.extend({}, this.defaultResponse, response);
-    return this.createConfigFile(res);
+    return this.createConfigFile(res)
+      .then((file) => {
+        this.logger(`Success Creation Configuration File :  ${file.path} `);
+        return file;
+      });
   }
 
 }

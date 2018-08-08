@@ -4,6 +4,7 @@ const serviceTask = require(path.resolve(__dirname, "serviceTask.js"));
 const entityTask = require(path.resolve(__dirname, "entityTask.js"));
 const nginxTask = require(path.resolve(__dirname, "nginxTask.js"));
 const haproxyTask = require(path.resolve(__dirname, "haproxyTask.js"));
+const letsencryptTask = require(path.resolve(__dirname, "letsencryptTask.js"));
 
 class generateCommand extends nodefony.Command {
 
@@ -15,6 +16,7 @@ class generateCommand extends nodefony.Command {
     this.setTask("entity", entityTask);
     this.setTask("nginx", nginxTask);
     this.setTask("haproxy", haproxyTask);
+    this.setTask("letsencrypt", letsencryptTask);
   }
 
   bundle() {
