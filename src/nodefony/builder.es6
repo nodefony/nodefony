@@ -101,7 +101,7 @@ nodefony.Builder = class Builder {
             skelete = new nodefony.fileClass(skeleton);
           }
           if (skelete.type === "File") {
-            if (parse === false) {
+            if (parse === true) {
               obj.settings = this.twigOptions;
               this.twig.renderFile(skelete.path, obj, (error, result) => {
                 if (error) {
@@ -135,7 +135,7 @@ nodefony.Builder = class Builder {
         skelete = new nodefony.fileClass(skeleton);
       }
       if (skelete.type === "File") {
-        if (parse === false) {
+        if (parse === true) {
           obj.settings = this.twigOptions;
           this.twig.renderFile(skelete.path, obj, callback);
         } else {
