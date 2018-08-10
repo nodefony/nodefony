@@ -94,7 +94,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
         let task = null;
         try {
           command = this.cli.getCommand("sequelize", "sequelize");
-          task = command.getTask("generate");
+          task = command.getTask("sync");
         } catch (e) {
           return reject(e);
         }

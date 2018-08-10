@@ -371,19 +371,18 @@ $ nodefony generate:bundle name [path]
 # Or Generate a New Bundle Interactive
 $ nodefony
 
-?  Nodefony CLI :  
-  Start Servers Development
-  Start Servers Pre-Production
-  Start Servers Production
-  Install Project
-  Rebuild Project
-❯ Generate Bundle
-  Generate Certificates
-  Run Test
-  Outdated
-  Webpack Dump
-  Reset
-  Help
+?  Nodefony CLI :  Generater
+?  Nodefony CLI :  (Use arrow keys)
+❯ Generate New Bundle
+  Generate New Controller 
+  Generate New Service
+  Generate New Entity
+  Generate New Nodefony Project
+  Generate Openssl Certificates
+  Generate Haproxy Configuration
+  Generate Nginx Configuration
+  Generate letsEncrypt Webroot Configuration
+  --------
   Quit
 ```
 

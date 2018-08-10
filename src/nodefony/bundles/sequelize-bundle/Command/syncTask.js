@@ -6,9 +6,23 @@ class generateTask extends nodefony.Task {
   }
 
   showHelp() {
-    this.setHelp("sequelize:generate:entities [force]",
-      "Generate All Entities force to delete table if exist  example : nodefony sequelize:generate:entities force"
+    this.setHelp("sequelize:sync [force]",
+      "Synchronize All Entities. [force] to delete table if exist  example : nodefony sequelize:sync force"
     );
+  }
+
+  generate(args, response) {
+    let force = false;
+    if (response) {
+      force = response.force || false;
+    } else {
+      if (args.length) {
+        if (args[0] === "force") {
+          force = true;
+        }
+      }
+    }
+    return this.entities(force);
   }
 
   entities(force = false) {

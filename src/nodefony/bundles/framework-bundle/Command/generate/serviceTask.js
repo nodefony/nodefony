@@ -78,7 +78,6 @@ class serviceTask extends nodefony.Task {
     } else {
       this.serviceName = ret[1];
     }
-    console.log(this.serviceName)
     if (nodefony.services[this.serviceName]) {
       throw new Error(`Service ${this.serviceName} already exist !`);
     }
