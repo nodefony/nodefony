@@ -15,6 +15,13 @@ module.exports = nodefony.register('providerManager', () => {
       throw new Error(`Provider : ${name} nor found`);
     }
 
+    getProviders(name) {
+      if (name) {
+        return this.getProvider(name);
+      }
+      return this.providers;
+    }
+
     addConfiguration(name, config) {
       if (name in this.providers) {
         this.logger(`Provider ${name} already exist`, "WARNING");

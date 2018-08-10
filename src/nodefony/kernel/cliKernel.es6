@@ -25,7 +25,7 @@ module.exports = nodefony.register("cliKernel", function () {
     'padding-right': 0
   };
   const optionsTaskTables = {
-    colWidths: [8, 45, 120],
+    colWidths: [8, 55, 120],
     chars: charsTable,
     style: styleTable
   };

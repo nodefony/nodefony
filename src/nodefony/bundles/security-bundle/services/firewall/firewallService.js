@@ -127,6 +127,7 @@ module.exports = class security extends nodefony.Service {
     }(this);
     this.securedAreas = {};
     this.providerManager = new nodefony.providerManager(this);
+    this.set("providerManager", this.providerManager);
     this.sessionStrategy = "invalidate";
     // listen KERNEL EVENTS
     this.once("onPreBoot", () => {

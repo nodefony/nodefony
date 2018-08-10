@@ -307,7 +307,6 @@ module.exports = class cliStart extends nodefony.cliKernel {
   buildMenu() {
     this.generateString = `Generater`;
     this.startString = "Start Servers";
-    this.runString = "Run";
     if (nodefony.isTrunk) {
       if (nodefony.builded) {
         this.choices.push(`${this.startString} Development`);
@@ -318,7 +317,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
         this.choices.push(`${this.generateString}`);
         this.choices.push(`Tools`);
         this.choices.push(`PM2 Tools`);
-        this.choices.push(`${this.runString} Test`);
+        this.choices.push(`Run Test`);
       } else {
         this.choices.push(`Build Project`);
         this.choices.push(`${this.generateString}`);
@@ -358,7 +357,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
             return "project";
           case `${this.generateString}`:
             return "generate";
-          case `${this.runString} Test`:
+          case `Run Test`:
             return "test";
           case `Install`:
           case `Install Framework`:

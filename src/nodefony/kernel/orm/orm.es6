@@ -44,6 +44,13 @@ module.exports = nodefony.register("orm", function () {
       return null;
     }
 
+    getConnections(name) {
+      if (name) {
+        return this.getConnection(name);
+      }
+      return this.connections;
+    }
+
     getEntity(name) {
       if (name) {
         if (name in this.entities) {

@@ -166,7 +166,9 @@ module.exports = class sequelize extends nodefony.orm {
       this.settings = this.getParameters("bundles.sequelize");
       this.debug = this.settings.debug;
       if (this.settings.connectors && Object.keys(this.settings.connectors).length) {
-        this.kernel.listen(this, "onReady", this.displayTable);
+        this.kernel.listen(this, "onReady", () => {
+          this.displayTable();
+        });
         for (let name in this.settings.connectors) {
           this.createConnection(name, this.settings.connectors[name]);
         }
@@ -180,16 +182,7 @@ module.exports = class sequelize extends nodefony.orm {
     });
   }
 
-  displayTable() {
-    let options = {
-      head: [
-        "NAME CONNECTOR",
-        "NAME DATABASE",
-        "DRIVER",
-      ]
-    };
-    let table = this.kernel.cli.displayTable(null, options);
-    //let tab = [];
+  getConnectorSettings(tab) {
     for (let dbname in this.settings.connectors) {
       let conn = ["", "", ""];
       conn[0] = dbname;
@@ -203,9 +196,24 @@ module.exports = class sequelize extends nodefony.orm {
           break;
         }
       }
-      table.push(conn);
+      tab.push(conn);
     }
-    this.logger("ORM CONNECTORS LIST  : \n" + table.toString(), "DEBUG");
+    return tab;
+  }
+
+  displayTable(severity = "DEBUG") {
+    let options = {
+      head: [
+        "NAME CONNECTOR",
+        "NAME DATABASE",
+        "DRIVER",
+      ]
+    };
+    let table = this.kernel.cli.displayTable(null, options);
+    this.getConnectorSettings(table);
+    let res = table.toString();
+    this.logger("ORM CONNECTORS LIST  : \n" + res, severity);
+    return res;
   }
 
   createConnection(name, config) {
