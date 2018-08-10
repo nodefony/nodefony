@@ -3,10 +3,13 @@ class serviceTask extends nodefony.Task {
   constructor(name, command) {
     super(name, command);
     this.dependencies = [];
+    this.builder = new nodefony.Builder(this.cli);
     this.defaultResponse = {
       bundle: "app",
       serviceName: "defaultService",
     };
+    this.skeleton = path.resolve(__dirname, "skeletons", "services", "classService.skeleton");
+    this.skeletonConfig = path.resolve(__dirname, "skeletons", "services", "configService.skeleton");
   }
 
   showHelp() {
@@ -67,8 +70,18 @@ class serviceTask extends nodefony.Task {
     return this.get(name);
   }
 
-  checkService(name, bundle) {
-    this.seviceName = name;
+  checkService(name) {
+    const regService = /^(.+)Service$/;
+    let ret = regService.exec(name);
+    if (!ret) {
+      this.serviceName = name;
+    } else {
+      this.serviceName = ret[1];
+    }
+    console.log(this.serviceName)
+    if (nodefony.services[this.serviceName]) {
+      throw new Error(`Service ${this.serviceName} already exist !`);
+    }
   }
 
   interaction( /*args*/ ) {
@@ -101,10 +114,10 @@ class serviceTask extends nodefony.Task {
             return `${response.bundle.name}Service`;
           },
           message: `Enter Service Name : `,
-          validate: (value, response) => {
+          validate: (value /*, response*/ ) => {
             if (value) {
               try {
-                this.checkService(value, response.bundle);
+                this.checkService(value);
               } catch (e) {
                 return e.message;
               }
@@ -137,9 +150,45 @@ class serviceTask extends nodefony.Task {
   }
 
   generate(args, response) {
-    console.log(this.dependencies)
-    return Promise.resolve();
+    return this.createClassService(response)
+      .then(() => {
+        return this.addConfigService(response);
+      });
+  }
 
+  createClassService(response) {
+    this.location = path.resolve(response.bundle.path, "services");
+    response.name = this.serviceName;
+    try {
+      let Path = path.resolve(this.location, `${this.serviceName}Service.js`);
+      if (this.dependencies.length) {
+        response.injections = this.dependencies.map((ele) => {
+          return ` ${ele}`;
+        });
+      } else {
+        response.injections = null;
+      }
+      response.servicePath = Path;
+      return this.builder.createFile(Path, this.skeleton, true, response);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  addConfigService(response) {
+    try {
+      response.injections = this.dependencies.map((ele) => {
+        return ` "@${ele}"`;
+      });
+    } catch (e) {
+      throw e;
+    }
+    return this.builder.buildSkeleton(this.skeletonConfig, true, response)
+      .then((result) => {
+        this.configLocation = path.resolve(response.bundle.path, "Resources", "config", "services.js");
+        this.logger(`You must Add this configuration services in ${this.configLocation} :\n${result}`);
+        return result;
+      });
   }
 
 }
