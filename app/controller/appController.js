@@ -31,7 +31,7 @@ module.exports = class appController extends nodefony.controller {
       core: core,
       demo: demo ? true : false,
       user: this.context.user,
-      readme: readme ? this.htmlMdParser(readme.content()) : false
+      readme: null //readme ? this.htmlMdParser(readme.content()) : false
     });
   }
 

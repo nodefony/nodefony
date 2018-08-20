@@ -72,7 +72,10 @@ class generateTask extends nodefony.Task {
         return this.cli.prompt([{
           type: 'list',
           name: 'bundle',
-          message: 'Choose a bundle to generate a Service : ',
+          message: () => {
+            this.orm.getEntityTable("INFO");
+            return 'Choose a bundle to generate a Service : ';
+          },
           default: 0,
           pageSize: this.bundles.length,
           choices: this.bundles,
@@ -100,42 +103,48 @@ class generateTask extends nodefony.Task {
             if (val === "Quit") {
               return Promise.reject("Quit");
             }
-
             let connection = this.getConnection(val);
+            this.connector = val;
             return connection;
           }
         }, {
           type: 'input',
           name: 'name',
           message: (response) => {
-            this.dialect = response.connection.options.dialect;
-            for (let type in this.dataType[this.dialect]) {
-              this.types.push(type);
-            }
             return `Enter Entity Name : `;
           },
-          validate: (value /*, response*/ ) => {
+          filter: (value) => {
             if (value) {
               try {
                 this.checkEntity(value);
+                return value;
               } catch (e) {
                 return e.message;
               }
-              return true;
             }
             return `${value} Unauthorised Please enter a valid Entity Name`;
           }
         }, {
-          type: 'input',
-          name: 'name_mapping',
-          message: `Enter Name to mappings between a model and a table: `,
-          validate: ( /*value , response*/ ) => {
-            return true;
-          },
-          filter: (val) => {
-            return this.createModel(val);
-          }
+          type: 'confirm',
+          name: 'column_generate',
+          message: `Do you want define model ?`,
+          default: false
         }]);
+      }).then((response) => {
+        response.connector = this.connector;
+        this.dialect = response.connection.options.dialect;
+        for (let type in this.dataType[this.dialect]) {
+          this.types.push(type);
+        }
+        if (response.column_generate) {
+          return this.createModel(response)
+            .then((myresponse) => {
+              return nodefony.extend(this.cli.response, response, myresponse);
+            });
+        }
+        return nodefony.extend(this.cli.response, response);
+      }).catch((e) => {
+        return Promise.reject(e);
       });
   }
 
@@ -143,29 +152,45 @@ class generateTask extends nodefony.Task {
     return this.createClassEntity(response);
   }
 
-  createModel(name) {
-    this.logger(name);
+  createModel(response) {
+    let name = response.name;
     return this.cli.prompt([{
-      type: 'input',
-      name: 'column_mapping',
-      message: `Mapping Define <${name}> Enter column Name: `,
-      validate: ( /*value , response*/ ) => {
-        return true;
-      }
-    }, {
-      type: 'list',
-      name: 'type',
-      message: `Add Mappings Type`,
-      default: 0,
-      pageSize: this.types.length,
-      choices: this.types,
-      filter: (val) => {
-        if (val === "quit") {
-          return Promise.resolve();
+        type: 'input',
+        name: 'column_mapping',
+        message: `Mapping Define Model <${name}> Enter column Name: `,
+        validate: (value, response) => {
+          return true;
         }
-        return val;
-      }
-    }]);
+      }, {
+        type: 'list',
+        name: 'type',
+        message: `Add Mappings Type`,
+        default: 0,
+        pageSize: this.types.length,
+        choices: this.types,
+        filter: (value) => {
+          return value;
+        }
+      }])
+      .then((myresponse) => {
+        this.models[myresponse.column_mapping] = {
+          name: myresponse.column_mapping
+        };
+        this.models.push(this.models[myresponse.column_mapping]);
+        this.models[myresponse.column_mapping].type = myresponse.type;
+        return this.cli.prompt([{
+            type: 'confirm',
+            message: `Model <${name}> Do you want to define other column `,
+            name: 'column_generate',
+            default: false
+          }])
+          .then((confirm) => {
+            if (confirm.column_generate) {
+              return this.createModel(response);
+            }
+            return response;
+          });
+      });
   }
 
   createClassEntity(response) {
@@ -173,18 +198,21 @@ class generateTask extends nodefony.Task {
     response.name = this.entityName;
     try {
       let Path = path.resolve(this.location, `${this.entityName}Entity.js`);
+      let obj = {};
       if (this.models.length) {
-        response.models = this.models;
-      } else {
-        response.models = "{}";
+        this.models.map((ele) => {
+          obj[ele.name] = {
+            type: `Sequelize.${ele.type}`
+          };
+        });
       }
+      response.models = JSON.stringify(obj);
       response.entityPath = Path;
       return this.builder.createFile(Path, this.skeleton, true, response);
     } catch (e) {
       throw e;
     }
   }
-
 }
 
 module.exports = generateTask;

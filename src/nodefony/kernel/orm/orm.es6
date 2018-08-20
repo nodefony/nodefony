@@ -62,6 +62,28 @@ module.exports = nodefony.register("orm", function () {
       }
     }
 
+    getEntityTable(severity = "DEBUG") {
+      let options = {
+        head: [
+          "NAME ENTITY",
+          "BUNDLE",
+          "CONNECTION"
+        ]
+      };
+      let table = this.kernel.cli.displayTable(null, options);
+      for (let entity in this.entities) {
+        let tab = ["", "", ""];
+        tab[0] = this.entities[entity].name;
+        tab[1] = this.entities[entity].bundle.name;
+        tab[2] = this.entities[entity].connectionName;
+        table.push(tab);
+      }
+      let res = table.toString();
+      this.logger("ORM ENTITY LIST  : \n" + res, severity);
+      return res;
+
+    }
+
     setEntity(entity) {
       if (!entity) {
         throw new Error(this.name + " setEntity : entity  is null ");

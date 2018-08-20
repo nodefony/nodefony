@@ -15,8 +15,8 @@
     "bootstrap": "=3.3.7",
     "font-awesome": "^4.7.0",
     "qs": "^6.5.2",
-    "request": "^2.87.0",
-    "shortid": "^2.2.12",
+    "request": "^2.88.0",
+    "shortid": "^2.2.13",
     "useragent": "^2.3.0",
     "webpack": "^4.16.5",
     "webpack-merge": "^4.1.4"

@@ -12,12 +12,12 @@ module.exports = class {{name}} extends nodefony.Entity {
      *   @param orm name
      *   @param connection name
      */
-    super(bundle, {{name}}, "sequelize", {{connector}});
+    super(bundle, "{{name}}", "sequelize", "{{connector}}");
 
   }
 
   getSchema() {
-    return {{model}}
+    return {{models}};
   }
 
   registerModel(db) {

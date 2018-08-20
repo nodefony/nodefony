@@ -975,8 +975,14 @@ module.exports = nodefony.register("Bundle", function () {
       if (this.entityFiles.length()) {
         this.entityFiles.getFiles().forEach((file) => {
           let res = regEntity.exec(file.name);
+          let Class = null;
           if (res) {
-            let Class = this.loadFile(file.path);
+            try {
+              Class = this.loadFile(file.path);
+            } catch (e) {
+              this.logger("LOAD ENTITY  " + file.path, "ERROR");
+              throw e;
+            }
             try {
               this.entities[Class.name] = new Class(this);
               this.logger("LOAD ENTITY  " + Class.name + " : " + file.name, "DEBUG");

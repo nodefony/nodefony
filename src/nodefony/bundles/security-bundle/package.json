@@ -14,7 +14,7 @@
     "@nodefony/passport-wrapper": "^4.0.0",
     "bcrypt": "^3.0.0",
     "jsonwebtoken": "^8.3.0",
-    "node-pre-gyp": "^0.10.3",
+    "node-pre-gyp": "^0.11.0",
     "passport": "^0.4.0",
     "passport-github2": "^0.1.11",
     "passport-google-oauth20": "^1.0.0",

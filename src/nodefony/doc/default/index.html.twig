@@ -212,52 +212,19 @@
         </small>
       </h2>
       <p class="doc2">
-        Get sources from gitHub
+        Install Nodefony Globally
       </p>
       <pre class="doc2">
+Install with NPM :
 
-$ git clone https://github.com/nodefony/nodefony.git
+$ npm -g install nodefony
 
-$ cd nodefony
+Install with yarn :
 
-$ make build
+$ yarn global add nodefony
 
 </pre>
-      <p class="doc2">
-        Install with NPM
-      </p>
-      <pre class="doc2">
-# NODEFONY GLOBAL INSTALL
-
-$ sudo npm -g install nodefony
-
-# GENERATE PROJECT WITH NODEFONY CLI
-
-$ nodefony
-Tue Jun 19 2018 10:10:41 INFO SERVICE nodefony  : WELCOME NODEFONY CLI 4.0.0 🏁
-?  Nodefony CLI :  (Use arrow keys)
-❯ Generate nodefony Project
-Help
-Quit
-? Enter Nodefony Project Name (myproject)
- ...
- ...
- Tue Jun 19 2018 10:05:42 INFO SERVICE nodefony  : myproject  complete
-
-$ cd myproject
-
-# INSTALL PROJECT
-
-$ nodefony
-Tue Jun 19 2018 10:10:41 INFO SERVICE nodefony  : WELCOME NODEFONY CLI 4.0.0 🏁
-
-?  Nodefony CLI :  (Use arrow keys)
-❯ Install myproject
-  Generate myproject Certificates
-  Clear myproject
-  Help
-  Quit
-      </pre>
+<a href="https://docs.npmjs.com/getting-started/fixing-npm-permissions">See Global install How to Prevent Permissions Errors</a>
       <h2>Configurations :
         <small>See more
           <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle })}}">( Nodefony Configurations documentation )
