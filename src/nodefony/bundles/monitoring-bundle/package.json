@@ -18,7 +18,7 @@
     "request": "^2.88.0",
     "shortid": "^2.2.13",
     "useragent": "^2.3.0",
-    "webpack": "^4.16.5",
+    "webpack": "^4.17.1",
     "webpack-merge": "^4.1.4"
   },
   "repository": {

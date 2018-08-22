@@ -141,6 +141,14 @@ module.exports = nodefony.register("controller", function () {
       throw new Error("getConnection must have name");
     }
 
+    getEntity(name) {
+      return this.getOrm().getEntity(name);
+    }
+
+    getNodefonyEntity(name) {
+      return this.getOrm().getNodefonyEntity(name);
+    }
+
     push(asset, headers, options) {
       if (this.context.type === "HTTP2" && this.context.pushAllowed) {
         let assetPublic = null;
@@ -359,6 +367,18 @@ module.exports = nodefony.register("controller", function () {
         throw e;
       }
       return this.response.body;
+    }
+
+    renderHtmlFile(Path) {
+      return new Promise((resolve, reject) => {
+        try {
+          let file = this.getFile(Path);
+          return resolve(file.readAsync());
+        } catch (e) {
+          return reject(e);
+        }
+      });
+
     }
 
     getFile(file) {

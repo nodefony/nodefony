@@ -198,15 +198,26 @@ class generateTask extends nodefony.Task {
     response.name = this.entityName;
     try {
       let Path = path.resolve(this.location, `${this.entityName}Entity.js`);
-      let obj = {};
       if (this.models.length) {
-        this.models.map((ele) => {
-          obj[ele.name] = {
-            type: `Sequelize.${ele.type}`
-          };
+        let obj = "{\n";
+        this.models.map((ele, index) => {
+          obj += `    ${ele.name}: {\n`;
+          if (ele.type) {
+            obj += `      type: Sequelize.${ele.type}\n`;
+          }
+          obj += `    }`;
+          if (this.models.length !== 1 && index + 1 !== this.models.length) {
+            obj += ",\n";
+          } else {
+            obj += "\n";
+          }
         });
+        obj += "}";
+        response.models = obj;
+      } else {
+        response.models = JSON.stringify({});
       }
-      response.models = JSON.stringify(obj);
+
       response.entityPath = Path;
       return this.builder.createFile(Path, this.skeleton, true, response);
     } catch (e) {

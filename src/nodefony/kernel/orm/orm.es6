@@ -62,6 +62,17 @@ module.exports = nodefony.register("orm", function () {
       }
     }
 
+    getNodefonyEntity(name) {
+      if (name) {
+        if (name in this.entities) {
+          return this.entities[name];
+        }
+        return null;
+      } else {
+        return this.entities;
+      }
+    }
+
     getEntityTable(severity = "DEBUG") {
       let options = {
         head: [

@@ -15,7 +15,7 @@
     "@nodefony/stage": "^0.1.10",
     "bootstrap": "=3.3.7",
     "memory-fs": "^0.4.1",
-    "webpack": "^4.16.5",
+    "webpack": "^4.17.1",
     "webpack-merge": "^4.1.4"
   },
   "repository": {

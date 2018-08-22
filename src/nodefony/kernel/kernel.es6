@@ -60,11 +60,11 @@ module.exports = nodefony.register("kernel", function () {
       super("KERNEL", cli.container, cli.notificationsCenter, nodefony.extend({}, defaultOptions, options));
       this.cli = cli;
       this.type = cli.type;
+      this.debug = (!!cli.commander.debug) || false;
       this.setEnv(environment);
       // Manage Kernel Container
       this.set("kernel", this);
       this.set("cli", this.cli);
-      this.debug = (!!cli.commander.debug) || false;
       //Autoloader
       this.autoLoader = nodefony.autoloader;
       this.autoLoader.setKernel(this);
@@ -210,6 +210,7 @@ module.exports = nodefony.register("kernel", function () {
           process.env.BABEL_ENV = 'production';
         }
       }
+      process.env.DEBUG_MODE = this.debug;
     }
 
     logEnv() {

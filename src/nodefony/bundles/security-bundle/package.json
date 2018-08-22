@@ -23,7 +23,7 @@
     "passport-ldapauth": "^2.0.0",
     "passport-local": "^1.0.0",
     "passport-oauth2": "^1.4.0",
-    "webpack": "^4.16.5",
+    "webpack": "^4.17.1",
     "webpack-merge": "^4.1.4"
   },
   "repository": {
