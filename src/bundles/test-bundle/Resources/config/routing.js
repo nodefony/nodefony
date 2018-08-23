@@ -13,5 +13,17 @@ module.exports = nodefony.extend(firewall, sessions, cors, rest, twig, routes, {
     defaults: {
       controller: "app:app:index"
     }
+  },
+  "boats": {
+    "pattern": "/test/boats",
+    "defaults": {
+      "controller": "test-bundle:boats:index"
+    }
+  },
+  "vue": {
+    "pattern": "/test/vue*",
+    "defaults": {
+      "controller": "test-bundle:vue:index"
+    }
   }
 });

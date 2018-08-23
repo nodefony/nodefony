@@ -1,0 +1,18 @@
+{% extends '/app/Resources/views/base.html.twig' %}
+
+{% block title %}Welcome {{name}}! {% endblock %}
+{% block stylesheets %}
+   {{ parent() }}
+   <!-- WEBPACK BUNDLE -->
+   <link rel="stylesheet" href="/test-bundle/assets/css/vue.css" />
+{% endblock %}
+
+{% block body %}
+  <div id="app"></div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <!-- WEBPACK BUNDLE -->
+  <script src="/test-bundle/assets/js/vue.js"></script>
+{% endblock %}

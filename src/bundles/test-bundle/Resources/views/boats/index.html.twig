@@ -1,0 +1,126 @@
+{% extends '/app/Resources/views/base.html.twig' %}
+
+{% block title %}Welcome {{name}}! {% endblock %}
+{% block stylesheets %}
+  {{ parent() }}
+  <!-- WEBPACK BUNDLE -->
+  <link rel='stylesheet' href='{{CDN("stylesheet")}}/framework-bundle/assets/css/framework.css' />
+{% endblock %}
+{% block body %}
+      <img class='displayed' src='{{CDN("image")}}/framework-bundle/images/nodefony-logo.png'>
+      <h1 class='success'>
+        <a href='{{url('boats')}}'>
+          <strong style='font-size:45px'>NODEFONY ENTITY</strong>
+        </a>
+          <p><strong style='font-size:45px'>{{entity}}</strong></p>
+      </h1>
+      <h5 class='success'>
+        <p>ORM : {{orm}}</p>
+        <p>CONNECTOR : {{connector}}</p>
+        {% if log != "null" %}
+        <p style="color:red">{{log}}</p>
+        {% endif %}
+      </h5>
+      <!-- CRUD -->
+      <div class="container-fluid">
+        <div class="row m-t-xl">
+          <div class="col-md-3">
+            <div class="panel panel-info">
+              <div class="panel-heading">{{ "Create" | trans() }}
+                <span class="label label-success pull-right">
+                  {{entity}}
+                </span>
+              </div>
+              <div class="panel-body" style="overflow: auto;">
+                <form method="POST" name="boat" action="boats/create">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Name</span>
+                      <input name="name" type="text" class="form-control" placeholder="boat name" aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Size</span>
+                      <input name="size"  type="text" class="form-control" placeholder="10'" aria-describedby="basic-addon1">
+                </div>
+                <button type="submit" class="btn btn-default">
+                     Create
+                </button>
+               </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="panel panel-info">
+              <div class="panel-heading">{{ "Read" | trans() }}
+                <span class="label label-success pull-right">
+                  {{entity}}
+                </span>
+              </div>
+              <div class="panel-body" style="overflow: auto;">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="panel panel-info">
+              <div class="panel-heading">{{ "Update" | trans() }}
+                <span class="label label-success pull-right">
+                  {{entity}}
+                </span>
+              </div>
+              <div class="panel-body" style="overflow: auto;">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="panel panel-info">
+              <div class="panel-heading">{{ "Delete" | trans() }}
+                <span class="label label-success pull-right">
+                  {{entity}}
+                </span>
+              </div>
+              <div class="panel-body" style="overflow: auto;">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIST -->
+      <div class="container">
+        <div class="row m-t-xl">
+          <div class="panel panel-info">
+            <div class="panel-heading">{{ "CRUD" | trans() }}
+              <span class="label label-success pull-right">
+                {{entity}}
+              </span>
+            </div>
+            <div class="panel-body" style="overflow: auto;">
+              <div class="table-responsive ">
+                <table class="table ">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>NAME</th>
+                      <th>SIZE</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for boat in boats %}
+                      <tr>
+                        <td>{{boat.id}}</td>
+                        <td>{{boat.name}}</td>
+                        <td>{{boat.size}}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  <!-- WEBPACK BUNDLE -->
+  <script src='{{CDN("javascript")}}/framework-bundle/assets/js/framework.js'></script>
+{% endblock %}

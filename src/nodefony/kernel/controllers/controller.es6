@@ -1,3 +1,4 @@
+const Request = require('request');
 module.exports = nodefony.register("controller", function () {
 
   const isPromise = function (obj) {
@@ -14,6 +15,7 @@ module.exports = nodefony.register("controller", function () {
     constructor(container, context) {
       super(null, container, container.get("notificationsCenter"));
       this.context = context;
+      this.http = Request;
       this.httpKernel = this.get("httpKernel");
       this.router = this.get("router");
       this.serviceTemplating = this.get('templating');
