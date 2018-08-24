@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+ //--inspect-brk
+"use strict;";
+const path = require("path");
+const fs = require("fs");
+
+const nodefony = function () {
+  try {
+    fs.lstatSync(path.resolve(".core"));
+    return require(path.resolve("src", "nodefony"));
+  } catch (e) {}
+  try {
+    return require("nodefony");
+  } catch (e) {}
+  try {
+    const globalPath = path.resolve(process.argv[1], '..', '..', 'lib', 'node_modules');
+    return require(path.resolve(globalPath, "nodefony"));
+  } catch (e) {
+    console.error(e);
+    throw new Error("Module nodefony not found try npm -g install nodefony");
+  }
+}();
+
+const isElectronDev = function () {
+  return process.mainModule.filename.indexOf('app.asar') === -1;
+};
+
+if (nodefony.isElectron) {
+  if (!isElectronDev()) {
+    process.chdir(nodefony.isElectron.app.getAppPath());
+  }
+  nodefony.isElectron.app.on('ready', () => {
+    try {
+      return new nodefony.cliStart();
+    } catch (e) {
+      throw e;
+    }
+  });
+  module.exports = nodefony.isElectron;
+} else {
+  try {
+    module.exports = new nodefony.cliStart();
+  } catch (e) {
+    throw e;
+  }
+}

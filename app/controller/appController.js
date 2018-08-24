@@ -5,21 +5,20 @@ module.exports = class appController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
+  }
 
+  indexAction() {
     // Example server push http2 if serverPush client is allowed
-    this.push(path.resolve(this.bundle.publicPath, "assets", "css", "app.css"), {
+    /*this.push(path.resolve(this.bundle.publicPath, "assets", "css", "app.css"), {
       path: "/app/assets/css/app.css"
     }).catch((e) => {
-      this.logger(e.message, "DEBUG");
+      this.logger(e, "ERROR");
     });
     this.push(path.resolve(this.bundle.publicPath, "assets", "js", "app.js"), {
       path: "/app/assets/js/app.js"
     }).catch((e) => {
-      this.logger(e.message, "DEBUG");
-    });
-  }
-
-  indexAction() {
+      this.logger(e, "ERROR");
+    });*/
     let core = this.kernel.isCore ? "CORE" : this.kernel.settings.version;
     let demo = this.kernel.getBundle("demo");
     let readme = null;
@@ -28,11 +27,11 @@ module.exports = class appController extends nodefony.controller {
     } catch (e) {
       readme = false;
     }
-    return this.render("AppBundle::index.html.twig", {
+    return this.render("app::index.html.twig", {
       core: core,
       demo: demo ? true : false,
       user: this.context.user,
-      readme: readme ? this.htmlMdParser(readme.content()) : false
+      readme: null //readme ? this.htmlMdParser(readme.content()) : false
     });
   }
 
@@ -41,8 +40,8 @@ module.exports = class appController extends nodefony.controller {
     let version = this.kernel.settings.version;
     let year = new Date().getFullYear();
     let langs = translateService.getLangs();
-    let locale = translateService.getLocale();
-    return this.render("AppBundle::footer.html.twig", {
+    let locale = this.getLocale();
+    return this.render("app::footer.html.twig", {
       langs: langs,
       version: version,
       year: year,

@@ -8,6 +8,7 @@ system:
     - "^127.0.0.1$"
   httpPort                      : 5151
   httpsPort                     : 5152
+  domainCheck                   : true
   statics                       : true
   security                      : true
   realtime                      : true
@@ -28,9 +29,19 @@ system:
       ca                        : "config/certificates/ca/nodefony-root-ca.crt.pem"
       options:
         rejectUnauthorized      : true
+  devServer:
+    inline                      : true
+    hot                         : false
+    hotOnly                     : false
+    overlay                     : true
+    logLevel                    : info        # none, error, warning or info
+    progress                    : false
+    protocol                    : https
+    websocket                   : true
 
   bundles:
-    test                        : "src/bundles/testBundle"
+    test-bundle                 : "file:src/bundles/test-bundle"
+    #workbox-bundle              : "file:src/bundles/workbox-bundle"
 
   #################
   # SYSLOG NODEFONY

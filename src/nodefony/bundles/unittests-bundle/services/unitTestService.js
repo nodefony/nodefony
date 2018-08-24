@@ -1,0 +1,77 @@
+const Mocha = require('mocha');
+
+const regFile = /^(.*)Test\.js$/;
+
+module.exports = class unitTest extends nodefony.Service {
+
+  constructor(kernel /*, options*/ ) {
+    super("unitTest", kernel.container, kernel.notificationsCenter);
+    this.bundles = this.kernel.bundles;
+  }
+
+  consoleMochaInit() {
+    this.settingMocha = this.kernel.getBundle("unittests").settings.mocha.nodefony;
+    this.mocha = new Mocha(this.settingMocha.console);
+    this.mocha.suite.on('pre-require', (context) => {
+      context.kernel = this.kernel;
+    });
+  }
+
+  mochaAddTest(tests) {
+    for (var i = 0; i < tests.length; i++) {
+      this.mocha.addFile(tests[i].path);
+    }
+  }
+
+  mochaRunTest(callback) {
+    return this.mocha.run(callback);
+  }
+
+  getBundlesTestFiles(bundleName, testName, tests) {
+    if (!this.bundles[bundleName]) {
+      throw new Error(bundleName + " don't exist");
+    }
+    if (this.bundles[bundleName].finder) {
+      var finder = this.bundles[bundleName].finder.find({
+        exclude: /^doc$|^public$|^Resources$/,
+        match: regFile
+      });
+      if (finder.files.length) {
+        for (var i = 0; i < finder.files.length; i++) {
+          if (testName) {
+            if (finder.files[i].name === testName) {
+              finder.files[i].bundle = bundleName;
+              tests.push(finder.files[i]);
+            }
+          } else {
+            finder.files[i].bundle = bundleName;
+            tests.push(finder.files[i]);
+          }
+        }
+      }
+    }
+  }
+
+  getNodefonyTestFiles(testName, tests) {
+    if (this.kernel.isCore) {
+      const finder = new nodefony.finder({
+        path: this.kernel.nodefonyPath,
+        exclude: /^bundles$|^doc$/,
+        match: regFile
+      });
+      if (finder.result.files.length) {
+        for (var i = 0; i < finder.result.files.length; i++) {
+          if (testName) {
+            if (finder.result.files[i].name === testName) {
+              finder.result.files[i].bundle = "nodefony";
+              tests.push(finder.result.files[i]);
+            }
+          } else {
+            finder.result.files[i].bundle = "nodefony";
+            tests.push(finder.result.files[i]);
+          }
+        }
+      }
+    }
+  }
+};

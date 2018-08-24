@@ -1,0 +1,10 @@
+IMG.displayed, .success {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+IMG.workbox {
+  max-width: 640px;
+}

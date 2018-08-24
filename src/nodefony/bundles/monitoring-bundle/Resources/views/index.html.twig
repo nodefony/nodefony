@@ -1,0 +1,30 @@
+{% extends "/app/Resources/views/base.html.twig" %}
+
+{% block meta %}
+  {{parent()}}
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+{% endblock %}
+
+{% block title %}Nodefony Monitoring{% endblock %}
+
+{% block body %}
+  <div class="hide environment" value="{{environment}}"></div>
+  <div class="hide debug" value="{{debug}}">{{debug}}</div>
+{% endblock %}
+
+{% block stylesheets %}
+
+  <!-- WEBPACK BUNDLE -->
+  <link href="{{CDN('stylesheet')}}/monitoring-bundle/assets/css/monitoring.css" rel="stylesheet"/>
+  <link href="{{CDN('stylesheet')}}/framework-bundle/vendors/dataTable/css/dataTables.bootstrap.min.css" rel="stylesheet"/>
+
+{% endblock %}
+
+{% block javascripts %}
+
+  <!-- WEBPACK BUNDLE -->
+  <script type="text/javascript" src="{{CDN('javascript')}}/monitoring-bundle/assets/js/monitoring.js"></script>
+  <script type="text/javascript" src="{{CDN('javascript')}}/framework-bundle/vendors/dataTable/js/jquery.dataTables.js"></script>
+  <script type="text/javascript" src="{{CDN('javascript')}}/framework-bundle/vendors/dataTable/js/dataTables.bootstrap.js"></script>
+  <script type="text/javascript" src="{{CDN('javascript')}}/monitoring-bundle/vendors/jquery.timeago/jquery.timeago.js"></script>
+{% endblock %}

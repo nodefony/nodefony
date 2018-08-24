@@ -1,0 +1,23 @@
+{% extends '/app/Resources/views/base.html.twig' %}
+
+{% block title %}Welcome
+  {{name}}!
+{% endblock %}
+{% block stylesheets %}
+  {{ parent() }}
+  <!-- WEBPACK BUNDLE -->
+  <link rel='stylesheet' href='{{CDN("stylesheet")}}/testBundle/assets/css/test.css'/>
+{% endblock %}
+{% block body %}
+  <img class='displayed' src='{{CDN("image")}}/framework-bundle/images/nodefony-logo-white.png'>
+  <h1 class='success'>
+    <a href='{{url(' documentation')}}'="documentation')}}'">
+      <strong style='font-size:45px'>NODEFONY</strong>
+    </a>
+    <p>{{trans('welcome')}}
+      {{name}}</p>
+  </h1>
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+{% endblock %}

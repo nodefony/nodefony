@@ -1,0 +1,42 @@
+{
+  "name": "@nodefony/security-bundle",
+  "version": "4.0.0-beta.1",
+  "description": "Nodefony Framework Bundle Security",
+  "contributors": [],
+  "private": false,
+  "scripts": {},
+  "main": "securityBundle.js",
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "dependencies": {
+    "@nodefony/passport-wrapper": "^4.0.0",
+    "bcrypt": "^3.0.0",
+    "jsonwebtoken": "^8.3.0",
+    "node-pre-gyp": "^0.11.0",
+    "passport": "^0.4.0",
+    "passport-github2": "^0.1.11",
+    "passport-google-oauth20": "^1.0.0",
+    "passport-http": "^0.3.0",
+    "passport-jwt": "^4.0.0",
+    "passport-ldapauth": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "passport-oauth2": "^1.4.0",
+    "webpack": "^4.17.1",
+    "webpack-merge": "^4.1.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nodefony/nodefony-core.git"
+  },
+  "license": "CECILL-B",
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
+  "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
+  "readmeFilename": "README.md"
+}

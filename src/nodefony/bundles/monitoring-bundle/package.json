@@ -1,0 +1,37 @@
+{
+  "name": "@nodefony/monitoring-bundle",
+  "version": "4.0.0-beta.1",
+  "description": "Nodefony Framework Bundle Monitoring",
+  "contributors": [],
+  "main": "monitoringBundle.js",
+  "private": false,
+  "scripts": {},
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "dependencies": {
+    "@nodefony/stage": "^0.1.10",
+    "bootstrap": "=3.3.7",
+    "font-awesome": "^4.7.0",
+    "qs": "^6.5.2",
+    "request": "^2.88.0",
+    "shortid": "^2.2.13",
+    "useragent": "^2.3.0",
+    "webpack": "^4.17.1",
+    "webpack-merge": "^4.1.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nodefony/nodefony-core.git"
+  },
+  "license": "CECILL-B",
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
+  "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
+  "readmeFilename": "README.md"
+}

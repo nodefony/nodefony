@@ -1,0 +1,183 @@
+{% extends '/app/Resources/views/base.html.twig' %}
+
+{% block title %}Welcome
+  {{kernel.name}}!
+{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <!-- WEBPACK BUNDLE -->
+  <link rel='stylesheet' href='{{CDN("stylesheet")}}/framework-bundle/assets/css/framework.css'/>
+  <link rel='stylesheet' href='{{CDN("stylesheet")}}/test-bundle/assets/css/test.css'/>
+{% endblock %}
+
+{% block body %}
+  <div class='container'>
+    <div class='row'>
+      <img class='displayed' src='{{CDN("image")}}/framework-bundle/images/nodefony-logo.png'>
+      <h1 class="success">
+        <a href="https://nodefony.net">
+          <strong itemprop="name" class="text-primary" id="version" style="font-size:45px">
+            NODEFONY UNIT TEST
+          </strong>
+        </a>
+      </h1>
+    </div>
+  </div>
+  <div class='container'>
+    <div class='row displayed'>
+      <button id="button"></button>
+      <div style="border:dotted;padding:10px">
+        <span id="final_span"></span>
+        <span id="interim_span" style="color:grey"></span>
+      </div>
+    </div>
+  </div>
+  <!--div class='container'>
+    <video autoplay="true" width="200" height="200" src="/test-bundle/images/oceans-clip.mp4"></video>
+  </div-->
+  <div class='container'>
+    <iframe style="margin:50px 50% 50px 50px" width="560" height="315" src="https://www.youtube.com/embed/HgzGwKwLmgM?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+    <div class="row">
+      <div class="col-md-6">
+        <pre >
+tonight i'm gonna have myself a real good time
+i feel alive
+and the world i'll turn it inside out
+and floating around in ecstasy
+
+so don't stop me now, don't stop me
+'cause i'm having a good time, having a good time
+
+i'm a shooting star leaping through the sky like a tiger
+defying the laws of gravity
+i'm a racing car passing by like lady godiva
+i'm gonna go go go
+
+there's no stopping me
+i'm burnin' through the sky two hundred degrees
+that's why they call me mister fahrenheit
+i'm traveling at the speed of light
+i wanna make a supersonic man out of you
+
+don't stop me now
+i'm having such a good time, i'm having a ball
+don't stop me now
+if you wanna have a good time just give me a call
+don't stop me now
+'cause i'm having a good time
+don't stop me now
+yes i'm havin' a good time
+i don't want to stop at all
+
+i'm a rocket ship on my way to mars
+on a collision course
+i am a satellite, i'm out of control
+i am a sex machine ready to reload
+like an atom bomb about to explode
+
+i'm burnin' through the sky two hundred degrees
+that's why they call me mister fahrenheit
+i'm traveling at the speed of light
+i wanna make a supersonic woman of you
+
+don't stop me, don't stop me
+don't stop me hey hey hey
+don't stop me, don't stop me
+i like it
+don't stop me don't stop me
+have a good time, good time
+don't stop me don't stop me
+alright
+
+i'm burnin' through the sky two hundred degrees
+that's why they call me mister fahrenheit
+i'm traveling at the speed of light
+i wanna make a supersonic man out of you
+
+don't stop me now
+i'm having such a good time, i'm having a ball
+don't stop me now
+if you wanna have a good time just give me a call
+don't stop me now
+'cause i'm having a good time
+don't stop me now
+yes i'm havin' a good time
+i don't want to stop at all
+			</pre>
+    </div>
+    <div class="col-md-6">
+      <pre id="french">
+ce soir, je vais m'amuser
+je me sens vivant et je vais mettre le monde à l'envers,
+ouais !
+je flotte autour en extase
+donc ne m'arrête pas tout de suite, ne m'arrête pas
+parce que je m'amuse, je m'amuse
+
+je suis une étoile filante bondissant dans les cieux
+comme un tigre défiant les lois de la gravité
+je suis une voiture de course rapide comme lady godiva
+je vais y aller, aller, aller
+il n'y aucun moyen de m'arrêter
+
+je brûle dans les cieux, ouais!
+deux cents degrés
+c'est pourquoi on m'appelle monsieur fahrenheit
+je voyage à la vitesse de la lumière
+je veux faire de toi un homme supersonique
+
+ne m'arrête pas tout de suite, je m'amuse vraiment
+je m'amuse, ne m'arrête pas tout de suite
+si tu veux t'amuser, appelle-moi simplement
+ne m'arrête pas tout de suite (car je m'amuse)
+ne m'arrête pas tout de suite (oui, je m'amuse)
+je ne veux pas m'arrêter du tout...ouais !
+
+je suis une fusée en direction de mars
+allant tout droit à la collision
+je suis un satellite je suis incontrôlable
+je suis une sex-machine prête à être rechargée
+comme une bombe atomique prête à
+oh oh oh oh oh exploser
+
+je brûle dans les cieux, ouais!
+deux cents degrés
+c'est pourquoi on m'appelle monsieur fahrenheit
+je voyage à la vitesse de la lumière
+je veux faire une femme supersonique de toi
+
+ne m'arrête pas, ne m'arrête pas, ne m'arrête pas
+ouais, ouais, ouais
+ne m'arrête pas, ne m'arrête pas
+ooh ooh ooh (j'aime ça)
+ne m'arrête pas, je m'amuse
+ne m'arrête pas, ne m'arrête pas
+ooh ooh d'accord
+
+je brûle dans les cieux, ouais!
+deux cents degrés
+c'est pourquoi on m'appelle monsieur fahrenheit
+je voyage à la vitesse de la lumière
+je veux faire un homme supersonique de toi
+
+ne m'arrête pas tout de suite, je m'amuse vraiment
+je m'amuse, ne m'arrête pas tout de suite
+si tu veux t'amuser, appelle-moi simplement
+ne m'arrête pas tout de suite (car je m'amuse)
+ne m'arrête pas tout de suite (oui, je m'amuse)
+je ne veux pas m'arrêter du tout
+			</pre>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+
+  {{ parent() }}
+  <!-- WEBPACK BUNDLE -->
+  <script src='{{CDN("javascript")}}/framework-bundle/assets/js/framework.js'></script>
+  <script src='{{CDN("javascript")}}/test-bundle/assets/js/test.js'></script>
+
+{% endblock %}

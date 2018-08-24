@@ -1,0 +1,130 @@
+#
+#
+#  ROUTING BUNDLE testBundle
+#
+########## nodefony ROUTING  testBundle  ############
+
+test:
+  pattern:                   /test
+  defaults: {"controller":   "test:default:index"}
+
+test-json:
+  pattern:                   /json
+  defaults: {"controller":   "test:default:json"}
+
+test-rest:
+  pattern:                   /rest
+  defaults: {"controller":   "test:default:rest"}
+
+test-watcher:
+    pattern:                 /test/watcher
+    defaults: {"controller": "test:default:watcher"}
+
+### WEBSOCKET ###
+test-websoket:
+  pattern:                   /websoket
+  defaults: {"controller":   "test:default:websoket"}
+  requirements:
+    method:
+      - WEBSOCKET
+test-websoket-code:
+  pattern:                   /test/unit/websocket/{code}
+  defaults: {"controller":   "test:websocket:websocket"}
+  requirements:
+      code:                  "^\\d{3}$"
+      method:
+          - WEBSOCKET
+
+test-websoket-protocol:
+  pattern:                   /test/unit/websocket/protocol/telnet
+  defaults: {"controller":   "test:websocket:protocol"}
+  requirements:
+      method:
+          - WEBSOCKET
+      protocol:              "telnet"
+
+test-websoket-protocol-sip:
+  pattern:                   /test/unit/websocket/protocol/sip
+  defaults: {"controller":   "test:websocket:protocolSip"}
+  requirements:
+      method:
+          - WEBSOCKET
+      protocol:              "sip"
+
+test-websoket-cors:
+  pattern:                   /test/unit/websocket/cors
+  defaults: {"controller":   "test:websocket:cors"}
+  requirements:
+      method:
+          - WEBSOCKET
+      protocol:              "sip"
+
+
+response-status:
+  pattern:                   /test/unit/response/status/{st}
+  defaults:     {"controller": "test:test:responseStatus"}
+  requirements:
+    method:                  GET
+
+response-message:
+  pattern:                   /test/unit/response/status/{st}/{message}
+  defaults:     {"controller": "test:test:responseMessage","message":bar}
+  requirements:
+    method:                  GET
+
+response-query:
+  pattern:                   /test/unit/response/query/{myVariable}/{myVariable2}
+  defaults:     {"controller": "test:test:responseQuery","myVariable":foo,"myVariable2":bar}
+  requirements:
+    method:                  GET
+
+redirect-301:
+  pattern:                   /test/unit/redirect/{status}
+  defaults:     {"controller": "test:controllerTest:redirect","status":302}
+  requirements:
+    method:
+      - GET
+      - POST
+
+request-data:
+  pattern:                   /test/unit/request
+  defaults:     {"controller": "test:controllerTest:request"}
+  requirements:
+    method:
+      - GET
+      - POST
+
+request-multi-part:
+  pattern:                   /test/unit/request/multipart
+  defaults:     {"controller": "test:multipart:requestMultiPart"}
+
+request-promise:
+  pattern:                   /test/unit/promise/{action}
+  defaults:     {"controller": "test:controllerTest:promise", "action":"promise"}
+  requirements:
+    method:
+      - GET
+      - POST
+
+request-exception:
+  pattern:                   /test/unit/exception/{action}
+  defaults:     {"controller": "test:controllerTest:exception", "action":500}
+  requirements:
+    method:
+      - GET
+      - POST
+
+subrequest:
+  pattern:                   /test/unit/subrequest
+  defaults:     {"controller": "test:subRequest:index" }
+  requirements:
+    method:                  GET
+
+
+# LOGIN
+test-login:
+  pattern:                   /test/login
+  defaults:     {"controller": "test:login:login"}
+test-logout:
+  pattern:                   /test/logout
+  defaults:     {"controller": "test:login:logout"}

@@ -14,6 +14,8 @@
 /.settings
 /nbproject/private/
 
+
+
 .git
 .github
 .travis
@@ -24,15 +26,13 @@
 .gitmodules
 .bithoundrc
 .grenrc.json
-
+.editorconfig
+.core
 
 *.db
 
 npm-debug.log
 yarn-error.log
-
-#**/assets/**
-**/tests/**
 
 
 /Makefile
@@ -44,3 +44,4 @@ yarn-error.log
 /src/bundles
 /docker
 /tools
+/src/nodefony/bundles

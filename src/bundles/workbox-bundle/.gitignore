@@ -1,0 +1,29 @@
+#Ignore directory
+**/public/dist/**
+
+
+**/assets/**
+
+*.db
+
+node_modules/**
+**/node_modules/**
+npm-debug.log
+yarn-error.log
+*.[oa]
+
+
+#Ignore vin backup
+*.swp
+*.swn
+*.swo
+#emacs
+*~
+# macos
+.DS_Store
+
+.srl
+# Eclipse file
+/.project
+/.settings
+/nbproject/private/

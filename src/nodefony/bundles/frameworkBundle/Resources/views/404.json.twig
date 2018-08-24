@@ -1,9 +1,0 @@
-{% extends "./layout.json.twig" %}
-
-{% block body %}
-"server":"nodefony",
-"code":404,
-"pdu":{{ error.pdu or null }},
-"url":"{{ error.url }}",
-"message":"{{  error.message or "Not Found"  }}"
-{% endblock %}

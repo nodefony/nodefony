@@ -1,0 +1,19 @@
+{% block body %}
+
+	/**
+	 *	The class is a **`{{name}}` SERVICE** .
+	 *	@module {{module}}
+	 *	@main {{module}}
+	 *	@class {{name}}
+	 *	@constructor
+	 *
+	 */
+	module.exports = class {{name}} extends nodefony.Service {
+
+		constructor(){
+			super("{{name}}");
+		}
+
+	};
+
+{% endblock %}

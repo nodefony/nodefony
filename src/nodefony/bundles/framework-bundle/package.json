@@ -1,0 +1,34 @@
+{
+  "name": "@nodefony/framework-bundle",
+  "version": "4.0.0-beta.1",
+  "description": "Nodefony Framework Bundle Framework ",
+  "contributors": [],
+  "private": false,
+  "main": "frameworkBundle.js",
+  "scripts": {},
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "dependencies": {
+    "@angular/cli": "=1.7.4",
+    "@nodefony/stage": "^0.1.10",
+    "bootstrap": "=3.3.7",
+    "memory-fs": "^0.4.1",
+    "webpack": "^4.17.1",
+    "webpack-merge": "^4.1.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nodefony/nodefony-core.git"
+  },
+  "license": "CECILL-B",
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
+  "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
+  "readmeFilename": "README.md"
+}

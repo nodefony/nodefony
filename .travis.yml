@@ -9,12 +9,10 @@ dist:            trusty
 sudo:            true
 
 node_js:
-  #- "6"
   - "8"
-  - "9"
+  - "10"
 
 services:
-  - mysql
   - memcached
   - elasticsearch
   - mongodb
@@ -30,8 +28,11 @@ before_script:
 before_install:
   - sudo apt-get install nginx -y
   - sudo apt-get install nodejs-legacy
-  - mysql -e "create database IF NOT EXISTS nodefony;" -uroot
-  - mysql -e "GRANT ALL ON nodefony.* TO 'travis'@'localhost';"
+  - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('nodefony') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
+  - sudo mysql -e "create database IF NOT EXISTS nodefony;" -uroot -pnodefony
+  - sudo mysql_upgrade -uroot -pnodefony
+  - sudo service mysql restart
+  - sudo mysql -e "GRANT ALL ON nodefony.* TO 'root'@'localhost';" -uroot -pnodefony
   - "curl -L https://raw.githubusercontent.com/nodefony/nodefony-core/dev/.travis/bin/install.sh | /bin/sh"
 
 branches:
@@ -46,8 +47,8 @@ addons:
   hosts:
     - nodefony.com
   apt:
-    sources:     [ 'ubuntu-toolchain-r-test']
-    packages:    ['libstdc++6']
+    sources:     [ 'ubuntu-toolchain-r-test', 'mysql-5.7-trusty']
+    packages:    ['libstdc++6', 'mysql-server', 'mysql-client']
 
 install:         true
 

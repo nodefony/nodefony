@@ -1,0 +1,31 @@
+{
+  "name": "@nodefony/sequelize-bundle",
+  "version": "4.0.0-beta.1",
+  "description": "Nodefony Framework Bundle Sequelize",
+  "contributors": [],
+  "scripts": {},
+  "main": "sequelizeBundle.js",
+  "private": false,
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "dependencies": {
+    "mysql2": "^1.6.1",
+    "sequelize": "^4.38.0",
+    "sqlite3": "^4.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nodefony/nodefony-core.git"
+  },
+  "license": "CECILL-B",
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
+  "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
+  "readmeFilename": "README.md"
+}

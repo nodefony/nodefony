@@ -1,0 +1,30 @@
+{% extends '/app/Resources/views/base.html.twig' %}
+
+{% block title %}Welcome
+  {{name}}!
+{% endblock %}
+{% block stylesheets %}
+  {{ parent() }}
+{% endblock %}
+{% block body %}
+  <img class='displayed' src='{{CDN("image")}}/framework-bundle/images/nodefony-logo-white.png'>
+  <h1 class='success'>
+    <a href='{{url(' documentation')}}'="documentation')}}'">
+      <strong style='font-size:45px'>NODEFONY API</strong>
+    </a>
+    <form id="login" action="{{url('api-token')}}" method="POST" class="margin-bottom-0">
+      <div class="form-group m-b-20">
+        <input id="email" name="email" type="text" class="form-control input-lg" placeholder="Login"/>
+      </div>
+      <div class="form-group m-b-20">
+        <input id="password" name="password" type="password" class="form-control input-lg" placeholder="Password"/>
+      </div>
+      <div class="login-buttons">
+        <button id="valid" class="btn btn-success btn-block btn-lg">Sign me in</button>
+      </div>
+    </form>
+  </h1>
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+{% endblock %}

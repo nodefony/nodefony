@@ -1,9 +1,12 @@
 const path = require("path");
 //const webpack = require('webpack');
-const ExtractTextPluginCss = require('extract-text-webpack-plugin');
-const public = path.resolve(__dirname, "..", "Resources", "public");
-const bundleName = path.basename(path.resolve(__dirname, ".."));
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpackMerge = require('webpack-merge');
+
+const context = path.resolve(__dirname, "..", "Resources", "public");
+const public = path.resolve(__dirname, "..", "Resources", "public", "assets");
+const bundleName = path.basename(path.resolve(__dirname, ".."));
+const publicPath = bundleName + "/assets/";
 
 let config = null;
 if (kernel.environment === "dev") {
@@ -13,15 +16,15 @@ if (kernel.environment === "dev") {
 }
 
 module.exports = webpackMerge(config, {
-  context: public,
+  context: context,
   target: "web",
-  //watch: false,
   entry: {
     app: ["./js/app.js"]
   },
   output: {
     path: public,
-    filename: "./assets/js/[name].js",
+    publicPath: publicPath,
+    filename: "./js/[name].js",
     library: "[name]",
     libraryTarget: "umd"
   },
@@ -29,58 +32,54 @@ module.exports = webpackMerge(config, {
   resolve: {},
   module: {
     rules: [{
-      // BABEL TRANSCODE
-      test: new RegExp("\.es6$|\.js$"),
-      exclude: new RegExp("node_modules"),
-      use: [{
-        loader: 'babel-loader',
-        options: {
-          presets: ['env']
-        }
-      }]
-    }, {
-      // CSS EXTRACT
-      test: new RegExp("\.css$"),
-      use: ExtractTextPluginCss.extract({
-        use: 'css-loader'
-      })
-    }, {
-      // SASS
-      test: new RegExp(".scss$"),
-      use: [{
-        loader: 'style-loader'
-      }, {
-        loader: 'css-loader'
-      }, {
-        loader: 'sass-loader'
-      }]
-    }, {
-      test: new RegExp("\.less$"),
-      use: ExtractTextPluginCss.extract({
-        use: [
-          "raw-loader",
-          {
-            loader: 'less-loader',
-            options: {
-              //strictMath: true,
-              //noIeCompat: true
-            }
+        // BABEL TRANSCODE
+        test: new RegExp("\.es6$|\.js$"),
+        exclude: new RegExp("node_modules"),
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            presets: ['env']
           }
+        }]
+      }, {
+        // CSS EXTRACT
+        test: new RegExp("\.(less|css)$"),
+        use: [
+          //'css-hot-loader',
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'less-loader'
         ]
-      })
-    }, {
-      // FONTS
-      test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '&outputPath=/assets/fonts/',
-    }, {
-      // IMAGES
-      test: new RegExp("\.(jpg|png|gif)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '&outputPath=/assets/images/'
-    }]
+      }, {
+        // SASS
+        test: new RegExp(".scss$"),
+        use: [{
+          loader: 'style-loader'
+        }, {
+          loader: 'css-loader'
+        }, {
+          loader: 'sass-loader'
+        }]
+      }, {
+        // FONTS
+        test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
+        use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/assets/fonts/" + '&outputPath=/fonts/',
+      },
+      {
+        // IMAGES
+        test: new RegExp("\.(jpg|png|gif)$"),
+        use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/assets/images/" + '&outputPath=/images/'
+      }
+    ]
   },
   plugins: [
-    new ExtractTextPluginCss({
-      filename: "./assets/css/[name].css",
+    new MiniCssExtractPlugin({
+      filename: "./css/[name].css",
+      allChunks: true
     })
-  ]
+  ],
+  devServer: {
+    inline: true,
+    hot: false
+  }
 });

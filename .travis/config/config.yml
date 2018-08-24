@@ -3,11 +3,8 @@
 #
 #   @here You can OVERRIDE all Bundles Configurations
 #
-name :                           AppBundle
-version:                         1.0.0
 locale :                         en_en
 App:
-  projectName:                   "nodefony"
   projectYear:                   2017
   locale:                        "en_en"
   authorName:                    "admin"
@@ -43,11 +40,22 @@ watch:                           true
 #
 #
 monitoringBundle:
-  debugBar:                      true
-  forceDebugBarProd:             true
-  storage:
-    active:                      true
-    requests:                    orm
+  debugBar                    :  true
+  forceDebugBarProd           :  false
+  profiler:
+    active                    :  false
+    storage                   :  orm
+
+##################################
+#  OVERRIDE FRAMEWORK Bundle
+#
+#    see FRAMEWORK BUNDLE config for more options
+#
+#
+frameworkBundle:
+  webpack:
+    cache                   :    true
+    outputFileSystem        :    file-system    # memory-fs not implemented yet
 
 ##################################
 #  OVERRIDE  BUNDLE SEQUELIZE
@@ -72,8 +80,8 @@ sequelizeBundle:
     nodefony:
       driver:                    mysql
       dbname:                    'nodefony'
-      username:                  'travis'
-      password:                  ''
+      username:                  'root'
+      password:                  'nodefony'
       options:
         dialect:                 mysql
         host:                    127.0.0.1
@@ -113,11 +121,8 @@ httpBundle:
     responseTimeout:             40000
   https:
     responseTimeout:             40000
-  sockjs:
-      overlay:                   true
-      hot:                       true
-      protocol:                  https
-      websocket:                 true
+  http2:
+    enablePush                :  true
   statics:
     defaultOptions:
       cacheControl :             true

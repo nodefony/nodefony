@@ -1,0 +1,22 @@
+{
+  "esversion": 6,
+  "node": true,
+  "undef": true,
+  "unused": true,
+  "boss": true,
+  "eqeqeq": true,
+  "curly": true,
+  "loopfunc": true,
+  "multistr": true,
+  "globals": {
+
+    "window": true,
+    "document": true,
+    "navigator": true,
+    "workbox": true,
+    "self": true,
+    "importScripts": true,
+    "caches": true,
+    "fetch": true
+  }
+}

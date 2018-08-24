@@ -1,7 +1,7 @@
 # test directories
 __tests__
-test
-tests
+#test
+#tests
 powered-test
 
 
@@ -14,7 +14,6 @@ coverage
 .nyc_output
 
 # build scripts
-Makefile
 Gulpfile.js
 Gruntfile.js
 
@@ -31,4 +30,23 @@ Gruntfile.js
 
 # misc
 *.gz
-*.md
+#*.md
+
+.git
+.github
+.travis
+.travis.yml
+.jshintrc
+.jshintignore
+.gitmodules
+.bithoundrc
+.grenrc.json
+.editorconfig
+.core
+
+/src/nodefony/bundles
+
+
+
+npm-debug.log
+yarn-error.log

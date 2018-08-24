@@ -1,0 +1,9 @@
+// Injections service {{name}} show in {{servicePath}}
+{{name}}: {
+  class: nodefony.services.{{name}},
+  {% if injections %}
+  arguments: ["@container", {{injections}}]
+  {% else %}
+  arguments: ["@container"]
+  {% endif %}
+}

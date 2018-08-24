@@ -1,0 +1,20 @@
+class {{name}}Task extends nodefony.Task {
+
+  constructor(name, command) {
+    super(name, command);
+  }
+
+  showHelp() {
+    this.setHelp("{{name}}:task:action myarg1 myarg2",
+      "nodefony {{name}}:task:action myarg1 myarg2"
+    );
+  }
+
+  action(arg1, arg2){
+    this.logger(arg1);
+    this.logger(arg2);
+  }
+
+}
+
+module.exports = {{name}}Task;

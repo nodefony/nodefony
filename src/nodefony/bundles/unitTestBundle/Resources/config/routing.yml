@@ -1,5 +1,0 @@
-########## nodefony ROUTING  unitTestBundle  ############
-
-unitTest:
-  pattern:  /unitTest
-  defaults: {"controller": "unitTestBundle:default:index"}

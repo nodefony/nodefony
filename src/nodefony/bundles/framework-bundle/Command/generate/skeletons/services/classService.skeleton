@@ -1,0 +1,11 @@
+
+module.exports = class {{name}} extends nodefony.Service {
+
+  {% if injections %}
+  constructor(container, {{injections}}){
+  {% else %}
+  constructor(container){
+  {% endif %}
+    super("{{name}}", container);
+  }
+};
