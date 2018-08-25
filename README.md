@@ -300,7 +300,7 @@ You can find certificate authority (ca) here:
 #### Access to Secure App with URL : <https://localhost:5152>
 #### Access to App with URL : <http://localhost:5151>
 
-[![nodefony](https://raw.githubusercontent.com/nodefony/nodefony-core/master/src/nodefony/bundles/documentationBundle/Resources/public/images/nodefony.png)](https://nodefony.net)
+[![nodefony](https://raw.githubusercontent.com/nodefony/nodefony-core/master/src/nodefony/bundles/documentation-bundle/Resources/public/images/nodefony.png)](https://nodefony.net)
 
 ## <a name="configurations"></a>Framework Configurations
 
