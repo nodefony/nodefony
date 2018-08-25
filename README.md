@@ -519,7 +519,7 @@ module.exports = webpackMerge({
 
 Access to monitoring route with URL : <http://localhost:5151/nodefony>
 
-[![MONITORING](https://raw.githubusercontent.com/nodefony/nodefony-core/master/doc/default/cluster.png)](https://nodefony.net/nodefony)
+[![MONITORING](https://raw.githubusercontent.com/nodefony/nodefony-core/master/src/nodefony/doc/default/cluster.png)](https://nodefony.net/nodefony)
 
 Monitoring in progress !!!
 
