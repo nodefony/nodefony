@@ -40,12 +40,12 @@ locale :			en_en
 #        translations: true
 #
 watch:
-  controllers:		true
+  controllers:	true
   config:       true
   views:			  true
   translations: true
   services:     true
-  webpack:      false
+  webpack:      true
 
 #
 #
