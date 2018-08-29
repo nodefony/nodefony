@@ -30,10 +30,16 @@ class webpackCommand extends nodefony.Command {
       } catch (e) {
         return reject(e);
       }
-      return Promise.all(promiseWebpack)
-        .then((data) => {
-          return data;
-        });
+      if (promiseWebpack.length) {
+        return Promise.all(promiseWebpack)
+          .then((data) => {
+            return data;
+          }).catch((e) => {
+            this.logger(e, "ERROR");
+            return reject(e);
+          });
+      }
+      return resolve();
     });
     //});
   }

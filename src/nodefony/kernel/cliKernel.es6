@@ -36,13 +36,13 @@ module.exports = nodefony.register("cliKernel", function () {
   };
 
   let createAssetDirectory = function (myPath, callback) {
-    this.logger("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : " + myPath, "DEBUG");
     try {
       if (fs.existsSync(myPath)) {
         return callback(fs.statSync(myPath));
       }
-      throw new Error(myPath + " don' exist");
+      throw new Error(myPath + " don't exist");
     } catch (e) {
+
       this.logger("Create directory : " + myPath);
       fs.mkdir(myPath, (e) => {
         if (!e || (e && e.code === 'EEXIST')) {
@@ -68,23 +68,28 @@ module.exports = nodefony.register("cliKernel", function () {
       if (result.length()) {
         name = bundles[bundle].bundleName;
         srcpath = path.resolve(bundles[bundle].path, "Resources", "public");
-        this.createSymlink(srcpath, path.resolve(this.publicPath, name), (Srcpath, dstpath) => {
-          let size = "not Defined";
-          let sizeAssets = "not Defined";
-          try {
-            size = nodefony.niceBytes(this.getSizeDirectory(Srcpath, /^docs$|^tests|^node_modules|^assets$/));
-            sizeAssets = nodefony.niceBytes(this.getSizeDirectory(path.resolve(Srcpath, "assets")));
-          } catch (e) {
-            //this.logger(e, "ERROR");
-          }
-          table.push([
-            bundle,
-            dstpath.replace(this.kernel.rootDir, "."),
-            Srcpath.replace(this.kernel.rootDir, "."),
-            size,
-            sizeAssets
-          ]);
-        });
+        try {
+          let file = new nodefony.fileClass(srcpath);
+          this.createSymlink(file.path, path.resolve(this.publicPath, name), (Srcpath, dstpath) => {
+            let size = "not Defined";
+            let sizeAssets = "not Defined";
+            try {
+              size = nodefony.niceBytes(this.getSizeDirectory(Srcpath, /^docs$|^tests|^node_modules|^assets$/));
+              sizeAssets = nodefony.niceBytes(this.getSizeDirectory(path.resolve(Srcpath, "assets")));
+            } catch (e) {
+              //this.logger(e, "ERROR");
+            }
+            table.push([
+              bundle,
+              dstpath.replace(this.kernel.rootDir, "."),
+              Srcpath.replace(this.kernel.rootDir, "."),
+              size,
+              sizeAssets
+            ]);
+          });
+        } catch (e) {
+          this.logger(e, "DEBUG");
+        }
       }
     }
     try {
@@ -538,6 +543,7 @@ module.exports = nodefony.register("cliKernel", function () {
           "ASSETS COMPILE"
         ]
       });
+      this.logger("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : " + this.publicPath, "INFO");
       createAssetDirectory.call(this, this.publicPath, () => {
         parseAssetsBundles.call(this, table);
         this.logger("\n" + table.toString(), "DEBUG");

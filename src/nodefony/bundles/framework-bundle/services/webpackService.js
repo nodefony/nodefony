@@ -150,180 +150,179 @@ module.exports = class webpack extends nodefony.Service {
   }
 
   loadConfig(file, bundle, reload) {
-    try {
-      if (!(file instanceof nodefony.fileClass)) {
-        file = new nodefony.fileClass(file);
+    return new Promise((resolve, reject) => {
+      try {
+        if (!(file instanceof nodefony.fileClass)) {
+          file = new nodefony.fileClass(file);
+        }
+      } catch (e) {
+        return reject(e);
       }
-    } catch (e) {
-      throw e;
-    }
-    let Path = bundle.path;
-    let type = bundle.settings.type;
-    let publicPath = bundle.publicPath;
-    let config = null;
-    let basename = bundle.bundleName;
-    let watch = bundle.webpackWatch || false;
-    let devServer = null;
-    let watchOptions = {};
-    shell.cd(Path);
-    let webpack = null;
-    try {
-      webpack = require(path.resolve("node_modules", "webpack"));
-    } catch (e) {
-      webpack = this.webpack;
-    }
-    try {
-      switch (type) {
-      case "angular":
-        publicPath = path.resolve("/", bundle.bundleName, "dist");
-        //shell.cd(Path);
-        //webpack = require(path.resolve("node_modules", "webpack"));
-        config = require(file.path);
-        config.context = Path;
-        //if (config  .output.path === undefined) {
-        config.output.path = path.resolve("Resources", "public", "dist");
-        //}
-        if (config.output.publicPath === undefined) {
+      let Path = bundle.path;
+      let type = bundle.settings.type;
+      let publicPath = bundle.publicPath;
+      let config = null;
+      let basename = bundle.bundleName;
+      let watch = bundle.webpackWatch || false;
+      let devServer = null;
+      let watchOptions = {};
+      shell.cd(Path);
+      let webpack = null;
+      try {
+        webpack = require(path.resolve(bundle.path, "node_modules", "webpack"));
+      } catch (e) {
+        webpack = this.webpack;
+      }
+      try {
+        switch (type) {
+        case "angular":
+          publicPath = path.resolve("/", bundle.bundleName, "dist");
+          config = require(file.path);
+          config.context = Path;
+          config.output.path = path.resolve(bundle.path, "Resources", "public", "dist");
+          if (config.output.publicPath === undefined) {
+            if (publicPath) {
+              config.output.publicPath = publicPath + "/";
+            } else {
+              config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
+            }
+          }
+          if (!this.production) {
+            watchOptions = {
+              ignoreInitial: false,
+              persistent: true,
+              followSymlinks: false,
+              depth: 0,
+              atomic: false,
+              alwaysStat: true,
+              ignorePermissionErrors: true,
+            };
+          }
+          break;
+        case "react":
+          publicPath = path.resolve("/", bundle.bundleName, "dist");
+          process.env.PUBLIC_URL = publicPath;
+          process.env.PUBLIC_PATH = publicPath;
+          process.env.HOST = this.socksSettings.hostname + ":" + this.socksSettings.port;
+          process.env.HTTPS = true;
+          config = require(file.path);
+          config.context = Path;
+          config.output.path = path.resolve(bundle.path, "Resources", "public", "dist");
           if (publicPath) {
             config.output.publicPath = publicPath + "/";
           } else {
             config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
           }
-        }
-        if (!this.production) {
           watchOptions = {
-            ignoreInitial: false,
-            persistent: true,
-            followSymlinks: false,
-            depth: 0,
-            atomic: false,
-            alwaysStat: true,
-            ignorePermissionErrors: true,
+            ignored: new RegExp(
+              `^(?!${path
+                .normalize(Path + '/')
+                .replace(/[\\]+/g, '\\\\')}).+[\\\\/]node_modules[\\\\/]`,
+              'g'
+            )
           };
+          break;
+        default:
+          config = require(file.path);
+          watchOptions = nodefony.extend({
+            ignored: /node_modules/
+          }, this.webPackSettings.watchOptions);
         }
-        break;
-      case "react":
-        publicPath = path.resolve("/", bundle.bundleName, "dist");
-        //shell.cd(Path);
-        //webpack = require(path.resolve("node_modules", "webpack"));
-        process.env.PUBLIC_URL = publicPath;
-        process.env.PUBLIC_PATH = publicPath;
-        process.env.HOST = this.socksSettings.hostname + ":" + this.socksSettings.port;
-        process.env.HTTPS = true;
-        config = require(file.path);
-        config.context = Path;
-        config.output.path = path.resolve("Resources", "public", "dist");
-        if (publicPath) {
-          config.output.publicPath = publicPath + "/";
-        } else {
-          config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
-        }
-        watchOptions = {
-          ignored: new RegExp(
-            `^(?!${path
-              .normalize(Path + '/')
-              .replace(/[\\]+/g, '\\\\')}).+[\\\\/]node_modules[\\\\/]`,
-            'g'
-          )
-        };
-        break;
-      default:
-        config = require(file.path);
-        watchOptions = nodefony.extend({
-          ignored: /node_modules/
-        }, this.webPackSettings.watchOptions);
-      }
 
+        try {
+          devServer = this.addDevServerEntrypoints(config, watch);
+        } catch (e) {
+          shell.cd(this.kernel.rootDir);
+          return reject(e);
+        }
+
+        if (!config.name) {
+          config.name = file.name || basename;
+        }
+        if (config.cache === undefined) {
+          config.cache = this.webPackSettings.cache;
+        }
+        bundle.webPackConfig = config;
+        bundle.webpackCompiler = webpack(config);
+        this.nbCompiler++;
+        if (this.kernel.type === "CONSOLE") {
+          return resolve(bundle.webpackCompiler);
+        }
+        bundle.webpackCompiler.plugin("done", () => {
+          bundle.fire("onWebpackDone", bundle.webpackCompiler, reload);
+          this.nbCompiled++;
+          if (this.nbCompiled === this.nbCompiler) {
+            this.nbCompiled = 0;
+            this.fire("onWebpackFinich", this, reload);
+            shell.cd(this.kernel.rootDir);
+          }
+          return resolve(bundle.webpackCompiler);
+        });
+        bundle.webpackCompiler.plugin("failed", (e) => {
+          this.logger(e, "ERROR");
+          return reject(e);
+        });
+      } catch (e) {
+        this.logger(e, 'ERROR');
+        shell.cd(this.kernel.rootDir);
+        return reject(e);
+      }
       try {
-        devServer = this.addDevServerEntrypoints(config, watch);
+        // WATCH
+        if (this.production) {
+          watch = false;
+        } else {
+          if (config.watch === undefined) {
+            config.watch = watch;
+          } else {
+            watch = config.watch;
+          }
+          if (watch && this.sockjs && bundle.webpackCompiler) {
+            this.sockjs.addCompiler(bundle.webpackCompiler, basename, devServer);
+          }
+        }
+        if (watch) {
+          if (!this.production && this.outputFileSystem) {
+            bundle.webpackCompiler.outputFileSystem = this.outputFileSystem;
+          }
+          if (this.nbWatched > 1) {
+            this.logger("Warning only 1 webpack bundle watcher can be use with nodefony framework !!! ", "WARNING");
+          }
+          this.nbWatched++;
+          bundle.watching = null;
+          bundle.watching = bundle.webpackCompiler.watch(watchOptions, (err, stats) => {
+            this.logger("BUNDLE : " + basename + " WACTHER WEBPACK COMPILE  ");
+            if (!err) {
+              this.logger("\n" + this.displayConfigTable(config), "DEBUG");
+            }
+            this.loggerStat(err, stats, basename, file.name, true);
+          });
+          this.kernel.listen(this, "onTerminate", () => {
+            if (bundle.watching) {
+              bundle.watching.close(() => {
+                this.logger("Watching Ended  " + config.context + " : " + util.inspect(config.entry), "INFO");
+              });
+            }
+          });
+        } else {
+          if (!this.kernel.isCore) {
+            if (this.kernel.isBundleCore(basename)) {
+              return resolve(bundle.webpackCompiler);
+            }
+          }
+          //if ((this.kernel.environment === "dev") && (basename in this.kernel.bundlesCore) && (!this.kernel.isCore)) {
+          //  return resolve(bundle.webpackCompiler);
+          //}
+          let idfile = basename + "_" + file.name;
+          this.runCompiler(bundle.webpackCompiler, idfile, basename, file.name);
+        }
       } catch (e) {
         shell.cd(this.kernel.rootDir);
-        throw e;
+        return reject(e);
       }
+      //return bundle.webpackCompiler;
+    });
 
-      if (!config.name) {
-        config.name = file.name || basename;
-      }
-      if (config.cache === undefined) {
-        config.cache = this.webPackSettings.cache;
-      }
-      bundle.webPackConfig = config;
-      bundle.webpackCompiler = webpack(config);
-      this.nbCompiler++;
-      if (this.kernel.type === "CONSOLE") {
-        return bundle.webpackCompiler;
-      }
-      bundle.webpackCompiler.plugin("done", () => {
-        bundle.fire("onWebpackDone", bundle.webpackCompiler);
-        this.nbCompiled++;
-        if (this.nbCompiled === this.nbCompiler) {
-          this.nbCompiled = 0;
-          this.fire("onWebpackFinich", this, reload);
-          shell.cd(this.kernel.rootDir);
-        }
-      });
-      bundle.webpackCompiler.plugin("failed", (e) => {
-        this.logger(e, "ERROR");
-      });
-    } catch (e) {
-      this.logger(e, 'ERROR');
-      shell.cd(this.kernel.rootDir);
-      throw e;
-    }
-    try {
-      // WATCH
-      if (this.production) {
-        watch = false;
-      } else {
-        if (config.watch === undefined) {
-          config.watch = watch;
-        } else {
-          watch = config.watch;
-        }
-        if (watch && this.sockjs && bundle.webpackCompiler) {
-          this.sockjs.addCompiler(bundle.webpackCompiler, basename, devServer);
-        }
-      }
-      if (watch) {
-        if (!this.production && this.outputFileSystem) {
-          bundle.webpackCompiler.outputFileSystem = this.outputFileSystem;
-        }
-        if (this.nbWatched > 1) {
-          this.logger("Warning only 1 webpack bundle watcher can be use with nodefony framework !!! ", "WARNING");
-        }
-        this.nbWatched++;
-        bundle.watching = null;
-        bundle.watching = bundle.webpackCompiler.watch(watchOptions, (err, stats) => {
-          this.logger("BUNDLE : " + basename + " WACTHER WEBPACK COMPILE  ");
-          if (!err) {
-            this.logger("\n" + this.displayConfigTable(config), "DEBUG");
-          }
-          this.loggerStat(err, stats, basename, file.name, true);
-        });
-        this.kernel.listen(this, "onTerminate", () => {
-          if (bundle.watching) {
-            bundle.watching.close(() => {
-              this.logger("Watching Ended  " + config.context + " : " + util.inspect(config.entry), "INFO");
-            });
-          }
-        });
-      } else {
-        if (!this.kernel.isCore) {
-          if (this.kernel.isBundleCore(basename)) {
-            return bundle.webpackCompiler;
-          }
-        }
-        //if ((this.kernel.environment === "dev") && (basename in this.kernel.bundlesCore) && (!this.kernel.isCore)) {
-        //  return bundle.webpackCompiler;
-        //}
-        let idfile = basename + "_" + file.name;
-        this.runCompiler(bundle.webpackCompiler, idfile, basename, file.name);
-      }
-    } catch (e) {
-      shell.cd(this.kernel.rootDir);
-      throw e;
-    }
-    return bundle.webpackCompiler;
   }
 
   runCompiler(compiler, id, bundle, file) {
@@ -345,7 +344,7 @@ module.exports = class webpack extends nodefony.Service {
           if (err) {
             return reject(err);
           }
-          return resolve(stats);
+          return resolve(compiler);
         });
       } catch (e) {
         throw e;

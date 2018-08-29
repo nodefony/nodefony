@@ -3,7 +3,7 @@ module = nodefony.module;
 
 module.exports = nodefony.register("kernel", function () {
 
-  const regBundleName = /^(.+)-bundle[\.js]{0,3}$|^(.+)[Bb]undle[\.js]{0,3}$/;
+  const regBundleName = /^(\w+)-bundle[\.js]{0,3}$|^(\w+)[Bb]undle[\.js]{0,3}$/;
   const regBundle = /^(.+)[Bb]undle.js$/;
   const regClassBundle = /^(.+)[Bb]undle$/;
   const regPackageFile = /^\s*file:(.*)/;

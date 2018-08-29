@@ -9,7 +9,7 @@ const Translation = require(path.resolve(__dirname, "translation.js"));
 const routing = require(path.resolve(__dirname, "routing.js"));
 const generateReactCli = require(path.resolve(__dirname, "react", "reactBuilder.js"));
 //const generateAngularCli = require(path.resolve(__dirname, "angular", "angularBuilder.js"));
-const regBundleName = /^(.+)-bundle[\.js]{0,3}$|^(.+)[Bb]undle[\.js]{0,3}$/;
+const regBundleName = /^(\w+)-bundle[\.js]{0,3}$|^(\w+)[Bb]undle[\.js]{0,3}$/;
 
 // mother class bundle
 const Bundle = class Bundle extends nodefony.Builder {
