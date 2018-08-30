@@ -37,12 +37,10 @@
     "url": "https://github.com/nodefony/help/issues"
   },
   "license": "CECILL-B",
-  "licenses": [
-    {
-      "type": "CECILL-B",
-      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-    }
-  ],
+  "licenses": [{
+    "type": "CECILL-B",
+    "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+  }],
   "os": [
     "darwin",
     "linux",
@@ -67,7 +65,6 @@
     "less-loader": "^4.1.0",
     "mini-css-extract-plugin": "^0.4.2",
     "mongoose": "^5.2.10",
-    "node-pre-gyp": "^0.11.0",
     "node-sass": "^4.9.3",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "pm2": "^3.0.4",
@@ -85,13 +82,12 @@
     "webpack-merge": "^4.1.4"
   },
   "devDependencies": {
+    "node-pre-gyp": "^0.11.0",
     "editorconfig": "^0.15.0",
     "github-release-notes": "^0.16.0",
     "jshint": "^2.9.6"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md",
-  "contributors": [
-    {}
-  ]
+  "contributors": [{}]
 }

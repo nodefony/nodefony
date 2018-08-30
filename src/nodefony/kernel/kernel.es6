@@ -4,8 +4,8 @@ module = nodefony.module;
 module.exports = nodefony.register("kernel", function () {
 
   const regBundleName = /^(\w+)-bundle[\.js]{0,3}$|^(\w+)[Bb]undle[\.js]{0,3}$/;
-  const regBundle = /^(.+)[Bb]undle.js$/;
-  const regClassBundle = /^(.+)[Bb]undle$/;
+  const regBundle = /^(\w+)[Bb]undle.js$/;
+  const regClassBundle = /^(\w+)[Bb]undle$/;
   const regPackageFile = /^\s*file:(.*)/;
 
   const promiseBundleReady = function () {

@@ -4,12 +4,12 @@ const Module = require("module");
 module.exports = nodefony.register("Bundle", function () {
 
   //const regBundle = /^(.*)[Bb]undle$/;
-  const regFixtures = /^(.+)Fixtures.js$/;
-  const regController = /^(.+)Controller\.[m]?js$/;
-  const regClassController = /^(.+)Controller$/;
-  const regService = /^(.+)Service.js$/;
-  const regCommand = /^(.+)Command.js$/;
-  const regEntity = /^(.+)Entity.js$/;
+  const regFixtures = /^(\w+)Fixtures.js$/;
+  const regController = /^(\w+)Controller\.[m]?js$/;
+  const regClassController = /^(\w+)Controller$/;
+  const regService = /^(\w+)Service.js$/;
+  const regCommand = /^(\w+)Command.js$/;
+  const regEntity = /^(\w+)Entity.js$/;
   const regI18nFile = /^(.*)\.(.._..)\.(.*)$/;
   const regConfigFile = /^(.*)\..*$/;
   const regRoutingFile = /^(routing)\..*$/;
@@ -231,17 +231,18 @@ module.exports = nodefony.register("Bundle", function () {
       // WEBPACK SERVICE
       this.webpackService = this.get("webpack");
       this.webpackCompiler = null;
+      this.webPackConfig = null;
       this.watching = null;
-      if (this.kernel.type !== "CONSOLE" || this.kernel.cli.command === "webpack") {
+      /*if (this.kernel.type !== "CONSOLE" || this.kernel.cli.command === "webpack") {
         try {
-          this.kernel.once("onReady", () => {
-            this.initWebpack();
+          this.kernel.once("onPostReady", () => {
+            //this.initWebpack();
           });
         } catch (e) {
           this.logger(e, "ERROR");
           throw e;
         }
-      }
+      }*/
       this.fire("onRegister", this);
     }
 
@@ -273,15 +274,6 @@ module.exports = nodefony.register("Bundle", function () {
             this.logger(e, "ERROR");
             throw e;
           });
-        /*this.on("onWebpackDone", (compiler, reload) => {
-          if (this.kernel.environment === "prod" || reload || !this.watching) {
-            this.logger(`MEMORY clean webpack compile bundle : ${this.name}`, "INFO");
-            this.webPackConfig = null;
-            delete this.webPackConfig;
-            this.webpackCompiler = null;
-            delete this.webpackCompiler;
-          }
-        });*/
       } catch (e) {
         this.logger(e, "ERROR");
         throw e;

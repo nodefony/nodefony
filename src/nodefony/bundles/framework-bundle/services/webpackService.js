@@ -21,6 +21,41 @@ module.exports = class webpack extends nodefony.Service {
     this.nbCompiled = 0;
     this.nbWatched = 0;
     this.sockjs = this.get("sockjs");
+    this.tabPromise = [];
+    this.kernel.once("onReady", () => {
+      for (let bundle in this.kernel.bundles) {
+        this.tabPromise.push(this.kernel.bundles[bundle]);
+      }
+      if (this.kernel.type === "CONSOLE" && this.kernel.cli.command === "webpack") {
+        return this.compile()
+          .then((ele) => {
+            shell.cd(this.kernel.rootDir);
+            this.logger("WEBPACK COMPILE FINISH");
+            this.tabPromise = [];
+            return ele;
+          }).catch(e => {
+            this.logger(e, "ERROR");
+            shell.cd(this.kernel.rootDir);
+          });
+      }
+    });
+
+    if (this.kernel.type !== "CONSOLE") {
+      this.kernel.once("onPostReady", () => {
+        this.logger(`Compile All WEBPACK config`, "INFO");
+        return this.compile()
+          .then((ele) => {
+            shell.cd(this.kernel.rootDir);
+            this.logger("WEBPACK COMPILE FINISH");
+            this.tabPromise = [];
+            return ele;
+          }).catch(e => {
+            this.logger(e, "ERROR");
+            shell.cd(this.kernel.rootDir);
+          });
+      });
+    }
+
     if (this.production) {
       try {
         if (!fs.existsSync(this.pathCache)) {
@@ -41,6 +76,33 @@ module.exports = class webpack extends nodefony.Service {
       }
     }
   }
+
+  compile() {
+    let bundle = this.tabPromise.shift();
+    if (!bundle) {
+      return Promise.resolve();
+    }
+    this.logger(`WEBAPCK Compile Bundle ${bundle.name}`, "INFO");
+    shell.cd(bundle.path);
+    if (this.kernel.type === "CONSOLE") {
+      return bundle.compileWebpack.call(bundle)
+        .then(() => {
+          if (this.tabPromise.length) {
+            return this.compile();
+          }
+          return Promise.resolve();
+        });
+    } else {
+      return bundle.initWebpack.call(bundle)
+        .then(() => {
+          if (this.tabPromise.length) {
+            return this.compile();
+          }
+          return Promise.resolve();
+        });
+    }
+  }
+
 
   setFileSystem() {
     switch (this.webPackSettings.outputFileSystem) {
@@ -235,7 +297,10 @@ module.exports = class webpack extends nodefony.Service {
           shell.cd(this.kernel.rootDir);
           return reject(e);
         }
-
+        //context
+        if (!config.context) {
+          config.context = Path;
+        }
         if (!config.name) {
           config.name = file.name || basename;
         }
