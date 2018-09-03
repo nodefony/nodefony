@@ -21,18 +21,8 @@ const sockCompiler = class sockCompiler extends nodefony.Service {
     this.stats = null;
     if (compiler) {
       this.compiler = compiler;
-      if (this.compiler.plugin) {
-        this.compiler.plugin("compile", () => {
-          this.sockWrite("invalid");
-        });
-        this.compiler.plugin("invalid", () => {
-          this.sockWrite("invalid");
-        });
-        this.compiler.plugin("done", (stats) => {
-          this.stats = stats.toJson(this.clientStats);
-          this.sendStats(this.stats);
-        });
-      } else {
+
+      if (this.compiler.hooks) {
         this.compiler.hooks.compile.tap('webpack-dev-server', () => {
           this.sockWrite("invalid");
         });
@@ -40,6 +30,17 @@ const sockCompiler = class sockCompiler extends nodefony.Service {
           this.sockWrite("invalid");
         });
         this.compiler.hooks.done.tap('webpack-dev-server', (stats) => {
+          this.stats = stats.toJson(this.clientStats);
+          this.sendStats(this.stats);
+        });
+      } else {
+        this.compiler.plugin("compile", () => {
+          this.sockWrite("invalid");
+        });
+        this.compiler.plugin("invalid", () => {
+          this.sockWrite("invalid");
+        });
+        this.compiler.plugin("done", (stats) => {
           this.stats = stats.toJson(this.clientStats);
           this.sendStats(this.stats);
         });

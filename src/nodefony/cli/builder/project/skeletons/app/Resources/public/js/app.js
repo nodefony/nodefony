@@ -3,7 +3,7 @@
  *	ENTRY POINT WEBPACK bundle APP
  *
  */
-import "../css/app.css";
+require("../css/app.css");
 
 module.exports = function () {
   /*

@@ -65,28 +65,21 @@
   background-color: #167b87;
   color: #ffffff;
   padding: 0px 0px;
-  font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
-  font-size: 14px;
+  font-family: "Source Sans Pro", Helvetica, Arial, sans-serif !important;
+  font-size: 14px !important;
   height: 30px;
+  -webkit-font-smoothing: auto;
 }
 
 .label-nodefony {
   display: inline;
   margin-right: 5px;
-  font-weight: initial;
+  font-weight: 300 !important;
   font-size: 12px;
   color: rgb(255, 255, 255);
   padding: 3px 5px;
   border-radius: 5px;
   color: #ffffff;
-}
-
-#nodefony-container .label {
-  padding: 3px 5px;
-  border-radius: 5px;
-  margin-right: 5px;
-  font-weight: initial;
-  font-size: 12px;
 }
 
 #nodefony-container .label-default {

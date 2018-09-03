@@ -39,7 +39,7 @@ module.exports = webpackMerge(config, {
       use: [{
         loader: 'babel-loader',
         options: {
-          presets: ['env']
+          presets: ['@babel/preset-env']
         }
       }]
     }, {

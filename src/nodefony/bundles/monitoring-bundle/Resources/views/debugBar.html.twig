@@ -158,11 +158,11 @@
     </li>
     <li class="separator"></li>
     <li>
-      <label class="label nodefony-responsive-sm">
+      <label class="label-nodefony nodefony-responsive-sm">
         <a target="blank" href='{{path("monitoring-index")}}#/config/App'>{{projectName}}
           :</a>
       </label>
-      <label class="label label-default">{{environment}}</label>
+      <label class="label-nodefony label-default">{{environment}}</label>
       <div class="details">
         <ul>
           <li>
@@ -316,7 +316,7 @@
     <li class="separator"></li>
 
     <li >
-      <label class="label nodefony-responsive-md">
+      <label class="label-nodefony nodefony-responsive-md">
         <a target="blank" href='{{path("monitoring-index")}}#/services'>SERVICES</a>
       </label>
       <label class="label-nodefony label-default">{{nbServices}}</label>
@@ -596,7 +596,7 @@
     <li class="separator"></li>
 
     <li >
-      <label class="label label-default nodefony-responsive-md">@
+      <label class="label-nodefony label-default nodefony-responsive-md">@
         {% if id %}
           <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=request'>{{route.name}}</a>
         {% else %}{{route.name}}
@@ -678,11 +678,11 @@
       {% endif %}
       <label class="label-nodefony label-success">{{ request.protocol | upper }}</label>
       {% if id %}
-        <label class="label nodefony-responsive-md">
+        <label class="label-nodefony nodefony-responsive-md">
           <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}'>REQUEST</a>
         </label>
       {% else %}
-        <label class="label nodefony-responsive-md">REQUEST</label>
+        <label class="label-nodefony nodefony-responsive-md">REQUEST</label>
       {% endif %}
 
       <label class="label-nodefony label-default">{{ request.method }}</label>
@@ -833,14 +833,14 @@
 
     <li>
       {% if id %}
-        <label class="label nodefony-responsive-md">
+        <label class="label-nodefony nodefony-responsive-md">
           <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=response'>RESPONSE</a>
         </label>
       {% else %}
-        <label class="label nodefony-responsive-md">RESPONSE</label>
+        <label class="label-nodefony nodefony-responsive-md">RESPONSE</label>
       {% endif %}
-      <label class="label label-success nodefony-responsive-sm">{{ response.statusCode }}</label>
-      <label class="label label-success">{{ timeRequest }}</label>
+      <label class="label-nodefony label-success nodefony-responsive-sm">{{ response.statusCode }}</label>
+      <label class="label-nodefony label-success">{{ timeRequest }}</label>
       <div class="details nodefony-response-details">
         <ul>
           <li>

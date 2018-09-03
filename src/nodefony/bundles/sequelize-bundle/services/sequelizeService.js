@@ -25,7 +25,7 @@ const error = function (err) {
   }
 };
 
-const Op = Sequelize.Op;
+/*const Op = Sequelize.Op;
 const operatorsAliases = {
   $eq: Op.eq,
   $ne: Op.ne,
@@ -61,7 +61,7 @@ const operatorsAliases = {
   $all: Op.all,
   $values: Op.values,
   $col: Op.col
-};
+};*/
 
 /*
  *
@@ -77,11 +77,11 @@ const connectionDB = class connectionDB {
     this.db = null;
     this.orm = orm;
     this.intervalId = null;
-    if (options.options) {
+    /*if (options.options) {
       options.options = nodefony.extend(true, {
         operatorsAliases: operatorsAliases
       }, options.options);
-    }
+    }*/
     this.settings = options;
     this.connect(type, this.settings);
   }

@@ -1,9 +1,7 @@
-//const semver = require('semver');
 const Module = require("module");
 
 module.exports = nodefony.register("Bundle", function () {
 
-  //const regBundle = /^(.*)[Bb]undle$/;
   const regFixtures = /^(\w+)Fixtures.js$/;
   const regController = /^(\w+)Controller\.[m]?js$/;
   const regClassController = /^(\w+)Controller$/;
@@ -280,6 +278,69 @@ module.exports = nodefony.register("Bundle", function () {
       }
     }
 
+    compileWebpack() {
+      return new Promise((resolve, reject) => {
+        if (this.webpackCompiler) {
+          try {
+            return this.webpackService.runCompiler(this.webpackCompiler, this.name + "_" + this.webpackCompiler.name, this.name, this.webpackCompiler.name)
+              .catch(e => {
+                return reject(e);
+              });
+          } catch (e) {
+            return reject(e);
+          }
+        }
+        return resolve();
+      });
+    }
+
+    findWebPackConfig() {
+      return new Promise((resolve, reject) => {
+        let res = null;
+        switch (this.settings.type) {
+        case "angular":
+          try {
+            res = this.finder.result.getFile("webpack.config.js", true);
+            if (!res) {
+              reject(new Error("Angular bundle no webpack config file : webpack.config.js "));
+            }
+            return resolve(this.webpackService.loadConfig(res, this));
+          } catch (e) {
+            throw e;
+          }
+          break;
+        case "react":
+          let file = null;
+          try {
+            switch (process.env.NODE_ENV) {
+            case "development":
+              file = path.resolve(this.path, "config", "webpack.config.dev.js");
+              break;
+            case "production":
+              file = path.resolve(this.path, "config", "webpack.config.prod.js");
+              break;
+            }
+            res = new nodefony.fileClass(file);
+            process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
+            return resolve(this.webpackService.loadConfig(res, this));
+          } catch (e) {
+            return reject(e);
+          }
+          break;
+        default:
+          try {
+            this.webpackConfigFile = this.finder.result.getFile("webpack.config.js", true);
+            if (!this.webpackConfigFile) {
+              return resolve(true);
+            }
+            return resolve(this.webpackService.loadConfig(this.webpackConfigFile, this));
+          } catch (e) {
+            return reject(e);
+          }
+        }
+      });
+    }
+
     initWatchers() {
       if (!this.settings.watch) {
         return;
@@ -494,23 +555,6 @@ module.exports = nodefony.register("Bundle", function () {
       return this.controllers[name];
     }
 
-    compileWebpack() {
-      return new Promise((resolve, reject) => {
-        if (this.webpackCompiler) {
-          try {
-            return this.webpackService.runCompiler(this.webpackCompiler, this.name + "_" + this.webpackCompiler.name, this.name, this.webpackCompiler.name)
-              .catch(e => {
-                return reject(e);
-              });
-          } catch (e) {
-            return reject(e);
-          }
-        }
-        return resolve();
-      });
-
-    }
-
     registerServices() {
       // find  controler files
       let services = this.finder.result.findByNode("services");
@@ -582,53 +626,6 @@ module.exports = nodefony.register("Bundle", function () {
       }
     }
 
-    findWebPackConfig() {
-      return new Promise((resolve, reject) => {
-        let res = null;
-        switch (this.settings.type) {
-        case "angular":
-          try {
-            res = this.finder.result.getFile("webpack.config.js", true);
-            if (!res) {
-              reject(new Error("Angular bundle no webpack config file : webpack.config.js "));
-            }
-            return resolve(this.webpackService.loadConfig(res, this));
-          } catch (e) {
-            throw e;
-          }
-          break;
-        case "react":
-          let file = null;
-          try {
-            switch (process.env.NODE_ENV) {
-            case "development":
-              file = path.resolve(this.path, "config", "webpack.config.dev.js");
-              break;
-            case "production":
-              file = path.resolve(this.path, "config", "webpack.config.prod.js");
-              break;
-            }
-            res = new nodefony.fileClass(file);
-            process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
-            return resolve(this.webpackService.loadConfig(res, this));
-          } catch (e) {
-            return reject(e);
-          }
-          break;
-        default:
-          try {
-            this.webpackConfigFile = this.finder.result.getFile("webpack.config.js", true);
-            if (!this.webpackConfigFile) {
-              return resolve(true);
-            }
-            return resolve(this.webpackService.loadConfig(this.webpackConfigFile, this));
-          } catch (e) {
-            return reject(e);
-          }
-        }
-      });
-
-    }
 
     findControllerFiles(result) {
       if (!result) {
@@ -645,6 +642,7 @@ module.exports = nodefony.register("Bundle", function () {
       }
       return this.controllerFiles;
     }
+
     registerControllers(result) {
       if (result) {
         this.controllerFiles = result;
@@ -659,6 +657,7 @@ module.exports = nodefony.register("Bundle", function () {
         });
       }
     }
+
     reloadWatcherControleur(name, Path) {
       try {
         if (name === null) {
@@ -671,6 +670,7 @@ module.exports = nodefony.register("Bundle", function () {
         throw e;
       }
     }
+
     loadController(name, Path, force) {
       if (this.controllers[name]) {
         delete this.controllers[name];
@@ -909,47 +909,6 @@ module.exports = nodefony.register("Bundle", function () {
       });
     }
 
-    /*
-     *
-     *  COMMAND
-     *
-     */
-    /*registerCommand(store) {
-      // find command files
-      this.commandFiles = this.finder.result.findByNode("Command");
-      let command = null;
-      this.commandFiles.getFiles().forEach((file) => {
-        let res = regCommand.exec(file.name);
-        if (res) {
-          try {
-            command = this.loadFile(file.path);
-          } catch (e) {
-            throw new Error(e + "   FILE COMMAND : " + file.path);
-          }
-          if (!command) {
-            throw new Error("Command : " + file + " BAD FORMAT");
-          }
-          let name = command.name || res[1];
-          if (!name) {
-            throw new Error("Command : " + name + "BAD FORMAT NANE ");
-          }
-
-          if (!store[this.name]) {
-            store[this.name] = {};
-          }
-          if (command.cli) {
-            if (command.commands) {
-              command.cli.prototype.commands = command.commands;
-              store[this.name][name] = command.cli;
-            } else {
-              throw new Error("Command : " + name + "BAD FORMAT commands ");
-            }
-          } else {
-            throw new Error("Command : " + name + " CLI NOT FIND");
-          }
-        }
-      });
-    }*/
     registerCommand(store) {
       // find command files
       this.commandFiles = this.finder.result.findByNode("Command");

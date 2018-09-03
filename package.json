@@ -37,10 +37,12 @@
     "url": "https://github.com/nodefony/help/issues"
   },
   "license": "CECILL-B",
-  "licenses": [{
-    "type": "CECILL-B",
-    "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-  }],
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
   "os": [
     "darwin",
     "linux",
@@ -50,9 +52,9 @@
     "node": ">=8"
   },
   "dependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.5",
-    "babel-preset-env": "^1.7.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "babel-loader": "^8.0.2",
     "clean-webpack-plugin": "^0.1.19",
     "create-react-app": "^1.5.2",
     "css-hot-loader": "^1.4.2",
@@ -64,7 +66,7 @@
     "less": "3.7.1",
     "less-loader": "^4.1.0",
     "mini-css-extract-plugin": "^0.4.2",
-    "mongoose": "^5.2.10",
+    "mongoose": "^5.2.12",
     "node-sass": "^4.9.3",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "pm2": "^3.0.4",
@@ -82,12 +84,14 @@
     "webpack-merge": "^4.1.4"
   },
   "devDependencies": {
-    "node-pre-gyp": "^0.11.0",
     "editorconfig": "^0.15.0",
     "github-release-notes": "^0.16.0",
-    "jshint": "^2.9.6"
+    "jshint": "^2.9.6",
+    "node-pre-gyp": "^0.11.0"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md",
-  "contributors": [{}]
+  "contributors": [
+    {}
+  ]
 }
