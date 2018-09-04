@@ -7,7 +7,7 @@ nodefony.register.call(nodefony.session.storage, "mongoose", function () {
         $lt: new Date(new Date() - msMaxlifetime)
       }
     };
-    return this.entity.remove(where).then((results) => {
+    return this.entity.deleteMany(where).then((results) => {
       let severity = "DEBUG";
       if (!results) {
         throw new Error("session.storage finderGC no result ");
@@ -47,7 +47,7 @@ nodefony.register.call(nodefony.session.storage, "mongoose", function () {
     open(contextSession) {
       if (this.orm.kernel.type !== "CONSOLE") {
         this.gc(this.gc_maxlifetime, contextSession);
-        return this.entity.count({
+        return this.entity.countDocuments({
           context: contextSession
         }).then((sessionCount) => {
           this.manager.logger("CONTEXT " + (contextSession ? contextSession : "default") + " MONGODB SESSIONS STORAGE  ==>  " + this.manager.settings.handler.toUpperCase() + " COUNT SESSIONS : " + sessionCount, "INFO");

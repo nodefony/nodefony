@@ -66,7 +66,7 @@
     "less": "3.7.1",
     "less-loader": "^4.1.0",
     "mini-css-extract-plugin": "^0.4.2",
-    "mongoose": "^5.2.12",
+    "mongoose": "^5.2.13",
     "node-sass": "^4.9.3",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "pm2": "^3.0.4",

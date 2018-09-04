@@ -14,7 +14,8 @@ const defaultConfigConnection = {
   reconnectTries: Number.MAX_VALUE,
   autoReconnect: true,
   socketTimeoutMS: 0,
-  keepAlive: true
+  keepAlive: true,
+  useNewUrlParser: true
 };
 
 module.exports = class mongoose extends nodefony.orm {
@@ -22,6 +23,7 @@ module.exports = class mongoose extends nodefony.orm {
   constructor(container, kernel, autoLoader) {
     super("mongoose", container, kernel, autoLoader);
     this.engine = Mongoose;
+    this.engine.set('useCreateIndex', true);
   }
 
   boot() {
