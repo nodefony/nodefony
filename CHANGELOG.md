@@ -1,5 +1,13 @@
 # Changelog
 
+## v4.0.0-beta.2 (04/09/2018)
+- [monggose update](https://github.com/nodefony/nodefony-core/commit/395b0f3acab64b6e2e8a188eeed14afda662ef2c) s-soo @cci
+- [update babel-core to @babel/core](https://github.com/nodefony/nodefony-core/commit/b0625966fcd3dbd8cd4d8d4d6b1cd87acd16459c) s-soo @cci
+- [debug webpack compiler sync](https://github.com/nodefony/nodefony-core/commit/807db2e8f34b9774ebed52c4d213d84975a5f6e0) s-soo @cci
+- [webpack compile promise](https://github.com/nodefony/nodefony-core/commit/c6f8613a33d11f0ef88bbded288dd421fb4f3a2c) s-soo @cci
+
+---
+
 ## v4.0.0-beta.1 (24/08/2018)
 - [debug bad entity orm register](https://github.com/nodefony/nodefony-core/commit/a96c4c964e61ce1fca7123393b445719228c1869) s-soo @cci
 - [update test wit vue.js bundle](https://github.com/nodefony/nodefony-core/commit/5303340dc04e53160b5117cdf314d2eb4666ccb5) s-soo @cci
@@ -46,7 +54,7 @@
 - [add searchPackage](https://github.com/nodefony/nodefony-core/commit/d266dfe9e3b60ff387c296d0bb1f1512e7958701) s-soo @cci
 - [debug install cli](https://github.com/nodefony/nodefony-core/commit/f6914c2b3bd7ce2219b9c128913d5b3d90e335b3) s-soo @cci
 - [debug bin nodefony](https://github.com/nodefony/nodefony-core/commit/167bc1aeb56901b9944905cd6000667745a484ba) s-soo @cci
-- [debug test](https://github.com/nodefony/nodefony-core/commit/a8d211352a29955383954d7e9bf45d79c5943bc6) s-soo @cci
+- [debug test](https://github.com/nodefony/nodefony-core/commit/a8d211352a29955383955d7e9bf45d79c5943bc6) s-soo @cci
 - [debug build](https://github.com/nodefony/nodefony-core/commit/8e5023d19cc28113e2b4fd214892b1c2ae57447a) s-soo @cci
 - [debug command promise design](https://github.com/nodefony/nodefony-core/commit/4e793f645daf2aaa387ca19e2d5a40fdd945b0eb) s-soo @cci
 - [debug travis](https://github.com/nodefony/nodefony-core/commit/a3ea0809f6a82388118a29dc58da44ac2d7bfb99) s-soo @cci
