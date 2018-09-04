@@ -11,7 +11,7 @@
     "javascript"
   ],
   "dependencies": {
-    "@nodefony/stage": "^0.1.10",
+    "@nodefony/stage": "^0.1.11",
     "bootstrap": "=3.3.7",
     "clean-webpack-plugin": "^0.1.19",
     "font-awesome": "^4.7.0",
@@ -22,7 +22,7 @@
     "shortid": "^2.2.13",
     "uglifyjs-webpack-plugin": "^1.3.0",
     "useragent": "^2.3.0",
-    "webpack": "^4.17.1",
+    "webpack": "^4.17.2",
     "webpack-merge": "^4.1.4"
   },
   "repository": {

@@ -108,7 +108,9 @@ module.exports = nodefony.register("controller", function () {
       }
       this.context.isJson = true;
       if (this.context.method !== "websoket") {
-        this.context.response.setHeader("Content-Type", "application/json; " + encoding);
+        if (this.context.response) {
+          this.context.response.setHeader("Content-Type", "application/json; " + encoding);
+        }
       }
     }
 
