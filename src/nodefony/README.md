@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/nodefony/nodefony-core/raw/master/src/nodefony/bundles/frameworkBundle/Resources/public/images/nodefony-logo.png"><br>
+  <img src="https://github.com/nodefony/nodefony-core/raw/master/src/nodefony/bundles/framework-bundle/Resources/public/images/nodefony-logo.png"><br>
 </p>
 <h1 align="center">NODEFONY V4</h1>
 
@@ -59,7 +59,7 @@ Nodefony is not an exhaustive port of symfony !
 -   [WATCHER](https://nodejs.org/docs/latest/api/fs.html#fs_fs_watch_filename_options_listener) node.js for auto reload-files in developement mode .
 -   [PM2](http://pm2.keymetrics.io/) Production Process Manager for Node.js .
 -   [Passport](http://passportjs.org/) Simple, unobtrusive authentication for Node.js .
--   ~~[Angular](https://github.com/angular/angular-cli) Experimental Bundle Generator ( Now an Angular Project can be merge into a Nodefony Bundle )~~
+-   ~~[Angular](https://github.com/angular/angular-cli) Experimental Bundle Generator ( Angular cli no longer allows the ejection of a webpack config)~~
 -   [React](https://github.com/facebookincubator/create-react-app) Experimental Bundle Generator ( Now an React Project can be merge into a Nodefony Bundle )
 
 **Nodefony 4  adds the following features** :
@@ -94,12 +94,15 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 
 #### On your system _you must have Installed_ :
 
--   ###### **[GIT](http://git-scm.com/)**  is Distributed version control system
+-   **[GIT](http://git-scm.com/)**  is Distributed version control system
 
 -   **[Node.js](https://nodejs.org/)** ® is a Platform built on Chrome's JavaScript runtime ( >= 6 )
 
 -   **[npm](https://www.npmjs.com/)** or **[yarn](https://yarnpkg.com/lang/en/)**  Packages Manager for javascript application
 
+-   **[OpenSSL](https://www.openssl.org/)** Toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols
+
+-   **[GNU Bash](https://www.gnu.org/software/bash/)** Bash is the GNU Project's shell
 
 #### Operating Systems : **[Install Node.js via Package](https://nodejs.org/en/download/package-manager)**
 
@@ -138,7 +141,9 @@ $ npm -g install nodefony
 $ yarn global add nodefony
 ```
 
-[See Global install How to Prevent Permissions Errors](https://docs.npmjs.com/getting-started/fixing-npm-permissions)
+ -   [See Global install How to Prevent Permissions Errors](https://docs.npmjs.com/getting-started/fixing-npm-permissions)
+
+ -   [nvm](https://github.com/creationix/nvm) Node Version Manager - Simple bash script to manage multiple active node.js versions
 
 **Cli Usage** :
 
@@ -180,9 +185,8 @@ Version : 4.0.0-beta.1 Platform : darwin Process : nodefony PID : 16368
 
 ?  Nodefony CLI :  (Use arrow keys)
 ❯ Create Nodefony Project
-  List PM2 Production Projects
-  Log  PM2 Production Projects
-  Kill PM2 Deamon
+  PM2 Tools
+  --------
   Help
   Quit
 ```
@@ -226,20 +230,19 @@ Version : 4.0.0 Platform : linux  Process : nodefony PID : 31635
 
 Fri Jul 27 2018 17:01:11 INFO nodefony : WELCOME PROJECT : myproject 1.0.0
 
-?  Nodefony CLI :  (Use arrow keys)
+?  Nodefony CLI :  
 ❯ Start Servers Development
-Start Servers Pre-Production
-Start Servers Production
-Install Project
-Rebuild Project
-Generate Bundle
-Generate Certificates
-Run Test
-Outdated
-Webpack Dump
-Reset
-Help
-Quit
+  Start Servers Pre-Production
+  Start Servers Production
+  Install Project
+  Rebuild Project
+  Generater
+  Tools
+  PM2 Tools
+  Run Test
+  --------
+  Help
+  Quit
 ```
 
 **Starting Development Servers in Inspector mode (--inspect)** :
@@ -297,7 +300,7 @@ You can find certificate authority (ca) here:
 #### Access to Secure App with URL : <https://localhost:5152>
 #### Access to App with URL : <http://localhost:5151>
 
-[![nodefony](https://raw.githubusercontent.com/nodefony/nodefony-core/master/src/nodefony/bundles/documentationBundle/Resources/public/images/nodefony.png)](https://nodefony.net)
+[![nodefony](https://raw.githubusercontent.com/nodefony/nodefony-core/master/src/nodefony/bundles/documentation-bundle/Resources/public/images/nodefony.png)](https://nodefony.net)
 
 ## <a name="configurations"></a>Framework Configurations
 
@@ -368,19 +371,18 @@ $ nodefony generate:bundle name [path]
 # Or Generate a New Bundle Interactive
 $ nodefony
 
-?  Nodefony CLI :  
-  Start Servers Development
-  Start Servers Pre-Production
-  Start Servers Production
-  Install Project
-  Rebuild Project
-❯ Generate Bundle
-  Generate Certificates
-  Run Test
-  Outdated
-  Webpack Dump
-  Reset
-  Help
+?  Nodefony CLI :  Generater
+?  Nodefony CLI :  (Use arrow keys)
+❯ Generate New Bundle
+  Generate New Controller 
+  Generate New Service
+  Generate New Entity
+  Generate New Nodefony Project
+  Generate Openssl Certificates
+  Generate Haproxy Configuration
+  Generate Nginx Configuration
+  Generate letsEncrypt Webroot Configuration
+  --------
   Quit
 ```
 
@@ -517,7 +519,7 @@ module.exports = webpackMerge({
 
 Access to monitoring route with URL : <http://localhost:5151/nodefony>
 
-[![MONITORING](https://raw.githubusercontent.com/nodefony/nodefony-core/master/doc/default/cluster.png)](https://nodefony.net/nodefony)
+[![MONITORING](https://raw.githubusercontent.com/nodefony/nodefony-core/master/src/nodefony/doc/default/cluster.png)](https://nodefony.net/nodefony)
 
 Monitoring in progress !!!
 
