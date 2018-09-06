@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.0.0-beta.3 (06/09/2018)
+- [sqlite fixtures debug](https://github.com/nodefony/nodefony-core/commit/268ed79b70898f38e493fd11cd129c51ba228170) s-soo @cci
+
+---
+
 ## v4.0.0-beta.2 (04/09/2018)
 - [monggose update](https://github.com/nodefony/nodefony-core/commit/395b0f3acab64b6e2e8a188eeed14afda662ef2c) s-soo @cci
 - [update babel-core to @babel/core](https://github.com/nodefony/nodefony-core/commit/b0625966fcd3dbd8cd4d8d4d6b1cd87acd16459c) s-soo @cci
