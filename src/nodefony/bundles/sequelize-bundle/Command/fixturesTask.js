@@ -44,13 +44,10 @@ class fixturesTask extends nodefony.Task {
         }
       });
       this.kernel.listen(this, "onReady", ( /*service*/ ) => {
-        let actions = this.tabPromise.map(function (ele) {
-          return new Promise(ele);
-        });
         const connection = this.ormService.getConnection("nodefony");
         switch (connection.options.dialect) {
         case "sqlite":
-          return this.loadSyncFixture(actions)
+          return this.loadSyncFixture(this.tabPromise)
             .then((ele) => {
               this.logger("LOAD FIXTURE ENTITY :  SUCCESS");
               return resolve(ele);
@@ -60,6 +57,9 @@ class fixturesTask extends nodefony.Task {
               return reject(e);
             });
         default:
+          let actions = this.tabPromise.map(function (ele) {
+            return new Promise(ele);
+          });
           return Promise.all(actions)
             .then((ele) => {
               this.logger("LOAD FIXTURE ENTITY :  SUCCESS");
@@ -103,12 +103,16 @@ class fixturesTask extends nodefony.Task {
         let fix = this.tabPromise.shift();
         return new Promise(fix)
           .then(() => {
-            return this.loadSyncFixture(this.tabPromise);
+            if (this.tabPromise.length) {
+              return resolve(this.loadSyncFixture(this.tabPromise));
+            }
+            return resolve(true);
           });
       }
       return Promise.resolve();
     });
   }
+
 
   findFixtures() {
     let bundles = this.ormService.kernel.bundles;
