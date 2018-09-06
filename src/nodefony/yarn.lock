@@ -629,9 +629,9 @@
     tree-kill "^1.0.0"
     webpack-sources "^1.1.0"
 
-"@nodefony/documentation-bundle@^4.0.0-beta.2":
-  version "4.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@nodefony/documentation-bundle/-/documentation-bundle-4.0.0-beta.2.tgz#dbba59ad736df05f87c92932726522dde0877bab"
+"@nodefony/documentation-bundle@^4.0.0-beta.3":
+  version "4.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@nodefony/documentation-bundle/-/documentation-bundle-4.0.0-beta.3.tgz#783e3b1738ceb3d9741791b0b40e4a2ac1d26d58"
   dependencies:
     "@nodefony/stage" "^0.1.11"
     bootstrap "=3.3.7"
@@ -645,9 +645,9 @@
     webpack "^4.17.2"
     webpack-merge "^4.1.4"
 
-"@nodefony/framework-bundle@^4.0.0-beta.2":
-  version "4.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@nodefony/framework-bundle/-/framework-bundle-4.0.0-beta.2.tgz#f279dfaa988d0ddb693b9fb990a6513da960b80e"
+"@nodefony/framework-bundle@^4.0.0-beta.3":
+  version "4.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@nodefony/framework-bundle/-/framework-bundle-4.0.0-beta.3.tgz#99bd064c6f43bbd88b5d370f52f149c742fa82f1"
   dependencies:
     "@angular/cli" "=1.7.4"
     "@nodefony/stage" "^0.1.11"
@@ -660,9 +660,9 @@
     webpack "^4.17.2"
     webpack-merge "^4.1.4"
 
-"@nodefony/http-bundle@^4.0.0-beta.2":
-  version "4.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@nodefony/http-bundle/-/http-bundle-4.0.0-beta.2.tgz#40b63df817b8413a70f7335879349d4e1da0682b"
+"@nodefony/http-bundle@^4.0.0-beta.3":
+  version "4.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@nodefony/http-bundle/-/http-bundle-4.0.0-beta.3.tgz#98e243c919070e9e35354fa7f2d9bc5e486ba03f"
   dependencies:
     cookie "^0.3.1"
     formidable "^1.2.1"
@@ -675,16 +675,16 @@
     sockjs "^0.3.19"
     websocket "^1.0.26"
 
-"@nodefony/mongo-bundle@^4.0.0-beta.2":
-  version "4.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@nodefony/mongo-bundle/-/mongo-bundle-4.0.0-beta.2.tgz#efd44d22f131a4db25c85b03fb525cb51c452009"
+"@nodefony/mongo-bundle@^4.0.0-beta.3":
+  version "4.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@nodefony/mongo-bundle/-/mongo-bundle-4.0.0-beta.3.tgz#224e070240e9a68a7a03fdfb1dae74fd6dac6464"
   dependencies:
     mongodb "^3.1.4"
     mongoose "^5.2.13"
 
-"@nodefony/monitoring-bundle@^4.0.0-beta.2":
-  version "4.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@nodefony/monitoring-bundle/-/monitoring-bundle-4.0.0-beta.2.tgz#54760c9e92ab535f82e4cd48efce573039855fae"
+"@nodefony/monitoring-bundle@^4.0.0-beta.3":
+  version "4.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@nodefony/monitoring-bundle/-/monitoring-bundle-4.0.0-beta.3.tgz#6842476e6e956e2c6885a0cc918dc38c78dedae8"
   dependencies:
     "@nodefony/stage" "^0.1.11"
     bootstrap "=3.3.7"
@@ -706,15 +706,15 @@
   dependencies:
     mocha "^5.2.0"
 
-"@nodefony/realtime-bundle@^4.0.0-beta.2":
-  version "4.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@nodefony/realtime-bundle/-/realtime-bundle-4.0.0-beta.2.tgz#9db8aaef1a8bc7c2ca2f4c368ecec4df29ed4398"
+"@nodefony/realtime-bundle@^4.0.0-beta.3":
+  version "4.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@nodefony/realtime-bundle/-/realtime-bundle-4.0.0-beta.3.tgz#0d6118bbf5230a685ff2d7f82b78452df576ece8"
   dependencies:
     shortid "^2.2.13"
 
-"@nodefony/security-bundle@^4.0.0-beta.2":
-  version "4.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@nodefony/security-bundle/-/security-bundle-4.0.0-beta.2.tgz#5564fbdcbdc8ba28ea80862b1e76c4578aaca66e"
+"@nodefony/security-bundle@^4.0.0-beta.3":
+  version "4.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@nodefony/security-bundle/-/security-bundle-4.0.0-beta.3.tgz#98c65c618e6aa59c81f87cd963b77c7e8f861ba9"
   dependencies:
     "@nodefony/passport-wrapper" "^4.0.0"
     bcrypt "^3.0.0"
@@ -735,9 +735,9 @@
     webpack "^4.17.2"
     webpack-merge "^4.1.4"
 
-"@nodefony/sequelize-bundle@^4.0.0-beta.2":
-  version "4.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@nodefony/sequelize-bundle/-/sequelize-bundle-4.0.0-beta.2.tgz#d19779b91e5f529fd3cc96782a58b93fa0b131aa"
+"@nodefony/sequelize-bundle@^4.0.0-beta.3":
+  version "4.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@nodefony/sequelize-bundle/-/sequelize-bundle-4.0.0-beta.3.tgz#3deebdde178bed17e979f23ff8e7b3a9cecb128a"
   dependencies:
     mysql2 "^1.6.1"
     sequelize "5.0.0-beta.11"
@@ -755,9 +755,9 @@
     twig "^1.12.0"
     webrtc-adapter "^6.3.2"
 
-"@nodefony/unittests-bundle@^4.0.0-beta.2":
-  version "4.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@nodefony/unittests-bundle/-/unittests-bundle-4.0.0-beta.2.tgz#18bf31264078a9ee4a95ebf3daed067817ef9a1a"
+"@nodefony/unittests-bundle@^4.0.0-beta.3":
+  version "4.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@nodefony/unittests-bundle/-/unittests-bundle-4.0.0-beta.3.tgz#87698cf7833b14b6685b1306f03e4520f27b4d1b"
   dependencies:
     chai "^4.1.2"
     mocha "^5.2.0"
