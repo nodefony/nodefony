@@ -17,7 +17,15 @@ class fixturesTask extends nodefony.Task {
         const connection = this.ormService.getConnection("nodefony");
         switch (connection.options.dialect) {
         case "sqlite":
-          return this.loadSyncFixture();
+          return this.loadSyncFixture()
+            .then((ele) => {
+              this.logger("LOAD FIXTURE ENTITY :  SUCCESS");
+              return resolve(ele);
+            })
+            .catch((e) => {
+              this.logger(e, "ERROR");
+              return reject(e);
+            });
         default:
           return this.loadFixture()
             .then((ele) => {
@@ -42,7 +50,15 @@ class fixturesTask extends nodefony.Task {
         const connection = this.ormService.getConnection("nodefony");
         switch (connection.options.dialect) {
         case "sqlite":
-          return this.loadSyncFixture(actions);
+          return this.loadSyncFixture(actions)
+            .then((ele) => {
+              this.logger("LOAD FIXTURE ENTITY :  SUCCESS");
+              return resolve(ele);
+            })
+            .catch((e) => {
+              this.logger(e, "ERROR");
+              return reject(e);
+            });
         default:
           return Promise.all(actions)
             .then((ele) => {
