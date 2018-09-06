@@ -942,7 +942,7 @@ module.exports = nodefony.register("Bundle", function () {
           exclude: /^docs$|^tests|^node_modules|^assets$/
         });
       } catch (e) {
-        throw e;
+        return res;
       }
       return res.result;
     }

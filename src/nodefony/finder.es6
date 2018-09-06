@@ -362,6 +362,9 @@ module.exports = nodefony.register("finder", function () {
           } catch (e) {
             throw e;
           }
+          break;
+        default:
+          throw new Error(`Finder bad path type`);
         }
       }
 

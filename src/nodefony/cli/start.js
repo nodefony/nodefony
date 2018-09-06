@@ -436,44 +436,57 @@ module.exports = class cliStart extends nodefony.cliKernel {
       let project = new nodefony.builders.Project(this, command, args);
       return project.run(interactive)
         .then((res) => {
-          this.logger(`Create Project ${res.name} complete`, "INFO");
-          if (res.bundle) {
-            this.response.project = true;
-            this.response.config = {
-              App: {
-                projectName: res.name,
-                authorName: res.authorFullName,
-                authorMail: res.authorMail,
-                local: res.locale,
-                projectYear: res.year
-              }
-            };
-            this.response.configKernel = {
-              system: {
-                domain: res.domain
-              }
-            };
-            let cwd = path.resolve(project.location, project.name);
-            this.cd(cwd);
-            return this.installProject(cwd)
-              .then(() => {
-                return this.buildProject(cwd)
-                  .then((cwd) => {
-                    nodefony.checkTrunk(cwd);
-                    this.parseNodefonyCommand("nodefony:build", [cwd]);
-                    return nodefony.start(command, args, this)
-                      .then(() => {
-                        return nodefony.builders.bundles.interaction(this)
-                          .then((res) => {
-                            let bundle = null;
-                            try {
-                              bundle = new nodefony.builders.bundles[res.type](this, "js");
-                            } catch (e) {
-                              throw e;
-                            }
-                            return bundle.run(interactive)
-                              .then(() => {
-                                return bundle.install();
+          let gitP, cwd, git;
+          try {
+            cwd = path.resolve(project.location, project.name);
+            gitP = require('simple-git/promise');
+            git = gitP(cwd);
+          } catch (e) {
+            throw e;
+          }
+          return git.init()
+            .then(() => {
+              this.logger(`Create Project ${res.name} complete`, "INFO");
+              if (res.bundle) {
+                this.response.project = true;
+                this.response.config = {
+                  App: {
+                    projectName: res.name,
+                    authorName: res.authorFullName,
+                    authorMail: res.authorMail,
+                    local: res.locale,
+                    projectYear: res.year
+                  }
+                };
+                this.response.configKernel = {
+                  system: {
+                    domain: res.domain
+                  }
+                };
+                this.cd(cwd);
+                return this.installProject(cwd)
+                  .then(() => {
+                    return this.buildProject(cwd)
+                      .then((cwd) => {
+                        nodefony.checkTrunk(cwd);
+                        this.parseNodefonyCommand("nodefony:build", [cwd]);
+                        return nodefony.start(command, args, this)
+                          .then(() => {
+                            return nodefony.builders.bundles.interaction(this)
+                              .then((res) => {
+                                let bundle = null;
+                                try {
+                                  bundle = new nodefony.builders.bundles[res.type](this, "js");
+                                } catch (e) {
+                                  throw e;
+                                }
+                                return bundle.run(interactive)
+                                  .then(() => {
+                                    return bundle.install();
+                                  }).catch((e) => {
+                                    this.logger(e, "ERROR");
+                                    return e;
+                                  });
                               }).catch((e) => {
                                 this.logger(e, "ERROR");
                                 return e;
@@ -490,35 +503,35 @@ module.exports = class cliStart extends nodefony.cliKernel {
                     this.logger(e, "ERROR");
                     return e;
                   });
-              }).catch((e) => {
-                this.logger(e, "ERROR");
-                return e;
-              });
-          }
-          let cwd = path.resolve(project.location, project.name);
-          this.cd(cwd);
-          return this.installProject(cwd)
-            .then(() => {
-              return this.buildProject(cwd)
-                .then((cwd) => {
-                  nodefony.checkTrunk(cwd);
-                  this.parseNodefonyCommand("nodefony:build", [cwd]);
-                  return nodefony.start(command, args, this);
+              }
+              //let cwd = path.resolve(project.location, project.name);
+              this.cd(cwd);
+              return this.installProject(cwd)
+                .then(() => {
+                  return this.buildProject(cwd)
+                    .then((cwd) => {
+                      nodefony.checkTrunk(cwd);
+                      this.parseNodefonyCommand("nodefony:build", [cwd]);
+                      return nodefony.start(command, args, this);
+                    }).catch((e) => {
+                      this.logger(e, "ERROR");
+                      return e;
+                    });
                 }).catch((e) => {
                   this.logger(e, "ERROR");
                   return e;
                 });
             }).catch((e) => {
+              if (e.code || e.code === 0) {
+                this.logger(e, "INFO");
+                this.terminate(e.code);
+              }
               this.logger(e, "ERROR");
-              return e;
+              this.terminate(e.code || 1);
             });
-        }).catch((e) => {
-          if (e.code || e.code === 0) {
-            this.logger(e, "INFO");
-            this.terminate(e.code);
-          }
-          this.logger(e, "ERROR");
-          this.terminate(e.code || 1);
+        })
+        .catch((e) => {
+          throw e;
         });
     } catch (e) {
       throw e;

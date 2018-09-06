@@ -1,0 +1,8 @@
+#Publishing with tags
+
+npm publish --tag beta
+
+
+#Scoped Package
+
+npm publish --access=public

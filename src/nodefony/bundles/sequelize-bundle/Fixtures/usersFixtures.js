@@ -5,6 +5,40 @@ module.exports = nodefony.registerFixture("users", function () {
 
     const user = this.getEntity("user");
 
+
+    const createUser = function (entity, user) {
+      return new Promise((resolve) => {
+          return resolve(entity.findOrCreate({
+            where: {
+              username: user.username
+            },
+            defaults: user
+          }));
+        })
+        .then((args) => {
+          if (args[1]) {
+            this.logger("ADD USER : " + args[0].username, "INFO");
+          } else {
+            this.logger("ALREADY EXIST USER : " + args[0].username, "INFO");
+          }
+          return args;
+        })
+        .catch(e => {
+          throw e;
+        });
+    };
+
+    const syncCall = function (User, tab) {
+      if (tab.length) {
+        let fix = tab.shift();
+        return createUser.call(this, User, fix)
+          .then(() => {
+            return syncCall.call(this, User, tab);
+          });
+      }
+      return Promise.resolve();
+    };
+
     const tab = [{
       username: "anonymous",
       name: "anonymous",
@@ -44,7 +78,7 @@ module.exports = nodefony.registerFixture("users", function () {
     const connection = this.getConnection("nodefony");
     switch (connection.options.dialect) {
     case "mysql":
-      connection.query('SET FOREIGN_KEY_CHECKS = 0')
+      return connection.query('SET FOREIGN_KEY_CHECKS = 0')
         .then(() => {
           return user.sync({
             force: false
@@ -81,41 +115,8 @@ module.exports = nodefony.registerFixture("users", function () {
         .done(function ( /*error, result*/ ) {
           return resolve("userEntity");
         });
-      break;
     case "sqlite":
-      /*user.sync({
-          force: false
-        })
-        .then(() => {
-          this.logger("Database synchronised  ", "INFO");
-          return Sequelize.Promise.map(tab, function (obj) {
-            return user.findOrCreate({
-              where: {
-                username: obj.username
-              },
-              defaults: obj
-            });
-          });
-        })
-        .spread(function () {
-          for (var i = 0; i < arguments.length; i++) {
-            if (arguments[i][1]) {
-              this.logger("ADD USER : " + arguments[i][0].username, "INFO");
-            } else {
-              this.logger("ALREADY EXIST USER : " + arguments[i][0].username, "INFO");
-            }
-          }
-        }.bind(this))
-        .catch(function (error) {
-          this.logger(error);
-          reject(error);
-        }.bind(this))
-        .done(() => {
-          resolve("userEntity");
-        });*/
-
-      //connection.query('SELECT * FROM users  ')
-      connection.query('PRAGMA foreign_keys = 0  ')
+      return connection.query('PRAGMA foreign_keys = 0  ')
         .then(() => {
           return user.sync({
             force: false
@@ -123,23 +124,7 @@ module.exports = nodefony.registerFixture("users", function () {
         })
         .then((User) => {
           this.logger("Database synchronised  ", "INFO");
-          return Sequelize.Promise.map(tab, (obj) => {
-            return User.findOrCreate({
-              where: {
-                username: obj.username
-              },
-              defaults: obj
-            });
-          });
-        })
-        .spread((...args) => {
-          for (var i = 0; i < args.length; i++) {
-            if (args[i][1]) {
-              this.logger("ADD USER : " + args[i][0].username, "INFO");
-            } else {
-              this.logger("ALREADY EXIST USER : " + args[i][0].username, "INFO");
-            }
-          }
+          return syncCall.call(this, User, tab);
         })
         .catch((error) => {
           this.logger(error, "ERROR");
@@ -148,7 +133,6 @@ module.exports = nodefony.registerFixture("users", function () {
         .done(() => {
           return resolve("userEntity");
         });
-      break;
     }
   };
 

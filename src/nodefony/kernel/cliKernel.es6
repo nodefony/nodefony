@@ -65,7 +65,7 @@ module.exports = nodefony.register("cliKernel", function () {
       } catch (e) {
         this.logger(e, "ERROR");
       }
-      if (result.length()) {
+      if (result && result.length()) {
         name = bundles[bundle].bundleName;
         srcpath = path.resolve(bundles[bundle].path, "Resources", "public");
         try {

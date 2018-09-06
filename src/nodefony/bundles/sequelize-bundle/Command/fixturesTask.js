@@ -14,13 +14,19 @@ class fixturesTask extends nodefony.Task {
   load() {
     return new Promise((resolve, reject) => {
       if (this.ormService.ready) {
-        return this.loadFixture()
-          .then((ele) => {
-            return resolve(ele);
-          })
-          .catch((e) => {
-            return reject(e);
-          });
+        const connection = this.ormService.getConnection("nodefony");
+        switch (connection.options.dialect) {
+        case "sqlite":
+          return this.loadSyncFixture();
+        default:
+          return this.loadFixture()
+            .then((ele) => {
+              return resolve(ele);
+            })
+            .catch((e) => {
+              return reject(e);
+            });
+        }
       }
       this.ormService.listen(this, "onOrmReady", ( /*service*/ ) => {
         try {
@@ -29,19 +35,25 @@ class fixturesTask extends nodefony.Task {
           return reject(e);
         }
       });
-      this.kernel.listen(this, "onPostReady", ( /*service*/ ) => {
+      this.kernel.listen(this, "onReady", ( /*service*/ ) => {
         let actions = this.tabPromise.map(function (ele) {
           return new Promise(ele);
         });
-        return Promise.all(actions)
-          .then((ele) => {
-            this.logger("LOAD FIXTURE ENTITY :  SUCCESS");
-            return resolve(ele);
-          })
-          .catch((e) => {
-            this.logger(e, "ERROR");
-            return reject(e);
-          });
+        const connection = this.ormService.getConnection("nodefony");
+        switch (connection.options.dialect) {
+        case "sqlite":
+          return this.loadSyncFixture(actions);
+        default:
+          return Promise.all(actions)
+            .then((ele) => {
+              this.logger("LOAD FIXTURE ENTITY :  SUCCESS");
+              return resolve(ele);
+            })
+            .catch((e) => {
+              this.logger(e, "ERROR");
+              return reject(e);
+            });
+        }
       });
     });
   }
@@ -59,6 +71,26 @@ class fixturesTask extends nodefony.Task {
         .catch((e) => {
           return reject(e);
         });
+    });
+  }
+
+  loadSyncFixture(tab) {
+    return new Promise((resolve, reject) => {
+      if (!tab) {
+        try {
+          this.tabPromise = this.findFixtures();
+        } catch (e) {
+          return reject(e);
+        }
+      }
+      if (this.tabPromise.length) {
+        let fix = this.tabPromise.shift();
+        return new Promise(fix)
+          .then(() => {
+            return this.loadSyncFixture(this.tabPromise);
+          });
+      }
+      return Promise.resolve();
     });
   }
 

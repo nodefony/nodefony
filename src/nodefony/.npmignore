@@ -15,7 +15,6 @@
 /nbproject/private/
 
 
-
 .git
 .github
 .travis
@@ -27,8 +26,6 @@
 .grenrc.json
 .editorconfig
 .core
-
-*.db
 
 npm-debug.log
 yarn-error.log

@@ -1,6 +1,6 @@
 {
   "name": "nodefony",
-  "version": "4.0.0-beta.2",
+  "version": "4.0.0-beta.3",
   "main": "autoloader.es6",
   "description": "Nodefony Framework Core",
   "contributors": [],
@@ -51,7 +51,7 @@
     "pm2": "^3.0.4",
     "promise": "^8.0.1",
     "request": "^2.88.0",
-    "rxjs": "^6.3.1",
+    "rxjs": "^6.3.2",
     "semver": "^5.5.1",
     "shelljs": "^0.8.2",
     "shortid": "^2.2.13",
