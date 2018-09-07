@@ -33,6 +33,7 @@ module.exports = class Nodefony {
       tokens: {},
       passport: {}
     };
+    this.packageManager = "npm";
     this.version = this.getVersion();
     this.versions = process.versions;
     this.kernelConfigPath = null;

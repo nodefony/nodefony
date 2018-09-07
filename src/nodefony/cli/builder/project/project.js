@@ -102,6 +102,21 @@ module.exports = class generateProject extends nodefony.Builder {
         default: this.cli.response.portHttps,
         message: 'Enter Server Secure Domain https Port  :',
       }, {
+        type: 'list',
+        name: 'packageManager',
+        message: 'Choose a default Package Manager : ',
+        default: 0,
+        pageSize: 2,
+        choices: ["npm", "yarn"],
+        filter: (value) => {
+          if (this.cli[value]) {
+            this.cli.packageManager = this.cli[value];
+          } else {
+            throw new Error(`Package Manager ${value} not available ! `);
+          }
+          return value;
+        }
+      }, {
         type: 'confirm',
         name: 'bundle',
         message: 'Do You Want Generate Bundle?',
@@ -154,11 +169,67 @@ module.exports = class generateProject extends nodefony.Builder {
             }]
           }, {
             name: "Resources",
-            type: "copy",
-            path: path.resolve(this.pathSkeleton, "app", "Resources"),
-            params: {
-              recurse: true
-            }
+            type: "directory",
+            childs: [{
+              name: "views",
+              type: "copy",
+              path: path.resolve(this.pathSkeleton, "app", "Resources", "views"),
+              params: {
+                recurse: true
+              }
+            }, {
+              name: "translations",
+              type: "copy",
+              path: path.resolve(this.pathSkeleton, "app", "Resources", "translations"),
+              params: {
+                recurse: true
+              }
+            }, {
+              name: "databases",
+              type: "copy",
+              path: path.resolve(this.pathSkeleton, "app", "Resources", "databases"),
+              params: {
+                recurse: true
+              }
+            }, {
+              name: "public",
+              type: "directory",
+              childs: [{
+                name: "manifest.json",
+                type: "file",
+                skeleton: path.resolve(this.pathSkeleton, "app", "Resources", "public", "manifest.json"),
+                params: this.cli.response
+              }, {
+                name: "favicon.ico",
+                type: "copy",
+                path: path.resolve(this.pathSkeleton, "app", "Resources", "public", "favicon.ico")
+              }, {
+                name: "robots.txt",
+                type: "copy",
+                path: path.resolve(this.pathSkeleton, "app", "Resources", "public", "robots.txt")
+              }, {
+                name: "css",
+                type: "copy",
+                path: path.resolve(this.pathSkeleton, "app", "Resources", "public", "css"),
+                params: {
+                  recurse: true
+                }
+              }, {
+                name: "images",
+                type: "copy",
+                path: path.resolve(this.pathSkeleton, "app", "Resources", "public", "images"),
+                params: {
+                  recurse: true
+                }
+              }, {
+                name: "js",
+                type: "copy",
+                path: path.resolve(this.pathSkeleton, "app", "Resources", "public", "js"),
+                params: {
+                  recurse: true
+                }
+              }]
+            }]
           }, {
             name: "config",
             type: "directory",

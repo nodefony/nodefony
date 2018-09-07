@@ -34,7 +34,7 @@ module.exports = nodefony.register("Bundle", function () {
 
   const moduleFindDependencies = class moduleFindDependencies {
     constructor(Path, type, bundle) {
-      this.container =   {};
+      this.container = {};
       this.bundle = bundle;
       this.childs = [];
       this.type = type;
@@ -231,16 +231,6 @@ module.exports = nodefony.register("Bundle", function () {
       this.webpackCompiler = null;
       this.webPackConfig = null;
       this.watching = null;
-      /*if (this.kernel.type !== "CONSOLE" || this.kernel.cli.command === "webpack") {
-        try {
-          this.kernel.once("onPostReady", () => {
-            //this.initWebpack();
-          });
-        } catch (e) {
-          this.logger(e, "ERROR");
-          throw e;
-        }
-      }*/
       this.fire("onRegister", this);
     }
 
@@ -261,7 +251,9 @@ module.exports = nodefony.register("Bundle", function () {
               if (this.kernel.cli.command === "webpack") {
                 return;
               }
-              this.logger(`MEMORY clean webpack compile bundle : ${this.name}`, "INFO");
+              if (this.kernel.isCore || !this.kernel.isBundleCore(this.name)) {
+                this.logger(`MEMORY clean webpack compile bundle : ${this.name}`, "INFO");
+              }
               this.webPackConfig = null;
               delete this.webPackConfig;
               this.webpackCompiler = null;

@@ -267,7 +267,6 @@ module.exports = nodefony.register("kernel", function () {
 
     getConfigBunbles() {
       let config = [];
-      //this.checkBundlesExist(this.settings, "Kernel Config", this.configPath);
       if (this.settings && this.settings.system && this.settings.system.bundles) {
         for (let bundle in this.settings.system.bundles) {
           let res = null;
@@ -1120,16 +1119,16 @@ module.exports = nodefony.register("kernel", function () {
       for (let ele in memory) {
         switch (ele) {
         case "rss":
-          this.logger((message ||  ele) + " ( Resident Set Size ) PID ( " + this.processId + " ) : " + nodefony.cli.niceBytes(memory[ele]), "INFO", "MEMORY " + ele);
+          this.logger((message || ele) + " ( Resident Set Size ) PID ( " + this.processId + " ) : " + nodefony.cli.niceBytes(memory[ele]), "INFO", "MEMORY " + ele);
           break;
         case "heapTotal":
-          this.logger((message ||  ele) + " ( Total Size of the Heap ) PID ( " + this.processId + " ) : " + nodefony.cli.niceBytes(memory[ele]), "INFO", "MEMORY " + ele);
+          this.logger((message || ele) + " ( Total Size of the Heap ) PID ( " + this.processId + " ) : " + nodefony.cli.niceBytes(memory[ele]), "INFO", "MEMORY " + ele);
           break;
         case "heapUsed":
-          this.logger((message ||  ele) + " ( Heap actually Used ) PID ( " + this.processId + " ) : " + nodefony.cli.niceBytes(memory[ele]), "INFO", "MEMORY " + ele);
+          this.logger((message || ele) + " ( Heap actually Used ) PID ( " + this.processId + " ) : " + nodefony.cli.niceBytes(memory[ele]), "INFO", "MEMORY " + ele);
           break;
         case "external":
-          this.logger((message ||  ele) + " PID ( " + this.processId + " ) : " + nodefony.cli.niceBytes(memory[ele]), "INFO", "MEMORY " + ele);
+          this.logger((message || ele) + " PID ( " + this.processId + " ) : " + nodefony.cli.niceBytes(memory[ele]), "INFO", "MEMORY " + ele);
           break;
         }
       }

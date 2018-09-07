@@ -86,4 +86,4 @@ orm                             : {{orm}}
 #       npm
 #       yarn
 #
-packageManager                  : {{npm}}
+packageManager                  : {{packageManager}}

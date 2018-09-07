@@ -26,18 +26,6 @@ module.exports = class webpack extends nodefony.Service {
       for (let bundle in this.kernel.bundles) {
         this.tabPromise.push(this.kernel.bundles[bundle]);
       }
-      /*if (this.kernel.type === "CONSOLE" && this.kernel.cli.command === "webpack") {
-        return this.compile()
-          .then((ele) => {
-            shell.cd(this.kernel.rootDir);
-            this.logger("WEBPACK COMPILE FINISH");
-            this.tabPromise = [];
-            return ele;
-          }).catch(e => {
-            this.logger(e, "ERROR");
-            shell.cd(this.kernel.rootDir);
-          });
-      }*/
     });
 
     let event = null;
@@ -47,11 +35,16 @@ module.exports = class webpack extends nodefony.Service {
       event = "onPostReady";
     }
     this.kernel.once(event, () => {
-      this.logger(`Compile All WEBPACK config`, "INFO");
       return this.compile()
         .then((ele) => {
           shell.cd(this.kernel.rootDir);
-          this.logger("WEBPACK COMPILE FINISH");
+          if (this.kernel.type !== "CONSOLE") {
+            this.logger("WEBPACK COMPILE FINISH");
+          } else {
+            if (this.kernel.cli.command === "webpack") {
+              this.logger("WEBPACK COMPILE FINISH");
+            }
+          }
           this.tabPromise = [];
           return ele;
         }).catch(e => {
@@ -89,7 +82,13 @@ module.exports = class webpack extends nodefony.Service {
     if (this.kernel.type === "CONSOLE" && this.kernel.cli.command !== "webpack") {
       return Promise.resolve();
     } else {
-      this.logger(`WEBAPCK Compile Bundle ${bundle.name}`, "INFO");
+      if (this.kernel.isCore) {
+        this.logger(`WEBAPCK Compile Bundle ${bundle.name}`, "INFO");
+      } else {
+        if (!this.kernel.isBundleCore(bundle.name)) {
+          this.logger(`WEBAPCK Compile Bundle ${bundle.name}`, "INFO");
+        }
+      }
       shell.cd(bundle.path);
       return bundle.initWebpack.call(bundle)
         .then(() => {
@@ -416,7 +415,7 @@ module.exports = class webpack extends nodefony.Service {
         this.logger("BUNDLE : " + bundle + " WEBPACK COMPILE : " + file, "DEBUG");
         this.logger("\n" + this.displayConfigTable(compiler.options), "DEBUG");
         compiler.run((err, stats) => {
-          this.loggerStat(err, stats,  bundle, file);
+          this.loggerStat(err, stats, bundle, file);
           if (err) {
             return reject(err);
           }
