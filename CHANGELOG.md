@@ -1,5 +1,12 @@
 # Changelog
 
+## v4.0.0-beta.4 (07/09/2018)
+- [debug create project  | add interactive package manager](https://github.com/nodefony/nodefony-core/commit/c869cb0875e8b43c84f99b3c31028eae1151674d) s-soo @cci
+- [debug sqlite fixture](https://github.com/nodefony/nodefony-core/commit/a38c323b51e7e9ffe30affa9ce1443ca1b50cfb8) s-soo @cci
+- [clean command fixture](https://github.com/nodefony/nodefony-core/commit/fea9a41c33868cc5fd48f8fba5124a7fde73164c) s-soo @cci
+
+---
+
 ## v4.0.0-beta.3 (06/09/2018)
 - [sqlite fixtures debug](https://github.com/nodefony/nodefony-core/commit/268ed79b70898f38e493fd11cd129c51ba228170) s-soo @cci
 
