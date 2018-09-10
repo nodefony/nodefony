@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/sequelize-bundle",
-  "version": "4.0.0-beta.4",
+  "version": "4.0.0-beta.5",
   "description": "Nodefony Framework Bundle Sequelize",
   "contributors": [],
   "scripts": {},
@@ -12,7 +12,7 @@
   ],
   "dependencies": {
     "mysql2": "^1.6.1",
-    "sequelize": "5.0.0-beta.11",
+    "sequelize": "5.0.0-beta.12",
     "sqlite3": "^4.0.2"
   },
   "repository": {

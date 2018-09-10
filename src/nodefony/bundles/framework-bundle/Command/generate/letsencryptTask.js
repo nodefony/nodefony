@@ -12,7 +12,7 @@ class letsencryptTask extends nodefony.Task {
     this.scriptName = `renew-letsencrypt.sh`;
     this.defaultResponse = {
       webservice: "nginx",
-      bin_letsencrypt: "/opt/letsencrypt",
+      bin_letsencrypt: "/usr/bin/letsencrypt",
       rootdir: this.kernel.rootDir,
       publicPath: this.kernel.publicPath,
       domain: `${this.kernel.projectName}.com`,

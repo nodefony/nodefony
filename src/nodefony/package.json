@@ -1,6 +1,6 @@
 {
   "name": "nodefony",
-  "version": "4.0.0-beta.4",
+  "version": "4.0.0-beta.5",
   "main": "autoloader.es6",
   "description": "Nodefony Framework Core",
   "contributors": [],
@@ -48,7 +48,7 @@
     "node-emoji": "^1.8.1",
     "npm": "^6.4.1",
     "parse-comments": "^0.4.3",
-    "pm2": "^3.0.4",
+    "pm2": "^3.1.2",
     "promise": "^8.0.1",
     "request": "^2.88.0",
     "rxjs": "^6.3.2",
@@ -57,7 +57,7 @@
     "shortid": "^2.2.13",
     "simple-git": "^1.96.0",
     "twig": "^1.12.0",
-    "webpack": "^4.17.2",
+    "webpack": "^4.18.0",
     "xml2js": "^0.4.19",
     "yarn": "^1.9.4"
   },
