@@ -387,7 +387,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
   runMenu(reload = false) {
     return this.interaction(this.choices)
       .then(() => {
-        this.reloadMenu = reload ||  this.reloadMenu;
+        this.reloadMenu = reload || this.reloadMenu;
         switch (this.response.command) {
         case "project":
           return this.createProject(null, null, true);
@@ -424,6 +424,31 @@ module.exports = class cliStart extends nodefony.cliKernel {
       });
   }
 
+
+  gitInit(project, response) {
+    let gitP, cwd, git;
+    try {
+      cwd = path.resolve(project.location, project.name);
+      gitP = require('simple-git/promise');
+      git = gitP(cwd);
+    } catch (e) {
+      throw e;
+    }
+    return git.init()
+      .then(() => {
+        return git.add(path.resolve(cwd, '*'))
+          .then(() => {
+            return git.addConfig('user.name', response.authorFullName)
+              .then(() => {
+                return git.addConfig('user.email', response.authorMail)
+                  .then(() => {
+                    return git.commit("first commit!");
+                  });
+              });
+          });
+      });
+  }
+
   createProject(command, args, interactive = false) {
     try {
       if (command === "create") {
@@ -436,16 +461,9 @@ module.exports = class cliStart extends nodefony.cliKernel {
       let project = new nodefony.builders.Project(this, command, args);
       return project.run(interactive)
         .then((res) => {
-          let gitP, cwd, git;
-          try {
-            cwd = path.resolve(project.location, project.name);
-            gitP = require('simple-git/promise');
-            git = gitP(cwd);
-          } catch (e) {
-            throw e;
-          }
-          return git.init()
+          return this.gitInit(project, res)
             .then(() => {
+              let cwd = path.resolve(project.location, project.name);
               this.logger(`Create Project ${res.name} complete`, "INFO");
               if (res.bundle) {
                 this.response.project = true;

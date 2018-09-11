@@ -88,4 +88,4 @@ orm                             : mongoose
 #       npm
 #       yarn
 #
-packageManager                  : npm
+packageManager                  : yarn
