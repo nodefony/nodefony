@@ -40,7 +40,7 @@
     "commander": "^2.18.0",
     "inquirer": "^6.2.0",
     "js-yaml": "^3.12.0",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.11",
     "lodash.isregexp": "^4.0.1",
     "markdown-it": "^8.4.2",
     "mime": "^2.3.1",

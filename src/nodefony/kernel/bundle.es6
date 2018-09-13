@@ -956,7 +956,7 @@ module.exports = nodefony.register("Bundle", function () {
               this.entities[Class.name] = new Class(this);
               this.logger("LOAD ENTITY  " + Class.name + " : " + file.name, "DEBUG");
             } catch (e) {
-              this.logger(e, "ERROR");
+              this.logger(e, "WARRING");
             }
           } else {
             this.logger("Drop Entity file " + file.name, "WARNING");
