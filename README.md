@@ -524,6 +524,7 @@ Access to monitoring route with URL : <http://localhost:5151/nodefony>
 Monitoring in progress !!!
 
 **Who Use Nodefony:**
+
   [![SFR](https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/sfr.jpg)](https://www.sfr.fr)
   [![ALTICE](https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/logo.png)](https://www.sfr.fr)
 
