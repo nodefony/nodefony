@@ -525,7 +525,7 @@ Monitoring in progress !!!
 
 **Who Use Nodefony:**
   [![SFR](https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/sfr.jpg)](https://www.sfr.fr)
-  [![ALTICE](https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/logo.jpg)](https://www.sfr.fr)
+  [![ALTICE](https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/logo.png)](https://www.sfr.fr)
 
 **Big thanks:**
   - [D-Lake](https://www.d-lake.fr/) French specialist in infrastructure and data security.
