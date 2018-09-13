@@ -61,6 +61,7 @@ Nodefony is not an exhaustive port of symfony !
 -   [Passport](http://passportjs.org/) Simple, unobtrusive authentication for Node.js .
 -   ~~[Angular](https://github.com/angular/angular-cli) Experimental Bundle Generator ( Angular cli no longer allows the ejection of a webpack config)~~
 -   [React](https://github.com/facebookincubator/create-react-app) Experimental Bundle Generator ( Now an React Project can be merge into a Nodefony Bundle )
+-   [Vue.js](https://vuejs.org) Experimental Bundle Generator ( Now an Vue.js Project can be merge into a Nodefony Bundle )
 
 **Nodefony 4  adds the following features** :
 
@@ -89,14 +90,13 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 #### Documentation in progress !!
 
 
-
 ## <a name="requirements"></a>Requirements
 
 #### On your system _you must have Installed_ :
 
 -   **[GIT](http://git-scm.com/)**  is Distributed version control system
 
--   **[Node.js](https://nodejs.org/)** ® is a Platform built on Chrome's JavaScript runtime ( >= 6 )
+-   **[Node.js](https://nodejs.org/)** ® is a Platform built on Chrome's JavaScript runtime ( >= 8 )
 
 -   **[npm](https://www.npmjs.com/)** or **[yarn](https://yarnpkg.com/lang/en/)**  Packages Manager for javascript application
 
@@ -117,7 +117,6 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
     -   setenv CC "/usr/local/bin/gcc"
     -   setenv CXX "/usr/local/bin/g++"
     -   cd /usr/local/bin/ ;ln -s pythonx.x python
-    -   replace make by gmake
 
 -   ~~OpenBSD (Not Checked yet )~~
 
@@ -374,7 +373,7 @@ $ nodefony
 ?  Nodefony CLI :  Generater
 ?  Nodefony CLI :  (Use arrow keys)
 ❯ Generate New Bundle
-  Generate New Controller 
+  Generate New Controller
   Generate New Service
   Generate New Entity
   Generate New Nodefony Project
@@ -523,9 +522,15 @@ Access to monitoring route with URL : <http://localhost:5151/nodefony>
 
 Monitoring in progress !!!
 
-**Big thanks:**
+## Who Use Nodefony:
 
-**Related Links:**
+  [![SFR](https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/sfr.jpg)](https://www.sfr.fr)
+  [![ALTICE](https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/logo.png)](https://www.sfr.fr)
+
+## Big thanks:
+  - [D-Lake](https://www.d-lake.fr/) French specialist in infrastructure and data security.
+
+## Related Links:
 
 -   [Node.js](https://nodejs.org/)
 -   [npm](https://www.npmjs.com/)
