@@ -1,74 +1,48 @@
 <h1>Hello Word<h1>
 
 <h2>Generate hello Bundle :</h2>
-Command console to Generate new bundle :    <strong>generate:bundle nameBundle path</strong>
+Command console to Generate new bundle :    <strong>generate:bundle name path</strong>
 <br/>
 <br/>
 <pre>
-$ <strong>./nodefony generate:bundle helloBundle src/bundles</strong>
-   _   _    ___    ____    _____   _____    ___    _   _  __   __
-  | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
-  |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
-  | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |
-  |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|
+$ <strong>nodefony generate:bundle hello src/bundles</strong>
 
-  Version : 3.0.0-beta Platform : darwin Process : nodefony PID : 21397
+# Or Interactive Mode
 
-  NODEFONY CONSOLE Cluster : master Environment : prod Debug :false
-  __ _    ___   _ __     ___   _ __    __ _  | |_    ___
-   / _` |  / _ \ | '_ \   / _ \ | '__|  / _` | | __|  / _ \
-  | (_| | |  __/ | | | | |  __/ | |    | (_| | | |_  |  __/
-   \__, |  \___| |_| |_|  \___| |_|     \__,_|  \__|  \___|
-   |___/
+$ <b>nodefony</b>
+  <b>?  Nodefony CLI :  Generater</b>
+?  Nodefony CLI :  (Use arrow keys)
+❯ <b>Generate New Bundle</b>
+  Generate New Controller
+  Generate New Service
+  Generate New Entity
+  Generate New Nodefony Project
+  Generate Openssl Certificates
+  Generate Haproxy Configuration
+  Generate Nginx Configuration
+  Generate letsEncrypt Webroot Configuration
+</pre>
 
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : GENERATE bundle : helloBundle LOCATION : /Users/cci/repository/nodefony-core/src/bundles
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :helloBundle
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :Command
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :controller
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create File      :defaultController.js
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :services
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :tests
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create File      :helloBundleTest.js
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :Resources
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :config
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create File      :config.yml
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create File      :routing.yml
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :webpack
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create File      :webpack.common.js
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create File      :webpack.dev.config.js
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create File      :webpack.prod.config.js
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create File      :security.yml
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :public
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :js
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create File      :hello.js
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :css
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create File      :hello.css
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :images
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :assets
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :js
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :css
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :fonts
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :images
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :translations
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :views
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create File      :index.html.twig
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :doc
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :1.0
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create File      :readme.md
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create symbolic link :Default
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :core
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create Directory :Entity
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create File      :helloBundle.js
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create symbolic link :readme.md
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : Create File      :package.json
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : /Users/cci/repository/nodefony-core/web/
-Thu Aug 03 2017 12:03:44 INFO SERVICE CLI KERNEL  : INSTALL LINK IN /web TOTAL SIZE : 2.6 MB
-┌─────────┬───────────────────┬────────────────────────────────────────────┬───────────┬────────────────┐
-│ BUNDLES │ DESTINATION PATH  │ SOURCE PATH                                │ SIZE      │ ASSETS COMPILE │
-├─────────┼───────────────────┼────────────────────────────────────────────┼───────────┼────────────────┤
-│ hello   │ ./web/helloBundle │ ./src/bundles/helloBundle/Resources/public │ 483 bytes │ 0 bytes        │
-└─────────┴───────────────────┴────────────────────────────────────────────┴───────────┴────────────────┘
-Thu Aug 03 2017 12:03:44 INFO CONSOLE   : NODEFONY Kernel Life Cycle Terminate CODE : 0
+<p>
+	<strong>Example files system after Generate Bundle :  </strong>
+</p>
+<pre>
+<b>ls -l src/bundles/hello-bundle</b>
+total 456
+drwxr-xr-x    4 cci  staff     136 13 sep 15:43 Command
+drwxr-xr-x    3 cci  staff     102 13 sep 15:43 Entity
+drwxr-xr-x    6 cci  staff     204 13 sep 15:43 Resources
+drwxr-xr-x    3 cci  staff     102 13 sep 15:43 build
+drwxr-xr-x    3 cci  staff     102 13 sep 15:43 controller
+drwxr-xr-x    3 cci  staff     102 13 sep 15:43 doc
+-rw-r--r--    1 cci  staff     628 13 sep 15:43 helloBundle.js
+drwxr-xr-x  438 cci  staff   14892 13 sep 15:43 node_modules
+-rw-r--r--    1 cci  staff  217359 13 sep 15:43 package-lock.json
+-rw-r--r--    1 cci  staff     926 13 sep 15:43 package.json
+-rw-r--r--    1 cci  staff       1 13 sep 15:43 readme.md
+drwxr-xr-x    3 cci  staff     102 13 sep 15:43 services
+drwxr-xr-x    2 cci  staff      68 13 sep 15:43 src
+drwxr-xr-x    3 cci  staff     102 13 sep 15:43 tests
 </pre>
 
 <h2> AUTO REGISTRATION :</h2>
@@ -81,7 +55,7 @@ Thu Aug 03 2017 12:03:44 INFO CONSOLE   : NODEFONY Kernel Life Cycle Terminate C
 <pre>
 system:
   bundles:
-  hello: src/bundles/helloBundle
+  hello: src/bundles/hello-bundle
 </pre>
 <p>
   If the bundle is to be used in a durable way It is preferable to register the bundles in framework config file : <strong>  ./config/config.yml</strong> <br>
@@ -90,11 +64,11 @@ system:
 <pre>
 system:
   bundles:
-  demo: src/bundles/helloBundle
+    hello: file:src/bundles/hello-bundle
 </pre>
 
 <h2> Generated VIEW :</h2>
-<code>src/bundles/helloBundle/Resources/views/index.html.twig</code>
+<code>src/bundles/hello-bundle/Resources/views/index.html.twig</code>
 <pre>
 &#123;% extends '/app/Resources/views/base.html.twig' %&#125;
 
@@ -105,7 +79,7 @@ system:
   &#123;&#123; parent() &#125;&#125;
 
   <strong>&lt;!-- WEBPACK BUNDLE --&gt;
-  &lt;link rel='stylesheet' href='&#123;&#123;CDN("stylesheet")&#125;&#125;/helloBundle/assets/css/hello.css' /&gt;</strong>
+  &lt;link rel='stylesheet' href='&#123;&#123;CDN("stylesheet")&#125;&#125;/hello-bundle/assets/css/hello.css' /&gt;</strong>
 
 &#123;% endblock %&#125;
 
@@ -122,31 +96,32 @@ system:
   &#123;&#123; parent() &#125;&#125;
 
   <strong>&lt;!-- WEBPACK BUNDLE --&gt;
-  &lt;script src='&#123;&#123;CDN("javascript")&#125;&#125;/helloBundle/assets/js/hello.js'&gt;&lt;/script&gt;</strong>
+  &lt;script src='&#123;&#123;CDN("javascript")&#125;&#125;/hello-bundle/assets/js/hello.js'&gt;&lt;/script&gt;</strong>
 
 &#123;% endblock %&#125;
 </pre>
 <h2> Generated Controller :</h2>
-<code>src/bundles/helloBundle/controller/defaultController.js</code>
+<code>src/bundles/hello-bundle/controller/defaultController.js</code>
 <pre>
 module.exports = class defaultController extends nodefony.controller {
 
-  constructor (container, context){
-    super(container, context);
-  }
+	constructor (container, context){
+		super(container, context);
+	}
 
-  /**
-  *
-  *	@method indexAction
-  *
-  */
-  indexAction (){
-    try {
-      return this.render("helloBundle::index.html.twig",{name:"default"});
-    }catch(e){
-      throw e;
-    }
-  }
+	/**
+	 *
+	 *	@method indexAction
+	 *
+	 */
+	indexAction (){
+		try {
+			return this.render("hello-bundle::index.html.twig", {
+				name: "hello-bundle"			});
+		}catch(e){
+			throw e;
+		}
+	}
 };
 </pre>
 
@@ -156,20 +131,19 @@ The bundle generation engine build bundle config with  node.js watcher configura
 In developement mode  is very usefull to auto-reload files as controllers , views , routing , translations <br>
 without having to reboot the server.
 </p>
-<code>./src/bundles/helloBundle/Resources/config/config.yml</code>
+<code>./src/bundles/hello-bundle/Resources/config/config.yml</code>
 <pre>
   #
   #  WATCHERS
   #
-  #    watchers Listen to changes, deletion, renaming of files and directories
-  #    of different components
+  #    Listen to changes, deleting, renaming files and directories of different components
   #
   #    For watch all components
   #
-  #      watch:			true       # services false by default
+  #      watch:			true            # by default services false !
   #    or
   #      watch:
-  #        controller     : true
+  #        controllers     : true
   #        config         : true		# only  routing
   #        views          : true
   #        translations   : true
@@ -183,112 +157,102 @@ without having to reboot the server.
 <p>
 The bundle generation engine build bundle config with a predefined webpack configurations <br>
 In this way webpack is very usefull to manage all assets of bundle <br>
-In developement mode watch  is very usefull to auto-compile webpack module bundle <br>
+In developement mode watch is very usefull to auto-compile webpack module bundle <br>
 without having to reboot the server.
 </p>
 
-<code>./src/bundles/helloBundle/Resources/config/webpack.config.js</code>
+<code>./src/bundles/hello-bundle/Resources/config/webpack.config.js</code>
 <pre>
-  const path = require("path");
-  const public = path.resolve(__dirname, "..", "public");
-  const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
-  const ExtractTextPluginCss = require('extract-text-webpack-plugin');
-  const webpackMerge = require('webpack-merge');
-  let config = null;
-  if (kernel.environment === "dev") {
-    config = require("./webpack/webpack.dev.config.js");
-  } else {
-    config = require("./webpack/webpack.prod.config.js");
-  }
-
-  module.exports = webpackMerge({
-    context: public,
-    target: "web",
-    entry       : {
-      hello  : [ "./js/hello.js" ]
-    },
-    output: {
-      path: public,
-      filename: "./assets/js/[name].js",
-      library: "[name]",
-      libraryTarget: "umd"
-    },
-    externals: {},
-    resolve: {},
-    module: {
-      rules: [{
-        // BABEL TRANSCODE
-        test: new RegExp("\.es6$"),
-        exclude: new RegExp("node_modules"),
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            presets: ['env']
-          }
-        }]
-      }, {
-        // CSS EXTRACT
-        test: new RegExp("\.css$"),
-        use: ExtractTextPluginCss.extract({
-          use: 'css-loader'
-        })
-      }, {
-        // SASS
-        test: new RegExp(".scss$"),
-        use: [{
-          loader: 'style-loader'
-        }, {
-          loader: 'css-loader'
-        }, {
-          loader: 'sass-loader'
-        }]
-      }, {
-        test: new RegExp("\.less$"),
-        use: ExtractTextPluginCss.extract({
-          use: [
-            "raw-loader",
-            {
-              loader: 'less-loader',
-              options: {
-                //strictMath: true,
-                //noIeCompat: true
-              }
-            }
-          ]
-        })
-      }, {
-        // FONTS
-        test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
-        use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '&outputPath=/assets/fonts/',
-      }, {
-        // IMAGES
-        test: new RegExp("\.(jpg|png|gif)$"),
-        use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '&outputPath=/assets/images/'
+module.exports = webpackMerge({
+  context: context,
+  target: "web",
+  entry       : {
+    hello  : [ "./js/hello.js" ]
+  },
+  output: {
+    path: public,
+    publicPath: publicPath,
+    filename: "./js/[name].js",
+    library: "[name]",
+    libraryTarget: "umd"
+  },
+  externals: {},
+  resolve: {},
+  module: {
+    rules: [{
+      // BABEL TRANSCODE
+      test: new RegExp("\.es6$|\.js$"),
+      exclude: new RegExp("node_modules"),
+      use: [{
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env']
+        }
       }]
-    },
-    plugins: [
-      new ExtractTextPluginCss({
-        filename: "./assets/css/[name].css",
-      })
-    ]
-  }, config);
+    }, {
+      // CSS EXTRACT
+      test: new RegExp("\.(less|css)$"),
+      use: [
+        //'css-hot-loader',
+        MiniCssExtractPlugin.loader,
+        'css-loader',
+        'less-loader'
+      ]
+    }, {
+      // SASS
+      test: new RegExp(".scss$"),
+      use: [{
+        loader: 'style-loader'
+      }, {
+        loader: 'css-loader'
+      }, {
+        loader: 'sass-loader'
+      }]
+    }, {
+      // FONTS
+      test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
+      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/assets/fonts/" +'&outputPath=/fonts/',
+    }, {
+      // IMAGES
+      test: new RegExp("\.(jpg|png|gif)$"),
+      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/assets/images/" +'&outputPath=/images/'
+    }]
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "./css/[name].css",
+      allChunks: true
+    })
+  ]
+}, config);
 </pre>
 
-<code>./src/bundles/helloBundle/Resources/config/webpack/webpack.dev.config.js</code>
+<code>./src/bundles/hello-bundle/Resources/config/webpack/webpack.dev.config.js</code>
 <pre>
+  // WEBPACK DEV CONFIGURATION
+  const CleanWebpackPlugin = require('clean-webpack-plugin');
+  const public = path.resolve(__dirname, "..", "..", "public");
   module.exports = {
+    mode: "development",
     devtool: "source-map",
     resolve: {},
-    plugins: []
+    plugins: [
+      new CleanWebpackPlugin(['assets'], {
+        verbose: kernel.debug,
+        root: public
+      })
+      //new webpack.NamedModulesPlugin(),
+      //new webpack.HotModuleReplacementPlugin()
+    ]
   };
 </pre>
 
 
 <h2> Start Nodefony to check new Bundle hello:</h2> -d for debug mode
 <pre>
-$ ./nodefony -d dev
+$ nodefony -d dev
  or
-$ ./nodefony dev
+$ nodefony dev
 </pre>
 
-Access to bundle route with URL : http://nodefony.com:5151/hello
+Access to bundle route with URL : http://mydomain.com:5151/hello

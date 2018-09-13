@@ -6,9 +6,9 @@
   <h1><strong>Nodefony DOCKER</strong> </h1>
 	<div class="alert alert-info" role="alert">
 		<strong>
-		Docker is a software containerization platform  </br> 
+		Docker is a software containerization platform  </br>
 		</strong>
-		You can use Nodefony in Docker Container 
+		You can use Nodefony in Docker Container
 	</div>
 	<p>
 		<center>
@@ -30,24 +30,23 @@
 
 </div>
 
-
 <h1 id="composer"> How to use Nodefony Framework with Docker composer :</h1>
 <div class="doc3">
 	<h2><strong>Build composer</strong> </h2>
 
 	<div class="alert alert-info" role="alert">
 		<strong>
-		Nodefony Docker Composer  </br> 
+		Nodefony Docker Composer  </br>
 		</strong>
-		With this mode nodefony run with  : 
+		With this mode nodefony run with  :
 		<ul>
-			<li>	Mariadb container  </li>  
-			<li>	Nginx container in front </li>  
+			<li>	Mariadb container  </li>
+			<li>	Nginx container in front </li>
 		</ul>
 	</div>
 
 	<pre>
-$  make docker-compose 
+$  make docker-compose
 	</pre>
 
 	<pre>
@@ -89,7 +88,7 @@ Attaching to mariadb, nodefony, nginx
 <h2 >  docker-compose.yml :</h2>
 
 	<p>
-		You can change  network  port expose  in this file 	
+		You can change  network  port expose  in this file
 	</p>
 
 	<code>./docker/docker-compose.yml</code>
@@ -139,7 +138,7 @@ services:
       interval: 15s
       timeout: 5s
       retries: 3
-    
+
 # NGINX
   nginx:
     container_name: nginx
@@ -159,18 +158,18 @@ services:
       - "5151:80"
       - "5152:443"
 
-# VOLUMES 
+# VOLUMES
 volumes:
   certificates:
     driver: local
   nodefony:
     driver: local
-  db: 
+  db:
     driver: local
 
 # NETWORK
 networks:
-  nodefony: 
+  nodefony:
     driver: bridge
     ipam:
       driver: default
@@ -184,8 +183,8 @@ networks:
 
 	<p>
 		composer create sub network on 172.51.51.0/24 (driver bridge )
-	</p>	
-	
+	</p>
+
 	<pre>
 $ docker network ls
 NETWORK ID          NAME                DRIVER              SCOPE
@@ -195,7 +194,7 @@ a850c6af6f6b        docker_nodefony     bridge              local
 783e02f89fdb        none                null                local
 	</pre>
 
-	<pre>	
+	<pre>
 $ docker network inspect docker_nodefony
 		</pre>
 
@@ -260,14 +259,10 @@ local               docker_db
 local               docker_nodefony
 
 		</pre>
-	
-</div>
-
-
-
 
 </div>
 
 
 
 
+</div>
