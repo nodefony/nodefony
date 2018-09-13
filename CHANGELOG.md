@@ -1,5 +1,12 @@
 # Changelog
 
+## v4.0.0-beta.5 (13/09/2018)
+- [doc](https://github.com/nodefony/nodefony-core/commit/d6ea13bc00523000ecfd64060cde47e6f4a9f900) s-soo @cci
+- [git Init create project](https://github.com/nodefony/nodefony-core/commit/04d1a34c3dcb21f52b1cc5a3c2a48578af7e259f) s-soo @cci
+- [update deps](https://github.com/nodefony/nodefony-core/commit/30d2f1514ff5dce82a68c1aab44fb3b4ec9bd05b) s-soo @cci
+
+---
+
 ## v4.0.0-beta.4 (07/09/2018)
 - [debug create project  | add interactive package manager](https://github.com/nodefony/nodefony-core/commit/c869cb0875e8b43c84f99b3c31028eae1151674d) s-soo @cci
 - [debug sqlite fixture](https://github.com/nodefony/nodefony-core/commit/a38c323b51e7e9ffe30affa9ce1443ca1b50cfb8) s-soo @cci
