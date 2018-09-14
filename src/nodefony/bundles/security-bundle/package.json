@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/security-bundle",
-  "version": "4.0.0-beta.5",
+  "version": "4.0.0-beta.6",
   "description": "Nodefony Framework Bundle Security",
   "contributors": [],
   "private": false,
@@ -27,7 +27,7 @@
     "passport-local": "^1.0.0",
     "passport-oauth2": "^1.4.0",
     "uglifyjs-webpack-plugin": "^1.3.0",
-    "webpack": "^4.18.1",
+    "webpack": "^4.19.0",
     "webpack-merge": "^4.1.4"
   },
   "repository": {

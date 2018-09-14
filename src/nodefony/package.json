@@ -1,6 +1,6 @@
 {
   "name": "nodefony",
-  "version": "4.0.0-beta.5",
+  "version": "4.0.0-beta.6",
   "main": "autoloader.es6",
   "description": "Nodefony Framework Core",
   "contributors": [],
@@ -57,7 +57,7 @@
     "shortid": "^2.2.13",
     "simple-git": "^1.96.0",
     "twig": "^1.12.0",
-    "webpack": "^4.18.1",
+    "webpack": "^4.19.0",
     "xml2js": "^0.4.19",
     "yarn": "^1.9.4"
   },

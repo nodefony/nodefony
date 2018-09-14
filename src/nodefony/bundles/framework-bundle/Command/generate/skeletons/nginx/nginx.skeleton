@@ -34,6 +34,8 @@ server {
     access_log off;
     root {{publicPath}};
     expires 7d;
+		add_header    'Access-Control-Allow-Origin' 'http://{{domain}}' always;
+    add_header    'Access-Control-Allow-Methods' 'GET' always;
   }
 }
 
@@ -74,6 +76,8 @@ server {
     root {{publicPath}};
     expires 7d;
     access_log off;
+		add_header    'Access-Control-Allow-Origin' 'https://{{domain}}' always;
+    add_header    'Access-Control-Allow-Methods' 'GET' always;
   }
 
 }
