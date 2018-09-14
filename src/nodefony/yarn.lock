@@ -629,9 +629,9 @@
     tree-kill "^1.0.0"
     webpack-sources "^1.1.0"
 
-"@nodefony/documentation-bundle@^4.0.0-beta.5":
-  version "4.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@nodefony/documentation-bundle/-/documentation-bundle-4.0.0-beta.5.tgz#b964cdec2d5aec6d311b395d513f9707334e7809"
+"@nodefony/documentation-bundle@^4.0.0-beta.6":
+  version "4.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@nodefony/documentation-bundle/-/documentation-bundle-4.0.0-beta.6.tgz#42189d418b4db26bf77a6d204b32053fce2da59c"
   dependencies:
     "@nodefony/stage" "^0.1.12"
     bootstrap "=3.3.7"
@@ -642,12 +642,12 @@
     mini-css-extract-plugin "^0.4.2"
     optimize-css-assets-webpack-plugin "^5.0.1"
     uglifyjs-webpack-plugin "^1.3.0"
-    webpack "^4.18.1"
+    webpack "^4.19.0"
     webpack-merge "^4.1.4"
 
-"@nodefony/framework-bundle@^4.0.0-beta.5":
-  version "4.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@nodefony/framework-bundle/-/framework-bundle-4.0.0-beta.5.tgz#1caff9213eb26d465d2137356abd390420e66b53"
+"@nodefony/framework-bundle@^4.0.0-beta.6":
+  version "4.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@nodefony/framework-bundle/-/framework-bundle-4.0.0-beta.6.tgz#3ad737335e342fa5636d076a3112eeeb328324fb"
   dependencies:
     "@angular/cli" "=1.7.4"
     "@nodefony/stage" "^0.1.12"
@@ -657,12 +657,12 @@
     mini-css-extract-plugin "^0.4.2"
     optimize-css-assets-webpack-plugin "^5.0.1"
     uglifyjs-webpack-plugin "^1.3.0"
-    webpack "^4.18.1"
+    webpack "^4.19.0"
     webpack-merge "^4.1.4"
 
-"@nodefony/http-bundle@^4.0.0-beta.5":
-  version "4.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@nodefony/http-bundle/-/http-bundle-4.0.0-beta.5.tgz#d6e47ee8bfa82dbf47f132643f28df81fe0952d1"
+"@nodefony/http-bundle@^4.0.0-beta.6":
+  version "4.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@nodefony/http-bundle/-/http-bundle-4.0.0-beta.6.tgz#dbf147893a3ffab03a68edebf049df6b99c306d1"
   dependencies:
     cookie "^0.3.1"
     formidable "^1.2.1"
@@ -675,16 +675,16 @@
     sockjs "^0.3.19"
     websocket "^1.0.26"
 
-"@nodefony/mongo-bundle@^4.0.0-beta.5":
-  version "4.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@nodefony/mongo-bundle/-/mongo-bundle-4.0.0-beta.5.tgz#966b5409a0292303580bc249dc7ad3a2ce907ce4"
+"@nodefony/mongo-bundle@^4.0.0-beta.6":
+  version "4.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@nodefony/mongo-bundle/-/mongo-bundle-4.0.0-beta.6.tgz#f11c39a61e0363a0d2bb73872915bb5bc0a9b5a7"
   dependencies:
     mongodb "^3.1.4"
     mongoose "^5.2.14"
 
-"@nodefony/monitoring-bundle@^4.0.0-beta.5":
-  version "4.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@nodefony/monitoring-bundle/-/monitoring-bundle-4.0.0-beta.5.tgz#23a84ea163f9c451bfe85ff778837012b776f0e3"
+"@nodefony/monitoring-bundle@^4.0.0-beta.6":
+  version "4.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@nodefony/monitoring-bundle/-/monitoring-bundle-4.0.0-beta.6.tgz#e7caa2f9a254e887b7f24d2a22f6f2cf21cbc75c"
   dependencies:
     "@nodefony/stage" "^0.1.12"
     bootstrap "=3.3.7"
@@ -697,7 +697,7 @@
     shortid "^2.2.13"
     uglifyjs-webpack-plugin "^1.3.0"
     useragent "^2.3.0"
-    webpack "^4.18.1"
+    webpack "^4.19.0"
     webpack-merge "^4.1.4"
 
 "@nodefony/passport-wrapper@^4.0.0":
@@ -706,15 +706,15 @@
   dependencies:
     mocha "^5.2.0"
 
-"@nodefony/realtime-bundle@^4.0.0-beta.5":
-  version "4.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@nodefony/realtime-bundle/-/realtime-bundle-4.0.0-beta.5.tgz#598bfa06abe43bd12164ad2f397323df468ea384"
+"@nodefony/realtime-bundle@^4.0.0-beta.6":
+  version "4.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@nodefony/realtime-bundle/-/realtime-bundle-4.0.0-beta.6.tgz#1c4a3a37cfe9050c45b1573b71424d2b23829932"
   dependencies:
     shortid "^2.2.13"
 
-"@nodefony/security-bundle@^4.0.0-beta.5":
-  version "4.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@nodefony/security-bundle/-/security-bundle-4.0.0-beta.5.tgz#416ec396969c2555b65a691b034257a8ba1a2003"
+"@nodefony/security-bundle@^4.0.0-beta.6":
+  version "4.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@nodefony/security-bundle/-/security-bundle-4.0.0-beta.6.tgz#7db7e518e0d13aed0dc4c5986cfe55ed6826f844"
   dependencies:
     "@nodefony/passport-wrapper" "^4.0.0"
     bcrypt "^3.0.0"
@@ -732,12 +732,12 @@
     passport-local "^1.0.0"
     passport-oauth2 "^1.4.0"
     uglifyjs-webpack-plugin "^1.3.0"
-    webpack "^4.18.1"
+    webpack "^4.19.0"
     webpack-merge "^4.1.4"
 
-"@nodefony/sequelize-bundle@^4.0.0-beta.5":
-  version "4.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@nodefony/sequelize-bundle/-/sequelize-bundle-4.0.0-beta.5.tgz#97942c4ffa60d0812f99e647e4144c72448d1f55"
+"@nodefony/sequelize-bundle@^4.0.0-beta.6":
+  version "4.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@nodefony/sequelize-bundle/-/sequelize-bundle-4.0.0-beta.6.tgz#1b5e63f4aec9a048a1d4f62347f1497ea5a5cdbf"
   dependencies:
     mysql2 "^1.6.1"
     sequelize "5.0.0-beta.12"
@@ -755,9 +755,9 @@
     twig "^1.12.0"
     webrtc-adapter "^6.3.2"
 
-"@nodefony/unittests-bundle@^4.0.0-beta.5":
-  version "4.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@nodefony/unittests-bundle/-/unittests-bundle-4.0.0-beta.5.tgz#a899be834cf49b4c3fed0d645c1a89c865e8c7c2"
+"@nodefony/unittests-bundle@^4.0.0-beta.6":
+  version "4.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@nodefony/unittests-bundle/-/unittests-bundle-4.0.0-beta.6.tgz#968f57fdbaeee184fb9fce1d32a31653a2beb122"
   dependencies:
     chai "^4.1.2"
     mocha "^5.2.0"
@@ -9284,35 +9284,6 @@ webpack-subresource-integrity@^1.0.1:
   resolved "https://registry.yarnpkg.com/webpack-subresource-integrity/-/webpack-subresource-integrity-1.0.4.tgz#8fac8a7e8eb59fc6a16768a85c9d94ee7f9d0edb"
   dependencies:
     webpack-core "^0.6.8"
-
-webpack@^4.18.1:
-  version "4.18.1"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.18.1.tgz#029042c815443fce23424de1548d9317cfca148a"
-  dependencies:
-    "@webassemblyjs/ast" "1.7.6"
-    "@webassemblyjs/helper-module-context" "1.7.6"
-    "@webassemblyjs/wasm-edit" "1.7.6"
-    "@webassemblyjs/wasm-parser" "1.7.6"
-    acorn "^5.6.2"
-    acorn-dynamic-import "^3.0.0"
-    ajv "^6.1.0"
-    ajv-keywords "^3.1.0"
-    chrome-trace-event "^1.0.0"
-    enhanced-resolve "^4.1.0"
-    eslint-scope "^4.0.0"
-    json-parse-better-errors "^1.0.2"
-    loader-runner "^2.3.0"
-    loader-utils "^1.1.0"
-    memory-fs "~0.4.1"
-    micromatch "^3.1.8"
-    mkdirp "~0.5.0"
-    neo-async "^2.5.0"
-    node-libs-browser "^2.0.0"
-    schema-utils "^0.4.4"
-    tapable "^1.1.0"
-    uglifyjs-webpack-plugin "^1.2.4"
-    watchpack "^1.5.0"
-    webpack-sources "^1.2.0"
 
 webpack@^4.19.0:
   version "4.19.0"
