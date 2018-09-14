@@ -29,19 +29,18 @@
           Location :
           <code>./config</code>
           <pre>
-	config/
-	├── certificates
-	│   ├── ca
-	│   ├── ca_intermediate
-	│   ├── client
-	│   └── server
-	├── config.yml
-	├── generatedconfig.yml
-	├── openssl
-	│   ├── ca
-	│   └── ca_intermediate
-	└── pm2.config.js
-</pre>
+config/
+├── certificates
+│   ├── ca
+│   ├── ca_intermediate
+│   ├── client
+│   └── server
+├── config.yml
+├── openssl
+│   ├── ca
+│   └── ca_intermediate
+└── pm2.config.js
+        </pre>
         </div>
 
         <h2 id="global">Goblal Configuration
@@ -391,42 +390,48 @@ config/certificates/
                 (Production process manager for Node.js )
                 <br>
                 This Configuration PM2 use by executable
-                <code>./nodefony pm2</code>
+                <code>nodefony prod</code>
               </p>
 
               <pre>
-const cpu = require('os').cpus().length ;
-let name = "nodefony";
+const cpu = require('os').cpus().length;
+let name = "myproject";
+let script = process.argv[1] || "nodefony";
+let logFile = path.resolve("tmp", "myproject.log");
 
+/**
+ * Application configuration section
+ * http://pm2.keymetrics.io/docs/usage/application-declaration/
+ */
 module.exports = {
-  apps : [{
-    name                : name,
-    script              : "./nodefony",
-    args                : "pm2",
+  apps: [{
+    name: name,
+    script: script,
+    args: "pm2",
     //node_args           : "--expose-gc",
-    watch               : false,
-    exec_mode           : "cluster",
-    instances           : cpu,
-    max_memory_restart  : "1024m",
-    autorestart         : true,
-    max_restarts        : 10,
-    log_file            : "./tmp/nodefony.log",
-    out_file            : "./tmp/nodefony.out.log",
-    error_file          : "./tmp/nodefony.error.log",
-    merge_logs          : true,
+    watch: false,
+    exec_mode: "cluster",
+    instances: cpu,
+    max_memory_restart: "1024M",
+    autorestart: true,
+    max_restarts: 10,
+    //log_file            : logFile,
+    out_file: logFile,
+    error_file: logFile,
+    merge_logs: true,
     env: {
-      "node_env"        : "development",
-      "mode_start"      : "pm2",
-      "nodefony_debug"  : true
+      "NODE_ENV": "development",
+      "MODE_START": "PM2",
+      "NODEFONY_DEBUG": true
     },
-    env_production : {
-       "node_env"       : "production",
-       "mode_start"     : "pm2",
-       "nodefony_debug" : false
+    env_production: {
+      "NODE_ENV": "production",
+      "MODE_START": "PM2",
+      "NODEFONY_DEBUG": false
     }
   }]
-}
-	</pre>
+};
+	            </pre>
               <a href="http://pm2.keymetrics.io/docs/usage/cluster-mode/">
                 Documentation pm2.keymetrics.io
               </a>

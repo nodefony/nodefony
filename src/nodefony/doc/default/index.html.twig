@@ -263,6 +263,7 @@ $ yarn global add nodefony
     - "^127.0.0.1$"
   httpport                      : 5151
   httpsport                     : 5152</strong>
+  domainCheck                   : true
   statics                       : true
   security                      : true
   realtime                      : true
@@ -284,7 +285,7 @@ $ yarn global add nodefony
         rejectunauthorized      : false
 
   bundles:
-    hello                       : "src/bundles/demo-bundle"
+    hello                       : "file:src/bundles/hello-bundle"
 
   log:
     active                      : true
@@ -325,7 +326,7 @@ cdn                             : ~
 
 # run appliation in dev mode
 
-$ ./nodefony dev
+$ nodefony dev
 
   </pre>
     </div>
