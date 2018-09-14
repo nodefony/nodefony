@@ -126,7 +126,7 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 
 -   EMBEDDED SYSTEM ( Very difficult : large memory footprint )  
 
-## <a name="install"></a>Install Framework **More Info : [ Getting Started with Nodefony ](https://nodefony.net/documentation/Beta/nodefony/started)**
+## <a name="install"></a>Install Nodefony Framework
 
 **npm** :
 
@@ -144,7 +144,7 @@ $ yarn global add nodefony
 
  -   [nvm](https://github.com/creationix/nvm) Node Version Manager - Simple bash script to manage multiple active node.js versions
 
- **Generating with CLI (Command Line Interface) a Nodefony project** :
+## Generating with CLI (Command Line Interface) a Nodefony project :
 
  ```bash
  #  CLI generate project name : myproject
@@ -153,42 +153,13 @@ $ yarn global add nodefony
  $ cd myproject
  ```
 
- **Build Project with Github Starter** :
-
- ```bash
- #  Clone nodefony starter
-
- $ git clone https://github.com/nodefony/nodefony.git
- $ cd nodefony
- $ nodefony build
- ```
-
 **Cli Usage** :
 
 ```bash
 $ nodefony -h
-Usage: nodefony [options] <command:task:action> [args...]
-                [options] <command:action> [args...]
-                [options] <action> [args...]
-
-  Options:
-    -d, --debug         Nodefony debug
-    -h, --help          Nodefony help
-    -v, --version       Nodefony version
-    -i, --interactive   Nodefony cli Interactive Mode
-    -j, --json          Nodefony json response
-    -h, --help          output usage information
 nodefony                                                                                              
     create [-i] name [path]                       Create New Nodefony Project                  
-PM2 Process Manager 2                                                                                 
-    stop name                                     Stop Production Project                  
-    reload name                                   Reload Production Project                                                                            
-    delete name                                   Delete Production Project from PM2 management                  
-    restart name                                  Restart Production Project                  
-    list                                          List all Production Projects                  
-    logs [name] [nblines]                         Stream pm2 logs  [name] is project name  and [nblines] to show
-    kill                                          Kill PM2 daemon         
-
+      
 # OR YOU CAN USE CLI INTERACTIVE MODE (nodefony without args)
 
 $ nodefony
@@ -198,7 +169,7 @@ $ nodefony
 | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |  
 |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|  
 
-Version : 4.0.0-beta.1 Platform : darwin Process : nodefony PID : 16368
+Version : 4.0.0-beta.5 Platform : darwin Process : nodefony PID : 16368
 
 ?  Nodefony CLI :  (Use arrow keys)
 ❯ Create Nodefony Project
@@ -208,8 +179,39 @@ Version : 4.0.0-beta.1 Platform : darwin Process : nodefony PID : 16368
   Quit
 ```
 
+## Build Project with Github Starter :
 
+ ```bash
+ #  Clone nodefony starter
 
+ $ git clone https://github.com/nodefony/nodefony.git
+ $ cd nodefony
+ $ nodefony build
+ ```
+ **Cli Usage** :
+ ```bash
+ # OR YOU CAN USE CLI INTERACTIVE MODE TO BUILD PROJECT (nodefony without args)
+ $ nodefony
+              _   _    ___    ____    _____   _____    ___    _   _  __   __
+             | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
+             |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V / 
+             | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |  
+             |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|  
+                                                                            
+
+          Version : 4.0.0-beta.6 Platform : darwin Process : nodefony PID : 51362
+                
+ Fri Sep 14 2018 14:46:14 INFO nodefony : WELCOME PROJECT : myproject 1.0.0
+?  Nodefony CLI :  (Use arrow keys)
+❯ Build Project 
+  Generater 
+  Tools 
+  PM2 Tools 
+  --------
+  Help 
+  Quit 
+ ```
+ 
 ## <a name="start"></a>Serving a Nodefony project via an development server
 
 **Starting Development Servers** :
