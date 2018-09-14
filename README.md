@@ -144,7 +144,7 @@ $ yarn global add nodefony
 
  -   [nvm](https://github.com/creationix/nvm) Node Version Manager - Simple bash script to manage multiple active node.js versions
 
- ** Generating with CLI (Command Line Interface) a Nodefony project** :
+ **Generating with CLI (Command Line Interface) a Nodefony project** :
 
  ```bash
  #  CLI generate project name : myproject
