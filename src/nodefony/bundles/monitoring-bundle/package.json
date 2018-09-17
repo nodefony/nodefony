@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/monitoring-bundle",
-  "version": "4.0.0-beta.6",
+  "version": "4.0.0-beta.7",
   "description": "Nodefony Framework Bundle Monitoring",
   "contributors": [],
   "main": "monitoringBundle.js",
@@ -20,7 +20,7 @@
     "qs": "^6.5.2",
     "request": "^2.88.0",
     "shortid": "^2.2.13",
-    "uglifyjs-webpack-plugin": "^2.0.0",
+    "terser-webpack-plugin": "^1.1.0",
     "useragent": "^2.3.0",
     "webpack": "^4.19.0",
     "webpack-merge": "^4.1.4"

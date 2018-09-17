@@ -1,6 +1,6 @@
 {
   "name": "nodefony-core",
-  "version": "4.0.0-beta.6",
+  "version": "4.0.0-beta.7",
   "description": "Nodefony Node.js full-stack web framework",
   "main": "./src/nodefony/core/autoloader.es6",
   "scripts": {
@@ -75,9 +75,8 @@
     "sass-loader": "^7.1.0",
     "sequelize": "5.0.0-beta.12",
     "style-loader": "^0.23.0",
-    "uglify-es": "^3.3.9",
+    "terser-webpack-plugin": "^1.1.0",
     "uglifycss": "^0.0.29",
-    "uglifyjs-webpack-plugin": "^2.0.0",
     "url-loader": "^1.1.1",
     "webpack": "^4.19.0",
     "webpack-dev-server": "^3.1.8",

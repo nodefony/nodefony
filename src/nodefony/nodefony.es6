@@ -527,6 +527,7 @@ module.exports = class Nodefony {
     cli.setTitleHelp(cli.clc.cyan("nodefony"));
     cli.setHelp("", "create [-i] name [path]", "Create New Nodefony Project");
     cli.setHelp("", "build", "Build Nodefony Framewok");
+    cli.setHelp("", "rebuild", "Rebuild Nodefony Framewok (Recompilation when node version change )");
     cli.setHelp("", "install", "Install Nodefony Project");
     cli.setHelp("", "certificates", `Generate HTTPS Certificates  'Change default openssl configuration in config/openssl'`);
     cli.setHelp("", "listDependencies", "List Project dependencies");
@@ -542,7 +543,6 @@ module.exports = class Nodefony {
     let name = nodefony.projectName;
     switch (cmd) {
     case "dev":
-    case "start":
     case "development":
       this.manageCache(cli);
       environment = "dev";
@@ -558,6 +558,7 @@ module.exports = class Nodefony {
       return this.preProd(environment, cli, options);
     case "production":
     case "prod":
+    case "start":
     case "pm2":
       cli.setType("SERVER");
       environment = "prod";

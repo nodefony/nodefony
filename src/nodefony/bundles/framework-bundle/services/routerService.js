@@ -136,7 +136,7 @@ const generateQueryString = function (obj, name) {
     return "";
   }
   let str = "?";
-  if (nodefony.typeOf(obj) !== "object" ||  obj === null) {
+  if (nodefony.typeOf(obj) !== "object" || obj === null) {
     this.logger("BAD arguments queryString in route varaibles :" + name, "WARNING");
     return "";
   }
@@ -167,7 +167,7 @@ module.exports = class router extends nodefony.Service {
       try {
         return this.generatePath(name, variables, host);
       } catch (e) {
-        this.logger(e, "WARRING");
+        this.logger(e, "WARNING");
         return null;
       }
     });
