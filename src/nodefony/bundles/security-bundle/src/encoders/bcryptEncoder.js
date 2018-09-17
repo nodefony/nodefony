@@ -1,8 +1,12 @@
 /*
  *	Encoder Bcrypt
  */
-const bcrypt = require("bcrypt");
-
+let bcrypt = null;
+try {
+  bcrypt = require("bcrypt");
+} catch (e) {
+  console.warn(e);
+}
 module.exports = nodefony.registerEncoder("bcrypt", () => {
 
   class bcryptEncoder extends nodefony.Encoder {
