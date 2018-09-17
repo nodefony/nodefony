@@ -17,8 +17,8 @@
     "nodefony": "./bin/nodefony"
   },
   "dependencies": {
-    "@babel/core": "^7.0.1",
-    "@babel/preset-env": "^7.0.0",
+    "@babel/core": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
     "@nodefony/documentation-bundle": "^4.0.0-beta.6",
     "@nodefony/framework-bundle": "^4.0.0-beta.6",
     "@nodefony/http-bundle": "^4.0.0-beta.6",
