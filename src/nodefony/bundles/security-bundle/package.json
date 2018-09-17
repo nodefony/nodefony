@@ -12,7 +12,7 @@
   ],
   "dependencies": {
     "@nodefony/passport-wrapper": "^4.0.0",
-    "bcrypt": "^3.0.0",
+    "bcrypt": "2.0.1",
     "clean-webpack-plugin": "^0.1.19",
     "jsonwebtoken": "^8.3.0",
     "mini-css-extract-plugin": "^0.4.2",
@@ -35,12 +35,10 @@
     "url": "git://github.com/nodefony/nodefony-core.git"
   },
   "license": "CECILL-B",
-  "licenses": [
-    {
-      "type": "CECILL-B",
-      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-    }
-  ],
+  "licenses": [{
+    "type": "CECILL-B",
+    "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+  }],
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md"
 }
