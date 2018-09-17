@@ -26,12 +26,14 @@ $ git update-index --assume-unchanged file
 $ eval "$(ssh-agent -s)"
 $ ssh-add -K ~/.ssh/my_github_key/id_rsa
 
-
-
 /*
  *	submodules
  *
  */
+  // sync
+ git submodule sync
+ git submodule update --init --recursive
+
   // add submodules
 git submodule add https://github.com/nodefony/nodefony-stage.git ./src/stage
 

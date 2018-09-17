@@ -16,16 +16,20 @@
     "url": "git://github.com/nodefony/nodefony-core.git"
   },
   "dependencies": {
-    "mongodb": "^3.1.4",
-    "mongoose": "^5.2.14"
+    "mongodb": "^3.1.6",
+    "mongoose": "^5.2.15"
   },
   "devDependencies": {},
-  "contributors": [{}],
+  "contributors": [
+    {}
+  ],
   "license": "CECILL-B",
-  "licenses": [{
-    "type": "CECILL-B",
-    "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-  }],
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md"
 }
