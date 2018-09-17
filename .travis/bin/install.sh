@@ -13,19 +13,13 @@ then
   echo "NODEFONY TRAVIS ENVIRONEMENT MONGODB ACTIVE " ;
 fi
 
-cat /etc/hosts
-
 git submodule sync
-git submodule update --init --recursive 
+git submodule update --init --recursive
 
-#configuring the system
+# Install Nodefony
 npm link src/nodefony
+# Build trunk
 nodefony build
-#make build
-#if [ "$DB" = "mongodb" ]
-#then
-#  make mongoose
-#fi
 
 if [ "$DB" = "mysql" ]
 then
