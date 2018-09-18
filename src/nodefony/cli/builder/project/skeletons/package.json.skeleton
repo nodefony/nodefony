@@ -31,6 +31,7 @@
   "dependencies": {
     "@babel/core": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
+    "@nodefony/demo-bundle": "latest",
     "babel-loader": "^8.0.2",
     "clean-webpack-plugin": "^0.1.19",
     "create-react-app": "^1.5.2",
