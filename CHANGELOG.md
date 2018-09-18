@@ -1,5 +1,14 @@
 # Changelog
 
+## v4.0.0-beta.7 (18/09/2018)
+- [add name in default param view](https://github.com/nodefony/nodefony-core/commit/e69d66cc2e124b4cae6b49e5ac12879c0276ba2a) s-soo @cci
+- [debug OVERRIDING app views](https://github.com/nodefony/nodefony-core/commit/77bb071e354795d31ec203397b4fa03af290ec4b) s-soo @cci
+- [debug bcrypt](https://github.com/nodefony/nodefony-core/commit/2e00b8e504a6c01415b4b1ab30e93f188f910971) s-soo @cci
+- [change bcrypt version](https://github.com/nodefony/nodefony-core/commit/965d1b2bca7f5a3cb2cc91e083c0d6957927e38d) s-soo @cci
+- [doc](https://github.com/nodefony/nodefony-core/commit/4b865ba91652053ae95050040bc8023495690a7f) s-soo @cci
+
+---
+
 ## v4.0.0-beta.5 (13/09/2018)
 - [doc](https://github.com/nodefony/nodefony-core/commit/d6ea13bc00523000ecfd64060cde47e6f4a9f900) s-soo @cci
 - [git Init create project](https://github.com/nodefony/nodefony-core/commit/04d1a34c3dcb21f52b1cc5a3c2a48578af7e259f) s-soo @cci
