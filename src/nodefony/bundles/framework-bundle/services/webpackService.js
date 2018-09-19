@@ -185,7 +185,8 @@ module.exports = class webpack extends nodefony.Service {
             devClient.push("webpack/hot/dev-server");
           }
         }
-        devClient.push(`webpack-dev-server/client?${this.sockjs.protocol}://${this.kernel.hostHttps}`);
+        //devClient.push(`webpack-dev-server/client?${this.sockjs.protocol}://${this.kernel.hostHttps}`);
+        devClient.push(`webpack-dev-server/client?${this.sockjs.protocol}://${this.kernel.domain}:${this.kernel.httpsPort}`);
         const prependDevClient = (entry) => {
           switch (nodefony.typeOf(entry)) {
           case "function":

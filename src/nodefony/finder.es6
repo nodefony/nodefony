@@ -11,6 +11,17 @@ module.exports = nodefony.register("finder", function () {
     }
   }
 
+
+  const findExist = function (tab, file) {
+    let exist = false;
+    tab.map((ele) => {
+      if (ele.path === file.path) {
+        exist = true;
+      }
+    });
+    return exist;
+  };
+
   /*
    *  CLASS Result
    *
@@ -92,7 +103,9 @@ module.exports = nodefony.register("finder", function () {
       if (Path.length) {
         for (i = 0; i < this.files.length; i++) {
           if (Path.indexOf(this.files[i].dirName) !== -1) {
-            tab.push(this.files[i]);
+            if (!findExist(tab, this.files[i])) {
+              tab.push(this.files[i]);
+            }
             if (this.files[i].isDirectory()) {
               this.findByNode(this.files[i].name, tab, [this.files[i].path]);
             }

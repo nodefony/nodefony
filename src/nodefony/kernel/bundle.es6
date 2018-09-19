@@ -769,14 +769,25 @@ module.exports = nodefony.register("Bundle", function () {
     }
 
     recompileTemplate(file, force) {
+      let bundle = this;
+      // OVERRIDE VIEWS BUNDLE in APP DIRECTORY
+      if (this.name === "app") {
+        let pattern = path.resolve(this.viewsPath, "(\\w+)-bundle", "views", "(.+\\.twig)");
+        let reg = new RegExp("^" + pattern + "$");
+        let res = reg.exec(file.path);
+        if (res && res[1]) {
+          bundle = this.kernel.getBundle(res[1]);
+          this.logger(`\x1b[32m APP OVERRIDING VIEWS\x1b[0m  Bundle : ${bundle.name}  File : ${file.name}`, "WARNING");
+        }
+      }
       try {
-        let ele = this.setView(file);
+        let ele = bundle.setView(file);
         if (ele) {
           if (force) {
-            this.compileTemplate(ele.file, ele.basename, ele.name);
+            bundle.compileTemplate(ele.file, ele.basename, ele.name);
           } else {
             if (this.kernel.type !== "CONSOLE") {
-              this.compileTemplate(ele.file, ele.basename, ele.name);
+              bundle.compileTemplate(ele.file, ele.basename, ele.name);
             }
           }
         }

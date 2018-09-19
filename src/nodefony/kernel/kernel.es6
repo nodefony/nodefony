@@ -1028,8 +1028,8 @@ module.exports = nodefony.register("kernel", function () {
           let result = this.bundles.app.resourcesFiles.findByNode(bundle + "-bundle");
           if (result.length()) {
             try {
-              this.logger("\x1b[32m APP OVERRIDING\x1b[0m views for bundle : " + bundle, "WARNING");
-              this.bundles[bundle].registerViews(result);
+              //this.logger("\x1b[32m APP OVERRIDING\x1b[0m for bundle : " + bundle, "WARNING");
+              //this.bundles[bundle].registerViews(result);
               this.bundles[bundle].registerI18n(null, result);
             } catch (e) {
               this.logger(e, "ERROR");
