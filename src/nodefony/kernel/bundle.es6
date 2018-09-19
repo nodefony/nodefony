@@ -198,7 +198,7 @@ module.exports = nodefony.register("Bundle", function () {
         this.resourcesFiles = this.finder.result.findByNode("Resources");
       } catch (e) {
         this.logger(e, "ERROR");
-        this.logger("Bundle " + this.name + " Resources directory not found", "WARNING");
+        this.logger("Bundle " + this.name + " Resources directory not found", "DEBUG");
       }
       // I18n
       this.i18nPath = path.resolve(this.path, "Resources", "translations");
@@ -252,7 +252,7 @@ module.exports = nodefony.register("Bundle", function () {
                 return;
               }
               if (this.kernel.isCore || !this.kernel.isBundleCore(this.name)) {
-                this.logger(`MEMORY clean webpack compile bundle : ${this.name}`, "INFO");
+                this.logger(`MEMORY clean webpack compile bundle : ${this.name}`, "DEBUG");
               }
               this.webPackConfig = null;
               delete this.webPackConfig;
@@ -455,7 +455,7 @@ module.exports = nodefony.register("Bundle", function () {
               this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name, "DEBUG");
             } else {
               ext = result[ele];
-              this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name + " BUT BUNDLE " + name + " NOT YET REGISTERED ", "WARNING");
+              this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name + " BUT BUNDLE " + name + " NOT YET REGISTERED ", "DEBUG");
             }
             if (this.kernel.bundles[name]) {
               this.kernel.bundles[name].settings = ext;
@@ -626,7 +626,7 @@ module.exports = nodefony.register("Bundle", function () {
             path: this.controllersPath
           }).result;
         } catch (e) {
-          this.logger("Bundle " + this.name + " controller directory not found", "WARNING");
+          this.logger("Bundle " + this.name + " controller directory not found", "DEBUG");
         }
       } else {
         // find  views files
@@ -709,7 +709,7 @@ module.exports = nodefony.register("Bundle", function () {
             path: this.viewsPath,
           }).result;
         } catch (e) {
-          this.logger("Bundle " + this.name + " views directory not found", "WARNING");
+          this.logger("Bundle " + this.name + " views directory not found", "DEBUG");
         }
       } else {
         // find  views files
@@ -777,7 +777,7 @@ module.exports = nodefony.register("Bundle", function () {
         let res = reg.exec(file.path);
         if (res && res[1]) {
           bundle = this.kernel.getBundle(res[1]);
-          this.logger(`\x1b[32m APP OVERRIDING VIEWS\x1b[0m  Bundle : ${bundle.name}  File : ${file.name}`, "WARNING");
+          this.logger(`\x1b[32m APP OVERRIDING VIEWS\x1b[0m  Bundle : ${bundle.name}  File : ${file.name}`, "DEBUG");
         }
       }
       try {
@@ -862,7 +862,7 @@ module.exports = nodefony.register("Bundle", function () {
             path: this.i18nPath
           }).result;
         } catch (e) {
-          this.logger("Bundle " + this.name + " I18n directory not found", "WARNING");
+          this.logger("Bundle " + this.name + " I18n directory not found", "DEBUG");
         }
 
       } else {

@@ -443,13 +443,13 @@ module.exports = nodefony.register("cliKernel", function () {
     setHelp(info, command, descrption, options) {
       this.displayTable([
         [info, this.clc.green(command), descrption]
-      ], options ||  this.optionsTables);
+      ], options || this.optionsTables);
     }
 
     setTitleHelp(title, options) {
       this.displayTable([
         [title, "", ""]
-      ], options ||  this.optionsTitleTables);
+      ], options || this.optionsTitleTables);
     }
 
     showHelp() {
@@ -543,7 +543,7 @@ module.exports = nodefony.register("cliKernel", function () {
           "ASSETS COMPILE"
         ]
       });
-      this.logger("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : " + this.publicPath, "INFO");
+      this.logger("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : " + this.publicPath, "DEBUG");
       createAssetDirectory.call(this, this.publicPath, () => {
         parseAssetsBundles.call(this, table);
         this.logger("\n" + table.toString(), "DEBUG");
@@ -714,7 +714,7 @@ module.exports = nodefony.register("cliKernel", function () {
                   ele.push([
                     data.dependencies[pack].name,
                     data.dependencies[pack].version,
-                    data.dependencies[pack].description ||  "",
+                    data.dependencies[pack].description || "",
                     where
                   ]);
                 }
