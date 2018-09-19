@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/framework-bundle",
-  "version": "4.0.0-beta.7",
+  "version": "4.0.0-beta.8",
   "description": "Nodefony Framework Bundle Framework ",
   "contributors": [],
   "private": false,
@@ -16,7 +16,7 @@
     "bootstrap": "=3.3.7",
     "clean-webpack-plugin": "^0.1.19",
     "memory-fs": "^0.4.1",
-    "mini-css-extract-plugin": "^0.4.2",
+    "mini-css-extract-plugin": "^0.4.3",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "terser-webpack-plugin": "^1.1.0",
     "webpack": "^4.19.1",

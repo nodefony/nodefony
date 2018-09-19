@@ -1833,9 +1833,9 @@ miller-rabin@^4.0.0:
     bn.js "^4.0.0"
     brorand "^1.0.1"
 
-mini-css-extract-plugin@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.4.2.tgz#b3ecc0d6b1bbe5ff14add42b946a7b200cf78651"
+mini-css-extract-plugin@^0.4.3:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.4.3.tgz#98d60fcc5d228c3e36a9bd15a1d6816d6580beb8"
   dependencies:
     loader-utils "^1.1.0"
     schema-utils "^1.0.0"
