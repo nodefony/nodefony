@@ -131,6 +131,18 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 **Node.js Installation** :
  -   [nvm](https://github.com/creationix/nvm) Node Version Manager - Simple bash script to manage multiple active node.js versions 
  
+  To install or update nvm, you can use the install script using cURL:
+
+```sh
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+```
+
+or Wget:
+
+```sh
+wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+```
+
 **npm** :
 
 ```bash
