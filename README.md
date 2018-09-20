@@ -126,8 +126,11 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 
 -   EMBEDDED SYSTEM ( Very difficult : large memory footprint )  
 
-## <a name="install"></a>Install Nodefony Framework
+## <a name="install"></a>Install Nodefony Excutable Globaly
 
+**Node.js Installation** : (Reinstall npm with a Node version manager)
+ -   [nvm](https://github.com/creationix/nvm) Node Version Manager - Simple bash script to manage multiple active node.js versions 
+ 
 **npm** :
 
 ```bash
@@ -140,9 +143,9 @@ $ npm -g install nodefony
 $ yarn global add nodefony
 ```
 
- -   [See Global install How to Prevent Permissions Errors](https://docs.npmjs.com/getting-started/fixing-npm-permissions)
+**EACCES error** : (Reinstall npm with a Node version manager)
 
- -   [nvm](https://github.com/creationix/nvm) Node Version Manager - Simple bash script to manage multiple active node.js versions
+-   [See Global install How to Prevent Permissions Errors](https://docs.npmjs.com/getting-started/fixing-npm-permissions)
 
 ## Generating with CLI (Command Line Interface) a Nodefony project :
 
