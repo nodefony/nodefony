@@ -143,16 +143,12 @@ or Wget:
 wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
 ```
 
-**npm** :
+**Nodefony Install** :
 
 ```bash
-$ npm -g install nodefony
-```
-
-**yarn** :
-
-```bash
-$ yarn global add nodefony
+npm -g install nodefony
+# or with yarn
+yarn global add nodefony
 ```
 
 **EACCES error** : (Reinstall npm with a Node Version Manager)
