@@ -17,15 +17,19 @@
   },
   "dependencies": {
     "mongodb": "^3.1.6",
-    "mongoose": "^5.2.15"
+    "mongoose": "^5.2.16"
   },
   "devDependencies": {},
-  "contributors": [{}],
+  "contributors": [
+    {}
+  ],
   "license": "CECILL-B",
-  "licenses": [{
-    "type": "CECILL-B",
-    "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-  }],
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md"
 }

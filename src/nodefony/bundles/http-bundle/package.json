@@ -21,7 +21,7 @@
     "qs": "^6.5.2",
     "serve-static": "^1.13.2",
     "sockjs": "^0.3.19",
-    "websocket": "^1.0.26"
+    "websocket": "^1.0.28"
   },
   "repository": {
     "type": "git",

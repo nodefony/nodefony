@@ -97,9 +97,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ ({
 
 /***/ "../../../../../node_modules/ansi-html/index.js":
-/*!***************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/node_modules/ansi-html/index.js ***!
-  \***************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/node_modules/ansi-html/index.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -285,9 +285,9 @@ ansiHTML.reset()
 /***/ }),
 
 /***/ "../../../../../node_modules/ansi-regex/index.js":
-/*!****************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/node_modules/ansi-regex/index.js ***!
-  \****************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/node_modules/ansi-regex/index.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -301,9 +301,9 @@ module.exports = function () {
 /***/ }),
 
 /***/ "../../../../../node_modules/html-entities/index.js":
-/*!*******************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/node_modules/html-entities/index.js ***!
-  \*******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/node_modules/html-entities/index.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -318,9 +318,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../../../node_modules/html-entities/lib/html4-entities.js":
-/*!********************************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/node_modules/html-entities/lib/html4-entities.js ***!
-  \********************************************************************************************/
+/*!************************************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/node_modules/html-entities/lib/html4-entities.js ***!
+  \************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -476,9 +476,9 @@ module.exports = Html4Entities;
 /***/ }),
 
 /***/ "../../../../../node_modules/html-entities/lib/html5-entities.js":
-/*!********************************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/node_modules/html-entities/lib/html5-entities.js ***!
-  \********************************************************************************************/
+/*!************************************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/node_modules/html-entities/lib/html5-entities.js ***!
+  \************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -677,9 +677,9 @@ module.exports = Html5Entities;
 /***/ }),
 
 /***/ "../../../../../node_modules/html-entities/lib/xml-entities.js":
-/*!******************************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/node_modules/html-entities/lib/xml-entities.js ***!
-  \******************************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/node_modules/html-entities/lib/xml-entities.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -843,9 +843,9 @@ module.exports = XmlEntities;
 /***/ }),
 
 /***/ "../../../../../node_modules/loglevel/lib/loglevel.js":
-/*!*********************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/node_modules/loglevel/lib/loglevel.js ***!
-  \*********************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/node_modules/loglevel/lib/loglevel.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1104,9 +1104,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
 /***/ }),
 
 /***/ "../../../../../node_modules/sockjs-client/dist/sockjs.js":
-/*!*************************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/node_modules/sockjs-client/dist/sockjs.js ***!
-  \*************************************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/node_modules/sockjs-client/dist/sockjs.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6868,9 +6868,9 @@ module.exports = URL;
 /***/ }),
 
 /***/ "../../../../../node_modules/strip-ansi/index.js":
-/*!****************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/node_modules/strip-ansi/index.js ***!
-  \****************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/node_modules/strip-ansi/index.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6886,9 +6886,9 @@ module.exports = function (str) {
 /***/ }),
 
 /***/ "../../../../../node_modules/webpack-dev-server/client/index.js?https://localhost:5152":
-/*!*********************************************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/node_modules/webpack-dev-server/client?https://localhost:5152 ***!
-  \*********************************************************************************************************/
+/*!*************************************************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/node_modules/webpack-dev-server/client?https://localhost:5152 ***!
+  \*************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7146,9 +7146,9 @@ function reloadApp() {
 /***/ }),
 
 /***/ "../../../../../node_modules/webpack-dev-server/client/overlay.js":
-/*!*********************************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/node_modules/webpack-dev-server/client/overlay.js ***!
-  \*********************************************************************************************/
+/*!*************************************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/node_modules/webpack-dev-server/client/overlay.js ***!
+  \*************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7283,9 +7283,9 @@ exports.showMessage = function handleMessage(messages) {
 /***/ }),
 
 /***/ "../../../../../node_modules/webpack-dev-server/client/socket.js":
-/*!********************************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/node_modules/webpack-dev-server/client/socket.js ***!
-  \********************************************************************************************/
+/*!************************************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/node_modules/webpack-dev-server/client/socket.js ***!
+  \************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7340,9 +7340,9 @@ module.exports = socket;
 /***/ }),
 
 /***/ "../../../../../node_modules/webpack/hot sync ^\\.\\/log$":
-/*!************************************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/node_modules/webpack/hot sync nonrecursive ^\.\/log$ ***!
-  \************************************************************************************************/
+/*!****************************************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/node_modules/webpack/hot sync nonrecursive ^\.\/log$ ***!
+  \****************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7374,9 +7374,9 @@ webpackContext.id = "../../../../../node_modules/webpack/hot sync ^\\.\\/log$";
 /***/ }),
 
 /***/ "../../../../../node_modules/webpack/hot/emitter.js":
-/*!*******************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/node_modules/webpack/hot/emitter.js ***!
-  \*******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/node_modules/webpack/hot/emitter.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7387,9 +7387,9 @@ module.exports = new EventEmitter();
 /***/ }),
 
 /***/ "../../../../../node_modules/webpack/hot/log.js":
-/*!***************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/node_modules/webpack/hot/log.js ***!
-  \***************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/node_modules/webpack/hot/log.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -7445,9 +7445,9 @@ module.exports.setLogLevel = function(level) {
 /***/ }),
 
 /***/ "../../node_modules/events/events.js":
-/*!*************************************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/src/bundles/test-bundle/node_modules/events/events.js ***!
-  \*************************************************************************************************/
+/*!*****************************************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/src/bundles/test-bundle/node_modules/events/events.js ***!
+  \*****************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -7758,9 +7758,9 @@ function isUndefined(arg) {
 /***/ }),
 
 /***/ "../../node_modules/punycode/punycode.js":
-/*!*****************************************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/src/bundles/test-bundle/node_modules/punycode/punycode.js ***!
-  \*****************************************************************************************************/
+/*!*********************************************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/src/bundles/test-bundle/node_modules/punycode/punycode.js ***!
+  \*********************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8289,9 +8289,9 @@ function isUndefined(arg) {
 /***/ }),
 
 /***/ "../../node_modules/querystring-es3/decode.js":
-/*!**********************************************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/src/bundles/test-bundle/node_modules/querystring-es3/decode.js ***!
-  \**********************************************************************************************************/
+/*!**************************************************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/src/bundles/test-bundle/node_modules/querystring-es3/decode.js ***!
+  \**************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8385,9 +8385,9 @@ var isArray = Array.isArray || function (xs) {
 /***/ }),
 
 /***/ "../../node_modules/querystring-es3/encode.js":
-/*!**********************************************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/src/bundles/test-bundle/node_modules/querystring-es3/encode.js ***!
-  \**********************************************************************************************************/
+/*!**************************************************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/src/bundles/test-bundle/node_modules/querystring-es3/encode.js ***!
+  \**************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8482,9 +8482,9 @@ var objectKeys = Object.keys || function (obj) {
 /***/ }),
 
 /***/ "../../node_modules/querystring-es3/index.js":
-/*!*********************************************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/src/bundles/test-bundle/node_modules/querystring-es3/index.js ***!
-  \*********************************************************************************************************/
+/*!*************************************************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/src/bundles/test-bundle/node_modules/querystring-es3/index.js ***!
+  \*************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8498,9 +8498,9 @@ exports.encode = exports.stringify = __webpack_require__(/*! ./encode */ "../../
 /***/ }),
 
 /***/ "../../node_modules/url/url.js":
-/*!*******************************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/src/bundles/test-bundle/node_modules/url/url.js ***!
-  \*******************************************************************************************/
+/*!***********************************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/src/bundles/test-bundle/node_modules/url/url.js ***!
+  \***********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9242,9 +9242,9 @@ Url.prototype.parseHost = function() {
 /***/ }),
 
 /***/ "../../node_modules/url/util.js":
-/*!********************************************************************************************!*\
-  !*** /Users/cci/repository/nodefony-core/src/bundles/test-bundle/node_modules/url/util.js ***!
-  \********************************************************************************************/
+/*!************************************************************************************************************!*\
+  !*** /Users/christophecamensuli/repository/nodefony-core/src/bundles/test-bundle/node_modules/url/util.js ***!
+  \************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
