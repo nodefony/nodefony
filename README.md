@@ -128,7 +128,7 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 
 ## <a name="install"></a>Install Nodefony Excutable Globaly
 
-**Node.js Installation** : (Reinstall npm with a Node version manager)
+**Node.js Installation** :
  -   [nvm](https://github.com/creationix/nvm) Node Version Manager - Simple bash script to manage multiple active node.js versions 
  
 **npm** :
@@ -143,7 +143,7 @@ $ npm -g install nodefony
 $ yarn global add nodefony
 ```
 
-**EACCES error** : (Reinstall npm with a Node version manager)
+**EACCES error** : (Reinstall npm with a Node Version Manager)
 
 -   [See Global install How to Prevent Permissions Errors](https://docs.npmjs.com/getting-started/fixing-npm-permissions)
 
