@@ -226,7 +226,7 @@ module.exports = class webpack extends nodefony.Service {
       let watch = bundle.webpackWatch || false;
       let devServer = null;
       let watchOptions = {};
-      shell.cd(Path);
+      //shell.cd(Path);
       let webpack = null;
       try {
         webpack = require(path.resolve(bundle.path, "node_modules", "webpack"));
@@ -312,6 +312,9 @@ module.exports = class webpack extends nodefony.Service {
           return resolve(bundle.webpackCompiler);
         }
         if (bundle.webpackCompiler.hooks) {
+          bundle.webpackCompiler.hooks.beforeCompile.tap("beforeCompile", () => {
+            shell.cd(Path);
+          });
           bundle.webpackCompiler.hooks.done.tap("done", () => {
             bundle.fire("onWebpackDone", bundle.webpackCompiler, reload);
             this.nbCompiled++;
@@ -327,6 +330,9 @@ module.exports = class webpack extends nodefony.Service {
             return reject(e);
           });
         } else {
+          bundle.webpackCompiler.plugin("beforeCompile", () => {
+            shell.cd(Path);
+          });
           bundle.webpackCompiler.plugin("done", () => {
             bundle.fire("onWebpackDone", bundle.webpackCompiler, reload);
             this.nbCompiled++;
@@ -337,7 +343,6 @@ module.exports = class webpack extends nodefony.Service {
             }
             return resolve(bundle.webpackCompiler);
           });
-
           bundle.webpackCompiler.plugin("failed", (e) => {
             this.logger(e, "ERROR");
             return reject(e);
