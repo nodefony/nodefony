@@ -10,6 +10,17 @@ const nodefony = function () {
     return require(path.resolve("src", "nodefony"));
   } catch (e) {}
   try {
+    let res = require(path.resolve(process.cwd(), "node_modules", "nodefony"));
+    let ret = null;
+    try {
+      ret = require("nodefony");
+    } catch (e) {}
+    if (ret && (ret.version !== res.version)) {
+      res.warning = `Module nodefony global = ${ret.version}\nModule nodefony local = ${res.version}`;
+    }
+    return res;
+  } catch (e) {}
+  try {
     return require("nodefony");
   } catch (e) {}
   try {
