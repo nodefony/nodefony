@@ -156,6 +156,7 @@ yarn global add nodefony
 **likely error** : 
 
 - EACCES error  [See Global install How to Prevent Permissions Errors](https://docs.npmjs.com/getting-started/fixing-npm-permissions) (Reinstall npm with a Node Version Manager)
+- Different Node.js version (NODE_MODULE_VERSION XX) use 'nodefony rebuild'
 
 ## Generating with CLI (Command Line Interface) a Nodefony project :
 
