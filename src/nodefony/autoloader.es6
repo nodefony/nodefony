@@ -4,7 +4,7 @@ const Module = require("module");
 const fs = require('fs');
 const Nodefony = require(path.resolve(__dirname, "nodefony.es6"));
 
-module.exports = function () {
+module.exports = function() {
 
   // Create Context copy library in context  see load runInThisContext
   const context = vm.createContext(this);
@@ -111,21 +111,21 @@ module.exports = function () {
     setEnv(environment) {
       this.environment = environment;
       switch (this.environment) {
-      case "production":
-      case "prod":
-      case "PROD":
-        this.environment = "prod";
-        this.dataCache = true;
-        break;
-      case "development":
-      case "dev":
-      case "DEV":
-        this.environment = "dev";
-        this.dataCache = false;
-        break;
-      default:
-        this.environment = "prod";
-        this.dataCache = true;
+        case "production":
+        case "prod":
+        case "PROD":
+          this.environment = "prod";
+          this.dataCache = true;
+          break;
+        case "development":
+        case "dev":
+        case "DEV":
+          this.environment = "dev";
+          this.dataCache = false;
+          break;
+        default:
+          this.environment = "prod";
+          this.dataCache = true;
       }
     }
 
@@ -162,7 +162,7 @@ module.exports = function () {
      * @method logger
      *
      * @param {void} payload payload for log. protocole controle information
-     * @param {Number || String} severity severity syslog like.
+     * @param {Number | String} severity severity syslog like.
      * @param {String} msgid informations for message. example(Name of function for debug)
      * @param {String} msg  message to add in log. example (I18N)
      */

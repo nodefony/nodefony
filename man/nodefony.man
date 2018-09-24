@@ -1,0 +1,38 @@
+.\" Manpage for nodefony.
+.\" Contact ccamensuli@ngmail.com to correct errors or typos.
+
+.TH man 8 "" "4.0.0" "NODEFONY 4.0.0 man page"
+.SH NAME
+nodefony --  High Level Node Program for manage a nodefony project
+.SH SYNOPSIS
+nodefony [options] <command:task:action> [args...]
+         [options] <command:action> [args...]
+         [options] <action> [args...]
+
+.SH DESCRIPTION
+nodefony
+         create [-i] name [path]                                 Create New Nodefony Project
+PM2 Process Manager 2
+         stop name                                               Stop Production Project
+         reload name                                             Reload Production Project
+         delete name                                             Delete Production Project from PM2 management
+         restart name                                            Restart Production Project
+         list                                                    List all Production Projects
+         logs [name] [nblines]                                   Stream pm2 logs  [name] is project name  and [nblines] to show
+         kill                                                    Kill PM2 daemon
+.SH OPTIONS
+Options:
+
+  -d, --debug         Nodefony debug
+  -h, --help          Nodefony help
+  -v, --version       Nodefony version
+  -f, --force         Force disable interactive mode
+  -i, --interactive   Nodefony cli Interactive Mode
+  -j, --json          Nodefony json response
+
+.SH SEE ALSO
+  nodefony -h
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+CAMENSULI christophe (ccamensuli@gmail.com)

@@ -8191,9 +8191,9 @@ silent-error@^1.0.0:
   dependencies:
     debug "^2.2.0"
 
-simple-git@^1.96.0:
-  version "1.100.0"
-  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-1.100.0.tgz#6e781885fcde0e7751cabec0746b2b943ae4cce7"
+simple-git@^1.102.0:
+  version "1.102.0"
+  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-1.102.0.tgz#5e159a15fcfcb1eca212a4fdceb4384166c71e7d"
   dependencies:
     debug "^4.0.1"
 

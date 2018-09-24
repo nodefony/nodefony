@@ -1,4 +1,4 @@
-module.exports = nodefony.register("syslog", function () {
+module.exports = nodefony.register("syslog", function() {
 
   /*
    * default settings
@@ -129,25 +129,25 @@ module.exports = nodefony.register("syslog", function () {
   };
 
   const operators = {
-    "<": function (ele1, ele2) {
+    "<": function(ele1, ele2) {
       return ele1 < ele2;
     },
-    ">": function (ele1, ele2) {
+    ">": function(ele1, ele2) {
       return ele1 > ele2;
     },
-    "<=": function (ele1, ele2) {
+    "<=": function(ele1, ele2) {
       return ele1 <= ele2;
     },
-    ">=": function (ele1, ele2) {
+    ">=": function(ele1, ele2) {
       return ele1 >= ele2;
     },
-    "==": function (ele1, ele2) {
+    "==": function(ele1, ele2) {
       return ele1 === ele2;
     },
-    "!=": function (ele1, ele2) {
+    "!=": function(ele1, ele2) {
       return ele1 !== ele2;
     },
-    "RegExp": function (ele1, ele2) {
+    "RegExp": function(ele1, ele2) {
       return (ele2.test(ele1));
     }
   };
@@ -208,54 +208,54 @@ module.exports = nodefony.register("syslog", function () {
   let checkFormatSeverity = (ele) => {
     let res = false;
     switch (nodefony.typeOf(ele)) {
-    case "string":
-      res = ele.split(/,| /);
-      break;
-    case "number":
-      res = ele;
-      break;
-    default:
-      throw new Error("checkFormatSeverity bad format " + nodefony.typeOf(ele) + " : " + ele);
-    }
-    return res;
-  };
-
-  const checkFormatDate = function (ele) {
-    let res = false;
-    switch (nodefony.typeOf(ele)) {
-    case "date":
-      res = ele.getTime();
-      break;
-    case "string":
-      res = new Date(ele);
-      break;
-    default:
-      throw new Error("checkFormatDate bad format " + nodefony.typeOf(ele) + " : " + ele);
-    }
-    return res;
-  };
-
-  const checkFormatMsgId = function (ele) {
-    let res = false;
-    switch (nodefony.typeOf(ele)) {
-    case "string":
-      res = ele.split(/,| /);
-      break;
-    case "number":
-      res = ele;
-      break;
-    case "object":
-      if (ele instanceof RegExp) {
+      case "string":
+        res = ele.split(/,| /);
+        break;
+      case "number":
         res = ele;
-      }
-      break;
-    default:
-      throw new Error("checkFormatMsgId bad format " + nodefony.typeOf(ele) + " : " + ele);
+        break;
+      default:
+        throw new Error("checkFormatSeverity bad format " + nodefony.typeOf(ele) + " : " + ele);
     }
     return res;
   };
 
-  const severityToString = function (severity) {
+  const checkFormatDate = function(ele) {
+    let res = false;
+    switch (nodefony.typeOf(ele)) {
+      case "date":
+        res = ele.getTime();
+        break;
+      case "string":
+        res = new Date(ele);
+        break;
+      default:
+        throw new Error("checkFormatDate bad format " + nodefony.typeOf(ele) + " : " + ele);
+    }
+    return res;
+  };
+
+  const checkFormatMsgId = function(ele) {
+    let res = false;
+    switch (nodefony.typeOf(ele)) {
+      case "string":
+        res = ele.split(/,| /);
+        break;
+      case "number":
+        res = ele;
+        break;
+      case "object":
+        if (ele instanceof RegExp) {
+          res = ele;
+        }
+        break;
+      default:
+        throw new Error("checkFormatMsgId bad format " + nodefony.typeOf(ele) + " : " + ele);
+    }
+    return res;
+  };
+
+  const severityToString = function(severity) {
     let myint = parseInt(severity, 10);
     let ele = null;
     if (!isNaN(myint)) {
@@ -270,7 +270,7 @@ module.exports = nodefony.register("syslog", function () {
   };
 
 
-  const sanitizeConditions = function (settingsCondition) {
+  const sanitizeConditions = function(settingsCondition) {
     let res = true;
     if (nodefony.typeOf(settingsCondition) !== "object") {
       return false;
@@ -286,64 +286,64 @@ module.exports = nodefony.register("syslog", function () {
       }
       if (condi.data) {
         switch (ele) {
-        case "severity":
-          if (condi.operator) {
-            res = checkFormatSeverity(condi.data);
-            if (res !== false) {
-              condi.data = sysLogSeverity[severityToString(res[0])];
-            } else {
-              return false;
-            }
-          } else {
-            condi.operator = "==";
-            res = checkFormatSeverity(condi.data);
-            if (res !== false) {
-              condi.data = {};
-              if (nodefony.typeOf(res) === "array") {
-                for (let i = 0; i < res.length; i++) {
-                  let mySeverity = severityToString(res[i]);
-                  if (mySeverity) {
-                    condi.data[mySeverity] = sysLogSeverity[mySeverity];
-                  } else {
-                    return false;
-                  }
-                }
+          case "severity":
+            if (condi.operator) {
+              res = checkFormatSeverity(condi.data);
+              if (res !== false) {
+                condi.data = sysLogSeverity[severityToString(res[0])];
               } else {
                 return false;
               }
             } else {
-              return false;
+              condi.operator = "==";
+              res = checkFormatSeverity(condi.data);
+              if (res !== false) {
+                condi.data = {};
+                if (nodefony.typeOf(res) === "array") {
+                  for (let i = 0; i < res.length; i++) {
+                    let mySeverity = severityToString(res[i]);
+                    if (mySeverity) {
+                      condi.data[mySeverity] = sysLogSeverity[mySeverity];
+                    } else {
+                      return false;
+                    }
+                  }
+                } else {
+                  return false;
+                }
+              } else {
+                return false;
+              }
             }
-          }
-          break;
-        case "msgid":
-          if (!condi.operator) {
-            condi.operator = "==";
-          }
-          res = checkFormatMsgId(condi.data);
-          if (res !== false) {
-            if (nodefony.typeOf(res) === "array") {
-              condi.data = {};
-              for (let i = 0; i < res.length; i++) {
-                condi.data[res[i]] = "||";
+            break;
+          case "msgid":
+            if (!condi.operator) {
+              condi.operator = "==";
+            }
+            res = checkFormatMsgId(condi.data);
+            if (res !== false) {
+              if (nodefony.typeOf(res) === "array") {
+                condi.data = {};
+                for (let i = 0; i < res.length; i++) {
+                  condi.data[res[i]] = "||";
+                }
+              } else {
+                condi.data = res;
               }
             } else {
-              condi.data = res;
+              return false;
             }
-          } else {
+            break;
+          case "date":
+            res = checkFormatDate(condi.data);
+            if (res) {
+              condi.data = res;
+            } else {
+              return false;
+            }
+            break;
+          default:
             return false;
-          }
-          break;
-        case "date":
-          res = checkFormatDate(condi.data);
-          if (res) {
-            condi.data = res;
-          } else {
-            return false;
-          }
-          break;
-        default:
-          return false;
         }
       } else {
         return false;
@@ -354,7 +354,7 @@ module.exports = nodefony.register("syslog", function () {
   };
 
 
-  let translateSeverity = function (severity) {
+  let translateSeverity = function(severity) {
     let myseverity = null;
     if (severity in sysLogSeverity) {
       if (typeof severity === 'number') {
@@ -372,7 +372,7 @@ module.exports = nodefony.register("syslog", function () {
     return myseverity;
   };
 
-  let createPDU = function (payload, severity, moduleName, msgid, msg) {
+  let createPDU = function(payload, severity, moduleName, msgid, msg) {
     let myseverity = null;
     if (!severity) {
       myseverity = sysLogSeverity[this.settings.defaultSeverity];
@@ -499,7 +499,7 @@ module.exports = nodefony.register("syslog", function () {
      * logger message
      * @method logger
      * @param {void} payload payload for log. protocole controle information
-     * @param {Number || String} severity severity syslog like.
+     * @param {Number | String} severity severity syslog like.
      * @param {String} msgid informations for message. example(Name of function for debug)
      * @param {String} msg  message to add in log. example (I18N)
      */
@@ -651,35 +651,35 @@ module.exports = nodefony.register("syslog", function () {
         throw new Error("syslog loadStack : not stack in arguments ");
       }
       switch (nodefony.typeOf(stack)) {
-      case "string":
-        try {
-          //console.log(stack);
-          st = JSON.parse(stack);
-          return this.loadStack(st, doEvent);
-        } catch (e) {
-          throw e;
-        }
-        break;
-      case "array":
-      case "object":
-        try {
-          for (let i = 0; i < stack.length; i++) {
-            let pdu = new nodefony.PDU(stack[i].payload, stack[i].severity, stack[i].moduleName || this.settings.moduleName, stack[i].msgid, stack[i].msg, stack[i].timeStamp);
-            this.pushStack(pdu);
-
-            if (doEvent) {
-              if (beforeConditions && typeof beforeConditions === "function") {
-                beforeConditions.call(this, pdu, stack[i]);
-              }
-              this.fire("onLog", pdu);
-            }
+        case "string":
+          try {
+            //console.log(stack);
+            st = JSON.parse(stack);
+            return this.loadStack(st, doEvent);
+          } catch (e) {
+            throw e;
           }
-        } catch (e) {
-          throw e;
-        }
-        break;
-      default:
-        throw new Error("syslog loadStack : bad stack in arguments type");
+          break;
+        case "array":
+        case "object":
+          try {
+            for (let i = 0; i < stack.length; i++) {
+              let pdu = new nodefony.PDU(stack[i].payload, stack[i].severity, stack[i].moduleName || this.settings.moduleName, stack[i].msgid, stack[i].msg, stack[i].timeStamp);
+              this.pushStack(pdu);
+
+              if (doEvent) {
+                if (beforeConditions && typeof beforeConditions === "function") {
+                  beforeConditions.call(this, pdu, stack[i]);
+                }
+                this.fire("onLog", pdu);
+              }
+            }
+          } catch (e) {
+            throw e;
+          }
+          break;
+        default:
+          throw new Error("syslog loadStack : bad stack in arguments type");
       }
       return st || stack;
     }
