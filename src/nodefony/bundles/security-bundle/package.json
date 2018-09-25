@@ -27,7 +27,7 @@
     "passport-local": "^1.0.0",
     "passport-oauth2": "^1.4.0",
     "terser-webpack-plugin": "^1.1.0",
-    "webpack": "^4.19.1",
+    "webpack": "^4.20.0",
     "webpack-merge": "^4.1.4"
   },
   "repository": {
