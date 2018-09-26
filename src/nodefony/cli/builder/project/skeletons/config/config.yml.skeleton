@@ -27,7 +27,7 @@ system:
     - "^localhost$"
   httpPort                      : {{portHttp}}
   httpsPort                     : {{portHttps}}
-  domainCheck                   : true
+  domainCheck                   : false
   statics                       : true
   security                      : true
   realtime                      : true
