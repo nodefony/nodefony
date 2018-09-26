@@ -16,19 +16,14 @@ module.exports = class defaultController extends nodefony.controller {
   }
 
   ["404Action"](error) {
-    if (!error) {
-      error = new Error("Not Found");
-      error.code = 404;
-      throw error;
-    }
     this.getResponse().setStatusCode(404);
     if (this.context.isJson) {
       return this.render('frameworkBundle::404.json.twig', {
-        error: error
+        error: error ? error : new Error("Not Found")
       });
     }
     return this.render('frameworkBundle::404.html.twig', {
-      error: error
+      error: error ? error : new Error("Not Found")
     });
   }
 

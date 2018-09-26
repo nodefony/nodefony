@@ -196,6 +196,7 @@ module.exports = class httpKernel extends nodefony.Service {
     return nodefony.extend({}, param, {
       nodefony: {
         name: nodefony.projectName,
+        version: nodefony.version,
         url: context.request.url,
         environment: this.kernel.environment,
         debug: this.kernel.debug,

@@ -45,7 +45,7 @@ watch:
   views:			  true
   translations: true
   services:     true
-  webpack:      true
+  webpack:      false
 
 #
 #

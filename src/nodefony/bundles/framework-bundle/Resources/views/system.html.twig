@@ -1,5 +1,5 @@
-{% extends "./layout.html.twig" %}
-{% block content %}
+{% extends "./index.html.twig" %}
+{% block body %}
   <div class="container">
     <div class="row">
       <div class="panel panel-default">
@@ -74,7 +74,6 @@
                   <td>{{service.injections}}</td>
                   <td>{{service.orderInjections}}</td>
                   <td>{{service.properties}}</td>
-
                 </tr>
               {% endfor %}
             </tbody>

@@ -16,7 +16,7 @@ module.exports = class generateProject extends nodefony.Builder {
       path: this.location || path.resolve("."),
       authorFullName: "admin",
       authorMail: "admin@nodefony.com",
-      domain: "localhost",
+      domain: "0.0.0.0",
       portHttp: "5151",
       portHttps: "5152",
       bundle: false,

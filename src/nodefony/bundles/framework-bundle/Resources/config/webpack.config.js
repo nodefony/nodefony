@@ -3,7 +3,7 @@ const path = require("path");
 const webpackMerge = require('webpack-merge');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const context = path.resolve(__dirname, "..", "public");
+//const context = path.resolve(__dirname, "..", "public");
 const public = path.resolve(__dirname, "..", "public", "assets");
 const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
 const publicPath = bundleName + "/assets/";
@@ -16,63 +16,70 @@ if (kernel.environment === "dev") {
 }
 
 module.exports = webpackMerge({
-  context: context,
-  target: "web",
-  watch: false,
-  entry: {
-    framework: "./js/framework.js"
-  },
-  output: {
-    path: public,
-    publicPath: publicPath,
-    filename: "./js/[name].js",
-    library: "[name]",
-    libraryTarget: "umd",
-  },
-  module: {
-    rules: [{
-      // BABEL TRANSCODE
-      test: new RegExp("\.es6$|\.js$"),
-      exclude: new RegExp("node_modules"),
-      use: [{
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/preset-env']
+    //context: context,
+    target: "web",
+    entry: {
+      framework: ["./Resources/public/js/framework.js"]
+    },
+    output: {
+      path: public,
+      publicPath: publicPath,
+      filename: "./js/[name].js",
+      library: "[name]",
+      libraryTarget: "umd"
+    },
+    externals: {},
+    resolve: {},
+    module: {
+      rules: [{
+          // BABEL TRANSCODE
+          test: new RegExp("\.es6$|\.js$"),
+          exclude: new RegExp("node_modules"),
+          use: [{
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env']
+            }
+          }]
+        },
+        /*
+         *	JQUERY EXPOSE BROWSER CONTEXT
+         *
+         */
+        {
+          test: require.resolve("jquery"),
+          loader: "expose-loader?$!expose-loader?jQuery"
+        }, {
+          test: /jquery\..*\.js/,
+          loader: "imports?$=jquery,jQuery=jquery,this=>window"
+        }, {
+          test: /\.(sa|sc|c)ss$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: "css-loader"
+            }, {
+              loader: 'postcss-loader', // Run post css actions
+              options: {
+                plugins: function () { // post css plugins, can be exported to postcss.config.js
+                  return [
+                    require('precss'),
+                    require('autoprefixer')
+                  ];
+                }
+              }
+            }, {
+              loader: "sass-loader"
+            }
+          ]
         }
-      }]
-    }, {
-      // CSS EXTRACT
-      test: new RegExp("\.(less|css)$"),
-      use: [
-        //'css-hot-loader',
-        MiniCssExtractPlugin.loader,
-        'css-loader',
-        'less-loader'
       ]
-    }, {
-      // SASS
-      test: new RegExp(".scss$"),
-      use: [{
-        loader: 'style-loader'
-      }, {
-        loader: 'css-loader'
-      }, {
-        loader: 'sass-loader'
-      }]
-    }, {
-      // FONTS
-      test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '/assets/fonts/' + '&outputPath=/fonts/',
-    }, {
-      // IMAGES
-      test: new RegExp("\.(jpg|png|gif)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '/assets/images/' + '&outputPath=/images/'
-    }]
+    },
+    plugins: [
+      new MiniCssExtractPlugin({
+        filename: "css/[name].css",
+        allChunks: true
+      })
+    ]
   },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: "./css/[name].css",
-      allChunks: true
-    })
-  ]
-}, config);
+  config);

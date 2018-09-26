@@ -1,12 +1,11 @@
-{% extends "./layout.html.twig" %}
+{% extends "/app/Resources/views/base.html.twig" %}
 
-{% block bodyContent %}
-
-  <div class="container"></div>
-
+{% block stylesheets %}
+  {{ parent() }}
+  <link href="/framework-bundle/assets/css/framework.css" rel="stylesheet" media="screen">
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
-
+  <script type="text/javascript" src="/framework-bundle/assets/js/framework.js"></script>
 {% endblock %}
