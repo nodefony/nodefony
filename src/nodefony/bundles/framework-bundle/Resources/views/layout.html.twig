@@ -14,8 +14,8 @@
               <img alt="nodefony"  width="30" height="30" src="/framework-bundle/images/nodefony-logo.png">
               <strong style="color:#337ab7">{{nodefony.name}}</strong>
             </a>
-            <button class="btn btn-sm btn-outline-secondary">
-              {{nodefony.version}}
+            <button class="btn btn-sm btn-secondary">
+              {{nodefony.projectVersion}}
             </button>
           </nav>
         </div>
@@ -25,7 +25,7 @@
           <div class="col-lg-12">
             <div class="card bg-light text-dark shadow p-3 mb-5 rounded">
               <div class="card-body mx-auto">
-                  <img src='{{CDN("image")}}/app/images/app-logo.png'><button class="btn btn-sm btn-outline-danger" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                  <img src='{{CDN("image")}}/app/images/app-logo.png'><button class="btn btn-sm btn-danger" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                     {{ error.type }}
                   </button>
                   <h1 class="display-4 text-danger">{{ error.code }} - {{ error.message }}</h1>

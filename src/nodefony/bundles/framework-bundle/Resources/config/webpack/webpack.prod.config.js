@@ -13,6 +13,7 @@ module.exports = {
           warnings: true,
           compress: true
         },
+        extractComments: true,
         cache: true,
         parallel: true
       })
