@@ -359,7 +359,7 @@ module.exports = nodefony.register("Bundle", function () {
           views = this.settings.watch || false;
           i18n = this.settings.watch || false;
           config = this.settings.watch || false;
-          services = false;
+          services = this.settings.watch || false;
           this.webpackWatch = this.settings.watch || false;
           break;
         default:
