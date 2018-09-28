@@ -468,6 +468,9 @@ module.exports = class security extends nodefony.Service {
         for (let firewall in obj[ele]) {
           let param = obj[ele][firewall];
           let area = this.addSecuredArea(firewall);
+          if (!area) {
+            continue;
+          }
           for (let config in param) {
             switch (config) {
             case "pattern":
@@ -578,7 +581,7 @@ module.exports = class security extends nodefony.Service {
       this.logger("ADD security context : " + name, "DEBUG");
       return this.securedAreas[name];
     } else {
-      this.logger("securedAreas :" + name + "already exist ");
+      this.logger("securedAreas :" + name + " already exist ", "WARNING");
     }
   }
 

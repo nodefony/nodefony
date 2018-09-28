@@ -1,6 +1,6 @@
 {
   "name": "nodefony",
-  "version": "4.0.0-beta.8",
+  "version": "4.0.0-beta.9",
   "main": "autoloader.es6",
   "description": "Nodefony Framework Core",
   "contributors": [],
@@ -30,7 +30,7 @@
     "@nodefony/unittests-bundle": "^4.0.0-beta.8",
     "asciify": "^1.3.5",
     "async": "^2.6.1",
-    "babel-loader": "^8.0.2",
+    "babel-loader": "^8.0.4",
     "bluebird": "^3.5.2",
     "chai": "^4.2.0",
     "chokidar": "^2.0.4",

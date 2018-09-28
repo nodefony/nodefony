@@ -1,6 +1,6 @@
 {
   "name": "nodefony-core",
-  "version": "4.0.0-beta.8",
+  "version": "4.0.0-beta.9",
   "description": "Nodefony Node.js full-stack web framework",
   "main": "./src/nodefony/core/autoloader.es6",
   "scripts": {
@@ -54,7 +54,7 @@
   "dependencies": {
     "@babel/core": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
-    "babel-loader": "^8.0.2",
+    "babel-loader": "^8.0.4",
     "clean-webpack-plugin": "^0.1.19",
     "create-react-app": "^1.5.2",
     "css-hot-loader": "^1.4.2",
@@ -66,7 +66,7 @@
     "less": "3.7.1",
     "less-loader": "^4.1.0",
     "mini-css-extract-plugin": "^0.4.3",
-    "mongoose": "^5.2.17",
+    "mongoose": "^5.2.18",
     "node-sass": "^4.9.3",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "pm2": "^3.1.3",
