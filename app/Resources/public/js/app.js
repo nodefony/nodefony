@@ -3,9 +3,11 @@
  *	ENTRY POINT WEBPACK bundle APP
  *
  */
+require('bootstrap');
+require('../../scss/custom.scss');
 require("../css/app.css");
 
-module.exports = function () {
+module.exports = function() {
   /*
    *	Class Bundle App client side
    */
@@ -13,7 +15,7 @@ module.exports = function () {
     constructor() {
       this.selectorLang = global.document.getElementById("langs");
       if (this.selectorLang) {
-        this.selectorLang.addEventListener("change", function (e) {
+        this.selectorLang.addEventListener("change", function(e) {
           window.location.href = "?lang=" + this.value;
           e.preventDefault();
         });

@@ -33,43 +33,56 @@ module.exports = webpackMerge(config, {
   resolve: {},
   module: {
     rules: [{
-      // BABEL TRANSCODE
-      test: new RegExp("\.es6$|\.js$"),
-      exclude: new RegExp("node_modules"),
-      use: [{
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/preset-env']
-        }
-      }]
-    }, {
-      // CSS EXTRACT
-      test: new RegExp("\.(less|css)$"),
-      use: [
-        //'css-hot-loader',
-        MiniCssExtractPlugin.loader,
-        'css-loader',
-        'less-loader'
-      ]
-    }, {
-      // SASS
-      test: new RegExp(".scss$"),
-      use: [{
-        loader: 'style-loader'
+        // BABEL TRANSCODE
+        test: new RegExp("\.es6$|\.js$"),
+        exclude: new RegExp("node_modules"),
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }]
+      },
+      /*
+       *	JQUERY EXPOSE BROWSER CONTEXT
+       *
+       */
+      {
+        test: require.resolve("jquery"),
+        loader: "expose-loader?$!expose-loader?jQuery"
       }, {
-        loader: 'css-loader'
+        test: /jquery\..*\.js/,
+        loader: "imports?$=jquery,jQuery=jquery,this=>window"
       }, {
-        loader: 'sass-loader'
-      }]
-    }, {
-      // FONTS
-      test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/assets/fonts/" + '&outputPath=/fonts/',
-    }, {
-      // IMAGES
-      test: new RegExp("\.(jpg|png|gif)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/assets/images/" + '&outputPath=/images/'
-    }]
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: "css-loader"
+          }, {
+            loader: 'postcss-loader', // Run post css actions
+            options: {
+              plugins: function() { // post css plugins, can be exported to postcss.config.js
+                return [
+                  require('precss'),
+                  require('autoprefixer')
+                ];
+              }
+            }
+          }, {
+            loader: "sass-loader"
+          }
+        ]
+      }, {
+        // FONTS
+        test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
+        use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/assets/fonts/" + '&outputPath=/fonts/',
+      }, {
+        // IMAGES
+        test: new RegExp("\.(jpg|png|gif)$"),
+        use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/assets/images/" + '&outputPath=/images/'
+      }
+    ]
   },
   plugins: [
     new MiniCssExtractPlugin({

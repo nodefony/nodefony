@@ -3,12 +3,13 @@
 #
 #   @here You can OVERRIDE all Bundles Configurations
 #
-locale                      :    en_en
+locale                      : en_en
 App:
-  projectYear               :    2017
-  locale                    :    "en_en"
-  authorName                :    "admin"
-  authorMail                :    "admin@nodefony.com"
+  projectYear               : 2018
+  locale                    : "en_en"
+  authorName                : "admin"
+  authorMail                : "admin@nodefony.com"
+  description               : "nodefony-core core base for nodefony framework"
 
 lang:
   en_en                     :    "english"
@@ -31,7 +32,7 @@ lang:
 #        translations:           true
 #        webpack:                true
 #
-watch                         :  false
+watch                         :  true
 
 ##################################
 #  OVERRIDE MONITORING BUNDLE

@@ -1,40 +1,50 @@
 {% extends './base.html.twig' %}
-{% block title %}Nodefony
-  {{core}}
+{% block title %}
+  {{nodefony.name}}
 {% endblock %}
+
 {% block body %}
-  <img class='displayed' src='{{CDN("image")}}/app/images/app-logo.png'>
-  <h1 class="success">
-    <a href="{{url('documentation')}}">
-      <strong style="font-size:45px">
-        NODEFONY
-        {{core}}
-      </strong>
-    </a>
-    <p>{{trans("welcome")}}
-      {{user.username}}</p>
-    <p>
-      <a href="{{url('documentation')}}">
-        <button>
-          Documentation
-        </button>
-      </a>
-    </p>
-    {% if demo %}
-      <p>
-        <a href="{{url('demo')}}">
-          <button>
-            Demo
-          </button>
-        </a </p>
-      {% endif %}
-    </h1>
-    {% if readme %}
-      <div>{{readme}}</div>
-    {% endif %}
+
+  {% block header %}
+    {{ render( controller("app:app:header" )) }}
   {% endblock %}
+
+  <div class="container">
+    <div class="row">
+      <div class="col text-center">
+        <img src='{{CDN("image")}}/app/images/app-logo.png'/>
+        <strong class="display-3" style="color:#0167b8;">
+          {{nodefony.name|upper}}
+        </strong>
+        <p class="display-4 mt-5">{{trans("welcome")}}
+          {{user.username}}
+        </p>
+        <p class="h3 mt-3">
+          <a href="{{url('documentation')}}">
+            <button class="btn btn-info btn-sm" type="button">
+              Documentation
+            </button>
+          </a>
+        </p>
+        {% if demo %}
+        <p class="h3 mt-3">
+          <a href="{{url('demo')}}">
+            <button class="btn btn-info btn-sm" type="button">
+              Demo
+            </button>
+            </a
+          </p>
+          {% endif %}
+        </h1>
+        {% if readme %}
+        <div>{{readme}}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
   {% block footer %}
-    <footer>
-      {{ render( controller("app:app:footer" )) }}
-    </footer>
+    {{ render( controller("app:app:footer" )) }}
   {% endblock %}
+
+{% endblock %}

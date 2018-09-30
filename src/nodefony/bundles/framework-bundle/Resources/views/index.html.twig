@@ -1,5 +1,15 @@
 {% extends "/app/Resources/views/base.html.twig" %}
-
+{% block body %}
+  <div class="container">
+    {% block header %}
+      {{ render( controller("framework:default:header" )) }}
+    {% endblock %}
+    {% block content %}{% endblock %}
+    {% block footer %}
+      {{ render( controller("framework:default:footer" )) }}
+    {% endblock %}
+  </div>
+{% endblock %}
 {% block stylesheets %}
   {{ parent() }}
   <link href="/framework-bundle/assets/css/framework.css" rel="stylesheet" media="screen">

@@ -1,4 +1,4 @@
-nodefony.register.call(nodefony.context, "http", function () {
+nodefony.register.call(nodefony.context, "http", function() {
 
   const Http = class httpContext extends nodefony.Context {
 
@@ -11,7 +11,6 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.protocol = (type === "HTTP2") ? "2.0" : "1.1";
       this.scheme = (type === "HTTPS" || type === "HTTP2") ? "https" : "http";
       this.pushAllowed = false;
-
       if (this.type === "HTTP2") {
         this.request = new nodefony.http2Request(request, this);
         this.response = new nodefony.http2Response(response, container);
@@ -21,10 +20,24 @@ nodefony.register.call(nodefony.context, "http", function () {
       }
       this.parseCookies();
       this.cookieSession = this.getCookieSession(this.sessionService.settings.name);
-
-      /*this.once("onRequestEnd", () => {
-        this.requestEnded = true;
-      });*/
+      this.once("onRequestEnd", () => {
+        try {
+          if (this.isRedirect) {
+            return this.send();
+          }
+          this.setParameters("query.get", this.request.queryGet);
+          if (this.request.queryPost) {
+            this.setParameters("query.post", this.request.queryPost);
+          }
+          if (this.request.queryFile) {
+            this.setParameters("query.files", this.request.queryFile);
+          }
+          this.setParameters("query.request", this.request.query);
+          this.locale = this.translation.handle();
+        } catch (e) {
+          this.fire("onError", this.container, e);
+        }
+      });
       this.method = this.request.getMethod();
       this.isAjax = this.request.isAjax();
       this.isHtml = this.request.acceptHtml;
@@ -99,20 +112,7 @@ nodefony.register.call(nodefony.context, "http", function () {
     }
 
     handle(data) {
-      this.setParameters("query.get", this.request.queryGet);
-      if (this.request.queryPost) {
-        this.setParameters("query.post", this.request.queryPost);
-      }
-      if (this.request.queryFile) {
-        this.setParameters("query.files", this.request.queryFile);
-      }
-      this.setParameters("query.request", this.request.query);
-
       try {
-        if (this.isRedirect) {
-          return this.send();
-        }
-        this.locale = this.translation.handle();
         if (!this.resolver) {
           this.resolver = this.router.resolve(this);
         }
@@ -204,7 +204,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       if (this.finished) {
         return;
       }
-      if ( !this.profiler) {
+      if (!this.profiler) {
         if (this.profiling) {
           this.fire("onSendMonitoring", this.response, this);
         }
@@ -290,23 +290,23 @@ nodefony.register.call(nodefony.context, "http", function () {
 
     setXjson(xjson) {
       switch (nodefony.typeOf(xjson)) {
-      case "object":
-        this.response.setHeader("X-Json", JSON.stringify(xjson));
-        return xjson;
-      case "string":
-        this.response.setHeader("X-Json", xjson);
-        return JSON.parse(xjson);
-      case "Error":
-        if (typeof xjson.message === "object") {
-          this.response.setHeader("X-Json", JSON.stringify(xjson.message));
-          return xjson.message;
-        } else {
-          this.response.setHeader("X-Json", xjson.message);
-          return {
-            error: xjson.message
-          };
-        }
-        break;
+        case "object":
+          this.response.setHeader("X-Json", JSON.stringify(xjson));
+          return xjson;
+        case "string":
+          this.response.setHeader("X-Json", xjson);
+          return JSON.parse(xjson);
+        case "Error":
+          if (typeof xjson.message === "object") {
+            this.response.setHeader("X-Json", JSON.stringify(xjson.message));
+            return xjson.message;
+          } else {
+            this.response.setHeader("X-Json", xjson.message);
+            return {
+              error: xjson.message
+            };
+          }
+          break;
       }
     }
 

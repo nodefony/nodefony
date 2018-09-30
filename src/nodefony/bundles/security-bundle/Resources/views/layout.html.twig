@@ -1,11 +1,13 @@
 {% extends "/app/Resources/views/base.html.twig" %}
 
-{{trans_default_domain("login")}}
+{% block title %}Security{% endblock %}
 
-{% block description %}
-	<meta name="description" content="Nodefony Oauth Server">
-{% endblock %}
-
-{% block title %}
-    OAUHT2
+{% block body %}
+  {% block header %}
+      {{ render( controller("framework:default:header" )) }}
+  {% endblock %}
+  {% block content %} {% endblock %}
+  {% block footer %}
+      {{ render( controller("framework:default:footer" )) }}
+  {% endblock %}
 {% endblock %}

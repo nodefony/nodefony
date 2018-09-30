@@ -35,6 +35,11 @@ module.exports = class appController extends nodefony.controller {
     });
   }
 
+
+  headerAction() {
+    return this.render("app::header.html.twig");
+  }
+
   footerAction() {
     let translateService = this.get("translation");
     let version = this.kernel.settings.version;
@@ -46,6 +51,7 @@ module.exports = class appController extends nodefony.controller {
       version: version,
       year: year,
       locale: locale,
+      description: this.kernel.app.settings.App.description
     });
   }
 };

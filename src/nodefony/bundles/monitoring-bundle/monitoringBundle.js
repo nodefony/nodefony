@@ -49,23 +49,23 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       this.infoKernel.events = {};
       for (let event in kernel.notificationsCenter._events) {
         switch (event) {
-        case "onPreBoot":
-          this.infoKernel.events[event] = {
-            fire: kernel.preboot,
-            nb: 1,
-            listeners: kernel.notificationsCenter._events[event].length
-          };
-          break;
-        default:
-          this.infoKernel.events[event] = {
-            fire: false,
-            nb: 0,
-            listeners: kernel.notificationsCenter._events[event].length
-          };
-          kernel.listen(this, event, () => {
-            this.infoKernel.events[event].fire = true;
-            this.infoKernel.events[event].nb = ++this.infoKernel.events[event].nb;
-          });
+          case "onPreBoot":
+            this.infoKernel.events[event] = {
+              fire: kernel.preboot,
+              nb: 1,
+              listeners: kernel.notificationsCenter._events[event].length
+            };
+            break;
+          default:
+            this.infoKernel.events[event] = {
+              fire: false,
+              nb: 0,
+              listeners: kernel.notificationsCenter._events[event].length
+            };
+            kernel.listen(this, event, () => {
+              this.infoKernel.events[event].fire = true;
+              this.infoKernel.events[event].nb = ++this.infoKernel.events[event].nb;
+            });
         }
       }
     });
@@ -106,23 +106,23 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       //console.log(this.infoBundles);
       for (let event in this.kernel.notificationsCenter._events) {
         switch (event) {
-        case "onReady":
-          this.infoKernel.events[event] = {
-            fire: kernel.ready,
-            nb: 0,
-            listeners: this.kernel.notificationsCenter._events[event].length
-          };
-          break;
-        default:
-          this.infoKernel.events[event] = nodefony.extend(true, this.infoKernel.events[event], {
-            listeners: this.kernel.notificationsCenter._events[event].length
-          });
+          case "onReady":
+            this.infoKernel.events[event] = {
+              fire: kernel.ready,
+              nb: 0,
+              listeners: this.kernel.notificationsCenter._events[event].length
+            };
+            break;
+          default:
+            this.infoKernel.events[event] = nodefony.extend(true, this.infoKernel.events[event], {
+              listeners: this.kernel.notificationsCenter._events[event].length
+            });
         }
       }
 
       if (this.settings.debugBar) {
         this.logger("ADD DEBUG BAR MONITORING", "INFO");
-        this.bundles = function () {
+        this.bundles = function() {
           let obj = {};
           for (let bundle in this.kernel.bundles) {
             let version = null;
@@ -176,54 +176,54 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         }
 
         switch (ORM.name) {
-        case "sequelize":
-          for (let connection in this.orm.connections) {
-            ORM.connections[connection] = {
-              state: this.orm.connections[connection].state,
-              name: this.orm.connections[connection].name,
-              type: this.orm.connections[connection].type,
-              db: {}
-            };
-            if (this.orm.connections[connection].db) {
-              ORM.connections[connection].db = {
-                config: this.orm.connections[connection].db.config,
-                options: this.orm.connections[connection].db.options,
-                models: {}
+          case "sequelize":
+            for (let connection in this.orm.connections) {
+              ORM.connections[connection] = {
+                state: this.orm.connections[connection].state,
+                name: this.orm.connections[connection].name,
+                type: this.orm.connections[connection].type,
+                db: {}
               };
-              for (let model in this.orm.connections[connection].db.models) {
-                ORM.connections[connection].db.models[model] = {
-                  name: model
+              if (this.orm.connections[connection].db) {
+                ORM.connections[connection].db = {
+                  config: this.orm.connections[connection].db.config,
+                  options: this.orm.connections[connection].db.options,
+                  models: {}
                 };
+                for (let model in this.orm.connections[connection].db.models) {
+                  ORM.connections[connection].db.models[model] = {
+                    name: model
+                  };
+                }
               }
             }
-          }
-          break;
-        case "mongoose":
-          for (let connection in this.orm.connections) {
-            ORM.connections[connection] = {
-              state: this.orm.connections[connection].states[this.orm.connections[connection]._readyState],
-              name: this.orm.connections[connection].name,
-              type: "mongodb",
-              db: {}
-            };
-            let options = {
-              host: this.orm.connections[connection].host + ":" + this.orm.connections[connection].port
-            };
+            break;
+          case "mongoose":
+            for (let connection in this.orm.connections) {
+              ORM.connections[connection] = {
+                state: this.orm.connections[connection].states[this.orm.connections[connection]._readyState],
+                name: this.orm.connections[connection].name,
+                type: "mongodb",
+                db: {}
+              };
+              let options = {
+                host: this.orm.connections[connection].host + ":" + this.orm.connections[connection].port
+              };
 
-            if (this.orm.connections[connection]) {
-              ORM.connections[connection].db = {
-                config: this.orm.connections[connection].config,
-                options: options,
-                models: {}
-              };
-              for (let model in this.orm.connections[connection].models) {
-                ORM.connections[connection].db.models[model] = {
-                  name: model
+              if (this.orm.connections[connection]) {
+                ORM.connections[connection].db = {
+                  config: this.orm.connections[connection].config,
+                  options: options,
+                  models: {}
                 };
+                for (let model in this.orm.connections[connection].models) {
+                  ORM.connections[connection].db.models[model] = {
+                    name: model
+                  };
+                }
               }
             }
-          }
-          break;
+            break;
         }
 
         this.service = {
@@ -242,7 +242,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
           ORM: ORM,
           templating: templating
         };
-        this.security = function () {
+        this.security = function() {
           let obj = {};
           let firewall = this.container.get("security");
           if (firewall) {
@@ -281,7 +281,6 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     if (this.kernel.environment === "prod" && !this.settings.forceDebugBarProd && !context.profiler) {
       return;
     }
-
     let agent = null;
     let tmp = null;
     let myUserAgent = null;
@@ -413,7 +412,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         token: token,
         user: context.user,
         firewall: context.security.name,
-        state: context.security.stateLess ? "stateless" :  "statefull",
+        state: context.security.stateLess ? "stateless" : "statefull",
         context: context.security.sessionContext,
         tokenRoles: tokenRoles
       };
@@ -508,15 +507,15 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       accessControlList: tokenRoles
     };
     switch (context.type) {
-    case "HTTP":
-    case "HTTPS":
-    case "HTTP2":
-      this.httpRequest(context);
-      break;
-    case "WEBSOCKET":
-    case "WEBSOCKET SECURE":
-      this.websocketRequest(context);
-      break;
+      case "HTTP":
+      case "HTTPS":
+      case "HTTP2":
+        this.httpRequest(context);
+        break;
+      case "WEBSOCKET":
+      case "WEBSOCKET SECURE":
+        this.websocketRequest(context);
+        break;
     }
     context.listen(this, "onView", this.onView);
   }
@@ -525,23 +524,23 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     context.profiling.timeStamp = context.request.request.nodefony_time;
     let content = null;
     switch (context.request.contentType) {
-    case "multipart/form-data":
-      try {
-        content = JSON.stringfy(context.request.queryFile);
-      } catch (e) {
+      case "multipart/form-data":
+        try {
+          content = JSON.stringfy(context.request.queryFile);
+        } catch (e) {
+          content = null;
+        }
+        break;
+      case "application/xml":
+      case "text/xml":
+      case "application/json":
+      case "text/json":
+      case "application/x-www-form-urlencoded":
+        content = context.request.data.toString(context.request.charset);
+        //content = context.request.query.toString();
+        break;
+      default:
         content = null;
-      }
-      break;
-    case "application/xml":
-    case "text/xml":
-    case "application/json":
-    case "text/json":
-    case "application/x-www-form-urlencoded":
-      content = context.request.data.toString(context.request.charset);
-      //content = context.request.query.toString();
-      break;
-    default:
-      content = null;
     }
     context.profiling.request = {
       url: context.url,
@@ -689,42 +688,42 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
   }
 
   canMonitoring(context) {
-    if (!context.resolver.route) {
+    /*if (!context.resolver.route) {
+      return false;
+    }*/
+    if (context.resolver.route && context.resolver.route.name.match(/^monitoring-/)) {
       return false;
     }
-    if (context.resolver.route.name.match(/^monitoring-/)) {
+    /*if (!context.resolver.resolve) {
       return false;
-    }
-    if (!context.resolver.resolve) {
-      return false;
-    }
+    }*/
     return this.settings.profiler.active;
   }
 
   updateProfile(context, callback) {
     if (context.profiling) {
       switch (this.storageProfiling) {
-      case "syslog":
-        context.profilingObject.payload = context.profiling;
-        return;
-      case "orm":
-        this.requestEntity.update({
-          data: JSON.stringify(context.profiling),
-          state: context.profiling.response.statusCode
-        }, {
-          where: {
-            id: context.profiling.id,
-          }
-        }).then((result) => {
-          this.kernel.logger("ORM REQUEST UPDATE ID : " + context.profiling.id, "DEBUG");
-          callback(null, result);
-        }).catch((error) => {
-          this.kernel.logger(error);
-          callback(error, null);
-        });
-        break;
-      default:
-        callback(new Error("No PROFILING"), null);
+        case "syslog":
+          context.profilingObject.payload = context.profiling;
+          return;
+        case "orm":
+          this.requestEntity.update({
+            data: JSON.stringify(context.profiling),
+            state: context.profiling.response.statusCode
+          }, {
+            where: {
+              id: context.profiling.id,
+            }
+          }).then((result) => {
+            this.kernel.logger("ORM REQUEST UPDATE ID : " + context.profiling.id, "DEBUG");
+            callback(null, result);
+          }).catch((error) => {
+            this.kernel.logger(error);
+            callback(error, null);
+          });
+          break;
+        default:
+          callback(new Error("No PROFILING"), null);
       }
     }
   }
@@ -732,93 +731,93 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
   saveProfile(context, callback) {
     if (context.profiling) {
       switch (this.storageProfiling) {
-      case "syslog":
-        this.syslogContext.logger(context.profiling);
-        let logProfile = this.syslogContext.getLogStack();
-        context.profiling.id = logProfile.uid;
-        callback(null, logProfile);
-        return;
-      case "orm":
-        let user = null;
-        let data = null;
-        // DATABASE ENTITY
-        if (context.profiling.context_secure) {
-          user = context.profiling.context_secure.user ? context.profiling.context_secure.user.username : "";
-        } else {
-          user = "";
-        }
-        try {
-          data = JSON.stringify(context.profiling);
-        } catch (e) {
-          this.kernel.logger(e, "ERROR");
+        case "syslog":
+          this.syslogContext.logger(context.profiling);
+          let logProfile = this.syslogContext.getLogStack();
+          context.profiling.id = logProfile.uid;
+          callback(null, logProfile);
           return;
-        }
-        switch (this.kernel.getOrm()) {
-        case "sequelize":
-          return this.requestEntity.create({
-              id: null,
-              remoteAddress: context.profiling.context.remoteAddress,
-              userAgent: context.profiling.userAgent.toString,
-              url: context.profiling.request.url,
-              route: context.profiling.route.name,
-              method: context.profiling.request.method,
-              state: context.profiling.response.statusCode,
-              protocole: context.profiling.context.scheme,
-              username: user,
-              data: data
-            }, {
-              isNewRecord: true
-            })
-            .then((request) => {
-              this.kernel.logger("ORM REQUEST SAVE ID :" + request.id, "DEBUG");
-              if (context && context.profiling) {
-                context.profiling.id = request.id;
-              }
-              if (callback) {
-                callback(null, request);
-              }
-              return request;
-            }).catch((error) => {
-              this.kernel.logger(error, "ERROR");
-              if (callback) {
-                callback(error, null);
-              }
-              return error;
-            });
-        case "mongoose":
-          return this.requestEntity.create({
-              id: null,
-              remoteAddress: context.profiling.context.remoteAddress,
-              userAgent: context.profiling.userAgent.toString,
-              url: context.profiling.request.url,
-              route: context.profiling.route.name,
-              method: context.profiling.request.method,
-              state: context.profiling.response.statusCode,
-              protocole: context.profiling.context.scheme,
-              username: user,
-              data: data
-            })
-            .then((request) => {
-              this.kernel.logger("ORM REQUEST SAVE ID :" + request._id, "DEBUG");
-              if (context && context.profiling) {
-                context.profiling.id = request.id;
-              }
-              if (callback) {
-                callback(null, request);
-              }
-              return request;
-            })
-            .catch((error) => {
-              this.kernel.logger(error, "ERROR");
-              if (callback) {
-                callback(error, null);
-              }
-              return error;
-            });
-        }
-        break;
-      default:
-        callback(new Error("No PROFILING"), null);
+        case "orm":
+          let user = null;
+          let data = null;
+          // DATABASE ENTITY
+          if (context.profiling.context_secure) {
+            user = context.profiling.context_secure.user ? context.profiling.context_secure.user.username : "";
+          } else {
+            user = "";
+          }
+          try {
+            data = JSON.stringify(context.profiling);
+          } catch (e) {
+            this.kernel.logger(e, "ERROR");
+            return;
+          }
+          switch (this.kernel.getOrm()) {
+            case "sequelize":
+              return this.requestEntity.create({
+                  id: null,
+                  remoteAddress: context.profiling.context.remoteAddress,
+                  userAgent: context.profiling.userAgent.toString,
+                  url: context.profiling.request.url,
+                  route: context.profiling.route.name,
+                  method: context.profiling.request.method,
+                  state: context.profiling.response.statusCode,
+                  protocole: context.profiling.context.scheme,
+                  username: user,
+                  data: data
+                }, {
+                  isNewRecord: true
+                })
+                .then((request) => {
+                  this.kernel.logger("ORM REQUEST SAVE ID :" + request.id, "DEBUG");
+                  if (context && context.profiling) {
+                    context.profiling.id = request.id;
+                  }
+                  if (callback) {
+                    callback(null, request);
+                  }
+                  return request;
+                }).catch((error) => {
+                  this.kernel.logger(error, "ERROR");
+                  if (callback) {
+                    callback(error, null);
+                  }
+                  return error;
+                });
+            case "mongoose":
+              return this.requestEntity.create({
+                  id: null,
+                  remoteAddress: context.profiling.context.remoteAddress,
+                  userAgent: context.profiling.userAgent.toString,
+                  url: context.profiling.request.url,
+                  route: context.profiling.route.name,
+                  method: context.profiling.request.method,
+                  state: context.profiling.response.statusCode,
+                  protocole: context.profiling.context.scheme,
+                  username: user,
+                  data: data
+                })
+                .then((request) => {
+                  this.kernel.logger("ORM REQUEST SAVE ID :" + request._id, "DEBUG");
+                  if (context && context.profiling) {
+                    context.profiling.id = request.id;
+                  }
+                  if (callback) {
+                    callback(null, request);
+                  }
+                  return request;
+                })
+                .catch((error) => {
+                  this.kernel.logger(error, "ERROR");
+                  if (callback) {
+                    callback(error, null);
+                  }
+                  return error;
+                });
+          }
+          break;
+        default:
+          callback(new Error("No PROFILING"), null);
       }
     }
   }

@@ -1,6 +1,6 @@
 const http = require("http");
 const mime = require('mime');
-module.exports = nodefony.register("Response", function () {
+module.exports = nodefony.register("Response", function() {
 
   const Response = class httpResponse {
 
@@ -109,7 +109,7 @@ module.exports = nodefony.register("Response", function () {
         myType = "application/octet-stream";
       }
       this.contentType = myType;
-      return this.setHeader("Content-Type", myType + " ; charset=" + (encoding ||  this.encoding));
+      return this.setHeader("Content-Type", myType + " ; charset=" + (encoding || this.encoding));
     }
 
     getMimeType(name) {
@@ -264,15 +264,15 @@ module.exports = nodefony.register("Response", function () {
       }
       if (headers) {
         switch (nodefony.typeOf(headers)) {
-        case "object":
-          this.setHeaders(headers);
-          break;
-        case "boolean":
-          this.setHeaders({
-            "Cache-Control": "no-store, no-cache, must-revalidate",
-            "Expires": "Thu, 01 Jan 1970 00:00:00 GMT"
-          });
-          break;
+          case "object":
+            this.setHeaders(headers);
+            break;
+          case "boolean":
+            this.setHeaders({
+              "Cache-Control": "no-store, no-cache, must-revalidate",
+              "Expires": "Thu, 01 Jan 1970 00:00:00 GMT"
+            });
+            break;
         }
       }
       this.setHeader("Location", url);

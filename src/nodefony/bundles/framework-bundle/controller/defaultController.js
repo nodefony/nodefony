@@ -6,12 +6,33 @@ module.exports = class defaultController extends nodefony.controller {
 
   indexAction() {
     if (this.context.isJson) {
-      return this.render('frameworkBundle::index.json.twig', {
+      return this.render('framework::index.json.twig', {
         title: "WEB nodefony FRAMEWORK"
       });
     }
-    return this.render('frameworkBundle::index.html.twig', {
+    return this.render('framework::index.html.twig', {
       title: "WEB nodefony FRAMEWORK"
+    });
+  }
+
+  headerAction() {
+    return this.render('framework::header.html.twig', {
+
+    });
+  }
+
+  footerAction() {
+    let translateService = this.get("translation");
+    let version = this.kernel.settings.version;
+    let year = new Date().getFullYear();
+    let langs = translateService.getLangs();
+    let locale = this.getLocale();
+    return this.render('framework::footer.html.twig', {
+      langs: langs,
+      version: version,
+      year: year,
+      locale: locale,
+      description: this.kernel.app.settings.App.description
     });
   }
 

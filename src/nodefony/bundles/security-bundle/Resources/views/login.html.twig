@@ -1,42 +1,41 @@
-{% extends '/app/Resources/views/base.html.twig' %}
+{% extends './layout.html.twig' %}
+{{trans_default_domain("login")}}
 
-{% block title %}Welcome
-  {{name}}!
-{% endblock %}
+
+{% block title %}login{% endblock %}
+
 {% block stylesheets %}
   {{ parent() }}
   <!-- WEBPACK BUNDLE -->
   <link rel='stylesheet' href='{{CDN("stylesheet")}}/security-bundle/assets/css/login.css'/>
 {% endblock %}
-{% block body %}
-  <div id="error" style="display:none">{{getFlashBag('error')}}</div>
-  <img class='displayed' src='{{CDN("image")}}/framework-bundle/images/nodefony-logo-white.png'>
 
-  <h1 class='success'>
-    <a href='{{url(' documentation')}}'="documentation')}}'">
-      <strong style='font-size:45px'>NODEFONY SECURITY</strong>
-    </a>
-  </h1>
+{% block content %}
+  <div class="container">
+    {{render(controller("framework-bundle:default:header"))}}
+    <div id="error" style="display:none">{{getFlashBag('error')}}</div>
+    <img class='displayed' src='{{CDN("image")}}/framework-bundle/images/nodefony-logo-white.png'>
 
-  <div class="login-block">
-    <h1>Login
-      {{type}}</h1>
-    <form id="login" action="{{ckeckLogin}}" method="POST">
-      <input type="text" value="" placeholder="Username" id="username" name="username"/>
-      <input type="password" value="" placeholder="Password" id="passwd" name="passwd"/>
-      <button>Submit</button>
-    </form>
-  </div>
+    <h1 class='success'>
+      <a href='{{url(' documentation')}}'="documentation')}}'">
+        <strong style='font-size:45px'>NODEFONY SECURITY</strong>
+      </a>
+    </h1>
 
+    <div class="login-block">
+      <h1>Login
+        {{type}}</h1>
+      <form id="login" action="{{ckeckLogin}}" method="POST">
+        <input type="text" value="" placeholder="Username" id="username" name="username"/>
+        <input type="password" value="" placeholder="Password" id="passwd" name="passwd"/>
+        <button>Submit</button>
+      </form>
+    </div>
+  <div>
 {% endblock %}
+
 {% block javascripts %}
   {{ parent() }}
   <!-- WEBPACK BUNDLE -->
   <script src='{{CDN("javascript")}}/security-bundle/assets/js/login.js'></script>
-{% endblock %}
-
-{% block footer %}
-  <footer>
-    {{ render( controller("app:app:footer" )) }}
-  </footer>
 {% endblock %}
