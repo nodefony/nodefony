@@ -154,7 +154,7 @@ module.exports = nodefony.register("Resolver", function () {
       }*/
       try {
         let controller = this.get("controller");
-        if (!controller ||  reload) {
+        if (!controller || reload) {
           controller = this.newController(this.container, this.context);
         }
         if (data) {

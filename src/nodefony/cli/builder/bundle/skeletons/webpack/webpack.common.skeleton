@@ -4,8 +4,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpackMerge = require('webpack-merge');
 
 const context = path.resolve(__dirname, "..", "Resources", "public");
-const public = path.resolve(__dirname, "..", "Resources", "public", "assets");
-const bundleName = path.basename(path.resolve(__dirname, ".."));
+const public = path.resolve(__dirname, "..", "public", "assets");
+const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
 const publicPath = bundleName + "/assets/";
 
 let config = null;
@@ -21,7 +21,7 @@ module.exports = webpackMerge(config, {
   //context: context,
   target: "web",
   entry: {
-    {{name}}  : [ "./js/{{name}}.js" ]
+    {{name}}  : [ "./Resources/public/js/{{name}}.js" ]
   },
   output: {
     path: public,

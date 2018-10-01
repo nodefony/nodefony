@@ -109,14 +109,14 @@ const Translation = class Translation extends nodefony.Service {
           if (queryGetlang) {
             Lang = queryGetlang;
           } else {
-            Lang = this.context.session.get("lang") ||  this.context.user.lang;
+            Lang = this.context.session.get("lang") || this.context.user.lang;
           }
         } else {
           Lang = queryGetlang || this.context.session.get("lang");
         }
       }
     }
-    let res = reg.exec(Lang ||  this.defaultLocale);
+    let res = reg.exec(Lang || this.defaultLocale);
     if (res) {
       if (res[2]) {
         this.defaultLocale = res[0];

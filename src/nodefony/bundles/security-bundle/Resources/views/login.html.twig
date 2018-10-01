@@ -1,8 +1,7 @@
 {% extends './layout.html.twig' %}
 {{trans_default_domain("login")}}
 
-
-{% block title %}login{% endblock %}
+{% block title %}{{trans("login")}}{% endblock %}
 
 {% block stylesheets %}
   {{ parent() }}
@@ -11,27 +10,25 @@
 {% endblock %}
 
 {% block content %}
-  <div class="container">
-    {{render(controller("framework-bundle:default:header"))}}
-    <div id="error" style="display:none">{{getFlashBag('error')}}</div>
-    <img class='displayed' src='{{CDN("image")}}/framework-bundle/images/nodefony-logo-white.png'>
 
-    <h1 class='success'>
-      <a href='{{url(' documentation')}}'="documentation')}}'">
-        <strong style='font-size:45px'>NODEFONY SECURITY</strong>
-      </a>
-    </h1>
-
-    <div class="login-block">
-      <h1>Login
-        {{type}}</h1>
-      <form id="login" action="{{ckeckLogin}}" method="POST">
-        <input type="text" value="" placeholder="Username" id="username" name="username"/>
-        <input type="password" value="" placeholder="Password" id="passwd" name="passwd"/>
-        <button>Submit</button>
-      </form>
+    <div class="container" style="margin-top:100px">
+        <div class="col text-center">
+          <img src='{{CDN("image")}}/app/images/app-logo.png'/>
+          <strong class="display-3" style="color:#0167b8;">
+            NODEFONY {{trans("security")}}
+          </strong>
+          <div class="login-block">
+            <h1>{{trans("login")}} {{type}}</h1>
+            <form id="login" action="{{ckeckLogin}}" method="POST">
+              <input type="text" value="" placeholder="Username" id="username" name="username"/>
+              <input type="password" value="" placeholder="Password" id="passwd" name="passwd"/>
+              <button>{{trans("submit")}}</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-  <div>
+
 {% endblock %}
 
 {% block javascripts %}

@@ -1,4 +1,4 @@
-nodefony.register.call(nodefony.context, "http", function() {
+nodefony.register.call(nodefony.context, "http", function () {
 
   const Http = class httpContext extends nodefony.Context {
 
@@ -33,7 +33,7 @@ nodefony.register.call(nodefony.context, "http", function() {
             this.setParameters("query.files", this.request.queryFile);
           }
           this.setParameters("query.request", this.request.query);
-          this.locale = this.translation.handle();
+          //this.locale = this.translation.handle();
         } catch (e) {
           this.fire("onError", this.container, e);
         }
@@ -113,6 +113,7 @@ nodefony.register.call(nodefony.context, "http", function() {
 
     handle(data) {
       try {
+        this.locale = this.translation.handle();
         if (!this.resolver) {
           this.resolver = this.router.resolve(this);
         }
@@ -290,23 +291,23 @@ nodefony.register.call(nodefony.context, "http", function() {
 
     setXjson(xjson) {
       switch (nodefony.typeOf(xjson)) {
-        case "object":
-          this.response.setHeader("X-Json", JSON.stringify(xjson));
-          return xjson;
-        case "string":
-          this.response.setHeader("X-Json", xjson);
-          return JSON.parse(xjson);
-        case "Error":
-          if (typeof xjson.message === "object") {
-            this.response.setHeader("X-Json", JSON.stringify(xjson.message));
-            return xjson.message;
-          } else {
-            this.response.setHeader("X-Json", xjson.message);
-            return {
-              error: xjson.message
-            };
-          }
-          break;
+      case "object":
+        this.response.setHeader("X-Json", JSON.stringify(xjson));
+        return xjson;
+      case "string":
+        this.response.setHeader("X-Json", xjson);
+        return JSON.parse(xjson);
+      case "Error":
+        if (typeof xjson.message === "object") {
+          this.response.setHeader("X-Json", JSON.stringify(xjson.message));
+          return xjson.message;
+        } else {
+          this.response.setHeader("X-Json", xjson.message);
+          return {
+            error: xjson.message
+          };
+        }
+        break;
       }
     }
 

@@ -37,14 +37,24 @@ const View = class View {
   <link rel='stylesheet' href='" + this.cli.response.CDN_stylesheet + "/" + this.cli.response.bundleName + "/assets/css/" + this.cli.response.name + ".css' />\n\
 {% endblock %}\n\
 {% block body %}\n\
-      <img class='displayed' src='" + this.cli.response.CDN_image + "/framework-bundle/images/nodefony-logo-white.png'>\n\
-      <h1 class='success'>\n\
+  {% block header %}\n\
+    {{ render( controller('app:app:header' )) }}\n\
+  {% endblock %}\n\
+  <div class='container' style='margin-top:100px'>\n\
+    <div class='row'>\n\
+      <div class='col text-center'>\n\
+        <img src='" + this.cli.response.CDN_image + "/app/images/app-logo.png'>\n\
         <a href='{{url('documentation')}}'>\n\
-          <strong style='font-size:45px'>NODEFONY</strong>\n\
+          <strong style='font-size:45px'>{{name}}</strong>\n\
         </a>\n\
-        <p>{{trans('welcome')}} {{name}}</p>\n\
+        <p class='display-4 mt-5'>{{trans('welcome')}}</p>\n\
         <p>{{binding}}</p>\n\
-      </h1>\n\
+        </div>\n\
+    </div>\n\
+  </div>\n\
+  {% block footer %}\n\
+    {{ render( controller('app:app:footer' )) }}\n\
+  {% endblock %}\n\
 {% endblock %}\n\
 {% block javascripts %}\n\
   {{ parent() }}\n\

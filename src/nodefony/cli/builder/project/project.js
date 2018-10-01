@@ -185,6 +185,13 @@ module.exports = class generateProject extends nodefony.Builder {
                 recurse: true
               }
             }, {
+              name: "scss",
+              type: "copy",
+              path: path.resolve(this.pathSkeleton, "app", "Resources", "scss"),
+              params: {
+                recurse: true
+              }
+            }, {
               name: "databases",
               type: "copy",
               path: path.resolve(this.pathSkeleton, "app", "Resources", "databases"),

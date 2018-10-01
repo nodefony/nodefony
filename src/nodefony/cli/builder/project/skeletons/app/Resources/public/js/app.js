@@ -3,6 +3,8 @@
  *	ENTRY POINT WEBPACK bundle APP
  *
  */
+require('bootstrap');
+require('../../scss/custom.scss');
 require("../css/app.css");
 
 module.exports = function () {

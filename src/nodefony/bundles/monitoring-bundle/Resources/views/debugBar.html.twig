@@ -595,21 +595,24 @@
 
     <li class="separator"></li>
 
-    <li >
-      <label class="label-nodefony label-default nodefony-responsive-md">@
-        {% if id %}
-          <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=request'>{{route.name}}</a>
-        {% else %}{{route.name}}
-        {% endif %}
-      </label>
+    <li>
+      {% if route.name != "undefined" %}
+        <label class="label-nodefony label-default nodefony-responsive-md">@
+          {% if id %}
+            <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=request'>{{route.name}}</a>
+          {% else %}
+            {{route.name}}
+          {% endif %}
+        </label>
+      {% else %}
+        <label class="label-nodefony nodefony-responsive-sm">
+          ROUTER
+        </label>
+      {% endif %}
       <div class="details">
         <ul>
           <li>
             <label class="nodefony-title">ROUTER SERVICE</label>
-          </li>
-          <li>
-            <label>Pattern</label>
-            <span class="label-nodefony label-default">{{routeur.pattern}}</span>
           </li>
           <li>
             <label>Bundle</label>
@@ -623,36 +626,41 @@
             <label>Action</label>
             <span class="label-nodefony label-success">{{routeur.action}}</span>
           </li>
-          <li>
-            <label>File</label>
-            <span class="label-nodefony label-success">{{routeur.file}}</span>
-          </li>
-          <li class="separator"></li>
-          <li>
-            <label class="nodefony-title">ROUTE</label>
-          </li>
-          {% for key, value in route %}
-            {% if key != "variables" %}
-              <li>
-                <label>{{ key }}</label>
-                <span class="label-nodefony label-success">{{value}}</span>
-              </li>
-            {% endif %}
-          {% endfor %}
-
-          {% for key, value in route %}
-            {% if key == "variables" %}
-              {% if route.variables | length %}
-                <label class="nodefony-title">Variables :</label>
-                {% for key, value in route.variables %}
-                  <li>
-                    <label>{{varialblesName[key]}}</label>
-                    <span class="label-nodefony label-success">{{value}}</span>
-                  </li>
-                {% endfor %}
+          {% if route.name != "undefined" %}
+            <li>
+              <label>Pattern</label>
+              <span class="label-nodefony label-default">{{routeur.pattern}}</span>
+            </li>
+            <li>
+              <label>File</label>
+              <span class="label-nodefony label-success">{{routeur.file}}</span>
+            </li>
+            <li class="separator"></li>
+            <li>
+              <label class="nodefony-title">ROUTE</label>
+            </li>
+            {% for key, value in route %}
+              {% if key != "variables" %}
+                <li>
+                  <label>{{ key }}</label>
+                  <span class="label-nodefony label-success">{{value}}</span>
+                </li>
               {% endif %}
-            {% endif %}
-          {% endfor %}
+            {% endfor %}
+            {% for key, value in route %}
+              {% if key == "variables" %}
+                {% if route.variables | length %}
+                  <label class="nodefony-title">Variables :</label>
+                  {% for key, value in route.variables %}
+                    <li>
+                      <label>{{varialblesName[key]}}</label>
+                      <span class="label-nodefony label-success">{{value}}</span>
+                    </li>
+                  {% endfor %}
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
           <li class="separator"></li>
           <li>
             <label class="nodefony-title">TRANSLATION</label>
@@ -672,7 +680,6 @@
     <li class="separator"></li>
 
     <li>
-
       {% if proxy %}
         <label class="label-nodefony label-default">PROXY</label>
       {% endif %}
