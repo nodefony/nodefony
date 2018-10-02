@@ -52,7 +52,7 @@
     "semver": "^5.5.1",
     "shelljs": "^0.8.2",
     "shortid": "^2.2.13",
-    "simple-git": "^1.103.0",
+    "simple-git": "^1.104.0",
     "twig": "^1.12.0",
     "webpack": "^4.20.2",
     "xml2js": "^0.4.19",
