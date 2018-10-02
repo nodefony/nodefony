@@ -4,10 +4,10 @@
 
 {% block body %}
   {% block header %}
-      {{ render( controller("framework:default:header" )) }}
+      {{ render( controller("app:app:header" )) }}
   {% endblock %}
   {% block content %} {% endblock %}
   {% block footer %}
-      {{ render( controller("framework:default:footer" )) }}
+      {{ render( controller("app:app:footer" )) }}
   {% endblock %}
 {% endblock %}

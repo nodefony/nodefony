@@ -4,38 +4,6 @@ module.exports = class defaultController extends nodefony.controller {
     super(container, context);
   }
 
-  indexAction() {
-    if (this.context.isJson) {
-      return this.render('framework::index.json.twig', {
-        title: "WEB nodefony FRAMEWORK"
-      });
-    }
-    return this.render('framework::index.html.twig', {
-      title: "WEB nodefony FRAMEWORK"
-    });
-  }
-
-  headerAction() {
-    return this.render('framework::header.html.twig', {
-
-    });
-  }
-
-  footerAction() {
-    let translateService = this.get("translation");
-    let version = this.kernel.settings.version;
-    let year = new Date().getFullYear();
-    let langs = translateService.getLangs();
-    let locale = this.getLocale();
-    return this.render('framework::footer.html.twig', {
-      langs: langs,
-      version: version,
-      year: year,
-      locale: locale,
-      description: this.kernel.app.settings.App.description
-    });
-  }
-
   ["404Action"](error) {
     this.getResponse().setStatusCode(404);
     if (this.context.isJson) {
@@ -127,7 +95,6 @@ module.exports = class defaultController extends nodefony.controller {
       error: error
     });
   }
-
 
   systemAction(options) {
     let services = {};
