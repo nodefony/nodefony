@@ -55,20 +55,26 @@ const Translation = class Translation extends nodefony.Service {
     this.langs = langs;
   }
 
-  trans(value, args) {
+  trans(value, domain = null, local = null) {
     let str = null;
+    let mylocal = null;
+    let myDomain = null;
     try {
-      str = this.getParameters("translate." + this.defaultLocale + "." + this.defaultDomain + "." + value) || value;
-      if (args) {
-        if (args[1]) {
-          this.trans_default_domain(args[1]);
+      myDomain = this.getTransDefaultDomain(domain);
+      if (domain && nodefony.typeOf(domain) === "array" && domain.length) {
+        if (domain[0]) {
+          myDomain = domain[0];
         }
-        if (args[0]) {
-          for (let ele in args[0]) {
-            str = str.replace(ele, args[0][ele]);
-          }
+        if (domain[1]) {
+          local = domain[1];
+        }
+      } else {
+        if (domain) {
+          myDomain = domain;
         }
       }
+      mylocal = this.setLocal(local);
+      str = this.getParameters("translate." + mylocal + "." + myDomain + "." + value) || value;
     } catch (e) {
       this.logger(e, "ERROR");
       return value;
@@ -81,6 +87,21 @@ const Translation = class Translation extends nodefony.Service {
   }
 
   getLocale() {
+    return this.defaultLocale;
+  }
+
+  setLocal(Lang) {
+    if (!Lang) {
+      return this.defaultLocale;
+    }
+    let res = reg.exec(Lang || this.defaultLocale);
+    if (res) {
+      if (res[2]) {
+        return res[0];
+      } else {
+        return res[1] + "_" + res[1];
+      }
+    }
     return this.defaultLocale;
   }
 
@@ -116,14 +137,8 @@ const Translation = class Translation extends nodefony.Service {
         }
       }
     }
-    let res = reg.exec(Lang || this.defaultLocale);
-    if (res) {
-      if (res[2]) {
-        this.defaultLocale = res[0];
-      } else {
-        this.defaultLocale = res[1] + "_" + res[1];
-      }
-    }
+    this.defaultLocale = this.setLocal(Lang);
+
     if (this.context.session) {
       this.context.session.set("lang", this.defaultLocale);
     }

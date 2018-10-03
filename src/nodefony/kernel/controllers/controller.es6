@@ -74,7 +74,7 @@ module.exports = nodefony.register("controller", function () {
     }
 
     getSession() {
-      return this.context.session ||  null;
+      return this.context.session || null;
     }
 
     getFlashBag(key) {

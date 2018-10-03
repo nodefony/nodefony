@@ -190,7 +190,8 @@ module.exports = nodefony.register("kernelWatcher", function () {
             fileClass.matchName(this.bundle.regI18nFile);
             let domain = fileClass.match[1];
             let Locale = fileClass.match[2];
-            this.bundle.translation.reader(fileClass.path, Locale, domain);
+            //console.log(`${file} : ${domain} : ${Locale}`)
+            this.bundle.translation.reader(fileClass.path, this.bundle, Locale, domain);
             if (this.sockjs) {
               this.sockjs.sendWatcher("change", file);
             }
