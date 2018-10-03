@@ -9,10 +9,10 @@ const reg = /^(..){1}_?(..)?$/;
  *
  *
  */
-const pluginReader = function () {
+const pluginReader = function() {
   // TODO
-  let getObjectTransXML = function () {};
-  let getObjectTransJSON = function (file, bundle, callback, parser) {
+  let getObjectTransXML = function() {};
+  let getObjectTransJSON = function(file, bundle, callback, parser) {
     if (parser) {
       file = this.render(file, parser.data, parser.options);
     }
@@ -20,7 +20,7 @@ const pluginReader = function () {
       callback(JSON.parse(file));
     }
   };
-  let getObjectTransYml = function (file, bundle, callback, parser) {
+  let getObjectTransYml = function(file, bundle, callback, parser) {
     if (parser) {
       file = this.render(file, parser.data, parser.options);
     }
@@ -36,9 +36,9 @@ const pluginReader = function () {
   };
 }();
 
-const reader = function (service) {
+const reader = function(service) {
   let func = service.get("reader").loadPlugin("translating", pluginReader);
-  return function (result, bundle, locale, domain) {
+  return function(result, bundle, locale, domain) {
     return func(result, bundle, service.nodeReader.bind(service, locale, domain));
   };
 };
@@ -60,10 +60,11 @@ const Translation = class Translation extends nodefony.Service {
     let mylocal = null;
     let myDomain = null;
     try {
-      myDomain = this.getTransDefaultDomain(domain);
-      if (domain && nodefony.typeOf(domain) === "array" && domain.length) {
+      if (domain && nodefony.typeOf(domain) === "array") {
         if (domain[0]) {
           myDomain = domain[0];
+        } else {
+          myDomain = this.getTransDefaultDomain();
         }
         if (domain[1]) {
           local = domain[1];
@@ -71,9 +72,12 @@ const Translation = class Translation extends nodefony.Service {
       } else {
         if (domain) {
           myDomain = domain;
+        } else {
+          myDomain = this.getTransDefaultDomain();
         }
       }
       mylocal = this.setLocal(local);
+      //console.log("translate." + mylocal + "." + myDomain + "." + value)
       str = this.getParameters("translate." + mylocal + "." + myDomain + "." + value) || value;
     } catch (e) {
       this.logger(e, "ERROR");
@@ -106,7 +110,9 @@ const Translation = class Translation extends nodefony.Service {
   }
 
   trans_default_domain(domain) {
-    this.defaultDomain = domain;
+    if (domain) {
+      this.defaultDomain = domain;
+    }
   }
 
   getTransDefaultDomain() {

@@ -15,9 +15,9 @@ const WebSocketClient = require('websocket').client;
 const assert = require('assert');
 //var querystring = require("querystring");
 
-describe("BUNDLE TEST", function () {
+describe("BUNDLE TEST", function() {
 
-  before(function () {
+  before(function() {
 
     global.options = {
       hostname: kernel.settings.system.domain,
@@ -27,11 +27,11 @@ describe("BUNDLE TEST", function () {
     };
   });
 
-  describe('CORS SETTINGS ', function () {
+  describe('CORS SETTINGS ', function() {
 
-    it("local-area-firewall", function (done) {
+    it("local-area-firewall", function(done) {
       global.options.path = '/test/unit/cors/http/test-local-area';
-      var request = http.request(global.options, function (res) {
+      var request = http.request(global.options, function(res) {
         assert.equal(res.statusCode, 200);
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
@@ -51,11 +51,12 @@ describe("BUNDLE TEST", function () {
 
   });
 
-  describe('CORS CONTEXT HTTP', function () {
+  describe('CORS CONTEXT HTTP', function() {
 
-    it("CROSS DOMAIN mycrossdomain", function (done) {
+    it("CROSS DOMAIN mycrossdomain", function(done) {
       global.options.path = '/test/firewall/local/cors/http/test-local-area';
-      let request = http.request(global.options, function (res) {
+      console.log(global.options)
+      let request = http.request(global.options, function(res) {
         assert.equal(res.statusCode, 302);
         res.setEncoding('utf8');
         assert.deepStrictEqual(res.headers["access-control-allow-methods"], "GET");
@@ -76,9 +77,9 @@ describe("BUNDLE TEST", function () {
       request.end();
     });
 
-    it("CROSS DOMAIN myfalsecrossdomain", function (done) {
+    it("CROSS DOMAIN myfalsecrossdomain", function(done) {
       global.options.path = '/test/firewall/local/cors/http/test-local-area';
-      let request = http.request(global.options, function (res) {
+      let request = http.request(global.options, function(res) {
         assert.equal(res.statusCode, 401);
         assert.deepStrictEqual(res.statusMessage, "CROSS DOMAIN Unauthorized REQUEST REFERER : http://myfalsecrossdomain.com:5151/");
         res.setEncoding('utf8');
@@ -91,16 +92,16 @@ describe("BUNDLE TEST", function () {
     });
   });
 
-  describe('CORS CONTEXT WEBSOCKET', function () {
+  describe('CORS CONTEXT WEBSOCKET', function() {
 
-    it("CROSS DOMAIN mycrossdomain", function (done) {
+    it("CROSS DOMAIN mycrossdomain", function(done) {
       let url = global.options.urlws;
       let options = nodefony.extend({}, global.options, {
         url: url + "/test/firewall/local/cors/http/test-local-area"
       });
       let client = new WebSocketClient();
       client.connect(options.url, null, "ws://mycrossdomain.com:5151", null, {});
-      client.on('connect', function (connection) {
+      client.on('connect', function(connection) {
         assert(connection.connected);
         connection.on('close', (reasonCode, description) => {
           assert.deepStrictEqual(reasonCode, 3401);
@@ -110,14 +111,14 @@ describe("BUNDLE TEST", function () {
       });
     });
 
-    it("CROSS DOMAIN myfalsecrossdomain", function (done) {
+    it("CROSS DOMAIN myfalsecrossdomain", function(done) {
       let url = global.options.urlws;
       let options = nodefony.extend({}, global.options, {
         url: url + "/test/firewall/local/cors/http/test-local-area"
       });
       let client = new WebSocketClient();
       client.connect(options.url, null, "http://myfalsecrossdomain.com:5151", null, {});
-      client.on('connect', function (connection) {
+      client.on('connect', function(connection) {
         assert(connection.connected);
         connection.on('close', (reasonCode, description) => {
           assert.deepStrictEqual(reasonCode, 3401);
@@ -128,10 +129,10 @@ describe("BUNDLE TEST", function () {
     });
   });
 
-  describe('CORS SESSION HTTP', function () {
+  describe('CORS SESSION HTTP', function() {
     it("CROSS DOMAIN SESSION START", (done) => {
       global.options.path = '/test/firewall/cors/session/start';
-      let request = http.request(global.options, function (res) {
+      let request = http.request(global.options, function(res) {
         assert.equal(res.statusCode, 200);
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
@@ -147,7 +148,7 @@ describe("BUNDLE TEST", function () {
     });
     it("CROSS DOMAIN SESSION HTTP", (done) => {
       global.options.path = '/test/firewall/cors/session/http';
-      let request = http.request(global.options, function (res) {
+      let request = http.request(global.options, function(res) {
         assert.equal(res.statusCode, 200);
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
@@ -163,7 +164,7 @@ describe("BUNDLE TEST", function () {
     });
   });
 
-  describe('CORS SESSION WEBSOCKET', function () {
+  describe('CORS SESSION WEBSOCKET', function() {
     it("CROSS DOMAIN SESSION WEBSOCKET", (done) => {
       let url = global.options.urlws;
       let options = nodefony.extend({}, global.options, {
@@ -171,7 +172,7 @@ describe("BUNDLE TEST", function () {
       });
       let client = new WebSocketClient();
       client.connect(options.url, null, "http://mycrossdomain.com:5151", null, {});
-      client.on('connect', function (connection) {
+      client.on('connect', function(connection) {
         assert(connection.connected);
         connection.on("message", (message) => {
           let res = JSON.parse(message.utf8Data);
