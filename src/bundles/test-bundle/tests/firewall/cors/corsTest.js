@@ -55,7 +55,6 @@ describe("BUNDLE TEST", function() {
 
     it("CROSS DOMAIN mycrossdomain", function(done) {
       global.options.path = '/test/firewall/local/cors/http/test-local-area';
-      console.log(global.options)
       let request = http.request(global.options, function(res) {
         assert.equal(res.statusCode, 302);
         res.setEncoding('utf8');

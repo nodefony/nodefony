@@ -25,15 +25,6 @@ nodefony.register.call(nodefony.context, "http", function() {
           if (this.isRedirect) {
             return this.send();
           }
-          this.setParameters("query.get", this.request.queryGet);
-          if (this.request.queryPost) {
-            this.setParameters("query.post", this.request.queryPost);
-          }
-          if (this.request.queryFile) {
-            this.setParameters("query.files", this.request.queryFile);
-          }
-          this.setParameters("query.request", this.request.query);
-          //this.locale = this.translation.handle();
         } catch (e) {
           this.fire("onError", this.container, e);
         }
@@ -116,14 +107,14 @@ nodefony.register.call(nodefony.context, "http", function() {
         if (this.isRedirect) {
           return this.send();
         }
-        /*this.setParameters("query.get", this.request.queryGet);
+        this.setParameters("query.get", this.request.queryGet);
         if (this.request.queryPost) {
           this.setParameters("query.post", this.request.queryPost);
         }
         if (this.request.queryFile) {
           this.setParameters("query.files", this.request.queryFile);
         }
-        this.setParameters("query.request", this.request.query);*/
+        this.setParameters("query.request", this.request.query);
         this.locale = this.translation.handle();
         if (!this.resolver) {
           this.resolver = this.router.resolve(this);

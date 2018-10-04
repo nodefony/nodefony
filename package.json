@@ -52,7 +52,7 @@
     "node": ">=8"
   },
   "dependencies": {
-    "create-react-app": "^2.0.2",
+    "create-react-app": "^2.0.3",
     "js-yaml": "^3.12.0",
     "mongoose": "^5.3.1",
     "pm2": "^3.2.1",
