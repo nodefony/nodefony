@@ -259,11 +259,7 @@
       {% endif %}
     </div>
   </div>
-
-{% endblock %}
-
-{% block footer %}
-  <footer>
-    {{ render( controller("documentation-bundle:default:footer" )) }}
-  </footer>
+  {% block footer %}
+      {{ render( controller("documentation-bundle:default:footer" )) }}
+  {% endblock %}
 {% endblock %}
