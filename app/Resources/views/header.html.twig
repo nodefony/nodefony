@@ -13,7 +13,7 @@
           {{getUser().name}}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="{{url("logout")}}">{{"logout"|trans}}</a>
+          <a class="dropdown-item" href="{{url("logout")}}">{{"logout"|trans("login")}}</a>
         </div>
       </li>
     {% else %}
@@ -22,7 +22,7 @@
           class="btn btn-sm btn-outline-secondary"
           role="button"
           aria-pressed="false">
-          {{"Login"|trans}}
+          {{"login"|trans("login")}}
       </a>
     </li>
     {% endif %}

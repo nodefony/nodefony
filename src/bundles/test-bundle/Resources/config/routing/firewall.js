@@ -35,7 +35,7 @@ module.exports = {
   "check-jwt": {
     pattern: "/test/firewall/jwt",
     defaults: {
-      controller: "security:login:jwt"
+      controller: "app:login:jwt"
     }
   }
 };
