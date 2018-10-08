@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
   <ul class="navbar-nav mr-auto">
-    <a class="navbar-brand font-weight-bold" href="/">
+    <a class="navbar-brand font-weight-bold" style="color:#0167b8" href="/" >
       <img src="/app/images/app-logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
       {{nodefony.name}}
     </a>
@@ -13,7 +13,7 @@
           {{getUser().name}}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="{{url("logout")}}">{{"logout"|trans}}</a>
+          <a class="dropdown-item" href="{{url("logout")}}">{{"logout"|trans("login")}}</a>
         </div>
       </li>
     {% else %}
@@ -22,7 +22,7 @@
           class="btn btn-sm btn-outline-secondary"
           role="button"
           aria-pressed="false">
-          {{"Login"|trans}}
+          {{"login"|trans("login")}}
       </a>
     </li>
     {% endif %}

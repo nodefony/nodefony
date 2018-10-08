@@ -1,4 +1,6 @@
 {% extends './base.html.twig' %}
+{% set error = getFlashBag("error") %}
+
 {% block title %}
   {{nodefony.name}}
 {% endblock %}
@@ -9,14 +11,18 @@
     {{ render( controller("app:app:header" )) }}
   {% endblock %}
 
-  <div class="container" style="margin-top:100px">
-    <div class="row">
-      <div class="col text-center">
-        <img src='{{CDN("image")}}/app/images/app-logo.png'/>
-        <strong class="display-3" style="color:#0167b8;">
-          {{nodefony.name|upper}}
-        </strong>
-        <p class="display-4 mt-5">{{trans("welcome")}}
+  <div class="container text-center mt-8" >
+        <img class="mb-4" src="{{CDN("image")}}/app/images/app-logo.png" alt="">
+        <h1 class="h1 mb-3 font-weight-normal"style="color:#0167b8">{{nodefony.name|upper}}</h1>
+        {% if error %}
+        <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+          <strong>{{error}}</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        <p class="h2 mt-3 mb-5">{{trans("welcome")}}
           {{user.username}}
         </p>
         <p class="h3 mt-3">
@@ -39,8 +45,6 @@
         {% if readme %}
         <div>{{readme}}</div>
         {% endif %}
-      </div>
-    </div>
   </div>
 
   {% block footer %}

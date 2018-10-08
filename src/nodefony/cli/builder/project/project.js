@@ -275,6 +275,10 @@ module.exports = class generateProject extends nodefony.Builder {
               type: "file",
               skeleton: path.resolve(this.pathSkeleton, "app", "controller", "appController.js.skeleton"),
               params: this.cli.response
+            }, {
+              name: "loginController.js",
+              type: "copy",
+              path: path.resolve(this.pathSkeleton, "app", "controller", "loginController.js")
             }]
           }]
         }, {
