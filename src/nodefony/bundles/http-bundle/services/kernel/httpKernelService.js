@@ -210,6 +210,7 @@ module.exports = class httpKernel extends nodefony.Service {
       getLocale: context.translation.getLocale.bind(context.translation),
       trans_default_domain: context.translation.trans_default_domain.bind(context.translation),
       getTransDefaultDomain: context.translation.getTransDefaultDomain.bind(context.translation),
+      getUser: context.getUser.bind(context),
       CDN: (type, nb) => {
         let cdn = this.getCDN(type, nb);
         if (cdn) {

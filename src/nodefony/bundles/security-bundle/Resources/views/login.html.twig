@@ -1,22 +1,29 @@
-{% extends './layout.html.twig' %}
+{% extends '/app/Resources/views/base.html.twig' %}
 {{trans_default_domain("login")}}
+{% set error = getFlashBag("error") %}
 
 {% block title %}{{trans("login")}}{% endblock %}
 
 {% block stylesheets %}
-  {{ parent() }}
   <!-- WEBPACK BUNDLE -->
   <link rel='stylesheet' href='{{CDN("stylesheet")}}/security-bundle/assets/css/login.css'/>
 {% endblock %}
 
-{% block content %}
-
+{% block body %}
     <div class="container" style="margin-top:100px">
         <div class="col text-center">
           <img src='{{CDN("image")}}/app/images/app-logo.png'/>
           <strong class="display-3" style="color:#0167b8;">
             NODEFONY {{trans("security")}}
           </strong>
+          {% if error %}
+          <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+            <strong>{{error}}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          {% endif %}
           <div class="login-block">
             <h1>{{trans("login")}} {{type}}</h1>
             <form id="login" action="{{ckeckLogin}}" method="POST">
@@ -28,11 +35,9 @@
         </div>
       </div>
     </div>
-
 {% endblock %}
 
 {% block javascripts %}
-  {{ parent() }}
   <!-- WEBPACK BUNDLE -->
   <script src='{{CDN("javascript")}}/security-bundle/assets/js/login.js'></script>
 {% endblock %}

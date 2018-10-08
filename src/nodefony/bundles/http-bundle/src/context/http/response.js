@@ -65,10 +65,9 @@ module.exports = nodefony.register("Response", function() {
     }
 
     setCookie(cookie) {
-      //this.response.on('header', function(){
-      this.logger("ADD COOKIE ==> " + cookie.serialize(), "DEBUG");
-      return this.setHeader('Set-Cookie', cookie.serialize());
-      //}.bind(this))
+      let serialize = cookie.serialize();
+      this.logger("ADD COOKIE ==> " + serialize, "DEBUG");
+      return this.setHeader('Set-Cookie', serialize);
     }
 
     logger(pci, severity, msgid, msg) {

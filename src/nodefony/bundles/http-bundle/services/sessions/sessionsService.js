@@ -27,34 +27,34 @@ module.exports = class sessions extends nodefony.Service {
 
   setAutoStart(setting) {
     switch (setting) {
-    case true:
-    case "":
-    case undefined:
-      return "default";
-    case false:
-    case null:
-      return null;
-    default:
-      if (typeof setting === "string") {
-        return setting;
-      }
-      throw new Error("Session start settings config error : " + setting);
+      case true:
+      case "":
+      case undefined:
+        return "default";
+      case false:
+      case null:
+        return null;
+      default:
+        if (typeof setting === "string") {
+          return setting;
+        }
+        throw new Error("Session start settings config error : " + setting);
     }
   }
 
   initializeStorage() {
     let storage = null;
     switch (this.settings.handler) {
-    case "orm":
-    case "ORM":
-      storage = nodefony.session.storage[this.kernel.getOrm()];
-      break;
-    default:
-      storage = nodefony.session.storage[this.settings.handler];
+      case "orm":
+      case "ORM":
+        storage = nodefony.session.storage[this.kernel.getOrm()];
+        break;
+      default:
+        storage = nodefony.session.storage[this.settings.handler];
     }
     if (storage) {
       this.storage = new storage(this);
-      this.listen(this, "onReady", function () {
+      this.listen(this, "onReady", function() {
         this.storage.open("default");
       });
     } else {
@@ -118,7 +118,7 @@ module.exports = class sessions extends nodefony.Service {
 
   addContextSession(context) {
     if (this.storage) {
-      this.listen(this, "onReady", function () {
+      this.listen(this, "onReady", function() {
         this.storage.open(context);
       });
     }

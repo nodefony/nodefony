@@ -11,10 +11,40 @@ module.exports = class loginController extends nodefony.controller {
     if (area && area.checkLogin) {
       checkLogin = area.checkLogin;
     }
-    return this.render("securityBundle::login.html.twig", {
+    return this.render("app:login:login.html.twig", {
       type: type,
       ckeckLogin: checkLogin
     });
+  }
+
+  logoutAction() {
+    if (this.context.session) {
+      let security = this.context.session.getMetaBag("security");
+      if (!security) {
+        return this.context.session.destroy(true).then(() => {
+          return this.redirect("/", null, true);
+        });
+      }
+      if (this.context.token) {
+        this.request.request.headers.authorization = "";
+        this.response.setHeader("authorization", "");
+        try {
+          let formlogin = this.firewall.getSecuredArea(security.firewall).formLogin;
+          return this.context.session.destroy(true).then(() => {
+            if (formlogin) {
+              return this.redirect(formlogin, null, true);
+            }
+            return this.redirect("/", null, true);
+          });
+        } catch (e) {
+          this.logger(e, "ERROR");
+          return this.context.session.destroy(true).then(() => {
+            return this.redirect("/", null, true);
+          });
+        }
+      }
+    }
+    return this.redirect("/", null, true);
   }
 
   jwtAction() {
@@ -31,8 +61,6 @@ module.exports = class loginController extends nodefony.controller {
       if (conf.params && conf.params[0]) {
         name = conf.params[0];
       }
-      //let area = this.firewall.getSecuredArea("test-api-area");
-      //let myPath = area.stringPattern.replace("^", "")
       this.context.createCookie(name, jeton, {
         httpOnly: true,
         secure: true,
