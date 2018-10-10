@@ -137,8 +137,8 @@ module.exports = nodefony.register("httpError", function () {
           this.code = 500;
         }
         break;
-        //default:
-        //  this.message = message;
+      default:
+        return super.parseMessage(message);
       }
     }
   }

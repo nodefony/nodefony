@@ -1,4 +1,5 @@
 const assert = require("assert");
+const STATUS_CODES = require("http").STATUS_CODES;
 module.exports = nodefony.register("Error", function () {
   class nodefonyError extends Error {
 
@@ -136,6 +137,17 @@ module.exports = nodefony.register("Error", function () {
           this.error = e;
         }
         break;
+      default:
+        this.getDefaultMessage();
+      }
+    }
+
+    getDefaultMessage() {
+      if (!this.message && this.code) {
+        let str = this.code.toString();
+        if (str in STATUS_CODES) {
+          this.message = STATUS_CODES[str];
+        }
       }
     }
 
