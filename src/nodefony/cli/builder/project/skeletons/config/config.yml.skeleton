@@ -34,7 +34,6 @@ system:
   monitoring                    : true
   documentation                 : true
   unitTest                      : true
-  demo                          : true
   locale                        : "en_en"
   servers:
     protocol                    : "2.0"             #  2.0 || 1.1

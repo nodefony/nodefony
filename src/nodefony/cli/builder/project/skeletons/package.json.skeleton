@@ -29,7 +29,6 @@
     "node": ">=8"
   },
   "dependencies": {
-    "@nodefony/demo-bundle": "latest",
     "create-react-app": "^2.0.3",
     "js-yaml": "^3.12.0",
     "mongoose": "^5.3.1",
