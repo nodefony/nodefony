@@ -25,7 +25,7 @@
     "font-awesome": "^4.7.0",
     "image-webpack-loader": "^4.3.1",
     "jquery": "^3.3.1",
-    "mini-css-extract-plugin": "^0.4.3",
+    "mini-css-extract-plugin": "^0.4.4",
     "node-sass": "^4.9.3",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "popper.js": "^1.14.4",

@@ -20,7 +20,7 @@
     "css-loader": "^1.0.0",
     "file-loader": "^2.0.0",
     "jsonwebtoken": "^8.3.0",
-    "mini-css-extract-plugin": "^0.4.3",
+    "mini-css-extract-plugin": "^0.4.4",
     "node-pre-gyp": "^0.11.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "passport": "^0.4.0",
