@@ -3,6 +3,7 @@ module.exports = class loginController extends nodefony.controller {
   constructor(container, context) {
     super(container, context);
     this.firewall = this.get("security");
+    this.startSession();
   }
 
   loginAction(type) {

@@ -19,5 +19,11 @@ module.exports = {
     defaults: {
       controller: "app:login:logout"
     }
+  },
+  lang: {
+    pattern: "/lang",
+    defaults: {
+      controller: "app:app:lang"
+    }
   }
 };

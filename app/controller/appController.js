@@ -5,6 +5,8 @@ module.exports = class appController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
+    // start session
+    this.startSession();
   }
 
   indexAction() {
@@ -53,5 +55,22 @@ module.exports = class appController extends nodefony.controller {
       locale: locale,
       description: this.kernel.app.settings.App.description
     });
+  }
+
+  /**
+   *
+   */
+  langAction() {
+    if (this.query.lang) {
+      if (this.context.session) {
+        this.context.session.set("lang", this.query.lang);
+        let route = this.context.session.getMetaBag("lastRoute");
+        if (route) {
+          return this.redirect(this.url(route));
+        }
+        return this.redirect("/");
+      }
+    }
+    return this.redirect("/");
   }
 };
