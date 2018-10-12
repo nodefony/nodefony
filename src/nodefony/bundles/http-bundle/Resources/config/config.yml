@@ -115,3 +115,7 @@ session:
     options:
       debug:              false
       timeout:            5000
+
+#########################
+#   SERVICE requestClient
+requestClient           : ~
