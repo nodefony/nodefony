@@ -1,5 +1,21 @@
 # Changelog
 
+## v4.0.0-beta.9 (12/10/2018)
+- [upgrade nodefony](https://github.com/nodefony/nodefony-core/commit/e89fb83c3c348722e8f307060fbdd4cae6edb340)
+- [Update README.md](https://github.com/nodefony/nodefony-core/commit/3fed5f69e58a2c65b6ab94f99c7bcb91c97b276a)
+- [init service config request](https://github.com/nodefony/nodefony-core/commit/0d79b86bb3eb029d12a1f0ce07123e00d6edfb3b)
+- [add service requestClient](https://github.com/nodefony/nodefony-core/commit/9924b2b0ea3d727c6d2351cd03e1b696b19d210d)
+- [upgrade builder](https://github.com/nodefony/nodefony-core/commit/162ad48634b89191512f6284910b6f17676e3898)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/9d797fe40c2c2573c890e65432451bad3de0cbc6)
+- [error class log  better](https://github.com/nodefony/nodefony-core/commit/0e8cc91fe71a7d3aac7b2519bdf53253844f7b1c)  
+- [update create project](https://github.com/nodefony/nodefony-core/commit/3f9b5602d604b59d20f18574ac9f594742232bd0)
+- [add translation login | debug test](https://github.com/nodefony/nodefony-core/commit/bf383add77a6c0b7f055176a1c617af6ac22bc55)
+- [add login page in app](https://github.com/nodefony/nodefony-core/commit/f18d4bccc6664e5b67c3c93f0a92524a3b00196b)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/7b29a4b9d203f32081e12f39cae01df2bfda81db)
+- [new design app | error page debug](https://github.com/nodefony/nodefony-core/commit/70b44bde94c63fd57bf57aac8b43fa74ed7cf84e)
+
+---
+
 ## v4.0.0-beta.8 (27/09/2018)
 - [4.0.0-beta.8](https://github.com/nodefony/nodefony-core/commit/5492bbad8ab1b9921e850d1a9234031731ded822)
 - [webpack extract comment](https://github.com/nodefony/nodefony-core/commit/f8a8908d168fdfd766ac7595a8abb7937b3049be)
