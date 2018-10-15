@@ -35,6 +35,10 @@ documentation:
   pattern:                              /documentation
   defaults: {"controller":              "documentation:default:index"}
 
+documentation-lang:
+  pattern:                              /documentation/changelang
+  defaults: {"controller":              "documentation:default:lang"}
+
 documentation-search:
   pattern:                              /documentation/search
   defaults: {"controller":              "documentation:default:search"}

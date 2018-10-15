@@ -95,19 +95,19 @@ module.exports = class httpsServer extends nodefony.Service {
       this.options = this.getCertificats();
       for (let ele in this.options) {
         switch (ele) {
-        case "keyPath":
-          this.logger(" READ CERTIFICATE KEY : " + this.options[ele], "DEBUG");
-          break;
-        case "certPath":
-          this.logger(" READ CERTIFICATE CERT : " + this.options[ele], "DEBUG");
-          break;
-        case "caPath":
-          if (this.options[ele]) {
-            this.logger(" READ CERTIFICATE CA : " + this.options[ele], "DEBUG");
-          } else {
-            this.logger(" NO CERTIFICATE CA : " + this.options[ele], "WARNING");
-          }
-          break;
+          case "keyPath":
+            this.logger(" READ CERTIFICATE KEY : " + this.options[ele], "DEBUG");
+            break;
+          case "certPath":
+            this.logger(" READ CERTIFICATE CERT : " + this.options[ele], "DEBUG");
+            break;
+          case "caPath":
+            if (this.options[ele]) {
+              this.logger(" READ CERTIFICATE CA : " + this.options[ele], "DEBUG");
+            } else {
+              this.logger(" NO CERTIFICATE CA : " + this.options[ele], "WARNING");
+            }
+            break;
         }
       }
     } catch (e) {
@@ -116,25 +116,25 @@ module.exports = class httpsServer extends nodefony.Service {
     }
     try {
       switch (this.protocol) {
-      case "1.1":
-        this.server = https.createServer(this.options);
-        this.bundle.fire("onCreateServer", this.type, this);
-        break;
-      case "2.0":
-        this.options.allowHTTP1 = true;
-        this.settings2 = this.getParameters("bundles.http").http2 || {};
-        let buf = http2.getPackedSettings(this.settings2);
-        this.defaultSetting2 = nodefony.extend({}, http2.getDefaultSettings(), http2.getUnpackedSettings(buf) || {});
-        this.server = http2.createSecureServer(this.options);
-        this.bundle.fire("onCreateServer", this.type, this);
-        this.server.on("sessionError", (error) => {
-          this.logger(error, "ERROR", "HTTP2 Server sessionError");
-        });
-        this.server.on("streamError", (error) => {
-          this.logger(error, "ERROR", "HTTP2 Server streamError");
-        });
-        break;
-      default:
+        case "1.1":
+          this.server = https.createServer(this.options);
+          this.bundle.fire("onCreateServer", this.type, this);
+          break;
+        case "2.0":
+          this.options.allowHTTP1 = true;
+          this.settings2 = this.getParameters("bundles.http").http2 || {};
+          let buf = http2.getPackedSettings(this.settings2);
+          this.defaultSetting2 = nodefony.extend({}, http2.getDefaultSettings(), http2.getUnpackedSettings(buf) || {});
+          this.server = http2.createSecureServer(this.options);
+          this.bundle.fire("onCreateServer", this.type, this);
+          this.server.on("sessionError", (error) => {
+            this.logger(error, "ERROR", "HTTP2 Server sessionError");
+          });
+          this.server.on("streamError", (error) => {
+            this.logger(error, "ERROR", "HTTP2 Server streamError");
+          });
+          break;
+        default:
       }
     } catch (e) {
       this.logger(e, "CRITIC");
@@ -176,19 +176,19 @@ module.exports = class httpsServer extends nodefony.Service {
     this.server.on("error", (error) => {
       let myError = new nodefony.Error(error);
       switch (error.errno) {
-      case "ENOTFOUND":
-        this.logger("CHECK DOMAIN IN /etc/hosts or config unable to connect to : " + this.domain, "ERROR");
-        this.logger(myError, "CRITIC");
-        break;
-      case "EADDRINUSE":
-        this.logger("Domain : " + this.domain + " Port : " + this.port + " ==> ALREADY USE ", "ERROR");
-        this.logger(myError, "CRITIC");
-        setTimeout(() => {
-          this.server.close();
-        }, 1000);
-        break;
-      default:
-        this.logger(myError, "CRITIC");
+        case "ENOTFOUND":
+          this.logger("CHECK DOMAIN IN /etc/hosts or config unable to connect to : " + this.domain, "ERROR");
+          this.logger(myError, "CRITIC");
+          break;
+        case "EADDRINUSE":
+          this.logger("Domain : " + this.domain + " Port : " + this.port + " ==> ALREADY USE ", "ERROR");
+          this.logger(myError, "CRITIC");
+          setTimeout(() => {
+            this.server.close();
+          }, 1000);
+          break;
+        default:
+          this.logger(myError, "CRITIC");
       }
     });
 

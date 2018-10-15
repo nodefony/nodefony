@@ -247,9 +247,9 @@ module.exports = nodefony.register("Response", function() {
     end(data, encoding) {
       if (this.response) {
         this.ended = true;
-        return this.response.end(data, encoding);
+        return Promise.resolve(this.response.end(data, encoding));
       }
-      return null;
+      return Promise.resolve(null);
     }
 
     redirect(url, status, headers) {

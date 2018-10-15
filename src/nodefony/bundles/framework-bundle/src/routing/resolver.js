@@ -4,7 +4,7 @@
  *
  *
  */
-module.exports = nodefony.register("Resolver", function () {
+module.exports = nodefony.register("Resolver", function() {
 
   const regAction = /^(.+)[Aa]ction$/;
 
@@ -135,16 +135,16 @@ module.exports = nodefony.register("Resolver", function () {
 
     setVariables(data) {
       switch (nodefony.typeOf(data)) {
-      case "array":
-      case "arguments":
-        if (data.length) {
-          for (let i = 0; i < data.length; i++) {
-            this.variables.push(data[i]);
+        case "array":
+        case "arguments":
+          if (data.length) {
+            for (let i = 0; i < data.length; i++) {
+              this.variables.push(data[i]);
+            }
           }
-        }
-        break;
-      default:
-        this.variables.push(data);
+          break;
+        default:
+          this.variables.push(data);
       }
     }
 
@@ -176,53 +176,53 @@ module.exports = nodefony.register("Resolver", function () {
     returnController(result) {
       let type = nodefony.typeOf(result);
       switch (true) {
-      case (type === "string"):
-      case result instanceof String:
-        return this.context.send(result);
-      case result instanceof nodefony.subRequest:
-        switch (true) {
-        case result.result instanceof Promise:
-        case result.result instanceof BlueBird:
-        case nodefony.isPromise(result.result):
-          this.returnController(result.result);
+        case (type === "string"):
+        case result instanceof String:
+          return this.context.send(result);
+        case result instanceof nodefony.subRequest:
+          switch (true) {
+            case result.result instanceof Promise:
+            case result.result instanceof BlueBird:
+            case nodefony.isPromise(result.result):
+              this.returnController(result.result);
+              return this.context.send();
+              //case nodefony.typeOf(result.result) === "object":
+              //  return this.returnController(this.get("controller").renderSync(this.defaultView, result.result));
+            default:
+              return this.returnController(result.result);
+          }
+          break;
+        case result instanceof nodefony.Response:
+        case result instanceof nodefony.wsResponse:
           return this.context.send();
-          //case nodefony.typeOf(result.result) === "object":
-          //  return this.returnController(this.get("controller").renderSync(this.defaultView, result.result));
+        case result instanceof Promise:
+        case result instanceof BlueBird:
+        case nodefony.isPromise(result):
+          //if (this.context.promise) {
+          //return this.context.promise.then(result);
+          //}
+          this.context.promise = result;
+          return this.context.promise.then((myResult) => {
+            return this.returnController(myResult);
+          }).catch((e) => {
+            throw e;
+          });
+        case result instanceof nodefony.Context:
+          return result;
+        case (type === "object"):
+          if (this.defaultView) {
+            return this.returnController(this.get("controller").renderSync(this.defaultView, result));
+          } else {
+            throw new Error("default view not exist");
+          }
+          break;
         default:
-          return this.returnController(result.result);
-        }
-        break;
-      case result instanceof nodefony.Response:
-      case result instanceof nodefony.wsResponse:
-        return this.context.send();
-      case result instanceof Promise:
-      case result instanceof BlueBird:
-      case nodefony.isPromise(result):
-        //if (this.context.promise) {
-        //return this.context.promise.then(result);
-        //}
-        this.context.promise = result;
-        return this.context.promise.then((myResult) => {
-          return this.returnController(myResult);
-        }).catch((e) => {
-          throw e;
-        });
-      case result instanceof nodefony.Context:
-        return result;
-      case (type === "object"):
-        if (this.defaultView) {
-          return this.returnController(this.get("controller").renderSync(this.defaultView, result));
-        } else {
-          throw new Error("default view not exist");
-        }
-        break;
-      default:
-        if (this.context.isRedirect) {
-          return this.context.send();
-        }
-        this.context.waitAsync = true;
-        //this.logger("WAIT ASYNC RESPONSE FOR ROUTE : " + this.route.name, "DEBUG")
-        // CASE async controller wait fire onResponse by other entity
+          if (this.context.isRedirect) {
+            return this.context.send();
+          }
+          this.context.waitAsync = true;
+          //this.logger("WAIT ASYNC RESPONSE FOR ROUTE : " + this.route.name, "DEBUG")
+          // CASE async controller wait fire onResponse by other entity
       }
     }
   };

@@ -244,24 +244,36 @@ nodefony.register("Context", () => {
     pushAsset() {
       let publicPath = this.kernelHttp.monitoringBundle.publicPath;
       let bundleName = this.kernelHttp.monitoringBundle.bundleName;
-      this.response.push(path.resolve(publicPath, "assets", "js", "debugBar.js"), {
-        path: "/" + bundleName + "/assets/js/debugBar.js"
-      });
-      this.response.push(path.resolve(publicPath, "assets", "css", "debugBar.css"), {
-        path: "/" + bundleName + "/assets/css/debugBar.css"
-      });
-      this.response.push(path.resolve(publicPath, "images", "http2.png"), {
-        path: "/" + bundleName + "/images/http2.png"
-      });
-      this.response.push(path.resolve(publicPath, "images", "nodejs_logo.png"), {
-        path: "/" + bundleName + "/images/nodejs_logo.png"
-      });
-      this.response.push(path.resolve(publicPath, "images", "window-close.ico"), {
-        path: "/" + bundleName + "/images/window-close.ico"
-      });
-      this.response.push(path.resolve(this.kernelHttp.frameworkBundle.publicPath, "images", "nodefony-logo.png"), {
-        path: "/" + this.kernelHttp.frameworkBundle.bundleName + "/images/nodefony-logo.png"
-      });
+      return this.response.push(path.resolve(publicPath, "assets", "js", "debugBar.js"), {
+          path: "/" + bundleName + "/assets/js/debugBar.js"
+        })
+        .then(() => {
+          return this.response.push(path.resolve(publicPath, "assets", "css", "debugBar.css"), {
+            path: "/" + bundleName + "/assets/css/debugBar.css"
+          });
+        })
+        .then(() => {
+          return this.response.push(path.resolve(publicPath, "images", "http2.png"), {
+            path: "/" + bundleName + "/images/http2.png"
+          });
+        })
+        .then(() => {
+          return this.response.push(path.resolve(publicPath, "images", "nodejs_logo.png"), {
+            path: "/" + bundleName + "/images/nodejs_logo.png"
+          });
+        })
+        .then(() => {
+          return this.response.push(path.resolve(publicPath, "images", "window-close.ico"), {
+            path: "/" + bundleName + "/images/window-close.ico"
+          });
+        })
+        .then(() => {
+          return this.response.push(path.resolve(this.kernelHttp.frameworkBundle.publicPath, "images", "nodefony-logo.png"), {
+            path: "/" + this.kernelHttp.frameworkBundle.bundleName + "/images/nodefony-logo.png"
+          });
+        }).catch(e => {
+          Promise.resolve();
+        })
     }
 
     saveProfile() {

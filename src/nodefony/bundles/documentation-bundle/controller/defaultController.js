@@ -99,7 +99,7 @@ module.exports = class defaultController extends nodefony.controller {
     }
     let directory = finder.result.getDirectories();
     let sections = [];
-    directory.forEach(function (ele) {
+    directory.forEach(function(ele) {
       sections.push(ele.name);
     });
     return this.render("documentationBundle:layouts:navSection.html.twig", {
@@ -162,7 +162,7 @@ module.exports = class defaultController extends nodefony.controller {
     }
     let directory = finderVersion.result.getDirectories();
     let all = [];
-    directory.forEach(function (ele) {
+    directory.forEach(function(ele) {
       all.push(ele.name);
     });
 
@@ -318,7 +318,7 @@ module.exports = class defaultController extends nodefony.controller {
     //console.log(directory)
 
     let versions = [];
-    directory.forEach(function (ele) {
+    directory.forEach(function(ele) {
       versions.push(ele.name);
     });
 
@@ -338,13 +338,45 @@ module.exports = class defaultController extends nodefony.controller {
     });
   }
 
+  footerAction() {
+    let translateService = this.get("translation");
+    let version = this.kernel.settings.version;
+    let year = new Date().getFullYear();
+    let langs = translateService.getLangs();
+    let locale = this.getLocale();
+    return this.render("documentation:layouts:footer.html.twig", {
+      langs: langs,
+      version: version,
+      year: year,
+      locale: locale,
+      description: this.kernel.app.settings.App.description
+    });
+  }
+
+  /**
+   *
+   */
+  langAction() {
+    if (this.query.lang) {
+      if (this.context.session) {
+        this.context.session.set("lang", this.query.lang);
+        let route = this.context.session.getMetaBag("lastRoute");
+        if (route) {
+          return this.redirect(this.url(route));
+        }
+        return this.redirect("/");
+      }
+    }
+    return this.redirect("/");
+  }
+
   /**
    *
    *   footer
    *
    *
    */
-  footerAction() {
+  /*footerAction() {
     let translateService = this.get("translation");
     let version = this.kernel.settings.version;
     let path = this.generateUrl("home");
@@ -387,7 +419,7 @@ module.exports = class defaultController extends nodefony.controller {
              </div>\
              </div>';
     return this.getResponse(html);
-  }
+  }*/
 
   searchAction() {
     let url = this.generateUrl("documentation-version", {

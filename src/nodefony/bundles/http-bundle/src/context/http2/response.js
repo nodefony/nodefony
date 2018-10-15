@@ -92,7 +92,7 @@ module.exports = nodefony.register("http2Response", () => {
     end(data, encoding) {
       if (this.stream) {
         this.ended = true;
-        return this.stream.end(data, encoding);
+        return Promise.resolve(this.stream.end(data, encoding));
       } else {
         return super.end(data, encoding);
       }
@@ -126,19 +126,32 @@ module.exports = nodefony.register("http2Response", () => {
               exclusive: true,
               parent: this.streamId
             }, (err, pushStream /*, headers*/ ) => {
-              /*if (version9) {
-                if (err) {
-                  return reject(err);
-                }
-              } else {
-                pushStream = err;
-              }*/
               if (err) {
                 return reject(err);
               }
+              pushStream.on('error', err => {
+                this.logger(err, "ERROR", 'HTTP2 push stream');
+                switch (err.code) {
+                  case "ENOENT":
+                    pushStream.respond({
+                      ':status': 404
+                    });
+                    break;
+                  case "ERR_HTTP2_STREAM_ERROR":
+                    return;
+                  default:
+                    pushStream.respond({
+                      ':status': 500
+                    });
+                }
+                return reject(err);
+              });
+              pushStream.on('close', () => {
+                this.logger("Push Stream Closed", "DEBUG", 'HTTP2 push stream');
+              });
               let myOptions = nodefony.extend({
                 onError: (err) => {
-                  this.logger(err, "ERROR");
+                  this.logger(err, "ERROR", 'HTTP2 push stream');
                   if (err.code === 'ENOENT') {
                     pushStream.respond({
                       ':status': 404
@@ -149,7 +162,7 @@ module.exports = nodefony.register("http2Response", () => {
                     });
                   }
                   //pushStream.end();
-                  return reject(pushStream);
+                  return reject(err);
                 }
               }, options);
               try {

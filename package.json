@@ -52,9 +52,9 @@
     "node": ">=8"
   },
   "dependencies": {
-    "create-react-app": "^2.0.3",
+    "create-react-app": "^2.0.4",
     "js-yaml": "^3.12.0",
-    "mongoose": "^5.3.2",
+    "mongoose": "^5.3.3",
     "pm2": "^3.2.2",
     "sequelize": "5.0.0-beta.12",
     "webpack": "^4.20.2",
@@ -62,8 +62,8 @@
     "webpack-merge": "^4.1.4"
   },
   "devDependencies": {
-    "editorconfig": "^0.15.0",
-    "github-release-notes": "^0.16.0",
+    "editorconfig": "^0.15.2",
+    "github-release-notes": "^0.17.0",
     "jshint": "^2.9.6",
     "node-pre-gyp": "^0.11.0"
   },
