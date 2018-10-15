@@ -3,7 +3,11 @@ module.exports = nodefony.register("requestError", function () {
   class requestError extends nodefony.httpError {
 
     constructor(message, response, container) {
-      super(message, response.statusCode, container);
+      if (response) {
+        super(message, response.statusCode, container);
+      } else {
+        super(message, null, container);
+      }
       this.response = response;
       if (this.response) {
         this.parserResponse();
