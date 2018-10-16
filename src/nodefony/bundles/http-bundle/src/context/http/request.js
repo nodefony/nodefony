@@ -425,6 +425,13 @@ module.exports = nodefony.register("Request", function () {
       }
     }
 
+    getHeader(name) {
+      if (name in this.headers) {
+        return this.headers[name];
+      }
+      return null;
+    }
+
     isAjax() {
       if (this.headers['x-requested-with']) {
         return ('xmlhttprequest' === this.headers['x-requested-with'].toLowerCase());
