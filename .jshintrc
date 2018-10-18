@@ -7,7 +7,6 @@
   "eqeqeq": true,
   "curly": true,
   "loopfunc": true,
-  "multistr": true,
   "globals": {
     "nodefony": true,
     "kernel": true,
