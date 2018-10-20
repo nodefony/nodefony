@@ -14,7 +14,9 @@ const reactCli = class reactCli extends nodefony.Service {
   }
 
   getReactPath() {
-    return path.resolve(process.cwd(), "node_modules", ".bin", "create-react-app");
+    console.log(kernel.nodefonyPath)
+    return path.resolve(kernel.nodefonyPath, "node_modules", ".bin", "create-react-app");
+    //return path.resolve(process.cwd(), "node_modules", ".bin", "create-react-app");
   }
 
   setEnv() {

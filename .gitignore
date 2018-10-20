@@ -13,6 +13,7 @@ app/*.db
 
 node_modules/**
 **/node_modules/**
+**/precache-manifest*
 npm-debug.log
 yarn-error.log
 
