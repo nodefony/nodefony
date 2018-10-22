@@ -52,9 +52,9 @@
     "node": ">=8"
   },
   "dependencies": {
-    "mongoose": "^5.3.4",
+    "mongoose": "^5.3.5",
     "pm2": "^3.2.2",
-    "sequelize": "5.0.0-beta.12",
+    "sequelize": "5.0.0-beta.13",
     "webpack": "^4.22.0",
     "webpack-dev-server": "^3.1.9"
   },

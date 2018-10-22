@@ -6,7 +6,7 @@ module.exports = nodefony.register("requestError", function () {
       if (response) {
         super(message, response.statusCode, container);
       } else {
-        super(message, null, container);
+        super(message, 500, container);
       }
       this.response = response;
       if (this.response) {

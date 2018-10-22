@@ -58,7 +58,13 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.validDomain = this.isValidDomain();
       this.remoteAddress = this.request.remoteAddress;
       this.once("onTimeout", () => {
-        let error = new nodefony.httpError("Request Timeout", 408, this.container);
+        let error = null;
+        if (this.response.stream) {
+          // traff 408 reload page htpp2 loop
+          error = new nodefony.httpError("Gateway Timeout", 504, this.container);
+        } else {
+          error = new nodefony.httpError("Request Timeout", 408, this.container);
+        }
         this.fire("onError", this.container, error);
       });
       //case proxy
@@ -130,9 +136,9 @@ nodefony.register.call(nodefony.context, "http", function () {
               this.timeoutid = this.response.stream.setTimeout(this.response.timeout, () => {
                 this.timeoutExpired = true;
                 this.fire("onTimeout", this);
-                this.once("onFinish", () => {
-                  //this.response.stream.close();
-                })
+                /*this.once("onFinish", () => {
+                  this.response.stream.close();
+                });*/
               });
             } else {
               this.timeoutid = this.response.response.setTimeout(this.response.timeout, () => {

@@ -60,7 +60,7 @@ system:
 
   bundles:
     test-bundle                 : "file:src/bundles/test-bundle"
-    workbox-bundle              : "file:src/bundles/workbox-bundle"
+    #workbox-bundle              : "file:src/bundles/workbox-bundle"
 
   #################
   # SYSLOG NODEFONY

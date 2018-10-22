@@ -319,7 +319,7 @@ module.exports = class httpKernel extends nodefony.Service {
       }
       if (!httpError.context) {
         httpError.context = container.get("context");
-        httpError.resolve();
+        httpError.resolve(true);
       }
       context = httpError.context;
       context.resolver = httpError.resolver;

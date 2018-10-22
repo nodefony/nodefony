@@ -15,6 +15,9 @@ module.exports = nodefony.register("httpError", function () {
       if (this.container) {
         this.parserContainer();
       }
+      if (this.code === 1000 || this.code === 200 || typeof this.code === "string") {
+        this.code = 500;
+      }
     }
 
     logger(data) {
@@ -38,9 +41,6 @@ module.exports = nodefony.register("httpError", function () {
         this.scheme = this.context.scheme;
         if (!this.code && this.context.response) {
           this.code = this.context.response.getStatusCode();
-          if (this.code === 1000 || this.code === 200) {
-            this.code = 500;
-          }
         }
         if (this.xjson && this.context.setXjson) {
           this.context.setXjson(this.xjson);
@@ -53,6 +53,9 @@ module.exports = nodefony.register("httpError", function () {
           this.code = st.code;
           this.message = st.message;
           this.resolve();
+        }
+        if (this.code === 1000 || this.code === 200 || typeof code === "string") {
+          this.code = 500;
         }
         if (this.context.isJson) {
           try {
@@ -73,7 +76,7 @@ module.exports = nodefony.register("httpError", function () {
       }
     }
 
-    resolve() {
+    resolve(setStatus = false) {
       switch (this.code) {
       case 404:
         this.resolver = this.context.router.resolveName(this.context, "frameworkBundle:default:404");
@@ -93,22 +96,21 @@ module.exports = nodefony.register("httpError", function () {
           this.code = 500;
         }
       }
+      if (setStatus) {
+        this.context.response.setStatusCode(this.code, this.message);
+      }
     }
 
     parseMessage(message) {
       switch (nodefony.typeOf(message)) {
       case "Error":
-        this.message = message.message;
-        if (message.code) {
-          this.code = message.code;
-        }
+        super.parseMessage(message);
         if (message.status) {
           this.code = message.status;
         }
         if (message.xjson) {
           this.xjson = message.xjson;
         }
-        this.stack = message.stack;
         break;
       case "string":
         this.message = message;
