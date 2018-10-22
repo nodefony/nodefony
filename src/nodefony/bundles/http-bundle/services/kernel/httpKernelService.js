@@ -305,7 +305,7 @@ module.exports = class httpKernel extends nodefony.Service {
   }
 
   onError(container, error) {
-    let context = null;
+    let context = container.get("context");
     let httpError = null;
     let result = null;
     try {
@@ -315,10 +315,14 @@ module.exports = class httpKernel extends nodefony.Service {
         httpError = error;
         break;
       default:
-        httpError = new nodefony.httpError(error, null, container);
+        if (context.response && context.response.statusCode === 200) {
+          httpError = new nodefony.httpError(error, 500, container);
+        } else {
+          httpError = new nodefony.httpError(error, null, container);
+        }
       }
       if (!httpError.context) {
-        httpError.context = container.get("context");
+        httpError.context = context;
         httpError.resolve(true);
       }
       context = httpError.context;
