@@ -85,10 +85,6 @@ module.exports = nodefony.register("http2Response", () => {
       }
     }
 
-    write(data, encoding) {
-      return this.send(data, encoding);
-    }
-
     end(data, encoding) {
       if (this.stream) {
         this.ended = true;
@@ -132,17 +128,17 @@ module.exports = nodefony.register("http2Response", () => {
               pushStream.on('error', err => {
                 this.logger(err, "ERROR", 'HTTP2 push stream');
                 switch (err.code) {
-                  case "ENOENT":
-                    pushStream.respond({
-                      ':status': 404
-                    });
-                    break;
-                  case "ERR_HTTP2_STREAM_ERROR":
-                    return;
-                  default:
-                    pushStream.respond({
-                      ':status': 500
-                    });
+                case "ENOENT":
+                  pushStream.respond({
+                    ':status': 404
+                  });
+                  break;
+                case "ERR_HTTP2_STREAM_ERROR":
+                  return;
+                default:
+                  pushStream.respond({
+                    ':status': 500
+                  });
                 }
                 return reject(err);
               });

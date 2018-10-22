@@ -1,4 +1,4 @@
-nodefony.register.call(nodefony.context, "http", function() {
+nodefony.register.call(nodefony.context, "http", function () {
 
   const Http = class httpContext extends nodefony.Context {
 
@@ -130,6 +130,9 @@ nodefony.register.call(nodefony.context, "http", function() {
               this.timeoutid = this.response.stream.setTimeout(this.response.timeout, () => {
                 this.timeoutExpired = true;
                 this.fire("onTimeout", this);
+                this.once("onFinish", () => {
+                  //this.response.stream.close();
+                })
               });
             } else {
               this.timeoutid = this.response.response.setTimeout(this.response.timeout, () => {
@@ -293,23 +296,23 @@ nodefony.register.call(nodefony.context, "http", function() {
 
     setXjson(xjson) {
       switch (nodefony.typeOf(xjson)) {
-        case "object":
-          this.response.setHeader("X-Json", JSON.stringify(xjson));
-          return xjson;
-        case "string":
-          this.response.setHeader("X-Json", xjson);
-          return JSON.parse(xjson);
-        case "Error":
-          if (typeof xjson.message === "object") {
-            this.response.setHeader("X-Json", JSON.stringify(xjson.message));
-            return xjson.message;
-          } else {
-            this.response.setHeader("X-Json", xjson.message);
-            return {
-              error: xjson.message
-            };
-          }
-          break;
+      case "object":
+        this.response.setHeader("X-Json", JSON.stringify(xjson));
+        return xjson;
+      case "string":
+        this.response.setHeader("X-Json", xjson);
+        return JSON.parse(xjson);
+      case "Error":
+        if (typeof xjson.message === "object") {
+          this.response.setHeader("X-Json", JSON.stringify(xjson.message));
+          return xjson.message;
+        } else {
+          this.response.setHeader("X-Json", xjson.message);
+          return {
+            error: xjson.message
+          };
+        }
+        break;
       }
     }
 

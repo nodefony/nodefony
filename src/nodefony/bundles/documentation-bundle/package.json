@@ -25,7 +25,7 @@
     "mini-css-extract-plugin": "^0.4.4",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "terser-webpack-plugin": "^1.1.0",
-    "webpack": "^4.21.0",
+    "webpack": "^4.22.0",
     "webpack-merge": "^4.1.4"
   },
   "repository": {
