@@ -32,7 +32,7 @@ lang:
 #        translations:           true
 #        webpack:                true
 #
-watch                         :  true
+watch                         :  false
 
 ##################################
 #  OVERRIDE MONITORING BUNDLE

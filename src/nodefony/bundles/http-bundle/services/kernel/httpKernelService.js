@@ -31,6 +31,7 @@ module.exports = class httpKernel extends nodefony.Service {
       this.sessionService = this.get("sessions");
       this.compileAlias();
       this.sockjs = this.get("sockjs");
+      this.socketio = this.get("socketio");
       this.bundleSettings = this.getParameters("bundles.http");
       this.responseTimeout = {
         HTTP: this.bundleSettings.http.responseTimeout,
@@ -533,8 +534,8 @@ module.exports = class httpKernel extends nodefony.Service {
   }
 
   onWebsocketRequest(request, type) {
-    if (request.resourceURL.path &&
-      this.sockjs &&
+    if (this.sockjs &&
+      request.resourceURL.path &&
       request.resourceURL.path.match(this.sockjs.regPrefix)
     ) {
       this.logger("websocket drop to sockjs : " + request.resourceURL.path, "DEBUG");
@@ -542,6 +543,14 @@ module.exports = class httpKernel extends nodefony.Service {
       //connection.drop(1006, 'TCP connection lost before handshake completed.', false);
       request = null;
       //connection = null ;
+      return;
+    }
+    if (this.socketio &&
+      request.resourceURL.path &&
+      this.socketio.checkPath(request.resourceURL.path)
+    ) {
+      this.logger("websocket drop to socket.io : " + request.resourceURL.path, "DEBUG");
+      request = null;
       return;
     }
     this.fire("onServerRequest", request, null, type);

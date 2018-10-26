@@ -1,0 +1,63 @@
+#
+#
+#	CONFIG BUNDLE socketio-bundle
+#
+#===============================================================================
+#
+#  Copyright © 2018/2018        admin | admin@nodefony.com
+#
+#===============================================================================
+#
+#        GENERATE BY nodefony-core BUILDER YAML FILE
+#
+# This file is YAML  FILE
+# ---
+# YAML: YAML Ain't Markup Language
+#
+# What It Is: YAML is a human friendly data serialization
+#   standard for all programming languages.
+#
+
+
+########## nodefony-core CONFIG BUNDLE  socketio-bundle  ############
+type        : "nodefony"
+locale      : en_en
+
+
+#:w
+
+#  WATCHERS
+#
+#    Listen to changes, deleting, renaming files and directories of different components
+#
+#    For watch all components
+#
+#      watch:			true            # by default services false !
+#    or
+#      watch:
+#        controllers     : true
+#        config         : true		# only  routing
+#        views          : true
+#        translations   : true
+#        webpack        : true
+#        services       : true
+watch       : true
+
+
+#
+#
+#	Insert here the bundle-specific configurations
+#
+#	You can also override config of another bundle
+#	with the name of the bundle
+#
+#	example : create an other database connector
+#
+
+
+socket.io:
+  http: false
+  https:
+    namespace:
+      - chat
+      - event
