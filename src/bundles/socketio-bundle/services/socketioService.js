@@ -2,10 +2,9 @@ const io = require("socket.io");
 
 module.exports = class socketio extends nodefony.Service {
 
-  constructor(container, httpsServer) {
+  constructor(container) {
     super("Socket.io", container);
-    this.httpsServer = httpsServer;
-    this.httpBundle = this.httpsServer.bundle;
+    this.httpBundle = this.kernel.getBundle("http");
     this.settings = this.bundle.settings["socket.io"];
     this.path = null;
     if (!this.kernel.ready) {
@@ -13,8 +12,32 @@ module.exports = class socketio extends nodefony.Service {
       this.iosecure = null;
       this.namespaces = {};
       this.httpBundle.on("onServersReady", (type, service) => {
+        this[type] = service;
         this.init(type, service);
       });
+    }
+  }
+
+  init(type, service) {
+    switch (type) {
+    case "HTTP":
+      if (this.settings.http) {
+        this.io = io(service.server, this.setOptions(this.settings.http));
+        this.logger(`Create Socket.io server`);
+        this.setNameSpace(this.io, this.settings.http.namespace);
+        this.handle(this.io, type);
+      }
+      break;
+    case "HTTPS":
+      if (this.settings.https) {
+        this.iosecure = io(service.server, this.setOptions(this.settings.https));
+        this.logger(`Create Socket.io Secure Server`);
+        this.setNameSpace(this.iosecure, this.settings.https.namespace);
+        this.handle(this.iosecure, type);
+      }
+      break;
+    default:
+      return;
     }
   }
 
@@ -59,7 +82,6 @@ module.exports = class socketio extends nodefony.Service {
     } catch (e) {
       throw e;
     }
-
     return obj;
   }
 
@@ -92,35 +114,11 @@ module.exports = class socketio extends nodefony.Service {
     return this.namespaces[ns] || null;
   }
 
-  init(type, service) {
-    switch (type) {
-    case "HTTP":
-      if (this.settings.http) {
-        this.io = io(service.server, this.setOptions(this.settings.http));
-        this.logger(`Create Socket.io server`);
-        this.setNameSpace(this.io, this.settings.http.namespace);
-        this.handle(this.io, type);
-      }
-      break;
-    case "HTTPS":
-      if (this.settings.https) {
-        this.iosecure = io(service.server, this.setOptions(this.settings.https));
-        this.logger(`Create Socket.io Secure Server`);
-        this.setNameSpace(this.iosecure, this.settings.https.namespace);
-        this.handle(this.iosecure, type);
-      }
-      break;
-    default:
-      return;
-    }
-  }
-
   handle(io, type) {
     try {
       io.on('connection', (client) => {
         this.logger(` CONNECTION  ${client.id}`, "INFO");
         this.handleSocket(client, type);
-        //console.log(client)
         client.on('event', (data) => {
           this.logger(data, "DEBUG");
         });
@@ -159,8 +157,5 @@ module.exports = class socketio extends nodefony.Service {
     });
     return context;
   }
-
-
-
 
 };

@@ -1,6 +1,6 @@
 /*
  *
- *	ENTRY POINT WEBPACK DEMO BUNLDE
+ *	ENTRY POINT WEBPACK BUNLDE
  *
  *
  *  Add your assets here with require  to an integration in webpack  bundle

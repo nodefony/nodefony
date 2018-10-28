@@ -56,8 +56,9 @@ watch       : true
 
 
 socket.io:
-  http: false
-  https:
+  http       : false
+  https      :
+    path     : /io
     namespace:
       - chat
       - event
