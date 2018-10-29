@@ -156,7 +156,7 @@ const progress2 = function (cli, time) {
         cli.logger("END PROGRESS 2 : " + cli.getEmoji("checkered_flag"));
         resolve(cli);
       }
-    }, time ||  30);
+    }, time || 30);
   });
 };
 
@@ -188,6 +188,6 @@ const Sparkline2 = function (cli, time) {
         cli.logger("END Sparkline2 : " + cli.getEmoji("checkered_flag"));
         resolve(cli);
       }
-    }, time ||  30);
+    }, time || 30);
   });
 };

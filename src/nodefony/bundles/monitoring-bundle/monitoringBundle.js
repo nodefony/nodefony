@@ -416,9 +416,6 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         tokenRoles: tokenRoles
       };
     } else {
-      if (token) {
-        console.log();
-      }
       if (secu) {
         context.profiling.context_secure = {
           name: "OFF",
@@ -452,7 +449,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       };
     } else {
       context.profiling.routeur = {
-        bundle: context.resolver.bundle.name,
+        bundle: context.resolver.bundle ? context.resolver.bundle.name : null,
         action: context.resolver.actionName,
         Controller: context.resolver.controller.name,
       };
@@ -607,14 +604,19 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         direction: direction
       };
 
-      if (JSON.stringify(context.profiling).length < 60000) {
-        if (message && context.profiling) {
+      try {
+        if (JSON.stringify(context.profiling).length < 60000) {
+          if (message && context.profiling) {
+            context.profiling.response.message.push(ele);
+          }
+        } else {
+          context.profiling.response.message.length = 0;
           context.profiling.response.message.push(ele);
         }
-      } else {
-        context.profiling.response.message.length = 0;
-        context.profiling.response.message.push(ele);
+      } catch (e) {
+        this.logger(e, "WARNING");
       }
+
       if (context.profiler) {
         this.updateProfile(context, (error /*, result*/ ) => {
           if (error) {
