@@ -1,5 +1,20 @@
 # Changelog
 
+## v4.0.0-beta.10 (30/10/2018)
+- [beta.10](https://github.com/nodefony/nodefony-core/commit/cb4896cc83f89ce652c58176fb287f3fb00372ae)
+- [debug session on 404](https://github.com/nodefony/nodefony-core/commit/e6cd54f142c85f8e3757b53fdadbc786df3a0b1c)
+- [debug promise catch error in controller](https://github.com/nodefony/nodefony-core/commit/63e519c22c3d8ed9ed8eb9c301deb264ed328083)
+- [debug eror http](https://github.com/nodefony/nodefony-core/commit/62708613542e284abc3bc9a7067ede153f6b9071)
+- [debug error status code | http2 408](https://github.com/nodefony/nodefony-core/commit/6655e79765c95e3d36403d1adcbcaa27214ffa17)
+- [upgrade builder packages](https://github.com/nodefony/nodefony-core/commit/5892a72ddc280b0033555021636e0c85147022b2)
+- [clean packages](https://github.com/nodefony/nodefony-core/commit/b03e2f6020c525699e5c35a9bff3423d45c1a960)
+- [lang referer](https://github.com/nodefony/nodefony-core/commit/e5263c8b10ab78f3c3decd70576caa810461309b)
+- [upgrade deps version](https://github.com/nodefony/nodefony-core/commit/fa61dc0cd706e3a01f92f4321f52d1fc0e43bcfb)
+- [debug errorRequest](https://github.com/nodefony/nodefony-core/commit/9c818ce64b9bb5b46ec9073aa63ede9b71854b59)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/65d7295db9f78d16cd36f95a2c11c767fba90432)
+
+---
+
 ## v4.0.0-beta.9 (12/10/2018)
 - [upgrade nodefony](https://github.com/nodefony/nodefony-core/commit/e89fb83c3c348722e8f307060fbdd4cae6edb340)
 - [Update README.md](https://github.com/nodefony/nodefony-core/commit/3fed5f69e58a2c65b6ab94f99c7bcb91c97b276a)
@@ -7,7 +22,7 @@
 - [add service requestClient](https://github.com/nodefony/nodefony-core/commit/9924b2b0ea3d727c6d2351cd03e1b696b19d210d)
 - [upgrade builder](https://github.com/nodefony/nodefony-core/commit/162ad48634b89191512f6284910b6f17676e3898)
 - [upgrade deps](https://github.com/nodefony/nodefony-core/commit/9d797fe40c2c2573c890e65432451bad3de0cbc6)
-- [error class log  better](https://github.com/nodefony/nodefony-core/commit/0e8cc91fe71a7d3aac7b2519bdf53253844f7b1c)  
+- [error class log  better](https://github.com/nodefony/nodefony-core/commit/0e8cc91fe71a7d3aac7b2519bdf53253844f7b1c)
 - [update create project](https://github.com/nodefony/nodefony-core/commit/3f9b5602d604b59d20f18574ac9f594742232bd0)
 - [add translation login | debug test](https://github.com/nodefony/nodefony-core/commit/bf383add77a6c0b7f055176a1c617af6ac22bc55)
 - [add login page in app](https://github.com/nodefony/nodefony-core/commit/f18d4bccc6664e5b67c3c93f0a92524a3b00196b)
