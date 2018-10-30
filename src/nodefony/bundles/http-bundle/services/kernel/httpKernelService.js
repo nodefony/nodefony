@@ -469,8 +469,26 @@ module.exports = class httpKernel extends nodefony.Service {
       controller = this.handleFrontController(context);
     } catch (e) {
       context.once('onRequestEnd', () => {
-        context.fire("onError", container, e);
-        return context;
+        if (context.sessionAutoStart || context.hasSession()) {
+          return this.sessionService.start(context, context.sessionAutoStart)
+            .then((session) => {
+              try {
+                if (!(session instanceof nodefony.Session)) {
+                  this.logger(new Error("SESSION START session storage ERROR"), "WARNING");
+                }
+                if (this.firewall) {
+                  this.firewall.getSessionToken(context, session);
+                }
+              } catch (err) {
+                this.logger(err, "WARNING");
+              }
+              context.fire("onError", container, e);
+              return context;
+            });
+        } else {
+          context.fire("onError", container, e);
+          return context;
+        }
       });
       return e;
     }

@@ -2896,10 +2896,10 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-create-react-app@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/create-react-app/-/create-react-app-2.0.4.tgz#733f4cee5a45c10cc4f9327efb3af71210bcb388"
-  integrity sha512-8FP0i8GNAVADIH6zc1INmpkxDZADi+wWNOveq/ja/vjpkfgXcHd0bglNC5mg03cVmJUZWm/Am9qNY1IsUW+PGQ==
+create-react-app@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/create-react-app/-/create-react-app-2.1.0.tgz#5b7f6084008350c8a8744ee19ac50f9e4de55bc7"
+  integrity sha512-ZKlgtWCEwq5deiJoDDeuZo0sYxPfVbpyupYmcVX+ANFuy7mncY07CiHmH/5sKgYVIPkuoOdw6mG/svfBTqt2YQ==
   dependencies:
     chalk "1.1.3"
     commander "2.18.0"
@@ -11345,7 +11345,7 @@ yargs@~3.10.0:
     decamelize "^1.0.0"
     window-size "0.1.0"
 
-yarn@^1.10.1:
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.10.1.tgz#b792ba28f050ae94cd7e719dbca80639d70da76f"
-  integrity sha512-EH0H1fyfFxkE4UpG4b+VCaVY4I488I2EyQNmGjGGKmvsSIb0G3b+1IcfGYPI2gqa1du43g4ZA3jH8fXlq6oVxg==
+yarn@^1.12.1:
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.12.1.tgz#afa478c9234ee55e8f4cdcfb994acfa54b69c95b"
+  integrity sha512-vdVLrYWx73k4QR8ZpQQ3HJg/X8aAunjUHuPlADR/ogmZOhnqgAdETPz0e/Df+MW8Dno7F1dOxS5e3G6niobumw==

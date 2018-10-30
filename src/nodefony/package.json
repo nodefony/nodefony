@@ -35,7 +35,7 @@
     "cli-table": "^0.3.1",
     "clui": "^0.3.6",
     "commander": "^2.19.0",
-    "create-react-app": "^2.0.4",
+    "create-react-app": "^2.1.0",
     "inquirer": "^6.2.0",
     "js-yaml": "^3.12.0",
     "lodash": "^4.17.11",
@@ -56,7 +56,7 @@
     "simple-git": "^1.106.0",
     "twig": "^1.12.0",
     "xml2js": "^0.4.19",
-    "yarn": "^1.10.1"
+    "yarn": "^1.12.1"
   },
   "repository": {
     "type": "git",

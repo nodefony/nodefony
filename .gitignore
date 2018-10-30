@@ -25,6 +25,9 @@ yarn.lock/**
 
 config/certificates/**/*
 
+**/assets/**/*.map
+src/**/assets/**/*.map
+
 #Ignore vin backup
 *.swp
 *.swn
