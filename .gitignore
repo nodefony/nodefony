@@ -21,6 +21,8 @@ package-lock.json/**
 **/package-lock.json/**
 yarn.lock/**
 **/yarn.lock/**
+*/yarn.lock
+*/package-lock.json
 *.[oa]
 
 config/certificates/**/*

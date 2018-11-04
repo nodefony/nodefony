@@ -29,7 +29,11 @@ const Routing = class Routing {
       let file = null;
       switch (type || this.type) {
       case "js":
-        file = path.resolve(this.builder.bundlePath, "Resources", "config", this.name);
+        if (this.builder.name === "app") {
+          file = path.resolve(this.builder.bundlePath, "config", this.name);
+        } else {
+          file = path.resolve(this.builder.bundlePath, "Resources", "config", this.name);
+        }
         let json = require(file);
         json[route.name] = {
           pattern: "/" + this.builder.shortName + "/" + route.name,
@@ -54,13 +58,28 @@ const Routing = class Routing {
         break;
       case "yml":
         let create = false;
+        let myroutingPpath = null;
+        if (this.builder.name === "app") {
+          myroutingPpath = path.resolve(this.builder.bundlePath, "config", this.name);
+        } else {
+          myroutingPpath = path.resolve(this.builder.bundlePath, "Resources", "config", this.name);
+        }
         try {
-          file = new nodefony.fileClass(path.resolve(this.builder.bundlePath, "Resources", "config", this.name));
+          file = new nodefony.fileClass(myroutingPpath);
         } catch (e) {
-          let parent = new nodefony.fileClass(path.resolve(this.builder.bundlePath, "Resources", "config"));
+          let parent = null;
+          if (this.builder.name === "app") {
+            parent = new nodefony.fileClass(path.resolve(this.builder.bundlePath, "config"));
+          } else {
+            parent = new nodefony.fileClass(path.resolve(this.builder.bundlePath, "Resources", "config"));
+          }
           let result = this.createBuilder();
           this.builder.build(result, parent);
-          file = new nodefony.fileClass(path.resolve(this.builder.bundlePath, "Resources", "config", this.name));
+          if (this.builder.name === "app") {
+            file = new nodefony.fileClass(path.resolve(this.builder.bundlePath, "config", this.name));
+          } else {
+            file = new nodefony.fileClass(path.resolve(this.builder.bundlePath, "Resources", "config", this.name));
+          }
           create = true;
         }
         this.builder.buildSkeleton(this.skeletonRoute, true, {

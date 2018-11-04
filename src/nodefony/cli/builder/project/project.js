@@ -164,9 +164,10 @@ module.exports = class generateProject extends nodefony.Builder {
           }, {
             name: "doc",
             type: "directory",
-            childs: [{
-
-            }]
+            childs: [{}]
+          }, {
+            name: "services",
+            type: "directory"
           }, {
             name: "Resources",
             type: "directory",
@@ -373,9 +374,8 @@ module.exports = class generateProject extends nodefony.Builder {
           type: "directory"
         }, {
           name: "README.md",
-          type: "file",
-          skeleton: path.resolve(this.pathSkeleton, "README.md"),
-          params: this.cli.response
+          type: "copy",
+          path: path.resolve(this.pathSkeleton, "README.md")
         }]
       };
     } catch (e) {
