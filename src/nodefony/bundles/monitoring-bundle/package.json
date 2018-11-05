@@ -25,7 +25,7 @@
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "qs": "^6.5.2",
     "request": "^2.88.0",
-    "shortid": "^2.2.13",
+    "shortid": "^2.2.14",
     "terser-webpack-plugin": "^1.1.0",
     "useragent": "^2.3.0",
     "webpack": "^4.24.0",

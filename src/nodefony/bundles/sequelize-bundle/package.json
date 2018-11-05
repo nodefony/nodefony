@@ -11,7 +11,7 @@
     "javascript"
   ],
   "dependencies": {
-    "mysql2": "^1.6.1",
+    "mysql2": "^1.6.2",
     "pg": "^7.6.0",
     "pg-hstore": "^2.3.2",
     "sequelize": "5.0.0-beta.13",

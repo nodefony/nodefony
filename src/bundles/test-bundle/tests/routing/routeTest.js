@@ -140,9 +140,8 @@ describe("BUNDLE TEST", function () {
       var request = http.request(global.options, function (res) {
         assert.equal(res.statusCode, 500);
         res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          done();
-        });
+        res.on('data', () => {});
+        done();
       });
       request.end();
     });
@@ -245,9 +244,7 @@ describe("BUNDLE TEST", function () {
       var request = http.request(global.options, function (res) {
         assert.equal(res.statusCode, 404);
         res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          done();
-        });
+        done();
       });
       request.end();
     });
