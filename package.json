@@ -55,7 +55,7 @@
     "mongoose": "^5.3.9",
     "pm2": "^3.2.2",
     "sequelize": "5.0.0-beta.13",
-    "webpack": "^4.25.0",
+    "webpack": "^4.25.1",
     "webpack-dev-server": "^3.1.10"
   },
   "devDependencies": {

@@ -38,7 +38,7 @@
     "socket.io-client": "^2.1.1",
     "style-loader": "^0.23.1",
     "terser-webpack-plugin": "^1.1.0",
-    "webpack": "^4.25.0",
+    "webpack": "^4.25.1",
     "webpack-merge": "^4.1.4"
   },
   "devDependencies": {
