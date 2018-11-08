@@ -275,7 +275,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
         } catch (e) {}
         try {
           if (rawCommand) {
-            return nodefony.require(path.resolve(rawCommand));
+            return require(path.resolve(rawCommand));
           } else {
             this.showHelp();
           }

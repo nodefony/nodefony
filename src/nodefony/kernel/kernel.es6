@@ -1,5 +1,52 @@
+'use strict';
 const os = require('os');
-module = nodefony.module;
+const Module = require("module");
+let myrequire = null;
+
+const makeRequireFunction = function makeRequireFunction(mod) {
+  const myModule = mod.constructor;
+
+  function myRequire(path) {
+    try {
+      exports.requireDepth += 1;
+      return mod.require(path);
+    } finally {
+      exports.requireDepth -= 1;
+    }
+  }
+
+  function resolve(request, options) {
+    if (typeof request !== 'string') {
+      throw new ERR_INVALID_ARG_TYPE('request', 'string', request);
+    }
+    return myModule._resolveFilename(request, mod, false, options);
+  }
+  myRequire.resolve = resolve;
+
+  function paths(request) {
+    if (typeof request !== 'string') {
+      throw new ERR_INVALID_ARG_TYPE('request', 'string', request);
+    }
+    return myModule._resolveLookupPaths(request, mod, true);
+  }
+  resolve.paths = paths;
+  myRequire.main = module; //process.mainModule;
+  // Enable support to add extra extension types.
+  myRequire.extensions = myModule._extensions;
+  myRequire.cache = myModule._cache;
+  return myRequire;
+}
+const createRequireFromPath = function createRequireFromPath(filename) {
+  const m = new Module(filename, module);
+  m.filename = filename;
+  m.paths = Module._nodeModulePaths(path.dirname(filename));
+  return makeRequireFunction(m);
+}
+try {
+  let filemame = path.resolve(process.cwd(), "package.json");
+  myrequire = createRequireFromPath(filemame);
+  //require(filemame);
+} catch (e) {};
 
 module.exports = nodefony.register("kernel", function () {
 
@@ -348,40 +395,79 @@ module.exports = nodefony.register("kernel", function () {
     searchPackage(name, mypath) {
       let res = null;
       let error = null;
-      if (mypath) {
+      if (mypath && mypath !== "*") {
         try {
           res = regPackageFile.exec(mypath);
           if (res) {
             mypath = res[1];
           } else {
-            try {
-              if (this.cli.checkVersion(mypath)) {
-                res = nodefony.require.resolve(`${name}@${mypath}`);
-                this.logger(`Find NPM Bundle Package : ${name}@${mypath} in : ${res}`, "DEBUG");
-                return `${name}@${mypath}`;
+            if (this.cli.checkVersion(mypath)) {
+              if (myrequire) {
+                try {
+                  res = myrequire.resolve(`${name}`);
+                  let version = myrequire(path.resolve(path.dirname(res), "package.json")).version;
+                  if (version === mypath) {
+                    if (this.type === "SERVER") {
+                      this.logger(`Find NPM Bundle Package : ${name}@${mypath} in : ${res}`, "INFO");
+                    }
+                    return `${name}`;
+                  } else {
+                    throw new Error(`Can not found NPM Bundle Package : ${name}@${mypath}`);
+                  }
+                } catch (e) {
+                  error = e;
+                }
               }
-            } catch (e) {
-              error = e;
+              try {
+                res = require.resolve(`${name}`);
+                let version = myrequire(path.resolve(path.dirname(res), "package.json")).version;
+                if (version === mypath) {
+                  if (this.type === "SERVER") {
+                    this.logger(`Find NPM Bundle Package : ${name}@${mypath} in : ${res}`, "INFO");
+                  }
+                  return `${name}`;
+                } else {
+                  throw new Error(`Can not found NPM Bundle Package : ${name}@${mypath}`);
+                }
+              } catch (e) {
+                if (error) {
+                  throw error;
+                }
+                throw e;
+              }
             }
           }
           res = null;
           res = this.checkPath(mypath);
+          if (myrequire) {
+            try {
+              myrequire.resolve(res);
+              if (this.type === "SERVER") {
+                this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "INFO");
+              }
+              return res;
+            } catch (e) {}
+          }
           try {
-            nodefony.require.resolve(res);
+            require.resolve(res);
           } catch (e) {
             // no main in package.json
             let bundleName = this.getBundleName(name);
             if (bundleName) {
               try {
-                nodefony.require.resolve(path.resolve(res, bundleName + "Bundle.js"));
+                res = path.resolve(res, bundleName + "Bundle.js");
+                require.resolve(res);
               } catch (e) {
+                this.logger(e, "ERROR");
                 throw new Error(`${name} is not a Bundle Package`);
               }
             } else {
               throw new Error(`${name} is not a Bundle Package`);
             }
           }
-          this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "DEBUG");
+          if (this.type === "SERVER") {
+            this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "INFO");
+          }
           return res;
         } catch (e) {
           if (error) {
@@ -390,44 +476,74 @@ module.exports = nodefony.register("kernel", function () {
           throw e;
         }
       }
-      try {
-        res = null;
-        res = nodefony.require.resolve(`@nodefony/${name}`);
-        this.logger(`Find NPM Bundle Package : @nodefony/${name} in : ${res}`, "DEBUG");
-        return `@nodefony/${name}`;
-      } catch (e) {
-        error = e;
+      if (!this.isCore) {
+        if (myrequire) {
+          try {
+            res = myrequire.resolve(name);
+            this.logger(`Find NPM Bundle Package : ${name} in : ${res}`, "INFO");
+            return name;
+          } catch (e) {}
+          try {
+            res = myrequire.resolve(`@nodefony/${name}`);
+            this.logger(`Find NPM Bundle Package : ${name} in : ${res}`, "INFO");
+            return `@nodefony/${name}`;
+          } catch (e) {}
+        }
+        try {
+          res = require.resolve(name);
+          this.logger(`Find NPM Bundle Package : ${name} in : ${res}`, "INFO");
+          return name;
+        } catch (e) {}
+        try {
+          res = null;
+          res = require.resolve(`@nodefony/${name}`);
+          if (this.type === "SERVER") {
+            this.logger(`Find NPM Bundle Package : @nodefony/${name} in : ${res}`, "INFO");
+          }
+          return `@nodefony/${name}`;
+        } catch (e) {}
       }
       try {
         res = null;
         res = path.resolve(this.rootDir, "src", "bundles", name);
-        nodefony.require.resolve(res);
-        this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "DEBUG");
+        require.resolve(res);
+        if (this.type === "SERVER") {
+          this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "INFO");
+        }
         return res;
       } catch (e) {}
       try {
         res = null;
         res = path.resolve(this.nodefonyPath, "bundles", name);
-        nodefony.require.resolve(res);
-        this.logger(`Find Core Bundle Package : ${name} in : ${res}`, "DEBUG");
+        require.resolve(res);
+        if (this.type === "SERVER") {
+          this.logger(`Find Core Bundle Package : ${name} in : ${res}`, "INFO");
+        }
         return res;
       } catch (e) {}
       try {
         res = null;
         res = path.resolve(this.nodefonyPath, '..', '..', "src", "bundles", name);
-        nodefony.require.resolve(res);
-        this.logger(`Find Core Local Bundle Package : ${name} in : ${res}`, "DEBUG");
+        require.resolve(res);
+        if (this.type === "SERVER") {
+          this.logger(`Find Core Local Bundle Package : ${name} in : ${res}`, "INFO");
+        }
         return res;
       } catch (e) {}
       try {
         res = null;
         const globalPath = path.resolve(process.execPath, '..', '..', 'lib', 'node_modules', "nodefony", 'node_modules');
         res = path.resolve(globalPath, `@nodefony/${name}`);
-        nodefony.require.resolve(res);
-        this.logger(`Find Global Bundle Package : @nodefony/${name} in : ${res}`, "DEBUG");
+        require.resolve(res);
+        if (this.type === "SERVER") {
+          this.logger(`Find Global Bundle Package : @nodefony/${name} in : ${res}`, "INFO");
+        }
         return res;
       } catch (e) {
-        throw error;
+        if (error) {
+          throw error;
+        }
+        return require.resolve(name);
       }
     }
 
@@ -957,8 +1073,15 @@ module.exports = nodefony.register("kernel", function () {
     }
 
     isNodeModule(module) {
+      let error = null;
       try {
-        return nodefony.require.resolve(module);
+        return require.resolve(module);
+      } catch (e) {
+        //this.logger(e, "ERROR");
+        error = e;
+      }
+      try {
+        return myrequire.resolve(module);
       } catch (e) {
         this.logger(e, "ERROR");
         return false;
