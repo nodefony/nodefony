@@ -1,5 +1,14 @@
 # Changelog
 
+## v4.0.0-beta.11 (09/11/2018)
+- [debug progress webpack | upgrade deps](https://github.com/nodefony/nodefony-core/commit/b9af74ce6bd0c924c2615404d8c53369227be406)
+- [debug nodefony config bundle require  | upgrade deps](https://github.com/nodefony/nodefony-core/commit/887268556a28abb29dccd7525c9885ad47d4b814)
+- [upgrede deps](https://github.com/nodefony/nodefony-core/commit/9bab58c98dfd6862cbb0a34af6648fec6dd87422)
+- [update generater packages](https://github.com/nodefony/nodefony-core/commit/7cad5a7d8339bed61b18e034fdb4ae5c3cad0cd2)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/9d41eb89f79484a8c1af2a4d61dce7058c3ddbeb)
+
+---
+
 ## v4.0.0-beta.10 (30/10/2018)
 - [beta.10](https://github.com/nodefony/nodefony-core/commit/cb4896cc83f89ce652c58176fb287f3fb00372ae)
 - [debug session on 404](https://github.com/nodefony/nodefony-core/commit/e6cd54f142c85f8e3757b53fdadbc786df3a0b1c)
