@@ -150,9 +150,9 @@ module.exports = class sockjs extends nodefony.Service {
     if (this.compilers[basename].initsockClient) {
       this.removeListener("onConnection", this.compilers[basename].initsockClient);
     }
-    let progress = config.progress ||  this.progress;
+    let progress = config.progress || this.progress;
     if (progress && config.watch) {
-      const progressPlugin = new this.webpack.webpack.ProgressPlugin((percent, msg, addInfo) => {
+      const progressPlugin = new this.compilers[basename].webpack.webpack.ProgressPlugin((percent, msg, addInfo) => {
         percent = Math.floor(percent * 100);
         if (percent === 100) {
           msg = 'Compilation completed';
@@ -160,7 +160,7 @@ module.exports = class sockjs extends nodefony.Service {
         if (addInfo) {
           msg = `${msg} (${addInfo})`;
         }
-        this.compilers[basename].logger(`${percent} % : ${msg}`, "DEBUG");
+        this.compilers[basename].logger(`${percent} % : ${msg}`, "INFO", `WEBPACK ${this.compilers[basename].name} Progress`);
         this.sockWrite('progress-update', {
           percent,
           msg
@@ -178,7 +178,7 @@ module.exports = class sockjs extends nodefony.Service {
       if (overlay) {
         this.sockWrite("overlay", overlay, conn);
       }
-      let hot = (config.hot || config.hotOnly) ||  (this.hot || this.hotOnly);
+      let hot = (config.hot || config.hotOnly) || (this.hot || this.hotOnly);
       if (hot) {
         this.sockWrite("hot", null, conn);
       }
