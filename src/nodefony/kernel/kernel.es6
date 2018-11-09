@@ -17,7 +17,7 @@ const makeRequireFunction = function makeRequireFunction(mod) {
 
   function resolve(request, options) {
     if (typeof request !== 'string') {
-      throw new ERR_INVALID_ARG_TYPE('request', 'string', request);
+      throw new new Error(`resolve arg must be a string  ERR_INVALID_ARG_TYPE : ${request}`);
     }
     return myModule._resolveFilename(request, mod, false, options);
   }
@@ -25,7 +25,7 @@ const makeRequireFunction = function makeRequireFunction(mod) {
 
   function paths(request) {
     if (typeof request !== 'string') {
-      throw new ERR_INVALID_ARG_TYPE('request', 'string', request);
+      throw new new Error(`paths arg must be a string  ERR_INVALID_ARG_TYPE : ${request}`);
     }
     return myModule._resolveLookupPaths(request, mod, true);
   }
@@ -35,18 +35,18 @@ const makeRequireFunction = function makeRequireFunction(mod) {
   myRequire.extensions = myModule._extensions;
   myRequire.cache = myModule._cache;
   return myRequire;
-}
+};
 const createRequireFromPath = function createRequireFromPath(filename) {
   const m = new Module(filename, module);
   m.filename = filename;
   m.paths = Module._nodeModulePaths(path.dirname(filename));
   return makeRequireFunction(m);
-}
+};
 try {
   let filemame = path.resolve(process.cwd(), "package.json");
   myrequire = createRequireFromPath(filemame);
   //require(filemame);
-} catch (e) {};
+} catch (e) {}
 
 module.exports = nodefony.register("kernel", function () {
 
@@ -455,8 +455,7 @@ module.exports = nodefony.register("kernel", function () {
             let bundleName = this.getBundleName(name);
             if (bundleName) {
               try {
-                res = path.resolve(res, bundleName + "Bundle.js");
-                require.resolve(res);
+                require.resolve(path.resolve(res, bundleName + "Bundle.js"));
               } catch (e) {
                 this.logger(e, "ERROR");
                 throw new Error(`${name} is not a Bundle Package`);
