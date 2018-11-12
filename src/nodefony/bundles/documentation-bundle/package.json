@@ -16,7 +16,7 @@
     "babel-loader": "^8.0.4",
     "bootstrap": "=3.3.7",
     "cheerio": "^1.0.0-rc.2",
-    "clean-webpack-plugin": "^0.1.19",
+    "clean-webpack-plugin": "^1.0.0",
     "css-loader": "^1.0.1",
     "elasticsearch": "^15.2.0",
     "file-loader": "^2.0.0",
