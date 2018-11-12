@@ -158,7 +158,7 @@ generate_changelog () {
   then
     ./node_modules/.bin/gren changelog --username=nodefony  --repo=nodefony-core --tags=$1 --data-source=commits --generate  --override
   else
-    ./node_modules/.bin/gren changelog --username=nodefony  --repo=nodefony-core --tags=$version --data-source=commits --generate  --override
+    ./node_modules/.bin/gren changelog --username=nodefony  --repo=nodefony-core --tags=v$version --data-source=commits --generate  --override
   fi
   sed -i "" 's,# Changelog,---,g' CHANGELOG.md.old
   echo >> CHANGELOG.md;

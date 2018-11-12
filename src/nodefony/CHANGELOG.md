@@ -1,3 +1,11 @@
+# Changelog
+
+## v4.0.0-beta.12 (12/11/2018)
+- [nodefony release 4.0.0-beta.12](https://github.com/nodefony/nodefony-core/commit/c65c52a3cdad6773aab46a05a5d50694ed0f3b85)
+- [nodefony release 4.0.0-beta.12](https://github.com/nodefony/nodefony-core/commit/7a930bbcd2e7e713631ca531fcd030f749eb7007)
+- [publish bash script](https://github.com/nodefony/nodefony-core/commit/d9b3643cefa1cfee0bfcdc98579cb1885fb4973d)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/668f68480f8972608debd23bbb9f1b5acefb4e57)
+- [inc version | debug search package](https://github.com/nodefony/nodefony-core/commit/3c8450e18f1ddd3b9f2ce24e66b5b91aa72fc4c7)
 
 ---
 
