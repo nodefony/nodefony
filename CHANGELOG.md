@@ -1,4 +1,5 @@
-# Changelog
+
+---
 
 ## v4.0.0-beta.11 (09/11/2018)
 - [debug progress webpack | upgrade deps](https://github.com/nodefony/nodefony-core/commit/b9af74ce6bd0c924c2615404d8c53369227be406)

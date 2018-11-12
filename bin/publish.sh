@@ -241,6 +241,9 @@ case $1 in
   "upgrade_nodefony" )
     upgrade_nodefony;
     break ;;
+  "tools" )
+    tools;
+    break ;;
   "commit_project" )
     commit_project;
     break ;;
