@@ -247,6 +247,9 @@ case $1 in
   "commit_project" )
     commit_project;
     break ;;
+  "publish_nodefony" )
+    publish_nodefony;
+    break ;;
   * )
     echo "
     __  __

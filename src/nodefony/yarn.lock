@@ -741,10 +741,10 @@
     tree-kill "^1.0.0"
     webpack-sources "^1.1.0"
 
-"@nodefony/documentation-bundle@^4.0.0-beta.11":
-  version "4.0.0-beta.11"
-  resolved "https://registry.yarnpkg.com/@nodefony/documentation-bundle/-/documentation-bundle-4.0.0-beta.11.tgz#a8d8959c3c8b93d85c9aa2a07ba35b6004645ffc"
-  integrity sha512-rUcENl2Ha96RRyS68cWy9hH6EzHrjVasmFkzFmlYKPfPMvfwG+qa68juWSw5Hzs7jD5FIcrL8YfBf3lbaJryBQ==
+"@nodefony/documentation-bundle@^4.0.0-beta.12":
+  version "4.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@nodefony/documentation-bundle/-/documentation-bundle-4.0.0-beta.12.tgz#9c3a6d05023e80a18e63d0aea15ce1d4bbc27483"
+  integrity sha512-hKKNOGKytUhMhWUO85yQza2Y/YejxvlEKJMsKhs6va8tPk272WDMyT4/Q7VNiRhucW0olIGdaowG1j0sGs21zA==
   dependencies:
     "@babel/core" "^7.1.5"
     "@babel/preset-env" "^7.1.5"
@@ -752,7 +752,7 @@
     babel-loader "^8.0.4"
     bootstrap "=3.3.7"
     cheerio "^1.0.0-rc.2"
-    clean-webpack-plugin "^0.1.19"
+    clean-webpack-plugin "^1.0.0"
     css-loader "^1.0.1"
     elasticsearch "^15.2.0"
     file-loader "^2.0.0"
@@ -764,19 +764,19 @@
     webpack "^4.25.1"
     webpack-merge "^4.1.4"
 
-"@nodefony/framework-bundle@^4.0.0-beta.11":
-  version "4.0.0-beta.11"
-  resolved "https://registry.yarnpkg.com/@nodefony/framework-bundle/-/framework-bundle-4.0.0-beta.11.tgz#84dda1ac6b0eed96f2e9650104fb45d4955ebf88"
-  integrity sha512-P6x52yqtjx9bcRZc3gWtsFdevLtudFe1d1Upukw3OLX1bY4hEaWOOrgoaa/8uCSDUYHZMfOPKSmZGv/zWiCpiw==
+"@nodefony/framework-bundle@^4.0.0-beta.12":
+  version "4.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@nodefony/framework-bundle/-/framework-bundle-4.0.0-beta.12.tgz#fff1b0e6960b0fd4b9afb6016e73d3fc3d2b29ed"
+  integrity sha512-1hJufc8ganGtx+zSG6il0LQ9u3sFBry5gdKN1dZwbABAFDTJC2/XCcLcJByrNzVgJI9hJkqhMPLjJgWQQOMtjQ==
   dependencies:
     "@angular/cli" "=1.7.4"
     memory-fs "^0.4.1"
     webpack "^4.25.1"
 
-"@nodefony/http-bundle@^4.0.0-beta.11":
-  version "4.0.0-beta.11"
-  resolved "https://registry.yarnpkg.com/@nodefony/http-bundle/-/http-bundle-4.0.0-beta.11.tgz#fbe09054596e653985944e62cb76a50f5cf2477d"
-  integrity sha512-rqv15WtHvsnht9FFy+UzMorMJsTmPlKwZEgRpiplSYXzmUpG+tgqb8dU/iLDq+1PxM5ugBcEgaUlbsUmKZe2lA==
+"@nodefony/http-bundle@^4.0.0-beta.12":
+  version "4.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@nodefony/http-bundle/-/http-bundle-4.0.0-beta.12.tgz#7d69870d34bef633255b18b232ae2ff317a1b7d3"
+  integrity sha512-YBKTd/M1ySzEwNK3Zo+6hpNxU3FdPs32YkNB0K4FxPgDRYKZZwdKjBy2qSp8jSrzDkROlC7la0TARcXK1YOcUw==
   dependencies:
     cookie "^0.3.1"
     formidable "^1.2.1"
@@ -790,25 +790,25 @@
     sockjs "^0.3.19"
     websocket "^1.0.28"
 
-"@nodefony/mongo-bundle@^4.0.0-beta.11":
-  version "4.0.0-beta.11"
-  resolved "https://registry.yarnpkg.com/@nodefony/mongo-bundle/-/mongo-bundle-4.0.0-beta.11.tgz#d91a3ae46c2eea7ff17cfa895d65ab2dc822d33a"
-  integrity sha512-6/aOYcDrME8gorjQZ6VnnYl9cqTn/v6kvdJLC6z857yLH/OyiH3HPqdtsGAFEGPo5U88/Fmo5Btft0o6447rCw==
+"@nodefony/mongo-bundle@^4.0.0-beta.12":
+  version "4.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@nodefony/mongo-bundle/-/mongo-bundle-4.0.0-beta.12.tgz#eead4de47dcd668d2b25d5b1a0d0645a2b9b2a17"
+  integrity sha512-iGataYZJ+2lMIoLYylh9QCrTFyDxw5lsP+ZkcRa+wf6eKoDH7sMo5KvtPtO9CIgmgUBpp83FWRTM7q/kOr1+aw==
   dependencies:
     mongodb "^3.1.9"
-    mongoose "^5.3.10"
+    mongoose "^5.3.11"
 
-"@nodefony/monitoring-bundle@^4.0.0-beta.11":
-  version "4.0.0-beta.11"
-  resolved "https://registry.yarnpkg.com/@nodefony/monitoring-bundle/-/monitoring-bundle-4.0.0-beta.11.tgz#6135bbe3605b46110cbe7fca99eecf221189aa1c"
-  integrity sha512-EWEP2Kd0pepjRpWhnoaQD15ldyBWQwyY8Rs/aVQ9hxQD6EVxBa3TA4yIvwTCjRLPkY6UUcni8tJxeqxtA9oehw==
+"@nodefony/monitoring-bundle@^4.0.0-beta.12":
+  version "4.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@nodefony/monitoring-bundle/-/monitoring-bundle-4.0.0-beta.12.tgz#f79db75e6a91b9c155da0555daf4d11225edc993"
+  integrity sha512-ttgHgGf5NL0TshIfxD+eJxk39O3GGpkcy5chVRk5mYoPhHbyon8Dcrhi3afQ84tJzWAtJQMFLwa4pP8DE72m0Q==
   dependencies:
     "@babel/core" "^7.1.5"
     "@babel/preset-env" "^7.1.5"
     "@nodefony/stage" "^0.1.12"
     babel-loader "^8.0.4"
     bootstrap "=3.3.7"
-    clean-webpack-plugin "^0.1.19"
+    clean-webpack-plugin "^1.0.0"
     css-loader "^1.0.1"
     file-loader "^2.0.0"
     font-awesome "^4.7.0"
@@ -830,17 +830,17 @@
   dependencies:
     mocha "^5.2.0"
 
-"@nodefony/realtime-bundle@^4.0.0-beta.11":
-  version "4.0.0-beta.11"
-  resolved "https://registry.yarnpkg.com/@nodefony/realtime-bundle/-/realtime-bundle-4.0.0-beta.11.tgz#4e36c3126eb324d54db3cb9f27532f7eeb0eacd4"
-  integrity sha512-8oKtsHGwXbAnBnYqZYtEQiwDhNl6bOzsdurcDbuo/KEDZDd9OMVxmUbh0M7UMB8FItXGel4Cgvim6ZKpB9oYzQ==
+"@nodefony/realtime-bundle@^4.0.0-beta.12":
+  version "4.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@nodefony/realtime-bundle/-/realtime-bundle-4.0.0-beta.12.tgz#e67348ef8dc36b18faf75e712d5e2d5641f51a11"
+  integrity sha512-5ZmKYKZMnGPBkDfd2uki4Cyw366DZ9yiBVVJGhZ0P9QVIA/lQbfHHZArsz+f6zlyy0cIoFId4gUlletRJM1r/g==
   dependencies:
     shortid "^2.2.14"
 
-"@nodefony/security-bundle@^4.0.0-beta.11":
-  version "4.0.0-beta.11"
-  resolved "https://registry.yarnpkg.com/@nodefony/security-bundle/-/security-bundle-4.0.0-beta.11.tgz#3f830ed16bf6770e94d1b8913b74c5f002cb0067"
-  integrity sha512-ySHIbbFQDlW4WzkQMbyfujyhjHO6+HRgVXOHqQSl92la/QPy2tBE7P3d/tdFiNuDDdju3nX38EtoV3A4Bp69lg==
+"@nodefony/security-bundle@^4.0.0-beta.12":
+  version "4.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@nodefony/security-bundle/-/security-bundle-4.0.0-beta.12.tgz#8198d3144e24ffde471bca7e6ce8885cbe49bf3f"
+  integrity sha512-kPg3Ft3rzuHQkQdHrl6zjMqz1aaCzvr0kMIodfJ8LxpyIJ+4lVWUnw/QrBhUR81eOMlWkvAwiLVwYbYh47e2pQ==
   dependencies:
     "@nodefony/passport-wrapper" "^4.0.0"
     bcrypt "^3.0.2"
@@ -855,16 +855,16 @@
     passport-local "^1.0.0"
     passport-oauth2 "^1.4.0"
 
-"@nodefony/sequelize-bundle@^4.0.0-beta.11":
-  version "4.0.0-beta.11"
-  resolved "https://registry.yarnpkg.com/@nodefony/sequelize-bundle/-/sequelize-bundle-4.0.0-beta.11.tgz#759c0f7b4d492bd3b7b8cfddf7ec6c4a88707394"
-  integrity sha512-QqUgcbvi3OTP/lLUymZxZjrKeLkvYu+5IxaSVxxeZVDZNpYzITxngSbbNduq9WkbxJLepExR+ZxoLmFrW9OWpA==
+"@nodefony/sequelize-bundle@^4.0.0-beta.12":
+  version "4.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@nodefony/sequelize-bundle/-/sequelize-bundle-4.0.0-beta.12.tgz#bcc26fa4a037c8cf16d06cb878dac57f0b105fd0"
+  integrity sha512-rKgKctvdAc77IQtS5L8MHZW8zGjI4Fh3YxrCpgOXNylJNCkR5OpDcmqMq+/JS7L4eZHDV1gRUFcpXlJ1lFx8xQ==
   dependencies:
     mysql2 "^1.6.4"
     pg "^7.6.1"
     pg-hstore "^2.3.2"
     sequelize "5.0.0-beta.14"
-    sqlite3 "^4.0.3"
+    sqlite3 "^4.0.4"
     tedious "^3.0.1"
 
 "@nodefony/stage@^0.1.12":
@@ -880,10 +880,10 @@
     twig "^1.12.0"
     webrtc-adapter "^6.3.2"
 
-"@nodefony/unittests-bundle@^4.0.0-beta.11":
-  version "4.0.0-beta.11"
-  resolved "https://registry.yarnpkg.com/@nodefony/unittests-bundle/-/unittests-bundle-4.0.0-beta.11.tgz#567a32c85d84abc8d7f7d3a5293474b5b23457cd"
-  integrity sha512-KqtXBbTsg9hJxV0XK2lnnbo86vz0FyLWWJFUajVu3gLIZbTJCV39RIK3Bxh3nmy9JatyZU/ZOgFC5Hq4fP7ivw==
+"@nodefony/unittests-bundle@^4.0.0-beta.12":
+  version "4.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@nodefony/unittests-bundle/-/unittests-bundle-4.0.0-beta.12.tgz#79f4be28483c316c51495a965f23108a1bbef688"
+  integrity sha512-67Qp3YjTufak3Pr5kHsJvZQ8+dl78CgGatNccUNCfXvZJZnxfbVvrt+ocSNoFIcmhEQOx9tgbwVHWg6XQsVMAw==
   dependencies:
     chai "^4.2.0"
     mocha "^5.2.0"
@@ -2440,10 +2440,10 @@ clean-css@4.2.x, clean-css@^4.1.11:
   dependencies:
     source-map "~0.6.0"
 
-clean-webpack-plugin@^0.1.19:
-  version "0.1.19"
-  resolved "https://registry.yarnpkg.com/clean-webpack-plugin/-/clean-webpack-plugin-0.1.19.tgz#ceda8bb96b00fe168e9b080272960d20fdcadd6d"
-  integrity sha512-M1Li5yLHECcN2MahoreuODul5LkjohJGFxLPTjl3j1ttKrF5rgjZET1SJduuqxLAuT1gAPOdkhg03qcaaU1KeA==
+clean-webpack-plugin@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/clean-webpack-plugin/-/clean-webpack-plugin-1.0.0.tgz#f184b9c26d12983d639828e0548ae2080e84b6a7"
+  integrity sha512-+f96f52UIET4tOFBbCqezx7KH+w7lz/p4fA1FEjf0hC6ugxqwZedBtENzekN2FnmoTF/bn1LrlkvebOsDZuXKw==
   dependencies:
     rimraf "^2.6.1"
 
@@ -6810,10 +6810,10 @@ mongoose-legacy-pluralize@1.0.2:
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
 
-mongoose@^5.3.10:
-  version "5.3.10"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.3.10.tgz#729695c04cb4e6c366ea4b399739f9dcf3fea8d9"
-  integrity sha512-h2cW/vR/7UFOAlOoGMpyWdXE75fvfC61TdX63tXnz8L95OU5p7Lj11FxZoznBKjfBPGUk79tmMz6zxPLyBkClQ==
+mongoose@^5.3.11:
+  version "5.3.11"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.3.11.tgz#ab71e070dabcb8b2aebff4702a09198a3f8a9401"
+  integrity sha512-LrsatxtUfZAerAxyFiaw/8T8M4T9Ff9+6wFkJwfTVDz9skX+HVOs70QOzTDawz0k0Q0I6qt9xv/ZYQi2Paykgw==
   dependencies:
     async "2.6.1"
     bson "~1.1.0"
@@ -9999,10 +9999,10 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
-sqlite3@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-4.0.3.tgz#da8c167a87941657fd22e27b248aa371e192b715"
-  integrity sha512-nuWqc26oiJZXyY5MEz+rQbiki1BTibnXsy8Kqo7QD/ut6eksOWi6uWwFMbdnFNME7CZyplWdDXj2fbdQVaEfuA==
+sqlite3@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-4.0.4.tgz#1f75e3ededad6e26f7dd819929460ce44a49dfcd"
+  integrity sha512-CO8vZMyUXBPC+E3iXOCc7Tz2pAdq5BWfLcQmOokCOZW5S5sZ/paijiPOCdvzpdP83RroWHYa5xYlVqCxSqpnQg==
   dependencies:
     nan "~2.10.0"
     node-pre-gyp "^0.10.3"
