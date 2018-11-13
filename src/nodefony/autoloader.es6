@@ -32,6 +32,13 @@ module.exports = function () {
   context.crypto = require("crypto");
   context.BlueBird = require("bluebird");
   context.pm2 = require('pm2');
+  /*try {
+    let pm2 = path.resolve(process.cwd(), "node_modules", "pm2");
+    require.resolve(pm2);
+    context.pm2 = require(pm2);
+  }catch(e){
+    context.pm2 = require('pm2');
+  }*/
   context.Rx = require("rxjs");
   context.nodefony = new Nodefony();
 

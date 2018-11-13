@@ -30,7 +30,6 @@
   },
   "dependencies": {
     "mongoose": "^5.3.11",
-    "pm2": "^3.2.2",
     "sequelize": "5.0.0-beta.14",
     "webpack": "^4.25.1",
     "webpack-dev-server": "^3.1.10"

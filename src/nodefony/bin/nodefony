@@ -24,6 +24,9 @@ const nodefony = function () {
     return require("nodefony");
   } catch (e) {}
   try {
+      return require(path.resolve(__dirname, ".."));
+  }catch(e){}
+  try {
     const globalPath = path.resolve(process.argv[1], '..', '..', 'lib', 'node_modules');
     return require(path.resolve(globalPath, "nodefony"));
   } catch (e) {
