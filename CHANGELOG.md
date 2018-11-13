@@ -1,5 +1,14 @@
 # Changelog
 
+## v4.0.0-beta.13 (13/11/2018)
+- [nodefony release 4.0.0-beta.13](https://github.com/nodefony/nodefony-core/commit/5f71c1902842f7a3ec6c497144fb89cc5f20459b)
+- [debug webpack dump](https://github.com/nodefony/nodefony-core/commit/0c279c76d460c9c01e7d0cc7222daf1703b30564)
+- [debug prod start](https://github.com/nodefony/nodefony-core/commit/b578717dc6323e8bdeccf2ffa682de08358e0a18)
+- [upgrade version](https://github.com/nodefony/nodefony-core/commit/7a9f4140c2197e610cab50ebcca5b4e40146f746)
+- [nodefony changelog 4.0.0-beta.12](https://github.com/nodefony/nodefony-core/commit/f81c7426f9dd5e831d64ed3c7a81f90bfdced527)
+
+---
+
 ## v4.0.0-beta.12 (12/11/2018)
 - [nodefony release 4.0.0-beta.12](https://github.com/nodefony/nodefony-core/commit/c65c52a3cdad6773aab46a05a5d50694ed0f3b85)
 - [nodefony release 4.0.0-beta.12](https://github.com/nodefony/nodefony-core/commit/7a930bbcd2e7e713631ca531fcd030f749eb7007)
