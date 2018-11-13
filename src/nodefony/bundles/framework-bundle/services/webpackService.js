@@ -75,31 +75,36 @@ module.exports = class webpack extends nodefony.Service {
   }
 
   compile() {
-    let bundle = this.tabPromise.shift();
-    if (!bundle) {
-      return Promise.resolve();
-    }
-    if (this.kernel.type === "CONSOLE" && this.kernel.cli.command !== "webpack") {
-      return Promise.resolve();
-    } else {
-      if (this.kernel.isCore) {
-        this.logger(`WEBAPCK Compile Bundle ${bundle.name}`, "INFO");
-      } else {
-        if (!this.kernel.isBundleCore(bundle.name)) {
-          this.logger(`WEBAPCK Compile Bundle ${bundle.name}`, "INFO");
-        }
-      }
-      shell.cd(bundle.path);
-      return bundle.initWebpack.call(bundle)
-        .then(() => {
-          if (this.tabPromise.length) {
-            return this.compile();
-          }
-          return Promise.resolve();
+    return new Promise((resolve, reject)=>{
+      let bundle = this.tabPromise.shift();
+      if (!bundle) {
+        process.nextTick(()=>{
+          resolve();
         });
-    }
+      }
+      if (this.kernel.type === "CONSOLE" && this.kernel.cli.command !== "webpack") {
+        return resolve();
+      } else {
+        if (this.kernel.isCore) {
+          this.logger(`WEBAPCK Compile Bundle ${bundle.name}`, "INFO");
+        } else {
+          if (!this.kernel.isBundleCore(bundle.name)) {
+            this.logger(`WEBAPCK Compile Bundle ${bundle.name}`, "INFO");
+          }
+        }
+        shell.cd(bundle.path);
+        return bundle.initWebpack.call(bundle)
+          .then(() => {
+            if (this.tabPromise.length) {
+              return this.compile();
+            }
+            return resolve();
+          }).catch(e =>{
+            return reject(e);
+          });
+      }
+    });
   }
-
 
   setFileSystem() {
     switch (this.webPackSettings.outputFileSystem) {
