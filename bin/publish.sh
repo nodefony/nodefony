@@ -53,6 +53,8 @@ publish_demo_bundles () {
     if grep -q "demo-bundle" <<< $file &>/dev/null; then
       cd $pathdemo/$file;
       npm_version;
+      echo "PUBLISH BUNDLE : @nodefony/$file";
+      npm_publish $pathdemo/$file ;
       echo "COMMIT DEMO-BUNDLE $version";
       git commit -a -m "demo-bundle release $version"
       echo "PUSH DEMO-BUNDLE TO REMOTE";
@@ -61,8 +63,6 @@ publish_demo_bundles () {
       git tag v$version
       git tag
       git push origin v$version
-      echo "PUBLISH BUNDLE : @nodefony/$file";
-      npm_publish $pathdemo/$file ;
     fi
   done
 }
