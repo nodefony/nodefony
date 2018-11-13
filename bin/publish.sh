@@ -116,8 +116,11 @@ npm_publish () {
   cd $1 ;
   echo "CLEAN $1 DIRECTORY";
   rm -rf node_modules ;
+  rm -f package.lock.json;
+  rm -f yarn.lock;
   yarn;
   npm install;
+  sleep 2;
   npm publish --access=public;
 }
 
@@ -128,6 +131,8 @@ npm_version () {
   else
     npm version $version --allow-same-version --git-tag-version false
   fi
+  cat package.json
+  sleep 2;
 }
 
 tools (){
