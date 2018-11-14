@@ -39,7 +39,6 @@ add_bundle () {
 publish_core_bundles () {
   for file in $(ls $pathbundles ); do
     if grep -q ".*-bundle" <<< $file &>/dev/null; then
-      npm_version;
       #packages=(${packages[@]} $file);
       echo "PUBLISH CORE BUNDLES : @nodefony/$file ";
       npm_publish $pathbundles/$file
@@ -52,7 +51,6 @@ publish_demo_bundles () {
   for file in $(ls $pathdemo ); do
     if grep -q "demo-bundle" <<< $file &>/dev/null; then
       cd $pathdemo/$file;
-      npm_version;
       echo "PUBLISH BUNDLE : @nodefony/$file";
       npm_publish $pathdemo/$file ;
       echo "COMMIT DEMO-BUNDLE $version";
@@ -83,7 +81,6 @@ publish_nodefony () {
 
 upgrade_nodefony () {
   cd $pathnodefony;
-  npm_version;
   add_bundle;
   for package in ${packages[@]}; do
     echo "UPGRADE PACKAGE nodefony with : @nodefony/$package";
@@ -114,6 +111,7 @@ commit_project () {
 
 npm_publish () {
   cd $1 ;
+  npm_version;
   echo "CLEAN $1 DIRECTORY";
   rm -rf node_modules ;
   rm -f package.lock.json;
@@ -131,8 +129,6 @@ npm_version () {
   else
     npm version $version --allow-same-version --git-tag-version false
   fi
-  cat package.json
-  sleep 2;
 }
 
 tools (){
