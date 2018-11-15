@@ -13,7 +13,7 @@
   "dependencies": {
     "@nodefony/passport-wrapper": "^4.0.0",
     "bcrypt": "^3.0.2",
-    "jsonwebtoken": "^8.3.0",
+    "jsonwebtoken": "^8.4.0",
     "node-pre-gyp": "^0.11.0",
     "passport": "^0.4.0",
     "passport-github2": "^0.1.11",
