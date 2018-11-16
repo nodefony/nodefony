@@ -1,13 +1,10 @@
-############ NPM #############
-# Node Package Manager
-  ___     _____     ___ ___
-/' _ `\  /\ '__`\ /' __` __`\
-/\ \/\ \ \ \ \L\ \/\ \/\ \/\ \
-\ \_\ \_\ \ \ ,__/\ \_\ \_\ \_\
-\/_/\/_/  \ \ \/  \/_/\/_/\/_/
-           \ \_\
-            \/_/
-
+   _   _   ____    __  __
+  | \ | | |  _ \  |  \/  |
+  |  \| | | |_) | | |\/| |
+  | |\  | |  __/  | |  | |
+  |_| \_| |_|     |_|  |_|
+  ########################
+  # Node Package Manager
 
 #Publishing with tags
 npm publish --tag beta
@@ -16,15 +13,13 @@ npm publish --tag beta
 #Scoped Package with tag
 npm publish --access=public
 
-
-############ NVM #############
-# Node Version Manager
-  ___     __  __    ___ ___
-/' _ `\  /\ \/\ \ /' __` __`\
-/\ \/\ \ \ \ \_/ |/\ \/\ \/\ \
-\ \_\ \_\ \ \___/ \ \_\ \_\ \_\
- \/_/\/_/  \/__/   \/_/\/_/\/_/
-
+   _   _  __     __  __  __
+  | \ | | \ \   / / |  \/  |
+  |  \| |  \ \ / /  | |\/| |
+  | |\  |   \ V /   | |  | |
+  |_| \_|    \_/    |_|  |_|
+  ##########################
+  # Node Version Manager
 
 # list installed version
 nvm ls
@@ -34,3 +29,33 @@ nvm ls-remote
 
 # change default version
 nvm alias default v10.11.0
+
+   __   __     _      ____    _   _
+   \ \ / /    / \    |  _ \  | \ | |
+    \ V /    / _ \   | |_) | |  \| |
+     | |    / ___ \  |  _ <  | |\  |
+     |_|   /_/   \_\ |_| \_\ |_| \_|
+  ##################################
+
+npm (v5)	                               Yarn
+
+npm install	                            yarn install
+(N/A)	                                  yarn install --flat
+(N/A)	                                  yarn install --har
+npm install --no-package-lock	          yarn install --no-lockfile
+(N/A)	                                  yarn install --pure-lockfile
+npm install [package] --save	          yarn add [package]
+npm install [package] --save-dev	      yarn add [package] --dev
+(N/A)	                                  yarn add [package] --peer
+npm install [package] --save-optional	  yarn add [package] --optional
+npm install [package] --save-exact	    yarn add [package] --exact
+(N/A)	                                  yarn add [package] --tilde
+npm install [package] --global	        yarn global add [package]
+npm update --global                  	  yarn global upgrade
+npm rebuild	                            yarn add --force
+npm uninstall [package]	                yarn remove [package]
+npm cache clean	                        yarn cache clean [package]
+rm -rf node_modules && npm install  	  yarn upgrade
+npm version major                    	  yarn version --major
+npm version minor                    	  yarn version --minor
+npm version patch                    	  yarn version --patch
