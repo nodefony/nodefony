@@ -14,7 +14,9 @@ module.exports = nodefony.register('passeportFactory', () => {
         `, "WARNING");
       }
       this.strategy = this.getStrategy(this.settings);
-      this.passport.use(this.strategy);
+      if (this.strategy) {
+        this.passport.use(this.strategy);
+      }
     }
 
     getStrategy( /*options*/ ) {
