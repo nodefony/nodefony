@@ -36,11 +36,11 @@
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
     "terser-webpack-plugin": "^1.1.0",
-    "webpack": "^4.25.1",
+    "webpack": "^4.26.0",
     "webpack-merge": "^4.1.4"
   },
   "devDependencies": {
-    "node-pre-gyp": "^0.11.0"
+    "node-pre-gyp": "^0.12.0"
   },
   "license": "CECILL-B",
   "readmeFilename": "README.md",
