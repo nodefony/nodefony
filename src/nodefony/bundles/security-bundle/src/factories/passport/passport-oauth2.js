@@ -2,6 +2,7 @@
  *	PASSPORT OPENID  FACTORY
  */
 const Strategy = require('passport-oauth2');
+require('https').globalAgent.options.rejectUnauthorized = false;
 
 module.exports = nodefony.registerFactory("passport-oauth2", () => {
 
@@ -12,10 +13,15 @@ module.exports = nodefony.registerFactory("passport-oauth2", () => {
     }
 
     getStrategy(options) {
-      return new Strategy(options, (accessToken, refreshToken, profile, done) => {
-        this.logger("TRY AUTHENTICATION " + this.name, "DEBUG");
-        //let mytoken = new nodefony.security.tokens.google(profile, accessToken, refreshToken);
-        return this.authenticateToken(accessToken)
+      return new Strategy(options, (accessToken, refreshToken, params, profile, done) => {
+        this.logger("TRY AUTHENTICATION " + this.name, "INFO");
+        let mytoken = null;
+        try {
+          mytoken = new nodefony.security.tokens.oauth2(profile, params, accessToken, refreshToken);
+        } catch (e) {
+          return done(e);
+        }
+        return this.authenticateToken(mytoken)
           .then((token) => {
             done(null, token);
             return token;
@@ -42,6 +48,21 @@ module.exports = nodefony.registerFactory("passport-oauth2", () => {
       }
       return super.authenticate(context);
     }
+
+    createToken(context = null /*, providerName = null*/ ) {
+      if (context.metaSecurity) {
+        if (context.metaSecurity.token) {
+          return new nodefony.security.tokens.oauth2(
+            context.metaSecurity.token.profile,
+            context.metaSecurity.token.params,
+            context.metaSecurity.token.accessToken,
+            context.metaSecurity.token.refreshToken
+          );
+        }
+      }
+      return new nodefony.security.tokens.oauth2();
+    }
+
   };
   return Factory;
 });
