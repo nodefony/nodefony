@@ -1,5 +1,5 @@
 /*
- *	PASSPORT OPENID  FACTORY
+ *	PASSPORT oauth2  FACTORY
  */
 const Strategy = require('passport-oauth2');
 require('https').globalAgent.options.rejectUnauthorized = false;
@@ -38,7 +38,8 @@ module.exports = nodefony.registerFactory("passport-oauth2", () => {
         return new Promise((resolve, reject) => {
           try {
             this.passport.authenticate(this.name, {
-              scope: this.scopes
+              scope: this.settings.scopes,
+              session: false
             })(context);
             return resolve(null);
           } catch (e) {
