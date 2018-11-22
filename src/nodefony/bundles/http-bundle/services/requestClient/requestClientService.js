@@ -23,21 +23,21 @@ class Request extends nodefony.Service {
     this.service = service;
     let type = nodefony.typeOf(baseUrl);
     switch (true) {
-    case type === "string":
-      this.baseUrl = url.parse(baseUrl);
-      if (options) {
-        this.options = nodefony.extend(true, this.options, options);
-      }
-      break;
-    case type === "object":
-      if (baseUrl instanceof nodefony.Service) {
-        this.service = baseUrl;
-      } else {
-        this.options = nodefony.extend(true, this.options, baseUrl);
-      }
-      break;
-    default:
-      throw new nodefony.requestError("Bad argument type", null, service.container);
+      case type === "string":
+        this.baseUrl = url.parse(baseUrl);
+        if (options) {
+          this.options = nodefony.extend(true, this.options, options);
+        }
+        break;
+      case type === "object":
+        if (baseUrl instanceof nodefony.Service) {
+          this.service = baseUrl;
+        } else {
+          this.options = nodefony.extend(true, this.options, baseUrl);
+        }
+        break;
+      default:
+        throw new nodefony.requestError("Bad argument type", null, service.container);
     }
   }
 
@@ -53,42 +53,42 @@ class Request extends nodefony.Service {
         let myoptions = nodefony.extend(true, {}, this.options);
         let type = nodefony.typeOf(uri);
         switch (true) {
-        case type === "string":
-          if (uri === "") {
-            if (this.baseUrl) {
-              myurl = url.parse(this.baseUrl);
-            } else {
-              throw new nodefony.requestError("http request Bad url", null, container);
-            }
-          } else {
-            if (this.baseUrl) {
-              if (/^\//.test(uri)) {
-                if (/\/$/.test(this.baseUrl)) {
-                  uri = uri.replace(/\/(.*)/, "$1");
-                }
-                myurl = url.parse(`${this.baseUrl.href}${uri}`);
+          case type === "string":
+            if (uri === "") {
+              if (this.baseUrl) {
+                myurl = url.parse(this.baseUrl);
               } else {
-                if (/\/$/.test(this.baseUrl)) {
-                  myurl = url.parse(`${this.baseUrl.href}${uri}`);
-                } else {
-                  myurl = url.parse(`${this.baseUrl.href}/${uri}`);
-                }
+                throw new nodefony.requestError("http request Bad url", null, container);
               }
             } else {
-              myurl = url.parse(uri);
+              if (this.baseUrl) {
+                if (/^\//.test(uri)) {
+                  if (/\/$/.test(this.baseUrl)) {
+                    uri = uri.replace(/\/(.*)/, "$1");
+                  }
+                  myurl = url.parse(`${this.baseUrl.href}${uri}`);
+                } else {
+                  if (/\/$/.test(this.baseUrl)) {
+                    myurl = url.parse(`${this.baseUrl.href}${uri}`);
+                  } else {
+                    myurl = url.parse(`${this.baseUrl.href}/${uri}`);
+                  }
+                }
+              } else {
+                myurl = url.parse(uri);
+              }
             }
-          }
 
-          if (options) {
-            myoptions = nodefony.extend(true, myoptions, options);
-          }
-          myoptions.url = myurl;
-          break;
-        case type === "object":
-          myoptions = nodefony.extend(true, myoptions, uri);
-          break;
-        default:
-          throw new nodefony.requestError("http request Bad argument type", null, container);
+            if (options) {
+              myoptions = nodefony.extend(true, myoptions, options);
+            }
+            myoptions.url = myurl;
+            break;
+          case type === "object":
+            myoptions = nodefony.extend(true, myoptions, uri);
+            break;
+          default:
+            throw new nodefony.requestError("http request Bad argument type", null, container);
         }
         this.logger(`${JSON.stringify(myoptions, null," ")}`, "DEBUG");
         req = request(myoptions, (error, response, body) => {
@@ -113,12 +113,12 @@ class Request extends nodefony.Service {
     });
   }
 
-  get(url, options = {}) {
+  GET(url, options = {}) {
     options.method = "GET";
     return this.http(url, options);
   }
 
-  post(url, options) {
+  POST(url, options) {
     options.method = "POST";
     return this.http(url, options);
   }

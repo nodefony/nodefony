@@ -2,7 +2,6 @@
  *	PASSPORT oauth2  FACTORY
  */
 const Strategy = require('passport-oauth2');
-require('https').globalAgent.options.rejectUnauthorized = false;
 
 module.exports = nodefony.registerFactory("passport-oauth2", () => {
 
@@ -10,25 +9,35 @@ module.exports = nodefony.registerFactory("passport-oauth2", () => {
 
     constructor(security, settings) {
       super("oauth2", security, settings);
+      if (this.security.kernel.environment === "dev") {
+        require('https').globalAgent.options.rejectUnauthorized = false;
+      }
     }
 
     getStrategy(options) {
-      return new Strategy(options, (accessToken, refreshToken, params, profile, done) => {
-        this.logger("TRY AUTHENTICATION " + this.name, "INFO");
-        let mytoken = null;
+      return new Promise((resolve, reject) => {
         try {
-          mytoken = new nodefony.security.tokens.oauth2(profile, params, accessToken, refreshToken);
-        } catch (e) {
-          return done(e);
-        }
-        return this.authenticateToken(mytoken)
-          .then((token) => {
-            done(null, token);
-            return token;
-          }).catch((error) => {
-            done(error, null);
-            throw error;
+          let strategy = new Strategy(options, (accessToken, refreshToken, params, profile, done) => {
+            this.logger("TRY AUTHENTICATION " + this.name, "INFO");
+            let mytoken = null;
+            try {
+              mytoken = new nodefony.security.tokens.oauth2(profile, params, accessToken, refreshToken);
+            } catch (e) {
+              return done(e);
+            }
+            return this.authenticateToken(mytoken)
+              .then((token) => {
+                done(null, token);
+                return token;
+              }).catch((error) => {
+                done(error, null);
+                throw error;
+              });
           });
+          return resolve(strategy);
+        } catch (e) {
+          return reject(e);
+        }
       });
     }
 

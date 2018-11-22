@@ -14,16 +14,23 @@ module.exports = nodefony.registerFactory("passport-google-oauth20", () => {
     }
 
     getStrategy(options) {
-      return new GoogleStrategy(options, (accessToken, refreshToken, profile, cb) => {
-        this.logger("TRY AUTHENTICATION " + this.name, "DEBUG");
-        let mytoken = new nodefony.security.tokens.google(profile, accessToken, refreshToken);
-        return this.authenticateToken(mytoken).then((token) => {
-          cb(null, token);
-          return token;
-        }).catch((error) => {
-          cb(error, null);
-          throw error;
-        });
+      return new Promise((resolve, reject) => {
+        try {
+          let strategy = new GoogleStrategy(options, (accessToken, refreshToken, profile, cb) => {
+            this.logger("TRY AUTHENTICATION " + this.name, "DEBUG");
+            let mytoken = new nodefony.security.tokens.google(profile, accessToken, refreshToken);
+            return this.authenticateToken(mytoken).then((token) => {
+              cb(null, token);
+              return token;
+            }).catch((error) => {
+              cb(error, null);
+              throw error;
+            });
+          });
+          return resolve(strategy);
+        } catch (e) {
+          return reject(e);
+        }
       });
     }
 

@@ -36,37 +36,131 @@ const openidStrategy = class openidStrategy extends oauth2Strategy {
     //let params = {};
     return options;
   }
-
 };
-
-
 
 module.exports = nodefony.registerFactory("passport-openid", () => {
 
   const Factory = class openidFactory extends nodefony.passeportFactory {
-
     constructor(security, settings) {
       super("openid", security, settings);
+      if (this.security.kernel.environment === "dev") {
+        require('https').globalAgent.options.rejectUnauthorized = false;
+      }
+    }
 
+    http(url, options) {
+      this.request = this.get("requestClient");
+      let settings = nodefony.extend({
+        agentOptions: {
+          rejectUnauthorized: (this.security.kernel.environment === "dev" ? false : true)
+        }
+      }, options);
+      return this.request.http(url, settings, this.container);
+    }
+
+    discoverOpenIdConnect(Url, options) {
+      if (Url) {
+        if (typeof url === "string") {
+          this.urlDiscovry = url.parse(Url);
+        } else {
+          this.urlDiscovry = Url;
+        }
+      }
+      this.logger(`openID DISCOVERY url : ${this.urlDiscovry.href}`, "INFO");
+      return this.http(this.urlDiscovry.href, options)
+        .then((response) => {
+          return response.json.body;
+        }).catch((e) => {
+          this.logger(e, "ERROR");
+          throw e;
+        });
+    }
+
+    setDiscovery(json) {
+      if (json) {
+        this.discovery = json;
+        for (let ele in json) {
+          switch (ele) {
+            case "authorization_endpoint":
+              this.settings.authorizationURL = json.authorization_endpoint;
+              break;
+            case "token_endpoint":
+              this.settings.tokenURL = json.token_endpoint;
+              break;
+            case "userinfo_endpoint":
+              this.settings.userInfoURL = json.userinfo_endpoint;
+              break;
+          }
+        }
+      }
     }
 
     getStrategy(options) {
-      return new openidStrategy(options, (accessToken, refreshToken, params, profile, done) => {
-        this.logger("TRY AUTHENTICATION " + this.name, "INFO");
-        let mytoken = null;
-        try {
-          mytoken = new nodefony.security.tokens.openid(profile, params, accessToken, refreshToken);
-        } catch (e) {
-          return done(e);
-        }
-        return this.authenticateToken(mytoken)
-          .then((token) => {
-            done(null, token);
-            return token;
-          }).catch((error) => {
-            done(error, null);
-            throw error;
+      if (this.settings.issuer) {
+        this.uriDiscovry = ".well-known/openid-configuration";
+        this.urlDiscovry = url.parse(`${options.issuer}/${this.uriDiscovry}`);
+        this.loadDiscovry = true;
+      } else {
+        this.urlDiscovry = null;
+        this.loadDiscovry = false;
+      }
+      if (this.loadDiscovry === true) {
+        return this.discoverOpenIdConnect(this.urlDiscovry, {
+          json: true
+        }).then((discovery) => {
+          this.setDiscovery(discovery);
+          return new Promise((resolve, reject) => {
+            try {
+              let strategy = new openidStrategy(this.settings, (accessToken, refreshToken, params, profile, done) => {
+                this.logger("TRY AUTHENTICATION " + this.name, "INFO");
+                let mytoken = null;
+                try {
+                  mytoken = new nodefony.security.tokens.openid(profile, params, accessToken, refreshToken);
+                } catch (e) {
+                  return done(e);
+                }
+                return this.authenticateToken(mytoken)
+                  .then((token) => {
+                    done(null, token);
+                    return token;
+                  }).catch((error) => {
+                    done(error, null);
+                    throw error;
+                  });
+              });
+              return resolve(strategy);
+            } catch (e) {
+              return reject(e);
+            }
           });
+        }).catch(e => {
+          this.logger(e, "ERROR");
+          throw e;
+        });
+      }
+      return new Promise((resolve, reject) => {
+        try {
+          let strategy = new openidStrategy(options, (accessToken, refreshToken, params, profile, done) => {
+            this.logger("TRY AUTHENTICATION " + this.name, "INFO");
+            let mytoken = null;
+            try {
+              mytoken = new nodefony.security.tokens.openid(profile, params, accessToken, refreshToken);
+            } catch (e) {
+              return done(e);
+            }
+            return this.authenticateToken(mytoken)
+              .then((token) => {
+                done(null, token);
+                return token;
+              }).catch((error) => {
+                done(error, null);
+                throw error;
+              });
+          });
+          return resolve(strategy);
+        } catch (e) {
+          return reject(e);
+        }
       });
     }
 
@@ -101,8 +195,6 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
       }
       return new nodefony.security.tokens.openid();
     }
-
-
 
   };
   return Factory;

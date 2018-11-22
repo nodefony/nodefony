@@ -14,16 +14,23 @@ module.exports = nodefony.registerFactory("passport-github2", () => {
     }
 
     getStrategy(options) {
-      return new GitHubStrategy(options, (accessToken, refreshToken, profile, cb) => {
-        this.logger("TRY AUTHENTICATION " + this.name, "DEBUG");
-        let mytoken = new nodefony.security.tokens.github(profile, accessToken, refreshToken);
-        return this.authenticateToken(mytoken).then((token) => {
-          cb(null, token);
-          return token;
-        }).catch((error) => {
-          cb(error, null);
-          throw error;
-        });
+      return new Promise((resolve, reject) => {
+        try {
+          let strategy = new GitHubStrategy(options, (accessToken, refreshToken, profile, cb) => {
+            this.logger("TRY AUTHENTICATION " + this.name, "DEBUG");
+            let mytoken = new nodefony.security.tokens.github(profile, accessToken, refreshToken);
+            return this.authenticateToken(mytoken).then((token) => {
+              cb(null, token);
+              return token;
+            }).catch((error) => {
+              cb(error, null);
+              throw error;
+            });
+          });
+          return resolve(strategy);
+        } catch (e) {
+          return reject(e);
+        }
       });
     }
 

@@ -17,22 +17,29 @@ module.exports = nodefony.registerFactory("passport-ldap", () => {
     }
 
     getStrategy(options) {
-      return new LdapStrategy(options, (profile, done) => {
-        this.logger("TRY AUTHENTICATION " + this.name + " : " + profile.uid, "DEBUG");
-        if (profile) {
-          let mytoken = new nodefony.security.tokens.ldap(profile, this.profileWrapper);
-          mytoken.setProvider(this.settings.server.url);
-          this.authenticateToken(mytoken).then((token) => {
-            done(null, token);
-            return token;
-          }).catch((error) => {
-            done(error, null);
-            throw error;
+      return new Promise((resolve, reject) => {
+        try {
+          let strategy = new LdapStrategy(options, (profile, done) => {
+            this.logger("TRY AUTHENTICATION " + this.name + " : " + profile.uid, "DEBUG");
+            if (profile) {
+              let mytoken = new nodefony.security.tokens.ldap(profile, this.profileWrapper);
+              mytoken.setProvider(this.settings.server.url);
+              this.authenticateToken(mytoken).then((token) => {
+                done(null, token);
+                return token;
+              }).catch((error) => {
+                done(error, null);
+                throw error;
+              });
+            } else {
+              let error = new Error("Profile Ldap error");
+              done(error, null);
+              throw error;
+            }
           });
-        } else {
-          let error = new Error("Profile Ldap error");
-          done(error, null);
-          throw error;
+          return resolve(strategy);
+        } catch (e) {
+          return reject(e);
         }
       });
     }

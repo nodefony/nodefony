@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 
 const fromCookieExtractor = function fromCookieExtractor(nameCookie) {
   const name = nameCookie || "jwt";
-  return function (req) {
+  return function(req) {
     var token = null;
     if (req && req.cookies && req.cookies[name]) {
       token = req.cookies.jwt.value;
@@ -27,20 +27,27 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
     }
 
     getStrategy(options = {}) {
-      let opt = nodefony.extend(true, {}, options);
-      opt.jwtFromRequest = this.getExtractor(options);
-      opt.secretOrKey = this.getSecretOrKeyConfig(options.secretOrKey);
-      return new JwtStrategy(opt, (jwt_payload, done) => {
-        this.logger("TRY AUTHORISATION " + this.name, "DEBUG");
-        let mytoken = new nodefony.security.tokens.jwt(jwt_payload);
-        mytoken.unserialize(mytoken);
-        this.authenticateToken(mytoken).then((token) => {
-          done(null, token);
-          return token;
-        }).catch((error) => {
-          done(error, null);
-          throw error;
-        });
+      return new Promise((resolve, reject) => {
+        try {
+          let opt = nodefony.extend(true, {}, options);
+          opt.jwtFromRequest = this.getExtractor(options);
+          opt.secretOrKey = this.getSecretOrKeyConfig(options.secretOrKey);
+          let strategy = new JwtStrategy(opt, (jwt_payload, done) => {
+            this.logger("TRY AUTHORISATION " + this.name, "DEBUG");
+            let mytoken = new nodefony.security.tokens.jwt(jwt_payload);
+            mytoken.unserialize(mytoken);
+            this.authenticateToken(mytoken).then((token) => {
+              done(null, token);
+              return token;
+            }).catch((error) => {
+              done(error, null);
+              throw error;
+            });
+          });
+          return resolve(strategy);
+        } catch (e) {
+          return reject(e);
+        }
       });
     }
 
@@ -108,42 +115,42 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
     getExtractorConfig(options, params) {
       let type = nodefony.typeOf(options);
       switch (type) {
-      case "string":
-        switch (options) {
-        case "fromCookie":
-          return fromCookieExtractor.apply(this, params);
-        default:
-          if (ExtractJwt[options]) {
-            return ExtractJwt[options].apply(this, params);
-          } else {
-            throw new Error(`Factory passport-jwt jwtFromRequest JWT Extractor not found  : ${options} `);
+        case "string":
+          switch (options) {
+            case "fromCookie":
+              return fromCookieExtractor.apply(this, params);
+            default:
+              if (ExtractJwt[options]) {
+                return ExtractJwt[options].apply(this, params);
+              } else {
+                throw new Error(`Factory passport-jwt jwtFromRequest JWT Extractor not found  : ${options} `);
+              }
           }
-        }
-        break;
-      case "object":
-        if (options.extractor) {
-          return this.getExtractorConfig(options.extractor, options.params);
-        } else {
+          break;
+        case "object":
+          if (options.extractor) {
+            return this.getExtractorConfig(options.extractor, options.params);
+          } else {
+            throw new Error(`Factory passport-jwt bad config Extractor jwtFromRequest : ${options} `);
+          }
+          break;
+        case null:
+        case undefined:
+          return ExtractJwt.fromAuthHeaderAsBearerToken();
+        default:
           throw new Error(`Factory passport-jwt bad config Extractor jwtFromRequest : ${options} `);
-        }
-        break;
-      case null:
-      case undefined:
-        return ExtractJwt.fromAuthHeaderAsBearerToken();
-      default:
-        throw new Error(`Factory passport-jwt bad config Extractor jwtFromRequest : ${options} `);
       }
     }
 
     getSecretOrKeyConfig(options) {
       let type = nodefony.typeOf(options);
       switch (type) {
-      case "string":
-        this.publicKey = options;
-        break;
-      default:
-        this.getCertificats();
-        break;
+        case "string":
+          this.publicKey = options;
+          break;
+        default:
+          this.getCertificats();
+          break;
       }
       return this.publicKey;
     }

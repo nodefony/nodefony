@@ -12,16 +12,23 @@ module.exports = nodefony.registerFactory("passport-local", () => {
     }
 
     getStrategy(options) {
-      return new LocalStrategy(options, (username, password, done) => {
-        this.logger("TRY AUTHENTICATION " + this.name + " : " + username, "DEBUG");
-        let mytoken = new nodefony.security.tokens.userPassword(username, password);
-        this.authenticateToken(mytoken).then((token) => {
-          done(null, token);
-          return token;
-        }).catch((error) => {
-          done(error, null);
-          throw error;
-        });
+      return new Promise((resolve, reject) => {
+        try {
+          let strategy = new LocalStrategy(options, (username, password, done) => {
+            this.logger("TRY AUTHENTICATION " + this.name + " : " + username, "DEBUG");
+            let mytoken = new nodefony.security.tokens.userPassword(username, password);
+            this.authenticateToken(mytoken).then((token) => {
+              done(null, token);
+              return token;
+            }).catch((error) => {
+              done(error, null);
+              throw error;
+            });
+          });
+          return resolve(strategy);
+        } catch (e) {
+          return reject(e);
+        }
       });
     }
 
