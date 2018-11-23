@@ -32,8 +32,6 @@ const openidStrategy = class openidStrategy extends oauth2Strategy {
   }
 
   authorizationParams(options) {
-    //console.log("PASSSSS", options);
-    //let params = {};
     return options;
   }
 };
@@ -90,6 +88,9 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
             case "userinfo_endpoint":
               this.settings.userInfoURL = json.userinfo_endpoint;
               break;
+            case "end_session_endpoint":
+              this.logoutUrl = json.end_session_endpoint;
+              break;
           }
         }
       }
@@ -111,7 +112,7 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
           this.setDiscovery(discovery);
           return new Promise((resolve, reject) => {
             try {
-              let strategy = new openidStrategy(this.settings, (accessToken, refreshToken, params, profile, done) => {
+              this.strategy = new openidStrategy(this.settings, (accessToken, refreshToken, params, profile, done) => {
                 this.logger("TRY AUTHENTICATION " + this.name, "INFO");
                 let mytoken = null;
                 try {
@@ -128,7 +129,7 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
                     throw error;
                   });
               });
-              return resolve(strategy);
+              return resolve(this.strategy);
             } catch (e) {
               return reject(e);
             }
@@ -140,7 +141,7 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
       }
       return new Promise((resolve, reject) => {
         try {
-          let strategy = new openidStrategy(options, (accessToken, refreshToken, params, profile, done) => {
+          this.strategy = new openidStrategy(options, (accessToken, refreshToken, params, profile, done) => {
             this.logger("TRY AUTHENTICATION " + this.name, "INFO");
             let mytoken = null;
             try {
@@ -157,7 +158,7 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
                 throw error;
               });
           });
-          return resolve(strategy);
+          return resolve(this.strategy);
         } catch (e) {
           return reject(e);
         }
@@ -180,6 +181,32 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
         });
       }
       return super.authenticate(context);
+    }
+
+    logout(context) {
+      if (this.logoutUrl) {
+        this.logger(`logout url : ${this.logoutUrl}`, "INFO");
+        return new Promise((resolve, reject) => {
+          if (this.strategy) {
+            this.strategy._oauth2.get(this.logoutUrl, context.token.accessToken, (err /*, body , res*/ ) => {
+              if (err) {
+                let error = new nodefony.securityError(err.data, err.statusCode, this.security, context);
+                return reject(error);
+              }
+              return super.logout(context)
+                .catch(e => {
+                  throw e;
+                });
+            });
+          } else {
+            return reject(new Error("No strategy"));
+          }
+        });
+      }
+      return super.logout(context)
+        .catch(e => {
+          throw e;
+        });
     }
 
     createToken(context = null /*, providerName = null*/ ) {

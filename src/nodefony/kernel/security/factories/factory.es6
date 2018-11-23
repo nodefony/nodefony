@@ -4,7 +4,7 @@ module.exports = nodefony.register('Factory', () => {
 
     constructor(name, security, settings = {}) {
       super(name, security.container, security.notificationsCenter);
-      this.settings = settings ||  {};
+      this.settings = settings || {};
       this.security = security;
       this.providerName = this.settings.provider;
       this.provider = null;
@@ -40,6 +40,13 @@ module.exports = nodefony.register('Factory', () => {
         })
         .catch(error => {
           throw error;
+        });
+    }
+
+    logout(context) {
+      return this.security.logout(context)
+        .catch(e => {
+          throw e;
         });
     }
 
@@ -86,7 +93,7 @@ module.exports = nodefony.register('Factory', () => {
       if (provider) {
         return provider.authenticate(token);
       } else {
-        if ( !this.provider) {
+        if (!this.provider) {
           return new Promise((resolve) => {
             return resolve(token);
           });

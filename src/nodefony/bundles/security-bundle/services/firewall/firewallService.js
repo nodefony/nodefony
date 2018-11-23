@@ -452,6 +452,41 @@ module.exports = class security extends nodefony.Service {
       });
   }
 
+  logout(context) {
+    context.request.request.headers.authorization = "";
+    context.response.setHeader("authorization", "");
+    if (context.token && context.token.factory) {
+      let factory = null;
+      if (context.security) {
+        factory = context.security.getFactory(context.token.factory);
+        return factory.logout(context)
+          .catch(e => {
+            throw e;
+          });
+      }
+      factory = this.getFactory(context.token.factory);
+      return factory.logout(context)
+        .catch(e => {
+          throw e;
+        });
+    }
+    if (context.security) {
+      return context.security.logout(context)
+        .catch(e => {
+          throw e;
+        });
+    }
+    if (context.session) {
+      return context.session.destroy(true)
+        .then(() => {
+          return context.redirect("/", null, true);
+        }).catch(e => {
+          this.logger(e, "ERROR");
+        });
+    }
+    return context.redirect("/", null, true);
+  }
+
   setSessionStrategy(strategy) {
     if (strategy in optionStrategy) {
       this.logger("Set Session Strategy  : " + strategy, "DEBUG");

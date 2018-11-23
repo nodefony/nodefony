@@ -15,13 +15,13 @@
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{user.name}}
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <div class="dropdown-menu p-0" aria-labelledby="navbarDropdownMenuLink">
           <div class="card" style="width: 20rem; border: none;">
             <div class="card-header">
                 <h5 class="card-title">Informations</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{"username"|trans("login")}}</h6>
             </div>
             <div class="card-body" >
-              <h6 class="card-subtitle mb-2 text-muted">{{"utilisateur"|trans("login")}}</h6>
               <div class="user-img">
                 {% if user.image %}
                   <img src="{{ user.image }}" alt=""></img>
@@ -30,9 +30,9 @@
                 {% endif %}
               </div>
               <div class="user-info">
-                <p>Username : {{ user.username }}</p>
-                <p>Name : <i> {{ user.name }} </i> </p>
-                <p>Surname : <i> {{ user.surname }} </i> </p>
+                <p>{{"username"|trans("login")}} : {{ user.username }}</p>
+                <p>{{"name"|trans("login")}} : <i> {{ user.name }} </i> </p>
+                <p>{{"surname"|trans("login")}} : <i> {{ user.surname }} </i> </p>
                 </span>
               </div>
             </div>

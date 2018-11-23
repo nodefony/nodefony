@@ -29,7 +29,7 @@
     "uglifycss": "^0.0.29",
     "vue": "^2.5.17",
     "vue-loader": "^15.4.2",
-    "vue-router": "^3.0.1",
+    "vue-router": "^3.0.2",
     "vue-template-compiler": "^2.5.17",
     "webpack": "^4.26.0",
     "webpack-merge": "^4.1.4",
