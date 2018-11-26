@@ -37,6 +37,7 @@ module.exports = nodefony.register("AccessControl", () => {
           this.setTokenRole(context);
           this.actived = true;
         }
+        return ret;
       } catch (e) {
         throw new nodefony.authorizationError(e, 500, context);
       }
@@ -58,26 +59,27 @@ module.exports = nodefony.register("AccessControl", () => {
         }
         ret = this.checkIp(context);
         if (ret === false) {
-          return ret;
+          return false;
+          //return new nodefony.authorizationError(`Access Control Unauthorized IP`);
         }
         ret = this.checkMethod(context);
         if (ret === false) {
-          return ret;
+          return false;
+          //return new nodefony.authorizationError(`Access Control Unauthorized Method`);
         }
         ret = this.checkHost(context);
         if (ret === false) {
-          return ret;
+          return false;
+          //return new nodefony.authorizationError(`Access Control Unauthorized Host`);
         }
         // allowIf
         ret = this.checkAllowRole(context);
         if (ret === false) {
-          return ret;
+          return new nodefony.authorizationError(`Access Control Unauthorized Role`, 401, context);
         }
         ret = this.checkAllowIp(context);
         if (ret === false) {
-          return ret;
-          //throw new nodefony.authorizationError(`Access Control Unauthorized IP
-          //  type ${net.isIP(context.request.remoteAddress)} : ${context.request.remoteAddress}`, 401, context);
+          return new nodefony.authorizationError(`Access Control Unauthorized IP type ${net.isIP(context.request.remoteAddress)} : ${context.request.remoteAddress}`, 401, context);
         }
         return ret;
       } catch (e) {

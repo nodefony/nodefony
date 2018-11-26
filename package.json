@@ -5,11 +5,8 @@
   "main": "./src/nodefony/core/autoloader.es6",
   "scripts": {
     "nodefony": "src/nodefony/bin/nodefony",
-    "pm2": "pm2",
+    "pm2": "src/nodefony/node_modules/.bin/pm2",
     "start": "src/nodefony/bin/nodefony dev",
-    "stop": "make stop",
-    "prod": "make start",
-    "kill": "make kill",
     "outdated": "npm outdated --deph=0",
     "test": "nodefony unitest:launch:all",
     "changelog": "gren changelog --username=nodefony  --repo=nodefony-core --tags=all --data-source=commits --override --generate"
@@ -54,7 +51,7 @@
   "dependencies": {
     "mongoose": "^5.3.13",
     "sequelize": "5.0.0-beta.14",
-    "webpack": "^4.26.0",
+    "webpack": "^4.26.1",
     "webpack-dev-server": "^3.1.10"
   },
   "devDependencies": {

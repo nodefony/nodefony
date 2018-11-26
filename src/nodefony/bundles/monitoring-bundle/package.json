@@ -23,12 +23,12 @@
     "less-loader": "^4.1.0",
     "mini-css-extract-plugin": "^0.4.5",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
-    "qs": "^6.5.2",
+    "qs": "^6.6.0",
     "request": "^2.88.0",
     "shortid": "^2.2.14",
     "terser-webpack-plugin": "^1.1.0",
     "useragent": "^2.3.0",
-    "webpack": "^4.26.0",
+    "webpack": "^4.26.1",
     "webpack-merge": "^4.1.4"
   },
   "repository": {

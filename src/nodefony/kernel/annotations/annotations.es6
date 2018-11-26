@@ -229,7 +229,7 @@ module.exports = nodefony.register("Annotations", function () {
     parseComments(fileContent) {
       return new Promise((resolve, reject) => {
         try {
-          return resolve(Comments(fileContent))
+          return resolve(new Comments(fileContent))
             .catch((e) => {
               reject(e);
             });

@@ -605,6 +605,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       };
 
       try {
+        //console.log(context.profiling)
         if (JSON.stringify(context.profiling).length < 60000) {
           if (message && context.profiling) {
             context.profiling.response.message.push(ele);

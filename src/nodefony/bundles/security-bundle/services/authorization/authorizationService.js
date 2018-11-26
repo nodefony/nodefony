@@ -67,6 +67,10 @@ module.exports = class Authorization extends nodefony.Service {
             if (ret === context) {
               return resolve(context);
             }
+            if (ret instanceof nodefony.authorizationError) {
+              return reject(ret);
+            }
+            //return reject(new nodefony.authorizationError(ret, 500, context));
           } catch (e) {
             return reject(e);
           }

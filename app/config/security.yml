@@ -4,25 +4,53 @@ security:
     #  FIREWALL strategy
     #  when change security context (multi firewalls areas)
     #
-    #  Strategy can be :       none, migrate, invalidate
+    #  Strategy can be :  none, migrate, invalidate
     #
-    session_fixation_strategy: migrate
+    session_fixation_strategy     : migrate
+
     #
     #  FIREWALL  AREAS
     #
-    firewalls:                 ~
+    firewalls:
+      # SECURITY MONITORING AREA passport-local
+      monitoring_area:
+          pattern                 : ^/nodefony
+          provider                : nodefony
+          form_login:
+            login_path            : /login/nodefony
+            default_target_path   : /nodefony
+            always_use_default_target_path : true
+          passport-local:
+            usernameField         : 'username'
+            passwordField         : 'passwd'
+          logout                  : /logout
+          context                 : ~
+          redirectHttps           : true
     #
     #  FIREWALL  PROVIDER
     #
     providers:
       anonymous:
         anonymous:
-          provider:            anonymous
+          provider                : anonymous
       nodefony:
         entity:
-          name:                "user"
-          property:            "username"
+          name                    : "user"
+          property                : "username"
     encoders:
       user :
-        algorithm:             bcrypt
-        saltRounds:            13
+        algorithm                 : bcrypt
+        saltRounds                : 13
+
+    #
+    #  FIREWALL  Authorization
+    #
+    access_control:
+      - {
+          path                    : ^/nodefony,
+          roles                   : ["ROLE_MONITORING"],
+          requires_channel        : "https",
+          allow_if                : {
+            roles:["ROLE_ADMIN"]
+          }
+        }
