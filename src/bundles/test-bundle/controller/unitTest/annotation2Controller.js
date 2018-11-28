@@ -1,7 +1,7 @@
 /**
  *    @Route ("/test/annotate")
  */
-module.exports = class annotation2Controller extends nodefony.controller {
+class annotation2Controller extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
@@ -40,4 +40,6 @@ module.exports = class annotation2Controller extends nodefony.controller {
       id: id
     });
   }
-};
+}
+
+module.exports = annotation2Controller;

@@ -17,6 +17,7 @@
     "nodefony": "./bin/nodefony"
   },
   "dependencies": {
+    "@babel/parser": "^7.1.6",
     "@nodefony/documentation-bundle": "^4.0.0-beta.14",
     "@nodefony/framework-bundle": "^4.0.0-beta.14",
     "@nodefony/http-bundle": "^4.0.0-beta.14",
@@ -41,11 +42,10 @@
     "lodash": "^4.17.11",
     "lodash.isregexp": "^4.0.1",
     "markdown-it": "^8.4.2",
-    "mime": "^2.3.1",
+    "mime": "^2.4.0",
     "moment": "^2.22.2",
     "node-emoji": "^1.8.1",
     "npm": "^6.4.1",
-    "parse-comments": "^1.0.0",
     "pm2": "^3.2.2",
     "promise": "^8.0.2",
     "request": "^2.88.0",
