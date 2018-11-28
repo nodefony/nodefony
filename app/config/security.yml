@@ -12,7 +12,7 @@ security:
     #  FIREWALL  AREAS
     #
     firewalls:
-      # SECURITY MONITORING AREA passport-local
+      # SECURITY AREA MONITORING  <passport-local>
       monitoring_area:
           pattern                 : ^/nodefony
           provider                : nodefony
@@ -27,7 +27,7 @@ security:
           context                 : ~
           redirectHttps           : true
     #
-    #  FIREWALL  PROVIDER
+    #  FIREWALL  Providers
     #
     providers:
       anonymous:
@@ -37,6 +37,9 @@ security:
         entity:
           name                    : "user"
           property                : "username"
+    #
+    #  FIREWALL Encoders
+    #
     encoders:
       user :
         algorithm                 : bcrypt

@@ -8,53 +8,53 @@ module.exports = class Authorization extends nodefony.Service {
 
   setAccessControl(config) {
     switch (nodefony.typeOf(config)) {
-    case "array":
-      for (let i = 0; i < config.length; i++) {
-        this.setAccessControl(config[i]);
-      }
-      break;
-    case "object":
-      let access = new nodefony.AccessControl(this);
-      try {
-        for (let conf in config) {
-          switch (conf) {
-          case "path":
-            access.setMatchPattern(config[conf]);
-            break;
-          case "roles":
-            access.setRoles(config[conf]);
-            break;
-          case "ip":
-            access.setIp(config[conf]);
-            break;
-          case "allow_if":
-            access.setAllowIf(config[conf]);
-            break;
-          case "host":
-            access.setHost(config[conf]);
-            break;
-          case "requires_channel":
-            access.setScheme(config[conf]);
-            break;
-          case "method":
-            access.setMethod(config[conf]);
-            break;
-          default:
-            throw new nodefony.Error(`Access Control Bad options config  : ${conf} in ${util.inspect(config)}`);
-          }
+      case "array":
+        for (let i = 0; i < config.length; i++) {
+          this.setAccessControl(config[i]);
         }
-      } catch (e) {
-        throw e;
-      }
-      if (access.pattern) {
-        this.accessControl.push(access);
-      } else {
-        this.logger(`Access Control no path option in ${util.inspect(config)}`, "WARNING");
-      }
-      //console.log(this.accessControl)
-      break;
-    default:
-      throw new nodefony.Error(`Access Control Bad configuration : ${util.inspect(config)}`);
+        break;
+      case "object":
+        let access = new nodefony.AccessControl(this);
+        try {
+          for (let conf in config) {
+            switch (conf) {
+              case "path":
+                access.setMatchPattern(config[conf]);
+                break;
+              case "roles":
+                access.setRoles(config[conf]);
+                break;
+              case "ip":
+                access.setIp(config[conf]);
+                break;
+              case "allow_if":
+                access.setAllowIf(config[conf]);
+                break;
+              case "host":
+                access.setHost(config[conf]);
+                break;
+              case "requires_channel":
+                access.setScheme(config[conf]);
+                break;
+              case "method":
+                access.setMethod(config[conf]);
+                break;
+              default:
+                throw new nodefony.Error(`Access Control Bad options config  : ${conf} in ${util.inspect(config)}`);
+            }
+          }
+        } catch (e) {
+          throw e;
+        }
+        if (access.pattern) {
+          this.accessControl.push(access);
+        } else {
+          this.logger(`Access Control no path option in ${util.inspect(config)}`, "WARNING");
+        }
+        //console.log(this.accessControl)
+        break;
+      default:
+        throw new nodefony.Error(`Access Control Bad configuration : ${util.inspect(config)}`);
     }
   }
 

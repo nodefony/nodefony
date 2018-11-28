@@ -90,14 +90,14 @@ module.exports = nodefony.register("AccessControl", () => {
 
     setMatchPattern(pattern) {
       switch (nodefony.typeOf(pattern)) {
-      case "string":
-        this.pattern = new RegExp(pattern);
-        break;
-      case "RegExp":
-        this.pattern = pattern;
-        break;
-      default:
-        throw new nodefony.Error(`Access Control Bad config path : ${pattern} must be a String or RegExp`);
+        case "string":
+          this.pattern = new RegExp(pattern);
+          break;
+        case "RegExp":
+          this.pattern = pattern;
+          break;
+        default:
+          throw new nodefony.Error(`Access Control Bad config path : ${pattern} must be a String or RegExp`);
       }
     }
 
@@ -115,38 +115,38 @@ module.exports = nodefony.register("AccessControl", () => {
         tab = this.roles;
       }
       switch (nodefony.typeOf(roles)) {
-      case "string":
-        if (!this.hasRole(roles)) {
-          tab.push(new nodefony.Role(roles));
-        }
-        break;
-      case "array":
-        if (roles && roles.length) {
-          for (let i = 0; i < roles.length; i++) {
-            try {
-              this.setRoles(roles[i], tab);
-            } catch (e) {
-              throw e;
+        case "string":
+          if (!this.hasRole(roles)) {
+            tab.push(new nodefony.Role(roles));
+          }
+          break;
+        case "array":
+          if (roles && roles.length) {
+            for (let i = 0; i < roles.length; i++) {
+              try {
+                this.setRoles(roles[i], tab);
+              } catch (e) {
+                throw e;
+              }
             }
           }
-        }
-        break;
-      case "object":
-        if (roles instanceof nodefony.Role) {
-          if (!this.hasRole(roles.role)) {
-            tab.push(roles);
-          }
-          if (roles.role) {
+          break;
+        case "object":
+          if (roles instanceof nodefony.Role) {
             if (!this.hasRole(roles.role)) {
-              tab.push(new nodefony.Role(roles.role));
+              tab.push(roles);
             }
-          } else {
-            new nodefony.Error(`Access Control Bad config roles  : ${roles} must be a String, Array or nodefony.Role`);
+            if (roles.role) {
+              if (!this.hasRole(roles.role)) {
+                tab.push(new nodefony.Role(roles.role));
+              }
+            } else {
+              new nodefony.Error(`Access Control Bad config roles  : ${roles} must be a String, Array or nodefony.Role`);
+            }
           }
-        }
-        break;
-      default:
-        throw new nodefony.Error(`Access Control Bad config roles : ${roles} must be a String, Array or nodefony.Role`);
+          break;
+        default:
+          throw new nodefony.Error(`Access Control Bad config roles : ${roles} must be a String, Array or nodefony.Role`);
       }
     }
 
@@ -183,25 +183,25 @@ module.exports = nodefony.register("AccessControl", () => {
         tab = this.ip;
       }
       switch (nodefony.typeOf(ips)) {
-      case "string":
-        let type = net.isIP(ips);
-        if (type) {
-          return tab.push(ips);
-        }
-        throw new nodefony.Error(`Access Control Bad ip  type : ${ips}`);
-      case "array":
-        if (ips.length) {
-          for (let i = 0; i < ips.length; i++) {
-            try {
-              this.setIp(ips[i], tab);
-            } catch (e) {
-              throw e;
+        case "string":
+          let type = net.isIP(ips);
+          if (type) {
+            return tab.push(ips);
+          }
+          throw new nodefony.Error(`Access Control Bad ip  type : ${ips}`);
+        case "array":
+          if (ips.length) {
+            for (let i = 0; i < ips.length; i++) {
+              try {
+                this.setIp(ips[i], tab);
+              } catch (e) {
+                throw e;
+              }
             }
           }
-        }
-        break;
-      default:
-        throw new nodefony.Error(`Access Control Bad config ip : ${ips}`);
+          break;
+        default:
+          throw new nodefony.Error(`Access Control Bad config ip : ${ips}`);
       }
     }
 
@@ -237,53 +237,51 @@ module.exports = nodefony.register("AccessControl", () => {
 
     setAllowIf(conf) {
       switch (nodefony.typeOf(conf)) {
-      case "string":
-        break;
-      case "object":
-        for (let ele in conf) {
-          switch (ele) {
-          case "roles":
-            this.setRoles(conf[ele], this.allowRoles);
-            break;
-          case "ip":
-          case "ips":
-            this.setIp(conf[ele], this.allowIp);
-            break;
-          default:
-            this.logger(`Access Control Bad config  ${ele} no defined in allow_if options`, "WARNING");
+        case "string":
+          break;
+        case "object":
+          for (let ele in conf) {
+            switch (ele) {
+              case "roles":
+                this.setRoles(conf[ele], this.allowRoles);
+                break;
+              case "ip":
+              case "ips":
+                this.setIp(conf[ele], this.allowIp);
+                break;
+              default:
+                this.logger(`Access Control Bad config  ${ele} no defined in allow_if options`, "WARNING");
+            }
           }
-        }
-        break;
-        //case "function":
-        //  return this.setAllowIf(conf.call(this));
-      default:
-        throw new nodefony.Error(`Access Control Bad config allow_if : ${conf}`);
+          break;
+          //case "function":
+          //  return this.setAllowIf(conf.call(this));
+        default:
+          throw new nodefony.Error(`Access Control Bad config allow_if : ${conf}`);
       }
 
     }
 
-
-
     setHost(conf) {
       switch (nodefony.typeOf(conf)) {
-      case "string":
-        if (this.hosts.indexOf(conf) < 0) {
-          this.hosts.push(conf);
-        }
-        break;
-      case "array":
-        if (conf.length) {
-          for (let i = 0; i < conf.length; i++) {
-            try {
-              this.setHost(conf[i]);
-            } catch (e) {
-              throw e;
+        case "string":
+          if (this.hosts.indexOf(conf) < 0) {
+            this.hosts.push(conf);
+          }
+          break;
+        case "array":
+          if (conf.length) {
+            for (let i = 0; i < conf.length; i++) {
+              try {
+                this.setHost(conf[i]);
+              } catch (e) {
+                throw e;
+              }
             }
           }
-        }
-        break;
-      default:
-        throw new nodefony.Error(`Access Control Bad config hosts : ${conf} must be an Array or a String`);
+          break;
+        default:
+          throw new nodefony.Error(`Access Control Bad config hosts : ${conf} must be an Array or a String`);
       }
     }
 
@@ -304,12 +302,12 @@ module.exports = nodefony.register("AccessControl", () => {
 
     setScheme(conf) {
       switch (conf) {
-      case "https":
-      case "http":
-        this.requires_channel = conf;
-        break;
-      default:
-        throw new nodefony.Error(`Access Control Bad config requires_channel : ${conf} must be http or https`);
+        case "https":
+        case "http":
+          this.requires_channel = conf;
+          break;
+        default:
+          throw new nodefony.Error(`Access Control Bad config requires_channel : ${conf} must be http or https`);
       }
     }
 
@@ -329,24 +327,24 @@ module.exports = nodefony.register("AccessControl", () => {
 
     setMethod(conf) {
       switch (nodefony.typeOf(conf)) {
-      case "string":
-        if (this.methods.indexOf(conf) < 0) {
-          this.methods.push(conf);
-        }
-        break;
-      case "array":
-        if (conf.length) {
-          for (let i = 0; i < conf.length; i++) {
-            try {
-              this.setMethod(conf[i]);
-            } catch (e) {
-              throw e;
+        case "string":
+          if (this.methods.indexOf(conf) < 0) {
+            this.methods.push(conf);
+          }
+          break;
+        case "array":
+          if (conf.length) {
+            for (let i = 0; i < conf.length; i++) {
+              try {
+                this.setMethod(conf[i]);
+              } catch (e) {
+                throw e;
+              }
             }
           }
-        }
-        break;
-      default:
-        throw new nodefony.Error(`Access Control Bad config methd : ${conf} must be an Array or a String`);
+          break;
+        default:
+          throw new nodefony.Error(`Access Control Bad config methd : ${conf} must be an Array or a String`);
       }
     }
 
