@@ -1,13 +1,13 @@
 const Request = require('request');
-module.exports = nodefony.register("controller", function () {
+module.exports = nodefony.register("controller", function() {
 
-  const isPromise = function (obj) {
+  const isPromise = function(obj) {
     switch (true) {
-    case obj instanceof Promise:
-    case obj instanceof BlueBird:
-      return true;
-    default:
-      return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
+      case obj instanceof Promise:
+      case obj instanceof BlueBird:
+        return true;
+      default:
+        return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
     }
   };
 
@@ -377,12 +377,24 @@ module.exports = nodefony.register("controller", function () {
       return new Promise((resolve, reject) => {
         try {
           let file = this.getFile(Path);
+
           return resolve(file.readAsync());
         } catch (e) {
           return reject(e);
         }
       });
+    }
 
+    renderXmlFile(Path, mime, encoding) {
+      return new Promise((resolve, reject) => {
+        try {
+          let file = this.getFile(Path);
+          this.setContentType(mime || "application/xml", encoding);
+          return resolve(file.readAsync());
+        } catch (e) {
+          return reject(e);
+        }
+      });
     }
 
     getFile(file) {
