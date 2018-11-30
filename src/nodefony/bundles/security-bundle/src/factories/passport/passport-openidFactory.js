@@ -107,7 +107,8 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
       }
       if (this.loadDiscovry === true && this.security.kernel.type !== "CONSOLE") {
         return this.discoverOpenIdConnect(this.urlDiscovry, {
-          json: true
+          json: true,
+          timeout: 10000
         }).then((discovery) => {
           this.setDiscovery(discovery);
           return new Promise((resolve, reject) => {
