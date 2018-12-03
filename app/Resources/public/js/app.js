@@ -5,9 +5,8 @@
  */
 require('bootstrap');
 require('../../scss/custom.scss');
-require("../css/app.css");
 
-module.exports = function() {
+module.exports = function () {
   /*
    *	Class Bundle App client side
    */

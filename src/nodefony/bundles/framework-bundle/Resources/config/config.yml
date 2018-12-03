@@ -20,6 +20,10 @@ watch                     : false
 webpack:
   cache                   : true
   outputFileSystem        : "file-system"
+  stats                    :
+    colors                : true
+    verbose               : true
+    maxModules            : Infinity
   watchOptions:
     ignoreInitial         : false
     persistent            : true

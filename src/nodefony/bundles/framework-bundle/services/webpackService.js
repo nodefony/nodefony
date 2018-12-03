@@ -75,10 +75,10 @@ module.exports = class webpack extends nodefony.Service {
   }
 
   compile() {
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve, reject) => {
       let bundle = this.tabPromise.shift();
       if (!bundle) {
-        process.nextTick(()=>{
+        process.nextTick(() => {
           resolve();
         });
       }
@@ -99,7 +99,7 @@ module.exports = class webpack extends nodefony.Service {
               return this.compile();
             }
             return resolve();
-          }).catch(e =>{
+          }).catch(e => {
             return reject(e);
           });
       }
@@ -142,11 +142,7 @@ module.exports = class webpack extends nodefony.Service {
         }
       }
       if (watcher) {
-        this.logger(stats.toString({
-          // Add console colors
-          colors: true,
-          verbose: true
-        }), "INFO");
+        this.logger(stats.toString(this.webPackSettings.stats), "INFO");
       }
       if (stats.hasWarnings()) {
         this.logger(info.warnings, "WARNING");
