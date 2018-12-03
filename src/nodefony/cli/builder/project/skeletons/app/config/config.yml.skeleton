@@ -33,6 +33,33 @@ lang:
 #
 watch                         :  false
 
+##################################
+#  OVERRIDE MONITORING BUNDLE
+#
+#    see MONITORING BUNDLE config for more options
+#
+#
+monitoring-bundle:
+  debugBar                    :  true
+  forceDebugBarProd           :  false
+  profiler:
+    active                    :  false
+    storage                   :  orm
+
+##################################
+#  OVERRIDE FRAMEWORK Bundle
+#
+#    see FRAMEWORK BUNDLE config for more options
+#
+#
+framework-bundle:
+  webpack:
+    cache                   :    true
+    outputFileSystem        :    file-system    # memory-fs not implemented yet
+    stats                   :
+      colors                :    true
+      verbose               :    true
+      maxModules            :    Infinity
 
 ##################################
 #  OVERRIDE  SEQUELIZE BUNDLE
@@ -51,7 +78,6 @@ watch                         :  false
 #
 #       Here create new databases connectors
 #       and use for sync connectors :
-#
 #       nodefony sequelize:sync
 #
 sequelize-bundle:
@@ -71,8 +97,9 @@ sequelize-bundle:
 ##################################
 #  OVERRIDE  BUNDLE MONGO
 #
-#       @see MONGO BUNDLE config
+#       @see MONGO BUNDLE config for more options
 #       @more options https://mongoosejs.com/docs/connections.html
+#
 #
 #       By default nodefony create  connector name nodefony
 #       for manage Sessions / Users
@@ -183,30 +210,6 @@ security-bundle:
      #Strict-Transport-Security: "max-age=31536000; includeSubDomains; preload"
      X-Frame-Options          :  "SAMEORIGIN"
      X-Content-Type-Options   :  "nosniff"
-
-##################################
-#  OVERRIDE MONITORING BUNDLE
-#
-#    see MONITORING BUNDLE config for more options
-#
-#
-monitoring-bundle:
-  debugBar                    :  true
-  forceDebugBarProd           :  false
-  profiler:
-    active                    :  false
-    storage                   :  orm
-
-##################################
-#  OVERRIDE FRAMEWORK Bundle
-#
-#    see FRAMEWORK BUNDLE config for more options
-#
-#
-framework-bundle:
-  webpack:
-    cache                   :    true
-    outputFileSystem        :    file-system    # memory-fs not implemented yet
 
 ################################
 #  OVERRIDE BUNDLE REALTIME

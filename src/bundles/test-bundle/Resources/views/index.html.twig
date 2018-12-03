@@ -7,22 +7,17 @@
 {% block stylesheets %}
   {{ parent() }}
   <!-- WEBPACK BUNDLE -->
-  <link rel='stylesheet' href='{{CDN("stylesheet")}}/framework-bundle/assets/css/framework.css'/>
   <link rel='stylesheet' href='{{CDN("stylesheet")}}/test-bundle/assets/css/test.css'/>
 {% endblock %}
 
 {% block body %}
-  <div class='container'>
-    <div class='row'>
-      <img class='displayed' src='{{CDN("image")}}/framework-bundle/images/nodefony-logo.png'>
-      <h1 class="success">
-        <a href="https://nodefony.net">
-          <strong itemprop="name" class="text-primary" id="version" style="font-size:45px">
-            NODEFONY UNIT TEST
-          </strong>
-        </a>
-      </h1>
-    </div>
+  {% block header %}
+    {{ render( controller("app:app:header" )) }}
+  {% endblock %}
+
+  <div class="container text-center mt-8" >
+    <img class="mb-4" src="{{CDN("image")}}/app/images/app-logo.png" alt="">
+    <h1 id="version" class="h1 mb-3 font-weight-normal"style="color:#0167b8">NODEFONY UNIT TEST</h1>
   </div>
   <div class='container'>
     <div class='row displayed'>
@@ -33,9 +28,6 @@
       </div>
     </div>
   </div>
-  <!--div class='container'>
-    <video autoplay="true" width="200" height="200" src="/test-bundle/images/oceans-clip.mp4"></video>
-  </div-->
   <div class='container'>
     <iframe style="margin:50px 50% 50px 50px" width="560" height="315" src="https://www.youtube.com/embed/HgzGwKwLmgM?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
     <div class="row">
@@ -171,13 +163,15 @@ je ne veux pas m'arrêter du tout
       </div>
     </div>
   </div>
+  {% block footer %}
+    {{ render( controller("app:app:footer" )) }}
+  {% endblock %}
 {% endblock %}
 
 {% block javascripts %}
 
   {{ parent() }}
   <!-- WEBPACK BUNDLE -->
-  <script src='{{CDN("javascript")}}/framework-bundle/assets/js/framework.js'></script>
   <script src='{{CDN("javascript")}}/test-bundle/assets/js/test.js'></script>
 
 {% endblock %}

@@ -79,7 +79,7 @@ framework-bundle:
 #
 #       Here create new databases connectors
 #       and use for sync connectors :
-#       make sequelize
+#       nodefony sequelize:sync
 #
 sequelize-bundle:
   debug                       :  false
@@ -99,7 +99,7 @@ sequelize-bundle:
 #  OVERRIDE  BUNDLE MONGO
 #
 #       @see MONGO BUNDLE config for more options
-#       @more options http://docs.sequelizejs.com/class/lib/sequelize.js~Sequelize.html
+#       @more options https://mongoosejs.com/docs/connections.html
 #
 #
 #       By default nodefony create  connector name nodefony

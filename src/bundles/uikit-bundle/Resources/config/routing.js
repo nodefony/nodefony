@@ -21,7 +21,7 @@ module.exports = {
     }
   },
   "uikit-documentation": {
-    pattern: "/uikit.documentation",
+    pattern: "/uikit/documentation",
     defaults: {
       controller: "uikit-bundle:default:doc"
     }

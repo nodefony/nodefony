@@ -19,9 +19,10 @@ require("../../now-ui-kit/sass/now-ui-kit.scss");
 require("../../now-ui-kit/css/demo.css");
 
 const nouislider = require("nouislider");
+require("tether");
 
 
-module.exports = function () {
+module.exports = function() {
 
   window.noUiSlider = nouislider;
   /*
@@ -32,7 +33,7 @@ module.exports = function () {
    */
   const uikit = class uikit {
     constructor() {
-      $(document).ready(function () {
+      $(document).ready(function() {
 
         // the body of this function is in assets/js/now-ui-kit.js
         nowuiKit.initSliders();

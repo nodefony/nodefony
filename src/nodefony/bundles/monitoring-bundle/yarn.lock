@@ -583,18 +583,18 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@nodefony/stage@^0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@nodefony/stage/-/stage-0.1.12.tgz#fb3db83c64b8544317cc8f9527e476ee558ddce3"
-  integrity sha512-NO4FBaGiTEwtHyWQvq/iDD2PyuGfJe4zL/TgpGSypmxR6HfZkIJOwcA43uIEPLjapRnf50GFuzk1nIC1mK+b/w==
+"@nodefony/stage@^0.1.13":
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/@nodefony/stage/-/stage-0.1.13.tgz#ceb00ba27018338b06dbc33e47ee8cccbe9f5866"
+  integrity sha512-u17ySIdqvwXF/qag+Nhhg4aCF8WQhUXR1lbLIbpho1yOdYL9nzC3lgfQNg5bYBh3+AEqaSziFP4XeoyH3tEA2g==
   dependencies:
     ascii-table "0.0.9"
-    asciify "1.3.5"
+    asciify "^1.3.5"
     jquery "^3.3.1"
-    opn "^5.3.0"
-    shortid "^2.2.13"
+    opn "^5.4.0"
+    shortid "^2.2.14"
     twig "^1.12.0"
-    webrtc-adapter "^6.3.2"
+    webrtc-adapter "^6.4.8"
 
 "@webassemblyjs/ast@1.7.11":
   version "1.7.11"
@@ -871,7 +871,7 @@ ascii-table@0.0.9:
   resolved "https://registry.yarnpkg.com/ascii-table/-/ascii-table-0.0.9.tgz#06a6604d6a55d4bf41a9a47d9872d7a78da31e73"
   integrity sha1-BqZgTWpV1L9BqaR9mHLXp42jHnM=
 
-asciify@1.3.5:
+asciify@^1.3.5:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/asciify/-/asciify-1.3.5.tgz#736bc0ab795feb4534fadd759797d10483573e27"
   integrity sha1-c2vAq3lf60U0+t11l5fRBINXPic=
@@ -3273,7 +3273,7 @@ once@^1.3.0, once@^1.3.1, once@^1.4.0:
   dependencies:
     wrappy "1"
 
-opn@^5.3.0:
+opn@^5.4.0:
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/opn/-/opn-5.4.0.tgz#cb545e7aab78562beb11aa3bfabc7042e1761035"
   integrity sha512-YF9MNdVy/0qvJvDtunAOzFw9iasOQHpVthTCvGzxt61Il64AYSGdK+rYwld7NAfk9qJ7dt+hymBNSc9LNYS+Sw==
@@ -4210,7 +4210,7 @@ sha.js@^2.4.0, sha.js@^2.4.8:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-shortid@^2.2.13, shortid@^2.2.14:
+shortid@^2.2.14:
   version "2.2.14"
   resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.14.tgz#80db6aafcbc3e3a46850b3c88d39e051b84c8d18"
   integrity sha512-4UnZgr9gDdA1kaKj/38IiudfC3KHKhDc1zi/HSxd9FQDR0VLwH3/y79tZJLsVYPsJgIjeHjqIWaWVRJUj9qZOQ==
@@ -4835,10 +4835,10 @@ webpack@^4.26.1:
     watchpack "^1.5.0"
     webpack-sources "^1.3.0"
 
-webrtc-adapter@^6.3.2:
-  version "6.4.5"
-  resolved "https://registry.yarnpkg.com/webrtc-adapter/-/webrtc-adapter-6.4.5.tgz#51393ed90a78c19957d52cb78f11137c0ed57ca8"
-  integrity sha512-eZkkraBtI3ny/PJ3kxeyrFzE/zCDc8O6HDq945/14qeEF0mg1htx3egNeb4vpWCL4pKVeJZWbXldr3NifLPaPw==
+webrtc-adapter@^6.4.8:
+  version "6.4.8"
+  resolved "https://registry.yarnpkg.com/webrtc-adapter/-/webrtc-adapter-6.4.8.tgz#eeca3f0d5b40c0e629b865ef2a936a0b658274de"
+  integrity sha512-YM8yl545c/JhYcjGHgaCoA7jRK/KZuMwEDFeP2AcP0Auv5awEd+gZE0hXy9z7Ed3p9HvAXp8jdbe+4ESb1zxAw==
   dependencies:
     rtcpeerconnection-shim "^1.2.14"
     sdp "^2.9.0"

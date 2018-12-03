@@ -192,11 +192,12 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
             this.strategy._oauth2.get(this.logoutUrl, context.token.accessToken, (err /*, body , res*/ ) => {
               if (err) {
                 let error = new nodefony.securityError(err.data, err.statusCode, this.security, context);
-                return reject(error);
+                this.logger(error, "ERROR");
+                //return reject(error);
               }
               return super.logout(context)
                 .catch(e => {
-                  throw e;
+                  return reject(e);
                 });
             });
           } else {

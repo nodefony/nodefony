@@ -25,12 +25,12 @@ var navbar_initialized,
   backgroundOrange = false,
   toggle_initialized = false;
 
-$(document).ready(function () {
+$(document).ready(function() {
   //  Activate the Tooltips
   $('[data-toggle="tooltip"], [rel="tooltip"]').tooltip();
 
   // Activate Popovers and set color for popovers
-  $('[data-toggle="popover"]').each(function () {
+  $('[data-toggle="popover"]').each(function() {
     color_class = $(this).data('color');
     $(this).popover({
       template: '<div class="popover popover-' + color_class + '" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
@@ -50,14 +50,14 @@ $(document).ready(function () {
     $(window).on('scroll', nowuiKit.checkScrollForTransparentNavbar)
   }
 
-  $('.form-control').on("focus", function () {
+  $('.form-control').on("focus", function() {
     $(this).parent('.input-group').addClass("input-group-focus");
-  }).on("blur", function () {
+  }).on("blur", function() {
     $(this).parent(".input-group").removeClass("input-group-focus");
   });
 
   // Activate bootstrapSwitch
-  $('.bootstrap-switch').each(function () {
+  $('.bootstrap-switch').each(function() {
     $this = $(this);
     data_on_label = $this.data('on-label') || '';
     data_off_label = $this.data('off-label') || '';
@@ -79,30 +79,30 @@ $(document).ready(function () {
     interval: 4000
   });
 
-  $('.date-picker').each(function () {
+  $('.date-picker').each(function() {
     $(this).datepicker({
       templates: {
         leftArrow: '<i class="now-ui-icons arrows-1_minimal-left"></i>',
         rightArrow: '<i class="now-ui-icons arrows-1_minimal-right"></i>'
       }
-    }).on('show', function () {
+    }).on('show', function() {
       $('.datepicker').addClass('open');
 
       datepicker_color = $(this).data('datepicker-color');
       if (datepicker_color.length != 0) {
         $('.datepicker').addClass('datepicker-' + datepicker_color + '');
       }
-    }).on('hide', function () {
+    }).on('hide', function() {
       $('.datepicker').removeClass('open');
     });
   });
 
-  $('.switch.switch-background input').on("switchChange.bootstrapSwitch", function () {
+  $('.switch.switch-background input').on("switchChange.bootstrapSwitch", function() {
     $input = $(this);
 
     if (!$input.is(':checked')) {
-      $('.section:not(.section-notifications):not(.section-tabs):not(.section-download):not(.section-examples)').each(function () {
-        $(this).fadeOut('fast', function () {
+      $('.section:not(.section-notifications):not(.section-tabs):not(.section-download):not(.section-examples)').each(function() {
+        $(this).fadeOut('fast', function() {
           $(this).attr('data-background-color', 'orange');
           $(this).fadeIn('fast');
         });
@@ -114,20 +114,20 @@ $(document).ready(function () {
       switch_white.removeClass('visible').addClass('hidden');
       switch_orange.removeClass('hidden').addClass('visible');
 
-      $('.section.section-navbars > .container .navbar.bg-primary, .section.section-navbars > .container .navbar.bg-info').each(function () {
+      $('.section.section-navbars > .container .navbar.bg-primary, .section.section-navbars > .container .navbar.bg-info').each(function() {
         $(this).addClass('bg-white');
       });
 
-      $('.btn-primary,.btn-default,.btn-link').each(function () {
+      $('.btn-primary,.btn-default,.btn-link').each(function() {
         $(this).addClass('btn-neutral');
       });
 
-      $('button[data-toggle="popover"], button[data-toggle="tooltip"]').each(function () {
+      $('button[data-toggle="popover"], button[data-toggle="tooltip"]').each(function() {
         $(this).removeClass('btn-default');
         $(this).addClass('btn-neutral');
       });
 
-      $('.nav.nav-pills').each(function () {
+      $('.nav.nav-pills').each(function() {
         $(this).addClass('nav-pills-neutral');
 
         if ($('.nav.nav-pills.nav-pills-primary').length != 0) {
@@ -135,11 +135,11 @@ $(document).ready(function () {
         }
       });
 
-      $('.pagination').each(function () {
+      $('.pagination').each(function() {
         $(this).addClass('pagination-neutral');
       });
 
-      $('.progress-container').each(function () {
+      $('.progress-container').each(function() {
         $(this).addClass('progress-neutral');
 
         if ($('.progress-container.progress-neutral').length != 0) {
@@ -147,11 +147,11 @@ $(document).ready(function () {
         }
       });
 
-      $('.badge').each(function () {
+      $('.badge').each(function() {
         $(this).addClass('badge-neutral');
       });
 
-      $('.slider').each(function () {
+      $('.slider').each(function() {
         $(this).addClass('slider-neutral');
 
         if ($('.slider.slider-neutral').length != 0) {
@@ -160,7 +160,7 @@ $(document).ready(function () {
         }
       });
 
-      $('.blockquote').each(function () {
+      $('.blockquote').each(function() {
         $(this).addClass('blockquote-white');
 
         if ($('.blockuote.blockquote-white').length != 0) {
@@ -170,8 +170,8 @@ $(document).ready(function () {
 
       backgroundOrange = true;
     } else {
-      $('.section:not(.section-notifications):not(.section-tabs):not(.section-download):not(.section-examples)').each(function () {
-        $(this).fadeOut('fast', function () {
+      $('.section:not(.section-notifications):not(.section-tabs):not(.section-download):not(.section-examples)').each(function() {
+        $(this).fadeOut('fast', function() {
           $(this).removeAttr('data-background-color', 'orange');
           $(this).fadeIn('fast');
         });
@@ -180,20 +180,20 @@ $(document).ready(function () {
       switch_white.removeClass('hidden').addClass('visible');
       switch_orange.removeClass('visible').addClass('hidden');
 
-      $('.btn-primary,.btn-default,.btn-link').each(function () {
+      $('.btn-primary,.btn-default,.btn-link').each(function() {
         $(this).removeClass('btn-neutral');
       });
 
-      $('.section.section-navbars > .container .navbar.bg-primary, .section.section-navbars > .container .navbar.bg-info').each(function () {
+      $('.section.section-navbars > .container .navbar.bg-primary, .section.section-navbars > .container .navbar.bg-info').each(function() {
         $(this).removeClass('bg-white');
       });
 
-      $('button[data-toggle="popover"], button[data-toggle="tooltip"]').each(function () {
+      $('button[data-toggle="popover"], button[data-toggle="tooltip"]').each(function() {
         $(this).removeClass('btn-neutral');
         $(this).addClass('btn-default');
       });
 
-      $('.nav.nav-pills').each(function () {
+      $('.nav.nav-pills').each(function() {
         $(this).removeClass('nav-pills-neutral');
 
         if ($('.nav.nav-pills.nav-pills-neutral').length == 0) {
@@ -201,11 +201,11 @@ $(document).ready(function () {
         }
       });
 
-      $('.pagination').each(function () {
+      $('.pagination').each(function() {
         $(this).removeClass('pagination-neutral');
       });
 
-      $('.progress-container').each(function () {
+      $('.progress-container').each(function() {
         $(this).removeClass('progress-neutral');
 
         if ($('.progress-container.progress-neutral').length == 0) {
@@ -213,11 +213,11 @@ $(document).ready(function () {
         }
       });
 
-      $('.badge').each(function () {
+      $('.badge').each(function() {
         $(this).removeClass('badge-neutral');
       });
 
-      $('.slider').each(function () {
+      $('.slider').each(function() {
         $(this).removeClass('slider-neutral');
 
         if ($('.slider.slider-neutral').length == 0) {
@@ -225,7 +225,7 @@ $(document).ready(function () {
         }
       });
 
-      $('.blockquote').each(function () {
+      $('.blockquote').each(function() {
         $(this).removeClass('blockquote-white');
 
         if ($('.blockuote.blockquote-white').length == 0) {
@@ -251,7 +251,7 @@ $(document).ready(function () {
           via: 'CreativeTim'
         }
       },
-      click: function (api, options) {
+      click: function(api, options) {
         api.simulateClick();
         api.openPopup('twitter');
       },
@@ -273,7 +273,7 @@ $(document).ready(function () {
           via: 'CreativeTim'
         }
       },
-      click: function (api, options) {
+      click: function(api, options) {
         api.simulateClick();
         api.openPopup('twitter');
       },
@@ -290,7 +290,7 @@ $(document).ready(function () {
       enableHover: false,
       enableTracking: true,
       enableCounter: false,
-      click: function (api, options) {
+      click: function(api, options) {
         api.simulateClick();
         api.openPopup('facebook');
       },
@@ -307,7 +307,7 @@ $(document).ready(function () {
       enableHover: false,
       enableTracking: true,
       enableCounter: false,
-      click: function (api, options) {
+      click: function(api, options) {
         api.simulateClick();
         api.openPopup('facebook');
       },
@@ -324,7 +324,7 @@ $(document).ready(function () {
       enableCounter: false,
       enableHover: false,
       enableTracking: true,
-      click: function (api, options) {
+      click: function(api, options) {
         api.simulateClick();
         api.openPopup('linkedin');
       },
@@ -341,7 +341,7 @@ $(document).ready(function () {
       enableCounter: false,
       enableHover: false,
       enableTracking: true,
-      click: function (api, options) {
+      click: function(api, options) {
         api.simulateClick();
         api.openPopup('linkedin');
       },
@@ -353,29 +353,29 @@ $(document).ready(function () {
 
 });
 
-$(window).on('resize', function () {
+$(window).on('resize', function() {
   nowuiKit.initNavbarImage();
 });
 
-$(document).on('click', '.navbar-toggler', function () {
+$(document).on('click', '.navbar-toggler', function() {
   $toggle = $(this);
 
   if (nowuiKit.misc.navbar_menu_visible == 1) {
     $('html').removeClass('nav-open');
     nowuiKit.misc.navbar_menu_visible = 0;
     $('#bodyClick').remove();
-    setTimeout(function () {
+    setTimeout(function() {
       $toggle.removeClass('toggled');
     }, 550);
   } else {
-    setTimeout(function () {
+    setTimeout(function() {
       $toggle.addClass('toggled');
     }, 580);
     div = '<div id="bodyClick"></div>';
-    $(div).appendTo('body').click(function () {
+    $(div).appendTo('body').click(function() {
       $('html').removeClass('nav-open');
       nowuiKit.misc.navbar_menu_visible = 0;
-      setTimeout(function () {
+      setTimeout(function() {
         $toggle.removeClass('toggled');
         $('#bodyClick').remove();
       }, 550);
@@ -391,7 +391,7 @@ nowuiKit = {
     navbar_menu_visible: 0
   },
 
-  checkScrollForTransparentNavbar: debounce(function () {
+  checkScrollForTransparentNavbar: debounce(function() {
     if ($(document).scrollTop() > scroll_distance) {
       if (transparent) {
         transparent = false;
@@ -405,7 +405,7 @@ nowuiKit = {
     }
   }, 17),
 
-  initNavbarImage: function () {
+  initNavbarImage: function() {
     var $navbar = $('.navbar').find('.navbar-translate').siblings('.navbar-collapse');
     var background_image = $navbar.data('nav-image');
 
@@ -424,7 +424,7 @@ nowuiKit = {
     }
   },
 
-  initSliders: function () {
+  initSliders: function() {
     // Sliders for demo purpose in refine cards section
     var slider = document.getElementById('sliderRegular');
 
@@ -455,7 +455,7 @@ var big_image;
 
 // Javascript just for Demo purpose, remove it from your project
 nowuiKitDemo = {
-  checkScrollForParallax: debounce(function () {
+  checkScrollForParallax: debounce(function() {
     var current_scroll = $(this).scrollTop();
 
     oVal = ($(window).scrollTop() / 3);
@@ -477,28 +477,14 @@ nowuiKitDemo = {
 
 function debounce(func, wait, immediate) {
   var timeout;
-  return function () {
+  return function() {
     var context = this,
       args = arguments;
     clearTimeout(timeout);
-    timeout = setTimeout(function () {
+    timeout = setTimeout(function() {
       timeout = null;
       if (!immediate) func.apply(context, args);
     }, wait);
     if (immediate && !timeout) func.apply(context, args);
   };
 };
-
-
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-46172202-1']);
-_gaq.push(['_trackPageview']);
-
-(function () {
-  var ga = document.createElement('script');
-  ga.type = 'text/javascript';
-  ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0];
-  s.parentNode.insertBefore(ga, s);
-})();

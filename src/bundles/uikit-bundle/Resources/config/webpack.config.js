@@ -43,17 +43,18 @@ module.exports = webpackMerge(config, {
             presets: ['@babel/preset-env']
           }
         }]
-      }, {
-        test: /\.nouislider$/,
-        use: [{
-          loader: 'postcss-loader',
-          options: {
-            ident: 'postcss',
-            sourceMap: true,
-            config: {},
-          }
-        }]
       },
+      /*{
+             test: /\.nouislider$/,
+             use: [{
+               loader: 'postcss-loader',
+               options: {
+                 ident: 'postcss',
+                 sourceMap: true,
+                 config: {},
+               }
+             }]
+           },*/
       /*
        *	JQUERY EXPOSE BROWSER CONTEXT
        *
@@ -61,11 +62,11 @@ module.exports = webpackMerge(config, {
       {
         test: require.resolve("jquery"),
         loader: "expose-loader?$!expose-loader?jQuery"
-            },
+      },
       {
         test: /jquery\..*\.js/,
         loader: "imports?$=jquery,jQuery=jquery,this=>window"
-            },
+      },
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
@@ -82,7 +83,7 @@ module.exports = webpackMerge(config, {
           }, {
             loader: 'postcss-loader', // Run post css actions
             options: {
-              plugins: function () { // post css plugins, can be exported to postcss.config.js
+              plugins: function() { // post css plugins, can be exported to postcss.config.js
                 return [
                   require('precss'),
                   require('autoprefixer')
@@ -96,7 +97,7 @@ module.exports = webpackMerge(config, {
             }
           }
         ]
-            },
+      },
       {
         test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
         use: [{
@@ -107,7 +108,7 @@ module.exports = webpackMerge(config, {
             publicPath: `/${bundleName}/assets/fonts/` // override the default path
           }
         }]
-            },
+      },
       {
         // IMAGES
         test: /\.(gif|png|jpe?g|svg)$/i,
@@ -143,8 +144,8 @@ module.exports = webpackMerge(config, {
             }
           }
         }]
-            }
-            ]
+      }
+    ]
   },
   plugins: [
     new MiniCssExtractPlugin({
