@@ -17,7 +17,7 @@
     "nodefony": "./bin/nodefony"
   },
   "dependencies": {
-    "@babel/parser": "^7.1.6",
+    "@babel/parser": "^7.2.0",
     "@nodefony/documentation-bundle": "^4.0.0-beta.14",
     "@nodefony/framework-bundle": "^4.0.0-beta.14",
     "@nodefony/http-bundle": "^4.0.0-beta.14",
