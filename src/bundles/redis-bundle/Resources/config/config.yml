@@ -1,0 +1,79 @@
+#
+#
+#	CONFIG BUNDLE redis-bundle
+#
+#===============================================================================
+#
+#  Copyright © 2018/2018        admin | admin@nodefony.com
+#
+#===============================================================================
+#
+#        GENERATE BY nodefony-core BUILDER YAML FILE
+#
+# This file is YAML  FILE
+# ---
+# YAML:      YAML Ain't Markup Language
+#
+# What It Is: YAML is a human friendly data serialization
+#   standard for all programming languages.
+#
+
+
+########## nodefony-core CONFIG BUNDLE  redis-bundle  ############
+type        : "nodefony"
+locale      : en_en
+
+#
+#  WATCHERS
+#
+#    Listen to changes, deleting, renaming files and directories of different components
+#
+#    For watch all components
+#
+#      watch:			true            # by default services false !
+#    or
+#      watch:
+#        controllers     : true
+#        config         : true		# only  routing
+#        views          : true
+#        translations   : true
+#        webpack        : true
+#        services       : true
+watch       :
+  services       : true
+
+
+#########################################
+#   REDIS
+#
+#	https://github.com/NodeRedis/node_redis
+#
+redis :
+  debug                         : true
+  globalOptions :
+    family                      : IPv4
+    disable_resubscribing       : false
+    tls                         : null
+    no_ready_check              : false
+    socket_keepalive            : false
+    return_buffers              : false
+    retry_unfulfilled_commands  : true
+  connections :
+    main :
+      name        : main
+      host        : cci-vm
+      port        : 6379
+      #db          : null
+      prefix      : null
+    publish :
+      name        : publish
+      host        : cci-vm
+      port        : 6379
+      #db          : ""
+      prefix      : ""
+    subscribe :
+      name        : subscribe
+      host        : cci-vm
+      port        : 6379
+      #db          : ""
+      prefix      : ""

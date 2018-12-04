@@ -1,0 +1,26 @@
+{
+  "name": "redis-bundle",
+  "version": "1.0.0",
+  "description": "Nodefony Framework Bundle redis ",
+  "author": "admin admin@nodefony.com",
+  "main": "redisBundle.js",
+  "scripts": {},
+  "private": true,
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "repository": {},
+  "dependencies": {
+    "redis": "^2.8.0",
+    "shortid": "^2.2.14"
+  },
+  "devDependencies": {
+    "node-pre-gyp": "^0.12.0"
+  },
+  "license": "CECILL-B",
+  "readmeFilename": "README.md",
+  "contributors": [
+    {}
+  ]
+}
