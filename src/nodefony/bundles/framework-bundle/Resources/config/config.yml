@@ -23,7 +23,7 @@ webpack:
   stats                    :
     colors                : true
     verbose               : true
-    maxModules            : Infinity
+    maxModules            : 16     #Infinity
   watchOptions:
     ignoreInitial         : false
     persistent            : true

@@ -1,7 +1,7 @@
 const redis = require('redis');
 const shortId = require('shortid');
 
-class redisClient extends nodefony.Service {
+class redisConnection extends nodefony.Service {
 
   constructor(name, options = {}, service = null) {
     super(name, service.container, nodefony.notificationsCenter.create(), options);
@@ -57,10 +57,37 @@ class redisClient extends nodefony.Service {
           this.logger(`SUBSCRIBE  ${this.settings.host}:${this.settings.port} channel : ${channel} `, "INFO");
           this.fire("onSubscribe", channel, count, this);
         });
+        this.client.on("unsubscribe", (channel, count) => {
+          this.logger(`UNSUBSCRIBE  ${this.settings.host}:${this.settings.port} channel : ${channel} `, "INFO");
+          this.fire("onUnsubscribe", channel, count, this);
+        });
+        this.client.on("psubscribe", (pattern, count) => {
+          this.logger(`PSUBSCRIBE  ${this.settings.host}:${this.settings.port} pattern : ${pattern} `, "INFO");
+          this.fire("onPsubscribe", pattern, count, this);
+        });
+        this.client.on("punsubscribe", (pattern, count) => {
+          this.logger(`PUNSUBSCRIBE  ${this.settings.host}:${this.settings.port} pattern : ${pattern} `, "INFO");
+          this.fire("onPunsubscribe", pattern, count, this);
+        });
         this.client.on("message", (channel, message) => {
           this.logger(`MESSAGE  ${this.settings.host}:${this.settings.port} channel : ${channel} `, "DEBUG");
           this.logger(message, "DEBUG");
           this.fire("onMessage", channel, message, this);
+        });
+        this.client.on("message_buffer", (channel, message) => {
+          this.logger(`MESSAGE BUFFER  ${this.settings.host}:${this.settings.port} channel : ${channel} `, "DEBUG");
+          this.logger(message, "DEBUG");
+          this.fire("onMessage_buffer", channel, message, this);
+        });
+        this.client.on("pmessage", (pattern, channel, message) => {
+          this.logger(`PMESSAGE  ${this.settings.host}:${this.settings.port} pattern : ${pattern} channel : ${channel} `, "DEBUG");
+          this.logger(message, "DEBUG");
+          this.fire("onPmessage", pattern, channel, message, this);
+        });
+        this.client.on("pmessage_buffer", (pattern, channel, message) => {
+          this.logger(`PMESSAGE BUFFER  ${this.settings.host}:${this.settings.port} pattern : ${pattern} channel : ${channel} `, "DEBUG");
+          this.logger(message, "DEBUG");
+          this.fire("onPmessage_buffer", pattern, channel, message, this);
         });
       } catch (e) {
         return reject(e);
@@ -68,9 +95,9 @@ class redisClient extends nodefony.Service {
     });
   }
 
-  subscribe(room) {
+  subscribe(channel) {
     try {
-      return this.client.subscribe(room);
+      return this.client.subscribe(channel);
     } catch (e) {
       throw e;
     }
@@ -83,6 +110,54 @@ class redisClient extends nodefony.Service {
       throw e;
     }
   }
+
+  quit() {
+    return this.client.quit.apply(this.client, arguments);
+  }
+
+  end() {
+    return this.client.end.apply(this.client, arguments);
+  }
+
+  unref() {
+    return this.client.unref.apply(this.client, arguments);
+  }
+
+  auth() {
+    return this.client.auth.apply(this.client, arguments);
+  }
+
+  set() {
+    return this.client.set.apply(this.client, arguments);
+  }
+  hset() {
+    return this.client.hset.apply(this.client, arguments);
+  }
+  get() {
+    return this.client.get.apply(this.client, arguments);
+  }
+  hget() {
+    return this.client.hget.apply(this.client, arguments);
+  }
+  hgetall() {
+    return this.client.hgetall.apply(this.client, arguments);
+  }
+  hmset() {
+    return this.client.hmset.apply(this.client, arguments);
+  }
+  sadd() {
+    return this.client.sadd.apply(this.client, arguments);
+  }
+  multi() {
+    return this.client.multi.apply(this.client, arguments);
+  }
+  watch() {
+    return this.client.watch.apply(this.client, arguments);
+  }
+  duplicate() {
+    return this.client.duplicate.apply(this.client, arguments);
+  }
+
 }
 
 module.exports = class Redis extends nodefony.Service {
@@ -90,22 +165,22 @@ module.exports = class Redis extends nodefony.Service {
   constructor(container) {
     super("redis", container);
     this.engine = redis;
-    BlueBird.promisifyAll(redis);
+    BlueBird.promisifyAll(this.engine);
     this.subscribers = {};
     this.publishers = {};
-    this.settings = this.bundle.settings.redis;
-    this.settings.retry_strategy = this.retry_strategy;
     this.clients = {};
     this.degug = false;
-    this.globalOptions = this.settings.globalOptions;
-    if (this.settings.debug) {
-      this.degug = true;
-      process.env.DEBUG_MODE = "redis";
-    }
   }
 
   boot() {
     if (this.kernel.ready) {
+      this.settings = this.bundle.settings.redis;
+      this.settings.retry_strategy = this.retry_strategy;
+      if (this.settings.debug) {
+        this.degug = true;
+        process.env.DEBUG_MODE = "redis";
+      }
+      this.globalOptions = this.settings.globalOptions;
       for (let connection in this.settings.connections) {
         let options = nodefony.extend({}, this.globalOptions, this.settings.connections[connection]);
         this.createConnection(connection, options)
@@ -117,6 +192,13 @@ module.exports = class Redis extends nodefony.Service {
       }
     } else {
       this.kernel.on("onReady", () => {
+        this.settings = this.bundle.settings.redis;
+        this.settings.retry_strategy = this.retry_strategy;
+        if (this.settings.debug) {
+          this.degug = true;
+          process.env.DEBUG_MODE = "redis";
+        }
+        this.globalOptions = this.settings.globalOptions;
         for (let connection in this.settings.connections) {
           let options = nodefony.extend({}, this.globalOptions, this.settings.connections[connection]);
           this.createConnection(connection, options)
@@ -143,7 +225,7 @@ module.exports = class Redis extends nodefony.Service {
         if (name in this.clients) {
           throw new Error(`Redis client ${name} already exit `);
         }
-        let conn = new redisClient(name, options, this);
+        let conn = new redisConnection(name, options, this);
         this.clients[conn.name] = conn;
         return conn.create(options)
           .then(() => {
@@ -172,8 +254,14 @@ module.exports = class Redis extends nodefony.Service {
     throw new Error(`redis removeClient ${name} not found`);
   }
 
+  print(error, message) {
+    if (error) {
+      return this.logger(message, "ERROR");
+    }
+    return this.logger(message);
+  }
+
   retry_strategy(options) {
-    console.log(options)
     if (options.error && options.error.code === 'ECONNREFUSED') {
       // End reconnecting on a specific error and flush all commands with
       // a individual error

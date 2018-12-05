@@ -1,7 +1,7 @@
 /**
  *
  */
-stage.registerController("dashboardController", function () {
+stage.registerController("dashboardController", function() {
 
   /**
    *
@@ -14,7 +14,7 @@ stage.registerController("dashboardController", function () {
       super(name, container, module);
       this.config = this.module.config;
 
-      this.kernel.listen(this, "onReady", function () {
+      this.kernel.listen(this, "onReady", function() {
         this.serverSyslog = this.get("serverSyslog");
       });
 
@@ -53,23 +53,23 @@ stage.registerController("dashboardController", function () {
           param: param
         }));
         switch (pdu.msgid) {
-        case "SERVER HTTP":
-        case "SERVER HTTPS":
-          this.nbRequest++;
-          $("#requests").html(this.nbRequest)
-          break;
-        case "REQUEST WEBSOCKET":
-        case "REQUEST WEBSOCKET SECURE":
-          this.nbWebsoket++;
-          $("#websocket").html(this.nbWebsoket);
-          break;
+          case "SERVER HTTP":
+          case "SERVER HTTPS":
+            this.nbRequest++;
+            $("#requests").html(this.nbRequest)
+            break;
+          case "REQUEST WEBSOCKET":
+          case "REQUEST WEBSOCKET SECURE":
+            this.nbWebsoket++;
+            $("#websocket").html(this.nbWebsoket);
+            break;
         }
       } else {
         var ele = $("#syslog");
         this.render(ele, this.renderPartial("appModule::activity", {
           param: param
         }));
-        this.eventSyslog = this.module.serverSyslog.listenWithConditions(this, contitions, function (pdu) {
+        this.eventSyslog = this.module.serverSyslog.listenWithConditions(this, contitions, function(pdu) {
           pdu.timeago = jQuery.timeago(pdu.timeStamp)
           this.syslogWidget(ele, pdu);
         });
@@ -101,7 +101,7 @@ stage.registerController("dashboardController", function () {
         this.render(ele, this.renderPartial("appModule::activity", {
           param: param
         }));
-        this.eventRealTime = this.module.serverSyslog.listenWithConditions(this, contitions, function (pdu) {
+        this.eventRealTime = this.module.serverSyslog.listenWithConditions(this, contitions, function(pdu) {
           pdu.timeago = jQuery.timeago(pdu.timeStamp)
           this.realtimeWidget(ele);
         });
@@ -136,7 +136,7 @@ stage.registerController("dashboardController", function () {
         this.render(ele, this.renderPartial("appModule::activity", {
           param: param
         }));
-        this.eventHttp = this.module.serverSyslog.listenWithConditions(this, contitions, function (pdu) {
+        this.eventHttp = this.module.serverSyslog.listenWithConditions(this, contitions, function(pdu) {
           pdu.timeago = jQuery.timeago(pdu.timeStamp)
           this.httpWidget(ele, pdu);
         });
@@ -159,19 +159,19 @@ stage.registerController("dashboardController", function () {
 
       switch (this.config.content.dashboard["@layout"]) {
         // standard layout
-      case "standard":
-        layout = "standard";
-        break;
-        // lefty layout
-      case "lefty":
-        layout = "lefty";
-        break;
-        // righty layout
-      case "righty":
-        layout = "righty";
-        break;
-      default:
-        layout = "standard";
+        case "standard":
+          layout = "standard";
+          break;
+          // lefty layout
+        case "lefty":
+          layout = "lefty";
+          break;
+          // righty layout
+        case "righty":
+          layout = "righty";
+          break;
+        default:
+          layout = "standard";
       }
       this.renderDefaultContent("appModule::dashboard", {
         "layout": layout,
@@ -182,7 +182,7 @@ stage.registerController("dashboardController", function () {
       $.ajax("/nodefony/api/syslog", {
         success: (data, status, xhr) => {
           try {
-            this.module.serverSyslog.loadStack(data.response.data, true, function (pdu) {
+            this.module.serverSyslog.loadStack(data.response.data, true, function(pdu) {
               //timeago
               pdu.timeago = jQuery.timeago(pdu.timeStamp)
             });
@@ -223,7 +223,7 @@ stage.registerController("dashboardController", function () {
       	}.bind(this)
       });*/
 
-      var manageWidgetServer = function (ele, conf) {
+      var manageWidgetServer = function(ele, conf) {
         ele.find(".panel-body").removeClass("hide")
         ele.find(".domain").text(conf.domain)
         ele.find(".port").text(conf.port)
@@ -250,29 +250,29 @@ stage.registerController("dashboardController", function () {
           for (var server in data.response.data.servers) {
             var conf = data.response.data.servers[server]
             switch (server) {
-            case "http":
-              if (conf) {
-                var ele = $("#HTTP");
-              }
-              break;
-            case "https":
-              if (conf) {
-                var ele = $("#HTTPS");
-              }
-              break;
-            case "websocket":
-              if (conf) {
-                var ele = $("#WEBSOCKET");
-              }
-              break;
-            case "websoketSecure":
-              if (conf) {
-                var ele = $("#WEBSOCKET_SECURE");
-              }
-              break;
-            case "statics":
-              conf = null;
-              break;
+              case "http":
+                if (conf) {
+                  var ele = $("#HTTP");
+                }
+                break;
+              case "https":
+                if (conf) {
+                  var ele = $("#HTTPS");
+                }
+                break;
+              case "websocket":
+                if (conf) {
+                  var ele = $("#WEBSOCKET");
+                }
+                break;
+              case "websoketSecure":
+                if (conf) {
+                  var ele = $("#WEBSOCKET_SECURE");
+                }
+                break;
+              case "statics":
+                conf = null;
+                break;
             }
             if (conf) {
               manageWidgetServer(ele, conf)
@@ -282,11 +282,11 @@ stage.registerController("dashboardController", function () {
           var ele = $("#KERNEL").find(".config");
           for (var sys in data.response.data.kernel.system) {
             switch (typeof data.response.data.kernel.system[sys]) {
-            case "string":
-            case "number":
-            case "boolean":
-              ele.append('<li class="list-group-item">' + sys + '<span class="badge">' + data.response.data.kernel.system[sys] + '</span></li>');
-              break;
+              case "string":
+              case "number":
+              case "boolean":
+                ele.append('<li class="list-group-item">' + sys + '<span class="badge">' + data.response.data.kernel.system[sys] + '</span></li>');
+                break;
             }
 
           }
@@ -295,16 +295,16 @@ stage.registerController("dashboardController", function () {
           var ele = $("#APP").find(".config");
           for (var sys in data.response.data.App.App) {
             switch (typeof data.response.data.App.App[sys]) {
-            case "string":
-            case "number":
-            case "boolean":
-              ele.append('<li class="list-group-item">' + sys + '<span class="badge">' + data.response.data.App.App[sys] + '</span></li>');
-              break;
-            default:
+              case "string":
+              case "number":
+              case "boolean":
+                ele.append('<li class="list-group-item">' + sys + '<span class="badge">' + data.response.data.App.App[sys] + '</span></li>');
+                break;
+              default:
             }
           }
           // Manage statics config
-          if (data.response.data.kernel.system.statics) {
+          if (data.response.data.kernel.system.servers.statics || data.response.data.kernel.system.statics) {
             var ele = $("#STATICS");
             ele.find(".panel-body").removeClass("hide")
             ele.find(".ready").text("ACTIVE")

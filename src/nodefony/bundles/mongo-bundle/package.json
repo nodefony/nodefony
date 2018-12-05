@@ -1,35 +1,25 @@
 {
-  "name": "@nodefony/mongo-bundle",
+  "name": "mongo-bundle",
   "version": "4.0.0-beta.14",
-  "description": "Nodefony Framework Bundle mongodb",
-  "scripts": {},
+  "description": "Nodefony Framework Bundle redis ",
+  "author": "admin admin@nodefony.com",
   "main": "mongoBundle.js",
-  "private": false,
+  "scripts": {},
+  "private": true,
   "keywords": [
     "nodefony",
-    "javascript",
-    "mongodb",
-    "mongoose"
+    "javascript"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/nodefony/nodefony-core.git"
-  },
+  "repository": {},
   "dependencies": {
-    "mongodb": "^3.1.10",
-    "mongoose": "^5.3.14"
+    "mongodb": "^3.1.10"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "node-pre-gyp": "^0.12.0"
+  },
+  "license": "CECILL-B",
+  "readmeFilename": "README.md",
   "contributors": [
     {}
-  ],
-  "license": "CECILL-B",
-  "licenses": [
-    {
-      "type": "CECILL-B",
-      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-    }
-  ],
-  "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
-  "readmeFilename": "README.md"
+  ]
 }

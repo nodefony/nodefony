@@ -60,10 +60,10 @@ framework-bundle:
     stats                   :
       colors                :    true
       verbose               :    true
-      maxModules            :    Infinity
+      maxModules            :    16     #Infinity
 
 ##################################
-#  OVERRIDE  SEQUELIZE BUNDLE
+#  OVERRIDE ORM SEQUELIZE BUNDLE
 #
 #       @see SEQUELIZE BUNDLE config for more options
 #       @more options http://docs.sequelizejs.com/class/lib/sequelize.js~Sequelize.html
@@ -96,7 +96,7 @@ sequelize-bundle:
 
 
 ##################################
-#  OVERRIDE  BUNDLE MONGO
+#  OVERRIDE ORM BUNDLE MONGOOSE
 #
 #       @see MONGO BUNDLE config for more options
 #       @more options https://mongoosejs.com/docs/connections.html
@@ -106,7 +106,7 @@ sequelize-bundle:
 #       for manage Sessions / Users
 #
 #
-mongo-bundle:
+mongoose-bundle:
  mongoose:
    debug:                        false
    connectors:
@@ -123,8 +123,8 @@ mongo-bundle:
          autoReconnect:          true
          poolSize:               5
 
-############################
-#  OVERRIDE BUNDLE HTTP
+#################################
+#  OVERRIDE BUNDLE HTTP SETTINGS
 #
 #       see HTTP BUNDLE config for more options
 #
@@ -189,6 +189,37 @@ http-bundle:
           location            :  127.0.0.1
           port                :  11211
           weight              :  1
+
+###################################
+#    OVERRIDE REDIS BUNDLE SETTINGS
+#
+#   All Options :                https://github.com/NodeRedis/node_redis
+#
+#   Add clients connections
+#   connections :
+#     data :
+#       name                      : data
+#     publish :
+#       name                      : publish
+#     subscribe :
+#       name                      : subscribe
+#
+redis-bundle:
+  redis:
+    debug                         : true
+    globalOptions :
+      host                        : cci-vm
+      port                        : 6379
+      family                      : IPv4
+      disable_resubscribing       : false
+      tls                         : null
+      no_ready_check              : false
+      socket_keepalive            : false
+      return_buffers              : false
+      retry_unfulfilled_commands  : true
+    connections                   :
+      data :
+        name                      : data
 
 #######################
 #  OVERRIDE SECURITY BUNDLE

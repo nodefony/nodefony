@@ -55,6 +55,8 @@ websocketSecure:
 sockjs:
   protocol                : https
   websocket               : true
+  domain                  : localhost
+  port                    : 5152
   prefix                  : "/sockjs-node"
   stats :
     cached                : false

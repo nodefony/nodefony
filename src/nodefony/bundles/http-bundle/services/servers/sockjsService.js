@@ -120,20 +120,20 @@ module.exports = class sockjs extends nodefony.Service {
       this.bundle.on('onCreateServer', (type, service) => {
         //this[type] = service ;
         switch (type) {
-        case "HTTP":
-        case "HTTPS":
-          let proto = type.toLowerCase();
-          if (proto === this.protocol) {
-            this.createServer(service, proto);
-            if (type === "HTTP") {
-              this.websocketServer = this.get("websocketServer");
+          case "HTTP":
+          case "HTTPS":
+            let proto = type.toLowerCase();
+            if (proto === this.protocol) {
+              this.createServer(service, proto);
+              if (type === "HTTP") {
+                this.websocketServer = this.get("websocketServer");
+              }
+              if (type === "HTTPS") {
+                this.websocketServer = this.get("websocketServerSecure");
+              }
+              this.fire("onCreateSockServer", this[proto], service);
             }
-            if (type === "HTTPS") {
-              this.websocketServer = this.get("websocketServerSecure");
-            }
-            this.fire("onCreateSockServer", this[proto], service);
-          }
-          break;
+            break;
         }
       });
     }
@@ -243,18 +243,18 @@ module.exports = class sockjs extends nodefony.Service {
 
   sendWatcher(type, data /*, force*/ ) {
     switch (type) {
-    case "error":
-      let myError = null;
-      if (data.stack) {
-        myError = data.stack;
-      } else {
-        myError = util.inspect(data);
-      }
-      return this.sockWrite("errors", [myError]);
-    case "change":
-      return this.sockWrite("content-changed");
-    default:
-      return;
+      case "error":
+        let myError = null;
+        if (data.stack) {
+          myError = data.stack;
+        } else {
+          myError = util.inspect(data);
+        }
+        return this.sockWrite("errors", [myError]);
+      case "change":
+        return this.sockWrite("content-changed");
+      default:
+        return;
     }
   }
 

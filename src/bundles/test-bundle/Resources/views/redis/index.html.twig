@@ -1,0 +1,33 @@
+{% extends '/app/Resources/views/base.html.twig' %}
+
+{% block title %}Welcome {{name}}! {% endblock %}
+{% block stylesheets %}
+  {{ parent() }}
+  <!-- WEBPACK BUNDLE -->
+  <link rel='stylesheet' href='{{CDN("stylesheet")}}/test-bundle/assets/css/test.css' />
+{% endblock %}
+{% block body %}
+  {% block header %}
+    {{ render( controller('app:app:header' )) }}
+  {% endblock %}
+  <div class='container' style='margin-top:100px'>
+    <div class='row'>
+      <div class='col text-center'>
+        <img src='{{CDN("image")}}/app/images/app-logo.png'>
+        <a href='{{url('documentation')}}'>
+          <strong style='font-size:45px'>{{name}}</strong>
+        </a>
+        <p class='display-4 mt-5'>{{trans('welcome')}}</p>
+        <p>{{binding}}</p>
+        </div>
+    </div>
+  </div>
+  {% block footer %}
+    {{ render( controller('app:app:footer' )) }}
+  {% endblock %}
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  <!-- WEBPACK BUNDLE -->
+  <script src='{{CDN("javascript")}}/test-bundle/assets/js/test.js'></script>
+{% endblock %}

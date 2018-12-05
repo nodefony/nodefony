@@ -19,7 +19,6 @@
 #        - "^nodefony\\.eu$"
 #        - "^.*\\.nodefony\\.eu$"
 #
-
 system:
   domain                        : 0.0.0.0
   domainAlias:
@@ -28,15 +27,22 @@ system:
   httpPort                      : 5151
   httpsPort                     : 5152
   domainCheck                   : false
-  statics                       : true
+  locale                        : en_en
+  ##############
+  # BUNDLES CORE
   security                      : true
   realtime                      : true
   monitoring                    : true
   documentation                 : true
   unitTest                      : true
   demo                          : true
-  locale                        : "en_en"
+  redis                         : false
+  mongo                         : false
+  elasctic                      : false
+  #########
+  # SERVERS
   servers:
+    statics                     : true
     protocol                    : "2.0"             #  2.0 || 1.1
     http                        : true
     https	                      : true
@@ -48,6 +54,8 @@ system:
       ca                        : "config/certificates/ca/nodefony-root-ca.crt.pem"
       options:
         rejectUnauthorized      : true
+  ############
+  # DEV SERVER
   devServer:
     inline                      : true
     hot                         : false
@@ -57,7 +65,8 @@ system:
     progress                    : false
     protocol                    : https
     websocket                   : true
-
+  ###############
+  # BUNDLES LOCAL
   bundles:
     test-bundle                 : "file:src/bundles/test-bundle"
     #workbox-bundle              : "file:src/bundles/workbox-bundle"

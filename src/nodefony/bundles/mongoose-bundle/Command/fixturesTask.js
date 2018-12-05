@@ -6,7 +6,7 @@ class fixturesTask extends nodefony.Task {
   }
 
   showHelp() {
-    this.setHelp("mongo:fixtures:load", "Load data fixtures in database");
+    this.setHelp("mongoose:fixtures:load", "Load data fixtures in database");
   }
 
   load() {
@@ -29,7 +29,7 @@ class fixturesTask extends nodefony.Task {
         }
       });
       this.kernel.listen(this, "onPostReady", ( /*service*/ ) => {
-        let actions = tabPromise.map(function (ele) {
+        let actions = tabPromise.map(function(ele) {
           return new Promise(ele);
         });
         return Promise.all(actions)
@@ -48,7 +48,7 @@ class fixturesTask extends nodefony.Task {
   loadFixture() {
     return new Promise((resolve, reject) => {
       let tabPromise = this.findFixtures();
-      let actions = tabPromise.map(function (ele) {
+      let actions = tabPromise.map(function(ele) {
         return new Promise(ele);
       });
       return Promise.all(actions)

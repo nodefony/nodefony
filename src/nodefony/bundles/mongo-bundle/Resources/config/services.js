@@ -1,14 +1,10 @@
 module.exports = {
-
-  /*mongo: {
-    class: nodefony.services.mongo,
-    arguments: ["@container"]
-  },*/
-  mongoose: {
-    class: nodefony.services.mongoose,
-    arguments: ["@container", "@kernel", "@autoLoader"],
+  mongo: {
+    class: nodefony.services.Mongo,
+    arguments: ["@container"],
     calls: [{
-      method: "boot"
+      method: "boot",
+      arguments: []
     }]
   }
 };

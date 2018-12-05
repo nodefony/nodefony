@@ -21,7 +21,6 @@
     "@nodefony/documentation-bundle": "^4.0.0-beta.14",
     "@nodefony/framework-bundle": "^4.0.0-beta.14",
     "@nodefony/http-bundle": "^4.0.0-beta.14",
-    "@nodefony/mongo-bundle": "^4.0.0-beta.14",
     "@nodefony/monitoring-bundle": "^4.0.0-beta.14",
     "@nodefony/realtime-bundle": "^4.0.0-beta.14",
     "@nodefony/security-bundle": "^4.0.0-beta.14",

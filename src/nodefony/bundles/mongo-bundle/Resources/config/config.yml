@@ -1,13 +1,32 @@
-########## nodefony CONFIG BUNDLE  mongoBundle  ############
-type        :              "nodefony"
-locale      :              en_en
+#
+#
+#	CONFIG BUNDLE mongo-bundle
+#
+#===============================================================================
+#
+#  Copyright © 2018/2018        admin | admin@nodefony.com
+#
+#===============================================================================
+#
+#        GENERATE BY nodefony-core BUILDER YAML FILE
+#
+# This file is YAML  FILE
+# ---
+# YAML:      YAML Ain't Markup Language
+#
+# What It Is: YAML is a human friendly data serialization
+#   standard for all programming languages.
+#
 
+
+########## nodefony-core CONFIG BUNDLE  mongo-bundle  ############
+type        : "nodefony"
+locale      : en_en
 
 #
 #  WATCHERS
 #
-#    watchers Listen to changes, deletion, renaming of files and directories
-#    of different components
+#    Listen to changes, deleting, renaming files and directories of different components
 #
 #    For watch all components
 #
@@ -15,24 +34,18 @@ locale      :              en_en
 #    or
 #      watch:
 #        controllers     : true
-#        config         :  true		# only  routing
-#        views          :  true
-#        translations   :  true
-#        webpack        :  true
-#        services       :  true
-watch       :              false
+#        config         : true		# only  routing
+#        views          : true
+#        translations   : true
+#        webpack        : true
+#        services       : true
+watch      :  false
 
-mongoose:
-  debug:                   false
-  connectors:
-    nodefony:
-      host:                "127.0.0.1"
-      port:                27017
-      dbname:              "nodefony"
-      settings:
-        #user:             "nodefony"
-        #pass:             "nodefony"
-        authSource:        "admin"
-        reconnectTries:    100
-        reconnectInterval: 5000
-        autoReconnect:     true
+
+#########################################
+#   REDIS
+#
+#	https://github.com/NodeRedis/node_redis
+#
+mongo :
+  debug                         : true

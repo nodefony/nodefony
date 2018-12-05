@@ -39,14 +39,34 @@ locale      : en_en
 #        translations   : true
 #        webpack        : true
 #        services       : true
-watch       :
-  services       : true
+watch       : false
 
 
 #########################################
 #   REDIS
 #
-#	https://github.com/NodeRedis/node_redis
+#	 options  : https://github.com/NodeRedis/node_redis
+#
+#
+#  connections :
+#    main :
+#      name        : main
+#      host        : cci-vm
+#      port        : 6379
+#      #db          : null
+#      prefix      : null
+#    publish :
+#      name        : publish
+#      host        : cci-vm
+#      port        : 6379
+#      #db          : ""
+#      prefix      : ""
+#    subscribe :
+#      name        : subscribe
+#      host        : cci-vm
+#      port        : 6379
+#      #db          : ""
+#      prefix      : ""
 #
 redis :
   debug                         : true
@@ -58,22 +78,4 @@ redis :
     socket_keepalive            : false
     return_buffers              : false
     retry_unfulfilled_commands  : true
-  connections :
-    main :
-      name        : main
-      host        : cci-vm
-      port        : 6379
-      #db          : null
-      prefix      : null
-    publish :
-      name        : publish
-      host        : cci-vm
-      port        : 6379
-      #db          : ""
-      prefix      : ""
-    subscribe :
-      name        : subscribe
-      host        : cci-vm
-      port        : 6379
-      #db          : ""
-      prefix      : ""
+  connections : ~
