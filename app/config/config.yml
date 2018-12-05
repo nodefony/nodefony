@@ -208,7 +208,7 @@ redis-bundle:
   redis:
     debug                         : true
     globalOptions :
-      host                        : cci-vm
+      host                        : localhost
       port                        : 6379
       family                      : IPv4
       disable_resubscribing       : false
