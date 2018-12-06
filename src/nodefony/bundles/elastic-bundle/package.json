@@ -1,0 +1,26 @@
+{
+  "name": "elastic-bundle",
+  "version": "4.0.0-beta.14",
+  "description": "Nodefony Framework Bundle elasticsearch ",
+  "author": "admin admin@nodefony.com",
+  "main": "elasticBundle.js",
+  "scripts": {},
+  "private": true,
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "repository": {},
+  "dependencies": {
+    "elasticsearch": "^15.2.0",
+    "shortid": "^2.2.14"
+  },
+  "devDependencies": {
+    "node-pre-gyp": "^0.12.0"
+  },
+  "license": "CECILL-B",
+  "readmeFilename": "README.md",
+  "contributors": [
+    {}
+  ]
+}

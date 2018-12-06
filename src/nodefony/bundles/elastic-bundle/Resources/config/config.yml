@@ -1,0 +1,72 @@
+#
+#
+#	CONFIG BUNDLE elastic-bundle
+#
+#===============================================================================
+#
+#  Copyright © 2018/2018        admin | admin@nodefony.com
+#
+#===============================================================================
+#
+#        GENERATE BY nodefony-core BUILDER YAML FILE
+#
+# This file is YAML  FILE
+# ---
+# YAML:      YAML Ain't Markup Language
+#
+# What It Is: YAML is a human friendly data serialization
+#   standard for all programming languages.
+#
+
+
+########## nodefony-core CONFIG BUNDLE  elastic-bundle  ############
+type        : "nodefony"
+locale      : en_en
+
+#
+#  WATCHERS
+#
+#    Listen to changes, deleting, renaming files and directories of different components
+#
+#    For watch all components
+#
+#      watch:			true            # by default services false !
+#    or
+#      watch:
+#        controllers     : true
+#        config         : true		# only  routing
+#        views          : true
+#        translations   : true
+#        webpack        : true
+#        services       : true
+watch       : false
+
+
+#########################################
+#   elasticsearch
+#
+#	 options  : https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/configuration.html
+#
+#
+#
+elasticsearch :
+  debug               : true
+  globalOptions :
+    protocol          : https
+    host              : localhost
+    port              : 56394
+    ssl               :
+      key         : ""
+      cert        : ""
+      ca          : ""
+  connections :
+    main :
+      hosts:
+        - {
+          country     : EU,
+          weight      : 10
+          }
+        - {
+          country     : US,
+          weight      : 50
+          }
