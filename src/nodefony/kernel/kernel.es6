@@ -616,8 +616,8 @@ module.exports = nodefony.register("kernel", function() {
           bundles.push(res);
         }
         if (this.settings.system.elastic) {
-          //res = this.searchPackage("elastic-bundle");
-          //bundles.push(res);
+          res = this.searchPackage("elastic-bundle");
+          bundles.push(res);
         }
       } catch (e) {
         this.logger(e, "ERROR");

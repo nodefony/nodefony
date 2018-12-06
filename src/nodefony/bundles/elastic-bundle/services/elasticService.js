@@ -28,19 +28,47 @@ class elesticConnection extends nodefony.Service {
   }
 }
 
-
 module.exports = class Elastic extends nodefony.Service {
 
   constructor(container) {
     super("elastic", container);
     this.engine = elasticsearch;
-
     this.clients = {};
     this.degug = false;
   }
 
-  boot() {
+  setOption(connection) {
+    if (connection) {
+      switch (nodefony.typeOf(connection.hosts)) {
+        case "array":
+          console.log("pass");
+          for (let i = 0; i < connection.hosts.length; i++) {
+            nodefony.extend(connection.hosts[i], this.globalHostsOptions);
+          }
+          return nodefony.extend({}, this.globalOptions, connection);
+        default:
+          return nodefony.extend({}, this.globalOptions, connection);
+      }
 
+
+    }
+  }
+
+  boot() {
+    if (this.kernel.ready) {
+      this.settings = this.bundle.settings.elasticsearch;
+      this.globalOptions = this.settings.globalOptions;
+      this.globalHostsOptions = this.settings.globalHostsOptions;
+    } else {
+      this.kernel.on("onReady", () => {
+        this.settings = this.bundle.settings.elasticsearch;
+        this.globalOptions = this.settings.globalOptions;
+        this.globalHostsOptions = this.settings.globalHostsOptions;
+        for (let connection in this.settings.connections) {
+          let options = this.setOption(this.settings.connections[connection]);
+        }
+      });
+    }
   }
 
 
@@ -51,7 +79,7 @@ module.exports = class Elastic extends nodefony.Service {
           name = this.generateId();
         }
         if (name in this.clients) {
-          throw new Error(`Redis client ${name} already exit `);
+          throw new Error(`ElasticSearch client ${name} already exit `);
         }
         let conn = new elesticConnection(name, options, this);
         this.clients[conn.name] = conn;
@@ -85,7 +113,6 @@ module.exports = class Elastic extends nodefony.Service {
   generateId() {
     return shortId.generate();
   }
-
 
   displayTable(client, severity = "DEBUG") {
     let options = {

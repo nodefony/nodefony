@@ -51,10 +51,11 @@ watch       : false
 #
 elasticsearch :
   debug               : true
-  globalOptions :
+  globalHostsOptions  :
     protocol          : https
     host              : localhost
     port              : 56394
+  globalOptions :
     ssl               :
       key         : ""
       cert        : ""

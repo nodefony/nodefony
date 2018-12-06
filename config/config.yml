@@ -38,7 +38,7 @@ system:
   demo                          : true
   redis                         : false
   mongo                         : false
-  elasctic                      : false
+  elastic                       : false
   #########
   # SERVERS
   servers:
