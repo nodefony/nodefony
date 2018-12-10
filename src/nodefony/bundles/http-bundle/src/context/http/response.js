@@ -1,6 +1,6 @@
 const http = require("http");
 const mime = require('mime');
-module.exports = nodefony.register("Response", function() {
+module.exports = nodefony.register("Response", function () {
 
   const Response = class httpResponse {
 
@@ -80,6 +80,11 @@ module.exports = nodefony.register("Response", function() {
     //ADD INPLICIT HEADER
     setHeader(name, value) {
       if (this.response) {
+        if (this.flushing) {
+          let obj = {};
+          obj[name] = value;
+          return this.addTrailers(obj);
+        }
         return this.response.setHeader(name, value);
       }
     }
@@ -113,10 +118,6 @@ module.exports = nodefony.register("Response", function() {
 
     getMimeType(name) {
       return mime.getType(name);
-    }
-
-    addTrailers(obj) {
-      return this.response.addTrailers(obj);
     }
 
     setEncoding(encoding) {
@@ -196,7 +197,7 @@ module.exports = nodefony.register("Response", function() {
           throw e;
         }
       } else {
-        throw new Error("Headers already sent !!");
+        this.logger("Headers already sent !!", "WARNING");
       }
     }
 
@@ -208,16 +209,21 @@ module.exports = nodefony.register("Response", function() {
       }
     }
 
-    flush(data, encoding) {
-      if (!this.response.headersSent) {
-        this.setHeader('Transfer-Encoding', 'chunked');
-        //this.headers['Transfer-Encoding'] = 'chunked';
-        this.flushHeaders();
+    addTrailers(headers) {
+      try {
+        return this.response.addTrailers(headers);
+      } catch (e) {
+        throw e;
       }
-      return this.send(data, encoding);
     }
 
-    send(data, encoding) {
+    flush(data, encoding) {
+      this.flushing = true;
+      this.setHeader("Transfer-Encoding", 'chunked');
+      return this.send(data, encoding, true);
+    }
+
+    send(data, encoding, flush = false) {
       try {
         if (this.context.isRedirect) {
           if (!this.stream.headersSent) {
@@ -229,7 +235,9 @@ module.exports = nodefony.register("Response", function() {
         if (data) {
           this.setBody(data);
         }
-        this.context.displayDebugBar();
+        if (!flush) {
+          this.context.displayDebugBar();
+        }
         return this.response.write(this.body, (encoding || this.encoding));
       } catch (e) {
         throw e;
@@ -263,15 +271,15 @@ module.exports = nodefony.register("Response", function() {
       }
       if (headers) {
         switch (nodefony.typeOf(headers)) {
-          case "object":
-            this.setHeaders(headers);
-            break;
-          case "boolean":
-            this.setHeaders({
-              "Cache-Control": "no-store, no-cache, must-revalidate",
-              "Expires": "Thu, 01 Jan 1970 00:00:00 GMT"
-            });
-            break;
+        case "object":
+          this.setHeaders(headers);
+          break;
+        case "boolean":
+          this.setHeaders({
+            "Cache-Control": "no-store, no-cache, must-revalidate",
+            "Expires": "Thu, 01 Jan 1970 00:00:00 GMT"
+          });
+          break;
         }
       }
       this.setHeader("Location", url);

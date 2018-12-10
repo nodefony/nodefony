@@ -1,9 +1,5 @@
 const lib = require("./lib.js");
 
-/*const flush = function (context, i) {
-  context.flush("flush : " + i);
-  console.log("flush : " + i);
-};*/
 
 /**
  */
@@ -45,6 +41,61 @@ module.exports = class defaultController extends nodefony.controller {
     } catch (e) {
       throw e;
     }
+  }
+
+  index2Action() {
+    try {
+      throw new Error("pass error");
+    } catch (e) {
+      return this.render("testBundle::index.html.twig", {
+        lib: lib.toJson(),
+        admin: this.isGranted("ROLE_ADMIN"),
+        error: e
+      });
+    }
+  }
+
+  myPromise() {
+    return new Promise((resolve, reject) => {
+      try {
+        let iterator = 0;
+        let interval = setInterval(() => {
+          try {
+            if (iterator === 10) {
+              clearInterval(interval);
+              return resolve();
+            }
+            this.context.flush(`flush : ${iterator++}`);
+          } catch (e) {
+            throw e;
+          }
+        }, 1000);
+        //if (true) {
+        //throw new Error("pass error");
+        //}
+
+      } catch (e) {
+        return reject(e);
+      }
+    });
+  }
+
+  indexAction() {
+    return this.myPromise()
+      .then(ele => {
+        return this.render("testBundle::index.html.twig", {
+          lib: lib.toJson(),
+          admin: this.isGranted("ROLE_ADMIN"),
+          result: ele
+        });
+      })
+      .catch(e => {
+        return this.render("testBundle::index.html.twig", {
+          lib: lib.toJson(),
+          admin: this.isGranted("ROLE_ADMIN"),
+          error: e
+        });
+      });
   }
 
   /**

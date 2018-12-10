@@ -55,14 +55,15 @@ module.exports = nodefony.register("http2Response", () => {
             throw e;
           }
         } else {
-          throw new Error("Headers already sent !!");
+          //throw new Error("Headers already sent !!");
+          this.logger("Headers already sent !!", "WARNING");
         }
       } else {
         return super.writeHead(statusCode, headers);
       }
     }
 
-    send(data, encoding) {
+    send(data, encoding, flush = false) {
       try {
         if (this.context.isRedirect) {
           if (!this.stream.headersSent) {
@@ -75,7 +76,9 @@ module.exports = nodefony.register("http2Response", () => {
           if (data) {
             this.setBody(data);
           }
-          this.context.displayDebugBar();
+          if (!flush) {
+            this.context.displayDebugBar();
+          }
           return this.stream.write(this.body, (encoding || this.encoding));
         } else {
           return super.send(data, encoding);
