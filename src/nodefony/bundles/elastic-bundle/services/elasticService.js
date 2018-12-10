@@ -1,5 +1,6 @@
 const elasticsearch = require('elasticsearch');
 const shortId = require('shortid');
+const logger = require(path.resolve(__dirname, "..", "src", "elasticLogger.js"));
 
 class elesticConnection extends nodefony.Service {
   constructor(name, options = {}, service = null) {
