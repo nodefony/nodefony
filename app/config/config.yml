@@ -221,6 +221,39 @@ redis-bundle:
       data :
         name                      : data
 
+
+#########################################
+# OVERRIDE ELASTIC BUNDLE SETTINGS
+#   elasticsearch
+#
+#	 options  :                    https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/configuration.html
+#
+#
+elastic-bundle:
+  elasticsearch :
+    globalHostsOptions  :
+      protocol                    : http
+    globalOptions :
+      ssl :
+        #key                      : "./config/certificates/server/privkey.pem"
+        #cert                     : "./config/certificates/server/cert.pem"
+        #ca                       : "./config/certificates/ca/nodefony-root-ca.crt.pem"
+    connections :
+      main :
+        hosts:
+          - {
+            host                 : localhost,
+            port                 : 9200,
+            country              : EU,
+            weight               : 10
+            }
+          - {
+            host                 : localhost,
+            port                 : 9200,
+            country              : US,
+            weight               : 50
+            }
+
 #######################
 #  OVERRIDE SECURITY BUNDLE
 #

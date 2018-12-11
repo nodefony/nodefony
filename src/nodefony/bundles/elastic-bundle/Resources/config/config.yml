@@ -50,24 +50,13 @@ watch       : false
 #
 #
 elasticsearch :
-  debug               : true
   globalHostsOptions  :
-    protocol          : https
+    protocol          : http
     host              : localhost
-    port              : 56394
+    port              : 9200
   globalOptions :
     ssl               :
-      key         : ""
-      cert        : ""
-      ca          : ""
-  connections :
-    main :
-      hosts:
-        - {
-          country     : EU,
-          weight      : 10
-          }
-        - {
-          country     : US,
-          weight      : 50
-          }
+      #key         : "./config/certificates/server/privkey.pem"
+      #cert        : "./config/certificates/server/cert.pem"
+      #ca          : "./config/certificates/ca/nodefony-root-ca.crt.pem"
+  connections : ~

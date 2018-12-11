@@ -1,43 +1,30 @@
 module.exports = class classElasticLog {
-  constructor( /*config*/ ) {
+  constructor(config) {
     this.logger("INIT SYSLOG ELASTIC ", "INFO");
+    this.config = config;
   }
 
-  error(data, ele) {
-    let res = null;
-    try {
-      if (ele && ele !== "undefined") {
-        try {
-          let str = JSON.stringify(ele);
-          res = data + " : " + str ? str : "";
-        } catch (e) {
-          res = data;
-        }
-      } else {
-        res = data + " : " + JSON.stringify(ele);
-      }
-      return this.logger(res, "ERROR");
-    } catch (e) {
-      console.log(e);
+  error(data) {
+    switch (nodefony.typeOf(data)) {
+      case "string":
+      case "error":
+        return this.logger(data, "ERROR");
+      default:
+        console.log(data);
     }
   }
 
-  warning(data, ele) {
-    let res = null;
-    try {
-      if (ele && ele !== "undefined") {
+  warning(data) {
+    switch (nodefony.typeOf(data)) {
+      case "string":
+        return this.logger(data, "WARNING");
+      default:
         try {
-          let str = JSON.stringify(ele);
-          res = data + " : " + str ? str : "";
+          let str = JSON.stringify(data);
+          return this.logger(str, "WARNING");
         } catch (e) {
-          res = data;
+          console.log(data);
         }
-      } else {
-        res = data + " : " + JSON.stringify(ele);
-      }
-      return this.logger(res, "WARNING");
-    } catch (e) {
-      console.log(e);
     }
   }
 
@@ -47,12 +34,12 @@ module.exports = class classElasticLog {
       if (ele && ele !== "undefined") {
         try {
           let str = JSON.stringify(ele);
-          res = data + " : " + str ? str : "";
+          res = `${data} : ${str}`;
         } catch (e) {
-          res = data;
+          res = `${data} : ${ele}`;
         }
       } else {
-        res = data + " : " + JSON.stringify(ele);
+        res = data;
       }
       return this.logger(res, "INFO");
     } catch (e) {
@@ -65,13 +52,13 @@ module.exports = class classElasticLog {
     try {
       if (ele && ele !== "undefined") {
         try {
-          let str = JSON.stringify(ele);
-          res = data + " : " + str ? str : "";
+          let str = JSON.stringify(ele, null, " ");
+          res = `${data} : ${str}`;
         } catch (e) {
-          res = data;
+          res = `${data} : ${ele}`;
         }
       } else {
-        res = data + " : " + JSON.stringify(ele);
+        res = data;
       }
       return this.logger(res, "DEBUG");
     } catch (e) {
@@ -79,25 +66,19 @@ module.exports = class classElasticLog {
     }
   }
 
-  trace(method, requestUrl, body /*, responseBody, responseStatus*/ ) {
-    let res = null;
+  trace(method, requestUrl, body, responseBody, responseStatus) {
     try {
       let ele = {
         method: method,
-        url: requestUrl,
-        body: body
+        url: `${requestUrl.protocol}${requestUrl.hostname}${requestUrl.port}${requestUrl.path}`,
+        body: body,
+        status: responseStatus
       };
-      if (ele) {
-        try {
-          let str = JSON.stringify(ele);
-          res = data + " : " + str ? str : "";
-        } catch (e) {
-          res = data;
-        }
-      } else {
-        res = method + " : " + requestUrl;
+      let str = JSON.stringify(ele, null, " ");
+      this.logger(str, "DEBUG");
+      if (responseBody) {
+        this.logger(JSON.stringify(JSON.parse(responseBody), null, " "), "DEBUG", `${ele.method} : ${ele.url}`);
       }
-      return this.logger(res, "NOTICE");
     } catch (e) {
       console.log(e);
     }
