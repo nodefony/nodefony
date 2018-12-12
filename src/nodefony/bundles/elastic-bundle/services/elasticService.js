@@ -1,10 +1,9 @@
 const elasticsearch = require('elasticsearch');
-const shortId = require('shortid');
 const logger = require(path.resolve(__dirname, "..", "src", "elasticLogger.js"));
 
 class elesticConnection extends nodefony.Service {
   constructor(name, options = {}, service = null) {
-    super(name, service.container, nodefony.notificationsCenter.create(), options);
+    super(name, service.container, service.container.notificationsCenter, options);
     this.service = service;
     this.client = null;
   }
@@ -25,6 +24,7 @@ class elesticConnection extends nodefony.Service {
           this.settings.log.prototype.logger = this.logger.bind(this);
         }
         this.client = new this.service.engine.Client(this.settings);
+        this.hosts = this.client.transport._config.hosts;
         return resolve(this.client);
       } catch (e) {
         return reject(e);
@@ -33,14 +33,10 @@ class elesticConnection extends nodefony.Service {
   }
 }
 
-module.exports = class Elastic extends nodefony.Service {
+module.exports = class Elastic extends nodefony.services.connections {
 
   constructor(container) {
-    super("elastic", container);
-    this.engine = elasticsearch;
-    this.connections = {};
-    this.degug = false;
-
+    super("elastic", container, elasticsearch, elesticConnection);
   }
 
   setOptions(connection) {
@@ -65,6 +61,33 @@ module.exports = class Elastic extends nodefony.Service {
       } catch (e) {
         throw e;
       }
+    }
+  }
+
+  readConfig() {
+    this.settings = this.bundle.settings.elasticsearch;
+    this.globalOptions = this.settings.globalOptions;
+    this.globalHostsOptions = this.settings.globalHostsOptions;
+    for (let connection in this.settings.connections) {
+      let options = this.setOptions(this.settings.connections[connection]);
+      this.createConnection(connection, options)
+        .then((conn) => {
+          return conn.client.ping({
+              requestTimeout: 3000
+            })
+            .then(() => {
+              this.logger("PING OK", "INFO");
+              this.displayTable(conn, "INFO");
+              return conn;
+            })
+            .catch(e => {
+              this.logger(e, "ERROR");
+              throw e;
+            });
+        }).catch((e) => {
+          this.logger(e, "ERROR");
+          throw e;
+        });
     }
   }
 
@@ -104,141 +127,4 @@ module.exports = class Elastic extends nodefony.Service {
       throw e;
     }
   }
-
-  boot() {
-    let options = null;
-    if (this.kernel.ready) {
-      this.settings = this.bundle.settings.elasticsearch;
-      this.globalOptions = this.settings.globalOptions;
-      this.globalHostsOptions = this.settings.globalHostsOptions;
-      for (let connection in this.settings.connections) {
-        options = this.setOptions(this.settings.connections[connection]);
-        this.createConnection(connection, options)
-          .then((conn) => {
-            this.displayTable(conn, "INFO");
-            return conn;
-          }).catch((e) => {
-            this.logger(e, "ERROR");
-          });
-      }
-    } else {
-      this.kernel.on("onReady", () => {
-        this.settings = this.bundle.settings.elasticsearch;
-        this.globalOptions = this.settings.globalOptions;
-        this.globalHostsOptions = this.settings.globalHostsOptions;
-        for (let connection in this.settings.connections) {
-          options = this.setOptions(this.settings.connections[connection]);
-          this.createConnection(connection, options)
-            .then((conn) => {
-              return conn.client.ping({
-                  requestTimeout: 3000,
-                })
-                .then(() => {
-                  this.logger("PING OK", "INFO");
-                  this.displayTable(conn, "INFO");
-                  return conn;
-                  /*setInterval(() => {
-                    client.search({
-                      index: 'products',
-                      body: {
-                        query: {
-                          match_all: {}
-                        }
-                      }
-                    });
-                  }, 10000);*/
-                })
-                .catch(e => {
-                  this.logger(e, "ERROR");
-                  throw e;
-                });
-            }).catch((e) => {
-              this.logger(e, "ERROR");
-            });
-        }
-      });
-    }
-  }
-
-  createConnection(name, options = {}) {
-    return new Promise((resolve, reject) => {
-      try {
-        if (!name) {
-          name = this.generateId();
-        }
-        if (name in this.connections) {
-          throw new Error(`ElasticSearch client ${name} already exit `);
-        }
-        let conn = new elesticConnection(name, options, this);
-        this.connections[conn.name] = conn;
-        return conn.create(options)
-          .then((client) => {
-            return resolve(conn);
-
-
-            /*let res = client.search({
-              index: 'products',
-              body: {
-                query: {
-                  match_all: {}
-                }
-              }
-            });*/
-
-          }).catch((e) => {
-            return reject(e);
-          });
-      } catch (e) {
-        return reject(e);
-      }
-    });
-  }
-
-  getConnection(name) {
-    if (name in this.connections) {
-      return this.connections[name];
-    }
-    return null;
-  }
-
-  getClient(name) {
-    let connection = this.getConnection(name);
-    if (connection) {
-      return connection.client;
-    }
-    return null;
-  }
-
-  removeConnection(name) {
-    if (name in this.connections) {
-      delete this.connections[name];
-      return true;
-    }
-    throw new Error(`ElasticSearch removeClient ${name} not found`);
-  }
-
-  generateId() {
-    return shortId.generate();
-  }
-
-  displayTable(connection, severity = "DEBUG") {
-    let options = {
-      head: [
-        "NAME CONNECTOR",
-        "hosts"
-      ]
-    };
-    try {
-      let table = this.kernel.cli.displayTable(null, options);
-      let data = [];
-      let hosts = JSON.stringify(connection.client.transport._config.hosts);
-      data.push(connection.name || "");
-      data.push(hosts || "");
-      table.push(data);
-      this.logger(`ELASTIC CLIENT ${connection.name} : \n${table.toString()}`, severity);
-    } catch (e) {
-      throw e;
-    }
-  }
-
 };

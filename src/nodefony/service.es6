@@ -61,7 +61,6 @@ module.exports = nodefony.register("Service", function() {
             this.notificationsCenter.setMaxListeners(options.nbListeners);
           }
         }
-
       } else {
         if (notificationsCenter) {
           throw new Error("Service nodefony notificationsCenter not valid must be instance of nodefony.notificationsCenter.notification");

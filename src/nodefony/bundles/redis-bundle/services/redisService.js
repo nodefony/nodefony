@@ -1,5 +1,4 @@
 const redis = require('redis');
-const shortId = require('shortid');
 
 class redisConnection extends nodefony.Service {
 
@@ -11,7 +10,7 @@ class redisConnection extends nodefony.Service {
 
   logger(pci, severity, msgid, msg) {
     if (!msgid) {
-      msgid = `\x1b[36mREDIS CLIENT ${this.name} \x1b[0m`;
+      msgid = `\x1b[36mREDIS CONNECTION ${this.name} \x1b[0m`;
     }
     return super.logger(pci, severity, msgid, msg);
   }
@@ -95,163 +94,33 @@ class redisConnection extends nodefony.Service {
     });
   }
 
-  subscribe(channel) {
-    try {
-      return this.client.subscribe(channel);
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  publish(channel, message) {
-    try {
-      return this.client.publish(channel, message);
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  quit() {
-    return this.client.quit.apply(this.client, arguments);
-  }
-
-  end() {
-    return this.client.end.apply(this.client, arguments);
-  }
-
-  unref() {
-    return this.client.unref.apply(this.client, arguments);
-  }
-
-  auth() {
-    return this.client.auth.apply(this.client, arguments);
-  }
-
-  set() {
-    return this.client.set.apply(this.client, arguments);
-  }
-  hset() {
-    return this.client.hset.apply(this.client, arguments);
-  }
-  get() {
-    return this.client.get.apply(this.client, arguments);
-  }
-  hget() {
-    return this.client.hget.apply(this.client, arguments);
-  }
-  hgetall() {
-    return this.client.hgetall.apply(this.client, arguments);
-  }
-  hmset() {
-    return this.client.hmset.apply(this.client, arguments);
-  }
-  sadd() {
-    return this.client.sadd.apply(this.client, arguments);
-  }
-  multi() {
-    return this.client.multi.apply(this.client, arguments);
-  }
-  watch() {
-    return this.client.watch.apply(this.client, arguments);
-  }
-  duplicate() {
-    return this.client.duplicate.apply(this.client, arguments);
-  }
-
 }
 
-module.exports = class Redis extends nodefony.Service {
+module.exports = class Redis extends nodefony.services.connections {
 
   constructor(container) {
-    super("redis", container);
-    this.engine = redis;
+    super("redis", container, redis, redisConnection);
     BlueBird.promisifyAll(this.engine);
-    this.subscribers = {};
-    this.publishers = {};
-    this.clients = {};
     this.degug = false;
   }
 
-  boot() {
-    if (this.kernel.ready) {
-      this.settings = this.bundle.settings.redis;
-      this.settings.retry_strategy = this.retry_strategy;
-      if (this.settings.debug) {
-        this.degug = true;
-        process.env.DEBUG_MODE = "redis";
-      }
-      this.globalOptions = this.settings.globalOptions;
-      for (let connection in this.settings.connections) {
-        let options = nodefony.extend({}, this.globalOptions, this.settings.connections[connection]);
-        this.createConnection(connection, options)
-          .then((client) => {
-            this.displayTable(client, "INFO");
-          }).catch((e) => {
-            this.logger(e, "ERROR");
-          });
-      }
-    } else {
-      this.kernel.on("onReady", () => {
-        this.settings = this.bundle.settings.redis;
-        this.settings.retry_strategy = this.retry_strategy;
-        if (this.settings.debug) {
-          this.degug = true;
-          process.env.DEBUG_MODE = "redis";
-        }
-        this.globalOptions = this.settings.globalOptions;
-        for (let connection in this.settings.connections) {
-          let options = nodefony.extend({}, this.globalOptions, this.settings.connections[connection]);
-          this.createConnection(connection, options)
-            .then((client) => {
-              this.displayTable(client, "INFO");
-            }).catch((e) => {
-              this.logger(e, "ERROR");
-            });
-        }
-      });
+  readConfig() {
+    this.settings = this.bundle.settings.redis;
+    this.settings.retry_strategy = this.retry_strategy;
+    if (this.settings.debug) {
+      this.degug = true;
+      process.env.DEBUG_MODE = "redis";
     }
-  }
-
-  generateId() {
-    return shortId.generate();
-  }
-
-  createConnection(name, options = {}) {
-    return new Promise((resolve, reject) => {
-      try {
-        if (!name) {
-          name = this.generateId();
-        }
-        if (name in this.clients) {
-          throw new Error(`Redis client ${name} already exit `);
-        }
-        let conn = new redisConnection(name, options, this);
-        this.clients[conn.name] = conn;
-        return conn.create(options)
-          .then(() => {
-            return resolve(conn);
-          }).catch((e) => {
-            return reject(e);
-          });
-      } catch (e) {
-        return reject(e);
-      }
-    });
-  }
-
-  getClient(name) {
-    if (name in this.clients) {
-      return this.clients[name];
+    this.globalOptions = this.settings.globalOptions;
+    for (let connection in this.settings.connections) {
+      let options = nodefony.extend({}, this.globalOptions, this.settings.connections[connection]);
+      this.createConnection(connection, options)
+        .then((client) => {
+          this.displayTable(client, "INFO");
+        }).catch((e) => {
+          this.logger(e, "ERROR");
+        });
     }
-    return null;
-  }
-
-  removeClient(name) {
-    if (name in this.clients) {
-      delete this.clients[name];
-      return true;
-    }
-    throw new Error(`redis removeClient ${name} not found`);
   }
 
   print(error, message) {
@@ -283,9 +152,9 @@ module.exports = class Redis extends nodefony.Service {
   displayTable(client, severity = "DEBUG") {
     let options = {
       head: [
-        "NAME CONNECTOR",
-        "Address",
-        "connected"
+        "CONNECTION NAME",
+        "HOSTS",
+        "CONNECTED"
       ]
     };
     try {
@@ -295,7 +164,7 @@ module.exports = class Redis extends nodefony.Service {
       data.push(client.client.address || "");
       data.push(client.client.connected || "");
       table.push(data);
-      this.logger(`REDIS CLIENT ${client.name} : \n${table.toString()}`, severity);
+      this.logger(` ${client.name} : \n${table.toString()}`, severity);
     } catch (e) {
       throw e;
     }

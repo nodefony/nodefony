@@ -242,15 +242,7 @@ elastic-bundle:
         hosts:
           - {
             host                 : localhost,
-            port                 : 9200,
-            country              : EU,
-            weight               : 10
-            }
-          - {
-            host                 : localhost,
-            port                 : 9200,
-            country              : US,
-            weight               : 50
+            port                 : 9200
             }
 
 #######################
