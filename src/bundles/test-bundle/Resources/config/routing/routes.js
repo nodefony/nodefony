@@ -12,7 +12,6 @@ module.exports = {
       page: /^\d\d$/
     }
   },
-  //##############################
   myroute2: {
     pattern: "/myroute/{page}/{elements}",
     defaults: {

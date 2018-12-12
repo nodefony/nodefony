@@ -1,4 +1,4 @@
-module.exports = nodefony.register("Reader", function () {
+module.exports = nodefony.register("Reader", function() {
 
   let defaultSetting = {
     parserXml: {
@@ -20,7 +20,7 @@ module.exports = nodefony.register("Reader", function () {
     parse: false
   };
 
-  let load = function (name, pathFile) {
+  let load = function(name, pathFile) {
     let mypath = pathFile;
     let ext = path.extname(pathFile);
     let basename = path.basename(pathFile);
@@ -34,51 +34,51 @@ module.exports = nodefony.register("Reader", function () {
     let txt = null;
     try {
       switch (ext) {
-      case ".xml":
-        txt = this.readFileSync(file);
-        Array.prototype.unshift.call(arguments, txt);
-        if (plug.xml) {
-          return plug.xml.apply(this, arguments);
-        } else {
-          return this.pluginConfig.xml.apply(this, arguments);
-        }
-        break;
-      case ".json":
-        txt = this.readFileSync(file);
-        Array.prototype.unshift.call(arguments, txt);
-        return plug.json.apply(this, arguments);
-      case ".yml":
-      case ".yaml":
-        txt = this.readFileSync(file);
-        Array.prototype.unshift.call(arguments, txt);
-        if (plug.yml) {
-          return plug.yml.apply(this, arguments);
-        } else {
-          return this.pluginConfig.yml.apply(this, arguments);
-        }
-        break;
-      case ".js":
-      case ".es6":
-      case ".es7":
-        Array.prototype.unshift.call(arguments, file);
-        switch (true) {
-        case new RegExp("^(.+)Controller.js$").test(basename):
-          if (plug.annotations) {
-            return plug.annotations.apply(this, arguments);
+        case ".xml":
+          txt = this.readFileSync(file);
+          Array.prototype.unshift.call(arguments, txt);
+          if (plug.xml) {
+            return plug.xml.apply(this, arguments);
           } else {
-            return this.pluginConfig.annotations.apply(this, arguments);
+            return this.pluginConfig.xml.apply(this, arguments);
+          }
+          break;
+        case ".json":
+          txt = this.readFileSync(file);
+          Array.prototype.unshift.call(arguments, txt);
+          return plug.json.apply(this, arguments);
+        case ".yml":
+        case ".yaml":
+          txt = this.readFileSync(file);
+          Array.prototype.unshift.call(arguments, txt);
+          if (plug.yml) {
+            return plug.yml.apply(this, arguments);
+          } else {
+            return this.pluginConfig.yml.apply(this, arguments);
+          }
+          break;
+        case ".js":
+        case ".es6":
+        case ".es7":
+          Array.prototype.unshift.call(arguments, file);
+          switch (true) {
+            case new RegExp("^(.+)Controller.js$").test(basename):
+              if (plug.annotations) {
+                return plug.annotations.apply(this, arguments);
+              } else {
+                return this.pluginConfig.annotations.apply(this, arguments);
+              }
+              break;
+            default:
+              if (plug.javascript) {
+                return plug.javascript.apply(this, arguments);
+              } else {
+                return this.pluginConfig.javascript.apply(this, arguments);
+              }
           }
           break;
         default:
-          if (plug.javascript) {
-            return plug.javascript.apply(this, arguments);
-          } else {
-            return this.pluginConfig.javascript.apply(this, arguments);
-          }
-        }
-        break;
-      default:
-        this.logger("DROP FILE : " + mypath + " PLUGIN " + myName + " NO EXTENTION FIND : " + ext, "WARNING");
+          this.logger("DROP FILE : " + mypath + " PLUGIN " + myName + " NO EXTENTION FIND : " + ext, "WARNING");
       }
     } catch (e) {
       throw e;
@@ -113,7 +113,7 @@ module.exports = nodefony.register("Reader", function () {
     }
 
     pluginConfig() {
-      const json = function (file, bundle, callback, parser) {
+      const json = function(file, bundle, callback, parser) {
         if (parser) {
           file = this.render(file, parser.data, parser.options);
         }
@@ -126,7 +126,7 @@ module.exports = nodefony.register("Reader", function () {
           throw (e);
         }
       };
-      const yml = function (file, bundle, callback, parser) {
+      const yml = function(file, bundle, callback, parser) {
         if (parser) {
           file = this.render(file, parser.data, parser.options);
         }
@@ -139,7 +139,7 @@ module.exports = nodefony.register("Reader", function () {
           throw (e);
         }
       };
-      const xml = function (file, bundle, callback, parser) {
+      const xml = function(file, bundle, callback, parser) {
         if (parser) {
           file = this.render(file, parser.data, parser.options);
         }
@@ -153,7 +153,7 @@ module.exports = nodefony.register("Reader", function () {
         });
       };
 
-      const javascript = function (file, bundle, parser, callback) {
+      const javascript = function(file, bundle, parser, callback) {
         try {
           return callback(this.loader.load(file, true));
         } catch (e) {
@@ -161,7 +161,7 @@ module.exports = nodefony.register("Reader", function () {
         }
       };
 
-      const annotations = function (file) {
+      const annotations = function(file) {
         throw new Error("Annotation is not defined for this file " + file);
       };
 
@@ -219,7 +219,7 @@ module.exports = nodefony.register("Reader", function () {
     loadPlugin(name, plugin) {
       this.plugins[name] = plugin;
       let context = this;
-      return function () {
+      return function() {
         Array.prototype.unshift.call(arguments, name);
         return load.apply(context, arguments);
       };

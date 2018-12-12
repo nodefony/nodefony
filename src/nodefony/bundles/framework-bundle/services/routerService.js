@@ -1,7 +1,7 @@
 const Querystring = require('querystring');
 
-const pluginReader = function () {
-  const importXmlConfig = function (xml, prefix, callback, parser) {
+const pluginReader = function() {
+  const importXmlConfig = function(xml, prefix, callback, parser) {
     if (parser) {
       xml = this.render(xml, parser.data, parser.options);
     }
@@ -15,26 +15,26 @@ const pluginReader = function () {
       }
       for (let key in node) {
         switch (key) {
-        case 'route':
-          if (prefix) {
-            for (let skey in node[key]) {
-              node[key][skey].id = prefix.replace('/', '_') + '_' + node[key][skey].id;
-              if (node[key][skey].id.charAt(0) === '_') {
-                node[key][skey].id = node[key][skey].id.slice(1);
+          case 'route':
+            if (prefix) {
+              for (let skey in node[key]) {
+                node[key][skey].id = prefix.replace('/', '_') + '_' + node[key][skey].id;
+                if (node[key][skey].id.charAt(0) === '_') {
+                  node[key][skey].id = node[key][skey].id.slice(1);
+                }
+                node[key][skey].pattern = prefix + node[key][skey].pattern;
               }
-              node[key][skey].pattern = prefix + node[key][skey].pattern;
             }
-          }
-          routes = routes.concat(node[key]);
-          break;
-        case 'import':
-          /*
-           * TODO PROBLEME DE LOAD DE FICHIER: path + getReaderFunc
-           */
-          for (let skey in node[key]) {
-            routes = routes.concat(importXmlConfig.call(this, '/' + node[key][skey].resource, (node[key][skey].prefix ? node[key][skey].prefix : '')));
-          }
-          break;
+            routes = routes.concat(node[key]);
+            break;
+          case 'import':
+            /*
+             * TODO PROBLEME DE LOAD DE FICHIER: path + getReaderFunc
+             */
+            for (let skey in node[key]) {
+              routes = routes.concat(importXmlConfig.call(this, '/' + node[key][skey].resource, (node[key][skey].prefix ? node[key][skey].prefix : '')));
+            }
+            break;
         }
       }
     });
@@ -45,7 +45,7 @@ const pluginReader = function () {
     }
   };
 
-  const normalizeXmlJson = function (routes, callback) {
+  const normalizeXmlJson = function(routes, callback) {
     for (let route in routes) {
       for (let param in routes[route]) {
         if (['pattern', 'host'].indexOf(param) >= 0) {
@@ -72,11 +72,11 @@ const pluginReader = function () {
     }
   };
 
-  const getObjectRoutesXML = function (file, bundle, parser, callback) {
+  const getObjectRoutesXML = function(file, bundle, parser, callback) {
     importXmlConfig.call(this, file, '', callback, parser);
   };
 
-  const getObjectRoutesJSON = function (file, bundle, parser, callback) {
+  const getObjectRoutesJSON = function(file, bundle, parser, callback) {
     if (parser) {
       file = this.render(file, parser.data, parser.options);
     }
@@ -85,7 +85,7 @@ const pluginReader = function () {
     }
   };
 
-  const getObjectRoutesYml = function (file, bundle, parser, callback) {
+  const getObjectRoutesYml = function(file, bundle, parser, callback) {
     if (parser) {
       file = this.render(file, parser.data, parser.options);
     }
@@ -94,7 +94,7 @@ const pluginReader = function () {
     }
   };
 
-  const annotations = function (file, bundle, parser, callback) {
+  const annotations = function(file, bundle, parser, callback) {
     try {
       return this.readFile(file)
         .then((fileContent) => {
@@ -127,7 +127,7 @@ const pluginReader = function () {
 }();
 
 
-const generateQueryString = function (obj, name) {
+const generateQueryString = function(obj, name) {
   if (obj._keys) {
     delete obj._keys;
   }
@@ -156,9 +156,9 @@ module.exports = class router extends nodefony.Service {
   constructor(container) {
     super("router", container, container.get("notificationsCenter"));
     this.routes = [];
-    this.reader = function (context) {
+    this.reader = function(context) {
       var func = context.container.get("reader").loadPlugin("routing", pluginReader);
-      return function (file, bundle, parser) {
+      return function(file, bundle, parser) {
         return func(file, bundle, parser, context.nodeReader.bind(context, file, bundle));
       };
     }(this);
@@ -336,30 +336,30 @@ module.exports = class router extends nodefony.Service {
       for (let ele in obj[route]) {
         let arg = obj[route][ele];
         switch (ele) {
-        case "pattern":
-          newRoute.setPattern(arg);
-          break;
-        case "host":
-          newRoute.setHostname(arg);
-          break;
-        case "firewalls":
-          newRoute.setFirewallConfigRoute(arg);
-          break;
-        case "defaults":
-          for (let ob in arg) {
-            newRoute.addDefault(ob, arg[ob]);
-          }
-          break;
-        case "requirements":
-          for (let ob in arg) {
-            newRoute.addRequirement(ob, arg[ob]);
-          }
-          break;
-        case "prefix":
-          newRoute.setPrefix(arg);
-          break;
-        default:
-          this.logger(" Tag : " + ele + " not exist in routings definition Route : " + route + " File : " + newRoute.filePath, "WARNING");
+          case "pattern":
+            newRoute.setPattern(arg);
+            break;
+          case "host":
+            newRoute.setHostname(arg);
+            break;
+          case "firewalls":
+            newRoute.setFirewallConfigRoute(arg);
+            break;
+          case "defaults":
+            for (let ob in arg) {
+              newRoute.addDefault(ob, arg[ob]);
+            }
+            break;
+          case "requirements":
+            for (let ob in arg) {
+              newRoute.addRequirement(ob, arg[ob]);
+            }
+            break;
+          case "prefix":
+            newRoute.setPrefix(arg);
+            break;
+          default:
+            this.logger(" Tag : " + ele + " not exist in routings definition Route : " + route + " File : " + newRoute.filePath, "WARNING");
         }
       }
       try {
