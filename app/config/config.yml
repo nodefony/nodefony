@@ -218,9 +218,8 @@ redis-bundle:
       return_buffers              : false
       retry_unfulfilled_commands  : true
     connections                   :
-      data :
-        name                      : data
-
+      main :
+        name                      : main
 
 #########################################
 # OVERRIDE ELASTIC BUNDLE SETTINGS

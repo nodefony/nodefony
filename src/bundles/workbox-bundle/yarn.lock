@@ -1638,10 +1638,10 @@ css-declaration-sorter@^4.0.1:
     postcss "^7.0.1"
     timsort "^0.3.0"
 
-css-hot-loader@^1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/css-hot-loader/-/css-hot-loader-1.4.2.tgz#6fa7ae7b8e309bb8be3b7b586efd702073c68611"
-  integrity sha512-f2A5oTwEOWFCM90zh/f+WEOcHbrqGK5Hc8CZI/Bf5kgSOsP6mAXd+P3thBg6uHxaKtby6+Z7wjT5IC6KZt1Q6g==
+css-hot-loader@^1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/css-hot-loader/-/css-hot-loader-1.4.3.tgz#69e8256ef85f2b3b3d89e37f7504c6e3431a70c9"
+  integrity sha512-akm6gN57sCirABQuT+BZIHWf/UZGX0y4zMnrbZIKOPyTdpg2+teP9kQ3StBi4d+bZbdJWGW78VmsgtXBYw4ukA==
   dependencies:
     loader-utils "^1.1.0"
     lodash "^4.17.5"
@@ -4297,10 +4297,13 @@ randomfill@^1.0.3:
     randombytes "^2.0.5"
     safe-buffer "^5.1.0"
 
-raw-loader@^0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/raw-loader/-/raw-loader-0.5.1.tgz#0c3d0beaed8a01c966d9787bf778281252a979aa"
-  integrity sha1-DD0L6u2KAclm2Xh793goElKpeao=
+raw-loader@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/raw-loader/-/raw-loader-1.0.0.tgz#3f9889e73dadbda9a424bce79809b4133ad46405"
+  integrity sha512-Uqy5AqELpytJTRxYT4fhltcKPj0TyaEpzJDcGz7DFJi+pQOOi3GjR/DOdxTkTsF+NzhnldIoG6TORaBlInUuqA==
+  dependencies:
+    loader-utils "^1.1.0"
+    schema-utils "^1.0.0"
 
 rc@^1.2.7:
   version "1.2.8"

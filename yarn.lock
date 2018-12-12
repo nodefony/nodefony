@@ -3483,10 +3483,10 @@ mongoose-legacy-pluralize@1.0.2:
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
 
-mongoose@^5.3.15:
-  version "5.3.15"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.3.15.tgz#11a803a4ae640b0cce29a2579282ac9dd005c47a"
-  integrity sha512-51PchMQn2kFZYPSe0vfr8RcJxm6g7RokfcVl2xVORogtT5GUKu6RgnRXsUV7v9vZ+b3Wh//ph53kuIyhtXi56g==
+mongoose@^5.3.16:
+  version "5.3.16"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.3.16.tgz#04af18eaf39f7a91e31285cfb180478874877611"
+  integrity sha512-BqFFqYFa0lMYuo9fRJpgvbvzlAUk0ffxlhyJsf2o9ruoGHwyR29GC+HJY5x8r4dCjbr+XJYO+g0kK3kGjASkaw==
   dependencies:
     async "2.6.1"
     bson "~1.1.0"
@@ -4996,10 +4996,10 @@ sequelize-pool@^1.0.0:
   dependencies:
     bluebird "^3.5.2"
 
-sequelize@5.0.0-beta.14:
-  version "5.0.0-beta.14"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.0.0-beta.14.tgz#9de2a5be00ca8c414729ba8109e16e03bc99d99d"
-  integrity sha512-JS4yr7zeujP+dVn4c2dYnLfq8RzzZCZEbnjsLhh2/e88UHhtiabVtrXttr7zsC8mcTSPyUlx4Y8IS+uNNKbdcg==
+sequelize@5.0.0-beta.15:
+  version "5.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.0.0-beta.15.tgz#ed3ae4e2c4d63577d1b4a452394f26a133a6c2e1"
+  integrity sha512-03AP0+j6L4/YYVAhP6RENCXlSckvnsAFoG3NwAfmlrvF3VUNaNNliTqOen93loHpa3zXXUyV2Qm/UJNHfRjGiA==
   dependencies:
     bluebird "^3.5.0"
     cls-bluebird "^2.1.0"

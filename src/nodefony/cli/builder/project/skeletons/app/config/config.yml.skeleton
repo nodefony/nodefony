@@ -110,7 +110,7 @@ mongoose-bundle:
    debug:                        false
    connectors:
      nodefony:
-       host:                     "127.0.0.1"
+       host:                     localhost
        port:                     27017
        dbname:                   "nodefony"
        settings:
@@ -216,7 +216,41 @@ redis-bundle:
       socket_keepalive            : false
       return_buffers              : false
       retry_unfulfilled_commands  : true
-    connections                   : ~
+    connections                   :
+      main :
+        name                      : main
+
+#########################################
+# OVERRIDE ELASTIC BUNDLE SETTINGS
+#   elasticsearch
+#
+#	 options  :                    https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/configuration.html
+#
+#
+elastic-bundle:
+  elasticsearch :
+    globalHostsOptions  :
+      protocol                    : http
+    globalOptions :
+      ssl :
+        #key                      : "./config/certificates/server/privkey.pem"
+        #cert                     : "./config/certificates/server/cert.pem"
+        #ca                       : "./config/certificates/ca/nodefony-root-ca.crt.pem"
+    connections :
+      main :
+        hosts:
+          - {
+            host                 : localhost,
+            port                 : 9200,
+            country              : EU,
+            weight               : 10
+            }
+          - {
+            host                 : localhost,
+            port                 : 9200,
+            country              : US,
+            weight               : 50
+            }
 
 #######################
 #  OVERRIDE SECURITY BUNDLE

@@ -902,10 +902,10 @@ sequelize-pool@^1.0.0:
   dependencies:
     bluebird "^3.5.2"
 
-sequelize@5.0.0-beta.14:
-  version "5.0.0-beta.14"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.0.0-beta.14.tgz#9de2a5be00ca8c414729ba8109e16e03bc99d99d"
-  integrity sha512-JS4yr7zeujP+dVn4c2dYnLfq8RzzZCZEbnjsLhh2/e88UHhtiabVtrXttr7zsC8mcTSPyUlx4Y8IS+uNNKbdcg==
+sequelize@5.0.0-beta.15:
+  version "5.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.0.0-beta.15.tgz#ed3ae4e2c4d63577d1b4a452394f26a133a6c2e1"
+  integrity sha512-03AP0+j6L4/YYVAhP6RENCXlSckvnsAFoG3NwAfmlrvF3VUNaNNliTqOen93loHpa3zXXUyV2Qm/UJNHfRjGiA==
   dependencies:
     bluebird "^3.5.0"
     cls-bluebird "^2.1.0"
