@@ -44,7 +44,7 @@ module.exports = class mongoose extends nodefony.orm {
     });
 
     this.kernel.listen(this, "onReady", () => {
-      this.displayTable();
+      this.displayTable("INFO");
     });
   }
 
@@ -58,50 +58,51 @@ module.exports = class mongoose extends nodefony.orm {
 
     let settings = nodefony.extend(true, {}, defaultConfigConnection, config.settings);
     settings.promiseLibrary = BlueBird;
-    return this.engine.createConnection(url, settings).then((db) => {
-      this.connections[name] = db;
-      db.on('close', () => {
-        this.closeConnetion(name, db);
-      });
-      db.on('reconnect', () => {
-        this.logger(`Reconnection to mongodb database ${name}`, 'INFO');
-        this.fire('onReconnect', name, db);
-        //this.createConnection(name, config);
+    return this.engine.createConnection(url, settings)
+      .then((db) => {
         this.connections[name] = db;
+        db.on('close', () => {
+          this.closeConnetion(name, db);
+        });
+        db.on('reconnect', () => {
+          this.logger(`Reconnection to mongodb database ${name}`, 'INFO');
+          this.fire('onReconnect', name, db);
+          //this.createConnection(name, config);
+          this.connections[name] = db;
+        });
+        db.on('timeout', () => {
+          this.logger(`Timeout to mongodb database ${name}`, 'INFO');
+          this.fire('onTimeout', name, db);
+        });
+        db.on('parseError', (error) => {
+          this.logger(`ParseError on mongodb database ${name}`, 'ERROR');
+          this.logger(error, 'ERROR');
+        });
+        db.on('error', (error) => {
+          this.logger(`Error on mongodb database ${name}`, 'ERROR');
+          this.logger(error, 'ERROR');
+        });
+        db.on('reconnectFailed', (error) => {
+          this.logger(`Error on mongodb database reconnect Failed ${name}`, 'ERROR');
+          this.logger(error, 'ERROR');
+        });
+        db.on('disconnected', () => {
+          this.logger(`mongodb database disconnected ${name}`, 'WARNING');
+        });
+        this.fire("onConnect", name, db);
+        //this.logger("Connect to " + name + " : " + url);
+        return db;
+      }).catch(error => {
+        this.logger(`Cannot connect to mongodb ( ${host}:${port}/${config.dbname} )`, "ERROR");
+        this.logger(error, "ERROR");
+        /*if (this.timeoutid) {
+          clearTimeout(this.timeoutid);
+        }
+        this.timeoutid = setTimeout(() => {
+          this.timeoutid = null;
+          //this.createConnection(name, config);
+        }, settings.reconnectInterval * 1000);*/
       });
-      db.on('timeout', () => {
-        this.logger(`Timeout to mongodb database ${name}`, 'INFO');
-        this.fire('onTimeout', name, db);
-      });
-      db.on('parseError', (error) => {
-        this.logger(`ParseError on mongodb database ${name}`, 'ERROR');
-        this.logger(error, 'ERROR');
-      });
-      db.on('error', (error) => {
-        this.logger(`Error on mongodb database ${name}`, 'ERROR');
-        this.logger(error, 'ERROR');
-      });
-      db.on('reconnectFailed', (error) => {
-        this.logger(`Error on mongodb database reconnect Failed ${name}`, 'ERROR');
-        this.logger(error, 'ERROR');
-      });
-      db.on('disconnected', () => {
-        this.logger(`mongodb database disconnected ${name}`, 'WARNING');
-      });
-      this.fire("onConnect", name, db);
-      this.logger("Connect to " + name + " : " + url);
-      return db;
-    }).catch(error => {
-      this.logger(`Cannot connect to mongodb ( ${host}:${port}/${config.dbname} )`, "ERROR");
-      this.logger(error, "ERROR");
-      /*if (this.timeoutid) {
-        clearTimeout(this.timeoutid);
-      }
-      this.timeoutid = setTimeout(() => {
-        this.timeoutid = null;
-        //this.createConnection(name, config);
-      }, settings.reconnectInterval * 1000);*/
-    });
   }
 
   closeConnetion(name, connection) {
@@ -115,10 +116,10 @@ module.exports = class mongoose extends nodefony.orm {
     }
   }
 
-  displayTable() {
+  displayTable(severity = "DEBUG") {
     let options = {
       head: [
-        "NAME CONNECTOR",
+        `${this.name.toUpperCase()} CONNECTIONS NAME`,
         "NAME DATABASE",
         "DRIVER",
         "URI"
@@ -131,21 +132,24 @@ module.exports = class mongoose extends nodefony.orm {
       conn[0] = dbname;
       for (let data in this.settings.connectors[dbname]) {
         switch (data) {
-        case "dbname":
-          conn[1] = this.settings.connectors[dbname][data];
-          break;
-        case "host":
-          conn[3] = this.settings.connectors[dbname][data];
-          break;
-        case "port":
-          conn[3] += ":" + this.settings.connectors[dbname][data];
-          break;
+          case "dbname":
+            conn[1] = this.settings.connectors[dbname][data];
+            break;
+          case "host":
+            conn[3] = this.settings.connectors[dbname][data];
+            break;
+          case "port":
+            conn[3] += ":" + this.settings.connectors[dbname][data];
+            break;
         }
 
       }
       table.push(conn);
     }
-    this.logger("ORM CONNECTORS LIST  : \n" + table.toString(), "DEBUG");
+    if (this.kernel && this.kernel.type === "CONSOLE") {
+      severity = "DEBUG";
+    }
+    this.logger("ORM CONNECTORS LIST  : \n" + table.toString(), severity);
   }
 
 };

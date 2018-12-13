@@ -74,7 +74,7 @@ nodefony.registerService("connections", () => {
     displayTable(connection, severity = "DEBUG") {
       let options = {
         head: [
-          "CONNECTION NAME",
+          `${this.name.toUpperCase()} CONNECTIONS NAME`,
           "HOST"
         ]
       };

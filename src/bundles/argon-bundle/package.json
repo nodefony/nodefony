@@ -1,0 +1,39 @@
+{
+  "name": "argon-bundle",
+  "version": "1.0.0",
+  "description": "Nodefony Framework Bundle argon ",
+  "author": "admin admin@nodefony.com",
+  "main": "argonBundle.js",
+  "scripts": {},
+  "private": true,
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "repository": {},
+  "dependencies": {
+    "bootstrap-vue": "^2.0.0-rc.11",
+    "clean-webpack-plugin": "^1.0.0",
+    "flatpickr": "^4.5.1",
+    "nouislider": "^12.1.0",
+    "vue": "^2.5.16",
+    "vue-flatpickr-component": "^8.0.0",
+    "vue-lazyload": "^1.2.6",
+    "vue-router": "^3.0.1",
+    "vue2-transitions": "^0.2.3"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.0.0-rc.10",
+    "@vue/cli-plugin-eslint": "^3.0.0-rc.10",
+    "@vue/cli-service": "^3.0.0-rc.10",
+    "@vue/eslint-config-prettier": "^4.0.1",
+    "node-sass": "^4.9.0",
+    "sass-loader": "^7.0.1",
+    "vue-template-compiler": "^2.5.16"
+  },
+  "license": "CECILL-B",
+  "readmeFilename": "README.md",
+  "contributors": [
+    {}
+  ]
+}

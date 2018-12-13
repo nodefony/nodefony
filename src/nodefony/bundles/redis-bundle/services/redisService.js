@@ -152,7 +152,7 @@ module.exports = class Redis extends nodefony.services.connections {
   displayTable(client, severity = "DEBUG") {
     let options = {
       head: [
-        "CONNECTION NAME",
+        `${this.name.toUpperCase()} CONNECTIONS NAME`,
         "HOSTS",
         "CONNECTED"
       ]
