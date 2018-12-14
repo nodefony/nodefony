@@ -5,7 +5,7 @@
   "author": "admin admin@nodefony.com",
   "main": "elasticBundle.js",
   "scripts": {},
-  "private": true,
+  "private": false,
   "keywords": [
     "nodefony",
     "javascript"
