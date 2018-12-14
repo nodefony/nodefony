@@ -701,10 +701,10 @@
     tree-kill "^1.0.0"
     webpack-sources "^1.1.0"
 
-"@nodefony/documentation-bundle@^4.0.0-beta.15":
-  version "4.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@nodefony/documentation-bundle/-/documentation-bundle-4.0.0-beta.15.tgz#981e95a10aa8c7cb2e51fbc115812d52a76f5099"
-  integrity sha512-3nV+BrYFtnDRknNn9P26UzHHOAv6O751pD/wEr0ufUdLHfj4dZ85Tc16H7dIT22WOJqZl2kh8m4cf3biraCJ+g==
+"@nodefony/documentation-bundle@^4.0.0-beta.16":
+  version "4.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@nodefony/documentation-bundle/-/documentation-bundle-4.0.0-beta.16.tgz#a71086728c8756347572b47e003f6161ba96e09c"
+  integrity sha512-SRzmQQYlc1jAqsOCqMXrGlivVPSZkeRXiD/4FrdCEdEurg+FrA7f3YZJcXkopJGpQMD1RUDKyNTjruGiRILWCg==
   dependencies:
     "@babel/core" "^7.2.0"
     "@babel/preset-env" "^7.2.0"
@@ -724,27 +724,27 @@
     webpack "^4.27.1"
     webpack-merge "^4.1.5"
 
-"@nodefony/elastic-bundle@^4.0.0-beta.15":
-  version "4.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@nodefony/elastic-bundle/-/elastic-bundle-4.0.0-beta.15.tgz#d7b509000a5d771773bf703faf57795707edd572"
-  integrity sha512-jeo8e94mxP31Y73HemrOI10/+FrvUDtM0sevIvASvlkEbA1bRgyt9Qfm978Fo095RlAtnAguvOz1kCS4vMwT7A==
+"@nodefony/elastic-bundle@^4.0.0-beta.16":
+  version "4.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@nodefony/elastic-bundle/-/elastic-bundle-4.0.0-beta.16.tgz#ca627aa96c7e7f87aa87d0c9af36ab6231a923a6"
+  integrity sha512-H4y5CL6KwWqq9Uf7In9RTg6Po1Unv6Q/hLFHAohVICUkW13V7pJGJ4NMToOTAWmbN5f9qHb4lJq9PPhdd2WIVQ==
   dependencies:
     elasticsearch "^15.2.0"
     shortid "^2.2.14"
 
-"@nodefony/framework-bundle@^4.0.0-beta.15":
-  version "4.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@nodefony/framework-bundle/-/framework-bundle-4.0.0-beta.15.tgz#0796d01febaa26776309c532d504f8868a24cc55"
-  integrity sha512-qUmG+bFeynyeOFq36qhKDHrjtJ1ViLY8dp8YJeDPnAOo2775kHgBjHWPRuF1+tRKVwfbsNZnpcwBmqn5Kk6g+g==
+"@nodefony/framework-bundle@^4.0.0-beta.16":
+  version "4.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@nodefony/framework-bundle/-/framework-bundle-4.0.0-beta.16.tgz#891ee1e6e0d4c2c900b4887476054ca37c1f6331"
+  integrity sha512-CdgsK+9PGGB5ITJpZd1D+bLxUngmCEKvZhoxveiYGP+QZIdxE7zrhhU0uwiZZdaZQEFYPlD/v+GBsNsQo03NpQ==
   dependencies:
     "@angular/cli" "=1.7.4"
     memory-fs "^0.4.1"
     webpack "^4.27.1"
 
-"@nodefony/http-bundle@^4.0.0-beta.15":
-  version "4.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@nodefony/http-bundle/-/http-bundle-4.0.0-beta.15.tgz#b83fbd181f7caf0e66ecea1f01f3325e8a6b9499"
-  integrity sha512-7CWbMx498YSH19c++fZ6XlqdOTQn04Mhchc3SQNUJVP+x+0zCf3JR5hSO8ycGuJxE3XzXib6KyONkc5YukadHg==
+"@nodefony/http-bundle@^4.0.0-beta.16":
+  version "4.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@nodefony/http-bundle/-/http-bundle-4.0.0-beta.16.tgz#ec2be58e5fbd9ec861b1eae64f714f59d679444e"
+  integrity sha512-HtEjYte7yiRC8FXr+oemnmrcJERxBPX/9cnIRxDx2loXV2Y9skoom1fuf7FuxwPMb5wsvZhC+JZQdG411AoUVQ==
   dependencies:
     cookie "^0.3.1"
     formidable "^1.2.1"
@@ -759,25 +759,24 @@
     websocket "^1.0.28"
 
 "@nodefony/mongo-bundle@^4.0.0-beta.14":
-  version "4.0.0-beta.14"
-  resolved "https://registry.yarnpkg.com/@nodefony/mongo-bundle/-/mongo-bundle-4.0.0-beta.14.tgz#946b509aff5410c94983d0283881b45a3c4a82f3"
-  integrity sha512-osn9SpCHaIR3+dhZ2vE2Meh2JLBcMOCjVhjB7vxEy//nlX0sWdgmXi5OIEcs8O2JbyouPGspfhKnpNRz50dO6g==
+  version "4.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@nodefony/mongo-bundle/-/mongo-bundle-4.0.0-beta.16.tgz#5f413b9cee1cd3ce7047c40d59b7952330e5599f"
+  integrity sha512-4vt5klSk93fZHuCtQ1ZgqECdH+0IZHyQ2KtMZqZOzx2xCcaN6Wl3nI0CP5vYL6uy00L/5WxrCy+q3kq1ivs2vQ==
   dependencies:
-    mongodb "^3.1.9"
-    mongoose "^5.3.12"
+    mongodb "^3.1.10"
 
-"@nodefony/mongoose-bundle@^4.0.0-beta.15":
-  version "4.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@nodefony/mongoose-bundle/-/mongoose-bundle-4.0.0-beta.15.tgz#9245d3208ad4eedd380df60c9cf39745a195e9b1"
-  integrity sha512-Rp24OJRhNtEdL0jq6y5v7vHMtRVWfFPgarg4QAMvAf5AaeCwqBV3VGHHbjDC1Rmgz96kdnptjYb/9yUmt+jUxw==
+"@nodefony/mongoose-bundle@^4.0.0-beta.16":
+  version "4.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@nodefony/mongoose-bundle/-/mongoose-bundle-4.0.0-beta.16.tgz#7d26567c245e96c16445d75b84192c6d9cf30082"
+  integrity sha512-iwUozMp7jFH1DpkTrCumn4mGlEsWoVQu6ZbnU6GyUfDN3FjUCxVFoyp6zP/XdNX5YLjwcwhTX6AtF4vUvTTVCA==
   dependencies:
     mongodb "^3.1.10"
     mongoose "^5.3.16"
 
-"@nodefony/monitoring-bundle@^4.0.0-beta.15":
-  version "4.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@nodefony/monitoring-bundle/-/monitoring-bundle-4.0.0-beta.15.tgz#7c455f6a89ccbf1b3bfb2e7a94f82beee2e69eec"
-  integrity sha512-5ERJNKCPmskcIHUlmogKli7RtHXaGyz2pDEwq5mmeZmZrsOFiZiAJYF0SyXQ1ZUO+Pu4sJGa+lvnRMcZ2k5lmQ==
+"@nodefony/monitoring-bundle@^4.0.0-beta.16":
+  version "4.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@nodefony/monitoring-bundle/-/monitoring-bundle-4.0.0-beta.16.tgz#cb1f7d1bb4619746cc4f7b42cc62126ee0072629"
+  integrity sha512-tA46nTLo7kHsVwfttf31wwpjn5+L94xF0M0yMoe7njJXLDbsx76eTuJzVmj37s2k197C31WXLKwHrA16UlOtzw==
   dependencies:
     "@babel/core" "^7.2.0"
     "@babel/preset-env" "^7.2.0"
@@ -806,25 +805,25 @@
   dependencies:
     mocha "^5.2.0"
 
-"@nodefony/realtime-bundle@^4.0.0-beta.15":
-  version "4.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@nodefony/realtime-bundle/-/realtime-bundle-4.0.0-beta.15.tgz#32d095ce36dbaee708519569ea657b590199f94a"
-  integrity sha512-z1FN2kva2lPyNjfQOuVvbAleJboVwctscRbWlcnFT6uIsdZUsyEdkEXqhuCOftq9PCpUWKIDu2FcAtpj7TCNww==
+"@nodefony/realtime-bundle@^4.0.0-beta.16":
+  version "4.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@nodefony/realtime-bundle/-/realtime-bundle-4.0.0-beta.16.tgz#159a9f1602f5f44d26610fe18c30669e60afeb79"
+  integrity sha512-sKuc92LRlA0oQuyEgWAlHwuL2jImjbZplKrG88C0tTx9q0644NDeKTZaVAQKq0yyxx8k6uE4VxeN840GeTAKYg==
   dependencies:
     shortid "^2.2.14"
 
-"@nodefony/redis-bundle@^4.0.0-beta.15":
-  version "4.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@nodefony/redis-bundle/-/redis-bundle-4.0.0-beta.15.tgz#a0a96125283468b667fb1f7d103a145b489ed318"
-  integrity sha512-WB4NJgHfKChOWn62TlVaThKjKgPht7ev+6YVZzd3R9KOxpPn49DVHCNai+E509ncCR0gc5C17dc3T+itZ8syAA==
+"@nodefony/redis-bundle@^4.0.0-beta.16":
+  version "4.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@nodefony/redis-bundle/-/redis-bundle-4.0.0-beta.16.tgz#e9a9cf6b489f44181d3330fdb689ce34f435d6cd"
+  integrity sha512-4KtAiBSLESa0RNctuDpmYya8u1xQ9Aj25ePnf8iJ4JSqSicyQVoUmKa1bzOUA0gon8L8M8vnBb4HtepGYKk2ig==
   dependencies:
     redis "^2.8.0"
     shortid "^2.2.14"
 
-"@nodefony/security-bundle@^4.0.0-beta.15":
-  version "4.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@nodefony/security-bundle/-/security-bundle-4.0.0-beta.15.tgz#bb5038ed957da98a5e4564244d1fa80198e0ad09"
-  integrity sha512-BEIF9YzkT3tz43uZ11TIA4IYPDocabEN5TyNhRllHZzk1HPXOlbEfsiIlSFzvET8O9Fe32SPntwy4DFJBEBPBg==
+"@nodefony/security-bundle@^4.0.0-beta.16":
+  version "4.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@nodefony/security-bundle/-/security-bundle-4.0.0-beta.16.tgz#ca1f9ee34e97ebb09e4a2c3b1cdb7ff84c2e1c71"
+  integrity sha512-FXg0jf2EUKonXoAv3gV2urntQk6zftty7NjQG+fKj+xOXRwmlIkElU/0wtDgFdZ3wrSPor0rFeeiNGQEFcdbEQ==
   dependencies:
     "@nodefony/passport-wrapper" "^4.0.0"
     bcrypt "^3.0.2"
@@ -839,10 +838,10 @@
     passport-local "^1.0.0"
     passport-oauth2 "^1.4.0"
 
-"@nodefony/sequelize-bundle@^4.0.0-beta.15":
-  version "4.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@nodefony/sequelize-bundle/-/sequelize-bundle-4.0.0-beta.15.tgz#ab5e2ff3d992cc5bd0bc9b66d49f5fea509dee01"
-  integrity sha512-sq6d0vjftY8UOpX1+t7Jp2773jhMC7U5m4QE3hZQTxAGi4JVu4uWKaT6VJK938R4R0jAgeCZP3jU6bH5uLc1Xw==
+"@nodefony/sequelize-bundle@^4.0.0-beta.16":
+  version "4.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@nodefony/sequelize-bundle/-/sequelize-bundle-4.0.0-beta.16.tgz#d7be9390806d5b4a9f25bee797f052883b29c9d0"
+  integrity sha512-QDR883I6MfSv9RvtSsngopVYybMLU3w/PinwvQNzwJuFMw31TsAtGxgfQk1NXiBjEWrlgHZ/PK6J8mr9ewzEmA==
   dependencies:
     mysql2 "^1.6.4"
     pg "^7.7.1"
@@ -864,19 +863,19 @@
     twig "^1.12.0"
     webrtc-adapter "^6.4.8"
 
-"@nodefony/unittests-bundle@^4.0.0-beta.15":
-  version "4.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@nodefony/unittests-bundle/-/unittests-bundle-4.0.0-beta.15.tgz#f806d4f6437cf7fd2117a149970a5e319ec32a87"
-  integrity sha512-jldogsuTbWfRcqX9EnkyckFoNz83aZZdfrLUeGC963m2OQ/vg0iGPnm8q8bda5FKRTvGqxTXyShQo1ZaO4egDw==
+"@nodefony/unittests-bundle@^4.0.0-beta.16":
+  version "4.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@nodefony/unittests-bundle/-/unittests-bundle-4.0.0-beta.16.tgz#e18b0b773bc3238368650032e53d4f279133d4eb"
+  integrity sha512-nVFPDxZkZZQDcUJXm0gSO3Yn8nCCNGRXQAkL+4fH9E2xhxfPuPiFpA3qaXa7KWdCtjgfd9FZGc2owKOpf3eBEA==
   dependencies:
     chai "^4.2.0"
     mocha "^5.2.0"
     websocket "^1.0.28"
 
 "@pm2/agent-node@^1.0.9":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@pm2/agent-node/-/agent-node-1.1.0.tgz#90d3ed23f0ff86814b9ab8730c074cef06828a6f"
-  integrity sha512-mgs/WwI2y+4CCn4wdkEwrbIxhRtp4uokKt7q2SvanZwR6MxnrWH9qU2uZGKJg23PGlv48imYG6MZv0zUFfWPoQ==
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@pm2/agent-node/-/agent-node-1.1.1.tgz#c0a2a5e5ec087b67e708b6b44732db8c57acdc17"
+  integrity sha512-HsGaz3KqJ4uh2b/n76ROmBqYB6HIPAoxD8/1EgZ5U9E5v2XGmmcRZD+Hnj4oU3QNwyE6FceRnl0SGMqIfTe/XA==
   dependencies:
     debug "^3.1.0"
     eventemitter2 "^5.0.1"
@@ -916,9 +915,9 @@
     vxx "1.2.2"
 
 "@pm2/js-api@^0.5.15":
-  version "0.5.40"
-  resolved "https://registry.yarnpkg.com/@pm2/js-api/-/js-api-0.5.40.tgz#c2e096e4942c90c23496820ebb3f913fa6746507"
-  integrity sha512-i3lftxKh8ToTHmgmN1z6JshoTVK9ibDnLkTIyB56ZoN57lTbW7Q6KnLCP9S36mqiwk3dOYfeQtGDznlyxpc+Yw==
+  version "0.5.41"
+  resolved "https://registry.yarnpkg.com/@pm2/js-api/-/js-api-0.5.41.tgz#aa83a1a4cb4c5629b1981c913312a08331747b50"
+  integrity sha512-0ZRlxv2etuPSiKkoGqn9bbYQu0qtcWq1h2uksOJGET0ZUZUWfIs3jnGu/bAaiz8EZ9Vjlu2ucRUl7fJL8FdaxA==
   dependencies:
     async "^2.4.1"
     axios "^0.16.2"
@@ -6894,7 +6893,7 @@ mongodb-core@3.1.9:
   optionalDependencies:
     saslprep "^1.0.0"
 
-mongodb@3.1.10, mongodb@^3.1.10, mongodb@^3.1.9:
+mongodb@3.1.10, mongodb@^3.1.10:
   version "3.1.10"
   resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.1.10.tgz#45ad9b74ea376f4122d0881b75e5489b9e504ed7"
   integrity sha512-Uml42GeFxhTGQVml1XQ4cD0o/rp7J2ROy0fdYUcVitoE7vFqEhKH4TYVqRDpQr/bXtCJVxJdNQC1ntRxNREkPQ==
@@ -6907,7 +6906,7 @@ mongoose-legacy-pluralize@1.0.2:
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
 
-mongoose@^5.3.12, mongoose@^5.3.16:
+mongoose@^5.3.16:
   version "5.3.16"
   resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.3.16.tgz#04af18eaf39f7a91e31285cfb180478874877611"
   integrity sha512-BqFFqYFa0lMYuo9fRJpgvbvzlAUk0ffxlhyJsf2o9ruoGHwyR29GC+HJY5x8r4dCjbr+XJYO+g0kK3kGjASkaw==

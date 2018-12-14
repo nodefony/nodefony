@@ -11,7 +11,22 @@
   "private": false,
   "keywords": [
     "nodefony",
-    "javascript"
+    "node-js",
+    "javascript",
+    "framework",
+    "mvc-framework",
+    "redis",
+    "eleasticsearch",
+    "http2",
+    "pm2",
+    "sequelize",
+    "mongoose",
+    "webpack",
+    "sockjs",
+    "twig",
+    "cors",
+    "websocket",
+    "waf"
   ],
   "bin": {
     "nodefony": "./bin/nodefony"
