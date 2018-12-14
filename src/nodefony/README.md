@@ -36,13 +36,13 @@ Nodefony is not an exhaustive port of symfony !
 -   [HTTP2](https://nodejs.org/api/http2.html)  http2 ready node module provides an implementation of the HTTP/2 (push server ready).
 -   Dynamics routing
 -   ORM ([Sequelize](http://docs.sequelizejs.com/), [mongoose](http://mongoosejs.com/index.html))
--   Simple Databases connection (mongo, ...)
+-   Simple Databases Services connections (Redis, Mongo, Elasticsearch).
 -   MVC templating ([Twig](https://github.com/twigjs/twig.js))
 -   Notion of real-time context in Action Controller (websocket).
 -   Notion of synchronous or asynchronous execution in Action Controller (Promise).
 -   Services Containers, Dependency Injection (Design Patterns)
 -   Sessions Manager (ORM, memcached)
--   Authentication Manager (Digest, Basic, oAuth, Local, ldap, jwf)
+-   Authentication Manager (Digest, Basic, oAuth, Local, ldap, jwf, openid)
 -   WAF ( Web application firewall )
 -   Cross-Origin Resource Sharing ([CORS](https://www.w3.org/TR/cors/))
 -   Production Management ([PM2](https://github.com/Unitech/pm2/))
