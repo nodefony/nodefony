@@ -1,7 +1,7 @@
 {
-  "name": "mongo-bundle",
+  "name": "@nodefony/mongo-bundle",
   "version": "4.0.0-beta.14",
-  "description": "Nodefony Framework Bundle redis ",
+  "description": "Nodefony Framework Bundle mongo ",
   "author": "admin admin@nodefony.com",
   "main": "mongoBundle.js",
   "scripts": {},
