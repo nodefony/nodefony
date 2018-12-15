@@ -1,5 +1,13 @@
 # Changelog
 
+## v4.0.0-beta.18 (15/12/2018)
+- [nodefony release 4.0.0-beta.18](https://github.com/nodefony/nodefony-core/commit/e8941ca1e29a0dfa9974fff220a4ebf4a51cbce5)
+- [upgrade version](https://github.com/nodefony/nodefony-core/commit/678ba8707377b686d2ff7e18479d8b27e0b944c6)
+- [travis config change](https://github.com/nodefony/nodefony-core/commit/86cb82f59a94222892b7698561acd352e4d2525f)
+- [debug test unit return error](https://github.com/nodefony/nodefony-core/commit/48a627033d2ddbb53b45c1de65fe3e1f01f1a148)
+
+---
+
 ## v4.0.0-beta.17 (15/12/2018)
 - [nodefony release 4.0.0-beta.17](https://github.com/nodefony/nodefony-core/commit/5a2a1dd0de574286cdb505590aafd2759fd3ef64)
 - [upgrade deps](https://github.com/nodefony/nodefony-core/commit/70b677c55b772aef2be04520d02a2e3849637f68)
