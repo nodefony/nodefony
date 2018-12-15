@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/documentation-bundle",
-  "version": "4.0.0-beta.17",
+  "version": "4.0.0-beta.18",
   "description": "Nodefony Framework Bundle Documentation ",
   "main": "documentationBundle.js",
   "contributors": [],
