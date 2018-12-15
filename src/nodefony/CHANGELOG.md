@@ -1,5 +1,12 @@
 # Changelog
 
+## v4.0.0-beta.17 (15/12/2018)
+- [nodefony release 4.0.0-beta.17](https://github.com/nodefony/nodefony-core/commit/5a2a1dd0de574286cdb505590aafd2759fd3ef64)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/70b677c55b772aef2be04520d02a2e3849637f68)
+- [README](https://github.com/nodefony/nodefony-core/commit/e6e9b57100185da67ff17c7a8541ef4e0c6688a7)
+
+---
+
 ## v4.0.0-beta.16 (14/12/2018)
 - [nodefony release 4.0.0-beta.16](https://github.com/nodefony/nodefony-core/commit/e07701e1fe6acbaa7b6bddeb9761d8715afabcd7)
 - [remane mongo-bundle in mongoose-bundle | add new mongo-bundle (type service simple connector)](https://github.com/nodefony/nodefony-core/commit/c51970cbcfe31f79f5b29a1746299c6497306950)
