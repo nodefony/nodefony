@@ -363,27 +363,35 @@ system:
     - "^localhost$"
   httpPort                      : 5151
   httpsPort                     : 5152
-  domainCheck                   : true
-  statics                       : true
+  domainCheck                   : false
+  locale                        : en_en
+  ##############
+  # BUNDLES CORE
   security                      : true
   realtime                      : true
   monitoring                    : true
   documentation                 : true
   unitTest                      : true
-  demo                          : true
-  locale                        : "en_en"
+  redis                         : false
+  mongo                         : false
+  elastic                       : false
+  #########
+  # SERVERS
   servers:
+    statics                     : true
     protocol                    : "2.0"             #  2.0 || 1.1
     http                        : true
-    https                       : true
-    ws                          : true
+    https	                      : true
+    ws			                    : true
     wss			                    : true
     certificats:
       key                       : "config/certificates/server/privkey.pem"
       cert                      : "config/certificates/server/fullchain.pem"
-      ca                        : "config/certificates/ca/projectName-root-ca.crt.pem"
+      ca                        : "config/certificates/ca/cci-root-ca.crt.pem"
       options:
         rejectUnauthorized      : true
+  ############
+  # DEV SERVER
   devServer:
     inline                      : true
     hot                         : false
@@ -393,8 +401,14 @@ system:
     progress                    : false
     protocol                    : https
     websocket                   : true
-  bundles:
-    hello-bundle                : "file:src/bundles/hello-bundle"
+
+  #######################
+  #  BUNDLES REGISTRATION
+  #
+  #       bundles:
+  #         hello-bundle                 : "file:src/bundles/hello-bundle"
+  #         my-bundle                    : ~
+  bundles                       : ~
 ```
 
 ## <a name="bundles"></a>Quick Start

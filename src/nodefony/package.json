@@ -32,12 +32,12 @@
     "nodefony": "./bin/nodefony"
   },
   "dependencies": {
-    "@babel/parser": "^7.2.0",
+    "@babel/parser": "^7.2.2",
     "@nodefony/documentation-bundle": "^4.0.0-beta.16",
     "@nodefony/elastic-bundle": "^4.0.0-beta.16",
     "@nodefony/framework-bundle": "^4.0.0-beta.16",
     "@nodefony/http-bundle": "^4.0.0-beta.16",
-    "@nodefony/mongo-bundle": "^4.0.0-beta.14",
+    "@nodefony/mongo-bundle": "^4.0.0-beta.16",
     "@nodefony/mongoose-bundle": "^4.0.0-beta.16",
     "@nodefony/monitoring-bundle": "^4.0.0-beta.16",
     "@nodefony/realtime-bundle": "^4.0.0-beta.16",
@@ -81,12 +81,10 @@
     "url": "git://github.com/nodefony/nodefony-core.git"
   },
   "license": "CECILL-B",
-  "licenses": [
-    {
-      "type": "CECILL-B",
-      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-    }
-  ],
+  "licenses": [{
+    "type": "CECILL-B",
+    "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+  }],
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md"
 }
