@@ -62,7 +62,7 @@ describe("NODEFONY CORE FINDER", function () {
     });
 
     it("RESULT JSON", function (done) {
-      var res = finder.find({
+      const res = finder.find({
         recurse: false,
         json: true,
         onFinish: function (error, result) {
@@ -71,10 +71,10 @@ describe("NODEFONY CORE FINDER", function () {
         }
       });
 
-      var finderJson = new nodefony.finder({
+      const finderJson = new nodefony.finder({
         path: kernel.rootDir,
         json: true,
-        recurse: true,
+        recurse: false,
         onFinish: function (error, result) {
           //console.log("RESULT length :" + result.length());
           //console.log(result.json.nodefony.children.web)

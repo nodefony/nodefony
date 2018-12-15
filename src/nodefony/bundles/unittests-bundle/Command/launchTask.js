@@ -21,7 +21,13 @@ class launchTask extends nodefony.Task {
     for (let bundle in this.kernel.bundles) {
       this.serviceUnitTest.getBundlesTestFiles(bundle, null, this.tests);
     }
-    return this.onReady();
+    return this.onReady()
+      .then(() => {
+        return 0;
+      })
+      .catch(e => {
+        return this.terminate(e);
+      });
   }
 
   bundle(bundleName, testName) {
@@ -31,13 +37,19 @@ class launchTask extends nodefony.Task {
     } else {
       this.serviceUnitTest.getBundlesTestFiles(bundleName, testName, this.tests);
     }
-    return this.onReady();
+    return this.onReady()
+      .then(() => {
+        return 0;
+      })
+      .catch(e => {
+        return this.terminate(e);
+      });
   }
 
   onReady() {
     return new Promise((resolve, reject) => {
       this.serviceUnitTest.mochaAddTest(this.tests);
-      this.serviceUnitTest.mochaRunTest((failures) => {
+      return this.serviceUnitTest.mochaRunTest((failures) => {
         if (failures) {
           return reject(failures);
         }

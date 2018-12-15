@@ -33,7 +33,7 @@ module.exports = class unitTest extends nodefony.Service {
     }
     if (this.bundles[bundleName].finder) {
       var finder = this.bundles[bundleName].finder.find({
-        exclude: /^doc$|^public$|^Resources$/,
+        exclude: /^doc$|^public$|^Resources$|^node_modules$/,
         match: regFile
       });
       if (finder.files.length) {
@@ -56,7 +56,7 @@ module.exports = class unitTest extends nodefony.Service {
     if (this.kernel.isCore) {
       const finder = new nodefony.finder({
         path: this.kernel.nodefonyPath,
-        exclude: /^bundles$|^doc$/,
+        exclude: /^bundles$|^doc$|^node_modules$/,
         match: regFile
       });
       if (finder.result.files.length) {
