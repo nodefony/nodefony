@@ -1,24 +1,49 @@
-#########################################################
+#####################
 #  NODEFONY FRAMEWORK
 #
 #       KERNEL CONFIG
+#
+#   Domain listen : Nodefony can listen only one domain ( no vhost )
+#     Example :
+#      domain :  0.0.0.0      # for all interfaces
+#      domain :  [::1]        # for IPV6 only
+#      domain :  192.168.1.1  # IPV4
+#      domain :  mydomain.com # DNS
+#
+#   Domain Alias : string only "<<regexp>>" use domainCheck : true
+#     Example :
+#      domainAlias:
+#        - "^127.0.0.1$"
+#        - "^localhost$"
+#        - ".*\\.nodefony\\.com"
+#        - "^nodefony\\.eu$"
+#        - "^.*\\.nodefony\\.eu$"
+#
 system:
-  domain                        : localhost             # nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
-  domainAlias:   # domainAlias string only <<regexp>>   example ".*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$"
+  domain                        : 0.0.0.0
+  domainAlias:
     - "^127.0.0.1$"
+    - "^localhost$"
   httpPort                      : 5151
   httpsPort                     : 5152
   domainCheck                   : true
-  statics                       : true
+  locale                        : en_en
+  ##############
+  # BUNDLES CORE
   security                      : true
   realtime                      : true
   monitoring                    : true
   documentation                 : true
   unitTest                      : true
   demo                          : true
-  locale                        : "en_en"
+  redis                         : false
+  mongo                         : false
+  elastic                       : false
+  #########
+  # SERVERS
   servers:
-    protocol                    : "2.0"
+    statics                     : true
+    protocol                    : "2.0"             #  2.0 || 1.1
     http                        : true
     https	                      : true
     ws			                    : true
@@ -29,6 +54,8 @@ system:
       ca                        : "config/certificates/ca/nodefony-root-ca.crt.pem"
       options:
         rejectUnauthorized      : true
+  ############
+  # DEV SERVER
   devServer:
     inline                      : true
     hot                         : false
@@ -38,9 +65,10 @@ system:
     progress                    : false
     protocol                    : https
     websocket                   : true
-
+  ###############
+  # BUNDLES LOCAL
   bundles:
-    test                        : "src/bundles/test-bundle"
+    test-bundle                 : "file:src/bundles/test-bundle"
 
   #################
   # SYSLOG NODEFONY
@@ -80,7 +108,6 @@ templating                      : twig
 # ENGINE ORM
 #       sequelize || mongoose
 orm                             : mongoose
-#orm                             : sequelize
 
 #########################
 # NODE.JS PACKAGE MANAGER
@@ -88,4 +115,4 @@ orm                             : mongoose
 #       npm
 #       yarn
 #
-packageManager                  : npm
+packageManager                  : yarn
