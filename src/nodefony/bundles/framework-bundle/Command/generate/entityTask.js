@@ -52,7 +52,7 @@ class entityTask extends nodefony.Task {
       task = command.getTask("generate");
       return task.run(response);
     case "mongoose":
-      command = this.cli.getCommand("generate", "mongo");
+      command = this.cli.getCommand("generate", "mongoose");
       task = command.getTask("entity");
       return task.generate(response);
     default:
