@@ -134,7 +134,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
         let command = null;
         let task = null;
         try {
-          command = this.cli.getCommand("mongo", "mongo");
+          command = this.cli.getCommand("mongoose", "mongoose");
           task = command.getTask("fixtures");
         } catch (e) {
           return reject(e);
