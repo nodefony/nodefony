@@ -23,6 +23,7 @@ env:
   - DB=mongodb
 
 before_script:
+  - npm install -g yarn
   - sleep 30
 
 before_install:
