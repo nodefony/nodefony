@@ -70,10 +70,10 @@ mongoose-legacy-pluralize@1.0.2:
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
 
-mongoose@^5.3.16:
-  version "5.3.16"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.3.16.tgz#04af18eaf39f7a91e31285cfb180478874877611"
-  integrity sha512-BqFFqYFa0lMYuo9fRJpgvbvzlAUk0ffxlhyJsf2o9ruoGHwyR29GC+HJY5x8r4dCjbr+XJYO+g0kK3kGjASkaw==
+mongoose@^5.4.0:
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.4.0.tgz#78e784a38aab8552c07ef336a342aa75a413c463"
+  integrity sha512-pFKa6askJ6xwZT6mWuYBwa2R9ryd1+JrXUhKuAUxEGrUMTi8ADcJC/RgBg4fZ1lL6VPVVChsc9wpVn4X6gcWlg==
   dependencies:
     async "2.6.1"
     bson "~1.1.0"

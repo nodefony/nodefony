@@ -19,7 +19,7 @@
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "vue": "^2.5.16",
-    "vue-flatpickr-component": "^8.0.0",
+    "vue-flatpickr-component": "^8.1.0",
     "vue-lazyload": "^1.2.6",
     "vue-router": "^3.0.1",
     "vue2-transitions": "^0.2.3"
