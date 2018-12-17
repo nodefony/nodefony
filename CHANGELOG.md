@@ -1,5 +1,13 @@
 # Changelog
 
+## v4.0.0-beta.19 (17/12/2018)
+- [nodefony release 4.0.0-beta.19](https://github.com/nodefony/nodefony-core/commit/ebc306a270b1747e2fb70060721082de480597ae)
+- [debug generate mongoose fixtures](https://github.com/nodefony/nodefony-core/commit/774f5c7d2929fa7f5e8b793f0ce84dd0d32d35fe)
+- [debug mongoose fixtures generate](https://github.com/nodefony/nodefony-core/commit/490be6f3fc9a1db774baaf97cee822332c823764)
+- [debug test](https://github.com/nodefony/nodefony-core/commit/a64503ea7601fbf71c562c5b694bb001a0b82305)
+
+---
+
 ## v4.0.0-beta.18 (15/12/2018)
 - [nodefony release 4.0.0-beta.18](https://github.com/nodefony/nodefony-core/commit/e8941ca1e29a0dfa9974fff220a4ebf4a51cbce5)
 - [upgrade version](https://github.com/nodefony/nodefony-core/commit/678ba8707377b686d2ff7e18479d8b27e0b944c6)
