@@ -1,10 +1,10 @@
 const Memcached = require('memcached');
 
-nodefony.register.call(nodefony.session.storage, "memcached", function () {
+nodefony.register.call(nodefony.session.storage, "memcached", function() {
 
-  const checkClient = function (contextSession) {
+  const checkClient = function(contextSession) {
     let client = null;
-    if (contextSession) {
+    if (contextSession && contextSession !== "undefined") {
       if (this.clients[contextSession]) {
         client = this.clients[contextSession];
       } else {
@@ -20,7 +20,7 @@ nodefony.register.call(nodefony.session.storage, "memcached", function () {
     return client;
   };
 
-  const memcacheGC = function ( /*client, msMaxlifetime*/ ) {};
+  const memcacheGC = function( /*client, msMaxlifetime*/ ) {};
 
   const memcachedSessionStorage = class memcachedSessionStorage {
     constructor(manager) {
@@ -142,7 +142,7 @@ nodefony.register.call(nodefony.session.storage, "memcached", function () {
           return reject(e);
         }
         try {
-          client.get(id, function (err, data) {
+          client.get(id, function(err, data) {
             if (err) {
               return reject(err);
             }
