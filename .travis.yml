@@ -49,6 +49,7 @@ addons:
   apt:
     sources:     [ 'ubuntu-toolchain-r-test', 'mysql-5.7-trusty']
     packages:    ['libstdc++6', 'mysql-server', 'mysql-client']
+  yarn:          1.12.3
 
 install:         true
 
