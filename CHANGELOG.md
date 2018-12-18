@@ -1,5 +1,14 @@
 # Changelog
 
+## v4.0.0-beta.20 (18/12/2018)
+- [nodefony release 4.0.0-beta.20](https://github.com/nodefony/nodefony-core/commit/3fa3b0faef921e9d0b264b93237871002c0f9dab)
+- [debug memecache storage when context session undefined](https://github.com/nodefony/nodefony-core/commit/da9db735eb1f7ec4b8a600a69943786fac74ca42)
+- [debug passport openid strategy](https://github.com/nodefony/nodefony-core/commit/0517810477ce1719a112496bd4ed3747e669a70d)
+- [travis yarn update](https://github.com/nodefony/nodefony-core/commit/067108fc2d06640c43bfd77ee7be462edf2abb70)
+- [travis add yarn](https://github.com/nodefony/nodefony-core/commit/de28ef76c6878de8c2a45891681f3905e2fe3dca)
+
+---
+
 ## v4.0.0-beta.19 (17/12/2018)
 - [nodefony release 4.0.0-beta.19](https://github.com/nodefony/nodefony-core/commit/ebc306a270b1747e2fb70060721082de480597ae)
 - [debug generate mongoose fixtures](https://github.com/nodefony/nodefony-core/commit/774f5c7d2929fa7f5e8b793f0ce84dd0d32d35fe)
