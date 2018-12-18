@@ -41,16 +41,22 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
   const Factory = class openidFactory extends nodefony.passeportFactory {
     constructor(security, settings) {
       super("openid", security, settings);
-      if (this.security.kernel.environment === "dev") {
-        require('https').globalAgent.options.rejectUnauthorized = false;
+      this.rejectUnauthorized = true;
+      if (this.settings.rejectUnauthorized === false) {
+        this.rejectUnauthorized = this.settings.rejectUnauthorized;
+      } else {
+        if (this.security.kernel.environment === "dev") {
+          this.rejectUnauthorized = false;
+        }
       }
+      require('https').globalAgent.options.rejectUnauthorized = this.rejectUnauthorized;
     }
 
     http(url, options) {
       this.request = this.get("requestClient");
       let settings = nodefony.extend({
         agentOptions: {
-          rejectUnauthorized: (this.security.kernel.environment === "dev" ? false : true)
+          rejectUnauthorized: this.rejectUnauthorized
         }
       }, options);
       return this.request.http(url, settings, this.container);
@@ -174,7 +180,18 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
             this.passport.authenticate(this.name, {
               scope: this.settings.scope,
               session: false
-            })(context);
+            })(context, (error, token) => {
+              if (error) {
+                return reject(error);
+              }
+              if (token) {
+                token.setAuthenticated(true);
+                token.setFactory(this.name);
+                this.logger(`AUTHENTICATION ${token.getUsername()} SUCCESSFULLY`, "INFO");
+                return resolve(token);
+              }
+              return resolve(null);
+            });
             return resolve(null);
           } catch (e) {
             return reject(e);
