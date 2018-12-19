@@ -12,9 +12,9 @@
 #
 # This file is YAML  FILE
 # ---
-# YAML:           YAML Ain't Markup Language
+# YAML:  YAML Ain't Markup Language
 #
-# What It Is:     YAML is a human friendly data serialization
+# What It Is: YAML is a human friendly data serialization
 #   standard for all programming languages.
 #
 # YAML Resources:
@@ -44,12 +44,11 @@ locale :			en_en
 #    or
 #      watch:
 #        controller:		true
-#        config:  true
+#        config: true
 #        views:			true
 #        translations: true
 #
-watch:            false
+watch:   false
 
-
-#elasticSearch:
-#  host:          "127.0.0.1:9200"
+github:
+  url :  "https://github.com/nodefony/nodefony-core/commit/"

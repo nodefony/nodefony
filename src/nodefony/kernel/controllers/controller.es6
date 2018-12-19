@@ -1,16 +1,6 @@
 const Request = require('request');
 module.exports = nodefony.register("controller", function() {
 
-  const isPromise = function(obj) {
-    switch (true) {
-      case obj instanceof Promise:
-      case obj instanceof BlueBird:
-        return true;
-      default:
-        return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
-    }
-  };
-
   class Controller extends nodefony.Service {
     constructor(container, context) {
       super(null, container, container.get("notificationsCenter"));
@@ -233,7 +223,7 @@ module.exports = nodefony.register("controller", function() {
     }
 
     renderJson(obj, status, headers) {
-      if (isPromise(obj)) {
+      if (nodefony.isPromise(obj)) {
         return obj.then(result => {
           return this.renderJsonSync(result, status, headers);
         }).catch(error => {

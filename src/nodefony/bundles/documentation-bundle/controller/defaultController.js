@@ -12,6 +12,7 @@ module.exports = class defaultController extends nodefony.controller {
     super(container, context);
     this.defaultVersion = this.kernel.settings.version;
     this.docPath = this.kernel.nodefonyPath;
+    this.urlGit = this.bundle.settings.github.url;
   }
 
   /**
@@ -38,7 +39,8 @@ module.exports = class defaultController extends nodefony.controller {
           return this.render("documentationBundle::index.html.twig", {
             bundle: "nodefony",
             readme: res,
-            version: defaultVersion
+            version: defaultVersion,
+            url: this.urlGit
           });
         }
       } catch (e) {
@@ -99,7 +101,7 @@ module.exports = class defaultController extends nodefony.controller {
     }
     let directory = finder.result.getDirectories();
     let sections = [];
-    directory.forEach(function (ele) {
+    directory.forEach(function(ele) {
       sections.push(ele.name);
     });
     return this.render("documentationBundle:layouts:navSection.html.twig", {
@@ -162,7 +164,7 @@ module.exports = class defaultController extends nodefony.controller {
     }
     let directory = finderVersion.result.getDirectories();
     let all = [];
-    directory.forEach(function (ele) {
+    directory.forEach(function(ele) {
       all.push(ele.name);
     });
 
@@ -228,7 +230,8 @@ module.exports = class defaultController extends nodefony.controller {
             version: version,
             section: section,
             allVersions: all,
-            subsection: subsection
+            subsection: subsection,
+            url: this.urlGit
           });
         }
       }
@@ -240,7 +243,8 @@ module.exports = class defaultController extends nodefony.controller {
           version: version,
           section: section,
           allVersions: all,
-          subsection: subsection
+          subsection: subsection,
+          url: this.urlGit
         });
       }
       res = this.htmlMdParser(file.content(file.encoding), {
@@ -253,7 +257,8 @@ module.exports = class defaultController extends nodefony.controller {
         version: version,
         section: section,
         allVersions: all,
-        subsection: subsection
+        subsection: subsection,
+        url: this.urlGit
       });
     } else {
       let force = this.query.force;
@@ -276,7 +281,8 @@ module.exports = class defaultController extends nodefony.controller {
             section: section,
             allVersions: all,
             subsection: subsection,
-            bundles: directoryBundles
+            bundles: directoryBundles,
+            url: this.urlGit
           });
         }
       }
@@ -293,7 +299,8 @@ module.exports = class defaultController extends nodefony.controller {
           version: version,
           section: section,
           allVersions: all,
-          subsection: subsection
+          subsection: subsection,
+          url: this.urlGit
         });
       } else {
         return this.render("documentationBundle::index.html.twig", {
@@ -302,7 +309,8 @@ module.exports = class defaultController extends nodefony.controller {
           version: version,
           section: section,
           allVersions: all,
-          subsection: subsection
+          subsection: subsection,
+          url: this.urlGit
         });
       }
     }
@@ -318,7 +326,7 @@ module.exports = class defaultController extends nodefony.controller {
     //console.log(directory)
 
     let versions = [];
-    directory.forEach(function (ele) {
+    directory.forEach(function(ele) {
       versions.push(ele.name);
     });
 
@@ -372,57 +380,6 @@ module.exports = class defaultController extends nodefony.controller {
     }
     return this.redirect("/");
   }
-
-  /**
-   *
-   *   footer
-   *
-   *
-   */
-  /*footerAction() {
-    let translateService = this.get("translation");
-    let version = this.kernel.settings.version;
-    let path = this.generateUrl("home");
-    let year = new Date().getFullYear();
-    let langs = translateService.getLangs();
-    let locale = translateService.getLocale();
-    let langOptions = "";
-    for (let ele in langs) {
-      if (locale === langs[ele].value) {
-        langOptions += '<option value="' + langs[ele].value + '" selected >' + langs[ele].name + '</option>';
-      } else {
-        langOptions += '<option value="' + langs[ele].value + '" >' + langs[ele].name + '</option>';
-      }
-    }
-    let html = '<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">\
-             <div class"container-fluid">\
-             <div class="navbar-header">\
-             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#footer-collapse">\
-             <span class="sr-only">Toggle navigation</span>\
-             <span class="icon-bar"></span>\
-             <span class="icon-bar"></span>\
-             <span class="icon-bar"></span>\
-             </button>\
-             <a class=" text-primary navbar-text" href="' + path + '" style="margin-left:20px" >\
-             ' + year + '\
-             <strong class="text-primary"> NODEFONY ' + version + '  ©</strong> \
-             </a>\
-             </div>\
-             <div class="collapse navbar-collapse" id="footer-collapse">\
-             <ul class="nav navbar-nav navbar-left">\
-             </ul>\
-             <ul class="nav navbar-nav navbar-right">\
-             <li  class="navbar-btn pull-right" style="margin-right:40px">\
-             <select id="langs"  class="form-control">\
-             ' + langOptions + '\
-             </select>\
-             </li>\
-             </div>\
-             </div>\
-             </div>\
-             </div>';
-    return this.getResponse(html);
-  }*/
 
   searchAction() {
     let url = this.generateUrl("documentation-version", {

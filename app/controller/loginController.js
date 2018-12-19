@@ -8,13 +8,13 @@ module.exports = class loginController extends nodefony.controller {
 
   loginAction(type) {
     let area = this.firewall.getSecuredArea(type);
-    let checkLogin = "/" + type;
+    let action = "/" + type;
     if (area && area.checkLogin) {
-      checkLogin = area.checkLogin;
+      action = area.checkLogin;
     }
     return this.render("app:login:login.html.twig", {
       type: type,
-      ckeckLogin: checkLogin
+      action: action
     });
   }
 

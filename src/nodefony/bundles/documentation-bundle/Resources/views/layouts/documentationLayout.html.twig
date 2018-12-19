@@ -41,9 +41,10 @@
   <script type="text/javascript" src="/documentation-bundle/assets/js/documentation.js"></script>
 
   <script>
-    var bundle = "{{ bundle }}";
-    var section = "{{section }}" || null;
-    documentation.index(bundle, section);
+    const bundle = "{{ bundle }}";
+    const section = "{{section }}" || null;
+    const url = "{{ url }}";
+    documentation.index(bundle, section, url);
   </script>
 
 {% endblock %}

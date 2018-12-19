@@ -13,7 +13,7 @@ security:
     #
     firewalls:
       # SECURITY AREA MONITORING  <passport-local>
-      monitoring_area:
+      nodefony_area:
           pattern                 : ^/nodefony
           provider                : nodefony
           form_login:
