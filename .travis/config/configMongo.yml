@@ -115,4 +115,4 @@ orm                             : mongoose
 #       npm
 #       yarn
 #
-packageManager                  : yarn
+packageManager                  : npm
