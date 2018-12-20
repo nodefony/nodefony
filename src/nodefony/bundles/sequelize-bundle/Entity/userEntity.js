@@ -79,7 +79,14 @@ module.exports = class user extends nodefony.Entity {
       },
       roles: {
         type: Sequelize.JSON,
-        defaultValue: ['ROLE_USER']
+        defaultValue: [],
+        get(key) {
+          let val = this.getDataValue(key);
+          if (typeof (val) === "string") {
+            val = JSON.parse(val);
+          }
+          return val;
+        }
       },
       gender: Sequelize.STRING,
       url: Sequelize.STRING,

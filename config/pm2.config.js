@@ -1,9 +1,11 @@
 const cpu = require('os').cpus().length;
 const path = require("path");
 
-let name = "nodefony-core";
-let script = process.argv[1] || "nodefony";
-let logFile = path.resolve("tmp", "nodefony-core.log");
+const package = require(path.resolve("package.json"));
+const name = package.name;
+const script = process.argv[1] || "nodefony";
+const logName = `${name}.log`;
+const logFile = path.resolve("tmp", logName);
 
 module.exports = {
   apps: [{

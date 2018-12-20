@@ -77,7 +77,7 @@ class generateTask extends nodefony.Task {
       this.logger("DATABASE SYNC : " + connectionName);
       switch (connection.options.dialect) {
       case "sqlite":
-        connection.sync({
+        return connection.sync({
           force: force,
           logging: this.cli.logger,
           hooks: true
@@ -88,9 +88,8 @@ class generateTask extends nodefony.Task {
           this.logger("DATABASE :" + connection.config.database + " CONNECTION : " + connectionName + " : " + error, "ERROR");
           return reject(error);
         });
-        break;
       case "mysql":
-        connection.query('SET FOREIGN_KEY_CHECKS = 0', null, {
+        return connection.query('SET FOREIGN_KEY_CHECKS = 0', null, {
             raw: true
           })
           .then(() => {
@@ -105,8 +104,10 @@ class generateTask extends nodefony.Task {
               this.logger("DATABASE :" + connection.config.database + " CONNECTION : " + connectionName + " : " + error, "ERROR");
               return reject(error);
             });
+          }).catch(e => {
+            this.logger(e, "ERROR");
+            return reject(e);
           });
-        break;
       }
     });
   }

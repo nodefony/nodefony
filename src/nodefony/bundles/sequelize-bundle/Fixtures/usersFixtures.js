@@ -44,6 +44,7 @@ module.exports = nodefony.registerFixture("users", function () {
       name: "anonymous",
       surname: "anonymous",
       password: "anonymous",
+      email: "anonymous@nodefony.com",
       lang: "en_en",
       roles: ["ROLE_ANONYMOUS"]
     }, {
@@ -51,6 +52,7 @@ module.exports = nodefony.registerFixture("users", function () {
       name: "administrator",
       surname: "nodefony",
       password: "admin",
+      email: "administrator@nodefony.com",
       roles: ["ROLE_ADMIN"]
     }, {
       username: "1000",
@@ -58,6 +60,7 @@ module.exports = nodefony.registerFixture("users", function () {
       surname: "1000",
       password: "1234",
       lang: "fr_fr",
+      email: "1000@nodefony.com",
       roles: ["ROLE_USER"]
     }, {
       username: "2000",
@@ -65,14 +68,15 @@ module.exports = nodefony.registerFixture("users", function () {
       surname: "2000",
       password: "1234",
       lang: "fr_fr",
+      email: "2000@nodefony.com",
       roles: ["ROLE_USER"]
     }, {
       username: "3000",
       name: "User",
       surname: "3000",
       password: "1234",
+      email: "3000@nodefony.com",
       lang: "fr_fr",
-      roles: ["ROLE_USER"]
     }];
 
     const connection = this.getConnection("nodefony");
