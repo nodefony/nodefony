@@ -1,6 +1,6 @@
-nodefony.register.call(nodefony.session.storage, "sequelize", function () {
+nodefony.register.call(nodefony.session.storage, "sequelize", function() {
 
-  const finderGC = function (msMaxlifetime, contextSession) {
+  const finderGC = function(msMaxlifetime, contextSession) {
     let mydate = new Date(new Date() - msMaxlifetime);
     let query = {};
     query.attributes = ['context', 'updatedAt', 'session_id'];
@@ -192,9 +192,9 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
               session_id: id,
               context: (contextSession || "default")
             }
-          }).then(function () {
+          }).then(function() {
             return serialize;
-          }).catch(function (error) {
+          }).catch(function(error) {
             throw error;
           });
         } else {

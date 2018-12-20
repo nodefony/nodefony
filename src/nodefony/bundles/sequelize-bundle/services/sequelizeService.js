@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-const error = function (err) {
+const error = function(err) {
 
   if (this.state !== "DISCONNECTED") {
     this.orm.kernel.fire('onError', err, this);
@@ -9,16 +9,16 @@ const error = function (err) {
   this.logger(this.settings, "INFO", `CONFIGURATION Sequelize ${this.name}`);
   if (err.code) {
     switch (err.code) {
-    case 'PROTOCOL_CONNECTION_LOST':
-    case "ECONNREFUSED":
-      this.state = "DISCONNECTED";
-      return {
-        status: 500,
-        code: err.code,
-        message: err.message
-      };
-    default:
-      return err;
+      case 'PROTOCOL_CONNECTION_LOST':
+      case "ECONNREFUSED":
+        this.state = "DISCONNECTED";
+        return {
+          status: 500,
+          code: err.code,
+          message: err.message
+        };
+      default:
+        return err;
     }
   } else {
     return err;
@@ -107,7 +107,7 @@ const connectionDB = class connectionDB {
   connect(type, config) {
     if (this.orm.debug) {
       config.options.logging = (value) => {
-        this.logger(value, "DEBUG");
+        this.logger(value, "INFO");
       };
     } else {
       config.options.logging = false;
@@ -115,9 +115,9 @@ const connectionDB = class connectionDB {
     let conn = null;
     try {
       switch (type) {
-      case "sqlite":
-        config.options.storage = process.cwd() + config.dbname;
-        break;
+        case "sqlite":
+          config.options.storage = process.cwd() + config.dbname;
+          break;
       }
       conn = new this.orm.engine(config.dbname, config.username, config.password, config.options);
       process.nextTick(() => {
@@ -167,7 +167,12 @@ module.exports = class sequelize extends nodefony.orm {
       this.debug = this.settings.debug;
       if (this.settings.connectors && Object.keys(this.settings.connectors).length) {
         this.kernel.listen(this, "onReady", () => {
-          this.displayTable();
+          if (this.kernel.type === "SERVER") {
+            this.displayTable("INFO");
+          } else {
+            this.displayTable();
+          }
+
         });
         for (let name in this.settings.connectors) {
           this.createConnection(name, this.settings.connectors[name]);
@@ -184,16 +189,19 @@ module.exports = class sequelize extends nodefony.orm {
 
   getConnectorSettings(tab) {
     for (let dbname in this.settings.connectors) {
-      let conn = ["", "", ""];
+      let conn = ["", "", "", ""];
       conn[0] = dbname;
       for (let data in this.settings.connectors[dbname]) {
         switch (data) {
-        case "dbname":
-          conn[1] = this.settings.connectors[dbname][data];
-          break;
-        case "driver":
-          conn[2] = this.settings.connectors[dbname][data];
-          break;
+          case "dbname":
+            conn[2] = this.settings.connectors[dbname][data];
+            break;
+          case "options":
+            conn[1] = this.settings.connectors[dbname][data].dialect;
+            if (this.settings.connectors[dbname][data].host) {
+              conn[3] = this.settings.connectors[dbname][data].host + ":" + this.settings.connectors[dbname][data].port;
+            }
+            break;
         }
       }
       tab.push(conn);
@@ -204,9 +212,10 @@ module.exports = class sequelize extends nodefony.orm {
   displayTable(severity = "DEBUG") {
     let options = {
       head: [
-        "NAME CONNECTOR",
-        "NAME DATABASE",
+        "ORM CONNECTOR NAME",
         "DRIVER",
+        "NAME DATABASE",
+        "HOST"
       ]
     };
     let table = this.kernel.cli.displayTable(null, options);
