@@ -1,5 +1,14 @@
 # Changelog
 
+## v4.0.0-beta.21 (20/12/2018)
+- [nodefony release 4.0.0-beta.21](https://github.com/nodefony/nodefony-core/commit/975ac0c0fcd4a14988b42d3d275b4c3b80be9928)
+- [Sequelize clean connector mysql | better sync](https://github.com/nodefony/nodefony-core/commit/451b037afe598fe500386eca45818ed4bdb0b2eb)
+- [debug mysql user entity sequilze](https://github.com/nodefony/nodefony-core/commit/74bbf2ced14b5705677e77d80c9ee57066d556f1)
+- [upgrade deps | clean starter skeleton](https://github.com/nodefony/nodefony-core/commit/bf07ebc28753162a29570bae1a10828be7154c3a)
+- [debug locale in front controller](https://github.com/nodefony/nodefony-core/commit/9ca4e05378fc496eff9235d53a181e6767e4b1fa)
+
+---
+
 ## v4.0.0-beta.20 (18/12/2018)
 - [nodefony release 4.0.0-beta.20](https://github.com/nodefony/nodefony-core/commit/3fa3b0faef921e9d0b264b93237871002c0f9dab)
 - [debug memecache storage when context session undefined](https://github.com/nodefony/nodefony-core/commit/da9db735eb1f7ec4b8a600a69943786fac74ca42)
