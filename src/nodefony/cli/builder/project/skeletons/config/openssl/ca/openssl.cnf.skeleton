@@ -115,9 +115,8 @@ subjectAltName		= @alt_names
 IP.1			= 127.0.0.1
 IP.2			= 0.0.0.0
 DNS.1			= localhost
-DNS.2			= docker.{{name}}
-DNS.3			= {{domain}}
-DNS.4			= {{name}}
+DNS.2			= docker.{{name}}.com
+DNS.3			= {{name}}.com
 
 [ usr_cert ]
 # Extensions for client certificates (`man x509v3_config`).
