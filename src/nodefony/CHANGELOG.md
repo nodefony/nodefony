@@ -1,5 +1,14 @@
 # Changelog
 
+## v4.0.0-beta.22 (22/12/2018)
+- [nodefony release 4.0.0-beta.22](https://github.com/nodefony/nodefony-core/commit/126cbdcdf73dcd9dc1a780f80bfe1617d3648724)
+- [clean webpack default config](https://github.com/nodefony/nodefony-core/commit/b2d52c945e1b8c959e0fe4dba1dd7124e8cb25b6)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/a0a7eb7670dd3487a27a97e6ec98ef9d233e46d3)
+- [upgrade deps | change starter skeleton](https://github.com/nodefony/nodefony-core/commit/ab13417c5bc78daae1661dc201eac85fda56e73d)
+- [travis config](https://github.com/nodefony/nodefony-core/commit/16be670b3dbbc6dadf8243e4ea64920d83e082ea)
+
+---
+
 ## v4.0.0-beta.21 (20/12/2018)
 - [nodefony release 4.0.0-beta.21](https://github.com/nodefony/nodefony-core/commit/975ac0c0fcd4a14988b42d3d275b4c3b80be9928)
 - [Sequelize clean connector mysql | better sync](https://github.com/nodefony/nodefony-core/commit/451b037afe598fe500386eca45818ed4bdb0b2eb)
