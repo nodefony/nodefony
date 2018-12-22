@@ -1,6 +1,6 @@
 {
   "name": "nodefony-core",
-  "version": "4.0.0-beta.13",
+  "version": "4.0.0-beta.22",
   "description": "Nodefony Node.js full-stack web framework",
   "main": "./src/nodefony/core/autoloader.es6",
   "scripts": {
@@ -34,12 +34,10 @@
     "url": "https://github.com/nodefony/help/issues"
   },
   "license": "CECILL-B",
-  "licenses": [
-    {
-      "type": "CECILL-B",
-      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-    }
-  ],
+  "licenses": [{
+    "type": "CECILL-B",
+    "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+  }],
   "os": [
     "darwin",
     "linux",
@@ -51,8 +49,8 @@
   "dependencies": {
     "mongoose": "^5.4.0",
     "sequelize": "5.0.0-beta.15",
-    "webpack": "^4.28.1",
-    "webpack-dev-server": "^3.1.10"
+    "webpack": "^4.28.2",
+    "webpack-dev-server": "^3.1.12"
   },
   "devDependencies": {
     "editorconfig": "^0.15.2",
@@ -62,7 +60,5 @@
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md",
-  "contributors": [
-    {}
-  ]
+  "contributors": [{}]
 }

@@ -31,9 +31,9 @@
     "require-yaml": "*",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
-    "terser-webpack-plugin": "^1.1.0",
+    "terser-webpack-plugin": "^1.2.0",
     "twig-loader": "^0.4.1",
-    "webpack": "^4.28.1",
+    "webpack": "^4.28.2",
     "webpack-merge": "^4.1.5",
     "workbox-webpack-plugin": "^3.6.3"
   },

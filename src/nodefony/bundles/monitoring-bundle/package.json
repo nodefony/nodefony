@@ -13,7 +13,7 @@
   "dependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.2.3",
-    "@nodefony/stage": "^0.1.14",
+    "@nodefony/stage": "^0.1.15",
     "babel-loader": "^8.0.4",
     "bootstrap": "=3.3.7",
     "clean-webpack-plugin": "^1.0.0",
@@ -26,9 +26,9 @@
     "qs": "^6.6.0",
     "request": "^2.88.0",
     "shortid": "^2.2.14",
-    "terser-webpack-plugin": "^1.1.0",
+    "terser-webpack-plugin": "^1.2.0",
     "useragent": "^2.3.0",
-    "webpack": "^4.28.1",
+    "webpack": "^4.28.2",
     "webpack-merge": "^4.1.5"
   },
   "repository": {

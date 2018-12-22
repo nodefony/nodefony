@@ -65,7 +65,7 @@ module.exports = webpackMerge(config, {
       },
       {
         test: /jquery\..*\.js/,
-        loader: "imports?$=jquery,jQuery=jquery,this=>window"
+        loader: "imports-loader?$=jquery,jQuery=jquery,this=>window"
       },
       {
         test: /\.(sa|sc|c)ss$/,
@@ -83,7 +83,7 @@ module.exports = webpackMerge(config, {
           }, {
             loader: 'postcss-loader', // Run post css actions
             options: {
-              plugins: function() { // post css plugins, can be exported to postcss.config.js
+              plugins: function () { // post css plugins, can be exported to postcss.config.js
                 return [
                   require('precss'),
                   require('autoprefixer')
