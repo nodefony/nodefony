@@ -4,9 +4,9 @@
  *
  */
 require('bootstrap');
-require('../../scss/custom.scss');
+require('../scss/custom.scss');
 
-module.exports = function() {
+module.exports = function () {
   /*
    *	Class Bundle App client side
    */
@@ -31,6 +31,7 @@ module.exports = function() {
         form.submit();
       }
     }
+
   };
   return new App();
 }();

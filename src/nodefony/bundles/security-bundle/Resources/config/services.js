@@ -10,9 +10,9 @@ module.exports = {
   authorization: {
     class: nodefony.services.Authorization,
     arguments: ["@container", "@security"]
+  },
+  csrf: {
+    class: nodefony.services.csrf,
+    arguments: ["@container", "@httpKernel"]
   }
-  //oauth2: {
-  //  class: nodefony.services.oauth2,
-  //  arguments: ["@container", "@kernel"]
-  //}
 };

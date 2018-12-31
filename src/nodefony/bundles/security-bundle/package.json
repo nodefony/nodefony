@@ -12,7 +12,8 @@
   ],
   "dependencies": {
     "@nodefony/passport-wrapper": "^4.0.0",
-    "bcrypt": "^3.0.2",
+    "bcrypt": "^3.0.3",
+    "csrf": "^3.0.6",
     "jsonwebtoken": "^8.4.0",
     "node-pre-gyp": "^0.12.0",
     "passport": "^0.4.0",

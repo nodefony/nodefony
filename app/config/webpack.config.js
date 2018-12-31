@@ -22,7 +22,8 @@ module.exports = webpackMerge(config, {
   //context: context,
   target: "web",
   entry: {
-    app: ["./Resources/public/js/app.js"]
+    app: ["./Resources/js/app.js"],
+    users: ["./Resources/js/users.js"]
   },
   output: {
     path: public,

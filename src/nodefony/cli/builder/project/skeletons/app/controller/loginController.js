@@ -6,6 +6,15 @@ module.exports = class loginController extends nodefony.controller {
     this.startSession();
   }
 
+  /**
+   *    @Method ({ "GET"})
+   *    @Route (
+   *      "/login/{type}",
+   *      name="login",
+   *      defaults={"type" = "nodefony"},
+   *      requirements={"type" = "\w+"}
+   *    )
+   */
   loginAction(type) {
     let area = this.firewall.getSecuredArea(type);
     let action = "/" + type;
@@ -14,10 +23,15 @@ module.exports = class loginController extends nodefony.controller {
     }
     return this.render("app:login:login.html.twig", {
       type: type,
-      action: action
+      action: action,
+      year: new Date().getFullYear()
     });
   }
 
+  /**
+   *    @Method ({ "GET"})
+   *    @Route ("/logout", name="logout")
+   */
   logoutAction() {
     return this.firewall.logout(this.context)
       .catch((e) => {

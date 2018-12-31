@@ -166,6 +166,10 @@ module.exports = class generateProject extends nodefony.Builder {
             type: "directory",
             childs: [{}]
           }, {
+            name: "README.md",
+            type: "copy",
+            path: path.resolve(this.pathSkeleton, "app", "README.md")
+          }, {
             name: "services",
             type: "directory"
           }, {
@@ -189,6 +193,13 @@ module.exports = class generateProject extends nodefony.Builder {
               name: "scss",
               type: "copy",
               path: path.resolve(this.pathSkeleton, "app", "Resources", "scss"),
+              params: {
+                recurse: true
+              }
+            }, {
+              name: "js",
+              type: "copy",
+              path: path.resolve(this.pathSkeleton, "app", "Resources", "js"),
               params: {
                 recurse: true
               }
@@ -259,27 +270,32 @@ module.exports = class generateProject extends nodefony.Builder {
               params: this.cli.response
             }, {
               name: "routing.js",
-              type: "file",
-              skeleton: path.resolve(this.pathSkeleton, "app", "config", "routing.js.skeleton"),
-              params: this.cli.response
+              type: "copy",
+              path: path.resolve(this.pathSkeleton, "app", "config", "routing.js")
+            }, {
+              name: "services.js",
+              type: "copy",
+              path: path.resolve(this.pathSkeleton, "app", "config", "services.js")
             }, {
               name: "security.yml",
-              type: "file",
-              skeleton: path.resolve(this.pathSkeleton, "app", "config", "security.yml.skeleton"),
-              params: this.cli.response
+              type: "copy",
+              path: path.resolve(this.pathSkeleton, "app", "config", "security.yml")
             }]
           }, {
             name: "controller",
             type: "directory",
             childs: [{
               name: "appController.js",
-              type: "file",
-              skeleton: path.resolve(this.pathSkeleton, "app", "controller", "appController.js.skeleton"),
-              params: this.cli.response
+              type: "copy",
+              path: path.resolve(this.pathSkeleton, "app", "controller", "appController.js")
             }, {
               name: "loginController.js",
               type: "copy",
               path: path.resolve(this.pathSkeleton, "app", "controller", "loginController.js")
+            }, {
+              name: "usersController.js",
+              type: "copy",
+              path: path.resolve(this.pathSkeleton, "app", "controller", "usersController.js")
             }]
           }]
         }, {

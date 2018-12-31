@@ -153,9 +153,6 @@ module.exports = class security extends nodefony.Service {
         break;
       }
     });
-
-    //this.on("onSecurity", (context) => {
-    //});
   }
 
   handleSecurity(context) {

@@ -1,0 +1,76 @@
+{% extends '../base.html.twig' %}
+{{trans_default_domain("users")}}
+
+{% set error = getFlashBag("error") %}
+{% set info = getFlashBag("info") %}
+
+
+{% block body %}
+  {% block header %}
+  {{ render( controller("app:app:header" )) }}
+  {% endblock %}
+  <div class="container mt-8">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">{{"users"|trans}} {{nodefony.name|escape}}</div>
+          <div class="card-body">
+            {% if info %}
+              <div class="alert alert-primary" role="alert">
+                <strong>INFO : </strong> {{info|escape}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            {% endif %}
+            {% if error %}
+              <div class="alert alert-danger" role="alert">
+                <strong>ERROR : </strong> {{error|escape}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            {% endif %}
+            <article class="card-body">
+              <table class="table table-hover table-sm table-responsive-xl table-bordered">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">{{"username"|trans}}</th>
+                    <th scope="col">{{"firstName"|trans}}</th>
+                    <th scope="col">{{"lastName"|trans}}</th>
+                    <th scope="col">{{"email"|trans}}</th>
+                    <th scope="col">{{"gender"|trans}}</th>
+                    <th scope="col">{{"role"|trans}}</th>
+                    <th scope="col">{{"actions"|trans}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for user in users %}
+                    <tr>
+                      <td>{{user.username|escape}}</td>
+                      <td>{{user.name|escape}}</td>
+                      <td>{{user.surname|escape}}</td>
+                      <td>{{user.email|escape}}</td>
+                      <td>{{user.gender|escape}}</td>
+                      <td>{{user.roles|escape}}</td>
+                      <td>
+                        {% if is_granted("ROLE_ADMIN") or (user.username == getUser().username) %}
+                            <a href="{{url("nodefony-user-delete",{username:user.username})}}"><i class="fa fa-trash pl-2"></i></a>
+                            <a href="{{url("nodefony-user-update",{username:user.username})}}"><i class="fa fa-eye pl-2"></i></a>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </article> <!-- card-body end .// -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% block footer %}
+  {{ render( controller("app:app:footer" )) }}
+  {% endblock %}
+{% endblock %}

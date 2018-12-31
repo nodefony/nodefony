@@ -1,10 +1,10 @@
 {
-  "name": "nodefony",
-  "short_name": "nodefony",
+  "name": "nodefony-starter",
+  "short_name": "nodefony-starter",
   "display": "standalone",
   "start_url": "/",
   "launch_path": "/",
-  "description": "Node.js full-stack web framework WPA ",
+  "description": "Project nodefony-starter",
   "default_locale": "en",
   "background_color": "#2196F3",
   "theme_color": "#2196F3",
