@@ -15,32 +15,25 @@ module.exports = class httpKernel extends nodefony.Service {
     this.httpPort = this.kernel.httpPort;
     this.httpsPort = this.kernel.httpsPort;
     this.container.addScope("request");
-    //this.container.addScope("subRequest");
-    /*this.on("onServerRequest", (request, response, type) => {
-      try {
-        return this.handle(request, response, type);
-      } catch (e) {
-        throw e;
-      }
-    });*/
 
     // listen KERNEL EVENTS
     this.once("onBoot", () => {
       this.firewall = this.get("security");
       this.router = this.get("router");
       this.sessionService = this.get("sessions");
+      this.csrfService = this.get("csrf");
       this.compileAlias();
       this.sockjs = this.get("sockjs");
       this.socketio = this.get("socketio");
-      this.bundleSettings = this.getParameters("bundles.http");
+      this.settings = this.getParameters("bundles.http");
       this.responseTimeout = {
-        HTTP: this.bundleSettings.http.responseTimeout,
-        HTTPS: this.bundleSettings.https.responseTimeout,
-        HTTP2: this.bundleSettings.https.responseTimeout
+        HTTP: this.settings.http.responseTimeout,
+        HTTPS: this.settings.https.responseTimeout,
+        HTTP2: this.settings.https.responseTimeout
       };
       this.closeTimeOutWs = {
-        WS: this.bundleSettings.websocket.closeTimeout,
-        WSS: this.bundleSettings.websocketSecure.closeTimeout
+        WS: this.settings.websocket.closeTimeout,
+        WSS: this.settings.websocketSecure.closeTimeout
       };
       this.translation = this.get("translation");
       this.cdn = this.setCDN();
@@ -372,14 +365,17 @@ module.exports = class httpKernel extends nodefony.Service {
     }
     response.setHeader("Server", "nodefony");
     if (this.kernel.settings.system.servers.statics || this.kernel.settings.system.statics) {
-      return this.serverStatic.handle(request, response, (error) => {
-        if (error) {
-          this.logger(error, "ERROR", " STATICS SERVER");
-          return;
-        }
-        this.fire("onServerRequest", request, response, type);
-        return this.handle(request, response, type);
-      });
+      return this.serverStatic.handle(request, response)
+        .then(() => {
+          this.fire("onServerRequest", request, response, type);
+          return this.handle(request, response, type);
+        })
+        .catch(e => {
+          if (e) {
+            this.logger(e, "ERROR", " STATICS SERVER");
+          }
+          return e;
+        });
     } else {
       this.fire("onServerRequest", request, response, type);
       return this.handle(request, response, type);
@@ -399,26 +395,6 @@ module.exports = class httpKernel extends nodefony.Service {
     case "WEBSOCKET SECURE":
       return this.handleWebsocket(container, request, type);
     }
-  }
-
-  handleFrontController(context, checkFirewall = true) {
-    let controller = null;
-    if (this.firewall && checkFirewall) {
-      context.secure = this.firewall.isSecure(context);
-    }
-    // FRONT ROUTER
-    let resolver = this.router.resolve(context);
-    if (resolver.resolve) {
-      context.resolver = resolver;
-      controller = resolver.newController(context.container, context);
-      if (controller.sessionAutoStart) {
-        context.sessionAutoStart = controller.sessionAutoStart;
-      }
-      return controller;
-    }
-    let error = new Error("Not Found");
-    error.code = 404;
-    throw error;
   }
 
   createHttpContext(container, request, response, type) {
@@ -451,9 +427,42 @@ module.exports = class httpKernel extends nodefony.Service {
     return context;
   }
 
+  handleFrontController(context, checkFirewall = true) {
+    return new Promise((resolve, reject) => {
+      let controller = null;
+      if (this.firewall && checkFirewall) {
+        context.secure = this.firewall.isSecure(context);
+      }
+      // FRONT ROUTER
+      let resolver = this.router.resolve(context);
+      if (resolver.resolve) {
+        context.resolver = resolver;
+        controller = resolver.newController(context.container, context);
+        if (controller.sessionAutoStart) {
+          context.sessionAutoStart = controller.sessionAutoStart;
+        }
+        if (context.csrf) {
+          return this.csrfService.handle(context)
+            .then((token) => {
+              if (token) {
+                this.logger(`Check CSRF TOKEN : ${token.name} OK`);
+              }
+              return resolve(controller);
+            })
+            .catch(e => {
+              return reject(e);
+            });
+        }
+        return resolve(controller);
+      }
+      let error = new Error("Not Found");
+      error.code = 404;
+      return reject(error);
+    });
+  }
+
   handleHttp(container, request, response, type) {
     let context = null;
-    let controller = null;
     try {
       context = this.createHttpContext(container, request, response, type);
       this.logger(`FROM : ${context.remoteAddress} ORIGIN : ${context.originUrl.host} URL : ${context.url}`,
@@ -466,72 +475,110 @@ module.exports = class httpKernel extends nodefony.Service {
           return context;
         }
       }
-      controller = this.handleFrontController(context);
     } catch (e) {
-      context.once('onRequestEnd', () => {
-        if (context.sessionAutoStart || context.hasSession()) {
-          return this.sessionService.start(context, context.sessionAutoStart)
-            .then((session) => {
-              try {
-                if (context.translation) {
-                  context.locale = context.translation.handle();
-                }
-                if (!(session instanceof nodefony.Session)) {
-                  this.logger(new Error("SESSION START session storage ERROR"), "WARNING");
-                }
-                if (this.firewall) {
-                  this.firewall.getSessionToken(context, session);
-                }
-              } catch (err) {
-                this.logger(err, "WARNING");
-              }
-              context.fire("onError", container, e);
-              return context;
-            });
-        } else {
-          context.fire("onError", container, e);
-          return context;
-        }
-      });
-      return e;
-    }
-    if (context.secure || context.isControlledAccess) {
-      return this.firewall.handleSecurity(context);
-    }
-    try {
-      context.once('onRequestEnd', () => {
-        try {
+      if (context) {
+        context.once('onRequestEnd', () => {
           if (context.sessionAutoStart || context.hasSession()) {
             return this.sessionService.start(context, context.sessionAutoStart)
               .then((session) => {
-                if (!(session instanceof nodefony.Session)) {
-                  throw new Error("SESSION START session storage ERROR");
-                }
                 try {
+                  if (context.translation) {
+                    context.locale = context.translation.handle();
+                  }
+                  if (!(session instanceof nodefony.Session)) {
+                    this.logger(new Error("SESSION START session storage ERROR"), "WARNING");
+                  }
                   if (this.firewall) {
                     this.firewall.getSessionToken(context, session);
                   }
-                } catch (e) {
-                  context.fire("onError", container, e);
-                  return e;
+                } catch (err) {
+                  this.logger(err, "WARNING");
                 }
-                return context.handle();
-              }).catch((error) => {
-                context.fire("onError", container, error);
-                return error;
+                context.fire("onError", container, e);
+                return context;
               });
           } else {
-            return context.handle();
+            context.fire("onError", container, e);
+            return context;
           }
+        });
+        return e;
+      } else {
+        return Promise.reject(e);
+      }
+    }
+    return this.handleFrontController(context)
+      .then((controller) => {
+        if (this.settings[context.scheme].headers) {
+          context.response.setHeaders(this.settings[context.scheme].headers);
+        }
+        if (context.secure || context.isControlledAccess) {
+          return this.firewall.handleSecurity(context);
+        }
+        try {
+          context.once('onRequestEnd', () => {
+            try {
+              if (context.sessionAutoStart || context.hasSession()) {
+                return this.sessionService.start(context, context.sessionAutoStart)
+                  .then((session) => {
+                    if (!(session instanceof nodefony.Session)) {
+                      throw new Error("SESSION START session storage ERROR");
+                    }
+                    controller.session = session;
+                    try {
+                      if (this.firewall) {
+                        this.firewall.getSessionToken(context, session);
+                      }
+                    } catch (e) {
+                      context.fire("onError", container, e);
+                      return e;
+                    }
+                    return context.handle();
+                  }).catch((error) => {
+                    context.fire("onError", container, error);
+                    return error;
+                  });
+              } else {
+                return context.handle();
+              }
+            } catch (e) {
+              context.fire("onError", container, e);
+              return e;
+            }
+          });
         } catch (e) {
           context.fire("onError", container, e);
           return e;
         }
+      })
+      .catch((e) => {
+        context.once('onRequestEnd', () => {
+          if (context.sessionAutoStart || context.hasSession()) {
+            return this.sessionService.start(context, context.sessionAutoStart)
+              .then((session) => {
+                try {
+                  if (context.translation) {
+                    context.locale = context.translation.handle();
+                  }
+                  if (!(session instanceof nodefony.Session)) {
+                    this.logger(new Error("SESSION START session storage ERROR"), "WARNING");
+                  }
+                  if (this.firewall) {
+                    this.firewall.getSessionToken(context, session);
+                  }
+                } catch (err) {
+                  this.logger(err, "WARNING");
+                }
+                context.fire("onError", container, e);
+                return context;
+              });
+          } else {
+            context.fire("onError", container, e);
+            return context;
+          }
+        });
+        return e;
       });
-    } catch (e) {
-      context.fire("onError", container, e);
-      return e;
-    }
   }
 
   createWebsocketContext(container, request, type) {
@@ -579,52 +626,63 @@ module.exports = class httpKernel extends nodefony.Service {
   }
 
   handleWebsocket(container, request, type) {
-    let context = this.createWebsocketContext(container, request, type);
-    this.logger("FROM : " + context.remoteAddress +
-      " ORIGIN : " + context.originUrl.host +
-      " URL : " + context.url, "INFO", type);
-    let controller = null;
+    let context = null;
     try {
+      context = this.createWebsocketContext(container, request, type);
+      this.logger("FROM : " + context.remoteAddress +
+        " ORIGIN : " + context.originUrl.host +
+        " URL : " + context.url, "INFO", type);
+
       if (this.kernel.domainCheck) {
         // DOMAIN VALID
         if (this.checkValidDomain(context) !== 200) {
-          return context;
+          return Promise.resolve(context);
         }
       }
-      controller = this.handleFrontController(context);
-      if (context.secure) {
-        return context.fire("connect");
-      }
-      try {
-        if (context.sessionAutoStart || context.hasSession()) {
-          return this.sessionService.start(context, context.sessionAutoStart)
-            .then((session) => {
-              if (!(session instanceof nodefony.Session)) {
-                throw new Error("SESSION START session storage ERROR");
-              }
-              try {
-                if (this.firewall) {
-                  this.firewall.getSessionToken(context, session);
-                }
-              } catch (e) {
-                context.fire("onError", container, e);
-                return context;
-              }
-              context.fire("connect");
-            }).catch((error) => {
-              context.fire("onError", container, error);
-              return context;
-            });
-        } else {
-          context.fire("connect");
-        }
-      } catch (e) {
-        context.fire("onError", container, e);
-      }
-      return context;
     } catch (e) {
-      context.fire("onError", container, e);
-      return context;
+      if (context) {
+        context.fire("onError", container, e);
+        return Promise.resolve(context);
+      } else {
+        return Promise.reject(e);
+      }
     }
+    return this.handleFrontController(context)
+      .then((controller) => {
+        if (context.secure) {
+          return context.fire("connect");
+        }
+        try {
+          if (context.sessionAutoStart || context.hasSession()) {
+            return this.sessionService.start(context, context.sessionAutoStart)
+              .then((session) => {
+                if (!(session instanceof nodefony.Session)) {
+                  throw new Error("SESSION START session storage ERROR");
+                }
+                controller.session = session;
+                try {
+                  if (this.firewall) {
+                    this.firewall.getSessionToken(context, session);
+                  }
+                } catch (e) {
+                  context.fire("onError", container, e);
+                  return context;
+                }
+                context.fire("connect");
+              }).catch((error) => {
+                context.fire("onError", container, error);
+                return context;
+              });
+          } else {
+            context.fire("connect");
+          }
+        } catch (e) {
+          context.fire("onError", container, e);
+        }
+        return context;
+      }).catch(e => {
+        context.fire("onError", container, e);
+        return context;
+      });
   }
 };

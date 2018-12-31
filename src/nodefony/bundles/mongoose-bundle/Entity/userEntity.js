@@ -70,7 +70,8 @@ module.exports = class user extends nodefony.Entity {
         default: ["ROLE_USER"]
       },
       gender: {
-        type: String
+        type: String,
+        default: "none"
       },
       url: {
         type: String

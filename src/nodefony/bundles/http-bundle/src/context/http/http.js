@@ -5,8 +5,8 @@ nodefony.register.call(nodefony.context, "http", function () {
     constructor(container, request, response, type) {
       super(container, request, response, type);
       this.uploadService = this.get("upload");
-      this.requestSettings = this.kernelHttp.bundleSettings.request;
-      this.queryStringParser = this.kernelHttp.bundleSettings.queryString;
+      this.requestSettings = this.kernelHttp.settings.request;
+      this.queryStringParser = this.kernelHttp.settings.queryString;
       this.isElectron = this.kernel.isElectron;
       this.protocol = (type === "HTTP2") ? "2.0" : "1.1";
       this.scheme = (type === "HTTPS" || type === "HTTP2") ? "https" : "http";
@@ -18,6 +18,7 @@ nodefony.register.call(nodefony.context, "http", function () {
         this.request = new nodefony.Request(request, this);
         this.response = new nodefony.Response(response, container);
       }
+      this.csrf = null;
       this.parseCookies();
       this.cookieSession = this.getCookieSession(this.sessionService.settings.name);
       this.once("onRequestEnd", () => {
@@ -106,6 +107,11 @@ nodefony.register.call(nodefony.context, "http", function () {
 
     getMethod() {
       return this.request.getMethod();
+    }
+
+    setCsrfToken(name, options) {
+      this.csrf = this.csrfService.createCsrfToken(name, options, this);
+      return this.csrf;
     }
 
     handle(data) {

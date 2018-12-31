@@ -88,7 +88,10 @@ module.exports = class user extends nodefony.Entity {
           return val;
         }
       },
-      gender: Sequelize.STRING,
+      gender: {
+        type: Sequelize.STRING,
+        defaultValue: "none"
+      },
       url: Sequelize.STRING,
       image: Sequelize.STRING
     };

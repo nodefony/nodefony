@@ -69,10 +69,16 @@ module.exports = class serverStatics extends nodefony.Service {
       });
       tab.push(myPromise);
     }
-    return Promise.all(tab).then(function () {
-      return next();
+    return Promise.all(tab).then((ele) => {
+      if (next) {
+        return next(ele);
+      }
+      return ele;
     }).catch((err) => {
-      return next(err);
+      if (next) {
+        return next(err);
+      }
+      throw err;
     });
   }
 };

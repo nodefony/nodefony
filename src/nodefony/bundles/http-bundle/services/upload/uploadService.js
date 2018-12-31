@@ -6,12 +6,12 @@ module.exports = class upload extends nodefony.Service {
     this.httpKernel = httpKernel;
 
     this.listen(this, "onBoot", () => {
-      this.config = this.httpKernel.bundleSettings.request;
-      let abs = path.isAbsolute(this.httpKernel.bundleSettings.request.uploadDir);
+      this.config = this.httpKernel.settings.request;
+      let abs = path.isAbsolute(this.httpKernel.settings.request.uploadDir);
       if (abs) {
-        this.path = this.httpKernel.bundleSettings.request.uploadDir;
+        this.path = this.httpKernel.settings.request.uploadDir;
       } else {
-        this.path = path.resolve(this.kernel.rootDir + "/" + this.httpKernel.bundleSettings.request.uploadDir);
+        this.path = path.resolve(this.kernel.rootDir + "/" + this.httpKernel.settings.request.uploadDir);
       }
       let res = fs.existsSync(this.path);
       if (!res) {
@@ -21,7 +21,7 @@ module.exports = class upload extends nodefony.Service {
           res = fs.mkdirSync(this.path);
         } catch (e) {
           this.path = "/tmp";
-          this.httpKernel.bundleSettings.request.uploadDir = this.path;
+          this.httpKernel.settings.request.uploadDir = this.path;
           this.logger(e, "DEBUG");
         }
       }
@@ -69,7 +69,7 @@ const uploadedFile = class uploadedFile extends nodefony.fileClass {
 
   getMimeType() {
     if (this.fomiFile) {
-      return this.fomiFile.type ||  super.getMimeType(this.filename);
+      return this.fomiFile.type || super.getMimeType(this.filename);
     }
     return super.getMimeType();
   }

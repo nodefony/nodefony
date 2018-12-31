@@ -18,6 +18,8 @@ nodefony.register("Context", () => {
       this.session = null;
       this.sessionService = this.get("sessions");
       this.sessionAutoStart = this.sessionService.sessionAutoStart;
+      // CSRF
+      this.csrfService = this.get("csrf");
       //parse cookies
       this.cookies = {};
       this.crossDomain = null;
@@ -163,7 +165,7 @@ nodefony.register("Context", () => {
       if (typeof (role) === "string") {
         return this.token.hasRole(role);
       } else {
-        throw new nodefony.Error(`is_granted Bad role type  : ${role}`);
+        throw new nodefony.Error(`is_granted Bad role type you must give role example "ROLE_USER" actually : ${role}`);
       }
     }
 

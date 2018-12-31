@@ -1,6 +1,6 @@
 {
   "name": "nodefony",
-  "version": "4.0.0-beta.22",
+  "version": "4.1.0-beta.1",
   "main": "autoloader.es6",
   "description": "Nodefony Framework Core",
   "contributors": [],
@@ -55,7 +55,7 @@
     "cli-table": "^0.3.1",
     "clui": "^0.3.6",
     "commander": "^2.19.0",
-    "create-react-app": "^2.1.1",
+    "create-react-app": "^2.1.2",
     "inquirer": "^6.2.1",
     "js-yaml": "^3.12.0",
     "lodash": "^4.17.11",
@@ -82,12 +82,10 @@
     "url": "git://github.com/nodefony/nodefony-core.git"
   },
   "license": "CECILL-B",
-  "licenses": [
-    {
-      "type": "CECILL-B",
-      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-    }
-  ],
+  "licenses": [{
+    "type": "CECILL-B",
+    "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+  }],
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md"
 }

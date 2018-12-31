@@ -118,7 +118,7 @@ module.exports = class usersController extends nodefony.controller {
           this.setFlashBag("error", error.message);
           this.logger(error, "ERROR");
           return this.redirectToRoute("nodefony-user-update", {
-            user: username
+            username: username
           });
         });
     default:

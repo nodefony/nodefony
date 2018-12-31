@@ -1,4 +1,4 @@
-module.exports = nodefony.register("Annotations", function() {
+module.exports = nodefony.register("Annotations", function () {
 
   //const regSpace = new RegExp("^[\\s]*(@.*)[\\s]*$");
   const regKeyValue = new RegExp("^[\\s]*([^=]*)[\\s]*=[\\s]*(([{]?).*[}]?)[\\s]*$");
@@ -6,7 +6,7 @@ module.exports = nodefony.register("Annotations", function() {
   const regMethodBlock = new RegExp("^.*@Method[\\s]*\\(([^()]*)\\).*");
   const regHostBlock = new RegExp("^.*@Host[\\s]*\\(([^()]*)\\).*");
 
-  const parseKeyValue = function(tab, obj) {
+  const parseKeyValue = function (tab, obj) {
     for (let i = 0; i < tab.length; i++) {
       let res = regKeyValue.exec(tab[i]);
       let key = res[1].replace(/["' ]/g, "");
@@ -118,42 +118,42 @@ module.exports = nodefony.register("Annotations", function() {
         //console.log(this.routings[i])
         let obj = {};
         switch (this.routings[i].type) {
-          case "Class":
-            let myobj = {};
-            this.parseBlock(this.routings[i], myobj);
-            this.prefix = myobj.pattern;
-            this.host = myobj.host;
-            break;
-          case "Action":
-            let name = null;
-            this.parseBlock(this.routings[i], obj);
-            if (Object.keys(obj).length) {
-              if (!obj.name) {
-                name = `${this.bundleShortName}_${this.routings[i].defaultNameController}_${this.routings[i].defaultNameAction}`;
-              } else {
-                name = obj.name;
-              }
-              if (obj.defaults) {
-                obj.defaults.controller = this.routings[i].patternController;
-              } else {
-                obj.defaults = {};
-                obj.defaults.controller = this.routings[i].patternController;
-              }
-              if (obj.method) {
-                if (obj.requirements) {
-                  obj.requirements.method = obj.method;
-                } else {
-                  obj.requirements = {};
-                  obj.requirements.method = obj.method;
-                }
-              }
-              obj.prefix = this.prefix || "";
-              obj.host = this.host || "";
-              delete obj.name;
-              delete obj.method;
-              this.obj[name] = obj;
+        case "Class":
+          let myobj = {};
+          this.parseBlock(this.routings[i], myobj);
+          this.prefix = myobj.pattern;
+          this.host = myobj.host;
+          break;
+        case "Action":
+          let name = null;
+          this.parseBlock(this.routings[i], obj);
+          if (Object.keys(obj).length) {
+            if (!obj.name) {
+              name = `${this.bundleShortName}_${this.routings[i].defaultNameController}_${this.routings[i].defaultNameAction}`;
+            } else {
+              name = obj.name;
             }
-            break;
+            if (obj.defaults) {
+              obj.defaults.controller = this.routings[i].patternController;
+            } else {
+              obj.defaults = {};
+              obj.defaults.controller = this.routings[i].patternController;
+            }
+            if (obj.method) {
+              if (obj.requirements) {
+                obj.requirements.method = obj.method;
+              } else {
+                obj.requirements = {};
+                obj.requirements.method = obj.method;
+              }
+            }
+            obj.prefix = this.prefix || "";
+            obj.host = this.host || "";
+            delete obj.name;
+            delete obj.method;
+            this.obj[name] = obj;
+          }
+          break;
         }
       }
       //console.log(this.obj)
@@ -166,23 +166,23 @@ module.exports = nodefony.register("Annotations", function() {
           let res = null;
           let cleanBlock = annotation.comment.replace(/\r?\n?/g, "");
           switch (true) {
-            case regRouteBlock.test(cleanBlock):
-              res = regRouteBlock.exec(cleanBlock);
-              if (res) {
-                this.parseRoute(res[1], obj);
-              }
-            case regMethodBlock.test(cleanBlock):
-              res = regMethodBlock.exec(cleanBlock);
-              if (res) {
-                this.parseMethod(res[1], obj);
-              }
-            case regHostBlock.test(cleanBlock):
-              res = regHostBlock.exec(cleanBlock);
-              if (res) {
-                this.parseHost(res[1], obj);
-              }
-              break;
-            default:
+          case regRouteBlock.test(cleanBlock):
+            res = regRouteBlock.exec(cleanBlock);
+            if (res) {
+              this.parseRoute(res[1], obj);
+            }
+          case regMethodBlock.test(cleanBlock):
+            res = regMethodBlock.exec(cleanBlock);
+            if (res) {
+              this.parseMethod(res[1], obj);
+            }
+          case regHostBlock.test(cleanBlock):
+            res = regHostBlock.exec(cleanBlock);
+            if (res) {
+              this.parseHost(res[1], obj);
+            }
+            break;
+          default:
           }
         } catch (e) {
           throw e;
@@ -193,8 +193,13 @@ module.exports = nodefony.register("Annotations", function() {
     parseRoute(route, obj) {
       let tab = route.replace(/[ ]|[\s]?\*[\s]?/g, "").split(",");
       let parser = Array.prototype.shift.call(tab).replace(/["' ]/g, "");
-      obj.pattern = parser;
-      parseKeyValue(tab, obj);
+      if (regKeyValue.test(parser)) {
+        obj.pattern = "";
+        tab.unshift(parser);
+      } else {
+        obj.pattern = parser;
+        parseKeyValue(tab, obj);
+      }
     }
 
     parseMethod(method, obj) {

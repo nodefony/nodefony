@@ -2,6 +2,7 @@
 const os = require('os');
 const Module = require("module");
 let myrequire = null;
+let mypackage = null;
 
 const makeRequireFunction = function makeRequireFunction(mod) {
   const myModule = mod.constructor;
@@ -45,23 +46,23 @@ const createRequireFromPath = function createRequireFromPath(filename) {
 try {
   let filemame = path.resolve(process.cwd(), "package.json");
   myrequire = createRequireFromPath(filemame);
-  //require(filemame);
+  mypackage = myrequire(filemame);
 } catch (e) {}
 
-module.exports = nodefony.register("kernel", function() {
+module.exports = nodefony.register("kernel", function () {
 
   const regBundleName = /^(\w+)-bundle[\.js]{0,3}$|^(\w+)[Bb]undle[\.js]{0,3}$/;
   const regBundle = /^(\w+)[Bb]undle.js$/;
   const regClassBundle = /^(\w+)[Bb]undle$/;
   const regPackageFile = /^\s*file:(.*)/;
 
-  const promiseBundleReady = function() {
+  const promiseBundleReady = function () {
     let myresolve = null;
     let myPromise = new Promise((resolve) => {
       myresolve = resolve;
     });
     this.promisesBundleReady.push(myPromise);
-    return function(bundle) {
+    return function (bundle) {
       return myresolve(bundle);
     };
   };
@@ -110,6 +111,7 @@ module.exports = nodefony.register("kernel", function() {
       super("KERNEL", cli.container, cli.notificationsCenter, nodefony.extend({}, defaultOptions, options));
       this.cli = cli;
       this.type = cli.type;
+      this.package = mypackage;
       this.debug = (!!cli.commander.debug) || false;
       this.setEnv(environment);
       // Manage Kernel Container
@@ -248,16 +250,16 @@ module.exports = nodefony.register("kernel", function() {
     setEnv(environment) {
       if (environment in defaultEnvEnable) {
         switch (environment) {
-          case "dev":
-          case "development":
-            this.environment = "dev";
-            process.env.NODE_ENV = "development";
-            process.env.BABEL_ENV = 'development';
-            break;
-          default:
-            this.environment = "prod";
-            process.env.NODE_ENV = "production";
-            process.env.BABEL_ENV = 'production';
+        case "dev":
+        case "development":
+          this.environment = "dev";
+          process.env.NODE_ENV = "development";
+          process.env.BABEL_ENV = 'development';
+          break;
+        default:
+          this.environment = "prod";
+          process.env.NODE_ENV = "production";
+          process.env.BABEL_ENV = 'production';
         }
       }
       process.env.DEBUG_MODE = this.debug;
@@ -543,6 +545,16 @@ module.exports = nodefony.register("kernel", function() {
       } catch (e) {}
       try {
         res = null;
+        const globalPath = path.resolve(process.execPath, '..', '..', 'lib', 'node_modules', "nodefony", "bundle");
+        res = path.resolve(globalPath, `@nodefony/${name}`);
+        require.resolve(res);
+        if (this.type === "SERVER") {
+          this.logger(`Find Global Core Bundle Package : @nodefony/${name} in : ${res}`, "INFO");
+        }
+        return res;
+      } catch (e) {}
+      try {
+        res = null;
         const globalPath = path.resolve(process.execPath, '..', '..', 'lib', 'node_modules', "nodefony", 'node_modules');
         res = path.resolve(globalPath, `@nodefony/${name}`);
         require.resolve(res);
@@ -578,18 +590,18 @@ module.exports = nodefony.register("kernel", function() {
           bundles.push(res);
         }
         switch (this.settings.orm) {
-          case "sequelize":
-            res = this.searchPackage("sequelize-bundle");
-            bundles.push(res);
-            break;
-          case "mongoose":
-            res = this.searchPackage("mongoose-bundle");
-            bundles.push(res);
-            break;
-          default:
-            let error = new Error("nodefony can't load ORM : " + this.settings.orm);
-            this.logger(error, "ERROR");
-            throw error;
+        case "sequelize":
+          res = this.searchPackage("sequelize-bundle");
+          bundles.push(res);
+          break;
+        case "mongoose":
+          res = this.searchPackage("mongoose-bundle");
+          bundles.push(res);
+          break;
+        default:
+          let error = new Error("nodefony can't load ORM : " + this.settings.orm);
+          this.logger(error, "ERROR");
+          throw error;
         }
         if (this.settings.system.realtime) {
           res = this.searchPackage("realtime-bundle");
@@ -633,12 +645,12 @@ module.exports = nodefony.register("kernel", function() {
       }
 
       switch (this.isInstall()) {
-        case "install":
-          return this.install(bundles);
-        case "rebuild":
-          return this.rebuild(bundles);
-        default:
-          return this.preRegister(bundles);
+      case "install":
+        return this.install(bundles);
+      case "rebuild":
+        return this.rebuild(bundles);
+      default:
+        return this.preRegister(bundles);
       }
     }
 
@@ -971,44 +983,44 @@ module.exports = nodefony.register("kernel", function() {
       }
       let ret = null;
       switch (typeof str) {
-        case "string":
-          ret = regBundleName.exec(str);
-          if (ret) {
-            return ret[1] || ret[2];
-          }
-          throw new Error("Bundle Bad Name :" + str);
-        case "function":
-          ret = regClassBundle.exec(str.name);
-          if (ret) {
-            return ret[1];
-          }
-          throw new Error("Bundle Bad Name :" + str.name);
-        default:
-          throw new Error("Bundle Bad Name :" + str);
+      case "string":
+        ret = regBundleName.exec(str);
+        if (ret) {
+          return ret[1] || ret[2];
+        }
+        throw new Error("Bundle Bad Name :" + str);
+      case "function":
+        ret = regClassBundle.exec(str.name);
+        if (ret) {
+          return ret[1];
+        }
+        throw new Error("Bundle Bad Name :" + str.name);
+      default:
+        throw new Error("Bundle Bad Name :" + str);
       }
     }
 
     getBundleClass(Class, Path) {
       try {
         switch (true) {
-          case (Class instanceof nodefony.fileClass):
-            return this.getBundleClass(require(Class.path), require.resolve(Class.path));
-          case (typeof Class === "function"):
-            if (Class.toString().indexOf("class") >= 0) {
-              Class.prototype.path = path.dirname(Path);
-              Class.prototype.autoLoader = this.autoLoader;
-              return {
-                class: Class,
-                name: this.getBundleName(Class)
-              };
-            } else {
-              throw new Error(`getBundleClass Bad Bundle Class : ${Class.toString()} Path : ${Path}`);
-            }
-            break;
-          case (typeof Class === "string"):
-            return this.getBundleClass(require(Class), require.resolve(Class));
-          default:
-            throw new Error(`getBundleClass Bad Bundle Class : ${typeof Class} Path : ${Path}`);
+        case (Class instanceof nodefony.fileClass):
+          return this.getBundleClass(require(Class.path), require.resolve(Class.path));
+        case (typeof Class === "function"):
+          if (Class.toString().indexOf("class") >= 0) {
+            Class.prototype.path = path.dirname(Path);
+            Class.prototype.autoLoader = this.autoLoader;
+            return {
+              class: Class,
+              name: this.getBundleName(Class)
+            };
+          } else {
+            throw new Error(`getBundleClass Bad Bundle Class : ${Class.toString()} Path : ${Path}`);
+          }
+          break;
+        case (typeof Class === "string"):
+          return this.getBundleClass(require(Class), require.resolve(Class));
+        default:
+          throw new Error(`getBundleClass Bad Bundle Class : ${typeof Class} Path : ${Path}`);
         }
       } catch (e) {
         throw e;
@@ -1119,31 +1131,31 @@ module.exports = nodefony.register("kernel", function() {
     registerBundles(bundles) {
       return new Promise((resolve, reject) => {
         switch (nodefony.typeOf(bundles)) {
-          case "array":
-            for (let i = 0; i < bundles.length; i++) {
-              let Path = this.isBundleDirectory(bundles[i]);
-              if (!Path) {
-                try {
-                  Path = this.isNodeModule(bundles[i]);
-                  if (Path) {
-                    this.loadBundle(Path, "package");
-                  } else {
-                    this.logger("GLOBAL CONFIG REGISTER : ", "INFO");
-                    this.logger(this.configBundle, "INFO");
-                    let gene = this.readGeneratedConfig();
-                    if (gene) {
-                      this.logger("GENERATED CONFIG REGISTER file ./config/GeneratedConfig.yml : ", "INFO");
-                      this.logger(gene, "INFO");
-                    }
+        case "array":
+          for (let i = 0; i < bundles.length; i++) {
+            let Path = this.isBundleDirectory(bundles[i]);
+            if (!Path) {
+              try {
+                Path = this.isNodeModule(bundles[i]);
+                if (Path) {
+                  this.loadBundle(Path, "package");
+                } else {
+                  this.logger("GLOBAL CONFIG REGISTER : ", "INFO");
+                  this.logger(this.configBundle, "INFO");
+                  let gene = this.readGeneratedConfig();
+                  if (gene) {
+                    this.logger("GENERATED CONFIG REGISTER file ./config/GeneratedConfig.yml : ", "INFO");
+                    this.logger(gene, "INFO");
                   }
-                } catch (e) {
-                  this.logger(e, "ERROR");
                 }
+              } catch (e) {
+                this.logger(e, "ERROR");
               }
             }
-            return resolve(bundles);
-          default:
-            return reject(new Error("registerBundles argument bundles must be an array "));
+          }
+          return resolve(bundles);
+        default:
+          return reject(new Error("registerBundles argument bundles must be an array "));
         }
       });
     }
@@ -1214,49 +1226,49 @@ module.exports = nodefony.register("kernel", function() {
       } else {
         result.forEach((ele) => {
           switch (true) {
-            case /^config\..*$/.test(ele.name):
-              try {
-                this.logger(name + " CONFIG LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
-                this.reader.readConfig(ele.path, this.name, callback);
-              } catch (e) {
-                this.logger(e, "ERROR", "BUNDLE " + name + " CONFIG :" + ele.path);
+          case /^config\..*$/.test(ele.name):
+            try {
+              this.logger(name + " CONFIG LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
+              this.reader.readConfig(ele.path, this.name, callback);
+            } catch (e) {
+              this.logger(e, "ERROR", "BUNDLE " + name + " CONFIG :" + ele.path);
+            }
+            break;
+          case /^routing\..*$/.test(ele.name):
+            // ROUTING
+            try {
+              this.logger(name + " ROUTER LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
+              let router = this.get("router");
+              if (router) {
+                router.reader(ele.path, this.name);
+              } else {
+                this.logger(name + " Router service not ready to LOAD FILE :" + ele.path, "WARNING", "SERVICE KERNEL READER");
               }
-              break;
-            case /^routing\..*$/.test(ele.name):
-              // ROUTING
-              try {
-                this.logger(name + " ROUTER LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
-                let router = this.get("router");
-                if (router) {
-                  router.reader(ele.path, this.name);
-                } else {
-                  this.logger(name + " Router service not ready to LOAD FILE :" + ele.path, "WARNING", "SERVICE KERNEL READER");
-                }
-              } catch (e) {
-                this.logger(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG ROUTING :" + ele.path);
+            } catch (e) {
+              this.logger(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG ROUTING :" + ele.path);
+            }
+            break;
+          case /^services\..*$/.test(ele.name):
+            try {
+              this.logger(name + " SERVICE LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
+              this.get("injection").reader(ele.path, this.name);
+            } catch (e) {
+              this.logger(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG SERVICE :" + ele.path);
+            }
+            break;
+          case /^security\..*$/.test(ele.name):
+            try {
+              let firewall = this.get("security");
+              if (firewall) {
+                this.logger(name + " SECURITY LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
+                firewall.reader(ele.path, this.name);
+              } else {
+                this.logger(name + " SECURITY LOAD FILE :" + ele.path + " BUT SERVICE NOT READY", "WARNING");
               }
-              break;
-            case /^services\..*$/.test(ele.name):
-              try {
-                this.logger(name + " SERVICE LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
-                this.get("injection").reader(ele.path, this.name);
-              } catch (e) {
-                this.logger(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG SERVICE :" + ele.path);
-              }
-              break;
-            case /^security\..*$/.test(ele.name):
-              try {
-                let firewall = this.get("security");
-                if (firewall) {
-                  this.logger(name + " SECURITY LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
-                  firewall.reader(ele.path, this.name);
-                } else {
-                  this.logger(name + " SECURITY LOAD FILE :" + ele.path + " BUT SERVICE NOT READY", "WARNING");
-                }
-              } catch (e) {
-                this.logger(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG SECURITY :" + ele.path);
-              }
-              break;
+            } catch (e) {
+              this.logger(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG SECURITY :" + ele.path);
+            }
+            break;
           }
         });
       }
@@ -1267,18 +1279,18 @@ module.exports = nodefony.register("kernel", function() {
       let memory = this.stats().memory;
       for (let ele in memory) {
         switch (ele) {
-          case "rss":
-            this.logger((message || ele) + " ( Resident Set Size ) PID ( " + this.processId + " ) : " + nodefony.cli.niceBytes(memory[ele]), "DEBUG", "MEMORY " + ele);
-            break;
-          case "heapTotal":
-            this.logger((message || ele) + " ( Total Size of the Heap ) PID ( " + this.processId + " ) : " + nodefony.cli.niceBytes(memory[ele]), "DEBUG", "MEMORY " + ele);
-            break;
-          case "heapUsed":
-            this.logger((message || ele) + " ( Heap actually Used ) PID ( " + this.processId + " ) : " + nodefony.cli.niceBytes(memory[ele]), "DEBUG", "MEMORY " + ele);
-            break;
-          case "external":
-            this.logger((message || ele) + " PID ( " + this.processId + " ) : " + nodefony.cli.niceBytes(memory[ele]), "DEBUG", "MEMORY " + ele);
-            break;
+        case "rss":
+          this.logger((message || ele) + " ( Resident Set Size ) PID ( " + this.processId + " ) : " + nodefony.cli.niceBytes(memory[ele]), "DEBUG", "MEMORY " + ele);
+          break;
+        case "heapTotal":
+          this.logger((message || ele) + " ( Total Size of the Heap ) PID ( " + this.processId + " ) : " + nodefony.cli.niceBytes(memory[ele]), "DEBUG", "MEMORY " + ele);
+          break;
+        case "heapUsed":
+          this.logger((message || ele) + " ( Heap actually Used ) PID ( " + this.processId + " ) : " + nodefony.cli.niceBytes(memory[ele]), "DEBUG", "MEMORY " + ele);
+          break;
+        case "external":
+          this.logger((message || ele) + " PID ( " + this.processId + " ) : " + nodefony.cli.niceBytes(memory[ele]), "DEBUG", "MEMORY " + ele);
+          break;
         }
       }
     }

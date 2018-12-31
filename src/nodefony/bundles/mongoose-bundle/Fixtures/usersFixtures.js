@@ -9,39 +9,42 @@ module.exports = nodefony.registerFixture("users", function () {
       username: "anonymous",
       name: "anonymous",
       surname: "anonymous",
-      displayName: "Anonymous",
       password: "anonymous",
+      email: "anonymous@nodefony.com",
       lang: "en_en",
       roles: ["ROLE_ANONYMOUS"]
     }, {
       username: "admin",
       name: "administrator",
       surname: "nodefony",
-      displayName: "administrator",
       password: "admin",
+      email: "administrator@nodefony.com",
       roles: ["ROLE_ADMIN"]
     }, {
       username: "1000",
-      name: "User",
-      surname: "1000",
-      displayName: "1000",
+      name: "Michael",
+      surname: "Corleone",
       password: "1234",
       lang: "fr_fr",
-      roles: ["ROLE_USER"]
+      email: "michael@nodefony.com",
+      gender: "male",
+      roles: ["ROLE_ADMIN", "ROLE_USER"]
     }, {
       username: "2000",
-      name: "User",
-      surname: "2000",
-      displayName: "2000",
+      name: "Vito",
+      surname: "Corleone",
       password: "1234",
       lang: "fr_fr",
+      email: "vito@nodefony.com",
+      gender: "male",
       roles: ["ROLE_USER"]
     }, {
       username: "3000",
-      name: "User",
-      surname: "3000",
-      displayName: "3000",
+      name: "Connie",
+      surname: "Corleone",
       password: "1234",
+      email: "connie@nodefony.com",
+      gender: "female",
       lang: "fr_fr",
       roles: ["ROLE_USER"]
     }];

@@ -47,7 +47,7 @@ module.exports = class httpServer extends nodefony.Service {
     }
 
     this.server.on("request", (request, response) => {
-      this.httpKernel.onHttpRequest(request, response, this.type);
+      return this.httpKernel.onHttpRequest(request, response, this.type);
     });
 
     if (this.settings.timeout) {

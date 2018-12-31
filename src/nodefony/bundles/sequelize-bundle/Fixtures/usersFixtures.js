@@ -56,27 +56,31 @@ module.exports = nodefony.registerFixture("users", function () {
       roles: ["ROLE_ADMIN"]
     }, {
       username: "1000",
-      name: "User",
-      surname: "1000",
+      name: "Michael",
+      surname: "Corleone",
       password: "1234",
       lang: "fr_fr",
-      email: "1000@nodefony.com",
-      roles: ["ROLE_USER"]
+      email: "michael@nodefony.com",
+      gender: "male",
+      roles: ["ROLE_ADMIN", "ROLE_USER"]
     }, {
       username: "2000",
-      name: "User",
-      surname: "2000",
+      name: "Vito",
+      surname: "Corleone",
       password: "1234",
       lang: "fr_fr",
-      email: "2000@nodefony.com",
+      email: "vito@nodefony.com",
+      gender: "male",
       roles: ["ROLE_USER"]
     }, {
       username: "3000",
-      name: "User",
-      surname: "3000",
+      name: "Connie",
+      surname: "Corleone",
       password: "1234",
-      email: "3000@nodefony.com",
+      email: "connie@nodefony.com",
+      gender: "female",
       lang: "fr_fr",
+      roles: ["ROLE_USER"]
     }];
 
     const connection = this.getConnection("nodefony");

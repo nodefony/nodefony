@@ -1,5 +1,5 @@
 const Request = require('request');
-module.exports = nodefony.register("controller", function() {
+module.exports = nodefony.register("controller", function () {
 
   class Controller extends nodefony.Service {
     constructor(container, context) {
@@ -29,6 +29,21 @@ module.exports = nodefony.register("controller", function() {
         msgid = `Controller : ${this.bundle.name}Bundle:${this.name}`;
       }
       return super.logger(pci, severity, msgid, msg);
+    }
+
+    clean() {
+      delete this.session;
+      delete this.context;
+      delete this.response;
+      delete this.request;
+      delete this.queryGet;
+      delete this.query;
+      delete this.queryFile;
+      delete this.http;
+      delete this.router;
+      delete this.httpKernel;
+      delete this.serviceTemplating;
+      super.clean();
     }
 
     getLocale() {
@@ -108,6 +123,10 @@ module.exports = nodefony.register("controller", function() {
       return this.setContextJson.apply(this, arguments);
     }
 
+    setCsrfToken(name, options) {
+      return this.context.setCsrfToken(name, options);
+    }
+
     setContentType(mime, encoding) {
       if (this.context.method !== "websoket") {
         let type = null;
@@ -143,6 +162,20 @@ module.exports = nodefony.register("controller", function() {
       return this.getOrm().getNodefonyEntity(name);
     }
 
+    /**
+     * Example server push http2 if serverPush client is allowed
+     *
+     * this.push(path.resolve(this.bundle.publicPath, "assets", "css", "app.css"), {
+     *  path: "/app/assets/css/app.css"
+     * }).catch((e) => {
+     *  this.logger(e, "ERROR");
+     * });
+     * this.push(path.resolve(this.bundle.publicPath, "assets", "js", "app.js"), {
+     *  path: "/app/assets/js/app.js"
+     * }).catch((e) => {
+     *  this.logger(e, "ERROR");
+     * });
+     **/
     push(asset, headers, options) {
       if (this.context.type === "HTTP2" && this.context.pushAllowed) {
         let assetPublic = null;
@@ -573,6 +606,10 @@ module.exports = nodefony.register("controller", function() {
 
     is_granted(role) {
       return this.isGranted(role);
+    }
+
+    translate() {
+      return this.context.translation.trans.apply(this.context.translation, arguments);
     }
 
     redirect(url, status, headers) {

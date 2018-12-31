@@ -27,11 +27,13 @@ http:
   maxHeadersCount:        null
   timeout:                null            # For Keep alive spec
   responseTimeout:        30000           # In ms | 30 seconds by default
+  headers:                null
 
 https:
   maxHeadersCount:        null
   timeout:                null            # For keep alive spec
   responseTimeout:        30000           # In MS  | 30 seconds by default
+  headers:                null
   certificats:
     options:
       rejectUnauthorized: false

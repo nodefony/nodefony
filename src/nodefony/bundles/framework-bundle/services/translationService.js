@@ -9,10 +9,10 @@ const reg = /^(..){1}_?(..)?$/;
  *
  *
  */
-const pluginReader = function() {
+const pluginReader = function () {
   // TODO
-  let getObjectTransXML = function() {};
-  let getObjectTransJSON = function(file, bundle, callback, parser) {
+  let getObjectTransXML = function () {};
+  let getObjectTransJSON = function (file, bundle, callback, parser) {
     if (parser) {
       file = this.render(file, parser.data, parser.options);
     }
@@ -20,7 +20,7 @@ const pluginReader = function() {
       callback(JSON.parse(file));
     }
   };
-  let getObjectTransYml = function(file, bundle, callback, parser) {
+  let getObjectTransYml = function (file, bundle, callback, parser) {
     if (parser) {
       file = this.render(file, parser.data, parser.options);
     }
@@ -36,9 +36,9 @@ const pluginReader = function() {
   };
 }();
 
-const reader = function(service) {
+const reader = function (service) {
   let func = service.get("reader").loadPlugin("translating", pluginReader);
-  return function(result, bundle, locale, domain) {
+  return function (result, bundle, locale, domain) {
     return func(result, bundle, service.nodeReader.bind(service, locale, domain));
   };
 };
@@ -159,6 +159,7 @@ const Translation = class Translation extends nodefony.Service {
   }
   handle() {
     this.service.engineTemplate.extendFilter("trans", this.trans.bind(this));
+    this.service.engineTemplate.extendFilter("translate", this.trans.bind(this));
     return this.getLang();
   }
 };

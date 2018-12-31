@@ -49,6 +49,7 @@
     "navigator": true,
     "stage": true,
     "$": true,
+    "jQuery": true,
     "Rx": true,
     "inquirer": true
   }

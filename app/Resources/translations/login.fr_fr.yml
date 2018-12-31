@@ -7,3 +7,6 @@ submit            : Valider
 surname           : Nom
 name              : Prénom
 username          : Utilisateur
+
+register          : "S'enregistrer"
+update            : Réactualiser
