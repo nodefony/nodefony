@@ -1,5 +1,13 @@
 # Changelog
 
+## v4.1.0-beta.1 (06/01/2019)
+- [nodefony release 4.1.0-beta.1](https://github.com/nodefony/nodefony-core/commit/fd5e57548838b27d3022092fb3902ffa141a8e18)
+- [Add CSRF service | update deps | update user entity | multi orm users management](https://github.com/nodefony/nodefony-core/commit/1680bf5e3eaad0e64ca64e4827c2d056791713de)
+- [Add csrf Service](https://github.com/nodefony/nodefony-core/commit/84300ed8694d7ce1c2d057141feeb10957d30da6)
+- [Add Csrf service](https://github.com/nodefony/nodefony-core/commit/0422f24b53634466229c97958f4ba3e429cded4f)
+
+---
+
 ## v4.0.0-beta.22 (22/12/2018)
 - [nodefony release 4.0.0-beta.22](https://github.com/nodefony/nodefony-core/commit/126cbdcdf73dcd9dc1a780f80bfe1617d3648724)
 - [clean webpack default config](https://github.com/nodefony/nodefony-core/commit/b2d52c945e1b8c959e0fe4dba1dd7124e8cb25b6)
