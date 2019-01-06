@@ -34,7 +34,7 @@ module.exports = nodefony.registerFactory("passport-github2", () => {
       });
     }
 
-    createToken(context = null /*, providerName = null*/ ) {
+    createToken(context = null, provider = null) {
       if (context.metaSecurity) {
         if (context.metaSecurity.token) {
           return new nodefony.security.tokens.github(

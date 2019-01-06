@@ -73,16 +73,18 @@ module.exports = nodefony.register('Factory', () => {
       });
     }
 
-    createToken(context = null /*, providerName = null*/ ) {
+    createToken(context = null, provider = null) {
+      let token = null;
       if (context.metaSecurity) {
         if (context.metaSecurity.token && context.metaSecurity.token.user) {
-          let token = new nodefony.security.tokens.userPassword(context.metaSecurity.token.user);
+          token = new nodefony.security.tokens.userPassword(context.metaSecurity.token.user);
           token.unserialize(context.metaSecurity.token);
-          return token;
         }
       } else {
-        return new nodefony.security.tokens.userPassword();
+        token = new nodefony.security.tokens.userPassword();
       }
+      token.setProvider(provider || this.provider);
+      return token;
     }
 
     supportsToken( /*token*/ ) {

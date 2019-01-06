@@ -170,7 +170,15 @@ module.exports = class security extends nodefony.Service {
               case ctx instanceof nodefony.Response:
               case ctx instanceof nodefony.wsResponse:
               case ctx instanceof nodefony.Context:
-                return resolve(context.handle());
+                try {
+                  return resolve(context.handle());
+                } catch (e) {
+                  if (context.session) {
+                    context.session.invalidate();
+                  }
+                  return reject(e);
+                }
+                break;
               default:
                 return resolve(ctx);
               }
@@ -180,6 +188,9 @@ module.exports = class security extends nodefony.Service {
                 context.locale = context.translation.handle();
               }
               context.fire("onError", context.container, error);
+              if (context.session) {
+                context.session.invalidate();
+              }
               return reject(error);
             });
         });
@@ -275,7 +286,7 @@ module.exports = class security extends nodefony.Service {
           factory = this.getFactory(context.metaSecurity.token.factory, context.metaSecurity.firewall);
         }
         if (factory) {
-          token = factory.createToken(context, factory.providerName);
+          token = factory.createToken(context);
           token.unserialize(context.metaSecurity.token);
           if (token) {
             if (!token.isAuthenticated()) {
@@ -354,7 +365,7 @@ module.exports = class security extends nodefony.Service {
               .then((session) => {
                 return this.handleStateLess(context)
                   .then((ctx) => {
-                    if (ctx.isControlledAccess) {
+                    if (ctx.isControlledAccess && (!ctx.checkLogin)) {
                       return resolve(this.authorizationService.handle(ctx));
                     } else {
                       return resolve(ctx);
@@ -377,7 +388,7 @@ module.exports = class security extends nodefony.Service {
           }
           return this.handleStateLess(context)
             .then((ctx) => {
-              if (ctx.isControlledAccess) {
+              if (ctx.isControlledAccess && (!ctx.checkLogin)) {
                 return resolve(this.authorizationService.handle(ctx));
               } else {
                 return resolve(ctx);
@@ -395,7 +406,7 @@ module.exports = class security extends nodefony.Service {
         }
         return this.handleStateFull(context)
           .then((ctx) => {
-            if (ctx.isControlledAccess) {
+            if (ctx.isControlledAccess && (!ctx.checkLogin)) {
               return resolve(this.authorizationService.handle(ctx));
             } else {
               return resolve(ctx);

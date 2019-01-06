@@ -13,7 +13,7 @@
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.2.3",
     "@nodefony/stage": "^0.1.15",
-    "babel-loader": "^8.0.4",
+    "babel-loader": "^8.0.5",
     "bootstrap": "=3.3.7",
     "cheerio": "^1.0.0-rc.2",
     "clean-webpack-plugin": "^1.0.0",
@@ -26,7 +26,7 @@
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "terser-webpack-plugin": "^1.2.1",
     "webpack": "^4.28.3",
-    "webpack-merge": "^4.1.5"
+    "webpack-merge": "^4.2.1"
   },
   "repository": {
     "type": "git",

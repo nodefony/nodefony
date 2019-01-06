@@ -12,6 +12,12 @@ oldPasswd       : Old Password
 newPasswd       : New Password
 createPasswd    : Create Password
 confirmPasswd   : Confirm Password
+lang            : Language
+enabled         : Enabled
+enable          : Enable
+disable         : Disable
+disabled        : Disabled
+
 
 male            : Male
 female          : Female
@@ -20,6 +26,7 @@ none            : None
 register        : Register
 update          : Update
 create          : Create
+delete          : Delete
 textRegister    : "By clicking the 'Sign Up' button, you confirm that you accept our <br> Terms of use and Privacy Policy."
 
 add             : "Add user"

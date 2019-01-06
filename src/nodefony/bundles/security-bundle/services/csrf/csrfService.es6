@@ -3,7 +3,9 @@ const Tokens = require('csrf');
 let defaultOptions = {
   name: "csrf-token",
   ignoreMethods: ["GET", "HEAD", "OPTIONS"],
-  cookie: false
+  cookie: false,
+  session: true,
+  secret: ""
 };
 
 const Csrf = class Csrf {
@@ -18,9 +20,14 @@ const Csrf = class Csrf {
     this.hearder = null;
     if (this.settings.cookie) {
       this.cookie = this.getCookie();
-    } else {
+    }
+    if (this.settings.session) {
+      this.session = this.getSession();
+    }
+    if (this.settings.hearder) {
       this.hearder = this.getHeader();
     }
+
   }
 
   logger() {
@@ -77,7 +84,28 @@ const Csrf = class Csrf {
 
   setHeader() {
     let token = this.setSecret(this.settings.secret);
-    this.context.response.setHeader("csrf-token", token);
+    this.context.response.setHeader(this.name, token);
+    return token;
+  }
+
+  getSession() {
+    this.context.once("onSessionStart", (session) => {
+      if (session) {
+        let token = session.getMetaBag(this.name);
+        if (token) {
+          this.session = token;
+          return token;
+        } else {
+          return this.setSession(session);
+        }
+      }
+    });
+  }
+
+  setSession(session) {
+    let token = this.setSecret(this.settings.secret);
+    this.session = token;
+    session.setMetaBag(this.name, token);
     return token;
   }
 
@@ -103,6 +131,10 @@ const Csrf = class Csrf {
         }
         return this.verify(token);
       }
+      if (this.session) {
+        let token = this.session;
+        return this.verify(token);
+      }
       if (this.header) {
         let token = this.header;
         return this.verify(token);
@@ -125,7 +157,6 @@ const Csrf = class Csrf {
       throw e;
     }
   }
-
 };
 
 module.exports = class csrf extends nodefony.Service {

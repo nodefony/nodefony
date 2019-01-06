@@ -42,9 +42,9 @@ module.exports = class appController extends nodefony.controller {
    *    @Route ("/lang", name="lang")
    */
   langAction() {
-    if (this.query.lang) {
+    if (this.query.language) {
       if (this.session) {
-        this.session.set("lang", this.query.lang);
+        this.session.set("lang", this.query.language);
         let route = this.session.getMetaBag("lastRoute");
         if (route) {
           return this.redirect(this.url(route));

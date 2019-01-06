@@ -9,17 +9,18 @@ module.exports = class usersController extends nodefony.controller {
     this.startSession();
     // CSRF cross-site request forgery
     this.setCsrfToken("nodefony_csrf", {
-      secret: "Les longs sanglots de l'hiver",
+      secret: "Make him an offer he can't refuse",
       cookie: {
         signed: false,
         secure: true,
+        sameSite: "strict",
         path: "/users",
         maxAge: 200
-      },
-      ignoreMethods: ["GET"]
+      }
     });
     this.entity = this.getEntity("user");
     this.ormName = this.getOrm().name;
+    this.translation = this.get("translation");
   }
 
   /**
@@ -30,12 +31,37 @@ module.exports = class usersController extends nodefony.controller {
   createAction() {
     switch (this.method) {
     case "GET":
+      let size = Object.keys(this.queryGet).length;
+      if (size) {
+        if (this.queryGet.roles) {
+          this.queryGet.roles = this.queryGet.roles.split(",");
+        }
+        this.queryGet.passwd = null;
+        this.queryGet.confirm = null;
+      }
       return this.render("app:users:createUser.html.twig", {
-        langs: this.get("translation").getLangs(),
-        locale: this.getLocale()
+        langs: this.translation.getLangs(),
+        locale: this.getLocale(),
+        queryString: size ? this.queryGet : null
       });
     case "POST":
       // FORM DATA
+      let error = null;
+      if (!this.query.passwd || !this.query.confirm) {
+        error = new Error(`Password can't be empty`);
+      }
+      if (this.query.passwd !== this.query.confirm) {
+        error = new Error(`Bad confirm password`);
+      }
+      if (error) {
+        this.setFlashBag("error", error.message);
+        this.logger(error, "ERROR");
+        delete this.query.passwd;
+        delete this.query.confirm;
+        return this.redirectToRoute("nodefony-user-create", {
+          queryString: this.query
+        });
+      }
       if (nodefony.typeOf(this.query.roles) === "string") {
         this.query.roles = [this.query.roles];
       }
@@ -50,7 +76,11 @@ module.exports = class usersController extends nodefony.controller {
         .catch((error) => {
           this.setFlashBag("error", error.message);
           this.logger(error, "ERROR");
-          return this.redirectToRoute("nodefony-user-create");
+          delete this.query.passwd;
+          delete this.query.confirm;
+          return this.redirectToRoute("nodefony-user-create", {
+            queryString: this.query
+          });
         });
     default:
       throw new Error("Bad Method");
@@ -70,7 +100,7 @@ module.exports = class usersController extends nodefony.controller {
           if (result) {
             return this.render("app:users:createUser.html.twig", {
               user: result,
-              langs: this.get("translation").getLangs(),
+              langs: this.translation.getLangs(),
               locale: this.getLocale()
             });
           }
@@ -82,33 +112,62 @@ module.exports = class usersController extends nodefony.controller {
     case "POST":
       return this.findOne(username)
         .then((user) => {
-          if (nodefony.typeOf(this.query.roles) === "string") {
-            this.query.roles = [this.query.roles];
-          }
-          let value = {
-            username: this.query.username || null,
-            email: this.query.email,
-            name: this.query.name,
-            surname: this.query.surname,
-            gender: this.query.gender,
-            roles: this.query.roles || [],
-            lang: this.query.lang
-          };
-          if (this.query.passwd && this.query["old-passwd"]) {
-            let encoder = this.getNodefonyEntity("user").getEncoder();
-            let check = encoder.isPasswordValid(this.query["old-passwd"], user.password);
-            if (check) {
+          if (user) {
+            if (nodefony.typeOf(this.query.roles) === "string") {
+              this.query.roles = [this.query.roles];
+            }
+            let value = {
+              username: this.query.username || null,
+              email: this.query.email,
+              name: this.query.name,
+              surname: this.query.surname,
+              gender: this.query.gender,
+              roles: this.query.roles || [],
+              lang: this.query.lang,
+              enabled: this.query.enabled
+            };
+            if (this.query.passwd && this.isGranted("ROLE_ADMIN")) {
+              let error = null;
+              if (this.query.passwd && this.query.passwd !== this.query.confirm) {
+                error = new Error(`Bad confirm password`);
+              }
+              if (error) {
+                throw error;
+              }
               value.password = this.query.passwd;
             } else {
-              throw new Error(`User ${username} bad passport`);
+              if (this.query.passwd && this.query["old-passwd"]) {
+                let encoder = this.getNodefonyEntity("user").getEncoder();
+                let check = encoder.isPasswordValid(this.query["old-passwd"], user.password);
+                if (check) {
+                  value.password = this.query.passwd;
+                } else {
+                  throw new Error(`User ${username} bad passport`);
+                }
+              }
             }
-          }
-          if (user) {
             return this.update(user, value)
               .then(() => {
-                let message = `Update User ${user.username} OK`;
+                let message = `Update User ${this.query.username} OK`;
                 this.setFlashBag("info", message);
                 this.logger(message, "INFO");
+                let currentUser = this.getUser();
+                if (user.username === currentUser.username) {
+                  if (this.query.username !== user.username) {
+                    currentUser.username = this.query.username;
+                  }
+                  if (this.getLocale() !== this.query.lang) {
+                    this.session.set("lang", this.query.lang);
+                  }
+                  let token = this.getToken();
+                  return token.refreshToken(this.context)
+                    .then(() => {
+                      return this.redirectToRoute("home");
+                    })
+                    .catch((error) => {
+                      throw error;
+                    });
+                }
                 return this.redirectToRoute("home");
               });
           }
@@ -174,9 +233,12 @@ module.exports = class usersController extends nodefony.controller {
       case "GET":
         return this.findOne(username)
           .then((result) => {
-            return this.render("app:users:readUsers.html.twig", {
-              users: [result]
-            });
+            if (result) {
+              return this.render("app:users:readUsers.html.twig", {
+                users: [result]
+              });
+            }
+            return this.render("app:users:readUsers.html.twig");
           }).catch(e => {
             throw e;
           });
@@ -245,6 +307,7 @@ module.exports = class usersController extends nodefony.controller {
   update(user, value) {
     switch (this.ormName) {
     case "mongoose":
+      return user.update(value);
     case "sequelize":
       return user.update(value);
     }

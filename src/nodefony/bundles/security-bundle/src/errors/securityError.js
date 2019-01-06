@@ -16,9 +16,13 @@ module.exports = nodefony.register("securityError", function () {
     logger(data) {
       if (this.secure) {
         if (data) {
-          return this.secure.logger.apply(this.secure, arguments);
+          if (this.secure.logger) {
+            return this.secure.logger.apply(this.secure, arguments);
+          }
         }
-        return this.secure.logger(this.toString(), "ERROR", `${clc.magenta(this.code)} ${clc.red(this.method)}`);
+        if (this.secure.logger) {
+          return this.secure.logger(this.toString(), "ERROR", `${clc.magenta(this.code)} ${clc.red(this.method)}`);
+        }
       }
       return super.logger(data);
     }

@@ -23,7 +23,7 @@ module.exports = nodefony.register('Provider', () => {
               this.logger(`TRY AUTHENTICATION  ${token.getUsername()}  PROVIDER ${this.name}`, "DEBUG");
               if (this.isPasswordValid(token.getCredentials(), user.getPassword())) {
                 token.setUser(user);
-                token.setProvider(this.name);
+                token.setProvider(this);
                 return resolve(token);
               }
               return reject(new Error(`user ${token.getUsername()} Incorrect password`));

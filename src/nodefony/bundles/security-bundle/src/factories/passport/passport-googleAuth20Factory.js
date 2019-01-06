@@ -34,7 +34,7 @@ module.exports = nodefony.registerFactory("passport-google-oauth20", () => {
       });
     }
 
-    createToken(context = null /*, providerName = null*/ ) {
+    createToken(context = null, provider = null) {
       if (context.metaSecurity) {
         if (context.metaSecurity.token) {
           return new nodefony.security.tokens.google(

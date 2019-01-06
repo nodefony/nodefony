@@ -440,18 +440,33 @@ module.exports = class httpKernel extends nodefony.Service {
         controller = resolver.newController(context.container, context);
         if (controller.sessionAutoStart) {
           context.sessionAutoStart = controller.sessionAutoStart;
-        }
-        if (context.csrf) {
-          return this.csrfService.handle(context)
-            .then((token) => {
-              if (token) {
-                this.logger(`Check CSRF TOKEN : ${token.name} OK`);
-              }
-              return resolve(controller);
-            })
-            .catch(e => {
-              return reject(e);
+          if (context.csrf) {
+            context.once("onSessionStart", () => {
+              return this.csrfService.handle(context)
+                .then((token) => {
+                  if (token) {
+                    this.logger(`Check CSRF TOKEN : ${token.name} OK`);
+                  }
+                  return resolve(controller);
+                })
+                .catch(e => {
+                  return reject(e);
+                });
             });
+          }
+        } else {
+          if (context.csrf) {
+            return this.csrfService.handle(context)
+              .then((token) => {
+                if (token) {
+                  this.logger(`Check CSRF TOKEN : ${token.name} OK`);
+                }
+                return resolve(controller);
+              })
+              .catch(e => {
+                return reject(e);
+              });
+          }
         }
         return resolve(controller);
       }
@@ -477,6 +492,17 @@ module.exports = class httpKernel extends nodefony.Service {
       }
     } catch (e) {
       if (context) {
+        if (context.requestEnded) {
+          try {
+            if (context.translation) {
+              context.locale = context.translation.handle();
+            }
+          } catch (err) {
+            this.logger(err, "WARNING");
+          }
+          context.fire("onError", container, e);
+          return context;
+        }
         context.once('onRequestEnd', () => {
           if (context.sessionAutoStart || context.hasSession()) {
             return this.sessionService.start(context, context.sessionAutoStart)
@@ -552,6 +578,17 @@ module.exports = class httpKernel extends nodefony.Service {
         }
       })
       .catch((e) => {
+        if (context.requestEnded) {
+          try {
+            if (context.translation) {
+              context.locale = context.translation.handle();
+            }
+          } catch (err) {
+            this.logger(err, "WARNING");
+          }
+          context.fire("onError", container, e);
+          return context;
+        }
         context.once('onRequestEnd', () => {
           if (context.sessionAutoStart || context.hasSession()) {
             return this.sessionService.start(context, context.sessionAutoStart)

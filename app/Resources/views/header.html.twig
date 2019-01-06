@@ -22,7 +22,7 @@
           <div class="input-group-prepend">
             <label class="input-group-text" for="inputGroupSelect01">{{"lang"| trans("messages") }} : </label>
           </div>
-          <select class="custom-select align-middle mr-4" name="lang"  id="lang">
+          <select class="custom-select align-middle mr-4" name="language"  id="language">
             {% for opt in langs %}
             {% if locale == opt.value %}
             <option value="{{ opt.value|escape}}" selected>
@@ -45,7 +45,7 @@
         {% endif %}
         <li class="nav-item dropdown dropleft">
           <a href="" class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-expanded="true">
-                {{user.name}}
+                {{user.username}}
           </a>
           <div class="dropdown-menu p-0 mt-5" aria-labelledby="navbarDropdownMenuLink" style="width: 18rem;">
             <div class="card" style="width: 18rem;">

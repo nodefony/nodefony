@@ -11,6 +11,7 @@ nodefony.register("cookies", function () {
     path: "/",
     domain: null,
     secure: false,
+    sameSite: null, // "Lax" || "Strict"
     httpOnly: true,
     signed: false,
     secret: "!nodefony.secret!"
@@ -68,6 +69,7 @@ nodefony.register("cookies", function () {
         this.httpOnly = name.httpOnly;
         this.secure = name.secure;
         this.maxAge = name.maxAge;
+        this.sameSite = name.sameSite;
       } else {
         this.settings = nodefony.extend({}, cookieDefaultSettings, settings);
         if (!name) {
@@ -82,6 +84,7 @@ nodefony.register("cookies", function () {
         this.domain = this.setDomain();
         this.httpOnly = this.setHttpOnly(this.settings.httpOnly);
         this.secure = this.setSecure(this.settings.secure);
+        this.sameSite = this.setSameSite(this.settings.sameSite);
       }
     }
 
@@ -115,6 +118,10 @@ nodefony.register("cookies", function () {
     }
 
     setPath(val) {
+      return val;
+    }
+
+    setSameSite(val) {
       return val;
     }
 
@@ -220,6 +227,9 @@ nodefony.register("cookies", function () {
       }
       if (this.path) {
         tab.push('Path=' + this.path);
+      }
+      if (this.sameSite) {
+        tab.push('SameSite=' + this.sameSite);
       }
       if (this.expires) {
         tab.push('Expires=' + this.expires.toUTCString());

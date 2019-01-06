@@ -69,7 +69,10 @@ module.exports = class user extends nodefony.Entity {
         defaultValue: true
       },
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        primaryKey: true,
+        unique: true,
+        allowNull: false
       },
       name: Sequelize.STRING,
       surname: Sequelize.STRING,

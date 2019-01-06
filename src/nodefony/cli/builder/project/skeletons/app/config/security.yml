@@ -18,6 +18,7 @@ security:
         provider                : nodefony
         form_login:
           login_path            : /login/nodefony
+          check_path            : /login/check
           default_target_path   : /
           always_use_default_target_path : true
         passport-local:

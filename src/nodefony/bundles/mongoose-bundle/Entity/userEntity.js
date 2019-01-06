@@ -52,7 +52,9 @@ module.exports = class user extends nodefony.Entity {
         default: true
       },
       email: {
-        type: String
+        type: String,
+        unique: true,
+        required: true
         //unique: true
       },
       name: {

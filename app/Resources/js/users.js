@@ -13,10 +13,9 @@ module.exports = function () {
     }
 
     ready() {
-      let selectorLang = global.document.getElementById("lang");
+      let selectorLang = global.document.getElementById("language");
       if (selectorLang) {
         selectorLang.addEventListener("change", (e) => {
-          //window.location.href = "?lang=" + this.value;
           this.changeLang();
           e.preventDefault();
         });
@@ -28,6 +27,7 @@ module.exports = function () {
         this.checkSelect();
       });
       $("#inputGroupRole")[0].size = $("#inputGroupRole option").length;
+      $("#roles")[0].size = $("#inputGroupRole option").length;
       $(document).on('submit', () => {
         $("#roles").removeAttr("disabled");
       });
@@ -51,13 +51,16 @@ module.exports = function () {
             $(`#inputGroupRole option[value=${val}]`).prop("selected", true);
             this.checkSelect();
           });
+          $("#roles")[0].size = $("#inputGroupRole option").length;
           //$("#inputGroupRole option[value=none]").prop("selected", true);
           break;
         case ele.hasClass("fa-minus-circle"):
           $(`#roles option[value=${val}]`).remove();
           //$("#inputGroupRole option[value=none]").prop("selected", true);
+          $("#roles")[0].size = $("#inputGroupRole option").length;
           break;
         default:
+          $("#roles")[0].size = $("#inputGroupRole option").length;
           $("#inputGroupRole")[0].size = $("#inputGroupRole option").length;
         }
         this.checkSelect();
@@ -66,7 +69,7 @@ module.exports = function () {
 
     changeLang(query) {
       if (query) {
-        return window.location.href = "?lang=" + query;
+        return window.location.href = "?language=" + query;
       }
       let form = global.document.getElementById("formLang");
       if (form) {

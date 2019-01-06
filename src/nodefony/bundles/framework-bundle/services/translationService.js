@@ -121,26 +121,17 @@ const Translation = class Translation extends nodefony.Service {
 
   getLang() {
     let Lang = null;
-    let query = this.context.request.query;
-    if (!this.context.session) {
-      if (query) {
-        Lang = query.lang;
-        if (Lang) {
-          this.defaultLocale = Lang;
-        }
+    if (this.context.request && this.context.request.queryGet && this.context.request.queryGet.language) {
+      Lang = this.context.request.queryGet.language;
+    }
+    if (this.context.session) {
+      if (!Lang) {
+        Lang = this.context.session.get("lang");
       }
-    } else {
-      if (query) {
-        let queryGetlang = query.lang;
-        if (this.context.user) {
-          if (queryGetlang) {
-            Lang = queryGetlang;
-          } else {
-            Lang = this.context.session.get("lang") || this.context.user.lang;
-          }
-        } else {
-          Lang = queryGetlang || this.context.session.get("lang");
-        }
+    }
+    if (!Lang) {
+      if (this.context.user) {
+        Lang = this.context.user.lang;
       }
     }
     this.defaultLocale = this.setLocal(Lang);

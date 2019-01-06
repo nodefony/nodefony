@@ -14,25 +14,9 @@ module.exports = nodefony.registerProvider("userProvider", () => {
         where: {
           username: username
         }
-      }).then(function (user) {
+      }).then((user) => {
         if (user) {
-          let serialize = user.get();
-          return new nodefony.User(
-            serialize.username,
-            serialize.password,
-            serialize.roles,
-            serialize.lang,
-            serialize.enabled,
-            serialize.userNonExpired,
-            serialize.credentialsNonExpired,
-            serialize.accountNonLocked,
-            serialize.name,
-            serialize.surname,
-            serialize.email,
-            serialize.gender,
-            serialize.url,
-            serialize.image
-          );
+          return this.refreshUser(user);
         }
         let error = new Error("User : " + username + " not Found");
         error.code = 401;
@@ -41,7 +25,28 @@ module.exports = nodefony.registerProvider("userProvider", () => {
         throw error;
       });
     }
+
+    refreshUser(user) {
+      let serialize = user.get();
+      return new nodefony.User(
+        serialize.username,
+        serialize.password,
+        serialize.roles,
+        serialize.lang,
+        serialize.enabled,
+        serialize.userNonExpired,
+        serialize.credentialsNonExpired,
+        serialize.accountNonLocked,
+        serialize.name,
+        serialize.surname,
+        serialize.email,
+        serialize.gender,
+        serialize.url,
+        serialize.image
+      );
+    }
   };
+
 
   return Provider;
 });

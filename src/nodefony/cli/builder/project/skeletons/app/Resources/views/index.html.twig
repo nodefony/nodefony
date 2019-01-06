@@ -35,8 +35,11 @@
           {% endfilter %}
         </h1>
         <p>{{description|escape}}</p>
-        <p class="h2 mt-3 mb-5">{{trans("welcome")}}
-          {{user.username|escape}}
+        <p class="h2 mt-3">
+          {{trans("welcome")}}
+        </p>
+        <p class="h2 mt-3 mb-5">
+          {{user.name|escape}} {{user.surname|escape}}
         </p>
         <p class="h2 mt-3 mb-5">
             <a href="{{url("nodefony-user")}}" class="btn btn-secondary" tabindex="-1" role="button">

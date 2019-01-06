@@ -137,6 +137,10 @@ nodefony.register.call(nodefony.context, "http", function () {
         if (this.resolver.resolve) {
           let ret = this.resolver.callController(data);
           // timeout response after  callController (to change timeout in action )
+          if (this.timeoutid !== null) {
+            this.timeoutExpired = false;
+            clearTimeout(this.timeoutid);
+          }
           if (this.response.response) {
             if (this.response.stream) {
               this.timeoutid = this.response.stream.setTimeout(this.response.timeout, () => {
@@ -159,7 +163,8 @@ nodefony.register.call(nodefony.context, "http", function () {
         error.code = 404;
         throw error;
       } catch (e) {
-        this.fire("onError", this.container, e);
+        throw e;
+        //this.fire("onError", this.container, e);
       }
     }
 

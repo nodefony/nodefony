@@ -60,148 +60,6 @@
           {% endfor %}
           <li class="separator"></li>
           <li>
-            <label class="nodefony-title">DEV SERVERS</label>
-          </li>
-          {% for key, value in kernelSettings.system.devServer %}
-            <li>
-              <label>{{ key  }}</label>
-              <span class="label-nodefony label-success">{{value}}</span>
-            </li>
-          {% endfor %}
-
-        </ul>
-      </div>
-    </li>
-    <li class="separator"></li>
-    <li>
-      <img src="/monitoring-bundle/images/nodejs_logo.png">
-      <div class="details">
-        <ul>
-          <li>
-            <label class="nodefony-title">Node.js ®</label>
-            <span class="label-nodefony label-default">{{node.node}}</span>
-          </li>
-          <li class="separator"></li>
-          {% for key, value in node %}
-            <li>
-              <label>{{ key }}</label>
-              <span class="label-nodefony label-success">{{value}}</span>
-            </li>
-          {% endfor %}
-          <li class="separator"></li>
-          <li>
-            <label class="nodefony-title">ENVIRONMENT</label>
-          </li>
-          {% for key, value in env %}
-            <li>
-              <label>{{ key }}</label>
-              <span title="{{value}}" class="label-nodefony label-success">{{value}}</span>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </li>
-    {% if context.protocol == "2.0" %}
-      <li class="separator"></li>
-      <li>
-        <img style="border-radius: 50%" alt="HTTP2" src="/monitoring-bundle/images/http2.png">
-        <div class="details">
-          <ul>
-            <li>
-              <label class="nodefony-title">
-                HTTP Protocol
-              </label>
-              <span class="label-nodefony label-default">{{context.protocol}}</span>
-            </li>
-            <li class="separator"></li>
-            <li>
-              <label>
-                Server Push Allowed
-              </label>
-              <span class="label-nodefony label-success">{{context.pushAllow}}</span>
-            </li>
-            <li>
-              <label>
-                Client Push Allowed
-              </label>
-              <span class="label-nodefony label-success">{{context.pushAllowed}}</span>
-            </li>
-          </ul>
-        </div>
-      </li>
-    {% endif %}
-
-    <li id="separator-workbox" class="separator hidden"></li>
-    <li id="workbox" class="hidden">
-      <img style="border-radius: 50%" alt="workbox" src="/monitoring-bundle/images/workbox-icon192x192.png">
-      <div class="details">
-        <ul>
-          <li>
-            <label class="nodefony-title">WORKBOX
-            </label>
-          </li>
-          <li class="separator"></li>
-          <li>
-            <label>
-              Version :
-            </label>
-            <span id="workbox-version" class="label-nodefony label-success"></span>
-          </li>
-          <li>
-            <label>
-              Worker State:
-            </label>
-            <span id="workbox-state" class="label-nodefony label-success"></span>
-          </li>
-        </ul>
-      </div>
-    </li>
-    <li class="separator"></li>
-    <li>
-      <label class="label-nodefony nodefony-responsive-sm">
-        <a target="blank" href='{{path("monitoring-index")}}#/config/App'>{{projectName}}
-          :</a>
-      </label>
-      <label class="label-nodefony label-default">{{environment}}</label>
-      <div class="details">
-        <ul>
-          <li>
-            <strong>
-              <label>
-                <a style="color:#0337ab" target="blank" href='{{path("monitoring-index")}}#/config/App'>
-                  APP</a>
-              </label>
-              <span title="{{bundles.app.title}}" class="label-nodefony label-default">{{bundles.app.version}}</span>
-            </strong>
-          </li>
-          {% for key, value in appSettings %}
-            <li>
-              <label>{{ key }}</label>
-              <span class="label-nodefony label-success">{{value}}</span>
-            </li>
-          {% endfor %}
-          <li class="separator"></li>
-
-          <li>
-            <label class="nodefony-title">BUNDLES</label>
-          </li>
-          {% for key, value in bundles %}
-            {% if key != "app" %}
-              <li>
-                <label>
-                  <a style="color:#2f2f2f" target="blank" href='{{path("monitoring-index")}}#/config/{{key}}'>{{ key }}</a>
-                </label>
-                {% if value.loader == "package" %}
-                  <span title="{{value.title}}" class="label-nodefony label-success">{{value.version}}</span>
-                {% else %}
-                  <span title="{{value.title}}" class="label-nodefony label-default">{{value.version}}</span>
-                {% endif %}
-              </li>
-            {% endif %}
-          {% endfor %}
-
-          <li class="separator"></li>
-          <li>
             <label class="nodefony-title" title="content delivery network">DOMAIN CDN</label>
           </li>
           {% if cdn %}
@@ -308,43 +166,136 @@
               </span>
             </li>
           {% endif %}
+          <li class="separator"></li>
+          <li>
+            <label class="nodefony-title">DEV SERVERS</label>
+          </li>
+          {% for key, value in kernelSettings.system.devServer %}
+            <li>
+              <label>{{ key  }}</label>
+              <span class="label-nodefony label-success">{{value}}</span>
+            </li>
+          {% endfor %}
+
         </ul>
       </div>
-
     </li>
-
     <li class="separator"></li>
-
-    <li >
-      <label class="label-nodefony nodefony-responsive-md">
-        <a target="blank" href='{{path("monitoring-index")}}#/services'>SERVICES</a>
-      </label>
-      <label class="label-nodefony label-default">{{nbServices}}</label>
+    <li>
+      <img src="/monitoring-bundle/images/nodejs_logo.png">
       <div class="details">
         <ul>
           <li>
-            <label class="nodefony-title">TRANSLATION</label>
+            <label class="nodefony-title">Node.js ®</label>
+            <span class="label-nodefony label-default">{{node.node}}</span>
           </li>
+          <li class="separator"></li>
+          {% for key, value in node %}
+            <li>
+              <label>{{ key }}</label>
+              <span class="label-nodefony label-success">{{value}}</span>
+            </li>
+          {% endfor %}
+          <li class="separator"></li>
           <li>
-            <label>Locale Default</label>
-            <span class="label-nodefony label-default">{{services.translation.defaultLocale}}</span>
+            <label class="nodefony-title">ENVIRONMENT</label>
           </li>
+          {% for key, value in env %}
+            <li>
+              <label>{{ key }}</label>
+              <span title="{{value}}" class="label-nodefony label-success">{{value}}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </li>
+    {% if context.protocol == "2.0" %}
+      <li class="separator"></li>
+      <li>
+        <img style="border-radius: 50%" alt="HTTP2" src="/monitoring-bundle/images/http2.png">
+        <div class="details">
+          <ul>
+            <li>
+              <label class="nodefony-title">
+                HTTP Protocol
+              </label>
+              <span class="label-nodefony label-default">{{context.protocol}}</span>
+            </li>
+            <li class="separator"></li>
+            <li>
+              <label>
+                Server Push Allowed
+              </label>
+              <span class="label-nodefony label-success">{{context.pushAllow}}</span>
+            </li>
+            <li>
+              <label>
+                Client Push Allowed
+              </label>
+              <span class="label-nodefony label-success">{{context.pushAllowed}}</span>
+            </li>
+          </ul>
+        </div>
+      </li>
+    {% endif %}
+
+    <li id="separator-workbox" class="separator hidden"></li>
+    <li id="workbox" class="hidden">
+      <img style="border-radius: 50%" alt="workbox" src="/monitoring-bundle/images/workbox-icon192x192.png">
+      <div class="details">
+        <ul>
           <li>
-            <label>Domain Default</label>
-            <span >{{services.translation.defaultDomain}}</span>
+            <label class="nodefony-title">WORKBOX
+            </label>
           </li>
           <li class="separator"></li>
           <li>
-            <label class="nodefony-title">UPLOAD</label>
+            <label>
+              Version :
+            </label>
+            <span id="workbox-version" class="label-nodefony label-success"></span>
           </li>
           <li>
-            <label>Temporary Directory</label>
-            <span >{{services.upload.tmp_dir}}</span>
+            <label>
+              Worker State:
+            </label>
+            <span id="workbox-state" class="label-nodefony label-success"></span>
+          </li>
+        </ul>
+      </div>
+    </li>
+    <li class="separator"></li>
+    <li>
+      <label class="label-nodefony nodefony-responsive-sm">
+        <a target="blank" href='{{path("monitoring-index")}}#/config/App'>{{projectName}}</a>
+      </label>
+      <label class="label-nodefony label-default">{{environment}}</label>
+      <div class="details">
+        <ul>
+          <li>
+            <strong>
+              <label>
+                <a style="color:#0337ab" target="blank" href='{{path("monitoring-index")}}#/config/App'>
+                  APP</a>
+              </label>
+              <span title="{{bundles.app.title}}" class="label-nodefony label-default">{{bundles.app.version}}</span>
+            </strong>
+          </li>
+          {% for key, value in appSettings %}
+            <li>
+              <label>{{ key }}</label>
+              <span class="label-nodefony label-success">{{value}}</span>
+            </li>
+          {% endfor %}
+          <li>
+            <label>Locale Default</label>
+            <span class="label-nodefony label-success">{{services.translation.defaultLocale}}</span>
           </li>
           <li>
-            <label>Max Size File</label>
-            <span >{{services.upload.max_size}}</span>
+            <label>Domain Default</label>
+            <span class="label-nodefony label-success">{{services.translation.defaultDomain}}</span>
           </li>
+
           <li class="separator"></li>
           <li>
             <label class="nodefony-title">SESSION</label>
@@ -385,6 +336,65 @@
               <label>Version</label>
               <span >{{services.ORM.version}}</span>
             </li>
+          {% endif %}
+          <li class="separator"></li>
+          <li>
+            <label class="nodefony-title">UPLOAD</label>
+          </li>
+          <li>
+            <label>Temporary Directory</label>
+            <span >{{services.upload.tmp_dir}}</span>
+          </li>
+          <li>
+            <label>Max Size File</label>
+            <span >{{services.upload.max_size}}</span>
+          </li>
+          <li class="separator"></li>
+          <li>
+            <label class="nodefony-title">BUNDLES</label>
+          </li>
+          {% for key, value in bundles %}
+            {% if key != "app" %}
+              <li>
+                <label>
+                  <a style="color:#2f2f2f" target="blank" href='{{path("monitoring-index")}}#/config/{{key}}'>{{ key }}</a>
+                </label>
+                {% if value.loader == "package" %}
+                  <span title="{{value.title}}" class="label-nodefony label-success">{{value.version}}</span>
+                {% else %}
+                  <span title="{{value.title}}" class="label-nodefony label-default">{{value.version}}</span>
+                {% endif %}
+              </li>
+            {% endif %}
+          {% endfor %}
+
+
+        </ul>
+      </div>
+    </li>
+
+    <li class="separator"></li>
+
+    <li >
+      <label class="label-nodefony nodefony-responsive-md">
+        <a target="blank" href='{{path("monitoring-index")}}#/services'>SERVICES</a>
+      </label>
+      <label class="label-nodefony label-default">{{nbServices}}</label>
+      <div class="details">
+        <ul>
+
+          <li>
+            <label class="nodefony-title">TRANSLATION</label>
+          </li>
+          <li>
+            <label>Local</label>
+            <span class="label-nodefony label-success">{{locale.default}}</span>
+          </li>
+          <li>
+            <label>Domain</label>
+            <span class="label-nodefony label-success">{{getTransDefaultDomain()}}</span>
+          </li>
+          {% if services.ORM %}
             <li class="separator"></li>
             <li>
               <label class="nodefony-title">DATABASES
@@ -661,19 +671,6 @@
               {% endif %}
             {% endfor %}
           {% endif %}
-          <li class="separator"></li>
-          <li>
-            <label class="nodefony-title">TRANSLATION</label>
-          </li>
-          <li>
-            <label>Local</label>
-            <span class="label-nodefony label-success">{{locale.default}}</span>
-          </li>
-          <li>
-            <label>Domain</label>
-            <span class="label-nodefony label-success">{{getTransDefaultDomain()}}</span>
-          </li>
-
         </ul>
       </div>
     </li>
@@ -806,6 +803,12 @@
                       <span style="margin:0 0 2px 20px">{{value}}</span>
                     </li>
                   {% endif %}
+                  {% if key == "csrf-token" %}
+                    <li>
+                      <label style="margin:0 0 2px 20px" class="label-nodefony  label-default">{{ key  }}</label>
+                      <span style="margin:0 0 2px 20px">{{value}}</span>
+                    </li>
+                  {% endif %}
                 {% endfor %}
               </span>
             </li>
@@ -861,7 +864,6 @@
                   {{response.message}}</span>
               </li>
             {% else %}
-
               {% if key != "headers" %}
                 <li>
                   <label>{{ key  }}</label>
@@ -872,18 +874,15 @@
                 <li>
                   <label class="nodefony-title">HEADERS</label>
                 </li>
-
                 {% for header, val in response["headers"] %}
                   <li>
                     <label>{{ header  }}</label>
                     <span class="label-nodefony label-success">{{val}}</span>
                   </li>
                 {% endfor %}
-
               {% endif %}
             {% endif %}
           {% endfor %}
-
         </ul>
       </div>
     </li>
@@ -893,6 +892,7 @@
   <ul class="pull-right">
     <li>
       <img id="nodefonyClose" src="/monitoring-bundle/images/window-close.ico">
+    </li>
   </ul>
 </div>
 

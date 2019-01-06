@@ -12,7 +12,7 @@ module.exports = function () {
    */
   const App = class App {
     constructor() {
-      let selectorLang = global.document.getElementById("lang");
+      let selectorLang = global.document.getElementById("language");
       if (selectorLang) {
         selectorLang.addEventListener("change", (e) => {
           //window.location.href = "?lang=" + this.value;
@@ -24,7 +24,7 @@ module.exports = function () {
 
     changeLang(query) {
       if (query) {
-        return window.location.href = "?lang=" + query;
+        return window.location.href = "?language=" + query;
       }
       let form = global.document.getElementById("formLang");
       if (form) {

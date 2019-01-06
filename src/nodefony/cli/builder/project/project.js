@@ -11,8 +11,8 @@ module.exports = class generateProject extends nodefony.Builder {
       }
     }
     nodefony.extend(this.cli.response, {
-      name: this.name || "myproject",
-      description: "description project",
+      name: this.name || "nodefony-starter",
+      description: "description nodefony-starter",
       path: this.location || path.resolve("."),
       authorFullName: "admin",
       authorMail: "admin@nodefony.com",
@@ -101,6 +101,13 @@ module.exports = class generateProject extends nodefony.Builder {
         name: 'portHttps',
         default: this.cli.response.portHttps,
         message: 'Enter Server Secure Domain https Port  :',
+      }, {
+        type: 'list',
+        name: 'orm',
+        default: 0,
+        pageSize: 2,
+        choices: ["sequelize", "mongoose"],
+        message: 'Choose default ORM  (Mapping Objet Relationnel) :'
       }, {
         type: 'list',
         name: 'packageManager',
