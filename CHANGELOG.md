@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.1.0-beta.2 (06/01/2019)
+- [nodefony release 4.1.0-beta.2](https://github.com/nodefony/nodefony-core/commit/56723c17bd96a4f307eb5e759b9ae5ba32889d86)
+
+---
+
 ## v4.1.0-beta.1 (06/01/2019)
 - [nodefony release 4.1.0-beta.1](https://github.com/nodefony/nodefony-core/commit/fd5e57548838b27d3022092fb3902ffa141a8e18)
 - [Add CSRF service | update deps | update user entity | multi orm users management](https://github.com/nodefony/nodefony-core/commit/1680bf5e3eaad0e64ca64e4827c2d056791713de)
