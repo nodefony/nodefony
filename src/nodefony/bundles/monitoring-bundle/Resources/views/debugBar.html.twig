@@ -503,7 +503,11 @@
               </li>
               <li>
                 <label>Provider</label>
-                <span class="label-nodefony black">{{context_secure.token.provider}}</span>
+                {% if context_secure.token.provider %}
+                  <span class="label-nodefony black">{{context_secure.token.provider.name}}</span>
+                {% else %}
+                  <span class="label-nodefony black">Not Defined</span>
+                {% endif %}
               </li>
               <li>
                 <label>Authenticated</label>

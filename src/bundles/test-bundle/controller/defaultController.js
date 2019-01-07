@@ -80,7 +80,7 @@ module.exports = class defaultController extends nodefony.controller {
     });
   }
 
-  indexAction() {
+  /*indexAction() {
     return this.myPromise()
       .then(ele => {
         return this.render("testBundle::index.html.twig", {
@@ -96,7 +96,7 @@ module.exports = class defaultController extends nodefony.controller {
           error: e
         });
       });
-  }
+  }*/
 
   /**
    *
@@ -182,36 +182,36 @@ module.exports = class defaultController extends nodefony.controller {
    */
   websoketAction(message) {
     switch (this.getMethod()) {
-    case "WEBSOCKET":
-      if (message) {
-        // MESSAGES CLIENT
-        this.logger(message.utf8Data, "INFO");
-      } else {
-        // PREPARE  PUSH MESSAGES SERVER
-        // SEND MESSAGES TO CLIENTS
-        var i = 0;
-        var id = setInterval(() => {
-          var mess = "I am a  message " + i + "\n";
-          this.logger("SEND TO CLIENT :" + mess, "INFO");
-          this.context.send(mess);
-          //this.renderResponse(mess);
-          i++;
-        }, 1000);
-        setTimeout(() => {
-          clearInterval(id);
-          // close reason , descripton
-          this.context.close(1000, "NODEFONY CONTROLLER CLOSE SOCKET");
-          id = null;
-        }, 10000);
-        this.context.listen(this, "onClose", () => {
-          if (id) {
+      case "WEBSOCKET":
+        if (message) {
+          // MESSAGES CLIENT
+          this.logger(message.utf8Data, "INFO");
+        } else {
+          // PREPARE  PUSH MESSAGES SERVER
+          // SEND MESSAGES TO CLIENTS
+          var i = 0;
+          var id = setInterval(() => {
+            var mess = "I am a  message " + i + "\n";
+            this.logger("SEND TO CLIENT :" + mess, "INFO");
+            this.context.send(mess);
+            //this.renderResponse(mess);
+            i++;
+          }, 1000);
+          setTimeout(() => {
             clearInterval(id);
-          }
-        });
-      }
-      break;
-    default:
-      throw new Error("REALTIME METHOD NOT ALLOWED");
+            // close reason , descripton
+            this.context.close(1000, "NODEFONY CONTROLLER CLOSE SOCKET");
+            id = null;
+          }, 10000);
+          this.context.listen(this, "onClose", () => {
+            if (id) {
+              clearInterval(id);
+            }
+          });
+        }
+        break;
+      default:
+        throw new Error("REALTIME METHOD NOT ALLOWED");
     }
   }
 };

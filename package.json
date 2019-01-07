@@ -1,7 +1,7 @@
 {
   "name": "nodefony-core",
-  "version": "4.0.0-beta.22",
-  "description": "Nodefony Node.js full-stack web framework",
+  "version": "4.1.0-beta.2",
+  "description": "Nodefony Node.js Web Framework",
   "main": "./src/nodefony/core/autoloader.es6",
   "scripts": {
     "nodefony": "src/nodefony/bin/nodefony",

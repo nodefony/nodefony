@@ -36,39 +36,39 @@ module.exports = nodefony.register('Token', () => {
 
     setRoles(roles) {
       switch (nodefony.typeOf(roles)) {
-      case "string":
-        if (!this.hasRole(roles)) {
-          this.roles.push(new nodefony.Role(roles));
-        }
-        break;
-      case "array":
-        if (roles && roles.length) {
-          for (let i = 0; i < roles.length; i++) {
-            try {
-              this.setRoles(roles[i]);
-            } catch (e) {
-              throw e;
+        case "string":
+          if (!this.hasRole(roles)) {
+            this.roles.push(new nodefony.Role(roles));
+          }
+          break;
+        case "array":
+          if (roles && roles.length) {
+            for (let i = 0; i < roles.length; i++) {
+              try {
+                this.setRoles(roles[i]);
+              } catch (e) {
+                throw e;
+              }
             }
           }
-        }
-        break;
-      case "object":
-        if (roles instanceof nodefony.Role) {
-          if (!this.hasRole(roles.role)) {
-            this.roles.push(roles);
-          }
-        } else {
-          if (roles.role) {
+          break;
+        case "object":
+          if (roles instanceof nodefony.Role) {
             if (!this.hasRole(roles.role)) {
-              this.roles.push(new nodefony.Role(roles.role));
+              this.roles.push(roles);
             }
           } else {
-            throw new Error("Bad typeof roles ");
+            if (roles.role) {
+              if (!this.hasRole(roles.role)) {
+                this.roles.push(new nodefony.Role(roles.role));
+              }
+            } else {
+              throw new Error("Bad typeof roles ");
+            }
           }
-        }
-        break;
-      default:
-        throw new Error("Bad typeof roles ");
+          break;
+        default:
+          throw new Error("Bad typeof roles ");
       }
     }
 
@@ -141,7 +141,7 @@ module.exports = nodefony.register('Token', () => {
         user: user,
         authenticated: this.authenticated,
         factory: this.factory,
-        provider: this.provider.name
+        provider: this.provider ? this.provider.name : null
       };
     }
 
@@ -149,20 +149,20 @@ module.exports = nodefony.register('Token', () => {
       try {
         for (let ele in token) {
           switch (ele) {
-          case "name":
-            break;
-          case "user":
-            if (this.user) {
-              this.user.unserialize(token[ele]);
-            }
-            break;
-          case "roles":
-            this.setRoles(token[ele]);
-            break;
-          case "provider":
-            break;
-          default:
-            this[ele] = token[ele];
+            case "name":
+              break;
+            case "user":
+              if (this.user) {
+                this.user.unserialize(token[ele]);
+              }
+              break;
+            case "roles":
+              this.setRoles(token[ele]);
+              break;
+            case "provider":
+              break;
+            default:
+              this[ele] = token[ele];
           }
         }
       } catch (e) {

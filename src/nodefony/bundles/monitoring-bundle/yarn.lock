@@ -583,10 +583,10 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@nodefony/stage@^0.1.15":
-  version "0.1.15"
-  resolved "https://registry.yarnpkg.com/@nodefony/stage/-/stage-0.1.15.tgz#5dfa8c81bdf1e3da318c7692a8b9e614862d853f"
-  integrity sha512-HALj/c3Vkz/Q/kQWCdxQ9tV99Zgc+NlxiQdfx4rYbt0KcjFMvo6kDJPZSrKbMYEjbZf1snxBzOPb6Wy9Y++y1w==
+"@nodefony/stage@^0.1.16":
+  version "0.1.16"
+  resolved "https://registry.yarnpkg.com/@nodefony/stage/-/stage-0.1.16.tgz#ca35bc2f998ddda30d6060a89c0c506fd6edfa1a"
+  integrity sha512-ertYnL5N20sdlCnP0htDKGjDIiYdhYjr+L/nM+JfpEx24uNSNWCUSO4jzFIIAD57fh5xlyP9xhqabFUevlgVCA==
   dependencies:
     ascii-table "0.0.9"
     asciify "^1.3.5"

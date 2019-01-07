@@ -13,7 +13,7 @@
   "dependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.2.3",
-    "@nodefony/stage": "^0.1.15",
+    "@nodefony/stage": "^0.1.16",
     "babel-loader": "^8.0.5",
     "bootstrap": "=3.3.7",
     "clean-webpack-plugin": "^1.0.0",
