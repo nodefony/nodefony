@@ -58,6 +58,7 @@ security:
 
     ######################
     # SECURITY AREA GOOGLE
+    # https://console.developers.google.com
     #
     # google_area:
     #   pattern                 : ^/login/google
