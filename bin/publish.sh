@@ -83,8 +83,8 @@ upgrade_nodefony () {
   cd $pathnodefony;
   add_bundle;
   for package in ${packages[@]}; do
-    echo "UPGRADE PACKAGE nodefony with : @nodefony/$package";
-    npm install @nodefony/$package
+    echo "UPGRADE PACKAGE nodefony with : @nodefony/$package@$version";
+    npm install @nodefony/$package@$version
   done
 }
 
