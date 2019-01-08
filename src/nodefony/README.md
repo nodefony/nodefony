@@ -387,7 +387,7 @@ system:
     certificats:
       key                       : "config/certificates/server/privkey.pem"
       cert                      : "config/certificates/server/fullchain.pem"
-      ca                        : "config/certificates/ca/cci-root-ca.crt.pem"
+      ca                        : "config/certificates/ca/nodefony-starter-root-ca.crt.pem"
       options:
         rejectUnauthorized      : true
   ############
