@@ -40,7 +40,11 @@
         <button class="btn btn-lg btn-primary btn-block mt-4" type="submit">{{trans("submit")}}</button>
       </form>
       <a  href="{{url("nodefony-user-create")}}" class="mt-5 mb-3 text-muted">{{"register"|trans}}</a>
-      <p class="mt-5 mb-3 text-muted">© {{year}}</p>
+      <p class="mt-5 mb-3 text-muted">
+        <a href="#" class="btn btn-secondary fa fa-github disabled"> {{trans("login")}} &nbsp with Github</a>
+        <a href="#" class="btn btn-danger fa fa-google disabled">{{trans("login")}} &nbsp with Google</a>
+      </p>
+      <p class="mt-3 mb-3 text-muted">© {{year}}</p>
     </div>
   </div>
     {% block footer %}
