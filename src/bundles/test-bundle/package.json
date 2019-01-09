@@ -28,7 +28,7 @@
     "terser-webpack-plugin": "^1.2.1",
     "uglifycss": "^0.0.29",
     "vue": "^2.5.20",
-    "vue-loader": "^15.5.0",
+    "vue-loader": "^15.5.1",
     "vue-router": "^3.0.2",
     "vue-template-compiler": "^2.5.20",
     "webpack": "^4.28.3",

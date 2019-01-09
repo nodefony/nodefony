@@ -6,9 +6,9 @@ module.exports = {
     defaults: {
       controller: "app:app:index"
     }
-  },
+  }
   //GOOGLE AUTH AREA
-  googleArea: {
+  /*googleArea: {
     pattern: "/login/google",
     defaults: {
       controller: "framework:default:401"
@@ -32,5 +32,5 @@ module.exports = {
     defaults: {
       controller: "framework:default:401"
     }
-  }
+  }*/
 };
