@@ -306,10 +306,8 @@ module.exports = nodefony.register("Bundle", function () {
           try {
             switch (process.env.NODE_ENV) {
             case "development":
-              file = path.resolve(this.path, "config", "webpack.config.dev.js");
-              break;
             case "production":
-              file = path.resolve(this.path, "config", "webpack.config.prod.js");
+              file = path.resolve(this.path, "config", "webpack.config.js");
               break;
             }
             res = new nodefony.fileClass(file);

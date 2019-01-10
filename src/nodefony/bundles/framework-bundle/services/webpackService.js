@@ -107,11 +107,11 @@ module.exports = class webpack extends nodefony.Service {
 
   setFileSystem() {
     switch (this.webPackSettings.outputFileSystem) {
-      case "memory-fs":
-        return null;
-        //return new MemoryFS();
-      default:
-        return null;
+    case "memory-fs":
+      return null;
+      //return new MemoryFS();
+    default:
+      return null;
     }
   }
 
@@ -191,16 +191,16 @@ module.exports = class webpack extends nodefony.Service {
         devClient.push(`webpack-dev-server/client?${options.protocol}://${options.domain}:${options.port}`);
         const prependDevClient = (entry) => {
           switch (nodefony.typeOf(entry)) {
-            case "function":
-              return () => Promise.resolve(entry()).then(prependDevClient);
-            case 'object':
-              const entryClone = {};
-              Object.keys(entry).forEach((key) => {
-                entryClone[key] = devClient.concat(entry[key]);
-              });
-              return entryClone;
-            default:
-              return devClient.concat(entry);
+          case "function":
+            return () => Promise.resolve(entry()).then(prependDevClient);
+          case 'object':
+            const entryClone = {};
+            Object.keys(entry).forEach((key) => {
+              entryClone[key] = devClient.concat(entry[key]);
+            });
+            return entryClone;
+          default:
+            return devClient.concat(entry);
           }
         };
         [].concat(config).forEach((wpOpt) => {
@@ -237,58 +237,58 @@ module.exports = class webpack extends nodefony.Service {
       }
       try {
         switch (type) {
-          case "angular":
-            publicPath = path.resolve("/", bundle.bundleName, "dist");
-            config = require(file.path);
-            config.context = Path;
-            config.output.path = path.resolve(bundle.path, "Resources", "public", "dist");
-            if (config.output.publicPath === undefined) {
-              if (publicPath) {
-                config.output.publicPath = publicPath + "/";
-              } else {
-                config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
-              }
-            }
-            if (!this.production) {
-              watchOptions = {
-                ignoreInitial: false,
-                persistent: true,
-                followSymlinks: false,
-                depth: 0,
-                atomic: false,
-                alwaysStat: true,
-                ignorePermissionErrors: true,
-              };
-            }
-            break;
-          case "react":
-            publicPath = path.resolve("/", bundle.bundleName, "dist");
-            process.env.PUBLIC_URL = publicPath;
-            process.env.PUBLIC_PATH = publicPath;
-            process.env.HOST = this.socksSettings.domain + ":" + this.socksSettings.port;
-            process.env.HTTPS = true;
-            config = require(file.path);
-            config.context = Path;
-            config.output.path = path.resolve(bundle.path, "Resources", "public", "dist");
+        case "angular":
+          publicPath = path.resolve("/", bundle.bundleName, "dist");
+          config = require(file.path);
+          config.context = Path;
+          config.output.path = path.resolve(bundle.path, "Resources", "public", "dist");
+          if (config.output.publicPath === undefined) {
             if (publicPath) {
               config.output.publicPath = publicPath + "/";
             } else {
               config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
             }
+          }
+          if (!this.production) {
             watchOptions = {
-              ignored: new RegExp(
-                `^(?!${path
+              ignoreInitial: false,
+              persistent: true,
+              followSymlinks: false,
+              depth: 0,
+              atomic: false,
+              alwaysStat: true,
+              ignorePermissionErrors: true,
+            };
+          }
+          break;
+        case "react":
+          publicPath = path.resolve("/", bundle.bundleName, "dist");
+          process.env.PUBLIC_URL = publicPath;
+          process.env.PUBLIC_PATH = publicPath;
+          process.env.HOST = this.socksSettings.domain + ":" + this.socksSettings.port;
+          process.env.HTTPS = true;
+          config = require(file.path)(process.env.NODE_ENV);
+          config.context = Path;
+          config.output.path = path.resolve(bundle.path, "Resources", "public", "dist");
+          if (publicPath) {
+            config.output.publicPath = publicPath + "/";
+          } else {
+            config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
+          }
+          watchOptions = {
+            ignored: new RegExp(
+              `^(?!${path
                 .normalize(Path + '/')
                 .replace(/[\\]+/g, '\\\\')}).+[\\\\/]node_modules[\\\\/]`,
-                'g'
-              )
-            };
-            break;
-          default:
-            config = require(file.path);
-            watchOptions = nodefony.extend({
-              ignored: /node_modules/
-            }, this.webPackSettings.watchOptions);
+              'g'
+            )
+          };
+          break;
+        default:
+          config = require(file.path);
+          watchOptions = nodefony.extend({
+            ignored: /node_modules/
+          }, this.webPackSettings.watchOptions);
         }
 
         try {
