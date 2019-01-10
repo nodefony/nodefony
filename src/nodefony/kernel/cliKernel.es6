@@ -1,7 +1,7 @@
 const simpleGit = require('simple-git');
 const npm = require("npm");
 
-module.exports = nodefony.register("cliKernel", function () {
+module.exports = nodefony.register("cliKernel", function() {
 
   const charsTable = {
     'top': '',
@@ -35,7 +35,7 @@ module.exports = nodefony.register("cliKernel", function () {
     style: styleTable
   };
 
-  let createAssetDirectory = function (myPath, callback) {
+  let createAssetDirectory = function(myPath, callback) {
     try {
       if (fs.existsSync(myPath)) {
         return callback(fs.statSync(myPath));
@@ -54,7 +54,7 @@ module.exports = nodefony.register("cliKernel", function () {
     }
   };
 
-  let parseAssetsBundles = function (table) {
+  let parseAssetsBundles = function(table) {
     let bundles = this.kernel.getBundles();
     let result = null;
     let name = null;
@@ -100,7 +100,7 @@ module.exports = nodefony.register("cliKernel", function () {
   };
 
   const regHidden = /^\./;
-  const isHiddenFile = function (name) {
+  const isHiddenFile = function(name) {
     return regHidden.test(name);
   };
   const defaultOptions = {
@@ -131,11 +131,11 @@ module.exports = nodefony.register("cliKernel", function () {
       this.publicPath = null;
       this.keepAlive = false;
       switch (nodefony.packageManager) {
-      case 'yarn':
-        this.packageManager = this.yarn;
-        break;
-      default:
-        this.packageManager = this.npm;
+        case 'yarn':
+          this.packageManager = this.yarn;
+          break;
+        default:
+          this.packageManager = this.npm;
       }
       this.parseNodefonyCommand();
     }
@@ -156,16 +156,16 @@ module.exports = nodefony.register("cliKernel", function () {
 
     setType(type) {
       switch (type) {
-      case "console":
-      case "CONSOLE":
-        this.type = "CONSOLE";
-        break;
-      case "server":
-      case "SERVER":
-        this.type = "SERVER";
-        break;
-      default:
-        throw new Error(`cliKernel Bad Type : ${type}`);
+        case "console":
+        case "CONSOLE":
+          this.type = "CONSOLE";
+          break;
+        case "server":
+        case "SERVER":
+          this.type = "SERVER";
+          break;
+        default:
+          throw new Error(`cliKernel Bad Type : ${type}`);
       }
     }
 
@@ -566,16 +566,16 @@ module.exports = nodefony.register("cliKernel", function () {
       }
       let files = null;
       switch (true) {
-      case stat.isFile():
-        throw new Error(dir + " is not a directory");
-      case stat.isDirectory():
-        files = fs.readdirSync(dir);
-        break;
-      case stat.isSymbolicLink():
-        files = fs.realpathSync(dir);
-        break;
-      default:
-        throw new Error(dir + " is not a directory");
+        case stat.isFile():
+          throw new Error(dir + " is not a directory");
+        case stat.isDirectory():
+          files = fs.readdirSync(dir);
+          break;
+        case stat.isSymbolicLink():
+          files = fs.realpathSync(dir);
+          break;
+        default:
+          throw new Error(dir + " is not a directory");
       }
       let totalSizeBytes = 0;
       let dirSize = null;
@@ -587,22 +587,22 @@ module.exports = nodefony.register("cliKernel", function () {
           return totalSizeBytes;
         }
         switch (true) {
-        case stat.isFile():
-          if (!isHiddenFile(files[i])) {
-            totalSizeBytes += stat.size;
-          }
-          break;
-        case stat.isDirectory():
-          dirSize = this.getSizeDirectory(myPath, exclude);
-          totalSizeBytes += dirSize;
-          break;
-        case stat.isSymbolicLink():
-          //console.log("isSymbolicLink")
-          try {
-            dirSize = this.getSizeDirectory(fs.realpathSync(myPath), exclude);
+          case stat.isFile():
+            if (!isHiddenFile(files[i])) {
+              totalSizeBytes += stat.size;
+            }
+            break;
+          case stat.isDirectory():
+            dirSize = this.getSizeDirectory(myPath, exclude);
             totalSizeBytes += dirSize;
-          } catch (e) {}
-          break;
+            break;
+          case stat.isSymbolicLink():
+            //console.log("isSymbolicLink")
+            try {
+              dirSize = this.getSizeDirectory(fs.realpathSync(myPath), exclude);
+              totalSizeBytes += dirSize;
+            } catch (e) {}
+            break;
         }
       }
       return totalSizeBytes;
@@ -623,14 +623,16 @@ module.exports = nodefony.register("cliKernel", function () {
           //console.log(e ,"ERROR")
         }
         //console.log(srcpath+" : "+ dstpath);
-        res = fs.symlink(srcpath, dstpath, (e) => {
+        res = shell.ln("-sf", srcpath, dstpath);
+        return callback(srcpath, dstpath);
+        /*res = fs.symlink(srcpath, dstpath, (e) => {
           if (!e || (e && e.code === 'EEXIST')) {
             callback(srcpath, dstpath);
           } else {
             this.logger(e, "ERROR");
           }
         });
-        callback(srcpath, dstpath);
+        callback(srcpath, dstpath);*/
       } catch (e) {
         this.logger("FILE :" + srcpath + " not exist: " + e, "ERROR");
       }
@@ -752,11 +754,11 @@ module.exports = nodefony.register("cliKernel", function () {
     rebuildPackage(bundle, env = "development") {
       let cmd = null;
       switch (nodefony.packageManager) {
-      case 'yarn':
-        cmd = ["install", "--force"];
-        break;
-      default:
-        cmd = ["install"];
+        case 'yarn':
+          cmd = ["install", "--force"];
+          break;
+        default:
+          cmd = ["install"];
       }
       try {
         if (bundle instanceof nodefony.Bundle) {

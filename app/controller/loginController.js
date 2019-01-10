@@ -66,10 +66,21 @@ module.exports = class loginController extends nodefony.controller {
    *    @Route ("/logout", name="logout")
    */
   logoutAction() {
-    return this.security.logout(this.context)
-      .catch((e) => {
-        throw e;
-      });
+    if (this.security) {
+      return this.security.logout(this.context)
+        .catch((e) => {
+          throw e;
+        });
+    }
+    if (this.context.session) {
+      return this.context.session.destroy(true)
+        .then(() => {
+          return this.context.redirect("/", null, true);
+        }).catch(e => {
+          this.logger(e, "ERROR");
+        });
+    }
+    return this.context.redirect("/", null, true);
   }
 
 };

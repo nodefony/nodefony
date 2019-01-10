@@ -34,14 +34,17 @@
     "url": "https://github.com/nodefony/help/issues"
   },
   "license": "CECILL-B",
-  "licenses": [{
-    "type": "CECILL-B",
-    "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-  }],
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
   "os": [
     "darwin",
     "linux",
-    "freebsd"
+    "freebsd",
+    "win32"
   ],
   "engines": {
     "node": ">=8"
@@ -49,7 +52,7 @@
   "dependencies": {
     "mongoose": "^5.4.3",
     "sequelize": "5.0.0-beta.15",
-    "webpack": "^4.28.3",
+    "webpack": "^4.28.4",
     "webpack-dev-server": "^3.1.14"
   },
   "devDependencies": {
@@ -60,5 +63,7 @@
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md",
-  "contributors": [{}]
+  "contributors": [
+    {}
+  ]
 }

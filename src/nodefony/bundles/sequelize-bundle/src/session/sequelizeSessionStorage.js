@@ -105,11 +105,14 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function() {
     }
 
     destroy(id, contextSession) {
+      let where = {
+        session_id: id
+      };
+      if (contextSession) {
+        where.context = contextSession;
+      }
       return this.entity.findOne({
-          where: {
-            session_id: id,
-            context: contextSession
-          }
+          where: where
         })
         .then((result) => {
           if (result) {

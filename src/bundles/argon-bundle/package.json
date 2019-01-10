@@ -25,9 +25,9 @@
     "vue2-transitions": "^0.2.3"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.2.2",
-    "@vue/cli-plugin-eslint": "^3.2.2",
-    "@vue/cli-service": "^3.2.3",
+    "@vue/cli-plugin-babel": "^3.3.0",
+    "@vue/cli-plugin-eslint": "^3.3.0",
+    "@vue/cli-service": "^3.3.0",
     "@vue/eslint-config-prettier": "^4.0.1",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
