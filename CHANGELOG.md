@@ -1,5 +1,16 @@
 # Changelog
 
+## v4.1.0-beta.4 (11/01/2019)
+- [nodefony release 4.1.0-beta.4](https://github.com/nodefony/nodefony-core/commit/7ce4df806712df6b2b2e88c40f0c18b7eb4e2d13)
+- [debug firewall authorisation](https://github.com/nodefony/nodefony-core/commit/4263fd3264a6626affcc3a460fb8ca307cb7709a)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/468bb0007a94a051e4736d8760fd29d77e9d5053)
+- [windows debug](https://github.com/nodefony/nodefony-core/commit/d7c36becdd52dc77981922a52e745a074f3201af)
+- [debug react config webpack](https://github.com/nodefony/nodefony-core/commit/2997937b54103f63aaa3382546ab5f246dbefbca)
+- [upgrade pm2](https://github.com/nodefony/nodefony-core/commit/4b6ba302626dd3bac9943085300abf2f28badc83)
+- [add route for social button in skeleton](https://github.com/nodefony/nodefony-core/commit/7fcae4f0f2d5b12dfc1b8ebe0100f384e54675a1)
+
+---
+
 ## v4.1.0-beta.3 (08/01/2019)
 - [nodefony release 4.1.0-beta.3](https://github.com/nodefony/nodefony-core/commit/9edc63ea407a1d1ba9d653764eef284decfd1b8f)
 - [add firewall config social login](https://github.com/nodefony/nodefony-core/commit/77950b749c6cf67d99a88771e6b493e906144fef)
