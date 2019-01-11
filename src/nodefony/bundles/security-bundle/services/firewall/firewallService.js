@@ -174,7 +174,7 @@ module.exports = class security extends nodefony.Service {
                       return resolve(context.handle());
                     } catch (e) {
                       if (context.session) {
-                        context.session.invalidate();
+                        //context.session.invalidate();
                       }
                       return reject(e);
                     }
@@ -556,7 +556,7 @@ module.exports = class security extends nodefony.Service {
                   area.setRedirectHttps(param[config]);
                   break;
                 case "provider":
-                  area.setProvider(param[config]);
+                  area.setProviderName(param[config]);
                   break;
                 case "context":
                   if (param[config]) {

@@ -22,23 +22,23 @@ module.exports = class apiController extends nodefony.controller {
       this.response.setStatusCode(data.code);
     }
     switch (type.toLowerCase()) {
-    case "application/xml":
-    case "text/xml":
-    case "xml":
-      this.response.setHeader('Content-Type', "application/xml");
-      if (async) {
-        return this.renderAsync('monitoringBundle:api:api.xml.twig', data);
-      } else {
-        return this.render('monitoringBundle:api:api.xml.twig', data);
-      }
-      break;
-    default:
-      this.response.setHeader('Content-Type', "application/json");
-      if (async) {
-        return this.renderAsync('monitoringBundle:api:api.json.twig', data);
-      } else {
-        return this.render('monitoringBundle:api:api.json.twig', data);
-      }
+      case "application/xml":
+      case "text/xml":
+      case "xml":
+        this.response.setHeader('Content-Type', "application/xml");
+        if (async) {
+          return this.renderAsync('monitoringBundle:api:api.xml.twig', data);
+        } else {
+          return this.render('monitoringBundle:api:api.xml.twig', data);
+        }
+        break;
+      default:
+        this.response.setHeader('Content-Type', "application/json");
+        if (async) {
+          return this.renderAsync('monitoringBundle:api:api.json.twig', data);
+        } else {
+          return this.render('monitoringBundle:api:api.json.twig', data);
+        }
     }
   }
 
@@ -112,28 +112,34 @@ module.exports = class apiController extends nodefony.controller {
   syslogAction(message) {
     switch (this.request.method) {
 
-    case "WEBSOCKET":
-      if (message) {
-        // MESSAGES
-        this.logger(message.utf8Data, "INFO");
-      } else {
-        let callback = function (pdu) {
-          this.renderResponse(JSON.stringify(pdu));
-        };
-        this.kernel.syslog.listen(this, "onLog", callback);
+      case "WEBSOCKET":
+        if (message) {
+          // MESSAGES
+          this.logger(message.utf8Data, "INFO");
+        } else {
+          let callback = function(pdu) {
+            this.renderResponse(JSON.stringify(pdu));
+          };
+          this.kernel.syslog.listen(this, "onLog", callback);
 
-        this.context.listen(this, "onClose", () => {
-          this.kernel.syslog.unListen("onLog", callback);
+          this.context.listen(this, "onClose", () => {
+            this.kernel.syslog.unListen("onLog", callback);
+          });
+        }
+        break;
+      default:
+        let data = null;
+        try {
+          data = JSON.stringify(this.get("syslog").ringStack);
+        } catch (e) {
+          throw e;
+        }
+        return this.renderRest({
+          code: 200,
+          type: "SUCCESS",
+          message: "OK",
+          data: data
         });
-      }
-      break;
-    default:
-      return this.renderRest({
-        code: 200,
-        type: "SUCCESS",
-        message: "OK",
-        data: JSON.stringify(this.get("syslog").ringStack)
-      });
     }
   }
 
@@ -147,200 +153,200 @@ module.exports = class apiController extends nodefony.controller {
     let storageProfiling = bundle.settings.profiler.storage;
     let ormName = this.kernel.getOrm();
     switch (storageProfiling) {
-    case "syslog":
-      let syslog = bundle.syslogContext;
-      return this.renderRest({
-        code: 200,
-        type: "SUCCESS",
-        message: "OK",
-        data: JSON.stringify(syslog.ringStack)
-      });
-    case "orm":
-      let requestEntity = bundle.requestEntity;
-      switch (ormName) {
-      case "sequelize":
-        if (this.query.type && this.query.type === "dataTable") {
-          let options = {
-            offset: parseInt(this.query.start, 10),
-            limit: parseInt(this.query.length, 10)
-          };
-          if (this.query.order.length) {
-            options.order = [];
-            for (var i = 0; i < this.query.order.length; i++) {
-              var tab = [];
-              tab.push(this.query.columns[parseInt(this.query.order[i].column, 10)].name);
-              tab.push(this.query.order[i].dir);
-              options.order.push(tab);
+      case "syslog":
+        let syslog = bundle.syslogContext;
+        return this.renderRest({
+          code: 200,
+          type: "SUCCESS",
+          message: "OK",
+          data: JSON.stringify(syslog.ringStack)
+        });
+      case "orm":
+        let requestEntity = bundle.requestEntity;
+        switch (ormName) {
+          case "sequelize":
+            if (this.query.type && this.query.type === "dataTable") {
+              let options = {
+                offset: parseInt(this.query.start, 10),
+                limit: parseInt(this.query.length, 10)
+              };
+              if (this.query.order.length) {
+                options.order = [];
+                for (var i = 0; i < this.query.order.length; i++) {
+                  var tab = [];
+                  tab.push(this.query.columns[parseInt(this.query.order[i].column, 10)].name);
+                  tab.push(this.query.order[i].dir);
+                  options.order.push(tab);
+                }
+              }
+              if (this.query.search.value !== "") {
+                options.where = {
+                  $or: [{
+                    username: {
+                      $like: "%" + this.query.search.value + "%"
+                    }
+                  }, {
+                    url: {
+                      $like: "%" + this.query.search.value + "%"
+                    }
+                  }, {
+                    route: {
+                      $like: "%" + this.query.search.value + "%"
+                    }
+                  }, {
+                    method: {
+                      $like: "%" + this.query.search.value + "%"
+                    }
+                  }, {
+                    state: {
+                      $like: "%" + this.query.search.value + "%"
+                    }
+                  }, {
+                    protocole: {
+                      $like: "%" + this.query.search.value + "%"
+                    }
+                  }]
+                };
+              }
+              return requestEntity.findAndCountAll(options)
+                .then((results) => {
+                  try {
+                    var dataTable = dataTableParsing.call(this, this.query, results);
+                    return dataTable;
+                  } catch (e) {
+                    throw e;
+                  }
+                })
+                .then((result) => {
+                  try {
+                    return this.renderDatatable(result);
+                  } catch (e) {
+                    throw e;
+                  }
+                })
+                .catch((error) => {
+                  if (error) {
+                    this.logger(error, "ERROR");
+                    return this.renderRest({
+                      code: 500,
+                      type: "ERROR",
+                      message: "internal error",
+                      data: error
+                    }, true);
+                  }
+                });
+            } else {
+              return requestEntity.findAll()
+                .then((results) => {
+                  try {
+                    let ele = [];
+                    for (let i = 0; i < results.length; i++) {
+                      let ret = {};
+                      ret.uid = results[i].id;
+                      ret.payload = JSON.parse(results[i].data);
+                      ret.timeStamp = results[i].createdAt;
+                      ele.push(ret);
+                    }
+                    return this.renderRest({
+                      code: 200,
+                      type: "SUCCESS",
+                      message: "OK",
+                      data: JSON.stringify(ele)
+                    }, true);
+                  } catch (e) {
+                    throw e;
+                  }
+                })
+                .catch((error) => {
+                  if (error) {
+                    this.logger(error, "ERROR");
+                    return this.renderRest({
+                      code: 500,
+                      type: "ERROR",
+                      message: "internal error",
+                      data: error
+                    }, true);
+                  }
+                });
             }
-          }
-          if (this.query.search.value !== "") {
-            options.where = {
-              $or: [{
-                username: {
-                  $like: "%" + this.query.search.value + "%"
-                }
-              }, {
-                url: {
-                  $like: "%" + this.query.search.value + "%"
-                }
-              }, {
-                route: {
-                  $like: "%" + this.query.search.value + "%"
-                }
-              }, {
-                method: {
-                  $like: "%" + this.query.search.value + "%"
-                }
-              }, {
-                state: {
-                  $like: "%" + this.query.search.value + "%"
-                }
-              }, {
-                protocole: {
-                  $like: "%" + this.query.search.value + "%"
-                }
-              }]
+            break;
+          case "mongoose":
+            let requests = {
+              rows: null,
+              count: 0
             };
-          }
-          return requestEntity.findAndCountAll(options)
-            .then((results) => {
-              try {
-                var dataTable = dataTableParsing.call(this, this.query, results);
-                return dataTable;
-              } catch (e) {
+            let sort = {};
+            if (this.query.order.length) {
+              for (let i = 0; i < this.query.order.length; i++) {
+                let name = this.query.columns[parseInt(this.query.order[i].column, 10)].name;
+                let dir = this.query.order[i].dir;
+                sort[name] = dir === "desc" ? -1 : 1;
+              }
+            } else {
+              sort.createdAt = -1;
+            }
+            let options = null;
+            if (this.query.search.value !== "") {
+              options = {
+                $or: [{
+                  username: {
+                    $regex: this.query.search.value
+                  }
+                }, {
+                  url: {
+                    $regex: this.query.search.value
+                  }
+                }, {
+                  route: {
+                    $regex: this.query.search.value
+                  }
+                }, {
+                  method: {
+                    $regex: this.query.search.value
+                  }
+                }, {
+                  state: {
+                    $regex: this.query.search.value
+                  }
+                }, {
+                  protocole: {
+                    $regex: this.query.search.value
+                  }
+                }]
+              };
+            }
+            return requestEntity.find(options)
+              .sort(sort)
+              .skip(parseInt(this.query.start, 10))
+              .limit(parseInt(this.query.length, 10))
+              .then((result) => {
+                requests.rows = result;
+                return requestEntity.count();
+              }).then((result) => {
+                requests.count = result;
+                let dataTable = dataTableParsing.call(this, this.query, requests);
+                return this.renderDatatable(dataTable);
+              })
+              .catch(e => {
                 throw e;
-              }
-            })
-            .then((result) => {
-              try {
-                return this.renderDatatable(result);
-              } catch (e) {
-                throw e;
-              }
-            })
-            .catch((error) => {
-              if (error) {
-                this.logger(error, "ERROR");
-                return this.renderRest({
-                  code: 500,
-                  type: "ERROR",
-                  message: "internal error",
-                  data: error
-                }, true);
-              }
-            });
-        } else {
-          return requestEntity.findAll()
-            .then((results) => {
-              try {
-                let ele = [];
-                for (let i = 0; i < results.length; i++) {
-                  let ret = {};
-                  ret.uid = results[i].id;
-                  ret.payload = JSON.parse(results[i].data);
-                  ret.timeStamp = results[i].createdAt;
-                  ele.push(ret);
-                }
-                return this.renderRest({
-                  code: 200,
-                  type: "SUCCESS",
-                  message: "OK",
-                  data: JSON.stringify(ele)
-                }, true);
-              } catch (e) {
-                throw e;
-              }
-            })
-            .catch((error) => {
-              if (error) {
-                this.logger(error, "ERROR");
-                return this.renderRest({
-                  code: 500,
-                  type: "ERROR",
-                  message: "internal error",
-                  data: error
-                }, true);
-              }
-            });
+              });
+          default:
+            this.logger("Orm not defined :" + ormName, "ERROR");
+            return this.renderRest({
+              code: 500,
+              type: "ERROR",
+              message: "Orm not defined :" + ormName,
+            }, true);
         }
         break;
-      case "mongoose":
-        let requests = {
-          rows: null,
-          count: 0
-        };
-        let sort = {};
-        if (this.query.order.length) {
-          for (let i = 0; i < this.query.order.length; i++) {
-            let name = this.query.columns[parseInt(this.query.order[i].column, 10)].name;
-            let dir = this.query.order[i].dir;
-            sort[name] = dir === "desc" ? -1 : 1;
-          }
-        } else {
-          sort.createdAt = -1;
-        }
-        let options = null;
-        if (this.query.search.value !== "") {
-          options = {
-            $or: [{
-              username: {
-                $regex: this.query.search.value
-              }
-            }, {
-              url: {
-                $regex: this.query.search.value
-              }
-            }, {
-              route: {
-                $regex: this.query.search.value
-              }
-            }, {
-              method: {
-                $regex: this.query.search.value
-              }
-            }, {
-              state: {
-                $regex: this.query.search.value
-              }
-            }, {
-              protocole: {
-                $regex: this.query.search.value
-              }
-            }]
-          };
-        }
-        return requestEntity.find(options)
-          .sort(sort)
-          .skip(parseInt(this.query.start, 10))
-          .limit(parseInt(this.query.length, 10))
-          .then((result) => {
-            requests.rows = result;
-            return requestEntity.count();
-          }).then((result) => {
-            requests.count = result;
-            let dataTable = dataTableParsing.call(this, this.query, requests);
-            return this.renderDatatable(dataTable);
-          })
-          .catch(e => {
-            throw e;
-          });
       default:
-        this.logger("Orm not defined :" + ormName, "ERROR");
+        this.logger("Storage request monitoring not found", "ERROR");
         return this.renderRest({
           code: 500,
           type: "ERROR",
-          message: "Orm not defined :" + ormName,
-        }, true);
-      }
-      break;
-    default:
-      this.logger("Storage request monitoring not found", "ERROR");
-      return this.renderRest({
-        code: 500,
-        type: "ERROR",
-        message: "not found",
-        data: "Storage request monitoring not found"
-      });
+          message: "not found",
+          data: "Storage request monitoring not found"
+        });
     }
   }
 
@@ -354,116 +360,116 @@ module.exports = class apiController extends nodefony.controller {
     let storageProfiling = bundle.settings.profiler.storage;
     let ormName = this.kernel.getOrm();
     switch (storageProfiling) {
-    case "syslog":
-      let syslog = bundle.syslogContext;
-      let pdu = null;
-      for (let i = 0; i < syslog.ringStack.length; i++) {
-        if (uid === syslog.ringStack[i].uid) {
-          pdu = syslog.ringStack[i];
-          break;
+      case "syslog":
+        let syslog = bundle.syslogContext;
+        let pdu = null;
+        for (let i = 0; i < syslog.ringStack.length; i++) {
+          if (uid === syslog.ringStack[i].uid) {
+            pdu = syslog.ringStack[i];
+            break;
+          }
         }
-      }
-      if (pdu === null) {
+        if (pdu === null) {
+          return this.renderRest({
+            code: 404,
+            type: "ERROR",
+            message: "not found",
+            data: JSON.stringify(null)
+          });
+        }
         return this.renderRest({
-          code: 404,
+          code: 200,
+          type: "SUCCESS",
+          message: "OK",
+          data: JSON.stringify(pdu)
+        });
+      case "orm":
+        let requestEntity = bundle.requestEntity;
+        switch (ormName) {
+          case "sequelize":
+            return requestEntity.findOne({
+                where: {
+                  id: uid
+                }
+              })
+              .then((result) => {
+                if (result) {
+                  let ret = {};
+                  ret.uid = result.id;
+                  ret.payload = JSON.parse(result.data);
+                  ret.timeStamp = result.createdAt;
+                  return this.renderRest({
+                    code: 200,
+                    type: "SUCCESS",
+                    message: "OK",
+                    data: JSON.stringify(ret)
+                  });
+                } else {
+                  return this.renderRest({
+                    code: 404,
+                    type: "ERROR",
+                    message: "not found",
+                    data: JSON.stringify(null)
+                  });
+                }
+              })
+              .catch((error) => {
+                this.logger(error, "ERROR");
+                if (error) {
+                  return this.renderRest({
+                    code: 500,
+                    type: "ERROR",
+                    message: "internal error",
+                    data: error
+                  });
+                }
+              });
+          case "mongoose":
+            return requestEntity.findOne({
+                _id: uid
+              })
+              .then((result) => {
+                if (result) {
+                  let ret = {};
+                  ret.uid = result.id;
+                  ret.payload = JSON.parse(result.data);
+                  ret.timeStamp = result.createdAt;
+                  return this.renderRest({
+                    code: 200,
+                    type: "SUCCESS",
+                    message: "OK",
+                    data: JSON.stringify(ret)
+                  });
+                } else {
+                  return this.renderRest({
+                    code: 404,
+                    type: "ERROR",
+                    message: "not found",
+                    data: JSON.stringify(null)
+                  });
+                }
+              })
+              .catch((error) => {
+                if (error) {
+                  this.logger(error, "ERROR");
+                  return this.renderRest({
+                    code: 500,
+                    type: "ERROR",
+                    message: "internal error",
+                    data: error
+                  });
+                }
+              });
+        }
+        break;
+      default:
+        this.logger("Storage request monitoring not found", "ERROR");
+        return this.renderRest({
+          code: 500,
           type: "ERROR",
           message: "not found",
-          data: JSON.stringify(null)
-        });
-      }
-      return this.renderRest({
-        code: 200,
-        type: "SUCCESS",
-        message: "OK",
-        data: JSON.stringify(pdu)
-      });
-    case "orm":
-      let requestEntity = bundle.requestEntity;
-      switch (ormName) {
-      case "sequelize":
-        return requestEntity.findOne({
-            where: {
-              id: uid
-            }
-          })
-          .then((result) => {
-            if (result) {
-              let ret = {};
-              ret.uid = result.id;
-              ret.payload = JSON.parse(result.data);
-              ret.timeStamp = result.createdAt;
-              return this.renderRest({
-                code: 200,
-                type: "SUCCESS",
-                message: "OK",
-                data: JSON.stringify(ret)
-              });
-            } else {
-              return this.renderRest({
-                code: 404,
-                type: "ERROR",
-                message: "not found",
-                data: JSON.stringify(null)
-              });
-            }
-          })
-          .catch((error) => {
-            this.logger(error, "ERROR");
-            if (error) {
-              return this.renderRest({
-                code: 500,
-                type: "ERROR",
-                message: "internal error",
-                data: error
-              });
-            }
-          });
-      case "mongoose":
-        return requestEntity.findOne({
-            _id: uid
-          })
-          .then((result) => {
-            if (result) {
-              let ret = {};
-              ret.uid = result.id;
-              ret.payload = JSON.parse(result.data);
-              ret.timeStamp = result.createdAt;
-              return this.renderRest({
-                code: 200,
-                type: "SUCCESS",
-                message: "OK",
-                data: JSON.stringify(ret)
-              });
-            } else {
-              return this.renderRest({
-                code: 404,
-                type: "ERROR",
-                message: "not found",
-                data: JSON.stringify(null)
-              });
-            }
-          })
-          .catch((error) => {
-            if (error) {
-              this.logger(error, "ERROR");
-              return this.renderRest({
-                code: 500,
-                type: "ERROR",
-                message: "internal error",
-                data: error
-              });
-            }
-          });
-      }
-      break;
-    default:
-      this.logger("Storage request monitoring not found", "ERROR");
-      return this.renderRest({
-        code: 500,
-        type: "ERROR",
-        message: "not found",
-        data: "Storage request monitoring not found"
-      }, true);
+          data: "Storage request monitoring not found"
+        }, true);
     }
   }
 
@@ -622,43 +628,43 @@ module.exports = class apiController extends nodefony.controller {
       });
     }
     switch (name) {
-    case "connections":
-      let obj = {
-        connections: {}
-      };
-      for (let connect in service.connections.connections) {
-        let conn = service.connections.connections[connect];
-        obj.connections[connect] = {
-          remote: conn.remote,
-          nbClients: Object.keys(conn.clients).length
+      case "connections":
+        let obj = {
+          connections: {}
         };
-      }
-      try {
+        for (let connect in service.connections.connections) {
+          let conn = service.connections.connections[connect];
+          obj.connections[connect] = {
+            remote: conn.remote,
+            nbClients: Object.keys(conn.clients).length
+          };
+        }
+        try {
+          return this.renderRest({
+            code: 200,
+            type: "SUCCESS",
+            message: "Operation Réussi",
+            data: JSON.stringify(obj) //JSON.stringify(service.connections)
+          });
+
+        } catch (e) {
+          this.logger(e, "ERROR");
+          this.realtimeAction("error");
+        }
+
+        break;
+      case "error":
         return this.renderRest({
-          code: 200,
-          type: "SUCCESS",
-          message: "Operation Réussi",
-          data: JSON.stringify(obj) //JSON.stringify(service.connections)
+          code: 404,
+          type: "ERROR",
+          message: "not found",
         });
-
-      } catch (e) {
-        this.logger(e, "ERROR");
-        this.realtimeAction("error");
-      }
-
-      break;
-    case "error":
-      return this.renderRest({
-        code: 404,
-        type: "ERROR",
-        message: "not found",
-      });
-    default:
-      return this.renderRest({
-        code: 404,
-        type: "ERROR",
-        message: "not found",
-      });
+      default:
+        return this.renderRest({
+          code: 404,
+          type: "ERROR",
+          message: "not found",
+        });
     }
 
   }
@@ -672,35 +678,35 @@ module.exports = class apiController extends nodefony.controller {
     let orm = this.getORM();
     let nameOrm = this.kernel.getOrm();
     switch (nameOrm) {
-    case "sequelize":
-      let nodefonyDb = orm.getConnection("nodefony");
-      //var users = null ;
-      return nodefonyDb.query('SELECT username,name,surname,lang FROM users')
-        .then((result) => {
+      case "sequelize":
+        let nodefonyDb = orm.getConnection("nodefony");
+        //var users = null ;
+        return nodefonyDb.query('SELECT username,name,surname,lang FROM users')
+          .then((result) => {
+            return this.renderRest({
+              code: 200,
+              type: "SUCCESS",
+              message: "OK",
+              data: JSON.stringify(result[0])
+            });
+          });
+      case "mongoose":
+        let users = orm.getEntity("user");
+        return users.find({}, {
+          username: 1,
+          name: 1,
+          surname: 1,
+          lang: 1,
+        }).then((result) => {
           return this.renderRest({
             code: 200,
             type: "SUCCESS",
             message: "OK",
-            data: JSON.stringify(result[0])
+            data: JSON.stringify(result)
           });
+        }).catch((e) => {
+          throw e;
         });
-    case "mongoose":
-      let users = orm.getEntity("user");
-      return users.find({}, {
-        username: 1,
-        name: 1,
-        surname: 1,
-        lang: 1,
-      }).then((result) => {
-        return this.renderRest({
-          code: 200,
-          type: "SUCCESS",
-          message: "OK",
-          data: JSON.stringify(result)
-        });
-      }).catch((e) => {
-        throw e;
-      });
 
     }
     return this.renderRest({
@@ -716,200 +722,200 @@ module.exports = class apiController extends nodefony.controller {
     let sessionServices = this.get("sessions");
     let storage = sessionServices.settings.handler;
     switch (storage) {
-    case "files":
-      let myResults = {
-        count: 0,
-        rows: [],
-        options: {}
-      };
-      myResults.options.offset = parseInt(this.query.start, 10);
-      myResults.options.limit = parseInt(this.query.length, 10);
-      if (this.query.order.length) {
-        myResults.options.order = [];
-        for (let i = 0; i < this.query.order.length; i++) {
-          let tab = [];
-          tab.push(this.query.columns[parseInt(this.query.order[i].column, 10)].name);
-          tab.push(this.query.order[i].dir);
-          myResults.options.order.push(tab);
-        }
-      }
-      finderSession(sessionServices.settings.save_path, myResults, (error /*, result*/ ) => {
-        if (error) {
-          this.logger(error, "ERROR");
-          return this.renderRest({
-            code: 500,
-            type: "ERROR",
-            message: "internal error",
-            data: error
-          }, true);
-        }
-        let dataTable = dataTableSessionParsing.call(this, this.query, myResults);
-        return this.renderDatatable(dataTable, true);
-      });
-      break;
-    case "orm":
-      let orm = this.getORM();
-      let ormName = this.kernel.getOrm();
-      let sessionEntity = orm.getEntity("session");
-      //let userEntity = orm.getEntity("user");
-      switch (ormName) {
-      case "sequelize":
-        if (this.query.type && this.query.type === "dataTable") {
-          let options = {
-            offset: parseInt(this.query.start, 10),
-            limit: parseInt(this.query.length, 10)
-
-          };
-          if (this.query.order.length) {
-            options.order = [];
-            for (let i = 0; i < this.query.order.length; i++) {
-              let tab = [];
-              tab.push(this.query.columns[parseInt(this.query.order[i].column, 10)].name);
-              tab.push(this.query.order[i].dir);
-              options.order.push(tab);
-            }
+      case "files":
+        let myResults = {
+          count: 0,
+          rows: [],
+          options: {}
+        };
+        myResults.options.offset = parseInt(this.query.start, 10);
+        myResults.options.limit = parseInt(this.query.length, 10);
+        if (this.query.order.length) {
+          myResults.options.order = [];
+          for (let i = 0; i < this.query.order.length; i++) {
+            let tab = [];
+            tab.push(this.query.columns[parseInt(this.query.order[i].column, 10)].name);
+            tab.push(this.query.order[i].dir);
+            myResults.options.order.push(tab);
           }
-          return sessionEntity.findAndCountAll(options)
-            .then((results) => {
-              let dataTable = null;
-              try {
-                dataTable = dataTableSessionParsing.call(this, this.query, results);
-                //var res = JSON.stringify(dataTable);
-              } catch (e) {
-                this.logger(e, "ERROR");
-                return this.renderRest({
-                  code: 500,
-                  type: "ERROR",
-                  message: "internal error",
-                  data: e
-                }, true);
+        }
+        finderSession(sessionServices.settings.save_path, myResults, (error /*, result*/ ) => {
+          if (error) {
+            this.logger(error, "ERROR");
+            return this.renderRest({
+              code: 500,
+              type: "ERROR",
+              message: "internal error",
+              data: error
+            }, true);
+          }
+          let dataTable = dataTableSessionParsing.call(this, this.query, myResults);
+          return this.renderDatatable(dataTable, true);
+        });
+        break;
+      case "orm":
+        let orm = this.getORM();
+        let ormName = this.kernel.getOrm();
+        let sessionEntity = orm.getEntity("session");
+        //let userEntity = orm.getEntity("user");
+        switch (ormName) {
+          case "sequelize":
+            if (this.query.type && this.query.type === "dataTable") {
+              let options = {
+                offset: parseInt(this.query.start, 10),
+                limit: parseInt(this.query.length, 10)
+
+              };
+              if (this.query.order.length) {
+                options.order = [];
+                for (let i = 0; i < this.query.order.length; i++) {
+                  let tab = [];
+                  tab.push(this.query.columns[parseInt(this.query.order[i].column, 10)].name);
+                  tab.push(this.query.order[i].dir);
+                  options.order.push(tab);
+                }
               }
-              return this.renderDatatable(dataTable);
-            })
-            .catch((error) => {
-              if (error) {
-                this.logger(error, "ERROR");
-                return this.renderRest({
-                  code: 500,
-                  type: "ERROR",
-                  message: "internal error",
-                  data: error
-                }, true);
+              return sessionEntity.findAndCountAll(options)
+                .then((results) => {
+                  let dataTable = null;
+                  try {
+                    dataTable = dataTableSessionParsing.call(this, this.query, results);
+                    //var res = JSON.stringify(dataTable);
+                  } catch (e) {
+                    this.logger(e, "ERROR");
+                    return this.renderRest({
+                      code: 500,
+                      type: "ERROR",
+                      message: "internal error",
+                      data: e
+                    }, true);
+                  }
+                  return this.renderDatatable(dataTable);
+                })
+                .catch((error) => {
+                  if (error) {
+                    this.logger(error, "ERROR");
+                    return this.renderRest({
+                      code: 500,
+                      type: "ERROR",
+                      message: "internal error",
+                      data: error
+                    }, true);
+                  }
+                });
+            } else {
+              return sessionEntity.findAndCountAll()
+                .then((results) => {
+                  let pdu = new nodefony.PDU({
+                    code: 200,
+                    data: JSON.stringify(results)
+                  });
+                  return this.renderJsonAsync(pdu);
+                })
+                .catch((error) => {
+                  if (error) {
+                    this.logger(error, "ERROR");
+                    return this.renderRest({
+                      code: 500,
+                      type: "ERROR",
+                      message: "internal error",
+                      data: error
+                    }, true);
+                  }
+                });
+            }
+            break;
+          case "mongoose":
+            let sessions = {
+              rows: null,
+              count: 0
+            };
+            let sort = {};
+            if (this.query.order.length) {
+              for (let i = 0; i < this.query.order.length; i++) {
+                let name = this.query.columns[parseInt(this.query.order[i].column, 10)].name;
+                let dir = this.query.order[i].dir;
+                sort[name] = dir === "desc" ? -1 : 1;
               }
-            });
-        } else {
-          return sessionEntity.findAndCountAll()
-            .then((results) => {
-              let pdu = new nodefony.PDU({
-                code: 200,
-                data: JSON.stringify(results)
+            } else {
+              sort.createdAt = -1;
+            }
+            return sessionEntity.find({}, {})
+              //.populate('username')
+              .sort(sort)
+              .skip(parseInt(this.query.start, 10))
+              .limit(parseInt(this.query.length, 10))
+              .then((result) => {
+                //console.log(result)
+                sessions.rows = result;
+                return sessionEntity.count();
+              }).then((result) => {
+                sessions.count = result;
+                let dataTable = dataTableSessionParsing.call(this, this.query, sessions);
+                return this.renderDatatable(dataTable);
+              })
+              .catch(e => {
+                throw e;
               });
-              return this.renderJsonAsync(pdu);
-            })
-            .catch((error) => {
-              if (error) {
-                this.logger(error, "ERROR");
-                return this.renderRest({
-                  code: 500,
-                  type: "ERROR",
-                  message: "internal error",
-                  data: error
-                }, true);
-              }
-            });
         }
         break;
-      case "mongoose":
-        let sessions = {
-          rows: null,
-          count: 0
-        };
-        let sort = {};
-        if (this.query.order.length) {
-          for (let i = 0; i < this.query.order.length; i++) {
-            let name = this.query.columns[parseInt(this.query.order[i].column, 10)].name;
-            let dir = this.query.order[i].dir;
-            sort[name] = dir === "desc" ? -1 : 1;
-          }
-        } else {
-          sort.createdAt = -1;
-        }
-        return sessionEntity.find({}, {})
-          //.populate('username')
-          .sort(sort)
-          .skip(parseInt(this.query.start, 10))
-          .limit(parseInt(this.query.length, 10))
-          .then((result) => {
-            //console.log(result)
-            sessions.rows = result;
-            return sessionEntity.count();
-          }).then((result) => {
-            sessions.count = result;
-            let dataTable = dataTableSessionParsing.call(this, this.query, sessions);
-            return this.renderDatatable(dataTable);
-          })
-          .catch(e => {
-            throw e;
-          });
-      }
-      break;
-    case "memcached":
-      return this.renderRest({
-        code: 500,
-        type: "ERROR",
-        message: "session.storage.memcached webservice not implemented",
-        data: ""
-      });
+      case "memcached":
+        return this.renderRest({
+          code: 500,
+          type: "ERROR",
+          message: "session.storage.memcached webservice not implemented",
+          data: ""
+        });
     }
   }
 
   pm2Action() {
     switch (this.kernel.node_start) {
-    case "PM2":
-      let pm2 = require("pm2");
-      let name = this.kernel.projectName || "nodefony";
-      pm2.connect(true, () => {
-        this.logger("CONNECT PM2", "DEBUG");
-        pm2.describe(name, (err, list) => {
-          this.renderRest({
-            code: 200,
-            type: "SUCCESS",
-            message: "OK",
-            data: JSON.stringify(list)
-          }, true);
+      case "PM2":
+        let pm2 = require("pm2");
+        let name = this.kernel.projectName || "nodefony";
+        pm2.connect(true, () => {
+          this.logger("CONNECT PM2", "DEBUG");
+          pm2.describe(name, (err, list) => {
+            this.renderRest({
+              code: 200,
+              type: "SUCCESS",
+              message: "OK",
+              data: JSON.stringify(list)
+            }, true);
+          });
         });
-      });
-      break;
-    case "NODEFONY_DEV":
-      let monitoring = this.get("monitoring");
-      let ele = {
-        monit: {
-          memory: 0,
-          cpu: 0
-        },
-        name: monitoring.name,
-        pid: this.kernel.processId,
-        pm_id: "",
-        pm2_env: {
-          exec_mode: "development",
-          restart_time: 0,
-          pm_uptime: this.kernel.uptime,
-          status: "online"
-        }
-      };
-      return this.renderRest({
-        code: 200,
-        type: "SUCCESS",
-        message: "OK",
-        data: JSON.stringify([ele])
-      });
-    default:
-      return this.renderRest({
-        code: 200,
-        type: "SUCCESS",
-        message: "OK",
-        data: JSON.stringify([])
-      });
+        break;
+      case "NODEFONY_DEV":
+        let monitoring = this.get("monitoring");
+        let ele = {
+          monit: {
+            memory: 0,
+            cpu: 0
+          },
+          name: monitoring.name,
+          pid: this.kernel.processId,
+          pm_id: "",
+          pm2_env: {
+            exec_mode: "development",
+            restart_time: 0,
+            pm_uptime: this.kernel.uptime,
+            status: "online"
+          }
+        };
+        return this.renderRest({
+          code: 200,
+          type: "SUCCESS",
+          message: "OK",
+          data: JSON.stringify([ele])
+        });
+      default:
+        return this.renderRest({
+          code: 200,
+          type: "SUCCESS",
+          message: "OK",
+          data: JSON.stringify([])
+        });
     }
   }
 
@@ -963,7 +969,7 @@ module.exports = class apiController extends nodefony.controller {
   }
 };
 
-const dataTableParsing = function (query, results) {
+const dataTableParsing = function(query, results) {
   let dataTable = {
     draw: parseInt(query.draw, 10),
     recordsTotal: results.count,
@@ -988,10 +994,10 @@ const dataTableParsing = function (query, results) {
   return dataTable;
 };
 
-const dataTableSessionParsing = function (query, results) {
+const dataTableSessionParsing = function(query, results) {
   let dataTable = {
     draw: parseInt(query.draw, 10),
-    recordsTotal: results.recordsTotal ||  results.count,
+    recordsTotal: results.recordsTotal || results.count,
     recordsFiltered: results.count,
     data: []
   };
@@ -1000,20 +1006,20 @@ const dataTableSessionParsing = function (query, results) {
     let payload = {};
     let user = null;
     switch (ormName) {
-    case "sequelize":
-      user = results.rows[i].username ? {
-        username: results.rows[i].username
-      } : {
-        username: ""
-      };
-      break;
-    case "mongoose":
-      user = results.rows[i].username ? {
-        username: results.rows[i].username
-      } : {
-        username: ""
-      };
-      break;
+      case "sequelize":
+        user = results.rows[i].username ? {
+          username: results.rows[i].username
+        } : {
+          username: ""
+        };
+        break;
+      case "mongoose":
+        user = results.rows[i].username ? {
+          username: results.rows[i].username
+        } : {
+          username: ""
+        };
+        break;
     }
     payload.session_id = results.rows[i].session_id;
     payload.context = results.rows[i].context;
@@ -1034,10 +1040,10 @@ const dataTableSessionParsing = function (query, results) {
  *    @method finderSession
  *
  */
-const finderSession = function (Path, Result, finish) {
+const finderSession = function(Path, Result, finish) {
   let finder = new nodefony.finder({
     path: Path,
-    onFinish: function (error, result) {
+    onFinish: function(error, result) {
       let files = result.getFiles();
       let nbTotal = files.length();
       Result.recordsTotal = nbTotal;
@@ -1051,68 +1057,68 @@ const finderSession = function (Path, Result, finish) {
         let colonm = Result.options.order[i][0];
         let direction = Result.options.order[i][1];
         switch (colonm) {
-        case "updatedAt":
-          let mtimea = null;
-          let mtimeb = null;
-          if (direction === "desc") {
-            callback = function (a, b) {
-              mtimea = new Date(a.stats.mtime).getTime();
-              mtimeb = new Date(b.stats.mtime).getTime();
-              if (mtimea > mtimeb) {
-                return 1;
-              }
-              if (mtimea < mtimeb) {
-                return -1;
-              }
-              return 0;
-            };
-          } else {
-            callback = function (a, b) {
-              mtimea = new Date(a.stats.mtime).getTime();
-              mtimeb = new Date(b.stats.mtime).getTime();
-              if (mtimea < mtimeb) {
-                return 1;
-              }
-              if (mtimea > mtimeb) {
-                return -1;
-              }
-              return 0;
-            };
-          }
-          break;
+          case "updatedAt":
+            let mtimea = null;
+            let mtimeb = null;
+            if (direction === "desc") {
+              callback = function(a, b) {
+                mtimea = new Date(a.stats.mtime).getTime();
+                mtimeb = new Date(b.stats.mtime).getTime();
+                if (mtimea > mtimeb) {
+                  return 1;
+                }
+                if (mtimea < mtimeb) {
+                  return -1;
+                }
+                return 0;
+              };
+            } else {
+              callback = function(a, b) {
+                mtimea = new Date(a.stats.mtime).getTime();
+                mtimeb = new Date(b.stats.mtime).getTime();
+                if (mtimea < mtimeb) {
+                  return 1;
+                }
+                if (mtimea > mtimeb) {
+                  return -1;
+                }
+                return 0;
+              };
+            }
+            break;
 
-        default:
-          if (direction === "desc") {
-            callback = function (a, b) {
-              obj1 = JSON.parse(a.content());
-              obj2 = JSON.parse(b.content());
-              if (obj1[colonm].toString() > obj2[colonm].toString()) {
-                return 1;
-              }
-              if (obj1[colonm].toString() < obj2[colonm].toString()) {
-                return -1;
-              }
-              return 0;
-            };
-          } else {
-            callback = function (a, b) {
-              obj1 = JSON.parse(a.content());
-              obj2 = JSON.parse(b.content());
-              if (obj1[colonm].toString() < obj2[colonm].toString()) {
-                return 1;
-              }
-              if (obj1[colonm].toString() > obj2[colonm].toString()) {
-                return -1;
-              }
-              return 0;
-            };
-          }
+          default:
+            if (direction === "desc") {
+              callback = function(a, b) {
+                obj1 = JSON.parse(a.content());
+                obj2 = JSON.parse(b.content());
+                if (obj1[colonm].toString() > obj2[colonm].toString()) {
+                  return 1;
+                }
+                if (obj1[colonm].toString() < obj2[colonm].toString()) {
+                  return -1;
+                }
+                return 0;
+              };
+            } else {
+              callback = function(a, b) {
+                obj1 = JSON.parse(a.content());
+                obj2 = JSON.parse(b.content());
+                if (obj1[colonm].toString() < obj2[colonm].toString()) {
+                  return 1;
+                }
+                if (obj1[colonm].toString() > obj2[colonm].toString()) {
+                  return -1;
+                }
+                return 0;
+              };
+            }
 
         }
         resTmp = files.sort(callback);
       }
       let res = resTmp.slice(Result.options.offset, Result.options.limit + Result.options.offset);
-      res.forEach(function (file) {
+      res.forEach(function(file) {
         //console.log(file.content())
         let content = JSON.parse(file.content());
         let mtime = new Date(file.stats.mtime);

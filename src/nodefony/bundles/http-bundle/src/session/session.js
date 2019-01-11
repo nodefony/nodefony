@@ -284,6 +284,10 @@ nodefony.register("Session", function() {
       return this.protoParameters.prototype;
     }
 
+    getMetas() {
+      return this.metaBag();
+    }
+
     setMetaBag(key, value) {
       return this.setParameters(key, value);
     }

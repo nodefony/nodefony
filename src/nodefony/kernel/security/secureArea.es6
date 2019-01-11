@@ -1,4 +1,4 @@
-module.exports = nodefony.register("SecuredArea", function () {
+module.exports = nodefony.register("SecuredArea", function() {
 
   // context security
   class securedArea extends nodefony.Service {
@@ -79,64 +79,64 @@ module.exports = nodefony.register("SecuredArea", function () {
     handleError(context, e) {
       let securityError = null;
       switch (true) {
-      case (e instanceof nodefony.securityError):
-        securityError = e;
-        break;
-      default:
-        securityError = new nodefony.securityError(e, null, this, context);
+        case (e instanceof nodefony.securityError):
+          securityError = e;
+          break;
+        default:
+          securityError = new nodefony.securityError(e, null, this, context);
       }
       if (!securityError.code) {
         securityError.code = 401;
       }
       this.logger(securityError, "ERROR");
       switch (context.type) {
-      case "HTTP":
-      case "HTTPS":
-      case "HTTP2":
-        if (this.formLogin) {
-          if (e && e.status) {
-            context.response.setStatusCode(e.code, e.message);
-          } else {
-            context.response.setStatusCode(401);
-          }
-          if (context.session &&
-            (context.request.url.pathname !== this.formLogin) &&
-            (context.request.url.pathname !== this.checkLogin)
-          ) {
+        case "HTTP":
+        case "HTTPS":
+        case "HTTP2":
+          if (this.formLogin) {
+            if (e && e.status) {
+              context.response.setStatusCode(e.code, e.message);
+            } else {
+              context.response.setStatusCode(401);
+            }
+            if (context.session &&
+              (context.request.url.pathname !== this.formLogin) &&
+              (context.request.url.pathname !== this.checkLogin)
+            ) {
 
-            let area = context.session.getMetaBag("area");
-            if (area && area !== this.name) {
-              context.session.clearFlashBag("default_target_path");
+              let area = context.session.getMetaBag("area");
+              if (area && area !== this.name) {
+                context.session.clearFlashBag("default_target_path");
+              }
+              let target_path = context.session.getFlashBag("default_target_path");
+              if (!target_path) {
+                context.session.setFlashBag("default_target_path", context.request.url.pathname);
+              }
+              context.session.setMetaBag("area", this.name);
             }
-            let target_path = context.session.getFlashBag("default_target_path");
-            if (!target_path) {
-              context.session.setFlashBag("default_target_path", context.request.url.pathname);
+            try {
+              //context.resolver = this.overrideURL(context, this.formLogin);
+              if (context.session) {
+                context.session.setFlashBag("error", securityError.message);
+              }
+              if (!context.isJson) {
+                return this.redirect(context, this.formLogin);
+              } else {
+                return securityError;
+              }
+            } catch (e) {
+              return new nodefony.securityError(e, 500, this, context);
             }
-            context.session.setMetaBag("area", this.name);
-          }
-          try {
-            //context.resolver = this.overrideURL(context, this.formLogin);
+          } else {
             if (context.session) {
               context.session.setFlashBag("error", securityError.message);
             }
-            if (!context.isJson) {
-              return this.redirect(context, this.formLogin);
-            } else {
-              return securityError;
-            }
-          } catch (e) {
-            return new nodefony.securityError(e, 500, this, context);
+            return securityError;
           }
-        } else {
-          if (context.session) {
-            context.session.setFlashBag("error", securityError.message);
-          }
+          break;
+        case "WEBSOCKET":
+        case "WEBSOCKET SECURE":
           return securityError;
-        }
-        break;
-      case "WEBSOCKET":
-      case "WEBSOCKET SECURE":
-        return securityError;
       }
     }
 
@@ -300,7 +300,14 @@ module.exports = nodefony.register("SecuredArea", function () {
     }
 
     setProvider(provider) {
-      this.providerName = provider;
+      if (provider) {
+        this.provider = provider;
+        this.providerName = provider.name;
+      }
+    }
+
+    setProviderName(name) {
+      this.providerName = name;
     }
 
     getProvider() {

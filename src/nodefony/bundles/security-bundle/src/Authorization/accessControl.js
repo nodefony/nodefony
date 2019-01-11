@@ -12,7 +12,7 @@ module.exports = nodefony.register("AccessControl", () => {
       this.allowIp = [];
       //this.allow_if = null;
       this.hosts = [];
-      this.requires_channel = null;
+      this.requires_channel = [];
       this.methods = [];
       this.actived = false;
     }
@@ -54,8 +54,11 @@ module.exports = nodefony.register("AccessControl", () => {
       let ret = false;
       try {
         ret = this.checkScheme(context);
-        if (ret instanceof nodefony.Context) {
-          return ret;
+        if (ret) {
+          if (ret instanceof nodefony.Context) {
+            return ret;
+          }
+          return false;
         }
         ret = this.checkIp(context);
         if (ret === false) {
@@ -303,8 +306,12 @@ module.exports = nodefony.register("AccessControl", () => {
     setScheme(conf) {
       switch (conf) {
         case "https":
+          this.requires_channel.push(conf);
+          this.requires_channel.push("wss");
+          break;
         case "http":
-          this.requires_channel = conf;
+          this.requires_channel.push(conf);
+          this.requires_channel.push("ws");
           break;
         default:
           throw new nodefony.Error(`Access Control Bad config requires_channel : ${conf} must be http or https`);
@@ -312,12 +319,15 @@ module.exports = nodefony.register("AccessControl", () => {
     }
 
     checkScheme(context) {
-      if (this.requires_channel) {
-        if (context.scheme !== this.requires_channel) {
-          if (this.requires_channel === "https") {
+      if (this.requires_channel.length) {
+        if (this.requires_channel.indexOf(context.scheme) < 0) {
+          if (context.scheme === "ws" || context.scheme === "wss") {
+            return false;
+          }
+          if (this.requires_channel.indexOf("https") >= 0) {
             return this.authorization.firewall.redirectHttps(context);
           }
-          if (this.requires_channel === "http") {
+          if (this.requires_channel.indexOf("http") >= 0) {
             return this.authorization.firewall.redirectHttp(context);
           }
         }

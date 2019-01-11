@@ -12,8 +12,6 @@ module.exports = nodefony.register('Factory', () => {
         if (!this.providerName) {
           if (this.providerName !== false) {
             this.providerName = this.security.providerName;
-          } else {
-            this.provider = this.providerName;
           }
         }
         if (this.providerName !== this.security.providerName) {
@@ -55,7 +53,7 @@ module.exports = nodefony.register('Factory', () => {
         this.logger("FACTORY AUTHENTICATION " + this.name, "DEBUG");
         let token = null;
         try {
-          token = this.createToken(context, this.providerName);
+          token = this.createToken(context, this.provider);
           if (!this.supportsToken(token)) {
             return reject(new Error("Factory " + this.name + " Token Unauthorized !! "));
           }
