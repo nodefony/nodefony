@@ -214,7 +214,7 @@ module.exports = nodefony.register("SecuredArea", function () {
               try {
                 delete context.resolver;
                 context.checkLogin = true;
-                context.resolver = this.overrideURL(context, this.checkLogin);
+                context.resolver = this.overrideURL(context, this.checkLogin, target);
                 //context.resolver = this.router.resolveName(context, this.checkLogin);
                 return resolve(context);
               } catch (e) {
@@ -314,11 +314,15 @@ module.exports = nodefony.register("SecuredArea", function () {
       return this.stateLess = state || false;
     }
 
-    overrideURL(context, myUrl) {
+    overrideURL(context, myUrl, target) {
       if (myUrl) {
         context.request.url = url.parse(url.resolve(context.request.url, myUrl));
       }
-      return this.router.resolve(context);
+      let resolver = this.router.resolve(context);
+      if (target) {
+        resolver.variables.push(target);
+      }
+      return resolver;
     }
 
     redirectHttps(context) {

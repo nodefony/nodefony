@@ -247,6 +247,8 @@ elastic-bundle:
             host                 : localhost,
             port                 : 9200
             }
+        sniffOnStart             : true
+        sniffInterval            : 5000
 
 #######################
 #  OVERRIDE SECURITY BUNDLE
