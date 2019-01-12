@@ -4,15 +4,15 @@
   "description": "{{description}}",
   "main": "nodefony",
   "scripts": {
-    "nodefony": "nodefony",
-    "pm2": "pm2",
-    "start": "nodefony",
-    "build": "nodefony build",
-    "rebuild": "nodefony rebuild",
-    "stop": "nodefony stop",
-    "prod": "nodefony prod",
-    "kill": "nodefony kill",
-    "test": "nodefony test"
+    "nodefony": "node node_modules/nodefony/bin/nodefony",
+    "pm2": "node node_modules/nodefony/node_modules/.bin/pm2",
+    "start": "node node_modules/nodefony/bin/nodefony",
+    "build": "node node_modules/nodefony/bin/nodefony build",
+    "rebuild": "node node_modules/nodefony/bin/nodefony rebuild",
+    "stop": "node node_modules/nodefony/bin/nodefony stop",
+    "prod": "node node_modules/nodefony/bin/nodefony prod",
+    "kill": "node node_modules/nodefony/bin/nodefony kill",
+    "test": "node node_modules/nodefony/bin/nodefony test"
   },
   "private": true,
   "keywords": [

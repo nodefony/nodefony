@@ -70,6 +70,8 @@ system:
   bundles:
     test-bundle                 : "file:src/bundles/test-bundle"
     #workbox-bundle              : "file:src/bundles/workbox-bundle"
+    #argon-bundle                : "file:src/bundles/argon-bundle"
+    #uikit-bundle                : "file:src/bundles/uikit-bundle"
 
   #################
   # SYSLOG NODEFONY
