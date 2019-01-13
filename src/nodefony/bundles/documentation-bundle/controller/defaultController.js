@@ -101,7 +101,7 @@ module.exports = class defaultController extends nodefony.controller {
     }
     let directory = finder.result.getDirectories();
     let sections = [];
-    directory.forEach(function(ele) {
+    directory.forEach(function (ele) {
       sections.push(ele.name);
     });
     return this.render("documentationBundle:layouts:navSection.html.twig", {
@@ -164,7 +164,7 @@ module.exports = class defaultController extends nodefony.controller {
     }
     let directory = finderVersion.result.getDirectories();
     let all = [];
-    directory.forEach(function(ele) {
+    directory.forEach(function (ele) {
       all.push(ele.name);
     });
 
@@ -326,7 +326,7 @@ module.exports = class defaultController extends nodefony.controller {
     //console.log(directory)
 
     let versions = [];
-    directory.forEach(function(ele) {
+    directory.forEach(function (ele) {
       versions.push(ele.name);
     });
 
