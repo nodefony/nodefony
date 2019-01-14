@@ -1,10 +1,9 @@
 const stage = require("@nodefony/stage");
-require("bootstrap");
-require('bootstrap/dist/css/bootstrap.css');
-require('font-awesome/css/font-awesome.css');
-require('../css/doc.css');
 
-module.exports = function() {
+require('bootstrap');
+require('../../scss/custom.scss');
+
+module.exports = function () {
 
   window["stage"] = stage;
   /*
@@ -17,31 +16,36 @@ module.exports = function() {
 
     constructor() {
 
-      $("#version").change(function(ele) {
+      let selectorLang = global.document.getElementById("language");
+      if (selectorLang) {
+        selectorLang.addEventListener("change", (e) => {
+          //window.location.href = "?lang=" + this.value;
+          this.changeLang();
+          e.preventDefault();
+        });
+      }
+
+      $("#version").change((event) => {
         window.location = this.value;
       });
-      $("#langs").change(function(ele) {
-        window.location.href = "?lang=" + this.value
-      });
 
-      $.get("/api/git/getCurrentBranch", function(data) {
+      $.get("/api/git/getCurrentBranch", function (data) {
         var ele = $(".branch");
         ele.text(data.branch);
-      }).fail(function(error) {
+      }).fail(function (error) {
         throw error;
       });
 
-
       var search = $("#inputSearh");
-      search.bind("keypress", function(event) {
-        if (event.keyCode == 13) {
-          event.stopPropagation()
-          event.preventDefault()
+      search.bind("keypress", function (event) {
+        if (event.keyCode === 13) {
+          event.stopPropagation();
+          event.preventDefault();
           $("#buttonSearh").trigger("click");
           return false;
         }
       });
-      $("#buttonSearh").click(function() {
+      $("#buttonSearh").click(function (event) {
         var ele = $("#search");
         var mysearch = search.val();
         var spinner = $("#spinner");
@@ -51,11 +55,11 @@ module.exports = function() {
             data: {
               search: mysearch
             },
-            beforeSend: function() {
+            beforeSend: function () {
               ele.empty();
               spinner.show();
             },
-            success: function(data) {
+            success: function (data) {
               var text = null;
               for (var link in data) {
                 var reg = new RegExp(mysearch, 'gi');
@@ -65,43 +69,49 @@ module.exports = function() {
                 } else {
                   continue;
                 }
-                var li = "<li class='list-group-item'>";
+                let li = "<li class='list-group-item'>";
                 li += "<a href='" + link + "'><span style=''>" + data[link].title + "</span></a>";
-                li += "<div>  " + text + " </div>"
+                li += "<div>  " + text + " </div>";
                 li += "</li>";
                 ele.append(li);
               }
               if (!text) {
-                var li = "<li class='list-group-item'>";
-                li += "<div>  No result </div>"
+                let li = "<li class='list-group-item'>";
+                li += "<div>  No result </div>";
                 li += "</li>";
                 ele.append(li);
-
               }
             },
-            complete: function() {
+            complete: function () {
               spinner.hide();
-
             }
-          }).fail(function() {
+          }).fail(function () {
             spinner.hide();
           });
-
         } else {
-          event.stopPropagation()
-          event.preventDefault()
+          event.stopPropagation();
+          event.preventDefault();
           return false;
         }
       });
     }
 
+    changeLang(query) {
+      if (query) {
+        return window.location.href = "?language=" + query;
+      }
+      let form = global.document.getElementById("formLang");
+      if (form) {
+        form.submit();
+      }
+    }
 
     index(bundle, section, url) {
       if (!url) {
         url = "https://github.com/nodefony/nodefony-core/commit/";
       }
       if (bundle === "nodefony" && section === null) {
-        $.get("/api/git/getMostRecentCommit", function(data) {
+        $.get("/api/git/getMostRecentCommit", function (data) {
           var ele = $("#commits");
           for (var i = 0; i < data.length; i++) {
             //var dt = new Date( data[i].date ) ;
@@ -110,56 +120,31 @@ module.exports = function() {
             var shaLink = url + sha;
             var date = new Date(data[i].date).toDateString();
             var li = "<li class='list-group-item'>";
-            li += "<span style='background-color:blue' class='badge'>" + data[i].author + "</span>";
+            li += "<span class='badge badge-primary'>" + data[i].author + "</span>";
             li += "<a href='" + shaLink + "' target='_blank' ><span style=''>" + data[i].msg + "</span></a>";
-            li += "<div> commit on " + date + " by " + data[i].author + " </div>"
+            li += "<div> commit on " + date + " by " + data[i].author + " </div>";
             li += "</li>";
             ele.append(li);
 
           }
-        }).fail(function() {
+        }).fail(function () {
           console.log("ERROR");
-        })
+        });
 
-        /*$.get("/api/git/getStatus",function(data){
-            var ele = $("#status");
-            for (var i = 0 ; i < data.length ; i++){
-                var type = data[i].type[0].replace("WT_","") ;
-                var li = "<li class='list-group-item'>";
-                switch(type){
-                    case "INDEX_NEW":
-                        li += "<span style='background-color:blue' class='badge'>"+type+"</span>" ;
-                        li += "<span style='cursor:context-menu' title="+data[i].path+"> " + stage.basename( data[i].path ) +"</span>" ;
-                    break;
-                    case "NEW":
-                        li += "<span style='background-color:red' class='badge'>"+type+"</span>" ;
-                        li += "<span style='cursor:context-menu' title="+data[i].path+"> " + stage.basename ( data[i].path ) +"</span>";
-                    break;
-                    default:
-                        li += "<span  class='badge'>"+type+"</span>" ;
-                        li += "<span style='cursor:context-menu' title="+ data[i].path +"> " + stage.basename ( data[i].path ) +"</span>";
-                }
-                li += "</li>";
-                ele.append(li);
-            }
-        }).fail(function() {
-            console.log( "ERROR" );
-        });*/
-
-        $.get("https://api.github.com/repos/nodefony/nodefony/issues?state=open", function(data) {
+        $.get("https://api.github.com/repos/nodefony/nodefony/issues?state=open", function (data) {
           var ele = $("#issues");
           for (var i = 0; i < data.length; i++) {
             var date = new Date(data[i].created_at).toDateString();
             var li = "<li class='list-group-item'>";
-            li += "<span style='background-color:blue' class='badge'>#" + data[i].number + "</span>";
+            li += "<span class='badge badge-primary'>#" + data[i].number + "</span>";
             li += "<a href='https://github.com/nodefony/nodefony/issues/" + data[i].number + "'><span style=''>" + data[i].title + "</span></a>";
-            li += "<div> opened on " + date + " by " + data[i].user.login + " </div>"
+            li += "<div> opened on " + date + " by " + data[i].user.login + " </div>";
             li += "</li>";
             ele.append(li);
           }
-        }).fail(function() {
+        }).fail(function () {
           console.log("ERROR");
-        })
+        });
       }
     }
   };

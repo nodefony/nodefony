@@ -1,40 +1,9 @@
-<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
-  <div class"container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#footer-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class=" text-primary navbar-text" href="{{path}}" style="margin-left:20px" >
-        {{year}}
-        <strong class="text-primary"> NODEFONY  {{version}}  ©</strong>
-      </a>
-    </div>
-    <div class="collapse navbar-collapse" id="footer-collapse">
-      <ul class="nav navbar-nav navbar-left">
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li  class="navbar-btn pull-right" style="margin-right:40px">
-          <form action="{{url('documentation-lang')}}" name="formLang" id="formLang" class="form-inline">
-            <div class="form-inline input-group">
-              <select class="custom-select align-middle mr-4" name="lang"  id="lang">
-                {% for opt in langs %}
-                {% if locale == opt.value %}
-                <option value="{{ opt.value}}" selected>
-                  {{ opt.name }}
-                </option>
-                {% else %}
-                <option value="{{ opt.value}}">
-                  {{ opt.name }}</option>
-                  {% endif %}
-                  {% endfor %}
-                </select>
-            </div>
-          </form>
-        </li>
-      </div>
-    </div>
+<!-- Footer -->
+<footer class="page-footer font-small bg-light fixed-bottom">
+  <!-- Copyright -->
+  <div class="text-center py-3">© {{year|escape}} Copyright:{{project|escape}}
+    <a href="/">{{nodefony.name|escape}}@{{nodefony.projectVersion|escape}}</a>
   </div>
-</div>
+  <!-- Copyright -->
+</footer>
+<!-- Footer -->

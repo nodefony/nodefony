@@ -13,6 +13,86 @@ module.exports = class defaultController extends nodefony.controller {
     this.defaultVersion = this.kernel.settings.version;
     this.docPath = this.kernel.nodefonyPath;
     this.urlGit = this.bundle.settings.github.url;
+    this.version = this.getVersions(this.docPath);
+  }
+
+
+  getVersions(Path) {
+    let finderVersion = null;
+    // get all version
+    try {
+      finderVersion = new nodefony.finder({
+        path: path.resolve(Path, "doc"),
+        recurse: false
+      });
+    } catch (e) {
+      throw e;
+    }
+    let directory = finderVersion.result.getDirectories();
+    let all = [];
+    directory.forEach(function (ele) {
+      all.push(ele.name);
+    });
+    return all;
+  }
+
+  /**
+   *
+   */
+  headerAction() {
+    return this.render("documentation:layouts:header.html.twig", {
+      langs: this.get("translation").getLangs(),
+      locale: this.getLocale(),
+      allVersions: this.version,
+      bundle: "nodefony"
+    });
+  }
+
+  /**
+   *
+   */
+  footerAction() {
+    let version = this.kernel.settings.version;
+    return this.render("documentation:layouts:footer.html.twig", {
+      version: version,
+      year: new Date().getFullYear()
+    });
+  }
+
+  /**
+   *    @Method ({ "GET"})
+   *    @Route ("/lang", name="lang")
+   */
+  langAction() {
+    if (this.query.language) {
+      if (this.session) {
+        this.session.set("lang", this.query.language);
+        let route = this.session.getMetaBag("lastRoute");
+        if (route) {
+          return this.redirect(this.url(route));
+        }
+      }
+    }
+    let referer = this.request.getHeader("referer");
+    if (referer) {
+      return this.redirect(referer);
+    }
+    return this.redirect("/");
+  }
+
+  searchAction() {
+    let url = this.generateUrl("documentation-version", {
+      bundle: "nodefony",
+      version: "default"
+    }, true);
+    if (this.query.search) {
+      let webCrawler = this.get("webCrawler");
+      webCrawler.siteAll(url, this.query.search, this.context, (data) => {
+        this.renderJsonAsync(data);
+      });
+    } else {
+      this.renderJsonAsync({});
+    }
   }
 
   /**
@@ -346,58 +426,6 @@ module.exports = class defaultController extends nodefony.controller {
     });
   }
 
-  footerAction() {
-    let translateService = this.get("translation");
-    let version = this.kernel.settings.version;
-    let year = new Date().getFullYear();
-    let langs = translateService.getLangs();
-    let locale = this.getLocale();
-    return this.render("documentation:layouts:footer.html.twig", {
-      langs: langs,
-      version: version,
-      year: year,
-      locale: locale,
-      description: this.kernel.app.settings.App.description
-    });
-  }
 
-  /**
-   *
-   */
-  langAction() {
-    let referer = this.request.getHeader("referer");
-    if (this.query.lang) {
-      if (this.context.session) {
-        this.context.session.set("lang", this.query.lang);
-        let route = this.context.session.getMetaBag("lastRoute");
-        if (route) {
-          return this.redirect(this.url(route));
-        }
-      }
-    }
-    if (referer) {
-      return this.redirect(referer);
-    }
-    return this.redirect("/");
-  }
 
-  searchAction() {
-    let url = this.generateUrl("documentation-version", {
-      bundle: "nodefony",
-      version: "default"
-    }, true);
-
-    let request = this.getRequest();
-    let context = this.getContext();
-    //console.log(request.url.host)
-    let query = request.query;
-    if (query.search) {
-      let webCrawler = this.get("webCrawler");
-      webCrawler.siteAll(url, query.search, context, (data) => {
-        this.renderJsonAsync(data);
-      });
-    } else {
-      this.renderJsonAsync({});
-    }
-  }
 };

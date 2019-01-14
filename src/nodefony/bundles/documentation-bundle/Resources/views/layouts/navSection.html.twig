@@ -1,17 +1,32 @@
 
 {% if  not section  %}
-	<li role="presentation" class="active"><a href="{{path('documentation-version',{version:version, bundle:bundle})}}">Home</a></li>
+	<li class="nav-item active">
+		<a class="nav-link" href="{{path('documentation-version',{version:version, bundle:bundle})}}">Home</a>
+	</li>
 {% else %}
-	
+
 	{% if section %}
-		{% if subsection == section %}	
-			<li role="presentation" class="active"><a href="{{path('documentation-section',{section:section, version:version, bundle:bundle })}}">{{section | trans() | capitalize()}}</a></li>
+		{% if subsection == section %}
+			<li class="nav-item active">
+				<a class="nav-link" href="{{path('documentation-section',{section:section, version:version, bundle:bundle })}}">
+					{{section | trans() | capitalize()}}
+				</a>
+			</li>
 		{% else %}
-			<li role="presentation" ><a href="{{path('documentation-section',{section:section, version:version, bundle:bundle })}}">{{section | trans() | capitalize()}}</a></li>
+			<li class="nav-item" >
+				<a class="nav-link" href="{{path('documentation-section',{section:section, version:version, bundle:bundle })}}">
+				{{section | trans() | capitalize()}}
+				</a>
+			</li>
 		{% endif %}
 	{% else %}
-		<li role="presentation" ><a href="{{path('documentation-version',{version:version,bundle:bundle})}}">{{section | trans() | capitalize()}}</a></li>
+		<li class="nav-item" >
+			<a class="nav-link" href="{{path('documentation-version',{version:version,bundle:bundle})}}">
+			{{section | trans() | capitalize()}}
+			</a>
+		</li>
 	{% endif %}
+
 {% endif %}
 
 {% for sec in sections %}
@@ -21,9 +36,16 @@
 		{% set qs = null %}
 	{% endif %}
 	{% if subsection == sec %}
-		<li role="presentation" class="active"><a href="{{path('documentation-section',{section:section, version:version, bundle:bundle,queryString:qs })}}">{{sec | trans() | capitalize()}}</a></li>
+		<li  class="nav-item active">
+			<a class="nav-link" href="{{path('documentation-section',{section:section, version:version, bundle:bundle,queryString:qs })}}">
+			{{sec | trans() | capitalize()}}
+			</a>
+		</li>
 	{% else %}
-		<li role="presentation"><a href="{{path('documentation-section',{section:section,version:version, bundle:bundle,queryString:qs })}}">{{sec | trans() | capitalize()}}</a></li>
+		<li class="nav-item">
+			<a class="nav-link" href="{{path('documentation-section',{section:section,version:version, bundle:bundle,queryString:qs })}}">
+			{{sec | trans() | capitalize()}}
+			</a>
+		</li>
 	{% endif %}
 {% endfor %}
-

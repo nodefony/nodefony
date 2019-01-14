@@ -1,6 +1,8 @@
 {{trans_default_domain("doc")}}
 
-<a href="https://github.com/nodefony/nodefony"><img style="position: fixed; top: 51px; right: 0; border: 0;z-index:8000" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+<a href="https://github.com/nodefony/nodefony">
+  <img style="position: fixed; top: 51px; right: 0; border: 0;z-index:8000" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
 
 <center>
   <h1>
@@ -10,211 +12,212 @@
     <span class="label label-success ">
       {{version}}
     </span>
-    <h2></center>
-    <hr>
-    <div class="container">
-      <div class="row m-t-xl">
+  </h2>
+</center>
 
-        <div class="col-md-6">
-          <div class="panel panel-info">
-            <div class="panel-heading">{{ "begin" | trans() }}
-              <span class="label label-success pull-right">
-                {{version}}
-              </span>
-            </div>
-            <div class="panel-body" style="overflow: auto;">
-              <ul>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'installation', version:version, bundle:bundle })}}">
-                    {{"installation" | trans() | capitalize() }}
-                  </a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'started', version:version, bundle:bundle })}}">
-                    {{"begin" | trans() | capitalize() }}
-                  </a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-version',{version:version, bundle:'app' })}}">
-                    {{"Application" | trans() | capitalize() }}</a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{version:version ,section:'configurations', bundle:bundle })}}">
-                    {{"configurations" | trans() | capitalize() }}</a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'running', version:version, bundle:bundle })}}">
-                    {{"running" | trans() | capitalize() }}</a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'helloWord', version:version, bundle:bundle })}}">
-                    Hello Word
-                  </a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'routing', version:version, bundle:'framework' })}}">
-                    {{"Routing" | trans() | capitalize() }}</a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'controller', version:version, bundle:'framework' })}}">
-                    {{"controller" | trans() | capitalize() }}</a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'view', version:version, bundle:'framework' })}}">
-                    {{"view" | trans() | capitalize() }}
-                  </a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'console', version:version, bundle:bundle })}}">
-                    {{"console" | trans() | capitalize() }}</a>
-                </li>
-              </ul>
-            </div>
-          </div>
+<hr>
+
+<div class="container">
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <div class="card card-info">
+        <div class="card-header">{{ "begin" | trans() }}
+          <span class="label label-success pull-right">
+            {{version}}
+          </span>
         </div>
-
-        <div class="col-md-6">
-          <div class="panel panel-info">
-            <div class="panel-heading">{{ "core" | trans() }}
-              <span class="label label-success pull-right">
-                {{version}}
-              </span>
-            </div>
-            <div class="panel-body" style="overflow: auto;">
-              <ul>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'architectures', version:version, bundle:bundle })}}">
-                    {{"Architecture" | trans() | capitalize() }}
-                  </a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'autoloader', version:version, bundle:bundle })}}">
-                    {{"Autoloader" | trans() | capitalize() }}</a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'kernel', version:version, bundle:bundle })}}">
-                    {{"Kernel" | trans() | capitalize() }}</a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'bundles', version:version, bundle:bundle })}}">
-                    {{"Bundles" | trans() | capitalize() }}</a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'container', version:version, bundle:bundle })}}">
-                    {{"Services Container" | trans() | capitalize() }}</a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'context', version:version, bundle:bundle })}}">
-                    {{"Request context" | trans() | capitalize() }}</a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'finder', version:version, bundle:bundle })}}">
-                    {{"Finder" | trans() | capitalize() }}</a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'fileClass', version:version, bundle:bundle })}}">
-                    {{"fileClass" | trans() | capitalize() }}</a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'notifications', version:version, bundle:bundle })}}">
-                    {{"notificationsCenter" | trans() | capitalize() }}</a>
-                </li>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'syslog', version:version, bundle:bundle })}}">
-                    {{"Syslog" | trans() | capitalize() }}</a>
-                </li>
-              </ul>
-            </div>
-          </div>
+        <div class="card-body" style="overflow: auto;">
+          <ul>
+            <li>
+              <a href="{{ path('documentation-section',{section:'installation', version:version, bundle:bundle })}}">
+                {{"installation" | trans() | capitalize() }}
+              </a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'started', version:version, bundle:bundle })}}">
+                {{"begin" | trans() | capitalize() }}
+              </a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-version',{version:version, bundle:'app' })}}">
+                {{"Application" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{version:version ,section:'configurations', bundle:bundle })}}">
+                {{"configurations" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'running', version:version, bundle:bundle })}}">
+                {{"running" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'helloWord', version:version, bundle:bundle })}}">
+                Hello Word
+              </a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'routing', version:version, bundle:'framework' })}}">
+                {{"Routing" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'controller', version:version, bundle:'framework' })}}">
+                {{"controller" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'view', version:version, bundle:'framework' })}}">
+                {{"view" | trans() | capitalize() }}
+              </a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'console', version:version, bundle:bundle })}}">
+                {{"console" | trans() | capitalize() }}</a>
+            </li>
+          </ul>
         </div>
       </div>
+    </div>
 
-      <div class="row m-t-xl">
-
-        <div class="col-md-6">
-          <div class="panel panel-info">
-            <div class="panel-heading">{{ "Bundles" | trans() }}
-            </div>
-            <div class="panel-body" style="overflow: auto;">
-              <ul>
-                {% for myBundle in bundles %}
-                  <li>
-                    <a href="{{path('documentation-version', {version:myBundle.version, bundle:myBundle.name})}}">
-                      <strong>{{myBundle.name}}</strong>
-                      <span class="label label-default pull-right">{{myBundle.version}}</span></a>
-                  </li>
-                {% endfor %}
-              </ul>
-            </div>
-          </div>
+    <div class="col-md-6">
+      <div class="card card-info">
+        <div class="card-header">{{ "core" | trans() }}
+          <span class="label label-success pull-right">
+            {{version}}
+          </span>
         </div>
-
-        <div class="col-md-6">
-          <div class="panel panel-info">
-            <div class="panel-heading">{{ "usage" | trans() }}
-              <span class="label label-success pull-right">
-                {{version}}
-              </span>
-            </div>
-            <div class="panel-body" style="overflow: auto;">
-              <ul>
-                <li>
-                  <a href="{{ path('documentation-section',{section:'servers', version:version, bundle:'http' })}}">
-                    {{"servers" | trans() | capitalize() }}
-                  </a>
-                </li>
-                <li>
-                  Front Proxy NGINX
-                </li>
-                <li>
-                  Production Mode PM2
-                </li>
-                <li>
-                  Statics Files</li>
-                <li>
-                  CDN
-                </li>
-                <li>
-                  Sessions</li>
-                <li>
-                  Firewall</li>
-                <li>
-                  Authentication</li>
-                <li>
-                  Orm</li>
-                <li>
-                  <a href="{{ path('documentation-version',{ version:version, bundle:'realTime' })}}">
-                    {{"realtime" | trans() | capitalize() }}</a>
-                </li>
-              </ul>
-            </div>
-          </div>
+        <div class="card-body" style="overflow: auto;">
+          <ul>
+            <li>
+              <a href="{{ path('documentation-section',{section:'architectures', version:version, bundle:bundle })}}">
+                {{"Architecture" | trans() | capitalize() }}
+              </a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'autoloader', version:version, bundle:bundle })}}">
+                {{"Autoloader" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'kernel', version:version, bundle:bundle })}}">
+                {{"Kernel" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'bundles', version:version, bundle:bundle })}}">
+                {{"Bundles" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'container', version:version, bundle:bundle })}}">
+                {{"Services Container" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'context', version:version, bundle:bundle })}}">
+                {{"Request context" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'finder', version:version, bundle:bundle })}}">
+                {{"Finder" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'fileClass', version:version, bundle:bundle })}}">
+                {{"fileClass" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'notifications', version:version, bundle:bundle })}}">
+                {{"notificationsCenter" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'syslog', version:version, bundle:bundle })}}">
+                {{"Syslog" | trans() | capitalize() }}</a>
+            </li>
+          </ul>
         </div>
       </div>
+    </div>
+  </div>
 
-      <hr>
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <div class="card card-info">
+        <div class="card-header">{{ "Bundles" | trans() }}
+        </div>
+        <div class="card-body" style="overflow: auto;">
+          <ul>
+            {% for myBundle in bundles %}
+            <li>
+              <a href="{{path('documentation-version', {version:myBundle.version, bundle:myBundle.name})}}">
+                <strong>{{myBundle.name}}</strong>
+                <span class="label label-default pull-right">{{myBundle.version}}</span></a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
 
-      <div class="row m-t-xl">
-        <center>
-          <h1>
-            {{ "begin" | trans() }}
-          </h1>
-          <small>
-            <a href="{{ path('documentation-section',{section:'started', version:version, bundle:bundle })}}">More details</a>
-          </small>
-        </br>
-      </center>
+    <div class="col-md-6">
+      <div class="card card-info">
+        <div class="card-header">{{ "usage" | trans() }}
+          <span class="label label-success pull-right">
+            {{version}}
+          </span>
+        </div>
+        <div class="card-body" style="overflow: auto;">
+          <ul>
+            <li>
+              <a href="{{ path('documentation-section',{section:'servers', version:version, bundle:'http' })}}">
+                {{"servers" | trans() | capitalize() }}
+              </a>
+            </li>
+            <li>
+              Front Proxy NGINX
+            </li>
+            <li>
+              Production Mode PM2
+            </li>
+            <li>
+              Statics Files</li>
+            <li>
+              CDN
+            </li>
+            <li>
+              Sessions</li>
+            <li>
+              Firewall</li>
+            <li>
+              Authentication</li>
+            <li>
+              Orm</li>
+            <li>
+              <a href="{{ path('documentation-version',{ version:version, bundle:'realTime' })}}">
+                {{"realtime" | trans() | capitalize() }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      <h2>NODEFONY INSTALLATION :
-        <small>See more
-          <a href="{{ path('documentation-section',{section:'installation', version:version, bundle:bundle })}}">( Nodefony installation documentation )
-          </a>
-        </small>
-      </h2>
-      <p class="doc2">
-        Install Nodefony Globally
-      </p>
-      <pre class="doc2">
+  <hr>
+
+  <div class="row m-t-xl">
+    <center>
+      <h1>
+        {{ "begin" | trans() }}
+      </h1>
+      <small>
+        <a href="{{ path('documentation-section',{section:'started', version:version, bundle:bundle })}}">More details</a>
+      </small>
+      </br>
+    </center>
+
+    <h2>NODEFONY INSTALLATION :
+      <small>See more
+        <a href="{{ path('documentation-section',{section:'installation', version:version, bundle:bundle })}}">( Nodefony installation documentation )
+        </a>
+      </small>
+    </h2>
+    <p class="doc2">
+      Install Nodefony Globally
+    </p>
+    <pre class="doc2">
 Install with NPM :
 
 $ npm -g install nodefony
@@ -222,18 +225,17 @@ $ npm -g install nodefony
 Install with yarn :
 
 $ yarn global add nodefony
+    </pre>
+    <a href="https://docs.npmjs.com/getting-started/fixing-npm-permissions">See Global install How to Prevent Permissions Errors</a>
+    <h2>Configurations :
+      <small>See more
+        <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle })}}">( Nodefony Configurations documentation )
+        </a>
+      </small>
+    </h2>
+    <p class="doc2">
 
-</pre>
-<a href="https://docs.npmjs.com/getting-started/fixing-npm-permissions">See Global install How to Prevent Permissions Errors</a>
-      <h2>Configurations :
-        <small>See more
-          <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle })}}">( Nodefony Configurations documentation )
-          </a>
-        </small>
-      </h2>
-      <p class="doc2">
-
-        By defaut NODEFONY bind all servers on loopback ( localhost : 127.0.0.1 )
+      By defaut NODEFONY bind all servers on loopback ( localhost : 127.0.0.1 )
       </br>
 
       <ul class="doc3">
@@ -258,37 +260,37 @@ $ yarn global add nodefony
       </p>
       <pre class="doc3">
 <strong>system:
-  domain                        : localhost             # nodefony can listen only one domain ( no vhost )  /    [::1] for ipv6 only
-  domainalias:                                          # domainalias string only <<regexp>>   example ".*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$"
-    - "^127.0.0.1$"
-  httpport                      : 5151
-  httpsport                     : 5152</strong>
-  domainCheck                   : true
-  statics                       : true
-  security                      : true
-  realtime                      : true
-  monitoring                    : true
-  documentation                 : true
-  unittest                      : true
-  locale                        : "en_en"
+domain                        : localhost             # nodefony can listen only one domain ( no vhost )  /    [::1] for ipv6 only
+domainalias:                                          # domainalias string only <<regexp>>   example ".*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$"
+- "^127.0.0.1$"
+httpport                      : 5151
+httpsport                     : 5152</strong>
+domainCheck                   : true
+statics                       : true
+security                      : true
+realtime                      : true
+monitoring                    : true
+documentation                 : true
+unittest                      : true
+locale                        : "en_en"
 
-  servers:
-    http                        : true
-    https	                : true
-    ws			        : true
-    wss			        : true
-    certificats:
-      key                       : "config/certificates/server/privkey.pem"
-      cert                      : "config/certificates/server/fullchain.pem"
-      ca                        : "config/certificates/ca/nodefony-root-ca.crt.pem"
-      options:
-        rejectunauthorized      : false
+servers:
+http                        : true
+https	                : true
+ws			        : true
+wss			        : true
+certificats:
+key                       : "config/certificates/server/privkey.pem"
+cert                      : "config/certificates/server/fullchain.pem"
+ca                        : "config/certificates/ca/nodefony-root-ca.crt.pem"
+options:
+rejectunauthorized      : false
 
-  bundles:
-    hello                       : "file:src/bundles/hello-bundle"
+bundles:
+hello                       : "file:src/bundles/hello-bundle"
 
-  log:
-    active                      : true
+log:
+active                      : true
 
 #
 #       assets cdn
@@ -311,7 +313,7 @@ $ yarn global add nodefony
 #           - cdn.nodefony.com
 #
 cdn                             : ~
-  </pre>
+                                                  </pre>
     </p>
 
     <h2>Running NODEFONY :
@@ -322,54 +324,57 @@ cdn                             : ~
     </h2>
     <div class="doc2">
 
-      <pre >
+      <pre>
 
-# run appliation in dev mode
+                                                    # run appliation in dev mode
 
-$ nodefony dev
+                                                    $ nodefony dev
 
-  </pre>
+                                                  </pre>
     </div>
 
     <h2>ACCEES NODEFONY APPLICATION :
     </h2>
     <div class="doc2">
-      <p >
+      <p>
         Access to App with URL :
         <strong>http://localhost:5151</strong><br>
-
-        By default the nodefony clone come with a demonstration bundle named "demo-bundle"
-
       </p>
     </div>
 
-    <center>
-      <img width="800" height="463" src="/documentation-bundle/images/nodefony.png"/>
-    </center>
+    <div class="row">
+      <img width="800" height="463" src="/documentation-bundle/images/nodefony.png" />
+    </div>
 
-    <h2>SIMPLE EXAMPLES NODEFONY FRAMEWORK :
-    </h2>
-    <h3 name="rawRender" id="rawRender">Rendering html :</h3>
-    <div class="doc3 ">
-      <div class="panel panel-info">
-        <div class="panel-heading">
+
+    <div class="container-fluid">
+      <h2>SIMPLE EXAMPLES NODEFONY FRAMEWORK :</h2>
+      <h3 name="rawRender" id="rawRender">Rendering html :</h3>
+      <div class="card card-info">
+        <div class="card-header">
           <strong>Simple Render html</strong>
         </div>
-        <div class="panel-body ">
-          <ul class="nav nav-tabs">
-            <li role="presentation" class="active">
-              <a data-target="#routing" data-toggle="tab">routing.js</a>
+        <div class="card-body">
+          <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="routing-tab" data-toggle="tab" href="#routing" role="tab" aria-controls="routing" aria-selected="true">
+                routing.js
+              </a>
             </li>
-            <li role="presentation">
-              <a data-target="#controler" data-toggle="tab">demoController.js</a>
+            <li class="nav-item">
+              <a class="nav-link" id="controler-tab" data-toggle="tab" href="#controler" role="tab" aria-controls="controler" aria-selected="false">
+                demoController.js
+              </a>
             </li>
-            <li role="presentation">
-              <a data-target="#result" data-toggle="tab">Result</a>
+            <li class="nav-item">
+              <a class="nav-link" id="result-tab" data-toggle="tab" href="#result" role="tab" aria-controls="result" aria-selected="false">
+                Result
+              </a>
             </li>
           </ul>
-          <div class="tab-content ">
-            <div id="routing" class="tab-pane active">
-              <br>
+          <div class="tab-content">
+
+            <div class="tab-pane fade show active" id="routing" role="tabpanel" aria-labelledby="routing-tab">
               <p>
                 URL :
                 <code>
@@ -386,36 +391,34 @@ module.exports = {
     }
   }
 };
-  </pre>
-
+              </pre>
             </div>
 
-            <div id="controler" class="tab-pane ">
-              <p></p>
+            <div class="tab-pane fade" id="controler" role="tabpanel" aria-labelledby="controler-tab">
               <pre>
 /*
- *	class democontroller
- *
- */
+*	class democontroller
+*
+*/
 module.exports = class democontroller extends nodefony.controller {
   /*
-   *	constructor
-   */
+  *	constructor
+  */
   constructor (container, context){
     super(container, context);
   }
   /*
- 	*	action html
- 	*
- 	*/
+  *	action html
+  *
+  */
   htmlaction (name){
     return <strong>this.renderresponse</strong>('&lt;h1&gt;'+name+'&lt;/h1&gt;');
   }
 };
-  </pre>
+              </pre>
             </div>
 
-            <div id="result" class="tab-pane">
+            <div class="tab-pane fade" id="result" role="tabpanel" aria-labelledby="result-tab">
               {{render( controller( "documentation-bundle:demo:html", "nodefony") ) }}
             </div>
           </div>
@@ -423,14 +426,14 @@ module.exports = class democontroller extends nodefony.controller {
       </div>
     </div>
 
-    <h3 name="simpleTemplate" id="simpleTemplate">Rendering Templates :</h3>
-    <div class="doc3 ">
 
-      <div class="panel panel-info">
-        <div class="panel-heading">
+    <div class="container-fluid">
+      <h3 name="simpleTemplate" id="simpleTemplate">Rendering Templates :</h3>
+      <div class="card card-info">
+        <div class="card-header">
           <strong>Rendering Twig Templates</strong>
         </div>
-        <div class="panel-body ">
+        <div class="card-body ">
           <ul class="nav nav-tabs">
             <li role="presentation" class="active">
               <a data-target="#routing1" data-toggle="tab">routing.yml</a>
@@ -447,7 +450,7 @@ module.exports = class democontroller extends nodefony.controller {
           </ul>
 
           <div class="tab-content ">
-            <div id="routing1" class="tab-pane active">
+            <div id="routing1" class="nav-item active">
               <br>
               <p>
                 URL :
@@ -457,44 +460,44 @@ module.exports = class democontroller extends nodefony.controller {
               </p>
               <pre>
 documentation-demo-render:
-  pattern:  /doc/demo/render/{name}
-  defaults: {controller: "documentation-bundle:demo:render", "name":"nodefony"}
-  </pre>
+pattern:  /doc/demo/render/{name}
+defaults: {controller: "documentation-bundle:demo:render", "name":"nodefony"}
+              </pre>
             </div>
 
-            <div id="controler1" class="tab-pane ">
+            <div id="controler1" class="nav-item ">
               <p></p>
               <pre>
 /*
- *	class democontroller
- *
- */
+*	class democontroller
+*
+*/
 module.exports = class democontroller extends nodefony.controller {
   /*
-   *	constructor
-   */
+  *	constructor
+  */
   constructor (container, context){
     super(container, context);
   }
   /*
- 	*	action render
- 	*
- 	*/
+  *	action render
+  *
+  */
   renderaction (name){
     return this.render('documentation-bundle:demo:index.html.twig', {
-  name:name,
-  });
+      name:name,
+    });
   }
 };
-  </pre>
+              </pre>
             </div>
-            <div id="twig1" class="tab-pane">
+            <div id="twig1" class="nav-item">
               <pre>
 &lt;h1&gt; &#123;&#123;name&#125;&#125; &lt;/h1&gt;
-  </pre>
+              </pre>
             </div>
 
-            <div id="result1" class="tab-pane">
+            <div id="result1" class="nav-item">
               {{render( controller( "documentation-bundle:demo:render", "nodefony") ) }}
             </div>
 
@@ -503,13 +506,13 @@ module.exports = class democontroller extends nodefony.controller {
       </div>
     </div>
 
-    <h3 name="websocket" id="websocket">Rendering Websocket :</h3>
-    <div class="doc3 ">
-      <div class="panel panel-info">
-        <div class="panel-heading">
+    <div class="container-fluid">
+      <h3 name="websocket" id="websocket">Rendering Websocket :</h3>
+      <div class="card card-info">
+        <div class="card-header">
           <strong>Rendering Websocket</strong>
         </div>
-        <div class="panel-body ">
+        <div class="card-body">
           <ul class="nav nav-tabs">
             <li role="presentation" class="active">
               <a data-target="#routing3" data-toggle="tab">routing.yml</a>
@@ -524,7 +527,7 @@ module.exports = class democontroller extends nodefony.controller {
 
           <div class="tab-content ">
 
-            <div id="routing3" class="tab-pane active">
+            <div id="routing3" class="nav-item active">
               <br>
               <p>
                 URL :
@@ -535,17 +538,17 @@ module.exports = class democontroller extends nodefony.controller {
 
               <pre>
 websoket:
-  pattern:  /websoket
-  defaults: {"controller": "demo-bundle:demo:websoket"}
-  requirements:
-    method:
-      - get
-      - websocket
-  </pre>
+pattern:  /websoket
+defaults: {"controller": "demo-bundle:demo:websoket"}
+requirements:
+method:
+- get
+- websocket
+              </pre>
 
             </div>
 
-            <div id="controler3" class="tab-pane ">
+            <div id="controler3" class="nav-item ">
               <p>
                 <div class="alert alert-warning" role="alert">
                   To use websocket you must understand Nodefony Request Context
@@ -570,53 +573,52 @@ module.exports = class democontroller extends nodefony.controller {
   websoketaction (message){
     switch( this.getmethod() ){
       <strong>case "get" :</strong>
-        return this.render('demo-bundle:default:websocket.html.twig',{name:"websoket"});
+      return this.render('demo-bundle:default:websocket.html.twig',{name:"websoket"});
       <strong>case "websocket" :</strong>
-        if (message){
-          // log  message client in terminal
-          this.logger( message.utf8data , "info");
-        }else{
-          // prepare  push messages server
-          // send messages to clients
-          let i = 0 ;
-          let id = setinterval(() => {
-            let mess = "i am a  message "+ i +"\n" ;
-             // you can use context to send data
-            <strong>this.context.send(mess);</strong>
-            //  or call controller method ( renderresponse , render , renderjson )
-            <strong>this.renderresponse(mess);</strong>
-            // log  message sending in terminal
-            this.logger( "send to client :" + mess , "info");
-            i++
-          }, 1000);
+      if (message){
+        // log  message client in terminal
+        this.logger( message.utf8data , "info");
+      }else{
+        // prepare  push messages server
+        // send messages to clients
+        let i = 0 ;
+        let id = setinterval(() => {
+          let mess = "i am a  message "+ i +"\n" ;
+          // you can use context to send data
+          <strong>this.context.send(mess);</strong>
+          //  or call controller method ( renderresponse , render , renderjson )
+          <strong>this.renderresponse(mess);</strong>
+          // log  message sending in terminal
+          this.logger( "send to client :" + mess , "info");
+          i++
+        }, 1000);
 
-          settimeout(function(){
+        settimeout(function(){
+          clearinterval(id);
+          // close reason , descripton
+          <strong>this.context.close(1000, "nodefony controller close socket");</strong>
+          id = null ;
+        }, 10000);
+        // event websocket close by client
+        <strong>this.context.listen</strong>(this, "onclose" , function(){
+          if (id){
             clearinterval(id);
-            // close reason , descripton
-            <strong>this.context.close(1000, "nodefony controller close socket");</strong>
-            id = null ;
-          }, 10000);
-          // event websocket close by client
-          <strong>this.context.listen</strong>(this, "onclose" , function(){
-            if (id){
-              clearinterval(id);
-            }
-          });
-        }
-        break;
-        <strong>default :</strong>
-          throw new error(" method not allowed")
-        }
+          }
+        });
       }
-    };
-  </pre>
+      break;
+      <strong>default :</strong>
+      throw new error(" method not allowed")
+    }
+  }
+};
+              </pre>
             </div>
 
-            <div id="logger3" class="tab-pane">
+            <div id="logger3" class="nav-item">
               <br>
 
               <pre>
-
 <strong>/* you can show log in terminal */</strong>
 
 thu oct 06 2016 15:49:09 info request websocket secure  :  connection websocket connection from : 192.168.100.71 pid :86607 origin : https://nodefony.com:5152
@@ -633,7 +635,7 @@ thu oct 06 2016 15:49:17 info controler demo   : send to client :i am a  message
 thu oct 06 2016 15:49:18 info controler demo   : send to client :i am a  message 8
 
 thu oct 06 2016 15:49:19 info request websocket secure  : thu oct 06 2016 15:49:19 gmt+0200 (cest) connection websocket close : 192.168.100.71 pid :86607 origin : https://nodefony.com:5152 1000 nodefony controller close socket
-  </pre>
+              </pre>
             </div>
           </div>
         </div>
@@ -641,13 +643,13 @@ thu oct 06 2016 15:49:19 info request websocket secure  : thu oct 06 2016 15:49:
     </div>
 
     <h3 name="renderJson" id="renderJson">Rendering JSON :</h3>
-    <div class="doc3 ">
+    <div class="container-fluid">
 
-      <div class="panel panel-info">
-        <div class="panel-heading">
+      <div class="card card-info">
+        <div class="card-header">
           <strong>Rendering JSON</strong>
         </div>
-        <div class="panel-body ">
+        <div class="card-body ">
           <ul class="nav nav-tabs">
             <li role="presentation" class="active">
               <a data-target="#routing4" data-toggle="tab">routing.yml</a>
@@ -657,7 +659,7 @@ thu oct 06 2016 15:49:19 info request websocket secure  : thu oct 06 2016 15:49:
             </li>
           </ul>
           <div class="tab-content ">
-            <div id="routing4" class="tab-pane active">
+            <div id="routing4" class="nav-item active">
               <br>
               <p>
                 URL :
@@ -667,27 +669,27 @@ thu oct 06 2016 15:49:19 info request websocket secure  : thu oct 06 2016 15:49:
               </p>
               <pre>
 json:
-  pattern:  /json
-  defaults: {"controller": "demo-bundle:demo:json"}
-  </pre>
+pattern:  /json
+defaults: {"controller": "demo-bundle:demo:json"}
+              </pre>
             </div>
-            <div id="controler4" class="tab-pane ">
+            <div id="controler4" class="nav-item ">
               <pre>
 /*
- *	class democontroller
- *
- */
+*	class democontroller
+*
+*/
 module.exports = class democontroller extends nodefony.controller {
   /*
-   *	constructor
-   */
+  *	constructor
+  */
   constructor (container, context){
     super(container, context);
   }
   /*
-   *	action json
-   *
-   */
+  *	action json
+  *
+  */
   jsonaction (){
     return <strong>this.renderjson</strong>({
       foo:"bar",
@@ -695,12 +697,9 @@ module.exports = class democontroller extends nodefony.controller {
     });
   }
 };
-  </pre>
+            </pre>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-  </div>
-</div>
