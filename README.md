@@ -173,7 +173,7 @@ yarn global add nodefony
 
 **[Nodefony](https://nodefony.net) Excutable Installation** :
 
- Launch a Git BASH terminal
+ Launch a CMD terminal
 ```bash
 npm -g install nodefony
 
@@ -182,6 +182,7 @@ npm -g install nodefony
 yarn global add nodefony
 ```
 **Add NPM global bin in $Path windows** :
+
   On the Windows System Property Menu, configure *Path* environment variable by adding :
 
   ```bash
@@ -228,6 +229,7 @@ nodefony
 ## <a name="buildstarter"></a> Build Project with Github Starter :
 
 **CLI** :
+
   Clone nodefony starter
  ```bash
  $ git clone https://github.com/nodefony/nodefony.git
@@ -238,6 +240,7 @@ nodefony
  $ npm start
  ```
  **CLI INTERATIVE** :
+
   YOU CAN USE CLI INTERACTIVE MODE TO BUILD PROJECT (nodefony without args)
  ```bash
  $ git clone https://github.com/nodefony/nodefony.git
@@ -265,6 +268,7 @@ $ nodefony dev
 $ <ctrl-c>
 ```
 **Starting Development Servers in Debug Mode (-d)** :
+
 ```bash
 $ nodefony -d dev
 
