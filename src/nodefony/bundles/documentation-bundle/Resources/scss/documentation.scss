@@ -2,7 +2,17 @@ html {
   font-size: 14px;
 }
 
+.mt-6{
+  margin-top: ($spacer * 4) !important;;
+}
 
+.mt-7{
+  margin-top: ($spacer * 4.5) !important;;
+}
+
+.mt-8{
+  margin-top: ($spacer * 5) !important;;
+}
 
 h1{
 	color:#337ab7;
@@ -16,7 +26,6 @@ h2{
 	margin-left:20px;
 }
 
-
 h3{
 	font-size: 17px;
 	color: #167b87;
@@ -28,8 +37,6 @@ h4{
 	font-size: 14px;
 	margin-left:50px;
 }
-
-
 
 .doc2  {
 	margin-left:20px;
@@ -43,12 +50,10 @@ h4{
 
 }
 
-
 .config-parameters{
 	font-size: 15px;
-	color:#167b87;	
+	color:#167b87;
 }
-
 
 hr{
 
