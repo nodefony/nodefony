@@ -770,9 +770,13 @@ module.exports = nodefony.register("Bundle", function() {
       let bundle = this;
       // OVERRIDE VIEWS BUNDLE in APP DIRECTORY
       if (this.name === "app") {
-        let pattern = path.resolve(this.viewsPath, "(\\w+)-bundle", "views", "(.+\\.twig)");
+        let pattern = null;
         if (this.kernel.platform === "win32") {
-          pattern = pattern.replace(/\\/g, "\\\\");
+          let prefix = path.resolve(this.viewsPath);
+          prefix = prefix.replace(/\\/g, "\\\\");
+          pattern = prefix + "\\\\(\\w+)-bundle\\\\views\\\\(.+\\.twig)";
+        } else {
+          pattern = path.resolve(this.viewsPath, "(\\w+)-bundle", "views", "(.+\\.twig)");
         }
         let reg = new RegExp("^" + pattern + "$");
         let res = reg.exec(file.path);

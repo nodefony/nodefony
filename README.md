@@ -171,11 +171,6 @@ yarn global add nodefony
 
   To install or update Node.js, you can download installer here [Node.js](https://nodejs.org/en/)
 
-**[Git For Windows](https://gitforwindows.org/) Installation** :
-
-  Git for Windows provides a BASH emulation used to run Git from the command line.
-  To install or update Git For Windows, you can download installer here [Git For Windows](https://gitforwindows.org)
-
 **[Nodefony](https://nodefony.net) Excutable Installation** :
 
  Launch a Git BASH terminal
@@ -186,6 +181,14 @@ npm -g install nodefony
 
 yarn global add nodefony
 ```
+**Add NPM global bin in $Path windows** :
+  On the Windows System Property Menu, configure *Path* environment variable by adding :
+
+  ```bash
+C:\Users\myuser\AppData\Roaming\npm
+or
+C:\Users\myuser\AppData\Roaming\npm\bin
+  ```
 
 ## <a name="buildcli"></a> Build Project with nodefony cli (recommended):
 
