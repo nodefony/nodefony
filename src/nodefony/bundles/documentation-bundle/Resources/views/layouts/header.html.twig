@@ -47,7 +47,7 @@
         <a class="nav-link" href="#">{{ "progress" | trans() | upper()}}</a>
       </li>
       <li class="nav-item">
-        <form action="{{url('lang')}}" name="formLang" id="formLang" class="form-inline">
+        <form action="{{url('documentation-default')}}"  class="form-inline">
           <div class="form-inline input-group">
             <div class="input-group-prepend">
               <label class="input-group-text" for="version">{{"VERSION"| trans("messages") }} : </label>
@@ -67,7 +67,7 @@
 
     </ul>
     <ul class="navbar-nav mt-2 mt-lg-0">
-      <form action="{{url('lang')}}" name="formLang" id="formLang" class="form-inline">
+      <form action="{{url('doc-lang')}}" name="formLang" id="formLang" class="form-inline">
         <div class="form-inline input-group">
           <div class="input-group-prepend">
             <label class="input-group-text" for="inputGroupSelect01">{{"lang"| trans("messages") }} : </label>

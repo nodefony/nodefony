@@ -1,81 +1,36 @@
-#
-#
-#	ROUTING BUNDLE documentationBundle
-#
-#===============================================================================
-#
-#  Copyright © /2016         |
-#
-# ===============================================================================
-#
-#        GENERATE BY App BUILDER YAML FILE
-#
-# This file is YAML  FILE
-# ---
-# YAML:                                 YAML Ain't Markup Language
-#
-# What It Is:                           YAML is a human friendly data serialization
-#   standard for all programming languages.
-#
-# YAML Resources:
-#   YAML 1.2 (3rd Edition):             http://yaml.org/spec/1.2/spec.html
-#   YAML 1.1 (2nd Edition):             http://yaml.org/spec/1.1/
-#   YAML 1.0 (1st Edition):             http://yaml.org/spec/1.0/
-#   YAML Trac Wiki:                     http://trac.yaml.org/
-#   YAML Mailing List:                  yaml-core@lists.sourceforge.net
-#   YAML IRC Channel:                   "#yaml on irc.freenode.net"
-#   YAML Cookbook (Ruby):               http://yaml4r.sourceforge.net/cookbook/ (local)
-#   YAML Reference Parser:              http://yaml.org/ypaste/
-
-
 
 ##########  ROUTING  documentationBundle  ############
-
 documentation:
-  pattern:                              /documentation
-  defaults: {"controller":              "documentation:default:index"}
-
-documentation-lang:
-  pattern:                              /documentation/changelang
-  defaults: {"controller":              "documentation:default:lang"}
+  pattern:                  /documentation
+  defaults: {"controller":  "documentation:default:index"}
 
 documentation-search:
-  pattern:                              /documentation/search
-  defaults: {"controller":              "documentation:default:search"}
+  pattern:                  /documentation/search
+  defaults: {"controller":  "documentation:default:search"}
 
 documentation-default:
-  pattern:                              /documentation/{version}
-  defaults: {"controller":              "documentation:default:index"}
+  pattern:                  /documentation
+  defaults:                 {
+    "controller":           "documentation:default:index"
+  }
 
 documentation-version:
-  pattern:                              /documentation/{version}/{bundle}
-  defaults: {"controller":              "documentation:default:version"}
+  pattern:                  /documentation/{version}/{bundle}
+  defaults:                 {
+    "controller":           "documentation:default:version"
+  }
 
 documentation-section:
-  pattern:                              /documentation/{version}/{bundle}/{section}
-  defaults: {"controller":              "documentation:default:version"}
-
-documentation-git-getMostRecentCommit:
-  pattern:                              /api/git/getMostRecentCommit
-  defaults: {"controller":              "documentation:git:getMostRecentCommit"}
-
-documentation-git-getStatus:
-  pattern:                              /api/git/getStatus
-  defaults: {"controller":              "documentation:git:getStatus"}
-
-
-documentation-git-getBranch:
-  pattern:                              /api/git/getCurrentBranch
-  defaults: {"controller":              "documentation:git:getCurrentBranch"}
-
+  pattern:                  /documentation/{version}/{bundle}/{section}
+  defaults: {"controller":  "documentation:default:version"}
 
 #
 # DEMO DOCUMENTATION
 #
 documentation-demo-html:
-  pattern:                              /doc/demo/html/{name}
-  defaults: {controller:                "documentation:demo:html", "name":"nodefony"}
+  pattern:                  /doc/demo/html/{name}
+  defaults: {controller:    "documentation:demo:html", "name":"nodefony"}
 
 documentation-demo-render:
-  pattern:                              /doc/demo/render/{name}
-  defaults: {controller:                "documentation:demo:render", "name":"nodefony"}
+  pattern:                  /doc/demo/render/{name}
+  defaults: {controller:    "documentation:demo:render", "name":"nodefony"}

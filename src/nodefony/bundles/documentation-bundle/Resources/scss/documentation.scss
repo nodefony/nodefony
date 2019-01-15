@@ -2,6 +2,27 @@ html {
   font-size: 14px;
 }
 
+pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  color: #333;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.bg-nodefony{
+  background-color: #00a0f1;
+  color: white;
+
+
+}
+
 .mt-6{
   margin-top: ($spacer * 4) !important;;
 }

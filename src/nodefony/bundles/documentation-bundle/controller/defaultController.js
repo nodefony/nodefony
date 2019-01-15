@@ -10,14 +10,16 @@ module.exports = class defaultController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
-    this.defaultVersion = this.kernel.settings.version;
+    this.defaultVersion = nodefony.version;
     this.docPath = this.kernel.nodefonyPath;
     this.urlGit = this.bundle.settings.github.url;
-    this.version = this.getVersions(this.docPath);
+    this.git = this.get("git");
+
+
   }
 
 
-  getVersions(Path) {
+  /*getVersions(Path) {
     let finderVersion = null;
     // get all version
     try {
@@ -30,10 +32,19 @@ module.exports = class defaultController extends nodefony.controller {
     }
     let directory = finderVersion.result.getDirectories();
     let all = [];
-    directory.forEach(function (ele) {
+    directory.forEach(function(ele) {
       all.push(ele.name);
     });
     return all;
+  }*/
+
+  getVersions() {
+    return this.git.getReleases()
+      .then((tags) => {
+        return tags;
+      }).catch(e => {
+        throw e;
+      });
   }
 
   /**
@@ -43,7 +54,6 @@ module.exports = class defaultController extends nodefony.controller {
     return this.render("documentation:layouts:header.html.twig", {
       langs: this.get("translation").getLangs(),
       locale: this.getLocale(),
-      allVersions: this.version,
       bundle: "nodefony"
     });
   }
@@ -61,7 +71,7 @@ module.exports = class defaultController extends nodefony.controller {
 
   /**
    *    @Method ({ "GET"})
-   *    @Route ("/lang", name="lang")
+   *    @Route ("/documentation/lang", name="doc-lang")
    */
   langAction() {
     if (this.query.language) {
@@ -83,7 +93,7 @@ module.exports = class defaultController extends nodefony.controller {
   searchAction() {
     let url = this.generateUrl("documentation-version", {
       bundle: "nodefony",
-      version: "default"
+      version: this.defaultVersion
     }, true);
     if (this.query.search) {
       let webCrawler = this.get("webCrawler");
@@ -106,7 +116,12 @@ module.exports = class defaultController extends nodefony.controller {
     if (!version) {
       defaultVersion = this.defaultVersion;
     } else {
-      defaultVersion = version;
+      if (version === "default") {
+        defaultVersion = this.defaultVersion;
+      } else {
+        defaultVersion = version;
+      }
+
     }
     if (force) {
       try {
@@ -181,7 +196,7 @@ module.exports = class defaultController extends nodefony.controller {
     }
     let directory = finder.result.getDirectories();
     let sections = [];
-    directory.forEach(function (ele) {
+    directory.forEach(function(ele) {
       sections.push(ele.name);
     });
     return this.render("documentationBundle:layouts:navSection.html.twig", {
@@ -244,7 +259,7 @@ module.exports = class defaultController extends nodefony.controller {
     }
     let directory = finderVersion.result.getDirectories();
     let all = [];
-    directory.forEach(function (ele) {
+    directory.forEach(function(ele) {
       all.push(ele.name);
     });
 
@@ -254,30 +269,28 @@ module.exports = class defaultController extends nodefony.controller {
       if (version) {
         if (section) {
           if (subsection) {
-            findPath = path.resolve(Path, "doc", version, section, subsection);
+            findPath = path.resolve(Path, "doc", section, subsection);
           } else {
-            findPath = path.resolve(Path, "doc", version, section);
+            findPath = path.resolve(Path, "doc", section);
           }
         } else {
-          findPath = path.resolve(Path, "doc", version);
+          findPath = path.resolve(Path, "doc");
         }
       } else {
-        findPath = path.resolve(Path, "doc", "default");
+        findPath = path.resolve(Path, "doc");
       }
       findPath = new nodefony.fileClass(findPath);
     } catch (e) {
-      findPath = path.resolve(Path, "doc", "default");
+      findPath = path.resolve(Path, "doc");
       try {
         findPath = new nodefony.fileClass(findPath);
         myUrl = this.generateUrl("documentation-version", {
-          bundle: bundle,
-          version: "default"
+          bundle: bundle
         });
         return this.redirect(myUrl);
       } catch (e) {
         myUrl = this.generateUrl("documentation-version", {
-          bundle: "nodefony",
-          version: "default"
+          bundle: "nodefony"
         });
         return this.redirect(myUrl);
       }
@@ -406,7 +419,7 @@ module.exports = class defaultController extends nodefony.controller {
     //console.log(directory)
 
     let versions = [];
-    directory.forEach(function (ele) {
+    directory.forEach(function(ele) {
       versions.push(ele.name);
     });
 

@@ -23,8 +23,8 @@ module.exports = class demoController extends nodefony.controller {
    *	@method renderAction
    */
   renderAction(name) {
-    return this.render('documentationBundle:demo:index.html.twig', {
-      name: name,
+    return this.render('documentation-bundle:demo:doc.html.twig', {
+      name: name
     });
 
   }

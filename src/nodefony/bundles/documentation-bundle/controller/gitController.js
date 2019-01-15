@@ -1,15 +1,37 @@
+/**
+ *    @Route ("/api/git")
+ */
 module.exports = class gitController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
     this.git = this.kernel.git;
+    this.serviceGit = this.get("git");
   }
 
+  /**
+   *    @Method ({"GET"})
+   *    @Route ("/versions", name="documentation-git-versions")
+   */
+  getVersionsAction() {
+    return this.serviceGit.getReleases()
+      .then((tags) => {
+        return this.renderJson(tags);
+      }).catch(e => {
+        throw e;
+      });
+  }
+
+  /**
+   *    @Method ({"GET"})
+   *    @Route ("/getStatus", name="documentation-git-getStatus")
+   */
   getStatusAction() {
 
     let tab = [];
     try {
-      this.git.Repository.open(this.get("kernel").rootDir).then((repo) => {
+      this.git.Repository.open(this.get("kernel").rootDir)
+        .then((repo) => {
           repo.getStatus().then((statuses) => {
             statuses.forEach((file) => {
               let obj = {
@@ -26,7 +48,7 @@ module.exports = class gitController extends nodefony.controller {
             throw err;
           }
           this.renderJsonAsync(tab);
-        }).done(function () {
+        }).done(function() {
           //console.log('Finished');
         });
     } catch (e) {
@@ -34,6 +56,10 @@ module.exports = class gitController extends nodefony.controller {
     }
   }
 
+  /**
+   *    @Method ({"GET"})
+   *    @Route ("/getCurrentBranch", name="documentation-git-getBranch")
+   */
   getCurrentBranchAction() {
 
     this.git.branch((err, BranchSummary) => {
@@ -48,6 +74,10 @@ module.exports = class gitController extends nodefony.controller {
     });
   }
 
+  /**
+   *    @Method ({"GET"})
+   *    @Route ("/getMostRecentCommit", name="documentation-git-getMostRecentCommit")
+   */
   getMostRecentCommitAction() {
     let tab = [];
     this.git.log((err, ListLogSummary) => {
