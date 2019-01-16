@@ -3,7 +3,7 @@
 require('bootstrap');
 require('../../scss/custom.scss');
 
-module.exports = function() {
+module.exports = function () {
 
   //window["stage"] = stage;
   /*
@@ -19,46 +19,47 @@ module.exports = function() {
       let selectorLang = global.document.getElementById("language");
       if (selectorLang) {
         selectorLang.addEventListener("change", (e) => {
-          //window.location.href = "?lang=" + this.value;
           this.changeLang();
           e.preventDefault();
         });
       }
 
-      $("#version").change(() => {
-        window.location = this.value;
+      $("#version").change(function () {
+        console.log(this.value)
+        window.location = "/documentation/" + this.value;
+        e.preventDefault();
       });
 
-      $.get("/api/git/getCurrentBranch", function(data) {
+      $.get("/api/git/getCurrentBranch", function (data) {
         var ele = $(".branch");
         ele.text(data.branch);
-      }).fail(function(error) {
+      }).fail(function (error) {
         throw error;
       });
 
-      $.get("/api/git/versions", function(data) {
+      $.get("/api/git/versions", function (data) {
         let ele = $("#version");
         for (let version in data) {
           switch (version) {
-            case "latest":
-              let option = `<option value="${data[version]}" selected="">${data[version]}</option>`;
+          case "latest":
+            let option = `<option value="${data[version]}" selected="">${data[version]}</option>`;
+            ele.append(option);
+            break;
+          case "all":
+            for (let i = 0; i < data[version].length; i++) {
+              let option = `<option value="${data[version][i]}" selected="">${data[version][i]}</option>`;
               ele.append(option);
-              break;
-            case "all":
-              for (let i = 0; i < data[version].length; i++) {
-                let option = `<option value="${data[version][i]}" selected="">${data[version][i]}</option>`;
-                ele.append(option);
-              }
-              break;
+            }
+            break;
           }
 
         }
-      }).fail(function(error) {
+      }).fail(function (error) {
         throw error;
       });
 
       var search = $("#inputSearh");
-      search.bind("keypress", function(event) {
+      search.bind("keypress", function (event) {
         if (event.keyCode === 13) {
           event.stopPropagation();
           event.preventDefault();
@@ -66,7 +67,7 @@ module.exports = function() {
           return false;
         }
       });
-      $("#buttonSearh").click(function(event) {
+      $("#buttonSearh").click(function (event) {
         var ele = $("#search");
         var mysearch = search.val();
         var spinner = $("#spinner");
@@ -76,11 +77,11 @@ module.exports = function() {
             data: {
               search: mysearch
             },
-            beforeSend: function() {
+            beforeSend: function () {
               ele.empty();
               spinner.show();
             },
-            success: function(data) {
+            success: function (data) {
               var text = null;
               for (var link in data) {
                 var reg = new RegExp(mysearch, 'gi');
@@ -103,10 +104,10 @@ module.exports = function() {
                 ele.append(li);
               }
             },
-            complete: function() {
+            complete: function () {
               spinner.hide();
             }
-          }).fail(function() {
+          }).fail(function () {
             spinner.hide();
           });
         } else {
@@ -132,7 +133,7 @@ module.exports = function() {
         url = "https://github.com/nodefony/nodefony-core/commit/";
       }
       if (bundle === "nodefony" && section === null) {
-        $.get("/api/git/getMostRecentCommit", function(data) {
+        $.get("/api/git/getMostRecentCommit", function (data) {
           var ele = $("#commits");
           for (var i = 0; i < data.length; i++) {
             //var dt = new Date( data[i].date ) ;
@@ -148,11 +149,11 @@ module.exports = function() {
             ele.append(li);
 
           }
-        }).fail(function() {
+        }).fail(function () {
           console.log("ERROR");
         });
 
-        $.get("https://api.github.com/repos/nodefony/nodefony/issues?state=open", function(data) {
+        $.get("https://api.github.com/repos/nodefony/nodefony/issues?state=open", function (data) {
           var ele = $("#issues");
           for (var i = 0; i < data.length; i++) {
             var date = new Date(data[i].created_at).toDateString();
@@ -163,7 +164,7 @@ module.exports = function() {
             li += "</li>";
             ele.append(li);
           }
-        }).fail(function() {
+        }).fail(function () {
           console.log("ERROR");
         });
       }

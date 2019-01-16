@@ -22,5 +22,14 @@ module.exports = class git extends nodefony.Service {
     });
   }
 
+  checkoutVersion(version) {
+    return new Promise((resolve, reject) => {
+      try {
+        return resolve(version);
+      } catch (e) {
+        return reject(e);
+      }
+    });
+  }
 
 };

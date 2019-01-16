@@ -613,6 +613,9 @@ module.exports = nodefony.register("controller", function () {
     }
 
     redirect(url, status, headers) {
+      if (!this.context.redirect) {
+        throw new Error("subRequest can't redirect request");
+      }
       if (!url) {
         throw new Error("Redirect error no url !!!");
       }

@@ -109,25 +109,13 @@
           </span>
           {{ render( controller("documentation-bundle:default:subSection", version, bundle, section  )) }}
         </ul>
-
-        <!--div class="text-primary text-center " style="margin:5px 0 10px 0 ; font-size:130%">
-          <a href="{{path('documentation-version',{version:version,bundle:bundle})}}">
-            {{bundle | trans() | upper}}
-          </a>
-          <span class="label label-success">
-            {{ version }}
-          </span>
-        </div>
-        <ul class="nav nav-pills nav-stacked">
-          {{ render( controller("documentation-bundle:default:subSection", version, bundle, section  )) }}
-        </ul-->
         {% block section %}{% endblock %}
       </div>
       <div class="col-md-10 col-lg-offset-2">
         <ol class="breadcrumb">
           {% if version %}
           <li class="breadcrumb-item">
-            <a href="{{path('documentation-default',{version:version})}}">Nodefony
+            <a href="{{path('documentation-version',{version:version})}}">Nodefony
               {{version }}</a>
             </li>
             {% endif %}

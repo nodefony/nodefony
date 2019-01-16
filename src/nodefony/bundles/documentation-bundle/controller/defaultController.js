@@ -14,8 +14,6 @@ module.exports = class defaultController extends nodefony.controller {
     this.docPath = this.kernel.nodefonyPath;
     this.urlGit = this.bundle.settings.github.url;
     this.git = this.get("git");
-
-
   }
 
 
@@ -111,6 +109,7 @@ module.exports = class defaultController extends nodefony.controller {
    *
    */
   indexAction(version) {
+
     let defaultVersion = null;
     let force = this.query.force;
     if (!version) {
@@ -121,7 +120,6 @@ module.exports = class defaultController extends nodefony.controller {
       } else {
         defaultVersion = version;
       }
-
     }
     if (force) {
       try {
@@ -150,6 +148,7 @@ module.exports = class defaultController extends nodefony.controller {
   }
 
   subSectionAction(version, bundle, section) {
+
     let subsection = null;
     let Path = null;
     let finder = null;
@@ -175,28 +174,24 @@ module.exports = class defaultController extends nodefony.controller {
       if (version) {
         if (section) {
           finder = new nodefony.finder({
-            path: Path + "/doc/" + version + "/" + section,
+            path: Path + "/doc/" + section,
             depth: 1
           });
         } else {
           finder = new nodefony.finder({
-            path: Path + "/doc/" + version,
+            path: Path + "/doc/",
             depth: 1
           });
         }
       } else {
-        throw "404";
+        throw new Error("version not found");
       }
     } catch (e) {
-      let myUrl = this.generateUrl("documentation-version", {
-        bundle: "nodefony",
-        version: this.defaultVersion
-      });
-      return this.redirect(myUrl);
+      throw e;
     }
     let directory = finder.result.getDirectories();
     let sections = [];
-    directory.forEach(function(ele) {
+    directory.forEach(function (ele) {
       sections.push(ele.name);
     });
     return this.render("documentationBundle:layouts:navSection.html.twig", {
@@ -209,6 +204,15 @@ module.exports = class defaultController extends nodefony.controller {
   }
 
   versionAction(version, bundle, section) {
+    if (section === "default" && version !== this.defaultVersion) {
+      return this.git.checkoutVersion(version)
+        .then(() => {
+          console.log("pass")
+          return this.redirectToRoute("documentation-section", {
+            version: version
+          });
+        });
+    }
     let subsection = null;
     let Path = null;
     let finder = null;
@@ -259,7 +263,7 @@ module.exports = class defaultController extends nodefony.controller {
     }
     let directory = finderVersion.result.getDirectories();
     let all = [];
-    directory.forEach(function(ele) {
+    directory.forEach(function (ele) {
       all.push(ele.name);
     });
 
@@ -295,7 +299,6 @@ module.exports = class defaultController extends nodefony.controller {
         return this.redirect(myUrl);
       }
     }
-
     finder = new nodefony.finder({
       path: findPath,
       recurse: false,
@@ -419,7 +422,7 @@ module.exports = class defaultController extends nodefony.controller {
     //console.log(directory)
 
     let versions = [];
-    directory.forEach(function(ele) {
+    directory.forEach(function (ele) {
       versions.push(ele.name);
     });
 
