@@ -162,7 +162,7 @@ module.exports = nodefony.register("Bundle", function() {
       try {
         this.finder = new nodefony.finder({
           path: this.path,
-          exclude: /^tests$|^public$|^node_modules$/,
+          exclude: /^tests$|^public$|^node_modules|nodefony-core|nodefony$/,
         });
       } catch (e) {
         this.logger(e, "ERROR");

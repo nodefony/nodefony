@@ -41,6 +41,17 @@ memory-pager@^1.0.2:
   resolved "https://registry.yarnpkg.com/memory-pager/-/memory-pager-1.5.0.tgz#d8751655d22d384682741c972f2c3d6dfa3e66b5"
   integrity sha512-ZS4Bp4r/Zoeq6+NLJpP+0Zzm0pR8whtGPf1XExKLJBAczGMnSi3It14OiNCStjQjM6NU1okjQGSxgEZN8eBYKg==
 
+mongodb-core@3.1.10:
+  version "3.1.10"
+  resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-3.1.10.tgz#a9f4839f99b81fe415710f747bb8f016bbdc877d"
+  integrity sha512-XD4elkPmcFU7rL3ucRQZeyNHdE9xVo4QHLsq63/PVs6nBwSFUhcqBQGg7aInWngiSaXyw/BtWtn21MED5yHO2g==
+  dependencies:
+    bson "^1.1.0"
+    require_optional "^1.0.1"
+    safe-buffer "^5.1.2"
+  optionalDependencies:
+    saslprep "^1.0.0"
+
 mongodb-core@3.1.9:
   version "3.1.9"
   resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-3.1.9.tgz#c31ee407bf932b0149eaed775c17ee09974e4ca3"
@@ -52,7 +63,7 @@ mongodb-core@3.1.9:
   optionalDependencies:
     saslprep "^1.0.0"
 
-mongodb@3.1.10, mongodb@^3.1.10:
+mongodb@3.1.10:
   version "3.1.10"
   resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.1.10.tgz#45ad9b74ea376f4122d0881b75e5489b9e504ed7"
   integrity sha512-Uml42GeFxhTGQVml1XQ4cD0o/rp7J2ROy0fdYUcVitoE7vFqEhKH4TYVqRDpQr/bXtCJVxJdNQC1ntRxNREkPQ==
@@ -60,15 +71,23 @@ mongodb@3.1.10, mongodb@^3.1.10:
     mongodb-core "3.1.9"
     safe-buffer "^5.1.2"
 
+mongodb@^3.1.11:
+  version "3.1.11"
+  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.1.11.tgz#c33792b25a86436ff79c52327939bac5f7d6a34e"
+  integrity sha512-rzOwCWvP/ojL505baIDHsxw6E/PK6GMXuAKvDHVhyG1EpUWyuqVetulDJT4Dhra86Uq6zumd+mdPZkEl+i+9kQ==
+  dependencies:
+    mongodb-core "3.1.10"
+    safe-buffer "^5.1.2"
+
 mongoose-legacy-pluralize@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
 
-mongoose@^5.4.3:
-  version "5.4.3"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.4.3.tgz#9cbc689ca0c529c2d7dd5a84dcfbc9b041084367"
-  integrity sha512-zhfypQm63CPYHi43O/3lTcEPVucY3h6CqONbzreMKZIEXtwgkB9HCm4wn441Z9/CpM94G6/NA3wcaRb0N2kPYQ==
+mongoose@^5.4.4:
+  version "5.4.4"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.4.4.tgz#923923cd39a03b970c269f828322990ea163f9a8"
+  integrity sha512-KoYUFtgrXQ9Sxuf5IEE0Y2LswWGhHiN27bxtObANxMgXbuNLTtLB3xaep8jITUDitG4kkI+FKElUJH4uY8G2Bw==
   dependencies:
     async "2.6.1"
     bson "~1.1.0"

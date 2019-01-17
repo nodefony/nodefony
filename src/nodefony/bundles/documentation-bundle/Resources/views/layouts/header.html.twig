@@ -25,18 +25,18 @@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#header_nodefony" aria-controls="header_nodefony" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-    <a class="navbar-brand mr-5" href="/">
-      <img src="/app/images/app-logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-      <span class="navbar-text pt-0 pb-0">{{nodefony.name|escape}}</span>
-    </a>
+  <a class="navbar-brand mr-5" href="/">
+    <img src="/app/images/app-logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+    <span class="navbar-text pt-0 pb-0">{{nodefony.name|escape}}</span>
+  </a>
   <div class="collapse navbar-collapse" id="header_nodefony">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
       <li class="nav-item active">
         <nav class="navbar navbar-light bg-light">
           <form class="form-inline">
-            <input d="inputSearh" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="{{ "Search" | trans() }}">
-            <button id="buttonSearh" data-toggle="modal" data-target="#myModal" class="btn btn-outline-success my-2 my-sm-0" type="button">
-              {{ "Search" | trans() }}
+            <input id="inputSearch" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="{{ " search" | trans() }}" />
+            <button id="buttonSearch" data-toggle="modal" data-target="#myModal" class="btn btn-outline-success my-2 my-sm-0" type="button">
+              {{ "search" | trans() }}
             </button>
           </form>
         </nav>
@@ -47,20 +47,14 @@
         <a class="nav-link" href="#">{{ "progress" | trans() | upper()}}</a>
       </li>
       <li class="nav-item">
-        <form action="{{url('documentation-version')}}"  class="form-inline">
+        <form action="{{url('documentation-version')}}" id='formVersion' method="POST" class="form-inline">
           <div class="form-inline input-group">
             <div class="input-group-prepend">
-              <label class="input-group-text" for="version">{{"VERSION"| trans("messages") }} : </label>
+              <label class="input-group-text" for="version">{{"VERSION"| trans("messages") }}
+                :
+              </label>
             </div>
-            <select class="custom-select align-middle mr-4" name="version"  id="version">
-              {% for ver in allVersions %}
-                {% if ver == version %}
-                  <option value="{{ver}}" selected="selected" class="active">{{ver}}</option>
-                {% else %}
-                  <option value="{{path('documentation-version',{version:ver,bundle:bundle})}}">{{ver}}</option>
-                {% endif %}
-              {% endfor %}
-              </select>
+            <select class="custom-select align-middle mr-4" name="version" id="version"></select>
           </div>
         </form>
       </li>
@@ -70,32 +64,34 @@
       <form action="{{url('doc-lang')}}" name="formLang" id="formLang" class="form-inline">
         <div class="form-inline input-group">
           <div class="input-group-prepend">
-            <label class="input-group-text" for="inputGroupSelect01">{{"lang"| trans("messages") }} : </label>
+            <label class="input-group-text" for="inputGroupSelect01">{{"lang"| trans("messages") }}
+              :
+            </label>
           </div>
-          <select class="custom-select align-middle mr-4" name="language"  id="language">
+          <select class="custom-select align-middle mr-4" name="language" id="language">
             {% for opt in langs %}
-            {% if locale == opt.value %}
-            <option value="{{ opt.value|escape}}" selected>
-              {{ opt.name|escape }}
-            </option>
-            {% else %}
-            <option value="{{ opt.value|escape}}">
-              {{ opt.name|escape }}</option>
+              {% if locale == opt.value %}
+                <option value="{{ opt.value|escape}}" selected="selected">
+                  {{ opt.name|escape }}
+                </option>
+              {% else %}
+                <option value="{{ opt.value|escape}}">
+                  {{ opt.name|escape }}</option>
               {% endif %}
-              {% endfor %}
-            </select>
+            {% endfor %}
+          </select>
         </div>
       </form>
 
-      {% if  user %}
+      {% if user %}
         {% if user.image %}
-          <img width="32px" height= "32px" class="rounded-circle" src="{{user.image}}" alt="image">
+          <img width="32px" height="32px" class="rounded-circle" src="{{user.image}}" alt="image">
         {% else %}
           <li class="nav-link fa fa-user pr-3" style="font-size:x-large"></li>
         {% endif %}
         <li class="nav-item ">
           <a href="" class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-expanded="true">
-                {{user.username}}
+            {{user.username}}
           </a>
         </li>
       {% endif %}

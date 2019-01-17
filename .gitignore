@@ -8,6 +8,7 @@ app/Resources/public/assets/
 src/bundles/test-bundle/Resources/public/assets/
 
 config/generatedConfig.yml
+/src/nodefony/bundles/documentation-bundle/Resources/clones/
 
 app/Resources/databases/*
 app/*.db

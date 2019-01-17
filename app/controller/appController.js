@@ -22,7 +22,8 @@ module.exports = class appController extends nodefony.controller {
   headerAction() {
     return this.render("app::header.html.twig", {
       langs: this.get("translation").getLangs(),
-      locale: this.getLocale()
+      locale: this.getLocale(),
+      version: nodefony.version
     });
   }
 

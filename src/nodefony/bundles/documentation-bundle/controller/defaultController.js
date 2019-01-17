@@ -10,31 +10,13 @@ module.exports = class defaultController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
-    this.defaultVersion = nodefony.version;
     this.docPath = this.kernel.nodefonyPath;
     this.urlGit = this.bundle.settings.github.url;
     this.git = this.get("git");
+    this.defaultVersion = this.git.currentVersion;
+    this.currentVersion = nodefony.version;
+    this.project = nodefony.projectName;
   }
-
-
-  /*getVersions(Path) {
-    let finderVersion = null;
-    // get all version
-    try {
-      finderVersion = new nodefony.finder({
-        path: path.resolve(Path, "doc"),
-        recurse: false
-      });
-    } catch (e) {
-      throw e;
-    }
-    let directory = finderVersion.result.getDirectories();
-    let all = [];
-    directory.forEach(function(ele) {
-      all.push(ele.name);
-    });
-    return all;
-  }*/
 
   getVersions() {
     return this.git.getReleases()
@@ -48,10 +30,11 @@ module.exports = class defaultController extends nodefony.controller {
   /**
    *
    */
-  headerAction() {
+  headerAction(version) {
     return this.render("documentation:layouts:header.html.twig", {
       langs: this.get("translation").getLangs(),
       locale: this.getLocale(),
+      version: version || this.defaultVersion,
       bundle: "nodefony"
     });
   }
@@ -69,7 +52,7 @@ module.exports = class defaultController extends nodefony.controller {
 
   /**
    *    @Method ({ "GET"})
-   *    @Route ("/documentation/lang", name="doc-lang")
+   *    @Route ("/document/lang", name="doc-lang")
    */
   langAction() {
     if (this.query.language) {
@@ -110,16 +93,10 @@ module.exports = class defaultController extends nodefony.controller {
    */
   indexAction(version) {
 
-    let defaultVersion = null;
+    let defaultVersion = this.currentVersion;
     let force = this.query.force;
-    if (!version) {
-      defaultVersion = this.defaultVersion;
-    } else {
-      if (version === "default") {
-        defaultVersion = this.defaultVersion;
-      } else {
-        defaultVersion = version;
-      }
+    if (version) {
+      defaultVersion = version;
     }
     if (force) {
       try {
@@ -129,11 +106,12 @@ module.exports = class defaultController extends nodefony.controller {
             linkify: true,
             typographer: true
           });
-          return this.render("documentationBundle::index.html.twig", {
-            bundle: "nodefony",
+          return this.render("documentation::index.html.twig", {
+            bundle: this.project,
             readme: res,
             version: defaultVersion,
-            url: this.urlGit
+            url: this.urlGit,
+            project: this.project
           });
         }
       } catch (e) {
@@ -157,44 +135,44 @@ module.exports = class defaultController extends nodefony.controller {
     } else {
       subsection = section;
     }
-
     if (!bundle) {
       bundle = "nodefony";
     }
     if (bundle === "nodefony") {
       Path = path.resolve(this.docPath);
     } else {
-      if (this.kernel.bundles[bundle]) {
-        Path = this.kernel.bundles[bundle].path;
+      if (bundle === this.project) {
+        Path = this.kernel.rootDir;
       } else {
-        Path = this.docPath;
+        if (this.kernel.bundles[bundle]) {
+          Path = this.kernel.bundles[bundle].path;
+        } else {
+          Path = this.kernel.rootDir;
+        }
       }
+
     }
     try {
-      if (version) {
-        if (section) {
-          finder = new nodefony.finder({
-            path: Path + "/doc/" + section,
-            depth: 1
-          });
-        } else {
-          finder = new nodefony.finder({
-            path: Path + "/doc/",
-            depth: 1
-          });
-        }
+      if (section) {
+        finder = new nodefony.finder({
+          path: Path + "/doc/" + section,
+          depth: 1
+        });
       } else {
-        throw new Error("version not found");
+        finder = new nodefony.finder({
+          path: Path + "/doc/",
+          depth: 1
+        });
       }
     } catch (e) {
       throw e;
     }
     let directory = finder.result.getDirectories();
     let sections = [];
-    directory.forEach(function (ele) {
+    directory.forEach(function(ele) {
       sections.push(ele.name);
     });
-    return this.render("documentationBundle:layouts:navSection.html.twig", {
+    return this.render("documentation:layouts:navSection.html.twig", {
       bundle: bundle,
       version: version,
       section: section,
@@ -204,23 +182,31 @@ module.exports = class defaultController extends nodefony.controller {
   }
 
   versionAction(version, bundle, section) {
-    if (section === "default" && version !== this.defaultVersion) {
-      return this.git.checkoutVersion(version)
-        .then(() => {
-          console.log("pass")
-          return this.redirectToRoute("documentation-section", {
-            version: version
+    if (this.method === "POST" && this.query && this.query.version !== this.defaultVersion) {
+      if (this.query.version === this.project) {
+        return this.git.getCurrentBranch()
+          .then((ele) => {
+            return this.redirectToRoute("documentation-version", {
+              version: ele,
+              bundle: this.query.version
+            });
+          });
+      }
+      // CHANGE VERSION
+      return this.git.checkoutVersion(this.query.version)
+        .then((ele) => {
+          return this.redirectToRoute("documentation-version", {
+            version: ele
           });
         });
     }
+    let Path = this.git.getClonePath();
     let subsection = null;
-    let Path = null;
     let finder = null;
     let myUrl = null;
     let directoryBundles = null;
     let file = null;
     let res = null;
-    let finderVersion = null;
 
     if (this.query.subsection) {
       subsection = this.query.subsection;
@@ -231,54 +217,45 @@ module.exports = class defaultController extends nodefony.controller {
     if (!bundle) {
       bundle = "nodefony";
     }
-    if (bundle === "nodefony") {
-      Path = path.resolve(this.docPath);
+    if (bundle === this.project) {
+      Path = this.kernel.rootDir;
       let bundles = this.kernel.bundles;
       if (!section) {
         directoryBundles = [];
-        for (var myBundle in bundles) {
+        for (let myBundle in bundles) {
           directoryBundles.push(bundles[myBundle]);
         }
       }
-
     } else {
-      if (this.kernel.bundles[bundle]) {
-        Path = this.kernel.bundles[bundle].path;
+      if (bundle === "nodefony") {
+        Path = path.resolve(Path, "src", "nodefony");
+        let bundles = this.kernel.bundles;
+        if (!section) {
+          directoryBundles = [];
+          for (let myBundle in bundles) {
+            directoryBundles.push(bundles[myBundle]);
+          }
+        }
       } else {
-        myUrl = this.generateUrl("documentation-version", {
-          bundle: "nodefony",
-          version: this.defaultVersion
-        });
-        return this.redirect(myUrl);
+        if (this.kernel.bundles[bundle]) {
+          Path = this.kernel.bundles[bundle].path;
+        } else {
+          myUrl = this.generateUrl("documentation-version", {
+            bundle: nodefony.projectName,
+            version: this.defaultVersion
+          });
+          return this.redirect(myUrl);
+        }
       }
     }
-    // get all version
-    try {
-      finderVersion = new nodefony.finder({
-        path: path.resolve(Path, "doc"),
-        recurse: false
-      });
-    } catch (e) {
-      throw e;
-    }
-    let directory = finderVersion.result.getDirectories();
-    let all = [];
-    directory.forEach(function (ele) {
-      all.push(ele.name);
-    });
-
     // manage link
     let findPath = null;
     try {
-      if (version) {
-        if (section) {
-          if (subsection) {
-            findPath = path.resolve(Path, "doc", section, subsection);
-          } else {
-            findPath = path.resolve(Path, "doc", section);
-          }
+      if (section) {
+        if (subsection) {
+          findPath = path.resolve(Path, "doc", section, subsection);
         } else {
-          findPath = path.resolve(Path, "doc");
+          findPath = path.resolve(Path, "doc", section);
         }
       } else {
         findPath = path.resolve(Path, "doc");
@@ -289,12 +266,14 @@ module.exports = class defaultController extends nodefony.controller {
       try {
         findPath = new nodefony.fileClass(findPath);
         myUrl = this.generateUrl("documentation-version", {
-          bundle: bundle
+          bundle: bundle,
+          version: version
         });
         return this.redirect(myUrl);
       } catch (e) {
         myUrl = this.generateUrl("documentation-version", {
-          bundle: "nodefony"
+          bundle: "nodefony",
+          version: version
         });
         return this.redirect(myUrl);
       }
@@ -317,44 +296,44 @@ module.exports = class defaultController extends nodefony.controller {
             readme: res,
             version: version,
             section: section,
-            allVersions: all,
-            subsection: subsection
+            subsection: subsection,
+            project: this.project
           });
           return this.render("documentationBundle::index.html.twig", {
             bundle: bundle,
             readme: res,
             version: version,
             section: section,
-            allVersions: all,
             subsection: subsection,
-            url: this.urlGit
+            url: this.urlGit,
+            project: this.project
           });
         }
       }
       // MD
       file = result.getFile("readme.md", true);
       if (!file) {
-        return this.render("documentationBundle::index.html.twig", {
+        return this.render("documentation::index.html.twig", {
           bundle: bundle,
           version: version,
           section: section,
-          allVersions: all,
           subsection: subsection,
-          url: this.urlGit
+          url: this.urlGit,
+          project: this.project
         });
       }
       res = this.htmlMdParser(file.content(file.encoding), {
         linkify: true,
         typographer: true
       });
-      return this.render("documentationBundle::index.html.twig", {
+      return this.render("documentation::index.html.twig", {
         bundle: bundle,
         readme: res,
         version: version,
         section: section,
-        allVersions: all,
         subsection: subsection,
-        url: this.urlGit
+        url: this.urlGit,
+        project: this.project
       });
     } else {
       let force = this.query.force;
@@ -366,19 +345,19 @@ module.exports = class defaultController extends nodefony.controller {
             readme: res,
             version: version,
             section: section,
-            allVersions: all,
             subsection: subsection,
-            bundles: directoryBundles
+            bundles: directoryBundles,
+            project: this.project
           });
-          return this.render("documentationBundle::index.html.twig", {
+          return this.render("documentation::index.html.twig", {
             bundle: bundle,
             readme: res,
             version: version,
             section: section,
-            allVersions: all,
             subsection: subsection,
             bundles: directoryBundles,
-            url: this.urlGit
+            url: this.urlGit,
+            project: this.project
           });
         }
       }
@@ -389,24 +368,24 @@ module.exports = class defaultController extends nodefony.controller {
           linkify: true,
           typographer: true
         });
-        return this.render("documentationBundle::index.html.twig", {
+        return this.render("documentation::index.html.twig", {
           bundle: bundle,
           readme: res,
           version: version,
           section: section,
-          allVersions: all,
           subsection: subsection,
-          url: this.urlGit
+          url: this.urlGit,
+          project: this.project
         });
       } else {
-        return this.render("documentationBundle::index.html.twig", {
+        return this.render("documentation::index.html.twig", {
           bundle: bundle,
           readme: res,
           version: version,
           section: section,
-          allVersions: all,
           subsection: subsection,
-          url: this.urlGit
+          url: this.urlGit,
+          project: this.project
         });
       }
     }
@@ -417,16 +396,12 @@ module.exports = class defaultController extends nodefony.controller {
       path: path.resolve(this.docPath, "doc"),
       recurse: false,
     });
-
     let directory = finder.result.getDirectories();
-    //console.log(directory)
-
     let versions = [];
-    directory.forEach(function (ele) {
+    directory.forEach(function(ele) {
       versions.push(ele.name);
     });
-
-    return this.renderSync("documentationBundle::navDoc.html.twig", {
+    return this.renderSync("documentation::navDoc.html.twig", {
       versions: versions
     });
   }
@@ -437,11 +412,9 @@ module.exports = class defaultController extends nodefony.controller {
     for (let bundle in bundles) {
       directory.push(bundles[bundle]);
     }
-    return this.renderView("documentationBundle::navDocBundle.html.twig", {
+    return this.renderView("documentation::navDocBundle.html.twig", {
       versions: directory
     });
   }
-
-
 
 };

@@ -12,14 +12,10 @@ const Documentation = class Documentation {
       name: this.name,
       type: "directory",
       childs: [{
-        name: "default",
-        type: "directory",
-        childs: [{
-          name: "readme.md",
-          type: "file",
-          skeleton: this.skeletonDoc,
-          params: this.cli.response
-        }]
+        name: "readme.md",
+        type: "file",
+        skeleton: this.skeletonDoc,
+        params: this.cli.response
       }]
     };
   }

@@ -19,16 +19,15 @@ module.exports = {
     defaults: {
       controller: "documentation:default:version",
       bundle: "nodefony",
-      version: nodefony.version,
+      version: "v" + nodefony.version,
     }
   },
   "documentation-section": {
     pattern: "/documentation/{version}/{bundle}/{section}",
     defaults: {
       controller: "documentation:default:version",
-      version: nodefony.version,
-      bundle: "nodefony",
-      section: "default"
+      version: "v" + nodefony.version,
+      bundle: "nodefony"
     }
   },
   "documentation-demo-html": {
