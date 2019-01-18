@@ -33,7 +33,7 @@ module.exports = class unitTest extends nodefony.Service {
     }
     if (this.bundles[bundleName].finder) {
       var finder = this.bundles[bundleName].finder.find({
-        exclude: /^doc$|^public$|^Resources$|^node_modules$/,
+        exclude: /^doc$|^public$|^Resources$|^node_modules$|^\.git$|^nodefony-core$/,
         match: regFile
       });
       if (finder.files.length) {
