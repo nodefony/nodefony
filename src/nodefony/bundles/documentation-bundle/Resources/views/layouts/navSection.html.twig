@@ -1,32 +1,30 @@
 
 {% if  not section  %}
 	<li class="nav-item active">
-		<a class="nav-link" href="{{path('documentation-version',{version:version, bundle:bundle})}}">Home</a>
+		<a class="nav-link" href="{{url('documentation-version',{version:version, bundle:bundle})}}">Home</a>
 	</li>
 {% else %}
-
 	{% if section %}
 		{% if subsection == section %}
 			<li class="nav-item active">
-				<a class="nav-link" href="{{path('documentation-section',{section:section, version:version, bundle:bundle })}}">
+				<a class="nav-link" href="{{url('documentation-section',{section:section, version:version, bundle:bundle })}}">
 					{{section | trans() | capitalize()}}
 				</a>
 			</li>
 		{% else %}
 			<li class="nav-item" >
-				<a class="nav-link" href="{{path('documentation-section',{section:section, version:version, bundle:bundle })}}">
+				<a class="nav-link" href="{{url('documentation-section',{section:section, version:version, bundle:bundle })}}">
 				{{section | trans() | capitalize()}}
 				</a>
 			</li>
 		{% endif %}
 	{% else %}
 		<li class="nav-item" >
-			<a class="nav-link" href="{{path('documentation-version',{version:version,bundle:bundle})}}">
+			<a class="nav-link" href="{{url('documentation-version',{version:version,bundle:bundle})}}">
 			{{section | trans() | capitalize()}}
 			</a>
 		</li>
 	{% endif %}
-
 {% endif %}
 
 {% for sec in sections %}
@@ -37,13 +35,13 @@
 	{% endif %}
 	{% if subsection == sec %}
 		<li  class="nav-item active">
-			<a class="nav-link" href="{{path('documentation-section',{section:section, version:version, bundle:bundle,queryString:qs })}}">
+			<a class="nav-link" href="{{url('documentation-section',{section:section, version:version, bundle:bundle,queryString:qs })}}">
 			{{sec | trans() | capitalize()}}
 			</a>
 		</li>
 	{% else %}
 		<li class="nav-item">
-			<a class="nav-link" href="{{path('documentation-section',{section:section,version:version, bundle:bundle,queryString:qs })}}">
+			<a class="nav-link" href="{{url('documentation-section',{section:section,version:version, bundle:bundle,queryString:qs })}}">
 			{{sec | trans() | capitalize()}}
 			</a>
 		</li>

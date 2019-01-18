@@ -30,13 +30,13 @@
 <h3 name="rawRender" id="rawRender" >Rendering html  :</h3>
 <div class="doc3 ">
 
-	<div  class="panel panel-info">
-		<div class="panel-heading"><strong>Simple Render html</strong>  </div>
-		<div class="panel-body ">
-			<ul class="nav nav-tabs">
-  				<li role="presentation" class="active"><a data-target="#routing" data-toggle="tab">Routing</a></li>
-  				<li role="presentation" ><a data-target="#controler" data-toggle="tab">Controller</a></li>
-  				<li role="presentation" ><a data-target="#result" data-toggle="tab">Result</a></li>
+	<div  class="card">
+		<div class="card-header bg-nodefony"><strong>Simple Render html</strong>  </div>
+		<div class="card-body ">
+			<ul class="nav nav-tabs" role="tablist">
+  				<li class="nav-item" ><a class="nav-link" data-target="#routing" data-toggle="tab">Routing</a></li>
+  				<li class="nav-item" ><a class="nav-link" data-target="#controler" data-toggle="tab">Controller</a></li>
+  				<li class="nav-item" ><a class="nav-link" data-target="#result" data-toggle="tab">Result</a></li>
 			</ul>
 			<div class="tab-content ">
 				<div id="routing" class="tab-pane active">
@@ -90,14 +90,14 @@ module.exports = class demoController extends nodefony.controller {
 <h3 name="simpleTemplate" id="simpleTemplate" >Rendering Templates :</h3>
 <div class="doc3 ">
 
-	<div  class="panel panel-info">
-		<div class="panel-heading"><strong>Rendering Twig Templates</strong>  </div>
-		<div class="panel-body ">
-			<ul class="nav nav-tabs">
-  				<li role="presentation" class="active"><a data-target="#routing1" data-toggle="tab">Routing</a></li>
-  				<li role="presentation" ><a data-target="#controler1" data-toggle="tab">Controller</a></li>
-  				<li role="presentation" ><a data-target="#twig1" data-toggle="tab">Twig</a></li>
-  				<li role="presentation" ><a data-target="#result1" data-toggle="tab">Result</a></li>
+	<div  class="card card-info">
+		<div class="card-header bg-nodefony"><strong>Rendering Twig Templates</strong>  </div>
+		<div class="card-body ">
+			<ul class="nav nav-tabs" role="tablist">
+  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing1" data-toggle="tab">Routing</a></li>
+  				<li class="nav-item" ><a class="nav-link" data-target="#controler1" data-toggle="tab">Controller</a></li>
+  				<li class="nav-item" ><a class="nav-link" data-target="#twig1" data-toggle="tab">Twig</a></li>
+  				<li class="nav-item" ><a class="nav-link" data-target="#result1" data-toggle="tab">Result</a></li>
 			</ul>
 
 			<div class="tab-content ">
@@ -158,13 +158,13 @@ module.exports = class demoController extends nodefony.controller {
 
 <h3 name="asyncTemplate" id="asyncTemplate">Rendering database query :</h3>
 <div class="doc3 ">
-	<div  class="panel panel-info">
-		<div class="panel-heading"><strong>Rendering database query with Promise</strong>  </div>
-		<div class="panel-body ">
-			<ul class="nav nav-tabs">
-  				<li role="presentation" class="active"><a data-target="#routing2" data-toggle="tab">Routing</a></li>
-  				<li role="presentation" ><a data-target="#controler2" data-toggle="tab">Controller</a></li>
-  				<li role="presentation" ><a data-target="#twig2" data-toggle="tab">Twig</a></li>
+	<div  class="card card-info">
+		<div class="card-header bg-nodefony"><strong>Rendering database query with Promise</strong>  </div>
+		<div class="card-body ">
+			<ul class="nav nav-tabs" role="tablist">
+  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing2" data-toggle="tab">Routing</a></li>
+  				<li class="nav-item" ><a class="nav-link" data-target="#controler2" data-toggle="tab">Controller</a></li>
+  				<li class="nav-item" ><a class="nav-link" data-target="#twig2" data-toggle="tab">Twig</a></li>
 			</ul>
 
 			<div class="tab-content ">
@@ -228,10 +228,10 @@ module.exports = class demoController extends nodefony.controller {
 &#123% if joins %&#125
 	&ltdiv class="container"&gt
 		&ltdiv class="row"&gt
-			&ltdiv class="panel panel-default "&gt
-				&lt!-- Default panel contents --&gt
-				&ltdiv class="panel-heading"&gt&ltstrong&gtSESSION  BY USER   &lt/strong&gt&lt/div&gt
-				&ltdiv class="panel-body"&gt
+			&ltdiv class="card card-default "&gt
+				&lt!-- Default card contents --&gt
+				&ltdiv class="card-header bg-nodefony"&gt&ltstrong&gtSESSION  BY USER   &lt/strong&gt&lt/div&gt
+				&ltdiv class="card-body"&gt
 
 				&ltdiv class="table-responsive  " &gt
 					&lttable class="table table-striped table-bordered"&gt
@@ -274,13 +274,13 @@ module.exports = class demoController extends nodefony.controller {
 
 <h3 name="websocket" id="websocket" >Rendering Websocket  :</h3>
 <div class="doc3 ">
-	<div  class="panel panel-info">
-		<div class="panel-heading"><strong>Rendering Websocket</strong>  </div>
-		<div class="panel-body ">
-			<ul class="nav nav-tabs">
-  				<li role="presentation" class="active"><a data-target="#routing3" data-toggle="tab">Routing</a></li>
-  				<li role="presentation" ><a data-target="#controler3" data-toggle="tab">Controller</a></li>
-  				<li role="presentation" ><a data-target="#logger3" data-toggle="tab">Logger</a></li>
+	<div  class="card card-info">
+		<div class="card-header bg-nodefony"><strong>Rendering Websocket</strong>  </div>
+		<div class="card-body ">
+			<ul class="nav nav-tabs" role="tablist">
+  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing3" data-toggle="tab">Routing</a></li>
+  				<li class="nav-item" ><a class="nav-link" data-target="#controler3" data-toggle="tab">Controller</a></li>
+  				<li class="nav-item" ><a class="nav-link" data-target="#logger3" data-toggle="tab">Logger</a></li>
 			</ul>
 
 			<div class="tab-content ">
@@ -401,12 +401,12 @@ Thu Oct 06 2016 15:49:19 INFO REQUEST WEBSOCKET SECURE  : Thu Oct 06 2016 15:49:
 <h3 name="renderJson" id="renderJson">Rendering JSON :</h3>
 <div class="doc3 ">
 
-	<div  class="panel panel-info">
-		<div class="panel-heading"><strong>Rendering JSON</strong>  </div>
-		<div class="panel-body ">
-			<ul class="nav nav-tabs">
-  				<li role="presentation" class="active"><a data-target="#routing4" data-toggle="tab">Routing</a></li>
-  				<li role="presentation" ><a data-target="#controler4" data-toggle="tab">Controller</a></li>
+	<div  class="card card-info">
+		<div class="card-header bg-nodefony"><strong>Rendering JSON</strong>  </div>
+		<div class="card-body ">
+			<ul class="nav nav-tabs" role="tablist">
+  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing4" data-toggle="tab">Routing</a></li>
+  				<li class="nav-item" ><a class="nav-link" data-target="#controler4" data-toggle="tab">Controller</a></li>
 			</ul>
 			<div class="tab-content ">
 				<div id="routing4" class="tab-pane active">
@@ -455,12 +455,12 @@ module.exports = class demoController extends nodefony.controller {
 <h3 name="renderXml" id="renderXml">Rendering XML :</h3>
 <div class="doc3 ">
 
-	<div  class="panel panel-info">
-		<div class="panel-heading"><strong>Rendering XML</strong>  </div>
-		<div class="panel-body ">
-			<ul class="nav nav-tabs">
-  				<li role="presentation" class="active"><a data-target="#routing6" data-toggle="tab">Routing</a></li>
-  				<li role="presentation" ><a data-target="#controler6" data-toggle="tab">Controller</a></li>
+	<div  class="card card-info">
+		<div class="card-header bg-nodefony"><strong>Rendering XML</strong>  </div>
+		<div class="card-body ">
+			<ul class="nav nav-tabs" role="tablist">
+  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing6" data-toggle="tab">Routing</a></li>
+  				<li class="nav-item" ><a class="nav-link" data-target="#controler6" data-toggle="tab">Controller</a></li>
 			</ul>
 			<div class="tab-content ">
 				<div id="routing6" class="tab-pane active">
@@ -519,12 +519,12 @@ module.exports = class demoController extends nodefony.controller {
 <h3 name="download" id="download">Download File :</h3>
 <div class="doc3 ">
 
-	<div  class="panel panel-info">
-		<div class="panel-heading"><strong>Download File</strong>  </div>
-		<div class="panel-body ">
-			<ul class="nav nav-tabs">
-  				<li role="presentation" class="active"><a data-target="#routing5" data-toggle="tab">Routing</a></li>
-  				<li role="presentation" ><a data-target="#controler5" data-toggle="tab">Controller</a></li>
+	<div  class="card card-info">
+		<div class="card-header bg-nodefony"><strong>Download File</strong>  </div>
+		<div class="card-body ">
+			<ul class="nav nav-tabs" role="tablist">
+  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing5" data-toggle="tab">Routing</a></li>
+  				<li class="nav-item" ><a class="nav-link" data-target="#controler5" data-toggle="tab">Controller</a></li>
 			</ul>
 			<div class="tab-content ">
 				<div id="routing5" class="tab-pane active">
@@ -572,12 +572,12 @@ module.exports = class finderController extends nodefony.controller {
 <h3 name="mediaStream" id="mediaStream">Media Stream Rendering   :</h3>
 <div class="doc3 ">
 
-	<div  class="panel panel-info">
-		<div class="panel-heading"><strong>Media Stream Rendering</strong>  </div>
-		<div class="panel-body ">
-			<ul class="nav nav-tabs">
-  				<li role="presentation" class="active"><a data-target="#routing7" data-toggle="tab">Routing</a></li>
-  				<li role="presentation" ><a data-target="#controler7" data-toggle="tab">Controller</a></li>
+	<div  class="card card-info">
+		<div class="card-header bg-nodefony"><strong>Media Stream Rendering</strong>  </div>
+		<div class="card-body ">
+			<ul class="nav nav-tabs" role="tablist">
+  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing7" data-toggle="tab">Routing</a></li>
+  				<li class="nav-item" ><a class="nav-link" data-target="#controler7" data-toggle="tab">Controller</a></li>
 			</ul>
 			<div class="tab-content ">
 				<div id="routing7" class="tab-pane active">
@@ -627,12 +627,12 @@ module.exports = class demoController extends nodefony.controller {
 <h3 name="upload" id="upload">File Upload :</h3>
 <div class="doc3 ">
 
-	<div  class="panel panel-info">
-		<div class="panel-heading"><strong>Upload Rendering</strong>  </div>
-		<div class="panel-body ">
-			<ul class="nav nav-tabs">
-  				<li role="presentation" class="active"><a data-target="#routing8" data-toggle="tab">Routing</a></li>
-  				<li role="presentation" ><a data-target="#controler8" data-toggle="tab">Controller</a></li>
+	<div  class="card card-info">
+		<div class="card-header bg-nodefony"><strong>Upload Rendering</strong>  </div>
+		<div class="card-body ">
+			<ul class="nav nav-tabs" role="tablist">
+  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing8" data-toggle="tab">Routing</a></li>
+  				<li class="nav-item" ><a class="nav-link" data-target="#controler8" data-toggle="tab">Controller</a></li>
 			</ul>
 			<div class="tab-content ">
 				<div id="routing8" class="tab-pane active">
@@ -716,13 +716,13 @@ module.exports = class demoController extends nodefony.controller {
 
 <h3>Redirecting and Forwarding :</h3>
 <div id="redirect" class="doc3 ">
-	<div  class="panel panel-info">
-		<div class="panel-heading"><strong>Redirecting and Forwarding</strong>  </div>
-		<div class="panel-body ">
-			<ul class="nav nav-tabs">
-  				<li role="presentation" class="active"><a data-target="#redirect1" data-toggle="tab">Redirect</a></li>
-  				<li role="presentation" ><a data-target="#forward" data-toggle="tab">Forward</a></li>
-  				<li role="presentation" ><a data-target="#genarate" data-toggle="tab">generateUrl</a></li>
+	<div  class="card card-info">
+		<div class="card-header bg-nodefony"><strong>Redirecting and Forwarding</strong>  </div>
+		<div class="card-body ">
+			<ul class="nav nav-tabs" role="tablist">
+  				<li class="nav-item" class="active"><a class="nav-link" data-target="#redirect1" data-toggle="tab">Redirect</a></li>
+  				<li class="nav-item" ><a class="nav-link" data-target="#forward" data-toggle="tab">Forward</a></li>
+  				<li class="nav-item" ><a class="nav-link" data-target="#genarate" data-toggle="tab">generateUrl</a></li>
 			</ul>
 			<div class="tab-content ">
 				<div id="redirect1" class="tab-pane active">

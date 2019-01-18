@@ -3406,10 +3406,10 @@ mongoose-legacy-pluralize@1.0.2:
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
 
-mongoose@^5.4.4:
-  version "5.4.4"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.4.4.tgz#923923cd39a03b970c269f828322990ea163f9a8"
-  integrity sha512-KoYUFtgrXQ9Sxuf5IEE0Y2LswWGhHiN27bxtObANxMgXbuNLTtLB3xaep8jITUDitG4kkI+FKElUJH4uY8G2Bw==
+mongoose@^5.4.5:
+  version "5.4.5"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.4.5.tgz#264f8a0bc507ce94f4e22a9788e03e83c6d60ec3"
+  integrity sha512-TO1xFVyZHALSaN3EEXY5rhpKNYDF0SQxK2TlYbCOGD/rurv9c9PQiNV6xcDZ09FPIoj/cOy4xDJnt3LnthTv5A==
   dependencies:
     async "2.6.1"
     bson "~1.1.0"
@@ -4915,10 +4915,10 @@ sequelize-pool@^1.0.0:
   dependencies:
     bluebird "^3.5.2"
 
-sequelize@5.0.0-beta.15:
-  version "5.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.0.0-beta.15.tgz#ed3ae4e2c4d63577d1b4a452394f26a133a6c2e1"
-  integrity sha512-03AP0+j6L4/YYVAhP6RENCXlSckvnsAFoG3NwAfmlrvF3VUNaNNliTqOen93loHpa3zXXUyV2Qm/UJNHfRjGiA==
+sequelize@5.0.0-beta.16:
+  version "5.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.0.0-beta.16.tgz#6d32bf4dec41b8092e2c2869c8cf13a5e72c1c46"
+  integrity sha512-WNzoMwzZCJlBi+aVJAYkgqLBxejkms+RYMf+TvGF7XdK98HJuBv2Iet76gcZTSX1ViW28QzObT7B7XY+XW1S0A==
   dependencies:
     bluebird "^3.5.0"
     cls-bluebird "^2.1.0"
@@ -4935,7 +4935,7 @@ sequelize@5.0.0-beta.15:
     toposort-class "^1.0.1"
     uuid "^3.2.1"
     validator "^10.4.0"
-    wkx "^0.4.5"
+    wkx "^0.4.6"
 
 serialize-javascript@^1.4.0:
   version "1.5.0"
@@ -5985,7 +5985,7 @@ widest-line@^2.0.0:
   dependencies:
     string-width "^2.1.1"
 
-wkx@^0.4.5:
+wkx@^0.4.6:
   version "0.4.6"
   resolved "https://registry.yarnpkg.com/wkx/-/wkx-0.4.6.tgz#228ab592e6457382ea6fb79fc825058d07fce523"
   integrity sha512-LHxXlzRCYQXA9ZHgs8r7Gafh0gVOE8o3QmudM1PIkOdkXXjW7Thcl+gb2P2dRuKgW8cqkitCRZkkjtmWzpHi7A==

@@ -156,15 +156,21 @@ index<strong>Action</strong> (){
 
 	There are 2 differents ways to render datas (or templates)  in the actions of the controllers
 
-	<div  class="panel panel-info">
-		<div class="panel-heading"><strong>Synchronous rendering</strong>  </div>
-		<div class="panel-body ">
-			<ul class="nav nav-tabs">
-  				<li role="presentation" class="active"><a data-target="#renderingS" data-toggle="tab">rendering</a></li>
-  				<li role="presentation" ><a data-target="#examples1" data-toggle="tab">Examples</a></li>
-  				<li role="presentation" ><a data-target="#" data-toggle="tab"></a></li>
+	<div  class="card">
+		<div class="card-header bg-nodefony"><strong>Synchronous rendering</strong>  </div>
+		<div class="card-body ">
+			<ul class="nav nav-tabs" role="tablist">
+  				<li class="nav-item">
+            <a class="nav-link active" data-target="#renderingS" data-toggle="tab">rendering</a>
+          </li>
+  				<li class="nav-item" >
+            <a class="nav-link" data-target="#examples1" data-toggle="tab">Examples</a>
+          </li>
+  				<li class="nav-item" >
+            <a class="nav-link" data-target="#" data-toggle="tab"></a>
+          </li>
 			</ul>
-			<div class="tab-content ">
+			<div class="tab-content">
 				<div id="renderingS" class="tab-pane active">
 					<br>
 					<div class="alert alert-warning" role="alert">
@@ -226,16 +232,21 @@ indexAction (){
 		</div>
 	</div>
 
-
-	<div  class="panel panel-info">
-		<div class="panel-heading"><strong>Asynchronous rendering</strong>  </div>
-		<div class="panel-body ">
-			<ul class="nav nav-tabs">
-  				<li role="presentation" class="active"><a data-target="#renderingA" data-toggle="tab">rendering</a></li>
-  				<li role="presentation" ><a data-target="#examples2" data-toggle="tab">Examples</a></li>
-  				<li role="presentation" ><a data-target="#" data-toggle="tab"></a></li>
+	<div  class="card card-info">
+		<div class="card-header bg-nodefony"><strong>Asynchronous rendering</strong>  </div>
+		<div class="card-body ">
+			<ul class="nav nav-tabs" role="tablist">
+  				<li class="nav-item">
+            <a class="nav-link active" data-target="#renderingA" data-toggle="tab">rendering</a>
+          </li>
+  				<li class="nav-item" >
+            <a class="nav-link" data-target="#examples2" data-toggle="tab">Examples</a>
+          </li>
+  				<li class="nav-item" >
+            <a class="nav-link" data-target="#" data-toggle="tab"></a>
+          </li>
 			</ul>
-			<div class="tab-content ">
+			<div class="tab-content">
 				<div id="renderingA" class="tab-pane active">
 					<br>
 					<p>
@@ -281,7 +292,6 @@ rawResponseAsyncAction(){
 
 	<strong>return null;</strong>
 };
-
 					</pre>
 
 				</div>
@@ -298,13 +308,19 @@ rawResponseAsyncAction(){
 <h2 name="context" id="context">Request Context  :</h2>
 <div class="doc2 ">
 
-	<div  class="panel panel-info">
-		<div class="panel-heading"><strong>Nodefony Context</strong>  </div>
-		<div class="panel-body ">
-			<ul class="nav nav-tabs">
-  				<li role="presentation" class="active"><a data-target="#context1" data-toggle="tab">CONTEXT</a></li>
-  				<li role="presentation" ><a data-target="#http" data-toggle="tab">HTTP</a></li>
-  				<li role="presentation" ><a data-target="#websoket" data-toggle="tab">WEBSOCKET</a></li>
+	<div  class="card card-info">
+		<div class="card-header bg-nodefony"><strong>Nodefony Context</strong>  </div>
+		<div class="card-body ">
+			<ul class="nav nav-tabs" role="tablist">
+  				<li class="nav-item ">
+            <a class="nav-link active" data-target="#context1" data-toggle="tab">CONTEXT</a>
+          </li>
+  				<li class="nav-item" >
+            <a class="nav-link" data-target="#http" data-toggle="tab">HTTP</a>
+          </li>
+  				<li class="nav-item" >
+            <a class="nav-link" data-target="#websoket" data-toggle="tab">WEBSOCKET</a>
+          </li>
 			</ul>
 			<div class="tab-content ">
 				<div id="context1" class="tab-pane active">
@@ -449,13 +465,19 @@ profiling: [Object]
 <h2 name="service" id="service">Services Container  : </h2>
 <div class="doc2 ">
 
-	<div  class="panel panel-info">
-		<div class="panel-heading"><strong>Controller Services Container</strong>  </div>
-		<div class="panel-body ">
-			<ul class="nav nav-tabs">
-  				<li role="presentation" class="active"><a data-target="#container" data-toggle="tab">Container</a></li>
-  				<li role="presentation" ><a data-target="#services" data-toggle="tab">Services</a></li>
-  				<li role="presentation" ><a data-target="#paramater" data-toggle="tab">Parameters</a></li>
+	<div  class="card card-info">
+		<div class="card-header bg-nodefony"><strong>Controller Services Container</strong>  </div>
+		<div class="card-body ">
+			<ul class="nav nav-tabs" role="tablist">
+  				<li class="nav-item active">
+            <a class="nav-link active" data-target="#container" data-toggle="tab">Container</a>
+          </li>
+  				<li class="nav-item" >
+            <a class="nav-link" data-target="#services" data-toggle="tab">Services</a>
+          </li>
+  				<li class="nav-item" >
+            <a class="nav-link" data-target="#paramater" data-toggle="tab">Parameters</a>
+          </li>
 			</ul>
 			<div class="tab-content ">
 				<div id="container" class="tab-pane active">
@@ -532,13 +554,19 @@ this.getParameters("bundles.assetic")
 <h3> Request :</h3>
 <div class="doc3 ">
 
-	<div  class="panel panel-info">
-		<div class="panel-heading"><strong>Request</strong>  </div>
-		<div class="panel-body ">
-			<ul class="nav nav-tabs">
-  				<li role="presentation" class="active"><a data-target="#request" data-toggle="tab">request</a></li>
-  				<li role="presentation" ><a data-target="#paramater1" data-toggle="tab">Parameters</a></li>
-  				<li role="presentation" ><a data-target="#" data-toggle="tab"></a></li>
+	<div  class="card card-info">
+		<div class="card-header bg-nodefony"><strong>Request</strong>  </div>
+		<div class="card-body ">
+			<ul class="nav nav-tabs" role="tablist">
+  				<li class="nav-item">
+            <a class="nav-link active" data-target="#request" data-toggle="tab">request</a>
+          </li>
+  				<li class="nav-item" >
+            <a class="nav-link" data-target="#paramater1" data-toggle="tab">Parameters</a>
+          </li>
+  				<li class="nav-item" >
+            <a class="nav-link" data-target="#" data-toggle="tab"></a>
+          </li>
 			</ul>
 			<div class="tab-content ">
 				<div id="request" class="tab-pane active">
@@ -647,13 +675,19 @@ var cookies = context.cookies ;
 
 
 
-	<div  class="panel panel-info">
-		<div class="panel-heading"><strong>Response</strong>  </div>
-		<div class="panel-body ">
-			<ul class="nav nav-tabs">
-  				<li role="presentation" class="active"><a data-target="#Response" data-toggle="tab">Response</a></li>
-  				<li role="presentation" ><a data-target="#paramater2" data-toggle="tab">Parameters</a></li>
-  				<li role="presentation" ><a data-target="#" data-toggle="tab"></a></li>
+	<div  class="card card-info">
+		<div class="card-header bg-nodefony"><strong>Response</strong>  </div>
+		<div class="card-body ">
+			<ul class="nav nav-tabs" role="tablist">
+  				<li class="nav-item">
+            <a class="nav-link active" data-target="#Response" data-toggle="tab">Response</a>
+          </li>
+  				<li class="nav-item" >
+            <a class="nav-link" data-target="#paramater2" data-toggle="tab">Parameters</a>
+          </li>
+  				<li class="nav-item" >
+            <a class="nav-link" data-target="#" data-toggle="tab"></a>
+          </li>
 			</ul>
 			<div class="tab-content ">
 				<div id="Response" class="tab-pane active">

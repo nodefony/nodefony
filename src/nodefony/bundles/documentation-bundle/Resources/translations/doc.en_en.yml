@@ -1,12 +1,12 @@
 ##
-##        nodefony TRANSLATION YAML FILE 
+##        nodefony TRANSLATION YAML FILE
 ##
 ##
 ## This file is YAML  FILE
 ## ---
-## YAML: YAML Ain't Markup Language
+## YAML:            YAML Ain't Markup Language
 ##
-## What It Is: YAML is a human friendly data serialization
+## What It Is:      YAML is a human friendly data serialization
 ##   standard for all programming languages.
 ##
 ## YAML Resources:
@@ -25,28 +25,28 @@
 
 
 
-progress:               "documentation in progress"   
+progress:           "Documentation in progress ! "   
 
-begin:                  "Getting Started with Nodefony"                     
-                     
-usage:                  "Advanced Use"
+begin:              "Getting Started with Nodefony"
 
-core:                   "Nodefony Core"
+usage:              "Advanced Use"
 
-started:                "start"
+core:               "Nodefony Core"
 
-running:                "start"
+started:            "start"
 
-Routing:                "Routing"
+running:            "start"
 
-controller:             "Controller"
+Routing:            "Routing"
 
-view:                   "Views And Templates"
+controller:         "Controller"
 
-twig:                   "Engine Twig.js"
+view:               "Views And Templates"
 
-extendTwig:             "Nodefony Extend Twig.js"
+twig:               "Engine Twig.js"
 
-flashMessage:           "Flash Messages"
+extendTwig:         "Nodefony Extend Twig.js"
 
-containerServices:      "Services Container"       
+flashMessage:       "Flash Messages"
+
+containerServices:  "Services Container"

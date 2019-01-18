@@ -96,7 +96,7 @@ module.exports = function() {
       });
       $("#buttonSearch").click(function(event) {
         var mysearch = searchImput.val();
-        var spinner = $("#spinner");
+        var spinner = $(".spinner");
         if (mysearch) {
           $.ajax({
             url: "/documentation/search",
@@ -109,6 +109,7 @@ module.exports = function() {
             },
             success: function(data) {
               var text = null;
+              search.empty();
               for (var link in data) {
                 var reg = new RegExp(mysearch, 'gi');
                 var res = reg.exec(data[link].text);
@@ -161,7 +162,7 @@ module.exports = function() {
       if (!url) {
         url = "https://github.com/nodefony/nodefony-core/commit/";
       }
-      if (bundle === "nodefony" && section === null) {
+      if ((bundle === "nodefony" || bundle === project) && section === null) {
         $.get("/api/git/getMostRecentCommit", function(data) {
           var ele = $("#commits");
           for (var i = 0; i < data.length; i++) {

@@ -231,10 +231,10 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
-mongodb-core@3.1.10:
-  version "3.1.10"
-  resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-3.1.10.tgz#a9f4839f99b81fe415710f747bb8f016bbdc877d"
-  integrity sha512-XD4elkPmcFU7rL3ucRQZeyNHdE9xVo4QHLsq63/PVs6nBwSFUhcqBQGg7aInWngiSaXyw/BtWtn21MED5yHO2g==
+mongodb-core@3.1.11:
+  version "3.1.11"
+  resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-3.1.11.tgz#b253038dbb4d7329f3d1c2ee5400bb0c9221fde5"
+  integrity sha512-rD2US2s5qk/ckbiiGFHeu+yKYDXdJ1G87F6CG3YdaZpzdOm5zpoAZd/EKbPmFO6cQZ+XVXBXBJ660sSI0gc6qg==
   dependencies:
     bson "^1.1.0"
     require_optional "^1.0.1"
@@ -242,12 +242,12 @@ mongodb-core@3.1.10:
   optionalDependencies:
     saslprep "^1.0.0"
 
-mongodb@^3.1.11:
-  version "3.1.11"
-  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.1.11.tgz#c33792b25a86436ff79c52327939bac5f7d6a34e"
-  integrity sha512-rzOwCWvP/ojL505baIDHsxw6E/PK6GMXuAKvDHVhyG1EpUWyuqVetulDJT4Dhra86Uq6zumd+mdPZkEl+i+9kQ==
+mongodb@^3.1.12:
+  version "3.1.12"
+  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.1.12.tgz#8dddb9d8891c34a7437d855e2cb548390082db42"
+  integrity sha512-JJnxDoaObL+U+TLo4A17yGe7vdRK8p8dh1MqxG9V9AFTZz13WoAXSMpT1kELUIyPCNaf0S0gW1EROPhmXVCgwg==
   dependencies:
-    mongodb-core "3.1.10"
+    mongodb-core "3.1.11"
     safe-buffer "^5.1.2"
 
 ms@2.0.0:

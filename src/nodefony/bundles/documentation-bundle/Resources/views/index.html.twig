@@ -1,9 +1,33 @@
 {% extends "./layouts/documentationLayout.html.twig" %}
 
-{% if readme %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="/documentation-bundle/assets/css/documentation.css"/>
+{% endblock %}
 
+{% block javascripts %}
+  <script type="text/javascript" src="/documentation-bundle/assets/js/documentation.js"></script>
+  <script>
+    const bundle = "{{ bundle }}";
+    const section = "{{ section }}" || null;
+    const url = "{{ url }}";
+    const version = "{{ version }}";
+    const project = "{{ project }}";
+    documentation.index(bundle, section, url, version, project );
+  </script>
+{% endblock %}
+
+{% if readme %}
   {% block readme %}
     {{readme}}
   {% endblock %}
-
 {% endif %}
+
+{% block body %}
+  {% block header %}
+    {{ render( controller("documentation:default:header", {version:version})) }}
+  {% endblock %}
+  {{ parent() }}
+  {% block footer %}
+    {{ render( controller("documentation-bundle:default:footer" )) }}
+  {% endblock %}
+{% endblock %}

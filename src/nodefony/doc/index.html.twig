@@ -20,9 +20,9 @@
 <div class="container">
   <div class="row">
     <div class="col-md-6">
-      <div class="card card-info">
+      <div class="card">
         <div class="card-header bg-nodefony">{{ "begin" | trans() }}
-          <span class="label label-success pull-right">
+          <span class="badge badge-pill badge-secondary pull-right">
             {{version}}
           </span>
         </div>
@@ -78,9 +78,9 @@
     </div>
 
     <div class="col-md-6">
-      <div class="card card-info">
+      <div class="card">
         <div class="card-header bg-nodefony">{{ "core" | trans() }}
-          <span class="label label-success pull-right">
+          <span class="badge badge-pill badge-secondary pull-right">
             {{version}}
           </span>
         </div>
@@ -144,7 +144,7 @@
               <li>
                 <a href="{{path('documentation-version', {version:myBundle.version, bundle:myBundle.name})}}">
                   <strong>{{myBundle.name}}</strong>
-                  <span class="label label-default pull-right">{{myBundle.version}}</span></a>
+                  <span class="badge badge-pill badge-secondary pull-right">{{myBundle.version}}</span></a>
               </li>
             {% endfor %}
           </ul>
@@ -152,9 +152,9 @@
       </div>
     </div>
     <div class="col-md-6">
-      <div class="card card-info">
+      <div class="card">
         <div class="card-header bg-nodefony">{{ "usage" | trans() }}
-          <span class="label label-success pull-right">
+          <span class="badge badge-pill badge-secondary pull-right">
             {{version}}
           </span>
         </div>

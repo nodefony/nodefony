@@ -150,7 +150,6 @@ module.exports = class defaultController extends nodefony.controller {
           Path = this.kernel.rootDir;
         }
       }
-
     }
     try {
       if (section) {
@@ -293,7 +292,6 @@ module.exports = class defaultController extends nodefony.controller {
         if (file) {
           res = this.renderRawView(file, {
             bundle: bundle,
-            readme: res,
             version: version,
             section: section,
             subsection: subsection,
@@ -342,7 +340,6 @@ module.exports = class defaultController extends nodefony.controller {
         if (file) {
           res = this.renderRawView(file, {
             bundle: bundle,
-            readme: res,
             version: version,
             section: section,
             subsection: subsection,
@@ -389,32 +386,6 @@ module.exports = class defaultController extends nodefony.controller {
         });
       }
     }
-  }
-
-  navDocAction() {
-    let finder = new nodefony.finder({
-      path: path.resolve(this.docPath, "doc"),
-      recurse: false,
-    });
-    let directory = finder.result.getDirectories();
-    let versions = [];
-    directory.forEach(function(ele) {
-      versions.push(ele.name);
-    });
-    return this.renderSync("documentation::navDoc.html.twig", {
-      versions: versions
-    });
-  }
-
-  navDocBundleAction() {
-    let bundles = this.kernel.bundles;
-    let directory = [];
-    for (let bundle in bundles) {
-      directory.push(bundles[bundle]);
-    }
-    return this.renderView("documentation::navDocBundle.html.twig", {
-      versions: directory
-    });
   }
 
 };

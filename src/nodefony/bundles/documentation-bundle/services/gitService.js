@@ -26,7 +26,7 @@ module.exports = class git extends nodefony.Service {
 
   cloneNodefony() {
     if (fs.existsSync(this.nodefonyClonePath)) {
-      return this.initCloneRepo();
+      return this.initCloneRepo(true);
     }
     const Git = promiseGit(this.clonePath);
     this.logger(`git clone nodefony documentation in ${this.clonePath}`);
@@ -51,15 +51,28 @@ module.exports = class git extends nodefony.Service {
       });
   }
 
-  initCloneRepo() {
+  initCloneRepo(pull) {
     this.cloneGit = promiseGit(this.nodefonyClonePath);
+    if (pull) {
+      return this.pull(this.cloneGit)
+        .then((PullSummary) => {
+          this.logger(PullSummary, "DEBUG");
+          return this.getCurrentBranch(this.cloneGit)
+            .then((current) => {
+              this.currentVersion = current;
+            }).catch(e => {
+              throw e;
+            });
+        }).catch(e => {
+          throw e;
+        });
+    }
     return this.getCurrentBranch(this.cloneGit)
       .then((current) => {
         this.currentVersion = current;
       }).catch(e => {
         throw e;
       });
-
   }
 
   getReleases(force) {
@@ -122,6 +135,18 @@ module.exports = class git extends nodefony.Service {
     return repo.log()
       .then((ListLogSummary) => {
         return ListLogSummary;
+      }).catch(e => {
+        throw e;
+      });
+  }
+
+  pull(repo) {
+    if (!repo) {
+      repo = this.gitKernel;
+    }
+    return repo.pull()
+      .then((PullSummary) => {
+        return PullSummary;
       }).catch(e => {
         throw e;
       });
