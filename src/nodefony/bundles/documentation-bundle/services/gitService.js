@@ -42,8 +42,8 @@ module.exports = class git extends nodefony.Service {
       });
   }
 
-  getTags() {
-    return this.getReleases(true)
+  getTags(repo) {
+    return this.getReleases(repo, true)
       .then((tags) => {
         return tags;
       }).catch(e => {
@@ -75,13 +75,16 @@ module.exports = class git extends nodefony.Service {
       });
   }
 
-  getReleases(force) {
+  getReleases(repo, force) {
+    if (!repo) {
+      repo = this.gitKernel;
+    }
     if (this.tags && force !== true) {
       return new Promise((resolve) => {
         return resolve(this.tags);
       });
     } else {
-      return this.gitKernel.tags()
+      return repo.tags()
         .then((tags) => {
           this.tags = tags;
           return tags;

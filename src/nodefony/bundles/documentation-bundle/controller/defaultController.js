@@ -100,7 +100,7 @@ module.exports = class defaultController extends nodefony.controller {
     }
     if (force) {
       try {
-        let file = new nodefony.fileClass(this.kernel.rootDir + "/README.md");
+        let file = new nodefony.fileClass(path.resolve(this.kernel.rootDir, "README.md"));
         if (file) {
           let res = this.htmlMdParser(file.content(file.encoding), {
             linkify: true,
@@ -168,7 +168,7 @@ module.exports = class defaultController extends nodefony.controller {
     }
     let directory = finder.result.getDirectories();
     let sections = [];
-    directory.forEach(function(ele) {
+    directory.forEach(function (ele) {
       sections.push(ele.name);
     });
     return this.render("documentation:layouts:navSection.html.twig", {

@@ -443,19 +443,19 @@ system:
 
 ## <a name="bundles"></a>Quick Start
 
-### Install Nodefony  :
+### Install Nodefony :
 ```
 $ npm -g install nodefony
 ```
 [See Global install How to Prevent Permissions Errors](https://docs.npmjs.com/getting-started/fixing-npm-permissions)
 
-### Install Project  :
+### Create Project :
 ```
 $ nodefony create myproject
 $ cd myproject
 ```
 
-### Generating a New Bundle  :
+### Generating a New Bundle :
 
 CLI Generate new bundle : default path src/bundles
 
@@ -615,7 +615,7 @@ module.exports = webpackMerge({
 
 Access to monitoring route with URL : <http://localhost:5151/nodefony>
 
-[![MONITORING](https://raw.githubusercontent.com/nodefony/nodefony-core/master/src/nodefony/doc/default/cluster.png)](https://nodefony.net/nodefony)
+[![MONITORING](https://raw.githubusercontent.com/nodefony/nodefony-core/master/src/nodefony/doc/cluster.png)](https://nodefony.net/nodefony)
 
 Monitoring in progress !!!
 

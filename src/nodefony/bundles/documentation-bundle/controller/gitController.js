@@ -11,10 +11,14 @@ module.exports = class gitController extends nodefony.controller {
 
   /**
    *    @Method ({"GET"})
-   *    @Route ("/versions", name="documentation-git-versions")
+   *    @Route (
+   *      "/versions/{project}",
+   *      name="documentation-git-versions",
+   *      defaults={"project" = "nodefony"}
+   *    )
    */
-  getVersionsAction() {
-    return this.serviceGit.getReleases()
+  getVersionsAction(project) {
+    return this.serviceGit.getReleases(project)
       .then((tags) => {
         return this.renderJson(tags);
       }).catch(e => {

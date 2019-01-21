@@ -23,15 +23,13 @@ module.exports = class {{controllerName}} extends nodefony.controller {
 	 *
 	 */
 	indexAction (){
-		try {
-			return this.render("{{bundleName}}:{{directory}}:index.html.twig", {
-				name: "{{bundleName}}"{% if addon == true %},
-				binding: addon.{{name}}()
-        {% endif %}
-			});
-		}catch(e){
-			throw e;
-		}
+		return this.render("{{bundleName}}:{{directory}}:index.html.twig", {
+			name: "{{bundleName}}"{% if addon == true %},
+			binding: addon.{{name}}()
+      {% endif %}
+		}).catch(e) =>{
+      throw e ;
+    };
 	}
 };
 {% endblock %}
