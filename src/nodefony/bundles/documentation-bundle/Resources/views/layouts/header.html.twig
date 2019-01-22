@@ -14,9 +14,7 @@
         <div class="container text-center">
           <i class="fa fa-spinner fa-spin fa-3x fa-fw spinner"></i>
         </div>
-        <ul id="search" class="list-group">
-
-        </ul>
+        <ul id="search" class="list-group"></ul>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -45,20 +43,28 @@
           </form>
         </nav>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" style="color:red">{{ "progress" | trans() | upper()}}</a>
+      </li>
     </ul>
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="#">{{ "progress" | trans() | upper()}}</a>
-      </li>
       <li class="nav-item">
         <form action="{{url('documentation-version')}}" id='formVersion' method="POST" class="form-inline">
           <div class="form-inline input-group">
             <div class="input-group-prepend">
-              <label class="input-group-text" for="version">{{"VERSION"| trans("messages") }}
-                :
-              </label>
+              <label class="input-group-text" for="version">Nodefony</label>
             </div>
             <select class="custom-select align-middle mr-4" name="version" id="version"></select>
+          </div>
+        </form>
+      </li>
+      <li class="nav-item">
+        <form action="{{url('documentation-version')}}" id='formProject' method="POST" class="form-inline">
+          <div class="form-inline input-group">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="version">{{nodefony.name}}</label>
+            </div>
+            <select class="custom-select align-middle mr-4" name="project" id="project"></select>
           </div>
         </form>
       </li>

@@ -3,7 +3,7 @@
 {{trans_default_domain("doc")}}
 
 {% block description %}
-  <meta name="description" content="Nodefony Documentation {{ version }}">
+  <meta name="description" content="Documentation {{ version }}">
 {% endblock %}
 
 {% block title %}
@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block body %}
-  {% if (bundle == "nodefony" or bundle == project ) and section == null %}
+  {% if (bundle == "nodefony" ) and section == null %}
     <div class="container-fluid mt-8">
       <div class="row">
         <div class="col-md-12 ">
@@ -86,36 +86,32 @@
               <a class="navbar-brand" href="{{url('documentation-version',{version:version,bundle:bundle})}}">
                 {{bundle | trans() | upper}}
               </a>
+              <h3><span class="badge badge-secondary">{{version}}</span></h3>
               {{ render( controller("documentation-bundle:default:subSection", version, bundle, section  )) }}
             </ul>
             {% block section %}{% endblock %}
           </div>
           <div class="col-md-10 col-lg-offset-2" style="overflow:auto">
-            <ol class="breadcrumb">
-              {% if version %}
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                  <a href="{{url('documentation-version',{version:version})}}">Nodefony
-                    {{version }}</a>
+                  <a href="{{url('documentation-version',{version:version,bundle:bundle})}}"> {{bundle}} </a>
                 </li>
-              {% endif %}
-              {% if bundle and ( bundle != "nodefony" or bundle == project )%}
-                <li class="breadcrumb-item">
-                  <a href="{{url('documentation-version',{version:version,bundle:bundle})}}">{{bundle | trans()}}</a>
-                </li>
-              {% endif %}
-              {% if section %}
-              <li class="breadcrumb-item" <a href="{{url('documentation-section',{section:section, version:version, bundle:bundle })}}">{{section | trans()}}</a>
-            </li>
-          {% endif %}
-          {% if subsection %}
-            {% set qs = {
-              'subsection': subsection
-            } %}
-            <li class="breadcrumb-item">
-              <a href="{{url('documentation-section',{section:section, version:version, bundle:bundle, queryString:qs})}}">{{subsection | trans()}}</a>
-            </li>
-          {% endif %}
-        </ol>
+                {% if section %}
+                  <li class="breadcrumb-item active">
+                    <a href="{{url('documentation-section',{section:section, version:version, bundle:bundle })}}">{{section | trans()}}</a>
+                  </li>
+                {% endif %}
+                {% if subsection %}
+                  {% set qs = {
+                  'subsection': subsection
+                  } %}
+                  <li class="breadcrumb-item active>
+                    <a href="{{url('documentation-section',{section:section, version:version, bundle:bundle, queryString:qs})}}">{{subsection | trans()}}</a>
+                  </li>
+                {% endif %}
+              </ol>
+            </nav>
         {% block readme %}
         <div class="container">
           <div class="jumbotron jumbotron-fluid">

@@ -25,7 +25,7 @@
 
 
 
-progress:           "Documentation in progress ! "   
+progress:           "Documentation in progress ! "
 
 begin:              "Getting Started with Nodefony"
 
@@ -35,7 +35,7 @@ core:               "Nodefony Core"
 
 started:            "start"
 
-running:            "start"
+running:            "Run"
 
 Routing:            "Routing"
 

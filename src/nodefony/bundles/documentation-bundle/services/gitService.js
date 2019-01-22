@@ -1,23 +1,69 @@
 const promiseGit = require('simple-git/promise');
 const remote = `https://github.com/nodefony/nodefony-core.git`;
+const useNodefonyVersion = `v${nodefony.version}`;
 
 module.exports = class git extends nodefony.Service {
 
   constructor(container) {
     super("git", container, container.get("notificationsCenter"));
+    this.project = nodefony.projectName;
     this.gitKernel = promiseGit(this.kernel.git._baseDir);
     this.clonePath = path.resolve(__dirname, "..", "clones");
     this.nodefonyClonePath = path.resolve(this.clonePath, "nodefony-core");
     this.tags = null;
+    this.nodefonyTags = null;
     this.cloneGit = null;
-    this.currentVersion = null;
+    this.currentVersion = useNodefonyVersion;
     if (!fs.existsSync(this.clonePath)) {
       this.kernel.cli.mkdir(this.clonePath);
     }
     if (this.kernel.type === "SERVER") {
-      this.getTags();
-      this.cloneNodefony();
+      this.getProjectTags(true)
+        .catch((err) => {
+          this.logger(err, "ERROR");
+        });
+      this.cloneNodefony()
+        .then((current) => {
+          this.currentVersion = current;
+          return this.getNodefonyTags(true)
+            .then((tags) => {
+              if (useNodefonyVersion !== current) {
+                if (tags.all.indexOf(useNodefonyVersion) >= 0) {
+                  return this.checkoutVersion(useNodefonyVersion, "nodefony")
+                    .then((newCurrent) => {
+                      this.currentVersion = newCurrent;
+                      return newCurrent;
+                    }).catch((err) => {
+                      throw err;
+                    });
+                }
+              }
+              return current;
+            }).catch((err) => {
+              throw err;
+            });
+        }).catch((err) => {
+          this.logger(err, "ERROR");
+        });
     }
+  }
+
+  getRepo(name) {
+    if (!name) {
+      return this.gitKernel;
+    }
+    const type = typeof(name);
+    if (type === "string") {
+      switch (name) {
+        case "nodefony":
+          return this.cloneGit;
+        case this.project:
+          return this.gitKernel;
+        default:
+          return this.gitKernel;
+      }
+    }
+    return name;
   }
 
   getClonePath() {
@@ -35,31 +81,23 @@ module.exports = class git extends nodefony.Service {
       .clone(remote)
       .then(() => {
         this.logger(`git clone ok nodefony documentation`);
-        this.initCloneRepo();
+        return this.initCloneRepo();
       })
       .catch((err) => {
         this.logger(err, "ERROR");
       });
   }
 
-  getTags(repo) {
-    return this.getReleases(repo, true)
-      .then((tags) => {
-        return tags;
-      }).catch(e => {
-        throw e;
-      });
-  }
-
   initCloneRepo(pull) {
     this.cloneGit = promiseGit(this.nodefonyClonePath);
     if (pull) {
-      return this.pull(this.cloneGit)
+      return this.pull(this.cloneGit, this.currentVersion)
         .then((PullSummary) => {
           this.logger(PullSummary, "DEBUG");
           return this.getCurrentBranch(this.cloneGit)
             .then((current) => {
               this.currentVersion = current;
+              return current;
             }).catch(e => {
               throw e;
             });
@@ -70,6 +108,7 @@ module.exports = class git extends nodefony.Service {
     return this.getCurrentBranch(this.cloneGit)
       .then((current) => {
         this.currentVersion = current;
+        return current;
       }).catch(e => {
         throw e;
       });
@@ -77,14 +116,47 @@ module.exports = class git extends nodefony.Service {
 
   getReleases(repo, force) {
     if (!repo) {
-      repo = this.gitKernel;
+      return this.getProjectTags(force);
+    } else {
+      if (typeof repo === "string") {
+        switch (repo) {
+          case "nodefony":
+            return this.getNodefonyTags(force);
+          default:
+            return this.getProjectTags(force);
+        }
+      }
     }
+    return repo.tags()
+      .then((tags) => {
+        return tags;
+      }).catch(e => {
+        throw e;
+      });
+  }
+
+  getNodefonyTags(force) {
+    if (this.nodefonyTags && force !== true) {
+      return new Promise((resolve) => {
+        return resolve(this.nodefonyTags);
+      });
+    }
+    return this.cloneGit.tags()
+      .then((tags) => {
+        this.nodefonyTags = tags;
+        return tags;
+      }).catch(e => {
+        throw e;
+      });
+  }
+
+  getProjectTags(force) {
     if (this.tags && force !== true) {
       return new Promise((resolve) => {
         return resolve(this.tags);
       });
     } else {
-      return repo.tags()
+      return this.gitKernel.tags()
         .then((tags) => {
           this.tags = tags;
           return tags;
@@ -94,8 +166,8 @@ module.exports = class git extends nodefony.Service {
     }
   }
 
-  checkoutVersion(version) {
-    return this.cloneGit.checkout(version)
+  checkoutVersion(version, repo) {
+    return this.getRepo(repo).checkout(version)
       .then(() => {
         return this.getCurrentBranch(this.cloneGit)
           .then((current) => {
@@ -108,10 +180,7 @@ module.exports = class git extends nodefony.Service {
   }
 
   getStatus(repo) {
-    if (!repo) {
-      repo = this.gitKernel;
-    }
-    return repo.status()
+    return this.getRepo(repo).status()
       .then((status) => {
         return status;
       }).catch(e => {
@@ -120,10 +189,7 @@ module.exports = class git extends nodefony.Service {
   }
 
   getCurrentBranch(repo) {
-    if (!repo) {
-      repo = this.gitKernel;
-    }
-    return repo.branch()
+    return this.getRepo(repo).branch()
       .then((BranchSummary) => {
         return BranchSummary.current;
       }).catch(e => {
@@ -132,10 +198,7 @@ module.exports = class git extends nodefony.Service {
   }
 
   getMostRecentCommit(repo) {
-    if (!repo) {
-      repo = this.gitKernel;
-    }
-    return repo.log()
+    return this.getRepo(repo).log()
       .then((ListLogSummary) => {
         return ListLogSummary;
       }).catch(e => {
@@ -143,11 +206,8 @@ module.exports = class git extends nodefony.Service {
       });
   }
 
-  pull(repo) {
-    if (!repo) {
-      repo = this.gitKernel;
-    }
-    return repo.pull()
+  pull(repo, branch) {
+    return this.getRepo(repo).pull(remote, branch)
       .then((PullSummary) => {
         return PullSummary;
       }).catch(e => {

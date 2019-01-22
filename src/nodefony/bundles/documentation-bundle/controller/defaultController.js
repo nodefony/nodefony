@@ -92,7 +92,6 @@ module.exports = class defaultController extends nodefony.controller {
    *
    */
   indexAction(version) {
-
     let defaultVersion = this.currentVersion;
     let force = this.query.force;
     if (version) {
@@ -119,7 +118,7 @@ module.exports = class defaultController extends nodefony.controller {
       }
     }
     let myUrl = this.generateUrl("documentation-version", {
-      bundle: "nodefony",
+      bundle: this.project,
       version: defaultVersion
     });
     return this.redirect(myUrl);
@@ -168,7 +167,7 @@ module.exports = class defaultController extends nodefony.controller {
     }
     let directory = finder.result.getDirectories();
     let sections = [];
-    directory.forEach(function (ele) {
+    directory.forEach(function(ele) {
       sections.push(ele.name);
     });
     return this.render("documentation:layouts:navSection.html.twig", {
@@ -181,30 +180,44 @@ module.exports = class defaultController extends nodefony.controller {
   }
 
   versionAction(version, bundle, section) {
-    if (this.method === "POST" && this.query && this.query.version !== this.defaultVersion) {
-      if (this.query.version === this.project) {
+    let Path = null;
+    if (this.method === "POST" && this.query) {
+      if (this.query.version) {
+        if (this.query.version !== this.defaultVersion) {
+          // CHANGE VERSION
+          return this.git.checkoutVersion(this.query.version, "nodefony")
+            .then((ele) => {
+              return this.redirectToRoute("documentation-version", {
+                version: ele,
+                bundle: "nodefony"
+              });
+            });
+        } else {
+          return this.redirectToRoute("documentation-version", {
+            version: this.query.version,
+            bundle: "nodefony"
+          });
+        }
+      }
+      if (this.query.project) {
         return this.git.getCurrentBranch()
           .then((ele) => {
             return this.redirectToRoute("documentation-version", {
               version: ele,
-              bundle: this.query.version
+              bundle: this.project
             });
           });
       }
-      // CHANGE VERSION
-      return this.git.checkoutVersion(this.query.version)
-        .then((ele) => {
-          return this.redirectToRoute("documentation-version", {
-            version: ele
-          });
-        });
     }
-    let Path = this.git.getClonePath();
+    if (!Path) {
+      Path = this.git.getClonePath();
+    }
     let subsection = null;
     let finder = null;
     let myUrl = null;
     let directoryBundles = null;
     let file = null;
+    let readme = null;
     let res = null;
 
     if (this.query.subsection) {
@@ -222,7 +235,9 @@ module.exports = class defaultController extends nodefony.controller {
       if (!section) {
         directoryBundles = [];
         for (let myBundle in bundles) {
-          directoryBundles.push(bundles[myBundle]);
+          if (!(myBundle + "-bundle" in this.kernel.bundlesCore) || this.project === "nodefony-core") {
+            directoryBundles.push(bundles[myBundle]);
+          }
         }
       }
     } else {
@@ -232,7 +247,9 @@ module.exports = class defaultController extends nodefony.controller {
         if (!section) {
           directoryBundles = [];
           for (let myBundle in bundles) {
-            directoryBundles.push(bundles[myBundle]);
+            if (myBundle + "-bundle" in this.kernel.bundlesCore) {
+              directoryBundles.push(bundles[myBundle]);
+            }
           }
         }
       } else {
@@ -284,108 +301,34 @@ module.exports = class defaultController extends nodefony.controller {
     });
 
     let result = finder.result;
-    if (section) {
-      let force = this.query.force;
-      if (!force) {
-        //twig
-        file = result.getFile("index.html.twig", true);
-        if (file) {
-          res = this.renderRawView(file, {
-            bundle: bundle,
-            version: version,
-            section: section,
-            subsection: subsection,
-            project: this.project
-          });
-          return this.render("documentationBundle::index.html.twig", {
-            bundle: bundle,
-            readme: res,
-            version: version,
-            section: section,
-            subsection: subsection,
-            url: this.urlGit,
-            project: this.project
-          });
-        }
-      }
-      // MD
-      file = result.getFile("readme.md", true);
-      if (!file) {
-        return this.render("documentation::index.html.twig", {
-          bundle: bundle,
-          version: version,
-          section: section,
-          subsection: subsection,
-          url: this.urlGit,
-          project: this.project
-        });
-      }
-      res = this.htmlMdParser(file.content(file.encoding), {
+    file = result.getFile("index.html.twig", true);
+    readme = result.getFile("README.md", true);
+    if (!readme) {
+      readme = result.getFile("readme.md", true);
+    }
+    if (readme) {
+      res = this.htmlMdParser(readme.content(readme.encoding), {
         linkify: true,
         typographer: true
       });
-      return this.render("documentation::index.html.twig", {
-        bundle: bundle,
-        readme: res,
-        version: version,
-        section: section,
-        subsection: subsection,
-        url: this.urlGit,
-        project: this.project
-      });
-    } else {
-      let force = this.query.force;
-      if (!force) {
-        file = result.getFile("index.html.twig", true);
-        if (file) {
-          res = this.renderRawView(file, {
-            bundle: bundle,
-            version: version,
-            section: section,
-            subsection: subsection,
-            bundles: directoryBundles,
-            project: this.project
-          });
-          return this.render("documentation::index.html.twig", {
-            bundle: bundle,
-            readme: res,
-            version: version,
-            section: section,
-            subsection: subsection,
-            bundles: directoryBundles,
-            url: this.urlGit,
-            project: this.project
-          });
-        }
-      }
-
-      file = result.getFile("README.md", true);
-      if (file) {
-        res = this.htmlMdParser(file.content(file.encoding), {
-          linkify: true,
-          typographer: true
-        });
-        return this.render("documentation::index.html.twig", {
-          bundle: bundle,
-          readme: res,
-          version: version,
-          section: section,
-          subsection: subsection,
-          url: this.urlGit,
-          project: this.project
-        });
-      } else {
-        return this.render("documentation::index.html.twig", {
-          bundle: bundle,
-          readme: res,
-          version: version,
-          section: section,
-          subsection: subsection,
-          url: this.urlGit,
-          project: this.project
-        });
-      }
     }
+    let data = {
+      bundle: bundle,
+      version: version,
+      section: section,
+      subsection: subsection,
+      bundles: directoryBundles,
+      url: this.urlGit,
+      project: this.project
+    };
+    if (file) {
+      res = this.renderRawView(file, nodefony.extend(data, {
+        readme: res
+      }));
+    }
+    return this.render("documentation::index.html.twig", nodefony.extend(data, {
+      readme: res
+    }));
   }
 
 };

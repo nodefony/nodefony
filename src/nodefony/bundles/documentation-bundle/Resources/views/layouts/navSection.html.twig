@@ -1,7 +1,7 @@
 
 {% if  not section  %}
 	<li class="nav-item active">
-		<a class="nav-link" href="{{url('documentation-version',{version:version, bundle:bundle})}}">Home</a>
+		<a class="nav-link" href="{{url('documentation-version',{version:version, bundle:bundle})}}">{{"Home"| trans}}</a>
 	</li>
 {% else %}
 	{% if section %}

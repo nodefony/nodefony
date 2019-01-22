@@ -1,22 +1,27 @@
-//const stage = require("@nodefony/stage");
-
 require('bootstrap');
 require('../../scss/custom.scss');
 const semver = require('semver');
 
 module.exports = function() {
 
-  //window["stage"] = stage;
-  /*
-   *
-   *    Class Bundle App client side
-   *
-   *
-   */
-  var Documentation = class Documentation {
+  class Documentation {
 
     constructor() {
+      $(document).ready(() => {
+        this.getVersions("nodefony");
+        this.getVersions(this.project);
+        this.initLang();
+        this.initSearch();
+        $.get("/api/git/getCurrentBranch", function(data) {
+          var ele = $(".branch");
+          ele.text(data.branch);
+        }).fail(function(error) {
+          throw error;
+        });
+      });
+    }
 
+    initLang() {
       let selectorLang = global.document.getElementById("language");
       if (selectorLang) {
         selectorLang.addEventListener("change", (e) => {
@@ -24,66 +29,9 @@ module.exports = function() {
           e.preventDefault();
         });
       }
+    }
 
-      $("#version").change(function(e) {
-        //window.location = "/documentation/" + this.value;
-        $("#formVersion").submit();
-        e.preventDefault();
-      });
-
-      $.get("/api/git/getCurrentBranch", function(data) {
-        var ele = $(".branch");
-        ele.text(data.branch);
-      }).fail(function(error) {
-        throw error;
-      });
-
-      $.get("/api/git/versions", (data) => {
-        let ele = $("#version");
-        let option = null;
-        if (this.version === "master") {
-          option = `<option title="master" value="master" selected="selected">master</option>`;
-        } else {
-          option = `<option title="master" value="master">master</option>`;
-        }
-        ele.append(option);
-        if (this.bundle === this.project) {
-          option = `<option title="${this.project}" value="${this.project}" selected="selected">${this.project}</option>`;
-        } else {
-          option = `<option title="${this.project}" value="${this.project}">${this.project}</option>`;
-        }
-        ele.append(option);
-        for (let version in data) {
-          let option = null;
-          switch (version) {
-            case "latest":
-              if (this.version === data[version]) {
-                option = `<option title="${data[version]}" value="${data[version]}" selected="selected">Latest</option>`;
-              } else {
-                option = `<option title="${data[version]}" value="${data[version]}">Latest</option>`;
-              }
-              ele.append(option);
-              break;
-            case "all":
-              for (let i = 0; i < data[version].length; i++) {
-                let check = semver.satisfies(semver.clean(data[version][i]), ">=4.1.0-beta.1");
-                if (check /*&& data[version][i] !== data.latest*/ ) {
-                  if (this.version === data[version][i]) {
-                    option = `<option value="${data[version][i]}" selected="selected" >${data[version][i]}</option>`;
-                  } else {
-                    option = `<option value="${data[version][i]}">${data[version][i]}</option>`;
-                  }
-                  ele.append(option);
-                }
-              }
-              break;
-          }
-
-        }
-      }).fail(function(error) {
-        throw error;
-      });
-
+    initSearch() {
       const searchImput = $("#inputSearch");
       const search = $("#search");
       searchImput.bind("keypress", function(event) {
@@ -145,6 +93,64 @@ module.exports = function() {
       });
     }
 
+    getVersions(project) {
+      switch (project) {
+        case "nodefony":
+          return $.get("/api/git/versions", (data) => {
+              const select = $("#version");
+              select.change(function(e) {
+                //window.location = "/documentation/" + this.value;
+                $("#formVersion").submit();
+                e.preventDefault();
+              });
+              return this.buildSelect(data, select, project);
+            })
+            .fail(function(error) {
+              throw error;
+            });
+        default:
+          return $.get("/api/git/getCurrentBranch/" + project, (data) => {
+              const select = $("#project");
+              select.change(function(e) {
+                $("#formProject").submit();
+                e.preventDefault();
+              });
+              select.append(`<option title="" value="" selected="selected">Select</option>`);
+              let option = `<option title="${data.branch}" value="${data.branch}">${data.branch}</option>`;
+              select.append(option);
+            })
+            .fail(function(error) {
+              throw error;
+            });
+      }
+    }
+
+    buildSelect(data, ele) {
+      let option = null;
+      ele.append(`<option title="" value="" selected="selected">Select</option>`);
+      option = `<option title="master" value="master">master</option>`;
+      ele.append(option);
+      for (let version in data) {
+        let option = null;
+        switch (version) {
+          case "latest":
+            option = `<option title="${data[version]}" value="${data[version]}">Latest</option>`;
+            ele.append(option);
+            break;
+          case "all":
+            for (let i = 0; i < data[version].length; i++) {
+              let check = semver.satisfies(semver.clean(data[version][i]), ">=4.2.0-beta.1");
+              if (check /*&& data[version][i] !== data.latest*/ ) {
+                option = `<option value="${data[version][i]}">${data[version][i]}</option>`;
+                ele.append(option);
+              }
+            }
+            break;
+        }
+      }
+      return data;
+    }
+
     changeLang(query) {
       if (query) {
         return window.location.href = "?language=" + query;
@@ -163,7 +169,7 @@ module.exports = function() {
         url = "https://github.com/nodefony/nodefony-core/commit/";
       }
       if ((bundle === "nodefony" || bundle === project) && section === null) {
-        $.get("/api/git/getMostRecentCommit", function(data) {
+        $.get("/api/git/getMostRecentCommit/" + bundle, function(data) {
           var ele = $("#commits");
           for (var i = 0; i < data.length; i++) {
             //var dt = new Date( data[i].date ) ;
@@ -198,7 +204,6 @@ module.exports = function() {
         });
       }
     }
-  };
-
+  }
   return new Documentation();
 }();

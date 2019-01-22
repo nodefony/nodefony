@@ -1,11 +1,12 @@
 // ROUTING
-
 module.exports = {
 
-  documentation: {
-    pattern: "/documentation",
+  "documentation": {
+    pattern: "/documentation/{version}/{bundle}",
     defaults: {
-      controller: "documentation:default:index"
+      controller: "documentation:default:version",
+      bundle: nodefony.projectPackage.name,
+      version: nodefony.projectPackage.version
     }
   },
   "documentation-search": {
@@ -18,16 +19,16 @@ module.exports = {
     pattern: `/documentation/{version}/{bundle}`,
     defaults: {
       controller: "documentation:default:version",
-      bundle: "nodefony",
-      version: "v" + nodefony.version,
+      bundle: nodefony.projectPackage.name,
+      version: nodefony.projectPackage.version
     }
   },
   "documentation-section": {
     pattern: "/documentation/{version}/{bundle}/{section}",
     defaults: {
       controller: "documentation:default:version",
-      version: "v" + nodefony.version,
-      bundle: "nodefony"
+      bundle: nodefony.projectPackage.name,
+      version: nodefony.projectPackage.version
     }
   },
   "documentation-demo-html": {

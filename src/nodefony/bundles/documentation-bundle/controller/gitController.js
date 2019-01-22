@@ -28,10 +28,14 @@ module.exports = class gitController extends nodefony.controller {
 
   /**
    *    @Method ({"GET"})
-   *    @Route ("/getStatus", name="documentation-git-getStatus")
+   *    @Route (
+   *      "/getStatus/{project}",
+   *      name="documentation-git-getStatus",
+   *      defaults={"project" = "nodefony"}
+   *    )
    */
-  getStatusAction() {
-    return this.serviceGit.getStatus()
+  getStatusAction(project) {
+    return this.serviceGit.getStatus(project)
       .then((status) => {
         return this.renderJson(status);
       }).catch(e => {
@@ -41,10 +45,14 @@ module.exports = class gitController extends nodefony.controller {
 
   /**
    *    @Method ({"GET"})
-   *    @Route ("/getCurrentBranch", name="documentation-git-getBranch")
+   *    @Route (
+   *      "/getCurrentBranch/{project}",
+   *      name="documentation-git-getBranch",
+   *      defaults={"project" = "nodefony"}
+   *    )
    */
-  getCurrentBranchAction() {
-    return this.serviceGit.getCurrentBranch()
+  getCurrentBranchAction(project) {
+    return this.serviceGit.getCurrentBranch(project)
       .then(branchName => {
         return this.renderJson({
           branch: branchName
@@ -56,11 +64,15 @@ module.exports = class gitController extends nodefony.controller {
 
   /**
    *    @Method ({"GET"})
-   *    @Route ("/getMostRecentCommit", name="documentation-git-getMostRecentCommit")
+   *    @Route (
+   *      "/getMostRecentCommit/{project}",
+   *      name="documentation-git-getMostRecentCommit",
+   *      defaults={"project" = "nodefony"}
+   *     )
    */
-  getMostRecentCommitAction() {
+  getMostRecentCommitAction(project) {
     let tab = [];
-    return this.serviceGit.getMostRecentCommit()
+    return this.serviceGit.getMostRecentCommit(project)
       .then((ListLogSummary) => {
         let nb = ListLogSummary.all.length;
         if (nb > 10) {

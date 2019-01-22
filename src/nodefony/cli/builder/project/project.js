@@ -171,7 +171,11 @@ module.exports = class generateProject extends nodefony.Builder {
           }, {
             name: "doc",
             type: "directory",
-            childs: [{}]
+            childs: [{
+              name: "index.html.twig",
+              type: "copy",
+              path: path.resolve(this.pathSkeleton, "app", "doc", "app.html.twig")
+            }]
           }, {
             name: "README.md",
             type: "copy",
@@ -394,7 +398,12 @@ module.exports = class generateProject extends nodefony.Builder {
           }]
         }, {
           name: "doc",
-          type: "directory"
+          type: "directory",
+          childs: [{
+            name: "index.html.twig",
+            type: "copy",
+            path: path.resolve(this.pathSkeleton, "documentation.html.twig")
+          }]
         }, {
           name: "README.md",
           type: "copy",
