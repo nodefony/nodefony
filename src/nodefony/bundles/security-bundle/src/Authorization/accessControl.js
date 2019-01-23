@@ -58,6 +58,7 @@ module.exports = nodefony.register("AccessControl", () => {
           if (ret instanceof nodefony.Context) {
             return ret;
           }
+        } else {
           return false;
         }
         ret = this.checkIp(context);
@@ -86,7 +87,7 @@ module.exports = nodefony.register("AccessControl", () => {
         }
         return ret;
       } catch (e) {
-        this.logger(e, "DEBUG");
+        this.logger(e, "WARNING");
         return false;
       }
     }
@@ -168,7 +169,19 @@ module.exports = nodefony.register("AccessControl", () => {
       if (this.allowRoles.length === 0) {
         return true;
       }
-      let tokenRoles = context.token.getRoles();
+      let tokenRoles = null;
+      try {
+        if (context.token) {
+          tokenRoles = context.token.getRoles();
+        } else {
+          return false;
+        }
+      } catch (e) {
+        throw e;
+      }
+      if (!tokenRoles) {
+        return false;
+      }
       let isAllow = false;
       for (let j = 0; j < tokenRoles.length; j++) {
         for (let i = 0; i < this.allowRoles.length; i++) {

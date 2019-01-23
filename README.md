@@ -117,7 +117,7 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 
 -   MACOS (Checked, Tested)
 
--   WINDOWS (Checked , help me !!!)
+-   WINDOWS (Checked)
 
 -   FreeBSD (Checked)
     -   pkg install bash gmake gcc6

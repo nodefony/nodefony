@@ -139,6 +139,8 @@ tools (){
       Yes )
         echo "copy README.md";
         cp README.md $pathnodefony ;
+        echo "copy README.md in $pathnodefony/cli/builder/project/skeletons";
+        cp README.md $pathnodefony/cli/builder/project/skeletons ;
         generate_changelog
         echo "copy CHANGELOG.md";
         cp CHANGELOG.md $pathnodefony ;

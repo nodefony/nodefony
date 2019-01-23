@@ -48,7 +48,7 @@ locale :			en_en
 #        views:			true
 #        translations: true
 #
-watch:   true
+watch:   false
 
 github:
   url :  "https://github.com/nodefony/nodefony-core/commit/"

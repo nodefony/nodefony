@@ -1,18 +1,18 @@
 // ROUTING
 module.exports = {
 
+  "documentation-search": {
+    pattern: "/documentation/search",
+    defaults: {
+      controller: "documentation:default:search"
+    }
+  },
   "documentation": {
     pattern: "/documentation/{version}/{bundle}",
     defaults: {
       controller: "documentation:default:version",
       bundle: nodefony.projectPackage.name,
       version: nodefony.projectPackage.version
-    }
-  },
-  "documentation-search": {
-    pattern: "/documentation/search",
-    defaults: {
-      controller: "documentation:default:search"
     }
   },
   "documentation-version": {
