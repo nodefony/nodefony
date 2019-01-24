@@ -19,7 +19,7 @@ nodefony.registerToken("openid", function() {
           surname: profile.family_name || "",
           email: profile.email,
           lang: profile.locale,
-          roles: ["ROLE_USER"],
+          roles: profile.role,
           gender: profile.gender || "",
           displayName: profile.name
         };
