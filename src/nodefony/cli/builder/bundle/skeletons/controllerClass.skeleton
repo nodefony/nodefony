@@ -25,11 +25,11 @@ module.exports = class {{controllerName}} extends nodefony.controller {
 	indexAction (){
 		return this.render("{{bundleName}}:{{directory}}:index.html.twig", {
 			name: "{{bundleName}}"{% if addon == true %},
-			binding: addon.{{name}}()
+			   binding: addon.{{name}}()
       {% endif %}
-		}).catch(e) =>{
+		}).catch((e) =>{
       throw e ;
-    };
+    });
 	}
 };
 {% endblock %}
