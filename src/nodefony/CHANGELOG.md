@@ -1,5 +1,12 @@
 # Changelog
 
+## v4.2.0-beta.2 (25/01/2019)
+- [nodefony release 4.2.0-beta.2](https://github.com/nodefony/nodefony-core/commit/98bd63dc67616c0cf7304a4b9ca653e3daac39b9)
+- [debug bundle generater](https://github.com/nodefony/nodefony-core/commit/0c1f46f63dcb7fff02aa7b00f66774786f518c8f)
+- [upgrade deps | debug logout openid](https://github.com/nodefony/nodefony-core/commit/1775ad2f5e7e25e57312ccc518481596ab41ef6e)
+
+---
+
 ## v4.2.0-beta.1 (23/01/2019)
 - [nodefony release 4.2.0-beta.1](https://github.com/nodefony/nodefony-core/commit/2afe612afe8b180b5aef7e8e8819fcf97109cf41)
 - [debug accessControl allow role](https://github.com/nodefony/nodefony-core/commit/3a9544f734e3589a9a07497e9935a8b38df65677)
