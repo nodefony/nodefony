@@ -28,6 +28,7 @@ module.exports = class git extends nodefony.Service {
           return this.getNodefonyTags(true)
             .then((tags) => {
               if (useNodefonyVersion !== current) {
+                this.logger(`Change Documentation version to : ${useNodefonyVersion}`);
                 if (tags.all.indexOf(useNodefonyVersion) >= 0) {
                   return this.checkoutVersion(useNodefonyVersion, "nodefony")
                     .then((newCurrent) => {
@@ -167,10 +168,12 @@ module.exports = class git extends nodefony.Service {
   }
 
   checkoutVersion(version, repo) {
+    this.logger(`Checkout Documentation :  ${version}`);
     return this.getRepo(repo).checkout(version)
       .then(() => {
         return this.getCurrentBranch(this.cloneGit)
           .then((current) => {
+            this.logger(`Documentation version:  ${current}`);
             this.currentVersion = current;
             return current;
           });

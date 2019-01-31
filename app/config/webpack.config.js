@@ -30,7 +30,7 @@ module.exports = webpackMerge(config, {
     publicPath: publicPath,
     filename: "./js/[name].js",
     library: "[name]",
-    libraryTarget: "umd"
+    libraryExport: "default"
   },
   externals: {},
   resolve: {},
@@ -72,12 +72,7 @@ module.exports = webpackMerge(config, {
           }, {
             loader: 'postcss-loader', // Run post css actions
             options: {
-              plugins: function () { // post css plugins, can be exported to postcss.config.js
-                return [
-                  require('precss'),
-                  require('autoprefixer')
-                ];
-              }
+              plugins: () => [require('precss'), require('autoprefixer')]
             }
           }, {
             loader: "sass-loader",

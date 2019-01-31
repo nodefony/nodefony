@@ -14,7 +14,7 @@
   "dependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.3.1",
-    "autoprefixer": "^9.4.6",
+    "autoprefixer": "^9.4.7",
     "babel-loader": "^8.0.5",
     "bootstrap": "^4.2.1",
     "clean-webpack-plugin": "^1.0.1",
@@ -28,7 +28,7 @@
     "mini-css-extract-plugin": "^0.5.0",
     "node-sass": "^4.11.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
-    "popper.js": "^1.14.6",
+    "popper.js": "^1.14.7",
     "postcss-loader": "^3.0.0",
     "precss": "^4.0.0",
     "raw-loader": "^1.0.0",

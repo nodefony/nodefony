@@ -7,7 +7,7 @@
 
 [![Issues Status](https://img.shields.io/github/issues/nodefony/nodefony.svg)](https://github.com/nodefony/nodefony/issues) [![Build Status](https://api.travis-ci.org/nodefony/nodefony-core.svg?branch=master)](https://travis-ci.org/nodefony/nodefony-core) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/495/badge)](https://bestpractices.coreinfrastructure.org/projects/495)
 
-Nodefony is Node.js full-stack web framework.  
+Nodefony is Node.js web framework.  
 
 Nodefony can be used to develop a complete solution to create a web application.
 
@@ -126,8 +126,6 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
     -   cd /usr/local/bin/ ;ln -s pythonx.x python
 
 -   ~~OpenBSD (Not Checked yet )~~
-
-
 
 -   ~~[ELECTRON](https://github.com/nodefony/nodefony-electron) Experimental Nodefony Electron  ( Now an Electron Context can be use in Nodefony Project )~~
 

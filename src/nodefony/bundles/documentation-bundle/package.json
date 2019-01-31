@@ -25,7 +25,7 @@
     "less-loader": "^4.1.0",
     "mini-css-extract-plugin": "^0.5.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
-    "popper.js": "^1.14.6",
+    "popper.js": "^1.14.7",
     "precss": "^4.0.0",
     "resolve-url-loader": "^3.0.0",
     "semver": "^5.6.0",

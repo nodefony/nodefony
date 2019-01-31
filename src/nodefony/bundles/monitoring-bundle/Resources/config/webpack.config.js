@@ -21,14 +21,14 @@ module.exports = webpackMerge({
   watch: false,
   entry: {
     monitoring: "./js/monitoring.js",
-    debugBar: "./js/debugBar.js"
+    nodefony: "./js/debugBar.js"
   },
   output: {
     path: public,
     publicPath: publicPath,
     filename: "./js/[name].js",
     library: "[name]",
-    libraryTarget: "umd"
+    libraryExport: "default"
   },
   module: {
     rules: [{
