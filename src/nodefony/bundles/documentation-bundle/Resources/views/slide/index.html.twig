@@ -1,0 +1,32 @@
+{% extends "/app/Resources/views/base.html.twig" %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="/documentation-bundle/assets/css/slide.css"/>
+{% endblock %}
+
+{% block javascripts %}
+  <script type="text/javascript" src="/documentation-bundle/assets/js/slide.js"></script>
+{% endblock %}
+
+
+{% block body %}
+
+<div class="reveal">
+  <div class="slides">
+
+    <section>Single Horizontal Slide</section>
+		<section>
+			<section>Vertical Slide 1</section>
+			<section>Vertical Slide 2</section>
+		</section>
+    <section data-markdown>
+    	<textarea data-template>## Page title A paragraph  [link](http://hakim.se).
+        ## Page
+    	</textarea>
+    </section>
+
+  </div>
+</div>
+
+
+{% endblock %}

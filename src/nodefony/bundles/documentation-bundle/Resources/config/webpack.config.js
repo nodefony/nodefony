@@ -23,6 +23,7 @@ module.exports = webpackMerge(config, {
   target: "web",
   entry: {
     documentation: ["./Resources/public/js/documentation.js"],
+    slide: ["./Resources/public/js/slide.js"]
   },
   output: {
     path: public,
@@ -55,7 +56,24 @@ module.exports = webpackMerge(config, {
       }, {
         test: /jquery\..*\.js/,
         loader: "imports-loader?$=jquery,jQuery=jquery,this=>window"
-      }, {
+      },
+      /*
+       *	reveal EXPOSE BROWSER CONTEXT
+       *
+       */
+      {
+        test: require.resolve("reveal.js"),
+        loader: "expose-loader?$!expose-loader?Reveal"
+      },
+      /*{
+        test: require.resolve("highlight.js"),
+        loader: "expose-loader?$!expose-loader?hljs"
+      },*/
+      /*
+       *	scss
+       *
+       */
+      {
         test: /\.(sa|sc|c)ss$/,
         use: [
           //'css-hot-loader',

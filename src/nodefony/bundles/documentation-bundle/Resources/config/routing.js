@@ -1,6 +1,12 @@
 // ROUTING
 module.exports = {
 
+  "documentation-slide": {
+    pattern: "/documentation/slide",
+    defaults: {
+      controller: "documentation:slide:index"
+    }
+  },
   "documentation-search": {
     pattern: "/documentation/search",
     defaults: {
