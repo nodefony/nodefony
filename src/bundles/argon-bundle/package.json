@@ -18,20 +18,20 @@
     "nouislider": "^12.1.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "uglifyjs-webpack-plugin": "^2.1.1",
-    "vue": "^2.5.22",
+    "vue": "^2.6.0",
     "vue-flatpickr-component": "^8.1.1",
     "vue-lazyload": "^1.2.6",
     "vue-router": "^3.0.1",
     "vue2-transitions": "^0.2.3"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.3.0",
-    "@vue/cli-plugin-eslint": "^3.3.0",
+    "@vue/cli-plugin-babel": "^3.4.0",
+    "@vue/cli-plugin-eslint": "^3.4.0",
     "@vue/cli-service": "^3.3.1",
     "@vue/eslint-config-prettier": "^4.0.1",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
-    "vue-template-compiler": "^2.5.22"
+    "vue-template-compiler": "^2.6.0"
   },
   "license": "CECILL-B",
   "readmeFilename": "README.md",

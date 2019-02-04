@@ -22,11 +22,11 @@ import "reveal.js/css/reveal.scss";
 //import "reveal.js/css/theme/source/solarized.scss";
 //import "reveal.js/css/theme/source/white.scss";
 
-//import "reveal.js/css/theme/source/sky.scss";
+import "reveal.js/css/theme/source/sky.scss";
 //import "reveal.js/css/theme/source/night.scss";
 //import "reveal.js/css/theme/source/blood.scss";
 //import "reveal.js/css/theme/source/serif.scss";
-import "reveal.js/css/theme/source/simple.scss";
+//import "reveal.js/css/theme/source/simple.scss";
 
 import "reveal.js/lib/css/zenburn.css";
 
@@ -38,7 +38,7 @@ class Slide {
         controls: true,
         progress: true,
         history: true,
-        center: false,
+        center: true,
         slideNumber: true,
         showSlideNumber: 'all',
         //showNotes: true,
@@ -48,18 +48,26 @@ class Slide {
         //parallaxBackgroundImage: 'https://localhost:5152/framework-bundle/images/nodefony-logo.png',
         //parallaxBackgroundSize: "100% 100%",
         markdown: {
-          //gfm: true,
-          //smartypants: true
+          gfm: true,
+          tables: true,
+          breaks: true,
+          sanitize: false,
+          smartLists: true,
+          smartypants: true,
+          xhtml: false
         },
-        width: 960,
-        height: 700,
-
+        //width: 960,
+        //height: 700,
         // Factor of the display size that should remain empty around the content
-        margin: 0.1,
-
+        //margin: 0.1,
         // Bounds for smallest/largest possible scale to apply to content
-        minScale: 0.2,
-        maxScale: 1.5
+        //minScale: 0.2,
+        //maxScale: 1.5
+        width: "100%",
+        height: "100%",
+        margin: 0,
+        minScale: 1,
+        maxScale: 1
       });
 
       /*Reveal.addKeyBinding({

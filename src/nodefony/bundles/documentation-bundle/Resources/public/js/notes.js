@@ -106,6 +106,7 @@ class Notes {
    * Called when the main window sends an updated state.
    */
   handleStateMessage(data) {
+    console.log(data)
     // Store the most recently set state to avoid circular loops
     // applying the same state
     this.currentState = JSON.stringify(data.state);
@@ -407,8 +408,8 @@ class Notes {
   debounce(fn, ms) {
     let lastTime = 0,
       timeout;
-    return () => {
-      let args = arguments;
+    return (...args) => {
+      //let args = arguments;
       let context = this;
       clearTimeout(timeout);
       let timeSinceLastCall = Date.now() - lastTime;

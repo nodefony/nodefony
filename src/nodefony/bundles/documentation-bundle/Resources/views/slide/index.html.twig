@@ -31,6 +31,20 @@
 			<section>Vertical Slide 2</section>
 		</section>
 
+    <section data-markdown>
+    	<script type="text/template">
+<!-- .slide: data-background="#ff0000" -->
+Markdown content
+    	</script>
+    </section>
+
+    <section data-markdown>
+    	<script type="text/template">
+- Item 1 <!-- .element: class="fragment" data-fragment-index="2" -->
+- Item 2 <!-- .element: class="fragment" data-fragment-index="1" -->
+    	</script>
+    </section>
+
     <section>
       <iframe  class="stretch" data-src="{{ url('home') }}"></iframe>
     </section>
@@ -99,7 +113,6 @@
     <section>
       <img data-src="{{CDN('image')}}/app/images/app-logo.png" style="background:white">
       <iframe data-src="https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" ></iframe>
-
     </section>
 
     <section>
@@ -123,10 +136,10 @@
 
 
     <section data-markdown="/documentation-bundle/slides/README.md"
-           data-separator="^\n\n\n"
+           data-separator="^\*\*"
            data-separator-vertical="^\n\n"
            data-separator-notes="^Note:"
-           data-charset="iso-8859-15">
+           data-charset="utf-8">
       <!--
           Note that Windows uses `\r\n` instead of `\n` as its linefeed character.
           For a regex that supports all operating systems, use `\r?\n` instead of `\n`.
@@ -141,12 +154,17 @@
     </section>
 
     <section data-markdown>
-    	<textarea data-template>## Page title A paragraph  [link](http://nodefony.net).
+    	<textarea data-template>
+## Page title
+
+A paragraph with some text and a [link](https://nodefony.net).
     	</textarea>
     </section>
+
     <section>
     	<h2>This video will use up the remaining space on the slide</h2>
-        <video class="stretch" data-autoplay  src="https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"></video>
+      <video  data-autoplay  src="https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4">
+      </video>
     </section>
   </div>
 </div>
