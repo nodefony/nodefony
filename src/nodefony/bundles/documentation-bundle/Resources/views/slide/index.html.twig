@@ -2,29 +2,152 @@
 
 {% block stylesheets %}
   <link rel="stylesheet" href="/documentation-bundle/assets/css/slide.css"/>
+
 {% endblock %}
 
 {% block javascripts %}
   <script type="text/javascript" src="/documentation-bundle/assets/js/slide.js"></script>
+  <script type="text/javascript" src="/documentation/notes.js"></script>
+  <script>
+  	let link = document.createElement( 'link' );
+  	link.rel = 'stylesheet';
+  	link.type = 'text/css';
+  	link.href = window.location.search.match( /print-pdf/gi ) ? '/documentation-bundle/css/print/pdf.css' : '/documentation-bundle/css/print/paper.css';
+  	document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
 {% endblock %}
-
 
 {% block body %}
 
 <div class="reveal">
   <div class="slides">
 
-    <section>Single Horizontal Slide</section>
-		<section>
+    <section>
+      Single Horizontal Slide
+    </section>
+
+    <section>
 			<section>Vertical Slide 1</section>
 			<section>Vertical Slide 2</section>
 		</section>
-    <section data-markdown>
-    	<textarea data-template>## Page title A paragraph  [link](http://hakim.se).
-        ## Page
-    	</textarea>
+
+    <section>
+      <iframe  class="stretch" data-src="{{ url('home') }}"></iframe>
     </section>
 
+    <section data-background-iframe="{{ url('home') }}" data-background-interactive>
+    </section>
+
+    <section data-autoslide="2000">
+    	<p>After 2 seconds the first fragment will be shown.</p>
+    	<p class="fragment" data-autoslide="10000">After 10 seconds the next fragment will be shown.</p>
+    	<p class="fragment">Now, the fragment is displayed for 2 seconds before the next slide is shown.</p>
+    </section>
+
+    <section>
+    	<pre><code data-trim data-noescape>
+        <mark>class Slide {</mark>
+          constructor() {
+
+          });
+          }
+        }
+    	</code></pre>
+      <pre><code data-trim >
+
+      </code></pre>
+    </section>
+
+    <section data-background-image="{{CDN('image')}}/app/images/app-logo.png">
+    	<h2>Image</h2>
+    </section>
+
+    <section data-background-image="{{CDN('image')}}/app/images/app-logo.png" data-background-size="100px" data-background-repeat="repeat">
+    	<h2>This background image will be sized to 100px and repeated</h2>
+    </section>
+
+    <section data-background-video="https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" data-background-video-loop data-background-video-muted>
+    	<h2>Video</h2>
+    </section>
+
+    <section data-transition="zoom">
+    	<h2>This slide will override the presentation transition and zoom!</h2>
+    </section>
+
+    <section data-transition-speed="fast">
+    	<h2>Choose from three transition speeds: default, fast or slow!</h2>
+    </section>
+
+
+    <section data-transition="slide">
+        The train goes on …
+    </section>
+    <section data-transition="slide">
+        and on …
+    </section>
+    <section data-transition="slide-in fade-out">
+        and stops.
+    </section>
+    <section data-transition="fade-in slide-out">
+        (Passengers entering and leaving)
+    </section>
+    <section data-transition="slide">
+        And it starts again.
+    </section>
+
+
+    <section>
+      <img data-src="{{CDN('image')}}/app/images/app-logo.png" style="background:white">
+      <iframe data-src="https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" ></iframe>
+
+    </section>
+
+    <section>
+    	<p class="fragment grow">grow</p>
+    	<p class="fragment shrink">shrink</p>
+    	<p class="fragment fade-out">fade-out</p>
+    	<p class="fragment fade-up">fade-up (also down, left and right!)</p>
+    	<p class="fragment fade-in-then-out">fades in, then out when we move to the next step</p>
+    	<p class="fragment fade-in-then-semi-out">fades in, then obfuscate when we move to the next step</p>
+    	<p class="fragment highlight-current-blue">blue only once</p>
+    	<p class="fragment highlight-red">highlight-red</p>
+    	<p class="fragment highlight-green">highlight-green</p>
+    	<p class="fragment highlight-blue">highlight-blue</p>
+    </section>
+
+    <section>
+    	<p class="fragment" data-fragment-index="3">Appears last</p>
+    	<p class="fragment" data-fragment-index="1">Appears first</p>
+    	<p class="fragment" data-fragment-index="2">Appears second</p>
+    </section>
+
+
+    <section data-markdown="/documentation-bundle/slides/README.md"
+           data-separator="^\n\n\n"
+           data-separator-vertical="^\n\n"
+           data-separator-notes="^Note:"
+           data-charset="iso-8859-15">
+      <!--
+          Note that Windows uses `\r\n` instead of `\n` as its linefeed character.
+          For a regex that supports all operating systems, use `\r?\n` instead of `\n`.
+      -->
+    </section>
+
+    <section>
+    	<h2>Some Slide</h2>
+    	<aside class="notes">
+    		Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit »S« on your keyboard).
+    	</aside>
+    </section>
+
+    <section data-markdown>
+    	<textarea data-template>## Page title A paragraph  [link](http://nodefony.net).
+    	</textarea>
+    </section>
+    <section>
+    	<h2>This video will use up the remaining space on the slide</h2>
+        <video class="stretch" data-autoplay  src="https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"></video>
+    </section>
   </div>
 </div>
 

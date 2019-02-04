@@ -13,6 +13,12 @@ module.exports = class slideController extends nodefony.controller {
   }
 
   indexAction() {
+    this.hideDebugBar();
     return this.render("documentation:slide:index.html.twig");
+  }
+
+  notesAction() {
+    this.hideDebugBar();
+    return this.render("documentation:slide:notes.html.twig");
   }
 };

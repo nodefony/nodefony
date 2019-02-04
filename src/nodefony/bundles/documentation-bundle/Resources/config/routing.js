@@ -2,9 +2,15 @@
 module.exports = {
 
   "documentation-slide": {
-    pattern: "/documentation/slide",
+    pattern: "/documentation/slides",
     defaults: {
       controller: "documentation:slide:index"
+    }
+  },
+  "documentation-notes": {
+    pattern: "/documentation/notes.html",
+    defaults: {
+      controller: "documentation:slide:notes"
     }
   },
   "documentation-search": {
