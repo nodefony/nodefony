@@ -1,6 +1,10 @@
+https://git-scm.com/book/en/v2
+https://en.wikipedia.org/wiki/Glob_(programming)
+https://gist.github.com/JamesMGreene/cdd0ac49f90c987e45ac
+https://www.atlassian.com/git/tutorials/what-is-git
 
 // ADD TAG
-$ git tag release01
+$ git tag -a release01
 $ git push origin release01
 
 
