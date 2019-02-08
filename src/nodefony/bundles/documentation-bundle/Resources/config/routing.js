@@ -4,13 +4,25 @@ module.exports = {
   "documentation-slide": {
     pattern: "/documentation/slides",
     defaults: {
-      controller: "documentation:slide:index"
+      controller: "documentation:slide:slides"
     }
   },
   "documentation-notes": {
     pattern: "/documentation/notes.html",
     defaults: {
       controller: "documentation:slide:notes"
+    }
+  },
+  "documentation-slides-server": {
+    pattern: "/documentation/slides/server",
+    defaults: {
+      controller: "documentation:slide:slidesServer"
+    }
+  },
+  "documentation-notes-server": {
+    pattern: "/documentation/notes/server",
+    defaults: {
+      controller: "documentation:slide:notesServer"
     }
   },
   "documentation-search": {

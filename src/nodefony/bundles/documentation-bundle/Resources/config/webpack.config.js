@@ -23,8 +23,10 @@ module.exports = webpackMerge(config, {
   target: "web",
   entry: {
     documentation: ["./Resources/public/js/documentation.js"],
-    slide: ["./Resources/public/js/slide.js"],
-    notes: ["./Resources/public/js/notes.js"]
+    slide: ["./Resources/public/js/slides/slide.js"],
+    notes: ["./Resources/public/js/slides/notes.js"],
+    ioserver: ["./Resources/public/js/slides/io-server.js"],
+    ioclient: ["./Resources/public/js/slides/io-client.js"]
   },
   output: {
     path: public,

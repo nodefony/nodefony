@@ -1,6 +1,6 @@
 module.exports = {
   socketio: {
-    class: nodefony.services.socketio,
+    class: nodefony.services.Socketio,
     arguments: ["@container"]
   }
 };

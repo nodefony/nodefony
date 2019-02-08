@@ -12,18 +12,18 @@
 #
 # This file is YAML  FILE
 # ---
-# YAML:  YAML Ain't Markup Language
+# YAML:                 YAML Ain't Markup Language
 #
-# What It Is: YAML is a human friendly data serialization
+# What It Is:           YAML is a human friendly data serialization
 #   standard for all programming languages.
 #
 # YAML Resources:
 #   YAML 1.2 (3rd Edition): http://yaml.org/spec/1.2/spec.html
 #   YAML 1.1 (2nd Edition): http://yaml.org/spec/1.1/
 #   YAML 1.0 (1st Edition): http://yaml.org/spec/1.0/
-#   YAML Trac Wiki: http://trac.yaml.org/
-#   YAML Mailing List: yaml-core@lists.sourceforge.net
-#   YAML IRC Channel: "#yaml on irc.freenode.net"
+#   YAML Trac Wiki:     http://trac.yaml.org/
+#   YAML Mailing List:  yaml-core@lists.sourceforge.net
+#   YAML IRC Channel:   "#yaml on irc.freenode.net"
 #   YAML Cookbook (Ruby): http://yaml4r.sourceforge.net/cookbook/ (local)
 #   YAML Reference Parser: http://yaml.org/ypaste/
 
@@ -44,11 +44,22 @@ locale :			en_en
 #    or
 #      watch:
 #        controller:		true
-#        config: true
+#        config:        true
 #        views:			true
-#        translations: true
+#        translations:  true
 #
-watch:   true
+watch:                  false
 
 github:
-  url :  "https://github.com/nodefony/nodefony-core/commit/"
+  url :                 "https://github.com/nodefony/nodefony-core/commit/"
+
+socketio-bundle:
+  socket.io:
+    https      :
+      path     :        /socket.io
+      namespace:
+        reveal:
+          pattern:      "/reveal"
+          defaults:     {
+            controller: "documentation:socket:reveal"
+            }

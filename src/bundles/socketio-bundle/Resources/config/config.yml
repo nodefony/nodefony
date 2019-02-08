@@ -12,16 +12,16 @@
 #
 # This file is YAML  FILE
 # ---
-# YAML: YAML Ain't Markup Language
+# YAML:               YAML Ain't Markup Language
 #
-# What It Is: YAML is a human friendly data serialization
+# What It Is:         YAML is a human friendly data serialization
 #   standard for all programming languages.
 #
 
 
 ########## nodefony-core CONFIG BUNDLE  socketio-bundle  ############
-type        : "nodefony"
-locale      : en_en
+type        :         "nodefony"
+locale      :         en_en
 
 
 #:w
@@ -41,24 +41,22 @@ locale      : en_en
 #        translations   : true
 #        webpack        : true
 #        services       : true
-watch       : true
+watch       :         true
 
-
-#
-#
-#	Insert here the bundle-specific configurations
-#
-#	You can also override config of another bundle
-#	with the name of the bundle
-#
-#	example : create an other database connector
-#
 
 
 socket.io:
-  http       : false
+  http       :        false
   https      :
-    path     : /io
+    path     :        /socket.io
     namespace:
-      - chat
-      - event
+      chat    :
+        pattern:      "/chat"
+        defaults:     {
+          controller: "socketio:default:chat"
+          }
+      events   :
+        pattern:      "/events"
+        defaults:     {
+          controller: "socketio:default:events"
+          }

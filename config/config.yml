@@ -69,6 +69,7 @@ system:
   # BUNDLES LOCAL
   bundles:
     test-bundle                 : "file:src/bundles/test-bundle"
+    #socketio-bundle             : "file:src/bundles/socketio-bundle"
     #workbox-bundle              : "file:src/bundles/workbox-bundle"
     #argon-bundle                : "file:src/bundles/argon-bundle"
     #uikit-bundle                : "file:src/bundles/uikit-bundle"

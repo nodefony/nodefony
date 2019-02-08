@@ -12,13 +12,24 @@ module.exports = class slideController extends nodefony.controller {
     super(container, context);
   }
 
-  indexAction() {
+  slidesAction() {
     this.hideDebugBar();
-    return this.render("documentation:slide:index.html.twig");
+    return this.render("documentation:slide:slides.html.twig");
   }
 
   notesAction() {
     this.hideDebugBar();
     return this.render("documentation:slide:notes.html.twig");
   }
+
+  slidesServerAction() {
+    this.hideDebugBar();
+    return this.render("documentation:slide:slides-server.html.twig");
+  }
+
+  notesServerAction() {
+    this.hideDebugBar();
+    return this.render("documentation:slide:notes-server.html.twig");
+  }
+
 };

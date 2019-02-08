@@ -9,50 +9,51 @@
  *  require('../css/mycss.css')
  *
  */
-require("../css/socketio.css");
-const io = require('socket.io-client');
+import "../css/socketio.css";
+/*import {
+  io
+} from 'socket.io-client';*/
+const io = require("socket.io-client");
+/*
+ *	Class
+ *
+ *	Namespace socketio client side
+ *
+ */
+class Socketio {
 
-module.exports = function () {
+  constructor() {
+    this.chatSocket = io("/chat", {
+      transports: ['websocket'],
+      path: '/socket.io'
+    });
+    this.listen(this.chatSocket);
+    this.eventSocket = io("/event", {
+      transports: ['websocket'],
+      path: '/socket.io'
+    });
+    this.listen(this.eventSocket);
 
-  /*
-   *	Class
-   *
-   *	Namespace socketio client side
-   *
-   */
-  const socketio = class socketio {
+    this.chatSocket.on('message', (data) => {
+      console.log(data);
+    });
 
-    constructor() {
-      this.chatSocket = io("/chat", {
-        transports: ['websocket'],
-        path: '/socket.io'
-      });
-      this.listen(this.chatSocket);
-      this.envetSocket = io("/event", {
-        transports: ['websocket'],
-        path: '/socket.io'
-      });
-      this.listen(this.envetSocket);
+  }
 
-    }
+  listen(socket) {
+    socket.on('connect', () => {
+      console.log("connect");
+    });
 
-    listen(socket) {
-      socket.on('connect', () => {
-        console.log("connect");
-      });
-      socket.on('event', (data) => {
-        console.log(data);
-      });
-      socket.on('error', (err) => {
-        console.log(err);
-      });
-      socket.on('disconnect', () => {
-        console.log("disconnect");
-      });
+    socket.on('error', (err) => {
+      console.log(err);
+    });
+    socket.on('disconnect', () => {
+      console.log("disconnect");
+    });
 
-    }
+  }
 
-  };
+}
 
-  return new socketio();
-}();
+export default new Socketio();

@@ -459,12 +459,16 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     if (context.resolver.route && context.resolver.route.defaults) {
       let tab = context.resolver.route.defaults.controller.split(":");
       let contr = (tab[1] ? tab[1] : "default");
+      let filePath = "dynamic";
+      if (context.resolver.route.filePath) {
+        filePath = path.basename(path.resolve(context.resolver.route.filePath));
+      }
       context.profiling.routeur = {
         bundle: context.resolver.bundle.name,
         action: tab[2] + "Action",
         pattern: context.resolver.route.defaults.controller,
         Controller: contr + "Controller",
-        file: path.basename(path.resolve(context.resolver.route.filePath))
+        file: filePath
       };
     } else {
       context.profiling.routeur = {
@@ -555,7 +559,11 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
   }
 
   httpRequest(context) {
-    context.profiling.timeStamp = context.request.request.nodefony_time;
+    if (context.request.request) {
+      context.profiling.timeStamp = context.request.request.nodefony_time;
+    } else {
+      context.profiling.timeStamp = 0;
+    }
     let content = null;
     switch (context.request.contentType) {
       case "multipart/form-data":

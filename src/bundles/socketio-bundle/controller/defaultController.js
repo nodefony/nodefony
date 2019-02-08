@@ -18,15 +18,21 @@ module.exports = class defaultController extends nodefony.controller {
    *
    */
   indexAction() {
+
     switch (this.context.method) {
-    case "GET":
-      try {
-        return this.render("socketio-bundle::index.html.twig", {
-          name: "socketio-bundle"
-        });
-      } catch (e) {
-        throw e;
-      }
+      case "GET":
+        try {
+          return this.render("socketio-bundle::index.html.twig", {
+            name: "socketio-bundle"
+          });
+        } catch (e) {
+          throw e;
+        }
+        break;
+      case "WEBSOCKET":
+
+
+        break;
     }
   }
 };

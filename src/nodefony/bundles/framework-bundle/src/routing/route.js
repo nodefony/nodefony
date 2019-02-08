@@ -1,6 +1,6 @@
-module.exports = nodefony.register("Route", function () {
+module.exports = nodefony.register("Route", function() {
 
-  const decode = function (str) {
+  const decode = function(str) {
     try {
       return decodeURIComponent(str);
     } catch (err) {
@@ -37,7 +37,16 @@ module.exports = nodefony.register("Route", function () {
         this.setPrefix(obj.prefix);
         this.setPattern(obj.pattern);
         this.setHostname(obj.host);
+        this.setDefaults(obj.defaults);
         this.compile();
+      }
+    }
+
+    setDefaults(arg) {
+      if (arg) {
+        for (let ob in arg) {
+          this.addDefault(ob, arg[ob]);
+        }
       }
     }
 
@@ -47,7 +56,9 @@ module.exports = nodefony.register("Route", function () {
     }
 
     setName(name) {
-      this.name = name;
+      if (name) {
+        this.name = name;
+      }
     }
 
     setPattern(pattern) {
@@ -116,12 +127,12 @@ module.exports = nodefony.register("Route", function () {
     checkDefaultParameters(variable) {
       for (let def in this.defaults) {
         switch (def) {
-        case "controller":
-          continue;
-        default:
-          if (def === variable) {
-            return true;
-          }
+          case "controller":
+            continue;
+          default:
+            if (def === variable) {
+              return true;
+            }
         }
       }
       return false;
@@ -139,10 +150,10 @@ module.exports = nodefony.register("Route", function () {
       } else {
         for (let def in this.defaults) {
           switch (def) {
-          case "controller":
-            continue;
-          default:
-            res.push(this.defaults[def]);
+            case "controller":
+              continue;
+            default:
+              res.push(this.defaults[def]);
           }
         }
       }
@@ -202,16 +213,16 @@ module.exports = nodefony.register("Route", function () {
           let result = null;
           if (req) {
             switch (nodefony.typeOf(req)) {
-            case "RegExp":
-              result = req.test(param);
-              break;
-            case "string":
-              result = new RegExp(req).test(param);
-              break;
-            default:
-              throw {
-                BreakException: "Requirement Routing config Exception variable : " + k + " must be RegExp or string : " + nodefony.typeOf(req)
-              };
+              case "RegExp":
+                result = req.test(param);
+                break;
+              case "string":
+                result = new RegExp(req).test(param);
+                break;
+              default:
+                throw {
+                  BreakException: "Requirement Routing config Exception variable : " + k + " must be RegExp or string : " + nodefony.typeOf(req)
+                };
             }
             if (!result) {
               map = false;
@@ -261,52 +272,52 @@ module.exports = nodefony.register("Route", function () {
       if (this.hasRequirements()) {
         for (let i in this.requirements) {
           switch (i) {
-          case "method":
-            switch (typeof this.requirements[i]) {
-            case "string":
-              let req = this.requirements[i].replace(/\s/g, "").toUpperCase();
-              if (req.split(",").lastIndexOf(context.method) < 0) {
-                let error = new Error("Method " + context.method + " Unauthorized");
+            case "method":
+              switch (typeof this.requirements[i]) {
+                case "string":
+                  let req = this.requirements[i].replace(/\s/g, "").toUpperCase();
+                  if (req.split(",").lastIndexOf(context.method) < 0) {
+                    let error = new Error("Method " + context.method + " Unauthorized");
+                    error.code = 401;
+                    error.type = "method";
+                    throw error;
+                  }
+                  break;
+                case "object":
+                  if (this.requirements[i].indexOf(context.method) < 0) {
+                    if (this.requirements[i].indexOf(context.method.toLowerCase()) < 0) {
+                      let error = new Error("Method " + context.method + " Unauthorized");
+                      error.code = 401;
+                      error.type = "method";
+                      throw error;
+                    }
+                  }
+                  break;
+                default:
+                  throw new Error("Bad config route method : " + this.requirements[i]);
+              }
+              break;
+            case "domain":
+              if (context.domain !== this.requirements[i]) {
+                let error = new Error("Domain " + context.domain + " Unauthorized");
                 error.code = 401;
-                error.type = "method";
+                error.type = "domain";
                 throw error;
               }
               break;
-            case "object":
-              if (this.requirements[i].indexOf(context.method) < 0) {
-                if (this.requirements[i].indexOf(context.method.toLowerCase()) < 0) {
-                  let error = new Error("Method " + context.method + " Unauthorized");
-                  error.code = 401;
-                  error.type = "method";
-                  throw error;
-                }
+            case "protocol":
+              switch (context.method) {
+                case "WEBSOCKET":
+                  //console.log("this.requirements[i]" +this.requirements[i]);
+                  if (context.acceptedProtocol !== this.requirements[i]) {
+                    let error = new Error("Protocol " + context.acceptedProtocol + " Unauthorized");
+                    error.code = 1002;
+                    error.type = "protocol";
+                    throw error;
+                  }
+                  break;
               }
               break;
-            default:
-              throw new Error("Bad config route method : " + this.requirements[i]);
-            }
-            break;
-          case "domain":
-            if (context.domain !== this.requirements[i]) {
-              let error = new Error("Domain " + context.domain + " Unauthorized");
-              error.code = 401;
-              error.type = "domain";
-              throw error;
-            }
-            break;
-          case "protocol":
-            switch (context.method) {
-            case "WEBSOCKET":
-              //console.log("this.requirements[i]" +this.requirements[i]);
-              if (context.acceptedProtocol !== this.requirements[i]) {
-                let error = new Error("Protocol " + context.acceptedProtocol + " Unauthorized");
-                error.code = 1002;
-                error.type = "protocol";
-                throw error;
-              }
-              break;
-            }
-            break;
           }
         }
       }

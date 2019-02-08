@@ -3,7 +3,7 @@ const jquery = require("jquery");
 
 const marked = require("reveal.js/plugin/markdown/marked.js");
 
-import "../css/notes.css";
+import "../../css/notes.css";
 
 const SPEAKER_LAYOUTS = {
   'default': 'Default',
@@ -62,6 +62,7 @@ class Notes {
       if (data.state) {
         delete data.state.overview;
       }
+      console.log(data)
       // Messages sent by the notes plugin inside of the main window
       if (data && data.namespace === 'reveal-notes') {
         if (data.type === 'connect') {

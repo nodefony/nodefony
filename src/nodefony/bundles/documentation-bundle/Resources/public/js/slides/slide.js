@@ -51,10 +51,10 @@ class Slide {
           gfm: true,
           tables: true,
           breaks: true,
-          sanitize: false,
+          sanitize: true,
           smartLists: true,
           smartypants: true,
-          xhtml: false
+          xhtml: true
         },
         //width: 960,
         //height: 700,

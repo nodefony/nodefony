@@ -162,7 +162,7 @@ nodefony.register("Context", () => {
         //throw new nodefony.Error(`is_granted method No token found !! `);
         return false;
       }
-      if (typeof (role) === "string") {
+      if (typeof(role) === "string") {
         return this.token.hasRole(role);
       } else {
         throw new nodefony.Error(`is_granted Bad role type you must give role example "ROLE_USER" actually : ${role}`);
@@ -215,13 +215,13 @@ nodefony.register("Context", () => {
         return false;
       }*/
       switch (true) {
-      case this.response.body instanceof Buffer:
-        this.response.body = this.response.body.toString(this.response.encoding);
-        break;
-      case (typeof this.response.body === "string"):
-        break;
-      default:
-        return false;
+        case this.response.body instanceof Buffer:
+          this.response.body = this.response.body.toString(this.response.encoding);
+          break;
+        case (typeof this.response.body === "string"):
+          break;
+        default:
+          return false;
       }
       if (this.response.body.indexOf("</body>") >= 0) {
         return this.showDebugBar;
