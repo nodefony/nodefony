@@ -1,5 +1,5 @@
 const Request = require('request');
-module.exports = nodefony.register("controller", function () {
+module.exports = nodefony.register("controller", function() {
 
   class Controller extends nodefony.Service {
     constructor(container, context) {

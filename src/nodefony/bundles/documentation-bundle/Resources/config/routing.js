@@ -13,7 +13,7 @@ module.exports = {
       controller: "documentation:slide:notes"
     }
   },
-  "documentation-slides-server": {
+  /*"documentation-slides-server": {
     pattern: "/documentation/slides/server",
     defaults: {
       controller: "documentation:slide:slidesServer"
@@ -24,7 +24,7 @@ module.exports = {
     defaults: {
       controller: "documentation:slide:notesServer"
     }
-  },
+  },*/
   "documentation-search": {
     pattern: "/documentation/search",
     defaults: {

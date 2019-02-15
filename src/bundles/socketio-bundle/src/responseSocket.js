@@ -20,6 +20,9 @@ nodefony.register("socketResponse", function() {
       // struct headers
       this.headers = {};
       this.type = "utf8";
+      if (socket.nsp && this.socket.nsp.name) {
+        this.nsp = this.socket.nsp.name;
+      }
     }
 
     setConnection(socket) {
@@ -55,16 +58,33 @@ nodefony.register("socketResponse", function() {
     }
 
     send(data, type) {
+      //console.log("pass send", data)
       if (data) {
-        return this.socket.emit(data);
-      } else {
-        if (this.body) {
-          if (!type) {
-            type = this.encoding;
-          }
-          return this.send(this.body);
+        switch (nodefony.typeOf(data)) {
+          case 'string':
+            try {
+              data = JSON.parse(data);
+            } catch (e) {
+              data = [data];
+            }
+            break;
+          case 'array':
+            break;
+          default:
+            data = [data];
         }
+        return this.socket.emit.apply(this.socket, data);
       }
+
+      if (this.body) {
+        if (!type) {
+          type = this.encoding;
+        }
+        let res = this.send(this.body);
+        this.body = "";
+        return res;
+      }
+
       this.body = "";
     }
 

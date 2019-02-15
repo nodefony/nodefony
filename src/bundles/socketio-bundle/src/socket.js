@@ -7,8 +7,8 @@ nodefony.register.call(nodefony.context, "socket", function() {
       this.request = socket.conn.request;
       this.type = type;
       this.socket = socket;
-      this.protocol = (type === "HTTPS") ? "wss" : "ws";
-      this.scheme = (type === "HTTPS") ? "wss" : "ws";
+      this.protocol = (type === "WEBSOCKET SECURE") ? "wss" : "ws";
+      this.scheme = (type === "WEBSOCKET SECURE") ? "wss" : "ws";
       this.isJson = true;
       this.method = this.getMethod();
 
@@ -20,7 +20,20 @@ nodefony.register.call(nodefony.context, "socket", function() {
         this.urlP = url.parse(href);
         this.request.url = this.urlP;
       } else {
-        this.urlP = this.request.url;
+        if (!this.request.url.host) {
+          let path = `${this.scheme}://${this.request.handshake.headers.host}${this.request.resourceURL.path}`;
+          this.urlP = url.parse(path);
+          this.request.url = this.urlP;
+        } else {
+          this.urlP = this.request.url;
+        }
+        /*if (!this.request.url.host || this.request.url.host === "undefined") {
+          //console.log(this.request.headers["referer"], this.request.headers.referer)
+          this.urlP = url.parse(this.request.headers.referer);
+          this.request.url = this.urlP;
+        } else {
+          this.urlP = this.request.url;
+        }*/
       }
       if (this.socket.nsp && this.socket.nsp.name) {
         if (this.socket.nsp.name !== "/") {
@@ -49,16 +62,43 @@ nodefony.register.call(nodefony.context, "socket", function() {
       this.domain = this.getHostName();
       this.validDomain = this.isValidDomain();
 
-      this.once("connect", () => {
-        this.handle(this.resolver.acceptedProtocol);
+      this.once("connect", (socket) => {
+        this.handle(socket);
       });
 
       this.socket.on('disconnect', (err) => {
         this.logger(err, "ERROR");
+        let res = this.handleMessage(["disconnect", err]);
+        if (nodefony.isPromise(res)) {
+          return res.then((ele) => {
+            return this.close(ele);
+          });
+        }
         this.close(err);
       });
 
-      this.socket.on('event', this.handleMessage.bind(this));
+      // middleware use
+      this.socket.use((packet, next) => {
+        let result = null;
+        try {
+          result = this.handleMessage.call(this, packet);
+        } catch (e) {
+          this.logger(e, "ERROR");
+          return next(e);
+        }
+        if (nodefony.isPromise(result)) {
+          return result
+            .then((data) => {
+              next();
+              return data;
+            })
+            .catch((e) => {
+              this.logger(e, "ERROR");
+              next(e);
+            });
+        }
+        return next();
+      });
 
       //case proxy
       this.proxy = null;
@@ -76,37 +116,21 @@ nodefony.register.call(nodefony.context, "socket", function() {
       this.crossDomain = this.isCrossDomain();
     }
 
-    handle(data) {
-
+    handle(socket) {
       try {
         this.locale = this.translation.handle();
-        if (!this.resolver) {
-          this.resolver = this.router.resolve(this);
-        } else {
-          //console.log(this.resolver.route)
-          try {
-            this.resolver.match(this.resolver.route, this);
-          } catch (e) {
-            console.log(e)
-            this.request.reject();
-            throw e;
-          }
-        }
         //WARNING EVENT KERNEL
         this.fire("onRequest", this, this.resolver);
         this.kernel.fire("onRequest", this, this.resolver);
-        if (this.resolver.resolve) {
-          return this.resolver.callController(data || null);
-        } else {
-          this.request.reject();
-        }
+        return this.handleMessage(["connect", socket]);
       } catch (e) {
-        console.log(e)
+        console.log(e);
         this.fire("onError", this.container, e);
       }
     }
 
     handleMessage(message) {
+      //console.log(message)
       this.response.body = message;
       try {
         if (!this.resolver) {
@@ -115,7 +139,8 @@ nodefony.register.call(nodefony.context, "socket", function() {
           try {
             this.resolver.match(this.resolver.route, this);
           } catch (e) {
-            this.request.reject();
+            this.logger(e, "ERROR");
+            this.socket.disconnect();
             this.fire("onError", this.container, e);
             return;
           }
@@ -124,9 +149,10 @@ nodefony.register.call(nodefony.context, "socket", function() {
         if (this.resolver.resolve) {
           return this.resolver.callController(message);
         } else {
-          this.request.reject();
+          this.socket.disconnect();
         }
       } catch (e) {
+        this.logger(e, "ERROR");
         this.fire("onError", this.container, e);
       }
     }
@@ -174,10 +200,6 @@ nodefony.register.call(nodefony.context, "socket", function() {
       if (this.response) {
         return this.response.close(description);
       }
-    }
-
-    drop(reasonCode, description) {
-      //return this.response.drop(reasonCode, description);
     }
 
   };

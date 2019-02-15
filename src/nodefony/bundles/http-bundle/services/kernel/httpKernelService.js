@@ -4,6 +4,8 @@
  *
  *
  */
+const clientErrorExclude = /SSL alert number 46|SSL alert number 48/;
+
 module.exports = class httpKernel extends nodefony.Service {
 
   constructor(container, serverStatics) {
@@ -54,7 +56,10 @@ module.exports = class httpKernel extends nodefony.Service {
     });
 
     this.on("onClientError", (e, socket) => {
-      this.logger(e, "WARNING", "SOCKET CLIENT ERROR");
+      let exclude = clientErrorExclude.test(e.message);
+      if (!exclude) {
+        this.logger(e, "WARNING", "SOCKET CLIENT ERROR");
+      }
       socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
     });
   }

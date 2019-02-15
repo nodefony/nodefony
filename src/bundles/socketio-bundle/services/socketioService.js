@@ -28,18 +28,26 @@ module.exports = class Socketio extends nodefony.Service {
     switch (type) {
       case "HTTP":
         if (this.settings.http) {
+          type = "WEBSOCKET";
           this.io = io(service.server, this.setOptions(this.settings.http));
           this.logger(`Create Socket.io server `);
-          this.setNameSpace(this.io, this.settings.http.namespace, type);
-          return this.handle(this.io, type);
+          this.io.on('connect', (socket) => {
+            this.handleSocket(socket, type);
+          });
+          return this.setNameSpace(this.io, this.settings.http.namespaces, type);
+          //return this.handle(this.io, type);
         }
         break;
       case "HTTPS":
         if (this.settings.https) {
+          type = "WEBSOCKET SECURE";
           this.iosecure = io(service.server, this.setOptions(this.settings.https));
-          this.logger(`Create Socket.io Secure Server `);
-          this.setNameSpace(this.iosecure, this.settings.https.namespace, type);
-          return this.handle(this.iosecure, type);
+          this.iosecure.on('connect', (socket) => {
+            this.handleSocket(socket, type);
+          });
+          //this.logger(`Create Socket.io Secure Server `);
+          return this.setNameSpace(this.iosecure, this.settings.https.namespaces, type);
+          //return this.handle(this.iosecure, type);
         }
         break;
       default:
@@ -111,12 +119,29 @@ module.exports = class Socketio extends nodefony.Service {
 
   createNameSpace(name, config, server, type) {
     this.namespaces[name] = server.of(config.pattern);
-    this.createDynamicRoute(this.namespaces[name], config, server, type);
-    this.handle(this.namespaces[name], type);
-    this.logger(`Add socket.io namespace ${name}`);
+    this.createDynamicRoute(this.namespaces[name], config, server);
+    return this.handle(this.namespaces[name], type);
+
+
   }
 
-  createDynamicRoute(ns, config, server, type) {
+  handle(ns, type) {
+    this.logger(`Add socket.io namespace ${ns.name}`);
+    try {
+      return ns.on('connect', (socket) => {
+        this.logger(`CONNECTION Namespace : ${socket.nsp.name} id :  ${socket.id}`, "INFO");
+        let context = this.createSocketContext(socket, type);
+        return this.kernelHttp.handleFrontController(context)
+          .then(() => {
+            context.fire("connect", socket);
+          });
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  createDynamicRoute(ns, config, server) {
     let conf = nodefony.extend({}, {
       prefix: server._path
     }, config);
@@ -129,24 +154,10 @@ module.exports = class Socketio extends nodefony.Service {
     return this.namespaces[ns] || null;
   }
 
-  handle(ns, type) {
-    try {
-      return ns.on('connect', (socket) => {
-        this.logger(` CONNECTION  ${socket.id}`, "INFO");
-        //console.log("connect : ", socket.nsp.name);
-        //console.log(socket.nsp)
-        return this.handleSocket(socket, type);
-      });
-    } catch (e) {
-      throw e;
-    }
-  }
-
   handleSocket(socket, type) {
-    let container = this.kernel.container.enterScope("request");
     let context = null;
     try {
-      context = this.createSocketContext(container, socket, type);
+      context = this.createSocketContext(socket, type);
       this.logger("FROM : " + context.remoteAddress +
         " ORIGIN : " + context.originUrl.host +
         " URL : " + context.url, "INFO", type);
@@ -158,9 +169,9 @@ module.exports = class Socketio extends nodefony.Service {
         }
       }
     } catch (e) {
-      console.log(e)
+      this.logger(e, "ERROR");
       if (context) {
-        context.fire("onError", container, e);
+        context.fire("onError", context.container, e);
         return Promise.resolve(context);
       } else {
         return Promise.reject(e);
@@ -169,7 +180,10 @@ module.exports = class Socketio extends nodefony.Service {
     return this.kernelHttp.handleFrontController(context)
       .then((controller) => {
         if (context.secure) {
-          return context.fire("connect");
+          if (context.security || context.isControlledAccess) {
+            return this.firewall.handleSecurity(context);
+          }
+          return context.fire("connect", socket);
         }
         try {
           if (context.sessionAutoStart || context.hasSession()) {
@@ -184,29 +198,33 @@ module.exports = class Socketio extends nodefony.Service {
                     this.firewall.getSessionToken(context, session);
                   }
                 } catch (e) {
-                  context.fire("onError", container, e);
+                  this.logger(e, "ERROR");
+                  context.fire("onError", context.container, e);
                   return context;
                 }
-                context.fire("connect");
+                context.fire("connect", socket);
               }).catch((error) => {
-                context.fire("onError", container, error);
+                this.logger(error, "ERROR");
+                context.fire("onError", context.container, error);
                 return context;
               });
           } else {
-            context.fire("connect");
+            context.fire("connect", socket);
           }
         } catch (e) {
-          context.fire("onError", container, e);
+          this.logger(e, "ERROR");
+          context.fire("onError", context.container, e);
         }
         return context;
       }).catch(e => {
-        console.log(e)
-        context.fire("onError", container, e);
+        this.logger(e, "ERROR");
+        context.fire("onError", context.container, e);
         return context;
       });
   }
 
-  createSocketContext(container, socket, type) {
+  createSocketContext(socket, type) {
+    let container = this.kernel.container.enterScope("request");
     let context = new nodefony.context.socket(container, socket, type);
     context.listen(this, "onError", this.onError);
     context.once('onFinish', (context) => {
@@ -216,12 +234,6 @@ module.exports = class Socketio extends nodefony.Service {
       socket = null;
       container = null;
       type = null;
-    });
-    context.once('onConnect', (context, socket) => {
-      if (context.security || context.isControlledAccess) {
-        return this.firewall.handleSecurity(context);
-      }
-      return context.handle(socket);
     });
     return context;
   }

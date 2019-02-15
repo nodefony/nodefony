@@ -24,18 +24,23 @@ class Socketio {
 
   constructor() {
     this.chatSocket = io("/chat", {
-      transports: ['websocket'],
-      path: '/socket.io'
+      //transports: ['websocket'],
+      path: '/socket.io',
+      forceNew: true
     });
     this.listen(this.chatSocket);
-    this.eventSocket = io("/event", {
-      transports: ['websocket'],
-      path: '/socket.io'
+
+    this.eventSocket = io("/events", {
+      //transports: ['websocket'],
+      path: '/socket.io',
+      forceNew: true
     });
     this.listen(this.eventSocket);
-
-    this.chatSocket.on('message', (data) => {
+    this.eventSocket.on('myevent', (data) => {
       console.log(data);
+    });
+    this.eventSocket.emit("ready", this.eventSocket.nsp, (data) => {
+      console.log(data)
     });
 
   }
@@ -51,6 +56,12 @@ class Socketio {
     socket.on('disconnect', () => {
       console.log("disconnect");
     });
+
+    setTimeout(() => {
+      socket.emit("ready", socket.nsp);
+    }, 500);
+
+
 
   }
 
