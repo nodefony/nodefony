@@ -9,7 +9,7 @@ module.exports = class defaultController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
-    this.socketio = this.get("socketio");
+    this.interval = null;
   }
 
   /**
@@ -18,21 +18,61 @@ module.exports = class defaultController extends nodefony.controller {
    *
    */
   indexAction() {
+    try {
+      return this.render("socketio-bundle::index.html.twig", {
+        name: "socketio-bundle"
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
 
-    switch (this.context.method) {
-      case "GET":
-        try {
-          return this.render("socketio-bundle::index.html.twig", {
-            name: "socketio-bundle"
+  chatAction(eventName, message) {
+    //console.log(arguments)
+    switch (eventName) {
+      case "connect":
+        this.logger(`${eventName} : ${message.nsp.name}`);
+        this.interval = setInterval(() => {
+          this.context.socket.emit("message", {
+            nodefony: "dqslkdjqlsdkj"
           });
-        } catch (e) {
-          throw e;
-        }
+        }, 10000);
         break;
-      case "WEBSOCKET":
-
+      case "ready":
+        this.logger(`${eventName} ${message}`);
+        break;
+      case "disconnect":
+        console.log("disconnect");
+        //this.logger(message);
+        if (this.interval) {
+          clearInterval(this.interval);
+          this.interval = null;
+        }
 
         break;
     }
   }
+
+  eventsAction(eventName, message, ack) {
+    //console.log(arguments)
+    switch (eventName) {
+      case "connect":
+        this.logger(`${eventName} : ${message.nsp.name}`);
+        break;
+      case "ready":
+        //console.log(arguments)
+        this.logger(`${eventName} ${message}`);
+        if (ack) {
+          ack("sbobobobo")
+        }
+        return this.renderJson(["myevent", {
+          pastis: "51"
+        }]);
+      case "disconnect":
+        console.log("disconnect");
+        break;
+    }
+  }
+
+
 };

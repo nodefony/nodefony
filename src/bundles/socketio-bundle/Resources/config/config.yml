@@ -49,7 +49,7 @@ socket.io:
   http       :        false
   https      :
     path     :        /socket.io
-    namespace:
+    namespaces:
       chat    :
         pattern:      "/chat"
         defaults:     {

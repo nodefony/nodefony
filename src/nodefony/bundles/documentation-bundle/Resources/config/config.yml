@@ -57,7 +57,7 @@ socketio-bundle:
   socket.io:
     https      :
       path     :        /socket.io
-      namespace:
+      namespaces:
         reveal:
           pattern:      "/reveal"
           defaults:     {

@@ -613,14 +613,25 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
 
     //console.log(context.request.remoteAddress)
     //console.log(context.profiling["context"].remoteAddress)
-    context.profiling.request = {
-      url: context.url,
-      headers: context.request.httpRequest.headers,
-      method: context.request.httpRequest.method,
-      protocol: context.scheme,
-      remoteAddress: context.request.remoteAddress,
-      serverConfig: configServer,
-    };
+    if (context.request.httpRequest) {
+      context.profiling.request = {
+        url: context.url,
+        headers: context.request.httpRequest.headers,
+        method: context.request.httpRequest.method,
+        protocol: context.scheme,
+        remoteAddress: context.request.remoteAddress,
+        serverConfig: configServer,
+      };
+    } else {
+      context.profiling.request = {
+        url: context.url,
+        headers: "",
+        method: "",
+        protocol: context.scheme,
+        remoteAddress: context.request.remoteAddress,
+        serverConfig: null,
+      };
+    }
     let config = {};
     for (conf in context.response.config) {
       if (conf === "httpServer") {
@@ -749,7 +760,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     /*if (!context.resolver.route) {
       return false;
     }*/
-    if (context.resolver.route && context.resolver.route.name.match(/^monitoring-/)) {
+    if (context.resolver && context.resolver.route && context.resolver.route.name.match(/^monitoring-/)) {
       return false;
     }
     /*if (!context.resolver.resolve) {

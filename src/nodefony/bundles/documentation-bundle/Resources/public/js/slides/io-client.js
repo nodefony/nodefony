@@ -85,12 +85,17 @@ class NotesClient {
   }
 
   initSocket() {
-    this.socket = io.connect(this.url);
+    this.socket = io.connect(this.url, {
+      transports: ['websocket'],
+      path: '/socket.io',
+      forceNew: true
+    });
     this.socketId = Math.random().toString().slice(2);
 
     console.log('View slide notes at ' + window.location.origin + '/documentation/notes/server/' + this.socketId);
 
     this.socket.on('new-subscriber', (data) => {
+      console.log("new - subscriber")
       this.post();
     });
 

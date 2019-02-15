@@ -14,7 +14,7 @@ module.exports = class slideController extends nodefony.controller {
 
   slidesAction() {
     this.hideDebugBar();
-    return this.render("documentation:slide:slides.html.twig");
+    return this.render("documentation:slide:slides-demo.html.twig");
   }
 
   notesAction() {
@@ -22,7 +22,7 @@ module.exports = class slideController extends nodefony.controller {
     return this.render("documentation:slide:notes.html.twig");
   }
 
-  slidesServerAction() {
+  /*slidesServerAction() {
     this.hideDebugBar();
     return this.render("documentation:slide:slides-server.html.twig");
   }
@@ -30,6 +30,6 @@ module.exports = class slideController extends nodefony.controller {
   notesServerAction() {
     this.hideDebugBar();
     return this.render("documentation:slide:notes-server.html.twig");
-  }
+  }*/
 
 };
