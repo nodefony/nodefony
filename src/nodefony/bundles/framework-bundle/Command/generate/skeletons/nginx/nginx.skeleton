@@ -13,6 +13,24 @@ server {
     set $via  "$http_via, $via";
   }
 
+	# letsEncrypt webroot
+	location ^~ /.well-known/acme-challenge/ {
+    # Set correct content type. According to this:
+    # https://community.letsencrypt.org/t/using-the-webroot-domain-verification-method/1445/29
+    # Current specification requires "text/plain" or no content header at all.
+    # It seems that "text/plain" is a safe option.
+    default_type "text/plain";
+    try_files $uri /$1;
+
+    # This directory must be the same as in /etc/letsencrypt/cli.ini
+    # as "webroot-path" parameter. Also don't forget to set "authenticator" parameter
+    # there to "webroot".
+    # Do NOT use alias, use root! Target directory is located here:
+    # /var/www/common/letsencrypt/.well-known/acme-challenge/
+
+    root {{publicPath}};
+  }
+
   location / {
     root {{publicPath}} ;
     proxy_pass http://{{proxy_domain}}:{{proxy_http_port}};
@@ -53,6 +71,24 @@ server {
   set  $via  "{{domain}} NGINX $nginx_version";
   if ($http_via) {
     set $via  "$http_via, $via";
+  }
+
+	# letsEncrypt webroot
+	location ^~ /.well-known/acme-challenge/ {
+    # Set correct content type. According to this:
+    # https://community.letsencrypt.org/t/using-the-webroot-domain-verification-method/1445/29
+    # Current specification requires "text/plain" or no content header at all.
+    # It seems that "text/plain" is a safe option.
+    default_type "text/plain";
+    try_files $uri /$1;
+
+    # This directory must be the same as in /etc/letsencrypt/cli.ini
+    # as "webroot-path" parameter. Also don't forget to set "authenticator" parameter
+    # there to "webroot".
+    # Do NOT use alias, use root! Target directory is located here:
+    # /var/www/common/letsencrypt/.well-known/acme-challenge/
+
+    root {{publicPath}};
   }
 
   location / {

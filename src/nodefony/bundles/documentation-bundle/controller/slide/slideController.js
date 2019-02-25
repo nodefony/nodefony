@@ -14,22 +14,23 @@ module.exports = class slideController extends nodefony.controller {
 
   slidesAction() {
     this.hideDebugBar();
-    return this.render("documentation:slide:slides-demo.html.twig");
+    //return this.render("documentation:slide:slides-demo.html.twig");
+    return this.render("documentation:slides:nodefony.html.twig");
   }
 
   notesAction() {
     this.hideDebugBar();
-    return this.render("documentation:slide:notes.html.twig");
+    return this.render("documentation:slides/notes:notes.html.twig");
   }
 
   /*slidesServerAction() {
     this.hideDebugBar();
-    return this.render("documentation:slide:slides-server.html.twig");
+    return this.render("documentation:slides:slides-server.html.twig");
   }
 
   notesServerAction() {
     this.hideDebugBar();
-    return this.render("documentation:slide:notes-server.html.twig");
+    return this.render("documentation:slides:notes-server.html.twig");
   }*/
 
 };

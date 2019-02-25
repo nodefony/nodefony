@@ -13,7 +13,7 @@ if [ ! -f $CONFIG_FILE ]; then
 fi
 
 DOMAIN=`grep "^\s*domains" $CONFIG_FILE | sed "s/^\s*domains\s*=\s*//" | sed 's/(\s*)\|,.*$//'`
-CERT_FILE="{{locationCertificates}}/$DOMAIN/{{nameCertificates}}"
+CERT_FILE="{{locationCertificates}}/$DOMAIN/{{certificateName}}"
 echo $CERT_FILE
 
 if [ ! -f $CERT_FILE ]; then

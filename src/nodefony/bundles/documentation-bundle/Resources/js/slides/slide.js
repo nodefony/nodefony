@@ -7,7 +7,6 @@ import javascript from 'highlight.js/lib/languages/javascript';
 import 'highlight.js/styles/github.css';
 hljs.registerLanguage('javascript', javascript);
 
-
 require("reveal.js/plugin/markdown/marked.js");
 require("reveal.js/plugin/markdown/markdown.js");
 require("reveal.js/plugin/math/math.js");
@@ -29,6 +28,8 @@ import "reveal.js/css/theme/source/sky.scss";
 //import "reveal.js/css/theme/source/simple.scss";
 
 import "reveal.js/lib/css/zenburn.css";
+
+import '../../css/slides-nodefony.css';
 
 class Slide {
   constructor() {
@@ -80,8 +81,6 @@ class Slide {
 
       hljs.initHighlightingOnLoad();
     });
-
-
   }
 }
 

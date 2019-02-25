@@ -12,11 +12,11 @@
   ],
   "repository": {},
   "dependencies": {
-    "@babel/core": "^7.2.2",
+    "@babel/core": "^7.3.3",
     "@babel/preset-env": "^7.3.1",
     "autoprefixer": "^9.4.7",
     "babel-loader": "^8.0.5",
-    "bootstrap": "^4.2.1",
+    "bootstrap": "^4.3.1",
     "clean-webpack-plugin": "^1.0.1",
     "css-hot-loader": "^1.4.3",
     "css-loader": "^2.1.0",
@@ -33,11 +33,11 @@
     "postcss-loader": "^3.0.0",
     "precss": "^4.0.0",
     "raw-loader": "^1.0.0",
-    "resolve-url-loader": "^3.0.0",
+    "resolve-url-loader": "^3.0.1",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
-    "terser-webpack-plugin": "^1.2.1",
-    "webpack": "^4.29.0",
+    "terser-webpack-plugin": "^1.2.2",
+    "webpack": "^4.29.4",
     "webpack-merge": "^4.2.1"
   },
   "devDependencies": {

@@ -1,0 +1,30 @@
+@import url(https://fonts.googleapis.com/css?family=Comfortaa);
+@import url(https://fonts.googleapis.com/css?family=Gochi+Hand);
+
+.nodefony h1 {
+  font-family: 'Gochi Hand', cursive;
+  color: #0167b8;
+  letter-spacing: 0;
+  font-size: 4em;
+  text-transform: none;
+}
+
+.nodefony sup {
+  font-family: 'Gochi Hand', cursive;
+  font-size: 0.3em;
+  color: #167b87;
+}
+
+.nodefony p {
+  font-family: 'Comfortaa', cursive;
+}
+
+.nodefony-grey {
+  color: #167b87;
+}
+
+.nodefony section img {
+  border: 0;
+  background: none;
+  box-shadow: none;
+}

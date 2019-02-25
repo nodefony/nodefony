@@ -731,6 +731,43 @@ module.exports = nodefony.register("Bundle", function () {
       let res = null;
       let name = null;
       if (basename !== "views") {
+        let dir = new nodefony.fileClass(file.dirName);
+        let tab = [dir.name];
+        while (path.basename(dir.dirName) !== "views") {
+          dir = new nodefony.fileClass(dir.dirName);
+          tab.push(dir.name);
+        }
+        basename = tab.reverse().join("/");
+        if (!this.views[basename]) {
+          this.views[basename] = {};
+        }
+      } else {
+        basename = ".";
+        if (!this.views[basename]) {
+          this.views[basename] = {};
+        }
+      }
+      res = this.regTemplateExt.exec(file.name);
+      if (res) {
+        name = res[1];
+        if (this.views[basename][name]) {
+          delete this.views[basename][name];
+        }
+        return this.views[basename][name] = {
+          name: name,
+          basename: basename,
+          file: file,
+          template: null
+        };
+      }
+      return null;
+    }
+
+    /*setView(file) {
+      let basename = path.basename(file.dirName);
+      let res = null;
+      let name = null;
+      if (basename !== "views") {
         if (!this.views[basename]) {
           this.views[basename] = {};
         }
@@ -764,7 +801,7 @@ module.exports = nodefony.register("Bundle", function () {
         }
       }
       return null;
-    }
+    }*/
 
     recompileTemplate(file, force) {
       let bundle = this;

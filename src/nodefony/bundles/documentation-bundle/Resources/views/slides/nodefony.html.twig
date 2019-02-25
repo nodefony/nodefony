@@ -1,0 +1,39 @@
+{% extends "/app/Resources/views/base.html.twig" %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="/documentation-bundle/assets/css/slide.css"/>
+{% endblock %}
+
+{% block javascripts %}
+  <script type="text/javascript" src="/documentation-bundle/assets/js/slide.js"></script>
+  <script type="text/javascript" src="/documentation/notes.js"></script>
+  <script>
+  	let link = document.createElement( 'link' );
+  	link.rel = 'stylesheet';
+  	link.type = 'text/css';
+  	link.href = window.location.search.match( /print-pdf/gi ) ? '/documentation-bundle/css/print/pdf.css' : '/documentation-bundle/css/print/paper.css';
+  	document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+{% endblock %}
+
+{% block body %}
+<div class="reveal nodefony">
+  <div class="slides">
+
+    <section>
+      <img data-src="{{CDN('image')}}/app/images/app-logo.png">
+      <h1>NodeFony<sup>®</sup></h1>
+      <img width="200px" height="123px" data-src="{{CDN('image')}}/framework-bundle/images/nodejs/nodejs-new-pantone-black.png">
+      <p class="nodefony-grey">
+        Web Framework
+      </p>
+    </section>
+
+    <section  data-background-transition="zoom">
+      <h1>Nodefony<sup>®</sup></h1>
+    </section>
+
+  </div>
+</div>
+
+{% endblock %}
