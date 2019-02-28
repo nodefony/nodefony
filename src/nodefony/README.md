@@ -45,7 +45,7 @@ Nodefony is not an exhaustive port of symfony !
 -   Notion of synchronous or asynchronous execution in Action Controller (Promise).
 -   Services Containers, Dependency Injection (Design Patterns)
 -   Sessions Manager (ORM, memcached)
--   Authentication Manager (Digest, Basic, oAuth, Local, ldap, jwf, openid)
+-   Authentication Manager (Digest, Basic, oAuth, Local, ldap, jwt, openid)
 -   WAF ( Web application firewall )
 -   Cross-Origin Resource Sharing ([CORS](https://www.w3.org/TR/cors/))
 -   Production Management ([PM2](https://github.com/Unitech/pm2/))

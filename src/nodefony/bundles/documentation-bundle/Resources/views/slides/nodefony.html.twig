@@ -1,10 +1,21 @@
 {% extends "/app/Resources/views/base.html.twig" %}
 
+
+{% block meta %}
+  {{ parent() }}
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+{% endblock %}
+
 {% block stylesheets %}
+  {{ parent() }}
   <link rel="stylesheet" href="/documentation-bundle/assets/css/slide.css"/>
 {% endblock %}
 
+
 {% block javascripts %}
+  {{ parent() }}
   <script type="text/javascript" src="/documentation-bundle/assets/js/slide.js"></script>
   <script type="text/javascript" src="/documentation/notes.js"></script>
   <script>
@@ -17,20 +28,68 @@
 {% endblock %}
 
 {% block body %}
+
 <div class="reveal nodefony">
   <div class="slides">
-
     <section>
       <img data-src="{{CDN('image')}}/app/images/app-logo.png">
-      <h1>NodeFony<sup>®</sup></h1>
-      <img width="200px" height="123px" data-src="{{CDN('image')}}/framework-bundle/images/nodejs/nodejs-new-pantone-black.png">
-      <p class="nodefony-grey">
+      <h1>Nodefony<sup>®</sup></h1>
+      <img width="200px" height="123px" data-src="{{CDN('image')}}/framework-bundle/images/nodejs/nodejs-new-pantone-black.png"/>
+      <h5 class="nodefony-grey" style="text-align:center">
         Web Framework
-      </p>
+      </h5>
     </section>
 
-    <section  data-background-transition="zoom">
-      <h1>Nodefony<sup>®</sup></h1>
+    <section>
+      <span>
+        <img data-src="{{CDN('image')}}/app/images/app-logo.png">
+        <h2 style="float:right">Nodefony<sup>®</sup></h2>
+      </span>
+      <div class="container" style="margin-left:auto;margin-right:auto;">
+        <ol style="display:contents">
+          <div class="row">
+              <div class="col-sm">
+                <li><a href="#/2">Features</a></li>
+                <li><a href="#/3">Installation</a></li>
+                <li><a href="#/4">Project Generator</a></li>
+                <li><a href="#/5">Serving Project</a></li>
+              </div>
+              <div class="col-sm">
+                <li><a href="#/6"></a></li>
+                <li><a href="#/7"></a></li>
+                <li><a href="#/8"></a></li>
+                <li><a href="#/8"></a></li>
+              </div>
+          </div>
+        </ol>
+      </div>
+
+    </section>
+
+    <!-- features -->
+    {% include "./features.html.twig" %}
+
+    <!-- INSTALL -->
+    {% include "./install.html.twig" %}
+
+    <!-- CREATE -->
+    {% include "./create.html.twig" %}
+
+    <!-- RUN -->
+    {% include "./run.html.twig" %}
+
+    <section class="center">
+      <img data-src="{{CDN('image')}}/app/images/app-logo.png">
+      <h1>THE END</h1>
+      <ul>
+        <li>
+          <a href="https://github.com/nodefony/nodefony">Git hub</a> <br>
+        </li>
+        <li>
+          <a href="https://nodefony.net">Demo Starter</a>
+        </li>
+      </ul>
+
     </section>
 
   </div>

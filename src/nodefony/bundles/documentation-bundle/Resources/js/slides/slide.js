@@ -1,19 +1,22 @@
 const Reveal = require("reveal.js");
-const jquery = require("jquery");
+//const jquery = require("jquery");
 
-//const hljs = require("highlight.js");
-import hljs from 'highlight.js/lib/highlight';
-import javascript from 'highlight.js/lib/languages/javascript';
-import 'highlight.js/styles/github.css';
-hljs.registerLanguage('javascript', javascript);
+//import "reveal.js/lib/js/head.min.js";
 
 require("reveal.js/plugin/markdown/marked.js");
 require("reveal.js/plugin/markdown/markdown.js");
 require("reveal.js/plugin/math/math.js");
 require("reveal.js/plugin/notes/notes.js");
 require("reveal.js/plugin/zoom-js/zoom.js");
-//require("reveal.js/plugin/highlight/highlight.js");
-//console.log(hljs);
+
+
+import hljs from 'highlight.js/lib/highlight';
+import javascript from 'highlight.js/lib/languages/javascript';
+import bash from 'highlight.js/lib/languages/bash';
+import css from 'highlight.js/lib/languages/css';
+import yaml from 'highlight.js/lib/languages/yaml';
+import twig from 'highlight.js/lib/languages/twig';
+import nginx from 'highlight.js/lib/languages/nginx';
 
 import "reveal.js/css/reveal.scss";
 
@@ -27,21 +30,27 @@ import "reveal.js/css/theme/source/sky.scss";
 //import "reveal.js/css/theme/source/serif.scss";
 //import "reveal.js/css/theme/source/simple.scss";
 
-import "reveal.js/lib/css/zenburn.css";
 
+//import 'highlight.js/styles/mono-blue.css';
+import 'highlight.js/styles/atom-one-dark.css';
+//import 'highlight.js/styles/github.css';
 import '../../css/slides-nodefony.css';
 
 class Slide {
   constructor() {
 
-    jquery(document).ready(() => {
-      this.reveal = Reveal.initialize({
+    //jquery(document).ready(() => {
+      Reveal.initialize({
         controls: true,
         progress: true,
         history: true,
-        center: true,
+        center: false,
+        //rtl:true,
         slideNumber: true,
         showSlideNumber: 'all',
+        transition: 'slide',
+        //transitionSpeed: "slow",
+        //hideAddressBar: true,
         //showNotes: true,
         //autoSlide: 5000,
         postMessage: true,
@@ -66,9 +75,9 @@ class Slide {
         //maxScale: 1.5
         width: "100%",
         height: "100%",
-        margin: 0,
-        minScale: 1,
-        maxScale: 1
+        //margin: 0.06,
+        //minScale: 1,
+        //maxScale: 1
       });
 
       /*Reveal.addKeyBinding({
@@ -78,9 +87,14 @@ class Slide {
       }, () => {
         console.log("pass t ");
       });*/
-
+      hljs.registerLanguage('javascript', javascript);
+      hljs.registerLanguage('bash', bash);
+      hljs.registerLanguage('css', css);
+      hljs.registerLanguage('yaml', yaml);
+      hljs.registerLanguage('twig', twig);
+      hljs.registerLanguage('nginx', nginx);
       hljs.initHighlightingOnLoad();
-    });
+    //});
   }
 }
 

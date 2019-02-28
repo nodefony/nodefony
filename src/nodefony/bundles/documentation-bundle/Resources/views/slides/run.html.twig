@@ -1,0 +1,112 @@
+<section >
+  <section style="top:10px">
+    <div class="container-fluid">
+
+      <h2>Serving Nodefony Project</h2>
+      <h4 style="text-align:center">Developement</h4>
+      <p>
+        Serving a Nodefony project via an development server
+        Starting Development Servers
+      </p>
+      <pre><code class="hljs bash" >
+        $ nodefony dev
+
+        # TO STOP
+        $ &ltctrl-c&gt
+      </code></pre>
+      <p>
+        Starting Development Servers in Debug Mode (-d)
+      </p>
+      <pre><code class="hljs bash" >
+        $ nodefony -d dev
+
+        # TO STOP
+        $ &ltctrl-c&gt
+      </code></pre>
+
+    </div>
+  </section>
+
+  <section >
+    <div class="container-fluid">
+      <h2>Serving Nodefony Project</h2>
+      <h4 style="text-align:center">Production Mode</h4>
+      <p>
+        Starting Servers Production (PM2)
+      </p>
+      <pre><code class="hljs bash" >
+      $ nodefony start
+      # or
+      $ nodefony prod
+
+      ┌──────────────────┬────┬──────────────┬───────┬────────┬─────────┬───────────────────┬─────┬────────┬──────┬──────────┐
+      │ App name         │ id │ mode         │ pid   │ status │ restart │ uptime            │ cpu │ memory │ user │ watching │
+      ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+      │ nodefony-starter │ 0  │ cluster_mode │ 79361 │ online │ -       │ a few seconds ago │ 71% │ 56 MB  │ cci  │ -        │
+      ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+      │ nodefony-starter │ 1  │ cluster_mode │ 79362 │ online │ -       │ a few seconds ago │ 65% │ 54 MB  │ cci  │ -        │
+      ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+      │ nodefony-starter │ 2  │ cluster_mode │ 79365 │ online │ -       │ a few seconds ago │ 55% │ 51 MB  │ cci  │ -        │
+      ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+      │ nodefony-starter │ 3  │ cluster_mode │ 79372 │ online │ -       │ a few seconds ago │ 42% │ 45 MB  │ cci  │ -        │
+      ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+      │ nodefony-starter │ 4  │ cluster_mode │ 79377 │ online │ -       │ a few seconds ago │ 36% │ 39 MB  │ cci  │ -        │
+      ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+      │ nodefony-starter │ 5  │ cluster_mode │ 79382 │ online │ -       │ a few seconds ago │ 25% │ 33 MB  │ cci  │ -        │
+      ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+      │ nodefony-starter │ 6  │ cluster_mode │ 79387 │ online │ -       │ a few seconds ago │ 0%  │ 27 MB  │ cci  │ -        │
+      ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+      │ nodefony-starter │ 7  │ cluster_mode │ 79392 │ online │ -       │ a few seconds ago │ 0%  │ 21 MB  │ cci  │ -        │
+      └──────────────────┴────┴──────────────┴───────┴────────┴─────────┴───────────────────┴─────┴────────┴──────┴──────────┘
+       To see all logs use the command  nodefony logs
+       Or use PM2  pm2 --lines 1000 logs
+
+       # To stop
+       $ nodefony stop
+
+       # To kill pm2 Manager
+       $ nodefony kill
+      </code></pre>
+    </div>
+  </section>
+
+  <section >
+    <div class="container-fluid">
+      <h2>Serving Nodefony Project</h2>
+      <h4 style="text-align:center">Interactive Mode</h4>
+      <p>
+        Starting Servers Interactive
+      </p>
+      <pre><code class="hljs bash" >
+        $ nodefony # or npm start
+         _   _    ___    ____    _____   _____    ___    _   _  __   __
+        | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
+        |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
+        | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |
+        |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|
+
+        Version : 4.2.0-beta.2 Platform : darwin Process : nodefony PID : 77661
+
+        Thu Feb 28 2019 15:29:39 INFO nodefony : WELCOME PROJECT : nodefony-starter 1.0.0
+        ?  Nodefony CLI :  (Use arrow keys)
+        ❯ Start Servers Development
+        Start Servers Pre-Production
+        Start Servers Production
+        Install Project
+        Rebuild Project
+        Generater
+        Tools
+        PM2 Tools
+        Run Test
+        --------
+        Help
+        Quit
+      </code></pre>
+    </div>
+  </section>
+
+
+  <section data-background-iframe="{{ url('home') }}" data-background-interactive>
+
+  </section>
+</section>

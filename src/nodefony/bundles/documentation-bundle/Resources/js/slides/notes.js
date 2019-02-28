@@ -1,5 +1,5 @@
 //const Reveal = require("reveal.js");
-const jquery = require("jquery");
+//const jquery = require("jquery");
 
 const marked = require("reveal.js/plugin/markdown/marked.js");
 
@@ -25,11 +25,11 @@ const params = [
 class Notes {
   constructor() {
 
-    jquery(document).ready(() => {
+    //jquery(document).ready(() => {
       this.initialize();
       // Limit to max one state update per X ms
       this.handleStateMessage = this.debounce(this.handleStateMessage, 200);
-    });
+    //});
 
   }
 
@@ -62,7 +62,6 @@ class Notes {
       if (data.state) {
         delete data.state.overview;
       }
-      console.log(data)
       // Messages sent by the notes plugin inside of the main window
       if (data && data.namespace === 'reveal-notes') {
         if (data.type === 'connect') {
@@ -107,7 +106,6 @@ class Notes {
    * Called when the main window sends an updated state.
    */
   handleStateMessage(data) {
-    console.log(data)
     // Store the most recently set state to avoid circular loops
     // applying the same state
     this.currentState = JSON.stringify(data.state);

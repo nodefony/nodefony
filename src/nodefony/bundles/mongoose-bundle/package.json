@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "mongodb": "^3.1.13",
-    "mongoose": "^5.4.15"
+    "mongoose": "^5.4.16"
   },
   "devDependencies": {},
   "contributors": [
