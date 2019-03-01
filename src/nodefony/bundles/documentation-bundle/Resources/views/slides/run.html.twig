@@ -1,27 +1,47 @@
 <section >
   <section style="top:10px">
     <div class="container-fluid">
+      <h2>Serving Nodefony Project</h2>
+      <div class="d-flex flex-row bd-highlight mb-3 w-100 justify-content-center align-items-center">
+        <div class="p-2 bd-highlight"><img data-src="{{CDN('image')}}/app/images/app-logo.png"></div>
+      </div>
+      <div class="d-flex flex-row bd-highlight mb-3 w-100 justify-content-center align-items-center">
+        <div class="p-2 bd-highlight">
+          <ol style="display:contents">
+                  <li><a href="#/5/1">Developement Mode</a></li>
+                  <li><a href="#/5/2">Production Mode</a></li>
+                  <li><a href="#/5/3">Pre-Production Mode</a></li>
+                  <li><a href="#/5/4">Interactive Mode</a></li>
+                  <li><a href="#/5/5">Proxy Mode</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="top:10px">
+    <div class="container-fluid">
 
       <h2>Serving Nodefony Project</h2>
-      <h4 style="text-align:center">Developement</h4>
+      <h4 style="text-align:center">Developement Mode</h4>
       <p>
         Serving a Nodefony project via an development server
         Starting Development Servers
       </p>
-      <pre><code class="hljs bash" >
-        $ nodefony dev
+      <pre><code class="hljs shell" >$ nodefony dev
 
-        # TO STOP
-        $ &ltctrl-c&gt
+// TO STOP
+
+$ &ltctrl-c&gt
       </code></pre>
       <p>
         Starting Development Servers in Debug Mode (-d)
       </p>
-      <pre><code class="hljs bash" >
-        $ nodefony -d dev
+      <pre><code class="hljs shell" >$ nodefony -d dev
 
-        # TO STOP
-        $ &ltctrl-c&gt
+// TO STOP
+
+$ &ltctrl-c&gt
       </code></pre>
 
     </div>
@@ -34,51 +54,78 @@
       <p>
         Starting Servers Production (PM2)
       </p>
-      <pre><code class="hljs bash" >
-      $ nodefony start
-      # or
-      $ nodefony prod
+      <pre><code class="hljs shell" >$ nodefony start # or nodefony prod
 
-      ┌──────────────────┬────┬──────────────┬───────┬────────┬─────────┬───────────────────┬─────┬────────┬──────┬──────────┐
-      │ App name         │ id │ mode         │ pid   │ status │ restart │ uptime            │ cpu │ memory │ user │ watching │
-      ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-      │ nodefony-starter │ 0  │ cluster_mode │ 79361 │ online │ -       │ a few seconds ago │ 71% │ 56 MB  │ cci  │ -        │
-      ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-      │ nodefony-starter │ 1  │ cluster_mode │ 79362 │ online │ -       │ a few seconds ago │ 65% │ 54 MB  │ cci  │ -        │
-      ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-      │ nodefony-starter │ 2  │ cluster_mode │ 79365 │ online │ -       │ a few seconds ago │ 55% │ 51 MB  │ cci  │ -        │
-      ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-      │ nodefony-starter │ 3  │ cluster_mode │ 79372 │ online │ -       │ a few seconds ago │ 42% │ 45 MB  │ cci  │ -        │
-      ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-      │ nodefony-starter │ 4  │ cluster_mode │ 79377 │ online │ -       │ a few seconds ago │ 36% │ 39 MB  │ cci  │ -        │
-      ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-      │ nodefony-starter │ 5  │ cluster_mode │ 79382 │ online │ -       │ a few seconds ago │ 25% │ 33 MB  │ cci  │ -        │
-      ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-      │ nodefony-starter │ 6  │ cluster_mode │ 79387 │ online │ -       │ a few seconds ago │ 0%  │ 27 MB  │ cci  │ -        │
-      ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-      │ nodefony-starter │ 7  │ cluster_mode │ 79392 │ online │ -       │ a few seconds ago │ 0%  │ 21 MB  │ cci  │ -        │
-      └──────────────────┴────┴──────────────┴───────┴────────┴─────────┴───────────────────┴─────┴────────┴──────┴──────────┘
-       To see all logs use the command  nodefony logs
-       Or use PM2  pm2 --lines 1000 logs
+┌──────────────────┬────┬──────────────┬───────┬────────┬─────────┬───────────────────┬─────┬────────┬──────┬──────────┐
+│ App name         │ id │ mode         │ pid   │ status │ restart │ uptime            │ cpu │ memory │ user │ watching │
+├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 0  │ cluster_mode │ 79361 │ online │ -       │ a few seconds ago │ 71% │ 56 MB  │ cci  │ -        │
+├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 1  │ cluster_mode │ 79362 │ online │ -       │ a few seconds ago │ 65% │ 54 MB  │ cci  │ -        │
+├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 2  │ cluster_mode │ 79365 │ online │ -       │ a few seconds ago │ 55% │ 51 MB  │ cci  │ -        │
+├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 3  │ cluster_mode │ 79372 │ online │ -       │ a few seconds ago │ 42% │ 45 MB  │ cci  │ -        │
+├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 4  │ cluster_mode │ 79377 │ online │ -       │ a few seconds ago │ 36% │ 39 MB  │ cci  │ -        │
+├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 5  │ cluster_mode │ 79382 │ online │ -       │ a few seconds ago │ 25% │ 33 MB  │ cci  │ -        │
+├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 6  │ cluster_mode │ 79387 │ online │ -       │ a few seconds ago │ 0%  │ 27 MB  │ cci  │ -        │
+├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 7  │ cluster_mode │ 79392 │ online │ -       │ a few seconds ago │ 0%  │ 21 MB  │ cci  │ -        │
+└──────────────────┴────┴──────────────┴───────┴────────┴─────────┴───────────────────┴─────┴────────┴──────┴──────────┘
+ To see all logs use the command  nodefony logs
+ Or use PM2  pm2 --lines 1000 logs
 
-       # To stop
-       $ nodefony stop
+// To stop
+$ nodefony stop
 
-       # To kill pm2 Manager
-       $ nodefony kill
+// To kill pm2 Manager
+$ nodefony kill
       </code></pre>
     </div>
   </section>
 
-  <section >
+  <section>
+    <div class="container-fluid">
+      <h2>Serving Nodefony Project</h2>
+      <h4 style="text-align:center">Pre-Production Mode</h4>
+      <p class="font-weight-bold">
+        <h5>Starting Servers Pre-Production</h5>
+      </p>
+      <p class="text-justify">
+        Usefull to check and use clusters
+      </p>
+        <pre><code class="hljs shell">$ nodefony preprod
+
+KERNEL SERVER Cluster : worker Environment : prod Debug :false
+
+                                  _           __                                         _                    _
+              _ __     ___     __| |   ___   / _|   ___    _ __    _   _           ___  | |_    __ _   _ __  | |_    ___   _ __
+             | '_ \   / _ \   / _` |  / _ \ | |_   / _ \  | '_ \  | | | |  _____  / __| | __|  / _` | | '__| | __|  / _ \ | '__|
+             | | | | | (_) | | (_| | |  __/ |  _| | (_) | | | | | | |_| | |_____| \__ \ | |_  | (_| | | |    | |_  |  __/ | |
+             |_| |_|  \___/   \__,_|  \___| |_|    \___/  |_| |_|  \__, |         |___/  \__|  \__,_| |_|     \__|  \___| |_|
+                                                                   |___/
+
+          Version : 1.0.0 Platform : darwin Process : nodefony-starter PID : 86633
+
+
+      KERNEL SERVER Cluster : worker Environment : prod Debug :false
+...
+        </code></pre>
+
+    </div>
+  </section>
+
+  <section>
     <div class="container-fluid">
       <h2>Serving Nodefony Project</h2>
       <h4 style="text-align:center">Interactive Mode</h4>
       <p>
-        Starting Servers Interactive
+        <h5>Starting Servers Interactive</h5>
       </p>
-      <pre><code class="hljs bash" >
-        $ nodefony # or npm start
+      <pre><code class="hljs console" >$ nodefony # or npm start
          _   _    ___    ____    _____   _____    ___    _   _  __   __
         | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
         |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
@@ -105,6 +152,109 @@
     </div>
   </section>
 
+  <section>
+    <div class="container-fluid">
+      <h2>Serving Nodefony Project</h2>
+      <h4 style="text-align:center">PROXY Mode</h4>
+      <span>
+
+      <h4>Nginx</h4>
+      <pre><code class="hljs gnix" ># RENDER STATICS CDN
+server {
+  listen       80;
+  listen       443 ssl;
+  server_name  static.nodefony.com;
+
+  ssl_certificate  /path_to_nodefony/config/certificates/nodefony.fr/fullchain.pem;
+  ssl_certificate_key /path_to_nodefony/config/certificates/nodefony.fr/privkey.pem;
+  ssl_trusted_certificate /path_to_nodefony/config/certificates/nodefony.fr/fullchain.pem;
+
+  location ~* \.(gif|jpg|jpeg|png|wmv|avi|mpg|mpeg|mp4|webm|htm|html|js|css|mp3|swf|ico|flv|woff.?|ttf)$ {
+    access_log off;
+    root /path_to_nodefony/web;
+    expires 7d;
+    add_header access-control-allow-origin  *;
+  }
+}
+
+server {
+  listen 80;
+
+  server_name nodefony.com;
+
+  set  $via  "1.0 nodefony nginx front";
+  if ($http_via) {
+  	set $via  "$http_via, 1.0 nodefony nginx front";
+  }
+
+  location / {
+  	root /path_to_nodefony/web ;
+  	proxy_pass http://nodefony.com:5151;
+  	proxy_http_version 1.1;
+  	proxy_pass_header Server;
+
+  	proxy_set_header Upgrade $http_upgrade;
+  	proxy_set_header Connection $connection_upgrade;
+  	proxy_set_header Host $host;
+  	proxy_set_header X-Forwarded-Proto $scheme;
+  	proxy_set_header X-Forwarded-Port $server_port;
+  	proxy_set_header X-Forwarded-Host $host;
+  	proxy_set_header X-Forwarded-Server $host;
+  	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header  Via  $via;
+  	proxy_cache_bypass $http_upgrade;
+  }
+
+  location ~ \.(js|css|png|ico|jpg|jpeg|gif|ttf|font|map|woff.?|twig|txt|html|xml|json|mp3|wmv|avi|mpg|mpeg|mp4|webm|swf|flv)$ {
+  	access_log off;
+  	root /path_to_nodefony/web;
+  	expires 7d;
+  }
+}
+
+server {
+  listen       443 ssl;
+
+  server_name nodefony.com;
+
+  ssl_certificate  /path_to_nodefony/config/certificates/nodefony.fr/fullchain.pem;
+  ssl_certificate_key /path_to_nodefony/config/certificates/nodefony.fr/privkey.pem;
+  ssl_trusted_certificate /path_to_nodefony/config/certificates/nodefony.fr/fullchain.pem;
+
+  set  $via  "1.0 nodefony nginx front";
+  if ($http_via) {
+    set $via  "$http_via, 1.0 nodefony nginx front";
+  }
+
+  location / {
+  	root /path_to_nodefony/web ;
+  	proxy_pass https://nodefony.com:5152;
+  	proxy_http_version 1.1;
+  	proxy_pass_header Server;
+
+  	proxy_set_header Upgrade $http_upgrade;
+  	proxy_set_header Connection $connection_upgrade;
+
+  	proxy_set_header Host $host;
+  	proxy_set_header X-Forwarded-Proto $scheme;
+  	proxy_set_header X-Forwarded-Port $server_port ;
+  	proxy_set_header X-Forwarded-Host $host;
+  	proxy_set_header X-Forwarded-Server $host;
+  	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header  Via  $via;
+
+  	proxy_cache_bypass $http_upgrade;
+  }
+
+  location ~ \.(js|css|png|ico|jpg|jpeg|gif|ttf|font|map|woff.?|twig|txt|html|xml|json|mp3|wmv|avi|mpg|mpeg|mp4|webm|swf|flv)$ {
+  	root /path_to_nodefony/web;
+  	expires 7d;
+  	access_log off;
+  }
+}
+      </code></pre>
+      <span>
+  </section>
 
   <section data-background-iframe="{{ url('home') }}" data-background-interactive>
 

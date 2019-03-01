@@ -13,6 +13,7 @@ require("reveal.js/plugin/zoom-js/zoom.js");
 import hljs from 'highlight.js/lib/highlight';
 import javascript from 'highlight.js/lib/languages/javascript';
 import bash from 'highlight.js/lib/languages/bash';
+import shell from 'highlight.js/lib/languages/shell';
 import css from 'highlight.js/lib/languages/css';
 import yaml from 'highlight.js/lib/languages/yaml';
 import twig from 'highlight.js/lib/languages/twig';
@@ -89,6 +90,7 @@ class Slide {
       });*/
       hljs.registerLanguage('javascript', javascript);
       hljs.registerLanguage('bash', bash);
+      hljs.registerLanguage('shell', shell);
       hljs.registerLanguage('css', css);
       hljs.registerLanguage('yaml', yaml);
       hljs.registerLanguage('twig', twig);
