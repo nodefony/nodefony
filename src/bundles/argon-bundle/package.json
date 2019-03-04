@@ -12,13 +12,14 @@
   ],
   "repository": {},
   "dependencies": {
+    "babel-loader": "^8.0.5",
     "bootstrap-vue": "^2.0.0-rc.13",
     "clean-webpack-plugin": "^1.0.1",
     "flatpickr": "^4.5.4",
     "nouislider": "^13.1.1",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "uglifyjs-webpack-plugin": "^2.1.2",
-    "vue": "^2.6.7",
+    "vue": "^2.6.8",
     "vue-flatpickr-component": "^8.1.1",
     "vue-lazyload": "^1.2.6",
     "vue-router": "^3.0.1",
@@ -31,7 +32,7 @@
     "@vue/eslint-config-prettier": "^4.0.1",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
-    "vue-template-compiler": "^2.6.7"
+    "vue-template-compiler": "^2.6.8"
   },
   "license": "CECILL-B",
   "readmeFilename": "README.md",
