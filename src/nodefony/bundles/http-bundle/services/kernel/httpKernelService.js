@@ -212,10 +212,13 @@ module.exports = class httpKernel extends nodefony.Service {
       getUser: context.getUser.bind(context),
       CDN: (type, nb) => {
         let cdn = this.getCDN(type, nb);
+        let res = `${context.request.url.protocol}//`;
         if (cdn) {
-          return context.request.url.protocol + "//" + cdn;
+          return `${res}${cdn}`;
+        } else {
+          return `${res}${context.request.url.host}`;
         }
-        return "";
+
       },
       absolute_url: context.generateAbsoluteUrl.bind(context),
       is_granted: context.is_granted.bind(context)

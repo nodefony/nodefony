@@ -1,0 +1,34 @@
+{% extends '/app/Resources/views/base.html.twig' %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{CDN('stylesheet')}}/mail-bundle/assets/css/mail.css" data-inline/>
+{% endblock %}
+
+{% block javascripts %}
+  <script type="text/javascript" src="{{CDN('javascript')}}/mail-bundle/assets/js/mail.js"></script>
+{% endblock %}
+
+{% block body %}
+  <div class="container text-center mt-8">
+
+    <div class="card mb-3" style="max-width: 540px;">
+      <div class="row no-gutters">
+        <div class="col-md-4">
+          <img src="https://nodefony.net/app/images/app-logo.png" class="card-img" alt="nodefony">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">Nodefony Email Bundle</h5>
+            <p class="card-text">Bootstrap responsive email. <i class="fa fa-user"></i></p>
+            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {% block footer %}
+    {{ render( controller("mail:default:footer" )) }}
+  {% endblock %}
+{% endblock %}

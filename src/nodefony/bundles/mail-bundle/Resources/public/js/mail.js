@@ -10,7 +10,12 @@
  *
  */
 
-import "../css/mail.css";
+// javascript bootstrap library
+import 'bootstrap';
+
+// bootstrap scss framework
+import '../../scss/custom.scss';
+
 
 /**
  *	Class

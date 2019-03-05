@@ -1,6 +1,6 @@
 {
   "name": "nodefony-core",
-  "version": "4.2.0-beta.1",
+  "version": "4.2.0-beta.2",
   "description": "Nodefony Node.js Web Framework",
   "main": "./src/nodefony/core/autoloader.es6",
   "scripts": {
@@ -50,7 +50,7 @@
     "node": ">=8"
   },
   "dependencies": {
-    "mongoose": "^5.4.16",
+    "mongoose": "^5.4.17",
     "sequelize": "5.0.0-beta.16",
     "webpack": "^4.29.6",
     "webpack-dev-server": "^3.2.1"

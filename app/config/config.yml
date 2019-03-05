@@ -61,6 +61,38 @@ framework-bundle:
       verbose               :    true
       maxModules            :    16     #Infinity
 
+
+##################################
+#  OVERRIDE MAIL Bundle
+#
+#    see FRAMEWORK MAIL config for more options
+#
+#   examples :                   gmail
+#
+#    nodemailer :
+#      default       :           "gmail"
+#      transporters  :
+#        #https://myaccount.google.com/security
+#        gmail :
+#          host      :           "smtp.gmail.com"
+#          port      :           465
+#          secure    :           true # true for 465, false for other ports
+#          auth:
+#            user    :           "user@gmail.com"
+#            pass    :           "xxxxxxxxx"
+#
+mail-bundle:
+  nodemailer :                   ~
+#    default                   : "free"
+#    transporters              :
+#      free :
+#        host                  : "smtp.free.fr"
+#        port                  : 465
+#        secure                : true # true for 465, false for other ports
+#        auth:
+#          user                : "user" #// generated ethereal user
+#          pass                : "xxxx" #// generated ethereal password
+
 ##################################
 #  OVERRIDE ORM SEQUELIZE BUNDLE
 #

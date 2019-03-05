@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const juice = require('juice');
 
 module.exports = class mail extends nodefony.Service {
 
@@ -7,21 +8,28 @@ module.exports = class mail extends nodefony.Service {
     this.nodemailer = nodemailer;
     this.transporters = {};
     this.domain = null;
-    this.config = this.bundle.settings.nodemailer;
     this.mailDefaultOptions = {};
     this.defaultTransporterOptions = {};
+    this.domain = this.kernel.domain;
+    this.defaultTransporterOptions.host = `smtp.${this.domain}`;
     if (!this.kernel.ready) {
       this.kernel.once("onBoot", () => {
+        this.config = this.bundle.settings.nodemailer;
         this.authorName = this.kernel.app.settings.App.authorName;
         this.authorMail = this.kernel.app.settings.App.authorMail;
         this.mailDefaultOptions.from = `"${this.authorName}" <${this.authorMail}>`;
+        this.initialize();
       });
+    } else {
+      this.config = this.bundle.settings.nodemailer;
+      this.authorName = this.kernel.app.settings.App.authorName;
+      this.authorMail = this.kernel.app.settings.App.authorMail;
+      this.mailDefaultOptions.from = `"${this.authorName}" <${this.authorMail}>`;
+      this.initialize();
     }
   }
 
-  async initialize(domain) {
-    this.domain = domain;
-    this.defaultTransporterOptions.host = `smtp.${this.domain}`;
+  async initialize() {
     if (this.config.transporters) {
       for (let server in this.config.transporters) {
         if (server) {
@@ -76,12 +84,13 @@ module.exports = class mail extends nodefony.Service {
         recipient: from
       },
       attachments: [
-            // String attachment
+        // String attachment
         {
           filename: 'notes.txt',
           content: 'Some notes about this e-mail',
           contentType: 'text/plain' // optional, would be detected from the filename
-            }],
+        }
+      ],
       list: {
         // List-Help: <mailto:admin@example.com?subject=help>
         help: 'ccamensuli@gmail.com?subject=help',
@@ -103,9 +112,7 @@ module.exports = class mail extends nodefony.Service {
   }
 
   async send(options, transporterName) {
-    //console.log(this.mailDefaultOptions)
     let conf = nodefony.extend({}, this.mailDefaultOptions, options);
-    //console.log(conf)
     if (!transporterName) {
       return await this.transporter.sendMail(conf)
         .then((info) => {
@@ -123,5 +130,69 @@ module.exports = class mail extends nodefony.Service {
     throw new Error("bad Transporter");
   }
 
+  juice(html, options) {
+    return new Promise((resolve, reject) => {
+      try {
+        return resolve(juice(html, options));
+      } catch (err) {
+        return reject(err);
+      }
+    });
+  }
+
+  juiceResources(html, options = {}, context = null) {
+    return new Promise((resolve, reject) => {
+      let settings = null;
+      try {
+        let relative = null;
+        if (context) {
+          relative = `${context.request.url.protocol}//${context.request.url.host}`;
+        }
+        settings = nodefony.extend(true, {
+          webResources: {
+            relativeTo: relative,
+            rebaseRelativeTo: relative,
+            preserveImportant: true,
+            //images: true,
+            scripts: false,
+            requestTransform: (requestOptions) => {
+              return nodefony.extend(requestOptions, {
+                strictSSL: false
+              });
+            }
+          }
+        }, options);
+      } catch (e) {
+        return reject(e);
+      }
+      juice.juiceResources(html, settings, (err, htmlp) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(htmlp);
+      });
+    });
+  }
+
+  juiceInline(html, css, options) {
+    return new Promise((resolve, reject) => {
+      try {
+        return resolve(juice.inlineContent(html, css, options));
+      } catch (err) {
+        return reject(err);
+      }
+    });
+  }
+
+  juiceFile(filePath, options) {
+    return new Promise((resolve, reject) => {
+      juice.juiceFile(filePath, options, (err, htmlp) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(htmlp);
+      });
+    });
+  }
 
 };

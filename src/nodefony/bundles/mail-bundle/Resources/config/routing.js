@@ -12,12 +12,7 @@
  *
  *        nodefony-core ROUTING  mail-bundle
  */
- 
+
 module.exports = {
-  mail: {
-    pattern: "/mail",
-    defaults: {
-      controller: "mail-bundle:default:index"
-    }
-  }
+
 };

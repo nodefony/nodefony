@@ -80,7 +80,8 @@ module.exports = nodefony.register("kernel", function () {
     "unittests-bundle": "unittests",
     "redis-bundle": "redis",
     "mongoose-bundle": "mongoose",
-    "elastic-bundle": "elastic"
+    "elastic-bundle": "elastic",
+    "mail-bundle": "mail"
   };
 
   const defaultEnvEnable = {
@@ -629,6 +630,10 @@ module.exports = nodefony.register("kernel", function () {
         }
         if (this.settings.system.elastic) {
           res = this.searchPackage("elastic-bundle");
+          bundles.push(res);
+        }
+        if (this.settings.system.mail) {
+          res = this.searchPackage("mail-bundle");
           bundles.push(res);
         }
       } catch (e) {

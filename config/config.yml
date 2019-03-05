@@ -33,6 +33,7 @@ system:
   security                      : true
   realtime                      : true
   monitoring                    : true
+  mail                          : true
   documentation                 : true
   unitTest                      : true
   demo                          : false

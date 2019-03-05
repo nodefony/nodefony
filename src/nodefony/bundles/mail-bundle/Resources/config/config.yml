@@ -42,21 +42,9 @@ locale      : en_en
 #        services       : true
 watch       : true
 
+#
+#  nodemailer config
+#
 nodemailer :
-  default       : "gmail"
-  transporters  :
-    #https://myaccount.google.com/security
-    gmail :
-      host      : "smtp.gmail.com"
-      port      : 465
-      secure    : true # true for 465, false for other ports
-      auth:
-        user    : "ccamensuli@gmail.com" #// generated ethereal user
-        pass    : "xxx" #// generated ethereal password
-    free :
-      host      : "smtp.free.fr"
-      port      : 465
-      secure    : true # true for 465, false for other ports
-      auth:
-        user    : "ccamensuli" #// generated ethereal user
-        pass    : "xxxxx" #// generated ethereal password
+  default       : ~
+  transporters  : ~
