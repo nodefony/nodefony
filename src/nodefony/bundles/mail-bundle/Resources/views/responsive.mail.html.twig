@@ -1,7 +1,7 @@
 {% extends '/app/Resources/views/base.html.twig' %}
 
 {% block stylesheets %}
-  <link rel="stylesheet" href="{{CDN('stylesheet')}}/mail-bundle/assets/css/mail.css" data-inline/>
+  <link rel="stylesheet" href="{{CDN('stylesheet')}}/mail-bundle/assets/css/mail.css"/>
 {% endblock %}
 
 {% block javascripts %}
@@ -9,21 +9,54 @@
 {% endblock %}
 
 {% block body %}
-  <div class="container text-center mt-8">
-
-    <div class="card mb-3" style="max-width: 540px;">
-      <div class="row no-gutters">
-        <div class="col-md-4">
-          <img src="https://nodefony.net/app/images/app-logo.png" class="card-img" alt="nodefony">
-        </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">Nodefony Email Bundle</h5>
-            <p class="card-text">Bootstrap responsive email. <i class="fa fa-user"></i></p>
-            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+  <div class="container text-center mt-4">
+    <div class="d-flex justify-content-center">
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <img src="https://nodefony.net/app/images/app-logo.png" class="card-img" alt="nodefony">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{name}} Email Bundle</h5>
+              <p class="card-text">Bootstrap responsive email. <i class="fa fa-user"></i></p>
+              <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-dark">
+        <thead>
+         <tr>
+           <th scope="col">#</th>
+           <th scope="col">First</th>
+           <th scope="col">Last</th>
+           <th scope="col">Handle</th>
+         </tr>
+       </thead>
+       <tbody>
+         <tr>
+           <th scope="row">1</th>
+           <td>Mark</td>
+           <td>Otto</td>
+           <td>@mdo</td>
+         </tr>
+         <tr>
+           <th scope="row">2</th>
+           <td>Jacob</td>
+           <td>Thornton</td>
+           <td>@fat</td>
+         </tr>
+         <tr>
+           <th scope="row">3</th>
+           <td colspan="2">Larry the Bird</td>
+           <td>@twitter</td>
+         </tr>
+       </tbody>
+      </table>
     </div>
 
   </div>

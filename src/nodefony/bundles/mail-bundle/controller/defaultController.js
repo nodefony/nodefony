@@ -4,8 +4,9 @@
  *	@param {class} container
  *	@param {class} context
  *
- *  @Route ("/mail")
+ *  @Route ("/nodefony/test/mail")
  */
+const puppeteer = require('puppeteer');
 
 module.exports = class defaultController extends nodefony.controller {
 
@@ -15,31 +16,27 @@ module.exports = class defaultController extends nodefony.controller {
   }
 
   /**
-   *   @Route ("/", name="nodefony-mail-default")
+   *   @Route ("", name="nodefony-mail-default")
    */
   mailAction() {
-    return this.render("mail-bundle::mail.html.twig", {
-        name: "mail-bundle"
-      })
-      .then((html) => {
-        return this.mailer.send({
-            to: "ccamensuli@gmail.com ", // list of receivers`
-            from: "ccamensuli@free.fr",
-            subject: `${this.kernel.name} ✔`, // Subject line
-            //text: "Hello world?", // plain text body
-            html: html, // html body
-          }, "free")
-          .then((info) => {
-            this.logger(info);
-            return html;
-          })
-          .catch(e => {
-            throw e;
-          });
-      })
+    this.hideDebugBar();
+    return this.mailer.sendTestMail("ccamensuli@gmail.com", this.context)
       .catch((e) => {
         throw e;
       });
+  }
+
+  async renderPdf(html) {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(html);
+    await page.emulateMedia("print");
+    let buffer = await page.pdf({
+      format: 'A4',
+      printBackground: true
+    });
+    await browser.close();
+    return buffer;
   }
 
   /**
@@ -48,17 +45,22 @@ module.exports = class defaultController extends nodefony.controller {
   mail2Action() {
     this.hideDebugBar();
     return this.render("mail-bundle::responsive.mail.html.twig", {
-        name: "mail-bundle"
+        name: this.kernel.projectName
       })
-      .then((html) => {
+      .then(async (html) => {
+        let buffer = await this.renderPdf(html);
         return this.mailer.juiceResources(html, {}, this.context)
           .then((htmlp) => {
             return this.mailer.send({
                 to: "ccamensuli@gmail.com, christophe.camensuli@sfr.com", // list of receivers`
                 from: "ccamensuli@free.fr",
-                subject: `${this.kernel.name} ✔`, // Subject line
+                subject: `${this.kernel.projectName} ✔`, // Subject line
                 //text: "Hello world?", // plain text body
                 html: htmlp, // html body
+                attachments: [{ // binary buffer as an attachment
+                  filename: 'nodefony.pdf',
+                  content: buffer
+                }]
               })
               .then((info) => {
                 this.logger(info);

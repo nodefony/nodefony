@@ -11,6 +11,7 @@ module.exports = class mail extends nodefony.Service {
     this.mailDefaultOptions = {};
     this.defaultTransporterOptions = {};
     this.domain = this.kernel.domain;
+    this.httpKernel = this.get("httpKernel");
     this.defaultTransporterOptions.host = `smtp.${this.domain}`;
     if (!this.kernel.ready) {
       this.kernel.once("onBoot", () => {
@@ -70,45 +71,66 @@ module.exports = class mail extends nodefony.Service {
     });
   }
 
-  async sendTestMail(to, from, transporterName) {
-    return this.send({
-      to: to, // list of receivers`
-      from: from,
-      subject: `${this.kernel.name} ✔`, // Subject line
-      text: "Hello world?", // plain text body
-      html: "<b>Hello world?</b>", // html body
-      dsn: {
-        id: 'some random message specific id',
-        return: 'headers',
-        notify: 'success',
-        recipient: from
-      },
-      attachments: [
-        // String attachment
-        {
-          filename: 'notes.txt',
-          content: 'Some notes about this e-mail',
-          contentType: 'text/plain' // optional, would be detected from the filename
-        }
-      ],
-      list: {
-        // List-Help: <mailto:admin@example.com?subject=help>
-        help: 'ccamensuli@gmail.com?subject=help',
-        // List-Unsubscribe: <http://example.com> (Comment)
-        unsubscribe: [{
-            url: 'http://example.com/unsubscribe',
-            comment: 'A short note about this url'
-          },
-          'unsubscribe@example.com'
-        ],
+  sendTestMail(to, context = null, transporterName = null) {
 
-        // List-ID: "comment" <example.com>
-        id: {
-          url: 'mylist.example.com',
-          comment: 'This is my awesome list'
+    return this.renderTwig("mail-bundle::mail.html.twig", {}, context)
+      .then((html) => {
+        return this.juiceResources(html, {}, context)
+          .then((htmlp) => {
+            let message = {
+              to: to, // list of receivers`
+              from: this.mailDefaultOptions.from,
+              subject: `${this.kernel.projectName} ✔`, // Subject line
+              text: "Test Email?", // plain text body
+              html: htmlp, // html body
+              attachments: [{
+                filename: 'nodefony.txt',
+                content: 'Nodefony attachement',
+                contentType: 'text/plain' // optional, would be detected from the filename
+              }],
+              list: {
+                // List-Help: <mailto:admin@example.com?subject=help>
+                help: `${this.authorMail}?subject=help`,
+                // List-Unsubscribe: <http://example.com> (Comment)
+                unsubscribe: [{
+                    url: `https://${this.domain}/mail/unsubscribe`,
+                    comment: 'A short note about this url'
+                  },
+                  `unsubscribe@{this.domain}`
+                ],
+              }
+            };
+            return this.send(message, transporterName || this.config.default)
+              .then((info) => {
+                this.logger(info);
+                return html;
+              })
+              .catch(e => {
+                throw e;
+              });
+          })
+          .catch(e => {
+            throw e;
+          });
+      })
+      .catch(e => {
+        throw e;
+      });
+  }
+
+  renderTwig(view, param = {}, context = null) {
+    return new Promise((resolve, reject) => {
+      try {
+        let extendParam = {};
+        if (context) {
+          extendParam = this.httpKernel.extendTemplate(param, context);
         }
+        let templ = this.httpKernel.getTemplate(view);
+        return resolve(templ.render(extendParam));
+      } catch (e) {
+        return reject(e);
       }
-    }, transporterName);
+    });
   }
 
   async send(options, transporterName) {
@@ -149,10 +171,17 @@ module.exports = class mail extends nodefony.Service {
           relative = `${context.request.url.protocol}//${context.request.url.host}`;
         }
         settings = nodefony.extend(true, {
+          //preserveFontFaces: true,
+          applyStyleTags: true,
+          removeStyleTags: true,
+          preserveMediaQueries: false,
+          preserveImportant: false,
+          preservePseudos: false,
+          //inlinePseudoElements: false,
+          preserveKeyFrames: false,
           webResources: {
             relativeTo: relative,
             rebaseRelativeTo: relative,
-            preserveImportant: true,
             //images: true,
             scripts: false,
             requestTransform: (requestOptions) => {

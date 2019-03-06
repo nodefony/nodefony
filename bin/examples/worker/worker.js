@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --experimental-worker
  // nodefony
 let nodefony = null;
 try {
@@ -6,7 +6,7 @@ try {
 } catch (e) {
   nodefony = require(require("path").resolve("src", "nodefony", "autoloader.es6"));
 }
-//const assert = require('assert');
+
 const {
   Worker,
   MessageChannel,
@@ -20,27 +20,26 @@ const path = require("path");
 const service = path.resolve(__dirname, "service.js");
 
 
-new nodefony.cli("WORKER", {
+new nodefony.cli("MAIN", {
+  pid: true,
   onStart: (cli) => {
     //console.log(cli)
     try {
-      const worker = new Worker(service, {
-        workerData: {}
-      });
       const subChannel = new MessageChannel();
-      worker.postMessage(subChannel.port1, {
-        portChanel: [subChannel.port1]
-      });
-      /*worker.postMessage({
-        from: "cci@gmail.com",
-        to: "cci2@gmail.com"
-      }, [subChannel.port1]);*/
       subChannel.port2.on('message', (value) => {
         console.log('received:', value);
       });
+      const worker = new Worker(service, {
+        workerData: {}
+      });
+      worker.on('online', () => {
+        cli.logger(`Worker online !`, "INFO", );
+      })
+      cli.logger(worker.threadId);
+      worker.postMessage(subChannel.port1, [subChannel.port1]);
 
       worker.on('message', (message) => {
-        cli.logger(message, "INFO");
+        cli.logger(message, "INFO", `MAIN EVENT MESSAGE`);
       });
 
       worker.on('error', (e) => {
