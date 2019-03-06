@@ -14,55 +14,33 @@
 const assert = require('assert');
 const http = require("http");
 
-describe("BUNDLE mail", function(){
+describe("BUNDLE mail", function () {
 
-	describe('CORE', function(){
+  describe('CORE', function () {
 
-		beforeEach(function(){
-		})
+    beforeEach(function () {})
 
-		before(function(){
-		})
+    before(function () {})
 
-		// EXAMPLE  NODEFONY
-		it("NAMESPACE LOADED", function(done){
-			// check nodefony namespace
-			assert.equal( typeof nodefony, "object" );
-			// check instance kernel
-			assert.equal( kernel instanceof nodefony.kernel, true)
-			done();
-		});
-	});
+    // EXAMPLE  NODEFONY
+    it("NAMESPACE LOADED", function (done) {
+      // check nodefony namespace
+      assert.equal(typeof nodefony, "object");
+      // check instance kernel
+      assert.equal(kernel instanceof nodefony.kernel, true)
+      done();
+    });
+  });
 
-	describe('ROUTE', () => {
+  describe('ROUTE', () => {
 
-		beforeEach( () => {
-		});
+    beforeEach(() => {});
 
-		before( () =>{
-		});
+    before(() => {});
 
-		it("ROUTE mail ", (done) => {
-			let options = {
-				hostname: kernel.settings.system.domain,
-				port: kernel.settings.system.httpPort,
-				path: "/mail",
-				method: 'GET'
-			};
+    it("ROUTE mail ", (done) => {
+      done();
+    });
 
-			let request = http.request(options, (res) => {
-				assert.equal(res.statusCode, 200);
-				assert.equal(res.headers.server, "nodefony");
-				res.setEncoding('utf8');
-				res.on('data',  (chunk) => {
-					// check result here
-				});
-        res.on('end', () => {
-          done();
-        });
-			})
-			request.end();
-		});
-
-	});
+  });
 });

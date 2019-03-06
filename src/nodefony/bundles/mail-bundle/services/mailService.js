@@ -30,7 +30,7 @@ module.exports = class mail extends nodefony.Service {
   }
 
   async initialize() {
-    if (this.config.transporters) {
+    if (this.config && this.config.transporters) {
       for (let server in this.config.transporters) {
         if (server) {
           let transporter = this.createTransporter(server, this.config.transporters[server]);

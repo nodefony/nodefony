@@ -10,7 +10,7 @@ class mailTask extends nodefony.Task {
     );
   }
 
-  action(arg1, arg2){
+  action(arg1, arg2) {
     this.logger(arg1);
     this.logger(arg2);
   }
