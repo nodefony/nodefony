@@ -7,6 +7,7 @@ module.exports = nodefony.register("controller", function() {
       this.context = context;
       this.http = Request;
       this.httpKernel = this.get("httpKernel");
+      this.mailer = this.get("mailer");
       this.router = this.get("router");
       this.serviceTemplating = this.get('templating');
       this.method = this.getMethod();
@@ -160,6 +161,22 @@ module.exports = nodefony.register("controller", function() {
 
     getNodefonyEntity(name) {
       return this.getOrm().getNodefonyEntity(name);
+    }
+
+    sendMail() {
+      if (!this.mailer) {
+        throw new Error("mail-bundle not registred !");
+      }
+      switch (arguments.length) {
+        case 1:
+          Array.prototype.push.call(arguments, null);
+          Array.prototype.push.call(arguments, this.context);
+          break;
+        case 2:
+          Array.prototype.push.call(arguments, this.context);
+          break;
+      }
+      return this.mailer.sendMail.apply(this.mailer, arguments);
     }
 
     /**

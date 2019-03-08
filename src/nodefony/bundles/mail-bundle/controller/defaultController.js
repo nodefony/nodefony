@@ -12,7 +12,6 @@ module.exports = class defaultController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
-    this.mailer = this.get("mail");
   }
 
   /**
@@ -20,7 +19,7 @@ module.exports = class defaultController extends nodefony.controller {
    */
   mailAction() {
     this.hideDebugBar();
-    return this.mailer.sendTestMail("ccamensuli@gmail.com", this.context)
+    return this.mailer.sendTestMail("ccamensuli@gmail.com", null, this.context)
       .catch((e) => {
         throw e;
       });
@@ -51,7 +50,7 @@ module.exports = class defaultController extends nodefony.controller {
         let buffer = await this.renderPdf(html);
         return this.mailer.juiceResources(html, {}, this.context)
           .then((htmlp) => {
-            return this.mailer.send({
+            return this.sendMail({
                 to: "ccamensuli@gmail.com, christophe.camensuli@sfr.com", // list of receivers`
                 from: "ccamensuli@free.fr",
                 subject: `${this.kernel.projectName} ✔`, // Subject line
@@ -71,7 +70,6 @@ module.exports = class defaultController extends nodefony.controller {
               });
           })
           .catch(e => {
-            this.logger(e, "ERROR");
             throw e;
           });
       })
@@ -91,6 +89,5 @@ module.exports = class defaultController extends nodefony.controller {
       year: new Date().getFullYear()
     });
   }
-
 
 };

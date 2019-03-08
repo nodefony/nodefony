@@ -47,6 +47,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     this.kernel.once("onPreBoot", (kernel) => {
       this.templating = this.get("templating");
       this.infoKernel.events = {};
+      this.mailer = this.get("mailer");
       for (let event in kernel.notificationsCenter._events) {
         switch (event) {
           case "onPreBoot":
@@ -225,6 +226,13 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
             }
             break;
         }
+        let mail = null;
+        if (this.mailer) {
+          mail = {
+            transporters: this.mailer.config.transporters,
+            default: this.mailer.config.default
+          };
+        }
 
         this.service = {
           upload: {
@@ -240,7 +248,8 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
             path: this.sessionService.settings.save_path
           },
           ORM: ORM,
-          templating: templating
+          templating: templating,
+          mail: mail
         };
         this.security = function() {
           let obj = {};

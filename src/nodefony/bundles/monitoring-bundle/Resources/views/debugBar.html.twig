@@ -428,12 +428,30 @@
                 </li>
               {% endif %}
               <li>
-                <label >ORM Models
-                </label>
+                <label >ORM Models</label>
                 <span title="{{value.db.models|keys}}">{{value.db.models|length}}</span>
               </li>
               <li class="separator"></li>
             {% endfor %}
+          {% endif %}
+          {% if services.mail %}
+            <li>
+              <label class="nodefony-title">MAILER</label>
+            </li>
+            <li>
+              <label >Default Transporter </label>
+              <span class="label-nodefony label-success" >{{services.mail.default}}</span>
+            </li>
+            {% for key, value in services.mail.transporters %}
+              <li>
+                <label style="margin:0 0 2px 10px" class="nodefony-title">{{ key }}</label>
+              </li>
+              <li>
+                <label style="margin:0 0 2px 20px">Host</label>
+                <span>{{value.host}}</span>
+              </li>
+            {% endfor %}
+            <li class="separator"></li>
           {% endif %}
         </ul>
       </div>

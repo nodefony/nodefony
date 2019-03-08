@@ -34,7 +34,7 @@ new nodefony.cli("MAIN", {
       });
       worker.on('online', () => {
         cli.logger(`Worker online !`, "INFO", );
-      })
+      });
       cli.logger(worker.threadId);
       worker.postMessage(subChannel.port1, [subChannel.port1]);
 

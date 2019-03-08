@@ -178,7 +178,7 @@ module.exports = nodefony.register("Resolver", function() {
       switch (true) {
         case (type === "Error"):
           this.context.fire("onError", this.context.container, result);
-          break;
+          return;
         case (type === "string"):
         case result instanceof String:
           return this.context.send(result);

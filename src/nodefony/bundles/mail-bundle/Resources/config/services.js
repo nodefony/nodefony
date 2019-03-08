@@ -1,6 +1,6 @@
 module.exports = {
-  mail: {
-    class: nodefony.services.mail,
+  mailer: {
+    class: nodefony.services.mailer,
     arguments: ["@container"]
   }
 };

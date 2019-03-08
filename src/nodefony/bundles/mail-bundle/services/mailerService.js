@@ -1,10 +1,10 @@
 const nodemailer = require("nodemailer");
 const juice = require('juice');
 
-module.exports = class mail extends nodefony.Service {
+module.exports = class mailer extends nodefony.Service {
 
   constructor(container) {
-    super("mail", container);
+    super("mailer", container);
     this.nodemailer = nodemailer;
     this.transporters = {};
     this.domain = null;
@@ -71,8 +71,10 @@ module.exports = class mail extends nodefony.Service {
     });
   }
 
-  sendTestMail(to, context = null, transporterName = null) {
-
+  sendTestMail(to, transporterName = null, context = null, ) {
+    if (!this.config) {
+      return Promise.reject(new Error("mail-bundle bad config"));
+    }
     return this.renderTwig("mail-bundle::mail.html.twig", {}, context)
       .then((html) => {
         return this.juiceResources(html, {}, context)
@@ -100,7 +102,7 @@ module.exports = class mail extends nodefony.Service {
                 ],
               }
             };
-            return this.send(message, transporterName || this.config.default)
+            return this.sendMail(message, transporterName, context)
               .then((info) => {
                 this.logger(info);
                 return html;
@@ -133,7 +135,7 @@ module.exports = class mail extends nodefony.Service {
     });
   }
 
-  async send(options, transporterName) {
+  async sendMail(options, transporterName = this.config.default, context = null) {
     let conf = nodefony.extend({}, this.mailDefaultOptions, options);
     if (!transporterName) {
       return await this.transporter.sendMail(conf)
@@ -149,7 +151,7 @@ module.exports = class mail extends nodefony.Service {
     if (transporterName in this.transporters) {
       return await this.transporters[transporterName].sendMail(conf);
     }
-    throw new Error("bad Transporter");
+    throw new Error(`Bad Transporter ${transporterName}`);
   }
 
   juice(html, options) {

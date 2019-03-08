@@ -69,6 +69,7 @@ framework-bundle:
 #
 #   examples :                   gmail
 #
+#    # https://nodemailer.com
 #    nodemailer :
 #      default       :           "gmail"
 #      transporters  :
@@ -80,18 +81,22 @@ framework-bundle:
 #          auth:
 #            user    :           "user@gmail.com"
 #            pass    :           "xxxxxxxxx"
+#          tls:                  {
+#            // do not fail on invalid certs
+#            rejectUnauthorized: false
+#          }
 #
 mail-bundle:
-  nodemailer :                   ~
-#    default                   : "free"
-#    transporters              :
+  nodemailer :
+    default                   :  "free"
+    transporters              :  ~
 #      free :
-#        host                  : "smtp.free.fr"
-#        port                  : 465
-#        secure                : true # true for 465, false for other ports
-#        auth:
-#          user                : "user" #// generated ethereal user
-#          pass                : "xxxx" #// generated ethereal password
+#          host                  : "smtp.free.fr"
+#          port                  : 465
+#          secure                : true # true for 465, false for other ports
+#          auth:
+#            user                : "" #// generated  user
+#            pass                : "" #// generated  password
 
 ##################################
 #  OVERRIDE ORM SEQUELIZE BUNDLE
