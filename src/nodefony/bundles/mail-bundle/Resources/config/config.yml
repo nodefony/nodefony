@@ -40,7 +40,7 @@ locale      : en_en
 #        translations   : true
 #        webpack        : true
 #        services       : true
-watch       : true
+watch       : false
 
 #
 #  nodemailer config
