@@ -12,9 +12,9 @@
   ],
   "dependencies": {
     "mysql2": "^1.6.5",
-    "pg": "^7.8.1",
+    "pg": "^7.8.2",
     "pg-hstore": "^2.3.2",
-    "sequelize": "5.0.0-beta.16",
+    "sequelize": "^5.0.0-beta.17",
     "sqlite3": "^4.0.6",
     "tedious": "^5.0.3"
   },

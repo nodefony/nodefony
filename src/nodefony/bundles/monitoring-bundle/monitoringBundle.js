@@ -227,7 +227,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
             break;
         }
         let mail = null;
-        if (this.mailer) {
+        if (this.mailer && this.mailer.config.transporters) {
           mail = {
             transporters: this.mailer.config.transporters,
             default: this.mailer.config.default

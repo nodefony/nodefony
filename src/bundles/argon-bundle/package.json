@@ -16,7 +16,7 @@
     "bootstrap-vue": "^2.0.0-rc.14",
     "clean-webpack-plugin": "^2.0.0",
     "flatpickr": "^4.5.7",
-    "nouislider": "^13.1.1",
+    "nouislider": "^13.1.2",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "uglifyjs-webpack-plugin": "^2.1.2",
     "vue": "^2.6.8",
@@ -26,9 +26,9 @@
     "vue2-transitions": "^0.3.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.5.0",
-    "@vue/cli-plugin-eslint": "^3.5.0",
-    "@vue/cli-service": "^3.5.0",
+    "@vue/cli-plugin-babel": "^3.5.1",
+    "@vue/cli-plugin-eslint": "^3.5.1",
+    "@vue/cli-service": "^3.5.1",
     "@vue/eslint-config-prettier": "^4.0.1",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",

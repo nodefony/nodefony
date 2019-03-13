@@ -50,8 +50,8 @@
     "node": ">=8"
   },
   "dependencies": {
-    "mongoose": "^5.4.18",
-    "sequelize": "5.0.0-beta.16",
+    "mongoose": "^5.4.19",
+    "sequelize": "5.0.0-beta.17",
     "webpack": "^4.29.6",
     "webpack-dev-server": "^3.2.1"
   },
