@@ -27,10 +27,10 @@
     "rxjs": "^6.4.0",
     "terser-webpack-plugin": "^1.2.3",
     "uglifycss": "^0.0.29",
-    "vue": "^2.6.8",
+    "vue": "^2.6.9",
     "vue-loader": "^15.7.0",
     "vue-router": "^3.0.2",
-    "vue-template-compiler": "^2.6.8",
+    "vue-template-compiler": "^2.6.9",
     "webpack": "^4.29.6",
     "webpack-merge": "^4.2.1",
     "websocket": "^1.0.28"

@@ -18,6 +18,7 @@ node_modules/**
 **/precache-manifest*
 npm-debug.log
 yarn-error.log
+.~lock*
 
 yarn.lock
 package-lock.json
