@@ -51,14 +51,14 @@
   },
   "dependencies": {
     "mongoose": "^5.4.19",
-    "sequelize": "5.0.0-beta.17",
+    "sequelize": "^5.1.0",
     "webpack": "^4.29.6",
     "webpack-dev-server": "^3.2.1"
   },
   "devDependencies": {
     "editorconfig": "^0.15.3",
     "github-release-notes": "^0.17.0",
-    "jshint": "^2.10.1",
+    "jshint": "^2.10.2",
     "node-pre-gyp": "^0.12.0"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
