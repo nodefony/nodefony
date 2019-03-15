@@ -92,11 +92,11 @@ module.exports = webpackMerge({
       filename: "./dist/css/[name].css",
       allChunks: true
     }),
-    new cleanPlugin([dist], {
+    /*new cleanPlugin({
       root: public,
       verbose: verbose,
       watch: false,
-    }),
+    }),*/
     new htmlPlugin({
       filename: "dist/index.html",
       template: path.resolve(bundlePath, "Resources", "templates", "index.html.twig"),

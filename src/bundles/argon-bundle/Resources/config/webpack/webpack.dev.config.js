@@ -8,7 +8,7 @@ module.exports = {
   devtool: "source-map",
   resolve: {},
   plugins: [
-    new CleanWebpackPlugin(['assets'], {
+    new CleanWebpackPlugin({
       verbose: kernel.debug,
       root: public
     })
