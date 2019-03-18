@@ -40,7 +40,8 @@ module.exports = function() {
     context.pm2 = require('pm2');
   }*/
   context.Rx = require("rxjs");
-  context.nodefony = new Nodefony();
+  const nodefony = new Nodefony(context);
+
 
   /**
    *  Nodefony autoloader

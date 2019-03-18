@@ -10,10 +10,11 @@ const execSync = require('child_process').execSync;
 const myObj = {};
 module.exports = class Nodefony {
 
-  constructor() {
-    this.require = require;
+  constructor(context) {
+    //this.require = require;
     this.io = {};
-    this.context = {};
+    this.context = context;
+    context.nodefony = this;
     this.session = {
       storage: {}
     };
@@ -423,20 +424,21 @@ module.exports = class Nodefony {
     try {
       try {
         this.kernelConfigPath = path.resolve(cwd, "config", "config.js");
+        fs.lstatSync(this.kernelConfigPath);
       } catch (e) {
         this.kernelConfigPath = path.resolve(cwd, "config", "config.yml");
+        fs.lstatSync(this.kernelConfigPath);
       }
-      //this.kernelConfigPath = path.resolve(cwd, "config", "config.yml");
       this.appPath = path.resolve(cwd, "app");
+      fs.lstatSync(this.appPath);
       try {
         this.appConfigPath = path.resolve(this.appPath, "config", "config.js");
+        fs.lstatSync(this.appConfigPath);
       } catch (e) {
         this.appConfigPath = path.resolve(this.appPath, "config", "config.yml");
+        fs.lstatSync(this.appConfigPath);
       }
       this.pm2ConfigPath = path.resolve(cwd, "config", "pm2.config.js");
-      fs.lstatSync(this.kernelConfigPath);
-      fs.lstatSync(this.appPath);
-      fs.lstatSync(this.appConfigPath);
       if (!this.appKernel) {
         this.loadAppKernel(cwd);
       }
