@@ -154,6 +154,9 @@ module.exports = nodefony.register("Reader", function() {
       };
 
       const javascript = function(file, bundle, parser, callback) {
+        if (typeof bundle === "function") {
+          callback = bundle;
+        }
         if (typeof parser === "function") {
           callback = parser;
         }
