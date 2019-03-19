@@ -6,7 +6,7 @@ const Config = class Config {
     this.bundleType = builder.bundleType;
     this.skeletonPath = builder.skeletonPath;
     this.routing = builder.routing; //new routing(this.cli, builder);
-    this.configSkeleton = path.resolve(this.skeletonPath, this.bundleType, "config.yml.skeleton");
+    this.configSkeleton = path.resolve(this.skeletonPath, this.bundleType, "config.js.skeleton");
     this.webpackSkeleton = path.resolve(this.skeletonPath, "webpack", "webpack.common.skeleton");
   }
 
@@ -15,7 +15,7 @@ const Config = class Config {
       name: this.name,
       type: "directory",
       childs: [{
-          name: "config.yml",
+          name: "config.js",
           type: "file",
           skeleton: this.configSkeleton,
           params: this.cli.response

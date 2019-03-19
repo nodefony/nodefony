@@ -275,9 +275,9 @@ module.exports = class generateProject extends nodefony.Builder {
               type: "copy",
               path: path.resolve(this.pathSkeleton, "app", "config", "webpack.config.js"),
             }, {
-              name: "config.yml",
+              name: "config.js",
               type: "file",
-              skeleton: path.resolve(this.pathSkeleton, "app", "config", "config.yml.skeleton"),
+              skeleton: path.resolve(this.pathSkeleton, "app", "config", "config.js.skeleton"),
               params: this.cli.response
             }, {
               name: "routing.js",
@@ -369,9 +369,9 @@ module.exports = class generateProject extends nodefony.Builder {
               }]
             }]
           }, {
-            name: "config.yml",
+            name: "config.js",
             type: "file",
-            skeleton: path.resolve(this.pathSkeleton, "config", "config.yml.skeleton"),
+            skeleton: path.resolve(this.pathSkeleton, "config", "config.js.skeleton"),
             params: this.cli.response
           }, {
             name: "pm2.config.js",
