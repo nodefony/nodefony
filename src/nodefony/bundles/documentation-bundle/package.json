@@ -10,8 +10,8 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/preset-env": "^7.3.4",
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.1",
     "@nodefony/stage": "^0.1.16",
     "babel-loader": "^8.0.5",
     "bootstrap": "^4.3.1",
@@ -21,9 +21,7 @@
     "expose-loader": "^0.7.5",
     "file-loader": "^3.0.1",
     "font-awesome": "^4.7.0",
-    "gojs": "^2.0.4",
     "highlight.js": "^9.15.6",
-    "image-webpack-loader": "^4.6.0",
     "less-loader": "^4.1.0",
     "mini-css-extract-plugin": "^0.5.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",

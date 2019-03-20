@@ -95,37 +95,39 @@ module.exports = webpackMerge(config, {
         // IMAGES
         test: /\.(gif|png|jpe?g|svg)$/i,
         use: [{
-          loader: "file-loader",
-          options: {
-            name: "[name].[ext]",
-            publicPath: `/${bundleName}/assets/images/`,
-            outputPath: "/images/"
-          }
-        }, {
-          loader: 'image-webpack-loader',
-          options: {
-            disable: dev,
-            mozjpeg: {
-              progressive: true,
-              quality: 65
-            },
-            // optipng.enabled: false will disable optipng
-            optipng: {
-              enabled: false,
-            },
-            pngquant: {
-              quality: '65-90',
-              speed: 4
-            },
-            gifsicle: {
-              interlaced: false,
-            },
-            // the webp option will enable WEBP
-            webp: {
-              quality: 75
+            loader: "file-loader",
+            options: {
+              name: "[name].[ext]",
+              publicPath: `/${bundleName}/assets/images/`,
+              outputPath: "/images/"
             }
           }
-        }]
+          /*, {
+                    loader: 'image-webpack-loader',
+                    options: {
+                      disable: dev,
+                      mozjpeg: {
+                        progressive: true,
+                        quality: 65
+                      },
+                      // optipng.enabled: false will disable optipng
+                      optipng: {
+                        enabled: false,
+                      },
+                      pngquant: {
+                        quality: '65-90',
+                        speed: 4
+                      },
+                      gifsicle: {
+                        interlaced: false,
+                      },
+                      // the webp option will enable WEBP
+                      webp: {
+                        quality: 75
+                      }
+                    }
+                  }*/
+        ]
       }
     ]
   },

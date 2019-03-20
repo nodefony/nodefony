@@ -26,10 +26,10 @@ module.exports = {
    *      watch:                    true
    *  or
    *      watch:{
-   *        controller:             true
-   *        config:                 true        // only  routing.yml
-   *        views:                  true
-   *        translations:           true
+   *        controller:             true,
+   *        config:                 true,       // only  routing.yml
+   *        views:                  true,
+   *        translations:           true,
    *        webpack:                true
    *      }
    *
@@ -45,4 +45,4 @@ module.exports = {
    *
    *	example : create an other database connector
    */
-}
+};

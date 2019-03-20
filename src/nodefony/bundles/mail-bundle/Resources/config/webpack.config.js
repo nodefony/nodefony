@@ -22,7 +22,7 @@ module.exports = webpackMerge(config, {
   //context: context,
   target: "web",
   entry: {
-    mail  : [ "./Resources/public/js/mail.js" ]
+    mail: ["./Resources/public/js/mail.js"]
   },
   output: {
     path: public,
@@ -99,30 +99,6 @@ module.exports = webpackMerge(config, {
             name: "[name].[ext]",
             publicPath: `/${bundleName}/assets/images/`,
             outputPath: "/images/"
-          }
-        }, {
-          loader: 'image-webpack-loader',
-          options: {
-            disable: dev,
-            mozjpeg: {
-              progressive: true,
-              quality: 65
-            },
-            // optipng.enabled: false will disable optipng
-            optipng: {
-              enabled: false,
-            },
-            pngquant: {
-              quality: '65-90',
-              speed: 4
-            },
-            gifsicle: {
-              interlaced: false,
-            },
-            // the webp option will enable WEBP
-            webp: {
-              quality: 75
-            }
           }
         }]
       }

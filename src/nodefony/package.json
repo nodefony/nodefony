@@ -32,8 +32,8 @@
     "nodefony": "./bin/nodefony"
   },
   "dependencies": {
-    "@babel/parser": "^7.3.4",
-    "@babel/preset-env": "^7.3.4",
+    "@babel/parser": "^7.4.0",
+    "@babel/preset-env": "^7.4.1",
     "@nodefony/documentation-bundle": "^4.2.0-beta.2",
     "@nodefony/elastic-bundle": "^4.2.0-beta.2",
     "@nodefony/framework-bundle": "^4.2.0-beta.2",
@@ -66,7 +66,7 @@
     "node-emoji": "^1.10.0",
     "npm": "^6.9.0",
     "pm2": "^3.4.0",
-    "promise": "^8.0.2",
+    "promise": "^8.0.3",
     "request": "^2.88.0",
     "rxjs": "^6.4.0",
     "semver": "^5.6.0",
