@@ -20,9 +20,16 @@ module.exports = class appController extends nodefony.controller {
    *
    */
   headerAction() {
+    let documentation = this.kernel.getBundles("documentation");
+    let urlDoc = null;
+    if (documentation) {
+      urlDoc = this.generateUrl("documentation");
+    }
     return this.render("app::header.html.twig", {
       langs: this.get("translation").getLangs(),
-      locale: this.getLocale()
+      locale: this.getLocale(),
+      version: nodefony.version,
+      urlDoc: urlDoc
     });
   }
 

@@ -21,7 +21,7 @@ const Config = class Config {
           params: this.cli.response
         },
         this.routing.createBuilder(),
-        this.createSecurityConfig("yml"),
+        this.createSecurityConfig("js"),
         this.createServicesConfig()
       ]
     };

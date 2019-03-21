@@ -57,7 +57,7 @@
     "commander": "^2.19.0",
     "create-react-app": "^2.1.8",
     "inquirer": "^6.2.2",
-    "js-yaml": "^3.12.2",
+    "js-yaml": "^3.13.0",
     "lodash": "^4.17.11",
     "lodash.isregexp": "^4.0.1",
     "markdown-it": "^8.4.2",

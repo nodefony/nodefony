@@ -77,11 +77,11 @@ module.exports = class Nodefony {
 
   setConfig(cwd = path.resolve(".")) {
     try {
-      this.kernelConfig = this.loadConfig(this.kernelConfigPath);
-      this.appConfig = this.loadConfig(this.appConfigPath);
       this.projectPackage = require(path.resolve(cwd, "package.json"));
       this.projectVersion = this.projectPackage.version;
       this.projectName = this.projectPackage.name;
+      this.kernelConfig = this.loadConfig(this.kernelConfigPath);
+      this.appConfig = this.loadConfig(this.appConfigPath, console.warn);
       this.packageManager = this.kernelConfig.packageManager || "npm";
     } catch (e) {
       throw e;
@@ -95,7 +95,7 @@ module.exports = class Nodefony {
     return this.pm2Config;
   }
 
-  loadConfig(file) {
+  loadConfig(file, log) {
     try {
       let ext = path.extname(file);
       switch (ext) {
@@ -105,6 +105,10 @@ module.exports = class Nodefony {
           return yaml.load(this.readFileSync(file));
       }
     } catch (e) {
+      if (log) {
+        //log(e);
+        return {};
+      }
       throw e;
     }
   }

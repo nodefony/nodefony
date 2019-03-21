@@ -4,6 +4,7 @@ module.exports = class appController extends nodefony.controller {
     super(container, context);
     // start session
     this.startSession();
+    this.documentation = this.kernel.getBundles("documentation");
   }
 
   /**
@@ -20,10 +21,15 @@ module.exports = class appController extends nodefony.controller {
    *
    */
   headerAction() {
+    let urlDoc = null;
+    if (this.documentation) {
+      urlDoc = this.generateUrl("documentation");
+    }
     return this.render("app::header.html.twig", {
       langs: this.get("translation").getLangs(),
       locale: this.getLocale(),
-      version: nodefony.version
+      version: nodefony.version,
+      urlDoc: urlDoc
     });
   }
 
@@ -43,8 +49,7 @@ module.exports = class appController extends nodefony.controller {
    *  @see Route documentation in routing.js
    */
   documentationAction() {
-    let docBundle = this.kernel.getBundles("documentation");
-    if (docBundle) {
+    if (this.documentation) {
       return this.forward("documentation:default:index");
     }
     try {

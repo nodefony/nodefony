@@ -41,7 +41,7 @@ module.exports = {
     realtime: true,
     monitoring: true,
     mail: true,
-    documentation: true,
+    documentation: false,
     unitTest: true,
     redis: false,
     mongo: false,

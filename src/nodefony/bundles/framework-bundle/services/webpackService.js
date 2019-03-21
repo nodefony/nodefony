@@ -178,8 +178,12 @@ module.exports = class webpack extends nodefony.Service {
     return options;
   }
 
-  addDevServerEntrypoints(config, watch) {
+  addDevServerEntrypoints(config, watch, type) {
     let options = this.setDevServer(config, watch);
+    switch (type) {
+      case "react":
+        return options;
+    }
     if (options.watch) {
       let devClient = [];
       if (options.inline) {
@@ -294,7 +298,7 @@ module.exports = class webpack extends nodefony.Service {
         }
 
         try {
-          devServer = this.addDevServerEntrypoints(config, watch);
+          devServer = this.addDevServerEntrypoints(config, watch, type);
         } catch (e) {
           shell.cd(this.kernel.rootDir);
           return reject(e);

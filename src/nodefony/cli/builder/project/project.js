@@ -288,9 +288,9 @@ module.exports = class generateProject extends nodefony.Builder {
               type: "copy",
               path: path.resolve(this.pathSkeleton, "app", "config", "services.js")
             }, {
-              name: "security.yml",
+              name: "security.js",
               type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "config", "security.yml")
+              path: path.resolve(this.pathSkeleton, "app", "config", "security.js")
             }]
           }, {
             name: "controller",
