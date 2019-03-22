@@ -32,8 +32,8 @@
     "nodefony": "./bin/nodefony"
   },
   "dependencies": {
-    "@babel/parser": "^7.4.0",
-    "@babel/preset-env": "^7.4.1",
+    "@babel/parser": "^7.4.2",
+    "@babel/preset-env": "^7.4.2",
     "@nodefony/documentation-bundle": "^4.2.0-beta.2",
     "@nodefony/elastic-bundle": "^4.2.0-beta.2",
     "@nodefony/framework-bundle": "^4.2.0-beta.2",
