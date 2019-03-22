@@ -342,7 +342,7 @@ $ nodefony preprod
 
 ## <a name="https"></a>Serving a Nodefony project with HTTPS
 
-By default nodefony listen secure port in 5152 @see config/config.yml
+By default nodefony listen secure port in 5152 @see config/config.js
 
 During the installation process all the openssl parts were generated ( self-signed localhost certificate ).
 
@@ -362,7 +362,7 @@ You can find certificate authority (ca) here:
 
 ## <a name="configurations"></a>Framework Configurations
 
-Open **[config/config.yml](https://github.com/nodefony/nodefony-core/blob/master/config/config.yml)**  if you want change httpPort, domain ,servers, add bundle, locale ...
+Open **[config/config.js](https://github.com/nodefony/nodefony-core/blob/master/config/config.js)**  if you want change httpPort, domain ,servers, add bundle, locale ...
 
 ```js
 /**
@@ -510,19 +510,30 @@ Access to bundle route with URL : <https://localhost:5152/hello>
 ### Example controller  : src/bundles/hello-bundle/controller/defaultController.js
 
 ```js
+/**
+ *	@class defaultController
+ *	@constructor
+ *	@param {class} container
+ *	@param {class} context
+ *
+ */
 module.exports = class defaultController extends nodefony.controller {
-  constructor (container, context){
-    super(container, context);
-  }
-  indexAction() {
-    try {
-      return this.render("hello-bundle::index.html.twig", {
-        name: "hello-bundle"
-      });
-    } catch (e) {
-      throw e;
-    }
-  }
+
+	constructor (container, context){
+		super(container, context);
+	}
+	/**
+	 *
+	 *	@method indexAction
+	 *
+	 */
+	indexAction (){
+		return this.render("hello-bundle::index.html.twig", {
+			name: "hello-bundle"		
+    }).catch((e) =>{
+      throw e ;
+    });
+	}
 };
 ```
 
@@ -530,25 +541,32 @@ module.exports = class defaultController extends nodefony.controller {
 
 ```twig
 {% extends '/app/Resources/views/base.html.twig' %}
-
 {% block title %}Welcome {{name}}! {% endblock %}
-
 {% block stylesheets %}
   {{ parent() }}
   <!-- WEBPACK BUNDLE -->
   <link rel='stylesheet' href='{{CDN("stylesheet")}}/hello-bundle/assets/css/hello.css' />
 {% endblock %}
-
 {% block body %}
-      <img class='displayed' src='{{CDN("image")}}/framework-bundle/images/nodefony-logo-white.png'>
-      <h1 class='success'>
+  {% block header %}
+    {{ render( controller('app:app:header' )) }}
+  {% endblock %}
+  <div class='container' style='margin-top:100px'>
+    <div class='row'>
+      <div class='col text-center'>
+        <img src='{{CDN("image")}}/app/images/app-logo.png'>
         <a href='{{url('documentation')}}'>
-          <strong style='font-size:45px'>NODEFONY</strong>
+          <strong style='font-size:45px'>{{name}}</strong>
         </a>
-        <p>{{trans('welcome')}} {{name}}</p>
-      </h1>
+        <p class='display-4 mt-5'>{{trans('welcome')}}</p>
+        <p>{{binding}}</p>
+        </div>
+    </div>
+  </div>
+  {% block footer %}
+    {{ render( controller('app:app:footer' )) }}
+  {% endblock %}
 {% endblock %}
-
 {% block javascripts %}
   {{ parent() }}
   <!-- WEBPACK BUNDLE -->
@@ -564,7 +582,7 @@ module.exports = class defaultController extends nodefony.controller {
 
 #### without having to reboot the server.
 
-You can see hello-bundle config   : src/bundles/hello-bundle/Resources/config/config.yml
+You can see hello-bundle config   : src/bundles/hello-bundle/Resources/config/config.js
 
 ```js
 /**
@@ -594,14 +612,14 @@ module.exports = {
    *  or
    *      watch:{
    *        controller:             true,
-   *        config:                 true,        // only  routing.yml
+   *        config:                 true,        // only  routing.js
    *        views:                  true,
    *        translations:           true,
    *        webpack:                true
    *      }
    *
    */
-  watch: true,
+  watch: true
   /**
    *
    *	Insert here the bundle-specific configurations
@@ -627,22 +645,45 @@ module.exports = {
 You can see hello-bundle config webpack : src/bundles/hello-bundle/Resources/config/webpack.config.js
 
 ```js
-module.exports = webpackMerge({
-  context: context,
+const path = require("path");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const webpackMerge = require('webpack-merge');
+
+// Default context <bundle base directory>
+//const context = path.resolve(__dirname, "..", "Resources", "public");
+const public = path.resolve(__dirname, "..", "public", "assets");
+const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
+const publicPath = bundleName + "/assets/";
+
+let config = null;
+let dev = true;
+if (kernel.environment === "dev") {
+  config = require("./webpack/webpack.dev.config.js");
+} else {
+  config = require("./webpack/webpack.prod.config.js");
+  dev = false;
+}
+module.exports = webpackMerge(config, {
+  //context: context,
   target: "web",
-  entry       : {
-    hello  : [ "./js/hello.js" ]
+  entry: {
+    hello  : [ "./Resources/public/js/hello.js" ]
   },
   output: {
     path: public,
     publicPath: publicPath,
     filename: "./js/[name].js",
     library: "[name]",
-    libraryTarget: "umd"
+    libraryExport: "default"
   },
-  externals: {},
-  resolve: {},
-  module: {...}
+  externals: {...},
+  resolve: {...},
+  module: {...},
+  plugins: [...],
+  devServer: {
+    inline: true,
+    hot: false
+  }
 });
 ```
 

@@ -45,7 +45,7 @@ Nodefony is not an exhaustive port of symfony !
 -   Notion of synchronous or asynchronous execution in Action Controller (Promise).
 -   Services Containers, Dependency Injection (Design Patterns)
 -   Sessions Manager (ORM, memcached)
--   Authentication Manager (Digest, Basic, oAuth, Local, ldap, jwf, openid)
+-   Authentication Manager (Digest, Basic, oAuth, Local, ldap, jwt, openid)
 -   WAF ( Web application firewall )
 -   Cross-Origin Resource Sharing ([CORS](https://www.w3.org/TR/cors/))
 -   Production Management ([PM2](https://github.com/Unitech/pm2/))
@@ -342,7 +342,7 @@ $ nodefony preprod
 
 ## <a name="https"></a>Serving a Nodefony project with HTTPS
 
-By default nodefony listen secure port in 5152 @see config/config.yml
+By default nodefony listen secure port in 5152 @see config/config.js
 
 During the installation process all the openssl parts were generated ( self-signed localhost certificate ).
 
@@ -362,83 +362,97 @@ You can find certificate authority (ca) here:
 
 ## <a name="configurations"></a>Framework Configurations
 
-Open **[config/config.yml](https://github.com/nodefony/nodefony-core/blob/master/config/config.yml)**  if you want change httpPort, domain ,servers, add bundle, locale ...
+Open **[config/config.js](https://github.com/nodefony/nodefony-core/blob/master/config/config.js)**  if you want change httpPort, domain ,servers, add bundle, locale ...
 
-```yml
-#####################
-#  NODEFONY FRAMEWORK
-#
-#       KERNEL CONFIG
-#
-#   Domain listen : Nodefony can listen only one domain ( no vhost )
-#     Example :
-#      domain :  0.0.0.0      # for all interfaces
-#      domain :  [::1]        # for IPV6 only
-#      domain :  192.168.1.1  # IPV4
-#      domain :  mydomain.com # DNS
-#
-#   Domain Alias : string only "<<regexp>>" use domainCheck : true
-#     Example :
-#      domainAlias:
-#        - "^127.0.0.1$"
-#        - "^localhost$"
-#        - ".*\\.nodefony\\.com"
-#        - "^nodefony\\.eu$"
-#        - "^.*\\.nodefony\\.eu$"
-#
-system:
-  domain                        : 0.0.0.0
-  domainAlias:
-    - "^127.0.0.1$"
-    - "^localhost$"
-  httpPort                      : 5151
-  httpsPort                     : 5152
-  domainCheck                   : false
-  locale                        : en_en
-  ##############
-  # BUNDLES CORE
-  security                      : true
-  realtime                      : true
-  monitoring                    : true
-  documentation                 : true
-  unitTest                      : true
-  redis                         : false
-  mongo                         : false
-  elastic                       : false
-  #########
-  # SERVERS
-  servers:
-    statics                     : true
-    protocol                    : "2.0"             #  2.0 || 1.1
-    http                        : true
-    https	                      : true
-    ws			                    : true
-    wss			                    : true
-    certificats:
-      key                       : "config/certificates/server/privkey.pem"
-      cert                      : "config/certificates/server/fullchain.pem"
-      ca                        : "config/certificates/ca/nodefony-starter-root-ca.crt.pem"
-      options:
-        rejectUnauthorized      : true
-  ############
-  # DEV SERVER
-  devServer:
-    inline                      : true
-    hot                         : false
-    hotOnly                     : false
-    overlay                     : true
-    logLevel                    : info        # none, error, warning or info
-    progress                    : false
-    protocol                    : https
-    websocket                   : true
+```js
+/**
+ *  NODEFONY FRAMEWORK
+ *
+ *       KERNEL CONFIG
+ *
+ *   Domain listen : Nodefony can listen only one domain ( no vhost )
+ *     Example :
+ *      domain :  0.0.0.0      // for all interfaces
+ *      domain :  [::1]        // for IPV6 only
+ *      domain :  192.168.1.1  // IPV4
+ *      domain :  mydomain.com // DNS
+ *
+ *   Domain Alias : string only "<<regexp>>" use domainCheck : true
+ *     Example :
+ *      domainAlias:[
+ *        "^127.0.0.1$",
+ *        "^localhost$",
+ *        ".*\\.nodefony\\.com",
+ *        "^nodefony\\.eu$",
+ *        "^.*\\.nodefony\\.eu$"
+ *      ]
+ */
+const path = require("path");
 
-  #######################
-  #  BUNDLES REGISTRATION
-  #
-  #       bundles:
-  #         hello-bundle                 : "file:src/bundles/hello-bundle"
-  #         my-bundle                    : ~
-  bundles                       : ~
+module.exports = {
+  system: {
+    domain: "0.0.0.0",
+    domainAlias: [
+      "^127.0.0.1$",
+      "^localhost$"
+    ],
+    httpPort: 5151,
+    httpsPort: 5152,
+    domainCheck: false,
+    locale: "en_en",
+    /**
+     * BUNDLES CORE
+     */
+    security: true,
+    realtime: true,
+    monitoring: true,
+    mail: true,
+    documentation: false,
+    unitTest: true,
+    redis: false,
+    mongo: false,
+    elastic: false,
+    /**
+     * SERVERS
+     */
+    servers: {
+      statics: true,
+      protocol: "2.0", //  2.0 || 1.1
+      http: true,
+      https: true,
+      ws: true,
+      wss: true,
+      certificats: {
+        key: path.resolve("config", "certificates", "server", "privkey.pem"),
+        cert: path.resolve("config", "certificates", "server", "fullchain.pem"),
+        ca: path.resolve("config", "certificates", "ca", "nodefony-root-ca.crt.pem"),
+        options: {
+          rejectUnauthorized: true
+        }
+      }
+    },
+    /**
+     * DEV SERVER
+     */
+    devServer: {
+      inline: true,
+      hot: false,
+      hotOnly: false,
+      overlay: true,
+      logLevel: "info", // none, error, warning or info
+      progress: false,
+      protocol: "https",
+      websocket: true
+    },
+    /**
+     *  BUNDLES LOCAL REGISTRATION
+     *
+     *       bundles:
+     *         hello-bundle                 : "file:src/bundles/hello-bundle"
+     *         
+     */
+    bundles: {}
+    ...
 ```
 
 ## <a name="bundles"></a>Quick Start
@@ -496,19 +510,30 @@ Access to bundle route with URL : <https://localhost:5152/hello>
 ### Example controller  : src/bundles/hello-bundle/controller/defaultController.js
 
 ```js
+/**
+ *	@class defaultController
+ *	@constructor
+ *	@param {class} container
+ *	@param {class} context
+ *
+ */
 module.exports = class defaultController extends nodefony.controller {
-  constructor (container, context){
-    super(container, context);
-  }
-  indexAction() {
-    try {
-      return this.render("hello-bundle::index.html.twig", {
-        name: "hello-bundle"
-      });
-    } catch (e) {
-      throw e;
-    }
-  }
+
+	constructor (container, context){
+		super(container, context);
+	}
+	/**
+	 *
+	 *	@method indexAction
+	 *
+	 */
+	indexAction (){
+		return this.render("hello-bundle::index.html.twig", {
+			name: "hello-bundle"		
+    }).catch((e) =>{
+      throw e ;
+    });
+	}
 };
 ```
 
@@ -516,25 +541,32 @@ module.exports = class defaultController extends nodefony.controller {
 
 ```twig
 {% extends '/app/Resources/views/base.html.twig' %}
-
 {% block title %}Welcome {{name}}! {% endblock %}
-
 {% block stylesheets %}
   {{ parent() }}
   <!-- WEBPACK BUNDLE -->
   <link rel='stylesheet' href='{{CDN("stylesheet")}}/hello-bundle/assets/css/hello.css' />
 {% endblock %}
-
 {% block body %}
-      <img class='displayed' src='{{CDN("image")}}/framework-bundle/images/nodefony-logo-white.png'>
-      <h1 class='success'>
+  {% block header %}
+    {{ render( controller('app:app:header' )) }}
+  {% endblock %}
+  <div class='container' style='margin-top:100px'>
+    <div class='row'>
+      <div class='col text-center'>
+        <img src='{{CDN("image")}}/app/images/app-logo.png'>
         <a href='{{url('documentation')}}'>
-          <strong style='font-size:45px'>NODEFONY</strong>
+          <strong style='font-size:45px'>{{name}}</strong>
         </a>
-        <p>{{trans('welcome')}} {{name}}</p>
-      </h1>
+        <p class='display-4 mt-5'>{{trans('welcome')}}</p>
+        <p>{{binding}}</p>
+        </div>
+    </div>
+  </div>
+  {% block footer %}
+    {{ render( controller('app:app:footer' )) }}
+  {% endblock %}
 {% endblock %}
-
 {% block javascripts %}
   {{ parent() }}
   <!-- WEBPACK BUNDLE -->
@@ -550,33 +582,54 @@ module.exports = class defaultController extends nodefony.controller {
 
 #### without having to reboot the server.
 
-You can see hello-bundle config   : src/bundles/hello-bundle/Resources/config/config.yml
+You can see hello-bundle config   : src/bundles/hello-bundle/Resources/config/config.js
 
-```yml
-########## nodefony CONFIG BUNDLE  hello-bundle  ############
-name :                          hello-bundle
-version:                        "1.0.0"
-locale :                        en_en
-
-#
-#  WATCHERS
-#
-#    watchers Listen to changes, deletion, renaming of files and directories
-#    of different components
-#
-#    For watch all components
-#
-#      watch:			true
-#    or
-#      watch:
-#        controller:	true
-#        config:        true		# only  routing
-#        views:         true
-#        translations:  true
-#        webpack:       true
-#        services:      true
-#
-watch:                          true
+```js
+/**
+*
+*
+*	nodefony-starter CONFIG BUNDLE  hello-bundle
+*
+* ===============================================================================
+*
+*  Copyright © 2019/2019        admin | admin@nodefony.com
+*
+* ===============================================================================
+*
+*        GENERATE BY nodefony-starter BUILDER
+*/
+module.exports = {
+  type        : "nodefony",
+  locale      : "en_en",
+  /**
+   *    WATCHERS
+   *
+   *  watchers Listen to changes, deletion, renaming of files and directories
+   *  of different components
+   *
+   *  For watch all components
+   *      watch:                    true
+   *  or
+   *      watch:{
+   *        controller:             true,
+   *        config:                 true,        // only  routing.js
+   *        views:                  true,
+   *        translations:           true,
+   *        webpack:                true
+   *      }
+   *
+   */
+  watch: true
+  /**
+   *
+   *	Insert here the bundle-specific configurations
+   *
+   *	You can also override config of another bundle
+   *	with the name of the bundle
+   *
+   *	example : create an other database connector
+   */
+};
 ```
 
 ### Webpack Module bundler :
@@ -592,22 +645,45 @@ watch:                          true
 You can see hello-bundle config webpack : src/bundles/hello-bundle/Resources/config/webpack.config.js
 
 ```js
-module.exports = webpackMerge({
-  context: context,
+const path = require("path");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const webpackMerge = require('webpack-merge');
+
+// Default context <bundle base directory>
+//const context = path.resolve(__dirname, "..", "Resources", "public");
+const public = path.resolve(__dirname, "..", "public", "assets");
+const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
+const publicPath = bundleName + "/assets/";
+
+let config = null;
+let dev = true;
+if (kernel.environment === "dev") {
+  config = require("./webpack/webpack.dev.config.js");
+} else {
+  config = require("./webpack/webpack.prod.config.js");
+  dev = false;
+}
+module.exports = webpackMerge(config, {
+  //context: context,
   target: "web",
-  entry       : {
-    hello  : [ "./js/hello.js" ]
+  entry: {
+    hello  : [ "./Resources/public/js/hello.js" ]
   },
   output: {
     path: public,
     publicPath: publicPath,
     filename: "./js/[name].js",
     library: "[name]",
-    libraryTarget: "umd"
+    libraryExport: "default"
   },
-  externals: {},
-  resolve: {},
-  module: {...}
+  externals: {...},
+  resolve: {...},
+  module: {...},
+  plugins: [...],
+  devServer: {
+    inline: true,
+    hot: false
+  }
 });
 ```
 
