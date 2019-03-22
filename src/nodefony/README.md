@@ -364,81 +364,95 @@ You can find certificate authority (ca) here:
 
 Open **[config/config.yml](https://github.com/nodefony/nodefony-core/blob/master/config/config.yml)**  if you want change httpPort, domain ,servers, add bundle, locale ...
 
-```yml
-#####################
-#  NODEFONY FRAMEWORK
-#
-#       KERNEL CONFIG
-#
-#   Domain listen : Nodefony can listen only one domain ( no vhost )
-#     Example :
-#      domain :  0.0.0.0      # for all interfaces
-#      domain :  [::1]        # for IPV6 only
-#      domain :  192.168.1.1  # IPV4
-#      domain :  mydomain.com # DNS
-#
-#   Domain Alias : string only "<<regexp>>" use domainCheck : true
-#     Example :
-#      domainAlias:
-#        - "^127.0.0.1$"
-#        - "^localhost$"
-#        - ".*\\.nodefony\\.com"
-#        - "^nodefony\\.eu$"
-#        - "^.*\\.nodefony\\.eu$"
-#
-system:
-  domain                        : 0.0.0.0
-  domainAlias:
-    - "^127.0.0.1$"
-    - "^localhost$"
-  httpPort                      : 5151
-  httpsPort                     : 5152
-  domainCheck                   : false
-  locale                        : en_en
-  ##############
-  # BUNDLES CORE
-  security                      : true
-  realtime                      : true
-  monitoring                    : true
-  documentation                 : true
-  unitTest                      : true
-  redis                         : false
-  mongo                         : false
-  elastic                       : false
-  #########
-  # SERVERS
-  servers:
-    statics                     : true
-    protocol                    : "2.0"             #  2.0 || 1.1
-    http                        : true
-    https	                      : true
-    ws			                    : true
-    wss			                    : true
-    certificats:
-      key                       : "config/certificates/server/privkey.pem"
-      cert                      : "config/certificates/server/fullchain.pem"
-      ca                        : "config/certificates/ca/nodefony-starter-root-ca.crt.pem"
-      options:
-        rejectUnauthorized      : true
-  ############
-  # DEV SERVER
-  devServer:
-    inline                      : true
-    hot                         : false
-    hotOnly                     : false
-    overlay                     : true
-    logLevel                    : info        # none, error, warning or info
-    progress                    : false
-    protocol                    : https
-    websocket                   : true
+```js
+/**
+ *  NODEFONY FRAMEWORK
+ *
+ *       KERNEL CONFIG
+ *
+ *   Domain listen : Nodefony can listen only one domain ( no vhost )
+ *     Example :
+ *      domain :  0.0.0.0      // for all interfaces
+ *      domain :  [::1]        // for IPV6 only
+ *      domain :  192.168.1.1  // IPV4
+ *      domain :  mydomain.com // DNS
+ *
+ *   Domain Alias : string only "<<regexp>>" use domainCheck : true
+ *     Example :
+ *      domainAlias:[
+ *        "^127.0.0.1$",
+ *        "^localhost$",
+ *        ".*\\.nodefony\\.com",
+ *        "^nodefony\\.eu$",
+ *        "^.*\\.nodefony\\.eu$"
+ *      ]
+ */
+const path = require("path");
 
-  #######################
-  #  BUNDLES REGISTRATION
-  #
-  #       bundles:
-  #         hello-bundle                 : "file:src/bundles/hello-bundle"
-  #         my-bundle                    : ~
-  bundles                       : ~
+module.exports = {
+  system: {
+    domain: "0.0.0.0",
+    domainAlias: [
+      "^127.0.0.1$",
+      "^localhost$"
+    ],
+    httpPort: 5151,
+    httpsPort: 5152,
+    domainCheck: false,
+    locale: "en_en",
+    /**
+     * BUNDLES CORE
+     */
+    security: true,
+    realtime: true,
+    monitoring: true,
+    mail: true,
+    documentation: false,
+    unitTest: true,
+    redis: false,
+    mongo: false,
+    elastic: false,
+    /**
+     * SERVERS
+     */
+    servers: {
+      statics: true,
+      protocol: "2.0", //  2.0 || 1.1
+      http: true,
+      https: true,
+      ws: true,
+      wss: true,
+      certificats: {
+        key: path.resolve("config", "certificates", "server", "privkey.pem"),
+        cert: path.resolve("config", "certificates", "server", "fullchain.pem"),
+        ca: path.resolve("config", "certificates", "ca", "nodefony-root-ca.crt.pem"),
+        options: {
+          rejectUnauthorized: true
+        }
+      }
+    },
+    /**
+     * DEV SERVER
+     */
+    devServer: {
+      inline: true,
+      hot: false,
+      hotOnly: false,
+      overlay: true,
+      logLevel: "info", // none, error, warning or info
+      progress: false,
+      protocol: "https",
+      websocket: true
+    },
+    /**
+     *  BUNDLES LOCAL REGISTRATION
+     *
+     *       bundles:
+     *         hello-bundle                 : "file:src/bundles/hello-bundle"
+     *         
+     */
+    bundles: {}
+    ...
 ```
 
 ## <a name="bundles"></a>Quick Start
@@ -552,31 +566,52 @@ module.exports = class defaultController extends nodefony.controller {
 
 You can see hello-bundle config   : src/bundles/hello-bundle/Resources/config/config.yml
 
-```yml
-########## nodefony CONFIG BUNDLE  hello-bundle  ############
-name :                          hello-bundle
-version:                        "1.0.0"
-locale :                        en_en
-
-#
-#  WATCHERS
-#
-#    watchers Listen to changes, deletion, renaming of files and directories
-#    of different components
-#
-#    For watch all components
-#
-#      watch:			true
-#    or
-#      watch:
-#        controller:	true
-#        config:        true		# only  routing
-#        views:         true
-#        translations:  true
-#        webpack:       true
-#        services:      true
-#
-watch:                          true
+```js
+/**
+*
+*
+*	nodefony-starter CONFIG BUNDLE  hello-bundle
+*
+* ===============================================================================
+*
+*  Copyright © 2019/2019        admin | admin@nodefony.com
+*
+* ===============================================================================
+*
+*        GENERATE BY nodefony-starter BUILDER
+*/
+module.exports = {
+  type        : "nodefony",
+  locale      : "en_en",
+  /**
+   *    WATCHERS
+   *
+   *  watchers Listen to changes, deletion, renaming of files and directories
+   *  of different components
+   *
+   *  For watch all components
+   *      watch:                    true
+   *  or
+   *      watch:{
+   *        controller:             true,
+   *        config:                 true,        // only  routing.yml
+   *        views:                  true,
+   *        translations:           true,
+   *        webpack:                true
+   *      }
+   *
+   */
+  watch: true,
+  /**
+   *
+   *	Insert here the bundle-specific configurations
+   *
+   *	You can also override config of another bundle
+   *	with the name of the bundle
+   *
+   *	example : create an other database connector
+   */
+};
 ```
 
 ### Webpack Module bundler :
