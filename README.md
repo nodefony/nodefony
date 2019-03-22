@@ -529,7 +529,8 @@ module.exports = class defaultController extends nodefony.controller {
 	 */
 	indexAction (){
 		return this.render("hello-bundle::index.html.twig", {
-			name: "hello-bundle"		}).catch((e) =>{
+			name: "hello-bundle"		
+    }).catch((e) =>{
       throw e ;
     });
 	}

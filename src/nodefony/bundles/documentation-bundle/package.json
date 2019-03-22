@@ -12,7 +12,7 @@
   "dependencies": {
     "@babel/core": "^7.4.0",
     "@babel/preset-env": "^7.4.2",
-    "@nodefony/stage": "^0.1.16",
+    "@nodefony/stage": "^0.1.18",
     "babel-loader": "^8.0.5",
     "bootstrap": "^4.3.1",
     "cheerio": "^1.0.0-rc.2",
