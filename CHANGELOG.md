@@ -1,5 +1,11 @@
 # Changelog
 
+## v4.3.1 (23/03/2019)
+- [nodefony release 4.3.1](https://github.com/nodefony/nodefony-core/commit/dbacb26ff6febb9d67b79748fe57370738aeb056)
+- [debug watcher upgrade chokidar](https://github.com/nodefony/nodefony-core/commit/d1f8c4d44d2edd2fc6c810bc7b11191fa4412971)
+
+---
+
 ## v4.3.0 (22/03/2019)
 - [nodefony release 4.3.0](https://github.com/nodefony/nodefony-core/commit/42a59f90e10f15a3ec99aa04a075e9d18d5b2e42)
 - [clean mail-bundle](https://github.com/nodefony/nodefony-core/commit/2133c65240e34dcbf5742adef27c2683cd69e9d8)
