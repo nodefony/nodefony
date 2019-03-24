@@ -11,7 +11,6 @@
     "javascript"
   ],
   "dependencies": {
-    "@angular/cli": "=1.7.4",
     "memory-fs": "^0.4.1",
     "webpack": "^4.29.6"
   },

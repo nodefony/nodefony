@@ -1,5 +1,5 @@
 {
-  "esversion": 6,
+  "esversion": 8,
   "node": true,
   "undef": true,
   "unused": true,
@@ -51,6 +51,7 @@
     "stage": true,
     "$": true,
     "jQuery": true,
-    "Rx": true
+    "Rx": true,
+    "inquirer": true
   }
 }

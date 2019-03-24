@@ -4,14 +4,10 @@ const http = require('http');
 const https = require('https');
 
 const makeRequestHttp = function (link, context, callback) {
-
   this.logger("REQUEST : " + link, "INFO");
   let myurl = url.parse(link);
-  if (!this.settingsHttps) {
-    this.settingsHttps = this.get("httpsServer").settings;
-  }
   // cookie session
-  var headers = {};
+  let headers = {};
   if (context.session) {
     headers.Cookie = context.session.name + "=" + context.session.id;
   }
@@ -31,11 +27,10 @@ const makeRequestHttp = function (link, context, callback) {
     keepAliveAgent = new https.Agent({
       keepAlive: true
     });
-
     // certificat
     nodefony.extend(options, {
-      key: fs.readFileSync(this.kernel.rootDir + "/" + this.settingsHttps.certificats.key),
-      cert: fs.readFileSync(this.kernel.rootDir + "/" + this.settingsHttps.certificats.cert),
+      key: this.serverHttps.key,
+      cert: this.serverHttps.cert,
       rejectUnauthorized: false,
       requestCert: true,
       agent: keepAliveAgent
@@ -48,32 +43,25 @@ const makeRequestHttp = function (link, context, callback) {
     });
     options.agent = keepAliveAgent;
   }
-
-  var req = wrapper(options, (res) => {
+  const req = wrapper(options, (res) => {
     var bodyRaw = "";
     res.setEncoding('utf8');
     res.on('data', (chunk) => {
       //this.logger( chunk, "DEBUG");
       bodyRaw += chunk;
     });
-
     res.on('end', () => {
       parseLink.call(this, link, bodyRaw, callback);
     });
-
   });
-
   req.on('error', (e) => {
     this.logger('Problem with request: ' + e.message, "ERROR");
-
   });
-
   req.end();
 };
 
 let parseLink = function (crawlUrl, body, callback) {
-
-  var pageObject = {};
+  let pageObject = {};
   pageObject.links = [];
 
   if (/^\//.test(crawlUrl)) {
@@ -81,8 +69,7 @@ let parseLink = function (crawlUrl, body, callback) {
   } else {
     pageObject.url = crawlUrl;
   }
-
-  var $ = cheerio.load(body, {
+  let $ = cheerio.load(body, {
     ignoreWhitespace: true
   });
   pageObject.title = $('title').text();
@@ -114,9 +101,7 @@ let parseLink = function (crawlUrl, body, callback) {
   callback(null, pageObject);
 };
 
-
 const myLoop = function (link, context, finish, recurse) {
-
   if (this.crawled[link]) {
     if (this.crawled[link].page) {
       finish(null, this.crawled);
@@ -124,14 +109,11 @@ const myLoop = function (link, context, finish, recurse) {
     }
   }
   makeRequestHttp.call(this, link, context, (error, pageObject) => {
-
     if (error) {
       return;
     }
-
     this.crawled[pageObject.url] = [];
     this.crawled[pageObject.url].page = pageObject;
-
     async.eachSeries(pageObject.links, (item, cb) => {
       if (item.linkUrl) {
         // test if the url actually points to the same domain
@@ -144,7 +126,6 @@ const myLoop = function (link, context, finish, recurse) {
       cb(null);
     }, (error) => {
       if (!error) {
-
         for (var i = 0; i < this.crawled[pageObject.url].length; i++) {
           //console.log( this.crawled[pageObject.url] )
           if (this.crawled[pageObject.url][i] in this.crawled) {
@@ -159,7 +140,6 @@ const myLoop = function (link, context, finish, recurse) {
                 finish(error, this.crawled);
               }
             }, 0);
-
           }
         }
       }
@@ -174,28 +154,21 @@ const myLoop = function (link, context, finish, recurse) {
 module.exports = class webCrawler extends nodefony.Service {
 
   constructor(container, kernel) {
-
     super("WEBCRAWLER", container, container.get("notificationsCenter"));
-
     this.kernel = kernel;
     this.crawled = {};
     this.elastic = null;
-
+    this.serverHttps = this.get("httpsServer");
     this.listen(this, "onReady", () => {
       this.elastic = this.kernel.getBundle("documentation").elastic;
     });
   }
 
   siteAll(urlBase, search, context, callback) {
-
-    //console.log(urlBase)
     var recurse = 0;
     var Link = url.parse(urlBase);
-
     this.base = Link.host;
-
     this.protocol = Link.protocol ? Link.protocol + "//" : 'http://';
-
     if (this.elastic) {
       myLoop.call(this, urlBase, context, function ( /*error, crawled*/ ) {});
     } else {

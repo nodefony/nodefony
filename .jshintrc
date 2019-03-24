@@ -51,7 +51,6 @@
     "$": true,
     "jQuery": true,
     "Rx": true,
-    "inquirer": true,
-    "go": true
+    "inquirer": true
   }
 }

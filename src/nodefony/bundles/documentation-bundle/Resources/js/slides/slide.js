@@ -37,10 +37,6 @@ import 'highlight.js/styles/atom-one-dark.css';
 //import 'highlight.js/styles/github.css';
 import '../../css/slides-nodefony.css';
 
-//import "../gojs/diagrams.js";
-//import "../d3/diagrams.js";
-//import "../cytoscape/diagrams.js";
-
 class Slide {
   constructor() {
 

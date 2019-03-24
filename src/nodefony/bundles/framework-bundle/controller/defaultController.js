@@ -96,54 +96,6 @@ module.exports = class defaultController extends nodefony.controller {
     });
   }
 
-  systemAction(options) {
-    let services = {};
-    for (let service in nodefony.services) {
-      let ele = this.container.getParameters("services." + service);
-      services[service] = {};
-      services[service].name = service;
-      if (ele) {
-        let inject = "";
-        let i = 0;
-        for (let inj in ele.injections) {
-          let esc = i === 0 ? "" : " , ";
-          inject += esc + inj;
-          i++;
-        }
-        services[service].run = "CONFIG";
-        services[service].scope = ele.scope === "container" ? "Default container" : ele.scope;
-        services[service].calls = ele.calls;
-        services[service].injections = inject;
-        services[service].properties = ele.properties;
-        services[service].orderInjections = ele.orderArguments ? true : false;
-      } else {
-        services[service].run = "KERNEL";
-        services[service].scope = "KERNEL container";
-
-      }
-    }
-    let obj = {
-      routes: this.router.routes,
-      kernel: this.getParameters("kernel"),
-      services: services
-    };
-    if (options) {
-      nodefony.extend(obj, options);
-      if (options.view) {
-        if (options.renderView) {
-          return this.renderView(options.view, obj);
-        } else {
-          return this.render(options.view, obj);
-        }
-      }
-      if (options.renderView) {
-        return this.renderView('frameworkBundle::system.html.twig', obj);
-      }
-    } else {
-      return this.render('frameworkBundle::system.html.twig', obj);
-    }
-  }
-
   readmeAction() {
     var kernel = this.container.get("kernel");
     var path = kernel.rootDir + '/README.md';
