@@ -7,6 +7,7 @@ const View = class View {
     this.directory = "views";
     this.skeletonView = path.resolve(this.skeletonPath, "bundleView.skeleton");
   }
+
   createBuilder(location, name) {
     nodefony.extend(this.cli.response, {
       CDN_stylesheet: '{{CDN("stylesheet")}}',
@@ -28,39 +29,39 @@ const View = class View {
   }
 
   generateTwig() {
-    return "{% extends '/app/Resources/views/base.html.twig' %}\n\
-\n\
-{% block title %}Welcome {{name}}! {% endblock %}\n\
-{% block stylesheets %}\n\
-  {{ parent() }}\n\
-  <!-- WEBPACK BUNDLE -->\n\
-  <link rel='stylesheet' href='" + this.cli.response.CDN_stylesheet + "/" + this.cli.response.bundleName + "/assets/css/" + this.cli.response.name + ".css' />\n\
-{% endblock %}\n\
-{% block body %}\n\
-  {% block header %}\n\
-    {{ render( controller('app:app:header' )) }}\n\
-  {% endblock %}\n\
-  <div class='container' style='margin-top:100px'>\n\
-    <div class='row'>\n\
-      <div class='col text-center'>\n\
-        <img src='" + this.cli.response.CDN_image + "/app/images/app-logo.png'>\n\
-        <a href='{{url('documentation')}}'>\n\
-          <strong style='font-size:45px'>{{name}}</strong>\n\
-        </a>\n\
-        <p class='display-4 mt-5'>{{trans('welcome')}}</p>\n\
-        <p>{{binding}}</p>\n\
-        </div>\n\
-    </div>\n\
-  </div>\n\
-  {% block footer %}\n\
-    {{ render( controller('app:app:footer' )) }}\n\
-  {% endblock %}\n\
-{% endblock %}\n\
-{% block javascripts %}\n\
-  {{ parent() }}\n\
-  <!-- WEBPACK BUNDLE -->\n\
-  <script src='" + this.cli.response.CDN_javascript + "/" + this.cli.response.bundleName + "/assets/js/" + this.cli.response.name + ".js'></script>\n\
-{% endblock %}";
+    return `{% extends '/app/Resources/views/base.html.twig' %}
+{% block title %}Welcome {{name}}! {% endblock %}
+{% block stylesheets %}
+  {{ parent() }}
+  <!-- WEBPACK BUNDLE -->
+  <link rel='stylesheet' href="${this.cli.response.CDN_stylesheet}/${this.cli.response.bundleName}/assets/css/${this.cli.response.name}.css" />
+{% endblock %}
+{% block body %}
+  {% block header %}
+    {{ render( controller('app:app:header' )) }}
+  {% endblock %}
+  <div class='container' style='margin-top:100px'>
+    <div class='row'>
+      <div class='col text-center'>
+        <img src="${this.cli.response.CDN_image}/app/images/app-logo.png">
+        <a href='#'>
+          <strong style='font-size:45px'>{{name}}</strong>
+        </a>
+        <p class='display-4 mt-5'>{{trans('welcome')}}</p>
+        <p>{{binding}}</p>
+        </div>
+    </div>
+  </div>
+  {% block footer %}
+    {{ render( controller('app:app:footer' )) }}
+  {% endblock %}
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  <!-- WEBPACK BUNDLE -->
+  <script src="${this.cli.response.CDN_javascript}/${this.cli.response.bundleName}/assets/js/${this.cli.response.name}.js"></script>
+{% endblock %}"
+    `;
   }
 };
 module.exports = View;

@@ -1,16 +1,8 @@
 const chokidar = require('chokidar');
 
-module.exports = nodefony.register("watcher", function () {
+module.exports = nodefony.register("watcher", function() {
 
-  // see Chokidar
-  /*
-   *
-   *
-   *
-   *
-   */
   const defaultWatcherSettings = {
-
     persistent: true,
     followSymlinks: true,
     cwd: '.',
@@ -29,9 +21,7 @@ module.exports = nodefony.register("watcher", function () {
   };
 
   class Watcher extends nodefony.Service {
-
     constructor(Path, settings, container) {
-
       super("WATCHER", container);
       this.chokidar = chokidar;
       this.watcher = null;

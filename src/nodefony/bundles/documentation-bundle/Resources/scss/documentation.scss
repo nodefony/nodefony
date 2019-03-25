@@ -1,26 +1,15 @@
+@import url(https://fonts.googleapis.com/css?family=Comfortaa);
+@import url(https://fonts.googleapis.com/css?family=Gochi+Hand);
+
 html {
   font-size: 14px;
 }
 
-pre {
-  display: block;
-  padding: 9.5px;
-  margin: 0 0 10px;
-  font-size: 13px;
-  line-height: 1.42857143;
-  color: #333;
-  word-break: break-all;
-  word-wrap: break-word;
-  background-color: #f5f5f5;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
+
 
 .bg-nodefony{
   background-color: #00a0f1;
   color: white;
-
-
 }
 
 .mt-6{
@@ -35,7 +24,7 @@ pre {
   margin-top: ($spacer * 5) !important;;
 }
 
-h1{
+/*h1{
 	color:#337ab7;
 	margin-left:0px;
 }
@@ -50,25 +39,25 @@ h2{
 h3{
 	font-size: 17px;
 	color: #167b87;
-	/*text-transform: uppercase;*/
+	text-transform: uppercase;
 	margin-left:40px;
 }
 
 h4{
 	font-size: 14px;
 	margin-left:50px;
-}
+}*/
 
 .doc2  {
 	margin-left:20px;
 }
+
 .doc3  {
 	margin-left:40px;
-
 }
+
 .doc4  {
 	margin-left:50px;
-
 }
 
 .config-parameters{
@@ -77,10 +66,92 @@ h4{
 }
 
 hr{
-
 }
 
 .scroll-wrap {
     max-height: 50vh;
     overflow-y: auto;
+}
+
+h1 {
+  margin-left:0px;
+  font-family: 'Gochi Hand', cursive;
+  color: #0167b8;
+  letter-spacing: 0;
+  font-size: 4em;
+  text-transform: none;
+}
+h2 {
+  margin-left:20px;
+  font-family: 'Comfortaa', cursive;
+  color: #0167b8;
+  letter-spacing: 0;
+  font-size: 2.0em;
+  text-transform: none;
+}
+h3 {
+  text-align: left;
+  font-family: 'Comfortaa', cursive;
+  color: #167b87;
+  letter-spacing: 0;
+  font-size: 2em;
+  text-transform: none;
+}
+h4 {
+  text-align: left;
+  font-family: 'Comfortaa', cursive;
+  color: #167b87;
+  letter-spacing: 0;
+  font-size: 1em;
+  text-transform: none;
+}
+h5 {
+  text-align: left;
+  font-family: 'Comfortaa', cursive;
+  color: #167b87;
+  letter-spacing: 0;
+  font-size: 0.8em;
+  text-transform: none;
+}
+h6 {
+  text-align: left;
+  font-family: 'Comfortaa', cursive;
+  letter-spacing: 0;
+  font-size: 0.6em;
+  text-transform: none;
+}
+sup {
+  font-family: 'Gochi Hand', cursive;
+  font-size: 0.2em;
+  color: #167b87;
+}
+
+p {
+  margin-left: 4.5em;
+  font-size: 1em;
+  font-family: 'Comfortaa', cursive;
+}
+
+div {
+  text-align: left;
+  font-size: 1em;
+  font-family: 'Comfortaa', cursive;
+}
+
+pre {
+  font-size:1em;
+  line-height:1em;
+  border-radius: 10px;
+  display: block;
+  border: 2px solid #ccc;
+}
+
+pre code {
+  font-size:1em;
+  min-height: 150px;
+  max-height: 500px;
+  line-height:1em;
+  padding-left:20px;
+  padding-top:20px;
+  border-radius: 10px;
 }

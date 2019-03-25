@@ -2,6 +2,20 @@ import 'bootstrap';
 import '../scss/custom.scss';
 const semver = require("semver");
 
+import hljs from 'highlight.js/lib/highlight';
+import javascript from 'highlight.js/lib/languages/javascript';
+import bash from 'highlight.js/lib/languages/bash';
+import shell from 'highlight.js/lib/languages/shell';
+import css from 'highlight.js/lib/languages/css';
+import yaml from 'highlight.js/lib/languages/yaml';
+import twig from 'highlight.js/lib/languages/twig';
+import nginx from 'highlight.js/lib/languages/nginx';
+
+import 'highlight.js/styles/atom-one-dark.css';
+//import 'highlight.js/styles/atom-one-light.css';
+//import 'highlight.js/styles/github.css';
+//import 'highlight.js/styles/purebasic.css';
+
 class Documentation {
 
   constructor() {
@@ -10,12 +24,20 @@ class Documentation {
       this.getVersions(this.project);
       this.initLang();
       this.initSearch();
-      $.get("/api/git/getCurrentBranch", function (data) {
+      $.get("/api/git/getCurrentBranch", function(data) {
         var ele = $(".branch");
         ele.text(data.branch);
-      }).fail(function (error) {
+      }).fail(function(error) {
         throw error;
       });
+      hljs.registerLanguage('javascript', javascript);
+      hljs.registerLanguage('bash', bash);
+      hljs.registerLanguage('shell', shell);
+      hljs.registerLanguage('css', css);
+      hljs.registerLanguage('yaml', yaml);
+      hljs.registerLanguage('twig', twig);
+      hljs.registerLanguage('nginx', nginx);
+      hljs.initHighlighting();
     });
   }
 
@@ -32,7 +54,7 @@ class Documentation {
   initSearch() {
     const searchImput = $("#inputSearch");
     const search = $("#search");
-    searchImput.bind("keypress", function (event) {
+    searchImput.bind("keypress", function(event) {
       if (event.keyCode === 13) {
         event.stopPropagation();
         event.preventDefault();
@@ -40,7 +62,7 @@ class Documentation {
         return false;
       }
     });
-    $("#buttonSearch").click(function (event) {
+    $("#buttonSearch").click(function(event) {
       var mysearch = searchImput.val();
       var spinner = $(".spinner");
       if (mysearch) {
@@ -49,11 +71,11 @@ class Documentation {
           data: {
             search: mysearch
           },
-          beforeSend: function () {
+          beforeSend: function() {
             searchImput.empty();
             spinner.show();
           },
-          success: function (data) {
+          success: function(data) {
             var text = null;
             search.empty();
             for (var link in data) {
@@ -77,10 +99,10 @@ class Documentation {
               search.append(li);
             }
           },
-          complete: function () {
+          complete: function() {
             spinner.hide();
           }
-        }).fail(function () {
+        }).fail(function() {
           spinner.hide();
         });
       } else {
@@ -93,33 +115,33 @@ class Documentation {
 
   getVersions(project) {
     switch (project) {
-    case "nodefony":
-      return $.get("/api/git/versions", (data) => {
-          const select = $("#version");
-          select.change(function (e) {
-            //window.location = "/documentation/" + this.value;
-            $("#formVersion").submit();
-            e.preventDefault();
+      case "nodefony":
+        return $.get("/api/git/versions", (data) => {
+            const select = $("#version");
+            select.change(function(e) {
+              //window.location = "/documentation/" + this.value;
+              $("#formVersion").submit();
+              e.preventDefault();
+            });
+            return this.buildSelect(data, select, project);
+          })
+          .fail(function(error) {
+            throw error;
           });
-          return this.buildSelect(data, select, project);
-        })
-        .fail(function (error) {
-          throw error;
-        });
-    default:
-      return $.get("/api/git/getCurrentBranch/" + project, (data) => {
-          const select = $("#project");
-          select.change(function (e) {
-            $("#formProject").submit();
-            e.preventDefault();
+      default:
+        return $.get("/api/git/getCurrentBranch/" + project, (data) => {
+            const select = $("#project");
+            select.change(function(e) {
+              $("#formProject").submit();
+              e.preventDefault();
+            });
+            select.append(`<option title="" value="" selected="selected">Select</option>`);
+            let option = `<option title="${data.branch}" value="${data.branch}">${data.branch}</option>`;
+            select.append(option);
+          })
+          .fail(function(error) {
+            throw error;
           });
-          select.append(`<option title="" value="" selected="selected">Select</option>`);
-          let option = `<option title="${data.branch}" value="${data.branch}">${data.branch}</option>`;
-          select.append(option);
-        })
-        .fail(function (error) {
-          throw error;
-        });
     }
   }
 
@@ -131,19 +153,19 @@ class Documentation {
     for (let version in data) {
       let option = null;
       switch (version) {
-      case "latest":
-        option = `<option title="${data[version]}" value="${data[version]}">Latest</option>`;
-        ele.append(option);
-        break;
-      case "all":
-        for (let i = 0; i < data[version].length; i++) {
-          let check = semver.satisfies(semver.clean(data[version][i]), ">=4.2.0-beta.1");
-          if (check /*&& data[version][i] !== data.latest*/ ) {
-            option = `<option value="${data[version][i]}">${data[version][i]}</option>`;
-            ele.append(option);
+        case "latest":
+          option = `<option title="${data[version]}" value="${data[version]}">Latest</option>`;
+          ele.append(option);
+          break;
+        case "all":
+          for (let i = 0; i < data[version].length; i++) {
+            let check = semver.satisfies(semver.clean(data[version][i]), ">=4.2.0-beta.1");
+            if (check /*&& data[version][i] !== data.latest*/ ) {
+              option = `<option value="${data[version][i]}">${data[version][i]}</option>`;
+              ele.append(option);
+            }
           }
-        }
-        break;
+          break;
       }
     }
     return data;
@@ -167,7 +189,7 @@ class Documentation {
       url = "https://github.com/nodefony/nodefony-core/commit/";
     }
     if ((bundle === "nodefony" || bundle === project) && section === null) {
-      $.get("/api/git/getMostRecentCommit/" + bundle, function (data) {
+      $.get("/api/git/getMostRecentCommit/" + bundle, function(data) {
         var ele = $("#commits");
         for (var i = 0; i < data.length; i++) {
           //var dt = new Date( data[i].date ) ;
@@ -182,11 +204,11 @@ class Documentation {
           li += "</li>";
           ele.append(li);
         }
-      }).fail(function (e) {
+      }).fail(function(e) {
         console.error(e);
       });
 
-      $.get("https://api.github.com/repos/nodefony/nodefony/issues?state=open", function (data) {
+      $.get("https://api.github.com/repos/nodefony/nodefony/issues?state=open", function(data) {
         var ele = $("#issues");
         for (var i = 0; i < data.length; i++) {
           var date = new Date(data[i].created_at).toDateString();
@@ -197,7 +219,7 @@ class Documentation {
           li += "</li>";
           ele.append(li);
         }
-      }).fail(function (e) {
+      }).fail(function(e) {
         console.error(e);
       });
     }
