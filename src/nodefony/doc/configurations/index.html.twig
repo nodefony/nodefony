@@ -2,91 +2,117 @@
 
 
 <div class="page-header">
-	<h1><strong>NODEFONY CONFIGURATION</strong> </h1>
-	<h2>Differents Nodefony configurations Files </h2>
-	<div class="doc2" >
-		Nodefony manage differents config files that you can find throughout your development.
+	<h1>NODEFONY CONFIGURATIONS </h1>
+	<div class="alert alert-info" role="alert">
+		<h2>Nodefony configurations Files : </h2>
+		<br>
+			Nodefony manage differents config files that you can find throughout your development.
+			<br>
+			Manage framework configuration <code>./config/config.js</code>
+			<br>
+			Manage Application configuration in app bundle   <code>./app/config/config.js</code>
+			<br>
+			Manage bundle configuration <code>./src/bundles/my-bundle/Ressources/config/config.js</code>
+			<hr>
+
+			<h4> Framework Configuration  : <code>./config/config.js</code>
+				<a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle, queryString:{'subsection':'framework'} })}}">
+					<button type="button" class="btn btn-primary">Framework Configuration</button>
+				</a>
+			</h4>
+
+			<h4> Application Configuration  : <code>./app/config/config.js</code>
+				<a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle, queryString:{'subsection':'application'} })}}">
+					<button type="button" class="btn btn-primary">Application Configuration</button>
+				</a>
+			</h4>
+
+			<h4> Bundle Configuration  : <code>./src/bundles/my-bundle/Resources/config/config.js</code>
+				<a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle, queryString:{'subsection':'bundle'} })}}">
+					<button type="button" class="btn btn-primary">Bundle Configuration</button>
+				</a>
+			</h4>
+
+			<h4> Routing Configuration  : <code>routing.js</code>
+				<a href="{{ path('documentation-section',{section:'routing', version:'Default', bundle:'framework' })}}">
+					<button type="button" class="btn btn-primary">Routing</button>
+				</a>
+			</h4>
+			<h4> Services Configuration  : <code>services.js</code>
+			<a href="{{ path('documentation-section',{section:'service', version:version, bundle:bundle })}}">
+				<button type="button" class="btn btn-primary">Services</button>
+			</a>
+			</h4>
+			<h4> Firewall Configuration  : <code>security.js</code>
+				<a href="{{ path('documentation-section',{section:'configuration', version:'Default', bundle:'security' })}}">
+					<button type="button" class="btn btn-primary">Firewall</button>
+				</a>
+			</h4>
+			<h4> Webpack Configuration  :
+				<a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:'nodefony' ,queryString:{'subsection':'webpack' } })}}">
+					<button type="button" class="btn btn-primary">Webpack</button>
+				</a>
+			</h4>
+			<h4>
+				<ul>
+					<li><code>webpack.config.js</code> </li>
+					<li><code>webpack/webpack.dev.config.js</code> </li>
+					<li><code>webpack/webpack.prod.config.js </code></li>
+				</ul>
+			</h4>
 	</div>
-
-	<h3> Global Configuration  : <code>config.yml</code> </h3>
-	<h3> Routing Configuration  : <code>routing.js</code> </h3>
-	<h3> Services Configuration  : <code>services.js</code> </h3>
-	<h3> Firewall Configuration  : <code>security.yml</code> </h3>
-	<h3> Webpack Configuration  :</h3>
-	<h3>
-		<ul>
-			<li><code>webpack.config.js</code> </li>
-			<li><code>webpack/webpack.dev.config.js</code> </li>
-			<li><code>webpack/webpack.prod.config.js </code></li>
-		</ul>
-	</h3>
-
 	</br>
 
 	<div class="doc3">
+		<h2>Nodefony Watchers :</h2>
+		<p>
+		In developement mode The bundle generation engine build bundle config with  node.js watcher configuration
 
-		<div class="alert alert-danger" role="alert">
-			<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-			<span class="sr-only">Error:</span>
-			In Developement mode :  Nodefony kernel Don't reload config.yml services.js security.yml files,You must restart nodefony  !!!
-		</div>
-		<div class="alert alert-info" role="alert">
-			<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-			<span class="sr-only">Error:</span>
-			In Developement mode :  routing.js is auto-reloaded is you manage  WATCHERS in config.yml
-			</br>
-			<pre>
-#
-#  WATCHERS
-#
-#    watchers Listen to changes, deletion, renaming of files and directories
-#    of different components
-#
-#    For watch all components
-#
-#      watch			: true
-#    or
-#      watch:
-#        controller		: true
-#        config			: true   	# only  routing
-#        views			: true
-#        translations   : true
-#        webpack		: true
-#				 services		: true
-#
-watch					: true
-			</pre>
-		</div>
+		  is very usefull to auto-reload files as controllers , views , routing , translations
 
+		without having to reboot the server.
+
+		Bundle manage  WATCHERS in  config.js
+		</p>
+
+		<pre><code class="hljs javascript" >module.exports = {
+
+	/**
+	 *    WATCHERS
+	 *
+	 *  watchers Listen to changes, deletion, renaming of files and directories
+	 *  of different components
+	 *
+	 *  For watch all components
+	 *      watch:                    true
+	 *  or
+	 *      watch:{
+	 *        controller:             true
+	 *        config:                 true        // only  routing.js
+	 *        views:                  true
+	 *        translations:           true
+	 *        webpack:                true
+	 *      }
+	 *
+	 */
+	watch: true
+}
+			</code></pre>
+	<div class="alert alert-danger" role="alert">
+		Nodefony kernel Don't reload config.js services.js security.js files,You must restart nodefony  !!!
 	</div>
-
-	<a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle, queryString:{'subsection':'application'} })}}"> <button type="button" class="btn btn-primary">Aplication Configuration</button></a>
-	<a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle, queryString:{'subsection':'framework'} })}}"> <button type="button" class="btn btn-primary">Framework Configuration</button></a>
-	<a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle, queryString:{'subsection':'bundle'} })}}"> <button type="button" class="btn btn-primary">Bundles Configuration</button></a>
 
 </div>
 
-	<h2> Global Configuration  : <code>config.yml</code> </h2>
 
-	<div class="doc2">
-		<p>
-			This file manage the global paramaters of an entity :  <br>
+<div class="doc2">
+	<h2> How to use Configuration  :  </h2>
 
-			<ul>
-				<li>config.yml in root path manage framework configuration <code>./config/config.yml</code></li>
-				<li>config.yml in app bundle manage Application configuration <code>./app/config/config.yml</code> </li>
-				<li>config.yml in bundles manage bundle configuration <code>./src/bundles/demo-bundle/Ressources/config/config.yml</code></li>
-			</ul>
-		</p>
-		<h4>How to use this parameters : </h4>
-		<div class="doc4">
 			There are different ways to access these configuration variables
 			<ul>
 				</li>
 				<li>In controller By Kernel Service Container <code> this.getParameters("bundles.App") </code>
-				<pre>
-
-module.exports = class defaultController extends nodefony.controller {
+				<pre><code class="hljs javascript" >module.exports = class defaultController extends nodefony.controller {
 
 	constructor(container, context){
 		super(container, context);
@@ -95,65 +121,51 @@ module.exports = class defaultController extends nodefony.controller {
 	indexAction (version){
 		// GET config bundle App
 		<strong> let bundleAppSettings = this.getParameters("bundles.App") ;</strong>
+
 		// GET config bundle http
 		<strong> let bundleHttpSettings = this.getParameters("bundles.http") ;</strong>
 
 		return this.renderJson(bundleAppSettings);
 	};
 };
-				</pre>
+				</code></pre>
 				</li>
 				<li>In Kernel you can find  <code> this.settings </code> with framework configuration
-				<pre>
+				<pre><code class="hljs javascript" >indexAction (version){
 
-indexAction (version){
 	// GET kernel service and get config
 	<strong>let kernelGlobalSettings = this.kernel.settings ;</strong>
 
 	return this.renderJson(kernelGlobalSettings);
 };
-				</pre>
+				</code></pre>
 				</li>
 				<li>In Bundle you can find <code> this.settings </code> with bundle configuration
-				<pre>
-indexAction (version){
-	// GET kernel service , get demo bundle  config
-	<strong>let demo-bundleGlobalSettings = this.kernel.getBundle("demo").settings ;</strong>
+				<pre><code class="hljs javascript">indexAction (version){
 
-	return this.renderJson(demo-bundleGlobalSettings);
+	// GET kernel service , get demo bundle  config
+
+	<strong>let demoGlobalSettings = this.kernel.getBundle("demo").settings ;</strong>
+
+	return this.renderJson(demoGlobalSettings);
 };
 
-				</pre>
+				</code></pre>
 				<li>Everywhere you can find config variables by Kernel Service Container
-					<pre>
-
-module.exports =  class myService extends nodefony.Service {
+					<pre><code class="hljs javascript" >module.exports =  class myService extends nodefony.Service {
 
 	constructor (kernel)
+
 		super("myService", kernel.container, kernel.notificationsCenter );
+
 	};
 
 	myFunction (){
-		<strong>let kernelSettings = this.kernel.settings ;</strong>
-		<strong>let appSettings = this.getParameters("bundles.App") ;</strong>
+		let kernelSettings = this.kernel.settings ;
+		let appSettings = this.getParameters("bundles.App") ;
 	};
 };
-
-					</pre>
-				</li>
-			</ul>
-		</div>
-	</div>
-
-<h2> Routing Configuration  :  <code>routing.js</code>
-	<a href="{{ path('documentation-section',{section:'routing', version:'Default', bundle:'framework' })}}"> <button type="button" class="btn btn-primary">Routing</button></a>
-</h2>
-<h2> Security Configuration  :  <code>security.yml</code>
-	<a href="{{ path('documentation-section',{section:'configuration', version:'Default', bundle:'security' })}}"> <button type="button" class="btn btn-primary">Firewall</button></a>
-</h2>
-<h2> Service Configuration  :  <code>service.js</code>
-	<a href="{{ path('documentation-section',{section:'service', version:version, bundle:bundle })}}"> <button type="button" class="btn btn-primary">Services</button></a>
-</h2>
-<h2> Webpack Configurations  :  <code>webpack/...</code>
-	<a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:'nodefony' ,queryString:{'subsection':'webpack' } })}}"> <button type="button" class="btn btn-primary">Webpack</button></a>
-</h2>
+					</code></pre>
+			</li>
+	</ul>
+</div>

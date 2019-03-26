@@ -1,53 +1,193 @@
 
-<div class="page-header">
-  <h1>Configuration Bundle </h1>
+<h1>Bundle  Configurations </h1>
 
+<h2>Bundle configurations Files : </h2>
+<div class="alert alert-info" role="alert">
+  <h4> Bundle NPM Module  : <code>./src/bundles/name-bundle/package.json</code>
+
+  </h4>
+
+  <h4> Bundle Configuration  : <code>./src/bundles/name-bundle/Resources/config/config.js</code>
+
+  </h4>
+
+  <h4> Routing Configuration  : <code>./src/bundles/name-bundle/Resources/config/routing.js</code>
+    <a href="{{ path('documentation-section',{section:'routing', version:'Default', bundle:'framework' })}}">
+      <button type="button" class="btn btn-primary">Routing</button>
+    </a>
+  </h4>
+  <h4> Services Configuration  : <code>/src/bundles/name-bundle/Resources/config/services.js</code>
+  <a href="{{ path('documentation-section',{section:'service', version:version, bundle:bundle })}}">
+    <button type="button" class="btn btn-primary">Services</button>
+  </a>
+  </h4>
+  <h4> Firewall Configuration  : <code>/src/bundles/name-bundle/Resources/config/security.js</code>
+    <a href="{{ path('documentation-section',{section:'configuration', version:'Default', bundle:'security' })}}">
+      <button type="button" class="btn btn-primary">Firewall</button>
+    </a>
+  </h4>
+  <h4> Webpack Configuration  : <code>/src/bundles/name-bundle/Resources/config/webpack.config.js</code>
+    <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:'nodefony' ,queryString:{'subsection':'webpack' } })}}">
+      <button type="button" class="btn btn-primary">Webpack</button>
+    </a>
+  </h4>
+  <h4>
+    <ul>
+      <li><code>webpack.config.js</code> </li>
+      <li><code>webpack/webpack.dev.config.js</code> </li>
+      <li><code>webpack/webpack.prod.config.js </code></li>
+    </ul>
+  </h4>
 </div>
-
 
 <h2>Location Bundle configurations in File System </h2>
 <div class="doc2">
-<pre>
-./src/nodefony/bundles/nameBundle/Resources/config/
 
-├── config.yml
-├── routing.js
-├── security.yml
-├── services.js
-├── webpack
-│   ├── webpack.dev.config.js
-│   └── webpack.prod.config.js
-└── webpack.config.js
-</pre>
+<pre><code class="hljs console">./src/bundles/name-bundle/
+
+├── Command
+├── Entity
+├── Resources
+│  ├── config
+│  │  ├── config.js
+│  │  ├── routing.js
+│  │  ├── security.js
+│  │  ├── services.js
+│  │  ├── webpack
+│  │  │   ├── webpack.dev.config.js
+│  │  │   └── webpack.prod.config.js
+│  │  └── webpack.config.js
+│  ├── public
+│  ├── translations
+│  └── views
+├── build
+├── controller
+├── doc
+├── nameBundle.js
+├── node_modules
+├── package-lock.json
+├── package.json
+├── readme.md
+├── services
+├── src
+└── tests
+
+</code></pre>
+
 </div>
 
-<h2> Global Configuration : <code>config.yml</code> <h2>
+
+<h2> Bundle NPM package  </h2>
+
 <div class="doc2">
+<code>package.json</code>
 
+<pre><code class="hljs json">{
+  "name": "name-bundle",
+  "version": "1.0.0",
+  "description": "Nodefony Framework Bundle name ",
+  "author": "admin admin@nodefony.com",
+  "main": "nameBundle.js",
+  "scripts": {},
+  "private": true,
+  "keywords": [
+    "nodefony",
+    "javascript"
+  ],
+  "repository": {},
+  "dependencies": {
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "autoprefixer": "^9.5.0",
+    "babel-loader": "^8.0.5",
+    "bootstrap": "^4.3.1",
+    "clean-webpack-plugin": "^2.0.1",
+    "css-hot-loader": "^1.4.4",
+    "css-loader": "^2.1.1",
+    "expose-loader": "^0.7.5",
+    "file-loader": "^3.0.1",
+    "font-awesome": "^4.7.0",
+    "imports-loader": "^0.8.0",
+    "jquery": "^3.3.1",
+    "mini-css-extract-plugin": "^0.5.0",
+    "node-sass": "^4.11.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "popper.js": "^1.14.7",
+    "postcss-loader": "^3.0.0",
+    "precss": "^4.0.0",
+    "raw-loader": "^2.0.0",
+    "resolve-url-loader": "^3.0.1",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "terser-webpack-plugin": "^1.2.3",
+    "webpack": "^4.29.6",
+    "webpack-merge": "^4.2.1"
+  },
+  "devDependencies": {
+    "node-pre-gyp": "^0.12.0"
+  },
+  "license": "CECILL-B",
+  "readmeFilename": "README.md",
+  "contributors": [
+    {}
+  ]
+}
+
+</code></pre>
 </div>
+<h2>Default Config </h2>
 
-<h2> Routing Configuration  : <code>routing.js</code> <h2>
 <div class="doc2">
+<code>config.js</code>
+<pre><code class="hljs javaScript">/**
+  *
+  *
+  *	nodefony-starter CONFIG BUNDLE  name-bundle
+  *
+  * ===============================================================================
+  *
+  *  Copyright © 2019/2019        admin | admin@nodefony.com
+  *
+  * ===============================================================================
+  *
+  *        GENERATE BY nodefony-starter BUILDER
+  */
 
-</div>
+module.exports = {
+  type        : "nodefony",
+  locale      : "en_en",
 
-<h2> Services Configuration  : <code>services.js</code> <h2>
-<div class="doc2">
+  /**
+   *    WATCHERS
+   *
+   *  watchers Listen to changes, deletion, renaming of files and directories
+   *  of different components
+   *
+   *  For watch all components
+   *      watch:                    true
+   *  or
+   *      watch:{
+   *        controller:             true,
+   *        config:                 true,        // only  routing.js
+   *        views:                  true,
+   *        translations:           true,
+   *        webpack:                true
+   *      }
+   *
+   */
+  watch: true
 
-</div>
+  /**
+   *
+   *	Insert here the bundle-specific configurations
+   *
+   *	You can also override config of another bundle
+   *	with the name of the bundle
+   *
+   *	example : create an other database connector
+   */
 
-<h2> Firewall Configuration  : <code>security.yml</code> <h2>
-<div class="doc2">
-
-</div>
-
-<h2> Webpack Configurations  :  <h2>
-
-<div class="doc4">
-    <ul>
-        <li><code>webpack.config.js</code> </li>
-        <li><code>webpack/webpack.dev.config.js</code> </li>
-        <li><code>webpack/webpack.prod.config.js </code></li>
-    </ul>
+};
+</code></pre>
 
 </div>

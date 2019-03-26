@@ -74,6 +74,7 @@ hr{
 }
 
 h1 {
+  text-align: center;
   margin-left:0px;
   font-family: 'Gochi Hand', cursive;
   color: #0167b8;
@@ -128,14 +129,22 @@ sup {
 
 p {
   margin-left: 4.5em;
-  font-size: 1em;
-  font-family: 'Comfortaa', cursive;
+  font-size: 1.1em;
+  /*font-family: 'Comfortaa', cursive;*/
 }
 
 div {
   text-align: left;
   font-size: 1em;
   font-family: 'Comfortaa', cursive;
+}
+
+.alert{
+  font-size: 1.2em;
+}
+
+.alert-info{
+  font-weight: bold;
 }
 
 pre {

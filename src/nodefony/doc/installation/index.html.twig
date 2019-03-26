@@ -55,25 +55,35 @@
       </p>
     </li>
 		<li> MACOS (Checked, Tested)</li>
-		<li> <s> WINDOWS </s>( Not ported yet )</li>
+		<li> WINDOWS Checked )</li>
 		<li> <s> OpenBSD </s>(Not Checked yet )</li>
 		<li> <s> ELECTRON </s>( Experimental )</li>
-		<li> <s> EMBEDDED SYSTEM</s> ( Very difficult : large memory footprint )</li>
+		<li> EMBEDDED SYSTEM ( Very difficult : large memory footprint )</li>
 
 	</ul>
 </div>
 
-
-
-<h2 name="system">Global Installation :</h2>
+<h2 name="system">Node.js Installation with nvm (Node Version Manager ) :</h2>
 <div class="doc2">
-	<pre>
-$ npm -g install nodefony
+	<pre><code class="hljs shell">$ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+
+# or
+
+$ wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+
+$ nvm install node # "node" is an alias for the latest version
+	</code></pre>
+</div>
+
+
+<h2 name="system">Nodefony Installation :</h2>
+<div class="doc2">
+	<pre><code class="hljs shell">$ npm -g install nodefony
 
 #  Or yarn
 
 $ yarn global add nodefony
-	</pre>
+	</code></pre>
 </div>
 
 <h2 name="system">Build New Project :</h2>
@@ -89,80 +99,158 @@ $ yarn global add nodefony
 
 </p>
 
-<pre>
-Usage:
-nodefony
-         create [-i] name [path]                                 Create New Nodefony Project
+<pre><code class="hljs shell" >$ nodefony
 
-$ <b>nodefony create myproject</b>
-</pre>
+ _   _    ___    ____    _____   _____    ___    _   _  __   __
+| \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
+|  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
+| |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |
+|_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|
+
+
+Version : 4.3.1 Platform : darwin Process : nodefony PID : 3520
+
+
+Tue Mar 26 2019 11:40:45 INFO nodefony : WELCOME NODEFONY CLI 4.3.1
+?  Nodefony CLI :  (Use arrow keys)
+
+❯ Create Nodefony Project
+
+PM2 Tools
+--------
+Help
+Quit
+
+</code></pre>
 
 <p>
 	<strong>Console when you Create nodefony Project :  </strong>
 </p>
-<pre style="height:500px">
-$ <b>nodefony create myproject</b>
-Thu Sep 13 2018 11:39:45 INFO BUILDER : Create Directory :myproject
-Thu Sep 13 2018 11:39:45 INFO nodefony : Create Project myproject complete
-  ...
-Thu Sep 13 2018 11:39:45 INFO nodefony : Spawn : npm install
-Thu Sep 13 2018 11:41:16 INFO nodefony : Command : npm install Finished cwd : /Users/cci/repository/myproject
-Thu Sep 13 2018 11:41:16 INFO nodefony : Install Complete
-Thu Sep 13 2018 11:41:16 INFO INSTALLER : Clean certificates in : /Users/cci/repository/myproject/config/certificates
-Thu Sep 13 2018 11:41:16 INFO INSTALLER : Create directory /Users/cci/repository/myproject/config/certificates
-Thu Sep 13 2018 11:41:16 INFO INSTALLER : Generate openssl certificates in : /Users/cci/repository/myproject/config/certificates
-Thu Sep 13 2018 11:41:16 INFO nodefony : Spawn : /Users/cci/repository/myproject/bin/generateCertificates.sh
-  ...
-Thu Sep 13 2018 11:41:19 INFO nodefony : Build Complete
-                                                             _                 _
-                _ __ ___    _   _   _ __    _ __    ___     (_)   ___    ___  | |_
-               | '_ ` _ \  | | | | | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
-               | | | | | | | |_| | | |_) | | |    | (_) |   | | |  __/ | (__  | |_
-               |_| |_| |_|  \__, | | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
-                            |___/  |_|                    |__/
+<pre><code class="hljs shell" >$ ❯ Create Nodefony Project
 
-            Version : 1.0.0 Platform : darwin Process : myproject PID : 25623
+ _   _    ___    ____    _____   _____    ___    _   _  __   __
+| \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
+|  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
+| |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |
+|_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|
 
-        KERNEL CONSOLE Cluster : master Environment : prod Debug :false
 
-Thu Sep 13 2018 11:42:11 INFO COMMAND : nodefony:build /Users/cci/repository/myproject
-Thu Sep 13 2018 11:42:11 INFO COMMAND nodefony : BUILD NODEFONY FRAMEWORK
-Thu Sep 13 2018 11:42:11 INFO COMMAND nodefony : INITIALIZE ORM
-Thu Sep 13 2018 11:42:11 INFO COMMAND nodefony : INITIALIZE SEQUELIZE
-Thu Sep 13 2018 11:42:11 INFO COMMAND sequelize TASK sync : DATABASE  : sqlite CONNECTION : nodefony
-Thu Sep 13 2018 11:42:11 INFO COMMAND sequelize TASK sync : DATABASE SYNC : nodefony
- ...
-Thu Sep 13 2018 11:42:14 INFO nodefony : NODEFONY PACKAGES :/Users/cci/repository/myproject/package.json
-Thu Sep 13 2018 11:42:14 INFO nodefony : NODEFONY PACKAGES :/Users/cci/repository/myproject/node_modules/@nodefony/demo-bundle/package.json
-Thu Sep 13 2018 11:42:14 INFO nodefony : NODEFONY PACKAGES :/Users/cci/repository/myproject/app/package.json
-Thu Sep 13 2018 11:42:25 INFO KERNEL CONSOLE  : NODEFONY Kernel Life Cycle Terminate CODE : 0
+Version : 4.3.1 Platform : darwin Process : nodefony PID : 3607
 
-</pre>
+
+Tue Mar 26 2019 11:45:02 INFO nodefony : WELCOME NODEFONY CLI 4.3.1
+?  Nodefony CLI :  Create Nodefony Project
+? Enter Nodefony Project Name nodefony-starter
+? Enter short description description nodefony-starter
+? Project Path /Users/cci/repository
+? Please Enter Author Full Name admin
+? Please Enter Email Author  admin@nodefony.com
+? Enter Server Domain : 0.0.0.0
+? Enter server Domain http Port  : 5151
+? Enter Server Secure Domain https Port  : 5152
+? Choose default ORM  (Mapping Objet Relationnel) : sequelize
+? Choose a default Package Manager :  npm
+? Do You Want Generate Bundle? No
+Tue Mar 26 2019 11:45:13 WARNING BUILDER : /Users/cci/repository/nodefony-starter Already exist
+? Do You Want Remove : /Users/cci/repository/nodefony-starter? Yes
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :nodefony-starter
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :app
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :appKernel.js
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :package.json
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :doc
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :index.html.twig
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :README.md
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :services
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :Resources
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :views
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :translations
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :scss
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :js
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :databases
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :public
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :manifest.json
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :favicon.ico
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :robots.txt
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :css
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :images
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :js
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :config
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :webpack
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :webpack.config.js
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :config.js
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :routing.js
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :services.js
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :security.js
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :controller
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :appController.js
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :loginController.js
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :usersController.js
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :package.json
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :.gitignore
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :.jshintrc
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :.jshintignore
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :.editorconfig
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :web
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :tmp
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :config
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :certificates
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :openssl
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :ca
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :openssl.cnf
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :ca_intermediate
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :openssl.cnf
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :config.js
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :pm2.config.js
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :bin
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :generateCertificates.sh
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :src
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :bundles
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :doc
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :index.html.twig
+Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :README.md
+Tue Mar 26 2019 11:45:28 INFO nodefony : Create Project nodefony-starter complete
+Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create Framework directories
+Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/tmp/upload
+Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/js
+Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/css
+Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/images
+Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/fonts
+Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/assets
+Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/assets/js
+Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/assets/css
+Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/assets/images
+Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/assets/fonts
+Tue Mar 26 2019 11:45:28 INFO nodefony : Spawn : npm install
+...
+</code></pre>
 
 <p>
 	<strong>Example files system  after Build The Project :  </strong>
 </p>
-<pre>
-$ <b>cd myproject</b>
-$ <b>ls -la </b>
-total 760
-  8 -rw-r--r--    1 cci  staff     331 13 sep 11:39 .editorconfig
-  0 drwxr-xr-x   13 cci  staff     442 13 sep 11:39 .git
-  8 -rw-r--r--    1 cci  staff     326 13 sep 11:39 .gitignore
-  8 -rw-r--r--    1 cci  staff      13 13 sep 11:39 .jshintignore
-  8 -rw-r--r--    1 cci  staff    1010 13 sep 11:39 .jshintrc
-  0 -rw-r--r--    1 cci  staff       0 13 sep 11:39 README.md
-  0 drwxr-xr-x   10 cci  staff     340 13 sep 11:42 app
-  0 drwxr-xr-x    3 cci  staff     102 13 sep 11:39 bin
-  0 drwxr-xr-x    6 cci  staff     204 13 sep 11:41 config
-  0 drwxr-xr-x    2 cci  staff      68 13 sep 11:39 doc
-  0 drwxr-xr-x  849 cci  staff   28866 13 sep 11:41 node_modules
-720 -rw-r--r--    1 cci  staff  366895 13 sep 11:41 package-lock.json
-  8 -rw-r--r--    1 cci  staff    1692 13 sep 11:41 package.json
-  0 drwxr-xr-x    3 cci  staff     102 13 sep 11:39 src
-  0 drwxr-xr-x    4 cci  staff     136 13 sep 11:42 tmp
-  0 drwxr-xr-x    7 cci  staff     238 13 sep 11:39 web
-</pre>
+<pre><code class="hljs shell" >$ cd nodefony-starter
+
+$ ls -la
+
+drwxr-xr-x    18 cci  staff     576 26 mar 11:46 .
+drwxr-xr-x    26 cci  staff     832 26 mar 11:45 ..
+-rw-r--r--     1 cci  staff     331 26 mar 11:45 .editorconfig
+drwxr-xr-x    13 cci  staff     416 26 mar 11:45 .git
+-rw-r--r--     1 cci  staff     326 26 mar 11:45 .gitignore
+-rw-r--r--     1 cci  staff      13 26 mar 11:45 .jshintignore
+-rw-r--r--     1 cci  staff    1068 26 mar 11:45 .jshintrc
+-rw-r--r--     1 cci  staff   21306 26 mar 11:45 README.md
+drwxr-xr-x    12 cci  staff     384 26 mar 11:47 app
+drwxr-xr-x     3 cci  staff      96 26 mar 11:45 bin
+drwxr-xr-x     6 cci  staff     192 26 mar 11:46 config
+drwxr-xr-x     3 cci  staff      96 26 mar 11:45 doc
+drwxr-xr-x  1223 cci  staff   39136 26 mar 11:46 node_modules
+-rw-r--r--     1 cci  staff  730514 26 mar 11:46 package-lock.json
+-rw-r--r--     1 cci  staff    1005 26 mar 11:46 package.json
+drwxr-xr-x     3 cci  staff      96 26 mar 11:45 src
+drwxr-xr-x     4 cci  staff     128 26 mar 11:47 tmp
+drwxr-xr-x     7 cci  staff     224 26 mar 11:45 web
+
+</code></pre>
 </div>
 
 
@@ -171,70 +259,83 @@ total 760
     <p>
     	Try nodefony Command Line Interface
     </p>
-    <pre>
-                                              _                 _
- _ __ ___    _   _   _ __    _ __    ___     (_)   ___    ___  | |_
-| '_ ` _ \  | | | | | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
-| | | | | | | |_| | | |_) | | |    | (_) |   | | |  __/ | (__  | |_
-|_| |_| |_|  \__, | | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
-             |___/  |_|                    |__/
+    <pre><code class="hljs shell" >$ nodefony -h
 
-Version : 1.0.0 Platform : darwin Process : myproject PID : 25811
+                              _           __                                         _                    _
+          _ __     ___     __| |   ___   / _|   ___    _ __    _   _           ___  | |_    __ _   _ __  | |_    ___   _ __
+         | '_ \   / _ \   / _` |  / _ \ | |_   / _ \  | '_ \  | | | |  _____  / __| | __|  / _` | | '__| | __|  / _ \ | '__|
+         | | | | | (_) | | (_| | |  __/ |  _| | (_) | | | | | | |_| | |_____| \__ \ | |_  | (_| | | |    | |_  |  __/ | |
+         |_| |_|  \___/   \__,_|  \___| |_|    \___/  |_| |_|  \__, |         |___/  \__|  \__,_| |_|     \__|  \___| |_|
+                                                               |___/
 
-KERNEL CONSOLE Cluster : master Environment : prod Debug :false
-Options:
--d, --debug         Nodefony debug
--h, --help          Nodefony help
--v, --version       Nodefony version
--f, --force         Force disable interactive mode
--i, --interactive   Nodefony cli Interactive Mode
--j, --json          Nodefony json response
+      Version : 1.0.0 Platform : darwin Process : nodefony-starter PID : 4237
 
-Servers
-         dev                                                     Run Nodefony Development Server
-         preprod                                                 Run Nodefony Preprod Server ( Usefull to check Clusters Node )
-         prod                                                    Run Nodefony Production Server ( PM2 mode )
-PM2 Process Manager 2
-         stop [name]                                             Stop Production Project
-         reload [name]                                           Reload Production Project
-         delete [name]                                           Delete Production Project from PM2 management
-         restart [name]                                          Restart Production Project
-         list                                                    List all Production Projects
-         kill                                                    Kill PM2 daemon
-         logs [name] [nblines]                                   Stream pm2 logs  [name] is project name  and [nblines] to show
-         clean-log                                               Remove logs
-nodefony
-         create [-i] name [path]                                 Create New Nodefony Project
-         build                                                   Build Nodefony Framewok
-         install                                                 Install Nodefony Project
-         certificates                                            Generate HTTPS Certificates  'Change default openssl configuration in config/openssl'
-         listDependencies                                        List Project dependencies
-         outdated                                                List Project dependencies outdated
-         version                                                 Get Project Version
-Bundles
-  framework
-         generate:bundle name [path]                             Generate a nodefony Bundle  Example : nodefony generate:bundle name ./src/bundles
-         generate:controller [-i] name [bundle]                  Generate a Bundle Controller  Example : nodefony generate:controller defaultController demo
-         generate:service [-i]                                   Generate Service
-         generate:entity [-i] orm                                Generate ORM Entity
-         generate:nginx [-i]                                     Generate Nginx Minimal Configuration File as a reverse proxy in front of Nodefony
-         generate:haproxy [-i]                                   Generate Haproxy Minimal Configuration File as a reverse proxy in front of Nodefony
-         generate:letsencrypt [-i]                               Generate Let's Encrypt Webroot Configuration
-         router:display:routes [routeName]                       Display all routes or route  Example : nodefony router:display:route home
-         router:display:match uri                                Get route who match uri Example : nodefony router:display:match /nodefony
-         webpack:dump                                            Compile webpack for all bundles
-  sequelize
-         sequelize:sync [force]                                  Synchronize All Entities. [force] to delete table if exist  example : nodefony sequelize:sync force
-         sequelize:fixtures:load                                 Load fixtures in database
-         sequelize:query:sql connectionName 'SQL'                Query sql in database connection  example : nodefony  sequelize:query:sql nodefony 'select * from users'
-         sequelize:entity:findAll entity                         Query findAll ENTITY
-         sequelize:generate:entity name bundle connector         Generate Sequelize Entity
-  unittests
-         unitest:list:all                                        List all unit tests
-         unitest:list:bundle bundleName                          List all bundle unit tests
-         unitest:launch:all                                      Launch all tests Example : nodefony unitest:launch:all
-         unitest:launch:bundle bundleName [testfile]             Launch bundle tests Example: nodefony unitest:launch:bundle demoBundle responseTest.js
-    </pre>
+
+      KERNEL CONSOLE Cluster : master Environment : prod Debug :false
+
+    Usage: nodefony [options] <command:task:action> [args...]
+                    [options] <command:action> [args...]
+                    [options] <action> [args...]
+
+    Options:
+      -V, --version       output the version number
+      -d, --debug         Nodefony debug
+      -h, --help          Nodefony help
+      -v, --version       Nodefony version
+      -f, --force         Force disable interactive mode
+      -i, --interactive   Nodefony cli Interactive Mode
+      -j, --json          Nodefony json response
+      -V, --version       output the version number
+      -h, --help          output usage information
+
+    Servers
+             dev                                                     Run Nodefony Development Server
+             preprod                                                 Run Nodefony Preprod Server ( Usefull to check Clusters Node )
+             prod                                                    Run Nodefony Production Server ( PM2 mode )
+    PM2 Process Manager 2
+             stop [name]                                             Stop Production Project
+             reload [name]                                           Reload Production Project
+             delete [name]                                           Delete Production Project from PM2 management
+             restart [name]                                          Restart Production Project
+             list                                                    List all Production Projects
+             kill                                                    Kill PM2 daemon
+             logs [name] [nblines]                                   Stream pm2 logs  [name] is project name  and [nblines] to show
+             clean-log                                               Remove logs
+    nodefony
+             create [-i] name [path]                                 Create New Nodefony Project
+             build                                                   Build Nodefony Framewok
+             rebuild                                                 Rebuild Nodefony Framewok (Recompilation when node version change )
+             install                                                 Install Nodefony Project
+             certificates                                            Generate HTTPS Certificates  'Change default openssl configuration in config/openssl'
+             listDependencies                                        List Project dependencies
+             outdated                                                List Project dependencies outdated
+             version                                                 Get Project Version
+    Bundles
+      framework
+             generate:bundle name [path]                             Generate a nodefony Bundle  Example : nodefony generate:bundle name ./src/bundles
+             generate:controller [-i] name [bundle]                  Generate a Bundle Controller  Example : nodefony generate:controller defaultController demo
+             generate:service [-i]                                   Generate Service
+             generate:entity [-i] orm                                Generate ORM Entity
+             generate:nginx [-i]                                     Generate Nginx Minimal Configuration File as a reverse proxy in front of Nodefony
+             generate:haproxy [-i]                                   Generate Haproxy Minimal Configuration File as a reverse proxy in front of Nodefony
+             generate:letsencrypt [-i]                               Generate Let's Encrypt Webroot Configuration
+             router:display:routes [routeName]                       Display all routes or route  Example : nodefony router:display:route home
+             router:display:match uri                                Get route who match uri Example : nodefony router:display:match /nodefony
+             webpack:dump                                            Compile webpack for all bundles
+      sequelize
+             sequelize:sync [force]                                  Synchronize All Entities. [force] to delete table if exist  example : nodefony sequelize:sync force
+             sequelize:fixtures:load                                 Load fixtures in database
+             sequelize:query:sql connectionName 'SQL'                Query sql in database connection  example : nodefony  sequelize:query:sql nodefony 'select * from users'
+             sequelize:entity:findAll entity                         Query findAll ENTITY
+             sequelize:generate:entity name bundle connector         Generate Sequelize Entity
+      unittests
+             unitest:list:all                                        List all unit tests
+             unitest:list:bundle bundleName                          List all bundle unit tests
+             unitest:launch:all                                      Launch all tests Example : nodefony unitest:launch:all
+             unitest:launch:bundle bundleName [testfile]             Launch bundle tests Example: nodefony unitest:launch:bundle demoBundle responseTest.js
+      mail
+             mail:task:action myarg1 myarg2                          nodefony mail:task:action myarg1 myarg2
+    </code></pre>
 
 </div>
 

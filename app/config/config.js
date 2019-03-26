@@ -140,7 +140,13 @@ module.exports = {
         options: {
           dialect: "mysql",
           host: "localhost",
-          port: "3306"
+          port: "3306",
+          pool:{
+            max:   5,
+            min:   0,
+            idle:  10000,
+            acquire:60000
+          }
         }
       }*/
     }

@@ -1,22 +1,42 @@
 {{trans_default_domain("doc")}}
 
-
-
 <h1> {{ "begin" | trans() }}</h1>
 <hr>
 
 
-<h2>NODEFONY INSTALLATION : See more<span> <a href="{{ path('documentation-section',{section:'installation', version:version, bundle:bundle })}}">( Nodefony installation  documentation ) </a> </span> </h2>
+<h2>Nodefony Installation : See more<span> <a href="{{ path('documentation-section',{section:'installation', version:version, bundle:bundle })}}">( Nodefony installation  documentation ) </a> </span> </h2>
 <div class="doc2">
-	<pre>
-$ npm -g install nodefony
+  <pre><code class="hljs shell">$ npm -g install nodefony
 
-$ nodefony create myproject
+$ nodefony
+
+ _   _    ___    ____    _____   _____    ___    _   _  __   __
+| \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
+|  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
+| |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |
+|_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|
+
+
+
+ Version : 4.3.1 Platform : darwin Process : nodefony PID : 3520
+
+
+ Tue Mar 26 2019 11:40:45 INFO nodefony : WELCOME NODEFONY CLI 4.3.1
+ ?  Nodefony CLI :  (Use arrow keys)
+
+ ❯ Create Nodefony Project
+
+ PM2 Tools
+ --------
+ Help
+ Quit
+
+...
 
 $ cd myproject
 
 $ nodefony dev
-</pre>
+</code></pre>
 
 </div>
 
@@ -27,8 +47,7 @@ If you want change domain other than localhost or an other interface ip binding<
 
 Change and Add host name "mydomain.com" in your /etc/hosts  :
 </p>
-	<pre>
-$ sudo vim /etc/hosts
+  <pre><code class="hljs shell">$ sudo vim /etc/hosts
 
 ##
 # Host Database
@@ -45,7 +64,7 @@ $ sudo vim /etc/hosts
 #  OR WAN IP
 
 209.x.x.x	mydomain.com
-	</pre>
+  </code></pre>
 </div>
 
 <h2>Configuration Framework : See more<span> <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle })}}">( Nodefony Configurations  documentation ) </a></span></h2>
@@ -53,30 +72,36 @@ $ sudo vim /etc/hosts
 <p>
 If you have change domain other than localhost or you want change http(s)  port binding</br>
 
-Change in Location : <code>./config/config.yml</code>   :
+Change in Location : <code>./config/config.js</code>   :
 </p>
 
-	<pre>
-system:
-  domain                        : mydomain.com          # nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
-  domainAlias:                                          # domainAlias string only regex  example .*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$
-    - "^www.mydomain.com$"
-  domainCheck                   : true
-  httpPort                      : 5151
-  httpsPort                     : 5152
-	</pre>
-	<p>
-	If you want listen all domains on all interfaces use 0.0.0.0</br>
-	Change in Location : <code>./config/config.yml</code>   :
-	</p>
-	<pre>
-system:
-  domain                        : 0.0.0.0         # nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
-  domainAlias:                  : ~               # domainAlias string only regex  example .*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$
-  domainCheck                   : false
-  httpPort                      : 5151
-  httpsPort                     : 5152
-	</pre>
+  <pre><code class="hljs javascript">module.exports = {
+  system: {
+    domain: "mydomain.com",	 	// nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
+    domainAlias: [	                // domainAlias string only regex  example .*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$
+      "^www.mydomain.com$",
+      "^192.168.x.x$"
+    ],
+    httpPort: 5151,
+    httpsPort: 5152
+  }
+}
+  </code></pre>
+  <p>
+  If you want listen all domains on all interfaces use 0.0.0.0</br>
+  Change in Location : <code>./config/config.js</code>   :
+  </p>
+  <pre><code class="hljs javascript">module.exports = {
+  system: {
+    domain: "0.0.0.0",	 	// nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
+    domainAlias: [              // domainAlias string only regex  example .*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$
+      "^127.0.0.1$",
+      "^localhost$"
+    ],
+    httpPort: 5151,
+    httpsPort: 5152
+  }
+  </code></pre>
 
 </div>
 
@@ -84,28 +109,28 @@ system:
 <div class="doc2">
 
 <p>
-	There are 3 methods to run NODEFONY framework
+  There are 3 methods to run NODEFONY framework
 
-	<ul>
-		<li>  Run Appliation in DEVELOPEMENT  mode <code>nodefony dev</code></li>
-		<li>  Run Appliation in PRE PRODUCTION mode with clusters <code>nodefony preprod</code></li>
-		<li>  Run Appliation in PRODUCTION PM2 MANAGEMENT mode  <code>nodefony prod</code> see  <a href="http://pm2.keymetrics.io/">PM2</a> </li>
-	</ul>
-	<strong> To check the good binding http(s) you can run nodefony in dev mode </strong><br>
+  <ul>
+  <li>  Run Appliation in DEVELOPEMENT  mode <code>nodefony dev</code></li>
+  <li>  Run Appliation in PRE PRODUCTION mode with clusters <code>nodefony preprod</code></li>
+  <li>  Run Appliation in PRODUCTION PM2 MANAGEMENT mode  <code>nodefony prod</code> see  <a href="http://pm2.keymetrics.io/">PM2</a> </li>
+  </ul>
+  <strong> To check the good binding http(s) you can run nodefony in dev mode </strong><br>
 </p>
 
-<pre >
-# Run Appliation in DEVELOPEMENT mode
-$ <b>nodefony dev</b>
+<pre><code class="hljs shell"># Run Appliation in DEVELOPEMENT mode
+
+$ nodefony dev
 
 # Run Appliation in DEVELOPEMENT mode  with debug
-$ <b>nodefony -d dev</b>
-</pre>
+
+$ nodefony -d dev
+</code></pre>
 <p>
 <strong>Console when you start nodefony in developement mode :  </strong>
 </p>
-<pre style="height:500px">
-$ <b>nodefony dev</b>
+<pre><code class="hljs shell">$ nodefony dev
                                                            _                 _
               _ __ ___    _   _   _ __    _ __    ___     (_)   ___    ___  | |_
              | '_ ` _ \  | | | | | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
@@ -113,44 +138,49 @@ $ <b>nodefony dev</b>
              |_| |_| |_|  \__, | | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
                           |___/  |_|                    |__/
 
-          Version : 1.0.0 Platform : darwin Process : myproject PID : 26213
+          Version : 1.0.0 Platform : darwin Process : myproject PID : 4794
 
 
       KERNEL SERVER Cluster : master Environment : dev Debug :false
 
- Thu Sep 13 2018 15:05:50 WARNING BUNDLE unittests : Bundle unittests controller directory not found
- Thu Sep 13 2018 15:05:50 WARNING SERVICE ROUTER : ROUTE HAS SAME NAME : documentation path : /documentation controller : demo:demo:readme
- Thu Sep 13 2018 15:05:50 WARNING BUNDLE app :  OVERRIDING  CONFIG bundle  : mongo BUT BUNDLE mongo NOT YET REGISTERED
- Thu Sep 13 2018 15:05:50 INFO nodefony : INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : /Users/cci/repository/myproject/web
- Thu Sep 13 2018 15:05:51 INFO sequelize  :  REGISTER ENTITY : requests PROVIDE BUNDLE : sequelize
- Thu Sep 13 2018 15:05:51 INFO sequelize  :  REGISTER ENTITY : session PROVIDE BUNDLE : sequelize
- Thu Sep 13 2018 15:05:51 INFO sequelize  :  REGISTER ENTITY : user PROVIDE BUNDLE : sequelize
- Thu Sep 13 2018 15:05:51 INFO CONNECTION Sequelize nodefony : Connection been established successfully Type : sqlite Database : /app/Resources/databases/nodefony.db
- Thu Sep 13 2018 15:05:51 INFO SERVICE sockjs  :  Create sockjs server :   HTTPS
- Thu Sep 13 2018 15:05:51 INFO MEMORY rss : MEMORY POST READY  ( Resident Set Size ) PID ( 26213 ) : 154 MB
- Thu Sep 13 2018 15:05:51 INFO MEMORY heapTotal : MEMORY POST READY  ( Total Size of the Heap ) PID ( 26213 ) : 125 MB
- Thu Sep 13 2018 15:05:51 INFO MEMORY heapUsed : MEMORY POST READY  ( Heap actually Used ) PID ( 26213 ) : 96 MB
- Thu Sep 13 2018 15:05:51 INFO MEMORY external : MEMORY POST READY  PID ( 26213 ) : 400 KB
- Thu Sep 13 2018 15:05:51 INFO SERVICE SERVER STATICS  : Server Static RootDir  ==> /Users/cci/repository/myproject/web
- Thu Sep 13 2018 15:05:51 INFO BUNDLE monitoring : ADD DEBUG BAR MONITORING
- Thu Sep 13 2018 15:05:54 INFO SERVICE SERVER HTTP  : Listening on DOMAIN : http://mydomain.com:5151
- Thu Sep 13 2018 15:05:54 INFO SERVICE SERVER WEBSOCKET  : Listening on DOMAIN : ws://mydomain.com:5151
- Thu Sep 13 2018 15:05:54 INFO SERVICE SERVER HTTPS  : Listening on DOMAIN : https://mydomain.com:5152
- Thu Sep 13 2018 15:05:54 INFO SERVICE SERVER WEBSOCKET SECURE  : Listening on DOMAIN : wss://mydomain.com:5152
- Thu Sep 13 2018 15:05:54 INFO SERVICE SESSIONS  : CONTEXT default SEQUELIZE SESSIONS STORAGE  ==>  ORM COUNT SESSIONS : 0
- Thu Sep 13 2018 15:05:58 INFO SERVICE WEBPACK  : WEBAPCK Compile Bundle app
- Thu Sep 13 2018 15:06:00 INFO SERVICE WEBPACK  : COMPILE SUCCESS BUNDLE : app webpack.config.js
- Thu Sep 13 2018 15:06:00 INFO BUNDLE app : MEMORY clean webpack compile bundle : app
- Thu Sep 13 2018 15:06:00 INFO SERVICE WEBPACK  : WEBPACK COMPILE FINISH
-</pre>
+ Tue Mar 26 2019 12:19:33 INFO KERNEL SERVER  : Find NPM Bundle Package : http-bundle in : /Users/cci/repository/myproject/node_modules/@nodefony/http-bundle/httpBundle.js
+ Tue Mar 26 2019 12:19:33 INFO KERNEL SERVER  : Find NPM Bundle Package : framework-bundle in : /Users/cci/repository/myproject/node_modules/@nodefony/framework-bundle/frameworkBundle.js
+ Tue Mar 26 2019 12:19:33 INFO KERNEL SERVER  : Find NPM Bundle Package : security-bundle in : /Users/cci/repository/myproject/node_modules/@nodefony/security-bundle/securityBundle.js
+ Tue Mar 26 2019 12:19:33 INFO KERNEL SERVER  : Find NPM Bundle Package : sequelize-bundle in : /Users/cci/repository/myproject/node_modules/@nodefony/sequelize-bundle/sequelizeBundle.js
+ Tue Mar 26 2019 12:19:33 INFO KERNEL SERVER  : Find NPM Bundle Package : realtime-bundle in : /Users/cci/repository/myproject/node_modules/@nodefony/realtime-bundle/realtimeBundle.js
+ Tue Mar 26 2019 12:19:33 INFO KERNEL SERVER  : Find NPM Bundle Package : monitoring-bundle in : /Users/cci/repository/myproject/node_modules/@nodefony/monitoring-bundle/monitoringBundle.js
+ Tue Mar 26 2019 12:19:33 INFO KERNEL SERVER  : Find NPM Bundle Package : unittests-bundle in : /Users/cci/repository/myproject/node_modules/@nodefony/unittests-bundle/unittestsBundle.js
+ Tue Mar 26 2019 12:19:33 INFO KERNEL SERVER  : Find NPM Bundle Package : mail-bundle in : /Users/cci/repository/myproject/node_modules/@nodefony/mail-bundle/mailBundle.js
+ Tue Mar 26 2019 12:19:34 INFO sequelize  :  REGISTER ENTITY : requests PROVIDE BUNDLE : sequelize
+ Tue Mar 26 2019 12:19:34 INFO sequelize  :  REGISTER ENTITY : session PROVIDE BUNDLE : sequelize
+ Tue Mar 26 2019 12:19:34 INFO sequelize  :  REGISTER ENTITY : user PROVIDE BUNDLE : sequelize
+ Tue Mar 26 2019 12:19:34 INFO CONNECTION Sequelize nodefony : Connection been established successfully Type : sqlite Database : /app/Resources/databases/nodefony.db
+ Tue Mar 26 2019 12:19:34 INFO sequelize  : ORM CONNECTORS LIST  :
+┌────────────────────┬────────┬──────────────────────────────────────┬──────┐
+│ ORM CONNECTOR NAME │ DRIVER │ NAME DATABASE                        │ HOST │
+├────────────────────┼────────┼──────────────────────────────────────┼──────┤
+│ nodefony           │ sqlite │ /app/Resources/databases/nodefony.db │      │
+└────────────────────┴────────┴──────────────────────────────────────┴──────┘
+ Tue Mar 26 2019 12:19:34 INFO SERVICE sockjs  :  Create sockjs server :   HTTPS
+ Tue Mar 26 2019 12:19:34 INFO SERVICE MONITORING  : Create server MONITORING listen on Domain : 0.0.0.0 Port : 1318
+ Tue Mar 26 2019 12:19:34 INFO SERVICE SERVER STATICS  : Server Static RootDir  ==> /Users/cci/repository/myproject/web
+ Tue Mar 26 2019 12:19:34 INFO BUNDLE monitoring : ADD DEBUG BAR MONITORING
+ Tue Mar 26 2019 12:19:35 INFO SERVICE WEBPACK  : WEBAPCK Compile Bundle app
+ Tue Mar 26 2019 12:19:35 INFO SERVICE SERVER HTTP  : Listening on DOMAIN : http://0.0.0.0:5151
+ Tue Mar 26 2019 12:19:35 INFO SERVICE SERVER WEBSOCKET  : Listening on DOMAIN : ws://0.0.0.0:5151
+ Tue Mar 26 2019 12:19:35 INFO SERVICE SERVER HTTPS  : Listening on DOMAIN : https://0.0.0.0:5152
+ Tue Mar 26 2019 12:19:35 INFO SERVICE SERVER WEBSOCKET SECURE  : Listening on DOMAIN : wss://0.0.0.0:5152
+ Tue Mar 26 2019 12:19:35 INFO SERVICE SESSIONS  : CONTEXT default SEQUELIZE SESSIONS STORAGE  ==>  ORM COUNT SESSIONS : 0
+ Tue Mar 26 2019 12:19:38 INFO SERVICE WEBPACK  : COMPILE SUCCESS BUNDLE : app webpack.config.js
+
+</code></pre>
 </div>
 
 <h2>ACCEES NODEFONY APPLICATION :  </h2>
 <div class="doc2">
 <p >
-	Access to App with URL : <strong>http://mydomain.com:5151</strong><br>
-
-	By default the nodefony clone come with a demonstration bundle named "demo-bundle"
+  Access to App with URL : <strong>http://mydomain.com:5151</strong><br>
+  
 </p>
 
 </div>

@@ -27,7 +27,7 @@ module.exports = {
    *  or
    *      watch:{
    *        controller:             true
-   *        config:                 true        // only  routing.yml
+   *        config:                 true        // only  routing.js
    *        views:                  true
    *        translations:           true
    *        webpack:                true
