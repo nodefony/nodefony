@@ -13,15 +13,13 @@
 		<li> Use nodefony in clusters mode  </li>
 		<li> Detach process from terminal </li>
 	</ul>
+  <img class="stretch" src="/documentation-bundle/images/nodefony_prod.png" data-lazy-loaded="">
 </p>
-
-
 </div>
 
-<h3>PM2     <a href="http://pm2.keymetrics.io/">pm2.keymetrics.io</a> </h3>
+<h5>PM2     <a href="http://pm2.keymetrics.io/">pm2.keymetrics.io</a> </h5>
 
 <h3>Configration PM2 in Nodefony      <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle, queryString:{'subsection':'framework'} })}}#pm2">PM2 Configuration </a> </h3>
-
 
 <h2>Location :</h2>
 <div class="doc2">
@@ -29,23 +27,20 @@
 		In nodefony Root directory launch <code>nodefony prod</code>
 	</p>
 
-	<pre>
-    .
-    ├── CHANGELOG.md
-    ├── LICENSE.txt
-    ├── README.md
-    ├── app
-    ├── bin
-    ├── config
-    ├── doc
-    ├── node_modules
-    ├── package-lock.json
-    ├── package.json
-    ├── src
-    ├── tmp
-    ├── web
-    └── yarn.lock
-	</pre>
+  <pre><code class="hljs console">
+  .
+├── README.md
+├── app
+├── bin
+├── config
+├── doc
+├── node_modules
+├── package-lock.json
+├── package.json
+├── src
+├── tmp
+└── web
+  </code></pre>
 </div>
 
 <h2>Run :</h2>
@@ -57,23 +52,31 @@
 	</div>
 	To launch nodefony in PM2 Management mode :
 </p>
-	<pre>
-$ <strong>nodefony prod</strong>
+	<pre><code class="hljs console">$ nodefony prod
 
-┌───────────┬────┬──────────────┬───────┬────────┬─────────┬───────────────────┬─────┬────────┬──────┬──────────┐
-│ App name  │ id │ mode         │ pid   │ status │ restart │ uptime            │ cpu │ memory │ user │ watching │
-├───────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-│ myproject │ 0  │ cluster_mode │ 53490 │ online │ -       │ a few seconds ago │ 38% │ 44 MB  │ cci  │ -        │
-├───────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-│ myproject │ 1  │ cluster_mode │ 53491 │ online │ -       │ a few seconds ago │ 52% │ 35 MB  │ cci  │ -        │
-├───────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-│ myproject │ 2  │ cluster_mode │ 53492 │ online │ -       │ a few seconds ago │ 26% │ 26 MB  │ cci  │ -        │
-├───────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-│ myproject │ 3  │ cluster_mode │ 53493 │ online │ -       │ a few seconds ago │ 17% │ 20 MB  │ cci  │ -        │
-└───────────┴────┴──────────────┴───────┴────────┴─────────┴───────────────────┴─────┴────────┴──────┴──────────┘
-To see all logs use the command  nodefony logs
-Or use PM2  pm2 --lines 1000 logs
-	</pre>
+┌──────────────────┬────┬──────────────┬───────┬────────┬─────────┬───────────────────┬─────┬────────┬──────┬──────────┐
+│ App name         │ id │ mode         │ pid   │ status │ restart │ uptime            │ cpu │ memory │ user │ watching │
+├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 0  │ cluster_mode │ 25040 │ online │ -       │ a few seconds ago │ 75% │ 58 MB  │ cci  │ -        │
+├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 1  │ cluster_mode │ 25041 │ online │ -       │ a few seconds ago │ 65% │ 54 MB  │ cci  │ -        │
+├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 2  │ cluster_mode │ 25044 │ online │ -       │ a few seconds ago │ 57% │ 51 MB  │ cci  │ -        │
+├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 3  │ cluster_mode │ 25051 │ online │ -       │ a few seconds ago │ 0%  │ 48 MB  │ cci  │ -        │
+├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 4  │ cluster_mode │ 25056 │ online │ -       │ a few seconds ago │ 0%  │ 42 MB  │ cci  │ -        │
+├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 5  │ cluster_mode │ 25061 │ online │ -       │ a few seconds ago │ 0%  │ 35 MB  │ cci  │ -        │
+├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 6  │ cluster_mode │ 25066 │ online │ -       │ a few seconds ago │ 0%  │ 28 MB  │ cci  │ -        │
+├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 7  │ cluster_mode │ 25071 │ online │ -       │ a few seconds ago │ 0%  │ 21 MB  │ cci  │ -        │
+└──────────────────┴────┴──────────────┴───────┴────────┴─────────┴───────────────────┴─────┴────────┴──────┴──────────┘
+ To see all logs use the command  nodefony logs
+ Or use PM2  pm2 --lines 1000 logs
+
+	</code></pre>
 </div>
 
 
@@ -83,22 +86,29 @@ Or use PM2  pm2 --lines 1000 logs
 <p>
 	To stop nodefony in PM2 Management mode :
 </p>
-	<pre>
-$ <strong>nodefony stop</strong>
+	<pre><code class="hljs console">$ nodefony stop
 
-Fri Sep 14 2018 16:02:05 INFO nodefony : PM2 Stop Project  myproject
-┌───────────┬────┬──────┬─────┬─────────┬─────────┬────────┬─────┬────────┬──────┬──────────┐
-│ App name  │ id │ mode │ pid │ status  │ restart │ uptime │ cpu │ memory │ user │ watching │
-├───────────┼────┼──────┼─────┼─────────┼─────────┼────────┼─────┼────────┼──────┼──────────┤
-│ myproject │ 0  │ -    │ -   │ stopped │ -       │ -      │ -   │ -      │ -    │ -        │
-├───────────┼────┼──────┼─────┼─────────┼─────────┼────────┼─────┼────────┼──────┼──────────┤
-│ myproject │ 1  │ -    │ -   │ stopped │ -       │ -      │ -   │ -      │ -    │ -        │
-├───────────┼────┼──────┼─────┼─────────┼─────────┼────────┼─────┼────────┼──────┼──────────┤
-│ myproject │ 3  │ -    │ -   │ stopped │ -       │ -      │ -   │ -      │ -    │ -        │
-├───────────┼────┼──────┼─────┼─────────┼─────────┼────────┼─────┼────────┼──────┼──────────┤
-│ myproject │ 2  │ -    │ -   │ stopped │ -       │ -      │ -   │ -      │ -    │ -        │
-└───────────┴────┴──────┴─────┴─────────┴─────────┴────────┴─────┴────────┴──────┴──────────┘
-	</pre>
+Wed Mar 27 2019 11:42:25 INFO nodefony : PM2 Stop Project  nodefony-starter
+┌──────────────────┬────┬──────┬─────┬─────────┬─────────┬────────┬─────┬────────┬──────┬──────────┐
+│ App name         │ id │ mode │ pid │ status  │ restart │ uptime │ cpu │ memory │ user │ watching │
+├──────────────────┼────┼──────┼─────┼─────────┼─────────┼────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 0  │ -    │ -   │ stopped │ -       │ -      │ -   │ -      │ -    │ -        │
+├──────────────────┼────┼──────┼─────┼─────────┼─────────┼────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 1  │ -    │ -   │ stopped │ -       │ -      │ -   │ -      │ -    │ -        │
+├──────────────────┼────┼──────┼─────┼─────────┼─────────┼────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 2  │ -    │ -   │ stopped │ -       │ -      │ -   │ -      │ -    │ -        │
+├──────────────────┼────┼──────┼─────┼─────────┼─────────┼────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 3  │ -    │ -   │ stopped │ -       │ -      │ -   │ -      │ -    │ -        │
+├──────────────────┼────┼──────┼─────┼─────────┼─────────┼────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 4  │ -    │ -   │ stopped │ -       │ -      │ -   │ -      │ -    │ -        │
+├──────────────────┼────┼──────┼─────┼─────────┼─────────┼────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 5  │ -    │ -   │ stopped │ -       │ -      │ -   │ -      │ -    │ -        │
+├──────────────────┼────┼──────┼─────┼─────────┼─────────┼────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 6  │ -    │ -   │ stopped │ -       │ -      │ -   │ -      │ -    │ -        │
+├──────────────────┼────┼──────┼─────┼─────────┼─────────┼────────┼─────┼────────┼──────┼──────────┤
+│ nodefony-starter │ 7  │ -    │ -   │ stopped │ -       │ -      │ -   │ -      │ -    │ -        │
+└──────────────────┴────┴──────┴─────┴─────────┴─────────┴────────┴─────┴────────┴──────┴──────────┘
+	</code></pre>
 </div>
 
 
@@ -109,8 +119,8 @@ Fri Sep 14 2018 16:02:05 INFO nodefony : PM2 Stop Project  myproject
 	To kill nodefony in PM2 Management mode :
 
 </p>
-	<pre>
-$ <strong>nodefony kill</strong>
+	<pre><code class="hljs console">$ nodefony kill
 
-	</pre>
+  Wed Mar 27 2019 11:43:24 CRITIC nodefony : SIGQUIT
+	</code></pre>
 </div>

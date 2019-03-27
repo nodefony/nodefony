@@ -28,19 +28,21 @@
         <div class="doc2">
           Location :
           <code>./config</code>
-          <pre>
+          <pre><code class="hljs console" >
 config/
 ├── certificates
 │   ├── ca
 │   ├── ca_intermediate
 │   ├── client
 │   └── server
-├── config.yml
+├── config.js
+├── generatedConfig.yml
 ├── openssl
 │   ├── ca
 │   └── ca_intermediate
 └── pm2.config.js
-        </pre>
+
+        </code></pre>
         </div>
 
         <h2 id="global">Goblal Configuration
@@ -69,93 +71,168 @@ config/
                   </li>
                   <li>
                     AutoLoad differents framework bundles as security monitoring ...</li>
-                  <li>
-                    Autoload services for render statics files (css, js , images ..)</li>
+                  </li>
                   <li>
                     locale (Lang) by default for all framework
                   </li>
                 </ul>
 
                 Location :
-                <code>./config/config.yml</code>
+                <code>./config/config.js</code>
                 <p>
-                  <pre>
-#########################################################
-#
-#  nodefony framework
-#
-#       kernel config
-#
-#
+                  <pre><code class="hljs javascript" >/**
+ *  NODEFONY FRAMEWORK
+ *
+ *       KERNEL CONFIG
+ *
+ *   Domain listen : Nodefony can listen only one domain ( no vhost )
+ *     Example :
+ *      domain :  0.0.0.0      // for all interfaces
+ *      domain :  [::1]        // for IPV6 only
+ *      domain :  192.168.1.1  // IPV4
+ *      domain :  mydomain.com // DNS
+ *
+ *   Domain Alias : string only "<<regexp>>" use domainCheck : true
+ *     Example :
+ *      domainAlias:[
+ *        "^127.0.0.1$",
+ *        "^localhost$",
+ *        ".*\\.nodefony-starter\\.com",
+ *        "^nodefony-starter\\.eu$",
+ *        "^.*\\.nodefony-starter\\.eu$"
+ *      ]
+ */
+const path = require("path");
 
-system:
-  domain                        : localhost             # nodefony can listen only one domain ( no vhost )  /    [::1] for ipv6 only
-  domainalias:                                          # domainalias string only <<regexp>>   example ".*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$"
-    - "^127.0.0.1$"
-  httpport                      : 5151
-  httpsport                     : 5152
-  statics                       : true
-  security                      : true
-  realtime                      : true
-  monitoring                    : true
-  documentation                 : true
-  unittest                      : true
-  locale                        : "en_en"
+module.exports = {
+  system: {
+    domain: "0.0.0.0",
+    domainAlias: [
+      "^127.0.0.1$",
+      "^localhost$"
+    ],
+    httpPort: 5151,
+    httpsPort: 5152,
+    domainCheck: false,
+    locale: "en_en",
 
-  servers:
-    http                        : true
-    https	                    : true
-    ws			                : true
-    wss			                : true
-    certificats:
-      key                       : "config/certificates/server/privkey.pem"
-      cert                      : "config/certificates/server/fullchain.pem"
-      ca                        : "config/certificates/ca/nodefony-root-ca.crt.pem"
-      options:
-        rejectunauthorized      : false
+    /**
+     * BUNDLES CORE
+     */
+    security: true,
+    realtime: true,
+    monitoring: true,
+    mail: true,
+    documentation: false,
+    unitTest: true,
+    redis: false,
+    mongo: false,
+    elastic: false,
 
-  bundles:
-    demo                        : "src/bundles/demo-bundle"
+    /**
+     * SERVERS
+     */
+    servers: {
+      statics: true,
+      protocol: "2.0", //  2.0 || 1.1
+      http: true,
+      https: true,
+      ws: true,
+      wss: true,
+      certificats: {
+        key: path.resolve("config", "certificates", "server", "privkey.pem"),
+        cert: path.resolve("config", "certificates", "server", "fullchain.pem"),
+        ca: path.resolve("config", "certificates", "ca", "nodefony-starter-root-ca.crt.pem"),
+        options: {
+          rejectUnauthorized: true
+        }
+      }
+    },
 
-  log:
-    active                      : true
+    /**
+     * DEV SERVER
+     */
+    devServer: {
+      inline: true,
+      hot: false,
+      hotOnly: false,
+      overlay: true,
+      logLevel: "info", // none, error, warning or info
+      progress: false,
+      protocol: "https",
+      websocket: true
+    },
 
-#
-#       assets cdn
-#
-#       you set cdn with string
-#       cdn :   cdn.nodefony.com
-#       or
-#       cdn:
-#          global: cdn.nodefony.com
-#       or
-#       cdn:
-#         stylesheet:
-#           - cdn.nodefony.com
-#         javascript:
-#           - cdn.nodefony.com
-#         image:
-#           - cdn.nodefony.com
-#           - cdn.nodefony.fr
-#         font:
-#           - cdn.nodefony.com
-#
-cdn                             : ~
+    /**
+     *  BUNDLES LOCAL REGISTRATION
+     *
+     *       bundles:
+     *         hello-bundle                 : "file:src/bundles/hello-bundle"
+     *         my-bundle                    : require("my-bundle")
+     */
+    bundles: {},
 
-#
-# engine template
-#
-#       twig
-#       https://github.com/justjohn/twig.js
-#
-templating                      : twig
+    /**
+     * SYSLOG NODEFONY
+     */
+    log: {
+      active: true
+    }
+  },
 
-#
-# engine orm
-#       sequelize
-orm                             : sequelize
+  /**
+   *       ASSETS CDN
+   *
+   *       You set cdn with string
+   *       CDN :    "cdn.nodefony-starter.com",
+   *       or
+   *       CDN:
+   *          global: "cdn.nodefony-starter.com",
+   *       or
+   *       CDN:{
+   *         stylesheet:[
+   *           "cdn.nodefony-starter.com"
+   *         ],
+   *         javascript:[
+   *           "cdn.nodefony-starter.com"
+   *         ],
+   *         image:[
+   *           "cdn.nodefony-starter.com",
+   *           "cdn.nodefony-starter.fr"
+   *         ],
+   *         font:[
+   *           "cdn.nodefony-starter.com"
+   *         ]
+   *      },
+   */
+  CDN: null,
 
-	  </pre>
+  /**
+   *  ENGINE TEMPLATE
+   *
+   *       TWIG
+   *       https://github.com/justjohn/twig.js
+   *
+   */
+  templating: "twig",
+
+  /**
+   * ENGINE ORM
+   *       sequelize || mongoose
+   *   orm : mongoose
+   */
+  orm: "sequelize",
+
+  /**
+   * NODE.JS PACKAGE MANAGER
+   *
+   *       npm
+   *       yarn
+   */
+  packageManager: "npm"
+
+};
+	                </code></pre>
                 </div>
 
                 <table class="table">
@@ -328,46 +405,43 @@ orm                             : sequelize
                   </tbody>
                 </table>
               </div>
-
             </div>
-
+            </br>
             <h2 id="certificates">Certificates SSL HTTPS
               <span class="badge">Directory</span>
               <small>
                 <code>./config/certificates</code>
               </small>
             </h2>
-
             <div class="doc2">
-              <pre>
-ls -l ./config/certificates/
+              <pre><code class="hljs console" > ./config/certificates/
 
-total 0
-drwxr-xr-x  9 cci  staff  306  2 aoû 09:40 ca
-drwxr-xr-x  8 cci  staff  272  2 aoû 09:40 ca_intermediate
-drwxr-xr-x  4 cci  staff  136  2 aoû 09:40 client
-drwxr-xr-x  6 cci  staff  204  2 aoû 09:40 server
-
-config/certificates/
-├── ca
-│   ├── nodefony-root-ca.crt.pem
-│   └── nodefony-root-ca.key.pem
-├── ca_intermediate
-│   └── certs
-│       ├── ca-chain.cert.pem
-│       ├── client.nodefony.cert.pem
-│       ├── intermediate.cert.pem
-│       └── server.nodefony.cert.pem
-├── client
-│   ├── chain.pem
-│   └── pubkey.pem
-└── server
-    ├── cert.pem
-    ├── chain.pem
-    ├── fullchain.pem
-    └── privkey.pem
-
-</pre>
+  ├── ca
+  │   ├── certs
+  │   ├── crl
+  │   ├── db
+  │   ├── newcerts
+  │   ├── nodefony-starter-root-ca.crt.pem
+  │   ├── nodefony-starter-root-ca.key.pem
+  │   ├── private
+  │   └── public
+  ├── ca_intermediate
+  │   ├── certs
+  │   ├── crl
+  │   ├── csr
+  │   ├── db
+  │   ├── newcerts
+  │   └── private
+  ├── client
+  │   ├── chain.pem
+  │   └── pubkey.pem
+  └── server
+      ├── cert.pem
+      ├── chain.pem
+      ├── fullchain.pem
+      ├── haproxy.pem
+      └── privkey.pem
+            </code></pre>
 
               <p>
                 You can manage your https certificates in this directory
@@ -393,11 +467,14 @@ config/certificates/
                 <code>nodefony prod</code>
               </p>
 
-              <pre>
-const cpu = require('os').cpus().length;
-let name = "myproject";
-let script = process.argv[1] || "nodefony";
-let logFile = path.resolve("tmp", "myproject.log");
+              <pre><code class="hljs javascript" >const cpu = require('os').cpus().length;
+const path = require("path");
+
+const package = require(path.resolve("package.json"));
+const name = package.name;
+const script = process.argv[1] || "nodefony";
+const logName = `${name}.log`;
+const logFile = path.resolve("tmp", logName);
 
 /**
  * Application configuration section
@@ -431,7 +508,7 @@ module.exports = {
     }
   }]
 };
-	            </pre>
+	            </code></pre>
               <a href="http://pm2.keymetrics.io/docs/usage/cluster-mode/">
                 Documentation pm2.keymetrics.io
               </a>

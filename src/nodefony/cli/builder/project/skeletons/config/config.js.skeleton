@@ -84,9 +84,10 @@ module.exports = {
     /**
      *  BUNDLES LOCAL REGISTRATION
      *
-     *       bundles:
-     *         hello-bundle                 : "file:src/bundles/hello-bundle"
-     *         my-bundle                    : require("my-bundle")
+     *       bundles:{
+     *         hello-bundle : "file:src/bundles/hello-bundle",
+     *         my-bundle    : require("my-bundle")
+     *      }
      */
     bundles: {},
 

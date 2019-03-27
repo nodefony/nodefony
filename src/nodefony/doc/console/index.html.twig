@@ -3,68 +3,223 @@
 <h1> {{ "COMMAND-LINE INTERFACE (CLI)" | trans() }}</h1>
 
 
-<p>
-	NODEFONY provides a command-line interface
-</p>
+<h2>
+	Framework cli (command-line interface)
+</h2>
 
 
-<pre>
-$ <strong>./nodefony -h</strong>
-   _   _    ___    ____    _____   _____    ___    _   _  __   __
-  | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
-  |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
-  | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |
-  |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|
+<pre><code class="hljs console" >$ nodefony -h
 
+                            _           __                                         _                    _
+        _ __     ___     __| |   ___   / _|   ___    _ __    _   _           ___  | |_    __ _   _ __  | |_    ___   _ __
+       | '_ \   / _ \   / _` |  / _ \ | |_   / _ \  | '_ \  | | | |  _____  / __| | __|  / _` | | '__| | __|  / _ \ | '__|
+       | | | | | (_) | | (_| | |  __/ |  _| | (_) | | | | | | |_| | |_____| \__ \ | |_  | (_| | | |    | |_  |  __/ | |
+       |_| |_|  \___/   \__,_|  \___| |_|    \___/  |_| |_|  \__, |         |___/  \__|  \__,_| |_|     \__|  \___| |_|
+                                                             |___/
 
-   Version : 3.0.0-beta Platform : darwin Process : nodefony PID : 26212
+      Version : 1.0.0 Platform : darwin Process : nodefony-starter PID : 26214
 
- NODEFONY CONSOLE Cluster : master Environment : prod Debug :false
+      KERNEL CONSOLE Cluster : master Environment : prod Debug :false
 
-Usage: nodefony [options] <cmd> [args...]
+Usage: nodefony [options] <command:task:action> [args...]
+                [options] <command:action> [args...]
+                [options] <action> [args...]
 
 Options:
+  -V, --version       output the version number
+  -d, --debug         Nodefony debug
+  -h, --help          Nodefony help
+  -v, --version       Nodefony version
+  -f, --force         Force disable interactive mode
+  -i, --interactive   Nodefony cli Interactive Mode
+  -j, --json          Nodefony json response
+  -V, --version       output the version number
+  -h, --help          output usage information
 
--d, --debug         Nodefony debug
--h, --help          Nodefony help
--v, --version       Nodefony version
--i, --interactive   Nodefony cli Interactive Mode
-
-Command :
-
+Servers
+         dev                                                     Run Nodefony Development Server
+         preprod                                                 Run Nodefony Preprod Server ( Usefull to check Clusters Node )
+         prod                                                    Run Nodefony Production Server ( PM2 mode )
+PM2 Process Manager 2
+         stop [name]                                             Stop Production Project
+         reload [name]                                           Reload Production Project
+         delete [name]                                           Delete Production Project from PM2 management
+         restart [name]                                          Restart Production Project
+         list                                                    List all Production Projects
+         kill                                                    Kill PM2 daemon
+         logs [name] [nblines]                                   Stream pm2 logs  [name] is project name  and [nblines] to show
+         clean-log                                               Remove logs
 nodefony
-	dev							 	 Run Nodefony Development Server
-	prod							 	 Run Nodefony Preprod Server
-	pm2							 	 Run Nodefony Production Server ( PM2 mode )
-	app							 	 Get Nodefony App name
-	npm:install							 Install all NPM framework packages
-	npm:list							 List all NPM installed packages
-framework
-	generate:bundle nameBundle path                                  Generate a nodefony Bundle  Example : nodefony generate:bundle myBundle ./src/bundles
-	generate:bundle:angular nameBundle path                          Generate a Angular Bundle  Example : nodefony generate:bundle:angular myBundle ./src/bundles
-	generate:bundle:react nameBundle path                            Generate a React Bundle Example : nodefony generate:bundle:react myBundle ./src/bundles
-	generate:controller  nameController bundlePath                   Generate a controller Example : nodefony generate:controller myController ./src/bundles/myBundle
-	generate:command nameCommand path                                Generate a command js file in bundle path
-	router:generate:routes                                           Generate all routes
-	router:generate:route routeName                                  Generate one route Example : nodefony router:generate:route home
-	router:match:url url                                             Get route who match url Example : nodefony router:match:url /nodefony
-	webpack:dump                                                     Compile webpack for all bundles
-security
-	encoders:Digest firewall login password [realm]                  Generate encoding keys digest MD5 Example : nodefony encoders:Digest secured_area login password
-sequelize
-	Sequelize:fixtures:load                                          Load data fixtures to your database
-	Sequelize:generate:entities [force]                              Generate All Entities force to delete table if exist  example : nodefony Sequelize:generate:entities force
-	Sequelize:query:sql connectionName SQL                           query sql in database connection  example : nodefony  Sequelize:query:sql nodefony  'select * from users'
-	Sequelize:entity:findAll entity                                  query findAll ENTITY
-monitoring
-	Monitoring:test:load URL [nbRequests] [concurence]               load test example : nodefony Monitoring:test:load http://localhost:5151/demo 10000 100
-unitTest
-	unitTest:list:all                                                List all unit tests
-	unitTest:list:bundle bundleName                                  List all bundle unit tests
-	unitTest:launch:all                                              Launch all tests Example : nodefony unitTest:launch:all
-	unitTest:launch:bundle bundleName { testfile }                   Launch bundle tests Example: nodefony unitTest:launch:bundle demo-bundle responseTest.js
+         create [-i] name [path]                                 Create New Nodefony Project
+         build                                                   Build Nodefony Framewok
+         rebuild                                                 Rebuild Nodefony Framewok (Recompilation when node version change )
+         install                                                 Install Nodefony Project
+         certificates                                            Generate HTTPS Certificates  'Change default openssl configuration in config/openssl'
+         listDependencies                                        List Project dependencies
+         outdated                                                List Project dependencies outdated
+         version                                                 Get Project Version
+Bundles
+  framework
+         generate:bundle name [path]                             Generate a nodefony Bundle  Example : nodefony generate:bundle name ./src/bundles
+         generate:controller [-i] name [bundle]                  Generate a Bundle Controller  Example : nodefony generate:controller defaultController demo
+         generate:service [-i]                                   Generate Service
+         generate:entity [-i] orm                                Generate ORM Entity
+         generate:nginx [-i]                                     Generate Nginx Minimal Configuration File as a reverse proxy in front of Nodefony
+         generate:haproxy [-i]                                   Generate Haproxy Minimal Configuration File as a reverse proxy in front of Nodefony
+         generate:letsencrypt [-i]                               Generate Let's Encrypt Webroot Configuration
+         router:display:routes [routeName]                       Display all routes or route  Example : nodefony router:display:route home
+         router:display:match uri                                Get route who match uri Example : nodefony router:display:match /nodefony
+         webpack:dump                                            Compile webpack for all bundles
+  sequelize
+         sequelize:sync [force]                                  Synchronize All Entities. [force] to delete table if exist  example : nodefony sequelize:sync force
+         sequelize:fixtures:load                                 Load fixtures in database
+         sequelize:query:sql connectionName 'SQL'                Query sql in database connection  example : nodefony  sequelize:query:sql nodefony 'select * from users'
+         sequelize:entity:findAll entity                         Query findAll ENTITY
+         sequelize:generate:entity name bundle connector         Generate Sequelize Entity
+  unittests
+         unitest:list:all                                        List all unit tests
+         unitest:list:bundle bundleName                          List all bundle unit tests
+         unitest:launch:all                                      Launch all tests Example : nodefony unitest:launch:all
+         unitest:launch:bundle bundleName [testfile]             Launch bundle tests Example: nodefony unitest:launch:bundle demoBundle responseTest.js
+  
+</code></pre>
 
-Thu Aug 03 2017 14:44:30 INFO CONSOLE   : NODEFONY Kernel Life Cycle Terminate CODE : 0
-</pre>
+<h2>
+	Create cli  (command-line interface)
+</h2>
 
 <script src="https://gist.github.com/ccamensuli/7d42aeb022406bd9527b562d5e181b50.js"></script>
+
+<pre><code class="hljs console" >
+ __  __  __   __     ____   _       ___
+|  \/  | \ \ / /    / ___| | |     |_ _|
+| |\/| |  \ V /    | |     | |      | |
+| |  | |   | |     | |___  | |___   | |
+|_|  |_|   |_|      \____| |_____| |___|
+
+
+Wed Mar 27 2019 18:06:52 INFO MY CLI : ON START
+Wed Mar 27 2019 18:06:52 INFO MY CLI : START simpleLogger : 🎬
+Wed Mar 27 2019 18:06:52 INFO MY CLI : Emoji : 🌜
+
+Wed Mar 27 2019 18:06:52 DEBUG MY CLI : Emoji : 🥫
+
+Wed Mar 27 2019 18:06:52 ERROR MY CLI : Emoji : 🌡️
+
+Wed Mar 27 2019 18:06:52 WARNING MY CLI : Emoji : 🚦
+Wed Mar 27 2019 18:06:52 INFO MY CLI : END simpleLogger : 🏁
+Wed Mar 27 2019 18:06:52 INFO MY CLI : START SPINNER : 🎬
+
+Wed Mar 27 2019 18:06:57 INFO MY CLI : END SPINNER : 🏁
+Wed Mar 27 2019 18:06:57 INFO MY CLI : START TABLE : 🎬
+┌──────────┬──────────┬──────────┬──────────┐
+│ COLUMN 1 │ COLUMN 2 │ COLUMN 3 │ COLUMN 4 │
+├──────────┼──────────┼──────────┼──────────┤
+│ CRITIC   │ 63       │ 185      │ 238      │
+├──────────┼──────────┼──────────┼──────────┤
+│ NOTICE   │ 26       │ 110      │ 169      │
+├──────────┼──────────┼──────────┼──────────┤
+│ ERROR    │ 39       │ 185      │ 132      │
+├──────────┼──────────┼──────────┼──────────┤
+│ CRITIC   │ 1        │ 53       │ 234      │
+├──────────┼──────────┼──────────┼──────────┤
+│ DEBUG    │ 43       │ 27       │ 18       │
+├──────────┼──────────┼──────────┼──────────┤
+│ DEBUG    │ 91       │ 10       │ 132      │
+├──────────┼──────────┼──────────┼──────────┤
+│ INFO     │ 21       │ 11       │ 18       │
+├──────────┼──────────┼──────────┼──────────┤
+│ DEBUG    │ 49       │ 142      │ 282      │
+├──────────┼──────────┼──────────┼──────────┤
+│ ERROR    │ 3        │ 13       │ 284      │
+├──────────┼──────────┼──────────┼──────────┤
+│ CRITIC   │ 89       │ 31       │ 97       │
+└──────────┴──────────┴──────────┴──────────┘
+┌──────────┬──────────┬──────────┬──────────┐
+│ COLUMN 1 │ COLUMN 2 │ COLUMN 3 │ COLUMN 4 │
+├──────────┼──────────┼──────────┼──────────┤
+│ WARNING  │ 97       │ 12       │ 191      │
+├──────────┼──────────┼──────────┼──────────┤
+│ ALERT    │ 38       │ 165      │ 45       │
+├──────────┼──────────┼──────────┼──────────┤
+│ ALERT    │ 41       │ 144      │ 100      │
+├──────────┼──────────┼──────────┼──────────┤
+│ INFO     │ 17       │ 116      │ 269      │
+├──────────┼──────────┼──────────┼──────────┤
+│ NOTICE   │ 24       │ 151      │ 7        │
+├──────────┼──────────┼──────────┼──────────┤
+│ CRITIC   │ 72       │ 70       │ 239      │
+├──────────┼──────────┼──────────┼──────────┤
+│ CRITIC   │ 16       │ 163      │ 225      │
+├──────────┼──────────┼──────────┼──────────┤
+│ NOTICE   │ 44       │ 48       │ 26       │
+├──────────┼──────────┼──────────┼──────────┤
+│ DEBUG    │ 85       │ 146      │ 261      │
+├──────────┼──────────┼──────────┼──────────┤
+│ ALERT    │ 6        │ 179      │ 75       │
+└──────────┴──────────┴──────────┴──────────┘
+Wed Mar 27 2019 18:06:57 INFO MY CLI : END TABLE : 🏁
+Wed Mar 27 2019 18:06:57 INFO MY CLI : START PROGRESS : 🎬
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [-------------------------------------------------] 2%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|------------------------------------------------] 4%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||-----------------------------------------------] 6%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||----------------------------------------------] 8%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||---------------------------------------------] 10%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||--------------------------------------------] 12%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||------------------------------------------] 15%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||------------------------------------------] 16%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||-----------------------------------------] 18%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||||----------------------------------------] 20%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||---------------------------------------] 22%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||||||--------------------------------------] 24%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||||-------------------------------------] 26%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||||||-----------------------------------] 29%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||||||-----------------------------------] 30%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||||||||||----------------------------------] 32%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||||||||---------------------------------] 34%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||||||||||||--------------------------------] 36%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||||||||||-------------------------------] 38%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||------------------------------] 40%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||-----------------------------] 42%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||----------------------------] 44%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||---------------------------] 46%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||--------------------------] 48%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||-------------------------] 50%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||------------------------] 52%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||-----------------------] 54%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||---------------------] 57%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||---------------------] 58%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||--------------------] 60%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||-------------------] 62%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||------------------] 64%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||-----------------] 66%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||----------------] 68%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||---------------] 70%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||--------------] 72%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||-------------] 74%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||------------] 76%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||-----------] 78%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||----------] 80%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||||---------] 82%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||||--------] 84%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||||||-------] 86%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||||||------] 88%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||||||||-----] 90%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||||||||----] 92%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||||||||||---] 94%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||||||||||--] 96%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||||||||||||-] 98%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||||||||||||] 100%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : END PROGRESS : 🏁
+Wed Mar 27 2019 18:06:58 INFO MY CLI : START PROGRESS 2 : 🎬
+Wed Mar 27 2019 18:07:00 INFO MY CLI : MY PROGRESS [|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||] 100%
+Wed Mar 27 2019 18:07:00 INFO MY CLI : END PROGRESS 2 : 🏁
+Wed Mar 27 2019 18:07:00 INFO MY CLI : START Sparkline  : 🎬
+Wed Mar 27 2019 18:07:00 INFO MY CLI : ▅▅▂▄▅▄█▅▄▇▆▇▅▅  12 reqs/sec (23 reqs/sec)
+Wed Mar 27 2019 18:07:00 INFO MY CLI : END Sparkline  : 🏁
+Wed Mar 27 2019 18:07:00 INFO MY CLI : START Sparkline  : 🎬
+◝  Wed Mar 27 2019 18:07:04 INFO MY CLI : ▃▆▆▇▇▄▅▇█▆▂▅▇▅▇▄██▆▂▂▅▅▆▄▃▅▇▆▆▇█▄▅▇▂▆▄▃▃▆██▃▄▂█▂▂▃▂▆▂█▇▄▇▆▄█▅▆▆▂▄▃█▆▄▃▆▅▆▂▄▃▄▂▂▄▆▂█▃▃▂█▆█▂▄▃██▃▄█▄▇  169 reqs/sec (200 reqs/sec)
+Wed Mar 27 2019 18:07:04 INFO MY CLI : END Sparkline2 : 🏁
+Wed Mar 27 2019 18:07:04 INFO MY CLI : TERMINATE MY CLI : 🏁
+
+</code></pre>
