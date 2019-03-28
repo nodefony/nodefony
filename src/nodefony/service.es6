@@ -96,6 +96,21 @@ module.exports = nodefony.register("Service", function() {
       }
     }
 
+    initSyslog(options = null) {
+      let defaultOptions = {
+        severity: {
+          operator: "<=",
+          data: "7"
+        }
+      };
+      return this.syslog.listenWithConditions(this, options || defaultOptions,
+        (pdu) => {
+          let message = pdu.payload;
+          let date = new Date(pdu.timeStamp);
+          console.log(`${date.toDateString()} ${date.toLocaleTimeString()} ${nodefony.Service.logSeverity(pdu.severityName)} ${cyan(pdu.msgid)} : ${message}`);
+        });
+    }
+
     getName() {
       return this.name;
     }
@@ -134,6 +149,11 @@ module.exports = nodefony.register("Service", function() {
       //this.logger(ev, "DEBUG", "EVENT KERNEL")
       if (this.notificationsCenter) {
         return this.notificationsCenter.fire.apply(this.notificationsCenter, arguments);
+      }
+    }
+    emit() {
+      if (this.notificationsCenter) {
+        return this.notificationsCenter.emit.apply(this.notificationsCenter, arguments);
       }
     }
 
