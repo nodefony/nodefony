@@ -13,8 +13,7 @@
     Example Generate nginx configuration :
   </h3>
 
-  <pre>
-$ nodefony
+  <pre><code class="hljs shell">$ nodefony
     _   _    ___    ____    _____   _____    ___    _   _  __   __
    | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
    |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
@@ -26,14 +25,14 @@ Version : 4.0.0-beta.5 Platform : darwin Process : nodefony PID : 26289
 Thu Sep 13 2018 15:20:52 INFO nodefony : WELCOME PROJECT : nodefony-core 4.0.0-beta.5
 ?  Nodefony CLI :  Generater
 ?  Nodefony CLI :  (Use arrow keys)
-❯ Generate New Bundle
+Generate New Bundle
 Generate New Controller
 Generate New Service
 Generate New Entity
 Generate New Nodefony Project
 Generate Openssl Certificates
 Generate Haproxy Configuration
-<b>Generate Nginx Configuration </b>
+❯ <h3>Generate Nginx Configuration </h3>
 Generate letsEncrypt Webroot Configuration
 --------
                        _
@@ -54,12 +53,12 @@ Generate letsEncrypt Webroot Configuration
 Thu Sep 13 2018 15:25:03 INFO COMMAND generate TASK nginx : Success Creation Configuration File :  /Users/cci/repository/myproject/config/nginx/myproject.conf
 Thu Sep 13 2018 15:25:03 INFO KERNEL CONSOLE  : NODEFONY Kernel Life Cycle Terminate CODE : 0
 
-  </pre>
+  </code></pre>
 
   <h3>
     Link this file in nginx configuration file  ./config/nginx/myproject.conf :
   </h3>
-  <pre>
+  <pre><code class="hljs nginx">
     map $http_upgrade $connection_upgrade {
     	default upgrade;
     	''      close;
@@ -140,5 +139,5 @@ Thu Sep 13 2018 15:25:03 INFO KERNEL CONSOLE  : NODEFONY Kernel Life Cycle Termi
 
     }
 
-  </pre>
+  </code></pre>
 </div>

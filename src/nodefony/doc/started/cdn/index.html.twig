@@ -13,7 +13,7 @@
     Example nginx configuration :
   </h4>
 
-  <pre>
+  <pre><code class="hljs nginx">
 server {
   listen       80;
   listen       443 ssl;
@@ -30,91 +30,73 @@ server {
     add_header access-control-allow-origin  *;
   }
 }
-  </pre>
+  </code></pre>
 </div>
 <div class="doc2">
   <h4>
-    Example nodefony CDN configuration : ./config/config.yml
+    Example nodefony CDN configuration : ./config/config.js
   </h4>
-  <pre>
-system:
-  domain                        : localhost             # nodefony can listen only one domain ( no vhost )  /    [::1] for IPV6 only
-  domainAlias:                                          # domainAlias string only <<regexp>>   example ".*\\.nodefony\\.com  ^nodefony\\.eu$ ^.*\\.nodefony\\.eu$"
-    - "^127.0.0.1$"
-  httpPort                      : 5151
-  httpsPort                     : 5152
-  <b>statics                       : false</b>
-  security                      : true
-  realtime                      : true
-  monitoring                    : true
-  documentation                 : true
-  unitTest                      : true
-  demo                          : true
-  locale                        : "en_en"
-
-  servers:
-    http                        : true
-    https                       : true
-    ws                          : true
-    wss                         : true
-    certificats:
-      key                       : "config/certificates/server/privkey.pem"
-      cert                      : "config/certificates/server/fullchain.pem"
-      ca                        : "config/certificates/ca/nodefony-root-ca.crt.pem"
-      options:
-        rejectUnauthorized      : false
-
-  bundles:
-    test                        : "src/bundles/testBundle"
-
-  log:
-    active                      : true
-
-#
-#       ASSETS CDN
-#
-#       You set cdn with string
-#       CDN :   cdn.nodefony.com
-#       or
-#       CDN:
-#          global: cdn.nodefony.com
-#       or
-#       CDN:
-#         stylesheet:
-#           - cdn.nodefony.com
-#         javascript:
-#           - cdn.nodefony.com
-#         image:
-#           - cdn.nodefony.com
-#           - cdn.nodefony.fr
-#         font:
-#           - cdn.nodefony.com
-#
-<b>CDN :
-  global: statics.domain.com</b>
-
-#
-# ENGINE TEMPLATE
-#
-#       TWIG
-#       https://github.com/justjohn/twig.js
-#
-templating                      : twig
-
-#
-# ENGINE ORM
-#       SEQUELIZE
-orm                             : sequelize
-
-#
-# NODE.JS PACKAGE MANAGER
-#
-#       npm
-#       yarn
-#
-packageManager                  : npm
-
-  </pre>
+  <pre><code class="hljs javascript">module.exports = {
+    system: {
+      domain: "0.0.0.0",
+      domainAlias: [
+        "^127.0.0.1$",
+        "^localhost$"
+      ],
+      httpPort: 5151,
+      httpsPort: 5152,
+      domainCheck: false,
+      locale: "en_en",
+      /**
+       * SERVERS
+       */
+      servers: {
+        <h3>statics: false,</h3>
+        protocol: "2.0", //  2.0 || 1.1
+        http: true,
+        https: true,
+        ws: true,
+        wss: true,
+        certificats: {
+          key: path.resolve("config", "certificates", "server", "privkey.pem"),
+          cert: path.resolve("config", "certificates", "server", "fullchain.pem"),
+          ca: path.resolve("config", "certificates", "ca", "nodefony-starter-root-ca.crt.pem"),
+          options: {
+            rejectUnauthorized: true
+          }
+        }
+      },
+      /**
+       *       ASSETS CDN
+       *
+       *       You set cdn with string
+       *       CDN :    "cdn.nodefony-starter.com",
+       *       or
+       *       CDN:
+       *          global: "cdn.nodefony-starter.com",
+       *       or
+       *       CDN:{
+       *         stylesheet:[
+       *           "cdn.nodefony-starter.com"
+       *         ],
+       *         javascript:[
+       *           "cdn.nodefony-starter.com"
+       *         ],
+       *         image:[
+       *           "cdn.nodefony-starter.com",
+       *           "cdn.nodefony-starter.fr"
+       *         ],
+       *         font:[
+       *           "cdn.nodefony-starter.com"
+       *         ]
+       *      },
+       */
+      CDN: {
+        <h3>global: statics.domain.com</h3>
+      }
+    }
+  }
+  </code></pre>
 </div>
 
 <h2>Use CDN In views
@@ -124,7 +106,7 @@ packageManager                  : npm
     Example base.html.twig :
   </h4>
 
-  <pre>
+  <pre><code class="hljs twig">
 &lthtml&gt
   &lthead&gt
 &#123% block head %&#125 &#123% endblock %&#125
@@ -160,5 +142,5 @@ packageManager                  : npm
   &lt/body&gt
 &lt/html&gt
 
-	</pre>
+	</code></pre>
 </div>

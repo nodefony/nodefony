@@ -9,18 +9,17 @@ module.exports = nodefony.register("syslog", function() {
    *   burstLimit:      3
    *   defaultSeverity: "DEBUG"
    *   checkConditions: "&&"
-   *   async:         false
    *
    * </pre>
    */
   const defaultSettings = {
     moduleName: "SYSLOG",
+    msgid: "",
     maxStack: 100,
     rateLimit: false,
     burstLimit: 3,
     defaultSeverity: "DEBUG",
-    checkConditions: "&&",
-    async: false
+    checkConditions: "&&"
   };
 
   /*
@@ -269,6 +268,45 @@ module.exports = nodefony.register("syslog", function() {
     return false;
   };
 
+  const wrapperCondition = function(conditions, callback, context = null) {
+    let myFuncCondition = null;
+    let Conditions = null;
+    try {
+      if (conditions.checkConditions && conditions.checkConditions in logicCondition) {
+        myFuncCondition = logicCondition[conditions.checkConditions];
+        delete conditions.checkConditions;
+      } else {
+        myFuncCondition = logicCondition[this.settings.checkConditions];
+      }
+      Conditions = sanitizeConditions(conditions);
+      switch (nodefony.typeOf(callback)) {
+        case "function":
+          return (pdu) => {
+            let res = myFuncCondition(Conditions, pdu);
+            if (res) {
+              if (context) {
+                callback.call(context, pdu);
+              } else {
+                callback(pdu);
+              }
+            }
+          };
+        case "array":
+          let tab = [];
+          for (let i = 0; i < callback.length; i++) {
+            let res = myFuncCondition(Conditions, callback[i]);
+            if (res) {
+              tab.push(callback[i]);
+            }
+          }
+          return tab;
+        default:
+          throw new Error("");
+      }
+    } catch (e) {
+      throw e;
+    }
+  };
 
   const sanitizeConditions = function(settingsCondition) {
     let res = true;
@@ -385,48 +423,10 @@ module.exports = nodefony.register("syslog", function() {
       msg);
   };
 
+
+
   /**
    * A class for product log in nodefony.
-   * @example
-   *
-   *    var ERROR_DEFINE = {
-   *       '-101': 'I18N string'
-   *    };
-   *
-   *    var settings = {
-   *        rateLimit:100,
-   *        burstLimit:10,
-   *        moduleName:"LIVE",
-   *        defaultSeverity:"ERROR"
-   *    };
-   *
-   *    var logIntance = new nodefony.syslog(settings);
-   *
-   *    logIntance.listenWithConditions(context,{
-   *        checkConditions: "&&",
-   *        severity:{
-   *            data:"CRITIC,ERROR"
-   *            //data:"1,7"
-   *        },
-   *        date:{
-   *            operator:">=",
-   *            data:new Date()
-   *        },
-   *        msgid:{
-   *            data:"myFunction"
-   *        }
-   *
-   *
-   *    },function(pdu){
-   *        logView(pdu)
-   *    } )
-   *
-   *
-   *    var myFunction = function(error){
-   *        logIntance.logger(error, "ERROR", "myFunction", ERROR_DEFINE[error] );
-   *    }
-   *
-   *
    *
    *    @class syslog
    *    @module library
@@ -518,7 +518,7 @@ module.exports = nodefony.register("syslog", function() {
             if (payload instanceof nodefony.PDU) {
               pdu = payload;
             } else {
-              pdu = createPDU.call(this, payload, severity, this.settings.moduleName, msgid, msg);
+              pdu = createPDU.call(this, payload, severity, this.settings.moduleName, msgid || this.settings.msgid, msg);
             }
           } catch (e) {
             console.trace(e);
@@ -537,7 +537,7 @@ module.exports = nodefony.register("syslog", function() {
           if (payload instanceof nodefony.PDU) {
             pdu = payload;
           } else {
-            pdu = createPDU.call(this, payload, severity, this.settings.moduleName, msgid, msg);
+            pdu = createPDU.call(this, payload, severity, this.settings.moduleName, msgid || this.settings.msgid, msg);
           }
         } catch (e) {
           console.trace(e);
@@ -571,12 +571,7 @@ module.exports = nodefony.register("syslog", function() {
      * @return {PDU} pdu
      */
     getLogStack(start, end, contition) {
-      let stack = null;
-      if (contition) {
-        stack = this.getLogs(contition);
-      } else {
-        stack = this.ringStack;
-      }
+      let stack = this.getLogs(contition);
       if (arguments.length === 0) {
         return stack[stack.length - 1];
       }
@@ -595,31 +590,11 @@ module.exports = nodefony.register("syslog", function() {
      * @param {Object} conditions .
      * @return {array} new array with matches conditions
      */
-    getLogs(conditions, stack) {
-      let myStack = stack || this.ringStack;
-      let myFuncCondition = null;
-      if (conditions.checkConditions && conditions.checkConditions in logicCondition) {
-        myFuncCondition = logicCondition[conditions.checkConditions];
-        delete conditions.checkConditions;
-      } else {
-        myFuncCondition = logicCondition[this.settings.checkConditions];
+    getLogs(conditions = null, stack = null) {
+      if (conditions) {
+        return wrapperCondition.call(this, conditions, stack || this.ringStack);
       }
-      let tab = [];
-      let Conditions = null;
-      try {
-        Conditions = sanitizeConditions(conditions);
-      } catch (e) {
-        throw new Error("registreNotification conditions format error: " + e);
-      }
-      if (Conditions) {
-        for (let i = 0; i < myStack.length; i++) {
-          let res = myFuncCondition(Conditions, myStack[i]);
-          if (res) {
-            tab.push(myStack[i]);
-          }
-        }
-      }
-      return tab;
+      return this.ringStack;
     }
 
     /**
@@ -633,8 +608,8 @@ module.exports = nodefony.register("syslog", function() {
         stack = this.getLogs(conditions);
       } else {
         stack = this.ringStack;
-        return JSON.stringify(stack);
       }
+      return JSON.stringify(stack);
     }
 
     /**
@@ -686,33 +661,31 @@ module.exports = nodefony.register("syslog", function() {
 
     /**
      *
+     *    @method  filter
+     *
+     */
+    filter(conditions = null, callback = null, context = null) {
+      if (!conditions) {
+        throw new Error("filter conditions not found ");
+      }
+      try {
+        let wrapper = wrapperCondition.call(this, conditions, callback, context);
+        if (wrapper) {
+          return super.on("onLog", wrapper);
+        }
+        return null;
+      } catch (e) {
+        throw e;
+      }
+    }
+
+    /**
+     *
      *    @method  listenWithConditions
      *
      */
     listenWithConditions(context, conditions, callback) {
-      let myFuncCondition = null;
-      let Conditions = null;
-      if (conditions.checkConditions && conditions.checkConditions in logicCondition) {
-        myFuncCondition = logicCondition[conditions.checkConditions];
-        delete conditions.checkConditions;
-      } else {
-        myFuncCondition = logicCondition[this.settings.checkConditions];
-      }
-      try {
-        Conditions = sanitizeConditions(conditions);
-      } catch (e) {
-        throw new Error("registreNotification conditions format error: " + e);
-      }
-      if (Conditions) {
-        let func = (pdu) => {
-          let res = myFuncCondition(Conditions, pdu);
-          if (res) {
-            callback.call(context || this, pdu);
-          }
-        };
-        super.listen(this, "onLog", func);
-        return func;
-      }
+      return this.filter(conditions, callback, context);
     }
 
     error(data) {

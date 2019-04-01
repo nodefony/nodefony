@@ -1,44 +1,244 @@
 {{trans_default_domain("doc")}}
 
 
-<h1> Syslog  </h1>
+<h1> Syslog Nodefony </h1>
 <hr>
 
 <div class="alert alert-info" role="alert">
-	<strong>
-		Syslog manage all log in Nodefony .</br>
-	</strong>
-</div>	
+  <strong>
+  Syslog manage all log in Nodefony .</br>
+  </strong>
+</div>
 
 
 <h2>Syslog Create instance : </h2>
 
-<pre>
-var settingsSyslog = {
-	moduleName:"KERNEL",
-	defaultSeverity:"INFO"
+<pre><code class="hljs javascript">#!/usr/bin/env node
+
+const nodefony = require("nodefony");
+
+const syslog = new nodefony.syslog();
+console.log(syslog);
+/*
+Syslog {
+  _events: [Object: null prototype] {},
+  _eventsCount: 0,
+  _maxListeners: 20,
+  settings:
+   { moduleName: 'SYSLOG',
+     maxStack: 100,
+     rateLimit: false,
+     burstLimit: 3,
+     defaultSeverity: 'DEBUG',
+     checkConditions: '&&',
+   },
+  ringStack: [],
+  burstPrinted: 0,
+  missed: 0,
+  invalid: 0,
+  valid: 0,
+  start: 0
+}
+*/
+</code></pre>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+
+const nodefony = require("nodefony");
+
+const settingsSyslog = {
+  moduleName: "LIVE",
+  defaultSeverity: "ERROR",
+  msgid: "websocket"
 };
 
-var syslog = new <strong>nodefony.syslog</strong>( settingsSyslog );
-</pre>
+const syslog = new nodefony.syslog( settingsSyslog );
+console.log(syslog);
+/*
+Syslog {
+  _events: [Object: null prototype] {},
+  _eventsCount: 0,
+  _maxListeners: 20,
+  settings:
+   { moduleName: 'LIVE',
+     msgid: 'websocket',
+     maxStack: 100,
+     rateLimit: false,
+     burstLimit: 3,
+     defaultSeverity: 'ERROR',
+     checkConditions: '&&' },
+  ringStack: [],
+  burstPrinted: 0,
+  missed: 0,
+  invalid: 0,
+  valid: 0,
+  start: 0
+}
+*/
+</code></pre>
 
 
-<h2> Syslog Listener  :  </h2>
+<h2> SYSLOG  PDU (Protocol Data Unit) : </h2>
+<p>
+  <h3>Syslog uses the class PDU to unify all the logs</h3>
+</p>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+
+const nodefony = require("nodefony");
+
+const pdu = new nodefony.PDU( /* pci, severity, moduleName, msgid, msg, date */);
+console.log(pdu);
+
+/*
+PDU {
+  timeStamp: 1554120561428,
+  uid: 1,
+  severity: 6,
+  severityName: 'INFO',
+  typePayload: 'undefined',
+  payload: undefined,
+  moduleName: 'nodefony',
+  msgid: '',
+  msg: ''
+}
+*/
+
+/* nodefony.PDU(payload, severity, moduleName, msgid, msg, date) */
+const pdu = new nodefony.PDU(
+  new Error("my error"),
+  3,
+  "MY_MODULE",
+  "MY_MSID",
+  "my message error",
+  new Date());
+
+console.log(pdu);
+/*
+PDU {
+  timeStamp: 1554121508290,
+  uid: 1,
+  severity: 3,
+  severityName: 'ERROR',
+  typePayload: 'Error',
+  payload:
+   Error: my error
+       at Object.<anonymous> (/Users/cci/repository/nodefony-core/bin/test.js:10:3)
+       at Module._compile (internal/modules/cjs/loader.js:701:30)
+       at Object.Module._extensions..js (internal/modules/cjs/loader.js:712:10)
+       at Module.load (internal/modules/cjs/loader.js:600:32)
+       at tryModuleLoad (internal/modules/cjs/loader.js:539:12)
+       at Function.Module._load (internal/modules/cjs/loader.js:531:3)
+       at Function.Module.runMain (internal/modules/cjs/loader.js:754:12)
+       at startup (internal/bootstrap/node.js:283:19)
+       at bootstrapNodeJSCore (internal/bootstrap/node.js:622:3),
+  moduleName: 'MY_MODULE',
+  msgid: 'MY_MSID',
+  msg: 'my message error'
+}
+*/
+</code></pre>
+
+<h2> Syslog FILTERS  : Filter With Conditions </h2>
+<p>
+  <h3>FILTER BY SEVERITY</h3>
+</p>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+
+const nodefony = require("nodefony");
+
+const settingsSyslog = {
+  moduleName: "LIVE",
+  defaultSeverity: "ERROR",
+  msgid: "websocket"
+};
+const syslog = new nodefony.syslog(settingsSyslog);
+
+/*
+ * Severity syslog
+ *
+ *    EMERGENCY   = 0
+ *    ALERT       = 1
+ *    CRITIC      = 2
+ *    ERROR       = 3
+ *    WARNING     = 4
+ *    NOTICE      = 5
+ *    INFO        = 6
+ *    DEBUG       = 7
+ */
+
+// listen severity CRITIC and ERROR
+syslog.filter( {
+  severity: {
+    data: "CRITIC,ERROR"
+    // or
+    //data:"2,3"
+  }
+}, (pdu) => {
+  // better log date
+  let date = new Date(pdu.timeStamp).toLocaleString('en-GB', {
+    timeZone: 'UTC',
+    timeZoneName: "short",
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  });
+  console.log(`${pdu.severityName} ${date} => ${pdu.moduleName}@${pdu.msgid} : ${pdu.payload}`);
+});
+// Try Logger logger(payload, severity, msgid, msg)
+
+syslog.logger(new Error("my Error"));
+
+// ERROR 04/01/19, 1:11:12 PM UTC => LIVE@websocket : Error: my Error
+
+syslog.logger(new Error("my Critic Error"), "CRITIC");
+
+// CRITIC 04/01/19, 1:11:12 PM UTC => LIVE@websocket : Error: my Critic Error
+
+syslog.logger(new Error("my Error"), "ERROR", "ajax");
+
+// ERROR 04/01/19, 1:11:12 PM UTC => LIVE@ajax : Error: my Error
+</code></pre>
+<p>
+  <h3>FILTER BY SEVERITY OPERATOR</h3>
+</p>
+<pre><code class="hljs javascript">// Log all pdu with severity <= 6
+
+syslog.filter( {
+  severity: {
+    operator: "<=",
+    data: "6" // Log all pdu with severity < 6
+  }
+}, (pdu) => {
+    console.log(pdu);
+});
+</code></pre>
+
+<p>
+  <h3>FILTER BY SEVERITY OPERATOR and MSGID</h3>
+</p>
+<pre><code class="hljs javascript">// Log all pdu with severity < 5 AND msgid === "websocket"
+
+syslog.filter( {
+
+  checkConditions: "&&",  // or "||"
+  severity: { // Log all pdu with severity < 5 (1 2 3 4)
+    operator: "<",
+    data: "5"
+  },
+  msgid:{ // Log all pdu with msgid === "websocket"
+    data:"websocket"
+  }
+}, (pdu) => {
+  console.log(pdu);
+});
+</code></pre>
+
+
+<!--h2> Syslog in nodefony services :  </h2>
 <p>
 </p>
-<pre>
+<pre><code class="hljs javascript">
 
-</pre>
-
-<h2> Syslog Logger :  </h2>
-<p>
-</p>
-<pre>
-
-</pre>
-
-
-
-
-
-
+</code></pre-->
