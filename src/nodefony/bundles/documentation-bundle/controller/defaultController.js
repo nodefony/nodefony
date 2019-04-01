@@ -167,7 +167,7 @@ module.exports = class defaultController extends nodefony.controller {
     }
     let directory = finder.result.getDirectories();
     let sections = [];
-    directory.forEach(function(ele) {
+    directory.forEach(function (ele) {
       sections.push(ele.name);
     });
     return this.render("documentation:layouts:navSection.html.twig", {

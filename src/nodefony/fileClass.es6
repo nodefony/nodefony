@@ -144,10 +144,6 @@ module.exports = nodefony.register("fileClass", function () {
 
     content(encoding) {
       let encode = encoding ? encoding : (this.encoding ? this.encoding : 'utf8');
-      if (this.type === "symbolicLink") {
-        let Path = fs.readlinkSync(this.path, encode);
-        return fs.readFileSync(Path, encode);
-      }
       return fs.readFileSync(this.path, encode);
     }
 

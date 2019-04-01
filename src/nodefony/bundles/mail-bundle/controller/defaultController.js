@@ -19,7 +19,7 @@ module.exports = class defaultController extends nodefony.controller {
    */
   mailAction() {
     this.hideDebugBar();
-    return this.mailer.sendTestMail("ccamensuli@gmail.com", null, this.context)
+    return this.mailer.sendTestMail(null, null, this.context)
       .catch((e) => {
         throw e;
       });

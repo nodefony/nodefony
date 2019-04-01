@@ -65,8 +65,6 @@ Nodefony is not an exhaustive port of symfony !
 -   [PM2](http://pm2.keymetrics.io/) Production Process Manager for Node.js .
 -   [Passport](http://passportjs.org/) Simple, unobtrusive authentication for Node.js .
 -   ~~[Angular](https://github.com/angular/angular-cli) Experimental Bundle Generator ( Angular cli no longer allows the ejection of a webpack config)~~
--   [React](https://github.com/facebookincubator/create-react-app) Experimental Bundle Generator ( Now an React Project can be merge into a Nodefony Bundle )
--   [Vue.js](https://vuejs.org) Experimental Bundle Generator ( Now an Vue.js Project can be merge into a Nodefony Bundle )
 
 **Nodefony 4  adds the following features** :
 
@@ -74,11 +72,12 @@ Nodefony is not an exhaustive port of symfony !
 -   Authorisations
 -   HTTP2
 -   WEBPACK 4  
+-   [React](https://github.com/facebookincubator/create-react-app) Experimental Bundle Generator ( Now an React Project can be merge into a Nodefony Bundle )
+-   [Vue.js](https://vuejs.org) Experimental Bundle Generator ( Now an Vue.js Project can be merge into a Nodefony Bundle )
 
 
-Now in this version  4 Beta,  Nodefony is evolved to a stable version without major fundamental changes.
+Evolution priorities for the next version will focus on robustness, unit testing, documentation and security.
 
-Evolution priorities up to the stable version will focus on robustness, unit testing, documentation and security.
 
 #### Nodefony is ported with ECMAScript 6 ( Class, Inheritance ).
 
@@ -109,7 +108,7 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 
 -   **[GNU Bash](https://www.gnu.org/software/bash/)** Bash is the GNU Project's shell
 
-#### Operating Systems : **[Install Node.js via Package](https://nodejs.org/en/download/package-manager)**
+#### Operating Systems :
 
 -   LINUX
     -   Debian, Ubuntu (Checked, Tested)
@@ -126,8 +125,6 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
     -   cd /usr/local/bin/ ;ln -s pythonx.x python
 
 -   ~~OpenBSD (Not Checked yet )~~
-
-
 
 -   ~~[ELECTRON](https://github.com/nodefony/nodefony-electron) Experimental Nodefony Electron  ( Now an Electron Context can be use in Nodefony Project )~~
 
@@ -160,7 +157,7 @@ npm -g install nodefony
 yarn global add nodefony
 ```
 
-**likely error** :
+**Error that you can usually find** :
 
 - EACCES error  [See Global install How to Prevent Permissions Errors](https://docs.npmjs.com/getting-started/fixing-npm-permissions) (Reinstall npm with a Node Version Manager)
 - Different Node.js version (NODE_MODULE_VERSION XX) use 'nodefony rebuild'
@@ -245,6 +242,19 @@ nodefony
  ```bash
  $ git clone https://github.com/nodefony/nodefony.git
  $ cd nodefony
+ $ ls -l
+ -rw-r--r--     1 cci  staff   21306 27 mar 19:22 README.md
+ drwxr-xr-x    12 cci  staff     384 27 mar 19:25 app
+ drwxr-xr-x     3 cci  staff      96 27 mar 19:22 bin
+ drwxr-xr-x     7 cci  staff     224 27 mar 19:26 config
+ drwxr-xr-x     3 cci  staff      96 27 mar 19:22 doc
+ drwxr-xr-x  1342 cci  staff   42944 27 mar 19:24 node_modules
+ -rw-r--r--     1 cci  staff     997 27 mar 19:22 package.json
+ drwxr-xr-x     3 cci  staff      96 27 mar 19:22 src
+ drwxr-xr-x     4 cci  staff     128 29 mar 11:13 tmp
+ drwxr-xr-x    12 cci  staff     384 29 mar 11:01 web
+ -rw-r--r--     1 cci  staff  542660 27 mar 19:24 yarn.lock
+
  $ nodefony
 
 ?  Nodefony CLI :  (Use arrow keys)
@@ -347,9 +357,14 @@ By default nodefony listen secure port in 5152 @see config/config.js
 During the installation process all the openssl parts were generated ( self-signed localhost certificate ).
 
 You can Change default openssl configuration in :
+```bash
+ls -l config/openssl
 
-    config/openssl
-
+├── ca
+│   └── openssl.cnf
+└── ca_intermediate
+    └── openssl.cnf
+```
 You must Add a Trusted CA in your Browser : projectName-root-ca.crt.pem
 You can find certificate authority (ca) here:
 

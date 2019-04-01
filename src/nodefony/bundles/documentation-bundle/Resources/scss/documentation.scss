@@ -91,11 +91,12 @@ h2 {
   text-transform: none;
 }
 h3 {
+  margin-left:40px;
   text-align: left;
   font-family: 'Comfortaa', cursive;
   color: #167b87;
   letter-spacing: 0;
-  font-size: 2em;
+  font-size: 1.2em;
   text-transform: none;
 }
 h4 {
@@ -159,6 +160,8 @@ pre code {
   font-size:1em;
   min-height: 150px;
   max-height: 500px;
+  min-width: 60%;
+  max-width: 100%;
   line-height:1em;
   padding-left:20px;
   padding-top:20px;
@@ -166,6 +169,7 @@ pre code {
 }
 
 pre code h3{
+  margin-left:0px;
   display:inline;
   font-size:1em;
   color:#026e00;

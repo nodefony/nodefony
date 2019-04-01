@@ -80,7 +80,7 @@ module.exports = class mailer extends nodefony.Service {
         return this.juiceResources(html, {}, context)
           .then((htmlp) => {
             let message = {
-              to: to, // list of receivers`
+              to: to || this.authorMail, // list of receivers`
               from: this.mailDefaultOptions.from,
               subject: `${this.kernel.projectName} ✔`, // Subject line
               text: "Test Email?", // plain text body
