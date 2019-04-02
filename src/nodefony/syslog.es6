@@ -204,7 +204,7 @@ module.exports = nodefony.register("syslog", function() {
     }
   };
 
-  let checkFormatSeverity = (ele) => {
+  const checkFormatSeverity = (ele) => {
     let res = false;
     switch (nodefony.typeOf(ele)) {
       case "string":
@@ -392,7 +392,7 @@ module.exports = nodefony.register("syslog", function() {
   };
 
 
-  let translateSeverity = function(severity) {
+  const translateSeverity = function(severity) {
     let myseverity = null;
     if (severity in sysLogSeverity) {
       if (typeof severity === 'number') {
@@ -410,7 +410,7 @@ module.exports = nodefony.register("syslog", function() {
     return myseverity;
   };
 
-  let createPDU = function(payload, severity, moduleName, msgid, msg) {
+  const createPDU = function(payload, severity, moduleName, msgid, msg) {
     let myseverity = null;
     if (!severity) {
       myseverity = sysLogSeverity[this.settings.defaultSeverity];
@@ -422,8 +422,6 @@ module.exports = nodefony.register("syslog", function() {
       msgid,
       msg);
   };
-
-
 
   /**
    * A class for product log in nodefony.
@@ -550,6 +548,8 @@ module.exports = nodefony.register("syslog", function() {
       }
     }
 
+
+
     /**
      * Clear stack of logs
      *
@@ -602,14 +602,14 @@ module.exports = nodefony.register("syslog", function() {
      * @method logToJson
      * @return {String} string in JSON format
      */
-    logToJson(conditions) {
-      let stack = null;
+    logToJson(conditions, stack = null) {
+      let res = null;
       if (conditions) {
-        stack = this.getLogs(conditions);
+        res = this.getLogs(conditions, stack);
       } else {
-        stack = this.ringStack;
+        res = this.ringStack;
       }
-      return JSON.stringify(stack);
+      return JSON.stringify(res);
     }
 
     /**
@@ -620,7 +620,7 @@ module.exports = nodefony.register("syslog", function() {
      * @param {function} callback before fire conditions events
      * @return {String}
      */
-    loadStack(stack, doEvent, beforeConditions) {
+    loadStack(stack, doEvent = false, beforeConditions = null) {
       let st = null;
       if (!stack) {
         throw new Error("syslog loadStack : not stack in arguments ");
@@ -630,7 +630,7 @@ module.exports = nodefony.register("syslog", function() {
           try {
             //console.log(stack);
             st = JSON.parse(stack);
-            return this.loadStack(st, doEvent);
+            return this.loadStack(st, doEvent, beforeConditions);
           } catch (e) {
             throw e;
           }
@@ -641,7 +641,6 @@ module.exports = nodefony.register("syslog", function() {
             for (let i = 0; i < stack.length; i++) {
               let pdu = new nodefony.PDU(stack[i].payload, stack[i].severity, stack[i].moduleName || this.settings.moduleName, stack[i].msgid, stack[i].msg, stack[i].timeStamp);
               this.pushStack(pdu);
-
               if (doEvent) {
                 if (beforeConditions && typeof beforeConditions === "function") {
                   beforeConditions.call(this, pdu, stack[i]);
@@ -686,6 +685,10 @@ module.exports = nodefony.register("syslog", function() {
      */
     listenWithConditions(context, conditions, callback) {
       return this.filter(conditions, callback, context);
+    }
+
+    log() {
+      return this.logger.apply(this, arguments);
     }
 
     error(data) {

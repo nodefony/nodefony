@@ -140,6 +140,10 @@ module.exports = nodefony.register("Service", function() {
       }
     }
 
+    log() {
+      return this.logger.apply(this, arguments);
+    }
+
     /**
      *  @method fire
      *  @param {String} event name
