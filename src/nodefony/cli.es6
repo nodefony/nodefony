@@ -7,7 +7,7 @@ const spawnSync = require('child_process').spawnSync;
 const moment = require("moment");
 const semver = require('semver');
 
-module.exports = nodefony.register("cli", function() {
+module.exports = nodefony.register("cli", function () {
 
   const red = clc.red.bold;
   //const cyan   = clc.cyan.bold;
@@ -52,43 +52,43 @@ module.exports = nodefony.register("cli", function() {
 
     constructor(name, container, notificationsCenter, options) {
       switch (arguments.length) {
-        case 0:
-          options = nodefony.extend({}, defaultOptions);
+      case 0:
+        options = nodefony.extend({}, defaultOptions);
+        name = options.processName;
+        super(options.processName, null, null, options);
+        break;
+      case 1:
+        if (typeof name === "object" && name !== null) {
+          options = nodefony.extend({}, defaultOptions, name);
           name = options.processName;
           super(options.processName, null, null, options);
-          break;
-        case 1:
-          if (typeof name === "object" && name !== null) {
-            options = nodefony.extend({}, defaultOptions, name);
-            name = options.processName;
-            super(options.processName, null, null, options);
-          } else {
-            options = nodefony.extend({}, defaultOptions);
+        } else {
+          options = nodefony.extend({}, defaultOptions);
+          name = name || options.processName;
+          super(name, null, null, options);
+        }
+        break;
+      case 2:
+        if (container instanceof nodefony.Container) {
+          options = nodefony.extend({}, defaultOptions);
+          name = name || options.processName;
+          super(name, container, null, options);
+        } else {
+          if (typeof container === "object" && container !== null) {
+            options = nodefony.extend({}, defaultOptions, container);
             name = name || options.processName;
             super(name, null, null, options);
-          }
-          break;
-        case 2:
-          if (container instanceof nodefony.Container) {
+          } else {
             options = nodefony.extend({}, defaultOptions);
             name = name || options.processName;
             super(name, container, null, options);
-          } else {
-            if (typeof container === "object" && container !== null) {
-              options = nodefony.extend({}, defaultOptions, container);
-              name = name || options.processName;
-              super(name, null, null, options);
-            } else {
-              options = nodefony.extend({}, defaultOptions);
-              name = name || options.processName;
-              super(name, container, null, options);
-            }
           }
-          break;
-        default:
-          options = nodefony.extend({}, defaultOptions, options);
-          name = name || options.processName;
-          super(name, container, notificationsCenter, options);
+        }
+        break;
+      default:
+        options = nodefony.extend({}, defaultOptions, options);
+        name = name || options.processName;
+        super(name, container, notificationsCenter, options);
       }
       this.environment = process.env.NODE_ENV || "production";
       process.env.NODE_ENV = this.environment;
@@ -192,6 +192,39 @@ module.exports = nodefony.register("cli", function() {
       }
     }
 
+    start() {
+      return new Promise((resolve, reject) => {
+        try {
+          if (this.options.autostart) {
+            if (this.options.asciify) {
+              this.once("onStart", () => {
+                return resolve(this);
+              });
+            } else {
+              this.fire("onStart", this);
+              return resolve(this);
+            }
+          } else {
+            if (this.options.asciify) {
+              this.once("onAsciify", () => {
+                this.fire("onStart", this);
+                return resolve(this);
+              });
+            } else {
+              this.fire("onStart", this);
+              return resolve(this);
+            }
+          }
+        } catch (e) {
+          return reject(e);
+        }
+      });
+    }
+
+    idle() {
+      this.idle = setInterval(() => {}, 0);
+    }
+
     logger(pci, severity, msgid, msg) {
       if (!msgid) {
         try {
@@ -220,6 +253,7 @@ module.exports = nodefony.register("cli", function() {
           font: this.options.font || "standard"
         })
         .then((data) => {
+          this.fire("onAsciify", data);
           if (this.options.clear) {
             this.clear();
           }
@@ -295,7 +329,7 @@ module.exports = nodefony.register("cli", function() {
       this.clui = require("clui");
       this.emoji = require("node-emoji");
       this.spinner = null;
-      this.blankLine = function() {
+      this.blankLine = function () {
         var myLine = new this.clui.Line().fill();
         return () => {
           myLine.output();
@@ -428,18 +462,18 @@ module.exports = nodefony.register("cli", function() {
       }
       let message = pdu.payload;
       switch (typeof message) {
-        case "object":
-          switch (true) {
-            case (message instanceof nodefony.Error):
-              break;
-            case (message instanceof Error):
-              message = new nodefony.Error(message);
-              break;
-            default:
-              message = util.inspect(message);
-          }
+      case "object":
+        switch (true) {
+        case (message instanceof nodefony.Error):
+          break;
+        case (message instanceof Error):
+          message = new nodefony.Error(message);
           break;
         default:
+          message = util.inspect(message);
+        }
+        break;
+      default:
       }
       if (!this.wrapperLog) {
         this.wrapperLog = console.log;
@@ -503,7 +537,9 @@ module.exports = nodefony.register("cli", function() {
 
     resize() {
       process.stdout.on('resize', () => {
-        this.fire("onResize", this);
+        this.columns = process.stdout.columns;
+        this.rows = process.stdout.rows;
+        this.fire("onResize", this.columns, this.rows);
       });
     }
 
@@ -567,13 +603,13 @@ module.exports = nodefony.register("cli", function() {
         return file;
       } catch (e) {
         switch (e.code) {
-          case "EEXIST":
-            if (force) {
-              file = new nodefony.fileClass(myPath);
-              callback(file);
-              return file;
-            }
-            break;
+        case "EEXIST":
+          if (force) {
+            file = new nodefony.fileClass(myPath);
+            callback(file);
+            return file;
+          }
+          break;
         }
         throw e;
       }
@@ -652,16 +688,16 @@ module.exports = nodefony.register("cli", function() {
 
     npm(argv = [], cwd = path.resolve("."), env = null) {
       switch (env) {
-        case "dev":
-        case "development":
-          process.env.NODE_ENV = "development";
-          break;
-        case "prod":
-        case "production":
-          process.env.NODE_ENV = "production";
-          break;
-        default:
-          process.env.NODE_ENV = this.environment;
+      case "dev":
+      case "development":
+        process.env.NODE_ENV = "development";
+        break;
+      case "prod":
+      case "production":
+        process.env.NODE_ENV = "production";
+        break;
+      default:
+        process.env.NODE_ENV = this.environment;
       }
       return new Promise((resolve, reject) => {
         let cmd = null;
@@ -686,16 +722,16 @@ module.exports = nodefony.register("cli", function() {
 
     yarn(argv = [], cwd = path.resolve("."), env = null) {
       switch (env) {
-        case "dev":
-        case "development":
-          process.env.NODE_ENV = "development";
-          break;
-        case "prod":
-        case "production":
-          process.env.NODE_ENV = "production";
-          break;
-        default:
-          process.env.NODE_ENV = this.environment;
+      case "dev":
+      case "development":
+        process.env.NODE_ENV = "development";
+        break;
+      case "prod":
+      case "production":
+        process.env.NODE_ENV = "production";
+        break;
+      default:
+        process.env.NODE_ENV = this.environment;
       }
       return new Promise((resolve, reject) => {
         let cmd = null;

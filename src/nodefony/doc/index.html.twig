@@ -145,46 +145,56 @@
         <div class="card-body" style="overflow: auto;">
           <ul>
             <li>
-              <a href="{{ path('documentation-section',{section:'architectures', version:version, bundle:bundle })}}">
-                {{"Architecture" | trans() | capitalize() }}
+              <a href="{{ path('documentation-section',{section:'library', version:version, bundle:bundle })}}">
+                {{"Use Nodefony as a Library" | trans() | capitalize() }}
               </a>
             </li>
             <li>
-              <a href="{{ path('documentation-section',{section:'autoloader', version:version, bundle:bundle })}}">
-                {{"Autoloader" | trans() | capitalize() }}</a>
+              <a href="{{ path('documentation-section',{section:'cli', version:version, bundle:bundle })}}">
+                {{"Command Line Interface" | trans() | capitalize() }}</a>
             </li>
             <li>
-              <a href="{{ path('documentation-section',{section:'kernel', version:version, bundle:bundle })}}">
-                {{"Kernel" | trans() | capitalize() }}</a>
-            </li>
-            <li>
-              <a href="{{ path('documentation-section',{section:'bundles', version:version, bundle:bundle })}}">
-                {{"Bundles" | trans() | capitalize() }}</a>
-            </li>
-            <li>
-              <a href="{{ path('documentation-section',{section:'container', version:version, bundle:bundle })}}">
-                {{"Services Container" | trans() | capitalize() }}</a>
-            </li>
-            <li>
-              <a href="{{ path('documentation-section',{section:'context', version:version, bundle:bundle })}}">
-                {{"Nodefony context" | trans() | capitalize() }}</a>
-            </li>
-            <li>
-              <a href="{{ path('documentation-section',{section:'finder', version:version, bundle:bundle })}}">
-                {{"Finder" | trans() | capitalize() }}</a>
-            </li>
-            <li>
-              <a href="{{ path('documentation-section',{section:'fileClass', version:version, bundle:bundle })}}">
-                {{"fileClass" | trans() | capitalize() }}</a>
+              <a href="{{ path('documentation-section',{section:'syslog', version:version, bundle:bundle })}}">
+                {{"Syslog" | trans() | capitalize() }}</a>
             </li>
             <li>
               <a href="{{ path('documentation-section',{section:'notifications', version:version, bundle:bundle })}}">
                 {{"notificationsCenter" | trans() | capitalize() }}</a>
             </li>
             <li>
-              <a href="{{ path('documentation-section',{section:'syslog', version:version, bundle:bundle })}}">
-                {{"Syslog" | trans() | capitalize() }}</a>
+              <a href="{{ path('documentation-section',{section:'fileClass', version:version, bundle:bundle })}}">
+                {{"fileClass" | trans() | capitalize() }}</a>
             </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'finder', version:version, bundle:bundle })}}">
+                {{"Finder" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'autoloader', version:version, bundle:bundle })}}">
+                {{"Autoloader" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'container', version:version, bundle:bundle })}}">
+                {{"Services Container" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'architectures', version:version, bundle:bundle })}}">
+                {{"Web Framework Architecture" | trans() | capitalize() }}
+              </a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'kernel', version:version, bundle:bundle })}}">
+                {{"Web Framework Kernel" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'bundles', version:version, bundle:bundle })}}">
+                {{"Web Framework Bundles" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'context', version:version, bundle:bundle })}}">
+                {{"Web Framework Nodefony context" | trans() | capitalize() }}</a>
+            </li>
+
           </ul>
 
         </div>
@@ -343,10 +353,12 @@ $ yarn global add nodefony
       },
       /**
        *  BUNDLES LOCAL REGISTRATION
-       *
-       *       bundles:
-       *         hello-bundle                 : "file:src/bundles/hello-bundle"
-       *         my-bundle                    : require("my-bundle")
+       *    Examples :
+       *       bundles:{
+       *         "hello-bundle" : "file:src/bundles/hello-bundle",
+       *         "hello-bundle" : path.resolve(__dirname, "..", "src", "bundles", "hello-bundle"),
+       *         "hello-bundle" : path.resolve("src", "bundles", "hello-bundle")
+       *       }
        */
       bundles: {
         "hello-bundle": "file:src/bundles/hello-bundle",
@@ -728,7 +740,7 @@ module.exports = class demoController extends nodefony.controller {
       case "WEBSOCKET" :
         if (message){
           // log  message client in terminal
-          this.logger( message.utf8data , "INFO");
+          this.log( message.utf8data , "INFO");
         }else{
           // prepare  push messages server
           // send messages to clients
@@ -740,7 +752,7 @@ module.exports = class demoController extends nodefony.controller {
             //  or call controller method ( renderResponse , render , renderJson )
             this.renderResponse(mess);
             // log  message sending in terminal
-            this.logger( "send to client :" + mess , "info");
+            this.log( "send to client :" + mess , "info");
             i++
           }, 1000);
 
@@ -751,7 +763,7 @@ module.exports = class demoController extends nodefony.controller {
             id = null ;
           }, 10000);
           // event websocket close by client
-          this.context.listen(this, "onClose", () =>{
+          this.context.on("onClose", () =>{
             if (id){
               clearInterval(id);
             }

@@ -1,0 +1,285 @@
+<h1>Command Line Interface</h1>
+
+<h2>
+	Simple Create cli  (command-line interface)
+</h2>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+
+const nodefony = require("nodefony");
+
+const project = new nodefony.cli("project", {
+  version: nodefony.version,
+  onStart: (cli) => {
+    cli.showBanner();
+    cli.log("start");
+  }
+});
+</code></pre>
+<pre><code class="hljs console">
+                                         _                 _
+                _ __    _ __    ___     (_)   ___    ___  | |_
+               | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+               | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+               | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+               |_|                    |__/
+
+            Version : 4.3.1 Platform : darwin Process : project PID : 40258
+
+
+   Wed Apr 03 2019 21:43:11 INFO project : start
+$
+</code></pre>
+
+<h2>
+	Cli Usage
+</h2>
+<h3> Options </h3>
+<pre><code class="hljs javascript">
+  // usage  new nodefony.cli(name, options)
+
+  const defaultOptions = {
+    processName: "name",
+    autostart: true,
+    asciify: true,
+    clear: true,
+    color: blue,
+    prompt: "default", // "default" || "rxjs"
+    commander: true,
+    signals: true,
+    autoLogger: true,
+    resize: false,
+    version: null,
+    warning: false,
+    pid: false,
+    promiseRejection: true
+  };
+
+
+</code></pre>
+
+<h3> Idle </h3>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+const nodefony = require("nodefony");
+
+const project = new nodefony.cli("project", {
+  onStart: (cli) => {
+    cli.idle();
+    cli.log("start");
+  },
+});
+</code></pre>
+
+<h3> Events</h3>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+const nodefony = require("nodefony");
+
+// with options
+const project = new nodefony.cli("project", {
+  version: nodedony.version,
+  onStart: (cli) => {
+    cli.idle();
+    cli.log("start");
+  },
+  onResize:()=>{},
+  onSignal:(sig)=>{
+    console.log(sig);
+  }
+});
+
+// with notifications center
+const project = new nodefony.cli("project", {
+  version: nodedony.version,
+})
+project.start()
+  .then((cli) => {
+    cli.idle();
+    cli.logger("start");
+  });
+project.on("onSignal", (sig) => {
+  console.log(sig);
+})
+
+</code></pre>
+<pre><code class="hljs console">
+                                       _                 _
+              _ __    _ __    ___     (_)   ___    ___  | |_
+             | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+             | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+             | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+             |_|                    |__/
+
+ Thu Apr 04 2019 00:46:16 INFO project : start
+
+&ltctrl-c&gt
+
+ Thu Apr 04 2019 00:46:18 CRITIC project : SIGINT
+SIGINT
+$
+</code></pre>
+
+
+<h3> Signals</h3>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+const nodefony = require("nodefony");
+
+const project = new nodefony.cli("project", {
+  onStart: (cli) => {
+    cli.idle();
+    cli.log("start");
+  },
+});
+</code></pre>
+<pre><code class="hljs console" >
+
+</code></pre>
+
+<h3> Show Banner</h3>
+
+<h3> Name Process</h3>
+
+
+
+
+<h3> prompt</h3>
+<h3> commander</h3>
+
+<p></p>
+<h2>
+	Gist Demo Nodefony cli
+</h2>
+
+<script src="https://gist.github.com/ccamensuli/7d42aeb022406bd9527b562d5e181b50.js"></script>
+
+<pre><code class="hljs console" >
+ __  __  __   __     ____   _       ___
+|  \/  | \ \ / /    / ___| | |     |_ _|
+| |\/| |  \ V /    | |     | |      | |
+| |  | |   | |     | |___  | |___   | |
+|_|  |_|   |_|      \____| |_____| |___|
+
+
+Wed Mar 27 2019 18:06:52 INFO MY CLI : ON START
+Wed Mar 27 2019 18:06:52 INFO MY CLI : START simpleLogger : 🎬
+Wed Mar 27 2019 18:06:52 INFO MY CLI : Emoji : 🌜
+
+Wed Mar 27 2019 18:06:52 DEBUG MY CLI : Emoji : 🥫
+
+Wed Mar 27 2019 18:06:52 ERROR MY CLI : Emoji : 🌡️
+
+Wed Mar 27 2019 18:06:52 WARNING MY CLI : Emoji : 🚦
+Wed Mar 27 2019 18:06:52 INFO MY CLI : END simpleLogger : 🏁
+Wed Mar 27 2019 18:06:52 INFO MY CLI : START SPINNER : 🎬
+
+Wed Mar 27 2019 18:06:57 INFO MY CLI : END SPINNER : 🏁
+Wed Mar 27 2019 18:06:57 INFO MY CLI : START TABLE : 🎬
+┌──────────┬──────────┬──────────┬──────────┐
+│ COLUMN 1 │ COLUMN 2 │ COLUMN 3 │ COLUMN 4 │
+├──────────┼──────────┼──────────┼──────────┤
+│ CRITIC   │ 63       │ 185      │ 238      │
+├──────────┼──────────┼──────────┼──────────┤
+│ NOTICE   │ 26       │ 110      │ 169      │
+├──────────┼──────────┼──────────┼──────────┤
+│ ERROR    │ 39       │ 185      │ 132      │
+├──────────┼──────────┼──────────┼──────────┤
+│ CRITIC   │ 1        │ 53       │ 234      │
+├──────────┼──────────┼──────────┼──────────┤
+│ DEBUG    │ 43       │ 27       │ 18       │
+├──────────┼──────────┼──────────┼──────────┤
+│ DEBUG    │ 91       │ 10       │ 132      │
+├──────────┼──────────┼──────────┼──────────┤
+│ INFO     │ 21       │ 11       │ 18       │
+├──────────┼──────────┼──────────┼──────────┤
+│ DEBUG    │ 49       │ 142      │ 282      │
+├──────────┼──────────┼──────────┼──────────┤
+│ ERROR    │ 3        │ 13       │ 284      │
+├──────────┼──────────┼──────────┼──────────┤
+│ CRITIC   │ 89       │ 31       │ 97       │
+└──────────┴──────────┴──────────┴──────────┘
+┌──────────┬──────────┬──────────┬──────────┐
+│ COLUMN 1 │ COLUMN 2 │ COLUMN 3 │ COLUMN 4 │
+├──────────┼──────────┼──────────┼──────────┤
+│ WARNING  │ 97       │ 12       │ 191      │
+├──────────┼──────────┼──────────┼──────────┤
+│ ALERT    │ 38       │ 165      │ 45       │
+├──────────┼──────────┼──────────┼──────────┤
+│ ALERT    │ 41       │ 144      │ 100      │
+├──────────┼──────────┼──────────┼──────────┤
+│ INFO     │ 17       │ 116      │ 269      │
+├──────────┼──────────┼──────────┼──────────┤
+│ NOTICE   │ 24       │ 151      │ 7        │
+├──────────┼──────────┼──────────┼──────────┤
+│ CRITIC   │ 72       │ 70       │ 239      │
+├──────────┼──────────┼──────────┼──────────┤
+│ CRITIC   │ 16       │ 163      │ 225      │
+├──────────┼──────────┼──────────┼──────────┤
+│ NOTICE   │ 44       │ 48       │ 26       │
+├──────────┼──────────┼──────────┼──────────┤
+│ DEBUG    │ 85       │ 146      │ 261      │
+├──────────┼──────────┼──────────┼──────────┤
+│ ALERT    │ 6        │ 179      │ 75       │
+└──────────┴──────────┴──────────┴──────────┘
+Wed Mar 27 2019 18:06:57 INFO MY CLI : END TABLE : 🏁
+Wed Mar 27 2019 18:06:57 INFO MY CLI : START PROGRESS : 🎬
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [-------------------------------------------------] 2%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|------------------------------------------------] 4%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||-----------------------------------------------] 6%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||----------------------------------------------] 8%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||---------------------------------------------] 10%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||--------------------------------------------] 12%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||------------------------------------------] 15%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||------------------------------------------] 16%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||-----------------------------------------] 18%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||||----------------------------------------] 20%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||---------------------------------------] 22%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||||||--------------------------------------] 24%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||||-------------------------------------] 26%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||||||-----------------------------------] 29%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||||||-----------------------------------] 30%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||||||||||----------------------------------] 32%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||||||||---------------------------------] 34%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||||||||||||--------------------------------] 36%
+Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||||||||||-------------------------------] 38%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||------------------------------] 40%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||-----------------------------] 42%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||----------------------------] 44%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||---------------------------] 46%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||--------------------------] 48%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||-------------------------] 50%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||------------------------] 52%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||-----------------------] 54%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||---------------------] 57%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||---------------------] 58%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||--------------------] 60%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||-------------------] 62%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||------------------] 64%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||-----------------] 66%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||----------------] 68%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||---------------] 70%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||--------------] 72%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||-------------] 74%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||------------] 76%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||-----------] 78%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||----------] 80%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||||---------] 82%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||||--------] 84%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||||||-------] 86%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||||||------] 88%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||||||||-----] 90%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||||||||----] 92%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||||||||||---] 94%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||||||||||--] 96%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||||||||||||-] 98%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||||||||||||] 100%
+Wed Mar 27 2019 18:06:58 INFO MY CLI : END PROGRESS : 🏁
+Wed Mar 27 2019 18:06:58 INFO MY CLI : START PROGRESS 2 : 🎬
+Wed Mar 27 2019 18:07:00 INFO MY CLI : MY PROGRESS [|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||] 100%
+Wed Mar 27 2019 18:07:00 INFO MY CLI : END PROGRESS 2 : 🏁
+Wed Mar 27 2019 18:07:00 INFO MY CLI : START Sparkline  : 🎬
+Wed Mar 27 2019 18:07:00 INFO MY CLI : ▅▅▂▄▅▄█▅▄▇▆▇▅▅  12 reqs/sec (23 reqs/sec)
+Wed Mar 27 2019 18:07:00 INFO MY CLI : END Sparkline  : 🏁
+Wed Mar 27 2019 18:07:00 INFO MY CLI : START Sparkline  : 🎬
+Wed Mar 27 2019 18:07:04 INFO MY CLI : ▃▆▆▇▇▄▅▇█▆▂▅▇▅▇▄██▆▂▂▅▅▆▄▃▅▇▆▆▇█▄▅▇▂▆▄▃▃▆██▃▄▂█▂▂▃▂▆▂█▇▄▇▆▄█▅▆▆▂▄▃█▆▄▃▆▅▆▂▄▃▄▂▂▄▆▂█▃▃▂█▆█▂▄▃██▃▄█▄▇  169 reqs/sec (200 reqs/sec)
+Wed Mar 27 2019 18:07:04 INFO MY CLI : END Sparkline2 : 🏁
+Wed Mar 27 2019 18:07:04 INFO MY CLI : TERMINATE MY CLI : 🏁
+
+</code></pre>

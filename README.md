@@ -461,10 +461,11 @@ module.exports = {
     },
     /**
      *  BUNDLES LOCAL REGISTRATION
-     *
-     *       bundles:
-     *         hello-bundle                 : "file:src/bundles/hello-bundle"
-     *         
+     *    Example :
+     *       bundles: {
+     *         hello-bundle : "file:src/bundles/hello-bundle",
+     *         test-bundle  : path.resolve("src","bundles","test-bundle")
+     *       }
      */
     bundles: {}
     ...

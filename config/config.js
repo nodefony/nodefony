@@ -82,7 +82,6 @@ module.exports = {
      *
      *       bundles:{
      *         "hello-bundle" : "file:src/bundles/hello-bundle"
-     *         "my-bundle"    : require("my-bundle")
      *         "test-bundle"  : path.resolve("src", "bundles", "test-bundle")
      *       }
      */
