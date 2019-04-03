@@ -1,0 +1,388 @@
+{{trans_default_domain("doc")}}
+
+
+<h1> Nodefony fileClass</h1>
+<hr>
+
+<div class="alert alert-info" role="alert">
+  <strong>
+    Class fileClass manage all files in Nodefony .</br>
+  </strong>
+</div>
+
+
+<h2>fileClass Create instance : </h2>
+
+<pre><code class="hljs javascript">#!/usr/bin/env node
+
+const nodefony = require("nodefony");
+
+const file = new nodefony.fileClass(path.resolve("package.json"));
+
+console.log(file);
+/*
+File {
+  stats:
+   Stats {
+     dev: 16777222,
+     mode: 33188,
+     nlink: 1,
+     uid: 501,
+     gid: 20,
+     rdev: 0,
+     blksize: 4096,
+     ino: 40281210,
+     size: 1687,
+     blocks: 8,
+     atimeMs: 1554295360896.986,
+     mtimeMs: 1554294169753.6108,
+     ctimeMs: 1554294169753.6108,
+     birthtimeMs: 1554107497773.7136,
+     atime: 2019-04-03T12:42:40.897Z,
+     mtime: 2019-04-03T12:22:49.754Z,
+     ctime: 2019-04-03T12:22:49.754Z,
+     birthtime: 2019-04-01T08:31:37.774Z },
+  type: 'File',
+  path: '/Users/cci/repository/nodefony-core/package.json',
+  parse:
+   { root: '/',
+     dir: '/Users/cci/repository/nodefony-core',
+     base: 'package.json',
+     ext: '.json',
+     name: 'package' },
+  name: 'package.json',
+  ext: '.json',
+  shortName: 'package',
+  mimeType: 'application/json',
+  encoding: 'UTF-8',
+  extention: 'json',
+  dirName: '/Users/cci/repository/nodefony-core',
+  match: null
+}
+*/
+
+const dir = new nodefony.fileClass(path.resolve("src", "bundles"));
+console.log(dir)
+/*File {
+  stats:
+   Stats {
+     dev: 16777222,
+     mode: 16877,
+     nlink: 9,
+     uid: 501,
+     gid: 20,
+     rdev: 0,
+     blksize: 4096,
+     ino: 2648231,
+     size: 288,
+     blocks: 0,
+     atimeMs: 1554295766625.2307,
+     mtimeMs: 1553271230772.93,
+     ctimeMs: 1553271230772.93,
+     birthtimeMs: 1541428940925.4922,
+     atime: 2019-04-03T12:49:26.625Z,
+     mtime: 2019-03-22T16:13:50.773Z,
+     ctime: 2019-03-22T16:13:50.773Z,
+     birthtime: 2018-11-05T14:42:20.925Z },
+  type: 'Directory',
+  path: '/Users/cci/repository/nodefony-core/src/bundles',
+  parse:
+   { root: '/',
+     dir: '/Users/cci/repository/nodefony-core/src',
+     base: 'bundles',
+     ext: '',
+     name: 'bundles' },
+  name: 'bundles',
+  ext: '',
+  shortName: 'bundles',
+  dirName: '/Users/cci/repository/nodefony-core/src',
+  match: null
+}
+*/
+
+
+</code></pre>
+
+<h2>Use fileClass  : </h2>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+const nodefony = require("nodefony");
+
+const file = new nodefony.fileClass(path.resolve("package.json"));
+const dir  = new nodefony.fileClass(path.resolve("src", "bundles"));
+
+// get mime-Type
+const mime = file.getMimeType();
+console.log(mime); // application/json
+
+
+//get extension
+let ext = file.getExtension();
+console.log(ext); // json
+
+ext = dir.getExtension();
+console.log(ext); // null
+
+ // type
+let res = file.getType()
+console.log(res); // File
+
+res = file.matchType("File");
+console.log(res); // true
+
+res = file.isFile()
+console.log(res); // true
+
+res = dir.isDirectory();
+console.log(res); // true
+
+res = file.isSymbolicLink();
+console.log(res); // false
+
+res = file.dirname();
+console.log(res); // /Users/cci/repository/nodefony-core
+
+res = dir.dirname();
+console.log(res); // /Users/cci/repository/nodefony-core/src
+
+res = file.isHidden();
+console.log(res); // false
+</code></pre>
+
+
+<h2>Advanced Use : </h2>
+
+<h3> Match name</h3>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+const nodefony = require("nodefony");
+
+const file = new nodefony.fileClass(path.resolve("package.json"));
+
+let res = file.matchName(/^(.*)\.json$/);
+console.log(res)
+/*
+[ 'package.json',
+  'package',
+  index: 0,
+  input: 'package.json',
+  groups: undefined
+]
+*/
+res = file.matchName(/^(.*)\.yml$/);
+console.log(res) // null
+
+
+</code></pre>
+
+<h3> Read File</h3>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+const nodefony = require("nodefony");
+
+const file = new nodefony.fileClass(path.resolve("package.json"));
+const dir  = new nodefony.fileClass(path.resolve("src", "bundles"));
+
+// Read file sync
+res = file.content();
+console.log(res)
+
+// or Read file with promise
+file.readAsync()
+  .then((content) => {
+    console.log(content)
+  })
+
+/*
+{
+  "name": "nodefony-core",
+  "version": "4.3.2",
+  "description": "Nodefony Node.js Web Framework",
+  "main": "./src/nodefony/core/autoloader.es6",
+  "scripts": {
+    "nodefony": "node src/nodefony/bin/nodefony",
+    "pm2": "node src/nodefony/node_modules/.bin/pm2",
+    "start": "node src/nodefony/bin/nodefony dev",
+    "outdated": "npm outdated --deph=0",
+    "test": "node src/nodefony/bin/nodefony unitest:launch:all",
+    "changelog": "gren changelog --username=nodefony  --repo=nodefony-core --tags=all --data-source=commits --override --generate"
+  },
+  "private": true,
+  "bin": {
+    "nodefony": "./src/nodefony/bin/nodefony"
+  },
+  "keywords": [
+    "nodefony",
+    "node.js",
+    "node",
+    "framework",
+    "webpack",
+    "websocket",
+    "realtime",
+    "angular",
+    "react"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nodefony/nodefony-core.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nodefony/help/issues"
+  },
+  "license": "CECILL-B",
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
+  "os": [
+    "darwin",
+    "linux",
+    "freebsd",
+    "win32"
+  ],
+  "engines": {
+    "node": ">=8"
+  },
+  "dependencies": {
+    "mongoose": "^5.4.21",
+    "sequelize": "^5.2.11",
+    "webpack": "^4.29.6",
+    "webpack-dev-server": "^3.2.1"
+  },
+  "devDependencies": {
+    "create-react-app": "^2.1.8",
+    "editorconfig": "^0.15.3",
+    "github-release-notes": "^0.17.0",
+    "jshint": "^2.10.2",
+    "node-pre-gyp": "^0.12.0"
+  },
+  "readmeFilename": "README.md",
+}
+*/
+
+// throw error on directory
+res = dir.read();
+/*
+Error: EISDIR: illegal operation on a directory, read
+    at Object.readSync (fs.js:493:3)
+    at Object.readSync (/Users/cci/repository/nodefony-core/src/nodefony/node_modules/npm/node_modules/graceful-fs/polyfills.js:137:28)
+    at tryReadSync (fs.js:332:20)
+    at Object.readFileSync (fs.js:369:19)
+    at File.read (/Users/cci/repository/nodefony-core/src/nodefony/fileClass.es6:160:17)
+    at Object.<anonymous> (/Users/cci/repository/nodefony-core/bin/test.js:47:11)
+    at Module._compile (internal/modules/cjs/loader.js:701:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:712:10)
+    at Module.load (internal/modules/cjs/loader.js:600:32)
+    at tryModuleLoad (internal/modules/cjs/loader.js:539:12)
+    at Function.Module._load (internal/modules/cjs/loader.js:531:3)
+    at Function.Module.runMain (internal/modules/cjs/loader.js:754:12)
+    at startup (internal/bootstrap/node.js:283:19)
+    at bootstrapNodeJSCore (internal/bootstrap/node.js:622:3)
+*/
+</code></pre>
+
+
+<h3> read File by line</h3>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+const nodefony = require("nodefony");
+
+const file = new nodefony.fileClass(path.resolve("package.json"));
+
+// readByLine(callback, encoding)
+let nbline = 0;
+file.readByLine((line, nb) => {
+    console.log(`${nb} : ${line}`);
+    nbline++
+  })
+  .then((content) => {
+    console.log(`nblines : ${nbline}`);
+  }).catch((e) => {
+    throw e;
+  });
+
+  /*
+  1 : {
+  2 :   "name": "nodefony-core",
+  3 :   "version": "4.3.2",
+  4 :   "description": "Nodefony Node.js Web Framework",
+  5 :   "main": "./src/nodefony/core/autoloader.es6",
+  6 :   "scripts": {
+  7 :     "nodefony": "node src/nodefony/bin/nodefony",
+  8 :     "pm2": "node src/nodefony/node_modules/.bin/pm2",
+  9 :     "start": "node src/nodefony/bin/nodefony dev",
+  10 :     "outdated": "npm outdated --deph=0",
+  11 :     "test": "node src/nodefony/bin/nodefony unitest:launch:all",
+  12 :     "changelog": "gren changelog --username=nodefony  --repo=nodefony-core --tags=all --data-source=commits --override --generate"
+  13 :   },
+  14 :   "private": true,
+  15 :   "bin": {
+  16 :     "nodefony": "./src/nodefony/bin/nodefony"
+  17 :   },
+  18 :   "keywords": [
+  19 :     "nodefony",
+  20 :     "node.js",
+  21 :     "node",
+  22 :     "framework",
+  23 :     "webpack",
+  24 :     "websocket",
+  25 :     "realtime",
+  26 :     "angular",
+  27 :     "react"
+  28 :   ],
+  29 :   "repository": {
+  30 :     "type": "git",
+  31 :     "url": "git://github.com/nodefony/nodefony-core.git"
+  32 :   },
+  33 :   "bugs": {
+  34 :     "url": "https://github.com/nodefony/help/issues"
+  35 :   },
+  36 :   "license": "CECILL-B",
+  37 :   "licenses": [
+  38 :     {
+  39 :       "type": "CECILL-B",
+  40 :       "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+  41 :     }
+  42 :   ],
+  43 :   "os": [
+  44 :     "darwin",
+  45 :     "linux",
+  46 :     "freebsd",
+  47 :     "win32"
+  48 :   ],
+  49 :   "engines": {
+  50 :     "node": ">=8"
+  51 :   },
+  52 :   "dependencies": {
+  53 :     "mongoose": "^5.4.21",
+  54 :     "sequelize": "^5.2.11",
+  55 :     "webpack": "^4.29.6",
+  56 :     "webpack-dev-server": "^3.2.1"
+  57 :   },
+  58 :   "devDependencies": {
+  59 :     "create-react-app": "^2.1.8",
+  60 :     "editorconfig": "^0.15.3",
+  61 :     "github-release-notes": "^0.17.0",
+  62 :     "jshint": "^2.10.2",
+  63 :     "node-pre-gyp": "^0.12.0"
+  64 :   },
+  65 :   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
+  66 :   "readmeFilename": "README.md",
+  67 :   "contributors": [
+  68 :     {}
+  69 :   ]
+  70 : }
+  71 :
+
+  nblines : 71
+  */
+</code></pre>
+
+<h3> Hash content file</h3>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+const nodefony = require("nodefony");
+
+const file = new nodefony.fileClass(path.resolve("package.json"));
+
+let res = file.checkSum();
+
+console.log(res) // 2c0619dd2ac0a6f3c43e1bbd41b4f9c8
+</code></pre>

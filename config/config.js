@@ -80,12 +80,14 @@ module.exports = {
     /**
      *  BUNDLES LOCAL REGISTRATION
      *
-     *       bundles:
-     *         hello-bundle                 : "file:src/bundles/hello-bundle"
-     *         my-bundle                    : require("my-bundle")
+     *       bundles:{
+     *         "hello-bundle" : "file:src/bundles/hello-bundle"
+     *         "my-bundle"    : require("my-bundle")
+     *         "test-bundle"  : path.resolve("src", "bundles", "test-bundle")
+     *       }
      */
     bundles: {
-      "test-bundle": "file:src/bundles/test-bundle",
+      "test-bundle": path.resolve("src", "bundles", "test-bundle"),
       //"local-bundle": require("local-bundle")
       //"demo-bundle": "file:src/bundles/demo-bundle",
       //"socketio-bundle": "file:src/bundles/socketio-bundle",

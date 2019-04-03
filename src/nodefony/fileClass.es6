@@ -1,9 +1,9 @@
 const mime = require('mime');
 const crypto = require('crypto');
 
-module.exports = nodefony.register("fileClass", function () {
+module.exports = nodefony.register("fileClass", function() {
 
-  const checkPath = function (myPath) {
+  const checkPath = function(myPath) {
     if (!myPath) {
       return null;
     }
@@ -78,6 +78,10 @@ module.exports = nodefony.register("fileClass", function () {
         return "Socket";
       }
       return;
+    }
+
+    getType() {
+      return this.checkType();
     }
 
     checkSum(type) {
@@ -180,10 +184,18 @@ module.exports = nodefony.register("fileClass", function () {
     }
 
     readByLine(callback, encoding) {
-      let res = this.content(encoding);
-      let nb = 0;
-      res.toString().split('\n').forEach(function (line) {
-        callback(line, ++nb);
+      return new Promise((resolve, reject) => {
+        let res = null;
+        try {
+          res = this.content(encoding);
+          let nb = 0;
+          res.toString().split('\n').forEach(function(line) {
+            callback(line, ++nb);
+          });
+        } catch (e) {
+          return reject(e);
+        }
+        return resolve(res);
       });
     }
 

@@ -4,7 +4,7 @@
 const path = require("path");
 const fs = require("fs");
 
-const nodefony = function () {
+const nodefony = function() {
   try {
     fs.lstatSync(path.resolve(".core"));
     return require(path.resolve("src", "nodefony"));
@@ -24,18 +24,17 @@ const nodefony = function () {
     return require("nodefony");
   } catch (e) {}
   try {
-      return require(path.resolve(__dirname, ".."));
-  }catch(e){}
+    return require(path.resolve(__dirname, ".."));
+  } catch (e) {}
   try {
     const globalPath = path.resolve(process.argv[1], '..', '..', 'lib', 'node_modules');
     return require(path.resolve(globalPath, "nodefony"));
   } catch (e) {
-    console.error(e);
     throw new Error("Module nodefony not found try npm -g install nodefony");
   }
 }();
 
-const isElectronDev = function () {
+const isElectronDev = function() {
   return process.mainModule.filename.indexOf('app.asar') === -1;
 };
 

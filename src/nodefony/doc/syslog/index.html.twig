@@ -138,27 +138,28 @@ PDU {
 */
 </code></pre>
 
-<h2> Method logger  : </h2>
+<h2> Method log : </h2>
 <p>
   <h3></h3>
 </p>
 <pre><code class="hljs javascript">#!/usr/bin/env node
+const nodefony = require("nodefony");
 
 const syslog = new nodefony.syslog( settingsSyslog );
 
-// <h3>logger(payload, severity, msgid, msg)</h3>
+// <h3>log(payload, severity, msgid, msg)</h3>
 
-syslog.logger("my message 1"); // default severity
-syslog.logger("my message 2", "EMERGENCY");
-syslog.logger("my message 3", "ALERT");
-syslog.logger("my message 4", "CRITIC");
-syslog.logger("my message 5", "ERROR");
-syslog.logger("my message 6", "WARNING");
-syslog.logger("my message 7", "NOTICE");
-syslog.logger("my message 8", "INFO");
-syslog.logger("my message 9", "DEBUG");
+syslog.log("my message 1"); // default severity
+syslog.log("my message 2", "EMERGENCY");
+syslog.log("my message 3", "ALERT");
+syslog.log("my message 4", "CRITIC");
+syslog.log("my message 5", "ERROR");
+syslog.log("my message 6", "WARNING");
+syslog.log("my message 7", "NOTICE");
+syslog.log("my message 8", "INFO");
+syslog.log("my message 9", "DEBUG");
 
-syslog.logger("my message 9", "DEBUG", "WEBSOCKET", "SEND");
+syslog.log("my message 9", "DEBUG", "WEBSOCKET", "SEND");
 
 console.log(syslog)
 /*
@@ -333,17 +334,17 @@ syslog.filter( {
   });
   console.log(`${pdu.severityName} ${date} => ${pdu.moduleName}@${pdu.msgid} : ${pdu.payload}`);
 });
-// Try Logger logger(payload, severity, msgid, msg)
+// Try Logger log(payload, severity, msgid, msg)
 
-syslog.logger(new Error("my Error"));
+syslog.log(new Error("my Error"));
 
 // ERROR 04/01/19, 1:11:12 PM UTC => LIVE@websocket : Error: my Error
 
-syslog.logger(new Error("my Critic Error"), "CRITIC");
+syslog.log(new Error("my Critic Error"), "CRITIC");
 
 // CRITIC 04/01/19, 1:11:12 PM UTC => LIVE@websocket : Error: my Critic Error
 
-syslog.logger(new Error("my Error"), "ERROR", "ajax");
+syslog.log(new Error("my Error"), "ERROR", "ajax");
 
 // ERROR 04/01/19, 1:11:12 PM UTC => LIVE@ajax : Error: my Error
 </code></pre>
@@ -542,9 +543,9 @@ console.log(json);
 const syslog = new nodefony.syslog(settingsSyslog);
 for (let i = 0; i < 10; i++) {
   if (i % 2) {
-    syslog.logger(new Error("my Error"), "ERROR");
+    syslog.log(new Error("my Error"), "ERROR");
   } else {
-    syslog.logger(new Error("my Critic Error"), "CRITIC");
+    syslog.log(new Error("my Critic Error"), "CRITIC");
   }
 }
 const json = syslog.logToJson({
@@ -578,18 +579,18 @@ class myService extends nodefony.Service {
   }
   async myMethod() {
     let ret = await this.myMethod2();
-    <h3>this.logger(ret);</h3>
+    <h3>this.log(ret);</h3>
     return ret;
   }
   myMethod2() {
     return new Promise((resolve, reject) => {
       try {
         setTimeout(() => {
-          <h3>this.logger("setTimeout", "WARNING");</h3>
+          <h3>this.log("setTimeout", "WARNING");</h3>
           resolve("Hello World");
         }, 1000);
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         return reject(e);
       }
     });

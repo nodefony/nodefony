@@ -82,49 +82,36 @@
           </span>
         </div>
         <div class="card-body" style="overflow: auto;">
-          <ul>
-            <li>
-              <a href="{{ path('documentation-section',{section:'architectures', version:version, bundle:bundle })}}">
-                {{"Architecture" | trans() | capitalize() }}
-              </a>
-            </li>
-            <li>
-              <a href="{{ path('documentation-section',{section:'autoloader', version:version, bundle:bundle })}}">
-                {{"Autoloader" | trans() | capitalize() }}</a>
-            </li>
-            <li>
-              <a href="{{ path('documentation-section',{section:'kernel', version:version, bundle:bundle })}}">
-                {{"Kernel" | trans() | capitalize() }}</a>
-            </li>
-            <li>
-              <a href="{{ path('documentation-section',{section:'bundles', version:version, bundle:bundle })}}">
-                {{"Bundles" | trans() | capitalize() }}</a>
-            </li>
-            <li>
-              <a href="{{ path('documentation-section',{section:'container', version:version, bundle:bundle })}}">
-                {{"Services Container" | trans() | capitalize() }}</a>
-            </li>
-            <li>
-              <a href="{{ path('documentation-section',{section:'context', version:version, bundle:bundle })}}">
-                {{"Request context" | trans() | capitalize() }}</a>
-            </li>
-            <li>
-              <a href="{{ path('documentation-section',{section:'finder', version:version, bundle:bundle })}}">
-                {{"Finder" | trans() | capitalize() }}</a>
-            </li>
-            <li>
-              <a href="{{ path('documentation-section',{section:'fileClass', version:version, bundle:bundle })}}">
-                {{"fileClass" | trans() | capitalize() }}</a>
-            </li>
-            <li>
-              <a href="{{ path('documentation-section',{section:'notifications', version:version, bundle:bundle })}}">
-                {{"notificationsCenter" | trans() | capitalize() }}</a>
-            </li>
-            <li>
-              <a href="{{ path('documentation-section',{section:'syslog', version:version, bundle:bundle })}}">
-                {{"Syslog" | trans() | capitalize() }}</a>
-            </li>
-          </ul>
+        <ul>
+          <li>
+            <a href="{{ path('documentation-section',{section:'servers', version:version, bundle:'http' })}}">
+              {{"servers" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            Front Proxy NGINX
+          </li>
+          <li>
+            Production Mode PM2
+          </li>
+          <li>
+            Statics Files</li>
+          <li>
+            CDN
+          </li>
+          <li>
+            Sessions</li>
+          <li>
+            Firewall</li>
+          <li>
+            Authentication</li>
+          <li>
+            Orm</li>
+          <li>
+            <a href="{{ path('documentation-version',{ version:version, bundle:'realTime' })}}">
+              {{"realtime" | trans() | capitalize() }}</a>
+          </li>
+        </ul>
         </div>
       </div>
     </div>
@@ -158,34 +145,48 @@
         <div class="card-body" style="overflow: auto;">
           <ul>
             <li>
-              <a href="{{ path('documentation-section',{section:'servers', version:version, bundle:'http' })}}">
-                {{"servers" | trans() | capitalize() }}
+              <a href="{{ path('documentation-section',{section:'architectures', version:version, bundle:bundle })}}">
+                {{"Architecture" | trans() | capitalize() }}
               </a>
             </li>
             <li>
-              Front Proxy NGINX
+              <a href="{{ path('documentation-section',{section:'autoloader', version:version, bundle:bundle })}}">
+                {{"Autoloader" | trans() | capitalize() }}</a>
             </li>
             <li>
-              Production Mode PM2
+              <a href="{{ path('documentation-section',{section:'kernel', version:version, bundle:bundle })}}">
+                {{"Kernel" | trans() | capitalize() }}</a>
             </li>
             <li>
-              Statics Files</li>
-            <li>
-              CDN
+              <a href="{{ path('documentation-section',{section:'bundles', version:version, bundle:bundle })}}">
+                {{"Bundles" | trans() | capitalize() }}</a>
             </li>
             <li>
-              Sessions</li>
+              <a href="{{ path('documentation-section',{section:'container', version:version, bundle:bundle })}}">
+                {{"Services Container" | trans() | capitalize() }}</a>
+            </li>
             <li>
-              Firewall</li>
+              <a href="{{ path('documentation-section',{section:'context', version:version, bundle:bundle })}}">
+                {{"Nodefony context" | trans() | capitalize() }}</a>
+            </li>
             <li>
-              Authentication</li>
+              <a href="{{ path('documentation-section',{section:'finder', version:version, bundle:bundle })}}">
+                {{"Finder" | trans() | capitalize() }}</a>
+            </li>
             <li>
-              Orm</li>
+              <a href="{{ path('documentation-section',{section:'fileClass', version:version, bundle:bundle })}}">
+                {{"fileClass" | trans() | capitalize() }}</a>
+            </li>
             <li>
-              <a href="{{ path('documentation-version',{ version:version, bundle:'realTime' })}}">
-                {{"realtime" | trans() | capitalize() }}</a>
+              <a href="{{ path('documentation-section',{section:'notifications', version:version, bundle:bundle })}}">
+                {{"notificationsCenter" | trans() | capitalize() }}</a>
+            </li>
+            <li>
+              <a href="{{ path('documentation-section',{section:'syslog', version:version, bundle:bundle })}}">
+                {{"Syslog" | trans() | capitalize() }}</a>
             </li>
           </ul>
+
         </div>
       </div>
     </div>

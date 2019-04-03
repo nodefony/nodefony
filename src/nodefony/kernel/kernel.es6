@@ -407,10 +407,26 @@ module.exports = nodefony.register("kernel", function() {
           if (res) {
             mypath = res[1];
           } else {
-            if (this.cli.checkVersion(mypath)) {
-              if (myrequire) {
+            try {
+              if (this.cli.checkVersion(mypath)) {
+                if (myrequire) {
+                  try {
+                    res = myrequire.resolve(`${name}`);
+                    let version = myrequire(path.resolve(path.dirname(res), "package.json")).version;
+                    if (version === mypath) {
+                      if (this.type === "SERVER") {
+                        this.logger(`Find NPM Bundle Package : ${name}@${mypath} in : ${res}`, "INFO");
+                      }
+                      return `${name}`;
+                    } else {
+                      throw new Error(`Can not found NPM Bundle Package : ${name}@${mypath}`);
+                    }
+                  } catch (e) {
+                    error = e;
+                  }
+                }
                 try {
-                  res = myrequire.resolve(`${name}`);
+                  res = require.resolve(`${name}`);
                   let version = myrequire(path.resolve(path.dirname(res), "package.json")).version;
                   if (version === mypath) {
                     if (this.type === "SERVER") {
@@ -421,27 +437,13 @@ module.exports = nodefony.register("kernel", function() {
                     throw new Error(`Can not found NPM Bundle Package : ${name}@${mypath}`);
                   }
                 } catch (e) {
-                  error = e;
-                }
-              }
-              try {
-                res = require.resolve(`${name}`);
-                let version = myrequire(path.resolve(path.dirname(res), "package.json")).version;
-                if (version === mypath) {
-                  if (this.type === "SERVER") {
-                    this.logger(`Find NPM Bundle Package : ${name}@${mypath} in : ${res}`, "INFO");
+                  if (error) {
+                    throw error;
                   }
-                  return `${name}`;
-                } else {
-                  throw new Error(`Can not found NPM Bundle Package : ${name}@${mypath}`);
+                  throw e;
                 }
-              } catch (e) {
-                if (error) {
-                  throw error;
-                }
-                throw e;
-              }
-            }
+              } //
+            } catch (e) {}
           }
           res = null;
           res = this.checkPath(mypath);

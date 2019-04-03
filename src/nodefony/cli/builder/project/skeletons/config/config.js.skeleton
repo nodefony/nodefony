@@ -83,11 +83,12 @@ module.exports = {
 
     /**
      *  BUNDLES LOCAL REGISTRATION
+     *    Example :
      *
      *       bundles:{
-     *         hello-bundle : "file:src/bundles/hello-bundle",
-     *         my-bundle    : require("my-bundle")
-     *      }
+     *         "hello-bundle" : "file:src/bundles/hello-bundle",
+     *         "test-bundle"  : path.resolve("src", "bundles", "test-bundle"),
+     *       }
      */
     bundles: {},
 
