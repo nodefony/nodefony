@@ -3,9 +3,9 @@
 
 <h2> Use Nodefony as a Library</h2>
 <h3> Initialize a new node.js Project</h3>
-<pre><code class="hljs console" >$ mkdir project
+<pre><code class="hljs console" ><span class="unselectable">$ </span>mkdir project
 
-$ cd project/
+<span class="unselectable">$ </span>cd project/
 
 $ npm init
 ...
@@ -18,6 +18,7 @@ $ npm install nodefony
 ⸨░░░░░░░░░░░░░░░░░░⸩ ⠋ ...
 
 $ touch index.js
+
 $ ls
 -rw-r--r--     1 cci  staff       0  3 avr 20:18 index.js
 drwxr-xr-x  1220 cci  staff   39040  3 avr 20:18 node_modules/
@@ -26,7 +27,7 @@ drwxr-xr-x  1220 cci  staff   39040  3 avr 20:18 node_modules/
 </code></pre>
 
 <h3> Add  start commnand </h3>
-<pre><code class="hljs console" >$ vim package.json
+<pre><code class="hljs console" ><span class="unselectable">$</span> vim package.json
 
   {
     "name": "project",
@@ -60,6 +61,17 @@ console.log(nodefony.version);
   > node index.js
 
 4.3.1
+  </code></pre>
+  <h4>If you prefer have an executable File</h4>
+  <pre><code class="hljs console">$ chmod +x index.js
+
+// add hashbang #!/usr/bin/env node
+
+$ vim index.js
+
+#!/usr/bin/env node
+
+const nodefony = require("nodefony");
   </code></pre>
 
 <h3> Now you can use nodefony as Library !</h3>

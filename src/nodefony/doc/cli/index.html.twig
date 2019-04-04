@@ -1,16 +1,32 @@
 <h1>Command Line Interface</h1>
 
-<h2>
-	Simple Create cli  (command-line interface)
+<h2 > You can see HERE :</h2>
+
+<p>
+<ul>
+  <li><a href="#Create">Create Simple cli</a></li>
+  <li><a href="#options"> Cli Usage </a>
+    <ul>
+      <li><a href="#">Options</a></li>
+      <li><a href="#">Idle</a></li>
+      <li><a href="#">Show Banner and Logger</a></li>
+      <li><a href="#">Events start</a></li>
+    </ul>
+  </li>
+  <li><a href="#commander"> Commander (Command line parser)</a></li>
+</ul>
+</p>
+
+
+<h2 name="Create" id="Create">
+  Create Simple cli  (command-line interface)
 </h2>
 <pre><code class="hljs javascript">#!/usr/bin/env node
 
 const nodefony = require("nodefony");
 
 const project = new nodefony.cli("project", {
-  version: nodefony.version,
   onStart: (cli) => {
-    cli.showBanner();
     cli.log("start");
   }
 });
@@ -23,15 +39,13 @@ const project = new nodefony.cli("project", {
                | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
                |_|                    |__/
 
-            Version : 4.3.1 Platform : darwin Process : project PID : 40258
-
 
    Wed Apr 03 2019 21:43:11 INFO project : start
 $
 </code></pre>
 
-<h2>
-	Cli Usage
+<h2 name="options" id="options">
+  Cli Usage
 </h2>
 <h3> Options </h3>
 <pre><code class="hljs javascript">
@@ -53,8 +67,6 @@ $
     pid: false,
     promiseRejection: true
   };
-
-
 </code></pre>
 
 <h3> Idle </h3>
@@ -69,35 +81,60 @@ const project = new nodefony.cli("project", {
 });
 </code></pre>
 
-<h3> Events</h3>
+<h3> Show Banner and Logger </h3>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+const nodefony = require("nodefony");
+
+const project = new nodefony.cli("project", {
+  version: nodefony.version,
+  onStart: (cli) => {
+    cli.idle();
+    cli.showBanner();
+    cli.log("start");
+    cli.log("start", "WARNING");
+    cli.log("start", "ERROR");
+    cli.log("start", "DEBUG");
+    cli.log("start", "NOTICE", "TERMINAL");
+  }
+});
+</code></pre>
+<pre><code class="hljs console" >
+                                       _                 _
+              _ __    _ __    ___     (_)   ___    ___  | |_
+             | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+             | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+             | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+             |_|                    |__/
+
+          Version : 4.3.1 Platform : darwin Process : project PID : 82305
+
+
+ Thu Apr 04 2019 11:24:28 INFO project : start
+ Thu Apr 04 2019 11:24:28 WARNING project : start
+ Thu Apr 04 2019 11:24:28 ERROR project : start
+ Thu Apr 04 2019 11:24:28 DEBUG project : start
+ Thu Apr 04 2019 11:24:28 NOTICE TERMINAL : start
+ </code></pre>
+
+<h3> Events start </h3>
 <pre><code class="hljs javascript">#!/usr/bin/env node
 const nodefony = require("nodefony");
 
 // with options
 const project = new nodefony.cli("project", {
-  version: nodedony.version,
   onStart: (cli) => {
     cli.idle();
     cli.log("start");
   },
-  onResize:()=>{},
-  onSignal:(sig)=>{
-    console.log(sig);
-  }
 });
 
-// with notifications center
-const project = new nodefony.cli("project", {
-  version: nodedony.version,
-})
+// without options start promise
+const project = new nodefony.cli("project");
 project.start()
   .then((cli) => {
     cli.idle();
-    cli.logger("start");
+    cli.log("start");
   });
-project.on("onSignal", (sig) => {
-  console.log(sig);
-})
 
 </code></pre>
 <pre><code class="hljs console">
@@ -110,11 +147,6 @@ project.on("onSignal", (sig) => {
 
  Thu Apr 04 2019 00:46:16 INFO project : start
 
-&ltctrl-c&gt
-
- Thu Apr 04 2019 00:46:18 CRITIC project : SIGINT
-SIGINT
-$
 </code></pre>
 
 
@@ -123,29 +155,263 @@ $
 const nodefony = require("nodefony");
 
 const project = new nodefony.cli("project", {
+  signals: true,
   onStart: (cli) => {
     cli.idle();
     cli.log("start");
   },
+  onSignal: (sig, cli) => {
+    // you can trap here SIGINT SIGTERM SIGHUP SIGQUIT
+    console.log(sig);
+  }
 });
 </code></pre>
 <pre><code class="hljs console" >
+                                       _                 _
+              _ __    _ __    ___     (_)   ___    ___  | |_
+             | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+             | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+             | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+             |_|                    |__/
+
+&ltctrl-c&gt
+ Thu Apr 04 2019 11:17:11 CRITIC project : SIGINT
+SIGINT
+</code></pre>
+
+<h3> Event TERMINAL resize </h3>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+const nodefony = require("nodefony");
+
+const project = new nodefony.cli("project", {
+  resize: true,
+  onStart: (cli) => {
+    cli.idle();
+    cli.log("start");
+  },
+  onResize: (columns, rows, cli) => {
+    // call when you resize your TERMINAL
+    cli.log(`columns : ${columns}  rows : ${rows}`, 'DEBUG', "SIZE");
+  }
+});
+</code></pre>
+<pre><code class="hljs console" >
+                                       _                 _
+              _ __    _ __    ___     (_)   ___    ___  | |_
+             | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+             | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+             | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+             |_|                    |__/
+
+ Thu Apr 04 2019 11:17:04 INFO project : start
+ Thu Apr 04 2019 11:17:09 DEBUG SIZE : columns : 232  rows : 53
+ Thu Apr 04 2019 11:17:09 DEBUG SIZE : columns : 232  rows : 52
+ Thu Apr 04 2019 11:17:09 DEBUG SIZE : columns : 231  rows : 52
+ Thu Apr 04 2019 11:17:10 DEBUG SIZE : columns : 230  rows : 52
+ Thu Apr 04 2019 11:17:10 DEBUG SIZE : columns : 229  rows : 52
+ Thu Apr 04 2019 11:17:10 DEBUG SIZE : columns : 229  rows : 51
+</code></pre>
+
+<h3> Display Table</h3>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+const nodefony = require("nodefony");
+
+const project = new nodefony.cli("project", {
+  version: nodefony.version,
+});
+
+project.start()
+  .then((cli) => {
+    cli.idle();
+    cli.showBanner();
+    // show cli-table  https://github.com/Automattic/cli-table
+    // displayTable(data, options, enableSyslog)
+
+    cli.log("TABLE 1");
+    cli.displayTable([
+      ['First value', 'Second value', cli.clc.red("third value")]
+    ]);
+
+    cli.blankLine();
+
+    cli.log("TABLE 2");
+    cli.displayTable([
+      ['First value', 'Second value', cli.getEmoji()]
+    ], {}, true);
+
+    cli.blankLine();
+    cli.log("TABLE 3");
+    cli.displayTable([
+      ['First value', 'Second value', cli.clc.magenta("third value")]
+    ], {
+      head: ["Header 1", "Header 2", "Header 3"]
+    });
+
+    cli.terminate(0);
+  })
+  .catch(e => {
+    console.trace(e);
+    cli.terminate(1);
+  });
+
+</code></pre>
+<pre><code class="hljs console" >
+                                       _                 _
+              _ __    _ __    ___     (_)   ___    ___  | |_
+             | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+             | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+             | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+             |_|                    |__/
+
+          Version : 4.3.1 Platform : darwin Process : project PID : 84290
+
+Thu Apr 04 2019 15:02:26 INFO project : TABLE 1
+┌─────────────┬──────────────┬─────────────┐
+│ First value │ Second value │ third value │
+└─────────────┴──────────────┴─────────────┘
+
+Thu Apr 04 2019 15:02:26 INFO project : TABLE 2
+Thu Apr 04 2019 15:02:26 INFO project :
+┌─────────────┬──────────────┬────┐
+│ First value │ Second value │ 🤓 │
+└─────────────┴──────────────┴────┘
+
+Thu Apr 04 2019 15:07:42 INFO project : TABLE 3
+┌─────────────┬──────────────┬─────────────┐
+│ Header 1    │ Header 2     │ Header 3    │
+├─────────────┼──────────────┼─────────────┤
+│ First value │ Second value │ third value │
+└─────────────┴──────────────┴─────────────┘
+</code></pre>
+
+<h3> Spinner </h3>
+
+<pre><code class="hljs javascript">#!/usr/bin/env node
+const project = new nodefony.cli("project", {
+  version: nodefony.version,
+});
+project.start()
+  .then((cli) => {
+    cli.idle();
+    cli.showBanner();
+
+    cli.logger("START SPINNER : " + cli.getEmoji("clapper"));
+    cli.startSpinner("MY CLI", ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷']);
+    cli.blankLine();
+
+    let interval = setInterval(() => {
+      cli.logger("MESSAGE : " + cli.getEmoji());
+    }, 500);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      cli.stopSpinner();
+      cli.logger("STOP SPINNER : " + cli.getEmoji("clapper"));
+    }, 10000);
+  })
+  .catch(e => {
+    console.trace(e);
+  });
+</code></pre>
+
+<pre><code class="hljs console" >
+                                       _                 _
+              _ __    _ __    ___     (_)   ___    ___  | |_
+             | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+             | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+             | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+             |_|                    |__/
+
+          Version : 4.3.1 Platform : darwin Process : project PID : 85023
+
+
+ Thu Apr 04 2019 15:20:52 INFO project : START SPINNER : 🎬
+
+ ⣷  Thu Apr 04 2019 15:23:51 INFO project : MESSAGE : 🎭
+
+ Thu Apr 04 2019 15:21:02 INFO project : STOP SPINNER : 🎬
 
 </code></pre>
 
-<h3> Show Banner</h3>
 
-<h3> Name Process</h3>
+<h2 name="commander" id="commander">Commander (Command line parser) </h2>
+
+<h3> Create Helper </h3>
+
+<pre><code class="hljs javascript">#!/usr/bin/env node
+const project = new nodefony.cli("project", {
+  version: nodefony.version,
+});
+project.start()
+  .then((cli) => {
+
+    cli.idle();
+    cli.showBanner();
+
+    // https://github.com/tj/commander.js
+    // usage
+    cli.commander.usage(`[options] <command1> [args...]`);
+
+    // custom help
+    cli.commander.on('--help', () => {
+      cli.blankLine();
+      console.log('Examples:');
+      console.log('  $ project create -name hello ');
+      console.log('  $ project -h');
+      cli.blankLine();
+    });
+
+    cli.parseCommand();
+
+
+  })
+  .catch(e => {
+    console.trace(e);
+  });
+</code></pre>
+<pre><code class="hljs console">
+$ project -h
+                                       _                 _
+              _ __    _ __    ___     (_)   ___    ___  | |_
+             | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+             | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+             | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+             |_|                    |__/
+
+          Version : 4.3.1 Platform : darwin Process : project PID : 86424
+
+Usage: test [options] <command1> [args...]
+
+Options:
+  -V, --version                output the version number
+  -h, --help                   output usage information
+
+Examples:
+  project create -name hello
+  project -h
+</code></pre>
+
+<h3> Create Command </h3>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+
+
+</code></pre>
+
+<pre><code class="hljs console">
+
+</code></pre>
 
 
 
 
-<h3> prompt</h3>
-<h3> commander</h3>
 
+
+
+<h3> Prompt</h3>
+<h3> Node Process Name </h3>
 <p></p>
 <h2>
-	Gist Demo Nodefony cli
+  Avanced Use Nodefony cli
 </h2>
 
 <script src="https://gist.github.com/ccamensuli/7d42aeb022406bd9527b562d5e181b50.js"></script>

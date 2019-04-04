@@ -227,13 +227,13 @@
     Install Nodefony Globally
   </p>
   <pre><code class="hljs shell" >
-# install with npm :
+<span class="unselectable"># install with npm :</span>
 
-$ npm -g install nodefony
+<span class="unselectable">$ </span>npm -g install nodefony
 
-# install with yarn :
+<span class="unselectable"># install with yarn :</span>
 
-$ yarn global add nodefony
+<span class="unselectable">$ </span>yarn global add nodefony
   </code></pre>
   <a class="doc3" href="https://docs.npmjs.com/getting-started/fixing-npm-permissions">See Global install How to Prevent Permissions Errors</a>
 </div>
@@ -248,12 +248,12 @@ $ yarn global add nodefony
   </h2>
   <p class="doc3">
 
-    By defaut NODEFONY bind all servers on loopback ( localhost : 127.0.0.1 )
+    By defaut NODEFONY bind all servers on all network interfaces  ( 0.0.0.0 )
   </br>
 
   <ul class="doc3">
     <li>
-      domain : localhost
+      domain : localhost or ip ( LAN )
     </li>
     <li>
       http : 5151
@@ -268,7 +268,7 @@ $ yarn global add nodefony
       <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle, queryString:{'subsection':'framework'} })}}">( Configurations framework )
       </a>
     </small><br>
-    Change config.yml Location :
+    Change config.js Location :
     <code>./config/config.js</code>
   </p>
   <pre><code class="hljs javascript" >

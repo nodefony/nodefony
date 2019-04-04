@@ -175,3 +175,7 @@ pre code h3{
   color:#026e00;
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
+
+.unselectable {
+  user-select: none;
+}

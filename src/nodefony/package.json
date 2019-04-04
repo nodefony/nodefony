@@ -62,7 +62,7 @@
     "lodash": "^4.17.11",
     "lodash.isregexp": "^4.0.1",
     "markdown-it": "^8.4.2",
-    "mime": "^2.4.0",
+    "mime": "^2.4.1",
     "moment": "^2.24.0",
     "node-emoji": "^1.10.0",
     "npm": "^6.9.0",
