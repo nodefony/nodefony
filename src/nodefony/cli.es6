@@ -269,10 +269,13 @@ module.exports = nodefony.register("cli", function() {
 
     showBanner() {
       let version = this.commander ? this.commander.version() : (this.options.version || "1.0.0");
+      let banner = null;
       if (this.options.version) {
-        console.log("          Version : " + blue(version) + " Platform : " + green(process.platform) + " Process : " + green(process.title) + " PID : " + process.pid + "\n");
+        banner = `          Version : ${blue(version)}   Platform : ${green(process.platform)}   Process : ${green(process.title)}   Pid : ${process.pid}`;
+        this.blankLine();
+        console.log(banner);
       }
-      this.blankLine();
+      return banner;
     }
 
     listenRejection() {
@@ -644,7 +647,10 @@ module.exports = nodefony.register("cli", function() {
       return fs.existsSync(myPath);
     }
 
-    terminate(code) {
+    terminate(code, quiet) {
+      if (quiet) {
+        return code;
+      }
       if (code === 0) {
         process.exitCode = code;
       }

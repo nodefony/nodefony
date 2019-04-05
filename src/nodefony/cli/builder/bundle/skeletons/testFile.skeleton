@@ -14,18 +14,16 @@
 const assert = require('assert');
 const http = require("http");
 
-describe("BUNDLE {{name}}", function(){
+describe("BUNDLE {{name}}", () => {
 
-	describe('CORE', function(){
+	describe('CORE', () => {
 
-		beforeEach(function(){
-		})
+		beforeEach(() =>{});
 
-		before(function(){
-		})
+		before( () => {});
 
 		// EXAMPLE  NODEFONY
-		it("NAMESPACE LOADED", function(done){
+		it("NAMESPACE LOADED", (done) => {
 			// check nodefony namespace
 			assert.equal( typeof nodefony, "object" );
 			// check instance kernel
@@ -36,11 +34,9 @@ describe("BUNDLE {{name}}", function(){
 
 	describe('ROUTE', () => {
 
-		beforeEach( () => {
-		});
+		beforeEach( () => {});
 
-		before( () =>{
-		});
+		before( () =>{});
 
 		it("ROUTE {{name}} ", (done) => {
 			let options = {

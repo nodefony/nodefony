@@ -526,30 +526,23 @@ Access to bundle route with URL : <https://localhost:5152/hello>
 ### Example controller  : src/bundles/hello-bundle/controller/defaultController.js
 
 ```js
-/**
- *	@class defaultController
- *	@constructor
- *	@param {class} container
- *	@param {class} context
- *
- */
 module.exports = class defaultController extends nodefony.controller {
 
-	constructor (container, context){
-		super(container, context);
-	}
-	/**
-	 *
-	 *	@method indexAction
-	 *
-	 */
-	indexAction (){
-		return this.render("hello-bundle::index.html.twig", {
-			name: "hello-bundle"		
+  constructor (container, context){
+    super(container, context);
+  }
+  /**
+   *
+   *  @method indexAction
+   *
+   */
+  indexAction (){
+    return this.render("hello-bundle::index.html.twig", {
+      name: "hello-bundle"    
     }).catch((e) =>{
       throw e ;
     });
-	}
+  }
 };
 ```
 
@@ -604,7 +597,7 @@ You can see hello-bundle config   : src/bundles/hello-bundle/Resources/config/co
 /**
 *
 *
-*	nodefony-starter CONFIG BUNDLE  hello-bundle
+*  nodefony-starter CONFIG BUNDLE  hello-bundle
 *
 * ===============================================================================
 *
@@ -638,12 +631,12 @@ module.exports = {
   watch: true
   /**
    *
-   *	Insert here the bundle-specific configurations
+   *  Insert here the bundle-specific configurations
    *
-   *	You can also override config of another bundle
-   *	with the name of the bundle
+   *  You can also override config of another bundle
+   *  with the name of the bundle
    *
-   *	example : create an other database connector
+   *  example : create an other database connector
    */
 };
 ```

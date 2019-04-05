@@ -183,6 +183,7 @@ module.exports = nodefony.register("kernel", function() {
         return this.cli.showAsciify(this.projectName)
           .then(() => {
             this.cli.showBanner();
+            this.cli.blankLine();
             try {
               // config
               this.readKernelConfig();

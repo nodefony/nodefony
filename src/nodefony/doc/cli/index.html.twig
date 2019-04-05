@@ -7,13 +7,18 @@
   <li><a href="#Create">Create Simple cli</a></li>
   <li><a href="#options"> Cli Usage </a>
     <ul>
-      <li><a href="#">Options</a></li>
-      <li><a href="#">Idle</a></li>
-      <li><a href="#">Show Banner and Logger</a></li>
-      <li><a href="#">Events start</a></li>
+      <li><a href="#options">Options</a></li>
+      <li><a href="#idle">Idle</a></li>
+      <li><a href="#banner">Show Banner and Logger</a></li>
+      <li><a href="#start">Start Events</a></li>
+      <li><a href="#signals">Signals Events</a></li>
+      <li><a href="#resize">Resize Events</a></li>
+      <li><a href="#table">Log with Table component</a></li>
+      <li><a href="#spinner">Log with Spinner component</a></li>
     </ul>
   </li>
-  <li><a href="#commander"> Commander (Command line parser)</a></li>
+  <li><a href="#commander"> Command line parser (commander)</a></li>
+  <li><a href="#prompt"> Use interactive command line  (Prompt)</a></li>
 </ul>
 </p>
 
@@ -52,24 +57,24 @@ $
   // usage  new nodefony.cli(name, options)
 
   const defaultOptions = {
-    processName: "name",
-    autostart: true,
-    asciify: true,
-    clear: true,
-    color: blue,
-    prompt: "default", // "default" || "rxjs"
-    commander: true,
-    signals: true,
-    autoLogger: true,
-    resize: false,
-    version: null,
-    warning: false,
-    pid: false,
-    promiseRejection: true
+    processName: name,    // Name of processus system
+    autostart: true,        // Auto event onStart
+    asciify: true,          // Display asciify name
+    clear: true,            // Clear console before onStart
+    color: clc.blue,        // Color asciify name
+    prompt: "default",      // Tools for interactive command line (inquirer) "default" || "rxjs"
+    commander: true,        // Tools for command line arguments (commander)
+    signals: true,          // Active event signals
+    autoLogger: true,       // Activate logger events by default
+    resize: false,          // Active event resize
+    version: null,          // Set cli version
+    warning: false,         // Active process.on('warning')
+    pid: false,             // Add pid in cli class
+    promiseRejection: true  // Active  process.on('rejectionHandled') and process.on('unhandledRejection')
   };
 </code></pre>
 
-<h3> Idle </h3>
+<h3 name="idle" id="idle"> Idle </h3>
 <pre><code class="hljs javascript">#!/usr/bin/env node
 const nodefony = require("nodefony");
 
@@ -81,7 +86,7 @@ const project = new nodefony.cli("project", {
 });
 </code></pre>
 
-<h3> Show Banner and Logger </h3>
+<h3 name="banner" id="banner"> Show Banner and Logger </h3>
 <pre><code class="hljs javascript">#!/usr/bin/env node
 const nodefony = require("nodefony");
 
@@ -150,7 +155,7 @@ project.start()
 </code></pre>
 
 
-<h3> Signals</h3>
+<h3 name="signals" id="signals"> Signals</h3>
 <pre><code class="hljs javascript">#!/usr/bin/env node
 const nodefony = require("nodefony");
 
@@ -212,7 +217,7 @@ const project = new nodefony.cli("project", {
  Thu Apr 04 2019 11:17:10 DEBUG SIZE : columns : 229  rows : 51
 </code></pre>
 
-<h3> Display Table</h3>
+<h3 name="table" id="table"> Display Table</h3>
 <pre><code class="hljs javascript">#!/usr/bin/env node
 const nodefony = require("nodefony");
 
@@ -284,7 +289,7 @@ Thu Apr 04 2019 15:07:42 INFO project : TABLE 3
 └─────────────┴──────────────┴─────────────┘
 </code></pre>
 
-<h3> Spinner </h3>
+<h3 name="spinner" id="spinner"> Spinner </h3>
 
 <pre><code class="hljs javascript">#!/usr/bin/env node
 const project = new nodefony.cli("project", {
@@ -369,8 +374,7 @@ project.start()
     console.trace(e);
   });
 </code></pre>
-<pre><code class="hljs console">
-$ project -h
+<pre><code class="hljs console">$ project -h
                                        _                 _
               _ __    _ __    ___     (_)   ___    ___  | |_
              | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
@@ -392,12 +396,119 @@ Examples:
 </code></pre>
 
 <h3> Create Command </h3>
+
 <pre><code class="hljs javascript">#!/usr/bin/env node
+const project = new nodefony.cli("project", {
+  version: nodefony.version,
+});
+project.start()
+  .then((cli) => {
+    cli.idle();
+    cli.showBanner();
+    cli.blankLine();
+    cli.commander.usage(`[options] <command1> [args...]`);
 
+    cli.setCommand('rm &ltdir&gt')
+      .option('-r, --recursive', 'Remove recursively')
+      .action(function(dir, cmd) {
+        console.log('remove ' + dir + (cmd.recursive ? ' recursively' : ''));
+      });
 
+    cli.setCommand('create <name>')
+      .description('Create something in project')
+      .alias('add')
+      .option('-d, --debug <env>', 'Environment', /^(dev|prod|preprod)$/i, 'dev')
+      .action((create, command) => {
+        cli.log(create, "INFO", "COMMAND ARGUMENTS");
+        cli.log(command.debug, "INFO", "COMMAND OPTIONS");
+      })
+      // custom command help
+      .on('--help', () => {
+        cli.blankLine();
+        console.log('Examples:');
+        console.log('  $ project create -name hello ');
+        console.log('  $ project create -name hello -d ');
+      });
+
+    // custom global help
+    cli.commander.on('--help', () => {
+      cli.blankLine();
+      console.log('Examples:');
+      console.log('  $ project create -name hello ');
+      console.log('  $ project -h');
+      cli.blankLine();
+    });
+
+    //cli.commander.arguments(`<cmd> [args...]`);
+    cli.parseCommand();
+  })
+  .catch(e => {
+    console.trace(e);
+  });
 </code></pre>
 
 <pre><code class="hljs console">
+$ project -h
+                                       _                 _
+              _ __    _ __    ___     (_)   ___    ___  | |_
+             | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+             | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+             | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+             |_|                    |__/
+
+        Version : 4.3.1   Platform : darwin   Process : project   Pid : 94629
+
+Usage: test [options] &ltcommand1&gt [args...]
+
+Options:
+-V, --version                output the version number
+-h, --help                   output usage information
+
+Commands:
+rm [options] &ltdir&gt
+create|add [options] &ltname&gt  Create something in project
+
+Examples:
+  project create -name hello
+  project -h
+
+
+$ project create -h
+                                       _                 _
+              _ __    _ __    ___     (_)   ___    ___  | |_
+             | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+             | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+             | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+             |_|                    |__/
+
+        Version : 4.3.1   Platform : darwin   Process : project   Pid : 94629
+
+
+Usage: create|add [options] &ltname&gt
+
+Create something in project
+
+Options:
+  -d, --debug &ltenv&gt  Environment (default: "dev")
+  -h, --help         output usage information
+
+Examples:
+  project create -name hello
+  project create -name hello -d
+
+
+$ create something -d prod
+                                       _                 _
+              _ __    _ __    ___     (_)   ___    ___  | |_
+             | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+             | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+             | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+             |_|                    |__/
+
+        Version : 4.3.1   Platform : darwin   Process : project   Pid : 96212
+
+Fri Apr 05 2019 14:14:46 INFO COMMAND ARGUMENTS : something
+Fri Apr 05 2019 14:14:46 INFO COMMAND OPTIONS : prod
 
 </code></pre>
 
@@ -406,9 +517,143 @@ Examples:
 
 
 
+<p>
+  <h2 name="prompt" id="prompt"> Use interactive command line  (Prompt)</h2>
+</p>
+<pre><code class="hljs javascript">#!/usr/bin/env node
+const project = new nodefony.cli("project", {
+  version: nodefony.version,
+});
+project.start()
+  .then( (cli) => {
 
-<h3> Prompt</h3>
-<h3> Node Process Name </h3>
+    return cli.prompt(questions)
+      .then(function(answers) {
+        cli.log('\nOrder receipt:');
+        cli.log(JSON.stringify(answers, null, '  '));
+      });
+
+  })
+  .catch(e => {
+    console.trace(e);
+  });
+</code></pre>
+
+<pre><code class="hljs console">
+                                       _                 _
+              _ __    _ __    ___     (_)   ___    ___  | |_
+             | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+             | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+             | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+             |_|                    |__/
+
+? Is this for delivery? Yes
+? What's your phone number? 0132659887
+? What size do you need? Medium
+? How many do you need? 5
+? What about the toppings? All dressed
+? You also get a free 2L beverage Pepsi
+? Any comments on your purchase experience? Nope, all good!
+ Fri Apr 05 2019 17:15:09 INFO project :
+Order receipt:
+ Fri Apr 05 2019 17:15:09 INFO project : {
+  "toBeDelivered": true,
+  "phone": "0132659887",
+  "size": "medium",
+  "quantity": 5,
+  "toppings": "alldressed",
+  "beverage": "Pepsi",
+  "comments": "Nope, all good!"
+}
+</code></pre>
+
+<pre><code class="hljs javascript">// https://github.com/SBoudrias/Inquirer.js/tree/master/examples
+
+const questions = [{
+    type: 'confirm',
+    name: 'toBeDelivered',
+    message: 'Is this for delivery?',
+    default: false
+  },
+  {
+    type: 'input',
+    name: 'phone',
+    message: 'What\'s your phone number?',
+    validate: function (value) {
+      let pass = value.match(/^([01]{1})?[-.\s]?\(?(\d{3})\)?[-.\s]?(\d{3})[-.\s]?(\d{4})\s?((?:#|ext\.?\s?|x\.?\s?){1}(?:\d+)?)?$/i);
+      if (pass) {
+        return true;
+      }
+
+      return 'Please enter a valid phone number';
+    }
+  },
+  {
+    type: 'list',
+    name: 'size',
+    message: 'What size do you need?',
+    choices: ['Large', 'Medium', 'Small'],
+    filter: function (val) {
+      return val.toLowerCase();
+    }
+  },
+  {
+    type: 'input',
+    name: 'quantity',
+    message: 'How many do you need?',
+    validate: function (value) {
+      let valid = !isNaN(parseFloat(value));
+      return valid || 'Please enter a number';
+    },
+    filter: Number
+  },
+  {
+    type: 'expand',
+    name: 'toppings',
+    message: 'What about the toppings?',
+    choices: [{
+        key: 'p',
+        name: 'Pepperoni and cheese',
+        value: 'PepperoniCheese'
+      },
+      {
+        key: 'a',
+        name: 'All dressed',
+        value: 'alldressed'
+      },
+      {
+        key: 'w',
+        name: 'Hawaiian',
+        value: 'hawaiian'
+      }
+    ]
+  },
+  {
+    type: 'rawlist',
+    name: 'beverage',
+    message: 'You also get a free 2L beverage',
+    choices: ['Pepsi', '7up', 'Coke']
+  },
+  {
+    type: 'input',
+    name: 'comments',
+    message: 'Any comments on your purchase experience?',
+    default: 'Nope, all good!'
+  },
+  {
+    type: 'list',
+    name: 'prize',
+    message: 'For leaving a comment, you get a freebie',
+    choices: ['cake', 'fries'],
+    when: function (answers) {
+      return answers.comments !== 'Nope, all good!';
+    }
+  }
+];
+
+</code></pre>
+
+
 <p></p>
 <h2>
   Avanced Use Nodefony cli
