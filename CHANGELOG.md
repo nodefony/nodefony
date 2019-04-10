@@ -1,5 +1,12 @@
 # Changelog
 
+## v4.3.3 (11/04/2019)
+- [nodefony release 4.3.3](https://github.com/nodefony/nodefony-core/commit/727230614790690702c523c138110c151f83b67e)
+- [debug add deps](https://github.com/nodefony/nodefony-core/commit/f7b88d76b77c6646dd758acc164b7ac8a610a523)
+- [debug install](https://github.com/nodefony/nodefony-core/commit/019701282b6f3be52b9eb4d0474372e94ccef870)
+
+---
+
 ## v4.3.2 (10/04/2019)
 - [nodefony release 4.3.2](https://github.com/nodefony/nodefony-core/commit/a76e301a4b2b238bdcefb04fa07f837a27c65adf)
 - [debug bundle documentation](https://github.com/nodefony/nodefony-core/commit/5debf50122f03bf2f90c46ba9da48452982f7870)
