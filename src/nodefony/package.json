@@ -1,6 +1,6 @@
 {
   "name": "nodefony",
-  "version": "4.3.2",
+  "version": "4.3.3",
   "main": "autoloader.es6",
   "description": "Nodefony Framework Core",
   "contributors": [],
@@ -83,12 +83,10 @@
     "url": "git://github.com/nodefony/nodefony-core.git"
   },
   "license": "CECILL-B",
-  "licenses": [
-    {
-      "type": "CECILL-B",
-      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-    }
-  ],
+  "licenses": [{
+    "type": "CECILL-B",
+    "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+  }],
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md"
 }

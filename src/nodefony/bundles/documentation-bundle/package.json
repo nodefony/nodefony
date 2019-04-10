@@ -24,11 +24,14 @@
     "highlight.js": "^9.15.6",
     "jquery": "^3.3.1",
     "mini-css-extract-plugin": "^0.6.0",
+    "node-sass": "^4.11.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "popper.js": "^1.15.0",
+    "postcss-loader": "^3.0.0",
     "precss": "^4.0.0",
     "resolve-url-loader": "^3.1.0",
     "reveal.js": "^3.8.0",
+    "sass-loader": "^7.1.0",
     "semver": "^6.0.0",
     "simple-git": "^1.110.0",
     "socket.io-client": "^2.2.0",
@@ -41,12 +44,10 @@
     "url": "git://github.com/nodefony/nodefony-core.git"
   },
   "license": "CECILL-B",
-  "licenses": [
-    {
-      "type": "CECILL-B",
-      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-    }
-  ],
+  "licenses": [{
+    "type": "CECILL-B",
+    "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+  }],
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md"
 }
