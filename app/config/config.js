@@ -5,8 +5,8 @@ module.exports = {
   App: {
     projectYear: "2018",
     locale: "en_en",
-    authorName: "admin",
-    authorMail: "admin@nodefony.com",
+    authorName: "Camensuli Christophe",
+    authorMail: "ccamensuli@gmail.com"
   },
   lang: {
     en_en: "english",
@@ -95,7 +95,7 @@ module.exports = {
    */
   "mail-bundle": {
     nodemailer: {
-      default: null,
+      default: "free",
       transporters: {
         /*free: {
           host: "smtp.free.fr",

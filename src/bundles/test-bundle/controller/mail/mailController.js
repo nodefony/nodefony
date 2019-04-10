@@ -6,7 +6,7 @@
  *
  *  @Route ("/nodefony/test/mail")
  */
-//const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer');
 
 module.exports = class mailController extends nodefony.controller {
 
@@ -25,7 +25,7 @@ module.exports = class mailController extends nodefony.controller {
       });
   }
 
-  /*async renderPdf(html) {
+  async renderPdf(html) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(html);
@@ -36,14 +36,14 @@ module.exports = class mailController extends nodefony.controller {
     });
     await browser.close();
     return buffer;
-  }*/
+  }
 
   /**
-   *  Route ("/responsive", name="nodefony-mail-responsive")
+   *  @Route ("/responsive", name="nodefony-mail-responsive")
    */
-  /*mail2Action() {
+  mail2Action() {
     this.hideDebugBar();
-    return this.render("mail-bundle::responsive.mail.html.twig", {
+    return this.render("test-bundle:mail:responsive.mail.html.twig", {
         name: this.kernel.projectName
       })
       .then(async (html) => {
@@ -75,16 +75,16 @@ module.exports = class mailController extends nodefony.controller {
       })
       .catch((e) => {
         this.logger(e, "ERROR");
-        throw e;
+        return Promise.reject(e);
       });
-  }*/
+  }
 
   /**
    *
    */
   footerAction() {
     let version = this.kernel.settings.version;
-    return this.render("mail::mail.footer.html.twig", {
+    return this.render("test:mail:mail.footer.html.twig", {
       version: version,
       year: new Date().getFullYear()
     });

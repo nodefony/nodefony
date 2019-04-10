@@ -136,6 +136,9 @@ module.exports = class mailer extends nodefony.Service {
   }
 
   async sendMail(options, transporterName = this.config.default, context = null) {
+    if (!this.transporter) {
+      throw new Error("Service mail no transporter found ");
+    }
     let conf = nodefony.extend({}, this.mailDefaultOptions, options);
     if (!transporterName) {
       return await this.transporter.sendMail(conf)

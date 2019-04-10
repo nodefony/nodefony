@@ -1,11 +1,11 @@
 {% extends '/app/Resources/views/base.html.twig' %}
 
 {% block stylesheets %}
-  <link rel="stylesheet" href="{{CDN('stylesheet')}}/mail-bundle/assets/css/mail.css"/>
+  <link rel="stylesheet" href="{{CDN('stylesheet')}}/test-bundle/assets/css/mail.css"/>
 {% endblock %}
 
 {% block javascripts %}
-  <script type="text/javascript" src="{{CDN('javascript')}}/mail-bundle/assets/js/mail.js"></script>
+  <script type="text/javascript" src="{{CDN('javascript')}}/test-bundle/assets/js/mail.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -62,6 +62,6 @@
   </div>
 
   {% block footer %}
-    {{ render( controller("mail:default:footer" )) }}
+    {{ render( controller("test:mail:footer" )) }}
   {% endblock %}
 {% endblock %}
