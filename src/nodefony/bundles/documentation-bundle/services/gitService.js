@@ -17,7 +17,7 @@ module.exports = class git extends nodefony.Service {
     if (!fs.existsSync(this.clonePath)) {
       this.kernel.cli.mkdir(this.clonePath);
     }
-    if (this.kernel.type === "SERVER") {
+    if (this.kernel.type === "SERVER" && this.kernel.isCore) {
       this.getProjectTags(true)
         .catch((err) => {
           this.logger(err, "ERROR");
@@ -53,15 +53,18 @@ module.exports = class git extends nodefony.Service {
     if (!name) {
       return this.gitKernel;
     }
-    const type = typeof(name);
+    const type = typeof (name);
     if (type === "string") {
       switch (name) {
-        case "nodefony":
+      case "nodefony":
+        if (this.cloneGit) {
           return this.cloneGit;
-        case this.project:
-          return this.gitKernel;
-        default:
-          return this.gitKernel;
+        }
+        return this.gitKernel;
+      case this.project:
+        return this.gitKernel;
+      default:
+        return this.gitKernel;
       }
     }
     return name;
@@ -121,10 +124,10 @@ module.exports = class git extends nodefony.Service {
     } else {
       if (typeof repo === "string") {
         switch (repo) {
-          case "nodefony":
-            return this.getNodefonyTags(force);
-          default:
-            return this.getProjectTags(force);
+        case "nodefony":
+          return this.getNodefonyTags(force);
+        default:
+          return this.getProjectTags(force);
         }
       }
     }
@@ -142,13 +145,17 @@ module.exports = class git extends nodefony.Service {
         return resolve(this.nodefonyTags);
       });
     }
-    return this.cloneGit.tags()
-      .then((tags) => {
-        this.nodefonyTags = tags;
-        return tags;
-      }).catch(e => {
-        throw e;
-      });
+    if (this.cloneGit) {
+      return this.cloneGit.tags()
+        .then((tags) => {
+          this.nodefonyTags = tags;
+          return tags;
+        }).catch(e => {
+          throw e;
+        });
+    } else {
+      return Promise.resolve(this.currentVersion);
+    }
   }
 
   getProjectTags(force) {
