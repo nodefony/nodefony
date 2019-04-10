@@ -1,5 +1,28 @@
 # Changelog
 
+## v4.3.2 (10/04/2019)
+- [nodefony release 4.3.2](https://github.com/nodefony/nodefony-core/commit/a76e301a4b2b238bdcefb04fa07f837a27c65adf)
+- [debug bundle documentation](https://github.com/nodefony/nodefony-core/commit/5debf50122f03bf2f90c46ba9da48452982f7870)
+- [add doc](https://github.com/nodefony/nodefony-core/commit/6251b8ea964a45452e180d0e968c77e7a7e17367)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/71f8e10b9e35eca2969cc80f5769d7cf52baedd6)
+- [add doc](https://github.com/nodefony/nodefony-core/commit/4548ebaa4b9fdb2d16826337c122acb2036f0bf4)
+- [add doc](https://github.com/nodefony/nodefony-core/commit/3e259241f63261cfd8f844cc0d22d77f3d84646f)
+- [add doc](https://github.com/nodefony/nodefony-core/commit/008273883b6041daac1fee41b40a734ccda7a740)
+- [add doc](https://github.com/nodefony/nodefony-core/commit/5c22ca6487022fe2c727b70fbe1abc95b17e5751)
+- [add doc](https://github.com/nodefony/nodefony-core/commit/26933ad106b1253073570a9f3a05e8ccbea181f6)
+- [add doc | upgrade deps](https://github.com/nodefony/nodefony-core/commit/31c154d2665ae999b72a77fd9bea7a4f9bcaa253)
+- [add doc | upgrade deps](https://github.com/nodefony/nodefony-core/commit/c9de62575d4865d7fe6950fe5cc861e36f88bafe)
+- [add doc](https://github.com/nodefony/nodefony-core/commit/d07fcd8da68ea10c43454e77ce9b0a215ff3384f)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/03e79d8d4205c8a2fa277a8bfacd16d5ee641534)
+- [upgrade deps | add doc](https://github.com/nodefony/nodefony-core/commit/4dff9456039ce9730e81c9e3b565d52e5e897722)
+- [add doc](https://github.com/nodefony/nodefony-core/commit/4e49944e707b7c84a6357683f0aaef41d0ab97e0)
+- [add doc](https://github.com/nodefony/nodefony-core/commit/c823320dd70227e03d11b5d2a6810c9f225212cb)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/27a54ded7bf22bb31aaafb70a50367ad8e42a264)
+- [add doc](https://github.com/nodefony/nodefony-core/commit/69680335e8264ea8bf4325fc09813a03e80d089e)
+- [upgrade deps | debug webcrawler](https://github.com/nodefony/nodefony-core/commit/d9b487ff47e3e2cf5e64d5b5e20c8d046aa0a63c)
+
+---
+
 ## v4.3.1 (23/03/2019)
 - [nodefony release 4.3.1](https://github.com/nodefony/nodefony-core/commit/dbacb26ff6febb9d67b79748fe57370738aeb056)
 - [debug watcher upgrade chokidar](https://github.com/nodefony/nodefony-core/commit/d1f8c4d44d2edd2fc6c810bc7b11191fa4412971)
