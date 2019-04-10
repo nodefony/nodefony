@@ -251,50 +251,143 @@ session: {
     if (! foo){
       foo = this.session.set("foo", {bar:true})
     }
-    return this.renderJson(foo);
+
   }
 
-  // result json
-  {"bar":true}
+  // getAttributtes
   createAction() {
     let attributes = this.session.getAttributtes();
     console.log(attributes)
     {
-      lang: 'en_en',
       foo: { bar: true }
     }
-    let
   }
-
-
 </code></pre>
 
 
-<h3> Session Metas Attributes </h3>
+<h3> Session Metas </h3>
 <p>
-
+  Meta attributes are needed for internal use but may be useful for better managing session usage.
 </p>
-<pre><code class="hljs javascript">createAction() {
+<pre><code class="hljs javascript">module.exports = class myController extends nodefony.controller {
 
-  let kernelMeta = this.session.getMetaBag("kernel");
-  if (!kernelMeta.domain) {
-    kernelMeta = this.session.setMetaBag("kernel.domain", this.kernel.domain);
-    console.log(kernelMeta)
+  constructor(container, context) {
+    super(container, context);
+    this.startSession();
   }
-  console.log(kernelMeta)
-  return this.renderJson(kernelMeta);
+
+  // Example getMetaBag / setMetaBag
+
+  createAction() {
+
+    let kernelMeta = this.session.getMetaBag("kernel");
+    if (!kernelMeta.domain) {
+      this.session.setMetaBag("kernel.domain", this.kernel.domain);
+    }
+
+  }
+
+  // invalide session after 1 minute
+  checkSession() {
+    let lastUsed = this.session.getMetaBag("lastUsed");
+    lastUsed = new Date(lastUsed).getTime();
+    let now = new Date().getTime();
+    if ( ( now - lastUsed ) > 60000) {
+      this.session.invalidate();
+      return false ;
+    }
+    return true;
+  }
+
+  createAction() {
+      this.checkSession();
+      ...
+  }
 }
 
-    let metas = this.session.getMetas();
-    console.log(metas)
 </code></pre>
+<pre><code class="hljs javascript">let metas = this.session.getMetas();
+console.log(metas)
+
+protoParameters {
+  lifetime: 0,
+  context: 'default',
+  request: 'HTTP2',
+  created: '2019-04-10T19:15:32.980Z',
+  remoteAddress: '127.0.0.1',
+  host: 'localhost:5152',
+  user_agent:
+   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  url:
+   Url {
+     protocol: 'https:',
+     slashes: true,
+     auth: null,
+     host: 'localhost:5152',
+     port: '5152',
+     hostname: 'localhost',
+     hash: null,
+     search: null,
+     query: null,
+     pathname: '/test/unit/session/get/attributes',
+     path: '/test/unit/session/get/attributes',
+     href: 'https://localhost:5152/test/unit/session/get/attributes' },
+  lastUsed: '2019-04-10T19:21:10.477Z',
+  kernel: { domain: '0.0.0.0' }
+}
+
+</code></pre>
+
 <h3> Session FlashBag </h3>
 <p>
-  Session must be started in Constructor of Controller called by front controller
+  Session FlashBag are useful for time-limited use (stealth)
 </p>
 
 
-<pre><code class="hljs javascript">
+<pre><code class="hljs javascript">module.exports = class myController extends nodefony.controller {
 
+  constructor(container, context) {
+    super(container, context);
+    this.startSession();
+  }
+
+  // Example setFlashBag
+
+  createAction() {
+    this.session.setFlashBag("info", "My log info" )
+    return this.render("app::index.hml.twig");
+  }
+
+}
 
 </code></pre>
+
+<p>
+  Usage in twig getFlashBag
+</p>
+{% verbatim %}
+<pre><code class="hljs twig">{% extends './base.html.twig' %}
+
+{% set error = getFlashBag("error") %}
+{% set info = getFlashBag("info") %}
+
+{% if info %}
+  &ltdiv class="alert alert-primary alert-dismissible fade show  mt-2" role="alert"&gt
+    &ltstrong&gtINFO :&lt/strong&gt
+    {{info|escape}}
+    &ltbutton type="button" class="close" data-dismiss="alert" aria-label="Close"&gt
+      &ltspan aria-hidden="true"&gt&times;&lt/span&gt
+    &lt/button&gt
+  &lt/div&gt
+{% endif %}
+{% if error %}
+  &ltdiv class="alert alert-danger alert-dismissible mt-2" role="alert"&gt
+    &ltstrong&gtERROR :&lt/strong&gt
+    {{error|escape}}
+    &ltbutton type="button" class="close" data-dismiss="alert" aria-label="Close"&gt
+      &ltspan aria-hidden="true"&gt&times;&lt/span&gt
+    &lt/button&gt
+  &lt/div&gt
+{% endif %}
+</code></pre>
+{% endverbatim %}

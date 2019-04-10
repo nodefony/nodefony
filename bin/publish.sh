@@ -177,7 +177,7 @@ publish (){
   # PUBLISH CORE BUNDLES
   publish_core_bundles
   # PUBLISH DEMO BUNDLE
-  publish_demo_bundles
+  #publish_demo_bundles
   sleep 10;
   # UPGRADE NODEFONY
   upgrade_nodefony

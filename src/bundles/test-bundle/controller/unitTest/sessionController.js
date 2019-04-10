@@ -84,29 +84,6 @@ module.exports = class sessionController extends nodefony.controller {
       this.session.setMetaBag("kernel.domain", this.kernel.domain);
     }
     return this.renderJson(kernelMeta);
-    let attributes = this.session.getAttributes();
-    console.log(attributes)
-    let metas = this.session.getMetas();
-    console.log(metas)
-    if (!foo) {
-      foo = this.session.set("foo", {
-        bar: true
-      });
-    }
-    return this.renderJson(foo);
-    console.log(this.session.get());
-    let ele = this.session.get("sboob");
-    if (!ele) {
-      this.session.set("ele", this.kernel.domain);
-      this.session.setParameters("ele.foo.bar", this.kernel.domain);
-      ele = this.session.set("sboob", {
-        ele: "foo"
-      });
-    }
-
-    return this.renderJson({
-      attr: ele
-    });
   }
 
 };

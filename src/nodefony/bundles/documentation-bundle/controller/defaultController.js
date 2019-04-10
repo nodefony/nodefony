@@ -125,7 +125,6 @@ module.exports = class defaultController extends nodefony.controller {
   }
 
   subSectionAction(version, bundle, section) {
-
     let subsection = null;
     let Path = null;
     let finder = null;
