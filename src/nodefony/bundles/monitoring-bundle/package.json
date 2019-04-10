@@ -21,7 +21,7 @@
     "file-loader": "^3.0.1",
     "font-awesome": "^4.7.0",
     "less-loader": "^4.1.0",
-    "mini-css-extract-plugin": "^0.5.0",
+    "mini-css-extract-plugin": "^0.6.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "qs": "^6.7.0",
     "request": "^2.88.0",

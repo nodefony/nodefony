@@ -84,7 +84,10 @@ module.exports = nodefony.register("Container", function () {
     }
 
     set(name, object) {
-      return this.protoService.prototype[name] = object;
+      if (name) {
+        return this.protoService.prototype[name] = object;
+      }
+      throw new Error("Container bad argument name");
     }
 
     get(name) {

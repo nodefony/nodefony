@@ -28,17 +28,38 @@ module.exports = nodefony.registerTemplate("twig", function () {
       this.name = "Twig";
     }
 
-    renderFile(file, option, callback) {
-      if (!option) {
-        option = {};
-      }
+    renderFile(file, option = {}, callback = null) {
       option.settings = nodefony.extend(true, {}, twigOptions, {
         views: this.rootDir,
         'twig options': {
           cache: this.cache
         }
       });
+      if (!callback) {
+        return new Promise((resolve, reject) => {
+          try {
+            if (!(file instanceof nodefony.fileClass)) {
+              file = new nodefony.fileClass(file);
+            }
+            return this.engine.renderFile(file.path, option, (error, result) => {
+              if (error || result === undefined) {
+                if (!error) {
+                  error = new Error("ERROR PARSING TEMPLATE :" + file.path);
+                  return reject(error);
+                }
+                return reject(error);
+              }
+              return resolve(result);
+            });
+          } catch (e) {
+            callback(e, null);
+          }
+        });
+      }
       try {
+        if (!(file instanceof nodefony.fileClass)) {
+          file = new nodefony.fileClass(file);
+        }
         return this.engine.renderFile(file.path, option, callback);
       } catch (e) {
         callback(e, null);

@@ -1,14 +1,14 @@
 /**
- *	@class defaultController
+ *	@class mailController
  *	@constructor
  *	@param {class} container
  *	@param {class} context
  *
  *  @Route ("/nodefony/test/mail")
  */
-const puppeteer = require('puppeteer');
+//const puppeteer = require('puppeteer');
 
-module.exports = class defaultController extends nodefony.controller {
+module.exports = class mailController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
@@ -25,7 +25,7 @@ module.exports = class defaultController extends nodefony.controller {
       });
   }
 
-  async renderPdf(html) {
+  /*async renderPdf(html) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(html);
@@ -36,12 +36,12 @@ module.exports = class defaultController extends nodefony.controller {
     });
     await browser.close();
     return buffer;
-  }
+  }*/
 
   /**
-   *  @Route ("/responsive", name="nodefony-mail-responsive")
+   *  Route ("/responsive", name="nodefony-mail-responsive")
    */
-  mail2Action() {
+  /*mail2Action() {
     this.hideDebugBar();
     return this.render("mail-bundle::responsive.mail.html.twig", {
         name: this.kernel.projectName
@@ -51,7 +51,7 @@ module.exports = class defaultController extends nodefony.controller {
         return this.mailer.juiceResources(html, {}, this.context)
           .then((htmlp) => {
             return this.sendMail({
-                to: "ccamensuli@gmail.com, christophe.camensuli@sfr.com", // list of receivers`
+                to: "ccamensuli@gmail.com", // list of receivers`
                 from: "ccamensuli@free.fr",
                 subject: `${this.kernel.projectName} ✔`, // Subject line
                 //text: "Hello world?", // plain text body
@@ -77,7 +77,7 @@ module.exports = class defaultController extends nodefony.controller {
         this.logger(e, "ERROR");
         throw e;
       });
-  }
+  }*/
 
   /**
    *

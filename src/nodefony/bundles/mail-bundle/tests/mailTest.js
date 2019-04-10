@@ -12,22 +12,22 @@
  *
  */
 const assert = require('assert');
-const http = require("http");
+//const http = require("http");
 
 describe("BUNDLE mail", function () {
 
-  describe('CORE', function () {
+  describe('CORE', () => {
 
-    beforeEach(function () {})
+    beforeEach(() => {});
 
-    before(function () {})
+    before(() => {});
 
     // EXAMPLE  NODEFONY
     it("NAMESPACE LOADED", function (done) {
       // check nodefony namespace
       assert.equal(typeof nodefony, "object");
       // check instance kernel
-      assert.equal(kernel instanceof nodefony.kernel, true)
+      assert.equal(kernel instanceof nodefony.kernel, true);
       done();
     });
   });

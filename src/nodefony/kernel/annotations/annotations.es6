@@ -8,6 +8,9 @@ module.exports = nodefony.register("Annotations", function () {
 
   const parseKeyValue = function (tab, obj) {
     for (let i = 0; i < tab.length; i++) {
+      if (!tab[i]) {
+        continue;
+      }
       let res = regKeyValue.exec(tab[i]);
       let key = res[1].replace(/["' ]/g, "");
       let value = res[2].replace(/["']/g, "");

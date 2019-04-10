@@ -385,13 +385,13 @@ module.exports = nodefony.register("controller", function () {
       }
     }
 
-    renderRawView(path, param) {
+    renderRawView(Path, param) {
       let extendParam = this.httpKernel.extendTemplate(param, this.context);
       try {
-        this.serviceTemplating.renderFile(path, extendParam, (error, result) => {
+        this.serviceTemplating.renderFile(Path, extendParam, (error, result) => {
           if (error || result === undefined) {
             if (!error) {
-              error = new Error("ERROR PARSING TEMPLATE :" + path.path);
+              error = new Error("ERROR PARSING TEMPLATE :" + Path.path);
             }
             extendParam = null;
             throw error;
@@ -417,9 +417,24 @@ module.exports = nodefony.register("controller", function () {
       return new Promise((resolve, reject) => {
         try {
           let file = this.getFile(Path);
-
           return resolve(file.readAsync());
         } catch (e) {
+          return reject(e);
+        }
+      });
+    }
+
+    renderTwigFile(Path, param) {
+      return new Promise((resolve, reject) => {
+        let extendParam = null;
+        try {
+          if (!(Path instanceof nodefony.fileClass)) {
+            Path = new nodefony.fileClass(Path);
+          }
+          extendParam = this.httpKernel.extendTemplate(param, this.context);
+          return resolve(this.serviceTemplating.renderFile(Path, extendParam));
+        } catch (e) {
+          extendParam = null;
           return reject(e);
         }
       });

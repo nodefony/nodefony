@@ -74,36 +74,36 @@ module.exports = class httpKernel extends nodefony.Service {
     try {
       let alias = [];
       switch (nodefony.typeOf(this.kernel.domainAlias)) {
-        case "string":
-          alias = this.kernel.domainAlias.split(" ");
-          Array.prototype.unshift.call(alias, "^" + this.kernel.domain + "$");
-          for (let i = 0; i < alias.length; i++) {
-            if (i === 0) {
-              str = alias[i];
-            } else {
-              str += "|" + alias[i];
-            }
+      case "string":
+        alias = this.kernel.domainAlias.split(" ");
+        Array.prototype.unshift.call(alias, "^" + this.kernel.domain + "$");
+        for (let i = 0; i < alias.length; i++) {
+          if (i === 0) {
+            str = alias[i];
+          } else {
+            str += "|" + alias[i];
           }
-          break;
-        case "object":
-          let first = true;
-          for (let myAlias in this.kernel.domainAlias) {
-            if (first) {
-              first = false;
-              str = this.kernel.domainAlias[myAlias];
-            } else {
-              str += "|" + this.kernel.domainAlias[myAlias];
-            }
+        }
+        break;
+      case "object":
+        let first = true;
+        for (let myAlias in this.kernel.domainAlias) {
+          if (first) {
+            first = false;
+            str = this.kernel.domainAlias[myAlias];
+          } else {
+            str += "|" + this.kernel.domainAlias[myAlias];
           }
-          break;
-        case "array":
-          str = "^" + this.kernel.domain + "$";
-          for (let i = 0; i < this.kernel.domainAlias.length; i++) {
-            str += "|" + this.kernel.domainAlias[i];
-          }
-          break;
-        default:
-          throw new Error("Config file bad format for domain alias must be a string ");
+        }
+        break;
+      case "array":
+        str = "^" + this.kernel.domain + "$";
+        for (let i = 0; i < this.kernel.domainAlias.length; i++) {
+          str += "|" + this.kernel.domainAlias[i];
+        }
+        break;
+      default:
+        throw new Error("Config file bad format for domain alias must be a string ");
       }
       if (str) {
         this.regAlias = new RegExp(str);
@@ -200,7 +200,8 @@ module.exports = class httpKernel extends nodefony.Service {
         url: context.request.url,
         environment: this.kernel.environment,
         debug: this.kernel.debug,
-        local: context.translation.defaultLocale.substr(0, 2)
+        local: context.translation.defaultLocale.substr(0, 2),
+        core: this.kernel.isCore
       },
       getFlashBag: context.getFlashBag.bind(context),
       render: context.render.bind(context),
@@ -248,30 +249,30 @@ module.exports = class httpKernel extends nodefony.Service {
       }
     }
     switch (typeof this.cdn) {
-      case "object":
-        if (!this.cdn) {
-          return "";
-        }
-        if (this.cdn.global) {
-          return this.cdn.global;
-        }
-        if (!type) {
-          let txt = "CDN ERROR getCDN bad argument type  ";
-          this.logger(txt, "ERROR");
-          throw new Error(txt);
-        }
-        if (type in this.cdn) {
-          if (this.cdn[type][wish]) {
-            return this.cdn[type][wish];
-          }
-        }
+    case "object":
+      if (!this.cdn) {
         return "";
-      case "string":
-        return this.cdn || "";
-      default:
-        let txt = "CDN CONFIG ERROR ";
+      }
+      if (this.cdn.global) {
+        return this.cdn.global;
+      }
+      if (!type) {
+        let txt = "CDN ERROR getCDN bad argument type  ";
         this.logger(txt, "ERROR");
         throw new Error(txt);
+      }
+      if (type in this.cdn) {
+        if (this.cdn[type][wish]) {
+          return this.cdn[type][wish];
+        }
+      }
+      return "";
+    case "string":
+      return this.cdn || "";
+    default:
+      let txt = "CDN CONFIG ERROR ";
+      this.logger(txt, "ERROR");
+      throw new Error(txt);
     }
   }
 
@@ -283,25 +284,25 @@ module.exports = class httpKernel extends nodefony.Service {
       next = 401;
     }
     switch (next) {
-      case 200:
-        return next;
-      default:
-        this.logger("\x1b[31m  DOMAIN Unauthorized \x1b[0mREQUEST DOMAIN : " + context.domain, "ERROR");
-        let error = new Error("Domain : " + context.domain + " Unauthorized ");
-        error.code = next;
-        throw error;
-        /*switch ( context.type ){
-            case "HTTP":
-            case "HTTPS":
-              this.logger("\x1b[31m  DOMAIN Unauthorized \x1b[0mREQUEST DOMAIN : " + context.domain ,"ERROR");
-              let error = new Error("Domain : "+context.domain+" Unauthorized ");
-              error.code = next ;
-              throw error ;
-            case "WEBSOCKET":
-            case "WEBSOCKET SECURE":
-              context.close(3001, "DOMAIN Unauthorized "+ context.domain );
-            break;
-        }*/
+    case 200:
+      return next;
+    default:
+      this.logger("\x1b[31m  DOMAIN Unauthorized \x1b[0mREQUEST DOMAIN : " + context.domain, "ERROR");
+      let error = new Error("Domain : " + context.domain + " Unauthorized ");
+      error.code = next;
+      throw error;
+      /*switch ( context.type ){
+          case "HTTP":
+          case "HTTPS":
+            this.logger("\x1b[31m  DOMAIN Unauthorized \x1b[0mREQUEST DOMAIN : " + context.domain ,"ERROR");
+            let error = new Error("Domain : "+context.domain+" Unauthorized ");
+            error.code = next ;
+            throw error ;
+          case "WEBSOCKET":
+          case "WEBSOCKET SECURE":
+            context.close(3001, "DOMAIN Unauthorized "+ context.domain );
+          break;
+      }*/
     }
     return next;
   }
@@ -312,16 +313,16 @@ module.exports = class httpKernel extends nodefony.Service {
     let result = null;
     try {
       switch (true) {
-        case (error instanceof nodefony.securityError):
-        case (error instanceof nodefony.httpError):
-          httpError = error;
-          break;
-        default:
-          if (context.response && context.response.statusCode === 200) {
-            httpError = new nodefony.httpError(error, 500, container);
-          } else {
-            httpError = new nodefony.httpError(error, null, container);
-          }
+      case (error instanceof nodefony.securityError):
+      case (error instanceof nodefony.httpError):
+        httpError = error;
+        break;
+      default:
+        if (context.response && context.response.statusCode === 200) {
+          httpError = new nodefony.httpError(error, 500, container);
+        } else {
+          httpError = new nodefony.httpError(error, null, container);
+        }
       }
       if (!httpError.context) {
         httpError.context = context;
@@ -395,13 +396,13 @@ module.exports = class httpKernel extends nodefony.Service {
     let container = this.container.enterScope("request");
     //if ( domain ) { domain.container = container ; }
     switch (type) {
-      case "HTTP":
-      case "HTTPS":
-      case "HTTP2":
-        return this.handleHttp(container, request, response, type);
-      case "WEBSOCKET":
-      case "WEBSOCKET SECURE":
-        return this.handleWebsocket(container, request, type);
+    case "HTTP":
+    case "HTTPS":
+    case "HTTP2":
+      return this.handleHttp(container, request, response, type);
+    case "WEBSOCKET":
+    case "WEBSOCKET SECURE":
+      return this.handleWebsocket(container, request, type);
     }
   }
 

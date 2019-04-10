@@ -255,7 +255,7 @@ module.exports = nodefony.register("Response", function () {
     end(data, encoding) {
       if (this.response) {
         this.ended = true;
-        return Promise.resolve(this.response.end(data, encoding));
+        return Promise.resolve(this.response.end(data, (encoding || this.encoding)));
       }
       return Promise.resolve(null);
     }

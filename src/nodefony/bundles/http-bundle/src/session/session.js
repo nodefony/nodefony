@@ -2,23 +2,23 @@
  *
  *    CLASS SESSION
  */
-nodefony.register("Session", function() {
+nodefony.register("Session", function () {
 
   const algorithm = 'aes-256-ctr';
   const password = 'd6F3Efeq';
 
-  const checkSecureReferer = function() {
+  const checkSecureReferer = function () {
     let host = null;
     switch (this.context.type) {
-      case "HTTP":
-      case "HTTPS":
-      case "HTTP2":
-        host = this.context.request.request.headers.host;
-        break;
-      case "WEBSOCKET":
-      case "WEBSOCKET SECURE":
-        host = this.context.request.httpRequest.headers.host;
-        break;
+    case "HTTP":
+    case "HTTPS":
+    case "HTTP2":
+      host = this.context.request.request.headers.host;
+      break;
+    case "WEBSOCKET":
+    case "WEBSOCKET SECURE":
+      host = this.context.request.httpRequest.headers.host;
+      break;
     }
     let meta = this.getMetaBag("host");
     if (host === meta) {
@@ -32,7 +32,7 @@ nodefony.register("Session", function() {
     }
   };
 
-  const setMetasSession = function() {
+  const setMetasSession = function () {
     let time = new Date();
     this.setMetaBag("lifetime", this.settings.cookie.maxAge);
     this.setMetaBag("context", this.contextSession || null);
@@ -72,10 +72,11 @@ nodefony.register("Session", function() {
       this.flashBag = {};
     }
 
-    set(name, object) {
-      //console.log(name)
-      //console.log(object)
-      return super.set(name, object);
+    get(name) {
+      if (!name) {
+        return this.protoService.prototype;
+      }
+      return super.get(name);
     }
 
     encrypt(text) {
@@ -114,14 +115,14 @@ nodefony.register("Session", function() {
       try {
         let ret = this.checkStatus();
         switch (ret) {
-          case false:
-            return new Promise((resolve /*, reject*/ ) => {
-              return resolve(this);
-            });
-          case "restart":
-            return this.start(context, contextSession);
-          default:
-            return this.getSession(contextSession);
+        case false:
+          return new Promise((resolve /*, reject*/ ) => {
+            return resolve(this);
+          });
+        case "restart":
+          return this.start(context, contextSession);
+        default:
+          return this.getSession(contextSession);
         }
       } catch (e) {
         return new Promise((resolve, reject) => {
@@ -132,23 +133,23 @@ nodefony.register("Session", function() {
 
     checkStatus() {
       switch (this.status) {
-        case "active":
-          this.manager.logger("SESSION ALLREADY STARTED ==> " + this.name + " : " + this.id, "WARNING");
-          return false;
-        case "disabled":
-          try {
-            this.storage = this.manager.initializeStorage();
-            if (this.storage) {
-              this.status = "none";
-              return "restart";
-            }
-          } catch (e) {
-            this.manager.logger("SESSION STORAGE HANDLER NOT FOUND ", "ERROR");
-            throw new Error("SESSION STORAGE HANDLER NOT FOUND ");
+      case "active":
+        this.manager.logger("SESSION ALLREADY STARTED ==> " + this.name + " : " + this.id, "WARNING");
+        return false;
+      case "disabled":
+        try {
+          this.storage = this.manager.initializeStorage();
+          if (this.storage) {
+            this.status = "none";
+            return "restart";
           }
-          break;
-        default:
-          return true;
+        } catch (e) {
+          this.manager.logger("SESSION STORAGE HANDLER NOT FOUND ", "ERROR");
+          throw new Error("SESSION STORAGE HANDLER NOT FOUND ");
+        }
+        break;
+      default:
+        return true;
       }
     }
 
@@ -184,37 +185,37 @@ nodefony.register("Session", function() {
       if (contextSession && this.contextSession !== contextSession) {
         this.manager.logger(`SESSION CONTEXT CHANGE : ${this.contextSession} ==> ${contextSession}`);
         switch (this.strategy) {
-          case "migrate":
-            return this.storage.start(this.id, this.contextSession).then((result) => {
-              this.deSerialize(result);
-              if (!this.isValidSession(result, this.context)) {
-                this.manager.logger("INVALID SESSION ==> " + this.name + " : " + this.id, "WARNING");
-                this.destroy();
-                this.contextSession = contextSession;
-                return this.create(this.lifetime, null);
-              }
-              this.remove();
-              this.manager.logger(`STRATEGY MIGRATE SESSION  ==> ${this.name} : ${this.id}`, "DEBUG");
-              this.migrated = true;
+        case "migrate":
+          return this.storage.start(this.id, this.contextSession).then((result) => {
+            this.deSerialize(result);
+            if (!this.isValidSession(result, this.context)) {
+              this.manager.logger("INVALID SESSION ==> " + this.name + " : " + this.id, "WARNING");
+              this.destroy();
               this.contextSession = contextSession;
               return this.create(this.lifetime, null);
-            }).catch((error) => {
-              throw error;
-            });
-          case "invalidate":
-            this.manager.logger("STRATEGY INVALIDATE SESSION ==> " + this.name + " : " + this.id, "DEBUG");
-            this.destroy();
+            }
+            this.remove();
+            this.manager.logger(`STRATEGY MIGRATE SESSION  ==> ${this.name} : ${this.id}`, "DEBUG");
+            this.migrated = true;
             this.contextSession = contextSession;
-            return new Promise((resolve, reject) => {
-              try {
-                return resolve(this.create(this.lifetime, null));
-              } catch (e) {
-                return reject(e);
-              }
-            });
-          case "none":
-            this.strategyNone = true;
-            break;
+            return this.create(this.lifetime, null);
+          }).catch((error) => {
+            throw error;
+          });
+        case "invalidate":
+          this.manager.logger("STRATEGY INVALIDATE SESSION ==> " + this.name + " : " + this.id, "DEBUG");
+          this.destroy();
+          this.contextSession = contextSession;
+          return new Promise((resolve, reject) => {
+            try {
+              return resolve(this.create(this.lifetime, null));
+            } catch (e) {
+              return reject(e);
+            }
+          });
+        case "none":
+          this.strategyNone = true;
+          break;
         }
         if (!this.strategyNone) {
           return new Promise((resolve /*, reject*/ ) => {
@@ -279,11 +280,13 @@ nodefony.register("Session", function() {
     attributes() {
       return this.protoService.prototype;
     }
+    getAttributes() {
+      return this.attributes();
+    }
 
     metaBag() {
       return this.protoParameters.prototype;
     }
-
     getMetas() {
       return this.metaBag();
     }
@@ -408,9 +411,9 @@ nodefony.register("Session", function() {
 
     clear() {
       delete this.protoService;
-      this.protoService = function() {};
+      this.protoService = function () {};
       delete this.protoParameters;
-      this.protoParameters = function() {};
+      this.protoParameters = function () {};
       delete this.services;
       this.services = new this.protoService();
       delete this.parameters;
@@ -444,14 +447,14 @@ nodefony.register("Session", function() {
       let concat = ip + date + this.randomValueHex(16) + Math.random() * 10;
       let hash = null;
       switch (this.settings.hash_function) {
-        case "md5":
-          hash = crypto.createHash('md5');
-          break;
-        case "sha1":
-          hash = crypto.createHash('sha1');
-          break;
-        default:
-          hash = crypto.createHash('md5');
+      case "md5":
+        hash = crypto.createHash('md5');
+        break;
+      case "sha1":
+        hash = crypto.createHash('sha1');
+        break;
+      default:
+        hash = crypto.createHash('md5');
       }
       let res = hash.update(concat).digest("hex");
 

@@ -91,7 +91,7 @@ module.exports = nodefony.register("http2Response", () => {
     end(data, encoding) {
       if (this.stream) {
         this.ended = true;
-        return Promise.resolve(this.stream.end(data, encoding));
+        return Promise.resolve(this.stream.end(data, (encoding || this.encoding)));
       } else {
         return super.end(data, encoding);
       }

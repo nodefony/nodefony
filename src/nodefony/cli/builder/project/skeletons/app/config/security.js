@@ -43,7 +43,7 @@ module.exports = {
       roles: ["ROLE_MONITORING"],
       requires_channel: "https",
       allow_if: {
-        roles: ["ROLE_ADMIN"]
+        roles: ["ROLE_ADMIN", "ROLE_USER"]
       }
     }],
 

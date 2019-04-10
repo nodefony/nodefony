@@ -64,16 +64,22 @@ config/
                 <br>
                 <ul>
                   <li>
-                    parametrers http(s) servers start , listen domain and port, certificats
+                    Configuring http(s) websoket(s) web servers to start them, listen domain and port, certificats
                   </li>
                   <li>
-                    Domain Alias
+                    Domain Alias, Domain check
                   </li>
                   <li>
-                    AutoLoad differents framework bundles as security monitoring ...</li>
+                    Register Bundles (Local and Core) </li>
                   </li>
                   <li>
-                    locale (Lang) by default for all framework
+                    Locale (Lang) by default for all framework
+                  </li>
+                  <li>
+                    Default node package Manager (yarn, npm)
+                  </li>
+                  <li>
+                    ORM to use (Sequelize, Mongoose)
                   </li>
                 </ul>
 
@@ -247,7 +253,7 @@ module.exports = {
                   <tbody>
                     <tr>
                       <td class="config-parameters">name</td>
-                      <td>Name Framework</td>
+                      <td>Name Project</td>
                       <td>String</td>
                       <td>NODEFONY</td>
                     </tr>
@@ -264,8 +270,8 @@ module.exports = {
                         </p>
                       </td>
                       <td>String</td>
-                      <td>localhost or 192.168.0.230 or 127.0.0.1
-                        <span class="badge">nodefony.com</span></td>
+                      <td>localhost or 192.168.0.230 or domain.com
+                        <span class="badge">0.0.0.0</span></td>
                     </tr>
                     <tr>
                       <td class="config-parameters">system.domainAlias</td>
@@ -397,7 +403,7 @@ module.exports = {
                     </tr>
                     <tr>
                       <td class="config-parameters">orm</td>
-                      <td>ORM Engine (only Sequelize for the moment)</td>
+                      <td>ORM Engine ( Sequelize, Mongoose )</td>
                       <td>String</td>
                       <td>
                         <span class="badge">sequelize</span></td>

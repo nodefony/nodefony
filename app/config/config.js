@@ -242,9 +242,9 @@ module.exports = {
       }
     },
     session: {
-      start: false, // false || true || Name Session Context
+      start: false, // false || true || Session Context Name (waf)
       name: "nodefony",
-      handler: "orm", // files | orm | memcached    => "nodefony.session.storage"
+      handler: "orm", // files | orm | memcached
       //save_path: "./tmp/sessions", // for session.storage.files only
       use_strict_mode: true,
       gc_probability: 1,

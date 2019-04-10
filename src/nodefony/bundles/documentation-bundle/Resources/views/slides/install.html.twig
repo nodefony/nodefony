@@ -39,11 +39,11 @@ lts/dubnium -> v10.15.1
   <section>
     <div class="container-fluid">
       <h2>Nodefony Installation</h2>
-      <h4 style="text-align:center">Command Line Interface</h4>
+      <h4 style="text-align:center"></h4>
       <span>
-        <p>
+        <h4>
           Excutable Installation (Globally Recommanded)
-        </p>
+        </h4>
         <pre><code class="hljs shell">$ npm -g install nodefony
 
 // or with yarn
@@ -63,7 +63,6 @@ Usage: nodefony [options] &ltcommand:task:action&gt [args...]
                 [options] &ltaction&gt [args...]
 
 Options:
-  -V, --version       output the version number
   -d, --debug         Nodefony debug
   -h, --help          Nodefony help
   -v, --version       Nodefony version
@@ -84,6 +83,142 @@ PM2 Process Manager 2
     </div>
   </section>
 
+  <section>
+    <div class="container-fluid">
+      <h2>Nodefony Installation</h2>
+      <h4 style="text-align:center">Build New Project</h4>
+      <span>
+      <pre><code class="hljs shell" >$ nodefony
+       _   _    ___    ____    _____   _____    ___    _   _  __   __
+      | \ | |  / _ \  |  _ \  | ____| |  ___|  / _ \  | \ | | \ \ / /
+      |  \| | | | | | | | | | |  _|   | |_    | | | | |  \| |  \ V /
+      | |\  | | |_| | | |_| | | |___  |  _|   | |_| | | |\  |   | |
+      |_| \_|  \___/  |____/  |_____| |_|      \___/  |_| \_|   |_|
+
+
+    Version : 4.3.1 Platform : darwin Process : nodefony PID : 3520
+
+  Tue Mar 26 2019 11:40:45 INFO nodefony : WELCOME NODEFONY CLI 4.3.1
+  ?  Nodefony CLI :  (Use arrow keys)
+
+  ❯ Create Nodefony Project
+
+  PM2 Tools
+  --------
+  Help
+  Quit
+
+
+  Tue Mar 26 2019 11:45:02 INFO nodefony : WELCOME NODEFONY CLI 4.3.1
+  ?  Nodefony CLI :  Create Nodefony Project
+  ? Enter Nodefony Project Name nodefony-starter
+  ? Enter short description description nodefony-starter
+  ? Project Path /Users/cci/repository
+  ? Please Enter Author Full Name admin
+  ? Please Enter Email Author  admin@nodefony.com
+  ? Enter Server Domain : 0.0.0.0
+  ? Enter server Domain http Port  : 5151
+  ? Enter Server Secure Domain https Port  : 5152
+  ? Choose default ORM  (Mapping Objet Relationnel) : sequelize
+  ? Choose a default Package Manager :  npm
+  ? Do You Want Generate Bundle? No
+  Tue Mar 26 2019 11:45:13 WARNING BUILDER : /Users/cci/repository/nodefony-starter Already exist
+  ? Do You Want Remove : /Users/cci/repository/nodefony-starter? Yes
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :nodefony-starter
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :app
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :appKernel.js
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :package.json
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :doc
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :index.html.twig
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :README.md
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :services
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :Resources
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :views
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :translations
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :scss
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :js
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :databases
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :public
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :manifest.json
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :favicon.ico
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :robots.txt
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :css
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :images
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :js
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :config
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :webpack
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :webpack.config.js
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :config.js
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :routing.js
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :services.js
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :security.js
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :controller
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :appController.js
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :loginController.js
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :usersController.js
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :package.json
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :.gitignore
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :.jshintrc
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :.jshintignore
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :.editorconfig
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :web
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :tmp
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :config
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :certificates
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :openssl
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :ca
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :openssl.cnf
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :ca_intermediate
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :openssl.cnf
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :config.js
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :pm2.config.js
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :bin
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create File      :generateCertificates.sh
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :src
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :bundles
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Create Directory :doc
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :index.html.twig
+  Tue Mar 26 2019 11:45:28 INFO BUILDER : Copy             :README.md
+  Tue Mar 26 2019 11:45:28 INFO nodefony : Create Project nodefony-starter complete
+  Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create Framework directories
+  Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/tmp/upload
+  Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/js
+  Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/css
+  Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/images
+  Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/fonts
+  Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/assets
+  Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/assets/js
+  Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/assets/css
+  Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/assets/images
+  Tue Mar 26 2019 11:45:28 INFO INSTALLER : Create directory /Users/cci/repository/nodefony-starter/web/assets/fonts
+  Tue Mar 26 2019 11:45:28 INFO nodefony : Spawn : npm install
+  ...
+
+  $ cd nodefony-starter
+
+  $ ls -la
+
+      drwxr-xr-x    18 cci  staff     576 26 mar 11:46 .
+      drwxr-xr-x    26 cci  staff     832 26 mar 11:45 ..
+      -rw-r--r--     1 cci  staff     331 26 mar 11:45 .editorconfig
+      drwxr-xr-x    13 cci  staff     416 26 mar 11:45 .git
+      -rw-r--r--     1 cci  staff     326 26 mar 11:45 .gitignore
+      -rw-r--r--     1 cci  staff      13 26 mar 11:45 .jshintignore
+      -rw-r--r--     1 cci  staff    1068 26 mar 11:45 .jshintrc
+      -rw-r--r--     1 cci  staff   21306 26 mar 11:45 README.md
+      drwxr-xr-x    12 cci  staff     384 26 mar 11:47 app
+      drwxr-xr-x     3 cci  staff      96 26 mar 11:45 bin
+      drwxr-xr-x     6 cci  staff     192 26 mar 11:46 config
+      drwxr-xr-x     3 cci  staff      96 26 mar 11:45 doc
+      drwxr-xr-x  1223 cci  staff   39136 26 mar 11:46 node_modules
+      -rw-r--r--     1 cci  staff  730514 26 mar 11:46 package-lock.json
+      -rw-r--r--     1 cci  staff    1005 26 mar 11:46 package.json
+      drwxr-xr-x     3 cci  staff      96 26 mar 11:45 src
+      drwxr-xr-x     4 cci  staff     128 26 mar 11:47 tmp
+      drwxr-xr-x     7 cci  staff     224 26 mar 11:45 web
+
+      </code></pre>
+  </section>
 
     <section>
       <div class="container-fluid">
@@ -453,7 +588,5 @@ Thu Feb 28 2019 16:22:42 INFO KERNEL CONSOLE  : NODEFONY Kernel Life Cycle Termi
         </span>
       </div>
     </section>
-
-    
 
 </section>

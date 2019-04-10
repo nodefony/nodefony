@@ -4,28 +4,48 @@
 const path = require("path");
 const fs = require("fs");
 
-const nodefony = function() {
+const nodefony = function () {
   try {
     fs.lstatSync(path.resolve(".core"));
     return require(path.resolve("src", "nodefony"));
-  } catch (e) {}
+  } catch (e) {
+    if (e && e.name && e.name === "nodefonyError") {
+      throw e;
+    }
+  }
   try {
     let res = require(path.resolve(process.cwd(), "node_modules", "nodefony"));
     let ret = null;
     try {
       ret = require("nodefony");
-    } catch (e) {}
+    } catch (e) {
+      if (e && e.name && e.name === "nodefonyError") {
+        throw e;
+      }
+    }
     if (ret && (ret.version !== res.version)) {
       res.warning = `Module nodefony global = ${ret.version}\nModule nodefony local = ${res.version}`;
     }
     return res;
-  } catch (e) {}
+  } catch (e) {
+    if (e && e.name && e.name === "nodefonyError") {
+      throw e;
+    }
+  }
   try {
     return require("nodefony");
-  } catch (e) {}
+  } catch (e) {
+    if (e && e.name && e.name === "nodefonyError") {
+      throw e;
+    }
+  }
   try {
     return require(path.resolve(__dirname, ".."));
-  } catch (e) {}
+  } catch (e) {
+    if (e && e.name && e.name === "nodefonyError") {
+      throw e;
+    }
+  }
   try {
     const globalPath = path.resolve(process.argv[1], '..', '..', 'lib', 'node_modules');
     return require(path.resolve(globalPath, "nodefony"));
@@ -34,7 +54,7 @@ const nodefony = function() {
   }
 }();
 
-const isElectronDev = function() {
+const isElectronDev = function () {
   return process.mainModule.filename.indexOf('app.asar') === -1;
 };
 

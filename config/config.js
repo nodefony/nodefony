@@ -87,7 +87,6 @@ module.exports = {
      */
     bundles: {
       "test-bundle": path.resolve("src", "bundles", "test-bundle"),
-      //"local-bundle": require("local-bundle")
       //"demo-bundle": "file:src/bundles/demo-bundle",
       //"socketio-bundle": "file:src/bundles/socketio-bundle",
       //"workbox-bundle": "file:src/bundles/workbox-bundle",

@@ -21,7 +21,8 @@ module.exports = webpackMerge({
   target: "web",
   entry: {
     test: ["./js/test.js"],
-    vue: ["../../src/main.js"]
+    vue: ["../../src/main.js"],
+    mail: ["./js/mail.js"]
   },
   output: {
     path: public,
@@ -51,14 +52,36 @@ module.exports = webpackMerge({
         }
       }]
     }, {
-      // CSS EXTRACT
-      test: new RegExp("\.(less|css)$"),
+      test: require.resolve("jquery"),
+      loader: "expose-loader?$!expose-loader?jQuery"
+    }, {
+      test: /jquery\..*\.js/,
+      loader: "imports-loader?$=jquery,jQuery=jquery,this=>window"
+    }, {
+      test: /\.(sa|sc|c)ss$/,
       use: [
-        //'css-hot-loader',
-        MiniCssExtractPlugin.loader,
-        'css-loader',
-        'less-loader'
-      ]
+          //'css-hot-loader',
+          MiniCssExtractPlugin.loader,
+        {
+          loader: "css-loader",
+          options: {
+            sourceMap: true
+          }
+          }, {
+          loader: 'resolve-url-loader',
+          options: {}
+          }, {
+          loader: 'postcss-loader', // Run post css actions
+          options: {
+            plugins: () => [require('precss'), require('autoprefixer')]
+          }
+          }, {
+          loader: "sass-loader",
+          options: {
+            sourceMap: true
+          }
+          }
+        ]
     }, {
       // FONTS
       test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),

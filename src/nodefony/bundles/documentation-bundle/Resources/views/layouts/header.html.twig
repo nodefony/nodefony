@@ -47,6 +47,7 @@
         <a class="nav-link" href="#" style="color:red">{{ "progress" | trans() | upper()}}</a>
       </li>
     </ul>
+    {% if nodefony.core %}
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
         <form action="{{url('documentation-version')}}" id='formVersion' method="POST" class="form-inline">
@@ -68,8 +69,8 @@
           </div>
         </form>
       </li>
-
     </ul>
+    {% endif %}
     <ul class="navbar-nav mt-2 mt-lg-0">
       <form action="{{url('doc-lang')}}" name="formLang" id="formLang" class="form-inline">
         <div class="form-inline input-group">

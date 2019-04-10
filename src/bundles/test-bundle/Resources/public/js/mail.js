@@ -14,7 +14,7 @@
 import 'bootstrap';
 
 // bootstrap scss framework
-import '../../scss/custom.scss';
+import '../../mail/scss/custom.scss';
 
 
 /**

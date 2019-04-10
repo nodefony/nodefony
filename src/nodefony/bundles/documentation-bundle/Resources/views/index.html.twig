@@ -1,5 +1,6 @@
 {% extends "./layouts/documentationLayout.html.twig" %}
 
+
 {% block stylesheets %}
   <link rel="stylesheet" href="/documentation-bundle/assets/css/documentation.css"/>
 {% endblock %}
@@ -16,7 +17,7 @@
   </script>
 {% endblock %}
 
-{% if readme %}
+{% if readme!= null %}
   {% block readme %}
     {{readme}}
   {% endblock %}
