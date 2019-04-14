@@ -18,7 +18,7 @@
     "babel-loader": "^8.0.5",
     "bootstrap": "^4.3.1",
     "bootstrap-datepicker": "^1.8.0",
-    "bootstrap-switch": "^3.3.4",
+    "bootstrap-switch": "^3.4.0",
     "clean-webpack-plugin": "^2.0.1",
     "css-hot-loader": "^1.4.4",
     "css-loader": "^2.1.1",
@@ -26,7 +26,7 @@
     "file-loader": "^3.0.1",
     "font-awesome": "^4.7.0",
     "image-webpack-loader": "^4.6.0",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.0",
     "mini-css-extract-plugin": "^0.6.0",
     "node-sass": "^4.11.0",
     "nouislider": "^13.1.4",
@@ -42,7 +42,7 @@
     "style-loader": "^0.23.1",
     "terser-webpack-plugin": "^1.2.3",
     "tether": "^1.4.5",
-    "webpack": "^4.29.6",
+    "webpack": "^4.30.0",
     "webpack-merge": "^4.2.1"
   },
   "devDependencies": {

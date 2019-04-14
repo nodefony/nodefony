@@ -135,7 +135,7 @@ module.exports = class mailer extends nodefony.Service {
     });
   }
 
-  async sendMail(options, transporterName = this.config.default, context = null) {
+  async sendMail(options, transporterName = this.config.default) {
     if (!this.transporter) {
       throw new Error("Service mail no transporter found ");
     }

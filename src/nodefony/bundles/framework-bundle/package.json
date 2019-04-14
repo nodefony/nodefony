@@ -12,7 +12,7 @@
   ],
   "dependencies": {
     "memory-fs": "^0.4.1",
-    "webpack": "^4.29.6"
+    "webpack": "^4.30.0"
   },
   "repository": {
     "type": "git",

@@ -22,7 +22,7 @@
     "vue": "^2.6.10",
     "vue-flatpickr-component": "^8.1.2",
     "vue-lazyload": "^1.2.6",
-    "vue-router": "^3.0.3",
+    "vue-router": "^3.0.4",
     "vue2-transitions": "^0.3.0"
   },
   "devDependencies": {
