@@ -140,6 +140,10 @@ You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nod
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
 # or
 wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+
+$ source ~/.bashrc # or source ~/.bash_profile
+$ nvm ls-remote
+$ nvm ls
 ```
 
 **[Node.js](https://nodejs.org/) Installation with [NVM](https://github.com/creationix/nvm)** :
