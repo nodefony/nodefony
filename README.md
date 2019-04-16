@@ -142,8 +142,8 @@ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | b
 wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
 
 $ source ~/.bashrc # or source ~/.bash_profile
-$ nvm ls-remote
-$ nvm ls
+$ nvm ls-remote # show all remote versions  
+$ nvm ls # show local versions
 ```
 
 **[Node.js](https://nodejs.org/) Installation with [NVM](https://github.com/creationix/nvm)** :
