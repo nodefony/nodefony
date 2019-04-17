@@ -289,6 +289,7 @@ module.exports = nodefony.register("Bundle", function() {
     findWebPackConfig() {
       return new Promise((resolve, reject) => {
         let res = null;
+        let file = null;
         switch (this.settings.type) {
           case "angular":
             try {
@@ -302,7 +303,7 @@ module.exports = nodefony.register("Bundle", function() {
             }
             break;
           case "react":
-            let file = null;
+            file = null;
             try {
               switch (process.env.NODE_ENV) {
                 case "development":
@@ -313,6 +314,16 @@ module.exports = nodefony.register("Bundle", function() {
               res = new nodefony.fileClass(file);
               process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
               return resolve(this.webpackService.loadConfig(res, this));
+            } catch (e) {
+              return reject(e);
+            }
+            break;
+          case "vue":
+            file = path.resolve(this.path, "node_modules", "@vue", "cli-service", "webpack.config.js");
+            try {
+              this.webpackConfigFile = new nodefony.fileClass(file);
+              process.env.VUE_CLI_CONTEXT = this.path;
+              return resolve(this.webpackService.loadConfig(this.webpackConfigFile, this));
             } catch (e) {
               return reject(e);
             }
