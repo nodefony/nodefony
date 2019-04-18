@@ -1,6 +1,6 @@
-nodefony.register.call(nodefony.session.storage, "sequelize", function() {
+nodefony.register.call(nodefony.session.storage, "sequelize", function () {
 
-  const finderGC = function(msMaxlifetime, contextSession) {
+  const finderGC = function (msMaxlifetime, contextSession) {
     let mydate = new Date(new Date() - msMaxlifetime);
     let query = {};
     query.attributes = ['context', 'updatedAt', 'session_id'];
@@ -14,6 +14,9 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function() {
     /*query.logging = (value) => {
       return this.manager.logger(value);
     };*/
+    if (!this.entity) {
+      return Promise.resolve(true)
+    }
     return this.entity.destroy(query).then((results) => {
       let severity = "DEBUG";
       if (results) {
@@ -89,6 +92,9 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function() {
     open(contextSession) {
       if (this.orm.kernel.type !== "CONSOLE") {
         this.gc(this.gc_maxlifetime, contextSession);
+        if (!this.entity) {
+          return Promise.resolve(0);
+        }
         return this.entity.count({
           where: {
             "context": contextSession
@@ -195,9 +201,9 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function() {
               session_id: id,
               context: (contextSession || "default")
             }
-          }).then(function() {
+          }).then(function () {
             return serialize;
-          }).catch(function(error) {
+          }).catch(function (error) {
             throw error;
           });
         } else {
