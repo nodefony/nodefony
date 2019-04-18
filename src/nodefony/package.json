@@ -47,6 +47,8 @@
     "@nodefony/security-bundle": "^4.3.3",
     "@nodefony/sequelize-bundle": "^4.3.3",
     "@nodefony/unittests-bundle": "^4.3.3",
+    "@vue/cli": "^3.6.3",
+    "@vue/cli-service-global": "^3.6.0",
     "asciify": "^1.3.5",
     "async": "^2.6.2",
     "bluebird": "^3.5.4",

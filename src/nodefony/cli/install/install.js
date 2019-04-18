@@ -47,11 +47,11 @@ module.exports = class installProject extends nodefony.Builder {
   rebuild(cwd = path.resolve(".")) {
     let cmd = null;
     switch (nodefony.packageManager) {
-    case 'yarn':
-      cmd = ["install", "--force"];
-      break;
-    default:
-      cmd = ["install"];
+      case 'yarn':
+        cmd = ["install", "--force"];
+        break;
+      default:
+        cmd = ["install"];
     }
     try {
       this.cli.rm("-rf", path.resolve(cwd, "node_modules"));
@@ -75,7 +75,8 @@ module.exports = class installProject extends nodefony.Builder {
         this.logger("npm link " + argv);
         cmd = this.cli.spawn("npm", tab, {
           cwd: cwd,
-          shell: true
+          shell: true,
+          stdio: "inherit"
         }, (code) => {
           if (code === 1) {
             return reject(new Error("nmp link error : " + code));
@@ -100,7 +101,8 @@ module.exports = class installProject extends nodefony.Builder {
         let cmd = null;
         cmd = this.cli.spawn(path.resolve(cwd, "bin", "generateCertificates.sh"), [], {
           cwd: cwd,
-          shell: true
+          shell: true,
+          stdio: "inherit"
         }, (code) => {
           if (code !== 0) {
             return reject(new Error("generateCertificates error : " + code));

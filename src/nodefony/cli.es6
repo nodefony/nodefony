@@ -720,7 +720,8 @@ module.exports = nodefony.register("cli", function() {
           this.debug = this.commander.debug || false;
           cmd = this.spawn("npm", argv, {
             cwd: cwd,
-            shell: true
+            shell: true,
+            stdio: "inherit"
           }, (code) => {
             this.logger(`Command : npm ${argv.join(' ')} Finished cwd : ${cwd}`);
             if (code === 0) {
@@ -754,7 +755,8 @@ module.exports = nodefony.register("cli", function() {
           this.debug = this.commander.debug || false;
           cmd = this.spawn("yarn", argv, {
             cwd: cwd,
-            shell: true
+            shell: true,
+            stdio: "inherit"
           }, (code) => {
             this.logger(`Command : yarn ${argv.join(' ')} Finished cwd : ${cwd}`);
             if (code === 0) {
@@ -775,25 +777,28 @@ module.exports = nodefony.register("cli", function() {
         this.logger(`Spawn : ${command} ${args.join(" ")}`, "INFO");
         cmd = spawn(command, args, options || {});
         //if (this.debug) {
-        cmd.stdout.on('data', (data) => {
-          let str = data.toString();
-          if (str) {
-            if (this.debug) {
-              this.logger(`${command} :\n`, "INFO", blue("STDOUT"));
+        if (cmd.stdout) {
+          cmd.stdout.on('data', (data) => {
+            let str = data.toString();
+            if (str) {
+              if (this.debug) {
+                this.logger(`${command} :\n`, "INFO", blue("STDOUT"));
+              }
+              process.stdout.write(str);
             }
-            process.stdout.write(str);
-          }
-        });
-        cmd.stderr.on('data', (data) => {
-          let str = data.toString();
-          if (str) {
-            if (this.debug) {
-              this.logger(`${command} :\n`, "INFO", red("STDERR"));
+          });
+        }
+        if (cmd.stderr) {
+          cmd.stderr.on('data', (data) => {
+            let str = data.toString();
+            if (str) {
+              if (this.debug) {
+                this.logger(`${command} :\n`, "INFO", red("STDERR"));
+              }
+              process.stdout.write(str);
             }
-            process.stdout.write(str);
-          }
-        });
-        //}
+          });
+        }
         cmd.on('close', (code) => {
           if (this.debug) {
             this.logger(`Child Process exited with code ${code}`, "DEBUG");
@@ -810,7 +815,9 @@ module.exports = nodefony.register("cli", function() {
           throw new Error(`Child Process exited with error :  ${err}`);
           //this.terminate(1);
         });
-        process.stdin.pipe(cmd.stdin);
+        if (cmd.stdin) {
+          process.stdin.pipe(cmd.stdin);
+        }
       } catch (e) {
         this.logger(e, "ERROR");
         throw e;

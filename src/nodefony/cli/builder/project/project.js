@@ -1,3 +1,9 @@
+const Vue = require("../vue/vueBuilder.js");
+const React = require("../react/reactBuilder.js");
+const Bootstrap = require("../bootstrap/bootstrapBuilder.js");
+const SandBox = require("../sandBox/sandBoxBuilder.js");
+const WorkBox = require("../workbox/workBoxBuilder.js");
+
 module.exports = class generateProject extends nodefony.Builder {
 
   constructor(cli, cmd, args) {
@@ -12,7 +18,8 @@ module.exports = class generateProject extends nodefony.Builder {
     }
     nodefony.extend(this.cli.response, {
       name: this.name || "nodefony-starter",
-      description: "description nodefony-starter",
+      description: "Project Description",
+      front: "sandbox",
       path: this.location || path.resolve("."),
       authorFullName: "admin",
       authorMail: "admin@nodefony.com",
@@ -25,7 +32,11 @@ module.exports = class generateProject extends nodefony.Builder {
       orm: "sequelize",
       npm: 'npm'
     });
+    if (!this.name) {
+      this.name = this.cli.response.name;
+    }
 
+    this.setFrontPath("sandbox");
     this.pathSkeleton = path.resolve(__dirname, "skeletons");
   }
 
@@ -47,12 +58,48 @@ module.exports = class generateProject extends nodefony.Builder {
         type: 'input',
         name: 'description',
         message: 'Enter short description',
-        default: this.cli.response.description,
+        //default: `${this.cli.response.description} ${this.name}`,
+        validate: (value) => {
+          if (!value) {
+            this.cli.response.description = `${this.cli.response.description} ${this.name}`;
+          }
+          return true;
+        },
         filter: (value) => {
-          if (value === "description project") {
+          if (value === "Project Description") {
             return `Project ${this.name}`;
           }
           return value;
+        }
+      }, {
+        type: 'list',
+        name: 'front',
+        default: 0,
+        pageSize: 5,
+        choices: ["Bootstrap (default)", "Vue.js", "React", "Progressive Web App (PWA) Workbox", "Sandbox (without Front framwork)"],
+        message: 'Choose Application Type (Mapping Front Framework in App) :',
+        filter: (value) => {
+          let front = null;
+          switch (value) {
+            case "Sandbox (without Front framwork)":
+              front = "sandbox";
+              break;
+            case "Bootstrap (default)":
+              front = 'bootstrap';
+              break;
+            case "Vue.js":
+              front = "vue";
+              break;
+            case "React":
+              front = 'react';
+              break;
+            case "Progressive Web App (PWA) Workbox":
+              front = 'workbox';
+              break;
+            default:
+              front = value;
+          }
+          return this.setFrontPath(front);
         }
       }, {
         type: 'input',
@@ -81,11 +128,23 @@ module.exports = class generateProject extends nodefony.Builder {
         name: 'authorFullName',
         default: this.cli.response.authorFullName,
         message: 'Please Enter Author Full Name',
+        filter: (value) => {
+          if (!value) {
+            return this.cli.response.authorFullName;
+          }
+          return value;
+        }
       }, {
         type: 'input',
         name: 'authorMail',
         default: this.cli.response.authorMail,
         message: 'Please Enter Email Author ',
+        filter: (value) => {
+          if (!value) {
+            return this.cli.response.authorMail;
+          }
+          return value;
+        }
       }, {
         type: 'input',
         name: 'domain',
@@ -137,7 +196,7 @@ module.exports = class generateProject extends nodefony.Builder {
           return this.removeInteractivePath(this.path).then((response) => {
             nodefony.extend(this.cli.response, response);
             if (response.remove) {
-              return this.cli.response;
+              return this.buildFront(this.cli.response);
             }
             let error = new Error(`${this.path} Already exist`);
             error.code = 0;
@@ -146,7 +205,44 @@ module.exports = class generateProject extends nodefony.Builder {
             throw e;
           });
         }
-        return this.cli.response;
+        return this.buildFront(this.cli.response);
+      });
+  }
+
+  setFrontPath(name = "sandbox") {
+    if (!name) {
+      throw new Error("bad front mapping name");
+    }
+    this.frontName = name;
+    this.pathFront = path.resolve(__dirname, "..", this.frontName);
+    return name;
+  }
+
+  buildFront(response) {
+    let Front = null;
+    switch (response.front) {
+      case "vue":
+        Front = new Vue(this);
+        break;
+      case "react":
+        Front = new React(this);
+        break;
+      case 'bootstrap':
+        Front = new Bootstrap(this);
+        break;
+      case 'workbox':
+        Front = new WorkBox(this);
+        break;
+      case 'sandbox':
+      default:
+        Front = new SandBox(this);
+        break;
+    }
+    return Front.generateProject()
+      .then(() => {
+        return response;
+      }).catch(e => {
+        throw e;
       });
   }
 
