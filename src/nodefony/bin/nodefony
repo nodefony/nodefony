@@ -5,6 +5,7 @@ const path = require("path");
 const fs = require("fs");
 
 const nodefony = function () {
+  let error = [];
   try {
     fs.lstatSync(path.resolve(".core"));
     return require(path.resolve("src", "nodefony"));
@@ -12,6 +13,7 @@ const nodefony = function () {
     if (e && e.name && e.name === "nodefonyError") {
       throw e;
     }
+    error.push(e);
   }
   try {
     let res = require(path.resolve(process.cwd(), "node_modules", "nodefony"));
@@ -22,6 +24,7 @@ const nodefony = function () {
       if (e && e.name && e.name === "nodefonyError") {
         throw e;
       }
+      error.push(e);
     }
     if (ret && (ret.version !== res.version)) {
       res.warning = `Module nodefony global = ${ret.version}\nModule nodefony local = ${res.version}`;
@@ -31,6 +34,7 @@ const nodefony = function () {
     if (e && e.name && e.name === "nodefonyError") {
       throw e;
     }
+    error.push(e);
   }
   try {
     return require("nodefony");
@@ -38,6 +42,7 @@ const nodefony = function () {
     if (e && e.name && e.name === "nodefonyError") {
       throw e;
     }
+    error.push(e);
   }
   try {
     return require(path.resolve(__dirname, ".."));
@@ -45,11 +50,14 @@ const nodefony = function () {
     if (e && e.name && e.name === "nodefonyError") {
       throw e;
     }
+    error.push(e);
   }
   try {
     const globalPath = path.resolve(process.argv[1], '..', '..', 'lib', 'node_modules');
     return require(path.resolve(globalPath, "nodefony"));
   } catch (e) {
+    error.push(e);
+    console.trace(error);
     throw new Error("Module nodefony not found try npm -g install nodefony");
   }
 }();

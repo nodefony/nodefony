@@ -50,13 +50,12 @@
     "node": ">=8"
   },
   "dependencies": {
-    "mongoose": "^5.5.2",
+    "mongoose": "^5.5.3",
     "sequelize": "^5.7.3",
     "webpack": "^4.30.0",
     "webpack-dev-server": "^3.3.1"
   },
   "devDependencies": {
-    "create-react-app": "^2.1.8",
     "editorconfig": "^0.15.3",
     "github-release-notes": "^0.17.0",
     "jshint": "^2.10.2",

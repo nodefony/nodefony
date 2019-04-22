@@ -1,1 +1,10 @@
-.hello {}
+@import url(https://fonts.googleapis.com/css?family=Gochi+Hand);
+
+.hello h1 {
+  text-align: center;
+  font-family: 'Gochi Hand', cursive;
+  color: #0167b8;
+  letter-spacing: 0;
+  font-size: 4em;
+  text-transform: none;
+}

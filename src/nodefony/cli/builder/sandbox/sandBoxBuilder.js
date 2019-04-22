@@ -6,17 +6,21 @@ class SandBox extends nodefony.Builder {
     this.force = true;
   }
 
-  /*interaction() {
+  async interaction() {
+    this.cli.reset();
+    await this.cli.showAsciify("SandBox");
     return this.cli.prompt([{
-      type: 'input',
-      name: 'name',
-      default: this.cli.response.name,
-      message: 'Enter Name',
-      validate: (value) => {
-        return true;
-      }
-    }]);
-  }*/
+      type: 'checkbox',
+      message: 'Select toppings',
+      name: 'toppings',
+      pageSize: 10,
+      choices: [{
+        name: 'Bootstrap'
+        }, {
+        name: 'PWA'
+        }]
+      }]);
+  }
 
   createBuilder() {
     try {
@@ -27,7 +31,7 @@ class SandBox extends nodefony.Builder {
           name: "package.json",
           type: "copy",
           path: path.resolve(this.pathSkeleton, "app", "package.json")
-        },{
+        }, {
           name: "appKernel.js",
           type: "file",
           skeleton: path.resolve(this.pathSkeleton, "app", "appKernel.js.skeleton"),
@@ -67,15 +71,15 @@ class SandBox extends nodefony.Builder {
             type: "copy",
             path: path.resolve(this.pathSkeleton, "app", "config", "security.js")
           }, {
-            name: "service.js",
+            name: "services.js",
             type: "copy",
             path: path.resolve(this.pathSkeleton, "app", "config", "services.js")
-          },{
+          }, {
             name: "webpack.config.js",
             type: "copy",
             path: path.resolve(this.pathSkeleton, "app", "config", "webpack.config.js")
-          },{
-            name:"webpack",
+          }, {
+            name: "webpack",
             type: "copy",
             path: path.resolve(this.pathSkeleton, "app", "config", "webpack"),
             params: {
@@ -106,14 +110,14 @@ class SandBox extends nodefony.Builder {
             params: {
               recurse: true
             }
-          },{
+          }, {
             name: "js",
             type: "copy",
             path: path.resolve(this.pathSkeleton, "app", "Resources", "js"),
             params: {
               recurse: true
             }
-          },{
+          }, {
             name: "css",
             type: "copy",
             path: path.resolve(this.pathSkeleton, "app", "Resources", "css"),
@@ -128,6 +132,5 @@ class SandBox extends nodefony.Builder {
     }
   }
 }
-
 
 module.exports = SandBox;
