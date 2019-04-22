@@ -1,7 +1,7 @@
 const Vue = require("../vue/vueBuilder.js");
 const React = require("../react/reactBuilder.js");
 const Bootstrap = require("../bootstrap/bootstrapBuilder.js");
-const SandBox = require("../sandBox/sandBoxBuilder.js");
+const SandBox = require("../sandbox/sandBoxBuilder.js");
 const WorkBox = require("../workbox/workBoxBuilder.js");
 
 module.exports = class generateProject extends nodefony.Builder {
