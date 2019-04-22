@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "mongoose": "^5.5.2",
-    "sequelize": "^5.7.0",
+    "sequelize": "^5.7.3",
     "webpack": "^4.30.0",
     "webpack-dev-server": "^3.3.1"
   },

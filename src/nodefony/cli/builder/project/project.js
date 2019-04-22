@@ -10,6 +10,7 @@ module.exports = class generateProject extends nodefony.Builder {
     super(cli, cmd, args);
     this.name = null;
     this.location = null;
+    this.pathSkeleton = path.resolve(__dirname, "skeletons");
     if (this.cmd === "create:project" || this.cmd === "create") {
       if (args && args[0]) {
         this.name = args[0];
@@ -35,9 +36,25 @@ module.exports = class generateProject extends nodefony.Builder {
     if (!this.name) {
       this.name = this.cli.response.name;
     }
+    this.setEnv();
+  }
 
-    this.setFrontPath("sandbox");
-    this.pathSkeleton = path.resolve(__dirname, "skeletons");
+  setEnv() {
+    process.env.NODE_ENV = "development";
+  }
+
+  generate(response) {
+    return super.generate(response, true)
+      .then(() => {
+        return this.buildFront(this.cli.response, this.path)
+          .run(true)
+          .then(() => {
+            return response;
+          })
+          .catch((e) => {
+            throw e;
+          });
+      });
   }
 
   interaction() {
@@ -76,30 +93,30 @@ module.exports = class generateProject extends nodefony.Builder {
         name: 'front',
         default: 0,
         pageSize: 5,
-        choices: ["Bootstrap (default)", "Vue.js", "React", "Progressive Web App (PWA) Workbox", "Sandbox (without Front framwork)"],
-        message: 'Choose Application Type (Mapping Front Framework in App) :',
+        choices: ["Sandbox (without Front framwork)", "Bootstrap", "Vue.js", "React", "Progressive Web App (PWA) Workbox"],
+        message: 'Choose Project Application Type (Mapping Front Framework in App) :',
         filter: (value) => {
           let front = null;
           switch (value) {
-            case "Sandbox (without Front framwork)":
-              front = "sandbox";
-              break;
-            case "Bootstrap (default)":
-              front = 'bootstrap';
-              break;
-            case "Vue.js":
-              front = "vue";
-              break;
-            case "React":
-              front = 'react';
-              break;
-            case "Progressive Web App (PWA) Workbox":
-              front = 'workbox';
-              break;
-            default:
-              front = value;
+          case "Sandbox (without Front framwork)":
+            front = "sandbox";
+            break;
+          case "Bootstrap":
+            front = 'bootstrap';
+            break;
+          case "Vue.js":
+            front = "vue";
+            break;
+          case "React":
+            front = 'react';
+            break;
+          case "Progressive Web App (PWA) Workbox":
+            front = 'workbox';
+            break;
+          default:
+            front = value;
           }
-          return this.setFrontPath(front);
+          return front;
         }
       }, {
         type: 'input',
@@ -193,57 +210,45 @@ module.exports = class generateProject extends nodefony.Builder {
         this.path = path.resolve(this.location, response.name);
         if (this.cli.exists(this.path)) {
           this.logger(`${this.path} Already exist`, "WARNING");
-          return this.removeInteractivePath(this.path).then((response) => {
-            nodefony.extend(this.cli.response, response);
-            if (response.remove) {
-              return this.buildFront(this.cli.response);
-            }
-            let error = new Error(`${this.path} Already exist`);
-            error.code = 0;
-            throw error;
-          }).catch((e) => {
-            throw e;
-          });
+          return this.removeInteractivePath(this.path)
+            .then((response) => {
+              nodefony.extend(this.cli.response, response);
+              if (response.remove) {
+                return this.cli.response;
+              }
+              let error = new Error(`${this.path} Already exist`);
+              error.code = 0;
+              throw error;
+            }).catch((e) => {
+              throw e;
+            });
         }
-        return this.buildFront(this.cli.response);
+        return this.cli.response;
       });
   }
 
-  setFrontPath(name = "sandbox") {
-    if (!name) {
-      throw new Error("bad front mapping name");
-    }
-    this.frontName = name;
-    this.pathFront = path.resolve(__dirname, "..", this.frontName);
-    return name;
-  }
-
-  buildFront(response) {
-    let Front = null;
+  buildFront(response, location) {
+    this.Front = null;
     switch (response.front) {
-      case "vue":
-        Front = new Vue(this);
-        break;
-      case "react":
-        Front = new React(this);
-        break;
-      case 'bootstrap':
-        Front = new Bootstrap(this);
-        break;
-      case 'workbox':
-        Front = new WorkBox(this);
-        break;
-      case 'sandbox':
-      default:
-        Front = new SandBox(this);
-        break;
+    case "vue":
+      this.Front = new Vue(this.cli, this.cmd, this.args);
+      break;
+    case "react":
+      this.Front = new React(this.cli, this.cmd, this.args);
+      break;
+    case 'bootstrap':
+      this.Front = new Bootstrap(this.cli, this.cmd, this.args);
+      break;
+    case 'workbox':
+      this.Front = new WorkBox(this.cli, this.cmd, this.args);
+      break;
+    case 'sandbox':
+    default:
+      this.Front = new SandBox(this.cli, this.cmd, this.args);
+      break;
     }
-    return Front.generateProject()
-      .then(() => {
-        return response;
-      }).catch(e => {
-        throw e;
-      });
+    this.Front.setLocation(location, "app");
+    return this.Front;
   }
 
   createBuilder() {
@@ -252,160 +257,6 @@ module.exports = class generateProject extends nodefony.Builder {
         name: this.cli.response.name,
         type: "directory",
         childs: [{
-          name: "app",
-          type: "directory",
-          childs: [{
-            name: "appKernel.js",
-            type: "file",
-            skeleton: path.resolve(this.pathSkeleton, "app", "appKernel.js.skeleton"),
-            params: this.cli.response
-          }, {
-            name: "package.json",
-            type: "file",
-            skeleton: path.resolve(this.pathSkeleton, "app", "package.json.skeleton"),
-            params: this.cli.response
-          }, {
-            name: "doc",
-            type: "directory",
-            childs: [{
-              name: "index.html.twig",
-              type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "doc", "app.html.twig")
-            }]
-          }, {
-            name: "README.md",
-            type: "copy",
-            path: path.resolve(this.pathSkeleton, "app", "README.md")
-          }, {
-            name: "services",
-            type: "directory"
-          }, {
-            name: "Resources",
-            type: "directory",
-            childs: [{
-              name: "views",
-              type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "Resources", "views"),
-              params: {
-                recurse: true
-              }
-            }, {
-              name: "translations",
-              type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "Resources", "translations"),
-              params: {
-                recurse: true
-              }
-            }, {
-              name: "scss",
-              type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "Resources", "scss"),
-              params: {
-                recurse: true
-              }
-            }, {
-              name: "js",
-              type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "Resources", "js"),
-              params: {
-                recurse: true
-              }
-            }, {
-              name: "databases",
-              type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "Resources", "databases"),
-              params: {
-                recurse: true
-              }
-            }, {
-              name: "public",
-              type: "directory",
-              childs: [{
-                name: "manifest.json",
-                type: "file",
-                skeleton: path.resolve(this.pathSkeleton, "app", "Resources", "public", "manifest.json"),
-                params: this.cli.response
-              }, {
-                name: "favicon.ico",
-                type: "copy",
-                path: path.resolve(this.pathSkeleton, "app", "Resources", "public", "favicon.ico")
-              }, {
-                name: "robots.txt",
-                type: "copy",
-                path: path.resolve(this.pathSkeleton, "app", "Resources", "public", "robots.txt")
-              }, {
-                name: "css",
-                type: "copy",
-                path: path.resolve(this.pathSkeleton, "app", "Resources", "public", "css"),
-                params: {
-                  recurse: true
-                }
-              }, {
-                name: "images",
-                type: "copy",
-                path: path.resolve(this.pathSkeleton, "app", "Resources", "public", "images"),
-                params: {
-                  recurse: true
-                }
-              }, {
-                name: "js",
-                type: "copy",
-                path: path.resolve(this.pathSkeleton, "app", "Resources", "public", "js"),
-                params: {
-                  recurse: true
-                }
-              }]
-            }]
-          }, {
-            name: "config",
-            type: "directory",
-            childs: [{
-              name: "webpack",
-              type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "config", "webpack"),
-              params: {
-                recurse: true
-              }
-            }, {
-              name: "webpack.config.js",
-              type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "config", "webpack.config.js"),
-            }, {
-              name: "config.js",
-              type: "file",
-              skeleton: path.resolve(this.pathSkeleton, "app", "config", "config.js.skeleton"),
-              params: this.cli.response
-            }, {
-              name: "routing.js",
-              type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "config", "routing.js")
-            }, {
-              name: "services.js",
-              type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "config", "services.js")
-            }, {
-              name: "security.js",
-              type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "config", "security.js")
-            }]
-          }, {
-            name: "controller",
-            type: "directory",
-            childs: [{
-              name: "appController.js",
-              type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "controller", "appController.js")
-            }, {
-              name: "loginController.js",
-              type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "controller", "loginController.js")
-            }, {
-              name: "usersController.js",
-              type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "controller", "usersController.js")
-            }]
-          }]
-        }, {
           name: "package.json",
           type: "file",
           skeleton: path.resolve(this.pathSkeleton, "package.json.skeleton"),
@@ -432,17 +283,17 @@ module.exports = class generateProject extends nodefony.Builder {
           params: this.cli.response
         }, {
           name: "web",
-          type: "directory",
+          type: "directory"
         }, {
           name: "tmp",
-          type: "directory",
+          type: "directory"
         }, {
           name: "config",
           type: "directory",
           childs: [{
             name: "certificates",
-            type: "directory",
-          }, {
+            type: "directory"
+              }, {
             name: "openssl",
             type: "directory",
             childs: [{
@@ -453,8 +304,8 @@ module.exports = class generateProject extends nodefony.Builder {
                 type: "file",
                 skeleton: path.resolve(this.pathSkeleton, "config", "openssl", "ca", "openssl.cnf.skeleton"),
                 params: this.cli.response
-              }]
-            }, {
+                }]
+              }, {
               name: "ca_intermediate",
               type: "directory",
               childs: [{
@@ -462,19 +313,19 @@ module.exports = class generateProject extends nodefony.Builder {
                 type: "file",
                 skeleton: path.resolve(this.pathSkeleton, "config", "openssl", "ca_intermediate", "openssl.cnf.skeleton"),
                 params: this.cli.response
+                  }]
               }]
-            }]
-          }, {
+              }, {
             name: "config.js",
             type: "file",
             skeleton: path.resolve(this.pathSkeleton, "config", "config.js.skeleton"),
             params: this.cli.response
-          }, {
+                  }, {
             name: "pm2.config.js",
             type: "file",
             skeleton: path.resolve(this.pathSkeleton, "config", "pm2.config.js.skeleton"),
             params: this.cli.response
-          }]
+              }]
         }, {
           name: "bin",
           type: "directory",
@@ -484,14 +335,14 @@ module.exports = class generateProject extends nodefony.Builder {
             chmod: 755,
             skeleton: path.resolve(this.pathSkeleton, "bin", "generateCertificates.sh.skeleton"),
             params: this.cli.response
-          }]
+                  }]
         }, {
           name: "src",
           type: "directory",
           childs: [{
             name: "bundles",
             type: "directory"
-          }]
+                  }]
         }, {
           name: "doc",
           type: "directory",
@@ -499,7 +350,7 @@ module.exports = class generateProject extends nodefony.Builder {
             name: "index.html.twig",
             type: "copy",
             path: path.resolve(this.pathSkeleton, "documentation.html.twig")
-          }]
+                  }]
         }, {
           name: "README.md",
           type: "copy",

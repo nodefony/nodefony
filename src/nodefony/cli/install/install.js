@@ -11,11 +11,11 @@ module.exports = class installProject extends nodefony.Builder {
     return super.logger(pci, severity, msgid, msg);
   }
 
-  install(cwd = path.resolve(".")) {
+  async install(cwd = path.resolve(".")) {
     return new Promise((resolve, reject) => {
       return this.installFramework(cwd)
         .then(() => {
-          return this.cli.packageManager.call(this.cli, ["install"], cwd, "dev")
+          return this.cli.packageManager.call(this.cli, ["install"], cwd)
             .then(() => {
               if (nodefony.isCore) {
                 return this.npmLink(path.resolve("."), path.resolve("src", "nodefony"))
@@ -47,11 +47,11 @@ module.exports = class installProject extends nodefony.Builder {
   rebuild(cwd = path.resolve(".")) {
     let cmd = null;
     switch (nodefony.packageManager) {
-      case 'yarn':
-        cmd = ["install", "--force"];
-        break;
-      default:
-        cmd = ["install"];
+    case 'yarn':
+      cmd = ["install", "--force"];
+      break;
+    default:
+      cmd = ["install"];
     }
     try {
       this.cli.rm("-rf", path.resolve(cwd, "node_modules"));
@@ -64,7 +64,7 @@ module.exports = class installProject extends nodefony.Builder {
       });
   }
 
-  npmLink(cwd = path.resolve("."), argv = []) {
+  async npmLink(cwd = path.resolve("."), argv = []) {
     return new Promise((resolve, reject) => {
       let tab = ["link"];
       if (argv) {
@@ -90,7 +90,7 @@ module.exports = class installProject extends nodefony.Builder {
     });
   }
 
-  generateCertificates(cwd = path.resolve(".")) {
+  async generateCertificates(cwd = path.resolve(".")) {
     return new Promise((resolve, reject) => {
       try {
         let directory = path.resolve(cwd, "config", "certificates");
@@ -115,7 +115,7 @@ module.exports = class installProject extends nodefony.Builder {
     });
   }
 
-  installFramework(cwd = path.resolve(".")) {
+  async installFramework(cwd = path.resolve(".")) {
     return new Promise((resolve, reject) => {
       this.logger("Create Framework directories");
       try {
@@ -180,7 +180,7 @@ module.exports = class installProject extends nodefony.Builder {
     }
   }
 
-  clear(cwd = path.resolve(".")) {
+  async clear(cwd = path.resolve(".")) {
     return new Promise((resolve, reject) => {
       try {
         let web = path.resolve(cwd, "web");

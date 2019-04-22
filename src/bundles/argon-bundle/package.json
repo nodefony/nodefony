@@ -22,13 +22,13 @@
     "vue": "^2.6.10",
     "vue-flatpickr-component": "^8.1.2",
     "vue-lazyload": "^1.2.6",
-    "vue-router": "^3.0.4",
+    "vue-router": "^3.0.6",
     "vue2-transitions": "^0.3.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.5.5",
-    "@vue/cli-plugin-eslint": "^3.5.1",
-    "@vue/cli-service": "^3.5.3",
+    "@vue/cli-plugin-babel": "^3.6.0",
+    "@vue/cli-plugin-eslint": "^3.6.0",
+    "@vue/cli-service": "^3.6.0",
     "@vue/eslint-config-prettier": "^4.0.1",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",

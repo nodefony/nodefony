@@ -1,11 +1,13 @@
-nodefony.Builder = class Builder {
+nodefony.Builder = class Builder extends nodefony.Service {
 
   constructor(cli, cmd, args) {
+    super("BUILDER", cli.container, cli.notificationsCenter);
     this.cli = cli;
     this.twig = twig;
     this.cmd = cmd || this.cli.cmd;
     this.args = args || this.cli.args;
     this.location = new nodefony.fileClass(path.resolve("."));
+    this.force = false;
     this.twigOptions = {
       views: process.cwd(),
       'twig options': {
@@ -15,25 +17,32 @@ nodefony.Builder = class Builder {
     };
   }
 
+  setLocation(location, suffix = null) {
+    if (suffix) {
+      this.suffix = suffix;
+    }
+    return this.location = location;
+  }
+
   run(interactive) {
     if (interactive) {
       this.interactive = interactive;
       return this.interaction()
         .then((response) => {
-          return this.generate(response);
+          return this.generate(response, this.force);
         });
     } else {
-      return this.generate();
+      return this.generate(null, this.force);
     }
   }
 
   interaction() {
-    return new Promise((resolve, reject) => {
-      return reject(new Error("Builder has not interactive mode"));
+    return new Promise(resolve => {
+      return resolve(this.cli.response);
     });
   }
 
-  generate(response) {
+  generate(response, force = false) {
     return new Promise((resolve, reject) => {
       try {
         if (this.generateProject) {
@@ -44,7 +53,7 @@ nodefony.Builder = class Builder {
             });
         } else {
           if (this.createBuilder) {
-            this.build(this.createBuilder(), this.location);
+            this.build(this.createBuilder(), this.location, force);
             return resolve(this.cli.response);
           }
         }
@@ -77,17 +86,6 @@ nodefony.Builder = class Builder {
         return response;
       }
     });
-  }
-
-  logger(pci, severity, msgid, msg) {
-    try {
-      if (!msgid) {
-        msgid = "BUILDER";
-      }
-      return this.cli.logger(pci, severity, msgid, msg);
-    } catch (e) {
-      console.log(pci);
-    }
   }
 
   buildSkeleton(skeleton, parse = true, obj = {}, callback = null) {

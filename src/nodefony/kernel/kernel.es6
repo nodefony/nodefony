@@ -416,7 +416,7 @@ module.exports = nodefony.register("kernel", function () {
                     let version = myrequire(path.resolve(path.dirname(res), "package.json")).version;
                     if (version === mypath) {
                       if (this.type === "SERVER") {
-                        this.logger(`Find NPM Bundle Package : ${name}@${mypath} in : ${res}`, "INFO");
+                        this.logger(`Find NPM Bundle Package : ${name}@${mypath} in : ${res}`, "DEBUG");
                       }
                       return `${name}`;
                     } else {
@@ -431,7 +431,7 @@ module.exports = nodefony.register("kernel", function () {
                   let version = myrequire(path.resolve(path.dirname(res), "package.json")).version;
                   if (version === mypath) {
                     if (this.type === "SERVER") {
-                      this.logger(`Find NPM Bundle Package : ${name}@${mypath} in : ${res}`, "INFO");
+                      this.logger(`Find NPM Bundle Package : ${name}@${mypath} in : ${res}`, "DEBUG");
                     }
                     return `${name}`;
                   } else {
@@ -452,7 +452,7 @@ module.exports = nodefony.register("kernel", function () {
             try {
               myrequire.resolve(res);
               if (this.type === "SERVER") {
-                this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "INFO");
+                this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "DEBUG");
               }
               return res;
             } catch (e) {}
@@ -474,7 +474,7 @@ module.exports = nodefony.register("kernel", function () {
             }
           }
           if (this.type === "SERVER") {
-            this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "INFO");
+            this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "DEBUG");
           }
           return res;
         } catch (e) {
@@ -488,18 +488,18 @@ module.exports = nodefony.register("kernel", function () {
         if (myrequire) {
           try {
             res = myrequire.resolve(name);
-            this.logger(`Find NPM Bundle Package : ${name} in : ${res}`, "INFO");
+            this.logger(`Find NPM Bundle Package : ${name} in : ${res}`, "DEBUG");
             return name;
           } catch (e) {}
           try {
             res = myrequire.resolve(`@nodefony/${name}`);
-            this.logger(`Find NPM Bundle Package : ${name} in : ${res}`, "INFO");
+            this.logger(`Find NPM Bundle Package : ${name} in : ${res}`, "DEBUG");
             return `@nodefony/${name}`;
           } catch (e) {}
         }
         try {
           res = require.resolve(name);
-          this.logger(`Find NPM Bundle Package : ${name} in : ${res}`, "INFO");
+          this.logger(`Find NPM Bundle Package : ${name} in : ${res}`, "DEBUG");
           return name;
         } catch (e) {}
         try {
@@ -507,7 +507,7 @@ module.exports = nodefony.register("kernel", function () {
           res = path.resolve(this.nodefonyPath, "bundles", name);
           require.resolve(res);
           if (this.type === "SERVER") {
-            this.logger(`Find Core Bundle Package : ${name} in : ${res}`, "INFO");
+            this.logger(`Find Core Bundle Package : ${name} in : ${res}`, "DEBUG");
           }
           return res;
         } catch (e) {}
@@ -515,7 +515,7 @@ module.exports = nodefony.register("kernel", function () {
           res = null;
           res = require.resolve(`@nodefony/${name}`);
           if (this.type === "SERVER") {
-            this.logger(`Find NPM Bundle Package : @nodefony/${name} in : ${res}`, "INFO");
+            this.logger(`Find NPM Bundle Package : @nodefony/${name} in : ${res}`, "DEBUG");
           }
           return `@nodefony/${name}`;
         } catch (e) {}
@@ -525,7 +525,7 @@ module.exports = nodefony.register("kernel", function () {
         res = path.resolve(this.rootDir, "src", "bundles", name);
         require.resolve(res);
         if (this.type === "SERVER") {
-          this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "INFO");
+          this.logger(`Find Local Bundle Package : ${name} in : ${res}`, "DEBUG");
         }
         return res;
       } catch (e) {}
@@ -534,7 +534,7 @@ module.exports = nodefony.register("kernel", function () {
         res = path.resolve(this.nodefonyPath, "bundles", name);
         require.resolve(res);
         if (this.type === "SERVER") {
-          this.logger(`Find Core Bundle Package : ${name} in : ${res}`, "INFO");
+          this.logger(`Find Core Bundle Package : ${name} in : ${res}`, "DEBUG");
         }
         return res;
       } catch (e) {}
@@ -543,7 +543,7 @@ module.exports = nodefony.register("kernel", function () {
         res = path.resolve(this.nodefonyPath, '..', '..', "src", "bundles", name);
         require.resolve(res);
         if (this.type === "SERVER") {
-          this.logger(`Find Core Local Bundle Package : ${name} in : ${res}`, "INFO");
+          this.logger(`Find Core Local Bundle Package : ${name} in : ${res}`, "DEBUG");
         }
         return res;
       } catch (e) {}
@@ -577,7 +577,7 @@ module.exports = nodefony.register("kernel", function () {
     /**
      *  @method boot
      */
-    boot() {
+    async boot() {
       /*
        *  BUNDLES
        */
@@ -654,17 +654,16 @@ module.exports = nodefony.register("kernel", function () {
 
       switch (this.isInstall()) {
       case "install":
-        return this.install(bundles);
+        return await this.install(bundles);
       case "rebuild":
-        return this.rebuild(bundles);
+        return await this.rebuild(bundles);
       default:
-        return this.preRegister(bundles);
+        return await this.preRegister(bundles);
       }
     }
 
-    install(coreBundles = []) {
+    async install(coreBundles = []) {
       let bundles = coreBundles.concat(this.configBundle, [this.appPath]);
-      let mypromise = [];
       try {
         for (let i = 0; i < bundles.length; i++) {
           let bundleFile = null;
@@ -680,30 +679,23 @@ module.exports = nodefony.register("kernel", function () {
             }
           }
           if (this.isCore) {
-            mypromise.push(this.cli.installPackage(bundleFile, this.environment));
+            await this.cli.installPackage(bundleFile, this.environment);
           } else {
             let dir = path.basename(bundleFile.dirName);
             if (!this.isBundleCore(dir)) {
-              mypromise.push(this.cli.installPackage(bundleFile, this.environment));
+              await this.cli.installPackage(bundleFile, this.environment);
             }
           }
         }
       } catch (e) {
+        this.logger(e, "ERROR");
         throw e;
       }
-      return Promise.all(mypromise)
-        .then(() => {
-          return this.preRegister(coreBundles);
-        })
-        .catch((e) => {
-          this.logger(e, "ERROR");
-          return e;
-        });
+      return this.preRegister(coreBundles);
     }
 
-    rebuild(coreBundles) {
+    async rebuild(coreBundles) {
       let bundles = coreBundles.concat(this.configBundle, [this.appPath]);
-      let mypromise = [];
       try {
         for (let i = 0; i < bundles.length; i++) {
           let bundleFile = null;
@@ -718,45 +710,39 @@ module.exports = nodefony.register("kernel", function () {
               continue;
             }
           }
-          mypromise.push(this.cli.rebuildPackage(bundleFile, this.environment));
+          await this.cli.rebuildPackage(bundleFile, this.environment);
         }
       } catch (e) {
+        this.logger(e, "ERROR");
         throw e;
       }
-      return Promise.all(mypromise)
-        .then(() => {
-          return this.preRegister(coreBundles);
-        })
-        .catch((e) => {
-          this.logger(e, "ERROR");
-          return e;
-        });
+      return this.preRegister(coreBundles);
     }
 
-    preRegister(bundles) {
+    async preRegister(bundles) {
       try {
         this.fire("onPreRegister", this);
         this.preRegistered = true;
       } catch (e) {
         this.logger(e);
       }
-      return this.registerBundles(bundles)
-        .then((res) => {
+      return await this.registerBundles(bundles)
+        .then(async (res) => {
           this.preboot = true;
           this.fire("onPreBoot", this);
           this.logger(res, "DEBUG", "REGISTER BUNDLES");
-          return this.registerBundles(this.configBundle)
-            .then((res) => {
+          return await this.registerBundles(this.configBundle)
+            .then(async (res) => {
               if (res.length) {
                 this.logger(res, "DEBUG", "REGISTER BUNDLES");
               }
               this.fire("onRegister", this);
-              return this.initializeBundles();
+              return await this.initializeBundles();
             });
         });
     }
 
-    onReady() {
+    async onReady() {
       return new Promise((resolve, reject) => {
         process.nextTick(() => {
           try {
@@ -785,7 +771,7 @@ module.exports = nodefony.register("kernel", function () {
      *  initialisation  all bundles
      *  @method initializeBundles
      */
-    initializeBundles() {
+    async initializeBundles() {
       let tab = [];
       try {
         this.app = this.initApplication();
@@ -809,35 +795,31 @@ module.exports = nodefony.register("kernel", function () {
       for (let name in this.bundles) {
         this.logger("\x1b[36m INITIALIZE Bundle :  " + name.toUpperCase() + "\x1b[0m", "DEBUG");
         try {
-          tab.push(this.bundles[name].boot());
+          //tab.push(this.bundles[name].boot());
+          tab.push(await this.bundles[name].boot());
         } catch (e) {
           this.logger(e, "ERROR");
           //console.trace(e);
           continue;
         }
       }
-      return new Promise.all(tab)
-        .then((tab) => {
-          this.fire("onBoot", this, tab);
-          this.booted = true;
-          return new Promise.all(this.promisesBundleReady)
-            .then((bundles) => {
-              this.fire("onReady", this, bundles);
-              this.ready = true;
-              if (this.console) {
-                return this.matchCommand();
-              }
-              return this.onReady()
-                .then(() => {
-                  this.fire("onPostReady", this);
-                  return this;
-                });
+      this.fire("onBoot", this, tab);
+      this.booted = true;
+
+      return new Promise.all(this.promisesBundleReady)
+        .then(async (bundles) => {
+          this.fire("onReady", this, bundles);
+          this.ready = true;
+          if (this.console) {
+            return this.matchCommand();
+          }
+          return await this.onReady()
+            .then(() => {
+              this.fire("onPostReady", this);
+              return this;
             });
-        })
-        .catch((e) => {
-          this.logger(e, "ERROR");
-          return e;
         });
+
     }
 
     getOrm() {
@@ -1137,7 +1119,7 @@ module.exports = nodefony.register("kernel", function () {
      *  @method
      *  @param {array} bundles
      */
-    registerBundles(bundles) {
+    async registerBundles(bundles) {
       return new Promise((resolve, reject) => {
         switch (nodefony.typeOf(bundles)) {
         case "array":

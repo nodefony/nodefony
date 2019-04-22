@@ -35,7 +35,7 @@
     "twig-loader": "^0.4.1",
     "webpack": "^4.30.0",
     "webpack-merge": "^4.2.1",
-    "workbox-webpack-plugin": "^4.2.0"
+    "workbox-webpack-plugin": "^4.3.0"
   },
   "devDependencies": {},
   "contributors": [

@@ -169,8 +169,9 @@ yarn global add nodefony
 ## <a name="installwin32"></a> Windows Installation
 
 **[Node.js](https://nodejs.org/en/) Installation** :
-
-  To install or update Node.js, you can download installer here [Node.js](https://nodejs.org/en/)
+ [nvm-windows](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows)
+ to easily switch Node versions between different projects.
+ or To install or update Node.js, you can download installer here [Node.js](https://nodejs.org/en/)
 
 **[Nodefony](https://nodefony.net) Excutable Installation** :
 
