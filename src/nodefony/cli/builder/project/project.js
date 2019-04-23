@@ -75,7 +75,7 @@ module.exports = class generateProject extends nodefony.Builder {
         type: 'input',
         name: 'description',
         message: 'Enter short description',
-        //default: `${this.cli.response.description} ${this.name}`,
+        default: "Project Description",
         validate: (value) => {
           if (!value) {
             this.cli.response.description = `${this.cli.response.description} ${this.name}`;
@@ -83,8 +83,11 @@ module.exports = class generateProject extends nodefony.Builder {
           return true;
         },
         filter: (value) => {
+          if (!value) {
+            return this.cli.response.description;
+          }
           if (value === "Project Description") {
-            return `Project ${this.name}`;
+            return this.cli.response.description;
           }
           return value;
         }
@@ -98,23 +101,23 @@ module.exports = class generateProject extends nodefony.Builder {
         filter: (value) => {
           let front = null;
           switch (value) {
-          case "Sandbox (without Front framwork)":
-            front = "sandbox";
-            break;
-          case "Bootstrap":
-            front = 'bootstrap';
-            break;
-          case "Vue.js":
-            front = "vue";
-            break;
-          case "React":
-            front = 'react';
-            break;
-          case "Progressive Web App (PWA) Workbox":
-            front = 'workbox';
-            break;
-          default:
-            front = value;
+            case "Sandbox (without Front framwork)":
+              front = "sandbox";
+              break;
+            case "Bootstrap":
+              front = 'bootstrap';
+              break;
+            case "Vue.js":
+              front = "vue";
+              break;
+            case "React":
+              front = 'react';
+              break;
+            case "Progressive Web App (PWA) Workbox":
+              front = 'workbox';
+              break;
+            default:
+              front = value;
           }
           return front;
         }
@@ -224,28 +227,30 @@ module.exports = class generateProject extends nodefony.Builder {
             });
         }
         return this.cli.response;
+      }).catch(e => {
+        throw e;
       });
   }
 
   buildFront(response, location) {
     this.Front = null;
     switch (response.front) {
-    case "vue":
-      this.Front = new Vue(this.cli, this.cmd, this.args);
-      break;
-    case "react":
-      this.Front = new React(this.cli, this.cmd, this.args);
-      break;
-    case 'bootstrap':
-      this.Front = new Bootstrap(this.cli, this.cmd, this.args);
-      break;
-    case 'workbox':
-      this.Front = new WorkBox(this.cli, this.cmd, this.args);
-      break;
-    case 'sandbox':
-    default:
-      this.Front = new SandBox(this.cli, this.cmd, this.args);
-      break;
+      case "vue":
+        this.Front = new Vue(this.cli, this.cmd, this.args);
+        break;
+      case "react":
+        this.Front = new React(this.cli, this.cmd, this.args);
+        break;
+      case 'bootstrap':
+        this.Front = new Bootstrap(this.cli, this.cmd, this.args);
+        break;
+      case 'workbox':
+        this.Front = new WorkBox(this.cli, this.cmd, this.args);
+        break;
+      case 'sandbox':
+      default:
+        this.Front = new SandBox(this.cli, this.cmd, this.args);
+        break;
     }
     this.Front.setLocation(location, "app");
     return this.Front;
@@ -293,7 +298,7 @@ module.exports = class generateProject extends nodefony.Builder {
           childs: [{
             name: "certificates",
             type: "directory"
-              }, {
+          }, {
             name: "openssl",
             type: "directory",
             childs: [{
@@ -304,8 +309,8 @@ module.exports = class generateProject extends nodefony.Builder {
                 type: "file",
                 skeleton: path.resolve(this.pathSkeleton, "config", "openssl", "ca", "openssl.cnf.skeleton"),
                 params: this.cli.response
-                }]
-              }, {
+              }]
+            }, {
               name: "ca_intermediate",
               type: "directory",
               childs: [{
@@ -313,19 +318,19 @@ module.exports = class generateProject extends nodefony.Builder {
                 type: "file",
                 skeleton: path.resolve(this.pathSkeleton, "config", "openssl", "ca_intermediate", "openssl.cnf.skeleton"),
                 params: this.cli.response
-                  }]
               }]
-              }, {
+            }]
+          }, {
             name: "config.js",
             type: "file",
             skeleton: path.resolve(this.pathSkeleton, "config", "config.js.skeleton"),
             params: this.cli.response
-                  }, {
+          }, {
             name: "pm2.config.js",
             type: "file",
             skeleton: path.resolve(this.pathSkeleton, "config", "pm2.config.js.skeleton"),
             params: this.cli.response
-              }]
+          }]
         }, {
           name: "bin",
           type: "directory",
@@ -335,14 +340,14 @@ module.exports = class generateProject extends nodefony.Builder {
             chmod: 755,
             skeleton: path.resolve(this.pathSkeleton, "bin", "generateCertificates.sh.skeleton"),
             params: this.cli.response
-                  }]
+          }]
         }, {
           name: "src",
           type: "directory",
           childs: [{
             name: "bundles",
             type: "directory"
-                  }]
+          }]
         }, {
           name: "doc",
           type: "directory",
@@ -350,7 +355,7 @@ module.exports = class generateProject extends nodefony.Builder {
             name: "index.html.twig",
             type: "copy",
             path: path.resolve(this.pathSkeleton, "documentation.html.twig")
-                  }]
+          }]
         }, {
           name: "README.md",
           type: "copy",

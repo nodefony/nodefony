@@ -30,13 +30,16 @@ nodefony.Builder = class Builder extends nodefony.Service {
       return this.interaction()
         .then((response) => {
           return this.generate(response, this.force);
+        })
+        .catch(e => {
+          throw e;
         });
     } else {
       return this.generate(null, this.force);
     }
   }
 
-  interaction() {
+  async interaction() {
     return new Promise(resolve => {
       return resolve(this.cli.response);
     });
@@ -156,102 +159,102 @@ nodefony.Builder = class Builder extends nodefony.Service {
     }
     let child = null;
     switch (nodefony.typeOf(obj)) {
-    case "array":
-      try {
-        for (let i = 0; i < obj.length; i++) {
-          this.build(obj[i], parent, force);
-        }
-      } catch (e) {
-        this.logger(e, "ERROR");
-        throw e;
-      }
-      break;
-    case "object":
-      for (let ele in obj) {
-        let value = obj[ele];
-        switch (ele) {
-        case "name":
-          var name = value;
-          break;
-        case "type":
-          switch (value) {
-          case "directory":
-            try {
-              let directory = path.resolve(parent.path, name);
-              child = this.cli.createDirectory(directory, 0o755, (ele) => {
-                if (force) {
-                  this.logger("Force Create Directory :" + ele.name);
-                } else {
-                  this.logger("Create Directory :" + ele.name);
-                }
-                if (obj.chmod) {
-                  this.cli.chmod(obj.chmod, directory);
-                }
-              }, force);
-            } catch (e) {
-              this.logger(e, "ERROR");
-              throw e;
-            }
-            break;
-          case "file":
-            try {
-              let file = path.resolve(parent.path, name);
-              this.createFile(file, obj.skeleton, obj.parse, obj.params, (ele) => {
-                this.logger("Create File      :" + ele.name);
-              });
-              if (obj.chmod) {
-                this.cli.chmod(obj.chmod, file);
-              }
-            } catch (e) {
-              this.logger(e, "ERROR");
-              throw e;
-            }
-            break;
-          case "symlink":
-            try {
-              if (force) {
-                this.cli.ln('-sf', path.resolve(parent.path, obj.params.source), path.resolve(parent.path, obj.params.dest));
-              } else {
-                this.cli.ln('-s', path.resolve(parent.path, obj.params.source), path.resolve(parent.path, obj.params.dest));
-              }
-              this.logger("Create symbolic link :" + obj.name);
-            } catch (e) {
-              this.logger(e, "ERROR");
-              throw e;
-            }
-            break;
-          case "copy":
-            try {
-              let file = path.resolve(parent.path, name);
-              if (obj.params && obj.params.recurse) {
-                this.cli.cp("-R", obj.path, file);
-              } else {
-                this.cli.cp("-f", obj.path, file);
-              }
-              this.logger("Copy             :" + obj.name);
-              if (obj.chmod) {
-                this.cli.chmod(obj.chmod, file);
-              }
-            } catch (e) {
-              this.logger(e, "ERROR");
-              throw e;
-            }
-            break;
+      case "array":
+        try {
+          for (let i = 0; i < obj.length; i++) {
+            this.build(obj[i], parent, force);
           }
-          break;
-        case "childs":
-          try {
-            this.build(value, child, force);
-          } catch (e) {
-            this.logger(e, "ERROR");
-            throw e;
-          }
-          break;
+        } catch (e) {
+          this.logger(e, "ERROR");
+          throw e;
         }
-      }
-      break;
-    default:
-      this.logger("generate build error arguments : ", "ERROR");
+        break;
+      case "object":
+        for (let ele in obj) {
+          let value = obj[ele];
+          switch (ele) {
+            case "name":
+              var name = value;
+              break;
+            case "type":
+              switch (value) {
+                case "directory":
+                  try {
+                    let directory = path.resolve(parent.path, name);
+                    child = this.cli.createDirectory(directory, 0o755, (ele) => {
+                      if (force) {
+                        this.logger("Force Create Directory :" + ele.name);
+                      } else {
+                        this.logger("Create Directory :" + ele.name);
+                      }
+                      if (obj.chmod) {
+                        this.cli.chmod(obj.chmod, directory);
+                      }
+                    }, force);
+                  } catch (e) {
+                    this.logger(e, "ERROR");
+                    throw e;
+                  }
+                  break;
+                case "file":
+                  try {
+                    let file = path.resolve(parent.path, name);
+                    this.createFile(file, obj.skeleton, obj.parse, obj.params, (ele) => {
+                      this.logger("Create File      :" + ele.name);
+                    });
+                    if (obj.chmod) {
+                      this.cli.chmod(obj.chmod, file);
+                    }
+                  } catch (e) {
+                    this.logger(e, "ERROR");
+                    throw e;
+                  }
+                  break;
+                case "symlink":
+                  try {
+                    if (force) {
+                      this.cli.ln('-sf', path.resolve(parent.path, obj.params.source), path.resolve(parent.path, obj.params.dest));
+                    } else {
+                      this.cli.ln('-s', path.resolve(parent.path, obj.params.source), path.resolve(parent.path, obj.params.dest));
+                    }
+                    this.logger("Create symbolic link :" + obj.name);
+                  } catch (e) {
+                    this.logger(e, "ERROR");
+                    throw e;
+                  }
+                  break;
+                case "copy":
+                  try {
+                    let file = path.resolve(parent.path, name);
+                    if (obj.params && obj.params.recurse) {
+                      this.cli.cp("-R", obj.path, file);
+                    } else {
+                      this.cli.cp("-f", obj.path, file);
+                    }
+                    this.logger("Copy             :" + obj.name);
+                    if (obj.chmod) {
+                      this.cli.chmod(obj.chmod, file);
+                    }
+                  } catch (e) {
+                    this.logger(e, "ERROR");
+                    throw e;
+                  }
+                  break;
+              }
+              break;
+            case "childs":
+              try {
+                this.build(value, child, force);
+              } catch (e) {
+                this.logger(e, "ERROR");
+                throw e;
+              }
+              break;
+          }
+        }
+        break;
+      default:
+        this.logger("generate build error arguments : ", "ERROR");
     }
     return child;
   }

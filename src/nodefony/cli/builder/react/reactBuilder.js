@@ -3,6 +3,7 @@ class React extends nodefony.Builder {
     super(cli, cmd, args);
     this.log("Build Vue.js Project");
     this.pathSkeleton = path.resolve(__dirname, "skeletons");
+    this.projectSkeleton = path.resolve(__dirname, "..", "project", "skeletons");
     this.cliReact = this.getCli();
     this.force = true;
     this.setEnv();
@@ -113,7 +114,7 @@ class React extends nodefony.Builder {
           type: "file",
           skeleton: path.resolve(this.pathSkeleton, "app", "appKernel.js.skeleton"),
           params: this.cli.response
-          }, {
+        }, {
           name: "Resources",
           type: "directory",
           childs: [{
@@ -157,19 +158,27 @@ class React extends nodefony.Builder {
           type: "directory",
           childs: [{
             name: "views",
-            type: "copy",
-            path: path.resolve(this.pathSkeleton, "app", "Resources", "views"),
-            params: {
-              recurse: true
-            }
+            type: "directory",
+            childs: [{
+              name: "base.html.twig",
+              type: "copy",
+              path: path.resolve(this.pathSkeleton, "app", "Resources", "views", "base.html.twig")
             }, {
+              name: "framework-bundle",
+              type: "copy",
+              path: path.resolve(this.projectSkeleton, "app", "Resources", "views", "framework-bundle"),
+              params: {
+                recurse: true
+              }
+            }]
+          }, {
             name: "translations",
             type: "copy",
             path: path.resolve(this.pathSkeleton, "app", "Resources", "translations"),
             params: {
               recurse: true
             }
-            }, {
+          }, {
             name: "public",
             type: "copy",
             path: path.resolve(this.pathSkeleton, "app", "Resources", "public"),

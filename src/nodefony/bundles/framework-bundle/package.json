@@ -11,8 +11,16 @@
     "javascript"
   ],
   "dependencies": {
+    "bootstrap": "^4.3.1",
+    "clean-webpack-plugin": "^2.0.1",
+    "font-awesome": "^4.7.0",
     "memory-fs": "^0.4.1",
-    "webpack": "^4.30.0"
+    "mini-css-extract-plugin": "^0.6.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "sass-loader": "^7.1.0",
+    "terser-webpack-plugin": "^1.2.3",
+    "webpack": "^4.30.0",
+    "webpack-merge": "^4.2.1"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,19 @@
+@import url(https://fonts.googleapis.com/css?family=Gochi+Hand);
+
+@import "~bootstrap/scss/bootstrap";
+
+$fa-font-path: "~font-awesome/fonts";
+@import '~font-awesome/scss/font-awesome.scss';
+
+
+.mt-6{
+  margin-top: ($spacer * 4) !important;;
+}
+
+.mt-7{
+  margin-top: ($spacer * 4.5) !important;;
+}
+
+.mt-8{
+  margin-top: ($spacer * 5) !important;;
+}

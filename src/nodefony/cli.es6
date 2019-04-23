@@ -7,7 +7,7 @@ const spawnSync = require('child_process').spawnSync;
 const moment = require("moment");
 const semver = require('semver');
 
-module.exports = nodefony.register("cli", function () {
+module.exports = nodefony.register("cli", function() {
 
   const red = clc.red.bold;
   //const cyan   = clc.cyan.bold;
@@ -52,43 +52,43 @@ module.exports = nodefony.register("cli", function () {
 
     constructor(name, container, notificationsCenter, options) {
       switch (arguments.length) {
-      case 0:
-        options = nodefony.extend({}, defaultOptions);
-        name = options.processName;
-        super(options.processName, null, null, options);
-        break;
-      case 1:
-        if (typeof name === "object" && name !== null) {
-          options = nodefony.extend({}, defaultOptions, name);
+        case 0:
+          options = nodefony.extend({}, defaultOptions);
           name = options.processName;
           super(options.processName, null, null, options);
-        } else {
-          options = nodefony.extend({}, defaultOptions);
-          name = name || options.processName;
-          super(name, null, null, options);
-        }
-        break;
-      case 2:
-        if (container instanceof nodefony.Container) {
-          options = nodefony.extend({}, defaultOptions);
-          name = name || options.processName;
-          super(name, container, null, options);
-        } else {
-          if (typeof container === "object" && container !== null) {
-            options = nodefony.extend({}, defaultOptions, container);
-            name = name || options.processName;
-            super(name, null, null, options);
+          break;
+        case 1:
+          if (typeof name === "object" && name !== null) {
+            options = nodefony.extend({}, defaultOptions, name);
+            name = options.processName;
+            super(options.processName, null, null, options);
           } else {
             options = nodefony.extend({}, defaultOptions);
             name = name || options.processName;
-            super(name, container, null, options);
+            super(name, null, null, options);
           }
-        }
-        break;
-      default:
-        options = nodefony.extend({}, defaultOptions, options);
-        name = name || options.processName;
-        super(name, container, notificationsCenter, options);
+          break;
+        case 2:
+          if (container instanceof nodefony.Container) {
+            options = nodefony.extend({}, defaultOptions);
+            name = name || options.processName;
+            super(name, container, null, options);
+          } else {
+            if (typeof container === "object" && container !== null) {
+              options = nodefony.extend({}, defaultOptions, container);
+              name = name || options.processName;
+              super(name, null, null, options);
+            } else {
+              options = nodefony.extend({}, defaultOptions);
+              name = name || options.processName;
+              super(name, container, null, options);
+            }
+          }
+          break;
+        default:
+          options = nodefony.extend({}, defaultOptions, options);
+          name = name || options.processName;
+          super(name, container, notificationsCenter, options);
       }
       this.environment = process.env.NODE_ENV || "production";
       process.env.NODE_ENV = this.environment;
@@ -332,7 +332,7 @@ module.exports = nodefony.register("cli", function () {
       this.clui = require("clui");
       this.emoji = require("node-emoji");
       this.spinner = null;
-      this.blankLine = function () {
+      this.blankLine = function() {
         var myLine = new this.clui.Line().fill();
         return () => {
           myLine.output();
@@ -465,18 +465,18 @@ module.exports = nodefony.register("cli", function () {
       }
       let message = pdu.payload;
       switch (typeof message) {
-      case "object":
-        switch (true) {
-        case (message instanceof nodefony.Error):
-          break;
-        case (message instanceof Error):
-          message = new nodefony.Error(message);
+        case "object":
+          switch (true) {
+            case (message instanceof nodefony.Error):
+              break;
+            case (message instanceof Error):
+              message = new nodefony.Error(message);
+              break;
+            default:
+              message = util.inspect(message);
+          }
           break;
         default:
-          message = util.inspect(message);
-        }
-        break;
-      default:
       }
       if (!this.wrapperLog) {
         this.wrapperLog = console.log;
@@ -608,6 +608,28 @@ module.exports = nodefony.register("cli", function () {
 
     createDirectory(myPath, mode, callback, force) {
       let file = null;
+      if (!callback) {
+        return new Promise((resolve, reject) => {
+            try {
+              fs.mkdirSync(myPath, mode);
+              file = new nodefony.fileClass(myPath);
+              return resolve(file);
+            } catch (e) {
+              switch (e.code) {
+                case "EEXIST":
+                  if (force) {
+                    file = new nodefony.fileClass(myPath);
+                    return resolve(file);
+                  }
+                  break;
+              }
+              return reject(e);
+            }
+          })
+          .catch(e => {
+            throw e;
+          });
+      }
       try {
         fs.mkdirSync(myPath, mode);
         file = new nodefony.fileClass(myPath);
@@ -615,13 +637,13 @@ module.exports = nodefony.register("cli", function () {
         return file;
       } catch (e) {
         switch (e.code) {
-        case "EEXIST":
-          if (force) {
-            file = new nodefony.fileClass(myPath);
-            callback(file);
-            return file;
-          }
-          break;
+          case "EEXIST":
+            if (force) {
+              file = new nodefony.fileClass(myPath);
+              callback(file);
+              return file;
+            }
+            break;
         }
         throw e;
       }
@@ -703,16 +725,16 @@ module.exports = nodefony.register("cli", function () {
 
     async npm(argv = [], cwd = path.resolve("."), env = null) {
       switch (env) {
-      case "dev":
-      case "development":
-        process.env.NODE_ENV = "development";
-        break;
-      case "prod":
-      case "production":
-        process.env.NODE_ENV = "production";
-        break;
-      default:
-        process.env.NODE_ENV = this.environment;
+        case "dev":
+        case "development":
+          process.env.NODE_ENV = "development";
+          break;
+        case "prod":
+        case "production":
+          process.env.NODE_ENV = "production";
+          break;
+        default:
+          process.env.NODE_ENV = this.environment;
       }
       return new Promise((resolve, reject) => {
         let cmd = null;
@@ -738,16 +760,16 @@ module.exports = nodefony.register("cli", function () {
 
     async yarn(argv = [], cwd = path.resolve("."), env = null) {
       switch (env) {
-      case "dev":
-      case "development":
-        process.env.NODE_ENV = "development";
-        break;
-      case "prod":
-      case "production":
-        process.env.NODE_ENV = "production";
-        break;
-      default:
-        process.env.NODE_ENV = this.environment;
+        case "dev":
+        case "development":
+          process.env.NODE_ENV = "development";
+          break;
+        case "prod":
+        case "production":
+          process.env.NODE_ENV = "production";
+          break;
+        default:
+          process.env.NODE_ENV = this.environment;
       }
       return new Promise((resolve, reject) => {
         let cmd = null;
