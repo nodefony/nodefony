@@ -61,7 +61,6 @@ nodefony.Builder = class Builder extends nodefony.Service {
           }
         }
         return resolve(this.cli.response);
-        //return reject(new Error(`Builder has not createBuilder Nothing to do !!`));
       } catch (e) {
         return reject(e);
       }
@@ -319,6 +318,5 @@ nodefony.Builder = class Builder extends nodefony.Service {
   }
 };
 nodefony.builders.bundles = require(path.resolve(__dirname, "cli", "builder", "bundle", "bundle.js"));
-nodefony.builders.Project = require(path.resolve(__dirname, "cli", "builder", "project", "project.js"));
 
 module.exports = nodefony.Builder;

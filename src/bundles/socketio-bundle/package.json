@@ -42,7 +42,7 @@
     "webpack-merge": "^4.2.1"
   },
   "devDependencies": {
-    "node-pre-gyp": "^0.12.0"
+    "node-pre-gyp": "^0.13.0"
   },
   "license": "CECILL-B",
   "readmeFilename": "README.md",

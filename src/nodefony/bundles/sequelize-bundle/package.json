@@ -14,7 +14,7 @@
     "mysql2": "^1.6.5",
     "pg": "^7.10.0",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^5.7.3",
+    "sequelize": "^5.7.5",
     "sqlite3": "^4.0.6",
     "tedious": "^6.1.1"
   },

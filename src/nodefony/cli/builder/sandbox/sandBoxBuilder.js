@@ -18,7 +18,7 @@ class SandBox extends nodefony.Builder {
       choices: [{
         name: 'Bootstrap'
       }, {
-        name: 'PWA'
+        name: 'Progressive Web App (PWA) Workbox'
       }]
     }]);
   }
@@ -35,7 +35,7 @@ class SandBox extends nodefony.Builder {
         }, {
           name: "appKernel.js",
           type: "file",
-          skeleton: path.resolve(this.pathSkeleton, "app", "appKernel.js.skeleton"),
+          skeleton: path.resolve(this.projectSkeleton, "app", "appKernel.js.skeleton"),
           params: this.cli.response
         }, {
           name: "Resources",
@@ -74,7 +74,7 @@ class SandBox extends nodefony.Builder {
           }, {
             name: "services.js",
             type: "copy",
-            path: path.resolve(this.pathSkeleton, "app", "config", "services.js")
+            path: path.resolve(this.projectSkeleton, "app", "config", "services.js")
           }, {
             name: "webpack.config.js",
             type: "copy",

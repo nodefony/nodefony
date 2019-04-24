@@ -2,7 +2,9 @@ let builderInstall = null;
 let builderGenerater = null;
 let builderTools = null;
 let builderPM2 = null;
+let projectBuilder = null;
 try {
+  projectBuilder = require(path.resolve(__dirname, "builder", "project", "project.js"));
   builderInstall = require(path.resolve(__dirname, "install", "install.js"));
   builderGenerater = require(path.resolve(__dirname, "generate", "generate.es6"));
   builderTools = require(path.resolve(__dirname, "tools", "tools.es6"));
@@ -458,7 +460,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
           this.terminate(1);
         }
       }
-      let project = new nodefony.builders.Project(this, command, args);
+      let project = new projectBuilder(this, command, args);
       return project.run(interactive)
         .then((res) => {
           return this.gitInit(project, res)

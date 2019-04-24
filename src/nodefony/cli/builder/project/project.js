@@ -1,8 +1,7 @@
+const SandBox = require("../sandbox/sandBoxBuilder.js");
 const Vue = require("../vue/vueBuilder.js");
 const React = require("../react/reactBuilder.js");
-const Bootstrap = require("../bootstrap/bootstrapBuilder.js");
-const SandBox = require("../sandbox/sandBoxBuilder.js");
-const WorkBox = require("../workbox/workBoxBuilder.js");
+const Demo = require("../demo/demoBuilder.js");
 
 module.exports = class generateProject extends nodefony.Builder {
 
@@ -96,7 +95,7 @@ module.exports = class generateProject extends nodefony.Builder {
         name: 'front',
         default: 0,
         pageSize: 5,
-        choices: ["Sandbox (without Front framwork)", "Bootstrap", "Vue.js", "React", "Progressive Web App (PWA) Workbox"],
+        choices: ["Sandbox (without Front framwork)", "Vue.js", "React", "Demo"],
         message: 'Choose Project Application Type (Mapping Front Framework in App) :',
         filter: (value) => {
           let front = null;
@@ -104,17 +103,14 @@ module.exports = class generateProject extends nodefony.Builder {
             case "Sandbox (without Front framwork)":
               front = "sandbox";
               break;
-            case "Bootstrap":
-              front = 'bootstrap';
+            case "Demo":
+              front = 'demo';
               break;
             case "Vue.js":
               front = "vue";
               break;
             case "React":
               front = 'react';
-              break;
-            case "Progressive Web App (PWA) Workbox":
-              front = 'workbox';
               break;
             default:
               front = value;
@@ -241,11 +237,8 @@ module.exports = class generateProject extends nodefony.Builder {
       case "react":
         this.Front = new React(this.cli, this.cmd, this.args);
         break;
-      case 'bootstrap':
-        this.Front = new Bootstrap(this.cli, this.cmd, this.args);
-        break;
-      case 'workbox':
-        this.Front = new WorkBox(this.cli, this.cmd, this.args);
+      case 'demo':
+        this.Front = new Demo(this.cli, this.cmd, this.args);
         break;
       case 'sandbox':
       default:
@@ -366,5 +359,4 @@ module.exports = class generateProject extends nodefony.Builder {
       throw e;
     }
   }
-
 };

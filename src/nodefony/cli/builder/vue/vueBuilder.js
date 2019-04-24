@@ -138,7 +138,7 @@ class Vue extends nodefony.Builder {
           }, {
             name: "services.js",
             type: "copy",
-            path: path.resolve(this.pathSkeleton, "app", "config", "services.js")
+            path: path.resolve(this.projectSkeleton, "app", "config", "services.js")
           }]
         }, {
           name: "Resources",
