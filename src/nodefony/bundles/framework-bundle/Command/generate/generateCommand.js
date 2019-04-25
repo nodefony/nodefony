@@ -25,18 +25,26 @@ class generateCommand extends nodefony.Command {
       return nodefony.builders.bundles.interaction(this.cli)
         .then((res) => {
           switch (res.type) {
-          case "nodefony":
-            return task.nodefony.apply(task, arguments);
-          case "react":
-            return task.react.apply(task, arguments);
-          case "angular":
-            return task.angular.apply(task, arguments);
+            case "nodefony":
+              return task.nodefony.apply(task, arguments);
+            case "react":
+              return task.react.apply(task, arguments);
+            case "angular":
+              return task.angular.apply(task, arguments);
           }
         });
     } else {
       return task.nodefony.apply(task, arguments);
     }
   }
+
+  /*bundle() {
+    let task = this.getTask("bundle");
+
+    //return task.run();
+    console.log(this.cli.response)
+  }*/
+
 
 }
 
