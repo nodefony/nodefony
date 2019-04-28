@@ -19,7 +19,7 @@ class generateCommand extends nodefony.Command {
     this.setTask("letsencrypt", letsencryptTask);
   }
 
-  bundle() {
+  /*bundle() {
     let task = this.getTask("bundle");
     if (this.interactive) {
       return nodefony.builders.bundles.interaction(this.cli)
@@ -36,14 +36,12 @@ class generateCommand extends nodefony.Command {
     } else {
       return task.nodefony.apply(task, arguments);
     }
-  }
-
-  /*bundle() {
-    let task = this.getTask("bundle");
-
-    //return task.run();
-    console.log(this.cli.response)
   }*/
+
+  bundle() {
+    let task = this.getTask("bundle");
+    return task.run(arguments);
+  }
 
 
 }

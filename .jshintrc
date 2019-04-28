@@ -7,6 +7,9 @@
   "eqeqeq": true,
   "curly": true,
   "loopfunc": true,
+  "browser": true,
+  "node": true,
+  "shelljs": true,
   "globals": {
     "nodefony": true,
     "kernel": true,

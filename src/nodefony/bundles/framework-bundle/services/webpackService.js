@@ -85,10 +85,10 @@ module.exports = class webpack extends nodefony.Service {
         return resolve();
       } else {
         if (this.kernel.isCore) {
-          this.logger(`WEBAPCK Compile Bundle ${bundle.name}`, "INFO");
+          this.logger(`FINDING WEBAPCK config Bundle ${bundle.name}`, "DEBUG");
         } else {
           if (!this.kernel.isBundleCore(bundle.name)) {
-            this.logger(`WEBAPCK Compile Bundle ${bundle.name}`, "INFO");
+            this.logger(`FINDING WEBAPCK config Bundle ${bundle.name}`, "DEBUG");
           }
         }
         shell.cd(bundle.path);

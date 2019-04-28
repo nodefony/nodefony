@@ -144,6 +144,15 @@ class SandBox extends nodefony.Builder {
       throw e;
     }
   }
+
+  builderProject() {
+
+  }
+
+  builderBundle() {
+
+  }
+
 }
 
 module.exports = SandBox;

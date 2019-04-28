@@ -1,3 +1,4 @@
+const bundlesBuilder = nodefony.builders.bundle;
 class bundlesTask extends nodefony.Task {
 
   constructor(name, command) {
@@ -12,15 +13,50 @@ class bundlesTask extends nodefony.Task {
     this.setHelp("generate:bundle name [path]",
       "Generate a nodefony Bundle  Example : nodefony generate:bundle name ./src/bundles"
     );
-    /*this.setHelp("generate:bundle:angular name [path]",
-      "Generate a Angular Bundle  Example : nodefony generate:bundle:angular name ./src/bundles"
+    this.setHelp("generate:bundle:vue name [path]",
+      "Generate a Vue.js Bundle  Example : nodefony generate:bundle:vue name ./src/bundles"
     );
     this.setHelp("generate:bundle:react name [path]",
       "Generate a React Bundle Example : nodefony generate:bundle:react name ./src/bundles"
-    );*/
+    );
   }
 
-  nodefony(name, Path = path.resolve("src", "bundles")) {
+
+  generate() {
+    return new bundlesBuilder(this.cli, this.cli.cmd, this.cli.args).run(this.cli.interactive);
+  }
+
+  /*interaction() {
+    return this.cli.prompt([{
+      type: 'list',
+      name: 'front',
+      default: 0,
+      pageSize: 5,
+      choices: ["Sandbox (without Front framwork)", "Vue.js", "React"],
+      message: 'Choose Bundle Type (Mapping Front Framework in Bundle) :',
+      filter: (value) => {
+        let front = null;
+        switch (value) {
+        case "Sandbox (without Front framwork)":
+          front = "sandbox";
+          break;
+        case "Vue.js":
+          front = "vue";
+          break;
+        case "React":
+          front = 'react';
+          break;
+        default:
+          front = value;
+        }
+        return front;
+      }
+      }]);
+  }*/
+
+
+
+  /*nodefony(name, Path = path.resolve("src", "bundles")) {
     let bundle = null;
     try {
       bundle = new nodefony.builders.bundles.nodefony(this.cli, "js");
@@ -140,7 +176,7 @@ class bundlesTask extends nodefony.Task {
     } catch (e) {
       throw e;
     }
-  }
+  }*/
 }
 
 module.exports = bundlesTask;

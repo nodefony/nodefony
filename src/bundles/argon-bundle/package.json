@@ -23,7 +23,8 @@
     "vue-flatpickr-component": "^8.1.2",
     "vue-lazyload": "^1.2.6",
     "vue-router": "^3.0.6",
-    "vue2-transitions": "^0.3.0"
+    "vue2-transitions": "^0.3.0",
+    "webpack-merge": "^4.2.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.6.0",

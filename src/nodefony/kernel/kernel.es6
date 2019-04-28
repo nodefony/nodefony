@@ -553,7 +553,7 @@ module.exports = nodefony.register("kernel", function () {
         res = path.resolve(globalPath, `@nodefony/${name}`);
         require.resolve(res);
         if (this.type === "SERVER") {
-          this.logger(`Find Global Core Bundle Package : @nodefony/${name} in : ${res}`, "INFO");
+          this.logger(`Find Global Core Bundle Package : @nodefony/${name} in : ${res}`, "DEBUG");
         }
         return res;
       } catch (e) {}
@@ -563,7 +563,7 @@ module.exports = nodefony.register("kernel", function () {
         res = path.resolve(globalPath, `@nodefony/${name}`);
         require.resolve(res);
         if (this.type === "SERVER") {
-          this.logger(`Find Global Bundle Package : @nodefony/${name} in : ${res}`, "INFO");
+          this.logger(`Find Global Bundle Package : @nodefony/${name} in : ${res}`, "DEBUG");
         }
         return res;
       } catch (e) {

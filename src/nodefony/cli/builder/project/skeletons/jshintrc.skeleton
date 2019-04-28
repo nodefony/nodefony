@@ -8,6 +8,9 @@
   "curly": true,
   "loopfunc": true,
   "multistr": true,
+  "browser": true,
+  "node": true,
+  "shelljs": true,
   "globals": {
     "nodefony": true,
     "kernel": true,
