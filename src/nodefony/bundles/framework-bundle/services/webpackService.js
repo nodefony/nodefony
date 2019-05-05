@@ -314,7 +314,11 @@ module.exports = class webpack extends nodefony.Service {
           config.cache = this.webPackSettings.cache;
         }
         bundle.webPackConfig = config;
-        bundle.webpackCompiler = webpack(config);
+        try {
+          bundle.webpackCompiler = webpack(config);
+        } catch (e) {
+          return reject(e);
+        }
         this.nbCompiler++;
         if (this.kernel.type === "CONSOLE" && this.kernel.cli.command !== "webpack") {
           return resolve(bundle.webpackCompiler);
@@ -405,7 +409,7 @@ module.exports = class webpack extends nodefony.Service {
             }
           }
           let idfile = basename + "_" + file.name;
-          this.runCompiler(bundle.webpackCompiler, idfile, basename, file.name);
+          return this.runCompiler(bundle.webpackCompiler, idfile, basename, file.name);
         }
       } catch (e) {
         shell.cd(this.kernel.rootDir);
@@ -431,12 +435,14 @@ module.exports = class webpack extends nodefony.Service {
         compiler.run((err, stats) => {
           this.loggerStat(err, stats, bundle, file);
           if (err) {
-            return reject(err);
+            throw err;
+            //return reject(err);
           }
           return resolve(compiler);
         });
       } catch (e) {
-        throw e;
+        this.logger(e, 'ERROR');
+        return resolve(compiler);
       }
     });
   }

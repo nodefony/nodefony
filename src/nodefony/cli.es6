@@ -728,7 +728,7 @@ module.exports = nodefony.register("cli", function () {
       }
     }
 
-    async npm(argv = [], cwd = path.resolve("."), env = null) {
+    async npm(argv = [], cwd = path.resolve("."), env = "dev") {
       switch (env) {
       case "dev":
       case "development":
@@ -763,7 +763,7 @@ module.exports = nodefony.register("cli", function () {
       });
     }
 
-    async yarn(argv = [], cwd = path.resolve("."), env = null) {
+    async yarn(argv = [], cwd = path.resolve("."), env = "dev") {
       switch (env) {
       case "dev":
       case "development":

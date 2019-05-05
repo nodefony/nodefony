@@ -176,6 +176,22 @@ module.exports = nodefony.register("kernel", function () {
         console.trace(e);
         throw e;
       }
+      this.once("onPostReady", () => {
+        if (process.getuid && process.getuid() === 0) {
+          //this.drop_root();
+        }
+      });
+    }
+
+    drop_root() {
+      try {
+        process.setgid('nobody');
+        process.setuid('nobody');
+      } catch (e) {
+        console.error(e);
+        console.log('Refusing to keep the process alive as root.');
+        nodefony.cli.quit(1);
+      }
     }
 
     start() {
