@@ -1,0 +1,107 @@
+		{% extends './layout.html.twig' %}
+
+		{% block stylesheets %}
+
+			{{ parent() }}
+
+			<!-- WEBPACK BUNDLE -->
+			
+			<link rel='stylesheet' href='{{CDN("stylesheet")}}/jfoBundle/assets/css/telnet.css' />
+
+		{% endblock %}
+
+		{% block javascripts %}
+
+			{{ parent() }}
+
+		    
+
+		    <!-- WEBPACK BUNDLE -->
+			<script src='{{CDN("javascript")}}/jfoBundle/assets/js/telnet.js'></script>
+
+		    <script type="text/javascript" src="{{CDN('javascript')}}/frameworkBundle/vendors/dataTable/js/jquery.dataTables.js"></script>
+			<script type="text/javascript" src="{{CDN('javascript')}}/frameworkBundle/vendors/dataTable/js/dataTables.bootstrap.js"></script>
+			
+			<script>
+				telnet.dashboard();
+			</script>
+		{% endblock %}
+
+
+
+		{% block title %}Telnet  Serial{% endblock %}
+
+		{% block body %}
+
+			{{ parent() }}
+
+			<img class='displayed' src='{{CDN("image")}}/frameworkBundle/images/nodefony-logo.png'/>
+			<h1 class="success" >
+				<a href="{{path('documentation')}}">
+					<strong  style="font-size:45px">
+						Network Monitoring 
+					</strong>
+				</a>
+			</h1>
+
+
+			<div class="wrapper">
+
+				<div class="row">
+					<div class="col-md-12 col-lg-12 col-sm-12">
+
+						<div id="HTTP" class="panel panel-nodefony">
+							<div class="panel-heading"><strong>DEVICES</strong></div>
+							<div  class="panel-body">
+
+								<ul class="nav nav-tabs">
+			  						<li role="presentation" class="active"><a data-target="#device" data-toggle="tab"  >DEVICES</a></li>
+								</ul>
+								<div class="tab-content wrapper">
+									
+									<div id="device" class="tab-pane active">
+
+										<div class="wrapper" >
+											<div class=""  >
+												<table class="table table-striped table-bordered">
+													<thead>
+														<tr>
+															<th>Device</th>
+															<th>type</th>
+															<th>IP</th>
+															
+														</tr>
+													</thead>
+													<tbody id="tableDevices">
+														{% for device in devices %}
+														<tr>
+															<td><a href="{{path('raspi-view', {hostname:device.device_id}) }}"">{{device.hostname}}</a></td>
+															<td>{{device.name}}</td>
+															<td>{{device.ip}}</td>
+														</tr>
+														{% endfor %}
+													</tbody>
+												</table>
+											</div>
+										</div>
+
+										{% for device in devices %}
+											<span name="{{device.hostname}}" id="{{device.device_id}}" >
+											{{ device.svg }}
+											</span>				
+										{% endfor %}
+
+									</div>
+									
+			                    </div>
+							</div>
+			            </div>
+			    	</div>
+
+			    </div>
+		</div>
+
+
+		{% endblock %}
+
+		

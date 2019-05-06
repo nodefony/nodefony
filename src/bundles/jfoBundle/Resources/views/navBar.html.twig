@@ -1,0 +1,51 @@
+<nav class="navbar navbar-custom" role="navigation">
+
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#custom-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand text-primary" href="{{path("home")}}" style="margin-left:20px" ><strong class="text-primary">SERIAL</strong></a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="custom-collapse">
+
+			<ul class="nav navbar-nav navbar-left">
+
+				 	
+				{{ render( controller("documentationBundle:default:navDoc" )) }}
+
+				
+			</ul>
+
+			<ul class="nav navbar-nav navbar-right">
+				
+				<li style='top:12px' >
+					<i class="fa fa-user" ></i>
+				</li>
+				<li class="dropdown">
+					{% if  user.username  %}
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.username}} <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="{{path('logout')}}">{{ "logout"|trans() }}</a></li>
+						</ul>
+					{% else %}
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Login <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="{{path('login')}}">{{ "ldap"|trans() }}</a></li>
+						</ul>
+
+					{% endif %}
+				</li>
+
+				
+			</ul>
+		</div>
+
+	</div><!-- .container -->
+
+</nav>

@@ -1,0 +1,13 @@
+textarea.terminal{
+    background-color: #000;
+    border: 1px solid #000;
+    color: #00ff00;
+    padding: 8px;
+    font-family: courier new;
+    width: 100%;
+    min-height: 400px;
+    max-height: 600px;
+    overflow: auto;
+    resize: none;
+
+}

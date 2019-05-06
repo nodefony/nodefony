@@ -1,0 +1,1 @@
+/home/nodefony/repository/nodefony/src/bundles/jfoBundle/doc/1.0/readme.md

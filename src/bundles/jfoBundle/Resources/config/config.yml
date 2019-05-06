@@ -1,0 +1,85 @@
+#
+#
+#	CONFIG BUNDLE jfoBundle
+#
+#===============================================================================
+#
+#  Copyright © 2017/2017         |
+#
+#===============================================================================
+#
+#        GENERATE BY raspberrypi BUILDER YAML FILE
+#
+# This file is YAML  FILE
+# ---
+# YAML:              YAML Ain't Markup Language
+#
+# What It Is:        YAML is a human friendly data serialization
+#   standard for all programming languages.
+#
+
+
+########## raspberrypi CONFIG BUNDLE  jfoBundle  ############
+name        :        jfoBundle
+version     :        "1.0.0"
+type        :        "nodefony"
+locale      :        en_en
+
+
+#
+#  WATCHERS
+#
+#    watchers Listen to changes, deletion, renaming of files and directories
+#    of different components
+#
+#    For watch all components
+#
+#      watch:			true
+#    or
+#      watch:
+#        controller     : true
+#        config         : true		# only  routing.yml
+#        views          : true
+#        translations   : true
+#        webpack        : true
+watch       :        true
+
+
+#
+#
+#	Insert here the bundle-specific configurations
+#
+#	You can also override config of another bundle
+#	with the name of the bundle
+#
+#	example :          create an other database connector
+#
+
+sessions_telnet:
+  test_box_8 :
+    host:            '192.168.245.206'
+    port:            2008
+    shellPrompt:     '~# '
+    timeout:         60000
+    initialLFCR:     true
+  monitoring_telnet:
+    host:            '192.168.245.206'
+    port:            2000
+    shellPrompt:     '-> '
+    timeout:         60000
+    initialLFCR:     true
+  test_deroule:
+    host:            '192.168.100.96'
+    port:            23
+    username:        "nodefony"
+    password:        "xxxxxxxx"
+    shellPrompt:     'CCI-DEROULE'
+    timeout:         60000
+    initialLFCR:     true
+  raspberrypi:
+    host:            '192.168.245.206'
+    port:            23
+    username:        "jfo"
+    password:        "xxxxxxxx"
+    shellPrompt:     '$ '
+    timeout:         60000

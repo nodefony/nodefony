@@ -1,0 +1,23 @@
+{
+    "name": "JFO",
+    "version": "1.0.0",
+    "description": "JFO",
+    "author": "admin admin@nodefony.com",
+    "scripts": {},
+    "private": true,
+    "keywords": [
+        "nodefony",
+        "javascript"
+    ],
+    "repository": {},
+    "dependencies": {
+        "jquery-caret-plugin": "^1.5.3",
+        "telnet-client": "^0.15.4"
+    },
+    "devDependencies": {},
+    "license": "CECILL-B",
+    "readmeFilename": "README.md",
+    "contributors": [
+        {}
+    ]
+}
