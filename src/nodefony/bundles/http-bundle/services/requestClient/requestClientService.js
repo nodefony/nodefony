@@ -45,7 +45,7 @@ class Request extends nodefony.Service {
     return myrequest.auth(this.options.auth.login, this.options.auth.passwd, sendImmediately, bearer);
   }
 
-  http(uri, options, container) {
+  async http(uri, options, container) {
     let req = null;
     return new Promise((resolve, reject) => {
       try {

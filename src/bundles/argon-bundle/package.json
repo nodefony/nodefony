@@ -14,7 +14,7 @@
   "dependencies": {
     "babel-loader": "^8.0.5",
     "bootstrap-vue": "^2.0.0-rc.18",
-    "clean-webpack-plugin": "^2.0.0",
+    "clean-webpack-plugin": "^2.0.2",
     "flatpickr": "^4.5.7",
     "nouislider": "^13.1.5",
     "optimize-css-assets-webpack-plugin": "^5.0.1",

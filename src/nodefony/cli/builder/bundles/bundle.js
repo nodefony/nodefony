@@ -36,7 +36,6 @@ class generateBundle extends nodefony.Builder {
   }
 
   generate(response) {
-    console.log("pass")
     return super.generate(response, true)
       .then(() => {
         return this.buildFront(this.cli.response, this.path)
@@ -53,16 +52,16 @@ class generateBundle extends nodefony.Builder {
   buildFront(response, location) {
     this.Front = null;
     switch (response.front) {
-    case "vue":
-      this.Front = new Vue(this.cli, this.cmd, this.args);
-      break;
-    case "react":
-      this.Front = new React(this.cli, this.cmd, this.args);
-      break;
-    case 'sandbox':
-    default:
-      this.Front = new SandBox(this.cli, this.cmd, this.args);
-      break;
+      case "vue":
+        this.Front = new Vue(this.cli, this.cmd, this.args);
+        break;
+      case "react":
+        this.Front = new React(this.cli, this.cmd, this.args);
+        break;
+      case 'sandbox':
+      default:
+        this.Front = new SandBox(this.cli, this.cmd, this.args);
+        break;
     }
     this.Front.setLocation(location);
     return this.Front;
@@ -108,21 +107,21 @@ class generateBundle extends nodefony.Builder {
       filter: (value) => {
         let front = null;
         switch (value) {
-        case "Sandbox (without Front framwork)":
-          front = "sandbox";
-          break;
-        case "Vue.js":
-          front = "vue";
-          break;
-        case "React":
-          front = 'react';
-          break;
-        default:
-          front = value;
+          case "Sandbox (without Front framwork)":
+            front = "sandbox";
+            break;
+          case "Vue.js":
+            front = "vue";
+            break;
+          case "React":
+            front = 'react';
+            break;
+          default:
+            front = value;
         }
         return front;
       }
-      }];
+    }];
 
     return this.cli.prompt(prompt)
       .then((response) => {
@@ -248,29 +247,29 @@ class generateBundle extends nodefony.Builder {
         name: this.name,
         type: "directory",
         childs: [
-            //this.controller.createBuilder("defaultController"),
-            //this.resources.createBuilder(),
-            //this.tests.createBuilder(),
-            //this.command.createBuilder(),
-            //this.service.createBuilder(),
-            //this.documentation.createBuilder(),
+          //this.controller.createBuilder("defaultController"),
+          //this.resources.createBuilder(),
+          //this.tests.createBuilder(),
+          //this.command.createBuilder(),
+          //this.service.createBuilder(),
+          //this.documentation.createBuilder(),
           {
             name: this.shortName + "Bundle.js",
             type: "file",
             //skeleton: this.skeleton,
             //params: this.cli.response
-            }, {
+          }, {
             name: "readme.md",
             type: "file"
-            }, {
+          }, {
             name: "Entity",
             type: "directory",
             childs: [{
               name: ".gitignore",
               type: "file"
-              }]
-            }
-          ]
+            }]
+          }
+        ]
       };
     } catch (e) {
       throw e;

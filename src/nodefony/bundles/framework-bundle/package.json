@@ -12,7 +12,7 @@
   ],
   "dependencies": {
     "bootstrap": "^4.3.1",
-    "clean-webpack-plugin": "^2.0.1",
+    "clean-webpack-plugin": "^2.0.2",
     "font-awesome": "^4.7.0",
     "memory-fs": "^0.4.1",
     "mini-css-extract-plugin": "^0.6.0",
