@@ -297,8 +297,9 @@ module.exports = nodefony.register("Bundle", function () {
             if (!res) {
               reject(new Error("Angular bundle no webpack config file : webpack.config.js "));
             }
-            return resolve(this.webpackService.loadConfig(res, this));
+            return resolve(this.loadWebpackConfig(res));
           } catch (e) {
+            shell.cd(this.kernel.rootDir);
             throw e;
           }
           break;
@@ -313,8 +314,9 @@ module.exports = nodefony.register("Bundle", function () {
             }
             res = new nodefony.fileClass(file);
             process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
-            return resolve(this.webpackService.loadConfig(res, this));
+            return resolve(this.loadWebpackConfig(res));
           } catch (e) {
+            shell.cd(this.kernel.rootDir);
             return reject(e);
           }
           break;
@@ -323,8 +325,9 @@ module.exports = nodefony.register("Bundle", function () {
           try {
             this.webpackConfigFile = new nodefony.fileClass(file);
             process.env.VUE_CLI_CONTEXT = this.path;
-            return resolve(this.webpackService.loadConfig(this.webpackConfigFile, this));
+            return resolve(this.loadWebpackConfig(this.webpackConfigFile));
           } catch (e) {
+            shell.cd(this.kernel.rootDir);
             return reject(e);
           }
           break;
@@ -334,12 +337,23 @@ module.exports = nodefony.register("Bundle", function () {
             if (!this.webpackConfigFile) {
               return resolve(true);
             }
-
-            return resolve(this.webpackService.loadConfig(this.webpackConfigFile, this));
+            return resolve(this.loadWebpackConfig(this.webpackConfigFile));
           } catch (e) {
+            shell.cd(this.kernel.rootDir);
             return reject(e);
           }
         }
+      });
+    }
+
+    loadWebpackConfig(conf){
+      return this.webpackService.loadConfig(conf, this)
+      .then((compiler)=>{
+        shell.cd(this.kernel.rootDir);
+        return compiler ;
+      }).catch(e=>{
+        shell.cd(this.kernel.rootDir);
+        throw e ;
       });
     }
 

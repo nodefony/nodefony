@@ -1,40 +1,5 @@
 import "../css/debugBar.css";
 
-const nativeBind = function() {
-  return (!!Function.prototype.bind);
-}();
-
-let setContext = null;
-if (!nativeBind) {
-  // bind tools
-  setContext = function() {
-
-    var mergeArg = function() {
-      if (Array.prototype.unshift) {
-        return function(tab, args) {
-          Array.prototype.unshift.apply(tab, args);
-        };
-      }
-      return function(tab, args) {
-        for (var i = args.length; i > 0; i--) {
-          Array.prototype.splice.call(tab, 0, 0, args[i - 1]);
-        }
-      };
-    }();
-
-    return function() {
-      var func = this;
-      var context = Array.prototype.shift.call(arguments);
-      var args = arguments;
-      return function() {
-        mergeArg(arguments, args);
-        return func.apply(context, arguments);
-      };
-    };
-  }();
-  Function.prototype.bind = setContext;
-}
-
 const listen = function() {
   if (document.addEventListener) {
     return function(event, handler, capture) {
@@ -118,21 +83,21 @@ const load = function() {
     this.addClass(this.debugbar, "hidden");
   }
 
-  this.listen(this.nodefonyClose, "click", function( /*event*/ ) {
+  this.listen(this.nodefonyClose, "click", ( /*event*/ ) =>{
     //var ev = new coreEvent(event);
     this.removeClass(this.smallContainer, "hidden");
     this.addClass(this.debugbar, "hidden");
     this.storage.set("nodefony_debug", false);
     //ev.stopPropagation();
-  }.bind(this));
+  });
 
-  this.listen(this.smallContainer, "click", function( /*event*/ ) {
+  this.listen(this.smallContainer, "click", ( /*event*/ ) =>{
     //var ev = new coreEvent(event);
     this.removeClass(this.debugbar, "hidden");
     this.addClass(this.smallContainer, "hidden");
     this.storage.set("nodefony_debug", true);
     //ev.stopPropagation();
-  }.bind(this));
+  });
 };
 
 

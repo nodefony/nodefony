@@ -234,7 +234,7 @@ module.exports = class webpack extends nodefony.Service {
       let watch = bundle.webpackWatch || false;
       let devServer = null;
       let watchOptions = {};
-      //shell.cd(Path);
+      shell.cd(Path);
       let webpack = null;
       try {
         webpack = require(path.resolve(bundle.path, "node_modules", "webpack"));
@@ -269,7 +269,7 @@ module.exports = class webpack extends nodefony.Service {
           break;
         case "react":
           publicPath = path.resolve("/", bundle.bundleName, "dist");
-          process.env.PUBLIC_URL = publicPath;
+          process.env.PUBLIC_URL = basename;
           process.env.PUBLIC_PATH = publicPath;
           process.env.HOST = this.socksSettings.domain + ":" + this.socksSettings.port;
           process.env.HTTPS = true;
@@ -300,7 +300,6 @@ module.exports = class webpack extends nodefony.Service {
         try {
           devServer = this.addDevServerEntrypoints(config, watch, type);
         } catch (e) {
-          shell.cd(this.kernel.rootDir);
           return reject(e);
         }
         //context
@@ -362,7 +361,6 @@ module.exports = class webpack extends nodefony.Service {
         }
       } catch (e) {
         this.logger(e, 'ERROR');
-        shell.cd(this.kernel.rootDir);
         return reject(e);
       }
       try {
@@ -412,7 +410,6 @@ module.exports = class webpack extends nodefony.Service {
           return this.runCompiler(bundle.webpackCompiler, idfile, basename, file.name);
         }
       } catch (e) {
-        shell.cd(this.kernel.rootDir);
         return reject(e);
       }
     });

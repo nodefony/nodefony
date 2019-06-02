@@ -1,13 +1,13 @@
-// WEBPACK DEV CONFIGURATION
-
-const webpackDevClient = "webpack-dev-server/client?https://" + kernel.hostHttps + "/";
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   mode: "development",
-  entry: {
-    workbox: [webpackDevClient]
-  },
   devtool: "source-map",
-  resolve: {},
-  plugins: []
+  plugins: [
+    new CleanWebpackPlugin({
+      verbose: kernel.debug
+    })
+    //new webpack.NamedModulesPlugin(),
+    //new webpack.HotModuleReplacementPlugin()
+  ]
 };

@@ -36,6 +36,20 @@ module.exports = class serverStatics extends nodefony.Service {
       }
       let Path = this.settings[staticRoot].path;
       Path = this.kernel.checkPath(Path);
+      let setHeaders = null ;
+      if (this.settings[staticRoot].options.setHeaders){
+        if ( typeof this.settings[staticRoot].options.setHeaders === "function"){
+          setHeaders = this.settings[staticRoot].options.setHeaders ;
+          delete this.settings[staticRoot].options.setHeaders ;
+        }
+      }
+      this.settings[staticRoot].options.setHeaders = (res, path)=>{
+        this.logger(`Serve Static ${path}`,"DEBUG");
+        this.fire("onServeStatic", res, path, staticRoot, this);
+      };
+      if (setHeaders){
+        this.on("onServeStatic", setHeaders);
+      }
       this.addDirectory(Path, this.settings[staticRoot].options);
     }
   }

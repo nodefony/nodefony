@@ -18,6 +18,18 @@ monitoring-index:
   pattern:             /nodefony
   defaults: {"controller": "monitoring:default:index"}
 
+monitoring-404:
+  pattern:             /nodefony/404
+  defaults: {"controller": "framework:default:404"}
+
+monitoring-500:
+  pattern:             /nodefony/500
+  defaults: {"controller": "framework:default:500"}
+
+monitoring-offline:
+  pattern:             /nodefony/offline
+  defaults: {"controller": "framework:default:500"}
+
 monitoring-module:
   pattern:             /nodefony/{module}
   defaults: {"controller": "monitoring:default:index"}

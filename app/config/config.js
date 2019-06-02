@@ -1,5 +1,3 @@
-//const path = require("path");
-
 module.exports = {
   locale: "en_en",
   App: {
@@ -23,7 +21,7 @@ module.exports = {
    *  or
    *      watch:{
    *        controller:             true
-   *        config:                 true        // only  routing.yml
+   *        config:                 true        // only  routing and services
    *        views:                  true
    *        translations:           true
    *        webpack:                true
@@ -235,7 +233,7 @@ module.exports = {
         maxAge: 0
       },
       web: {
-        path: "web",
+        path: path.resolve("web"),
         options: {
           maxAge: 0 //30*24*60*60*1000
         }

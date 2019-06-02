@@ -1,105 +1,110 @@
 const path = require("path");
-require('require-yaml');
 //const webpack = require('webpack');
-const htmlPlugin = require('html-webpack-plugin');
-const cleanPlugin = require('clean-webpack-plugin');
-const workboxPlugin = require('workbox-webpack-plugin');
-const webpackMerge = require('webpack-merge');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const htmlPlugin = require('html-webpack-plugin');
+const webpackMerge = require('webpack-merge');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
-const bundlePath = path.resolve(__dirname, "..", "..");
-const bundlePathConfig = path.resolve(bundlePath, "Resources", "config");
-const bundleName = path.basename(bundlePath);
-const bundleConfig = require(path.resolve(bundlePathConfig, "config.yml"));
-const public = path.resolve(__dirname, "..", "public");
-const publicPath = path.join("/", bundleName, "/");
-const dist = path.resolve(public, "dist");
+// Default context <bundle base directory>
+//const context = path.resolve(__dirname, "..", "Resources", "public");
+const public = path.resolve(__dirname, "..", "public", "assets");
+const package = require(path.resolve("package.json"));
+const bundleConfig = require(path.resolve(__dirname, "..", "config", "config.js"));
+const bundleName = package.name;
+const publicPath = `/${bundleName}/assets/`;
+
 
 let config = null;
 let verbose = false;
 
 if (kernel.environment === "dev") {
   verbose = true;
-  config = require(path.resolve(bundlePathConfig, "webpack", "webpack.dev.config.js"));
+  config = require("./webpack/webpack.dev.config.js");
 } else {
-  config = require(path.resolve(bundlePathConfig, "webpack", "webpack.prod.config.js"));
+  config = require("./webpack/webpack.prod.config.js");
+  //dev = false;
 }
-//console.log(path.join("dist", "js", "[name].js"))
 
-module.exports = webpackMerge({
-  context: public,
+module.exports = webpackMerge(config, {
+  //context: context,
   target: "web",
   entry: {
-    workbox: ["./js/workbox.js"]
+    workbox: ["./Resources/js/workbox.js"]
   },
   output: {
     path: public,
     publicPath: publicPath,
-    filename: "./dist/js/[name].js",
-    library: "[name]"
-    //libraryTarget: "umd"
+    filename: "./js/[name].js",
+    library: "[name]",
+    libraryExport: "default"
   },
   externals: {},
   resolve: {},
   module: {
     rules: [{
-      // BABEL TRANSCODE
-      test: new RegExp("\.es6$"),
-      exclude: new RegExp("node_modules"),
-      use: [{
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/preset-env']
-        }
-      }]
-    }, {
-      // CSS EXTRACT
-      test: new RegExp("\.(less|css)$"),
-      use: [
-        //'css-hot-loader',
-        MiniCssExtractPlugin.loader,
-        'css-loader',
-        'less-loader'
-      ]
-    }, {
-      // SASS
-      test: new RegExp(".scss$"),
-      use: [{
-        loader: 'style-loader'
+        // BABEL TRANSCODE
+        test: new RegExp("\.es6$|\.js$"),
+        exclude: new RegExp("node_modules"),
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }]
       }, {
-        loader: 'css-loader'
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          //'css-hot-loader',
+          MiniCssExtractPlugin.loader,
+          {
+            loader: "css-loader",
+            options: {
+              sourceMap: true
+            }
+          }, {
+            loader: 'resolve-url-loader',
+            options: {}
+          }, {
+            loader: 'postcss-loader', // Run post css actions
+            options: {
+              plugins: () => [require('precss'), require('autoprefixer')]
+            }
+          }, {
+            loader: "sass-loader",
+            options: {
+              sourceMap: true
+            }
+          }
+        ]
       }, {
-        loader: 'sass-loader'
-      }]
-    }, {
-      // FONTS
-      test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/dist/fonts/" + '&outputPath=/dist/fonts/',
-    }, {
-      // IMAGES
-      test: new RegExp("\.(jpg|png|gif)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + "/dist/images/" + '&outputPath=/dist/images/'
-    }, {
-      test: new RegExp("\.twig$"),
-      loader: "twig-loader"
-    }, {
-      test: new RegExp("\.html$"),
-      loader: "html-loader"
-    }]
+        test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'fonts/', // where the fonts will go
+            publicPath: `/${bundleName}/assets/fonts/` // override the default path
+          }
+        }]
+      }, {
+        // IMAGES
+        test: /\.(gif|png|jpe?g|svg)$/i,
+        use: [{
+            loader: "file-loader",
+            options: {
+              name: "[name].[ext]",
+              publicPath: `/${bundleName}/assets/images/`,
+              outputPath: "/images/"
+            }
+          }
+        ]
+      }
+    ]
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: "./dist/css/[name].css",
-      allChunks: true
-    }),
-    /*new cleanPlugin({
-      root: public,
-      verbose: verbose,
-      watch: false,
-    }),*/
     new htmlPlugin({
-      filename: "dist/index.html",
-      template: path.resolve(bundlePath, "Resources", "templates", "index.html.twig"),
+      filename: path.resolve("Resources", "views", "index.html.twig"),
+      template: path.resolve("Resources", "templates", "index.html.twig"),
       title: 'Nodefony Workbox For Webpack',
       cache: !verbose,
       inject: true,
@@ -111,16 +116,21 @@ module.exports = webpackMerge({
       chunks: ['workbox'],
       config: bundleConfig
     }),
-    new workboxPlugin.InjectManifest({
-      swSrc: path.resolve(public, "workers", "service-worker.js"),
-      swDest: path.resolve(public, "dist", 'workers', 'service-worker.js'),
-      include: [/\.html$/, /\.js$/, /\.css$/],
-      importScripts: [
-        //path.resolve("/", "workboxBundle", "workers", "nodefony-worker.js"),
-        //path.resolve("/", "workboxBundle", "workers", "precache-worker.js")
-      ],
-      //importWorkboxFrom: "disabled",
+    new MiniCssExtractPlugin({
+      filename: "./css/[name].css",
+      allChunks: true
+    }),
+    //new WorkboxPlugin.GenerateSW(),
+    new WorkboxPlugin.InjectManifest({
+      swSrc: path.resolve("Resources", "workers", "service-worker.js"),
+      swDest: path.resolve("Resources","public" ,"assets","service-worker.js"),
+      //include: [/workbox/, /\.js$/, /\.css$/],
+      importsDirectory: 'wb-assets',
       chunks: ['workbox']
     })
-  ]
-}, config);
+  ],
+  devServer: {
+    inline: true,
+    hot: false
+  }
+});

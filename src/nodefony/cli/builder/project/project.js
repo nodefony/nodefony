@@ -1,7 +1,3 @@
-const SandBox = require("../sandbox/sandBoxBuilder.js");
-const Vue = require("../vue/vueBuilder.js");
-const React = require("../react/reactBuilder.js");
-const Demo = require("../demo/demoBuilder.js");
 
 module.exports = class generateProject extends nodefony.Builder {
 
@@ -16,12 +12,15 @@ module.exports = class generateProject extends nodefony.Builder {
         this.location = args[1] || path.resolve(".");
       }
     }
-    nodefony.extend(this.cli.response, {
+    this.response = nodefony.extend(true, {}, this.cli.response, {
       name: this.name || "nodefony-starter",
+      bundleName:"app",
+      shortName:"app",
       description: "Project Description",
       front: "sandbox",
       path: this.location || path.resolve("."),
       authorFullName: "admin",
+      authorName: "admin",
       authorMail: "admin@nodefony.com",
       domain: "0.0.0.0",
       portHttp: "5151",
@@ -47,8 +46,39 @@ module.exports = class generateProject extends nodefony.Builder {
       .then(() => {
         return this.buildFront(this.cli.response, this.path)
           .run(true)
-          .then(() => {
-            return response;
+          .then((project) => {
+            return this.cli.installProject(this.path)
+            .then(()=>{
+              if ( project.response.bundle){
+                this.cli.response.project = true;
+                this.cli.response.config = {
+                  App: {
+                    projectName: project.response.name,
+                    authorName: project.response.authorFullName,
+                    authorMail: project.response.authorMail,
+                    local: project.response.locale,
+                    projectYear: project.response.year
+                  }
+                };
+                this.cli.response.configKernel = {
+                  system: {
+                    domain: project.response.domain
+                  }
+                };
+                let bundle = new nodefony.builders.bundle(this.cli, this.cmd, this.args );
+                console.log(this.cli.interactive)
+                return bundle.run(true)
+                .then(()=>{
+                    return project.response;
+                });
+              }
+              return project.response;
+            })
+            .catch((e) => {
+              this.logger(e, "ERROR");
+            });
+
+
           })
           .catch((e) => {
             throw e;
@@ -56,11 +86,11 @@ module.exports = class generateProject extends nodefony.Builder {
       });
   }
 
-  interaction() {
+  async interaction() {
     return this.cli.prompt([{
         type: 'input',
         name: 'name',
-        default: this.cli.response.name,
+        default: this.response.name,
         message: 'Enter Nodefony Project Name',
         validate: (value) => {
           if (value && value !== "nodefony") {
@@ -77,16 +107,16 @@ module.exports = class generateProject extends nodefony.Builder {
         default: "Project Description",
         validate: (value) => {
           if (!value) {
-            this.cli.response.description = `${this.cli.response.description} ${this.name}`;
+            this.cli.response.description = `${this.response.description} ${this.name}`;
           }
           return true;
         },
         filter: (value) => {
           if (!value) {
-            return this.cli.response.description;
+            return this.response.description;
           }
           if (value === "Project Description") {
-            return this.cli.response.description;
+            return this.response.description;
           }
           return value;
         }
@@ -95,7 +125,19 @@ module.exports = class generateProject extends nodefony.Builder {
         name: 'front',
         default: 0,
         pageSize: 5,
-        choices: ["Sandbox (without Front framwork)", "Vue.js", "React", "Demo"],
+        choices: [{
+          name:"Sandbox (without Front framwork)"
+        },{
+          name:"Vue.js"
+        },{
+          name:"React"
+        },{
+          name:"Demo",
+        },{
+          name:"Electron",
+          disabled:true
+        }],
+        //choices: ["Sandbox (without Front framwork)", "Vue.js", "React", "Demo"],
         message: 'Choose Project Application Type (Mapping Front Framework in App) :',
         filter: (value) => {
           let front = null;
@@ -112,6 +154,9 @@ module.exports = class generateProject extends nodefony.Builder {
             case "React":
               front = 'react';
               break;
+            case "Electron":
+              front = 'electron';
+              break;
             default:
               front = value;
           }
@@ -120,7 +165,7 @@ module.exports = class generateProject extends nodefony.Builder {
       }, {
         type: 'input',
         name: 'path',
-        default: this.cli.response.path,
+        default: this.response.path,
         message: 'Project Path',
         validate: (value) => {
           let myPath = null;
@@ -142,39 +187,40 @@ module.exports = class generateProject extends nodefony.Builder {
       }, {
         type: 'input',
         name: 'authorFullName',
-        default: this.cli.response.authorFullName,
+        default: this.response.authorFullName,
         message: 'Please Enter Author Full Name',
         filter: (value) => {
           if (!value) {
-            return this.cli.response.authorFullName;
+            this.response.authorName = this.response.authorFullName;
+            return this.response.authorFullName;
           }
           return value;
         }
       }, {
         type: 'input',
         name: 'authorMail',
-        default: this.cli.response.authorMail,
+        default: this.response.authorMail,
         message: 'Please Enter Email Author ',
         filter: (value) => {
           if (!value) {
-            return this.cli.response.authorMail;
+            return this.response.authorMail;
           }
           return value;
         }
       }, {
         type: 'input',
         name: 'domain',
-        default: this.cli.response.domain,
+        default: this.response.domain,
         message: 'Enter Server Domain :',
       }, {
         type: 'input',
         name: 'portHttp',
-        default: this.cli.response.portHttp,
+        default: this.response.portHttp,
         message: 'Enter server Domain http Port  :',
       }, {
         type: 'input',
         name: 'portHttps',
-        default: this.cli.response.portHttps,
+        default: this.response.portHttps,
         message: 'Enter Server Secure Domain https Port  :',
       }, {
         type: 'list',
@@ -202,18 +248,18 @@ module.exports = class generateProject extends nodefony.Builder {
         type: 'confirm',
         name: 'bundle',
         message: 'Do You Want Generate Bundle?',
-        default: this.cli.response.bundle
+        default: this.response.bundle
       }])
       .then((response) => {
-        nodefony.extend(this.cli.response, response);
+        nodefony.extend(this.response, response);
         this.path = path.resolve(this.location, response.name);
         if (this.cli.exists(this.path)) {
           this.logger(`${this.path} Already exist`, "WARNING");
           return this.removeInteractivePath(this.path)
             .then((response) => {
-              nodefony.extend(this.cli.response, response);
+              nodefony.extend(this.response, response);
               if (response.remove) {
-                return this.cli.response;
+                return this.response;
               }
               let error = new Error(`${this.path} Already exist`);
               error.code = 0;
@@ -222,63 +268,43 @@ module.exports = class generateProject extends nodefony.Builder {
               throw e;
             });
         }
-        return this.cli.response;
+        return this.response;
       }).catch(e => {
         throw e;
       });
   }
 
-  buildFront(response, location) {
-    this.Front = null;
-    switch (response.front) {
-      case "vue":
-        this.Front = new Vue(this.cli, this.cmd, this.args);
-        break;
-      case "react":
-        this.Front = new React(this.cli, this.cmd, this.args);
-        break;
-      case 'demo':
-        this.Front = new Demo(this.cli, this.cmd, this.args);
-        break;
-      case 'sandbox':
-      default:
-        this.Front = new SandBox(this.cli, this.cmd, this.args);
-        break;
-    }
-    this.Front.setLocation(location, "app");
-    return this.Front;
-  }
-
-  createBuilder() {
+  createBuilder(response) {
+    nodefony.extend(this.cli.response, response);
     try {
       return {
-        name: this.cli.response.name,
+        name: this.response.name,
         type: "directory",
         childs: [{
           name: "package.json",
           type: "file",
           skeleton: path.resolve(this.pathSkeleton, "package.json.skeleton"),
-          params: this.cli.response
+          params: this.response
         }, {
           name: ".gitignore",
           type: "file",
           skeleton: path.resolve(this.pathSkeleton, "gitignore.skeleton"),
-          params: this.cli.response
+          params: this.response
         }, {
           name: ".jshintrc",
           type: "file",
           skeleton: path.resolve(this.pathSkeleton, "jshintrc.skeleton"),
-          params: this.cli.response
+          params: this.response
         }, {
           name: ".jshintignore",
           type: "file",
           skeleton: path.resolve(this.pathSkeleton, "jshintignore.skeleton"),
-          params: this.cli.response
+          params: this.response
         }, {
           name: ".editorconfig",
           type: "file",
           skeleton: path.resolve(this.pathSkeleton, "editorconfig.skeleton"),
-          params: this.cli.response
+          params: this.response
         }, {
           name: "web",
           type: "directory"
@@ -301,7 +327,7 @@ module.exports = class generateProject extends nodefony.Builder {
                 name: "openssl.cnf",
                 type: "file",
                 skeleton: path.resolve(this.pathSkeleton, "config", "openssl", "ca", "openssl.cnf.skeleton"),
-                params: this.cli.response
+                params: this.response
               }]
             }, {
               name: "ca_intermediate",
@@ -310,19 +336,19 @@ module.exports = class generateProject extends nodefony.Builder {
                 name: "openssl.cnf",
                 type: "file",
                 skeleton: path.resolve(this.pathSkeleton, "config", "openssl", "ca_intermediate", "openssl.cnf.skeleton"),
-                params: this.cli.response
+                params: this.response
               }]
             }]
           }, {
             name: "config.js",
             type: "file",
             skeleton: path.resolve(this.pathSkeleton, "config", "config.js.skeleton"),
-            params: this.cli.response
+            params: this.response
           }, {
             name: "pm2.config.js",
             type: "file",
             skeleton: path.resolve(this.pathSkeleton, "config", "pm2.config.js.skeleton"),
-            params: this.cli.response
+            params: this.response
           }]
         }, {
           name: "bin",
@@ -332,7 +358,7 @@ module.exports = class generateProject extends nodefony.Builder {
             type: "file",
             chmod: 755,
             skeleton: path.resolve(this.pathSkeleton, "bin", "generateCertificates.sh.skeleton"),
-            params: this.cli.response
+            params: this.response
           }]
         }, {
           name: "src",

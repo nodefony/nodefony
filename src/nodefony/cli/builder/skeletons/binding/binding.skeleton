@@ -1,0 +1,8 @@
+{
+  "targets": [
+    {
+      "target_name": "{{shortName}}",
+      "sources": [ "src/addon/{{shortName}}.cc" ]
+    }
+  ]
+}

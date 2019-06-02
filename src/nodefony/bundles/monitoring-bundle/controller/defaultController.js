@@ -33,13 +33,26 @@
           return this.render('monitoringBundle::' + module + '.xml.twig', {
             bundles: bundles,
             user: this.context.user
+          }).catch(e=>{
+            this.logger(e,"ERROR");
+            this.response.setHeader('Content-Type', "text/html");
+            return this.createNotFoundException();
           });
         }
-        return this.render('monitoringBundle::' + module + '.xml.twig');
+        return this.render('monitoringBundle::' + module + '.xml.twig')
+        .catch(e=>{
+          this.log(e,"ERROR");
+          this.response.setHeader('Content-Type', "text/html");
+          return this.createNotFoundException();
+        });
       } else {
         return this.render('monitoringBundle::index.html.twig', {
           environment: this.kernel.environment,
           debug: this.kernel.debug
+        }).catch(e=>{
+          this.logger(e,"ERROR");
+          this.response.setHeader('Content-Type', "text/html");
+          return this.createNotFoundException();
         });
       }
     }

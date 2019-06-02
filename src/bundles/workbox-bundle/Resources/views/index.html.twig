@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang={{htmlWebpackPlugin.options.config.locale}}>
+  <head>
+    <title>{{htmlWebpackPlugin.options.title}}
+    </title>
+    {% block head %}{% endblock %}
+    {% block meta %}
+      <meta charset=utf-8>
+      <meta http-equiv=content-type content="text/html; charset=UTF-8">
+      <meta http-equiv=X-UA-Compatible content="IE=edge">
+      <meta name=viewport content="width=device-width,initial-scale=1">
+      <meta name=generator content="Nodefony (https://nodefony.net)">
+      <meta name=keywords content=web,Framework,node.js,workbox,javascript,npm,yarn>
+      <meta name=theme-color content=#2196F3>
+      <link rel=manifest href=/workbox-bundle/manifest.json>
+      <link rel=icon type=image/x-icon href=/app/favicon.ico>
+    {% endblock %}
+    {% block description %}
+      <meta name=description content="Nodefony node.js full-stack web framework PWA (Progressive Web Application)">
+    {% endblock %}
+    {% block stylesheets %}{% endblock %}
+  <link href=/workbox-bundle/assets/./css/workbox.css rel=stylesheet></head>
+  <body>
+    {% block body %}
+      <img class=displayed src=/workbox-bundle/images/nodefony-logo.png>
+      <h1 class=success>
+        <p>
+          PROGRESSIVE WEB APPS
+        </p>
+        <img class="displayed workbox" src=/workbox-bundle/images/Workbox-Logo-Grey.svg>
+        <img class="displayed workbox" src=/workbox-bundle/images/webpack.svg>
+      </h1>
+    {% endblock %}
+    {% block footer %}{% endblock %}
+    {% block javascripts %}{% endblock %}
+  <script type=text/javascript src=/workbox-bundle/assets/./js/workbox.js></script></body>
+</html>

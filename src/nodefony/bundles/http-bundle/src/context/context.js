@@ -35,6 +35,7 @@ nodefony.register("Context", () => {
       // Authorisation
       this.accessControl = null;
       this.isControlledAccess = false;
+      this.contentLength = false ;
     }
 
     logger(pci, severity, msgid, msg) {

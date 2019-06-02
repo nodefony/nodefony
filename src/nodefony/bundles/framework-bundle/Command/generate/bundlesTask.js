@@ -23,38 +23,18 @@ class bundlesTask extends nodefony.Task {
 
 
   generate() {
-    return new bundlesBuilder(this.cli, this.cli.cmd, this.cli.args).run(this.cli.interactive);
+    return new bundlesBuilder(this.cli, this.cli.cmd, this.cli.args)
+    .run(this.cli.interactive)
+    .then((obj)=>{
+      return obj.builder.install()
+      .then(() => {
+        this.cli.terminate(0);
+      }).catch((e) => {
+        this.logger(e, "ERROR");
+        this.cli.terminate(0);
+      });
+    });
   }
-
-  /*interaction() {
-    return this.cli.prompt([{
-      type: 'list',
-      name: 'front',
-      default: 0,
-      pageSize: 5,
-      choices: ["Sandbox (without Front framwork)", "Vue.js", "React"],
-      message: 'Choose Bundle Type (Mapping Front Framework in Bundle) :',
-      filter: (value) => {
-        let front = null;
-        switch (value) {
-        case "Sandbox (without Front framwork)":
-          front = "sandbox";
-          break;
-        case "Vue.js":
-          front = "vue";
-          break;
-        case "React":
-          front = 'react';
-          break;
-        default:
-          front = value;
-        }
-        return front;
-      }
-      }]);
-  }*/
-
-
 
   /*nodefony(name, Path = path.resolve("src", "bundles")) {
     let bundle = null;

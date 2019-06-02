@@ -184,7 +184,7 @@ module.exports = nodefony.register("Response", function () {
       if (!this.response.headersSent) {
         //this.response.statusMessage = this.statusMessage;
         try {
-          if (this.context.method === "HEAD") {
+          if (this.context.method === "HEAD" || this.context.contentLength) {
             this.setHeader('Content-Length', this.getLength());
           }
           //this.headers = nodefony.extend(this.headers, this.getHeaders(), headers);

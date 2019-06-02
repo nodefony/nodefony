@@ -1,0 +1,32 @@
+{
+  "name": "{{name}}",
+  "short_name": "{{shortName}}",
+  "display": "standalone",
+  "start_url": {% if bundleName == "app" %}"/""{%else%}"/{{shortName}}"{%endif%},
+  "description": "Node.js WPA ",
+  "default_locale": "en",
+  "background_color": "#2196F3",
+  "theme_color": "#2196F3",
+  "orientation": "landscape",
+  "icons": [{
+      "src": "/{{bundleName}}/favicon.ico",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "/{{bundleName}}/images/nodefony-logo.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/{{bundleName}}/images/nodefony-logo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "developer": {
+    "name": "{{authorName}}",
+  },
+  "gcm_sender_id": "my_gcm_sender_id",
+  "gcm_user_visible_only": true
+}

@@ -462,12 +462,13 @@ module.exports = class cliStart extends nodefony.cliKernel {
       }
       let project = new projectBuilder(this, command, args);
       return project.run(interactive)
-        .then((res) => {
-          return this.gitInit(project, res)
+        .then((obj) => {
+          return this.gitInit(project, obj.response)
             .then(() => {
+              let res = obj.response ;
               let cwd = path.resolve(project.location, project.name);
               this.logger(`Create Project ${res.name} complete`, "INFO");
-              if (res.bundle) {
+              if (false /*res.bundle*/) {
                 this.response.project = true;
                 this.response.config = {
                   App: {

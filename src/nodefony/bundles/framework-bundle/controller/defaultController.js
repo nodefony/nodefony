@@ -5,6 +5,11 @@ module.exports = class defaultController extends nodefony.controller {
   }
 
   ["404Action"](error) {
+    if (!error) {
+      error = new Error();
+      error.code = 404;
+      throw error;
+    }
     this.getResponse().setStatusCode(404);
     if (this.context.isJson) {
       return this.render('frameworkBundle::404.json.twig', {

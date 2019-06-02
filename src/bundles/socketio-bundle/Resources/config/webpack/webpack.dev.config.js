@@ -1,7 +1,5 @@
 // WEBPACK DEV CONFIGURATION
-//const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-//const public = path.resolve(__dirname, "..", "..", "public");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   mode: "development",

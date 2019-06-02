@@ -1,5 +1,4 @@
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-//const public = path.resolve(__dirname, "..", "..", "Resources", "public");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   mode: "development",

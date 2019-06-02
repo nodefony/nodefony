@@ -2,6 +2,7 @@ class Vue extends nodefony.Builder {
   constructor(cli, cmd, args) {
     super(cli, cmd, args);
     this.log("Build Vue.js Project");
+    this.globalSkeleton = path.resolve(__dirname, "..", "skeletons");
     this.pathSkeleton = path.resolve(__dirname, "skeletons");
     this.projectSkeleton = path.resolve(__dirname, "..", "project", "skeletons");
     this.cliVue = this.getCli();
@@ -95,7 +96,7 @@ class Vue extends nodefony.Builder {
         childs: [{
           name: "appKernel.js",
           type: "file",
-          skeleton: path.resolve(this.pathSkeleton, "app", "appKernel.js.skeleton"),
+          skeleton: path.resolve(this.globalSkeleton, "appKernel.js"),
           params: this.cli.response
         }, {
           name: "Resources",
@@ -125,20 +126,22 @@ class Vue extends nodefony.Builder {
           childs: [{
             name: "config.js",
             type: "file",
-            skeleton: path.resolve(this.pathSkeleton, "app", "config", "config.js"),
+            skeleton: path.resolve(this.globalSkeleton, "config", "config.js"),
             params: this.cli.response
           }, {
             name: "routing.js",
-            type: "copy",
-            path: path.resolve(this.pathSkeleton, "app", "config", "routing.js")
+            type: "file",
+            skeleton: path.resolve(this.globalSkeleton, "config", "routing.js"),
+            params: this.cli.response
           }, {
             name: "security.js",
-            type: "copy",
-            path: path.resolve(this.pathSkeleton, "app", "config", "security.js")
+            type: "file",
+            skeleton: path.resolve(this.pathSkeleton, "app", "config", "security.js"),
+            params: this.cli.response
           }, {
             name: "services.js",
             type: "copy",
-            path: path.resolve(this.projectSkeleton, "app", "config", "services.js")
+            path: path.resolve(this.globalSkeleton, "config", "services.js")
           }]
         }, {
           name: "Resources",
@@ -153,7 +156,7 @@ class Vue extends nodefony.Builder {
             }, {
               name: "framework-bundle",
               type: "copy",
-              path: path.resolve(this.projectSkeleton, "app", "Resources", "views", "framework-bundle"),
+              path: path.resolve(this.globalSkeleton, "Resources", "views", "framework-bundle"),
               params: {
                 recurse: true
               }

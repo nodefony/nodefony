@@ -1,7 +1,3 @@
-const SandBox = require("../sandbox/sandBoxBuilder.js");
-const Vue = require("../vue/vueBuilder.js");
-const React = require("../react/reactBuilder.js");
-
 const regBundleName = /^(\w+)-bundle[\.js]{0,3}$|^(\w+)[Bb]undle[\.js]{0,3}$/;
 
 class generateBundle extends nodefony.Builder {
@@ -17,7 +13,7 @@ class generateBundle extends nodefony.Builder {
         this.location = args[1] || path.resolve(".");
       }
     }
-    nodefony.extend(this.cli.response, {
+    this.response = nodefony.extend(this.cli.response, {
       module: nodefony.projectName,
       projectName: nodefony.projectName,
       authorName: this.cli.response.config.App.authorName,
@@ -25,8 +21,7 @@ class generateBundle extends nodefony.Builder {
       projectYear: this.cli.response.config.App.projectYear,
       domain: this.cli.response.configKernel.system.domain,
       local: this.cli.response.config.App.locale,
-      projectYearNow: new Date().getFullYear(),
-      addon: false
+      projectYearNow: new Date().getFullYear()
     });
     this.setEnv();
   }
@@ -36,39 +31,35 @@ class generateBundle extends nodefony.Builder {
   }
 
   generate(response) {
-    return super.generate(response, true)
-      .then(() => {
-        return this.buildFront(this.cli.response, this.path)
-          .run(true)
-          .then(() => {
-            return response;
+    return super.generate(response)
+    .then(() => {
+      return this.buildFront(this.cli.response, this.path)
+        .run(true)
+        .then((bundle)=>{
+          return this.install()
+          .then(()=>{
+            return bundle.response ;
           })
           .catch((e) => {
             throw e;
           });
-      });
+        })
+        .catch((e) => {
+          throw e;
+        });
+    });
   }
 
-  buildFront(response, location) {
-    this.Front = null;
-    switch (response.front) {
-      case "vue":
-        this.Front = new Vue(this.cli, this.cmd, this.args);
-        break;
-      case "react":
-        this.Front = new React(this.cli, this.cmd, this.args);
-        break;
-      case 'sandbox':
-      default:
-        this.Front = new SandBox(this.cli, this.cmd, this.args);
-        break;
+  async interaction() {
+    this.cli.reset();
+    await this.cli.showAsciify("Generate Bundle");
+    console.log(this.cli.response)
+    let mypath = null
+    if (this.cli.response.project){
+      mypath = path.resolve(this.cli.response.path, this.cli.response.name,"src", "bundles");
+    }else{
+      mypath = path.resolve("src", "bundles");
     }
-    this.Front.setLocation(location);
-    return this.Front;
-  }
-
-  interaction() {
-    const mypath = path.resolve("src", "bundles");
     let prompt = [{
       type: 'input',
       name: 'name',
@@ -101,23 +92,36 @@ class generateBundle extends nodefony.Builder {
       type: 'list',
       name: 'front',
       default: 0,
-      pageSize: 5,
-      choices: ["Sandbox (without Front framwork)", "Vue.js", "React"],
+      pageSize: 10,
+      //choices: ["Sandbox (without Front framwork)", "Vue.js", "React"],
+      choices: [{
+        name: "Sandbox (without Front framwork)"
+      }, {
+        name: "Vue.js"
+      }, {
+        name: "React"
+      }, {
+        name: "Api",
+        disabled: true
+      }],
       message: 'Choose Bundle Type (Mapping Front Framework in Bundle) :',
       filter: (value) => {
         let front = null;
         switch (value) {
-          case "Sandbox (without Front framwork)":
-            front = "sandbox";
-            break;
-          case "Vue.js":
-            front = "vue";
-            break;
-          case "React":
-            front = 'react';
-            break;
-          default:
-            front = value;
+        case "Sandbox (without Front framwork)":
+          front = "sandbox";
+          break;
+        case "Vue.js":
+          front = "vue";
+          break;
+        case "React":
+          front = 'react';
+          break;
+        case "Api":
+          front = 'api';
+          break;
+        default:
+          front = value;
         }
         return front;
       }
@@ -240,7 +244,7 @@ class generateBundle extends nodefony.Builder {
     }
   }
 
-  createBuilder() {
+  createBuilder(res) {
     try {
       //this.checkPath(name, location);
       return {
@@ -254,27 +258,66 @@ class generateBundle extends nodefony.Builder {
           //this.service.createBuilder(),
           //this.documentation.createBuilder(),
           {
-            name: this.shortName + "Bundle.js",
-            type: "file",
-            //skeleton: this.skeleton,
-            //params: this.cli.response
-          }, {
             name: "readme.md",
             type: "file"
-          }, {
-            name: "Entity",
-            type: "directory",
-            childs: [{
-              name: ".gitignore",
-              type: "file"
-            }]
-          }
-        ]
+          }]
       };
     } catch (e) {
       throw e;
     }
   }
-}
 
+  install() {
+    try {
+      let json = null;
+      let configPath = null;
+      if (this.cli.kernel) {
+        json = this.cli.kernel.readGeneratedConfig();
+        configPath = this.cli.kernel.generateConfigPath;
+      } else {
+        configPath = path.resolve(this.cli.response.path, this.cli.response.projectName, "config", "generatedConfig.yml");
+      }
+      if (json) {
+        if (json.system && json.system.bundles) {
+          json.system.bundles[this.name] = `file:${this.bundlePath}`;
+        } else {
+          if (json.system) {
+            json.system.bundles = {};
+          } else {
+            json.system = {
+              bundles: {}
+            };
+          }
+          json.system.bundles[this.name] = `file:${this.bundlePath}`;
+        }
+      } else {
+        json = {
+          system: {
+            bundles: {}
+          }
+        };
+        json.system.bundles[this.name] = `file:${this.bundlePath}`;
+      }
+      fs.writeFileSync(configPath, yaml.safeDump(json), {
+        encoding: 'utf8'
+      });
+
+      try {
+        let file = new nodefony.fileClass(this.bundleFile);
+        if (this.cli.kernel) {
+          this.cli.kernel.loadBundle(file);
+        }
+        //this.cli.assetInstall(this.name);
+      } catch (e) {
+        this.logger(e, "WARNING");
+      }
+      if (this.cli.kernel) {
+        return this.cli.packageManager(["install"], this.bundlePath);
+      }
+      return Promise.resolve(this.bundlePath);
+    } catch (e) {
+      throw e;
+    }
+  }
+}
 module.exports = generateBundle;

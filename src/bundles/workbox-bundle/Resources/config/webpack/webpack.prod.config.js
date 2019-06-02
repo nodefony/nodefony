@@ -1,12 +1,10 @@
-// WEBPACK PROD CONFIGURATION
+/// WEBPACK PROD CONFIGURATION
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   mode: "production",
   watch: false,
-  externals: {},
-  resolve: {},
   optimization: {
     minimizer: [
       new TerserPlugin({
@@ -14,6 +12,7 @@ module.exports = {
           warnings: true,
           compress: true
         },
+        extractComments: true,
         cache: true,
         parallel: true
       })
