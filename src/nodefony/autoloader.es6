@@ -69,7 +69,13 @@ module.exports = function() {
         require(path.resolve(__dirname, "protocol.es6"));
         require(path.resolve(__dirname, "watcher.es6"));
         require(path.resolve(__dirname, "cli.es6"));
+        //builders
         require(path.resolve(__dirname, "builder.es6"));
+        require(path.resolve(__dirname, "cli", "builder", "bundles", "bundle.js"));
+        require(path.resolve(__dirname, "cli", "builder", "project", "project.js"));
+        require(path.resolve(__dirname, "cli", "builder", "sandbox", "sandboxBuilder.js"));
+        require(path.resolve(__dirname, "cli", "builder", "react", "reactBuilder.js"));
+        require(path.resolve(__dirname, "cli", "builder", "vue", "vueBuilder.js"));
         this.loadDirectory(path.resolve(__dirname, "kernel"), /^tests$|^tasks$/);
         this.loadDirectory(path.resolve(__dirname, "protocols"), /^tests$/);
         context.nodefony.cliStart = require(path.resolve(__dirname, "cli", "start.js"));

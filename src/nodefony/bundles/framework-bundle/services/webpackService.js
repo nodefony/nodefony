@@ -142,6 +142,7 @@ module.exports = class webpack extends nodefony.Service {
       }
       if (watcher) {
         this.logger(stats.toString(this.webPackSettings.stats), "INFO");
+        this.sockjs.sendWatcher("change");
       }
       if (stats.hasWarnings()) {
         if (info.warnings.length) {
@@ -179,11 +180,15 @@ module.exports = class webpack extends nodefony.Service {
   }
 
   addDevServerEntrypoints(config, watch, type) {
+    //console.log(config)
     let options = this.setDevServer(config, watch);
     switch (type) {
     case "react":
+    //case "vue":
+    //console.log(config.plugins)
       return options;
     }
+
     if (options.watch) {
       let devClient = [];
       if (options.inline) {
@@ -214,6 +219,7 @@ module.exports = class webpack extends nodefony.Service {
         });
       }
     }
+    //console.log(options)
     return options;
   }
 
@@ -243,7 +249,7 @@ module.exports = class webpack extends nodefony.Service {
       }
       try {
         switch (type) {
-        case "angular":
+        /*case "angular":
           publicPath = path.resolve("/", bundle.bundleName, "dist");
           config = require(file.path);
           config.context = Path;
@@ -266,7 +272,7 @@ module.exports = class webpack extends nodefony.Service {
               ignorePermissionErrors: true,
             };
           }
-          break;
+          break;*/
         case "react":
           publicPath = path.resolve("/", bundle.bundleName, "dist");
           process.env.PUBLIC_URL = basename;
@@ -296,7 +302,6 @@ module.exports = class webpack extends nodefony.Service {
             ignored: /node_modules/
           }, this.webPackSettings.watchOptions);
         }
-
         try {
           devServer = this.addDevServerEntrypoints(config, watch, type);
         } catch (e) {

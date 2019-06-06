@@ -13,7 +13,7 @@ class generateBundle extends nodefony.Builder {
         this.location = args[1] || path.resolve(".");
       }
     }
-    this.response = nodefony.extend(this.cli.response, {
+    nodefony.extend(this.response, {
       module: nodefony.projectName,
       projectName: nodefony.projectName,
       authorName: this.cli.response.config.App.authorName,
@@ -26,38 +26,33 @@ class generateBundle extends nodefony.Builder {
     this.setEnv();
   }
 
-  setEnv() {
-    process.env.NODE_ENV = "development";
-  }
-
   generate(response) {
     return super.generate(response)
-    .then(() => {
-      return this.buildFront(this.cli.response, this.path)
-        .run(true)
-        .then((bundle)=>{
-          return this.install()
-          .then(()=>{
-            return bundle.response ;
+      .then(() => {
+        return this.buildFront(this.response, this.path)
+          .run(true)
+          .then((bundle) => {
+            return this.install()
+              .then(() => {
+                return bundle.response;
+              })
+              .catch((e) => {
+                throw e;
+              });
           })
           .catch((e) => {
             throw e;
           });
-        })
-        .catch((e) => {
-          throw e;
-        });
-    });
+      });
   }
 
   async interaction() {
     this.cli.reset();
     await this.cli.showAsciify("Generate Bundle");
-    console.log(this.cli.response)
-    let mypath = null
-    if (this.cli.response.project){
-      mypath = path.resolve(this.cli.response.path, this.cli.response.name,"src", "bundles");
-    }else{
+    let mypath = null;
+    if (this.cli.response.project) {
+      mypath = path.resolve(this.cli.response.path, this.cli.response.name, "src", "bundles");
+    } else {
       mypath = path.resolve("src", "bundles");
     }
     let prompt = [{
@@ -108,39 +103,33 @@ class generateBundle extends nodefony.Builder {
       filter: (value) => {
         let front = null;
         switch (value) {
-        case "Sandbox (without Front framwork)":
-          front = "sandbox";
-          break;
-        case "Vue.js":
-          front = "vue";
-          break;
-        case "React":
-          front = 'react';
-          break;
-        case "Api":
-          front = 'api';
-          break;
-        default:
-          front = value;
+          case "Sandbox (without Front framwork)":
+            front = "sandbox";
+            break;
+          case "Vue.js":
+            front = "vue";
+            break;
+          case "React":
+            front = 'react';
+            break;
+          case "Api":
+            front = 'api';
+            break;
+          default:
+            front = value;
         }
         return front;
       }
     }];
-
     return this.cli.prompt(prompt)
       .then((response) => {
-        nodefony.extend(this.cli.response, response);
-        //console.log(response)
-        //console.log(this)
         this.path = path.resolve(this.location.path, this.name);
-        //console.log(this.path)
         if (this.cli.exists(this.path)) {
           this.logger(`${this.path} Already exist`, "WARNING");
           return this.removeInteractivePath(this.path)
-            .then((response) => {
-              nodefony.extend(this.cli.response, response);
-              if (response.remove) {
-                return this.cli.response;
+            .then((myresponse) => {
+              if (myresponse.remove) {
+                return response;
               }
               let error = new Error(`${this.path} Already exist`);
               error.code = 0;
@@ -149,7 +138,7 @@ class generateBundle extends nodefony.Builder {
               throw e;
             });
         }
-        return this.cli.response;
+        return response;
       }).catch(e => {
         throw e;
       });
@@ -202,7 +191,7 @@ class generateBundle extends nodefony.Builder {
       this.bundlePath = path.resolve(this.location.path, this.name);
       this.bundleFile = path.resolve(this.bundlePath, this.shortName + "Bundle.js");
     }
-    nodefony.extend(this.cli.response, {
+    nodefony.extend(this.response, {
       bundleName: this.name,
       name: this.shortName,
       title: this.shortName,
@@ -221,7 +210,6 @@ class generateBundle extends nodefony.Builder {
     if (bundle) {
       throw new Error("Bundle already exist " + name);
     }
-
     this.shortName = name;
     let res = regBundleName.exec(name);
     if (res) {
@@ -244,23 +232,15 @@ class generateBundle extends nodefony.Builder {
     }
   }
 
-  createBuilder(res) {
+  createBuilder() {
     try {
-      //this.checkPath(name, location);
       return {
         name: this.name,
         type: "directory",
-        childs: [
-          //this.controller.createBuilder("defaultController"),
-          //this.resources.createBuilder(),
-          //this.tests.createBuilder(),
-          //this.command.createBuilder(),
-          //this.service.createBuilder(),
-          //this.documentation.createBuilder(),
-          {
-            name: "readme.md",
-            type: "file"
-          }]
+        childs: [{
+          name: "readme.md",
+          type: "file"
+        }]
       };
     } catch (e) {
       throw e;
@@ -307,7 +287,6 @@ class generateBundle extends nodefony.Builder {
         if (this.cli.kernel) {
           this.cli.kernel.loadBundle(file);
         }
-        //this.cli.assetInstall(this.name);
       } catch (e) {
         this.logger(e, "WARNING");
       }
@@ -320,4 +299,6 @@ class generateBundle extends nodefony.Builder {
     }
   }
 }
+
+nodefony.builders.bundle = generateBundle;
 module.exports = generateBundle;

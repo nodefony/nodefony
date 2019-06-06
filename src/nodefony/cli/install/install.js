@@ -37,11 +37,9 @@ module.exports = class installProject extends nodefony.Builder {
     });
   }
 
-  build(cwd = path.resolve(".")) {
-    return this.generateCertificates(cwd)
-      .then(() => {
-        return cwd;
-      });
+  async build(cwd = path.resolve(".")) {
+    await this.generateCertificates(cwd);
+    return cwd ;
   }
 
   rebuild(cwd = path.resolve(".")) {
@@ -58,7 +56,7 @@ module.exports = class installProject extends nodefony.Builder {
     } catch (e) {
       throw e;
     }
-    return this.cli.packageManager.call(this.cli, cmd, cwd)
+    return this.cli.packageManager.call(this.cli, cmd, cwd, "development")
       .then(() => {
         return cwd;
       });
@@ -143,7 +141,7 @@ module.exports = class installProject extends nodefony.Builder {
         this.checkDirectoryExist(js);
         css = path.resolve(cwd, "web", "assets", "css");
         this.checkDirectoryExist(css);
-        images = path.resolve("web", "assets", "images");
+        images = path.resolve(cwd, "web", "assets", "images");
         this.checkDirectoryExist(images);
         fonts = path.resolve(cwd, "web", "assets", "fonts");
         this.checkDirectoryExist(fonts);

@@ -5,7 +5,7 @@ const outputDir = path.resolve("Resources", "public");
 const indexPath = path.resolve("Resources", "views", 'index.html.twig');
 
 module.exports = {
-  publicPath: "app",
+  publicPath: "{{bundleName}}",
   outputDir: outputDir,
   indexPath: indexPath,
   assetsDir: "assets",
@@ -19,7 +19,7 @@ module.exports = {
       filename: indexPath,
       // when using title option,
       // template title tag needs to be <title><%= htmlWebpackPlugin.options.title %></title>
-      title: 'Nodefony Vue',
+      title: 'Vue {{name}}',
       // chunks to include on this page, by default includes
       // extracted common chunks and vendor chunks.
       chunks: ['chunk-vendors', 'chunk-common', 'index']

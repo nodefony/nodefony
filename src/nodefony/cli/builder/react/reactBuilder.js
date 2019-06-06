@@ -1,21 +1,20 @@
-class React extends nodefony.Builder {
+class React extends nodefony.builders.sandbox {
   constructor(cli, cmd, args) {
-    super(cli, cmd, args);
-    this.log("Build Vue.js Project");
-    this.globalSkeleton = path.resolve(__dirname, "..", "skeletons");
+    super(cli, cmd, args, {
+      addons: {
+        webpack: false
+      }
+    });
     this.pathSkeleton = path.resolve(__dirname, "skeletons");
-    this.projectSkeleton = path.resolve(__dirname, "..", "project", "skeletons");
     this.cliReact = this.getCli();
-    this.force = true;
-    this.setEnv();
   }
 
-  setEnv() {
-    process.env.NODE_ENV = "development";
+  run() {
+    return super.run(false);
   }
 
   generate(response, force) {
-    return this.buiReact(this.cli.response, this.location)
+    return this.buiReact()
       .then((dir) => {
         return this.ejectReact(dir, this.cli.response)
           .then(() => {
@@ -30,10 +29,22 @@ class React extends nodefony.Builder {
       });
   }
 
-  buiReact(response, location) {
+  buiReact() {
+    let name = null;
+    let location = null;
+    switch (this.cli.response.command) {
+      case "project":
+        name = "app";
+        location = this.location ;
+        break;
+      case "bundle":
+        name = this.cli.response.bundleName;
+        location = this.cli.response.location;
+        break;
+    }
     return new Promise((resolve, reject) => {
       //console.log(this.bundleName)
-      let args = [this.suffix];
+      let args = [name];
       this.logger("install React cli : create-react-app " + args.join(" "));
       let cmd = null;
       try {
@@ -45,7 +56,7 @@ class React extends nodefony.Builder {
             //.cleanTmp();
             return reject(new Error("install React cli  create-react-app new error : " + code));
           }
-          return resolve(path.resolve(this.location, this.suffix));
+          return resolve(path.resolve(this.location, name));
         });
       } catch (e) {
         this.logger(e, "ERROR");
@@ -105,96 +116,6 @@ class React extends nodefony.Builder {
     return cliPath;
   }
 
-  createBuilder() {
-    try {
-      return {
-        name: "app",
-        type: "directory",
-        childs: [{
-          name: "appKernel.js",
-          type: "file",
-          skeleton: path.resolve(this.globalSkeleton, "appKernel.js"),
-          params: this.cli.response
-        }, {
-          name: "Resources",
-          type: "directory",
-          childs: [{
-            name: "databases",
-            type: "copy",
-            path: path.resolve(this.pathSkeleton, "app", "Resources", "databases"),
-            params: {
-              recurse: true
-            }
-          }]
-        }, {
-          name: "controller",
-          type: "copy",
-          path: path.resolve(this.pathSkeleton, "app", "controller"),
-          params: {
-            recurse: true
-          }
-        }, {
-          name: "config",
-          type: "directory",
-          childs: [{
-            name: "config.js",
-            type: "file",
-            skeleton: path.resolve(this.globalSkeleton, "config", "config.js"),
-            params: this.cli.response
-          }, {
-            name: "routing.js",
-            type: "file",
-            skeleton: path.resolve(this.globalSkeleton, "config", "routing.js"),
-            params: this.cli.response
-          }, {
-            name: "security.js",
-            type: "file",
-            skeleton: path.resolve(this.globalSkeleton,  "config", "security.js"),
-            params: this.cli.response
-          }, {
-            name: "services.js",
-            type: "copy",
-            path: path.resolve(this.globalSkeleton, "config", "services.js")
-          }]
-        }, {
-          name: "Resources",
-          type: "directory",
-          childs: [{
-            name: "views",
-            type: "directory",
-            childs: [{
-              name: "base.html.twig",
-              type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "Resources", "views", "base.html.twig")
-            }, {
-              name: "framework-bundle",
-              type: "copy",
-              path: path.resolve(this.globalSkeleton, "Resources", "views", "framework-bundle"),
-              params: {
-                recurse: true
-              }
-            }]
-          }, {
-            name: "translations",
-            type: "copy",
-            path: path.resolve(this.pathSkeleton, "app", "Resources", "translations"),
-            params: {
-              recurse: true
-            }
-          }, {
-            name: "public",
-            type: "copy",
-            path: path.resolve(this.pathSkeleton, "app", "Resources", "public"),
-            params: {
-              recurse: true
-            }
-          }]
-        }]
-      };
-    } catch (e) {
-      throw e;
-    }
-  }
 }
-
+nodefony.builders.react = React;
 module.exports = React;

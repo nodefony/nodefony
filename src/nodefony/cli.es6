@@ -748,7 +748,7 @@ module.exports = nodefony.register("cli", function () {
           this.logger(`Command : npm ${argv.join(' ')} in cwd : ${cwd}`);
           cmd = this.spawn("npm", argv, {
             cwd: cwd,
-            shell: true,
+            env: process.env,
             stdio: "inherit"
           }, (code) => {
             if (code === 0) {
@@ -783,7 +783,7 @@ module.exports = nodefony.register("cli", function () {
           this.debug = this.commander.debug || false;
           cmd = this.spawn("yarn", argv, {
             cwd: cwd,
-            shell: true,
+            env: process.env,
             stdio: "inherit"
           }, (code) => {
             if (code === 0) {

@@ -8,6 +8,7 @@ const path = require("path");
 
 module.exports = {
   locale: "en_en",
+  type  : "{{ front }}",
   App: {
     projectYear: {{year}},
     locale: "en_en",

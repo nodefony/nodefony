@@ -17,10 +17,15 @@ nodefony.Builder = class Builder extends nodefony.Service {
         cache: false
       }
     };
+    this.response = nodefony.extend(true, {}, this.cli.response);
   }
 
   setLocation(location) {
     return this.location = location;
+  }
+
+  setEnv(env) {
+    process.env.NODE_ENV = env || "development";
   }
 
   run(interactive) {
@@ -28,6 +33,11 @@ nodefony.Builder = class Builder extends nodefony.Service {
       this.interactive = interactive;
       return this.interaction()
         .then((response) => {
+          this.log(this.response, "WARNING")
+          nodefony.extend(true, this.response, response);
+          this.log(this.response)
+          nodefony.extend(true, this.cli.response, this.response);
+          this.log(this.cli.response,"CRITIC")
           return this.generate(response, this.force)
             .then((response) => {
               return {
@@ -74,13 +84,13 @@ nodefony.Builder = class Builder extends nodefony.Service {
     this.Front = null;
     switch (response.front) {
     case "vue":
-      this.Front = new Vue(this.cli, this.cmd, this.args);
+      this.Front = new nodefony.builders.vue(this.cli, this.cmd, this.args);
       break;
     case "react":
-      this.Front = new React(this.cli, this.cmd, this.args);
+      this.Front = new nodefony.builders.react(this.cli, this.cmd, this.args);
       break;
     case 'demo':
-      this.Front = new Demo(this.cli, this.cmd, this.args);
+      //this.Front = new Demo(this.cli, this.cmd, this.args);
       break;
     case 'electron':
       this.Front = null;
@@ -90,7 +100,7 @@ nodefony.Builder = class Builder extends nodefony.Service {
       break;
     case 'sandbox':
     default:
-      this.Front = new SandBox(this.cli, this.cmd, this.args);
+      this.Front = new nodefony.builders.sandbox(this.cli, this.cmd, this.args);
       break;
     }
     this.Front.setLocation(location);
@@ -353,56 +363,6 @@ nodefony.Builder = class Builder extends nodefony.Service {
     }
   }
 
-  generateConfig(webpack = false) {
-    let config = {
-      name: "config",
-      type: "directory",
-      childs: [{
-        name: "config.js",
-        type: "file",
-        skeleton: path.resolve(this.globalSkeleton, "config", "config.js"),
-        params: this.cli.response
-      }, {
-        name: "routing.js",
-        type: "file",
-        skeleton: path.resolve(this.globalSkeleton, "config", "routing.js"),
-        params: this.cli.response
-      }, {
-        name: "security.js",
-        type: "file",
-        skeleton: path.resolve(this.globalSkeleton, "config", "security.js"),
-        params: this.cli.response
-      }, {
-        name: "services.js",
-        type: "copy",
-        path: path.resolve(this.globalSkeleton, "config", "services.js")
-      }]
-    };
-    if (webpack) {
-      config.childs.push({
-        name: "webpack.config.js",
-        type: "file",
-        skeleton: path.resolve(this.globalSkeleton, "config", "webpack.config.js"),
-        params: this.cli.response
-      });
-      config.childs.push({
-        name: "webpack",
-        type: "copy",
-        path: path.resolve(this.globalSkeleton, "config", "webpack"),
-        params: {
-          recurse: true
-        }
-      });
-    }
-    return config;
-  }
 };
-
-const SandBox = require(path.resolve(__dirname, "cli", "builder", "sandbox", "sandBoxBuilder.js"));
-const Vue = require(path.resolve(__dirname, "cli", "builder", "vue", "vueBuilder.js"));
-const React = require(path.resolve(__dirname, "cli", "builder", "react", "reactBuilder.js"));
-const Demo = require(path.resolve(__dirname, "cli", "builder", "demo", "demoBuilder.js"));
-//nodefony.builders.bundles = require(path.resolve(__dirname, "cli", "builder", "bundle", "bundle.js"));
-nodefony.builders.bundle = require(path.resolve(__dirname, "cli", "builder", "bundles", "bundle.js"));
 
 module.exports = nodefony.Builder;

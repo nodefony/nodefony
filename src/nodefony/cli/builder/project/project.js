@@ -1,5 +1,5 @@
 
-module.exports = class generateProject extends nodefony.Builder {
+ class generateProject extends nodefony.Builder {
 
   constructor(cli, cmd, args) {
     super(cli, cmd, args);
@@ -37,13 +37,12 @@ module.exports = class generateProject extends nodefony.Builder {
     this.setEnv();
   }
 
-  setEnv() {
-    process.env.NODE_ENV = "development";
-  }
-
   generate(response) {
     return super.generate(response, true)
       .then(() => {
+        if ( ! this.buildFront) {
+          return this.response ;
+        }
         return this.buildFront(this.cli.response, this.path)
           .run(true)
           .then((project) => {
@@ -66,7 +65,6 @@ module.exports = class generateProject extends nodefony.Builder {
                   }
                 };
                 let bundle = new nodefony.builders.bundle(this.cli, this.cmd, this.args );
-                console.log(this.cli.interactive)
                 return bundle.run(true)
                 .then(()=>{
                     return project.response;
@@ -77,8 +75,6 @@ module.exports = class generateProject extends nodefony.Builder {
             .catch((e) => {
               this.logger(e, "ERROR");
             });
-
-
           })
           .catch((e) => {
             throw e;
@@ -244,22 +240,20 @@ module.exports = class generateProject extends nodefony.Builder {
           }
           return value;
         }
-      }, {
+      }/*, {
         type: 'confirm',
         name: 'bundle',
         message: 'Do You Want Generate Bundle?',
         default: this.response.bundle
-      }])
+      }*/])
       .then((response) => {
-        nodefony.extend(this.response, response);
         this.path = path.resolve(this.location, response.name);
         if (this.cli.exists(this.path)) {
           this.logger(`${this.path} Already exist`, "WARNING");
           return this.removeInteractivePath(this.path)
-            .then((response) => {
-              nodefony.extend(this.response, response);
-              if (response.remove) {
-                return this.response;
+            .then((myresponse) => {
+              if (myresponse.remove) {
+                return response;
               }
               let error = new Error(`${this.path} Already exist`);
               error.code = 0;
@@ -268,7 +262,7 @@ module.exports = class generateProject extends nodefony.Builder {
               throw e;
             });
         }
-        return this.response;
+        return response;
       }).catch(e => {
         throw e;
       });
@@ -385,4 +379,7 @@ module.exports = class generateProject extends nodefony.Builder {
       throw e;
     }
   }
-};
+}
+
+nodefony.builders.project = generateProject;
+module.exports = generateProject ;

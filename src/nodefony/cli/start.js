@@ -2,9 +2,7 @@ let builderInstall = null;
 let builderGenerater = null;
 let builderTools = null;
 let builderPM2 = null;
-let projectBuilder = null;
 try {
-  projectBuilder = require(path.resolve(__dirname, "builder", "project", "project.js"));
   builderInstall = require(path.resolve(__dirname, "install", "install.js"));
   builderGenerater = require(path.resolve(__dirname, "generate", "generate.es6"));
   builderTools = require(path.resolve(__dirname, "tools", "tools.es6"));
@@ -460,7 +458,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
           this.terminate(1);
         }
       }
-      let project = new projectBuilder(this, command, args);
+      let project = new nodefony.builders.project(this, command, args);
       return project.run(interactive)
         .then((obj) => {
           return this.gitInit(project, obj.response)
@@ -468,7 +466,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
               let res = obj.response ;
               let cwd = path.resolve(project.location, project.name);
               this.logger(`Create Project ${res.name} complete`, "INFO");
-              if (false /*res.bundle*/) {
+            /*if (res.bundle) {
                 this.response.project = true;
                 this.response.config = {
                   App: {
@@ -524,8 +522,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
                     this.logger(e, "ERROR");
                     return e;
                   });
-              }
-              //let cwd = path.resolve(project.location, project.name);
+              }*/
               this.cd(cwd);
               return this.installProject(cwd)
                 .then(() => {

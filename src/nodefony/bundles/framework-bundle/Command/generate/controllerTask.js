@@ -6,7 +6,7 @@ class controllerTask extends nodefony.Task {
       config: this.getParameters("bundles.app"),
       configKernel: this.getParameters("kernel")
     });
-    this.bundleBuilder = new nodefony.builders.bundles.nodefony(this.cli, "js");
+    //this.bundleBuilder = new nodefony.builders.bundles.nodefony(this.cli, "js");
     this.controller = this.bundleBuilder.controller;
     this.defaultOptions = {
       bundle: "app",

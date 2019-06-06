@@ -1,23 +1,26 @@
-class Vue extends nodefony.Builder {
+class Vue extends nodefony.builders.sandbox {
   constructor(cli, cmd, args) {
-    super(cli, cmd, args);
-    this.log("Build Vue.js Project");
-    this.globalSkeleton = path.resolve(__dirname, "..", "skeletons");
+    super(cli, cmd, args, {
+      addons: {
+        webpack: false
+      }
+    });
     this.pathSkeleton = path.resolve(__dirname, "skeletons");
-    this.projectSkeleton = path.resolve(__dirname, "..", "project", "skeletons");
     this.cliVue = this.getCli();
-    this.force = true;
-    //this.setEnv();
+  }
+
+  run() {
+    return super.run(false);
   }
 
   generate(response, force) {
-    return this.builVue(this.cli.response, this.location)
+    return this.builVue()
       .then(() => {
         return super.generate(response, force)
           .then(() => {
             return this.checkTypeScript()
               .then(() => {
-                return response;
+                return this.response;
               });
           })
           .catch((e) => {
@@ -30,7 +33,7 @@ class Vue extends nodefony.Builder {
     return new Promise((resolve) => {
       try {
         new nodefony.fileClass(path.resolve(this.location, "app", "src", "main.ts"));
-        let skelete = path.resolve(this.pathSkeleton, "app", "vue.config.js.ts");
+        let skelete = path.resolve(this.pathSkeleton, "vue.config.js.ts");
         this.cli.cp("-f", skelete, path.resolve(this.location, "app", "vue.config.js"));
         return resolve(true);
       } catch (e) {
@@ -62,24 +65,35 @@ class Vue extends nodefony.Builder {
     return cliPath;
   }
 
-  setEnv() {
-    process.env.NODE_ENV = "development";
-  }
 
-  builVue(response, location) {
+
+  builVue() {
+    let name = null;
+    let location = null;
+    switch (this.cli.response.command) {
+      case "project":
+        name = "app";
+        location = this.location ;
+        break;
+      case "bundle":
+        name = this.cli.response.bundleName;
+        location = this.cli.response.location;
+        break;
+    }
     return new Promise((resolve, reject) => {
-      let args = ["create", this.suffix];
+      let args = ["create", "-n", name];
       this.logger("install Vue cli : vue " + args.join(" "));
       let cmd = null;
       try {
         cmd = this.cli.spawn(this.cliVue, args, {
           cwd: location,
+          env: process.env,
           stdio: "inherit"
         }, (code) => {
           if (code === 1) {
             return reject(new Error("install Vue cli new error : " + code));
           }
-          return resolve(path.resolve(this.location, response.name));
+          return resolve(path.resolve(this.location, this.response.name));
         });
       } catch (e) {
         this.logger(e, "ERROR");
@@ -88,101 +102,113 @@ class Vue extends nodefony.Builder {
     });
   }
 
-  createBuilder() {
+  builderProject() {
     try {
       return {
         name: "app",
         type: "directory",
         childs: [{
-          name: "appKernel.js",
-          type: "file",
-          skeleton: path.resolve(this.globalSkeleton, "appKernel.js"),
-          params: this.cli.response
-        }, {
-          name: "Resources",
-          type: "directory",
-          childs: [{
-            name: "databases",
-            type: "copy",
-            path: path.resolve(this.pathSkeleton, "app", "Resources", "databases"),
-            params: {
-              recurse: true
-            }
-          }]
-        }, {
-          name: "controller",
-          type: "copy",
-          path: path.resolve(this.pathSkeleton, "app", "controller"),
-          params: {
-            recurse: true
-          }
-        }, {
-          name: "vue.config.js",
-          type: "copy",
-          path: path.resolve(this.pathSkeleton, "app", "vue.config.js"),
-        }, {
-          name: "config",
-          type: "directory",
-          childs: [{
-            name: "config.js",
+            name: "appKernel.js",
             type: "file",
-            skeleton: path.resolve(this.globalSkeleton, "config", "config.js"),
-            params: this.cli.response
+            skeleton: path.resolve(this.globalSkeleton, "app", "appKernel.js"),
+            params: this.response
           }, {
-            name: "routing.js",
+            name: "vue.config.js",
             type: "file",
-            skeleton: path.resolve(this.globalSkeleton, "config", "routing.js"),
-            params: this.cli.response
-          }, {
-            name: "security.js",
-            type: "file",
-            skeleton: path.resolve(this.pathSkeleton, "app", "config", "security.js"),
-            params: this.cli.response
-          }, {
-            name: "services.js",
-            type: "copy",
-            path: path.resolve(this.globalSkeleton, "config", "services.js")
-          }]
-        }, {
-          name: "Resources",
-          type: "directory",
-          childs: [{
-            name: "views",
-            type: "directory",
-            childs: [{
-              name: "base.html.twig",
-              type: "copy",
-              path: path.resolve(this.pathSkeleton, "app", "Resources", "views", "base.html.twig")
-            }, {
-              name: "framework-bundle",
-              type: "copy",
-              path: path.resolve(this.globalSkeleton, "Resources", "views", "framework-bundle"),
-              params: {
-                recurse: true
-              }
-            }]
-          }, {
-            name: "translations",
-            type: "copy",
-            path: path.resolve(this.pathSkeleton, "app", "Resources", "translations"),
-            params: {
-              recurse: true
-            }
-          }, {
-            name: "public",
-            type: "copy",
-            path: path.resolve(this.pathSkeleton, "app", "Resources", "public"),
-            params: {
-              recurse: true
-            }
-          }]
-        }]
+            skeleton: path.resolve(this.pathSkeleton, "vue.config.js"),
+            params: this.response
+          },
+          this.generateController(),
+          this.generateConfig(),
+          this.generateRessources()
+        ]
       };
     } catch (e) {
       throw e;
     }
   }
 
-}
+  builderBundle() {
+    let bundle = [];
+    bundle.push({
+      name: `${this.response.name}Bundle.js`,
+      type: "file",
+      skeleton: path.resolve(this.globalSkeleton, "bundle", "bundleClass.js"),
+      params: this.response
+    });
+    bundle.push({
+      name: "vue.config.js",
+      type: "file",
+      skeleton: path.resolve(this.pathSkeleton, "vue.config.js"),
+      params: this.response
+    });
+    bundle.push(this.generateController());
+    bundle.push(this.generateConfig(this.response.addons.webpack));
+    bundle.push(this.generateRessources());
+    bundle.push({
+      name: "Entity",
+      type: "directory",
+      childs: [{
+        name: ".gitignore",
+        type: "file"
+      }]
+    });
+    return bundle;
+  }
 
+  generateRessources() {
+    let resources = {
+      name: "Resources",
+      type: "directory",
+      childs: []
+    };
+    if (this.cli.response.command === "project") {
+      // databases
+      resources.childs.push({
+        name: "databases",
+        type: "copy",
+        path: path.resolve(this.globalSkeleton, "Resources", "databases"),
+        params: {
+          recurse: true
+        }
+      });
+    } else {
+      // config
+      resources.childs.push(this.generateConfig());
+    }
+    // views
+    resources.childs.push(this.generateViews());
+    //translations
+    resources.childs.push({
+      name: "translations",
+      type: "copy",
+      path: path.resolve(this.pathSkeleton, "Resources", "translations"),
+      params: {
+        recurse: true
+      }
+    });
+    return resources;
+  }
+
+  generateViews() {
+    let views = {
+      name: "views",
+      type: "directory",
+      childs: []
+    };
+    if (this.cli.response.command === "project") {
+      views.childs.push({
+        name: "framework-bundle",
+        type: "copy",
+        path: path.resolve(this.globalSkeleton, "Resources", "views", "framework-bundle"),
+        params: {
+          recurse: true
+        }
+      });
+    }
+    return views;
+  }
+
+}
+nodefony.builders.vue = Vue;
 module.exports = Vue;
