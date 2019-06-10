@@ -14,9 +14,9 @@
     "mysql2": "^1.6.5",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^5.8.7",
+    "sequelize": "^5.8.8",
     "sqlite3": "^4.0.8",
-    "tedious": "^6.1.1"
+    "tedious": "^6.1.2"
   },
   "repository": {
     "type": "git",

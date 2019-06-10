@@ -36,7 +36,7 @@
     "nodefony": "^{{version}}",
     "sequelize": "^5.7.5",
     "webpack": "^4.30.0",
-    "webpack-dev-server": "^3.3.1"
+    "webpack-dev-server": "^3.5.1"
   },
   "devDependencies": {
     "node-gyp": "^4.0.0",

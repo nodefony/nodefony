@@ -463,66 +463,8 @@ module.exports = class cliStart extends nodefony.cliKernel {
         .then((obj) => {
           return this.gitInit(project, obj.response)
             .then(() => {
-              let res = obj.response ;
               let cwd = path.resolve(project.location, project.name);
-              this.logger(`Create Project ${res.name} complete`, "INFO");
-            /*if (res.bundle) {
-                this.response.project = true;
-                this.response.config = {
-                  App: {
-                    projectName: res.name,
-                    authorName: res.authorFullName,
-                    authorMail: res.authorMail,
-                    local: res.locale,
-                    projectYear: res.year
-                  }
-                };
-                this.response.configKernel = {
-                  system: {
-                    domain: res.domain
-                  }
-                };
-                this.cd(cwd);
-                return this.installProject(cwd)
-                  .then(() => {
-                    return this.buildProject(cwd)
-                      .then((cwd) => {
-                        nodefony.checkTrunk(cwd);
-                        this.parseNodefonyCommand("nodefony:build", [cwd]);
-                        return nodefony.start(command, args, this)
-                          .then(() => {
-                            return nodefony.builders.bundles.interaction(this)
-                              .then((res) => {
-                                let bundle = null;
-                                try {
-                                  bundle = new nodefony.builders.bundles[res.type](this, "js");
-                                } catch (e) {
-                                  throw e;
-                                }
-                                return bundle.run(interactive)
-                                  .then(() => {
-                                    return bundle.install();
-                                  }).catch((e) => {
-                                    this.logger(e, "ERROR");
-                                    return e;
-                                  });
-                              }).catch((e) => {
-                                this.logger(e, "ERROR");
-                                return e;
-                              });
-                          }).catch((e) => {
-                            this.logger(e, "ERROR");
-                            return e;
-                          });
-                      }).catch((e) => {
-                        this.logger(e, "ERROR");
-                        return e;
-                      });
-                  }).catch((e) => {
-                    this.logger(e, "ERROR");
-                    return e;
-                  });
-              }*/
+              this.logger(`Create Project ${obj.response.name} complete`, "INFO");
               this.cd(cwd);
               return this.installProject(cwd)
                 .then(() => {

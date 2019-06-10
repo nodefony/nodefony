@@ -21,7 +21,8 @@ class generateBundle extends nodefony.Builder {
       projectYear: this.cli.response.config.App.projectYear,
       domain: this.cli.response.configKernel.system.domain,
       local: this.cli.response.config.App.locale,
-      projectYearNow: new Date().getFullYear()
+      projectYearNow: new Date().getFullYear(),
+      path:this.location || path.resolve(".")
     });
     this.setEnv();
   }
@@ -237,10 +238,7 @@ class generateBundle extends nodefony.Builder {
       return {
         name: this.name,
         type: "directory",
-        childs: [{
-          name: "readme.md",
-          type: "file"
-        }]
+        childs: []
       };
     } catch (e) {
       throw e;

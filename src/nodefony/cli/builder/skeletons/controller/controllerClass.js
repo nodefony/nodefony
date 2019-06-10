@@ -20,20 +20,24 @@ module.exports = class {{controllerName}} extends nodefony.controller {
    *  @see Route home in routing.js
    */
   indexAction() {
+  {% if  front == "react" %}
+      return this.renderHtmlFile(path.resolve(this.bundle.publicPath, "dist","index.html"));
+  {% else %}
+  {% if bundleName == "app" %}
     return this.render("{{bundleName}}:{{directory}}:index.html.twig", {
-{% if bundleName == "app" %}
       name: this.kernel.projectName,
 			description: this.kernel.package.description{% if addons.binding %},
       binding: binding.{{shortName}}()
-{% endif %}
-{% else %}
+    });
+  {% endif %}
+  {% else %}
+    return this.render("{{bundleName}}:{{directory}}:index.html.twig", {
 			name: this.bundle.name,
 			description: this.bundle.package.description{% if addons.binding %},
       binding: binding.{{shortName}}()
-{% endif %}
-
-{% endif %}
     });
+  {% endif %}
+  {% endif %}
+  {% endif %}
   }
-
 };

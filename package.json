@@ -50,10 +50,10 @@
     "node": ">=8"
   },
   "dependencies": {
-    "mongoose": "^5.5.13",
-    "sequelize": "^5.8.7",
+    "mongoose": "^5.5.14",
+    "sequelize": "^5.8.8",
     "webpack": "^4.33.0",
-    "webpack-dev-server": "^3.7.0"
+    "webpack-dev-server": "3.5.1"
   },
   "devDependencies": {
     "editorconfig": "^0.15.3",

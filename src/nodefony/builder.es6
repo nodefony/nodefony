@@ -33,11 +33,11 @@ nodefony.Builder = class Builder extends nodefony.Service {
       this.interactive = interactive;
       return this.interaction()
         .then((response) => {
-          this.log(this.response, "WARNING")
+          //this.log(this.response, "WARNING")
           nodefony.extend(true, this.response, response);
-          this.log(this.response)
+          //this.log(this.response)
           nodefony.extend(true, this.cli.response, this.response);
-          this.log(this.cli.response,"CRITIC")
+          //this.log(this.cli.response,"CRITIC")
           return this.generate(response, this.force)
             .then((response) => {
               return {

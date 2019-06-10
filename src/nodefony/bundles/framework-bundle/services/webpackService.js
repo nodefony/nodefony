@@ -184,11 +184,8 @@ module.exports = class webpack extends nodefony.Service {
     let options = this.setDevServer(config, watch);
     switch (type) {
     case "react":
-    //case "vue":
-    //console.log(config.plugins)
       return options;
     }
-
     if (options.watch) {
       let devClient = [];
       if (options.inline) {

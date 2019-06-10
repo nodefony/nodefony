@@ -82,6 +82,7 @@ class SandBox extends nodefony.Builder {
     switch (this.cli.response.command) {
     case "project":
       this.response.packageName = "app";
+      this.response.shortName = "app";
       return this.builderProject(response);
     default:
       this.response.packageName = this.response.name;

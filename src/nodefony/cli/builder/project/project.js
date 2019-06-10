@@ -46,35 +46,7 @@
         return this.buildFront(this.cli.response, this.path)
           .run(true)
           .then((project) => {
-            return this.cli.installProject(this.path)
-            .then(()=>{
-              if ( project.response.bundle){
-                this.cli.response.project = true;
-                this.cli.response.config = {
-                  App: {
-                    projectName: project.response.name,
-                    authorName: project.response.authorFullName,
-                    authorMail: project.response.authorMail,
-                    local: project.response.locale,
-                    projectYear: project.response.year
-                  }
-                };
-                this.cli.response.configKernel = {
-                  system: {
-                    domain: project.response.domain
-                  }
-                };
-                let bundle = new nodefony.builders.bundle(this.cli, this.cmd, this.args );
-                return bundle.run(true)
-                .then(()=>{
-                    return project.response;
-                });
-              }
-              return project.response;
-            })
-            .catch((e) => {
-              this.logger(e, "ERROR");
-            });
+            return project.response ;
           })
           .catch((e) => {
             throw e;

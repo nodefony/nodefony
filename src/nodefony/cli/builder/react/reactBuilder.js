@@ -29,18 +29,39 @@ class React extends nodefony.builders.sandbox {
       });
   }
 
+  builderBundle() {
+    let bundle = [];
+    bundle.push({
+      name: `${this.response.name}Bundle.js`,
+      type: "file",
+      skeleton: path.resolve(this.globalSkeleton, "bundle", "bundleClass.js"),
+      params: this.response
+    });
+    bundle.push(this.generateController());
+    bundle.push(this.generateRessources());
+    bundle.push({
+      name: "Entity",
+      type: "directory",
+      childs: [{
+        name: ".gitignore",
+        type: "file"
+      }]
+    });
+    return bundle;
+  }
+
   buiReact() {
     let name = null;
     let location = null;
     switch (this.cli.response.command) {
-      case "project":
-        name = "app";
-        location = this.location ;
-        break;
-      case "bundle":
-        name = this.cli.response.bundleName;
-        location = this.cli.response.location;
-        break;
+    case "project":
+      name = "app";
+      location = this.location;
+      break;
+    case "bundle":
+      name = this.cli.response.bundleName;
+      location = this.cli.response.location;
+      break;
     }
     return new Promise((resolve, reject) => {
       //console.log(this.bundleName)
@@ -56,7 +77,10 @@ class React extends nodefony.builders.sandbox {
             //.cleanTmp();
             return reject(new Error("install React cli  create-react-app new error : " + code));
           }
-          return resolve(path.resolve(this.location, name));
+          if (this.cli.response.command === "project") {
+            return resolve(path.resolve(this.location, name));
+          }
+          return resolve(this.location);
         });
       } catch (e) {
         this.logger(e, "ERROR");
@@ -66,31 +90,86 @@ class React extends nodefony.builders.sandbox {
     });
   }
 
-  ejectReact(dir, response) {
-    return new Promise((resolve, reject) => {
+  async ejectReact(dir) {
+    await this.stach(dir);
+    let err = null;
+    return new Promise(async (resolve, reject) => {
       let args = ['run', 'eject'];
       this.logger(" eject  webpack config React : " + args.join(" "));
       try {
         return this.cli.packageManager(args, dir)
-          .then(() => {
-            /*try {
-              this.moveToRealPath();
-            } catch (e) {
-              this.cleanTmp();
-              return reject(e);
-            }*/
-            return resolve(path.resolve(this.location, response.name));
+          .then(async () => {
+            await this.stachPop();
+            return resolve(path.resolve(this.location));
           })
-          .catch((error) => {
+          .catch(async (error) => {
             //this.cleanTmp();
+            await this.stachPop();
             return reject(new Error("React eject error : " + error));
           });
       } catch (e) {
         //this.cleanTmp();
+        err = e;
+      }
+      if (err) {
+        await this.stachPop();
         this.logger("React eject ", "ERROR");
-        return reject(e);
+        return reject(err);
       }
     });
+
+  }
+
+  async stach() {
+    let gitP, cwd, gitS, gitC;
+    try {
+      cwd = path.resolve(this.response.path);
+      gitP = require('simple-git/promise');
+      gitS = gitP(cwd);
+      gitC = gitP(this.location);
+    } catch (e) {
+      throw e;
+    }
+    await gitC.add(path.resolve(this.location, "*"))
+    .then(() => {
+      this.log("git add ");
+      return cwd;
+    }).catch((err) => {
+        this.log(err, "ERROR");
+    });
+    await gitC.commit(`create bundle ${this.response.bundleName}`)
+    .then(() => {
+      this.log("git commit");
+      return cwd;
+    }).catch((err) => {
+        this.log(err, "ERROR");
+    });
+    return gitS.stash(["-u"])
+      .then(() => {
+        this.log("git stash");
+        return cwd;
+      }).catch((err) => {
+          this.log(err, "ERROR");
+      });
+  }
+
+  stachPop() {
+    let gitP, cwd, git;
+    try {
+      cwd = path.resolve(this.response.path);
+      gitP = require('simple-git/promise');
+      git = gitP(cwd);
+    } catch (e) {
+      throw e;
+    }
+    return git.stash(["pop"])
+      .then(() => {
+        this.logger(" git stash pop ");
+        return cwd;
+      })
+      .catch((err) => {
+          this.log(err, "ERROR");
+      });
   }
 
   getCli() {
