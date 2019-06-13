@@ -10,7 +10,21 @@ class generateBundle extends nodefony.Builder {
     if (this.cmd === "generate:bundle" || this.cmd === "create:bundle") {
       if (args && args[0]) {
         this.name = args[0];
-        this.location = args[1] || path.resolve(".");
+        this.cli.response.name = args[0] ;
+        if (args[1]) {
+          this.setLocation(args[1]);
+        } else {
+          this.setLocation(path.resolve("src", "bundles"));
+        }
+      } else {
+        this.cli.interactive = true;
+      }
+    }
+    if (!this.location) {
+      if (this.cli.response.project) {
+        this.location = path.resolve(this.cli.response.path, this.cli.response.name, "src", "bundles");
+      } else {
+        this.location = path.resolve("src", "bundles");
       }
     }
     nodefony.extend(this.response, {
@@ -22,8 +36,13 @@ class generateBundle extends nodefony.Builder {
       domain: this.cli.response.configKernel.system.domain,
       local: this.cli.response.config.App.locale,
       projectYearNow: new Date().getFullYear(),
-      path:this.location || path.resolve(".")
+      path: this.location
     });
+    if (!this.name) {
+      this.name = this.cli.response.name;
+    }
+    this.response.name = this.name ;
+    this.path = path.resolve(this.location, this.name || "");
     this.setEnv();
   }
 
@@ -50,16 +69,10 @@ class generateBundle extends nodefony.Builder {
   async interaction() {
     this.cli.reset();
     await this.cli.showAsciify("Generate Bundle");
-    let mypath = null;
-    if (this.cli.response.project) {
-      mypath = path.resolve(this.cli.response.path, this.cli.response.name, "src", "bundles");
-    } else {
-      mypath = path.resolve("src", "bundles");
-    }
     let prompt = [{
       type: 'input',
       name: 'name',
-      default: "api",
+      default: this.name || "",
       message: 'Enter Bundle Name',
       validate: (value) => {
         if (value && value !== "nodefony") {
@@ -75,7 +88,7 @@ class generateBundle extends nodefony.Builder {
     }, {
       type: 'input',
       name: 'location',
-      default: mypath,
+      default: this.location,
       message: 'Enter Bundle Path',
       validate: (value) => {
         if (value) {
@@ -124,7 +137,7 @@ class generateBundle extends nodefony.Builder {
     }];
     return this.cli.prompt(prompt)
       .then((response) => {
-        this.path = path.resolve(this.location.path, this.name);
+        this.path = path.resolve(this.location, this.name);
         if (this.cli.exists(this.path)) {
           this.logger(`${this.path} Already exist`, "WARNING");
           return this.removeInteractivePath(this.path)
@@ -182,21 +195,21 @@ class generateBundle extends nodefony.Builder {
       this.bundleFile = path.resolve(this.bundlePath, this.shortName + "Bundle.js");
     } else {
       if (Path instanceof nodefony.fileClass) {
-        this.location = Path;
+        this.location = Path.path;
       } else {
         if (!Path) {
           return this.setPath(this.location);
         }
-        this.location = new nodefony.fileClass(Path);
+        this.location = Path;
       }
-      this.bundlePath = path.resolve(this.location.path, this.name);
+      this.bundlePath = path.resolve(this.location, this.name);
       this.bundleFile = path.resolve(this.bundlePath, this.shortName + "Bundle.js");
     }
     nodefony.extend(this.response, {
       bundleName: this.name,
       name: this.shortName,
       title: this.shortName,
-      location: this.location.path
+      location: this.location
     });
   }
 

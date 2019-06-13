@@ -1,3 +1,6 @@
+const Sequelize = require("Sequelize");
+const Op = Sequelize.Op;
+
 nodefony.register.call(nodefony.session.storage, "sequelize", function () {
 
   const finderGC = function (msMaxlifetime, contextSession) {
@@ -8,14 +11,15 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
     query.where = {
       context: contextSession,
       updatedAt: {
-        $lt: mydate
+        //$lt: mydate
+        [Op.lt]:mydate
       }
     };
     /*query.logging = (value) => {
       return this.manager.logger(value);
     };*/
     if (!this.entity) {
-      return Promise.resolve(true)
+      return Promise.resolve(true);
     }
     return this.entity.destroy(query).then((results) => {
       let severity = "DEBUG";

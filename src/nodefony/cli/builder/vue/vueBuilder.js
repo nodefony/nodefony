@@ -2,7 +2,8 @@ class Vue extends nodefony.builders.sandbox {
   constructor(cli, cmd, args) {
     super(cli, cmd, args, {
       addons: {
-        webpack: false
+        webpack: false,
+        bootstrap: false
       }
     });
     this.pathSkeleton = path.resolve(__dirname, "skeletons");

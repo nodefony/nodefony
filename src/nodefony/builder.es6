@@ -7,7 +7,7 @@ nodefony.Builder = class Builder extends nodefony.Service {
     this.twig = twig;
     this.cmd = cmd || this.cli.cmd;
     this.args = args || this.cli.args;
-    this.location = new nodefony.fileClass(path.resolve("."));
+    this.location = path.resolve(".");
     this.globalSkeleton = path.resolve(__dirname, "cli", "builder", "skeletons");
     this.force = false;
     this.twigOptions = {
@@ -20,8 +20,11 @@ nodefony.Builder = class Builder extends nodefony.Service {
     this.response = nodefony.extend(true, {}, this.cli.response);
   }
 
-  setLocation(location) {
-    return this.location = location;
+  setLocation(location){
+    if (location instanceof nodefony.fileClass){
+      return this.location = location.path ;
+    }
+    return this.location = path.resolve(location);
   }
 
   setEnv(env) {
@@ -80,7 +83,7 @@ nodefony.Builder = class Builder extends nodefony.Service {
     });
   }
 
-  buildFront(response, location) {
+  buildFront(response, Path) {
     this.Front = null;
     switch (response.front) {
     case "vue":
@@ -103,7 +106,7 @@ nodefony.Builder = class Builder extends nodefony.Service {
       this.Front = new nodefony.builders.sandbox(this.cli, this.cmd, this.args);
       break;
     }
-    this.Front.setLocation(location);
+    this.Front.setLocation(Path);
     return this.Front;
   }
 

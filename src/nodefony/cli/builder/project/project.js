@@ -4,21 +4,22 @@
   constructor(cli, cmd, args) {
     super(cli, cmd, args);
     this.name = null;
-    this.location = null;
     this.pathSkeleton = path.resolve(__dirname, "skeletons");
     if (this.cmd === "create:project" || this.cmd === "create") {
       if (args && args[0]) {
         this.name = args[0];
-        this.location = args[1] || path.resolve(".");
+        if (args[1]){
+          this.location = path.resolve(args[1]) ;
+        }
       }
     }
-    this.response = nodefony.extend(true, {}, this.cli.response, {
+    nodefony.extend(this.response, {
       name: this.name || "nodefony-starter",
       bundleName:"app",
       shortName:"app",
       description: "Project Description",
       front: "sandbox",
-      path: this.location || path.resolve("."),
+      path: this.location ,
       authorFullName: "admin",
       authorName: "admin",
       authorMail: "admin@nodefony.com",
@@ -34,6 +35,7 @@
     if (!this.name) {
       this.name = this.cli.response.name;
     }
+    this.path = path.resolve(this.location, this.response.name);
     this.setEnv();
   }
 
@@ -133,7 +135,7 @@
       }, {
         type: 'input',
         name: 'path',
-        default: this.response.path,
+        default: this.location,
         message: 'Project Path',
         validate: (value) => {
           let myPath = null;
@@ -241,7 +243,6 @@
   }
 
   createBuilder(response) {
-    nodefony.extend(this.cli.response, response);
     try {
       return {
         name: this.response.name,

@@ -50,16 +50,16 @@
     "node": ">=8"
   },
   "dependencies": {
-    "mongoose": "^5.5.14",
-    "sequelize": "^5.8.8",
-    "webpack": "^4.33.0",
-    "webpack-dev-server": "3.5.1"
+    "mongoose": "^5.5.15",
+    "sequelize": "^5.8.9",
+    "webpack": "^4.34.0",
+    "webpack-dev-server": "^3.7.1"
   },
   "devDependencies": {
     "editorconfig": "^0.15.3",
     "github-release-notes": "^0.17.0",
     "jshint": "^2.10.2",
-    "node-gyp": "^4.0.0",
+    "node-gyp": "^5.0.0",
     "node-pre-gyp": "^0.13.0"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",

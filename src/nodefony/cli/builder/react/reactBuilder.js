@@ -2,7 +2,8 @@ class React extends nodefony.builders.sandbox {
   constructor(cli, cmd, args) {
     super(cli, cmd, args, {
       addons: {
-        webpack: false
+        webpack: false,
+        bootstrap: false
       }
     });
     this.pathSkeleton = path.resolve(__dirname, "skeletons");
@@ -20,13 +21,34 @@ class React extends nodefony.builders.sandbox {
           .then(() => {
             return super.generate(response, force)
               .then(() => {
-                return response;
+                return this.response;
               });
           })
           .catch((e) => {
             throw e;
           });
       });
+  }
+
+  builderProject() {
+    try {
+      return {
+        name: "app",
+        type: "directory",
+        childs: [{
+            name: "appKernel.js",
+            type: "file",
+            skeleton: path.resolve(this.globalSkeleton, "app", "appKernel.js"),
+            params: this.response
+          },
+          this.generateController(),
+          this.generateConfig(),
+          this.generateRessources()
+        ]
+      };
+    } catch (e) {
+      throw e;
+    }
   }
 
   builderBundle() {
@@ -130,6 +152,10 @@ class React extends nodefony.builders.sandbox {
     } catch (e) {
       throw e;
     }
+    let res = await gitC.checkIsRepo();
+    if (! res){
+      return Promise.resolve(this.location);
+    }
     await gitC.add(path.resolve(this.location, "*"))
     .then(() => {
       this.log("git add ");
@@ -153,7 +179,7 @@ class React extends nodefony.builders.sandbox {
       });
   }
 
-  stachPop() {
+  async stachPop() {
     let gitP, cwd, git;
     try {
       cwd = path.resolve(this.response.path);
@@ -161,6 +187,10 @@ class React extends nodefony.builders.sandbox {
       git = gitP(cwd);
     } catch (e) {
       throw e;
+    }
+    let res = await git.checkIsRepo();
+    if (! res){
+      return Promise.resolve(this.location);
     }
     return git.stash(["pop"])
       .then(() => {

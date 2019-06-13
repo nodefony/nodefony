@@ -21,6 +21,15 @@ class bundlesTask extends nodefony.Task {
     );
   }
 
+  vue(){
+    this.cli.response.front = "vue";
+    return this.generate();
+  }
+
+  react(){
+    this.cli.response.front = "react";
+    return this.generate();
+  }
 
   generate() {
     return new bundlesBuilder(this.cli, this.cli.cmd, this.cli.args)

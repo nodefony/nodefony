@@ -1,3 +1,4 @@
+{% if addons.webpack %}
 /*
  *
  *	ENTRY POINT
@@ -12,13 +13,14 @@ import '../scss/custom.scss';
 {% else%}
 import "../css/{{shortName}}.css";
 {% endif%}
+{% endif%}
 
 /*
  *	Class Bundle App
  */
 class {{shortName | capitalize }}  {
   constructor() {
-{% if addons.workbox %}
+{% if addons.workbox and  addons.webpack %}
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/{{bundleName}}/assets/service-worker.js', {
@@ -41,6 +43,7 @@ class {{shortName | capitalize }}  {
   }
 }
 
+{% if addons.webpack %}
 /*
  * HMR
  */
@@ -51,5 +54,6 @@ if (module.hot) {
     }
   });
 }
+{% endif %}
 
 export default new {{shortName | capitalize }}();

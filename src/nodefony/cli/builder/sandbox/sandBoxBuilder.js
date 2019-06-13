@@ -422,6 +422,32 @@ class SandBox extends nodefony.Builder {
         path: path.resolve(this.sandboxSkeleton, "Resources", "public", "images", "app-logo.png"),
       }]
     });
+    if( ! this.response.addons.webpack){
+      publicWeb.childs.push({
+        name: "js",
+        type: "directory",
+        childs: [{
+          name: `${this.response.shortName}.js`,
+          type: "file",
+          skeleton: path.resolve(this.sandboxSkeleton, "Resources", "js", "entry.js"),
+          params: this.response
+        }]
+      });
+      publicWeb.childs.push({
+        name: "css",
+        type: "directory",
+        childs: [{
+          name: `${this.response.shortName}.css`,
+          type: "file",
+          skeleton: path.resolve(this.sandboxSkeleton, "Resources", "css", "entry.css"),
+          params: this.response
+        }]
+      });
+      publicWeb.childs.push({
+        name: "fonts",
+        type: "directory"
+      });
+    }
     return publicWeb;
   }
 

@@ -21,7 +21,11 @@
     {% block stylesheets %}
       <!-- WEBPACK BUNDLE -->
 {% endverbatim %}
+{% if addons.webpack %}
       <link rel="stylesheet" href="{% verbatim %}{{CDN('stylesheet')}}{% endverbatim %}/{{bundleName}}/assets/css/{{shortName}}.css"/>
+{% else %}
+      <link rel="stylesheet" href="{% verbatim %}{{CDN('stylesheet')}}{% endverbatim %}/{{bundleName}}/css/{{shortName}}.css"/>
+{% endif %}
 {% verbatim %}
     {% endblock %}
   </head>
@@ -30,7 +34,11 @@
     {% block javascripts %}
       <!-- WEBPACK BUNDLE -->
 {% endverbatim %}
+{% if addons.webpack %}
       <script type="text/javascript" src="{% verbatim %}{{CDN('javascript')}}{% endverbatim %}/{{bundleName}}/assets/js/{{shortName}}.js"></script>
+{% else %}
+      <script type="text/javascript" src="{% verbatim %}{{CDN('javascript')}}{% endverbatim %}/{{bundleName}}/js/{{shortName}}.js"></script>
+{% endif %}
 {% verbatim %}
     {% endblock %}
   </body>
