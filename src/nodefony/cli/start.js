@@ -105,11 +105,14 @@ module.exports = class cliStart extends nodefony.cliKernel {
     this.setOption('-j, --json', 'Nodefony json response');
     let cmd = (!process.argv[2]);
     this.parseCommand(process.argv);
+    this.interactive = this.commander.interactive || false;
     if (!this.cmd && !process.argv.slice(2).length && cmd) {
       this.buildMenu();
+      this.interactive = true ;
       return this.showMenu();
     } else {
-      if (!this.cmd && this.commander.interactive) {
+
+      if (!this.cmd && this.interactive) {
         this.buildMenu();
         return this.showMenu();
       } else {
@@ -175,13 +178,16 @@ module.exports = class cliStart extends nodefony.cliKernel {
   }
 
   start(command, args, rawCommand) {
+    if(this.interactive === undefined){
+      this.interactive = this.commander.interactive || false;
+    }
     this.started = true;
     switch (command) {
       case "showmenu":
         return this.reloadPromt();
       case "create":
         try {
-          return this.createProject(command, args, this.commander.interactive);
+          return this.createProject(command, args, this.interactive);
         } catch (e) {
           throw e;
         }
@@ -453,9 +459,10 @@ module.exports = class cliStart extends nodefony.cliKernel {
     try {
       if (command === "create") {
         if (!args[0]) {
-          let error = new Error("Project name empty Unauthorised Please enter a valid project name ");
-          this.logger(error, "ERROR");
-          this.terminate(1);
+          args[0] = "nodefony-starter" ;
+          //let error = new Error("Project name empty Unauthorised Please enter a valid project name ");
+          //this.logger(error, "ERROR");
+          //this.terminate(1);
         }
       }
       let project = new nodefony.builders.project(this, command, args);

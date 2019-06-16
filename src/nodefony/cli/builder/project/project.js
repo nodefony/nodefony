@@ -45,8 +45,8 @@
         if ( ! this.buildFront) {
           return this.response ;
         }
-        return this.buildFront(this.cli.response, this.path)
-          .run(true)
+        return this.buildFront(this.response, this.path)
+          .run(this.cli.interactive)
           .then((project) => {
             return project.response ;
           })

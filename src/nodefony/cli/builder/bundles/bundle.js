@@ -10,14 +10,12 @@ class generateBundle extends nodefony.Builder {
     if (this.cmd === "generate:bundle" || this.cmd === "create:bundle") {
       if (args && args[0]) {
         this.name = args[0];
-        this.cli.response.name = args[0] ;
+        this.cli.response.name = args[0];
         if (args[1]) {
           this.setLocation(args[1]);
         } else {
           this.setLocation(path.resolve("src", "bundles"));
         }
-      } else {
-        this.cli.interactive = true;
       }
     }
     if (!this.location) {
@@ -28,6 +26,7 @@ class generateBundle extends nodefony.Builder {
       }
     }
     nodefony.extend(this.response, {
+      bundle: true,
       module: nodefony.projectName,
       projectName: nodefony.projectName,
       authorName: this.cli.response.config.App.authorName,
@@ -41,7 +40,7 @@ class generateBundle extends nodefony.Builder {
     if (!this.name) {
       this.name = this.cli.response.name;
     }
-    this.response.name = this.name ;
+    this.response.name = this.name;
     this.path = path.resolve(this.location, this.name || "");
     this.setEnv();
   }
@@ -50,7 +49,7 @@ class generateBundle extends nodefony.Builder {
     return super.generate(response)
       .then(() => {
         return this.buildFront(this.response, this.path)
-          .run(true)
+          .run(this.cli.interactive)
           .then((bundle) => {
             return this.install()
               .then(() => {
@@ -117,20 +116,20 @@ class generateBundle extends nodefony.Builder {
       filter: (value) => {
         let front = null;
         switch (value) {
-          case "Sandbox (without Front framwork)":
-            front = "sandbox";
-            break;
-          case "Vue.js":
-            front = "vue";
-            break;
-          case "React":
-            front = 'react';
-            break;
-          case "Api":
-            front = 'api';
-            break;
-          default:
-            front = value;
+        case "Sandbox (without Front framwork)":
+          front = "sandbox";
+          break;
+        case "Vue.js":
+          front = "vue";
+          break;
+        case "React":
+          front = 'react';
+          break;
+        case "Api":
+          front = 'api';
+          break;
+        default:
+          front = value;
         }
         return front;
       }

@@ -1,11 +1,11 @@
 class Vue extends nodefony.builders.sandbox {
-  constructor(cli, cmd, args) {
-    super(cli, cmd, args, {
+  constructor(cli, cmd, args, options) {
+    super(cli, cmd, args, nodefony.extend(true,{}, options,{
       addons: {
         webpack: false,
         bootstrap: false
       }
-    });
+    }));
     this.pathSkeleton = path.resolve(__dirname, "skeletons");
     this.cliVue = this.getCli();
   }

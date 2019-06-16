@@ -6,12 +6,13 @@ class SandBox extends nodefony.Builder {
     nodefony.extend(true, this.response, {
       addons: {
         webpack: true,
-        bootstrap: true,
+        bootstrap: false,
         workbox: false,
         annotations: true,
         binding: false
       }
     }, options);
+    console.log(this.response)
     this.setEnv("development");
   }
 
@@ -85,6 +86,10 @@ class SandBox extends nodefony.Builder {
       this.response.shortName = "app";
       return this.builderProject(response);
     default:
+      if (! this.response.bundle){
+        this.cli.response.command = "project";
+        return this.createBuilder(response);
+      }
       this.response.packageName = this.response.name;
       this.response.shortName = this.response.name;
       return this.builderBundle(response);
