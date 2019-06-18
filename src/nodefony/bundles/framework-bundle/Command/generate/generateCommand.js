@@ -11,7 +11,7 @@ class generateCommand extends nodefony.Command {
   constructor(cli, bundle) {
     super("generate", cli, bundle);
     this.setTask("bundle", bundlesTask);
-    //this.setTask("controller", controllerTask);
+    this.setTask("controller", controllerTask);
     //this.setTask("service", serviceTask);
     //this.setTask("entity", entityTask);
     this.setTask("nginx", nginxTask);
@@ -19,30 +19,15 @@ class generateCommand extends nodefony.Command {
     this.setTask("letsencrypt", letsencryptTask);
   }
 
-  /*bundle() {
-    let task = this.getTask("bundle");
-    if (this.interactive) {
-      return nodefony.builders.bundles.interaction(this.cli)
-        .then((res) => {
-          switch (res.type) {
-            case "nodefony":
-              return task.nodefony.apply(task, arguments);
-            case "react":
-              return task.react.apply(task, arguments);
-            case "angular":
-              return task.angular.apply(task, arguments);
-          }
-        });
-    } else {
-      return task.nodefony.apply(task, arguments);
-    }
-  }*/
-
   bundle() {
     let task = this.getTask("bundle");
     return task.run(arguments);
   }
 
+  controller(){
+    let task = this.getTask("controller");
+    return task.run(arguments);
+  }
 
 }
 

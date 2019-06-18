@@ -47,8 +47,8 @@
     "@nodefony/security-bundle": "^4.3.3",
     "@nodefony/sequelize-bundle": "^4.3.3",
     "@nodefony/unittests-bundle": "^4.3.3",
-    "@vue/cli": "^3.8.3",
-    "@vue/cli-service-global": "^3.8.3",
+    "@vue/cli": "^3.8.4",
+    "@vue/cli-service-global": "^3.8.4",
     "asciify": "^1.3.5",
     "async": "^3.0.1",
     "bluebird": "^3.5.5",
@@ -75,11 +75,12 @@
     "semver": "^6.1.1",
     "shelljs": "^0.8.3",
     "shortid": "^2.2.14",
-    "simple-git": "^1.113.0",
+    "simple-git": "^1.115.0",
     "twig": "^1.13.3",
     "xml2js": "^0.4.19",
     "yarn": "^1.16.0"
   },
+  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git://github.com/nodefony/nodefony-core.git"

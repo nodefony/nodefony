@@ -116,20 +116,20 @@ class generateBundle extends nodefony.Builder {
       filter: (value) => {
         let front = null;
         switch (value) {
-        case "Sandbox (without Front framwork)":
-          front = "sandbox";
-          break;
-        case "Vue.js":
-          front = "vue";
-          break;
-        case "React":
-          front = 'react';
-          break;
-        case "Api":
-          front = 'api';
-          break;
-        default:
-          front = value;
+          case "Sandbox (without Front framwork)":
+            front = "sandbox";
+            break;
+          case "Vue.js":
+            front = "vue";
+            break;
+          case "React":
+            front = 'react';
+            break;
+          case "Api":
+            front = 'api';
+            break;
+          default:
+            front = value;
         }
         return front;
       }
@@ -308,6 +308,19 @@ class generateBundle extends nodefony.Builder {
       throw e;
     }
   }
+
+  static controller() {
+    return  require(path.resolve(__dirname, "controller.js"));
+  }
+
+  static service() {
+
+  }
+
+  static entity() {
+
+  }
+
 }
 
 nodefony.builders.bundle = generateBundle;

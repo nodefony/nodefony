@@ -1,6 +1,7 @@
 class Vue extends nodefony.builders.sandbox {
   constructor(cli, cmd, args, options) {
-    super(cli, cmd, args, nodefony.extend(true,{}, options,{
+    super(cli, cmd, args, nodefony.extend(true, {}, options, {
+      typescript: false,
       addons: {
         webpack: false,
         bootstrap: false
@@ -17,27 +18,44 @@ class Vue extends nodefony.builders.sandbox {
   generate(response, force) {
     return this.builVue()
       .then(() => {
-        return super.generate(response, force)
+        return this.checkTypeScript()
           .then(() => {
-            return this.checkTypeScript()
+            return super.generate(response, force)
               .then(() => {
                 return this.response;
+              })
+              .catch((e) => {
+                throw e;
               });
           })
           .catch((e) => {
             throw e;
           });
+      })
+      .catch((e) => {
+        throw e;
       });
   }
 
   checkTypeScript() {
     return new Promise((resolve) => {
       try {
-        new nodefony.fileClass(path.resolve(this.location, "app", "src", "main.ts"));
-        let skelete = path.resolve(this.pathSkeleton, "vue.config.js.ts");
-        this.cli.cp("-f", skelete, path.resolve(this.location, "app", "vue.config.js"));
+        if (this.response.command === "project") {
+
+          new nodefony.fileClass(path.resolve(this.location, "app", "src", "main.ts"));
+          this.response.typescript = true;
+          //let skelete = path.resolve(this.pathSkeleton, "vue.config.js.ts");
+          //this.cli.cp("-f", skelete, path.resolve(this.location, "app", "vue.config.js"));
+        } else {
+          new nodefony.fileClass(path.resolve(this.location, "src", "main.ts"));
+          this.response.typescript = true;
+          //let skelete = path.resolve(this.pathSkeleton, "vue.config.js.ts");
+          //this.cli.cp("-f", skelete, path.resolve(this.location, "vue.config.js"));
+        }
+
         return resolve(true);
       } catch (e) {
+        this.response.typescript = false;
         return resolve(true);
       }
     });
@@ -74,7 +92,7 @@ class Vue extends nodefony.builders.sandbox {
     switch (this.cli.response.command) {
       case "project":
         name = "app";
-        location = this.location ;
+        location = this.location;
         break;
       case "bundle":
         name = this.cli.response.bundleName;

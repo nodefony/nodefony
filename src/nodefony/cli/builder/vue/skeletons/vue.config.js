@@ -13,7 +13,11 @@ module.exports = {
   pages: {
     index: {
       // entry for the page
+{% if typescript %}
+      entry: 'src/main.ts',
+{% else %}
       entry: 'src/main.js',
+{% endif %}
       // the source template
       template: 'public/index.html',
       // output as dist/index.html

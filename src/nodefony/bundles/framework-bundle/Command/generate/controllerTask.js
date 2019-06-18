@@ -6,12 +6,8 @@ class controllerTask extends nodefony.Task {
       config: this.getParameters("bundles.app"),
       configKernel: this.getParameters("kernel")
     });
-    //this.bundleBuilder = new nodefony.builders.bundles.nodefony(this.cli, "js");
-    this.controller = this.bundleBuilder.controller;
-    this.defaultOptions = {
-      bundle: "app",
-      controllerName: "defaultController",
-    };
+    let generaterController = nodefony.builders.bundle.controller();
+    this.controller = new generaterController(this.cli);
   }
 
   showHelp() {
@@ -34,17 +30,10 @@ class controllerTask extends nodefony.Task {
   getBundle(name) {
     let bundle = this.kernel.getBundle(name);
     if (bundle) {
-      this.bundleBuilder.setPath(null, bundle);
+      this.controller.setBundle(bundle);
       return bundle;
     }
     throw new Error(`Bundle: ${name} not found`);
-  }
-
-  checkController(bundle, nameController) {
-    let res = this.controller.checkName(nameController);
-    if (res) {
-      throw new Error(`Name : ${nameController} Unauthorised Please enter a valid Controller name`);
-    }
   }
 
   interaction( /*args*/ ) {
@@ -66,27 +55,6 @@ class controllerTask extends nodefony.Task {
             }
             return this.getBundle(val);
           }
-        }, {
-          type: 'input',
-          name: 'controllerName',
-          default: (response) => {
-            if (response.bundle === "Quit") {
-              return Promise.reject("Quit");
-            }
-            return `${response.bundle.name}Controller`;
-          },
-          message: `Enter Controller Name : `,
-          validate: (value, response) => {
-            if (value) {
-              try {
-                this.checkController(response.bundle, value);
-              } catch (e) {
-                return e.message;
-              }
-              return true;
-            }
-            return `${value} Unauthorised Please enter a valid Controller name`;
-          }
         }]);
       }).then((response) => {
         return nodefony.extend(this.cli.response, response);
@@ -96,28 +64,7 @@ class controllerTask extends nodefony.Task {
   }
 
   generate(args, response) {
-    return new Promise((resolve, reject) => {
-      try {
-        if (this.interactive && response) {
-          return this.controller.generateController(response.controllerName);
-        }
-        if (args.length) {
-          let bundle = null;
-          if (!args[1]) {
-            bundle = this.getBundle("app");
-          } else {
-            bundle = this.getBundle(args[1]);
-          }
-          if (bundle) {
-            this.checkController(bundle, args[0]);
-            return this.controller.generateController(args[0]);
-          }
-        }
-        return reject(new Error("Bad Arguments"));
-      } catch (e) {
-        return reject(e);
-      }
-    });
+    return this.controller.run(this.cli.interactive);
   }
 
 }

@@ -564,6 +564,7 @@ module.exports = nodefony.register("cliKernel", function() {
         //this.logger(e, "WARNING");
         return 0;
       }
+
       let files = null;
       switch (true) {
         case stat.isFile():
@@ -580,7 +581,7 @@ module.exports = nodefony.register("cliKernel", function() {
       let totalSizeBytes = 0;
       let dirSize = null;
       for (let i = 0; i < files.length; i++) {
-        let myPath = dir + files[i];
+        let myPath = `${dir}/${files[i]}`;
         try {
           stat = fs.lstatSync(myPath);
         } catch (e) {

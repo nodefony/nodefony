@@ -12,7 +12,6 @@ class SandBox extends nodefony.Builder {
         binding: false
       }
     }, options);
-    console.log(this.response)
     this.setEnv("development");
   }
 
