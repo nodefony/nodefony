@@ -75,6 +75,9 @@ module.exports = class webpack extends nodefony.Service {
 
   compile() {
     return new Promise((resolve, reject) => {
+      if (! this.tabPromise.length ){
+        return ;
+      }
       let bundle = this.tabPromise.shift();
       if (!bundle) {
         process.nextTick(() => {

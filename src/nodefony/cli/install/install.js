@@ -53,6 +53,8 @@ module.exports = class installProject extends nodefony.Builder {
     }
     try {
       this.cli.rm("-rf", path.resolve(cwd, "node_modules"));
+      this.cli.rm("-rf", path.resolve(cwd, "yarn.lock"));
+      this.cli.rm("-rf", path.resolve(cwd, "package-lock.json"));
     } catch (e) {
       throw e;
     }

@@ -711,7 +711,7 @@ module.exports = nodefony.register("cliKernel", function() {
                     data.dependencies[pack].name,
                     data.dependencies[pack].version,
                     data.dependencies[pack].description || "",
-                    where
+                    where || path.basename(cwd)
                   ]);
                 }
               }
