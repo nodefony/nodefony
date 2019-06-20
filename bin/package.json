@@ -1,0 +1,17 @@
+{
+  "name": "bin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^6.4.0"
+  }
+}

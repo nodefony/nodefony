@@ -35,7 +35,7 @@
     "mongoose": "^5.6.0",
     "nodefony": "^{{version}}",
     "sequelize": "^5.8.10",
-    "webpack": "^4.34.0",
+    "webpack": "^4.35.0",
     "webpack-dev-server": "^3.7.2"
   },
   "devDependencies": {

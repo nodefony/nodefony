@@ -66,20 +66,23 @@ module.exports = webpackMerge(config, {
             presets: ['@babel/preset-env']
           }
         }]
-      },
-      {% if addons.bootstrap %}
+      }, {% if addons.bootstrap %}{
       /*
        *	JQUERY EXPOSE BROWSER CONTEXT
        *
        */
-      {
-        test: require.resolve("jquery"),
-        loader: "expose-loader?$!expose-loader?jQuery"
+        test: require.resolve('jquery'),
+        use: [{
+          loader: 'expose-loader',
+          options: 'jQuery'
+        }, {
+          loader: 'expose-loader',
+          options: '$'
+        }]
       }, {
         test: /jquery\..*\.js/,
-        loader: "imports-loader?$=jquery,jQuery=jquery,this=>window"
-      },
-      {% endif %}{
+        use: "imports-loader?$=jquery,jQuery=jquery,this=>window"
+      }, {% endif %}{
         test: /\.(sa|sc|c)ss$/,
         use: [
           //'css-hot-loader',

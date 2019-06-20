@@ -59,7 +59,7 @@
     "clui": "^0.3.6",
     "commander": "^2.20.0",
     "create-react-app": "^3.0.1",
-    "inquirer": "^6.3.1",
+    "inquirer": "6.3.1",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.11",
     "lodash.isregexp": "^4.0.1",
@@ -75,7 +75,7 @@
     "semver": "^6.1.1",
     "shelljs": "^0.8.3",
     "shortid": "^2.2.14",
-    "simple-git": "^1.115.0",
+    "simple-git": "^1.116.0",
     "twig": "^1.13.3",
     "xml2js": "^0.4.19",
     "yarn": "^1.16.0"

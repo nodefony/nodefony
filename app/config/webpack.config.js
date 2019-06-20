@@ -36,100 +36,104 @@ module.exports = webpackMerge(config, {
   resolve: {},
   module: {
     rules: [{
-        // BABEL TRANSCODE
-        test: new RegExp("\.es6$|\.js$"),
-        exclude: new RegExp("node_modules"),
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env']
-          }
-        }]
-      },
+      // BABEL TRANSCODE
+      test: new RegExp("\.es6$|\.js$"),
+      exclude: new RegExp("node_modules"),
+      use: [{
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env']
+        }
+      }]
+    }, {
       /*
        *	JQUERY EXPOSE BROWSER CONTEXT
        *
        */
-      {
-        test: require.resolve("jquery"),
-        loader: "expose-loader?$!expose-loader?jQuery"
+      test: require.resolve('jquery'),
+      use: [{
+        loader: 'expose-loader',
+        options: 'jQuery'
       }, {
-        test: /jquery\..*\.js/,
-        loader: "imports-loader?$=jquery,jQuery=jquery,this=>window"
-      }, {
-        test: /\.(sa|sc|c)ss$/,
-        use: [
-          //'css-hot-loader',
-          MiniCssExtractPlugin.loader,
-          {
-            loader: "css-loader",
-            options: {
-              sourceMap: true
-            }
-          }, {
-            loader: 'resolve-url-loader',
-            options: {}
-          }, {
-            loader: 'postcss-loader', // Run post css actions
-            options: {
-              plugins: () => [require('precss'), require('autoprefixer')]
-            }
-          }, {
-            loader: "sass-loader",
-            options: {
-              sourceMap: true
-            }
-          }
-        ]
-      }, {
-        test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-        use: [{
-          loader: 'file-loader',
+        loader: 'expose-loader',
+        options: '$'
+      }]
+    }, {
+      test: /jquery\..*\.js/,
+      use: "imports-loader?$=jquery,jQuery=jquery,this=>window"
+    }, {
+      test: /\.(sa|sc|c)ss$/,
+      use: [
+        //'css-hot-loader',
+        MiniCssExtractPlugin.loader,
+        {
+          loader: "css-loader",
           options: {
-            name: '[name].[ext]',
-            outputPath: 'fonts/', // where the fonts will go
-            publicPath: `/${bundleName}/assets/fonts/` // override the default path
+            sourceMap: true
           }
-        }]
-      }, {
-        // IMAGES
-        test: /\.(gif|png|jpe?g|svg)$/i,
-        use: [{
-            loader: "file-loader",
-            options: {
-              name: "[name].[ext]",
-              publicPath: `/${bundleName}/assets/images/`,
-              outputPath: "/images/"
-            }
+        }, {
+          loader: 'resolve-url-loader',
+          options: {}
+        }, {
+          loader: 'postcss-loader', // Run post css actions
+          options: {
+            plugins: () => [require('precss'), require('autoprefixer')]
           }
-          /*, {
-                    loader: 'image-webpack-loader',
-                    options: {
-                      disable: dev,
-                      mozjpeg: {
-                        progressive: true,
-                        quality: 65
-                      },
-                      // optipng.enabled: false will disable optipng
-                      optipng: {
-                        enabled: false,
-                      },
-                      pngquant: {
-                        quality: '65-90',
-                        speed: 4
-                      },
-                      gifsicle: {
-                        interlaced: false,
-                      },
-                      // the webp option will enable WEBP
-                      webp: {
-                        quality: 75
-                      }
+        }, {
+          loader: "sass-loader",
+          options: {
+            sourceMap: true
+          }
+        }
+      ]
+    }, {
+      test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+      use: [{
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]',
+          outputPath: 'fonts/', // where the fonts will go
+          publicPath: `/${bundleName}/assets/fonts/` // override the default path
+        }
+      }]
+    }, {
+      // IMAGES
+      test: /\.(gif|png|jpe?g|svg)$/i,
+      use: [{
+          loader: "file-loader",
+          options: {
+            name: "[name].[ext]",
+            publicPath: `/${bundleName}/assets/images/`,
+            outputPath: "/images/"
+          }
+        }
+        /*, {
+                  loader: 'image-webpack-loader',
+                  options: {
+                    disable: dev,
+                    mozjpeg: {
+                      progressive: true,
+                      quality: 65
+                    },
+                    // optipng.enabled: false will disable optipng
+                    optipng: {
+                      enabled: false,
+                    },
+                    pngquant: {
+                      quality: '65-90',
+                      speed: 4
+                    },
+                    gifsicle: {
+                      interlaced: false,
+                    },
+                    // the webp option will enable WEBP
+                    webp: {
+                      quality: 75
                     }
-                  }*/
-        ]
-      }
-    ]
+                  }
+                }*/
+      ]
+    }]
   },
   plugins: [
     new MiniCssExtractPlugin({
