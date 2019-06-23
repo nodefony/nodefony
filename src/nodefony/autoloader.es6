@@ -22,7 +22,7 @@ module.exports = function() {
   context.url = require("url");
   context.xmlParser = require('xml2js').Parser;
   context.dns = require('dns');
-  context.async = require('async');
+  //context.async = require('async');
   //context.nodedomain = require('domain');
   context.Promise = require('promise');
   context.inquirer = require('inquirer');
@@ -32,7 +32,7 @@ module.exports = function() {
   context.crypto = require("crypto");
   context.BlueBird = require("bluebird");
   context.pm2 = require('pm2');
-  context.Rx = require("rxjs");
+  //context.Rx = require("rxjs");
   const nodefony = new Nodefony(context);
 
 
