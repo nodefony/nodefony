@@ -1,4 +1,4 @@
-const Sequelize = require("Sequelize");
+const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
 nodefony.register.call(nodefony.session.storage, "sequelize", function () {
