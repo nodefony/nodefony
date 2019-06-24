@@ -69,9 +69,9 @@ class displayTask extends nodefony.Task {
       //"SCHEMES",
       //"PATTERN",
     ];
-    if (firstMatch) {
+    //if (firstMatch) {
       head.push("FIRST MATCH");
-    }
+    //}
     let table = this.cli.displayTable(null, {
       head: head
     });
@@ -91,9 +91,12 @@ class displayTask extends nodefony.Task {
           //ele[i].schemes|| "",
           //ele[i].pattern,
         ];
-        if (firstMatch) {
+        tab.push(ele[i].firstMatch || "none")
+        /*if (firstMatch) {
           tab.push(ele[i].firstMatch);
-        }
+        }else{
+          tab.push("none");
+        }*/
         table.push(tab);
       }
     }
