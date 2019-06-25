@@ -321,6 +321,10 @@ class generateBundle extends nodefony.Builder {
 
   }
 
+  static command() {
+
+  }
+
 }
 
 nodefony.builders.bundle = generateBundle;

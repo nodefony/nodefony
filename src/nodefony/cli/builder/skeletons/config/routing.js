@@ -12,7 +12,13 @@
  *        {{name}} ROUTING  {{ bundleName }}
  **/
 
-{% if bundleName == "app" %}
+{% if addons.annotations %}
+
+  module.exports = {};
+
+{% else %}
+
+{% if command == "project" %}
 module.exports = {
   home: {
     pattern: "/",
@@ -30,4 +36,6 @@ module.exports = {
     }
   }
 };
+{% endif %}
+
 {% endif %}

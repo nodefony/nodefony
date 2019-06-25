@@ -7,6 +7,8 @@ class SandBox extends nodefony.Builder {
       addons: {
         webpack: true,
         bootstrap: false,
+        command: false,
+        unittest: false,
         workbox: false,
         annotations: true,
         binding: false
@@ -34,6 +36,14 @@ class SandBox extends nodefony.Builder {
         name: 'Bootstrap',
         checked: this.response.addons.bootstrap
       }, {
+        name: "Command",
+        message: "Add Cli Command Matrice",
+        checked: this.response.addons.command
+      },{
+        name: "Unit Tests",
+        message: "Add Unit Tests Matrice",
+        checked: this.response.addons.unittest
+      },{
         name: 'Progressive Web App (PWA) Workbox',
         checked: this.response.addons.workbox
       }, {
@@ -44,6 +54,8 @@ class SandBox extends nodefony.Builder {
       let addons = {
         webpack: false,
         bootstrap: false,
+        command: false,
+        unittest: false,
         workbox: false,
         annotations: false,
         binding: false
@@ -51,47 +63,53 @@ class SandBox extends nodefony.Builder {
       if (response.addons.length) {
         for (let i = 0; i < response.addons.length; i++) {
           switch (response.addons[i]) {
-          case "Bootstrap":
-            addons.bootstrap = true;
-            break;
-          case "Annotations":
-            addons.annotations = true;
-            break;
-          case "Progressive Web App (PWA) Workbox":
-            addons.workbox = true;
-            break;
-          case "Build Matrice C++ Binding":
-            addons.binding = true;
-            break;
-          case "Webpack":
-            addons.webpack = true;
-            break;
+            case "Bootstrap":
+              addons.bootstrap = true;
+              break;
+            case "Annotations":
+              addons.annotations = true;
+              break;
+            case "Command":
+              addons.command = true;
+              break;
+            case "Unit Tests":
+              addons.unittest = true;
+              break;
+            case "Progressive Web App (PWA) Workbox":
+              addons.workbox = true;
+              break;
+            case "Build Matrice C++ Binding":
+              addons.binding = true;
+              break;
+            case "Webpack":
+              addons.webpack = true;
+              break;
           }
         }
       }
       if (addons.bootstrap) {
         addons.webpack = true;
       }
-      delete response.addons ;
-      response.addons = addons ;
-      return response ;
+      delete response.addons;
+      response.addons = addons;
+      return response;
     });
   }
 
   createBuilder(response) {
     switch (this.cli.response.command) {
-    case "project":
-      this.response.packageName = "app";
-      this.response.shortName = "app";
-      return this.builderProject(response);
-    default:
-      if (! this.response.bundle){
-        this.cli.response.command = "project";
-        return this.createBuilder(response);
-      }
-      this.response.packageName = this.response.name;
-      this.response.shortName = this.response.name;
-      return this.builderBundle(response);
+      case "project":
+        this.response.packageName = "app";
+        this.response.shortName = "app";
+        return this.builderProject(response);
+      default:
+        if (!this.response.bundle) {
+          this.cli.response.command = "project";
+          return this.createBuilder(response);
+        }
+        this.response.packageName = this.response.name;
+        this.response.shortName = this.response.name;
+        return this.builderBundle(response);
     }
   }
 
@@ -105,22 +123,24 @@ class SandBox extends nodefony.Builder {
             type: "file",
             skeleton: path.resolve(this.globalSkeleton, "package.json"),
             params: this.response
-        }, {
+          }, {
             name: "appKernel.js",
             type: "file",
             skeleton: path.resolve(this.globalSkeleton, "app", "appKernel.js"),
             params: this.response
-        }, {
+          }, {
             name: "Entity",
             type: "directory",
             childs: [{
               name: ".gitignore",
               type: "file"
-          }]
-        },
-        this.generateController(),
-        this.generateConfig(this.response.addons.webpack),
-        this.generateRessources()
+            }]
+          },
+          this.generateController(),
+          this.generateConfig(this.response.addons.webpack),
+          this.generateRessources(),
+          this.generateCommand(),
+          this.generateUnitTest()
         ]
       };
       if (this.response.addons.binding) {
@@ -179,6 +199,8 @@ class SandBox extends nodefony.Builder {
         type: "file"
       }]
     });
+    bundle.push(this.generateCommand());
+    bundle.push(this.generateUnitTest());
     return bundle;
   }
 
@@ -253,6 +275,60 @@ class SandBox extends nodefony.Builder {
       });
     }
     return controller;
+  }
+
+  generateCommand(){
+    let command = {
+      name: "Command",
+      type: "directory",
+      childs: []
+    };
+    if (this.response.addons.command) {
+      let name = null;
+      if (this.cli.response.command === "project") {
+        name = "app";
+      }else{
+        name = this.response.name ;
+      }
+      this.response.commandName = name ;
+      command.childs.push({
+        name: name + "Command.js",
+        type: "file",
+        skeleton: path.resolve(this.globalSkeleton, "command", "commandClass.js"),
+        params: this.response
+      });
+      command.childs.push({
+        name: name + "Task.js",
+        type: "file",
+        skeleton: path.resolve(this.globalSkeleton, "command", "taskClass.js"),
+        params: this.response
+      });
+    }
+    return command;
+  }
+
+  generateUnitTest(){
+    let unit = {
+      name: "tests",
+      type: "directory",
+      childs: []
+    };
+    let name = null;
+    if (this.cli.response.command === "project") {
+      name = "app";
+    }else{
+      name = this.response.name ;
+    }
+    this.response.testName = name ;
+    if (this.response.addons.unittest) {
+      unit.childs.push({
+        name: name + "Test.js",
+        type: "file",
+        skeleton: path.resolve(this.globalSkeleton, "unittest", "testFile.js"),
+        params: this.response
+      });
+    }
+    return unit;
   }
 
   generateRessources() {
@@ -426,7 +502,7 @@ class SandBox extends nodefony.Builder {
         path: path.resolve(this.sandboxSkeleton, "Resources", "public", "images", "app-logo.png"),
       }]
     });
-    if( ! this.response.addons.webpack){
+    if (!this.response.addons.webpack) {
       publicWeb.childs.push({
         name: "js",
         type: "directory",

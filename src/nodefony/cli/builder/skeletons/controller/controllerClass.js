@@ -1,13 +1,23 @@
 {% if addons.binding %}
 const binding = require('../build/Release/{{shortName}}.node');
 {% endif %}
+
+{% if addons.annotations and command != "project" %}
 /**
  *	@class {{controllerName}}
  *	@constructor
  *	@param {class} container
  *	@param {class} context
- *
+ *  @Route ("/{{name}}")
  */
+{% else %}
+/**
+ *	@class {{controllerName}}
+ *	@constructor
+ *	@param {class} container
+ *	@param {class} context
+ */
+{% endif %}
 module.exports = class {{controllerName}} extends nodefony.controller {
 
   constructor(container, context) {
@@ -16,9 +26,23 @@ module.exports = class {{controllerName}} extends nodefony.controller {
     this.startSession();
   }
 
-  /**
-   *  @see Route home in routing.js
-   */
+{% if addons.annotations %}
+{% if command == "project" %}
+/**
+ *    @Route ("/",
+ *      name="home")
+ */
+{% else %}
+/**
+ *    @Route ("",
+ *      name="route-{{bundleName}}-{{name}}")
+ */
+{% endif %}
+{% else %}
+/**
+ *  @see Route home in routing.js
+ */
+{% endif %}
   indexAction() {
 {% if  front == "react" %}
       return this.renderHtmlFile(path.resolve(this.bundle.publicPath, "dist","index.html"));
