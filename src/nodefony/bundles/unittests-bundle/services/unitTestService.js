@@ -31,6 +31,9 @@ module.exports = class unitTest extends nodefony.Service {
     if (!this.bundles[bundleName]) {
       throw new Error(bundleName + " don't exist");
     }
+    if ( this.kernel.isBundleCore(bundleName) && ( ! this.kernel.isCore ) ){
+      return ;
+    }
     if (this.bundles[bundleName].finder) {
       var finder = this.bundles[bundleName].finder.find({
         exclude: /^doc$|^public$|^Resources$|^node_modules$|^\.git$|^nodefony-core$/,

@@ -4,7 +4,6 @@ class generateController extends nodefony.Builder {
 
   constructor(cli, options = {}) {
     super(cli, cli.cmd, cli.args);
-    this.skeletonController = path.resolve(this.globalSkeleton, "controller", "controllerClass.js");
     this.directory = "controller";
     this.bundle = this.kernel.getBundle("app");
     nodefony.extend(true, this.response, {
@@ -16,6 +15,7 @@ class generateController extends nodefony.Builder {
       controllerName: "defaultController",
       shortName:"default"
     }, options);
+
   }
 
   interaction( ) {
@@ -46,20 +46,15 @@ class generateController extends nodefony.Builder {
   setBundle(bundle){
     this.bundle = bundle ;
     this.response.bundle = bundle.name ;
+    //console.log(this.response)
+    //console.log(this.bundle.bundleName)
+    this.response.bundleName = this.bundle.bundleName ;
+    this.setLocation(path.resolve(bundle.path, "controller"));
   }
 
   createBuilder() {
-    console.log(this.response);
-
-  }
-
-  createFile(name) {
-    return {
-      name: name + ".js",
-      type: "file",
-      skeleton: this.skeletonController,
-      params: this.response
-    };
+    this.buildFront(this.response, this.bundle.path);
+    return this.Front.generateController(this.response.directory);
   }
 
   checkName(name, response) {
@@ -68,6 +63,7 @@ class generateController extends nodefony.Builder {
     if (res) {
       this.name = name;
       this.shortName = res[1];
+      response.name = this.shortName ;
       response.shortName = this.shortName ;
       response.directory = this.shortName ;
     } else {

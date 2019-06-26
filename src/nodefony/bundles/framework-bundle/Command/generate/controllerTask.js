@@ -6,8 +6,7 @@ class controllerTask extends nodefony.Task {
       config: this.getParameters("bundles.app"),
       configKernel: this.getParameters("kernel")
     });
-    let generaterController = nodefony.builders.bundle.controller();
-    this.controller = new generaterController(this.cli);
+    this.controller = nodefony.builders.bundle.controller(this.cli);
   }
 
   showHelp() {

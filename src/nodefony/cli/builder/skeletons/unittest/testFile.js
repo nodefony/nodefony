@@ -38,11 +38,11 @@ describe("BUNDLE {{testName}}", () => {
 
 		before( () =>{});
 
-		it("ROUTE {{testName}} ", (done) => {
+		it("ROUTE {{routeName}} ", (done) => {
 			let options = {
 				hostname: kernel.settings.system.domain,
 				port: kernel.settings.system.httpPort,
-				path: "/{{testName}}",
+				path: "/{{routeName}}",
 				method: 'GET'
 			};
 

@@ -248,9 +248,9 @@ class SandBox extends nodefony.Builder {
     return config;
   }
 
-  generateController() {
+  generateController(directory = "controller") {
     let controller = {
-      name: "controller",
+      name: directory,
       type: "directory",
       childs: []
     };
@@ -316,8 +316,10 @@ class SandBox extends nodefony.Builder {
     let name = null;
     if (this.cli.response.command === "project") {
       name = "app";
+      this.response.routeName = "" ;
     }else{
       name = this.response.name ;
+      this.response.routeName = name ;
     }
     this.response.testName = name ;
     if (this.response.addons.unittest) {

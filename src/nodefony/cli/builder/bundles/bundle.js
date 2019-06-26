@@ -309,8 +309,9 @@ class generateBundle extends nodefony.Builder {
     }
   }
 
-  static controller() {
-    return  require(path.resolve(__dirname, "controller.js"));
+  static controller(cli) {
+    let controller = require(path.resolve(__dirname, "controller.js"));
+    return new controller(cli) ;
   }
 
   static service() {
