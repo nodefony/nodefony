@@ -20,6 +20,10 @@ class generateTask extends nodefony.Task {
     );
   }
 
+  entity(){
+    return this.run();
+  }
+
   getBundle(name) {
     let bundle = this.kernel.getBundle(name);
     if (bundle) {

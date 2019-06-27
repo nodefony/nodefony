@@ -69,7 +69,8 @@ module.exports = class generateBuilder extends nodefony.Builder {
         }
       }])
       .then((response) => {
-        return this.start(nodefony.extend(this.cli.response, response));
+        this.start(response);
+        return response ;
       });
   }
 

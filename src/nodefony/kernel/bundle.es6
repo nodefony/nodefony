@@ -249,7 +249,7 @@ module.exports = nodefony.register("Bundle", function () {
           .then(( /*compiler*/ ) => {
             if (!this.watching || this.kernel.environment === "prod") {
               if (this.kernel.cli.command === "webpack") {
-                return;
+                return Promise.resolve();
               }
               if (this.kernel.isCore || !this.kernel.isBundleCore(this.name)) {
                 this.logger(`MEMORY clean webpack compile bundle : ${this.name}`, "DEBUG");
@@ -258,6 +258,7 @@ module.exports = nodefony.register("Bundle", function () {
               delete this.webPackConfig;
               this.webpackCompiler = null;
               delete this.webpackCompiler;
+              return Promise.resolve();
             }
           })
           .catch((e) => {

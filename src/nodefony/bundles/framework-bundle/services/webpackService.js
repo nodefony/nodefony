@@ -74,9 +74,9 @@ module.exports = class webpack extends nodefony.Service {
   }
 
   compile() {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) =>  {
       if (! this.tabPromise.length ){
-        return ;
+        return resolve() ;
       }
       let bundle = this.tabPromise.shift();
       if (!bundle) {
@@ -95,15 +95,15 @@ module.exports = class webpack extends nodefony.Service {
           }
         }
         shell.cd(bundle.path);
-        return bundle.initWebpack.call(bundle)
-          .then(() => {
-            if (this.tabPromise.length) {
-              return this.compile();
-            }
-            return resolve();
-          }).catch(e => {
-            return reject(e);
-          });
+        try {
+          let res = await bundle.initWebpack.call(bundle);
+          if (this.tabPromise.length) {
+            return this.compile();
+          }
+          return resolve(res);
+        }catch(e){
+          return reject(e);
+        }
       }
     });
   }
@@ -432,8 +432,8 @@ module.exports = class webpack extends nodefony.Service {
             fs.mkdirSync(pathCache);
           } catch (e) {}
         }
-        this.logger("BUNDLE : " + bundle + " WEBPACK COMPILE : " + file, "DEBUG");
-        this.logger("\n" + this.displayConfigTable(compiler.options), "DEBUG");
+        //this.logger("BUNDLE : " + bundle + " WEBPACK COMPILE : " + file, "DEBUG");
+        this.logger(`BUNDLE : ${bundle} WEBPACK COMPILE ${file}\n` + this.displayConfigTable(compiler.options), "INFO");
         compiler.run((err, stats) => {
           this.loggerStat(err, stats, bundle, file);
           if (err) {
