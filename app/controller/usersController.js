@@ -307,7 +307,7 @@ module.exports = class usersController extends nodefony.controller {
   update(user, value) {
     switch (this.ormName) {
     case "mongoose":
-      return user.update(value);
+      return user.updateOne(value);
     case "sequelize":
       return user.update(value);
     }

@@ -16,6 +16,7 @@ module.exports = class defaultController extends nodefony.controller {
     this.defaultVersion = this.git.currentVersion;
     this.currentVersion = nodefony.version;
     this.project = nodefony.projectName;
+    this.projectVersion = this.kernel.package.version ;
   }
 
   getVersions() {
@@ -92,7 +93,7 @@ module.exports = class defaultController extends nodefony.controller {
    *
    */
   indexAction(version) {
-    let defaultVersion = this.currentVersion;
+    let defaultVersion = this.projectVersion;
     let force = this.query.force;
     if (version) {
       defaultVersion = version;
@@ -208,8 +209,10 @@ module.exports = class defaultController extends nodefony.controller {
           });
       }
     }
-    if (!Path) {
+    if (!Path && this.kernel.isCore) {
       Path = this.git.getClonePath();
+    }else{
+      Path = path.resolve(this.docPath);
     }
     let subsection = null;
     let finder = null;
@@ -241,7 +244,7 @@ module.exports = class defaultController extends nodefony.controller {
       }
     } else {
       if (bundle === "nodefony") {
-        Path = path.resolve(Path, "src", "nodefony");
+        Path = path.resolve(this.docPath);
         let bundles = this.kernel.bundles;
         if (!section) {
           directoryBundles = [];

@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://github.com/nodefony/nodefony-core/raw/master/src/nodefony/bundles/framework-bundle/Resources/public/images/nodefony-logo.png"><br>
 </p>
-<h1 align="center">NODEFONY V4</h1>
+<h1 align="center">NODEFONY V5</h1>
 
 [![npm package](https://nodei.co/npm/nodefony.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/nodefony)
 
@@ -39,7 +39,7 @@ Nodefony is not an exhaustive port of symfony !
 -   [HTTP2](https://nodejs.org/api/http2.html)  http2 ready node module provides an implementation of the HTTP/2 (push server ready).
 -   Dynamics routing
 -   ORM ([Sequelize](http://docs.sequelizejs.com/), [mongoose](http://mongoosejs.com/index.html))
--   Simple Databases Services connections (Redis, Mongo, Elasticsearch).
+-   Simple Databases Services connections (Redis, Mongo, Elasticsearch, mysql, sqlite ...).
 -   MVC templating ([Twig](https://github.com/twigjs/twig.js))
 -   Notion of real-time context in Action Controller (websocket).
 -   Notion of synchronous or asynchronous execution in Action Controller (Promise).
@@ -66,7 +66,7 @@ Nodefony is not an exhaustive port of symfony !
 -   [Passport](http://passportjs.org/) Simple, unobtrusive authentication for Node.js .
 -   ~~[Angular](https://github.com/angular/angular-cli) Experimental Bundle Generator ( Angular cli no longer allows the ejection of a webpack config)~~
 
-**Nodefony 4  adds the following features** :
+**Nodefony 5  adds the following features** :
 
 -   C++ Addons (Binding in Bundle)
 -   Authorisations

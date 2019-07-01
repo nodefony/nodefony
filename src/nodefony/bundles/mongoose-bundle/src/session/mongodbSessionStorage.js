@@ -131,7 +131,7 @@ nodefony.register.call(nodefony.session.storage, "mongoose", function () {
         session_id: id,
         context: contextSession || "default"
       });
-      return this.entity.update({
+      return this.entity.updateOne({
           session_id: id,
           context: (contextSession || "default")
         }, data, {
