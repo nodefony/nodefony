@@ -2,6 +2,7 @@
 const cheerio = require('cheerio');
 const http = require('http');
 const https = require('https');
+const async = require("async");
 
 const makeRequestHttp = function (link, context, callback) {
   this.logger("REQUEST : " + link, "INFO");

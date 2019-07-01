@@ -13,6 +13,7 @@
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
     "@nodefony/stage": "^0.1.18",
+    "async": "^3.1.0",
     "babel-loader": "^8.0.6",
     "bootstrap": "^4.3.1",
     "cheerio": "^1.0.0-rc.3",

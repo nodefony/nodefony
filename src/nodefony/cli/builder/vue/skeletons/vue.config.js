@@ -14,12 +14,12 @@ module.exports = {
     index: {
       // entry for the page
 {% if typescript %}
-      entry: 'src/main.ts',
+      entry: path.resolve("src","main.ts"),
 {% else %}
-      entry: 'src/main.js',
+      entry: path.resolve("src","main.js"),
 {% endif %}
       // the source template
-      template: 'public/index.html',
+      template: path.resolve('public','index.html'),
       // output as dist/index.html
       filename: indexPath,
       // when using title option,
