@@ -91,6 +91,13 @@ const connectionDB = class connectionDB {
       throw new Error("Cannot create class connection without db native");
     }
     this.db = db;
+    /*this.db.afterDisconnect((connection)=>{
+      this.logger(connection,"WARNING");
+
+    });
+    this.db.beforeConnect((config)=>{
+      this.logger(config, "WARNING");
+    });*/
     this.orm.fire("onConnect", this.name, this.db);
     this.state = "CONNECTED";
     let severity = "INFO";

@@ -42,7 +42,7 @@ Nodefony is not an exhaustive port of symfony !
 -   Simple Databases Services connections (Redis, Mongo, Elasticsearch, mysql, sqlite ...).
 -   MVC templating ([Twig](https://github.com/twigjs/twig.js))
 -   Notion of real-time context in Action Controller (websocket).
--   Notion of synchronous or asynchronous execution in Action Controller (Promise).
+-   Notion of synchronous or asynchronous execution in Action Controller (Promise, Async, Await).
 -   Services Containers, Dependency Injection (Design Patterns)
 -   Sessions Manager (ORM, memcached)
 -   Authentication Manager (Digest, Basic, oAuth, Local, ldap, jwt, openid)

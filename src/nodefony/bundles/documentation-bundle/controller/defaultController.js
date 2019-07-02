@@ -244,6 +244,10 @@ module.exports = class defaultController extends nodefony.controller {
       }
     } else {
       if (bundle === "nodefony") {
+        if (! this.kernel.isCore){
+          version = this.currentVersion ;
+        }
+
         Path = path.resolve(this.docPath);
         let bundles = this.kernel.bundles;
         if (!section) {
