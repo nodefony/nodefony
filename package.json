@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "mongoose": "^5.6.1",
-    "sequelize": "^5.9.1",
+    "sequelize": "^5.9.2",
     "webpack": "^4.35.2",
     "webpack-dev-server": "^3.7.2"
   },
@@ -59,7 +59,7 @@
     "editorconfig": "^0.15.3",
     "github-release-notes": "^0.17.0",
     "jshint": "^2.10.2",
-    "node-gyp": "^5.0.1",
+    "node-gyp": "^5.0.2",
     "node-pre-gyp": "^0.13.0"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",

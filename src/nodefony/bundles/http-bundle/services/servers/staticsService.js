@@ -12,7 +12,6 @@ module.exports = class serverStatics extends nodefony.Service {
     if (this.kernel.type !== "SERVER") {
       return;
     }
-
     this.environment = this.kernel.environment;
     this.once("onBoot", () => {
       this.settings = this.getParameters("bundles.http").statics;
@@ -36,18 +35,21 @@ module.exports = class serverStatics extends nodefony.Service {
       }
       let Path = this.settings[staticRoot].path;
       Path = this.kernel.checkPath(Path);
-      let setHeaders = null ;
-      if (this.settings[staticRoot].options.setHeaders){
-        if ( typeof this.settings[staticRoot].options.setHeaders === "function"){
-          setHeaders = this.settings[staticRoot].options.setHeaders ;
-          delete this.settings[staticRoot].options.setHeaders ;
+      let setHeaders = null;
+      if (!this.settings[staticRoot].options) {
+        this.settings[staticRoot].options = {};
+      }
+      if (this.settings[staticRoot].options.setHeaders) {
+        if (typeof this.settings[staticRoot].options.setHeaders === "function") {
+          setHeaders = this.settings[staticRoot].options.setHeaders;
+          delete this.settings[staticRoot].options.setHeaders;
         }
       }
-      this.settings[staticRoot].options.setHeaders = (res, path)=>{
-        this.logger(`Serve Static ${path}`,"DEBUG");
+      this.settings[staticRoot].options.setHeaders = (res, path) => {
+        this.logger(`Serve Static ${path}`, "DEBUG");
         this.fire("onServeStatic", res, path, staticRoot, this);
       };
-      if (setHeaders){
+      if (setHeaders) {
         this.on("onServeStatic", setHeaders);
       }
       this.addDirectory(Path, this.settings[staticRoot].options);
@@ -67,32 +69,29 @@ module.exports = class serverStatics extends nodefony.Service {
     return server;
   }
 
-  handle(request, response, next) {
+  getStatic(server, request, response) {
+    return new Promise((resolve, reject) => {
+      server(request, response, (err) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(response);
+      });
+    });
+  }
+
+  async handle(request, response) {
     let pathname = url.parse(request.url).pathname;
     let type = this.mime.lookup(pathname);
     response.setHeader("Content-Type", type);
-    let tab = [];
+    let res = null;
     for (let server in this.servers) {
-      let myPromise = new Promise((resolve, reject) => {
-        this.servers[server](request, response, (err) => {
-          if (err) {
-            return reject(err);
-          }
-          return resolve();
-        });
-      });
-      tab.push(myPromise);
+      try {
+        res = await this.getStatic(this.servers[server], request, response);
+      } catch (e) {
+        return Promise.reject(e);
+      }
     }
-    return Promise.all(tab).then((ele) => {
-      if (next) {
-        return next(ele);
-      }
-      return ele;
-    }).catch((err) => {
-      if (next) {
-        return next(err);
-      }
-      throw err;
-    });
+    return Promise.resolve(res);
   }
 };

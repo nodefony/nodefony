@@ -53,7 +53,7 @@
 {% endif %}
   },
   "devDependencies": {
-    "node-gyp": "^5.0.1",
+    "node-gyp": "^5.0.2",
     "node-pre-gyp": "^0.13.0"
   },
   "license": "",
