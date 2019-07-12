@@ -156,6 +156,7 @@ class SandBox extends nodefony.Builder {
         });
       }
       obj.childs.push(this.generateBinding());
+      obj.childs.push(this.generateDoc());
       return obj;
     } catch (e) {
       throw e;
@@ -177,7 +178,7 @@ class SandBox extends nodefony.Builder {
       params: this.response
     });
     bundle.push(this.generateController());
-    bundle.push(this.generateRessources());
+    bundle.push(this.generateDoc());
     if (this.response.addons.binding) {
       bundle.push({
         name: "build",
@@ -202,6 +203,15 @@ class SandBox extends nodefony.Builder {
     bundle.push(this.generateCommand());
     bundle.push(this.generateUnitTest());
     return bundle;
+  }
+
+  generateDoc(){
+    let doc = {
+      name: "doc",
+      type: "directory",
+      childs: []
+    };
+    return doc ;
   }
 
   generateConfig(webpack = false) {
