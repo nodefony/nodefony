@@ -71,7 +71,11 @@ module.exports = nodefony.register("subRequest", () => {
       default:
         return new nodefony.Response(response, this.container);
       }
+    }
 
+    setCsrfToken(name, options) {
+      this.csrf = this.csrfService.createCsrfToken(name, options, this);
+      return this.csrf;
     }
 
     clean() {

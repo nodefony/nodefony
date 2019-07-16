@@ -92,9 +92,6 @@ nodefony.Builder = class Builder extends nodefony.Service {
     case "react":
       this.Front = new nodefony.builders.react(this.cli, this.cmd, this.args, response);
       break;
-    case 'demo':
-      //this.Front = new Demo(this.cli, this.cmd, this.args);
-      break;
     case 'electron':
       this.Front = null;
       break;

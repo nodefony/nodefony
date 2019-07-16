@@ -179,6 +179,7 @@ class SandBox extends nodefony.Builder {
     });
     bundle.push(this.generateController());
     bundle.push(this.generateDoc());
+    bundle.push(this.generateRessources());
     if (this.response.addons.binding) {
       bundle.push({
         name: "build",

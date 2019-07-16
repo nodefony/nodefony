@@ -1,11 +1,12 @@
-const Request = require('request');
+const myRequest = require('request');
+
 module.exports = nodefony.register("controller", function() {
 
   class Controller extends nodefony.Service {
     constructor(container, context) {
       super(null, container, container.get("notificationsCenter"));
       this.context = context;
-      this.http = Request;
+      this.http = myRequest;
       this.httpKernel = this.get("httpKernel");
       this.mailer = this.get("mailer");
       this.router = this.get("router");

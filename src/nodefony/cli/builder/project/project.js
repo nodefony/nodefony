@@ -102,21 +102,15 @@
         },{
           name:"React"
         },{
-          name:"Demo",
-        },{
           name:"Electron",
           disabled:true
         }],
-        //choices: ["Sandbox (without Front framwork)", "Vue.js", "React", "Demo"],
         message: 'Choose Project Application Type (Mapping Front Framework in App) :',
         filter: (value) => {
           let front = null;
           switch (value) {
             case "Sandbox (without Front framwork)":
               front = "sandbox";
-              break;
-            case "Demo":
-              front = 'demo';
               break;
             case "Vue.js":
               front = "vue";
