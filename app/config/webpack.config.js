@@ -22,8 +22,7 @@ module.exports = webpackMerge(config, {
   //context: context,
   target: "web",
   entry: {
-    app: ["./Resources/js/app.js"],
-    users: ["./Resources/js/users.js"]
+    app: ["./Resources/js/app.js"]
   },
   output: {
     path: public,
@@ -137,6 +136,7 @@ module.exports = webpackMerge(config, {
   },
   plugins: [
     new MiniCssExtractPlugin({
+      fallback: "style-loader",
       filename: "./css/[name].css",
       allChunks: true
     })

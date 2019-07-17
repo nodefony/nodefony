@@ -28,7 +28,7 @@ module.exports = {
    *      }
    *
    */
-  watch: false,
+  watch: true,
 
   /**
    *    OVERRIDE MONITORING BUNDLE
