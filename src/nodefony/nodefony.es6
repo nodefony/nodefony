@@ -12,6 +12,7 @@ module.exports = class Nodefony {
 
   constructor(context) {
     //this.require = require;
+    this.path = path.resolve(__dirname);
     this.io = {};
     this.context = context;
     context.nodefony = this;

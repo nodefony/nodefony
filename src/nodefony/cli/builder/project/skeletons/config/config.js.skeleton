@@ -90,8 +90,13 @@ module.exports = {
      *         "hello-bundle" : path.resolve(__dirname, "..", "src", "bundles", "hello-bundle"),
      *       }
      */
+{% if addons.users %}
+    bundles: {
+      "users-bundle": path.resolve("src", "bundle", "users-bundle")
+    },
+{% else %}
     bundles: {},
-
+{% endif %}
     /**
      * SYSLOG NODEFONY
      */

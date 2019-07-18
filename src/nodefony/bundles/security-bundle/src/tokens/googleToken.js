@@ -23,7 +23,7 @@ nodefony.registerToken("google", function () {
           gender: profile.gender || "",
           displayName: profile.displayName,
           url: profile._json.url || "",
-          image: profile._json.image.url || ""
+          image: profile._json.image ? profile._json.image.url : ""
         };
         if (obj.username) {
           let user = new nodefony.User(obj.username);

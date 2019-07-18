@@ -6,6 +6,7 @@ class SandBox extends nodefony.Builder {
     nodefony.extend(true, this.response, {
       addons: {
         webpack: true,
+        users: false,
         bootstrap: false,
         command: false,
         unittest: false,
@@ -20,7 +21,7 @@ class SandBox extends nodefony.Builder {
   async interaction() {
     this.cli.reset();
     await this.cli.showAsciify("SandBox");
-    return this.cli.prompt([{
+    let promtOptions = [{
       type: 'checkbox',
       message: 'Select addons',
       name: 'addons',
@@ -36,64 +37,78 @@ class SandBox extends nodefony.Builder {
         name: 'Bootstrap',
         checked: this.response.addons.bootstrap
       }, {
+        name: 'Users Management',
+        message: "Bootstrap only",
+        checked: this.response.addons.users,
+        disabled: (this.cli.response.command === "bundle")
+      }, {
         name: "Command",
         message: "Add Cli Command Matrice",
         checked: this.response.addons.command
-      },{
+      }, {
         name: "Unit Tests",
         message: "Add Unit Tests Matrice",
         checked: this.response.addons.unittest
-      },{
+      }, {
         name: 'Progressive Web App (PWA) Workbox',
         checked: this.response.addons.workbox
       }, {
         name: 'Build Matrice C++ Binding',
         checked: this.response.addons.binding
       }]
-    }]).then((response) => {
-      let addons = {
-        webpack: false,
-        bootstrap: false,
-        command: false,
-        unittest: false,
-        workbox: false,
-        annotations: false,
-        binding: false
-      };
-      if (response.addons.length) {
-        for (let i = 0; i < response.addons.length; i++) {
-          switch (response.addons[i]) {
-            case "Bootstrap":
-              addons.bootstrap = true;
-              break;
-            case "Annotations":
-              addons.annotations = true;
-              break;
-            case "Command":
-              addons.command = true;
-              break;
-            case "Unit Tests":
-              addons.unittest = true;
-              break;
-            case "Progressive Web App (PWA) Workbox":
-              addons.workbox = true;
-              break;
-            case "Build Matrice C++ Binding":
-              addons.binding = true;
-              break;
-            case "Webpack":
-              addons.webpack = true;
-              break;
+    }];
+    return this.cli.prompt(promtOptions)
+      .then((response) => {
+        let addons = {
+          webpack: false,
+          users: false,
+          bootstrap: false,
+          command: false,
+          unittest: false,
+          workbox: false,
+          annotations: false,
+          binding: false
+        };
+        if (response.addons.length) {
+          for (let i = 0; i < response.addons.length; i++) {
+            switch (response.addons[i]) {
+              case "Bootstrap":
+                addons.bootstrap = true;
+                break;
+              case "Annotations":
+                addons.annotations = true;
+                break;
+              case "Command":
+                addons.command = true;
+                break;
+              case "Unit Tests":
+                addons.unittest = true;
+                break;
+              case "Progressive Web App (PWA) Workbox":
+                addons.workbox = true;
+                break;
+              case "Build Matrice C++ Binding":
+                addons.binding = true;
+                break;
+              case "Webpack":
+                addons.webpack = true;
+                break;
+              case "Users Management":
+                addons.users = true;
+                break;
+            }
           }
         }
-      }
-      if (addons.bootstrap) {
-        addons.webpack = true;
-      }
-      delete response.addons;
-      response.addons = addons;
-      return response;
-    });
+        if (addons.users) {
+          addons.bootstrap = true;
+        }
+        if (addons.bootstrap) {
+          addons.webpack = true;
+        }
+        delete response.addons;
+        response.addons = addons;
+        return response;
+      });
   }
 
   createBuilder(response) {
@@ -206,13 +221,13 @@ class SandBox extends nodefony.Builder {
     return bundle;
   }
 
-  generateDoc(){
+  generateDoc() {
     let doc = {
       name: "doc",
       type: "directory",
       childs: []
     };
-    return doc ;
+    return doc;
   }
 
   generateConfig(webpack = false) {
@@ -288,7 +303,7 @@ class SandBox extends nodefony.Builder {
     return controller;
   }
 
-  generateCommand(){
+  generateCommand() {
     let command = {
       name: "Command",
       type: "directory",
@@ -298,10 +313,10 @@ class SandBox extends nodefony.Builder {
       let name = null;
       if (this.cli.response.command === "project") {
         name = "app";
-      }else{
-        name = this.response.name ;
+      } else {
+        name = this.response.name;
       }
-      this.response.commandName = name ;
+      this.response.commandName = name;
       command.childs.push({
         name: name + "Command.js",
         type: "file",
@@ -318,7 +333,7 @@ class SandBox extends nodefony.Builder {
     return command;
   }
 
-  generateUnitTest(){
+  generateUnitTest() {
     let unit = {
       name: "tests",
       type: "directory",
@@ -327,12 +342,12 @@ class SandBox extends nodefony.Builder {
     let name = null;
     if (this.cli.response.command === "project") {
       name = "app";
-      this.response.routeName = "" ;
-    }else{
-      name = this.response.name ;
-      this.response.routeName = name ;
+      this.response.routeName = "";
+    } else {
+      name = this.response.name;
+      this.response.routeName = name;
     }
-    this.response.testName = name ;
+    this.response.testName = name;
     if (this.response.addons.unittest) {
       unit.childs.push({
         name: name + "Test.js",
