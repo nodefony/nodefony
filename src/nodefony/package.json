@@ -60,7 +60,7 @@
     "create-react-app": "^3.0.1",
     "inquirer": "^6.5.0",
     "js-yaml": "^3.13.1",
-    "lodash": "^4.17.14",
+    "lodash": "^4.17.15",
     "lodash.isregexp": "^4.0.1",
     "markdown-it": "^9.0.1",
     "mime": "^2.4.4",
@@ -73,7 +73,7 @@
     "semver": "^6.2.0",
     "shelljs": "^0.8.3",
     "shortid": "^2.2.14",
-    "simple-git": "^1.121.0",
+    "simple-git": "^1.122.0",
     "twig": "^1.13.3",
     "xml2js": "^0.4.19",
     "yarn": "^1.17.3"
