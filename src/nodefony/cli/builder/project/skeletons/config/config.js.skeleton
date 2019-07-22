@@ -92,7 +92,7 @@ module.exports = {
      */
 {% if addons.users %}
     bundles: {
-      "users-bundle": path.resolve("src", "bundle", "users-bundle")
+      "users-bundle": path.resolve("src", "bundles", "users-bundle")
     },
 {% else %}
     bundles: {},

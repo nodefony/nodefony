@@ -6,7 +6,6 @@ class SandBox extends nodefony.Builder {
     nodefony.extend(true, this.response, {
       addons: {
         webpack: true,
-        users: false,
         bootstrap: false,
         command: false,
         unittest: false,
@@ -37,11 +36,6 @@ class SandBox extends nodefony.Builder {
         name: 'Bootstrap',
         checked: this.response.addons.bootstrap
       }, {
-        name: 'Users Management',
-        message: "Bootstrap only",
-        checked: this.response.addons.users,
-        disabled: (this.cli.response.command === "bundle")
-      }, {
         name: "Command",
         message: "Add Cli Command Matrice",
         checked: this.response.addons.command
@@ -61,7 +55,6 @@ class SandBox extends nodefony.Builder {
       .then((response) => {
         let addons = {
           webpack: false,
-          users: false,
           bootstrap: false,
           command: false,
           unittest: false,
@@ -93,14 +86,8 @@ class SandBox extends nodefony.Builder {
               case "Webpack":
                 addons.webpack = true;
                 break;
-              case "Users Management":
-                addons.users = true;
-                break;
             }
           }
-        }
-        if (addons.users) {
-          addons.bootstrap = true;
         }
         if (addons.bootstrap) {
           addons.webpack = true;

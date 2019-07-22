@@ -20,12 +20,6 @@ module.exports = class webpack extends nodefony.Service {
     this.nbCompiled = 0;
     this.nbWatched = 0;
     this.sockjs = this.get("sockjs");
-    this.tabPromise = [];
-    this.kernel.once("onReady", () => {
-      for (let bundle in this.kernel.bundles) {
-        this.tabPromise.push(this.kernel.bundles[bundle]);
-      }
-    });
 
     let event = null;
     if (this.kernel.type === "CONSOLE") {
@@ -34,6 +28,9 @@ module.exports = class webpack extends nodefony.Service {
       event = "onPostReady";
     }
     this.kernel.once(event, () => {
+      if (this.kernel.type === "CONSOLE" && this.kernel.cli.command !== "webpack") {
+        return ;
+      }
       return this.compile()
         .then((ele) => {
           shell.cd(this.kernel.rootDir);
@@ -44,7 +41,8 @@ module.exports = class webpack extends nodefony.Service {
               this.logger("WEBPACK COMPILE FINISH");
             }
           }
-          this.tabPromise = [];
+          this.fire("onWebpackFinich", this);
+          //console.log(ele)
           return ele;
         }).catch(e => {
           this.logger(e, "ERROR");
@@ -75,35 +73,18 @@ module.exports = class webpack extends nodefony.Service {
 
   compile() {
     return new Promise(async (resolve, reject) =>  {
-      if (! this.tabPromise.length ){
-        return resolve() ;
-      }
-      let bundle = this.tabPromise.shift();
-      if (!bundle) {
-        process.nextTick(() => {
-          resolve();
-        });
-      }
-      if (this.kernel.type === "CONSOLE" && this.kernel.cli.command !== "webpack") {
-        return resolve();
-      } else {
-        if (this.kernel.isCore) {
-          this.logger(`FINDING WEBAPCK config Bundle ${bundle.name}`, "DEBUG");
-        } else {
-          if (!this.kernel.isBundleCore(bundle.name)) {
-            this.logger(`FINDING WEBAPCK config Bundle ${bundle.name}`, "DEBUG");
-          }
+      let tab  =[];
+      try {
+        for (let bundle in this.kernel.bundles) {
+          let myBundle = this.kernel.bundles[bundle] ;
+          shell.cd(myBundle.path);
+          let res = await myBundle.initWebpack.call(myBundle);
+          shell.cd(this.kernel.rootDir);
+          tab.push(res);
         }
-        shell.cd(bundle.path);
-        try {
-          let res = await bundle.initWebpack.call(bundle);
-          if (this.tabPromise.length) {
-            return this.compile();
-          }
-          return resolve(res);
-        }catch(e){
-          return reject(e);
-        }
+        return resolve(tab);
+      }catch(e){
+        return reject(e);
       }
     });
   }
@@ -315,17 +296,29 @@ module.exports = class webpack extends nodefony.Service {
           config.name = file.name || basename;
         }
         if (config.cache === undefined) {
-          config.cache = this.webPackSettings.cache;
+          if (this.production) {
+            config.cache = this.webPackSettings.cache;
+          }else{
+            config.cache = false;
+          }
         }
         bundle.webPackConfig = config;
+        //console.log(config)
         try {
           bundle.webpackCompiler = webpack(config);
         } catch (e) {
           return reject(e);
         }
-        this.nbCompiler++;
+        if ( this.kernel.isCore){
+          this.nbCompiler++;
+        }else{
+          if (! bundle.isCore){
+            this.nbCompiler++;
+          }
+        }
+
         if (this.kernel.type === "CONSOLE" && this.kernel.cli.command !== "webpack") {
-          return resolve(bundle.webpackCompiler);
+          return resolve(bundle.webpackCompiler || false);
         }
         if (bundle.webpackCompiler.hooks) {
           bundle.webpackCompiler.hooks.beforeCompile.tap("beforeCompile", () => {
@@ -334,11 +327,6 @@ module.exports = class webpack extends nodefony.Service {
           bundle.webpackCompiler.hooks.done.tap("done", () => {
             bundle.fire("onWebpackDone", bundle.webpackCompiler, reload);
             this.nbCompiled++;
-            if (this.nbCompiled === this.nbCompiler) {
-              this.nbCompiled = 0;
-              this.fire("onWebpackFinich", this, reload);
-              shell.cd(this.kernel.rootDir);
-            }
             return resolve(bundle.webpackCompiler);
           });
           bundle.webpackCompiler.hooks.failed.tap("failed", (e) => {
@@ -352,11 +340,6 @@ module.exports = class webpack extends nodefony.Service {
           bundle.webpackCompiler.plugin("done", () => {
             bundle.fire("onWebpackDone", bundle.webpackCompiler, reload);
             this.nbCompiled++;
-            if (this.nbCompiled === this.nbCompiler) {
-              this.nbCompiled = 0;
-              this.fire("onWebpackFinich", this, reload);
-              shell.cd(this.kernel.rootDir);
-            }
             return resolve(bundle.webpackCompiler);
           });
           bundle.webpackCompiler.plugin("failed", (e) => {
@@ -408,7 +391,7 @@ module.exports = class webpack extends nodefony.Service {
         } else {
           if (!this.kernel.isCore) {
             if (this.kernel.isBundleCore(basename)) {
-              return resolve(bundle.webpackCompiler);
+              return resolve(bundle.webpackCompiler || true);
             }
           }
           let idfile = basename + "_" + file.name;

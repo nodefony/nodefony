@@ -158,7 +158,7 @@ module.exports = nodefony.register("Bundle", function () {
       this.package = require(path.resolve(this.path, "package.json"));
       this.version = this.package.version;
       this.packageName = this.package.name;
-
+      this.isCore = this.kernel.isBundleCore(this.name);
       try {
         this.finder = new nodefony.finder({
           path: this.path,
@@ -246,19 +246,19 @@ module.exports = nodefony.register("Bundle", function () {
     initWebpack() {
       try {
         return this.findWebPackConfig()
-          .then(( /*compiler*/ ) => {
+          .then(( compiler ) => {
             if (!this.watching || this.kernel.environment === "prod") {
               if (this.kernel.cli.command === "webpack") {
-                return Promise.resolve();
+                return Promise.resolve(compiler);
               }
-              if (this.kernel.isCore || !this.kernel.isBundleCore(this.name)) {
+              if (this.kernel.isCore || !this.isCore) {
                 this.logger(`MEMORY clean webpack compile bundle : ${this.name}`, "DEBUG");
               }
               this.webPackConfig = null;
               delete this.webPackConfig;
               this.webpackCompiler = null;
               delete this.webpackCompiler;
-              return Promise.resolve();
+              return Promise.resolve(compiler);
             }
           })
           .catch((e) => {
@@ -296,7 +296,7 @@ module.exports = nodefony.register("Bundle", function () {
           try {
             res = this.finder.result.getFile("webpack.config.js", true);
             if (!res) {
-              reject(new Error("Angular bundle no webpack config file : webpack.config.js "));
+              return reject(new Error("Angular bundle no webpack config file : webpack.config.js "));
             }
             return resolve(this.loadWebpackConfig(res));
           } catch (e) {
@@ -336,7 +336,7 @@ module.exports = nodefony.register("Bundle", function () {
           try {
             this.webpackConfigFile = this.finder.result.getFile("webpack.config.js", true);
             if (!this.webpackConfigFile) {
-              return resolve(true);
+              return resolve(false);
             }
             return resolve(this.loadWebpackConfig(this.webpackConfigFile));
           } catch (e) {

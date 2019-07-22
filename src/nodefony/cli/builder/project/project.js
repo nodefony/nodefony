@@ -31,7 +31,10 @@ class generateProject extends nodefony.Builder {
       version: nodefony.version,
       year: new Date().getFullYear(),
       orm: "sequelize",
-      npm: 'npm'
+      npm: 'npm',
+      addons: {
+        users: false
+      }
     });
     if (!this.name) {
       this.name = this.cli.response.name;
@@ -79,166 +82,196 @@ class generateProject extends nodefony.Builder {
   }
 
   async interaction() {
-    return this.cli.prompt([{
-          type: 'input',
-          name: 'name',
-          default: this.response.name,
-          message: 'Enter Nodefony Project Name',
-          validate: (value) => {
-            if (value && value !== "nodefony") {
-              this.name = value;
-              nodefony.projectName = value;
-              return true;
-            }
-            return `${value} Unauthorised Please enter a valid project name`;
-          }
-        }, {
-          type: 'input',
-          name: 'description',
-          message: 'Enter short description',
-          default: "Project Description",
-          validate: (value) => {
-            if (!value) {
-              this.cli.response.description = `${this.response.description} ${this.name}`;
-            }
+    let promtOptions = [{
+        type: 'input',
+        name: 'name',
+        default: this.response.name,
+        message: 'Enter Nodefony Project Name',
+        validate: (value) => {
+          if (value && value !== "nodefony") {
+            this.name = value;
+            nodefony.projectName = value;
             return true;
-          },
-          filter: (value) => {
-            if (!value) {
-              return this.response.description;
-            }
-            if (value === "Project Description") {
-              return this.response.description;
-            }
-            return value;
           }
-        }, {
-          type: 'list',
-          name: 'front',
-          default: 0,
-          pageSize: 5,
-          choices: [{
-            name: "Sandbox (without Front framwork)"
-          }, {
-            name: "Vue.js"
-          }, {
-            name: "React"
-          }, {
-            name: "Electron",
-            disabled: true
-          }],
-          message: 'Choose Project Application Type (Mapping Front Framework in App) :',
-          filter: (value) => {
-            let front = null;
-            switch (value) {
-              case "Sandbox (without Front framwork)":
-                front = "sandbox";
-                break;
-              case "Vue.js":
-                front = "vue";
-                break;
-              case "React":
-                front = 'react';
-                break;
-              case "Electron":
-                front = 'electron';
-                break;
-              default:
-                front = value;
-            }
-            return front;
+          return `${value} Unauthorised Please enter a valid project name`;
+        }
+      }, {
+        type: 'input',
+        name: 'description',
+        message: 'Enter short description',
+        default: "Project Description",
+        validate: (value) => {
+          if (!value) {
+            this.cli.response.description = `${this.response.description} ${this.name}`;
           }
-        }, {
-          type: 'input',
-          name: 'path',
-          default: this.location,
-          message: 'Project Path',
-          validate: (value) => {
-            let myPath = null;
-            try {
-              myPath = new nodefony.fileClass(path.resolve(value));
-            } catch (e) {
-              return e.message;
-            }
-            let res = nodefony.isNodefonyTrunk(myPath.path);
-            if (res) {
-              return "You can't install project in nodefony Trunk project !";
-            }
-            if (value) {
-              this.location = value;
-              return true;
-            }
-            return 'Please enter a valid project Path';
+          return true;
+        },
+        filter: (value) => {
+          if (!value) {
+            return this.response.description;
           }
-        }, {
-          type: 'input',
-          name: 'authorFullName',
-          default: this.response.authorFullName,
-          message: 'Please Enter Author Full Name',
-          filter: (value) => {
-            if (!value) {
-              this.response.authorName = this.response.authorFullName;
-              return this.response.authorFullName;
-            }
-            return value;
+          if (value === "Project Description") {
+            return this.response.description;
           }
+          return value;
+        }
+      }, {
+        type: 'list',
+        name: 'front',
+        default: 0,
+        pageSize: 5,
+        choices: [{
+          name: "Sandbox (without Front framwork)"
         }, {
-          type: 'input',
-          name: 'authorMail',
-          default: this.response.authorMail,
-          message: 'Please Enter Email Author ',
-          filter: (value) => {
-            if (!value) {
-              return this.response.authorMail;
-            }
-            return value;
+          name: "Vue.js"
+        }, {
+          name: "React"
+        }, {
+          name: "Electron",
+          disabled: true
+        }],
+        message: 'Choose Project Application Type (Mapping Front Framework in App) :',
+        filter: (value) => {
+          let front = null;
+          switch (value) {
+            case "Sandbox (without Front framwork)":
+              front = "sandbox";
+              break;
+            case "Vue.js":
+              front = "vue";
+              break;
+            case "React":
+              front = 'react';
+              break;
+            case "Electron":
+              front = 'electron';
+              break;
+            default:
+              front = value;
           }
-        }, {
-          type: 'input',
-          name: 'domain',
-          default: this.response.domain,
-          message: 'Enter Server Domain :',
-        }, {
-          type: 'input',
-          name: 'portHttp',
-          default: this.response.portHttp,
-          message: 'Enter server Domain http Port  :',
-        }, {
-          type: 'input',
-          name: 'portHttps',
-          default: this.response.portHttps,
-          message: 'Enter Server Secure Domain https Port  :',
-        }, {
-          type: 'list',
-          name: 'orm',
-          default: 0,
-          pageSize: 2,
-          choices: ["sequelize", "mongoose"],
-          message: 'Choose default ORM  (Mapping Objet Relationnel) :'
-        }, {
-          type: 'list',
-          name: 'packageManager',
-          message: 'Choose a default Package Manager : ',
-          default: 0,
-          pageSize: 2,
-          choices: ["npm", "yarn"],
-          filter: (value) => {
-            if (this.cli[value]) {
-              this.cli.packageManager = this.cli[value];
-            } else {
-              throw new Error(`Package Manager ${value} not available ! `);
+          return front;
+        }
+      }, {
+        type: 'input',
+        name: 'path',
+        default: this.location,
+        message: 'Project Path',
+        validate: (value) => {
+          let myPath = null;
+          try {
+            myPath = new nodefony.fileClass(path.resolve(value));
+          } catch (e) {
+            return e.message;
+          }
+          let res = nodefony.isNodefonyTrunk(myPath.path);
+          if (res) {
+            return "You can't install project in nodefony Trunk project !";
+          }
+          if (value) {
+            this.location = value;
+            return true;
+          }
+          return 'Please enter a valid project Path';
+        }
+      }, {
+        type: 'input',
+        name: 'authorFullName',
+        default: this.response.authorFullName,
+        message: 'Please Enter Author Full Name',
+        filter: (value) => {
+          if (!value) {
+            this.response.authorName = this.response.authorFullName;
+            return this.response.authorFullName;
+          }
+          return value;
+        }
+      }, {
+        type: 'input',
+        name: 'authorMail',
+        default: this.response.authorMail,
+        message: 'Please Enter Email Author ',
+        filter: (value) => {
+          if (!value) {
+            return this.response.authorMail;
+          }
+          return value;
+        }
+      }, {
+        type: 'input',
+        name: 'domain',
+        default: this.response.domain,
+        message: 'Enter Server Domain :',
+      }, {
+        type: 'input',
+        name: 'portHttp',
+        default: this.response.portHttp,
+        message: 'Enter server Domain http Port  :',
+      }, {
+        type: 'input',
+        name: 'portHttps',
+        default: this.response.portHttps,
+        message: 'Enter Server Secure Domain https Port  :',
+      }, {
+        type: 'list',
+        name: 'orm',
+        default: 0,
+        pageSize: 2,
+        choices: ["sequelize", "mongoose"],
+        message: 'Choose default ORM  (Mapping Objet Relationnel) :'
+      }, {
+        type: 'list',
+        name: 'packageManager',
+        message: 'Choose a default Package Manager : ',
+        default: 0,
+        pageSize: 2,
+        choices: ["npm", "yarn"],
+        filter: (value) => {
+          if (this.cli[value]) {
+            this.cli.packageManager = this.cli[value];
+          } else {
+            throw new Error(`Package Manager ${value} not available ! `);
+          }
+          return value;
+        }
+      } ,{
+        type: 'checkbox',
+        message: 'Select addons project',
+        name: 'addons',
+        pageSize: 10,
+        choices: [{
+          name: 'Users Management',
+          message: "Bootstrap only",
+          checked: this.response.addons.users,
+          disabled: (this.cli.response.command === "bundle")
+        }],
+        filter: (value) => {
+          console.log("pass")
+          console.log(value)
+          return value ;
+        }
+      }
+      /*, {
+              type: 'confirm',
+              name: 'bundle',
+              message: 'Do You Want Generate Bundle?',
+              default: this.response.bundle
+            }*/
+    ];
+    return this.cli.prompt(promtOptions)
+      .then((response) => {
+        let addons = {
+          users:false
+        };
+        if (response.addons.length) {
+          for (let i = 0; i < response.addons.length; i++) {
+            switch (response.addons[i]) {
+              case "Users Management":
+              addons.users = true ;
+              break;
             }
-            return value;
           }
         }
-        /*, {
-                type: 'confirm',
-                name: 'bundle',
-                message: 'Do You Want Generate Bundle?',
-                default: this.response.bundle
-              }*/
-      ])
-      .then((response) => {
+        response.addons = addons ;
         this.path = path.resolve(this.location, response.name);
         if (this.cli.exists(this.path)) {
           this.logger(`${this.path} Already exist`, "WARNING");
