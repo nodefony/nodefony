@@ -1,6 +1,6 @@
 {
   "name": "nodefony-core",
-  "version": "4.3.3",
+  "version": "5.0.0",
   "description": "Nodefony Node.js Web Framework",
   "main": "./src/nodefony/core/autoloader.es6",
   "scripts": {
@@ -22,9 +22,7 @@
     "framework",
     "webpack",
     "websocket",
-    "realtime",
-    "angular",
-    "react"
+    "realtime"
   ],
   "repository": {
     "type": "git",
@@ -50,9 +48,9 @@
     "node": ">=8"
   },
   "dependencies": {
-    "mongoose": "^5.6.5",
-    "sequelize": "^5.10.1",
-    "webpack": "^4.36.1",
+    "mongoose": "^5.6.6",
+    "sequelize": "^5.10.2",
+    "webpack": "^4.37.0",
     "webpack-dev-server": "^3.7.2"
   },
   "devDependencies": {

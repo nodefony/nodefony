@@ -54,6 +54,7 @@ if (module.hot) {
     }
   });
 }
-{% endif %}
-
 export default new {{shortName | capitalize }}();
+{% else%}
+const {{shortName}} = new {{shortName | capitalize }}();
+{% endif %}

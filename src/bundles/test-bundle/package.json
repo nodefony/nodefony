@@ -32,7 +32,7 @@
     "popper.js": "^1.15.0",
     "postcss-loader": "^3.0.0",
     "precss": "^4.0.0",
-    "puppeteer": "^1.18.1",
+    "puppeteer": "^1.19.0",
     "request": "^2.88.0",
     "resolve-url-loader": "^3.1.0",
     "rxjs": "^6.5.2",
@@ -42,7 +42,7 @@
     "vue-loader": "^15.7.1",
     "vue-router": "^3.0.7",
     "vue-template-compiler": "^2.6.10",
-    "webpack": "^4.36.1",
+    "webpack": "^4.37.0",
     "webpack-merge": "^4.2.1",
     "websocket": "^1.0.29"
   },
