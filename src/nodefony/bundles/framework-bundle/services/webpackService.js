@@ -29,7 +29,7 @@ module.exports = class webpack extends nodefony.Service {
     }
     this.kernel.once(event, () => {
       if (this.kernel.type === "CONSOLE" && this.kernel.cli.command !== "webpack") {
-        return ;
+        return;
       }
       return this.compile()
         .then((ele) => {
@@ -72,18 +72,18 @@ module.exports = class webpack extends nodefony.Service {
   }
 
   compile() {
-    return new Promise(async (resolve, reject) =>  {
-      let tab  =[];
+    return new Promise(async (resolve, reject) => {
+      let tab = [];
       try {
         for (let bundle in this.kernel.bundles) {
-          let myBundle = this.kernel.bundles[bundle] ;
+          let myBundle = this.kernel.bundles[bundle];
           shell.cd(myBundle.path);
           let res = await myBundle.initWebpack.call(myBundle);
           shell.cd(this.kernel.rootDir);
           tab.push(res);
         }
         return resolve(tab);
-      }catch(e){
+      } catch (e) {
         return reject(e);
       }
     });
@@ -91,11 +91,11 @@ module.exports = class webpack extends nodefony.Service {
 
   setFileSystem() {
     switch (this.webPackSettings.outputFileSystem) {
-    case "memory-fs":
-      return null;
-      //return new MemoryFS();
-    default:
-      return null;
+      case "memory-fs":
+        return null;
+        //return new MemoryFS();
+      default:
+        return null;
     }
   }
 
@@ -167,8 +167,8 @@ module.exports = class webpack extends nodefony.Service {
     //console.log(config)
     let options = this.setDevServer(config, watch);
     switch (type) {
-    case "react":
-      return options;
+      case "react":
+        return options;
     }
     if (options.watch) {
       let devClient = [];
@@ -183,16 +183,16 @@ module.exports = class webpack extends nodefony.Service {
         devClient.push(`webpack-dev-server/client?${options.protocol}://${options.domain}:${options.port}`);
         const prependDevClient = (entry) => {
           switch (nodefony.typeOf(entry)) {
-          case "function":
-            return () => Promise.resolve(entry()).then(prependDevClient);
-          case 'object':
-            const entryClone = {};
-            Object.keys(entry).forEach((key) => {
-              entryClone[key] = devClient.concat(entry[key]);
-            });
-            return entryClone;
-          default:
-            return devClient.concat(entry);
+            case "function":
+              return () => Promise.resolve(entry()).then(prependDevClient);
+            case 'object':
+              const entryClone = {};
+              Object.keys(entry).forEach((key) => {
+                entryClone[key] = devClient.concat(entry[key]);
+              });
+              return entryClone;
+            default:
+              return devClient.concat(entry);
           }
         };
         [].concat(config).forEach((wpOpt) => {
@@ -230,58 +230,58 @@ module.exports = class webpack extends nodefony.Service {
       }
       try {
         switch (type) {
-        /*case "angular":
-          publicPath = path.resolve("/", bundle.bundleName, "dist");
-          config = require(file.path);
-          config.context = Path;
-          config.output.path = path.resolve(bundle.path, "Resources", "public", "dist");
-          if (config.output.publicPath === undefined) {
+          /*case "angular":
+            publicPath = path.resolve("/", bundle.bundleName, "dist");
+            config = require(file.path);
+            config.context = Path;
+            config.output.path = path.resolve(bundle.path, "Resources", "public", "dist");
+            if (config.output.publicPath === undefined) {
+              if (publicPath) {
+                config.output.publicPath = publicPath + "/";
+              } else {
+                config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
+              }
+            }
+            if (!this.production) {
+              watchOptions = {
+                ignoreInitial: false,
+                persistent: true,
+                followSymlinks: false,
+                depth: 0,
+                atomic: false,
+                alwaysStat: true,
+                ignorePermissionErrors: true,
+              };
+            }
+            break;*/
+          case "react":
+            publicPath = path.resolve("/", bundle.bundleName, "dist");
+            process.env.PUBLIC_URL = basename;
+            process.env.PUBLIC_PATH = publicPath;
+            process.env.HOST = this.socksSettings.domain + ":" + this.socksSettings.port;
+            process.env.HTTPS = true;
+            config = require(file.path)(process.env.NODE_ENV);
+            config.context = Path;
+            config.output.path = path.resolve(bundle.path, "Resources", "public", "dist");
             if (publicPath) {
               config.output.publicPath = publicPath + "/";
             } else {
               config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
             }
-          }
-          if (!this.production) {
             watchOptions = {
-              ignoreInitial: false,
-              persistent: true,
-              followSymlinks: false,
-              depth: 0,
-              atomic: false,
-              alwaysStat: true,
-              ignorePermissionErrors: true,
-            };
-          }
-          break;*/
-        case "react":
-          publicPath = path.resolve("/", bundle.bundleName, "dist");
-          process.env.PUBLIC_URL = basename;
-          process.env.PUBLIC_PATH = publicPath;
-          process.env.HOST = this.socksSettings.domain + ":" + this.socksSettings.port;
-          process.env.HTTPS = true;
-          config = require(file.path)(process.env.NODE_ENV);
-          config.context = Path;
-          config.output.path = path.resolve(bundle.path, "Resources", "public", "dist");
-          if (publicPath) {
-            config.output.publicPath = publicPath + "/";
-          } else {
-            config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
-          }
-          watchOptions = {
-            ignored: new RegExp(
-              `^(?!${path
+              ignored: new RegExp(
+                `^(?!${path
                 .normalize(Path + '/')
                 .replace(/[\\]+/g, '\\\\')}).+[\\\\/]node_modules[\\\\/]`,
-              'g'
-            )
-          };
-          break;
-        default:
-          config = require(file.path);
-          watchOptions = nodefony.extend({
-            ignored: /node_modules/
-          }, this.webPackSettings.watchOptions);
+                'g'
+              )
+            };
+            break;
+          default:
+            config = require(file.path);
+            watchOptions = nodefony.extend({
+              ignored: /node_modules/
+            }, this.webPackSettings.watchOptions);
         }
         try {
           devServer = this.addDevServerEntrypoints(config, watch, type);
@@ -298,7 +298,7 @@ module.exports = class webpack extends nodefony.Service {
         if (config.cache === undefined) {
           if (this.production) {
             config.cache = this.webPackSettings.cache;
-          }else{
+          } else {
             config.cache = false;
           }
         }
@@ -309,10 +309,10 @@ module.exports = class webpack extends nodefony.Service {
         } catch (e) {
           return reject(e);
         }
-        if ( this.kernel.isCore){
+        if (this.kernel.isCore) {
           this.nbCompiler++;
-        }else{
-          if (! bundle.isCore){
+        } else {
+          if (!bundle.isCore) {
             this.nbCompiler++;
           }
         }
