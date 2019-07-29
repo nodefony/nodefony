@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/mongo-bundle",
-  "version": "4.3.3",
+  "version": "5.0.0",
   "description": "Nodefony Framework Bundle mongo ",
   "author": "admin admin@nodefony.com",
   "main": "mongoBundle.js",

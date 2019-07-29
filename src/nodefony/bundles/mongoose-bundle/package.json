@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/mongoose-bundle",
-  "version": "4.3.3",
+  "version": "5.0.0",
   "description": "Nodefony Framework Bundle ORM mongoose",
   "scripts": {},
   "main": "mongooseBundle.js",
