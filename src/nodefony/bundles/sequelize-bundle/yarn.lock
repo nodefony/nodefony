@@ -771,10 +771,10 @@ pg-types@~2.0.0:
     postgres-date "~1.0.4"
     postgres-interval "^1.1.0"
 
-pg@^7.11.0:
-  version "7.11.0"
-  resolved "https://registry.yarnpkg.com/pg/-/pg-7.11.0.tgz#a8b9ae9cf19199b7952b72957573d0a9c5e67c0c"
-  integrity sha512-YO4V7vCmEMGoF390LJaFaohWNKaA2ayoQOEZmiHVcAUF+YsRThpf/TaKCgSvsSE7cDm37Q/Cy3Gz41xiX/XjTw==
+pg@^7.12.0:
+  version "7.12.0"
+  resolved "https://registry.yarnpkg.com/pg/-/pg-7.12.0.tgz#e1b883afe14acb0db58385c20bb7236c7e0aef56"
+  integrity sha512-q54Ic0oBXfDZMwheP8ALeUX32TUXvF7SNgAlZjyhkDuFCJkQCgcLBz0Be5uOrAj3ljSok/CI9lRbYzEko0z1Zw==
   dependencies:
     buffer-writer "2.0.0"
     packet-reader "1.0.0"
@@ -955,10 +955,10 @@ sequelize-pool@^2.3.0:
   resolved "https://registry.yarnpkg.com/sequelize-pool/-/sequelize-pool-2.3.0.tgz#64f1fe8744228172c474f530604b6133be64993d"
   integrity sha512-Ibz08vnXvkZ8LJTiUOxRcj1Ckdn7qafNZ2t59jYHMX1VIebTAOYefWdRYFt6z6+hy52WGthAHAoLc9hvk3onqA==
 
-sequelize@^5.10.3:
-  version "5.10.3"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.10.3.tgz#a4bafc3c540f1fa1a28752b9f8cdfacbba025715"
-  integrity sha512-Eabksjfb2kuX/a/7Mt2iHneos0PZxP5f74bdm1ktiG3Y9utfevNr+nIZ0sCvQW6jbJFwNtiLndTxUsNgYK8qpg==
+sequelize@^5.11.0:
+  version "5.11.0"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.11.0.tgz#5aad54cb0cf5d0ba99786bffb2674a8a9051d564"
+  integrity sha512-JcCX87sqiAelFtIzmvgEGWoFjcwqaJIDI9MNm9RtBh5mY5j+L/9sk644imkd1kX3julvEXeu9KCXY/Ofje0rCQ==
   dependencies:
     bluebird "^3.5.0"
     cls-bluebird "^2.1.0"

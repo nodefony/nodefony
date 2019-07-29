@@ -42,7 +42,7 @@
     "vue-loader": "^15.7.1",
     "vue-router": "^3.0.7",
     "vue-template-compiler": "^2.6.10",
-    "webpack": "^4.37.0",
+    "webpack": "^4.38.0",
     "webpack-merge": "^4.2.1",
     "websocket": "^1.0.29"
   },

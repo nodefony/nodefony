@@ -10,25 +10,12 @@ module.exports = {
   outputDir: outputDir,
   indexPath: indexPath,
   assetsDir: "assets",
-  pages: {
-    index: {
-      // entry for the page
-{% if typescript %}
-      entry: path.resolve("src","main.ts"),
-{% else %}
-      entry: path.resolve("src","main.js"),
-{% endif %}
-      // the source template
-      template: path.resolve('public','index.html'),
-      // output as dist/index.html
-      filename: indexPath,
-      // when using title option,
-      // template title tag needs to be <title><%= htmlWebpackPlugin.options.title %></title>
-      title: 'Vue {{name}}',
-      // chunks to include on this page, by default includes
-      // extracted common chunks and vendor chunks.
-      chunks: ['chunk-vendors', 'chunk-common', 'index']
-    }
-
+  chainWebpack: config => {
+    config
+      .plugin('html')
+      .tap(args => {
+        args[0].template = path.resolve('public','index.html');
+        return args;
+      });
   }
 };
