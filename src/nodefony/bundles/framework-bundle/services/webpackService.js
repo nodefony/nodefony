@@ -126,7 +126,15 @@ module.exports = class webpack extends nodefony.Service {
       }
       if (watcher) {
         this.logger(stats.toString(this.webPackSettings.stats), "INFO");
-        this.sockjs.sendWatcher("change");
+        if (this.kernel.getBundle(bundle) &&
+          this.kernel.getBundle(bundle).settings &&
+          this.kernel.getBundle(bundle).settings.devServer) {
+          if (!this.kernel.getBundle(bundle).settings.devServer.hot) {
+            this.sockjs.sendWatcher("change");
+          }
+        } else {
+          this.sockjs.sendWatcher("change");
+        }
       }
       if (stats.hasWarnings()) {
         if (info.warnings.length) {
