@@ -28,16 +28,27 @@ module.exports = {
    *  For watch all components
    *      watch:                    true
    *  or
-   *      watch:{
-   *        controller:             true
-   *        config:                 true        // only routing and services
-   *        views:                  true
-   *        translations:           true
+   *      watch : {
+   *        controller:             true,
+   *        config:                 true,        // only routing and services
+   *        views:                  true,
+   *        translations:           true,
    *        webpack:                true
    *      }
    *
    */
   watch: true,
+
+  /**
+   * DEV SERVER
+   */
+  devServer: {
+{% if front == "vue" %}
+    hot: true
+{% else %}
+    hot: false
+{% endif %}
+  },
 
   /**
    *    OVERRIDE MONITORING BUNDLE
@@ -432,7 +443,18 @@ module.exports = {
    *      }
    *
    */
-  watch: true
+  watch: true,
+
+  /**
+   * DEV SERVER
+   */
+  devServer: {
+{% if front == "vue" %}
+    hot: true
+{% else %}
+    hot: false
+{% endif %}
+  }
 
   /**
    *

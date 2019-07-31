@@ -162,7 +162,7 @@ class Vue extends nodefony.builders.sandbox {
       params: this.response
     });
     bundle.push(this.generateController());
-    bundle.push(this.generateConfig(this.response.addons.webpack));
+    //bundle.push(this.generateConfig(this.response.addons.webpack));
     bundle.push(this.generateRessources());
     bundle.push({
       name: "Entity",
@@ -197,6 +197,8 @@ class Vue extends nodefony.builders.sandbox {
     }
     // views
     resources.childs.push(this.generateViews());
+    // public
+    resources.childs.push(this.generatePublic());
     //translations
     resources.childs.push({
       name: "translations",
@@ -207,6 +209,29 @@ class Vue extends nodefony.builders.sandbox {
       }
     });
     return resources;
+  }
+
+  generatePublic() {
+    let publicWeb = {
+      name: "public",
+      type: "directory",
+      childs: []
+    };
+    publicWeb.childs.push({
+      name: "favicon.ico",
+      type: "copy",
+      path: path.resolve(this.globalSkeleton, "Resources", "public", "favicon.ico"),
+    });
+    publicWeb.childs.push({
+      name: "images",
+      type: "directory",
+      childs: [{
+        name: this.cli.response.command === "project" ? "app-logo.png" : `${this.response.shortName}-logo.png`,
+        type: "copy",
+        path: path.resolve(this.globalSkeleton, "Resources", "public", "images", "app-logo.png"),
+      }]
+    });
+    return publicWeb;
   }
 
   generateViews() {

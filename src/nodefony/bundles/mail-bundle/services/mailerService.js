@@ -14,7 +14,7 @@ module.exports = class mailer extends nodefony.Service {
     this.httpKernel = this.get("httpKernel");
     this.defaultTransporterOptions.host = `smtp.${this.domain}`;
     if (!this.kernel.ready) {
-      this.kernel.once("onBoot", () => {
+      this.kernel.once("onPostRegister", () => {
         this.config = this.bundle.settings.nodemailer;
         this.authorName = this.kernel.app.settings.App.authorName;
         this.authorMail = this.kernel.app.settings.App.authorMail;

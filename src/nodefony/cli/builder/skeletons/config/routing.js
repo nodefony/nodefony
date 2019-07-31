@@ -14,8 +14,33 @@
 
 {% if addons.annotations %}
 
+{% if command == "project"%}
+{% if front == "vue"%}
+  module.exports = {
+    app: {
+      pattern: "/app*",
+      defaults: {
+        controller: "app:app:index"
+      }
+    },
+  };
+{% else %}
   module.exports = {};
-
+{% endif %}
+{% else %}
+{% if front == "vue"%}
+  module.exports = {
+    {{name}}: {
+      pattern: "/{{name}}*",
+      defaults: {
+        controller: "{{ bundleName }}:default:index"
+      }
+    }
+  };
+{% else %}
+  module.exports = {};
+{% endif %}
+{% endif %}
 {% else %}
 
 {% if command == "project" %}

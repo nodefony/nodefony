@@ -498,7 +498,7 @@ class SandBox extends nodefony.Builder {
     publicWeb.childs.push({
       name: "favicon.ico",
       type: "copy",
-      path: path.resolve(this.sandboxSkeleton, "Resources", "public", "favicon.ico"),
+      path: path.resolve(this.globalSkeleton, "Resources", "public", "favicon.ico"),
     });
     if (this.response.addons.workbox) {
       publicWeb.childs.push({
@@ -514,7 +514,7 @@ class SandBox extends nodefony.Builder {
       childs: [{
         name: this.cli.response.command === "project" ? "app-logo.png" : `${this.response.shortName}-logo.png`,
         type: "copy",
-        path: path.resolve(this.sandboxSkeleton, "Resources", "public", "images", "app-logo.png"),
+        path: path.resolve(this.globalSkeleton, "Resources", "public", "images", "app-logo.png"),
       }]
     });
     if (!this.response.addons.webpack) {

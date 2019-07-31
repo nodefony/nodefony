@@ -144,7 +144,7 @@ module.exports = class webpack extends nodefony.Service {
     }
   }
 
-  setDevServer(config, watch) {
+  setDevServer(config, watch, bundleSettings = {}) {
     let options = {
       watch: false
     };
@@ -166,14 +166,13 @@ module.exports = class webpack extends nodefony.Service {
         protocol: this.sockjs.protocol,
         domain: this.sockjs.settings.domain || this.kernel.domain,
         port: this.sockjs.settings.port || this.kernel.httpsPort
-      }, (config.devServer || {}));
+      }, (config.devServer || {}), (bundleSettings.devServer || {}));
     }
     return options;
   }
 
-  addDevServerEntrypoints(config, watch, type) {
-    //console.log(config)
-    let options = this.setDevServer(config, watch);
+  addDevServerEntrypoints(config, watch, type, bundleSettings) {
+    let options = this.setDevServer(config, watch, bundleSettings);
     switch (type) {
       case "react":
         return options;
@@ -292,7 +291,7 @@ module.exports = class webpack extends nodefony.Service {
             }, this.webPackSettings.watchOptions);
         }
         try {
-          devServer = this.addDevServerEntrypoints(config, watch, type);
+          devServer = this.addDevServerEntrypoints(config, watch, type, bundle.settings);
         } catch (e) {
           return reject(e);
         }
