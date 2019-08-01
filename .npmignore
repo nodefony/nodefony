@@ -34,6 +34,9 @@
 npm-debug.log
 yarn-error.log
 
+node_modules
+node_modules/**
+**/node_modules/**
 
 /Makefile
 /node_modules
