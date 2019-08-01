@@ -1,5 +1,12 @@
 # Changelog
 
+## v5.0.1 (01/08/2019)
+- [nodefony release 5.0.1](https://github.com/nodefony/nodefony-core/commit/4258de57e7431b9d72e2b25b91008313f7c314fc)
+- [debug vue bundle generator](https://github.com/nodefony/nodefony-core/commit/bca151cd3fa08666096aec4272414a8b1ca8458a)
+- [debug HMR](https://github.com/nodefony/nodefony-core/commit/913d21cce709fe61534f6ecb5d9b1f5372978705)
+
+---
+
 ## v5.0.0 (29/07/2019)
 - [nodefony release 5.0.0](https://github.com/nodefony/nodefony-core/commit/c7868fd12c1707615995395e7c02ddea80ff5f70)
 - [upgrade deps](https://github.com/nodefony/nodefony-core/commit/b74a00dca9001894734034dd9f3a170e4967d6db)
