@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/monitoring-bundle",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "Nodefony Framework Bundle Monitoring",
   "contributors": [],
   "main": "monitoringBundle.js",

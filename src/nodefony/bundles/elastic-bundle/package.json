@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/elastic-bundle",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "Nodefony Framework Bundle elasticsearch ",
   "author": "admin admin@nodefony.com",
   "main": "elasticBundle.js",
