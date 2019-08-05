@@ -245,8 +245,6 @@ class generateProject extends nodefony.Builder {
           disabled: (this.cli.response.command === "bundle")
         }],
         filter: (value) => {
-          console.log("pass")
-          console.log(value)
           return value ;
         }
       }
