@@ -7,6 +7,7 @@
     "nodefony": "node src/nodefony/bin/nodefony",
     "pm2": "node src/nodefony/node_modules/.bin/pm2",
     "start": "node src/nodefony/bin/nodefony dev",
+    "dev": "node src/nodefony/bin/nodefony dev",
     "outdated": "npm outdated --deph=0",
     "test": "node src/nodefony/bin/nodefony unitest:launch:all",
     "changelog": "gren changelog --username=nodefony  --repo=nodefony-core --tags=all --data-source=commits --override --generate"

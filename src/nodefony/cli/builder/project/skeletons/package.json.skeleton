@@ -7,6 +7,7 @@
     "nodefony": "nodefony",
     "pm2": "pm2",
     "start": "nodefony",
+    "dev": "nodefony dev",
     "build": "nodefony build",
     "rebuild": "nodefony rebuild",
     "stop": "nodefony stop",
