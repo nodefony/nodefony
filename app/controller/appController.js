@@ -69,26 +69,4 @@ module.exports = class appController extends nodefony.controller {
     return this.render('app:documentation:documentation.html.twig');
   }
 
-  /**
-   *    @see Route by Annotaion
-   *    @Method ({ "GET"})
-   *    @Route ("/lang", name="lang")
-   */
-  langAction() {
-    if (this.query.language) {
-      if (this.session) {
-        this.session.set("lang", this.query.language);
-        let route = this.session.getMetaBag("lastRoute");
-        if (route) {
-          return this.redirect(this.url(route));
-        }
-      }
-    }
-    let referer = this.request.getHeader("referer");
-    if (referer) {
-      return this.redirect(referer);
-    }
-    return this.redirect("/");
-  }
-
 };
