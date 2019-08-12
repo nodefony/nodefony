@@ -12,11 +12,11 @@
   ],
   "dependencies": {
     "mysql2": "^1.6.5",
-    "pg": "^7.12.0",
+    "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^5.12.3",
+    "sequelize": "^5.13.1",
     "sqlite3": "^4.0.9",
-    "tedious": "^6.2.0"
+    "tedious": "^6.3.0"
   },
   "repository": {
     "type": "git",
