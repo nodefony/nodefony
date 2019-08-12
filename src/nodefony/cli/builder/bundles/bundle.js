@@ -9,12 +9,14 @@ class generateBundle extends nodefony.Builder {
     this.pathSkeleton = path.resolve(__dirname, "skeletons");
     if (this.cmd === "generate:bundle" || this.cmd === "create:bundle") {
       if (args && args[0]) {
-        this.name = args[0];
-        this.cli.response.name = args[0];
+        //this.name = args[0];
+        //this.cli.response.name = args[0];
         if (args[1]) {
           this.setLocation(args[1]);
+          this.checkPath(args[0], args[1]);
         } else {
           this.setLocation(path.resolve("src", "bundles"));
+          this.checkPath(args[0], path.resolve("src", "bundles"));
         }
       }
     }
@@ -40,7 +42,7 @@ class generateBundle extends nodefony.Builder {
     if (!this.name) {
       this.name = this.cli.response.name;
     }
-    this.response.name = this.name;
+    this.response.name = this.shortName;
     this.path = path.resolve(this.location, this.name || "");
     this.setEnv();
   }

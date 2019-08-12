@@ -18,6 +18,7 @@ class generateProject extends nodefony.Builder {
       name: this.name || "nodefony-starter",
       bundleName: "app",
       shortName: "app",
+      command : "project",
       description: "Project Description",
       front: "sandbox",
       path: this.location,
@@ -33,6 +34,7 @@ class generateProject extends nodefony.Builder {
       orm: "sequelize",
       npm: 'npm',
       addons: {
+        annotations:true,
         users: false
       }
     });
