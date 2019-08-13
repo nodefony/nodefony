@@ -87,7 +87,7 @@ module.exports = class generateBuilder extends nodefony.Builder {
       case "service":
         return this.cli.setCommand("generate:service", ["-i"]);
       case "entity":
-        return this.cli.setCommand("generate:entity", ["-i"]);
+        return this.cli.setCommand("sequelize:generate:entity", ["-i"]);
       case "haproxy":
         return this.cli.setCommand("generate:haproxy", ["-i"]);
       case "nginx":

@@ -78,7 +78,7 @@ class generateTask extends nodefony.Task {
           name: 'bundle',
           message: () => {
             this.orm.getEntityTable("INFO");
-            return 'Choose a bundle to generate a Service : ';
+            return 'Choose a bundle to generate an Entity : ';
           },
           default: 0,
           pageSize: this.bundles.length,

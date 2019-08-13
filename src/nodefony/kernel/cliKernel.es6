@@ -247,39 +247,46 @@ module.exports = nodefony.register("cliKernel", function() {
     }
 
     loadCommand() {
-      if (!this.commands) {
-        this.commands = {};
-      }
-      for (let bundle in this.kernel.bundles) {
-        if (!this.commands[bundle]) {
-          this.commands[bundle] = {};
+      return new Promise((resolve, reject) => {
+        let error = [];
+        if (!this.commands) {
+          this.commands = {};
         }
-        if (!this.classCommand[bundle]) {
-          this.classCommand[bundle] = [];
-        }
-        try {
-          this.kernel.bundles[bundle].registerCommand(this.classCommand[bundle]);
-        } catch (e) {
-          this.logger(e, "ERROR");
-          continue;
-        }
-        for (let i = 0; i < this.classCommand[bundle].length; i++) {
+        for (let bundle in this.kernel.bundles) {
+          if (!this.commands[bundle]) {
+            this.commands[bundle] = {};
+          }
+          if (!this.classCommand[bundle]) {
+            this.classCommand[bundle] = [];
+          }
           try {
-            let instance = new this.classCommand[bundle][i](this, this.kernel.bundles[bundle]);
-            this.commands[bundle][instance.name] = instance;
-            if (this.commander.debug) {
-              this.logger(`Register Command ${instance.name}`, "DEBUG", `Bundle ${bundle}`);
-            }
+            this.kernel.bundles[bundle].registerCommand(this.classCommand[bundle]);
           } catch (e) {
+            error.push(e);
             this.logger(e, "ERROR");
             continue;
           }
+          for (let i = 0; i < this.classCommand[bundle].length; i++) {
+            try {
+              let instance = new this.classCommand[bundle][i](this, this.kernel.bundles[bundle]);
+              this.commands[bundle][instance.name] = instance;
+              if (this.commander.debug) {
+                this.logger(`Register Command ${instance.name}`, "DEBUG", `Bundle ${bundle}`);
+              }
+            } catch (e) {
+              this.logger(e, "ERROR");
+              error.push(e);
+              continue;
+            }
+          }
         }
-      }
-      /*this.commander.on('--help', (...args) => {
-        console.log(args)
-      });*/
+        if (error.length) {
+          return reject(error);
+        }
+        return resolve(this.commands);
+      });
     }
+
     getCommand(command, bundle = null) {
       let commands = [];
       if (!command) {

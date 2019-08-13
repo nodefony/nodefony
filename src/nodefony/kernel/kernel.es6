@@ -221,12 +221,37 @@ module.exports = nodefony.register("kernel", function () {
 
     loadCommand() {
       try {
-        return this.cli.loadCommand();
+        return this.cli.loadCommand()
+        .then((commands)=>{
+          if (this.debug){
+            this.displayCommand(commands);
+          }
+          return commands ;
+        });
       } catch (e) {
         this.logger(e, "ERROR");
         this.terminate(e.code || 1);
         return;
       }
+    }
+
+    displayCommand(commands){
+      let table = this.cli.displayTable(null, {
+        head: [
+          "BUNDLES",
+          "COMMAND NAME"
+        ]
+      });
+      for(let bundle in commands){
+        let cmd = commands[bundle];
+        for ( let command in cmd){
+          let tab = [];
+          tab.push(bundle);
+          tab.push(command);
+          table.push(tab);
+        }
+      }
+      this.logger("\n" + table.toString(), "DEBUG");
     }
 
     matchCommand() {
@@ -793,7 +818,7 @@ module.exports = nodefony.register("kernel", function () {
         this.app = this.initApplication();
         this.fire("onPostRegister", this);
         if (this.console) {
-          this.loadCommand();
+          await this.loadCommand();
         } else {
           if (!fs.existsSync(this.cacheLink)) {
             try {
@@ -841,7 +866,6 @@ module.exports = nodefony.register("kernel", function () {
     getOrm() {
       return this.settings.orm;
     }
-
 
     initServers() {
       // create HTTP server
