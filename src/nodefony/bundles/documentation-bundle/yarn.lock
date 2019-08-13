@@ -648,18 +648,18 @@
   resolved "https://registry.yarnpkg.com/@csstools/sass-import-resolve/-/sass-import-resolve-1.0.0.tgz#32c3cdb2f7af3cd8f0dca357b592e7271f3831b5"
   integrity sha512-pH4KCsbtBLLe7eqUrw8brcuFO8IZlN36JjdKlOublibVdAIPHCzEnpBWOVUXK5sCf+DpBi8ZtuWtjF0srybdeA==
 
-"@nodefony/stage@^0.1.18":
-  version "0.1.18"
-  resolved "https://registry.yarnpkg.com/@nodefony/stage/-/stage-0.1.18.tgz#d0843540475f58c4b0a26133fc54d8d752cf38df"
-  integrity sha512-2s9QG3W8XR1nE0dZN6fJ/TxTh/ta316S5GBDjjW9n+s89CGv14ZLmvKKipl/9IVThPLtR17iCNdUe81reFp4bg==
+"@nodefony/stage@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@nodefony/stage/-/stage-0.2.0.tgz#fd70997b89a0bac559b70f41a518187391a36f73"
+  integrity sha512-OYhJ5Nn/8G9L5CCU5KdLZKR3/hE7Wc6ENUI4iFY8sBRokQVb/wGd0zNewv3sAX8Podo6ndKzf/mNdeidonRboQ==
   dependencies:
-    ascii-table "0.0.9"
+    ascii-table "^0.0.9"
     asciify "^1.3.5"
     jquery "^3.3.1"
-    opn "^5.5.0"
+    opn "^6.0.0"
     shortid "^2.2.14"
     twig "^1.13.2"
-    webrtc-adapter "^7.2.1"
+    webrtc-adapter "^7.2.9"
 
 "@types/anymatch@*":
   version "1.3.1"
@@ -1032,7 +1032,7 @@ arraybuffer.slice@~0.0.7:
   resolved "https://registry.yarnpkg.com/arraybuffer.slice/-/arraybuffer.slice-0.0.7.tgz#3bbc4275dd584cc1b10809b89d4e8b63a69e7675"
   integrity sha512-wGUIVQXuehL5TCqQun8OW81jGzAWycqzFF8lFp+GOM5BXLYj3bKNsYC4daB7n6XjCqxQA/qgTJ+8ANR3acjrog==
 
-ascii-table@0.0.9:
+ascii-table@^0.0.9:
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/ascii-table/-/ascii-table-0.0.9.tgz#06a6604d6a55d4bf41a9a47d9872d7a78da31e73"
   integrity sha1-BqZgTWpV1L9BqaR9mHLXp42jHnM=
@@ -4118,10 +4118,10 @@ once@^1.3.0, once@^1.3.1, once@^1.4.0:
   dependencies:
     wrappy "1"
 
-opn@^5.5.0:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/opn/-/opn-5.5.0.tgz#fc7164fab56d235904c51c3b27da6758ca3b9bfc"
-  integrity sha512-PqHpggC9bLV0VeWcdKhkpxY+3JTzetLSqTCWL/z/tFIbI6G8JCjondXklT1JinczLz2Xib62sSp0T/gKT4KksA==
+opn@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/opn/-/opn-6.0.0.tgz#3c5b0db676d5f97da1233d1ed42d182bc5a27d2d"
+  integrity sha512-I9PKfIZC+e4RXZ/qr1RhgyCnGgYX0UEIlXgWnCOVACIvFgaC9rz6Won7xbdhoHrd8IIhV7YEpHjreNUNkqCGkQ==
   dependencies:
     is-wsl "^1.1.0"
 
@@ -6399,7 +6399,7 @@ webpack@^4.39.1:
     watchpack "^1.6.0"
     webpack-sources "^1.4.1"
 
-webrtc-adapter@^7.2.1:
+webrtc-adapter@^7.2.9:
   version "7.2.9"
   resolved "https://registry.yarnpkg.com/webrtc-adapter/-/webrtc-adapter-7.2.9.tgz#6bbea91d23747b9f66f220cd783c26a036ee0465"
   integrity sha512-98rcdbSqUBR+L+erotCFWgiPyYjCEq6NJYN/1Bl6cRl2CxSU3wanJlc4YdfWzaTGaK13ZVmHay2mlW4aOWXh0A==
