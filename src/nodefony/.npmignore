@@ -35,3 +35,7 @@ node_modules/**
 **/node_modules/**
 /node_modules
 /bundles
+
+/cli/builder/bundles/users-bundle/Resources/public/assets
+/cli/builder/bundles/users-bundle/yarn.lock
+/cli/builder/bundles/users-bundle/package-lock.json
