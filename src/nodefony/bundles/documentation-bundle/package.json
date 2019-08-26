@@ -12,7 +12,7 @@
   "dependencies": {
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
-    "@nodefony/stage": "^0.2.0",
+    "@nodefony/stage": "^0.2.1",
     "async": "^3.1.0",
     "babel-loader": "^8.0.6",
     "bootstrap": "^4.3.1",
