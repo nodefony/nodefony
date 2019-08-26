@@ -1,5 +1,13 @@
 # Changelog
 
+## v5.0.4 (26/08/2019)
+- [nodefony release 5.0.4](https://github.com/nodefony/nodefony-core/commit/ceec78b01a9b749329b814040d3ecf1c3fb3a00f)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/3b4628e09a5aa36d6cdaa9bd8b3a6c110e90386e)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/654b94925dcb04494b843e6415a189cfa055692d)
+- [add ingnore file](https://github.com/nodefony/nodefony-core/commit/49d2c3135dea367954aee8e85ac7da5c982cd54d)
+
+---
+
 ## v5.0.3 (14/08/2019)
 - [nodefony release 5.0.3](https://github.com/nodefony/nodefony-core/commit/3e50c5cda6cb5c269c6069455fe1da4c699dca31)
 - [upgrade deps](https://github.com/nodefony/nodefony-core/commit/e49ffdc9112c6bd29fe6c0ffc19ca1955a091355)
