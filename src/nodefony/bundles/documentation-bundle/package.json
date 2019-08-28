@@ -37,8 +37,8 @@
     "simple-git": "^1.124.0",
     "socket.io-client": "^2.2.0",
     "terser-webpack-plugin": "^1.4.1",
-    "webpack": "^4.39.2",
-    "webpack-merge": "^4.2.1"
+    "webpack": "^4.39.3",
+    "webpack-merge": "^4.2.2"
   },
   "repository": {
     "type": "git",
