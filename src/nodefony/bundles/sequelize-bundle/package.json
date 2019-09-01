@@ -14,7 +14,7 @@
     "mysql2": "^1.7.0",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^5.17.0",
+    "sequelize": "^5.18.0",
     "sqlite3": "^4.1.0",
     "tedious": "^6.3.0"
   },
@@ -32,6 +32,6 @@
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "sequelize-cli": "^5.5.0"
+    "sequelize-cli": "^5.5.1"
   }
 }

@@ -1331,10 +1331,10 @@ seq-queue@^0.0.5:
   resolved "https://registry.yarnpkg.com/seq-queue/-/seq-queue-0.0.5.tgz#d56812e1c017a6e4e7c3e3a37a1da6d78dd3c93e"
   integrity sha1-1WgS4cAXpuTnw+Ojeh2m143TyT4=
 
-sequelize-cli@^5.5.0:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/sequelize-cli/-/sequelize-cli-5.5.0.tgz#b0570352f70eaa489a25dccf55cf316675d6ff06"
-  integrity sha512-twVQ02alCpr2XvxNmpi32C48WZs6xHTH1OFTfTS5Meg3BVqOM8ghiZoml4FITFjlD8sAJSQjlAHTwqTbuolA6Q==
+sequelize-cli@^5.5.1:
+  version "5.5.1"
+  resolved "https://registry.yarnpkg.com/sequelize-cli/-/sequelize-cli-5.5.1.tgz#0b9c2fc04d082cc8ae0a8fe270b96bb606152bab"
+  integrity sha512-ZM4kUZvY3y14y+Rq3cYxGH7YDJz11jWHcN2p2x7rhAIemouu4CEXr5ebw30lzTBtyXV4j2kTO+nUjZOqzG7k+Q==
   dependencies:
     bluebird "^3.5.3"
     cli-color "^1.4.0"
@@ -1350,10 +1350,10 @@ sequelize-pool@^2.3.0:
   resolved "https://registry.yarnpkg.com/sequelize-pool/-/sequelize-pool-2.3.0.tgz#64f1fe8744228172c474f530604b6133be64993d"
   integrity sha512-Ibz08vnXvkZ8LJTiUOxRcj1Ckdn7qafNZ2t59jYHMX1VIebTAOYefWdRYFt6z6+hy52WGthAHAoLc9hvk3onqA==
 
-sequelize@^5.17.0:
-  version "5.17.0"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.17.0.tgz#dd939381d68ddb77e6651607be8051b60bad01fc"
-  integrity sha512-M5/6ek+9YpUAEImqrIMlguEIE22Cf6rX35P/72S1q3nwYhDxb96shM5iHjk7+A3tZEFiNHKf//cbIMwNaljNbA==
+sequelize@^5.18.0:
+  version "5.18.0"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.18.0.tgz#3ed8eda9ec741f64f134752e0765216d760d2efe"
+  integrity sha512-Kw2LHYpXGa1v5T3Q1r+cPvYeeCJV53RbpoDO/NAVZAUiGj/UFPxaJH9qV/pYw2AAhkNkyzfml6Ud6dieJllB2A==
   dependencies:
     bluebird "^3.5.0"
     cls-bluebird "^2.1.0"
