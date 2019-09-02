@@ -15,7 +15,7 @@ module.exports = class defaultController extends nodefony.controller {
   }
 
 /**
- *    @Route ("",
+ *    @Route ("*",
  *      name="route-blackdashboardreact-bundle-blackdashboardreact")
  */
   indexAction() {

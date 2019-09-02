@@ -82,7 +82,7 @@ class Admin extends React.Component {
       if (prop.layout === "/admin") {
         return (
           <Route
-            path={prop.layout + prop.path}
+            path={`${prop.layout}${prop.path}`}
             component={prop.component}
             key={key}
           />
@@ -133,7 +133,7 @@ class Admin extends React.Component {
               toggleSidebar={this.toggleSidebar}
               sidebarOpened={this.state.sidebarOpened}
             />
-            <Switch>{this.getRoutes(routes)}</Switch>
+          <Switch>{`${this.getRoutes(routes)}`}</Switch>
             {// we don't want the Footer to be rendered on map page
             this.props.location.pathname.indexOf("maps") !== -1 ? null : (
               <Footer fluid />

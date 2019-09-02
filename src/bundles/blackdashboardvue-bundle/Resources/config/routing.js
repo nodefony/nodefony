@@ -13,11 +13,4 @@
  **/
 
 
-  module.exports = {
-    /*blackdashboard: {
-      pattern: "/blackdashboard*",
-      defaults: {
-        controller: "blackdashboardvue-bundle:default:index"
-      }
-    }*/
-  };
+  module.exports = {};

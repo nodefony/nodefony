@@ -11,7 +11,8 @@ module.exports = nodefony.register("Annotations", function () {
       if (!tab[i]) {
         continue;
       }
-      let res = regKeyValue.exec(tab[i]);
+      let str = tab[i].replace(/(.*)\*$/,"$1");
+      let res = regKeyValue.exec(str);
       let key = res[1].replace(/["' ]/g, "");
       let value = res[2].replace(/["']/g, "");
       let tmp = null;
@@ -194,7 +195,14 @@ module.exports = nodefony.register("Annotations", function () {
     }
 
     parseRoute(route, obj) {
-      let tab = route.replace(/[ ]|[\s]?\*[\s]?/g, "").split(",");
+      //let tab = route.replace(/[ ]|[\s]?\*[\s]?/g, "").split(",");
+      route = route.replace(/[ ]|[\s]?/g, "");
+      let tab = route.split(",");
+      tab.map((ele, index)=>{
+        let res = ele.replace(/^\*([\s]?)/g, "$1");
+        tab[index] = res ;
+        return res ;
+      });
       let parser = Array.prototype.shift.call(tab).replace(/["' ]/g, "");
       if (regKeyValue.test(parser)) {
         obj.pattern = "";
