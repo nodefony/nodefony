@@ -4,7 +4,7 @@
  *	@constructor
  *	@param {class} container
  *	@param {class} context
- *  @Route ("/react")
+ *  @Route ("/admin")
  */
 module.exports = class defaultController extends nodefony.controller {
 

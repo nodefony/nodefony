@@ -33,10 +33,17 @@ module.exports = class {{controllerName}} extends nodefony.controller {
  *      name="home")
  */
 {% else %}
+{% if  front == "react" or front == "vue"%}
+/**
+ *    @Route ("*",
+ *      name="route-{{bundleName}}-{{name}}")
+ */
+{% else %}
 /**
  *    @Route ("",
  *      name="route-{{bundleName}}-{{name}}")
  */
+{% endif %}
 {% endif %}
 {% else %}
 /**

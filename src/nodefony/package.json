@@ -75,7 +75,7 @@
     "shortid": "^2.2.14",
     "simple-git": "^1.126.0",
     "twig": "^1.13.3",
-    "xml2js": "^0.4.20",
+    "xml2js": "^0.4.21",
     "yarn": "^1.17.3"
   },
   "devDependencies": {},

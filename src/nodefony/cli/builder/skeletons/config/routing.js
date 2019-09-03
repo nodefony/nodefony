@@ -28,18 +28,7 @@
   module.exports = {};
 {% endif %}
 {% else %}
-{% if front == "vue"%}
-  module.exports = {
-    {{name}}: {
-      pattern: "/{{name}}*",
-      defaults: {
-        controller: "{{ bundleName }}:default:index"
-      }
-    }
-  };
-{% else %}
   module.exports = {};
-{% endif %}
 {% endif %}
 {% else %}
 

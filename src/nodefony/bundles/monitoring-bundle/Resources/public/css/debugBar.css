@@ -84,17 +84,17 @@
 
 #nodefony-container .label-default {
   background-color: #373767;
-  color: #FFF;
+  color: #FFF !important;;
 }
 
 #nodefony-container .label-success {
   background-color: #5AB155;
-  color: #FFF;
+  color: #FFF !important;;
 }
 
 #nodefony-container .label-error {
   background-color: #a33;
-  color: #FFF;
+  color: #FFF !important;;
 }
 
 .black {
@@ -153,6 +153,7 @@
   vertical-align: top;
   text-overflow: ellipsis;
   overflow: hidden;
+  color: #000;
 }
 
 #nodefony-container ul li .details ul li span:empty {
@@ -164,6 +165,7 @@
   overflow: hidden;
   display: inline-block;
   max-width: 200px;
+  color: #000;
 }
 
 #nodefony-container ul li:hover .details {

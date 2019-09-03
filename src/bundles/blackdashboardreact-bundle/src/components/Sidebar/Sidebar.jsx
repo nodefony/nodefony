@@ -126,7 +126,7 @@ class Sidebar extends React.Component {
                   key={key}
                 >
                   <NavLink
-                    to={"/react"+prop.layout + prop.path}
+                    to={prop.layout + prop.path}
                     className="nav-link"
                     activeClassName="active"
                     onClick={this.props.toggleSidebar}
