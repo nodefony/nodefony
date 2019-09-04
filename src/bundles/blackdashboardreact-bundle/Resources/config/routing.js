@@ -3,7 +3,7 @@
  * ===============================================================================
  *      ROUTING BUNDLE blackdashboardreact-bundle
  *
- *  Copyright © /2019     | 
+ *  Copyright © /2019     |
  *
  * ===============================================================================
  *
@@ -13,4 +13,11 @@
  **/
 
 
-  module.exports = {};
+  module.exports = {
+    react: {
+      pattern: "/react",
+      defaults: {
+        controller: "blackdashboardreact:default:index"
+      }
+    },
+  };

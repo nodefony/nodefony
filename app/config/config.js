@@ -38,7 +38,7 @@ module.exports = {
    */
   "monitoring-bundle": {
     debugBar: true,
-    forceDebugBarProd: false,
+    forceDebugBarProd: true,
     profiler: {
       active: false,
       storage: "orm"

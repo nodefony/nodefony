@@ -52,8 +52,8 @@ class AdminNavbar extends React.Component {
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateColor);
   }
-  // function that adds color white/transparent to the navbar on resize (this is for the collapse)
-  updateColor = () => {
+  updateColor() {
+    // function that adds color white/transparent to the navbar on resize (this is for the collapse)
     if (window.innerWidth < 993 && this.state.collapseOpen) {
       this.setState({
         color: "bg-white"
@@ -63,9 +63,9 @@ class AdminNavbar extends React.Component {
         color: "navbar-transparent"
       });
     }
-  };
+  }
   // this function opens and closes the collapse on small devices
-  toggleCollapse = () => {
+  toggleCollapse() {
     if (this.state.collapseOpen) {
       this.setState({
         color: "navbar-transparent"
@@ -78,13 +78,14 @@ class AdminNavbar extends React.Component {
     this.setState({
       collapseOpen: !this.state.collapseOpen
     });
-  };
+  }
   // this function is to open the Search modal
-  toggleModalSearch = () => {
+  toggleModalSearch(){
     this.setState({
       modalSearch: !this.state.modalSearch
     });
-  };
+  }
+
   render() {
     return (
       <>

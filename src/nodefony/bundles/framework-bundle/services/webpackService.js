@@ -126,16 +126,13 @@ module.exports = class webpack extends nodefony.Service {
       }
       if (watcher) {
         this.logger(stats.toString(this.webPackSettings.stats), "INFO");
-        console.log(bundle)
         if (this.kernel.getBundle(bundle) &&
           this.kernel.getBundle(bundle).settings &&
           this.kernel.getBundle(bundle).settings.devServer) {
-            console.log(this.kernel.getBundle(bundle).settings.devServer.hot)
           if (!this.kernel.getBundle(bundle).settings.devServer.hot) {
             this.sockjs.sendWatcher("change");
           }
         } else {
-          console.log("pass 2")
           this.sockjs.sendWatcher("change");
         }
       }
@@ -313,7 +310,6 @@ module.exports = class webpack extends nodefony.Service {
           }
         }
         bundle.webPackConfig = config;
-        //console.log(config)
         try {
           bundle.webpackCompiler = webpack(config);
         } catch (e) {
