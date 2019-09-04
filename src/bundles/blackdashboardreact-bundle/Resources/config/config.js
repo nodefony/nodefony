@@ -40,7 +40,7 @@ module.exports = {
    * DEV SERVER
    */
   devServer: {
-    hot: false
+    hot: true
   }
 
   /**

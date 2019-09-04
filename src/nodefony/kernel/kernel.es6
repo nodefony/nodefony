@@ -979,7 +979,12 @@ module.exports = nodefony.register("kernel", function () {
      *  @param {String} name
      */
     getBundle(name) {
-      if (name === "App") {
+      this.regBundleName.test(name);
+      let res = regBundleName.exec(name);
+      if (res){
+        name = res[1];
+      }
+      if (name === "App" || name === "app") {
         return this.bundles.app;
       }
       for (let ns in this.bundles) {

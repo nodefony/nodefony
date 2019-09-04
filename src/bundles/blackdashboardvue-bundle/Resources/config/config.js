@@ -34,7 +34,10 @@ module.exports = {
    *      }
    *
    */
-  watch: true,
+  watch: {
+    views:                  false,
+    webpack:                true
+  },
 
   /**
    * DEV SERVER
