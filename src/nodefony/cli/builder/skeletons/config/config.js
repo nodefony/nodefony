@@ -37,8 +37,14 @@ module.exports = {
    *      }
    *
    */
+  {% if front == "vue" %}
+  watch: {
+    views: false,
+    webpack: true
+  },
+  {% else %}
   watch: true,
-
+  {% endif %}
   /**
    * DEV SERVER
    */
