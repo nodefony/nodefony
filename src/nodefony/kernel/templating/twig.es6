@@ -66,28 +66,43 @@ module.exports = nodefony.registerTemplate("twig", function () {
       }
     }
 
-    render(view, param) {
+    async render(view, param) {
       try {
-        let Render = this.compile(view);
-        return Render(param);
+        let template = await this.compile(view)
+        .catch(e=>{
+          this.logger(e,"ERROR");
+          throw e;
+        });
+        if (template){
+          return template.render(param);
+        }
+        return null ;
       } catch (e) {
         throw e;
       }
     }
 
     compile(file, callback) {
-      return this.engine.twig({
-        path: file.path,
-        async: false,
-        base: this.rootDir,
-        //precompiled:false,
-        name: file.name,
-        load: (template) => {
-          callback(null, template);
-        },
-        error: (error) => {
-          callback(error, null);
-        }
+      return new Promise((resolve, reject) => {
+        this.engine.twig({
+          path: file.path,
+          async: true,
+          base: this.rootDir,
+          //precompiled:false,
+          name: file.name,
+          load: (template) => {
+            if (callback) {
+              callback(null, template);
+            }
+            return resolve(template);
+          },
+          error: (error) => {
+            if (callback) {
+              callback(error, null);
+            }
+            return reject(error);
+          }
+        });
       });
     }
 

@@ -4,6 +4,7 @@ const path = require('path');
 const outputDir = path.resolve("Resources", "public");
 const indexPath = path.resolve("Resources", "views", 'index.html.twig');
 const publicPath = "{{bundleName}}";
+const template = path.resolve('public','index.html');
 
 module.exports = {
   publicPath: publicPath,
@@ -14,7 +15,7 @@ module.exports = {
     config
       .plugin('html')
       .tap(args => {
-        args[0].template = path.resolve('public','index.html');
+        args[0].template = template;
         return args;
       });
   }

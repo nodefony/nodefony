@@ -29,7 +29,7 @@ module.exports = {
    *      watch:                    true
    *  or
    *      watch : {
-   *        controller:             true,
+   *        controllers:             true,
    *        config:                 true,        // only routing and services
    *        views:                  true,
    *        translations:           true,
@@ -39,6 +39,9 @@ module.exports = {
    */
   {% if front == "vue" %}
   watch: {
+    controllers: true,
+    config: true,
+    translations: true,
     views: false,
     webpack: true
   },

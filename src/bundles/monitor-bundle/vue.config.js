@@ -1,9 +1,10 @@
 // vue.config.js
 const path = require('path');
 
-const outputDir = path.resolve("Resources", "public");
-const indexPath = path.resolve("Resources", "views", 'index.html.twig');
+const outputDir = path.resolve(__dirname, "Resources", "public");
+const indexPath = path.resolve(__dirname, "Resources", "views", 'index.html.twig');
 const publicPath = "monitor-bundle";
+const template = path.resolve(__dirname, 'public', 'index.html');
 
 module.exports = {
   publicPath: publicPath,
@@ -14,11 +15,17 @@ module.exports = {
     config
       .plugin('html')
       .tap(args => {
-        args[0].template = path.resolve('public','index.html');
+        args[0].template = template;
         return args;
       });
-    config.module.rule('eslint').use('eslint-loader').options({
-      fix: true
-    });
+    if ( process.env.NODE_ENV !== 'production'){
+      config
+        .module
+        .rule('eslint')
+        .use('eslint-loader')
+        .options({
+          fix: true
+        });
+      }
   }
 };

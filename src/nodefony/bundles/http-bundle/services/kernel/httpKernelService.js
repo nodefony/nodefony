@@ -40,7 +40,6 @@ module.exports = class httpKernel extends nodefony.Service {
       this.translation = this.get("translation");
       this.cdn = this.setCDN();
       this.corsManager = this.get("cors");
-      this.debugView = this.getTemplate("monitoringBundle::debugBar.html.twig");
       this.frameworkBundle = this.kernel.getBundle("framework");
       this.monitoringBundle = this.kernel.getBundle("monitoring");
       if (this.monitoringBundle) {
@@ -52,7 +51,10 @@ module.exports = class httpKernel extends nodefony.Service {
         };
         this.forceDebugBarProd = false;
       }
+    });
 
+    this.once("onReady", () => {
+      this.debugView = this.getTemplate("monitoringBundle::debugBar.html.twig");
     });
 
     this.on("onClientError", (e, socket) => {

@@ -1,20 +1,20 @@
 /**
-*
-*
-*	nodefony-core CONFIG BUNDLE  blackdashboard-bundle
-*
-* ===============================================================================
-*
-*  Copyright © 2018/2019        Camensuli Christophe | ccamensuli@gmail.com
-*
-* ===============================================================================
-*
-*        GENERATE BY nodefony-core BUILDER
-*/
+ *
+ *
+ *	nodefony-core CONFIG BUNDLE  blackdashboard-bundle
+ *
+ * ===============================================================================
+ *
+ *  Copyright © 2018/2019        Camensuli Christophe | ccamensuli@gmail.com
+ *
+ * ===============================================================================
+ *
+ *        GENERATE BY nodefony-core BUILDER
+ */
 
 module.exports = {
-  type        : "vue",
-  locale      : "en_en",
+  type: "vue",
+  locale: "en_en",
 
   /**
    *    WATCHERS
@@ -26,7 +26,7 @@ module.exports = {
    *      watch:                    true
    *  or
    *      watch:{
-   *        controller:             true,
+   *        controllers:             true,
    *        config:                 true,        // only routing and services
    *        views:                  true,
    *        translations:           true,
@@ -35,8 +35,9 @@ module.exports = {
    *
    */
   watch: {
-    views:                  false,
-    webpack:                true
+    controllers: true,
+    views: false,
+    webpack: false
   },
 
   /**

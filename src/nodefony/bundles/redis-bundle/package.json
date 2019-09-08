@@ -13,7 +13,7 @@
   "repository": {},
   "dependencies": {
     "redis": "^2.8.0",
-    "shortid": "^2.2.14"
+    "shortid": "^2.2.15"
   },
   "devDependencies": {
     "node-pre-gyp": "^0.13.0"

@@ -1,20 +1,20 @@
 /**
-*
-*
-*	nodefony-starter CONFIG BUNDLE  monitor-bundle
-*
-* ===============================================================================
-*
-*  Copyright © 2019/2019        admin | admin@nodefony.com
-*
-* ===============================================================================
-*
-*        GENERATE BY nodefony-starter BUILDER
-*/
+ *
+ *
+ *	nodefony-starter CONFIG BUNDLE  monitor-bundle
+ *
+ * ===============================================================================
+ *
+ *  Copyright © 2019/2019        admin | admin@nodefony.com
+ *
+ * ===============================================================================
+ *
+ *        GENERATE BY nodefony-starter BUILDER
+ */
 
 module.exports = {
-  type        : "vue",
-  locale      : "en_en",
+  type: "vue",
+  locale: "en_en",
 
   /**
    *    WATCHERS
@@ -26,7 +26,7 @@ module.exports = {
    *      watch:                    true
    *  or
    *      watch:{
-   *        controller:             true,
+   *        controllers:             true,
    *        config:                 true,        // only routing and services
    *        views:                  true,
    *        translations:           true,
@@ -35,8 +35,9 @@ module.exports = {
    *
    */
   watch: {
-    views:                  false,
-    webpack:                true
+    controllers: true,
+    views: true,
+    webpack: true
   },
 
   /**

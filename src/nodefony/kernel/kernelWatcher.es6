@@ -129,7 +129,14 @@ module.exports = nodefony.register("kernelWatcher", function () {
               this.logger("RECOMPILE Template : '" + this.bundle.name + "Bundle:" + ele.basename + ":" + ele.name + "'", "INFO", event);
             }
             if (this.sockjs) {
-              this.sockjs.sendWatcher("change", file);
+              switch(this.bundle.settings.type){
+                case "vue" :
+                case "react" :
+                break;
+                default :
+                  this.sockjs.sendWatcher("change", file);
+              }
+
             }
           } catch (e) {
             this.logger(e, "ERROR", event);

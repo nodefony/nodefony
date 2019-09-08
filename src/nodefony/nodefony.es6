@@ -22,10 +22,10 @@ module.exports = class Nodefony {
     this.bundles = {};
     this.builders = {
       bundles: null,
-      project:null,
-      react:null,
-      vue:null,
-      sandbox:null
+      project: null,
+      react: null,
+      vue: null,
+      sandbox: null
     };
     this.cliStart = null;
     this.templatings = {};

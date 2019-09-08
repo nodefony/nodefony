@@ -108,10 +108,9 @@ module.exports = class cliStart extends nodefony.cliKernel {
     this.interactive = this.commander.interactive || false;
     if (!this.cmd && !process.argv.slice(2).length && cmd) {
       this.buildMenu();
-      this.interactive = true ;
+      this.interactive = true;
       return this.showMenu();
     } else {
-
       if (!this.cmd && this.interactive) {
         this.buildMenu();
         return this.showMenu();
@@ -178,120 +177,120 @@ module.exports = class cliStart extends nodefony.cliKernel {
   }
 
   start(command, args, rawCommand) {
-    if(this.interactive === undefined){
+    if (this.interactive === undefined) {
       this.interactive = this.commander.interactive || false;
     }
     this.started = true;
     switch (command) {
-      case "showmenu":
-        return this.reloadPromt();
-      case "create":
-        try {
-          return this.createProject(command, args, this.interactive);
-        } catch (e) {
-          throw e;
-        }
-        break;
-      case "rebuild":
-        try {
-          if (nodefony.isTrunk) {
-            return this.rebuild()
-              .then((cwd) => {
-                this.parseNodefonyCommand("nodefony:rebuild", [cwd]);
-                return nodefony.start(command, args, this);
-              })
-              .then(() => {
-                return this.installProject()
-                  .then(() => {
-                    return this.buildProject()
-                      .then((cwd) => {
-                        this.parseNodefonyCommand("nodefony:build", [cwd]);
-                        return nodefony.start(command, args, this);
-                      });
-                  });
-              });
-          }
-          this.showHelp();
-          this.logger("No nodefony trunk detected !", "WARNING");
-          break;
-        } catch (e) {
-          throw e;
-        }
-        break;
-      case "build":
-        try {
-          if (nodefony.isTrunk) {
-            return this.installProject()
-              .then(() => {
-                return this.buildProject()
-                  .then((cwd) => {
-                    this.parseNodefonyCommand("nodefony:build", [cwd]);
-                    return nodefony.start(command, args, this);
-                  });
-              });
-          }
-          this.showHelp();
-          this.logger("No nodefony trunk detected !", "WARNING");
-          break;
-        } catch (e) {
-          throw e;
-        }
-        break;
-      case "install":
+    case "showmenu":
+      return this.reloadPromt();
+    case "create":
+      try {
+        return this.createProject(command, args, this.interactive);
+      } catch (e) {
+        throw e;
+      }
+      break;
+    case "rebuild":
+      try {
         if (nodefony.isTrunk) {
-          return this.installProject()
-            .then((...args) => {
-              return nodefony.start(command, args, this)
-                .then((...args) => {
-                  return args;
-                })
-                .catch((e) => {
-                  this.logger(e, "ERROR");
+          return this.rebuild()
+            .then((cwd) => {
+              this.parseNodefonyCommand("nodefony:rebuild", [cwd]);
+              return nodefony.start(command, args, this);
+            })
+            .then(() => {
+              return this.installProject()
+                .then(() => {
+                  return this.buildProject()
+                    .then((cwd) => {
+                      this.parseNodefonyCommand("nodefony:build", [cwd]);
+                      return nodefony.start(command, args, this);
+                    });
                 });
             });
         }
         this.showHelp();
         this.logger("No nodefony trunk detected !", "WARNING");
         break;
-      case "version":
-        try {
-          return process.stdout.write(nodefony.version);
-        } catch (e) {
-          throw e;
-        }
-        break;
-      case "help":
-        if (!nodefony.isTrunk) {
-          return this.showHelp();
-        } else {
-          return nodefony.start(command, args, this);
-        }
-        break;
-      case "certificates":
-        return this.generateCertificates();
-      default:
+      } catch (e) {
+        throw e;
+      }
+      break;
+    case "build":
+      try {
         if (nodefony.isTrunk) {
-          if (this.kernel) {
-            return this.matchCommand();
-          }
-          return nodefony.start(command, args, this);
-        } else {
-          try {
-            return nodefony.start(rawCommand, args, this);
-          } catch (e) {}
-          try {
-            if (rawCommand) {
-              return require(path.resolve(rawCommand));
-            } else {
-              this.showHelp();
-            }
-          } catch (e) {
-            this.logger("Nodefony Command Not Found ", "ERROR");
-            this.logger(e, "ERROR");
-            this.showHelp();
-            this.terminate(-1);
-          }
+          return this.installProject()
+            .then(() => {
+              return this.buildProject()
+                .then((cwd) => {
+                  this.parseNodefonyCommand("nodefony:build", [cwd]);
+                  return nodefony.start(command, args, this);
+                });
+            });
         }
+        this.showHelp();
+        this.logger("No nodefony trunk detected !", "WARNING");
+        break;
+      } catch (e) {
+        throw e;
+      }
+      break;
+    case "install":
+      if (nodefony.isTrunk) {
+        return this.installProject()
+          .then((...args) => {
+            return nodefony.start(command, args, this)
+              .then((...args) => {
+                return args;
+              })
+              .catch((e) => {
+                this.logger(e, "ERROR");
+              });
+          });
+      }
+      this.showHelp();
+      this.logger("No nodefony trunk detected !", "WARNING");
+      break;
+    case "version":
+      try {
+        return process.stdout.write(nodefony.version);
+      } catch (e) {
+        throw e;
+      }
+      break;
+    case "help":
+      if (!nodefony.isTrunk) {
+        return this.showHelp();
+      } else {
+        return nodefony.start(command, args, this);
+      }
+      break;
+    case "certificates":
+      return this.generateCertificates();
+    default:
+      if (nodefony.isTrunk) {
+        if (this.kernel) {
+          return this.matchCommand();
+        }
+        return nodefony.start(command, args, this);
+      } else {
+        try {
+          return nodefony.start(rawCommand, args, this);
+        } catch (e) {}
+        try {
+          if (rawCommand) {
+            return require(path.resolve(rawCommand));
+          } else {
+            this.showHelp();
+          }
+        } catch (e) {
+          this.logger("Nodefony Command Not Found ", "ERROR");
+          this.logger(e, "ERROR");
+          this.showHelp();
+          this.terminate(-1);
+        }
+      }
     }
   }
 
@@ -349,39 +348,39 @@ module.exports = class cliStart extends nodefony.cliKernel {
         choices: choices,
         filter: (val) => {
           switch (val) {
-            case "Quit":
-              return "exit";
-            case "Help":
-              return "help";
-            case `${this.startString} Development`:
-              return "development";
-            case `${this.startString} Production`:
-              return "production";
-            case `${this.startString} Pre-Production`:
-              return "pre-production";
-            case `Create Nodefony Project`:
-              return "project";
-            case `${this.generateString}`:
-              return "generate";
-            case `Run Test`:
-              return "test";
-            case `Install`:
-            case `Install Framework`:
-            case `Install Project`:
-              return "install";
-            case `Build`:
-            case `Build Project`:
-              return "build";
-            case `Rebuild Project`:
-              return "rebuild";
-            case `PM2 Tools`:
-              return "pm2";
-            case `Tools`:
-              return "tools";
-            default:
-              console.log("\n");
-              this.logger(`command not found : ${val}`, "INFO");
-              this.terminate(1);
+          case "Quit":
+            return "exit";
+          case "Help":
+            return "help";
+          case `${this.startString} Development`:
+            return "development";
+          case `${this.startString} Production`:
+            return "production";
+          case `${this.startString} Pre-Production`:
+            return "pre-production";
+          case `Create Nodefony Project`:
+            return "project";
+          case `${this.generateString}`:
+            return "generate";
+          case `Run Test`:
+            return "test";
+          case `Install`:
+          case `Install Framework`:
+          case `Install Project`:
+            return "install";
+          case `Build`:
+          case `Build Project`:
+            return "build";
+          case `Rebuild Project`:
+            return "rebuild";
+          case `PM2 Tools`:
+            return "pm2";
+          case `Tools`:
+            return "tools";
+          default:
+            console.log("\n");
+            this.logger(`command not found : ${val}`, "INFO");
+            this.terminate(1);
           }
         }
       }])
@@ -395,33 +394,33 @@ module.exports = class cliStart extends nodefony.cliKernel {
       .then(() => {
         this.reloadMenu = reload || this.reloadMenu;
         switch (this.response.command) {
-          case "project":
-            return this.createProject(null, null, true);
-          case "rebuild":
-            return this.setCommand("rebuild");
-          case "build":
-            return this.setCommand("build");
-          case "install":
-            return this.setCommand("install");
-          case "generate":
-            return this.generateCli(true);
-          case "pm2":
-            return this.pm2Cli(true);
-          case "tools":
-            return this.toolsCli(true);
-          case "development":
-            return this.setCommand("development");
-          case "production":
-            return this.setCommand("production");
-          case "pre-production":
-            return this.setCommand("preprod");
-          case "test":
-            return this.setCommand("unitest:launch:all");
-          case "exit":
-            this.logger("QUIT");
-            return this.terminate(0);
-          default:
-            return this.setCommand("", "-h");
+        case "project":
+          return this.createProject(null, null, true);
+        case "rebuild":
+          return this.setCommand("rebuild");
+        case "build":
+          return this.setCommand("build");
+        case "install":
+          return this.setCommand("install");
+        case "generate":
+          return this.generateCli(true);
+        case "pm2":
+          return this.pm2Cli(true);
+        case "tools":
+          return this.toolsCli(true);
+        case "development":
+          return this.setCommand("development");
+        case "production":
+          return this.setCommand("production");
+        case "pre-production":
+          return this.setCommand("preprod");
+        case "test":
+          return this.setCommand("unitest:launch:all");
+        case "exit":
+          this.logger("QUIT");
+          return this.terminate(0);
+        default:
+          return this.setCommand("", "-h");
         }
       })
       .catch((e) => {
@@ -459,7 +458,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
     try {
       if (command === "create") {
         if (!args[0]) {
-          args[0] = "nodefony-starter" ;
+          args[0] = "nodefony-starter";
           //let error = new Error("Project name empty Unauthorised Please enter a valid project name ");
           //this.logger(error, "ERROR");
           //this.terminate(1);
