@@ -94,6 +94,8 @@ module.exports = nodefony.register("kernel", function () {
   const defaultOptions = {
     nbListeners: 60
   };
+
+  const colorLogEvent = clc.blue(`EVENT KERNEL :`);
   /**
    *  KERKEL class
    *  The class is a **`KERNEL NODEFONY`** .
@@ -132,6 +134,7 @@ module.exports = nodefony.register("kernel", function () {
       this.console = this.isConsole();
       this.booted = false;
       this.ready = false;
+      this.postReady = false ;
       this.started = false;
       this.preRegistered = false;
       this.isCore = nodefony.isCore;
@@ -180,6 +183,7 @@ module.exports = nodefony.register("kernel", function () {
         if (process.getuid && process.getuid() === 0) {
           //this.drop_root();
         }
+        this.postReady = true ;
       });
     }
 
@@ -923,7 +927,11 @@ module.exports = nodefony.register("kernel", function () {
     }
 
     fire() {
-      this.logger(this.cli.clc.blue(`EVENT KERNEL : ${arguments[0]} `), "DEBUG");
+      if ( this.postReady ){
+        this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
+        return super.fire.apply(this, arguments);
+      }
+      this.logger(`${colorLogEvent} ${arguments[0]}`, "INFO");
       return super.fire.apply(this, arguments);
     }
 

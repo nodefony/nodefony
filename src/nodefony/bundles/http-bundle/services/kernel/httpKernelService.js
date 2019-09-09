@@ -55,6 +55,7 @@ module.exports = class httpKernel extends nodefony.Service {
 
     this.once("onReady", () => {
       this.debugView = this.getTemplate("monitoringBundle::debugBar.html.twig");
+      //console.log(this.debugView)
     });
 
     this.on("onClientError", (e, socket) => {

@@ -535,14 +535,14 @@ module.exports = nodefony.register("Bundle", function() {
       }
     }
 
-    boot() {
-      return new Promise((resolve, reject) => {
+    async boot() {
+      return new Promise(async (resolve, reject) => {
         try {
           this.fire("onBoot", this);
           // Register Controller
           this.registerControllers(this.controllerFiles);
           // Register Views
-          this.registerViews();
+          await this.registerViews();
           // Register internationalisation
           if (this.translation) {
             this.locale = this.translation.defaultLocal;
@@ -642,7 +642,6 @@ module.exports = nodefony.register("Bundle", function() {
         throw e;
       }
     }
-
 
     findControllerFiles(result) {
       if (!result) {
@@ -744,19 +743,25 @@ module.exports = nodefony.register("Bundle", function() {
     }
 
     async compileTemplate(file, basename, name) {
-      if (this.views[basename] && this.views[basename][name] && this.views[basename][name].template){
-        this.views[basename][name].template = null ;
-        delete this.views[basename][name].template ;
-      }
-      const template = await this.serviceTemplate.compile(file)
-      .catch(()=>{
-        this.logger(error, "ERROR");
+      return new Promise(async (resolve, reject) => {
+        if (this.views[basename] && this.views[basename][name] && this.views[basename][name].template) {
+          this.views[basename][name].template = null;
+          delete this.views[basename][name].template;
+        }
+        let template = null;
+        try {
+          template = await this.serviceTemplate.compile(file);
+
+        } catch (e) {
+          return reject(e);
+        }
+        if (template) {
+          this.views[basename][name].template = template;
+          return resolve(template);
+        }
+        return resolve(null);
       });
-      if( template){
-        this.views[basename][name].template = template;
-        return template ;
-      }
-      return null ;
+
     }
 
     setView(file) {
@@ -796,62 +801,71 @@ module.exports = nodefony.register("Bundle", function() {
       return null;
     }
 
-    recompileTemplate(file, force) {
-      let bundle = this;
-      // OVERRIDE VIEWS BUNDLE in APP DIRECTORY
-      if (this.name === "app") {
-        let pattern = null;
-        if (this.kernel.platform === "win32") {
-          let prefix = path.resolve(this.viewsPath);
-          prefix = prefix.replace(/\\/g, "\\\\");
-          pattern = prefix + "\\\\(\\w+)-bundle\\\\views\\\\(.+\\.twig)";
-        } else {
-          pattern = path.resolve(this.viewsPath, "(\\w+)-bundle", "views", "(.+\\.twig)");
-        }
-        let reg = new RegExp("^" + pattern + "$");
-        let res = reg.exec(file.path);
-        if (res && res[1]) {
-          bundle = this.kernel.getBundle(res[1]);
-          this.logger(`\x1b[32m APP OVERRIDING VIEWS\x1b[0m  Bundle : ${bundle.name}  File : ${file.name}`, "DEBUG");
-        }
-      }
-      try {
-        let ele = bundle.setView(file);
-        if (ele) {
-          if (force) {
-            bundle.compileTemplate(ele.file, ele.basename, ele.name);
+    async recompileTemplate(file, force) {
+      return new Promise(async (resolve, reject) => {
+        let bundle = this;
+        // OVERRIDE VIEWS BUNDLE in APP DIRECTORY
+        if (this.name === "app") {
+          let pattern = null;
+          if (this.kernel.platform === "win32") {
+            let prefix = path.resolve(this.viewsPath);
+            prefix = prefix.replace(/\\/g, "\\\\");
+            pattern = prefix + "\\\\(\\w+)-bundle\\\\views\\\\(.+\\.twig)";
           } else {
-            if (this.kernel.type !== "CONSOLE") {
-              bundle.compileTemplate(ele.file, ele.basename, ele.name);
-            }
+            pattern = path.resolve(this.viewsPath, "(\\w+)-bundle", "views", "(.+\\.twig)");
+          }
+          let reg = new RegExp("^" + pattern + "$");
+          let res = reg.exec(file.path);
+          if (res && res[1]) {
+            bundle = this.kernel.getBundle(res[1]);
+            this.logger(`\x1b[32m APP OVERRIDING VIEWS\x1b[0m  Bundle : ${bundle.name}  File : ${file.name}`, "DEBUG");
           }
         }
-        return ele;
-      } catch (e) {
-        throw e;
-      }
+        try {
+          let ele = bundle.setView(file);
+          if (ele) {
+            if (force) {
+              await bundle.compileTemplate(ele.file, ele.basename, ele.name);
+            } else {
+              if (this.kernel.type !== "CONSOLE") {
+                await bundle.compileTemplate(ele.file, ele.basename, ele.name);
+              }
+            }
+          } else {
+            this.log(` DROP VIEW TEMPLATE : ${file.path}`, "DEBUG");
+          }
+          return resolve(ele);
+        } catch (e) {
+          return reject(e);
+        }
+      });
+
     }
 
-    registerViews(result) {
-      let views = null;
-      if (result) {
-        views = this.findViewFiles(result);
-      } else {
-        views = this.viewFiles;
-      }
-      return views.getFiles().forEach((file) => {
-        try {
-          let ele = this.recompileTemplate(file, true);
-          if (ele) {
-            if (ele.basename === ".") {
-              this.logger("Register Template   : '" + this.name + "Bundle:" + "" + ":" + ele.name + "'", "DEBUG");
-            } else {
-              this.logger("Register Template   : '" + this.name + "Bundle:" + ele.basename + ":" + ele.name + "'", "DEBUG");
-            }
-          }
-        } catch (e) {
-          throw e;
+    async registerViews(result) {
+      return new Promise(async (resolve, reject) => {
+        let views = null;
+        if (result) {
+          views = this.findViewFiles(result);
+        } else {
+          views = this.viewFiles;
         }
+        views.getFiles().forEach(async (file) => {
+          try {
+            let ele = await this.recompileTemplate(file, true);
+            if (ele) {
+              if (ele.basename === ".") {
+                this.logger("Register Template   : '" + this.name + "Bundle:" + "" + ":" + ele.name + "'", "DEBUG");
+              } else {
+                this.logger("Register Template   : '" + this.name + "Bundle:" + ele.basename + ":" + ele.name + "'", "DEBUG");
+              }
+            }
+          } catch (e) {
+            return reject(e);
+            //throw e;
+          }
+        });
+        return resolve(views);
       });
     }
 

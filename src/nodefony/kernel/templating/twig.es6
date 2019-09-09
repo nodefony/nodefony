@@ -86,7 +86,7 @@ module.exports = nodefony.registerTemplate("twig", function () {
       return new Promise((resolve, reject) => {
         this.engine.twig({
           path: file.path,
-          async: true,
+          async: false,
           base: this.rootDir,
           //precompiled:false,
           name: file.name,
