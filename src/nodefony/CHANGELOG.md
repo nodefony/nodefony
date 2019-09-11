@@ -1,5 +1,25 @@
 # Changelog
 
+## v5.0.5 (11/09/2019)
+- [nodefony release 5.0.5](https://github.com/nodefony/nodefony-core/commit/9be004a0e544e6ae3cd582584d9724b208ddbb0d)
+- [clean handle http promise](https://github.com/nodefony/nodefony-core/commit/26b2c8cf01403b29b64233fe2f1b991999edc5f1)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/818530795381230e96386330d799df19a3e945ae)
+- [async await migration](https://github.com/nodefony/nodefony-core/commit/10e3e0d36391990e68df1071b9b192a675c38624)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/63a172834c9640f88465fd170615c49f0f7495b3)
+- [add monitor vue](https://github.com/nodefony/nodefony-core/commit/f961f9eefdee9751bbda81d730ef8d2c245e58be)
+- [debug vue bundle](https://github.com/nodefony/nodefony-core/commit/f5539855031817abc2ee26dff876888f9d32dc4b)
+- [debug hmr](https://github.com/nodefony/nodefony-core/commit/fed06fb5b97e23f715fe2ecfe235f03d67fa0b12)
+- [debug react demo creative](https://github.com/nodefony/nodefony-core/commit/03eb0a75c9d8d89354a9cba8c574b11aa0777855)
+- [debug](https://github.com/nodefony/nodefony-core/commit/875b752617cfc2fd11f2c2267355b4087a2b2405)
+- [add bundle test creative](https://github.com/nodefony/nodefony-core/commit/d90814cce78be259be063b08cead708f197553be)
+- [clean repo](https://github.com/nodefony/nodefony-core/commit/739b0cabbf3304b310fdb5f863ee05bab789c50c)
+- [add test front bundle](https://github.com/nodefony/nodefony-core/commit/57f3f16f1fb1878707a7906e36e49e787a1d759a)
+- [create bundle blackdashboardreact-bundle](https://github.com/nodefony/nodefony-core/commit/ba58cc3be4c984d89cba13a53f9a036b144b0b74)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/307d6c6d745aaa791c657bb2feaa29120714252d)
+- [update builder](https://github.com/nodefony/nodefony-core/commit/e79dcf8777198ce8451e54e1b203ff6333988962)
+
+---
+
 ## v5.0.4 (26/08/2019)
 - [nodefony release 5.0.4](https://github.com/nodefony/nodefony-core/commit/ceec78b01a9b749329b814040d3ecf1c3fb3a00f)
 - [upgrade deps](https://github.com/nodefony/nodefony-core/commit/3b4628e09a5aa36d6cdaa9bd8b3a6c110e90386e)
