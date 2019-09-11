@@ -115,60 +115,58 @@ nodefony.register.call(nodefony.context, "http", function() {
     }
 
     handle(data) {
-      try {
-        if (this.isRedirect) {
-          return this.send();
-        }
-        this.setParameters("query.get", this.request.queryGet);
-        if (this.request.queryPost) {
-          this.setParameters("query.post", this.request.queryPost);
-        }
-        if (this.request.queryFile) {
-          this.setParameters("query.files", this.request.queryFile);
-        }
-        this.setParameters("query.request", this.request.query);
-        this.locale = this.translation.handle();
-        if (!this.resolver) {
-          this.resolver = this.router.resolve(this);
-        }
-        //WARNING EVENT KERNEL
-        this.fire("onRequest", this, this.resolver);
-        this.kernel.fire("onRequest", this, this.resolver);
-        if (this.resolver.resolve) {
-          let ret = this.resolver.callController(data);
-          // timeout response after  callController (to change timeout in action )
-          if (this.timeoutid !== null) {
-            this.timeoutExpired = false;
-            clearTimeout(this.timeoutid);
+      return new Promise((resolve, reject) => {
+        try {
+          if (this.isRedirect) {
+            return resolve(this.send());
           }
-          if (this.response.response) {
-            if (this.response.stream) {
-              this.timeoutid = this.response.stream.setTimeout(this.response.timeout, () => {
-                this.timeoutExpired = true;
-                this.fire("onTimeout", this);
-                /*this.once("onFinish", () => {
-                  this.response.stream.close();
-                });*/
-              });
-            } else {
-              this.timeoutid = this.response.response.setTimeout(this.response.timeout, () => {
-                this.timeoutExpired = true;
-                this.fire("onTimeout", this);
-              });
+          this.setParameters("query.get", this.request.queryGet);
+          if (this.request.queryPost) {
+            this.setParameters("query.post", this.request.queryPost);
+          }
+          if (this.request.queryFile) {
+            this.setParameters("query.files", this.request.queryFile);
+          }
+          this.setParameters("query.request", this.request.query);
+          this.locale = this.translation.handle();
+          if (!this.resolver) {
+            this.resolver = this.router.resolve(this);
+          }
+          //WARNING EVENT KERNEL
+          this.fire("onRequest", this, this.resolver);
+          this.kernel.fire("onRequest", this, this.resolver);
+          if (this.resolver.resolve) {
+            let ret = this.resolver.callController(data);
+            // timeout response after  callController (to change timeout in action )
+            if (this.timeoutid !== null) {
+              this.timeoutExpired = false;
+              clearTimeout(this.timeoutid);
             }
+            if (this.response.response) {
+              if (this.response.stream) {
+                this.timeoutid = this.response.stream.setTimeout(this.response.timeout, () => {
+                  this.timeoutExpired = true;
+                  this.fire("onTimeout", this);
+                });
+              } else {
+                this.timeoutid = this.response.response.setTimeout(this.response.timeout, () => {
+                  this.timeoutExpired = true;
+                  this.fire("onTimeout", this);
+                });
+              }
+            }
+            return resolve(ret);
           }
-          return ret;
+          let error = new Error("");
+          error.code = 404;
+          return reject(error);
+        } catch (e) {
+          return reject(e);
         }
-        let error = new Error("");
-        error.code = 404;
-        throw error;
-      } catch (e) {
-        throw e;
-        //this.fire("onError", this.container, e);
-      }
+      });
     }
 
-    clean() {
+          clean() {
       if (this.timeoutid !== null) {
         clearTimeout(this.timeoutid);
       }

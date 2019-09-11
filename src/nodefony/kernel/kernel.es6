@@ -927,11 +927,12 @@ module.exports = nodefony.register("kernel", function () {
     }
 
     fire() {
-      if ( this.postReady ){
-        this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
-        return super.fire.apply(this, arguments);
-      }
-      this.logger(`${colorLogEvent} ${arguments[0]}`, "INFO");
+      this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
+      return super.fire.apply(this, arguments);
+    }
+
+    emit(){
+      this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
       return super.fire.apply(this, arguments);
     }
 

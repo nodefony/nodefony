@@ -77,36 +77,36 @@ module.exports = class httpKernel extends nodefony.Service {
     try {
       let alias = [];
       switch (nodefony.typeOf(this.kernel.domainAlias)) {
-      case "string":
-        alias = this.kernel.domainAlias.split(" ");
-        Array.prototype.unshift.call(alias, "^" + this.kernel.domain + "$");
-        for (let i = 0; i < alias.length; i++) {
-          if (i === 0) {
-            str = alias[i];
-          } else {
-            str += "|" + alias[i];
+        case "string":
+          alias = this.kernel.domainAlias.split(" ");
+          Array.prototype.unshift.call(alias, "^" + this.kernel.domain + "$");
+          for (let i = 0; i < alias.length; i++) {
+            if (i === 0) {
+              str = alias[i];
+            } else {
+              str += "|" + alias[i];
+            }
           }
-        }
-        break;
-      case "object":
-        let first = true;
-        for (let myAlias in this.kernel.domainAlias) {
-          if (first) {
-            first = false;
-            str = this.kernel.domainAlias[myAlias];
-          } else {
-            str += "|" + this.kernel.domainAlias[myAlias];
+          break;
+        case "object":
+          let first = true;
+          for (let myAlias in this.kernel.domainAlias) {
+            if (first) {
+              first = false;
+              str = this.kernel.domainAlias[myAlias];
+            } else {
+              str += "|" + this.kernel.domainAlias[myAlias];
+            }
           }
-        }
-        break;
-      case "array":
-        str = "^" + this.kernel.domain + "$";
-        for (let i = 0; i < this.kernel.domainAlias.length; i++) {
-          str += "|" + this.kernel.domainAlias[i];
-        }
-        break;
-      default:
-        throw new Error("Config file bad format for domain alias must be a string ");
+          break;
+        case "array":
+          str = "^" + this.kernel.domain + "$";
+          for (let i = 0; i < this.kernel.domainAlias.length; i++) {
+            str += "|" + this.kernel.domainAlias[i];
+          }
+          break;
+        default:
+          throw new Error("Config file bad format for domain alias must be a string ");
       }
       if (str) {
         this.regAlias = new RegExp(str);
@@ -252,30 +252,30 @@ module.exports = class httpKernel extends nodefony.Service {
       }
     }
     switch (typeof this.cdn) {
-    case "object":
-      if (!this.cdn) {
+      case "object":
+        if (!this.cdn) {
+          return "";
+        }
+        if (this.cdn.global) {
+          return this.cdn.global;
+        }
+        if (!type) {
+          let txt = "CDN ERROR getCDN bad argument type  ";
+          this.logger(txt, "ERROR");
+          throw new Error(txt);
+        }
+        if (type in this.cdn) {
+          if (this.cdn[type][wish]) {
+            return this.cdn[type][wish];
+          }
+        }
         return "";
-      }
-      if (this.cdn.global) {
-        return this.cdn.global;
-      }
-      if (!type) {
-        let txt = "CDN ERROR getCDN bad argument type  ";
+      case "string":
+        return this.cdn || "";
+      default:
+        let txt = "CDN CONFIG ERROR ";
         this.logger(txt, "ERROR");
         throw new Error(txt);
-      }
-      if (type in this.cdn) {
-        if (this.cdn[type][wish]) {
-          return this.cdn[type][wish];
-        }
-      }
-      return "";
-    case "string":
-      return this.cdn || "";
-    default:
-      let txt = "CDN CONFIG ERROR ";
-      this.logger(txt, "ERROR");
-      throw new Error(txt);
     }
   }
 
@@ -287,25 +287,25 @@ module.exports = class httpKernel extends nodefony.Service {
       next = 401;
     }
     switch (next) {
-    case 200:
-      return next;
-    default:
-      this.logger("\x1b[31m  DOMAIN Unauthorized \x1b[0mREQUEST DOMAIN : " + context.domain, "ERROR");
-      let error = new Error("Domain : " + context.domain + " Unauthorized ");
-      error.code = next;
-      throw error;
-      /*switch ( context.type ){
-          case "HTTP":
-          case "HTTPS":
-            this.logger("\x1b[31m  DOMAIN Unauthorized \x1b[0mREQUEST DOMAIN : " + context.domain ,"ERROR");
-            let error = new Error("Domain : "+context.domain+" Unauthorized ");
-            error.code = next ;
-            throw error ;
-          case "WEBSOCKET":
-          case "WEBSOCKET SECURE":
-            context.close(3001, "DOMAIN Unauthorized "+ context.domain );
-          break;
-      }*/
+      case 200:
+        return next;
+      default:
+        this.logger("\x1b[31m  DOMAIN Unauthorized \x1b[0mREQUEST DOMAIN : " + context.domain, "ERROR");
+        let error = new Error("Domain : " + context.domain + " Unauthorized ");
+        error.code = next;
+        throw error;
+        /*switch ( context.type ){
+            case "HTTP":
+            case "HTTPS":
+              this.logger("\x1b[31m  DOMAIN Unauthorized \x1b[0mREQUEST DOMAIN : " + context.domain ,"ERROR");
+              let error = new Error("Domain : "+context.domain+" Unauthorized ");
+              error.code = next ;
+              throw error ;
+            case "WEBSOCKET":
+            case "WEBSOCKET SECURE":
+              context.close(3001, "DOMAIN Unauthorized "+ context.domain );
+            break;
+        }*/
     }
     return next;
   }
@@ -316,16 +316,16 @@ module.exports = class httpKernel extends nodefony.Service {
     let result = null;
     try {
       switch (true) {
-      case (error instanceof nodefony.securityError):
-      case (error instanceof nodefony.httpError):
-        httpError = error;
-        break;
-      default:
-        if (context.response && context.response.statusCode === 200) {
-          httpError = new nodefony.httpError(error, 500, container);
-        } else {
-          httpError = new nodefony.httpError(error, null, container);
-        }
+        case (error instanceof nodefony.securityError):
+        case (error instanceof nodefony.httpError):
+          httpError = error;
+          break;
+        default:
+          if (context.response && context.response.statusCode === 200) {
+            httpError = new nodefony.httpError(error, 500, container);
+          } else {
+            httpError = new nodefony.httpError(error, null, container);
+          }
       }
       if (!httpError.context) {
         httpError.context = context;
@@ -379,9 +379,12 @@ module.exports = class httpKernel extends nodefony.Service {
     if (this.kernel.settings.system.servers.statics || this.kernel.settings.system.statics) {
       return this.serverStatic.handle(request, response)
         .then((res) => {
-          if ( res ){
+          if (res) {
             this.fire("onServerRequest", request, response, type);
-            return this.handle(request, response, type);
+            return this.handle(request, response, type)
+            .catch(e => {
+              this.logger(e, "ERROR");
+            });
           }
           throw new Error("Bad request");
         })
@@ -402,13 +405,13 @@ module.exports = class httpKernel extends nodefony.Service {
     let container = this.container.enterScope("request");
     //if ( domain ) { domain.container = container ; }
     switch (type) {
-    case "HTTP":
-    case "HTTPS":
-    case "HTTP2":
-      return this.handleHttp(container, request, response, type);
-    case "WEBSOCKET":
-    case "WEBSOCKET SECURE":
-      return this.handleWebsocket(container, request, type);
+      case "HTTP":
+      case "HTTPS":
+      case "HTTP2":
+        return this.handleHttp(container, request, response, type);
+      case "WEBSOCKET":
+      case "WEBSOCKET SECURE":
+        return this.handleWebsocket(container, request, type);
     }
   }
 
@@ -424,10 +427,10 @@ module.exports = class httpKernel extends nodefony.Service {
     context.once("onError", this.onError.bind(this));
     //response events
     context.response.response.once("finish", () => {
-      if (context.finished) {
+      if (!context) {
         return;
       }
-      if (!context) {
+      if (context.finished) {
         return;
       }
       context.fire("onFinish", context);
@@ -491,22 +494,15 @@ module.exports = class httpKernel extends nodefony.Service {
     });
   }
 
-  handleHttp(container, request, response, type) {
-    let context = null;
-    try {
-      context = this.createHttpContext(container, request, response, type);
-      this.logger(`FROM : ${context.remoteAddress} ORIGIN : ${context.originUrl.host} URL : ${context.url}`,
-        "INFO",
-        (context.isAjax ? `${context.type} AJAX REQUEST ${context.method}` : `${context.type} REQUEST ${context.method}`));
-
-      // DOMAIN VALID
-      if (this.kernel.domainCheck) {
-        if (this.checkValidDomain(context) !== 200) {
-          return context;
+  requestEnd(context, controller, error = null) {
+    return new Promise((resolve, reject) => {
+      try {
+        if (!context) {
+          if (error) {
+            return reject(error);
+          }
+          return reject(new Error(`Bad context`));
         }
-      }
-    } catch (e) {
-      if (context) {
         if (context.requestEnded) {
           try {
             if (context.translation) {
@@ -514,123 +510,115 @@ module.exports = class httpKernel extends nodefony.Service {
             }
           } catch (err) {
             this.logger(err, "WARNING");
+            if (error) {
+              return reject(error);
+            }
+            return reject(err);
           }
-          context.fire("onError", container, e);
-          return context;
+          if (error) {
+            return reject(error);
+          }
+          return reject(new Error(`Request already Ended`));
         }
-        context.once('onRequestEnd', () => {
-          if (context.sessionAutoStart || context.hasSession()) {
-            return this.sessionService.start(context, context.sessionAutoStart)
-              .then((session) => {
-                try {
-                  if (context.translation) {
-                    context.locale = context.translation.handle();
-                  }
-                  if (!(session instanceof nodefony.Session)) {
-                    this.logger(new Error("SESSION START session storage ERROR"), "WARNING");
-                  }
-                  if (this.firewall) {
-                    this.firewall.getSessionToken(context, session);
-                  }
-                } catch (err) {
-                  this.logger(err, "WARNING");
-                }
-                context.fire("onError", container, e);
-                return context;
-              });
-          } else {
-            context.fire("onError", container, e);
-            return context;
-          }
-        });
-        return e;
-      } else {
-        return Promise.reject(e);
-      }
-    }
-    return this.handleFrontController(context)
-      .then((controller) => {
+
         if (this.settings[context.scheme].headers) {
           context.response.setHeaders(this.settings[context.scheme].headers);
         }
         if (context.secure || context.isControlledAccess) {
-          return this.firewall.handleSecurity(context);
-        }
-        try {
-          context.once('onRequestEnd', () => {
-            try {
-              if (context.sessionAutoStart || context.hasSession()) {
-                return this.sessionService.start(context, context.sessionAutoStart)
-                  .then((session) => {
-                    if (!(session instanceof nodefony.Session)) {
-                      throw new Error("SESSION START session storage ERROR");
-                    }
-                    controller.session = session;
-                    try {
-                      if (this.firewall) {
-                        this.firewall.getSessionToken(context, session);
-                      }
-                    } catch (e) {
-                      context.fire("onError", container, e);
-                      return e;
-                    }
-                    return context.handle();
-                  }).catch((error) => {
-                    context.fire("onError", container, error);
-                    return error;
-                  });
-              } else {
-                return context.handle();
-              }
-            } catch (e) {
-              context.fire("onError", container, e);
-              return e;
-            }
+          return this.firewall.handleSecurity(context)
+          .then(()=>{
+            return resolve(null);
+          })
+          .catch(e =>{
+            return reject(e);
           });
-        } catch (e) {
-          context.fire("onError", container, e);
-          return e;
-        }
-      })
-      .catch((e) => {
-        if (context.requestEnded) {
-          try {
-            if (context.translation) {
-              context.locale = context.translation.handle();
-            }
-          } catch (err) {
-            this.logger(err, "WARNING");
-          }
-          context.fire("onError", container, e);
-          return context;
+          //return resolve(this.firewall.handleSecurity(context));
         }
         context.once('onRequestEnd', () => {
-          if (context.sessionAutoStart || context.hasSession()) {
-            return this.sessionService.start(context, context.sessionAutoStart)
-              .then((session) => {
-                try {
-                  if (context.translation) {
-                    context.locale = context.translation.handle();
-                  }
+          try {
+            if (context.sessionAutoStart || context.hasSession()) {
+              return this.sessionService.start(context, context.sessionAutoStart)
+                .then((session => {
                   if (!(session instanceof nodefony.Session)) {
                     this.logger(new Error("SESSION START session storage ERROR"), "WARNING");
+                  }
+                  if (controller) {
+                    controller.session = session;
                   }
                   if (this.firewall) {
                     this.firewall.getSessionToken(context, session);
                   }
-                } catch (err) {
-                  this.logger(err, "WARNING");
-                }
-                context.fire("onError", container, e);
-                return context;
-              });
-          } else {
-            context.fire("onError", container, e);
-            return context;
+                  if (error) {
+                    return reject(error);
+                  }
+                  return resolve(context);
+                }));
+            } else {
+              if (error) {
+                return reject(error);
+              }
+              return resolve(context);
+            }
+          } catch (e) {
+            return reject(e);
           }
         });
-        return e;
-      });
+      } catch (e) {
+        return reject(e);
+      }
+    });
+  }
+
+  handleHttp(container, request, response, type) {
+    return new Promise((resolve, reject) => {
+      let context = null;
+      try {
+        context = this.createHttpContext(container, request, response, type);
+        this.logger(`FROM : ${context.remoteAddress} ORIGIN : ${context.originUrl.host} URL : ${context.url}`,
+          "INFO",
+          (context.isAjax ? `${context.type} AJAX REQUEST ${context.method}` : `${context.type} REQUEST ${context.method}`));
+        // DOMAIN VALID
+        if (this.kernel.domainCheck) {
+          if (this.checkValidDomain(context) !== 200) {
+            return context;
+          }
+        }
+      } catch (e) {
+        return this.requestEnd(context, null, e)
+          .catch(e => {
+            context.fire("onError", container, e);
+            return reject(e);
+          });
+      }
+      return this.handleFrontController(context)
+        .then((controller) => {
+          return this.requestEnd(context, controller, null)
+            .then((ctx) => {
+              if ( ctx instanceof nodefony.Context){
+                return ctx.handle()
+                  .then(() => {
+                    return resolve(context);
+                  })
+                  .catch(e => {
+                    context.fire("onError", container, e);
+                    return reject(e);
+                  });
+              }
+              return resolve(context);
+            })
+            .catch(e => {
+              context.fire("onError", container, e);
+              return reject(e);
+            });
+        })
+        .catch(e => {
+          return this.requestEnd(context, null, e)
+            .catch(e => {
+              context.fire("onError", container, e);
+              return reject(e);
+            });
+        });
+    });
   }
 
   createWebsocketContext(container, request, type) {
@@ -651,31 +639,6 @@ module.exports = class httpKernel extends nodefony.Service {
       return context.handle();
     });
     return context;
-  }
-
-  onWebsocketRequest(request, type) {
-    if (this.sockjs &&
-      request.resourceURL.path &&
-      request.resourceURL.path.match(this.sockjs.regPrefix)
-    ) {
-      this.logger("websocket drop to sockjs : " + request.resourceURL.path, "DEBUG");
-      //let connection = request.accept(null, request.origin);
-      //connection.drop(1006, 'TCP connection lost before handshake completed.', false);
-      request = null;
-      //connection = null ;
-      return;
-    }
-    if (this.socketio &&
-      request.resourceURL.path &&
-      this.socketio.checkPath(request.resourceURL.path)
-    ) {
-      this.fire("onServerRequest", request, null, type);
-      this.logger("websocket drop to socket.io : " + request.resourceURL.path, "DEBUG");
-      request = null;
-      return;
-    }
-    this.fire("onServerRequest", request, null, type);
-    return this.handle(request, null, type);
   }
 
   handleWebsocket(container, request, type) {
@@ -738,4 +701,31 @@ module.exports = class httpKernel extends nodefony.Service {
         return context;
       });
   }
+
+  onWebsocketRequest(request, type) {
+    if (this.sockjs &&
+      request.resourceURL.path &&
+      request.resourceURL.path.match(this.sockjs.regPrefix)
+    ) {
+      this.logger("websocket drop to sockjs : " + request.resourceURL.path, "DEBUG");
+      //let connection = request.accept(null, request.origin);
+      //connection.drop(1006, 'TCP connection lost before handshake completed.', false);
+      request = null;
+      //connection = null ;
+      return;
+    }
+    if (this.socketio &&
+      request.resourceURL.path &&
+      this.socketio.checkPath(request.resourceURL.path)
+    ) {
+      this.fire("onServerRequest", request, null, type);
+      this.logger("websocket drop to socket.io : " + request.resourceURL.path, "DEBUG");
+      request = null;
+      return;
+    }
+    this.fire("onServerRequest", request, null, type);
+    return this.handle(request, null, type);
+  }
+
+
 };
