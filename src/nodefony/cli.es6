@@ -749,7 +749,8 @@ module.exports = nodefony.register("cli", function () {
           cmd = this.spawn("npm", argv, {
             cwd: cwd,
             env: process.env,
-            stdio: "inherit"
+            stdio: "inherit",
+            NODE_ENV:process.env.NODE_ENV
           }, (code) => {
             if (code === 0) {
               return resolve(code);
@@ -784,7 +785,8 @@ module.exports = nodefony.register("cli", function () {
           cmd = this.spawn("yarn", argv, {
             cwd: cwd,
             env: process.env,
-            stdio: "inherit"
+            stdio: "inherit",
+            NODE_ENV:process.env.NODE_ENV
           }, (code) => {
             if (code === 0) {
               return resolve(code);
@@ -801,6 +803,10 @@ module.exports = nodefony.register("cli", function () {
     spawn(command, args, options, close) {
       let cmd = null;
       try {
+        if (options.NODE_ENV){
+          options.env.NODE_ENV = options.NODE_ENV ;
+          delete options.NODE_ENV ;
+        }
         this.logger(`Spawn : ${command} ${args.join(" ")}`, "INFO");
         cmd = spawn(command, args, options || {});
         //if (this.debug) {
