@@ -31,7 +31,7 @@
     "eslint-plugin-react-hooks": "^2.0.1",
     "file-loader": "^4.2.0",
     "fs-extra": "^8.1.0",
-    "history": "^4.10.0",
+    "history": "^4.10.1",
     "html-webpack-plugin": "4.0.0-beta.5",
     "identity-obj-proxy": "3.0.0",
     "is-wsl": "^2.1.0",
@@ -68,7 +68,7 @@
     "terser-webpack-plugin": "^2.0.1",
     "ts-pnp": "^1.1.4",
     "url-loader": "2.1.0",
-    "webpack": "^4.40.0",
+    "webpack": "^4.40.2",
     "webpack-dev-server": "^3.8.0",
     "webpack-manifest-plugin": "2.0.4",
     "workbox-webpack-plugin": "4.3.1"
