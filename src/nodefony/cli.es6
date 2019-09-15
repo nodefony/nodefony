@@ -93,6 +93,7 @@ module.exports = nodefony.register("cli", function () {
       this.environment = process.env.NODE_ENV || "production";
       process.env.NODE_ENV = this.environment;
       this.unhandledRejections = new Map();
+
       this.setProcessTitle();
       this.pid = "";
       if (this.options.pid) {
@@ -746,7 +747,8 @@ module.exports = nodefony.register("cli", function () {
         try {
           this.debug = this.commander.debug || false;
           this.logger(`Command : npm ${argv.join(' ')} in cwd : ${cwd}`);
-          cmd = this.spawn("npm", argv, {
+          const exe = path.resolve(nodefony.path, "node_modules",".bin","npm");
+          cmd = this.spawn(exe, argv, {
             cwd: cwd,
             env: process.env,
             stdio: "inherit",
@@ -782,7 +784,8 @@ module.exports = nodefony.register("cli", function () {
         try {
           this.logger(`Command : yarn ${argv.join(' ')} in cwd : ${cwd}`);
           this.debug = this.commander.debug || false;
-          cmd = this.spawn("yarn", argv, {
+          const exe = path.resolve(nodefony.path, "node_modules",".bin","npm");
+          cmd = this.spawn(exe, argv, {
             cwd: cwd,
             env: process.env,
             stdio: "inherit",
