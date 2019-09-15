@@ -149,6 +149,6 @@ module.exports = {
    *       npm
    *       yarn
    */
-  packageManager: "yarn"
+  packageManager: "npm"
 
 };
