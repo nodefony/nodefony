@@ -747,12 +747,18 @@ module.exports = nodefony.register("cli", function () {
         try {
           this.debug = this.commander.debug || false;
           this.logger(`Command : npm ${argv.join(' ')} in cwd : ${cwd}`);
-          const exe = path.resolve(nodefony.path, "node_modules",".bin","npm");
+          //const exe = path.resolve(nodefony.path, "node_modules", ".bin", "npm");
+          let exe = null;
+          if (process.platform === "win32") {
+            exe = 'npm.cmd';
+          } else {
+            exe = 'npm';
+          }
           cmd = this.spawn(exe, argv, {
             cwd: cwd,
             env: process.env,
             stdio: "inherit",
-            NODE_ENV:process.env.NODE_ENV
+            NODE_ENV: process.env.NODE_ENV
           }, (code) => {
             if (code === 0) {
               return resolve(code);
@@ -784,12 +790,18 @@ module.exports = nodefony.register("cli", function () {
         try {
           this.logger(`Command : yarn ${argv.join(' ')} in cwd : ${cwd}`);
           this.debug = this.commander.debug || false;
-          const exe = path.resolve(nodefony.path, "node_modules",".bin","npm");
+          //const exe = path.resolve(nodefony.path, "node_modules", ".bin", "npm");
+          let exe = null;
+          if (process.platform === "win32") {
+            exe = 'yarn.cmd';
+          } else {
+            exe = 'yarn';
+          }
           cmd = this.spawn(exe, argv, {
             cwd: cwd,
             env: process.env,
             stdio: "inherit",
-            NODE_ENV:process.env.NODE_ENV
+            NODE_ENV: process.env.NODE_ENV
           }, (code) => {
             if (code === 0) {
               return resolve(code);
@@ -806,9 +818,9 @@ module.exports = nodefony.register("cli", function () {
     spawn(command, args, options, close) {
       let cmd = null;
       try {
-        if (options.NODE_ENV){
-          options.env.NODE_ENV = options.NODE_ENV ;
-          delete options.NODE_ENV ;
+        if (options.NODE_ENV) {
+          options.env.NODE_ENV = options.NODE_ENV;
+          delete options.NODE_ENV;
         }
         this.logger(`Spawn : ${command} ${args.join(" ")}`, "INFO");
         cmd = spawn(command, args, options || {});
