@@ -9,7 +9,7 @@ jobs:
       uses:            actions/checkout@v1
     - name:            Hello world action step
       id:              hello
-      uses:            ./.github/workflow/actions/hello # Uses an action in the root directory
+      uses:            ./tools/actions/hello # Uses an action in the root directory
       with:
         who-to-greet:  'Nodefony'
     # Use the output from the `hello` step
