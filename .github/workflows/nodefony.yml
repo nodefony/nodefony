@@ -1,5 +1,16 @@
 name:                  nodefony-core
 on:                    [push]
+services:
+  nginx:
+    image:             nginx
+    ports:
+      - 8080:80
+    env:
+      NGINX_PORT:      80
+  redis:
+    image:             redis
+    ports:
+      - 6379/tcp
 jobs:
   hello:
     runs-on:           ubuntu-latest
