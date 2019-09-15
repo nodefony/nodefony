@@ -30,7 +30,7 @@
     "@azure/ms-rest-js" "^1.8.13"
     adal-node "^0.1.28"
 
-"@types/node@*":
+"@types/node@*", "@types/node@^12.6.9":
   version "12.7.5"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.7.5.tgz#e19436e7f8e9b4601005d73673b6dc4784ffcc2f"
   integrity sha512-9fq4jZVhPNW8r+UYKnxF1e2HkDWOWKM5bC2/7c9wPV835I0aOrVbS/Hw/pWPk2uKrNXQqg9Z959Kz+IYDd5p3w==
@@ -1618,12 +1618,13 @@ tar@^4:
     safe-buffer "^5.1.2"
     yallist "^3.0.3"
 
-tedious@^6.3.0:
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/tedious/-/tedious-6.3.0.tgz#e25c9f933abf82d2d7617d25dd700dc6381f646b"
-  integrity sha512-ITJ0iIEMQPveuOJwBI/UB8rIYL0OMtFAWXugM3QX7iOuGL9NJboVpMcU9tTVD8nMSAyggqwNbDL8+5dSe9fA/w==
+tedious@^6.4.0:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/tedious/-/tedious-6.4.0.tgz#68be73d80d4dd37f763e239371f19c20751afdbf"
+  integrity sha512-DqoRZdQpINGUhv8k3bkmidpXpy0aVNdmaYFXb+IK7roQI7RUZegUfl37ayY4MmBNH0YnSUaVQs+U9P7itV/dTg==
   dependencies:
     "@azure/ms-rest-nodeauth" "^2.0.2"
+    "@types/node" "^12.6.9"
     big-number "1.0.0"
     bl "^3.0.0"
     depd "^2.0.0"

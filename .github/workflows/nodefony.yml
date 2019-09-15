@@ -1,6 +1,18 @@
 name:                  nodefony-core
 on:                    [push]
 jobs:
+  hello:
+    runs-on:           ubuntu-latest
+    name:              A job to say hello
+    steps:
+    - name:            Hello world action step
+      id:              hello
+      uses:            actions/hello@v1
+      with:
+        who-to-greet:  'Nodefony'
+    # Use the output from the `hello` step
+    - name:            Get the output time
+      run:             echo "The time was ${{ steps.hello.outputs.time }}"
   build-linux:
     runs-on:           ubuntu-latest
     strategy:
@@ -64,6 +76,7 @@ jobs:
       with:
         node-version:  ${{ matrix.node-version }}
     - name:            npm install, build, and test
+      shell:           cmd
       run:             |
         git submodule sync
         git submodule update --init --recursive

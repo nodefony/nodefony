@@ -122,7 +122,7 @@ class AdminNavbar extends React.Component {
               data-toggle="collapse"
               id="navigation"
               type="button"
-              onClick={this.toggleCollapse}
+              onClick={()=>this.toggleCollapse()}
             >
               <span className="navbar-toggler-bar navbar-kebab" />
               <span className="navbar-toggler-bar navbar-kebab" />
@@ -136,7 +136,7 @@ class AdminNavbar extends React.Component {
                     data-target="#searchModal"
                     data-toggle="modal"
                     id="search-button"
-                    onClick={this.toggleModalSearch}
+                    onClick={()=>this.toggleCollapse() }
                   >
                     <i className="tim-icons icon-zoom-split" />
                     <span className="d-lg-none d-md-block">Search</span>
