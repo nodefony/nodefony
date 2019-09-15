@@ -5,9 +5,11 @@ jobs:
     runs-on:           ubuntu-latest
     name:              A job to say hello
     steps:
+    - name:            Checkout
+      uses:            actions/checkout@v1
     - name:            Hello world action step
       id:              hello
-      uses:            actions/hello@v1
+      uses:            ./ # Uses an action in the root directory
       with:
         who-to-greet:  'Nodefony'
     # Use the output from the `hello` step
