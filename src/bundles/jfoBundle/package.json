@@ -12,7 +12,7 @@
     "repository": {},
     "dependencies": {
         "jquery-caret-plugin": "^1.5.3",
-        "telnet-client": "^0.15.4"
+        "telnet-client": "^1.0.5"
     },
     "devDependencies": {},
     "license": "CECILL-B",
