@@ -86,39 +86,39 @@ jobs:
       env:
         CI:           true
 
-build-windows:
-  runs-on:            ${{ matrix.os }}
-  name:               Nodefony Build Windows
-  strategy:
-    matrix:
-      os:             [windows-latest]
-      node-version:   [8.x, 10.x, 12.x]
-  steps:
-  - uses:             actions/checkout@v1
-  - name:             Use Node.js ${{ matrix.node-version }}
-    uses:             actions/setup-node@v1
-    with:
-      node-version:   ${{ matrix.node-version }}
-  # ACTION LOCAL TEST
-  - name:             Hello world action step
-    id:               hello
-    uses:             ./tools/actions/hello # Uses an action in the root directory
-    with:
-      who-to-greet:   'Nodefony Test Action'
-  # Use the output from the `hello` step
-  - name:             Get the output time
-    shell:            bash
-    run:              echo "The time was ${{ steps.hello.outputs.time }}"
-  - name:             npm install, build, and test
-    shell:            bash
-    run:              |
-      git submodule sync
-      git submodule update --init --recursive
-      npm install
-      npm link src/nodefony
-      npm run build --if-present
-      nodefony start
-      sleep 60;
-      npm test
-    env:
-      CI:             true
+  build-windows:
+    runs-on:          ${{ matrix.os }}
+    name:             Nodefony Build Windows
+    strategy:
+      matrix:
+        os:           [windows-latest]
+        node-version: [8.x, 10.x, 12.x]
+    steps:
+    - uses:           actions/checkout@v1
+    - name:           Use Node.js ${{ matrix.node-version }}
+      uses:           actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    # ACTION LOCAL TEST
+    - name:           Hello world action step
+      id:             hello
+      uses:           ./tools/actions/hello # Uses an action in the root directory
+      with:
+        who-to-greet: 'Nodefony Test Action'
+    # Use the output from the `hello` step
+    - name:           Get the output time
+      shell:          bash
+      run:            echo "The time was ${{ steps.hello.outputs.time }}"
+    - name:           npm install, build, and test
+      shell:          bash
+      run:            |
+        git submodule sync
+        git submodule update --init --recursive
+        npm install
+        npm link src/nodefony
+        npm run build --if-present
+        nodefony start
+        sleep 60;
+        npm test
+      env:
+        CI:           true
