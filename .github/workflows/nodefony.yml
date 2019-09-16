@@ -3,7 +3,7 @@ on:                   [push]
 jobs:
   build-linux:
     runs-on:          ${{ matrix.os }}
-    name:             Nodefony Build
+    name:             Nodefony Build Linux
     strategy:
       matrix:
         os:           [ubuntu-latest]
@@ -51,7 +51,7 @@ jobs:
 
   build-other:
     runs-on:          ${{ matrix.os }}
-    name:             Nodefony Build
+    name:             Nodefony Build macOS windows
     strategy:
       matrix:
         os:           [macOS-latest, windows-latest]
