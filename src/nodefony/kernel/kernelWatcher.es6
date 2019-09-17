@@ -110,7 +110,7 @@ module.exports = nodefony.register("kernelWatcher", function () {
     }
 
     listenWatcherView() {
-      this.on('all', (event, Path) => {
+      this.on('all', async (event, Path) => {
         let file = null;
         switch (event) {
         case "addDir":
@@ -122,7 +122,7 @@ module.exports = nodefony.register("kernelWatcher", function () {
           file = this.cwd + "/" + Path;
           try {
             let fileClass = new nodefony.fileClass(file);
-            let ele = this.bundle.recompileTemplate(fileClass);
+            let ele = await this.bundle.recompileTemplate(fileClass);
             if (ele.basename === ".") {
               this.logger("RECOMPILE Template : '" + this.bundle.name + "Bundle:" + "" + ":" + ele.name + "'", "INFO", event);
             } else {
