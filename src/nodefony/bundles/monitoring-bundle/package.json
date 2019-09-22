@@ -24,7 +24,7 @@
     "less-loader": "^5.0.0",
     "mini-css-extract-plugin": "^0.8.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
-    "qs": "^6.8.0",
+    "qs": "^6.9.0",
     "request": "^2.88.0",
     "shortid": "^2.2.15",
     "terser-webpack-plugin": "^2.1.0",
