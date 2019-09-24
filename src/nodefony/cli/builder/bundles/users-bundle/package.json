@@ -13,8 +13,8 @@
   ],
   "repository": {},
   "dependencies": {
-    "@babel/core": "^7.6.0",
-    "@babel/preset-env": "^7.6.0",
+    "@babel/core": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
     "autoprefixer": "^9.6.1",
     "babel-loader": "^8.0.6",
     "bootstrap": "^4.3.1",
