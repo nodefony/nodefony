@@ -5,7 +5,7 @@
   "dependencies": {
     "@babel/core": "^7.6.2",
     "@svgr/webpack": "^4.3.3",
-    "@types/react": "^16.9.2",
+    "@types/react": "^16.9.3",
     "@typescript-eslint/eslint-plugin": "^2.3.1",
     "@typescript-eslint/parser": "^2.3.1",
     "babel-eslint": "^10.0.3",
@@ -57,7 +57,7 @@
     "react-dom": "^16.9.0",
     "react-google-maps": "9.4.5",
     "react-notification-alert": "^0.0.12",
-    "react-router-dom": "^5.0.1",
+    "react-router-dom": "^5.1.0",
     "react-scripts": "^3.1.2",
     "reactstrap": "^8.0.1",
     "resolve": "1.12.0",
@@ -68,7 +68,7 @@
     "terser-webpack-plugin": "^2.1.0",
     "ts-pnp": "^1.1.4",
     "url-loader": "2.1.0",
-    "webpack": "^4.40.2",
+    "webpack": "^4.41.0",
     "webpack-dev-server": "^3.8.1",
     "webpack-manifest-plugin": "^2.1.1",
     "workbox-webpack-plugin": "4.3.1"
