@@ -724,11 +724,11 @@ module.exports = nodefony.register("kernel", function () {
             }
           }
           if (this.isCore) {
-            await this.cli.installPackage(bundleFile, this.environment);
+            await this.cli.installPackage(bundleFile, "development");
           } else {
             let dir = path.basename(bundleFile.dirName);
             if (!this.isBundleCore(dir)) {
-              await this.cli.installPackage(bundleFile, this.environment);
+              await this.cli.installPackage(bundleFile, "development");
             }
           }
         }
@@ -755,7 +755,7 @@ module.exports = nodefony.register("kernel", function () {
               continue;
             }
           }
-          await this.cli.rebuildPackage(bundleFile, this.environment);
+          await this.cli.rebuildPackage(bundleFile, "development");
         }
       } catch (e) {
         this.logger(e, "ERROR");

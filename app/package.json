@@ -36,13 +36,13 @@
     "resolve-url-loader": "^3.1.0",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.0",
-    "terser-webpack-plugin": "^2.1.0",
+    "terser-webpack-plugin": "^2.1.2",
     "webpack": "^4.41.0",
     "webpack-merge": "^4.2.2",
     "workbox-webpack-plugin": "^4.3.1"
   },
   "devDependencies": {
-    "node-gyp": "^5.0.3",
+    "node-gyp": "^5.0.4",
     "node-pre-gyp": "^0.13.0"
   },
   "license": "",
