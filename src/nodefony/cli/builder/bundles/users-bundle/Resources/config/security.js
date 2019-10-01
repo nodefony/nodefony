@@ -55,7 +55,7 @@ module.exports = {
         roles: ["ROLE_ADMIN", "ROLE_USER"]
       }
     }],
-    
+
     firewalls   :   {
       // SECURITY AREA MONITORING  <passport-local>
       nodefony_area: {
@@ -72,6 +72,10 @@ module.exports = {
         },
         logout: "/logout",
         context: null,
+        redirectHttps: true
+      },
+      login_area: {
+        pattern: /^\/login/,
         redirectHttps: true
       }
     }
