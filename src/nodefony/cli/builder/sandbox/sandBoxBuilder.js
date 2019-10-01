@@ -137,6 +137,13 @@ class SandBox extends nodefony.Builder {
               name: ".gitignore",
               type: "file"
             }]
+          },{
+            name: "services",
+            type: "directory",
+            childs: [{
+              name: ".gitignore",
+              type: "file"
+            }]
           },
           this.generateController(),
           this.generateConfig(this.response.addons.webpack),

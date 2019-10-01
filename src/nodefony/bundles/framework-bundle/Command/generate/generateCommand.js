@@ -12,7 +12,7 @@ class generateCommand extends nodefony.Command {
     super("generate", cli, bundle);
     this.setTask("bundle", bundlesTask);
     this.setTask("controller", controllerTask);
-    //this.setTask("service", serviceTask);
+    this.setTask("service", serviceTask);
     //this.setTask("entity", entityTask);
     this.setTask("nginx", nginxTask);
     this.setTask("haproxy", haproxyTask);

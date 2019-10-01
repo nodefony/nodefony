@@ -156,9 +156,12 @@ class serviceTask extends nodefony.Task {
   }
 
   createClassService(response) {
-    this.location = path.resolve(response.bundle.path, "services");
-    response.name = this.serviceName;
     try {
+      this.location = path.resolve(response.bundle.path, "services");
+      if ( ! this.cli.exists(this.location) ){
+        this.cli.mkdir(this.location);
+      }
+      response.name = this.serviceName;
       let Path = path.resolve(this.location, `${this.serviceName}Service.js`);
       if (this.dependencies.length) {
         response.injections = this.dependencies.map((ele) => {
