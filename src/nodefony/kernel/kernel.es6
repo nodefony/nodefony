@@ -212,6 +212,7 @@ module.exports = nodefony.register("kernel", function () {
               // Manage Template engine
               this.initTemplate();
             } catch (e) {
+              console.error(e);
               throw e;
             }
             this.started = true;
@@ -322,7 +323,11 @@ module.exports = nodefony.register("kernel", function () {
 
     readKernelConfig() {
       try {
-        this.settings = this.autoLoader.load(this.configPath, true );
+        if( path.basename(this.configPath) === "config.js"){
+          this.settings = this.autoLoader.load(this.configPath, true );
+        }else{
+          this.settings = nodefony.kernelConfig;
+        }
         this.settings.name = "NODEFONY";
         this.settings.version = this.version;
         this.settings.environment = this.environment;
