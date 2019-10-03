@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/redis-bundle",
-  "version": "5.0.8",
+  "version": "5.0.9",
   "description": "Nodefony Framework Bundle redis ",
   "author": "admin admin@nodefony.com",
   "main": "redisBundle.js",
