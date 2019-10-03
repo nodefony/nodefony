@@ -57,7 +57,7 @@
     "cli-table": "^0.3.1",
     "clui": "^0.3.6",
     "commander": "^3.0.2",
-    "create-react-app": "^3.1.2",
+    "create-react-app": "^3.2.0",
     "inquirer": "^7.0.0",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.15",
