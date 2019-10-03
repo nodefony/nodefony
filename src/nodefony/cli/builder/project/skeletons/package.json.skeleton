@@ -33,14 +33,14 @@
     "node": ">=8"
   },
   "dependencies": {
-    "mongoose": "^5.7.1",
+    "mongoose": "^5.7.3",
     "nodefony": "^{{version}}",
-    "sequelize": "^5.19.1",
+    "sequelize": "^5.19.2",
     "webpack": "^4.41.0",
-    "webpack-dev-server": "^3.8.1"
+    "webpack-dev-server": "^3.8.2"
   },
   "devDependencies": {
-    "node-gyp": "^5.0.2",
+    "node-gyp": "^5.0.4",
     "node-pre-gyp": "^0.13.0"
   },
   "author": "{{authorFullName}} <{{authorMail}}>",
