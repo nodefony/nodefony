@@ -58,7 +58,6 @@ module.exports = nodefony.register("cliKernel", function() {
     let bundles = this.kernel.getBundles();
     let result = null;
     let name = null;
-    let srcpath = null;
     for (let bundle in bundles) {
       try {
         result = bundles[bundle].getPublicDirectory();
@@ -67,9 +66,8 @@ module.exports = nodefony.register("cliKernel", function() {
       }
       if (result && result.length()) {
         name = bundles[bundle].bundleName;
-        srcpath = path.resolve(bundles[bundle].path, "Resources", "public");
         try {
-          let file = new nodefony.fileClass(srcpath);
+          let file = new nodefony.fileClass(bundles[bundle].publicPath);
           this.createSymlink(file.path, path.resolve(this.publicPath, name), (Srcpath, dstpath) => {
             let size = "not Defined";
             let sizeAssets = "not Defined";
