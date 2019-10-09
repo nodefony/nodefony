@@ -32,8 +32,8 @@
     "nodefony": "./bin/nodefony"
   },
   "dependencies": {
-    "@babel/parser": "^7.6.2",
-    "@babel/preset-env": "^7.6.2",
+    "@babel/parser": "^7.6.3",
+    "@babel/preset-env": "^7.6.3",
     "@nodefony/documentation-bundle": "^5.0.9",
     "@nodefony/elastic-bundle": "^5.0.9",
     "@nodefony/framework-bundle": "^5.0.9",
@@ -53,7 +53,7 @@
     "bluebird": "^3.7.0",
     "chai": "^4.2.0",
     "chokidar": "^3.2.1",
-    "cli-color": "^1.4.0",
+    "cli-color": "^2.0.0",
     "cli-table": "^0.3.1",
     "clui": "^0.3.6",
     "commander": "^3.0.2",
@@ -66,7 +66,7 @@
     "mime": "^2.4.4",
     "moment": "^2.24.0",
     "node-emoji": "^1.10.0",
-    "npm": "^6.11.3",
+    "npm": "^6.12.0",
     "pm2": "^3.5.1",
     "promise": "^8.0.3",
     "request": "^2.88.0",
