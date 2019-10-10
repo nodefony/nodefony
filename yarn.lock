@@ -3557,10 +3557,10 @@ mongoose-legacy-pluralize@1.0.2:
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
 
-mongoose@^5.7.3:
-  version "5.7.3"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.7.3.tgz#8bd46b561eaed1a4d4a6cdd81d5b23c2e30da846"
-  integrity sha512-CKCCCAhFnJRtmdmver8Ud9/NZ9m7D2H/xLgmrcL6cb9D4nril/idL8lsWWpBsJI81AOCVsktiZJ4X4vfo2S0fw==
+mongoose@^5.7.4:
+  version "5.7.4"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.7.4.tgz#b6a77a9217dace917ab028fa5dc72f400f2faf4b"
+  integrity sha512-IgqQS5HIaZ8tG2cib6QllfIw2Wc/A0QVOsdKLsSqRolqJFWOjI0se3vsKXLNkbEcuJ1xziW3e/jPhBs65678Hg==
   dependencies:
     bson "~1.1.1"
     kareem "2.3.1"
@@ -5120,10 +5120,10 @@ sequelize-pool@^2.3.0:
   resolved "https://registry.yarnpkg.com/sequelize-pool/-/sequelize-pool-2.3.0.tgz#64f1fe8744228172c474f530604b6133be64993d"
   integrity sha512-Ibz08vnXvkZ8LJTiUOxRcj1Ckdn7qafNZ2t59jYHMX1VIebTAOYefWdRYFt6z6+hy52WGthAHAoLc9hvk3onqA==
 
-sequelize@^5.19.4:
-  version "5.19.4"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.19.4.tgz#2d943c0037eb7eb6f685e2df6dd8db879a380dba"
-  integrity sha512-MFjwpbcpFY2bbwtdeFfPq0roTSuRwZzAkjNX5e2KELHoIw98mviGKoh1FtK7fb8MpOiXxpyQhoOpAnhOTWGqNg==
+sequelize@^5.19.5:
+  version "5.19.5"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.19.5.tgz#87a53437460ee2e527ad9478458e26a87889a2a0"
+  integrity sha512-NdICIFJ0KEjLGrlbnVC3K74tPursZ9yjY5112uCiAxiXK2LXyXP1ePgATEdMJDdeaR5hmP4//qFInTfrnoGe/w==
   dependencies:
     bluebird "^3.5.0"
     cls-bluebird "^2.1.0"

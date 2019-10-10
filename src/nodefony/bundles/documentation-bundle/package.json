@@ -10,7 +10,7 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "^7.6.3",
+    "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.6.3",
     "@nodefony/stage": "^0.2.2",
     "async": "^3.1.0",
