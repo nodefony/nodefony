@@ -10,7 +10,7 @@
   "dependencies": {
     "bootstrap": "^4.3.1",
     "chart.js": "^2.8.0",
-    "core-js": "^3.2.1",
+    "core-js": "^3.3.1",
     "font-awesome": "^4.7.0",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",

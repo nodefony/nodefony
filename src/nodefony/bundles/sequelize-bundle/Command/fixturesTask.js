@@ -42,35 +42,36 @@ class fixturesTask extends nodefony.Task {
         } catch (e) {
           return reject(e);
         }
-      });
-      this.kernel.listen(this, "onReady", ( /*service*/ ) => {
-        const connection = this.ormService.getConnection("nodefony");
-        switch (connection.options.dialect) {
-        case "sqlite":
-          return this.loadSyncFixture(this.tabPromise)
-            .then((ele) => {
-              this.logger("LOAD FIXTURE ENTITY :  SUCCESS");
-              return resolve(ele);
-            })
-            .catch((e) => {
-              this.logger(e, "ERROR");
-              return reject(e);
+        this.kernel.listen(this, "onReady", ( /*service*/ ) => {
+          const connection = this.ormService.getConnection("nodefony");
+          switch (connection.options.dialect) {
+          case "sqlite":
+            return this.loadSyncFixture(this.tabPromise)
+              .then((ele) => {
+                this.logger("LOAD FIXTURE ENTITY :  SUCCESS");
+                return resolve(ele);
+              })
+              .catch((e) => {
+                this.logger(e, "ERROR");
+                return reject(e);
+              });
+          default:
+            let actions = this.tabPromise.map(function (ele) {
+              return new Promise(ele);
             });
-        default:
-          let actions = this.tabPromise.map(function (ele) {
-            return new Promise(ele);
-          });
-          return Promise.all(actions)
-            .then((ele) => {
-              this.logger("LOAD FIXTURE ENTITY :  SUCCESS");
-              return resolve(ele);
-            })
-            .catch((e) => {
-              this.logger(e, "ERROR");
-              return reject(e);
-            });
-        }
+            return Promise.all(actions)
+              .then((ele) => {
+                this.logger("LOAD FIXTURE ENTITY :  SUCCESS");
+                return resolve(ele);
+              })
+              .catch((e) => {
+                this.logger(e, "ERROR");
+                return reject(e);
+              });
+          }
+        });
       });
+
     });
   }
 
