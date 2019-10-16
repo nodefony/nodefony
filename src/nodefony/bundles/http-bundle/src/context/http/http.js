@@ -166,7 +166,7 @@ nodefony.register.call(nodefony.context, "http", function() {
       });
     }
 
-          clean() {
+    clean() {
       if (this.timeoutid !== null) {
         clearTimeout(this.timeoutid);
       }

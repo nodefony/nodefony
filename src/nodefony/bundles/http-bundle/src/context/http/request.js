@@ -7,14 +7,11 @@ module.exports = nodefony.register("Request", function () {
   const reg = /(.*)[\[][\]]$/;
   const settingsXml = {};
 
-  const parser = class parser {
+  class Parser {
     constructor(request) {
       this.request = request;
       this.request.request.on("data", (data) => {
         this.write(data);
-      });
-      this.request.request.on("end", () => {
-        this.parse();
       });
     }
     write(buffer) {
@@ -28,11 +25,10 @@ module.exports = nodefony.register("Request", function () {
     }
     parse() {
       this.request.context.requestEnded = true;
-      this.request.context.fire("onRequestEnd", this.request);
     }
-  };
+  }
 
-  const parserQs = class parserQs extends parser {
+  class ParserQs extends Parser {
     constructor(request) {
       super(request);
       this.queryStringParser = this.request.context.queryStringParser || {};
@@ -49,9 +45,9 @@ module.exports = nodefony.register("Request", function () {
         throw err;
       }
     }
-  };
+  }
 
-  const parserXml = class parserXml extends parser {
+  class ParserXml extends Parser {
     constructor(request) {
       super(request);
       this.xmlParser = new xmlParser(settingsXml);
@@ -67,7 +63,7 @@ module.exports = nodefony.register("Request", function () {
         super.parse();
       });
     }
-  };
+  }
 
   const acceptParser = function (acc) {
     if (!acc) {
@@ -174,21 +170,53 @@ module.exports = nodefony.register("Request", function () {
       this.context.once("onRequestEnd", () => {
         this.request.body = this.query;
       });
-      try {
-        if (this.method in parse) {
-          this.parserRequest();
-        } else {
-          this.request.on("end", () => {
+
+      this.parseRequest()
+      .then((parser)=>{
+        this.request.once("end", () => {
+          if (this.context.finished){
+            return ;
+          }
+          if (parser){
+            switch(true){
+              case parser instanceof Parser :
+              case parser instanceof ParserQs :
+              case parser instanceof ParserXml :
+                parser.parse();
+              break;
+            }
+            this.context.fire("onRequestEnd", this);
+          }else{
             this.context.requestEnded = true;
             this.context.fire("onRequestEnd", this);
+          }
+        });
+        return parser ;
+      })
+      .catch((error) =>{
+        if ( this.context.requestEnded ){
+          this.context.fire("onError", this.context.container, error);
+        }else{
+          this.request.once("end", () => {
+            this.context.requestEnded = true;
+            this.context.fire("onError", this.context.container, error);
           });
         }
-      } catch (error) {
-        this.request.on("end", () => {
-          this.context.requestEnded = true;
-          this.context.fire("onError", this.context.container, error);
-        });
-      }
+      });
+    }
+
+    parseRequest(){
+      return new Promise((resolve, reject)=>{
+        try {
+          if (this.method in parse) {
+            return resolve( this.parserRequest());
+          } else {
+            return resolve();
+          }
+        } catch (error) {
+          return reject(error);
+        }
+      });
     }
 
     createFileUpload(name, file, maxSize) {
@@ -208,11 +236,11 @@ module.exports = nodefony.register("Request", function () {
       switch (this.contentType) {
       case "application/xml":
       case "text/xml":
-        this.parser = new parserXml(this);
-        break;
+        this.parser = new ParserXml(this);
+        return this.parser ;
       case "application/x-www-form-urlencoded":
-        this.parser = new parserQs(this);
-        break;
+        this.parser = new ParserQs(this);
+        return this.parser ;
       default:
         let opt = nodefony.extend(this.context.requestSettings, {
           encoding: this.charset
@@ -266,6 +294,7 @@ module.exports = nodefony.register("Request", function () {
           this.context.requestEnded = true;
           this.context.fire("onRequestEnd", this);
         });
+        return this.parser ;
       }
     }
 

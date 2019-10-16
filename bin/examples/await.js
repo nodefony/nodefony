@@ -13,11 +13,16 @@ class Sboob {
   }
 
   async asyncCall() {
-    console.log('calling');
-    var result = await this.resolveAfter2Seconds();
-    console.log(result);
-    var result2 = await this.resolveAfter3Seconds();
-    console.log("pass", result2);
+    try {
+      //console.log('calling');
+      let result = await this.resolveAfter2Seconds();
+      //console.log(result);
+      let result2 = await this.resolveAfter3Seconds();
+      //console.log("pass", result2);
+      return [result, result2];
+    } catch (e) {
+      throw e;
+    }
   }
 
   resolveAfter2Seconds() {
@@ -38,10 +43,22 @@ class Sboob {
     });
   }
 
+  async dubbleCall() {
+    try {
+      console.log('calling');
+      let res1 = await this.asyncCall();
+      console.log('calling 2');
+      let res2 = await this.asyncCall();
+      return [res1, res2];
+    }catch (e) {
+      throw e;
+    }
+  }
+
 }
 
 let ele = new Sboob("cci");
-ele.asyncCall();
+ele.dubbleCall();
 /*function resolveAfter2Seconds() {
   return new Promise(resolve => {
     setTimeout(() => {

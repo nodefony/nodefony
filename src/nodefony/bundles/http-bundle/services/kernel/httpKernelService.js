@@ -452,14 +452,29 @@ module.exports = class httpKernel extends nodefony.Service {
         context.secure = this.firewall.isSecure(context);
       }
       // FRONT ROUTER
-      let resolver = this.router.resolve(context);
-      if (resolver.resolve) {
-        context.resolver = resolver;
-        controller = resolver.newController(context.container, context);
-        if (controller.sessionAutoStart) {
-          context.sessionAutoStart = controller.sessionAutoStart;
-          if (context.csrf) {
-            context.once("onSessionStart", () => {
+      try{
+        let resolver = this.router.resolve(context);
+        if (resolver.resolve) {
+          context.resolver = resolver;
+          controller = resolver.newController(context.container, context);
+          if (controller.sessionAutoStart) {
+            context.sessionAutoStart = controller.sessionAutoStart;
+            if (context.csrf) {
+              context.once("onSessionStart", () => {
+                return this.csrfService.handle(context)
+                  .then((token) => {
+                    if (token) {
+                      this.logger(`Check CSRF TOKEN : ${token.name} OK`);
+                    }
+                    return resolve(controller);
+                  })
+                  .catch(e => {
+                    return reject(e);
+                  });
+              });
+            }
+          } else {
+            if (context.csrf) {
               return this.csrfService.handle(context)
                 .then((token) => {
                   if (token) {
@@ -470,27 +485,16 @@ module.exports = class httpKernel extends nodefony.Service {
                 .catch(e => {
                   return reject(e);
                 });
-            });
+            }
           }
-        } else {
-          if (context.csrf) {
-            return this.csrfService.handle(context)
-              .then((token) => {
-                if (token) {
-                  this.logger(`Check CSRF TOKEN : ${token.name} OK`);
-                }
-                return resolve(controller);
-              })
-              .catch(e => {
-                return reject(e);
-              });
-          }
+          return resolve(controller);
         }
-        return resolve(controller);
+        let error = new Error("Not Found");
+        error.code = 404;
+        return reject(error);
+      }catch(e){
+        return reject(e);
       }
-      let error = new Error("Not Found");
-      error.code = 404;
-      return reject(error);
     });
   }
 
