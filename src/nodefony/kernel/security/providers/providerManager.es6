@@ -4,7 +4,7 @@ module.exports = nodefony.register('providerManager', () => {
 
     constructor(firewall, providers = []) {
       super("providerManager", firewall.container);
-      this.providers = providers ||  [];
+      this.providers = providers || [];
       this.nbProviders = 0;
     }
 

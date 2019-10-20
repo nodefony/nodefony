@@ -159,6 +159,13 @@ module.exports = class Nodefony {
     return this.isRegExp(it);
   }
 
+  isContainer(container) {
+    if (container.protoService && container.protoParameters) {
+      return true;
+    }
+    return false;
+  }
+
   isPromise(obj) {
     switch (true) {
     case obj instanceof Promise:
@@ -380,7 +387,6 @@ module.exports = class Nodefony {
     }
     throw new Error("Register Encoder : " + name + "  error Encoder bad format");
   }
-
 
   /**
    *  Register Nodefony fixture

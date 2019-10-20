@@ -1,4 +1,4 @@
-module.exports = nodefony.register("finder", function() {
+module.exports = nodefony.register("finder", function () {
 
   class jsonTree extends nodefony.fileClass {
     constructor(path, parent) {
@@ -12,7 +12,7 @@ module.exports = nodefony.register("finder", function() {
   }
 
 
-  const findExist = function(tab, file) {
+  const findExist = function (tab, file) {
     let exist = false;
     tab.map((ele) => {
       if (ele.path === file.path) {
@@ -54,7 +54,7 @@ module.exports = nodefony.register("finder", function() {
     }
 
     sortByName() {
-      let res = this.files.sort(function(a, b) {
+      let res = this.files.sort(function (a, b) {
         if (a.name.toString() > b.name.toString()) {
           return 1;
         }
@@ -70,7 +70,7 @@ module.exports = nodefony.register("finder", function() {
     }
 
     sortByType() {
-      let res = this.files.sort(function(a, b) {
+      let res = this.files.sort(function (a, b) {
         if (a.type.toString() > b.type.toString()) {
           return 1;
         }
@@ -129,16 +129,16 @@ module.exports = nodefony.register("finder", function() {
       let tab = [];
       for (let i = 0; i < this.files.length; i++) {
         switch (this.files[i].type) {
-          case "File":
+        case "File":
+          tab.push(this.files[i]);
+          break;
+        case "symbolicLink":
+          let path = fs.readlinkSync(this.files[i].path);
+          let file = this.files[i].dirName + "/" + path;
+          if (fs.lstatSync(file).isFile()) {
             tab.push(this.files[i]);
-            break;
-          case "symbolicLink":
-            let path = fs.readlinkSync(this.files[i].path);
-            let file = this.files[i].dirName + "/" + path;
-            if (fs.lstatSync(file).isFile()) {
-              tab.push(this.files[i]);
-            }
-            break;
+          }
+          break;
         }
       }
       return new Result(tab);
@@ -148,38 +148,38 @@ module.exports = nodefony.register("finder", function() {
       let reg = null;
       for (let i = 0; i < this.files.length; i++) {
         switch (this.files[i].type) {
-          case "File":
-            if (casse) {
-              reg = new RegExp("^" + name + "$", "i");
-              if (reg.test(this.files[i].name)) {
-                return this.files[i];
-              }
-            } else {
-              if (this.files[i].name === name) {
-                return this.files[i];
-              }
+        case "File":
+          if (casse) {
+            reg = new RegExp("^" + name + "$", "i");
+            if (reg.test(this.files[i].name)) {
+              return this.files[i];
             }
-            break;
-          case "symbolicLink":
-            try {
-              let path = fs.readlinkSync(this.files[i].path);
-              let file = this.files[i].dirName + "/" + path;
-              if (fs.lstatSync(file).isFile()) {
-                if (casse) {
-                  reg = new RegExp("^" + name + "$", "i");
-                  if (reg.test(this.files[i].name)) {
-                    return this.files[i];
-                  }
-                } else {
-                  if (this.files[i].name === name) {
-                    return this.files[i];
-                  }
+          } else {
+            if (this.files[i].name === name) {
+              return this.files[i];
+            }
+          }
+          break;
+        case "symbolicLink":
+          try {
+            let path = fs.readlinkSync(this.files[i].path);
+            let file = this.files[i].dirName + "/" + path;
+            if (fs.lstatSync(file).isFile()) {
+              if (casse) {
+                reg = new RegExp("^" + name + "$", "i");
+                if (reg.test(this.files[i].name)) {
+                  return this.files[i];
+                }
+              } else {
+                if (this.files[i].name === name) {
+                  return this.files[i];
                 }
               }
-            } catch (e) {
-              continue;
             }
-            break;
+          } catch (e) {
+            continue;
+          }
+          break;
         }
       }
       return null;
@@ -206,7 +206,7 @@ module.exports = nodefony.register("finder", function() {
    *  CLASS Finder
    *
    */
-  const checkMatch = function(file, settings) {
+  const checkMatch = function (file, settings) {
     if (settings.match) {
       if (file.matchName(settings.match)) {
         return true;
@@ -221,7 +221,7 @@ module.exports = nodefony.register("finder", function() {
   };
 
 
-  const checkExclude = function(file, settings) {
+  const checkExclude = function (file, settings) {
     if (file.matchName(settings.exclude)) {
       return true;
     }
@@ -231,7 +231,7 @@ module.exports = nodefony.register("finder", function() {
     return false;
   };
 
-  const checkHidden = function(file, settings) {
+  const checkHidden = function (file, settings) {
     if (!settings.seeHidden) {
       if (file.isHidden()) {
         return true;
@@ -240,7 +240,7 @@ module.exports = nodefony.register("finder", function() {
     return false;
   };
 
-  const find = function(file, result, depth, settings, parent) {
+  const find = function (file, result, depth, settings, parent) {
     let res = null;
     try {
       try {
@@ -293,20 +293,20 @@ module.exports = nodefony.register("finder", function() {
             }
           }
           switch (info.type) {
-            case "Directory":
-              if (settings.recurse && depth - 1 !== 0) {
-                arguments.callee.call(this, info, result, --depth, settings, info);
-                depth++;
+          case "Directory":
+            if (settings.recurse && depth - 1 !== 0) {
+              arguments.callee.call(this, info, result, --depth, settings, info);
+              depth++;
+            }
+            break;
+          case "symbolicLink":
+            if (settings.followSymLink && depth - 1 !== 0) {
+              let obj = new this.wrapper(info.path, info);
+              if (obj.isDirectory()) {
+                arguments.callee.call(this, obj, result, settings.depth, settings, parent);
               }
-              break;
-            case "symbolicLink":
-              if (settings.followSymLink && depth - 1 !== 0) {
-                let obj = new this.wrapper(info.path, info);
-                if (obj.isDirectory()) {
-                  arguments.callee.call(this, obj, result, settings.depth, settings, parent);
-                }
-              }
-              break;
+            }
+            break;
           }
         }
       }
@@ -358,33 +358,33 @@ module.exports = nodefony.register("finder", function() {
       in (Path) {
         this.typePath = nodefony.typeOf(Path);
         switch (true) {
-          case this.typePath === "string":
-            try {
-              this.path.push(new this.wrapper(Path, null));
-              return this;
-            } catch (e) {
-              throw e;
-            }
-            break;
-          case this.typePath === "array":
-            for (let i = 0; i < Path.length; i++) {
-              try {
-                this.path.push(new this.wrapper(Path[i], null));
-              } catch (e) {
-                throw e;
-              }
-            }
+        case this.typePath === "string":
+          try {
+            this.path.push(new this.wrapper(Path, null));
             return this;
-          case Path instanceof nodefony.fileClass:
+          } catch (e) {
+            throw e;
+          }
+          break;
+        case this.typePath === "array":
+          for (let i = 0; i < Path.length; i++) {
             try {
-              this.path.push(new this.wrapper(Path.path, null));
-              return this;
+              this.path.push(new this.wrapper(Path[i], null));
             } catch (e) {
               throw e;
             }
-            break;
-            //default:
-            //  throw new Error(`Finder bad path type`);
+          }
+          return this;
+        case Path instanceof nodefony.fileClass:
+          try {
+            this.path.push(new this.wrapper(Path.path, null));
+            return this;
+          } catch (e) {
+            throw e;
+          }
+          break;
+          //default:
+          //  throw new Error(`Finder bad path type`);
         }
       }
 

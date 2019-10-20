@@ -1,27 +1,26 @@
 <template>
-
 <div class=" sidebar container-fluid h-100 pt-20" :data="backgroundColor">
-    <div class="row h-100">
-        <aside class="col-12 col-md-2 p-0 bg-dark">
-            <nav class="navbar navbar-expand navbar-dark bg-dark flex-md-column flex-row align-items-start">
-                <div class="collapse navbar-collapse">
-                    <ul class="flex-md-column flex-row navbar-nav w-100 justify-content-between">
-                        <li class="nav-item">
-                            <a class="nav-link pl-0" href="#">Link</a>
-                        </li>
-                        ..
-                    </ul>
-                </div>
-            </nav>
-        </aside>
-        <main class="col">
+  <div class="row h-100">
+    <aside class="col-12 col-md-2 p-0 bg-dark">
+      <nav class="navbar navbar-expand navbar-dark bg-dark flex-md-column flex-row align-items-start">
+        <div class="collapse navbar-collapse">
+          <ul class="flex-md-column flex-row navbar-nav w-100 justify-content-between">
+            <li class="nav-item">
+              <a class="nav-link pl-0" href="#">Link</a>
+            </li>
             ..
-        </main>
-    </div>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+    <main class="col">
+      ..
+    </main>
+  </div>
 </div>
 </template>
 <script>
-import SidebarLink from './SidebarLink'
+// import SidebarLink from './SidebarLink'
 
 export default {
   props: {
@@ -64,7 +63,7 @@ export default {
     }
   },
   components: {
-    SidebarLink
+    // SidebarLink
   },
   computed: {
     /**
