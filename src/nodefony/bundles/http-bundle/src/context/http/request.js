@@ -1,7 +1,7 @@
 const QS = require('qs');
 const formidable = require("formidable");
 
-module.exports = nodefony.register("Request", function () {
+module.exports = nodefony.register("Request", function() {
 
   // ARRAY PHP LIKE
   const reg = /(.*)[\[][\]]$/;
@@ -65,7 +65,7 @@ module.exports = nodefony.register("Request", function () {
     }
   }
 
-  const acceptParser = function (acc) {
+  const acceptParser = function(acc) {
     if (!acc) {
       return [{
         type: new RegExp(".*"),
@@ -172,44 +172,49 @@ module.exports = nodefony.register("Request", function () {
       });
 
       this.parseRequest()
-      .then((parser)=>{
-        this.request.once("end", () => {
-          if (this.context.finished){
-            return ;
-          }
-          if (parser){
-            switch(true){
-              case parser instanceof Parser :
-              case parser instanceof ParserQs :
-              case parser instanceof ParserXml :
+        .then((parser) => {
+          switch (true) {
+            case parser instanceof Parser:
+            case parser instanceof ParserQs:
+            case parser instanceof ParserXml:
+              this.request.once("end", () => {
+                if (this.context.finished) {
+                  return;
+                }
                 parser.parse();
+                this.context.fire("onRequestEnd", this);
+              });
               break;
-            }
-            this.context.fire("onRequestEnd", this);
-          }else{
-            this.context.requestEnded = true;
-            this.context.fire("onRequestEnd", this);
+            default:
+              if (! parser) {
+                this.request.once("end", () => {
+                  if (this.context.finished) {
+                    return;
+                  }
+                  this.context.requestEnded = true;
+                  this.context.fire("onRequestEnd", this);
+                });
+              }
+          }
+          return parser;
+        })
+        .catch((error) => {
+          if (this.context.requestEnded) {
+            this.context.fire("onError", this.context.container, error);
+          } else {
+            this.request.once("end", () => {
+              this.context.requestEnded = true;
+              this.context.fire("onError", this.context.container, error);
+            });
           }
         });
-        return parser ;
-      })
-      .catch((error) =>{
-        if ( this.context.requestEnded ){
-          this.context.fire("onError", this.context.container, error);
-        }else{
-          this.request.once("end", () => {
-            this.context.requestEnded = true;
-            this.context.fire("onError", this.context.container, error);
-          });
-        }
-      });
     }
 
-    parseRequest(){
-      return new Promise((resolve, reject)=>{
+    parseRequest() {
+      return new Promise((resolve, reject) => {
         try {
           if (this.method in parse) {
-            return resolve( this.parserRequest());
+            return resolve(this.parserRequest());
           } else {
             return resolve();
           }
@@ -234,67 +239,67 @@ module.exports = nodefony.register("Request", function () {
 
     parserRequest() {
       switch (this.contentType) {
-      case "application/xml":
-      case "text/xml":
-        this.parser = new ParserXml(this);
-        return this.parser ;
-      case "application/x-www-form-urlencoded":
-        this.parser = new ParserQs(this);
-        return this.parser ;
-      default:
-        let opt = nodefony.extend(this.context.requestSettings, {
-          encoding: this.charset
-        });
-        this.parser = new formidable.IncomingForm(opt);
-        this.parser.parse(this.request, (err, fields, files) => {
-          if (err) {
-            this.request.on("end", () => {
-              this.context.fire("onError", this.context.container, err);
-            });
-            return;
-          }
-          try {
-            this.queryPost = fields;
-            //this.context.setParameters("query.post", this.queryPost);
-            this.query = nodefony.extend({}, this.query, this.queryPost);
-            //this.context.setParameters("query.request", this.query);
-            if (Object.keys(files).length) {
-              for (let file in files) {
-                try {
-                  if (reg.exec(file)) {
-                    if (nodefony.isArray(files[file])) {
-                      for (let multifiles in files[file]) {
-                        this.createFileUpload(multifiles, files[file][multifiles], opt.maxFileSize);
+        case "application/xml":
+        case "text/xml":
+          this.parser = new ParserXml(this);
+          return this.parser;
+        case "application/x-www-form-urlencoded":
+          this.parser = new ParserQs(this);
+          return this.parser;
+        default:
+          let opt = nodefony.extend(this.context.requestSettings, {
+            encoding: this.charset
+          });
+          this.parser = new formidable.IncomingForm(opt);
+          this.parser.parse(this.request, (err, fields, files) => {
+            if (err) {
+              this.request.on("end", () => {
+                this.context.fire("onError", this.context.container, err);
+              });
+              return;
+            }
+            try {
+              this.queryPost = fields;
+              //this.context.setParameters("query.post", this.queryPost);
+              this.query = nodefony.extend({}, this.query, this.queryPost);
+              //this.context.setParameters("query.request", this.query);
+              if (Object.keys(files).length) {
+                for (let file in files) {
+                  try {
+                    if (reg.exec(file)) {
+                      if (nodefony.isArray(files[file])) {
+                        for (let multifiles in files[file]) {
+                          this.createFileUpload(multifiles, files[file][multifiles], opt.maxFileSize);
+                        }
+                      } else {
+                        if (files[file].name) {
+                          this.createFileUpload(file, files[file], opt.maxFileSize);
+                        }
                       }
                     } else {
-                      if (files[file].name) {
+                      if (nodefony.isArray(files[file])) {
+                        for (let multifiles in files[file]) {
+                          this.createFileUpload(multifiles, files[file][multifiles], opt.maxFileSize);
+                        }
+                      } else {
                         this.createFileUpload(file, files[file], opt.maxFileSize);
                       }
                     }
-                  } else {
-                    if (nodefony.isArray(files[file])) {
-                      for (let multifiles in files[file]) {
-                        this.createFileUpload(multifiles, files[file][multifiles], opt.maxFileSize);
-                      }
-                    } else {
-                      this.createFileUpload(file, files[file], opt.maxFileSize);
-                    }
+                  } catch (err) {
+                    this.context.fire("onError", this.context.container, err);
+                    return err;
                   }
-                } catch (err) {
-                  this.context.fire("onError", this.context.container, err);
-                  return err;
                 }
               }
+            } catch (err) {
+              this.request.on("end", () => {
+                this.context.fire("onError", this.context.container, err);
+              });
             }
-          } catch (err) {
-            this.request.on("end", () => {
-              this.context.fire("onError", this.context.container, err);
-            });
-          }
-          this.context.requestEnded = true;
-          this.context.fire("onRequestEnd", this);
-        });
-        return this.parser ;
+            this.context.requestEnded = true;
+            this.context.fire("onRequestEnd", this);
+          });
+          return this.parser;
       }
     }
 
@@ -308,15 +313,15 @@ module.exports = nodefony.register("Request", function () {
         }
         if (parse) {
           switch (parse.length) {
-          case 1:
-            subtype = parse.shift();
-            break;
-          case 2:
-            type = parse.shift();
-            subtype = parse.shift();
-            break;
-          default:
-            throw new Error("request accepts method bad type format");
+            case 1:
+              subtype = parse.shift();
+              break;
+            case 2:
+              type = parse.shift();
+              subtype = parse.shift();
+              break;
+            default:
+              throw new Error("request accepts method bad type format");
           }
         }
         for (let i = 0; i < this.accept.length; i++) {
