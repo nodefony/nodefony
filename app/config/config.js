@@ -312,14 +312,11 @@ module.exports = {
    * OVERRIDE ELASTIC BUNDLE SETTINGS
    *   elasticsearch
    *
-   *	 options  :  https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/configuration.html
+   *	 options  :  https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/client-configuration.html
    *
    */
   "elastic-bundle": {
     elasticsearch: {
-      globalHostsOptions: {
-        protocol: "http"
-      },
       globalOptions: {
         ssl: {
           //key : path.resolve("config","certificates","server","privkey.pem"),
@@ -329,10 +326,8 @@ module.exports = {
       },
       connections: {
         main: {
-          hosts: [{
-            host: "localhost",
-            port: 9200
-          }],
+          nodes: ["http://localhost:9200"],
+          //log: "trace",
           sniffOnStart: true,
           sniffInterval: 5000
         }

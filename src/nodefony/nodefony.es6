@@ -160,7 +160,7 @@ module.exports = class Nodefony {
   }
 
   isContainer(container) {
-    if (container.protoService && container.protoParameters) {
+    if (container && container.protoService && container.protoParameters) {
       return true;
     }
     return false;

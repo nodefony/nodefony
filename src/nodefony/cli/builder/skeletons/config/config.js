@@ -345,7 +345,7 @@ module.exports = {
    * OVERRIDE ELASTIC BUNDLE SETTINGS
    *   elasticsearch
    *
-   *	 options  :  https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/configuration.html
+   *	 options  :  https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/client-configuration.html
    *
    */
   "elastic-bundle": {

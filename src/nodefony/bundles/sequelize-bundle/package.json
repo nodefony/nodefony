@@ -16,7 +16,7 @@
     "pg-hstore": "^2.3.3",
     "sequelize": "^5.21.1",
     "sqlite3": "^4.1.0",
-    "tedious": "^6.4.0"
+    "tedious": "^6.6.0"
   },
   "repository": {
     "type": "git",

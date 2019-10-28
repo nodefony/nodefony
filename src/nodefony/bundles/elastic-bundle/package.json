@@ -12,11 +12,11 @@
   ],
   "repository": {},
   "dependencies": {
-    "elasticsearch": "^16.4.0",
+    "@elastic/elasticsearch": "^7.4.0",
     "shortid": "^2.2.15"
   },
   "devDependencies": {
-    "node-pre-gyp": "^0.13.0"
+    "node-pre-gyp": "^0.14.0"
   },
   "license": "CECILL-B",
   "readmeFilename": "README.md",

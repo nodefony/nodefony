@@ -2,12 +2,12 @@
 # yarn lockfile v1
 
 
-"@azure/ms-rest-azure-env@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@azure/ms-rest-azure-env/-/ms-rest-azure-env-2.0.0.tgz#45809f89763a480924e21d3c620cd40866771625"
-  integrity sha512-dG76W7ElfLi+fbTjnZVGj+M9e0BIEJmRxU6fHaUQ12bZBe8EJKYb2GV50YWNaP2uJiVQ5+7nXEVj1VN1UQtaEw==
+"@azure/ms-rest-azure-env@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@azure/ms-rest-azure-env/-/ms-rest-azure-env-1.1.2.tgz#8505873afd4a1227ec040894a64fdd736b4a101f"
+  integrity sha512-l7z0DPCi2Hp88w12JhDTtx5d0Y3+vhfE7JKJb9O7sEz71Cwp053N8piTtTnnk/tUor9oZHgEKi/p3tQQmLPjvA==
 
-"@azure/ms-rest-js@^1.8.13":
+"@azure/ms-rest-js@^1.8.7":
   version "1.8.13"
   resolved "https://registry.yarnpkg.com/@azure/ms-rest-js/-/ms-rest-js-1.8.13.tgz#ed0cd86469697378cd39d79d5589e877a3bc87a6"
   integrity sha512-jAa6Y2XrvwbEqkaEXDHK+ReNo0WnCPS+LgQ1dRAJUUNxK4CghF5u+SXsVtPENritilVE7FVteqsLOtlhTk+haA==
@@ -21,19 +21,24 @@
     uuid "^3.2.1"
     xml2js "^0.4.19"
 
-"@azure/ms-rest-nodeauth@^2.0.2":
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/@azure/ms-rest-nodeauth/-/ms-rest-nodeauth-2.0.5.tgz#e19877c707d4912853b5b58ec6e9c214eb15bb30"
-  integrity sha512-pS2NLW3TY4tPvHcF7QIW2xYoXrpEpodbz1oFCnWnTRw2w38reCq1OyktfLDBkpEUVTN+GrAA5ZgnX6PcZxvJeg==
+"@azure/ms-rest-nodeauth@2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@azure/ms-rest-nodeauth/-/ms-rest-nodeauth-2.0.2.tgz#037e29540c5625eaec718b8fcc178dd7ad5dfb96"
+  integrity sha512-KmNNICOxt3EwViAJI3iu2VH8t8BQg5J2rSAyO4IUYLF9ZwlyYsP419pdvl4NBUhluAP2cgN7dfD2V6E6NOMZlQ==
   dependencies:
-    "@azure/ms-rest-azure-env" "^2.0.0"
-    "@azure/ms-rest-js" "^1.8.13"
+    "@azure/ms-rest-azure-env" "^1.1.2"
+    "@azure/ms-rest-js" "^1.8.7"
     adal-node "^0.1.28"
 
-"@types/node@*", "@types/node@^12.6.9":
+"@types/node@*":
   version "12.7.9"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.7.9.tgz#da0210f91096aa67138cf5afd04c4d629f8a406a"
   integrity sha512-P57oKTJ/vYivL2BCfxCC5tQjlS8qW31pbOL6qt99Yrjm95YdHgNZwjrTTjMBh+C2/y6PXIX4oz253+jUzxKKfQ==
+
+"@types/node@^12.7.11":
+  version "12.11.7"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.11.7.tgz#57682a9771a3f7b09c2497f28129a0462966524a"
+  integrity sha512-JNbGaHFCLwgHn/iCckiGSOZ1XYHsKFwREtzPwSGCVld1SGhOlmZw2D4ZI94HQCrBHbADzW9m4LER/8olJTRGHA==
 
 "@types/node@^8.0.47":
   version "8.10.54"
@@ -176,11 +181,6 @@ bcrypt-pbkdf@^1.0.0:
   integrity sha1-pDAdOJtqQ/m2f/PKEaP2Y342Dp4=
   dependencies:
     tweetnacl "^0.14.3"
-
-big-number@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/big-number/-/big-number-1.0.0.tgz#a0277607a0adb06492d3099546ef0d547785df18"
-  integrity sha512-cHUzdT+mMXd1ozht8n5ZwBlNiPO/4zCqqkyp3lF1TMPsRJLXUbQ7cKnfXRkrW475H5SOtSOP0HFeihNbpa53MQ==
 
 bl@^3.0.0:
   version "3.0.0"
@@ -677,7 +677,7 @@ http-signature@~1.2.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
-iconv-lite@^0.4.23, iconv-lite@^0.4.4:
+iconv-lite@^0.4.4:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
   integrity sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==
@@ -802,6 +802,11 @@ js-beautify@^1.8.8:
     glob "^7.1.3"
     mkdirp "~0.5.1"
     nopt "~4.0.1"
+
+jsbi@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/jsbi/-/jsbi-3.1.1.tgz#8ea18b3e08d102c6cc09acaa9a099921d775f4fa"
+  integrity sha512-+HQESPaV0mRiH614z4JPVPAftcRC2p53x92lySPzUzFwJbJTMpzHz8OYUkcXPN3fOcHUe0NdVcHnCtX/1+eCrA==
 
 jsbn@~0.1.0:
   version "0.1.1"
@@ -1618,17 +1623,17 @@ tar@^4:
     safe-buffer "^5.1.2"
     yallist "^3.0.3"
 
-tedious@^6.4.0:
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/tedious/-/tedious-6.4.0.tgz#68be73d80d4dd37f763e239371f19c20751afdbf"
-  integrity sha512-DqoRZdQpINGUhv8k3bkmidpXpy0aVNdmaYFXb+IK7roQI7RUZegUfl37ayY4MmBNH0YnSUaVQs+U9P7itV/dTg==
+tedious@^6.6.0:
+  version "6.6.0"
+  resolved "https://registry.yarnpkg.com/tedious/-/tedious-6.6.0.tgz#f08c5c9034fb23738eff018ec8f04ee41e396c35"
+  integrity sha512-XBuo2iQxYD2dRKVXO7Z4BwopzwTtza3bnsMNWHxmFzr0Z8KemjXEAzUOXu4W2Nyn4lETh/Sw09d9bpNtDzfNoA==
   dependencies:
-    "@azure/ms-rest-nodeauth" "^2.0.2"
-    "@types/node" "^12.6.9"
-    big-number "1.0.0"
+    "@azure/ms-rest-nodeauth" "2.0.2"
+    "@types/node" "^12.7.11"
     bl "^3.0.0"
     depd "^2.0.0"
-    iconv-lite "^0.4.23"
+    iconv-lite "^0.5.0"
+    jsbi "^3.1.1"
     native-duplexpair "^1.0.0"
     punycode "^2.1.0"
     readable-stream "^3.4.0"

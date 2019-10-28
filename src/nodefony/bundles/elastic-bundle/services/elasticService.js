@@ -1,5 +1,25 @@
-const elasticsearch = require('elasticsearch');
-const logger = require(path.resolve(__dirname, "..", "src", "elasticLogger.js"));
+const elasticsearch = require('@elastic/elasticsearch');
+const {
+  ConnectionPool,
+  Connection
+} = require('@elastic/elasticsearch');
+//const logger = require(path.resolve(__dirname, "..", "src", "elasticLogger.js"));
+
+class MyConnectionPool extends ConnectionPool {
+  markAlive(connection) {
+    // your code
+    kernel.log(connection, "DEBUG", "ELASTIC POOL CONNECTION");
+    super.markAlive(connection);
+  }
+}
+
+class MyConnection extends Connection {
+  request(params, callback) {
+    // your code
+    kernel.log(params, "DEBUG", "ELASTIC CONNECTION");
+  }
+}
+
 
 class elesticConnection extends nodefony.Service {
   constructor(name, options = {}, service = null) {
@@ -20,11 +40,14 @@ class elesticConnection extends nodefony.Service {
       try {
         this.settings = nodefony.extend({}, this.settings, options);
         if (!this.settings.log) {
-          this.settings.log = logger;
-          this.settings.log.prototype.logger = this.logger.bind(this);
+          //this.settings.log = logger;
+          //this.settings.log.prototype.logger = this.logger.bind(this);
+          this.settings.ConnectionPool = MyConnectionPool;
+          this.settings.Connection = MyConnection;
         }
         this.client = new this.service.engine.Client(this.settings);
-        this.hosts = this.client.transport._config.hosts;
+        //console.log(this.client)
+        //this.nodes = this.client.transport._config.nodes;
         return resolve(this.client);
       } catch (e) {
         return reject(e);
@@ -42,15 +65,12 @@ module.exports = class Elastic extends nodefony.services.connections {
   setOptions(connection) {
     if (connection) {
       let myOpt = {};
-      switch (nodefony.typeOf(connection.hosts)) {
-        case "array":
-          for (let i = 0; i < connection.hosts.length; i++) {
-            connection.hosts[i] = nodefony.extend({}, this.globalHostsOptions, connection.hosts[i]);
-          }
-          nodefony.extend(myOpt, this.globalOptions, connection);
-          break;
-        default:
-          nodefony.extend(myOpt, this.globalOptions, connection);
+      switch (nodefony.typeOf(connection.nodes)) {
+      case "array":
+        nodefony.extend(myOpt, this.globalOptions, connection);
+        break;
+      default:
+        nodefony.extend(myOpt, this.globalOptions, connection);
       }
       try {
         if (myOpt.ssl) {
@@ -64,30 +84,60 @@ module.exports = class Elastic extends nodefony.services.connections {
     }
   }
 
-  readConfig() {
+  getConnection(name) {
+    return new Promise((resolve, reject) => {
+      if (name in this.connections) {
+        return resolve(super.getConnection(name));
+      } else {
+        this.on("connection", (connection) => {
+          if (connection) {
+            return resolve(connection);
+          }
+          return reject(new Error("No connection : " + name));
+        });
+      }
+    });
+  }
+
+  async readConfig() {
     this.settings = this.bundle.settings.elasticsearch;
     this.globalOptions = this.settings.globalOptions;
-    this.globalHostsOptions = this.settings.globalHostsOptions;
+    //this.globalHostsOptions = this.settings.globalHostsOptions;
     for (let connection in this.settings.connections) {
-      let options = this.setOptions(this.settings.connections[connection]);
-      this.createConnection(connection, options)
-        .then((conn) => {
-          return conn.client.ping({
-              requestTimeout: 3000
-            })
-            .then(() => {
-              this.logger("PING OK", "INFO");
-              this.displayTable(conn, "INFO");
-              return conn;
-            })
-            .catch(e => {
-              this.logger(e, "ERROR");
-              throw e;
-            });
-        }).catch((e) => {
-          this.logger(e, "ERROR");
-          throw e;
-        });
+      try {
+        let options = this.setOptions(this.settings.connections[connection]);
+        let conn = await this.createConnection(connection, options);
+        let ping = await conn.client.ping();
+        //this.logger(ping, "INFO");
+        //let info = await conn.client.info();
+        //console.log(info.body)
+        //this.displayTable(conn, "INFO");
+      } catch (e) {
+        this.logger(e, "ERROR");
+        continue;
+      }
+    }
+    this.displayTable(this.connections, "INFO");
+  }
+
+  async displayTable(connections, severity = "DEBUG") {
+    let options = {
+      head: [
+        `${this.name.toUpperCase()} CONNECTIONS NAME`,
+        "HOST"
+      ]
+    };
+    try {
+      let table = this.kernel.cli.displayTable(null, options);
+      let data = [];
+      for (let connection in connections) {
+        data.push(connection || "");
+        data.push(connections[connection].client.name || "");
+      }
+      table.push(data);
+      this.logger(`${this.name} Connections : \n${table.toString()}`, severity);
+    } catch (e) {
+      throw e;
     }
   }
 

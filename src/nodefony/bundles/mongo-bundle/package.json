@@ -15,7 +15,7 @@
     "mongodb": "^3.3.3"
   },
   "devDependencies": {
-    "node-pre-gyp": "^0.13.0"
+    "node-pre-gyp": "^0.14.0"
   },
   "license": "CECILL-B",
   "readmeFilename": "README.md",

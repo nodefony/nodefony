@@ -34,6 +34,7 @@ nodefony.registerService("connections", () => {
           this.connections[conn.name] = conn;
           return conn.create(options)
             .then((client) => {
+              this.fire("connection", conn);
               return resolve(conn);
             }).catch((e) => {
               return reject(e);
