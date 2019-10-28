@@ -326,10 +326,21 @@ module.exports = {
       },
       connections: {
         main: {
+          name: "main",
           nodes: ["http://localhost:9200"],
-          //log: "trace",
-          sniffOnStart: true,
-          sniffInterval: 5000
+          log: {
+            request: true,
+            response: true,
+            sniff: true,
+            resurrect: true
+          },
+          maxRetries:10,
+          //resurrectStrategy: "optimistic",
+          //sniffOnStart: true,
+          //sniffInterval: 5000,
+          //sniffOnConnectionFault: true,
+          pingTimeout: 5000,
+          requestTimeout:10
         }
       }
     }

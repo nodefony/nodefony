@@ -1,67 +1,3 @@
-# Welcome to elastic-bundle
-
-
-## Register and Configure elastic Bundle
-
-### For a Register elastic-bundle add <b>elastic: true</b> in config framework
-#### <code>./config/config.js</code>
-
-```js
-module.exports = {
-  system: {
-    /**
-    * BUNDLES CORE
-    */
-    elastic: true
-  }
-}
-```
-
-### Override elastic-bundle configuration your bundle  
-
-#### <code>./app/config/config.js</code>
-
-```js
-/**
- * OVERRIDE ELASTIC BUNDLE SETTINGS
- *   elasticsearch
- *
- *	 options  :  https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/client-configuration.html
- *
- */
-"elastic-bundle": {
-  elasticsearch: {
-    globalOptions: {
-      ssl: {
-        //key : path.resolve("config","certificates","server","privkey.pem"),
-        //cert : path.resolve("config","certificates","server","cert.pem"),
-        //ca : path.resolve("config","certificates","ca","nodefony-root-ca.crt.pem")
-      }
-    },
-    connections: {
-      main: {
-        name: "main",
-        nodes: ["http://localhost:9200"],
-        log: {
-          request: false,
-          response: false,
-          sniff: true,
-          resurrect: true
-        },
-        maxRetries:10,
-        sniffInterval: 5000,
-        pingTimeout: 5000,
-        requestTimeout:5000
-      }
-    }
-  }
-},
-```
-
-## Example to use :
-
-#### <code>./controller/elasticController.js</code>
-```js
 /**
  *    @Route ("/test/elastic")
  */
@@ -138,12 +74,8 @@ module.exports = class elasticController extends nodefony.controller {
           throw e;
         });
     }
+
+
+
   }
 };
-```
-
-## <a name="authors"></a>Authors
-
-- Camensuli Christophe  ccamensuli@gmail.com
-
-##  <a name="license"></a>License
