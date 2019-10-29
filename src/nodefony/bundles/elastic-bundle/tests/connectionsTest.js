@@ -4,7 +4,16 @@ const request = require("request");
 const http = require("http");
 
 describe("NODEFONY BUNDLE ELASTICSEARCH", () => {
+  beforeEach(async () => {
+    global.elastic = kernel.get("elastic");
+    let conn = await global.elastic.getConnection("main");
+    global.client = conn.client;
 
+  });
+  /*beforeEach(async () => {
+    const { Client } = require('@elastic/elasticsearch');
+    global.client  = new Client({ node: 'http://localhost:9200' });
+  });*/
   describe('CONFIGURATIONS ', () => {
 
     /*it("KERNEL", function(done){
@@ -15,14 +24,6 @@ describe("NODEFONY BUNDLE ELASTICSEARCH", () => {
   });
 
   describe('Connection', () => {
-
-    beforeEach(async () => {
-      global.elastic = kernel.get("elastic");
-      let conn = await global.elastic.getConnection("main");
-      global.client = conn.client;
-
-    });
-
     it("HEALF-SERVICE", async () => {
       let res = await global.client.cluster.health();
       assert.deepStrictEqual(res.statusCode, 200);
@@ -32,28 +33,16 @@ describe("NODEFONY BUNDLE ELASTICSEARCH", () => {
       let res = await global.client.ping();
       res = await global.client.info();
     });
-
   });
 
-
   describe('create Index', () => {
-    /*beforeEach(async () => {
-      const { Client } = require('@elastic/elasticsearch');
-      global.client  = new Client({ node: 'http://localhost:9200' });
-    });*/
-
-    beforeEach(async () => {
-      global.elastic = kernel.get("elastic");
-      let conn = await global.elastic.getConnection("main");
-      global.client = conn.client;
-
-    });
-
     it("INDEX-CREATE", async () => {
-      const { body } = await global.client.indices.exists({
-        index:"game-of-thrones"
+      const {
+        body
+      } = await global.client.indices.exists({
+        index: "game-of-thrones"
       });
-      if ( ! body ){
+      if (!body) {
         // Let's start by indexing some data
         await global.client.index({
           index: 'game-of-thrones',
@@ -82,18 +71,23 @@ describe("NODEFONY BUNDLE ELASTICSEARCH", () => {
           }
         });
       }
-      await global.client.indices.refresh({ index: 'game-of-thrones' });
-
+      await global.client.indices.refresh({
+        index: 'game-of-thrones'
+      });
     });
 
-    it("INDEX-SARCH", async () => {
-        // Let's search!
-      const { body } = await global.client.search({
+    it("INDEX-SEARCH", async () => {
+      // Let's search!
+      const {
+        body
+      } = await global.client.search({
         index: 'game-of-thrones',
         // type: '_doc', // uncomment this line if you are using Elasticsearch ≤ 6
         body: {
           query: {
-            match: { quote: 'winter' }
+            match: {
+              quote: 'winter'
+            }
           }
         }
       });
@@ -102,16 +96,10 @@ describe("NODEFONY BUNDLE ELASTICSEARCH", () => {
       assert.deepStrictEqual(body.hits.hits[0]._source.character, "Ned Stark");
       assert.deepStrictEqual(body.hits.hits[0]._source.quote, "Winter is coming.");
     });
-
   });
-
 
   describe('request index', () => {
     beforeEach(async () => {
-      global.elastic = kernel.get("elastic");
-      let conn = await global.elastic.getConnection("main");
-      global.client = conn.client;
-
       global.options = {
         hostname: kernel.settings.system.domain,
         port: kernel.settings.system.httpPort,
@@ -121,7 +109,7 @@ describe("NODEFONY BUNDLE ELASTICSEARCH", () => {
 
     it("INDEX-REQUEST", (done) => {
       global.options.path = '/test/elastic/index';
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
@@ -135,16 +123,16 @@ describe("NODEFONY BUNDLE ELASTICSEARCH", () => {
       request.end();
     });
 
-    it("INDEX-REQUEST", (done) => {
+    it("INDEX-REQUEST-NOT-FOUND", (done) => {
       global.options.path = '/test/elastic/index/2';
-      var request = http.request(global.options, function (res) {
-        assert.equal(res.statusCode, 200);
+      const request = http.request(global.options, (res) => {
+        assert.equal(res.statusCode, 404);
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
           const res = JSON.parse(chunk);
-          assert.deepStrictEqual(res.body.found, true);
-          assert.deepStrictEqual(res.body._id, "1");
-          assert.deepStrictEqual(res.body._source.package.name, "nodefony-core");
+          assert.deepStrictEqual(res.meta.body.found, false);
+          assert.deepStrictEqual(res.meta.body._id, "2");
+          //assert.deepStrictEqual(res.body._source.package.name, "nodefony-core");
           done();
         });
       });

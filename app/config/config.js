@@ -329,18 +329,18 @@ module.exports = {
           name: "main",
           nodes: ["http://localhost:9200"],
           log: {
-            request: true,
-            response: true,
+            request: false,
+            response: false,
             sniff: true,
             resurrect: true
           },
-          maxRetries:10,
+          maxRetries: 10,
           //resurrectStrategy: "optimistic",
           //sniffOnStart: true,
           //sniffInterval: 5000,
           //sniffOnConnectionFault: true,
           pingTimeout: 5000,
-          requestTimeout:10
+          requestTimeout: 5000
         }
       }
     }

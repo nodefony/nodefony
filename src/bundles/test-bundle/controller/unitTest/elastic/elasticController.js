@@ -37,6 +37,9 @@ module.exports = class elasticController extends nodefony.controller {
     } else {
       this.log(`Index : ${index} Already exist !!! `);
     }
+    await client.indices.refresh({
+      index: index
+    });
     return res;
   }
 
@@ -51,9 +54,9 @@ module.exports = class elasticController extends nodefony.controller {
    */
   async indexAction(id) {
     const client = await this.getClient();
-    await this.createIndex("nodefony", "id");
-    let get = null ;
-    try{
+    await this.createIndex("nodefony", id);
+    let get = null;
+    try {
       get = await client.get({
         index: 'nodefony',
         id: id
@@ -62,20 +65,18 @@ module.exports = class elasticController extends nodefony.controller {
         .catch((e) => {
           throw e;
         });
-    }catch(e){
-      if ( e && e.meta && e.meta.statusCode ){
-        return this.renderJson(e, e.meta.statusCode )
+    } catch (e) {
+      if (e && e.meta && e.meta.statusCode) {
+        return this.renderJson(e, e.meta.statusCode)
           .catch((e) => {
             throw e;
           });
       }
-      return this.renderJson(e )
+      return this.renderJson(e)
         .catch((e) => {
           throw e;
         });
     }
-
-
 
   }
 };
