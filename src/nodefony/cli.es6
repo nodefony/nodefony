@@ -223,7 +223,7 @@ module.exports = nodefony.register("cli", function () {
     }
 
     idle() {
-      this.idle = setInterval(() => {}, 0);
+      return this.idle = setInterval(() => {}, 0);
     }
 
     logger(pci, severity, msgid, msg) {

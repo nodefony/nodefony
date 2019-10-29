@@ -20,6 +20,8 @@ class MyConnection extends Connection {
 
 //const { events } = require('@elastic/elasticsearch')
 //console.log(events)
+//const { errors } = require('@elastic/elasticsearch');
+//console.log(errors);
 
 
 class elesticConnection extends nodefony.Service {
