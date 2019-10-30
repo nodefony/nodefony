@@ -1,5 +1,27 @@
 # Changelog
 
+## v5.1.0 (30/10/2019)
+- [nodefony release 5.1.0](https://github.com/nodefony/nodefony-core/commit/eb41d9f4dff0c999e56ed982653ef2101de4f58c)
+- [add node 13 in workflow](https://github.com/nodefony/nodefony-core/commit/b61e8e9cdaf063a9ac5f4372981d55442caa936c)
+- [readme bundle mail](https://github.com/nodefony/nodefony-core/commit/ef93c88ff28c6868f035e40cd82e536df58f092c)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/2c36f4920cee8b3d1a50052cf3ee34369d66fb9f)
+- [clean elastic](https://github.com/nodefony/nodefony-core/commit/cccac75fa38c9b27f00bde874b7635cdad2680d2)
+- [add elastic  test unit](https://github.com/nodefony/nodefony-core/commit/08dbfdbe148a841ef7fbf105c1c942fddcce631c)
+- [elastic client migrate](https://github.com/nodefony/nodefony-core/commit/0aa38459f9a345aa283ded1ebc787f61a7d44750)
+- [upgrade deps | upgrade eleastic seervice](https://github.com/nodefony/nodefony-core/commit/a61639a75b4a932ef40eb97ce2a71667a5fc673a)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/7c9569c111c0ffea94bffb633b96793422d5e746)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/2b007a4646db5f85b7c41d70dd0b44e72a31d130)
+- [debug request events](https://github.com/nodefony/nodefony-core/commit/0fa4b3320408ab3b50705dfb2911ffb213e3d66c)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/de6354a5a3acd12ac38a84cd51ba3ac645e6a0f2)
+- [clean request parser](https://github.com/nodefony/nodefony-core/commit/ff9cc60731ed23b5a200f87fa6faf50a15d1e51c)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/91c1033d678f1dd702044da6c8a08d6cfe908ae4)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/70d82d28068995958011543bc35a5fc2e23f9831)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/2b2d0683ef2e6e0756e1cc4ffeb67a8e8157ebb8)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/b8f6ccf982f45e1ea6e2023854be9d8de28eee3e)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/5ab8939a5dca4b57bd65ceebc7f51f7f06d91ba8)
+
+---
+
 ## v5.0.9 (03/10/2019)
 - [nodefony release 5.0.9](https://github.com/nodefony/nodefony-core/commit/2e7d175414d0536c5c748c5a93b074a0a9e99e75)
 - [upgrade generator](https://github.com/nodefony/nodefony-core/commit/05604ec34cbc1ba313696a6bb73d046dbfa46740)
