@@ -33,16 +33,16 @@
     "node": ">=8"
   },
   "dependencies": {
-    "mongoose": "^5.7.4",
+    "mongoose": "^5.7.7",
     "nodefony": "^{{version}}",
-    "sequelize": "^5.21.1",
+    "sequelize": "^5.21.2",
     "sequelize-cli": "^5.5.1",
     "webpack": "^4.41.2",
-    "webpack-dev-server": "^3.8.2"
+    "webpack-dev-server": "^3.9.0"
   },
   "devDependencies": {
     "node-gyp": "^6.0.0",
-    "node-pre-gyp": "^0.13.0"
+    "node-pre-gyp": "^0.14.0"
   },
   "author": "{{authorFullName}} <{{authorMail}}>",
   "readmeFilename": "README.md",
