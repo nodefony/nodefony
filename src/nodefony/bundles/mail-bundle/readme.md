@@ -30,35 +30,35 @@ module.exports = {
  *
  *
  */
-"mail-bundle": {
-  nodemailer: {
-    default: "free",
-    transporters: {
-      free: {
-        host: "smtp.free.fr",
-        port: 465,
-        secure: true, // true for 465, false for other ports
-        auth: {
-          user: "username", // generated  user
-          pass: "passwd" // generated  password
-        }
-      },
-      gmail : {
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true, // true for 465, false for other ports
-        auth: {
-          user: "user@gmail.com",
-          pass: "xxxxxxxxx"
-        },
-        tls: {
-          // do not fail on invalid certs
-          rejectUnauthorized: false
-        }
-      }
-    }
-  }
-}
+ "mail-bundle": {
+   nodemailer: {
+     default: "free",
+     transporters: {
+       free: {
+         host: "smtp.free.fr",
+         port: 465,
+         secure: true, // true for 465, false for other ports
+         auth: {
+           user: "username", // generated  user
+           pass: "passwd" // generated  password
+         }
+       },
+       gmail : {
+         host: "smtp.gmail.com",
+         port: 465,
+         secure: true, // true for 465, false for other ports
+         auth: {
+           user: "user@gmail.com",
+           pass: "xxxxxxxxx"
+         },
+         tls: {
+           // do not fail on invalid certs
+           rejectUnauthorized: false
+         }
+       }
+     }
+   }
+ }
 ```
 
 ## Example to use :
@@ -67,134 +67,130 @@ module.exports = {
 #### <code>./controller/defaultController.js</code>
 ```js
 mailAction() {
-
-  // sendTestMail(to, transporterName = null, context = null, ) {
-  return this.mailer.sendTestMail("admin@nodefony.com", "free", this.context)
+  return this.mailer.sendTestMail("admin@nodefony.com", "gmail", this.context)
     .catch((e) => {
       throw e;
     });
 }
-};
 ```
-```js
-sendTestMail(to, transporterName = null, context = null, ) {
 
-  return this.renderTwig("mail-bundle::mail.html.twig", {}, context)
-    .then((html) => {
-      return this.juiceResources(html, {}, context)
-        .then((htmlp) => {
-          let message = {
-            to: to || this.authorMail, // list of receivers`
-            from: this.mailDefaultOptions.from,
-            subject: `${this.kernel.projectName} ✔`, // Subject line
-            text: "Test Email?", // plain text body
-            html: htmlp, // html body
-            attachments: [{
-              filename: 'nodefony.txt',
-              content: 'Nodefony attachement',
-              contentType: 'text/plain' // optional, would be detected from the filename
-            }],
-            list: {
-              // List-Help: <mailto:admin@example.com?subject=help>
-              help: `${this.authorMail}?subject=help`,
-              // List-Unsubscribe: <http://example.com> (Comment)
-              unsubscribe: [{
-                  url: `https://${this.domain}/mail/unsubscribe`,
-                  comment: 'A short note about this url'
-                },
-                `unsubscribe@{this.domain}`
-              ],
-            }
-          };
-          return this.sendMail(message, transporterName, context)
-            .then((info) => {
-              this.logger(info);
-              return html;
-            })
-            .catch(e => {
-              throw e;
-            });
-        })
-        .catch(e => {
-          throw e;
+### Complete example
+```js
+
+const vCardsJS = require('vcards-js');
+const puppeteer = require('puppeteer');
+...
+
+
+async indexAction() {
+  switch(this.method){
+    case "POST":
+      if (this.query.mail){
+        return this.sendEmail(this.query.mail)
+        .then((info) =>{
+          this.logger(info, "INFO", "EMAIL");
+          return this.redirectToRoute("route-after-sended");
         });
-    })
-    .catch(e => {
+      }else{
+        return this.redirectToRoute("myroute");
+      }
+      break;    
+  }
+}
+
+async sendEmail(to) {
+  let res = await this.twigToHtml();
+  const message = {
+    to: to,
+    from: `"${this.mailer.authorName}" <admin@nodefony.net>`,
+    subject: `${this.kernel.projectName} ✔`, // Subject line
+    html: res, // html body
+    attachments: [{
+      // binary buffer as an attachment
+        filename: 'nodefony.pdf',
+        content: await this.renderPdf({}, {
+          queryString: {
+            mail: true
+          }
+        })
+      }, {
+      // define custom content type for the attachment
+        filename: 'nodefony.vcf',
+        content: this.renderVcard(),
+        contentType: 'text/vcard'
+    }]
+  };
+  // sendMail(message, transporterName, context)
+  // sendMail(message,"gmail", this.context);
+  return await this.sendMail(message);
+}
+
+async twigToHtml() {
+  let file = path.resolve(this.bundle.viewsPath, "index.html.twig");
+  let res = await this.renderTwigFile(file)
+    .catch((e) => {
       throw e;
     });
+  return this.mailer.juiceResources(res, null, this.context);
 }
-```
 
-```twig
-{% extends '/app/Resources/views/base.html.twig' %}
+// vcard example
+renderVcard() {
+  let vCard = vCardsJS();
+  //set properties
+  vCard.firstName = 'admin';
+  vCard.lastName = 'admin';
+  vCard.organization = 'Nodefony';
+  vCard.photo.attachFromUrl('https://cdn.nodefony.com/app/images/app-logo.png', 'JPEG');
+  vCard.logo.attachFromUrl('https://cdn.nodefony.com/app/images/app-logo.png', "PNG");
+  vCard.workPhone = '+033xxxxxxxxxx';
+  vCard.birthday = new Date(xxxx, xx, xx);
+  vCard.title = 'Software Developer ';
+  vCard.url = this.generateAbsoluteUrl("myurl", true);
+  vCard.gender = 'M';
+  vCard.email = 'admin@nodefony.net';
+  vCard.source = this.generateAbsoluteUrl("render-vcard", true);
+  vCard.homeAddress.label = 'Home Address';
+  vCard.homeAddress.street = '';
+  vCard.homeAddress.city = '';
+  vCard.homeAddress.stateProvince = '';
+  vCard.homeAddress.postalCode = '';
+  vCard.homeAddress.countryRegion = '';
+  vCard.socialUrls.github = 'https://github.com/nodefony';
+  //vCard.note = '';
+  return vCard.getFormattedString();
+}
 
-{% block stylesheets %}
-  <link rel="stylesheet" href="{{CDN('stylesheet')}}/mail-bundle/assets/css/mail.css"/>
-{% endblock %}
-
-{% block javascripts %}
-  <script type="text/javascript" src="{{CDN('javascript')}}/mail-bundle/assets/js/mail.js"></script>
-{% endblock %}
-
-{% block body %}
-  <div class="container text-center mt-4">
-    <div class="d-flex justify-content-center">
-      <div class="card mb-3" style="max-width: 540px;">
-        <div class="row no-gutters">
-          <div class="col-md-4">
-            <img src="https://nodefony.net/app/images/app-logo.png" class="card-img" alt="nodefony">
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 class="card-title">{{name}} Email Bundle</h5>
-              <p class="card-text">Bootstrap responsive email. <i class="fa fa-user"></i></p>
-              <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="table-responsive">
-      <table class="table table-bordered table-dark">
-        <thead>
-         <tr>
-           <th scope="col">#</th>
-           <th scope="col">First</th>
-           <th scope="col">Last</th>
-           <th scope="col">Handle</th>
-         </tr>
-       </thead>
-       <tbody>
-         <tr>
-           <th scope="row">1</th>
-           <td>Mark</td>
-           <td>Otto</td>
-           <td>@mdo</td>
-         </tr>
-         <tr>
-           <th scope="row">2</th>
-           <td>Jacob</td>
-           <td>Thornton</td>
-           <td>@fat</td>
-         </tr>
-         <tr>
-           <th scope="row">3</th>
-           <td colspan="2">Larry the Bird</td>
-           <td>@twitter</td>
-         </tr>
-       </tbody>
-      </table>
-    </div>
-
-  </div>
-
-  {% block footer %}
-    {{ render( controller("mail:default:footer" )) }}
-  {% endblock %}
-{% endblock %}
-
-
+// RENDER PDF ON attachement with puppeteer
+async renderPdf(options, query = {}) {
+  const browser = await puppeteer.launch({
+    headless: true,
+    ignoreHTTPSErrors:true,
+    defaultViewport:null
+  });
+  options = nodefony.extend({
+    //format: 'A6',
+    scale: 0.8,
+    printBackground: true,
+    //width: '1300px',
+    preferCSSPageSize: false,
+    displayHeaderFooter: false,
+    //headerTemplate: ,
+    landscape: false,
+    margin: {
+      top: "30px",
+      bottom:"30px",
+      right:"0px",
+      left:"0px"
+    }
+  }, options);
+  const page = await browser.newPage();
+  await page.goto(this.generateAbsoluteUrl("route_page_to_transform", query));
+  await page.emulateMedia("print");
+  let buffer = await page.pdf(options);
+  await browser.close();
+  return buffer;
+}
 ```
 
 ## <a name="authors"></a>Authors
