@@ -2,7 +2,7 @@
   "name": "{{packageName}}",
   "version": "1.0.0",
   "description": "{{name}} description",
-  "author": "{{authorFullName}} <{{authorMail}}>",
+  "author": "{{authorName}} <{{authorEmail}}>",
 {% if packageName == "app" %}
   "main": "appKernel.js",
 {% else %}

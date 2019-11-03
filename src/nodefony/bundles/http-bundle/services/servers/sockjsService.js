@@ -181,7 +181,6 @@ module.exports = class sockjs extends nodefony.Service {
       }
       let hot = (config.hot || config.hotOnly) || (this.hot || this.hotOnly);
       if (hot) {
-        console.log(hot)
         this.sockWrite("hot", null, conn);
       }
       let clientLogLevel = (config.clientLogLevel || this.clientLogLevel);

@@ -12,53 +12,36 @@
  *
  */
 const assert = require('assert');
-const http = require("http");
 
 describe("BUNDLE {{testName}}", () => {
+  beforeEach(() => {
+    const requestClient = kernel.get("requestClient");
+    const httpsServer = kernel.get("httpsServer");
+    const certificats = httpsServer.getCertificats();
+    const defaultOptions = {
+      method: 'GET',
+      timeout: 5000,
+      agentOptions: {
+        cert: certificats.cert,
+        key: certificats.key,
+        ca: certificats.ca
+      }
+    };
+    const myurl = `https://${kernel.settings.system.domain}:${kernel.settings.system.httpsPort}`;
+    global.request = requestClient.create(myurl, defaultOptions);
+  });
 
-	describe('CORE', () => {
+  describe('ROUTE', () => {
 
-		beforeEach(() =>{});
+    it("ROUTE {{routeName}} ", async () => {
+      let options = {
+        timeout: 1500
+      };
+      let result = await global.request.http("{{routeName}}", options);
+      assert.equal(result.json.statusCode, 200);
+      assert.equal(result.json.headers.server, "nodefony");
+    });
 
-		before( () => {});
+  });
 
-		// EXAMPLE  NODEFONY
-		it("NAMESPACE LOADED", (done) => {
-			// check nodefony namespace
-			assert.equal( typeof nodefony, "object" );
-			// check instance kernel
-			assert.equal( kernel instanceof nodefony.kernel, true)
-			done();
-		});
-	});
-
-	describe('ROUTE', () => {
-
-		beforeEach( () => {});
-
-		before( () =>{});
-
-		it("ROUTE {{routeName}} ", (done) => {
-			let options = {
-				hostname: kernel.settings.system.domain,
-				port: kernel.settings.system.httpPort,
-				path: "/{{routeName}}",
-				method: 'GET'
-			};
-
-			let request = http.request(options, (res) => {
-				assert.equal(res.statusCode, 200);
-				assert.equal(res.headers.server, "nodefony");
-				res.setEncoding('utf8');
-				res.on('data',  (chunk) => {
-					// check result here
-				});
-        res.on('end', () => {
-          done();
-        });
-			})
-			request.end();
-		});
-
-	});
 });

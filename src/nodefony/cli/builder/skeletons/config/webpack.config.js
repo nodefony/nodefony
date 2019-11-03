@@ -1,5 +1,3 @@
-//const bundleName = path.basename(path.resolve(__dirname, ".."));
-
 const path = require("path");
 //const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -24,19 +22,18 @@ const package = require(path.resolve("package.json"));
 
 const bundleConfig = require(path.resolve(__dirname, "config.js"));
 const bundleName = package.name;
-const publicPath = `/${bundleName}/assets/`;
+const publicPath = "/{{bundleName}}/assets/";
 
-let config = null;
+let wpconfig = null;
 let dev = true;
 if (kernel.environment === "dev") {
-  config = require("./webpack/webpack.dev.config.js");
+  wpconfig = require("./webpack/webpack.dev.config.js");
 } else {
-  config = require("./webpack/webpack.prod.config.js");
+  wpconfig = require("./webpack/webpack.prod.config.js");
   dev = false;
 }
 
-
-module.exports = webpackMerge(config, {
+module.exports = webpackMerge(wpconfig, {
   //context: context,
   target: "web",
   entry: {

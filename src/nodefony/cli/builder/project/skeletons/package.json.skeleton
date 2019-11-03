@@ -27,7 +27,8 @@
   "os": [
     "darwin",
     "linux",
-    "freebsd"
+    "freebsd",
+    "win32"
   ],
   "engines": {
     "node": ">=8"
