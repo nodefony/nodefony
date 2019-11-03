@@ -80,17 +80,17 @@ module.exports = {
    *    see FRAMEWORK BUNDLE config for more options
    *
    */
-  "framework-bundle": {
-    webpack: {
-      cache: true,
-      outputFileSystem: "file-system" // memory-fs not implemented yet
-    },
-    stats: {
-      colors: true,
-      verbose: true,
-      maxModules: 16 // Infinity
-    }
-  },
+   "framework-bundle": {
+     webpack: {
+       cache: true,
+       outputFileSystem: "file-system", // memory-fs not implemented yet
+       stats: {
+         colors: true,
+         verbose: true,
+         maxModules: 16 // Infinity
+       }
+     }
+   },
 
   /**
    *  OVERRIDE MAIL Bundle

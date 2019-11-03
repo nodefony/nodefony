@@ -22,7 +22,7 @@
     "expose-loader": "^0.7.5",
     "file-loader": "^4.2.0",
     "font-awesome": "^4.7.0",
-    "highlight.js": "^9.15.10",
+    "highlight.js": "^9.16.2",
     "jquery": "^3.4.1",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.13.0",

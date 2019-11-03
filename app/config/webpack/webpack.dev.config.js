@@ -1,4 +1,6 @@
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const {
+  CleanWebpackPlugin
+} = require('clean-webpack-plugin');
 
 module.exports = {
   mode: "development",
@@ -7,7 +9,5 @@ module.exports = {
     new CleanWebpackPlugin({
       verbose: kernel.debug
     })
-    //new webpack.NamedModulesPlugin(),
-    //new webpack.HotModuleReplacementPlugin()
   ]
 };

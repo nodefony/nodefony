@@ -41,7 +41,7 @@
     "webpack-dev-server": "^3.9.0"
   },
   "devDependencies": {
-    "node-gyp": "^6.0.0",
+    "node-gyp": "^6.0.1",
     "node-pre-gyp": "^0.14.0"
   },
   "author": "{{authorFullName}} <{{authorMail}}>",

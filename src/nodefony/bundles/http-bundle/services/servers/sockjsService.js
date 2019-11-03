@@ -120,20 +120,20 @@ module.exports = class sockjs extends nodefony.Service {
       this.bundle.on('onCreateServer', (type, service) => {
         //this[type] = service ;
         switch (type) {
-          case "HTTP":
-          case "HTTPS":
-            let proto = type.toLowerCase();
-            if (proto === this.protocol) {
-              this.createServer(service, proto);
-              if (type === "HTTP") {
-                this.websocketServer = this.get("websocketServer");
-              }
-              if (type === "HTTPS") {
-                this.websocketServer = this.get("websocketServerSecure");
-              }
-              this.fire("onCreateSockServer", this[proto], service);
+        case "HTTP":
+        case "HTTPS":
+          let proto = type.toLowerCase();
+          if (proto === this.protocol) {
+            this.createServer(service, proto);
+            if (type === "HTTP") {
+              this.websocketServer = this.get("websocketServer");
             }
-            break;
+            if (type === "HTTPS") {
+              this.websocketServer = this.get("websocketServerSecure");
+            }
+            this.fire("onCreateSockServer", this[proto], service);
+          }
+          break;
         }
       });
     }
@@ -147,7 +147,7 @@ module.exports = class sockjs extends nodefony.Service {
   addCompiler(compiler, basename, config = {}) {
     this.compilers[basename] = new sockCompiler(this, "SOCKJS_" + basename, compiler);
     this.logger("Add sock-js compiler  : " + "SOCKJS_" + basename, "DEBUG");
-    this.log(config, "DEBUG");
+    this.log("dev config : " + config, "DEBUG");
     if (this.compilers[basename].initsockClient) {
       this.removeListener("onConnection", this.compilers[basename].initsockClient);
     }
@@ -181,6 +181,7 @@ module.exports = class sockjs extends nodefony.Service {
       }
       let hot = (config.hot || config.hotOnly) || (this.hot || this.hotOnly);
       if (hot) {
+        console.log(hot)
         this.sockWrite("hot", null, conn);
       }
       let clientLogLevel = (config.clientLogLevel || this.clientLogLevel);
@@ -244,18 +245,18 @@ module.exports = class sockjs extends nodefony.Service {
 
   sendWatcher(type, data /*, force*/ ) {
     switch (type) {
-      case "error":
-        let myError = null;
-        if (data.stack) {
-          myError = data.stack;
-        } else {
-          myError = util.inspect(data);
-        }
-        return this.sockWrite("errors", [myError]);
-      case "change":
-        return this.sockWrite("content-changed");
-      default:
-        return;
+    case "error":
+      let myError = null;
+      if (data.stack) {
+        myError = data.stack;
+      } else {
+        myError = util.inspect(data);
+      }
+      return this.sockWrite("errors", [myError]);
+    case "change":
+      return this.sockWrite("content-changed");
+    default:
+      return;
     }
   }
 

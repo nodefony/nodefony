@@ -91,11 +91,11 @@ module.exports = class webpack extends nodefony.Service {
 
   setFileSystem() {
     switch (this.webPackSettings.outputFileSystem) {
-      case "memory-fs":
-        return null;
-        //return new MemoryFS();
-      default:
-        return null;
+    case "memory-fs":
+      return null;
+      //return new MemoryFS();
+    default:
+      return null;
     }
   }
 
@@ -171,35 +171,53 @@ module.exports = class webpack extends nodefony.Service {
     return options;
   }
 
-  addDevServerEntrypoints(config, watch, type, bundleSettings) {
-    let options = this.setDevServer(config, watch, bundleSettings);
-    switch (type) {
-      case "react":
-        return options;
-    }
+  addDevServerEntrypoints(config, watch, type, bundle) {
+    let options = this.setDevServer(config, watch, bundle.settings);
+    /*switch (type) {
+    case "react":
+      return options;
+    }*/
     if (options.watch) {
       let devClient = [];
       if (options.inline) {
+        if (type !== "react") {
+          devClient.push(`webpack-dev-server/client?${options.protocol}://${options.domain}:${options.port}`);
+        }
         if (options.hotOnly) {
-          devClient.push("webpack/hot/only-dev-server");
+          if (type !== "react") {
+            config.plugins.push(new this.webpack.HotModuleReplacementPlugin({
+              // Options...
+            }));
+            devClient.push("webpack/hot/only-dev-server");
+          } else {
+            //react-hot-loader/patch
+            devClient.push("react-hot-loader/patch");
+          }
         } else {
           if (options.hot) {
-            devClient.push("webpack/hot/dev-server");
+            if (type !== "react") {
+              config.plugins.push(new this.webpack.HotModuleReplacementPlugin({
+                // Options...
+              }));
+              devClient.push("webpack/hot/dev-server");
+            } else {
+              //react-hot-loader/patch
+              devClient.push("react-hot-loader/patch");
+            }
           }
         }
-        devClient.push(`webpack-dev-server/client?${options.protocol}://${options.domain}:${options.port}`);
         const prependDevClient = (entry) => {
           switch (nodefony.typeOf(entry)) {
-            case "function":
-              return () => Promise.resolve(entry()).then(prependDevClient);
-            case 'object':
-              const entryClone = {};
-              Object.keys(entry).forEach((key) => {
-                entryClone[key] = devClient.concat(entry[key]);
-              });
-              return entryClone;
-            default:
-              return devClient.concat(entry);
+          case "function":
+            return () => Promise.resolve(entry()).then(prependDevClient);
+          case 'object':
+            const entryClone = {};
+            Object.keys(entry).forEach((key) => {
+              entryClone[key] = devClient.concat(entry[key]);
+            });
+            return entryClone;
+          default:
+            return devClient.concat(entry);
           }
         };
         [].concat(config).forEach((wpOpt) => {
@@ -261,37 +279,37 @@ module.exports = class webpack extends nodefony.Service {
               };
             }
             break;*/
-          case "react":
-            publicPath = path.resolve("/", bundle.bundleName, "dist");
-            process.env.PUBLIC_URL = basename;
-            process.env.PUBLIC_PATH = publicPath;
-            process.env.HOST = this.socksSettings.domain + ":" + this.socksSettings.port;
-            process.env.HTTPS = true;
-            config = require(file.path)(process.env.NODE_ENV);
-            config.context = Path;
-            config.output.path = path.resolve(bundle.path, "Resources", "public", "dist");
-            if (publicPath) {
-              config.output.publicPath = publicPath + "/";
-            } else {
-              config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
-            }
-            watchOptions = {
-              ignored: new RegExp(
-                `^(?!${path
+        case "react":
+          publicPath = path.resolve("/", bundle.bundleName, "dist");
+          process.env.PUBLIC_URL = basename;
+          process.env.PUBLIC_PATH = publicPath;
+          process.env.HOST = this.socksSettings.domain + ":" + this.socksSettings.port;
+          process.env.HTTPS = true;
+          config = require(file.path)(process.env.NODE_ENV);
+          config.context = Path;
+          config.output.path = path.resolve(bundle.path, "Resources", "public", "dist");
+          if (publicPath) {
+            config.output.publicPath = publicPath + "/";
+          } else {
+            config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
+          }
+          watchOptions = {
+            ignored: new RegExp(
+              `^(?!${path
                 .normalize(Path + '/')
                 .replace(/[\\]+/g, '\\\\')}).+[\\\\/]node_modules[\\\\/]`,
-                'g'
-              )
-            };
-            break;
-          default:
-            config = require(file.path);
-            watchOptions = nodefony.extend({
-              ignored: /node_modules/
-            }, this.webPackSettings.watchOptions);
+              'g'
+            )
+          };
+          break;
+        default:
+          config = require(file.path);
+          watchOptions = nodefony.extend({
+            ignored: /node_modules/
+          }, this.webPackSettings.watchOptions);
         }
         try {
-          devServer = this.addDevServerEntrypoints(config, watch, type, bundle.settings);
+          devServer = this.addDevServerEntrypoints(config, watch, type, bundle);
         } catch (e) {
           return reject(e);
         }
@@ -310,6 +328,9 @@ module.exports = class webpack extends nodefony.Service {
           }
         }
         bundle.webPackConfig = config;
+        //this.log(config, "DEBUG");
+        //console.log(config)
+        //console.log(devServer)
         try {
           bundle.webpackCompiler = webpack(config);
         } catch (e) {
