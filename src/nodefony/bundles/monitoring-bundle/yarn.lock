@@ -637,10 +637,10 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@nodefony/stage@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@nodefony/stage/-/stage-0.2.2.tgz#9ee13e633b504e610efac5e0d31ee8c52855c818"
-  integrity sha512-z6nBWBHpK83FsKXbxOiGT8Z56Xr8ZV1e7B8OxkjVD+NHehDMSS6QYu4L6DO0KE9M36lrL+Gq3uOkboAekNvqAw==
+"@nodefony/stage@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@nodefony/stage/-/stage-0.2.3.tgz#b4f112cd61a89f3f8dbc1bffdfa7020cc88f39b9"
+  integrity sha512-E8OzIY9wskd6QVcB9bRFUz7xWk/EQwl8gR27SIueNKH5IcpvHyjW3r9XaJBinmC8lukEvR+lzkVHu9DDrukUew==
   dependencies:
     ascii-table "^0.0.9"
     asciify "^1.3.5"
