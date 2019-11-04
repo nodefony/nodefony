@@ -1,5 +1,14 @@
 # Changelog
 
+## v5.1.1 (04/11/2019)
+- [nodefony release 5.1.1](https://github.com/nodefony/nodefony-core/commit/51626c8aa5ff84c8b604a77cfead414e58c00f47)
+- [upgrade bunider](https://github.com/nodefony/nodefony-core/commit/0682c21c4bc95cf1455a8fa76fbbb22034b5140e)
+- [debug HMR vue.js](https://github.com/nodefony/nodefony-core/commit/920e97910e3d2dbeee93aa92048dbb7f6286b101)
+- [Create FUNDING.yml](https://github.com/nodefony/nodefony-core/commit/3bf8285f4a3dfbde96c2f7b362a00fa93feeb77a)
+- [upgrade builder deps](https://github.com/nodefony/nodefony-core/commit/2cb72181259b61713f01a4a5c7d2ac8b42473f53)
+
+---
+
 ## v5.1.0 (30/10/2019)
 - [nodefony release 5.1.0](https://github.com/nodefony/nodefony-core/commit/eb41d9f4dff0c999e56ed982653ef2101de4f58c)
 - [add node 13 in workflow](https://github.com/nodefony/nodefony-core/commit/b61e8e9cdaf063a9ac5f4372981d55442caa936c)
