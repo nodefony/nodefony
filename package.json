@@ -50,7 +50,7 @@
     "node": ">=8"
   },
   "dependencies": {
-    "mongoose": "^5.7.7",
+    "mongoose": "^5.7.8",
     "sequelize": "^5.21.2",
     "sequelize-cli": "^5.5.1",
     "webpack": "^4.41.2",
