@@ -27,7 +27,6 @@ const Csrf = class Csrf {
     if (this.settings.hearder) {
       this.hearder = this.getHeader();
     }
-
   }
 
   logger() {
@@ -146,7 +145,6 @@ const Csrf = class Csrf {
   }
 
   verify(token) {
-    console.log(token)
     try {
       let res = this.engine.verify(this.settings.secret, token);
       if (!res) {
