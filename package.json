@@ -59,7 +59,7 @@
   "devDependencies": {
     "editorconfig": "^0.15.3",
     "github-release-notes": "^0.17.0",
-    "jshint": "^2.10.2",
+    "jshint": "^2.10.3",
     "node-gyp": "^6.0.1",
     "node-pre-gyp": "^0.14.0"
   },
