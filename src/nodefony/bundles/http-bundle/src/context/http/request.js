@@ -11,7 +11,13 @@ module.exports = nodefony.register("Request", function() {
     constructor(request) {
       this.request = request;
       this.request.request.on("data", (data) => {
-        this.write(data);
+        //console.log("data : ")
+        try {
+            this.write(data);
+            //console.log(this.request.data)
+        } catch (e) {
+          throw e;
+        }
       });
     }
     write(buffer) {
@@ -170,7 +176,6 @@ module.exports = nodefony.register("Request", function() {
       this.context.once("onRequestEnd", () => {
         this.request.body = this.query;
       });
-
       this.parseRequest()
         .then((parser) => {
           switch (true) {
@@ -178,16 +183,19 @@ module.exports = nodefony.register("Request", function() {
             case parser instanceof ParserQs:
             case parser instanceof ParserXml:
               this.request.once("end", () => {
+                //console.log("pass native end")
                 if (this.context.finished) {
                   return;
                 }
                 parser.parse();
                 this.context.fire("onRequestEnd", this);
+                return parser ;
               });
               break;
             default:
-              if (! parser) {
+              if (!parser) {
                 this.request.once("end", () => {
+                  //console.log("pass native end")
                   if (this.context.finished) {
                     return;
                   }
@@ -244,7 +252,11 @@ module.exports = nodefony.register("Request", function() {
           this.parser = new ParserXml(this);
           return this.parser;
         case "application/x-www-form-urlencoded":
-          this.parser = new ParserQs(this);
+          try {
+            this.parser = new ParserQs(this);
+          } catch (e) {
+            throw e ;
+          }
           return this.parser;
         default:
           let opt = nodefony.extend(this.context.requestSettings, {

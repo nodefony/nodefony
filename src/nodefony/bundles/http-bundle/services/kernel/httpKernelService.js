@@ -55,7 +55,6 @@ module.exports = class httpKernel extends nodefony.Service {
 
     this.once("onReady", () => {
       this.debugView = this.getTemplate("monitoringBundle::debugBar.html.twig");
-      //console.log(this.debugView)
     });
 
     this.on("onClientError", (e, socket) => {
@@ -494,21 +493,22 @@ module.exports = class httpKernel extends nodefony.Service {
           controller = resolver.newController(context.container, context);
           if (controller.sessionAutoStart) {
             context.sessionAutoStart = controller.sessionAutoStart;
-            if (context.csrf) {
-              context.once("onSessionStart", (session) => {
-                controller.session = session;
+            context.once("onSessionStart", (session) => {
+              controller.session = session;
+              if (context.csrf) {
                 return this.csrfService.handle(context)
                   .then((token) => {
                     if (token) {
                       this.logger(`Check CSRF TOKEN : ${token.name} OK`);
                     }
-                    return resolve(controller);
+                    return controller;
                   })
                   .catch(e => {
                     return reject(e);
                   });
-              });
-            }
+              }
+            });
+            return resolve(controller);
           } else {
             if (context.csrf) {
               return this.csrfService.handle(context)
@@ -521,13 +521,15 @@ module.exports = class httpKernel extends nodefony.Service {
                 .catch(e => {
                   return reject(e);
                 });
+            }else{
+              return resolve(controller);
             }
           }
-          return resolve(controller);
+        }else{
+          let error = new Error("Not Found");
+          error.code = 404;
+          return reject(error);
         }
-        let error = new Error("Not Found");
-        error.code = 404;
-        return reject(error);
       } catch (e) {
         return reject(e);
       }
