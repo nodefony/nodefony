@@ -35,7 +35,7 @@ nodefony.register("Context", () => {
       // Authorisation
       this.accessControl = null;
       this.isControlledAccess = false;
-      this.contentLength = false ;
+      this.contentLength = false;
     }
 
     logger(pci, severity, msgid, msg) {
@@ -163,7 +163,7 @@ nodefony.register("Context", () => {
         //throw new nodefony.Error(`is_granted method No token found !! `);
         return false;
       }
-      if (typeof(role) === "string") {
+      if (typeof (role) === "string") {
         return this.token.hasRole(role);
       } else {
         throw new nodefony.Error(`is_granted Bad role type you must give role example "ROLE_USER" actually : ${role}`);
@@ -194,6 +194,9 @@ nodefony.register("Context", () => {
     }
 
     canDisplayBar() {
+      if (!this.kernelHttp.monitoringBundle) {
+        return false;
+      }
       if (this.kernel.environment === "prod" && !this.kernelHttp.forceDebugBarProd) {
         return false;
       }
@@ -216,13 +219,13 @@ nodefony.register("Context", () => {
         return false;
       }*/
       switch (true) {
-        case this.response.body instanceof Buffer:
-          this.response.body = this.response.body.toString(this.response.encoding);
-          break;
-        case (typeof this.response.body === "string"):
-          break;
-        default:
-          return false;
+      case this.response.body instanceof Buffer:
+        this.response.body = this.response.body.toString(this.response.encoding);
+        break;
+      case (typeof this.response.body === "string"):
+        break;
+      default:
+        return false;
       }
       if (this.response.body.indexOf("</body>") >= 0) {
         return this.showDebugBar;
@@ -233,8 +236,10 @@ nodefony.register("Context", () => {
     displayDebugBar( /*data*/ ) {
       if (this.canDisplayBar()) {
         try {
-          let result = this.kernelHttp.debugView.render(this.kernelHttp.extendTemplate(this.profiling, this));
-          this.response.body = this.response.body.replace("</body>", result + "\n </body>");
+          if (this.kernelHttp.debugView) {
+            let result = this.kernelHttp.debugView.render(this.kernelHttp.extendTemplate(this.profiling, this));
+            this.response.body = this.response.body.replace("</body>", result + "\n </body>");
+          }
           if (this.type === "HTTP2" && this.pushAllowed) {
             //this.pushAsset();
           }
