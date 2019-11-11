@@ -10,7 +10,7 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "^7.7.0",
+    "@babel/core": "^7.7.2",
     "@babel/preset-env": "^7.7.1",
     "@nodefony/stage": "^0.2.3",
     "async": "^3.1.0",
@@ -30,7 +30,7 @@
     "popper.js": "^1.16.0",
     "postcss-loader": "^3.0.0",
     "precss": "^4.0.0",
-    "resolve-url-loader": "^3.1.0",
+    "resolve-url-loader": "^3.1.1",
     "reveal.js": "^3.8.0",
     "sass-loader": "^8.0.0",
     "semver": "^6.3.0",

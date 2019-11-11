@@ -107,7 +107,6 @@ security:
       test-api-area:
           pattern:                                ^/test/firewall/api
           stateless:                              true
-          #provider:                              nodefony
           redirectHttps:                          true
           form_login:
             login_path:                           /test/firewall/local

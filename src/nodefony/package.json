@@ -32,7 +32,7 @@
     "nodefony": "./bin/nodefony"
   },
   "dependencies": {
-    "@babel/parser": "^7.7.0",
+    "@babel/parser": "^7.7.3",
     "@babel/preset-env": "^7.7.1",
     "@nodefony/documentation-bundle": "^5.1.1",
     "@nodefony/elastic-bundle": "^5.1.1",
@@ -56,7 +56,7 @@
     "cli-color": "^2.0.0",
     "cli-table": "^0.3.1",
     "clui": "^0.3.6",
-    "commander": "^4.0.0",
+    "commander": "^4.0.1",
     "create-react-app": "^3.2.0",
     "inquirer": "^7.0.0",
     "js-yaml": "^3.13.1",

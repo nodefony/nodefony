@@ -153,7 +153,7 @@ $ nvm ls # show local versions
 nvm install node # "node" is an alias for the latest version
 ```
 
-**[Nodefony](https://nodefony.net) Excutable Installation (Globally Recommanded)** :
+**[Nodefony](https://nodefony.net) Excutable Installation (Globally)** :
 
 ```bash
 npm -g install nodefony
@@ -175,9 +175,9 @@ yarn global add nodefony
  to easily switch Node versions between different projects.
  or To install or update Node.js, you can download installer here [Node.js](https://nodejs.org/en/)
 
-**[Nodefony](https://nodefony.net) Excutable Installation** :
+**[Nodefony](https://nodefony.net)  Installation** :
 
- Launch a CMD terminal
+Launch a CMD terminal
 ```bash
 npm -g install nodefony
 
@@ -194,6 +194,35 @@ C:\Users\myuser\AppData\Roaming\npm
 or
 C:\Users\myuser\AppData\Roaming\npm\bin
   ```
+
+## <a name="usecli"></a> Use nodefony cli:
+
+**cli command when use Global installation **
+```bash
+$ nodefony -v
+5.1.1
+```
+
+**By using yarn or npm**
+```bash
+#Or by using yarn
+yarn run nodefony
+
+#Or by using npm
+npm run nodefony
+```
+**By using npx **
+***note: npx is included with npm > v5.2 or can be installed separately.***
+```bash
+npx nodefony
+```
+
+**The long way with the full path**
+```bash
+./node_modules/.bin/nodefony
+#Or with the shortcut using npm bin
+$(npm bin)/nodefony
+```
 
 ## <a name="buildcli"></a> Build Project with nodefony cli (recommended):
 
