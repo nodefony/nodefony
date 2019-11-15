@@ -4,8 +4,6 @@ module.exports = nodefony.registerFixture("users", function () {
   const userPromise = function (resolve, reject) {
 
     const user = this.getEntity("user");
-
-
     const createUser = function (entity, user) {
       return new Promise((resolve) => {
           return resolve(entity.findOrCreate({
@@ -139,6 +137,38 @@ module.exports = nodefony.registerFixture("users", function () {
           return reject(error);
         })
         .done(() => {
+          return resolve("userEntity");
+        });
+    default:
+      return user.sync({
+          force: false
+        })
+        .then((User) => {
+          this.logger("Database synchronised  ", "INFO");
+          return Sequelize.Promise.map(tab, (obj) => {
+            return User.findOrCreate({
+              where: {
+                username: obj.username
+              },
+              defaults: obj
+            });
+          });
+        })
+        .spread((...args) => {
+          for (var i = 0; i < args.length; i++) {
+            if (args[i][1]) {
+              this.logger("ADD USER : " + args[i][0].username, "INFO");
+            } else {
+              this.logger("ALREADY EXIST USER : " + args[i][0].username, "INFO");
+            }
+          }
+          return args;
+        })
+        .catch((error) => {
+          this.logger(error);
+          return reject(error);
+        })
+        .done(function ( /*error, result*/ ) {
           return resolve("userEntity");
         });
     }
