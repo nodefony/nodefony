@@ -1,5 +1,7 @@
 name:                 nodefony-core
 on:                   [push]
+paths-ignore:
+    - 'doc/**'
 jobs:
   build-linux:
     runs-on:          ${{ matrix.os }}

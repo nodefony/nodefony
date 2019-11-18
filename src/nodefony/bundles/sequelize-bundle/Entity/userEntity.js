@@ -52,6 +52,13 @@ module.exports = class user extends nodefony.Entity {
           return this.setDataValue("password", encoded);
         }
       },
+      "2fa": {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      "2fa-token": {
+        type: Sequelize.STRING(256),
+      },
       enabled: {
         type: Sequelize.BOOLEAN,
         defaultValue: true
@@ -104,7 +111,6 @@ module.exports = class user extends nodefony.Entity {
     let model = db.define(this.name, this.getSchema(), {
       logging: this.logger.bind(this)
     });
-
     return model;
   }
 
