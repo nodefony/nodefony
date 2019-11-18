@@ -6,6 +6,7 @@
  *
  */
 const Sequelize = require("sequelize");
+const Model = Sequelize.Model;
 
 module.exports = class requests extends nodefony.Entity {
 
@@ -58,9 +59,13 @@ module.exports = class requests extends nodefony.Entity {
   }
 
   registerModel(db) {
-    return db.define(this.name, this.getSchema(), {
-      logging: false
+    class MyModel extends Model{}
+    MyModel.init(this.getSchema(), {
+      sequelize: db,
+      modelName: this.name,
+      logging:this.logger.bind(this)
     });
+    return MyModel;
   }
 
 };

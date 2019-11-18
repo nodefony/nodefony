@@ -164,6 +164,14 @@ module.exports = nodefony.register("controller", function() {
       return this.getOrm().getNodefonyEntity(name);
     }
 
+    getEntityTransaction(name){
+      if ( this.getOrm().name === "sequelize"){
+        let db = this.getNodefonyEntity(name).db ;
+        return db.transaction.bind(db) ;
+      }
+      return null;
+    }
+
     sendMail() {
       if (!this.mailer) {
         throw new Error("mail-bundle not registred !");

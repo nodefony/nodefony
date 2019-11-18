@@ -11,11 +11,12 @@
     "javascript"
   ],
   "dependencies": {
+    "cls-hooked": "^4.2.2",
     "mysql2": "^2.0.0",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
     "pgtools": "^0.3.0",
-    "sequelize": "^5.21.2",
+    "sequelize": "6.0.0-beta.3",
     "sqlite3": "^4.1.0",
     "tedious": "^6.6.2"
   },

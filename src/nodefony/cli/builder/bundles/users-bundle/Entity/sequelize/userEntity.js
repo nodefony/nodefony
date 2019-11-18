@@ -1,4 +1,5 @@
 const Sequelize = require("sequelize");
+const Model = Sequelize.Model;
 /*
  *
  *
@@ -17,7 +18,6 @@ module.exports = class user extends nodefony.Entity {
      *   @param connection name
      */
     super(bundle, "user", "sequelize", "nodefony");
-
     /*this.orm.on("onOrmReady", ( orm ) => {
         let session = this.orm.getEntity("session");
         if (session) {
@@ -56,9 +56,7 @@ module.exports = class user extends nodefony.Entity {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },
-      "2fa-token": {
-        type: Sequelize.STRING(256),
-      },
+      "2fa-token": Sequelize.STRING(256),
       enabled: {
         type: Sequelize.BOOLEAN,
         defaultValue: true
@@ -108,10 +106,12 @@ module.exports = class user extends nodefony.Entity {
   }
 
   registerModel(db) {
-    let model = db.define(this.name, this.getSchema(), {
-      logging: this.logger.bind(this)
+    class MyModel extends Model{}
+    MyModel.init(this.getSchema(), {
+      sequelize: db,
+      modelName: this.name
     });
-    return model;
+    return MyModel;
   }
 
   logger(pci /*, sequelize*/ ) {

@@ -52,7 +52,7 @@ module.exports = {
      */
     servers: {
       statics: true,
-      protocol: "2.0", //  2.0 || 1.1
+      protocol: "1.1", //  2.0 || 1.1
       http: true,
       https: true,
       ws: true,

@@ -1006,7 +1006,8 @@ module.exports = nodefony.register("Bundle", function () {
     }
 
     registerEntities() {
-      this.entityFiles = this.finder.result.findByNode("Entity");
+      const entity = this.finder.result.findByNode("Entity");
+      this.entityFiles = entity.findByNode(this.kernel.getOrm());
       if (this.entityFiles.length()) {
         this.entityFiles.getFiles().forEach((file) => {
           let res = regEntity.exec(file.name);

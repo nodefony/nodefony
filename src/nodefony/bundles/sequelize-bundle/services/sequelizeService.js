@@ -1,7 +1,9 @@
+const cls = require('cls-hooked');
+const namespace = cls.createNamespace('nodefony');
 const Sequelize = require('sequelize');
+Sequelize.useCLS(namespace);
 
 const error = function(err) {
-
   if (this.state !== "DISCONNECTED") {
     this.orm.kernel.fire('onError', err, this);
   }
@@ -68,7 +70,7 @@ const operatorsAliases = {
  * CLASS LIBRARY CONNECTION
  *
  */
-const connectionDB = class connectionDB {
+class connectionDB {
 
   constructor(name, type, options, orm) {
     this.state = "DISCONNECTED";
@@ -152,7 +154,7 @@ const connectionDB = class connectionDB {
     }
     return this.orm.logger(pci, severity, msgid, msg);
   }
-};
+}
 
 /*
  *

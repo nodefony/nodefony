@@ -1,4 +1,5 @@
 const Sequelize = require("sequelize");
+const Model = Sequelize.Model;
 
 module.exports = class session extends nodefony.Entity {
 
@@ -13,13 +14,16 @@ module.exports = class session extends nodefony.Entity {
 
     /*this.orm.on("onOrmReady", ( orm ) => {
         let user = this.orm.getEntity("user");
+        console.log(user)
+        console.log(this.model)
         if (user) {
           this.model.belongsTo(user, {
             foreignKey: 'username',
             constraints: false
           });
         } else {
-          throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
+          this.log("ENTITY ASSOCIATION user NOT AVAILABLE" , "WARNING");
+          //throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
         }
       });*/
   }
@@ -79,7 +83,25 @@ module.exports = class session extends nodefony.Entity {
   }
 
   registerModel(db) {
-    let model = db.define(this.name, this.getSchema(), {
+    class MyModel extends Model {
+      fetchAll(callback) {
+        return this.findAll()
+          .then(function(result) {
+            return callback(null, result);
+          }).catch(function(error) {
+            if (error) {
+              return callback(error, null);
+            }
+          });
+      }
+    }
+    MyModel.init(this.getSchema(), {
+      sequelize: db,
+      modelName: this.name
+    });
+    return MyModel;
+
+    /*let model = db.define(this.name, this.getSchema(), {
       logging: false
     });
 
@@ -93,6 +115,6 @@ module.exports = class session extends nodefony.Entity {
       });
     };
 
-    return model;
+    return model;*/
   }
 };
