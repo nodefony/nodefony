@@ -25,6 +25,7 @@ module.exports = class user extends nodefony.Entity {
             foreignKey: 'username',
             onDelete: 'CASCADE'
           });
+
         } else {
           throw new Error("ENTITY ASSOCIATION session NOT AVAILABLE");
         }

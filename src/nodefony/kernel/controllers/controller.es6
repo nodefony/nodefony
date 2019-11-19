@@ -164,12 +164,28 @@ module.exports = nodefony.register("controller", function() {
       return this.getOrm().getNodefonyEntity(name);
     }
 
-    getEntityTransaction(name){
-      if ( this.getOrm().name === "sequelize"){
-        let db = this.getNodefonyEntity(name).db ;
-        return db.transaction.bind(db) ;
+    getTransaction(name) {
+      const orm = this.getOrm();
+      if (!orm) {
+        throw new Error(`Orm not found`);
       }
-      return null;
+      try {
+        return orm.getTransaction(name);
+      } catch (e) {
+        throw e;
+      }
+    }
+
+    async startTransaction(name) {
+      const orm = this.getOrm();
+      if (!orm) {
+        throw new Error(`Orm not found`);
+      }
+      try {
+        return await orm.startTransaction(name);
+      } catch (e) {
+        throw e;
+      }
     }
 
     sendMail() {

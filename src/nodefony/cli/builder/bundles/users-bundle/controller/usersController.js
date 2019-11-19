@@ -1,3 +1,4 @@
+const User = require(path.resolve(__dirname, "..", "src", "user.js"));
 /**
  *    @Route ("/users")
  */
@@ -8,19 +9,10 @@ module.exports = class usersController extends nodefony.controller {
     // start session
     this.startSession();
     // CSRF cross-site request forgery
-    this.setCsrfToken("nodefony_csrf", {
-      secret: "Make him an offer he can't refuse",
-      cookie: {
-        signed: false,
-        secure: true,
-        sameSite: "strict",
-        path: "/users",
-        maxAge: 200
-      }
+    this.setCsrfToken(this.bundle.settings.csrfToken.name, {
+      secret: this.bundle.settings.csrfToken.secret,
+      cookie: this.bundle.settings.csrfToken.cookie
     });
-    this.entity = this.getEntity("user");
-    this.transaction = this.getEntityTransaction("user");
-    this.ormName = this.getOrm().name;
     this.translation = this.get("translation");
   }
 
@@ -110,8 +102,9 @@ module.exports = class usersController extends nodefony.controller {
         if (nodefony.typeOf(this.query.roles) === "string") {
           this.query.roles = [this.query.roles];
         }
+        const user = new User(this);
         this.checkAuthorisation(null, this.query);
-        return this.create()
+        return user.create()
           .then((user) => {
             let message = `${this.translate("added", "users")} ${user.username}`;
             this.setFlashBag("info", message);
@@ -133,14 +126,15 @@ module.exports = class usersController extends nodefony.controller {
   }
 
   /**
-   *    @Method ({"GET","POST", "PUT"})
+   *    @Method ({"GET","POST"})
    *    @Route ( "/update/{username}", name="nodefony-user-update")
    */
   updateAction(username) {
     this.checkAuthorisation(username, this.query);
+    const user = new User(this);
     switch (this.method) {
       case "GET":
-        return this.findOne(username)
+        return user.findOne(username)
           .then((result) => {
             if (result) {
               return this.render("users:users:createUser.html.twig", {
@@ -153,11 +147,10 @@ module.exports = class usersController extends nodefony.controller {
           }).catch(e => {
             throw e;
           });
-      case "PUT":
       case "POST":
-        return this.findOne(username)
-          .then((user) => {
-            if (user) {
+        return user.findOne(username)
+          .then((myuser) => {
+            if (myuser) {
               if (nodefony.typeOf(this.query.roles) === "string") {
                 this.query.roles = [this.query.roles];
               }
@@ -183,7 +176,7 @@ module.exports = class usersController extends nodefony.controller {
               } else {
                 if (this.query.passwd && this.query["old-passwd"]) {
                   let encoder = this.getNodefonyEntity("user").getEncoder();
-                  let check = encoder.isPasswordValid(this.query["old-passwd"], user.password);
+                  let check = encoder.isPasswordValid(this.query["old-passwd"], myuser.password);
                   if (check) {
                     value.password = this.query.passwd;
                   } else {
@@ -191,14 +184,14 @@ module.exports = class usersController extends nodefony.controller {
                   }
                 }
               }
-              return this.update(user, value)
+              return user.update(myuser, value)
                 .then(() => {
                   let message = `Update User ${this.query.username} OK`;
                   this.setFlashBag("info", message);
                   this.logger(message, "INFO");
                   let currentUser = this.getUser();
-                  if (user.username === currentUser.username) {
-                    if (this.query.username !== user.username) {
+                  if (myuser.username === currentUser.username) {
+                    if (this.query.username !== myuser.username) {
                       currentUser.username = this.query.username;
                     }
                     if (this.getLocale() !== this.query.lang) {
@@ -237,10 +230,11 @@ module.exports = class usersController extends nodefony.controller {
    */
   deleteAction(username) {
     this.checkAuthorisation(username);
-    return this.findOne(username)
-      .then((user) => {
-        if (user) {
-          return this.delete(user)
+    const user = new User(this);
+    return user.findOne(username)
+      .then((myuser) => {
+        if (myuser) {
+          return user.delete(myuser)
             .then((result) => {
               let message = `Delete User ${result.username} OK`;
               this.setFlashBag("info", message);
@@ -276,7 +270,8 @@ module.exports = class usersController extends nodefony.controller {
         case "DELETE":
           return this.deleteAction(username);
         case "GET":
-          return this.findOne(username)
+          const user = new User(this);
+          return user.findOne(username)
             .then((result) => {
               if (result) {
                 return this.render("users:users:readUsers.html.twig", {
@@ -293,7 +288,8 @@ module.exports = class usersController extends nodefony.controller {
       case "POST":
         return this.createAction();
       default:
-        return this.find()
+        const user = new User(this);
+        return user.find()
           .then((result) => {
             return this.render("users:users:readUsers.html.twig", {
               users: result
@@ -323,95 +319,6 @@ module.exports = class usersController extends nodefony.controller {
       }
     }
     return true;
-  }
-
-  find() {
-    switch (this.ormName) {
-      case "mongoose":
-        return this.entity.find();
-      case "sequelize":
-        return this.entity.findAll();
-    }
-  }
-
-  findOne(username) {
-    switch (this.ormName) {
-      case "mongoose":
-        return this.entity.findOne({
-          username: username
-        });
-      case "sequelize":
-        return this.entity.findOne({
-          where: {
-            username: username
-          }
-        });
-    }
-  }
-
-  update(user, value) {
-    switch (this.ormName) {
-      case "mongoose":
-        return user.updateOne(value);
-      case "sequelize":
-        if (this.transaction) {
-          return this.transaction(t => {
-            return user.update(value, {
-              transaction: t
-            });
-          });
-        }
-        return user.update(value);
-    }
-  }
-
-  create() {
-    switch (this.ormName) {
-      case "mongoose":
-      case "sequelize":
-        if (this.transaction) {
-          return this.transaction(t => {
-            return this.entity.create({
-              username: this.query.username || null,
-              email: this.query.email,
-              password: this.query.passwd,
-              name: this.query.name,
-              surname: this.query.surname,
-              gender: this.query.gender,
-              roles: this.query.roles
-            }, {
-              transaction: t
-            });
-          });
-        }
-        return this.entity.create({
-          username: this.query.username || null,
-          email: this.query.email,
-          password: this.query.passwd,
-          name: this.query.name,
-          surname: this.query.surname,
-          gender: this.query.gender,
-          roles: this.query.roles
-        });
-    }
-  }
-
-  delete(user) {
-    switch (this.ormName) {
-      case "mongoose":
-        return user.remove({
-          force: true
-        });
-      case "sequelize":
-        if (this.transaction) {
-          return this.transaction(t => {
-            return user.destroy({
-              transaction: t
-            });
-          });
-        }
-        return user.destroy();
-    }
   }
 
 };

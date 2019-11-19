@@ -14,7 +14,7 @@ module.exports = class session extends nodefony.Entity {
 
     /*this.orm.on("onOrmReady", ( orm ) => {
         let user = this.orm.getEntity("user");
-        console.log(user)
+        console.log(user instanceof Model)
         console.log(this.model)
         if (user) {
           this.model.belongsTo(user, {

@@ -1,20 +1,25 @@
 /**
-*
-*
-*	nodefony-starter CONFIG BUNDLE  users-bundle
-*
-* ===============================================================================
-*
-*  Copyright © 2019/2019        admin | admin@nodefony.com
-*
-* ===============================================================================
-*
-*        GENERATE BY nodefony-starter BUILDER
-*/
+ *
+ *
+ *	nodefony-starter CONFIG BUNDLE  users-bundle
+ *
+ * ===============================================================================
+ *
+ *  Copyright © 2019/2019        admin | admin@nodefony.com
+ *
+ * ===============================================================================
+ *
+ *        GENERATE BY nodefony-starter BUILDER
+ */
+
+const crypto = require('crypto');
+const randomSecret = function() {
+  return crypto.randomBytes(48).toString('hex');
+};
 
 module.exports = {
-  type        : "sandbox",
-  locale      : "en_en",
+  type: "sandbox",
+  locale: "en_en",
 
   /**
    *    WATCHERS
@@ -34,7 +39,7 @@ module.exports = {
    *      }
    *
    */
-  watch: false
+  watch: false,
 
   /**
    *
@@ -45,5 +50,16 @@ module.exports = {
    *
    *	example : create an other database connector
    */
+  csrfToken: {
+    name: "nodefony_csrf",
+    secret: randomSecret(48),
+    cookie: {
+      signed: false,
+      secure: true,
+      sameSite: "strict",
+      path: "/users",
+      maxAge: 200
+    }
+  }
 
 };

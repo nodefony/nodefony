@@ -241,4 +241,23 @@ module.exports = class sequelize extends nodefony.orm {
       throw e;
     }
   }
+
+  async startTransaction(entityName){
+    const entity = this.getNodefonyEntity(entityName);
+    if ( ! entity) {
+      throw new Error(`Entity : ${entityName} not found` );
+    }
+    let db = entity.db;
+    return await db.transaction.call(db);
+  }
+
+  getTransaction(entityName){
+    const entity = this.getNodefonyEntity(entityName);
+    if ( ! entity) {
+      throw new Error(`Entity : ${entityName} not found` );
+    }
+    let db = entity.db;
+    return db.transaction.bind(db);
+  }
+
 };

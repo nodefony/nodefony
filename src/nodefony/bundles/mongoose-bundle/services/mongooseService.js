@@ -142,7 +142,6 @@ module.exports = class mongoose extends nodefony.orm {
             conn[3] += ":" + this.settings.connectors[dbname][data];
             break;
         }
-
       }
       table.push(conn);
     }
@@ -150,6 +149,24 @@ module.exports = class mongoose extends nodefony.orm {
       severity = "DEBUG";
     }
     this.logger("ORM CONNECTORS LIST  : \n" + table.toString(), severity);
+  }
+
+  async startTransaction(entityName){
+    const entity = this.getNodefonyEntity(entityName);
+    if ( ! entity) {
+      throw new Error(`Entity : ${entityName} not found` );
+    }
+    let db = entity.db;
+    return await db.startSession.call(db);
+  }
+
+  getTransaction(entityName){
+    const entity = this.getNodefonyEntity(entityName);
+    if ( ! entity) {
+      throw new Error(`Entity : ${entityName} not found` );
+    }
+    let db = entity.db;
+    return db.startSession.bind(db);
   }
 
 };
