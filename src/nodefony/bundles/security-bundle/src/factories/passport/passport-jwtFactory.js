@@ -24,6 +24,12 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
       super("jwt", security, settings);
       this.algorithm = this.settings.algorithms || "RS256";
       this.jwt = jwt;
+      this.orm = null;
+      this.entity = null;
+      this.kernel.once("onReady", () => {
+        this.orm = this.kernel.getORM();
+        this.entity = this.orm.getEntity("jwt");
+      });
     }
 
     getStrategy(options = {}) {
@@ -36,13 +42,14 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
             this.logger("TRY AUTHORISATION " + this.name, "DEBUG");
             let mytoken = new nodefony.security.tokens.jwt(jwt_payload);
             mytoken.unserialize(mytoken);
-            this.authenticateToken(mytoken).then((token) => {
-              done(null, token);
-              return token;
-            }).catch((error) => {
-              done(error, null);
-              throw error;
-            });
+            this.authenticateToken(mytoken)
+              .then((token) => {
+                done(null, token);
+                return token;
+              }).catch((error) => {
+                done(error, null);
+                throw error;
+              });
           });
           return resolve(strategy);
         } catch (e) {
@@ -64,13 +71,33 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
 
     generateJwtToken(data = null, settings = {}) {
       let defaultSettings = {
-        expiresIn: '1h',
+        expiresIn: 900,
         algorithm: this.getAlgorithmKey()
       };
       let opt = nodefony.extend({}, defaultSettings, settings);
       return this.jwt.sign({
         data: data
       }, this.getPrivateKey(), opt);
+    }
+
+    generateJwtRefreshToken(token, settings = {}) {
+      let defaultSettings = {
+        expiresIn: "1d",
+        algorithm: this.getAlgorithmKey()
+      };
+      let opt = nodefony.extend({}, defaultSettings, settings);
+      return this.generateJwtToken("refresh", opt);
+    }
+
+    verifyRefreshToken(token) {
+      return new Promise((resolve, reject) => {
+        this.jwt.verify(token, this.publicKey, (err, decoded) => {
+          if (err) {
+            return reject(err);
+          }
+          return resolve(decoded);
+        });
+      });
     }
 
     decodeJwtToken(token) {

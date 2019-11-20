@@ -52,12 +52,24 @@ module.exports = class loginController extends nodefony.controller {
         return this.redirectToRoute("home");
       } else {
         this.context.session.invalidate();
-        let error = new nodefony.securityError(
-          `User ${token.user.username}  Désactivé `,
-          401,
-          this.context.security,
-          this.context
-        );
+        let error = null;
+        if (token && !token.user.enabled) {
+          error = new nodefony.securityError(
+            `User ${token.user.username}  Désactivé `,
+            401,
+            this.context.security,
+            this.context
+          );
+          this.logger(error, "ERROR");
+          this.setFlashBag("error", error.message);
+        } else {
+          error = new nodefony.securityError(
+            `No Auth Token`,
+            401,
+            this.context.security,
+            this.context
+          );
+        }
         this.logger(error, "ERROR");
         this.setFlashBag("error", error.message);
         return this.redirectToRoute("login");

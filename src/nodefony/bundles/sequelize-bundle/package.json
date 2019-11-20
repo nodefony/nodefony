@@ -12,7 +12,7 @@
   ],
   "dependencies": {
     "cls-hooked": "^4.2.2",
-    "mysql2": "^2.0.0",
+    "mysql2": "^2.0.1",
     "pg": "^7.13.0",
     "pg-hstore": "^2.3.3",
     "pgtools": "^0.3.0",

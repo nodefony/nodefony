@@ -876,6 +876,10 @@ module.exports = nodefony.register("kernel", function () {
       return this.settings.orm;
     }
 
+    getORM() {
+      return this.get(this.getOrm());
+    }
+
     initServers() {
       // create HTTP server
       let http = null;

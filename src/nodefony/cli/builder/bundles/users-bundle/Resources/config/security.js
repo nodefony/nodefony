@@ -74,10 +74,33 @@ module.exports = {
         context: null,
         redirectHttps: true
       },
-      login_area: {
-        pattern: /^\/login/,
+      login_api_area:{
+        pattern: /^\/api\/login\/jwt/,
+        provider: "nodefony",
+        "passport-local": {
+          usernameField: 'username',
+          passwordField: 'passwd'
+        },
+        stateless: true,
         redirectHttps: true
+      },
+      api_area: {
+        pattern: /^\/api/,
+        redirectHttps: true,
+        stateless: true,
+        "passport-jwt": {
+          algorithms: "RS256",
+          certificats: {
+            private: "config/certificates/ca/private/ca.key.pem",
+            public: "config/certificates/ca/public/public.key.pem"
+          },
+          jwtFromRequest: { // fromCookie or fromHeader
+            extractor: "fromHeader",
+            params: ["jwt"]
+          }
+        }
       }
+
     }
   }
 };
