@@ -1,5 +1,6 @@
+const User = require(path.resolve(__dirname, "..", "src", "user.js"));
 /**
- *    @Route ("/api")
+ *    @Route ("/jwt")
  */
 module.exports = class loginApiController extends nodefony.controller {
 
@@ -7,25 +8,35 @@ module.exports = class loginApiController extends nodefony.controller {
     super(container, context);
     this.security = this.get("security");
     this.jwtFactory = this.security.getFactory("jwt");
+    this.setJsonContext();
   }
 
   /**
    *    @Method ({"POST"})
    *    @Route (
-   *      "/login/jwt",
-   *      name="login-api-jwt"
+   *      "/login",
+   *      name="login-jwt"
    *    )
    */
-  jwtAction() {
+  loginAction() {
     if (!this.context.token) {
       return this.createUnauthorizedException("No Auth Token");
     }
     try {
+      if (!this.context.token.user.enabled) {
+        let error = new nodefony.securityError(
+          `User : ${this.context.token.user.username} disabled`,
+          401,
+          this.context.security,
+          this.context
+        );
+        throw error;
+      }
       const token = this.jwtFactory.generateJwtToken(this.context.token.serialize());
       const refrechToken = this.jwtFactory.generateJwtRefreshToken();
       return this.renderJson(nodefony.extend({}, this.jwtFactory.decodeJwtToken(token), {
         token: token,
-        refreshToken:refrechToken
+        refreshToken: refrechToken
       }));
     } catch (e) {
       let error = new nodefony.securityError(
@@ -41,21 +52,22 @@ module.exports = class loginApiController extends nodefony.controller {
   /**
    *    @Method ({"POST"})
    *    @Route (
-   *      "/jwt/refresh",
-   *      name="api-jwt-refresh"
+   *      "/token",
+   *      name="refresh-jwt"
    *    )
    */
-  async refrehAction(){
-    if (!this.context.token) {
-      return this.createUnauthorizedException("No Auth Token");
-    }
+  async tokenAction() {
     try {
-      const refresh = await this.verifyRefreshToken(this.query.refreshToken);
-      const token = this.jwtFactory.generateJwtToken(this.context.token.serialize());
-
+      // verify refreshToken expired
+      const refresh = await this.jwtFactory.verifyRefreshToken(this.query.refreshToken);
+      // controll user enabled
+      const user = new User(this);
+      const dtuser = await user.findOne(this.query.username);
+      // generate new token access
+      const token = this.jwtFactory.generateJwtToken(dtuser);
       return this.renderJson(nodefony.extend({}, this.jwtFactory.decodeJwtToken(token), {
         token: token,
-        refreshToken:refresh.token
+        refreshToken: refresh.token
       }));
     } catch (e) {
       let error = new nodefony.securityError(
@@ -70,7 +82,7 @@ module.exports = class loginApiController extends nodefony.controller {
 
   /**
    *    @Method ({"GET"})
-   *    @Route ("/logout", name="api-logout")
+   *    @Route ("/logout", name="jwt-logout")
    */
   logoutAction() {
     if (this.security) {

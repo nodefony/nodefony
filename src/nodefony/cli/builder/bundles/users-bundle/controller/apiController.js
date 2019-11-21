@@ -6,7 +6,7 @@ module.exports = class apiController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
-
+    this.setJsonContext();
   }
 
   /**
@@ -14,42 +14,42 @@ module.exports = class apiController extends nodefony.controller {
    *    @Route ( "/{username}",name="api-user",defaults={"username" = ""})
    *
    */
-  async getAction(username){
+  async getAction(username) {
     const user = new User(this);
     let result = null;
-    if ( username){
+    if (username) {
       result = await user.findOne(username);
-    }else{
+    } else {
       result = await user.find();
     }
     return this.renderJson(result);
   }
 
-  postMethod(){
+  postMethod() {
 
   }
 
-  deleteMethod(){
+  deleteMethod() {
 
   }
 
-  putMethod(){
+  putMethod() {
 
   }
 
-  headMethod(){
+  headMethod() {
 
   }
 
-  optionsMethod(){
+  optionsMethod() {
 
   }
 
-  traceMethod(){
+  traceMethod() {
 
   }
 
-  connectMethod(){
+  connectMethod() {
 
   }
 

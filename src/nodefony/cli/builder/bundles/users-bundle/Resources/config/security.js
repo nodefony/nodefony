@@ -1,26 +1,18 @@
-/**
- *   Firewall Config  service Security
- *
- *   // example cross domain
- *   firewalls   :{
- *      users_area:{
- *        pattern:                    /^\/users/,
- *        crossDomain:{
- *            "allow-origin":           "*",
- *            "Access-Control":{
- *              "Access-Control-Allow-Methods":         "GET, POST, PUT, DELETE, OPTIONS",
- *              "Access-Control-Allow-Headers":         "ETag, Authorization,  X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date",
- *              "Access-Control-Allow-Credentials":     true,
- *              "Access-Control-Expose-Headers":        "WWW-Authenticate ,X-Json",
- *              "Access-Control-Max-Age":               10
- *            }
- *        }
- *      }
- *    }
- **/
+const path = require("path");
+
+const cors = {
+  "allow-origin": "*",
+  "Access-Control": {
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "ETag, Authorization,  X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date",
+    "Access-Control-Allow-Credentials": true,
+    "Access-Control-Expose-Headers": "WWW-Authenticate ,X-Json",
+    "Access-Control-Max-Age": 10
+  }
+};
 
 module.exports = {
-  security:{
+  security: {
     /**
      *  FIREWALL  PROVIDER
      */
@@ -56,7 +48,7 @@ module.exports = {
       }
     }],
 
-    firewalls   :   {
+    firewalls: {
       // SECURITY AREA MONITORING  <passport-local>
       nodefony_area: {
         pattern: /^\/nodefony/,
@@ -74,33 +66,37 @@ module.exports = {
         context: null,
         redirectHttps: true
       },
-      login_api_area:{
-        pattern: /^\/api\/login\/jwt/,
+      // SECURITY AREA LOGIN API  <passport-local>
+      login_api_area: {
+        pattern: /^\/jwt\/login/,
         provider: "nodefony",
         "passport-local": {
           usernameField: 'username',
           passwordField: 'passwd'
         },
         stateless: true,
-        redirectHttps: true
+        redirectHttps: true,
+        crossDomain: cors
       },
+      // SECURITY AREA  API  <passport-jwt>
       api_area: {
         pattern: /^\/api/,
         redirectHttps: true,
         stateless: true,
         "passport-jwt": {
           algorithms: "RS256",
+          //secretOrKey:"Les sanglots longs Des violons De l’automne Blessent mon cœur D’une langueur Monotone."
           certificats: {
-            private: "config/certificates/ca/private/ca.key.pem",
-            public: "config/certificates/ca/public/public.key.pem"
+            private: path.resolve("config", "certificates", "ca", "private", "ca.key.pem"),
+            public: path.resolve("config", "certificates", "ca", "public", "public.key.pem")
           },
           jwtFromRequest: { // fromCookie or fromHeader
             extractor: "fromHeader",
             params: ["jwt"]
           }
-        }
+        },
+        crossDomain: cors
       }
-
     }
   }
 };
