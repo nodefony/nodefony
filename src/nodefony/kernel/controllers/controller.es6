@@ -297,6 +297,7 @@ module.exports = nodefony.register("controller", function() {
       }
     }
 
+
     renderJson(obj, status, headers) {
       if (nodefony.isPromise(obj)) {
         return obj.then(result => {

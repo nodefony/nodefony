@@ -29,6 +29,7 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
       this.kernel.once("onReady", () => {
         this.orm = this.kernel.getORM();
         this.entity = this.orm.getEntity("jwt");
+        this.jwtConfig = this.kernel.getBundle("security").settings["passport-jwt"];
       });
     }
 
@@ -80,24 +81,44 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
       }, this.getPrivateKey(), opt);
     }
 
-    generateJwtRefreshToken(token, settings = {}) {
+    async generateJwtRefreshToken(name, token, settings = {}) {
       let defaultSettings = {
         expiresIn: "1d",
         algorithm: this.getAlgorithmKey()
       };
       let opt = nodefony.extend({}, defaultSettings, settings);
-      return this.generateJwtToken("refresh", opt);
+      const refreshToken = this.generateJwtToken({username:name}, opt);
+      await this.entity.setRefreshToken(name, token, refreshToken);
+      return refreshToken;
     }
 
-    verifyRefreshToken(token) {
-      return new Promise((resolve, reject) => {
-        this.jwt.verify(token, this.publicKey, (err, decoded) => {
-          if (err) {
-            return reject(err);
+    verifyRefreshToken(refreshtoken) {
+      return new Promise(async (resolve, reject) => {
+        try{
+          const mytoken = await this.entity.getRefreshToken(refreshtoken);
+          if ( ! mytoken  ){
+            return reject( new Error("Refresh Token not found"));
           }
-          return resolve(decoded);
-        });
+          if ( ! mytoken.active ){
+            return reject( new Error("Refresh Token disabled"));
+          }
+          this.jwt.verify(refreshtoken, this.publicKey, (err, decoded) => {
+            if (err) {
+              return reject(err);
+            }
+            return resolve(decoded);
+          });
+        }catch(e){
+          throw e ;
+        }
       });
+    }
+    async updateJwtRefreshToken(name, token, refreshToken){
+      return await this.entity.updateRefreshToken(name, token, refreshToken);
+    }
+
+    async truncateJwtToken(username = null){
+      return await this.entity.truncate(username);
     }
 
     decodeJwtToken(token) {

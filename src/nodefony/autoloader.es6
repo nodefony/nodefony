@@ -64,11 +64,13 @@ module.exports = function () {
         require(path.resolve(__dirname, "notificationsCenter.es6"));
         require(path.resolve(__dirname, "syslog.es6"));
         require(path.resolve(__dirname, "service.es6"));
+        require(path.resolve(__dirname, "result.es6"));
         require(path.resolve(__dirname, "fileClass.es6"));
         require(path.resolve(__dirname, "finder.es6"));
         require(path.resolve(__dirname, "protocol.es6"));
         require(path.resolve(__dirname, "watcher.es6"));
         require(path.resolve(__dirname, "cli.es6"));
+
         //builders
         require(path.resolve(__dirname, "builder.es6"));
         require(path.resolve(__dirname, "cli", "builder", "bundles", "bundle.js"));

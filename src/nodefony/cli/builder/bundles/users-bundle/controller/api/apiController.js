@@ -1,4 +1,3 @@
-const User = require(path.resolve(__dirname, "..", "src", "user.js"));
 /**
  *    @Route ("/api/users")
  */
@@ -7,6 +6,7 @@ module.exports = class apiController extends nodefony.controller {
   constructor(container, context) {
     super(container, context);
     this.setJsonContext();
+    this.usersService = this.get("users");
   }
 
   /**
@@ -15,12 +15,11 @@ module.exports = class apiController extends nodefony.controller {
    *
    */
   async getAction(username) {
-    const user = new User(this);
     let result = null;
     if (username) {
-      result = await user.findOne(username);
+      result = await this.usersService.findOne(username);
     } else {
-      result = await user.find();
+      result = await this.usersService.find();
     }
     return this.renderJson(result);
   }

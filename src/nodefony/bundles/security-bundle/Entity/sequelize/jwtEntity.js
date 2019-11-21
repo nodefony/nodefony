@@ -7,7 +7,6 @@ const Model = Sequelize.Model;
  *
  *
  */
-
 module.exports = class jwt extends nodefony.Entity {
 
   constructor(bundle) {
@@ -22,9 +21,8 @@ module.exports = class jwt extends nodefony.Entity {
   }
 
   getSchema() {
-
     return {
-      username:{
+      username: {
         type: Sequelize.STRING(256)
       },
       refreshToken: {
@@ -35,12 +33,108 @@ module.exports = class jwt extends nodefony.Entity {
       },
       token: {
         type: Sequelize.STRING(256)
+      },
+      active: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
       }
     };
   }
 
   registerModel(db) {
-    class MyModel extends Model{}
+    class MyModel extends Model {
+      static getRefreshToken(token) {
+        const request = {
+          where: {
+            refreshToken: token
+          }
+        };
+        return this.findOne(request);
+      }
+
+      static async setRefreshToken(username, token, refreshToken, active = true) {
+        const transaction = await db.transaction.call(db);
+        return this.create({
+            username: username,
+            refreshToken: refreshToken,
+            token: token,
+            active: active
+          }, {
+            transaction: transaction
+          })
+          .then((mytoken) => {
+            transaction.commit();
+            return mytoken;
+          }).catch(e => {
+            transaction.rollback();
+            throw e;
+          });
+      }
+
+      static async updateRefreshToken(username, token, refreshToken) {
+        let transaction = null;
+        try {
+          transaction = await db.transaction.call(db);
+          return this.update({
+              token: token
+            }, {
+              where: {
+                username: username,
+                refreshToken: refreshToken
+              }
+            }, {
+              transaction: transaction
+            })
+            .then((mytoken) => {
+              transaction.commit();
+              return mytoken;
+            }).catch(e => {
+              transaction.rollback();
+              throw e;
+            });
+        } catch (e) {
+          if (transaction) {
+            transaction.rollback();
+          }
+          throw e;
+        }
+      }
+
+      static deleteRefreshToken(refreshToken) {
+
+      }
+
+      static async truncate(username) {
+        let transaction = null;
+        let opt = {
+          where: {}
+        };
+        if (username) {
+          opt.where.username = username;
+        } else {
+          opt.truncate = true;
+        }
+        try {
+          transaction = await db.transaction.call(db);
+          return this.destroy(opt, {
+              transaction: transaction
+            })
+            .then((mytoken) => {
+              transaction.commit();
+              return mytoken;
+            }).catch(e => {
+              transaction.rollback();
+              throw e;
+            });
+        } catch (e) {
+          if (transaction) {
+            transaction.rollback();
+          }
+          throw e;
+        }
+      }
+    }
+
     MyModel.init(this.getSchema(), {
       sequelize: db,
       modelName: this.name

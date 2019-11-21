@@ -175,13 +175,12 @@ module.exports = class sequelize extends nodefony.orm {
       this.settings = this.getParameters("bundles.sequelize");
       this.debug = this.settings.debug;
       if (this.settings.connectors && Object.keys(this.settings.connectors).length) {
-        this.kernel.listen(this, "onReady", () => {
+        this.kernel.once( "onReady", () => {
           if (this.kernel.type === "SERVER") {
             this.displayTable("INFO");
           } else {
             this.displayTable();
           }
-
         });
         for (let name in this.settings.connectors) {
           this.createConnection(name, this.settings.connectors[name]);
