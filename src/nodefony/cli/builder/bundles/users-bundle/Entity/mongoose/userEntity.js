@@ -18,7 +18,10 @@ module.exports = class user extends nodefony.Entity {
      *   @param connection name
      */
     super(bundle, "user", "mongoose", "nodefony");
-
+    this.once("onConnect", (name, db) => {
+      this.model = this.registerModel(db);
+      this.orm.setEntity(this);
+    });
   }
 
   getSchema() {
@@ -91,7 +94,6 @@ module.exports = class user extends nodefony.Entity {
         updatedAt: 'updatedAt'
       }
     });
-
     return db.model(this.name, mySchema);
   }
 };

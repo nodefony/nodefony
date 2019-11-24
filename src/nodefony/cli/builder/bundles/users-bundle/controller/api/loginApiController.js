@@ -7,26 +7,9 @@ module.exports = class loginApiController extends nodefony.controller {
     super(container, context);
     this.security = this.get("security");
     this.jwtFactory = this.security.getFactory("jwt");
-    this.setJsonContext();
+    this.jwtSettings = this.bundle.settings.jwt;
     this.usersService = this.get("users");
-  }
-
-  renderJsonApi(obj, status, headers) {
-    try {
-      let json = {
-        url: this.context.url || "",
-        method: this.context.method,
-        scheme: this.context.scheme,
-      };
-      json.pdu = JSON.stringify(new nodefony.PDU({
-        bundle: this.bundle.name,
-        controller: this.name,
-        action: this.get("action") ? this.get("action") : "",
-      }, "INFO"));
-      return this.renderJson(nodefony.extend(true, json, obj), status, headers);
-    } catch (e) {
-      throw e;
-    }
+    this.jsonApi = new nodefony.JsonApi(this.bundle.name, this.bundle.version, this.context);
   }
 
   /**
@@ -42,28 +25,22 @@ module.exports = class loginApiController extends nodefony.controller {
     }
     try {
       if (!this.context.token.user.enabled) {
-        let error = new nodefony.securityError(
-          `User : ${this.context.token.user.username} disabled`,
-          401,
-          this.context.security,
-          this.context
-        );
-        throw error;
+        const error = new Error(`User : ${this.context.token.user.username} disabled`);
+        throw this.createSecurityException(error, 401);
       }
-      const token = this.jwtFactory.generateJwtToken(this.context.token.user);
-      const refrechToken = await this.jwtFactory.generateJwtRefreshToken(this.context.token.user.username, token);
-      return this.renderJsonApi(nodefony.extend({}, this.jwtFactory.decodeJwtToken(token), {
+      const token = this.jwtFactory.generateJwtToken(
+        this.context.token.serialize(),
+        this.jwtSettings.token);
+      const refrechToken = await this.jwtFactory.generateJwtRefreshToken(
+        this.context.token.user.username,
+        token,
+        this.jwtSettings.refreshToken);
+      return this.jsonApi.render(nodefony.extend({}, this.jwtFactory.decodeJwtToken(token), {
         token: token,
         refreshToken: refrechToken
       }));
     } catch (e) {
-      let error = new nodefony.securityError(
-        e,
-        401,
-        this.context.security,
-        this.context
-      );
-      throw error;
+      throw this.createSecurityException(e, 401);
     }
   }
 
@@ -78,39 +55,28 @@ module.exports = class loginApiController extends nodefony.controller {
     try {
       // verify refreshToken expired
       let refresh = await this.jwtFactory.verifyRefreshToken(this.query.refreshToken)
-      .catch((e)=>{
-        let error = new nodefony.securityError(
-          e,
-          401,
-          this.context.security,
-          this.context
-        );
-        throw error;
-      });
-      const username = refresh.data.username ;
-      if ( ! username){
-        throw new Error(`username not valid`);
+        .catch((e) => {
+          throw this.createSecurityException(e, 401);
+        });
+      const username = refresh.data.username;
+      if (!username) {
+        throw this.createSecurityException(new Error(`username not valid`), 401);
       }
-      // controll user enabled
-      //const user = new User(this);
       const dtuser = await this.usersService.findOne(username);
-      if ( dtuser && dtuser.enabled){
+      // controll user enabled
+      if (dtuser && dtuser.enabled) {
         // generate new token access
-        const token = this.jwtFactory.generateJwtToken(dtuser);
-        await this.jwtFactory.updateJwtRefreshToken(dtuser.username, token, this.query.refreshToken );
-        return this.renderJsonApi(nodefony.extend({}, this.jwtFactory.decodeJwtToken(token), {
+        const token = this.jwtFactory.generateJwtToken({
+          user: dtuser
+        }, this.jwtSettings.token);
+        await this.jwtFactory.updateJwtRefreshToken(dtuser.username, token, this.query.refreshToken);
+        return this.jsonApi.render(nodefony.extend({}, this.jwtFactory.decodeJwtToken(token), {
           token: token
         }));
       }
-      throw new Error(`User not valid`);
+      throw this.createSecurityException(new Error(`User not valid`), 401);
     } catch (e) {
-      let error = new nodefony.securityError(
-        e,
-        401,
-        this.context.security,
-        this.context
-      );
-      throw error;
+      throw this.createSecurityException(e, 401);
     }
   }
 
@@ -121,20 +87,16 @@ module.exports = class loginApiController extends nodefony.controller {
    *      name="truncate-jwt"
    *    )
    */
-   async truncateAction() {
-     try {
-       let res = await this.jwtFactory.truncateJwtToken(this.query.username);
-       return this.renderJsonApi({nbDeleted:res});
-     } catch (e) {
-       let error = new nodefony.securityError(
-         e,
-         401,
-         this.context.security,
-         this.context
-       );
-       throw error;
-     }
-   }
+  async truncateAction() {
+    try {
+      let res = await this.jwtFactory.truncateJwtToken(this.query.username);
+      return this.jsonApi.render({
+        nbDeleted: res
+      });
+    } catch (e) {
+      throw this.createSecurityException(e, 401);
+    }
+  }
 
   /**
    *    @Method ({"GET"})

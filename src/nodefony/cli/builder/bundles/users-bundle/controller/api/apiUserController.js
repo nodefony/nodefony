@@ -1,12 +1,12 @@
 /**
  *    @Route ("/api/users")
  */
-module.exports = class apiController extends nodefony.controller {
+module.exports = class apiUserController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
-    this.setJsonContext();
     this.usersService = this.get("users");
+    this.jsonApi = new nodefony.JsonApi(this.bundle.name, this.bundle.version, this.context);
   }
 
   /**
@@ -16,12 +16,16 @@ module.exports = class apiController extends nodefony.controller {
    */
   async getAction(username) {
     let result = null;
-    if (username) {
-      result = await this.usersService.findOne(username);
-    } else {
-      result = await this.usersService.find();
+    try {
+      if (username) {
+        result = await this.usersService.findOne(username);
+      } else {
+        result = await this.usersService.find();
+      }
+      return this.jsonApi.render(result);
+    } catch (e) {
+      throw e;
     }
-    return this.renderJson(result);
   }
 
   postMethod() {

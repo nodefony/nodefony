@@ -13,7 +13,7 @@
  */
 
 const crypto = require('crypto');
-const randomSecret = function() {
+const randomSecret = function () {
   return crypto.randomBytes(48).toString('hex');
 };
 
@@ -39,7 +39,7 @@ module.exports = {
    *      }
    *
    */
-  watch: false,
+  watch: true,
 
   /**
    *
@@ -60,7 +60,14 @@ module.exports = {
       path: "/users",
       maxAge: 200
     }
+  },
+  jwt: {
+    token: {
+      expiresIn: 900
+    },
+    refreshToken: {
+      expiresIn: 3600
+    }
   }
-
 
 };

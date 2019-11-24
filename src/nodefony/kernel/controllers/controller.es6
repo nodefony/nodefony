@@ -1,6 +1,6 @@
 const myRequest = require('request');
 
-module.exports = nodefony.register("controller", function() {
+module.exports = nodefony.register("controller", function () {
 
   class Controller extends nodefony.Service {
     constructor(container, context) {
@@ -108,17 +108,7 @@ module.exports = nodefony.register("controller", function() {
     }
 
     setContextJson(encoding) {
-      if (!encoding) {
-        encoding = "charset=utf-8";
-      } else {
-        encoding = "charset=" + encoding;
-      }
-      this.context.isJson = true;
-      if (this.context.method !== "websoket") {
-        if (this.context.response) {
-          this.context.response.setHeader("Content-Type", "application/json; " + encoding);
-        }
-      }
+      return this.context.setContextJson(encoding);
     }
 
     setJsonContext() {
@@ -193,13 +183,13 @@ module.exports = nodefony.register("controller", function() {
         throw new Error("mail-bundle not registred !");
       }
       switch (arguments.length) {
-        case 1:
-          Array.prototype.push.call(arguments, null);
-          Array.prototype.push.call(arguments, this.context);
-          break;
-        case 2:
-          Array.prototype.push.call(arguments, this.context);
-          break;
+      case 1:
+        Array.prototype.push.call(arguments, null);
+        Array.prototype.push.call(arguments, this.context);
+        break;
+      case 2:
+        Array.prototype.push.call(arguments, this.context);
+        break;
       }
       return this.mailer.sendMail.apply(this.mailer, arguments);
     }
@@ -651,6 +641,10 @@ module.exports = nodefony.register("controller", function() {
 
     createAccessDeniedException(message, code) {
       throw new nodefony.authorizationError(message, code, this.context);
+    }
+
+    createSecurityException(message, code) {
+      throw new nodefony.securityError(message, code, this.context.security, this.context);
     }
 
     isGranted(role) {

@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 
 const fromCookieExtractor = function fromCookieExtractor(nameCookie) {
   const name = nameCookie || "jwt";
-  return function(req) {
+  return function (req) {
     var token = null;
     if (req && req.cookies && req.cookies[name]) {
       token = req.cookies.jwt.value;
@@ -87,20 +87,22 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
         algorithm: this.getAlgorithmKey()
       };
       let opt = nodefony.extend({}, defaultSettings, settings);
-      const refreshToken = this.generateJwtToken({username:name}, opt);
+      const refreshToken = this.generateJwtToken({
+        username: name
+      }, opt);
       await this.entity.setRefreshToken(name, token, refreshToken);
       return refreshToken;
     }
 
     verifyRefreshToken(refreshtoken) {
       return new Promise(async (resolve, reject) => {
-        try{
+        try {
           const mytoken = await this.entity.getRefreshToken(refreshtoken);
-          if ( ! mytoken  ){
-            return reject( new Error("Refresh Token not found"));
+          if (!mytoken) {
+            return reject(new Error("Refresh Token not found"));
           }
-          if ( ! mytoken.active ){
-            return reject( new Error("Refresh Token disabled"));
+          if (!mytoken.active) {
+            return reject(new Error("Refresh Token disabled"));
           }
           this.jwt.verify(refreshtoken, this.publicKey, (err, decoded) => {
             if (err) {
@@ -108,16 +110,16 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
             }
             return resolve(decoded);
           });
-        }catch(e){
-          throw e ;
+        } catch (e) {
+          throw e;
         }
       });
     }
-    async updateJwtRefreshToken(name, token, refreshToken){
+    async updateJwtRefreshToken(name, token, refreshToken) {
       return await this.entity.updateRefreshToken(name, token, refreshToken);
     }
 
-    async truncateJwtToken(username = null){
+    async truncateJwtToken(username = null) {
       return await this.entity.truncate(username);
     }
 
@@ -163,42 +165,42 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
     getExtractorConfig(options, params) {
       let type = nodefony.typeOf(options);
       switch (type) {
-        case "string":
-          switch (options) {
-            case "fromCookie":
-              return fromCookieExtractor.apply(this, params);
-            default:
-              if (ExtractJwt[options]) {
-                return ExtractJwt[options].apply(this, params);
-              } else {
-                throw new Error(`Factory passport-jwt jwtFromRequest JWT Extractor not found  : ${options} `);
-              }
-          }
-          break;
-        case "object":
-          if (options.extractor) {
-            return this.getExtractorConfig(options.extractor, options.params);
-          } else {
-            throw new Error(`Factory passport-jwt bad config Extractor jwtFromRequest : ${options} `);
-          }
-          break;
-        case null:
-        case undefined:
-          return ExtractJwt.fromAuthHeaderAsBearerToken();
+      case "string":
+        switch (options) {
+        case "fromCookie":
+          return fromCookieExtractor.apply(this, params);
         default:
+          if (ExtractJwt[options]) {
+            return ExtractJwt[options].apply(this, params);
+          } else {
+            throw new Error(`Factory passport-jwt jwtFromRequest JWT Extractor not found  : ${options} `);
+          }
+        }
+        break;
+      case "object":
+        if (options.extractor) {
+          return this.getExtractorConfig(options.extractor, options.params);
+        } else {
           throw new Error(`Factory passport-jwt bad config Extractor jwtFromRequest : ${options} `);
+        }
+        break;
+      case null:
+      case undefined:
+        return ExtractJwt.fromAuthHeaderAsBearerToken();
+      default:
+        throw new Error(`Factory passport-jwt bad config Extractor jwtFromRequest : ${options} `);
       }
     }
 
     getSecretOrKeyConfig(options) {
       let type = nodefony.typeOf(options);
       switch (type) {
-        case "string":
-          this.publicKey = options;
-          break;
-        default:
-          this.getCertificats();
-          break;
+      case "string":
+        this.publicKey = options;
+        break;
+      default:
+        this.getCertificats();
+        break;
       }
       return this.publicKey;
     }

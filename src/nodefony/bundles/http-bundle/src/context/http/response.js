@@ -160,7 +160,10 @@ module.exports = nodefony.register("Response", function () {
       return this.statusCode;
     }
 
-    getStatusMessage() {
+    getStatusMessage(code) {
+      if (code) {
+        return http.STATUS_CODES[code] || this.statusMessage || this.response.statusMessage;
+      }
       if (this.response) {
         return this.statusMessage || this.response.statusMessage || http.STATUS_CODES[this.statusCode];
       } else {

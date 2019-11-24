@@ -1,4 +1,4 @@
-nodefony.register.call(nodefony.context, "http", function() {
+nodefony.register.call(nodefony.context, "http", function () {
 
   const Http = class httpContext extends nodefony.Context {
 
@@ -309,25 +309,39 @@ nodefony.register.call(nodefony.context, "http", function() {
       return this.redirect(newUrl, status, headers);
     }
 
+    setContextJson(encoding) {
+      if (!encoding) {
+        encoding = "charset=utf-8";
+      } else {
+        encoding = "charset=" + encoding;
+      }
+      this.isJson = true;
+      if (this.method !== "websoket") {
+        if (this.response) {
+          this.response.setHeader("Content-Type", "application/json; " + encoding);
+        }
+      }
+    }
+
     setXjson(xjson) {
       switch (nodefony.typeOf(xjson)) {
-        case "object":
-          this.response.setHeader("X-Json", JSON.stringify(xjson));
-          return xjson;
-        case "string":
-          this.response.setHeader("X-Json", xjson);
-          return JSON.parse(xjson);
-        case "Error":
-          if (typeof xjson.message === "object") {
-            this.response.setHeader("X-Json", JSON.stringify(xjson.message));
-            return xjson.message;
-          } else {
-            this.response.setHeader("X-Json", xjson.message);
-            return {
-              error: xjson.message
-            };
-          }
-          break;
+      case "object":
+        this.response.setHeader("X-Json", JSON.stringify(xjson));
+        return xjson;
+      case "string":
+        this.response.setHeader("X-Json", xjson);
+        return JSON.parse(xjson);
+      case "Error":
+        if (typeof xjson.message === "object") {
+          this.response.setHeader("X-Json", JSON.stringify(xjson.message));
+          return xjson.message;
+        } else {
+          this.response.setHeader("X-Json", xjson.message);
+          return {
+            error: xjson.message
+          };
+        }
+        break;
       }
     }
 

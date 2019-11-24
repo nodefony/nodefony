@@ -1,5 +1,5 @@
 /**
- *    @Route ("/api/git")
+ *    @Route ("/nodefony/api/git")
  */
 module.exports = class gitController extends nodefony.controller {
 

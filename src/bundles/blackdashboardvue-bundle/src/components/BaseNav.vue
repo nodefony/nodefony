@@ -1,43 +1,40 @@
 <template>
-    <nav class="navbar"
-         :class="[
+<nav class="navbar" :class="[
             {'navbar-expand-lg': expand},
             {[`navbar-${effect}`]: effect},
             {'navbar-transparent': transparent},
             {[`bg-${type}`]: type},
             {'rounded': round}
          ]">
-        <div class="container">
-            <slot name="container-pre"></slot>
-            <slot name="brand">
-                <a class="navbar-brand" href="#" @click.prevent="onTitleClick">
-                    {{title}}
-                </a>
-            </slot>
-            <navbar-toggle-button :toggled="toggled"
-                                  :target="contentId"
-                                  @click.native.stop="toggled = !toggled">
-            </navbar-toggle-button>
+  <div class="container">
+    <slot name="container-pre"></slot>
+    <slot name="brand">
+      <a class="navbar-brand" href="#" @click.prevent="onTitleClick">
+        {{title}}
+      </a>
+    </slot>
+    <navbar-toggle-button :toggled="toggled" :target="contentId" @click.native.stop="toggled = !toggled">
+    </navbar-toggle-button>
 
-            <slot name="container-after"></slot>
+    <slot name="container-after"></slot>
 
-            <div class="collapse navbar-collapse" :class="{show: toggled}" :id="contentId" v-click-outside="closeMenu">
-                <div class="navbar-collapse-header">
-                    <slot name="content-header" :close-menu="closeMenu"></slot>
-                </div>
-                <slot :close-menu="closeMenu"></slot>
-            </div>
-        </div>
-    </nav>
+    <div class="collapse navbar-collapse" :class="{show: toggled}" :id="contentId" v-click-outside="closeMenu">
+      <div class="navbar-collapse-header">
+        <slot name="content-header" :close-menu="closeMenu"></slot>
+      </div>
+      <slot :close-menu="closeMenu"></slot>
+    </div>
+  </div>
+</nav>
 </template>
 <script>
-import { FadeTransition } from "vue2-transitions";
+//import { FadeTransition } from "vue2-transitions";
 import NavbarToggleButton from "./NavbarToggleButton";
 
 export default {
   name: "base-nav",
   components: {
-    FadeTransition,
+    //FadeTransition,
     NavbarToggleButton
   },
   props: {
@@ -54,8 +51,7 @@ export default {
     contentId: {
       type: [String, Number],
       default: Math.random().toString(),
-      description:
-        "Explicit id for the menu. By default it's a generated random number"
+      description: "Explicit id for the menu. By default it's a generated random number"
     },
     effect: {
       type: String,

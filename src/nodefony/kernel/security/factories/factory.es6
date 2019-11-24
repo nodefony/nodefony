@@ -50,7 +50,7 @@ module.exports = nodefony.register('Factory', () => {
 
     authenticate(context) {
       return new Promise((resolve, reject) => {
-        this.logger("FACTORY AUTHENTICATION " + this.name, "DEBUG");
+        this.log("FACTORY AUTHENTICATION " + this.name, "DEBUG");
         let token = null;
         try {
           token = this.createToken(context, this.provider);

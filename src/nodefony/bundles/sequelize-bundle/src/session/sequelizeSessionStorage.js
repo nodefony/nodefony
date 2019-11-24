@@ -12,66 +12,24 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
       context: contextSession,
       updatedAt: {
         //$lt: mydate
-        [Op.lt]:mydate
+        [Op.lt]: mydate
       }
     };
-    /*query.logging = (value) => {
-      return this.manager.logger(value);
-    };*/
     if (!this.entity) {
       return Promise.resolve(true);
     }
-    return this.entity.destroy(query).then((results) => {
-      let severity = "DEBUG";
-      if (results) {
-        severity = "INFO";
-      }
-      this.manager.logger("Context : " + (contextSession || "default") + " GARBADGE COLLECTOR ==> " + results + "  DELETED", severity);
-      return results;
-    }).catch((error) => {
-      throw error;
-    });
-
+    return this.entity.destroy(query)
+      .then((results) => {
+        let severity = "DEBUG";
+        if (results) {
+          severity = "INFO";
+        }
+        this.manager.logger("Context : " + (contextSession || "default") + " GARBADGE COLLECTOR ==> " + results + "  DELETED", severity);
+        return results;
+      }).catch((error) => {
+        throw error;
+      });
   };
-
-  /*const finderGC2 = function (msMaxlifetime, contextSession) {
-    let nbSessionsDelete = 0;
-    let myDate = new Date().getTime() - msMaxlifetime;
-    return this.entity.findAll({
-      where: {
-        context: contextSession
-      }
-    }).then((results) => {
-      for (let i = 0; i < results.length; i++) {
-        let date = null;
-        if (results[i].metaBag.lastUsed) {
-          date = new Date(results[i].metaBag.lastUsed).getTime();
-        } else {
-          date = new Date(results[i].createdAt).getTime();
-        }
-        if (date > myDate) {
-          continue;
-        }
-        results[i].destroy({
-          force: true
-        }).then((session) => {
-
-          nbSessionsDelete++;
-          this.manager.logger("DB SESSIONS STORAGE GARBADGE COLLECTOR SESSION context : " + session.context + " ID : " + session.session_id + " DELETED");
-        }).catch((error) => {
-          if (error) {
-            this.manager.logger("DB SESSIONS STORAGE GARBADGE COLLECTOR SESSION : " + error, "ERROR");
-            throw error;
-          }
-        });
-      }
-      return results;
-      //this.manager.logger("DB SESSIONS STORAGE context : "+ ( contextSession || "default" ) +" GARBADGE COLLECTOR ==> "+ nbSessionsDelete + " DELETED")
-    }).catch((error) => {
-      //console.trace(error);
-      throw error;
-    });
-  };*/
 
   const dbSessionStorage = class dbSessionStorage {
 
