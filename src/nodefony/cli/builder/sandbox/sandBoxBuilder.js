@@ -146,7 +146,7 @@ class SandBox extends nodefony.Builder {
             }]
           },
           this.generateController(),
-          this.generateConfig(this.response.addons.webpack),
+          this.generateConfig(this.response.addons.webpack, true),
           this.generateRessources(),
           this.generateCommand(),
           this.generateUnitTest()
@@ -224,30 +224,42 @@ class SandBox extends nodefony.Builder {
     return doc;
   }
 
-  generateConfig(webpack = false) {
+  generateConfig(webpack = false, project =false) {
+    let childs = [{
+      name: "config.js",
+      type: "file",
+      skeleton: path.resolve(this.globalSkeleton, "config", "config.js"),
+      params: this.response
+    }, {
+      name: "routing.js",
+      type: "file",
+      skeleton: path.resolve(this.globalSkeleton, "config", "routing.js"),
+      params: this.response
+    }, {
+      name: "security.js",
+      type: "file",
+      skeleton: path.resolve(this.globalSkeleton, "config", "security.js"),
+      params: this.response
+    }, {
+      name: "services.js",
+      type: "copy",
+      path: path.resolve(this.globalSkeleton, "config", "services.js")
+    }];
+
+    if ( project){
+      childs.push({
+        name: "nodefony",
+        type: "copy",
+        path: path.resolve(this.globalSkeleton, "config", "nodefony"),
+        params: {
+          recurse: true
+        }
+      });
+    }
     let config = {
       name: "config",
       type: "directory",
-      childs: [{
-        name: "config.js",
-        type: "file",
-        skeleton: path.resolve(this.globalSkeleton, "config", "config.js"),
-        params: this.response
-      }, {
-        name: "routing.js",
-        type: "file",
-        skeleton: path.resolve(this.globalSkeleton, "config", "routing.js"),
-        params: this.response
-      }, {
-        name: "security.js",
-        type: "file",
-        skeleton: path.resolve(this.globalSkeleton, "config", "security.js"),
-        params: this.response
-      }, {
-        name: "services.js",
-        type: "copy",
-        path: path.resolve(this.globalSkeleton, "config", "services.js")
-      }]
+      childs: childs
     };
     if (webpack) {
       config.childs.push({

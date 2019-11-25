@@ -1,3 +1,4 @@
+const path = require("path");
 const dirConfig = path.resolve(__dirname, "nodefony");
 
 module.exports = {
