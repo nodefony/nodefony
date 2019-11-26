@@ -38,6 +38,13 @@ module.exports = class user extends nodefony.Entity {
           return encodePassword(value);
         }
       },
+      "2fa": {
+        type: Boolean,
+        default: false
+      },
+      "2fa-token": {
+        type: String
+      },
       enabled: {
         type: Boolean,
         default: true

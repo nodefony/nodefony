@@ -45,7 +45,7 @@ describe("BUNDLE users", () => {
 
   });
 
-  describe('USER API LOGIN', () => {
+  describe('API LOGIN', () => {
     beforeEach(() => {});
     before(() => {});
     it("LOGIN JWT", async () => {
@@ -84,7 +84,7 @@ describe("BUNDLE users", () => {
       assert.strictEqual(body.code, 200);
     });
 
-    it("BAD LOGIN PASSD JWT ", async () => {
+    it("BAD PASSWD LOGIN  JWT ", async () => {
       const result = await global.http("/jwt/login", {
           method: 'POST',
           form: {
@@ -98,7 +98,7 @@ describe("BUNDLE users", () => {
       assert.strictEqual(result.json.statusCode, 401);
       //const body = JSON.parse(result.json.body);
     });
-    it("BAD LOGIN NAME JWT ", async () => {
+    it("BAD NAME LOGIN JWT ", async () => {
       const result = await global.http("/jwt/login", {
           method: 'POST',
           form: {
@@ -109,9 +109,22 @@ describe("BUNDLE users", () => {
         .catch(e => {
           throw e;
         });
-      //assert.strictEqual(result.json.statusCode, 404);
+      assert.strictEqual(result.json.statusCode, 404);
       const body = JSON.parse(result.json.body);
-      //console.log(body)
+      assert.strictEqual(body.message, "User : badname not Found");
+    });
+
+    it("BAD LOGIN NO credentials ", async () => {
+      const result = await global.http("/jwt/login", {
+          method: 'POST',
+          form: {}
+        })
+        .catch(e => {
+          throw e;
+        });
+      assert.strictEqual(result.json.statusCode, 400);
+      const body = JSON.parse(result.json.body);
+      assert.strictEqual(body.message, "Missing credentials");
     });
 
   });

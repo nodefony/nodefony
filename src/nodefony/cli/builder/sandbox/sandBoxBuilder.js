@@ -134,8 +134,19 @@ class SandBox extends nodefony.Builder {
             name: "Entity",
             type: "directory",
             childs: [{
-              name: ".gitignore",
-              type: "file"
+              name: "sequelize",
+              type: "directory",
+              childs: [{
+                name: ".gitignore",
+                type: "file"
+              }]
+            },{
+              name: "mongoose",
+              type: "directory",
+              childs: [{
+                name: ".gitignore",
+                type: "file"
+              }]
             }]
           },{
             name: "services",
@@ -206,8 +217,19 @@ class SandBox extends nodefony.Builder {
       name: "Entity",
       type: "directory",
       childs: [{
-        name: ".gitignore",
-        type: "file"
+        name: "sequelize",
+        type: "directory",
+        childs: [{
+          name: ".gitignore",
+          type: "file"
+        }]
+      },{
+        name: "mongoose",
+        type: "directory",
+        childs: [{
+          name: ".gitignore",
+          type: "file"
+        }]
       }]
     });
     bundle.push(this.generateCommand());

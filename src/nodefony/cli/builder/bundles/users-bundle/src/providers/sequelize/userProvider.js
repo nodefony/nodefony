@@ -18,9 +18,7 @@ module.exports = nodefony.registerProvider("userProvider", () => {
         if (user) {
           return this.refreshUser(user);
         }
-        let error = new Error("User : " + username + " not Found");
-        error.code = 401;
-        throw error;
+        throw new nodefony.Error("User : " + username + " not Found", 404);
       }).catch(function (error) {
         throw error;
       });
@@ -46,7 +44,6 @@ module.exports = nodefony.registerProvider("userProvider", () => {
       );
     }
   };
-
 
   return Provider;
 });

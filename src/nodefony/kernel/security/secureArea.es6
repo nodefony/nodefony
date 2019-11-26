@@ -83,7 +83,7 @@ module.exports = nodefony.register("SecuredArea", function() {
           securityError = e;
           break;
         default:
-          securityError = new nodefony.securityError(e, null, this, context);
+            securityError = new nodefony.securityError(e, e ? e.code : null , this, context);
       }
       if (!securityError.code) {
         securityError.code = 401;
@@ -93,12 +93,12 @@ module.exports = nodefony.register("SecuredArea", function() {
         case "HTTP":
         case "HTTPS":
         case "HTTP2":
+          if (e && e.status) {
+            context.response.setStatusCode(e.code, e.message);
+          } else {
+            context.response.setStatusCode(401);
+          }
           if (this.formLogin) {
-            if (e && e.status) {
-              context.response.setStatusCode(e.code, e.message);
-            } else {
-              context.response.setStatusCode(401);
-            }
             if (context.session &&
               (context.request.url.pathname !== this.formLogin) &&
               (context.request.url.pathname !== this.checkLogin)
