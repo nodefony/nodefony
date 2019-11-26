@@ -184,6 +184,8 @@ nodefony.register("Context", () => {
       }
     }
 
+    setContextJson() {}
+
     createCookie(name, value, settings) {
       try {
         let cookie = new nodefony.cookies.cookie(name, value, settings);

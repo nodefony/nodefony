@@ -55,7 +55,7 @@ module.exports = nodefony.register('Factory', () => {
         try {
           token = this.createToken(context, this.provider);
           if (!this.supportsToken(token)) {
-            return reject(new Error("Factory " + this.name + " Token Unauthorized !! "));
+            return reject(new nodefony.Error("Factory " + this.name + " Token Unauthorized !! "));
           }
           return this.authenticateToken(token)
             .then((token) => {

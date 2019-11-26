@@ -45,7 +45,7 @@ class Request extends nodefony.Service {
     return myrequest.auth(this.options.auth.login, this.options.auth.passwd, sendImmediately, bearer);
   }
 
-  async http(uri, options, container) {
+  http(uri, options, container) {
     let req = null;
     return new Promise((resolve, reject) => {
       try {
@@ -129,6 +129,7 @@ module.exports = class requestClient extends nodefony.Service {
   constructor(container) {
     super("requestClient", container);
     this.request = this.create(this);
+    this.engine = request;
   }
 
   create(baseUrl, options) {

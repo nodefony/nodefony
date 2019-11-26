@@ -26,20 +26,20 @@ module.exports = nodefony.register('Provider', () => {
                 token.setProvider(this);
                 return resolve(token);
               }
-              return reject(new Error(`user ${token.getUsername()} Incorrect password`));
+              return reject(new nodefony.Error(`user ${token.getUsername()} Incorrect password`, 401));
             }
-            return reject(new Error(`user ${token.getUsername()} not found `));
+            return reject(new nodefony.Error(`user ${token.getUsername()} not found `, 404));
           }).catch((error) => {
             return reject(error);
           });
         }
-        return reject(new Error("The token is not supported by this authentication provider " + this.name));
+        return reject(new nodefony.Error("The token is not supported by this authentication provider " + this.name));
       });
     }
 
     loadUserByUsername( /*username*/ ) {
       return new Promise((resolve, reject) => {
-        return reject(new Error(`Provider : ${this.name} loadUserByUsername method  not defined`));
+        return reject(new nodefony.Error(`Provider : ${this.name} loadUserByUsername method  not defined`));
       });
     }
 
@@ -52,7 +52,7 @@ module.exports = nodefony.register('Provider', () => {
         return this.loadUserByUsername(user.getUsername());
       }
       return new Promise((resolve, reject) => {
-        return reject(new Error("refreshUser bad user type"));
+        return reject(new nodefony.Error("refreshUser bad user type"));
       });
     }
 

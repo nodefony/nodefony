@@ -24,9 +24,14 @@
          return this.entity.find();
        case "sequelize":
          return this.entity.findAll(options)
-           .map(el => el.get({
-             plain: true
-           }));
+           .map((el) => {
+             if (!el) {
+               return null;
+             }
+             return el.get({
+               plain: true
+             });
+           });
        }
      } catch (e) {
        throw e;
@@ -46,9 +51,14 @@
                username: username
              }
            })
-           .then(el => el.get({
-             plain: true
-           }));
+           .then((el) => {
+             if (!el) {
+               return null;
+             }
+             return el.get({
+               plain: true
+             });
+           });
        }
      } catch (e) {
        throw e;
