@@ -53,7 +53,10 @@ module.exports = nodefony.register("notificationsCenter", function () {
         if (!res) {
           continue;
         }
-        this.listen(context || this, res[0], localSettings[i]);
+        if ( context){
+          this.listen(context || this, res[0], localSettings[i]);
+        }
+        this.on(res[0], localSettings[i]);
       }
     }
     /**

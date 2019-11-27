@@ -29,7 +29,7 @@ nodefony.register.call(nodefony.session.storage, "mongoose", function () {
     constructor(manager) {
       this.manager = manager;
       this.orm = this.manager.get("mongoose");
-      this.manager.kernel.listen(this, "onReady", () => {
+      this.manager.kernel.on( "onReady", () => {
         this.entity = this.orm.getEntity("session");
       });
       this.gc_maxlifetime = this.manager.settings.gc_maxlifetime;

@@ -28,7 +28,7 @@ module.exports = class mongoose extends nodefony.orm {
 
   boot() {
     super.boot();
-    this.kernel.listen(this, "onBoot", () => {
+    this.kernel.once("onBoot", () => {
       this.settings = nodefony.extend({}, defaultconfigServer, this.bundle.settings.mongoose);
       if (this.settings.connectors && Object.keys(this.settings.connectors).length) {
         for (let name in this.settings.connectors) {
@@ -43,7 +43,7 @@ module.exports = class mongoose extends nodefony.orm {
       }
     });
 
-    this.kernel.listen(this, "onReady", () => {
+    this.kernel.once("onReady", () => {
       this.displayTable("INFO");
     });
   }
@@ -151,19 +151,19 @@ module.exports = class mongoose extends nodefony.orm {
     this.logger("ORM CONNECTORS LIST  : \n" + table.toString(), severity);
   }
 
-  async startTransaction(entityName){
+  async startTransaction(entityName) {
     const entity = this.getNodefonyEntity(entityName);
-    if ( ! entity) {
-      throw new Error(`Entity : ${entityName} not found` );
+    if (!entity) {
+      throw new Error(`Entity : ${entityName} not found`);
     }
     let db = entity.db;
     return await db.startSession.call(db);
   }
 
-  getTransaction(entityName){
+  getTransaction(entityName) {
     const entity = this.getNodefonyEntity(entityName);
-    if ( ! entity) {
-      throw new Error(`Entity : ${entityName} not found` );
+    if (!entity) {
+      throw new Error(`Entity : ${entityName} not found`);
     }
     let db = entity.db;
     return db.startSession.bind(db);

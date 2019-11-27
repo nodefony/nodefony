@@ -146,9 +146,8 @@ module.exports = class realTime extends nodefony.syslog {
     this.services = {};
     this.initSyslog();
     this.protocol = new nodefony.io.protocol.bayeux();
-    this.listen(this, "onError", this.onError);
-    //this.listen(this, "onMessage", this.onMessage );
-    this.kernel.listen(this, "onReady", () => {
+    this.on( "onError", this.onError.bind(this));
+    this.kernel.once( "onReady", () => {
       this.settings = this.container.getParameters("bundles.realtime");
       for (let services in this.settings.services) {
         this.registerService(services, this.settings.services[services]);
@@ -589,7 +588,7 @@ module.exports = class realTime extends nodefony.syslog {
           //var remoteAddress = context.request.remoteAddress ;
           //var remoteAddress = context.request.domain ;
           //console.log(context.request)
-          context.notificationsCenter.listen(this, "onClose", ( /*code, info*/ ) => {
+          context.notificationsCenter.once( "onClose", ( /*code, info*/ ) => {
             cleanConnection.call(this, message.clientId);
           });
           return this.send(context, this.onConnect(message, JSON.stringify(obj)));

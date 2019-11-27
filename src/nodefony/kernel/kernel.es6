@@ -928,7 +928,10 @@ module.exports = nodefony.register("kernel", function () {
         this.workerId = cluster.worker.id;
         this.worker = cluster.worker;
         this.fire("onCluster", "WORKER", this, process);
-        process.on("message", this.listen(this, "onMessage"));
+        //process.on("message", this.listen(this, "onMessage"));
+        process.on("message", (msg) =>{
+          this.fire("onMessage", msg);
+        });
       }
       if (nodefony.warning) {
         this.logger(nodefony.warning, "WARNING");

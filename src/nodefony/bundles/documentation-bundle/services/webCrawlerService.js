@@ -160,7 +160,7 @@ module.exports = class webCrawler extends nodefony.Service {
     this.crawled = {};
     this.elastic = null;
     this.serverHttps = this.get("httpsServer");
-    this.listen(this, "onReady", () => {
+    this.once( "onReady", () => {
       this.elastic = this.kernel.getBundle("documentation").elastic;
     });
   }

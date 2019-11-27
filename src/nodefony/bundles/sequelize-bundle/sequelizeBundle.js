@@ -11,7 +11,7 @@ module.exports = class sequelizeBundle extends nodefony.Bundle {
     this.waitBundleReady = true;
 
     let service = this.get("sequelize");
-    service.listen(this, "onOrmReady", () => {
+    service.on("onOrmReady", () => {
       this.fire("onReady", this, service);
     });
   }

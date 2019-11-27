@@ -42,7 +42,7 @@ class React extends nodefony.builders.sandbox {
             params: this.response
           },
           this.generateController(),
-          this.generateConfig(),
+          this.generateConfig(false, true),
           this.generateRessources()
         ]
       };

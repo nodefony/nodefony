@@ -54,13 +54,6 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       this.domain = this.getHostName();
       this.validDomain = this.isValidDomain();
       // LISTEN EVENTS
-      /*this.on("onView", (result) => {
-        if (this.response) {
-          this.response.body = result;
-        }
-      });*/
-      //this.listen(this, "onResponse", this.send);
-      //this.once("onRequest", this.handle.bind(this));
       this.once("connect", () => {
         this.connect(this.resolver.acceptedProtocol);
       });

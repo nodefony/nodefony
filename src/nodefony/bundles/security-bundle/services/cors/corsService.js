@@ -95,7 +95,7 @@ module.exports = class cors extends nodefony.Service {
     this.allowMatch = null;
     this.headers = {};
     this.httpKernel = httpKernel;
-    this.kernel.listen(this, "onPreBoot", () => {
+    this.kernel.once( "onPreBoot", () => {
       this.settings = this.kernel.getBundle("security").settings.cors;
       readConfig.call(this, this.settings);
     });

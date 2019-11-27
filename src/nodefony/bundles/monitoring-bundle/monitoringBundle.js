@@ -63,7 +63,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
               nb: 0,
               listeners: kernel.notificationsCenter._events[event].length
             };
-            kernel.listen(this, event, () => {
+            kernel.on( event, () => {
               this.infoKernel.events[event].fire = true;
               this.infoKernel.events[event].nb = ++this.infoKernel.events[event].nb;
             });
@@ -283,7 +283,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       request.nodefony_time = new Date().getTime();
     });
 
-    this.kernel.listen(this, "onRequest", this.onRequest);
+    this.kernel.on( "onRequest", this.onRequest.bind(this));
   }
 
   onRequest(context /*, resolver*/ ) {
@@ -408,7 +408,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
           listeners: context.notificationsCenter._events[event].length
         };
       }
-      context.listen(context, event, () => {
+      context.on( event, () => {
         if (context.profiling) {
           //var ele = arguments[0];
           context.profiling.events[event].fire = true;
@@ -564,7 +564,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         this.websocketRequest(context);
         break;
     }
-    context.listen(this, "onView", this.onView);
+    context.on( "onView", this.onView.bind(this));
   }
 
   httpRequest(context) {
@@ -606,7 +606,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       content: content,
       "content-type": context.request.contentType
     };
-    context.listen(this, "onSendMonitoring", this.onSendMonitoring);
+    context.on( "onSendMonitoring", this.onSendMonitoring.bind(this));
   }
 
   websocketRequest(context) {
@@ -656,7 +656,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       message: [],
     };
     if (context.profiler) {
-      context.listen(this, "onMessage", (message, Context, direction) => {
+      context.on( "onMessage", (message, Context, direction) => {
         let ele = {
           date: new Date().toTimeString(),
           data: message,
@@ -683,7 +683,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       });
     }
 
-    context.listen(this, "onFinish", ( /*Context, reasonCode, description*/ ) => {
+    context.on( "onFinish", ( /*Context, reasonCode, description*/ ) => {
       if (context.profiling) {
         context.profiling.response.statusCode = context.connection.state;
       }

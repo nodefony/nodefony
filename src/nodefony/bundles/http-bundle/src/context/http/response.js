@@ -10,7 +10,6 @@ module.exports = nodefony.register("Response", function () {
       //}
       this.context = container.get('context');
       this.container = container;
-      //this.container.get("notificationsCenter").listen(this, "onView", this.setBody);
       //BODY
       this.body = "";
       this.encoding = this.setEncoding('utf8');

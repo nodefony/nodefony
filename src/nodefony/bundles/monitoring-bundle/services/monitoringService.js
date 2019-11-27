@@ -1,7 +1,7 @@
 const net = require('net');
 const os = require('os');
 
-const _totalCpuTime = function (cpu) {
+const _totalCpuTime = function(cpu) {
   // millis
   if (!cpu || !cpu.times) {
     return 0;
@@ -17,7 +17,7 @@ const _totalCpuTime = function (cpu) {
   return user + nice + sys + idle + irq;
 };
 
-const totalCpusTime = function (cpus) {
+const totalCpusTime = function(cpus) {
   if (cpus) {
     return cpus.map(_totalCpuTime).reduce((a, b) => a + b, 0);
   }
@@ -52,7 +52,7 @@ module.exports = class monitoring extends nodefony.Service {
     this.syslog = kernel.syslog;
     this.node_start = this.kernel.node_start;
 
-    this.listen(this, "onReady", () => {
+    this.once("onReady", () => {
       this.name = this.kernel.projectName || "nodefony";
       this.port = this.container.getParameters("bundles.realtime.services.monitoring.port") || 1318;
       if (this.realTime && this.kernel.type === "SERVER") {
@@ -108,74 +108,74 @@ module.exports = class monitoring extends nodefony.Service {
       };*/
 
       switch (this.node_start) {
-      case "PM2":
-        pm2.connect(() => {
-          this.logger("CONNECT PM2 REALTIME MONITORING", "DEBUG");
-          // PM2 REALTIME
-          interval = setInterval(() => {
-            pm2.describe(this.name, (err, list) => {
-              let clusters = {
-                pm2: [],
-                name: this.name
-              };
-              if (list) {
-                for (let i = 0; i < list.length; i++) {
-                  clusters.pm2.push({
-                    monit: list[i].monit,
-                    name: list[i].name,
-                    pid: list[i].pid,
-                    pm_id: list[i].pm_id,
-                    pm2_env: {
-                      exec_mode: list[i].pm2_env.exec_mode,
-                      restart_time: list[i].pm2_env.restart_time,
-                      pm_uptime: list[i].pm2_env.pm_uptime,
-                      status: list[i].pm2_env.status
-                    }
-                  });
+        case "PM2":
+          pm2.connect(() => {
+            this.logger("CONNECT PM2 REALTIME MONITORING", "DEBUG");
+            // PM2 REALTIME
+            interval = setInterval(() => {
+              pm2.describe(this.name, (err, list) => {
+                let clusters = {
+                  pm2: [],
+                  name: this.name
+                };
+                if (list) {
+                  for (let i = 0; i < list.length; i++) {
+                    clusters.pm2.push({
+                      monit: list[i].monit,
+                      name: list[i].name,
+                      pid: list[i].pid,
+                      pm_id: list[i].pm_id,
+                      pm2_env: {
+                        exec_mode: list[i].pm2_env.exec_mode,
+                        restart_time: list[i].pm2_env.restart_time,
+                        pm_uptime: list[i].pm2_env.pm_uptime,
+                        status: list[i].pm2_env.status
+                      }
+                    });
+                  }
                 }
+                if (closed || this.stopped) {
+                  clearInterval(interval);
+                  return;
+                }
+                conn.write(JSON.stringify(clusters));
+              });
+            }, 1000);
+          });
+          break;
+        case "NODEFONY_DEV":
+          let cpuUsage = null;
+          let cpus = null;
+          interval = setInterval(() => {
+            let stats = this.kernel.stats();
+            let cpu = this.getCpuUsage(cpuUsage, cpus);
+            cpuUsage = cpu.cpuUsage;
+            cpus = cpu.cpus;
+            let clusters = {
+              pm2: [],
+              name: this.name
+            };
+            let ele = {
+              monit: {
+                memory: stats.memory.rss,
+                cpu: cpu.percent
+              },
+              name: this.name,
+              pid: this.kernel.processId,
+              pm_id: "",
+              pm2_env: {
+                exec_mode: "development",
+                restart_time: 0,
+                pm_uptime: this.kernel.uptime,
+                status: "online"
               }
-              if (closed || this.stopped) {
-                clearInterval(interval);
-                return;
-              }
-              conn.write(JSON.stringify(clusters));
-            });
+            };
+            clusters.pm2.push(ele);
+            conn.write(JSON.stringify(clusters));
           }, 1000);
-        });
-        break;
-      case "NODEFONY_DEV":
-        let cpuUsage = null;
-        let cpus = null;
-        interval = setInterval(() => {
-          let stats = this.kernel.stats();
-          let cpu = this.getCpuUsage(cpuUsage, cpus);
-          cpuUsage = cpu.cpuUsage;
-          cpus = cpu.cpus;
-          let clusters = {
-            pm2: [],
-            name: this.name
-          };
-          let ele = {
-            monit: {
-              memory: stats.memory.rss,
-              cpu: cpu.percent
-            },
-            name: this.name,
-            pid: this.kernel.processId,
-            pm_id: "",
-            pm2_env: {
-              exec_mode: "development",
-              restart_time: 0,
-              pm_uptime: this.kernel.uptime,
-              status: "online"
-            }
-          };
-          clusters.pm2.push(ele);
-          conn.write(JSON.stringify(clusters));
-        }, 1000);
-        break;
-      case "NODEFONY":
-        break;
+          break;
+        case "NODEFONY":
+          break;
       }
 
       socket.on('end', () => {
@@ -214,19 +214,19 @@ module.exports = class monitoring extends nodefony.Service {
     this.server.on("error", (error) => {
       let myError = new nodefony.Error(error);
       switch (error.errno) {
-      case "ENOTFOUND":
-        this.logger("CHECK DOMAIN IN /etc/hosts or config unable to connect to : " + this.domain, "ERROR");
-        this.logger(myError, "CRITIC");
-        break;
-      case "EADDRINUSE":
-        this.logger("Domain : " + this.domain + " Port : " + this.port + " ==> ALREADY USE ", "ERROR");
-        this.logger(myError, "CRITIC");
-        setTimeout(() => {
-          this.server.close();
-        }, 1000);
-        break;
-      default:
-        this.logger(myError, "CRITIC");
+        case "ENOTFOUND":
+          this.logger("CHECK DOMAIN IN /etc/hosts or config unable to connect to : " + this.domain, "ERROR");
+          this.logger(myError, "CRITIC");
+          break;
+        case "EADDRINUSE":
+          this.logger("Domain : " + this.domain + " Port : " + this.port + " ==> ALREADY USE ", "ERROR");
+          this.logger(myError, "CRITIC");
+          setTimeout(() => {
+            this.server.close();
+          }, 1000);
+          break;
+        default:
+          this.logger(myError, "CRITIC");
       }
     });
 
@@ -240,7 +240,7 @@ module.exports = class monitoring extends nodefony.Service {
     /*
      *  KERNEL EVENT TERMINATE
      */
-    this.kernel.listen(this, "onTerminate", () => {
+    this.kernel.once("onTerminate", () => {
       this.stopServer();
     });
   }

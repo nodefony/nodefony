@@ -663,7 +663,7 @@ module.exports = class httpKernel extends nodefony.Service {
 
   createWebsocketContext(container, request, type) {
     let context = new nodefony.context.websocket(container, request, type);
-    context.listen(this, "onError", this.onError);
+    context.on("onError", this.onError.bind(this));
     context.once('onFinish', (context) => {
       this.container.leaveScope(container);
       context.clean();
@@ -766,6 +766,5 @@ module.exports = class httpKernel extends nodefony.Service {
     this.fire("onServerRequest", request, null, type);
     return this.handle(request, null, type);
   }
-
 
 };

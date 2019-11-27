@@ -59,7 +59,7 @@ module.exports = class webpack extends nodefony.Service {
         this.logger(e.message, "WARNING");
       }
       if (!this.production) {
-        this.kernel.listen(this, "onTerminate", () => {
+        this.kernel.once( "onTerminate", () => {
           let res = fs.readdirSync(this.pathCache);
           if (res && res.length) {
             for (let i = 0; i < res.length; i++) {
@@ -408,7 +408,7 @@ module.exports = class webpack extends nodefony.Service {
             }
             this.loggerStat(err, stats, basename, file.name, true);
           });
-          this.kernel.listen(this, "onTerminate", () => {
+          this.kernel.once( "onTerminate", () => {
             if (bundle.watching) {
               bundle.watching.close(() => {
                 this.logger("Watching Ended  " + config.context + " : " + util.inspect(config.entry), "INFO");

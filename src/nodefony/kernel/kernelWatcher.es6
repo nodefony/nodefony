@@ -29,6 +29,9 @@ module.exports = nodefony.register("kernelWatcher", function () {
     }
 
     logger(payload, severity, msgid, msg) {
+      if ( severity === "ERROR"){
+        console.trace(payload);
+      }
       if (typeof payload === "string") {
         let txt = "\x1b[36m";
         if (this.bundle) {

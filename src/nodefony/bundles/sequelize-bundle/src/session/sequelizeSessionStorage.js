@@ -36,7 +36,7 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
     constructor(manager) {
       this.manager = manager;
       this.orm = this.manager.get("sequelize");
-      this.manager.kernel.listen(this, "onReady", () => {
+      this.manager.kernel.once( "onReady", () => {
         this.entity = this.orm.getEntity("session");
       });
       this.gc_maxlifetime = this.manager.settings.gc_maxlifetime;

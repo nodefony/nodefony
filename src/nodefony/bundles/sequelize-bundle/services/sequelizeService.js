@@ -3,7 +3,7 @@ const namespace = cls.createNamespace('nodefony');
 const Sequelize = require('sequelize');
 Sequelize.useCLS(namespace);
 
-const error = function(err) {
+const myerror = function(err) {
   if (this.state !== "DISCONNECTED") {
     this.orm.kernel.fire('onError', err, this);
   }
@@ -137,12 +137,12 @@ class connectionDB {
           })
           .catch(err => {
             this.logger('Unable to connect to the database : ' + err, "ERROR");
-            error.call(this, err);
+            myerror.call(this, err);
             this.orm.fire('onErrorConnection', this.name, conn, this.orm);
           });
       });
     } catch (err) {
-      error.call(this, err);
+      myerror.call(this, err);
       this.orm.fire('onErrorConnection', this.name, conn, this.orm);
     }
     return conn;
@@ -171,7 +171,7 @@ module.exports = class sequelize extends nodefony.orm {
 
   boot() {
     super.boot();
-    this.kernel.listen(this, 'onBoot', ( /*kernel*/ ) => {
+    this.kernel.once('onBoot', ( /*kernel*/ ) => {
       this.settings = this.getParameters("bundles.sequelize");
       this.debug = this.settings.debug;
       if (this.settings.connectors && Object.keys(this.settings.connectors).length) {

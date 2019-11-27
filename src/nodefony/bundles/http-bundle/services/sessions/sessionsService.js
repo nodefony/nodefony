@@ -10,7 +10,7 @@ module.exports = class sessions extends nodefony.Service {
     super("SESSIONS", httpKernel.container, httpKernel.notificationsCenter);
     this.httpKernel = httpKernel;
     this.sessionStrategy = "none";
-    this.listen(this, "onBoot", () => {
+    this.once("onBoot", () => {
       this.settings = this.container.getParameters("bundles.http").session;
       this.proba = parseInt(this.settings.gc_probability, 10);
       this.divisor = parseInt(this.settings.gc_divisor, 10);
@@ -18,7 +18,7 @@ module.exports = class sessions extends nodefony.Service {
       this.sessionAutoStart = this.setAutoStart(this.settings.start);
       this.initializeStorage();
     });
-    this.listen(this, "onTerminate", () => {
+    this.once("onTerminate", () => {
       if (this.storage) {
         this.storage.close();
       }
@@ -27,34 +27,34 @@ module.exports = class sessions extends nodefony.Service {
 
   setAutoStart(setting) {
     switch (setting) {
-    case true:
-    case "":
-    case undefined:
-      return "default";
-    case false:
-    case null:
-      return null;
-    default:
-      if (typeof setting === "string") {
-        return setting;
-      }
-      throw new Error("Session start settings config error : " + setting);
+      case true:
+      case "":
+      case undefined:
+        return "default";
+      case false:
+      case null:
+        return null;
+      default:
+        if (typeof setting === "string") {
+          return setting;
+        }
+        throw new Error("Session start settings config error : " + setting);
     }
   }
 
   initializeStorage() {
     let storage = null;
     switch (this.settings.handler) {
-    case "orm":
-    case "ORM":
-      storage = nodefony.session.storage[this.kernel.getOrm()];
-      break;
-    default:
-      storage = nodefony.session.storage[this.settings.handler];
+      case "orm":
+      case "ORM":
+        storage = nodefony.session.storage[this.kernel.getOrm()];
+        break;
+      default:
+        storage = nodefony.session.storage[this.settings.handler];
     }
     if (storage) {
       this.storage = new storage(this);
-      this.listen(this, "onReady", function () {
+      this.on("onReady", () => {
         this.storage.open("default");
       });
     } else {
@@ -119,7 +119,7 @@ module.exports = class sessions extends nodefony.Service {
 
   addContextSession(context) {
     if (this.storage) {
-      this.listen(this, "onReady", function () {
+      this.once( "onReady", function() {
         this.storage.open(context);
       });
     }
