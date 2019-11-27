@@ -15,26 +15,27 @@ module.exports = nodefony.register('Provider', () => {
       return super.logger(pci, severity, msgid, msg);
     }
 
-    async authenticate(token) {
-      if (token && this.supports(token)) {
-        return await this.loadUserByUsername(token.getUsername())
-          .then((user) => {
-            if (user) {
-              this.logger(`TRY AUTHENTICATION  ${token.getUsername()}  PROVIDER ${this.name}`, "DEBUG");
-              if (this.isPasswordValid(token.getCredentials(), user.getPassword())) {
-                token.setUser(user);
-                token.setProvider(this);
-                return token;
+    authenticate(token) {
+      return new Promise((resolve, reject) => {
+        if (token && this.supports(token)) {
+          return this.loadUserByUsername(token.getUsername())
+            .then((user) => {
+              if (user) {
+                this.logger(`TRY AUTHENTICATION  ${token.getUsername()}  PROVIDER ${this.name}`, "DEBUG");
+                if (this.isPasswordValid(token.getCredentials(), user.getPassword())) {
+                  token.setUser(user);
+                  token.setProvider(this);
+                  return resolve(token);
+                }
+                return reject(new nodefony.Error(`user ${token.getUsername()} Incorrect password`));
               }
-              throw new nodefony.Error(`user ${token.getUsername()} Incorrect password`, 401);
-            }
-            throw new nodefony.Error(`user ${token.getUsername()} not found `, 404);
-          }).catch((error) => {
-            throw error;
-
-          });
-      }
-      throw new nodefony.Error("The token is not supported by this authentication provider " + this.name);
+              return reject(new nodefony.Error(`user ${token.getUsername()} not found `));
+            }).catch((error) => {
+              return reject(error);
+            });
+        }
+        return reject(new nodefony.Error("The token is not supported by this authentication provider " + this.name));
+      });
     }
 
     loadUserByUsername( /*username*/ ) {

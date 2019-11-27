@@ -17,8 +17,8 @@ module.exports = nodefony.registerProvider("userProvider", () => {
         if (user) {
           return this.refreshUser(user);
         }
-        throw new nodefony.Error("User : " + username + " not Found", 404);
-      }).catch(function (error) {
+        throw new nodefony.Error(`User : ${username} not Found`, 404);
+      }).catch((error) => {
         throw error;
       });
     }

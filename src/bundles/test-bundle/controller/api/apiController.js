@@ -22,7 +22,7 @@ module.exports = class apiController extends nodefony.controller {
       return this.renderJson({
         foo: "bar",
         user: this.getUser(),
-        token: this.getToken()
+        token: this.getToken().serialize()
       });
     } catch (e) {
       throw e;
