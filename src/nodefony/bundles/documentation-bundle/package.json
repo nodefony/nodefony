@@ -15,7 +15,7 @@
     "@nodefony/stage": "^0.2.3",
     "async": "^3.1.0",
     "babel-loader": "^8.0.6",
-    "bootstrap": "^4.4.0",
+    "bootstrap": "^4.4.1",
     "cheerio": "^1.0.0-rc.3",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.2.0",

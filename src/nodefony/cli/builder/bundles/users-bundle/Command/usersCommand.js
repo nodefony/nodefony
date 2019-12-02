@@ -41,9 +41,9 @@ class usersCommand extends nodefony.Command {
     return this.usersService.find()
       .then((res) => {
         if (this.cli.commander.json) {
-          return process.stdout.write(`${JSON.stringify(res)}\n`);
+          return process.stdout.write(`${JSON.stringify(res.rows)}\n`);
         } else {
-          return this.display(res);
+          return this.display(res.rows);
         }
       });
   }

@@ -1,5 +1,6 @@
 nodefony.register("Context", () => {
 
+  const colorLogEvent = clc.cyan.bgBlue(`EVENT CONTEXT`);
   const Context = class Context extends nodefony.Service {
 
     constructor(container, request, response, type) {
@@ -43,6 +44,15 @@ nodefony.register("Context", () => {
         msgid = this.type + " REQUEST";
       }
       return super.logger(pci, severity, msgid, msg);
+    }
+
+    fire() {
+      this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
+      return super.fire.apply(this, arguments);
+    }
+    emit() {
+      this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
+      return super.fire.apply(this, arguments);
     }
 
     controller() {

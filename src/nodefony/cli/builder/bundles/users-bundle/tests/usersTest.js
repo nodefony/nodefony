@@ -66,10 +66,11 @@ describe("BUNDLE users", () => {
       global.token = body.result.token;
       assert(body.result.refreshToken);
       global.refreshToken = body.result.refreshToken;
-      assert(body.result.data);
-      assert.strictEqual(body.result.data.authenticated, true);
-      assert(body.result.iat);
-      assert(body.result.exp);
+      assert(body.result.decodedToken.data);
+      assert.strictEqual(body.result.decodedToken.data.authenticated, true);
+      assert(body.result.decodedToken.iat);
+      assert(body.result.decodedToken.exp);
+      assert(body.result.config);
       assert.strictEqual(body.api, "users");
       assert.strictEqual(body.code, 200);
       assert.strictEqual(body.message, 'OK');

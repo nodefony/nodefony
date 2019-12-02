@@ -161,6 +161,10 @@ module.exports = nodefony.register("Resolver", function () {
           this.setVariables(data);
         }
         this.container.set("action", this.actionName);
+        if (this.kernel.debug) {
+          this.logger(`${JSON.stringify(this.route, null, " ")}
+QUERY : ${controller.query ? JSON.stringify(controller.query, null, " "): null}`, "DEBUG", `ROUTE ${this.route.name}`);
+        }
         return this.returnController(this.action.apply(controller, this.variables));
       } catch (e) {
         throw e;

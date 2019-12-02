@@ -56,7 +56,7 @@ class JsonApi extends nodefony.Service {
         }
         if (this.kernel.debug) {
           json.pdu = new nodefony.PDU({
-            bundle: controller.bundle,
+            bundle: controller.bundle.name,
             controller: controller.name,
             action: this.context.get("action") ? this.context.get("action") : "",
             stack: json.error ? json.error.stack : null
@@ -82,6 +82,22 @@ class JsonApi extends nodefony.Service {
       return controller.renderJson(json, json.code);
     }
     return new nodefony.PDU(json, severity, api, messageID, message);
+  }
+
+  renderOptions() {
+    let obj = {
+      name: nodefony.projectName,
+      version: nodefony.projectVersion,
+      nodefony: {
+        version: nodefony.version
+      }
+    };
+    if (this.context) {
+      obj.nodefony.environment = this.kernel.environment;
+      obj.nodefony.debug = this.debug;
+      obj.nodefony.local = this.context.translation.defaultLocale.substr(0, 2);
+    }
+    return obj;
   }
 }
 

@@ -48,9 +48,9 @@ module.exports = class apiUserController extends nodefony.controller {
     let result = null;
     try {
       if (username) {
-        result = await this.usersService.findOne(username);
+        result = await this.usersService.findOne(username, this.query);
       } else {
-        result = await this.usersService.find();
+        result = await this.usersService.find(this.query);
       }
       return this.jsonApi.render(result);
     } catch (e) {
@@ -58,33 +58,38 @@ module.exports = class apiUserController extends nodefony.controller {
     }
   }
 
-  postMethod() {
+  /**
+   *    @Method ({"OPTIONS"})
+   *    @Route ( "/",name="api-users-options")
+   *
+   */
+  optionsAction() {
+    return this.jsonApi.render(this.jsonApi.renderOptions());
+  }
+
+
+  postAction() {
 
   }
 
-  deleteMethod() {
+  deleteAction() {
 
   }
 
-  putMethod() {
+  putAction() {
 
   }
 
-  headMethod() {
+  headAction() {
 
   }
 
-  optionsMethod() {
+  traceAction() {
 
   }
 
-  traceMethod() {
+  connectAction() {
 
   }
-
-  connectMethod() {
-
-  }
-
 
 };

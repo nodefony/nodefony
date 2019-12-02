@@ -95,7 +95,7 @@ module.exports = nodefony.register("kernel", function () {
     nbListeners: 60
   };
 
-  const colorLogEvent = clc.blue(`EVENT KERNEL :`);
+  const colorLogEvent = clc.cyan.bgBlue(`EVENT KERNEL`);
   /**
    *  KERKEL class
    *  The class is a **`KERNEL NODEFONY`** .
@@ -134,7 +134,7 @@ module.exports = nodefony.register("kernel", function () {
       this.console = this.isConsole();
       this.booted = false;
       this.ready = false;
-      this.postReady = false ;
+      this.postReady = false;
       this.started = false;
       this.preRegistered = false;
       this.isCore = nodefony.isCore;
@@ -183,7 +183,7 @@ module.exports = nodefony.register("kernel", function () {
         if (process.getuid && process.getuid() === 0) {
           //this.drop_root();
         }
-        this.postReady = true ;
+        this.postReady = true;
       });
     }
 
@@ -227,12 +227,12 @@ module.exports = nodefony.register("kernel", function () {
     loadCommand() {
       try {
         return this.cli.loadCommand()
-        .then((commands)=>{
-          if (this.debug){
-            this.displayCommand(commands);
-          }
-          return commands ;
-        });
+          .then((commands) => {
+            if (this.debug) {
+              this.displayCommand(commands);
+            }
+            return commands;
+          });
       } catch (e) {
         this.logger(e, "ERROR");
         this.terminate(e.code || 1);
@@ -240,16 +240,16 @@ module.exports = nodefony.register("kernel", function () {
       }
     }
 
-    displayCommand(commands){
+    displayCommand(commands) {
       let table = this.cli.displayTable(null, {
         head: [
           "BUNDLES",
           "COMMAND NAME"
         ]
       });
-      for(let bundle in commands){
+      for (let bundle in commands) {
         let cmd = commands[bundle];
-        for ( let command in cmd){
+        for (let command in cmd) {
           let tab = [];
           tab.push(bundle);
           tab.push(command);
@@ -323,9 +323,9 @@ module.exports = nodefony.register("kernel", function () {
 
     readKernelConfig() {
       try {
-        if( path.basename(this.configPath) === "config.js"){
-          this.settings = this.autoLoader.load(this.configPath, true );
-        }else{
+        if (path.basename(this.configPath) === "config.js") {
+          this.settings = this.autoLoader.load(this.configPath, true);
+        } else {
           this.settings = nodefony.kernelConfig;
         }
         this.settings.name = "NODEFONY";
@@ -929,7 +929,7 @@ module.exports = nodefony.register("kernel", function () {
         this.worker = cluster.worker;
         this.fire("onCluster", "WORKER", this, process);
         //process.on("message", this.listen(this, "onMessage"));
-        process.on("message", (msg) =>{
+        process.on("message", (msg) => {
           this.fire("onMessage", msg);
         });
       }
@@ -943,7 +943,7 @@ module.exports = nodefony.register("kernel", function () {
       return super.fire.apply(this, arguments);
     }
 
-    emit(){
+    emit() {
       this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
       return super.fire.apply(this, arguments);
     }
@@ -1002,10 +1002,10 @@ module.exports = nodefony.register("kernel", function () {
     getBundle(name) {
       this.regBundleName.test(name);
       let res = regBundleName.exec(name);
-      if (res){
+      if (res) {
         name = res[1];
       }
-      if (name === "App" || name === "app") {
+      if (name === "App" || name === "app") {
         return this.bundles.app;
       }
       for (let ns in this.bundles) {

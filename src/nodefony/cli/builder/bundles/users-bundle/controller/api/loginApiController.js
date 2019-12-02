@@ -35,10 +35,12 @@ module.exports = class loginApiController extends nodefony.controller {
         this.context.token.user.username,
         token,
         this.jwtSettings.refreshToken);
-      return this.jsonApi.render(nodefony.extend({}, this.jwtFactory.decodeJwtToken(token), {
+      return this.jsonApi.render({
+        config: this.jsonApi.renderOptions(),
+        decodedToken: this.jwtFactory.decodeJwtToken(token),
         token: token,
         refreshToken: refrechToken
-      }));
+      });
     } catch (e) {
       throw this.createSecurityException(e, 401);
     }

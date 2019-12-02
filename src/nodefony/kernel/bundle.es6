@@ -1,9 +1,8 @@
 const Module = require("module");
 
-const colorLogEvent = clc.blue(`EVENT BUNDLE :`);
-
 module.exports = nodefony.register("Bundle", function () {
 
+  const colorLogEvent = clc.cyan.bgBlue(`EVENT BUNDLE`);
   const regFixtures = /^(\w+)Fixtures.js$/;
   const regController = /^(\w+)Controller\.[m]?js$/;
   const regClassController = /^(\w+)Controller$/;
