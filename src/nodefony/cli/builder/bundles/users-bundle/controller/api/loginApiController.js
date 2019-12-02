@@ -72,9 +72,10 @@ module.exports = class loginApiController extends nodefony.controller {
           user: dtuser
         }, this.jwtSettings.token);
         await this.jwtFactory.updateJwtRefreshToken(dtuser.username, token, this.query.refreshToken);
-        return this.jsonApi.render(nodefony.extend({}, this.jwtFactory.decodeJwtToken(token), {
+        return this.jsonApi.render({
+          decodedToken: this.jwtFactory.decodeJwtToken(token),
           token: token
-        }));
+        });
       }
       throw this.createSecurityException(new Error(`User not valid`), 401);
     } catch (e) {

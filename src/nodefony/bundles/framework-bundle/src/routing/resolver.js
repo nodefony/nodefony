@@ -149,9 +149,6 @@ module.exports = nodefony.register("Resolver", function () {
     }
 
     callController(data, reload) {
-      /*if ( this.context.isRedirect || this.context.sended) {
-        return;
-      }*/
       try {
         let controller = this.get("controller");
         if (!controller || reload) {
@@ -161,9 +158,13 @@ module.exports = nodefony.register("Resolver", function () {
           this.setVariables(data);
         }
         this.container.set("action", this.actionName);
-        if (this.kernel.debug) {
-          this.logger(`${JSON.stringify(this.route, null, " ")}
-QUERY : ${controller.query ? JSON.stringify(controller.query, null, " "): null}`, "DEBUG", `ROUTE ${this.route.name}`);
+        if (this.kernel.debug && this.route) {
+          this.logger(`
+${clc.green("bundle")} : ${this.bundle.name}
+${clc.blue("controller")} : ${this.controller.name}
+${clc.yellow("action")} : ${this.actionName}
+${clc.red("route")} : ${clc.cyan(this.route.toString())}
+${clc.red("query")} : ${controller.query ? JSON.stringify(controller.query, null, " "): null}`, "DEBUG", `ROUTE ${this.route.name}`);
         }
         return this.returnController(this.action.apply(controller, this.variables));
       } catch (e) {

@@ -50,7 +50,7 @@ module.exports = class apiUserController extends nodefony.controller {
       if (username) {
         result = await this.usersService.findOne(username, this.query);
       } else {
-        result = await this.usersService.find(this.query);
+        result = await this.usersService.find(this.query.query, this.query);
       }
       return this.jsonApi.render(result);
     } catch (e) {
@@ -68,26 +68,50 @@ module.exports = class apiUserController extends nodefony.controller {
   }
 
 
+  /**
+   *    @Method ({"POST"})
+   *
+   */
   postAction() {
 
   }
 
+  /**
+   *    @Method ({"DELETE"})
+   *
+   */
   deleteAction() {
 
   }
 
+  /**
+   *    @Method ({"PUT"})
+   *
+   */
   putAction() {
 
   }
 
+  /**
+   *    @Method ({"HEAD"})
+   *
+   */
   headAction() {
 
   }
 
+  /**
+   *    @Method ({"TRACE"})
+   *
+   */
   traceAction() {
 
   }
 
+  /**
+   *    @Method ({"CONNECT"})
+   *
+   */
   connectAction() {
 
   }

@@ -50,6 +50,19 @@ module.exports = nodefony.register("Route", function() {
       }
     }
 
+    toString() {
+      return JSON.stringify({
+        name: this.name,
+        path: this.path,
+        prefix: this.prefix,
+        host: this.host,
+        controller: this.defaults.controller,
+        filePath: this.filePath,
+        schemes:this.schemes,
+        bypassFirewall: this.bypassFirewall
+      }, null, " ");
+    }
+
     generateId() {
       this.hash = crypto.createHash("md5").update(JSON.stringify(this)).digest("hex");
       return this.hash;
@@ -108,21 +121,6 @@ module.exports = nodefony.register("Route", function() {
     addOptions(key, value) {
       this.options[key] = value;
     }
-
-    /*addResource(file) {
-      this.resource = file;
-    }
-
-    addType(type) {
-      this.type = type;
-    }*/
-
-    /*setPath (){}
-    setRequirements (){}
-    setOptions (){}
-    setMethods (){}
-    setHost (){}
-    setSchemes (){}*/
 
     checkDefaultParameters(variable) {
       for (let def in this.defaults) {
