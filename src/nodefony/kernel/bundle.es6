@@ -723,7 +723,7 @@ module.exports = nodefony.register("Bundle", function () {
             this.router.reader(Path, this.name);
           }
         } else {
-          throw new Error("Bundle " + this.name + " Load Controller : " + Path + " Controller closure bad format ");
+          throw new Error("Bundle " + this.name + " Load Controller : " + Path + " Controller bad format module.exports must return a class  ");
         }
       } catch (e) {
         throw e;

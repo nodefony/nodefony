@@ -18,7 +18,7 @@ const binding = require('../build/Release/{{shortName}}.node');
  *	@param {class} context
  */
 {% endif %}
-module.exports = class {{controllerName}} extends nodefony.controller {
+class {{controllerName}} extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
@@ -70,4 +70,6 @@ module.exports = class {{controllerName}} extends nodefony.controller {
 
 {% endif %}
   }
-};
+}
+
+module.exports = {{controllerName}};

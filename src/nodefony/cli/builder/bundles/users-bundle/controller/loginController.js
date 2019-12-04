@@ -1,4 +1,4 @@
-module.exports = class loginController extends nodefony.controller {
+class loginController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
@@ -101,4 +101,6 @@ module.exports = class loginController extends nodefony.controller {
     return this.redirectToRoute("login");
   }
 
-};
+}
+
+module.exports = loginController ;

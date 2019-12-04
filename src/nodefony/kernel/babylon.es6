@@ -114,7 +114,7 @@ nodefony.register("babylon", () => {
             name: name,
             extends: superClass,
             actions: [],
-            comments: []
+            comments: node.leadingComments || []
           };
           obj.class.push(myclass);
           return this.parseClassNode(node.body, myclass);
@@ -157,7 +157,7 @@ nodefony.register("babylon", () => {
     parseController(file) {
       return this.parse(file)
         .then((ast) => {
-          let obj = {};
+          let obj = {raw:ast};
           this.parseClassNode(ast, obj);
           return obj;
         });

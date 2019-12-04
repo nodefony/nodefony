@@ -347,6 +347,7 @@ module.exports = class router extends nodefony.Service {
             newRoute.setHostname(arg);
             break;
           case "firewalls":
+          case "firewall":
             newRoute.setFirewallConfigRoute(arg);
             break;
           case "defaults":

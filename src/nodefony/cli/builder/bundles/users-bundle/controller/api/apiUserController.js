@@ -1,12 +1,12 @@
 /**
  *    @Route ("/api/users")
  */
-module.exports = class apiUserController extends nodefony.controller {
+class apiController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
     this.usersService = this.get("users");
-    this.jsonApi = new nodefony.JsonApi(this.bundle.name, this.bundle.version, this.context);
+    this.jsonApi = new nodefony.JsonApi("users", this.bundle.version, this.context);
   }
 
   /**
@@ -59,28 +59,29 @@ module.exports = class apiUserController extends nodefony.controller {
   }
 
   /**
-   *    @Method ({"OPTIONS"})
-   *    @Route ( "/",name="api-users-options")
+   *    @Method ({"HEAD"})
    *
    */
-  optionsAction() {
-    return this.jsonApi.render(this.jsonApi.renderOptions());
+  headAction() {
+    return this.renderResponse("");
   }
 
+  /**
+   *    @Method ({"OPTIONS"})
+   *    @Route ( "",name="api-users-options",)
+   *    @Firewall ({bypass:true})
+   */
+  optionsAction() {
+    let result = this.jsonApi.renderOptions();
+    result.methods = ["GET", "POST", "DELETE", "HEAD", "PUT", "TRACE", "PATCH", "CONNECT"];
+    return this.renderJson(result);
+  }
 
   /**
    *    @Method ({"POST"})
    *
    */
-  postAction() {
-
-  }
-
-  /**
-   *    @Method ({"DELETE"})
-   *
-   */
-  deleteAction() {
+  async postAction() {
 
   }
 
@@ -88,15 +89,23 @@ module.exports = class apiUserController extends nodefony.controller {
    *    @Method ({"PUT"})
    *
    */
-  putAction() {
+  async putAction() {
 
   }
 
   /**
-   *    @Method ({"HEAD"})
+   *    @Method ({"PATCH"})
    *
    */
-  headAction() {
+  async patchAction() {
+
+  }
+
+  /**
+   *    @Method ({"DELETE"})
+   *
+   */
+  async deleteAction() {
 
   }
 
@@ -105,7 +114,9 @@ module.exports = class apiUserController extends nodefony.controller {
    *
    */
   traceAction() {
-
+    return this.renderResponse(JSON.stringify(this.request.request.headers, null, " "), 200, {
+      "Content-Type": "message/http"
+    });
   }
 
   /**
@@ -116,4 +127,6 @@ module.exports = class apiUserController extends nodefony.controller {
 
   }
 
-};
+}
+
+module.exports = apiController;

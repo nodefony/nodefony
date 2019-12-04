@@ -156,6 +156,15 @@ module.exports = class security extends nodefony.Service {
   }
 
   handleSecurity(context) {
+    if (context.resolver && context.resolver.bypassFirewall) {
+      return new Promise((resolve, reject) => {
+        try{
+          return resolve(context.handle());
+        }catch(e){
+          return reject(e);
+        }
+      });
+    }
     this.fire("onSecurity", context);
     switch (context.type) {
       case "HTTPS":

@@ -1,7 +1,7 @@
 /**
  *    @Route ("/jwt")
  */
-module.exports = class loginApiController extends nodefony.controller {
+ class loginApiController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
@@ -123,4 +123,6 @@ module.exports = class loginApiController extends nodefony.controller {
     return this.redirectToRoute("login");
   }
 
-};
+}
+
+module.exports = loginApiController ;

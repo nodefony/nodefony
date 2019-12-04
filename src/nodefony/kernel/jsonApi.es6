@@ -86,11 +86,17 @@ class JsonApi extends nodefony.Service {
 
   renderOptions() {
     let obj = {
-      name: nodefony.projectName,
-      version: nodefony.projectVersion,
+      name:this.name,
+      version:this.version,
+      debug:this.debug,
+      accept:["application/json"],
       nodefony: {
         version: nodefony.version
       }
+    };
+    obj.application = {
+      name: nodefony.projectName,
+      version: nodefony.projectVersion,
     };
     if (this.context) {
       obj.nodefony.environment = this.kernel.environment;

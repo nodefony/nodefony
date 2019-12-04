@@ -1,17 +1,18 @@
-module.exports = nodefony.register("Annotations", function () {
+module.exports = nodefony.register("Annotations", function() {
 
   //const regSpace = new RegExp("^[\\s]*(@.*)[\\s]*$");
   const regKeyValue = new RegExp("^[\\s]*([^=]*)[\\s]*=[\\s]*(([{]?).*[}]?)[\\s]*$");
   const regRouteBlock = new RegExp("^.*@Route[\\s]*\\(([^()]*)\\).*");
   const regMethodBlock = new RegExp("^.*@Method[\\s]*\\(([^()]*)\\).*");
   const regHostBlock = new RegExp("^.*@Host[\\s]*\\(([^()]*)\\).*");
+  const regFirewallBlock = new RegExp("^.*@Firewall[\\s]*\\(([^()]*)\\).*");
 
-  const parseKeyValue = function (tab, obj) {
+  const parseKeyValue = function(tab, obj) {
     for (let i = 0; i < tab.length; i++) {
       if (!tab[i]) {
         continue;
       }
-      let str = tab[i].replace(/(.*)\*$/,"$1");
+      let str = tab[i].replace(/(.*)\*$/, "$1");
       let res = regKeyValue.exec(str);
       let key = res[1].replace(/["' ]/g, "");
       let value = res[2].replace(/["']/g, "");
@@ -68,6 +69,11 @@ module.exports = nodefony.register("Annotations", function () {
                 patternController: pattern,
                 defaultNameController: defaultNameController
               };
+              if ( comments.program.class[myClass].comments && comments.program.class[myClass].comments.length ){
+                comments.program.class[myClass].comments.map((ele) => {
+                  eleClass.comment += ele.value;
+                });
+              }
               if (comments.program.comments && comments.program.comments.length) {
                 comments.program.comments.map((ele) => {
                   eleClass.comment += ele;
@@ -119,45 +125,44 @@ module.exports = nodefony.register("Annotations", function () {
      */
     parseRouting() {
       for (let i = 0; i < this.routings.length; i++) {
-        //console.log(this.routings[i])
         let obj = {};
         switch (this.routings[i].type) {
-        case "Class":
-          let myobj = {};
-          this.parseBlock(this.routings[i], myobj);
-          this.prefix = myobj.pattern;
-          this.host = myobj.host;
-          break;
-        case "Action":
-          let name = null;
-          this.parseBlock(this.routings[i], obj);
-          if (Object.keys(obj).length) {
-            if (!obj.name) {
-              name = `${this.bundleShortName}_${this.routings[i].defaultNameController}_${this.routings[i].defaultNameAction}`;
-            } else {
-              name = obj.name;
-            }
-            if (obj.defaults) {
-              obj.defaults.controller = this.routings[i].patternController;
-            } else {
-              obj.defaults = {};
-              obj.defaults.controller = this.routings[i].patternController;
-            }
-            if (obj.method) {
-              if (obj.requirements) {
-                obj.requirements.method = obj.method;
+          case "Class":
+            let myobj = {};
+            this.parseBlock(this.routings[i], myobj);
+            this.prefix = myobj.pattern;
+            this.host = myobj.host;
+            break;
+          case "Action":
+            let name = null;
+            this.parseBlock(this.routings[i], obj);
+            if (Object.keys(obj).length) {
+              if (!obj.name) {
+                name = `${this.bundleShortName}_${this.routings[i].defaultNameController}_${this.routings[i].defaultNameAction}`;
               } else {
-                obj.requirements = {};
-                obj.requirements.method = obj.method;
+                name = obj.name;
               }
+              if (obj.defaults) {
+                obj.defaults.controller = this.routings[i].patternController;
+              } else {
+                obj.defaults = {};
+                obj.defaults.controller = this.routings[i].patternController;
+              }
+              if (obj.method) {
+                if (obj.requirements) {
+                  obj.requirements.method = obj.method;
+                } else {
+                  obj.requirements = {};
+                  obj.requirements.method = obj.method;
+                }
+              }
+              obj.prefix = this.prefix || "";
+              obj.host = this.host || "";
+              delete obj.name;
+              delete obj.method;
+              this.obj[name] = obj;
             }
-            obj.prefix = this.prefix || "";
-            obj.host = this.host || "";
-            delete obj.name;
-            delete obj.method;
-            this.obj[name] = obj;
-          }
-          break;
+            break;
         }
       }
       //console.log(this.obj)
@@ -170,23 +175,28 @@ module.exports = nodefony.register("Annotations", function () {
           let res = null;
           let cleanBlock = annotation.comment.replace(/\r?\n?/g, "");
           switch (true) {
-          case regRouteBlock.test(cleanBlock):
-            res = regRouteBlock.exec(cleanBlock);
-            if (res) {
-              this.parseRoute(res[1], obj);
-            }
-          case regMethodBlock.test(cleanBlock):
-            res = regMethodBlock.exec(cleanBlock);
-            if (res) {
-              this.parseMethod(res[1], obj);
-            }
-          case regHostBlock.test(cleanBlock):
-            res = regHostBlock.exec(cleanBlock);
-            if (res) {
-              this.parseHost(res[1], obj);
-            }
-            break;
-          default:
+            case regRouteBlock.test(cleanBlock):
+              res = regRouteBlock.exec(cleanBlock);
+              if (res) {
+                this.parseRoute(res[1], obj);
+              }
+            case regMethodBlock.test(cleanBlock):
+              res = regMethodBlock.exec(cleanBlock);
+              if (res) {
+                this.parseMethod(res[1], obj);
+              }
+            case regHostBlock.test(cleanBlock):
+              res = regHostBlock.exec(cleanBlock);
+              if (res) {
+                this.parseHost(res[1], obj);
+              }
+            case regFirewallBlock.test(cleanBlock):
+              res = regFirewallBlock.exec(cleanBlock);
+              if (res) {
+                this.parseFirewall(res[1], obj);
+              }
+              break;
+            default:
           }
         } catch (e) {
           throw e;
@@ -198,10 +208,10 @@ module.exports = nodefony.register("Annotations", function () {
       //let tab = route.replace(/[ ]|[\s]?\*[\s]?/g, "").split(",");
       route = route.replace(/[ ]|[\s]?/g, "");
       let tab = route.split(",");
-      tab.map((ele, index)=>{
+      tab.map((ele, index) => {
         let res = ele.replace(/^\*([\s]?)/g, "$1");
-        tab[index] = res ;
-        return res ;
+        tab[index] = res;
+        return res;
       });
       let parser = Array.prototype.shift.call(tab).replace(/["' ]/g, "");
       if (regKeyValue.test(parser)) {
@@ -219,6 +229,25 @@ module.exports = nodefony.register("Annotations", function () {
 
     parseHost(host, obj) {
       obj.host = host.replace(/["'{} ]|[\s]?\*[\s]?/g, "");
+    }
+
+    parseFirewall(firewall, obj) {
+      let fw = {};
+      let rep = firewall.replace(/["'{} ]|[\s]?\*[\s]?/g, "").split(",");
+      for (let i = 0; i < rep.length; i++) {
+        let spl = rep[i].split(":");
+        if ( spl.length){
+          let value = spl[1];
+          if ( spl[1] === "true"){
+            value = true ;
+          }
+          if ( spl[1] === "false" ){
+            value = false ;
+          }
+          fw[spl[0]] = value;
+        }
+      }
+      obj.firewalls = fw;
     }
 
     toString() {
