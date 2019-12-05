@@ -17,6 +17,31 @@
      this.entity = this.orm.getEntity("user");
    }
 
+   getSchemaAttributes() {
+     switch (this.ormName) {
+       case "sequelize":
+         return this.entity.rawAttributes;
+       case "mongoose":
+         return this.entity.schema.paths;
+     }
+   }
+
+   checkSchema(query) {
+     try {
+       if (query) {
+         const attr = this.getSchemaAttributes();
+         for (let ele in query) {
+           if (ele in attr) {
+             continue;
+           }
+           throw new nodefony.Error(`${ele} not found in User Entity Schema`, 400);
+         }
+       }
+     } catch (e) {
+       throw e;
+     }
+   }
+
    find(query = {}, options = {}) {
      try {
        switch (this.ormName) {
@@ -155,8 +180,6 @@
    }
 
    async update(user, value) {
-     //console.log(value)
-     //console.log(user)
      switch (this.ormName) {
        case "mongoose":
          let session = null;

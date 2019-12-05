@@ -13,6 +13,7 @@ class JsonApi extends nodefony.Service {
       messageId: null,
       error: null,
       errorCode: null,
+      errorType: null,
       debug: this.debug
     };
     if (context) {
@@ -26,24 +27,28 @@ class JsonApi extends nodefony.Service {
 
   getDatatype(data, obj, severity) {
     switch (nodefony.typeOf(data)) {
-    case "error":
+    case "Error":
       obj.error = data;
-      if (!severity) {
-        obj.severity = "ERROR";
+      obj.severity = severity || "ERROR";
+      if ( data.name){
+        obj.errorType = data.name ;
       }
       if (data.code) {
         obj.errorCode = data.code;
       }
-      return data;
+      if ( ! obj.message ){
+        obj.message = data.message;
+      }
+      return obj.result = null;
     default:
-      return data;
+      return obj.result = data;
     }
   }
 
-  render(payload, code, message = "", severity = "INFO", messageID = null) {
+  render(payload, code, message = "", severity = null, messageID = null) {
     try {
       let json = nodefony.extend({}, this.json, {
-        severity: severity,
+        severity: severity || "INFO",
         message: message,
         messageId: messageID
       });
@@ -68,6 +73,10 @@ class JsonApi extends nodefony.Service {
     } catch (e) {
       throw e;
     }
+  }
+
+  renderError(error, code= 400, message = "", severity = "ERROR", messageID = null){
+    return this.render(error, code, message, severity, messageID);
   }
 
   renderPdu(payload, code, message = "", severity = "INFO", messageID = null, api = this.name) {

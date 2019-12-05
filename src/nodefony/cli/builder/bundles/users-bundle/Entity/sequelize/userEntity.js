@@ -48,6 +48,7 @@ module.exports = class user extends nodefony.Entity {
       },
       password: {
         type: Sequelize.STRING(256),
+        allowNull: false,
         set(value) {
           let encoded = encodePassword(value);
           return this.setDataValue("password", encoded);

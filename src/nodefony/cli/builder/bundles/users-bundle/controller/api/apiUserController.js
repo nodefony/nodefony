@@ -36,6 +36,29 @@ class apiController extends nodefony.controller {
 
   PATCH
   La méthode PATCH est utilisée pour appliquer des modifications partielles à une ressource.
+
+  200 (OK)
+  201 (Created)
+  202 (Accepted)
+  204 (No Content)
+
+  301 (Moved Permanently)
+  302 (Found)
+  303 (See Other)
+  304 (Not Modified)
+  307 (Temporary Redirect)
+
+  400 (Bad Request)
+  401 (Unauthorized)
+  403 (Forbidden)
+  404 (Not Found)
+  405 (Method Not Allowed)
+  406 (Not Acceptable)
+  412 (Precondition Failed)
+  415 (Unsupported Media Type)
+  500 (Internal Server Error)
+  501 (Not Implemented)
+
   **/
 
 
@@ -54,7 +77,7 @@ class apiController extends nodefony.controller {
       }
       return this.jsonApi.render(result);
     } catch (e) {
-      throw e;
+      return this.jsonApi.renderError(e, 400);
     }
   }
 
@@ -72,40 +95,55 @@ class apiController extends nodefony.controller {
    *    @Firewall ({bypass:true})
    */
   optionsAction() {
-    let result = this.jsonApi.renderOptions();
-    result.methods = ["GET", "POST", "DELETE", "HEAD", "PUT", "TRACE", "PATCH", "CONNECT"];
-    return this.renderJson(result);
+    try{
+      let result = this.jsonApi.renderOptions();
+      result.methods = ["GET", "POST", "DELETE", "HEAD", "PUT", "TRACE", "PATCH"];
+      result.schema = this.usersService.getSchemaAttributes();
+      return this.renderJson(result);
+    }catch(e){
+      return this.jsonApi.renderError(e, 400);
+    }
   }
 
   /**
    *    @Method ({"POST"})
-   *
    */
   async postAction() {
+    console.log(this.query);
+    let user = null ;
+    try{
+    //user = await this.usersService.create(this.query);
+    if ( user ){
+      return this.jsonApi.render(user);
+    }
+      return this.jsonApi.render({});
+    }catch(e){
+      return this.jsonApi.renderError(e, 400);
+    }
 
   }
 
   /**
    *    @Method ({"PUT"})
-   *
+   *    @Route ( "/{username}",name="api-user-put")
    */
-  async putAction() {
+  async putAction(username) {
 
   }
 
   /**
    *    @Method ({"PATCH"})
-   *
+   *    @Route ( "/{username}",name="api-user-patch")
    */
-  async patchAction() {
+  async patchAction(username) {
 
   }
 
   /**
    *    @Method ({"DELETE"})
-   *
+   *    @Route ( "/{username}",name="api-user-delete")
    */
-  async deleteAction() {
+  async deleteAction(username) {
 
   }
 
@@ -117,14 +155,6 @@ class apiController extends nodefony.controller {
     return this.renderResponse(JSON.stringify(this.request.request.headers, null, " "), 200, {
       "Content-Type": "message/http"
     });
-  }
-
-  /**
-   *    @Method ({"CONNECT"})
-   *
-   */
-  connectAction() {
-
   }
 
 }

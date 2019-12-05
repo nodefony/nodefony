@@ -1,5 +1,18 @@
 const assert = require("assert");
 const STATUS_CODES = require("http").STATUS_CODES;
+const json = {
+  configurable: true,
+  value: function() {
+    let alt = {};
+    const storeKey = function(key) {
+      alt[key] = this[key];
+    };
+    Object.getOwnPropertyNames(this).forEach(storeKey, this);
+    return alt;
+  }
+};
+Object.defineProperty(Error.prototype, 'toJSON', json);
+
 module.exports = nodefony.register("Error", function () {
   class nodefonyError extends Error {
 

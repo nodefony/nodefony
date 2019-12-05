@@ -3,7 +3,7 @@
 ## Register and Configure users Bundle
 
 ### For a Register users-bundle in config framework
-#### <code>./config/config.js</code>
+#### <code>/config/config.js</code>
 
 ```js
 module.exports = {
@@ -45,7 +45,7 @@ module.exports = {
 };
 ```
 
-### Configure Firewall
+### Configure Firewall <code>./Resources/config/security.js</code>
 ```js
   // Cross Domain configuration
   const cors = {
@@ -93,10 +93,10 @@ module.exports = {
   }
 ```
 
-## Use Http login :
+## HTTP login :
 
 
-## USER API REST
+## API REST
 
 ### Use API with axios :
 ```js
@@ -278,7 +278,7 @@ curl -k -X POST  --data "refreshToken=refreshToken" https://localhost:5152/jwt/t
 ```
 
 ## Cli Commands
-     
+
 ```bash
 $ nodefony -h
 

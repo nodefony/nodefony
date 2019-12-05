@@ -30,6 +30,13 @@ $ git update-index --assume-unchanged file
 $ eval "$(ssh-agent -s)"
 $ ssh-add -K ~/.ssh/my_github_key/id_rsa
 
+
+// amend
+git commit --amend --no-edit
+git push -f
+
+
+
 /*
  *	submodules
  *
