@@ -1,3 +1,5 @@
+const mime = require('mime');
+
 nodefony.register.call(nodefony.context, "http", function () {
 
   const Http = class httpContext extends nodefony.Context {
@@ -316,9 +318,25 @@ nodefony.register.call(nodefony.context, "http", function () {
         encoding = "charset=" + encoding;
       }
       this.isJson = true;
+      const type = mime.getType("json") ;
       if (this.method !== "websoket") {
         if (this.response) {
-          this.response.setHeader("Content-Type", "application/json; " + encoding);
+          this.response.setHeader("Content-Type", `${type}; ${encoding}`);
+        }
+      }
+    }
+
+    setContextHtml(encoding) {
+      if (!encoding) {
+        encoding = "charset=utf-8";
+      } else {
+        encoding = "charset=" + encoding;
+      }
+      this.isJson = false;
+      let type = mime.getType("html") ;
+      if (this.method !== "websoket") {
+        if (this.response) {
+          this.response.setHeader("Content-Type", `${type}; ${encoding}`);
         }
       }
     }

@@ -110,9 +110,14 @@ module.exports = nodefony.register("controller", function () {
     setContextJson(encoding) {
       return this.context.setContextJson(encoding);
     }
-
-    setJsonContext() {
-      return this.setContextJson.apply(this, arguments);
+    setJsonContext(encoding) {
+      return this.context.setContextJson(encoding);
+    }
+    setContextHtml(encoding){
+      return this.context.setContextHtml(encoding);
+    }
+    setHtmlContext(encoding){
+      return this.context.setContextHtml(encoding);
     }
 
     setCsrfToken(name, options) {

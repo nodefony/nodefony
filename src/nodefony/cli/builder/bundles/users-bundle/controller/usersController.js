@@ -17,6 +17,24 @@ class usersController extends nodefony.controller {
   }
 
   /**
+   *    @Method ({"GET"})
+   *    @Route ("/api/documentation", name="nodefony-user-doc")
+   */
+  swaggerAction() {
+    if (this.query && this.query.config) {
+      let jsonApi = null ;
+      try {
+        jsonApi = this.usersService.getJsonApi(this.context);
+        let openApi = require(path.resolve(this.bundle.path, "Resources", "config", "openapi", "users.js"));
+        return jsonApi.renderSchema(openApi, this.usersService);
+      } catch (e) {
+        return jsonApi.renderError(e, 400);
+      }
+    }
+    return this.render("users:swagger:index.html.twig");
+  }
+
+  /**
    *
    */
   headerAction() {

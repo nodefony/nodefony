@@ -2,7 +2,9 @@ const spdx = require('spdx');
 
 class JsonApi extends nodefony.Service {
   constructor(name = "api", version = "1.0.0", description = "API", context = null) {
-    super(name, context.container);
+    const container = context ? context.container : null ;
+    super(name, container);
+
     this.name = name;
     this.version = version;
     this.debug = this.kernel.debug;
@@ -24,6 +26,16 @@ class JsonApi extends nodefony.Service {
       this.json.url = this.context.url || "";
       this.json.method = this.context.method;
       this.json.scheme = this.context.scheme;
+    }
+  }
+
+  getDescription(dsc){
+    switch(true){
+      case dsc:
+      break;
+      default:
+        throw new Error(`Bad api description  : ${dsc}`);
+
     }
   }
 
@@ -128,7 +140,8 @@ class JsonApi extends nodefony.Service {
       nodefony.extend(true, shem, schema);
       return controller.renderJson(shem, code);
     }
-    return this.getSchema(service);
+    let shem = this.getSchema(service);
+    return nodefony.extend(true, shem, schema);
   }
 
   getLicence() {
@@ -187,7 +200,7 @@ class JsonApi extends nodefony.Service {
             `${this.kernel.httpsPort}`,
             "443"
           ],
-          "default": "443"
+          "default": `${this.kernel.httpsPort}`
         },
         "basePath": {
           "default": "api"

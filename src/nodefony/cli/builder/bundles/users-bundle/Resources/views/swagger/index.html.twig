@@ -1,0 +1,17 @@
+{% extends '../base.html.twig' %}
+
+
+{% block stylesheets %}
+  <!-- WEBPACK BUNDLE -->
+  <link rel='stylesheet' href='{{CDN("stylesheet")}}/users-bundle/assets/css/swagger.css'/>
+{% endblock %}
+
+{% block body %}
+  <div id="swagger"></div>
+{% endblock %}
+
+{% block javascripts %}
+  <!-- WEBPACK BUNDLE -->
+  <script src='{{CDN("javascript")}}/users-bundle/assets/js/swagger.js'></script>
+
+{% endblock %}
