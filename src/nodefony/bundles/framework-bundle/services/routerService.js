@@ -284,15 +284,18 @@ module.exports = class router extends nodefony.Service {
     for (let i = 0; i < this.routes.length; i++) {
       try {
         if (resolver.match(this.routes[i], context)) {
+          this.log(`Match route : ${this.routes[i].name}`, "DEBUG");
+          resolver.exception = null;
           return resolver;
         }
       } catch (e) {
+        this.log(`Match route : ${this.routes[i].name} ${e}`, "WARNING");
         resolver.exception = e;
         continue;
       }
     }
     if (resolver.exception) {
-      throw resolver.exception;
+      throw resolver;
     }
     return resolver;
   }

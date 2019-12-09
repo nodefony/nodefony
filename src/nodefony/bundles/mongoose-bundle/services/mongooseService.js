@@ -132,15 +132,15 @@ module.exports = class mongoose extends nodefony.orm {
       conn[0] = dbname;
       for (let data in this.settings.connectors[dbname]) {
         switch (data) {
-          case "dbname":
-            conn[1] = this.settings.connectors[dbname][data];
-            break;
-          case "host":
-            conn[3] = this.settings.connectors[dbname][data];
-            break;
-          case "port":
-            conn[3] += ":" + this.settings.connectors[dbname][data];
-            break;
+        case "dbname":
+          conn[1] = this.settings.connectors[dbname][data];
+          break;
+        case "host":
+          conn[3] = this.settings.connectors[dbname][data];
+          break;
+        case "port":
+          conn[3] += ":" + this.settings.connectors[dbname][data];
+          break;
         }
       }
       table.push(conn);
@@ -167,6 +167,39 @@ module.exports = class mongoose extends nodefony.orm {
     }
     let db = entity.db;
     return db.startSession.bind(db);
+  }
+
+  getOpenApiSchema(entity) {
+    let attr = {
+      type: "object",
+      properties: {},
+      required: []
+    };
+    const attributes = entity.schema.paths || {};
+    for (let ele in attributes) {
+      let prop = attr.properties[ele] = {};
+      if (attributes[ele].isRequired === true) {
+        attr.required.push(ele);
+      }
+      if (!nodefony.isUndefined(attributes[ele].defaultValue)) {
+        prop.default = attributes[ele].defaultValue;
+      }
+      switch (attributes[ele].instance) {
+      case "String":
+        prop.type = "string";
+        break;
+      case "Array":
+        prop.type = "array";
+        break;
+      case 'Boolean':
+        prop.type = "boolean";
+        break;
+      case "Date":
+        prop.type = "date";
+        break;
+      }
+    }
+    return attr;
   }
 
 };

@@ -176,6 +176,10 @@ module.exports = class Nodefony {
     }
   }
 
+  isUndefined(value) {
+    return value === undefined;
+  }
+
   isPlainObject(obj) {
     let proto, Ctor;
     // Detect obvious negatives

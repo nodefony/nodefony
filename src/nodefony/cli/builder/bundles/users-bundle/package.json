@@ -16,8 +16,8 @@
   ],
   "repository": {},
   "dependencies": {
-    "@babel/core": "^7.7.4",
-    "@babel/preset-env": "^7.7.4",
+    "@babel/core": "^7.7.5",
+    "@babel/preset-env": "^7.7.5",
     "autoprefixer": "^9.7.3",
     "babel-loader": "^8.0.6",
     "babel-register": "^6.26.0",
@@ -42,7 +42,7 @@
     "resolve-url-loader": "^3.1.1",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.1",
-    "terser-webpack-plugin": "^2.2.1",
+    "terser-webpack-plugin": "^2.2.2",
     "webpack": "^4.41.2",
     "webpack-merge": "^4.2.2"
   },
@@ -51,7 +51,7 @@
     "node-pre-gyp": "^0.14.0",
     "sequelize-cli": "^5.5.1"
   },
-  "license": "",
+  "license": "CECILL-B",
   "readmeFilename": "README.md",
   "contributors": []
 }

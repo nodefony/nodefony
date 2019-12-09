@@ -6,7 +6,7 @@ class apiController extends nodefony.controller {
   constructor(container, context) {
     super(container, context);
     this.usersService = this.get("users");
-    this.jsonApi = new nodefony.JsonApi("users", this.bundle.version, this.context);
+    this.jsonApi = new nodefony.JsonApi("users", this.bundle.version, "Nodefony Users Api", this.context);
   }
 
   /**
@@ -83,7 +83,7 @@ class apiController extends nodefony.controller {
 
   /**
    *    @Method ({"HEAD"})
-   *
+   *    @Route ( "",name="api-users-head",)
    */
   headAction() {
     return this.renderResponse("");
@@ -95,29 +95,27 @@ class apiController extends nodefony.controller {
    *    @Firewall ({bypass:true})
    */
   optionsAction() {
-    try{
-      let result = this.jsonApi.renderOptions();
-      result.methods = ["GET", "POST", "DELETE", "HEAD", "PUT", "TRACE", "PATCH"];
-      result.schema = this.usersService.getSchemaAttributes();
-      return this.renderJson(result);
-    }catch(e){
+    try {
+      return this.jsonApi.renderSchema({}, this.usersService);
+    } catch (e) {
       return this.jsonApi.renderError(e, 400);
     }
   }
 
   /**
    *    @Method ({"POST"})
+   *    @Route ( "",name="api-users-post")
    */
   async postAction() {
     console.log(this.query);
-    let user = null ;
-    try{
-    //user = await this.usersService.create(this.query);
-    if ( user ){
-      return this.jsonApi.render(user);
-    }
+    let user = null;
+    try {
+      //user = await this.usersService.create(this.query);
+      if (user) {
+        return this.jsonApi.render(user);
+      }
       return this.jsonApi.render({});
-    }catch(e){
+    } catch (e) {
       return this.jsonApi.renderError(e, 400);
     }
 
@@ -128,7 +126,7 @@ class apiController extends nodefony.controller {
    *    @Route ( "/{username}",name="api-user-put")
    */
   async putAction(username) {
-
+    this.log(username);
   }
 
   /**
@@ -136,7 +134,7 @@ class apiController extends nodefony.controller {
    *    @Route ( "/{username}",name="api-user-patch")
    */
   async patchAction(username) {
-
+    this.log(username);
   }
 
   /**
@@ -144,7 +142,7 @@ class apiController extends nodefony.controller {
    *    @Route ( "/{username}",name="api-user-delete")
    */
   async deleteAction(username) {
-
+    this.log(username);
   }
 
   /**

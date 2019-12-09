@@ -68,7 +68,7 @@ module.exports = {
       },
       // SECURITY AREA LOGIN API  <passport-local>
       login_api_area: {
-        pattern: /^\/jwt\/login/,
+        pattern: /^\/api\/jwt\/login/,
         provider: "nodefony",
         "passport-local": {
           usernameField: 'username',

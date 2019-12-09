@@ -490,7 +490,7 @@ module.exports = class httpKernel extends nodefony.Service {
       // FRONT ROUTER
       try {
         let resolver = this.router.resolve(context);
-        if (resolver.resolve) {
+        if (resolver.resolve && !resolver.exception) {
           context.resolver = resolver;
           controller = resolver.newController(context.container, context);
           if (controller.sessionAutoStart) {
@@ -528,11 +528,21 @@ module.exports = class httpKernel extends nodefony.Service {
             }
           }
         } else {
-          let error = new Error("Not Found");
-          error.code = 404;
+          if (resolver.exception) {
+            return reject(resolver.exception);
+          }
+          let error = new nodefony.httpError("Not Found", 404, context.container);
           return reject(error);
         }
       } catch (e) {
+        if (e instanceof nodefony.Resolver) {
+          if (e.exception) {
+            controller = e.newController(context.container, context);
+            return reject(e.exception);
+          } else {
+            return reject(new nodefony.httpError("Not Found", 404, context.container));
+          }
+        }
         return reject(e);
       }
     });
@@ -568,7 +578,7 @@ module.exports = class httpKernel extends nodefony.Service {
         if (this.settings[context.scheme].headers) {
           context.response.setHeaders(this.settings[context.scheme].headers);
         }
-        if (context.secure || context.isControlledAccess) {
+        if (!error && context.secure || context.isControlledAccess) {
           return this.firewall.handleSecurity(context)
             .then(() => {
               return resolve(null);

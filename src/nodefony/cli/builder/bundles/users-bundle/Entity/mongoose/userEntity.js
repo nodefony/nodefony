@@ -35,6 +35,7 @@ module.exports = class user extends nodefony.Entity {
       },
       password: {
         type: String,
+        required: true,
         set: (value) => {
           return encodePassword(value);
         }

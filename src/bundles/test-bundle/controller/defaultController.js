@@ -55,6 +55,70 @@ module.exports = class defaultController extends nodefony.controller {
     }
   }
 
+  /**
+   *    @Method ({ "GET"})
+   *    @Route ("/test/swagger")
+   */
+  swaggerAction() {
+    if (this.query.api) {
+      let paths = {
+        "/api/users": {
+          get: {
+            summary: "List all",
+            operationId: "listUsers",
+            tags: ["users"],
+            parameters: [{
+              name: "limit",
+              in: "query",
+              description: "How many items to return at one time (max 100)",
+              required: false,
+              schema: {
+                type: "integer",
+                format: "int32"
+              }
+            }],
+            responses: {
+              '200': {
+                description: "A paged array of users",
+                headers: {
+                  "x-next": {
+                    description: "A link to the next page of responses",
+                    schema: {
+                      type: "string"
+                    }
+                  }
+                },
+                content: {
+                  "application/json": {
+                    schema: {
+                      $ref: "#/components/schemas/users"
+                    }
+                  }
+                }
+              },
+              default: {
+                description: "unexpected error",
+                content: {
+                  "application/json": {
+                    schema: {
+                      $ref: "#/components/schemas/Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      };
+      const usersService = this.get("users");
+      const jsonApi = new nodefony.JsonApi("users", "2.0.0", "Nodefony Users Api", this.context);
+      return jsonApi.renderSchema({
+        paths: paths
+      }, usersService);
+    }
+    return this.render("testBundle:swagger:swagger.html.twig");
+  }
+
   myPromise() {
     return new Promise((resolve, reject) => {
       try {
@@ -182,36 +246,36 @@ module.exports = class defaultController extends nodefony.controller {
    */
   websoketAction(message) {
     switch (this.getMethod()) {
-      case "WEBSOCKET":
-        if (message) {
-          // MESSAGES CLIENT
-          this.logger(message.utf8Data, "INFO");
-        } else {
-          // PREPARE  PUSH MESSAGES SERVER
-          // SEND MESSAGES TO CLIENTS
-          var i = 0;
-          var id = setInterval(() => {
-            var mess = "I am a  message " + i + "\n";
-            this.logger("SEND TO CLIENT :" + mess, "INFO");
-            this.context.send(mess);
-            //this.renderResponse(mess);
-            i++;
-          }, 1000);
-          setTimeout(() => {
+    case "WEBSOCKET":
+      if (message) {
+        // MESSAGES CLIENT
+        this.logger(message.utf8Data, "INFO");
+      } else {
+        // PREPARE  PUSH MESSAGES SERVER
+        // SEND MESSAGES TO CLIENTS
+        var i = 0;
+        var id = setInterval(() => {
+          var mess = "I am a  message " + i + "\n";
+          this.logger("SEND TO CLIENT :" + mess, "INFO");
+          this.context.send(mess);
+          //this.renderResponse(mess);
+          i++;
+        }, 1000);
+        setTimeout(() => {
+          clearInterval(id);
+          // close reason , descripton
+          this.context.close(1000, "NODEFONY CONTROLLER CLOSE SOCKET");
+          id = null;
+        }, 10000);
+        this.context.listen(this, "onClose", () => {
+          if (id) {
             clearInterval(id);
-            // close reason , descripton
-            this.context.close(1000, "NODEFONY CONTROLLER CLOSE SOCKET");
-            id = null;
-          }, 10000);
-          this.context.listen(this, "onClose", () => {
-            if (id) {
-              clearInterval(id);
-            }
-          });
-        }
-        break;
-      default:
-        throw new Error("REALTIME METHOD NOT ALLOWED");
+          }
+        });
+      }
+      break;
+    default:
+      throw new Error("REALTIME METHOD NOT ALLOWED");
     }
   }
 };

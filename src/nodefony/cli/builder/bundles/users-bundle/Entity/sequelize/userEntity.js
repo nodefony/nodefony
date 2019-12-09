@@ -108,7 +108,7 @@ module.exports = class user extends nodefony.Entity {
   }
 
   registerModel(db) {
-    class MyModel extends Model{}
+    class MyModel extends Model {}
     MyModel.init(this.getSchema(), {
       sequelize: db,
       modelName: this.name

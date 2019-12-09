@@ -319,13 +319,46 @@ describe("BUNDLE TEST", function () {
           assert.deepStrictEqual(res.query, data);
           assert.deepStrictEqual(res.queryPost, data);
           assert.deepStrictEqual(res.queryGet, {});
-          assert.deepStrictEqual(res.resolver.type, "method");
+          assert.deepStrictEqual(res.resolver, null);
           done();
         });
       });
       request.write(post_data);
       request.end();
     });
+    it("PATTERN => PUT /requirement/method", function (done) {
+      global.options.path = '/requirement/method';
+      global.options.method = 'PUT';
+      var data = {
+        foo: "bar",
+        bar: "foo"
+      };
+      var post_data = querystring.stringify(data);
+      global.options.headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': Buffer.byteLength(post_data)
+      };
+      var request = http.request(global.options, function (res) {
+        assert.equal(res.statusCode, 405);
+        assert.equal(res.statusMessage, "Method PUT Unauthorized");
+        res.setEncoding('utf8');
+        res.on('data', (chunk) => {
+          //console.log(chunk)
+          var res = JSON.parse(chunk);
+          //assert.deepStrictEqual(res.method, "PUT");
+          assert.deepStrictEqual(res.message, "Method PUT Unauthorized");
+          assert.deepStrictEqual(res.code, 405);
+          //assert.deepStrictEqual(res.query, data);
+          //assert.deepStrictEqual(res.queryPost, data);
+          //assert.deepStrictEqual(res.queryGet, {});
+          //assert.deepStrictEqual(res.resolver, null);
+          done();
+        });
+      });
+      request.write(post_data);
+      request.end();
+    });
+
   });
 
 });

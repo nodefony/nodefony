@@ -22,7 +22,8 @@ module.exports = webpackMerge({
   entry: {
     test: ["./js/test.js"],
     vue: ["../../src/main.js"],
-    mail: ["./js/mail.js"]
+    mail: ["./js/mail.js"],
+    swagger: ["./js/swagger.js"]
   },
   output: {
     path: public,

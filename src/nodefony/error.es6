@@ -2,9 +2,10 @@ const assert = require("assert");
 const STATUS_CODES = require("http").STATUS_CODES;
 const json = {
   configurable: true,
-  value: function() {
+  writable: true,
+  value: function () {
     let alt = {};
-    const storeKey = function(key) {
+    const storeKey = function (key) {
       alt[key] = this[key];
     };
     Object.getOwnPropertyNames(this).forEach(storeKey, this);

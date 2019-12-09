@@ -2,6 +2,7 @@ module.exports = class testController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
+    this.setContextJson();
   }
 
   /**

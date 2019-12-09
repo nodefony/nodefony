@@ -39,7 +39,7 @@ describe("BUNDLE users", () => {
         ca: openssl.ca,
       }
     };
-    global.baseUrl = `https://${kernel.settings.system.domain}:${kernel.settings.system.httpsPort}`;
+    global.baseUrl = `https://${kernel.settings.system.domain}:${kernel.settings.system.httpsPort}/api/jwt`;
     const request = Request.create(global.baseUrl, requestOptions);
     global.http = request.http.bind(request);
 
@@ -49,7 +49,7 @@ describe("BUNDLE users", () => {
     beforeEach(() => {});
     before(() => {});
     it("LOGIN JWT", async () => {
-      const result = await global.http("/jwt/login", {
+      const result = await global.http("/login", {
           method: 'POST',
           form: {
             username: 'admin',
@@ -70,15 +70,14 @@ describe("BUNDLE users", () => {
       assert.strictEqual(body.result.decodedToken.data.authenticated, true);
       assert(body.result.decodedToken.iat);
       assert(body.result.decodedToken.exp);
-      assert(body.result.config);
-      assert.strictEqual(body.api, "users");
+      assert(body.result.schema);
+      assert.strictEqual(body.api, "jwt-api");
       assert.strictEqual(body.code, 200);
       assert.strictEqual(body.message, 'OK');
       assert.strictEqual(body.messageId, null);
       assert.strictEqual(body.error, null);
       assert.strictEqual(body.errorCode, null);
-      assert.strictEqual(body.debug, false);
-      assert.strictEqual(body.url, `${global.baseUrl}/jwt/login`);
+      assert.strictEqual(body.url, `${global.baseUrl}/login`);
       assert.strictEqual(body.method, 'POST');
       assert.strictEqual(body.scheme, 'https');
       assert.strictEqual(body.severity, 'INFO');
@@ -86,7 +85,7 @@ describe("BUNDLE users", () => {
     });
 
     it("BAD PASSWD LOGIN  JWT ", async () => {
-      const result = await global.http("/jwt/login", {
+      const result = await global.http("/login", {
           method: 'POST',
           form: {
             username: 'admin',
@@ -100,7 +99,7 @@ describe("BUNDLE users", () => {
       //const body = JSON.parse(result.json.body);
     });
     it("BAD NAME LOGIN JWT ", async () => {
-      const result = await global.http("/jwt/login", {
+      const result = await global.http("/login", {
           method: 'POST',
           form: {
             username: 'badname',
@@ -116,7 +115,7 @@ describe("BUNDLE users", () => {
     });
 
     it("BAD LOGIN NO credentials ", async () => {
-      const result = await global.http("/jwt/login", {
+      const result = await global.http("/login", {
           method: 'POST',
           form: {}
         })

@@ -63,6 +63,14 @@ module.exports = nodefony.register("Resolver", function () {
         }
         return match;
       } catch (e) {
+        this.request = context.request.request;
+        this.route = route;
+        this.parsePathernController(route.defaults.controller);
+        this.bypassFirewall = route.bypassFirewall;
+        this.defaultLang = route.defaultLang;
+        if (route.requirements.protocol) {
+          this.acceptedProtocol = route.requirements.protocol.toLowerCase();
+        }
         throw e;
       }
     }

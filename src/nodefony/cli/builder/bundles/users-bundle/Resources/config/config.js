@@ -20,7 +20,6 @@ const randomSecret = function () {
 module.exports = {
   type: "sandbox",
   locale: "en_en",
-
   /**
    *    WATCHERS
    *

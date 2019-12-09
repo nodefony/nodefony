@@ -34,12 +34,6 @@
     "url": "https://github.com/nodefony/help/issues"
   },
   "license": "CECILL-B",
-  "licenses": [
-    {
-      "type": "CECILL-B",
-      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-    }
-  ],
   "os": [
     "darwin",
     "linux",
@@ -50,7 +44,7 @@
     "node": ">=10"
   },
   "dependencies": {
-    "mongoose": "^5.7.13",
+    "mongoose": "^5.7.14",
     "pm2": "^4.2.0",
     "sequelize": "6.0.0-beta.3",
     "webpack": "^4.41.2",

@@ -48,6 +48,9 @@ class listTask extends nodefony.Task {
           this.logger("       ‣ " + this.tests[i].name, "INFO");
         }
         //this.logger("\x1b[0m\x1b[0m", "INFO");
+        this.logger(` To run test
+nodefony unitest:launch:all                                Launch all tests Example : nodefony unitest:launch:all
+nodefony unitest:launch:bundle bundleName [testfile]       Launch bundle tests Example: nodefony unitest:launch:bundle demo responseTest.js `);
         return resolve(0);
       } catch (e) {
         return reject(e);
