@@ -2,8 +2,8 @@ const spdx = require('spdx');
 
 class JsonApi extends nodefony.Service {
   constructor(name = "api", version = "1.0.0", description = "API", context = null) {
-    const container = context ? context.container : null ;
-    super(name, container);
+    const container = context ? context.container : null;
+    super(name, container, false);
 
     this.name = name;
     this.version = version;
@@ -29,12 +29,12 @@ class JsonApi extends nodefony.Service {
     }
   }
 
-  getDescription(dsc){
-    switch(true){
-      case dsc:
+  getDescription(dsc) {
+    switch (true) {
+    case dsc:
       break;
-      default:
-        throw new Error(`Bad api description  : ${dsc}`);
+    default:
+      throw new Error(`Bad api description  : ${dsc}`);
 
     }
   }
@@ -191,6 +191,7 @@ class JsonApi extends nodefony.Service {
   }
 
   getServers() {
+    console.log(this.kernel.domainAlias)
     return [{
       "url": `https://${this.kernel.domain}:{port}`,
       "description": this.kernel.description,

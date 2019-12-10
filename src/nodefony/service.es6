@@ -70,12 +70,14 @@ module.exports = nodefony.register("Service", function () {
         if (notificationsCenter) {
           throw new Error("Service nodefony notificationsCenter not valid must be instance of nodefony.notificationsCenter.notification");
         }
-        this.notificationsCenter = nodefony.notificationsCenter.create(this.options, this, this.options.nbListeners);
-        if (!this.kernel) {
-          this.set("notificationsCenter", this.notificationsCenter);
-        } else {
-          if (this.kernel.container !== this.container) {
+        if (notificationsCenter !== false) {
+          this.notificationsCenter = nodefony.notificationsCenter.create(this.options, this, this.options.nbListeners);
+          if (!this.kernel) {
             this.set("notificationsCenter", this.notificationsCenter);
+          } else {
+            if (this.kernel.container !== this.container) {
+              this.set("notificationsCenter", this.notificationsCenter);
+            }
           }
         }
       }
@@ -173,10 +175,14 @@ module.exports = nodefony.register("Service", function () {
      *  @param {Function} listener
      */
     listen() {
-      return this.notificationsCenter.listen.apply(this.notificationsCenter, arguments);
+      if (this.notificationsCenter) {
+        return this.notificationsCenter.listen.apply(this.notificationsCenter, arguments);
+      }
     }
     on() {
-      return this.notificationsCenter.on.apply(this.notificationsCenter, arguments);
+      if (this.notificationsCenter) {
+        return this.notificationsCenter.on.apply(this.notificationsCenter, arguments);
+      }
     }
 
     listenSyslog(options) {
@@ -199,8 +205,9 @@ module.exports = nodefony.register("Service", function () {
 
     */
     once() {
-      //this.logger(ev, "DEBUG", "EVENT KERNEL")
-      return this.notificationsCenter.once.apply(this.notificationsCenter, arguments);
+      if (this.notificationsCenter) {
+        return this.notificationsCenter.once.apply(this.notificationsCenter, arguments);
+      }
     }
 
     /**
@@ -208,7 +215,9 @@ module.exports = nodefony.register("Service", function () {
      *  @param nb
      */
     setMaxListeners() {
-      return this.notificationsCenter.setMaxListeners.apply(this.notificationsCenter, arguments);
+      if (this.notificationsCenter) {
+        return this.notificationsCenter.setMaxListeners.apply(this.notificationsCenter, arguments);
+      }
     }
 
     /**
@@ -217,49 +226,63 @@ module.exports = nodefony.register("Service", function () {
      *  @param {String} listener
      */
     removeListener() {
-      return this.notificationsCenter.unListen.apply(this.notificationsCenter, arguments);
+      if (this.notificationsCenter) {
+        return this.notificationsCenter.unListen.apply(this.notificationsCenter, arguments);
+      }
     }
 
     /**
      *  @method removeAllListeners
      */
     removeAllListeners() {
-      return this.notificationsCenter.removeAllListeners.apply(this.notificationsCenter, arguments);
+      if (this.notificationsCenter) {
+        return this.notificationsCenter.removeAllListeners.apply(this.notificationsCenter, arguments);
+      }
     }
 
     /**
      *  @method prependOnceListener
      */
     prependOnceListener() {
-      return this.notificationsCenter.prependOnceListener.apply(this.notificationsCenter, arguments);
+      if (this.notificationsCenter) {
+        return this.notificationsCenter.prependOnceListener.apply(this.notificationsCenter, arguments);
+      }
     }
 
     /**
      *  @method prependListener
      */
     prependListener() {
-      return this.notificationsCenter.prependListener.apply(this.notificationsCenter, arguments);
+      if (this.notificationsCenter) {
+        return this.notificationsCenter.prependListener.apply(this.notificationsCenter, arguments);
+      }
     }
 
     /**
      *  @method getMaxListeners
      */
     getMaxListeners() {
-      return this.notificationsCenter.getMaxListeners.apply(this.notificationsCenter, arguments);
+      if (this.notificationsCenter) {
+        return this.notificationsCenter.getMaxListeners.apply(this.notificationsCenter, arguments);
+      }
     }
 
     /**
      *  @method listenerCount
      */
     listenerCount() {
-      return this.notificationsCenter.listenerCount.apply(this.notificationsCenter, arguments);
+      if (this.notificationsCenter) {
+        return this.notificationsCenter.listenerCount.apply(this.notificationsCenter, arguments);
+      }
     }
 
     /**
      *  @method listenerCount
      */
     listeners() {
-      return this.notificationsCenter.listeners.apply(this.notificationsCenter, arguments);
+      if (this.notificationsCenter) {
+        return this.notificationsCenter.listeners.apply(this.notificationsCenter, arguments);
+      }
     }
 
     /**
