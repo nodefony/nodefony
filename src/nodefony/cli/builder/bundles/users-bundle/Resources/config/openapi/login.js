@@ -50,17 +50,12 @@ La méthode PATCH est utilisée pour appliquer des modifications partielles à u
 
 **/
 
-const openApi = {
-
+const openapi = {
   openapi: "3.0.2",
-  security: [{
-    jwtAuth: ""
-  }],
   components: {
     securitySchemes: {
       jwtAuth: { // arbitrary name for the security scheme
         type: "apiKey",
-        scheme: "bearer",
         in: "header", // can be "header", "query" or "cookie"
         name: "jwt" // name of the header, query parameter or cookie
       }
@@ -104,20 +99,10 @@ const openApi = {
     }
   },
   paths: {
-    "/api/users": {
+    "api/jwt/login": {
       options: {
         summary: "Get openapi3 config",
-        tags: ["users"],
-        parameters: [{
-          name: "limit",
-          in: "query",
-          description: "How many items to return at one time (max 100)",
-          required: false,
-          schema: {
-            type: "integer",
-            format: "int32"
-          }
-        }],
+        tags: ["jwt"],
         responses: {
           '200': {
             description: "A paged array of users",
@@ -133,7 +118,10 @@ const openApi = {
       },
       get: {
         summary: "List all users",
-        tags: ["users"],
+        tags: ["jwt"],
+        security: [{
+          jwtAuth: ""
+        }],
         responses: {
           '200': {
             description: "get headers request"
@@ -143,7 +131,7 @@ const openApi = {
       },
       post: {
         summary: "List all users",
-        tags: ["users"],
+        tags: ["jwt"],
         responses: {
           '200': {
             description: "get headers request"
@@ -152,10 +140,7 @@ const openApi = {
       },
       head: {
         summary: "List all users",
-        tags: ["users"],
-        security: [{
-          jwtAuth: ""
-        }],
+        tags: ["jwt"],
         responses: {
           '200': {
             description: "get headers request"
@@ -164,7 +149,7 @@ const openApi = {
       },
       trace: {
         summary: "List all users",
-        tags: ["users"],
+        tags: ["jwt"],
         responses: {
           '200': {
             description: "get headers request"
@@ -174,11 +159,11 @@ const openApi = {
     },
   },
 
-  tags: [{
-    name: "users",
-    description: "Users operations"
+  tags: [ {
+    name: "jwt",
+    description: "JWT Authentication"
   }]
 
 };
 
-module.exports = openApi;
+module.exports = openapi;

@@ -25,10 +25,18 @@ module.exports = nodefony.register("Service", function () {
         this.name = name;
       }
       if (options) {
-        this.options = nodefony.extend(true, {}, defaultOptions, options);
+        if ( notificationsCenter === false){
+          this.options = nodefony.extend(true, {}, options);
+        }else{
+          this.options = nodefony.extend(true, {}, defaultOptions, options);
+        }
       } else {
-        //optimize
-        this.options = nodefony.extend(true, {}, defaultOptions);
+        if ( notificationsCenter === false){
+          this.options = {};
+        }else{
+          //optimize
+          this.options = nodefony.extend(true, {}, defaultOptions);
+        }
       }
       if (container instanceof nodefony.Container) {
         this.container = container;

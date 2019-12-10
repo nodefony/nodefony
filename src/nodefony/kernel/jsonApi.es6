@@ -1,8 +1,6 @@
-const spdx = require('spdx');
-
 class JsonApi extends nodefony.Service {
   constructor(name = "api", version = "1.0.0", description = "API", context = null) {
-    const container = context ? context.container : null;
+    const container = context ? context.container : kernel.container;
     super(name, container, false);
 
     this.name = name;
@@ -117,110 +115,38 @@ class JsonApi extends nodefony.Service {
     return new nodefony.PDU(json, severity, api, messageID, message);
   }
 
-  getSchema(service) {
-    let obj = {
-      openapi: "3.0.2"
-    };
-    //obj[nodefony.projectName] = nodefony.projectVersion;
-    obj.info = this.getInfo();
-    obj.servers = this.getServers();
-    obj.security = [];
-    obj.paths = {};
-    obj.components = this.getComponents(service);
-    obj.tags = {};
-    obj.externalDocs = {};
-    //obj.info.nodefony = this.getNodefonyInfo(service);
-    return obj;
-  }
-
-  renderSchema(schema, service, code = 200) {
-    if (this.context) {
-      const controller = this.context.get("controller");
-      let shem = this.getSchema(service);
-      nodefony.extend(true, shem, schema);
-      return controller.renderJson(shem, code);
+  setSchema(config = {}, entity = null) {
+    if(config.openapi){
+      this.schema = new nodefony.openApiSchema(this, config, entity);
+      return this.schema ;
     }
-    let shem = this.getSchema(service);
-    return nodefony.extend(true, shem, schema);
+    throw new nodefony.Error("schema api not supported ");
   }
 
-  getLicence() {
-    if (this.context) {
-      const bundle = this.get("bundle");
-      if (bundle.package && bundle.package.license) {
-        try {
-          if (bundle.package.license !== "UNLICENSED") {
-            spdx.parse(bundle.package.license);
-            return {
-              name: bundle.package.license
-            };
-          }
-          return {
-            name: bundle.package.license
-          };
-        } catch (e) {
-          this.log(e, "WARNING");
-          spdx.licenses.every((element) => {
-            this.log(element, "WARNING");
-            return typeof element === 'string';
-          });
-          this.log("licence not valid  ", "WARNING");
-          this.log("Show licence param in package.json and use spdx to valid : https://github.com/kemitchell/spdx.js ");
-          this.log("Or use <UNLICENSED> value");
-        }
-      }
-    }
-    return {
-      name: "UNLICENSED"
-    };
-  }
-
-  getInfo() {
-    return {
-      title: this.name,
-      version: this.version,
-      description: this.description,
-      contact: {
-        name: this.kernel.app.settings.App.authorName,
-        url: `https://${this.kernel.domain}`,
-        email: this.kernel.app.settings.App.authorMail
-      },
-      termsOfService: "",
-      license: this.getLicence()
-    };
-  }
-
-  getServers() {
-    console.log(this.kernel.domainAlias)
-    return [{
-      "url": `https://${this.kernel.domain}:{port}`,
-      "description": this.kernel.description,
-      "variables": {
-        "port": {
-          "enum": [
-            `${this.kernel.httpsPort}`,
-            "443"
-          ],
-          "default": `${this.kernel.httpsPort}`
-        },
-        "basePath": {
-          "default": "api"
-        }
-      }
-    }];
-  }
-
-  getComponents(service) {
-    let comp = {};
+  getSchema(config = {}, entity = null){
     try {
-      if (service.getDefinitions) {
-        comp.schemas = {};
-        comp.schemas[service.name] = service.getDefinitions();
+      if ( config){
+        this.setSchema(config, entity);
       }
-      return comp;
-    } catch (e) {
-      this.log(e, "WARNING");
-      return comp;
+      if (this.schema){
+        return this.schema.getConfig();
+      }
+      return {};
+    }catch(e){
+      throw e ;
+    }
+  }
+
+  renderSchema(config = {}, entity = null, code= 200){
+    try {
+      let conf = this.getSchema(config, entity);
+      if (this.context) {
+        const controller = this.context.get("controller");
+        return controller.renderJson(conf, code);
+      }
+      return conf ;
+    }catch(e){
+      throw e ;
     }
   }
 

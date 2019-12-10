@@ -9,7 +9,33 @@ class loginApiController extends nodefony.controller {
     this.jwtFactory = this.security.getFactory("jwt");
     this.jwtSettings = this.bundle.settings.jwt;
     this.usersService = this.get("users");
-    this.jsonApi = new nodefony.JsonApi("jwt-api", this.bundle.version, "Nodefony Login Api JWT", this.context);
+    // api
+    this.jsonApi = new nodefony.JsonApi("jwt-api-login", this.bundle.version, "Nodefony Login Api JWT", this.context);
+  }
+
+  /**
+   *    @Method ({"GET"})
+   *    @Route (
+   *      "/documentation",
+   *      name="api-jwt-login-doc"
+   *    )
+   *    @Firewall ({bypass:true})
+   */
+  swaggerAction() {
+    return this.optionsAction();
+  }
+
+  /**
+   *    @Method ({"OPTIONS"})
+   *    @Route ( "",name="api-login-options",)
+   */
+  optionsAction() {
+    try {
+      let openApiConfig = require(path.resolve(this.bundle.path, "Resources", "config", "openapi", "login.js"));
+      return this.jsonApi.renderSchema(openApiConfig, this.usersService.entity);
+    } catch (e) {
+      return this.jsonApi.renderError(e, 400);
+    }
   }
 
   /**
@@ -36,7 +62,6 @@ class loginApiController extends nodefony.controller {
         token,
         this.jwtSettings.refreshToken);
       return this.jsonApi.render({
-        schema: this.jsonApi.getSchema(this.usersService),
         decodedToken: this.jwtFactory.decodeJwtToken(token),
         token: token,
         refreshToken: refrechToken

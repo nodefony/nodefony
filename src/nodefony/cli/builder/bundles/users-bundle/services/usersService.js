@@ -17,19 +17,7 @@
      this.entity = this.orm.getEntity("user");
    }
 
-   getJsonApi(context){
-     // json API nodefony.JsonApi(name, version, descripton | schema, context)
-     return  new nodefony.JsonApi(
-       this.name,
-       this.bundle.version,
-       "Nodefony Users Api",
-       context);
-   }
-
-   getDefinitions(schema) {
-     return this.orm.getOpenApiSchema(this.entity, schema);
-   }
-
+   
    getSchemaAttributes() {
      switch (this.ormName) {
      case "sequelize":

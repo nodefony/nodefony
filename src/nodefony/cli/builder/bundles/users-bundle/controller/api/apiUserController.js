@@ -8,18 +8,28 @@ class apiController extends nodefony.controller {
     // service entity
     this.usersService = this.get("users");
     // api
-    this.jsonApi = this.usersService.getJsonApi(this.context);
+    this.jsonApi = new nodefony.JsonApi("users-api", this.bundle.version, "Nodefony Users Api", this.context);
+  }
+
+  /**
+   *    @Method ({"GET"})
+   *    @Route ("/documentation",
+   *      name="nodefony-users-apidoc"
+   *    )
+   *    @Firewall ({bypass:true})
+   */
+  swaggerAction() {
+    return this.optionsAction();
   }
 
   /**
    *    @Method ({"OPTIONS"})
    *    @Route ( "",name="api-users-options",)
-   *    @Firewall ({bypass:true})
    */
   optionsAction() {
     try {
-      let openApi = require(path.resolve(this.bundle.path, "Resources", "config", "openapi", "users.js"));
-      return this.jsonApi.renderSchema(openApi, this.usersService);
+      let openApiConfig = require(path.resolve(this.bundle.path, "Resources", "config", "openapi", "users.js"));
+      return this.jsonApi.renderSchema(openApiConfig, this.usersService.entity);
     } catch (e) {
       return this.jsonApi.renderError(e, 400);
     }

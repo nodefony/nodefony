@@ -1,19 +1,32 @@
 import SwaggerUI from 'swagger-ui';
+import { SwaggerUIBundle, SwaggerUIStandalonePreset } from "swagger-ui-dist";
 // or use require, if you prefer
 //const SwaggerUI = require('swagger-ui');
 import "swagger-ui/dist/swagger-ui.css";
 
 SwaggerUI({
+  //url: "/users/api/documentation?config=true",
+  urls: [{
+    url: "/api/users/documentation",
+    name: "users"
+  }, {
+    url: "/api/jwt/documentation",
+    name: "login"
+  }],
   dom_id: '#swagger',
-  url: "/users/api/documentation?config=true",
-  requestInterceptor:function (request) {
+  //defaultModelsExpandDepth: -1,
+  deepLinking: true,
+  presets: [
+    SwaggerUI.presets.apis,
+    SwaggerUIStandalonePreset
+  ],
+  plugins: [
+    SwaggerUIBundle.plugins.DownloadUrl
+  ],
+  layout: "StandaloneLayout",
+  requestInterceptor: function(request) {
+    //console.log('[Swagger] intercept try-it-out request');
+    //request.headers.jwt = localstorage;
     return request;
   }
-  /*urls: [{
-    url: "https://localhost:5152/test/swagger?api=users",
-    name: "user1"
-  }, {
-    url: "https://localhost:5152/test/swagger?api=users",
-    name: "user2"
-  }]*/
 });
