@@ -28,6 +28,7 @@ class loginApiController extends nodefony.controller {
   /**
    *    @Method ({"OPTIONS"})
    *    @Route ( "",name="api-login-options",)
+   *    @Firewall ({bypass:true})
    */
   optionsAction() {
     try {

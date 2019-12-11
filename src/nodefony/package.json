@@ -34,7 +34,7 @@
   "dependencies": {
     "@babel/core": "^7.7.5",
     "@babel/parser": "^7.7.5",
-    "@babel/preset-env": "^7.7.5",
+    "@babel/preset-env": "^7.7.6",
     "@nodefony/documentation-bundle": "^5.1.1",
     "@nodefony/elastic-bundle": "^5.1.1",
     "@nodefony/framework-bundle": "^5.1.1",
@@ -68,7 +68,7 @@
     "moment": "^2.24.0",
     "node-emoji": "^1.10.0",
     "npm": "^6.13.3",
-    "pm2": "^4.2.0",
+    "pm2": "^4.2.1",
     "promise": "^8.0.3",
     "request": "^2.88.0",
     "semver": "^6.3.0",

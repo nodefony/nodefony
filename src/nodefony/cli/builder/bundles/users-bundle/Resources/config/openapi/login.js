@@ -99,71 +99,81 @@ const openapi = {
     }
   },
   paths: {
-    "api/jwt/login": {
+    "/api/jwt": {
       options: {
         summary: "Get openapi3 config",
         tags: ["jwt"],
         responses: {
           '200': {
-            description: "A paged array of users",
+            description: "A paged array of users"
+          }
+        }
+      },
+    },
+    "/api/jwt/login": {
+      post: {
+        summary: "List all users",
+        tags: ["jwt"],
+        parameters: [{
+          name: "username",
+          description: "User name",
+          in: "query",
+          required: true
+        }, {
+          name: "passwd",
+          description: "User password",
+          in: "query",
+          required: true
+        }],
+        responses: {
+          '200': {
+            description: "get Authentication tokens",
             content: {
               "application/json": {
                 schema: {
-                  //$ref: "#/components/schemas/users"
+                  type: "array",
+                  items: {
+                    "$ref": "#/components/schemas/user"
+                  }
+                }
+              }
+            }
+          },
+          default: {
+            description: "Unexpected error",
+            content: {
+              "application/json": {
+                schema: {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           }
         }
-      },
-      get: {
-        summary: "List all users",
+      }
+    },
+    "/api/jwt/logout": {
+      post: {
+        summary: "logout user",
         tags: ["jwt"],
-        security: [{
-          jwtAuth: ""
+        parameters: [{
+          name: "token",
+          description: "Authentication token",
+          in: "header",
+          required: true
         }],
         responses: {
           '200': {
-            description: "get headers request"
+            description: "logout user"
           },
-
-        }
-      },
-      post: {
-        summary: "List all users",
-        tags: ["jwt"],
-        responses: {
-          '200': {
-            description: "get headers request"
-          }
-        }
-      },
-      head: {
-        summary: "List all users",
-        tags: ["jwt"],
-        responses: {
-          '200': {
-            description: "get headers request"
-          }
-        }
-      },
-      trace: {
-        summary: "List all users",
-        tags: ["jwt"],
-        responses: {
-          '200': {
-            description: "get headers request"
-          }
         }
       }
     },
   },
-
-  tags: [ {
+  tags: [{
     name: "jwt",
     description: "JWT Authentication"
   }]
-
 };
 
 module.exports = openapi;
