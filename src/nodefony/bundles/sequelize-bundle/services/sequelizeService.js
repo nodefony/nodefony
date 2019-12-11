@@ -2,8 +2,9 @@ const cls = require('cls-hooked');
 const namespace = cls.createNamespace('nodefony');
 const Sequelize = require('sequelize');
 Sequelize.useCLS(namespace);
+const { JsonSchemaManager, OpenApi3Strategy } = require('@alt3/sequelize-to-json-schemas');
 
-const myerror = function (err) {
+const myerror = function(err) {
   if (this.state !== "DISCONNECTED") {
     this.orm.kernel.fire('onError', err, this);
   }
@@ -11,16 +12,16 @@ const myerror = function (err) {
   this.logger(this.settings, "INFO", `CONFIGURATION Sequelize ${this.name}`);
   if (err.code) {
     switch (err.code) {
-    case 'PROTOCOL_CONNECTION_LOST':
-    case "ECONNREFUSED":
-      this.state = "DISCONNECTED";
-      return {
-        status: 500,
-        code: err.code,
-        message: err.message
-      };
-    default:
-      return err;
+      case 'PROTOCOL_CONNECTION_LOST':
+      case "ECONNREFUSED":
+        this.state = "DISCONNECTED";
+        return {
+          status: 500,
+          code: err.code,
+          message: err.message
+        };
+      default:
+        return err;
     }
   } else {
     return err;
@@ -124,9 +125,9 @@ class connectionDB {
     let conn = null;
     try {
       switch (type) {
-      case "sqlite":
-        config.options.storage = process.cwd() + config.dbname;
-        break;
+        case "sqlite":
+          config.options.storage = process.cwd() + config.dbname;
+          break;
       }
       conn = new this.orm.engine(config.dbname, config.username, config.password, config.options);
       process.nextTick(() => {
@@ -201,15 +202,15 @@ module.exports = class sequelize extends nodefony.orm {
       conn[0] = dbname;
       for (let data in this.settings.connectors[dbname]) {
         switch (data) {
-        case "dbname":
-          conn[2] = this.settings.connectors[dbname][data];
-          break;
-        case "options":
-          conn[1] = this.settings.connectors[dbname][data].dialect;
-          if (this.settings.connectors[dbname][data].host) {
-            conn[3] = this.settings.connectors[dbname][data].host + ":" + this.settings.connectors[dbname][data].port;
-          }
-          break;
+          case "dbname":
+            conn[2] = this.settings.connectors[dbname][data];
+            break;
+          case "options":
+            conn[1] = this.settings.connectors[dbname][data].dialect;
+            if (this.settings.connectors[dbname][data].host) {
+              conn[3] = this.settings.connectors[dbname][data].host + ":" + this.settings.connectors[dbname][data].port;
+            }
+            break;
         }
       }
       tab.push(conn);
@@ -260,6 +261,16 @@ module.exports = class sequelize extends nodefony.orm {
   }
 
   getOpenApiSchema(entity) {
+    try{
+      const schemaManager = new JsonSchemaManager();
+      const schema = schemaManager.generate(entity, new OpenApi3Strategy());
+      return schema ;
+    }catch(e){
+      throw e ;
+    }
+  }
+
+  /*getOpenApiSchema(entity) {
     let attr = {
       type: "object",
       properties: {},
@@ -275,24 +286,46 @@ module.exports = class sequelize extends nodefony.orm {
         prop.default = attributes[ele].defaultValue;
       }
       switch (attributes[ele].type.constructor.name) {
-      case "STRING":
-        prop.type = "string";
-        if (attributes[ele].type._binary) {
-          prop.format = "binary";
-        }
-        break;
-      case "JSONTYPE":
-        prop.type = "array";
-        break;
-      case 'BOOLEAN':
-        prop.type = "boolean";
-        break;
-      case "DATE":
-        prop.type = "date";
-        break;
+        case "STRING":
+          prop.type = "string";
+          if (attributes[ele].type._binary) {
+            prop.format = "binary";
+          }
+          break;
+        case "INTEGER":
+          prop.type = "integer";
+          prop.format = "int32";
+          break;
+        case "BIGINT":
+          prop.type = "integer";
+          prop.format = "int64";
+          break;
+        case "FLOAT":
+        case "REAL":
+          prop.type = "number";
+          prop.format = "float";
+          break;
+        case "DOUBLE":
+          prop.type = "number";
+          prop.format = "double";
+          break;
+        case "JSONTYPE":
+          prop.type = "array";
+          break;
+        case 'BOOLEAN':
+          prop.type = "boolean";
+          break;
+        case "DATE":
+        case "DATEONLY":
+          prop.type = "string";
+          prop.format = "date";
+          break;
+        default:
+          prop.type = "string";
+          prop.format = attributes[ele].instance;
       }
     }
     return attr;
-  }
+  }*/
 
 };

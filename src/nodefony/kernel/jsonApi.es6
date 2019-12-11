@@ -115,6 +115,8 @@ class JsonApi extends nodefony.Service {
     return new nodefony.PDU(json, severity, api, messageID, message);
   }
 
+  // schema api management
+
   setSchema(config = {}, entity = null) {
     if(config.openapi){
       this.schema = new nodefony.openApiSchema(this, config, entity);
@@ -129,7 +131,11 @@ class JsonApi extends nodefony.Service {
         this.setSchema(config, entity);
       }
       if (this.schema){
-        return this.schema.getConfig();
+        let conf = this.schema.getConfig();
+        if (conf.components && conf.components.schemas){
+          conf.components.schemas[this.name] = this.getOpenApiSchema();
+        }
+        return conf ;
       }
       return {};
     }catch(e){
@@ -148,6 +154,76 @@ class JsonApi extends nodefony.Service {
     }catch(e){
       throw e ;
     }
+  }
+
+  getOpenApiSchema(){
+    return {
+      type: "object",
+      properties: {
+        api: {
+          type: "string"
+        },
+        version: {
+          type: "string"
+        },
+        result: {
+          type: "array"
+        },
+        message: {
+          type: "string"
+        },
+        messageId: {
+          type: "string"
+        },
+        error: {
+          $ref:"#/components/schemas/NodefonyError"
+        },
+        errorCode: {
+          type: "integer",
+          format: "int32"
+        },
+        errorType: {
+          type: "string"
+        },
+        debug: {
+          type: "boolean"
+        },
+        url: {
+          type: "string"
+        },
+        method: {
+          type: "string"
+        },
+        scheme: {
+          type: "string"
+        },
+        severity: {
+          type: "string"
+        },
+        code: {
+          type: "integer",
+          format: "int32",
+        }
+      },
+      example: `
+{
+  "api": ${this.name},
+  "version": ${this.version},
+  "result": [],
+  "message": "OK",
+  "messageId": null,
+  "error": null,
+  "errorCode": null,
+  "errorType": null,
+  "debug": false,
+  "url": "https://0.0.0.0:5152/api/jwt/login?username=admin&passwd=admin",
+  "method": "POST",
+  "scheme": "https",
+  "severity": "INFO",
+  "code": 200
+}
+      `
+    };
   }
 
   getNodefonyInfo(service) {

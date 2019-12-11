@@ -27,7 +27,7 @@ module.exports = nodefony.register('Provider', () => {
                   token.setProvider(this);
                   return resolve(token);
                 }
-                return reject(new nodefony.Error(`user ${token.getUsername()} Incorrect password`));
+                return reject(new nodefony.Error(`user ${token.getUsername()} Incorrect password`,401));
               }
               return reject(new nodefony.Error(`user ${token.getUsername()} not found `));
             }).catch((error) => {

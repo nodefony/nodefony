@@ -61,59 +61,77 @@ const openapi = {
       }
     },
     schemas: {
-      Error: {
-        description: "Api Error",
-        content: {
-          "application/json": {
-            schema: {
-
-            }
+      jwt: {
+        type: "object",
+        properties:{
+          token:{
+            type: "string"
+          },
+          refreshToken:{
+            type: "string"
+          },
+          decodedToken:{
+            type: "object"
           }
-        }
+        },
+        example: `{
+"decodedToken": {
+      "data": {
+        "name": "userPassword",
+        "roles": [
+          {
+            "role": "ROLE_ADMIN"
+          }
+        ],
+        "user": {
+          "username": "admin",
+          "name": "administrator",
+          "surname": "nodefony",
+          "roles": [
+            "ROLE_ADMIN"
+          ],
+          "lang": "en_en",
+          "enabled": true,
+          "accountNonExpired": true,
+          "credentialsNonExpired": true,
+          "accountNonLocked": true
+        },
+        "authenticated": true,
+        "factory": "local",
+        "provider": "nodefony"
+      },
+      "iat": 1576074663,
+      "exp": 1576075563
+    },
+"token": ".....",
+"refreshToken":"......"
+  }
+        `
       }
     },
     responses: {
-      UnauthorizedError: {
-        description: "API key is missing or invalid",
-        headers: {
-          jwt: {
-            schema: {
-              type: "string"
-            }
-          }
-        }
-      },
-      '401': {
-        $ref: "#/components/responses/UnauthorizedError"
-      },
-      default: {
-        description: "unexpected error",
-        content: {
-          "application/json": {
-            schema: {
-              $ref: "#/components/schemas/Error"
-            }
-          }
-        }
-      }
+
     }
   },
   paths: {
     "/api/jwt": {
       options: {
-        summary: "Get openapi3 config",
-        tags: ["jwt"],
+        summary: "Get OpenAPI (OAS 3.0) configuration",
+        tags: ["JWT CONFIGURATION"],
         responses: {
           '200': {
             description: "A paged array of users"
+          },
+          default: {
+            $ref: "#/components/responses/default"
           }
         }
       },
     },
     "/api/jwt/login": {
       post: {
-        summary: "List all users",
-        tags: ["jwt"],
+        summary: "Authnticate user with credentials",
+        tags: ["JWT AUTHENTICATION"],
         parameters: [{
           name: "username",
           description: "User name",
@@ -131,23 +149,90 @@ const openapi = {
             content: {
               "application/json": {
                 schema: {
-                  type: "array",
-                  items: {
-                    "$ref": "#/components/schemas/user"
-                  }
-                }
+                  allOf: [{
+                    $ref:"#/components/schemas/jwt-api-login"
+                  },{
+                    type:"object",
+                    properties:{
+                      result: {
+                        $ref:"#/components/schemas/jwt"
+                      },
+                    }
+                  }]
+                },
+                example: `{
+  "api": "jwt-api-login",
+  "version": "1.0.0",
+  "result": {
+    "decodedToken": {
+      "data": {
+        "name": "userPassword",
+        "roles": [
+          {
+            "role": "ROLE_ADMIN"
+          }
+        ],
+        "user": {
+          "username": "admin",
+          "name": "administrator",
+          "surname": "nodefony",
+          "roles": [
+            "ROLE_ADMIN"
+          ],
+          "lang": "en_en",
+          "enabled": true,
+          "accountNonExpired": true,
+          "credentialsNonExpired": true,
+          "accountNonLocked": true
+        },
+        "authenticated": true,
+        "factory": "local",
+        "provider": "nodefony"
+      },
+      "iat": 1576074663,
+      "exp": 1576075563
+    },
+    "token": "....",
+    "refreshToken":"...."
+  },
+  "message": "OK",
+  "messageId": null,
+  "error": null,
+  "errorCode": null,
+  "errorType": null,
+  "debug": false,
+  "url": "https://0.0.0.0:5152/api/jwt/login?username=admin&passwd=admin",
+  "method": "POST",
+  "scheme": "https",
+  "severity": "INFO",
+  "code": 200
+}
+                `
               }
             }
           },
           default: {
-            description: "Unexpected error",
-            content: {
-              "application/json": {
-                schema: {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
+            $ref: "#/components/responses/default"
+          }
+        }
+      }
+    },
+    "/api/jwt/token": {
+      post: {
+        summary: "Regenerate token with refreshToken",
+        tags: ["JWT AUTHENTICATION"],
+        parameters: [{
+          name: "refreshToken",
+          description: "Authentication refreshToken",
+          in: "header",
+          required: true
+        }],
+        responses: {
+          '200': {
+            description: "Regenerated Token"
+          },
+          default: {
+            $ref: "#/components/responses/default"
           }
         }
       }
@@ -155,7 +240,7 @@ const openapi = {
     "/api/jwt/logout": {
       post: {
         summary: "logout user",
-        tags: ["jwt"],
+        tags: ["JWT AUTHENTICATION"],
         parameters: [{
           name: "token",
           description: "Authentication token",
@@ -166,13 +251,22 @@ const openapi = {
           '200': {
             description: "logout user"
           },
-        }
+          default: {
+            $ref: "#/components/responses/default"
+          }
+        },
+        security: [{
+          jwtAuth: ""
+        }],
       }
     },
   },
   tags: [{
-    name: "jwt",
-    description: "JWT Authentication"
+    name: "JWT AUTHENTICATION",
+    description: "JWT Authentication and refresh"
+  }, {
+    name: "JWT CONFIGURATION",
+    description: "JWT API configuration"
   }]
 };
 

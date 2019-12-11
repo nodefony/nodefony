@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@alt3/sequelize-to-json-schemas@^0.3.36":
+  version "0.3.36"
+  resolved "https://registry.yarnpkg.com/@alt3/sequelize-to-json-schemas/-/sequelize-to-json-schemas-0.3.36.tgz#627a07fb3d8441d7ae6d093d7524f691c514c45b"
+  integrity sha512-u89oNkrWDvc3R3pKaZIIo4o83/yPizafRRn+5yZjoXMvpTW00BF/nQwo+6L54bN1G63LgVFeBXg+MdJkjAQIQA==
+
 "@azure/ms-rest-azure-env@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@azure/ms-rest-azure-env/-/ms-rest-azure-env-1.1.2.tgz#8505873afd4a1227ec040894a64fdd736b4a101f"

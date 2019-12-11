@@ -66,68 +66,26 @@ const openApi = {
       }
     },
     schemas: {
-      Error: {
-        description: "Api Error",
-        content: {
-          "application/json": {
-            schema: {
 
-            }
-          }
-        }
-      }
     },
     responses: {
-      UnauthorizedError: {
-        description: "API key is missing or invalid",
-        headers: {
-          jwt: {
-            schema: {
-              type: "string"
-            }
-          }
-        }
-      },
-      '401': {
-        $ref: "#/components/responses/UnauthorizedError"
-      },
-      default: {
-        description: "unexpected error",
-        content: {
-          "application/json": {
-            schema: {
-              $ref: "#/components/schemas/Error"
-            }
-          }
-        }
-      }
+
     }
   },
   paths: {
     "/api/users": {
       options: {
-        summary: "Get openapi3 config",
+        summary: "Get OpenAPI (OAS 3.0) configuration",
         tags: ["users"],
-        parameters: [{
-          name: "limit",
-          in: "query",
-          description: "How many items to return at one time (max 100)",
-          required: false,
-          schema: {
-            type: "integer",
-            format: "int32"
-          }
-        }],
         responses: {
           '200': {
-            description: "A paged array of users",
+            description: "OpenAPI (OAS 3.0) configuration",
             content: {
-              "application/json": {
-                schema: {
-                  //$ref: "#/components/schemas/users"
-                }
-              }
+              "application/json": {}
             }
+          },
+          default: {
+            $ref: "#/components/responses/default"
           }
         }
       },
@@ -136,22 +94,55 @@ const openApi = {
         tags: ["users"],
         responses: {
           '200': {
-            description: "get headers request"
+            description: "List or filter Users",
+            content: {
+              "application/json": {
+                schema: {
+                  allOf: [{
+                    $ref:"#/components/schemas/users-api"
+                  },{
+                    type:"object",
+                    properties:{
+                      result: {
+                        type:"object",
+                        properties: {
+                          total:{
+                            type: "integer"
+                          },
+                          rows:{
+                            type: "array",
+                            items:{
+                              type:"object",
+                              $ref:"#/components/schemas/user"
+                            }
+                          }
+                        }
+                      },
+                    }
+                  }]
+                }
+              }
+            }
           },
-
+          default: {
+            $ref: "#/components/responses/default"
+          }
         }
       },
       post: {
-        summary: "List all users",
+        summary: "Create user",
         tags: ["users"],
         responses: {
           '200': {
             description: "get headers request"
+          },
+          default: {
+            $ref: "#/components/responses/default"
           }
         }
       },
       head: {
-        summary: "List all users",
+        summary: "List headers Api",
         tags: ["users"],
         security: [{
           jwtAuth: ""
@@ -159,15 +150,9 @@ const openApi = {
         responses: {
           '200': {
             description: "get headers request"
-          }
-        }
-      },
-      trace: {
-        summary: "List all users",
-        tags: ["users"],
-        responses: {
-          '200': {
-            description: "get headers request"
+          },
+          default: {
+            $ref: "#/components/responses/default"
           }
         }
       }

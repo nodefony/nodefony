@@ -186,17 +186,37 @@ module.exports = class mongoose extends nodefony.orm {
       }
       switch (attributes[ele].instance) {
       case "String":
+      case 'SchemaString':
+      case 'SchemaBuffer':
+      case 'SchemaObjectId':
+      case 'ObjectId':
+      case 'ObjectID':
+      case 'SchemaDate':
         prop.type = "string";
         break;
+      case 'Number':
+      case 'SchemaNumber':
+        prop.type = "number";
+        break;
+      case 'Mixed':
+        prop.type = "object";
+        break;
       case "Array":
+      case 'DocumentArray':
+      case 'SchemaArray':
         prop.type = "array";
         break;
       case 'Boolean':
+      case 'SchemaBoolean':
         prop.type = "boolean";
         break;
       case "Date":
-        prop.type = "date";
+        prop.type = "string";
+        prop.format = "date";
         break;
+      default:
+        prop.type = "string";
+        prop.format = attributes[ele].instance;
       }
     }
     return attr;
