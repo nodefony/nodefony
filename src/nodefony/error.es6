@@ -3,9 +3,9 @@ const STATUS_CODES = require("http").STATUS_CODES;
 const json = {
   configurable: true,
   writable: true,
-  value: function () {
+  value: function() {
     let alt = {};
-    const storeKey = function (key) {
+    const storeKey = function(key) {
       alt[key] = this[key];
     };
     Object.getOwnPropertyNames(this).forEach(storeKey, this);
@@ -14,7 +14,7 @@ const json = {
 };
 Object.defineProperty(Error.prototype, 'toJSON', json);
 
-module.exports = nodefony.register("Error", function () {
+module.exports = nodefony.register("Error", function() {
   class nodefonyError extends Error {
 
     constructor(message, code) {
@@ -28,6 +28,34 @@ module.exports = nodefony.register("Error", function () {
       if (message) {
         this.parseMessage(message);
       }
+    }
+
+    static isError(error) {
+      switch (true) {
+        case error instanceof TypeError:
+          return "TypeError";
+        case error instanceof ReferenceError:
+          return "ReferenceError";
+        case error instanceof TypeError:
+          return "TypeError";
+        case error instanceof SyntaxError:
+          return "SyntaxError";
+        case error instanceof assert.AssertionError:
+          return "AssertionError";
+        case error instanceof Error:
+          if (error.errno) {
+            return "SystemError" ;
+          }
+          if (error.bytesParsed) {
+            return "ClientError";
+          }
+          try{
+            return error.constructor.name || "Error";
+          }catch(e){
+            return "Error";
+          }
+      }
+      return false ;
     }
 
     getType(error) {
@@ -66,15 +94,15 @@ module.exports = nodefony.register("Error", function () {
 
     toString() {
       switch (this.errorType) {
-      case "Error":
-        return ` ${clc.red(this.message)}
+        case "Error":
+          return ` ${clc.red(this.message)}
           ${clc.blue("Name :")} ${this.name}
           ${clc.blue("Type :")} ${this.errorType}
           ${clc.red("Code :")} ${this.code}
           ${clc.red("Message :")} ${this.message}
           ${clc.green("Stack :")} ${this.stack}`;
-      case "httpError":
-        return `${clc.red(this.message)}
+        case "httpError":
+          return `${clc.red(this.message)}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.blue("Url :")} ${this.url}
@@ -84,8 +112,8 @@ module.exports = nodefony.register("Error", function () {
         ${clc.green("Controller :")} ${this.controller}
         ${clc.green("Action :")} ${this.action}
         ${clc.green("Stack :")} ${this.stack}`;
-      case "SystemError":
-        return `${clc.red(this.message)}
+        case "SystemError":
+          return `${clc.red(this.message)}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.red("Message :")} ${this.message}
@@ -94,8 +122,8 @@ module.exports = nodefony.register("Error", function () {
         ${clc.blue("Address :")} ${this.address}
         ${clc.blue("Port :")} ${this.port}
         ${clc.green("Stack :")} ${this.stack}`;
-      case "AssertionError":
-        return ` ${clc.red(this.message)}
+        case "AssertionError":
+          return ` ${clc.red(this.message)}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.red("Code :")} ${this.code}
@@ -104,8 +132,8 @@ module.exports = nodefony.register("Error", function () {
         ${clc.white("Expected :")} ${this.expected}
         ${clc.white("Operator :")} ${this.operator}
         ${clc.green("Stack :")} ${this.stack}`;
-      case "ClientError":
-        return ` ${clc.red(this.message)}
+        case "ClientError":
+          return ` ${clc.red(this.message)}
             ${clc.blue("Name :")} ${this.name}
             ${clc.blue("Type :")} ${this.errorType}
             ${clc.red("Code :")} ${this.code}
@@ -113,8 +141,8 @@ module.exports = nodefony.register("Error", function () {
             ${clc.white("BytesParsed :")} ${this.bytesParsed}
             ${clc.white("RawPacket :")} ${this.rawPacket}
             ${clc.green("Stack :")} ${this.stack}`;
-      default:
-        return ` ${clc.red(this.message)}
+        default:
+          return ` ${clc.red(this.message)}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.red("Message :")} ${this.message}
@@ -125,34 +153,34 @@ module.exports = nodefony.register("Error", function () {
     parseMessage(message) {
       this.errorType = this.getType(message);
       switch (nodefony.typeOf(message)) {
-      case "Error":
-        this.message = message.message;
-        if (message.code) {
-          this.code = message.code;
-        }
-        this.stack = message.stack;
-        break;
-      case "object":
-        // Capturing stack trace, excluding constructor call from it.
-        Error.captureStackTrace(message, this.constructor);
-        if (message.status) {
-          this.code = message.status;
-        }
-        if (message.code) {
-          this.code = message.code;
-        }
-        try {
-          if (message.message) {
-            this.message = message.message;
-          } else {
-            this.message = JSON.stringify(message);
+        case "Error":
+          this.message = message.message;
+          if (message.code) {
+            this.code = message.code;
           }
-        } catch (e) {
-          this.error = e;
-        }
-        break;
-      default:
-        this.getDefaultMessage();
+          this.stack = message.stack;
+          break;
+        case "object":
+          // Capturing stack trace, excluding constructor call from it.
+          Error.captureStackTrace(message, this.constructor);
+          if (message.status) {
+            this.code = message.status;
+          }
+          if (message.code) {
+            this.code = message.code;
+          }
+          try {
+            if (message.message) {
+              this.message = message.message;
+            } else {
+              this.message = JSON.stringify(message);
+            }
+          } catch (e) {
+            this.error = e;
+          }
+          break;
+        default:
+          this.getDefaultMessage();
       }
     }
 

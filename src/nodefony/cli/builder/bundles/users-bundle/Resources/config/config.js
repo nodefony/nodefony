@@ -13,7 +13,7 @@
  */
 
 const crypto = require('crypto');
-const randomSecret = function () {
+const randomSecret = function() {
   return crypto.randomBytes(48).toString('hex');
 };
 
@@ -67,6 +67,19 @@ module.exports = {
     refreshToken: {
       expiresIn: 3600
     }
+  },
+
+  swagger: {
+    projectName: "Nodefony User",
+    logo: "/app/images/app-logo.png",
+    urls: [{
+      url: "/api/users/documentation",
+      name: "users"
+    }, {
+      url: "/api/jwt/documentation",
+      name: "login"
+    }],
+    primaryName:"login"
   }
 
 };

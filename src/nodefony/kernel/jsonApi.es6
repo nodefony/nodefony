@@ -2,11 +2,12 @@ class JsonApi extends nodefony.Service {
   constructor(name = "api", version = "1.0.0", description = "API", context = null) {
     const container = context ? context.container : kernel.container;
     super(name, container, false);
-
-    this.name = name;
-    this.version = version;
-    this.debug = this.kernel.debug;
-    this.description = description;
+    this.name = null;
+    this.version = null;
+    this.description = null;
+    this.context = null;
+    this.parseArgs.call(this, ...arguments);
+    this.debug = kernel.debug;
     this.json = {
       api: this.name,
       version: this.version,
@@ -18,8 +19,9 @@ class JsonApi extends nodefony.Service {
       errorType: null,
       debug: this.debug
     };
-    if (context) {
-      this.context = context;
+    if (this.context) {
+      this.bundle = this.context.get("bundle");
+      this.debug = this.kernel.debug;
       this.context.setContextJson();
       this.json.url = this.context.url || "";
       this.json.method = this.context.method;
@@ -27,13 +29,24 @@ class JsonApi extends nodefony.Service {
     }
   }
 
-  getDescription(dsc) {
-    switch (true) {
-    case dsc:
-      break;
-    default:
-      throw new Error(`Bad api description  : ${dsc}`);
-
+  parseArgs(name, version, description, context) {
+    switch (nodefony.typeOf(name)) {
+      case "string":
+        this.name = name;
+        this.version = version;
+        this.description = description;
+        this.context = context;
+        this.basePath = "";
+        break;
+      case "object":
+        this.name = name.name;
+        this.version = name.version;
+        this.description = name.description;
+        this.context = version;
+        this.basePath = name.basePath;
+        break;
+      default:
+        throw new Error(`Constructor JsonApi bad arguments  : ${arguments}`);
     }
   }
 
@@ -48,8 +61,10 @@ class JsonApi extends nodefony.Service {
   }
 
   sanitize(data, obj, severity) {
-    switch (nodefony.typeOf(data)) {
-    case "Error":
+    const errorType = nodefony.Error.isError(data);
+    if (errorType) {
+      obj.errorType = errorType;
+      obj.result = null;
       obj.error = data;
       obj.severity = severity || "ERROR";
       if (data.name) {
@@ -60,13 +75,22 @@ class JsonApi extends nodefony.Service {
       } else {
         obj.code = 400;
       }
+      if( data.errorCode){
+        obj.errorCode = data.errorCode;
+      }
       if (!obj.message) {
         obj.message = data.message;
       }
-      return obj.result = null;
-    default:
-      return obj.result = data;
+      if (!data.message && this.context ) {
+        obj.message = this.context.response.getStatusMessage(obj.code);
+      }
+      return data ;
     }
+    if (!obj.message && this.context) {
+      obj.message = this.context.response.getStatusMessage(obj.code);
+    }
+    obj.result = null;
+    return obj.result = data;
   }
 
   render(payload, code, message = "", severity = null, messageID = null) {
@@ -79,10 +103,7 @@ class JsonApi extends nodefony.Service {
       if (this.context) {
         const controller = this.context.get("controller");
         json.code = code || this.context.response.getStatusCode();
-        if (!json.message) {
-          json.message = this.context.response.getStatusMessage(json.code);
-        }
-        json.result = this.sanitize(payload, json, severity);
+        this.sanitize(payload, json, severity);
         if (this.kernel.debug) {
           json.pdu = new nodefony.PDU({
             bundle: controller.bundle.name,
@@ -93,7 +114,8 @@ class JsonApi extends nodefony.Service {
         }
         return controller.renderJson(json, json.code);
       }
-      json.result = this.sanitize(payload, json, severity);
+      json.code = code || 200 ;
+      this.sanitize(payload, json, severity);
       return json;
     } catch (e) {
       throw e;
@@ -106,7 +128,7 @@ class JsonApi extends nodefony.Service {
 
   renderPdu(payload, code, message = "", severity = "INFO", messageID = null, api = this.name) {
     let json = nodefony.extend({}, this.json);
-    json.result = this.sanitize(payload, json, severity);
+    this.sanitize(payload, json, severity);
     if (this.context) {
       const controller = this.context.get("controller");
       json.code = code || this.context.response.getStatusCode();
@@ -254,15 +276,15 @@ class JsonApi extends nodefony.Service {
       debug: this.debug
     };
     switch (true) {
-    case service instanceof nodefony.Service:
-      obj.service = {
-        name: service.name
-      };
-      if (service.entity && service.entity.name) {
-        obj.service.entity = service.entity.name;
-      }
-      break;
-    default:
+      case service instanceof nodefony.Service:
+        obj.service = {
+          name: service.name
+        };
+        if (service.entity && service.entity.name) {
+          obj.service.entity = service.entity.name;
+        }
+        break;
+      default:
     }
     if (this.context) {
       obj.environment = this.kernel.environment;

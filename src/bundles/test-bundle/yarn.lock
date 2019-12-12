@@ -2007,10 +2007,10 @@ css-hot-loader@^1.4.4:
     lodash "^4.17.5"
     normalize-url "^1.9.1"
 
-css-loader@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-3.3.0.tgz#65f889807baec3197313965d6cda9899f936734d"
-  integrity sha512-x9Y1vvHe5RR+4tzwFdWExPueK00uqFTCw7mZy+9aE/X1SKWOArm5luaOrtJ4d05IpOwJ6S86b/tVcIdhw1Bu4A==
+css-loader@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-3.3.1.tgz#7e80ee995e96adbd8cc08cca9cfbd8109121f312"
+  integrity sha512-I2Sz5X81b2pJ4SM2UwxWcIu6uXcCvfCHgRHa1j0J8PmZj7qXu9ZkFdBeIwl6brZPseW982MrBoPfCfHqbkAUZw==
   dependencies:
     camelcase "^5.3.1"
     cssesc "^3.0.0"
@@ -6743,10 +6743,10 @@ terser-webpack-plugin@^1.4.1:
     webpack-sources "^1.4.0"
     worker-farm "^1.7.0"
 
-terser-webpack-plugin@^2.2.3:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/terser-webpack-plugin/-/terser-webpack-plugin-2.2.3.tgz#7b070b40e39ef177ca062a4b6d70c3acdd85defc"
-  integrity sha512-R8cqQDld4BjVKaIR0D9Q0O/QzfgXzME3wXfSxxW23ZGv5xpMDUt1NEnCuG94y1+bKASLvc5TjIHLlNo0eK8GLA==
+terser-webpack-plugin@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/terser-webpack-plugin/-/terser-webpack-plugin-2.3.0.tgz#00fd8f792a330dc572e2e2b468fd7cb5ffd7ea51"
+  integrity sha512-yez0HdpDf/iQVYGf+e/o8ZYWLb1g9d1nRRi5FIOZ4KfXbfSPT259UoqxPiSLhCnr0mlDoh+bucpYQSFbU0cEsQ==
   dependencies:
     cacache "^13.0.1"
     find-cache-dir "^3.1.0"

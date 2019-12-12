@@ -8,7 +8,12 @@ class apiController extends nodefony.controller {
     // service entity
     this.usersService = this.get("users");
     // api
-    this.jsonApi = new nodefony.JsonApi("users-api", this.bundle.version, "Nodefony Users Api", this.context);
+    this.jsonApi = new nodefony.JsonApi({
+      name: "users-api",
+      version: this.bundle.version,
+      description: "Nodefony Users Api",
+      basePath:"/api/users"
+    }, this.context);
   }
 
   /**

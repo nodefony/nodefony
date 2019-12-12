@@ -9,15 +9,20 @@ class loginApiController extends nodefony.controller {
     this.jwtFactory = this.security.getFactory("jwt");
     this.jwtSettings = this.bundle.settings.jwt;
     this.usersService = this.get("users");
-    // api
-    this.jsonApi = new nodefony.JsonApi("jwt-api-login", this.bundle.version, "Nodefony Login Api JWT", this.context);
+    // JSON API
+    this.jsonApi = new nodefony.JsonApi({
+      name: "login-api",
+      version: this.bundle.version,
+      description: "Nodefony Login Api",
+      basePath:"/api"
+    }, this.context);
   }
 
   /**
    *    @Method ({"GET"})
    *    @Route (
    *      "/documentation",
-   *      name="api-jwt-login-doc"
+   *      name="api-login-doc"
    *    )
    *    @Firewall ({bypass:true})
    */
@@ -43,7 +48,7 @@ class loginApiController extends nodefony.controller {
    *    @Method ({"POST"})
    *    @Route (
    *      "/login",
-   *      name="api-jwt-login"
+   *      name="api-login-jwt"
    *    )
    */
   async loginAction() {
@@ -76,7 +81,7 @@ class loginApiController extends nodefony.controller {
    *    @Method ({"POST"})
    *    @Route (
    *      "/token",
-   *      name="api-jwt-refresh"
+   *      name="api-login-jwt-refresh"
    *    )
    */
   async tokenAction() {
@@ -113,7 +118,7 @@ class loginApiController extends nodefony.controller {
    *    @Method ({"POST"})
    *    @Route (
    *      "/token/truncate",
-   *      name="api-jwt-truncate"
+   *      name="api-login-jwt-truncate"
    *    )
    */
   async truncateAction() {
@@ -129,7 +134,7 @@ class loginApiController extends nodefony.controller {
 
   /**
    *    @Method ({"GET"})
-   *    @Route ("/logout", name="api-jwt-logout")
+   *    @Route ("/logout", name="api-login-jwt-logout")
    */
   logoutAction() {
     if (this.security) {

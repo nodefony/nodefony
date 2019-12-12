@@ -1726,10 +1726,10 @@ sequelize-pool@^2.3.0:
   resolved "https://registry.yarnpkg.com/sequelize-pool/-/sequelize-pool-2.3.0.tgz#64f1fe8744228172c474f530604b6133be64993d"
   integrity sha512-Ibz08vnXvkZ8LJTiUOxRcj1Ckdn7qafNZ2t59jYHMX1VIebTAOYefWdRYFt6z6+hy52WGthAHAoLc9hvk3onqA==
 
-sequelize@6.0.0-beta.3:
-  version "6.0.0-beta.3"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.0.0-beta.3.tgz#ea0cdd57989fd42d411121db3ec82e25c0f7e616"
-  integrity sha512-m6xMXG4Bp4oZntHrwXRg+q9g6rmTU5b5M1kEsyz8aiJzcD2Sax2bZFO8njRj+ebLw72CkS8OzIILYcLj8lPIWA==
+sequelize@6.0.0-beta.4:
+  version "6.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.0.0-beta.4.tgz#5e09878013c02b62ac726c76d41639bd2b9d675f"
+  integrity sha512-p0CzKCWumVSkQJj13/17iIt7MAwo3IBgn3FLdoJ2dizvBa9uRtprI6XTmBKvK0NjqHXK+cBDZUpPR1J+NMeAJw==
   dependencies:
     bluebird "^3.7.1"
     debug "^4.1.1"

@@ -46,13 +46,13 @@
   "dependencies": {
     "mongoose": "^5.8.0",
     "pm2": "^4.2.1",
-    "sequelize": "6.0.0-beta.3",
+    "sequelize": "6.0.0-beta.4",
     "webpack": "^4.41.2",
     "webpack-dev-server": "^3.9.0"
   },
   "devDependencies": {
     "editorconfig": "^0.15.3",
-    "github-release-notes": "^0.17.0",
+    "github-release-notes": "^0.17.1",
     "jshint": "^2.10.3",
     "node-gyp": "^6.0.1",
     "node-pre-gyp": "^0.14.0"

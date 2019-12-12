@@ -80,7 +80,7 @@ class openApiSchema extends nodefony.Service {
   }
 
   getLicence(licence = "", url = "") {
-    const bundle = this.get("bundle");
+    const bundle = this.api.bundle;
     if (bundle) {
       if (bundle.package && bundle.package.license) {
         try {

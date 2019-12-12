@@ -74,6 +74,7 @@ Nodefony is not an exhaustive port of symfony !
 -   WEBPACK 4  
 -   [React](https://github.com/facebookincubator/create-react-app) Experimental Bundle Generator ( Now an React Project can be merge into a Nodefony Bundle )
 -   [Vue.js](https://vuejs.org) Experimental Bundle Generator ( Now an Vue.js Project can be merge into a Nodefony Bundle )
+-   [Api swagger-ui](https://swagger.io/) ( Documentation Api with swagger and openapi AOS3)
 
 
 Evolution priorities for the next version will focus on robustness, unit testing, documentation and security.
@@ -81,7 +82,7 @@ Evolution priorities for the next version will focus on robustness, unit testing
 
 #### Nodefony is ported with ECMAScript 6 ( Class, Inheritance ).
 
-You can follow Nodefony build on travis at **<https://travis-ci.org/nodefony/nodefony>**
+You can follow Nodefony-core build with github actions at **<https://github.com/nodefony/nodefony-core/actions>**
 
 ## **Resources for Newcomers**
 
