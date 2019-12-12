@@ -49,7 +49,7 @@ class apiController extends nodefony.controller {
       }
       return this.jsonApi.render(result);
     } catch (e) {
-      return this.jsonApi.renderError(e, 400);
+      return this.jsonApi.renderError(e);
     }
   }
 

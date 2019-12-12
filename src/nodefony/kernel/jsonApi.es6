@@ -56,7 +56,9 @@ class JsonApi extends nodefony.Service {
         obj.errorType = data.name;
       }
       if (data.code) {
-        obj.errorCode = data.code;
+        obj.code = data.code;
+      } else {
+        obj.code = 400;
       }
       if (!obj.message) {
         obj.message = data.message;
@@ -69,18 +71,18 @@ class JsonApi extends nodefony.Service {
 
   render(payload, code, message = "", severity = null, messageID = null) {
     try {
-      let json = nodefony.extend({}, this.json, {
+      let json = nodefony.extend(this.json, {
         severity: severity || "INFO",
         message: message,
         messageId: messageID
       });
-      json.result = this.sanitize(payload, json, severity);
       if (this.context) {
         const controller = this.context.get("controller");
         json.code = code || this.context.response.getStatusCode();
         if (!json.message) {
           json.message = this.context.response.getStatusMessage(json.code);
         }
+        json.result = this.sanitize(payload, json, severity);
         if (this.kernel.debug) {
           json.pdu = new nodefony.PDU({
             bundle: controller.bundle.name,
@@ -91,13 +93,14 @@ class JsonApi extends nodefony.Service {
         }
         return controller.renderJson(json, json.code);
       }
+      json.result = this.sanitize(payload, json, severity);
       return json;
     } catch (e) {
       throw e;
     }
   }
 
-  renderError(error, code = 400, message = "", severity = "ERROR", messageID = null) {
+  renderError(error, code, message = "", severity = "ERROR", messageID = null) {
     return this.render(error, code, message, severity, messageID);
   }
 
@@ -118,45 +121,45 @@ class JsonApi extends nodefony.Service {
   // schema api management
 
   setSchema(config = {}, entity = null) {
-    if(config.openapi){
+    if (config.openapi) {
       this.schema = new nodefony.openApiSchema(this, config, entity);
-      return this.schema ;
+      return this.schema;
     }
     throw new nodefony.Error("schema api not supported ");
   }
 
-  getSchema(config = {}, entity = null){
+  getSchema(config = {}, entity = null) {
     try {
-      if ( config){
+      if (config) {
         this.setSchema(config, entity);
       }
-      if (this.schema){
+      if (this.schema) {
         let conf = this.schema.getConfig();
-        if (conf.components && conf.components.schemas){
+        if (conf.components && conf.components.schemas) {
           conf.components.schemas[this.name] = this.getOpenApiSchema();
         }
-        return conf ;
+        return conf;
       }
       return {};
-    }catch(e){
-      throw e ;
+    } catch (e) {
+      throw e;
     }
   }
 
-  renderSchema(config = {}, entity = null, code= 200){
+  renderSchema(config = {}, entity = null, code = 200) {
     try {
       let conf = this.getSchema(config, entity);
       if (this.context) {
         const controller = this.context.get("controller");
         return controller.renderJson(conf, code);
       }
-      return conf ;
-    }catch(e){
-      throw e ;
+      return conf;
+    } catch (e) {
+      throw e;
     }
   }
 
-  getOpenApiSchema(){
+  getOpenApiSchema() {
     return {
       type: "object",
       properties: {
@@ -164,10 +167,14 @@ class JsonApi extends nodefony.Service {
           type: "string"
         },
         version: {
-          type: "string"
+          type: "string",
+          format: "semver"
         },
         result: {
-          type: "array"
+          AnyValue: {
+            nullable: true,
+            description: "Can be any value, including `null`"
+          }
         },
         message: {
           type: "string"
@@ -176,7 +183,7 @@ class JsonApi extends nodefony.Service {
           type: "string"
         },
         error: {
-          $ref:"#/components/schemas/NodefonyError"
+          $ref: "#/components/schemas/NodefonyError"
         },
         errorCode: {
           type: "integer",
@@ -192,10 +199,26 @@ class JsonApi extends nodefony.Service {
           type: "string"
         },
         method: {
-          type: "string"
+          type: "string",
+          enum: [
+            "GET",
+            "POST",
+            "OPTIONS",
+            "PUT",
+            "PATCH",
+            "TRACE",
+            "DELETE",
+            "HEAD"
+          ]
         },
         scheme: {
-          type: "string"
+          type: "string",
+          enum: [
+            "HTTP",
+            "HTTPS",
+            "WEBSOCKET",
+            "WEBSOCKET_SECURE"
+          ]
         },
         severity: {
           type: "string"

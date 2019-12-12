@@ -17,7 +17,7 @@
      this.entity = this.orm.getEntity("user");
    }
 
-   
+
    getSchemaAttributes() {
      switch (this.ormName) {
      case "sequelize":
@@ -168,7 +168,7 @@
            })
            .then((el) => {
              if (!el) {
-               return null;
+               throw new nodefony.Error(`Username ${username} not found`, 404);
              }
              return el.get({
                plain: true

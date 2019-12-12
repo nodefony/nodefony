@@ -73,6 +73,42 @@ const openApi = {
     }
   },
   paths: {
+    "/api/users/{username}": {
+      get: {
+        summary: "User Description",
+        tags: ["users"],
+        parameters: [{
+          name: "username",
+          description: "username",
+          in: "path",
+          required: true
+        }],
+        responses: {
+          '200': {
+            description: "User Description",
+            content: {
+              "application/json": {
+                schema: {
+                  allOf: [{
+                    $ref: "#/components/schemas/users-api"
+                }, {
+                    type: "object",
+                    properties: {
+                      result: {
+                        $ref: "#/components/schemas/user"
+                      },
+                    }
+                }]
+                }
+              }
+            }
+          },
+          default: {
+            $ref: "#/components/responses/default"
+          }
+        }
+      }
+    },
     "/api/users": {
       options: {
         summary: "Get OpenAPI (OAS 3.0) configuration",
@@ -92,6 +128,17 @@ const openApi = {
       get: {
         summary: "List all users",
         tags: ["users"],
+        parameters: [{
+          name: "limit",
+          description: "limit",
+          in: "query",
+          required: false
+        }, {
+          name: "offset",
+          description: "offset",
+          in: "query",
+          required: false
+        }],
         responses: {
           '200': {
             description: "List or filter Users",
@@ -99,21 +146,21 @@ const openApi = {
               "application/json": {
                 schema: {
                   allOf: [{
-                    $ref:"#/components/schemas/users-api"
-                  },{
-                    type:"object",
-                    properties:{
+                    $ref: "#/components/schemas/users-api"
+                  }, {
+                    type: "object",
+                    properties: {
                       result: {
-                        type:"object",
+                        type: "object",
                         properties: {
-                          total:{
+                          total: {
                             type: "integer"
                           },
-                          rows:{
+                          rows: {
                             type: "array",
-                            items:{
-                              type:"object",
-                              $ref:"#/components/schemas/user"
+                            items: {
+                              type: "object",
+                              $ref: "#/components/schemas/user"
                             }
                           }
                         }
@@ -131,6 +178,22 @@ const openApi = {
       },
       post: {
         summary: "Create user",
+        requestBody: {
+          description: `Parameters **users** schema`,
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                $ref: '#/components/schemas/user'
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              schema: {
+                $ref: '#/components/schemas/user'
+              }
+            }
+          },
+        },
         tags: ["users"],
         responses: {
           '200': {
