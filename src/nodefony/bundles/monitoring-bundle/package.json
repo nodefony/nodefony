@@ -29,7 +29,7 @@
     "shortid": "^2.2.15",
     "terser-webpack-plugin": "^2.3.0",
     "useragent": "^2.3.0",
-    "webpack": "^4.41.2",
+    "webpack": "^4.41.3",
     "webpack-merge": "^4.2.2"
   },
   "repository": {

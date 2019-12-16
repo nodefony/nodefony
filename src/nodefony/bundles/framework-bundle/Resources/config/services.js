@@ -14,10 +14,9 @@ module.exports = {
   webpack: {
     class: nodefony.services.webpack,
     arguments: ["@container", "@kernel"]
+  },
+  cron: {
+    class: nodefony.services.cron,
+    arguments: ["@container"]
   }
-  /*,
-    wds: {
-      class: nodefony.services.webpackDevServer,
-      arguments: ["@container"]
-    }*/
 };
