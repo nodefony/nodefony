@@ -1,34 +1,32 @@
-module.exports = nodefony.register("authorizationError", function () {
-
-  class authorizationError extends nodefony.httpError {
-    constructor(message, code, context) {
-      if (context) {
-        super(message, code, context.container);
-      } else {
-        super(message, code, null);
-      }
-      if (context.token) {
-        this.token = context.token;
-        this.parserSecure();
-      }
+class authorizationError extends nodefony.httpError {
+  constructor(message, code, context) {
+    if (context) {
+      super(message, code, context.container);
+    } else {
+      super(message, code, null);
     }
-
-    logger(data) {
-      if (this.secure) {
-        if (data) {
-          return this.context.logger.apply(this.secure, arguments);
-        }
-        return this.context.logger(this.toString(), "ERROR", `${clc.magenta(this.code)} ${clc.red(this.method)}`);
-      }
-      return super.logger(data);
+    if (context.token) {
+      this.token = context.token;
+      this.parserSecure();
     }
+  }
 
-    parserSecure() {}
+  logger(data) {
+    if (this.secure) {
+      if (data) {
+        return this.context.logger.apply(this.secure, arguments);
+      }
+      return this.context.logger(this.toString(), "ERROR", `${clc.magenta(this.code)} ${clc.red(this.method)}`);
+    }
+    return super.logger(data);
+  }
 
-    toString() {
-      switch (this.errorType) {
-      case "authorizationError":
-        return `${clc.red(this.message)}
+  parserSecure() {}
+
+  toString() {
+    switch (this.errorType) {
+    case "authorizationError":
+      return `${clc.red(this.message)}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.blue("Url :")} ${this.url}
@@ -38,11 +36,11 @@ module.exports = nodefony.register("authorizationError", function () {
         ${clc.green("Controller :")} ${this.controller}
         ${clc.green("Action :")} ${this.action}
         ${clc.green("Stack :")} ${this.stack}`;
-      default:
-        return super.toString();
-      }
+    default:
+      return super.toString();
     }
   }
+}
 
-  return authorizationError;
-});
+nodefony.authorizationError = authorizationError;
+module.exports = authorizationError;

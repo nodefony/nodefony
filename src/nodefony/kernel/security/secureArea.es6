@@ -149,7 +149,7 @@ module.exports = nodefony.register("SecuredArea", function () {
                 return resolve(token);
               })
               .catch((e) => {
-                this.factories[index - 1].logger(e, "ERROR");
+                this.factories[index - 1].logger(e, "DEBUG");
                 if (index === this.nbFactories) {
                   return reject(e);
                 }

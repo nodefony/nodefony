@@ -1,40 +1,38 @@
-module.exports = nodefony.register("securityError", function () {
-
-  class securityError extends nodefony.httpError {
-    constructor(message, code, secure, context) {
-      if (context) {
-        super(message, code, context.container);
-      } else {
-        super(message, code, null);
-      }
-      if (secure) {
-        this.secure = secure;
-        this.parserSecure();
-      }
+class securityError extends nodefony.httpError {
+  constructor(message, code, secure, context) {
+    if (context) {
+      super(message, code, context.container);
+    } else {
+      super(message, code, null);
     }
+    if (secure) {
+      this.secure = secure;
+      this.parserSecure();
+    }
+  }
 
-    logger(data) {
-      if (this.secure) {
-        if (data) {
-          if (this.secure.logger) {
-            return this.secure.logger.apply(this.secure, arguments);
-          }
-        }
+  logger(data) {
+    if (this.secure) {
+      if (data) {
         if (this.secure.logger) {
-          return this.secure.logger(this.toString(), "ERROR", `${clc.magenta(this.code)} ${clc.red(this.method)}`);
+          return this.secure.logger.apply(this.secure, arguments);
         }
       }
-      return super.logger(data);
+      if (this.secure.logger) {
+        return this.secure.logger(this.toString(), "ERROR", `${clc.magenta(this.code)} ${clc.red(this.method)}`);
+      }
     }
+    return super.logger(data);
+  }
 
-    parserSecure() {
-      this.securedArea = this.secure.name;
-    }
+  parserSecure() {
+    this.securedArea = this.secure.name;
+  }
 
-    toString() {
-      switch (this.errorType) {
-      case "securityError":
-        return `${clc.red(this.message)}
+  toString() {
+    switch (this.errorType) {
+    case "securityError":
+      return `${clc.red(this.message)}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.white("Secure Area :")} ${this.securedArea}
@@ -45,12 +43,11 @@ module.exports = nodefony.register("securityError", function () {
         ${clc.green("Controller :")} ${this.controller}
         ${clc.green("Action :")} ${this.action}
         ${clc.green("Stack :")} ${this.stack}`;
-      default:
-        return super.toString();
-      }
-
+    default:
+      return super.toString();
     }
   }
+}
 
-  return securityError;
-});
+nodefony.securityError = securityError;
+module.exports = securityError;

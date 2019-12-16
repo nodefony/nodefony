@@ -1,7 +1,7 @@
 /**
  *    @Route ("/api/users")
  */
-class apiController extends nodefony.controller {
+class apiController extends nodefony.Controller {
 
   constructor(container, context) {
     super(container, context);
@@ -12,7 +12,7 @@ class apiController extends nodefony.controller {
       name: "users-api",
       version: this.bundle.version,
       description: "Nodefony Users Api",
-      basePath:"/api/users"
+      basePath: "/api/users"
     }, this.context);
   }
 
@@ -71,15 +71,26 @@ class apiController extends nodefony.controller {
    *    @Route ( "",name="api-users-post")
    */
   async postAction() {
-    console.log(this.query);
+    console.log(this.query)
     let user = null;
     try {
-      //user = await this.usersService.create(this.query);
+      user = await this.usersService.create(this.query);
+      /*.catch(e => {
+        throw e;
+      });*/
       if (user) {
-        return this.jsonApi.render(user);
+        let res = {
+          query: this.query,
+          user: user
+        };
+        return this.jsonApi.render(res);
       }
-      return this.jsonApi.render({});
+      return this.jsonApi.render({
+        query: this.query,
+        user: null
+      });
     } catch (e) {
+      this.log(e, "ERROR");
       return this.jsonApi.renderError(e, 400);
     }
 

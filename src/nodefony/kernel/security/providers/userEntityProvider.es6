@@ -1,52 +1,51 @@
-module.exports = nodefony.register("userEntityProvider", () => {
+class userEntityProvider extends nodefony.Provider {
 
-  class userEntityProvider extends nodefony.Provider {
-
-    constructor(name, manager, config) {
-      super(name, manager);
-      this.entityName = config.name || "user";
-      this.userProperty = config.property ||  "username";
-      this.orm = this.get(this.kernel.getOrm());
-      this.orm.on("onOrmReady", () => {
-        this.userEntity = this.orm.getEntity(this.entityName);
-        this.entity = this.orm.entities[this.entityName];
-        if (this.entity) {
-          this.encoder = this.entity.getEncoder();
-        }
-      });
-    }
-
-    getEntity(name) {
-      if (name) {
-        return this.orm.getEntity(name);
+  constructor(name, manager, config) {
+    super(name, manager);
+    this.entityName = config.name || "user";
+    this.userProperty = config.property || "username";
+    this.orm = this.get(this.kernel.getOrm());
+    this.orm.on("onOrmReady", () => {
+      this.userEntity = this.orm.getEntity(this.entityName);
+      this.entity = this.orm.entities[this.entityName];
+      if (this.entity) {
+        this.encoder = this.entity.getEncoder();
       }
-      return this.orm.getEntity(this.entityName);
-    }
+    });
+  }
 
-    encodePassword(raw, salt) {
-      try {
-        let ret = this.entity.hasEncoder();
-        if (ret) {
-          return this.encoder.encodePassword(raw, salt);
-        }
-        throw new Error(`encodePassword : Entity ${this.entity.name} encoder not defined`);
-      } catch (e) {
-        throw e;
-      }
+  getEntity(name) {
+    if (name) {
+      return this.orm.getEntity(name);
     }
+    return this.orm.getEntity(this.entityName);
+  }
 
-    isPasswordValid(raw, encoded) {
-      try {
-        let ret = this.entity.hasEncoder();
-        if (ret) {
-          this.logger(`Check Password Valid `, "DEBUG", `ENCODER ${this.encoder.name}`);
-          return this.encoder.isPasswordValid(raw, encoded);
-        }
-        return super.isPasswordValid(raw, encoded);
-      } catch (e) {
-        throw e;
+  async encodePassword(raw, salt) {
+    try {
+      let ret = this.entity.hasEncoder();
+      if (ret) {
+        return await this.encoder.encodePassword(raw, salt);
       }
+      throw new Error(`encodePassword : Entity ${this.entity.name} encoder not defined`);
+    } catch (e) {
+      throw e;
     }
   }
-  return userEntityProvider;
-});
+
+  async isPasswordValid(raw, encoded) {
+    try {
+      let ret = this.entity.hasEncoder();
+      if (ret) {
+        this.logger(`Check Password Valid `, "DEBUG", `ENCODER ${this.encoder.name}`);
+        return await this.encoder.isPasswordValid(raw, encoded);
+      }
+      return await super.isPasswordValid(raw, encoded);
+    } catch (e) {
+      throw e;
+    }
+  }
+}
+
+nodefony.userEntityProvider = userEntityProvider;
+module.exports = userEntityProvider;

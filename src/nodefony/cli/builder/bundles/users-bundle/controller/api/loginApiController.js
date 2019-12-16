@@ -1,7 +1,7 @@
 /**
  *    @Route ("/api/jwt")
  */
-class loginApiController extends nodefony.controller {
+class loginApiController extends nodefony.Controller {
 
   constructor(container, context) {
     super(container, context);
@@ -14,7 +14,7 @@ class loginApiController extends nodefony.controller {
       name: "login-api",
       version: this.bundle.version,
       description: "Nodefony Login Api",
-      basePath:"/api"
+      basePath: "/api/jwt"
     }, this.context);
   }
 
@@ -53,12 +53,12 @@ class loginApiController extends nodefony.controller {
    */
   async loginAction() {
     if (!this.context.token) {
-      return this.createUnauthorizedException("No Auth Token");
+      return this.createException("No Auth Token", 401);
     }
     try {
       if (!this.context.token.user.enabled) {
         const error = new Error(`User : ${this.context.token.user.username} disabled`);
-        throw this.createSecurityException(error, 401);
+        throw this.createSecurityException(error);
       }
       const token = this.jwtFactory.generateJwtToken(
         this.context.token.serialize(),
@@ -73,7 +73,7 @@ class loginApiController extends nodefony.controller {
         refreshToken: refrechToken
       });
     } catch (e) {
-      throw this.createSecurityException(e, 401);
+      throw this.createException(e, 401);
     }
   }
 
@@ -83,17 +83,29 @@ class loginApiController extends nodefony.controller {
    *      "/token",
    *      name="api-login-jwt-refresh"
    *    )
+   *    @Firewall ({bypass:true})
    */
   async tokenAction() {
     try {
+      // get refreshToken from request
+      let sessionToken = null;
+      let refreshToken = null;
+      // for statefull
+      if (this.session) {
+        sessionToken = this.session.get("refreshToken");
+      }
+      refreshToken = this.request.headers.refreshtoken || this.query.refreshToken || sessionToken;
+      if (!refreshToken) {
+        throw this.createSecurityException("refreshToken parameter Not found");
+      }
       // verify refreshToken expired
-      let refresh = await this.jwtFactory.verifyRefreshToken(this.query.refreshToken)
+      let refresh = await this.jwtFactory.verifyRefreshToken(refreshToken)
         .catch((e) => {
-          throw this.createSecurityException(e, 401);
+          throw this.createSecurityException(e);
         });
       const username = refresh.data.username;
       if (!username) {
-        throw this.createSecurityException(new Error(`username not valid`), 401);
+        throw this.createSecurityException(`username not valid`);
       }
       const dtuser = await this.usersService.findOne(username);
       // controll user enabled
@@ -108,9 +120,9 @@ class loginApiController extends nodefony.controller {
           token: token
         });
       }
-      throw this.createSecurityException(new Error(`User not valid`), 401);
+      throw this.createSecurityException(`User not valid`);
     } catch (e) {
-      throw this.createSecurityException(e, 401);
+      throw this.createException(e);
     }
   }
 
@@ -128,7 +140,7 @@ class loginApiController extends nodefony.controller {
         nbDeleted: res
       });
     } catch (e) {
-      throw this.createSecurityException(e, 401);
+      throw this.jsonApi.renderError(e, 401);
     }
   }
 

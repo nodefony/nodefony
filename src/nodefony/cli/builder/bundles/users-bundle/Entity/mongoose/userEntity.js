@@ -9,7 +9,7 @@
 const Schema = require('mongoose').Schema;
 const mongoosePaginate = require('mongoose-paginate-v2');
 
-module.exports = class user extends nodefony.Entity {
+class userEntity extends nodefony.Entity {
 
   constructor(bundle) {
     /*
@@ -106,4 +106,6 @@ module.exports = class user extends nodefony.Entity {
     mySchema.plugin(mongoosePaginate);
     return db.model(this.name, mySchema);
   }
-};
+}
+
+module.exports = userEntity;

@@ -32,11 +32,16 @@ nodefony.register("Context", () => {
       this.secure = false;
       this.isJson = false;
       this.waitAsync = false;
+      this.requested = false;
       this.profiler = this.kernelHttp.profiler.active;
       // Authorisation
       this.accessControl = null;
       this.isControlledAccess = false;
       this.contentLength = false;
+
+      this.once("onRequest", () => {
+        this.requested = true;
+      });
     }
 
     logger(pci, severity, msgid, msg) {

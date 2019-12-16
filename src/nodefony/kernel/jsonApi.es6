@@ -31,22 +31,22 @@ class JsonApi extends nodefony.Service {
 
   parseArgs(name, version, description, context) {
     switch (nodefony.typeOf(name)) {
-      case "string":
-        this.name = name;
-        this.version = version;
-        this.description = description;
-        this.context = context;
-        this.basePath = "";
-        break;
-      case "object":
-        this.name = name.name;
-        this.version = name.version;
-        this.description = name.description;
-        this.context = version;
-        this.basePath = name.basePath;
-        break;
-      default:
-        throw new Error(`Constructor JsonApi bad arguments  : ${arguments}`);
+    case "string":
+      this.name = name;
+      this.version = version;
+      this.description = description;
+      this.context = context;
+      this.basePath = "";
+      break;
+    case "object":
+      this.name = name.name;
+      this.version = name.version;
+      this.description = name.description;
+      this.context = version;
+      this.basePath = name.basePath;
+      break;
+    default:
+      throw new Error(`Constructor JsonApi bad arguments  : ${arguments}`);
     }
   }
 
@@ -75,16 +75,16 @@ class JsonApi extends nodefony.Service {
       } else {
         obj.code = 400;
       }
-      if( data.errorCode){
+      if (data.errorCode) {
         obj.errorCode = data.errorCode;
       }
       if (!obj.message) {
         obj.message = data.message;
       }
-      if (!data.message && this.context ) {
+      if (!data.message && this.context) {
         obj.message = this.context.response.getStatusMessage(obj.code);
       }
-      return data ;
+      return data;
     }
     if (!obj.message && this.context) {
       obj.message = this.context.response.getStatusMessage(obj.code);
@@ -114,7 +114,7 @@ class JsonApi extends nodefony.Service {
         }
         return controller.renderJson(json, json.code);
       }
-      json.code = code || 200 ;
+      json.code = code || 200;
       this.sanitize(payload, json, severity);
       return json;
     } catch (e) {
@@ -276,15 +276,15 @@ class JsonApi extends nodefony.Service {
       debug: this.debug
     };
     switch (true) {
-      case service instanceof nodefony.Service:
-        obj.service = {
-          name: service.name
-        };
-        if (service.entity && service.entity.name) {
-          obj.service.entity = service.entity.name;
-        }
-        break;
-      default:
+    case service instanceof nodefony.Service:
+      obj.service = {
+        name: service.name
+      };
+      if (service.entity && service.entity.name) {
+        obj.service.entity = service.entity.name;
+      }
+      break;
+    default:
     }
     if (this.context) {
       obj.environment = this.kernel.environment;
@@ -292,7 +292,6 @@ class JsonApi extends nodefony.Service {
     }
     return obj;
   }
-
 }
 
 nodefony.JsonApi = JsonApi;

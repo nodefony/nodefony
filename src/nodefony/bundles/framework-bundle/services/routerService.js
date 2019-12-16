@@ -289,7 +289,7 @@ module.exports = class router extends nodefony.Service {
           return resolver;
         }
       } catch (e) {
-        this.log(`Match route : ${this.routes[i].name} ${e}`, "WARNING");
+        this.log(`Match route exception : ${this.routes[i].name} ${e}`, "DEBUG");
         resolver.exception = e;
         continue;
       }

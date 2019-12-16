@@ -681,7 +681,7 @@ module.exports = class apiController extends nodefony.controller {
     case "sequelize":
       let nodefonyDb = orm.getConnection("nodefony");
       //var users = null ;
-      return nodefonyDb.query('SELECT username,name,surname,lang FROM users')
+      return nodefonyDb.query('SELECT username,name,surname,lang FROM user')
         .then((result) => {
           return this.renderRest({
             code: 200,

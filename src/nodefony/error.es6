@@ -3,9 +3,9 @@ const STATUS_CODES = require("http").STATUS_CODES;
 const json = {
   configurable: true,
   writable: true,
-  value: function() {
+  value: function () {
     let alt = {};
-    const storeKey = function(key) {
+    const storeKey = function (key) {
       alt[key] = this[key];
     };
     Object.getOwnPropertyNames(this).forEach(storeKey, this);
@@ -14,95 +14,146 @@ const json = {
 };
 Object.defineProperty(Error.prototype, 'toJSON', json);
 
-module.exports = nodefony.register("Error", function() {
-  class nodefonyError extends Error {
+const isSequelizeError = function (error) {
+  try {
+    return nodefony.sequelize.isError(error);
+  } catch (e) {
+    return false;
+  }
+};
 
-    constructor(message, code) {
-      super(message);
-      this.name = this.constructor.name;
-      this.code = null;
-      this.errorType = this.name;
-      if (code) {
-        this.code = code;
+const isMongooseError = function (error) {
+  try {
+    return nodefony.mongoose.isError(error);
+  } catch (e) {
+    return false;
+  }
+};
+
+class nodefonyError extends Error {
+
+  constructor(message, code) {
+    super(message);
+    this.name = this.constructor.name;
+    this.code = null;
+    this.errorType = this.name;
+    if (code) {
+      this.code = code;
+    }
+    if (message) {
+      this.parseMessage(message);
+    }
+  }
+
+  static isError(error) {
+    switch (true) {
+    case error instanceof ReferenceError:
+      return "ReferenceError";
+    case error instanceof TypeError:
+      return "TypeError";
+    case error instanceof SyntaxError:
+      return "SyntaxError";
+    case error instanceof assert.AssertionError:
+      return "AssertionError";
+    case isSequelizeError(error):
+      return "SequelizeError";
+    case isMongooseError(error):
+      return "MongooseError";
+    case error instanceof Error:
+      if (error.errno) {
+        return "SystemError";
       }
-      if (message) {
-        this.parseMessage(message);
+      if (error.bytesParsed) {
+        return "ClientError";
+      }
+      try {
+        return error.constructor.name || "Error";
+      } catch (e) {
+        return "Error";
       }
     }
+    return false;
+  }
 
-    static isError(error) {
-      switch (true) {
-        case error instanceof TypeError:
-          return "TypeError";
-        case error instanceof ReferenceError:
-          return "ReferenceError";
-        case error instanceof TypeError:
-          return "TypeError";
-        case error instanceof SyntaxError:
-          return "SyntaxError";
-        case error instanceof assert.AssertionError:
-          return "AssertionError";
-        case error instanceof Error:
-          if (error.errno) {
-            return "SystemError" ;
-          }
-          if (error.bytesParsed) {
-            return "ClientError";
-          }
-          try{
-            return error.constructor.name || "Error";
-          }catch(e){
-            return "Error";
-          }
-      }
-      return false ;
-    }
-
-    getType(error) {
-      if (error instanceof TypeError) {
-        return "TypeError";
-      }
-      if (error instanceof ReferenceError) {
-        return "ReferenceError";
-      }
-      if (error instanceof SyntaxError) {
-        return "SyntaxError";
-      }
-      if (error instanceof assert.AssertionError) {
+  getType(error) {
+    const errorType = nodefony.Error.isError(error);
+    if (errorType) {
+      switch (errorType) {
+      case "TypeError":
+      case "ReferenceError":
+      case "SyntaxError":
+        return errorType;
+      case "AssertionError":
         this.actual = error.actual;
         this.expected = error.expected;
         this.operator = error.operator;
-        return "AssertionError";
-      }
-      if (error instanceof Error) {
-        if (error.errno) {
-          this.errno = error.errno;
-          this.syscall = error.syscall;
-          this.address = error.address;
-          this.port = error.port;
-          this.stack = error.stack;
-          return "SystemError";
+        return errorType;
+      case "SystemError":
+        this.errno = error.errno;
+        this.syscall = error.syscall;
+        this.address = error.address;
+        this.port = error.port;
+        this.stack = error.stack;
+        return errorType;
+      case "ClientError":
+        this.bytesParsed = error.bytesParsed;
+        this.rawPacket = error.rawPacket;
+        return errorType;
+      case "SequelizeError":
+        this.name = error.name;
+        this.message = error.message;
+        if (error.errors) {
+          this.errors = error.errors || [];
         }
-        if (error.bytesParsed) {
-          this.bytesParsed = error.bytesParsed;
-          this.rawPacket = error.rawPacket;
-          return "ClientError";
+        if (error.fields) {
+          this.fields = error.fields;
         }
+        if (error.parent) {
+          this.parent = error.parent;
+          if (this.parent.errno) {
+            this.errno = this.parent.errno;
+          }
+          if (this.parent.code) {
+            this.code = this.parent.code;
+          }
+        }
+        if (error.sql) {
+          this.sql = error.sql;
+        }
+        if (error.index) {
+          this.index = error.index;
+        }
+        if (error.value) {
+          this.value = error.value;
+        }
+        if (error.table) {
+          this.table = error.table;
+        }
+        if (error.constraint) {
+          this.constraint = error.constraint;
+        }
+        return errorType;
+      default:
+        return error.constructor.name;
       }
-      return this.errorType;
     }
+    if (error && error.constructor) {
+      return error.constructor.name;
+    }
+    return "Error";
+  }
 
-    toString() {
-      switch (this.errorType) {
-        case "Error":
-          return ` ${clc.red(this.message)}
+  toString() {
+    switch (this.errorType) {
+    case "Error":
+      return ` ${clc.red(this.message)}
           ${clc.blue("Name :")} ${this.name}
           ${clc.blue("Type :")} ${this.errorType}
           ${clc.red("Code :")} ${this.code}
           ${clc.red("Message :")} ${this.message}
           ${clc.green("Stack :")} ${this.stack}`;
-        case "httpError":
-          return `${clc.red(this.message)}
+    case "httpError":
+      return `${clc.red(this.message)}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.blue("Url :")} ${this.url}
@@ -112,8 +163,8 @@ module.exports = nodefony.register("Error", function() {
         ${clc.green("Controller :")} ${this.controller}
         ${clc.green("Action :")} ${this.action}
         ${clc.green("Stack :")} ${this.stack}`;
-        case "SystemError":
-          return `${clc.red(this.message)}
+    case "SystemError":
+      return `${clc.red(this.message)}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.red("Message :")} ${this.message}
@@ -122,8 +173,8 @@ module.exports = nodefony.register("Error", function() {
         ${clc.blue("Address :")} ${this.address}
         ${clc.blue("Port :")} ${this.port}
         ${clc.green("Stack :")} ${this.stack}`;
-        case "AssertionError":
-          return ` ${clc.red(this.message)}
+    case "AssertionError":
+      return ` ${clc.red(this.message)}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.red("Code :")} ${this.code}
@@ -132,8 +183,8 @@ module.exports = nodefony.register("Error", function() {
         ${clc.white("Expected :")} ${this.expected}
         ${clc.white("Operator :")} ${this.operator}
         ${clc.green("Stack :")} ${this.stack}`;
-        case "ClientError":
-          return ` ${clc.red(this.message)}
+    case "ClientError":
+      return ` ${clc.red(this.message)}
             ${clc.blue("Name :")} ${this.name}
             ${clc.blue("Type :")} ${this.errorType}
             ${clc.red("Code :")} ${this.code}
@@ -141,62 +192,70 @@ module.exports = nodefony.register("Error", function() {
             ${clc.white("BytesParsed :")} ${this.bytesParsed}
             ${clc.white("RawPacket :")} ${this.rawPacket}
             ${clc.green("Stack :")} ${this.stack}`;
-        default:
-          return ` ${clc.red(this.message)}
+    case "SequelizeError":
+      return nodefony.sequelize.errorToString(this);
+    case "MongooseError":
+      return nodefony.mongoose.errorToString(this);
+    default:
+      return ` ${clc.red(this.message)}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.red("Message :")} ${this.message}
         ${clc.green("Stack :")} ${this.stack}`;
-      }
     }
-
-    parseMessage(message) {
-      this.errorType = this.getType(message);
-      switch (nodefony.typeOf(message)) {
-        case "Error":
-          this.message = message.message;
-          if (message.code) {
-            this.code = message.code;
-          }
-          this.stack = message.stack;
-          break;
-        case "object":
-          // Capturing stack trace, excluding constructor call from it.
-          Error.captureStackTrace(message, this.constructor);
-          if (message.status) {
-            this.code = message.status;
-          }
-          if (message.code) {
-            this.code = message.code;
-          }
-          try {
-            if (message.message) {
-              this.message = message.message;
-            } else {
-              this.message = JSON.stringify(message);
-            }
-          } catch (e) {
-            this.error = e;
-          }
-          break;
-        default:
-          this.getDefaultMessage();
-      }
-    }
-
-    getDefaultMessage() {
-      if (!this.message && this.code) {
-        let str = this.code.toString();
-        if (str in STATUS_CODES) {
-          this.message = STATUS_CODES[str];
-        }
-      }
-    }
-
-    logger() {
-      return console.log(this.toString());
-    }
-
   }
-  return nodefonyError;
-});
+
+  parseMessage(message) {
+    this.errorType = this.getType(message);
+    switch (nodefony.typeOf(message)) {
+    case "Error":
+      if (this.errorType === "SequelizeError") {
+        break;
+      }
+      this.message = message.message;
+      if (message.code) {
+        this.code = message.code;
+      }
+      this.stack = message.stack;
+      break;
+    case "object":
+      // Capturing stack trace, excluding constructor call from it.
+      Error.captureStackTrace(message, this.constructor);
+      if (message.status) {
+        this.code = message.status;
+      }
+      if (message.code) {
+        this.code = message.code;
+      }
+      try {
+        if (message.message) {
+          this.message = message.message;
+        } else {
+          this.message = JSON.stringify(message);
+        }
+      } catch (e) {
+        this.error = e;
+      }
+      break;
+    default:
+      this.getDefaultMessage();
+    }
+  }
+
+  getDefaultMessage() {
+    if (!this.message && this.code) {
+      let str = this.code.toString();
+      if (str in STATUS_CODES) {
+        this.message = STATUS_CODES[str];
+      }
+    }
+  }
+
+  logger() {
+    return console.log(this.toString());
+  }
+
+}
+
+nodefony.Error = nodefonyError;
+module.exports = nodefonyError;

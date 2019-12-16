@@ -195,11 +195,11 @@ module.exports = class httpKernel extends nodefony.Service {
     }
   }
 
-  extendTemplate(param, context) {
+  extendTemplate(param = {}, context = null) {
     if (param && typeof param !== "object") {
-      throw new Error(`bad paramaters template ${param} must be an object`);
+      throw new Error(`bad paramaters : ${param} must be an object`);
     }
-    return nodefony.extend(param, {
+    /*return nodefony.extend(param, {
       nodefony: {
         name: nodefony.projectName,
         version: nodefony.version,
@@ -230,8 +230,8 @@ module.exports = class httpKernel extends nodefony.Service {
       },
       absolute_url: context.generateAbsoluteUrl.bind(context),
       is_granted: context.is_granted.bind(context)
-    });
-    /*param.nodefony = {
+    });*/
+    param.nodefony = {
       name: nodefony.projectName,
       version: nodefony.version,
       projectVersion: nodefony.projectVersion,
@@ -257,12 +257,10 @@ module.exports = class httpKernel extends nodefony.Service {
       } else {
         return `${res}${context.request.url.host}`;
       }
-
     };
     param.absolute_url = context.generateAbsoluteUrl.bind(context);
     param.is_granted = context.is_granted.bind(context);
-
-    return param;*/
+    return param;
   }
 
   generateUrl(name, variables, host) {
@@ -382,8 +380,10 @@ module.exports = class httpKernel extends nodefony.Service {
         return httpError.resolver;
       }
       result = httpError.resolver.callController(httpError);
-      context.fire("onRequest", context, httpError.resolver);
-      this.kernel.fire("onRequest", context, httpError.resolver);
+      if (!context.requested) {
+        context.fire("onRequest", context, httpError.resolver);
+        this.kernel.fire("onRequest", context, httpError.resolver);
+      }
       if (context.method === "WEBSOCKET") {
         if (httpError.code < 3000) {
           httpError.code += 3000;
@@ -419,7 +419,8 @@ module.exports = class httpKernel extends nodefony.Service {
             this.fire("onServerRequest", request, response, type);
             return this.handle(request, response, type)
               .catch(e => {
-                this.logger(e, "ERROR");
+                this.logger(e, "DEBUG");
+                return null;
               });
           }
           throw new Error("Bad request");

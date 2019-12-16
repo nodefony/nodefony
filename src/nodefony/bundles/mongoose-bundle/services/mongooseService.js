@@ -18,12 +18,20 @@ const defaultConfigConnection = {
   useNewUrlParser: true
 };
 
-module.exports = class mongoose extends nodefony.orm {
+class mongoose extends nodefony.Orm {
 
   constructor(container, kernel, autoLoader) {
     super("mongoose", container, kernel, autoLoader);
     this.engine = Mongoose;
     this.engine.set('useCreateIndex', true);
+  }
+
+  static isError(error) {
+    return error instanceof Mongoose.Error;
+  }
+
+  static errorToString(error) {
+    return `${error.message}`;
   }
 
   boot() {
@@ -221,5 +229,7 @@ module.exports = class mongoose extends nodefony.orm {
     }
     return attr;
   }
+}
 
-};
+nodefony.mongoose = mongoose;
+module.exports = mongoose;

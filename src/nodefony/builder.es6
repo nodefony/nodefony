@@ -1,5 +1,4 @@
-
-nodefony.Builder = class Builder extends nodefony.Service {
+class Builder extends nodefony.Service {
 
   constructor(cli, cmd, args) {
     super("BUILDER", cli.container, cli.notificationsCenter);
@@ -20,15 +19,15 @@ nodefony.Builder = class Builder extends nodefony.Service {
     this.response = nodefony.extend(true, {}, this.cli.response);
   }
 
-  setLocation(location){
-    if (location instanceof nodefony.fileClass){
-      return this.location = location.path ;
+  setLocation(location) {
+    if (location instanceof nodefony.fileClass) {
+      return this.location = location.path;
     }
     return this.location = path.resolve(location);
   }
 
   setEnv(env) {
-    process.env.NODE_ENV = env || "development";
+    process.env.NODE_ENV = env || "development";
   }
 
   run(interactive) {
@@ -362,7 +361,8 @@ nodefony.Builder = class Builder extends nodefony.Service {
       }
     }
   }
+}
 
-};
+nodefony.Builder = Builder;
 
-module.exports = nodefony.Builder;
+module.exports = Builder;

@@ -70,8 +70,7 @@ describe("BUNDLE users", () => {
       assert.strictEqual(body.result.decodedToken.data.authenticated, true);
       assert(body.result.decodedToken.iat);
       assert(body.result.decodedToken.exp);
-      assert(body.result.schema);
-      assert.strictEqual(body.api, "jwt-api");
+      assert.strictEqual(body.api, "login-api");
       assert.strictEqual(body.code, 200);
       assert.strictEqual(body.message, 'OK');
       assert.strictEqual(body.messageId, null);

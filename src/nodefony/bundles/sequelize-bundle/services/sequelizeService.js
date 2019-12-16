@@ -2,9 +2,12 @@ const cls = require('cls-hooked');
 const namespace = cls.createNamespace('nodefony');
 const Sequelize = require('sequelize');
 Sequelize.useCLS(namespace);
-const { JsonSchemaManager, OpenApi3Strategy } = require('@alt3/sequelize-to-json-schemas');
+const {
+  JsonSchemaManager,
+  OpenApi3Strategy
+} = require('@alt3/sequelize-to-json-schemas');
 
-const myerror = function(err) {
+const myerror = function (err) {
   if (this.state !== "DISCONNECTED") {
     this.orm.kernel.fire('onError', err, this);
   }
@@ -12,16 +15,16 @@ const myerror = function(err) {
   this.logger(this.settings, "INFO", `CONFIGURATION Sequelize ${this.name}`);
   if (err.code) {
     switch (err.code) {
-      case 'PROTOCOL_CONNECTION_LOST':
-      case "ECONNREFUSED":
-        this.state = "DISCONNECTED";
-        return {
-          status: 500,
-          code: err.code,
-          message: err.message
-        };
-      default:
-        return err;
+    case 'PROTOCOL_CONNECTION_LOST':
+    case "ECONNREFUSED":
+      this.state = "DISCONNECTED";
+      return {
+        status: 500,
+        code: err.code,
+        message: err.message
+      };
+    default:
+      return err;
     }
   } else {
     return err;
@@ -125,9 +128,9 @@ class connectionDB {
     let conn = null;
     try {
       switch (type) {
-        case "sqlite":
-          config.options.storage = process.cwd() + config.dbname;
-          break;
+      case "sqlite":
+        config.options.storage = process.cwd() + config.dbname;
+        break;
       }
       conn = new this.orm.engine(config.dbname, config.username, config.password, config.options);
       process.nextTick(() => {
@@ -162,12 +165,56 @@ class connectionDB {
  * CLASS SERVICE sequelize
  *
  */
-module.exports = class sequelize extends nodefony.orm {
+class sequelize extends nodefony.Orm {
 
   constructor(container, kernel, autoLoader) {
     super("sequelize", container, kernel, autoLoader);
     this.engine = Sequelize;
     this.boot();
+  }
+
+  static isError(error) {
+    return error instanceof Sequelize.Error;
+  }
+
+  static errorToString(error) {
+    if (error.name) {
+      switch (error.name) {
+      case "SequelizeBaseError":
+      case "SequelizeValidationError":
+      case "SequelizeDatabaseError":
+      case "SequelizeTimeoutError":
+      case "SequelizeUniqueConstraintError":
+      case "SequelizeForeignKeyConstraintError":
+      case "SequelizeExclusionConstraintError":
+      case "SequelizeConnectionError":
+      case "SequelizeConnectionRefusedError":
+      case "SequelizeAccessDeniedError":
+      case "SequelizeHostNotFoundError":
+      case "SequelizeHostNotReachableError":
+      case "SequelizeInvalidConnectionError":
+      case "SequelizeConnectionTimedOutError":
+      case "SequelizeInstanceError":
+        let parser = "";
+        if (error.errors && error.errors.length) {
+          error.errors.map((ele) => {
+            parser += `\n\tfield ${ele.path} : ${ele.message}`;
+          });
+        }
+        return ` ${clc.red(error.message)}
+            ${clc.blue("Name :")} ${error.name}
+            ${clc.blue("Type :")} ${error.errorType}
+            ${clc.red("Message :")} ${error.message}
+            ${clc.red("fields :")} ${error.fields}
+            ${clc.red("errors :")} ${parser}
+            ${clc.green("Stack :")} ${error.stack}`;
+      default:
+        return `${clc.red(error.message)}`;
+      }
+    }
+    return ` ${error.message}
+      ${clc.blue("Name :")} ${error.name}
+      ${clc.blue("Type :")} ${error.errorType}`;
   }
 
   boot() {
@@ -202,15 +249,15 @@ module.exports = class sequelize extends nodefony.orm {
       conn[0] = dbname;
       for (let data in this.settings.connectors[dbname]) {
         switch (data) {
-          case "dbname":
-            conn[2] = this.settings.connectors[dbname][data];
-            break;
-          case "options":
-            conn[1] = this.settings.connectors[dbname][data].dialect;
-            if (this.settings.connectors[dbname][data].host) {
-              conn[3] = this.settings.connectors[dbname][data].host + ":" + this.settings.connectors[dbname][data].port;
-            }
-            break;
+        case "dbname":
+          conn[2] = this.settings.connectors[dbname][data];
+          break;
+        case "options":
+          conn[1] = this.settings.connectors[dbname][data].dialect;
+          if (this.settings.connectors[dbname][data].host) {
+            conn[3] = this.settings.connectors[dbname][data].host + ":" + this.settings.connectors[dbname][data].port;
+          }
+          break;
         }
       }
       tab.push(conn);
@@ -261,12 +308,12 @@ module.exports = class sequelize extends nodefony.orm {
   }
 
   getOpenApiSchema(entity) {
-    try{
+    try {
       const schemaManager = new JsonSchemaManager();
       const schema = schemaManager.generate(entity, new OpenApi3Strategy());
-      return schema ;
-    }catch(e){
-      throw e ;
+      return schema;
+    } catch (e) {
+      throw e;
     }
   }
 
@@ -327,5 +374,7 @@ module.exports = class sequelize extends nodefony.orm {
     }
     return attr;
   }*/
+}
 
-};
+nodefony.sequelize = sequelize;
+module.exports = sequelize;

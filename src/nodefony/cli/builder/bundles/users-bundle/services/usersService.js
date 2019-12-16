@@ -17,6 +17,12 @@
      this.entity = this.orm.getEntity("user");
    }
 
+   sanitizeSequelizeError(error) {
+     if (nodefony.Error.isError(error) === "SequelizeError") {
+       return new nodefony.Error(error);
+     }
+     return error;
+   }
 
    getSchemaAttributes() {
      switch (this.ormName) {
@@ -125,7 +131,7 @@
                  rows: tab
                };
              }).catch(e => {
-               throw e;
+               throw this.sanitizeSequelizeError(e);
              });
          }
          return this.entity.findAll(query)
@@ -146,6 +152,9 @@
                total: tab.length,
                rows: tab
              };
+           })
+           .catch(e => {
+             throw this.sanitizeSequelizeError(e);
            });
        }
      } catch (e) {
@@ -173,10 +182,13 @@
              return el.get({
                plain: true
              });
+           })
+           .catch(e => {
+             throw this.sanitizeSequelizeError(e);
            });
        }
      } catch (e) {
-       throw e;
+       throw this.sanitizeSequelizeError(e);
      }
    }
 
@@ -220,13 +232,13 @@
              return user;
            }).catch(e => {
              transaction.rollback();
-             throw e;
+             throw this.sanitizeSequelizeError(e);
            });
        } catch (e) {
          if (transaction) {
            transaction.rollback();
          }
-         throw e;
+         throw this.sanitizeSequelizeError(e);
        }
      }
    }
@@ -237,15 +249,7 @@
        let transaction = null;
        try {
          transaction = await this.orm.startTransaction("user");
-         return this.entity.create({
-             username: query.username || null,
-             email: query.email,
-             password: query.passwd,
-             name: query.name,
-             surname: query.surname,
-             gender: query.gender,
-             roles: query.roles
-           }, {
+         return this.entity.create(query, {
              transaction: transaction
            })
            .then((user) => {
@@ -253,28 +257,20 @@
              return user;
            }).catch(e => {
              transaction.rollback();
-             throw e;
+             throw this.sanitizeSequelizeError(e);
            });
        } catch (e) {
          if (transaction) {
            transaction.rollback();
          }
-         throw e;
+         throw this.sanitizeSequelizeError(e);
        }
        break;
      case "mongoose":
        let session = null;
        try {
          session = await this.orm.startTransaction("user");
-         return this.entity.create({
-             username: query.username || null,
-             email: query.email,
-             password: query.passwd,
-             name: query.name,
-             surname: query.surname,
-             gender: query.gender,
-             roles: query.roles
-           })
+         return this.entity.create(query)
            .then((user) => {
              session.commitTransaction();
              return user;
@@ -350,14 +346,14 @@
                  return user;
                }).catch(e => {
                  transaction.rollback();
-                 throw e;
+                 throw this.sanitizeSequelizeError(e);
                });
            });
        } catch (e) {
          if (transaction) {
            transaction.rollback();
          }
-         throw e;
+         throw this.sanitizeSequelizeError(e);
        }
      }
    }

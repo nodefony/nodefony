@@ -318,7 +318,7 @@ nodefony.register.call(nodefony.context, "http", function () {
         encoding = "charset=" + encoding;
       }
       this.isJson = true;
-      const type = mime.getType("json") ;
+      const type = mime.getType("json");
       if (this.method !== "websoket") {
         if (this.response) {
           this.response.setHeader("Content-Type", `${type}; ${encoding}`);
@@ -333,7 +333,7 @@ nodefony.register.call(nodefony.context, "http", function () {
         encoding = "charset=" + encoding;
       }
       this.isJson = false;
-      let type = mime.getType("html") ;
+      let type = mime.getType("html");
       if (this.method !== "websoket") {
         if (this.response) {
           this.response.setHeader("Content-Type", `${type}; ${encoding}`);

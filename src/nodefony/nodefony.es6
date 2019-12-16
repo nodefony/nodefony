@@ -8,7 +8,8 @@ const execSync = require('child_process').execSync;
  *
  */
 const myObj = {};
-module.exports = class Nodefony {
+
+class Nodefony {
 
   constructor(context) {
     //this.require = require;
@@ -28,7 +29,7 @@ module.exports = class Nodefony {
       sandbox: null
     };
     this.cliStart = null;
-    this.templatings = {};
+    this.templates = {};
     this.services = {};
     this.commands = {};
     this.encoders = {};
@@ -326,70 +327,6 @@ module.exports = class Nodefony {
       return this.bundles[name] = closure();
     }
     throw new Error("Register bundle : " + name + "  error bundle bad format");
-  }
-
-  /**
-   *  Register Nodefony controller
-   *  @method registerController
-   *  @param {String} name
-   *  @param {Function} closure
-   *
-   */
-  registerController(name, closure) {
-    if (typeof closure === "function") {
-      //controller.prototype.name = name ;
-      return closure();
-    }
-    throw new Error("Register Controller : " + name + "  error Controller bad format");
-  }
-
-  /**
-   *  Register Nodefony Template
-   *  @method registerTemplate
-   *  @param {String} name
-   *  @param {Function} closure
-   *
-   */
-  registerTemplate(name, closure) {
-    return this.templatings[name] = closure();
-  }
-
-  /**
-   *  Register Nodefony service
-   *  @method registerService
-   *  @param {String} name
-   *  @param {Function} closure
-   *
-   */
-  registerService(name, closure) {
-    if (name in this.services) {
-      throw new Error("Service name : " + name + " already exit in application !!! ");
-    }
-    if (typeof closure === "function") {
-      return this.services[name] = closure();
-    }
-    throw new Error("Register Service : " + name + "  error Service bad format");
-  }
-
-  /**
-   *  Register Nodefony entity
-   *  @method registerEntity
-   *  @param {String} name
-   *  @param {Function} closure
-   *
-   */
-  registerEntity(name, closure) {
-    if (typeof closure === "function") {
-      return closure();
-    }
-    throw new Error("Register Entity : " + name + "  error Entity bad format");
-  }
-
-  registerEncoder(name, closure) {
-    if (typeof closure === "function") {
-      return this.encoders[name] = closure();
-    }
-    throw new Error("Register Encoder : " + name + "  error Encoder bad format");
   }
 
   /**
@@ -915,5 +852,6 @@ module.exports = class Nodefony {
       return new nodefony.appKernel(environment, cli, options);
     }
   }
+}
 
-};
+module.exports = Nodefony;

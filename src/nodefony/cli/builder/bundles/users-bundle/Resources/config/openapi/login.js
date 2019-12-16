@@ -11,14 +11,14 @@ const openapi = {
     schemas: {
       jwt: {
         type: "object",
-        properties:{
-          token:{
+        properties: {
+          token: {
             type: "string"
           },
-          refreshToken:{
+          refreshToken: {
             type: "string"
           },
-          decodedToken:{
+          decodedToken: {
             type: "object"
           }
         },
@@ -98,12 +98,12 @@ const openapi = {
               "application/json": {
                 schema: {
                   allOf: [{
-                    $ref:"#/components/schemas/login-api"
-                  },{
-                    type:"object",
-                    properties:{
+                    $ref: "#/components/schemas/login-api"
+                  }, {
+                    type: "object",
+                    properties: {
                       result: {
-                        $ref:"#/components/schemas/jwt"
+                        $ref: "#/components/schemas/jwt"
                       },
                     }
                   }]
@@ -173,8 +173,25 @@ const openapi = {
           name: "refreshToken",
           description: "Authentication refreshToken",
           in: "header",
-          required: true
+          //required: true
         }],
+        requestBody: {
+          description: ``,
+          //required: true,
+          content: {
+            "application/x-www-form-urlencoded": {
+              schema: {
+                type: "object",
+                properties: {
+                  refreshToken: {
+                    type: "string"
+                  }
+                },
+                required: ["refreshToken"]
+              }
+            }
+          },
+        },
         responses: {
           '200': {
             description: "Regenerated Token"

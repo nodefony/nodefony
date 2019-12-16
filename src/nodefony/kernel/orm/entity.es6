@@ -48,9 +48,9 @@ module.exports = nodefony.register("Entity", function () {
       throw new Error(`setEncoder : Entity ${this.name} encoder must be an instance of nodefony.Encoder`);
     }
 
-    encode(value) {
+    async encode(value) {
       if (this.hasEncoder()) {
-        return this.encoder.encodePassword.apply(this.encoder, arguments);
+        return await this.encoder.encodePassword.apply(this.encoder, arguments);
       }
       return value;
     }

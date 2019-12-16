@@ -96,7 +96,7 @@ class redisConnection extends nodefony.Service {
 
 }
 
-module.exports = class Redis extends nodefony.services.connections {
+class Redis extends nodefony.services.Connections {
 
   constructor(container) {
     super("redis", container, redis, redisConnection);
@@ -169,5 +169,7 @@ module.exports = class Redis extends nodefony.services.connections {
       throw e;
     }
   }
+}
 
-};
+nodefony.services.Redis = Redis;
+module.exports = Redis;

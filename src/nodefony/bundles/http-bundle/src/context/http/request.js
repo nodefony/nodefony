@@ -307,6 +307,7 @@ module.exports = nodefony.register("Request", function () {
             this.request.on("end", () => {
               this.context.fire("onError", this.context.container, err);
             });
+            return;
           }
           this.context.requestEnded = true;
           this.context.fire("onRequestEnd", this);

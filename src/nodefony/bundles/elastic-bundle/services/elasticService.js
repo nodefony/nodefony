@@ -1,5 +1,7 @@
 const elasticsearch = require('@elastic/elasticsearch');
-const { Client } = require('@elastic/elasticsearch');
+const {
+  Client
+} = require('@elastic/elasticsearch');
 /*const {
   ConnectionPool,
   Connection
@@ -22,7 +24,6 @@ class MyConnection extends Connection {
 //console.log(events)
 //const { errors } = require('@elastic/elasticsearch');
 //console.log(errors);
-
 
 class elesticConnection extends nodefony.Service {
   constructor(name, options = {}, service = null) {
@@ -98,7 +99,7 @@ class elesticConnection extends nodefony.Service {
   }
 }
 
-module.exports = class Elastic extends nodefony.services.connections {
+class Elastic extends nodefony.services.Connections {
 
   constructor(container) {
     super("elastic", container, elasticsearch, elesticConnection);
@@ -108,11 +109,11 @@ module.exports = class Elastic extends nodefony.services.connections {
     if (connection) {
       let myOpt = {};
       switch (nodefony.typeOf(connection.nodes)) {
-        case "array":
-          nodefony.extend(myOpt, this.globalOptions, connection);
-          break;
-        default:
-          nodefony.extend(myOpt, this.globalOptions, connection);
+      case "array":
+        nodefony.extend(myOpt, this.globalOptions, connection);
+        break;
+      default:
+        nodefony.extend(myOpt, this.globalOptions, connection);
       }
       try {
         if (myOpt.ssl) {
@@ -220,4 +221,7 @@ module.exports = class Elastic extends nodefony.services.connections {
       throw e;
     }
   }
-};
+}
+
+nodefony.services.Elastic = Elastic;
+module.exports = Elastic;

@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
 const Model = Sequelize.Model;
+const validator = require('validator');
 /*
  *
  *
@@ -7,8 +8,7 @@ const Model = Sequelize.Model;
  *
  *
  */
-
-module.exports = class user extends nodefony.Entity {
+class userEntity extends nodefony.Entity {
 
   constructor(bundle) {
     /*
@@ -33,25 +33,27 @@ module.exports = class user extends nodefony.Entity {
   }
 
   getSchema() {
-    const encodePassword = this.encode.bind(this);
     return {
-      /*id: {
-        type: Sequelize.INTEGER,
-        //primaryKey: true,
-        autoIncrement: true
-      },*/
       username: {
         type: Sequelize.STRING(126),
         primaryKey: true,
         unique: true,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          isAlphanumeric: {
+            msg: "username only allow alphanumeric characters"
+          }
+          /*notIn: {
+            args: [['admin', 'root']],
+            msg: `username don't allow (admin , root) login name`
+          }*/
+        }
       },
       password: {
         type: Sequelize.STRING(256),
         allowNull: false,
-        set(value) {
-          let encoded = encodePassword(value);
-          return this.setDataValue("password", encoded);
+        validate: {
+          min: 4
         }
       },
       "2fa": {
@@ -79,17 +81,30 @@ module.exports = class user extends nodefony.Entity {
         type: Sequelize.STRING,
         primaryKey: true,
         unique: true,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          isEmail: true
+        }
       },
-      name: Sequelize.STRING,
-      surname: Sequelize.STRING,
+      name: {
+        type: Sequelize.STRING,
+        validate: {
+          is: /^[a-z]+$/i
+        }
+      },
+      surname: {
+        type: Sequelize.STRING,
+        validate: {
+          is: /^[a-z]+$/i
+        }
+      },
       lang: {
         type: Sequelize.STRING,
         defaultValue: "en_en"
       },
       roles: {
         type: Sequelize.JSON,
-        defaultValue: [],
+        defaultValue: ["ROLE_USER"],
         get(key) {
           let val = this.getDataValue(key);
           if (typeof (val) === "string") {
@@ -102,7 +117,12 @@ module.exports = class user extends nodefony.Entity {
         type: Sequelize.STRING,
         defaultValue: "none"
       },
-      url: Sequelize.STRING,
+      url: {
+        type: Sequelize.STRING,
+        validate: {
+          isUrl: true
+        }
+      },
       image: Sequelize.STRING
     };
   }
@@ -111,7 +131,39 @@ module.exports = class user extends nodefony.Entity {
     class MyModel extends Model {}
     MyModel.init(this.getSchema(), {
       sequelize: db,
-      modelName: this.name
+      modelName: this.name,
+      hooks: {
+        beforeCreate: (user) => {
+          return this.encode(user.password)
+            .then(hash => {
+              user.password = hash;
+            })
+            .catch(err => {
+              this.logger(err, "ERROR");
+              throw err;
+            });
+        },
+        beforeBulkUpdate: (userUpate) => {
+          if ("password" in userUpate.attributes) {
+            return this.encode(userUpate.attributes.password)
+              .then(hash => {
+                userUpate.attributes.password = hash;
+              })
+              .catch(err => {
+                this.logger(err, "ERROR");
+                throw err;
+              });
+          }
+        }
+      },
+      freezeTableName: true,
+      //add indexes
+      indexes: [{
+        unique: true,
+        fields: ['email']
+      }]
+      // add custom validations
+      //validate: {}
     });
     return MyModel;
   }
@@ -120,4 +172,6 @@ module.exports = class user extends nodefony.Entity {
     const msgid = "Entity " + this.name;
     return super.logger(pci, "DEBUG", msgid);
   }
-};
+}
+
+module.exports = userEntity;
