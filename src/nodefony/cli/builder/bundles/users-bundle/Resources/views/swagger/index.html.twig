@@ -1,6 +1,8 @@
 {% extends '../base.html.twig' %}
 
 
+{% block title %}{{title|escape}}{% endblock %}
+
 {% block stylesheets %}
   <!-- WEBPACK BUNDLE -->
   <link rel='stylesheet' href='{{CDN("stylesheet")}}/users-bundle/assets/css/swagger.css'/>

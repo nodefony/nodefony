@@ -24,7 +24,9 @@ class usersController extends nodefony.Controller {
    *    )
    */
   swaggerAction() {
-    return this.render("users:swagger:index.html.twig");
+    return this.render("users:swagger:index.html.twig",{
+      title:"nodefony-api"
+    });
   }
 
   /**
@@ -94,7 +96,6 @@ class usersController extends nodefony.Controller {
       });
     case "POST":
       // FORM DATA
-      console.log(this.query)
       let error = null;
       if (!this.query.password || !this.query.confirm) {
         error = new Error(`Password can't be empty`);

@@ -53,7 +53,10 @@ class userEntity extends nodefony.Entity {
         type: Sequelize.STRING(256),
         allowNull: false,
         validate: {
-          min: 4
+          min: {
+            args:[[4]],
+            msg: `password  allow 4 characters min  `
+          }
         }
       },
       "2fa": {
@@ -83,17 +86,21 @@ class userEntity extends nodefony.Entity {
         unique: true,
         allowNull: false,
         validate: {
-          isEmail: true
+          isEmail: {
+            msg:"invalid email"
+          }
         }
       },
       name: {
         type: Sequelize.STRING,
+        allowNull: true,
         validate: {
           is: /^[a-z]+$/i
         }
       },
       surname: {
         type: Sequelize.STRING,
+        allowNull: true,
         validate: {
           is: /^[a-z]+$/i
         }
@@ -119,12 +126,24 @@ class userEntity extends nodefony.Entity {
       },
       url: {
         type: Sequelize.STRING,
+        allowNull: true,
         validate: {
           isUrl: true
         }
       },
       image: Sequelize.STRING
     };
+  }
+
+  validPassword(value){
+    let valid = validator.isLength(value, {
+      min:4,
+      max:undefined
+    });
+    if (! valid){
+      throw new nodefony.Error("password must have 4 characters min");
+    }
+    return value;
   }
 
   registerModel(db) {
@@ -134,6 +153,7 @@ class userEntity extends nodefony.Entity {
       modelName: this.name,
       hooks: {
         beforeCreate: (user) => {
+          this.validPassword(user.password);
           return this.encode(user.password)
             .then(hash => {
               user.password = hash;
@@ -145,6 +165,7 @@ class userEntity extends nodefony.Entity {
         },
         beforeBulkUpdate: (userUpate) => {
           if ("password" in userUpate.attributes) {
+            this.validPassword(userUpate.attributes.password);
             return this.encode(userUpate.attributes.password)
               .then(hash => {
                 userUpate.attributes.password = hash;

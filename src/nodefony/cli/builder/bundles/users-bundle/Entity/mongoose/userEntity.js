@@ -8,6 +8,7 @@
 //const Mongoose = require('mongoose');
 const Schema = require('mongoose').Schema;
 const mongoosePaginate = require('mongoose-paginate-v2');
+const validator = require('validator');
 
 class userEntity extends nodefony.Entity {
 
@@ -26,7 +27,7 @@ class userEntity extends nodefony.Entity {
   }
 
   getSchema() {
-    const encodePassword = this.encode.bind(this);
+    //const encodePassword = this.encode.bind(this);
     return {
       username: {
         type: String,
@@ -35,10 +36,7 @@ class userEntity extends nodefony.Entity {
       },
       password: {
         type: String,
-        required: true,
-        set: (value) => {
-          return encodePassword(value);
-        }
+        required: true
       },
       "2fa": {
         type: Boolean,
@@ -66,14 +64,37 @@ class userEntity extends nodefony.Entity {
       email: {
         type: String,
         unique: true,
-        required: true
-        //unique: true
+        required: true,
+        validate: [validator.isEmail, 'invalid email {VALUE}'],
+        createIndexes: {
+          unique: true
+        }
       },
       name: {
-        type: String
+        type: String,
+        validate: {
+          validator: (value) => {
+            // Check if value is empty then return true.
+            if (value === "") {
+              return true;
+            }
+            return validator.matches(value, /^[a-z]+$/i);
+          },
+          message: "{VALUE} is not valid"
+        }
       },
       surname: {
-        type: String
+        type: String,
+        validate: {
+          validator: (value) => {
+            // Check if value is empty then return true.
+            if (value === "") {
+              return true;
+            }
+            return validator.matches(value, /^[a-z]+$/i);
+          },
+          message: "{VALUE} is not valid"
+        }
       },
       lang: {
         type: String,
@@ -96,6 +117,17 @@ class userEntity extends nodefony.Entity {
     };
   }
 
+  validPassword(value) {
+    let valid = validator.isLength(value, {
+      min: 4,
+      max: undefined
+    });
+    if (!valid) {
+      throw new nodefony.Error("password must have 4 characters min");
+    }
+    return value;
+  }
+
   registerModel(db) {
     let mySchema = new Schema(this.getSchema(), {
       timestamps: {
@@ -104,6 +136,42 @@ class userEntity extends nodefony.Entity {
       }
     });
     mySchema.plugin(mongoosePaginate);
+    let entity = this;
+    mySchema.pre('save', function(next) {
+      if (!this.isModified('password')) {
+        return next();
+      }
+      entity.logger("hash password ", "DEBUG");
+      entity.validPassword(this.password);
+      return entity.encode(this.password)
+        .then(hash => {
+          entity.logger(hash, "DEBUG");
+          this.password = hash;
+          return hash;
+        })
+        .catch(err => {
+          entity.logger(err, "ERROR");
+          throw err;
+        });
+    });
+    mySchema.pre('updateOne', function(next) {
+      //const data = this.getUpdate();
+      let password = this.get("password");
+      if (!password) {
+        return next();
+      }
+      entity.logger("update password hash", "DEBUG");
+      entity.validPassword(password);
+      return entity.encode(password)
+        .then(hash => {
+          entity.logger(hash, "DEBUG");
+          this._update.password = hash ;
+        })
+        .catch(err => {
+          entity.logger(err, "ERROR");
+          throw err;
+        });
+    });
     return db.model(this.name, mySchema);
   }
 }
