@@ -285,7 +285,7 @@ module.exports = nodefony.register("Response", function () {
         }
       }
       this.setHeader("Location", url);
-      this.logger(`REDIRECT ${status} : ${url} `, "INFO");
+      this.logger(`REDIRECT ${status} : ${url} `, "DEBUG");
       return this;
     }
   };

@@ -30,16 +30,12 @@ class securityError extends nodefony.httpError {
   }
 
   toString() {
-    if (kernel && !kernel.debug) {
-      this.stack = null;
-    }
-    let err = `${clc.red(this.message)}`;
     switch (this.errorType) {
     case "securityError":
       if (kernel && kernel.environment === "prod") {
-        return ` ${clc.blue("Type :")} ${this.errorType} ${clc.blue("Url :")} ${this.url} ${err}`;
+        return ` ${clc.blue("Type :")} ${this.errorType} ${clc.blue("Url :")} ${this.url} ${clc.red(this.message)}`;
       }
-      return `${clc.red(this.message)}
+      let err = ` ${clc.red(this.message)}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.white("Secure Area :")} ${this.securedArea}
@@ -48,8 +44,12 @@ class securityError extends nodefony.httpError {
         ${clc.red("Message :")} ${this.message}
         ${clc.green("Bundle :")} ${this.bundle}
         ${clc.green("Controller :")} ${this.controller}
-        ${clc.green("Action :")} ${this.action}
-        ${clc.green("Stack :")} ${this.stack}`;
+        ${clc.green("Action :")} ${this.action}`;
+        if (kernel.debug) {
+          err += `
+            ${clc.green("Stack :")} ${this.stack}`;
+        }
+        return err;
     default:
       return super.toString();
     }

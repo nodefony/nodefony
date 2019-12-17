@@ -367,7 +367,7 @@ module.exports = class httpKernel extends nodefony.Service {
       }
       context = httpError.context;
       context.resolver = httpError.resolver;
-      httpError.logger();
+      context.logRequest(httpError);
       if (context.method === "WEBSOCKET" &&
         context.response &&
         !context.response.connection) {
@@ -470,6 +470,7 @@ module.exports = class httpKernel extends nodefony.Service {
       if (context.finished) {
         return;
       }
+      context.logRequest();
       context.fire("onFinish", context);
       context.finished = true;
       this.container.leaveScope(container);
@@ -625,7 +626,6 @@ module.exports = class httpKernel extends nodefony.Service {
       let context = null;
       try {
         context = this.createHttpContext(container, request, response, type);
-
         // DOMAIN VALID
         if (this.kernel.domainCheck) {
           if (this.checkValidDomain(context) !== 200) {
@@ -643,9 +643,6 @@ module.exports = class httpKernel extends nodefony.Service {
         .then((controller) => {
           return this.requestEnd(context, controller, null)
             .then((ctx) => {
-              this.logger(`FROM : ${context.remoteAddress} ORIGIN : ${context.originUrl.host} URL : ${context.url}`,
-                "INFO",
-                (context.isAjax ? `${context.type} AJAX REQUEST ${context.method}` : `${context.type} REQUEST ${context.method}`));
               if (ctx instanceof nodefony.Context) {
                 return ctx.handle()
                   .then(() => {
@@ -697,10 +694,6 @@ module.exports = class httpKernel extends nodefony.Service {
     let context = null;
     try {
       context = this.createWebsocketContext(container, request, type);
-      this.logger("FROM : " + context.remoteAddress +
-        " ORIGIN : " + context.originUrl.host +
-        " URL : " + context.url, "INFO", type);
-
       if (this.kernel.domainCheck) {
         // DOMAIN VALID
         if (this.checkValidDomain(context) !== 200) {

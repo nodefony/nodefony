@@ -5,7 +5,7 @@ const https = require('https');
 const async = require("async");
 
 const makeRequestHttp = function (link, context, callback) {
-  this.logger("REQUEST : " + link, "INFO");
+  this.logger("REQUEST : " + link, "DEBUG");
   let myurl = url.parse(link);
   // cookie session
   let headers = {};

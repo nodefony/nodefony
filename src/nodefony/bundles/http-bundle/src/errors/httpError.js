@@ -34,21 +34,25 @@ module.exports = nodefony.register("httpError", function () {
       if (kernel && !kernel.debug) {
         this.stack = null;
       }
-      let err = `${clc.red(this.message)}`;
+      let err = ``;
       switch (this.errorType) {
       case "httpError":
         if (kernel && kernel.environment === "prod") {
           return ` ${clc.blue("Url :")} ${this.url} ${err}`;
         }
-        return ` ${clc.blue("Url :")} ${this.url} ${err}
+        err += ` ${clc.blue("Url :")} ${this.url} ${clc.red(this.message)}
           ${clc.blue("Name :")} ${this.name}
           ${clc.blue("Type :")} ${this.errorType}
           ${clc.red("Code :")} ${this.code}
           ${clc.red("Message :")} ${this.message}
           ${clc.green("Bundle :")} ${this.bundle}
           ${clc.green("Controller :")} ${this.controller}
-          ${clc.green("Action :")} ${this.action}
-          ${clc.green("Stack :")} ${this.stack}`;
+          ${clc.green("Action :")} ${this.action}`;
+          if (kernel.debug) {
+            err += `
+              ${clc.green("Stack :")} ${this.stack}`;
+          }
+          return err;
       default:
         return super.toString();
       }

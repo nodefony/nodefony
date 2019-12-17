@@ -1,16 +1,24 @@
 nodefony.register.call(nodefony.context, "websocket", function () {
 
   const onClose = function (reasonCode, description) {
-    if (!this.request) {
+    /*if (!this.request) {
       this.logger('CLOSE : ' + this.remoteAddress + " " + reasonCode + " " + description, "INFO");
     } else {
       this.logger('CLOSE : ' + this.remoteAddress + " ORIGIN : " + this.origin + " " + reasonCode + " " + description, "INFO");
-    }
+    }*/
+
+    this.logger(`${clc.cyan("URL")} : ${this.url}  ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host} ${clc.cyan("Description")} : ${description} `,
+      "INFO",
+      `${this.type} ${clc.magenta(reasonCode)} CLOSE ${this.method}`);
+
     if (this.connection.state !== "closed") {
       try {
         this.response.drop(reasonCode, description);
       } catch (e) {
-        this.logger('CLOSE : ' + this.remoteAddress + " ORIGIN : " + this.origin + " " + e.message, "ERROR");
+        //this.logger('CLOSE : ' + this.remoteAddress + " ORIGIN : " + this.origin + " " + e.message, "ERROR");
+        this.logger(`${clc.cyan("URL")} : ${this.url}  ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host} ${clc.cyan("error")} : ${e.message} `,
+          "ERROR",
+          `${this.type} CLOSE ${clc.red(this.method)}`);
       }
       this.fire("onClose", reasonCode, description, this.connection);
     } else {
@@ -73,15 +81,31 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       this.crossDomain = this.isCrossDomain();
     }
 
+    logRequest(httpError, acceptedProtocol) {
+      if (httpError) {
+        //return httpError.logger();
+        return this.logger(`${clc.cyan("URL")} : ${this.url}  ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host}
+        ${httpError.toString()}`,
+          "ERROR",
+          `${this.type} ${clc.magenta(this.response.statusCode)} ${clc.red(this.method)}`);
+      }
+      return this.logger(`${clc.cyan("URL")} : ${this.url} ${clc.cyan("Accept-Protocol")} : ${acceptedProtocol || undefined} ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host}`,
+        "INFO",
+        `${this.type} ${clc.magenta(this.response.statusCode)} ${this.method}`);
+      /*return this.logger(`FROM : ${this.remoteAddress} ORIGIN : ${this.originUrl.host} URL : ${this.url}`,
+        "INFO",
+        (this.isAjax ? `${this.type} AJAX REQUEST ${this.method}` : `${this.type} ${this.method}`));*/
+    }
+
     connect(acceptedProtocol) {
       this.connection = this.request.accept(acceptedProtocol || null, this.origin /*, this.request.cookies || null*/ );
       this.response.setConnection(this.connection);
       this.connection.on('close', onClose.bind(this));
       this.requestEnded = true;
       this.fire("onConnect", this, this.connection);
-      this.logger("Connection origin : " + this.originUrl.host + " Protocol : " + acceptedProtocol || "Not Defined", "DEBUG");
       // LISTEN EVENTS SOCKET
       this.connection.on('message', this.handleMessage.bind(this));
+      this.logRequest(null, acceptedProtocol);
     }
 
     getRemoteAddress() {

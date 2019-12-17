@@ -46,9 +46,25 @@ nodefony.register("Context", () => {
 
     logger(pci, severity, msgid, msg) {
       if (!msgid) {
-        msgid = this.type + " REQUEST";
+        msgid = this.type ;
       }
       return super.logger(pci, severity, msgid, msg);
+    }
+
+    logRequest(httpError) {
+      if (httpError) {
+        //return httpError.logger();
+        return this.logger(`${clc.cyan("URL")} : ${this.url} ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host}
+        ${httpError.toString()}`,
+          "ERROR",
+          `${this.type} ${clc.magenta(this.response.statusCode)} ${clc.red(this.method)}`);
+      }
+      return this.logger(`${clc.cyan("URL")} : ${this.url} ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host}`,
+        "INFO",
+        `${this.type} ${clc.magenta(this.response.statusCode)} ${this.method}`);
+      /*return this.logger(`FROM : ${this.remoteAddress} ORIGIN : ${this.originUrl.host} URL : ${this.url}`,
+        "INFO",
+        (this.isAjax ? `${this.type} AJAX REQUEST ${this.method}` : `${this.type} ${this.method}`));*/
     }
 
     fire() {
@@ -178,7 +194,7 @@ nodefony.register("Context", () => {
         //throw new nodefony.Error(`is_granted method No token found !! `);
         return false;
       }
-      if (typeof (role) === "string") {
+      if (typeof(role) === "string") {
         return this.token.hasRole(role);
       } else {
         throw new nodefony.Error(`is_granted Bad role type you must give role example "ROLE_USER" actually : ${role}`);
@@ -236,13 +252,13 @@ nodefony.register("Context", () => {
         return false;
       }*/
       switch (true) {
-      case this.response.body instanceof Buffer:
-        this.response.body = this.response.body.toString(this.response.encoding);
-        break;
-      case (typeof this.response.body === "string"):
-        break;
-      default:
-        return false;
+        case this.response.body instanceof Buffer:
+          this.response.body = this.response.body.toString(this.response.encoding);
+          break;
+        case (typeof this.response.body === "string"):
+          break;
+        default:
+          return false;
       }
       if (this.response.body.indexOf("</body>") >= 0) {
         return this.showDebugBar;

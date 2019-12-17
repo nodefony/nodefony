@@ -303,7 +303,7 @@ nodefony.register("Session", function () {
       //this.logger("GET FlashBag : " + key ,"WARNING")
       let res = this.flashBag[key];
       if (res) {
-        this.logger("Delete FlashBag : " + key, "WARNING");
+        this.logger("Delete FlashBag : " + key, "DEBUG");
         delete this.flashBag[key];
         return res;
       }
