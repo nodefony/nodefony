@@ -30,8 +30,15 @@ class securityError extends nodefony.httpError {
   }
 
   toString() {
+    if (kernel && !kernel.debug) {
+      this.stack = null;
+    }
+    let err = `${clc.red(this.message)}`;
     switch (this.errorType) {
     case "securityError":
+      if (kernel && kernel.environment === "prod") {
+        return ` ${clc.blue("Type :")} ${this.errorType} ${clc.blue("Url :")} ${this.url} ${err}`;
+      }
       return `${clc.red(this.message)}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}

@@ -96,7 +96,7 @@ nodefony.register("Session", function () {
     create(lifetime, id) {
       this.id = id || this.setId();
       setMetasSession.call(this);
-      this.manager.logger("NEW SESSION CREATE : " + this.id);
+      this.manager.logger("NEW SESSION CREATE : " + this.id, "DEBUG");
       this.cookieSession = this.setCookieSession(lifetime);
       this.status = "active";
       return this;

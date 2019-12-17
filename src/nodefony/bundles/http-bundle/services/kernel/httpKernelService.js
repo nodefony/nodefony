@@ -502,7 +502,7 @@ module.exports = class httpKernel extends nodefony.Service {
                 return this.csrfService.handle(context)
                   .then((token) => {
                     if (token) {
-                      this.logger(`Check CSRF TOKEN : ${token.name} OK`);
+                      this.logger(`Check CSRF TOKEN : ${token.name} OK`, "DEBUG");
                     }
                     return controller;
                   })
@@ -517,7 +517,7 @@ module.exports = class httpKernel extends nodefony.Service {
               return this.csrfService.handle(context)
                 .then((token) => {
                   if (token) {
-                    this.logger(`Check CSRF TOKEN : ${token.name} OK`);
+                    this.logger(`Check CSRF TOKEN : ${token.name} OK`, "DEBUG");
                   }
                   return resolve(controller);
                 })
@@ -625,9 +625,7 @@ module.exports = class httpKernel extends nodefony.Service {
       let context = null;
       try {
         context = this.createHttpContext(container, request, response, type);
-        this.logger(`FROM : ${context.remoteAddress} ORIGIN : ${context.originUrl.host} URL : ${context.url}`,
-          "INFO",
-          (context.isAjax ? `${context.type} AJAX REQUEST ${context.method}` : `${context.type} REQUEST ${context.method}`));
+
         // DOMAIN VALID
         if (this.kernel.domainCheck) {
           if (this.checkValidDomain(context) !== 200) {
@@ -645,6 +643,9 @@ module.exports = class httpKernel extends nodefony.Service {
         .then((controller) => {
           return this.requestEnd(context, controller, null)
             .then((ctx) => {
+              this.logger(`FROM : ${context.remoteAddress} ORIGIN : ${context.originUrl.host} URL : ${context.url}`,
+                "INFO",
+                (context.isAjax ? `${context.type} AJAX REQUEST ${context.method}` : `${context.type} REQUEST ${context.method}`));
               if (ctx instanceof nodefony.Context) {
                 return ctx.handle()
                   .then(() => {

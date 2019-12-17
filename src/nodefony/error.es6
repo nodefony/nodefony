@@ -144,27 +144,26 @@ class nodefonyError extends Error {
   }
 
   toString() {
+    if (kernel && !kernel.debug) {
+      this.stack = null;
+    }
+    let err = `${clc.red(this.message)}`;
     switch (this.errorType) {
     case "Error":
-      return ` ${clc.red(this.message)}
+      if (kernel && kernel.environment === "prod") {
+        return err;
+      }
+      return ` ${err}
           ${clc.blue("Name :")} ${this.name}
           ${clc.blue("Type :")} ${this.errorType}
           ${clc.red("Code :")} ${this.code}
           ${clc.red("Message :")} ${this.message}
           ${clc.green("Stack :")} ${this.stack}`;
-    case "httpError":
-      return `${clc.red(this.message)}
-        ${clc.blue("Name :")} ${this.name}
-        ${clc.blue("Type :")} ${this.errorType}
-        ${clc.blue("Url :")} ${this.url}
-        ${clc.red("Code :")} ${this.code}
-        ${clc.red("Message :")} ${this.message}
-        ${clc.green("Bundle :")} ${this.bundle}
-        ${clc.green("Controller :")} ${this.controller}
-        ${clc.green("Action :")} ${this.action}
-        ${clc.green("Stack :")} ${this.stack}`;
     case "SystemError":
-      return `${clc.red(this.message)}
+      if (kernel && kernel.environment === "prod") {
+        return ` ${clc.blue("Type :")} ${this.errorType} ${clc.red(this.message)}`;
+      }
+      return ` ${err}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.red("Message :")} ${this.message}
@@ -174,7 +173,10 @@ class nodefonyError extends Error {
         ${clc.blue("Port :")} ${this.port}
         ${clc.green("Stack :")} ${this.stack}`;
     case "AssertionError":
-      return ` ${clc.red(this.message)}
+      if (kernel && kernel.environment === "prod") {
+        return ` ${clc.blue("Type :")} ${this.errorType} ${clc.red(this.message)}`;
+      }
+      return ` ${err}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.red("Code :")} ${this.code}
@@ -184,7 +186,10 @@ class nodefonyError extends Error {
         ${clc.white("Operator :")} ${this.operator}
         ${clc.green("Stack :")} ${this.stack}`;
     case "ClientError":
-      return ` ${clc.red(this.message)}
+      if (kernel && kernel.environment === "prod") {
+        return ` ${clc.blue("Type :")} ${this.errorType} ${clc.red(this.message)}`;
+      }
+      return ` ${err}
             ${clc.blue("Name :")} ${this.name}
             ${clc.blue("Type :")} ${this.errorType}
             ${clc.red("Code :")} ${this.code}
@@ -197,7 +202,10 @@ class nodefonyError extends Error {
     case "MongooseError":
       return nodefony.mongoose.errorToString(this);
     default:
-      return ` ${clc.red(this.message)}
+      if (kernel && kernel.environment === "prod") {
+        return ` ${clc.blue("Type :")} ${this.errorType} ${clc.red(this.message)}`;
+      }
+      return ` ${err}
         ${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.red("Message :")} ${this.message}

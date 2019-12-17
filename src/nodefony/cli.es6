@@ -482,7 +482,26 @@ class CLI extends nodefony.Service {
       break;
     default:
     }
-    if (!this.wrapperLog) {
+    switch (pdu.severity) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      this.wrapperLog = console.error;
+      break;
+    case 4:
+      this.wrapperLog = console.warn;
+      break;
+    case 5:
+      this.wrapperLog = console.log;
+      break;
+    case 6:
+      this.wrapperLog = console.info;
+      break;
+    case 7:
+      this.wrapperLog = console.debug;
+      break;
+    default:
       this.wrapperLog = console.log;
     }
     return this.wrapperLog(`${this.pid} ${date.toDateString()} ${date.toLocaleTimeString()} ${nodefony.Service.logSeverity(pdu.severityName)} ${green(pdu.msgid)} : ${message}`);
