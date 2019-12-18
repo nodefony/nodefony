@@ -974,6 +974,7 @@ class Bundle extends nodefony.Service {
       if (res) {
         try {
           command = this.loadFile(file.path);
+          command.prototype.bundle = this ;
           store.push(command);
         } catch (e) {
           throw new Error(e + "   FILE COMMAND : " + file.path);

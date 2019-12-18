@@ -826,7 +826,7 @@ class Nodefony {
   preProd(environment, cli, options) {
     const instances = require('os').cpus().length;
     if (cluster.isMaster) {
-      for (var i = 0; i < instances; i++) {
+      for (let i = 0; i < instances; i++) {
         cluster.fork();
       }
       cluster.on('disconnect', function ( /*worker*/ ) {

@@ -14,7 +14,24 @@ class usersCommand extends nodefony.Command {
     this.setHelp("users:findAll [--json]",
       "nodefony --json users:findAll"
     );
+    this.setHelp("users:fixtures ",
+      "nodefony  users:fixtures"
+    );
     super.showHelp();
+  }
+
+  async fixtures(){
+    try{
+      const fixtures = this.bundle.getFixtures() ;
+      for (let fixture in fixtures){
+          this.logger(`LOAD FIXTURE : ${fixture}`, "INFO");
+          let inst = new fixtures[fixture].fixture(this.container);
+          await inst.run();
+      }
+      return fixtures ;
+    }catch(e){
+      throw e ;
+    }
   }
 
   async show(username) {

@@ -332,7 +332,7 @@ class CLI extends nodefony.Service {
     this.emoji = require("node-emoji");
     this.spinner = null;
     this.blankLine = function () {
-      var myLine = new this.clui.Line().fill();
+      const myLine = new this.clui.Line().fill();
       return () => {
         myLine.output();
       };
@@ -512,7 +512,7 @@ class CLI extends nodefony.Service {
     try {
       table = new Table(options || defaultTableCli);
       if (datas) {
-        for (var i = 0; i < datas.length; i++) {
+        for (let i = 0; i < datas.length; i++) {
           table.push(datas[i]);
         }
         if (syslog) {

@@ -160,8 +160,8 @@ class Watcher extends nodefony.Watcher {
         file = this.cwd + "/" + Path;
         let parse = path.parse(file);
         if (parse.ext === "." + this.bundle.serviceTemplate.extention) {
-          var name = parse.name;
-          var directory = path.basename(parse.dir);
+          let name = parse.name;
+          let directory = path.basename(parse.dir);
           if (directory !== "views") {
             if (this.bundle.views[directory]) {
               if (this.bundle.views[directory][name]) {
@@ -194,7 +194,7 @@ class Watcher extends nodefony.Watcher {
         this.logger(Path, "INFO", event);
         file = this.cwd + "/" + Path;
         try {
-          var fileClass = new nodefony.fileClass(file);
+          const fileClass = new nodefony.fileClass(file);
           fileClass.matchName(this.bundle.regI18nFile);
           let domain = fileClass.match[1];
           let Locale = fileClass.match[2];
@@ -311,7 +311,7 @@ class Watcher extends nodefony.Watcher {
         this.logger(Path, "INFO", event);
         /*file = this.cwd + "/" + Path ;
           try{
-          var fileClass = new nodefony.fileClass(file);
+          const fileClass = new nodefony.fileClass(file);
           this.router.removeRoutes(fileClass.path);
         }catch(e){
         this.logger(e, "ERROR", event);

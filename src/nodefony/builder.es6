@@ -212,9 +212,10 @@ class Builder extends nodefony.Service {
       case "object":
         for (let ele in obj) {
           let value = obj[ele];
+          let name = null ;
           switch (ele) {
           case "name":
-            var name = value;
+            name = value;
             break;
           case "type":
             switch (value) {
