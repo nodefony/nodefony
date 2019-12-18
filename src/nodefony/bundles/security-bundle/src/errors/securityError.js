@@ -35,8 +35,7 @@ class securityError extends nodefony.httpError {
       if (kernel && kernel.environment === "prod") {
         return ` ${clc.blue("Type :")} ${this.errorType} ${clc.blue("Url :")} ${this.url} ${clc.red(this.message)}`;
       }
-      let err = ` ${clc.red(this.message)}
-        ${clc.blue("Name :")} ${this.name}
+      let err = `${clc.blue("Name :")} ${this.name}
         ${clc.blue("Type :")} ${this.errorType}
         ${clc.white("Secure Area :")} ${this.securedArea}
         ${clc.blue("Url :")} ${this.url}
@@ -45,11 +44,11 @@ class securityError extends nodefony.httpError {
         ${clc.green("Bundle :")} ${this.bundle}
         ${clc.green("Controller :")} ${this.controller}
         ${clc.green("Action :")} ${this.action}`;
-        if (kernel.debug) {
-          err += `
+      if (kernel.debug) {
+        err += `
             ${clc.green("Stack :")} ${this.stack}`;
-        }
-        return err;
+      }
+      return err;
     default:
       return super.toString();
     }

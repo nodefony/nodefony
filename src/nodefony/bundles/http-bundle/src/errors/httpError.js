@@ -31,28 +31,25 @@ module.exports = nodefony.register("httpError", function () {
     }
 
     toString() {
-      if (kernel && !kernel.debug) {
-        this.stack = null;
-      }
       let err = ``;
       switch (this.errorType) {
       case "httpError":
         if (kernel && kernel.environment === "prod") {
           return ` ${clc.blue("Url :")} ${this.url} ${err}`;
         }
-        err += ` ${clc.blue("Url :")} ${this.url} ${clc.red(this.message)}
-          ${clc.blue("Name :")} ${this.name}
-          ${clc.blue("Type :")} ${this.errorType}
-          ${clc.red("Code :")} ${this.code}
-          ${clc.red("Message :")} ${this.message}
-          ${clc.green("Bundle :")} ${this.bundle}
-          ${clc.green("Controller :")} ${this.controller}
-          ${clc.green("Action :")} ${this.action}`;
-          if (kernel.debug) {
-            err += `
-              ${clc.green("Stack :")} ${this.stack}`;
-          }
-          return err;
+        err += `${clc.blue("Name :")} ${this.name}
+        ${clc.blue("Type :")} ${this.errorType}
+        ${clc.red("Code :")} ${this.code}
+        ${clc.blue("Url :")} ${this.url}
+        ${clc.red("Message :")} ${this.message}
+        ${clc.green("Bundle :")} ${this.bundle}
+        ${clc.green("Controller :")} ${this.controller}
+        ${clc.green("Action :")} ${this.action}`;
+        if (kernel.debug) {
+          err += `
+            ${clc.green("Stack :")} ${this.stack}`;
+        }
+        return err;
       default:
         return super.toString();
       }
@@ -87,15 +84,18 @@ module.exports = nodefony.register("httpError", function () {
         }
         if (this.context.isJson) {
           try {
-            this.pdu = JSON.stringify(new nodefony.PDU({
+            let obj = {
               code: this.code,
               message: this.message,
               bundle: this.bundle,
               controller: this.controller,
               action: this.action,
-              url: this.url,
-              stack: this.stack
-            }, "ERROR"));
+              url: this.url
+            };
+            if (this.context.kernel.debug) {
+              obj.stack = this.stack;
+            }
+            this.pdu = JSON.stringify(new nodefony.PDU(obj, "ERROR"));
           } catch (e) {
             this.message = e.message;
             this.logger(e, "WARNING");

@@ -90,6 +90,9 @@ class JsonApi extends nodefony.Service {
       obj.message = this.context.response.getStatusMessage(obj.code);
     }
     obj.result = null;
+    if (!this.kernel.debug) {
+      delete data.stack;
+    }
     return obj.result = data;
   }
 
