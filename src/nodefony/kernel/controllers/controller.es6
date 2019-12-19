@@ -726,6 +726,30 @@ class Controller extends nodefony.Service {
     return this.context.resolver.getRoute();
   }
 
+  logout(){
+    if (this.security) {
+      return this.security.logout(this.context)
+        .then(()=>{
+          return true;
+        })
+        .catch((e) => {
+          throw e;
+        });
+    }
+    return new Promise((resolve, reject)=>{
+      if (this.context.session) {
+        return this.context.session.destroy(true)
+          .then(() => {
+            return resolve(true);
+          }).catch(e => {
+            this.logger(e, "ERROR");
+            return reject(e) ;
+          });
+      }
+      return resolve(true);
+    });
+  }
+
   generateUrl(name, variables, absolute) {
     try {
       if (absolute) {

@@ -40,10 +40,17 @@ class Factory extends nodefony.Service {
   }
 
   logout(context) {
-    return this.security.logout(context)
-      .catch(e => {
-        throw e;
-      });
+    if ( context.session){
+      return context.session.destroy(true)
+        .then(() => {
+          return context ;
+        }).catch(e => {
+          throw e ;
+        });
+    }
+    return new Promise((resolve) => {
+      return resolve(context);
+    });
   }
 
   authenticate(context) {

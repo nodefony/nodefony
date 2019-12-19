@@ -509,12 +509,14 @@ module.exports = class security extends nodefony.Service {
     if (context.session) {
       return context.session.destroy(true)
         .then(() => {
-          return context.redirect("/", null, true);
+          return context;
         }).catch(e => {
-          this.logger(e, "ERROR");
+          throw e ;
         });
     }
-    return context.redirect("/", null, true);
+    return new Promise((resolve)=>{
+      return resolve(context);
+    });
   }
 
   setSessionStrategy(strategy) {

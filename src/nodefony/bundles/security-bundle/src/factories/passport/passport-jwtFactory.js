@@ -33,6 +33,28 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
       });
     }
 
+    logout(context){
+      return new Promise(async (resolve, reject) => {
+        if (!context){
+          return reject(new nodefony.Error("logout no context"));
+        }
+        const query = context.request.query;
+        if ( query.refreshToken){
+          let res = await this.entity.deleteRefreshToken(query.refreshToken);
+          if (res){
+            return resolve(super.logout(context));
+          }
+          return super.logout(context)
+          .then(() =>{
+            return reject(new nodefony.Error("refreshToken not found"));
+          });
+
+        }
+        return reject(new nodefony.Error("No refreshToken parameter"));
+      });
+
+    }
+
     getStrategy(options = {}) {
       return new Promise((resolve, reject) => {
         try {

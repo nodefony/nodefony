@@ -10,8 +10,8 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "^7.7.5",
-    "@babel/preset-env": "^7.7.6",
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
     "@nodefony/stage": "^0.2.3",
     "async": "^3.1.0",
     "babel-loader": "^8.0.6",
@@ -37,7 +37,7 @@
     "simple-git": "^1.129.0",
     "socket.io-client": "^2.3.0",
     "terser-webpack-plugin": "^2.3.1",
-    "webpack": "^4.41.3",
+    "webpack": "^4.41.4",
     "webpack-merge": "^4.2.2"
   },
   "repository": {

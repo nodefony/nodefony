@@ -100,8 +100,33 @@ module.exports = class jwt extends nodefony.Entity {
         }
       }
 
-      static deleteRefreshToken(refreshToken) {
-
+      static async deleteRefreshToken(refreshToken) {
+        let transaction = null;
+        let opt = {
+          where: {}
+        };
+        opt.where.refreshToken = refreshToken;
+        try {
+          transaction = await db.transaction.call(db);
+          return this.destroy(opt, {
+              transaction: transaction
+            })
+            .then((mytoken) => {
+              transaction.commit();
+              if (mytoken){
+                return true;
+              }
+              return false;
+            }).catch(e => {
+              transaction.rollback();
+              throw e;
+            });
+        } catch (e) {
+          if (transaction) {
+            transaction.rollback();
+          }
+          throw e;
+        }
       }
 
       static async truncate(username) {

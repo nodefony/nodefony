@@ -108,10 +108,25 @@ module.exports = class jwt extends nodefony.Entity {
       }
     };
 
-    mySchema.statics.deleteRefreshToken = async function () {
+    mySchema.statics.deleteRefreshToken = async function (refreshToken) {
       let session = null;
       try {
         session = await db.startSession.call(db);
+        let res = null;
+          res = this.deleteMany({
+            refreshToken: refreshToken
+          });
+          return res
+            .then((mytoken) => {
+              session.commitTransaction();
+              if (mytoken.deletedCount){
+                return true ;
+              }
+              return false;
+            }).catch(e => {
+              session.abortTransaction();
+              throw e;
+            });
 
       } catch (e) {
         if (session) {

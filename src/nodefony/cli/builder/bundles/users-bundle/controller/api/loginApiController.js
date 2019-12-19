@@ -145,27 +145,19 @@ class loginApiController extends nodefony.Controller {
   }
 
   /**
-   *    @Method ({"GET"})
+   *    @Method ({"POST"})
    *    @Route ("/logout", name="api-login-jwt-logout")
    */
   logoutAction() {
-    if (this.security) {
-      return this.security.logout(this.context)
-        .catch((e) => {
-          throw e;
+    return this.logout()
+      .then(() => {
+        return this.jsonApi.render({
+          logout: "ok"
         });
-    }
-    if (this.context.session) {
-      return this.context.session.destroy(true)
-        .then(() => {
-          return this.redirectToRoute("login");
-        }).catch(e => {
-          this.logger(e, "ERROR");
-        });
-    }
-    return this.redirectToRoute("login");
+      }).catch((e) => {
+        return this.jsonApi.render(e, 500);
+      });
   }
-
 }
 
 module.exports = loginApiController;

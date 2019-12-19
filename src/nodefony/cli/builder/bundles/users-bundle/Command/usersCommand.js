@@ -25,7 +25,7 @@ class usersCommand extends nodefony.Command {
       const fixtures = this.bundle.getFixtures() ;
       for (let fixture in fixtures){
           this.logger(`LOAD FIXTURE : ${fixture}`, "INFO");
-          let inst = new fixtures[fixture].fixture(this.container);
+          let inst = new fixtures[fixture](this.container);
           await inst.run();
       }
       return fixtures ;

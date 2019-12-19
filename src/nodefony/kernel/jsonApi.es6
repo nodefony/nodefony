@@ -65,15 +65,20 @@ class JsonApi extends nodefony.Service {
     if (errorType) {
       obj.errorType = errorType;
       obj.result = null;
+      if (!this.kernel.debug && data.stack) {
+        delete data.stack;
+      }
       obj.error = data;
       obj.severity = severity || "ERROR";
       if (data.name) {
         obj.errorType = data.name;
       }
-      if (data.code) {
-        obj.code = data.code;
-      } else {
-        obj.code = 400;
+      if (! obj.code ){
+        if (data.code) {
+          obj.code = data.code;
+        }else{
+          obj.code = 400 ;
+        }
       }
       if (data.errorCode) {
         obj.errorCode = data.errorCode;
@@ -89,10 +94,6 @@ class JsonApi extends nodefony.Service {
     if (!obj.message && this.context) {
       obj.message = this.context.response.getStatusMessage(obj.code);
     }
-    obj.result = null;
-    if (!this.kernel.debug) {
-      delete data.stack;
-    }
     return obj.result = data;
   }
 
@@ -105,8 +106,11 @@ class JsonApi extends nodefony.Service {
       });
       if (this.context) {
         const controller = this.context.get("controller");
-        json.code = code || this.context.response.getStatusCode();
+        json.code = code;
         this.sanitize(payload, json, severity);
+        if (! json.code){
+          json.code = this.context.response.getStatusCode() ;
+        }
         if (this.kernel.debug) {
           json.pdu = new nodefony.PDU({
             bundle: controller.bundle.name,

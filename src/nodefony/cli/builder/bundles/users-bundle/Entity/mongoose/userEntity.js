@@ -172,7 +172,7 @@ class userEntity extends nodefony.Entity {
           throw err;
         });
     });
-    return db.model(this.name, mySchema);
+    return db.model(this.name, mySchema, this.name);
   }
 }
 

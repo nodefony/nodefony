@@ -32,9 +32,9 @@
     "nodefony": "./bin/nodefony"
   },
   "dependencies": {
-    "@babel/core": "^7.7.5",
-    "@babel/parser": "^7.7.5",
-    "@babel/preset-env": "^7.7.6",
+    "@babel/core": "^7.7.7",
+    "@babel/parser": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
     "@nodefony/documentation-bundle": "^5.1.1",
     "@nodefony/elastic-bundle": "^5.1.1",
     "@nodefony/framework-bundle": "^5.1.1",
@@ -78,7 +78,7 @@
     "simple-git": "^1.129.0",
     "spdx": "^0.5.2",
     "twig": "^1.14.0",
-    "xml2js": "^0.4.22",
+    "xml2js": "^0.4.23",
     "yarn": "^1.21.1"
   },
   "devDependencies": {},

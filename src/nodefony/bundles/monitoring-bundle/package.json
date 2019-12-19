@@ -11,8 +11,8 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "^7.7.5",
-    "@babel/preset-env": "^7.7.6",
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
     "@nodefony/stage": "^0.2.3",
     "babel-loader": "^8.0.6",
     "bootstrap": "=3.3.7",
@@ -29,7 +29,7 @@
     "shortid": "^2.2.15",
     "terser-webpack-plugin": "^2.3.1",
     "useragent": "^2.3.0",
-    "webpack": "^4.41.3",
+    "webpack": "^4.41.4",
     "webpack-merge": "^4.2.2"
   },
   "repository": {

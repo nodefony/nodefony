@@ -40,6 +40,13 @@ class openApiSchema extends nodefony.Service {
     this.obj.info = this.getInfo();
     this.obj.servers = this.getServers();
     if (entity) {
+      switch(this.ormName){
+        case "mongoose":
+          this.setSchema(entity.collection.collectionName, entity);
+        break;
+        default:
+          this.setSchema(entity.name, entity);
+      }
       this.setSchema(entity.name, entity);
     }
     return this.obj;

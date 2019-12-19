@@ -207,9 +207,9 @@ const openapi = {
         summary: "logout user",
         tags: ["JSON WEB TOKEN"],
         parameters: [{
-          name: "token",
-          description: "Authentication token",
-          in: "header",
+          name: "refreshToken",
+          description: "Authentication refreshToken",
+          in: "query",
           required: true
         }],
         responses: {

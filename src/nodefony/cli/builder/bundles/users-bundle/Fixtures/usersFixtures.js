@@ -34,8 +34,8 @@ class usersFixture extends nodefony.Service {
   async runSequelize() {
     try {
       let tab = [];
-      for (let user in users) {
-        tab.push(await this.loadSequelizeFixtures(users[user]));
+      for await (let user of users) {
+        tab.push(await this.loadSequelizeFixtures(user));
       }
       return tab;
     } catch (e) {
@@ -66,9 +66,4 @@ class usersFixture extends nodefony.Service {
 
 }
 
-module.exports = {
-  type: "sequelize",
-  connection: "nodefony",
-  entity: "user",
-  fixture: usersFixture
-};
+module.exports = usersFixture ;

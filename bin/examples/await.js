@@ -7,9 +7,10 @@ try {
   nodefony = require(require("path").resolve("src", "nodefony", "autoloader.es6"));
 }
 
-class Sboob {
+class Test {
   constructor(name) {
     this.name = name;
+    this.mytab =[this.resolveAfter3Seconds, this.resolveAfter2Seconds];
   }
 
   async asyncCall() {
@@ -28,6 +29,7 @@ class Sboob {
   resolveAfter2Seconds() {
     return new Promise(resolve => {
       setTimeout(() => {
+        console.log('2000');
         resolve('resolved');
       }, 2000);
     });
@@ -36,6 +38,7 @@ class Sboob {
   resolveAfter3Seconds() {
     return new Promise(resolve => {
       setTimeout(() => {
+        console.log('3000');
         return resolve({
           ele: this.name
         });
@@ -55,10 +58,28 @@ class Sboob {
     }
   }
 
+  async testFor(){
+    let tab = [];
+    for await ( let ele of this.mytab){
+      console.log(ele)
+      tab.push( await ele.call(this) );
+    }
+    console.log("end");
+    return tab ;
+  }
+
 }
 
-let ele = new Sboob("cci");
-ele.dubbleCall();
+let ele = new Test("cci");
+//ele.dubbleCall();
+ele.testFor();
+
+
+
+
+
+
+
 /*function resolveAfter2Seconds() {
   return new Promise(resolve => {
     setTimeout(() => {

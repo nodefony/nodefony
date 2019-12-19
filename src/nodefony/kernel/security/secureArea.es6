@@ -249,20 +249,24 @@ module.exports = nodefony.register("SecuredArea", function () {
     }
 
     logout(context) {
-      if (context.session) {
-        return context.session.destroy(true)
-          .then(() => {
-            if (this.formLogin) {
-              return this.redirect(context, this.formLogin);
-            }
-            return context.redirect("/", null, true);
-          }).catch(e => {
-            this.logger(e, "ERROR");
-            throw e;
-          });
-      }
-      return new Promise((resolve) => {
-        return resolve(true);
+      return new Promise(async (resolve, reject) => {
+        let res = [];
+        for await (let factorie of this.factories){
+          res.push( await factorie.logout(context) );
+        }
+        if (context.session) {
+          return context.session.destroy(true)
+            .then(() => {
+              if (this.formLogin) {
+                return resolve( this.redirect(context, this.formLogin) );
+              }
+              return resolve( context );
+            }).catch(e => {
+              this.logger(e, "ERROR");
+              return reject(e);
+            });
+        }
+        return resolve(res);
       });
     }
 
