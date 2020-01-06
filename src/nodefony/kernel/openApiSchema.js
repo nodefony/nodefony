@@ -17,7 +17,7 @@ class openApiSchema extends nodefony.Service {
           NodefonyError: this.getErrorSchema(),
           Pdu: this.getPduSchema(),
         },
-        responses : this.getResponseSchema()
+        responses: this.getResponseSchema()
       },
       tags: [],
       externalDocs: {}
@@ -40,14 +40,13 @@ class openApiSchema extends nodefony.Service {
     this.obj.info = this.getInfo();
     this.obj.servers = this.getServers();
     if (entity) {
-      switch(this.ormName){
-        case "mongoose":
-          this.setSchema(entity.collection.collectionName, entity);
+      switch (this.ormName) {
+      case "mongoose":
+        this.setSchema(entity.collection.collectionName, entity);
         break;
-        default:
-          this.setSchema(entity.name, entity);
+      default:
+        this.setSchema(entity.name, entity);
       }
-      this.setSchema(entity.name, entity);
     }
     return this.obj;
   }
@@ -138,7 +137,7 @@ class openApiSchema extends nodefony.Service {
   }
 
 
-  getResponseSchema(){
+  getResponseSchema() {
     return {
       '400': {
         description: "Bad Request",
@@ -240,7 +239,7 @@ class openApiSchema extends nodefony.Service {
           }
         }
       },
-      default:{
+      default: {
         description: "nodefony unexpected error",
         content: {
           "application/json": {
@@ -319,7 +318,7 @@ class openApiSchema extends nodefony.Service {
         severity: {
           type: "integer",
           format: "int32",
-          enum: [0,1,2,3,4,5,6,7]
+          enum: [0, 1, 2, 3, 4, 5, 6, 7]
         },
         severityName: {
           type: "string",

@@ -1,4 +1,16 @@
-module.exports = [{
+const localFramework = kernel.app.settings.locale;
+const Faker = require(`faker`);
+//const local = localFramework.slice(0, 2);
+//const Faker = require(`faker/locale/${local}`);
+//Faker.locale = local;
+
+//let uuid = Faker.random.uuid();
+//let ele = `/${uuid.split('-').slice(1, 4).join('\/')}/${uuid}.jpg `;
+
+
+const rolesArray = ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_TEST', 'ROLE_AUDIO', 'ROLE_VIDEO'];
+
+const defaultFixtures = [{
   username: "anonymous",
   name: "anonymous",
   surname: "anonymous",
@@ -46,3 +58,59 @@ module.exports = [{
   lang: "fr_fr",
   roles: ["ROLE_USER"]
 }];
+
+class randomFixture {
+  constructor() {
+    this.matrice = {
+      username: "",
+      name: "",
+      surname: "",
+      password: "1234",
+      "2fa": false,
+      email: "",
+      gender: "",
+      lang: "",
+      roles: ["ROLE_USER"]
+    };
+  }
+
+  randomUser(nb = 100) {
+    let tab = [];
+    for (let i = 0; i < nb; i++) {
+      let gender = "male";
+      let lang = "fr-FR";
+      if (i % 2) {
+        gender = "female";
+        lang = "en_EN";
+      }
+      tab.push(
+        nodefony.extend({}, this.matrice, {
+          username: Faker.internet.userName(),
+          name: Faker.name.lastName(),
+          surname: Faker.name.firstName(),
+          email: Faker.internet.email(),
+          gender: gender,
+          lang: Faker.random.locale(),
+          image: Faker.image.avatar(),
+          url: Faker.internet.url(),
+          roles: [Faker.random.arrayElement(rolesArray)]
+        }));
+    }
+    return tab;
+  }
+
+  faker(option) {
+    return Faker.fake(option);
+  }
+
+  randomFloat(modulo = 0, min = 0, max = 100) {
+    if (modulo % 2) {
+      return -(Math.random() * (max - min) + min).toFixed(2);
+    }
+    return (Math.random() * (max - min) + min).toFixed(2);
+  }
+
+}
+
+module.exports.default = defaultFixtures;
+module.exports.random = randomFixture;

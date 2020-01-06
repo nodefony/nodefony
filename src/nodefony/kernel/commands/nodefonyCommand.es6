@@ -80,10 +80,10 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
 
     async generateSequelizeFixture() {
       try {
-        this.logger("Generate Fixtures");
-        let command = this.cli.getCommand("sequelize", "sequelize");
+        this.logger("Generate Sequelize Fixtures");
+        let command = this.cli.getCommand("users", "users");
         let task = command.getTask("fixtures");
-        return await task.load();
+        return await task.default();
       } catch (e) {
         throw e;
       }
@@ -92,10 +92,10 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
     async installMongoose() {
       try {
         this.log("INITIALIZE Mongoose");
-        this.log("Generate Fixtures");
-        let command = this.cli.getCommand("mongoose", "mongoose");
+        this.log("Generate Mongoose Fixtures");
+        let command = this.cli.getCommand("users", "users");
         let task = command.getTask("fixtures");
-        return await task.load();
+        return await task.default();
       } catch (e) {
         throw e;
       }

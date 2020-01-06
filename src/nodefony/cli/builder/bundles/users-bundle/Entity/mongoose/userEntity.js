@@ -78,9 +78,9 @@ class userEntity extends nodefony.Entity {
             if (value === "") {
               return true;
             }
-            return validator.matches(value, /^[a-z]+$/i);
+            return validator.matches(value, /[^\w]|_|-|.|'/g);
           },
-          message: "{VALUE} is not valid"
+          message: "name allow alphanumeric characters {VALUE}"
         }
       },
       surname: {
@@ -91,9 +91,9 @@ class userEntity extends nodefony.Entity {
             if (value === "") {
               return true;
             }
-            return validator.matches(value, /^[a-z]+$/i);
+            return validator.matches(value, /[^\w]|_|-|.|'/g);
           },
-          message: "{VALUE} is not valid"
+          message: "surname allow alphanumeric characters {VALUE}"
         }
       },
       lang: {
@@ -137,7 +137,7 @@ class userEntity extends nodefony.Entity {
     });
     mySchema.plugin(mongoosePaginate);
     let entity = this;
-    mySchema.pre('save', function(next) {
+    mySchema.pre('save', function (next) {
       if (!this.isModified('password')) {
         return next();
       }
@@ -154,7 +154,7 @@ class userEntity extends nodefony.Entity {
           throw err;
         });
     });
-    mySchema.pre('updateOne', function(next) {
+    mySchema.pre('updateOne', function (next) {
       //const data = this.getUpdate();
       let password = this.get("password");
       if (!password) {
@@ -165,7 +165,7 @@ class userEntity extends nodefony.Entity {
       return entity.encode(password)
         .then(hash => {
           entity.logger(hash, "DEBUG");
-          this._update.password = hash ;
+          this._update.password = hash;
         })
         .catch(err => {
           entity.logger(err, "ERROR");

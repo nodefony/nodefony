@@ -21,6 +21,7 @@ class Nodefony {
       storage: {}
     };
     this.bundles = {};
+    this.api = {};
     this.builders = {
       bundles: null,
       project: null,

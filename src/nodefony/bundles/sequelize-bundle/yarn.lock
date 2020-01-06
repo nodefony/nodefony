@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@alt3/sequelize-to-json-schemas@^0.3.36":
-  version "0.3.36"
-  resolved "https://registry.yarnpkg.com/@alt3/sequelize-to-json-schemas/-/sequelize-to-json-schemas-0.3.36.tgz#627a07fb3d8441d7ae6d093d7524f691c514c45b"
-  integrity sha512-u89oNkrWDvc3R3pKaZIIo4o83/yPizafRRn+5yZjoXMvpTW00BF/nQwo+6L54bN1G63LgVFeBXg+MdJkjAQIQA==
+"@alt3/sequelize-to-json-schemas@^0.3.38":
+  version "0.3.38"
+  resolved "https://registry.yarnpkg.com/@alt3/sequelize-to-json-schemas/-/sequelize-to-json-schemas-0.3.38.tgz#163b0d6400613d673da6e99ca5842a9c236329d2"
+  integrity sha512-tHK9/wLR0gYgs3Tw9z8dGhNgqEMmx04pL7kxHM0rjFfHzPdZ5+Xs7qgBTqsh947Eq43VbXMB+cNRjg1aCpQ93g==
 
 "@azure/ms-rest-azure-env@^1.1.2":
   version "1.1.2"
@@ -35,10 +35,15 @@
     "@azure/ms-rest-js" "^1.8.7"
     adal-node "^0.1.28"
 
-"@types/node@*", "@types/node@^12.7.11":
+"@types/node@*":
   version "12.12.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.6.tgz#a47240c10d86a9a57bb0c633f0b2e0aea9ce9253"
   integrity sha512-FjsYUPzEJdGXjwKqSpE0/9QEh6kzhTAeObA54rn6j3rR4C/mzpI9L0KNfoeASSPMMdxIsoJuCLDWcM/rVjIsSA==
+
+"@types/node@^12.12.17":
+  version "12.12.22"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.22.tgz#b8d9eae3328b96910a373cf06ac8d3c5abe9c200"
+  integrity sha512-r5i93jqbPWGXYXxianGATOxTelkp6ih/U0WVnvaqAvTqM+0U6J3kw6Xk6uq/dWNRkEVw/0SLcO5ORXbVNz4FMQ==
 
 "@types/node@^8.0.47":
   version "8.10.58"
@@ -1124,10 +1129,10 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-mysql2@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/mysql2/-/mysql2-2.0.2.tgz#178c1c018a9283751ffa8dcf67ed720bb5b1c6a6"
-  integrity sha512-n9Tiw8LzrfOnH1CLFw0AWJlkQLOWMSr2Q+/aF5jRJ7SRRJLGrY9FidhyoTEhF0FxQYE+xABvXwiZl4b61Mt4eg==
+mysql2@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/mysql2/-/mysql2-2.1.0.tgz#55ecfd4353114c148cc4c253192dbbfd000e6642"
+  integrity sha512-9kGVyi930rG2KaHrz3sHwtc6K+GY9d8wWk1XRSYxQiunvGcn4DwuZxOwmK11ftuhhwrYDwGx9Ta4VBwznJn36A==
   dependencies:
     cardinal "^2.1.1"
     denque "^1.4.1"
@@ -1386,6 +1391,11 @@ pg-int8@1.0.1:
   resolved "https://registry.yarnpkg.com/pg-int8/-/pg-int8-1.0.1.tgz#943bd463bf5b71b4170115f80f8efc9a0c0eb78c"
   integrity sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==
 
+pg-packet-stream@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/pg-packet-stream/-/pg-packet-stream-1.1.0.tgz#e45c3ae678b901a2873af1e17b92d787962ef914"
+  integrity sha512-kRBH0tDIW/8lfnnOyTwKD23ygJ/kexQVXZs7gEyBljw4FYqimZFxnMMx50ndZ8In77QgfGuItS5LLclC2TtjYg==
+
 pg-pool@1.*:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-1.8.0.tgz#f7ec73824c37a03f076f51bfdf70e340147c4f37"
@@ -1394,10 +1404,10 @@ pg-pool@1.*:
     generic-pool "2.4.3"
     object-assign "4.1.0"
 
-pg-pool@^2.0.7:
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-2.0.7.tgz#f14ecab83507941062c313df23f6adcd9fd0ce54"
-  integrity sha512-UiJyO5B9zZpu32GSlP0tXy8J2NsJ9EFGFfz5v6PSbdz/1hBLX1rNiiy5+mAm5iJJYwfCv4A0EBcQLGWwjbpzZw==
+pg-pool@^2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-2.0.9.tgz#7ed69a27e204f99e9804a851404db6aa908a6dea"
+  integrity sha512-gNiuIEKNCT3OnudQM2kvgSnXsLkSpd6mS/fRnqs6ANtrke6j8OY5l9mnAryf1kgwJMWLg0C1N1cYTZG1xmEYHQ==
 
 pg-types@1.*:
   version "1.13.0"
@@ -1435,15 +1445,16 @@ pg@^6.1.0:
     pgpass "1.*"
     semver "4.3.2"
 
-pg@^7.15.1:
-  version "7.15.1"
-  resolved "https://registry.yarnpkg.com/pg/-/pg-7.15.1.tgz#a0bac84ebaeb809f3a369fb695ae89b314b08b22"
-  integrity sha512-o293Pxx5bNRpTv3Dh4+IIhPbTw19Bo4zvppLgR+MAV2I7AF3sMr9gPB4JPvBffWb24pDfC+7Ghe6xh2VxVMBpQ==
+pg@^7.17.0:
+  version "7.17.0"
+  resolved "https://registry.yarnpkg.com/pg/-/pg-7.17.0.tgz#1fcf82238dcbebea63e192c944345c25c86992fc"
+  integrity sha512-70Q4ZzIdPgwMPb3zUIzAUwigNJ4v5vsWdMED6OzXMfOECeYTvTm7iSC3FpKizu/R1BHL8Do3bLs6ltGfOTAnqg==
   dependencies:
     buffer-writer "2.0.0"
     packet-reader "1.0.0"
     pg-connection-string "0.1.3"
-    pg-pool "^2.0.7"
+    pg-packet-stream "^1.1.0"
+    pg-pool "^2.0.9"
     pg-types "^2.1.0"
     pgpass "1.x"
     semver "4.3.2"
@@ -1940,13 +1951,13 @@ tar@^4:
     safe-buffer "^5.1.2"
     yallist "^3.0.3"
 
-tedious@^6.6.2:
-  version "6.6.2"
-  resolved "https://registry.yarnpkg.com/tedious/-/tedious-6.6.2.tgz#37ddd16d19ad7d594acbeb9eb6545b9f385980cc"
-  integrity sha512-0Yziuys2h66dVlqMPJpNFciQ/N2VrgwY8o8TXyj4OZBaxrvqRPeMuTKZZVBFTGOjt/J15fR0fX0HBnCHjm7QWA==
+tedious@^6.6.5:
+  version "6.6.5"
+  resolved "https://registry.yarnpkg.com/tedious/-/tedious-6.6.5.tgz#0a14b11b78fe1fce0dfdf3d268a6c80ecf3a69e9"
+  integrity sha512-kS3xw5KT46QIokXeGJ47d/xc93bPa+bB5rKHpGkCc1iO0JCOlGTm+93RHBgs3DD7FQdIn9HyvzurR2plb7z4NA==
   dependencies:
     "@azure/ms-rest-nodeauth" "2.0.2"
-    "@types/node" "^12.7.11"
+    "@types/node" "^12.12.17"
     "@types/readable-stream" "^2.3.5"
     bl "^3.0.0"
     depd "^2.0.0"

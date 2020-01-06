@@ -4,16 +4,16 @@ module.exports = nodefony.registerProvider("userProvider", () => {
 
     constructor(name, manager, config) {
       super(name, manager, config);
+      this.property = {};
     }
 
     loadUserByUsername(username) {
+      this.property[this.userProperty] = username;
       if (!this.userEntity) {
         this.userEntity = this.getEntity();
       }
       return this.userEntity.findOne({
-        where: {
-          username: username
-        }
+        where: this.property
       }).then((user) => {
         if (user) {
           return this.refreshUser(user);

@@ -22,17 +22,22 @@ module.exports = class jwt extends nodefony.Entity {
 
   getSchema() {
     return {
+      id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+      },
       username: {
         type: Sequelize.STRING(256)
       },
       refreshToken: {
-        type: Sequelize.STRING(256),
-        primaryKey: true,
-        unique: true,
+        type: Sequelize.TEXT('medium'),
+        //primaryKey: true,
+        //unique: true,
         allowNull: false
       },
       token: {
-        type: Sequelize.STRING(256)
+        type: Sequelize.TEXT('medium'),
       },
       active: {
         type: Sequelize.BOOLEAN,
@@ -113,7 +118,7 @@ module.exports = class jwt extends nodefony.Entity {
             })
             .then((mytoken) => {
               transaction.commit();
-              if (mytoken){
+              if (mytoken) {
                 return true;
               }
               return false;

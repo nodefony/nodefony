@@ -10,7 +10,7 @@ class loginApiController extends nodefony.Controller {
     this.jwtSettings = this.bundle.settings.jwt;
     this.usersService = this.get("users");
     // JSON API
-    this.jsonApi = new nodefony.JsonApi({
+    this.api = new nodefony.api.OpenApi({
       name: "login-api",
       version: this.bundle.version,
       description: "Nodefony Login Api",
@@ -38,9 +38,9 @@ class loginApiController extends nodefony.Controller {
   optionsAction() {
     try {
       let openApiConfig = require(path.resolve(this.bundle.path, "Resources", "config", "openapi", "login.js"));
-      return this.jsonApi.renderSchema(openApiConfig, this.usersService.entity);
+      return this.api.renderSchema(openApiConfig, this.usersService.entity);
     } catch (e) {
-      return this.jsonApi.renderError(e, 400);
+      return this.api.renderError(e, 400);
     }
   }
 
@@ -67,7 +67,7 @@ class loginApiController extends nodefony.Controller {
         this.context.token.user.username,
         token,
         this.jwtSettings.refreshToken);
-      return this.jsonApi.render({
+      return this.api.render({
         decodedToken: this.jwtFactory.decodeJwtToken(token),
         token: token,
         refreshToken: refrechToken
@@ -115,7 +115,7 @@ class loginApiController extends nodefony.Controller {
           user: dtuser
         }, this.jwtSettings.token);
         await this.jwtFactory.updateJwtRefreshToken(dtuser.username, token, this.query.refreshToken);
-        return this.jsonApi.render({
+        return this.api.render({
           decodedToken: this.jwtFactory.decodeJwtToken(token),
           token: token
         });
@@ -136,11 +136,11 @@ class loginApiController extends nodefony.Controller {
   async truncateAction() {
     try {
       let res = await this.jwtFactory.truncateJwtToken(this.query.username);
-      return this.jsonApi.render({
+      return this.api.render({
         nbDeleted: res
       });
     } catch (e) {
-      throw this.jsonApi.renderError(e, 401);
+      throw this.api.renderError(e, 401);
     }
   }
 
@@ -151,11 +151,11 @@ class loginApiController extends nodefony.Controller {
   logoutAction() {
     return this.logout()
       .then(() => {
-        return this.jsonApi.render({
+        return this.api.render({
           logout: "ok"
         });
       }).catch((e) => {
-        return this.jsonApi.render(e, 500);
+        return this.api.render(e, 500);
       });
   }
 }

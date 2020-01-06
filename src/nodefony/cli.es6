@@ -472,9 +472,16 @@ class CLI extends nodefony.Service {
     case "object":
       switch (true) {
       case (message instanceof nodefony.Error):
+        if (this.kernel && this.kernel.console) {
+          message = message.message;
+        }
         break;
       case (message instanceof Error):
-        message = new nodefony.Error(message);
+        if (this.kernel && this.kernel.console) {
+          message = message.message;
+        } else {
+          message = new nodefony.Error(message);
+        }
         break;
       default:
         message = util.inspect(message);
@@ -504,6 +511,7 @@ class CLI extends nodefony.Service {
     default:
       this.wrapperLog = console.log;
     }
+
     return this.wrapperLog(`${this.pid} ${date.toDateString()} ${date.toLocaleTimeString()} ${nodefony.Service.logSeverity(pdu.severityName)} ${green(pdu.msgid)} : ${message}`);
   }
 

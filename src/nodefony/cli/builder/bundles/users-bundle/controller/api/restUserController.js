@@ -1,14 +1,14 @@
 /**
  *    @Route ("/api/users")
  */
-class apiController extends nodefony.Controller {
+class restController extends nodefony.Controller {
 
   constructor(container, context) {
     super(container, context);
     // service entity
     this.usersService = this.get("users");
     // api
-    this.jsonApi = new nodefony.JsonApi({
+    this.api = new nodefony.api.OpenApi({
       name: "users-api",
       version: this.bundle.version,
       description: "Nodefony Users Api",
@@ -34,9 +34,9 @@ class apiController extends nodefony.Controller {
   optionsAction() {
     try {
       let openApiConfig = require(path.resolve(this.bundle.path, "Resources", "config", "openapi", "users.js"));
-      return this.jsonApi.renderSchema(openApiConfig, this.usersService.entity);
+      return this.api.renderSchema(openApiConfig, this.usersService.entity);
     } catch (e) {
-      return this.jsonApi.renderError(e, 400);
+      return this.api.renderError(e, 400);
     }
   }
 
@@ -52,9 +52,9 @@ class apiController extends nodefony.Controller {
       } else {
         result = await this.usersService.find(this.query.query, this.query);
       }
-      return this.jsonApi.render(result);
+      return this.api.render(result);
     } catch (e) {
-      return this.jsonApi.renderError(e);
+      return this.api.renderError(e);
     }
   }
 
@@ -71,7 +71,6 @@ class apiController extends nodefony.Controller {
    *    @Route ( "",name="api-users-post")
    */
   async postAction() {
-    console.log(this.query)
     let user = null;
     try {
       user = await this.usersService.create(this.query);
@@ -83,15 +82,15 @@ class apiController extends nodefony.Controller {
           query: this.query,
           user: user
         };
-        return this.jsonApi.render(res);
+        return this.api.render(res);
       }
-      return this.jsonApi.render({
+      return this.api.render({
         query: this.query,
         user: null
       });
     } catch (e) {
       this.log(e, "ERROR");
-      return this.jsonApi.renderError(e, 400);
+      return this.api.renderError(e, 400);
     }
 
   }
@@ -132,4 +131,4 @@ class apiController extends nodefony.Controller {
 
 }
 
-module.exports = apiController;
+module.exports = restController;

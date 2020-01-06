@@ -1,14 +1,22 @@
 const myRequest = require('request');
+const {
+  graphql
+} = require('graphql');
 
 class Controller extends nodefony.Service {
   constructor(container, context) {
     super(null, container, container.get("notificationsCenter"));
-    this.context = context;
+    this.setContext(context);
+    this.graphql = graphql;
     this.http = myRequest;
     this.httpKernel = this.get("httpKernel");
     this.mailer = this.get("mailer");
     this.router = this.get("router");
     this.serviceTemplating = this.get('templating');
+  }
+
+  setContext(context) {
+    this.context = context;
     this.method = this.getMethod();
     this.response = this.context.response;
     this.request = this.context.request;
@@ -22,6 +30,23 @@ class Controller extends nodefony.Service {
       this.queryFile = this.request.queryFile;
       this.queryPost = this.request.queryPost;
     });
+  }
+
+  getContext() {
+    return this.context;
+  }
+
+  setContextJson(encoding) {
+    return this.context.setContextJson(encoding);
+  }
+  setJsonContext(encoding) {
+    return this.context.setContextJson(encoding);
+  }
+  setContextHtml(encoding) {
+    return this.context.setContextHtml(encoding);
+  }
+  setHtmlContext(encoding) {
+    return this.context.setContextHtml(encoding);
   }
 
   logger(pci, severity, msgid, msg) {
@@ -59,10 +84,6 @@ class Controller extends nodefony.Service {
       this.response.setBody(content);
     }
     return this.response;
-  }
-
-  getContext() {
-    return this.context;
   }
 
   getMethod() {
@@ -103,19 +124,6 @@ class Controller extends nodefony.Service {
 
   addFlash(key, value) {
     return this.setFlashBag(key, value);
-  }
-
-  setContextJson(encoding) {
-    return this.context.setContextJson(encoding);
-  }
-  setJsonContext(encoding) {
-    return this.context.setContextJson(encoding);
-  }
-  setContextHtml(encoding) {
-    return this.context.setContextHtml(encoding);
-  }
-  setHtmlContext(encoding) {
-    return this.context.setContextHtml(encoding);
   }
 
   setCsrfToken(name, options) {
@@ -726,24 +734,24 @@ class Controller extends nodefony.Service {
     return this.context.resolver.getRoute();
   }
 
-  logout(){
+  logout() {
     if (this.security) {
       return this.security.logout(this.context)
-        .then(()=>{
+        .then(() => {
           return true;
         })
         .catch((e) => {
           throw e;
         });
     }
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve, reject) => {
       if (this.context.session) {
         return this.context.session.destroy(true)
           .then(() => {
             return resolve(true);
           }).catch(e => {
             this.logger(e, "ERROR");
-            return reject(e) ;
+            return reject(e);
           });
       }
       return resolve(true);

@@ -154,6 +154,12 @@ tools (){
   done
 }
 
+build(){
+  cd $pathnodefony
+  echo "Build webpackck nodefony for browser";
+  npm run build
+}
+
 generate_changelog () {
   cd $pathproject
   mv CHANGELOG.md CHANGELOG.md.old
@@ -185,12 +191,14 @@ publish (){
   commit_project
   # TOOLS CHANGELOG
   tools
+  # BUILD nodefony
+  build
   # PUBLISH NODEFONY
   publish_nodefony
 }
 
 menu () {
-  declare -a commands=("publish" "changelog" "Quit");
+  declare -a commands=("build" "publish" "changelog" "Quit");
   # MENU
   select yn in ${commands[@]}; do
     case $yn in
@@ -199,6 +207,9 @@ menu () {
         break ;;
       "publish" )
         publish ;
+        break ;;
+      "build" )
+        build ;
         break ;;
       "Quit" )
         exit;
@@ -246,6 +257,9 @@ case $1 in
     break ;;
   "tools" )
     tools;
+    break ;;
+  "build" )
+    build;
     break ;;
   "commit_project" )
     commit_project;

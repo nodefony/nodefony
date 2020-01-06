@@ -41,64 +41,64 @@ module.exports = class generateBuilder extends nodefony.Builder {
         choices: this.choices,
         filter: (val) => {
           switch (val) {
-            case "Generate New Nodefony Project":
-              return "project";
-            case "Generate Openssl Certificates":
-              return "certificates";
-            case "Generate New Bundle":
-              return "bundle";
-            case "Generate New Controller":
-              return "controller";
-            case "Generate New Service":
-              return "service";
-            case "Generate New Entity":
-              return "entity";
-            case "Generate Haproxy Configuration":
-              return "haproxy";
-            case "Generate Nginx Configuration":
-              return "nginx";
-            case "Generate letsEncrypt Webroot Configuration":
-              return "letsencrypt";
-            case "Quit":
-              return "quit";
-            default:
-              console.log("\n");
-              this.logger(`command not found : ${val}`, "INFO");
-              this.cli.terminate(1);
+          case "Generate New Nodefony Project":
+            return "project";
+          case "Generate Openssl Certificates":
+            return "certificates";
+          case "Generate New Bundle":
+            return "bundle";
+          case "Generate New Controller":
+            return "controller";
+          case "Generate New Service":
+            return "service";
+          case "Generate New Entity":
+            return "entity";
+          case "Generate Haproxy Configuration":
+            return "haproxy";
+          case "Generate Nginx Configuration":
+            return "nginx";
+          case "Generate letsEncrypt Webroot Configuration":
+            return "letsencrypt";
+          case "Quit":
+            return "quit";
+          default:
+            console.log("\n");
+            this.logger(`command not found : ${val}`, "INFO");
+            this.cli.terminate(1);
           }
         }
       }])
       .then((response) => {
         this.start(response);
-        return response ;
+        return response;
       });
   }
 
   start(response) {
     switch (response.command) {
-      case "project":
-        return this.cli.createProject(response.command, this.cli.args, true);
-      case "certificates":
-        return this.cli.generateCertificates();
-      case "bundle":
-        return this.cli.setCommand("generate:bundle", ["-i"]);
-      case "controller":
-        return this.cli.setCommand("generate:controller", ["-i"]);
-      case "service":
-        return this.cli.setCommand("generate:service", ["-i"]);
-      case "entity":
-        return this.cli.setCommand("sequelize:generate:entity", ["-i"]);
-      case "haproxy":
-        return this.cli.setCommand("generate:haproxy", ["-i"]);
-      case "nginx":
-        return this.cli.setCommand("generate:nginx", ["-i"]);
-      case "letsencrypt":
-        return this.cli.setCommand("generate:letsencrypt", ["-i"]);
-      case "quit":
-        return this.cli.setCommand("showmenu");
-      default:
-        this.logger(`Command : ${response.command} Not Found`, "ERROR");
-        return this.cli.setCommand("", "-h");
+    case "project":
+      return this.cli.createProject(response.command, this.cli.args, true);
+    case "certificates":
+      return this.cli.generateCertificates();
+    case "bundle":
+      return this.cli.setCommand("generate:bundles", ["-i"]);
+    case "controller":
+      return this.cli.setCommand("generate:controller", ["-i"]);
+    case "service":
+      return this.cli.setCommand("generate:service", ["-i"]);
+    case "entity":
+      return this.cli.setCommand("sequelize:generate:entity", ["-i"]);
+    case "haproxy":
+      return this.cli.setCommand("generate:haproxy", ["-i"]);
+    case "nginx":
+      return this.cli.setCommand("generate:nginx", ["-i"]);
+    case "letsencrypt":
+      return this.cli.setCommand("generate:letsencrypt", ["-i"]);
+    case "quit":
+      return this.cli.setCommand("showmenu");
+    default:
+      this.logger(`Command : ${response.command} Not Found`, "ERROR");
+      return this.cli.setCommand("", "-h");
     }
   }
 };

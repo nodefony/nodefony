@@ -40,8 +40,9 @@ class userEntity extends nodefony.Entity {
         unique: true,
         allowNull: false,
         validate: {
-          isAlphanumeric: {
-            msg: "username only allow alphanumeric characters"
+          is: {
+            args: /[^\w]|_|-|./g,
+            msg: `username allow alphanumeric and ( _ | - | . ) characters`
           }
           /*notIn: {
             args: [['admin', 'root']],
@@ -54,7 +55,7 @@ class userEntity extends nodefony.Entity {
         allowNull: false,
         validate: {
           min: {
-            args:[[4]],
+            args: [[4]],
             msg: `password  allow 4 characters min  `
           }
         }
@@ -87,7 +88,7 @@ class userEntity extends nodefony.Entity {
         allowNull: false,
         validate: {
           isEmail: {
-            msg:"invalid email"
+            msg: "invalid email"
           }
         }
       },
@@ -95,14 +96,20 @@ class userEntity extends nodefony.Entity {
         type: Sequelize.STRING,
         allowNull: true,
         validate: {
-          is: /^[a-z]+$/i
+          is: {
+            args: /[^\w]|_|-|.|'/g,
+            msg: `name allow alphanumeric characters`
+          }
         }
       },
       surname: {
         type: Sequelize.STRING,
         allowNull: true,
         validate: {
-          is: /^[a-z]+$/i
+          is: {
+            args: /[^\w]|_|-|.|''/g,
+            msg: `surname allow alphanumeric characters`
+          }
         }
       },
       lang: {
@@ -135,12 +142,12 @@ class userEntity extends nodefony.Entity {
     };
   }
 
-  validPassword(value){
+  validPassword(value) {
     let valid = validator.isLength(value, {
-      min:4,
-      max:undefined
+      min: 4,
+      max: undefined
     });
-    if (! valid){
+    if (!valid) {
       throw new nodefony.Error("password must have 4 characters min");
     }
     return value;

@@ -18,7 +18,7 @@ class generateProject extends nodefony.Builder {
       name: this.name || "nodefony-starter",
       bundleName: "app",
       shortName: "app",
-      command : "project",
+      command: "project",
       description: "Project Description",
       front: "sandbox",
       path: this.location,
@@ -34,7 +34,7 @@ class generateProject extends nodefony.Builder {
       orm: "sequelize",
       npm: 'npm',
       addons: {
-        annotations:true,
+        annotations: true,
         users: false
       }
     });
@@ -136,20 +136,20 @@ class generateProject extends nodefony.Builder {
         filter: (value) => {
           let front = null;
           switch (value) {
-            case "Sandbox (without Front framwork)":
-              front = "sandbox";
-              break;
-            case "Vue.js":
-              front = "vue";
-              break;
-            case "React":
-              front = 'react';
-              break;
-            case "Electron":
-              front = 'electron';
-              break;
-            default:
-              front = value;
+          case "Sandbox (without Front framwork)":
+            front = "sandbox";
+            break;
+          case "Vue.js":
+            front = "vue";
+            break;
+          case "React":
+            front = 'react';
+            break;
+          case "Electron":
+            front = 'electron';
+            break;
+          default:
+            front = value;
           }
           return front;
         }
@@ -235,7 +235,7 @@ class generateProject extends nodefony.Builder {
           }
           return value;
         }
-      } ,{
+      }, {
         type: 'checkbox',
         message: 'Select addons project',
         name: 'addons',
@@ -247,7 +247,7 @@ class generateProject extends nodefony.Builder {
           disabled: (this.cli.response.command === "bundle")
         }],
         filter: (value) => {
-          return value ;
+          return value;
         }
       }
       /*, {
@@ -260,18 +260,18 @@ class generateProject extends nodefony.Builder {
     return this.cli.prompt(promtOptions)
       .then((response) => {
         let addons = {
-          users:false
+          users: false
         };
         if (response.addons.length) {
           for (let i = 0; i < response.addons.length; i++) {
             switch (response.addons[i]) {
-              case "Users Management":
-              addons.users = true ;
+            case "Users Management":
+              addons.users = true;
               break;
             }
           }
         }
-        response.addons = addons ;
+        response.addons = addons;
         this.path = path.resolve(this.location, response.name);
         if (this.cli.exists(this.path)) {
           this.logger(`${this.path} Already exist`, "WARNING");

@@ -7,7 +7,7 @@ class generateBundle extends nodefony.Builder {
     this.name = null;
     this.location = null;
     this.pathSkeleton = path.resolve(__dirname, "skeletons");
-    if (this.cmd === "generate:bundle" || this.cmd === "create:bundle") {
+    if (this.cmd === "generate:bundles" || this.cmd === "create:bundles") {
       if (args && args[0]) {
         //this.name = args[0];
         //this.cli.response.name = args[0];
@@ -118,20 +118,20 @@ class generateBundle extends nodefony.Builder {
       filter: (value) => {
         let front = null;
         switch (value) {
-          case "Sandbox (without Front framwork)":
-            front = "sandbox";
-            break;
-          case "Vue.js":
-            front = "vue";
-            break;
-          case "React":
-            front = 'react';
-            break;
-          case "Api":
-            front = 'api';
-            break;
-          default:
-            front = value;
+        case "Sandbox (without Front framwork)":
+          front = "sandbox";
+          break;
+        case "Vue.js":
+          front = "vue";
+          break;
+        case "React":
+          front = 'react';
+          break;
+        case "Api":
+          front = 'api';
+          break;
+        default:
+          front = value;
         }
         return front;
       }
@@ -313,7 +313,7 @@ class generateBundle extends nodefony.Builder {
 
   static controller(cli) {
     let controller = require(path.resolve(__dirname, "controller.js"));
-    return new controller(cli) ;
+    return new controller(cli);
   }
 
   static service() {

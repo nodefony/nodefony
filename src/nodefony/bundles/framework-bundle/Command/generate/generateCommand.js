@@ -10,7 +10,7 @@ class generateCommand extends nodefony.Command {
 
   constructor(cli, bundle) {
     super("generate", cli, bundle);
-    this.setTask("bundle", bundlesTask);
+    this.setTask("bundles", bundlesTask);
     this.setTask("controller", controllerTask);
     this.setTask("service", serviceTask);
     //this.setTask("entity", entityTask);
@@ -19,12 +19,12 @@ class generateCommand extends nodefony.Command {
     this.setTask("letsencrypt", letsencryptTask);
   }
 
-  bundle() {
-    let task = this.getTask("bundle");
-    return task.run(arguments);
+  bundles() {
+    let task = this.getTask("bundles");
+    return task.nodefony();
   }
 
-  controller(){
+  controller() {
     let task = this.getTask("controller");
     return task.run(arguments);
   }

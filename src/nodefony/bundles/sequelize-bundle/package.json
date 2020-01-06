@@ -11,15 +11,15 @@
     "javascript"
   ],
   "dependencies": {
-    "@alt3/sequelize-to-json-schemas": "^0.3.36",
+    "@alt3/sequelize-to-json-schemas": "^0.3.38",
     "cls-hooked": "^4.2.2",
-    "mysql2": "^2.0.2",
-    "pg": "^7.15.1",
+    "mysql2": "^2.1.0",
+    "pg": "^7.17.0",
     "pg-hstore": "^2.3.3",
     "pgtools": "^0.3.0",
     "sequelize": "6.0.0-beta.4",
     "sqlite3": "^4.1.1",
-    "tedious": "^6.6.2"
+    "tedious": "^6.6.5"
   },
   "repository": {
     "type": "git",

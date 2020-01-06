@@ -1,5 +1,5 @@
 const path = require("path");
-//const webpack = require('webpack');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpackMerge = require('webpack-merge');
 
@@ -139,6 +139,11 @@ module.exports = webpackMerge(config, {
       fallback: "style-loader",
       filename: "./css/[name].css",
       allChunks: true
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+      }
     })
   ],
   devServer: {
