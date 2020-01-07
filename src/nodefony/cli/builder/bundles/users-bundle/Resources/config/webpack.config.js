@@ -29,8 +29,9 @@ module.exports = webpackMerge(config, {
   //context: context,
   target: "web",
   entry: {
-    users:["./Resources/js/users.js"],
-    swagger:["./Resources/js/swagger.js"]
+    users: ["./Resources/js/users.js"],
+    swagger: ["./Resources/js/swagger.js"],
+    graphiql: ["./Resources/js/graphiql.jsx"]
   },
   output: {
     path: public,
@@ -40,23 +41,30 @@ module.exports = webpackMerge(config, {
     libraryExport: "default"
   },
   externals: {},
-  resolve: {},
+  resolve: {
+    extensions: ['*', '.js', '.jsx', '.mjs']
+  },
   module: {
     rules: [{
         // BABEL TRANSCODE
-        test: new RegExp("\.es6$|\.js$"),
+        test: /\.(jsx|mjs|js|es6)$/,
         exclude: new RegExp("node_modules"),
         use: [{
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env']
+            presets: ['@babel/preset-env', '@babel/preset-react']
           }
         }]
       }, {
-      /*
-       *	JQUERY EXPOSE BROWSER CONTEXT
-       *
-       */
+        type: 'javascript/auto',
+        test: /\.mjs$/,
+        use: [],
+        include: /node_modules/,
+      }, {
+        /*
+         *	JQUERY EXPOSE BROWSER CONTEXT
+         *
+         */
         test: require.resolve('jquery'),
         use: [{
           loader: 'expose-loader',
@@ -107,12 +115,12 @@ module.exports = webpackMerge(config, {
         // IMAGES
         test: /\.(gif|png|jpe?g|svg)$/i,
         use: [{
-            loader: "file-loader",
-            options: {
-              name: "[name].[ext]",
-              publicPath: `${publicPath}/images/`,
-              outputPath: "/images/"
-            }
+          loader: "file-loader",
+          options: {
+            name: "[name].[ext]",
+            publicPath: `${publicPath}/images/`,
+            outputPath: "/images/"
+          }
           }]
       }
     ]

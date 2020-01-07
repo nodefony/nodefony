@@ -22,6 +22,18 @@ class graphqlController extends nodefony.Controller {
   }
 
   /**
+   *    @Method ({"OPTIONS"})
+   *    @Route ( "",name="api-users-options",)
+   */
+  optionsAction() {
+    try {
+      return this.api.renderSchema();
+    } catch (e) {
+      return this.api.renderError(e, 400);
+    }
+  }
+
+  /**
    *    @Method ({"GET", "POST"})
    *    @Route ( "*",name="api-user-graphql")
    *    @Firewall ({bypass:true})
