@@ -56,7 +56,7 @@
     "webpack-merge": "^4.2.2"
   },
   "devDependencies": {
-    "node-gyp": "^6.0.1",
+    "node-gyp": "^6.1.0",
     "node-pre-gyp": "^0.14.0",
     "sequelize-cli": "^5.5.1"
   },

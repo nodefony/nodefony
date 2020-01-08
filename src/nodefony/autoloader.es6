@@ -44,7 +44,7 @@ module.exports = function () {
    * @module NODEFONY
    *
    */
-  const regJs = /.*\.js$|.*\.es6$/;
+  const regJs = /.*\.js$|.*\.es6$|.*\.es7$/;
 
   class Autoload {
 

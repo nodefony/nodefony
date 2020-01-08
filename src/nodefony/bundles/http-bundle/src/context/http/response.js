@@ -1,5 +1,18 @@
 const http = require("http");
 const mime = require('mime');
+
+const ansiRegex= function ({onlyFirst = false} = {}){
+  const pattern = [
+		'[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:[a-zA-Z\\d]*(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',
+		'(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-ntqry=><~]))'
+	].join('|');
+	return new RegExp(pattern, onlyFirst ? undefined : 'g');
+};
+
+const stripAinsi = function(val){
+  return  ( typeof val === 'string') ? val.replace(ansiRegex(), '') : val;
+};
+
 module.exports = nodefony.register("Response", function () {
 
   const Response = class httpResponse {
@@ -132,7 +145,7 @@ module.exports = nodefony.register("Response", function () {
       }
       this.statusCode = status || this.statusCode;
       if (message) {
-        this.statusMessage = message;
+        this.statusMessage = stripAinsi(message);
       } else {
         if (!this.statusMessage) {
           if (http.STATUS_CODES[this.statusCode]) {
@@ -189,7 +202,6 @@ module.exports = nodefony.register("Response", function () {
           if (this.context.method === "HEAD" || this.context.contentLength) {
             this.setHeader('Content-Length', this.getLength());
           }
-          //this.headers = nodefony.extend(this.headers, this.getHeaders(), headers);
           return this.response.writeHead(
             this.statusCode,
             this.statusMessage,

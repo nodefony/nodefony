@@ -89,7 +89,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
           "ERROR",
           `${this.type} ${clc.magenta(this.response.statusCode)} ${clc.red(this.method)}`);
       }
-      return this.logger(`${clc.cyan("URL")} : ${this.url} ${clc.cyan("Accept-Protocol")} : ${acceptedProtocol || undefined} ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host}`,
+      return this.logger(`${clc.cyan("URL")} : ${this.url} ${clc.cyan("Accept-Protocol")} : ${acceptedProtocol || "*"} ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host}`,
         "INFO",
         `${this.type} ${clc.magenta(this.response.statusCode)} ${this.method}`);
       /*return this.logger(`FROM : ${this.remoteAddress} ORIGIN : ${this.originUrl.host} URL : ${this.url}`,
@@ -97,15 +97,22 @@ nodefony.register.call(nodefony.context, "websocket", function () {
         (this.isAjax ? `${this.type} AJAX REQUEST ${this.method}` : `${this.type} ${this.method}`));*/
     }
 
-    connect(acceptedProtocol) {
-      this.connection = this.request.accept(acceptedProtocol || null, this.origin /*, this.request.cookies || null*/ );
-      this.response.setConnection(this.connection);
-      this.connection.on('close', onClose.bind(this));
-      this.requestEnded = true;
-      this.fire("onConnect", this, this.connection);
-      // LISTEN EVENTS SOCKET
-      this.connection.on('message', this.handleMessage.bind(this));
-      this.logRequest(null, acceptedProtocol);
+    connect() {
+      return new Promise ((resolve, reject)=>{
+        try{
+          this.connection = this.request.accept(this.resolver.acceptedProtocol || null, this.origin /*, this.request.cookies || null*/ );
+          this.response.setConnection(this.connection);
+          this.connection.on('close', onClose.bind(this));
+          this.requestEnded = true;
+          this.fire("onConnect", this, this.connection);
+          // LISTEN EVENTS SOCKET
+          this.connection.on('message', this.handleMessage.bind(this));
+          this.logRequest(null, this.resolver.acceptedProtocol);
+          return resolve( this.connection );
+        }catch(e){
+          return reject(e);
+        }
+      });
     }
 
     getRemoteAddress() {

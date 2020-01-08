@@ -65,13 +65,22 @@ module.exports = class sessions extends nodefony.Service {
   }
 
   start(context, sessionContext) {
+    if ( context.sessionStarting ){
+      this.logger("SESSION ALLREADY STARTED ", "DEBUG");
+      return new Promise( (resolve) =>{
+        context.once("onSessionStart", (session) =>{
+          return resolve(session);
+        });
+      });
+    }
     return new Promise((resolve, reject) => {
-      if (context.session) {
+      if (context.session ) {
         if (context.session.status === "active") {
-          this.logger("SESSION ALLREADY STARTED ==> " + context.session.name + " : " + context.session.id, "WARNING");
+          this.logger("SESSION ALLREADY STARTED ==> " + context.session.name + " : " + context.session.id, "DEBUG");
           return resolve(context.session);
         }
       }
+      context.sessionStarting = true ;
       try {
         sessionContext = this.setAutoStart(sessionContext);
         if (this.probaGarbage()) {
@@ -84,6 +93,7 @@ module.exports = class sessions extends nodefony.Service {
               throw new Error("SESSION START session storage ERROR");
             }
             context.session = session;
+            context.sessionStarting = false ;
             session.setMetaBag("url", url.parse(context.url));
             context.fire("onSessionStart", session);
             return resolve(session);

@@ -6,7 +6,7 @@ assets
 #**/assets/**
 app/Resources/public/assets/
 src/bundles/test-bundle/Resources/public/assets/
-
+src/nodefony/browser/dist
 config/generatedConfig.yml
 src/nodefony/bundles/documentation-bundle/Resources/clones/nodefony-core
 

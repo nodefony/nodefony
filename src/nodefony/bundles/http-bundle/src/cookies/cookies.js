@@ -1,7 +1,7 @@
 const cookieLib = require('cookie');
 const MS = require('ms');
 
-nodefony.register("cookies", function () {
+nodefony.register("cookies", function() {
 
   const encode = encodeURIComponent;
   const decode = decodeURIComponent;
@@ -17,41 +17,62 @@ nodefony.register("cookies", function () {
     secret: "!nodefony.secret!"
   };
 
-  const parse = function (strToParse) {
+  const parse = function(strToParse) {
     return cookieLib.parse(strToParse);
   };
 
-  const cookiesParser = function (context) {
+
+  const getRequestcookies = function(context) {
+    let cookies = null;
+    switch (context.type) {
+      case "HTTP":
+      case "HTTPS":
+      case "HTTP2":
+        if (context.request.request && context.request.request.headers.cookie) {
+          cookies = context.request.request.headers.cookie;
+        }
+        break;
+      case "WEBSOCKET":
+      case "WEBSOCKET SECURE":
+        if (context.request.cookies) {
+          cookies = context.request.cookies;
+        }
+        break;
+    }
+    return parse(cookies);
+  };
+
+  const cookiesParser = function(context) {
     let cookies = null;
     let co = null;
     switch (context.type) {
-    case "HTTP":
-    case "HTTPS":
-    case "HTTP2":
-      if (context.request.request && context.request.request.headers.cookie) {
-        cookies = context.request.request.headers.cookie;
-      }
-      if (cookies) {
-        let obj = parse(cookies);
-        for (let cookie in obj) {
-          co = new Cookie(cookie, obj[cookie]);
-          context.addCookie(co);
+      case "HTTP":
+      case "HTTPS":
+      case "HTTP2":
+        if (context.request.request && context.request.request.headers.cookie) {
+          cookies = context.request.request.headers.cookie;
         }
-        context.request.request.cookies = context.cookies;
-      }
-      break;
-    case "WEBSOCKET":
-    case "WEBSOCKET SECURE":
-      if (context.request.cookies) {
-        cookies = context.request.cookies;
-      }
-      if (cookies) {
-        for (let i = 0; i < cookies.length; i++) {
-          co = new Cookie(cookies[i].name, cookies[i].value);
-          context.addCookie(co);
+        if (cookies) {
+          let obj = parse(cookies);
+          for (let cookie in obj) {
+            co = new Cookie(cookie, obj[cookie]);
+            context.addCookie(co);
+          }
+          context.request.request.cookies = context.cookies;
         }
-      }
-      break;
+        break;
+      case "WEBSOCKET":
+      case "WEBSOCKET SECURE":
+        if (context.request.cookies) {
+          cookies = context.request.cookies;
+        }
+        if (cookies) {
+          for (let i = 0; i < cookies.length; i++) {
+            co = new Cookie(cookies[i].name, cookies[i].value);
+            context.addCookie(co);
+          }
+        }
+        break;
     }
   };
 
@@ -153,17 +174,17 @@ nodefony.register("cookies", function () {
     setOriginalMaxAge(ms) {
       let res = null;
       switch (typeof ms) {
-      case "number":
-        return ms;
-      case "string":
-        try {
-          res = MS(ms) / 1000;
-        } catch (e) {
-          res = ms;
-        }
-        return parseInt(res, 10);
-      default:
-        throw new Error("cookie class error maxage bad type " + typeof ms);
+        case "number":
+          return ms;
+        case "string":
+          try {
+            res = MS(ms) / 1000;
+          } catch (e) {
+            res = ms;
+          }
+          return parseInt(res, 10);
+        default:
+          throw new Error("cookie class error maxage bad type " + typeof ms);
       }
     }
 
@@ -247,6 +268,7 @@ nodefony.register("cookies", function () {
   return {
     cookie: Cookie,
     cookiesParser: cookiesParser,
-    parser: parse
+    parser: parse,
+    getRequestcookies: getRequestcookies
   };
 });

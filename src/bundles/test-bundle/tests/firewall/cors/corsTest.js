@@ -66,11 +66,6 @@ describe("BUNDLE TEST", function () {
         assert.deepStrictEqual(res.headers["access-control-allow-origin"], "http://mycrossdomain.com:5151");
         assert.deepStrictEqual(res.headers.location, "/login/test-local-area");
         done();
-        /*res.on('data', (chunk) => {
-          let ret = JSON.parse(chunk);
-          assert.deepStrictEqual(ret.name, "test-login");
-          done();
-        });*/
       });
       request.setHeader("origin", "http://mycrossdomain.com:5151");
       request.end();

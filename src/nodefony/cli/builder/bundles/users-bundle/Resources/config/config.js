@@ -12,9 +12,21 @@
  *        GENERATE BY nodefony-starter BUILDER
  */
 
-const crypto = require('crypto');
+//const crypto = require('crypto');
+const path = require('path');
+const readFile = function(Path) {
+  try {
+    return fs.readFileSync(Path, {
+      encoding: "utf8"
+    });
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
 const randomSecret = function() {
-  return crypto.randomBytes(48).toString('hex');
+  let sercretPath = path.resolve("config", "certificates", "ca", "private", "ca.key.pem");
+  return readFile(sercretPath);
 };
 
 module.exports = {
@@ -51,7 +63,7 @@ module.exports = {
    */
   csrfToken: {
     name: "nodefony_csrf",
-    secret: randomSecret(48),
+    secret: randomSecret(),
     cookie: {
       signed: false,
       secure: true,
@@ -79,7 +91,7 @@ module.exports = {
       url: "/api/jwt/documentation",
       name: "login"
     }],
-    primaryName:"login"
+    primaryName: "login"
   }
 
 };

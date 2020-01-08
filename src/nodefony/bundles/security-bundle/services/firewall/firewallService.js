@@ -155,17 +155,12 @@ module.exports = class security extends nodefony.Service {
     });
   }
 
-  handleSecurity(context) {
+  handleSecurity(context, connection) {
     if (context.resolver && context.resolver.bypassFirewall) {
       return new Promise((resolve, reject) => {
         try {
           context.resolver.log(`bypassFirewall ${context.url}`, "DEBUG");
-          if (context.requestEnded) {
             return resolve(context.handle());
-          }
-          context.once('onRequestEnd', () => {
-            return resolve(context.handle());
-          });
         } catch (e) {
           return reject(e);
         }
@@ -178,7 +173,6 @@ module.exports = class security extends nodefony.Service {
     case "HTTP2":
       context.response.setHeaders(this.settings[context.scheme]);
       return new Promise((resolve, reject) => {
-        context.once('onRequestEnd', () => {
           return this.handle(context)
             .then((ctx) => {
               switch (true) {
@@ -208,11 +202,10 @@ module.exports = class security extends nodefony.Service {
               }
               return reject(error);
             });
-        });
       });
     case "WEBSOCKET SECURE":
     case "WEBSOCKET":
-      return this.handle(context)
+      return this.handle(context, connection)
         .then((ctx) => {
           if (ctx) {
             return ctx.handle();

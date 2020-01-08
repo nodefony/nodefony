@@ -41,6 +41,14 @@ const Csrf = class Csrf {
     }
   }
 
+  getRequestCookie(){
+    let cookie = nodefony.cookies.getRequestcookies(this.context);
+    if ( cookie   &&  cookie[this.name]){
+        return cookie[this.name];
+    }
+    return null ;
+  }
+
   setCookie() {
     if (this.settings.cookie) {
       let token = this.setSecret(this.settings.secret);
@@ -120,12 +128,16 @@ const Csrf = class Csrf {
       if (this.settings.ignoreMethods.indexOf(this.context.method) >= 0) {
         return null;
       }
-      if (this.cookie) {
-        let token = this.cookie.value;
+      if (this.settings.cookie) {
+        let token = this.getRequestCookie();
+        if ( ! token ){
+          throw new nodefony.Error(`No crsf token ${this.name}`, 401);
+
+        }
         if (this.settings.cookie.signed) {
-          token = this.cookie.unsign(token, this.settings.secret);
+          token = this.context.cookies[this.name].unsign(token, this.settings.secret);
           if (!token) {
-            throw new Error(`bad signed cookie : ${this.name}`);
+            throw new nodefony.Error(`bad signed cookie ${this.name}`, 401);
           }
         }
         return this.verify(token);
@@ -138,7 +150,7 @@ const Csrf = class Csrf {
         let token = this.header;
         return this.verify(token);
       }
-      return this;
+      throw new nodefony.Error(`No csrf method defined`, 500);
     } catch (e) {
       throw e;
     }
@@ -148,10 +160,10 @@ const Csrf = class Csrf {
     try {
       let res = this.engine.verify(this.settings.secret, token);
       if (!res) {
-        throw new Error(`BAD CSRF Token : ${this.name}`);
+        throw new nodefony.Error(`BAD CSRF Token ${this.name}`,401);
       }
-      this.logger(`VALID CSRF Token : ${this.name}`);
-      return this;
+      this.logger(`VALID CSRF Token : ${this.name}`,"DEBUG");
+      return token;
     } catch (e) {
       throw e;
     }
@@ -169,7 +181,8 @@ module.exports = class csrf extends nodefony.Service {
     return new Promise((resolve, reject) => {
       try {
         if (context.csrf) {
-          return resolve(context.csrf.validate(context));
+          let token = context.csrf.validate(context);
+          return resolve(token);
         }
         return resolve(null);
       } catch (e) {

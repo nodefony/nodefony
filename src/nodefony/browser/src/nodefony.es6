@@ -1,4 +1,5 @@
-import 'babel-polyfill';
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 import api from "./api/api.js";
 const version = require("../../package.json").version;
@@ -14,7 +15,6 @@ class Nodefony {
   }
 
   load() {
-    console.log(this)
   }
 
   basename(path) {
@@ -151,5 +151,4 @@ class Nodefony {
   }
 
 }
-
 export default new Nodefony(process.env.NODE_ENV);

@@ -163,14 +163,23 @@ class Service {
    *  @param {Arguments} ... arguments to inject
    */
   fire() {
-    //this.logger(ev, "DEBUG", "EVENT KERNEL")
     if (this.notificationsCenter) {
       return this.notificationsCenter.fire.apply(this.notificationsCenter, arguments);
+    }
+  }
+  fireAsync() {
+    if (this.notificationsCenter) {
+      return this.notificationsCenter.fireAsync.apply(this.notificationsCenter, arguments);
     }
   }
   emit() {
     if (this.notificationsCenter) {
       return this.notificationsCenter.emit.apply(this.notificationsCenter, arguments);
+    }
+  }
+  emitAsync(){
+    if (this.notificationsCenter) {
+      return this.notificationsCenter.emitAsync.apply(this.notificationsCenter, arguments);
     }
   }
 
