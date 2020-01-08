@@ -35,10 +35,6 @@ class Api extends nodefony.Service {
     return super.logger(pci, severity, msgid, msg);
   }
 
-  renderError(error, code, message = "", severity = "ERROR", messageID = null) {
-    return this.render(error, code, message, severity, messageID);
-  }
-
   getNodefonyInfo(service) {
     let obj = {
       debug: this.debug

@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import GraphiQL from 'graphiql';
 import 'graphiql/graphiql.css';
 
-const Logo = () => <span>My Corp</span>;
+const Logo = () => <span>Nodefony</span>;
 
 // See GraphiQL Readme - Advanced Usage section for more examples like this
 GraphiQL.Logo = Logo;
@@ -13,7 +13,8 @@ const App = () => (
     style={{ height: '100vh' }}
     fetcher={async graphQLParams => {
       const data = await fetch(
-        'https://swapi-graphql.netlify.com/.netlify/functions/index',
+        //'https://swapi-graphql.netlify.com/.netlify/functions/index',
+        'https://localhost:5152/api/graphql/users',
         {
           method: 'POST',
           headers: {
@@ -24,7 +25,8 @@ const App = () => (
           credentials: 'same-origin',
         },
       );
-      return data.json().catch(() => data.text());
+      let res = await data.json().catch(() => data.text());
+      return res.result ;
     }}
   />
 );

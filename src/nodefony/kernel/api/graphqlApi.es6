@@ -10,9 +10,17 @@ class graphqlApi extends JsonApi {
     super(config, context);
   }
 
-  query(query, variables = null, operationName = null) {
+  async query(query, variables = null, operationName = null) {
     const controller = this.get("controller");
-    return graphql(this.schema, query, controller, this, variables, operationName);
+    try {
+      let res = await graphql(this.schema, query, controller, this, variables, operationName);
+      if (res.errors && res.errors.length) {
+        throw res.errors;
+      }
+      return res;
+    } catch (e) {
+      throw e;
+    }
   }
 
   buildSchema(schema) {
