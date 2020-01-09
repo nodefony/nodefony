@@ -76,17 +76,17 @@ class httpKernel extends nodefony.Service {
     try {
       let errorType = nodefony.Error.isError(error);
       switch (errorType) {
-        case "securityError":
-        case "httpError":
-          httpError = error;
-          break;
-        default:
-          if (context.response && context.response.statusCode === 200) {
-            httpError = new nodefony.httpError(error, 500, container);
+      case "securityError":
+      case "httpError":
+        httpError = error;
+        break;
+      default:
+        if (context.response && context.response.statusCode === 200) {
+          httpError = new nodefony.httpError(error, 500, container);
 
-          } else {
-            httpError = new nodefony.httpError(error, null, container);
-          }
+        } else {
+          httpError = new nodefony.httpError(error, null, container);
+        }
       }
       if (!httpError.context) {
         httpError.context = context;
@@ -145,11 +145,7 @@ class httpKernel extends nodefony.Service {
         .then((res) => {
           if (res) {
             this.fire("onServerRequest", request, response, type);
-            return this.handle(request, response, type)
-              .catch(e => {
-                this.logger(e, "DEBUG");
-                return null;
-              });
+            return this.handle(request, response, type);
           }
           throw new Error("Bad request");
         })
@@ -195,13 +191,13 @@ class httpKernel extends nodefony.Service {
     // SCOPE REQUEST ;
     let container = this.container.enterScope("request");
     switch (type) {
-      case "HTTP":
-      case "HTTPS":
-      case "HTTP2":
-        return this.handleHttp(container, request, response, type);
-      case "WEBSOCKET":
-      case "WEBSOCKET SECURE":
-        return this.handleWebsocket(container, request, type);
+    case "HTTP":
+    case "HTTPS":
+    case "HTTP2":
+      return this.handleHttp(container, request, response, type);
+    case "WEBSOCKET":
+    case "WEBSOCKET SECURE":
+      return this.handleWebsocket(container, request, type);
     }
   }
 
@@ -263,8 +259,7 @@ class httpKernel extends nodefony.Service {
         }
         return resolve(context);
       } catch (e) {
-        return reject( context.fireAsync("onError", container, e) );
-        //return reject(e);
+        return reject(context.fireAsync("onError", container, e));
       }
     });
   }
@@ -298,7 +293,7 @@ class httpKernel extends nodefony.Service {
             if (context.csrf) {
               let token = await this.csrfService.handle(context);
               if (token) {
-                this.logger(`Check CSRF TOKEN : ${token.name} OK`, "DEBUG");
+                this.logger(`CSRF TOKEN OK`, "DEBUG");
               }
             }
             return resolve(res);
@@ -317,7 +312,7 @@ class httpKernel extends nodefony.Service {
           if (context.csrf) {
             let token = await this.csrfService.handle(context);
             if (token) {
-              this.logger(`Check CSRF TOKEN : ${token.name} OK`, "DEBUG");
+              this.logger(`CSRF TOKEN OK`, "DEBUG");
             }
           }
           return resolve(context);
@@ -377,8 +372,7 @@ class httpKernel extends nodefony.Service {
         }
         return resolve(await context.handle());
       } catch (e) {
-        context.fire("onError", container, e);
-        return reject(e);
+        return reject(context.fireAsync("onError", container, e));
       }
     });
   }
@@ -444,36 +438,36 @@ class httpKernel extends nodefony.Service {
     try {
       let alias = [];
       switch (nodefony.typeOf(this.kernel.domainAlias)) {
-        case "string":
-          alias = this.kernel.domainAlias.split(" ");
-          Array.prototype.unshift.call(alias, "^" + this.kernel.domain + "$");
-          for (let i = 0; i < alias.length; i++) {
-            if (i === 0) {
-              str = alias[i];
-            } else {
-              str += "|" + alias[i];
-            }
+      case "string":
+        alias = this.kernel.domainAlias.split(" ");
+        Array.prototype.unshift.call(alias, "^" + this.kernel.domain + "$");
+        for (let i = 0; i < alias.length; i++) {
+          if (i === 0) {
+            str = alias[i];
+          } else {
+            str += "|" + alias[i];
           }
-          break;
-        case "object":
-          let first = true;
-          for (let myAlias in this.kernel.domainAlias) {
-            if (first) {
-              first = false;
-              str = this.kernel.domainAlias[myAlias];
-            } else {
-              str += "|" + this.kernel.domainAlias[myAlias];
-            }
+        }
+        break;
+      case "object":
+        let first = true;
+        for (let myAlias in this.kernel.domainAlias) {
+          if (first) {
+            first = false;
+            str = this.kernel.domainAlias[myAlias];
+          } else {
+            str += "|" + this.kernel.domainAlias[myAlias];
           }
-          break;
-        case "array":
-          str = "^" + this.kernel.domain + "$";
-          for (let i = 0; i < this.kernel.domainAlias.length; i++) {
-            str += "|" + this.kernel.domainAlias[i];
-          }
-          break;
-        default:
-          throw new Error("Config file bad format for domain alias must be a string ");
+        }
+        break;
+      case "array":
+        str = "^" + this.kernel.domain + "$";
+        for (let i = 0; i < this.kernel.domainAlias.length; i++) {
+          str += "|" + this.kernel.domainAlias[i];
+        }
+        break;
+      default:
+        throw new Error("Config file bad format for domain alias must be a string ");
       }
       if (str) {
         this.regAlias = new RegExp(str);
@@ -652,30 +646,30 @@ class httpKernel extends nodefony.Service {
       }
     }
     switch (typeof this.cdn) {
-      case "object":
-        if (!this.cdn) {
-          return "";
-        }
-        if (this.cdn.global) {
-          return this.cdn.global;
-        }
-        if (!type) {
-          let txt = "CDN ERROR getCDN bad argument type  ";
-          this.logger(txt, "ERROR");
-          throw new Error(txt);
-        }
-        if (type in this.cdn) {
-          if (this.cdn[type][wish]) {
-            return this.cdn[type][wish];
-          }
-        }
+    case "object":
+      if (!this.cdn) {
         return "";
-      case "string":
-        return this.cdn || "";
-      default:
-        let txt = "CDN CONFIG ERROR ";
+      }
+      if (this.cdn.global) {
+        return this.cdn.global;
+      }
+      if (!type) {
+        let txt = "CDN ERROR getCDN bad argument type  ";
         this.logger(txt, "ERROR");
         throw new Error(txt);
+      }
+      if (type in this.cdn) {
+        if (this.cdn[type][wish]) {
+          return this.cdn[type][wish];
+        }
+      }
+      return "";
+    case "string":
+      return this.cdn || "";
+    default:
+      let txt = "CDN CONFIG ERROR ";
+      this.logger(txt, "ERROR");
+      throw new Error(txt);
     }
   }
 

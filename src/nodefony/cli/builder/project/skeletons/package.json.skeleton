@@ -34,7 +34,7 @@
     "node": ">=10"
   },
   "dependencies": {
-    "mongoose": "^5.8.4",
+    "mongoose": "^5.8.6",
     "nodefony": "^{{version}}",
     "pm2": "^4.2.1",
     "sequelize": "6.0.0-beta.4",
@@ -42,7 +42,7 @@
     "webpack-dev-server": "^3.10.1"
   },
   "devDependencies": {
-    "node-gyp": "^6.0.1",
+    "node-gyp": "^6.1.0",
     "node-pre-gyp": "^0.14.0"
   },
   "author": "{{authorFullName}} <{{authorMail}}>",
