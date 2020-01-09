@@ -41,7 +41,7 @@ class Notification extends events.EventEmitter {
     }
   }
 
-  async fireAsync(type, ...args) {
+  async emitAsync (type, ...args) {
     const handler = _.get(this._events, type);
     if (_.isEmpty(handler) && !_.isFunction(handler)) {
       return false;
@@ -57,8 +57,8 @@ class Notification extends events.EventEmitter {
     return tab;
   }
 
-  emitAsync() {
-    return this.fireAsync.apply(this, arguments);
+  fireAsync() {
+    return this.emitAsync.apply(this, arguments);
   }
   /**
    *

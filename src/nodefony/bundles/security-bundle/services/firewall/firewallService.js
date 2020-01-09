@@ -196,7 +196,7 @@ module.exports = class security extends nodefony.Service {
               if (context.translation) {
                 context.locale = context.translation.handle();
               }
-              context.fire("onError", context.container, error);
+              //context.fire("onError", context.container, error);
               if (context.session) {
                 context.session.invalidate();
               }
@@ -213,7 +213,7 @@ module.exports = class security extends nodefony.Service {
           return context;
         })
         .catch((error) => {
-          context.fire("onError", context.container, error);
+          //context.fire("onError", context.container, error);
           throw error;
         });
     }

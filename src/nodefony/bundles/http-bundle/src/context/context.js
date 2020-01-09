@@ -71,11 +71,19 @@ nodefony.register("Context", () => {
 
     fire() {
       this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
-      return super.fire.apply(this, arguments);
+      return super.emit.apply(this, arguments);
+    }
+    fireAsync() {
+      this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
+      return super.emitAsync.apply(this, arguments);
     }
     emit() {
       this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
-      return super.fire.apply(this, arguments);
+      return super.emit.apply(this, arguments);
+    }
+    emitAsync(){
+      this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
+      return super.emitAsync.apply(this, arguments);
     }
 
     controller() {

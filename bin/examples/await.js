@@ -10,7 +10,7 @@ try {
 class Test {
   constructor(name) {
     this.name = name;
-    this.mytab =[this.resolveAfter3Seconds, this.resolveAfter2Seconds];
+    this.mytab = [this.resolveAfter3Seconds, this.resolveAfter2Seconds];
   }
 
   async asyncCall() {
@@ -53,46 +53,57 @@ class Test {
       console.log('calling 2');
       let res2 = await this.asyncCall();
       return [res1, res2];
-    }catch (e) {
+    } catch (e) {
       throw e;
     }
   }
 
-  async testFor(){
+  async testFor() {
     let tab = [];
-    for await ( let ele of this.mytab){
-      console.log(ele)
-      tab.push( await ele.call(this) );
+    for await (let ele of this.mytab) {
+      console.log(ele);
+      tab.push(await ele.call(this));
     }
     console.log("end");
-    return tab ;
+    return tab;
+  }
+
+
+  error() {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject(new Error("my error"));
+      }, 1000);
+    });
+  }
+
+  async testError() {
+    try {
+      return await this.error();
+    } catch (e) {
+      console.log("testError", e.message);
+    }
+  }
+
+  async testError2(err) {
+    try{
+      if (err){
+        throw err ;
+      }
+      return await this.error()
+      .catch(e => {
+        console.log("testError2 promise catch ", e.message);
+      });
+    }catch(e){
+      console.log("testError2 native catch ", e.message);
+    }
   }
 
 }
 
 let ele = new Test("cci");
 //ele.dubbleCall();
-ele.testFor();
-
-
-
-
-
-
-
-/*function resolveAfter2Seconds() {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve('resolved');
-    }, 2000);
-  });
-}
-
-async function asyncCall() {
-  console.log('calling');
-  var result = await resolveAfter2Seconds();
-  console.log(result);
-  // expected output: 'resolved'
-}
-
-console.log(asyncCall());*/
+//ele.testFor();
+//ele.testError();
+ele.testError2();
+ele.testError2(new Error("my Error native"));

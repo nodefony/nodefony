@@ -83,10 +83,12 @@ class httpKernel extends nodefony.Service {
       default:
         if (context.response && context.response.statusCode === 200) {
           httpError = new nodefony.httpError(error, 500, container);
-
         } else {
           httpError = new nodefony.httpError(error, null, container);
         }
+      }
+      if(context.resolver && context.resolver.onError){
+        return context.resolver.callController(httpError);
       }
       if (!httpError.context) {
         httpError.context = context;
@@ -151,7 +153,7 @@ class httpKernel extends nodefony.Service {
         })
         .catch(e => {
           if (e) {
-            this.logger(e, "ERROR", " STATICS SERVER");
+            this.logger(e, "ERROR", "STATICS SERVER");
           }
           return e;
         });
@@ -259,7 +261,7 @@ class httpKernel extends nodefony.Service {
         }
         return resolve(context);
       } catch (e) {
-        return reject(context.fireAsync("onError", container, e));
+        return resolve(context.fireAsync("onError", container, e));
       }
     });
   }
@@ -353,7 +355,6 @@ class httpKernel extends nodefony.Service {
     });
     return context;
   }
-
 
   // WEBSOCKET ENTRY POINT
   handleWebsocket(container, request, type) {

@@ -25,6 +25,7 @@ class Resolver extends nodefony.Service {
     this.request = null;
     this.route = null;
     this.bundle = null;
+    this.onError = null ;
   }
 
   clean() {
@@ -160,9 +161,6 @@ class Resolver extends nodefony.Service {
       if (!controller || reload) {
         controller = this.newController(this.container, this.context);
       }
-      if (data) {
-        this.setVariables(data);
-      }
       this.container.set("action", this.actionName);
       if (this.kernel.debug && this.route) {
         this.logger(`
@@ -172,6 +170,20 @@ ${clc.yellow("action")} : ${this.actionName}
 ${clc.red("route")} : ${clc.cyan(this.route.toString())}
 ${clc.red("query")} : ${controller.query ? JSON.stringify(controller.query, null, " "): null}`, "DEBUG", `ROUTE ${this.route.name}`);
       }
+      if(this.onError && nodefony.Error.isError(data) ){
+        if ( data.code ){
+          controller.response.setStatusCode(data.code);
+        }
+        try {
+          return this.returnController(this.onError.apply(controller, [data, this.route, this.variables]));
+        }catch(e){
+          this.onError = null ;
+          return this.context.kernelHttp.onError(this.container, e);
+        }
+      }
+      if (data) {
+        this.setVariables(data);
+      }
       return this.returnController(this.action.apply(controller, this.variables));
     } catch (e) {
       throw e;
@@ -180,6 +192,9 @@ ${clc.red("query")} : ${controller.query ? JSON.stringify(controller.query, null
 
   newController(container, context) {
     let controller = new this.controller(container || this.container, context || this.context);
+    if ( controller.onError && context.resolver ){
+      context.resolver.onError = controller.onError.bind(controller) ;
+    }
     container.set("controller", controller);
     return controller;
   }

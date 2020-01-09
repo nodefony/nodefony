@@ -651,6 +651,9 @@ class Controller extends nodefony.Service {
   createException(message, code = 500) {
     throw new nodefony.httpError(message, code, this.container);
   }
+  renderException(message, code = 500){
+    throw new nodefony.httpError(message, code, this.container);
+  }
 
   createAccessDeniedException(message, code = 403) {
     throw new nodefony.authorizationError(message, code, this.context);
@@ -659,6 +662,7 @@ class Controller extends nodefony.Service {
   createSecurityException(message, code = 401) {
     throw new nodefony.securityError(message, code, this.context.security, this.context);
   }
+
 
   isGranted(role) {
     try {

@@ -164,12 +164,12 @@ class Service {
    */
   fire() {
     if (this.notificationsCenter) {
-      return this.notificationsCenter.fire.apply(this.notificationsCenter, arguments);
+      return this.notificationsCenter.emit.apply(this.notificationsCenter, arguments);
     }
   }
   fireAsync() {
     if (this.notificationsCenter) {
-      return this.notificationsCenter.fireAsync.apply(this.notificationsCenter, arguments);
+      return this.notificationsCenter.emitAsync.apply(this.notificationsCenter, arguments);
     }
   }
   emit() {

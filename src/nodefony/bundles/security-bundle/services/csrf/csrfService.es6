@@ -131,13 +131,13 @@ const Csrf = class Csrf {
       if (this.settings.cookie) {
         let token = this.getRequestCookie();
         if ( ! token ){
-          throw new nodefony.Error(`No crsf token ${this.name}`, 401);
+          throw new nodefony.csrfError(`No crsf token ${this.name}`, 401);
 
         }
         if (this.settings.cookie.signed) {
           token = this.context.cookies[this.name].unsign(token, this.settings.secret);
           if (!token) {
-            throw new nodefony.Error(`bad signed cookie ${this.name}`, 401);
+            throw new nodefony.csrfError(`bad signed cookie ${this.name}`, 401);
           }
         }
         return this.verify(token);
@@ -150,7 +150,7 @@ const Csrf = class Csrf {
         let token = this.header;
         return this.verify(token);
       }
-      throw new nodefony.Error(`No csrf method defined`, 500);
+      throw new nodefony.csrfError(`No csrf method defined`, 500);
     } catch (e) {
       throw e;
     }
@@ -160,7 +160,7 @@ const Csrf = class Csrf {
     try {
       let res = this.engine.verify(this.settings.secret, token);
       if (!res) {
-        throw new nodefony.Error(`BAD CSRF Token ${this.name}`,401);
+        throw new nodefony.csrfError(`BAD CSRF Token ${this.name}`,401);
       }
       this.logger(`VALID CSRF Token : ${this.name}`,"DEBUG");
       return token;
