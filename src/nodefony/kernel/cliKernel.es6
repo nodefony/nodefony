@@ -363,12 +363,15 @@ class cliKernel extends nodefony.cli {
                 let myAction = myCommand[this.task];
                 try {
                   return myCommand.showBanner()
-                    .then(() => {
+                    .then(async () => {
                       this.logger(this.logCommand(), "INFO", "COMMAND");
-                      return myAction.apply(myCommand, this.args)
-                        .then(() => {
+                      let res = await myAction.apply(myCommand, this.args);
+                      if (nodefony.isPromise(res)){
+                        res.then(() => {
                           return myCommand;
                         });
+                      }
+                      return myCommand;
                     })
                     .catch((e) => {
                       throw e;
@@ -390,12 +393,15 @@ class cliKernel extends nodefony.cli {
                     let myAction = myTask[this.action];
                     try {
                       return myTask.showBanner()
-                        .then(() => {
+                        .then(async () => {
                           this.logger(this.logCommand(), "INFO", "COMMAND");
-                          return myAction.apply(myCommand.tasks[this.task], this.args)
-                            .then(() => {
-                              return myCommand;
+                          let res = await myAction.apply(myTask, this.args);
+                          if (nodefony.isPromise(res)){
+                            res.then(() => {
+                              return myTask;
                             });
+                          }
+                          return myTask;
                         })
                         .catch((e) => {
                           throw e;
@@ -417,9 +423,9 @@ class cliKernel extends nodefony.cli {
                 } else {
                   // hook run
                   return myTask.showBanner()
-                    .then(() => {
+                    .then(async () => {
                       this.logger(this.logCommand(), "INFO", "COMMAND");
-                      return myTask.run.call(myCommand.tasks[this.task], this.args)
+                      return await myTask.run.call(myCommand.tasks[this.task], this.args)
                         .then(() => {
                           return myCommand;
                         });
@@ -541,7 +547,7 @@ class cliKernel extends nodefony.cli {
     });
     // INFO DEBUG
     let data = null;
-    if (debug) {
+    if (debug || this.debug) {
       data = "INFO,DEBUG,WARNING";
     } else {
       if (this.kernel.type === "SERVER" && this.kernel.environment === "dev") {
@@ -681,6 +687,9 @@ class cliKernel extends nodefony.cli {
         continue;
       }
       ele.push(await this.npmList(this.kernel.bundles[bundle].path, tab));
+    }
+    if ( this.commander.json ){
+      return process.stdout.write(JSON.stringify(ele)) ;
     }
     let headers = [
         "NAME",

@@ -378,7 +378,7 @@ class CLI extends nodefony.Service {
   }
 
   async parseCommand(argv) {
-    const parser = this.commander.parse(argv || process.argv);
+    const parser = await this.commander.parse(argv || process.argv);
     if (this.commander.debug) {
       this.debug = this.commander.debug;
     } else {

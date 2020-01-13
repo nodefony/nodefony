@@ -6388,9 +6388,9 @@ supports-color@^6.1.0:
     has-flag "^3.0.0"
 
 systeminformation@^4.14.16:
-  version "4.18.3"
-  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-4.18.3.tgz#804099061209ed8430188b8c67e0f9e6df94f655"
-  integrity sha512-RMDIl3lVuNoWe6hbxctjohQTPD+HEy9EqtmUtwKasMT3Xkdrs2gZvBVnISAI4tH7mkk7v8TQ0T8Uc3eSTXpU8Q==
+  version "4.19.0"
+  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-4.19.0.tgz#a0e43e1db161ae8e559352491e977bc6e984e9a8"
+  integrity sha512-/IxTW0g43oQKLFGyfrpkiZ4/mWO2whzfXdsh4zXEPPNDaVSTPy3t5m/07Quf2nmt65RoykYxUhzWSRNc6K86PQ==
 
 tapable@^1.0.0, tapable@^1.1.3:
   version "1.1.3"

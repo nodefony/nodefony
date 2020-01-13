@@ -517,7 +517,7 @@ class Nodefony {
     cli.setHelp("", "rebuild", "Rebuild Nodefony Framewok (Recompilation when node version change )");
     cli.setHelp("", "install", "Install Nodefony Project");
     cli.setHelp("", "certificates", `Generate HTTPS Certificates  'Change default openssl configuration in config/openssl'`);
-    cli.setHelp("", "listDependencies", "List Project dependencies");
+    cli.setHelp("", "dependencies", "List Project dependencies");
     cli.setHelp("", "outdated", "List Project dependencies outdated");
     cli.setHelp("", "version", "Get Project Version");
   }
@@ -550,15 +550,15 @@ class Nodefony {
     case "prod":
     case "start":
     case "pm2":
-
-      //return cli.setCommand("", ["-h"])
       cli.keepAlive = true;
-      cli.setType("SERVER");
       environment = "prod";
       if (process.env.MODE_START && process.env.MODE_START === "PM2") {
+        cli.setType("SERVER");
         const kernel = new nodefony.appKernel(environment, cli, options);
         return await kernel.start();
       } else {
+        await cli.setCommand("webpack:dump");
+        cli.setType("SERVER");
         this.manageCache(cli);
         process.env.MODE_START = "PM2_START";
         return this.pm2Start(cli);
@@ -690,8 +690,8 @@ class Nodefony {
       return cli.setCommand("nodefony:outdated");
     case "test":
       return cli.setCommand("unitest:launch:all");
-    case "listdependencies":
-      return cli.setCommand("nodefony:bundles:listDependencies");
+    case "dependencies":
+      return cli.setCommand("nodefony:bundles:dependencies");
     default:
       if (cli.kernel) {
         return await cli.kernel.matchCommand()
@@ -700,7 +700,7 @@ class Nodefony {
             if (command && command.name) {
               name = command.name;
             }
-            this.logger(`${this.cli.getEmoji("checkered_flag")}`, "INFO", `Command ${name}`);
+            this.logger(`${cli.getEmoji("checkered_flag")}`, "INFO", `Command ${name}`);
             return command;
           })
           .catch((error) => {
@@ -812,46 +812,54 @@ class Nodefony {
    * PM2
    */
   pm2Start(cli) {
-    this.setPm2Config();
-    if (!this.pm2Config) {
-      this.pm2Config = this.kernelConfig.system.PM2;
-      this.pm2Config.apps[0].script = process.argv[1] || "nodefony";
-      this.pm2Config.apps[0].args = "pm2";
-      this.pm2Config.apps[0].env = {
-        NODE_ENV: "production",
-        MODE_START: "PM2"
-      };
-    }
-    if (!this.pm2Config.apps[0].name) {
-      this.pm2Config.apps[0].name = this.projectPackage.name || this.projectName;
-    }
-    pm2.connect((err) => {
-      if (err) {
-        cli.logger(err, "ERROR");
-        cli.terminate(1);
-        return;
+    return new Promise ((resolve, reject)=>{
+      this.setPm2Config();
+      if (!this.pm2Config) {
+        this.pm2Config = this.kernelConfig.system.PM2;
+        this.pm2Config.apps[0].script = process.argv[1] || "nodefony";
+        this.pm2Config.apps[0].args = "pm2";
+        this.pm2Config.apps[0].env = {
+          NODE_ENV: "production",
+          MODE_START: "PM2"
+        };
       }
-      pm2.start(this.pm2Config, (err /*, apps*/ ) => {
+      if (!this.pm2Config.apps[0].name) {
+        this.pm2Config.apps[0].name = this.projectPackage.name || this.projectName;
+      }
+      pm2.connect((err) => {
         if (err) {
-          cli.logger(err.stack || err, "ERROR");
+          cli.logger(err, "ERROR");
           cli.terminate(1);
+          return;
         }
-        try {
-          process.nextTick(() => {
-            pm2.list((err, processDescriptionList) => {
-              if (err) {
-                console.error(err);
-              }
-              this.tablePm2(cli, processDescriptionList);
-              console.log(" To see all logs use the command  nodefony logs ");
-              console.log(" Or use PM2  pm2 --lines 1000 logs ");
-              pm2.disconnect();
+        pm2.start(this.pm2Config, (err /*, apps*/ ) => {
+          if (err) {
+            cli.logger(err.stack || err, "ERROR");
+            cli.terminate(1);
+          }
+          try {
+            process.nextTick(() => {
+              pm2.list((err, processDescriptionList) => {
+                if (err) {
+                  console.error(err);
+                }
+                this.tablePm2(cli, processDescriptionList);
+                console.log(" To see all logs you can use these commands : ");
+                console.log(" nodefony logs ");
+                console.log(" npm run pm2 logs || yarn pm2 logs");
+                console.log(" npm run pm2 monit || yarn  pm2 monit");
+                console.log(" npm run pm2 --lines 1000 logs || yarn pm2 --lines 1000 logs ");
+                //pm2.disconnect();
+                resolve( pm2.disconnect() );
+                cli.terminate(0);
+              });
             });
-          });
-        } catch (e) {
-          cli.logger(e, "ERROR");
-          cli.terminate(1);
-        }
+          } catch (e) {
+            cli.logger(e, "ERROR");
+            reject(e);
+            cli.terminate(1);
+          }
+        });
       });
     });
   }

@@ -4,12 +4,13 @@ const assert = require('assert');
 const request = function (url, options) {
   return new Promise((resolve, reject) => {
     const client = new WebSocketClient();
+    this.result.requests += 1 ;
     client.connect(url, null, null, null, options);
     client.on('connect', (connection) => {
       this.result.connect += 1;
       setTimeout(() => {
         connection.close(1000);
-      }, 5000);
+      }, 1000);
 
       connection.on("message", (message) => {
         this.logger(message, "INFO");
@@ -17,17 +18,15 @@ const request = function (url, options) {
       });
       connection.on('close', (reasonCode, description) => {
         this.logger(description, "INFO", `CLOSE WEBSOKET : ${reasonCode}`);
-        if (reasonCode === 1000) {
-          this.result["1OOO"] += 1;
+        if ( ! this.result[reasonCode] ){
+          this.result[reasonCode] = 0;
         }
-        if (this.result[reasonCode]) {
-          this.result[reasonCode] += 1;
-        } else {
-          this.result[reasonCode] = 1;
-        }
+        this.result[reasonCode] += 1 ;
+
         return resolve(reasonCode);
       });
       connection.on('error', (error) => {
+        this.result.errors += 1;
         this.logger(error, "ERROR");
       });
 
@@ -41,15 +40,24 @@ const request = function (url, options) {
 
 const requestConcurence = function (url, options, concurence) {
   return new Promise((resolve, reject) => {
-    let i = 0;
+    let i  = 0;
+    let j  = 0;
     for (;;) {
       request.call(this, url, options)
+        .then( ( ) =>{
+          console.log("then : ", j , concurence);
+          if ( j === (concurence - 1) ){
+            return resolve(concurence);
+          }
+          j++;
+        })
         .catch((error) => {
           this.logger(error, "ERROR");
+          console.log("then : ", j , concurence);
+          j++;
         });
       if (i === (concurence - 1)) {
-        resolve(concurence);
-        break;
+        break ;
       }
       i++;
     }
@@ -70,8 +78,9 @@ class loadTask extends nodefony.Task {
     };
     this.cert = this.get("httpsServer").getCertificats();
     this.result = {
+      requests:0,
       connect: 0,
-      error: 0
+      errors: 0
     };
   }
 
@@ -90,11 +99,14 @@ class loadTask extends nodefony.Task {
         cert: this.cert.cert,
         ca: this.cert.ca
       });
-      let nb = number || 100;
-      let conc = concurence || 10;
+      let nb = parseInt( number, 10) || 100;
+      let conc = parseInt( concurence, 10) || 10;
       let i = 0;
-      //console.log(nb, conc);
-      return resolve(await requestConcurence.call(this, url, options, 5));
+      this.log({
+        requests : nb,
+        concurence: conc
+      }, "INFO");
+      //return resolve(await requestConcurence.call(this, url, options, 5));
       try {
         for (;;) {
           try {
@@ -104,12 +116,9 @@ class loadTask extends nodefony.Task {
               i: i,
               nb: nb
             });
-
-            if (i === nb) {
-              console.log(i, res, nb);
+            if (i === (nb) ) {
               console.log(this.result);
-              resolve(i);
-              break;
+              return resolve(i);
             }
             i += res;
           } catch (e) {
@@ -117,8 +126,6 @@ class loadTask extends nodefony.Task {
             break;
           }
         }
-
-
       } catch (e) {
         this.logger(error, "ERROR");
       }
