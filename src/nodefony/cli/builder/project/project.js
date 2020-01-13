@@ -66,6 +66,9 @@ class generateProject extends nodefony.Builder {
           .catch((e) => {
             throw e;
           });
+      })
+      .catch((e) => {
+        throw e;
       });
   }
 
@@ -75,7 +78,6 @@ class generateProject extends nodefony.Builder {
       try {
         let mypath = path.resolve(this.path, "src", "bundles");
         let res = this.cli.cp('-Rf', this.bundleUsersPath, mypath);
-        //console.log(res)
         return resolve(res);
       } catch (e) {
         return reject(e);

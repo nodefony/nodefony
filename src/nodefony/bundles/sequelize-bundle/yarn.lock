@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@alt3/sequelize-to-json-schemas@^0.3.39":
-  version "0.3.39"
-  resolved "https://registry.yarnpkg.com/@alt3/sequelize-to-json-schemas/-/sequelize-to-json-schemas-0.3.39.tgz#76659ed3a98b9dfac660942d2faafb107519d9ce"
-  integrity sha512-+l1ZFFmVzqWh1bV0CkavscJ3HKFhenVECYylNY0vTBKnz3HQV3vjSUKqBfW2ZI+k9hWRiRxrBB5O0Nbb00y8ug==
+"@alt3/sequelize-to-json-schemas@^0.3.40":
+  version "0.3.40"
+  resolved "https://registry.yarnpkg.com/@alt3/sequelize-to-json-schemas/-/sequelize-to-json-schemas-0.3.40.tgz#455b209da4e7295ad6413c307a7ab741c5d0a04e"
+  integrity sha512-f3hhk6CQCTXP6JZkjg3dH4DF8x62xV3StCq3dHIU22VuU/GHkx9PqVb9pY8pdLuqGE++EmRE9owKWtFus87OBQ==
 
 "@azure/ms-rest-azure-env@^1.1.2":
   version "1.1.2"
@@ -1445,10 +1445,10 @@ pg@^6.1.0:
     pgpass "1.*"
     semver "4.3.2"
 
-pg@^7.17.0:
-  version "7.17.0"
-  resolved "https://registry.yarnpkg.com/pg/-/pg-7.17.0.tgz#1fcf82238dcbebea63e192c944345c25c86992fc"
-  integrity sha512-70Q4ZzIdPgwMPb3zUIzAUwigNJ4v5vsWdMED6OzXMfOECeYTvTm7iSC3FpKizu/R1BHL8Do3bLs6ltGfOTAnqg==
+pg@^7.17.1:
+  version "7.17.1"
+  resolved "https://registry.yarnpkg.com/pg/-/pg-7.17.1.tgz#1eb4d900e1f21f43978b306972b02a2329138755"
+  integrity sha512-SYWEip6eADsgDQIZk0bmB2JDOrC8Xu6z10KlhlXl03NSomwVmHB6ZTVyDCwOfT6bXHI8QndJdk5XxSSRXikaSA==
   dependencies:
     buffer-writer "2.0.0"
     packet-reader "1.0.0"

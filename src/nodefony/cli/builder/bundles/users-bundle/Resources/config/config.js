@@ -14,7 +14,7 @@
 
 //const crypto = require('crypto');
 const path = require('path');
-const readFile = function(Path) {
+const readFile = function (Path) {
   try {
     return fs.readFileSync(Path, {
       encoding: "utf8"
@@ -24,7 +24,7 @@ const readFile = function(Path) {
     throw e;
   }
 };
-const randomSecret = function() {
+const randomSecret = function () {
   let sercretPath = path.resolve("config", "certificates", "ca", "private", "ca.key.pem");
   return readFile(sercretPath);
 };
@@ -80,18 +80,6 @@ module.exports = {
       expiresIn: 3600
     }
   },
-
-  swagger: {
-    projectName: "Nodefony User",
-    logo: "/app/images/app-logo.png",
-    urls: [{
-      url: "/api/users/documentation",
-      name: "users"
-    }, {
-      url: "/api/jwt/documentation",
-      name: "login"
-    }],
-    primaryName: "login"
-  }
+  swagger: require(path.resolve(__dirname, "swagger.js"))
 
 };

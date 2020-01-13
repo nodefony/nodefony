@@ -30,7 +30,7 @@ class Builder extends nodefony.Service {
     process.env.NODE_ENV = env || "development";
   }
 
-  run(interactive) {
+  async run(interactive) {
     if (interactive) {
       this.interactive = interactive;
       return this.interaction()
@@ -46,6 +46,9 @@ class Builder extends nodefony.Service {
                 response: response,
                 builder: this
               };
+            })
+            .catch(e => {
+              throw e;
             });
         })
         .catch(e => {
@@ -58,11 +61,14 @@ class Builder extends nodefony.Service {
             response: response,
             builder: this
           };
+        })
+        .catch(e => {
+          throw e;
         });
     }
   }
 
-  async interaction() {
+  interaction() {
     return new Promise(resolve => {
       return resolve(this.cli.response);
     });
@@ -108,25 +114,28 @@ class Builder extends nodefony.Service {
 
   async removeInteractivePath(file) {
     return this.cli.prompt([{
-      type: 'confirm',
-      name: 'remove',
-      message: `Do You Want Remove : ${file}?`,
-      default: false
-    }]).then((response) => {
-      if (response.remove) {
-        if (!this.cli.exists(file)) {
-          throw `${file} not exist`;
-        }
-        try {
-          this.cli.rm("-rf", file);
+        type: 'confirm',
+        name: 'remove',
+        message: `Do You Want Remove : ${file}?`,
+        default: false
+    }])
+      .then((response) => {
+        if (response.remove) {
+          if (!this.cli.exists(file)) {
+            throw `${file} not exist`;
+          }
+          try {
+            this.cli.rm("-rf", file);
+            return response;
+          } catch (e) {
+            throw e;
+          }
+        } else {
           return response;
-        } catch (e) {
-          throw e;
         }
-      } else {
-        return response;
-      }
-    });
+      }).catch(e => {
+        throw e;
+      });
   }
 
   buildSkeleton(skeleton, parse = true, obj = {}, callback = null) {

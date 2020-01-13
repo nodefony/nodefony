@@ -29,7 +29,8 @@ nodefony.register.call(nodefony.context, "http", function () {
             return this.send();
           }
         } catch (e) {
-          this.fire("onError", this.container, e);
+          return this.kernelHttp.onError(this.container, e);
+          //this.fire("onError", this.container, e);
         }
       });
       this.method = this.request.getMethod();
@@ -68,7 +69,8 @@ nodefony.register.call(nodefony.context, "http", function () {
         } else {
           error = new nodefony.httpError("Request Timeout", 408, this.container);
         }
-        this.fire("onError", this.container, error);
+        return this.kernelHttp.onError(this.container, error);
+        //this.fire("onError", this.container, error);
       });
       //case proxy
       this.proxy = null;

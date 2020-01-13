@@ -32,57 +32,119 @@ module.exports = class cliStart extends nodefony.cliKernel {
     this.commander.usage(`[options] <command:task:action> [args...]
                   [options] <command:action> [args...]
                   [options] <action> [args...]`);
+    // EVENTS ACTION
     this.commander.arguments(`<cmd> [args...]`)
-      .action((cmd, args /*, commander*/ ) => {
-        this.cmd = cmd.toLowerCase();
+      .action(async (cmd, args, commander) => {
+        //console.log("action : ", cmd, args)
+        //this.cmd = cmd ? cmd.toLowerCase() : null;
+        this.cmd = cmd;
+        this.rawCommand = cmd;
         this.args = args;
-        this.parseNodefonyCommand();
-        //console.log(`Command : ${this.cmd} Args : ${this.args}`);
-        if (this.promise) {
-          return this.promise
-            .then(() => {
-              return this.start(this.cmd, this.args, cmd)
-                .then(() => {
-                  if (!this.keepAlive) {
-                    if (this.reloadMenu) {
-                      return this.showMenu(true, this.reloadMenu);
-                    }
-                    return this.terminate(0);
-                  }
-                })
-                .catch(( /*e*/ ) => {
-                  if (!this.keepAlive) {
-                    if (this.reloadMenu) {
-                      return this.showMenu(true, this.reloadMenu);
-                    }
-                    return this.terminate(1);
-                  }
-                });
-            });
-        } else {
-          this.promise = this.start(this.cmd, this.args, cmd);
-          if (nodefony.isPromise(this.promise)) {
-            return this.promise
-              .then(() => {
-                if (!this.keepAlive) {
-                  if (this.reloadMenu) {
-                    return this.showMenu(true, this.reloadMenu);
-                  }
-                  return this.terminate(0);
-                }
-              })
-              .catch(( /*e*/ ) => {
-                if (!this.keepAlive) {
-                  if (this.reloadMenu) {
-                    return this.showMenu(true, this.reloadMenu);
-                  }
-                  return this.terminate(1);
-                }
-              });
+        return commander;
+      });
+    // INIT
+    this.initialize();
+  }
+
+  async setCommand(cmd, args = []) {
+    this.clearCommand();
+    if (cmd) {
+      process.argv.push(cmd);
+    }
+    await this.parseCommand(process.argv.concat(args));
+    console.log("onStart", cmd, args)
+    return await this.onStart(this.cmd, this.args);
+  }
+
+  onStart(cmd = this.cmd, args = this.args) {
+    //console.log("onStart", cmd, args)
+    this.interactive = this.commander.interactive || false;
+    if (!cmd && !process.argv.slice(2).length && (!process.argv[2])) {
+      this.buildMenu();
+      this.interactive = true;
+      return this.showMenu()
+        .catch((e) => {
+          if (!this.keepAlive) {
+            if (this.reloadMenu) {
+              console.log("passsss")
+              return this.showMenu(true, this.reloadMenu);
+            }
+            if (e) {
+              this.logger(e, "ERROR");
+              return this.terminate(e.code || 1);
+            }
+            return this.terminate(1);
           }
-          this.promise = null;
+        });
+    }
+    if (!cmd && this.interactive) {
+      this.buildMenu();
+      return this.showMenu()
+        .catch((e) => {
+          if (!this.keepAlive) {
+            if (this.reloadMenu) {
+              return this.showMenu(true, this.reloadMenu);
+            }
+            if (e) {
+              this.logger(e, "ERROR");
+              return this.terminate(e.code || 1);
+            }
+            return this.terminate(1);
+          }
+        });
+    }
+    return this.start(cmd, args)
+      .then((result) => {
+        if (!this.keepAlive) {
+          if (this.reloadMenu) {
+            return this.showMenu(true, this.reloadMenu);
+          }
+          if (typeof result === "number") {
+            return this.terminate(result);
+          }
+          return this.terminate(0);
+        }
+        return result;
+      })
+      .catch((e) => {
+        if (!this.keepAlive) {
+          if (this.reloadMenu) {
+            return this.showMenu(true, this.reloadMenu);
+          }
+          if (e) {
+            this.logger(e, "ERROR");
+            return this.terminate(e.code || 1);
+          }
+          return this.terminate(1);
         }
       });
+  }
+
+  async initialize() {
+    this.initHelp();
+    this.initOptions();
+    await this.parseCommand(process.argv);
+    // first time no action fire
+    return await this.onStart();
+  }
+
+  /*async onCommand(cmd = this.cmd, args = this.args) {
+    //this.cmd = cmd ? cmd.toLowerCase() : null;
+    //this.args = args;
+    this.parseNodefonyCommand();
+    return await this.onStart(cmd, args);
+  }*/
+
+  clearCommand() {
+    this.cmd = null;
+    this.args.length = 0;
+    this.clearNodefonyCommand();
+    while (process.argv.length > 2) {
+      process.argv.pop();
+    }
+  }
+
+  initHelp() {
     this.commander.on('--help', () => {
       if (!nodefony.isTrunk) {
         this.setTitleHelp(this.clc.cyan("nodefony"));
@@ -97,46 +159,15 @@ module.exports = class cliStart extends nodefony.cliKernel {
         this.setHelp("", "kill", "Kill PM2 daemon ");
       }
     });
+  }
+
+  initOptions() {
     this.setOption('-d, --debug ', 'Nodefony debug');
     this.setOption('-h, --help ', 'Nodefony help');
     this.setOption('-v, --version ', 'Nodefony version');
     this.setOption('-f, --force ', 'Force disable interactive mode');
     this.setOption('-i, --interactive ', 'Nodefony cli Interactive Mode');
     this.setOption('-j, --json', 'Nodefony json response');
-    let cmd = (!process.argv[2]);
-    this.parseCommand(process.argv);
-    this.interactive = this.commander.interactive || false;
-    if (!this.cmd && !process.argv.slice(2).length && cmd) {
-      this.buildMenu();
-      this.interactive = true;
-      return this.showMenu();
-    } else {
-      if (!this.cmd && this.interactive) {
-        this.buildMenu();
-        return this.showMenu();
-      } else {
-        if (!this.started) {
-          this.start(this.cmd, this.args)
-            .then(() => {
-              if (!this.keepAlive) {
-                if (this.reloadMenu) {
-                  return this.showMenu(true, this.reloadMenu);
-                }
-                return this.terminate(0);
-              }
-            })
-            .catch(( /*e*/ ) => {
-              //this.logger(e, "ERROR");
-              if (!this.keepAlive) {
-                if (this.reloadMenu) {
-                  return this.showMenu(true, this.reloadMenu);
-                }
-                return this.terminate(1);
-              }
-            });
-        }
-      }
-    }
   }
 
   showBanner(data) {
@@ -149,6 +180,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
   }
 
   reloadPromt(clear) {
+    console.log("pass")
     if (clear) {
       this.clear();
     }
@@ -157,29 +189,25 @@ module.exports = class cliStart extends nodefony.cliKernel {
     return Promise.resolve();
   }
 
-  clearCommand() {
-    this.cmd = null;
-    this.args.length = 0;
-    this.clearNodefonyCommand();
-    while (process.argv.length > 2) {
-      process.argv.pop();
+  showMenu(noAscii = false, reload = false) {
+    if (!noAscii) {
+      return this.showAsciify("NODEFONY")
+        .then((data) => {
+          this.showBanner(data);
+          return this.runMenu(reload);
+        })
+        .catch((e) => {
+          throw e;
+        });
     }
+    return this.runMenu(reload);
   }
 
-  setCommand(cmd, args = []) {
-    this.clearCommand();
-    if (cmd) {
-      process.argv.push(cmd);
-    } else {
-      return this.start(null, args);
-    }
-    return this.parseCommand(process.argv.concat(args));
-  }
-
-  start(command, args, rawCommand) {
-    if (this.interactive === undefined) {
+  async start(command, args) {
+    //console.log("START", command, args)
+    /*if (this.interactive === undefined) {
       this.interactive = this.commander.interactive || false;
-    }
+    }*/
     this.started = true;
     switch (command) {
     case "showmenu":
@@ -245,7 +273,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
                 return args;
               })
               .catch((e) => {
-                this.logger(e, "ERROR");
+                throw e;
               });
           });
       }
@@ -263,50 +291,62 @@ module.exports = class cliStart extends nodefony.cliKernel {
       if (!nodefony.isTrunk) {
         return this.showHelp();
       } else {
-        return nodefony.start(command, args, this);
+        return await nodefony.start(command, args, this)
+          .then(() => {
+            return this.showHelp();
+          })
+          .catch(() => {
+            return this.showHelp();
+          });
       }
       break;
     case "certificates":
       return this.generateCertificates();
     default:
+      this.parseNodefonyCommand(command, args);
       if (nodefony.isTrunk) {
-        if (this.kernel) {
-          return this.matchCommand();
+        try {
+          if (this.kernel) {
+            return this.matchCommand();
+          }
+          return await nodefony.start(command, args, this);
+        } catch (e) {
+          try {
+            if (this.rawCommand) {
+              //return require(path.resolve(this.rawCommand));
+            } else {
+              //this.showHelp();
+            }
+            throw e;
+          } catch (e) {
+            //this.showHelp();
+            //this.logger(`Command Not Found  ${this.cmd} ${this.args}`, "ERROR");
+            //this.logger(e, "ERROR", "MODULE");
+            //this.terminate(1);
+            throw e;
+          }
         }
-        return nodefony.start(command, args, this);
       } else {
         try {
-          return nodefony.start(rawCommand, args, this);
-        } catch (e) {}
-        try {
-          if (rawCommand) {
-            return require(path.resolve(rawCommand));
-          } else {
-            this.showHelp();
-          }
+          return await nodefony.start(this.rawCommand, args, this);
         } catch (e) {
-          this.logger("Nodefony Command Not Found ", "ERROR");
-          this.logger(e, "ERROR");
-          this.showHelp();
-          this.terminate(-1);
+          try {
+            if (this.rawCommand) {
+              //return require(path.resolve(this.rawCommand));
+            } else {
+              //return this.showHelp();
+            }
+            throw e;
+          } catch (e) {
+            //this.showHelp();
+            //this.logger(`Command Not Found  ${this.cmd} ${this.args}`, "ERROR");
+            //this.logger(e, "ERROR", "MODULE");
+            //this.terminate(1);
+            throw e;
+          }
         }
       }
     }
-  }
-
-  showMenu(noAscii = false, reload = false) {
-    if (!noAscii) {
-      return this.showAsciify("NODEFONY")
-        .then((data) => {
-          this.showBanner(data);
-          return this.runMenu(reload);
-        })
-        .catch((e) => {
-          this.logger(e, "ERROR");
-          throw e;
-        });
-    }
-    return this.runMenu(reload);
   }
 
   buildMenu() {
@@ -420,15 +460,14 @@ module.exports = class cliStart extends nodefony.cliKernel {
           this.logger("QUIT");
           return this.terminate(0);
         default:
-          return this.setCommand("", "-h");
+          return this.setCommand("help");
+          //return this.setCommand(null, ["-h"]);
         }
       })
       .catch((e) => {
-        this.logger(e, "ERROR");
         throw e;
       });
   }
-
 
   gitInit(project, response) {
     let gitP, cwd, git;
@@ -485,11 +524,11 @@ module.exports = class cliStart extends nodefony.cliKernel {
                       }
                     }).catch((e) => {
                       this.logger(e, "ERROR");
-                      return e;
+                      throw e;
                     });
                 }).catch((e) => {
                   this.logger(e, "ERROR");
-                  return e;
+                  throw e;
                 });
             }).catch((e) => {
               if (e.code || e.code === 0) {

@@ -35,10 +35,13 @@ class Task extends nodefony.Service {
           return this.generate(args, response);
         })
         .catch((e) => {
-          return Promise.reject(e);
+          throw e;
         });
     } else {
-      return this.generate(args, null);
+      return this.generate(args, null)
+        .catch((e) => {
+          throw e;
+        });
     }
   }
 

@@ -350,12 +350,12 @@ class Controller extends nodefony.Service {
 
   }
 
-  render(view, param) {
+  async render(view, param) {
     if (!this.response) {
       throw new Error("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK");
     }
     try {
-      return this.renderView(view, param);
+      return await this.renderView(view, param);
     } catch (e) {
       throw e;
     }
@@ -396,8 +396,9 @@ class Controller extends nodefony.Service {
   renderViewSync(view, param) {
     let res = null;
     let templ = null;
-    let extendParam = this.httpKernel.extendTemplate(param, this.context);
+    let extendParam = null;
     try {
+      extendParam = this.httpKernel.extendTemplate(param, this.context);
       templ = this.httpKernel.getTemplate(view);
     } catch (e) {
       extendParam = null;
@@ -651,7 +652,7 @@ class Controller extends nodefony.Service {
   createException(message, code = 500) {
     throw new nodefony.httpError(message, code, this.container);
   }
-  renderException(message, code = 500){
+  renderException(message, code = 500) {
     throw new nodefony.httpError(message, code, this.container);
   }
 

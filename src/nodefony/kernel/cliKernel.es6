@@ -193,13 +193,21 @@ class cliKernel extends nodefony.cli {
   parseNodefonyCommand(cmd, args) {
     this.clearNodefonyCommand();
     if (cmd) {
-      this.pattern = cmd.split(":");
+      if (typeof this.commander.args[0] === "string") {
+        this.pattern = cmd.split(":");
+      } else {
+        this.pattern = null;
+      }
       if (args) {
         this.args = args;
       }
     } else {
       if (this.commander.args && this.commander.args.length) {
-        this.pattern = this.commander.args[0].split(":");
+        if (typeof this.commander.args[0] === "string") {
+          this.pattern = this.commander.args[0].split(":");
+        } else {
+          this.pattern = null;
+        }
         if (this.commander.args[1]) {
           this.args = this.commander.args[1];
         }
@@ -344,6 +352,7 @@ class cliKernel extends nodefony.cli {
   }
 
   matchCommand() {
+    //console.log(this.command, ":", this.task, ":", this.action)
     if (this.command) {
       for (let bundle in this.commands) {
         if (Object.keys(this.commands[bundle]).length) {
@@ -356,14 +365,19 @@ class cliKernel extends nodefony.cli {
                   return myCommand.showBanner()
                     .then(() => {
                       this.logger(this.logCommand(), "INFO", "COMMAND");
-                      return myAction.apply(myCommand, this.args);
+                      return myAction.apply(myCommand, this.args)
+                        .then(() => {
+                          return myCommand;
+                        });
                     })
                     .catch((e) => {
-                      return Promise.reject(e);
+                      throw e;
+                      //return Promise.reject(e);
                     });
                 } catch (e) {
+                  throw e;
                   //myCommand.logger(e, "ERROR");
-                  return Promise.reject(e);
+                  //return Promise.reject(e);
                 }
               }
             }
@@ -378,40 +392,51 @@ class cliKernel extends nodefony.cli {
                       return myTask.showBanner()
                         .then(() => {
                           this.logger(this.logCommand(), "INFO", "COMMAND");
-                          return myAction.apply(myCommand.tasks[this.task], this.args);
+                          return myAction.apply(myCommand.tasks[this.task], this.args)
+                            .then(() => {
+                              return myCommand;
+                            });
                         })
                         .catch((e) => {
+                          throw e;
                           //myTask.logger(e, "ERROR");
-                          return Promise.reject(e);
+                          //return Promise.reject(e);
                         });
                     } catch (e) {
+                      throw e;
                       //myTask.logger(e, "ERROR");
-                      return Promise.reject(e);
+                      //return Promise.reject(e);
                     }
                   } else {
                     myTask.showHelp();
                     let error = new Error(this.logCommand() + " Action Not Found");
-                    this.logger(error, "ERROR", "COMMAND");
-                    return Promise.reject(error);
+                    //this.logger(error, "ERROR", "COMMAND");
+                    throw error;
+                    //return Promise.reject(error);
                   }
                 } else {
                   // hook run
                   return myTask.showBanner()
                     .then(() => {
                       this.logger(this.logCommand(), "INFO", "COMMAND");
-                      return myTask.run.call(myCommand.tasks[this.task], this.args);
+                      return myTask.run.call(myCommand.tasks[this.task], this.args)
+                        .then(() => {
+                          return myCommand;
+                        });
                     })
                     .catch((e) => {
                       //myTask.logger(e, "ERROR");
-                      myTask.showHelp();
-                      return Promise.reject(e);
+                      //myTask.showHelp();
+                      throw e;
+                      //return Promise.reject(e);
                     });
                 }
               } else {
                 myCommand.showHelp();
                 let error = new Error(this.logCommand() + " Task Not Found");
-                this.logger(error, "ERROR", "COMMAND");
-                return Promise.reject(error);
+                //this.logger(error, "ERROR", "COMMAND");
+                throw error;
+                //return Promise.reject(error);
               }
             } else {
               continue;
@@ -438,9 +463,8 @@ class cliKernel extends nodefony.cli {
         }
       }
     } else {
-      this.showHelp();
+      throw new Error("No Command found");
     }
-    return this.terminate(0);
   }
 
   setHelp(info, command, descrption, options) {

@@ -41,7 +41,7 @@ class Notification extends events.EventEmitter {
     }
   }
 
-  async emitAsync (type, ...args) {
+  async emitAsync(type, ...args) {
     const handler = _.get(this._events, type);
     if (_.isEmpty(handler) && !_.isFunction(handler)) {
       return false;

@@ -47,8 +47,9 @@ module.exports = nodefony.register("Request", function () {
         //this.request.context.setParameters("query.request", this.request.query);
         super.parse();
       } catch (err) {
-        this.request.context.fire("onError", this.request.context.container, err);
         throw err;
+        //this.request.context.fire("onError", this.request.context.container, err);
+        //throw err;
       }
     }
   }
@@ -61,7 +62,7 @@ module.exports = nodefony.register("Request", function () {
     parse() {
       this.xmlParser.parseString(this.request.data.toString(this.charset), (err, result) => {
         if (err) {
-          this.request.context.fire("onError", this.request.context.container, err);
+          //this.request.context.fire("onError", this.request.context.container, err);
           throw err;
         }
         this.request.queryPost = result;
@@ -183,24 +184,29 @@ module.exports = nodefony.register("Request", function () {
           case parser instanceof ParserQs:
           case parser instanceof ParserXml:
             this.request.once("end", () => {
-              //console.log("pass native end")
-              if (this.context.finished) {
-                return;
+              try {
+                if (this.context.finished) {
+                  return;
+                }
+                parser.parse();
+                this.context.fire("onRequestEnd", this);
+              } catch (error) {
+                return this.context.kernelHttp.onError(this.context.container, error);
               }
-              parser.parse();
-              this.context.fire("onRequestEnd", this);
-              return parser;
             });
             break;
           default:
             if (!parser) {
               this.request.once("end", () => {
-                //console.log("pass native end")
-                if (this.context.finished) {
-                  return;
+                try {
+                  if (this.context.finished) {
+                    return;
+                  }
+                  this.context.requestEnded = true;
+                  this.context.fire("onRequestEnd", this);
+                } catch (error) {
+                  return this.context.kernelHttp.onError(this.context.container, error);
                 }
-                this.context.requestEnded = true;
-                this.context.fire("onRequestEnd", this);
               });
             }
           }
@@ -208,11 +214,13 @@ module.exports = nodefony.register("Request", function () {
         })
         .catch((error) => {
           if (this.context.requestEnded) {
-            this.context.fire("onError", this.context.container, error);
+            //this.context.fire("onError", this.context.container, error);
+            return this.context.kernelHttp.onError(this.context.container, error);
           } else {
             this.request.once("end", () => {
               this.context.requestEnded = true;
-              this.context.fire("onError", this.context.container, error);
+              //this.context.fire("onError", this.context.container, error);
+              return this.context.kernelHttp.onError(this.context.container, error);
             });
           }
         });
@@ -266,7 +274,8 @@ module.exports = nodefony.register("Request", function () {
         this.parser.parse(this.request, (err, fields, files) => {
           if (err) {
             this.request.on("end", () => {
-              this.context.fire("onError", this.context.container, err);
+              //this.context.fire("onError", this.context.container, err);
+              return this.context.kernelHttp.onError(this.context.container, err);
             });
             return;
           }
@@ -298,14 +307,16 @@ module.exports = nodefony.register("Request", function () {
                     }
                   }
                 } catch (err) {
-                  this.context.fire("onError", this.context.container, err);
-                  return err;
+                  //this.context.fire("onError", this.context.container, err);
+                  return this.context.kernelHttp.onError(this.context.container, err);
+                  //return err;
                 }
               }
             }
           } catch (err) {
             this.request.on("end", () => {
-              this.context.fire("onError", this.context.container, err);
+              //this.context.fire("onError", this.context.container, err);
+              return this.context.kernelHttp.onError(this.context.container, err);
             });
             return;
           }

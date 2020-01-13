@@ -170,19 +170,20 @@ class Kernel extends nodefony.Service {
         this.tmpDir = file;
       }, true);
       this.git = this.cli.setGitPath(this.rootDir);
+      this.once("onPostReady", () => {
+        if (process.getuid && process.getuid() === 0) {
+          //this.drop_root();
+        }
+        this.postReady = true;
+      });
       if (!this.console) {
-        this.start();
+        //this.start();
       }
     } catch (e) {
       console.trace(e);
       throw e;
     }
-    this.once("onPostReady", () => {
-      if (process.getuid && process.getuid() === 0) {
-        //this.drop_root();
-      }
-      this.postReady = true;
-    });
+
   }
 
   drop_root() {
@@ -199,7 +200,7 @@ class Kernel extends nodefony.Service {
   start() {
     if (!this.started) {
       return this.cli.showAsciify(this.projectName)
-        .then(() => {
+        .then(async () => {
           this.cli.showBanner();
           this.cli.blankLine();
           try {
@@ -214,10 +215,14 @@ class Kernel extends nodefony.Service {
             throw e;
           }
           this.started = true;
-          return this.boot();
-        }).catch((e) => {
-          this.logger(e, "ERROR");
-          return e;
+          return await this.boot()
+            .catch(e => {
+              throw e;
+            });
+        })
+        .catch((e) => {
+          //this.logger(e, "ERROR");
+          throw e;
         });
     }
   }
@@ -257,12 +262,11 @@ class Kernel extends nodefony.Service {
     this.logger("\n" + table.toString(), "DEBUG");
   }
 
-  matchCommand() {
+  async matchCommand() {
     try {
-      return this.cli.matchCommand();
+      return await this.cli.matchCommand();
     } catch (e) {
-      this.logger(e, "ERROR");
-      this.terminate(e.code || 1);
+      throw e;
     }
   }
 
@@ -702,11 +706,20 @@ class Kernel extends nodefony.Service {
 
     switch (this.isInstall()) {
     case "install":
-      return await this.install(bundles);
+      return await this.install(bundles)
+        .catch(e => {
+          throw e;
+        });
     case "rebuild":
-      return await this.rebuild(bundles);
+      return await this.rebuild(bundles)
+        .catch(e => {
+          throw e;
+        });
     default:
-      return await this.preRegister(bundles);
+      return await this.preRegister(bundles)
+        .catch(e => {
+          throw e;
+        });
     }
   }
 
@@ -735,11 +748,14 @@ class Kernel extends nodefony.Service {
           }
         }
       }
+      return await this.preRegister(coreBundles)
+        .catch(e => {
+          throw e;
+        });
     } catch (e) {
       this.logger(e, "ERROR");
       throw e;
     }
-    return this.preRegister(coreBundles);
   }
 
   async rebuild(coreBundles) {
@@ -760,11 +776,14 @@ class Kernel extends nodefony.Service {
         }
         await this.cli.rebuildPackage(bundleFile, "development");
       }
+      return await this.preRegister(coreBundles)
+        .catch(e => {
+          throw e;
+        });
     } catch (e) {
       this.logger(e, "ERROR");
       throw e;
     }
-    return this.preRegister(coreBundles);
   }
 
   async preRegister(bundles) {
@@ -787,6 +806,9 @@ class Kernel extends nodefony.Service {
             this.fire("onRegister", this);
             return await this.initializeBundles();
           });
+      })
+      .catch(e => {
+        throw e;
       });
   }
 
@@ -843,31 +865,45 @@ class Kernel extends nodefony.Service {
     for (let name in this.bundles) {
       this.logger("\x1b[36m INITIALIZE Bundle :  " + name.toUpperCase() + "\x1b[0m", "DEBUG");
       try {
-        //tab.push(this.bundles[name].boot());
         tab.push(await this.bundles[name].boot());
       } catch (e) {
         this.logger(e, "ERROR");
-        //console.trace(e);
         continue;
       }
     }
     this.fire("onBoot", this, tab);
     this.booted = true;
 
-    return new Promise.all(this.promisesBundleReady)
-      .then(async (bundles) => {
-        this.fire("onReady", this, bundles);
-        this.ready = true;
-        if (this.console) {
-          return this.matchCommand();
-        }
-        return await this.onReady()
-          .then(() => {
-            this.fire("onPostReady", this);
-            return this;
-          });
+    let bundles = [];
+    for await (let boot of this.promisesBundleReady) {
+      this.log(`End Waiting Bundle Ready  ${boot.name}`, "DEBUG");
+      bundles.push(boot);
+    }
+    this.fire("onReady", this, bundles);
+    this.ready = true;
+    if (this.console) {
+      return this.matchCommand()
+        .then((command) => {
+          let name = command;
+          if (command && command.name) {
+            name = command.name;
+          }
+          this.logger(`${this.cli.getEmoji("checkered_flag")}`, "INFO", `Command ${name}`);
+          return command;
+        })
+        .catch((error) => {
+          //this.logger(error, "ERROR", `COMMAND`);
+          throw error;
+        });
+    }
+    return await this.onReady()
+      .then(() => {
+        this.fire("onPostReady", this);
+        return this;
+      })
+      .catch((error) => {
+        this.logger(error, "CRITIC");
       });
-
   }
 
   getOrm() {
@@ -1367,6 +1403,9 @@ class Kernel extends nodefony.Service {
    *  @method terminate
    */
   terminate(code) {
+    if (this.debug) {
+      console.trace(code);
+    }
     if (code === undefined) {
       code = 0;
     }

@@ -69,12 +69,16 @@ class httpKernel extends nodefony.Service {
   }
 
   // EVENTS DISPATCHER
-  onError(container, error) {
+  async onError(container, error) {
     let context = container.get("context");
+    if (context.sended) {
+      this.log(error, "ERROR");
+      return;
+    }
     let httpError = null;
     let result = null;
     try {
-      let errorType = nodefony.Error.isError(error);
+      let errorType = nodefony.isError(error);
       switch (errorType) {
       case "securityError":
       case "httpError":
@@ -87,7 +91,8 @@ class httpKernel extends nodefony.Service {
           httpError = new nodefony.httpError(error, null, container);
         }
       }
-      if(context.resolver && context.resolver.onError){
+      if (context.listenerCount("onError")) {
+        context.logRequest(httpError);
         return context.resolver.callController(httpError);
       }
       if (!httpError.context) {
@@ -128,7 +133,7 @@ class httpKernel extends nodefony.Service {
       } else {
         this.logger(e, "ERROR");
       }
-      return context;
+      throw e;
     }
   }
 
@@ -251,6 +256,7 @@ class httpKernel extends nodefony.Service {
       let error = null;
       try {
         context = this.createHttpContext(container, request, response, type);
+        context.translation.extendTemplate();
       } catch (e) {
         error = e;
       }
@@ -261,7 +267,13 @@ class httpKernel extends nodefony.Service {
         }
         return resolve(context);
       } catch (e) {
-        return resolve(context.fireAsync("onError", container, e));
+        return this.onError(container, e)
+          .then(res => {
+            return resolve(res);
+          })
+          .catch(e => {
+            return reject(e);
+          });
       }
     });
   }
@@ -287,7 +299,6 @@ class httpKernel extends nodefony.Service {
           }
           // FRONT CONTROLLER
           await this.handleFrontController(context);
-
           // FIREWALL
           if (context.secure || context.isControlledAccess) {
             let res = await this.firewall.handleSecurity(context);
@@ -333,8 +344,6 @@ class httpKernel extends nodefony.Service {
       this.logger(e, "ERROR");
       throw e;
     }
-    //request events
-    context.once("onError", this.onError.bind(this));
     //response events
     context.response.response.once("finish", () => {
       if (!context) {
@@ -363,6 +372,7 @@ class httpKernel extends nodefony.Service {
       let error = null;
       try {
         context = this.createWebsocketContext(container, request, type);
+        context.translation.extendTemplate();
       } catch (e) {
         error = e;
       }
@@ -373,7 +383,13 @@ class httpKernel extends nodefony.Service {
         }
         return resolve(await context.handle());
       } catch (e) {
-        return reject(context.fireAsync("onError", container, e));
+        return this.onError(container, e)
+          .then(res => {
+            return resolve(res);
+          })
+          .catch(e => {
+            return reject(e);
+          });
       }
     });
   }
@@ -416,7 +432,6 @@ class httpKernel extends nodefony.Service {
 
   createWebsocketContext(container, request, type) {
     let context = new nodefony.context.websocket(container, request, type);
-    context.on("onError", this.onError.bind(this));
     context.once('onFinish', (context) => {
       this.container.leaveScope(container);
       context.clean();
@@ -602,26 +617,30 @@ class httpKernel extends nodefony.Service {
       local: context.translation.defaultLocale.substr(0, 2),
       core: this.kernel.isCore
     };
-    param.getFlashBag = context.getFlashBag.bind(context);
-    param.render = context.render.bind(context);
-    param.controller = context.controller.bind(context);
-    param.trans = context.translation.trans.bind(context.translation);
-    param.getLocale = context.translation.getLocale.bind(context.translation);
-    param.trans_default_domain = context.translation.trans_default_domain.bind(context.translation);
-    param.getTransDefaultDomain = context.translation.getTransDefaultDomain.bind(context.translation);
-    param.getUser = context.getUser.bind(context);
-    param.CDN = (type, nb) => {
-      let cdn = this.getCDN(type, nb);
-      let res = `${context.request.url.protocol}//`;
-      if (cdn) {
-        return `${res}${cdn}`;
-      } else {
-        return `${res}${context.request.url.host}`;
-      }
-    };
-    param.absolute_url = context.generateAbsoluteUrl.bind(context);
-    param.is_granted = context.is_granted.bind(context);
-    return param;
+    try {
+      param.getFlashBag = context.getFlashBag.bind(context);
+      param.render = context.render.bind(context);
+      param.controller = context.controller.bind(context);
+      param.trans = context.translation.trans.bind(context.translation);
+      param.getLocale = context.translation.getLocale.bind(context.translation);
+      param.trans_default_domain = context.translation.trans_default_domain.bind(context.translation);
+      param.getTransDefaultDomain = context.translation.getTransDefaultDomain.bind(context.translation);
+      param.getUser = context.getUser.bind(context);
+      param.CDN = (type, nb) => {
+        let cdn = this.getCDN(type, nb);
+        let res = `${context.request.url.protocol}//`;
+        if (cdn) {
+          return `${res}${cdn}`;
+        } else {
+          return `${res}${context.request.url.host}`;
+        }
+      };
+      param.absolute_url = context.generateAbsoluteUrl.bind(context);
+      param.is_granted = context.is_granted.bind(context);
+      return param;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   generateUrl(name, variables, host) {

@@ -98,8 +98,8 @@ nodefony.register.call(nodefony.context, "websocket", function () {
     }
 
     connect() {
-      return new Promise ((resolve, reject)=>{
-        try{
+      return new Promise((resolve, reject) => {
+        try {
           this.connection = this.request.accept(this.resolver.acceptedProtocol || null, this.origin /*, this.request.cookies || null*/ );
           this.response.setConnection(this.connection);
           this.connection.on('close', onClose.bind(this));
@@ -108,8 +108,8 @@ nodefony.register.call(nodefony.context, "websocket", function () {
           // LISTEN EVENTS SOCKET
           this.connection.on('message', this.handleMessage.bind(this));
           this.logRequest(null, this.resolver.acceptedProtocol);
-          return resolve( this.connection );
-        }catch(e){
+          return resolve(this.connection);
+        } catch (e) {
           return reject(e);
         }
       });
@@ -156,8 +156,9 @@ nodefony.register.call(nodefony.context, "websocket", function () {
             this.resolver.match(this.resolver.route, this);
           } catch (e) {
             this.request.reject();
-            this.fire("onError", this.container, e);
-            return;
+            //this.fire("onError", this.container, e);
+            throw e;
+            //return;
           }
         }
         this.fire("onMessage", message, this, "RECEIVE");
@@ -167,7 +168,8 @@ nodefony.register.call(nodefony.context, "websocket", function () {
           this.request.reject();
         }
       } catch (e) {
-        this.fire("onError", this.container, e);
+        throw e;
+        //this.fire("onError", this.container, e);
       }
     }
 
@@ -193,7 +195,8 @@ nodefony.register.call(nodefony.context, "websocket", function () {
           this.request.reject();
         }
       } catch (e) {
-        this.fire("onError", this.container, e);
+        throw e;
+        //this.fire("onError", this.container, e);
       }
     }
 

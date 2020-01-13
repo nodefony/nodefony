@@ -161,6 +161,10 @@ class Nodefony {
     return this.isRegExp(it);
   }
 
+  isError(it) {
+    return nodefony.Error.isError(it);
+  }
+
   isContainer(container) {
     if (container && container.protoService && container.protoParameters) {
       return true;
@@ -232,7 +236,7 @@ class Nodefony {
       if (value instanceof SyntaxError) {
         return "SyntaxError";
       }
-      if (value instanceof Error) {
+      if (this.isError(value)) {
         return "Error";
       }
     } else {
@@ -518,7 +522,7 @@ class Nodefony {
     cli.setHelp("", "version", "Get Project Version");
   }
 
-  start(cmd, args, cli, options = {}) {
+  async start(cmd, args, cli, options = {}) {
     if (cmd !== "preprod" && cluster.isWorker) {
       cmd = "production";
     }
@@ -527,13 +531,16 @@ class Nodefony {
     switch (cmd) {
     case "dev":
     case "development":
+      cli.keepAlive = true;
       this.manageCache(cli);
       environment = "dev";
       process.env.MODE_START = "NODEFONY_DEV";
       cli.setType("SERVER");
-      return new nodefony.appKernel(environment, cli, options);
+      const kernel = new nodefony.appKernel(environment, cli, options);
+      return await kernel.start();
     case "preprod":
     case "preproduction":
+      cli.keepAlive = true;
       this.manageCache(cli);
       environment = "prod";
       process.env.MODE_START = "NODEFONY";
@@ -543,10 +550,14 @@ class Nodefony {
     case "prod":
     case "start":
     case "pm2":
+
+      //return cli.setCommand("", ["-h"])
+      cli.keepAlive = true;
       cli.setType("SERVER");
       environment = "prod";
       if (process.env.MODE_START && process.env.MODE_START === "PM2") {
-        return new nodefony.appKernel(environment, cli, options);
+        const kernel = new nodefony.appKernel(environment, cli, options);
+        return await kernel.start();
       } else {
         this.manageCache(cli);
         process.env.MODE_START = "PM2_START";
@@ -554,6 +565,7 @@ class Nodefony {
       }
       break;
     case "stop":
+      cli.keepAlive = true;
       if (args.length) {
         name = args[0];
       }
@@ -568,6 +580,7 @@ class Nodefony {
       });
       break;
     case "reload":
+      cli.keepAlive = true;
       if (args.length) {
         name = args[0];
       }
@@ -582,6 +595,7 @@ class Nodefony {
       });
       break;
     case "restart":
+      cli.keepAlive = true;
       if (args.length) {
         name = args[0];
       }
@@ -596,6 +610,7 @@ class Nodefony {
       });
       break;
     case "delete":
+      cli.keepAlive = true;
       if (args.length) {
         name = args[0];
       }
@@ -610,6 +625,7 @@ class Nodefony {
       });
       break;
     case "kill":
+      cli.keepAlive = true;
       pm2.killDaemon((error, proc) => {
         if (error) {
           cli.logger(error, "ERROR");
@@ -628,6 +644,7 @@ class Nodefony {
       break;
     case "status":
     case "list":
+      cli.keepAlive = true;
       pm2.list((error, processDescriptionList) => {
         if (error) {
           cli.logger(error, "ERROR");
@@ -639,6 +656,7 @@ class Nodefony {
       break;
     case "log":
     case "logs":
+      cli.keepAlive = true;
       let myname = null;
       let line = 20;
       if (this.isTrunk) {
@@ -657,6 +675,7 @@ class Nodefony {
       pm2.streamLogs(myname, line);
       break;
     case "clean-log":
+      cli.keepAlive = true;
       pm2.flush((error, result) => {
         if (error) {
           cli.logger(error, "ERROR");
@@ -671,13 +690,23 @@ class Nodefony {
       return cli.setCommand("nodefony:outdated");
     case "test":
       return cli.setCommand("unitest:launch:all");
-    case "help":
-      return cli.setCommand("", ["-h"]);
     case "listdependencies":
       return cli.setCommand("nodefony:bundles:listDependencies");
     default:
       if (cli.kernel) {
-        return cli.kernel.matchCommand();
+        return await cli.kernel.matchCommand()
+          .then((command) => {
+            let name = "";
+            if (command && command.name) {
+              name = command.name;
+            }
+            this.logger(`${this.cli.getEmoji("checkered_flag")}`, "INFO", `Command ${name}`);
+            return command;
+          })
+          .catch((error) => {
+            throw error;
+            //this.logger(error, "ERROR", `COMMAND`);
+          });
       }
       if (this.appKernel) {
         environment = "prod";
@@ -685,7 +714,10 @@ class Nodefony {
         process.env.MODE_START = "NODEFONY_CONSOLE";
         this.manageCache(cli);
         let kernel = new this.appKernel(environment, cli, options);
-        return kernel.start();
+        return await kernel.start()
+          .catch(e => {
+            throw e;
+          });
       }
       if (cli.commander.hasOwnProperty('help')) {
         cli.clear();
@@ -824,7 +856,7 @@ class Nodefony {
     });
   }
 
-  preProd(environment, cli, options) {
+  async preProd(environment, cli, options) {
     const instances = require('os').cpus().length;
     if (cluster.isMaster) {
       for (let i = 0; i < instances; i++) {
@@ -850,7 +882,8 @@ class Nodefony {
         });
       });
     } else {
-      return new nodefony.appKernel(environment, cli, options);
+      const kernel = new nodefony.appKernel(environment, cli, options);
+      return await kernel.start();
     }
   }
 }

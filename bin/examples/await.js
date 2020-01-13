@@ -68,6 +68,26 @@ class Test {
     return tab;
   }
 
+  async inc() {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        return resolve(10);
+      }, 1000);
+    });
+  }
+
+  async testFor2(bn = 100) {
+    let i = 0;
+    for (;;) {
+      let res1 = await this.inc();
+      console.log(i, res1);
+      if (i === bn) {
+        break;
+      }
+      i += res1;
+    }
+  }
+
 
   error() {
     return new Promise((resolve, reject) => {
@@ -86,15 +106,15 @@ class Test {
   }
 
   async testError2(err) {
-    try{
-      if (err){
-        throw err ;
+    try {
+      if (err) {
+        throw err;
       }
       return await this.error()
-      .catch(e => {
-        console.log("testError2 promise catch ", e.message);
-      });
-    }catch(e){
+        .catch(e => {
+          console.log("testError2 promise catch ", e.message);
+        });
+    } catch (e) {
       console.log("testError2 native catch ", e.message);
     }
   }
@@ -105,5 +125,6 @@ let ele = new Test("cci");
 //ele.dubbleCall();
 //ele.testFor();
 //ele.testError();
-ele.testError2();
-ele.testError2(new Error("my Error native"));
+//ele.testError2();
+//ele.testError2(new Error("my Error native"));
+ele.testFor2()

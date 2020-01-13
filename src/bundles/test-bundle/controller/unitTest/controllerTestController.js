@@ -617,14 +617,15 @@ module.exports = class controllerTestController extends nodefony.controller {
     case "408":
       this.getResponse().setStatusCode(408);
       throw new Error("My Timeout Exception");
-      //return this.notificationsCenter.fire("onError", this.container, "My Timeout Exception");
     case "error":
       varNotExit.defined.value;
       break;
     case "notDefined":
-      return this.notificationsCenter.fire("onError", this.container, null);
+      throw null;
+      //return this.notificationsCenter.fire("onError", this.container, null);
     case "fire":
-      return this.notificationsCenter.fire("onError", this.container, new Error("My Fire Exception"));
+      return new Error("My Fire Exception");
+      //return this.notificationsCenter.fire("onError", this.container, new Error("My Fire Exception"));
     case "timeout":
       this.response.setTimeout(1000);
       return;

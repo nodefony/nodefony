@@ -52,21 +52,23 @@ nodefony.register("Context", () => {
     }
 
     logRequest(httpError) {
-      let txt = `${clc.cyan("URL")} : ${this.url} ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host}`;
-      let mgid = "";
-      if (httpError) {
-        this.errorLog = true;
-        mgid = `${this.type} ${clc.magenta(this.response.statusCode)} ${clc.red(this.method)}`;
-        if (kernel && kernel.environment === "prod") {
-          return this.logger(`${txt} ${httpError.toString()}`, "ERROR", mgid);
+      try {
+        let txt = `${clc.cyan("URL")} : ${this.url} ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host}`;
+        let mgid = "";
+        if (httpError) {
+          this.errorLog = true;
+          mgid = `${this.type} ${clc.magenta(this.response.statusCode)} ${clc.red(this.method)}`;
+          if (kernel && kernel.environment === "prod") {
+            return this.logger(`${txt} ${httpError.toString()}`, "ERROR", mgid);
+          }
+          return this.logger(`${txt}
+          ${httpError.toString()}`, "ERROR", mgid);
         }
-        return this.logger(`${txt}
-        ${httpError.toString()}`, "ERROR", mgid);
-      }
-      if (!this.errorLog) {
-        mgid = `${this.type} ${clc.magenta(this.response.statusCode)} ${this.method}`;
-        return this.logger(txt, "INFO", mgid);
-      }
+        if (!this.errorLog) {
+          mgid = `${this.type} ${clc.magenta(this.response.statusCode)} ${this.method}`;
+          return this.logger(txt, "INFO", mgid);
+        }
+      } catch (e) {}
     }
 
     fire() {
@@ -81,7 +83,7 @@ nodefony.register("Context", () => {
       this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
       return super.emit.apply(this, arguments);
     }
-    emitAsync(){
+    emitAsync() {
       this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
       return super.emitAsync.apply(this, arguments);
     }

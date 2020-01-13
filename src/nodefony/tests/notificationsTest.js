@@ -132,13 +132,67 @@ describe("NODEFONY Notifications Center", () => {
       global.notificationsCenter.on("myEvent", async (count, args) => {
         return await myFunc(count, args);
       });
-      let res = await global.notificationsCenter.fireAsync("myEvent", i, obj);
-      let res2 = await global.notificationsCenter.fireAsync("myEvent", res[0], obj);
+      let res = await global.notificationsCenter.fireAsync("myEvent", i, obj)
+        .then((args) => {
+          assert.strictEqual(args[0], 1);
+          assert.strictEqual(args[1], 1);
+          return args;
+        });
+      let res2 = await global.notificationsCenter.fireAsync("myEvent", res[0], obj)
+        .then((args) => {
+          assert.strictEqual(args[0], obj);
+          assert.strictEqual(args[1], obj);
+          return args;
+        });
       assert.strictEqual(res[0], 1);
       assert.strictEqual(res[1], 1);
       assert.strictEqual(res2[0], obj);
       assert.strictEqual(res2[1], obj);
     });
-  });
 
+    it("await error", async () => {
+      const myFunc = async function (count, args) {
+        if (count === 0) {
+          return count + 1;
+        } else {
+          return args;
+        }
+      };
+      const obj = {};
+      let i = 0;
+      const myFunc2 = async function () {
+        throw new Error("myError");
+      };
+      global.notificationsCenter.on("myEvent", async (count, args) => {
+        return await myFunc(count, args);
+      });
+      global.notificationsCenter.on("myEvent", async (count, args) => {
+        return await myFunc2(count, args);
+      });
+      let res = null;
+      try {
+        res = await global.notificationsCenter.fireAsync("myEvent", i, obj)
+          .then((...args) => {
+            console.log(args);
+            throw new Error("then don't be call");
+          })
+          .catch((e) => {
+            assert.strictEqual(e.message, "myError");
+          });
+        assert.strictEqual(res, undefined);
+        res = null;
+        res = global.notificationsCenter.fireAsync("myEvent", i, obj)
+          .then((...args) => {
+            console.log(args);
+            throw new Error("then don't be call");
+          })
+          .catch((e) => {
+            assert.strictEqual(e.message, "myError");
+          });
+        assert(nodefony.isPromise(res));
+      } catch (e) {
+        throw e;
+      }
+    });
+  });
 });

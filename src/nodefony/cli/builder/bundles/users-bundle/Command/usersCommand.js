@@ -37,6 +37,12 @@ class usersCommand extends nodefony.Command {
         } else {
           return this.display(res);
         }
+      }).catch(e => {
+        if (this.cli.commander.json) {
+          return process.stdout.write(`${JSON.stringify({})}\n`);
+        } else {
+          throw e;
+        }
       });
   }
 
@@ -47,6 +53,13 @@ class usersCommand extends nodefony.Command {
           return process.stdout.write(`${JSON.stringify(res.rows)}\n`);
         } else {
           return this.display(res.rows);
+        }
+      })
+      .catch(e => {
+        if (this.cli.commander.json) {
+          return process.stdout.write(`${JSON.stringify({})}\n`);
+        } else {
+          throw e;
         }
       });
   }

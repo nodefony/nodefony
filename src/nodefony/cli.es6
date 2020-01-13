@@ -377,8 +377,8 @@ class CLI extends nodefony.Service {
     });
   }
 
-  parseCommand(argv) {
-    this.parse = this.commander.parse(argv || process.argv);
+  async parseCommand(argv) {
+    const parser = this.commander.parse(argv || process.argv);
     if (this.commander.debug) {
       this.debug = this.commander.debug;
     } else {
@@ -389,7 +389,7 @@ class CLI extends nodefony.Service {
     } else {
       this.interactive = false;
     }
-    return this.parse;
+    return Promise.resolve(parser);
   }
 
   setOption(option, description, callback) {

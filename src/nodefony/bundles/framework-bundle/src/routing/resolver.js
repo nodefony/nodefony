@@ -25,7 +25,6 @@ class Resolver extends nodefony.Service {
     this.request = null;
     this.route = null;
     this.bundle = null;
-    this.onError = null ;
   }
 
   clean() {
@@ -170,15 +169,12 @@ ${clc.yellow("action")} : ${this.actionName}
 ${clc.red("route")} : ${clc.cyan(this.route.toString())}
 ${clc.red("query")} : ${controller.query ? JSON.stringify(controller.query, null, " "): null}`, "DEBUG", `ROUTE ${this.route.name}`);
       }
-      if(this.onError && nodefony.Error.isError(data) ){
-        if ( data.code ){
+      if (nodefony.isError(data)) {
+        if (data.code) {
           controller.response.setStatusCode(data.code);
         }
-        try {
-          return this.returnController(this.onError.apply(controller, [data, this.route, this.variables]));
-        }catch(e){
-          this.onError = null ;
-          return this.context.kernelHttp.onError(this.container, e);
+        if (this.context.listenerCount("onError")) {
+          return this.returnController(data);
         }
       }
       if (data) {
@@ -192,9 +188,6 @@ ${clc.red("query")} : ${controller.query ? JSON.stringify(controller.query, null
 
   newController(container, context) {
     let controller = new this.controller(container || this.container, context || this.context);
-    if ( controller.onError && context.resolver ){
-      context.resolver.onError = controller.onError.bind(controller) ;
-    }
     container.set("controller", controller);
     return controller;
   }
@@ -202,13 +195,30 @@ ${clc.red("query")} : ${controller.query ? JSON.stringify(controller.query, null
   returnController(result) {
     let type = nodefony.typeOf(result);
     switch (true) {
+    case result instanceof Promise:
+    case result instanceof BlueBird:
+    case nodefony.isPromise(result):
+      this.context.promise = result;
+      return this.context.promise
+        .then((myResult) => {
+          return this.returnController(myResult);
+        }).catch((e) => {
+          return this.returnController(e);
+        });
     case (type === "Error"):
-      if (this.context) {
-        this.context.fire("onError", this.context.container, result);
-        return;
+      if (this.context.listenerCount("onError")) {
+        return this.context.fireAsync("onError", result, this.route, this.variables)
+          .then((res) => {
+            this.context.removeAllListeners("onError");
+            return this.returnController(res[0]);
+          }).catch(e => {
+            this.context.removeAllListeners("onError");
+            return this.context.kernelHttp.onError(this.container, e);
+          });
+      } else {
+        return this.context.kernelHttp.onError(this.container, result);
       }
-      this.log(result, "ERROR");
-      return;
+      break;
     case (type === "string"):
     case result instanceof String:
       return this.context.send(result);
@@ -228,19 +238,6 @@ ${clc.red("query")} : ${controller.query ? JSON.stringify(controller.query, null
     case result instanceof nodefony.Response:
     case result instanceof nodefony.wsResponse:
       return this.context.send();
-    case result instanceof Promise:
-    case result instanceof BlueBird:
-    case nodefony.isPromise(result):
-      //if (this.context.promise) {
-      //return this.context.promise.then(result);
-      //}
-      this.context.promise = result;
-      return this.context.promise
-        .then((myResult) => {
-          return this.returnController(myResult);
-        }).catch((e) => {
-          return this.returnController(e);
-        });
     case result instanceof nodefony.Context:
       return result;
     case (type === "object"):

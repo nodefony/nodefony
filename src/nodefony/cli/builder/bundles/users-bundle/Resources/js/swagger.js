@@ -7,11 +7,11 @@ import {
 import "swagger-ui/dist/swagger-ui.css";
 import "../css/swagger.css";
 
-const configBundle = require("../config/config.js");
+import config from "../config/swagger.js";
 
 class Swagger {
   constructor() {
-    this.config = configBundle.swagger;
+    this.config = config;
     this.initialize();
     this.changeLogo();
   }
@@ -35,7 +35,7 @@ class Swagger {
     this.swagger = SwaggerUI({
       //url: "/api/users/documentation",
       urls: this.config.urls,
-      "urls.primaryName":this.config.primaryName,
+      "urls.primaryName": this.config.primaryName,
       dom_id: '#swagger',
       //defaultModelsExpandDepth: -1,
       deepLinking: true,
@@ -47,7 +47,7 @@ class Swagger {
         SwaggerUIBundle.plugins.DownloadUrl
       ],
       layout: "StandaloneLayout",
-      requestInterceptor: function(request) {
+      requestInterceptor: function (request) {
         //console.log('[Swagger] intercept try-it-out request');
         //request.headers.jwt = localstorage;
         return request;

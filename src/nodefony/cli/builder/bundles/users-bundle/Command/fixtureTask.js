@@ -7,10 +7,10 @@ class fixtureTask extends nodefony.Task {
 
   showHelp() {
     this.setHelp("users:fixtures:default",
-      "nodefony  users:fixtures:default generate admin, anonymous and 3 common users"
+      "Generate admin, anonymous and 3 common users `nodefony  users:fixtures:default` "
     );
-    this.setHelp("users:fixtures:random [nb]",
-      "nodefony  users:fixtures:random [nb = 10] generate ramdom users with faker"
+    this.setHelp("users:fixtures:random nb",
+      "Generate ramdom users with faker `nodefony users:fixtures:random 10` "
     );
   }
 
