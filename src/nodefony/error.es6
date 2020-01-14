@@ -14,6 +14,28 @@ const json = {
 };
 Object.defineProperty(Error.prototype, 'toJSON', json);
 
+const exclude = {
+  context:true,
+  resolver:true,
+  container:true
+};
+const jsonNodefony = {
+  configurable: true,
+  writable: true,
+  value: function () {
+    let alt = {};
+    const storeKey = function (key) {
+      if (key in exclude){
+        return ;
+      }
+      alt[key] = this[key];
+    };
+    Object.getOwnPropertyNames(this).forEach(storeKey, this);
+    return alt;
+  }
+};
+
+
 const isSequelizeError = function (error) {
   try {
     return nodefony.sequelize.isError(error);
@@ -43,6 +65,10 @@ class nodefonyError extends Error {
     if (message) {
       this.parseMessage(message);
     }
+  }
+
+  toJSON(){
+
   }
 
   static isError(error) {
@@ -261,6 +287,8 @@ class nodefonyError extends Error {
   }
 
 }
+
+Object.defineProperty(nodefonyError.prototype, 'toJSON', jsonNodefony);
 
 nodefony.Error = nodefonyError;
 module.exports = nodefonyError;

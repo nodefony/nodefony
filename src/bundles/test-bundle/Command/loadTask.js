@@ -106,7 +106,6 @@ class loadTask extends nodefony.Task {
         requests : nb,
         concurence: conc
       }, "INFO");
-      //return resolve(await requestConcurence.call(this, url, options, 5));
       try {
         for (;;) {
           try {
@@ -116,7 +115,7 @@ class loadTask extends nodefony.Task {
               i: i,
               nb: nb
             });
-            if (i === (nb) ) {
+            if (i  >= nb - res ) {
               console.log(this.result);
               return resolve(i);
             }

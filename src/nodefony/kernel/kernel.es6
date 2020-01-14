@@ -814,7 +814,7 @@ class Kernel extends nodefony.Service {
 
   async onReady() {
     return new Promise((resolve, reject) => {
-      process.nextTick(() => {
+      //process.nextTick(() => {
         try {
           if (this.type === "SERVER") {
             this.initServers();
@@ -834,7 +834,7 @@ class Kernel extends nodefony.Service {
           return reject(e);
         }
       });
-    });
+    //});
   }
 
   /**

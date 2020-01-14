@@ -35,7 +35,7 @@ class generateProject extends nodefony.Builder {
       npm: 'npm',
       addons: {
         annotations: true,
-        users: false
+        users: true
       }
     });
     if (!this.name) {
@@ -54,14 +54,14 @@ class generateProject extends nodefony.Builder {
         return this.buildFront(this.response, this.path)
           .run(this.cli.interactive)
           .then(async (project) => {
-            if (project.response.addons.users) {
+            if (this.response.addons.users) {
               try {
                 await this.generateUserBundle(project);
               } catch (e) {
                 this.log(e, "ERROR");
               }
             }
-            return project.response;
+            return this.response;
           })
           .catch((e) => {
             throw e;

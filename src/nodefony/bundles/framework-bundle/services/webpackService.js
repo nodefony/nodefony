@@ -32,6 +32,7 @@ module.exports = class webpack extends nodefony.Service {
         return;
       }
       if (this.kernel.environment === "dev") {
+        this.logger("Start WEBPACK Compiler");
         return this.compile()
           .then((ele) => {
             shell.cd(this.kernel.rootDir);
