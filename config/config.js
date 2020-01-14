@@ -22,6 +22,33 @@
  */
 const path = require("path");
 
+let certificats = {
+  options: {
+    rejectUnauthorized: true
+  }
+};
+let CDN = null;
+let statics = true;
+let monitoring = true;
+let documentation = true;
+let unitTest = true;
+let domainCheck = false;
+if (process.env && process.env.NODE_ENV === "production") {
+  certificats.key = path.resolve("config", "certificates", "server", "privkey.pem");
+  certificats.cert = path.resolve("config", "certificates", "server", "fullchain.pem");
+  certificats.ca = path.resolve("config", "certificates", "ca", "nodefony-root-ca.crt.pem");
+  CDN = null;
+  statics = true;
+  documentation = false;
+  monitoring = true;
+  unitTest = false;
+  domainCheck = true;
+} else {
+  certificats.key = path.resolve("config", "certificates", "server", "privkey.pem");
+  certificats.cert = path.resolve("config", "certificates", "server", "fullchain.pem");
+  certificats.ca = path.resolve("config", "certificates", "ca", "nodefony-root-ca.crt.pem");
+}
+
 module.exports = {
   system: {
     domain: "0.0.0.0",
@@ -31,17 +58,17 @@ module.exports = {
     ],
     httpPort: 5151,
     httpsPort: 5152,
-    domainCheck: false,
+    domainCheck: domainCheck,
     locale: "en_en",
     /**
      * BUNDLES CORE
      */
     security: true,
     realtime: true,
-    monitoring: true,
+    monitoring: monitoring,
     mail: true,
-    documentation: true,
-    unitTest: true,
+    documentation: documentation,
+    unitTest: unitTest,
     redis: false,
     mongo: false,
     elastic: false,
@@ -49,20 +76,13 @@ module.exports = {
      * SERVERS
      */
     servers: {
-      statics: true,
+      statics: statics,
       protocol: "1.1", //  2.0 || 1.1
       http: true,
       https: true,
       ws: true,
       wss: true,
-      certificats: {
-        key: path.resolve("config", "certificates", "server", "privkey.pem"),
-        cert: path.resolve("config", "certificates", "server", "fullchain.pem"),
-        ca: path.resolve("config", "certificates", "ca", "nodefony-root-ca.crt.pem"),
-        options: {
-          rejectUnauthorized: true
-        }
-      }
+      certificats: certificats
     },
     /**
      * DEV SERVER
@@ -125,7 +145,7 @@ module.exports = {
    *         ]
    *      },
    */
-  CDN: null,
+  CDN: CDN,
 
   /**
    *  ENGINE TEMPLATE

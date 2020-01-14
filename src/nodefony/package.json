@@ -34,9 +34,9 @@
     "nodefony": "./bin/nodefony"
   },
   "dependencies": {
-    "@babel/core": "^7.8.0",
-    "@babel/parser": "^7.8.0",
-    "@babel/preset-env": "^7.8.2",
+    "@babel/core": "^7.8.3",
+    "@babel/parser": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
     "@nodefony/documentation-bundle": "^5.1.1",
     "@nodefony/elastic-bundle": "^5.1.1",
     "@nodefony/framework-bundle": "^5.1.1",
@@ -61,7 +61,7 @@
     "cli-table": "^0.3.1",
     "clui": "^0.3.6",
     "commander": "^4.1.0",
-    "core-js": "^3.6.3",
+    "core-js": "^3.6.4",
     "create-react-app": "^3.3.0",
     "graphql": "^14.5.8",
     "inquirer": "^7.0.3",
