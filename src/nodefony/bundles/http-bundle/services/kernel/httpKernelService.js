@@ -433,8 +433,15 @@ class httpKernel extends nodefony.Service {
   createWebsocketContext(container, request, type) {
     let context = new nodefony.context.websocket(container, request, type);
     context.once('onFinish', (context) => {
+      if (!context) {
+        return;
+      }
+      if (context.finished) {
+        return;
+      }
       this.container.leaveScope(container);
       context.clean();
+      context.finished = true;
       context = null;
       request = null;
       container = null;

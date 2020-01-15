@@ -18,7 +18,7 @@ const binding = require('../build/Release/{{shortName}}.node');
  *	@param {class} context
  */
 {% endif %}
-class {{controllerName}} extends nodefony.controller {
+class {{controllerName}} extends nodefony.Controller {
 
   constructor(container, context) {
     super(container, context);

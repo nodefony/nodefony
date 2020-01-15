@@ -2,7 +2,12 @@ class passeportFactory extends nodefony.Factory {
 
   constructor(name, security, settings) {
     super(name, security, settings);
-    this.passport = security.firewall.passport;
+
+    //this.passport = security.firewall.passport;
+    const passport = security.firewall.newPassport();
+    this.passport = passport.framework(security.firewall.nodefonyPassport(security.firewall));
+    //console.log(this.passport)
+
     this.getStrategy(this.settings)
       .then((strategy) => {
         if (this.name in this.passport._strategies) {

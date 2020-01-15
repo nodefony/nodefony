@@ -230,16 +230,32 @@ class Bundle extends nodefony.Service {
     this.webpackCompiler = null;
     this.webPackConfig = null;
     this.watching = null;
+    this.kernel.once("onPostReady", ()=>{
+      if( this.kernel.environment === "prod" || this.kernel.environment === "production"){
+        this.clean();
+      }
+    });
     this.fire("onRegister", this);
   }
 
   clean() {
+    this.logger(`CLEAN MEMORY BUNDLE :  ${this.name}`);
     this.webPackConfig = null;
     delete this.webPackConfig;
     this.webpackCompiler = null;
     delete this.webpackCompiler;
     this.watching = null;
     delete this.watching;
+    this.viewFiles = null ;
+    delete this.viewFiles ;
+    this.i18nFiles = null ;
+    delete this.i18nFiles ;
+    this.controllerFiles = null ;
+    delete this.controllerFiles ;
+    this.commandFiles = null ;
+    delete this.commandFiles ;
+    this.resourcesFiles = null ;
+    delete this.resourcesFiles ;
   }
 
   fire() {

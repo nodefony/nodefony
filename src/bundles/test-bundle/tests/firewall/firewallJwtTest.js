@@ -199,7 +199,9 @@ describe("BUNDLE TEST", function () {
         assert.deepStrictEqual(token.authenticated, true);
         assert.deepStrictEqual(token.factory, "jwt");
         assert.deepStrictEqual(token.provider, null);
-        assert.deepStrictEqual(token.user, json.user);
+        assert.deepStrictEqual(token.user.username, json.user.username);
+        assert.deepStrictEqual(token.user.name, json.user.name);
+        assert.deepStrictEqual(token.user.surname, json.user.surname);
         assert(token.jwtToken);
         // valid token during authenticate local
         assert(token.jwtToken.data);

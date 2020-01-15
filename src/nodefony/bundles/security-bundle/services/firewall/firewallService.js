@@ -2,7 +2,8 @@ let passport = null;
 let nodefonyPassport = null;
 try {
   passport = require('passport');
-  nodefonyPassport = require("@nodefony/passport-wrapper");
+  //nodefonyPassport = require("@nodefony/passport-wrapper");
+  nodefonyPassport = require(path.resolve(__dirname, "..", "..","src", "passport","passportFramework.js"));
 } catch (e) {
   this.logger(e);
 }
@@ -113,7 +114,9 @@ module.exports = class security extends nodefony.Service {
 
   constructor(container, kernel, cors) {
     super("firewall", container, kernel.notificationsCenter);
-    this.passport = passport.framework(nodefonyPassport(this));
+    //this.passport = passport.framework(nodefonyPassport(this));
+    //this.passport = passport ;
+    this.nodefonyPassport = nodefonyPassport ;
     this.corsManager = cors;
     this.reader = function (context) {
       let func = context.get("reader").loadPlugin("security", pluginReader);
@@ -153,6 +156,11 @@ module.exports = class security extends nodefony.Service {
         break;
       }
     });
+  }
+
+  newPassport(){
+    delete require.cache[require.resolve("passport")];
+    return require("passport");
   }
 
   handleSecurity(context, connection) {

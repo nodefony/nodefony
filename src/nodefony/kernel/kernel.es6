@@ -174,6 +174,7 @@ class Kernel extends nodefony.Service {
         if (process.getuid && process.getuid() === 0) {
           //this.drop_root();
         }
+        this.clean();
         this.postReady = true;
       });
       if (!this.console) {
@@ -182,6 +183,12 @@ class Kernel extends nodefony.Service {
     } catch (e) {
       console.trace(e);
       throw e;
+    }
+  }
+
+  clean(){
+    if ( this.environment === "prod"){
+      myrequire = null ;
     }
 
   }
