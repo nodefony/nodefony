@@ -94,11 +94,11 @@ module.exports = class webpack extends nodefony.Service {
 
   setFileSystem() {
     switch (this.webPackSettings.outputFileSystem) {
-      case "memory-fs":
-        return null;
-        //return new MemoryFS();
-      default:
-        return null;
+    case "memory-fs":
+      return null;
+      //return new MemoryFS();
+    default:
+      return null;
     }
   }
 
@@ -127,7 +127,7 @@ module.exports = class webpack extends nodefony.Service {
           this.logger("COMPILE SUCCESS BUNDLE : " + bundle + " " + file, "INFO");
         }
       }
-      if (watcher) {
+      if (watcher && this.sockjs) {
         this.logger(stats.toString(this.webPackSettings.stats), "INFO");
         if (this.kernel.getBundle(bundle) &&
           this.kernel.getBundle(bundle).settings &&
@@ -161,15 +161,19 @@ module.exports = class webpack extends nodefony.Service {
       addEntry = config.watch;
     }
     if (addEntry) {
-      options = nodefony.extend({
-        inline: this.sockjs.settings.inline,
-        hot: this.sockjs.hot,
-        hotOnly: this.sockjs.hotOnly,
-        watch: addEntry,
-        protocol: this.sockjs.protocol,
-        domain: this.sockjs.settings.domain || this.kernel.domain,
-        port: this.sockjs.settings.port || this.kernel.httpsPort
-      }, (config.devServer || {}), (bundleSettings.devServer || {}));
+      if (!this.sockjs) {
+        options = nodefony.extend({}, (config.devServer || {}), (bundleSettings.devServer || {}));
+      } else {
+        options = nodefony.extend({
+          inline: this.sockjs.settings.inline,
+          hot: this.sockjs.hot,
+          hotOnly: this.sockjs.hotOnly,
+          watch: addEntry,
+          protocol: this.sockjs.protocol,
+          domain: this.sockjs.settings.domain || this.kernel.domain,
+          port: this.sockjs.settings.port || this.kernel.httpsPort
+        }, (config.devServer || {}), (bundleSettings.devServer || {}));
+      }
     }
     return options;
   }
@@ -211,16 +215,16 @@ module.exports = class webpack extends nodefony.Service {
         }
         const prependDevClient = (entry) => {
           switch (nodefony.typeOf(entry)) {
-            case "function":
-              return () => Promise.resolve(entry()).then(prependDevClient);
-            case 'object':
-              const entryClone = {};
-              Object.keys(entry).forEach((key) => {
-                entryClone[key] = devClient.concat(entry[key]);
-              });
-              return entryClone;
-            default:
-              return devClient.concat(entry);
+          case "function":
+            return () => Promise.resolve(entry()).then(prependDevClient);
+          case 'object':
+            const entryClone = {};
+            Object.keys(entry).forEach((key) => {
+              entryClone[key] = devClient.concat(entry[key]);
+            });
+            return entryClone;
+          default:
+            return devClient.concat(entry);
           }
         };
         [].concat(config).forEach((wpOpt) => {
@@ -282,34 +286,34 @@ module.exports = class webpack extends nodefony.Service {
               };
             }
             break;*/
-          case "react":
-            publicPath = path.resolve("/", bundle.bundleName, "dist");
-            process.env.PUBLIC_URL = basename;
-            process.env.PUBLIC_PATH = publicPath;
-            process.env.HOST = this.socksSettings.domain + ":" + this.socksSettings.port;
-            process.env.HTTPS = true;
-            config = require(file.path)(process.env.NODE_ENV);
-            config.context = Path;
-            config.output.path = path.resolve(bundle.path, "Resources", "public", "dist");
-            if (publicPath) {
-              config.output.publicPath = publicPath + "/";
-            } else {
-              config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
-            }
-            watchOptions = {
-              ignored: new RegExp(
-                `^(?!${path
+        case "react":
+          publicPath = path.resolve("/", bundle.bundleName, "dist");
+          process.env.PUBLIC_URL = basename;
+          process.env.PUBLIC_PATH = publicPath;
+          process.env.HOST = this.socksSettings.domain + ":" + this.socksSettings.port;
+          process.env.HTTPS = true;
+          config = require(file.path)(process.env.NODE_ENV);
+          config.context = Path;
+          config.output.path = path.resolve(bundle.path, "Resources", "public", "dist");
+          if (publicPath) {
+            config.output.publicPath = publicPath + "/";
+          } else {
+            config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
+          }
+          watchOptions = {
+            ignored: new RegExp(
+              `^(?!${path
                 .normalize(Path + '/')
                 .replace(/[\\]+/g, '\\\\')}).+[\\\\/]node_modules[\\\\/]`,
-                'g'
-              )
-            };
-            break;
-          default:
-            config = require(file.path);
-            watchOptions = nodefony.extend({
-              ignored: /node_modules/
-            }, this.webPackSettings.watchOptions);
+              'g'
+            )
+          };
+          break;
+        default:
+          config = require(file.path);
+          watchOptions = nodefony.extend({
+            ignored: /node_modules/
+          }, this.webPackSettings.watchOptions);
         }
         try {
           devServer = this.addDevServerEntrypoints(config, watch, type, bundle);

@@ -139,7 +139,7 @@ class httpKernel extends nodefony.Service {
 
   //HTTP ENTRY POINT
   onHttpRequest(request, response, type) {
-    if (request.url && this.sockjs && request.url.match(this.sockjs.regPrefix)) {
+    if (this.sockjs && request.url && request.url.match(this.sockjs.regPrefix)) {
       this.logger("HTTP drop to sockj " + request.url, "DEBUG");
       return;
     }

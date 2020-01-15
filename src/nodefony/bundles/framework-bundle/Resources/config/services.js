@@ -12,6 +12,7 @@ module.exports = {
     }]
   },
   webpack: {
+    environment: ["development", "CONSOLE"],
     class: nodefony.services.webpack,
     arguments: ["@container", "@kernel"]
   },

@@ -32,6 +32,7 @@ module.exports = {
     arguments: ["@httpKernel"]
   },
   sockjs: {
+    environment: ["development"],
     class: nodefony.services.sockjs,
     arguments: ["@httpKernel", "@httpServer", "@httpsServer"]
   },

@@ -41,7 +41,7 @@ if (process.env && process.env.NODE_ENV === "production") {
   statics = true;
   documentation = false;
   monitoring = true;
-  unitTest = false;
+  unitTest = true;
   domainCheck = true;
 } else {
   certificats.key = path.resolve("config", "certificates", "server", "privkey.pem");

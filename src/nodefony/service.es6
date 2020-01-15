@@ -177,7 +177,7 @@ class Service {
       return this.notificationsCenter.emit.apply(this.notificationsCenter, arguments);
     }
   }
-  emitAsync(){
+  emitAsync() {
     if (this.notificationsCenter) {
       return this.notificationsCenter.emitAsync.apply(this.notificationsCenter, arguments);
     }

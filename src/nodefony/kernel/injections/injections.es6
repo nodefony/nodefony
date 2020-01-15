@@ -21,7 +21,6 @@ const pluginReader = function () {
         case 'parameters':
           parameters = this.xmlToJson.call(this, node[key][0].parameter);
           break;
-
         case 'services':
           services = this.xmlToJson.call(this, node[key][0].service);
           break;
@@ -365,6 +364,29 @@ class Injection extends nodefony.Service {
   nodeReader(jsonServices) {
     for (let lib in jsonServices) {
       if (jsonServices[lib].class) {
+        if (jsonServices[lib].environment) {
+          let inject = false;
+          if (process.env && process.env.NODE_ENV) {
+            if (nodefony.typeOf(jsonServices[lib].environment) === "array") {
+              let res = jsonServices[lib].environment.indexOf(process.env.NODE_ENV);
+              if (res >= 0) {
+                inject = true;
+              }
+              res = jsonServices[lib].environment.indexOf(this.kernel.type);
+              if (res >= 0) {
+                inject = true;
+              }
+            } else {
+              if (jsonServices[lib].environment === process.env.NODE_ENV) {
+                inject = true;
+              }
+            }
+            if (!inject) {
+              this.logger(`environment : ${process.env.NODE_ENV} BYPASS SERVICE START : ${lib}`, "DEBUG");
+              continue;
+            }
+          }
+        }
         try {
           let injector = this.setInjector(lib, jsonServices[lib]);
           injector.startService();
