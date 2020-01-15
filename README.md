@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://github.com/nodefony/nodefony-core/raw/master/src/nodefony/bundles/framework-bundle/Resources/public/images/nodefony-logo.png"><br>
 </p>
-<h1 align="center">NODEFONY V5</h1>
+<h1 align="center">NODEFONY V6</h1>
 
 [![npm package](https://nodei.co/npm/nodefony.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/nodefony)
 
@@ -9,7 +9,7 @@
 
 Nodefony is Node.js full-stack web framework.  
 
-Nodefony can be used to develop a complete solution to create a web application.
+Nodefony can be used to develop a complete solution to create a Fullstack Web Application, Secure Api, or Microservices.
 
 The Nodefony project is inspired by the PHP Symfony framework, a developer can find most of the concepts, configurations and patterns of Symfony framework.
 
@@ -38,14 +38,15 @@ Nodefony is not an exhaustive port of symfony !
 -   Servers  ([http(s)](https://nodejs.org/dist/latest-v8.x/docs/api/https.html), [websocket(s)](https://github.com/theturtle32/WebSocket-Node), statics, sockjs)
 -   [HTTP2](https://nodejs.org/api/http2.html)  http2 ready node module provides an implementation of the HTTP/2 (push server ready).
 -   Dynamics routing
--   ORM ([Sequelize](http://docs.sequelizejs.com/), [mongoose](http://mongoosejs.com/index.html))
+-   ORM [Sequelize](http://docs.sequelizejs.com)
+-   ORM [mongoose](http://mongoosejs.com/index.html)
 -   Simple Databases Services connections (Redis, Mongo, Elasticsearch, mysql, sqlite ...).
--   MVC templating ([Twig](https://github.com/twigjs/twig.js))
+-   MVC Templating Server Side ([Twig](https://github.com/twigjs/twig.js))
 -   Notion of real-time context in Action Controller (websocket).
 -   Notion of synchronous or asynchronous execution in Action Controller (Promise, Async, Await).
 -   Services Containers, Dependency Injection (Design Patterns)
--   Sessions Manager (ORM, memcached)
--   Authentication Manager (Digest, Basic, oAuth, Local, ldap, jwt, openid)
+-   Sessions Manager (ORM, Memcached)
+-   Authentication Manager (Digest, Basic, oAuth, Local, ldap, jwt, openid, passportjs)
 -   WAF ( Web application firewall )
 -   Cross-Origin Resource Sharing ([CORS](https://www.w3.org/TR/cors/))
 -   Production Management ([PM2](https://github.com/Unitech/pm2/))
@@ -66,15 +67,12 @@ Nodefony is not an exhaustive port of symfony !
 -   [Passport](http://passportjs.org/) Simple, unobtrusive authentication for Node.js .
 -   ~~[Angular](https://github.com/angular/angular-cli) Experimental Bundle Generator ( Angular cli no longer allows the ejection of a webpack config)~~
 
-**Nodefony 5  adds the following features** :
+**Nodefony 6  adds the following features** :
 
--   C++ Addons (Binding in Bundle)
--   Authorisations
--   HTTP2
--   WEBPACK 4  
 -   [React](https://github.com/facebookincubator/create-react-app) Experimental Bundle Generator ( Now an React Project can be merge into a Nodefony Bundle )
 -   [Vue.js](https://vuejs.org) Experimental Bundle Generator ( Now an Vue.js Project can be merge into a Nodefony Bundle )
 -   [Api swagger-ui](https://swagger.io/) ( Documentation Api with swagger and openapi AOS3)
+-   [Api graphql](https://graphql.org/) ( Documentation Api with graphiql)
 
 
 Evolution priorities for the next version will focus on robustness, unit testing, documentation and security.
@@ -86,14 +84,13 @@ You can follow Nodefony-core build with github actions at **<https://github.com/
 
 ## **Resources for Newcomers**
 
-#### -  **[Nodefony Demo](https://nodefony.net)**
+#### -  **[Nodefony Starter Demo](https://nodefony.net)**
+
+#### -  **[Nodefony CORE](https://github.com/nodefony/nodefony-core)**
 
 #### -  **[Nodefony Documentation](https://nodefony.net/documentation/default/nodefony)**
 
-#### -  **[Nodefony Monitoring](https://nodefony.net/nodefony)**
-
 #### Documentation in progress !!
-
 
 ## <a name="requirements"></a>Requirements
 
@@ -140,9 +137,9 @@ You can follow Nodefony-core build with github actions at **<https://github.com/
 
   To install or update nvm, you can use the install script:
 ```sh
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.2/install.sh | bash
 # or
-wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.2/install.sh | bash
 
 $ source ~/.bashrc # or source ~/.bash_profile
 $ nvm ls-remote # show all remote versions  
@@ -198,13 +195,13 @@ C:\Users\myuser\AppData\Roaming\npm\bin
 
 ## <a name="usecli"></a> Use nodefony cli:
 
-**cli command when use Global installation **
+**Cli command when use Global installation **
 ```bash
 $ nodefony -v
 5.1.1
 ```
 
-**By using yarn or npm**
+**Cli command when By using yarn or npm in trunk**
 ```bash
 #Or by using yarn
 yarn run nodefony
@@ -366,6 +363,8 @@ $ npx --node-arg=--inspect nodefony dev
 **Starting a Nodefony project with [PM2](http://pm2.keymetrics.io/)** :
 ```bash
 $ nodefony prod
+or
+$ nodefony start
 ```
 Tools PM2 You can see PM2 config : config/pm2.config.js
 ```bash
@@ -380,6 +379,13 @@ $ nodefony kill
 
 # TO STOP APPLICATION WITHOUT KILL PM2 DEAMON
 $ nodefony stop
+
+# YOU can use all pm2 command by using
+$ yarn pm2 monit
+$ yarn pm2 [list|ls|status]
+$ yarn pm2 stop all
+or
+$ npm run pm2 logs --lines 200
 ```
 
 **Checking a Nodefony Project Pre-Production (Usefull to check Clusters Node)** :
@@ -563,7 +569,7 @@ Access to bundle route with URL : <https://localhost:5152/hello>
 ### Example controller  : src/bundles/hello-bundle/controller/defaultController.js
 
 ```js
-module.exports = class defaultController extends nodefony.controller {
+module.exports = class defaultController extends nodefony.Controller {
 
   constructor (container, context){
     super(container, context);
@@ -631,19 +637,6 @@ module.exports = class defaultController extends nodefony.controller {
 You can see hello-bundle config   : src/bundles/hello-bundle/Resources/config/config.js
 
 ```js
-/**
-*
-*
-*  nodefony-starter CONFIG BUNDLE  hello-bundle
-*
-* ===============================================================================
-*
-*  Copyright © 2019/2019        admin | admin@nodefony.com
-*
-* ===============================================================================
-*
-*        GENERATE BY nodefony-starter BUILDER
-*/
 module.exports = {
   type        : "nodefony",
   locale      : "en_en",
@@ -691,18 +684,6 @@ module.exports = {
 You can see hello-bundle config webpack : src/bundles/hello-bundle/Resources/config/webpack.config.js
 
 ```js
-const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const webpackMerge = require('webpack-merge');
-
-// Default context <bundle base directory>
-//const context = path.resolve(__dirname, "..", "Resources", "public");
-const public = path.resolve(__dirname, "..", "public", "assets");
-const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
-const publicPath = bundleName + "/assets/";
-
-let config = null;
-let dev = true;
 if (kernel.environment === "dev") {
   config = require("./webpack/webpack.dev.config.js");
 } else {
