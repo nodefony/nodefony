@@ -49,14 +49,14 @@ module.exports = {
     }],
 
     firewalls: {
-      // SECURITY AREA MONITORING  <passport-local>
+      // SECURITY AREA  <passport-local>
       nodefony_area: {
-        pattern: /^\/nodefony/,
+        pattern: /^\/secure/,
         provider: "nodefony",
         form_login: {
-          login_path: "/login/nodefony",
+          login_path: "/login/secure",
           check_path: "/login/check",
-          default_target_path: "/"
+          default_target_path: "/users"
         },
         "passport-local": {
           usernameField: 'username',

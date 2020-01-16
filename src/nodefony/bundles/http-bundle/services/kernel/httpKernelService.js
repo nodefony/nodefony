@@ -223,10 +223,10 @@ class httpKernel extends nodefony.Service {
           controller = resolver.newController(context.container, context);
           if (controller.sessionAutoStart) {
             context.sessionAutoStart = controller.sessionAutoStart;
-            context.once("onSessionStart", (session) => {
-              controller.session = session;
-            });
           }
+          context.once("onSessionStart", (session) => {
+            controller.session = session;
+          });
           return resolve(controller);
         } else {
           if (resolver.exception) {

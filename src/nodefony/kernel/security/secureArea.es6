@@ -11,7 +11,6 @@ module.exports = nodefony.register("SecuredArea", function () {
       this.cors = null;
       this.pattern = /.*/;
       this.factories = [];
-      //this.factory = null;
       this.nbFactories = 0;
       this.provider = null;
       this.providerName = null;
@@ -202,6 +201,8 @@ module.exports = nodefony.register("SecuredArea", function () {
                 }
                 if (!this.alwaysUseDefaultTarget) {
                   target = context.session.getFlashBag("default_target_path") || this.defaultTarget;
+                }else{
+                  target = this.defaultTarget ;
                 }
                 context.session.clearFlashBag("default_target_path");
               }

@@ -40,7 +40,7 @@ if (process.env && process.env.NODE_ENV === "production") {
   CDN = null;
   statics = true;
   documentation = false;
-  monitoring = true;
+  monitoring = false;
   unitTest = true;
   domainCheck = true;
 } else {
