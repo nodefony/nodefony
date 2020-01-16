@@ -87,6 +87,7 @@ class Notification extends events.EventEmitter {
   }
 }
 
+nodefony.Events = Notification;
 nodefony.notificationsCenter = {
   notification: Notification,
   create: function (settings, context, nbListener) {

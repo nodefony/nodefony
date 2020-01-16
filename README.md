@@ -195,7 +195,7 @@ C:\Users\myuser\AppData\Roaming\npm\bin
 
 ## <a name="usecli"></a> Use nodefony cli:
 
-**Cli command when use Global installation **
+**Cli command when use Global installation**
 ```bash
 $ nodefony -v
 5.1.1
@@ -209,7 +209,7 @@ yarn run nodefony
 #Or by using npm
 npm run nodefony
 ```
-**By using npx **
+**By using npx**
 ***note: npx is included with npm > v5.2 or can be installed separately.***
 ```bash
 npx nodefony
@@ -393,7 +393,7 @@ $ npm run pm2 logs --lines 200
 $ nodefony preprod
 ```
 
-## <a name="https"></a>Serving a Nodefony project with HTTPS
+## <a name="https"></a>Serving a Nodefony project with HTTPS or WSS
 
 By default nodefony listen secure port in 5152 @see config/config.js
 
@@ -569,61 +569,52 @@ Access to bundle route with URL : <https://localhost:5152/hello>
 ### Example controller  : src/bundles/hello-bundle/controller/defaultController.js
 
 ```js
-module.exports = class defaultController extends nodefony.Controller {
+/**
+ *	@class defaultController
+ *	@constructor
+ *	@param {class} container
+ *	@param {class} context
+ *  @Route ("/hello")
+ */
+class defaultController extends nodefony.Controller {
 
-  constructor (container, context){
+  constructor(container, context) {
     super(container, context);
+    // start session
+    this.startSession();
   }
-  /**
-   *
-   *  @method indexAction
-   *
-   */
-  indexAction (){
+
+/**
+ *    @Route ("",
+ *      name="hello-route")
+ */
+  indexAction() {
     return this.render("hello-bundle::index.html.twig", {
-      name: "hello-bundle"    
-    }).catch((e) =>{
-      throw e ;
+			name: this.bundle.name,
+			description: this.bundle.package.description    
     });
   }
-};
+}
+
+module.exports = defaultController;
 ```
 
-### Example view  (twig) : src/bundles/hello-bundle/Resources/views/index.html.twig
+### Example view (twig) : src/bundles/hello-bundle/Resources/views/index.html.twig
 
 ```twig
-{% extends '/app/Resources/views/base.html.twig' %}
-{% block title %}Welcome {{name}}! {% endblock %}
-{% block stylesheets %}
-  {{ parent() }}
-  <!-- WEBPACK BUNDLE -->
-  <link rel='stylesheet' href='{{CDN("stylesheet")}}/hello-bundle/assets/css/hello.css' />
-{% endblock %}
+{% extends './base.html.twig' %}
+{% set error = getFlashBag("error") %}
+{% set info = getFlashBag("info") %}
 {% block body %}
-  {% block header %}
-    {{ render( controller('app:app:header' )) }}
-  {% endblock %}
-  <div class='container' style='margin-top:100px'>
-    <div class='row'>
-      <div class='col text-center'>
-        <img src='{{CDN("image")}}/app/images/app-logo.png'>
-        <a href='{{url('documentation')}}'>
-          <strong style='font-size:45px'>{{name}}</strong>
-        </a>
-        <p class='display-4 mt-5'>{{trans('welcome')}}</p>
-        <p>{{binding}}</p>
-        </div>
-    </div>
+  <div class="hello">
+    <img class=displayed src=/framework-bundle/images/nodefony-logo.png>
+    <h1>{{ name }}</h1>
+    <h2>{{ description }}</h2>
+    <img class="displayed"  style=" width:10%; height:10%" src="/framework-bundle/images/nodejs/nodejs-new-pantone-black.png">
+    <img class="displayed" style=" width:15%; height:15%" src="/framework-bundle/images/webpack/webpack.svg">
   </div>
-  {% block footer %}
-    {{ render( controller('app:app:footer' )) }}
-  {% endblock %}
 {% endblock %}
-{% block javascripts %}
-  {{ parent() }}
-  <!-- WEBPACK BUNDLE -->
-  <script src='{{CDN("javascript")}}/hello-bundle/assets/js/hello.js'></script>
-{% endblock %}
+
 ```
 
 ### watchers :
@@ -638,7 +629,6 @@ You can see hello-bundle config   : src/bundles/hello-bundle/Resources/config/co
 
 ```js
 module.exports = {
-  type        : "nodefony",
   locale      : "en_en",
   /**
    *    WATCHERS
@@ -651,23 +641,21 @@ module.exports = {
    *  or
    *      watch:{
    *        controller:             true,
-   *        config:                 true,        // only  routing.js
+   *        config:                 true,        // only routing and services
    *        views:                  true,
    *        translations:           true,
    *        webpack:                true
    *      }
    *
    */
-  watch: true
+  watch: true,
+
   /**
-   *
-   *  Insert here the bundle-specific configurations
-   *
-   *  You can also override config of another bundle
-   *  with the name of the bundle
-   *
-   *  example : create an other database connector
+   * DEV SERVER
    */
+  devServer: {
+    hot: false
+  }
 };
 ```
 
@@ -684,17 +672,24 @@ module.exports = {
 You can see hello-bundle config webpack : src/bundles/hello-bundle/Resources/config/webpack.config.js
 
 ```js
+// Default context <bundle base directory>
+//const context = path.resolve(__dirname, "..", "public");
+const public = path.resolve(__dirname, "..", "public", "assets");
+const publicPath = "/hello-bundle/assets/";
+let wpconfig = null;
+let dev = true;
 if (kernel.environment === "dev") {
-  config = require("./webpack/webpack.dev.config.js");
+  wpconfig = require("./webpack/webpack.dev.config.js");
 } else {
-  config = require("./webpack/webpack.prod.config.js");
+  wpconfig = require("./webpack/webpack.prod.config.js");
   dev = false;
 }
+
 module.exports = webpackMerge(config, {
   //context: context,
   target: "web",
   entry: {
-    hello  : [ "./Resources/public/js/hello.js" ]
+    hello:["./Resources/js/hello.js"]
   },
   output: {
     path: public,

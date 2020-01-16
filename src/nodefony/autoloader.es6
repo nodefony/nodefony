@@ -67,6 +67,7 @@ module.exports = function () {
         require(path.resolve(__dirname, "result.es6"));
         require(path.resolve(__dirname, "fileClass.es6"));
         require(path.resolve(__dirname, "finder.es6"));
+        require(path.resolve(__dirname, "finder2.es6"));
         require(path.resolve(__dirname, "protocol.es6"));
         require(path.resolve(__dirname, "watcher.es6"));
         require(path.resolve(__dirname, "cli.es6"));
