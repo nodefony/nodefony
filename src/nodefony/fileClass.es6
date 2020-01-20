@@ -52,6 +52,29 @@ class File {
     }
   }
 
+  toString() {
+    return JSON.stringify(this.toJson(), null, "\n");
+  }
+
+  toJson() {
+    let obj = {
+      path: this.path,
+      name: this.name,
+      ext: this.ext,
+      shortName: this.shortName,
+      type: this.type,
+      stats: this.stats,
+      dirName: this.dirName,
+      parse: this.parse
+    };
+    if (this.type === "File") {
+      obj.encoding = this.encoding;
+      obj.mimeType = this.mimeType;
+      obj.extention = this.extention;
+    }
+    return obj;
+  }
+
   checkType() {
     if (this.stats.isDirectory()) {
       return "Directory";
@@ -109,7 +132,7 @@ class File {
   }
 
   matchName(ele) {
-    if (nodefony.typeOf(ele) === "RegExp") {
+    if (ele instanceof RegExp) {
       this.match = ele.exec(this.name);
       return this.match;
     }

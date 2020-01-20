@@ -8,6 +8,7 @@ class Result extends Array {
           this.push(res[i]);
         }
         if (res instanceof Result) {
+          //this.concat(res);
           res.clean();
         }
       } else {
@@ -15,6 +16,30 @@ class Result extends Array {
       }
     } else {
       super();
+    }
+  }
+
+  toJson(json = []) {
+    for (let index = 0; index < this.length; index++) {
+      let ele = this[index];
+      json.push(ele);
+    }
+    try {
+      return JSON.stringify(json);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  toString(json = []) {
+    for (let index = 0; index < this.length; index++) {
+      let ele = this[index];
+      json.push(ele);
+    }
+    try {
+      return JSON.stringify(json, null, "\n");
+    } catch (e) {
+      throw e;
     }
   }
 
