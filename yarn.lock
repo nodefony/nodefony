@@ -5039,10 +5039,10 @@ pm2-multimeter@^0.1.2:
   dependencies:
     charm "~0.1.1"
 
-pm2@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/pm2/-/pm2-4.2.1.tgz#c4da5cbb7c04b5a8e08c1caaad638289a90eab76"
-  integrity sha512-y75VuMJmMoTgEMSveF4fQGbu3on4YkZXm5Mu4pPW1NlPgdD7yoWu8yfXzAKs94tKCIDrbL54Z5BfFBfUgmFSIw==
+pm2@^4.2.2:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/pm2/-/pm2-4.2.2.tgz#ed21a277fd0d0db1fcb6e91864119f80c9ca2d10"
+  integrity sha512-0KDxOdo/9HaCiPoqj/EGoH3xT8eYSVsNu0lxw2kT1mn5fLomPKicO5tdCPywjSWLehbUhnPAxLjfFwH35wFZdQ==
   dependencies:
     "@pm2/agent" "^0.5.26"
     "@pm2/io" "^4.3.2"
