@@ -186,9 +186,9 @@ class Kernel extends nodefony.Service {
     }
   }
 
-  clean(){
-    if ( this.environment === "prod"){
-      myrequire = null ;
+  clean() {
+    if (this.environment === "prod") {
+      myrequire = null;
     }
 
   }
@@ -822,25 +822,25 @@ class Kernel extends nodefony.Service {
   async onReady() {
     return new Promise((resolve, reject) => {
       //process.nextTick(() => {
-        try {
-          if (this.type === "SERVER") {
-            this.initServers();
-            if (global && global.gc) {
-              this.memoryUsage("MEMORY POST READY ");
-              setTimeout(() => {
-                global.gc();
-                this.memoryUsage("EXPOSE GARBADGE COLLECTOR ON START");
-              }, 20000);
-            } else {
-              this.memoryUsage("MEMORY POST READY ");
-            }
+      try {
+        if (this.type === "SERVER") {
+          this.initServers();
+          if (global && global.gc) {
+            this.memoryUsage("MEMORY POST READY ");
+            setTimeout(() => {
+              global.gc();
+              this.memoryUsage("EXPOSE GARBADGE COLLECTOR ON START");
+            }, 20000);
+          } else {
+            this.memoryUsage("MEMORY POST READY ");
           }
-          return resolve(this);
-        } catch (e) {
-          this.logger(e, "ERROR");
-          return reject(e);
         }
-      });
+        return resolve(this);
+      } catch (e) {
+        this.logger(e, "ERROR");
+        return reject(e);
+      }
+    });
     //});
   }
 
@@ -871,6 +871,14 @@ class Kernel extends nodefony.Service {
     }
     for (let name in this.bundles) {
       this.logger("\x1b[36m INITIALIZE Bundle :  " + name.toUpperCase() + "\x1b[0m", "DEBUG");
+      try {
+        await this.bundles[name].initialize();
+      } catch (e) {
+        this.logger(e, "ERROR");
+        continue;
+      }
+      return this.terminate(0);
+
       try {
         tab.push(await this.bundles[name].boot());
       } catch (e) {

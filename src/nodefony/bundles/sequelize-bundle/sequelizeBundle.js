@@ -10,9 +10,9 @@ module.exports = class sequelizeBundle extends nodefony.Bundle {
      */
     this.waitBundleReady = true;
 
-    let service = this.get("sequelize");
+    /*let service = this.get("sequelize");
     service.on("onOrmReady", () => {
       this.fire("onReady", this, service);
-    });
+    });*/
   }
 };

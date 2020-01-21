@@ -33,7 +33,7 @@ const optionsTitleTables = {
   style: styleTable
 };
 
-let createAssetDirectory = function (myPath, callback) {
+const createAssetDirectory = function (myPath, callback) {
   try {
     if (fs.existsSync(myPath)) {
       return callback(fs.statSync(myPath));
@@ -52,7 +52,7 @@ let createAssetDirectory = function (myPath, callback) {
   }
 };
 
-let parseAssetsBundles = function (table) {
+const parseAssetsBundles = function (table) {
   let bundles = this.kernel.getBundles();
   let result = null;
   let name = null;
@@ -366,7 +366,7 @@ class cliKernel extends nodefony.cli {
                     .then(async () => {
                       this.logger(this.logCommand(), "INFO", "COMMAND");
                       let res = await myAction.apply(myCommand, this.args);
-                      if (nodefony.isPromise(res)){
+                      if (nodefony.isPromise(res)) {
                         res.then(() => {
                           return myCommand;
                         });
@@ -396,7 +396,7 @@ class cliKernel extends nodefony.cli {
                         .then(async () => {
                           this.logger(this.logCommand(), "INFO", "COMMAND");
                           let res = await myAction.apply(myTask, this.args);
-                          if (nodefony.isPromise(res)){
+                          if (nodefony.isPromise(res)) {
                             res.then(() => {
                               return myTask;
                             });
@@ -688,8 +688,8 @@ class cliKernel extends nodefony.cli {
       }
       ele.push(await this.npmList(this.kernel.bundles[bundle].path, tab));
     }
-    if ( this.commander.json ){
-      return process.stdout.write(JSON.stringify(ele)) ;
+    if (this.commander.json) {
+      return process.stdout.write(JSON.stringify(ele));
     }
     let headers = [
         "NAME",
