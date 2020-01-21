@@ -43,6 +43,12 @@ class Notification extends events.EventEmitter {
 
   async emitAsync(type, ...args) {
     const handler = _.get(this._events, type);
+    if ( type === 'onBoot'){
+      console.log( type)
+      this._events[type].forEach((ele) =>{
+        console.log(ele)
+      });
+    }
     if (_.isEmpty(handler) && !_.isFunction(handler)) {
       return false;
     }

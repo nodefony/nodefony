@@ -219,7 +219,7 @@ class sequelize extends nodefony.Orm {
 
   boot() {
     super.boot();
-    this.kernel.once('onBoot', ( /*kernel*/ ) => {
+    this.kernel.once('onBoot', async ( /*kernel*/ ) => {
       this.settings = this.getParameters("bundles.sequelize");
       this.debug = this.settings.debug;
       if (this.settings.connectors && Object.keys(this.settings.connectors).length) {

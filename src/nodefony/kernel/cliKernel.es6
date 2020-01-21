@@ -33,7 +33,7 @@ const optionsTitleTables = {
   style: styleTable
 };
 
-const createAssetDirectory = function (myPath, callback) {
+const createAssetDirectory = function(myPath, callback) {
   try {
     if (fs.existsSync(myPath)) {
       return callback(fs.statSync(myPath));
@@ -52,20 +52,23 @@ const createAssetDirectory = function (myPath, callback) {
   }
 };
 
-const parseAssetsBundles = function (table) {
+const parseAssetsBundles = async function(table) {
   let bundles = this.kernel.getBundles();
   let result = null;
   let name = null;
+  let files = [] ;
   for (let bundle in bundles) {
     try {
-      result = bundles[bundle].getPublicDirectory();
+      result = await bundles[bundle].getPublicDirectory();
+
     } catch (e) {
       this.logger(e, "ERROR");
     }
-    if (result && result.length()) {
+    if (result && result.length) {
       name = bundles[bundle].bundleName;
       try {
-        let file = new nodefony.fileClass(bundles[bundle].publicPath);
+        //let file = new nodefony.fileClass(bundles[bundle].publicPath);
+        let file = result[0];
         this.createSymlink(file.path, path.resolve(this.publicPath, name), (Srcpath, dstpath) => {
           let size = "not Defined";
           let sizeAssets = "not Defined";
@@ -76,27 +79,29 @@ const parseAssetsBundles = function (table) {
             //this.logger(e, "ERROR");
           }
           table.push([
-              bundle,
-              dstpath.replace(this.kernel.rootDir, "."),
-              Srcpath.replace(this.kernel.rootDir, "."),
-              size,
-              sizeAssets
-            ]);
+            bundle,
+            dstpath.replace(this.kernel.rootDir, "."),
+            Srcpath.replace(this.kernel.rootDir, "."),
+            size,
+            sizeAssets
+          ]);
         });
       } catch (e) {
         this.logger(e, "DEBUG");
       }
     }
+
   }
   try {
     this.logger("INSTALL LINK IN /web TOTAL SIZE : " + nodefony.niceBytes(this.getSizeDirectory(this.publicPath, /^docs$|^tests|^node_modules|^assets$/)), "DEBUG");
+    return files ;
   } catch (e) {
     this.logger(e, "WARNING");
   }
 };
 
 const regHidden = /^\./;
-const isHiddenFile = function (name) {
+const isHiddenFile = function(name) {
   return regHidden.test(name);
 };
 const defaultOptions = {
@@ -127,11 +132,11 @@ class cliKernel extends nodefony.cli {
     this.publicPath = null;
     this.keepAlive = false;
     switch (nodefony.packageManager) {
-    case 'yarn':
-      this.packageManager = this.yarn;
-      break;
-    default:
-      this.packageManager = this.npm;
+      case 'yarn':
+        this.packageManager = this.yarn;
+        break;
+      default:
+        this.packageManager = this.npm;
     }
     this.parseNodefonyCommand();
   }
@@ -152,16 +157,16 @@ class cliKernel extends nodefony.cli {
 
   setType(type) {
     switch (type) {
-    case "console":
-    case "CONSOLE":
-      this.type = "CONSOLE";
-      break;
-    case "server":
-    case "SERVER":
-      this.type = "SERVER";
-      break;
-    default:
-      throw new Error(`cliKernel Bad Type : ${type}`);
+      case "console":
+      case "CONSOLE":
+        this.type = "CONSOLE";
+        break;
+      case "server":
+      case "SERVER":
+        this.type = "SERVER";
+        break;
+      default:
+        throw new Error(`cliKernel Bad Type : ${type}`);
     }
   }
 
@@ -251,7 +256,7 @@ class cliKernel extends nodefony.cli {
   }
 
   loadCommand() {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       let error = [];
       if (!this.commands) {
         this.commands = {};
@@ -264,7 +269,7 @@ class cliKernel extends nodefony.cli {
           this.classCommand[bundle] = [];
         }
         try {
-          this.kernel.bundles[bundle].registerCommand(this.classCommand[bundle]);
+          await this.kernel.bundles[bundle].registerCommand(this.classCommand[bundle]);
         } catch (e) {
           error.push(e);
           this.logger(e, "ERROR");
@@ -475,14 +480,14 @@ class cliKernel extends nodefony.cli {
 
   setHelp(info, command, descrption, options) {
     this.displayTable([
-        [info, this.clc.green(command), descrption]
-      ], options || this.optionsTables);
+      [info, this.clc.green(command), descrption]
+    ], options || this.optionsTables);
   }
 
   setTitleHelp(title, options) {
     this.displayTable([
-        [title, "", ""]
-      ], options || this.optionsTitleTables);
+      [title, "", ""]
+    ], options || this.optionsTitleTables);
   }
 
   showHelp() {
@@ -567,19 +572,27 @@ class cliKernel extends nodefony.cli {
 
   // ASSETS LINK
   assetInstall() {
-    let table = this.displayTable(null, {
-      head: [
-          "BUNDLES",
-          "DESTINATION PATH",
-          "SOURCE PATH",
-          "SIZE",
-          "ASSETS COMPILE"
-        ]
-    });
-    this.logger("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : " + this.publicPath, "DEBUG");
-    createAssetDirectory.call(this, this.publicPath, () => {
-      parseAssetsBundles.call(this, table);
-      this.logger("\n" + table.toString(), "DEBUG");
+    return new Promise((resolve, reject) => {
+      try {
+        let table = this.displayTable(null, {
+          head: [
+            "BUNDLES",
+            "DESTINATION PATH",
+            "SOURCE PATH",
+            "SIZE",
+            "ASSETS COMPILE"
+          ]
+        });
+        this.logger("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : " + this.publicPath, "DEBUG");
+        createAssetDirectory.call(this, this.publicPath, async () => {
+          let res = await parseAssetsBundles.call(this, table);
+          this.logger("\n" + table.toString(), "DEBUG");
+          return resolve(res);
+        });
+
+      } catch (e) {
+        return reject(e);
+      }
     });
   }
 
@@ -600,16 +613,16 @@ class cliKernel extends nodefony.cli {
 
     let files = null;
     switch (true) {
-    case stat.isFile():
-      throw new Error(dir + " is not a directory");
-    case stat.isDirectory():
-      files = fs.readdirSync(dir);
-      break;
-    case stat.isSymbolicLink():
-      files = fs.realpathSync(dir);
-      break;
-    default:
-      throw new Error(dir + " is not a directory");
+      case stat.isFile():
+        throw new Error(dir + " is not a directory");
+      case stat.isDirectory():
+        files = fs.readdirSync(dir);
+        break;
+      case stat.isSymbolicLink():
+        files = fs.realpathSync(dir);
+        break;
+      default:
+        throw new Error(dir + " is not a directory");
     }
     let totalSizeBytes = 0;
     let dirSize = null;
@@ -621,22 +634,22 @@ class cliKernel extends nodefony.cli {
         return totalSizeBytes;
       }
       switch (true) {
-      case stat.isFile():
-        if (!isHiddenFile(files[i])) {
-          totalSizeBytes += stat.size;
-        }
-        break;
-      case stat.isDirectory():
-        dirSize = this.getSizeDirectory(myPath, exclude);
-        totalSizeBytes += dirSize;
-        break;
-      case stat.isSymbolicLink():
-        //console.log("isSymbolicLink")
-        try {
-          dirSize = this.getSizeDirectory(fs.realpathSync(myPath), exclude);
+        case stat.isFile():
+          if (!isHiddenFile(files[i])) {
+            totalSizeBytes += stat.size;
+          }
+          break;
+        case stat.isDirectory():
+          dirSize = this.getSizeDirectory(myPath, exclude);
           totalSizeBytes += dirSize;
-        } catch (e) {}
-        break;
+          break;
+        case stat.isSymbolicLink():
+          //console.log("isSymbolicLink")
+          try {
+            dirSize = this.getSizeDirectory(fs.realpathSync(myPath), exclude);
+            totalSizeBytes += dirSize;
+          } catch (e) {}
+          break;
       }
     }
     return totalSizeBytes;
@@ -692,11 +705,11 @@ class cliKernel extends nodefony.cli {
       return process.stdout.write(JSON.stringify(ele));
     }
     let headers = [
-        "NAME",
-        "VERSION",
-        "DESCRIPTION",
-        "BUNDLES"
-      ];
+      "NAME",
+      "VERSION",
+      "DESCRIPTION",
+      "BUNDLES"
+    ];
     this.displayTable(ele[0], {
       head: headers,
       colWidths: [30, 10, 100, 20]
@@ -744,11 +757,11 @@ class cliKernel extends nodefony.cli {
                   where = path.basename(data.dependencies[pack]._where) || "";
                 }
                 ele.push([
-                    data.dependencies[pack].name,
-                    data.dependencies[pack].version,
-                    data.dependencies[pack].description || "",
-                    where || path.basename(cwd)
-                  ]);
+                  data.dependencies[pack].name,
+                  data.dependencies[pack].version,
+                  data.dependencies[pack].description || "",
+                  where || path.basename(cwd)
+                ]);
               }
             }
           } catch (e) {
@@ -784,11 +797,11 @@ class cliKernel extends nodefony.cli {
   async rebuildPackage(bundle, env = "development") {
     let cmd = null;
     switch (nodefony.packageManager) {
-    case 'yarn':
-      cmd = ["install", "--force"];
-      break;
-    default:
-      cmd = ["install"];
+      case 'yarn':
+        cmd = ["install", "--force"];
+        break;
+      default:
+        cmd = ["install"];
     }
     try {
       if (bundle instanceof nodefony.Bundle) {

@@ -95,7 +95,7 @@ module.exports = class sockjs extends nodefony.Service {
     super("sockjs", httpKernel.container, httpKernel.notificationsCenter);
     this.compilers = {};
     this.sockets = [];
-    this.kernel.once("onBoot", () => {
+    this.kernel.once("onBoot", async () => {
       this.settings = nodefony.extend(this.bundle.settings.sockjs, kernel.settings.system.devServer);
       if (this.bundle.settings.sockjs) {
         if (this.settings.overlay) {

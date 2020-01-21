@@ -10,7 +10,7 @@ module.exports = class sessions extends nodefony.Service {
     super("SESSIONS", httpKernel.container, httpKernel.notificationsCenter);
     this.httpKernel = httpKernel;
     this.sessionStrategy = "none";
-    this.once("onBoot", () => {
+    this.once("onBoot", async () => {
       this.settings = this.container.getParameters("bundles.http").session;
       this.proba = parseInt(this.settings.gc_probability, 10);
       this.divisor = parseInt(this.settings.gc_divisor, 10);

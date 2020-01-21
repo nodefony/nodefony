@@ -27,7 +27,7 @@ module.exports = class httpsServer extends nodefony.Service {
     this.family = null;
     this.type = "HTTPS";
     this.server = null;
-    this.once("onBoot", () => {
+    this.once("onBoot", async () => {
       this.bundle.on("onServersReady", (type) => {
         if (type === this.type) {
           let addr = this.server.address();

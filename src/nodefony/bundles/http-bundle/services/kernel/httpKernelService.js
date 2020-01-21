@@ -19,7 +19,7 @@ class httpKernel extends nodefony.Service {
     this.container.addScope("request");
 
     // listen KERNEL EVENTS
-    this.once("onBoot", () => {
+    this.once("onBoot", async () => {
       this.firewall = this.get("security");
       this.router = this.get("router");
       this.sessionService = this.get("sessions");
@@ -53,7 +53,7 @@ class httpKernel extends nodefony.Service {
       }
     });
 
-    this.once("onReady", () => {
+    this.once("onReady", async () => {
       if (this.monitoringBundle) {
         this.debugView = this.getTemplate("monitoringBundle::debugBar.html.twig");
       }

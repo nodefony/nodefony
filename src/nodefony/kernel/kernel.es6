@@ -724,6 +724,9 @@ class Kernel extends nodefony.Service {
         });
     default:
       return await this.preRegister(bundles)
+        .then(()=>{
+          return this ;
+        })
         .catch(e => {
           throw e;
         });
@@ -795,7 +798,8 @@ class Kernel extends nodefony.Service {
 
   async preRegister(bundles) {
     try {
-      this.fire("onPreRegister", this);
+      //this.fire("onPreRegister", this);
+      await this.emitAsync("onPreRegister", this);
       this.preRegistered = true;
     } catch (e) {
       this.logger(e);
@@ -803,14 +807,16 @@ class Kernel extends nodefony.Service {
     return await this.registerBundles(bundles)
       .then(async (res) => {
         this.preboot = true;
-        this.fire("onPreBoot", this);
+        //this.fire("onPreBoot", this);
+        await this.emitAsync("onPreBoot", this);
         this.logger(res, "DEBUG", "REGISTER BUNDLES");
         return await this.registerBundles(this.configBundle)
           .then(async (res) => {
             if (res.length) {
               this.logger(res, "DEBUG", "REGISTER BUNDLES");
             }
-            this.fire("onRegister", this);
+            //this.fire("onRegister", this);
+            await this.emitAsync("onRegister", this);
             return await this.initializeBundles();
           });
       })
@@ -851,20 +857,23 @@ class Kernel extends nodefony.Service {
   async initializeBundles() {
     let tab = [];
     try {
-      this.app = this.initApplication();
-      this.fire("onPostRegister", this);
+      this.app = await this.initApplication();
+      await this.emitAsync("onPostRegister", this);
+
       if (this.console) {
         await this.loadCommand();
       } else {
-        if (!fs.existsSync(this.cacheLink)) {
+        await this.cli.assetInstall();
+        /*if (!fs.existsSync(this.cacheLink)) {
           try {
             fs.mkdirSync(this.cacheLink);
             this.cli.assetInstall();
           } catch (e) {
             this.logger(e, "WARNING");
           }
-        }
+        }*/
       }
+
     } catch (e) {
       this.logger(e, "ERROR");
       throw e;
@@ -873,29 +882,49 @@ class Kernel extends nodefony.Service {
       this.logger("\x1b[36m INITIALIZE Bundle :  " + name.toUpperCase() + "\x1b[0m", "DEBUG");
       try {
         await this.bundles[name].initialize();
+        //tab.push(await this.bundles[name].boot());
       } catch (e) {
         this.logger(e, "ERROR");
         continue;
       }
-      return this.terminate(0);
+    }
 
+    //this.fire("onBoot", this, tab);
+    try{
+       await this.emitAsync("onBoot", this, tab);
+       //this.fire("onBoot", this, tab);
+    }catch(e){
+      this.log(e,"WARNING", "EVENTS onBoot");
+    }
+    this.booted = true;
+
+    for (let name in this.bundles) {
+      this.logger("\x1b[36m BOOT Bundle :  " + name.toUpperCase() + "\x1b[0m", "DEBUG");
       try {
+        //await this.bundles[name].initialize();
         tab.push(await this.bundles[name].boot());
       } catch (e) {
         this.logger(e, "ERROR");
         continue;
       }
     }
-    this.fire("onBoot", this, tab);
-    this.booted = true;
 
-    let bundles = [];
+
+
+    /*let bundles = [];
     for await (let boot of this.promisesBundleReady) {
       this.log(`End Waiting Bundle Ready  ${boot.name}`, "DEBUG");
       bundles.push(boot);
+    }*/
+    //await this.emitAsync("onReady", this, tab);
+    try{
+      await this.emitAsync("onReady", this, tab);
+    }catch(e){
+      this.log(e,"WARNING", "EVENTS onReady");
     }
-    this.fire("onReady", this, bundles);
+    //this.fire("onReady", this, bundles);
     this.ready = true;
+
     if (this.console) {
       return this.matchCommand()
         .then((command) => {
@@ -912,8 +941,9 @@ class Kernel extends nodefony.Service {
         });
     }
     return await this.onReady()
-      .then(() => {
-        this.fire("onPostReady", this);
+      .then(async () => {
+        //this.fire("onPostReady", this);
+        await this.emitAsync("onPostReady", this);
         return this;
       })
       .catch((error) => {
@@ -995,6 +1025,11 @@ class Kernel extends nodefony.Service {
   emit() {
     this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
     return super.fire.apply(this, arguments);
+  }
+
+  emitAsync() {
+    this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
+    return super.emitAsync.apply(this, arguments);
   }
 
   sendMessage(message) {
@@ -1132,7 +1167,7 @@ class Kernel extends nodefony.Service {
     }
   }
 
-  loadBundle(file, loader) {
+  async loadBundle(file, loader) {
     try {
       let bundle = this.getBundleClass(file);
       try {
@@ -1141,7 +1176,8 @@ class Kernel extends nodefony.Service {
       } catch (e) {
         throw e;
       }
-      this.bundles[bundle.name].once("onReady", promiseBundleReady.call(this));
+      //this.bundles[bundle.name].once("onReady", promiseBundleReady.call(this));
+      return await this.bundles[bundle.name].find() ;
     } catch (e) {
       throw e;
     }
@@ -1190,24 +1226,26 @@ class Kernel extends nodefony.Service {
     return false;
   }
 
-  isBundleDirectory(dir) {
+  async isBundleDirectory(dir) {
     let directory = this.isPathExist(dir);
     if (directory) {
-      let finder = new nodefony.finder({
-        path: directory,
+      let finder = new nodefony.Finder2({
         followSymLink: true,
-        exclude: /^doc$|^node_modules$|^build$/,
+        excludeDir: nodefony.Bundle.excludeDir(),
+        exclude:nodefony.Bundle.exclude(),
         recurse: false,
-        match: this.regBundle,
-        onFile: (file) => {
-          try {
-            this.loadBundle(file, "filesystem");
-          } catch (e) {
-            this.logger(e, "ERROR");
-          }
-        }
+        match: this.regBundle
       });
-      return finder.result.length() === 1;
+      let result = await finder.in(directory);
+      let length = result.getFiles().length ;
+      for ( let i = 0 ; i < length; i++){
+        try {
+          await this.loadBundle(result[i], "filesystem");
+        } catch (e) {
+          this.logger(e, "ERROR");
+        }
+      }
+      return length ;
     }
     return false;
   }
@@ -1234,17 +1272,17 @@ class Kernel extends nodefony.Service {
    *  @method
    *  @param {array} bundles
    */
-  async registerBundles(bundles) {
-    return new Promise((resolve, reject) => {
+  registerBundles(bundles) {
+    return new Promise(async ( resolve, reject) => {
       switch (nodefony.typeOf(bundles)) {
       case "array":
         for (let i = 0; i < bundles.length; i++) {
-          let Path = this.isBundleDirectory(bundles[i]);
+          let Path = await this.isBundleDirectory(bundles[i]);
           if (!Path) {
             try {
               Path = this.isNodeModule(bundles[i]);
               if (Path) {
-                this.loadBundle(Path, "package");
+                await this.loadBundle(Path, "package");
               } else {
                 this.logger("GLOBAL CONFIG REGISTER : ", "INFO");
                 this.logger(this.configBundle, "INFO");
@@ -1270,7 +1308,7 @@ class Kernel extends nodefony.Service {
    *  initialisation application bundle
    *  @method initApplication
    */
-  initApplication() {
+  async initApplication() {
     let app = class appBundle extends nodefony.Bundle {
       constructor(name, myKernel, myContainer) {
         super(name, myKernel, myContainer);
@@ -1280,20 +1318,15 @@ class Kernel extends nodefony.Service {
     app.prototype.autoLoader = this.autoLoader;
     app.prototype.settings = this.settings;
     this.bundles.app = new app("app", this, this.container);
-    this.readConfigDirectory(path.resolve(this.appPath, "config"), (result) => {
-      if (result) {
-        this.bundles.app.parseConfig(result);
-        this.bundles.app.configPath = path.resolve(this.bundles.app.path, "config");
-      }
-    });
+    await this.bundles.app.find();
     // OVERRIDE VIEWS BUNDLE in APP DIRECTORY
-    this.once("onBoot", () => {
+    this.once("onBoot", async () => {
       for (let bundle in this.bundles) {
         if (bundle === "app") {
           continue;
         }
-        let result = this.bundles.app.resourcesFiles.findByNode(bundle + "-bundle");
-        if (result.length()) {
+        let result = this.bundles.app.resourcesFiles.find(bundle + "-bundle");
+        if (result.length) {
           try {
             //this.logger("\x1b[32m APP OVERRIDING\x1b[0m for bundle : " + bundle, "WARNING");
             //this.bundles[bundle].registerViews(result);

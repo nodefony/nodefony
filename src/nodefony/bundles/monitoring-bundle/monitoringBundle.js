@@ -44,7 +44,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       this.logger(e, "WARNING");
     }
 
-    this.kernel.once("onPreBoot", (kernel) => {
+    this.kernel.once("onPreBoot", async (kernel) => {
       this.templating = this.get("templating");
       this.infoKernel.events = {};
       this.mailer = this.get("mailer");
@@ -71,7 +71,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       }
     });
 
-    this.kernel.once("onPostReady", (kernel) => {
+    this.kernel.once("onPostReady", async(kernel) => {
       //this.debugView = this.httpKernel.getTemplate("monitoringBundle::debugBar.html.twig");
       if (this.settings.profiler.active) {
         this.storageProfiling = this.settings.profiler.storage;

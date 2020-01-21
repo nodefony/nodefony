@@ -12,7 +12,7 @@ module.exports = class httpServer extends nodefony.Service {
     this.address = null;
     this.family = null;
     this.server = null;
-    this.once("onBoot", () => {
+    this.once("onBoot", async () => {
       this.bundle = this.kernel.getBundles("http");
       this.bundle.on("onServersReady", (type) => {
         if (type === this.type) {

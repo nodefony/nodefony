@@ -9,10 +9,11 @@ module.exports = class webpack extends nodefony.Service {
     this.webpack = Webpack;
     this.production = (this.kernel.environment === "prod") ? true : false;
     this.pathCache = this.kernel.cacheWebpack;
-    this.kernel.on("onBoot", () => {
+    this.kernel.once("onBoot", async () => {
       this.socksSettings = this.kernel.getBundle("http").settings.sockjs;
       this.webPackSettings = this.kernel.getBundle("framework").settings.webpack;
       this.outputFileSystem = this.setFileSystem();
+      return this ;
     });
 
     this.version = this.getWebpackVersion();
@@ -27,7 +28,7 @@ module.exports = class webpack extends nodefony.Service {
     } else {
       event = "onPostReady";
     }
-    this.kernel.once(event, () => {
+    this.kernel.once(event, async () => {
       if (this.kernel.type === "CONSOLE" && this.kernel.cli.command !== "webpack") {
         return;
       }
@@ -51,6 +52,7 @@ module.exports = class webpack extends nodefony.Service {
             shell.cd(this.kernel.rootDir);
           });
       }
+      return this ;
     });
 
     if (this.production) {

@@ -5,7 +5,7 @@ module.exports = class upload extends nodefony.Service {
     super("upload", httpKernel.container, httpKernel.notificationsCenter);
     this.httpKernel = httpKernel;
 
-    this.once("onBoot", () => {
+    this.once("onBoot", async () => {
       this.config = this.httpKernel.settings.request;
       let abs = path.isAbsolute(this.httpKernel.settings.request.uploadDir);
       if (abs) {

@@ -26,7 +26,7 @@ class providerManager extends nodefony.Service {
       return null;
     }
     if (config) {
-      this.kernel.prependOnceListener("onBoot", () => {
+      this.kernel.prependOnceListener("onBoot", async() => {
         switch (true) {
         case !!config.entity:
           if (config.class) {

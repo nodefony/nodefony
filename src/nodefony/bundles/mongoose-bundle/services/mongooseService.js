@@ -36,7 +36,7 @@ class mongoose extends nodefony.Orm {
 
   boot() {
     super.boot();
-    this.kernel.once("onBoot", () => {
+    this.kernel.once("onBoot", async () => {
       this.settings = nodefony.extend({}, defaultconfigServer, this.bundle.settings.mongoose);
       if (this.settings.connectors && Object.keys(this.settings.connectors).length) {
         for (let name in this.settings.connectors) {

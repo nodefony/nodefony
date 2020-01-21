@@ -12,10 +12,7 @@ const regConfigFile = /^(.*)\..*$/;
 const regRoutingFile = /^(routing)\..*$/;
 const regWebpackCongig = /^(webpack)\.(dev\.|prod\.)?config\.js$/;
 
-const excludeDir = /^tests$|^public$|^node_modules$|^nodefony-core$|^\.git|assets|tmp|doc|documentation$/;
-const exclude = /yarn.lock|package-lock.json|yarn-error.log|package.json|readme|README/;
-
-const checkIngnoreFile = function (string, basename) {
+const checkIngnoreFile = function(string, basename) {
   let file = null;
   try {
     file = new nodefony.fileClass(string);
@@ -41,23 +38,23 @@ const moduleFindDependencies = class moduleFindDependencies {
     this.childs = [];
     this.type = type;
     switch (type) {
-    case "controller":
-      this.path = this.bundle.controllersPath;
-      this.reg = regController;
-      this.loader = this.bundle.loadController;
-      break;
-    case "routing":
-      this.path = this.bundle.configPath;
-      this.reg = regRoutingFile;
-      this.loader = this.bundle.reloadRouting;
-      break;
-    case "service":
-      this.path = this.bundle.servicesPath;
-      this.reg = regService;
-      this.loader = this.bundle.reloadService;
-      break;
-    default:
-      throw new Error("moduleFindDependencies type not valid : " + type);
+      case "controller":
+        this.path = this.bundle.controllersPath;
+        this.reg = regController;
+        this.loader = this.bundle.loadController;
+        break;
+      case "routing":
+        this.path = this.bundle.configPath;
+        this.reg = regRoutingFile;
+        this.loader = this.bundle.reloadRouting;
+        break;
+      case "service":
+        this.path = this.bundle.servicesPath;
+        this.reg = regService;
+        this.loader = this.bundle.reloadService;
+        break;
+      default:
+        throw new Error("moduleFindDependencies type not valid : " + type);
     }
     this.cache = Module._cache;
     if (Path) {
@@ -119,7 +116,7 @@ const moduleFindDependencies = class moduleFindDependencies {
   }
 };
 
-const defaultWatcher = function (reg /*, settings*/ ) {
+const defaultWatcher = function(reg /*, settings*/ ) {
   return {
     ignoreInitial: true,
     ignored: [
@@ -211,68 +208,40 @@ class Bundle extends nodefony.Service {
     this.regRoutingFile = regRoutingFile;
     this.regWebpackCongig = regWebpackCongig;
 
-    // finder
-    try {
-      this.finder = new nodefony.finder({
-        path: this.path,
-        exclude: /^tests$|^public$|^node_modules$|^nodefony-core$|^\.git$/,
-      });
-    } catch (e) {
-      this.logger(e, "ERROR");
-    }
     try {
       this.finder2 = new nodefony.Finder2({
-        exclude: exclude,
-        excludeDir: excludeDir,
+        exclude: nodefony.Bundle.exclude(),
+        excludeDir: nodefony.Bundle.excludeDir(),
         recurse: true
       });
     } catch (e) {
       throw e;
     }
 
-    // controllers
-    //this.findControllerFiles();
-
-    // views
-    // this.viewFiles = this.findViewFiles(this.finder.result);
-
-
-    // resources
-    /*try {
-      this.resourcesFiles = this.finder.result.findByNode("Resources");
-    } catch (e) {
-      this.logger(e, "ERROR");
-      this.logger("Bundle " + this.name + " Resources directory not found", "DEBUG");
-    }*/
-    // I18n
-    //this.i18nFiles = this.findI18nFiles(this.resourcesFiles);
-
-    // Register Service
-    //this.registerServices();
-
-    // read config files
-    /*this.kernel.readConfig.call(this, null, this.resourcesFiles.findByNode("config"), (result) => {
-      this.parseConfig(result);
-    });*/
-
     // KERNEL EVENTS
-    this.kernel.once("onBoot", async () => {
-      this.webpackService = this.get("webpack");
-      this.translation = this.get("translation");
-      // Register internationalisation
-      if (this.translation) {
-        this.locale = this.translation.defaultLocal;
+    let BOOT = async () =>{
+      console.log("BOOOOOOOOTTTT event ", this.name)
+      try {
+        this.webpackService = this.get("webpack");
+        this.translation = this.get("translation");
+        // Register internationalisation
+        if (this.translation) {
+          this.locale = this.translation.defaultLocal;
+        }
+        await this.registerI18n(this.locale);
+        // Register Entity
+        await this.registerEntities();
+        // WATCHERS
+        if (this.kernel.environment === "dev" && this.settings.watch && this.kernel.type !== "CONSOLE") {
+          this.initWatchers();
+        }
+      } catch (e) {
+        throw e;
       }
-      await this.registerI18n(this.locale);
-      // Register Entity
-      await this.registerEntities();
+    };
+    this.kernel.once("onBoot", BOOT);
 
-      // WATCHERS
-      if (this.kernel.environment === "dev" && this.settings.watch && this.kernel.type !== "CONSOLE") {
-        this.initWatchers();
-      }
-    });
-    this.kernel.once("onPostReady", () => {
+    this.kernel.once("onPostReady", async () => {
       if (this.kernel.environment === "prod" || this.kernel.environment === "production") {
         this.clean();
       }
@@ -281,19 +250,33 @@ class Bundle extends nodefony.Service {
     this.fire("onRegister", this);
   }
 
+  static excludeDir() {
+    return /^tests$|^public$|^node_modules$|^nodefony-core$|^\.git|assets|tmp|doc|documentation|build/;
+  }
+  static exclude() {
+    return /yarn.lock|package-lock.json|yarn-error.log|package.json|readme|README/;
+  }
+
   async initialize() {
-    // finder parser filesystem
-    await this.find();
     // Register services before boot
     return await this.registerServices()
       .then((results) => {
+        let dir = null;
+        if (this.name === "app") {
+          dir = this.findResult;
+          this.configPath = path.resolve(this.path, "config");
+        } else {
+          dir = this.resourcesFiles;
+        }
         // config
-        let conf = this.resourcesFiles.find("config")[0];
+        let conf = dir.find("config")[0];
         if (conf) {
           this.kernel.readConfig.call(this, null, conf.children, (result) => {
             //console.log(result)
             this.parseConfig(result);
           });
+        } else {
+          throw new Error("Bundle must have config directory");
         }
         //EVENT BOOT BUNDLE
         this.fire("onInitialize", this);
@@ -302,19 +285,21 @@ class Bundle extends nodefony.Service {
   }
 
   async find() {
-    this.findResult = await this.finder2
-      .in(this.path).then((result) => {
+    return this.findResult = await this.finder2
+      .in(this.path)
+      .then((result) => {
+        //this.log(result[0].children.length ,'WARNING', `FINDER ${this.name}`);
+        this.resourcesFiles = result[0].children.find("Resources");
         return result[0].children;
+      })
+      .catch(e => {
+        this.logger(e, "ERROR");
       });
-    this.resourcesFiles = this.findResult.find("Resources");
   }
 
   boot() {
     return new Promise(async (resolve, reject) => {
       try {
-
-
-        return reject(this);
 
         // finder controller
         await this.findControllerFiles();
@@ -383,8 +368,6 @@ class Bundle extends nodefony.Service {
     return super.fire.apply(this, arguments);
   }
 
-
-
   initWebpack() {
     try {
       return this.findWebPackConfig()
@@ -434,57 +417,57 @@ class Bundle extends nodefony.Service {
       let res = null;
       let file = null;
       switch (this.settings.type) {
-      case "angular":
-        try {
-          res = this.finder.result.getFile("webpack.config.js", true);
-          if (!res) {
-            return reject(new Error("Angular bundle no webpack config file : webpack.config.js "));
+        case "angular":
+          try {
+            res = this.findResult.find("webpack.config.js")[0];
+            if (!res) {
+              return reject(new Error("Angular bundle no webpack config file : webpack.config.js "));
+            }
+            return resolve(this.loadWebpackConfig(res));
+          } catch (e) {
+            shell.cd(this.kernel.rootDir);
+            throw e;
           }
-          return resolve(this.loadWebpackConfig(res));
-        } catch (e) {
-          shell.cd(this.kernel.rootDir);
-          throw e;
-        }
-        break;
-      case "react":
-        file = null;
-        try {
-          switch (process.env.NODE_ENV) {
-          case "development":
-          case "production":
-            file = path.resolve(this.path, "config", "webpack.config.js");
-            break;
+          break;
+        case "react":
+          file = null;
+          try {
+            switch (process.env.NODE_ENV) {
+              case "development":
+              case "production":
+                file = path.resolve(this.path, "config", "webpack.config.js");
+                break;
+            }
+            res = new nodefony.fileClass(file);
+            process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
+            return resolve(this.loadWebpackConfig(res));
+          } catch (e) {
+            shell.cd(this.kernel.rootDir);
+            return reject(e);
           }
-          res = new nodefony.fileClass(file);
-          process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
-          return resolve(this.loadWebpackConfig(res));
-        } catch (e) {
-          shell.cd(this.kernel.rootDir);
-          return reject(e);
-        }
-        break;
-      case "vue":
-        file = path.resolve(this.path, "node_modules", "@vue", "cli-service", "webpack.config.js");
-        try {
-          this.webpackConfigFile = new nodefony.fileClass(file);
-          process.env.VUE_CLI_CONTEXT = this.path;
-          return resolve(this.loadWebpackConfig(this.webpackConfigFile));
-        } catch (e) {
-          shell.cd(this.kernel.rootDir);
-          return reject(e);
-        }
-        break;
-      default:
-        try {
-          this.webpackConfigFile = this.finder.result.getFile("webpack.config.js", true);
-          if (!this.webpackConfigFile) {
-            return resolve(false);
+          break;
+        case "vue":
+          file = path.resolve(this.path, "node_modules", "@vue", "cli-service", "webpack.config.js");
+          try {
+            this.webpackConfigFile = new nodefony.fileClass(file);
+            process.env.VUE_CLI_CONTEXT = this.path;
+            return resolve(this.loadWebpackConfig(this.webpackConfigFile));
+          } catch (e) {
+            shell.cd(this.kernel.rootDir);
+            return reject(e);
           }
-          return resolve(this.loadWebpackConfig(this.webpackConfigFile));
-        } catch (e) {
-          shell.cd(this.kernel.rootDir);
-          return reject(e);
-        }
+          break;
+        default:
+          try {
+            this.webpackConfigFile = this.findResult.find("webpack.config.js")[0];
+            if (!this.webpackConfigFile) {
+              return resolve(false);
+            }
+            return resolve(this.loadWebpackConfig(this.webpackConfigFile));
+          } catch (e) {
+            shell.cd(this.kernel.rootDir);
+            return reject(e);
+          }
       }
     });
   }
@@ -513,25 +496,25 @@ class Bundle extends nodefony.Service {
     let regJs = new RegExp(".*\.js$|.*\.es6$|.*\.es7$");
     try {
       switch (typeof this.settings.watch) {
-      case "object":
-        controllers = this.settings.watch.controllers || false;
-        views = this.settings.watch.views || false;
-        i18n = this.settings.watch.translations || false;
-        config = this.settings.watch.config || false;
-        services = this.settings.watch.services || false;
-        this.webpackWatch = this.settings.watch.webpack || false;
-        break;
-      case "boolean":
-        controllers = this.settings.watch || false;
-        views = this.settings.watch || false;
-        i18n = this.settings.watch || false;
-        config = this.settings.watch || false;
-        services = this.settings.watch || false;
-        this.webpackWatch = this.settings.watch || false;
-        break;
-      default:
-        this.logger("BAD CONFIG WATCHER  ", "WARNING");
-        return;
+        case "object":
+          controllers = this.settings.watch.controllers || false;
+          views = this.settings.watch.views || false;
+          i18n = this.settings.watch.translations || false;
+          config = this.settings.watch.config || false;
+          services = this.settings.watch.services || false;
+          this.webpackWatch = this.settings.watch.webpack || false;
+          break;
+        case "boolean":
+          controllers = this.settings.watch || false;
+          views = this.settings.watch || false;
+          i18n = this.settings.watch || false;
+          config = this.settings.watch || false;
+          services = this.settings.watch || false;
+          this.webpackWatch = this.settings.watch || false;
+          break;
+        default:
+          this.logger("BAD CONFIG WATCHER  ", "WARNING");
+          return;
       }
       // controllers
       if (controllers) {
@@ -613,39 +596,39 @@ class Bundle extends nodefony.Service {
       for (let ele in result) {
         let ext = null;
         switch (true) {
-        case this.kernel.regBundleName.test(ele):
-          let myname = this.kernel.regBundleName.exec(ele);
-          let name = myname[1] || myname[2];
-          config = this.getParameters("bundles." + name);
-          if (config) {
-            ext = nodefony.extend(true, {}, config, result[ele]);
-            this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name, "DEBUG");
-          } else {
-            ext = result[ele];
-            this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name + " BUT BUNDLE " + name + " NOT YET REGISTERED ", "DEBUG");
-          }
-          if (this.kernel.bundles[name]) {
-            this.kernel.bundles[name].settings = ext;
-            this.setParameters("bundles." + name, this.kernel.bundles[name].settings);
-          } else {
-            this.setParameters("bundles." + name, ext || {});
-          }
-          break;
-          /*case /^version$/.test(ele):
-            try {
-              let res = semver.valid(result[ele]);
-              if (!res) {
-                this.logger("Bad Bundle Semantic Versioning  : " + result[ele] + " Check  http://semver.org ", "WARNING");
-              }
-            } catch (e) {
-              this.logger(e, "ERROR");
+          case this.kernel.regBundleName.test(ele):
+            let myname = this.kernel.regBundleName.exec(ele);
+            let name = myname[1] || myname[2];
+            config = this.getParameters("bundles." + name);
+            if (config) {
+              ext = nodefony.extend(true, {}, config, result[ele]);
+              this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name, "DEBUG");
+            } else {
+              ext = result[ele];
+              this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name + " BUT BUNDLE " + name + " NOT YET REGISTERED ", "DEBUG");
             }
-            break;*/
-        case /^locale$/.test(ele):
-          if (result[ele]) {
-            this.locale = result[ele];
-          }
-          break;
+            if (this.kernel.bundles[name]) {
+              this.kernel.bundles[name].settings = ext;
+              this.setParameters("bundles." + name, this.kernel.bundles[name].settings);
+            } else {
+              this.setParameters("bundles." + name, ext || {});
+            }
+            break;
+            /*case /^version$/.test(ele):
+              try {
+                let res = semver.valid(result[ele]);
+                if (!res) {
+                  this.logger("Bad Bundle Semantic Versioning  : " + result[ele] + " Check  http://semver.org ", "WARNING");
+                }
+              } catch (e) {
+                this.logger(e, "ERROR");
+              }
+              break;*/
+          case /^locale$/.test(ele):
+            if (result[ele]) {
+              this.locale = result[ele];
+            }
+            break;
         }
       }
       config = this.getParameters("bundles." + this.name);
@@ -1011,7 +994,7 @@ class Bundle extends nodefony.Service {
 
   getfilesByLocal(locale) {
     let reg = new RegExp("^(.*)\.(" + locale + ")\.(.*)$");
-    return this.i18nFiles.match(reg);
+    return this.i18nFiles.find(reg);
   }
 
   async registerI18n(locale, result) {
@@ -1024,6 +1007,7 @@ class Bundle extends nodefony.Service {
       }
     }
     if (result) {
+      console.log(result)
       this.i18nFiles = await this.findI18nFiles(result);
     }
     if (!this.i18nFiles.length) {
@@ -1034,11 +1018,11 @@ class Bundle extends nodefony.Service {
       files = this.getfilesByLocal(locale);
     } else {
       files = this.getfilesByLocal(this.translation.defaultLocale);
-      if (!files.length()) {
+      if (!files.length) {
         let bundleLocal = this.getParameters("bundles." + this.name + ".locale");
         files = this.getfilesByLocal(bundleLocal || this.translation.defaultLocale);
-        if (bundleLocal && !files.length()) {
-          this.logger(Error("Error Translation file locale: " + bundleLocal + " don't exist"), "WARNING");
+        if (bundleLocal && !files.length) {
+          this.logger(`Translation File Locale : ${bundleLocal} not found`, "DEBUG");
         }
       }
     }
@@ -1049,9 +1033,13 @@ class Bundle extends nodefony.Service {
     });
   }
 
-  registerCommand(store) {
-    // find command files
-    this.commandFiles = this.finder.result.findByNode("Command");
+  async registerCommand(store) {
+    this.commandFiles = await this.findResult.find("Command")
+      .find(regCommand);
+    if (!this.commandFiles.length) {
+      this.logger(`Bundle ${this.name} No Command Found`, "DEBUG");
+      return this.commandFiles;
+    }
     let command = null;
     this.commandFiles.getFiles().forEach((file) => {
       let res = regCommand.exec(file.name);
@@ -1074,17 +1062,15 @@ class Bundle extends nodefony.Service {
     });
   }
 
-  getPublicDirectory() {
-    let res = null;
+  async getPublicDirectory() {
     try {
-      res = new nodefony.finder({
-        path: path.resolve(this.path, "Resources", "public"),
-        exclude: /^docs$|^tests|^node_modules|^assets$/
-      });
+      return await new nodefony.Finder2({
+        excludeDir: /^docs$|^tests|^node_modules|^assets$/
+      }).in(path.resolve(this.path, "Resources", "public"));
     } catch (e) {
-      return res;
+      return null;
     }
-    return res.result;
+    return null;
   }
 
   async registerEntities() {
@@ -1092,7 +1078,7 @@ class Bundle extends nodefony.Service {
       .find(this.kernel.getOrm())
       .find(regEntity);
     if (!this.entityFiles.length) {
-      this.logger("Bundle " + this.name + "No Entity Found", "DEBUG");
+      this.logger(`Bundle ${this.name} No Entity Found`, "DEBUG");
       return this.entityFiles;
     }
     this.entityFiles.forEach((file) => {
