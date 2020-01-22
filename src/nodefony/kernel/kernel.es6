@@ -724,8 +724,8 @@ class Kernel extends nodefony.Service {
         });
     default:
       return await this.preRegister(bundles)
-        .then(()=>{
-          return this ;
+        .then(() => {
+          return this;
         })
         .catch(e => {
           throw e;
@@ -890,11 +890,12 @@ class Kernel extends nodefony.Service {
     }
 
     //this.fire("onBoot", this, tab);
-    try{
-       await this.emitAsync("onBoot", this, tab);
-       //this.fire("onBoot", this, tab);
-    }catch(e){
-      this.log(e,"WARNING", "EVENTS onBoot");
+    try {
+      await this.emitAsync("onBoot", this, tab);
+      //this.fire("onBoot", this, tab);
+    } catch (e) {
+      this.log(e, "WARNING", "EVENTS onBoot");
+      throw e;
     }
     this.booted = true;
 
@@ -905,11 +906,10 @@ class Kernel extends nodefony.Service {
         tab.push(await this.bundles[name].boot());
       } catch (e) {
         this.logger(e, "ERROR");
-        continue;
+        //continue;
+        throw e;
       }
     }
-
-
 
     /*let bundles = [];
     for await (let boot of this.promisesBundleReady) {
@@ -917,10 +917,10 @@ class Kernel extends nodefony.Service {
       bundles.push(boot);
     }*/
     //await this.emitAsync("onReady", this, tab);
-    try{
+    try {
       await this.emitAsync("onReady", this, tab);
-    }catch(e){
-      this.log(e,"WARNING", "EVENTS onReady");
+    } catch (e) {
+      this.log(e, "WARNING", "EVENTS onReady");
     }
     //this.fire("onReady", this, bundles);
     this.ready = true;
@@ -1171,13 +1171,15 @@ class Kernel extends nodefony.Service {
     try {
       let bundle = this.getBundleClass(file);
       try {
+        this.log(`${bundle.name} : ${file.path}`, "DEBUG", "LOADER BUNDLE");
         this.bundles[bundle.name] = new bundle.class(bundle.name, this, this.container);
         this.bundles[bundle.name].loader = loader;
+        console.log(bundle.name, this.notificationsCenter._events)
       } catch (e) {
         throw e;
       }
       //this.bundles[bundle.name].once("onReady", promiseBundleReady.call(this));
-      return await this.bundles[bundle.name].find() ;
+      return await this.bundles[bundle.name].find();
     } catch (e) {
       throw e;
     }
@@ -1232,20 +1234,12 @@ class Kernel extends nodefony.Service {
       let finder = new nodefony.Finder2({
         followSymLink: true,
         excludeDir: nodefony.Bundle.excludeDir(),
-        exclude:nodefony.Bundle.exclude(),
+        exclude: nodefony.Bundle.exclude(),
         recurse: false,
         match: this.regBundle
       });
       let result = await finder.in(directory);
-      let length = result.getFiles().length ;
-      for ( let i = 0 ; i < length; i++){
-        try {
-          await this.loadBundle(result[i], "filesystem");
-        } catch (e) {
-          this.logger(e, "ERROR");
-        }
-      }
-      return length ;
+      return result.getFiles();
     }
     return false;
   }
@@ -1273,12 +1267,18 @@ class Kernel extends nodefony.Service {
    *  @param {array} bundles
    */
   registerBundles(bundles) {
-    return new Promise(async ( resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       switch (nodefony.typeOf(bundles)) {
       case "array":
         for (let i = 0; i < bundles.length; i++) {
           let Path = await this.isBundleDirectory(bundles[i]);
-          if (!Path) {
+          if (Path && Path.length) {
+            try {
+              await this.loadBundle(Path[0], "filesystem");
+            } catch (e) {
+              this.logger(e, "ERROR");
+            }
+          } else {
             try {
               Path = this.isNodeModule(bundles[i]);
               if (Path) {
