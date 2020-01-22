@@ -105,7 +105,11 @@ const isHiddenFile = function(name) {
   return regHidden.test(name);
 };
 const defaultOptions = {
-  type: "CONSOLE"
+  type: "CONSOLE",
+  events:{
+    nbListeners:60,
+    captureRejections: true
+  }
 };
 /*
  *
@@ -115,7 +119,7 @@ const defaultOptions = {
 class cliKernel extends nodefony.cli {
 
   constructor(name, container, notificationsCenter, options) {
-    super(name, container, notificationsCenter, nodefony.extend(defaultOptions, options));
+    super(name, container, notificationsCenter, nodefony.extend(true,defaultOptions, options));
     this.type = this.options.type;
     this.optionsTables = optionsTaskTables;
     this.optionsTitleTables = optionsTitleTables;

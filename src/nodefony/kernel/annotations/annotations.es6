@@ -257,7 +257,10 @@ class Annotation extends nodefony.Service {
 
   constructor(container) {
     super("Annotations", container);
-    this.router = this.get("router");
+    this.kernel.once("onBoot", async () =>{
+      this.router = this.get("router");
+    });
+    //this.router = this.get("router");
     this.engine = nodefony.babylon;
   }
 

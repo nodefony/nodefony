@@ -2,17 +2,18 @@
 
    constructor(container) {
      super("users", container);
-     if (this.kernel.ready) {
+     this.orm = this.kernel.getORM();
+
+     if (this.orm.ready) {
        this.initialize();
      } else {
-       this.kernel.once("onReady", () => {
+       this.orm.on("onOrmReady", () => {
          this.initialize();
        });
      }
    }
 
    initialize() {
-     this.orm = this.kernel.getORM();
      this.ormName = this.orm.name;
      this.entity = this.orm.getEntity("user");
    }

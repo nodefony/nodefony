@@ -6,7 +6,9 @@ const settingsSyslog = {
 };
 
 const defaultOptions = {
-  nbListeners: 20
+  events:{
+    nbListeners: 20
+  }
 };
 
 const red = clc.red.bold;
@@ -17,7 +19,7 @@ const yellow = clc.yellow.bold;
 
 class Service {
 
-  constructor(name, container, notificationsCenter, options) {
+  constructor(name, container, notificationsCenter, options=null) {
 
     if (name) {
       this.name = name;
@@ -77,7 +79,11 @@ class Service {
         throw new Error("Service nodefony notificationsCenter not valid must be instance of nodefony.notificationsCenter.notification");
       }
       if (notificationsCenter !== false) {
-        this.notificationsCenter = nodefony.notificationsCenter.create(this.options, this, this.options.nbListeners);
+        this.notificationsCenter = nodefony.notificationsCenter.create(this.options, this, this.options.events);
+        this.notificationsCenter.on('error', (err) => {
+          this.logger(err, "ERROR" , "Error events");
+        });
+
         if (!this.kernel) {
           this.set("notificationsCenter", this.notificationsCenter);
         } else {

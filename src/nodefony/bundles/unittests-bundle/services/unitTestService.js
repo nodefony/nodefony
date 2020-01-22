@@ -34,21 +34,18 @@ module.exports = class unitTest extends nodefony.Service {
     if (this.kernel.isBundleCore(bundleName) && (!this.kernel.isCore)) {
       return;
     }
-    if (this.bundles[bundleName].finder) {
-      var finder = this.bundles[bundleName].finder.find({
-        exclude: /^doc$|^public$|^Resources$|^node_modules$|^\.git$|^nodefony-core$/,
-        match: regFile
-      });
-      if (finder.files.length) {
-        for (var i = 0; i < finder.files.length; i++) {
+    if ( this.bundles[bundleName].findResult){
+      let results = this.bundles[bundleName].findResult.find(regFile);
+      if (results.length) {
+        for (var i = 0; i < results.length; i++) {
           if (testName) {
-            if (finder.files[i].name === testName) {
-              finder.files[i].bundle = bundleName;
-              tests.push(finder.files[i]);
+            if (results[i].name === testName) {
+              results[i].bundle = bundleName;
+              tests.push(results[i]);
             }
           } else {
-            finder.files[i].bundle = bundleName;
-            tests.push(finder.files[i]);
+            results[i].bundle = bundleName;
+            tests.push(results[i]);
           }
         }
       }

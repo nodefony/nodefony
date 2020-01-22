@@ -5,9 +5,11 @@ const _ = require('lodash');
 
 class Notification extends events.EventEmitter {
 
-  constructor(settings, context, nbListener) {
-    super();
-    this.setMaxListeners(nbListener || defaultNbListeners);
+  constructor(settings, context, options ={}) {
+    super(options);
+    if ( options.nbListeners ){
+      this.setMaxListeners(options.nbListeners || defaultNbListeners);
+    }
     if (settings) {
       this.settingsToListen(settings, context);
     }
@@ -43,12 +45,6 @@ class Notification extends events.EventEmitter {
 
   async emitAsync(type, ...args) {
     const handler = _.get(this._events, type);
-    if (type === 'onBoot') {
-      //console.log( type)
-      this._events[type].forEach((ele) => {
-        //console.log(ele)
-      });
-    }
     if (_.isEmpty(handler) && !_.isFunction(handler)) {
       return false;
     }
@@ -56,9 +52,19 @@ class Notification extends events.EventEmitter {
     if (typeof handler === 'function') {
       tab.push(await Reflect.apply(handler, this, args));
     } else {
-      for await (const func of handler) {
-        tab.push(await Reflect.apply(func, this, args));
+      let size = handler.length ;
+      let i = 0 ;
+      while(size !== i){
+        tab.push(await Reflect.apply(handler[i], this, args));
+        if ( handler.length === size){
+          i++;
+        }else{
+          size--;
+        }
       }
+      /*for await (const func of handler) {
+        tab.push(await Reflect.apply(func, this, args));
+      }*/
     }
     return tab;
   }

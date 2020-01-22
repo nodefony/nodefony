@@ -139,12 +139,19 @@ const defaultWatcher = function (reg /*, settings*/ ) {
   };
 };
 
+
+const defaultOptions = {
+  events:{
+    nbListeners: 60,
+    captureRejections:true
+  }
+};
 /*
  *  BUNDLE CLASS
  */
 class Bundle extends nodefony.Service {
   constructor(name, kernel, container) {
-    super(name, container);
+    super(name, container, null , nodefony.extend(true, {},defaultOptions) );
     this.logger("\x1b[36m REGISTER BUNDLE : " + this.name + "   \x1b[0m", "DEBUG", this.kernel.cli.clc.magenta("KERNEL"));
     this.bundleName = path.basename(this.path);
     this.location = path.dirname(this.path);
@@ -209,7 +216,7 @@ class Bundle extends nodefony.Service {
     this.regWebpackCongig = regWebpackCongig;
 
     try {
-      this.finder2 = new nodefony.Finder2({
+      this.finder = new nodefony.Finder2({
         exclude: nodefony.Bundle.exclude(),
         excludeDir: nodefony.Bundle.excludeDir(),
         recurse: true
@@ -217,18 +224,17 @@ class Bundle extends nodefony.Service {
     } catch (e) {
       throw e;
     }
-
     // KERNEL EVENTS
-    let BOOT = async () => {
-      console.log("BOOOOOOOOTTTT event ", this.name)
+    this.kernel.once("onBoot", async ()=>{
       try {
+        this.router = this.get("router");
         this.webpackService = this.get("webpack");
         this.translation = this.get("translation");
         // Register internationalisation
         if (this.translation) {
           this.locale = this.translation.defaultLocal;
         }
-        await this.registerI18n(this.locale);
+        this.i18nFiles = await this.registerI18n(this.locale);
         // Register Entity
         await this.registerEntities();
         // WATCHERS
@@ -238,8 +244,7 @@ class Bundle extends nodefony.Service {
       } catch (e) {
         throw e;
       }
-    };
-    this.kernel.once("onBoot", BOOT);
+    });
 
     this.kernel.once("onPostReady", async () => {
       if (this.kernel.environment === "prod" || this.kernel.environment === "production") {
@@ -251,7 +256,7 @@ class Bundle extends nodefony.Service {
   }
 
   static excludeDir() {
-    return /^tests$|^public$|^node_modules$|^nodefony-core$|^\.git|assets|tmp|doc|documentation|build/;
+    return /^public$|^node_modules$|^nodefony-core$|^\.git|assets|tmp|doc|documentation|build/;
   }
   static exclude() {
     return /yarn.lock|package-lock.json|yarn-error.log|package.json|readme|README/;
@@ -285,7 +290,7 @@ class Bundle extends nodefony.Service {
   }
 
   async find() {
-    return this.findResult = await this.finder2
+    return this.findResult = await this.finder
       .in(this.path)
       .then((result) => {
         //this.log(result[0].children.length ,'WARNING', `FINDER ${this.name}`);
@@ -641,6 +646,7 @@ class Bundle extends nodefony.Service {
         this.setParameters("bundles." + this.name, this.settings);
       }
       this.settings.version = this.version;
+      //console.log(this.settings)
     }
   }
 
@@ -984,21 +990,22 @@ class Bundle extends nodefony.Service {
   }
 
   async findI18nFiles(result) {
+    let trans = null ;
     if (result) {
-      return result[0].children;
+      trans = await result.find("translations");
+    }else{
+      trans = await this.resourcesFiles.find("translations");
     }
-    this.i18nFiles = await this.resourcesFiles.find("translations");
-    if (!this.i18nFiles.length || !this.i18nFiles[0]) {
+    if (!trans.length || !trans[0]) {
       this.logger("Bundle " + this.name + "No Translation Found", "DEBUG");
-      return this.i18nFiles;
+      return trans;
     }
-    //console.log(this.i18nFiles)
-    return this.i18nFiles[0].children;
+    return trans[0].children;
   }
 
-  getfilesByLocal(locale) {
+  getfilesByLocal(locale, dir) {
     let reg = new RegExp("^(.*)\.(" + locale + ")\.(.*)$");
-    return this.i18nFiles.find(reg);
+    return dir.find(reg);
   }
 
   async registerI18n(locale, result) {
@@ -1010,22 +1017,25 @@ class Bundle extends nodefony.Service {
         return;
       }
     }
-    console.log(this.i18nFiles)
-    if (result) {
-      this.i18nFiles = await this.findI18nFiles(result);
-    }
+    let dir = null ;
 
-    if (!this.i18nFiles.length) {
+    if (result) {
+      dir =  await this.findI18nFiles(result);
+    }else{
+      dir = this.i18nFiles ;
+    }
+    //console.trace(dir)
+    if (!dir || !dir.length) {
       return;
     }
     let files = null;
     if (locale) {
-      files = this.getfilesByLocal(locale);
+      files = this.getfilesByLocal(locale, dir);
     } else {
-      files = this.getfilesByLocal(this.translation.defaultLocale);
+      files = this.getfilesByLocal(this.translation.defaultLocale, dir);
       if (!files.length) {
         let bundleLocal = this.getParameters("bundles." + this.name + ".locale");
-        files = this.getfilesByLocal(bundleLocal || this.translation.defaultLocale);
+        files = this.getfilesByLocal(bundleLocal || this.translation.defaultLocale, dir);
         if (bundleLocal && !files.length) {
           this.logger(`Translation File Locale : ${bundleLocal} not found`, "DEBUG");
         }

@@ -21,6 +21,10 @@ module.exports = class cliStart extends nodefony.cliKernel {
       clean: true,
       promiseRejection: true,
       version: nodefony.version,
+      events:{
+        nbListeners: 60,
+        captureRejections:true
+      }
     });
     this.choices = [];
     this.cmd = null;

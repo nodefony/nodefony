@@ -223,13 +223,6 @@ class sequelize extends nodefony.Orm {
       this.settings = this.getParameters("bundles.sequelize");
       this.debug = this.settings.debug;
       if (this.settings.connectors && Object.keys(this.settings.connectors).length) {
-        this.kernel.once("onReady", () => {
-          if (this.kernel.type === "SERVER") {
-            this.displayTable("INFO");
-          } else {
-            this.displayTable();
-          }
-        });
         for (let name in this.settings.connectors) {
           this.createConnection(name, this.settings.connectors[name]);
         }
@@ -239,6 +232,14 @@ class sequelize extends nodefony.Orm {
           this.fire('onOrmReady', this);
           this.ready = true;
         });
+      }
+    });
+
+    this.kernel.once("onReady", async () => {
+      if (this.kernel.type === "SERVER") {
+        this.displayTable("INFO");
+      } else {
+        this.displayTable();
       }
     });
   }
