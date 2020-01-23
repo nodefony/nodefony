@@ -179,16 +179,16 @@ class Kernel extends nodefony.Service {
         }
         //this.clean();
         this.postReady = true;
-        switch(this.environment){
-          case 'production':
-          case 'prod':
-          case 'preprod':
-          case 'preproduction':
-            this.clean();
-            break;
-          default:
-            this.clean()  ;
-            myrequire = null;
+        switch (this.environment) {
+        case 'production':
+        case 'prod':
+        case 'preprod':
+        case 'preproduction':
+          this.clean();
+          break;
+        default:
+          this.clean();
+          myrequire = null;
         }
 
 
@@ -200,11 +200,11 @@ class Kernel extends nodefony.Service {
   }
 
   clean() {
-      require.cache = null ;
-      delete require.cache;
-      myrequire.cache = null;
-      delete myrequire.cache;
-      myrequire = null;
+    require.cache = null;
+    delete require.cache;
+    myrequire.cache = null;
+    delete myrequire.cache;
+    myrequire = null;
   }
 
   drop_root() {
@@ -692,7 +692,7 @@ class Kernel extends nodefony.Service {
         res = this.searchPackage("documentation-bundle");
         bundles.push(res);
       }
-      if (this.settings.system.unitTest) {
+      if (this.settings.system.unitTest || this.type === "CONSOLE") {
         res = this.searchPackage("unittests-bundle");
         bundles.push(res);
       }

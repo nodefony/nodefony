@@ -129,7 +129,7 @@ class connectionDB {
     try {
       switch (type) {
       case "sqlite":
-        config.options.storage = process.cwd() + config.dbname;
+        config.options.storage = path.resolve(config.dbname);
         break;
       }
       conn = new this.orm.engine(config.dbname, config.username, config.password, config.options);

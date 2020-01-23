@@ -10,8 +10,12 @@
  *       By default nodefony create  connector name nodefony ( driver sqlite )
  *       for manage Sessions / Users
  *
- *       For mysql/mariadb create database nodefony before
- *       Mysql > CREATE DATABASE nodefony;
+ *       For mysql/mariadb create database nodefony before :
+ *
+ *       $ nodefony sequelize:create:database [force]  => Create database
+ *
+ *       Synchronize entities :
+ *       $ nodefony sequelize:sync [force]    => Create tables index ...
  *
  *       Here create new databases connectors
  *       and use for sync connectors :
@@ -39,7 +43,5 @@
  */
 module.exports = {
   debug: false,
-  connectors: {
-
-  }
+  connectors: {}
 };
