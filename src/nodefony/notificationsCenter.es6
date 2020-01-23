@@ -5,9 +5,9 @@ const _ = require('lodash');
 
 class Notification extends events.EventEmitter {
 
-  constructor(settings, context, options ={}) {
+  constructor(settings, context, options = {}) {
     super(options);
-    if ( options.nbListeners ){
+    if (options.nbListeners) {
       this.setMaxListeners(options.nbListeners || defaultNbListeners);
     }
     if (settings) {
@@ -22,10 +22,10 @@ class Notification extends events.EventEmitter {
   listen(context, eventName, callback) {
     let event = arguments[1];
     let ContextClosure = this;
-    if (typeof (callback) === 'function' || callback instanceof Function) {
+    if (typeof(callback) === 'function' || callback instanceof Function) {
       this.addListener(eventName, callback.bind(context));
     }
-    return function () {
+    return function() {
       Array.prototype.unshift.call(arguments, event);
       return ContextClosure.fire.apply(ContextClosure, arguments);
     };
@@ -52,13 +52,14 @@ class Notification extends events.EventEmitter {
     if (typeof handler === 'function') {
       tab.push(await Reflect.apply(handler, this, args));
     } else {
-      let size = handler.length ;
-      let i = 0 ;
-      while(size !== i){
+      let size = handler.length;
+      let i = 0;
+      while (size !== i) {
+        //console.log(size, i, handler.length)
         tab.push(await Reflect.apply(handler[i], this, args));
-        if ( handler.length === size){
+        if (handler.length === size) {
           i++;
-        }else{
+        } else {
           size--;
         }
       }
@@ -102,7 +103,7 @@ class Notification extends events.EventEmitter {
 nodefony.Events = Notification;
 nodefony.notificationsCenter = {
   notification: Notification,
-  create: function (settings, context, nbListener) {
+  create: function(settings, context, nbListener) {
     return new Notification(settings, context, nbListener);
   }
 };

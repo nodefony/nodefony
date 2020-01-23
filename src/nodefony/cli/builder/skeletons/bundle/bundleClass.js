@@ -9,7 +9,8 @@
  *	@param {class} container
  *
  */
-module.exports = class {{name}}Bundle  extends nodefony.Bundle {
+ 
+ class {{name}}Bundle  extends nodefony.Bundle {
 
   constructor (name, kernel, container){
     // Mother Class constructor
@@ -31,4 +32,6 @@ module.exports = class {{name}}Bundle  extends nodefony.Bundle {
   *      this.waitBundleReady = true ;
   */
   }
-};
+}
+
+module.exports = {{name}}Bundle ;

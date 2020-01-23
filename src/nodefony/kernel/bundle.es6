@@ -225,18 +225,23 @@ class Bundle extends nodefony.Service {
       throw e;
     }
     // KERNEL EVENTS
-    this.kernel.once("onBoot", async () => {
+    this.kernel.prependOnceListener("onBoot", async () => {
       try {
         this.router = this.get("router");
+        //this.orm = this.get("orm");
+        //console.log("PASSS",this.orm)
         this.webpackService = this.get("webpack");
         this.translation = this.get("translation");
         // Register internationalisation
         if (this.translation) {
-          this.locale = this.translation.defaultLocal;
+          this.locale = this.translation.defaultLocale;
         }
-        this.i18nFiles = await this.registerI18n(this.locale);
+        // I18n
+        this.i18nFiles =  await this.findI18nFiles();
+
         // Register Entity
         await this.registerEntities();
+
         // WATCHERS
         if (this.kernel.environment === "dev" && this.settings.watch && this.kernel.type !== "CONSOLE") {
           this.initWatchers();
@@ -247,8 +252,13 @@ class Bundle extends nodefony.Service {
     });
 
     this.kernel.once("onPostReady", async () => {
-      if (this.kernel.environment === "prod" || this.kernel.environment === "production") {
-        this.clean();
+      switch(this.kernel.environment){
+        case 'production':
+        case 'prod':
+        case 'preprod':
+        case 'preproduction':
+          this.clean();
+          break;
       }
     });
     // BUNDLE EVENTS
@@ -306,19 +316,17 @@ class Bundle extends nodefony.Service {
     return new Promise(async (resolve, reject) => {
       try {
 
+        //EVENT BOOT BUNDLE
+        this.fire("onBoot", this);
+
         // finder controller
         await this.findControllerFiles();
 
         // finder views
         await this.findViewFiles();
 
-        // I18n
-        await this.findI18nFiles();
-
-        //return resolve(this);
-
-        //EVENT BOOT BUNDLE
-        this.fire("onBoot", this);
+        // I18N
+        await this.registerI18n(this.locale);
 
         // Register Controller
         await this.registerControllers();
@@ -351,8 +359,8 @@ class Bundle extends nodefony.Service {
     delete this.watching;
     this.viewFiles = null;
     delete this.viewFiles;
-    this.i18nFiles = null;
-    delete this.i18nFiles;
+    //this.i18nFiles = null;
+    //delete this.i18nFiles;
     this.controllerFiles = null;
     delete this.controllerFiles;
     this.commandFiles = null;
@@ -675,7 +683,7 @@ class Bundle extends nodefony.Service {
     let service = await this.findResult.find("services")
       .find(regService);
     if (!service.length) {
-      this.logger("Bundle " + this.name + "No Services Found", "DEBUG");
+      this.logger("Bundle " + this.name + " No Services Found", "DEBUG");
     }
     service.forEach((ele) => {
       try {
@@ -820,7 +828,7 @@ class Bundle extends nodefony.Service {
   async findViewFiles() {
     this.viewFiles = await this.resourcesFiles.find("views");
     if (!this.viewFiles.length) {
-      this.logger("Bundle " + this.name + "No views Found", "DEBUG");
+      this.logger("Bundle " + this.name + " No views Found", "DEBUG");
     }
     return this.viewFiles;
   }
@@ -994,7 +1002,7 @@ class Bundle extends nodefony.Service {
       trans = await this.resourcesFiles.find("translations");
     }
     if (!trans.length || !trans[0]) {
-      this.logger("Bundle " + this.name + "No Translation Found", "DEBUG");
+      this.logger("Bundle " + this.name + " No Translation Found", "DEBUG");
       return trans;
     }
     return trans[0].children;
@@ -1006,16 +1014,8 @@ class Bundle extends nodefony.Service {
   }
 
   async registerI18n(locale, result) {
-    if (!this.translation) {
-      this.translation = this.get("translation");
-      if (this.translation) {
-        this.locale = this.translation.defaultLocal;
-      } else {
-        return;
-      }
-    }
-    let dir = null;
 
+    let dir = null;
     if (result) {
       dir = await this.findI18nFiles(result);
     } else {
@@ -1133,7 +1133,7 @@ class Bundle extends nodefony.Service {
     this.fixtureFiles = await this.findResult.find("Fixtures")
       .find(regFixtures);
     if (!this.fixtureFiles.length) {
-      this.logger("Bundle " + this.name + "No Fixutures Found", "DEBUG");
+      this.logger("Bundle " + this.name + " No Fixutures Found", "DEBUG");
       return this.entityFiles;
     }
     this.fixtureFiles.forEach((file) => {

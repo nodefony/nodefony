@@ -5,6 +5,7 @@ const connectionMonitor = function ( /*name, db*/ ) {
       if (this.kernel.type !== "CONSOLE") {
         this.logger('onOrmReady', "INFO", `EVENTS ${this.name} ORM`);
       }
+        //this.logger('onOrmReady', "INFO", `EVENTS ${this.name} ORM`);
       this.fire('onOrmReady', this);
       this.ready = true;
     });

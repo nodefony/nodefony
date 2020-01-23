@@ -54,7 +54,7 @@ const regBundle = /^(\w+)[Bb]undle.js$/;
 const regClassBundle = /^(\w+)[Bb]undle$/;
 const regPackageFile = /^\s*file:(.*)/;
 
-const promiseBundleReady = function () {
+/*const promiseBundleReady = function () {
   let myresolve = null;
   let myPromise = new Promise((resolve) => {
     myresolve = resolve;
@@ -63,7 +63,7 @@ const promiseBundleReady = function () {
   return function (bundle) {
     return myresolve(bundle);
   };
-};
+};*/
 
 const bundlesCore = {
   "framework-bundle": "framework",
@@ -177,12 +177,22 @@ class Kernel extends nodefony.Service {
         if (process.getuid && process.getuid() === 0) {
           //this.drop_root();
         }
-        this.clean();
+        //this.clean();
         this.postReady = true;
+        switch(this.environment){
+          case 'production':
+          case 'prod':
+          case 'preprod':
+          case 'preproduction':
+            this.clean();
+            break;
+          default:
+            this.clean()  ;
+            myrequire = null;
+        }
+
+
       });
-      if (!this.console) {
-        //this.start();
-      }
     } catch (e) {
       console.trace(e);
       throw e;
@@ -190,9 +200,11 @@ class Kernel extends nodefony.Service {
   }
 
   clean() {
-    if (this.environment === "prod") {
+      require.cache = null ;
+      delete require.cache;
+      myrequire.cache = null;
+      delete myrequire.cache;
       myrequire = null;
-    }
   }
 
   drop_root() {
@@ -882,20 +894,6 @@ class Kernel extends nodefony.Service {
       }
     }
 
-    if (this.console) {
-      await this.loadCommand();
-    } else {
-      await this.cli.assetInstall();
-      /*if (!fs.existsSync(this.cacheLink)) {
-        try {
-          fs.mkdirSync(this.cacheLink);
-          this.cli.assetInstall();
-        } catch (e) {
-          this.logger(e, "WARNING");
-        }
-      }*/
-    }
-
     // BOOT
     tab.length = 0;
     try {
@@ -917,6 +915,20 @@ class Kernel extends nodefony.Service {
         throw e;
       }
     }
+    if (this.console) {
+      await this.loadCommand();
+    } else {
+      await this.cli.assetInstall();
+      /*if (!fs.existsSync(this.cacheLink)) {
+        try {
+          fs.mkdirSync(this.cacheLink);
+          this.cli.assetInstall();
+        } catch (e) {
+          this.logger(e, "WARNING");
+        }
+      }*/
+    }
+
     /*let bundles = [];
     for await (let boot of this.promisesBundleReady) {
       this.log(`End Waiting Bundle Ready  ${boot.name}`, "DEBUG");
@@ -1345,21 +1357,6 @@ class Kernel extends nodefony.Service {
     });
     return this.bundles.app;
   }
-
-
-  /**
-   *
-   *  @method readConfigDirectory
-   *
-  readConfigDirectory(Path, callbackConfig) {
-    console.log(Path)
-    return new nodefony.finder({
-      path: Path,
-      onFinish: (error, result) => {
-        this.readConfig(error, result, callbackConfig);
-      }
-    });
-  }/*
 
   /**
    *

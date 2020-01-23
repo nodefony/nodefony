@@ -14,13 +14,21 @@ module.exports = class mongooseBundle extends nodefony.Bundle {
      *      this.waitBundleReady = true ;
      */
     this.waitBundleReady = true;
-
-    this.kernel.once("onBoot", async () => {
-      let orm = this.get("mongoose");
-      orm.once("onOrmReady", () => {
-        this.fire("onReady", this, orm);
-      });
-    });
-
   }
+
+  boot(){
+    return new Promise((resolve, reject)=>{
+      try{
+        let orm = this.get("mongoose");
+        this.logger(`Waiting.... orm connections`,"DEBUG");
+        orm.prependOnceListener("onOrmReady", async () => {
+          this.fire("onReady", this, orm);
+          resolve(await super.boot());
+        });
+      }catch(e){
+        return reject(e);
+      }
+    });
+  }
+
 };

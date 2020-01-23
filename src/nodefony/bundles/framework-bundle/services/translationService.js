@@ -46,9 +46,9 @@ const reader = function (service) {
 const Translation = class Translation extends nodefony.Service {
 
   constructor(context, service) {
-    super("transaltion", context.container, context.notificationsCenter);
+    super("translation", context.container, context.notificationsCenter);
     this.context = context;
-    this.service = service;
+    this.service = service ;
     this.setParameters("translate", translate);
     this.defaultDomain = service.defaultDomain;
     this.defaultLocale = service.defaultLocale;
@@ -139,10 +139,10 @@ const Translation = class Translation extends nodefony.Service {
     if (this.context.session) {
       this.context.session.set("lang", this.defaultLocale);
     }
-    if (!this.service.getParameters("translate." + this.defaultLocale)) {
+    if (!this.service.getParameters(`translate.${this.defaultLocale}`)) {
       this.service.getFileLocale(this.defaultLocale);
     } else {
-      if (!this.service.getParameters("translate." + this.defaultLocale + "." + this.defaultDomain)) {
+      if (!this.service.getParameters(`translate.${this.defaultLocale}.${this.defaultDomain}`)) {
         this.service.getFileLocale(this.defaultLocale);
       }
     }
@@ -164,7 +164,6 @@ module.exports = class translation extends nodefony.Service {
   constructor(container) {
     super("I18N", container, container.get("notificationsCenter"));
     this.defaultLocale = this.getParameters("kernel.system.locale");
-    this.engineTemplate = this.get("templating");
     this.setParameters("translate", translate);
     this.defaultDomain = "messages";
     this.reader = reader(this);
@@ -172,13 +171,13 @@ module.exports = class translation extends nodefony.Service {
 
   boot() {
     this.once("onBoot", async () => {
+      this.engineTemplate = this.get("templating");
       let dl = this.getParameters("bundles.app").App.locale;
       if (dl) {
         this.defaultLocale = dl;
       }
       this.getFileLocale(dl);
       this.logger("default Local APPLICATION ==> " + this.defaultLocale, "DEBUG");
-
       this.engineTemplate.extendFunction("getLangs", this.getLangs.bind(this));
       this.getConfigLangs(this.getParameters("bundles.app.lang"));
     });
@@ -195,6 +194,7 @@ module.exports = class translation extends nodefony.Service {
     }
     return langs;
   }
+
   getLangs() {
     return this.langs;
   }
