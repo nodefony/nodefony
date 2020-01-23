@@ -3,7 +3,7 @@
    constructor(container) {
      super("users", container);
      this.orm = this.kernel.getORM();
-
+     this.ormName = this.orm.name;
      if (this.orm.ready) {
        this.initialize();
      } else {
@@ -14,7 +14,6 @@
    }
 
    initialize() {
-     this.ormName = this.orm.name;
      this.entity = this.orm.getEntity("user");
    }
 

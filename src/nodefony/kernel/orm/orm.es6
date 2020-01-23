@@ -2,7 +2,9 @@ const connectionMonitor = function ( /*name, db*/ ) {
   this.connectionNotification++;
   if (Object.keys(this.settings.connectors).length === this.connectionNotification) {
     process.nextTick(() => {
-      this.logger('onOrmReady', "DEBUG", "EVENTS ORM");
+      if (this.kernel.type !== "CONSOLE") {
+        this.logger('onOrmReady', "INFO", `EVENTS ${this.name} ORM`);
+      }
       this.fire('onOrmReady', this);
       this.ready = true;
     });
@@ -12,7 +14,6 @@ const connectionMonitor = function ( /*name, db*/ ) {
 class Orm extends nodefony.Service {
 
   constructor(name, container /*, kernel, autoLoader*/ ) {
-
     super(name, container);
     if ((this.kernel.debug === false && this.debug === true) || this.debug === undefined) {
       this.debug = this.kernel.debug;

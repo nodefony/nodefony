@@ -55,7 +55,6 @@ class loginController extends nodefony.controller {
    *    )
    */
   loginCheckAction(lastUrl) {
-    console.log("passsss loginCheckAction")
     try {
       let token = this.getToken();
       if (token.user && token.user.enabled) {

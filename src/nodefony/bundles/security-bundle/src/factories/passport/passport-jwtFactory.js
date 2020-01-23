@@ -24,30 +24,29 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
       super("jwt", security, settings);
       this.algorithm = this.settings.algorithms || "RS256";
       this.jwt = jwt;
-      this.orm = null;
+      this.orm = this.kernel.getORM();
+      this.jwtConfig = this.kernel.getBundle("security").settings["passport-jwt"];
       this.entity = null;
-      this.kernel.once("onReady", () => {
-        this.orm = this.kernel.getORM();
+      this.orm.on("onOrmReady", () => {
         this.entity = this.orm.getEntity("jwt");
-        this.jwtConfig = this.kernel.getBundle("security").settings["passport-jwt"];
       });
     }
 
-    logout(context){
+    logout(context) {
       return new Promise(async (resolve, reject) => {
-        if (!context){
+        if (!context) {
           return reject(new nodefony.Error("logout no context"));
         }
         const query = context.request.query;
-        if ( query.refreshToken){
+        if (query.refreshToken) {
           let res = await this.entity.deleteRefreshToken(query.refreshToken);
-          if (res){
+          if (res) {
             return resolve(super.logout(context));
           }
           return super.logout(context)
-          .then(() =>{
-            return reject(new nodefony.Error("refreshToken not found"));
-          });
+            .then(() => {
+              return reject(new nodefony.Error("refreshToken not found"));
+            });
 
         }
         return reject(new nodefony.Error("No refreshToken parameter"));

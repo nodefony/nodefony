@@ -90,9 +90,9 @@ const defaultEnvEnable = {
 };
 
 const defaultOptions = {
-  events:{
+  events: {
     nbListeners: 60,
-    captureRejections:true
+    captureRejections: true
   }
 };
 
@@ -193,7 +193,6 @@ class Kernel extends nodefony.Service {
     if (this.environment === "prod") {
       myrequire = null;
     }
-
   }
 
   drop_root() {
@@ -862,8 +861,6 @@ class Kernel extends nodefony.Service {
     try {
       this.app = await this.initApplication();
       await this.emitAsync("onPostRegister", this);
-
-
     } catch (e) {
       this.logger(e, "ERROR");
       throw e;

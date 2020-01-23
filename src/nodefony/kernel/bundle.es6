@@ -141,9 +141,9 @@ const defaultWatcher = function (reg /*, settings*/ ) {
 
 
 const defaultOptions = {
-  events:{
+  events: {
     nbListeners: 60,
-    captureRejections:true
+    captureRejections: true
   }
 };
 /*
@@ -151,7 +151,7 @@ const defaultOptions = {
  */
 class Bundle extends nodefony.Service {
   constructor(name, kernel, container) {
-    super(name, container, null , nodefony.extend(true, {},defaultOptions) );
+    super(name, container, null, nodefony.extend(true, {}, defaultOptions));
     this.logger("\x1b[36m REGISTER BUNDLE : " + this.name + "   \x1b[0m", "DEBUG", this.kernel.cli.clc.magenta("KERNEL"));
     this.bundleName = path.basename(this.path);
     this.location = path.dirname(this.path);
@@ -225,7 +225,7 @@ class Bundle extends nodefony.Service {
       throw e;
     }
     // KERNEL EVENTS
-    this.kernel.once("onBoot", async ()=>{
+    this.kernel.once("onBoot", async () => {
       try {
         this.router = this.get("router");
         this.webpackService = this.get("webpack");
@@ -326,15 +326,6 @@ class Bundle extends nodefony.Service {
         // Register Views
         await this.registerViews();
 
-        // Register internationalisation
-        /*if (this.translation) {
-          this.locale = this.translation.defaultLocal;
-        }
-        await this.registerI18n(this.locale);
-
-        // Register Entity
-        await this.registerEntities();*/
-        // Register Fixtures
         if (this.kernel.type === "CONSOLE") {
           await this.registerFixtures();
         }
@@ -350,6 +341,8 @@ class Bundle extends nodefony.Service {
 
   clean() {
     this.logger(`CLEAN MEMORY BUNDLE :  ${this.name}`);
+    this.findResult = null;
+    delete this.findResult;
     this.webPackConfig = null;
     delete this.webPackConfig;
     this.webpackCompiler = null;
@@ -366,6 +359,10 @@ class Bundle extends nodefony.Service {
     delete this.commandFiles;
     this.resourcesFiles = null;
     delete this.resourcesFiles;
+    this.fixtureFiles = null;
+    delete this.fixtureFiles;
+    this.entityFiles = null;
+    delete this.entityFiles;
   }
 
   fire() {
@@ -990,10 +987,10 @@ class Bundle extends nodefony.Service {
   }
 
   async findI18nFiles(result) {
-    let trans = null ;
+    let trans = null;
     if (result) {
       trans = await result.find("translations");
-    }else{
+    } else {
       trans = await this.resourcesFiles.find("translations");
     }
     if (!trans.length || !trans[0]) {
@@ -1017,12 +1014,12 @@ class Bundle extends nodefony.Service {
         return;
       }
     }
-    let dir = null ;
+    let dir = null;
 
     if (result) {
-      dir =  await this.findI18nFiles(result);
-    }else{
-      dir = this.i18nFiles ;
+      dir = await this.findI18nFiles(result);
+    } else {
+      dir = this.i18nFiles;
     }
     //console.trace(dir)
     if (!dir || !dir.length) {

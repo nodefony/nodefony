@@ -4,7 +4,9 @@ class usersFixture extends nodefony.Fixture {
 
   constructor(container) {
     super("users", container);
-    this.entity = this.orm.getEntity("user");
+    this.orm.on("onOrmReady", () => {
+      this.entity = this.orm.getEntity("user");
+    });
     this.usersService = this.get("users");
   }
 

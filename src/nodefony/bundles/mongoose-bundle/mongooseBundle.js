@@ -15,10 +15,10 @@ module.exports = class mongooseBundle extends nodefony.Bundle {
      */
     this.waitBundleReady = true;
 
-    this.on("onBoot", async ()=>{
-      let service = this.get("mongoose");
-      service.on("onOrmReady", () => {
-        this.fire("onReady", this, service);
+    this.kernel.once("onBoot", async () => {
+      let orm = this.get("mongoose");
+      orm.once("onOrmReady", () => {
+        this.fire("onReady", this, orm);
       });
     });
 
