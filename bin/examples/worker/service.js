@@ -1,5 +1,5 @@
 const {
-  Worker,
+  //Worker,
   isMainThread,
   parentPort,
   MessagePort,
@@ -15,70 +15,42 @@ try {
 const green = clc.green;
 
 class myService extends nodefony.Service {
-  constructor(name) {
-    super(name);
+  constructor(...args) {
+    super("cci");
     this.pid = process.pid;
+    this.port = null;
+    this.initialize();
+    this.send(`running thread on ${green(this.pid)}`);
+    //this.asyncCall(workerData);
+  }
+
+  initialize() {
     this.listenSyslog();
     this.workerData = workerData;
-    parentPort.postMessage("running");
-    parentPort.on('message', this.listen("message"));
-    this.on("message", (msg) => {
+    this.parentPort = parentPort;
+    this.parentPort.on('message', (msg) => {
+      this.emit("onMessage", msg);
+    });
+    //this.parentPort.on('message', this.listen("message"));
+    this.on("onMessage", (msg) => {
+      console.log(msg)
       if (msg instanceof MessagePort) {
-        console.log(msg)
         this.port = msg;
         this.port.postMessage({
-          sboob: true
+          foo: true
         });
       } else {
         if (this.port) {
           this.port.postMessage(msg);
         } else {
-          parentPort.postMessage(msg);
+          this.send(msg);
         }
       }
     });
-
-    this.asyncCall(workerData);
-
   }
 
-  listenSyslog(options) {
-    let defaultOption = {
-      severity: {
-        operator: "<=",
-        data: "7"
-      }
-    };
-    return this.syslog.listenWithConditions(this, options || defaultOption,
-      (pdu) => {
-        return this.normalizeLog(pdu);
-      });
-  }
-
-  normalizeLog(pdu) {
-    //console.log(pdu)
-    let date = new Date(pdu.timeStamp);
-    if (pdu.payload === "" || pdu.payload === undefined) {
-      console.error(date.toDateString() + " " + date.toLocaleTimeString() + " " + nodefony.Service.logSeverity(pdu.severityName) + " " + green(pdu.msgid) + " " + " : " + "logger message empty !!!!");
-      console.trace(pdu);
-      return;
-    }
-    let message = pdu.payload;
-    switch (typeof message) {
-      case "object":
-        switch (true) {
-          case (message instanceof nodefony.Error):
-            break;
-          case (message instanceof Error):
-            message = new nodefony.Error(message);
-            break;
-          default:
-            message = util.inspect(message);
-        }
-        break;
-      default:
-    }
-    return console.log(`${date.toDateString()} ${date.toLocaleTimeString()} ${nodefony.Service.logSeverity(pdu.severityName)} ${green(pdu.msgid)} : ${message}`);
+  send(msg) {
+    this.parentPort.postMessage(msg);
   }
 
   /**
@@ -90,7 +62,6 @@ class myService extends nodefony.Service {
     }
     return super.logger(pci, severity, msgid, msg);
   }
-
 
   async asyncCall(ele) {
     return await this.call(ele);
@@ -109,7 +80,10 @@ class myService extends nodefony.Service {
       }, 10000);
     });
   }
-
 }
 
-module.exports = new myService("cci");
+if (isMainThread) {
+  module.exports = myService;
+} else {
+  module.exports = new myService();
+}
