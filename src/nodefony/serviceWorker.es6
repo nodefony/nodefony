@@ -2,20 +2,20 @@ const {
   Worker,
   MessageChannel,
   //MessagePort,
-  isMainThread,
-  parentPort,
+  //isMainThread,
+  //parentPort,
   //workerData
 } = require('worker_threads');
 
 class ServiceWorker extends nodefony.Service {
 
-  constructor(name, container, notificationsCenter, options = null) {
-    super(name, container, notificationsCenter, options);
-    this.initWorker();
+  constructor(name, container, workerfile = __filename, options = {}) {
+    super(name, container, null, options);
+    this.initWorker(workerfile);
   }
 
-  initWorker() {
-    this.worker = new Worker(__filename, {
+  initWorker(workerfile) {
+    this.worker = new Worker(workerfile, {
       workerData: this.options
     });
     this.worker.on('online', () => {
@@ -39,10 +39,5 @@ class ServiceWorker extends nodefony.Service {
   }
 
 }
-
-
-if (isMainThread) {
-  module.exports = new ServiceWorker();
-} else {
-
-}
+nodefony.ServiceWorker = ServiceWorker;
+module.exports = ServiceWorker;
