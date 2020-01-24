@@ -32,11 +32,20 @@ module.exports = class defaultController extends nodefony.controller {
 
   }
 
-  indexAction() {
+  async indexAction() {
+    this.response.setTimeout(100000);
+    // run in thread
+    let res = await this.get("worker")
+      .find(path.resolve("."))
+      .then((ret) => {
+        return ret;
+      });
+    console.log(res)
     try {
       return this.render("testBundle::index.html.twig", {
         lib: lib.toJson(),
-        admin: this.isGranted("ROLE_ADMIN")
+        admin: this.isGranted("ROLE_ADMIN"),
+        thread: res
       });
     } catch (e) {
       throw e;

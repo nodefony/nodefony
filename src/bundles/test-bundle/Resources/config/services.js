@@ -12,8 +12,8 @@ module.exports = {
       ]
     }]
   },
-  /*worker: {
+  worker: {
     class: nodefony.services.worker,
     arguments: ["@container"]
-  }*/
+  }
 };
