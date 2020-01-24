@@ -237,7 +237,7 @@ class Bundle extends nodefony.Service {
           this.locale = this.translation.defaultLocale;
         }
         // I18n
-        this.i18nFiles =  await this.findI18nFiles();
+        this.i18nFiles = await this.findI18nFiles();
 
         // Register Entity
         await this.registerEntities();
@@ -252,13 +252,13 @@ class Bundle extends nodefony.Service {
     });
 
     this.kernel.once("onPostReady", async () => {
-      switch(this.kernel.environment){
-        case 'production':
-        case 'prod':
-        case 'preprod':
-        case 'preproduction':
-          this.clean();
-          break;
+      switch (this.kernel.environment) {
+      case 'production':
+      case 'prod':
+      case 'preprod':
+      case 'preproduction':
+        this.clean();
+        break;
       }
     });
     // BUNDLE EVENTS

@@ -64,6 +64,7 @@ module.exports = function () {
         require(path.resolve(__dirname, "notificationsCenter.es6"));
         require(path.resolve(__dirname, "syslog.es6"));
         require(path.resolve(__dirname, "service.es6"));
+        require(path.resolve(__dirname, "serviceWorker.es6"));
         require(path.resolve(__dirname, "result.es6"));
         require(path.resolve(__dirname, "fileClass.es6"));
         require(path.resolve(__dirname, "finder.es6"));

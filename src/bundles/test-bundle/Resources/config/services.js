@@ -11,5 +11,9 @@ module.exports = {
         [1, 2, 3, 4], null, "@httpServer"
       ]
     }]
-  }
+  },
+  /*worker: {
+    class: nodefony.services.worker,
+    arguments: ["@container"]
+  }*/
 };
