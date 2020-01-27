@@ -18,7 +18,7 @@ class loginController extends nodefony.controller {
   }
 
   /**
-   *    @Method ({"GET'})
+   *    @Method ({"GET", "POST"})
    *    @Route (
    *      "/login/secure",
    *      name="login"
@@ -33,13 +33,14 @@ class loginController extends nodefony.controller {
   }
 
   /**
-   *    @Method ({ "POST"})
+   *    @Method ({"POST"})
    *    @Route (
    *      "/login/check",
    *      name="login-check"
    *    )
    */
   loginCheckAction(lastUrl) {
+    //console.log(lastUrl)
     try {
       let token = this.getToken();
       if (token.user && token.user.enabled) {

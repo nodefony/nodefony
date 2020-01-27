@@ -100,18 +100,17 @@ module.exports = nodefony.register("SecuredArea", function () {
           context.response.setStatusCode(401);
         }
         if (this.formLogin) {
-          console.log("PASSAS no form login", this.formLogin, context.request.url.pathname, securityError.message, context.method)
-
           if (context.session) {
             let area = context.session.getMetaBag("area");
             if (area && area !== this.name) {
               context.session.clearFlashBag("default_target_path");
             }
+            context.session.setMetaBag("area", this.name);
             let target_path = context.session.getFlashBag("default_target_path");
-            if (!target_path) {
+            if (!target_path && context.method === "GET") {
               context.session.setFlashBag("default_target_path", context.request.url.pathname);
             }
-            context.session.setMetaBag("area", this.name);
+            
             if (context.method !== "GET") {
               context.session.setFlashBag("error", securityError.message);
             }
@@ -348,15 +347,24 @@ module.exports = nodefony.register("SecuredArea", function () {
       return this.stateLess = state || false;
     }
 
-    overrideURL(context, myUrl, target = null, force = false) {
-      if (myUrl) {
-        context.request.url = url.parse(url.resolve(context.request.url, myUrl));
+    overrideURL(context, myUrl, target = null) {
+      try{
+        if (myUrl) {
+          context.request.url = url.parse(url.resolve(context.request.url, myUrl));
+        }
+        let resolver = this.router.resolve(context);
+        if (target) {
+          resolver.variables.push(target);
+        }
+        return resolver;
+      }catch(e){
+        if (e instanceof nodefony.Resolver ){
+          if ( e.exception){
+            throw e.exception ;
+          }
+        }
+        throw e ;
       }
-      let resolver = this.router.resolve(context, force);
-      if (target) {
-        resolver.variables.push(target);
-      }
-      return resolver;
     }
 
     redirectHttps(context) {

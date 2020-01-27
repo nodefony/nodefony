@@ -55,7 +55,6 @@ class Notification extends events.EventEmitter {
       let size = handler.length;
       let i = 0;
       while (size !== i) {
-        //console.log(size, i, handler.length)
         tab.push(await Reflect.apply(handler[i], this, args));
         if (handler.length === size) {
           i++;

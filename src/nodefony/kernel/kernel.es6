@@ -960,7 +960,6 @@ class Kernel extends nodefony.Service {
     }
     return await this.onReady()
       .then(async () => {
-        //this.fire("onPostReady", this);
         await this.emitAsync("onPostReady", this);
         return this;
       })

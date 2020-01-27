@@ -4,9 +4,10 @@ class Factory extends nodefony.Service {
     super(name, security.container, security.notificationsCenter);
     this.settings = settings || {};
     this.security = security;
-    this.providerName = this.settings.provider;
+    this.providerName = this.settings.provider  || this.security.providerName;
     this.provider = null;
-    this.kernel.once("onPostReady", () => {
+    this.kernel.once("onReady", () => {
+      //console.log("onReady factory", this.name, this.providerName)
       if (!this.providerName) {
         if (this.providerName !== false) {
           this.providerName = this.security.providerName;
