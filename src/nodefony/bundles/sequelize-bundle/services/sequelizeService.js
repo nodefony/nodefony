@@ -1,7 +1,7 @@
-const cls = require('cls-hooked');
-const namespace = cls.createNamespace('nodefony');
+//const cls = require('cls-hooked');
+//const namespace = cls.createNamespace('nodefony');
 const Sequelize = require('sequelize');
-Sequelize.useCLS(namespace);
+//Sequelize.useCLS(namespace);
 const {
   JsonSchemaManager,
   OpenApi3Strategy

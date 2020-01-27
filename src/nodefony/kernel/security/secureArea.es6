@@ -100,11 +100,9 @@ module.exports = nodefony.register("SecuredArea", function () {
           context.response.setStatusCode(401);
         }
         if (this.formLogin) {
-          if (context.session &&
-            (context.request.url.pathname !== this.formLogin) &&
-            (context.request.url.pathname !== this.checkLogin)
-          ) {
+          console.log("PASSAS no form login", this.formLogin, context.request.url.pathname, securityError.message, context.method)
 
+          if (context.session) {
             let area = context.session.getMetaBag("area");
             if (area && area !== this.name) {
               context.session.clearFlashBag("default_target_path");
@@ -114,17 +112,40 @@ module.exports = nodefony.register("SecuredArea", function () {
               context.session.setFlashBag("default_target_path", context.request.url.pathname);
             }
             context.session.setMetaBag("area", this.name);
-          }
-          try {
-            //context.resolver = this.overrideURL(context, this.formLogin);
-            if (context.session) {
+            if (context.method !== "GET") {
               context.session.setFlashBag("error", securityError.message);
             }
-            if (!context.isJson) {
-              return this.redirect(context, this.formLogin);
-            } else {
+          }
+
+          /*if (context.session &&
+            (context.request.url.pathname !== this.formLogin) &&
+            (context.request.url.pathname !== this.checkLogin)
+          ) {
+            console.log("PASSAS no form login", this.formLogin, context.request.url.pathname, securityError.message, context.method)
+            let area = context.session.getMetaBag("area");
+            if (area && area !== this.name) {
+              context.session.clearFlashBag("default_target_path");
+            }
+            let target_path = context.session.getFlashBag("default_target_path");
+            if (!target_path) {
+              context.session.setFlashBag("default_target_path", context.request.url.pathname);
+            }
+            context.session.setMetaBag("area", this.name);
+          } else {
+            console.log("PASSAS formLogin ok", this.formLogin, context.request.url.pathname, securityError.message, context.method)
+            if (context.session) {
+              if (this.formLogin === context.request.url.pathname && context.method !== "GET") {
+                context.session.setFlashBag("error", securityError.message);
+              }
+            }
+          }*/
+          try {
+            if (context.isJson) {
               return securityError;
             }
+            //return this.redirect(context, this.formLogin);
+            context.resolver = this.overrideURL(context, this.formLogin);
+            return context;
           } catch (e) {
             return new nodefony.securityError(e, 500, this, context);
           }
@@ -201,8 +222,8 @@ module.exports = nodefony.register("SecuredArea", function () {
                 }
                 if (!this.alwaysUseDefaultTarget) {
                   target = context.session.getFlashBag("default_target_path") || this.defaultTarget;
-                }else{
-                  target = this.defaultTarget ;
+                } else {
+                  target = this.defaultTarget;
                 }
                 context.session.clearFlashBag("default_target_path");
               }
@@ -227,7 +248,6 @@ module.exports = nodefony.register("SecuredArea", function () {
             if (!target) {
               return resolve(context);
             }
-
             if (context.isJson) {
               context.resolver = this.overrideURL(context, target);
               return resolve(context);
@@ -252,16 +272,16 @@ module.exports = nodefony.register("SecuredArea", function () {
     logout(context) {
       return new Promise(async (resolve, reject) => {
         let res = [];
-        for await (let factorie of this.factories){
-          res.push( await factorie.logout(context) );
+        for await (let factorie of this.factories) {
+          res.push(await factorie.logout(context));
         }
         if (context.session) {
           return context.session.destroy(true)
             .then(() => {
               if (this.formLogin) {
-                return resolve( this.redirect(context, this.formLogin) );
+                return resolve(this.redirect(context, this.formLogin));
               }
-              return resolve( context );
+              return resolve(context);
             }).catch(e => {
               this.logger(e, "ERROR");
               return reject(e);
@@ -328,11 +348,11 @@ module.exports = nodefony.register("SecuredArea", function () {
       return this.stateLess = state || false;
     }
 
-    overrideURL(context, myUrl, target) {
+    overrideURL(context, myUrl, target = null, force = false) {
       if (myUrl) {
         context.request.url = url.parse(url.resolve(context.request.url, myUrl));
       }
-      let resolver = this.router.resolve(context);
+      let resolver = this.router.resolve(context, force);
       if (target) {
         resolver.variables.push(target);
       }

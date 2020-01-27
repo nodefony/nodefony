@@ -43,9 +43,9 @@ module.exports = {
       path: /^\/nodefony/,
       roles: ["ROLE_MONITORING"],
       requires_channel: "https",
-      allow_if: {
+      /*allow_if: {
         roles: ["ROLE_ADMIN", "ROLE_USER"]
-      }
+      }*/
     }],
 
     firewalls: {

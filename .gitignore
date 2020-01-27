@@ -3,7 +3,7 @@
 /web/*
 
 assets
-#**/assets/**
+**/assets/**
 app/Resources/public/assets/
 src/bundles/test-bundle/Resources/public/assets/
 src/nodefony/browser/dist

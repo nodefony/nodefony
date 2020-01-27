@@ -19,7 +19,8 @@ module.exports = function () {
     output: {
       path: path.resolve(__dirname, "../dist"),
       library: 'nodefony',
-      libraryTarget: 'umd'
+      libraryTarget: 'umd',
+      libraryExport: "default"
     },
 
     node: {
@@ -49,7 +50,17 @@ module.exports = function () {
      * See: http://webpack.github.io/docs/configuration.html#module
      */
     module: {
-      rules: []
+      rules: [{
+        // BABEL TRANSCODE
+        test: new RegExp("\.es6$|\.js$|\.es7$"),
+        exclude: new RegExp("node_modules"),
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }]
+      }]
     },
     /*
      * Add additional plugins to the compiler.

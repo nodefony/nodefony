@@ -26,17 +26,7 @@ module.exports = function () {
       ]
     },
     module: {
-      rules: [{
-        // BABEL TRANSCODE
-        test: new RegExp("\.es6$|\.js$"),
-        exclude: new RegExp("node_modules"),
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env']
-          }
-        }]
-      }]
+      rules: []
     }
   })];
 };

@@ -2,13 +2,12 @@ class loginController extends nodefony.controller {
 
   constructor(container, context) {
     super(container, context);
-    this.security = this.get("security");
     this.startSession();
   }
 
 
   /**
-   *    @Method ({ "POST","GET"})
+   *    @Method ({"POST"})
    *    @Route (
    *      "/secure",
    *      name="secure-login"
@@ -19,32 +18,18 @@ class loginController extends nodefony.controller {
   }
 
   /**
-   *    @Method ({"GET"})
+   *    @Method ({"GET'})
    *    @Route (
-   *      "/login/{type}",
-   *      name="login",
-   *      defaults={"type" = "secure"},
-   *      requirements={"type" = "\w+"}
+   *      "/login/secure",
+   *      name="login"
    *    )
    */
-  loginAction(type) {
+  loginAction() {
     let token = this.getToken();
     if (this.session && token) {
       return this.redirectToRoute("home");
     }
-    let area = this.security.getSecuredArea(type);
-    let action = "/" + type;
-    if (area && area.checkLogin) {
-      action = area.checkLogin;
-    }
-    let google = this.security.getSecuredArea("google_area") ? true : false;
-    let github = this.security.getSecuredArea("github_area") ? true : false;
-    return this.render("users:login:login.html.twig", {
-      type: type,
-      action: action,
-      google: google,
-      github: github
-    });
+    return this.render("users:login:login.html.twig");
   }
 
   /**
