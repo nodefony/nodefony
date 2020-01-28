@@ -15,13 +15,14 @@ module.exports = nodefony.registerFactory("passport-digest", () => {
           let strategy = new DigestStrategy(options, (username, done) => {
             this.logger("TRY AUTHENTICATION " + this.name + " : " + username, "DEBUG");
             let mytoken = new nodefony.security.tokens.userPassword(username);
-            this.authenticateToken(mytoken).then((token) => {
-              done(null, token, token.getCredentials());
-              return token;
-            }).catch((error) => {
-              done(error, null);
-              throw error;
-            });
+            this.authenticateToken(mytoken)
+              .then((token) => {
+                done(null, token, token.getCredentials());
+                return token;
+              }).catch((error) => {
+                done(error, null);
+                throw error;
+              });
           });
           return resolve(strategy);
         } catch (e) {
