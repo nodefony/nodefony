@@ -87,7 +87,7 @@ describe("BUNDLE TEST", function () {
       assert.deepStrictEqual(local.factories.length, 1);
       assert.deepStrictEqual(local.factories[0].name, "local");
       assert(local.cors);
-      assert.deepStrictEqual(local.formLogin, "/login/test-local-area");
+      assert.deepStrictEqual(local.formLogin, "/login/secure");
       assert.deepStrictEqual(local.checkLogin, "/test/firewall/local");
       assert.deepStrictEqual(local.stringPattern, '^/test/firewall/local');
       try {
@@ -122,9 +122,9 @@ describe("BUNDLE TEST", function () {
         if (error) {
           throw error;
         }
-        assert.deepStrictEqual(body, "");
-        assert.deepStrictEqual(response.headers.location, "/login/test-local-area");
-        assert.deepStrictEqual(response.statusCode, 302);
+        //assert.deepStrictEqual(body, "");
+        //assert.deepStrictEqual(response.headers.location, "/login/secure");
+        assert.deepStrictEqual(response.statusCode, 400);
         assert.deepStrictEqual(response.statusMessage, 'Missing credentials');
         let session = response.headers["set-cookie"][0];
         assert(session);

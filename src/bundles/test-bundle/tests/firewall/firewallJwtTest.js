@@ -146,9 +146,9 @@ describe("BUNDLE TEST", function () {
         if (error) {
           throw error;
         }
-        assert.deepStrictEqual(body, "");
-        assert.deepStrictEqual(response.headers.location, "/test/firewall/local");
-        assert.deepStrictEqual(response.statusCode, 302);
+        //assert.deepStrictEqual(body, "");
+        //assert.deepStrictEqual(response.headers.location, "/test/firewall/local");
+        assert.deepStrictEqual(response.statusCode, 401);
         assert.deepStrictEqual(response.statusMessage, 'No auth token');
         done();
       });
