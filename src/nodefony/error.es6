@@ -17,7 +17,8 @@ Object.defineProperty(Error.prototype, 'toJSON', json);
 const exclude = {
   context:true,
   resolver:true,
-  container:true
+  container:true,
+  secure:true
 };
 const jsonNodefony = {
   configurable: true,

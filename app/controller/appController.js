@@ -23,7 +23,7 @@ module.exports = class appController extends nodefony.controller {
   headerAction() {
     let urlDoc = null;
     if (this.documentation) {
-      urlDoc = this.generateUrl("documentation");
+      urlDoc = this.generateUrl("nodefony-doc");
     }
     return this.render("app::header.html.twig", {
       langs: this.get("translation").getLangs(),
@@ -48,7 +48,7 @@ module.exports = class appController extends nodefony.controller {
    *	Documentation
    *  @see Route documentation in routing.js
    */
-  documentationAction() {
+  /*documentationAction() {
     if (this.documentation) {
       return this.forward("documentation:default:index");
     }
@@ -67,6 +67,6 @@ module.exports = class appController extends nodefony.controller {
       throw e;
     }
     return this.render('app:documentation:documentation.html.twig');
-  }
+  }*/
 
 };

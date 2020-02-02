@@ -8,93 +8,107 @@ class JsonApi extends Api {
       version: this.version,
       result: null,
       message: "",
-      messageId: null,
-      error: null,
-      errorCode: null,
-      errorType: null,
-      debug: this.debug
+      messageId: null
+      //error: null,
+      //errorCode: null,
+      //errorType: null,
+      //debug: this.debug
     };
+    if (this.debug) {
+      this.json.debug = this.debug;
+    }
     if (this.context) {
       this.json.url = this.context.url || "";
       this.json.method = this.context.method;
       this.json.scheme = this.context.scheme;
+      this.context.once("onError", (e) => {
+        return this.renderError(e);
+      });
     }
   }
 
-  sanitize(data, obj, severity) {
-    let errorType = null;
-    let myData = data;
-    if (nodefony.isArray(data)) {
-      errorType = nodefony.Error.isError(data[0]);
+  isError(e, json = {}) {
+    if (nodefony.isArray(e)) {
+      const errorType = nodefony.Error.isError(e[0]);
       if (errorType) {
-        obj.error = data;
-        myData = data[0];
+        json.errors = e;
+        return this.isError(e[0], json);
       }
     } else {
-      errorType = nodefony.Error.isError(data);
+      let errorType = nodefony.Error.isError(e);
+      if (errorType) {
+        if (!this.kernel.debug && e.stack) {
+          delete e.stack;
+        }
+        if (e.name) {
+          errorType = e.name;
+        }
+        if (!json.severity) {
+          json.severity = "ERROR";
+        }
+        if (!json.code) {
+          json.code = e.code || 400;
+        }
+        if (!json.message) {
+          if (!e.message && this.context) {
+            json.message = this.context.response.getStatusMessage(json.errorCode);
+          } else {
+            json.message = e.message;
+          }
+        }
+        json.errorType = errorType;
+        json.error = e.toJSON();
+        json.errorCode = e.code || 400;
+      }
     }
-    if (errorType) {
-      obj.errorType = errorType;
-      obj.result = null;
-      if (!this.kernel.debug && myData.stack) {
-        delete myData.stack;
+    return json;
+  }
+
+  sanitize(payload, json) {
+    this.isError(payload, json);
+    if (json.error) {
+      return json.result = null;
+    } else {
+      if (!json.severity) {
+        json.severity = "INFO";
       }
-      obj.error = data;
-      obj.severity = severity || "ERROR";
-      if (myData.name) {
-        obj.errorType = myData.name;
-      }
-      if (!obj.code) {
-        if (myData.code) {
-          obj.code = myData.code;
+      if (!json.code) {
+        if (this.context) {
+          json.code = this.context.response.getStatusCode();
         } else {
-          obj.code = 400;
+          json.code = 200;
         }
       }
-      if (myData.errorCode) {
-        obj.errorCode = myData.errorCode;
+      if (!json.message && this.context) {
+        json.message = this.context.response.getStatusMessage(json.code);
       }
-      if (!obj.message) {
-        obj.message = myData.message;
-      }
-      if (!myData.message && this.context) {
-        obj.message = this.context.response.getStatusMessage(obj.code);
-      }
-      return myData;
+      return json.result = payload;
     }
-    if (!obj.message && this.context) {
-      obj.message = this.context.response.getStatusMessage(obj.code);
-    }
-    return obj.result = data;
   }
 
   render(payload, code, message = "", severity = null, messageID = null) {
     try {
       let json = nodefony.extend(this.json, {
-        severity: severity || "INFO",
+        severity: severity,
+        code: code,
         message: message,
         messageId: messageID
       });
       if (this.context) {
         const controller = this.context.get("controller");
-        json.code = code;
-        let res = this.sanitize(payload, json, severity);
-        if (!json.code) {
-          json.code = this.context.response.getStatusCode();
-        }
-        if (this.kernel.debug) {
+        this.sanitize(payload, json);
+        if (this.debug) {
           json.pdu = new nodefony.PDU({
             message: json.message,
             bundle: controller.bundle.name,
             controller: controller.name,
             action: this.context.get("action") ? this.context.get("action") : "",
-            stack: json.error ? res.stack : null
+            stack: json.error ? json.error.stack : null
           }, json.severity, this.name, messageID, message);
         }
         return controller.renderJson(json, json.code);
       }
-      json.code = code || 200;
-      this.sanitize(payload, json, severity);
+      this.sanitize(payload, json);
       return json;
     } catch (e) {
       throw e;
@@ -102,7 +116,9 @@ class JsonApi extends Api {
   }
 
   renderPdu(payload, code, message = "", severity = "INFO", messageID = null, api = this.name) {
-    let json = nodefony.extend({}, this.json);
+    let json = nodefony.extend({
+
+    }, this.json);
     this.sanitize(payload, json, severity);
     if (this.context) {
       const controller = this.context.get("controller");

@@ -82,7 +82,7 @@ module.exports = nodefony.register("httpError", function () {
         if (this.code === 1000 || this.code === 200 || typeof code === "string") {
           this.code = 500;
         }
-        if (this.context.isJson) {
+        /*if (this.context.isJson) {
           try {
             let obj = {
               code: this.code,
@@ -100,7 +100,7 @@ module.exports = nodefony.register("httpError", function () {
             this.message = e.message;
             this.logger(e, "WARNING");
           }
-        }
+        }*/
       }
     }
 

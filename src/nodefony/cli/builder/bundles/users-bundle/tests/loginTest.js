@@ -74,8 +74,8 @@ describe("BUNDLE users", () => {
       assert.strictEqual(body.code, 200);
       assert.strictEqual(body.message, 'OK');
       assert.strictEqual(body.messageId, null);
-      assert.strictEqual(body.error, null);
-      assert.strictEqual(body.errorCode, null);
+      //assert.strictEqual(body.error, undefined);
+      //assert.strictEqual(body.errorCode, undefined);
       assert.strictEqual(body.url, `${global.baseUrl}/login`);
       assert.strictEqual(body.method, 'POST');
       assert.strictEqual(body.scheme, 'https');

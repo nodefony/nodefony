@@ -5,10 +5,10 @@ const webpackMerge = require('webpack-merge');
 
 {% if addons.workbox %}
 const htmlPlugin = require('html-webpack-plugin');
-const WorkboxPlugin = require('workbox-webpack-plugin');
+const {InjectManifest} = require('workbox-webpack-plugin');
 {% endif %}
 
-{% if packageName == "app" %}
+{% if packageName == "a pp" %}
 // Default context <bundle base directory>
 //const context = path.resolve(__dirname, "..", "Resources", "public");
 const public = path.resolve(__dirname, "..", "Resources", "public", "assets");
@@ -140,11 +140,10 @@ module.exports = webpackMerge(wpconfig, {
       }
     }),
 {% if addons.workbox %}
-    new WorkboxPlugin.InjectManifest({
+    new InjectManifest({
       swSrc: path.resolve("Resources", "workers", "service-worker.js"),
       swDest: path.resolve("Resources","public" ,"assets","service-worker.js"),
       //include: [/workbox/, /\.js$/, /\.css$/],
-      importsDirectory: '{{shortName}}-assets',
       chunks: ['{{shortName}}']
     }),
     new htmlPlugin({

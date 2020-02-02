@@ -5,13 +5,13 @@ import {
 } from "swagger-ui-dist";
 
 import "swagger-ui/dist/swagger-ui.css";
-import "../css/swagger.css";
+import "./swagger.css";
 
-import config from "../config/swagger.js";
+const configSwagger = process.env.SWAGGER;
 
 class Swagger {
   constructor() {
-    this.config = config;
+    this.config = configSwagger;
     this.initialize();
     this.changeLogo();
   }
@@ -31,7 +31,6 @@ class Swagger {
   }
 
   initialize() {
-
     this.swagger = SwaggerUI({
       //url: "/api/users/documentation",
       urls: this.config.urls,
@@ -54,7 +53,6 @@ class Swagger {
       }
     });
   }
-
 }
 
 export default new Swagger();

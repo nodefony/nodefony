@@ -1,20 +1,46 @@
+import "workbox-sw";
+import {
+  registerRoute,
+  setCatchHandler
+} from 'workbox-routing';
+
+import {
+  NetworkOnly,
+  CacheFirst,
+  StaleWhileRevalidate
+} from 'workbox-strategies';
+
+import {
+  precacheAndRoute
+} from 'workbox-precaching';
+
+import {
+  ExpirationPlugin
+} from 'workbox-expiration';
+
+import {
+  //cacheNames,
+  setCacheNameDetails
+} from 'workbox-core';
+
 /**
  *  serviceWorker
  */
-
 class serviceWorker {
   constructor(context) {
     this.context = context;
-    if (!workbox) {
+    this.worbox = this.context.workbox;
+    /*if (!this.workbox) {
       throw new Error("Workbox didn't load");
-    }
-    //this.initEvents();
+    }*/
+    this.initEvents();
   }
 
   initEvents() {
     // the rest below handles the installing and caching
     this.context.addEventListener('install', (event) => {
       console.log('[Service Worker] Install', event);
+      this.initWorkbox();
     });
 
     this.context.addEventListener('activate', (event) => {
@@ -24,14 +50,16 @@ class serviceWorker {
   }
 
   initWorkbox() {
-    workbox.setConfig({
-      debug: true
-    });
+    if (this.workbox) {
+      this.workbox.setConfig({
+        debug: true
+      });
+    }
     this.initCache();
   }
 
   initCache() {
-    workbox.core.setCacheNameDetails({
+    setCacheNameDetails({
       prefix: '{{shortName}}',
       suffix: 'bundle',
       precache: '-precache',
@@ -49,34 +77,34 @@ class serviceWorker {
       this.precache = PRECACHE_URLS;
     }
 
-    workbox.precaching.precacheAndRoute(this.precache);
+    precacheAndRoute(this.precache);
 
-    this.pageHandler = new workbox.strategies.StaleWhileRevalidate({
+    this.pageHandler = new StaleWhileRevalidate({
       cacheName: 'pages-cache',
       plugins: [
-        new workbox.expiration.Plugin({
+        new ExpirationPlugin({
           maxEntries: 50,
         })
       ]
     });
-    this.jsHandler = new workbox.strategies.CacheFirst({
+    this.jsHandler = new CacheFirst({
       cacheName: 'javascript-cache',
     });
 
-    this.cssHandler = new workbox.strategies.CacheFirst({
+    this.cssHandler = new CacheFirst({
       // Use a custom cache name
       cacheName: 'css-cache',
     });
 
-    this.sockjsHandler = new workbox.strategies.NetworkOnly({
+    this.sockjsHandler = new NetworkOnly({
       cacheName: 'sockjs-cache',
     });
 
-    this.imagesHandler = new workbox.strategies.CacheFirst({
+    this.imagesHandler = new CacheFirst({
       // Use a custom cache name
       cacheName: 'image-cache',
       plugins: [
-        new workbox.expiration.Plugin({
+        new ExpirationPlugin({
           // Cache only 20 images
           maxEntries: 20,
           // Cache for a maximum of a week
@@ -90,58 +118,62 @@ class serviceWorker {
 
   initRouting() {
     {% if bundleName == "app" %}
-    workbox.routing.registerRoute(/\/(.*)/, args => {
+    registerRoute(/\/(.*)/, args => {
     {%else%}
-    workbox.routing.registerRoute(/(.*){{shortName}}/, args => {
+    registerRoute(/(.*){{shortName}}/, args => {
     {%endif%}
-      return this.pageHandler.handle(args).then(response => {
-        if (!response) {
-          return caches.match('nodefony/offline');
-        } else if (response.status === 404) {
-          return caches.match('nodefony/404');
-        }
-        return response;
-      });
+      return this.pageHandler.handle(args)
+        .then(response => {
+          if (!response) {
+            return caches.match('nodefony/offline');
+          } else if (response.status === 404) {
+            return caches.match('nodefony/404');
+          }
+          return response;
+        });
     });
 
-    workbox.routing.registerRoute(/(.*)sockjs-node*/, args => {
+    registerRoute(/(.*)sockjs-node*/, args => {
       return this.sockjsHandler.handle(args);
     });
 
-    workbox.routing.registerRoute(new RegExp('.*\.js'), args => {
-      return this.jsHandler.handle(args).then(response => {
-        if (!response) {
-          return caches.match('nodefony/offline');
-        } else if (response.status === 404) {
-          return caches.match('nodefony/404');
-        }
-        return response;
-      });
+    registerRoute(new RegExp('.*\.js'), args => {
+      return this.jsHandler.handle(args)
+        .then(response => {
+          if (!response) {
+            return caches.match('nodefony/offline');
+          } else if (response.status === 404) {
+            return caches.match('nodefony/404');
+          }
+          return response;
+        });
     });
 
-    workbox.routing.registerRoute(/.*\.css/, args => {
-      return this.cssHandler.handle(args).then(response => {
-        if (!response) {
-          return caches.match('nodefony/offline');
-        } else if (response.status === 404) {
-          return caches.match('nodefony/404');
-        }
-        return response;
-      });
+    registerRoute(/.*\.css/, args => {
+      return this.cssHandler.handle(args)
+        .then(response => {
+          if (!response) {
+            return caches.match('nodefony/offline');
+          } else if (response.status === 404) {
+            return caches.match('nodefony/404');
+          }
+          return response;
+        });
     });
 
-    workbox.routing.registerRoute(/.*\.(?:png|jpg|jpeg|svg|gif|ico)/, args => {
-      return this.imagesHandler.handle(args).then(response => {
-        if (!response) {
-          return caches.match('nodefony/offline');
-        } else if (response.status === 404) {
-          return caches.match('nodefony/404');
-        }
-        return response;
-      });
+    registerRoute(/.*\.(?:png|jpg|jpeg|svg|gif|ico)/, args => {
+      return this.imagesHandler.handle(args)
+        .then(response => {
+          if (!response) {
+            return caches.match('nodefony/offline');
+          } else if (response.status === 404) {
+            return caches.match('nodefony/404');
+          }
+          return response;
+        });
     });
 
-    /*workbox.routing.setCatchHandler(({
+    /*setCatchHandler(({
       event
     }) => {
       switch (event.request.destination) {
@@ -159,5 +191,6 @@ class serviceWorker {
   }
 }
 
-const worker = new serviceWorker(this);
-worker.initWorkbox();
+precacheAndRoute(self.__WB_MANIFEST);
+
+const worker = new serviceWorker(self);

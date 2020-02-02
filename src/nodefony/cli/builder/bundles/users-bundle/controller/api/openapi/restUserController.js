@@ -33,7 +33,7 @@ class restController extends nodefony.Controller {
    */
   optionsAction() {
     try {
-      let openApiConfig = require(path.resolve(this.bundle.path, "Resources", "config", "openapi", "users.js"));
+      let openApiConfig = require(path.resolve(this.bundle.path, "Resources", "swagger", "openapi", "users.js"));
       return this.api.renderSchema(openApiConfig, this.usersService.entity);
     } catch (e) {
       return this.api.renderError(e, 400);

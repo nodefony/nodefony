@@ -44,11 +44,11 @@
     "node": ">=10"
   },
   "dependencies": {
-    "mongoose": "^5.8.10",
+    "mongoose": "^5.8.11",
     "pm2": "^4.2.3",
     "sequelize": "6.0.0-beta.4",
     "webpack": "^4.41.5",
-    "webpack-dev-server": "^3.10.1"
+    "webpack-dev-server": "^3.10.2"
   },
   "devDependencies": {
     "editorconfig": "^0.15.3",

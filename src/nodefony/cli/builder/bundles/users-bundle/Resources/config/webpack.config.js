@@ -1,10 +1,7 @@
-//const bundleName = path.basename(path.resolve(__dirname, ".."));
-
 const path = require("path");
-//const webpack = require('webpack');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpackMerge = require('webpack-merge');
-
 
 // Default context <bundle base directory>
 //const context = path.resolve(__dirname, "..", "public");
@@ -30,8 +27,8 @@ module.exports = webpackMerge(config, {
   target: "web",
   entry: {
     users: ["./Resources/js/users.js"],
-    swagger: ["./Resources/js/swagger.js"],
-    graphiql: ["./Resources/js/graphiql.jsx"]
+    swagger: ["./Resources/swagger/swagger.js"],
+    graphiql: ["./Resources/graphiql/graphiql.jsx"]
   },
   output: {
     path: public,
@@ -130,6 +127,12 @@ module.exports = webpackMerge(config, {
       filename: "./css/[name].css",
       allChunks: true
     }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.DEBUG': JSON.stringify(process.env.DEBUG),
+      'process.env.GRAPHIQL': JSON.stringify(bundleConfig.graphiql),
+      'process.env.SWAGGER': JSON.stringify(bundleConfig.swagger)
+    })
   ],
   devServer: {
     inline: true,

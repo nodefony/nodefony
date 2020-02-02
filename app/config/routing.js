@@ -7,12 +7,12 @@ module.exports = {
       controller: "app:app:index"
     }
   },
-  documentation: {
+  /*documentation: {
     pattern: "/documentation",
     defaults: {
       controller: "app:app:documentation"
     }
-  }
+  }*/
   //GOOGLE AUTH AREA
   /*googleArea: {
     pattern: "/login/google",

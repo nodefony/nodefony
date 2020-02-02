@@ -1,7 +1,7 @@
 // ROUTING
 module.exports = {
 
-  "documentation": {
+  /*"documentation": {
     pattern: `/documentation`,
     defaults: {
       controller: "documentation:default:index"
@@ -20,6 +20,10 @@ module.exports = {
       controller: "documentation:slide:notes"
     }
   },
+  */
+
+
+  
   /*"documentation-slides-server": {
     pattern: "/documentation/slides/server",
     defaults: {
@@ -32,7 +36,10 @@ module.exports = {
       controller: "documentation:slide:notesServer"
     }
   },*/
-  "documentation-search": {
+
+
+
+  /*"documentation-search": {
     pattern: "/documentation/search",
     defaults: {
       controller: "documentation:default:search"
@@ -68,5 +75,5 @@ module.exports = {
       controller: "documentation:demo:render",
       name: "nodefony"
     }
-  }
+  }*/
 };

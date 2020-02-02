@@ -33,32 +33,6 @@ class usersController extends nodefony.Controller {
   }
 
   /**
-   *    @Method ({"GET"})
-   *    @Route (
-   *      "/api/openapi/documentation",
-   *      name="api-user-openapi-doc"
-   *    )
-   */
-  swaggerAction() {
-    return this.render("users:swagger:index.html.twig", {
-      title: "user openapi"
-    });
-  }
-
-  /**
-   *    @Method ({"GET"})
-   *    @Route (
-   *      "/api/graphiql/documentation",
-   *      name="api-user-graphql-doc"
-   *    )
-   */
-  graphiqlAction() {
-    return this.render("users:graphiql:index.html.twig", {
-      title: "user graphiql"
-    });
-  }
-
-  /**
    *
    */
   headerAction() {

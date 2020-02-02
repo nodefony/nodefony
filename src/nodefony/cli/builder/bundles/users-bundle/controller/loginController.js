@@ -5,7 +5,6 @@ class loginController extends nodefony.controller {
     this.startSession();
   }
 
-
   /**
    *    @Method ({"POST"})
    *    @Route (

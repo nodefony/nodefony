@@ -37,7 +37,7 @@ class loginApiController extends nodefony.Controller {
    */
   optionsAction() {
     try {
-      let openApiConfig = require(path.resolve(this.bundle.path, "Resources", "config", "openapi", "login.js"));
+      let openApiConfig = require(path.resolve(this.bundle.path, "Resources", "swagger", "openapi", "login.js"));
       return this.api.renderSchema(openApiConfig, this.usersService.entity);
     } catch (e) {
       return this.api.renderError(e, 400);

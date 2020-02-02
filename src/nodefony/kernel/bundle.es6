@@ -266,10 +266,10 @@ class Bundle extends nodefony.Service {
   }
 
   static excludeDir() {
-    return /^public$|^node_modules$|^nodefony-core$|^\.git|assets|tmp|doc|documentation|build/;
+    return /^public$|^node_modules$|^nodefony-core$|^\.git|assets$|tmp$|doc$|build$|css$|scss$|public$/;
   }
   static exclude() {
-    return /yarn.lock|package-lock.json|yarn-error.log|package.json|readme|README/;
+    return /yarn.lock$|package-lock.json$|yarn-error.log$|package.json$/;
   }
 
   async initialize() {
