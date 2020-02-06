@@ -1,7 +1,7 @@
 /**
- *    @Route ("/user/documentation")
+ *    @Route ("/users/documentation")
  */
-class docController extends nodefony.Controller {
+class documentationController extends nodefony.Controller {
 
   constructor(container, context) {
     super(container, context);
@@ -13,12 +13,12 @@ class docController extends nodefony.Controller {
    *    @Method ({"GET"})
    *    @Route (
    *      "",
-   *      name="user-doc"
+   *      name="users-doc"
    *    )
    */
   indexAction(){
     let readme = path.resolve(this.bundle.path,"README.md") ;
-    return this.render("users:documentation:doc.html.twig", {
+    return this.render("users:documentation:index.html.twig", {
       title: "README",
       readme:this.htmlMdParser(new nodefony.fileClass(readme).content())
     });
@@ -27,7 +27,7 @@ class docController extends nodefony.Controller {
   /**
    *    @Method ({"GET"})
    *    @Route (
-   *      "slides",
+   *      "/slides",
    *      name="user-doc-slides"
    *    )
    */
@@ -65,4 +65,4 @@ class docController extends nodefony.Controller {
 
 }
 
-module.exports = docController;
+module.exports = documentationController;

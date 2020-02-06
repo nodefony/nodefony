@@ -1,14 +1,9 @@
-<div class="col-12 col-md-3 col-xl-2" style="
-    flex: 0 1 320px;
-    position: sticky;
-    top: 5rem;
-    z-index: 1000;
-    height: calc(100vh - 5rem);">
+<div class="col-12 col-md-3 col-xl-2 nodefony-doc-nav">
 
   <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
     <a class="nav-link"  href="{{url("nodefony-doc")}}" role="tab" aria-selected="true">Home</a>
     <a class="nav-link active"  href="{{url("user-doc")}}" role="tab" aria-selected="true">Readme</a>
-    <a class="nav-link"  href="{{url("user-doc-slides")}}" role="tab" aria-selected="true">Presentation</a>
+    <a class="nav-link"  href="{{url("nodefony-slides",{bundle:'users'})}}" role="tab" aria-selected="true">Presentation</a>
     <a class="nav-link"  href="{{url("openapi-doc")}}" role="tab" aria-selected="false">Swagger</a>
     <a class="nav-link"  href="{{url("graphql-doc")}}" role="tab" aria-selected="false">Graphiql</a>
     <a class="nav-link"  href="#" role="tab" aria-selected="false"></a>

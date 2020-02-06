@@ -12,27 +12,81 @@ class documentationController extends nodefony.Controller {
   /**
    *    @Method ({"GET"})
    *    @Route (
-   *      "",
-   *      name="nodefony-doc"
-   *    )
+   *      "/notes.html",
+   *      name="nodefony-slides-notes")
+   *
    */
-  indexAction(){
-    return this.render("documentation:documentation:doc.html.twig", {
-      title: "nodefony",
-      bundles:this.kernel.bundles,
-      include:""
-    });
+  notesAction() {
+    this.hideDebugBar();
+    return this.render("documentation:slides/notes:notes.html.twig");
   }
 
   /**
    *    @Method ({"GET"})
    *    @Route (
-   *      "/nodefony/readme",
-   *      name="nodefony-readme"
-   *    )
+   *      "/{bundle}/slides",
+   *      name="nodefony-slides",
+   *      defaults={"bundle" = "nodefony"})
+   *
    */
-  readmeAction(){
-    let readme = path.resolve(this.kernel.rootDir,"README.md") ;
+  slidesAction(bundle){
+    this.hideDebugBar();
+    let readme = null ;
+    if ( bundle === "nodefony"){
+      readme = path.resolve(this.kernel.rootDir,"README.md") ;
+      return this.render("documentation:slides:index.html.twig", {
+        title: "README",
+        readme:this.htmlMdParser(new nodefony.fileClass(readme).content())
+      });
+    }else{
+      return this.forward(`${bundle}:documentation:slides`);
+    }
+  }
+
+  /*slidesServerAction() {
+    this.hideDebugBar();
+    return this.render("documentation:slides:slides-server.html.twig");
+  }
+
+  notesServerAction() {
+    this.hideDebugBar();
+    return this.render("documentation:slides:notes-server.html.twig");
+  }*/
+
+  /**
+   *    @Method ({"GET"})
+   *    @Route ("/{bundle}",
+   *        name="nodefony-doc",
+   *        defaults={"bundle" = "nodefony"})
+   */
+  indexAction(bundle){
+    if ( bundle === "nodefony"){
+      return this.render(`documentation:documentation:index.html.twig`, {
+        title: bundle,
+        bundle: this.kernel.bundles
+      });
+    }else{
+      return this.forward(`${bundle}:documentation:index`);
+    }
+  }
+
+  /**
+   *    @Method ({"GET"})
+   *    @Route (
+   *      "/{bundle}/readme",
+   *      name="nodefony-readme",
+   *      defaults={"bundle" = "nodefony"})
+   *
+   */
+  readmeAction(bundle){
+    let readme = null ;
+    if ( bundle === "nodefony"){
+      readme = path.resolve(this.kernel.rootDir,"README.md") ;
+    }else{
+      if ( this.kernel.bundles[bundle] ){
+        readme = path.resolve(this.kernel.bundles[bundle].path, "README.md") ;
+      }
+    }
     return this.render("documentation:documentation:readme.html.twig", {
       title: "README",
       readme:this.htmlMdParser(new nodefony.fileClass(readme).content(),{
@@ -83,21 +137,6 @@ class documentationController extends nodefony.Controller {
     return this.render("documentation:documentation:footer.html.twig", {
       version: version,
       year: new Date().getFullYear()
-    });
-  }
-
-  /**
-   *    @Method ({"GET"})
-   *    @Route (
-   *      "/slides",
-   *      name="nodefony-slides"
-   *    )
-   */
-  slidesAction(){
-    let readme = path.resolve(this.bundle.path,"README.md") ;
-    return this.render("documentation:slides:nodefony.html.twig", {
-      title: "README",
-      readme:this.htmlMdParser(new nodefony.fileClass(readme).content())
     });
   }
 

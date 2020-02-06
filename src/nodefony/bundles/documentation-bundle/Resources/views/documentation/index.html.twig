@@ -135,9 +135,10 @@
             </div>
             <div class="card-body" style="overflow: auto;">
               <ul>
-                {% for myBundle in bundles %}
+                {% for myBundle in bundle %}
+                  {% set bund = myBundle.name ~ "-doc" %}
                   <li>
-                    <a href="{{path('documentation-version', {version:version, bundle:myBundle.name})}}">
+                    <a href="{{ url("nodefony-doc",{bundle:myBundle.name}) }}">
                       <strong>{{myBundle.name}}</strong>
                       <span class="badge badge-pill badge-secondary pull-right">{{version}}</span></a>
                   </li>
@@ -214,7 +215,6 @@
       </div>
 
 
-
       <div class="container mt-4">
         <h2>NODEFONY INSTALLATION :
           <small>See more
@@ -240,7 +240,6 @@
 
 
       <div class="container mt-4">
-
         <h2>Configurations :
           <small>See more
             <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle })}}">( Nodefony Configurations documentation )
@@ -273,158 +272,179 @@
           <code>./config/config.js</code>
         </p>
         <pre><code class="hljs javascript" >
-        /**
-         *  NODEFONY FRAMEWORK
-         *
-         *       KERNEL CONFIG
-         *
-         *   Domain listen : Nodefony can listen only one domain ( no vhost )
-         *     Example :
-         *      domain :  0.0.0.0      // for all interfaces
-         *      domain :  [::1]        // for IPV6 only
-         *      domain :  192.168.1.1  // IPV4
-         *      domain :  mydomain.com // DNS
-         *
-         *   Domain Alias : string only "<<regexp>>" use domainCheck : true
-         *     Example :
-         *      domainAlias:[
-         *        "^127.0.0.1$",
-         *        "^localhost$",
-         *        ".*\\.nodefony\\.com",
-         *        "^nodefony\\.eu$",
-         *        "^.*\\.nodefony\\.eu$"
-         *      ]
-         */
-        const path = require("path");
+/**
+ *  NODEFONY FRAMEWORK
+ *
+ *       KERNEL CONFIG
+ *
+ *   Domain listen : Nodefony can listen only one domain ( no vhost )
+ *     Example :
+ *      domain :  0.0.0.0      // for all interfaces
+ *      domain :  [::1]        // for IPV6 only
+ *      domain :  192.168.1.1  // IPV4
+ *      domain :  mydomain.com // DNS
+ *
+ *   Domain Alias : string only "<<regexp>>" use domainCheck : true
+ *     Example :
+ *      domainAlias:[
+ *        "^127.0.0.1$",
+ *        "^localhost$",
+ *        ".*\\.nodefony\\.com",
+ *        "^nodefony\\.eu$",
+ *        "^.*\\.nodefony\\.eu$"
+ *      ]
+ */
+ let certificats = {
+   options: {
+     rejectUnauthorized: true
+   }
+ };
+ let CDN = null;
+ let statics = true;
+ let monitoring = true;
+ let documentation = true;
+ let unitTest = true;
+ let domainCheck = false;
+ if (process.env && process.env.NODE_ENV === "production") {
+   certificats.key = path.resolve("config", "certificates", "server", "privkey.pem");
+   certificats.cert = path.resolve("config", "certificates", "server", "fullchain.pem");
+   certificats.ca = path.resolve("config", "certificates", "ca", "nodefony-root-ca.crt.pem");
+   CDN = null;
+   statics = true;
+   documentation = false;
+   monitoring = true;
+   unitTest = true;
+   domainCheck = true;
+ } else {
+   certificats.key = path.resolve("config", "certificates", "server", "privkey.pem");
+   certificats.cert = path.resolve("config", "certificates", "server", "fullchain.pem");
+   certificats.ca = path.resolve("config", "certificates", "ca", "nodefony-root-ca.crt.pem");
+ }
 
-        module.exports = {
-          system: {
-            domain: "0.0.0.0",
-            domainAlias: [
-              "^127.0.0.1$",
-              "^localhost$"
-            ],
-            httpPort: 5151,
-            httpsPort: 5152,
-            domainCheck: false,
-            locale: "en_en",
-            /**
-             * BUNDLES CORE
-             */
-            security: true,
-            realtime: true,
-            monitoring: true,
-            mail: true,
-            documentation: true,
-            unitTest: true,
-            redis: false,
-            mongo: false,
-            elastic: false,
-            /**
-             * SERVERS
-             */
-            servers: {
-              statics: true,
-              protocol: "2.0", //  2.0 || 1.1
-              http: true,
-              https: true,
-              ws: true,
-              wss: true,
-              certificats: {
-                key: path.resolve("config", "certificates", "server", "privkey.pem"),
-                cert: path.resolve("config", "certificates", "server", "fullchain.pem"),
-                ca: path.resolve("config", "certificates", "ca", "nodefony-root-ca.crt.pem"),
-                options: {
-                  rejectUnauthorized: true
-                }
-              }
-            },
-            /**
-             * DEV SERVER
-             */
-            devServer: {
-              inline: true,
-              hot: false,
-              hotOnly: false,
-              overlay: true,
-              logLevel: "info", // none, error, warning or info
-              progress: false,
-              protocol: "https",
-              websocket: true
-            },
-            /**
-             *  BUNDLES LOCAL REGISTRATION
-             *    Examples :
-             *       bundles:{
-             *         "hello-bundle" : "file:src/bundles/hello-bundle",
-             *         "hello-bundle" : path.resolve(__dirname, "..", "src", "bundles", "hello-bundle"),
-             *         "hello-bundle" : path.resolve("src", "bundles", "hello-bundle")
-             *       }
-             */
-            bundles: {
-              "hello-bundle": "file:src/bundles/hello-bundle",
-            },
-            /**
-             * SYSLOG NODEFONY
-             */
-            log: {
-              active: true
-            }
-          },
-          /**
-           *       ASSETS CDN
-           *
-           *       You set cdn with string
-           *       CDN :    "cdn.nodefony.com",
-           *       or
-           *       CDN:
-           *          global: "cdn.nodefony.com",
-           *       or
-           *       CDN:{
-           *         stylesheet:[
-           *           "cdn.nodefony.com"
-           *         ],
-           *         javascript:[
-           *           "cdn.nodefony.com"
-           *         ],
-           *         image:[
-           *           "cdn.nodefony.com",
-           *           "cdn.nodefony.fr"
-           *         ],
-           *         font:[
-           *           "cdn.nodefony.com"
-           *         ]
-           *      },
-           */
-          CDN: null,
+ module.exports = {
+   system: {
+     domain: "0.0.0.0",
+     domainAlias: [
+       "^127.0.0.1$",
+       "^localhost$"
+     ],
+     httpPort: 5151,
+     httpsPort: 5152,
+     domainCheck: domainCheck,
+     locale: "en_en",
+     /**
+      * BUNDLES CORE
+      */
+     security: true,
+     realtime: true,
+     monitoring: monitoring,
+     mail: true,
+     documentation: documentation,
+     unitTest: unitTest,
+     redis: false,
+     mongo: false,
+     elastic: false,
+     /**
+      * SERVERS
+      */
+     servers: {
+       statics: statics,
+       protocol: "1.1", //  2.0 || 1.1
+       http: true,
+       https: true,
+       ws: true,
+       wss: true,
+       certificats: certificats
+     },
+     /**
+      * DEV SERVER
+      */
+     devServer: {
+       inline: true,
+       hot: false,
+       hotOnly: false,
+       overlay: true,
+       logLevel: "info", // none, error, warning or info
+       progress: false,
+       protocol: "https",
+       websocket: true
+     },
+     /**
+      *  BUNDLES LOCAL REGISTRATION
+      *
+      *       bundles:{
+      *         "hello-bundle" : "file:src/bundles/hello-bundle"
+      *         "test-bundle"  : path.resolve("src", "bundles", "test-bundle")
+      *       }
+      */
+     bundles: {
+       "test-bundle": path.resolve("src", "bundles", "test-bundle"),
+       "users-bundle": path.resolve("src", "nodefony", "cli", "builder", "bundles", "users-bundle"),
+       //"demo-bundle": "file:src/bundles/demo-bundle",
+       //"monitor-bundle": "file:src/bundles/monitor-bundle",
+       //"blackdashboardreact-bundle": "file:src/bundles/blackdashboardreact-bundle",
+       //"blackdashboardvue-bundle": "file:src/bundles/blackdashboardvue-bundle"
+     },
+     /**
+      * SYSLOG NODEFONY
+      */
+     log: {
+       active: true
+     }
+   },
+   /**
+    *       ASSETS CDN
+    *
+    *       You set cdn with string
+    *       CDN :    "cdn.nodefony.com",
+    *       or
+    *       CDN:
+    *          global: "cdn.nodefony.com",
+    *       or
+    *       CDN:{
+    *         stylesheet:[
+    *           "cdn.nodefony.com"
+    *         ],
+    *         javascript:[
+    *           "cdn.nodefony.com"
+    *         ],
+    *         image:[
+    *           "cdn.nodefony.com",
+    *           "cdn.nodefony.fr"
+    *         ],
+    *         font:[
+    *           "cdn.nodefony.com"
+    *         ]
+    *      },
+    */
+   CDN: CDN,
 
-          /**
-           *  ENGINE TEMPLATE
-           *
-           *       TWIG
-           *       https://github.com/justjohn/twig.js
-           *
-           */
-          templating: "twig",
+   /**
+    *  ENGINE TEMPLATE
+    *
+    *       TWIG
+    *       https://github.com/justjohn/twig.js
+    *
+    */
+   templating: "twig",
 
-          /**
-           * ENGINE ORM
-           *       sequelize || mongoose
-           *   orm : mongoose
-           */
-          orm: "sequelize",
+   /**
+    * ENGINE ORM
+    *       sequelize || mongoose
+    *   orm : mongoose
+    */
+   orm: "sequelize",
 
-          /**
-           * NODE.JS PACKAGE MANAGER
-           *
-           *       npm
-           *       yarn
-           */
-          packageManager: "npm"
+   /**
+    * NODE.JS PACKAGE MANAGER
+    *
+    *       npm
+    *       yarn
+    */
+   packageManager: "yarn"
 
-        };</code></pre>
+ };</code></pre>
       </div>
-
 
 
       <div class="container mt-4">
@@ -435,7 +455,6 @@
           </small>
         </h2>
         <pre><code class="hljs shell" >
-
       # run appliation in dev mode
 
       $ nodefony dev
@@ -444,9 +463,7 @@
 
 
 
-
       <div class="container mt-4">
-
         <h2>ACCEES NODEFONY APPLICATION :</h2>
         <div class="doc3">
           <p>
@@ -454,11 +471,9 @@
             <strong>http://localhost:5151</strong><br>
           </p>
         </div>
-
         <div class="row justify-content-center">
           <img width="800" height="463" src="/documentation-bundle/images/nodefony.png" style="border: solid grey;"/>
         </div>
-
       </div>
 
 
@@ -513,20 +528,19 @@
 
                 <div class="tab-pane fade" id="controler" role="tabpanel" aria-labelledby="controler-tab">
                   <pre><code class="hljs js">
-      module.exports = class demoController extends nodefony.controller {
+class demoController extends nodefony.Controller {
 
-        constructor(container, context) {
-          super(container, context);
-        }
+  constructor(container, context) {
+    super(container, context);
+  }
 
-        /**
-         *	@method htmlAction
-         */
-        htmlAction(name) {
-          return this.renderResponse('&lth1>' + name + '&lt/h1>');
-        }
-      };
-                  </code></pre>
+  /**
+   *	@method htmlAction
+   */
+  htmlAction(name) {
+    return this.renderResponse('&lth1>' + name + '&lt/h1>');
+  }
+}</code></pre>
                 </div>
                 <div class="tab-pane fade" id="result" role="tabpanel" aria-labelledby="result-tab">
                   {{render( controller( "documentation-bundle:demo:html", "nodefony") ) }}
@@ -536,6 +550,8 @@
           </div>
         </div>
 
+
+        <!--EXAMPLE -->
         <div class="doc3 container-fluid mt-4">
           <div class="card card-info">
             <div class="card-header bg-nodefony">
@@ -585,23 +601,22 @@
 
                 <div id="controler1" class="tab-pane fade" role="tabpanel" aria-labelledby="controler1-tab">
                   <pre><code class="hljs javascript" >
-      module.exports = class demoController extends nodefony.controller {
+class demoController extends nodefony.Controller {
 
-        constructor(container, context) {
-          super(container, context);
-        }
+  constructor(container, context) {
+    super(container, context);
+  }
 
-        /**
-         *	@method renderAction
-         */
-        renderAction(name) {
-          return this.render('documentation-bundle:demo:doc.html.twig', {
-            name: name
-          });
+  /**
+   *	@method renderAction
+   */
+  renderAction(name) {
+    return this.render('documentation-bundle:demo:doc.html.twig', {
+      name: name
+    });
 
-        }
-      };
-                  </code></pre>
+  }
+}</code></pre>
                 </div>
 
                 <div id="twig1" class="tab-pane fade" role="tabpanel" aria-labelledby="twig1-tab">
@@ -619,6 +634,8 @@
           </div>
         </div>
 
+
+        <!--EXAMPLE -->
         <div class="doc3 container-fluid mt-4">
           <div class="card card-info">
             <div class="card-header bg-nodefony">
@@ -655,27 +672,27 @@
                     </code></pre>
                 </div>
                 <div id="controler4" class="tab-pane fade" role="tabpanel" aria-labelledby="controler4-tab">
-                  <pre><code class="hljs javascript">module.exports = class demoController extends nodefony.controller {
+                  <pre><code class="hljs javascript">
+class demoController extends nodefony.Controller {
 
-          constructor (container, context){
-            super(container, context);
-          }
+  constructor (container, context){
+    super(container, context);
+  }
 
-          jsonAction (){
-            return <strong>this.renderJson</strong>({
-              foo:"bar",
-              bar:"foo"
-            });
-          }
-        };
-                  </code></pre>
+  jsonAction (){
+    return <strong>this.renderJson</strong>({
+      foo:"bar",
+      bar:"foo"
+    });
+  }
+}</code></pre>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-
+        <!--EXAMPLE -->
         <div class="doc3 container-fluid mt-4">
           <div class="card card-info">
             <div class="card-header bg-nodefony">
@@ -730,57 +747,57 @@
                       To use websocket you must understand Nodefony Context
                     </div>
                   </p>
-                  <pre><code class="hljs javascript">module.exports = class demoController extends nodefony.controller {
+                  <pre><code class="hljs javascript">
+class demoController extends nodefony.Controller {
 
-        constructor (container, context){
-          super(container, context);
+  constructor (container, context){
+    super(container, context);
+  }
+
+  websocketAction (<strong>message</strong>){
+    switch( this.method ){
+      case "GET" :
+        return this.render('demo-bundle:default:websocket.html.twig', {
+          name:"websoket"
+        });
+      case "WEBSOCKET" :
+        if (message){
+          // log  message client in terminal
+          this.log( message.utf8data , "INFO");
+        }else{
+          // prepare  push messages server
+          // send messages to clients
+          let i = 0 ;
+          let id = setInterval(() => {
+            let mess = "i am a  message "+ i +"\n" ;
+            // you can use context to send data
+            this.context.send(mess);
+            //  or call controller method ( renderResponse , render , renderJson )
+            this.renderResponse(mess);
+            // log  message sending in terminal
+            this.log( "send to client :" + mess , "info");
+            i++
+          }, 1000);
+
+          setTimeout( () =>{
+            clearInterval(id);
+            // close reason , descripton
+            this.context.close(1000, "nodefony controller close socket");
+            id = null ;
+          }, 10000);
+          // event websocket close by client
+          this.context.on("onClose", () =>{
+            if (id){
+              clearInterval(id);
+            }
+          });
         }
-
-        websocketAction (<strong>message</strong>){
-          switch( this.method ){
-            case "GET" :
-              return this.render('demo-bundle:default:websocket.html.twig', {
-                name:"websoket"
-              });
-            case "WEBSOCKET" :
-              if (message){
-                // log  message client in terminal
-                this.log( message.utf8data , "INFO");
-              }else{
-                // prepare  push messages server
-                // send messages to clients
-                let i = 0 ;
-                let id = setInterval(() => {
-                  let mess = "i am a  message "+ i +"\n" ;
-                  // you can use context to send data
-                  this.context.send(mess);
-                  //  or call controller method ( renderResponse , render , renderJson )
-                  this.renderResponse(mess);
-                  // log  message sending in terminal
-                  this.log( "send to client :" + mess , "info");
-                  i++
-                }, 1000);
-
-                setTimeout( () =>{
-                  clearInterval(id);
-                  // close reason , descripton
-                  this.context.close(1000, "nodefony controller close socket");
-                  id = null ;
-                }, 10000);
-                // event websocket close by client
-                this.context.on("onClose", () =>{
-                  if (id){
-                    clearInterval(id);
-                  }
-                });
-              }
-            break;
-            default :
-              throw new error(" method not allowed");
-          }
-        }
-      };
-                    </code></pre>
+      break;
+      default :
+        throw new error(" method not allowed");
+    }
+  }
+}</code></pre>
                   </div>
 
                 <div id="logger3" class="tab-pane fade" role="tabpanel" aria-labelledby="logger3-tab">

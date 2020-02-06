@@ -23,7 +23,7 @@ module.exports = {
   */
 
 
-  
+
   /*"documentation-slides-server": {
     pattern: "/documentation/slides/server",
     defaults: {
