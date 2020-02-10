@@ -1,19 +1,54 @@
-<div class="page-header">
-  <h1>Running Nodefony </h1>
-</div>
+{% extends '../base.html.twig' %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+      {% include '../../documentation/navbar.html.twig' with {
+        'route' : nodefony.route
+      } %}
+      <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" style="top: 5rem;">
+
+        <div class="page-header">
+          <h1>Running Nodefony </h1>
+        </div>
 
 
-<div class="doc2 jumbotron">
+        <div class="doc2 jumbotron">
 
-<p>
-	<strong><h2>METHODS TO RUN NODEFONY FRAMEWORK </h2></strong>
+        <p>
+        	<strong><h2>METHODS TO RUN NODEFONY FRAMEWORK </h2></strong>
 
-	<ul>
-		<li>  Run Appliation in <a href="{{ path('documentation-section',{section:'running', version:version, bundle:bundle ,queryString:{'subsection':'developement'} }) }}">DEVELOPEMENT </a> mode <code>nodefony dev</code></li>
-		<li>  Run Appliation in <a href="{{ path('documentation-section',{section:'running', version:version, bundle:bundle ,queryString:{'subsection':'preproduction'} }) }}"> PRE PRODUCTION </a>mode with clusters <code>nodefony preprod</code></li>
-		<li>  Run Appliation in <a href="{{ path('documentation-section',{section:'running', version:version, bundle:bundle ,queryString:{'subsection':'pm2'} }) }}">PM2 MANAGEMENT </a>mode  <code>nodefony prod</code> see  <a href="http://pm2.keymetrics.io/">PM2</a> </li>
-	</ul>
-</p>
+        	<ul>
+        		<li>
+              Run Appliation in
+              <a href="{{ path('nodefony-doc-index',{section:'running', subsection:"developement" }) }}">
+                DEVELOPEMENT </a>
+                mode
+                <code>nodefony dev</code>
+            </li>
 
+            <li>
+              Run Appliation in
+              <a href="{{ path('nodefony-doc-index',{section:'running', subsection:"preproduction" }) }}">
+                PRE PRODUCTION </a>
+                mode with clusters
+                <code>nodefony preprod</code>
+            </li>
 
-</div>
+            <li>
+              Run Appliation in
+              <a href="{{ path('nodefony-doc-index',{section:'running', subsection:"pm2" }) }}">
+                PM2 MANAGEMENT </a>
+                mode  <code>nodefony prod</code>
+                see  <a href="http://pm2.keymetrics.io/">PM2</a>
+            </li>
+
+        	</ul>
+        </p>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+{% endblock %}

@@ -20,16 +20,11 @@ class Documentation {
 
   constructor() {
     $(document).ready(() => {
-      this.getVersions("nodefony");
-      this.getVersions(this.project);
+      //this.getVersions("nodefony");
+      //this.getVersions(this.project);
+      //this.initSearch();
+      //this.getBranch();
       this.initLang();
-      this.initSearch();
-      $.get("/nodefony/api/git/getCurrentBranch", function (data) {
-        var ele = $(".branch");
-        ele.text(data.branch);
-      }).fail(function (error) {
-        throw error;
-      });
       hljs.registerLanguage('javascript', javascript);
       hljs.registerLanguage('bash', bash);
       hljs.registerLanguage('shell', shell);
@@ -38,6 +33,15 @@ class Documentation {
       hljs.registerLanguage('twig', twig);
       hljs.registerLanguage('nginx', nginx);
       hljs.initHighlighting();
+    });
+  }
+
+  getBranch(){
+    $.get("/nodefony/api/git/getCurrentBranch", function (data) {
+      var ele = $(".branch");
+      ele.text(data.branch);
+    }).fail(function (error) {
+      throw error;
     });
   }
 

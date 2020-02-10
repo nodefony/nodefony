@@ -70,15 +70,20 @@ class httpKernel extends nodefony.Service {
 
   // EVENTS DISPATCHER
   async onError(container, error) {
-    console.log(error)
-    let context = container.get("context");
-    if (context.sended) {
+    let context = null ;
+    try {
+      context = container.get("context");
+      if( ! context || context.sended ){
+        this.log(error, "ERROR");
+        return;
+      }
+    }catch(e){
       this.log(error, "ERROR");
       return;
     }
-    let httpError = null;
-    let result = null;
     try {
+      let httpError = null;
+      let result = null;
       let errorType = nodefony.isError(error);
       switch (errorType) {
       case "securityError":

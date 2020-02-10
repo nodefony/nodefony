@@ -1,33 +1,43 @@
-<div class="page-header">
-  <h1>Nodefony start in <strong>PM2 Management </strong>mode</h1>
-</div>
+{% extends '../../base.html.twig' %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+      {% include '../../../documentation/navbar.html.twig' with {
+        'route' : nodefony.route
+      } %}
+      <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" style="top: 5rem;">
+
+        <div class="page-header">
+          <h1>Nodefony start in <strong>PM2 Management </strong>mode</h1>
+        </div>
 
 
-<div class="doc2 jumbotron">
+        <div class="doc2 jumbotron">
 
-<p>
-	<strong><h2>MODE  PM2 Management </h2></strong>
+        <p>
+        	<strong><h2>MODE  PM2 Management </h2></strong>
 
-	This mode is the good  way  to deploy Application in prodution  <br>
-	<ul>
-		<li> Use nodefony in clusters mode  </li>
-		<li> Detach process from terminal </li>
-	</ul>
-  <img class="stretch" src="/documentation-bundle/images/nodefony_prod.png" data-lazy-loaded="">
-</p>
-</div>
+        	This mode is the good  way  to deploy Application in prodution  <br>
+        	<ul>
+        		<li> Use nodefony in clusters mode  </li>
+        		<li> Detach process from terminal </li>
+        	</ul>
+          <img class="stretch" src="/documentation-bundle/images/nodefony_prod.png" data-lazy-loaded="">
+        </p>
+        </div>
 
-<h5>PM2     <a href="http://pm2.keymetrics.io/">pm2.keymetrics.io</a> </h5>
+        <h5>PM2     <a href="http://pm2.keymetrics.io/">pm2.keymetrics.io</a> </h5>
 
-<h3>Configration PM2 in Nodefony      <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle, queryString:{'subsection':'framework'} })}}#pm2">PM2 Configuration </a> </h3>
+        <h3>Configration PM2 in Nodefony      <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle, queryString:{'subsection':'framework'} })}}#pm2">PM2 Configuration </a> </h3>
 
-<h2>Location :</h2>
-<div class="doc2">
-	<p>
-		In nodefony Root directory launch <code>nodefony prod</code>
-	</p>
+        <h2>Location :</h2>
+        <div class="doc2">
+        	<p>
+        		In nodefony Root directory launch <code>nodefony prod</code>
+        	</p>
 
-  <pre><code class="hljs console">
+          <pre><code class="hljs console">
   .
 ├── README.md
 ├── app
@@ -40,53 +50,53 @@
 ├── src
 ├── tmp
 └── web
-  </code></pre>
-</div>
+          </code></pre>
+        </div>
 
-<h2>Run :</h2>
-<div class="doc2 ">
+        <h2>Run :</h2>
+        <div class="doc2 ">
 
-<p>
-	<div class="alert alert-warning" role="alert">
-		 !! Use nodefony cli to launch nodefony in PM2 Management
-	</div>
-	To launch nodefony in PM2 Management mode :
-</p>
-	<pre><code class="hljs console">$ nodefony prod
+        <p>
+        	<div class="alert alert-warning" role="alert">
+        		 !! Use nodefony cli to launch nodefony in PM2 Management
+        	</div>
+        	To launch nodefony in PM2 Management mode :
+        </p>
+        	<pre><code class="hljs console">$ nodefony prod
 
-┌──────────────────┬────┬──────────────┬───────┬────────┬─────────┬───────────────────┬─────┬────────┬──────┬──────────┐
-│ App name         │ id │ mode         │ pid   │ status │ restart │ uptime            │ cpu │ memory │ user │ watching │
-├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-│ nodefony-starter │ 0  │ cluster_mode │ 25040 │ online │ -       │ a few seconds ago │ 75% │ 58 MB  │ cci  │ -        │
-├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-│ nodefony-starter │ 1  │ cluster_mode │ 25041 │ online │ -       │ a few seconds ago │ 65% │ 54 MB  │ cci  │ -        │
-├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-│ nodefony-starter │ 2  │ cluster_mode │ 25044 │ online │ -       │ a few seconds ago │ 57% │ 51 MB  │ cci  │ -        │
-├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-│ nodefony-starter │ 3  │ cluster_mode │ 25051 │ online │ -       │ a few seconds ago │ 0%  │ 48 MB  │ cci  │ -        │
-├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-│ nodefony-starter │ 4  │ cluster_mode │ 25056 │ online │ -       │ a few seconds ago │ 0%  │ 42 MB  │ cci  │ -        │
-├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-│ nodefony-starter │ 5  │ cluster_mode │ 25061 │ online │ -       │ a few seconds ago │ 0%  │ 35 MB  │ cci  │ -        │
-├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-│ nodefony-starter │ 6  │ cluster_mode │ 25066 │ online │ -       │ a few seconds ago │ 0%  │ 28 MB  │ cci  │ -        │
-├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
-│ nodefony-starter │ 7  │ cluster_mode │ 25071 │ online │ -       │ a few seconds ago │ 0%  │ 21 MB  │ cci  │ -        │
-└──────────────────┴────┴──────────────┴───────┴────────┴─────────┴───────────────────┴─────┴────────┴──────┴──────────┘
- To see all logs use the command  nodefony logs
- Or use PM2  pm2 --lines 1000 logs
+        ┌──────────────────┬────┬──────────────┬───────┬────────┬─────────┬───────────────────┬─────┬────────┬──────┬──────────┐
+        │ App name         │ id │ mode         │ pid   │ status │ restart │ uptime            │ cpu │ memory │ user │ watching │
+        ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+        │ nodefony-starter │ 0  │ cluster_mode │ 25040 │ online │ -       │ a few seconds ago │ 75% │ 58 MB  │ cci  │ -        │
+        ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+        │ nodefony-starter │ 1  │ cluster_mode │ 25041 │ online │ -       │ a few seconds ago │ 65% │ 54 MB  │ cci  │ -        │
+        ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+        │ nodefony-starter │ 2  │ cluster_mode │ 25044 │ online │ -       │ a few seconds ago │ 57% │ 51 MB  │ cci  │ -        │
+        ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+        │ nodefony-starter │ 3  │ cluster_mode │ 25051 │ online │ -       │ a few seconds ago │ 0%  │ 48 MB  │ cci  │ -        │
+        ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+        │ nodefony-starter │ 4  │ cluster_mode │ 25056 │ online │ -       │ a few seconds ago │ 0%  │ 42 MB  │ cci  │ -        │
+        ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+        │ nodefony-starter │ 5  │ cluster_mode │ 25061 │ online │ -       │ a few seconds ago │ 0%  │ 35 MB  │ cci  │ -        │
+        ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+        │ nodefony-starter │ 6  │ cluster_mode │ 25066 │ online │ -       │ a few seconds ago │ 0%  │ 28 MB  │ cci  │ -        │
+        ├──────────────────┼────┼──────────────┼───────┼────────┼─────────┼───────────────────┼─────┼────────┼──────┼──────────┤
+        │ nodefony-starter │ 7  │ cluster_mode │ 25071 │ online │ -       │ a few seconds ago │ 0%  │ 21 MB  │ cci  │ -        │
+        └──────────────────┴────┴──────────────┴───────┴────────┴─────────┴───────────────────┴─────┴────────┴──────┴──────────┘
+         To see all logs use the command  nodefony logs
+         Or use PM2  pm2 --lines 1000 logs
 
-	</code></pre>
-</div>
+        	</code></pre>
+        </div>
 
 
-<h2>Stop :</h2>
-<div class="doc2 ">
+        <h2>Stop :</h2>
+        <div class="doc2 ">
 
-<p>
-	To stop nodefony in PM2 Management mode :
-</p>
-	<pre><code class="hljs console">$ nodefony stop
+        <p>
+        	To stop nodefony in PM2 Management mode :
+        </p>
+        	<pre><code class="hljs console">$ nodefony stop
 
 Wed Mar 27 2019 11:42:25 INFO nodefony : PM2 Stop Project  nodefony-starter
 ┌──────────────────┬────┬──────┬─────┬─────────┬─────────┬────────┬─────┬────────┬──────┬──────────┐
@@ -108,19 +118,23 @@ Wed Mar 27 2019 11:42:25 INFO nodefony : PM2 Stop Project  nodefony-starter
 ├──────────────────┼────┼──────┼─────┼─────────┼─────────┼────────┼─────┼────────┼──────┼──────────┤
 │ nodefony-starter │ 7  │ -    │ -   │ stopped │ -       │ -      │ -   │ -      │ -    │ -        │
 └──────────────────┴────┴──────┴─────┴─────────┴─────────┴────────┴─────┴────────┴──────┴──────────┘
-	</code></pre>
-</div>
+        	</code></pre>
+        </div>
 
 
-<h2>Kill :</h2>
-<div class="doc2 ">
+        <h2>Kill :</h2>
+        <div class="doc2 ">
 
-<p>
-	To kill nodefony in PM2 Management mode :
+        <p>
+        	To kill nodefony in PM2 Management mode :
 
-</p>
-	<pre><code class="hljs console">$ nodefony kill
+        </p>
+        	<pre><code class="hljs console">$ nodefony kill
 
-  Wed Mar 27 2019 11:43:24 CRITIC nodefony : SIGQUIT
-	</code></pre>
-</div>
+Wed Mar 27 2019 11:43:24 CRITIC nodefony : SIGQUIT
+        	</code></pre>
+        </div>
+      </main>
+    </div>
+  </div>
+{% endblock %}

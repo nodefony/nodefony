@@ -12,6 +12,35 @@ class documentationController extends nodefony.Controller {
   /**
    *    @Method ({"GET"})
    *    @Route (
+   *      "/search",
+   *      name="nodefony-search")
+   *
+   */
+  searchAction() {
+    return new Promise((resolve, reject)=>{
+      try {
+        let url = this.generateUrl("nodefony-doc", {
+          bundle: "nodefony"
+          //version: this.defaultVersion
+        }, true);
+        if (this.query.search) {
+          let webCrawler = this.get("webCrawler");
+          webCrawler.siteAll(url, this.query.search, this.context, (data) => {
+            return resolve( this.renderJson(data) );
+          });
+        } else {
+          return resolve(this.renderJson({}));
+        }
+      }catch(e){
+        return reject(e);
+      }
+    });
+
+  }
+
+  /**
+   *    @Method ({"GET"})
+   *    @Route (
    *      "/notes.html",
    *      name="nodefony-slides-notes")
    *
@@ -63,10 +92,18 @@ class documentationController extends nodefony.Controller {
     if (bundle === "nodefony") {
       return this.render(`documentation:documentation:index.html.twig`, {
         title: bundle,
-        bundle: this.kernel.bundles
+        bundle: this.kernel.bundles,
+        url: this.bundle.settings.github.url
       });
     } else {
-      return this.forward(`${bundle}:documentation:index`);
+      try {
+        return this.forward(`${bundle}:documentation:index`);
+      }catch(e){
+        return this.render(`documentation:documentation:progress.html.twig`, {
+          title: bundle,
+          bundle: bundle
+        });
+      }
     }
   }
 
@@ -82,18 +119,25 @@ class documentationController extends nodefony.Controller {
     let readme = null;
     if (bundle === "nodefony") {
       readme = path.resolve(this.kernel.rootDir, "README.md");
+      return this.render("documentation:documentation:readme.html.twig", {
+        title: "README",
+        readme: this.htmlMdParser(new nodefony.fileClass(readme).content(), {
+          linkify: true,
+          typographer: true
+        })
+      });
     } else {
       if (this.kernel.bundles[bundle]) {
         readme = path.resolve(this.kernel.bundles[bundle].path, "README.md");
       }
+      return this.render(`${bundle}:documentation:readme.html.twig`, {
+        title: "README",
+        readme: this.htmlMdParser(new nodefony.fileClass(readme).content(), {
+          linkify: true,
+          typographer: true
+        })
+      });
     }
-    return this.render("documentation:documentation:readme.html.twig", {
-      title: "README",
-      readme: this.htmlMdParser(new nodefony.fileClass(readme).content(), {
-        linkify: true,
-        typographer: true
-      })
-    });
   }
 
   /**

@@ -1,0 +1,8 @@
+<div class="col-12 col-md-3 col-xl-2 nodefony-doc-nav">
+  {% set activeRoute = route.name %}
+  <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+    <a class="nav-link {% if activeRoute == "nodefony-doc" %} active {% endif %}"  href="{{url("nodefony-doc")}}" role="tab" aria-selected="true">Home</a>
+    <a class="nav-link {% if activeRoute == "nodefony-readme" %} active {% endif %}"  href="{{url("nodefony-readme",{bundle:"mail"})}}" role="tab" aria-selected="true">Readme</a>
+  </div>
+
+</div>

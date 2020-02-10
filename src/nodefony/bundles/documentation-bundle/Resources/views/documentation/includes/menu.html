@@ -29,8 +29,9 @@
             </a>
           </li>
           <li>
-            <a href="{{ path('documentation-section',{section:'running', version:version, bundle:bundle })}}">
-              {{"running" | trans() | capitalize() }}</a>
+            <a href="{{ url("nodefony-doc-index",{section:"running"}) }}">
+              {{"running" | trans() | capitalize() }}
+            </a>
           </li>
           <li>
             <a href="{{ url("nodefony-doc-index",{section:"helloWord"}) }}">

@@ -15,7 +15,7 @@
 #        views:			true
 #        translations:      true
 #
-watch                     : true
+watch                     : false
 
 webpack:
   cache                   : true

@@ -1,30 +1,40 @@
-<div class="page-header">
-  <h1>Nodefony start in <strong>pre-production </strong>mode</h1>
-</div>
+{% extends '../../base.html.twig' %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+      {% include '../../../documentation/navbar.html.twig' with {
+        'route' : nodefony.route
+      } %}
+      <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" style="top: 5rem;">
+
+        <div class="page-header">
+          <h1>Nodefony start in <strong>pre-production </strong>mode</h1>
+        </div>
 
 
-<div class="doc2 jumbotron">
+        <div class="doc2 jumbotron">
 
-<p>
-	<strong><h2>MODE  pre-production </h2></strong>
+        <p>
+        	<strong><h2>MODE  pre-production </h2></strong>
 
-	This mode can be useful if you want to check the proper functioning of the production environment <br>
-	<ul>
-		<li>  Use Node Clusters </li>
-		<li>  Use caches control (views , controller ...) </li>
-		<li>  Use Webpack config in production mode (uglyfyjs, uglyfycss ...) </li>
-	</ul>
-</p>
+        	This mode can be useful if you want to check the proper functioning of the production environment <br>
+        	<ul>
+        		<li>  Use Node Clusters </li>
+        		<li>  Use caches control (views , controller ...) </li>
+        		<li>  Use Webpack config in production mode (uglyfyjs, uglyfycss ...) </li>
+        	</ul>
+        </p>
 
-</div>
+        </div>
 
-<h2>Location :</h2>
-<div class="doc2">
-	<p>
-    In nodefony Root directory launch <code>nodefony preprod</code>
-	</p>
+        <h2>Location :</h2>
+        <div class="doc2">
+        	<p>
+            In nodefony Root directory launch <code>nodefony preprod</code>
+        	</p>
 
-	<pre><code class="hljs console">
+        	<pre><code class="hljs console">
   .
 ├── README.md
 ├── app
@@ -37,105 +47,111 @@
 ├── src
 ├── tmp
 └── web
-	</code></pre>
-</div>
+        	</code></pre>
+        </div>
 
-<h2>Run :</h2>
-<div class="doc2 ">
+        <h2>Run :</h2>
+        <div class="doc2 ">
 
-<p>
-	To launch nodefony in pre-production mode (clusters) here you can see here 4 clusters:
-</p>
-	<pre><code class="hljs console">$ nodefony preprod
-                            _           __                                         _                    _
-        _ __     ___     __| |   ___   / _|   ___    _ __    _   _           ___  | |_    __ _   _ __  | |_    ___   _ __
-       | '_ \   / _ \   / _` |  / _ \ | |_   / _ \  | '_ \  | | | |  _____  / __| | __|  / _` | | '__| | __|  / _ \ | '__|
-       | | | | | (_) | | (_| | |  __/ |  _| | (_) | | | | | | |_| | |_____| \__ \ | |_  | (_| | | |    | |_  |  __/ | |
-       |_| |_|  \___/   \__,_|  \___| |_|    \___/  |_| |_|  \__, |         |___/  \__|  \__,_| |_|     \__|  \___| |_|
-                                                             |___/
+        <p>
+        	To launch nodefony in pre-production mode (clusters) here you can see here 4 clusters:
+        </p>
+        	<pre><code class="hljs console">$ nodefony preprod
+                          _           __                                         _                    _
+      _ __     ___     __| |   ___   / _|   ___    _ __    _   _           ___  | |_    __ _   _ __  | |_    ___   _ __
+     | '_ \   / _ \   / _` |  / _ \ | |_   / _ \  | '_ \  | | | |  _____  / __| | __|  / _` | | '__| | __|  / _ \ | '__|
+     | | | | | (_) | | (_| | |  __/ |  _| | (_) | | | | | | |_| | |_____| \__ \ | |_  | (_| | | |    | |_  |  __/ | |
+     |_| |_|  \___/   \__,_|  \___| |_|    \___/  |_| |_|  \__, |         |___/  \__|  \__,_| |_|     \__|  \___| |_|
+                                                           |___/
 
-    Version : 1.0.0 Platform : darwin Process : nodefony-starter PID : 24947
+  Version : 1.0.0 Platform : darwin Process : nodefony-starter PID : 24947
 
 
-  24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find Local Bundle Package : name-bundle in : /Users/cci/repository/nodefony-starter/src/bundles/name-bundle
-        KERNEL SERVER Cluster : worker Environment : prod Debug :false
+24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find Local Bundle Package : name-bundle in : /Users/cci/repository/nodefony-starter/src/bundles/name-bundle
+      KERNEL SERVER Cluster : worker Environment : prod Debug :false
 
-  24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find Local Bundle Package : name-bundle in : /Users/cci/repository/nodefony-starter/src/bundles/name-bundle
-  24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find NPM Bundle Package : http-bundle in : /Users/cci/repository/nodefony-starter/node_modules/@nodefony/http-bundle/httpBundle.js
-  24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find NPM Bundle Package : framework-bundle in : /Users/cci/repository/nodefony-starter/node_modules/@nodefony/framework-bundle/frameworkBundle.js
-  24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find NPM Bundle Package : security-bundle in : /Users/cci/repository/nodefony-starter/node_modules/@nodefony/security-bundle/securityBundle.js
-  24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find NPM Bundle Package : sequelize-bundle in : /Users/cci/repository/nodefony-starter/node_modules/@nodefony/sequelize-bundle/sequelizeBundle.js
-  24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find NPM Bundle Package : realtime-bundle in : /Users/cci/repository/nodefony-starter/node_modules/@nodefony/realtime-bundle/realtimeBundle.js
-  24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find NPM Bundle Package : monitoring-bundle in : /Users/cci/repository/nodefony-starter/node_modules/@nodefony/monitoring-bundle/monitoringBundle.js
-  24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find NPM Bundle Package : unittests-bundle in : /Users/cci/repository/nodefony-starter/node_modules/@nodefony/unittests-bundle/unittestsBundle.js
-  24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find NPM Bundle Package : mail-bundle in : /Users/cci/repository/nodefony-starter/node_modules/@nodefony/mail-bundle/mailBundle.js
-  24946 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : requests PROVIDE BUNDLE : sequelize
-  24946 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : session PROVIDE BUNDLE : sequelize
-  24945 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : requests PROVIDE BUNDLE : sequelize
-  24946 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : user PROVIDE BUNDLE : sequelize
-  24946 Wed Mar 27 2019 11:36:09 INFO CONNECTION Sequelize nodefony : Connection been established successfully Type : sqlite Database : /app/Resources/databases/nodefony.db
-  24949 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : requests PROVIDE BUNDLE : sequelize
-  24945 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : session PROVIDE BUNDLE : sequelize
-  24944 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : requests PROVIDE BUNDLE : sequelize
-  24949 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : session PROVIDE BUNDLE : sequelize
-  24945 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : user PROVIDE BUNDLE : sequelize
-  24945 Wed Mar 27 2019 11:36:09 INFO CONNECTION Sequelize nodefony : Connection been established successfully Type : sqlite Database : /app/Resources/databases/nodefony.db
-  24944 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : session PROVIDE BUNDLE : sequelize
-  24949 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : user PROVIDE BUNDLE : sequelize
-  24949 Wed Mar 27 2019 11:36:09 INFO CONNECTION Sequelize nodefony : Connection been established successfully Type : sqlite Database : /app/Resources/databases/nodefony.db
-  24944 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : user PROVIDE BUNDLE : sequelize
-  24944 Wed Mar 27 2019 11:36:09 INFO CONNECTION Sequelize nodefony : Connection been established successfully Type : sqlite Database : /app/Resources/databases/nodefony.db
-  24945 Wed Mar 27 2019 11:36:09 INFO sequelize  : ORM CONNECTORS LIST  :
-  ┌────────────────────┬────────┬──────────────────────────────────────┬──────┐
-  │ ORM CONNECTOR NAME │ DRIVER │ NAME DATABASE                        │ HOST │
-  ├────────────────────┼────────┼──────────────────────────────────────┼──────┤
-  │ nodefony           │ sqlite │ /app/Resources/databases/nodefony.db │      │
-  └────────────────────┴────────┴──────────────────────────────────────┴──────┘
-  24949 Wed Mar 27 2019 11:36:09 INFO sequelize  : ORM CONNECTORS LIST  :
-  ┌────────────────────┬────────┬──────────────────────────────────────┬──────┐
-  │ ORM CONNECTOR NAME │ DRIVER │ NAME DATABASE                        │ HOST │
-  ├────────────────────┼────────┼──────────────────────────────────────┼──────┤
-  │ nodefony           │ sqlite │ /app/Resources/databases/nodefony.db │      │
-  └────────────────────┴────────┴───24944 Wed Mar 27 2019 11:36:09 INFO sequelize  : ORM CONNECTORS LIST  :
-  ┌────────────────────┬────────┬──────────────────────────────────────┬──────┐
-  │ ORM CONNECTOR NAME │ DRIVER │ NAME DATABASE                        │ HOST │
-  ├────────────────────┼────────┼──────────────────────────────────────┼──────┤
-  │ nodefony           │ sqlite │ /app/Resources/databases/nodefony.db │      │
-  └────────────────────┴────────┴──────────────────────────────────────┴──────┘
-  ───────────────────────────────────┴──────┘
-  24946 Wed Mar 27 2019 11:36:09 INFO sequelize  : ORM CONNECTORS LIST  :
-  ┌────────────────────┬────────┬──────────────────────────────────────┬──────┐
-  │ ORM CONNECTOR NAME │ DRIVER │ NAME DATABASE                        │ HOST │
-  ├────────────────────┼────────┼──────────────────────────────────────┼──────┤
-  │ nodefony           │ sqlite │ /app/Resources/databases/nodefony.db │      │
-  └────────────────────┴────────┴──────────────────────────────────────┴──────┘
-  24949 Wed Mar 27 2019 11:36:09 INFO SERVICE SERVER STATICS  : Server Static RootDir  ==> /Users/cci/repository/nodefony-starter/web
-  24944 Wed Mar 27 2019 11:36:09 INFO SERVICE SERVER STATICS  : Server Static RootDir  ==> /Users/cci/repository/nodefony-starter/web
-  24944 Wed Mar 27 2019 11:36:09 INFO BUNDLE monitoring : ADD DEBUG BAR MONITORING
-  24945 Wed Mar 27 2019 11:36:09 INFO SERVICE SERVER STATICS  : Server Static RootDir  ==> /Users/cci/repository/nodefony-starter/web
-  24946 Wed Mar 27 2019 11:36:09 INFO SERVICE SERVER STATICS  : Server Static RootDir  ==> /Users/cci/repository/nodefony-starter/web
-  24943 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : requests PROVIDE BUNDLE : sequelize
-  24943 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : session PROVIDE BUNDLE : sequelize
-  24943 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : user PROVIDE BUNDLE : sequelize
-  24943 Wed Mar 27 2019 11:36:09 INFO CONNECTION Sequelize nodefony : Connection been established successfully Type : sqlite Database : /app/Resources/databases/nodefony.db
-  24949 Wed Mar 27 2019 11:36:09 INFO BUNDLE monitoring : ADD DEBUG BAR MONITORING
-  24945 Wed Mar 27 2019 11:36:09 INFO BUNDLE monitoring : ADD DEBUG BAR MONITORING
-  24947 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : requests PROVIDE BUNDLE : sequelize
-  24946 Wed Mar 27 2019 11:36:09 INFO BUNDLE monitoring : ADD DEBUG BAR MONITORING
-  24947 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : session PROVIDE BUNDLE : sequelize
+24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find Local Bundle Package : name-bundle in : /Users/cci/repository/nodefony-starter/src/bundles/name-bundle
+24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find NPM Bundle Package : http-bundle in : /Users/cci/repository/nodefony-starter/node_modules/@nodefony/http-bundle/httpBundle.js
+24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find NPM Bundle Package : framework-bundle in : /Users/cci/repository/nodefony-starter/node_modules/@nodefony/framework-bundle/frameworkBundle.js
+24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find NPM Bundle Package : security-bundle in : /Users/cci/repository/nodefony-starter/node_modules/@nodefony/security-bundle/securityBundle.js
+24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find NPM Bundle Package : sequelize-bundle in : /Users/cci/repository/nodefony-starter/node_modules/@nodefony/sequelize-bundle/sequelizeBundle.js
+24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find NPM Bundle Package : realtime-bundle in : /Users/cci/repository/nodefony-starter/node_modules/@nodefony/realtime-bundle/realtimeBundle.js
+24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find NPM Bundle Package : monitoring-bundle in : /Users/cci/repository/nodefony-starter/node_modules/@nodefony/monitoring-bundle/monitoringBundle.js
+24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find NPM Bundle Package : unittests-bundle in : /Users/cci/repository/nodefony-starter/node_modules/@nodefony/unittests-bundle/unittestsBundle.js
+24947 Wed Mar 27 2019 11:36:07 INFO KERNEL SERVER  : Find NPM Bundle Package : mail-bundle in : /Users/cci/repository/nodefony-starter/node_modules/@nodefony/mail-bundle/mailBundle.js
+24946 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : requests PROVIDE BUNDLE : sequelize
+24946 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : session PROVIDE BUNDLE : sequelize
+24945 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : requests PROVIDE BUNDLE : sequelize
+24946 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : user PROVIDE BUNDLE : sequelize
+24946 Wed Mar 27 2019 11:36:09 INFO CONNECTION Sequelize nodefony : Connection been established successfully Type : sqlite Database : /app/Resources/databases/nodefony.db
+24949 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : requests PROVIDE BUNDLE : sequelize
+24945 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : session PROVIDE BUNDLE : sequelize
+24944 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : requests PROVIDE BUNDLE : sequelize
+24949 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : session PROVIDE BUNDLE : sequelize
+24945 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : user PROVIDE BUNDLE : sequelize
+24945 Wed Mar 27 2019 11:36:09 INFO CONNECTION Sequelize nodefony : Connection been established successfully Type : sqlite Database : /app/Resources/databases/nodefony.db
+24944 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : session PROVIDE BUNDLE : sequelize
+24949 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : user PROVIDE BUNDLE : sequelize
+24949 Wed Mar 27 2019 11:36:09 INFO CONNECTION Sequelize nodefony : Connection been established successfully Type : sqlite Database : /app/Resources/databases/nodefony.db
+24944 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : user PROVIDE BUNDLE : sequelize
+24944 Wed Mar 27 2019 11:36:09 INFO CONNECTION Sequelize nodefony : Connection been established successfully Type : sqlite Database : /app/Resources/databases/nodefony.db
+24945 Wed Mar 27 2019 11:36:09 INFO sequelize  : ORM CONNECTORS LIST  :
+┌────────────────────┬────────┬──────────────────────────────────────┬──────┐
+│ ORM CONNECTOR NAME │ DRIVER │ NAME DATABASE                        │ HOST │
+├────────────────────┼────────┼──────────────────────────────────────┼──────┤
+│ nodefony           │ sqlite │ /app/Resources/databases/nodefony.db │      │
+└────────────────────┴────────┴──────────────────────────────────────┴──────┘
+24949 Wed Mar 27 2019 11:36:09 INFO sequelize  : ORM CONNECTORS LIST  :
+┌────────────────────┬────────┬──────────────────────────────────────┬──────┐
+│ ORM CONNECTOR NAME │ DRIVER │ NAME DATABASE                        │ HOST │
+├────────────────────┼────────┼──────────────────────────────────────┼──────┤
+│ nodefony           │ sqlite │ /app/Resources/databases/nodefony.db │      │
+└────────────────────┴────────┴───24944 Wed Mar 27 2019 11:36:09 INFO sequelize  : ORM CONNECTORS LIST  :
+┌────────────────────┬────────┬──────────────────────────────────────┬──────┐
+│ ORM CONNECTOR NAME │ DRIVER │ NAME DATABASE                        │ HOST │
+├────────────────────┼────────┼──────────────────────────────────────┼──────┤
+│ nodefony           │ sqlite │ /app/Resources/databases/nodefony.db │      │
+└────────────────────┴────────┴──────────────────────────────────────┴──────┘
+───────────────────────────────────┴──────┘
+24946 Wed Mar 27 2019 11:36:09 INFO sequelize  : ORM CONNECTORS LIST  :
+┌────────────────────┬────────┬──────────────────────────────────────┬──────┐
+│ ORM CONNECTOR NAME │ DRIVER │ NAME DATABASE                        │ HOST │
+├────────────────────┼────────┼──────────────────────────────────────┼──────┤
+│ nodefony           │ sqlite │ /app/Resources/databases/nodefony.db │      │
+└────────────────────┴────────┴──────────────────────────────────────┴──────┘
+24949 Wed Mar 27 2019 11:36:09 INFO SERVICE SERVER STATICS  : Server Static RootDir  ==> /Users/cci/repository/nodefony-starter/web
+24944 Wed Mar 27 2019 11:36:09 INFO SERVICE SERVER STATICS  : Server Static RootDir  ==> /Users/cci/repository/nodefony-starter/web
+24944 Wed Mar 27 2019 11:36:09 INFO BUNDLE monitoring : ADD DEBUG BAR MONITORING
+24945 Wed Mar 27 2019 11:36:09 INFO SERVICE SERVER STATICS  : Server Static RootDir  ==> /Users/cci/repository/nodefony-starter/web
+24946 Wed Mar 27 2019 11:36:09 INFO SERVICE SERVER STATICS  : Server Static RootDir  ==> /Users/cci/repository/nodefony-starter/web
+24943 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : requests PROVIDE BUNDLE : sequelize
+24943 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : session PROVIDE BUNDLE : sequelize
+24943 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : user PROVIDE BUNDLE : sequelize
+24943 Wed Mar 27 2019 11:36:09 INFO CONNECTION Sequelize nodefony : Connection been established successfully Type : sqlite Database : /app/Resources/databases/nodefony.db
+24949 Wed Mar 27 2019 11:36:09 INFO BUNDLE monitoring : ADD DEBUG BAR MONITORING
+24945 Wed Mar 27 2019 11:36:09 INFO BUNDLE monitoring : ADD DEBUG BAR MONITORING
+24947 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : requests PROVIDE BUNDLE : sequelize
+24946 Wed Mar 27 2019 11:36:09 INFO BUNDLE monitoring : ADD DEBUG BAR MONITORING
+24947 Wed Mar 27 2019 11:36:09 INFO sequelize  :  REGISTER ENTITY : session PROVIDE BUNDLE : sequelize
 
 ...
-	</code></pre>
-</div>
+        	</code></pre>
+        </div>
 
-<h2>Stop :</h2>
-<div class="doc2 ">
+        <h2>Stop :</h2>
+        <div class="doc2 ">
 
-<p>
-	To stop nodefony in pre-production mode :
-</p>
-	<pre><code class="hljs console">
+        <p>
+        	To stop nodefony in pre-production mode :
+        </p>
+        	<pre><code class="hljs console">
 $ &lt;ctrl-c&gt;
 
-	</code></pre>
-</div>
+        	</code></pre>
+        </div>
+
+
+      </main>
+    </div>
+  </div>
+{% endblock %}
