@@ -1,0 +1,185 @@
+{% extends '../../base.html.twig' %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+      {% include '../../../documentation/navbar.html.twig' with {
+        'route' : nodefony.route
+      } %}
+      <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" style="top: 5rem;">
+
+        <div class="page-header">
+          <h1><strong>Services</strong> </h1>
+
+        	<p>
+        		Examples Services in nodefony :
+        		<center>
+        			<img src="/documentation-bundle/images/services.png" />
+        		</center>
+        	</p>
+
+        </div>
+
+
+        <h2 > You can see here :</h2>
+
+        <p>
+          <ul>
+          <li> <a href="#create"> Create Service </a></li>
+          <li> <a href="#logger"> Use Logger (syslog)</a></li>
+          <li> <a href="#event"> Use Notifications Center (events)</a></li>
+          <li> <a href="#container"> Use Service Container </a></li>
+          <li> <a href="#usage"> Nodefony Framework Usage Injection</a></li>
+
+          </ul>
+        <p>
+
+        <h2 id="create" >Create Service :</h2>
+
+        <pre><code class="hljs javascript" >#!/usr/bin/env node
+
+        const nodefony = require("nodefony");
+
+        class myService extends nodefony.Service {
+
+          constructor(name) {
+            super(name);
+          }
+
+        }
+
+        const service = new myService("hello");
+        console.log(service);
+        </code></pre>
+        <pre><code class="hljs javascript" >myService {
+          name: 'hello',
+          options: { nbListeners: 20 },
+          container:
+           Container {
+             protoService: [Function: protoService],
+             protoParameters: [Function: protoParameters],
+             id: 'foah_e3bT',
+             scope: {},
+             services: protoService {},
+             parameters: protoParameters {} },
+          syslog:
+           Syslog {
+             _events: [Object: null prototype] {},
+             _eventsCount: 0,
+             _maxListeners: 20,
+             settings:
+              { moduleName: 'hello',
+                maxStack: 100,
+                rateLimit: false,
+                burstLimit: 3,
+                defaultSeverity: 'INFO',
+                checkConditions: '&&',
+                async: false },
+             ringStack: [],
+             burstPrinted: 0,
+             missed: 0,
+             invalid: 0,
+             valid: 0,
+             start: 0 },
+          settingsSyslog: { moduleName: 'hello', defaultSeverity: 'INFO' },
+          notificationsCenter:
+           Notification {
+             _events: [Object: null prototype] {},
+             _eventsCount: 0,
+             _maxListeners: 20 }
+        }
+        </code></pre>
+
+        <h2 id="logger" >Use Syslog :</h2>
+        <pre><code class="hljs javascript" >#!/usr/bin/env node
+
+        const nodefony = require("nodefony");
+
+        class myService extends nodefony.Service {
+
+          constructor(name) {
+            super(name);
+            this.initSyslog();
+            this.myMethod();
+          }
+          async myMethod() {
+            let ret = await this.myMethod2();
+            this.logger(ret);
+            return ret;
+          }
+          myMethod2() {
+            return new Promise((resolve, reject) => {
+              try {
+                setTimeout(() => {
+                  this.logger("setTimeout", "WARNING");
+                  resolve("Hello World");
+                }, 1000);
+              } catch (e) {
+                this.logger(e, "ERROR");
+                return reject(e);
+              }
+            });
+          }
+        }
+        const service = new myService("hello");
+        </code></pre>
+        <pre><code class="hljs javascript" >
+
+        // after 1000 ms
+        Thu Mar 28 2019 15:30:53 WARNING SERVICE hello  : setTimeout
+        Thu Mar 28 2019 15:30:53 INFO SERVICE hello  : Hello World
+        </code></pre>
+
+        <h2 id="logger" >Use Notifications Center : </h2>
+        <pre><code class="hljs javascript" >#!/usr/bin/env node
+
+        const nodefony = require("nodefony");
+
+        class myService extends nodefony.Service {
+
+          constructor(name) {
+            super(name);
+            this.initSyslog();
+            this.myMethod();
+
+          }
+
+          async myMethod() {
+            let ret = await this.myMethod2();
+            return ret;
+          }
+
+          myMethod2() {
+            return new Promise((resolve, reject) => {
+              try {
+                setTimeout(() => {
+
+                  this.emit("timeout", "Hello World", this);
+
+                  resolve("Hello World");
+                }, 1000);
+              } catch (e) {
+                this.logger(e, "ERROR");
+                return reject(e);
+              }
+            });
+          }
+        }
+
+        const service = new myService("hello");
+
+        service.on("timeout", (txt, hello) => {
+          hello.logger(`Event timeout ${txt}`);
+        });
+        </code></pre>
+        <pre><code class="hljs javascript" >
+
+        // after 1000 ms
+        Thu Mar 28 2019 16:13:58 INFO SERVICE hello  :  Event timeout Hello World
+        </code></pre>
+
+
+      </main>
+    </div>
+  </div>
+{% endblock %}

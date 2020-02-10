@@ -1,0 +1,407 @@
+{% extends '../base.html.twig' %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+      {% include '../../documentation/navbar.html.twig' with {
+        'route' : nodefony.route
+      } %}
+      <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" style="top: 5rem;">
+        <h1>Nodefony Sessions</h1>
+
+          <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+              <h2 class="">SESSIONS</h2>
+              <p class="lead">
+                Sevcice Sessions manage sessions of HTTP or WEBSOCKET requests.  </br>
+                <ul>
+                  <li>Storages ( )</li>
+                  <li>Use Sessions</li>
+                  <li>Advanced Use</li>
+                </ul>
+              </p>
+
+            </div>
+          </div>
+          <p>
+            <img src="/documentation-bundle/images/sessions.png" />
+          </p>
+
+        <h2> Session Configrations </h2>
+        <p>
+          Bundle App configurations  file Location : <code> app/config/config.js</code>
+        </p>
+        <pre><code class="hljs javascript">
+          session: {
+            start: false, // false || true || Session Context Name (waf)
+            name: "nodefony",
+            handler: "orm", // files | orm | memcached
+            //save_path: "./tmp/sessions", // for session.storage.files only
+            use_strict_mode: true,
+            gc_probability: 1,
+            gc_divisor: 100,
+            gc_maxlifetime: 1440,
+            use_cookies: true,
+            use_only_cookies: true,
+            referer_check: false,
+            cookie: {
+              maxAge: 0, // like cookie_lifetime php  => secondes or ms style ('1d', "1h")
+              secure: false, // Set true for https site only see https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/Set-Cookie
+              httpOnly: true
+            },
+            memcached: {
+              servers: {
+                nodefony: {
+                  location: "127.0.0.1",
+                  port: 11211,
+                  weight: 1
+                }
+              }
+            }
+          }
+        </code></pre>
+
+        <h2> Session Auto Start </h2>
+        <p>
+          Nodefony framework can configure autostart session  in App bundle configuration file <code> app/config/config.js</code>
+        </p>
+        <pre><code class="hljs javascript">
+
+        session: {
+          start: true, // false || true || Session Context Name (waf)
+        }
+        </code></pre>
+        <p>
+          Session Context Name , Web Application Firewall (WAF) can use context session name to manage strategy betwin secures areas
+        </p>
+        <pre><code class="hljs javascript">
+
+        session: {
+          start: "oauth", // false || true || Session Context Name (waf)
+        }
+        </code></pre>
+        <h2> Start session in controller </h2>
+        <pre><code class="hljs javascript"> // don't use autostarter session
+
+        session: {
+          start: false
+        }
+        </code></pre>
+        <p>
+          Session must be started in Constructor of Controller called by front controller
+        </p>
+        <pre><code class="hljs javascript">module.exports = class usersController extends nodefony.controller {
+
+          constructor(container, context) {
+            super(container, context);
+
+            // start session startSession(context)
+            this.startSession(/*"oauth"*/);
+          }
+
+          /**
+           *    @Method ({"GET", "POST"})
+           *    @Route ( "/create", name="route-create")
+           *
+           */
+          createAction() {
+            console.log(this.session)
+          }
+        }
+        </code></pre>
+        <pre><code class="hljs javascript">Session {
+          protoService: [Function: protoService],
+          protoParameters: [Function: protoParameters],
+          id:
+           '008d8494242229256948b50ff7e64d98e71adcb6d5b6de622cff057298da2b62c45c95c5929d9a5c',
+          scope: {},
+          services: protoService {},
+          parameters: protoParameters {},
+          status: 'active',
+          manager:
+           sessions {
+             name: 'SESSIONS',
+             options: [Object],
+             container: [Container],
+             kernel: [appKernel],
+             syslog: [Syslog],
+             settingsSyslog: [Object],
+             notificationsCenter: [Notification],
+             httpKernel: [httpKernel],
+             sessionStrategy: 'migrate',
+             settings: [Object],
+             proba: 1,
+             divisor: 100,
+             defaultSessionName: 'nodefony',
+             sessionAutoStart: null,
+             storage: [dbSessionStorage] },
+          strategy: 'migrate',
+          strategyNone: false,
+          logger: [Function: bound logger],
+          name: 'nodefony',
+          settings:
+           { start: false,
+             use_strict_mode: true,
+             name: 'nodefony',
+             handler: 'orm',
+             save_path: '/tmp/sessions',
+             gc_probability: 1,
+             gc_divisor: 100,
+             gc_maxlifetime: 1440,
+             hash_function: 'md5',
+             use_cookies: true,
+             use_only_cookies: true,
+             referer_check: false,
+             cookie: [Object],
+             memcached: [Object] },
+          storage:
+           dbSessionStorage {
+             manager: [sessions],
+             orm: [sequelize],
+             gc_maxlifetime: 1440,
+             contextSessions: [],
+             entity: session },
+          context:
+           httpContext {
+             name: 'HTTP2 CONTEXT',
+             options: [Object],
+             container: [Scope],
+             kernel: [appKernel],
+             syslog: [Syslog],
+             settingsSyslog: [Object],
+             notificationsCenter: [Notification],
+             type: 'HTTP2',
+             kernelHttp: [httpKernel],
+             router: [router],
+             translation: [Translation],
+             resolver: [Resolver],
+             nbCallController: 0,
+             requestEnded: true,
+             session: [Circular],
+             sessionService: [sessions],
+             sessionAutoStart: 'default',
+             csrfService: [csrf],
+             cookies: [Object],
+             crossDomain: null,
+             secureArea: null,
+             security: null,
+             metaSecurity: [Object],
+             user: [User],
+             token: [userPasswordToken],
+             secure: false,
+             isJson: false,
+             waitAsync: false,
+             profiler: false,
+             accessControl: [],
+             isControlledAccess: false,
+             uploadService: [upload],
+             requestSettings: [Object],
+             queryStringParser: [Object],
+             isElectron: false,
+             protocol: '2.0',
+             scheme: 'https',
+             pushAllowed: true,
+             request: [http2Request],
+             response: [http2Response],
+             csrf: null,
+             cookieSession: [Cookie],
+             method: 'GET',
+             isAjax: false,
+             isHtml: true,
+             isRedirect: false,
+             sended: false,
+             showDebugBar: true,
+             timeoutExpired: false,
+             promise: null,
+             timeoutid: null,
+             profiling: [Object],
+             url: 'https://localhost:5152/',
+             port: '5152',
+             originUrl: [Url],
+             domain: 'localhost',
+             validDomain: true,
+             remoteAddress: '127.0.0.1',
+             proxy: null,
+             locale: 'en_en' },
+          contextSession: 'default',
+          lifetime: 0,
+          saved: false,
+          flashBag: {},
+          applyTranId: 0,
+          cookieSession:
+           Cookie {
+             settings: [Object],
+             name: 'nodefony',
+             signed: false,
+             value:
+              '008d8494242229256948b50ff7e64d98e71adcb6d5b6de622cff057298da2b62c45c95c5929d9a5c',
+             originalMaxAge: 0,
+             maxAge: 0,
+             expires: null,
+             path: '/',
+             domain: null,
+             httpOnly: true,
+             secure: false,
+             sameSite: null
+          }
+        }
+        </code></pre>
+
+        <h2> Use session </h2>
+
+        <h3> Session Attributes </h3>
+        <p>
+          Getter // Setter
+        </p>
+        <pre><code class="hljs javascript"> // Getter // Setter
+          createAction() {
+
+            let foo = this.session.get("foo")
+            if (! foo){
+              foo = this.session.set("foo", {bar:true})
+            }
+
+          }
+
+          // getAttributtes
+          createAction() {
+            let attributes = this.session.getAttributtes();
+            console.log(attributes)
+            {
+              foo: { bar: true }
+            }
+          }
+        </code></pre>
+
+
+        <h3> Session Metas </h3>
+        <p>
+          Meta attributes are needed for internal use but may be useful for better managing session usage.
+        </p>
+        <pre><code class="hljs javascript">module.exports = class myController extends nodefony.controller {
+
+          constructor(container, context) {
+            super(container, context);
+            this.startSession();
+          }
+
+          // Example getMetaBag / setMetaBag
+
+          createAction() {
+
+            let kernelMeta = this.session.getMetaBag("kernel");
+            if (!kernelMeta.domain) {
+              this.session.setMetaBag("kernel.domain", this.kernel.domain);
+            }
+
+          }
+
+          // invalide session after 1 minute
+          checkSession() {
+            let lastUsed = this.session.getMetaBag("lastUsed");
+            lastUsed = new Date(lastUsed).getTime();
+            let now = new Date().getTime();
+            if ( ( now - lastUsed ) > 60000) {
+              this.session.invalidate();
+              return false ;
+            }
+            return true;
+          }
+
+          createAction() {
+              this.checkSession();
+              ...
+          }
+        }
+
+        </code></pre>
+        <pre><code class="hljs javascript">let metas = this.session.getMetas();
+        console.log(metas)
+
+        protoParameters {
+          lifetime: 0,
+          context: 'default',
+          request: 'HTTP2',
+          created: '2019-04-10T19:15:32.980Z',
+          remoteAddress: '127.0.0.1',
+          host: 'localhost:5152',
+          user_agent:
+           'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+          url:
+           Url {
+             protocol: 'https:',
+             slashes: true,
+             auth: null,
+             host: 'localhost:5152',
+             port: '5152',
+             hostname: 'localhost',
+             hash: null,
+             search: null,
+             query: null,
+             pathname: '/test/unit/session/get/attributes',
+             path: '/test/unit/session/get/attributes',
+             href: 'https://localhost:5152/test/unit/session/get/attributes' },
+          lastUsed: '2019-04-10T19:21:10.477Z',
+          kernel: { domain: '0.0.0.0' }
+        }
+
+        </code></pre>
+
+        <h3> Session FlashBag </h3>
+        <p>
+          Session FlashBag are useful for time-limited use (stealth)
+        </p>
+
+
+        <pre><code class="hljs javascript">module.exports = class myController extends nodefony.controller {
+
+          constructor(container, context) {
+            super(container, context);
+            this.startSession();
+          }
+
+          // Example setFlashBag
+
+          createAction() {
+            this.session.setFlashBag("info", "My log info" )
+            return this.render("app::index.hml.twig");
+          }
+
+        }
+
+        </code></pre>
+
+        <p>
+          Usage in twig getFlashBag
+        </p>
+        {% verbatim %}
+        <pre><code class="hljs twig">{% extends './base.html.twig' %}
+
+        {% set error = getFlashBag("error") %}
+        {% set info = getFlashBag("info") %}
+
+        {% if info %}
+          &ltdiv class="alert alert-primary alert-dismissible fade show  mt-2" role="alert"&gt
+            &ltstrong&gtINFO :&lt/strong&gt
+            {{info|escape}}
+            &ltbutton type="button" class="close" data-dismiss="alert" aria-label="Close"&gt
+              &ltspan aria-hidden="true"&gt&times;&lt/span&gt
+            &lt/button&gt
+          &lt/div&gt
+        {% endif %}
+        {% if error %}
+          &ltdiv class="alert alert-danger alert-dismissible mt-2" role="alert"&gt
+            &ltstrong&gtERROR :&lt/strong&gt
+            {{error|escape}}
+            &ltbutton type="button" class="close" data-dismiss="alert" aria-label="Close"&gt
+              &ltspan aria-hidden="true"&gt&times;&lt/span&gt
+            &lt/button&gt
+          &lt/div&gt
+        {% endif %}
+        </code></pre>
+        {% endverbatim %}
+
+      </main>
+    </div>
+  </div>
+{% endblock %}

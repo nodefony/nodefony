@@ -1,0 +1,132 @@
+<!--EXAMPLE -->
+<div class="doc3 container-fluid mt-4">
+  <div class="card card-info">
+    <div class="card-header bg-nodefony">
+          <strong>Rendering Websocket</strong>
+    </div>
+    <div class="card-body">
+      <ul class="nav nav-pills" role="tablist">
+        <li  class="nav-item">
+          <a class="nav-link active" id="routing3-tab" data-toggle="tab" href="#routing3" role="tab" aria-controls="routing3" aria-selected="true">
+            routing.yml
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="controler3-tab" data-toggle="tab" href="#controler3" role="tab" aria-controls="controler3" aria-selected="false" >
+            demoController.js
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="logger3-tab" data-toggle="tab" href="#logger3" role="tab" aria-controls="logger3" aria-selected="false">
+            Logger
+          </a>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+
+        <div id="routing3" class="tab-pane fade show active" role="tabpanel" aria-labelledby="routing3-tab">
+          <br>
+          <p>
+            URL :
+            <code>
+              ws://localhost:5151/websocket
+            </code>
+          </p>
+
+          <pre><code class="hljs yaml">websoket:
+pattern:  /websocket
+defaults: {
+  "controller": "demo-bundle:demo:websocket"
+}
+requirements:
+  method:
+    - GET
+    - WEBSOCKET
+          </code></pre>
+
+        </div>
+
+        <div id="controler3" class="tab-pane fade" role="tabpanel" aria-labelledby="controler3-tab">
+          <p>
+            <div class="alert alert-warning" role="alert">
+              To use websocket you must understand Nodefony Context
+            </div>
+          </p>
+          <pre><code class="hljs javascript">
+class demoController extends nodefony.Controller {
+
+constructor (container, context){
+super(container, context);
+}
+
+websocketAction (<strong>message</strong>){
+switch( this.method ){
+case "GET" :
+return this.render('demo-bundle:default:websocket.html.twig', {
+  name:"websoket"
+});
+case "WEBSOCKET" :
+if (message){
+  // log  message client in terminal
+  this.log( message.utf8data , "INFO");
+}else{
+  // prepare  push messages server
+  // send messages to clients
+  let i = 0 ;
+  let id = setInterval(() => {
+    let mess = "i am a  message "+ i +"\n" ;
+    // you can use context to send data
+    this.context.send(mess);
+    //  or call controller method ( renderResponse , render , renderJson )
+    this.renderResponse(mess);
+    // log  message sending in terminal
+    this.log( "send to client :" + mess , "info");
+    i++
+  }, 1000);
+
+  setTimeout( () =>{
+    clearInterval(id);
+    // close reason , descripton
+    this.context.close(1000, "nodefony controller close socket");
+    id = null ;
+  }, 10000);
+  // event websocket close by client
+  this.context.on("onClose", () =>{
+    if (id){
+      clearInterval(id);
+    }
+  });
+}
+break;
+default :
+throw new error(" method not allowed");
+}
+}
+}</code></pre>
+          </div>
+
+        <div id="logger3" class="tab-pane fade" role="tabpanel" aria-labelledby="logger3-tab">
+              <br>
+
+          <pre><code class="hljs shell" >thu oct 06 2016 15:49:09 info request websocket secure  :  connection websocket connection from : 192.168.100.71 pid :86607 origin : https://nodefony.com:5152
+thu oct 06 2016 15:49:09 info controler demo   :  hello server i am a client : mozilla/5.0 (macintosh; intel mac os x 10_11_6) applewebkit/537.36 (khtml, like gecko) chrome/55.0.2879.0 safari/537.36
+
+thu oct 06 2016 15:49:10 info controler demo   : send to client :i am a  message 0
+thu oct 06 2016 15:49:11 info controler demo   : send to client :i am a  message 1
+thu oct 06 2016 15:49:12 info controler demo   : send to client :i am a  message 2
+thu oct 06 2016 15:49:13 info controler demo   : send to client :i am a  message 3
+thu oct 06 2016 15:49:14 info controler demo   : send to client :i am a  message 4
+thu oct 06 2016 15:49:15 info controler demo   : send to client :i am a  message 5
+thu oct 06 2016 15:49:16 info controler demo   : send to client :i am a  message 6
+thu oct 06 2016 15:49:17 info controler demo   : send to client :i am a  message 7
+thu oct 06 2016 15:49:18 info controler demo   : send to client :i am a  message 8
+
+thu oct 06 2016 15:49:19 info request websocket secure  : thu oct 06 2016 15:49:19 gmt+0200 (cest) connection websocket close : 192.168.100.71 pid :86607 origin : https://nodefony.com:5152 1000 nodefony controller close socket
+          </code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

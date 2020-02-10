@@ -1,0 +1,27 @@
+{% extends '../base.html.twig' %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+      {% include '../../documentation/navbar.html.twig' with {
+        'route' : nodefony.route
+      } %}
+      <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" style="top: 5rem;">
+        <h1>Nodefony Context</h1>
+
+        <h2>
+          Services Context
+        </h2>
+        <p>
+          A Context is service who manage protocol HTTP or WEBSOCKET.  </br>
+          You can find in the service all methods, tools and events related to the communication protocol. </br>
+          Nodefony has two context classes http and websocket.
+
+        </p>
+        <p>
+          <img src="/documentation-bundle/images/context.png" />
+        </p>
+      </main>
+    </div>
+  </div>
+{% endblock %}

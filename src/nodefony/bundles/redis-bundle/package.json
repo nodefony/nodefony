@@ -12,7 +12,7 @@
   ],
   "repository": {},
   "dependencies": {
-    "redis": "^2.8.0",
+    "redis": "^3.0.2",
     "shortid": "^2.2.15"
   },
   "devDependencies": {

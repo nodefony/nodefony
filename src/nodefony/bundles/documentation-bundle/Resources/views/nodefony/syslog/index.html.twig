@@ -1,0 +1,616 @@
+{% extends '../base.html.twig' %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+      {% include '../../documentation/navbar.html.twig' with {
+        'route' : nodefony.route
+      } %}
+      <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" style="top: 5rem;">
+        <h1> Syslog Nodefony </h1>
+        <hr>
+
+        <div class="alert alert-info" role="alert">
+          <strong>
+          Syslog manage all log in Nodefony .</br>
+          </strong>
+        </div>
+
+
+        <h2>Syslog Create instance : </h2>
+
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+
+        const nodefony = require("nodefony");
+
+        const syslog = new nodefony.syslog();
+        console.log(syslog);
+        /*
+        Syslog {
+          _events: [Object: null prototype] {},
+          _eventsCount: 0,
+          _maxListeners: 20,
+          settings:
+           { moduleName: 'SYSLOG',
+             maxStack: 100,
+             rateLimit: false,
+             burstLimit: 3,
+             defaultSeverity: 'DEBUG',
+             checkConditions: '&&',
+           },
+          ringStack: [],
+          burstPrinted: 0,
+          missed: 0,
+          invalid: 0,
+          valid: 0,
+          start: 0
+        }
+        */
+        </code></pre>
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+
+        const nodefony = require("nodefony");
+
+        const settingsSyslog = {
+          moduleName: "LIVE",
+          defaultSeverity: "ERROR",
+          msgid: "websocket"
+        };
+
+        const syslog = new nodefony.syslog( settingsSyslog );
+        console.log(syslog);
+        /*
+        Syslog {
+          _events: [Object: null prototype] {},
+          _eventsCount: 0,
+          _maxListeners: 20,
+          settings:
+           { moduleName: 'LIVE',
+             msgid: 'websocket',
+             maxStack: 100,
+             rateLimit: false,
+             burstLimit: 3,
+             defaultSeverity: 'ERROR',
+             checkConditions: '&&' },
+          ringStack: [],
+          burstPrinted: 0,
+          missed: 0,
+          invalid: 0,
+          valid: 0,
+          start: 0
+        }
+        */
+        </code></pre>
+
+
+
+        <h2> SYSLOG  PDU (Protocol Data Unit) : </h2>
+        <p>
+          <h3>Syslog uses the class PDU to unify all the logs</h3>
+        </p>
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+
+        const nodefony = require("nodefony");
+
+        const pdu = new nodefony.PDU( /* pci, severity, moduleName, msgid, msg, date */);
+        console.log(pdu);
+
+        /*
+        PDU {
+          timeStamp: 1554120561428,
+          uid: 1,
+          severity: 6,
+          severityName: 'INFO',
+          typePayload: 'undefined',
+          payload: undefined,
+          moduleName: 'nodefony',
+          msgid: '',
+          msg: ''
+        }
+        */
+
+        /* nodefony.PDU(payload, severity, moduleName, msgid, msg, date) */
+        const pdu = new nodefony.PDU(
+          new Error("my error"),
+          3,
+          "MY_MODULE",
+          "MY_MSID",
+          "my message error",
+          new Date());
+
+        console.log(pdu);
+        /*
+        PDU {
+          timeStamp: 1554121508290,
+          uid: 1,
+          severity: 3,
+          severityName: 'ERROR',
+          typePayload: 'Error',
+          payload:
+           Error: my error
+               at Object.<anonymous> (/Users/cci/repository/nodefony-core/bin/test.js:10:3)
+               at Module._compile (internal/modules/cjs/loader.js:701:30)
+               at Object.Module._extensions..js (internal/modules/cjs/loader.js:712:10)
+               at Module.load (internal/modules/cjs/loader.js:600:32)
+               at tryModuleLoad (internal/modules/cjs/loader.js:539:12)
+               at Function.Module._load (internal/modules/cjs/loader.js:531:3)
+               at Function.Module.runMain (internal/modules/cjs/loader.js:754:12)
+               at startup (internal/bootstrap/node.js:283:19)
+               at bootstrapNodeJSCore (internal/bootstrap/node.js:622:3),
+          moduleName: 'MY_MODULE',
+          msgid: 'MY_MSID',
+          msg: 'my message error'
+        }
+        */
+        </code></pre>
+
+        <h2> Method log : </h2>
+        <p>
+          <h3></h3>
+        </p>
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+        const nodefony = require("nodefony");
+
+        const syslog = new nodefony.syslog( settingsSyslog );
+
+        // <h3>log(payload, severity, msgid, msg)</h3>
+
+        syslog.log("my message 1"); // default severity
+        syslog.log("my message 2", "EMERGENCY");
+        syslog.log("my message 3", "ALERT");
+        syslog.log("my message 4", "CRITIC");
+        syslog.log("my message 5", "ERROR");
+        syslog.log("my message 6", "WARNING");
+        syslog.log("my message 7", "NOTICE");
+        syslog.log("my message 8", "INFO");
+        syslog.log("my message 9", "DEBUG");
+
+        syslog.log("my message 9", "DEBUG", "WEBSOCKET", "SEND");
+
+        console.log(syslog)
+        /*
+        Syslog {
+          _events: [Object: null prototype] {},
+          _eventsCount: 0,
+          _maxListeners: 20,
+          settings:
+           { moduleName: 'LIVE',
+             msgid: 'websocket',
+             maxStack: 100,
+             rateLimit: false,
+             burstLimit: 3,
+             defaultSeverity: 'ERROR',
+             checkConditions: '&&' },
+          ringStack:
+           [ PDU {
+               timeStamp: 1554209446812,
+               uid: 1,
+               severity: 3,
+               severityName: 'ERROR',
+               typePayload: 'string',
+               payload: 'my message 1',
+               moduleName: 'LIVE',
+               msgid: 'websocket',
+               msg: '' },
+             PDU {
+               timeStamp: 1554209446812,
+               uid: 2,
+               severity: 6,
+               severityName: 'INFO',
+               typePayload: 'string',
+               payload: 'my message 2',
+               moduleName: 'LIVE',
+               msgid: 'websocket',
+               msg: '' },
+             PDU {
+               timeStamp: 1554209446812,
+               uid: 3,
+               severity: 1,
+               severityName: 'ALERT',
+               typePayload: 'string',
+               payload: 'my message 3',
+               moduleName: 'LIVE',
+               msgid: 'websocket',
+               msg: '' },
+             PDU {
+               timeStamp: 1554209446812,
+               uid: 4,
+               severity: 2,
+               severityName: 'CRITIC',
+               typePayload: 'string',
+               payload: 'my message 4',
+               moduleName: 'LIVE',
+               msgid: 'websocket',
+               msg: '' },
+             PDU {
+               timeStamp: 1554209446812,
+               uid: 5,
+               severity: 3,
+               severityName: 'ERROR',
+               typePayload: 'string',
+               payload: 'my message 5',
+               moduleName: 'LIVE',
+               msgid: 'websocket',
+               msg: '' },
+             PDU {
+               timeStamp: 1554209446812,
+               uid: 6,
+               severity: 4,
+               severityName: 'WARNING',
+               typePayload: 'string',
+               payload: 'my message 6',
+               moduleName: 'LIVE',
+               msgid: 'websocket',
+               msg: '' },
+             PDU {
+               timeStamp: 1554209446812,
+               uid: 7,
+               severity: 5,
+               severityName: 'NOTICE',
+               typePayload: 'string',
+               payload: 'my message 7',
+               moduleName: 'LIVE',
+               msgid: 'websocket',
+               msg: '' },
+             PDU {
+               timeStamp: 1554209446812,
+               uid: 8,
+               severity: 6,
+               severityName: 'INFO',
+               typePayload: 'string',
+               payload: 'my message 8',
+               moduleName: 'LIVE',
+               msgid: 'websocket',
+               msg: '' },
+             PDU {
+               timeStamp: 1554209446812,
+               uid: 9,
+               severity: 7,
+               severityName: 'DEBUG',
+               typePayload: 'string',
+               payload: 'my message 9',
+               moduleName: 'LIVE',
+               msgid: 'websocket',
+               msg: '' },
+             PDU {
+               timeStamp: 1554209446812,
+               uid: 10,
+               severity: 7,
+               severityName: 'DEBUG',
+               typePayload: 'string',
+               payload: 'my message 9',
+               moduleName: 'LIVE',
+               msgid: 'WEBSOCKET',
+               msg: 'SEND' } ],
+          burstPrinted: 0,
+          missed: 0,
+          invalid: 0,
+          valid: 10,
+          start: 0
+        }
+        */
+        </code></pre>
+
+        <h2> Listen Events with Syslog Filter  : Filter With Conditions </h2>
+        <p>
+          <h3>FILTER BY SEVERITY</h3>
+        </p>
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+
+        const nodefony = require("nodefony");
+
+        const settingsSyslog = {
+          moduleName: "LIVE",
+          defaultSeverity: "ERROR",
+          msgid: "websocket"
+        };
+        const syslog = new nodefony.syslog(settingsSyslog);
+
+        /*
+         * Severity syslog
+         *
+         *    EMERGENCY   = 0
+         *    ALERT       = 1
+         *    CRITIC      = 2
+         *    ERROR       = 3
+         *    WARNING     = 4
+         *    NOTICE      = 5
+         *    INFO        = 6
+         *    DEBUG       = 7
+         */
+
+        // listen severity CRITIC and ERROR
+        syslog.filter( {
+          severity: {
+            data: "CRITIC,ERROR"
+            // or
+            //data:"2,3"
+          }
+        }, (pdu) => {
+          // better log date
+          let date = new Date(pdu.timeStamp).toLocaleString('en-GB', {
+            timeZone: 'UTC',
+            timeZoneName: "short",
+            year: "2-digit",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+          });
+          console.log(`${pdu.severityName} ${date} => ${pdu.moduleName}@${pdu.msgid} : ${pdu.payload}`);
+        });
+        // Try Logger log(payload, severity, msgid, msg)
+
+        syslog.log(new Error("my Error"));
+
+        // ERROR 04/01/19, 1:11:12 PM UTC => LIVE@websocket : Error: my Error
+
+        syslog.log(new Error("my Critic Error"), "CRITIC");
+
+        // CRITIC 04/01/19, 1:11:12 PM UTC => LIVE@websocket : Error: my Critic Error
+
+        syslog.log(new Error("my Error"), "ERROR", "ajax");
+
+        // ERROR 04/01/19, 1:11:12 PM UTC => LIVE@ajax : Error: my Error
+        </code></pre>
+        <p>
+          <h3>FILTER BY SEVERITY OPERATOR</h3>
+        </p>
+        <pre><code class="hljs javascript">// Log all pdu with severity <= 6
+
+        syslog.filter( {
+          severity: {
+            operator: "<=",
+            data: "6" // Log all pdu with severity < 6
+          }
+        }, (pdu) => {
+            console.log(pdu);
+        });
+        </code></pre>
+
+        <p>
+          <h3>FILTER BY SEVERITY OPERATOR and MSGID</h3>
+        </p>
+        <pre><code class="hljs javascript">// Log all pdu with severity < 5 AND msgid === "websocket"
+
+        syslog.filter( {
+
+          checkConditions: "&&",  // or "||"
+          severity: { // Log all pdu with severity < 5 (1 2 3 4)
+            operator: "<",
+            data: "5"
+          },
+          msgid:{ // Log all pdu with msgid === "websocket"
+            data:"websocket"
+          }
+        }, (pdu) => {
+          console.log(pdu);
+        });
+        </code></pre>
+
+        <h2> Advanced use : </h2>
+        <p>
+        <h3>getLogs</h3>
+        </p>
+        <pre><code class="hljs javascript">// getLogs(conditions [,stack])
+
+        let tab = syslog.getLogs({
+          severity: {
+            data: "CRITIC"
+          }
+        });
+
+        console.log(tab);
+
+        /*[ PDU {
+            timeStamp: 1554196628842,
+            uid: 2,
+            severity: 2,
+            severityName: 'CRITIC',
+            typePayload: 'Error',
+            payload:
+             Error: my Critic Error
+                 at Object.<anonymous> (/Users/cci/repository/nodefony-core/bin/test.js:40:15)
+                 at Module._compile (internal/modules/cjs/loader.js:701:30)
+                 at Object.Module._extensions..js (internal/modules/cjs/loader.js:712:10)
+                 at Module.load (internal/modules/cjs/loader.js:600:32)
+                 at tryModuleLoad (internal/modules/cjs/loader.js:539:12)
+                 at Function.Module._load (internal/modules/cjs/loader.js:531:3)
+                 at Function.Module.runMain (internal/modules/cjs/loader.js:754:12)
+                 at startup (internal/bootstrap/node.js:283:19)
+                 at bootstrapNodeJSCore (internal/bootstrap/node.js:622:3),
+            moduleName: 'LIVE',
+            msgid: 'websocket',
+            msg: '' },
+          PDU {
+            timeStamp: 1554196628844,
+            uid: 4,
+            severity: 2,
+            severityName: 'CRITIC',
+            typePayload: 'Error',
+            payload:
+             Error: my Critic Error
+                 at Object.<anonymous> (/Users/cci/repository/nodefony-core/bin/test.js:52:19)
+                 at Module._compile (internal/modules/cjs/loader.js:701:30)
+                 at Object.Module._extensions..js (internal/modules/cjs/loader.js:712:10)
+                 at Module.load (internal/modules/cjs/loader.js:600:32)
+                 at tryModuleLoad (internal/modules/cjs/loader.js:539:12)
+                 at Function.Module._load (internal/modules/cjs/loader.js:531:3)
+                 at Function.Module.runMain (internal/modules/cjs/loader.js:754:12)
+                 at startup (internal/bootstrap/node.js:283:19)
+                 at bootstrapNodeJSCore (internal/bootstrap/node.js:622:3),
+            moduleName: 'LIVE',
+            msgid: 'websocket',
+            msg: '' },
+          PDU {
+            timeStamp: 1554196628846,
+            uid: 6,
+            severity: 2,
+            severityName: 'CRITIC',
+            typePayload: 'Error',
+            payload:
+             Error: my Critic Error
+                 at Object.<anonymous> (/Users/cci/repository/nodefony-core/bin/test.js:52:19)
+                 at Module._compile (internal/modules/cjs/loader.js:701:30)
+                 at Object.Module._extensions..js (internal/modules/cjs/loader.js:712:10)
+                 at Module.load (internal/modules/cjs/loader.js:600:32)
+                 at tryModuleLoad (internal/modules/cjs/loader.js:539:12)
+                 at Function.Module._load (internal/modules/cjs/loader.js:531:3)
+                 at Function.Module.runMain (internal/modules/cjs/loader.js:754:12)
+                 at startup (internal/bootstrap/node.js:283:19)
+                 at bootstrapNodeJSCore (internal/bootstrap/node.js:622:3),
+            moduleName: 'LIVE',
+            msgid: 'websocket',
+            msg: '' },
+          PDU {
+            timeStamp: 1554196628849,
+            uid: 8,
+            severity: 2,
+            severityName: 'CRITIC',
+            typePayload: 'Error',
+            payload:
+             Error: my Critic Error
+                 at Object.<anonymous> (/Users/cci/repository/nodefony-core/bin/test.js:52:19)
+                 at Module._compile (internal/modules/cjs/loader.js:701:30)
+                 at Object.Module._extensions..js (internal/modules/cjs/loader.js:712:10)
+                 at Module.load (internal/modules/cjs/loader.js:600:32)
+                 at tryModuleLoad (internal/modules/cjs/loader.js:539:12)
+                 at Function.Module._load (internal/modules/cjs/loader.js:531:3)
+                 at Function.Module.runMain (internal/modules/cjs/loader.js:754:12)
+                 at startup (internal/bootstrap/node.js:283:19)
+                 at bootstrapNodeJSCore (internal/bootstrap/node.js:622:3),
+            moduleName: 'LIVE',
+            msgid: 'websocket',
+            msg: '' },
+          PDU {
+            timeStamp: 1554196628851,
+            uid: 10,
+            severity: 2,
+            severityName: 'CRITIC',
+            typePayload: 'Error',
+            payload:
+             Error: my Critic Error
+                 at Object.<anonymous> (/Users/cci/repository/nodefony-core/bin/test.js:52:19)
+                 at Module._compile (internal/modules/cjs/loader.js:701:30)
+                 at Object.Module._extensions..js (internal/modules/cjs/loader.js:712:10)
+                 at Module.load (internal/modules/cjs/loader.js:600:32)
+                 at tryModuleLoad (internal/modules/cjs/loader.js:539:12)
+                 at Function.Module._load (internal/modules/cjs/loader.js:531:3)
+                 at Function.Module.runMain (internal/modules/cjs/loader.js:754:12)
+                 at startup (internal/bootstrap/node.js:283:19)
+                 at bootstrapNodeJSCore (internal/bootstrap/node.js:622:3),
+            moduleName: 'LIVE',
+            msgid: 'websocket',
+            msg: '' },
+          PDU {
+            timeStamp: 1554196628852,
+            uid: 12,
+            severity: 2,
+            severityName: 'CRITIC',
+            typePayload: 'Error',
+            payload:
+             Error: my Critic Error
+                 at Object.<anonymous> (/Users/cci/repository/nodefony-core/bin/test.js:52:19)
+                 at Module._compile (internal/modules/cjs/loader.js:701:30)
+                 at Object.Module._extensions..js (internal/modules/cjs/loader.js:712:10)
+                 at Module.load (internal/modules/cjs/loader.js:600:32)
+                 at tryModuleLoad (internal/modules/cjs/loader.js:539:12)
+                 at Function.Module._load (internal/modules/cjs/loader.js:531:3)
+                 at Function.Module.runMain (internal/modules/cjs/loader.js:754:12)
+                 at startup (internal/bootstrap/node.js:283:19)
+                 at bootstrapNodeJSCore (internal/bootstrap/node.js:622:3),
+            moduleName: 'LIVE',
+            msgid: 'websocket',
+            msg: '' } ]
+        */
+        </code></pre>
+
+        <h3>logToJson</h3>
+
+        <pre><code class="hljs javascript">const json = syslog.logToJson({
+          severity: {
+            data: "CRITIC"
+          }
+        });
+        console.log(json);
+
+        /*[
+
+        {"timeStamp":1554196303568,"uid":4,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303569,"uid":6,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303570,"uid":8,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},<br>{"timeStamp":1554196303572,"uid":10,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303573,"uid":12,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303574,"uid":14,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},</br>{"timeStamp":1554196303576,"uid":16,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303577,"uid":18,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303578,"uid":20,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},</br>{"timeStamp":1554196303580,"uid":22,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303581,"uid":24,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303583,"uid":26,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},</br>{"timeStamp":1554196303584,"uid":28,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303585,"uid":30,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303587,"uid":32,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},</br>{"timeStamp":1554196303588,"uid":34,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303590,"uid":36,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303591,"uid":38,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},</br>{"timeStamp":1554196303592,"uid":40,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303594,"uid":42,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303595,"uid":44,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},</br>{"timeStamp":1554196303596,"uid":46,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303598,"uid":48,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303599,"uid":50,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},</br>{"timeStamp":1554196303601,"uid":52,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303602,"uid":54,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303603,"uid":56,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},</br>{"timeStamp":1554196303604,"uid":58,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303606,"uid":60,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303607,"uid":62,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},</br>{"timeStamp":1554196303608,"uid":64,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303610,"uid":66,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303611,"uid":68,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},</br>{"timeStamp":1554196303613,"uid":70,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303614,"uid":72,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303616,"uid":74,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},</br>{"timeStamp":1554196303617,"uid":76,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303618,"uid":78,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303620,"uid":80,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},</br>{"timeStamp":1554196303621,"uid":82,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303623,"uid":84,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303624,"uid":86,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},</br>{"timeStamp":1554196303625,"uid":88,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303626,"uid":90,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303628,"uid":92,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},</br>{"timeStamp":1554196303629,"uid":94,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303631,"uid":96,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303632,"uid":98,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},</br>{"timeStamp":1554196303633,"uid":100,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""},{"timeStamp":1554196303634,"uid":102,"severity":2,"severityName":"CRITIC","typePayload":"Error","payload":{},"moduleName":"LIVE","msgid":"websocket","msg":""}
+
+        ]*/
+        </code></pre>
+
+        <h3>loadStack </h3>
+        <p>Load stack (json string or array) in syslog engine if doEvent is true the engine fire all events filters , before condition is a hook who can call before events fire </p>
+        <pre><code class="hljs javascript"> // loadStack(stack [,doEvent = false, beforeConditions = null])
+
+        const syslog = new nodefony.syslog(settingsSyslog);
+        for (let i = 0; i < 10; i++) {
+          if (i % 2) {
+            syslog.log(new Error("my Error"), "ERROR");
+          } else {
+            syslog.log(new Error("my Critic Error"), "CRITIC");
+          }
+        }
+        const json = syslog.logToJson({
+          severity: {
+            data: "CRITIC"
+          }
+        });
+
+        // load syslog stack in syslog2
+        const syslog2 = new nodefony.syslog(settingsSyslog);
+
+        syslog2.loadStack(json, true, (pdu, ele) => {
+          // you can change pdu before fire events
+        });
+
+        </code></pre>
+
+
+
+        <h2> Use Syslog in nodefony services :  </h2>
+        <p>
+        </p>
+        <pre><code class="hljs javascript">const nodefony = require("nodefony");
+
+        class myService extends nodefony.Service {
+
+          constructor(name) {
+            super(name);
+            this.initSyslog();
+            this.myMethod();
+          }
+          async myMethod() {
+            let ret = await this.myMethod2();
+            <h3>this.log(ret);</h3>
+            return ret;
+          }
+          myMethod2() {
+            return new Promise((resolve, reject) => {
+              try {
+                setTimeout(() => {
+                  <h3>this.log("setTimeout", "WARNING");</h3>
+                  resolve("Hello World");
+                }, 1000);
+              } catch (e) {
+                this.log(e, "ERROR");
+                return reject(e);
+              }
+            });
+          }
+        }
+        const service = new myService("hello");
+
+        /*
+        Tue Apr 02 2019 14:58:28 WARNING SERVICE hello  : setTimeout
+        Tue Apr 02 2019 14:58:28 INFO SERVICE hello  : Hello World
+        */
+        </code></pre>
+
+      </main>
+    </div>
+  </div>
+{% endblock %}

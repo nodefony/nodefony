@@ -70,6 +70,7 @@ class httpKernel extends nodefony.Service {
 
   // EVENTS DISPATCHER
   async onError(container, error) {
+    console.log(error)
     let context = container.get("context");
     if (context.sended) {
       this.log(error, "ERROR");
@@ -128,6 +129,9 @@ class httpKernel extends nodefony.Service {
       }
       return result;
     } catch (e) {
+      if (error){
+        this.logger(error, "ERROR");
+      }
       if (httpError) {
         httpError.logger(e, "ERROR");
       } else {
@@ -591,7 +595,8 @@ class httpKernel extends nodefony.Service {
         environment: this.kernel.environment,
         debug: this.kernel.debug,
         local: context.translation.defaultLocale.substr(0, 2),
-        core: this.kernel.isCore
+        core: this.kernel.isCore,
+        route:context.resolver.getRoute()
       },
       getFlashBag: context.getFlashBag.bind(context),
       render: context.render.bind(context),
@@ -622,7 +627,8 @@ class httpKernel extends nodefony.Service {
       environment: this.kernel.environment,
       debug: this.kernel.debug,
       local: context.translation.defaultLocale.substr(0, 2),
-      core: this.kernel.isCore
+      core: this.kernel.isCore,
+      route:context.resolver.getRoute()
     };
     try {
       param.getFlashBag = context.getFlashBag.bind(context);

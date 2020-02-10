@@ -1,0 +1,67 @@
+<div class="doc3 container-fluid mt-4">
+  <div class=" card card-info">
+    <div class="card-header bg-nodefony">
+      <strong>Simple Render html</strong>
+    </div>
+    <div class="card-body">
+      <ul class="nav nav-pills" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="routing-tab" data-toggle="tab" href="#routing" role="tab" aria-controls="routing" aria-selected="true">
+            routing.js
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="controler-tab" data-toggle="tab" href="#controler" role="tab" aria-controls="controler" aria-selected="false">
+            demoController.js
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="result-tab" data-toggle="tab" href="#result" role="tab" aria-controls="result" aria-selected="false">
+            Result
+          </a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="routing" role="tabpanel" aria-labelledby="routing-tab">
+          <p>
+            URL :
+            <code>
+              http://localhost:5151/doc/demo/html/nodefony
+            </code>
+          </p>
+          <pre><code class="hljs js">
+module.exports = {
+"documentation-demo": {
+  pattern: "/doc/demo/html/{name}",
+  defaults: {
+    controller: "documentation-bundle:demo:html",
+    name:	"nodefony"
+  }
+}
+};
+          </code></pre>
+        </div>
+
+        <div class="tab-pane fade" id="controler" role="tabpanel" aria-labelledby="controler-tab">
+          <pre><code class="hljs js">
+class demoController extends nodefony.Controller {
+
+constructor(container, context) {
+super(container, context);
+}
+
+/**
+*	@method htmlAction
+*/
+htmlAction(name) {
+return this.renderResponse('&lth1>' + name + '&lt/h1>');
+}
+}</code></pre>
+        </div>
+        <div class="tab-pane fade" id="result" role="tabpanel" aria-labelledby="result-tab">
+          {{render( controller( "documentation-bundle:demo:html", "nodefony") ) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

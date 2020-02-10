@@ -1,0 +1,202 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header bg-nodefony">{{ "begin" | trans() }}
+        <span class="badge badge-pill badge-secondary pull-right">
+          {{version}}
+        </span>
+      </div>
+      <div class="card-body" style="overflow: auto;">
+        <ul>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"installation"}) }}">
+              {{"installation" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"started"}) }}">
+              {{"begin" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"application"}) }}">
+              {{"Application" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"configurations"}) }}">
+              {{"configurations" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ path('documentation-section',{section:'running', version:version, bundle:bundle })}}">
+              {{"running" | trans() | capitalize() }}</a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"helloWord"}) }}">
+              {{"Hello Word" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc",{bundle:"framework"}) }}">
+              {{"Routing" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc",{bundle:"framework"}) }}">
+              {{"controller" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc",{bundle:"framework"}) }}">
+              {{"view" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"console"}) }}">
+              {{"console" | trans() | capitalize() }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header bg-nodefony">{{ "core" | trans() }}
+        <span class="badge badge-pill badge-secondary pull-right">
+          {{version}}
+        </span>
+      </div>
+      <div class="card-body" style="overflow: auto;">
+        <ul>
+          <li>
+            <a href="{{ url("nodefony-doc",{bundle:"http"}) }}">
+              {{"servers" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            Front Proxy NGINX
+          </li>
+          <li>
+            Production Mode PM2
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"sessions"}) }}">
+              {{"Nodefony Sessions" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"firewall"}) }}">
+              {{"Web Application Firewall" | trans() | capitalize() }} (WAF)
+            </a>
+          </li>
+          <li>
+            Orm</li>
+          <li>
+            <a href="{{ url("nodefony-doc",{bundle:"realTime"}) }}">
+              {{"realtime" | trans() | capitalize() }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="row mt-3">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header bg-nodefony">{{ "Bundles" | trans() }}
+      </div>
+      <div class="card-body" style="overflow: auto;">
+        <ul>
+          {% for myBundle in bundle %}
+            {% set bund = myBundle.name ~ "-doc" %}
+            <li>
+              <a href="{{ url("nodefony-doc",{bundle:myBundle.name}) }}">
+                <strong>{{myBundle.name}}</strong>
+                <span class="badge badge-pill badge-secondary pull-right">{{version}}</span></a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header bg-nodefony">{{ "usage" | trans() }}
+        <span class="badge badge-pill badge-secondary pull-right">
+          {{version}}
+        </span>
+      </div>
+      <div class="card-body" style="overflow: auto;">
+        <ul>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"library"}) }}">
+              {{"Use Nodefony as a Library" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"cli"}) }}">
+              {{"Command Line Interface" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"syslog"}) }}">
+              {{"Syslog" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"notifications"}) }}">
+              {{"notificationsCenter" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"fileClass"}) }}">
+              {{"fileClass" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"finder"}) }}">
+              {{"Finder" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"autoloader"}) }}">
+              {{"Autoloader" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"container"}) }}">
+              {{"Services Container" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"architectures"}) }}">
+              {{"Web Framework Architecture" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+              <a href="{{ url("nodefony-doc-index",{section:"kernel"}) }}">
+                {{"Web Framework Kernel" | trans() | capitalize() }}
+              </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"bundles"}) }}">
+              {{"Web Framework Bundles" | trans() | capitalize() }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url("nodefony-doc-index",{section:"context"}) }}">
+              {{"Web Framework Nodefony context" | trans() | capitalize() }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

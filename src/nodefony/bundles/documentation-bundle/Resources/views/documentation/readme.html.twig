@@ -1,4 +1,4 @@
-{% extends '../base.html.twig' %}
+{% extends './base.html.twig' %}
 {{trans_default_domain("doc")}}
 
 {% block body %}
@@ -8,7 +8,7 @@
 
   <div class="container-fluid">
     <div class="row flex-xl-nowrap">
-      {% include './navbar.html.twig' %}
+      {% include './navbar.html.twig' with {'route': nodefony.route} %}
       <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" style="top: 5rem;">
         {{readme}}
       </main>

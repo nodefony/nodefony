@@ -18,7 +18,7 @@ class documentationController extends nodefony.Controller {
    */
   notesAction() {
     this.hideDebugBar();
-    return this.render("documentation:slides/notes:notes.html.twig");
+    return this.render("documentation:documentation/slides/notes:notes.html.twig");
   }
 
   /**
@@ -29,16 +29,16 @@ class documentationController extends nodefony.Controller {
    *      defaults={"bundle" = "nodefony"})
    *
    */
-  slidesAction(bundle){
+  slidesAction(bundle) {
     this.hideDebugBar();
-    let readme = null ;
-    if ( bundle === "nodefony"){
-      readme = path.resolve(this.kernel.rootDir,"README.md") ;
-      return this.render("documentation:slides:index.html.twig", {
+    let readme = null;
+    if (bundle === "nodefony") {
+      readme = path.resolve(this.kernel.rootDir, "README.md");
+      return this.render("documentation:documentation/slides:index.html.twig", {
         title: "README",
-        readme:this.htmlMdParser(new nodefony.fileClass(readme).content())
+        readme: this.htmlMdParser(new nodefony.fileClass(readme).content())
       });
-    }else{
+    } else {
       return this.forward(`${bundle}:documentation:slides`);
     }
   }
@@ -59,13 +59,13 @@ class documentationController extends nodefony.Controller {
    *        name="nodefony-doc",
    *        defaults={"bundle" = "nodefony"})
    */
-  indexAction(bundle){
-    if ( bundle === "nodefony"){
+  indexAction(bundle) {
+    if (bundle === "nodefony") {
       return this.render(`documentation:documentation:index.html.twig`, {
         title: bundle,
         bundle: this.kernel.bundles
       });
-    }else{
+    } else {
       return this.forward(`${bundle}:documentation:index`);
     }
   }
@@ -78,22 +78,35 @@ class documentationController extends nodefony.Controller {
    *      defaults={"bundle" = "nodefony"})
    *
    */
-  readmeAction(bundle){
-    let readme = null ;
-    if ( bundle === "nodefony"){
-      readme = path.resolve(this.kernel.rootDir,"README.md") ;
-    }else{
-      if ( this.kernel.bundles[bundle] ){
-        readme = path.resolve(this.kernel.bundles[bundle].path, "README.md") ;
+  readmeAction(bundle) {
+    let readme = null;
+    if (bundle === "nodefony") {
+      readme = path.resolve(this.kernel.rootDir, "README.md");
+    } else {
+      if (this.kernel.bundles[bundle]) {
+        readme = path.resolve(this.kernel.bundles[bundle].path, "README.md");
       }
     }
     return this.render("documentation:documentation:readme.html.twig", {
       title: "README",
-      readme:this.htmlMdParser(new nodefony.fileClass(readme).content(),{
+      readme: this.htmlMdParser(new nodefony.fileClass(readme).content(), {
         linkify: true,
         typographer: true
       })
     });
+  }
+
+  /**
+   *    @Method ({"GET"})
+   *    @Route ("/nodefony/{section}/{subsection}",
+   *        defaults={"subsection" = ""},
+   *        name="nodefony-doc-index")
+   */
+  nodefonyAction(section, subsection) {
+    if (subsection)  {
+      return this.render(`documentation:nodefony/${section}/${subsection}:index.html.twig`, {});
+    }
+    return this.render(`documentation:nodefony/${section}:index.html.twig`, {});
   }
 
   /**

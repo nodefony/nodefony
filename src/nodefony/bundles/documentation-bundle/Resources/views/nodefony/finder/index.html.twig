@@ -1,0 +1,83 @@
+{% extends '../base.html.twig' %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+      {% include '../../documentation/navbar.html.twig' with {
+        'route' : nodefony.route
+      } %}
+      <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" style="top: 5rem;">
+
+        <h1> Nodefony Finder</h1>
+        <hr>
+
+        <div class="alert alert-info" role="alert">
+          <strong>
+            Class Finder  to find files in file system.</br>
+          </strong>
+        </div>
+
+        <h2>Finder Create instance : </h2>
+
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+
+        const nodefony = require("nodefony");
+
+        const finder = new nodefony.finder();
+
+        console.log(finder);
+        /*
+        Finder {
+          path: [],
+          errorParse: [],
+          settings:
+           { path: null,
+             sync: true,
+             recurse: true,
+             depth: -1,
+             seeHidden: false,
+             match: null,
+             exclude: null,
+             followSymLink: false,
+             json: false }
+        }
+        */
+        finder.in(path.resolve("node_modules"));
+
+        console.log(finder);
+        /*
+        Finder {
+          path:
+           [ File {
+               stats: [Stats],
+               type: 'Directory',
+               path: '/Users/cci/repository/nodefony-core/node_modules',
+               parse: [Object],
+               name: 'node_modules',
+               ext: '',
+               shortName: 'node_modules',
+               dirName: '/Users/cci/repository/nodefony-core',
+               match: null } ],
+          errorParse: [],
+          settings:
+           { path: null,
+             sync: true,
+             recurse: true,
+             depth: -1,
+             seeHidden: false,
+             match: null,
+             exclude: null,
+             followSymLink: false,
+             json: false },
+          tree: false,
+          wrapper: [Function: File],
+          typePath: 'string'
+        }
+        */
+        </code></pre>
+
+
+      </main>
+    </div>
+  </div>
+{% endblock %}

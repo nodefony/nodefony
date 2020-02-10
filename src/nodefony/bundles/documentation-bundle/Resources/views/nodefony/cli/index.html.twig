@@ -1,0 +1,810 @@
+{% extends '../base.html.twig' %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+      {% include '../../documentation/navbar.html.twig' with {
+        'route' : nodefony.route
+      } %}
+      <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" style="top: 5rem;">
+
+        <h1>Command Line Interface</h1>
+
+        <h2 > You can see HERE :</h2>
+
+        <p>
+        <ul>
+          <li><a href="#Create">Create Simple cli</a></li>
+          <li><a href="#options"> Cli Usage </a>
+            <ul>
+              <li><a href="#options">Options</a></li>
+              <li><a href="#idle">Idle</a></li>
+              <li><a href="#banner">Show Banner and Logger</a></li>
+              <li><a href="#start">Start Events</a></li>
+              <li><a href="#signals">Signals Events</a></li>
+              <li><a href="#resize">Resize Events</a></li>
+              <li><a href="#table">Log with Table component</a></li>
+              <li><a href="#spinner">Log with Spinner component</a></li>
+            </ul>
+          </li>
+          <li><a href="#commander"> Command line parser (commander)</a></li>
+          <li><a href="#prompt"> Use interactive command line  (Prompt)</a></li>
+        </ul>
+        </p>
+
+
+        <h2 name="Create" id="Create">
+          Create Simple cli  (command-line interface)
+        </h2>
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+
+        const nodefony = require("nodefony");
+
+        const project = new nodefony.cli("project", {
+          onStart: (cli) => {
+            cli.log("start");
+          }
+        });
+        </code></pre>
+        <pre><code class="hljs console">
+                                                 _                 _
+                        _ __    _ __    ___     (_)   ___    ___  | |_
+                       | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+                       | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+                       | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+                       |_|                    |__/
+
+
+           Wed Apr 03 2019 21:43:11 INFO project : start
+        $
+        </code></pre>
+
+        <h2 name="options" id="options">
+          Cli Usage
+        </h2>
+        <h3> Options </h3>
+        <pre><code class="hljs javascript">
+          // usage  new nodefony.cli(name, options)
+
+          const defaultOptions = {
+            processName: name,    // Name of processus system
+            autostart: true,        // Auto event onStart
+            asciify: true,          // Display asciify name
+            clear: true,            // Clear console before onStart
+            color: clc.blue,        // Color asciify name
+            prompt: "default",      // Tools for interactive command line (inquirer) "default" || "rxjs"
+            commander: true,        // Tools for command line arguments (commander)
+            signals: true,          // Active event signals
+            autoLogger: true,       // Activate logger events by default
+            resize: false,          // Active event resize
+            version: null,          // Set cli version
+            warning: false,         // Active process.on('warning')
+            pid: false,             // Add pid in cli class
+            promiseRejection: true  // Active  process.on('rejectionHandled') and process.on('unhandledRejection')
+          };
+        </code></pre>
+
+        <h3 name="idle" id="idle"> Idle </h3>
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+        const nodefony = require("nodefony");
+
+        const project = new nodefony.cli("project", {
+          onStart: (cli) => {
+            cli.idle();
+            cli.log("start");
+          },
+        });
+        </code></pre>
+
+        <h3 name="banner" id="banner"> Show Banner and Logger </h3>
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+        const nodefony = require("nodefony");
+
+        const project = new nodefony.cli("project", {
+          version: nodefony.version,
+          onStart: (cli) => {
+            cli.idle();
+            cli.showBanner();
+            cli.log("start");
+            cli.log("start", "WARNING");
+            cli.log("start", "ERROR");
+            cli.log("start", "DEBUG");
+            cli.log("start", "NOTICE", "TERMINAL");
+          }
+        });
+        </code></pre>
+        <pre><code class="hljs console" >
+                                               _                 _
+                      _ __    _ __    ___     (_)   ___    ___  | |_
+                     | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+                     | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+                     | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+                     |_|                    |__/
+
+                  Version : 4.3.1 Platform : darwin Process : project PID : 82305
+
+
+         Thu Apr 04 2019 11:24:28 INFO project : start
+         Thu Apr 04 2019 11:24:28 WARNING project : start
+         Thu Apr 04 2019 11:24:28 ERROR project : start
+         Thu Apr 04 2019 11:24:28 DEBUG project : start
+         Thu Apr 04 2019 11:24:28 NOTICE TERMINAL : start
+         </code></pre>
+
+        <h3> Events start </h3>
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+        const nodefony = require("nodefony");
+
+        // with options
+        const project = new nodefony.cli("project", {
+          onStart: (cli) => {
+            cli.idle();
+            cli.log("start");
+          },
+        });
+
+        // without options start promise
+        const project = new nodefony.cli("project");
+        project.start()
+          .then((cli) => {
+            cli.idle();
+            cli.log("start");
+          });
+
+        </code></pre>
+        <pre><code class="hljs console">
+                                               _                 _
+                      _ __    _ __    ___     (_)   ___    ___  | |_
+                     | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+                     | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+                     | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+                     |_|                    |__/
+
+         Thu Apr 04 2019 00:46:16 INFO project : start
+
+        </code></pre>
+
+
+        <h3 name="signals" id="signals"> Signals</h3>
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+        const nodefony = require("nodefony");
+
+        const project = new nodefony.cli("project", {
+          signals: true,
+          onStart: (cli) => {
+            cli.idle();
+            cli.log("start");
+          },
+          onSignal: (sig, cli) => {
+            // you can trap here SIGINT SIGTERM SIGHUP SIGQUIT
+            console.log(sig);
+          }
+        });
+        </code></pre>
+        <pre><code class="hljs console" >
+                                               _                 _
+                      _ __    _ __    ___     (_)   ___    ___  | |_
+                     | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+                     | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+                     | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+                     |_|                    |__/
+
+        &ltctrl-c&gt
+         Thu Apr 04 2019 11:17:11 CRITIC project : SIGINT
+        SIGINT
+        </code></pre>
+
+        <h3> Event TERMINAL resize </h3>
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+        const nodefony = require("nodefony");
+
+        const project = new nodefony.cli("project", {
+          resize: true,
+          onStart: (cli) => {
+            cli.idle();
+            cli.log("start");
+          },
+          onResize: (columns, rows, cli) => {
+            // call when you resize your TERMINAL
+            cli.log(`columns : ${columns}  rows : ${rows}`, 'DEBUG', "SIZE");
+          }
+        });
+        </code></pre>
+        <pre><code class="hljs console" >
+                                               _                 _
+                      _ __    _ __    ___     (_)   ___    ___  | |_
+                     | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+                     | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+                     | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+                     |_|                    |__/
+
+         Thu Apr 04 2019 11:17:04 INFO project : start
+         Thu Apr 04 2019 11:17:09 DEBUG SIZE : columns : 232  rows : 53
+         Thu Apr 04 2019 11:17:09 DEBUG SIZE : columns : 232  rows : 52
+         Thu Apr 04 2019 11:17:09 DEBUG SIZE : columns : 231  rows : 52
+         Thu Apr 04 2019 11:17:10 DEBUG SIZE : columns : 230  rows : 52
+         Thu Apr 04 2019 11:17:10 DEBUG SIZE : columns : 229  rows : 52
+         Thu Apr 04 2019 11:17:10 DEBUG SIZE : columns : 229  rows : 51
+        </code></pre>
+
+        <h3 name="table" id="table"> Display Table</h3>
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+        const nodefony = require("nodefony");
+
+        const project = new nodefony.cli("project", {
+          version: nodefony.version,
+        });
+
+        project.start()
+          .then((cli) => {
+            cli.idle();
+            cli.showBanner();
+            // show cli-table  https://github.com/Automattic/cli-table
+            // displayTable(data, options, enableSyslog)
+
+            cli.log("TABLE 1");
+            cli.displayTable([
+              ['First value', 'Second value', cli.clc.red("third value")]
+            ]);
+
+            cli.blankLine();
+
+            cli.log("TABLE 2");
+            cli.displayTable([
+              ['First value', 'Second value', cli.getEmoji()]
+            ], {}, true);
+
+            cli.blankLine();
+            cli.log("TABLE 3");
+            cli.displayTable([
+              ['First value', 'Second value', cli.clc.magenta("third value")]
+            ], {
+              head: ["Header 1", "Header 2", "Header 3"]
+            });
+
+            cli.terminate(0);
+          })
+          .catch(e => {
+            console.trace(e);
+            cli.terminate(1);
+          });
+
+        </code></pre>
+        <pre><code class="hljs console" >
+                                               _                 _
+                      _ __    _ __    ___     (_)   ___    ___  | |_
+                     | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+                     | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+                     | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+                     |_|                    |__/
+
+                  Version : 4.3.1 Platform : darwin Process : project PID : 84290
+
+        Thu Apr 04 2019 15:02:26 INFO project : TABLE 1
+        ┌─────────────┬──────────────┬─────────────┐
+        │ First value │ Second value │ third value │
+        └─────────────┴──────────────┴─────────────┘
+
+        Thu Apr 04 2019 15:02:26 INFO project : TABLE 2
+        Thu Apr 04 2019 15:02:26 INFO project :
+        ┌─────────────┬──────────────┬────┐
+        │ First value │ Second value │ 🤓 │
+        └─────────────┴──────────────┴────┘
+
+        Thu Apr 04 2019 15:07:42 INFO project : TABLE 3
+        ┌─────────────┬──────────────┬─────────────┐
+        │ Header 1    │ Header 2     │ Header 3    │
+        ├─────────────┼──────────────┼─────────────┤
+        │ First value │ Second value │ third value │
+        └─────────────┴──────────────┴─────────────┘
+        </code></pre>
+
+        <h3 name="spinner" id="spinner"> Spinner </h3>
+
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+        const project = new nodefony.cli("project", {
+          version: nodefony.version,
+        });
+        project.start()
+          .then((cli) => {
+            cli.idle();
+            cli.showBanner();
+
+            cli.logger("START SPINNER : " + cli.getEmoji("clapper"));
+            cli.startSpinner("MY CLI", ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷']);
+            cli.blankLine();
+
+            let interval = setInterval(() => {
+              cli.logger("MESSAGE : " + cli.getEmoji());
+            }, 500);
+
+            setTimeout(() => {
+              clearInterval(interval);
+              cli.stopSpinner();
+              cli.logger("STOP SPINNER : " + cli.getEmoji("clapper"));
+            }, 10000);
+          })
+          .catch(e => {
+            console.trace(e);
+          });
+        </code></pre>
+
+        <pre><code class="hljs console" >
+                                               _                 _
+                      _ __    _ __    ___     (_)   ___    ___  | |_
+                     | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+                     | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+                     | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+                     |_|                    |__/
+
+                  Version : 4.3.1 Platform : darwin Process : project PID : 85023
+
+
+         Thu Apr 04 2019 15:20:52 INFO project : START SPINNER : 🎬
+
+         ⣷  Thu Apr 04 2019 15:23:51 INFO project : MESSAGE : 🎭
+
+         Thu Apr 04 2019 15:21:02 INFO project : STOP SPINNER : 🎬
+
+        </code></pre>
+
+
+        <h2 name="commander" id="commander">Commander (Command line parser) </h2>
+
+        <h3> Create Helper </h3>
+
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+        const project = new nodefony.cli("project", {
+          version: nodefony.version,
+        });
+        project.start()
+          .then((cli) => {
+
+            cli.idle();
+            cli.showBanner();
+
+            // https://github.com/tj/commander.js
+            // usage
+            cli.commander.usage(`[options] <command1> [args...]`);
+
+            // custom help
+            cli.commander.on('--help', () => {
+              cli.blankLine();
+              console.log('Examples:');
+              console.log('  $ project create -name hello ');
+              console.log('  $ project -h');
+              cli.blankLine();
+            });
+
+            cli.parseCommand();
+
+
+          })
+          .catch(e => {
+            console.trace(e);
+          });
+        </code></pre>
+        <pre><code class="hljs console">$ project -h
+                                               _                 _
+                      _ __    _ __    ___     (_)   ___    ___  | |_
+                     | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+                     | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+                     | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+                     |_|                    |__/
+
+                  Version : 4.3.1 Platform : darwin Process : project PID : 86424
+
+        Usage: test [options] <command1> [args...]
+
+        Options:
+          -V, --version                output the version number
+          -h, --help                   output usage information
+
+        Examples:
+          project create -name hello
+          project -h
+        </code></pre>
+
+        <h3> Create Command </h3>
+
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+        const project = new nodefony.cli("project", {
+          version: nodefony.version,
+        });
+        project.start()
+          .then((cli) => {
+            cli.idle();
+            cli.showBanner();
+            cli.blankLine();
+            cli.commander.usage(`[options] <command1> [args...]`);
+
+            cli.setCommand('rm &ltdir&gt')
+              .option('-r, --recursive', 'Remove recursively')
+              .action(function(dir, cmd) {
+                console.log('remove ' + dir + (cmd.recursive ? ' recursively' : ''));
+              });
+
+            cli.setCommand('create <name>')
+              .description('Create something in project')
+              .alias('add')
+              .option('-d, --debug <env>', 'Environment', /^(dev|prod|preprod)$/i, 'dev')
+              .action((create, command) => {
+                cli.log(create, "INFO", "COMMAND ARGUMENTS");
+                cli.log(command.debug, "INFO", "COMMAND OPTIONS");
+              })
+              // custom command help
+              .on('--help', () => {
+                cli.blankLine();
+                console.log('Examples:');
+                console.log('  $ project create -name hello ');
+                console.log('  $ project create -name hello -d ');
+              });
+
+            // custom global help
+            cli.commander.on('--help', () => {
+              cli.blankLine();
+              console.log('Examples:');
+              console.log('  $ project create -name hello ');
+              console.log('  $ project -h');
+              cli.blankLine();
+            });
+
+            //cli.commander.arguments(`<cmd> [args...]`);
+            cli.parseCommand();
+          })
+          .catch(e => {
+            console.trace(e);
+          });
+        </code></pre>
+
+        <pre><code class="hljs console">
+        $ project -h
+                                               _                 _
+                      _ __    _ __    ___     (_)   ___    ___  | |_
+                     | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+                     | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+                     | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+                     |_|                    |__/
+
+                Version : 4.3.1   Platform : darwin   Process : project   Pid : 94629
+
+        Usage: test [options] &ltcommand1&gt [args...]
+
+        Options:
+        -V, --version                output the version number
+        -h, --help                   output usage information
+
+        Commands:
+        rm [options] &ltdir&gt
+        create|add [options] &ltname&gt  Create something in project
+
+        Examples:
+          project create -name hello
+          project -h
+
+
+        $ project create -h
+                                               _                 _
+                      _ __    _ __    ___     (_)   ___    ___  | |_
+                     | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+                     | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+                     | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+                     |_|                    |__/
+
+                Version : 4.3.1   Platform : darwin   Process : project   Pid : 94629
+
+
+        Usage: create|add [options] &ltname&gt
+
+        Create something in project
+
+        Options:
+          -d, --debug &ltenv&gt  Environment (default: "dev")
+          -h, --help         output usage information
+
+        Examples:
+          project create -name hello
+          project create -name hello -d
+
+
+        $ create something -d prod
+                                               _                 _
+                      _ __    _ __    ___     (_)   ___    ___  | |_
+                     | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+                     | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+                     | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+                     |_|                    |__/
+
+                Version : 4.3.1   Platform : darwin   Process : project   Pid : 96212
+
+        Fri Apr 05 2019 14:14:46 INFO COMMAND ARGUMENTS : something
+        Fri Apr 05 2019 14:14:46 INFO COMMAND OPTIONS : prod
+
+        </code></pre>
+
+
+
+
+
+
+        <p>
+          <h2 name="prompt" id="prompt"> Use interactive command line  (Prompt)</h2>
+        </p>
+        <pre><code class="hljs javascript">#!/usr/bin/env node
+        const project = new nodefony.cli("project", {
+          version: nodefony.version,
+        });
+        project.start()
+          .then( (cli) => {
+
+            return cli.prompt(questions)
+              .then(function(answers) {
+                cli.log('\nOrder receipt:');
+                cli.log(JSON.stringify(answers, null, '  '));
+              });
+
+          })
+          .catch(e => {
+            console.trace(e);
+          });
+        </code></pre>
+
+        <pre><code class="hljs console">
+                                               _                 _
+                      _ __    _ __    ___     (_)   ___    ___  | |_
+                     | '_ \  | '__|  / _ \    | |  / _ \  / __| | __|
+                     | |_) | | |    | (_) |   | | |  __/ | (__  | |_
+                     | .__/  |_|     \___/   _/ |  \___|  \___|  \__|
+                     |_|                    |__/
+
+        ? Is this for delivery? Yes
+        ? What's your phone number? 0132659887
+        ? What size do you need? Medium
+        ? How many do you need? 5
+        ? What about the toppings? All dressed
+        ? You also get a free 2L beverage Pepsi
+        ? Any comments on your purchase experience? Nope, all good!
+         Fri Apr 05 2019 17:15:09 INFO project :
+        Order receipt:
+         Fri Apr 05 2019 17:15:09 INFO project : {
+          "toBeDelivered": true,
+          "phone": "0132659887",
+          "size": "medium",
+          "quantity": 5,
+          "toppings": "alldressed",
+          "beverage": "Pepsi",
+          "comments": "Nope, all good!"
+        }
+        </code></pre>
+
+        <pre><code class="hljs javascript">// https://github.com/SBoudrias/Inquirer.js/tree/master/examples
+
+        const questions = [{
+            type: 'confirm',
+            name: 'toBeDelivered',
+            message: 'Is this for delivery?',
+            default: false
+          },
+          {
+            type: 'input',
+            name: 'phone',
+            message: 'What\'s your phone number?',
+            validate: function (value) {
+              let pass = value.match(/^([01]{1})?[-.\s]?\(?(\d{3})\)?[-.\s]?(\d{3})[-.\s]?(\d{4})\s?((?:#|ext\.?\s?|x\.?\s?){1}(?:\d+)?)?$/i);
+              if (pass) {
+                return true;
+              }
+
+              return 'Please enter a valid phone number';
+            }
+          },
+          {
+            type: 'list',
+            name: 'size',
+            message: 'What size do you need?',
+            choices: ['Large', 'Medium', 'Small'],
+            filter: function (val) {
+              return val.toLowerCase();
+            }
+          },
+          {
+            type: 'input',
+            name: 'quantity',
+            message: 'How many do you need?',
+            validate: function (value) {
+              let valid = !isNaN(parseFloat(value));
+              return valid || 'Please enter a number';
+            },
+            filter: Number
+          },
+          {
+            type: 'expand',
+            name: 'toppings',
+            message: 'What about the toppings?',
+            choices: [{
+                key: 'p',
+                name: 'Pepperoni and cheese',
+                value: 'PepperoniCheese'
+              },
+              {
+                key: 'a',
+                name: 'All dressed',
+                value: 'alldressed'
+              },
+              {
+                key: 'w',
+                name: 'Hawaiian',
+                value: 'hawaiian'
+              }
+            ]
+          },
+          {
+            type: 'rawlist',
+            name: 'beverage',
+            message: 'You also get a free 2L beverage',
+            choices: ['Pepsi', '7up', 'Coke']
+          },
+          {
+            type: 'input',
+            name: 'comments',
+            message: 'Any comments on your purchase experience?',
+            default: 'Nope, all good!'
+          },
+          {
+            type: 'list',
+            name: 'prize',
+            message: 'For leaving a comment, you get a freebie',
+            choices: ['cake', 'fries'],
+            when: function (answers) {
+              return answers.comments !== 'Nope, all good!';
+            }
+          }
+        ];
+
+        </code></pre>
+
+
+        <p></p>
+        <h2>
+          Avanced Use Nodefony cli
+        </h2>
+
+        <script src="https://gist.github.com/ccamensuli/7d42aeb022406bd9527b562d5e181b50.js"></script>
+
+        <pre><code class="hljs console" >
+         __  __  __   __     ____   _       ___
+        |  \/  | \ \ / /    / ___| | |     |_ _|
+        | |\/| |  \ V /    | |     | |      | |
+        | |  | |   | |     | |___  | |___   | |
+        |_|  |_|   |_|      \____| |_____| |___|
+
+
+        Wed Mar 27 2019 18:06:52 INFO MY CLI : ON START
+        Wed Mar 27 2019 18:06:52 INFO MY CLI : START simpleLogger : 🎬
+        Wed Mar 27 2019 18:06:52 INFO MY CLI : Emoji : 🌜
+
+        Wed Mar 27 2019 18:06:52 DEBUG MY CLI : Emoji : 🥫
+
+        Wed Mar 27 2019 18:06:52 ERROR MY CLI : Emoji : 🌡️
+
+        Wed Mar 27 2019 18:06:52 WARNING MY CLI : Emoji : 🚦
+        Wed Mar 27 2019 18:06:52 INFO MY CLI : END simpleLogger : 🏁
+        Wed Mar 27 2019 18:06:52 INFO MY CLI : START SPINNER : 🎬
+
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : END SPINNER : 🏁
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : START TABLE : 🎬
+        ┌──────────┬──────────┬──────────┬──────────┐
+        │ COLUMN 1 │ COLUMN 2 │ COLUMN 3 │ COLUMN 4 │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ CRITIC   │ 63       │ 185      │ 238      │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ NOTICE   │ 26       │ 110      │ 169      │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ ERROR    │ 39       │ 185      │ 132      │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ CRITIC   │ 1        │ 53       │ 234      │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ DEBUG    │ 43       │ 27       │ 18       │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ DEBUG    │ 91       │ 10       │ 132      │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ INFO     │ 21       │ 11       │ 18       │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ DEBUG    │ 49       │ 142      │ 282      │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ ERROR    │ 3        │ 13       │ 284      │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ CRITIC   │ 89       │ 31       │ 97       │
+        └──────────┴──────────┴──────────┴──────────┘
+        ┌──────────┬──────────┬──────────┬──────────┐
+        │ COLUMN 1 │ COLUMN 2 │ COLUMN 3 │ COLUMN 4 │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ WARNING  │ 97       │ 12       │ 191      │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ ALERT    │ 38       │ 165      │ 45       │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ ALERT    │ 41       │ 144      │ 100      │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ INFO     │ 17       │ 116      │ 269      │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ NOTICE   │ 24       │ 151      │ 7        │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ CRITIC   │ 72       │ 70       │ 239      │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ CRITIC   │ 16       │ 163      │ 225      │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ NOTICE   │ 44       │ 48       │ 26       │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ DEBUG    │ 85       │ 146      │ 261      │
+        ├──────────┼──────────┼──────────┼──────────┤
+        │ ALERT    │ 6        │ 179      │ 75       │
+        └──────────┴──────────┴──────────┴──────────┘
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : END TABLE : 🏁
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : START PROGRESS : 🎬
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [-------------------------------------------------] 2%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [|------------------------------------------------] 4%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [||-----------------------------------------------] 6%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||----------------------------------------------] 8%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||---------------------------------------------] 10%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||--------------------------------------------] 12%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||------------------------------------------] 15%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||------------------------------------------] 16%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||-----------------------------------------] 18%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||||----------------------------------------] 20%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||---------------------------------------] 22%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||||||--------------------------------------] 24%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||||-------------------------------------] 26%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||||||-----------------------------------] 29%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||||||-----------------------------------] 30%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||||||||||----------------------------------] 32%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||||||||---------------------------------] 34%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [|||||||||||||||||--------------------------------] 36%
+        Wed Mar 27 2019 18:06:57 INFO MY CLI : [||||||||||||||||||-------------------------------] 38%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||------------------------------] 40%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||-----------------------------] 42%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||----------------------------] 44%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||---------------------------] 46%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||--------------------------] 48%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||-------------------------] 50%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||------------------------] 52%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||-----------------------] 54%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||---------------------] 57%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||---------------------] 58%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||--------------------] 60%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||-------------------] 62%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||------------------] 64%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||-----------------] 66%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||----------------] 68%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||---------------] 70%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||--------------] 72%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||-------------] 74%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||------------] 76%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||-----------] 78%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||----------] 80%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||||---------] 82%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||||--------] 84%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||||||-------] 86%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||||||------] 88%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||||||||-----] 90%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||||||||----] 92%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||||||||||---] 94%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||||||||||--] 96%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [||||||||||||||||||||||||||||||||||||||||||||||||-] 98%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : [|||||||||||||||||||||||||||||||||||||||||||||||||] 100%
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : END PROGRESS : 🏁
+        Wed Mar 27 2019 18:06:58 INFO MY CLI : START PROGRESS 2 : 🎬
+        Wed Mar 27 2019 18:07:00 INFO MY CLI : MY PROGRESS [|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||] 100%
+        Wed Mar 27 2019 18:07:00 INFO MY CLI : END PROGRESS 2 : 🏁
+        Wed Mar 27 2019 18:07:00 INFO MY CLI : START Sparkline  : 🎬
+        Wed Mar 27 2019 18:07:00 INFO MY CLI : ▅▅▂▄▅▄█▅▄▇▆▇▅▅  12 reqs/sec (23 reqs/sec)
+        Wed Mar 27 2019 18:07:00 INFO MY CLI : END Sparkline  : 🏁
+        Wed Mar 27 2019 18:07:00 INFO MY CLI : START Sparkline  : 🎬
+        Wed Mar 27 2019 18:07:04 INFO MY CLI : ▃▆▆▇▇▄▅▇█▆▂▅▇▅▇▄██▆▂▂▅▅▆▄▃▅▇▆▆▇█▄▅▇▂▆▄▃▃▆██▃▄▂█▂▂▃▂▆▂█▇▄▇▆▄█▅▆▆▂▄▃█▆▄▃▆▅▆▂▄▃▄▂▂▄▆▂█▃▃▂█▆█▂▄▃██▃▄█▄▇  169 reqs/sec (200 reqs/sec)
+        Wed Mar 27 2019 18:07:04 INFO MY CLI : END Sparkline2 : 🏁
+        Wed Mar 27 2019 18:07:04 INFO MY CLI : TERMINATE MY CLI : 🏁
+
+        </code></pre>        
+      </main>
+    </div>
+  </div>
+{% endblock %}

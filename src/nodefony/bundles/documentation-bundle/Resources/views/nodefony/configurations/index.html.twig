@@ -1,0 +1,178 @@
+{% extends '../base.html.twig' %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+      {% include '../../documentation/navbar.html.twig' with {
+        'route' : nodefony.route
+      } %}
+      <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" style="top: 5rem;">
+
+				<div class="page-header">
+					<h1>NODEFONY CONFIGURATIONS </h1>
+					<div class="alert alert-info" role="alert">
+						<h2>Nodefony configurations Files : </h2>
+						<br>
+							Nodefony manage differents config files that you can find throughout your development.
+							<br>
+							Manage framework configuration <code>./config/config.js</code>
+							<br>
+							Manage Application configuration in app bundle   <code>./app/config/config.js</code>
+							<br>
+							Manage bundle configuration <code>./src/bundles/my-bundle/Ressources/config/config.js</code>
+							<hr>
+
+							<h4> Framework Configuration  : <code>./config/config.js</code>
+                <a href="{{ url("nodefony-doc-index",{section:"configurations",subsection:"framework"}) }}">
+                  <button type="button" class="btn btn-primary">{{"Framework Configuration" | trans() | capitalize() }}</button>
+                </a>
+							</h4>
+
+							<h4> Application Configuration  : <code>./app/config/config.js</code>
+                <a href="{{ url("nodefony-doc-index",{section:"configurations",subsection:"application"}) }}">
+                  <button type="button" class="btn btn-primary">{{"Application Configuration" | trans() | capitalize() }}</button>
+                </a>
+							</h4>
+
+							<h4> Bundle Configuration  : <code>./src/bundles/my-bundle/Resources/config/config.js</code>
+                <a href="{{ url("nodefony-doc-index",{section:"configurations",subsection:"bundle"}) }}">
+                  <button type="button" class="btn btn-primary">{{"Bundle Configuration" | trans() | capitalize() }}</button>
+                </a>
+							</h4>
+
+							<h4> Routing Configuration  : <code>routing.js</code>
+								<a href="{{ path('documentation-section',{section:'routing', version:'Default', bundle:'framework' })}}">
+									<button type="button" class="btn btn-primary">Routing</button>
+								</a>
+							</h4>
+							<h4> Services Configuration  : <code>services.js</code>
+                <a href="{{ url("nodefony-doc-index",{section:"services"}) }}">
+                  <button type="button" class="btn btn-primary">{{"Services Configuration" | trans() | capitalize() }}</button>
+                </a>
+							</h4>
+							<h4> Firewall Configuration  : <code>security.js</code>
+                <a href="{{ url("nodefony-doc",{bundle:"security"}) }}">
+                  <button type="button" class="btn btn-primary">{{"Firewall" | trans() | capitalize() }}</button>
+                </a>
+							</h4>
+							<h4> Webpack Configuration  :
+                <a href="{{ url("nodefony-doc-index",{section:"configurations", subsection:"webpack"}) }}">
+                  <button type="button" class="btn btn-primary">{{"Webpack" | trans() | capitalize() }}</button>
+                </a>
+							</h4>
+							<h4>
+								<ul>
+									<li><code>webpack.config.js</code> </li>
+									<li><code>webpack/webpack.dev.config.js</code> </li>
+									<li><code>webpack/webpack.prod.config.js </code></li>
+								</ul>
+							</h4>
+					</div>
+					</br>
+
+					<div class="doc3">
+						<h2>Nodefony Watchers :</h2>
+						<p>
+						In developement mode The bundle generation engine build bundle config with  node.js watcher configuration
+
+						  is very usefull to auto-reload files as controllers , views , routing , translations
+
+						without having to reboot the server.
+
+						Bundle manage  WATCHERS in  config.js
+						</p>
+
+						<pre><code class="hljs javascript" >module.exports = {
+
+/**
+ *    WATCHERS
+ *
+ *  watchers Listen to changes, deletion, renaming of files and directories
+ *  of different components
+ *
+ *  For watch all components
+ *      watch:                    true
+ *  or
+ *      watch:{
+ *        controller:             true
+ *        config:                 true        // only  routing.js
+ *        views:                  true
+ *        translations:           true
+ *        webpack:                true
+ *      }
+ *
+ */
+watch: true
+}
+							</code></pre>
+					<div class="alert alert-danger" role="alert">
+						Nodefony kernel Don't reload config.js services.js security.js files,You must restart nodefony  !!!
+					</div>
+
+				</div>
+
+
+				<div class="doc2">
+					<h2> How to use Configuration  :  </h2>
+
+							There are different ways to access these configuration variables
+							<ul>
+								</li>
+								<li>In controller By Kernel Service Container <code> this.getParameters("bundles.App") </code>
+								<pre><code class="hljs javascript" >class defaultController extends nodefony.Controller {
+
+  constructor(container, context){
+    super(container, context);
+  };
+
+  indexAction (version){
+  	// GET config bundle App
+    <strong>let bundleAppSettings = this.getParameters("bundles.App") ;</strong>
+
+  	// GET config bundle http
+    <strong>let bundleHttpSettings = this.getParameters("bundles.http") ;</strong>
+    return this.renderJson(bundleAppSettings);
+  };
+};</code></pre>
+								</li>
+								<li>In Kernel you can find  <code> this.settings </code> with framework configuration
+								<pre><code class="hljs javascript" >indexAction (version){
+                  // GET kernel service and get config
+  <strong>let kernelGlobalSettings = this.kernel.settings ;</strong>
+
+  return this.renderJson(kernelGlobalSettings);
+}</code></pre>
+								</li>
+								<li>In Bundle you can find <code> this.settings </code> with bundle configuration
+								<pre><code class="hljs javascript">indexAction (version){
+
+                  // GET kernel service , get demo bundle  config
+
+  <strong>let demoGlobalSettings = this.kernel.getBundle("demo").settings ;</strong>
+
+  return this.renderJson(demoGlobalSettings);
+}</code></pre>
+								<li>Everywhere you can find config variables by Kernel Service Container
+									<pre><code class="hljs javascript" >class myService extends nodefony.Service {
+
+  constructor (kernel)
+
+  	super("myService", kernel.container, kernel.notificationsCenter );
+
+  };
+
+  myFunction (){
+    let kernelSettings = this.kernel.settings ;
+    let appSettings = this.getParameters("bundles.App") ;
+  };
+};
+									</code></pre>
+							</li>
+					</ul>
+				</div>
+
+
+      </main>
+    </div>
+  </div>
+{% endblock %}
