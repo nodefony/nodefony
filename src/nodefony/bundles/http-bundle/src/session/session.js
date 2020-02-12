@@ -180,17 +180,18 @@ nodefony.register("Session", function () {
       }
     }
 
-    checkChangeContext(contextSession) {
+    async checkChangeContext(contextSession) {
       // change context session
       if (contextSession && this.contextSession !== contextSession) {
         this.manager.logger(`SESSION CONTEXT CHANGE : ${this.contextSession} ==> ${contextSession}`);
         switch (this.strategy) {
         case "migrate":
-          return this.storage.start(this.id, this.contextSession).then((result) => {
+          return this.storage.start(this.id, this.contextSession)
+          .then(async (result) => {
             this.deSerialize(result);
             if (!this.isValidSession(result, this.context)) {
               this.manager.logger("INVALID SESSION ==> " + this.name + " : " + this.id, "WARNING");
-              this.destroy();
+              await this.destroy();
               this.contextSession = contextSession;
               return this.create(this.lifetime, null);
             }
@@ -204,7 +205,7 @@ nodefony.register("Session", function () {
           });
         case "invalidate":
           this.manager.logger("STRATEGY INVALIDATE SESSION ==> " + this.name + " : " + this.id, "DEBUG");
-          this.destroy();
+          await this.destroy();
           this.contextSession = contextSession;
           return new Promise((resolve, reject) => {
             try {
@@ -224,28 +225,28 @@ nodefony.register("Session", function () {
         }
       }
       return this.storage.start(this.id, this.contextSession)
-        .then((result) => {
+        .then(async (result) => {
           if (result && Object.keys(result).length) {
             this.deSerialize(result);
             if (!this.isValidSession(result, this.context)) {
               this.manager.logger("SESSION ==> " + this.name + " : " + this.id + "  session invalid ", "ERROR");
-              this.invalidate();
+              await this.invalidate();
             }
           } else {
             if (this.settings.use_strict_mode) {
               if (!this.strategyNone) {
                 this.manager.logger("SESSION ==> " + this.name + " : " + this.id + " use_strict_mode ", "ERROR");
-                this.invalidate();
+                await this.invalidate();
               }
             }
           }
           this.status = "active";
           return this;
-        }).catch((error) => {
+        }).catch(async (error) => {
           if (error) {
             this.manager.logger("SESSION ==> " + this.name + " : " + this.id + " " + error, "ERROR");
             if (!this.strategyNone) {
-              this.invalidate();
+              await this.invalidate();
             }
             throw error;
           }
@@ -421,22 +422,22 @@ nodefony.register("Session", function () {
       this.clearFlashBags();
     }
 
-    invalidate(lifetime, id) {
+    async invalidate(lifetime, id) {
       this.manager.logger("INVALIDATE SESSION ==>" + this.name + " : " + this.id, "DEBUG");
       if (!lifetime) {
         lifetime = this.lifetime;
       }
-      this.destroy();
+      await this.destroy();
       return this.create(lifetime, id);
     }
 
-    migrate(destroy, lifetime, id) {
+    async migrate(destroy, lifetime, id) {
       this.manager.logger("MIGRATE SESSION ==>" + this.name + " : " + this.id, "DEBUG");
       if (!lifetime) {
         lifetime = this.lifetime;
       }
       if (destroy) {
-        this.remove(destroy);
+        await this.remove(destroy);
       }
       return this.create(lifetime, id);
     }

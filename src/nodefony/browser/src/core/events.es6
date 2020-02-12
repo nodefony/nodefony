@@ -149,12 +149,12 @@ module.exports = function (nodefony) {
     }
   }
 
-  nodefony.notificationsCenter = {
+  /*nodefony.notificationsCenter = {
     notification: Notification,
     create: function (settings, context) {
       return new Notification(settings, context);
     }
-  };
+  };*/
 
   return Notification;
 };

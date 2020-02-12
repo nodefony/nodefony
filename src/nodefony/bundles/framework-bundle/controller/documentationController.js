@@ -31,6 +31,20 @@ class documentationController extends nodefony.Controller {
     });
   }
 
+  /**
+   *    @Method ({"GET"})
+   *    @Route ("/{section}/{subsection}",
+   *        defaults={"subsection" = ""},
+   *        name="framework-doc")
+   */
+  sectionAction(section, subsection){
+    if ( subsection ){
+      return this.render(`framework:documentation/${section}/${subsection}:index.html.twig`, {});
+    }
+    return this.render(`framework:documentation/${section}:index.html.twig`, {});
+  }
+
+
 }
 
 module.exports = documentationController;

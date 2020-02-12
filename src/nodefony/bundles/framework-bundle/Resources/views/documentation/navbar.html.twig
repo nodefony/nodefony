@@ -2,6 +2,12 @@
 
   <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
     <a class="nav-link"  href="{{url("nodefony-doc")}}" role="tab" aria-selected="true">Home</a>
+    <a class="nav-link"  href="{{url("nodefony-doc",{bundle:'framework'})}}" role="tab" aria-selected="true">Framework</a>
+    <a class="nav-link"  href="{{url("framework-doc",{section:"controller"})}}">Controller</a>
+    <a class="nav-link"  href="{{url("framework-doc",{section:"controller", subsection:"examples"})}}">Examples</a>
+    <a class="nav-link"  href="{{url("framework-doc",{section:"routing"})}}">Routing</a>
+    <a class="nav-link"  href="{{url("framework-doc",{section:"views"})}}">Views</a>
+    <a class="nav-link"  href="{{url("framework-doc",{section:"transaltion"})}}">Transaltion</a>
     <a class="nav-link"  href="{{url("nodefony-slides",{bundle:'framework'})}}" role="tab" aria-selected="true">Presentation</a>
   </div>
 

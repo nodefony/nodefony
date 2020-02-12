@@ -12,7 +12,7 @@ module.exports = function (nodefony) {
   let defaultOptions = {};
 
 
-  const Service = class Service {
+  class Service {
 
     constructor(name, container, notificationsCenter, options) {
 
@@ -36,12 +36,12 @@ module.exports = function (nodefony) {
         this.settingsSyslog = nodefony.extend({}, settingsSyslog, {
           moduleName: this.name
         }, options.syslog || {});
-        this.syslog = new nodefony.syslog(this.settingsSyslog);
+        this.syslog = new nodefony.Syslog(this.settingsSyslog);
         this.set("syslog", this.syslog);
       } else {
         this.settingsSyslog = this.syslog.settings;
       }
-      if (notificationsCenter instanceof nodefony.notificationsCenter.notification) {
+      if (notificationsCenter instanceof nodefony.Events) {
         this.notificationsCenter = notificationsCenter;
       } else {
         if (notificationsCenter) {
@@ -49,7 +49,7 @@ module.exports = function (nodefony) {
         }
         this.notificationsCenter = this.container.get("notificationsCenter");
         if (!this.notificationsCenter) {
-          this.notificationsCenter = nodefony.notificationsCenter.create(options, this);
+          this.notificationsCenter = new nodefony.Events(options, this);
           if (!this.kernel) {
             this.set("notificationsCenter", this.notificationsCenter);
           } else {
@@ -203,8 +203,7 @@ module.exports = function (nodefony) {
     has() {
       return this.container.has.apply(this.container, arguments);
     }
-  };
+  }
 
-  nodefony.Service = Service;
   return Service;
 };

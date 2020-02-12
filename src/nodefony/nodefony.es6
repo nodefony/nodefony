@@ -157,10 +157,6 @@ class Nodefony {
     return Object.prototype.toString.call(it) === '[object Array]';
   }
 
-  isRegExp(it) {
-    return this.isRegExp(it);
-  }
-
   isError(it) {
     return nodefony.Error.isError(it);
   }

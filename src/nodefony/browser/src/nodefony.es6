@@ -9,12 +9,10 @@ class Nodefony {
     this.version = version;
     this.environment = env;
     this.api = api;
-    window.addEventListener("load", () => {
+    this.isRegExp = require('lodash.isregexp');
+    /*window.addEventListener("load", () => {
       this.load();
-    }, false);
-  }
-
-  load() {
+    }, false);*/
   }
 
   basename(path) {

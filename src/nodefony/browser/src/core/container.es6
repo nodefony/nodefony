@@ -249,7 +249,5 @@ module.exports = function (nodefony) {
       }
     }
   }
-
-  nodefony.Container = Container;
   return Container;
 };

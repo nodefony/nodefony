@@ -3,13 +3,13 @@
  *
  *
  */
-module.exports = function(stage) {
+module.exports = function(nodefony) {
 
   'use strict';
   /*
    * default settings
    * <pre>
-   *   moduleName:      "stage"
+   *   moduleName:      "nodefony"
    *   maxStack:        100
    *   rateLimit:       false
    *   burstLimit:      3
@@ -80,7 +80,7 @@ module.exports = function(stage) {
       /* severityName */
       this.severityName = sysLogSeverity[this.severity];
       /* typePayload */
-      this.typePayload = stage.typeOf(pci);
+      this.typePayload = nodefony.typeOf(pci);
       /*
        * protocole controle information
        * @type Void
@@ -216,7 +216,7 @@ module.exports = function(stage) {
 
   const checkFormatSeverity = function(ele) {
     let res = false;
-    switch (stage.typeOf(ele)) {
+    switch (nodefony.typeOf(ele)) {
       case "string":
         res = ele.split(/,| /);
         break;
@@ -224,14 +224,14 @@ module.exports = function(stage) {
         res = ele;
         break;
       default:
-        throw new Error("checkFormatSeverity bad format " + stage.typeOf(ele) + " : " + ele);
+        throw new Error("checkFormatSeverity bad format " + nodefony.typeOf(ele) + " : " + ele);
     }
     return res;
   };
 
   const checkFormatDate = function(ele) {
     let res = false;
-    switch (stage.typeOf(ele)) {
+    switch (nodefony.typeOf(ele)) {
       case "date":
         res = ele.getTime();
         break;
@@ -239,14 +239,14 @@ module.exports = function(stage) {
         res = new Date(ele);
         break;
       default:
-        throw new Error("checkFormatDate bad format " + stage.typeOf(ele) + " : " + ele);
+        throw new Error("checkFormatDate bad format " + nodefony.typeOf(ele) + " : " + ele);
     }
     return res;
   };
 
   const checkFormatMsgId = function(ele) {
     let res = false;
-    switch (stage.typeOf(ele)) {
+    switch (nodefony.typeOf(ele)) {
       case "string":
         res = ele.split(/,| /);
         break;
@@ -259,7 +259,7 @@ module.exports = function(stage) {
         }
         break;
       default:
-        throw new Error("checkFormatMsgId bad format " + stage.typeOf(ele) + " : " + ele);
+        throw new Error("checkFormatMsgId bad format " + nodefony.typeOf(ele) + " : " + ele);
     }
     return res;
   };
@@ -281,7 +281,7 @@ module.exports = function(stage) {
 
   const sanitizeConditions = function(settingsCondition) {
     let res = true;
-    if (stage.typeOf(settingsCondition) !== "object") {
+    if (nodefony.typeOf(settingsCondition) !== "object") {
       return false;
     }
     for (let ele in settingsCondition) {
@@ -307,7 +307,7 @@ module.exports = function(stage) {
               res = checkFormatSeverity(condi.data);
               if (res !== false) {
                 condi.data = {};
-                if (stage.typeOf(res) === "array") {
+                if (nodefony.typeOf(res) === "array") {
                   for (let i = 0; i < res.length; i++) {
                     let mySeverity = severityToString(res[i]);
                     if (mySeverity) {
@@ -330,7 +330,7 @@ module.exports = function(stage) {
             }
             res = checkFormatMsgId(condi.data);
             if (res !== false) {
-              if (stage.typeOf(res) === "array") {
+              if (nodefony.typeOf(res) === "array") {
                 condi.data = {};
                 for (let i = 0; i < res.length; i++) {
                   condi.data[res[i]] = "||";
@@ -374,7 +374,7 @@ module.exports = function(stage) {
       if (!severity) {
         return null;
       } else {
-        throw new Error("not stage syslog severity :" + severity);
+        throw new Error("not nodefony syslog severity :" + severity);
       }
     }
     return myseverity;
@@ -394,7 +394,7 @@ module.exports = function(stage) {
   };
 
   /**
-   * A class for product log in stage.
+   * A class for product log in nodefony.
    * @example
    *
    *    var ERROR_DEFINE = {
@@ -408,7 +408,7 @@ module.exports = function(stage) {
    *        defaultSeverity:"ERROR"
    *    };
    *
-   *    var logIntance = new stage.syslog(settings);
+   *    var logIntance = new nodefony.Syslog(settings);
    *
    *
    *    controller.logIntance.listen(context,function(pdu){
@@ -447,7 +447,7 @@ module.exports = function(stage) {
    *    @param {Object} settings The settings to extend.
    *    @return syslog
    */
-  class syslog extends stage.notificationsCenter.notification {
+  class Syslog extends nodefony.Events {
 
     constructor(settings) {
 
@@ -458,7 +458,7 @@ module.exports = function(stage) {
        * @type Object
        * @see defaultSettings
        */
-      this.settings = stage.extend({}, defaultSettings, settings);
+      this.settings = nodefony.extend({}, defaultSettings, settings);
       /**
        * ring buffer structure container instances of PDU
        * @property ringStack
@@ -668,7 +668,7 @@ module.exports = function(stage) {
         throw new Error("syslog loadStack : not stack in arguments ");
       }
       let st = null;
-      switch (stage.typeOf(stack)) {
+      switch (nodefony.typeOf(stack)) {
         case "string":
           try {
             //console.log(stack);
@@ -733,7 +733,10 @@ module.exports = function(stage) {
     }
 
   }
-  stage.syslog = syslog;
-  stage.PDU = PDU;
-  return syslog;
+  //nodefony.syslog = syslog;
+  //nodefony.PDU = PDU;
+  return {
+    Syslog:Syslog,
+    PDU:PDU
+  };
 };

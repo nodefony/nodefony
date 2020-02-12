@@ -20,7 +20,7 @@ module.exports = class sessionController extends nodefony.controller {
    *    @Method ({"GET", "POST", "WEBSOCKET"})
    *
    */
-  sessionAction(type, message) {
+  async sessionAction(type, message) {
     if (message) {
       return this.context.send(message.utf8Data);
     }
@@ -40,7 +40,7 @@ module.exports = class sessionController extends nodefony.controller {
       });
     case "invalidate":
       oldId = this.context.session.id;
-      this.context.session.invalidate();
+      await this.context.session.invalidate();
       return this.renderJson({
         id: this.context.session.id,
         oldId: oldId,
@@ -52,7 +52,7 @@ module.exports = class sessionController extends nodefony.controller {
 
     case "migrate":
       oldId = this.context.session.id;
-      this.context.session.migrate();
+      await this.context.session.migrate();
       return this.renderJson({
         id: this.context.session.id,
         oldId: oldId,

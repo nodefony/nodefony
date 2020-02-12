@@ -567,9 +567,7 @@ module.exports = class apiController extends nodefony.controller {
   bundleAction(bundleName) {
     //var config = this.getParameters( "bundles."+bundleName );
     let bundle = this.get("kernel").getBundle(bundleName);
-    //console.log(bundle)
     let router = this.get("router");
-    //console.log(router)
     let routing = [];
     for (let i = 0; i < router.routes.length; i++) {
       if (router.routes[i].bundle === bundleName) {
@@ -581,7 +579,7 @@ module.exports = class apiController extends nodefony.controller {
       views[view] = {};
       for (let view2 in bundle.views[view]) {
         views[view][view2] = {
-          file: bundle.views[view][view2].file
+          file: bundle.views[view][view2].file.toJson()
         };
       }
     }
@@ -602,7 +600,7 @@ module.exports = class apiController extends nodefony.controller {
       events: bundle.notificationsCenter._events,
       waitBundleReady: bundle.waitBundleReady,
       locale: bundle.locale,
-      files: bundle.resourcesFiles.files
+      files: bundle.resourcesFiles.toJson()
     };
     //let security  = this.get("security");
     return this.renderRest({

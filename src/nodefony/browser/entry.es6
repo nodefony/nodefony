@@ -38,9 +38,19 @@
 
 // CORE
 import nodefony from './src/nodefony.es6';
-require('./src/core/notificationsCenter.es6')(nodefony);
-require('./src/syslog/syslog.es6')(nodefony);
-require('./src/core/service.es6')(nodefony);
-require('./src/core/container.es6')(nodefony);
+
+import events from './src/core/events.es6';
+nodefony.Events = events(nodefony);
+
+import syslog from './src/syslog/syslog.es6';
+const lib = syslog(nodefony);
+nodefony.Syslog = lib.Syslog ;
+nodefony.PDU = lib.PDU ;
+
+import container from './src/core/container.es6';
+nodefony.Container = container(nodefony);
+
+import service from './src/core/service.es6';
+nodefony.Service = service(nodefony);
 
 export default nodefony;

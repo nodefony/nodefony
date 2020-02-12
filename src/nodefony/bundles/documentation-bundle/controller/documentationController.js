@@ -153,6 +153,7 @@ class documentationController extends nodefony.Controller {
     return this.render(`documentation:nodefony/${section}:index.html.twig`, {});
   }
 
+
   /**
    *    @Method ({ "GET"})
    *    @Route ("/lang", name="nodefony-doc-lang")

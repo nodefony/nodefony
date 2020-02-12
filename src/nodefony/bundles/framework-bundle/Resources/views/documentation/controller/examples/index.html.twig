@@ -1,65 +1,67 @@
-{{trans_default_domain("doc")}}
+{% extends '../../base.html.twig' %}
+
+{% block body %}
+
+<div class="container-fluid">
+  <div class="row flex-xl-nowrap">
+    {% include '../../navbar.html.twig' %}
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" style="top: 5rem;">
 
 
+			<h2 name="examples" id="examples">Examples  :</h2>
+			<div class="doc2 ">
+
+			<p>
+				Example of controller actions to different use cases :
+				<ul>
+					<li><a href="#rawRender">Simple Render html</a></li>
+					<li><a href="#simpleTemplate">Simple Render Template</a></li>
+					<li><a href="#asyncTemplate">Rendering database query</a></li>
+					<li><a href="#websocket">Websocket</a></li>
+					<li><a href="#renderJson">Rendering JSON</a></li>
+					<li><a href="#renderXml">Rendering XML</a></li>
+					<li><a href="#download"> Rendering File Download</a></li>
+					<li><a href="#upload"> File Upload</a></li>
+					<li><a href="#mediaStream">Rendering Media Stream</a></li>
+					<li><a href="#redirect">Redirecting</a></li>
+					<li><a href="#redirect">Forwarding</a></li>
+					<li><a href="#redirect">Generating URL</a></li>
+				</ul>
+			</p>
+
+			</div>
 
 
-<h2 name="examples" id="examples">Examples  :</h2>
-<div class="doc2 ">
+			<h3 name="rawRender" id="rawRender" >Rendering html  :</h3>
+			<div class="doc3 ">
 
-<p>
-	Example of controller actions to different use cases :
-	<ul>
-		<li><a href="#rawRender">Simple Render html</a></li>
-		<li><a href="#simpleTemplate">Simple Render Template</a></li>
-		<li><a href="#asyncTemplate">Rendering database query</a></li>
-		<li><a href="#websocket">Websocket</a></li>
-		<li><a href="#renderJson">Rendering JSON</a></li>
-		<li><a href="#renderXml">Rendering XML</a></li>
-		<li><a href="#download"> Rendering File Download</a></li>
-		<li><a href="#upload"> File Upload</a></li>
-		<li><a href="#mediaStream">Rendering Media Stream</a></li>
-		<li><a href="#redirect">Redirecting</a></li>
-		<li><a href="#redirect">Forwarding</a></li>
-		<li><a href="#redirect">Generating URL</a></li>
-	</ul>
-</p>
-
-</div>
-
-
-<h3 name="rawRender" id="rawRender" >Rendering html  :</h3>
-<div class="doc3 ">
-
-	<div  class="card">
-		<div class="card-header bg-nodefony"><strong>Simple Render html</strong>  </div>
-		<div class="card-body ">
-			<ul class="nav nav-tabs" role="tablist">
-  				<li class="nav-item" ><a class="nav-link" data-target="#routing" data-toggle="tab">Routing</a></li>
-  				<li class="nav-item" ><a class="nav-link" data-target="#controler" data-toggle="tab">Controller</a></li>
-  				<li class="nav-item" ><a class="nav-link" data-target="#result" data-toggle="tab">Result</a></li>
-			</ul>
-			<div class="tab-content ">
-				<div id="routing" class="tab-pane active">
-					<br>
-					<p>
-					URL : <code> http://localhost:5151/doc/demo/html/nodefony </code>
-					</p>
-					<pre>
+				<div  class="card">
+					<div class="card-header bg-nodefony"><strong>Simple Render html</strong>  </div>
+					<div class="card-body ">
+						<ul class="nav nav-tabs" role="tablist">
+			  				<li class="nav-item" ><a class="nav-link" data-target="#routing" data-toggle="tab">Routing</a></li>
+			  				<li class="nav-item" ><a class="nav-link" data-target="#controler" data-toggle="tab">Controller</a></li>
+			  				<li class="nav-item" ><a class="nav-link" data-target="#result" data-toggle="tab">Result</a></li>
+						</ul>
+						<div class="tab-content ">
+							<div id="routing" class="tab-pane active">
+								<br>
+								<p>
+								URL : <code> http://localhost:5151/doc/demo/html/nodefony </code>
+								</p>
+								<pre>
 documentation-demo:
   pattern:  /doc/demo/html/{name}
   defaults: {controller: "documentation-bundle:demo:html", "name":"nodefony"}
-					</pre>
+								</pre>
 
-				</div>
+							</div>
 
-				<div id="controler" class="tab-pane ">
-					<p>
-					</p>
-					<pre>
-/*
- *	Class demoController
- */
-module.exports = class demoController extends nodefony.controller {
+							<div id="controler" class="tab-pane ">
+								<p>
+								</p>
+								<pre>
+class demoController extends nodefony.Controller {
 	/*
 	 *	CONSTRUCTOR
 	 */
@@ -73,55 +75,51 @@ module.exports = class demoController extends nodefony.controller {
 	htmlAction (name){
 		return <strong>this.renderResponse</strong>('&lt;h1&gt;'+name+'&lt;/h1&gt;');
 	}
-};
-					</pre>
-				</div>
+}
+								</pre>
+							</div>
 
-				<div id="result" class="tab-pane">
-					{{render( controller( "documentation-bundle:demo:html", "nodefony") ) }}
-				</div>
+							<div id="result" class="tab-pane">
+								{{render( controller( "documentation-bundle:demo:html", "nodefony") ) }}
+							</div>
 
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
-</div>
 
 
-<h3 name="simpleTemplate" id="simpleTemplate" >Rendering Templates :</h3>
-<div class="doc3 ">
+			<h3 name="simpleTemplate" id="simpleTemplate" >Rendering Templates :</h3>
+			<div class="doc3 ">
 
-	<div  class="card card-info">
-		<div class="card-header bg-nodefony"><strong>Rendering Twig Templates</strong>  </div>
-		<div class="card-body ">
-			<ul class="nav nav-tabs" role="tablist">
-  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing1" data-toggle="tab">Routing</a></li>
-  				<li class="nav-item" ><a class="nav-link" data-target="#controler1" data-toggle="tab">Controller</a></li>
-  				<li class="nav-item" ><a class="nav-link" data-target="#twig1" data-toggle="tab">Twig</a></li>
-  				<li class="nav-item" ><a class="nav-link" data-target="#result1" data-toggle="tab">Result</a></li>
-			</ul>
+				<div  class="card card-info">
+					<div class="card-header bg-nodefony"><strong>Rendering Twig Templates</strong>  </div>
+					<div class="card-body ">
+						<ul class="nav nav-tabs" role="tablist">
+			  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing1" data-toggle="tab">Routing</a></li>
+			  				<li class="nav-item" ><a class="nav-link" data-target="#controler1" data-toggle="tab">Controller</a></li>
+			  				<li class="nav-item" ><a class="nav-link" data-target="#twig1" data-toggle="tab">Twig</a></li>
+			  				<li class="nav-item" ><a class="nav-link" data-target="#result1" data-toggle="tab">Result</a></li>
+						</ul>
 
-			<div class="tab-content ">
-				<div id="routing1" class="tab-pane active">
-					<br>
-					<p>
-					URL : <code> http://localhost:5151/doc/demo/render/nodefony </code>
-					</p>
-					<pre>
+						<div class="tab-content ">
+							<div id="routing1" class="tab-pane active">
+								<br>
+								<p>
+								URL : <code> http://localhost:5151/doc/demo/render/nodefony </code>
+								</p>
+								<pre>
 documentation-demo-render:
   pattern:  /doc/demo/render/{name}
   defaults: {controller: "documentation-bundle:demo:render", "name":"nodefony"}
-					</pre>
-				</div>
+								</pre>
+							</div>
 
-				<div id="controler1" class="tab-pane ">
-					<p>
-					</p>
-					<pre>
-/*
- *	Class demoController
- *
- */
-module.exports = class demoController extends nodefony.controller {
+							<div id="controler1" class="tab-pane ">
+								<p>
+								</p>
+								<pre>
+class demoController extends nodefony.Controller {
 	/*
 	 *	CONSTRUCTOR
 	 */
@@ -137,65 +135,65 @@ module.exports = class demoController extends nodefony.controller {
 			name:name,
 		});
 	}
-};
-					</pre>
-				</div>
-				<div id="twig1" class="tab-pane">
-					<pre>
+}
+								</pre>
+							</div>
+							<div id="twig1" class="tab-pane">
+								<pre>
 &lt;h1&gt; &#123;&#123;name&#125;&#125; &lt;/h1&gt;
-					</pre>
-				</div>
+								</pre>
+							</div>
 
-				<div id="result1" class="tab-pane">
-					{{render( controller( "documentation-bundle:demo:render", "nodefony") ) }}
-				</div>
+							<div id="result1" class="tab-pane">
+								{{render( controller( "documentation-bundle:demo:render", "nodefony") ) }}
+							</div>
 
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
-</div>
 
 
-<h3 name="asyncTemplate" id="asyncTemplate">Rendering database query :</h3>
-<div class="doc3 ">
-	<div  class="card card-info">
-		<div class="card-header bg-nodefony"><strong>Rendering database query with Promise</strong>  </div>
-		<div class="card-body ">
-			<ul class="nav nav-tabs" role="tablist">
-  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing2" data-toggle="tab">Routing</a></li>
-  				<li class="nav-item" ><a class="nav-link" data-target="#controler2" data-toggle="tab">Controller</a></li>
-  				<li class="nav-item" ><a class="nav-link" data-target="#twig2" data-toggle="tab">Twig</a></li>
-			</ul>
+			<h3 name="asyncTemplate" id="asyncTemplate">Rendering database query :</h3>
+			<div class="doc3 ">
+				<div  class="card card-info">
+					<div class="card-header bg-nodefony"><strong>Rendering database query with Promise</strong>  </div>
+					<div class="card-body ">
+						<ul class="nav nav-tabs" role="tablist">
+			  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing2" data-toggle="tab">Routing</a></li>
+			  				<li class="nav-item" ><a class="nav-link" data-target="#controler2" data-toggle="tab">Controller</a></li>
+			  				<li class="nav-item" ><a class="nav-link" data-target="#twig2" data-toggle="tab">Twig</a></li>
+						</ul>
 
-			<div class="tab-content ">
+						<div class="tab-content ">
 
-				<div id="routing2" class="tab-pane active">
-					<br>
-					<p>
-					URL : <code> http://localhost:5151/query/join </code>
-					</p>
-					<pre>
+							<div id="routing2" class="tab-pane active">
+								<br>
+								<p>
+								URL : <code> http://localhost:5151/query/join </code>
+								</p>
+								<pre>
 sqlJoin:
   pattern:  /query/join
   defaults: {"controller": "demo-bundle:demo:querySqlJoin"}
   requirements:
     method: GET
-					</pre>
+								</pre>
 
-				</div>
+							</div>
 
-				<div id="controler2" class="tab-pane ">
-					<p>
-						<div class="alert alert-warning" role="alert">
-						For database data rendering ,  The controller's Action function must return a Promise Object
-						</div>
-					</p>
-					<pre>
+							<div id="controler2" class="tab-pane ">
+								<p>
+									<div class="alert alert-warning" role="alert">
+									For database data rendering ,  The controller's Action function must return a Promise Object
+									</div>
+								</p>
+								<pre>
 /*
  *	Class demoController
  *
  */
-module.exports = class demoController extends nodefony.controller {
+class demoController extends nodefony.Controller {
 	/*
 	 *	CONSTRUCTOR
 	 */
@@ -220,11 +218,11 @@ module.exports = class demoController extends nodefony.controller {
 			});
 		})
 	}
-};
-					</pre>
-				</div>
-				<div id="twig2" class="tab-pane">
-					<pre>
+}
+								</pre>
+							</div>
+							<div id="twig2" class="tab-pane">
+								<pre>
 &#123% if joins %&#125
 	&ltdiv class="container"&gt
 		&ltdiv class="row"&gt
@@ -264,55 +262,52 @@ module.exports = class demoController extends nodefony.controller {
 		&lt/div&gt
 	&lt/div&gt
 &#123% endif %&#125
-					</pre>
+								</pre>
+							</div>
+
+						</div>
+					</div>
 				</div>
-
 			</div>
-		</div>
-	</div>
-</div>
 
-<h3 name="websocket" id="websocket" >Rendering Websocket  :</h3>
-<div class="doc3 ">
-	<div  class="card card-info">
-		<div class="card-header bg-nodefony"><strong>Rendering Websocket</strong>  </div>
-		<div class="card-body ">
-			<ul class="nav nav-tabs" role="tablist">
-  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing3" data-toggle="tab">Routing</a></li>
-  				<li class="nav-item" ><a class="nav-link" data-target="#controler3" data-toggle="tab">Controller</a></li>
-  				<li class="nav-item" ><a class="nav-link" data-target="#logger3" data-toggle="tab">Logger</a></li>
-			</ul>
+			<h3 name="websocket" id="websocket" >Rendering Websocket  :</h3>
+			<div class="doc3 ">
+				<div  class="card card-info">
+					<div class="card-header bg-nodefony"><strong>Rendering Websocket</strong>  </div>
+					<div class="card-body ">
+						<ul class="nav nav-tabs" role="tablist">
+			  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing3" data-toggle="tab">Routing</a></li>
+			  				<li class="nav-item" ><a class="nav-link" data-target="#controler3" data-toggle="tab">Controller</a></li>
+			  				<li class="nav-item" ><a class="nav-link" data-target="#logger3" data-toggle="tab">Logger</a></li>
+						</ul>
 
-			<div class="tab-content ">
+						<div class="tab-content ">
 
-				<div id="routing3" class="tab-pane active">
-					<br>
-					<p>
-					URL : <code> ws://localhost:5151/websoket </code>
-					</p>
+							<div id="routing3" class="tab-pane active">
+								<br>
+								<p>
+								URL : <code> ws://localhost:5151/websoket </code>
+								</p>
 
-					<pre>
-websoket:
-  pattern:  /websoket
-  defaults: {"controller": "demo-bundle:demo:websoket"}
+								<pre>
+websocket:
+  pattern:  /websocket
+  defaults: {"controller": "demo-bundle:demo:websocket"}
   requirements:
     method:     GET,WEBSOCKET
-					</pre>
+								</pre>
 
-				</div>
+							</div>
 
-				<div id="controler3" class="tab-pane ">
-					<p>
-						<div class="alert alert-warning" role="alert">
-						To use websocket you must understand Nodefony Request Context
-						</div>
-					</p>
-					<pre>
-/*
-*	Class demoController
-*
-*/
-module.exports = class demoController extends nodefony.controller {
+							<div id="controler3" class="tab-pane ">
+								<p>
+									<div class="alert alert-warning" role="alert">
+									To use websocket you must understand Nodefony Request Context
+									</div>
+								</p>
+								<pre>
+
+class demoController extends nodefony.Controller {
 	/*
 	*	CONSTRUCTOR
 	*/
@@ -365,14 +360,14 @@ module.exports = class demoController extends nodefony.controller {
 				throw new Error(" METHOD NOT ALLOWED")
 		}
 	}
-};
-					</pre>
-				</div>
+}
+								</pre>
+							</div>
 
-				<div id="logger3" class="tab-pane">
-					<br>
+							<div id="logger3" class="tab-pane">
+								<br>
 
-					<pre>
+								<pre>
 
 <strong>/* YOU CAN SHOW LOG IN TERMINAL */</strong>
 
@@ -390,43 +385,43 @@ Thu Oct 06 2016 15:49:17 INFO CONTROLER demo   : SEND TO CLIENT :I am a  message
 Thu Oct 06 2016 15:49:18 INFO CONTROLER demo   : SEND TO CLIENT :I am a  message 8
 
 Thu Oct 06 2016 15:49:19 INFO REQUEST WEBSOCKET SECURE  : Thu Oct 06 2016 15:49:19 GMT+0200 (CEST) Connection Websocket CLOSE : 192.168.100.71 PID :86607 ORIGIN : https://nodefony.com:5152 1000 NODEFONY CONTROLLER CLOSE SOCKET
-					</pre>
+								</pre>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-</div>
 
 
-<h3 name="renderJson" id="renderJson">Rendering JSON :</h3>
-<div class="doc3 ">
+			<h3 name="renderJson" id="renderJson">Rendering JSON :</h3>
+			<div class="doc3 ">
 
-	<div  class="card card-info">
-		<div class="card-header bg-nodefony"><strong>Rendering JSON</strong>  </div>
-		<div class="card-body ">
-			<ul class="nav nav-tabs" role="tablist">
-  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing4" data-toggle="tab">Routing</a></li>
-  				<li class="nav-item" ><a class="nav-link" data-target="#controler4" data-toggle="tab">Controller</a></li>
-			</ul>
-			<div class="tab-content ">
-				<div id="routing4" class="tab-pane active">
-					<br>
-					<p>
-					URL : <code> http://localhost:5151/json </code>
-					</p>
-					<pre>
+				<div  class="card card-info">
+					<div class="card-header bg-nodefony"><strong>Rendering JSON</strong>  </div>
+					<div class="card-body ">
+						<ul class="nav nav-tabs" role="tablist">
+			  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing4" data-toggle="tab">Routing</a></li>
+			  				<li class="nav-item" ><a class="nav-link" data-target="#controler4" data-toggle="tab">Controller</a></li>
+						</ul>
+						<div class="tab-content ">
+							<div id="routing4" class="tab-pane active">
+								<br>
+								<p>
+								URL : <code> http://localhost:5151/json </code>
+								</p>
+								<pre>
 json:
   pattern:  /json
   defaults: {"controller": "demo-bundle:demo:json"}
-					</pre>
-				</div>
-				<div id="controler4" class="tab-pane ">
-					<pre>
+								</pre>
+							</div>
+							<div id="controler4" class="tab-pane ">
+								<pre>
 /*
  *	Class demoController
  *
  */
-module.exports = class demoController extends nodefony.controller {
+class demoController extends nodefony.Controller {
 	/*
 	 *	CONSTRUCTOR
 	 */
@@ -443,47 +438,47 @@ module.exports = class demoController extends nodefony.controller {
 			bar:"foo"
 		});
 	}
-};
-					</pre>
+}
+								</pre>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-</div>
 
 
-<h3 name="renderXml" id="renderXml">Rendering XML :</h3>
-<div class="doc3 ">
+			<h3 name="renderXml" id="renderXml">Rendering XML :</h3>
+			<div class="doc3 ">
 
-	<div  class="card card-info">
-		<div class="card-header bg-nodefony"><strong>Rendering XML</strong>  </div>
-		<div class="card-body ">
-			<ul class="nav nav-tabs" role="tablist">
-  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing6" data-toggle="tab">Routing</a></li>
-  				<li class="nav-item" ><a class="nav-link" data-target="#controler6" data-toggle="tab">Controller</a></li>
-			</ul>
-			<div class="tab-content ">
-				<div id="routing6" class="tab-pane active">
-					<br>
-					<p>
-					URL : <code> http://localhost:5151/xml </code>
-					</p>
-					<pre>
+				<div  class="card card-info">
+					<div class="card-header bg-nodefony"><strong>Rendering XML</strong>  </div>
+					<div class="card-body ">
+						<ul class="nav nav-tabs" role="tablist">
+			  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing6" data-toggle="tab">Routing</a></li>
+			  				<li class="nav-item" ><a class="nav-link" data-target="#controler6" data-toggle="tab">Controller</a></li>
+						</ul>
+						<div class="tab-content ">
+							<div id="routing6" class="tab-pane active">
+								<br>
+								<p>
+								URL : <code> http://localhost:5151/xml </code>
+								</p>
+								<pre>
 xmlResponse:
   pattern:  /xml
   defaults: {"controller": "demo-bundle:demo:xml"}
   requirements:
     method: GET
 
-					</pre>
-				</div>
-				<div id="controler6" class="tab-pane ">
-					<pre>
+								</pre>
+							</div>
+							<div id="controler6" class="tab-pane ">
+								<pre>
 /*
  *	Class demoController
  *
  */
-module.exports = class demoController extends nodefony.controller {
+class demoController extends nodefony.Controller {
 	/*
 	 *	CONSTRUCTOR
 	 */
@@ -506,47 +501,47 @@ module.exports = class demoController extends nodefony.controller {
 			"content-type" :"Application/xml"
 		});
 	}
-};
-					</pre>
+}
+								</pre>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-</div>
 
 
 
-<h3 name="download" id="download">Download File :</h3>
-<div class="doc3 ">
+			<h3 name="download" id="download">Download File :</h3>
+			<div class="doc3 ">
 
-	<div  class="card card-info">
-		<div class="card-header bg-nodefony"><strong>Download File</strong>  </div>
-		<div class="card-body ">
-			<ul class="nav nav-tabs" role="tablist">
-  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing5" data-toggle="tab">Routing</a></li>
-  				<li class="nav-item" ><a class="nav-link" data-target="#controler5" data-toggle="tab">Controller</a></li>
-			</ul>
-			<div class="tab-content ">
-				<div id="routing5" class="tab-pane active">
-					<br>
-					<p>
-					URL : <code> http://localhost:5151/download </code>
-					</p>
-					<pre>
+				<div  class="card card-info">
+					<div class="card-header bg-nodefony"><strong>Download File</strong>  </div>
+					<div class="card-body ">
+						<ul class="nav nav-tabs" role="tablist">
+			  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing5" data-toggle="tab">Routing</a></li>
+			  				<li class="nav-item" ><a class="nav-link" data-target="#controler5" data-toggle="tab">Controller</a></li>
+						</ul>
+						<div class="tab-content ">
+							<div id="routing5" class="tab-pane active">
+								<br>
+								<p>
+								URL : <code> http://localhost:5151/download </code>
+								</p>
+								<pre>
 download:
   pattern:  /download
   defaults: {"controller": "demo-bundle:finder:download"}
   requirements:
     method: GET
-					</pre>
-				</div>
-				<div id="controler5" class="tab-pane ">
-					<pre>
+								</pre>
+							</div>
+							<div id="controler5" class="tab-pane ">
+								<pre>
 /*
  *	Class finderController
  *
  */
-module.exports = class finderController extends nodefony.controller {
+class finderController extends nodefony.Controller {
 	/*
 	 *	CONSTRUCTOR
 	 */
@@ -561,46 +556,46 @@ module.exports = class finderController extends nodefony.controller {
 		let filePath = this.kernel.rootDir + '/README.md';
 		return <strong>this.renderFileDownload</strong>(filePath);
 	}
-};
-					</pre>
+}
+								</pre>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-</div>
 
-<h3 name="mediaStream" id="mediaStream">Media Stream Rendering   :</h3>
-<div class="doc3 ">
+			<h3 name="mediaStream" id="mediaStream">Media Stream Rendering   :</h3>
+			<div class="doc3 ">
 
-	<div  class="card card-info">
-		<div class="card-header bg-nodefony"><strong>Media Stream Rendering</strong>  </div>
-		<div class="card-body ">
-			<ul class="nav nav-tabs" role="tablist">
-  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing7" data-toggle="tab">Routing</a></li>
-  				<li class="nav-item" ><a class="nav-link" data-target="#controler7" data-toggle="tab">Controller</a></li>
-			</ul>
-			<div class="tab-content ">
-				<div id="routing7" class="tab-pane active">
-					<br>
-					<p>
-					URL : <code> http://localhost:5151/rendermedia </code>
-					</p>
-					<pre>
+				<div  class="card card-info">
+					<div class="card-header bg-nodefony"><strong>Media Stream Rendering</strong>  </div>
+					<div class="card-body ">
+						<ul class="nav nav-tabs" role="tablist">
+			  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing7" data-toggle="tab">Routing</a></li>
+			  				<li class="nav-item" ><a class="nav-link" data-target="#controler7" data-toggle="tab">Controller</a></li>
+						</ul>
+						<div class="tab-content ">
+							<div id="routing7" class="tab-pane active">
+								<br>
+								<p>
+								URL : <code> http://localhost:5151/rendermedia </code>
+								</p>
+								<pre>
 render-media:
   pattern:  /rendermedia
   defaults: {"controller": "demo-bundle:demo:mediaStream"}
   requirements:
     method: GET
 
-					</pre>
-				</div>
-				<div id="controler7" class="tab-pane ">
-					<pre>
+								</pre>
+							</div>
+							<div id="controler7" class="tab-pane ">
+								<pre>
 /*
  *	Class demoController
  *
  */
-module.exports = class demoController extends nodefony.controller {
+class demoController extends nodefony.Controller {
 	/*
 	 *	CONSTRUCTOR
 	 */
@@ -617,44 +612,44 @@ module.exports = class demoController extends nodefony.controller {
 		return <strong>this.renderMediaStream</strong>(file);
 	}
 }
-					</pre>
+								</pre>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-</div>
 
-<h3 name="upload" id="upload">File Upload :</h3>
-<div class="doc3 ">
+			<h3 name="upload" id="upload">File Upload :</h3>
+			<div class="doc3 ">
 
-	<div  class="card card-info">
-		<div class="card-header bg-nodefony"><strong>Upload Rendering</strong>  </div>
-		<div class="card-body ">
-			<ul class="nav nav-tabs" role="tablist">
-  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing8" data-toggle="tab">Routing</a></li>
-  				<li class="nav-item" ><a class="nav-link" data-target="#controler8" data-toggle="tab">Controller</a></li>
-			</ul>
-			<div class="tab-content ">
-				<div id="routing8" class="tab-pane active">
-					<br>
-					<p>
-					URL : <code> http://localhost:5151/fileupload </code>
-					</p>
-					<pre>
-uploadFile:
-  pattern:  /fileupload
-  defaults: {"controller": "demo-bundle:demo:upload"}
-  requirements:
-    method: POST
-					</pre>
-				</div>
-				<div id="controler8" class="tab-pane ">
-					<pre>
+				<div  class="card card-info">
+					<div class="card-header bg-nodefony"><strong>Upload Rendering</strong>  </div>
+					<div class="card-body ">
+						<ul class="nav nav-tabs" role="tablist">
+			  				<li class="nav-item" class="active"><a class="nav-link" data-target="#routing8" data-toggle="tab">Routing</a></li>
+			  				<li class="nav-item" ><a class="nav-link" data-target="#controler8" data-toggle="tab">Controller</a></li>
+						</ul>
+						<div class="tab-content ">
+							<div id="routing8" class="tab-pane active">
+								<br>
+								<p>
+								URL : <code> http://localhost:5151/fileupload </code>
+								</p>
+								<pre>
+			uploadFile:
+			  pattern:  /fileupload
+			  defaults: {"controller": "demo-bundle:demo:upload"}
+			  requirements:
+			    method: POST
+								</pre>
+							</div>
+							<div id="controler8" class="tab-pane ">
+								<pre>
 /*
  *	Class demoController
  *
  */
-module.exports = class demoController extends nodefony.controller {
+class demoController extends nodefony.Controller {
 	/*
 	 *	CONSTRUCTOR
 	 */
@@ -707,42 +702,42 @@ module.exports = class demoController extends nodefony.controller {
 		}
 	}
 };
-					</pre>
+								</pre>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-</div>
 
-<h3>Redirecting and Forwarding :</h3>
-<div id="redirect" class="doc3 ">
-	<div  class="card card-info">
-		<div class="card-header bg-nodefony"><strong>Redirecting and Forwarding</strong>  </div>
-		<div class="card-body ">
-			<ul class="nav nav-tabs" role="tablist">
-  				<li class="nav-item" class="active"><a class="nav-link" data-target="#redirect1" data-toggle="tab">Redirect</a></li>
-  				<li class="nav-item" ><a class="nav-link" data-target="#forward" data-toggle="tab">Forward</a></li>
-  				<li class="nav-item" ><a class="nav-link" data-target="#genarate" data-toggle="tab">generateUrl</a></li>
-			</ul>
-			<div class="tab-content ">
-				<div id="redirect1" class="tab-pane active">
-					<br>
-					<p>
+			<h3>Redirecting and Forwarding :</h3>
+			<div id="redirect" class="doc3 ">
+				<div  class="card card-info">
+					<div class="card-header bg-nodefony"><strong>Redirecting and Forwarding</strong>  </div>
+					<div class="card-body ">
+						<ul class="nav nav-tabs" role="tablist">
+			  				<li class="nav-item" class="active"><a class="nav-link" data-target="#redirect1" data-toggle="tab">Redirect</a></li>
+			  				<li class="nav-item" ><a class="nav-link" data-target="#forward" data-toggle="tab">Forward</a></li>
+			  				<li class="nav-item" ><a class="nav-link" data-target="#genarate" data-toggle="tab">generateUrl</a></li>
+						</ul>
+						<div class="tab-content ">
+							<div id="redirect1" class="tab-pane active">
+								<br>
+								<p>
 
-					</p>
-					<pre>
+								</p>
+								<pre>
 redirectGoogleAction (){
 	// status 301 or 302
 	return <strong>this.redirect</strong>("http://google.com");
 };
-					</pre>
-				</div>
-				<div id="forward" class="tab-pane">
-					<br>
-					<p>
+								</pre>
+							</div>
+							<div id="forward" class="tab-pane">
+								<br>
+								<p>
 
-					</p>
-					<pre>
+								</p>
+								<pre>
 forwardAction (){
 	let docBundle = this.kernel.getBundles("documentation");
 	if (  docBundle ){
@@ -762,9 +757,16 @@ generateUrlAction (){
 	return this.redirect ( <strong>this.generateUrl</strong>("user", {name:"cci"} );
 };
 
-					</pre>
+								</pre>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
+
+
+
+		</main>
 	</div>
 </div>
+{% endblock %}
