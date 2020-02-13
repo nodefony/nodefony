@@ -1,7 +1,8 @@
 <div class="container mt-4">
   <h2>Configurations :
     <small>See more
-      <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle })}}">( Nodefony Configurations documentation )
+      <a href="{{ url("nodefony-doc-index",{section:"configurations",subsection:"framework"}) }}">
+        ( Configurations framework )
       </a>
     </small>
   </h2>
@@ -24,14 +25,15 @@
     <p class="doc3">
       If you want change listen port http(s) by defaut or domain
       <small>
-        <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:bundle, queryString:{'subsection':'framework'} })}}">( Configurations framework )
-        </a>
+          <a href="{{ url("nodefony-doc-index",{section:"configurations",subsection:"framework"}) }}">
+            ( Configurations framework )
+          </a>
       </small><br>
       Change config.js Location :
       <code>./config/config.js</code>
     </p>
     <pre><code class="hljs javascript" >
-      
+
     </code></pre>
 </div>
 
@@ -40,7 +42,8 @@
 <div class="container mt-4">
   <h2>Running NODEFONY :
     <small>See more
-      <a href="{{ path('documentation-section',{section:'running', version:version, bundle:bundle })}}">( RUN Nodefony documentation )
+      <a href="{{ url("nodefony-doc-index",{section:"running"}) }}">
+        ( RUN Nodefony documentation )
       </a>
     </small>
   </h2>

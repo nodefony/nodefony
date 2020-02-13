@@ -53,7 +53,11 @@ drwxr-xr-x    2 cci  staff      64 26 mar 11:45 services
     </code></pre>
   </div>
 
-  <h2 name="config" id="config">Configuration Application  :<small> More <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:'nodefony', queryString:{'subsection':'application'} })}}">Application config</a></small> </h2>
+  <h2 name="config" id="config">Configuration Application  :<small> More
+    <a href="{{ url("nodefony-doc-index",{section:"configurations",subsection:"application"}) }}">
+      <button type="button" class="btn btn-primary">{{"Application Configuration" | trans() | capitalize() }}</button>
+    </a
+  </small></h2>
   <div class="doc2">
     <pre><code class="hljs javascript" >
     /**
@@ -450,7 +454,12 @@ drwxr-xr-x    2 cci  staff      64 26 mar 11:45 services
     </code></pre>
   </div>
 
-  <h2 name="entry" id="entry">Application  Entry Point   :  <code style="text-transform: initial;">appKernel.js</code> <small>see <a href="{{ path('documentation-section',{section:'running', version:version, bundle:'nodefony',queryString:{'subsection':'developement'} })}}#script">Running Nodefony Startup Script </a></small></h2>
+  <h2 name="entry" id="entry">Application  Entry Point   :  <code style="text-transform: initial;">appKernel.js</code> <small>see
+    <a href="{{ url("nodefony-doc-index",{section:"running",subsection:"developement"}) }}">
+
+      Running Nodefony Startup Script
+    </a>
+    </small></h2>
   <div class="doc2">
     <p>
       <div class="alert alert-warning" role="alert">

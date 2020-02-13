@@ -1,49 +1,58 @@
+{% extends '../../base.html.twig' %}
 
-<h1>Bundle  Configurations </h1>
+{% block body %}
+  <div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+      {% include '../../../documentation/navbar.html.twig' with {
+        'route' : nodefony.route
+      } %}
+      <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" style="top: 5rem;">
 
-<h2>Bundle configurations Files : </h2>
-<div class="alert alert-info" role="alert">
-  <h4> Bundle NPM Module  : <code>./src/bundles/name-bundle/package.json</code>
+        <h1>Bundle  Configurations </h1>
 
-  </h4>
+        <h2>Bundle configurations Files : </h2>
+        <div class="alert alert-info" role="alert">
+          <h4> Bundle NPM Module  : <code>./src/bundles/name-bundle/package.json</code>
 
-  <h4> Bundle Configuration  : <code>./src/bundles/name-bundle/Resources/config/config.js</code>
+          </h4>
 
-  </h4>
+          <h4> Bundle Configuration  : <code>./src/bundles/name-bundle/Resources/config/config.js</code>
 
-  <h4> Routing Configuration  : <code>./src/bundles/name-bundle/Resources/config/routing.js</code>
-    <a href="{{ path('documentation-section',{section:'routing', version:'Default', bundle:'framework' })}}">
-      <button type="button" class="btn btn-primary">Routing</button>
-    </a>
-  </h4>
-  <h4> Services Configuration  : <code>/src/bundles/name-bundle/Resources/config/services.js</code>
-  <a href="{{ path('documentation-section',{section:'service', version:version, bundle:bundle })}}">
-    <button type="button" class="btn btn-primary">Services</button>
-  </a>
-  </h4>
-  <h4> Firewall Configuration  : <code>/src/bundles/name-bundle/Resources/config/security.js</code>
-    <a href="{{ path('documentation-section',{section:'configuration', version:'Default', bundle:'security' })}}">
-      <button type="button" class="btn btn-primary">Firewall</button>
-    </a>
-  </h4>
-  <h4> Webpack Configuration  : <code>/src/bundles/name-bundle/Resources/config/webpack.config.js</code>
-    <a href="{{ path('documentation-section',{section:'configurations', version:version, bundle:'nodefony' ,queryString:{'subsection':'webpack' } })}}">
-      <button type="button" class="btn btn-primary">Webpack</button>
-    </a>
-  </h4>
-  <h4>
-    <ul>
-      <li><code>webpack.config.js</code> </li>
-      <li><code>webpack/webpack.dev.config.js</code> </li>
-      <li><code>webpack/webpack.prod.config.js </code></li>
-    </ul>
-  </h4>
-</div>
+          </h4>
 
-<h2>Location Bundle configurations in File System </h2>
-<div class="doc2">
+          <h4> Routing Configuration  : <code>./src/bundles/name-bundle/Resources/config/routing.js</code>
+            <a href="{{ url("nodefony-doc-index",{section:"routing"}) }}">
+              <button type="button" class="btn btn-primary">Routing</button>
+            </a>
+          </h4>
+          <h4> Services Configuration  : <code>/src/bundles/name-bundle/Resources/config/services.js</code>
+            <a href="{{ url("nodefony-doc-index",{section:"service"}) }}">
+              <button type="button" class="btn btn-primary">Services</button>
+            </a>
+          </h4>
+          <h4> Firewall Configuration  : <code>/src/bundles/name-bundle/Resources/config/security.js</code>
+            <a href="{{ url("nodefony-doc-index",{section:"firewall"}) }}">
+              <button type="button" class="btn btn-primary">Firewall</button>
+            </a>
+          </h4>
+          <h4> Webpack Configuration  : <code>/src/bundles/name-bundle/Resources/config/webpack.config.js</code>
+            <a href="{{ url("nodefony-doc-index",{section:"configuration",subsection:"webpack"}) }}">
+              <button type="button" class="btn btn-primary">Webpack</button>
+            </a>
+          </h4>
+          <h4>
+            <ul>
+              <li><code>webpack.config.js</code> </li>
+              <li><code>webpack/webpack.dev.config.js</code> </li>
+              <li><code>webpack/webpack.prod.config.js </code></li>
+            </ul>
+          </h4>
+        </div>
 
-<pre><code class="hljs console">./src/bundles/name-bundle/
+        <h2>Location Bundle configurations in File System </h2>
+        <div class="doc2">
+
+        <pre><code class="hljs console">./src/bundles/name-bundle/
 
 ├── Command
 ├── Entity
@@ -72,17 +81,17 @@
 ├── src
 └── tests
 
-</code></pre>
+        </code></pre>
 
-</div>
+        </div>
 
 
-<h2> Bundle NPM package  </h2>
+        <h2> Bundle NPM package  </h2>
 
-<div class="doc2">
-<code>package.json</code>
+        <div class="doc2">
+        <code>package.json</code>
 
-<pre><code class="hljs json">{
+        <pre><code class="hljs json">{
   "name": "name-bundle",
   "version": "1.0.0",
   "description": "Nodefony Framework Bundle name ",
@@ -133,61 +142,67 @@
   ]
 }
 
-</code></pre>
-</div>
-<h2>Default Config </h2>
+        </code></pre>
+        </div>
+        <h2>Default Config </h2>
 
-<div class="doc2">
-<code>config.js</code>
-<pre><code class="hljs javaScript">/**
-  *
-  *
-  *	nodefony-starter CONFIG BUNDLE  name-bundle
-  *
-  * ===============================================================================
-  *
-  *  Copyright © 2019/2019        admin | admin@nodefony.com
-  *
-  * ===============================================================================
-  *
-  *        GENERATE BY nodefony-starter BUILDER
-  */
+        <div class="doc2">
+        <code>config.js</code>
+        <pre><code class="hljs javaScript">/**
+*
+*
+*	nodefony-starter CONFIG BUNDLE  name-bundle
+*
+* ===============================================================================
+*
+*  Copyright © 2019/2019        admin | admin@nodefony.com
+*
+* ===============================================================================
+*
+*        GENERATE BY nodefony-starter BUILDER
+*/
 
 module.exports = {
-  type        : "nodefony",
-  locale      : "en_en",
+type        : "nodefony",
+locale      : "en_en",
 
-  /**
-   *    WATCHERS
-   *
-   *  watchers Listen to changes, deletion, renaming of files and directories
-   *  of different components
-   *
-   *  For watch all components
-   *      watch:                    true
-   *  or
-   *      watch:{
-   *        controller:             true,
-   *        config:                 true,        // only  routing.js
-   *        views:                  true,
-   *        translations:           true,
-   *        webpack:                true
-   *      }
-   *
-   */
-  watch: true
+/**
+ *    WATCHERS
+ *
+ *  watchers Listen to changes, deletion, renaming of files and directories
+ *  of different components
+ *
+ *  For watch all components
+ *      watch:                    true
+ *  or
+ *      watch:{
+ *        controller:             true,
+ *        config:                 true,        // only  routing.js
+ *        views:                  true,
+ *        translations:           true,
+ *        webpack:                true
+ *      }
+ *
+ */
+watch: true
 
-  /**
-   *
-   *	Insert here the bundle-specific configurations
-   *
-   *	You can also override config of another bundle
-   *	with the name of the bundle
-   *
-   *	example : create an other database connector
-   */
+/**
+ *
+ *	Insert here the bundle-specific configurations
+ *
+ *	You can also override config of another bundle
+ *	with the name of the bundle
+ *
+ *	example : create an other database connector
+ */
 
 };
-</code></pre>
+        </code></pre>
 
-</div>
+        </div>
+
+
+      </main>
+    </div>
+  </div>
+{% endblock %}

@@ -1,25 +1,34 @@
-<div class="page-header">
-	<h1>WEBPACK </h1>
-	<p>
-		 Bundle Nodofony Generate a default webpack configuration  in Bundle config directory  <br>
+{% extends '../../base.html.twig' %}
 
-		<h2 > You can see here :</h2>
+{% block body %}
+  <div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+      {% include '../../../documentation/navbar.html.twig' with {
+        'route' : nodefony.route
+      } %}
+      <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" style="top: 5rem;">
+				<div class="page-header">
+					<h1>WEBPACK </h1>
+					<p>
+						 Bundle Nodofony Generate a default webpack configuration  in Bundle config directory  <br>
 
-		<p>
-			<ul>
-				<li><a href="#Location">Location</a></li>
-				<li><a href="#configuration">Configuration</a></li>
-			</ul>
-		<p>
+						<h2 > You can see here :</h2>
 
-	<p>
-</div>
+						<p>
+							<ul>
+								<li><a href="#Location">Location</a></li>
+								<li><a href="#configuration">Configuration</a></li>
+							</ul>
+						<p>
 
-<h2 name="Location">Location Webpack configurations in File System <span class="badge">Directory</span></h2>
-<div class="doc2">
-    </br>
-Location : <code>src/bundles/name-bundle/Resources/config/webpack</code>
-<pre><code class="hljs console" >
+					<p>
+				</div>
+
+				<h2 name="Location">Location Webpack configurations in File System <span class="badge">Directory</span></h2>
+				<div class="doc2">
+				    </br>
+				Location : <code>src/bundles/name-bundle/Resources/config/webpack</code>
+				<pre><code class="hljs console" >
 $ ls -l ./src/bundles/name-bundle/Resources/config
 -rw-r--r--  1 cci  staff  1142 26 mar 17:08 config.js
 -rw-r--r--  1 cci  staff   501 26 mar 17:08 routing.js
@@ -37,47 +46,47 @@ drwxr-xr-x  4 cci  staff   128 26 mar 17:08 webpack
 │   ├── webpack.dev.config.js
 │   └── webpack.prod.config.js
 └── webpack.config.js
-</code></pre>
-</div>
-</br>
+				</code></pre>
+				</div>
+				</br>
 
-<h2 name="configuration">Webpack Nodefony configurations </h2>
-<div class="doc2">
+				<h2 name="configuration">Webpack Nodefony configurations </h2>
+				<div class="doc2">
 
-<div  class="card">
-    <div class="card-header"><strong>Nodefony WebPack Configurations</strong>  </div>
-    <div class="alert alert-warning" role="alert">
-        Nodefony  WebPack Configuration
-        </br>
-        <ul>
-            <li>
-                <strong>public</strong> : "src/bundles/name-bundle/Resources/public",
-            </li>
-            <li>
-                <strong>entry</strong> : "src/bundles/name-bundle/Resources/public/js/name.js",
-            </li>
-            <li>
-                <strong>output</strong>  : "src/bundles/name-bundle/Resources/public/assets",
-            </li>
-            <li>
-                <strong>publicPath</strong> : "/name-bundle",
-            </li>
-        </ul>
-    </div>
-    <div class="card-body" style='border-width:0.2em'>
-        <ul class="nav nav-pills"  role="tablist">
-            <li class="nav-item "><a class="nav-link active" href="#common" role="tab" aria-controls="common" data-toggle="pill" >webpack.config.js</a></li>
-            <li class="nav-item" ><a class="nav-link" href="#dev" role="tab" aria-controls="dev" data-toggle="pill">webpack.dev.config.js</a></li>
-            <li class="nav-item" ><a class="nav-link" href="#prod" role="tab" aria-controls="prod" data-toggle="pill">webpack.prod.config.js</a></li>
-            <li class="nav-item" ><a class="nav-link" href="#index" role="tab" aria-controls="index" data-toggle="pill">index.html.twig</a></li>
-            <li class="nav-item" ><a class="nav-link" href="#entryjs" role="tab" aria-controls="entryjs" data-toggle="pill">name.js</a></li>
-            <li class="nav-item" ><a class="nav-link" href="#entrycss" role="tab" aria-controls="entrycss" data-toggle="pill">name.css</a></li>
-        </ul>
-        <div class="tab-content ">
-            <div id="common" class="tab-pane active">
-                </br>
-                <p>Location : <code>src/bundles/name-bundle//Resources/config/webpack.config.js</code></p>
-                <pre><code class="hljs javascript" >const path = require("path");
+				<div  class="card">
+				    <div class="card-header"><strong>Nodefony WebPack Configurations</strong>  </div>
+				    <div class="alert alert-warning" role="alert">
+				        Nodefony  WebPack Configuration
+				        </br>
+				        <ul>
+				            <li>
+				                <strong>public</strong> : "src/bundles/name-bundle/Resources/public",
+				            </li>
+				            <li>
+				                <strong>entry</strong> : "src/bundles/name-bundle/Resources/public/js/name.js",
+				            </li>
+				            <li>
+				                <strong>output</strong>  : "src/bundles/name-bundle/Resources/public/assets",
+				            </li>
+				            <li>
+				                <strong>publicPath</strong> : "/name-bundle",
+				            </li>
+				        </ul>
+				    </div>
+				    <div class="card-body" style='border-width:0.2em'>
+				        <ul class="nav nav-pills"  role="tablist">
+				            <li class="nav-item "><a class="nav-link active" href="#common" role="tab" aria-controls="common" data-toggle="pill" >webpack.config.js</a></li>
+				            <li class="nav-item" ><a class="nav-link" href="#dev" role="tab" aria-controls="dev" data-toggle="pill">webpack.dev.config.js</a></li>
+				            <li class="nav-item" ><a class="nav-link" href="#prod" role="tab" aria-controls="prod" data-toggle="pill">webpack.prod.config.js</a></li>
+				            <li class="nav-item" ><a class="nav-link" href="#index" role="tab" aria-controls="index" data-toggle="pill">index.html.twig</a></li>
+				            <li class="nav-item" ><a class="nav-link" href="#entryjs" role="tab" aria-controls="entryjs" data-toggle="pill">name.js</a></li>
+				            <li class="nav-item" ><a class="nav-link" href="#entrycss" role="tab" aria-controls="entrycss" data-toggle="pill">name.css</a></li>
+				        </ul>
+				        <div class="tab-content ">
+				            <div id="common" class="tab-pane active">
+				                </br>
+				                <p>Location : <code>src/bundles/name-bundle//Resources/config/webpack.config.js</code></p>
+				                <pre><code class="hljs javascript" >const path = require("path");
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpackMerge = require('webpack-merge');
@@ -194,12 +203,12 @@ module.exports = webpackMerge(config, {
     hot: false
   }
 });
-                </code></pre>
-            </div>
-						<div id="dev" class="tab-pane">
-						</br>
-						<p>Location : <code>src/bundles/name-bundle/Resources/config/webpack/webpack.dev.config.js</code></p>
-						<pre><code class="hljs javascript">// WEBPACK DEV CONFIGURATION
+				                </code></pre>
+				            </div>
+										<div id="dev" class="tab-pane">
+										</br>
+										<p>Location : <code>src/bundles/name-bundle/Resources/config/webpack/webpack.dev.config.js</code></p>
+										<pre><code class="hljs javascript">// WEBPACK DEV CONFIGURATION
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 //const public = path.resolve(__dirname, "..", "..", "public");
 
@@ -215,12 +224,12 @@ module.exports = {
     //new webpack.HotModuleReplacementPlugin()
   ]
 };
-						</code></pre>
-						</div>
-						<div id="prod" class="tab-pane">
-                </br>
-                <p>Location : <code>src/bundles/name-bundle/Resources/config/webpack/webpack.prod.config.js</code></p>
-                <pre><code class="hljs javascript">const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+										</code></pre>
+										</div>
+										<div id="prod" class="tab-pane">
+				                </br>
+				                <p>Location : <code>src/bundles/name-bundle/Resources/config/webpack/webpack.prod.config.js</code></p>
+				                <pre><code class="hljs javascript">const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
@@ -251,12 +260,12 @@ module.exports = {
     })
   ]
 };
-                </code></pre>
-            </div>
-            <div id="index" class="tab-pane">
-                </br>
-                <p>Location : <code>src/bundles/name-bundle/Resources/views/index.html.twig</code></p>
-                <pre><code class="hljs twig">
+				                </code></pre>
+				            </div>
+				            <div id="index" class="tab-pane">
+				                </br>
+				                <p>Location : <code>src/bundles/name-bundle/Resources/views/index.html.twig</code></p>
+				                <pre><code class="hljs twig">
 &#123;% extends '/app/Resources/views/base.html.twig' %&#125;
 
 &#123;% block title %&#125;Welcome &#123;&#123;kernel.name&#125;&#125;! &#123;% endblock %&#125;
@@ -291,13 +300,13 @@ module.exports = {
 	&ltscript src='&#123;&#123;CDN("javascript")&#125;&#125;/name-bundle/assets/js/name.js'&gt&lt/script&gt
 
 &#123;% endblock %&#125;
-            </code></pre>
-            </div>
+				            </code></pre>
+				            </div>
 
-            <div id="entryjs" class="tab-pane">
-                </br>
-                <p>Location : <code>src/bundles/name-bundle/Resources/public/js/name.js</code></p>
-                <pre><code class="hljs javascript" >/**
+				            <div id="entryjs" class="tab-pane">
+				                </br>
+				                <p>Location : <code>src/bundles/name-bundle/Resources/public/js/name.js</code></p>
+				                <pre><code class="hljs javascript" >/**
  *
  *	ENTRY POINT WEBPACK BUNLDE
  *
@@ -321,20 +330,26 @@ import "../css/name.css";
 }
 
 export default new name();
-                </code></pre>
-            </div>
-            <div id="entrycss" class="tab-pane">
-                </br>
-                <p>Location : <code>src/bundles/name-bundle/Resources/public/css/name.css</code></p>
-                <pre><code class="hljs css" >
+				                </code></pre>
+				            </div>
+				            <div id="entrycss" class="tab-pane">
+				                </br>
+				                <p>Location : <code>src/bundles/name-bundle/Resources/public/css/name.css</code></p>
+				                <pre><code class="hljs css" >
 IMG.displayed {
     display: block;
     margin-left: auto;
     margin-right: auto
 }
-                </code></pre>
-            </div>
+				                </code></pre>
+				            </div>
 
-        </div>
-    </div>
-</div>
+				        </div>
+				    </div>
+				</div>
+
+
+			</main>
+		</div>
+	</div>
+{% endblock %}
