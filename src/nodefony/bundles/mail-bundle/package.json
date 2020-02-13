@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/mail-bundle",
-  "version": "5.1.1",
+  "version": "6.0.0-beta.1",
   "description": "Nodefony Framework Bundle mail",
   "main": "mailBundle.js",
   "private": false,
