@@ -27,7 +27,7 @@
     "qs": "^6.9.1",
     "request": "^2.88.2",
     "shortid": "^2.2.15",
-    "terser-webpack-plugin": "^2.3.4",
+    "terser-webpack-plugin": "^2.3.5",
     "useragent": "^2.3.0",
     "webpack": "^4.41.6",
     "webpack-merge": "^4.2.2"
