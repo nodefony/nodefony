@@ -509,8 +509,8 @@ class Nodefony {
     // nodefony
     cli.setTitleHelp(cli.clc.cyan("nodefony"));
     cli.setHelp("", "create [-i] name [path]", "Create New Nodefony Project");
-    cli.setHelp("", "build", "Build Nodefony Framewok");
-    cli.setHelp("", "rebuild", "Rebuild Nodefony Framewok (Recompilation when node version change )");
+    cli.setHelp("", "build", "Build Nodefony Framework");
+    cli.setHelp("", "rebuild", "Rebuild Nodefony Framework (Recompilation when node version change )");
     cli.setHelp("", "install", "Install Nodefony Project");
     cli.setHelp("", "certificates", `Generate HTTPS Certificates  'Change default openssl configuration in config/openssl'`);
     cli.setHelp("", "dependencies", "List Project dependencies");

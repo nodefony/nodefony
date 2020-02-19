@@ -363,6 +363,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
         this.choices.push(`${this.startString} Pre-Production`);
         this.choices.push(`${this.startString} Production`);
         this.choices.push(`Install Project`);
+        this.choices.push(`Build Project`);
         this.choices.push(`Rebuild Project`);
         this.choices.push(`${this.generateString}`);
         this.choices.push(`Tools`);
