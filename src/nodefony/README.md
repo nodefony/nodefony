@@ -36,7 +36,7 @@ Nodefony is not an exhaustive port of symfony !
 ## <a name="features"></a>Nodefony features :
 
 -   Servers  ([http(s)](https://nodejs.org/dist/latest-v8.x/docs/api/https.html), [websocket(s)](https://github.com/theturtle32/WebSocket-Node), statics, sockjs)
--   [HTTP2](https://nodejs.org/api/http2.html)  http2 ready node module provides an implementation of the HTTP/2 (push server ready).
+-   [HTTP2](https://nodejs.org/api/http2.html) ready node module provides an implementation of the HTTP/2 (push server ready).
 -   Dynamics routing
 -   ORM [Sequelize](http://docs.sequelizejs.com)
 -   ORM [mongoose](http://mongoosejs.com/index.html)

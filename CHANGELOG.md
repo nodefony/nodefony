@@ -1,5 +1,15 @@
 # Changelog
 
+## v6.0.0-beta.2 (25/02/2020)
+- [nodefony release 6.0.0-beta.2](https://github.com/nodefony/nodefony-core/commit/4d02933506cab4d3d937b9bb38139a5b197bcf54)
+- [debug create Project cli](https://github.com/nodefony/nodefony-core/commit/527b739df97e59a4bab1dc2b77dbc33a1661693a)
+- [upgrade deps:wq](https://github.com/nodefony/nodefony-core/commit/131a7f26e4fd7dc02d7de60af2c050ebd33f6dad)
+- [debug](https://github.com/nodefony/nodefony-core/commit/b1bb506f36bf9a829a3264df59585201ac0bb875)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/c16f3d98336679ac2305a874e38478f0512a0998)
+- [nodefony changelog 6.0.0-beta.1](https://github.com/nodefony/nodefony-core/commit/8335357342f6e13d08e1511e6cebd11a4ad9aea7)
+
+---
+
 ## v6.0.0-beta.1 (13/02/2020)
 - [nodefony release 6.0.0-beta.1](https://github.com/nodefony/nodefony-core/commit/c7d1ca6100f4cfda49648caec484ce0f2bc24143)
 - [upgrade deps](https://github.com/nodefony/nodefony-core/commit/cab39f8883fa132ad83404dea975493e1cc46802)
