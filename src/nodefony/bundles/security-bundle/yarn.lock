@@ -47,14 +47,14 @@
   integrity sha512-FwI9gX75FgVBJ7ywgnq/P7tw+/o1GUbtP0KzbtusLigAOgIgNISRK0ZPl4qertvXSIE8YbsVJueQ90cDt9YYyw==
 
 "@types/node@*":
-  version "13.7.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.7.1.tgz#238eb34a66431b71d2aaddeaa7db166f25971a0d"
-  integrity sha512-Zq8gcQGmn4txQEJeiXo/KiLpon8TzAl0kmKH4zdWctPj05nWwp1ClMdAVEloqrQKfaC48PNLdgN/aVaLqUrluA==
+  version "13.7.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.7.4.tgz#76c3cb3a12909510f52e5dc04a6298cdf9504ffd"
+  integrity sha512-oVeL12C6gQS/GAExndigSaLxTrKpQPxewx9bOcwfvJiJge4rr7wNaph4J+ns5hrmIV2as5qxqN8YKthn9qh0jw==
 
 "@types/node@^10.12.12", "@types/node@^10.12.26":
-  version "10.17.15"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.15.tgz#bfff4e23e9e70be6eec450419d51e18de1daf8e7"
-  integrity sha512-daFGV9GSs6USfPgxceDA8nlSe48XrVCJfDeYm7eokxq/ye7iuOH87hKXgMtEAVLFapkczbZsx868PMDT1Y0a6A==
+  version "10.17.16"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.16.tgz#ee96ddac1a38d98d2c8a71c7df0cdad5758e8993"
+  integrity sha512-A4283YSA1OmnIivcpy/4nN86YlnKRiQp8PYwI2KdPCONEBN093QTb0gCtERtkLyVNGKKIGazTZ2nAmVzQU51zA==
 
 "@types/passport@^1.0.0":
   version "1.0.2"
@@ -403,9 +403,9 @@ ldap-filter@0.2.2:
     assert-plus "0.1.5"
 
 ldapauth-fork@^4.2.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/ldapauth-fork/-/ldapauth-fork-4.3.0.tgz#c9818087542a5d3aa17c15ab948aede046382d36"
-  integrity sha512-ipVpHX1UL9K5klPYTlQzrBbGejrFjavrld4PVbSShz5nnaK8oYo6v/85Ys/S7jylCkgpQn5QLGGWEhYYjcFbWA==
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/ldapauth-fork/-/ldapauth-fork-4.3.1.tgz#500c04f339257ac0e189af8752ec5df43982ceac"
+  integrity sha512-IJUnkEDQg6D45jUKW3FFfMWZhUjZoGkN97WaMXF1cBod0gJq74d+iwRavPqiE3o/KNRgqwFesrdE4Ym4Fc1GIQ==
   dependencies:
     "@types/ldapjs" "^1.0.0"
     "@types/node" "^10.12.12"
