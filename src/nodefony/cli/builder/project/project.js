@@ -77,8 +77,11 @@ class generateProject extends nodefony.Builder {
       this.log('Copy users-bundle in src/bundles', "INFO", "USERS-BUNDLE");
       try {
         let mypath = path.resolve(this.path, "src", "bundles");
-        let res = this.cli.cp('-Rf', this.bundleUsersPath, mypath);
-        return resolve(res);
+        this.cli.cp('-Rf', this.bundleUsersPath, mypath);
+        return this.cli.packageManager.call(this.cli, ["install"], path.resolve(mypath, "users-bundle"))
+        .then(( res)=>{
+          return resolve(res);
+        });
       } catch (e) {
         return reject(e);
       }

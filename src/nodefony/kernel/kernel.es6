@@ -190,8 +190,6 @@ class Kernel extends nodefony.Service {
           this.clean();
           myrequire = null;
         }
-
-
       });
     } catch (e) {
       console.trace(e);

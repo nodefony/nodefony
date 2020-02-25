@@ -7,7 +7,7 @@ class generateTask extends nodefony.Task {
     this.connectionsSettings = [];
     this.connections = [];
     this.bundles = this.getBundles();
-    this.location = path.resolve("Entity");
+    this.location = path.resolve("Entity", "sequelize");
     this.skeleton = path.resolve(__dirname, "skeletons", "entity.skeleton");
     this.dataType = this.orm.engine.DataTypes;
     this.types = [];

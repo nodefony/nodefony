@@ -47,7 +47,7 @@ module.exports = {
     webpack: true
   },
   {% else %}
-  watch: true,
+  watch: false,
   {% endif %}
   /**
    * DEV SERVER

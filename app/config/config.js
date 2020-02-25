@@ -31,7 +31,7 @@ module.exports = {
    *      }
    *
    */
-  watch: true,
+  watch: false,
 
   /*
    *   OVERRIDE BUNDLES CONFIG

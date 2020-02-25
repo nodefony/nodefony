@@ -202,11 +202,12 @@ class cliKernel extends nodefony.cli {
   parseNodefonyCommand(cmd, args) {
     this.clearNodefonyCommand();
     if (cmd) {
-      if (typeof this.commander.args[0] === "string") {
+      /*if (typeof this.commander.args[0] === "string") {
         this.pattern = cmd.split(":");
       } else {
-        this.pattern = null;
-      }
+        this.pattern = cmd.split(":");
+      }*/
+      this.pattern = cmd.split(":");
       if (args) {
         this.args = args;
       }
