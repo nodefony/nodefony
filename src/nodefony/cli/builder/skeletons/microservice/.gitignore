@@ -1,0 +1,40 @@
+#Ignore directory
+/tmp/*
+
+
+node_modules/**
+**/node_modules/**
+**/precache-manifest*
+npm-debug.log
+yarn-error.log
+.~lock*
+
+yarn.lock
+package-lock.json
+package-lock.json/**
+**/package-lock.json/**
+yarn.lock/**
+**/yarn.lock/**
+*/yarn.lock
+*/package-lock.json
+*.[oa]
+
+config/certificates/**/*
+
+
+#Ignore vin backup
+*.swp
+*.swn
+*.swo
+#emacs
+*~
+# macos
+.DS_Store
+.ftpconfig
+.ftpignore
+
+.srl
+# Eclipse file
+/.project
+/.settings
+/nbproject/private/

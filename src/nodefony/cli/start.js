@@ -377,6 +377,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
       }
     } else {
       this.choices.push(`Create Nodefony Project`);
+      this.choices.push(`Build Micro Service`);
       this.choices.push(`PM2 Tools`);
     }
     this.choices.push(this.getSeparator());
@@ -406,6 +407,8 @@ module.exports = class cliStart extends nodefony.cliKernel {
               return "pre-production";
             case `Create Nodefony Project`:
               return "project";
+            case `Build Micro Service`:
+              return "microService";
             case `${this.generateString}`:
               return "generate";
             case `Run Test`:
@@ -442,6 +445,8 @@ module.exports = class cliStart extends nodefony.cliKernel {
         switch (this.response.command) {
           case "project":
             return this.createProject(null, null, true);
+          case "microService":
+            return this.createMicroService(null, null, true);
           case "rebuild":
             return this.setCommand("rebuild");
           case "build":
@@ -551,6 +556,15 @@ module.exports = class cliStart extends nodefony.cliKernel {
     } catch (e) {
       throw e;
     }
+  }
+
+  createMicroService(command, args, interactive = false){
+    let microService = new nodefony.builders.microService(this, command, args);
+
+    return microService.run(interactive)
+      .then((obj) => {
+        //console.log(obj)
+      });
   }
 
   installProject(cwd = path.resolve(".")) {

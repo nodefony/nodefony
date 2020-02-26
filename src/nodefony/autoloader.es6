@@ -77,6 +77,7 @@ module.exports = function () {
         //builders
         require(path.resolve(__dirname, "builder.es6"));
         require(path.resolve(__dirname, "cli", "builder", "bundles", "bundle.js"));
+        require(path.resolve(__dirname, "cli", "builder", "microService", "microService.js"));
         require(path.resolve(__dirname, "cli", "builder", "project", "project.js"));
         require(path.resolve(__dirname, "cli", "builder", "sandbox", "sandBoxBuilder.js"));
         require(path.resolve(__dirname, "cli", "builder", "react", "reactBuilder.js"));

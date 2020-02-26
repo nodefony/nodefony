@@ -51,11 +51,6 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.7.4.tgz#76c3cb3a12909510f52e5dc04a6298cdf9504ffd"
   integrity sha512-oVeL12C6gQS/GAExndigSaLxTrKpQPxewx9bOcwfvJiJge4rr7wNaph4J+ns5hrmIV2as5qxqN8YKthn9qh0jw==
 
-"@types/node@^10.12.12", "@types/node@^10.12.26":
-  version "10.17.16"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.16.tgz#ee96ddac1a38d98d2c8a71c7df0cdad5758e8993"
-  integrity sha512-A4283YSA1OmnIivcpy/4nN86YlnKRiQp8PYwI2KdPCONEBN093QTb0gCtERtkLyVNGKKIGazTZ2nAmVzQU51zA==
-
 "@types/passport@^1.0.0":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@types/passport/-/passport-1.0.2.tgz#f085033e2b301b1f97d4b57bfa73d8e934650c63"
@@ -402,13 +397,13 @@ ldap-filter@0.2.2:
   dependencies:
     assert-plus "0.1.5"
 
-ldapauth-fork@^4.2.0:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/ldapauth-fork/-/ldapauth-fork-4.3.1.tgz#500c04f339257ac0e189af8752ec5df43982ceac"
-  integrity sha512-IJUnkEDQg6D45jUKW3FFfMWZhUjZoGkN97WaMXF1cBod0gJq74d+iwRavPqiE3o/KNRgqwFesrdE4Ym4Fc1GIQ==
+ldapauth-fork@^4.3.2:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/ldapauth-fork/-/ldapauth-fork-4.3.2.tgz#bc408f0d4fb8d07e5e9a7287c7310fdceea226f9"
+  integrity sha512-XaO/kLaY9XGH/O58qTgtGtS0u7Qfq9IMDYWBvjRDuNfh7PbqOA5JXwF7DeKW6kIWQ842fGoIpB/cZmJ0SaJFbQ==
   dependencies:
     "@types/ldapjs" "^1.0.0"
-    "@types/node" "^10.12.12"
+    "@types/node" "*"
     bcryptjs "^2.4.0"
     ldapjs "^1.0.2"
     lru-cache "^5.1.1"
@@ -678,14 +673,14 @@ passport-jwt@^4.0.0:
     jsonwebtoken "^8.2.0"
     passport-strategy "^1.0.0"
 
-passport-ldapauth@^2.1.3:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/passport-ldapauth/-/passport-ldapauth-2.1.3.tgz#833530c31c1e2f8d2ab7a1ff97339291074dc6f6"
-  integrity sha512-23n425UTasN6XhcXG0qQ0h0YrS/zfo8kNIEhSLfPsNpglhYhhQFfB1pmDc5RrH+Kiz5fKLkki5BpvkKHCwkixg==
+passport-ldapauth@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/passport-ldapauth/-/passport-ldapauth-2.1.4.tgz#2259e4e5d2d9c2b3d50a04f6640a941effda8da9"
+  integrity sha512-VeVL69ZK+cpJe0DKMSGuwcf7k+V4dr0U0Y7ZhXL785pcRb5gRA6qYZfIH+XTsAzwqTK9l0Dn3Ds4weOZ1jKkLQ==
   dependencies:
-    "@types/node" "^10.12.26"
+    "@types/node" "*"
     "@types/passport" "^1.0.0"
-    ldapauth-fork "^4.2.0"
+    ldapauth-fork "^4.3.2"
     passport-strategy "^1.0.0"
 
 passport-local@^1.0.0:

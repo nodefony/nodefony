@@ -13,7 +13,7 @@
   ],
   "dependencies": {
     "cookie": "^0.4.0",
-    "formidable": "^1.2.1",
+    "formidable": "^1.2.2",
     "memcached": "^2.2.2",
     "mime": "^2.4.4",
     "mkdirp": "^1.0.3",

@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+
+"use strict;";
+const path = require("path");
+let cli = null;
+
+try {
+  cli = require(path.resolve("src", "cli", "cli.js"));
+} catch (e) {
+  throw e;
+}
+
+module.exports = cli;
