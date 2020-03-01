@@ -1,5 +1,6 @@
 #Ignore directory
-/tmp/*
+#/tmp/*
+#/dist/*
 
 
 node_modules/**
