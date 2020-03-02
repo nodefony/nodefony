@@ -16,6 +16,7 @@
     "pm2": "pm2",
     "start": "node ./bin/cli",
     "dev": "NODE_ENV=development pm2 start config/pm2.config.js --env development --no-daemon",
+    "dev_debug": "NODE_ENV=development; DEBUG=* pm2 start config/pm2.config.js --env development --no-daemon",
     "prod": "NODE_ENV=production pm2 start config/pm2.config.js --env production",
     "stop": "pm2 stop cci",
     "restart": "pm2 restart cci",

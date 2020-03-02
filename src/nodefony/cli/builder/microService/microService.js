@@ -4,7 +4,7 @@ class microService extends nodefony.Builder {
   constructor(cli, cmd, args) {
     super(cli, cmd, args);
     this.name = null;
-    this.pathSkeleton = path.resolve(__dirname, "skeletons", "microService");
+    this.pathSkeleton = path.resolve(__dirname, "..","skeletons", "microservice");
 
 
     if (this.cmd === "create:microService" || this.cmd === "microService") {
@@ -85,7 +85,7 @@ class microService extends nodefony.Builder {
           } catch (e) {
             return e.message;
           }
-          
+
           if (value) {
             this.location = value;
             return true;
@@ -120,17 +120,69 @@ class microService extends nodefony.Builder {
       return this.cli.prompt(promtOptions)
         .then((response) => {
           console.log(response)
+          return response ;
         });
-
   }
-
 
   createBuilder(response) {
     try {
       return {
         name: this.response.name,
         type: "directory",
-        childs: []
+        childs: [{
+            name: "tmp",
+            type: "directory"
+          },{
+            name: "dist",
+            type: "directory"
+          },{
+            name: "package.json",
+            type: "file",
+            skeleton: path.resolve(this.pathSkeleton, "package.json"),
+            params: this.response
+          },{
+            name: "README.md",
+            type: "copy",
+            path: path.resolve(this.pathSkeleton, "README.md")
+          },{
+            name: ".editorconfig",
+            type: "copy",
+            path: path.resolve(this.pathSkeleton, ".editorconfig")
+          },{
+            name: ".gitignore",
+            type: "copy",
+            path: path.resolve(this.pathSkeleton, ".gitignore")
+          },{
+            name: ".jshintrc",
+            type: "copy",
+            path: path.resolve(this.pathSkeleton, ".jshintrc")
+          },{
+            name: "bin",
+            type: "directory",
+            childs: [{
+              name: "cli",
+              type: "file",
+              chmod: 755,
+              skeleton: path.resolve(this.pathSkeleton, "bin", "cli"),
+              params: this.response
+            }]
+          },{
+            name: "src",
+            type: "copy",
+            path: path.resolve(this.pathSkeleton, "src"),
+            params:{recurse:true}
+          },{
+            name: "tests",
+            type: "copy",
+            path: path.resolve(this.pathSkeleton, "tests"),
+            params:{recurse:true}
+          },{
+            name: "config",
+            type: "copy",
+            path: path.resolve(this.pathSkeleton, "config"),
+            params:{recurse:true}
+          }
+        ]
       };
     }catch(e){
 

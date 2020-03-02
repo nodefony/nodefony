@@ -56,7 +56,7 @@ module.exports = class unitTest extends nodefony.Service {
     if (this.kernel.isCore) {
       const finder = new nodefony.finder({
         path: this.kernel.nodefonyPath,
-        exclude: /^bundles$|^doc$|^node_modules$/,
+        exclude: /^bundles$|^doc$|^node_modules$|^builder$/,
         match: regFile
       });
       if (finder.result.files.length) {

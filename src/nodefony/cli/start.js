@@ -560,10 +560,29 @@ module.exports = class cliStart extends nodefony.cliKernel {
 
   createMicroService(command, args, interactive = false){
     let microService = new nodefony.builders.microService(this, command, args);
-
     return microService.run(interactive)
       .then((obj) => {
-        //console.log(obj)
+        return this.gitInit(microService, obj.response)
+        .then(()=>{
+          let cwd = path.resolve(microService.location, microService.name);
+          this.logger(`Nodefony Micro Service ${obj.response.name} complete`, "INFO");
+          this.cd(cwd);
+          return this.npm(["install"], cwd);
+        }).catch(e =>{
+          if (e.code || e.code === 0) {
+            this.logger(e, "INFO");
+            this.terminate(e.code);
+          }
+          this.logger(e, "ERROR");
+          this.terminate(e.code || 1);
+        });
+      }).catch(e =>{
+        if (e.code || e.code === 0) {
+          this.logger(e, "INFO");
+          this.terminate(e.code);
+        }
+        this.logger(e, "ERROR");
+        this.terminate(e.code || 1);
       });
   }
 
