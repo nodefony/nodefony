@@ -1,0 +1,62 @@
+{
+  "name": "{{name}}",
+  "version": "1.0.0",
+  "description": "{{description}}",
+  "author": "{{authorFullName}} <{{authorMail}}>",
+  "main": "/src/index.js",
+  "browser": "./dist/index.js",
+  "private": true,
+  "bin": {
+    "cli": "./bin/cli"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "nodefony": "nodefony",
+    "pm2": "pm2",
+    "start": "node ./bin/cli",
+    "dev": "env-cmd -e development pm2 start config/pm2.config.js --env development --no-daemon",
+    "dev_debug": "env-cmd -e development_debug pm2 start config/pm2.config.js --env development --no-daemon",
+    "prod": "env-cmd -e production pm2 start config/pm2.config.js --env production",
+    "stop": "pm2 stop {{name}}",
+    "restart": "pm2 restart {{name}}",
+    "delete": "pm2 delete {{name}}",
+    "log": "pm2 logs",
+    "monit": "pm2 monit",
+    "status": "pm2 status",
+    "kill": "pm2 kill",
+    "build": "env-cmd -e webpack_prod webpack --env.production --config config/webpack.config.js; env-cmd -e webpack_dev webpack --env.development --verbose --config config/webpack.config.js",
+    "test": "env-cmd -e test mocha  --require @babel/register --recursive ./tests"
+  },
+  "keywords": [
+    "javascript",
+    "node.js",
+    "nodefony",
+    "microservice"
+  ],
+  "dependencies": {
+    "env-cmd": "^10.1.0",
+    "markdown-it": "^10.0.0",
+    "nodefony": "^6.0.0-beta.2",
+    "pm2": "^4.2.3",
+    "pm2-logrotate": "^2.7.0",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.6",
+    "@babel/preset-env": "^7.8.6",
+    "@babel/register": "^7.8.6",
+    "babel-loader": "^8.0.6",
+    "chai": "^4.2.0",
+    "mocha": "^7.1.0",
+    "node-gyp": "^6.1.0",
+    "node-pre-gyp": "^0.14.0",
+    "open": "^7.0.2",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-merge": "^4.2.2"
+  },
+  "license": "ISC"
+}

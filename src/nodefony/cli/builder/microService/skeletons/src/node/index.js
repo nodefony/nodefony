@@ -7,6 +7,7 @@ const Server = require(path.resolve(__dirname, "services", "servers", "http.js")
 const Worker = require(path.resolve(__dirname, "services", "worker", "worker.js"));
 const Socket = require(path.resolve(__dirname, "services", "socketio", "socketio.js"));
 const Markdown = require(path.resolve(__dirname, "services", "markdown", "markdown.js"));
+const Syscall = require(path.resolve(__dirname, "services", "syscall", "syscall.js"));
 
 class Service extends nodefony.Service {
   constructor(env= "production", debug = false){
@@ -28,8 +29,10 @@ class Service extends nodefony.Service {
     this.createHttpServer();
     // SocketIo for websocket connections
     this.createSocketIoServer();
-    // user node.js worker (multi threading)
+    // node.js worker (multi threading)
     this.createWorker();
+    //  Syscall  (Spawn)
+    this.createSyscall();
   }
 
   createHttpServer(){
@@ -60,6 +63,12 @@ class Service extends nodefony.Service {
     return mk ;
   }
 
+  createSyscall(){
+    const sys = new Syscall(this);
+    // add in service container
+    this.set("syscall", sys);
+  }
+
   terminate(code, quiet){
     if (this.debug) {
       console.trace(code);
@@ -85,4 +94,4 @@ class Service extends nodefony.Service {
 
 }
 
-module.exports = new Service(process.env.NODE_ENV, process.env.NODE_DEBUG);
+module.exports = new Service(process.env.NODE_ENV, process.env.DEBUG);

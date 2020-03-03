@@ -4,7 +4,7 @@ class microService extends nodefony.Builder {
   constructor(cli, cmd, args) {
     super(cli, cmd, args);
     this.name = null;
-    this.pathSkeleton = path.resolve(__dirname, "..","skeletons", "microservice");
+    this.pathSkeleton = path.resolve(__dirname, "skeletons");
 
 
     if (this.cmd === "create:microService" || this.cmd === "microService") {
@@ -145,6 +145,10 @@ class microService extends nodefony.Builder {
             type: "copy",
             path: path.resolve(this.pathSkeleton, "README.md")
           },{
+            name: ".env-cmdrc.js",
+            type: "copy",
+            path: path.resolve(this.pathSkeleton, ".env-cmdrc.js")
+          },{
             name: ".editorconfig",
             type: "copy",
             path: path.resolve(this.pathSkeleton, ".editorconfig")
@@ -164,6 +168,18 @@ class microService extends nodefony.Builder {
               type: "file",
               chmod: 755,
               skeleton: path.resolve(this.pathSkeleton, "bin", "cli"),
+              params: this.response
+            },{
+              name: "hello.sh",
+              type: "file",
+              chmod: 755,
+              skeleton: path.resolve(this.pathSkeleton, "bin", "bash","hello.sh"),
+              params: this.response
+            },{
+              name: "hello.py",
+              type: "file",
+              chmod: 755,
+              skeleton: path.resolve(this.pathSkeleton, "bin", "python","hello.py"),
               params: this.response
             }]
           },{
