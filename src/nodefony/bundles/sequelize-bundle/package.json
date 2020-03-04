@@ -11,7 +11,7 @@
     "javascript"
   ],
   "dependencies": {
-    "@alt3/sequelize-to-json-schemas": "^0.3.47",
+    "@alt3/sequelize-to-json-schemas": "^0.3.48",
     "cls-hooked": "^4.2.2",
     "mysql2": "^2.1.0",
     "pg": "^7.18.2",

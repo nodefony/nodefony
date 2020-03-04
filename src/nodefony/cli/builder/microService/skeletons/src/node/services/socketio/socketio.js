@@ -14,18 +14,19 @@ class SocketIo extends nodefony.Service {
   }
 
   start(){
-    this.io = socketio(this.http.server);
-    this.log(`Server socketio running at ws://${this.http.settings.hostname}:${this.http.settings.port}/`);
-    this.io.on('connection', client => {
-      client.on('event', data => {
-        this.log(data);
+    return new Promise((resolve, reject)=>{
+      this.io = socketio(this.http.server);
+      this.log(`Server socketio running at ws://${this.http.settings.hostname}:${this.http.settings.port}/`);
+      this.io.on('connection', client => {
+        client.on('event', data => {
+          this.log(data);
+        });
+        client.on('disconnect', () => {
+          this.log("disconnect");
+        });
       });
-      client.on('disconnect', () => {
-        this.log("disconnect");
-      });
+      return resolve(this.io) ;
     });
-    return this.io ;
-
   }
 
 }

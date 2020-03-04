@@ -19,7 +19,11 @@ class Service extends nodefony.Service {
     this.debug = debug;
     this.log(`Environment = ${env}   Debug = ${debug}`);
     this.settings = config ;
+    // start
+    this.start();
+  }
 
+  start(){
     /**
      *  examples services
      */
@@ -35,18 +39,19 @@ class Service extends nodefony.Service {
     this.createSyscall();
   }
 
-  createHttpServer(){
+
+  async createHttpServer(){
     const http = new Server(this);
     // add in service container
     this.set("http", http);
-    return http.start();
+    return await http.start();
   }
 
-  createSocketIoServer(){
+  async createSocketIoServer(){
     const socket = new Socket(this);
     // add in service container
     this.set("socketio", socket);
-    return socket.start();
+    return await socket.start();
   }
 
   createWorker(){

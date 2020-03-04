@@ -25,7 +25,7 @@ class myWorker extends nodefony.Service {
     const worker = new Worker(thread, {
       workerData: data
     });
-    this.log(worker.threadId);
+    //this.log(worker.threadId);
     worker.on('online', () => {
       this.log(`Worker online !`, "INFO");
     });
