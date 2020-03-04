@@ -7,7 +7,7 @@ class microService extends nodefony.Builder {
     this.pathSkeleton = path.resolve(__dirname, "skeletons");
 
 
-    if (this.cmd === "create:microService" || this.cmd === "microService") {
+    if (this.cmd === "create:microservice" || this.cmd === "microservice") {
       if (args && args[0]) {
         this.name = args[0];
         if (args[1]) {
@@ -17,7 +17,7 @@ class microService extends nodefony.Builder {
     }
     nodefony.extend(this.response, {
       name: this.name || "nodefony-service",
-      description: "Service Description",
+      description: "Micro Service Description",
       path: this.location,
       authorFullName: "admin",
       authorName: "admin",
@@ -57,7 +57,7 @@ class microService extends nodefony.Builder {
         type: 'input',
         name: 'description',
         message: 'Enter short description',
-        default: "Service Description",
+        default: this.response.description,
         validate: (value) => {
           if (!value) {
             this.cli.response.description = `${this.response.description} ${this.name}`;
@@ -66,9 +66,6 @@ class microService extends nodefony.Builder {
         },
         filter: (value) => {
           if (!value) {
-            return this.response.description;
-          }
-          if (value === "Service Description") {
             return this.response.description;
           }
           return value;
@@ -119,7 +116,7 @@ class microService extends nodefony.Builder {
 
       return this.cli.prompt(promtOptions)
         .then((response) => {
-          console.log(response)
+          this.log(response)
           return response ;
         });
   }
@@ -201,13 +198,10 @@ class microService extends nodefony.Builder {
         ]
       };
     }catch(e){
-
+      throw e ;
     }
   }
-
 }
-
-
 
 nodefony.builders.microService = microService;
 module.exports = microService;

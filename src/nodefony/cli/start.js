@@ -376,8 +376,8 @@ module.exports = class cliStart extends nodefony.cliKernel {
         this.choices.push(`PM2 Tools`);
       }
     } else {
-      this.choices.push(`Create Nodefony Project`);
-      this.choices.push(`Build Micro Service`);
+      this.choices.push(`Create Nodefony Web Project`);
+      this.choices.push(`Create Micro Service Project`);
       this.choices.push(`PM2 Tools`);
     }
     this.choices.push(this.getSeparator());
@@ -405,10 +405,10 @@ module.exports = class cliStart extends nodefony.cliKernel {
               return "production";
             case `${this.startString} Pre-Production`:
               return "pre-production";
-            case `Create Nodefony Project`:
+            case `Create Nodefony Web Project`:
               return "project";
-            case `Build Micro Service`:
-              return "microService";
+            case `Create Micro Service Project`:
+              return "microservice";
             case `${this.generateString}`:
               return "generate";
             case `Run Test`:
@@ -445,7 +445,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
         switch (this.response.command) {
           case "project":
             return this.createProject(null, null, true);
-          case "microService":
+          case "microservice":
             return this.createMicroService(null, null, true);
           case "rebuild":
             return this.setCommand("rebuild");
@@ -509,9 +509,6 @@ module.exports = class cliStart extends nodefony.cliKernel {
       if (command === "create") {
         if (!args[0]) {
           args[0] = "nodefony-starter";
-          //let error = new Error("Project name empty Unauthorised Please enter a valid project name ");
-          //this.logger(error, "ERROR");
-          //this.terminate(1);
         }
       }
       let project = new nodefony.builders.project(this, command, args);
@@ -567,7 +564,13 @@ module.exports = class cliStart extends nodefony.cliKernel {
           let cwd = path.resolve(microService.location, microService.name);
           this.logger(`Nodefony Micro Service ${obj.response.name} complete`, "INFO");
           this.cd(cwd);
-          return this.npm(["install"], cwd);
+          return this.npm(["install"], cwd)
+          .then(()=>{
+            
+            this.log(`cd ${obj.response.name}`);
+            this.log(`npm start`);
+            return cwd;
+          });
         }).catch(e =>{
           if (e.code || e.code === 0) {
             this.logger(e, "INFO");

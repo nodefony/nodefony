@@ -15,6 +15,7 @@
   "scripts": {
     "nodefony": "nodefony",
     "pm2": "pm2",
+    "install": "npm install --cwd ./src/n-api",
     "start": "node ./bin/cli",
     "dev": "env-cmd -e development pm2 start config/pm2.config.js --env development --no-daemon",
     "dev_debug": "env-cmd -e development_debug pm2 start config/pm2.config.js --env development --no-daemon",
