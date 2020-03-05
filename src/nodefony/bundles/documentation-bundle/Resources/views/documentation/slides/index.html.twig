@@ -35,7 +35,10 @@
       <h1>Nodefony<sup>®</sup></h1>
       <img width="200px" height="123px" data-src="{{CDN('image')}}/framework-bundle/images/nodejs/nodejs-new-pantone-black.png"/>
       <h5 class="nodefony-grey" style="text-align:center">
-        Web Framework
+        Web Fullstack 
+      </h5>
+      <h5 class="nodefony-grey" style="text-align:center">
+        Micro Services
       </h5>
     </section>
 
@@ -50,16 +53,9 @@
         <ol style="display:contents">
           <div class="row">
               <div class="col-sm">
-                <li><a href="#/3">Features</a></li>
-                <li><a href="#/4">Installation</a></li>
-                <li><a href="#/5">Project Generator</a></li>
-                <li><a href="#/6">Serving Project</a></li>
-              </div>
-              <div class="col-sm">
-                <li><a href="#/7">Configurations</a></li>
-                <li><a href="#/8">Simple USe</a></li>
-                <li><a href="#/9"></a></li>
-                <li><a href="#/10"></a></li>
+                <li><a href="#/2">Nodefony Installation</a></li>
+                <li><a href="#/3">Nodefony Web Project</a></li>
+                <li><a href="#/4">Nodefony Microservices Project </a></li>
               </div>
           </div>
         </ol>
@@ -67,22 +63,18 @@
 
     </section>
 
-    <!-- features -->
-    {% include "./features.html" %}
-
-
-    <section data-background-iframe="{{ url('nodefony-readme',{queryString:[{display:'debug'}]}) }}" data-background-interactive>
+    <!--section data-background-iframe="{{ url('nodefony-readme',{queryString:[{display:'debug'}]}) }}" data-background-interactive-->
 
     </section>
 
     <!-- INSTALL -->
     {% include "./install.html" %}
 
-    <!-- CREATE -->
-    {% include "./create.html" %}
+    <!-- Web Project -->
+    {% include "./web/index.html" %}
 
-    <!-- RUN -->
-    {% include "./run.html" %}
+    <!-- Microservices -->
+    {% include "./microservices/index.html" %}
 
     <section class="center">
       <img data-src="{{CDN('image')}}/app/images/app-logo.png">
@@ -95,7 +87,6 @@
           <a href="https://nodefony.net">Demo Starter</a>
         </li>
       </ul>
-
     </section>
 
   </div>
