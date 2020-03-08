@@ -1,9 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Comfortaa);
 @import url(https://fonts.googleapis.com/css?family=Gochi+Hand);
 
-
-body{
-    font-size: 0.1em !important;
+body {
+  font-size: 0.1em !important;
 }
 
 .nodefony h1 {
@@ -41,6 +40,7 @@ body{
   font-size: 1em;
   text-transform: none;
 }
+
 .nodefony h5 {
   text-align: left;
   font-family: 'Comfortaa', cursive;
@@ -49,6 +49,7 @@ body{
   font-size: 0.8em;
   text-transform: none;
 }
+
 .nodefony h6 {
   text-align: left;
   font-family: 'Comfortaa', cursive;
@@ -65,7 +66,7 @@ body{
 
 .nodefony p {
   margin-left: 4.5em;
-  font-size: 0.5em;
+  font-size: 0.8em;
   font-family: 'Comfortaa', cursive;
 }
 
@@ -76,14 +77,13 @@ body{
 }
 
 .nodefony pre code {
-  font-size:0.7em;
+  font-size: 0.7em;
   min-height: 150px;
   max-height: 500px;
-  line-height:1em;
-  padding-left:20px;
-  padding-top:20px;
+  line-height: 1em;
+  padding-left: 20px;
+  padding-top: 20px;
 }
-
 
 .nodefony-grey {
   color: #167b87;

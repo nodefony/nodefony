@@ -1041,6 +1041,7 @@ class Bundle extends nodefony.Service {
     files.getFiles().forEach((file) => {
       let domain = file.match[1];
       let Locale = file.match[2];
+      this.log(`Read I18n file : ${file.path}`, 'DEBUG');
       this.translation.reader(file.path, this.name, Locale, domain);
     });
   }

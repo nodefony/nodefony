@@ -15,11 +15,12 @@
   "scripts": {
     "nodefony": "nodefony",
     "pm2": "pm2",
-    "install": "npm install --cwd ./src/n-api",
+    "install": "env-cmd -e webpack_prod webpack --env.production --config config/webpack.config.js; env-cmd -e webpack_dev webpack --env.development --config config/webpack.config.js",
     "start": "node ./bin/cli",
-    "dev": "env-cmd -e development pm2 start config/pm2.config.js --env development --no-daemon",
-    "dev_debug": "env-cmd -e development_debug pm2 start config/pm2.config.js --env development --no-daemon",
+    "dev": "env-cmd -e development pm2 start config/pm2.config.js --only {{name}} --env development --no-daemon",
+    "dev_debug": "env-cmd -e development_debug pm2 start config/pm2.config.js --only {{name}} --env development --no-daemon",
     "prod": "env-cmd -e production pm2 start config/pm2.config.js --env production",
+    "examples": "env-cmd -e development pm2 start config/pm2.config.js --only examples --env development --no-daemon",
     "stop": "pm2 stop {{name}}",
     "restart": "pm2 restart {{name}}",
     "delete": "pm2 delete {{name}}",
@@ -27,7 +28,8 @@
     "monit": "pm2 monit",
     "status": "pm2 status",
     "kill": "pm2 kill",
-    "build": "env-cmd -e webpack_prod webpack --env.production --config config/webpack.config.js; env-cmd -e webpack_dev webpack --env.development --verbose --config config/webpack.config.js",
+    "webpack": "env-cmd -e webpack_prod webpack --env.production --config config/webpack.config.js; env-cmd -e webpack_dev webpack --env.development --verbose --config config/webpack.config.js",
+    "ssl": "./bin/generateCertificates.sh",
     "test": "env-cmd -e test mocha  --require @babel/register --recursive ./tests"
   },
   "keywords": [
@@ -38,11 +40,13 @@
   ],
   "dependencies": {
     "env-cmd": "^10.1.0",
+    "hello_world": "./src/n-api",
     "markdown-it": "^10.0.0",
-    "nodefony": "^6.0.0-beta.2",
+    "nodefony": "^{{version}}",
     "pm2": "^4.2.3",
     "pm2-logrotate": "^2.7.0",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -51,6 +55,7 @@
     "@babel/register": "^7.8.6",
     "babel-loader": "^8.0.6",
     "chai": "^4.2.0",
+    "mini-css-extract-plugin": "^0.9.0",
     "mocha": "^7.1.0",
     "node-gyp": "^6.1.0",
     "node-pre-gyp": "^0.14.0",

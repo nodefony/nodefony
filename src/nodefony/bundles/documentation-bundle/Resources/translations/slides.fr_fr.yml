@@ -1,0 +1,6 @@
+microservices :
+  definition: "En informatique,
+    les microservices sont une technique de développement logiciel,
+    une variante du style architectural de l'architecture orientée services (SOA),
+    qui structure une application comme un ensemble de services faiblement couplés.
+    </br> Les microservices indépendants communiquent les uns avec les autres en utilisant des API indépendantes du langage de programmation."

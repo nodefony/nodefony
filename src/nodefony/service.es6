@@ -115,7 +115,7 @@ class Service {
     }
   }
 
-  initSyslog(options = null) {
+  initSyslog(environment, debug , options = {}) {
     let defaultOptions = {
       severity: {
         operator: "<=",

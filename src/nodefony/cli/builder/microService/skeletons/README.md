@@ -1,6 +1,9 @@
-<h1 align="center">Nodefony Micro Service</h1>
+<p align="center">
+  <img src="https://github.com/nodefony/nodefony-core/raw/master/src/nodefony/bundles/framework-bundle/Resources/public/images/nodefony-logo.png"><br>
+</p>
+<h1 align="center">NODEFONY V6 Micro Service</h1>
 
-<h2 align="center"> Micro Service Tools Chain <h2>
+<h2 align="center">Tools Chain <h2>
 
 ## Table of content
 -   [Features](#features)
@@ -9,16 +12,12 @@
 -   [Build CLient Library](#build)
 -   [Test Library](#test)
 -   [Command Line Interface](#cli)
--   [GITHUB CI (Continuous integration)](#ci)
 -   [Library Webpack Usage](#webpack)
 
 ## <a name="features"></a>Tools Chain features :
   -   ES6 transpilation (webpack / Babel)
   -   CLI (Command Line Interface)
-  -   GITHUB CI (Continuous integration)
   -   Unit Tests with Mocha
-  -   Demo webGL on node.js environment (nodefony)
-
 
 # <a name="requirements"></a>Requirements :
 

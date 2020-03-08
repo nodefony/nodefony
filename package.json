@@ -46,6 +46,7 @@
   "dependencies": {
     "mongoose": "^5.9.3",
     "pm2": "^4.2.3",
+    "pm2-logrotate": "^2.7.0",
     "sequelize": "^5.21.5",
     "webpack": "^4.42.0",
     "webpack-dev-server": "^3.10.3"

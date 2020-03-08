@@ -1,35 +1,43 @@
 const nodefony = require("nodefony");
-//const http = require(path.resolve(__dirname,"..","servers", "http.js"));
 const socketio = require('socket.io');
 
 class SocketIo extends nodefony.Service {
   constructor(service){
-    super("Socket", service.container);
+    super("socket-io", service.container);
     this.service = service ;
-    this.http = this.get("http");
-    if (! this.http){
+    this.http = this.getHttp();
+  }
+
+  getHttp(){
+    let http = this.get("http");
+    if (! http){
       this.service.createHttpServer();
-      this.http = this.get("http");
+      http = this.get("http");
     }
+    return http;
   }
 
   start(){
     return new Promise((resolve, reject)=>{
-      this.io = socketio(this.http.server);
-      this.log(`Server socketio running at ws://${this.http.settings.hostname}:${this.http.settings.port}/`);
-      this.io.on('connection', client => {
-        client.on('event', data => {
-          this.log(data);
+      try{
+        this.io = socketio(this.http.server, this.service.settings.socketio);
+        this.log(`Server ${this.name} running at ws://${this.http.settings.hostname}:${this.http.settings.port}/`);
+        this.io.on('connection', client => {
+          this.log(`connection : ${client.id}`);
+          client.on('microservice', data => {
+            this.log(data);
+          });
+          client.on('disconnect', () => {
+            this.log(`disconnect : ${client.id}`);
+          });
+          this.io.emit("microservice", 'DEMO SOCKET IO MICROSERVICE');
         });
-        client.on('disconnect', () => {
-          this.log("disconnect");
-        });
-      });
-      return resolve(this.io) ;
+        return resolve(this.io) ;
+      }catch(e){
+        return reject(e);
+      }
     });
   }
-
 }
-
 
 module.exports = SocketIo ;

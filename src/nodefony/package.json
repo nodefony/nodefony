@@ -1,6 +1,6 @@
 {
   "name": "nodefony",
-  "version": "6.0.0-beta.2",
+  "version": "6.0.0-beta.3",
   "main": "autoloader.es6",
   "browser": "./browser/dist/nodefony.min.js",
   "description": "Nodefony Framework Core",
@@ -84,7 +84,7 @@
     "spdx": "^0.5.2",
     "twig": "^1.15.0",
     "xml2js": "^0.4.23",
-    "yarn": "^1.22.0"
+    "yarn": "^1.22.1"
   },
   "devDependencies": {
     "babel-loader": "^8.0.6",

@@ -11,8 +11,8 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "^7.8.6",
-    "@babel/preset-env": "^7.8.6",
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
     "@nodefony/stage": "^0.2.4",
     "babel-loader": "^8.0.6",
     "bootstrap": "=3.3.7",

@@ -1,5 +1,7 @@
 {% extends "../base.html.twig" %}
 
+{{trans_default_domain("slides")}}
+
 {% block meta %}
   {{ parent() }}
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -35,7 +37,7 @@
       <h1>Nodefony<sup>®</sup></h1>
       <img width="200px" height="123px" data-src="{{CDN('image')}}/framework-bundle/images/nodejs/nodejs-new-pantone-black.png"/>
       <h5 class="nodefony-grey" style="text-align:center">
-        Web Fullstack 
+        Framework Web Fullstack
       </h5>
       <h5 class="nodefony-grey" style="text-align:center">
         Micro Services
@@ -53,9 +55,9 @@
         <ol style="display:contents">
           <div class="row">
               <div class="col-sm">
-                <li><a href="#/2">Nodefony Installation</a></li>
-                <li><a href="#/3">Nodefony Web Project</a></li>
-                <li><a href="#/4">Nodefony Microservices Project </a></li>
+                <li><a href="#/2">Installation</a></li>
+                <li><a href="#/3">Web Project</a></li>
+                <li><a href="#/4">Microservices Project </a></li>
               </div>
           </div>
         </ol>

@@ -17,10 +17,13 @@ describe("Service Unit Test", () => {
     });
 
     it("Example", async () => {
-      return new Promise((resolve, reject)=>{
-        setTimeout(()=>{
-          resolve();
-        },4000)
+
+    });
+
+    it("Stop", async () => {
+      return service.stop()
+      .then(()=>{
+        return true;
       });
     });
   });

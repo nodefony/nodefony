@@ -5,7 +5,7 @@ class microService extends nodefony.Builder {
     super(cli, cmd, args);
     this.name = null;
     this.pathSkeleton = path.resolve(__dirname, "skeletons");
-
+    this.projectSkeleton = path.resolve(__dirname, "..","project", "skeletons");
 
     if (this.cmd === "create:microservice" || this.cmd === "microservice") {
       if (args && args[0]) {
@@ -22,8 +22,10 @@ class microService extends nodefony.Builder {
       authorFullName: "admin",
       authorName: "admin",
       authorMail: "admin@nodefony.com",
+      domain:"localhost",
       year: new Date().getFullYear(),
       npm: 'npm',
+      version: nodefony.version,
       addons: {
       }
     });
@@ -33,11 +35,6 @@ class microService extends nodefony.Builder {
     this.path = path.resolve(this.location, this.response.name);
     this.setEnv();
   }
-
-  /*generate(response) {
-
-  }*/
-
 
   async interaction() {
     let promtOptions = [{
@@ -116,7 +113,7 @@ class microService extends nodefony.Builder {
 
       return this.cli.prompt(promtOptions)
         .then((response) => {
-          this.log(response)
+          this.log(response);
           return response ;
         });
   }
@@ -178,6 +175,12 @@ class microService extends nodefony.Builder {
               chmod: 755,
               skeleton: path.resolve(this.pathSkeleton, "bin", "python","hello.py"),
               params: this.response
+            },{
+              name: "generateCertificates.sh",
+              type: "file",
+              chmod: 755,
+              skeleton: path.resolve(this.projectSkeleton, "bin", "generateCertificates.sh.skeleton"),
+              params: this.response
             }]
           },{
             name: "src",
@@ -190,10 +193,54 @@ class microService extends nodefony.Builder {
             path: path.resolve(this.pathSkeleton, "tests"),
             params:{recurse:true}
           },{
+            //name: "config",
+            //type: "copy",
+            //path: path.resolve(this.pathSkeleton, "config"),
+            //params:{recurse:true}
+          },{
             name: "config",
-            type: "copy",
-            path: path.resolve(this.pathSkeleton, "config"),
-            params:{recurse:true}
+            type: "directory",
+            childs: [{
+              name: "certificates",
+              type: "directory"
+            }, {
+              name: "openssl",
+              type: "directory",
+              childs: [{
+                name: "ca",
+                type: "directory",
+                childs: [{
+                  name: "openssl.cnf",
+                  type: "file",
+                  skeleton: path.resolve(this.projectSkeleton, "config", "openssl", "ca", "openssl.cnf.skeleton"),
+                  params: this.response
+                }]
+              }, {
+                name: "ca_intermediate",
+                type: "directory",
+                childs: [{
+                  name: "openssl.cnf",
+                  type: "file",
+                  skeleton: path.resolve(this.projectSkeleton, "config", "openssl", "ca_intermediate", "openssl.cnf.skeleton"),
+                  params: this.response
+                }]
+              }]
+            }, {
+              name: "config.js",
+              type: "file",
+              skeleton: path.resolve(this.pathSkeleton, "config", "config.js"),
+              params: this.response
+            }, {
+              name: "pm2.config.js",
+              type: "file",
+              skeleton: path.resolve(this.pathSkeleton, "config", "pm2.config.js"),
+              params: this.response
+            },{
+              name: "webpack.config.js",
+              type: "file",
+              skeleton: path.resolve(this.pathSkeleton, "config", "webpack.config.js"),
+              params: this.response
+            }]
           }
         ]
       };

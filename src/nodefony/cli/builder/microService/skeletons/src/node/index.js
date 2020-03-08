@@ -1,102 +1,102 @@
 const nodefony = require("nodefony");
 const path = require("path");
-const config = require(path.resolve("config", "config.js"));
-
-// examples services
-const Server = require(path.resolve(__dirname, "services", "servers", "http.js"));
-const Worker = require(path.resolve(__dirname, "services", "worker", "worker.js"));
-const Socket = require(path.resolve(__dirname, "services", "socketio", "socketio.js"));
-const Markdown = require(path.resolve(__dirname, "services", "markdown", "markdown.js"));
-const Syscall = require(path.resolve(__dirname, "services", "syscall", "syscall.js"));
+const Server = require(path.resolve("src", "node", "services", "servers", "http.js"));
+const ServerSecure = require(path.resolve("src", "node", "services", "servers", "https.js"));
+const Markdown = require(path.resolve("src", "node", "services", "markdown", "markdown.js"));
 
 class Service extends nodefony.Service {
-  constructor(env= "production", debug = false){
-    super("My Microservice");
 
+  constructor(environment = "production", debug = false) {
+    super("Microservice");
+    this.environment = environment;
+    this.debug = debug;
     // init logger
     this.initSyslog();
-    this.env = env ;
-    this.debug = debug;
-    this.log(`Environment = ${env}   Debug = ${debug}`);
-    this.settings = config ;
+    this.log(`Environment = ${environment}   Debug = ${debug}`);
+    this.settings = require(path.resolve("config", "config.js"));
+    this.markdown = this.getMarkdown();
     // start
     this.start();
   }
 
-  start(){
-    /**
-     *  examples services
-     */
-    // Simple Markdown parser
-    this.createMarkdownService();
-    // SIMPLE  HTTP  SERVER
-    this.createHttpServer();
-    // SocketIo for websocket connections
-    this.createSocketIoServer();
-    // node.js worker (multi threading)
-    this.createWorker();
-    //  Syscall  (Spawn)
-    this.createSyscall();
+  async start() {
+    await this.startHttpServer();
+    await this.startHttpsServer();
+    return this;
   }
 
-
-  async createHttpServer(){
+  async startHttpServer() {
     const http = new Server(this);
     // add in service container
     this.set("http", http);
-    return await http.start();
+    await http.start();
+    http.on("request", async (request, response) => {
+      response.statusCode = 200;
+      response.setHeader('Content-Type', 'text/html');
+      this.log(` ${response.statusCode} url : http://${http.settings.hostname}:${http.settings.port}/`);
+      response.end(await this.renderHtml());
+    });
+    return http;
   }
 
-  async createSocketIoServer(){
-    const socket = new Socket(this);
+  async startHttpsServer() {
+    const https = new ServerSecure(this);
     // add in service container
-    this.set("socketio", socket);
-    return await socket.start();
+    this.set("https", https);
+    await https.start();
+    https.on("request", async (request, response) => {
+      response.statusCode = 200;
+      response.setHeader('Content-Type', 'text/html');
+      this.log(` ${response.statusCode} url : http://${https.settings.hostname}:${https.settings.port}/`);
+      response.end(await this.renderHtml());
+    });
+    return https;
   }
 
-  createWorker(){
-    const myworker = new Worker(this);
-    // add in service container
-    this.set("myworker", myworker);
-    return myworker ;
+  async renderHtml() {
+    const readme = path.resolve("README.md");
+    const md = await this.markdown.fileToMarkdown(readme);
+    return `<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Nodefony Microservice</title>
+  <style>
+    body { font: 13px Helvetica, Arial; }
+  </style>
+</head>
+<body>
+  ${md}
+</body>
+</html>
+    `;
   }
 
-  createMarkdownService(){
-    const mk = new Markdown(this);
-    // add in service container
-    this.set("markdown", mk);
-    return mk ;
-  }
-
-  createSyscall(){
-    const sys = new Syscall(this);
-    // add in service container
-    this.set("syscall", sys);
-  }
-
-  terminate(code, quiet){
-    if (this.debug) {
-      console.trace(code);
+  getMarkdown() {
+    let markdown = this.get("markdown");
+    if (!markdown) {
+      markdown = new Markdown(this);
+      this.set("markdown", markdown);
     }
-    if (code === undefined) {
-      code = 0;
-    }
-    process.nextTick(() => {
-      this.log("Life Cycle Terminate CODE : " + code, "INFO");
-      try {
-        if (quiet) {
-          return code;
+    return markdown;
+  }
+
+  stop(code) {
+    return new Promise((resolve, reject) => {
+      process.nextTick(() => {
+        this.log("Life Cycle Terminate");
+        try {
+          if (code === 0) {
+            process.exitCode = code;
+          }
+          return resolve(process.exit(code));
+        } catch (e) {
+          this.log(e, "ERROR");
+          return reject(e);
         }
-        if (code === 0) {
-          process.exitCode = code;
-        }
-        return process.exit(code);
-      } catch (e) {
-        this.log(e, "ERROR");
-      }
+      });
     });
   }
-
 }
 
 module.exports = new Service(process.env.NODE_ENV, process.env.DEBUG);

@@ -50,7 +50,7 @@ class Thread extends nodefony.Service {
         this.logger("STOP", "INFO");
         clearInterval(interval);
         resolve(ele);
-      }, 10000);
+      }, 5000);
     });
   }
 

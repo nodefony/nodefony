@@ -1,6 +1,7 @@
 #Ignore directory
-#/tmp/*
-#/dist/*
+/tmp/*
+/dist/*
+**/build/**
 
 
 node_modules/**

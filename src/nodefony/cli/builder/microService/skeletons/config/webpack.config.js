@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   /*
@@ -51,9 +52,47 @@ module.exports = {
           presets: ['@babel/preset-env']
         }
        }]
+     },{
+       test: /\.(sa|sc|c)ss$/,
+       use: [
+         MiniCssExtractPlugin.loader,
+         {
+           loader: "css-loader",
+           options: {
+             sourceMap: true
+           }
+         }, {
+           loader: 'resolve-url-loader',
+           options: {}
+         }, {
+           loader: 'postcss-loader', // Run post css actions
+           options: {
+             plugins: () => [require('precss'), require('autoprefixer')]
+           }
+         }, {
+           loader: "sass-loader",
+           options: {
+             sourceMap: true
+           }
+         }
+       ]
+     }, {
+       test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+       use: [{
+         loader: 'file-loader',
+         options: {
+           name: '[name].[ext]',
+           outputPath: 'fonts/', // where the fonts will go
+         }
+       }]
      }]
   },
   plugins: [
+    new MiniCssExtractPlugin({
+      fallback: "style-loader",
+      filename: "./css/[name].css",
+      allChunks: true
+    }),
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify(process.env.NODE_ENV),

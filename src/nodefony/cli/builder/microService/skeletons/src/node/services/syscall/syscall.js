@@ -23,8 +23,21 @@ class Syscall extends nodefony.Service {
     this.service = service ;
     this.settings = this.service.settings.syscall ;
     this.log("Running");
-    this.python();
-    this.bash();
+  }
+
+  start(){
+    return new Promise (async (resolve, reject)=>{
+      try{
+        let codeP = await this.python();
+        let codeB = await this.bash();
+        return resolve({
+          python:codeP,
+          bash:codeB
+        }) ;
+      }catch(e){
+        return reject(e);
+      }
+    });
   }
 
   async python(){
@@ -34,7 +47,6 @@ class Syscall extends nodefony.Service {
   async bash(){
     return await this.spawn(path.resolve("bin", "hello.sh"));
   }
-
 
   spawn(command, args=[], options = defaultOption, close=false){
     return new Promise((resolve, reject)=>{

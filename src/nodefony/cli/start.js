@@ -566,10 +566,12 @@ module.exports = class cliStart extends nodefony.cliKernel {
           this.cd(cwd);
           return this.npm(["install"], cwd)
           .then(()=>{
-            
-            this.log(`cd ${obj.response.name}`);
-            this.log(`npm start`);
-            return cwd;
+            return this.generateCertificates(cwd)
+            .then(()=>{
+              this.log(`cd ${obj.response.name}`);
+              this.log(`npm start`);
+              return cwd;
+            });
           });
         }).catch(e =>{
           if (e.code || e.code === 0) {

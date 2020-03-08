@@ -35,14 +35,14 @@ class Cli extends nodefony.cli {
       });
   }
 
-  showMenu(noAscii = false, reload = false) {
-    return this.runMenu(questions, noAscii, reload);
+  showMenu( noAscii = false) {
+    return this.runMenu(questions, noAscii);
   }
 
-  runMenu(menu, reload, noAscii) {
+  runMenu(menu, noAscii = false) {
     return this.prompt(menu)
       .then((answers) => {
-        return this.initCommand(answers.cli, null, noAscii);
+        return this.initCommand(answers.cli, null,  noAscii);
       })
       .catch((e) => {
         this.logger(e, "ERROR");
@@ -50,7 +50,7 @@ class Cli extends nodefony.cli {
       });
   }
 
-  initCommand(cmd, args = null, noAscii = false) {
+  initCommand(cmd, args = null, noAscii= false ) {
     if (!noAscii) {
       this.showAsciify(cmd)
         .then((data) => {
@@ -71,8 +71,8 @@ class Cli extends nodefony.cli {
       this.log(cmd, "INFO", "COMMAND");
     }
     switch (cmd) {
-    case "build":
-      return this.npm(["run", "build"])
+    case "webpack":
+      return this.npm(["run", "webpack"])
         .then(() => {
           this.terminate(0);
         });
@@ -84,6 +84,10 @@ class Cli extends nodefony.cli {
       return this.npm(["run", "dev"]);
     case "pm2":
       return this.pm2();
+    case "ssl":
+      return this.npm(["run", "ssl"]);
+    case "tools":
+      return this.tools();
     case "status":
       return this.npm(["run", "status"]);
     case "log":
@@ -94,14 +98,55 @@ class Cli extends nodefony.cli {
       return this.npm(["run", "restart"]);
     case "delete":
       return this.npm(["run", "delete"]);
+    case "example":
+      return this.npm(["run", "examples"]);
     case "test":
       return this.npm(["run", "test"])
         .then(() => {
           this.terminate(0);
         });
+    case 'undo':
+      return this.showMenu(name);
     default:
       this.terminate(0);
     }
+  }
+
+  tools(){
+    this.choices = [];
+    this.choices.push(`Webpack Compile`);
+    this.choices.push(`Generate SSL Certificates`);
+    this.choices.push(`Quit`);
+    return this.prompt([{
+        type: 'list',
+        name: 'command',
+        message: ' Nodefony CLI : ',
+        default: 0,
+        pageSize: this.choices.length,
+        choices: this.choices,
+        filter: (val) => {
+          switch (val) {
+          case "Webpack Compile":
+            return "webpack";
+          case "Generate SSL Certificates":
+            return "ssl";
+          case "Quit":
+            return "undo";
+          default:
+            this.logger(`\ncommand not found : ${val}`, "ERROR");
+            this.terminate(1);
+          }
+        }
+      }])
+      .then((response) => {
+        if (response.command !== "undo"){
+          return this.initCommand(response.command) ;
+        }
+        return this.showAsciify(name)
+        .then(()=>{
+          return this.showMenu();
+        });
+      });
   }
 
   pm2(){
@@ -112,6 +157,7 @@ class Cli extends nodefony.cli {
     this.choices.push(`Restart PM2 Production Project`);
     this.choices.push(`Delete PM2 Production Project`);
     this.choices.push(`Kill PM2 Deamon`);
+    this.choices.push(`Quit`);
     return this.prompt([{
         type: 'list',
         name: 'command',
@@ -135,7 +181,7 @@ class Cli extends nodefony.cli {
           case "Kill PM2 Deamon":
             return "kill";
           case "Quit":
-            return "quit";
+            return "undo";
           default:
             this.logger(`\ncommand not found : ${val}`, "ERROR");
             this.cli.terminate(1);
@@ -143,7 +189,13 @@ class Cli extends nodefony.cli {
         }
       }])
       .then((response) => {
-        return this.initCommand(response.command) ;
+        if (response.command !== "undo"){
+          return this.initCommand(response.command) ;
+        }
+        return this.showAsciify(name)
+        .then(()=>{
+          return this.showMenu();
+        });
       });
   }
 }
