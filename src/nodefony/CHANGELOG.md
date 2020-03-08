@@ -1,5 +1,19 @@
 # Changelog
 
+## v6.0.0-beta.3 (08/03/2020)
+- [nodefony release 6.0.0-beta.3](https://github.com/nodefony/nodefony-core/commit/ce1bd47357c45c7c74368d8679c7a434e5e2746b)
+- [upgrade deps | add slides microservice](https://github.com/nodefony/nodefony-core/commit/b7b605a81f3bb8172b8b002a898b94ae02f11b87)
+- [slides microservices](https://github.com/nodefony/nodefony-core/commit/755ce635365698e8d952f67c59b3720ef46a417b)
+- [microservice project add n-api](https://github.com/nodefony/nodefony-core/commit/d317401b3dbca67dd46a39febf4487fea491a49b)
+- [microservide examples:wq](https://github.com/nodefony/nodefony-core/commit/369fee3b102e42d3417c16b9ac615a14be5d7915)
+- [change microservice skeletons](https://github.com/nodefony/nodefony-core/commit/04e2f220a95b56adcb03c829d40a7abe4b9ca261)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/a4036b0970c5afaba67ab19052e0ca30a380c1cc)
+- [add microservice skeleton | upgrade deps](https://github.com/nodefony/nodefony-core/commit/e3d98ddd03c6a8d1ee965787a5f615ce025650b9)
+- [add microservice generator](https://github.com/nodefony/nodefony-core/commit/cc556e94906d26cf578fd37d4fccb674d691f6f0)
+- [nodefony changelog 6.0.0-beta.2](https://github.com/nodefony/nodefony-core/commit/6cb804ebd2c11cd9277bc053dcf8e31077119c21)
+
+---
+
 ## v6.0.0-beta.2 (25/02/2020)
 - [nodefony release 6.0.0-beta.2](https://github.com/nodefony/nodefony-core/commit/4d02933506cab4d3d937b9bb38139a5b197bcf54)
 - [debug create Project cli](https://github.com/nodefony/nodefony-core/commit/527b739df97e59a4bab1dc2b77dbc33a1661693a)
