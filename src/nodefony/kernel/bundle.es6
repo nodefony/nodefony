@@ -166,10 +166,7 @@ class Bundle extends nodefony.Service {
     this.isCore = this.kernel.isBundleCore(this.name);
 
     // services
-    this.router = this.get("router");
-    this.sockjs = this.get("sockjs");
     this.injectionService = this.get("injection");
-    //this.webpackService = this.get("webpack");
     this.reader = this.kernel.reader;
 
     // webpack
@@ -228,6 +225,7 @@ class Bundle extends nodefony.Service {
     this.kernel.prependOnceListener("onBoot", async () => {
       try {
         this.router = this.get("router");
+        this.sockjs = this.get("sockjs");
         //this.orm = this.get("orm");
         //console.log("PASSS",this.orm)
         this.webpackService = this.get("webpack");

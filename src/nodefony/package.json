@@ -84,7 +84,7 @@
     "spdx": "^0.5.2",
     "twig": "^1.15.0",
     "xml2js": "^0.4.23",
-    "yarn": "^1.22.1"
+    "yarn": "^1.22.4"
   },
   "devDependencies": {
     "babel-loader": "^8.0.6",
