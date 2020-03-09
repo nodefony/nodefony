@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.0.0-beta.4 (09/03/2020)
+- [nodefony release 6.0.0-beta.4](https://github.com/nodefony/nodefony-core/commit/749da73d6a5af4aa999173d38b38747d4dc93d76)
+- [debug service class log quiet](https://github.com/nodefony/nodefony-core/commit/1d3b9586100a6b50db76a39c76b81cf463476ae4)
+- [nodefony changelog 6.0.0-beta.3](https://github.com/nodefony/nodefony-core/commit/af79318cc7f830f95d6dac130cbd4ec2efb80905)
+
+---
+
 ## v6.0.0-beta.3 (08/03/2020)
 - [nodefony release 6.0.0-beta.3](https://github.com/nodefony/nodefony-core/commit/ce1bd47357c45c7c74368d8679c7a434e5e2746b)
 - [upgrade deps | add slides microservice](https://github.com/nodefony/nodefony-core/commit/b7b605a81f3bb8172b8b002a898b94ae02f11b87)
