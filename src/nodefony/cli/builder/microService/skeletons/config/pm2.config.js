@@ -20,7 +20,8 @@ module.exports = {
     args: "pm2",
     //node_args           : "--expose-gc",
     watch: watch,
-    ignore_watch: ["node_modules", "^dist$", "^bin$", "^test$", "^tmp$"],
+    // anymatch format https://github.com/micromatch/anymatch
+    ignore_watch: ["node_modules", "dist", "bin", "tests", "tmp"],
     time: false,
     exec_mode: exec_mode,
     instances: cpu,
@@ -45,7 +46,8 @@ module.exports = {
     args: "pm2",
     //node_args           : "--expose-gc",
     watch: watch,
-    ignore_watch: ["node_modules", "^dist$", "^bin$", "^test$", "^tmp$"],
+    // anymatch format https://github.com/micromatch/anymatch
+    ignore_watch: ["node_modules", "dist", "bin", "tests", "tmp"],
     time: false,
     exec_mode: exec_mode,
     instances: cpu,

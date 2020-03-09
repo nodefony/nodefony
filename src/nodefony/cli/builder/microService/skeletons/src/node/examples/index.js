@@ -48,7 +48,7 @@ class Service extends nodefony.Service {
     http.on("request", async (request, response) => {
       response.statusCode = 200;
       response.setHeader('Content-Type', 'text/html');
-      this.log(` ${response.statusCode} url : http://${http.settings.hostname}:${http.settings.port}/`);
+      http.log(` ${response.statusCode} url : http://${http.settings.hostname}:${http.settings.port}/`);
       response.end(await this.renderHtml());
     });
     return await http.start(this.settings.examples.http);

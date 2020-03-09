@@ -47,7 +47,7 @@ class Service extends nodefony.Service {
     https.on("request", async (request, response) => {
       response.statusCode = 200;
       response.setHeader('Content-Type', 'text/html');
-      this.log(` ${response.statusCode} url : http://${https.settings.hostname}:${https.settings.port}/`);
+      https.log(` ${response.statusCode} url : https://${https.settings.hostname}:${https.settings.port}/`);
       response.end(await this.renderHtml());
     });
     return https;

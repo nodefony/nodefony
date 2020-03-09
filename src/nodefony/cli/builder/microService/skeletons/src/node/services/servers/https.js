@@ -21,7 +21,7 @@ class Server extends nodefony.Service {
 
       this.server.listen(this.settings.port, this.settings.hostname, () => {
         this.started = true;
-        this.log(`Server running at http://${this.settings.hostname}:${this.settings.port}/`);
+        this.log(`Server running at https://${this.settings.hostname}:${this.settings.port}/`);
         return resolve(this.server);
       });
 

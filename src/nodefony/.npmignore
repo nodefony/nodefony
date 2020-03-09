@@ -15,16 +15,12 @@
 /nbproject/private/
 
 
-.git
 .github
 .travis
 .travis.yml
-.jshintrc
-.jshintignore
 .gitmodules
 .bithoundrc
 .grenrc.json
-.editorconfig
 .core
 
 npm-debug.log
