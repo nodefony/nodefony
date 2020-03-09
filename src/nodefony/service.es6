@@ -6,7 +6,7 @@ const settingsSyslog = {
 };
 
 const defaultOptions = {
-  events:{
+  events: {
     nbListeners: 20
   }
 };
@@ -19,7 +19,7 @@ const yellow = clc.yellow.bold;
 
 class Service {
 
-  constructor(name, container, notificationsCenter, options=null) {
+  constructor(name, container, notificationsCenter, options = null) {
 
     if (name) {
       this.name = name;
@@ -81,7 +81,7 @@ class Service {
       if (notificationsCenter !== false) {
         this.notificationsCenter = nodefony.notificationsCenter.create(this.options, this, this.options.events);
         this.notificationsCenter.on('error', (err) => {
-          this.logger(err, "ERROR" , "Error events");
+          this.logger(err, "ERROR", "Error events");
         });
 
         if (!this.kernel) {
@@ -97,25 +97,25 @@ class Service {
 
   static logSeverity(severity) {
     switch (severity) {
-    case "DEBUG":
-      return cyan(severity);
-    case "INFO":
-      return blue(severity);
-    case "NOTICE":
-      return red(severity);
-    case "WARNING":
-      return yellow(severity);
-    case "ERROR":
-    case "CRITIC":
-    case "ALERT":
-    case "EMERGENCY":
-      return red(severity);
-    default:
-      return cyan(severity);
+      case "DEBUG":
+        return cyan(severity);
+      case "INFO":
+        return blue(severity);
+      case "NOTICE":
+        return red(severity);
+      case "WARNING":
+        return yellow(severity);
+      case "ERROR":
+      case "CRITIC":
+      case "ALERT":
+      case "EMERGENCY":
+        return red(severity);
+      default:
+        return cyan(severity);
     }
   }
 
-  initSyslog(environment, debug , options = {}) {
+  initSyslog(environment = "production", debug = false, options = null) {
     let defaultOptions = {
       severity: {
         operator: "<=",
