@@ -222,7 +222,11 @@ describe("BUNDLE TEST", function () {
         assert.equal(res.statusCode, 200);
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
-          assert.deepStrictEqual(chunk, '"<h1>NODEFONY REQUEST :renderOject </h1>"\n');
+          if (kernel.platform === "win32"){
+            assert.deepStrictEqual(chunk, '"<h1>NODEFONY REQUEST :renderOject </h1>"\r\n');
+          }else{
+            assert.deepStrictEqual(chunk, '"<h1>NODEFONY REQUEST :renderOject </h1>"\n');
+          }
           done();
         });
       });
