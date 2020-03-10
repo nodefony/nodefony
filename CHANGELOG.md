@@ -1,5 +1,15 @@
 # Changelog
 
+## v6.0.0-beta.5 (10/03/2020)
+- [nodefony release 6.0.0-beta.5](https://github.com/nodefony/nodefony-core/commit/ba28106445178125d427d111198da2ce89f3a260)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/664411e61aa621bc17f2a94e63be1f57eed842df)
+- [skeleton microservice](https://github.com/nodefony/nodefony-core/commit/262072d2c6d0830abd0fe784c93a907ce6360698)
+- [debug sockjs server](https://github.com/nodefony/nodefony-core/commit/f774d6a379fd90e4d7cbfe7544f6ace92f72008b)
+- [debug microservice builder](https://github.com/nodefony/nodefony-core/commit/9528223b14367195b7e31797bbe9c58cb43bac3c)
+- [nodefony changelog 6.0.0-beta.4](https://github.com/nodefony/nodefony-core/commit/88f673b9ab519a9b1578e5c77d164a1104dae986)
+
+---
+
 ## v6.0.0-beta.4 (09/03/2020)
 - [nodefony release 6.0.0-beta.4](https://github.com/nodefony/nodefony-core/commit/749da73d6a5af4aa999173d38b38747d4dc93d76)
 - [debug service class log quiet](https://github.com/nodefony/nodefony-core/commit/1d3b9586100a6b50db76a39c76b81cf463476ae4)
