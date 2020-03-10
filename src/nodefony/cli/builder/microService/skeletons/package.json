@@ -60,6 +60,7 @@
     "node-gyp": "^6.1.0",
     "node-pre-gyp": "^0.14.0",
     "open": "^7.0.2",
+    "terser-webpack-plugin": "^2.1.2",
     "webpack": "^4.42.0",
     "webpack-cli": "^3.3.11",
     "webpack-merge": "^4.2.2"
