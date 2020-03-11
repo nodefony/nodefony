@@ -1,7 +1,7 @@
 const nodefony = require("nodefony");
 let package = require(path.resolve(__dirname, "..", "..", "package.json"));
 let version = package.version;
-let name = package.name ;
+let name = package.name;
 
 const questions = require(path.resolve(__dirname, "menu.js"));
 
@@ -12,10 +12,10 @@ class Cli extends nodefony.cli {
       version: version,
     });
     this.start()
-    .catch(e => {
-      this.log(e, "ERROR");
-      throw e;
-    });
+      .catch(e => {
+        this.log(e, "ERROR");
+        throw e;
+      });
   }
 
   start() {
@@ -35,14 +35,14 @@ class Cli extends nodefony.cli {
       });
   }
 
-  showMenu( noAscii = false) {
+  showMenu(noAscii = false) {
     return this.runMenu(questions, noAscii);
   }
 
   runMenu(menu, noAscii = false) {
     return this.prompt(menu)
       .then((answers) => {
-        return this.initCommand(answers.cli, null,  noAscii);
+        return this.initCommand(answers.cli, null, noAscii);
       })
       .catch((e) => {
         this.logger(e, "ERROR");
@@ -50,7 +50,7 @@ class Cli extends nodefony.cli {
       });
   }
 
-  initCommand(cmd, args = null, noAscii= false ) {
+  initCommand(cmd, args = null, noAscii = false) {
     if (!noAscii) {
       this.showAsciify(cmd)
         .then((data) => {
@@ -100,6 +100,8 @@ class Cli extends nodefony.cli {
       return this.npm(["run", "delete"]);
     case "example":
       return this.npm(["run", "examples"]);
+    case "pm2-logrotate":
+      return this.npm(["run", "pm2", "install", "pm2-logrotate"]);
     case "test":
       return this.npm(["run", "test"])
         .then(() => {
@@ -112,7 +114,7 @@ class Cli extends nodefony.cli {
     }
   }
 
-  tools(){
+  tools() {
     this.choices = [];
     this.choices.push(`Webpack Compile`);
     this.choices.push(`Generate SSL Certificates`);
@@ -139,17 +141,17 @@ class Cli extends nodefony.cli {
         }
       }])
       .then((response) => {
-        if (response.command !== "undo"){
-          return this.initCommand(response.command) ;
+        if (response.command !== "undo") {
+          return this.initCommand(response.command);
         }
         return this.showAsciify(name)
-        .then(()=>{
-          return this.showMenu();
-        });
+          .then(() => {
+            return this.showMenu();
+          });
       });
   }
 
-  pm2(){
+  pm2() {
     this.choices = [];
     this.choices.push(`List PM2 Production Projects`);
     this.choices.push(`Log PM2 Production Project`);
@@ -157,6 +159,7 @@ class Cli extends nodefony.cli {
     this.choices.push(`Restart PM2 Production Project`);
     this.choices.push(`Delete PM2 Production Project`);
     this.choices.push(`Kill PM2 Deamon`);
+    this.choices.push(`Install PM2 Logrotate`);
     this.choices.push(`Quit`);
     return this.prompt([{
         type: 'list',
@@ -178,6 +181,8 @@ class Cli extends nodefony.cli {
           case "Log PM2 Production Projects":
           case "Log PM2 Production Project":
             return "log";
+          case "Install PM2 Logrotate":
+            return "pm2-logrotate";
           case "Kill PM2 Deamon":
             return "kill";
           case "Quit":
@@ -189,13 +194,13 @@ class Cli extends nodefony.cli {
         }
       }])
       .then((response) => {
-        if (response.command !== "undo"){
-          return this.initCommand(response.command) ;
+        if (response.command !== "undo") {
+          return this.initCommand(response.command);
         }
         return this.showAsciify(name)
-        .then(()=>{
-          return this.showMenu();
-        });
+          .then(() => {
+            return this.showMenu();
+          });
       });
   }
 }
