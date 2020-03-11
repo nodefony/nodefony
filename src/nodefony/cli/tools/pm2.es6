@@ -9,10 +9,15 @@ module.exports = class pm2Builder extends nodefony.Builder {
       this.choices.push(`Stop PM2 Production Project`);
       this.choices.push(`Restart PM2 Production Project`);
       this.choices.push(`Delete PM2 Production Project`);
+      this.choices.push(`Save PM2`);
+      this.choices.push(`Startup PM2`);
+      this.choices.push(`Unstartup PM2`);
+      this.choices.push(`Install PM2 Logrotate`);
       this.choices.push(`Kill PM2 Deamon`);
     } else {
       this.choices.push(`List PM2 Production Projects`);
       this.choices.push(`Log  PM2 Production Projects`);
+      this.choices.push(`Install PM2 Logrotate`);
       this.choices.push(`Kill PM2 Deamon`);
     }
     this.choices.push(this.cli.getSeparator());
@@ -48,9 +53,18 @@ module.exports = class pm2Builder extends nodefony.Builder {
             return "restart";
           case "Delete PM2 Production Project":
             return "delete";
+
           case "Log PM2 Production Projects":
           case "Log PM2 Production Project":
             return "logs";
+          case "Save PM2":
+            return "pm2-save";
+          case "Startup PM2":
+            return "pm2-startup";
+          case "Unstartup PM2":
+            return "pm2-unstartup";
+          case "Install PM2 Logrotate":
+            return "pm2-logrotate";
           case "Kill PM2 Deamon":
             return "kill";
           case "Quit":
@@ -64,7 +78,7 @@ module.exports = class pm2Builder extends nodefony.Builder {
       }])
       .then((response) => {
         this.start(response);
-        return response ;
+        return response;
       });
   }
 
@@ -82,6 +96,14 @@ module.exports = class pm2Builder extends nodefony.Builder {
       return this.cli.setCommand("delete");
     case "kill":
       return this.cli.setCommand("kill");
+    case "pm2-logrotate":
+      return this.cli.setCommand("pm2-logrotate");
+    case "pm2-save":
+      return this.cli.setCommand("pm2-save");
+    case "pm2-startup":
+      return this.cli.setCommand("pm2-startup");
+    case "pm2-unstartup":
+      return this.cli.setCommand("pm2-unstartup");
     case "quit":
       return this.cli.setCommand("showmenu");
     default:

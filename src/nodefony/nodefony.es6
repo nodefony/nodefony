@@ -682,6 +682,23 @@ class Nodefony {
         return process.exit(0);
       });
       break;
+    case "pm2-logrotate":
+      return cli.npm(["run", "pm2", "install", "pm2-logrotate"]);
+    case "pm2-save":
+      return cli.npm(["run", "pm2", "save"]);
+    case "pm2-startup":
+      return cli.spawn("npx", ["pm2", "startup"], {
+        cwd: process.cwd(),
+        env: process.env,
+        stdio: "inherit"
+      }).then((code)=>{
+        cli.log(`[PM2] Init System found To setup the Startup Script, copy/paste the previous command :)`);
+        return code ;
+      }).catch(e =>{
+        cli.log(e, "ERROR");
+      });
+    case "pm2-unstartup":
+      return cli.npm(["run", "pm2", "unstartup"]);
     case "outdated":
       return cli.setCommand("nodefony:outdated");
     case "test":
