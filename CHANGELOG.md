@@ -1,5 +1,15 @@
 # Changelog
 
+## v6.0.0-beta.6 (12/03/2020)
+- [nodefony release 6.0.0-beta.6](https://github.com/nodefony/nodefony-core/commit/17dc82d1f8079a30e1c9d37811c83220e5dada16)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/621bd6382c60ab91f79d74d490183d8367640ae0)
+- [upgrade sekeleton microservices](https://github.com/nodefony/nodefony-core/commit/183f80074e89a1faae6367570b5dd6b7e39ff7ea)
+- [microservice skeleton](https://github.com/nodefony/nodefony-core/commit/9a5d21da1af74ee873558fca98b32d8f9e2eafa9)
+- [add command cli](https://github.com/nodefony/nodefony-core/commit/01aed9c188255b02a2b31f9f7c6832b74c8c96a5)
+- [nodefony changelog 6.0.0-beta.5](https://github.com/nodefony/nodefony-core/commit/4fe1b5797c5c80246e731fac1af45ea7e990743f)
+
+---
+
 ## v6.0.0-beta.5 (10/03/2020)
 - [nodefony release 6.0.0-beta.5](https://github.com/nodefony/nodefony-core/commit/ba28106445178125d427d111198da2ce89f3a260)
 - [upgrade deps](https://github.com/nodefony/nodefony-core/commit/664411e61aa621bc17f2a94e63be1f57eed842df)
