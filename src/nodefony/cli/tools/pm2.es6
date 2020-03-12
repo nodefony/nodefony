@@ -17,7 +17,7 @@ module.exports = class pm2Builder extends nodefony.Builder {
     } else {
       this.choices.push(`List PM2 Production Projects`);
       this.choices.push(`Log  PM2 Production Projects`);
-      this.choices.push(`Install PM2 Logrotate`);
+      //this.choices.push(`Install PM2 Logrotate`);
       this.choices.push(`Kill PM2 Deamon`);
     }
     this.choices.push(this.cli.getSeparator());
@@ -53,7 +53,6 @@ module.exports = class pm2Builder extends nodefony.Builder {
             return "restart";
           case "Delete PM2 Production Project":
             return "delete";
-
           case "Log PM2 Production Projects":
           case "Log PM2 Production Project":
             return "logs";

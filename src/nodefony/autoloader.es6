@@ -82,10 +82,14 @@ module.exports = function () {
         require(path.resolve(__dirname, "cli", "builder", "sandbox", "sandBoxBuilder.js"));
         require(path.resolve(__dirname, "cli", "builder", "react", "reactBuilder.js"));
         require(path.resolve(__dirname, "cli", "builder", "vue", "vueBuilder.js"));
+
+        // kernel
         this.loadDirectory(path.resolve(__dirname, "kernel"), /^tests$|^tasks$/);
         this.loadDirectory(path.resolve(__dirname, "protocols"), /^tests$/);
         context.nodefony.cliStart = require(path.resolve(__dirname, "cli", "start.js"));
         context.nodefony.appKernel = this.loadAppKernel();
+
+        //services
       } catch (e) {
         throw e;
       }
