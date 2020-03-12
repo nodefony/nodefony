@@ -88,6 +88,17 @@ $ npm run prod
 
 ```
 
+**Starting Development Servers in Inspector mode (--inspect)** :
+
+[Nodejs Debugging Guide](https://nodejs.org/en/docs/guides/debugging-getting-started)
+```bash
+$ npm -g install npx
+
+$ npx --node-arg=--inspect npm run dev
+
+# check chrome://inspect in your browser
+```
+
 
 ## <a name="tools"></a> Tools Prodution Mode
 ```

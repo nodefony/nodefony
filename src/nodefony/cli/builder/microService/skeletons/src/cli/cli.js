@@ -102,6 +102,12 @@ class Cli extends nodefony.cli {
       return this.npm(["run", "examples"]);
     case "pm2-logrotate":
       return this.npm(["run", "pm2", "install", "pm2-logrotate"]);
+    case "pm2-save":
+      return this.spawn("npx", ["pm2", "save"]);
+    case "pm2-startup":
+      return this.spawn("npx", ["pm2", "startup"]);
+    case "pm2-unstartup":
+      return this.spawn("npx", ["pm2", "unstartup"]);
     case "test":
       return this.npm(["run", "test"])
         .then(() => {
@@ -110,6 +116,7 @@ class Cli extends nodefony.cli {
     case 'undo':
       return this.showMenu(name);
     default:
+      this.logger(`Command Not Found : ${cmd}`, "WARNING");
       this.terminate(0);
     }
   }
@@ -159,6 +166,9 @@ class Cli extends nodefony.cli {
     this.choices.push(`Restart PM2 Production Project`);
     this.choices.push(`Delete PM2 Production Project`);
     this.choices.push(`Kill PM2 Deamon`);
+    this.choices.push(`Save PM2`);
+    this.choices.push(`Startup PM2`);
+    this.choices.push(`Unstartup PM2`);
     this.choices.push(`Install PM2 Logrotate`);
     this.choices.push(`Quit`);
     return this.prompt([{
@@ -183,6 +193,12 @@ class Cli extends nodefony.cli {
             return "log";
           case "Install PM2 Logrotate":
             return "pm2-logrotate";
+          case "Save PM2":
+            return "pm2-save";
+          case "Startup PM2":
+            return "pm2-startup";
+          case "Unstartup PM2":
+            return "pm2-unstartup";
           case "Kill PM2 Deamon":
             return "kill";
           case "Quit":
