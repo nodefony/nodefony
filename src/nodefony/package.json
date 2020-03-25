@@ -34,9 +34,9 @@
     "nodefony": "./bin/nodefony"
   },
   "dependencies": {
-    "@babel/core": "^7.8.7",
-    "@babel/parser": "^7.8.7",
-    "@babel/preset-env": "^7.8.7",
+    "@babel/core": "^7.9.0",
+    "@babel/parser": "^7.9.4",
+    "@babel/preset-env": "^7.9.0",
     "@nodefony/documentation-bundle": "^6.0.0-beta.6",
     "@nodefony/elastic-bundle": "^6.0.0-beta.6",
     "@nodefony/framework-bundle": "^6.0.0-beta.6",
@@ -60,9 +60,9 @@
     "cli-color": "^2.0.0",
     "cli-table": "^0.3.1",
     "clui": "^0.3.6",
-    "commander": "^4.1.1",
+    "commander": "^5.0.0",
     "core-js": "^3.6.4",
-    "create-react-app": "^3.4.0",
+    "create-react-app": "^3.4.1",
     "graphql": "^14.6.0",
     "inquirer": "^7.1.0",
     "js-yaml": "^3.13.1",
@@ -73,7 +73,7 @@
     "moment": "^2.24.0",
     "node-cron": "^2.0.3",
     "node-emoji": "^1.10.0",
-    "npm": "^6.14.2",
+    "npm": "^6.14.3",
     "pm2": "^4.2.3",
     "promise": "^8.1.0",
     "request": "^2.88.2",
@@ -87,10 +87,10 @@
     "yarn": "^1.22.4"
   },
   "devDependencies": {
-    "babel-loader": "^8.0.6",
+    "babel-loader": "^8.1.0",
     "babel-polyfill": "^6.26.0",
     "terser-webpack-plugin": "^2.3.5",
-    "webpack": "^4.42.0",
+    "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-merge": "^4.2.2"
   },

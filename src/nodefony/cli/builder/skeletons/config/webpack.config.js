@@ -8,7 +8,7 @@ const htmlPlugin = require('html-webpack-plugin');
 const {InjectManifest} = require('workbox-webpack-plugin');
 {% endif %}
 
-{% if packageName == "a pp" %}
+{% if packageName == "app" %}
 // Default context <bundle base directory>
 //const context = path.resolve(__dirname, "..", "Resources", "public");
 const public = path.resolve(__dirname, "..", "Resources", "public", "assets");

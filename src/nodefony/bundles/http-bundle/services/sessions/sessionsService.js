@@ -129,7 +129,7 @@ module.exports = class sessions extends nodefony.Service {
 
   addContextSession(context) {
     if (this.storage) {
-      this.once( "onReady", function() {
+      this.once( "onReady", () => {
         this.storage.open(context);
       });
     }

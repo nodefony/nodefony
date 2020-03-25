@@ -37,7 +37,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
                   [options] <command:action> [args...]
                   [options] <action> [args...]`);
     // EVENTS ACTION
-    this.commander.arguments(`<cmd> [args...]`)
+    this.commander.arguments(`[cmd] [args...]`)
       .action((cmd, args, commander) => {
         //this.logger(`Commnand : ${cmd} Arguments : ${args}`, "DEBUG", "CLI EVENT ACTION");
         //this.cmd = cmd ? cmd.toLowerCase() : null;
