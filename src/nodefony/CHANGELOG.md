@@ -1,5 +1,13 @@
 # Changelog
 
+## v6.0.0-beta.7 (25/03/2020)
+- [nodefony release 6.0.0-beta.7](https://github.com/nodefony/nodefony-core/commit/3e78364d6d781308623cc9d975f1752d0e1db48a)
+- [upgrade deps | debug builder project](https://github.com/nodefony/nodefony-core/commit/b487c5747d0c124d8323b4f71214c880e0e61b45)
+- [Update FUNDING.yml](https://github.com/nodefony/nodefony-core/commit/2ac0c822896d8fd35460cbcf2d2d10448c82423a)
+- [nodefony changelog 6.0.0-beta.6](https://github.com/nodefony/nodefony-core/commit/3ad897c8afaded2d2a3c4f0d8b81d4b7683f5f39)
+
+---
+
 ## v6.0.0-beta.6 (12/03/2020)
 - [nodefony release 6.0.0-beta.6](https://github.com/nodefony/nodefony-core/commit/17dc82d1f8079a30e1c9d37811c83220e5dada16)
 - [upgrade deps](https://github.com/nodefony/nodefony-core/commit/621bd6382c60ab91f79d74d490183d8367640ae0)
