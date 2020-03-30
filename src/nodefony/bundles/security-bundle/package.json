@@ -16,7 +16,7 @@
     "jsonwebtoken": "^8.5.1",
     "node-pre-gyp": "^0.14.0",
     "passport": "^0.4.1",
-    "passport-github2": "^0.1.11",
+    "passport-github2": "^0.1.12",
     "passport-google-oauth20": "^2.0.0",
     "passport-http": "^0.3.0",
     "passport-jwt": "^4.0.0",

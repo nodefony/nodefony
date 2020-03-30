@@ -6,11 +6,13 @@ const logName = `${package.name}.log`;
 let cpu = require('os').cpus().length;
 let exec_mode = "cluster";
 let watch = false;
+let autorestart =true ;
 
 if (env === "development") {
   cpu = 1;
   exec_mode = "fork";
   watch = true;
+  autorestart= false;
 }
 
 module.exports = {
@@ -26,7 +28,7 @@ module.exports = {
     exec_mode: exec_mode,
     instances: cpu,
     max_memory_restart: "1024M",
-    autorestart: true,
+    autorestart: autorestart,
     max_restarts: 10,
     //log_file            : logFile,
     out_file: path.resolve("tmp", logName),
