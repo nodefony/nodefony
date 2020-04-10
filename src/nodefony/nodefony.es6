@@ -864,8 +864,12 @@ class Nodefony {
                 console.log(" npm run pm2 monit || yarn  pm2 monit");
                 console.log(" npm run pm2 --lines 1000 logs || yarn pm2 --lines 1000 logs ");
                 //pm2.disconnect();
-                resolve(pm2.disconnect());
-                cli.terminate(0);
+                if ( cli.commander.daemon ){
+                  resolve(pm2.disconnect());
+                  cli.terminate(0);
+                }else{
+                  resolve(pm2.disconnect());
+                }
               });
             } catch (e) {
               cli.logger(e, "ERROR");
