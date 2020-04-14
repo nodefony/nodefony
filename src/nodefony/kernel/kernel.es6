@@ -150,6 +150,7 @@ class Kernel extends nodefony.Service {
     this.bundlesCore = bundlesCore;
     // Paths
     this.rootDir = process.cwd();
+    this.path = this.rootDir;
     this.bundlesPath = path.resolve(this.rootDir, "src", "bundles");
     this.appPath = nodefony.appPath; // path.resolve(this.rootDir, "app");
     this.configPath = nodefony.kernelConfigPath; //path.resolve(this.rootDir, "config", "config.yml");

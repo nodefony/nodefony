@@ -177,7 +177,11 @@ module.exports = nodefony.register("Request", function () {
       this.context.once("onRequestEnd", () => {
         this.request.body = this.query;
       });
-      this.parseRequest()
+      this.initialize();
+    }
+
+    initialize(){
+      return this.parseRequest()
         .then((parser) => {
           switch (true) {
           case parser instanceof Parser:
@@ -189,7 +193,7 @@ module.exports = nodefony.register("Request", function () {
                   return;
                 }
                 parser.parse();
-                this.context.fire("onRequestEnd", this);
+                return this.context.fireAsync("onRequestEnd", this);
               } catch (error) {
                 return this.context.kernelHttp.onError(this.context.container, error);
               }
@@ -197,13 +201,13 @@ module.exports = nodefony.register("Request", function () {
             break;
           default:
             if (!parser) {
-              this.request.once("end", () => {
+              this.request.once("end",() => {
                 try {
                   if (this.context.finished) {
                     return;
                   }
                   this.context.requestEnded = true;
-                  this.context.fire("onRequestEnd", this);
+                  return this.context.fireAsync("onRequestEnd", this);
                 } catch (error) {
                   return this.context.kernelHttp.onError(this.context.container, error);
                 }
@@ -214,12 +218,10 @@ module.exports = nodefony.register("Request", function () {
         })
         .catch((error) => {
           if (this.context.requestEnded) {
-            //this.context.fire("onError", this.context.container, error);
             return this.context.kernelHttp.onError(this.context.container, error);
           } else {
             this.request.once("end", () => {
               this.context.requestEnded = true;
-              //this.context.fire("onError", this.context.container, error);
               return this.context.kernelHttp.onError(this.context.container, error);
             });
           }
@@ -228,14 +230,68 @@ module.exports = nodefony.register("Request", function () {
 
     parseRequest() {
       return new Promise((resolve, reject) => {
-        try {
-          if (this.method in parse) {
-            return resolve(this.parserRequest());
-          } else {
-            return resolve();
+        if (this.method in parse) {
+          switch (this.contentType) {
+          case "application/xml":
+          case "text/xml":
+            this.parser = new ParserXml(this);
+            return resolve(this.parser);
+          case "application/x-www-form-urlencoded":
+            try {
+              this.parser = new ParserQs(this);
+            } catch (e) {
+              return reject(e);
+            }
+            return resolve(this.parser);
+          default:
+            let opt = nodefony.extend(this.context.requestSettings, {
+              encoding: this.charset
+            });
+            this.parser = new formidable.IncomingForm(opt);
+            this.parser.parse(this.request, (err, fields, files) => {
+              if (err) {
+                return reject(err);
+              }
+              try {
+                this.queryPost = fields;
+                this.query = nodefony.extend({}, this.query, this.queryPost);
+                if (Object.keys(files).length) {
+                  for (let file in files) {
+                    try {
+                      if (reg.exec(file)) {
+                        if (nodefony.isArray(files[file])) {
+                          for (let multifiles in files[file]) {
+                            this.createFileUpload(multifiles, files[file][multifiles], opt.maxFileSize);
+                          }
+                        } else {
+                          if (files[file].name) {
+                            this.createFileUpload(file, files[file], opt.maxFileSize);
+                          }
+                        }
+                      } else {
+                        if (nodefony.isArray(files[file])) {
+                          for (let multifiles in files[file]) {
+                            this.createFileUpload(multifiles, files[file][multifiles], opt.maxFileSize);
+                          }
+                        } else {
+                          this.createFileUpload(file, files[file], opt.maxFileSize);
+                        }
+                      }
+                    } catch (err) {
+                      return reject(err);
+                    }
+                  }
+                }
+              } catch (err) {
+                return reject(err);
+              }
+              this.context.requestEnded = true;
+              this.context.fireAsync("onRequestEnd", this);
+              return resolve(this.parser);
+            });
           }
-        } catch (error) {
-          return reject(error);
+        } else {
+          return resolve();
         }
       });
     }
@@ -251,80 +307,6 @@ module.exports = nodefony.register("Request", function () {
         this.queryFile[name] = this.queryFile[index - 1];
       }
       return fileUpload;
-    }
-
-    parserRequest() {
-      switch (this.contentType) {
-      case "application/xml":
-      case "text/xml":
-        this.parser = new ParserXml(this);
-        return this.parser;
-      case "application/x-www-form-urlencoded":
-        try {
-          this.parser = new ParserQs(this);
-        } catch (e) {
-          throw e;
-        }
-        return this.parser;
-      default:
-        let opt = nodefony.extend(this.context.requestSettings, {
-          encoding: this.charset
-        });
-        this.parser = new formidable.IncomingForm(opt);
-        this.parser.parse(this.request, (err, fields, files) => {
-          if (err) {
-            this.request.on("end", () => {
-              //this.context.fire("onError", this.context.container, err);
-              return this.context.kernelHttp.onError(this.context.container, err);
-            });
-            return;
-          }
-          try {
-            this.queryPost = fields;
-            //this.context.setParameters("query.post", this.queryPost);
-            this.query = nodefony.extend({}, this.query, this.queryPost);
-            //this.context.setParameters("query.request", this.query);
-            if (Object.keys(files).length) {
-              for (let file in files) {
-                try {
-                  if (reg.exec(file)) {
-                    if (nodefony.isArray(files[file])) {
-                      for (let multifiles in files[file]) {
-                        this.createFileUpload(multifiles, files[file][multifiles], opt.maxFileSize);
-                      }
-                    } else {
-                      if (files[file].name) {
-                        this.createFileUpload(file, files[file], opt.maxFileSize);
-                      }
-                    }
-                  } else {
-                    if (nodefony.isArray(files[file])) {
-                      for (let multifiles in files[file]) {
-                        this.createFileUpload(multifiles, files[file][multifiles], opt.maxFileSize);
-                      }
-                    } else {
-                      this.createFileUpload(file, files[file], opt.maxFileSize);
-                    }
-                  }
-                } catch (err) {
-                  //this.context.fire("onError", this.context.container, err);
-                  return this.context.kernelHttp.onError(this.context.container, err);
-                  //return err;
-                }
-              }
-            }
-          } catch (err) {
-            this.request.on("end", () => {
-              //this.context.fire("onError", this.context.container, err);
-              return this.context.kernelHttp.onError(this.context.container, err);
-            });
-            return;
-          }
-          this.context.requestEnded = true;
-          this.context.fire("onRequestEnd", this);
-        });
-        return this.parser;
-      }
     }
 
     accepts(Type) {

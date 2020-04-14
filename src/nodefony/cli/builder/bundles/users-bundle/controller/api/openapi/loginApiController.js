@@ -63,14 +63,14 @@ class loginApiController extends nodefony.Controller {
       const token = this.jwtFactory.generateJwtToken(
         this.context.token.serialize(),
         this.jwtSettings.token);
-      const refrechToken = await this.jwtFactory.generateJwtRefreshToken(
+      const refreshToken = await this.jwtFactory.generateJwtRefreshToken(
         this.context.token.user.username,
         token,
         this.jwtSettings.refreshToken);
       return this.api.render({
         decodedToken: this.jwtFactory.decodeJwtToken(token),
         token: token,
-        refreshToken: refrechToken
+        refreshToken: refreshToken
       });
     } catch (e) {
       throw this.createException(e, 401);

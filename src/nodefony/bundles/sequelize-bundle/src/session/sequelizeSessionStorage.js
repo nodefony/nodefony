@@ -24,7 +24,7 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
         if (results) {
           severity = "INFO";
         }
-        this.manager.logger("Context : " + (contextSession || "default") + " GARBADGE COLLECTOR ==> " + results + "  DELETED", severity);
+        this.manager.logger("Context : " + (contextSession || "default") + " GARBAGE COLLECTOR ==> " + results + "  DELETED", severity);
         return results;
       }).catch((error) => {
         throw error;

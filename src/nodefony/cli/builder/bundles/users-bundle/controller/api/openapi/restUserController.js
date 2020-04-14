@@ -29,7 +29,7 @@ class restController extends nodefony.Controller {
 
   /**
    *    @Method ({"OPTIONS"})
-   *    @Route ( "",name="api-users-options",)
+   *    @Route ( "",name="api-users-options")
    */
   optionsAction() {
     try {

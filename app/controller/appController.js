@@ -4,7 +4,6 @@ module.exports = class appController extends nodefony.controller {
     super(container, context);
     // start session
     this.startSession();
-    this.documentation = this.kernel.getBundles("documentation");
   }
 
   /**
@@ -22,7 +21,8 @@ module.exports = class appController extends nodefony.controller {
    */
   headerAction() {
     let urlDoc = null;
-    if (this.documentation) {
+    let doc = this.kernel.getBundles("documentation") ;
+    if (doc) {
       urlDoc = this.generateUrl("nodefony-doc");
     }
     return this.render("app::header.html.twig", {
@@ -43,30 +43,5 @@ module.exports = class appController extends nodefony.controller {
       year: new Date().getFullYear()
     });
   }
-
-  /**
-   *	Documentation
-   *  @see Route documentation in routing.js
-   */
-  /*documentationAction() {
-    if (this.documentation) {
-      return this.forward("documentation:default:index");
-    }
-    try {
-      let file = new nodefony.fileClass(path.resolve(this.kernel.rootDir, "README.md"));
-      if (file) {
-        let res = this.htmlMdParser(file.content(file.encoding), {
-          linkify: true,
-          typographer: true
-        });
-        return this.render("app:documentation:documentation.html.twig", {
-          readme: res,
-        });
-      }
-    } catch (e) {
-      throw e;
-    }
-    return this.render('app:documentation:documentation.html.twig');
-  }*/
 
 };

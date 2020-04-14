@@ -31,9 +31,12 @@ $ eval "$(ssh-agent -s)"
 $ ssh-add -K ~/.ssh/my_github_key/id_rsa
 
 
-// amend
+// amend change last commit --no-edit for keep old message
 git commit --amend --no-edit
 git push -f
+
+// return to head
+git reset --hard
 
 
 
@@ -125,6 +128,13 @@ git rebase --interactive b8603aca
 git commit -a --amend --no-edit
 git rebase --continue
 
+
+# Journal des changements locaux réalisés sur le repo.
+git reflog
+
+
+# clean Working Directory
+git clean -f -d
 
 
 /**
