@@ -506,6 +506,10 @@ class Nodefony {
     cli.setHelp("", "kill", "Kill PM2 daemon ");
     cli.setHelp("", "logs [name] [nblines]", "Stream pm2 logs  [name] is project name  and [nblines] to show ");
     cli.setHelp("", "clean-log", "Remove logs");
+    cli.setHelp("", "pm2-logrotate", "install pm2 logrotate");
+    cli.setHelp("", "pm2-save", "save pm2 deamon status, It will save the process list with the corresponding environments into the dump file");
+    cli.setHelp("", "pm2-startup", "Detect available init system, generate configuration and enable startup system");
+    cli.setHelp("", "pm2-unstartup", "Disabling startup system");
     // nodefony
     cli.setTitleHelp(cli.clc.cyan("nodefony"));
     cli.setHelp("", "create [-i] name [path]", "Create New Nodefony Project");
@@ -864,11 +868,9 @@ class Nodefony {
                 console.log(" npm run pm2 monit || yarn  pm2 monit");
                 console.log(" npm run pm2 --lines 1000 logs || yarn pm2 --lines 1000 logs ");
                 //pm2.disconnect();
+                resolve(pm2.disconnect());
                 if ( cli.commander.daemon ){
-                  resolve(pm2.disconnect());
                   cli.terminate(0);
-                }else{
-                  resolve(pm2.disconnect());
                 }
               });
             } catch (e) {
