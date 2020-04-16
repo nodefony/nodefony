@@ -695,10 +695,10 @@ class Nodefony {
         cwd: process.cwd(),
         env: process.env,
         stdio: "inherit"
-      }).then((code)=>{
+      }).then((code) => {
         cli.log(`[PM2] Init System found To setup the Startup Script, copy/paste the previous command :)`);
-        return code ;
-      }).catch(e =>{
+        return code;
+      }).catch(e => {
         cli.log(e, "ERROR");
       });
     case "pm2-unstartup":
@@ -843,6 +843,7 @@ class Nodefony {
       if (!this.pm2Config.apps[0].name) {
         this.pm2Config.apps[0].name = this.projectPackage.name || this.projectName;
       }
+      this.pm2Config.apps[0].vizion = false ;
       pm2.connect((err) => {
         if (err) {
           cli.logger(err, "ERROR");
@@ -862,20 +863,53 @@ class Nodefony {
                   console.error(err);
                 }
                 this.tablePm2(cli, processDescriptionList);
-                console.log(" To see all logs you can use these commands : ");
-                console.log(" nodefony logs ");
-                console.log(" npm run pm2 logs || yarn pm2 logs");
-                console.log(" npm run pm2 monit || yarn  pm2 monit");
-                console.log(" npm run pm2 --lines 1000 logs || yarn pm2 --lines 1000 logs ");
-                //pm2.disconnect();
-                resolve(pm2.disconnect());
-                if ( cli.commander.daemon ){
-                  cli.terminate(0);
-                }
+                cli.logger(`SAVING process`);
+                //process.env.PWD = process.cwd();
+                pm2.dump((err, result) => {
+                  if (err) {
+                    cli.logger(err, "ERROR");
+                  }
+                  if (result.success) {
+                    cli.logger(`${process.platform} PM2 process saved `);
+                  }
+                  cli.log(`
+
+PM2 Process Manager 2 :
+   stop [name]                                             Stop Production Project
+   reload [name]                                           Reload Production Project
+   delete [name]                                           Delete Production Project from PM2 management
+   restart [name]                                          Restart Production Project
+   list                                                    List all Production Projects
+   kill                                                    Kill PM2 daemon
+   logs [name] [nblines]                                   Stream pm2 logs  [name] is project name  and [nblines] to show
+   clean-log                                               Remove logs
+   pm2-logrotate                                           install pm2 logrotate
+   pm2-save                                                save pm2 deamon status, It will save the process list with the corresponding environments into the dump file
+   pm2-startup                                             Detect available init system, generate configuration and enable startup system
+   pm2-unstartup                                           Disabling startup system
+
+Examples :
+
+$ nodefony logs
+$ nodefony reload <myproject>
+$ nodedony pm2-logrotate
+$ nodedony pm2-save
+
+Examples with pm2 native tools :
+
+$ npx pm2 monit
+$ npx pm2 --lines 1000 logs
+                    `);
+                  resolve(pm2.disconnect());
+                  if (cli.commander.daemon) {
+                    cli.terminate(0);
+                  }
+                });
               });
             } catch (e) {
               cli.logger(e, "ERROR");
               reject(e);
+              resolve(pm2.disconnect());
               cli.terminate(1);
             }
           });

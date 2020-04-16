@@ -4,8 +4,6 @@ const path = require("path");
 const package = require(path.resolve("package.json"));
 const name = package.name;
 const script = process.argv[1] || "nodefony";
-const logName = `${name}.log`;
-const logFile = path.resolve("tmp", logName);
 
 module.exports = {
   apps: [{
@@ -20,15 +18,10 @@ module.exports = {
     autorestart: true,
     max_restarts: 10,
     //log_file            : "./tmp/nodefony.log",
-    out_file: logFile,
-    error_file: logFile,
+    out_file: path.resolve("tmp", `${name}.log`),
+    error_file: path.resolve("tmp", `${name}.error`),
     merge_logs: true,
     env: {
-      "NODE_ENV": "development",
-      "MODE_START": "PM2",
-      "NODEFONY_DEBUG": true
-    },
-    env_production: {
       "NODE_ENV": "production",
       "MODE_START": "PM2",
       "NODEFONY_DEBUG": false
