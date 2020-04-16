@@ -1,5 +1,24 @@
 # Changelog
 
+## v6.0.0-beta.8 (16/04/2020)
+- [nodefony release 6.0.0-beta.8](https://github.com/nodefony/nodefony-core/commit/eb6e0e72468a4df83bc3cd3a54c7323344919a55)
+- [debug app core](https://github.com/nodefony/nodefony-core/commit/a865170efde98d46196663922a47dc44d96d30db)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/43919772e21e02dde9583999cc846174f7172472)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/c97067d2d4ba14963a59e86742db8b6e7caa9bcf)
+- [start production add save pm2](https://github.com/nodefony/nodefony-core/commit/8a06f457bc934786e2b225a5a6bfc1fc604f358a)
+- [upgrade deps builders](https://github.com/nodefony/nodefony-core/commit/511ca7d840efe890f34e45c0ae521dbeb699e359)
+- [Add command line for pm2 tools logrotate ... #26](https://github.com/nodefony/nodefony-core/commit/4cae5b2bcf076c61e63055a15a643b0844facde7)
+- [app doc controller](https://github.com/nodefony/nodefony-core/commit/5e4155b8581dec31743b2f0d06cc76d51079ac7e)
+- [clean repo](https://github.com/nodefony/nodefony-core/commit/eeaac1b6822d9f37f07650e37917433e1ff81bce)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/412222872c6b0f7125d6d816c49396a94310794d)
+- [#27 add cli option for no deamize process --no-daemon   Nodefony Deamon off for production](https://github.com/nodefony/nodefony-core/commit/650e2447fa829d1c6e9ca26116e5e7dc7a4a26b1)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/e5177908010f77ba48c90ecccc90f61eac163c01)
+- [upgrade builder](https://github.com/nodefony/nodefony-core/commit/6579740a3b0853b3f96b679e6cfa64ca11183960)
+- [upgrade deps](https://github.com/nodefony/nodefony-core/commit/8b44c63095eb929c8f69fb4237954464c2747aeb)
+- [nodefony changelog 6.0.0-beta.7](https://github.com/nodefony/nodefony-core/commit/860e4a1bed3ff731a5a6eddf6c1b35bdacd04301)
+
+---
+
 ## v6.0.0-beta.7 (25/03/2020)
 - [nodefony release 6.0.0-beta.7](https://github.com/nodefony/nodefony-core/commit/3e78364d6d781308623cc9d975f1752d0e1db48a)
 - [upgrade deps | debug builder project](https://github.com/nodefony/nodefony-core/commit/b487c5747d0c124d8323b4f71214c880e0e61b45)
