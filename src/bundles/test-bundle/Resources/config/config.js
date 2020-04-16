@@ -11,6 +11,23 @@ module.exports = {
     webpack: false
   },
 
+  "mail-bundle": {
+    /*nodemailer: {
+      default: "free",
+      transporters: {
+        free: {
+          host: "smtp.free.fr",
+          port: 465,
+          secure: true, // true for 465, false for other ports
+          auth: {
+            user: "xxxxxx",
+            pass: "xxxxxx"
+          }
+        }
+      }
+    }*/
+  },
+
   "http-bundle": {
     statics: {
       doc: {
