@@ -24,21 +24,6 @@ class documentationController extends nodefony.Controller {
     });
   }
 
-  /**
-   *    @Method ({"GET"})
-   *    @Route (
-   *      "/slides/{type}",
-   *      name="app-doc-slides",
-   *      defaults={type='app'}
-   *    )
-   */
-  slidesAction(type){
-    return this.render("app:documentation/slides:slides.html.twig", {
-      title: "Presentation",
-      type:type
-    });
-  }
-
 }
 
 module.exports = documentationController;

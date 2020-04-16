@@ -193,6 +193,9 @@ ${clc.red("query")} : ${controller.query ? JSON.stringify(controller.query, null
   }
 
   returnController(result) {
+    if ( ! this.context){
+      return ;
+    }
     let type = nodefony.typeOf(result);
     switch (true) {
     case result instanceof Promise:
