@@ -53,4 +53,7 @@ nodefony.Container = container(nodefony);
 import service from './src/core/service.es6';
 nodefony.Service = service(nodefony);
 
+import medias from './src/medias/medias.es6';
+nodefony.medias = medias(nodefony);
+
 export default nodefony;

@@ -128,6 +128,10 @@ module.exports = function (nodefony) {
       return this.logger.apply(this, arguments);
     }
 
+    settingsToListen(){
+      return this.notificationsCenter.settingsToListen.apply(this, arguments);
+    }
+
     /**
      *	@method fire
      *	@param {String} event name
