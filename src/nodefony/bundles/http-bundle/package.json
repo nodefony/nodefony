@@ -12,7 +12,7 @@
     "HTTP2"
   ],
   "dependencies": {
-    "cookie": "^0.4.0",
+    "cookie": "^0.4.1",
     "formidable": "^1.2.2",
     "memcached": "^2.2.2",
     "mime": "^2.4.4",
