@@ -36,7 +36,9 @@ class providerManager extends nodefony.Service {
               this.logger(new Error(`provider class not exist : ${config.class}`), "ERROR");
             }
           } else {
-            this.providers[name] = new nodefony.security.providers.userProvider(name, this, config.entity);
+            if ( nodefony.security.providers.userProvider ){
+              this.providers[name] = new nodefony.security.providers.userProvider(name, this, config.entity);
+            }
           }
           break;
         case !!config.chain:
