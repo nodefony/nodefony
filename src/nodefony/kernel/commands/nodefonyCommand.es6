@@ -93,9 +93,12 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
       try {
         this.log("INITIALIZE Mongoose");
         this.log("Generate Mongoose Fixtures");
-        let command = this.cli.getCommand("users", "users");
-        let task = command.getTask("fixtures");
-        return await task.default();
+        if( this.kernel.bundles.users){
+          let command = this.cli.getCommand("users", "users");
+          let task = command.getTask("fixtures");
+          return await task.default();
+        }
+        return true ;
       } catch (e) {
         throw e;
       }
