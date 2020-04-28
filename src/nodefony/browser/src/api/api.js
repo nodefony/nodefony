@@ -47,20 +47,20 @@ class Api extends LocalStorage {
         throw error;
       });
   }
-  get(url, data) {
-    return this.http(url, "get", data);
+  get(url, options) {
+    return this.http(url, "get", options);
   }
-  post(url, data) {
-    return this.http(url, "post", data);
+  post(url, options) {
+    return this.http(url, "post", options);
   }
-  put(url, data) {
-    return this.http(url, "put", data);
+  put(url, options) {
+    return this.http(url, "put", options);
   }
-  delete(url, data) {
-    return this.http(url, "delete", data);
+  delete(url, options) {
+    return this.http(url, "delete", options);
   }
 
-  login(url = "/jwt/login", username = null, passwd = null) {
+  login(url = "/api/jwt/login", username = null, passwd = null) {
     return axios({
         method: "post",
         url: url,
@@ -82,8 +82,12 @@ class Api extends LocalStorage {
         throw error;
       });
   }
-  logout(url = "/jwt/logout", options = {}) {
-    return this.get(url, options)
+  logout(url = "/api/jwt/logout", refreshToken = this.refreshToken, options = {}) {
+    return this.post(url, {
+      data: {
+        refreshToken:  this.refreshToken
+      }
+    })
       .then(response => {
         this.clearToken(true);
         return response;
@@ -93,10 +97,10 @@ class Api extends LocalStorage {
         throw error;
       });
   }
-  getToken() {
+  getToken(url = "/jwt/token") {
     return axios({
         method: "post",
-        url: "/jwt/token",
+        url: url,
         data: {
           refreshToken: this.refreshToken
         }

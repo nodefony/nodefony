@@ -92,6 +92,8 @@ module.exports = function(nodefony) {
       this.msgid = msgid || "";
       /* msg */
       this.msg = msg || "";
+      /* */
+      this.status = "NOTDEFINED";
     }
 
     /**
@@ -539,15 +541,18 @@ module.exports = function(nodefony) {
           } catch (e) {
             console.error(e);
             this.invalid++;
-            return "INVALID";
+            pdu.status = "INVALID";
+            return pdu;
           }
           this.pushStack(pdu);
           this.fire("onLog", pdu);
           this.burstPrinted++;
-          return "ACCEPTED";
+          pdu.status = "ACCEPTED";
+          return pdu;
         }
         this.missed++;
-        return "DROPPED";
+        pdu.status = "DROPPED";
+        return pdu;
       } else {
         try {
           if (payload instanceof PDU) {
@@ -558,11 +563,13 @@ module.exports = function(nodefony) {
         } catch (e) {
           console.error(e);
           this.invalid++;
-          return "INVALID";
+          pdu.status = "INVALID";
+          return pdu;
         }
         this.pushStack(pdu);
+        pdu.status = "ACCEPTED";
         this.fire("onLog", pdu);
-        return "ACCEPTED";
+        return pdu;
       }
     }
 
