@@ -149,11 +149,6 @@ const Translation = class Translation extends nodefony.Service {
     return this.defaultLocale;
   }
 
-  extendTemplate() {
-    this.service.engineTemplate.extendFilter("trans", this.trans.bind(this));
-    this.service.engineTemplate.extendFilter("translate", this.trans.bind(this));
-  }
-
   handle() {
     return this.getLang();
   }
@@ -167,18 +162,17 @@ module.exports = class translation extends nodefony.Service {
     this.setParameters("translate", translate);
     this.defaultDomain = "messages";
     this.reader = reader(this);
+    this.langs = langs;
   }
 
   boot() {
     this.once("onBoot", async () => {
-      this.engineTemplate = this.get("templating");
       let dl = this.getParameters("bundles.app").App.locale;
       if (dl) {
         this.defaultLocale = dl;
       }
       this.getFileLocale(dl);
       this.logger("default Local APPLICATION ==> " + this.defaultLocale, "DEBUG");
-      this.engineTemplate.extendFunction("getLangs", this.getLangs.bind(this));
       this.getConfigLangs(this.getParameters("bundles.app.lang"));
     });
     translate[this.defaultLocale] = {};

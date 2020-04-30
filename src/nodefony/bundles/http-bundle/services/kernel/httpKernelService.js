@@ -70,19 +70,19 @@ class httpKernel extends nodefony.Service {
 
   // EVENTS DISPATCHER
   async onError(container, error) {
-    let context = null ;
+    let context = null;
     try {
       context = container.get("context");
-      if( ! context || context.sended ){
+      if (!context || context.sended) {
         this.log(error, "ERROR");
         return;
       }
-    }catch(e){
+    } catch (e) {
       this.log(error, "ERROR");
       return;
     }
+    let httpError = null;
     try {
-      let httpError = null;
       let result = null;
       let errorType = nodefony.isError(error);
       switch (errorType) {
@@ -99,6 +99,10 @@ class httpKernel extends nodefony.Service {
       }
       if (context.listenerCount("onError")) {
         context.logRequest(httpError);
+        /*if (!context.requested) {
+          context.fire("onRequest", context, httpError.resolver);
+          this.kernel.fire("onRequest", context, httpError.resolver);
+        }*/
         return httpError.resolver.callController(httpError);
       }
       if (!httpError.context) {
@@ -134,7 +138,7 @@ class httpKernel extends nodefony.Service {
       }
       return result;
     } catch (e) {
-      if (error){
+      if (error) {
         this.logger(error, "ERROR");
       }
       if (httpError) {
@@ -265,7 +269,6 @@ class httpKernel extends nodefony.Service {
       let error = null;
       try {
         context = this.createHttpContext(container, request, response, type);
-        context.translation.extendTemplate();
       } catch (e) {
         error = e;
       }
@@ -381,7 +384,6 @@ class httpKernel extends nodefony.Service {
       let error = null;
       try {
         context = this.createWebsocketContext(container, request, type);
-        context.translation.extendTemplate();
       } catch (e) {
         error = e;
       }
@@ -588,42 +590,12 @@ class httpKernel extends nodefony.Service {
   }
 
   extendTemplate(param = {}, context = null) {
+    if (!param) {
+      param = {};
+    }
     if (param && typeof param !== "object") {
       throw new Error(`bad paramaters : ${param} must be an object`);
     }
-    /*return nodefony.extend(param, {
-      nodefony: {
-        name: nodefony.projectName,
-        version: nodefony.version,
-        projectVersion: nodefony.projectVersion,
-        url: context.request.url,
-        environment: this.kernel.environment,
-        debug: this.kernel.debug,
-        local: context.translation.defaultLocale.substr(0, 2),
-        core: this.kernel.isCore,
-        route:context.resolver.getRoute()
-      },
-      getFlashBag: context.getFlashBag.bind(context),
-      render: context.render.bind(context),
-      controller: context.controller.bind(context),
-      trans: context.translation.trans.bind(context.translation),
-      getLocale: context.translation.getLocale.bind(context.translation),
-      trans_default_domain: context.translation.trans_default_domain.bind(context.translation),
-      getTransDefaultDomain: context.translation.getTransDefaultDomain.bind(context.translation),
-      getUser: context.getUser.bind(context),
-      CDN: (type, nb) => {
-        let cdn = this.getCDN(type, nb);
-        let res = `${context.request.url.protocol}//`;
-        if (cdn) {
-          return `${res}${cdn}`;
-        } else {
-          return `${res}${context.request.url.host}`;
-        }
-
-      },
-      absolute_url: context.generateAbsoluteUrl.bind(context),
-      is_granted: context.is_granted.bind(context)
-    });*/
     param.nodefony = {
       name: nodefony.projectName,
       version: nodefony.version,
@@ -633,32 +605,12 @@ class httpKernel extends nodefony.Service {
       debug: this.kernel.debug,
       local: context.translation.defaultLocale.substr(0, 2),
       core: this.kernel.isCore,
-      route:context.resolver.getRoute()
+      route: context.resolver.getRoute(),
+      getContext: () => {
+        return context;
+      }
     };
-    try {
-      param.getFlashBag = context.getFlashBag.bind(context);
-      param.render = context.render.bind(context);
-      param.controller = context.controller.bind(context);
-      param.trans = context.translation.trans.bind(context.translation);
-      param.getLocale = context.translation.getLocale.bind(context.translation);
-      param.trans_default_domain = context.translation.trans_default_domain.bind(context.translation);
-      param.getTransDefaultDomain = context.translation.getTransDefaultDomain.bind(context.translation);
-      param.getUser = context.getUser.bind(context);
-      param.CDN = (type, nb) => {
-        let cdn = this.getCDN(type, nb);
-        let res = `${context.request.url.protocol}//`;
-        if (cdn) {
-          return `${res}${cdn}`;
-        } else {
-          return `${res}${context.request.url.host}`;
-        }
-      };
-      param.absolute_url = context.generateAbsoluteUrl.bind(context);
-      param.is_granted = context.is_granted.bind(context);
-      return param;
-    } catch (e) {
-      console.log(e);
-    }
+    return param;
   }
 
   generateUrl(name, variables, host) {

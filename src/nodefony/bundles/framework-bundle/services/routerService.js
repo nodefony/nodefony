@@ -162,23 +162,6 @@ module.exports = class router extends nodefony.Service {
         return func(file, bundle, parser, context.nodeReader.bind(context, file, bundle));
       };
     }(this);
-    this.engineTemplate = this.get("templating");
-    this.engineTemplate.extendFunction("path", (name, variables, host) => {
-      try {
-        return this.generatePath(name, variables, host);
-      } catch (e) {
-        this.logger(e, "WARNING");
-        return null;
-      }
-    });
-    this.engineTemplate.extendFunction("url", (name, variables, host) => {
-      try {
-        return this.generatePath(name, variables, host);
-      } catch (e) {
-        this.logger(e, "ERROR");
-        return null;
-      }
-    });
   }
 
   generatePath(name, variables, host) {
