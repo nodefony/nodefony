@@ -10,8 +10,8 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.5",
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
     "@nodefony/stage": "^0.2.4",
     "async": "^3.2.0",
     "babel-loader": "^8.1.0",
@@ -34,7 +34,7 @@
     "reveal.js": "^3.9.2",
     "sass-loader": "^8.0.2",
     "semver": "^7.3.0",
-    "simple-git": "^2.0.0",
+    "simple-git": "^2.2.0",
     "socket.io-client": "^2.3.0",
     "terser-webpack-plugin": "^2.3.6",
     "webpack": "^4.43.0",

@@ -34,9 +34,9 @@
     "nodefony": "./bin/nodefony"
   },
   "dependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/parser": "^7.9.4",
-    "@babel/preset-env": "^7.9.5",
+    "@babel/core": "^7.9.6",
+    "@babel/parser": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
     "@nodefony/documentation-bundle": "^6.0.0-beta.8",
     "@nodefony/elastic-bundle": "^6.0.0-beta.8",
     "@nodefony/framework-bundle": "^6.0.0-beta.8",
@@ -80,7 +80,7 @@
     "semver": "^7.3.2",
     "shelljs": "^0.8.4",
     "shortid": "^2.2.15",
-    "simple-git": "^2.0.0",
+    "simple-git": "^2.2.0",
     "spdx": "^0.5.2",
     "twig": "^1.15.0",
     "webrtc-adapter": "^7.5.1",
