@@ -405,6 +405,10 @@ nodefony.register("Session", function () {
       }
     }
 
+    delete(cookieDelete = false){
+      return this.destroy(cookieDelete);
+    }
+
     destroy(cookieDelete) {
       this.clear();
       return this.remove(cookieDelete);

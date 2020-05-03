@@ -117,7 +117,7 @@ module.exports = class webpack extends nodefony.Service {
     if (error) {
       if (info.errors && nodefony.typeOf(info.errors) === "array") {
         this.logger(info.errors.join("\n"), "ERROR");
-        console.trace(info.errors);
+        //console.trace(info.errors);
       } else {
         this.logger(info.errors, "ERROR");
       }

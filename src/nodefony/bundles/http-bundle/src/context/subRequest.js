@@ -3,12 +3,6 @@ module.exports = nodefony.register("subRequest", () => {
   class subRequest extends nodefony.Context {
 
     constructor(context, pattern, data) {
-      //let container = context.container.enterScope("subRequest");
-      /*container.set("httpKernel", context.kernelHttp);
-      container.set("translation", context.translation);
-      container.set("syslog", context.syslog);
-      container.set("router", context.router);
-      container.set("sessions", context.sessionService);*/
       super(context.container, null, null, context.type);
       this.parent = context;
       this.pattern = pattern;
@@ -90,7 +84,6 @@ module.exports = nodefony.register("subRequest", () => {
     }
 
     handle(data) {
-
       if (data) {
         this.resolver.setVariables(data);
       }

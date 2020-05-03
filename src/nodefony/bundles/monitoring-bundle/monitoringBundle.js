@@ -501,14 +501,16 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     }
 
     if (context.session) {
-      context.profiling.session = {
-        name: context.session.name,
-        id: context.session.id,
-        metas: context.session.metaBag(),
-        attributes: context.session.attributes(),
-        flashes: context.session.flashBags(),
-        context: context.session.contextSession
-      };
+      context.on("onSaveSession", ()=>{
+        context.profiling.session = {
+          name: context.session.name,
+          id: context.session.id,
+          metas: context.session.metaBag(),
+          attributes: context.session.attributes(),
+          flashes: context.session.flashBags(),
+          context: context.session.contextSession
+        };
+      });
     }
 
     if (context.request.queryFile) {

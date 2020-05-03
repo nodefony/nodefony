@@ -42,7 +42,7 @@ class Factory extends nodefony.Service {
 
   logout(context) {
     if ( context.session){
-      return context.session.destroy(true)
+      return context.session.invalidate()
         .then(() => {
           return context ;
         }).catch(e => {

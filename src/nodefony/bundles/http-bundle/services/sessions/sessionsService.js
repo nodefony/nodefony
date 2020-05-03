@@ -111,6 +111,7 @@ module.exports = class sessions extends nodefony.Service {
     if (context.session) {
       if (!context.session.saved) {
         context.session.setMetaBag("lastUsed", new Date());
+        context.fire("onSaveSession", context.session);
         return context.session.save(context.user ? context.user.username : null, context.session.contextSession);
       }
     }

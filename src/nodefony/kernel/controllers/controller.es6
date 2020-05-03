@@ -751,7 +751,7 @@ class Controller extends nodefony.Service {
     }
     return new Promise((resolve, reject) => {
       if (this.context.session) {
-        return this.context.session.destroy(true)
+        return this.context.session.invalidate()
           .then(() => {
             return resolve(true);
           }).catch(e => {

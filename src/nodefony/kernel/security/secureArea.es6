@@ -110,7 +110,6 @@ module.exports = nodefony.register("SecuredArea", function () {
             if (!target_path && context.method === "GET") {
               context.session.setFlashBag("default_target_path", context.request.url.pathname);
             }
-            
             if (context.method !== "GET") {
               context.session.setFlashBag("error", securityError.message);
             }
@@ -275,7 +274,7 @@ module.exports = nodefony.register("SecuredArea", function () {
           res.push(await factorie.logout(context));
         }
         if (context.session) {
-          return context.session.destroy(true)
+          return context.session.invalidate()
             .then(() => {
               if (this.formLogin) {
                 return resolve(this.redirect(context, this.formLogin));

@@ -154,6 +154,12 @@ class Resolver extends nodefony.Service {
     }
   }
 
+  newController(container, context) {
+    let controller = new this.controller(container || this.container, context || this.context);
+    container.set("controller", controller);
+    return controller;
+  }
+
   callController(data, reload) {
     try {
       let controller = this.get("controller");
@@ -184,12 +190,6 @@ ${clc.red("query")} : ${controller.query ? JSON.stringify(controller.query, null
     } catch (e) {
       throw e;
     }
-  }
-
-  newController(container, context) {
-    let controller = new this.controller(container || this.container, context || this.context);
-    container.set("controller", controller);
-    return controller;
   }
 
   returnController(result) {
@@ -232,8 +232,6 @@ ${clc.red("query")} : ${controller.query ? JSON.stringify(controller.query, null
       case nodefony.isPromise(result.result):
         this.returnController(result.result);
         return this.context.send();
-        //case nodefony.typeOf(result.result) === "object":
-        //  return this.returnController(this.get("controller").renderSync(this.defaultView, result.result));
       default:
         return this.returnController(result.result);
       }
