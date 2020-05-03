@@ -97,7 +97,7 @@ class Api extends LocalStorage {
         throw error;
       });
   }
-  getToken(url = "/jwt/token") {
+  getToken(url = "/api/jwt/token") {
     return axios({
         method: "post",
         url: url,
