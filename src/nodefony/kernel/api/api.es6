@@ -2,7 +2,7 @@ class Api extends nodefony.Service {
 
   constructor(config, context = null) {
     const container = context ? context.container : kernel.container;
-    super(config.name, container, false);
+    super(config.name, container, false, config);
     this.name = null;
     this.version = null;
     this.description = null;

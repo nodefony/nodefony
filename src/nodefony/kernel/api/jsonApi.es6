@@ -6,7 +6,7 @@ class JsonApi extends Api {
     this.json = {
       api: this.name,
       version: this.version,
-      result: null,
+      //result: null,
       message: "",
       messageId: null
       //error: null,
@@ -14,6 +14,8 @@ class JsonApi extends Api {
       //errorType: null,
       //debug: this.debug
     };
+
+    this.setResultName(this.options.resultName);
     if (this.debug) {
       this.json.debug = this.debug;
     }
@@ -25,6 +27,18 @@ class JsonApi extends Api {
         return this.renderError(e);
       });
     }
+  }
+
+  setResultName(name = "result", value = null) {
+    this.resultName = name;
+    this.json[this.resultName] = value;
+    /*Object.defineProperty(this.json, this.resultName, {
+      value: value,
+      writable: true
+    });*/
+  }
+  getResultName() {
+    return this.resultName || "result";
   }
 
   isError(e, json = {}) {
@@ -67,7 +81,8 @@ class JsonApi extends Api {
   sanitize(payload, json) {
     this.isError(payload, json);
     if (json.error) {
-      return json.result = null;
+      //return json.result = null;
+      return json[this.resultName] = null;
     } else {
       if (!json.severity) {
         json.severity = "INFO";
@@ -82,7 +97,8 @@ class JsonApi extends Api {
       if (!json.message && this.context) {
         json.message = this.context.response.getStatusMessage(json.code);
       }
-      return json.result = payload;
+      //return json.result = payload;
+      return json[this.resultName] = payload;
     }
   }
 
