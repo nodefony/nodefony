@@ -137,9 +137,9 @@ module.exports = function (nodefony) {
      *	@param {String} event name
      *	@param {Arguments} ... arguments to inject
      */
-    fire() {
+    fire(...args) {
       //this.logger(ev, "DEBUG", "EVENT KERNEL")
-      return this.notificationsCenter.fire.apply(this.notificationsCenter, arguments);
+      return this.notificationsCenter.fire( ...args);
     }
 
     /**
@@ -150,6 +150,10 @@ module.exports = function (nodefony) {
      */
     listen() {
       return this.notificationsCenter.listen.apply(this.notificationsCenter, arguments);
+    }
+
+    on(...args) {
+      return this.notificationsCenter.on(...args);
     }
 
     /**

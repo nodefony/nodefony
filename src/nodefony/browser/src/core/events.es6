@@ -40,7 +40,7 @@ module.exports = function (nodefony) {
       }
       if (typeof callback === 'function') {
         this.garbageEvent[eventName].push(callback);
-        this.events[eventName].push(function (args) {
+        this.events[eventName].push(function (...args) {
           callback.apply(context, args);
         });
       }
@@ -59,8 +59,8 @@ module.exports = function (nodefony) {
       }
       if (typeof callback === 'function') {
         this.garbageEvent[eventName].push(callback);
-        this.events[eventName].push(function (args) {
-          callback(args);
+        this.events[eventName].push(function (...args) {
+          callback(...args);
         });
       }
       return function () {
@@ -97,13 +97,13 @@ module.exports = function (nodefony) {
      *      @method fire
      *
      */
-    fire(eventName) {
+    fire(eventName, ...ar) {
       let ret = true;
       if (this.events[eventName]) {
-        let args = Array.prototype.slice.call(arguments, 1);
+        //let args = Array.prototype.slice.call(arguments, 1);
         for (let i = 0; i < this.events[eventName].length; i++) {
           try {
-            ret = this.events[eventName][i](args);
+            ret = this.events[eventName][i](...ar);
             if (ret) {
               break;
             }

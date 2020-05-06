@@ -187,6 +187,6 @@ export default function (nodefony) {
 
   return {
     MediaStream: MediaStream,
-    "webrtc-adapter": adapter
+    webrtcAdapter: adapter
   };
 }
