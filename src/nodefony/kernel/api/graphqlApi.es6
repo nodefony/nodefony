@@ -6,8 +6,9 @@ const {
 
 class graphqlApi extends JsonApi {
 
-  constructor(config, context = null) {
+  constructor(config = {}, context = null) {
     super(config, context);
+    this.setResultName(config.resultName || "data");
   }
 
   async query(query, variables = null, operationName = null) {

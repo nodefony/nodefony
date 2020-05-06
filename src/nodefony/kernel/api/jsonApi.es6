@@ -32,13 +32,6 @@ class JsonApi extends Api {
   setResultName(name = "result", value = null) {
     this.resultName = name;
     this.json[this.resultName] = value;
-    /*Object.defineProperty(this.json, this.resultName, {
-      value: value,
-      writable: true
-    });*/
-  }
-  getResultName() {
-    return this.resultName || "result";
   }
 
   isError(e, json = {}) {
@@ -81,7 +74,6 @@ class JsonApi extends Api {
   sanitize(payload, json) {
     this.isError(payload, json);
     if (json.error) {
-      //return json.result = null;
       return json[this.resultName] = null;
     } else {
       if (!json.severity) {
@@ -97,7 +89,6 @@ class JsonApi extends Api {
       if (!json.message && this.context) {
         json.message = this.context.response.getStatusMessage(json.code);
       }
-      //return json.result = payload;
       return json[this.resultName] = payload;
     }
   }
