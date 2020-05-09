@@ -35,7 +35,11 @@ const App = () => (
         }
       );
       let res = await data.json().catch(() => data.text());
-      return res.result ;
+      console.log(res)
+      if (res.error){
+        return res;
+      }
+      return res.data ;
     }}
   />
 );
