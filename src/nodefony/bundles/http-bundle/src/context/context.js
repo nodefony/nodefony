@@ -98,6 +98,10 @@ nodefony.register("Context", () => {
       return subRequest.handle();
     }
 
+    getRoute() {
+      return this.resolver.getRoute();
+    }
+
     clean() {
       this.kernelHttp = null;
       delete this.kernelHttp;
