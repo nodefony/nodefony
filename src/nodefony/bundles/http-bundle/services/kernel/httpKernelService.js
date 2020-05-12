@@ -75,11 +75,11 @@ class httpKernel extends nodefony.Service {
       context = container.get("context");
       if (!context || context.sended) {
         this.log(error, "ERROR");
-        return;
+        return Promise.reject(error);
       }
     } catch (e) {
       this.log(error, "ERROR");
-      return;
+      return Promise.reject(error);
     }
     let httpError = null;
     try {
@@ -101,10 +101,14 @@ class httpKernel extends nodefony.Service {
         return context.handle(error)
         .then((ret)=>{
           context.removeAllListeners("onError");
+          context.logRequest(httpError);
           return ret;
         }).catch(e=>{
+          if ( ! (e instanceof nodefony.Resolver) ){
+            this.log(e, "ERROR");
+          }
           context.removeAllListeners("onError");
-          throw e;
+          return this.onError(container, error);
         });
         //context.logRequest(httpError);
         //return httpError.resolver.callController(httpError);
