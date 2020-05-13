@@ -114,7 +114,7 @@ class loginApiController extends nodefony.Controller {
         const token = this.jwtFactory.generateJwtToken({
           user: dtuser
         }, this.jwtSettings.token);
-        await this.jwtFactory.updateJwtRefreshToken(dtuser.username, token, this.query.refreshToken);
+        await this.jwtFactory.updateJwtRefreshToken(dtuser.username, token, refreshToken);
         return this.api.render({
           decodedToken: this.jwtFactory.decodeJwtToken(token),
           token: token
