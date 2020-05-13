@@ -56,21 +56,21 @@ nodefony.Service = service(nodefony);
 // medias
 import medias from './src/medias/medias.es6';
 nodefony.medias = medias(nodefony);
-import webrtc from './src/medias/webrtc/webrtc.es6';
-nodefony.medias.webrtc = webrtc(nodefony);
-import transaction from './src/medias/webrtc/transaction.es6';
-nodefony.medias.webrtcTransaction = transaction(nodefony);
-import user from './src/medias/webrtc/user.es6';
-nodefony.medias.userMedia = user(nodefony);
+//import webrtc from './src/medias/webrtc/webrtc.es6';
+//nodefony.medias.webrtc = webrtc(nodefony);
+//import transaction from './src/medias/webrtc/transaction.es6';
+//nodefony.medias.webrtcTransaction = transaction(nodefony);
+//import user from './src/medias/webrtc/user.es6';
+//nodefony.medias.userMedia = user(nodefony);
 // medias webaudio
-import audio from './src/medias/webAudio/webAudio.es6';
-nodefony.medias.webAudioApi = audio(nodefony);
-import mixer from './src/medias/webAudio/mixer.es6';
-nodefony.medias.webAudioApi.MediaMix = mixer(nodefony);
-import bus from './src/medias/webAudio/audioBus.es6';
-nodefony.medias.webAudioApi.AudioBus = bus(nodefony);
-import track from './src/medias/webAudio/track.es6';
-nodefony.medias.webAudioApi.Track = track(nodefony);
+//import audio from './src/medias/webAudio/webAudio.es6';
+//nodefony.medias.webAudioApi = audio(nodefony);
+//import mixer from './src/medias/webAudio/mixer.es6';
+//nodefony.medias.webAudioApi.MediaMix = mixer(nodefony);
+//import bus from './src/medias/webAudio/audioBus.es6';
+//nodefony.medias.webAudioApi.AudioBus = bus(nodefony);
+//import track from './src/medias/webAudio/track.es6';
+//nodefony.medias.webAudioApi.Track = track(nodefony);
 
 
 
