@@ -217,6 +217,8 @@ class httpKernel extends nodefony.Service {
 
   handle(request, response, type) {
     // SCOPE REQUEST ;
+    let log = clc.cyan.bgBlue(`REQUEST ${request.url}`) ;
+    this.log(`REQUEST HANDLE ${type} : ${log}`,"DEBUG")
     let container = this.container.enterScope("request");
     switch (type) {
     case "HTTP":

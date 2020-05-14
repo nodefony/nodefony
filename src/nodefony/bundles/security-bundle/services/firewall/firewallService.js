@@ -201,13 +201,13 @@ module.exports = class security extends nodefony.Service {
                   return resolve(ctx);
               }
             })
-            .catch((error) => {
+            .catch(async (error) => {
               if (context.translation) {
                 context.locale = context.translation.handle();
               }
               //context.fire("onError", context.container, error);
               if (context.session) {
-                context.session.invalidate();
+                await context.session.invalidate();
               }
               return reject(error);
             });
