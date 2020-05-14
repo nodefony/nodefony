@@ -148,7 +148,7 @@ class Service {
     delete this.kernel;
   }
 
-  logger(pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     try {
       if (!msgid) {
         msgid = "SERVICE " + this.name + " ";
@@ -159,51 +159,35 @@ class Service {
     }
   }
 
-  log() {
-    return this.logger.apply(this, arguments);
+  logger(...args) {
+    return this.log(...args);
   }
-
-  /**
-   *  @method fire
-   *  @param {String} event name
-   *  @param {Arguments} ... arguments to inject
-   */
-  fire() {
-    if (this.notificationsCenter) {
-      return this.notificationsCenter.emit.apply(this.notificationsCenter, arguments);
-    }
+  eventNames(...args){
+    return this.notificationsCenter.eventNames(...args);
   }
-  fireAsync() {
-    if (this.notificationsCenter) {
-      return this.notificationsCenter.emitAsync.apply(this.notificationsCenter, arguments);
-    }
+  fire(...args) {
+    return this.notificationsCenter.emit(...args);
   }
-  emit() {
-    if (this.notificationsCenter) {
-      return this.notificationsCenter.emit.apply(this.notificationsCenter, arguments);
-    }
+  fireAsync(...args) {
+    return this.notificationsCenter.emitAsync(...args);
   }
-  emitAsync() {
-    if (this.notificationsCenter) {
-      return this.notificationsCenter.emitAsync.apply(this.notificationsCenter, arguments);
-    }
+  emit(...args) {
+    return this.notificationsCenter.emit(...args);
   }
-
-  /**
-   *  @method listen
-   *  @param {Oject} context
-   *  @param {String} eventName
-   *  @param {Function} listener
-   */
-  listen() {
-    if (this.notificationsCenter) {
-      return this.notificationsCenter.listen.apply(this.notificationsCenter, arguments);
-    }
+  emitAsync(...args) {
+    return this.notificationsCenter.emitAsync(...args);
   }
-  on() {
-    if (this.notificationsCenter) {
-      return this.notificationsCenter.on.apply(this.notificationsCenter, arguments);
-    }
+  addListener(...args){
+    this.notificationsCenter.addListener(...args);
+  }
+  listen(...args) {
+    return this.notificationsCenter.listen(...args);
+  }
+  on(...args) {
+    return this.notificationsCenter.on(...args);
+  }
+  off(...args) {
+    return this.notificationsCenter.off(...args);
   }
 
   listenSyslog(options) {
@@ -219,91 +203,66 @@ class Service {
     });
   }
 
-  /**
-  *  @method once
-  *  @param {String} eventName
-  *  @param {Function} listener
-
-  */
-  once() {
-    if (this.notificationsCenter) {
-      return this.notificationsCenter.once.apply(this.notificationsCenter, arguments);
-    }
+  once(...args) {
+    return this.notificationsCenter.once(...args);
   }
 
   /**
    *  @method setMaxListeners
    *  @param nb
    */
-  setMaxListeners() {
-    if (this.notificationsCenter) {
-      return this.notificationsCenter.setMaxListeners.apply(this.notificationsCenter, arguments);
-    }
+  setMaxListeners(...args) {
+    return this.notificationsCenter.setMaxListeners(...args);
   }
 
-  /**
-   *  @method removeListener
-   *  @param {Oject} eventName
-   *  @param {String} listener
-   */
-  removeListener() {
-    if (this.notificationsCenter) {
-      return this.notificationsCenter.unListen.apply(this.notificationsCenter, arguments);
-    }
+  removeListener(...args) {
+    return this.notificationsCenter.unListen(...args);
   }
 
   /**
    *  @method removeAllListeners
    */
-  removeAllListeners() {
-    if (this.notificationsCenter) {
-      return this.notificationsCenter.removeAllListeners.apply(this.notificationsCenter, arguments);
-    }
+  removeAllListeners(...args) {
+    return this.notificationsCenter.removeAllListeners(...args);
   }
 
   /**
    *  @method prependOnceListener
    */
-  prependOnceListener() {
-    if (this.notificationsCenter) {
-      return this.notificationsCenter.prependOnceListener.apply(this.notificationsCenter, arguments);
-    }
+  prependOnceListener(...args) {
+    return this.notificationsCenter.prependOnceListener(...args);
   }
 
   /**
    *  @method prependListener
    */
-  prependListener() {
-    if (this.notificationsCenter) {
-      return this.notificationsCenter.prependListener.apply(this.notificationsCenter, arguments);
-    }
+  prependListener(...args) {
+    return this.notificationsCenter.prependListener(...args)
   }
 
   /**
    *  @method getMaxListeners
    */
-  getMaxListeners() {
-    if (this.notificationsCenter) {
-      return this.notificationsCenter.getMaxListeners.apply(this.notificationsCenter, arguments);
-    }
+  getMaxListeners(...args) {
+    return this.notificationsCenter.getMaxListeners(...args);
   }
 
   /**
    *  @method listenerCount
    */
-  listenerCount() {
-    if (this.notificationsCenter) {
-      return this.notificationsCenter.listenerCount.apply(this.notificationsCenter, arguments);
-    }
+  listenerCount(...args) {
+    return this.notificationsCenter.listenerCount(...args);
   }
 
   /**
    *  @method listenerCount
    */
-  listeners() {
-    if (this.notificationsCenter) {
-      return this.notificationsCenter.listeners.apply(this.notificationsCenter, arguments);
-    }
+  listeners(...args) {
+    return this.notificationsCenter.listeners(...args);
+  }
+
+  rawListeners(...args){
+    return this.notificationsCenter.rawListeners(...args);
   }
 
   /**
@@ -342,16 +301,16 @@ class Service {
     return false;
   }
 
-  getParameters() {
-    return this.container.getParameters.apply(this.container, arguments);
+  getParameters(...args) {
+    return this.container.getParameters(...args);
   }
 
-  setParameters() {
-    return this.container.setParameters.apply(this.container, arguments);
+  setParameters(...args) {
+    return this.container.setParameters(...args);
   }
 
-  has() {
-    return this.container.has.apply(this.container, arguments);
+  has(...args) {
+    return this.container.has(...args);
   }
 }
 

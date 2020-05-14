@@ -35,9 +35,9 @@ class Notification extends events.EventEmitter {
    *  @method fire
    *
    */
-  fire() {
+  fire(...args) {
     try {
-      return this.emit.apply(this, arguments);
+      return this.emit(...args);
     } catch (e) {
       throw e;
     }
@@ -69,8 +69,8 @@ class Notification extends events.EventEmitter {
     return tab;
   }
 
-  fireAsync() {
-    return this.emitAsync.apply(this, arguments);
+  fireAsync(...args) {
+    return this.emitAsync(...args);
   }
   /**
    *
@@ -94,8 +94,8 @@ class Notification extends events.EventEmitter {
    *  @method unListen
    *
    */
-  unListen() {
-    return this.removeListener.apply(this, arguments);
+  unListen(...args) {
+    return this.removeListener(...args);
   }
 }
 
