@@ -100,14 +100,22 @@ class httpKernel extends nodefony.Service {
       if (context.listenerCount("onError")) {
         return context.handle(error)
         .then((ret)=>{
-          context.removeAllListeners("onError");
-          context.logRequest(httpError);
+          if(context){
+            if (context.notificationsCenter){
+              context.removeAllListeners("onError");
+            }
+            context.logRequest(httpError);
+          }
           return ret;
         }).catch(e=>{
           if ( ! (e instanceof nodefony.Resolver) ){
             this.log(e, "ERROR");
           }
-          context.removeAllListeners("onError");
+          if(context){
+            if (context.notificationsCenter){
+              context.removeAllListeners("onError");
+            }
+          }
           return this.onError(container, error);
         });
         //context.logRequest(httpError);
