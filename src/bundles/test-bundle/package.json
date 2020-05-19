@@ -32,7 +32,7 @@
     "popper.js": "^1.16.1",
     "postcss-loader": "^3.0.0",
     "precss": "^4.0.0",
-    "puppeteer": "^3.0.4",
+    "puppeteer": "^3.1.0",
     "request": "^2.88.2",
     "resolve-url-loader": "^3.1.1",
     "rxjs": "^6.5.5",
