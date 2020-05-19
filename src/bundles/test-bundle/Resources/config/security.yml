@@ -214,7 +214,7 @@ security:
 
 
       # passport-ldapauth  LDAP DEMO SECURITY AREA
-      #   CHECK ./node_modules/.bin/ldapjs-search   -u ldap://ldap-server.com -b "dc=object,dc=com" "uid=user"
+      #   CHECK :                                 npx ldapjs-search   -u ldap://ldap-server.com -b "dc=object,dc=com" "uid=user"
       #
       #ldap_area:
       #         pattern:                          ^/

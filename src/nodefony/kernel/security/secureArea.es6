@@ -164,6 +164,7 @@ module.exports = nodefony.register("SecuredArea", function () {
       return new Promise((resolve, reject) => {
         if (this.nbFactories) {
           try {
+            this.log(`Try Authentication Factory ${this.factories[index - 1].name}`, "DEBUG");
             return this.factories[index - 1].handle(context)
               .then((token) => {
                 return resolve(token);
