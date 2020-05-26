@@ -80,6 +80,7 @@ const Cors = class Cors {
         context.response.statusCode = 204;
         context.response.writeHead();
         context.response.flush();
+        context.response.end();
         return 204;
       }
       return 200;
