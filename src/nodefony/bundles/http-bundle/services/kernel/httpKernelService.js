@@ -452,14 +452,19 @@ class httpKernel extends nodefony.Service {
           this.checkValidDomain(context);
         }
         // FRONT CONTROLLER
-        //await this.handleFrontController(context);
         try{
           let ret = await this.handleFrontController(context);
           if (ret === 204){
             return resolve(ret);
           }
         }catch(e){
-          this.log(e,"ERROR");
+          if (e.code && e.code === 404){
+            throw e;
+          }
+          if (context.resolver){
+            throw e;
+          }
+          this.log(e, "ERROR");
         }
 
         if (context.secure || context.isControlledAccess) {
