@@ -114,7 +114,7 @@ describe("BUNDLE TEST", function () {
         assert(connection.connected);
         connection.on('close', (reasonCode, description) => {
           assert.deepStrictEqual(reasonCode, 3401);
-          assert.deepStrictEqual(description, "CROSS DOMAIN Unauthorized REQUEST REFERER : http://myfalsecrossdomain.com:5151/");
+          assert.deepStrictEqual(description, "Unauthorized");
           done();
         });
       });

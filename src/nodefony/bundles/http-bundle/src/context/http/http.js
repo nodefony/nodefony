@@ -88,9 +88,9 @@ nodefony.register.call(nodefony.context, "http", function () {
         };
         this.logger("PROXY REQUEST x-forwarded VIA : " + this.proxy.proxyVia, "DEBUG");
       }
-      if (this.security) {
+      /*if (this.security) {
         this.crossDomain = this.isCrossDomain();
-      }
+      }*/
     }
 
     getRemoteAddress() {

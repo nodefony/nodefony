@@ -100,14 +100,18 @@ nodefony.register.call(nodefony.context, "websocket", function () {
     connect() {
       return new Promise((resolve, reject) => {
         try {
-          this.connection = this.request.accept(this.resolver.acceptedProtocol || null, this.origin /*, this.request.cookies || null*/ );
+          if( this.resolver ){
+            this.connection = this.request.accept(this.resolver.acceptedProtocol || null, this.origin /*, this.request.cookies || null*/ );
+          }else{
+            this.connection = this.request.accept( null, this.origin /*, this.request.cookies || null*/ );
+          }
           this.response.setConnection(this.connection);
           this.connection.on('close', onClose.bind(this));
           this.requestEnded = true;
           this.fire("onConnect", this, this.connection);
           // LISTEN EVENTS SOCKET
           this.connection.on('message', this.handleMessage.bind(this));
-          this.logRequest(null, this.resolver.acceptedProtocol);
+          this.logRequest(null, this.resolver ? this.resolver.acceptedProtocol : null);
           return resolve(this.connection);
         } catch (e) {
           return reject(e);

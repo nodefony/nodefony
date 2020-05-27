@@ -363,13 +363,13 @@ module.exports = class security extends nodefony.Service {
   handle(context) {
     return new Promise((resolve, reject) => {
       try {
-        try {
+        /*try {
           if (this.handleCrossDomain(context) === 204) {
             return resolve();
           }
         } catch (error) {
           return reject(error);
-        }
+        }*/
         if (context.type === "HTTP" && this.httpsReady) {
           if (context.security && context.security.redirect_Https) {
             return resolve(this.redirectHttps(context));

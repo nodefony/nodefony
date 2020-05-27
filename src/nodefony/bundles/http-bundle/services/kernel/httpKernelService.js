@@ -225,16 +225,19 @@ class httpKernel extends nodefony.Service {
 
   handle(request, response, type) {
     // SCOPE REQUEST ;
-    let log = clc.cyan.bgBlue(`REQUEST ${request.url}`) ;
-    this.log(`REQUEST HANDLE ${type} : ${log}`,"DEBUG")
+    let log = null ;
     let container = this.container.enterScope("request");
     switch (type) {
     case "HTTP":
     case "HTTPS":
     case "HTTP2":
+      log = clc.cyan.bgBlue(`${request.url}`) ;
+      this.log(`REQUEST HANDLE ${type} : ${log}`,"DEBUG")
       return this.handleHttp(container, request, response, type);
     case "WEBSOCKET":
     case "WEBSOCKET SECURE":
+      log = clc.cyan.bgBlue(`${request.resource}`) ;
+      this.log(`REQUEST HANDLE ${type} : ${log}`,"DEBUG")
       return this.handleWebsocket(container, request, type);
     }
   }
@@ -245,6 +248,14 @@ class httpKernel extends nodefony.Service {
       let controller = null;
       if (this.firewall && checkFirewall) {
         context.secure = this.firewall.isSecure(context);
+      }
+      if (context.security) {
+        let res = this.firewall.handleCrossDomain(context);
+        if (context.crossDomain && context.method === "OPTIONS"){
+          if (res === 204){
+            return resolve(res);
+          }
+        }
       }
       // FRONT ROUTER
       try {
@@ -328,7 +339,10 @@ class httpKernel extends nodefony.Service {
             this.checkValidDomain(context);
           }
           // FRONT CONTROLLER
-          await this.handleFrontController(context);
+          let ret = await this.handleFrontController(context);
+          if (ret === 204){
+            return resolve(ret);
+          }
           // FIREWALL
           if (context.secure || context.isControlledAccess) {
             let res = await this.firewall.handleSecurity(context);
@@ -438,7 +452,16 @@ class httpKernel extends nodefony.Service {
           this.checkValidDomain(context);
         }
         // FRONT CONTROLLER
-        await this.handleFrontController(context);
+        //await this.handleFrontController(context);
+        try{
+          let ret = await this.handleFrontController(context);
+          if (ret === 204){
+            return resolve(ret);
+          }
+        }catch(e){
+          this.log(e,"ERROR");
+        }
+
         if (context.secure || context.isControlledAccess) {
           return resolve(await context.connect());
         }
