@@ -721,9 +721,11 @@ Monitoring in progress !!!
 
   [![SFR](https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/sfr.jpg)](https://www.sfr.fr)
   [![ALTICE](https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/logo.png)](https://www.sfr.fr)
+  [![DLAKE](https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/d-lake.png)](https://www.d-lake.fr)
+  [![EMERSYA](https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/emersya.png)](https://emersya.com)
 
 ## Big thanks:
-  - [D-Lake](https://www.d-lake.fr/) French specialist in infrastructure and data security.
+  - [D-Lake](https://www.d-lake.fr/) French specialist in infrastructure and data security .
 
 ## Related Links:
 
