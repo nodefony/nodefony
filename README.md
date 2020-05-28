@@ -198,7 +198,7 @@ C:\Users\myuser\AppData\Roaming\npm\bin
 **Cli command when use Global installation**
 ```bash
 $ nodefony -v
-5.1.1
+6.0.0
 ```
 
 **Cli command when By using yarn or npm in trunk**
@@ -231,11 +231,12 @@ YOU CAN USE CLI INTERACTIVE MODE (nodefony without args) :
 $ nodefony
 
 ?  Nodefony CLI :  (Use arrow keys)
-❯ Create Nodefony Project
-  PM2 Tools
-  --------
-  Help
-  Quit
+❯ Create Nodefony Web Project
+Create Micro Service Project
+PM2 Tools
+--------
+Help
+Quit
 ```
 **Cli Usage NO INTERRATIVE** :
 
@@ -719,13 +720,26 @@ Monitoring in progress !!!
 
 ## Who Use Nodefony:
 
-  [![SFR](https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/sfr.jpg)](https://www.sfr.fr)
-  [![ALTICE](https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/logo.png)](https://www.sfr.fr)
-  [![DLAKE](https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/d-lake.png)](https://www.d-lake.fr)
-  [![EMERSYA](https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/emersya.png)](https://emersya.com)
+<p float="left">
+  <a href="https://www.sfr.fr" target="_blank">
+    <img src="https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/sfr.jpg"/>
+  </a>
+  &nbsp&nbsp&nbsp&nbsp&nbsp
+  <a href="https://www.sfr.fr" target="_blank">
+    <img src="https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/logo.png"/>
+  </a>
+  &nbsp&nbsp&nbsp&nbsp&nbsp
+  <a href="https://www.d-lake.fr" target="_blank">
+    <img src="https://raw.githubusercontent.com/nodefony/nodefony-core/dev/tools/images/d-lake.png"/>
+  </a>
+  &nbsp&nbsp&nbsp&nbsp&nbsp
+  <a href="https://emersya.com" target="_blank">
+    <img src="https://raw.githubusercontent.com/nodefony/nodefony-core/dev/tools/images/emersya.png"/>
+  </a>
+</p>
 
 ## Big thanks:
-  - [D-Lake](https://www.d-lake.fr/) French specialist in infrastructure and data security .
+  - [D-Lake](https://www.d-lake.fr/) French specialist in infrastructure and data security.
 
 ## Related Links:
 
