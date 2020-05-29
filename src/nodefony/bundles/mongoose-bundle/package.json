@@ -16,7 +16,7 @@
     "url": "git://github.com/nodefony/nodefony-core.git"
   },
   "dependencies": {
-    "mongodb": "^3.5.7",
+    "mongodb": "^3.5.8",
     "mongoose": "^5.9.16"
   },
   "devDependencies": {},

@@ -10,8 +10,8 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "^7.10.0",
-    "@babel/preset-env": "^7.10.0",
+    "@babel/core": "^7.10.1",
+    "@babel/preset-env": "^7.10.1",
     "@nodefony/stage": "^0.2.4",
     "async": "^3.2.0",
     "babel-loader": "^8.1.0",
@@ -31,7 +31,7 @@
     "postcss-loader": "^3.0.0",
     "precss": "^4.0.0",
     "resolve-url-loader": "^3.1.1",
-    "reveal.js": "^3.9.2",
+    "reveal.js": "^4.0.2",
     "sass-loader": "^8.0.2",
     "semver": "^7.3.0",
     "simple-git": "^2.5.0",
