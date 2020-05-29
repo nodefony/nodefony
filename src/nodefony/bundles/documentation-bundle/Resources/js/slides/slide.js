@@ -1,16 +1,12 @@
-const Reveal = require("reveal.js");
-const jquery = require("jquery");
+import Reveal from 'reveal.js';
+import jquery from 'jquery' ;
+import Markdown from 'reveal.js/plugin/markdown/markdown.esm.js';
+import Math from 'reveal.js/plugin/math/math.esm.js';
+import Notes from 'reveal.js/plugin/notes/notes.esm.js';
+import Zoom from 'reveal.js/plugin/zoom/zoom.esm.js';
+import Highlight from 'reveal.js/plugin/highlight/highlight.esm.js';
 
-//import "reveal.js/lib/js/head.min.js";
-
-require("reveal.js/plugin/markdown/marked.js");
-require("reveal.js/plugin/markdown/markdown.js");
-require("reveal.js/plugin/math/math.js");
-require("reveal.js/plugin/notes/notes.js");
-require("reveal.js/plugin/zoom-js/zoom.js");
-
-
-import hljs from 'highlight.js/lib/highlight';
+import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
 import bash from 'highlight.js/lib/languages/bash';
 import shell from 'highlight.js/lib/languages/shell';
@@ -20,17 +16,14 @@ import twig from 'highlight.js/lib/languages/twig';
 import nginx from 'highlight.js/lib/languages/nginx';
 
 import "reveal.js/css/reveal.scss";
-
+import "reveal.js/css/theme/source/sky.scss";
 //import "reveal.js/css/theme/moon.css";
 //import "reveal.js/css/theme/source/solarized.scss";
 //import "reveal.js/css/theme/source/white.scss";
-
-import "reveal.js/css/theme/source/sky.scss";
 //import "reveal.js/css/theme/source/night.scss";
 //import "reveal.js/css/theme/source/blood.scss";
 //import "reveal.js/css/theme/source/serif.scss";
 //import "reveal.js/css/theme/source/simple.scss";
-
 
 //import 'highlight.js/styles/mono-blue.css';
 import 'highlight.js/styles/atom-one-dark.css';
@@ -42,7 +35,10 @@ class Slide {
 
     jquery(document).ready(() => {
       //document.addEventListener('DOMContentLoaded', () => {
-      Reveal.initialize({
+      this.reveal = new Reveal({
+        plugins: [ Markdown, Math, Notes, Zoom /*Highlight*/]
+      })
+      this.reveal.initialize({
         controls: true,
         controlsBackArrows: 'faded',
         progress: true,
@@ -81,26 +77,25 @@ class Slide {
         //margin: 0.06,
         //minScale: 1,
         //maxScale: 1
+      }).then(()=>{
+        /*Reveal.addKeyBinding({
+          keyCode: 84,
+          key: 't',
+          description: 'Start timer'
+        }, () => {
+          console.log("pass t ");
+        });*/
+        hljs.registerLanguage('javascript', javascript);
+        hljs.registerLanguage('bash', bash);
+        hljs.registerLanguage('shell', shell);
+        hljs.registerLanguage('css', css);
+        hljs.registerLanguage('yaml', yaml);
+        hljs.registerLanguage('twig', twig);
+        hljs.registerLanguage('nginx', nginx);
+        hljs.initHighlighting();
+        //hljs.initHighlightingOnLoad();
       });
-
-      /*Reveal.addKeyBinding({
-        keyCode: 84,
-        key: 't',
-        description: 'Start timer'
-      }, () => {
-        console.log("pass t ");
-      });*/
-      hljs.registerLanguage('javascript', javascript);
-      hljs.registerLanguage('bash', bash);
-      hljs.registerLanguage('shell', shell);
-      hljs.registerLanguage('css', css);
-      hljs.registerLanguage('yaml', yaml);
-      hljs.registerLanguage('twig', twig);
-      hljs.registerLanguage('nginx', nginx);
-      hljs.initHighlighting();
-      //hljs.initHighlightingOnLoad();
     });
   }
 }
-
 export default new Slide();
