@@ -29,7 +29,7 @@ module.exports = {
     parameterLimit: 1000,
     delimiter: "&"
   },
-  //Server @see :                https://nodejs.org/dist/latest-v8.x/docs/api/http.html*http_class_http_server
+  //Server @see : https://nodejs.org/dist/latest-v8.x/docs/api/http.html*http_class_http_server
   http: {
     responseTimeout: 40000,
     headers: {
@@ -45,6 +45,16 @@ module.exports = {
   http2: {
     enablePush: true
   },
+  websocket: {
+    keepaliveInterval: 20000,
+    keepaliveGracePeriod: 10000,
+    closeTimeout: 5000
+  },
+  websocketSecure: {
+    keepaliveInterval: 20000,
+    keepaliveGracePeriod: 10000,
+    closeTimeout: 5000
+  },
   statics: {
     defaultOptions: {
       cacheControl: true,
@@ -56,6 +66,10 @@ module.exports = {
         maxAge: 0 //30*24*60*60*1000
       }
     }
+  },
+  sockjs: {
+    domain: kernel.settings.system.domain,
+    port: kernel.settings.system.httpsPort
   },
   session: {
     start: false, // false || true || Session Context Name (waf)
