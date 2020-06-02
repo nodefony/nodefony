@@ -16,7 +16,7 @@
     "shortid": "^2.2.15"
   },
   "devDependencies": {
-    "node-pre-gyp": "^0.14.0"
+    "node-pre-gyp": "^0.15.0"
   },
   "license": "CECILL-B",
   "readmeFilename": "README.md",

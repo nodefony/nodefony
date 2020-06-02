@@ -56,7 +56,7 @@
     "github-release-notes": "^0.17.3",
     "jshint": "^2.11.1",
     "node-gyp": "^6.1.0",
-    "node-pre-gyp": "^0.14.0"
+    "node-pre-gyp": "^0.15.0"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md",
