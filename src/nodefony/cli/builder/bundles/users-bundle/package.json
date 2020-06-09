@@ -51,14 +51,14 @@
     "sass-loader": "^8.0.2",
     "style-loader": "^1.2.1",
     "svg-inline-loader": "^0.8.2",
-    "swagger-ui": "^3.25.5",
-    "swagger-ui-dist": "^3.25.5",
-    "terser-webpack-plugin": "^3.0.2",
+    "swagger-ui": "^3.26.0",
+    "swagger-ui-dist": "^3.26.0",
+    "terser-webpack-plugin": "^3.0.3",
     "webpack": "^4.42.1",
     "webpack-merge": "^4.2.2"
   },
   "devDependencies": {
-    "node-gyp": "^6.1.0",
+    "node-gyp": "^7.0.0",
     "node-pre-gyp": "^0.15.0",
     "sequelize-cli": "^5.5.1"
   },
