@@ -39,7 +39,7 @@ module.exports = webpackMerge(config, {
   },
   externals: {},
   resolve: {
-    extensions: ['*', '.js', '.jsx', '.mjs']
+    extensions: ['.js', '.json', '.jsx', '.css', '.mjs']
   },
   module: {
     rules: [{
@@ -49,7 +49,13 @@ module.exports = webpackMerge(config, {
         use: [{
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react']
+            //presets: ['@babel/preset-env', '@babel/preset-react']
+            presets: [
+                 ['@babel/preset-env', {
+                modules: false
+              }],
+                 '@babel/preset-react',
+               ],
           }
         }]
       }, {
@@ -108,6 +114,11 @@ module.exports = webpackMerge(config, {
             publicPath: `${publicPath}fonts/` // override the default path
           }
         }]
+      }, {
+        test: /\.svg$/,
+        use: [{
+          loader: 'svg-inline-loader'
+        }],
       }, {
         // IMAGES
         test: /\.(gif|png|jpe?g|svg)$/i,

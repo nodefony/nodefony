@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import GraphiQL from 'graphiql';
-import 'graphiql/graphiql.css';
+import 'graphiql/graphiql.min.css';
 
 const NODE_ENV = process.env.NODE_ENV ;
 const DEBUG = process.env.DEBUG ;
@@ -9,7 +9,7 @@ const config = process.env.GRAPHIQL ;
 const Logo = () => {
   return <span className="graphiql-container" style={{width:"15%"}}>
     <img width="30px" heigth="30px" src={config.logo}></img>
-    <span className="doc-explorer-title">
+    <span className="">
       {config.projectName}
     </span>
   </span>;
@@ -35,7 +35,6 @@ const App = () => (
         }
       );
       let res = await data.json().catch(() => data.text());
-      console.log(res)
       if (res.error){
         return res;
       }
