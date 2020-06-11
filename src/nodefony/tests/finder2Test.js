@@ -268,19 +268,23 @@ describe("NODEFONY CORE FINDER", () => {
         });
         let res = await finder.in(global.dataPath, {
           onFinish: (res, totals) => {
-            assert.strictEqual(totals.Directory, 4);
-            assert.strictEqual(totals.File, 13);
-            assert.strictEqual(totals.symbolicLink, 3);
-            assert.strictEqual(totals.hidden, 3);
+            if ( process.platform !== "win32" ){
+              assert.strictEqual(totals.Directory, 4);
+              assert.strictEqual(totals.File, 13);
+              assert.strictEqual(totals.symbolicLink, 3);
+              assert.strictEqual(totals.hidden, 3);
+            }
           }
         });
         res = await finder.in(global.dataPath, {
           seeHidden: false,
           onFinish: (res, totals) => {
-            assert.strictEqual(totals.Directory, 4);
-            assert.strictEqual(totals.File, 10);
-            assert.strictEqual(totals.symbolicLink, 3);
-            assert.strictEqual(totals.hidden, 0);
+            if ( process.platform !== "win32" ){
+              assert.strictEqual(totals.Directory, 4);
+              assert.strictEqual(totals.File, 10);
+              assert.strictEqual(totals.symbolicLink, 3);
+              assert.strictEqual(totals.hidden, 0);
+            }
           }
         });
         res = await finder.in(global.dataPath, {
@@ -289,9 +293,11 @@ describe("NODEFONY CORE FINDER", () => {
             //console.log(res)
             //console.log( res[0].children.getDirectories() )
             //assert.strictEqual(totals.Directory, 4);
-            assert.strictEqual(totals.File, 9);
-            assert.strictEqual(totals.symbolicLink, 2);
-            assert.strictEqual(totals.hidden, 2);
+            if ( process.platform !== "win32" ){
+              assert.strictEqual(totals.File, 9);
+              assert.strictEqual(totals.symbolicLink, 2);
+              assert.strictEqual(totals.hidden, 2);
+            }
           }
         });
       });
