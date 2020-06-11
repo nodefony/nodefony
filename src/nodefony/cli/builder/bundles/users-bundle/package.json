@@ -32,7 +32,7 @@
     "faker": "^4.1.0",
     "file-loader": "^6.0.0",
     "font-awesome": "^4.7.0",
-    "graphiql": "1.0.0-alpha.13",
+    "graphiql": "^1.0.0",
     "graphql": "^15.1.0",
     "html-webpack-plugin": "^4.3.0",
     "imports-loader": "^0.8.0",
