@@ -55,19 +55,17 @@ class Vue extends nodefony.builders.sandbox {
           i18n: false,
           apollo:false
         };
-        if (response.addons.length) {
-          for (let i = 0; i < response.addons.length; i++) {
-            switch (response.addons[i]) {
-            case "vuetify":
-              addons.vuetify = true;
-              break;
-            case "i18n":
-              addons.i18n = true;
-              break;
-            case "apollo-client":
-              addons.apollo = true;
-              break;
-            }
+        for (let i = 0; i < response.addons.length; i++) {
+          switch (response.addons[i]) {
+          case "vuetify":
+            addons.vuetify = true;
+            break;
+          case "i18n":
+            addons.i18n = true;
+            break;
+          case "apollo-client":
+            addons.apollo = true;
+            break;
           }
         }
         delete response.addons;
@@ -138,10 +136,9 @@ class Vue extends nodefony.builders.sandbox {
     return location;
   }
 
-  addVuetify(location = this.vueLocation) {
+  addVuePlugin(args = [], location = this.vueLocation){
     return new Promise(async (resolve, reject) => {
-      let args = ["vue", "add", "vuetify"];
-      this.logger("install Vue cli : " + args.join(" "));
+      this.logger("install Vue plugin : " + args.join(" "));
       let cmd = null;
       try {
         cmd = await this.cli.spawn("npx", args, {
@@ -162,28 +159,14 @@ class Vue extends nodefony.builders.sandbox {
     });
   }
 
+  addVuetify(location = this.vueLocation) {
+    let args = ["vue", "add", "vuetify"];
+    return this.addVuePlugin(args, location);
+  }
+
   addI18n(location = this.vueLocation) {
-    return new Promise(async (resolve, reject) => {
-      let args = ["vue", "add", "i18n"];
-      this.logger("install Vue cli : " + args.join(" "));
-      let cmd = null;
-      try {
-        cmd = await this.cli.spawn("npx", args, {
-          cwd: location,
-          env: process.env,
-          stdio: "inherit"
-        }, (code) => {
-          if (code === 1) {
-            return reject(new Error("install Vue cli new error : " + code));
-          }
-          return resolve(cmd);
-        });
-        return resolve(cmd);
-      } catch (e) {
-        this.logger(e, "ERROR");
-        return reject(e);
-      }
-    });
+    let args = ["vue", "add", "i18n"];
+    return this.addVuePlugin(args, location);
   }
 
   // TODO: apollo
@@ -248,7 +231,7 @@ class Vue extends nodefony.builders.sandbox {
       case "bundle":
         return this.cli.response.location;
       default:
-        return  this.location;
+        return this.location;
     }
   }
 
