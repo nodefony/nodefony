@@ -15,15 +15,16 @@ import yaml from 'highlight.js/lib/languages/yaml';
 import twig from 'highlight.js/lib/languages/twig';
 import nginx from 'highlight.js/lib/languages/nginx';
 
-import "reveal.js/css/reveal.scss";
-import "reveal.js/css/theme/source/sky.scss";
-//import "reveal.js/css/theme/moon.css";
-//import "reveal.js/css/theme/source/solarized.scss";
-//import "reveal.js/css/theme/source/white.scss";
-//import "reveal.js/css/theme/source/night.scss";
-//import "reveal.js/css/theme/source/blood.scss";
-//import "reveal.js/css/theme/source/serif.scss";
-//import "reveal.js/css/theme/source/simple.scss";
+import "reveal.js/dist/reveal.css";
+import "reveal.js/dist/theme/sky.css";
+
+//import "reveal.js/dist/theme/moon.css";
+//import "reveal.js/dist/theme/source/solarized.scss";
+//import "reveal.js/dist/theme/source/white.scss";
+//import "reveal.js/dist/theme/source/night.scss";
+//import "reveal.js/dist/theme/source/blood.scss";
+//import "reveal.js/dist/theme/source/serif.scss";
+//import "reveal.js/dist/theme/source/simple.scss";
 
 //import 'highlight.js/styles/mono-blue.css';
 import 'highlight.js/styles/atom-one-dark.css';
