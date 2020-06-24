@@ -38,10 +38,6 @@
     "rxjs": "^6.5.5",
     "sass-loader": "^8.0.2",
     "terser-webpack-plugin": "^3.0.6",
-    "vue": "^2.6.11",
-    "vue-loader": "^16.0.0-beta.4",
-    "vue-router": "^3.3.4",
-    "vue-template-compiler": "^2.6.11",
     "webpack": "^4.43.0",
     "webpack-merge": "^4.2.2",
     "websocket": "^1.0.31"
