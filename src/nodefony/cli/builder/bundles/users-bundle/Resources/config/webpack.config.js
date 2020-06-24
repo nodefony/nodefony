@@ -64,17 +64,19 @@ module.exports = webpackMerge(config, {
         use: [],
         include: /node_modules/,
       }, {
-        /*
-         *	JQUERY EXPOSE BROWSER CONTEXT
-         *
-         */
         test: require.resolve('jquery'),
-        use: [{
+        rules: [{
           loader: 'expose-loader',
-          options: 'jQuery'
-        }, {
-          loader: 'expose-loader',
-          options: '$'
+          options: {
+            //expose: ['$', 'jQuery'],
+            exposes: [{
+              globalName: '$',
+              override: true,
+                }, {
+              globalName: 'jQuery',
+              override: true,
+            }]
+          }
         }]
       }, {
         test: /jquery\..*\.js/,

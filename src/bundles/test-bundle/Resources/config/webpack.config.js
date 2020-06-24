@@ -32,7 +32,6 @@ module.exports = webpackMerge({
   externals: {},
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js' // 'vue/dist/vue.common.js' pour webpack 1
     }
   },
   module: {
@@ -47,8 +46,21 @@ module.exports = webpackMerge({
         }
       }]
     }, {
-      test: require.resolve("jquery"),
-      loader: "expose-loader?$!expose-loader?jQuery"
+        test: require.resolve('jquery'),
+        rules: [{
+            loader: 'expose-loader',
+            options: {
+              //expose: ['$', 'jQuery'],
+              exposes: [{
+                globalName: '$',
+                override: true,
+              },{
+                globalName: 'jQuery',
+                override: true,
+              }]
+            }
+          }
+        ],
     }, {
       test: /jquery\..*\.js/,
       loader: "imports-loader?$=jquery,jQuery=jquery,this=>window"

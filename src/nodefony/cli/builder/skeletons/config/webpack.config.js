@@ -64,17 +64,18 @@ module.exports = webpackMerge(wpconfig, {
           }
         }]
       }, {% if addons.bootstrap %}{
-      /*
-       *	JQUERY EXPOSE BROWSER CONTEXT
-       *
-       */
         test: require.resolve('jquery'),
-        use: [{
+        rules: [{
           loader: 'expose-loader',
-          options: 'jQuery'
-        }, {
-          loader: 'expose-loader',
-          options: '$'
+          options: {
+            exposes: [{
+              globalName: '$',
+              override: true,
+                }, {
+              globalName: 'jQuery',
+              override: true,
+            }]
+          }
         }]
       }, {
         test: /jquery\..*\.js/,
