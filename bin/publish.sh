@@ -156,6 +156,9 @@ tools (){
 
 build(){
   cd $pathnodefony
+  yarn;
+  npm install;
+  sleep 2;
   echo "Build webpackck nodefony for browser";
   npm run build
 }
