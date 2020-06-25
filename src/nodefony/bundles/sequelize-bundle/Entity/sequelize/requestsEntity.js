@@ -5,8 +5,7 @@
  *
  *
  */
-const Sequelize = require("sequelize");
-const Model = Sequelize.Model;
+const { Sequelize, DataTypes, Model } = require("sequelize");
 
 module.exports = class requests extends nodefony.Entity {
 
@@ -24,36 +23,36 @@ module.exports = class requests extends nodefony.Entity {
   getSchema() {
     return {
       id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
       remoteAddress: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       userAgent: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       url: {
-        type: Sequelize.TEXT
+        type: DataTypes.TEXT
       },
       route: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       method: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       state: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       protocole: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       username: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       data: {
-        type: Sequelize.TEXT
+        type: DataTypes.TEXT
       }
     };
   }

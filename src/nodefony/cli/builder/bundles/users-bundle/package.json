@@ -35,7 +35,7 @@
     "graphiql": "^1.0.3",
     "graphql": "^15.1.0",
     "html-webpack-plugin": "^4.3.0",
-    "imports-loader": "^1.0.0",
+    "imports-loader": "^1.1.0",
     "jquery": "^3.5.1",
     "mini-css-extract-plugin": "^0.9.0",
     "mongoose-paginate-v2": "^1.3.9",
@@ -60,7 +60,7 @@
   "devDependencies": {
     "node-gyp": "^7.0.0",
     "node-pre-gyp": "^0.15.0",
-    "sequelize-cli": "^5.5.1"
+    "sequelize-cli": "^6.0.0"
   },
   "license": "CECILL-B",
   "readmeFilename": "README.md",

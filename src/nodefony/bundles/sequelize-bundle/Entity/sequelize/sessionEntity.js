@@ -1,5 +1,4 @@
-const Sequelize = require("sequelize");
-const Model = Sequelize.Model;
+const { Sequelize, DataTypes, Model } = require("sequelize");
 
 module.exports = class session extends nodefony.Entity {
 
@@ -31,21 +30,21 @@ module.exports = class session extends nodefony.Entity {
   getSchema() {
     return {
       session_id: {
-        type: Sequelize.STRING(126),
+        type: DataTypes.STRING(126),
         primaryKey: true
       },
       context: {
-        type: Sequelize.STRING(126),
+        type: DataTypes.STRING(126),
         defaultValue: "default",
         primaryKey: true
       },
       username: {
-        type: Sequelize.STRING(126),
+        type: DataTypes.STRING(126),
         defaultValue: "",
         allowNull: true
       },
       Attributes: {
-        type: Sequelize.JSON
+        type: DataTypes.JSON
         /*set(value) {
           return this.setDataValue('Attributes', JSON.stringify(value));
         },
@@ -54,7 +53,7 @@ module.exports = class session extends nodefony.Entity {
         }*/
       },
       flashBag: {
-        type: Sequelize.JSON
+        type: DataTypes.JSON
         /*set: function (value) {
           return this.setDataValue('flashBag', JSON.stringify(value));
         },
@@ -63,7 +62,7 @@ module.exports = class session extends nodefony.Entity {
         }*/
       },
       metaBag: {
-        type: Sequelize.JSON,
+        type: DataTypes.JSON,
         /*set(value) {
           return this.setDataValue('metaBag', JSON.stringify(value));
         },
@@ -72,11 +71,11 @@ module.exports = class session extends nodefony.Entity {
         }*/
       },
       createdAt: {
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
         defaultValue: Sequelize.NOW
       },
       updatedAt: {
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
         defaultValue: Sequelize.NOW
       }
     };

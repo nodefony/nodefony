@@ -1,6 +1,6 @@
 //const cls = require('cls-hooked');
 //const namespace = cls.createNamespace('nodefony');
-const Sequelize = require('sequelize');
+const { Sequelize } = require('sequelize');
 //Sequelize.useCLS(namespace);
 const {
   JsonSchemaManager,

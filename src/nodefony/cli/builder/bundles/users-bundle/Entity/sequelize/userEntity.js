@@ -1,5 +1,4 @@
-const Sequelize = require("sequelize");
-const Model = Sequelize.Model;
+const { Sequelize, DataTypes, Model } = require("sequelize");
 const validator = require('validator');
 /*
  *
@@ -35,7 +34,7 @@ class userEntity extends nodefony.Entity {
   getSchema() {
     return {
       username: {
-        type: Sequelize.STRING(126),
+        type: DataTypes.STRING(126),
         primaryKey: true,
         unique: true,
         allowNull: false,
@@ -51,7 +50,7 @@ class userEntity extends nodefony.Entity {
         }
       },
       password: {
-        type: Sequelize.STRING(256),
+        type: DataTypes.STRING(256),
         allowNull: false,
         validate: {
           min: {
@@ -61,28 +60,28 @@ class userEntity extends nodefony.Entity {
         }
       },
       "2fa": {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         defaultValue: false
       },
       "2fa-token": Sequelize.STRING(256),
       enabled: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         defaultValue: true
       },
       userNonExpired: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         defaultValue: true
       },
       credentialsNonExpired: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         defaultValue: true
       },
       accountNonLocked: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         defaultValue: true
       },
       email: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         primaryKey: true,
         unique: true,
         allowNull: false,
@@ -93,7 +92,7 @@ class userEntity extends nodefony.Entity {
         }
       },
       name: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: true,
         validate: {
           is: {
@@ -103,7 +102,7 @@ class userEntity extends nodefony.Entity {
         }
       },
       surname: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: true,
         validate: {
           is: {
@@ -113,11 +112,11 @@ class userEntity extends nodefony.Entity {
         }
       },
       lang: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         defaultValue: "en_en"
       },
       roles: {
-        type: Sequelize.JSON,
+        type: DataTypes.JSON,
         defaultValue: ["ROLE_USER"],
         get(key) {
           let val = this.getDataValue(key);
@@ -128,17 +127,17 @@ class userEntity extends nodefony.Entity {
         }
       },
       gender: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         defaultValue: "none"
       },
       url: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: true,
         validate: {
           isUrl: true
         }
       },
-      image: Sequelize.STRING
+      image: DataTypes.STRING
     };
   }
 
