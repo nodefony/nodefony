@@ -88,7 +88,7 @@ You can follow Nodefony-core build with github actions at **<https://github.com/
 
 #### -  **[Nodefony CORE](https://github.com/nodefony/nodefony-core)**
 
-#### -  **[Nodefony Documentation](https://nodefony.net/documentation/default/nodefony)**
+#### -  **[Nodefony Documentation](https://nodefony.net/documentation/nodefony)**
 
 #### Documentation in progress !!
 
@@ -740,7 +740,7 @@ Monitoring in progress !!!
 
 ## Big thanks:
   - [D-Lake](https://www.d-lake.fr/) French specialist in infrastructure and data security.
-
+  - [Emersya](https://emersya.com) Emersya has pioneered a unique way of interacting with products online using 3D technology.
 ## Related Links:
 
 -   [Node.js](https://nodejs.org/)
