@@ -27,7 +27,8 @@ if (isMainThread) {
 
 } else {
   // thread in node context
-  const nodefony = require("nodefony");
+  let path = require("path");
+  const nodefony = require(path.resolve("src", "nodefony"));
 
   class myService extends nodefony.ServiceWorker {
 
