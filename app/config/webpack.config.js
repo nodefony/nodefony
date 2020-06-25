@@ -49,7 +49,6 @@ module.exports = webpackMerge(config, {
       rules: [{
         loader: 'expose-loader',
         options: {
-          //expose: ['$', 'jQuery'],
           exposes: [{
             globalName: '$',
             override: true,

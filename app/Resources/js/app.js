@@ -5,7 +5,7 @@
  *  client side
  */
 
-import nodefony from "../../../src/nodefony";
+//import nodefony from "../../../src/nodefony";
 // javascript bootstrap library
 import 'bootstrap';
 
@@ -15,11 +15,9 @@ import '../scss/custom.scss';
 /*
  *	Class Bundle App
  */
-class App extends nodefony.Service {
+class App  {
   constructor() {
-    super("App");
-    this.initSyslog();
-    this.log("INIT APP");
+
     this.addEvents();
   }
 
