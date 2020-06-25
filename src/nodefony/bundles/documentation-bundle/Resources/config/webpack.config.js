@@ -48,14 +48,20 @@ module.exports = webpackMerge(config, {
             presets: ['@babel/preset-env']
           }
         }]
-      },
-      /*
-       *	JQUERY EXPOSE BROWSER CONTEXT
-       *
-       */
-      {
-        test: require.resolve("jquery"),
-        loader: "expose-loader?$!expose-loader?jQuery"
+      }, {
+        test: require.resolve('jquery'),
+        rules: [{
+          loader: 'expose-loader',
+          options: {
+            exposes: [{
+              globalName: '$',
+              override: true,
+                }, {
+              globalName: 'jQuery',
+              override: true,
+            }]
+          }
+        }]
       }, {
         test: /jquery\..*\.js/,
         loader: "imports-loader?$=jquery,jQuery=jquery,this=>window"
