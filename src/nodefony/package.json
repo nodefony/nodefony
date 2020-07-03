@@ -34,9 +34,9 @@
     "nodefony": "./bin/nodefony"
   },
   "dependencies": {
-    "@babel/core": "^7.10.3",
-    "@babel/parser": "^7.10.3",
-    "@babel/preset-env": "^7.10.3",
+    "@babel/core": "^7.10.4",
+    "@babel/parser": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
     "@nodefony/documentation-bundle": "^6.0.0-beta.13",
     "@nodefony/elastic-bundle": "^6.0.0-beta.13",
     "@nodefony/framework-bundle": "^6.0.0-beta.13",
@@ -63,8 +63,8 @@
     "commander": "^5.1.0",
     "core-js": "^3.6.5",
     "create-react-app": "^3.4.1",
-    "graphql": "^15.1.0",
-    "inquirer": "^7.2.0",
+    "graphql": "^15.2.0",
+    "inquirer": "^7.3.0",
     "js-yaml": "^3.14.0",
     "lodash": "^4.17.15",
     "lodash.isregexp": "^4.0.1",
