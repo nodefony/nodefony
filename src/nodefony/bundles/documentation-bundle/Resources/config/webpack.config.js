@@ -1,7 +1,7 @@
 const path = require("path");
 //const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const webpackMerge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 
 // Default context <bundle base directory>
 //const context = path.resolve(__dirname, "..", "public");
@@ -18,7 +18,7 @@ if (kernel.environment === "dev") {
   dev = false;
 }
 
-module.exports = webpackMerge(config, {
+module.exports = merge(config, {
   //context: context,
   target: "web",
   entry: {

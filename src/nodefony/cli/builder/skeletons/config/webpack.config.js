@@ -1,7 +1,7 @@
 const path = require("path");
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const webpackMerge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 
 {% if addons.workbox %}
 const htmlPlugin = require('html-webpack-plugin');
@@ -33,7 +33,7 @@ if (kernel.environment === "dev") {
   dev = false;
 }
 
-module.exports = webpackMerge(wpconfig, {
+module.exports = merge(wpconfig, {
   //context: context,
   target: "web",
   entry: {

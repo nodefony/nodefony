@@ -1,6 +1,6 @@
 const path = require("path");
 //const webpack = require('webpack');
-const webpackMerge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const context = path.resolve(__dirname, "..", "public");
@@ -15,7 +15,7 @@ if (kernel.environment === "dev") {
   config = require("./webpack/webpack.prod.config.js");
 }
 
-module.exports = webpackMerge({
+module.exports = merge({
   context: context,
   target: "web",
   watch: false,
