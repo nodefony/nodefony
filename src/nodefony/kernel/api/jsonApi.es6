@@ -101,9 +101,9 @@ class JsonApi extends Api {
         message: message,
         messageId: messageID
       });
+      this.sanitize(payload, json);
       if (this.context) {
         const controller = this.context.get("controller");
-        this.sanitize(payload, json);
         if (this.debug) {
           json.pdu = new nodefony.PDU({
             message: json.message,
@@ -115,12 +115,40 @@ class JsonApi extends Api {
         }
         return controller.renderJson(json, json.code);
       }
-      this.sanitize(payload, json);
       return json;
     } catch (e) {
       throw e;
     }
   }
+
+  renderAsync(payload, code, message = "", severity = null, messageID = null) {
+    try {
+      let json = nodefony.extend(this.json, {
+        severity: severity,
+        code: code,
+        message: message,
+        messageId: messageID
+      });
+      this.sanitize(payload, json);
+      if (this.context) {
+        const controller = this.context.get("controller");
+        if (this.debug) {
+          json.pdu = new nodefony.PDU({
+            message: json.message,
+            bundle: controller.bundle.name,
+            controller: controller.name,
+            action: this.context.get("action") ? this.context.get("action") : "",
+            stack: json.error ? json.error.stack : null
+          }, json.severity, this.name, messageID, message);
+        }
+        return controller.renderJsonAsync(json, json.code);
+      }
+      return json;
+    } catch (e) {
+      throw e;
+    }
+  }
+
 
   renderPdu(payload, code, message = "", severity = "INFO", messageID = null, api = this.name) {
     let json = nodefony.extend({
