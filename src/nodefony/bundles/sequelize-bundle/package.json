@@ -14,10 +14,10 @@
     "@alt3/sequelize-to-json-schemas": "^0.3.50",
     "cls-hooked": "^4.2.2",
     "mysql2": "^2.1.0",
-    "pg": "^8.2.1",
+    "pg": "^8.3.0",
     "pg-hstore": "^2.3.3",
     "pgtools": "^0.3.0",
-    "sequelize": "^6.3.0",
+    "sequelize": "^6.3.3",
     "sqlite3": "^5.0.0",
     "tedious": "^8.3.0"
   },

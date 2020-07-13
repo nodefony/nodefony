@@ -30,7 +30,7 @@
     "terser-webpack-plugin": "^3.0.6",
     "useragent": "^2.3.0",
     "webpack": "^4.43.0",
-    "webpack-merge": "^5.0.8"
+    "webpack-merge": "^5.0.9"
   },
   "repository": {
     "type": "git",
