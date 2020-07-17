@@ -34,7 +34,7 @@
     "node": ">=10"
   },
   "dependencies": {
-    "mongoose": "^5.9.23",
+    "mongoose": "^5.9.24",
     "nodefony": "^{{version}}",
     "pm2": "^4.4.0",
     "pm2-logrotate": "^2.7.0",
