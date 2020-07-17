@@ -741,6 +741,7 @@ class Controller extends nodefony.Service {
 
   logout() {
     if (this.security) {
+      this.log(`Logout Controller : ${this.name}`,"DEBUG");
       return this.security.logout(this.context)
         .then(() => {
           return true;

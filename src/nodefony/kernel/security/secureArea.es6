@@ -271,10 +271,13 @@ module.exports = nodefony.register("SecuredArea", function () {
     logout(context) {
       return new Promise(async (resolve, reject) => {
         let res = [];
+        this.log("Logout factories","DEBUG");
         for await (let factorie of this.factories) {
+          this.log(`Logout factory : ${factorie}`,"DEBUG")
           res.push(await factorie.logout(context));
         }
         if (context.session) {
+          this.log(`Invalidate session Security : ${context.session.id}`,"DEBUG")
           return context.session.invalidate()
             .then(() => {
               if (this.formLogin) {

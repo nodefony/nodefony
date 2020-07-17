@@ -38,8 +38,11 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
           return reject(new nodefony.Error("logout no context"));
         }
         const query = context.request.query;
+        this.log(`logout jwt token : ${query}`,'DEBUG');
+        this.log( query,'DEBUG');
         if (query.refreshToken) {
           let res = await this.entity.deleteRefreshToken(query.refreshToken);
+          this.log(`delete jwt refrestoken : ${res}`,'DEBUG');
           if (res) {
             return resolve(super.logout(context));
           }

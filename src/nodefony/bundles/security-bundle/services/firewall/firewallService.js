@@ -456,13 +456,13 @@ module.exports = class security extends nodefony.Service {
           if (token) {
             return context;
           } else {
-            if (context.method === "WEBSOCKET") {
+            /*if (context.method === "WEBSOCKET") {
               if (context.security && context.security.factories.length && !context.security.anonymous) {
                 let error = new Error("Unauthorized");
                 error.code = 401;
                 throw error;
               }
-            }
+            }*/
             if (context.security) {
               return this.handleStateLess(context);
             }
@@ -488,6 +488,7 @@ module.exports = class security extends nodefony.Service {
       if (context.security) {
         factory = context.security.getFactory(context.token.factory);
         if (factory) {
+          this.log(`Logout factory : ${factory.name} token : ${context.token.name} `,"DEBUG");
           return factory.logout(context)
             .catch(e => {
               throw e;
@@ -496,6 +497,7 @@ module.exports = class security extends nodefony.Service {
       }
       factory = this.getFactory(context.token.factory);
       if (factory) {
+        this.log(`Logout factory : ${factory.name}`,"DEBUG");
         return factory.logout(context)
           .catch(e => {
             throw e;

@@ -215,8 +215,12 @@ module.exports = function(Firewall) {
       };
 
       this.firewall.logger("STRATEGY AUTHENTICATE  passport-" + name, "DEBUG");
-      context.request.request.query = context.request.query;
-      this.strategy.authenticate(context.request.request, this.options);
+      if( context.request && context.request.request){
+        context.request.request.query = context.request.query;
+        this.strategy.authenticate(context.request.request, this.options);
+      }else{
+        this.strategy.authenticate(context.request, this.options);
+      }
     }
   }
 

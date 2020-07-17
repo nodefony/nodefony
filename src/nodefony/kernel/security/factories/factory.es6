@@ -42,6 +42,7 @@ class Factory extends nodefony.Service {
 
   logout(context) {
     if ( context.session){
+      this.log(`Factory ${this.name} :  invalide session`, "DEBUG");
       return context.session.invalidate()
         .then(() => {
           return context ;

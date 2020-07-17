@@ -45,6 +45,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       this.request.url.hash = this.request.resourceURL.hash;
       this.request.url.search = this.request.resourceURL.search;
       this.request.url.query = this.request.resourceURL.query;
+      this.request.query = this.request.resourceURL.query;
       this.request.url.pathname = this.request.resourceURL.pathname;
       this.request.url.path = this.request.resourceURL.path;
       this.url = url.format(this.request.url);
