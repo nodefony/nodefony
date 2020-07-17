@@ -96,8 +96,8 @@ describe("BUNDLE TEST", function () {
       client.on('connect', function (connection) {
         assert(connection.connected);
         connection.on('close', (reasonCode, description) => {
-          assert.deepStrictEqual(reasonCode, 3401);
-          assert.deepStrictEqual(description, "Unauthorized");
+          assert.deepStrictEqual(reasonCode, 3400);
+          assert.deepStrictEqual(description, "Missing credentials");
           done();
         });
       });
@@ -113,8 +113,8 @@ describe("BUNDLE TEST", function () {
       client.on('connect', function (connection) {
         assert(connection.connected);
         connection.on('close', (reasonCode, description) => {
-          assert.deepStrictEqual(reasonCode, 3401);
-          assert.deepStrictEqual(description, "Unauthorized");
+          assert.deepStrictEqual(reasonCode, 3400);
+          assert.deepStrictEqual(description, "Missing credentials");
           done();
         });
       });
