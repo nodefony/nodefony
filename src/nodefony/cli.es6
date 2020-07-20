@@ -1,7 +1,8 @@
 const Table = require('cli-table');
 const asciify = require('asciify');
 //const inquirer = require('inquirer');
-const commander = require('commander');
+//const commander = require('commander');
+const { program, command } = require('commander');
 const spawn = require('child_process').spawn;
 const spawnSync = require('child_process').spawnSync;
 const moment = require("moment");
@@ -308,7 +309,7 @@ class CLI extends nodefony.Service {
 
   initCommander() {
     if (this.options.commander) {
-      this.commander = commander;
+      this.commander = program;
       if (this.options.version) {
         this.setCommandVersion(this.options.version);
       }
@@ -397,7 +398,7 @@ class CLI extends nodefony.Service {
   }
   setCommandVersion(version) {
     if (typeof this.commander.version === "function") {
-      return this.commander.version(version);
+      return this.commander.version(version, '-v, --version', 'Nodeofny Current Version');
     }
   }
   setCommand(command, description, options) {
