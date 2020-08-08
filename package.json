@@ -44,17 +44,17 @@
     "node": ">=10"
   },
   "dependencies": {
-    "mongoose": "^5.9.25",
+    "mongoose": "^5.9.28",
     "pm2": "^4.4.0",
     "pm2-logrotate": "^2.7.0",
-    "sequelize": "^6.3.3",
-    "webpack": "^4.43.0",
+    "sequelize": "^6.3.4",
+    "webpack": "^4.44.1",
     "webpack-dev-server": "^3.11.0"
   },
   "devDependencies": {
     "editorconfig": "^0.15.3",
     "github-release-notes": "^0.17.3",
-    "jshint": "^2.11.1",
+    "jshint": "^2.12.0",
     "node-gyp": "^7.0.0",
     "node-pre-gyp": "^0.15.0"
   },
