@@ -34,16 +34,16 @@
     "node": ">=10"
   },
   "dependencies": {
-    "mongoose": "^5.9.24",
+    "mongoose": "^5.10.0",
     "nodefony": "^{{version}}",
-    "pm2": "^4.4.0",
+    "pm2": "^4.4.1",
     "pm2-logrotate": "^2.7.0",
-    "sequelize": "^6.3.3",
-    "webpack": "^4.43.0",
+    "sequelize": "^6.3.4",
+    "webpack": "^4.44.1",
     "webpack-dev-server": "^3.11.0"
   },
   "devDependencies": {
-    "node-gyp": "^7.0.0",
+    "node-gyp": "^7.1.0",
     "node-pre-gyp": "^0.15.0"
   },
   "author": "{{authorFullName}} <{{authorMail}}>",

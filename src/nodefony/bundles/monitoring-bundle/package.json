@@ -11,7 +11,7 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "^7.11.1",
+    "@babel/core": "^7.11.4",
     "@babel/preset-env": "^7.11.0",
     "@nodefony/stage": "^0.2.4",
     "babel-loader": "^8.1.0",
@@ -22,15 +22,15 @@
     "font-awesome": "^4.7.0",
     "less": "^3.12.2",
     "less-loader": "^6.2.0",
-    "mini-css-extract-plugin": "^0.9.0",
+    "mini-css-extract-plugin": "^0.10.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "qs": "^6.9.4",
     "request": "^2.88.2",
     "shortid": "^2.2.15",
-    "terser-webpack-plugin": "^4.0.0",
+    "terser-webpack-plugin": "^4.1.0",
     "useragent": "^2.3.0",
     "webpack": "^4.44.1",
-    "webpack-merge": "^5.1.1"
+    "webpack-merge": "^5.1.2"
   },
   "repository": {
     "type": "git",

@@ -39,7 +39,7 @@ if (process.env && process.env.NODE_ENV === "production") {
   certificats.ca = path.resolve("config", "certificates", "ca", "nodefony-root-ca.crt.pem");
   CDN = null;
   statics = true;
-  documentation = false;
+  documentation = true;
   monitoring = true;
   unitTest = true;
   domainCheck = true;
@@ -108,7 +108,7 @@ module.exports = {
     bundles: {
       "test-bundle": path.resolve("src", "bundles", "test-bundle"),
       "users-bundle": path.resolve("src", "nodefony", "cli", "builder", "bundles", "users-bundle"),
-      //"demo-bundle": "file:src/bundles/demo-bundle",
+      "demo-bundle": "file:src/bundles/demo-bundle",
     },
     /**
      * SYSLOG NODEFONY
