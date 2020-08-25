@@ -80,7 +80,7 @@
     "semver": "^7.3.2",
     "shelljs": "^0.8.4",
     "shortid": "^2.2.15",
-    "simple-git": "^2.19.0",
+    "simple-git": "^2.20.1",
     "spdx": "^0.5.2",
     "twig": "^1.15.2",
     "webrtc-adapter": "^7.7.0",
