@@ -664,7 +664,7 @@ class Bundle extends nodefony.Service {
     try {
       return this.autoLoader.load(Path, force);
     } catch (e) {
-      this.logger(e, "ERROR");
+      console.error(e);
       throw e;
     }
   }
