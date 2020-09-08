@@ -2,6 +2,8 @@ const path = require("path");
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { merge } = require('webpack-merge');
+const precss = require('precss');
+const autoprefixer = require('autoprefixer');
 
 {% if addons.workbox %}
 const htmlPlugin = require('html-webpack-plugin');
@@ -96,7 +98,9 @@ module.exports = merge(wpconfig, {
           }, {
             loader: 'postcss-loader', // Run post css actions
             options: {
-              plugins: () => [require('precss'), require('autoprefixer')]
+              postcssOptions: {
+                plugins: [autoprefixer({}), precss({})]
+              }
             }
           }, {
             loader: "sass-loader",

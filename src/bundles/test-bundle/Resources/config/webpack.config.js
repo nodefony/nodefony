@@ -2,6 +2,8 @@ const path = require("path");
 //const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const precss = require('precss');
+const autoprefixer = require('autoprefixer');
 
 const context = path.resolve(__dirname, "..", "public");
 const public = path.resolve(__dirname, "..", "public", "assets");
@@ -80,7 +82,9 @@ module.exports = merge({
           }, {
           loader: 'postcss-loader', // Run post css actions
           options: {
-            plugins: () => [require('precss'), require('autoprefixer')]
+            postcssOptions: {
+              plugins: [autoprefixer({}), precss({})]
+            }
           }
           }, {
           loader: "sass-loader",
