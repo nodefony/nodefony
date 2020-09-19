@@ -217,6 +217,27 @@ class Kernel extends nodefony.Service {
     }
   }
 
+  getLocalExternalIP() {
+    return [].concat(...Object.values(os.networkInterfaces()))
+      .find((details) => details.family === 'IPv4' && !details.internal);
+  }
+
+  getNetworkInterfaces() {
+    const nets = os.networkInterfaces();
+    const devices = Object.create(null); // or just '{}', an empty object
+    for (const name of Object.keys(nets)) {
+      for (const net of nets[name]) {
+        if (!devices[name]) {
+          devices[name] = [];
+          devices[name].push(net);
+        } else {
+          devices[name].push(net);
+        }
+      }
+    }
+    return devices;
+  }
+
   start() {
     if (!this.started) {
       return this.cli.showAsciify(this.projectName)
