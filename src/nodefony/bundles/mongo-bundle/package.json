@@ -12,7 +12,7 @@
   ],
   "repository": {},
   "dependencies": {
-    "mongodb": "^3.6.1"
+    "mongodb": "^3.6.2"
   },
   "devDependencies": {
     "node-pre-gyp": "^0.15.0"
