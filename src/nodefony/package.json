@@ -90,7 +90,7 @@
   "devDependencies": {
     "babel-loader": "^8.1.0",
     "babel-polyfill": "^6.26.0",
-    "terser-webpack-plugin": "^4.2.1",
+    "terser-webpack-plugin": "^4.2.2",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",
     "webpack-merge": "^5.1.4"

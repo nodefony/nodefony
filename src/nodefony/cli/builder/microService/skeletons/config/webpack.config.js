@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const webpackMerge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 
 let conf = null;
 if (process.env.NODE_ENV === "development") {
@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === "development") {
   conf = require(path.resolve("config", "webpack", "webpack.config.prod.js"));
 }
 
-module.exports = webpackMerge(conf, {
+module.exports = merge(conf, {
   /*
    * The entry point
    *

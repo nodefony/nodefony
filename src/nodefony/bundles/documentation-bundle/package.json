@@ -36,7 +36,7 @@
     "semver": "^7.3.0",
     "simple-git": "^2.20.1",
     "socket.io-client": "^2.3.0",
-    "terser-webpack-plugin": "^4.2.1",
+    "terser-webpack-plugin": "^4.2.2",
     "webpack": "^4.44.2",
     "webpack-merge": "^5.1.4"
   },
