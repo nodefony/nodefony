@@ -9,7 +9,7 @@ module.exports = {
     monitoring: {
       type: "tcp",
       port: 1318,
-      domain: "0.0.0.0"
+      domain: kernel.domain
     }
   }
 };

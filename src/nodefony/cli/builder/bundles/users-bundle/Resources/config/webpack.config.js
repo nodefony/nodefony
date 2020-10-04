@@ -41,7 +41,8 @@ module.exports = merge(config, {
   },
   externals: {},
   resolve: {
-    extensions: ['.js', '.json', '.jsx', '.css', '.mjs']
+    extensions: ['.js', '.json', '.jsx', '.css', '.mjs'],
+    fallback: { "path": false }
   },
   module: {
     rules: [{
@@ -80,9 +81,6 @@ module.exports = merge(config, {
             }]
           }
         }]
-      }, {
-        test: /jquery\..*\.js/,
-        use: "imports-loader?$=jquery,jQuery=jquery,this=>window"
       }, {
         test: /\.(sa|sc|c)ss$/,
         use: [

@@ -117,8 +117,9 @@ module.exports = class webpack extends nodefony.Service {
     if (error) {
       if (info.errors && nodefony.typeOf(info.errors) === "array") {
         this.logger(info.errors.join("\n"), "ERROR");
-        //console.trace(info.errors);
+        console.trace(info.errors);
       } else {
+        console.trace(info.errors)
         this.logger(info.errors, "ERROR");
       }
     } else {
@@ -340,6 +341,7 @@ module.exports = class webpack extends nodefony.Service {
         //this.log(config, "DEBUG");
         //console.log(config)
         //console.log(devServer)
+        this.log(`Compile Webpack version : ${webpack.version}`);
         try {
           bundle.webpackCompiler = webpack(config);
         } catch (e) {
@@ -483,12 +485,14 @@ module.exports = class webpack extends nodefony.Service {
     let table = this.kernel.cli.displayTable(null, options);
     try {
       for (let ele in config.entry) {
+        let entry = config.entry[ele].import ? config.entry[ele].import.toString() :config.entry[ele] ;
+        let lib = config.output.library.name ? config.output.library.name : config.output.library ;
         if (config.output) {
           table.push([
             ele,
-            config.entry[ele].toString(),
+            entry,
             config.output.filename || "",
-            config.output.library || "",
+            lib || "",
             config.output.libraryTarget || "var",
             config.output.path || "",
             config.watch || ""

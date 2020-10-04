@@ -74,7 +74,7 @@
     "node-cron": "^2.0.3",
     "node-emoji": "^1.10.0",
     "npm": "^6.14.8",
-    "pm2": "^4.4.1",
+    "pm2": "^4.5.0",
     "promise": "^8.1.0",
     "request": "^2.88.2",
     "semver": "^7.3.2",
@@ -85,13 +85,13 @@
     "twig": "^1.15.2",
     "webrtc-adapter": "^7.7.0",
     "xml2js": "^0.4.23",
-    "yarn": "^1.22.5"
+    "yarn": "^1.22.10"
   },
   "devDependencies": {
     "babel-loader": "^8.1.0",
     "babel-polyfill": "^6.26.0",
     "terser-webpack-plugin": "^4.2.2",
-    "webpack": "^4.44.2",
+    "webpack": "5.0.0-rc.3",
     "webpack-cli": "^3.3.12",
     "webpack-merge": "^5.1.4"
   },

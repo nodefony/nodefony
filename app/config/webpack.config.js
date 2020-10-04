@@ -48,21 +48,16 @@ module.exports = merge(config, {
       }]
     }, {
       test: require.resolve('jquery'),
-      rules: [{
-        loader: 'expose-loader',
-        options: {
-          exposes: [{
-            globalName: '$',
-            override: true,
-              }, {
-            globalName: 'jQuery',
-            override: true,
-          }]
-        }
-      }]
-    }, {
-      test: /jquery\..*\.js/,
-      use: "imports-loader?$=jquery,jQuery=jquery,this=>window"
+      loader: 'expose-loader',
+      options: {
+        exposes: [{
+          globalName: '$',
+          override: true
+        },{
+          globalName: 'jQuery',
+          override: true
+        }]
+      }
     }, {
       test: /\.(sa|sc|c)ss$/,
       use: [

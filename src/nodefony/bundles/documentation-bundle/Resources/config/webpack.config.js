@@ -1,7 +1,9 @@
 const path = require("path");
 //const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const { merge } = require('webpack-merge');
+const {
+  merge
+} = require('webpack-merge');
 const precss = require('precss')
 const autoprefixer = require('autoprefixer')
 const postcssPreset = require("postcss-preset-env");
@@ -54,21 +56,16 @@ module.exports = merge(config, {
         }]
       }, {
         test: require.resolve('jquery'),
-        rules: [{
-          loader: 'expose-loader',
-          options: {
-            exposes: [{
-              globalName: '$',
-              override: true,
-                }, {
-              globalName: 'jQuery',
-              override: true,
-            }]
-          }
-        }]
-      }, {
-        test: /jquery\..*\.js/,
-        loader: "imports-loader?$=jquery,jQuery=jquery,this=>window"
+        loader: 'expose-loader',
+        options: {
+          exposes: [{
+            globalName: '$',
+            override: true
+          },{
+            globalName: 'jQuery',
+            override: true
+          }]
+        }
       },
       /*
        *	reveal EXPOSE BROWSER CONTEXT
@@ -76,7 +73,11 @@ module.exports = merge(config, {
        */
       {
         test: require.resolve("reveal.js"),
-        loader: "expose-loader?$!expose-loader?Reveal"
+        //loader: "expose-loader?$!expose-loader?Reveal"
+        loader: 'expose-loader',
+        options: {
+          exposes: ['Reveal']
+        }
       },
       /*{
         test: require.resolve("reveal.js/plugin/notes/notes.js"),
@@ -113,7 +114,8 @@ module.exports = merge(config, {
             }
           }
         ]
-      }, {
+      },
+      {
         test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
         use: [{
           loader: 'file-loader',
@@ -123,7 +125,8 @@ module.exports = merge(config, {
             publicPath: `/${bundleName}/assets/fonts/` // override the default path
           }
         }]
-      }, {
+      },
+      {
         // IMAGES
         test: /\.(gif|png|jpe?g|svg)$/i,
         use: [{
@@ -135,7 +138,7 @@ module.exports = merge(config, {
           }
         }]
       }
-    ]
+      ]
   },
   plugins: [
     new MiniCssExtractPlugin({
