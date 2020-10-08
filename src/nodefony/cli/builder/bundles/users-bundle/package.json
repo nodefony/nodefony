@@ -54,7 +54,7 @@
     "svg-inline-loader": "^0.8.2",
     "swagger-ui": "^3.35.0",
     "swagger-ui-dist": "^3.35.0",
-    "terser-webpack-plugin": "^4.2.2",
+    "terser-webpack-plugin": "^4.2.3",
     "webpack": "5.0.0-rc.4",
     "webpack-merge": "^5.2.0"
   },

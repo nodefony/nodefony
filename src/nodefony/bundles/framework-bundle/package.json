@@ -29,7 +29,7 @@
     "precss": "^4.0.0",
     "resolve-url-loader": "^3.1.1",
     "sass-loader": "^10.0.2",
-    "terser-webpack-plugin": "^4.2.2",
+    "terser-webpack-plugin": "^4.2.3",
     "webpack": "5.0.0-rc.4",
     "webpack-merge": "^5.2.0"
   },
