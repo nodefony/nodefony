@@ -1,1 +1,1 @@
-module.exports = "/documentation-bundle/assets/images/fontawesome-webfont.svg";
+export default "/documentation-bundle/assets/images/fontawesome-webfont.svg";

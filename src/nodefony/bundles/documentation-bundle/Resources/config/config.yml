@@ -51,7 +51,7 @@ locale :			en_en
 watch:                  false
 
 github:
-  url :                 "https://github.com/nodefony/nodefony-core/commit/"
+  url :                 "https://github.com/nodefony/nodefony/commit/"
 
 socketio-bundle:
   socket.io:

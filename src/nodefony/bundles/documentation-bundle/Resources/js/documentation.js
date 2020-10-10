@@ -190,7 +190,7 @@ class Documentation {
     this.project = project;
     this.bundle = bundle;
     if (!url) {
-      url = "https://github.com/nodefony/nodefony-core/commit/";
+      url = "https://github.com/nodefony/nodefony/commit/";
     }
     if ((bundle === "nodefony" || bundle === project) && section === null) {
       $.get("/nodefony/api/git/getMostRecentCommit/" + bundle, function (data) {

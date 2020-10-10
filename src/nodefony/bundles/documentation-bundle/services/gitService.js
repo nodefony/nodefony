@@ -1,5 +1,5 @@
 const promiseGit = require('simple-git/promise');
-const remote = `https://github.com/nodefony/nodefony-core.git`;
+const remote = `https://github.com/nodefony/nodefony.git`;
 const useNodefonyVersion = `v${nodefony.version}`;
 
 module.exports = class git extends nodefony.Service {
@@ -9,7 +9,7 @@ module.exports = class git extends nodefony.Service {
     this.project = nodefony.projectName;
     this.gitKernel = promiseGit(this.kernel.git._baseDir);
     this.clonePath = path.resolve(__dirname, "..", "clones");
-    this.nodefonyClonePath = path.resolve(this.clonePath, "nodefony-core");
+    this.nodefonyClonePath = path.resolve(this.clonePath, "nodefony");
     this.tags = null;
     this.nodefonyTags = null;
     this.cloneGit = null;

@@ -11,7 +11,7 @@
     "outdated": "npm outdated --deph=0",
     "build": "node src/nodefony/bin/nodefony build",
     "test": "node src/nodefony/bin/nodefony unitest:launch:all",
-    "changelog": "gren changelog --username=nodefony  --repo=nodefony-core --tags=all --data-source=commits --override --generate"
+    "changelog": "gren changelog --username=nodefony  --repo=nodefony --tags=all --data-source=commits --override --generate"
   },
   "private": true,
   "bin": {
@@ -28,7 +28,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/nodefony/nodefony-core.git"
+    "url": "git://github.com/nodefony/nodefony.git"
   },
   "bugs": {
     "url": "https://github.com/nodefony/help/issues"
@@ -48,7 +48,7 @@
     "pm2": "^4.5.0",
     "pm2-logrotate": "^2.7.0",
     "sequelize": "^6.3.5",
-    "webpack": "5.0.0-rc.5",
+    "webpack": "^5.0.0",
     "webpack-dev-server": "^3.11.0"
   },
   "devDependencies": {

@@ -264,7 +264,7 @@ class Bundle extends nodefony.Service {
   }
 
   static excludeDir() {
-    return /^public$|^node_modules$|^nodefony-core$|^\.git|assets$|tmp$|doc$|build$|css$|scss$|public$/;
+    return /^public$|^node_modules$|^nodefony$|^\.git|assets$|tmp$|doc$|build$|css$|scss$|public$/;
   }
   static exclude() {
     return /yarn.lock$|package-lock.json$|yarn-error.log$|package.json$/;

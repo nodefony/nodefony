@@ -1,4 +1,4 @@
-name:                 nodefony-core
+name:                 nodefony
 on:                   [push]
 jobs:
   build-linux:

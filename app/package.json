@@ -38,7 +38,7 @@
     "sass-loader": "^10.0.3",
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^4.2.3",
-    "webpack": "5.0.0-rc.5",
+    "webpack": "^5.0.0",
     "webpack-merge": "^5.2.0",
     "workbox-webpack-plugin": "^5.1.4"
   },

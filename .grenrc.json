@@ -1,7 +1,7 @@
 {
   "dataSource": "commits",
   "username": "nodefony",
-  "repo": "nodefony-core",
+  "repo": "nodefony",
   "tags": "all",
   "action": "changelog",
   "template": {

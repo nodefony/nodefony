@@ -29,12 +29,12 @@
     "shortid": "^2.2.15",
     "terser-webpack-plugin": "^4.2.3",
     "useragent": "^2.3.0",
-    "webpack": "5.0.0-rc.5",
+    "webpack": "^5.0.0",
     "webpack-merge": "^5.2.0"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/nodefony/nodefony-core.git"
+    "url": "git://github.com/nodefony/nodefony.git"
   },
   "license": "CECILL-B",
   "licenses": [
