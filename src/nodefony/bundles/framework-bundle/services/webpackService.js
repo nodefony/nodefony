@@ -464,6 +464,7 @@ module.exports = class webpack extends nodefony.Service {
           return resolve(compiler);
         });
       } catch (e) {
+        console.trace(e)
         this.logger(e, 'ERROR');
         return resolve(compiler);
       }

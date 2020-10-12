@@ -23,9 +23,6 @@ module.exports = function () {
       libraryExport: "default"
     },
 
-    node: {
-      fs: 'empty'
-    },
     externals: {},
     /*
      * Options affecting the resolving of modules.
