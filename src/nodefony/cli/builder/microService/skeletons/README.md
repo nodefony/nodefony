@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/nodefony/nodefony-core/raw/master/src/nodefony/bundles/framework-bundle/Resources/public/images/nodefony-logo.png"><br>
+  <img src="https://github.com/nodefony/nodefony/raw/master/src/nodefony/bundles/framework-bundle/Resources/public/images/nodefony-logo.png"><br>
 </p>
 <h1 align="center">NODEFONY V6 Micro Service</h1>
 

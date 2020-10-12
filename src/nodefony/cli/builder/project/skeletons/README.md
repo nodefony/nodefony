@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="https://github.com/nodefony/nodefony-core/raw/master/src/nodefony/bundles/framework-bundle/Resources/public/images/nodefony-logo.png"><br>
+  <img src="https://github.com/nodefony/nodefony/raw/master/src/nodefony/bundles/framework-bundle/Resources/public/images/nodefony-logo.png"><br>
 </p>
 <h1 align="center">NODEFONY V6</h1>
 
 [![npm package](https://nodei.co/npm/nodefony.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/nodefony)
 
-[![Issues Status](https://img.shields.io/github/issues/nodefony/nodefony.svg)](https://github.com/nodefony/nodefony/issues) [![Build Status](https://github.com/nodefony/nodefony-core/workflows/nodefony-core/badge.svg)](https://github.com/nodefony/nodefony-core/actions) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/495/badge)](https://bestpractices.coreinfrastructure.org/projects/495)
+[![Issues Status](https://img.shields.io/github/issues/nodefony/nodefony.svg)](https://github.com/nodefony/nodefony/issues) [![Build Status](https://github.com/nodefony/nodefony/workflows/nodefony-core/badge.svg)](https://github.com/nodefony/nodefony-core/actions) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/495/badge)](https://bestpractices.coreinfrastructure.org/projects/495)
 
 Nodefony is Node.js full-stack web framework.  
 
@@ -80,13 +80,13 @@ Evolution priorities for the next version will focus on robustness, unit testing
 
 #### Nodefony is ported with ECMAScript 6 ( Class, Inheritance ).
 
-You can follow Nodefony-core build with github actions at **<https://github.com/nodefony/nodefony-core/actions>**
+You can follow Nodefony-core build with github actions at **<https://github.com/nodefony/nodefony/actions>**
 
 ## **Resources for Newcomers**
 
 #### -  **[Nodefony Starter Demo](https://nodefony.net)**
 
-#### -  **[Nodefony CORE](https://github.com/nodefony/nodefony-core)**
+#### -  **[Nodefony CORE](https://github.com/nodefony/nodefony)**
 
 #### -  **[Nodefony Documentation](https://nodefony.net/documentation/nodefony)**
 
@@ -417,11 +417,11 @@ You can find certificate authority (ca) here:
 #### Access to Secure App with URL : <https://localhost:5152>
 #### Access to App with URL : <http://localhost:5151>
 
-[![nodefony](https://raw.githubusercontent.com/nodefony/nodefony-core/master/src/nodefony/bundles/documentation-bundle/Resources/public/images/nodefony.png)](https://nodefony.net)
+[![nodefony](https://raw.githubusercontent.com/nodefony/nodefony/master/src/nodefony/bundles/documentation-bundle/Resources/public/images/nodefony.png)](https://nodefony.net)
 
 ## <a name="configurations"></a>Framework Configurations
 
-Open **[config/config.js](https://github.com/nodefony/nodefony-core/blob/master/config/config.js)**  if you want change httpPort, domain ,servers, add bundle, locale ...
+Open **[config/config.js](https://github.com/nodefony/nodefony/blob/master/config/config.js)**  if you want change httpPort, domain ,servers, add bundle, locale ...
 
 ```js
 /**
@@ -714,7 +714,7 @@ module.exports = webpackMerge(config, {
 
 Access to monitoring route with URL : <http://localhost:5151/nodefony>
 
-[![MONITORING](https://raw.githubusercontent.com/nodefony/nodefony-core/master/src/nodefony/doc/cluster.png)](https://nodefony.net/nodefony)
+[![MONITORING](https://raw.githubusercontent.com/nodefony/nodefony/master/src/nodefony/doc/cluster.png)](https://nodefony.net/nodefony)
 
 Monitoring in progress !!!
 
@@ -722,19 +722,19 @@ Monitoring in progress !!!
 
 <p float="left">
   <a href="https://www.sfr.fr" target="_blank">
-    <img src="https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/sfr.jpg"/>
+    <img src="https://raw.githubusercontent.com/nodefony/nodefony/master/tools/images/sfr.jpg"/>
   </a>
   &nbsp&nbsp&nbsp&nbsp&nbsp
   <a href="https://www.sfr.fr" target="_blank">
-    <img src="https://raw.githubusercontent.com/nodefony/nodefony-core/master/tools/images/logo.png"/>
+    <img src="https://raw.githubusercontent.com/nodefony/nodefony/master/tools/images/logo.png"/>
   </a>
   &nbsp&nbsp&nbsp&nbsp&nbsp
   <a href="https://www.d-lake.fr" target="_blank">
-    <img src="https://raw.githubusercontent.com/nodefony/nodefony-core/dev/tools/images/d-lake.png"/>
+    <img src="https://raw.githubusercontent.com/nodefony/nodefony/dev/tools/images/d-lake.png"/>
   </a>
   &nbsp&nbsp&nbsp&nbsp&nbsp
   <a href="https://emersya.com" target="_blank">
-    <img src="https://raw.githubusercontent.com/nodefony/nodefony-core/dev/tools/images/emersya.png"/>
+    <img src="https://raw.githubusercontent.com/nodefony/nodefony/dev/tools/images/emersya.png"/>
   </a>
 </p>
 

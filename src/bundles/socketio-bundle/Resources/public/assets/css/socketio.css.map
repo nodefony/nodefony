@@ -1,1 +1,0 @@
-{"version":3,"sources":["webpack://[name]/./Resources/public/css/socketio.css"],"names":[],"mappings":"AAAA;EACE,cAAc;EACd,iBAAiB;EACjB,kBAAkB,EAAE","file":"./css/socketio.css","sourcesContent":["IMG.displayed {\n  display: block;\n  margin-left: auto;\n  margin-right: auto; }\n"],"sourceRoot":""}
