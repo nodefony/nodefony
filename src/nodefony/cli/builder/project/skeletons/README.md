@@ -5,7 +5,7 @@
 
 [![npm package](https://nodei.co/npm/nodefony.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/nodefony)
 
-[![Issues Status](https://img.shields.io/github/issues/nodefony/nodefony.svg)](https://github.com/nodefony/nodefony/issues) [![Build Status](https://github.com/nodefony/nodefony/workflows/nodefony-core/badge.svg)](https://github.com/nodefony/nodefony-core/actions) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/495/badge)](https://bestpractices.coreinfrastructure.org/projects/495)
+[![Issues Status](https://img.shields.io/github/issues/nodefony/nodefony.svg)](https://github.com/nodefony/nodefony/issues) [![Build Status](https://github.com/nodefony/nodefony/workflows/nodefony/badge.svg)](https://github.com/nodefony/nodefony/actions) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/495/badge)](https://bestpractices.coreinfrastructure.org/projects/495)
 
 Nodefony is Node.js full-stack web framework.  
 
@@ -80,7 +80,7 @@ Evolution priorities for the next version will focus on robustness, unit testing
 
 #### Nodefony is ported with ECMAScript 6 ( Class, Inheritance ).
 
-You can follow Nodefony-core build with github actions at **<https://github.com/nodefony/nodefony/actions>**
+You can follow Nodefony build with github actions at **<https://github.com/nodefony/nodefony/actions>**
 
 ## **Resources for Newcomers**
 

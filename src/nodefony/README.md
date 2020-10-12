@@ -80,7 +80,7 @@ Evolution priorities for the next version will focus on robustness, unit testing
 
 #### Nodefony is ported with ECMAScript 6 ( Class, Inheritance ).
 
-You can follow Nodefony-core build with github actions at **<https://github.com/nodefony/nodefony/actions>**
+You can follow Nodefony build with github actions at **<https://github.com/nodefony/nodefony/actions>**
 
 ## **Resources for Newcomers**
 
