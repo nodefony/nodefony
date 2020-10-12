@@ -181,7 +181,7 @@ module.exports = class webpack extends nodefony.Service {
     return options;
   }
 
-  addDevServerEntrypoints(config, watch, type, bundle) {
+  addDevServerEntrypoints(config, watch, type, bundle, webpack) {
     let options = this.setDevServer(config, watch, bundle.settings);
     /*switch (type) {
     case "react":
@@ -195,7 +195,7 @@ module.exports = class webpack extends nodefony.Service {
         }
         if (options.hotOnly) {
           if (type !== "react") {
-            config.plugins.push(new this.webpack.HotModuleReplacementPlugin({
+            config.plugins.push(new webpack.HotModuleReplacementPlugin({
               // Options...
             }));
             devClient.push("webpack/hot/only-dev-server");
@@ -206,7 +206,8 @@ module.exports = class webpack extends nodefony.Service {
         } else {
           if (options.hot) {
             if (type !== "react") {
-              config.plugins.push(new this.webpack.HotModuleReplacementPlugin({
+
+              config.plugins.push(new webpack.HotModuleReplacementPlugin({
                 // Options...
               }));
               devClient.push("webpack/hot/dev-server");
@@ -319,7 +320,7 @@ module.exports = class webpack extends nodefony.Service {
           }, this.webPackSettings.watchOptions);
         }
         try {
-          devServer = this.addDevServerEntrypoints(config, watch, type, bundle);
+          devServer = this.addDevServerEntrypoints(config, watch, type, bundle, webpack);
         } catch (e) {
           return reject(e);
         }
@@ -487,7 +488,7 @@ module.exports = class webpack extends nodefony.Service {
     try {
       for (let ele in config.entry) {
         let entry = config.entry[ele].import ? config.entry[ele].import.toString() :config.entry[ele] ;
-        let lib = config.output.library.name ? config.output.library.name : config.output.library ;
+        let lib = (config.output.library && config.output.library.name) ? config.output.library.name : config.output.library ;
         if (config.output) {
           table.push([
             ele,
