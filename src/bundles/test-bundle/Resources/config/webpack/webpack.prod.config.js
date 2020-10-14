@@ -13,7 +13,6 @@ module.exports = {
           warnings: true,
           compress: true
         },
-        cache: true,
         parallel: true
       })
     ]
