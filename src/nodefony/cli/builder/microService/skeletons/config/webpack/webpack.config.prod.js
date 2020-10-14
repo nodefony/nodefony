@@ -14,7 +14,6 @@ module.exports = {
           compress: true
         },
         extractComments: true,
-        cache: true,
         parallel: true
       })
     ]
