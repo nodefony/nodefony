@@ -116,18 +116,21 @@ class Service {
   }
 
   initSyslog(environment = "production", debug = false, options = null) {
-    let defaultOptions = {
+    let myDefaultOptions = {
       severity: {
         operator: "<=",
         data: "7"
       }
     };
-    return this.syslog.listenWithConditions(this, options || defaultOptions,
+    return this.syslog.listenWithConditions(this, options || myDefaultOptions,
       (pdu) => {
         let message = pdu.payload;
         let date = new Date(pdu.timeStamp);
         console.log(`${date.toDateString()} ${date.toLocaleTimeString()} ${nodefony.Service.logSeverity(pdu.severityName)} ${cyan(pdu.msgid)} : ${message}`);
       });
+  }
+  listenSyslog(...args){
+    return this.initSyslog(...args)
   }
 
   getName() {
@@ -162,6 +165,11 @@ class Service {
   logger(...args) {
     return this.log(...args);
   }
+
+  debug(...args){
+    this.log("DEBUG", "DEBUG")
+    console.log(...args)
+  }
   eventNames(...args){
     return this.notificationsCenter.eventNames(...args);
   }
@@ -190,18 +198,6 @@ class Service {
     return this.notificationsCenter.off(...args);
   }
 
-  listenSyslog(options) {
-    let defaultOption = {
-      severity: {
-        operator: "<=",
-        data: "7"
-      }
-    };
-    this.syslog.listenWithConditions(this, options || defaultOption, (pdu) => {
-      let date = new Date(pdu.timeStamp);
-      console.log(date.toDateString() + " " + date.toLocaleTimeString() + " " + Service.logSeverity(pdu.severityName) + " " + green(pdu.msgid) + " " + " : " + pdu.payload);
-    });
-  }
 
   once(...args) {
     return this.notificationsCenter.once(...args);
