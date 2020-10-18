@@ -20,7 +20,6 @@ const yellow = clc.yellow.bold;
 class Service {
 
   constructor(name, container, notificationsCenter, options = null) {
-
     if (name) {
       this.name = name;
     }
@@ -32,10 +31,10 @@ class Service {
       }
     } else {
       if (notificationsCenter === false) {
-        this.options = {};
+        this.options = options;
       } else {
         //optimize
-        this.options = nodefony.extend(true, {}, defaultOptions);
+        this.options = nodefony.extend(true, options, defaultOptions);
       }
     }
     if (container instanceof nodefony.Container) {
