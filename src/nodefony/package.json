@@ -34,9 +34,9 @@
     "nodefony": "./bin/nodefony"
   },
   "dependencies": {
-    "@babel/core": "^7.12.0",
-    "@babel/parser": "^7.12.0",
-    "@babel/preset-env": "^7.12.0",
+    "@babel/core": "^7.12.3",
+    "@babel/parser": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
     "@nodefony/documentation-bundle": "^6.0.1",
     "@nodefony/elastic-bundle": "^6.0.1",
     "@nodefony/framework-bundle": "^6.0.1",
@@ -91,7 +91,7 @@
     "babel-loader": "^8.1.0",
     "babel-polyfill": "^6.26.0",
     "terser-webpack-plugin": "^5.0.0",
-    "webpack": "^5.1.0",
+    "webpack": "^5.1.3",
     "webpack-cli": "^4.0.0",
     "webpack-merge": "^5.2.0"
   },
