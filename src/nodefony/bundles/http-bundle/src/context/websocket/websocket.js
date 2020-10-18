@@ -50,10 +50,9 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       this.request.url.path = this.request.resourceURL.path;
       this.url = url.format(this.request.url);
       this.port = this.request.url.port;
-
+      //this.nodefonyId = null;
       this.parseCookies();
       this.cookieSession = this.getCookieSession(this.sessionService.settings.name);
-
       try {
         this.originUrl = url.parse(this.request.origin);
       } catch (e) {
@@ -102,10 +101,10 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       return new Promise((resolve, reject) => {
         try {
           let acceptedProtocol = null;
-          if( this.resolver ){
+          if (this.resolver) {
             acceptedProtocol = this.resolver.acceptedProtocol;
           }
-          this.connection = this.request.accept(acceptedProtocol, this.origin );
+          this.connection = this.request.accept(acceptedProtocol, this.origin);
           this.response.setConnection(this.connection);
           this.connection.on('close', onClose.bind(this));
           this.requestEnded = true;
@@ -161,20 +160,36 @@ nodefony.register.call(nodefony.context, "websocket", function () {
             this.resolver.match(this.resolver.route, this);
           } catch (e) {
             this.request.reject();
-            //this.fire("onError", this.container, e);
             throw e;
-            //return;
           }
         }
         this.fire("onMessage", message, this, "RECEIVE");
         if (this.resolver.resolve) {
+          /*try {
+            if( message.utf8Data){
+              let result = JSON.parse(message.utf8Data);
+              if (result.nodefonyId) {
+                this.nodefonyId = {
+                  id: result.nodefonyId,
+                  timeout: result.timeout,
+                  timeoutid: result.timeoutid
+                }
+                delete result.nodefonyId;
+                delete result.timeout;
+                delete result.timeoutid;
+                message.utf8Data = result.stringify(result);
+                return this.resolver.callController(message);
+              }
+            }
+          } catch (e) {
+            return this.resolver.callController(message);
+          }*/
           return this.resolver.callController(message);
         } else {
           this.request.reject();
         }
       } catch (e) {
         throw e;
-        //this.fire("onError", this.container, e);
       }
     }
 
@@ -201,7 +216,6 @@ nodefony.register.call(nodefony.context, "websocket", function () {
         }
       } catch (e) {
         throw e;
-        //this.fire("onError", this.container, e);
       }
     }
 
