@@ -264,7 +264,7 @@ nodefony
 
   Clone nodefony starter
  ```bash
- $ git clone https://github.com/nodefony/nodefony.git
+ $ git clone https://github.com/nodefony/nodefony-starter.git
  $ cd nodefony
  $ nodefony build
    ...
@@ -275,7 +275,7 @@ nodefony
 
   YOU CAN USE CLI INTERACTIVE MODE TO BUILD PROJECT (nodefony without args)
  ```bash
- $ git clone https://github.com/nodefony/nodefony.git
+ $ git clone https://github.com/nodefony/nodefony-starter.git
  $ cd nodefony
  $ ls -l
  -rw-r--r--     1 cci  staff   21306 27 mar 19:22 README.md
