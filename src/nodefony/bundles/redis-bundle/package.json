@@ -2,10 +2,15 @@
   "name": "@nodefony/redis-bundle",
   "version": "6.0.1",
   "description": "Nodefony Framework Bundle redis ",
-  "author": "admin admin@nodefony.com",
+  "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "main": "redisBundle.js",
   "scripts": {},
   "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nodefony/nodefony.git",
+    "directory": "src/nodefony/bundles/redis-bundle"
+  },
   "keywords": [
     "nodefony",
     "javascript"
@@ -18,7 +23,12 @@
   "devDependencies": {
     "node-pre-gyp": "^0.15.0"
   },
-  "license": "CECILL-B",
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
   "readmeFilename": "README.md",
   "contributors": [
     {}

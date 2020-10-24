@@ -97,7 +97,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/nodefony/nodefony.git"
+    "url": "git://github.com/nodefony/nodefony.git",
+    "directory": "src/nodefony"
   },
   "license": "CECILL-B",
   "licenses": [

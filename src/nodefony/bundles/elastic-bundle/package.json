@@ -2,10 +2,15 @@
   "name": "@nodefony/elastic-bundle",
   "version": "6.0.1",
   "description": "Nodefony Framework Bundle elasticsearch ",
-  "author": "admin admin@nodefony.com",
   "main": "elasticBundle.js",
   "scripts": {},
   "private": false,
+  "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nodefony/nodefony.git",
+    "directory": "src/nodefony/bundles/elastic-bundle"
+  },
   "keywords": [
     "nodefony",
     "javascript"
@@ -18,7 +23,12 @@
   "devDependencies": {
     "node-pre-gyp": "^0.15.0"
   },
-  "license": "CECILL-B",
+  "licenses": [
+    {
+      "type": "CECILL-B",
+      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+    }
+  ],
   "readmeFilename": "README.md",
   "contributors": [
     {}

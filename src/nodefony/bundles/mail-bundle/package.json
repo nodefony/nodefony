@@ -19,7 +19,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/nodefony/nodefony.git"
+    "url": "git://github.com/nodefony/nodefony.git",
+    "directory": "src/nodefony/bundles/mail-bundle"
   },
   "contributors": [],
   "license": "CECILL-B",

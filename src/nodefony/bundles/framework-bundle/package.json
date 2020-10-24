@@ -35,7 +35,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/nodefony/nodefony.git"
+    "url": "git://github.com/nodefony/nodefony.git",
+    "directory": "src/nodefony/bundles/framework-bundle"
   },
   "license": "CECILL-B",
   "licenses": [
