@@ -13,7 +13,7 @@
   "repository": {},
   "dependencies": {
     "@elastic/elasticsearch": "^7.9.1",
-    "shortid": "^2.2.15"
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "node-pre-gyp": "^0.15.0"
