@@ -342,7 +342,7 @@ module.exports = class webpack extends nodefony.Service {
         //this.log(config, "DEBUG");
         //console.log(config)
         //console.log(devServer)
-        this.log(`Compile Webpack version : ${webpack.version}`);
+        this.log(`Webpack (${webpack.version}) Compile bundle :  ${bundle.name}  `);
         try {
           bundle.webpackCompiler = webpack(config);
         } catch (e) {
@@ -455,7 +455,7 @@ module.exports = class webpack extends nodefony.Service {
           } catch (e) {}
         }
         //this.logger("BUNDLE : " + bundle + " WEBPACK COMPILE : " + file, "DEBUG");
-        this.logger(`BUNDLE : ${bundle} WEBPACK COMPILE ${file}\n` + this.displayConfigTable(compiler.options), "INFO");
+        this.logger(`Webpack Compile ${bundle} :  ${file}\n` + this.displayConfigTable(compiler.options), "INFO");
         compiler.run((err, stats) => {
           this.loggerStat(err, stats, bundle, file);
           if (err) {
