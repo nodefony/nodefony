@@ -6,9 +6,17 @@ try {
   http2 = null;
 }
 
+let quic = null;
+try {
+  quic = require('net').createQuicSocket;
+} catch (e) {
+  quic = null;
+}
+
 const protocol = {
   "1.1": https,
-  "2.0": http2
+  "2.0": http2,
+  "3.0": quic
 };
 
 module.exports = class httpsServer extends nodefony.Service {
