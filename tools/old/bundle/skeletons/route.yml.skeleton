@@ -1,8 +1,0 @@
-
-#
-# AUTOGENERATE ROUTE CONTROLLER {{controller}}
-#
-
-{{controller}}:
-  pattern:  /{{prefix}}/{{controller}}
-  defaults: {controller: "{{ bundleName }}:{{controller}}:index"}
