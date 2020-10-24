@@ -8,7 +8,7 @@ const spawnSync = require('child_process').spawnSync;
 const moment = require("moment");
 const semver = require('semver');
 
-const red = clc.red.bold;
+//const red = clc.red.bold;
 //const cyan   = clc.cyan.bold;
 const blue = clc.blueBright.bold;
 const green = clc.green;
@@ -102,7 +102,7 @@ class CLI extends nodefony.Service {
     this.response = {};
     this.timers = {};
     if (this.options.autoLogger) {
-      this.listenSyslog();
+      this.initSyslog();
     }
     this.initUi();
     this.initCommander();
@@ -349,19 +349,6 @@ class CLI extends nodefony.Service {
     });
   }
 
-  listenSyslog(options) {
-    let defaultOption = {
-      severity: {
-        operator: "<=",
-        data: "7"
-      }
-    };
-    return this.syslog.listenWithConditions(this, options || defaultOption,
-      (pdu) => {
-        return this.normalizeLog(pdu);
-      });
-  }
-
   async asciify(txt, options, callback) {
     return new Promise((resolve, reject) => {
       asciify(txt, nodefony.extend({
@@ -458,62 +445,6 @@ class CLI extends nodefony.Service {
     }
     this.logger(new Error("Spinner is not started "), "ERROR");
     return false;
-  }
-
-  normalizeLog(pdu) {
-    //console.log(pdu)
-    let date = new Date(pdu.timeStamp);
-    if (pdu.payload === "" || pdu.payload === undefined) {
-      console.error(date.toDateString() + " " + date.toLocaleTimeString() + " " + nodefony.Service.logSeverity(pdu.severityName) + " " + green(pdu.msgid) + " " + " : " + "logger message empty !!!!");
-      console.trace(pdu);
-      return;
-    }
-    let message = pdu.payload;
-    switch (typeof message) {
-    case "object":
-      switch (true) {
-      case (message instanceof nodefony.Error):
-        if (this.kernel && this.kernel.console) {
-          message = message.message;
-        }
-        break;
-      case (message instanceof Error):
-        if (this.kernel && this.kernel.console) {
-          message = message.message;
-        } else {
-          message = new nodefony.Error(message);
-        }
-        break;
-      default:
-        message = util.inspect(message);
-      }
-      break;
-    default:
-    }
-    switch (pdu.severity) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-      this.wrapperLog = console.error;
-      break;
-    case 4:
-      this.wrapperLog = console.warn;
-      break;
-    case 5:
-      this.wrapperLog = console.log;
-      break;
-    case 6:
-      this.wrapperLog = console.info;
-      break;
-    case 7:
-      this.wrapperLog = console.debug;
-      break;
-    default:
-      this.wrapperLog = console.log;
-    }
-
-    return this.wrapperLog(`${this.pid} ${date.toDateString()} ${date.toLocaleTimeString()} ${nodefony.Service.logSeverity(pdu.severityName)} ${green(pdu.msgid)} : ${message}`);
   }
 
   displayTable(datas, options, syslog) {

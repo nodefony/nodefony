@@ -135,7 +135,7 @@ const cleanConnection = function (cliendID, disconnect, context) {
 };
 
 
-module.exports = class realTime extends nodefony.syslog {
+module.exports = class realTime extends nodefony.Syslog {
 
   constructor(container, kernel) {
     super(settingsSyslog);

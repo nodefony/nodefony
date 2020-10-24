@@ -11,15 +11,16 @@ const defaultOptions = {
   }
 };
 
-const red = clc.red.bold;
-const cyan = clc.cyan.bold;
-const blue = clc.blueBright.bold;
-const green = clc.green;
-const yellow = clc.yellow.bold;
+const conditionOptions = {
+  severity: {
+    operator: "<=",
+    data: "7"
+  }
+};
 
 class Service {
 
-  constructor(name, container, notificationsCenter, options = null) {
+  constructor(name, container, notificationsCenter, options = {}) {
     if (name) {
       this.name = name;
     }
@@ -34,7 +35,8 @@ class Service {
         this.options = options;
       } else {
         //optimize
-        this.options = nodefony.extend(true, options, defaultOptions);
+        //this.options = nodefony.extend(true, options, defaultOptions);
+        this.options = nodefony.extend(true, {}, defaultOptions, options);
       }
     }
     if (container instanceof nodefony.Container) {
@@ -60,7 +62,7 @@ class Service {
       this.settingsSyslog = nodefony.extend({}, settingsSyslog, {
         moduleName: this.name
       }, this.options.syslog || {});
-      this.syslog = new nodefony.syslog(this.settingsSyslog);
+      this.syslog = new nodefony.Syslog(this.settingsSyslog);
       this.set("syslog", this.syslog);
     } else {
       this.settingsSyslog = this.syslog.settings;
@@ -94,42 +96,11 @@ class Service {
     }
   }
 
-  static logSeverity(severity) {
-    switch (severity) {
-      case "DEBUG":
-        return cyan(severity);
-      case "INFO":
-        return blue(severity);
-      case "NOTICE":
-        return red(severity);
-      case "WARNING":
-        return yellow(severity);
-      case "ERROR":
-      case "CRITIC":
-      case "ALERT":
-      case "EMERGENCY":
-        return red(severity);
-      default:
-        return cyan(severity);
-    }
-  }
-
   initSyslog(environment = "production", debug = false, options = null) {
-    let myDefaultOptions = {
-      severity: {
-        operator: "<=",
-        data: "7"
-      }
-    };
-    return this.syslog.listenWithConditions(this, options || myDefaultOptions,
+    return this.syslog.listenWithConditions(this, options || conditionOptions,
       (pdu) => {
-        let message = pdu.payload;
-        let date = new Date(pdu.timeStamp);
-        console.log(`${date.toDateString()} ${date.toLocaleTimeString()} ${nodefony.Service.logSeverity(pdu.severityName)} ${cyan(pdu.msgid)} : ${message}`);
+        return nodefony.Syslog.normalizeLog(pdu);
       });
-  }
-  listenSyslog(...args){
-    return this.initSyslog(...args)
   }
 
   getName() {
@@ -139,6 +110,7 @@ class Service {
   clean() {
     this.settingsSyslog = null;
     delete this.settingsSyslog;
+    this.syslog.reset();
     this.syslog = null;
     delete this.syslog;
     this.removeAllListeners();
@@ -164,12 +136,11 @@ class Service {
   logger(...args) {
     return this.log(...args);
   }
-
-  debug(...args){
+  debug(...args) {
     this.log("DEBUG", "DEBUG")
-    console.log(...args)
+    console.debug(...args)
   }
-  eventNames(...args){
+  eventNames(...args) {
     return this.notificationsCenter.eventNames(...args);
   }
   fire(...args) {
@@ -184,7 +155,7 @@ class Service {
   emitAsync(...args) {
     return this.notificationsCenter.emitAsync(...args);
   }
-  addListener(...args){
+  addListener(...args) {
     this.notificationsCenter.addListener(...args);
   }
   listen(...args) {
@@ -197,6 +168,9 @@ class Service {
     return this.notificationsCenter.off(...args);
   }
 
+  settingsToListen(...args) {
+    return this.notificationsCenter.settingsToListen(...args);
+  }
 
   once(...args) {
     return this.notificationsCenter.once(...args);
@@ -256,7 +230,7 @@ class Service {
     return this.notificationsCenter.listeners(...args);
   }
 
-  rawListeners(...args){
+  rawListeners(...args) {
     return this.notificationsCenter.rawListeners(...args);
   }
 

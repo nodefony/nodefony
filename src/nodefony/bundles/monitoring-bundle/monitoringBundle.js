@@ -218,7 +218,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
           }
           return obj;
         }.call(this);
-        this.syslogContext = new nodefony.syslog({
+        this.syslogContext = new nodefony.Syslog({
           moduleName: "CONTEXT",
           maxStack: 50,
           defaultSeverity: "INFO"

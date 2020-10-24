@@ -162,8 +162,14 @@ class Nodefony {
   }
 
   isContainer(container) {
-    if (container && container.protoService && container.protoParameters) {
-      return true;
+    if (container) {
+      if (container instanceof nodefony.Container) {
+        return true;
+      }
+      if (container.protoService && container.protoParameters) {
+        return true;
+      }
+      return false;
     }
     return false;
   }
@@ -843,7 +849,7 @@ class Nodefony {
       if (!this.pm2Config.apps[0].name) {
         this.pm2Config.apps[0].name = this.projectPackage.name || this.projectName;
       }
-      this.pm2Config.apps[0].vizion = false ;
+      this.pm2Config.apps[0].vizion = false;
       pm2.connect((err) => {
         if (err) {
           cli.logger(err, "ERROR");

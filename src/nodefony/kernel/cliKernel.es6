@@ -537,23 +537,21 @@ class cliKernel extends nodefony.cli {
     return this.git;
   }
 
-  listenSyslog(syslog, debug) {
+  initSyslog(environment, debug) {
     if (!this.kernel) {
-      return super.listenSyslog(syslog, debug);
+      return super.initSyslog(environment, debug);
     }
     if (this.commander.json) {
       return;
     }
-    if (!syslog) {
-      syslog = this.syslog;
-    }
+    let syslog = this.syslog;
     // CRITIC ERROR
     syslog.listenWithConditions(this, {
       severity: {
         data: "CRITIC,ERROR"
       }
     }, (pdu) => {
-      return this.normalizeLog(pdu);
+      return nodefony.Syslog.normalizeLog.call(this, pdu);
     });
     // INFO DEBUG
     let data = null;
@@ -571,7 +569,7 @@ class cliKernel extends nodefony.cli {
         data: data
       }
     }, (pdu) => {
-      return this.normalizeLog(pdu, this.cluster);
+      return nodefony.Syslog.normalizeLog.call(this, pdu, this.cluster);
     });
   }
 

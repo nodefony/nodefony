@@ -1081,12 +1081,12 @@ class Kernel extends nodefony.Service {
    */
   initializeLog() {
     if (this.type === "CONSOLE") {
-      return this.cli.listenSyslog(this.syslog, this.debug);
+      return this.cli.initSyslog(this.environment, this.debug);
     }
     if (!this.settings.system.log.active) {
       return;
     }
-    return this.cli.listenSyslog(this.syslog, this.debug);
+    return this.cli.initSyslog(this.environment, this.debug);
   }
 
   /**

@@ -12,40 +12,410 @@
 const assert = require('assert');
 const chai = require('chai');
 
+const defaultOptions = {
+  severity: {
+    operator: "<=",
+    data: "7"
+  }
+};
 
 describe("NODEFONY SYSLOG", function () {
 
+  before(function () {
+    global.syslog = new nodefony.Syslog();
+    let ret = global.syslog.listenWithConditions(this, defaultOptions,
+      (pdu) => {
+        //nodefony.Syslog.normalizeLog(pdu);
+        return true
+      });
+  });
+
   describe('CONTRUSTROR ', function () {
-
-    beforeEach(function () {});
-
-    before(function () {
-      global.myNotification = new nodefony.notificationsCenter.notification();
-    });
-
-    it("LIB", function (done) {
+    it("Constructor ", function (done) {
+      let inst = new nodefony.Syslog({})
+      assert.strict.equal(inst.ringStack.length, 0);
       done();
     });
-    it("LIB 2", function (done) {
+    it("Check options moduleName ", function (done) {
+      let inst = new nodefony.Syslog({
+        moduleName: "MYMODULE"
+      });
+      inst.listenWithConditions(this, defaultOptions,
+        (pdu) => {
+          assert.strict.equal(pdu.moduleName, 'MYMODULE');
+          assert.strict.equal(pdu.severity, 7);
+          assert.strict.equal(pdu.payload, "test");
+        });
+      inst.log("test");
+      done();
+    });
+    it("Check options sevirity ", function (done) {
+      let inst = new nodefony.Syslog({
+        moduleName: "MYMODULE2",
+        defaultSeverity: "ALERT",
+      });
+      inst.listenWithConditions(this, defaultOptions,
+        (pdu) => {
+          assert.strict.equal(pdu.moduleName, 'MYMODULE2');
+          assert.strict.equal(pdu.severity, 1);
+          assert.strict.equal(pdu.payload, "test");
+        });
+      inst.log("test");
+      done();
+    });
+
+    it("Change stack size ", function (done) {
+      let inst = new nodefony.Syslog({
+        maxStack: 500,
+      });
+      for (let i = 0; i < 1000; i++) {
+        inst.log(i);
+      }
+      assert.strict.equal(inst.ringStack.length, 500);
+      done();
+    });
+
+  });
+
+  describe('RING STACK', function () {
+    beforeEach(function () {
+      //global.syslog.log(this.currentTest.title)
+    });
+    before(function () {});
+    it("100 entries ", function (done) {
+      for (let i = 0; i < 100; i++) {
+        let pdu = global.syslog.log(i, i % 2 ? "INFO" : "DEBUG");
+        assert.strict.equal(pdu.payload, i);
+        //assert.strict.equal(pdu.uid, i + 1);
+        assert.strict.equal(pdu.severity, i % 2 ? 6 : 7);
+        assert.strict.equal(pdu.severityName, i % 2 ? "INFO" : "DEBUG");
+        assert.strict.equal(pdu.status, 'ACCEPTED');
+        assert.strict.equal(pdu.moduleName, 'SYSLOG');
+        assert.strict.equal(pdu.typePayload, "number");
+        assert.strict.equal(pdu.msgid, "");
+        assert.strict.equal(pdu.msg, "");
+      }
+      assert.strict.equal(global.syslog.ringStack[0].payload, 0);
+      assert.strict.equal(global.syslog.ringStack[99].payload, 99);
+      assert.strict.equal(global.syslog.missed, 0);
+      assert.strict.equal(global.syslog.invalid, 0);
+      assert.strict.equal(global.syslog.valid, 100);
+      assert.strict.equal(global.syslog._eventsCount, 1);
+      assert.strict.equal(global.syslog._events["onLog"].length, 1);
+      done();
+    });
+
+    it("1000  entries ", function (done) {
+      let i = 0;
+      let res = global.syslog.on("onLog",
+        (pdu) => {
+          return i++
+        });
+      for (let i = 0; i < 1000; i++) {
+        let pdu = global.syslog.log(i, i % 2 ? "INFO" : "DEBUG");
+      }
+      assert.strict.equal(global.syslog.ringStack.length, 100);
+      assert.strict.equal(global.syslog.ringStack[0].payload, 900);
+      assert.strict.equal(global.syslog.ringStack[99].payload, 999);
+      assert.strict.equal(global.syslog.missed, 0);
+      assert.strict.equal(global.syslog.invalid, 0);
+      assert.strict.equal(global.syslog.valid, 1100);
+      assert.strict.equal(global.syslog._events["onLog"].length, 2);
+      assert.strict.equal(i, 1000);
       done();
     });
   });
 
-  describe('RING STACK', function () {
-
-    beforeEach(function () {});
-
-    before(function () {});
-
-    it("100 entries ", function (done) {
-      done();
-      /*setTimeout(() =>{
-          //asserts
-          throw new Error("My Error")
-      }, 5000)*/
+  describe('getLogStack', function () {
+    it("reload 1000  entries ", function (done) {
+      let res = global.syslog.getLogStack();
+      assert.strict.equal(res.payload, 999);
+      res = global.syslog.getLogStack(0,10);
+      assert.strict.equal(res[0].payload, 900);
+      assert.strict.equal(res[9].payload, 909);
+      res = global.syslog.getLogStack(0);
+      assert.strict.equal(res[0].payload, 900);
+      assert.strict.equal(res[99].payload, 999);
+      res = global.syslog.getLogStack(50);
+      assert.strict.equal(res[0].payload, 950);
+      assert.strict.equal(res[49].payload, 999);
+      res = global.syslog.getLogStack(10,10);
+      assert.strict.equal(res.payload, 989);
+      done()
     });
-    it("1000  entries ", function (done) {
+  });
+
+  describe('getLogs conditions ', function () {
+    it("getLogs 1000  entries ", function (done) {
+      let res = global.syslog.getLogs({
+          severity:{
+            data:"INFO"
+          }
+      });
+      assert.strict.equal(res.length, 50);
       done();
+    });
+  });
+
+  describe('loadStack ', function () {
+
+    it("loadStack 1000  entries ", function (done) {
+      let inst = new nodefony.Syslog({
+        maxStack: 100
+      });
+      inst.loadStack(global.syslog.ringStack);
+      assert.strict.equal(inst.ringStack.length, 100);
+      done();
+    });
+    it("loadStack 1000 events  ", function (done) {
+      let inst = new nodefony.Syslog({
+        maxStack: 100
+      });
+      let i = 0;
+      inst.listenWithConditions(this, {
+        severity:{
+          data:"INFO"
+        }
+      }, (pdu)=>{
+        i++;
+        //nodefony.Syslog.normalizeLog(pdu);
+      });
+      inst.loadStack(global.syslog.ringStack, true);
+      assert.strict.equal(inst.ringStack.length, 100);
+      assert.strict.equal(i, 50);
+      done();
+    });
+    it("loadStack 1000 events  ", function (done) {
+      let inst = new nodefony.Syslog({
+        maxStack: 100
+      });
+      let i = 0;
+      inst.listenWithConditions(this, {
+        severity:{
+          data:"INFO"
+        }
+      }, (pdu)=>{
+        i++;
+        //nodefony.Syslog.normalizeLog(pdu);
+      });
+      inst.loadStack(global.syslog.ringStack, true, (pdu)=>{
+        pdu.before = "add";
+      });
+      assert.strict.equal(inst.ringStack.length, 100);
+      assert.strict.equal(i, 50);
+      assert.strict.equal(inst.getLogStack().before, "add");
+      done();
+    });
+  });
+
+  describe('BASE', function () {
+    before(function () {
+      global.syslog.reset();
+    });
+    it("LOG sevirity ", function (done) {
+      let i = 0;
+      global.syslog.listenWithConditions(this, defaultOptions,
+        (pdu) => {
+          switch (pdu.severityName) {
+          case "EMERGENCY":
+            {
+              assert.strict.equal(pdu.severity, 0);
+              assert.strict.equal(pdu.msgid, "MYMODULE0");
+              i++;
+              break;
+            }
+          case "ALERT":
+            {
+              i++;
+              assert.strict.equal(pdu.severity, 1);
+              assert.strict.equal(pdu.msgid, "MYMODULE1");
+              break;
+            }
+          case "CRITIC":
+            {
+              assert.strict.equal(pdu.severity, 2);
+              assert.strict.equal(pdu.msgid, "MYMODULE2");
+              i++;
+              break;
+            }
+          case "ERROR":
+            {
+              assert.strict.equal(pdu.severity, 3);
+              assert.strict.equal(pdu.msgid, "MYMODULE3");
+              i++;
+              break;
+            }
+          case "WARNING":
+            {
+              assert.strict.equal(pdu.severity, 4);
+              assert.strict.equal(pdu.msgid, "MYMODULE4");
+              i++;
+              break;
+            }
+          case "NOTICE":
+            {
+              assert.strict.equal(pdu.severity, 5);
+              assert.strict.equal(pdu.msgid, "MYMODULE5");
+              i++;
+              break;
+            }
+          case "INFO":
+            {
+              assert.strict.equal(pdu.severity, 6);
+              assert.strict.equal(pdu.msgid, "MYMODULE6");
+              i++;
+              break;
+            }
+          case "DEBUG":
+            {
+              assert.strict.equal(pdu.severity, 7);
+              assert.strict.equal(pdu.msgid, "MYMODULE7");
+              i++;
+              break;
+            }
+          }
+        });
+      global.syslog.log("test", "EMERGENCY", "MYMODULE0");
+      global.syslog.log("test", "ALERT", "MYMODULE1");
+      global.syslog.log("test", "CRITIC", "MYMODULE2");
+      global.syslog.log("test", "ERROR", "MYMODULE3");
+      global.syslog.log("test", "WARNING", "MYMODULE4");
+      global.syslog.log("test", "NOTICE", "MYMODULE5");
+      global.syslog.log("test", "INFO", "MYMODULE6");
+      global.syslog.log("test", "DEBUG", "MYMODULE7");
+      assert.strict.equal(i, 8);
+      done();
+    });
+
+  });
+
+  describe('SEVERITY', function () {
+    beforeEach(function () {
+      global.syslog.reset();
+      assert.strict.equal(global.syslog._eventsCount, 0);
+    });
+
+    it("listener ", function (done) {
+      let i = 0;
+      global.syslog.listenWithConditions(this, defaultOptions,
+        (pdu) => {
+          return i++
+        });
+      assert.strict.equal(global.syslog._eventsCount, 1);
+      for (let i = 0; i < 10; i++) {
+        let pdu = global.syslog.log(i, i % 2 ? "INFO" : "DEBUG");
+      }
+      assert.strict.equal(i, 10);
+      done();
+    });
+
+    it("Other listener 2 ", function (done) {
+      let i = 0;
+      global.syslog.listenWithConditions(this, {
+          severity: {
+            operator: "<=",
+            data: "INFO"
+          }
+        },
+        (pdu) => {
+          return i++
+        });
+      assert.strict.equal(global.syslog._eventsCount, 1);
+      for (let i = 0; i < 10; i++) {
+        let pdu = global.syslog.log(i, i % 2 ? "INFO" : "DEBUG");
+      }
+      assert.strict.equal(i, 5);
+      done();
+    });
+
+    it("Other listener 3 ", function (done) {
+      let i = 0;
+      global.syslog.listenWithConditions(this, {
+          severity: {
+            operator: "<=",
+            data: "INFO"
+          }
+        },
+        (pdu) => {
+          assert.strict.equal(pdu.severity, 6);
+          assert.strict.equal(pdu.severityName, "INFO");
+          return i++
+        });
+      assert.strict.equal(global.syslog._eventsCount, 1);
+      for (let i = 0; i < 10; i++) {
+        let pdu = global.syslog.log(i, i % 2 ? "INFO" : "DEBUG");
+      }
+      assert.strict.equal(i, 5);
+      done();
+    });
+
+    it("listener condition severity interger ", function (done) {
+      let i = 0;
+      global.syslog.listenWithConditions(this, {
+          severity: {
+            data: 6
+          }
+        },
+        (pdu) => {
+          //nodefony.Syslog.normalizeLog(pdu);
+          assert.strict.equal(pdu.severity, 6);
+          assert.strict.equal(pdu.severityName, "INFO");
+          return i++
+        });
+      for (let i = 0; i < 10; i++) {
+        let pdu = global.syslog.log(i, i % 2 ? "INFO" : "DEBUG");
+      }
+      assert.strict.equal(i, 5);
+      done();
+    });
+
+    it("listener condition severity operator == ", function (done) {
+      let i = 0;
+      global.syslog.listenWithConditions(this, {
+          severity: {
+            operator: "==",
+            data: "7"
+          }
+        },
+        (pdu) => {
+          //nodefony.Syslog.normalizeLog(pdu);
+          assert.strict.equal(pdu.severity, 7);
+          assert.strict.equal(pdu.severityName, "DEBUG");
+          return i++
+        });
+      assert.strict.equal(global.syslog._eventsCount, 1);
+      for (let i = 0; i < 10; i++) {
+        let pdu = global.syslog.log(i, i % 2 ? "INFO" : "DEBUG");
+      }
+      assert.strict.equal(i, 5);
+      done();
+    });
+
+  });
+
+  describe('MSGID', function () {
+    it("listener condition MSGID ", () => {
+      return new Promise((resolve, reject) => {
+        let i = 0
+        global.syslog.listenWithConditions(this, {
+            msgid: {
+              data: "NODEFONY"
+            }
+          },
+          (pdu) => {
+            i++;
+            //nodefony.Syslog.normalizeLog(pdu);
+            assert.strict.equal(pdu.msgid, "NODEFONY");
+            assert.strict.equal(pdu.payload, "pass");
+            if (i === 2) {
+              resolve();
+            }
+          });
+        global.syslog.log("pass", "INFO", "NODEFONY")
+        global.syslog.log("nopass", "INFO")
+        global.syslog.log("pass", "INFO", "NODEFONY")
+      })
+
     });
   });
 
