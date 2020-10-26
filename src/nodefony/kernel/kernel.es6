@@ -317,7 +317,8 @@ class Kernel extends nodefony.Service {
     }
     this.cli.setProcessTitle(this.projectName);
     this.cli.setCommandVersion(this.isCore ? this.version : nodefony.projectVersion);
-    this.cli.syslog.removeAllListeners('onLog');
+    //this.cli.syslog.removeAllListeners();
+    this.cli.syslog.reset();
   }
 
   isBundleCore(name) {

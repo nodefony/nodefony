@@ -28,6 +28,16 @@ describe("NODEFONY SYSLOG", function () {
         //nodefony.Syslog.normalizeLog(pdu);
         return true
       });
+      global.logger = ()=>{
+        global.syslog.log('info', "INFO");
+        global.syslog.log('debug', "DEBUG");
+        global.syslog.log('notice', "NOTICE");
+        global.syslog.log('warning', "WARNING");
+        global.syslog.log('error', "ERROR");
+        global.syslog.log('alert', "ALERT");
+        global.syslog.log('critic', "CRITIC");
+        global.syslog.log('emergency', "EMERGENCY");
+      }
   });
 
   describe('CONTRUSTROR ', function () {
@@ -391,9 +401,137 @@ describe("NODEFONY SYSLOG", function () {
       done();
     });
 
+    it("listener condition severity listerner1 ", function (done) {
+      let i = 0;
+      global.syslog.listenWithConditions(this, {
+          severity: {
+            data: "INFO,DEBUG,WARNING"
+          }
+        },
+        (pdu) => {
+          //nodefony.Syslog.normalizeLog(pdu);
+          return i++
+        });
+      global.logger();
+      assert.strict.equal(i, 3);
+      done();
+    });
+    it("listener condition severity listerner tab", function (done) {
+      let i = 0;
+      global.syslog.listenWithConditions(this, {
+          severity: {
+            data: ["INFO","WARNING","DEBUG"]
+          }
+        },
+        (pdu) => {
+          //nodefony.Syslog.normalizeLog(pdu);
+          return i++
+        });
+      global.logger();
+      assert.strict.equal(i, 3);
+      done();
+    });
+    it("listener condition severity listerner tab string", function (done) {
+      let i = 0;
+      global.syslog.listenWithConditions(this, {
+          severity: {
+            data: ["6","4","7"]
+          }
+        },
+        (pdu) => {
+          //nodefony.Syslog.normalizeLog(pdu);
+          return i++
+        });
+      global.logger();
+      assert.strict.equal(i, 3);
+      done();
+    });
+    it("listener condition severity listerner tab integer", function (done) {
+      let i = 0;
+      global.syslog.listenWithConditions(this, {
+          severity: {
+            data: [6,4,7]
+          }
+        },
+        (pdu) => {
+          //nodefony.Syslog.normalizeLog(pdu);
+          return i++
+        });
+      global.logger();
+      assert.strict.equal(i, 3);
+      done();
+    });
+
+    it("listener condition severity listerner >=", function (done) {
+      let i = 0;
+      global.syslog.listenWithConditions(this, {
+          severity: {
+            operator:">=",
+            data: 4
+          }
+        },
+        (pdu) => {
+          //nodefony.Syslog.normalizeLog(pdu);
+          return i++
+        });
+      global.logger();
+      assert.strict.equal(i, 4);
+      done();
+    });
+    it("listener condition severity listerner >", function (done) {
+      let i = 0;
+      global.syslog.listenWithConditions(this, {
+          severity: {
+            operator:">",
+            data: 4
+          }
+        },
+        (pdu) => {
+          //nodefony.Syslog.normalizeLog(pdu);
+          return i++
+        });
+      global.logger();
+      assert.strict.equal(i, 3);
+      done();
+    });
+    it("listener condition severity listerner <", function (done) {
+      let i = 0;
+      global.syslog.listenWithConditions(this, {
+          severity: {
+            operator:"<",
+            data: 4
+          }
+        },
+        (pdu) => {
+          //nodefony.Syslog.normalizeLog(pdu);
+          return i++
+        });
+      global.logger();
+      assert.strict.equal(i, 4);
+      done();
+    });
+    it("listener condition severity listerner < string", function (done) {
+      let i = 0;
+      global.syslog.listenWithConditions(this, {
+          severity: {
+            operator:"<",
+            data: "WARNING"
+          }
+        },
+        (pdu) => {
+          //nodefony.Syslog.normalizeLog(pdu);
+          return i++
+        });
+      global.logger();
+      assert.strict.equal(i, 4);
+      done();
+    });
   });
 
   describe('MSGID', function () {
+    beforeEach(function () {
+      global.syslog.reset();
+    });
     it("listener condition MSGID ", () => {
       return new Promise((resolve, reject) => {
         let i = 0

@@ -107,10 +107,12 @@ class Service {
     return this.name;
   }
 
-  clean() {
+  clean(syslog = false) {
     this.settingsSyslog = null;
     delete this.settingsSyslog;
-    this.syslog.reset();
+    if (syslog) {
+      this.syslog.reset();
+    }
     this.syslog = null;
     delete this.syslog;
     this.removeAllListeners();
@@ -135,10 +137,6 @@ class Service {
 
   logger(...args) {
     return this.log(...args);
-  }
-  debug(...args) {
-    this.log("DEBUG", "DEBUG")
-    console.debug(...args)
   }
   eventNames(...args) {
     return this.notificationsCenter.eventNames(...args);

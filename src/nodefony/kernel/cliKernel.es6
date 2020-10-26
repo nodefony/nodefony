@@ -537,31 +537,33 @@ class cliKernel extends nodefony.cli {
     return this.git;
   }
 
-  initSyslog(environment, debug) {
+  initSyslog(environment, debug, options= {}) {
     if (!this.kernel) {
-      return super.initSyslog(environment, debug);
+      return super.initSyslog(environment, debug, options);
     }
     if (this.commander.json) {
       return;
     }
     let syslog = this.syslog;
-    // CRITIC ERROR
-    syslog.listenWithConditions(this, {
-      severity: {
-        data: "CRITIC,ERROR"
-      }
-    }, (pdu) => {
-      return nodefony.Syslog.normalizeLog.call(this, pdu);
-    });
-    // INFO DEBUG
-    let data = null;
+    let data = [6];
     if (debug || this.debug) {
-      data = "INFO,DEBUG,WARNING";
+      // INFO , DEBUG , WARNING
+      data.push(7);
     } else {
       if (this.kernel.type === "SERVER" && this.kernel.environment === "dev") {
-        data = "INFO,WARNING";
+        // EMERGENCY ALERT CRITIC ERROR INFO WARNING
+        data.push(0);
+        data.push(1);
+        data.push(2);
+        data.push(3);
+        data.push(4);
+        data.push(5);
       } else {
-        data = "INFO";
+        // EMERGENCY ALERT CRITIC ERROR INFO
+        data.push(0);
+        data.push(1);
+        data.push(2);
+        data.push(3);
       }
     }
     syslog.listenWithConditions(this, {
@@ -569,7 +571,7 @@ class cliKernel extends nodefony.cli {
         data: data
       }
     }, (pdu) => {
-      return nodefony.Syslog.normalizeLog.call(this, pdu, this.cluster);
+        return nodefony.Syslog.normalizeLog.call(this, pdu, this.cluster);
     });
   }
 

@@ -430,7 +430,7 @@ const createPDU = function (payload, severity, moduleName, msgid, msg) {
  *    @param {Object} settings The settings to extend.
  *    @return syslog
  */
-class Syslog extends nodefony.notificationsCenter.notification {
+class Syslog extends nodefony.Events {
 
   constructor(settings) {
 
@@ -732,14 +732,15 @@ class Syslog extends nodefony.notificationsCenter.notification {
     return this.logger(data, "NOTICE");
   }
 
-  static normalizeLog(pdu) {
+  static normalizeLog(pdu, pid = "") {
     let date = new Date(pdu.timeStamp);
-    if (pdu.payload === "" || pdu.payload === undefined) {
-      let error = `${date.toDateString()} ${date.toLocaleTimeString()} ${nodefony.Syslog.logSeverity(pdu.severityName)} ${green(pdu.msgid)} : ogger message empty !!!!`;
+    let wrap = nodefony.Syslog.wrapper(pdu);
+    /*if (pdu.payload === "" || pdu.payload === undefined) {
+      let error = `${date.toDateString()} ${date.toLocaleTimeString()} ${wrap.name} ${green(pdu.msgid)} : Log message empty !!!!`;
       console.error(error);
       console.trace(pdu);
       return;
-    }
+    }*/
     let message = pdu.payload;
     switch (typeof message) {
     case "object":
@@ -762,48 +763,46 @@ class Syslog extends nodefony.notificationsCenter.notification {
       break;
     default:
     }
+    //this.wrapperLog = wrap.logger;
+    //return this.wrapperLog(`${pid} ${date.toDateString()} ${date.toLocaleTimeString()} ${nodefony.Syslog.logSeverity(pdu.severityName)} ${green(pdu.msgid)} : ${message}`);
+    return wrap.logger(`${pid} ${date.toDateString()} ${date.toLocaleTimeString()} ${wrap.name} ${green(pdu.msgid)} : ${message}`);
+  }
+
+  static wrapper(pdu) {
     switch (pdu.severity) {
     case 0:
     case 1:
     case 2:
     case 3:
-      this.wrapperLog = console.error;
-      break;
+      return {
+        logger: console.error,
+        name: red(pdu.severityName)
+      }
     case 4:
-      this.wrapperLog = console.warn;
-      break;
+      return {
+        logger: console.warn,
+        name: yellow(pdu.severityName)
+      }
     case 5:
-      this.wrapperLog = console.log;
-      break;
+      return {
+        logger: console.log,
+        name: red(pdu.severityName)
+      }
     case 6:
-      this.wrapperLog = console.info;
-      break;
+      return {
+        logger: console.info,
+        name: blue(pdu.severityName)
+      }
     case 7:
-      this.wrapperLog = console.debug;
-      break;
+      return {
+        logger: console.debug,
+        name: cyan(pdu.severityName)
+      }
     default:
-      this.wrapperLog = console.log;
-    }
-    return this.wrapperLog(`${this.pid} ${date.toDateString()} ${date.toLocaleTimeString()} ${nodefony.Syslog.logSeverity(pdu.severityName)} ${green(pdu.msgid)} : ${message}`);
-  }
-
-  static logSeverity(severity) {
-    switch (severity) {
-    case "DEBUG":
-      return cyan(severity);
-    case "INFO":
-      return blue(severity);
-    case "NOTICE":
-      return red(severity);
-    case "WARNING":
-      return yellow(severity);
-    case "ERROR":
-    case "CRITIC":
-    case "ALERT":
-    case "EMERGENCY":
-      return red(severity);
-    default:
-      return cyan(severity);
+      return {
+        logger: console.log,
+        name: cyan(pdu.severityName)
+      }
     }
   }
 }

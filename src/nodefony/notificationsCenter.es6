@@ -3,7 +3,7 @@ const regListenOn = /^on(.*)$/;
 const defaultNbListeners = 20;
 const _ = require('lodash');
 
-class Notification extends events.EventEmitter {
+class Events extends events.EventEmitter {
 
   constructor(settings, context, options = {}) {
     super(options);
@@ -99,11 +99,11 @@ class Notification extends events.EventEmitter {
   }
 }
 
-nodefony.Events = Notification;
+nodefony.Events = Events;
 nodefony.notificationsCenter = {
-  notification: Notification,
+  notification: Events,
   create: function(settings, context, nbListener) {
-    return new Notification(settings, context, nbListener);
+    return new Events(settings, context, nbListener);
   }
 };
 module.exports = nodefony.notificationsCenter;
