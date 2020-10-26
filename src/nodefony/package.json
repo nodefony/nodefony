@@ -60,7 +60,7 @@
     "cli-color": "^2.0.0",
     "cli-table": "^0.3.1",
     "clui": "^0.3.6",
-    "commander": "^6.1.0",
+    "commander": "^6.2.0",
     "core-js": "^3.6.5",
     "create-react-app": "^4.0.0",
     "graphql": "^15.3.0",
