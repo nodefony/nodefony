@@ -22,14 +22,14 @@
     "font-awesome": "^4.7.0",
     "less": "^3.12.2",
     "less-loader": "^7.0.2",
-    "mini-css-extract-plugin": "^1.2.0",
+    "mini-css-extract-plugin": "^1.2.1",
     "optimize-css-assets-webpack-plugin": "^5.0.4",
     "qs": "^6.9.4",
     "request": "^2.88.2",
     "shortid": "^2.2.16",
-    "terser-webpack-plugin": "^5.0.1",
+    "terser-webpack-plugin": "^5.0.2",
     "useragent": "^2.3.0",
-    "webpack": "^5.2.0",
+    "webpack": "^5.3.0",
     "webpack-merge": "^5.2.0"
   },
   "repository": {
