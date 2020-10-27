@@ -2,6 +2,9 @@ const path = require("path");
 //const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const {
+  CleanWebpackPlugin
+} = require('clean-webpack-plugin');
 
 const context = path.resolve(__dirname, "..", "public");
 const public = path.resolve(__dirname, "..", "public", "assets");
@@ -21,7 +24,7 @@ module.exports = merge({
   watch: false,
   entry: {
     monitoring: "./js/monitoring.js",
-    nodefony: "./js/debugBar.js"
+    debugbar: "./js/debugBar.js"
   },
   output: {
     path: public,
@@ -71,7 +74,7 @@ module.exports = merge({
     }]
   },
   plugins: [
-
+    new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: "./css/[name].css",
       allChunks: true
