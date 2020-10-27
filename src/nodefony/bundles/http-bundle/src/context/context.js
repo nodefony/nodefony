@@ -246,6 +246,9 @@ nodefony.register("Context", () => {
       if (!this.kernelHttp.monitoringBundle) {
         return false;
       }
+      if (!this.kernelHttp.monitoringBundle.settings.debugBar) {
+        return false;
+      }
       if (this.kernel.environment === "prod" && !this.kernelHttp.forceDebugBarProd) {
         return false;
       }
