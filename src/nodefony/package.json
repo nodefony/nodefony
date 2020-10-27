@@ -63,7 +63,7 @@
     "commander": "^6.2.0",
     "core-js": "^3.6.5",
     "create-react-app": "^4.0.0",
-    "graphql": "^15.3.0",
+    "graphql": "^15.4.0",
     "inquirer": "^7.3.3",
     "js-yaml": "^3.14.0",
     "lodash": "^4.17.20",

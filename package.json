@@ -49,7 +49,7 @@
     "node": ">=10"
   },
   "dependencies": {
-    "mongoose": "^5.10.10",
+    "mongoose": "^5.10.11",
     "pm2": "^4.5.0",
     "pm2-logrotate": "^2.7.0",
     "sequelize": "^6.3.5",

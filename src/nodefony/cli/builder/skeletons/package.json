@@ -26,8 +26,8 @@
     "font-awesome": "^4.7.0",
 {% endif %}
 {% if addons.webpack %}
-    "@babel/core": "^7.12.0",
-    "@babel/preset-env": "^7.12.0",
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
     "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
     "css-hot-loader": "^1.4.4",
@@ -36,25 +36,25 @@
     "file-loader": "^6.1.1",
     "html-webpack-plugin": "^4.5.0",
     "imports-loader": "^1.2.0",
-    "mini-css-extract-plugin": "^1.0.0",
+    "mini-css-extract-plugin": "^1.2.0",
     "node-sass": "^4.14.1",
     "optimize-css-assets-webpack-plugin": "^5.0.4",
     "popper.js": "^1.16.1",
-    "postcss": "^8.1.1",
+    "postcss": "^8.1.4",
     "postcss-loader": "^4.0.4",
     "postcss-preset-env": "^6.7.0",
     "precss": "^4.0.0",
     "raw-loader": "^4.0.2",
-    "resolve-url-loader": "^3.1.1",
-    "sass-loader": "^10.0.3",
+    "resolve-url-loader": "^3.1.2",
+    "sass-loader": "^10.0.4",
     "style-loader": "^2.0.0",
-    "terser-webpack-plugin": "^5.0.0",
-    "webpack": "^5.1.0",
+    "terser-webpack-plugin": "^5.0.1",
+    "webpack": "^5.2.0",
     "webpack-merge": "^5.2.0"
 {% endif %}
   },
   "devDependencies": {
-    "node-gyp": "^7.1.0",
+    "node-gyp": "^7.1.2",
     "node-pre-gyp": "^0.15.0"
   },
   "license": "",

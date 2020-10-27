@@ -14,7 +14,7 @@
     "@alt3/sequelize-to-json-schemas": "^0.3.51",
     "cls-hooked": "^4.2.2",
     "mysql2": "^2.2.5",
-    "pg": "^8.4.1",
+    "pg": "^8.4.2",
     "pg-hstore": "^2.3.3",
     "pgtools": "^0.3.0",
     "sequelize": "^6.3.5",
