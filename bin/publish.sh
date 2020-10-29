@@ -154,14 +154,14 @@ tools (){
   done
 }
 
-build(){
-  cd $pathnodefony
-  yarn;
-  npm install;
-  sleep 2;
-  echo "Build webpackck nodefony for browser";
-  npm run build
-}
+#build(){
+#  cd $pathnodefony
+#  yarn;
+#  npm install;
+#  sleep 2;
+#  echo "Build webpackck nodefony for browser";
+#  npm run build
+#}
 
 generate_changelog () {
   cd $pathproject
@@ -195,13 +195,13 @@ publish (){
   # TOOLS CHANGELOG
   tools
   # BUILD nodefony
-  build
+  #build
   # PUBLISH NODEFONY
   publish_nodefony
 }
 
 menu () {
-  declare -a commands=("build" "publish" "changelog" "Quit");
+  declare -a commands=("publish" "changelog" "Quit");
   # MENU
   select yn in ${commands[@]}; do
     case $yn in
@@ -211,9 +211,9 @@ menu () {
       "publish" )
         publish ;
         break ;;
-      "build" )
-        build ;
-        break ;;
+      #"build" )
+      #  build ;
+      #  break ;;
       "Quit" )
         exit;
     esac
@@ -261,9 +261,9 @@ case $1 in
   "tools" )
     tools;
     break ;;
-  "build" )
-    build;
-    break ;;
+  #"build" )
+  #  build;
+  #  break ;;
   "commit_project" )
     commit_project;
     break ;;
