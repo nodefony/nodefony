@@ -52,7 +52,7 @@ module.exports = merge(conf, {
   module: {
     rules: [{
       // BABEL TRANSCODE
-      test: new RegExp("\.es6$|\.js$|\.es7$"),
+      test: new RegExp("\\.es6$|\\.js$|\\.es7$"),
       exclude: new RegExp("node_modules"),
       use: [{
         loader: 'babel-loader',

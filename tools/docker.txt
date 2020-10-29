@@ -31,10 +31,17 @@ docker rmi $(docker images -q)
 # build IMAGE
 docker build -t nodefony .
 
+# exec
+docker ps ;
+
+docker exec -it <container name> /bin/bash
+or
+docker exec -it <container name> /bin/sh
 
 
 
-# COMPOSE 
+
+# COMPOSE
 
 docker-compose up
 
