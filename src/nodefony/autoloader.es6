@@ -58,25 +58,25 @@ module.exports = function () {
       this.dirname = path.resolve(__dirname);
 
       try {
-        require(path.resolve(__dirname, "error.es6"));
+        nodefony.Error = require(path.resolve(__dirname, "error.es6"));
         //this.load(path.resolve(__dirname, "error.es6"));
-        require(path.resolve(__dirname, "container.es6"));
+        nodefony.Container = require(path.resolve(__dirname, "container.es6"));
         require(path.resolve(__dirname, "notificationsCenter.es6"));
         nodefony.PDU = require(path.resolve(__dirname, "syslog", "pdu.es6"));
         nodefony.Syslog = require(path.resolve(__dirname, "syslog", "syslog.es6"));
-        require(path.resolve(__dirname, "service.es6"));
-        require(path.resolve(__dirname, "result.es6"));
-        require(path.resolve(__dirname, "fileClass.es6"));
-        require(path.resolve(__dirname, "finder.es6"));
-        require(path.resolve(__dirname, "finder", "fileResult.es6"));
-        require(path.resolve(__dirname, "finder", "file.es6"));
-        require(path.resolve(__dirname, "finder", "finder2.es6"));
+        nodefony.Service = require(path.resolve(__dirname, "service.es6"));
+        nodefony.Result = require(path.resolve(__dirname, "result.es6"));
+        nodefony.fileClass = require(path.resolve(__dirname, "fileClass.es6"));
+        nodefony.finder = require(path.resolve(__dirname, "finder.es6"));
+        nodefony.FileResult = require(path.resolve(__dirname, "finder", "fileResult.es6"));
+        nodefony.File = require(path.resolve(__dirname, "finder", "file.es6"));
+        nodefony.Finder2 = require(path.resolve(__dirname, "finder", "finder2.es6"));
         require(path.resolve(__dirname, "protocol.es6"));
-        require(path.resolve(__dirname, "watcher.es6"));
-        require(path.resolve(__dirname, "cli.es6"));
+        nodefony.Watcher = require(path.resolve(__dirname, "watcher.es6"));
+        nodefony.cli = require(path.resolve(__dirname, "cli.es6"));
 
         //builders
-        require(path.resolve(__dirname, "builder.es6"));
+        nodefony.Builder = require(path.resolve(__dirname, "builder.es6"));
         require(path.resolve(__dirname, "cli", "builder", "bundles", "bundle.js"));
         require(path.resolve(__dirname, "cli", "builder", "microService", "microService.js"));
         require(path.resolve(__dirname, "cli", "builder", "project", "project.js"));

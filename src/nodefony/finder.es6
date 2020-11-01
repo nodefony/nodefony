@@ -433,5 +433,4 @@ class Finder {
   }
 }
 
-nodefony.finder = Finder;
 module.exports = Finder;

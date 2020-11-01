@@ -97,5 +97,4 @@ class Result extends Array {
   }
 }
 
-nodefony.Result = Result;
 module.exports = Result;

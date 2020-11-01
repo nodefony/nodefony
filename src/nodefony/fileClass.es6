@@ -241,5 +241,4 @@ class File {
   }
 }
 
-nodefony.fileClass = File;
 module.exports = File;

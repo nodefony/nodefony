@@ -273,5 +273,4 @@ class Service {
   }
 }
 
-nodefony.Service = Service;
 module.exports = Service;

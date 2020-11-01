@@ -291,5 +291,4 @@ class nodefonyError extends Error {
 
 Object.defineProperty(nodefonyError.prototype, 'toJSON', jsonNodefony);
 
-nodefony.Error = nodefonyError;
 module.exports = nodefonyError;

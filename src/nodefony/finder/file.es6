@@ -29,5 +29,4 @@ class File extends nodefony.fileClass {
   }
 }
 
-nodefony.File = File;
 module.exports = File;

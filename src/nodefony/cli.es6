@@ -852,5 +852,4 @@ class CLI extends nodefony.Service {
 }
 
 nodefony.niceBytes = CLI.niceBytes;
-nodefony.cli = CLI;
 module.exports = CLI;

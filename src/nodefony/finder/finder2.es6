@@ -280,6 +280,4 @@ class Finder extends nodefony.Events {
   }
 }
 
-
-nodefony.Finder2 = Finder;
 module.exports = Finder;

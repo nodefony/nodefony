@@ -373,6 +373,4 @@ class Builder extends nodefony.Service {
   }
 }
 
-nodefony.Builder = Builder;
-
 module.exports = Builder;

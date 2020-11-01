@@ -109,5 +109,4 @@ class Watcher extends nodefony.Service {
   }
 }
 
-nodefony.Watcher = Watcher;
 module.exports = Watcher;

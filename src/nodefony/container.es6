@@ -277,5 +277,4 @@ class ExtendedScope extends Container {
   }
 }
 
-nodefony.Container = Container;
 module.exports = Container;
