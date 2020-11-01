@@ -6,21 +6,16 @@
   "main": "mongoBundle.js",
   "scripts": {},
   "private": false,
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/nodefony/nodefony.git",
-    "directory": "src/nodefony/bundles/mongo-bundle"
-  },
+  "repository": {},
   "keywords": [
     "nodefony",
     "javascript"
   ],
-  "repository": {},
   "dependencies": {
     "mongodb": "^3.6.2"
   },
   "devDependencies": {
-    "node-pre-gyp": "^0.15.0"
+    "node-pre-gyp": "^0.16.0"
   },
   "licenses": [
     {

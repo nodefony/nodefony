@@ -6,22 +6,17 @@
   "main": "redisBundle.js",
   "scripts": {},
   "private": false,
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/nodefony/nodefony.git",
-    "directory": "src/nodefony/bundles/redis-bundle"
-  },
+  "repository": {},
   "keywords": [
     "nodefony",
     "javascript"
   ],
-  "repository": {},
   "dependencies": {
     "redis": "^3.0.2",
     "shortid": "^2.2.16"
   },
   "devDependencies": {
-    "node-pre-gyp": "^0.15.0"
+    "node-pre-gyp": "^0.16.0"
   },
   "licenses": [
     {

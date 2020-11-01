@@ -6,22 +6,17 @@
   "scripts": {},
   "private": false,
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/nodefony/nodefony.git",
-    "directory": "src/nodefony/bundles/elastic-bundle"
-  },
+  "repository": {},
   "keywords": [
     "nodefony",
     "javascript"
   ],
-  "repository": {},
   "dependencies": {
     "@elastic/elasticsearch": "^7.9.1",
     "shortid": "^2.2.16"
   },
   "devDependencies": {
-    "node-pre-gyp": "^0.15.0"
+    "node-pre-gyp": "^0.16.0"
   },
   "licenses": [
     {
