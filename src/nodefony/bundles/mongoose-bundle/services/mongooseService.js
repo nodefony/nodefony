@@ -44,7 +44,7 @@ class mongoose extends nodefony.Orm {
         }
       } else {
         process.nextTick(() => {
-          this.logger('onOrmReady', "DEBUG", "EVENTS MOOGODB");
+          this.log('onOrmReady', "DEBUG", "EVENTS MOOGODB");
           this.fire('onOrmReady', this);
           this.ready = true;
         });
@@ -73,36 +73,36 @@ class mongoose extends nodefony.Orm {
           this.closeConnetion(name, db);
         });
         db.on('reconnect', () => {
-          this.logger(`Reconnection to mongodb database ${name}`, 'INFO');
+          this.log(`Reconnection to mongodb database ${name}`, 'INFO');
           this.fire('onReconnect', name, db);
           //this.createConnection(name, config);
           this.connections[name] = db;
         });
         db.on('timeout', () => {
-          this.logger(`Timeout to mongodb database ${name}`, 'INFO');
+          this.log(`Timeout to mongodb database ${name}`, 'INFO');
           this.fire('onTimeout', name, db);
         });
         db.on('parseError', (error) => {
-          this.logger(`ParseError on mongodb database ${name}`, 'ERROR');
-          this.logger(error, 'ERROR');
+          this.log(`ParseError on mongodb database ${name}`, 'ERROR');
+          this.log(error, 'ERROR');
         });
         db.on('error', (error) => {
-          this.logger(`Error on mongodb database ${name}`, 'ERROR');
-          this.logger(error, 'ERROR');
+          this.log(`Error on mongodb database ${name}`, 'ERROR');
+          this.log(error, 'ERROR');
         });
         db.on('reconnectFailed', (error) => {
-          this.logger(`Error on mongodb database reconnect Failed ${name}`, 'ERROR');
-          this.logger(error, 'ERROR');
+          this.log(`Error on mongodb database reconnect Failed ${name}`, 'ERROR');
+          this.log(error, 'ERROR');
         });
         db.on('disconnected', () => {
-          this.logger(`mongodb database disconnected ${name}`, 'WARNING');
+          this.log(`mongodb database disconnected ${name}`, 'WARNING');
         });
         this.fire("onConnect", name, db);
-        //this.logger("Connect to " + name + " : " + url);
+        //this.log("Connect to " + name + " : " + url);
         return db;
       }).catch(error => {
-        this.logger(`Cannot connect to mongodb ( ${host}:${port}/${config.dbname} )`, "ERROR");
-        this.logger(error, "ERROR");
+        this.log(`Cannot connect to mongodb ( ${host}:${port}/${config.dbname} )`, "ERROR");
+        this.log(error, "ERROR");
         /*if (this.timeoutid) {
           clearTimeout(this.timeoutid);
         }
@@ -118,7 +118,7 @@ class mongoose extends nodefony.Orm {
       throw new Error("Close connection no name connection !!");
     }
     this.fire('onClose', name, connection);
-    this.logger(`Close connection to mongodb database ${name}`, 'WARNING');
+    this.log(`Close connection to mongodb database ${name}`, 'WARNING');
     if (this.connections[name]) {
       delete this.connections[name];
     }
@@ -156,7 +156,7 @@ class mongoose extends nodefony.Orm {
     if (this.kernel && this.kernel.type === "CONSOLE") {
       severity = "DEBUG";
     }
-    this.logger("ORM CONNECTORS LIST  : \n" + table.toString(), severity);
+    this.log("ORM CONNECTORS LIST  : \n" + table.toString(), severity);
   }
 
   async startTransaction(entityName) {

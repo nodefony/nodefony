@@ -24,7 +24,7 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
         if (results) {
           severity = "INFO";
         }
-        this.manager.logger("Context : " + (contextSession || "default") + " GARBAGE COLLECTOR ==> " + results + "  DELETED", severity);
+        this.manager.log("Context : " + (contextSession || "default") + " GARBAGE COLLECTOR ==> " + results + "  DELETED", severity);
         return results;
       }).catch((error) => {
         throw error;
@@ -65,7 +65,7 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
             "context": contextSession
           }
         }).then((sessionCount) => {
-          this.manager.logger("CONTEXT " + (contextSession ? contextSession : "default") + " SEQUELIZE SESSIONS STORAGE  ==>  " + this.manager.settings.handler.toUpperCase() + " COUNT SESSIONS : " + sessionCount, "INFO");
+          this.manager.log("CONTEXT " + (contextSession ? contextSession : "default") + " SEQUELIZE SESSIONS STORAGE  ==>  " + this.manager.settings.handler.toUpperCase() + " COUNT SESSIONS : " + sessionCount, "INFO");
         });
       }
     }
@@ -90,9 +90,9 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
             return result.destroy({
               force: true
             }).then((session) => {
-              this.manager.logger("DB DESTROY SESSION context : " + session.context + " ID : " + session.session_id + " DELETED");
+              this.manager.log("DB DESTROY SESSION context : " + session.context + " ID : " + session.session_id + " DELETED");
             }).catch((error) => {
-              this.manager.logger("DB DESTROY SESSION context : " + contextSession + " ID : " + id, "ERROR");
+              this.manager.log("DB DESTROY SESSION context : " + contextSession + " ID : " + id, "ERROR");
               throw error;
             });
           }
@@ -143,7 +143,7 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
             return {};
           }
         }).catch((error) => {
-          this.manager.logger(error, "ERROR");
+          this.manager.log(error, "ERROR");
           throw error;
         });
     }
@@ -176,7 +176,7 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
               isNewRecord: true
             })
             .then((session) => {
-              this.manager.logger("ADD SESSION : " + session.session_id + (session.username ? " username :" + session.username : ""), "DEBUG");
+              this.manager.log("ADD SESSION : " + session.session_id + (session.username ? " username :" + session.username : ""), "DEBUG");
               return session;
             }).catch((error) => {
               throw error;

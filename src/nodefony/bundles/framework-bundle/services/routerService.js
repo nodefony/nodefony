@@ -8,7 +8,7 @@ const pluginReader = function () {
     let routes = [];
     this.xmlParser.parseString(xml, (err, node) => {
       if (err) {
-        this.logger("ROUTER xmlParser.parseString : " + err, 'WARNING');
+        this.log("ROUTER xmlParser.parseString : " + err, 'WARNING');
       }
       if (!node) {
         return node;
@@ -105,13 +105,13 @@ const pluginReader = function () {
               }
             })
             .catch((e) => {
-              this.logger(file, "ERROR");
-              this.logger(e, "ERROR");
+              this.log(file, "ERROR");
+              this.log(e, "ERROR");
             });
         })
         .catch((e) => {
-          this.logger(file, "ERROR");
-          this.logger(e, "ERROR");
+          this.log(file, "ERROR");
+          this.log(e, "ERROR");
         });
     } catch (e) {
       throw e;
@@ -137,7 +137,7 @@ const generateQueryString = function (obj, name) {
   }
   let str = "?";
   if (nodefony.typeOf(obj) !== "object" || obj === null) {
-    this.logger("BAD arguments queryString in route varaibles :" + name, "WARNING");
+    this.log("BAD arguments queryString in route varaibles :" + name, "WARNING");
     return "";
   }
   let iter = 0;
@@ -209,7 +209,7 @@ module.exports = class router extends nodefony.Service {
     if (this.routes[name]) {
       return this.routes[name];
     }
-    this.logger("Route name: " + name + " not exist");
+    this.log("Route name: " + name + " not exist");
     return null;
   }
 
@@ -232,14 +232,14 @@ module.exports = class router extends nodefony.Service {
           same = true;
         }
         //console.log("index old route : " + index )
-        this.logger("ROUTE HAS SAME NAME : " + name + " path : " + myroute.path + " controller : " + myroute.defaults.controller, "WARNING");
+        this.log("ROUTE HAS SAME NAME : " + name + " path : " + myroute.path + " controller : " + myroute.defaults.controller, "WARNING");
       }
     }
     if (index === null) {
       index = this.routes.push(myroute);
       myroute.index = index;
       this.routes[name] = this.routes[index - 1];
-      this.logger("ADD ROUTE : " + name + " path :" + myroute.path + " controller " + myroute.defaults.controller, "DEBUG");
+      this.log("ADD ROUTE : " + name + " path :" + myroute.path + " controller " + myroute.defaults.controller, "DEBUG");
     } else {
       if (!same) {
         myroute.index = index;
@@ -248,7 +248,7 @@ module.exports = class router extends nodefony.Service {
         this.routes[index - 1] = myroute;
         delete this.routes[name];
         this.routes[name] = this.routes[index - 1];
-        this.logger("REPLACE ROUTE : " + name + " path : " + myroute.path + " controller " + myroute.defaults.controller, "WARNING");
+        this.log("REPLACE ROUTE : " + name + " path : " + myroute.path + " controller " + myroute.defaults.controller, "WARNING");
       } else {
         myroute.index = index;
       }
@@ -297,18 +297,18 @@ module.exports = class router extends nodefony.Service {
     return new nodefony.Route(obj);
   }
 
-  logger(pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = "SERVICE ROUTER";
     }
-    return super.logger(pci, severity, msgid, msg);
+    return super.log(pci, severity, msgid, msg);
   }
 
   removeRoutes(filePath) {
     for (let i = 0; i < this.routes.length; i++) {
       //console.log( this.routes[i].name +" : "+this.routes[i].filePath)
       if (this.routes[i].filePath === filePath) {
-        this.logger("DELETE ROUTE : " + this.routes[i].name);
+        this.log("DELETE ROUTE : " + this.routes[i].name);
         let index = this.routes[i].index;
         let name = this.routes[i].name;
         delete this.routes[index - 1];
@@ -350,13 +350,13 @@ module.exports = class router extends nodefony.Service {
             newRoute.setPrefix(arg);
             break;
           default:
-            this.logger(" Tag : " + ele + " not exist in routings definition Route : " + route + " File : " + newRoute.filePath, "WARNING");
+            this.log(" Tag : " + ele + " not exist in routings definition Route : " + route + " File : " + newRoute.filePath, "WARNING");
           }
         }
         newRoute.compile();
         this.setRoute(route, newRoute);
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         continue;
       }
     }

@@ -62,7 +62,8 @@ module.exports = function () {
         //this.load(path.resolve(__dirname, "error.es6"));
         require(path.resolve(__dirname, "container.es6"));
         require(path.resolve(__dirname, "notificationsCenter.es6"));
-        require(path.resolve(__dirname, "syslog.es6"));
+        nodefony.PDU = require(path.resolve(__dirname, "syslog", "pdu.es6"));
+        nodefony.Syslog = require(path.resolve(__dirname, "syslog", "syslog.es6"));
         require(path.resolve(__dirname, "service.es6"));
         require(path.resolve(__dirname, "result.es6"));
         require(path.resolve(__dirname, "fileClass.es6"));
@@ -176,19 +177,19 @@ module.exports = function () {
     }
 
     /**
-     * @method logger
+     * @method log
      *
      * @param {void} payload payload for log. protocole controle information
      * @param {Number | String} severity severity syslog like.
      * @param {String} msgid informations for message. example(Name of function for debug)
      * @param {String} msg  message to add in log. example (I18N)
      */
-    logger(pci, severity, msgid, msg) {
+    log(pci, severity, msgid, msg) {
       if (this.syslog) {
         if (!msgid) {
           msgid = "AUTOLOADER  ";
         }
-        return this.syslog.logger(pci, severity, msgid, msg);
+        return this.syslog.log(pci, severity, msgid, msg);
       }
       //console.log(pci);
     }
@@ -217,7 +218,7 @@ module.exports = function () {
         try {
           finder = new nodefony.finder(settings);
         } catch (e) {
-          this.logger(e);
+          this.log(e);
           if (finder) {
             return finder.result;
           }
@@ -231,7 +232,7 @@ module.exports = function () {
     autoloadEach(ele) {
       if (regJs.exec(ele.path)) {
         this.load.call(this, ele.path);
-        this.logger(ele.path, "DEBUG");
+        this.log(ele.path, "DEBUG");
       }
     }
 

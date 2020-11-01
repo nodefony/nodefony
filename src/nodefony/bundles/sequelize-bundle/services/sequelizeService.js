@@ -11,8 +11,8 @@ const myerror = function (err) {
   if (this.state !== "DISCONNECTED") {
     this.orm.kernel.fire('onError', err, this);
   }
-  this.logger(err, "ERROR");
-  this.logger(this.settings, "INFO", `CONFIGURATION Sequelize ${this.name}`);
+  this.log(err, "ERROR");
+  this.log(this.settings, "INFO", `CONFIGURATION Sequelize ${this.name}`);
   if (err.code) {
     switch (err.code) {
     case 'PROTOCOL_CONNECTION_LOST':
@@ -98,11 +98,11 @@ class connectionDB {
     }
     this.db = db;
     /*this.db.afterDisconnect((connection)=>{
-      this.logger(connection,"WARNING");
+      this.log(connection,"WARNING");
 
     });
     this.db.beforeConnect((config)=>{
-      this.logger(config, "WARNING");
+      this.log(config, "WARNING");
     });*/
     this.orm.fire("onConnect", this.name, this.db);
     this.state = "CONNECTED";
@@ -110,7 +110,7 @@ class connectionDB {
     if (this.orm.kernel.type === "CONSOLE") {
       severity = "DEBUG";
     }
-    this.logger('Connection been established successfully Type : ' + this.type + " Database : " + config.dbname, severity);
+    this.log('Connection been established successfully Type : ' + this.type + " Database : " + config.dbname, severity);
   }
 
   getConnection() {
@@ -120,7 +120,7 @@ class connectionDB {
   connect(type, config) {
     if (this.orm.debug) {
       config.options.logging = (value) => {
-        this.logger(value, "INFO");
+        this.log(value, "INFO");
       };
     } else {
       config.options.logging = false;
@@ -140,7 +140,7 @@ class connectionDB {
             this.setConnection(conn, config);
           })
           .catch(err => {
-            this.logger('Unable to connect to the database : ' + err, "ERROR");
+            this.log('Unable to connect to the database : ' + err, "ERROR");
             myerror.call(this, err);
             this.orm.fire('onErrorConnection', this.name, conn, this.orm);
           });
@@ -152,11 +152,11 @@ class connectionDB {
     return conn;
   }
 
-  logger(pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = `CONNECTION Sequelize ${this.name}`;
     }
-    return this.orm.logger(pci, severity, msgid, msg);
+    return this.orm.log(pci, severity, msgid, msg);
   }
 }
 
@@ -228,7 +228,7 @@ class sequelize extends nodefony.Orm {
         }
       } else {
         process.nextTick(() => {
-          this.logger('onOrmReady', "DEBUG", "EVENTS SEQUELIZE");
+          this.log('onOrmReady', "DEBUG", "EVENTS SEQUELIZE");
           this.fire('onOrmReady', this);
           this.ready = true;
         });
@@ -278,7 +278,7 @@ class sequelize extends nodefony.Orm {
     let table = this.kernel.cli.displayTable(null, options);
     this.getConnectorSettings(table);
     let res = table.toString();
-    this.logger("ORM CONNECTORS LIST  : \n" + res, severity);
+    this.log("ORM CONNECTORS LIST  : \n" + res, severity);
     return res;
   }
 

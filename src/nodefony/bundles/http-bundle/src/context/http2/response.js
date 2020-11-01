@@ -56,7 +56,7 @@ module.exports = nodefony.register("http2Response", () => {
           }
         } else {
           //throw new Error("Headers already sent !!");
-          this.logger("Headers already sent !!", "WARNING");
+          this.log("Headers already sent !!", "WARNING");
         }
       } else {
         return super.writeHead(statusCode, headers);
@@ -129,7 +129,7 @@ module.exports = nodefony.register("http2Response", () => {
                 return reject(err);
               }
               pushStream.on('error', err => {
-                this.logger(err, "ERROR", 'HTTP2 push stream');
+                this.log(err, "ERROR", 'HTTP2 push stream');
                 switch (err.code) {
                 case "ENOENT":
                   pushStream.respond({
@@ -146,11 +146,11 @@ module.exports = nodefony.register("http2Response", () => {
                 return reject(err);
               });
               pushStream.on('close', () => {
-                this.logger("Push Stream Closed", "DEBUG", 'HTTP2 push stream');
+                this.log("Push Stream Closed", "DEBUG", 'HTTP2 push stream');
               });
               let myOptions = nodefony.extend({
                 onError: (err) => {
-                  this.logger(err, "ERROR", 'HTTP2 push stream');
+                  this.log(err, "ERROR", 'HTTP2 push stream');
                   if (err.code === 'ENOENT') {
                     pushStream.respond({
                       ':status': 404
@@ -165,7 +165,7 @@ module.exports = nodefony.register("http2Response", () => {
                 }
               }, options);
               try {
-                this.logger(">> Pushing : " + file.path, "DEBUG", "HTTP2 Pushing");
+                this.log(">> Pushing : " + file.path, "DEBUG", "HTTP2 Pushing");
                 pushStream.respondWithFile(file.path, myheaders, myOptions);
                 return resolve(pushStream);
               } catch (e) {
@@ -174,7 +174,7 @@ module.exports = nodefony.register("http2Response", () => {
             });
           } else {
             let warn = new Error("HTTP/2 client has disabled push streams !! ");
-            this.logger(warn.message, "DEBUG");
+            this.log(warn.message, "DEBUG");
             return reject(warn);
           }
         } catch (e) {

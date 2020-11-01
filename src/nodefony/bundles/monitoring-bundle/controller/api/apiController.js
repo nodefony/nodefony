@@ -115,7 +115,7 @@ module.exports = class apiController extends nodefony.controller {
     case "WEBSOCKET":
       if (message) {
         // MESSAGES
-        this.logger(message.utf8Data, "INFO");
+        this.log(message.utf8Data, "INFO");
       } else {
         let callback = function (pdu) {
           this.renderResponse(JSON.stringify(pdu));
@@ -226,7 +226,7 @@ module.exports = class apiController extends nodefony.controller {
             })
             .catch((error) => {
               if (error) {
-                this.logger(error, "ERROR");
+                this.log(error, "ERROR");
                 return this.renderRest({
                   code: 500,
                   type: "ERROR",
@@ -259,7 +259,7 @@ module.exports = class apiController extends nodefony.controller {
             })
             .catch((error) => {
               if (error) {
-                this.logger(error, "ERROR");
+                this.log(error, "ERROR");
                 return this.renderRest({
                   code: 500,
                   type: "ERROR",
@@ -331,7 +331,7 @@ module.exports = class apiController extends nodefony.controller {
             throw e;
           });
       default:
-        this.logger("Orm not defined :" + ormName, "ERROR");
+        this.log("Orm not defined :" + ormName, "ERROR");
         return this.renderRest({
           code: 500,
           type: "ERROR",
@@ -340,7 +340,7 @@ module.exports = class apiController extends nodefony.controller {
       }
       break;
     default:
-      this.logger("Storage request monitoring not found", "ERROR");
+      this.log("Storage request monitoring not found", "ERROR");
       return this.renderRest({
         code: 500,
         type: "ERROR",
@@ -414,7 +414,7 @@ module.exports = class apiController extends nodefony.controller {
             }
           })
           .catch((error) => {
-            this.logger(error, "ERROR");
+            this.log(error, "ERROR");
             if (error) {
               return this.renderRest({
                 code: 500,
@@ -451,7 +451,7 @@ module.exports = class apiController extends nodefony.controller {
           })
           .catch((error) => {
             if (error) {
-              this.logger(error, "ERROR");
+              this.log(error, "ERROR");
               return this.renderRest({
                 code: 500,
                 type: "ERROR",
@@ -463,7 +463,7 @@ module.exports = class apiController extends nodefony.controller {
       }
       break;
     default:
-      this.logger("Storage request monitoring not found", "ERROR");
+      this.log("Storage request monitoring not found", "ERROR");
       return this.renderRest({
         code: 500,
         type: "ERROR",
@@ -646,7 +646,7 @@ module.exports = class apiController extends nodefony.controller {
         });
 
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         this.realtimeAction("error");
       }
 
@@ -739,7 +739,7 @@ module.exports = class apiController extends nodefony.controller {
       }
       finderSession(sessionServices.settings.save_path, myResults, (error /*, result*/ ) => {
         if (error) {
-          this.logger(error, "ERROR");
+          this.log(error, "ERROR");
           return this.renderRest({
             code: 500,
             type: "ERROR",
@@ -779,7 +779,7 @@ module.exports = class apiController extends nodefony.controller {
                 dataTable = dataTableSessionParsing.call(this, this.query, results);
                 //var res = JSON.stringify(dataTable);
               } catch (e) {
-                this.logger(e, "ERROR");
+                this.log(e, "ERROR");
                 return this.renderRest({
                   code: 500,
                   type: "ERROR",
@@ -791,7 +791,7 @@ module.exports = class apiController extends nodefony.controller {
             })
             .catch((error) => {
               if (error) {
-                this.logger(error, "ERROR");
+                this.log(error, "ERROR");
                 return this.renderRest({
                   code: 500,
                   type: "ERROR",
@@ -811,7 +811,7 @@ module.exports = class apiController extends nodefony.controller {
             })
             .catch((error) => {
               if (error) {
-                this.logger(error, "ERROR");
+                this.log(error, "ERROR");
                 return this.renderRest({
                   code: 500,
                   type: "ERROR",
@@ -872,7 +872,7 @@ module.exports = class apiController extends nodefony.controller {
       let pm2 = require("pm2");
       let name = this.kernel.projectName || "nodefony";
       pm2.connect(true, () => {
-        this.logger("CONNECT PM2", "DEBUG");
+        this.log("CONNECT PM2", "DEBUG");
         pm2.describe(name, (err, list) => {
           this.renderRest({
             code: 200,

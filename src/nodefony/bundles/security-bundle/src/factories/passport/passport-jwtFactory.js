@@ -64,7 +64,7 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
           opt.jwtFromRequest = this.getExtractor(options);
           opt.secretOrKey = this.getSecretOrKeyConfig(options.secretOrKey);
           let strategy = new JwtStrategy(opt, (jwt_payload, done) => {
-            this.logger("TRY AUTHORISATION " + this.name, "DEBUG");
+            this.log("TRY AUTHORISATION " + this.name, "DEBUG");
             let mytoken = new nodefony.security.tokens.jwt(jwt_payload);
             mytoken.unserialize(mytoken);
             this.authenticateToken(mytoken)

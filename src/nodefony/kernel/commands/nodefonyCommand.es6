@@ -13,7 +13,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
 
     async install(cwd) {
       try {
-        this.logger("INSTALL NODEFONY FRAMEWORK");
+        this.log("INSTALL NODEFONY FRAMEWORK");
         return await this.displayInfo(cwd);
       } catch (error) {
         this.log(error, "ERROR");
@@ -23,7 +23,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
 
     async build(cwd) {
       try {
-        this.logger("BUILD NODEFONY FRAMEWORK");
+        this.log("BUILD NODEFONY FRAMEWORK");
         await this.installOrm();
         return this.displayInfo(cwd);
       } catch (error) {
@@ -42,7 +42,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
     }
 
     installOrm(force = false) {
-      this.logger("INITIALIZE ORM");
+      this.log("INITIALIZE ORM");
       this.orm = this.cli.kernel.getOrm();
       switch (this.orm) {
       case "sequelize":
@@ -63,7 +63,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
     }
 
     async installSequelize(force = false) {
-      this.logger("INITIALIZE SEQUELIZE");
+      this.log("INITIALIZE SEQUELIZE");
       let command = null;
       let task = null;
       try {
@@ -80,7 +80,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
 
     async generateSequelizeFixture() {
       try {
-        this.logger("Generate Sequelize Fixtures");
+        this.log("Generate Sequelize Fixtures");
         let command = this.cli.getCommand("users", "users");
         let task = command.getTask("fixtures");
         return await task.default();
@@ -106,28 +106,28 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
 
     async outdated() {
       try {
-        this.logger("PACKAGES OUTDATED");
+        this.log("PACKAGES OUTDATED");
         let args = [];
         let trunk = null;
         if (this.cli.kernel.isCore) {
           trunk = path.resolve(".", "package.json");
-          this.logger(`Check Outdated trunk :  ${trunk}`);
+          this.log(`Check Outdated trunk :  ${trunk}`);
           args.push(new nodefony.fileClass(trunk));
           trunk = path.resolve("src", "nodefony", "package.json");
-          this.logger(`Check Outdated nodefony :  ${trunk}`);
+          this.log(`Check Outdated nodefony :  ${trunk}`);
           args.push(new nodefony.fileClass(trunk));
         } else {
           trunk = path.resolve("package.json");
-          this.logger(`Check Outdated trunk :  ${trunk}`);
+          this.log(`Check Outdated trunk :  ${trunk}`);
           args.push(new nodefony.fileClass(trunk));
         }
         for (let bundle in this.cli.kernel.bundles) {
           if (nodefony.isCore) {
-            this.logger(`Check Outdated Bundle :  ${this.cli.kernel.bundles[bundle].name}`);
+            this.log(`Check Outdated Bundle :  ${this.cli.kernel.bundles[bundle].name}`);
             args.push(this.cli.kernel.bundles[bundle]);
           } else {
             if (!this.cli.kernel.isBundleCore(bundle)) {
-              this.logger(`Check Outdated ${this.cli.kernel.bundles[bundle].name}`);
+              this.log(`Check Outdated ${this.cli.kernel.bundles[bundle].name}`);
               args.push(this.cli.kernel.bundles[bundle]);
             }
           }
@@ -157,7 +157,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
     }
 
     async matchHomeRoute(route) {
-      this.logger("ROUTING LIST ");
+      this.log("ROUTING LIST ");
       try {
         let command = this.cli.getCommand("router", "framework");
         let task = command.getTask("display");
@@ -172,7 +172,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
 
     async listRouting() {
       try {
-        this.logger("ROUTING LIST ");
+        this.log("ROUTING LIST ");
         let command = this.cli.getCommand("router", "framework");
         let task = command.getTask("display");
         if (task) {

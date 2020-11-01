@@ -20,14 +20,14 @@ module.exports = nodefony.register("httpError", function () {
       }
     }
 
-    logger(data) {
+    log(data) {
       if (this.context) {
         if (data) {
-          return this.context.logger.apply(this.context, arguments);
+          return this.context.log.apply(this.context, arguments);
         }
-        return this.context.logger(this.toString(), "ERROR", `${clc.magenta(this.code)} ${clc.red(this.method)}`);
+        return this.context.log(this.toString(), "ERROR", `${clc.magenta(this.code)} ${clc.red(this.method)}`);
       }
-      return super.logger(data);
+      return super.log(data);
     }
 
     toString() {
@@ -98,7 +98,7 @@ module.exports = nodefony.register("httpError", function () {
             this.pdu = JSON.stringify(new nodefony.PDU(obj, "ERROR"));
           } catch (e) {
             this.message = e.message;
-            this.logger(e, "WARNING");
+            this.log(e, "WARNING");
           }
         }*/
       }

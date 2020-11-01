@@ -33,7 +33,7 @@ module.exports = class websocketServer extends nodefony.Service {
           this.kernel.once("onTerminate", () => {
             if (this.websocketServer && this.ready) {
               this.websocketServer.shutDown();
-              this.logger(" SHUTDOWN WEBSOCKET Server is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
+              this.log(" SHUTDOWN WEBSOCKET Server is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
             }
           });
 
@@ -41,10 +41,10 @@ module.exports = class websocketServer extends nodefony.Service {
             this.ready = true;
           }
           this.bundle.fire("onServersReady", this.type, this);
-          this.logger("Listening on DOMAIN : ws://" + this.domain + ":" + this.port, "INFO");
+          this.log("Listening on DOMAIN : ws://" + this.domain + ":" + this.port, "INFO");
           return this.websocketServer;
         } catch (e) {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
           throw e;
         }
       }

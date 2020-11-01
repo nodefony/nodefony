@@ -11,11 +11,11 @@ class Template extends nodefony.Service {
   }
 
   extendFunction() {
-    this.logger("extendFunction You must redefine this function in engine templating");
+    this.log("extendFunction You must redefine this function in engine templating");
   }
 
   extendFilter() {
-    this.logger("extendFilter You must redefine this function in engine templating");
+    this.log("extendFilter You must redefine this function in engine templating");
   }
 }
 

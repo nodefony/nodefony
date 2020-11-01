@@ -25,9 +25,6 @@ describe("NODEFONY CLI", () => {
       assert.strictEqual(project.name, "project");
       assert.strictEqual(project.commander.version(), nodefony.version);
       let options = {
-        events: {
-          nbListeners: 20,
-        },
         processName: 'nodefony',
         autostart: true,
         asciify: true,

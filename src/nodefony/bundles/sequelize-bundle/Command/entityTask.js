@@ -18,13 +18,13 @@ class entityTask extends nodefony.Task {
           let conn = this.ormService.getEntity(entity);
           if (!conn) {
             let error = new Error("ENTITY : " + entity + " NOT FOUND");
-            this.logger(error, "ERROR");
+            this.log(error, "ERROR");
             return reject(error);
           }
-          this.logger("ENTITY :" + entity + " \nEXECUTE findAll   ", "INFO");
+          this.log("ENTITY :" + entity + " \nEXECUTE findAll   ", "INFO");
           return conn.findAll()
             .catch((error) => {
-              this.logger(error, "ERROR");
+              this.log(error, "ERROR");
               return reject(1);
             })
             .then((result) => {
@@ -40,13 +40,13 @@ class entityTask extends nodefony.Task {
           let conn = this.ormService.getEntity(entity);
           if (!conn) {
             let error = new Error("ENTITY : " + entity + " NOT FOUND");
-            this.logger(error, "ERROR");
+            this.log(error, "ERROR");
             return reject(error);
           }
-          this.logger("ENTITY :" + entity + " \nEXECUTE findAll   ", "INFO");
+          this.log("ENTITY :" + entity + " \nEXECUTE findAll   ", "INFO");
           return conn.findAll()
             .catch((error) => {
-              this.logger(error, "ERROR");
+              this.log(error, "ERROR");
               return reject(error);
             })
             .then((result) => {

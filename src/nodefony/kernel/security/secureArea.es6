@@ -44,16 +44,16 @@ module.exports = nodefony.register("SecuredArea", function () {
             }
           }
         } catch (e) {
-          this.logger(this.name + "  " + e, "ERROR");
+          this.log(this.name + "  " + e, "ERROR");
         }
       });
     }
 
-    logger(pci, severity, msgid, msg) {
+    log(pci, severity, msgid, msg) {
       if (!msgid) {
         msgid = "\x1b[36mSECURE AREA \x1b[31m" + this.name + " \x1b[0m";
       }
-      return super.logger(pci, severity, msgid, msg);
+      return super.log(pci, severity, msgid, msg);
     }
 
     handleCrossDomain(context) {
@@ -88,7 +88,7 @@ module.exports = nodefony.register("SecuredArea", function () {
         securityError.code = 401;
       }
       if (this.kernel.debug) {
-        this.logger(securityError, "ERROR");
+        this.log(securityError, "ERROR");
       }
       switch (context.type) {
       case "HTTP":
@@ -170,7 +170,7 @@ module.exports = nodefony.register("SecuredArea", function () {
                 return resolve(token);
               })
               .catch((e) => {
-                this.factories[index - 1].logger(e, "DEBUG");
+                this.factories[index - 1].log(e, "DEBUG");
                 if (index === this.nbFactories) {
                   return reject(e);
                 }
@@ -285,7 +285,7 @@ module.exports = nodefony.register("SecuredArea", function () {
               }
               return resolve(context);
             }).catch(e => {
-              this.logger(e, "ERROR");
+              this.log(e, "ERROR");
               return reject(e);
             });
         }
@@ -306,10 +306,10 @@ module.exports = nodefony.register("SecuredArea", function () {
             index = 0;
           }
           this.nbFactories++;
-          this.logger("FACTORY " + auth + " registered ", "DEBUG");
+          this.log("FACTORY " + auth + " registered ", "DEBUG");
           return this.factories[index];
         } else {
-          this.logger("FACTORY :" + auth + "NOT registered ", "ERROR");
+          this.log("FACTORY :" + auth + "NOT registered ", "ERROR");
           throw new Error("FACTORY :" + auth + "NOT registered ");
         }
       }

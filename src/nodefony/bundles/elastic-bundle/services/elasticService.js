@@ -32,7 +32,7 @@ class elesticConnection extends nodefony.Service {
     this.client = null;
   }
 
-  logger(pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     if (!msgid) {
       if (msg) {
         msgid = `\x1b[36mELASTICSEARCH CLIENT ${this.name}  ${msg} \x1b[0m`;
@@ -40,7 +40,7 @@ class elesticConnection extends nodefony.Service {
         msgid = `\x1b[36mELASTICSEARCH CLIENT ${this.name}\x1b[0m`;
       }
     }
-    return super.logger(pci, severity, msgid, msg);
+    return super.log(pci, severity, msgid, msg);
   }
 
   create(options = {}) {
@@ -50,44 +50,44 @@ class elesticConnection extends nodefony.Service {
         this.client = new Client(this.settings);
         if (this.settings.log) {
           //this.settings.log = logger;
-          //this.settings.log.prototype.logger = this.logger.bind(this);
+          //this.settings.log.prototype.logger = this.log.bind(this);
           //this.settings.ConnectionPool = MyConnectionPool;
           //this.settings.Connection = MyConnection;
           if (this.settings.log.request) {
             this.client.on('request', (err, result) => {
               if (err) {
-                this.logger(err, "ERROR");
-                this.logger(err.meta, "ERROR");
+                this.log(err, "ERROR");
+                this.log(err.meta, "ERROR");
                 return err;
               }
-              this.logger(result.meta.request, "DEBUG", null, "REQUEST");
+              this.log(result.meta.request, "DEBUG", null, "REQUEST");
             });
           }
           if (this.settings.log.response) {
             this.client.on('response', (err, result) => {
               if (err) {
-                this.logger(err, "ERROR");
+                this.log(err, "ERROR");
                 return;
               }
-              this.logger(result, "DEBUG", null, "RESPONSE");
+              this.log(result, "DEBUG", null, "RESPONSE");
             });
           }
           if (this.settings.log.sniff) {
             this.client.on('sniff', (err, result) => {
               if (err) {
-                this.logger(err, "ERROR");
+                this.log(err, "ERROR");
                 return;
               }
-              this.logger(`${JSON.stringify(result.meta.sniff,null, '\t')}`, "DEBUG", null, "SNIFF");
+              this.log(`${JSON.stringify(result.meta.sniff,null, '\t')}`, "DEBUG", null, "SNIFF");
             });
           }
           if (this.settings.log.resurrect) {
             this.client.on('resurrect', (err, result) => {
               if (err) {
-                this.logger(err, "ERROR");
+                this.log(err, "ERROR");
                 return;
               }
-              this.logger(result, "INFO", null, "RESURRECT");
+              this.log(result, "INFO", null, "RESURRECT");
             });
           }
         }
@@ -150,14 +150,14 @@ class Elastic extends nodefony.services.Connections {
       try {
         let options = this.setOptions(this.settings.connections[connection]);
         let conn = await this.createConnection(connection, options);
-        this.logger(`Ping Elastic connection`, "INFO");
+        this.log(`Ping Elastic connection`, "INFO");
         let ping = await conn.client.ping();
-        this.logger(ping, "DEBUG", );
-        this.logger(`Info Elastic connection`, "INFO");
+        this.log(ping, "DEBUG", );
+        this.log(`Info Elastic connection`, "INFO");
         let info = await conn.client.info();
-        this.logger(info, "DEBUG");
+        this.log(info, "DEBUG");
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         continue;
       }
     }
@@ -179,7 +179,7 @@ class Elastic extends nodefony.services.Connections {
         data.push(connections[connection].client.name || "");
       }
       table.push(data);
-      this.logger(`${this.name} Connections : \n${table.toString()}`, severity);
+      this.log(`${this.name} Connections : \n${table.toString()}`, severity);
     } catch (e) {
       throw e;
     }

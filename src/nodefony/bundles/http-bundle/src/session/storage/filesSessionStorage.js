@@ -10,12 +10,12 @@ nodefony.register.call(nodefony.session.storage, "files", function () {
         var mtime = new Date(file.stats.mtime).getTime();
         if (mtime + msMaxlifetime < new Date().getTime()) {
           file.unlink();
-          this.manager.logger("FILES SESSIONS STORAGE GARBADGE COLLECTOR SESSION context : " + context + " ID : " + file.name + " DELETED");
+          this.manager.log("FILES SESSIONS STORAGE GARBADGE COLLECTOR SESSION context : " + context + " ID : " + file.name + " DELETED");
           nbSessionsDelete++;
         }
       }.bind(this),
       onFinish: ( /*error, result*/ ) => {
-        this.manager.logger("FILES SESSIONS STORAGE context : " + (context || "default") + " GARBADGE COLLECTOR ==> " + nbSessionsDelete + " DELETED");
+        this.manager.log("FILES SESSIONS STORAGE context : " + (context || "default") + " GARBADGE COLLECTOR ==> " + nbSessionsDelete + " DELETED");
       }
     });
   };
@@ -60,7 +60,7 @@ nodefony.register.call(nodefony.session.storage, "files", function () {
       }
       let res = fs.existsSync(Path);
       if (!res) {
-        this.manager.logger("create directory context sessions " + Path);
+        this.manager.log("create directory context sessions " + Path);
         try {
           mkdirp.sync(Path);
         } catch (e) {
@@ -72,7 +72,7 @@ nodefony.register.call(nodefony.session.storage, "files", function () {
           path: Path,
           recurse: false,
           onFinish: (error, result) => {
-            this.manager.logger("CONTEXT " + (contextSession ? contextSession : "GLOBAL") + " SESSIONS STORAGE  ==>  " + this.manager.settings.handler.toUpperCase() + " COUNT SESSIONS : " + result.length());
+            this.manager.log("CONTEXT " + (contextSession ? contextSession : "GLOBAL") + " SESSIONS STORAGE  ==>  " + this.manager.settings.handler.toUpperCase() + " COUNT SESSIONS : " + result.length());
           }
         });
       }
@@ -96,14 +96,14 @@ nodefony.register.call(nodefony.session.storage, "files", function () {
       try {
         fileDestroy = new nodefony.fileClass(Path);
       } catch (e) {
-        this.manager.logger("STORAGE FILE :" + Path, "DEBUG");
+        this.manager.log("STORAGE FILE :" + Path, "DEBUG");
         return new Promise((resolve /*, reject*/ ) => {
           return resolve(id);
         });
       }
       return new Promise((resolve, reject) => {
         try {
-          this.manager.logger("FILES SESSIONS STORAGE DESTROY SESSION context : " + contextSession + " ID : " + fileDestroy.name + " DELETED");
+          this.manager.log("FILES SESSIONS STORAGE DESTROY SESSION context : " + contextSession + " ID : " + fileDestroy.name + " DELETED");
           return resolve(fileDestroy.unlink());
         } catch (e) {
           return reject(id);
@@ -137,7 +137,7 @@ nodefony.register.call(nodefony.session.storage, "files", function () {
           });
 
         } catch (e) {
-          this.manager.logger("FILES SESSIONS STORAGE READ  ==> " + e, "ERROR");
+          this.manager.log("FILES SESSIONS STORAGE READ  ==> " + e, "ERROR");
           return reject(e);
         }
       });
@@ -159,7 +159,7 @@ nodefony.register.call(nodefony.session.storage, "files", function () {
             return resolve(serialize);
           });
         } catch (e) {
-          this.manager.logger("FILES SESSIONS STORAGE : " + e, "ERROR");
+          this.manager.log("FILES SESSIONS STORAGE : " + e, "ERROR");
           return reject(e);
         }
       });

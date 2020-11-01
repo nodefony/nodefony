@@ -33,10 +33,10 @@ module.exports = class bundlesTask extends nodefony.Task {
         }
       }
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
-    this.logger("Install success");
+    this.log("Install success");
   }
 
   async outdated(...args) {

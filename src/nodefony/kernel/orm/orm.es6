@@ -3,9 +3,9 @@ const connectionMonitor = function ( /*name, db*/ ) {
   if (Object.keys(this.settings.connectors).length === this.connectionNotification) {
     process.nextTick(() => {
       if (this.kernel.type !== "CONSOLE") {
-        this.logger('onOrmReady', "INFO", `EVENTS ${this.name} ORM`);
+        this.log('onOrmReady', "INFO", `EVENTS ${this.name} ORM`);
       }
-        //this.logger('onOrmReady', "INFO", `EVENTS ${this.name} ORM`);
+        //this.log('onOrmReady', "INFO", `EVENTS ${this.name} ORM`);
       this.fire('onOrmReady', this);
       this.ready = true;
     });
@@ -30,11 +30,11 @@ class Orm extends nodefony.Service {
     this.on("onErrorConnection", connectionMonitor.bind(this));
   }
 
-  logger(pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = this.kernel.cli.clc.magenta(this.name + " ");
     }
-    return super.logger(pci, severity, msgid, msg);
+    return super.log(pci, severity, msgid, msg);
   }
 
   getConnection(name) {
@@ -90,7 +90,7 @@ class Orm extends nodefony.Service {
       table.push(tab);
     }
     let res = table.toString();
-    this.logger("ORM ENTITY LIST  : \n" + res, severity);
+    this.log("ORM ENTITY LIST  : \n" + res, severity);
     return res;
 
   }
@@ -110,7 +110,7 @@ class Orm extends nodefony.Service {
     }
     this.entities[entity.name] = entity;
     if (this.kernel.type === "SERVER") {
-      this.logger(" REGISTER ENTITY : " + entity.name + " PROVIDE BUNDLE : " + entity.bundle.name, "INFO");
+      this.log(" REGISTER ENTITY : " + entity.name + " PROVIDE BUNDLE : " + entity.bundle.name, "INFO");
     }
   }
 }

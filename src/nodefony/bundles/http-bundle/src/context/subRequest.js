@@ -76,11 +76,11 @@ module.exports = nodefony.register("subRequest", () => {
       //this.parent.container.leaveScope(this.container);
     }
 
-    logger(pci, severity, msgid, msg) {
+    log(pci, severity, msgid, msg) {
       if (!msgid) {
         msgid = this.type + " SUB REQUEST";
       }
-      return super.logger(pci, severity, msgid, msg);
+      return super.log(pci, severity, msgid, msg);
     }
 
     handle(data) {
@@ -96,7 +96,7 @@ module.exports = nodefony.register("subRequest", () => {
         //console.log(res)
         return res;
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         return e.toString();
       }
     }

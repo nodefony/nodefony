@@ -62,7 +62,7 @@ class httpKernel extends nodefony.Service {
     this.on("onClientError", (e, socket) => {
       let exclude = clientErrorExclude.test(e.message);
       if (!exclude) {
-        this.logger(e, "WARNING", "SOCKET CLIENT ERROR");
+        this.log(e, "WARNING", "SOCKET CLIENT ERROR");
       }
       socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
     });
@@ -155,12 +155,12 @@ class httpKernel extends nodefony.Service {
       return result;
     } catch (e) {
       if (error) {
-        this.logger(error, "ERROR");
+        this.log(error, "ERROR");
       }
       if (httpError) {
-        httpError.logger(e, "ERROR");
+        httpError.log(e, "ERROR");
       } else {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
       }
       throw e;
     }
@@ -169,7 +169,7 @@ class httpKernel extends nodefony.Service {
   //HTTP ENTRY POINT
   onHttpRequest(request, response, type) {
     if (this.sockjs && request.url && request.url.match(this.sockjs.regPrefix)) {
-      this.logger("HTTP drop to sockj " + request.url, "DEBUG");
+      this.log("HTTP drop to sockj " + request.url, "DEBUG");
       return;
     }
     if (response.headersSent) {
@@ -187,7 +187,7 @@ class httpKernel extends nodefony.Service {
         })
         .catch(e => {
           if (e) {
-            this.logger(e, "ERROR", "STATICS SERVER");
+            this.log(e, "ERROR", "STATICS SERVER");
           }
           return e;
         });
@@ -203,7 +203,7 @@ class httpKernel extends nodefony.Service {
       request.resourceURL.path &&
       request.resourceURL.path.match(this.sockjs.regPrefix)
     ) {
-      this.logger("websocket drop to sockjs : " + request.resourceURL.path, "DEBUG");
+      this.log("websocket drop to sockjs : " + request.resourceURL.path, "DEBUG");
       //let connection = request.accept(null, request.origin);
       //connection.drop(1006, 'TCP connection lost before handshake completed.', false);
       request = null;
@@ -215,7 +215,7 @@ class httpKernel extends nodefony.Service {
       this.socketio.checkPath(request.resourceURL.path)
     ) {
       this.fire("onServerRequest", request, null, type);
-      this.logger("websocket drop to socket.io : " + request.resourceURL.path, "DEBUG");
+      this.log("websocket drop to socket.io : " + request.resourceURL.path, "DEBUG");
       request = null;
       return;
     }
@@ -350,7 +350,7 @@ class httpKernel extends nodefony.Service {
             if (context.csrf) {
               let token = await this.csrfService.handle(context);
               if (token) {
-                this.logger(`CSRF TOKEN OK`, "DEBUG");
+                this.log(`CSRF TOKEN OK`, "DEBUG");
               }
             }
             return resolve(res);
@@ -359,7 +359,7 @@ class httpKernel extends nodefony.Service {
           if (context.sessionAutoStart || context.hasSession()) {
             let session = await this.sessionService.start(context, context.sessionAutoStart);
             if (!(session instanceof nodefony.Session)) {
-              this.logger(new Error("SESSION START session storage ERROR"), "WARNING");
+              this.log(new Error("SESSION START session storage ERROR"), "WARNING");
             }
             if (this.firewall) {
               this.firewall.getSessionToken(context, session);
@@ -369,7 +369,7 @@ class httpKernel extends nodefony.Service {
           if (context.csrf) {
             let token = await this.csrfService.handle(context);
             if (token) {
-              this.logger(`CSRF TOKEN OK`, "DEBUG");
+              this.log(`CSRF TOKEN OK`, "DEBUG");
             }
           }
           return resolve(context);
@@ -385,7 +385,7 @@ class httpKernel extends nodefony.Service {
     try {
       context = new nodefony.context.http(container, request, response, type);
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
     //response events
@@ -474,7 +474,7 @@ class httpKernel extends nodefony.Service {
         if (context.sessionAutoStart || context.hasSession()) {
           let session = await this.sessionService.start(context, context.sessionAutoStart);
           if (!(session instanceof nodefony.Session)) {
-            this.logger(new Error("SESSION START session storage ERROR"), "WARNING");
+            this.log(new Error("SESSION START session storage ERROR"), "WARNING");
           }
           if (this.firewall) {
             this.firewall.getSessionToken(context, session);
@@ -677,8 +677,8 @@ class httpKernel extends nodefony.Service {
       try {
         wish = parseInt(wish, 10);
       } catch (e) {
-        this.logger("CDN CONFIG ERROR  : ", "ERROR");
-        this.logger(e, "ERROR");
+        this.log("CDN CONFIG ERROR  : ", "ERROR");
+        this.log(e, "ERROR");
       }
     }
     switch (typeof this.cdn) {
@@ -691,7 +691,7 @@ class httpKernel extends nodefony.Service {
       }
       if (!type) {
         let txt = "CDN ERROR getCDN bad argument type  ";
-        this.logger(txt, "ERROR");
+        this.log(txt, "ERROR");
         throw new Error(txt);
       }
       if (type in this.cdn) {
@@ -704,7 +704,7 @@ class httpKernel extends nodefony.Service {
       return this.cdn || "";
     default:
       let txt = "CDN CONFIG ERROR ";
-      this.logger(txt, "ERROR");
+      this.log(txt, "ERROR");
       throw new Error(txt);
     }
   }

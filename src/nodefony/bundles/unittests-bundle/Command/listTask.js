@@ -43,12 +43,12 @@ class listTask extends nodefony.Task {
         for (let i = 0; i < this.tests.length; i++) {
           if (bundleName !== this.tests[i].bundle) {
             bundleName = this.tests[i].bundle;
-            this.logger("★★★ BUNDLE : " + bundleName + " ★★★\n", "INFO");
+            this.log("★★★ BUNDLE : " + bundleName + " ★★★\n", "INFO");
           }
-          this.logger("       ‣ " + this.tests[i].name, "INFO");
+          this.log("       ‣ " + this.tests[i].name, "INFO");
         }
-        //this.logger("\x1b[0m\x1b[0m", "INFO");
-        this.logger(` To run test
+        //this.log("\x1b[0m\x1b[0m", "INFO");
+        this.log(` To run test
 nodefony unitest:launch:all                                Launch all tests Example : nodefony unitest:launch:all
 nodefony unitest:launch:bundle bundleName [testfile]       Launch bundle tests Example: nodefony unitest:launch:bundle demo responseTest.js `);
         return resolve(0);

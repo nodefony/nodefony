@@ -94,15 +94,15 @@ class Request extends nodefony.Service {
     return new Promise((resolve, reject) => {
       try {
         const myoptions = this.checkUrl(uri, options, container);
-        this.logger(`${JSON.stringify(myoptions, null," ")}`, "DEBUG");
+        this.log(`${JSON.stringify(myoptions, null," ")}`, "DEBUG");
         req = request(myoptions, (error, response, body) => {
           if (error) {
             return reject(new nodefony.requestError(error, response, container));
           }
           const json = response.toJSON();
           if (json) {
-            this.logger(`${json.request.method} ${json.request.uri.href}`, "DEBUG");
-            this.logger(`${JSON.stringify(json, null," ")}`, "DEBUG");
+            this.log(`${json.request.method} ${json.request.uri.href}`, "DEBUG");
+            this.log(`${JSON.stringify(json, null," ")}`, "DEBUG");
           }
           return resolve({
             response: response,

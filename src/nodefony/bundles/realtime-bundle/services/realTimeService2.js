@@ -1,10 +1,96 @@
 const net = require('net');
 const dgram = require('dgram');
+//const shortId = require('shortid');
 
-const TcpSocket = require(path.resolve(__dirname, "..", "src", "tcpSocket.js"));
-const UdpSocket = require(path.resolve(__dirname, "..", "src", "udpSocket.js"));
-const UnixSocket = require(path.resolve(__dirname, "..", "src", "unixSocket.js"));
-const Connections = require(path.resolve(__dirname, "..", "src", "connections.js"));
+/*
+ *
+ *  CLASS CONNECTION
+ *
+ */
+const Connections = class Connections {
+
+  constructor() {
+    this.connections = {};
+  }
+
+  generateId() {
+    return nodefony.generateId()
+  }
+
+  getClientId(client) {
+    return client.idClient;
+  }
+
+  getConnectionId(client) {
+    return client.idConnection;
+  }
+
+  setConnection(connection, obj) {
+    let id = this.generateId();
+    connection.id = id;
+    this.connections[id] = {
+      id: id,
+      remote: obj,
+      context: connection,
+      mustClose: false,
+      clients: {}
+    };
+    return id;
+  }
+
+  getConnection(client) {
+    let id = this.getConnectionId(client);
+    return this.connections[id];
+  }
+
+  removeConnection(id) {
+    if (this.connections[id]) {
+      delete this.connections[id];
+      return true;
+    }
+    return false;
+  }
+
+  setClient(idConnection, client) {
+    if (this.connections[idConnection]) {
+      let idClient = this.generateId();
+      client.idClient = idClient;
+      client.idConnection = idConnection;
+      this.connections[idConnection].clients[idClient] = client;
+      return idClient;
+    } else {
+      throw idConnection;
+    }
+  }
+
+  getClient(clientId) {
+    for (let connection in this.connections) {
+      for (let client in this.connections[connection].clients) {
+        if (client === clientId) {
+          return this.connections[connection].clients[client];
+        }
+      }
+    }
+    return null;
+  }
+
+  removeClient(client) {
+    let idConnection = this.getConnectionId(client);
+    let idClient = this.getClientId(client);
+    if (idConnection && idClient) {
+      if (this.connections[idConnection]) {
+        delete this.connections[idConnection].clients[idClient];
+        return idClient;
+      }
+    }
+    return false;
+  }
+
+  removeAllClientConnection() {
+    /*for (let ele in this.connections) {
+    }*/
+  }
+};
 
 
 const settingsSyslog = {
@@ -49,16 +135,19 @@ const cleanConnection = function (cliendID, disconnect, context) {
 };
 
 
-class realTime extends nodefony.Service {
+module.exports = class realTime extends nodefony.Syslog {
 
   constructor(container, kernel) {
-    super("REALTIME", container, );
+    super(settingsSyslog);
+    this.kernel = kernel;
+    this.container = container;
     this.version = "1.0";
     this.connections = new Connections();
     this.services = {};
+    this.initSyslog();
     this.protocol = new nodefony.io.protocol.bayeux();
-    this.on("onError", this.onError.bind(this));
-    this.kernel.once("onReady", () => {
+    this.on( "onError", this.onError.bind(this));
+    this.kernel.once( "onReady", () => {
       this.settings = this.container.getParameters("bundles.realtime");
       for (let services in this.settings.services) {
         this.registerService(services, this.settings.services[services]);
@@ -66,33 +155,50 @@ class realTime extends nodefony.Service {
     });
   }
 
-  createSocket(type, options) {
+  createSocket(type) {
     type = type.toUpperCase();
     switch (type) {
     case "TCP":
-      return this.socketTcp(options, this);
+      return this.socketTcp();
     case "UDP":
-      return this.socketUdp(options, this);
+      return this.socketUdp();
     case "UNIX":
-      return this.socketUnix(options, this);
+      return this.socketUnix();
     }
   }
 
-  socketTcp(...args) {
-    return new TcpSocket(...args)
+  socketTcp() {
+
   }
 
-  socketUdp(...args) {
-    return new UdpSocket(...args)
+  socketUdp() {
+
   }
 
-  socketUnix(...args) {
-    return new UnixSocket(...args)
+  socketUnix() {
+
   }
 
   registerService(name, definition) {
     this.services[name] = definition;
     return this.services[name];
+  }
+
+  initSyslog() {
+    this.listenWithConditions(this, {
+      severity: {
+        data: "CRITIC,ERROR,DEBUG,INFO"
+      }
+    }, function (pdu) {
+      this.kernel.log(pdu);
+    });
+  }
+
+  log(pci, severity, msgid, msg) {
+    if (!msgid) {
+      msgid = "SERVICE REALTIME";
+    }
+    return super.log(pci, severity, msgid, msg);
   }
 
   getServices() {
@@ -117,158 +223,139 @@ class realTime extends nodefony.Service {
       return this.send(context, this.protocol.send(message));
     }
     let client = null;
-    let socket = null;
     switch (serv.type) {
     case "TCP":
     case "tcp":
-    /*  try {
-        socket = this.createSocket(serv.type, {
+      try {
+        client = new net.Socket({
           allowHalfOpen: true,
-          highWaterMark: 1024 * 64
+          //highWaterMark:16384*2
+          highWaterMark: 1024 * 64,
+          //readable: true,
+          //writable: true
         });
-        socket.connect(serv.port, serv.domain)
-          .then((ret) => {
-            let id = this.connections.setClient(message.clientId, socket);
-            message.successful = true;
-            message.clientId = id;
-            this.log(`CONNECT SERVICE TCP : ${name} => clientId : ${id}`, "INFO");
-            return id;
-          })
-          .then((id) => {
-            try {
-              if (data) {
-                socket.write(data);
-              }
-              return id ;
-            } catch (e) {
-              if (id) {
-                this.connections.removeClient(socket);
-              }
-              throw e;
+
+        /*client.on("readable",function(){
+          console.log( client);
+          var chunk;
+          console.log("-------------")
+          console.log(client._readableState.buffer)
+          console.log(client.bytesRead);
+          while (null !== (chunk = client.read())) {
+          console.log(chunk.toString());
+          this.send( context , this.protocol.publishMessage( message.subscription, chunk.toString(), message.clientId ) );
+        }
+        //client.read(0)
+        console.log("-------------")
+      }.bind(this));*/
+
+
+        //console.log(client)
+        client.connect(serv.port, serv.domain, () => {
+          let id = null;
+          try {
+            if (data) {
+              client.write(data);
             }
-          })
-          .catch((e) => {
-            this.log(e, 'ERROR');
-            message.error = this.protocol.errorResponse(500, message.subscription, e.message);
-            return this.send(context, this.protocol.send(message));
-            throw e;
-          })
-        socket.on("data", (buffer) => {
-          this.send(context,
-            this.protocol.publishMessage(message.subscription, buffer.toString(), message.clientId));
+            id = this.connections.setClient(message.clientId, client);
+            message.successful = true;
+            //message.data = id;
+            message.clientId = id;
+            //console.log(client)
+            this.log("SUBCRIBE SERVICE TCP : " + name + " ID = " + id, "INFO");
+          } catch (e) {
+            if (id) {
+              this.connections.removeClient(client);
+            }
+            message.successful = false;
+            message.error = e;
+            this.log("SUBCRIBE SERVICE TCP: " + name + " ID = " + id + " " + e, "ERROR");
+          }
+          this.send(context, this.protocol.send(message));
         });
-      } catch (e) {
-        message.error = this.protocol.errorResponse(500, message.subscription, "Create Socket error");
-        return this.send(context, this.protocol.send(message));
-        throw e;
-      }*/
 
-      client = new net.Socket({
-        allowHalfOpen: true,
-        //highWaterMark:16384*2
-        highWaterMark: 1024 * 64,
-        //readable: true,
-        //writable: true
-      });
+        client.on("data", (buffer) => {
+          //console.log(buffer)
+          //this.log(buffer.length, "INFO")
+          //console.log("--------")
+          //console.log(buffer.length)
+          //console.log(buffer.toString())
+          // ENCAPSULATION buffer in bayeux data
+          //console.log(buffer.toString())
+          this.send(context, this.protocol.publishMessage(message.subscription, buffer.toString(), message.clientId));
+          //client.push("");
+        });
 
-      //console.log(client)
-      client.connect(serv.port, serv.domain, () => {
-        let id = null;
-        try {
-          if (data) {
-            client.write(data);
-          }
-          id = this.connections.setClient(message.clientId, client);
+
+        /*client.on("timeout",function(buffer){
+      console.log("PASS event timeout")
+    });*/
+
+
+        client.on("end", () => {
+          message.channel = "/meta/unsubscribe";
+          //message.data = error ;
+          message.subscription = "/service/" + name;
           message.successful = true;
-          //message.data = id;
-          message.clientId = id;
-          //console.log(client)
-          this.log("SUBCRIBE SERVICE TCP : " + name + " ID = " + id, "INFO");
-        } catch (e) {
-          if (id) {
-            this.connections.removeClient(client);
+          this.onUnSubscribe(message, null, context);
+          this.send(context, this.protocol.send(message));
+        });
+
+        client.on("error", (error) => {
+          let res = null;
+          switch (error.code) {
+          case "ECONNREFUSED":
+            //this.send( context ,this.protocol.errorResponse(403, message.clientId+","+message.channel,error.errno ) );
+            res = this.protocol.subscribeResponse(message);
+            res.error = this.protocol.errorResponse(403, message.clientId + "," + message.channel, error.errno);
+            res.successful = false;
+            this.send(context, this.protocol.send(res));
+            break;
+          case "ETIMEDOUT":
+            res = this.protocol.subscribeResponse(message);
+            res.error = this.protocol.errorResponse(408, message.clientId + "," + message.channel, error.errno);
+            res.successful = false;
+            this.send(context, this.protocol.send(res));
+            break;
           }
-          message.successful = false;
-          message.error = e;
-          this.log("SUBCRIBE SERVICE TCP: " + name + " ID = " + id + " " + e, "ERROR");
-        }
-        this.send(context, this.protocol.send(message));
-      });
+          //console.log(error);
+          this.log("ERROR SERVER DOMAIN : " + serv.domain + " SERVER PORT : " + serv.port + " SERVICE : " + name + " " + error, "ERROR");
+        });
 
-      client.on("data", (buffer) => {
-        //console.log(buffer)
-        //this.log(buffer.length, "INFO")
-        //console.log("--------")
-        //console.log(buffer.length)
-        //console.log(buffer.toString())
-        // ENCAPSULATION buffer in bayeux data
-        //console.log(buffer.toString())
-        this.send(context, this.protocol.publishMessage(message.subscription, buffer.toString(), message.clientId));
-        //client.push("");
-      });
-
-
-      client.on("end", () => {
-        message.channel = "/meta/unsubscribe";
-        //message.data = error ;
-        message.subscription = "/service/" + name;
-        message.successful = true;
-        this.onUnSubscribe(message, null, context);
-        this.send(context, this.protocol.send(message));
-      });
-
-      client.on("error", (error) => {
-        let res = null;
-        switch (error.code) {
-        case "ECONNREFUSED":
-          //this.send( context ,this.protocol.errorResponse(403, message.clientId+","+message.channel,error.errno ) );
-          res = this.protocol.subscribeResponse(message);
-          res.error = this.protocol.errorResponse(403, message.clientId + "," + message.channel, error.errno);
-          res.successful = false;
-          this.send(context, this.protocol.send(res));
-          break;
-        case "ETIMEDOUT":
-          res = this.protocol.subscribeResponse(message);
-          res.error = this.protocol.errorResponse(408, message.clientId + "," + message.channel, error.errno);
-          res.successful = false;
-          this.send(context, this.protocol.send(res));
-          break;
-        }
-        //console.log(error);
-        this.log("ERROR SERVER DOMAIN : " + serv.domain + " SERVER PORT : " + serv.port + " SERVICE : " + name + " " + error, "ERROR");
-      });
-
-      client.on("close", (error) => {
-        if (error) {
-          this.log("CANNOT CONNECT SERVICE : " + name, "ERROR");
+        client.on("close", (error) => {
+          if (error) {
+            this.log("CANNOT CONNECT SERVICE : " + name, "ERROR");
+            client.destroy();
+            client = null;
+            throw error;
+          } else {
+            let connection = this.connections.getConnection(client);
+            let size = null;
+            if (connection && connection.mustClose) {
+              size = Object.keys(connection.clients).length;
+            }
+            let id = this.connections.removeClient(client);
+            this.log("UNSUBCRIBE SERVICE : " + name + " ID = " + id, "INFO");
+            if (connection && connection.mustClose) {
+              //console.log("SIZE clients struck :" + size)
+              if (size === 1) {
+                if (connection.disconnect) {
+                  //console.log(connection.disconnect)
+                  this.send(connection.context, connection.disconnect);
+                }
+                this.connections.removeConnection(connection.id);
+                this.log("REMOVE ID connection : " + connection.id, "INFO");
+              }
+            }
+          }
           client.destroy();
           client = null;
-          throw error;
-        } else {
-          let connection = this.connections.getConnection(client);
-          let size = null;
-          if (connection && connection.mustClose) {
-            size = Object.keys(connection.clients).length;
-          }
-          let id = this.connections.removeClient(client);
-          this.log("UNSUBCRIBE SERVICE : " + name + " ID = " + id, "INFO");
-          if (connection && connection.mustClose) {
-            //console.log("SIZE clients struck :" + size)
-            if (size === 1) {
-              if (connection.disconnect) {
-                //console.log(connection.disconnect)
-                this.send(connection.context, connection.disconnect);
-              }
-              this.connections.removeConnection(connection.id);
-              this.log("REMOVE ID connection : " + connection.id, "INFO");
-            }
-          }
-        }
-        client.destroy();
-        client = null;
-      });
+        });
 
-
+      } catch (e) {
+        //FIXME
+        //this.send( context ,this.protocol.errorResponse(403, message.clientId+","+message.channel,error.errno ) );
+      }
       break;
     case "socket":
       break;
@@ -445,9 +532,12 @@ class realTime extends nodefony.Service {
     switch (context.type) {
     case "WEBSOCKET":
     case "WEBSOCKET SECURE":
-      this.onMessage(message, context);
+      return this.onMessage(message, context);
+    case "HTTP":
+    case "HTTPS":
+    case "HTTP2":
+      return this.onMessage(message, context);
     }
-    return null;
   }
 
   onMessage(message, context) {
@@ -478,7 +568,7 @@ class realTime extends nodefony.Service {
         case "/meta/handshake":
           let host = context.request.host || context.request.headers.host;
           obj = {
-            remoteAddress: context.remoteAddress || context.request.remoteAddress,
+            remoteAddress: context.remoteAddress ||  context.request.remoteAddress,
             host: url.parse(host)
           };
           //console.log(remoteAddress + " : " + context.request.domain)
@@ -497,7 +587,7 @@ class realTime extends nodefony.Service {
           //var remoteAddress = context.request.remoteAddress ;
           //var remoteAddress = context.request.domain ;
           //console.log(context.request)
-          context.notificationsCenter.once("onClose", ( /*code, info*/ ) => {
+          context.notificationsCenter.once( "onClose", ( /*code, info*/ ) => {
             cleanConnection.call(this, message.clientId);
           });
           return this.send(context, this.onConnect(message, JSON.stringify(obj)));
@@ -549,6 +639,4 @@ class realTime extends nodefony.Service {
       this.log(e, "ERROR");
     }
   }
-}
-
-module.exports = realTime;
+};

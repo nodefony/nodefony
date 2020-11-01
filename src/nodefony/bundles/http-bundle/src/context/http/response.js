@@ -78,15 +78,15 @@ module.exports = nodefony.register("Response", function () {
 
     setCookie(cookie) {
       let serialize = cookie.serialize();
-      this.logger("ADD COOKIE ==> " + serialize, "DEBUG");
+      this.log("ADD COOKIE ==> " + serialize, "DEBUG");
       return this.setHeader('Set-Cookie', serialize);
     }
 
-    logger(pci, severity, msgid, msg) {
+    log(pci, severity, msgid, msg) {
       if (!msgid) {
         msgid = this.context.type + " RESPONSE ";
       }
-      return this.context.logger(pci, severity, msgid, msg);
+      return this.context.log(pci, severity, msgid, msg);
     }
 
     //ADD INPLICIT HEADER
@@ -121,7 +121,7 @@ module.exports = nodefony.register("Response", function () {
     setContentType(type, encoding) {
       let myType = this.getMimeType(type);
       if (!myType) {
-        this.logger("Content-Type not valid !!! : " + type, "WARNING");
+        this.log("Content-Type not valid !!! : " + type, "WARNING");
         myType = "application/octet-stream";
       }
       this.contentType = myType;
@@ -211,7 +211,7 @@ module.exports = nodefony.register("Response", function () {
           throw e;
         }
       } else {
-        this.logger("Headers already sent !!", "WARNING");
+        this.log("Headers already sent !!", "WARNING");
       }
     }
 
@@ -297,7 +297,7 @@ module.exports = nodefony.register("Response", function () {
         }
       }
       this.setHeader("Location", url);
-      this.logger(`REDIRECT ${status} : ${url} `, "DEBUG");
+      this.log(`REDIRECT ${status} : ${url} `, "DEBUG");
       return this;
     }
   };

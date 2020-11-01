@@ -195,7 +195,7 @@ class Builder extends nodefony.Service {
         throw new Error(" skeleton must be file !!! : " + skelete.path);
       }
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
     }
     return skelete;
   }
@@ -214,7 +214,7 @@ class Builder extends nodefony.Service {
             this.build(obj[i], parent, force);
           }
         } catch (e) {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
           throw e;
         }
         break;
@@ -233,16 +233,16 @@ class Builder extends nodefony.Service {
                 let directory = path.resolve(parent.path, name);
                 child = this.cli.createDirectory(directory, 0o755, (ele) => {
                   if (force) {
-                    this.logger("Force Create Directory :" + ele.name);
+                    this.log("Force Create Directory :" + ele.name);
                   } else {
-                    this.logger("Create Directory :" + ele.name);
+                    this.log("Create Directory :" + ele.name);
                   }
                   if (obj.chmod) {
                     this.cli.chmod(obj.chmod, directory);
                   }
                 }, force);
               } catch (e) {
-                this.logger(e, "ERROR");
+                this.log(e, "ERROR");
                 throw e;
               }
               break;
@@ -250,13 +250,13 @@ class Builder extends nodefony.Service {
               try {
                 let file = path.resolve(parent.path, name);
                 this.createFile(file, obj.skeleton, obj.parse, obj.params, (ele) => {
-                  this.logger("Create File      :" + ele.name);
+                  this.log("Create File      :" + ele.name);
                 });
                 if (obj.chmod) {
                   this.cli.chmod(obj.chmod, file);
                 }
               } catch (e) {
-                this.logger(e, "ERROR");
+                this.log(e, "ERROR");
                 throw e;
               }
               break;
@@ -267,9 +267,9 @@ class Builder extends nodefony.Service {
                 } else {
                   this.cli.ln('-s', path.resolve(parent.path, obj.params.source), path.resolve(parent.path, obj.params.dest));
                 }
-                this.logger("Create symbolic link :" + obj.name);
+                this.log("Create symbolic link :" + obj.name);
               } catch (e) {
-                this.logger(e, "ERROR");
+                this.log(e, "ERROR");
                 throw e;
               }
               break;
@@ -281,12 +281,12 @@ class Builder extends nodefony.Service {
                 } else {
                   this.cli.cp("-f", obj.path, file);
                 }
-                this.logger("Copy             :" + obj.name);
+                this.log("Copy             :" + obj.name);
                 if (obj.chmod) {
                   this.cli.chmod(obj.chmod, file);
                 }
               } catch (e) {
-                this.logger(e, "ERROR");
+                this.log(e, "ERROR");
                 throw e;
               }
               break;
@@ -296,7 +296,7 @@ class Builder extends nodefony.Service {
             try {
               this.build(value, child, force);
             } catch (e) {
-              this.logger(e, "ERROR");
+              this.log(e, "ERROR");
               throw e;
             }
             break;
@@ -304,10 +304,10 @@ class Builder extends nodefony.Service {
         }
         break;
       default:
-        this.logger("generate build error arguments : ", "ERROR");
+        this.log("generate build error arguments : ", "ERROR");
       }
     } catch (e) {
-      this.logger(obj, "ERROR");
+      this.log(obj, "ERROR");
       throw e;
     }
     return child;
@@ -347,7 +347,7 @@ class Builder extends nodefony.Service {
     if (skeleton) {
       this.buildSkeleton(skeleton, parse, params, (error, result) => {
         if (error) {
-          this.logger(error, "ERROR");
+          this.log(error, "ERROR");
         } else {
           try {
             fs.writeFileSync(myPath, result, {

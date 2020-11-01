@@ -62,7 +62,7 @@ module.exports = class mailController extends nodefony.controller {
                 }]
               })
               .then((info) => {
-                this.logger(info);
+                this.log(info);
                 return html;
               })
               .catch(e => {
@@ -74,7 +74,7 @@ module.exports = class mailController extends nodefony.controller {
           });
       })
       .catch((e) => {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         return Promise.reject(e);
       });
   }

@@ -11,13 +11,6 @@ const defaultOptions = {
   }
 };
 
-const conditionOptions = {
-  severity: {
-    operator: "<=",
-    data: "7"
-  }
-};
-
 class Service {
 
   constructor(name, container, notificationsCenter, options = {}) {
@@ -67,7 +60,7 @@ class Service {
     } else {
       this.settingsSyslog = this.syslog.settings;
     }
-    if (notificationsCenter instanceof nodefony.notificationsCenter.notification) {
+    if (notificationsCenter instanceof nodefony.Events) {
       this.notificationsCenter = notificationsCenter;
       if (options) {
         this.notificationsCenter.settingsToListen(options, this);
@@ -77,14 +70,13 @@ class Service {
       }
     } else {
       if (notificationsCenter) {
-        throw new Error("Service nodefony notificationsCenter not valid must be instance of nodefony.notificationsCenter.notification");
+        throw new Error("Service nodefony notificationsCenter not valid must be instance of nodefony.Events");
       }
       if (notificationsCenter !== false) {
-        this.notificationsCenter = nodefony.notificationsCenter.create(this.options, this, this.options.events);
+        this.notificationsCenter = new nodefony.Events(this.options, this, this.options.events);
         this.notificationsCenter.on('error', (err) => {
-          this.logger(err, "ERROR", "Error events");
+          this.log(err, "ERROR", "Error events");
         });
-
         if (!this.kernel) {
           this.set("notificationsCenter", this.notificationsCenter);
         } else {
@@ -94,13 +86,11 @@ class Service {
         }
       }
     }
+    delete this.options.events;
   }
 
-  initSyslog(environment = "production", debug = false, options = null) {
-    return this.syslog.listenWithConditions(this, options || conditionOptions,
-      (pdu) => {
-        return nodefony.Syslog.normalizeLog(pdu);
-      });
+  initSyslog(environment = "production", debug = undefined, options = null) {
+    return this.syslog.init(environment, debug, options);
   }
 
   getName() {
@@ -124,20 +114,21 @@ class Service {
     delete this.kernel;
   }
 
-  log(pci, severity, msgid, msg) {
+  log(pci, severity, msgid = null, msg = null) {
     try {
       if (!msgid) {
-        msgid = "SERVICE " + this.name + " ";
+        msgid = `SERVICE ${this.name} `;
       }
-      return this.syslog.logger(pci, severity, msgid, msg);
+      return this.syslog.log(pci, severity, msgid, msg);
     } catch (e) {
-      console.log(pci);
+      console.log(severity , msgid, msg, " : ", pci);
     }
   }
 
-  logger(...args) {
-    return this.log(...args);
+  logger(one, ...args) {
+    console.trace(nodefony.Syslog.wrapper(this.log(one, "DEBUG")).text, one, ...args);
   }
+
   eventNames(...args) {
     return this.notificationsCenter.eventNames(...args);
   }
@@ -162,16 +153,17 @@ class Service {
   on(...args) {
     return this.notificationsCenter.on(...args);
   }
+
+  once(...args) {
+    return this.notificationsCenter.once(...args);
+  }
+
   off(...args) {
     return this.notificationsCenter.off(...args);
   }
 
   settingsToListen(...args) {
     return this.notificationsCenter.settingsToListen(...args);
-  }
-
-  once(...args) {
-    return this.notificationsCenter.once(...args);
   }
 
   /**
@@ -204,7 +196,7 @@ class Service {
    *  @method prependListener
    */
   prependListener(...args) {
-    return this.notificationsCenter.prependListener(...args)
+    return this.notificationsCenter.prependListener(...args);
   }
 
   /**
@@ -222,7 +214,7 @@ class Service {
   }
 
   /**
-   *  @method listenerCount
+   *  @method listeners
    */
   listeners(...args) {
     return this.notificationsCenter.listeners(...args);

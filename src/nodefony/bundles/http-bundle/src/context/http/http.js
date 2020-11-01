@@ -86,7 +86,7 @@ nodefony.register.call(nodefony.context, "http", function () {
           proxyHost: request.headers["x-forwarded-host"],
           proxyVia: request.headers.via
         };
-        this.logger("PROXY REQUEST x-forwarded VIA : " + this.proxy.proxyVia, "DEBUG");
+        this.log("PROXY REQUEST x-forwarded VIA : " + this.proxy.proxyVia, "DEBUG");
       }
       /*if (this.security) {
         this.crossDomain = this.isCrossDomain();
@@ -197,7 +197,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       return this.saveSession()
         .then((session) => {
           if (session) {
-            this.logger("SAVE SESSION ID : " + session.id, "DEBUG");
+            this.log("SAVE SESSION ID : " + session.id, "DEBUG");
           }
           this.fire("onSend", this.response, this);
           this.writeHead();
@@ -207,7 +207,7 @@ nodefony.register.call(nodefony.context, "http", function () {
           return this.response.end();
         })
         .catch((error) => {
-          this.logger(error, "ERROR");
+          this.log(error, "ERROR");
           if (this.session) {
             this.session.destroy(true);
           }

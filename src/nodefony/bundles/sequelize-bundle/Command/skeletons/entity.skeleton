@@ -22,13 +22,13 @@ module.exports = class {{name}} extends nodefony.Entity {
 
   registerModel(db) {
     let model = db.define(this.name, this.getSchema(), {
-      logging: this.logger.bind(this)
+      logging: this.log.bind(this)
     });
     return model;
   }
 
-  logger(pci /*, sequelize*/ ) {
+  log(pci /*, sequelize*/ ) {
     const msgid = "Entity " + this.name;
-    return super.logger(pci, "DEBUG", msgid);
+    return super.log(pci, "DEBUG", msgid);
   }
 };

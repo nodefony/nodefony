@@ -33,12 +33,12 @@ nodefony.register("wsResponse", function () {
       return connection;
     }
 
-    logger(pci, severity, msgid, msg) {
+    log(pci, severity, msgid, msg) {
       let syslog = this.container.get("syslog");
       if (!msgid) {
         msgid = "WEBSOCKET RESPONSE";
       }
-      return syslog.logger(pci, severity, msgid, msg);
+      return syslog.log(pci, severity, msgid, msg);
     }
 
     setBody(ele) {
@@ -164,7 +164,7 @@ nodefony.register("wsResponse", function () {
     }
 
     setCookie(cookie) {
-      this.logger("ADD COOKIE ==> " + cookie.serialize(), "DEBUG");
+      this.log("ADD COOKIE ==> " + cookie.serialize(), "DEBUG");
       this.setHeader('Set-Cookie', cookie.serialize());
     }
 

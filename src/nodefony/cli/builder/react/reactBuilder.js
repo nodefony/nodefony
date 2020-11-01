@@ -88,7 +88,7 @@ class React extends nodefony.builders.sandbox {
     return new Promise((resolve, reject) => {
       //console.log(this.bundleName)
       let args = [name];
-      this.logger("install React cli : create-react-app " + args.join(" "));
+      this.log("install React cli : create-react-app " + args.join(" "));
       let cmd = null;
       try {
         cmd = this.cli.spawn(this.cliReact, args, {
@@ -105,7 +105,7 @@ class React extends nodefony.builders.sandbox {
           return resolve(this.location);
         });
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         //this.cleanTmp();
         return reject(e);
       }
@@ -117,7 +117,7 @@ class React extends nodefony.builders.sandbox {
     let err = null;
     return new Promise(async (resolve, reject) => {
       let args = ['run', 'eject'];
-      this.logger(" eject  webpack config React : " + args.join(" "));
+      this.log(" eject  webpack config React : " + args.join(" "));
       try {
         return this.cli.packageManager(args, dir)
           .then(async () => {
@@ -135,7 +135,7 @@ class React extends nodefony.builders.sandbox {
       }
       if (err) {
         await this.stachPop();
-        this.logger("React eject ", "ERROR");
+        this.log("React eject ", "ERROR");
         return reject(err);
       }
     });
@@ -194,7 +194,7 @@ class React extends nodefony.builders.sandbox {
     }
     return git.stash(["pop"])
       .then(() => {
-        this.logger(" git stash pop ");
+        this.log(" git stash pop ");
         return cwd;
       })
       .catch((err) => {

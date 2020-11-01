@@ -161,7 +161,7 @@ module.exports = nodefony.register("Request", function () {
         this.accept = acceptParser(this.headers.accept);
         this.acceptHtml = this.accepts("html");
       } catch (e) {
-        this.logger(e, "WARNING");
+        this.log(e, "WARNING");
       }
       this.rawContentType = {};
       this.contentType = this.getContentType(this.request);
@@ -392,11 +392,11 @@ module.exports = nodefony.register("Request", function () {
       //super.clean();
     }
 
-    logger(pci, severity, msgid, msg) {
+    log(pci, severity, msgid, msg) {
       if (!msgid) {
         msgid = this.context.type + " REQUEST ";
       }
-      return this.context.logger(pci, severity, msgid, msg);
+      return this.context.log(pci, severity, msgid, msg);
     }
 
     getContentType(request) {

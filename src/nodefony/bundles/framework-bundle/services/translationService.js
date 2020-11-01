@@ -80,7 +80,7 @@ const Translation = class Translation extends nodefony.Service {
       //console.log("translate." + mylocal + "." + myDomain + "." + value)
       str = this.getParameters("translate." + mylocal + "." + myDomain + "." + value) || value;
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       return value;
     }
     return str;
@@ -172,7 +172,7 @@ module.exports = class translation extends nodefony.Service {
         this.defaultLocale = dl;
       }
       this.getFileLocale(dl);
-      this.logger("default Local APPLICATION ==> " + this.defaultLocale, "DEBUG");
+      this.log("default Local APPLICATION ==> " + this.defaultLocale, "DEBUG");
       this.getConfigLangs(this.getParameters("bundles.app.lang"));
     });
     translate[this.defaultLocale] = {};

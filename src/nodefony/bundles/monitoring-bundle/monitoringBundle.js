@@ -34,13 +34,13 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     try {
       this.kernel.git.branch((err, BranchSummary) => {
         if (err) {
-          this.logger(err, "WARNING");
+          this.log(err, "WARNING");
           return;
         }
         this.gitInfo.currentBranch = BranchSummary.current;
       });
     } catch (e) {
-      this.logger(e, "WARNING");
+      this.log(e, "WARNING");
     }
 
     this.kernel.once("onPreBoot", async (kernel) => {
@@ -195,7 +195,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
         }
       }
       if (this.settings.debugBar) {
-        this.logger("ADD DEBUG BAR MONITORING", "INFO");
+        this.log("ADD DEBUG BAR MONITORING", "INFO");
         this.bundles = function () {
           let obj = {};
           for (let bundle in this.kernel.bundles) {
@@ -683,11 +683,11 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
             context.profiling.response.message.push(ele);
           }
         } catch (e) {
-          this.logger(e, "WARNING");
+          this.log(e, "WARNING");
         }
         this.updateProfile(context, (error /*, result*/ ) => {
           if (error) {
-            this.kernel.logger(error);
+            this.kernel.log(error);
           }
         });
       });
@@ -700,7 +700,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       if (context.profiler) {
         this.updateProfile(context, (error /*, result*/ ) => {
           if (error) {
-            this.kernel.logger(error);
+            this.kernel.log(error);
           }
           if (context) {
             delete context.profiling;
@@ -712,7 +712,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
     if (context.profiler) {
       this.saveProfile(context)
         .catch(e => {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
         });
     }
   }
@@ -756,7 +756,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
           }
         }).catch((error) => {
           if (error) {
-            this.kernel.logger(error, "ERROR");
+            this.kernel.log(error, "ERROR");
           }
           throw error;
         });
@@ -807,10 +807,10 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
               id: id,
             }
           }).then((result) => {
-            this.kernel.logger("ORM REQUEST UPDATE ID : " + id, "DEBUG");
+            this.kernel.log("ORM REQUEST UPDATE ID : " + id, "DEBUG");
             callback(null, result);
           }).catch((error) => {
-            this.kernel.logger(error);
+            this.kernel.log(error);
             callback(error, null);
           });
         } catch (e) {
@@ -829,7 +829,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       case "syslog":
         return new Promise((resolve, reject) => {
           try {
-            this.syslogContext.logger(context.profiling);
+            this.syslogContext.log(context.profiling);
             let logProfile = this.syslogContext.getLogStack();
             context.profiling.id = logProfile.uid;
           } catch (e) {
@@ -871,7 +871,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
               isNewRecord: true
             })
             .then((request) => {
-              this.kernel.logger("ORM REQUEST SAVE ID :" + request.id, "DEBUG");
+              this.kernel.log("ORM REQUEST SAVE ID :" + request.id, "DEBUG");
               if (context && context.profiling) {
                 context.profiling.id = request.id;
               }
@@ -893,7 +893,7 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
               data: data
             })
             .then((request) => {
-              this.kernel.logger("ORM REQUEST SAVE ID :" + request._id, "DEBUG");
+              this.kernel.log("ORM REQUEST SAVE ID :" + request._id, "DEBUG");
               if (context && context.profiling) {
                 context.profiling.id = request.id;
               }

@@ -6,11 +6,11 @@ class Provider extends nodefony.Service {
     this.encoder = null;
   }
 
-  logger(pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = "PROVIDER " + this.name;
     }
-    return super.logger(pci, severity, msgid, msg);
+    return super.log(pci, severity, msgid, msg);
   }
 
   authenticate(token) {
@@ -19,7 +19,7 @@ class Provider extends nodefony.Service {
         return this.loadUserByUsername(token.getUsername())
           .then(async (user) => {
             if (user) {
-              this.logger(`TRY AUTHENTICATION  ${token.getUsername()}  PROVIDER ${this.name}`, "DEBUG");
+              this.log(`TRY AUTHENTICATION  ${token.getUsername()}  PROVIDER ${this.name}`, "DEBUG");
               if (await this.isPasswordValid(token.getCredentials(), user.getPassword())) {
                 token.setUser(user);
                 token.setProvider(this);

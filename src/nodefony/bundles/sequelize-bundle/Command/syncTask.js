@@ -60,10 +60,10 @@ class generateTask extends nodefony.Task {
         for (let connectionName in this.ormService.connections) {
           let connection = this.ormService.connections[connectionName].db;
           if (!connection) {
-            this.logger("CONNECTION : " + connectionName + " State : " + this.ormService.connections[connectionName].state, "ERROR");
+            this.log("CONNECTION : " + connectionName + " State : " + this.ormService.connections[connectionName].state, "ERROR");
             continue;
           }
-          this.logger("DATABASE  : " + connection.options.dialect + " CONNECTION : " + connectionName, "INFO");
+          this.log("DATABASE  : " + connection.options.dialect + " CONNECTION : " + connectionName, "INFO");
           tab.push(this.sync(connectionName, connection, force));
         }
         return Promise.all(tab)
@@ -78,7 +78,7 @@ class generateTask extends nodefony.Task {
 
   sync(connectionName, connection, force) {
     return new Promise((resolve, reject) => {
-      this.logger("DATABASE SYNC : " + connectionName);
+      this.log("DATABASE SYNC : " + connectionName);
       switch (connection.options.dialect) {
       case "mysql":
         return connection.query('SET FOREIGN_KEY_CHECKS = 0', null, {
@@ -88,32 +88,32 @@ class generateTask extends nodefony.Task {
             return connection.sync({
               force: force,
               logging: (value) => {
-                return this.cli.logger(value, "INFO");
+                return this.cli.log(value, "INFO");
               },
               hooks: true
             }).then((db) => {
-              this.logger("DATABASE :" + db.config.database + " CONNECTION : " + connectionName + " CREATE ALL TABLES", "INFO");
+              this.log("DATABASE :" + db.config.database + " CONNECTION : " + connectionName + " CREATE ALL TABLES", "INFO");
               return resolve(connectionName);
             }).catch((error) => {
-              this.logger("DATABASE :" + connection.config.database + " CONNECTION : " + connectionName + " : " + error, "ERROR");
+              this.log("DATABASE :" + connection.config.database + " CONNECTION : " + connectionName + " : " + error, "ERROR");
               return reject(error);
             });
           }).catch(e => {
-            this.logger(e, "ERROR");
+            this.log(e, "ERROR");
             return reject(e);
           });
       default:
         return connection.sync({
           force: force,
           logging: (value) => {
-            return this.cli.logger(value, "INFO");
+            return this.cli.log(value, "INFO");
           },
           hooks: true
         }).then((db) => {
-          this.logger("DATABASE :" + db.config.database + " CONNECTION : " + connectionName + " CREATE ALL TABLES", "INFO");
+          this.log("DATABASE :" + db.config.database + " CONNECTION : " + connectionName + " CREATE ALL TABLES", "INFO");
           return resolve(connectionName);
         }).catch((error) => {
-          this.logger("DATABASE :" + connection.config.database + " CONNECTION : " + connectionName + " : " + error, "ERROR");
+          this.log("DATABASE :" + connection.config.database + " CONNECTION : " + connectionName + " : " + error, "ERROR");
           return reject(error);
         });
       }

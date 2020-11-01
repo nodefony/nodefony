@@ -84,7 +84,7 @@ class Connections extends nodefony.Service {
       data.push(connection.name || "");
       data.push(hosts || "");
       table.push(data);
-      this.logger(`${this.name} Connection ${connection.name} : \n${table.toString()}`, severity);
+      this.log(`${this.name} Connection ${connection.name} : \n${table.toString()}`, severity);
     } catch (e) {
       throw e;
     }

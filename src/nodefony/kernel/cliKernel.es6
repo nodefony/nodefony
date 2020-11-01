@@ -33,7 +33,7 @@ const optionsTitleTables = {
   style: styleTable
 };
 
-const createAssetDirectory = function(myPath, callback) {
+const createAssetDirectory = function (myPath, callback) {
   try {
     if (fs.existsSync(myPath)) {
       return callback(fs.statSync(myPath));
@@ -41,28 +41,28 @@ const createAssetDirectory = function(myPath, callback) {
     throw new Error(myPath + " don't exist");
   } catch (e) {
 
-    this.logger("Create directory : " + myPath);
+    this.log("Create directory : " + myPath);
     fs.mkdir(myPath, (e) => {
       if (!e || (e && e.code === 'EEXIST')) {
         callback(fs.statSync(myPath));
       } else {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
       }
     });
   }
 };
 
-const parseAssetsBundles = async function(table) {
+const parseAssetsBundles = async function (table) {
   let bundles = this.kernel.getBundles();
   let result = null;
   let name = null;
-  let files = [] ;
+  let files = [];
   for (let bundle in bundles) {
     try {
       result = await bundles[bundle].getPublicDirectory();
 
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
     }
     if (result && result.length) {
       name = bundles[bundle].bundleName;
@@ -76,7 +76,7 @@ const parseAssetsBundles = async function(table) {
             size = nodefony.niceBytes(this.getSizeDirectory(Srcpath, /^docs$|^tests|^node_modules|^assets$/));
             sizeAssets = nodefony.niceBytes(this.getSizeDirectory(path.resolve(Srcpath, "assets")));
           } catch (e) {
-            //this.logger(e, "ERROR");
+            //this.log(e, "ERROR");
           }
           table.push([
             bundle,
@@ -87,27 +87,27 @@ const parseAssetsBundles = async function(table) {
           ]);
         });
       } catch (e) {
-        this.logger(e, "DEBUG");
+        this.log(e, "DEBUG");
       }
     }
 
   }
   try {
-    this.logger("INSTALL LINK IN /web TOTAL SIZE : " + nodefony.niceBytes(this.getSizeDirectory(this.publicPath, /^docs$|^tests|^node_modules|^assets$/)), "DEBUG");
-    return files ;
+    this.log("INSTALL LINK IN /web TOTAL SIZE : " + nodefony.niceBytes(this.getSizeDirectory(this.publicPath, /^docs$|^tests|^node_modules|^assets$/)), "DEBUG");
+    return files;
   } catch (e) {
-    this.logger(e, "WARNING");
+    this.log(e, "WARNING");
   }
 };
 
 const regHidden = /^\./;
-const isHiddenFile = function(name) {
+const isHiddenFile = function (name) {
   return regHidden.test(name);
 };
 const defaultOptions = {
   type: "CONSOLE",
-  events:{
-    nbListeners:60,
+  events: {
+    nbListeners: 60,
     captureRejections: true
   }
 };
@@ -119,7 +119,7 @@ const defaultOptions = {
 class cliKernel extends nodefony.cli {
 
   constructor(name, container, notificationsCenter, options) {
-    super(name, container, notificationsCenter, nodefony.extend(true,defaultOptions, options));
+    super(name, container, notificationsCenter, nodefony.extend(true, defaultOptions, options));
     this.type = this.options.type;
     this.optionsTables = optionsTaskTables;
     this.optionsTitleTables = optionsTitleTables;
@@ -136,11 +136,11 @@ class cliKernel extends nodefony.cli {
     this.publicPath = null;
     this.keepAlive = false;
     switch (nodefony.packageManager) {
-      case 'yarn':
-        this.packageManager = this.yarn;
-        break;
-      default:
-        this.packageManager = this.npm;
+    case 'yarn':
+      this.packageManager = this.yarn;
+      break;
+    default:
+      this.packageManager = this.npm;
     }
     this.parseNodefonyCommand();
   }
@@ -161,16 +161,16 @@ class cliKernel extends nodefony.cli {
 
   setType(type) {
     switch (type) {
-      case "console":
-      case "CONSOLE":
-        this.type = "CONSOLE";
-        break;
-      case "server":
-      case "SERVER":
-        this.type = "SERVER";
-        break;
-      default:
-        throw new Error(`cliKernel Bad Type : ${type}`);
+    case "console":
+    case "CONSOLE":
+      this.type = "CONSOLE";
+      break;
+    case "server":
+    case "SERVER":
+      this.type = "SERVER";
+      break;
+    default:
+      throw new Error(`cliKernel Bad Type : ${type}`);
     }
   }
 
@@ -251,10 +251,10 @@ class cliKernel extends nodefony.cli {
         let instance = new nodefony.commands[cmd](this, this.kernel);
         this.commands.nodefony[instance.name] = instance;
         if (this.commander.debug) {
-          this.logger(`Register Command ${instance.name}`, "DEBUG", `Nodefony`);
+          this.log(`Register Command ${instance.name}`, "DEBUG", `Nodefony`);
         }
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         continue;
       }
     }
@@ -277,7 +277,7 @@ class cliKernel extends nodefony.cli {
           await this.kernel.bundles[bundle].registerCommand(this.classCommand[bundle]);
         } catch (e) {
           error.push(e);
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
           continue;
         }
         for (let i = 0; i < this.classCommand[bundle].length; i++) {
@@ -285,10 +285,10 @@ class cliKernel extends nodefony.cli {
             let instance = new this.classCommand[bundle][i](this, this.kernel.bundles[bundle]);
             this.commands[bundle][instance.name] = instance;
             if (this.commander.debug) {
-              this.logger(`Register Command ${instance.name}`, "DEBUG", `Bundle ${bundle}`);
+              this.log(`Register Command ${instance.name}`, "DEBUG", `Bundle ${bundle}`);
             }
           } catch (e) {
-            this.logger(e, "ERROR");
+            this.log(e, "ERROR");
             error.push(e);
             continue;
           }
@@ -358,7 +358,7 @@ class cliKernel extends nodefony.cli {
       }
     }
     return txt;
-    //this.logger(txt, "INFO", "COMMAND");
+    //this.log(txt, "INFO", "COMMAND");
   }
 
   matchCommand() {
@@ -374,7 +374,7 @@ class cliKernel extends nodefony.cli {
                 try {
                   return myCommand.showBanner()
                     .then(async () => {
-                      this.logger(this.logCommand(), "INFO", "COMMAND");
+                      this.log(this.logCommand(), "INFO", "COMMAND");
                       let res = await myAction.apply(myCommand, this.args);
                       if (nodefony.isPromise(res)) {
                         res.then(() => {
@@ -404,7 +404,7 @@ class cliKernel extends nodefony.cli {
                     try {
                       return myTask.showBanner()
                         .then(async () => {
-                          this.logger(this.logCommand(), "INFO", "COMMAND");
+                          this.log(this.logCommand(), "INFO", "COMMAND");
                           let res = await myAction.apply(myTask, this.args);
                           if (nodefony.isPromise(res)) {
                             res.then(() => {
@@ -426,7 +426,7 @@ class cliKernel extends nodefony.cli {
                   } else {
                     myTask.showHelp();
                     let error = new Error(this.logCommand() + " Action Not Found");
-                    //this.logger(error, "ERROR", "COMMAND");
+                    //this.log(error, "ERROR", "COMMAND");
                     throw error;
                     //return Promise.reject(error);
                   }
@@ -434,7 +434,7 @@ class cliKernel extends nodefony.cli {
                   // hook run
                   return myTask.showBanner()
                     .then(async () => {
-                      this.logger(this.logCommand(), "INFO", "COMMAND");
+                      this.log(this.logCommand(), "INFO", "COMMAND");
                       return await myTask.run.call(myCommand.tasks[this.task], this.args)
                         .then(() => {
                           return myCommand;
@@ -450,7 +450,7 @@ class cliKernel extends nodefony.cli {
               } else {
                 myCommand.showHelp();
                 let error = new Error(this.logCommand() + " Task Not Found");
-                //this.logger(error, "ERROR", "COMMAND");
+                //this.log(error, "ERROR", "COMMAND");
                 throw error;
                 //return Promise.reject(error);
               }
@@ -537,7 +537,7 @@ class cliKernel extends nodefony.cli {
     return this.git;
   }
 
-  initSyslog(environment, debug, options= {}) {
+  initSyslog(environment, debug, options = {}) {
     if (!this.kernel) {
       return super.initSyslog(environment, debug, options);
     }
@@ -549,29 +549,28 @@ class cliKernel extends nodefony.cli {
     if (debug || this.debug) {
       // INFO , DEBUG , WARNING
       data.push(7);
-    } else {
-      if (this.kernel.type === "SERVER" && this.kernel.environment === "dev") {
-        // EMERGENCY ALERT CRITIC ERROR INFO WARNING
-        data.push(0);
-        data.push(1);
-        data.push(2);
-        data.push(3);
-        data.push(4);
-        data.push(5);
-      } else {
-        // EMERGENCY ALERT CRITIC ERROR INFO
-        data.push(0);
-        data.push(1);
-        data.push(2);
-        data.push(3);
-      }
     }
-    syslog.listenWithConditions(this, {
+    if (this.kernel.type === "SERVER" && this.kernel.environment === "dev") {
+      // EMERGENCY ALERT CRITIC ERROR INFO WARNING
+      data.push(0);
+      data.push(1);
+      data.push(2);
+      data.push(3);
+      data.push(4);
+      data.push(5);
+    } else {
+      // EMERGENCY ALERT CRITIC ERROR INFO
+      data.push(0);
+      data.push(1);
+      data.push(2);
+      data.push(3);
+    }
+    syslog.listenWithConditions( {
       severity: {
         data: data
       }
     }, (pdu) => {
-        return nodefony.Syslog.normalizeLog.call(this, pdu, this.cluster);
+      return nodefony.Syslog.normalizeLog.call(this, pdu, this.cluster);
     });
   }
 
@@ -588,10 +587,10 @@ class cliKernel extends nodefony.cli {
             "ASSETS COMPILE"
           ]
         });
-        this.logger("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : " + this.publicPath, "DEBUG");
+        this.log("INSTALL ASSETS LINK IN WEB PUBLIC DIRECTORY  : " + this.publicPath, "DEBUG");
         createAssetDirectory.call(this, this.publicPath, async () => {
           let res = await parseAssetsBundles.call(this, table);
-          this.logger("\n" + table.toString(), "DEBUG");
+          this.log("\n" + table.toString(), "DEBUG");
           return resolve(res);
         });
 
@@ -612,22 +611,22 @@ class cliKernel extends nodefony.cli {
       }
       stat = fs.lstatSync(dir);
     } catch (e) {
-      //this.logger(e, "WARNING");
+      //this.log(e, "WARNING");
       return 0;
     }
 
     let files = null;
     switch (true) {
-      case stat.isFile():
-        throw new Error(dir + " is not a directory");
-      case stat.isDirectory():
-        files = fs.readdirSync(dir);
-        break;
-      case stat.isSymbolicLink():
-        files = fs.realpathSync(dir);
-        break;
-      default:
-        throw new Error(dir + " is not a directory");
+    case stat.isFile():
+      throw new Error(dir + " is not a directory");
+    case stat.isDirectory():
+      files = fs.readdirSync(dir);
+      break;
+    case stat.isSymbolicLink():
+      files = fs.realpathSync(dir);
+      break;
+    default:
+      throw new Error(dir + " is not a directory");
     }
     let totalSizeBytes = 0;
     let dirSize = null;
@@ -639,22 +638,22 @@ class cliKernel extends nodefony.cli {
         return totalSizeBytes;
       }
       switch (true) {
-        case stat.isFile():
-          if (!isHiddenFile(files[i])) {
-            totalSizeBytes += stat.size;
-          }
-          break;
-        case stat.isDirectory():
-          dirSize = this.getSizeDirectory(myPath, exclude);
+      case stat.isFile():
+        if (!isHiddenFile(files[i])) {
+          totalSizeBytes += stat.size;
+        }
+        break;
+      case stat.isDirectory():
+        dirSize = this.getSizeDirectory(myPath, exclude);
+        totalSizeBytes += dirSize;
+        break;
+      case stat.isSymbolicLink():
+        //console.log("isSymbolicLink")
+        try {
+          dirSize = this.getSizeDirectory(fs.realpathSync(myPath), exclude);
           totalSizeBytes += dirSize;
-          break;
-        case stat.isSymbolicLink():
-          //console.log("isSymbolicLink")
-          try {
-            dirSize = this.getSizeDirectory(fs.realpathSync(myPath), exclude);
-            totalSizeBytes += dirSize;
-          } catch (e) {}
-          break;
+        } catch (e) {}
+        break;
       }
     }
     return totalSizeBytes;
@@ -681,12 +680,12 @@ class cliKernel extends nodefony.cli {
         if (!e || (e && e.code === 'EEXIST')) {
           callback(srcpath, dstpath);
         } else {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
         }
       });
       callback(srcpath, dstpath);*/
     } catch (e) {
-      this.logger("FILE :" + srcpath + " not exist: " + e, "ERROR");
+      this.log("FILE :" + srcpath + " not exist: " + e, "ERROR");
     }
   }
 
@@ -735,11 +734,11 @@ class cliKernel extends nodefony.cli {
         config = path.resolve(cwd, "package.json");
         conf = require(config);
       } catch (e) {
-        this.logger("NODEFONY PACKAGES package.json not find in : " + cwd, "INFO");
+        this.log("NODEFONY PACKAGES package.json not find in : " + cwd, "INFO");
         this.cd(this.kernel.rootDir);
         return resolve(ele);
       }
-      this.logger("NODEFONY PACKAGES :" + config, "INFO");
+      this.log("NODEFONY PACKAGES :" + config, "INFO");
       npm.load(conf, (error, event) => {
         if (error) {
           this.cd(this.kernel.rootDir);
@@ -791,8 +790,8 @@ class cliKernel extends nodefony.cli {
       throw new Error("installPackage bundle must be an instance of nodefony.Bundle");
     } catch (e) {
       if (e.code !== "ENOENT") {
-        this.logger("Install Package BUNDLE : " + bundle.name + ":", "ERROR");
-        this.logger(e, "ERROR");
+        this.log("Install Package BUNDLE : " + bundle.name + ":", "ERROR");
+        this.log(e, "ERROR");
         throw e;
       }
       throw e;
@@ -802,11 +801,11 @@ class cliKernel extends nodefony.cli {
   async rebuildPackage(bundle, env = "development") {
     let cmd = null;
     switch (nodefony.packageManager) {
-      case 'yarn':
-        cmd = ["install", "--force"];
-        break;
-      default:
-        cmd = ["install"];
+    case 'yarn':
+      cmd = ["install", "--force"];
+      break;
+    default:
+      cmd = ["install"];
     }
     try {
       if (bundle instanceof nodefony.Bundle) {
@@ -820,8 +819,8 @@ class cliKernel extends nodefony.cli {
       throw new Error("rebuildPackage bundle must be an instance of nodefony.Bundle");
     } catch (e) {
       if (e.code !== "ENOENT") {
-        this.logger("rebuild Package BUNDLE : " + bundle.name + ":", "ERROR");
-        this.logger(e, "ERROR");
+        this.log("rebuild Package BUNDLE : " + bundle.name + ":", "ERROR");
+        this.log(e, "ERROR");
         throw e;
       }
       throw e;
@@ -839,8 +838,8 @@ class cliKernel extends nodefony.cli {
       throw new Error("Method outdatedPackage bundle must be an instance of nodefony.Bundle");
     } catch (e) {
       if (e.code !== "ENOENT") {
-        this.logger("Outdated  Package BUNDLE : " + bundle.name + ":", "ERROR");
-        this.logger(e, "ERROR");
+        this.log("Outdated  Package BUNDLE : " + bundle.name + ":", "ERROR");
+        this.log(e, "ERROR");
         throw e;
       }
       throw e;
@@ -849,11 +848,11 @@ class cliKernel extends nodefony.cli {
 
   listenRejection() {
     process.on('rejectionHandled', (promise) => {
-      this.logger("PROMISE REJECTION EVENT ", "CRITIC");
+      this.log("PROMISE REJECTION EVENT ", "CRITIC");
       this.unhandledRejections.delete(promise);
     });
     process.on('unhandledRejection', (reason, promise) => {
-      this.logger("WARNING  !!! PROMISE CHAIN BREAKING : " + reason, "WARNING");
+      this.log("WARNING  !!! PROMISE CHAIN BREAKING : " + reason, "WARNING");
       this.unhandledRejections.set(promise, reason);
       if (this.kernel && this.kernel.type === "SERVER") {
         console.trace(promise);

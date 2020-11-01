@@ -24,7 +24,7 @@ const load = function (name, pathFile) {
   let basename = path.basename(pathFile);
   let plug = this.plugins[name];
   if (!plug) {
-    this.logger("DROP FILE : " + mypath + " NO PLUGIN FIND : " + name, "WARNING");
+    this.log("DROP FILE : " + mypath + " NO PLUGIN FIND : " + name, "WARNING");
     return null;
   }
   let myName = Array.prototype.shift.call(arguments);
@@ -76,7 +76,7 @@ const load = function (name, pathFile) {
       }
       break;
     default:
-      this.logger("DROP FILE : " + mypath + " PLUGIN " + myName + " NO EXTENTION FIND : " + ext, "WARNING");
+      this.log("DROP FILE : " + mypath + " PLUGIN " + myName + " NO EXTENTION FIND : " + ext, "WARNING");
     }
   } catch (e) {
     throw e;
@@ -190,7 +190,7 @@ class Reader extends nodefony.Service {
           return resolve(data);
         });
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         return reject(e);
       }
     });
@@ -200,7 +200,7 @@ class Reader extends nodefony.Service {
     try {
       return fs.readFileSync(file, nodefony.extend({}, this.settings.readFile, localSettings));
     } catch (e) {
-      this.logger(e);
+      this.log(e);
       throw e;
     }
   }

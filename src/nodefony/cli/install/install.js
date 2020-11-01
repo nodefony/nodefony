@@ -4,11 +4,11 @@ module.exports = class installProject extends nodefony.Builder {
     super(cli);
   }
 
-  logger(pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = "INSTALLER";
     }
-    return super.logger(pci, severity, msgid, msg);
+    return super.log(pci, severity, msgid, msg);
   }
 
   async install(cwd = path.resolve(".")) {
@@ -72,7 +72,7 @@ module.exports = class installProject extends nodefony.Builder {
       }
       let cmd = null;
       try {
-        this.logger("npm link " + argv);
+        this.log("npm link " + argv);
         cmd = this.cli.spawn("npm", tab, {
           cwd: cwd,
           shell: true,
@@ -84,7 +84,7 @@ module.exports = class installProject extends nodefony.Builder {
           return resolve(cwd);
         });
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         return reject(e);
       }
     });
@@ -94,10 +94,10 @@ module.exports = class installProject extends nodefony.Builder {
     return new Promise((resolve, reject) => {
       try {
         let directory = path.resolve(cwd, "config", "certificates");
-        this.logger(`Clean certificates in : ${directory}`);
+        this.log(`Clean certificates in : ${directory}`);
         this.cli.rm("-rf", directory);
         this.checkDirectoryExist(directory);
-        this.logger(`Generate openssl certificates in : ${directory}`);
+        this.log(`Generate openssl certificates in : ${directory}`);
         let cmd = null;
         cmd = this.cli.spawn(path.resolve(cwd, "bin", "generateCertificates.sh"), [], {
           cwd: cwd,
@@ -117,7 +117,7 @@ module.exports = class installProject extends nodefony.Builder {
 
   async installFramework(cwd = path.resolve(".")) {
     return new Promise((resolve, reject) => {
-      this.logger("Create Framework directories");
+      this.log("Create Framework directories");
       try {
         let tmp = path.resolve(cwd, "tmp");
         this.checkDirectoryExist(tmp);
@@ -158,7 +158,7 @@ module.exports = class installProject extends nodefony.Builder {
     if (!this.cli.exists(directory)) {
       try {
         this.cli.mkdir(directory);
-        this.logger(`Create directory ${directory}`);
+        this.log(`Create directory ${directory}`);
       } catch (e) {
         throw e;
       }
@@ -173,7 +173,7 @@ module.exports = class installProject extends nodefony.Builder {
         } else {
           this.cli.rm("-f", directory);
         }
-        this.logger(`Remove directory ${directory}`);
+        this.log(`Remove directory ${directory}`);
       } catch (e) {
         throw e;
       }

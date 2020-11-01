@@ -20,7 +20,7 @@ module.exports = class git extends nodefony.Service {
     if (this.kernel.type === "SERVER" && this.kernel.isCore) {
       this.getProjectTags(true)
         .catch((err) => {
-          this.logger(err, "ERROR");
+          this.log(err, "ERROR");
         });
       this.cloneNodefony()
         .then((current) => {
@@ -28,7 +28,7 @@ module.exports = class git extends nodefony.Service {
           return this.getNodefonyTags(true)
             .then((tags) => {
               if (useNodefonyVersion !== current) {
-                this.logger(`Change Documentation version to : ${useNodefonyVersion}`);
+                this.log(`Change Documentation version to : ${useNodefonyVersion}`);
                 if (tags.all.indexOf(useNodefonyVersion) >= 0) {
                   return this.checkoutVersion(useNodefonyVersion, "nodefony")
                     .then((newCurrent) => {
@@ -44,7 +44,7 @@ module.exports = class git extends nodefony.Service {
               throw err;
             });
         }).catch((err) => {
-          this.logger(err, "ERROR");
+          this.log(err, "ERROR");
         });
     }
   }
@@ -79,16 +79,16 @@ module.exports = class git extends nodefony.Service {
       return this.initCloneRepo(true);
     }
     const Git = promiseGit(this.clonePath);
-    this.logger(`git clone nodefony documentation in ${this.clonePath}`);
+    this.log(`git clone nodefony documentation in ${this.clonePath}`);
     return Git
       .silent(true)
       .clone(remote)
       .then(() => {
-        this.logger(`git clone ok nodefony documentation`);
+        this.log(`git clone ok nodefony documentation`);
         return this.initCloneRepo();
       })
       .catch((err) => {
-        this.logger(err, "ERROR");
+        this.log(err, "ERROR");
       });
   }
 
@@ -97,7 +97,7 @@ module.exports = class git extends nodefony.Service {
     if (pull) {
       return this.pull(this.cloneGit, this.currentVersion)
         .then((PullSummary) => {
-          this.logger(PullSummary, "DEBUG");
+          this.log(PullSummary, "DEBUG");
           return this.getCurrentBranch(this.cloneGit)
             .then((current) => {
               this.currentVersion = current;
@@ -175,12 +175,12 @@ module.exports = class git extends nodefony.Service {
   }
 
   checkoutVersion(version, repo) {
-    this.logger(`Checkout Documentation :  ${version}`);
+    this.log(`Checkout Documentation :  ${version}`);
     return this.getRepo(repo).checkout(version)
       .then(() => {
         return this.getCurrentBranch(this.cloneGit)
           .then((current) => {
-            this.logger(`Documentation version:  ${current}`);
+            this.log(`Documentation version:  ${current}`);
             this.currentVersion = current;
             return current;
           });

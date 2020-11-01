@@ -45,7 +45,7 @@ module.exports = class httpsServer extends nodefony.Service {
           this.kernel.httpsPort = addr.port;
           this.kernel.hostHttps = this.kernel.hostname + ":" + addr.port;
           this.family = addr.family;
-          this.logger("Listening on DOMAIN : https://" + this.domain + ":" + this.port, "INFO");
+          this.log("Listening on DOMAIN : https://" + this.domain + ":" + this.port, "INFO");
           /*dns.lookup(this.domain, (err, addresses, family) => {
             if (err) {
               throw err;
@@ -90,9 +90,9 @@ module.exports = class httpsServer extends nodefony.Service {
       this.protocol = this.kernel.settings.system.servers.protocol;
     } else {
       if (this.kernel.settings.system.servers.protocol) {
-        this.logger(this.kernel.settings.system.servers.protocol + " not implemented ", 'WARNING');
+        this.log(this.kernel.settings.system.servers.protocol + " not implemented ", 'WARNING');
       } else {
-        this.logger("BAD config servers https protocol not defined !! check framework config", 'WARNING');
+        this.log("BAD config servers https protocol not defined !! check framework config", 'WARNING');
       }
       this.protocol = "1.1";
     }
@@ -104,22 +104,22 @@ module.exports = class httpsServer extends nodefony.Service {
       for (let ele in this.options) {
         switch (ele) {
         case "keyPath":
-          this.logger(" READ CERTIFICATE KEY : " + this.options[ele], "DEBUG");
+          this.log(" READ CERTIFICATE KEY : " + this.options[ele], "DEBUG");
           break;
         case "certPath":
-          this.logger(" READ CERTIFICATE CERT : " + this.options[ele], "DEBUG");
+          this.log(" READ CERTIFICATE CERT : " + this.options[ele], "DEBUG");
           break;
         case "caPath":
           if (this.options[ele]) {
-            this.logger(" READ CERTIFICATE CA : " + this.options[ele], "DEBUG");
+            this.log(" READ CERTIFICATE CA : " + this.options[ele], "DEBUG");
           } else {
-            this.logger(" NO CERTIFICATE CA : " + this.options[ele], "WARNING");
+            this.log(" NO CERTIFICATE CA : " + this.options[ele], "WARNING");
           }
           break;
         }
       }
     } catch (e) {
-      this.logger(e);
+      this.log(e);
       throw e;
     }
     try {
@@ -136,16 +136,16 @@ module.exports = class httpsServer extends nodefony.Service {
         this.server = http2.createSecureServer(this.options);
         this.bundle.fire("onCreateServer", this.type, this);
         this.server.on("sessionError", (error) => {
-          this.logger(error, "ERROR", "HTTP2 Server sessionError");
+          this.log(error, "ERROR", "HTTP2 Server sessionError");
         });
         this.server.on("streamError", (error) => {
-          this.logger(error, "ERROR", "HTTP2 Server streamError");
+          this.log(error, "ERROR", "HTTP2 Server streamError");
         });
         break;
       default:
       }
     } catch (e) {
-      this.logger(e, "CRITIC");
+      this.log(e, "CRITIC");
       throw e;
     }
 
@@ -185,18 +185,18 @@ module.exports = class httpsServer extends nodefony.Service {
       let myError = new nodefony.Error(error);
       switch (error.errno) {
       case "ENOTFOUND":
-        this.logger("CHECK DOMAIN IN /etc/hosts or config unable to connect to : " + this.domain, "ERROR");
-        this.logger(myError, "CRITIC");
+        this.log("CHECK DOMAIN IN /etc/hosts or config unable to connect to : " + this.domain, "ERROR");
+        this.log(myError, "CRITIC");
         break;
       case "EADDRINUSE":
-        this.logger("Domain : " + this.domain + " Port : " + this.port + " ==> ALREADY USE ", "ERROR");
-        this.logger(myError, "CRITIC");
+        this.log("Domain : " + this.domain + " Port : " + this.port + " ==> ALREADY USE ", "ERROR");
+        this.log(myError, "CRITIC");
         setTimeout(() => {
           this.server.close();
         }, 1000);
         break;
       default:
-        this.logger(myError, "CRITIC");
+        this.log(myError, "CRITIC");
       }
     });
 
@@ -207,7 +207,7 @@ module.exports = class httpsServer extends nodefony.Service {
     this.on("onTerminate", () => {
       if (this.server) {
         this.server.close(() => {
-          this.logger(this.type + " SHUTDOWN Server is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
+          this.log(this.type + " SHUTDOWN Server is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
         });
       }
     });

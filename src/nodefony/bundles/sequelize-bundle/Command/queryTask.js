@@ -17,7 +17,7 @@ class queryTask extends nodefony.Task {
         try {
           return this.query(db, sql)
             .catch((error) => {
-              this.logger(error, "ERROR");
+              this.log(error, "ERROR");
               return reject(error);
             })
             .then((result) => {
@@ -33,7 +33,7 @@ class queryTask extends nodefony.Task {
         this.ormService.listen(this, "onOrmReady", function ( /*service*/ ) {
           return this.query(db, sql)
             .catch((error) => {
-              this.logger(error, "ERROR");
+              this.log(error, "ERROR");
               return reject(error);
             })
             .then((result) => {
@@ -49,7 +49,7 @@ class queryTask extends nodefony.Task {
   query(db, sql) {
     let conn = this.ormService.getConnection(db);
     if (!conn) {
-      this.logger("CONNECTION : " + db + " NOT FOUND", "ERROR");
+      this.log("CONNECTION : " + db + " NOT FOUND", "ERROR");
       throw new Error("CONNECTION : " + db + " NOT FOUND");
     }
     return conn.query(sql);

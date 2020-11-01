@@ -16,13 +16,13 @@ module.exports = class upload extends nodefony.Service {
       let res = fs.existsSync(this.path);
       if (!res) {
         // create directory
-        this.logger("create directory FOR UPLOAD FILE " + this.path, "DEBUG");
+        this.log("create directory FOR UPLOAD FILE " + this.path, "DEBUG");
         try {
           res = fs.mkdirSync(this.path);
         } catch (e) {
           this.path = "/tmp";
           this.httpKernel.settings.request.uploadDir = this.path;
-          this.logger(e, "DEBUG");
+          this.log(e, "DEBUG");
         }
       }
     });

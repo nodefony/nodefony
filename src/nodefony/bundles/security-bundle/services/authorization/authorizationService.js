@@ -49,7 +49,7 @@ module.exports = class Authorization extends nodefony.Service {
         if (access.pattern) {
           this.accessControl.push(access);
         } else {
-          this.logger(`Access Control no path option in ${util.inspect(config)}`, "WARNING");
+          this.log(`Access Control no path option in ${util.inspect(config)}`, "WARNING");
         }
         //console.log(this.accessControl)
         break;

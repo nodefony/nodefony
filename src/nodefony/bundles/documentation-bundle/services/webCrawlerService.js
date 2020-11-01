@@ -5,7 +5,7 @@ const https = require('https');
 const async = require("async");
 
 const makeRequestHttp = function (link, context, callback) {
-  this.logger("REQUEST : " + link, "DEBUG");
+  this.log("REQUEST : " + link, "DEBUG");
   let myurl = url.parse(link);
   // cookie session
   let headers = {};
@@ -48,7 +48,7 @@ const makeRequestHttp = function (link, context, callback) {
     var bodyRaw = "";
     res.setEncoding('utf8');
     res.on('data', (chunk) => {
-      //this.logger( chunk, "DEBUG");
+      //this.log( chunk, "DEBUG");
       bodyRaw += chunk;
     });
     res.on('end', () => {
@@ -56,7 +56,7 @@ const makeRequestHttp = function (link, context, callback) {
     });
   });
   req.on('error', (e) => {
-    this.logger('Problem with request: ' + e.message, "ERROR");
+    this.log('Problem with request: ' + e.message, "ERROR");
   });
   req.end();
 };
@@ -196,7 +196,7 @@ module.exports = class webCrawler extends nodefony.Service {
             }
           }
         } catch (e) {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
         }
         callback(obj);
       }, recurse);

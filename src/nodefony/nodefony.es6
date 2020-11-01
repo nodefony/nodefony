@@ -1,4 +1,5 @@
 const execSync = require('child_process').execSync;
+const uuid = require("uuid");
 
 /**
  *  The class is a **`Nodefony Nodefony `** .
@@ -80,6 +81,10 @@ class Nodefony {
     } catch (e) {
       return false;
     }
+  }
+
+  generateId(...args){
+    return uuid.v4(...args);
   }
 
   setConfig(cwd = path.resolve(".")) {

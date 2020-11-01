@@ -15,7 +15,7 @@ module.exports = nodefony.registerCommand("decoders", function () {
             saltRounds: args[2] || null
           });
           let res = bcrypt.isPasswordValid(args[0], args[1]);
-          this.logger(`Is passport valid  : ${res}`);
+          this.log(`Is passport valid  : ${res}`);
         } else {
           throw new Error("no passwordField ");
         }

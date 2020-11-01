@@ -18,7 +18,7 @@ module.exports = nodefony.registerFactory("passport-oauth2", () => {
       return new Promise((resolve, reject) => {
         try {
           let strategy = new Strategy(options, (accessToken, refreshToken, params, profile, done) => {
-            this.logger("TRY AUTHENTICATION " + this.name, "INFO");
+            this.log("TRY AUTHENTICATION " + this.name, "INFO");
             let mytoken = null;
             try {
               mytoken = new nodefony.security.tokens.oauth2(profile, params, accessToken, refreshToken);

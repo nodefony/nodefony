@@ -20,12 +20,12 @@ module.exports = class generateBuilder extends nodefony.Builder {
     this.choices.push("Quit");
   }
 
-  logger(pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     try {
       if (!msgid) {
         msgid = "GENERATER";
       }
-      return this.cli.logger(pci, severity, msgid, msg);
+      return this.cli.log(pci, severity, msgid, msg);
     } catch (e) {
       console.log(pci);
     }
@@ -63,7 +63,7 @@ module.exports = class generateBuilder extends nodefony.Builder {
             return "quit";
           default:
             console.log("\n");
-            this.logger(`command not found : ${val}`, "INFO");
+            this.log(`command not found : ${val}`, "INFO");
             this.cli.terminate(1);
           }
         }
@@ -97,7 +97,7 @@ module.exports = class generateBuilder extends nodefony.Builder {
     case "quit":
       return this.cli.setCommand("showmenu");
     default:
-      this.logger(`Command : ${response.command} Not Found`, "ERROR");
+      this.log(`Command : ${response.command} Not Found`, "ERROR");
       return this.cli.setCommand("", "-h");
     }
   }

@@ -20,12 +20,12 @@ module.exports = class toolsBuilder extends nodefony.Builder {
     this.choices.push("Quit");
   }
 
-  logger(pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     try {
       if (!msgid) {
         msgid = "TOOLS";
       }
-      return this.cli.logger(pci, severity, msgid, msg);
+      return this.cli.log(pci, severity, msgid, msg);
     } catch (e) {
       console.log(pci);
     }
@@ -51,7 +51,7 @@ module.exports = class toolsBuilder extends nodefony.Builder {
             return "quit";
           default:
             console.log("\n");
-            this.logger(`command not found : ${val}`, "INFO");
+            this.log(`command not found : ${val}`, "INFO");
             this.cli.terminate(1);
           }
         }
@@ -73,7 +73,7 @@ module.exports = class toolsBuilder extends nodefony.Builder {
     case "quit":
       return this.cli.setCommand("showmenu");
     default:
-      this.logger(`Command : ${response.command} Not Found`, "ERROR");
+      this.log(`Command : ${response.command} Not Found`, "ERROR");
       return this.cli.setCommand("", "-h");
     }
   }
@@ -83,14 +83,14 @@ module.exports = class toolsBuilder extends nodefony.Builder {
       let installer = new builderInstall(this.cli);
       return installer.clear(cwd)
         .then(() => {
-          this.logger("Clean Project Complete");
+          this.log("Clean Project Complete");
           this.cli.terminate(0);
         }).catch((e) => {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
           throw e;
         });
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
   }

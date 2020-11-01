@@ -111,7 +111,7 @@ class nginxTask extends nodefony.Task {
     let res = nodefony.extend({}, this.defaultResponse, response);
     return this.createConfigFile(res)
       .then((file) => {
-        this.logger(`Success Creation Configuration File :  ${file.path} `);
+        this.log(`Success Creation Configuration File :  ${file.path} `);
         return file;
       });
   }

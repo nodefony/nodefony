@@ -70,12 +70,12 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
           this.urlDiscovry = Url;
         }
       }
-      this.logger(`openID DISCOVERY url : ${this.urlDiscovry.href}`, "INFO");
+      this.log(`openID DISCOVERY url : ${this.urlDiscovry.href}`, "INFO");
       return this.http(this.urlDiscovry.href, options)
         .then((response) => {
           return response.json.body;
         }).catch((e) => {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
           throw e;
         });
     }
@@ -120,7 +120,7 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
           return new Promise((resolve, reject) => {
             try {
               this.strategy = new openidStrategy(this.settings, (accessToken, refreshToken, params, profile, done) => {
-                this.logger("TRY AUTHENTICATION " + this.name, "INFO");
+                this.log("TRY AUTHENTICATION " + this.name, "INFO");
                 let mytoken = null;
                 try {
                   mytoken = new nodefony.security.tokens.openid(profile, params, accessToken, refreshToken);
@@ -142,14 +142,14 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
             }
           });
         }).catch(e => {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
           throw e;
         });
       }
       return new Promise((resolve, reject) => {
         try {
           this.strategy = new openidStrategy(options, (accessToken, refreshToken, params, profile, done) => {
-            this.logger("TRY AUTHENTICATION " + this.name, "INFO");
+            this.log("TRY AUTHENTICATION " + this.name, "INFO");
             let mytoken = null;
             try {
               mytoken = new nodefony.security.tokens.openid(profile, params, accessToken, refreshToken);
@@ -187,7 +187,7 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
               if (token) {
                 token.setAuthenticated(true);
                 token.setFactory(this.name);
-                this.logger(`AUTHENTICATION ${token.getUsername()} SUCCESSFULLY`, "INFO");
+                this.log(`AUTHENTICATION ${token.getUsername()} SUCCESSFULLY`, "INFO");
                 return resolve(token);
               }
               return resolve(null);
@@ -203,13 +203,13 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
 
     logout(context) {
       if (this.logoutUrl) {
-        this.logger(`logout url : ${this.logoutUrl}`, "INFO");
+        this.log(`logout url : ${this.logoutUrl}`, "INFO");
         return new Promise((resolve, reject) => {
           if (this.strategy) {
             this.strategy._oauth2.get(this.logoutUrl, context.token.accessToken, (err /*, body , res*/ ) => {
               if (err) {
                 let error = new nodefony.securityError(err.data, err.statusCode, this.security, context);
-                this.logger(error, "ERROR");
+                this.log(error, "ERROR");
                 return reject(super.logout(context));
               }
               return resolve(super.logout(context));

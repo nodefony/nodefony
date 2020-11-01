@@ -15,7 +15,7 @@
     return new Promise((resolve, reject)=>{
       try{
         let orm = this.get("sequelize");
-        this.logger(`Waiting.... orm connections`,"DEBUG");
+        this.log(`Waiting.... orm connections`,"DEBUG");
         orm.prependOnceListener("onOrmReady", async () => {
           this.fire("onReady", this, orm);
           resolve(await super.boot());

@@ -16,11 +16,11 @@ class AccessControl {
     this.actived = false;
   }
 
-  logger(pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = "\x1b[36mAccess Control\x1b[0m";
     }
-    return this.authorization.logger(pci, severity, msgid, msg);
+    return this.authorization.log(pci, severity, msgid, msg);
   }
 
   handle(context) {
@@ -86,7 +86,7 @@ class AccessControl {
       }
       return ret;
     } catch (e) {
-      this.logger(e, "WARNING");
+      this.log(e, "WARNING");
       return false;
     }
   }
@@ -265,7 +265,7 @@ class AccessControl {
           this.setIp(conf[ele], this.allowIp);
           break;
         default:
-          this.logger(`Access Control Bad config  ${ele} no defined in allow_if options`, "WARNING");
+          this.log(`Access Control Bad config  ${ele} no defined in allow_if options`, "WARNING");
         }
       }
       break;

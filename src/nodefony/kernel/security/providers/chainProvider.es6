@@ -23,7 +23,7 @@ module.exports = nodefony.registerProvider("chainProvider", () => {
         this.providers.push(provider);
         this.nbProviders++;
       } else {
-        this.logger(new Error(`In Chain Provider ${name} not exist `), "ERROR");
+        this.log(new Error(`In Chain Provider ${name} not exist `), "ERROR");
       }
     }
 

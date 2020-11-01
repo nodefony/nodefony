@@ -271,7 +271,7 @@ class Annotation extends nodefony.Service {
           let annotations = new annotationRouting(this, this.kernel.getBundle(bundle), file);
           annotations.parse(comments);
           if (Object.keys(annotations.obj).length) {
-            this.logger("Bundle " + bundle + " Parse Controller Annotation : " + file, "DEBUG");
+            this.log("Bundle " + bundle + " Parse Controller Annotation : " + file, "DEBUG");
           }
           return annotations.obj;
         } catch (e) {

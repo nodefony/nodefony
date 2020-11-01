@@ -81,11 +81,11 @@ const sockCompiler = class sockCompiler extends nodefony.Service {
     return this.service.sockWrite(type, data, connection);
   }
 
-  logger(pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = "WEBPACK COMPILER " + this.name.toUpperCase();
     }
-    return super.logger(pci, severity, msgid, msg);
+    return super.log(pci, severity, msgid, msg);
   }
 };
 
@@ -146,7 +146,7 @@ module.exports = class sockjs extends nodefony.Service {
 
   addCompiler(compiler, basename, config = {}) {
     this.compilers[basename] = new sockCompiler(this, "SOCKJS_" + basename, compiler);
-    this.logger("Add sock-js compiler  : " + "SOCKJS_" + basename, "DEBUG");
+    this.log("Add sock-js compiler  : " + "SOCKJS_" + basename, "DEBUG");
     this.log("dev config : " + config, "DEBUG");
     if (this.compilers[basename].initsockClient) {
       this.removeListener("onConnection", this.compilers[basename].initsockClient);
@@ -161,7 +161,7 @@ module.exports = class sockjs extends nodefony.Service {
         if (addInfo) {
           msg = `${msg} (${addInfo})`;
         }
-        this.compilers[basename].logger(`${percent} % : ${msg}`, "INFO", `WEBPACK ${this.compilers[basename].name} Progress`);
+        this.compilers[basename].log(`${percent} % : ${msg}`, "INFO", `WEBPACK ${this.compilers[basename].name} Progress`);
         this.sockWrite('progress-update', {
           percent,
           msg
@@ -171,7 +171,7 @@ module.exports = class sockjs extends nodefony.Service {
       try {
         progressPlugin.apply(compiler);
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
       }
     }
     this.compilers[basename].initsockClient = (conn /*, server, index*/ ) => {
@@ -201,16 +201,16 @@ module.exports = class sockjs extends nodefony.Service {
 
   createServer(service, protocol) {
     try {
-      this.logger(" Create sockjs server :   " + service.type);
+      this.log(" Create sockjs server :   " + service.type);
       this[protocol] = Sockjs.createServer({
         sockjs_url: '/__webpack_dev_server__/sockjs.bundle.js',
         websocket: this.websocket,
         prefix: this.prefix,
         log: (severity, line) => {
           if (severity === "error") {
-            this.logger(severity + " " + line, "ERROR");
+            this.log(severity + " " + line, "ERROR");
           } else {
-            this.logger(severity + " " + line, "DEBUG");
+            this.log(severity + " " + line, "DEBUG");
           }
         }
       });
@@ -224,7 +224,7 @@ module.exports = class sockjs extends nodefony.Service {
           this.fire("onConnection", conn, this[protocol], index);
         }
         conn.on("close", () => {
-          this.logger(" Close Connection " + this.name, "DEBUG");
+          this.log(" Close Connection " + this.name, "DEBUG");
           if (this.websocketServer) {
             this.websocketServer.removePendingRequests(conn.url);
           }
@@ -237,7 +237,7 @@ module.exports = class sockjs extends nodefony.Service {
       this[protocol].installHandlers(service.server);
       return this[protocol];
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
   }
@@ -274,18 +274,18 @@ module.exports = class sockjs extends nodefony.Service {
       }
       if (connection) {
         if (type !== "progress-update") {
-          this.logger(type, "DEBUG");
+          this.log(type, "DEBUG");
         }
         return connection.write(msg);
       }
       this.sockets.forEach((sock) => {
         if (type !== "progress-update") {
-          this.logger(type, "DEBUG");
+          this.log(type, "DEBUG");
         }
         sock.write(msg);
       });
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
   }

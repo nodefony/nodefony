@@ -59,14 +59,14 @@ module.exports = class sessions extends nodefony.Service {
       });
     } else {
       this.storage = null;
-      this.logger("SESSION HANDLER STORAGE NOT FOUND :" + this.settings.handler, "ERROR");
+      this.log("SESSION HANDLER STORAGE NOT FOUND :" + this.settings.handler, "ERROR");
     }
     return this.storage;
   }
 
   start(context, sessionContext) {
     if ( context.sessionStarting ){
-      this.logger("SESSION ALLREADY STARTED ", "DEBUG");
+      this.log("SESSION ALLREADY STARTED ", "DEBUG");
       return new Promise( (resolve) =>{
         context.once("onSessionStart", (session) =>{
           return resolve(session);
@@ -76,7 +76,7 @@ module.exports = class sessions extends nodefony.Service {
     return new Promise((resolve, reject) => {
       if (context.session ) {
         if (context.session.status === "active") {
-          this.logger("SESSION ALLREADY STARTED ==> " + context.session.name + " : " + context.session.id, "DEBUG");
+          this.log("SESSION ALLREADY STARTED ==> " + context.session.name + " : " + context.session.id, "DEBUG");
           return resolve(context.session);
         }
       }

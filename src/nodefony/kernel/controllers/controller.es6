@@ -49,11 +49,11 @@ class Controller extends nodefony.Service {
     return this.context.setContextHtml(encoding);
   }
 
-  logger(pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = `Controller : ${this.bundle.name}Bundle:${this.name}`;
     }
-    return super.logger(pci, severity, msgid, msg);
+    return super.log(pci, severity, msgid, msg);
   }
 
   clean() {
@@ -108,7 +108,7 @@ class Controller extends nodefony.Service {
     if (session) {
       return session.getFlashBag(key);
     } else {
-      this.logger("getFlashBag session not started !", "ERROR");
+      this.log("getFlashBag session not started !", "ERROR");
       return null;
     }
   }
@@ -211,12 +211,12 @@ class Controller extends nodefony.Service {
    * this.push(path.resolve(this.bundle.publicPath, "assets", "css", "app.css"), {
    *  path: "/app/assets/css/app.css"
    * }).catch((e) => {
-   *  this.logger(e, "ERROR");
+   *  this.log(e, "ERROR");
    * });
    * this.push(path.resolve(this.bundle.publicPath, "assets", "js", "app.js"), {
    *  path: "/app/assets/js/app.js"
    * }).catch((e) => {
-   *  this.logger(e, "ERROR");
+   *  this.log(e, "ERROR");
    * });
    **/
   push(asset, headers, options) {
@@ -235,8 +235,8 @@ class Controller extends nodefony.Service {
       try {
         return this.response.push(asset, headers, options)
           .catch((error) => {
-            this.logger(`HTTP2 push error  : ${asset}`, "ERROR");
-            this.logger(error, "ERROR");
+            this.log(`HTTP2 push error  : ${asset}`, "ERROR");
+            this.log(error, "ERROR");
             return error;
           });
       } catch (e) {
@@ -248,12 +248,12 @@ class Controller extends nodefony.Service {
       return new Promise((resolve /*, reject*/ ) => {
         if (this.context.type !== "HTTP2") {
           //let error = `HTTP2 push : ${asset} method must be called with HTTP2 request !!!!`;
-          //this.logger(error, "WARNING");
+          //this.log(error, "WARNING");
           return resolve();
           //return reject();
         }
         let error = `HTTP2 Server push : ${asset} not pushAllowed `;
-        this.logger(error, "WARNING");
+        this.log(error, "WARNING");
         return resolve();
         //return reject(new Error("HTTP2 Server push not pushAllowed"));
       });
@@ -276,7 +276,7 @@ class Controller extends nodefony.Service {
         return this.context.send(result);
       })
       .catch((e) => {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         this.createException(e);
         return e;
       });
@@ -293,7 +293,7 @@ class Controller extends nodefony.Service {
       }
       return data;
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
   }
@@ -321,7 +321,7 @@ class Controller extends nodefony.Service {
       .then((result) => {
         return this.context.send(result);
       }).catch((e) => {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         this.createException(e);
         return e;
       });
@@ -344,7 +344,7 @@ class Controller extends nodefony.Service {
       }
       return data;
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
 
@@ -377,7 +377,7 @@ class Controller extends nodefony.Service {
       .then((result) => {
         return this.context.send(result);
       }).catch((e) => {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         this.createException(e);
         return e;
       });
@@ -507,7 +507,7 @@ class Controller extends nodefony.Service {
     try {
       this.response.streamFile = fs.createReadStream(this.getFile(file).path, options);
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
     this.response.streamFile.on("open", () => {
@@ -519,7 +519,7 @@ class Controller extends nodefony.Service {
           end: false
         });
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         throw e;
       }
     });
@@ -534,7 +534,7 @@ class Controller extends nodefony.Service {
             }
           }
         } catch (e) {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
           throw e;
         }
       }
@@ -555,7 +555,7 @@ class Controller extends nodefony.Service {
       }
     });
     this.response.streamFile.on("error", (error) => {
-      this.logger(error, "ERROR");
+      this.log(error, "ERROR");
       if (!this.response.ended) {
         this.response.end();
       }
@@ -756,7 +756,7 @@ class Controller extends nodefony.Service {
           .then(() => {
             return resolve(true);
           }).catch(e => {
-            this.logger(e, "ERROR");
+            this.log(e, "ERROR");
             return reject(e);
           });
       }

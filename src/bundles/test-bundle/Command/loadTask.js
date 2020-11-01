@@ -13,11 +13,11 @@ const request = function (url, options) {
       }, 1000);
 
       connection.on("message", (message) => {
-        this.logger(message, "INFO");
+        this.log(message, "INFO");
         assert(message);
       });
       connection.on('close', (reasonCode, description) => {
-        this.logger(description, "INFO", `CLOSE WEBSOKET : ${reasonCode}`);
+        this.log(description, "INFO", `CLOSE WEBSOKET : ${reasonCode}`);
         if ( ! this.result[reasonCode] ){
           this.result[reasonCode] = 0;
         }
@@ -27,12 +27,12 @@ const request = function (url, options) {
       });
       connection.on('error', (error) => {
         this.result.errors += 1;
-        this.logger(error, "ERROR");
+        this.log(error, "ERROR");
       });
 
     });
     client.on('connectFailed', (error) => {
-      this.logger(error, "ERROR");
+      this.log(error, "ERROR");
       return reject(error);
     });
   });
@@ -52,7 +52,7 @@ const requestConcurence = function (url, options, concurence) {
           j++;
         })
         .catch((error) => {
-          this.logger(error, "ERROR");
+          this.log(error, "ERROR");
           console.log("then : ", j , concurence);
           j++;
         });
@@ -110,7 +110,7 @@ class loadTask extends nodefony.Task {
         for (;;) {
           try {
             let res = await requestConcurence.call(this, url, options, conc);
-            this.logger({
+            this.log({
               res: res,
               i: i,
               nb: nb
@@ -121,12 +121,12 @@ class loadTask extends nodefony.Task {
             }
             i += res;
           } catch (e) {
-            this.logger(error, "ERROR");
+            this.log(error, "ERROR");
             break;
           }
         }
       } catch (e) {
-        this.logger(error, "ERROR");
+        this.log(error, "ERROR");
       }
 
     });

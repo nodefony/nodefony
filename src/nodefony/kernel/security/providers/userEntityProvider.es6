@@ -37,7 +37,7 @@ class userEntityProvider extends nodefony.Provider {
     try {
       let ret = this.entity.hasEncoder();
       if (ret) {
-        this.logger(`Check Password Valid `, "DEBUG", `ENCODER ${this.encoder.name}`);
+        this.log(`Check Password Valid `, "DEBUG", `ENCODER ${this.encoder.name}`);
         return await this.encoder.isPasswordValid(raw, encoded);
       }
       return await super.isPasswordValid(raw, encoded);

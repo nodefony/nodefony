@@ -34,7 +34,7 @@ module.exports = class boat extends nodefony.Entity {
 
   registerModel(db) {
     let model = db.define(this.name, this.getSchema(), {
-      logging: this.logger.bind(this)
+      logging: this.log.bind(this)
     });
     return model;
   }

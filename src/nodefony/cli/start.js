@@ -39,7 +39,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
     // EVENTS ACTION
     this.commander.arguments(`[cmd] [args...]`)
       .action((cmd, args, commander) => {
-        //this.logger(`Commnand : ${cmd} Arguments : ${args}`, "DEBUG", "CLI EVENT ACTION");
+        //this.log(`Commnand : ${cmd} Arguments : ${args}`, "DEBUG", "CLI EVENT ACTION");
         //this.cmd = cmd ? cmd.toLowerCase() : null;
         this.cmd = cmd;
         this.rawCommand = cmd;
@@ -51,7 +51,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
   }
 
   async setCommand(cmd, args = []) {
-    //this.logger(`Commnand : ${cmd} Arguments : ${args}`, "DEBUG", "COMMAND");
+    //this.log(`Commnand : ${cmd} Arguments : ${args}`, "DEBUG", "COMMAND");
     this.clearCommand();
     if (cmd) {
       process.argv.push(cmd);
@@ -61,7 +61,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
   }
 
   onStart(cmd = this.cmd, args = this.args) {
-    //this.logger(`Commnand : ${cmd} Arguments : ${args}`, "DEBUG", "CLI ONSTART");
+    //this.log(`Commnand : ${cmd} Arguments : ${args}`, "DEBUG", "CLI ONSTART");
     this.interactive = this.commander.interactive || false;
     if (!cmd && !process.argv.slice(2).length && (!process.argv[2])) {
       this.buildMenu();
@@ -73,7 +73,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
               return this.showMenu(true, this.reloadMenu);
             }
             if (e) {
-              this.logger(e, "ERROR");
+              this.log(e, "ERROR");
               return this.terminate(e.code || 1);
             }
             return this.terminate(1);
@@ -89,7 +89,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
               return this.showMenu(true, this.reloadMenu);
             }
             if (e) {
-              this.logger(e, "ERROR");
+              this.log(e, "ERROR");
               return this.terminate(e.code || 1);
             }
             return this.terminate(1);
@@ -115,7 +115,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
             return this.showMenu(true, this.reloadMenu);
           }
           if (e) {
-            this.logger(e, "ERROR");
+            this.log(e, "ERROR");
             return this.terminate(e.code || 1);
           }
           return this.terminate(1);
@@ -182,9 +182,9 @@ module.exports = class cliStart extends nodefony.cliKernel {
   showBanner(data) {
     super.showBanner(data);
     if (nodefony.projectName !== "nodefony") {
-      this.logger(`WELCOME PROJECT : ${nodefony.projectName} ${nodefony.projectVersion}`);
+      this.log(`WELCOME PROJECT : ${nodefony.projectName} ${nodefony.projectVersion}`);
     } else {
-      this.logger(`WELCOME NODEFONY CLI ${nodefony.version}`);
+      this.log(`WELCOME NODEFONY CLI ${nodefony.version}`);
     }
   }
 
@@ -212,7 +212,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
   }
 
   async start(command, args) {
-    //this.logger(`Commnand : ${command} Arguments : ${args}`, "DEBUG", "CLI START");
+    //this.log(`Commnand : ${command} Arguments : ${args}`, "DEBUG", "CLI START");
     this.started = true;
     switch (command) {
       case "showmenu":
@@ -244,7 +244,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
               });
           }
           this.showHelp();
-          this.logger("No nodefony trunk detected !", "WARNING");
+          this.log("No nodefony trunk detected !", "WARNING");
           break;
         } catch (e) {
           throw e;
@@ -263,7 +263,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
               });
           }
           this.showHelp();
-          this.logger("No nodefony trunk detected !", "WARNING");
+          this.log("No nodefony trunk detected !", "WARNING");
           break;
         } catch (e) {
           throw e;
@@ -283,7 +283,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
             });
         }
         this.showHelp();
-        this.logger("No nodefony trunk detected !", "WARNING");
+        this.log("No nodefony trunk detected !", "WARNING");
         break;
       case "version":
         try {
@@ -325,8 +325,8 @@ module.exports = class cliStart extends nodefony.cliKernel {
               throw e;
             } catch (e) {
               //this.showHelp();
-              //this.logger(`Command Not Found  ${this.cmd} ${this.args}`, "ERROR");
-              //this.logger(e, "ERROR", "MODULE");
+              //this.log(`Command Not Found  ${this.cmd} ${this.args}`, "ERROR");
+              //this.log(e, "ERROR", "MODULE");
               //this.terminate(1);
               throw e;
             }
@@ -344,8 +344,8 @@ module.exports = class cliStart extends nodefony.cliKernel {
               throw e;
             } catch (e) {
               //this.showHelp();
-              //this.logger(`Command Not Found  ${this.cmd} ${this.args}`, "ERROR");
-              //this.logger(e, "ERROR", "MODULE");
+              //this.log(`Command Not Found  ${this.cmd} ${this.args}`, "ERROR");
+              //this.log(e, "ERROR", "MODULE");
               //this.terminate(1);
               throw e;
             }
@@ -428,7 +428,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
               return "tools";
             default:
               console.log("\n");
-              this.logger(`command not found : ${val}`, "INFO");
+              this.log(`command not found : ${val}`, "INFO");
               this.terminate(1);
           }
         }
@@ -468,7 +468,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
           case "test":
             return this.setCommand("unitest:launch:all");
           case "exit":
-            this.logger("QUIT");
+            this.log("QUIT");
             return this.terminate(0);
           default:
             return this.setCommand("help");
@@ -517,7 +517,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
           return this.gitInit(project, obj.response)
             .then(() => {
               let cwd = path.resolve(project.location, project.name);
-              this.logger(`Create Project ${obj.response.name} complete`, "INFO");
+              this.log(`Create Project ${obj.response.name} complete`, "INFO");
               this.cd(cwd);
               return this.installProject(cwd)
                 .then(() => {
@@ -531,19 +531,19 @@ module.exports = class cliStart extends nodefony.cliKernel {
                         throw e;
                       }
                     }).catch((e) => {
-                      this.logger(e, "ERROR");
+                      this.log(e, "ERROR");
                       throw e;
                     });
                 }).catch((e) => {
-                  this.logger(e, "ERROR");
+                  this.log(e, "ERROR");
                   throw e;
                 });
             }).catch((e) => {
               if (e.code || e.code === 0) {
-                this.logger(e, "INFO");
+                this.log(e, "INFO");
                 this.terminate(e.code);
               }
-              this.logger(e, "ERROR");
+              this.log(e, "ERROR");
               this.terminate(e.code || 1);
             });
         })
@@ -562,7 +562,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
         return this.gitInit(microService, obj.response)
         .then(()=>{
           let cwd = path.resolve(microService.location, microService.name);
-          this.logger(`Nodefony Micro Service ${obj.response.name} complete`, "INFO");
+          this.log(`Nodefony Micro Service ${obj.response.name} complete`, "INFO");
           this.cd(cwd);
           return this.npm(["install"], cwd)
           .then(()=>{
@@ -575,18 +575,18 @@ module.exports = class cliStart extends nodefony.cliKernel {
           });
         }).catch(e =>{
           if (e.code || e.code === 0) {
-            this.logger(e, "INFO");
+            this.log(e, "INFO");
             this.terminate(e.code);
           }
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
           this.terminate(e.code || 1);
         });
       }).catch(e =>{
         if (e.code || e.code === 0) {
-          this.logger(e, "INFO");
+          this.log(e, "INFO");
           this.terminate(e.code);
         }
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         this.terminate(e.code || 1);
       });
   }
@@ -596,14 +596,14 @@ module.exports = class cliStart extends nodefony.cliKernel {
       let installer = new builderInstall(this);
       return installer.install(cwd)
         .then((ret) => {
-          this.logger("Install Complete");
+          this.log("Install Complete");
           return ret;
         }).catch((e) => {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
           throw e;
         });
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
   }
@@ -613,14 +613,14 @@ module.exports = class cliStart extends nodefony.cliKernel {
       let installer = new builderInstall(this);
       return installer.rebuild(cwd)
         .then((ret) => {
-          this.logger(`Rebuild Complete : ${cwd}`);
+          this.log(`Rebuild Complete : ${cwd}`);
           return ret;
         }).catch((e) => {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
           throw e;
         });
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
   }
@@ -630,14 +630,14 @@ module.exports = class cliStart extends nodefony.cliKernel {
       let installer = new builderInstall(this);
       return installer.build(cwd)
         .then((ret) => {
-          this.logger("Build Complete");
+          this.log("Build Complete");
           return ret;
         }).catch((e) => {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
           throw e;
         });
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
   }
@@ -664,17 +664,17 @@ module.exports = class cliStart extends nodefony.cliKernel {
         .then(() => {
           let directory = path.resolve(cwd, "config", "certificates");
           let config = path.resolve(cwd, "config", "openssl");
-          this.logger(`Certificates build with config : ${config}`);
+          this.log(`Certificates build with config : ${config}`);
           let res = this.ls(directory);
-          this.logger(`See Generated Certificates in directory : ${directory} \n${res.stdout}`);
-          this.logger("Generate Certificates Complete");
+          this.log(`See Generated Certificates in directory : ${directory} \n${res.stdout}`);
+          this.log("Generate Certificates Complete");
           return cwd;
         }).catch((e) => {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
           throw e;
         });
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
   }

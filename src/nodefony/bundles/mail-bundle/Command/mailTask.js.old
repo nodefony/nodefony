@@ -11,8 +11,8 @@ class mailTask extends nodefony.Task {
   }
 
   action(arg1, arg2) {
-    this.logger(arg1);
-    this.logger(arg2);
+    this.log(arg1);
+    this.log(arg2);
   }
 
 }

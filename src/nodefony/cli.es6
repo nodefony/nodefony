@@ -109,7 +109,7 @@ class CLI extends nodefony.Service {
 
     if (this.options.warning) {
       process.on('warning', (warning) => {
-        this.logger(warning, "WARNING");
+        this.log(warning, "WARNING");
         this.fire("onNodeWarning", warning, this);
       });
     } else {
@@ -122,7 +122,7 @@ class CLI extends nodefony.Service {
       process.on('SIGINT', () => {
         this.blankLine();
         this.wrapperLog = console.log;
-        this.logger("SIGINT", "CRITIC");
+        this.log("SIGINT", "CRITIC");
         //this.clear();
         this.fire("onSignal", "SIGINT", this);
         process.nextTick(() => {
@@ -132,7 +132,7 @@ class CLI extends nodefony.Service {
       process.on('SIGTERM', () => {
         this.blankLine();
         this.wrapperLog = console.log;
-        this.logger("SIGTERM", "CRITIC");
+        this.log("SIGTERM", "CRITIC");
         this.fire("onSignal", "SIGTERM", this);
         process.nextTick(() => {
           this.terminate();
@@ -141,7 +141,7 @@ class CLI extends nodefony.Service {
       process.on('SIGHUP', () => {
         this.blankLine();
         this.wrapperLog = console.log;
-        this.logger("SIGHUP", "CRITIC");
+        this.log("SIGHUP", "CRITIC");
         this.fire("onSignal", "SIGHUP", this);
         process.nextTick(() => {
           this.terminate();
@@ -150,7 +150,7 @@ class CLI extends nodefony.Service {
       process.on('SIGQUIT', () => {
         this.blankLine();
         this.wrapperLog = console.log;
-        this.logger("SIGQUIT", "CRITIC");
+        this.log("SIGQUIT", "CRITIC");
         //this.clear();
         this.fire("onSignal", "SIGQUIT", this);
         process.nextTick(() => {
@@ -158,7 +158,7 @@ class CLI extends nodefony.Service {
         });
       });
       process.on('uncaughtException', (err) => {
-        this.logger(err, "CRITIC", 'uncaughtException');
+        this.log(err, "CRITIC", 'uncaughtException');
       });
     }
     /**
@@ -186,7 +186,7 @@ class CLI extends nodefony.Service {
         try {
           this.fire("onStart", this);
         } catch (e) {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
         }
       }
     }
@@ -225,13 +225,13 @@ class CLI extends nodefony.Service {
     return this.idle = setInterval(() => {}, 0);
   }
 
-  logger(pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     if (!msgid) {
       try {
         msgid = clc.magenta(`${this.name}`);
       } catch (e) {}
     }
-    return super.logger(pci, severity, msgid, msg);
+    return super.log(pci, severity, msgid, msg);
   }
 
   checkVersion(version = null) {
@@ -262,7 +262,7 @@ class CLI extends nodefony.Service {
         return data;
       })
       .catch((err) => {
-        this.logger(err, "ERROR");
+        this.log(err, "ERROR");
         throw err;
       });
   }
@@ -280,11 +280,11 @@ class CLI extends nodefony.Service {
 
   listenRejection() {
     process.on('rejectionHandled', (promise) => {
-      this.logger("PROMISE REJECTION EVENT ", "CRITIC", 'rejectionHandled');
+      this.log("PROMISE REJECTION EVENT ", "CRITIC", 'rejectionHandled');
       this.unhandledRejections.delete(promise);
     });
     process.on('unhandledRejection', (reason, promise) => {
-      this.logger("WARNING  !!! PROMISE CHAIN BREAKING : " + reason, "WARNING", 'unhandledRejection');
+      this.log("WARNING  !!! PROMISE CHAIN BREAKING : " + reason, "WARNING", 'unhandledRejection');
       console.trace(promise);
       this.unhandledRejections.set(promise, reason);
     });
@@ -345,7 +345,7 @@ class CLI extends nodefony.Service {
 
   getFonts() {
     asciify.getFonts((err, fonts) => {
-      fonts.forEach(this.logger);
+      fonts.forEach(this.log);
     });
   }
 
@@ -407,7 +407,7 @@ class CLI extends nodefony.Service {
       try {
         return this.clui.Sparkline(values, suffix || "");
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         throw e;
       }
     }
@@ -431,7 +431,7 @@ class CLI extends nodefony.Service {
       this.spinner.start();
       return this.spinner;
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
   }
@@ -443,7 +443,7 @@ class CLI extends nodefony.Service {
       delete this.spinner;
       return true;
     }
-    this.logger(new Error("Spinner is not started "), "ERROR");
+    this.log(new Error("Spinner is not started "), "ERROR");
     return false;
   }
 
@@ -456,7 +456,8 @@ class CLI extends nodefony.Service {
           table.push(datas[i]);
         }
         if (syslog) {
-          if (syslog.logger) {
+          syslog.log(`\n${table.toString()}`);
+          /*if (syslog.logger) {
             syslog.logger(table.toString());
           } else {
             if (syslog.log) {
@@ -464,8 +465,7 @@ class CLI extends nodefony.Service {
             } else {
               this.log(`\n${table.toString()}`);
             }
-
-          }
+          }*/
         } else {
           console.log(table.toString());
         }
@@ -654,7 +654,7 @@ class CLI extends nodefony.Service {
       throw new Error("Timer : " + name + " already exist !! stopTimer to clear");
     }
     try {
-      this.logger("BEGIN TIMER : " + name, "INFO");
+      this.log("BEGIN TIMER : " + name, "INFO");
       this.timers[name] = name;
       return console.time(name);
     } catch (e) {
@@ -673,7 +673,7 @@ class CLI extends nodefony.Service {
     }
     try {
       if (name in this.timers) {
-        this.logger("END TIMER : " + name, "INFO");
+        this.log("END TIMER : " + name, "INFO");
         delete this.timers[name];
         return console.timeEnd(name);
       }
@@ -703,7 +703,7 @@ class CLI extends nodefony.Service {
       let cmd = null;
       try {
         this.debug = this.commander.debug || false;
-        this.logger(`Command : npm ${argv.join(' ')} in cwd : ${cwd}`);
+        this.log(`Command : npm ${argv.join(' ')} in cwd : ${cwd}`);
         //const exe = path.resolve(nodefony.path, "node_modules", ".bin", "npm");
         let exe = null;
         if (process.platform === "win32") {
@@ -723,7 +723,7 @@ class CLI extends nodefony.Service {
           return resolve(new Error(`Command : npm ${argv.join(' ')}  cwd : ${cwd} Error Code : ${code}`));
         });
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         return reject(e);
       }
     });
@@ -745,7 +745,7 @@ class CLI extends nodefony.Service {
     return new Promise((resolve, reject) => {
       let cmd = null;
       try {
-        this.logger(`Command : yarn ${argv.join(' ')} in cwd : ${cwd}`);
+        this.log(`Command : yarn ${argv.join(' ')} in cwd : ${cwd}`);
         this.debug = this.commander.debug || false;
         //const exe = path.resolve(nodefony.path, "node_modules", ".bin", "npm");
         let exe = null;
@@ -766,7 +766,7 @@ class CLI extends nodefony.Service {
           return resolve(new Error(`Command : yarn ${argv.join(' ')}  cwd : ${cwd} Error Code : ${code}`));
         });
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         return reject(e);
       }
     });
@@ -838,13 +838,13 @@ class CLI extends nodefony.Service {
         throw cmd.error;
       }
       if (cmd.stderr) {
-        this.logger(cmd.stderr.toString(), "ERROR");
+        this.log(cmd.stderr.toString(), "ERROR");
       }
       if (cmd.stdout) {
-        this.logger(cmd.stdout.toString(), "INFO");
+        this.log(cmd.stdout.toString(), "INFO");
       }
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
     return cmd;

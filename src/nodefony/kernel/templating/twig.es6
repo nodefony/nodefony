@@ -103,7 +103,7 @@ class Twig extends nodefony.Template {
     try {
       return this.router.generatePath(name, variables, host);
     } catch (e) {
-      this.logger(e, "WARNING");
+      this.log(e, "WARNING");
       return null;
     }
   }
@@ -158,7 +158,7 @@ class Twig extends nodefony.Template {
     try {
       let template = await this.compile(view)
         .catch(e => {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
           throw e;
         });
       if (template) {

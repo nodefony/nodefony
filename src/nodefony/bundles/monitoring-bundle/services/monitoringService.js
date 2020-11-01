@@ -53,7 +53,6 @@ module.exports = class monitoring extends nodefony.Service {
     this.node_start = this.kernel.node_start;
 
     this.once("onReady", () => {
-      this.name = this.kernel.projectName || "nodefony";
       this.port = this.container.getParameters("bundles.realtime.services.monitoring.port") || 1318;
       if (this.realTime && this.kernel.type === "SERVER") {
         this.createServer();
@@ -61,14 +60,14 @@ module.exports = class monitoring extends nodefony.Service {
     });
   }
 
-  logger(pci, severity, msgid) {
+  log(pci, severity, msgid) {
     if (!msgid) {
       msgid = "SERVICE MONITORING ";
     }
     if (this.realTime) {
-      this.realTime.logger(pci, severity, msgid);
+      this.realTime.log(pci, severity, msgid);
     } else {
-      this.kernel.logger(pci, severity, msgid);
+      this.kernel.log(pci, severity, msgid);
     }
   }
 
@@ -84,7 +83,7 @@ module.exports = class monitoring extends nodefony.Service {
      *	EVENT CONNECTIONS
      */
     this.server.on("connection", (socket) => {
-      this.logger("CONNECT TO SERVICE MONITORING FROM : " + socket.remoteAddress, "INFO");
+      this.log("CONNECT TO SERVICE MONITORING FROM : " + socket.remoteAddress, "INFO");
 
       let closed = false;
       let interval = null;
@@ -110,7 +109,7 @@ module.exports = class monitoring extends nodefony.Service {
       switch (this.node_start) {
         case "PM2":
           pm2.connect(() => {
-            this.logger("CONNECT PM2 REALTIME MONITORING", "DEBUG");
+            this.log("CONNECT PM2 REALTIME MONITORING", "DEBUG");
             // PM2 REALTIME
             interval = setInterval(() => {
               pm2.describe(this.name, (err, list) => {
@@ -186,7 +185,7 @@ module.exports = class monitoring extends nodefony.Service {
           }
         }
         clearInterval(interval);
-        this.logger("CLOSE CONNECTION TO SERVICE MONITORING FROM : " + socket.remoteAddress + " ID :" + conn.id, "INFO");
+        this.log("CLOSE CONNECTION TO SERVICE MONITORING FROM : " + socket.remoteAddress + " ID :" + conn.id, "INFO");
         socket.end();
         delete this.connections[conn.id];
       });
@@ -195,7 +194,7 @@ module.exports = class monitoring extends nodefony.Service {
         try {
           console.log(buffer.toString());
         } catch (e) {
-          this.logger("message :" + buffer.toString() + " error : " + e.message, "ERROR");
+          this.log("message :" + buffer.toString() + " error : " + e.message, "ERROR");
         }
       });
     });
@@ -205,7 +204,7 @@ module.exports = class monitoring extends nodefony.Service {
      */
     this.server.on("close", ( /*socket*/ ) => {
       this.stopped = true;
-      this.logger("SHUTDOWN server MONITORING listen on Domain : " + this.domain + " Port : " + this.port, "INFO");
+      this.log("SHUTDOWN server MONITORING listen on Domain : " + this.domain + " Port : " + this.port, "INFO");
     });
 
     /*
@@ -215,18 +214,18 @@ module.exports = class monitoring extends nodefony.Service {
       let myError = new nodefony.Error(error);
       switch (error.errno) {
         case "ENOTFOUND":
-          this.logger("CHECK DOMAIN IN /etc/hosts or config unable to connect to : " + this.domain, "ERROR");
-          this.logger(myError, "CRITIC");
+          this.log("CHECK DOMAIN IN /etc/hosts or config unable to connect to : " + this.domain, "ERROR");
+          this.log(myError, "CRITIC");
           break;
         case "EADDRINUSE":
-          this.logger("Domain : " + this.domain + " Port : " + this.port + " ==> ALREADY USE ", "ERROR");
-          this.logger(myError, "CRITIC");
+          this.log("Domain : " + this.domain + " Port : " + this.port + " ==> ALREADY USE ", "ERROR");
+          this.log(myError, "CRITIC");
           setTimeout(() => {
             this.server.close();
           }, 1000);
           break;
         default:
-          this.logger(myError, "CRITIC");
+          this.log(myError, "CRITIC");
       }
     });
 
@@ -234,7 +233,7 @@ module.exports = class monitoring extends nodefony.Service {
      *	LISTEN ON DOMAIN
      */
     this.server.listen(this.port, this.domain, () => {
-      this.logger("Create server MONITORING listen on Domain : " + this.domain + " Port : " + this.port, "INFO");
+      this.log("Create server MONITORING listen on Domain : " + this.domain + " Port : " + this.port, "INFO");
     });
 
     /*
@@ -275,7 +274,7 @@ module.exports = class monitoring extends nodefony.Service {
   stopServer() {
     this.stopped = true;
     for (let i = 0; i < this.connections.length; i++) {
-      this.logger("CLOSE CONNECTIONS SERVICE REALTIME : " + this.name);
+      this.log("CLOSE CONNECTIONS SERVICE REALTIME : " + this.name);
       if (this.connections[i].listener) {
         this.syslog.unListen("onLog", this.connections[i].listener);
       }
@@ -288,7 +287,7 @@ module.exports = class monitoring extends nodefony.Service {
       try {
         this.server.close();
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
       }
     }
   }

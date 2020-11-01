@@ -54,13 +54,13 @@ module.exports = class mailer extends nodefony.Service {
   verifyTransporter(name, transporter, options) {
     return transporter.verify((error, success) => {
       if (error) {
-        this.logger(error, "ERROR");
+        this.log(error, "ERROR");
         throw error;
       } else {
         if (success) {
           let info = `Create SNMP TRANSPOTER ${name|| "default"}`;
-          this.logger(info, "INFO");
-          this.logger(options);
+          this.log(info, "INFO");
+          this.log(options);
           if (!name) {
             this.transporter = transporter;
           } else {
@@ -104,7 +104,7 @@ module.exports = class mailer extends nodefony.Service {
             };
             return this.sendMail(message, transporterName, context)
               .then((info) => {
-                this.logger(info);
+                this.log(info);
                 return html;
               })
               .catch(e => {
@@ -143,11 +143,11 @@ module.exports = class mailer extends nodefony.Service {
     if (!transporterName) {
       return await this.transporter.sendMail(conf)
         .then((info) => {
-          this.logger(info, "INFO");
+          this.log(info, "INFO");
           return info;
         })
         .catch(e => {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
           throw e;
         });
     }

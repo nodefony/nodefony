@@ -34,7 +34,7 @@
             bundles: bundles,
             user: this.context.user
           }).catch(e=>{
-            this.logger(e,"ERROR");
+            this.log(e,"ERROR");
             this.response.setHeader('Content-Type', "text/html");
             return this.createNotFoundException();
           });
@@ -50,7 +50,7 @@
           environment: this.kernel.environment,
           debug: this.kernel.debug
         }).catch(e=>{
-          this.logger(e,"ERROR");
+          this.log(e,"ERROR");
           this.response.setHeader('Content-Type', "text/html");
           return this.createNotFoundException();
         });

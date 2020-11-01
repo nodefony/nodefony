@@ -11,7 +11,7 @@ const pluginReader = function () {
       //console.log(require('util').inspect(node, {depth: null}));
       //console.log('\n\n');
       if (err) {
-        this.logger("INJECTION xmlParser.parseString : " + err, 'WARNING');
+        this.log("INJECTION xmlParser.parseString : " + err, 'WARNING');
       }
       if (!node) {
         return node;
@@ -164,7 +164,7 @@ class Injector extends nodefony.Service {
         calls: service.calls
       });
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
   }
@@ -224,7 +224,7 @@ class Injector extends nodefony.Service {
           args = service.calls[i].arguments;
           break;
         default:
-          this.logger(service.calls, 'ERROR');
+          this.log(service.calls, 'ERROR');
           throw new Error("Service bad Calls config ");
         }
         ele[method] = this.findInjections(args);
@@ -242,7 +242,7 @@ class Injector extends nodefony.Service {
           if (instance[call]) {
             this.call(instance, instance[call], this.calls[call]);
           } else {
-            this.logger('Method ' + call + ' in service ' + this.name + ' not found', "ERROR");
+            this.log('Method ' + call + ' in service ' + this.name + ' not found', "ERROR");
             continue;
           }
         }
@@ -251,16 +251,16 @@ class Injector extends nodefony.Service {
       if (restart) {
         log = "RESTARTED";
       }
-      instance.logger(log, 'DEBUG');
+      instance.log(log, 'DEBUG');
       return instance;
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
   }
 
   restartService() {
-    this.logger("RESTART : " + this.name, "INFO");
+    this.log("RESTART : " + this.name, "INFO");
     try {
       this.remove(this.name);
       return this.startService(true);
@@ -292,7 +292,7 @@ class Injector extends nodefony.Service {
     try {
       return Reflect.construct(this.Class, this.injections);
     } catch (e) {
-      this.logger("ERRROR SERVICE CLASS " + this.name + " " + e.message, "ERROR");
+      this.log("ERRROR SERVICE CLASS " + this.name + " " + e.message, "ERROR");
       throw e;
     }
   }
@@ -328,7 +328,7 @@ class Injector extends nodefony.Service {
             if (service) {
               tab.push(service);
             } else {
-              this.logger("Injection Service  : " + name + " not found !!", "ERROR");
+              this.log("Injection Service  : " + name + " not found !!", "ERROR");
             }
             break;
           default:
@@ -382,7 +382,7 @@ class Injection extends nodefony.Service {
               }
             }
             if (!inject) {
-              this.logger(`environment : ${process.env.NODE_ENV} BYPASS SERVICE START : ${lib}`, "DEBUG");
+              this.log(`environment : ${process.env.NODE_ENV} BYPASS SERVICE START : ${lib}`, "DEBUG");
               continue;
             }
           }
@@ -394,7 +394,7 @@ class Injection extends nodefony.Service {
           throw e;
         }
       } else {
-        this.logger(new Error(`${lib} class not defined check services configurations`), "WARNING");
+        this.log(new Error(`${lib} class not defined check services configurations`), "WARNING");
       }
     }
   }
@@ -404,7 +404,7 @@ class Injection extends nodefony.Service {
       let injector = new Injector(name, service, this.container);
       if (this.kernel.environment === "dev" && this.kernel.type !== "CONSOLE") {
         if (this.injectors[name]) {
-          this.logger("Service name : " + name + " Already exist ", "WARNING");
+          this.log("Service name : " + name + " Already exist ", "WARNING");
         }
         this.injectors[name] = injector;
       }

@@ -48,7 +48,7 @@ class serviceTask extends nodefony.Task {
   }
 
   showService(services, val) {
-    this.logger(`Add ${val} Injector dependencies arguments : [${this.dependencies}]`);
+    this.log(`Add ${val} Injector dependencies arguments : [${this.dependencies}]`);
     return this.cli.prompt([{
       type: 'list',
       name: 'services',
@@ -188,7 +188,7 @@ class serviceTask extends nodefony.Task {
     return this.builder.buildSkeleton(this.skeletonConfig, true, response)
       .then((result) => {
         this.configLocation = path.resolve(response.bundle.path, "Resources", "config", "services.js");
-        this.logger(`You must Add this configuration services in ${this.configLocation} :\n${result}`);
+        this.log(`You must Add this configuration services in ${this.configLocation} :\n${result}`);
         return result;
       });
   }

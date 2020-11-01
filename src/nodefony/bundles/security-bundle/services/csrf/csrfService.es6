@@ -29,8 +29,8 @@ const Csrf = class Csrf {
     }
   }
 
-  logger() {
-    this.service.logger.apply(this.service, arguments);
+  log() {
+    this.service.log.apply(this.service, arguments);
   }
 
   getCookie() {
@@ -162,7 +162,7 @@ const Csrf = class Csrf {
       if (!res) {
         throw new nodefony.csrfError(`BAD CSRF Token ${this.name}`,401);
       }
-      this.logger(`VALID CSRF Token : ${this.name}`,"DEBUG");
+      this.log(`VALID CSRF Token : ${this.name}`,"DEBUG");
       return token;
     } catch (e) {
       throw e;

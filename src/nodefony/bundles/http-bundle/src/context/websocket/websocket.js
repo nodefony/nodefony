@@ -2,12 +2,12 @@ nodefony.register.call(nodefony.context, "websocket", function () {
 
   const onClose = function (reasonCode, description) {
     /*if (!this.request) {
-      this.logger('CLOSE : ' + this.remoteAddress + " " + reasonCode + " " + description, "INFO");
+      this.log('CLOSE : ' + this.remoteAddress + " " + reasonCode + " " + description, "INFO");
     } else {
-      this.logger('CLOSE : ' + this.remoteAddress + " ORIGIN : " + this.origin + " " + reasonCode + " " + description, "INFO");
+      this.log('CLOSE : ' + this.remoteAddress + " ORIGIN : " + this.origin + " " + reasonCode + " " + description, "INFO");
     }*/
 
-    this.logger(`${clc.cyan("URL")} : ${this.url}  ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host} ${clc.cyan("Description")} : ${description} `,
+    this.log(`${clc.cyan("URL")} : ${this.url}  ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host} ${clc.cyan("Description")} : ${description} `,
       "INFO",
       `${this.type} ${clc.magenta(reasonCode)} CLOSE ${this.method}`);
 
@@ -15,8 +15,8 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       try {
         this.response.drop(reasonCode, description);
       } catch (e) {
-        //this.logger('CLOSE : ' + this.remoteAddress + " ORIGIN : " + this.origin + " " + e.message, "ERROR");
-        this.logger(`${clc.cyan("URL")} : ${this.url}  ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host} ${clc.cyan("error")} : ${e.message} `,
+        //this.log('CLOSE : ' + this.remoteAddress + " ORIGIN : " + this.origin + " " + e.message, "ERROR");
+        this.log(`${clc.cyan("URL")} : ${this.url}  ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host} ${clc.cyan("error")} : ${e.message} `,
           "ERROR",
           `${this.type} CLOSE ${clc.red(this.method)}`);
       }
@@ -76,7 +76,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
           proxyHost: this.request.httpRequest.headers["x-forwarded-host"],
           proxyVia: this.request.httpRequest.headers.via
         };
-        this.logger("PROXY WEBSOCKET REQUEST x-forwarded VIA : " + this.proxy.proxyVia, "DEBUG");
+        this.log("PROXY WEBSOCKET REQUEST x-forwarded VIA : " + this.proxy.proxyVia, "DEBUG");
       }
       this.crossDomain = this.isCrossDomain();
     }
@@ -84,15 +84,15 @@ nodefony.register.call(nodefony.context, "websocket", function () {
     logRequest(httpError, acceptedProtocol) {
       if (httpError) {
         //return httpError.logger();
-        return this.logger(`${clc.cyan("URL")} : ${this.url}  ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host}
+        return this.log(`${clc.cyan("URL")} : ${this.url}  ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host}
         ${httpError.toString()}`,
           "ERROR",
           `${this.type} ${clc.magenta(this.response.statusCode)} ${clc.red(this.method)}`);
       }
-      return this.logger(`${clc.cyan("URL")} : ${this.url} ${clc.cyan("Accept-Protocol")} : ${acceptedProtocol || "*"} ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host}`,
+      return this.log(`${clc.cyan("URL")} : ${this.url} ${clc.cyan("Accept-Protocol")} : ${acceptedProtocol || "*"} ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host}`,
         "INFO",
         `${this.type} ${clc.magenta(this.response.statusCode)} ${this.method}`);
-      /*return this.logger(`FROM : ${this.remoteAddress} ORIGIN : ${this.originUrl.host} URL : ${this.url}`,
+      /*return this.log(`FROM : ${this.remoteAddress} ORIGIN : ${this.originUrl.host} URL : ${this.url}`,
         "INFO",
         (this.isAjax ? `${this.type} AJAX REQUEST ${this.method}` : `${this.type} ${this.method}`));*/
     }
@@ -220,7 +220,7 @@ nodefony.register.call(nodefony.context, "websocket", function () {
     }
 
     handleError(container, error) {
-      this.logger("Message : " + error.message, "ERROR");
+      this.log("Message : " + error.message, "ERROR");
     }
 
     send(data, type) {

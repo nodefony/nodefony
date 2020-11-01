@@ -168,7 +168,7 @@ class Resolver extends nodefony.Service {
       }
       this.container.set("action", this.actionName);
       if (this.kernel.debug && this.route) {
-        this.logger(`
+        this.log(`
 ${clc.green("bundle")} : ${this.bundle.name}
 ${clc.blue("controller")} : ${this.controller.name}
 ${clc.yellow("action")} : ${this.actionName}
@@ -193,8 +193,8 @@ ${clc.red("query")} : ${controller.query ? JSON.stringify(controller.query, null
   }
 
   returnController(result) {
-    if ( ! this.context){
-      return ;
+    if (!this.context) {
+      return;
     }
     let type = nodefony.typeOf(result);
     switch (true) {
@@ -243,7 +243,12 @@ ${clc.red("query")} : ${controller.query ? JSON.stringify(controller.query, null
       return result;
     case (type === "object"):
       if (this.defaultView) {
-        return this.returnController(this.get("controller").renderSync(this.defaultView, result));
+        try{
+          return this.returnController(this.get("controller").renderSync(this.defaultView, result));
+        }catch(e){
+            this.log(e,"WARNING")
+            return result;
+        }
       } else {
         throw new Error("default view not exist");
       }

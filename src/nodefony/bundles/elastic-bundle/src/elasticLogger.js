@@ -1,6 +1,6 @@
 module.exports = class classElasticLog {
   constructor(config) {
-    this.logger("INIT SYSLOG ELASTIC ", "INFO");
+    this.log("INIT SYSLOG ELASTIC ", "INFO");
     this.config = config;
   }
 
@@ -8,7 +8,7 @@ module.exports = class classElasticLog {
     switch (nodefony.typeOf(data)) {
       case "string":
       case "error":
-        return this.logger(data, "ERROR");
+        return this.log(data, "ERROR");
       default:
         console.log(data);
     }
@@ -17,11 +17,11 @@ module.exports = class classElasticLog {
   warning(data) {
     switch (nodefony.typeOf(data)) {
       case "string":
-        return this.logger(data, "WARNING");
+        return this.log(data, "WARNING");
       default:
         try {
           let str = JSON.stringify(data);
-          return this.logger(str, "WARNING");
+          return this.log(str, "WARNING");
         } catch (e) {
           console.log(data);
         }
@@ -41,7 +41,7 @@ module.exports = class classElasticLog {
       } else {
         res = data;
       }
-      return this.logger(res, "INFO");
+      return this.log(res, "INFO");
     } catch (e) {
       console.log(e);
     }
@@ -60,7 +60,7 @@ module.exports = class classElasticLog {
       } else {
         res = data;
       }
-      return this.logger(res, "DEBUG");
+      return this.log(res, "DEBUG");
     } catch (e) {
       console.log(e);
     }
@@ -75,9 +75,9 @@ module.exports = class classElasticLog {
         status: responseStatus
       };
       let str = JSON.stringify(ele, null, " ");
-      this.logger(str, "DEBUG");
+      this.log(str, "DEBUG");
       if (responseBody) {
-        this.logger(JSON.stringify(JSON.parse(responseBody), null, " "), "DEBUG", `${ele.method} : ${ele.url}`);
+        this.log(JSON.stringify(JSON.parse(responseBody), null, " "), "DEBUG", `${ele.method} : ${ele.url}`);
       }
     } catch (e) {
       console.log(e);

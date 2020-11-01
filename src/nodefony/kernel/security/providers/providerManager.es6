@@ -22,7 +22,7 @@ class providerManager extends nodefony.Service {
 
   addConfiguration(name, config) {
     if (name in this.providers) {
-      this.logger(`Provider ${name} already exist`, "WARNING");
+      this.log(`Provider ${name} already exist`, "WARNING");
       return null;
     }
     if (config) {
@@ -33,7 +33,7 @@ class providerManager extends nodefony.Service {
             if (config.class in nodefony.security.providers) {
               this.providers[name] = new nodefony.security.providers[config.class](name, this, config.entity);
             } else {
-              this.logger(new Error(`provider class not exist : ${config.class}`), "ERROR");
+              this.log(new Error(`provider class not exist : ${config.class}`), "ERROR");
             }
           } else {
             if ( nodefony.security.providers.userProvider ){

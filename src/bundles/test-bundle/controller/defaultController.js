@@ -185,14 +185,14 @@ module.exports = class defaultController extends nodefony.controller {
     case "WEBSOCKET":
       if (message) {
         // MESSAGES CLIENT
-        this.logger(message.utf8Data, "INFO");
+        this.log(message.utf8Data, "INFO");
       } else {
         // PREPARE  PUSH MESSAGES SERVER
         // SEND MESSAGES TO CLIENTS
         var i = 0;
         var id = setInterval(() => {
           var mess = "I am a  message " + i + "\n";
-          this.logger("SEND TO CLIENT :" + mess, "INFO");
+          this.log("SEND TO CLIENT :" + mess, "INFO");
           this.context.send(mess);
           //this.renderResponse(mess);
           i++;

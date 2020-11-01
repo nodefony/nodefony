@@ -23,7 +23,7 @@ module.exports = class serverStatics extends nodefony.Service {
     this.servers = {};
     this.kernel.on("onPostReady", () => {
       for (let ele in this.servers) {
-        this.logger("Server Static RootDir  ==> " + ele, "INFO");
+        this.log("Server Static RootDir  ==> " + ele, "INFO");
       }
     });
   }
@@ -46,7 +46,7 @@ module.exports = class serverStatics extends nodefony.Service {
         }
       }
       this.settings[staticRoot].options.setHeaders = (res, path) => {
-        this.logger(`Serve Static ${path}`, "DEBUG");
+        this.log(`Serve Static ${path}`, "DEBUG");
         this.fire("onServeStatic", res, path, staticRoot, this);
       };
       if (setHeaders) {

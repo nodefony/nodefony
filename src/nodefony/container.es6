@@ -70,7 +70,7 @@ class Container {
     }
   }
 
-  logger(pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     let syslog = this.get("syslog");
     if (!syslog) {
       console.log(pci);
@@ -79,7 +79,7 @@ class Container {
     if (!msgid) {
       msgid = "SERVICES CONTAINER ";
     }
-    return syslog.logger(pci, severity, msgid, msg);
+    return syslog.log(pci, severity, msgid, msg);
   }
 
   set(name, object) {
@@ -160,24 +160,24 @@ class Container {
 
   setParameters(name, str) {
     if (typeof name !== "string") {
-      this.logger(new Error("setParameters : container parameter name must be a string"));
+      this.log(new Error("setParameters : container parameter name must be a string"));
       return false;
     }
     if (str === undefined) {
-      this.logger(new Error("setParameters : " + name + " container parameter value must be define"));
+      this.log(new Error("setParameters : " + name + " container parameter value must be define"));
       return false;
     }
     if (parseParameterString.call(this.protoParameters.prototype, name, str) === str) {
       return str;
     } else {
-      this.logger(new Error("container parameter " + name + " parse error"));
+      this.log(new Error("container parameter " + name + " parse error"));
       return false;
     }
   }
 
   getParameters(name) {
     /*if (typeof name !== "string") {
-      this.logger(new Error("container parameter name must be a string"));
+      this.log(new Error("container parameter name must be a string"));
       return false;
     }*/
     //return parseParameterString.call(this.protoParameters.prototype, name, null);
@@ -224,7 +224,7 @@ class Scope extends Container {
     if (parseParameterString.call(this.parameters, name, str) === str) {
       return super.setParameters(name, str);
     } else {
-      this.logger(new Error("container parameter " + name + " parse error"));
+      this.log(new Error("container parameter " + name + " parse error"));
       return false;
     }
   }
@@ -271,7 +271,7 @@ class ExtendedScope extends Container {
     if (parseParameterString.call(this.parameters, name, str) === str) {
       return super.setParameters(name, str);
     } else {
-      this.logger(new Error("container parameter " + name + " parse error"));
+      this.log(new Error("container parameter " + name + " parse error"));
       return false;
     }
   }

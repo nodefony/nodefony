@@ -33,22 +33,22 @@ module.exports = class webpack extends nodefony.Service {
         return;
       }
       if (this.kernel.environment === "dev") {
-        this.logger("Start WEBPACK Compiler");
+        this.log("Start WEBPACK Compiler");
         return this.compile()
           .then((ele) => {
             shell.cd(this.kernel.rootDir);
             if (this.kernel.type !== "CONSOLE") {
-              this.logger("WEBPACK COMPILE FINISH");
+              this.log("WEBPACK COMPILE FINISH");
             } else {
               if (this.kernel.cli.command === "webpack") {
-                this.logger("WEBPACK COMPILE FINISH");
+                this.log("WEBPACK COMPILE FINISH");
               }
             }
             this.fire("onWebpackFinich", this);
             //console.log(ele)
             return ele;
           }).catch(e => {
-            this.logger(e, "ERROR");
+            this.log(e, "ERROR");
             shell.cd(this.kernel.rootDir);
           });
       }
@@ -61,7 +61,7 @@ module.exports = class webpack extends nodefony.Service {
           fs.mkdirSync(this.pathCache);
         }
       } catch (e) {
-        this.logger(e.message, "WARNING");
+        this.log(e.message, "WARNING");
       }
       if (!this.production) {
         this.kernel.once("onTerminate", () => {
@@ -116,22 +116,22 @@ module.exports = class webpack extends nodefony.Service {
     let error = stats.hasErrors();
     if (error) {
       if (info.errors && nodefony.typeOf(info.errors) === "array") {
-        this.logger(info.errors.join("\n"), "ERROR");
+        this.log(info.errors.join("\n"), "ERROR");
         console.trace(info.errors);
       } else {
         console.trace(info.errors)
-        this.logger(info.errors, "ERROR");
+        this.log(info.errors, "ERROR");
       }
     } else {
       if (bundle) {
         if (watcher) {
-          this.logger("Bundle : " + bundle + " WATCHER IN CONFIG   ", "INFO");
+          this.log("Bundle : " + bundle + " WATCHER IN CONFIG   ", "INFO");
         } else {
-          this.logger("COMPILE SUCCESS BUNDLE : " + bundle + " " + file, "INFO");
+          this.log("COMPILE SUCCESS BUNDLE : " + bundle + " " + file, "INFO");
         }
       }
       if (watcher && this.sockjs) {
-        this.logger(stats.toString(this.webPackSettings.stats), "INFO");
+        this.log(stats.toString(this.webPackSettings.stats), "INFO");
         if (this.kernel.getBundle(bundle) &&
           this.kernel.getBundle(bundle).settings &&
           this.kernel.getBundle(bundle).settings.devServer) {
@@ -144,7 +144,7 @@ module.exports = class webpack extends nodefony.Service {
       }
       if (stats.hasWarnings()) {
         if (info.warnings.length) {
-          this.logger(info.warnings, "WARNING");
+          this.log(info.warnings, "WARNING");
         }
       }
     }
@@ -368,7 +368,7 @@ module.exports = class webpack extends nodefony.Service {
             return resolve(bundle.webpackCompiler);
           });
           bundle.webpackCompiler.hooks.failed.tap("failed", (e) => {
-            this.logger(e, "ERROR");
+            this.log(e, "ERROR");
             return reject(e);
           });
         } else {
@@ -381,12 +381,12 @@ module.exports = class webpack extends nodefony.Service {
             return resolve(bundle.webpackCompiler);
           });
           bundle.webpackCompiler.plugin("failed", (e) => {
-            this.logger(e, "ERROR");
+            this.log(e, "ERROR");
             return reject(e);
           });
         }
       } catch (e) {
-        this.logger(e, 'ERROR');
+        this.log(e, 'ERROR');
         return reject(e);
       }
       try {
@@ -408,21 +408,21 @@ module.exports = class webpack extends nodefony.Service {
             bundle.webpackCompiler.outputFileSystem = this.outputFileSystem;
           }
           if (this.nbWatched > 1) {
-            this.logger("Warning only 1 webpack bundle watcher can be use with nodefony framework !!! ", "WARNING");
+            this.log("Warning only 1 webpack bundle watcher can be use with nodefony framework !!! ", "WARNING");
           }
           this.nbWatched++;
           bundle.watching = null;
           bundle.watching = bundle.webpackCompiler.watch(watchOptions, (err, stats) => {
-            this.logger("BUNDLE : " + basename + " WACTHER WEBPACK COMPILE  ");
+            this.log("BUNDLE : " + basename + " WACTHER WEBPACK COMPILE  ");
             if (!err) {
-              this.logger("\n" + this.displayConfigTable(config), "DEBUG");
+              this.log("\n" + this.displayConfigTable(config), "DEBUG");
             }
             this.loggerStat(err, stats, basename, file.name, true);
           });
           this.kernel.once("onTerminate", () => {
             if (bundle.watching) {
               bundle.watching.close(() => {
-                this.logger("Watching Ended  " + config.context + " : " + util.inspect(config.entry), "INFO");
+                this.log("Watching Ended  " + config.context + " : " + util.inspect(config.entry), "INFO");
               });
             }
           });
@@ -454,8 +454,8 @@ module.exports = class webpack extends nodefony.Service {
             fs.mkdirSync(pathCache);
           } catch (e) {}
         }
-        //this.logger("BUNDLE : " + bundle + " WEBPACK COMPILE : " + file, "DEBUG");
-        this.logger(`Webpack Compile ${bundle} :  ${file}\n` + this.displayConfigTable(compiler.options), "INFO");
+        //this.log("BUNDLE : " + bundle + " WEBPACK COMPILE : " + file, "DEBUG");
+        this.log(`Webpack Compile ${bundle} :  ${file}\n` + this.displayConfigTable(compiler.options), "INFO");
         compiler.run((err, stats) => {
           this.loggerStat(err, stats, bundle, file);
           if (err) {
@@ -466,7 +466,7 @@ module.exports = class webpack extends nodefony.Service {
         });
       } catch (e) {
         console.trace(e)
-        this.logger(e, 'ERROR');
+        this.log(e, 'ERROR');
         return resolve(compiler);
       }
     });
@@ -503,7 +503,7 @@ module.exports = class webpack extends nodefony.Service {
       }
       return table.toString();
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
     }
   }
 };

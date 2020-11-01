@@ -4,7 +4,7 @@
 try {
   var LdapStrategy = require('passport-ldapauth');
 } catch (e) {
-  this.logger(e, "ERROR");
+  this.log(e, "ERROR");
 }
 
 module.exports = nodefony.registerFactory("passport-ldap", () => {
@@ -20,7 +20,7 @@ module.exports = nodefony.registerFactory("passport-ldap", () => {
       return new Promise((resolve, reject) => {
         try {
           let strategy = new LdapStrategy(options, (profile, done) => {
-            this.logger("TRY AUTHENTICATION " + this.name + " : " + profile.uid, "DEBUG");
+            this.log("TRY AUTHENTICATION " + this.name + " : " + profile.uid, "DEBUG");
             if (profile) {
               let mytoken = new nodefony.security.tokens.ldap(profile, this.profileWrapper);
               //mytoken.setProvider(this.settings.server.url);

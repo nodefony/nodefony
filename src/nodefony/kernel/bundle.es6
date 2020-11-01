@@ -106,7 +106,7 @@ const moduleFindDependencies = class moduleFindDependencies {
   reload() {
     if (this.length()) {
       for (let i = 0; i < this.childs.length; i++) {
-        this.bundle.logger("Reload " + this.type + " Dependency : " + this.childs[i]);
+        this.bundle.log("Reload " + this.type + " Dependency : " + this.childs[i]);
         this.bundle.loadFile(this.childs[i], true);
       }
       for (let control in this.container) {
@@ -152,7 +152,7 @@ const defaultOptions = {
 class Bundle extends nodefony.Service {
   constructor(name, kernel, container) {
     super(name, container, null, nodefony.extend(true, {}, defaultOptions));
-    this.logger("\x1b[36m REGISTER BUNDLE : " + this.name + "   \x1b[0m", "DEBUG", this.kernel.cli.clc.magenta("KERNEL"));
+    this.log("\x1b[36m REGISTER BUNDLE : " + this.name + "   \x1b[0m", "DEBUG", this.kernel.cli.clc.magenta("KERNEL"));
     this.bundleName = path.basename(this.path);
     this.location = path.dirname(this.path);
     this.publicPath = path.resolve(this.path, "Resources", "public");
@@ -306,7 +306,7 @@ class Bundle extends nodefony.Service {
         return result[0].children;
       })
       .catch(e => {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
       });
   }
 
@@ -346,7 +346,7 @@ class Bundle extends nodefony.Service {
   }
 
   clean() {
-    this.logger(`CLEAN MEMORY BUNDLE :  ${this.name}`);
+    this.log(`CLEAN MEMORY BUNDLE :  ${this.name}`);
     this.findResult = null;
     delete this.findResult;
     this.webPackConfig = null;
@@ -372,7 +372,7 @@ class Bundle extends nodefony.Service {
   }
 
   fire() {
-    this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
+    this.log(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
     return super.fire.apply(this, arguments);
   }
 
@@ -385,7 +385,7 @@ class Bundle extends nodefony.Service {
               return Promise.resolve(compiler);
             }
             if (this.kernel.isCore || !this.isCore) {
-              this.logger(`MEMORY clean webpack compile bundle : ${this.name}`, "DEBUG");
+              this.log(`MEMORY clean webpack compile bundle : ${this.name}`, "DEBUG");
             }
             this.webPackConfig = null;
             delete this.webPackConfig;
@@ -395,11 +395,11 @@ class Bundle extends nodefony.Service {
           }
         })
         .catch((e) => {
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
           throw e;
         });
     } catch (e) {
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
   }
@@ -521,7 +521,7 @@ class Bundle extends nodefony.Service {
         this.webpackWatch = this.settings.watch || false;
         break;
       default:
-        this.logger("BAD CONFIG WATCHER  ", "WARNING");
+        this.log("BAD CONFIG WATCHER  ", "WARNING");
         return;
       }
       // controllers
@@ -530,7 +530,7 @@ class Bundle extends nodefony.Service {
         this.watcherController.setSockjsServer(this.sockjs);
         this.watcherController.listenWatcherController();
         this.kernel.on("onTerminate", () => {
-          this.logger("Watching Ended : " + this.watcherController.path, "INFO");
+          this.log("Watching Ended : " + this.watcherController.path, "INFO");
           this.watcherController.close();
         });
       }
@@ -540,7 +540,7 @@ class Bundle extends nodefony.Service {
         this.watcherView.listenWatcherView();
         this.watcherView.setSockjsServer(this.sockjs);
         this.kernel.on("onTerminate", () => {
-          this.logger("Watching Ended : " + this.watcherView.path, "INFO");
+          this.log("Watching Ended : " + this.watcherView.path, "INFO");
           this.watcherView.close();
         });
       }
@@ -550,7 +550,7 @@ class Bundle extends nodefony.Service {
         this.watcherI18n.listenWatcherI18n();
         this.watcherI18n.setSockjsServer(this.sockjs);
         this.kernel.on("onTerminate", () => {
-          this.logger("Watching Ended : " + this.watcherI18n.path, "INFO");
+          this.log("Watching Ended : " + this.watcherI18n.path, "INFO");
           this.watcherI18n.close();
         });
       }
@@ -560,7 +560,7 @@ class Bundle extends nodefony.Service {
         this.watcherConfig.listenWatcherConfig();
         this.watcherConfig.setSockjsServer(this.sockjs);
         this.kernel.on("onTerminate", () => {
-          this.logger("Watching Ended : " + this.watcherConfig.path, "INFO");
+          this.log("Watching Ended : " + this.watcherConfig.path, "INFO");
           this.watcherConfig.close();
         });
       }
@@ -570,7 +570,7 @@ class Bundle extends nodefony.Service {
         this.watcherService.listenWatcherServices();
         this.watcherService.setSockjsServer(this.sockjs);
         this.kernel.on("onTerminate", () => {
-          this.logger("Watching Ended : " + this.watcherService.path, "INFO");
+          this.log("Watching Ended : " + this.watcherService.path, "INFO");
           this.watcherService.close();
         });
       }
@@ -588,7 +588,7 @@ class Bundle extends nodefony.Service {
         find.reload();
       } else {
         let fileClass = new nodefony.fileClass(Path);
-        this.logger("Reload Routing : " + Path);
+        this.log("Reload Routing : " + Path);
         if (this.router) {
           this.router.reader(fileClass.path, this.name);
         }
@@ -610,10 +610,10 @@ class Bundle extends nodefony.Service {
           config = this.getParameters("bundles." + name);
           if (config) {
             ext = nodefony.extend(true, {}, config, result[ele]);
-            this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name, "DEBUG");
+            this.log("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name, "DEBUG");
           } else {
             ext = result[ele];
-            this.logger("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name + " BUT BUNDLE " + name + " NOT YET REGISTERED ", "DEBUG");
+            this.log("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name + " BUT BUNDLE " + name + " NOT YET REGISTERED ", "DEBUG");
           }
           if (this.kernel.bundles[name]) {
             this.kernel.bundles[name].settings = ext;
@@ -626,10 +626,10 @@ class Bundle extends nodefony.Service {
             try {
               let res = semver.valid(result[ele]);
               if (!res) {
-                this.logger("Bad Bundle Semantic Versioning  : " + result[ele] + " Check  http://semver.org ", "WARNING");
+                this.log("Bad Bundle Semantic Versioning  : " + result[ele] + " Check  http://semver.org ", "WARNING");
               }
             } catch (e) {
-              this.logger(e, "ERROR");
+              this.log(e, "ERROR");
             }
             break;*/
         case /^locale$/.test(ele):
@@ -641,7 +641,7 @@ class Bundle extends nodefony.Service {
       }
       config = this.getParameters("bundles." + this.name);
       if (config && Object.keys(config).length) {
-        this.logger("\x1b[32m BUNDLE IS ALREADY OVERRIDING BY AN OTHERONE  INVERT\x1b[0m  CONFIG  " + util.inspect(config), "WARNING");
+        this.log("\x1b[32m BUNDLE IS ALREADY OVERRIDING BY AN OTHERONE  INVERT\x1b[0m  CONFIG  " + util.inspect(config), "WARNING");
         this.settings = nodefony.extend(true, {}, result, config);
         this.setParameters("bundles." + this.name, this.settings);
       } else {
@@ -653,11 +653,11 @@ class Bundle extends nodefony.Service {
     }
   }
 
-  logger(pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = "BUNDLE " + this.name;
     }
-    return super.logger(pci, severity, msgid, msg);
+    return super.log(pci, severity, msgid, msg);
   }
 
   loadFile(Path, force) {
@@ -681,13 +681,13 @@ class Bundle extends nodefony.Service {
     let service = await this.findResult.find("services")
       .find(regService);
     if (!service.length) {
-      this.logger("Bundle " + this.name + " No Services Found", "DEBUG");
+      this.log("Bundle " + this.name + " No Services Found", "DEBUG");
     }
     service.forEach((ele) => {
       try {
         this.loadService(ele);
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
       }
     });
     return service;
@@ -704,7 +704,7 @@ class Bundle extends nodefony.Service {
           }
         }
         nodefony.services[Class.name] = Class;
-        this.logger("Register Service : " + Class.name, "DEBUG");
+        this.log("Register Service : " + Class.name, "DEBUG");
         return Class;
       } else {
         throw new Error("Bundle Register Service : " + ele.path + "  error Service bad format " + typeof Class);
@@ -752,7 +752,7 @@ class Bundle extends nodefony.Service {
   async findControllerFiles() {
     this.controllerFiles = await this.findResult.find("controller").find(this.regController);
     if (!this.controllerFiles.length) {
-      this.logger("Bundle " + this.name + " controller directory not found", "DEBUG");
+      this.log("Bundle " + this.name + " controller directory not found", "DEBUG");
     }
     return this.controllerFiles;
   }
@@ -797,8 +797,8 @@ class Bundle extends nodefony.Service {
       if (res) {
         name = res[1];
       } else {
-        this.logger("Controller Bad Class name :" + Class.name + " file : " + Path, "ERROR");
-        this.logger("Controller take the file name  !!! " + name, "WARNING");
+        this.log("Controller Bad Class name :" + Class.name + " file : " + Path, "ERROR");
+        this.log("Controller take the file name  !!! " + name, "WARNING");
       }
       if (typeof Class === "function") {
         Class.prototype.name = name;
@@ -810,7 +810,7 @@ class Bundle extends nodefony.Service {
         if (force) {
           severity = "INFO";
         }
-        this.logger("Load " + name + " Controller : '" + Path + "'", severity);
+        this.log("Load " + name + " Controller : '" + Path + "'", severity);
         if (this.router && true /*Class.prototype.annotation*/ ) {
           this.router.reader(Path, this.name);
         }
@@ -826,7 +826,7 @@ class Bundle extends nodefony.Service {
   async findViewFiles() {
     this.viewFiles = await this.resourcesFiles.find("views");
     if (!this.viewFiles.length) {
-      this.logger("Bundle " + this.name + " No views Found", "DEBUG");
+      this.log("Bundle " + this.name + " No views Found", "DEBUG");
     }
     return this.viewFiles;
   }
@@ -907,7 +907,7 @@ class Bundle extends nodefony.Service {
         let res = reg.exec(file.path);
         if (res && res[1]) {
           bundle = this.kernel.getBundle(res[1]);
-          this.logger(`\x1b[32m APP OVERRIDING VIEWS\x1b[0m  Bundle : ${bundle.name}  File : ${file.name}`, "DEBUG");
+          this.log(`\x1b[32m APP OVERRIDING VIEWS\x1b[0m  Bundle : ${bundle.name}  File : ${file.name}`, "DEBUG");
         }
       }
       try {
@@ -944,9 +944,9 @@ class Bundle extends nodefony.Service {
           let ele = await this.recompileTemplate(file, true);
           if (ele) {
             if (ele.basename === ".") {
-              this.logger("Register Template   : '" + this.name + "Bundle:" + "" + ":" + ele.name + "'", "DEBUG");
+              this.log("Register Template   : '" + this.name + "Bundle:" + "" + ":" + ele.name + "'", "DEBUG");
             } else {
-              this.logger("Register Template   : '" + this.name + "Bundle:" + ele.basename + ":" + ele.name + "'", "DEBUG");
+              this.log("Register Template   : '" + this.name + "Bundle:" + ele.basename + ":" + ele.name + "'", "DEBUG");
             }
           }
         } catch (e) {
@@ -1000,7 +1000,7 @@ class Bundle extends nodefony.Service {
       trans = await this.resourcesFiles.find("translations");
     }
     if (!trans.length || !trans[0]) {
-      this.logger("Bundle " + this.name + " No Translation Found", "DEBUG");
+      this.log("Bundle " + this.name + " No Translation Found", "DEBUG");
       return trans;
     }
     return trans[0].children;
@@ -1032,7 +1032,7 @@ class Bundle extends nodefony.Service {
         let bundleLocal = this.getParameters("bundles." + this.name + ".locale");
         files = this.getfilesByLocal(bundleLocal || this.translation.defaultLocale, dir);
         if (bundleLocal && !files.length) {
-          this.logger(`Translation File Locale : ${bundleLocal} not found`, "DEBUG");
+          this.log(`Translation File Locale : ${bundleLocal} not found`, "DEBUG");
         }
       }
     }
@@ -1048,7 +1048,7 @@ class Bundle extends nodefony.Service {
     this.commandFiles = await this.findResult.find("Command")
       .find(regCommand);
     if (!this.commandFiles.length) {
-      this.logger(`Bundle ${this.name} No Command Found`, "DEBUG");
+      this.log(`Bundle ${this.name} No Command Found`, "DEBUG");
       return this.commandFiles;
     }
     let command = null;
@@ -1089,7 +1089,7 @@ class Bundle extends nodefony.Service {
       .find(this.kernel.getOrm())
       .find(regEntity);
     if (!this.entityFiles.length) {
-      this.logger(`Bundle ${this.name} No Entity Found`, "DEBUG");
+      this.log(`Bundle ${this.name} No Entity Found`, "DEBUG");
       return this.entityFiles;
     }
     this.entityFiles.forEach((file) => {
@@ -1099,17 +1099,17 @@ class Bundle extends nodefony.Service {
         try {
           Class = this.loadFile(file.path);
         } catch (e) {
-          this.logger("LOAD ENTITY  " + file.path, "ERROR");
+          this.log("LOAD ENTITY  " + file.path, "ERROR");
           throw e;
         }
         try {
           this.entities[Class.name] = new Class(this);
-          this.logger("LOAD ENTITY  " + Class.name + " : " + file.name, "DEBUG");
+          this.log("LOAD ENTITY  " + Class.name + " : " + file.name, "DEBUG");
         } catch (e) {
-          this.logger(e, "WARNING");
+          this.log(e, "WARNING");
         }
       } else {
-        this.logger("Drop Entity file " + file.name, "WARNING");
+        this.log("Drop Entity file " + file.name, "WARNING");
       }
     });
   }
@@ -1132,7 +1132,7 @@ class Bundle extends nodefony.Service {
     this.fixtureFiles = await this.findResult.find("Fixtures")
       .find(regFixtures);
     if (!this.fixtureFiles.length) {
-      this.logger("Bundle " + this.name + " No Fixutures Found", "DEBUG");
+      this.log("Bundle " + this.name + " No Fixutures Found", "DEBUG");
       return this.entityFiles;
     }
     this.fixtureFiles.forEach((file) => {
@@ -1143,9 +1143,9 @@ class Bundle extends nodefony.Service {
         if (typeof Class === "function") {
           Class.prototype.bundle = this;
           this.fixtures[name] = Class;
-          this.logger("LOAD FIXTURE : " + file.name, "DEBUG");
+          this.log("LOAD FIXTURE : " + file.name, "DEBUG");
         } else {
-          this.logger("Register FIXTURE : " + name + "  error FIXTURE bad format");
+          this.log("Register FIXTURE : " + name + "  error FIXTURE bad format");
         }
       }
     });

@@ -62,9 +62,9 @@
        let message = JSON.parse(data);
        if (message.message === "END LOAD TEST") {
          this.displayTable(message);
-         this.logger(data, "INFO");
+         this.log(data, "INFO");
        } else {
-         this.logger(data, "INFO");
+         this.log(data, "INFO");
        }
      }
 

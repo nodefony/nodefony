@@ -58,12 +58,12 @@ class fixturesCommand extends nodefony.Command {
         if (bundle && fixture !== bundle) {
           continue;
         }
-        this.logger(`LOAD FIXTURE bundle : ${fixture}`, "INFO");
+        this.log(`LOAD FIXTURE bundle : ${fixture}`, "INFO");
         for await (let fix of fixtures[fixture]) {
           if (fixtureName && fix.name !== fixtureName) {
             continue;
           }
-          this.logger(`RUN FIXTURE  : ${fix.name}`, "INFO");
+          this.log(`RUN FIXTURE  : ${fix.name}`, "INFO");
           await fix.run();
         }
       }

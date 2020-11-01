@@ -44,11 +44,11 @@ nodefony.register("Context", () => {
       });
     }
 
-    logger(pci, severity, msgid, msg) {
+    log(pci, severity, msgid, msg) {
       if (!msgid) {
         msgid = this.type;
       }
-      return super.logger(pci, severity, msgid, msg);
+      return super.log(pci, severity, msgid, msg);
     }
 
     logRequest(httpError) {
@@ -59,32 +59,32 @@ nodefony.register("Context", () => {
           this.errorLog = true;
           mgid = `${this.type} ${clc.magenta(this.response.statusCode)} ${clc.red(this.method)}`;
           if (kernel && kernel.environment === "prod") {
-            return this.logger(`${txt} ${httpError.toString()}`, "ERROR", mgid);
+            return this.log(`${txt} ${httpError.toString()}`, "ERROR", mgid);
           }
-          return this.logger(`${txt}
+          return this.log(`${txt}
           ${httpError.toString()}`, "ERROR", mgid);
         }
         if (!this.errorLog) {
           mgid = `${this.type} ${clc.magenta(this.response.statusCode)} ${this.method}`;
-          return this.logger(txt, "INFO", mgid);
+          return this.log(txt, "INFO", mgid);
         }
       } catch (e) {}
     }
 
     fire() {
-      this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
+      this.log(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
       return super.emit.apply(this, arguments);
     }
     fireAsync() {
-      this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
+      this.log(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
       return super.emitAsync.apply(this, arguments);
     }
     emit() {
-      this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
+      this.log(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
       return super.emit.apply(this, arguments);
     }
     emitAsync() {
-      this.logger(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
+      this.log(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
       return super.emitAsync.apply(this, arguments);
     }
 
@@ -154,7 +154,7 @@ nodefony.register("Context", () => {
         this.cookies[cookie.name] = cookie;
       } else {
         let error = new Error("addCookie cookie not valid !!");
-        this.logger(cookie, "ERROR");
+        this.log(cookie, "ERROR");
         throw error;
       }
     }

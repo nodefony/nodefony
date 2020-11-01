@@ -17,7 +17,7 @@ module.exports = nodefony.registerFactory("passport-google-oauth20", () => {
       return new Promise((resolve, reject) => {
         try {
           let strategy = new GoogleStrategy(options, (accessToken, refreshToken, profile, cb) => {
-            this.logger("TRY AUTHENTICATION " + this.name, "DEBUG");
+            this.log("TRY AUTHENTICATION " + this.name, "DEBUG");
             let mytoken = new nodefony.security.tokens.google(profile, accessToken, refreshToken);
             return this.authenticateToken(mytoken).then((token) => {
               cb(null, token);

@@ -279,7 +279,7 @@ class generateProject extends nodefony.Builder {
         response.addons = addons;
         this.path = path.resolve(this.location, response.name);
         if (this.cli.exists(this.path)) {
-          this.logger(`${this.path} Already exist`, "WARNING");
+          this.log(`${this.path} Already exist`, "WARNING");
           return this.removeInteractivePath(this.path)
             .then((myresponse) => {
               if (myresponse.remove) {

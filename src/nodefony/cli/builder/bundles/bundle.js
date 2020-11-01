@@ -140,7 +140,7 @@ class generateBundle extends nodefony.Builder {
       .then((response) => {
         this.path = path.resolve(this.location, this.name);
         if (this.cli.exists(this.path)) {
-          this.logger(`${this.path} Already exist`, "WARNING");
+          this.log(`${this.path} Already exist`, "WARNING");
           return this.removeInteractivePath(this.path)
             .then((myresponse) => {
               if (myresponse.remove) {
@@ -242,7 +242,7 @@ class generateBundle extends nodefony.Builder {
     try {
       this.setPath(Path);
     } catch (e) {
-      this.cli.logger(e, "ERROR");
+      this.cli.log(e, "ERROR");
       throw e;
     }
   }
@@ -300,7 +300,7 @@ class generateBundle extends nodefony.Builder {
           this.cli.kernel.loadBundle(file);
         }
       } catch (e) {
-        this.logger(e, "WARNING");
+        this.log(e, "WARNING");
       }
       if (this.cli.kernel) {
         return this.cli.packageManager(["install"], this.bundlePath);

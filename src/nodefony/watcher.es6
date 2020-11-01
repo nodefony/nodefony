@@ -61,7 +61,7 @@ class Watcher extends nodefony.Service {
       return this.watcher.unwatch(file);
     } catch (e) {
       this.fire("onError", e);
-      this.logger(e, "ERROR");
+      this.log(e, "ERROR");
       throw e;
     }
   }
@@ -88,7 +88,7 @@ class Watcher extends nodefony.Service {
     try {
       this.watcher = this.chokidar.watch(Path, nodefony.extend(true, {}, this.settings, settings));
       this.fire("onInitialize", this.watcher, Path);
-      super.logger("INITIALISE WATCHING  PATH : " + Path, "DEBUG");
+      super.log("INITIALISE WATCHING  PATH : " + Path, "DEBUG");
       this.watcher.on('all', (event, Path) => {
         this.fire("all", event, Path);
         try {
@@ -97,7 +97,7 @@ class Watcher extends nodefony.Service {
           this.fire("on" + event, Path, stats, this.watcher);
         } catch (e) {
           this.fire("onError", e);
-          this.logger(e, "ERROR");
+          this.log(e, "ERROR");
           throw e;
         }
       });

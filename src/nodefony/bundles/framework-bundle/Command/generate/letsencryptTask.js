@@ -72,10 +72,10 @@ class letsencryptTask extends nodefony.Task {
     let res = nodefony.extend({}, this.defaultResponse, response);
     return this.createConfigFile(res)
       .then((file) => {
-        this.logger(`Success Creation letsEncrypt Configuration File :  ${file.path} `);
+        this.log(`Success Creation letsEncrypt Configuration File :  ${file.path} `);
         return this.createScriptRenew(res)
           .then((script) => {
-            this.logger(`Success Creation Script Renew Certificates :  ${script.path} `);
+            this.log(`Success Creation Script Renew Certificates :  ${script.path} `);
             this.cli.chmod('+x', script.path);
             return file;
           });

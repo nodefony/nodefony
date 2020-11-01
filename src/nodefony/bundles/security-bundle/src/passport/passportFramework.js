@@ -214,7 +214,7 @@ module.exports = function(Firewall) {
         return next(err, null);
       };
 
-      this.firewall.logger("STRATEGY AUTHENTICATE  passport-" + name, "DEBUG");
+      this.firewall.log("STRATEGY AUTHENTICATE  passport-" + name, "DEBUG");
       if( context.request && context.request.request){
         context.request.request.query = context.request.query;
         this.strategy.authenticate(context.request.request, this.options);

@@ -5,7 +5,7 @@ try {
   //nodefonyPassport = require("@nodefony/passport-wrapper");
   nodefonyPassport = require(path.resolve(__dirname, "..", "..", "src", "passport", "passportFramework.js"));
 } catch (e) {
-  this.logger(e);
+  this.log(e);
 }
 
 const pluginReader = function() {
@@ -235,7 +235,7 @@ module.exports = class security extends nodefony.Service {
     context.accessControl = this.authorizationService.isControlledAccess(context);
     context.isControlledAccess = (!!context.accessControl.length);
     if (context.isControlledAccess) {
-      this.logger(`Front Controler isControlledAccess : ${context.isControlledAccess}`, "DEBUG");
+      this.log(`Front Controler isControlledAccess : ${context.isControlledAccess}`, "DEBUG");
     }
     for (let area in this.securedAreas) {
       if (this.securedAreas[area].match(context)) {
@@ -243,7 +243,7 @@ module.exports = class security extends nodefony.Service {
         context.security = this.securedAreas[area];
         let state = context.security.stateLess ? "STATELESS" : "STATEFULL";
         let msgid = `\x1b[36mSECURE AREA ${state}\x1b[0m`;
-        context.security.logger(`ENTER SECURE AREA : ${context.security.name}`, "DEBUG", msgid);
+        context.security.log(`ENTER SECURE AREA : ${context.security.name}`, "DEBUG", msgid);
         return true;
       }
     }
@@ -345,7 +345,7 @@ module.exports = class security extends nodefony.Service {
             error.code = next;
             throw error;
           case 200:
-            this.logger("\x1b[34m CROSS DOMAIN  \x1b[0mREQUEST REFERER : " + context.originUrl.href, "DEBUG");
+            this.log("\x1b[34m CROSS DOMAIN  \x1b[0mREQUEST REFERER : " + context.originUrl.href, "DEBUG");
             return 200;
         }
       } else {
@@ -525,7 +525,7 @@ module.exports = class security extends nodefony.Service {
 
   setSessionStrategy(strategy) {
     if (strategy in optionStrategy) {
-      this.logger("Set Session Strategy  : " + strategy, "DEBUG");
+      this.log("Set Session Strategy  : " + strategy, "DEBUG");
       return this.sessionStrategy = strategy;
     }
     throw new Error("sessionStrategy strategy not found");
@@ -593,7 +593,7 @@ module.exports = class security extends nodefony.Service {
                       area.setFactory(config, param[config]);
                     } else {
                       //area.factoryName = config;
-                      this.logger("FACTORY : " + config + " not found in nodefony namespace", "ERROR");
+                      this.log("FACTORY : " + config + " not found in nodefony namespace", "ERROR");
                     }
                   });
               }
@@ -638,11 +638,11 @@ module.exports = class security extends nodefony.Service {
           break;
         case "providers":
           for (let name in obj[ele]) {
-            this.logger("DECLARE FIREWALL PROVIDER NAME " + name, "DEBUG");
+            this.log("DECLARE FIREWALL PROVIDER NAME " + name, "DEBUG");
             try {
               this.providerManager.addConfiguration(name, obj[ele][name]);
             } catch (e) {
-              this.logger(e, "ERROR");
+              this.log(e, "ERROR");
             }
           }
           break;
@@ -653,10 +653,10 @@ module.exports = class security extends nodefony.Service {
   addSecuredArea(name) {
     if (!this.securedAreas[name]) {
       this.securedAreas[name] = new nodefony.SecuredArea(name, this);
-      this.logger("ADD security context : " + name, "DEBUG");
+      this.log("ADD security context : " + name, "DEBUG");
       return this.securedAreas[name];
     } else {
-      this.logger("securedAreas :" + name + " already exist ", "WARNING");
+      this.log("securedAreas :" + name + " already exist ", "WARNING");
     }
   }
 
@@ -667,10 +667,10 @@ module.exports = class security extends nodefony.Service {
     return null;
   }
 
-  logger(pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = "\x1b[36mSERVICE FIREWALL\x1b[0m";
     }
-    return super.logger(pci, severity, msgid, msg);
+    return super.log(pci, severity, msgid, msg);
   }
 };

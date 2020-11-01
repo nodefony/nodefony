@@ -15,7 +15,7 @@ module.exports = nodefony.registerCommand("encoders", function () {
           var security = this.container.get("security");
           var context = args[0];
           if (!security.securedAreas[context]) {
-            this.logger("firewall " + context + " not exits", "ERROR");
+            this.log("firewall " + context + " not exits", "ERROR");
             this.terminate(1);
             return;
           }
@@ -26,19 +26,19 @@ module.exports = nodefony.registerCommand("encoders", function () {
           } else {
             realm = security.securedAreas[context].factory.settings.realm; //  //this.container.getParameters("kernel").system.domain+":"+this.container.getParameters("kernel").system.httpsPort;
           }
-          this.logger("FIREWALL = " + security.securedAreas[context].name);
-          this.logger("Authentification = " + security.securedAreas[context].factory.name);
-          this.logger("REALM = " + security.securedAreas[context].factory.settings.realm);
-          this.logger("HASH GENERATE = " + security.securedAreas[context].factory.generatePasswd(realm, user, passwd));
+          this.log("FIREWALL = " + security.securedAreas[context].name);
+          this.log("Authentification = " + security.securedAreas[context].factory.name);
+          this.log("REALM = " + security.securedAreas[context].factory.settings.realm);
+          this.log("HASH GENERATE = " + security.securedAreas[context].factory.generatePasswd(realm, user, passwd));
         } else {
-          this.logger(new Error("encoders:MD5 must have login password arguments"), "ERROR");
+          this.log(new Error("encoders:MD5 must have login password arguments"), "ERROR");
         }
         break;
       case "bcrypt":
         if (args[0]) {
           let bcrypt = new nodefony.encoders.bcrypt(args[1]);
           let hash = bcrypt.encodePassword(args[0]);
-          this.logger(`HASH GENERATED : ${hash}`);
+          this.log(`HASH GENERATED : ${hash}`);
         } else {
           throw new Error("no passwordField ");
         }

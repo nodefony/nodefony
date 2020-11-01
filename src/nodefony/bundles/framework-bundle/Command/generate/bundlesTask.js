@@ -42,7 +42,7 @@ class bundlesTask extends nodefony.Task {
           .then(() => {
             this.cli.terminate(0);
           }).catch((e) => {
-            this.logger(e, "ERROR");
+            this.log(e, "ERROR");
             this.cli.terminate(0);
           });
       });

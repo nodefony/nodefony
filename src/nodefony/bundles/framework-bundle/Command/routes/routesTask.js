@@ -31,7 +31,7 @@ class displayTask extends nodefony.Task {
     if (url) {
       return this.matchRoutes(url);
     } else {
-      this.logger(new Error("Bad argument must have url  to match"), "ERROR");
+      this.log(new Error("Bad argument must have url  to match"), "ERROR");
     }
   }
 
@@ -106,7 +106,7 @@ class displayTask extends nodefony.Task {
 
   matchRoutes(uri) {
     let myUrl = url.parse(uri);
-    this.logger("URI TO CHECK : " + uri);
+    this.log("URI TO CHECK : " + uri);
     var routes = this.getRoutes();
     var tab = [];
     for (var i = 0; i < routes.length; i++) {
@@ -121,7 +121,7 @@ class displayTask extends nodefony.Task {
       this.displayTable("MATCH URI : " + uri, tab, true);
     } else {
       this.displayTable("no routes match GENARATE ALL ROUTE", routes);
-      this.logger(`URI : ${uri} no routes to match `, "ERROR");
+      this.log(`URI : ${uri} no routes to match `, "ERROR");
     }
     return tab;
   }

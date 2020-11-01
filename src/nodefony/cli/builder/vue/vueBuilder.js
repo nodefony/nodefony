@@ -138,7 +138,7 @@ class Vue extends nodefony.builders.sandbox {
 
   addVuePlugin(args = [], location = this.vueLocation){
     return new Promise(async (resolve, reject) => {
-      this.logger("install Vue plugin : " + args.join(" "));
+      this.log("install Vue plugin : " + args.join(" "));
       let cmd = null;
       try {
         cmd = await this.cli.spawn("npx", args, {
@@ -153,7 +153,7 @@ class Vue extends nodefony.builders.sandbox {
         });
         return resolve(cmd);
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         return reject(e);
       }
     });
@@ -249,7 +249,7 @@ class Vue extends nodefony.builders.sandbox {
     this.vueLocation = path.resolve(location, name);
     return new Promise((resolve, reject) => {
       let args = ["create", "-n", name];
-      this.logger("install Vue cli : vue " + args.join(" "));
+      this.log("install Vue cli : vue " + args.join(" "));
       let cmd = null;
       try {
         cmd = this.cli.spawn(this.cliVue, args, {
@@ -263,7 +263,7 @@ class Vue extends nodefony.builders.sandbox {
           return resolve(path.resolve(this.location, this.response.name));
         });
       } catch (e) {
-        this.logger(e, "ERROR");
+        this.log(e, "ERROR");
         return reject(e);
       }
     });
