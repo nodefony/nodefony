@@ -51,7 +51,7 @@ class Controller extends nodefony.Service {
 
   log(pci, severity, msgid, msg) {
     if (!msgid) {
-      msgid = `Controller : ${this.bundle.name}Bundle:${this.name}`;
+      msgid = `CONTROLLER : ${this.bundle.name}Bundle:${this.name}`;
     }
     return super.log(pci, severity, msgid, msg);
   }

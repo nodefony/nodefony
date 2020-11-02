@@ -154,7 +154,7 @@ const generateQueryString = function (obj, name) {
 module.exports = class router extends nodefony.Service {
 
   constructor(container) {
-    super("router", container, container.get("notificationsCenter"));
+    super("ROUTER", container, container.get("notificationsCenter"));
     this.routes = [];
     this.reader = function (context) {
       var func = context.container.get("reader").loadPlugin("routing", pluginReader);
@@ -297,12 +297,12 @@ module.exports = class router extends nodefony.Service {
     return new nodefony.Route(obj);
   }
 
-  log(pci, severity, msgid, msg) {
+  /*log(pci, severity, msgid, msg) {
     if (!msgid) {
-      msgid = "SERVICE ROUTER";
+      msgid = this.nale;
     }
     return super.log(pci, severity, msgid, msg);
-  }
+  }*/
 
   removeRoutes(filePath) {
     for (let i = 0; i < this.routes.length; i++) {

@@ -167,6 +167,9 @@ const checkFormatMsgId = function (ele) {
       res = ele;
     }
     break;
+  case "array":
+    res = ele;
+    break;
   default:
     throw new Error("checkFormatMsgId bad format " + nodefony.typeOf(ele) + " : " + ele);
   }
@@ -373,7 +376,7 @@ class Syslog extends nodefony.Events {
     this.fire = this.settings.async ? super.fireAsync : super.fire;
   }
 
-  init(environment = nodefony.environment, debug, options = null) {
+  init(environment = nodefony.environment, debug = nodefony.debug, options = null) {
     return this.listenWithConditions(options || conditionOptions(environment, debug),
       (pdu) => {
         return Syslog.normalizeLog(pdu);
@@ -674,8 +677,8 @@ class Syslog extends nodefony.Events {
       console.trace(pdu);
       return;
     }
-    let wrap = Syslog.wrapper(pdu);
     let message = pdu.payload;
+    let wrap = Syslog.wrapper(pdu, message);
     switch (typeof message) {
     case "object":
       switch (true) {
@@ -692,12 +695,12 @@ class Syslog extends nodefony.Events {
         }
         break;
       default:
-        message = util.inspect(message);
+        //message = util.inspect(message);
       }
       break;
     default:
     }
-    return wrap.logger(`${pid} ${wrap.text} ${message}`);
+    return wrap.logger(`${pid} ${wrap.text}`, message);
   }
 }
 

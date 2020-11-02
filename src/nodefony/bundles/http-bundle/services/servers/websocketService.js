@@ -5,7 +5,7 @@ module.exports = class websocketServer extends nodefony.Service {
 
   constructor(httpKernel, options) {
 
-    super("SERVER WEBSOCKET", httpKernel.container, httpKernel.notificationsCenter, options);
+    super("WEBSOCKET", httpKernel.container, httpKernel.notificationsCenter, options);
 
     this.httpKernel = httpKernel;
     this.port = this.httpKernel.kernel.httpPort;

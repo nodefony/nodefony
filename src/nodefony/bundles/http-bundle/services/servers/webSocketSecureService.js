@@ -5,7 +5,7 @@ module.exports = class websocketServerSecure extends nodefony.Service {
 
   constructor(httpKernel, options) {
 
-    super("SERVER WEBSOCKET SECURE", httpKernel.container, httpKernel.notificationsCenter, options);
+    super("WEBSOCKET SECURE", httpKernel.container, httpKernel.notificationsCenter, options);
 
     this.httpKernel = httpKernel;
     this.port = this.httpKernel.kernel.httpsPort;

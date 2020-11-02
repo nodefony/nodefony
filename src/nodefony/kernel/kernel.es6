@@ -1391,7 +1391,7 @@ class Kernel extends nodefony.Service {
         switch (true) {
         case /^config\..*$/.test(ele.name):
           try {
-            this.log(name + " CONFIG LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
+            this.log(name + " CONFIG LOAD FILE :" + ele.path, "DEBUG", "KERNEL READER");
             this.reader.readConfig(ele.path, this.name, callback);
           } catch (e) {
             this.log(e, "ERROR", "BUNDLE " + name + " CONFIG :" + ele.path);
@@ -1400,12 +1400,12 @@ class Kernel extends nodefony.Service {
         case /^routing\..*$/.test(ele.name):
           // ROUTING
           try {
-            this.log(name + " ROUTER LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
+            this.log(name + " ROUTER LOAD FILE :" + ele.path, "DEBUG", "KERNEL READER");
             let router = this.get("router");
             if (router) {
               router.reader(ele.path, this.name);
             } else {
-              this.log(name + " Router service not ready to LOAD FILE :" + ele.path, "WARNING", "SERVICE KERNEL READER");
+              this.log(name + " Router service not ready to LOAD FILE :" + ele.path, "WARNING", "KERNEL READER");
             }
           } catch (e) {
             this.log(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG ROUTING :" + ele.path);
@@ -1413,7 +1413,7 @@ class Kernel extends nodefony.Service {
           break;
         case /^services\..*$/.test(ele.name):
           try {
-            this.log(name + " SERVICE LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
+            this.log(name + " LOAD FILE :" + ele.path, "DEBUG", "KERNEL READER");
             this.get("injection").reader(ele.path, this.name);
           } catch (e) {
             this.log(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG SERVICE :" + ele.path);
@@ -1423,7 +1423,7 @@ class Kernel extends nodefony.Service {
           try {
             let firewall = this.get("security");
             if (firewall) {
-              this.log(name + " SECURITY LOAD FILE :" + ele.path, "DEBUG", "SERVICE KERNEL READER");
+              this.log(name + " SECURITY LOAD FILE :" + ele.path, "DEBUG", "KERNEL READER");
               firewall.reader(ele.path, this.name);
             } else {
               this.log(name + " SECURITY LOAD FILE :" + ele.path + " BUT SERVICE NOT READY", "WARNING");

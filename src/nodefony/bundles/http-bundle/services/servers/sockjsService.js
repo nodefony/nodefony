@@ -92,7 +92,7 @@ const sockCompiler = class sockCompiler extends nodefony.Service {
 module.exports = class sockjs extends nodefony.Service {
 
   constructor(httpKernel) {
-    super("sockjs", httpKernel.container, httpKernel.notificationsCenter);
+    super("SOCKJS", httpKernel.container, httpKernel.notificationsCenter);
     this.compilers = {};
     this.sockets = [];
     this.kernel.once("onBoot", async () => {

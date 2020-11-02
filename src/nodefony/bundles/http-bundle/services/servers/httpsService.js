@@ -22,7 +22,7 @@ const protocol = {
 module.exports = class httpsServer extends nodefony.Service {
 
   constructor(httpKernel) {
-    super("SERVER HTTPS", httpKernel.container, httpKernel.notificationsCenter);
+    super("HTTPS", httpKernel.container, httpKernel.notificationsCenter);
     this.httpKernel = httpKernel;
     this.port = this.httpKernel.kernel.httpsPort;
     this.domain = this.httpKernel.kernel.settings.system.domain;

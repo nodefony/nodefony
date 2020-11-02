@@ -117,7 +117,7 @@ class Service {
   log(pci, severity, msgid = null, msg = null) {
     try {
       if (!msgid) {
-        msgid = `SERVICE ${this.name} `;
+        msgid = this.name;
       }
       return this.syslog.log(pci, severity, msgid, msg);
     } catch (e) {

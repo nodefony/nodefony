@@ -31,7 +31,7 @@ describe("BUNDLE TEST", function () {
 
   describe('FIREWALL CONFIG', () => {
     it("SETTINGS", (done) => {
-      assert.deepStrictEqual(global.firewall.name, "firewall");
+      assert.deepStrictEqual(global.firewall.name, "FIREWALL");
       assert.deepStrictEqual(global.firewall.sessionStrategy, "migrate");
       assert(global.firewall.sessionService);
       assert(global.firewall.orm);

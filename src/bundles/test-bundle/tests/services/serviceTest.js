@@ -35,7 +35,7 @@ describe("BUNDLE TEST", function () {
       assert(myservice);
       assert.deepStrictEqual(myservice.name, "myservice");
       assert(myservice.router);
-      assert.deepStrictEqual(myservice.router.name, "router");
+      assert.deepStrictEqual(myservice.router.name, "ROUTER");
       assert(myservice.httpKernel);
       assert.deepStrictEqual(myservice.httpKernel.name, "HTTP KERNEL");
       assert(myservice.domain);
@@ -48,7 +48,7 @@ describe("BUNDLE TEST", function () {
       assert(myservice.ele);
       assert.deepStrictEqual(myservice.ele, "myargs");
       assert(myservice.https);
-      assert.deepStrictEqual(myservice.https.name, "SERVER HTTPS");
+      assert.deepStrictEqual(myservice.https.name, "HTTPS");
       assert(myservice.calldomain);
       assert.deepStrictEqual(myservice.calldomain, kernel.domain);
       done();
@@ -60,7 +60,7 @@ describe("BUNDLE TEST", function () {
       assert.deepStrictEqual(myservice.ele2, [1, 2, 3, 4]);
       assert.deepStrictEqual(myservice.ele3, null);
       assert(myservice.http);
-      assert.deepStrictEqual(myservice.http.name, "SERVER HTTP");
+      assert.deepStrictEqual(myservice.http.name, "HTTP");
       done();
     });
 

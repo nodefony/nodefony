@@ -3,7 +3,7 @@ const http = require("http");
 module.exports = class httpServer extends nodefony.Service {
 
   constructor(httpKernel, options) {
-    super("SERVER HTTP", httpKernel.container, httpKernel.notificationsCenter, options);
+    super("HTTP", httpKernel.container, httpKernel.notificationsCenter, options);
     this.httpKernel = httpKernel;
     this.port = this.httpKernel.kernel.httpPort;
     this.domain = this.httpKernel.kernel.settings.system.domain;

@@ -113,7 +113,7 @@ const optionStrategy = {
 module.exports = class security extends nodefony.Service {
 
   constructor(container, kernel, cors) {
-    super("firewall", container, kernel.notificationsCenter);
+    super("FIREWALL", container, kernel.notificationsCenter);
     //this.passport = passport.framework(nodefonyPassport(this));
     //this.passport = passport ;
     this.nodefonyPassport = nodefonyPassport;
@@ -669,7 +669,7 @@ module.exports = class security extends nodefony.Service {
 
   log(pci, severity, msgid, msg) {
     if (!msgid) {
-      msgid = "\x1b[36mSERVICE FIREWALL\x1b[0m";
+      msgid = "\x1b[36mFIREWALL\x1b[0m";
     }
     return super.log(pci, severity, msgid, msg);
   }

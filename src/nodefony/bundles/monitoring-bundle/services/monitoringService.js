@@ -62,7 +62,7 @@ module.exports = class monitoring extends nodefony.Service {
 
   log(pci, severity, msgid) {
     if (!msgid) {
-      msgid = "SERVICE MONITORING ";
+      msgid = "MONITORING";
     }
     if (this.realTime) {
       this.realTime.log(pci, severity, msgid);

@@ -8,7 +8,7 @@ const defaultStatic = {
 module.exports = class serverStatics extends nodefony.Service {
 
   constructor(container, options) {
-    super("SERVER STATICS", container, container.get("notificationsCenter"));
+    super("STATICS", container, container.get("notificationsCenter"));
     if (this.kernel.type !== "SERVER") {
       return;
     }
