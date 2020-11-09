@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.12.3",
-    "@babel/parser": "^7.12.3",
+    "@babel/parser": "^7.12.5",
     "@babel/preset-env": "^7.12.1",
     "@nodefony/documentation-bundle": "^6.0.1",
     "@nodefony/elastic-bundle": "^6.0.1",
@@ -59,7 +59,7 @@
     "cli-table": "^0.3.1",
     "clui": "^0.3.6",
     "commander": "^6.2.0",
-    "core-js": "^3.6.5",
+    "core-js": "^3.7.0",
     "create-react-app": "^4.0.0",
     "graphql": "^15.4.0",
     "inquirer": "^7.3.3",
@@ -80,7 +80,7 @@
     "shortid": "^2.2.16",
     "simple-git": "^2.21.0",
     "spdx": "^0.5.2",
-    "twig": "^1.15.2",
+    "twig": "^1.15.3",
     "uuid": "^8.3.1",
     "webrtc-adapter": "^7.7.0",
     "xml2js": "^0.4.23",
@@ -90,8 +90,8 @@
     "babel-loader": "^8.1.0",
     "babel-polyfill": "^6.26.0",
     "terser-webpack-plugin": "^5.0.3",
-    "webpack": "^5.3.1",
-    "webpack-cli": "^4.1.0",
+    "webpack": "^5.4.0",
+    "webpack-cli": "^4.2.0",
     "webpack-merge": "^5.3.0"
   },
   "repository": {
