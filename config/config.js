@@ -114,7 +114,8 @@ module.exports = {
      * SYSLOG NODEFONY
      */
     log: {
-      active: true
+      active: true,
+      debug: "*"
     }
   },
   /**

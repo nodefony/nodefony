@@ -503,76 +503,76 @@ class Controller extends nodefony.Service {
     }
   }
 
-  streamFile(file, headers, options) {
+  streamFile(file, headers, options={}) {
+    options.autoClose =false;
     try {
-      this.response.streamFile = fs.createReadStream(this.getFile(file).path, options);
-    } catch (e) {
-      this.log(e, "ERROR");
-      throw e;
-    }
-    this.response.streamFile.on("open", () => {
-      //console.log("open")
-      try {
-        this.response.response.writeHead(this.response.statusCode, headers);
-        this.response.streamFile.pipe(this.response.response, {
-          // auto end response
-          end: false
-        });
-      } catch (e) {
-        this.log(e, "ERROR");
-        throw e;
-      }
-    });
-    this.response.streamFile.on("end", () => {
-      //console.log("end")
-      if (this.response.streamFile) {
+      const streamFile = fs.createReadStream(this.getFile(file).path, options);
+      streamFile.on("open", () => {
+        //console.log("open")
         try {
-          if (this.response.streamFile) {
-            this.response.streamFile.unpipe(this.response.response);
-            if (this.response.streamFile.fd) {
-              fs.close(this.response.streamFile.fd);
+          this.response.response.writeHead(this.response.statusCode, headers);
+          streamFile.pipe(this.response.response, {
+            // auto end response
+            end: false
+          });
+        } catch (e) {
+          this.log(e, "ERROR");
+          throw e;
+        }
+      });
+      streamFile.on("end", () => {
+        //console.log("end")
+        try {
+          if (streamFile) {
+            streamFile.unpipe(this.response.response);
+            //console.trace(streamFile)
+            if (streamFile.fd) {
+              fs.close(streamFile.fd);
             }
           }
         } catch (e) {
           this.log(e, "ERROR");
           throw e;
         }
-      }
-      if (!this.response.ended) {
-        this.response.end();
-      }
-    });
-    this.response.streamFile.on("close", () => {
-      //console.log("close")
-      if (this.response.streamFile) {
-        this.response.streamFile.unpipe(this.response.response);
-        if (this.response.streamFile.fd) {
-          fs.close(this.response.streamFile.fd);
+        if (!this.response.ended) {
+          this.response.end();
         }
-      }
-      if (!this.response.ended) {
-        this.response.end();
-      }
-    });
-    this.response.streamFile.on("error", (error) => {
-      this.log(error, "ERROR");
-      if (!this.response.ended) {
-        this.response.end();
-      }
-      throw error;
-    });
-    this.response.response.on('close', () => {
-      if (this.response.streamFile) {
-        this.response.streamFile.unpipe(this.response.response);
-        if (this.response.streamFile.fd) {
-          fs.close(this.response.streamFile.fd);
+      });
+      streamFile.on("close", () => {
+        //console.log("close")
+        if (streamFile) {
+          streamFile.unpipe(this.response.response);
+          if (streamFile.fd) {
+            fs.close(streamFile.fd);
+          }
         }
-      }
-      if (!this.response.ended) {
-        this.response.end();
-      }
-    });
-    return this.response.streamFile;
+        if (!this.response.ended) {
+          this.response.end();
+        }
+      });
+      streamFile.on("error", (error) => {
+        this.log(error, "ERROR");
+        if (!this.response.ended) {
+          this.response.end();
+        }
+        throw error;
+      });
+      streamFile.on('close', () => {
+        if (streamFile) {
+          streamFile.unpipe(this.response.response);
+          if (streamFile.fd) {
+            fs.close(streamFile.fd);
+          }
+        }
+        if (!this.response.ended) {
+          this.response.end();
+        }
+      });
+      return streamFile;
+    } catch (e) {
+      this.log(e, "ERROR");
+      throw e;
+    }
   }
 
   renderFileDownload(file, options, headers) {
@@ -741,7 +741,7 @@ class Controller extends nodefony.Service {
 
   logout() {
     if (this.security) {
-      this.log(`Logout Controller : ${this.name}`,"DEBUG");
+      this.log(`Logout Controller : ${this.name}`, "DEBUG");
       return this.security.logout(this.context)
         .then(() => {
           return true;

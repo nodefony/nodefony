@@ -264,7 +264,7 @@ class Bundle extends nodefony.Service {
   }
 
   static excludeDir() {
-    return /^public$|^node_modules$|^nodefony$|^\.git|assets$|tmp$|doc$|build$|css$|scss$|public$/;
+    return /^public$|^node_modules$|^clones$|^\.git|assets$|tmp$|doc$|build$|css$|scss$|public$/;
   }
   static exclude() {
     return /yarn.lock$|package-lock.json$|yarn-error.log$|package.json$/;
@@ -1077,7 +1077,8 @@ class Bundle extends nodefony.Service {
     try {
       return await new nodefony.Finder2({
         excludeDir: /^docs$|^tests|^node_modules|^assets$/
-      }).in(path.resolve(this.path, "Resources", "public"));
+      })
+      .in(path.resolve(this.path, "Resources", "public"));
     } catch (e) {
       return null;
     }
