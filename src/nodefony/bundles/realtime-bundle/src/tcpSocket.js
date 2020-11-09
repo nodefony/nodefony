@@ -1,6 +1,5 @@
 const net = require('net');
 
-
 const defaultOptions = {
   allowHalfOpen: true,
   //highWaterMark:16384*2
@@ -9,29 +8,65 @@ const defaultOptions = {
   //writable: true
 }
 
-class TcpSocket extends nodefony.Service{
+class TcpSocket extends net.Socket {
 
-  constructor(options = defaultOptions, service) {
-    super("TcpSocket", service.container);
-    this.socket = this.create(options);
+  constructor(options = null) {
+    if (!options) {
+      options = defaultOptions;
+    }else{
+      options = nodefony.extend(true, {}, defaultOptions, options)
+    }
+    super(options);
+    this.idConnection = null;
+    this.id = nodefony.generateId();
   }
 
-  create(options = defaultOptions) {
-    return new net.Socket(options);
+  setConnection(id){
+    this.idConnection = id;
   }
 
-  connect(port, domain, data){
-    return new Promise((resolve, reject)=>{
-      this.socket.connect(port, domain, (...args) =>{
-        return resolve(this.socket)
-      });
+  toJson(){
+    return {
+      id : this.id,
+      type: "TcpSocket",
+      address:this.address()
+    }
+  }
+
+  connect(port, domain) {
+    return new Promise((resolve, reject) => {
+      try{
+        super.connect(port, domain, () => {
+          return resolve(this);
+        });
+      }catch(e){
+        return reject(e);
+      }
     });
   }
+
+  send(message){
+    return new Promise((resolve, reject)=>{
+      try{
+        return super.write(message, ()=>{
+          return resolve();
+        });
+      }catch(e){
+        return reject(e)
+      }
+    });
+  }
+
+  close(){
+    return new Promise((resolve, reject)=>{
+      try{
+        super.end(() =>{
+          return resolve(this)
+        })
+      }catch(e){
+        return reject(e);
+      }
+    })
+  }
 }
-
-/*client.on("timeout",function(buffer){
-console.log("PASS event timeout")
-});*/
-
-
-module.exports = TcpSocket
+module.exports = TcpSocket;

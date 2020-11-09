@@ -42,7 +42,7 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
         channel: "/meta/handshake",
         //clientId:this.generateClientId(),
         supportedConnectionTypes: ["websocket"],
-        //successful:true,
+        successful:true,
         authSuccessful: true,
         advice: {
           reconnect: reconnect
@@ -144,7 +144,7 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
       case "object":
         switch (message.channel) {
         case "/meta/handshake":
-          return this.send(this.handshakeResponse(message));
+          return this.handshakeResponse(message);
         case "/meta/connect":
           return this.send(this.connectResponse(message));
         case "/meta/disconnect":

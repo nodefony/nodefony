@@ -5,19 +5,24 @@ module.exports = class defaultController extends nodefony.controller {
     this.realtime = this.get("realTime");
   }
 
+  /**
+   *    @Route ("/nodefony/socket",
+   *      name="socket",requirements={"protocol" = "bayeux"})
+   */
   indexAction(message) {
     switch (this.method) {
-      case "GET":
-        return this.getResponse("PING");
-      case "POST":
-        return this.realtime.handleConnection(this.getParameters("query").request, this.context);
-      case "WEBSOCKET":
-        if (message) {
-          this.realtime.handleConnection(message.utf8Data, this.context);
-        }
-        break;
-      default:
-        throw new Error("REALTIME METHOD NOT ALLOWED");
+    case "GET":
+      return this.getResponse("PING");
+    case "POST":
+      this.realtime.handleConnection(this.query, this.context);
+      return ;
+    case "WEBSOCKET":
+      if (message) {
+        this.realtime.handleConnection(message.utf8Data, this.context);
+      }
+      break;
+    default:
+      throw new Error("REALTIME METHOD NOT ALLOWED");
     }
   }
 };

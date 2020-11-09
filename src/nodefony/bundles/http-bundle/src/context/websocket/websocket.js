@@ -1,12 +1,6 @@
 nodefony.register.call(nodefony.context, "websocket", function () {
 
   const onClose = function (reasonCode, description) {
-    /*if (!this.request) {
-      this.log('CLOSE : ' + this.remoteAddress + " " + reasonCode + " " + description, "INFO");
-    } else {
-      this.log('CLOSE : ' + this.remoteAddress + " ORIGIN : " + this.origin + " " + reasonCode + " " + description, "INFO");
-    }*/
-
     this.log(`${clc.cyan("URL")} : ${this.url}  ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host} ${clc.cyan("Description")} : ${description} `,
       "INFO",
       `${this.type} ${clc.magenta(reasonCode)} CLOSE ${this.method}`);

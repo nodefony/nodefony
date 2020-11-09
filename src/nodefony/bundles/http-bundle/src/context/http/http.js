@@ -11,7 +11,6 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.queryStringParser = this.kernelHttp.settings.queryString;
       this.isElectron = this.kernel.isElectron;
       this.protocol = (type === "HTTP2") ? "2.0" : "1.1";
-      this.scheme = (type === "HTTPS" || type === "HTTP2") ? "https" : "http";
       this.pushAllowed = false;
       if (this.type === "HTTP2") {
         this.request = new nodefony.http2Request(request, this);
@@ -44,9 +43,8 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.promise = null;
       this.timeoutid = null;
       this.profiling = null;
-
       this.url = url.format(this.request.url);
-
+      this.scheme = this.request.url.protocol.replace(":","");
       if (this.request.url.port) {
         this.port = this.request.url.port;
       } else {
