@@ -1,5 +1,13 @@
 {{trans_default_domain("doc")}}
 
+{% extends '../base.html.twig' %}
+
+{% block body %}
+<div class="container-fluid">
+  <div class="row flex-xl-nowrap">
+    {% include '../navbar.html.twig' %}
+		<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" style="top: 5rem;">
+
 <div class="page-header">
 	<h1><strong>ROUTING</strong> </h1>
 	<div class="alert alert-info" role="alert">
@@ -586,3 +594,8 @@ module.exports = class websocketController extends nodefony.controller {
 };
 	</pre>
 </div>
+</main>
+</div>
+</div>
+
+{% endblock %}
