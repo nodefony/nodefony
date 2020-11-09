@@ -4,21 +4,62 @@ const blue = clc.blueBright.bold;
 const green = clc.green;
 const yellow = clc.yellow.bold;
 
+const formatDebug = function (debug) {
+  switch (nodefony.typeOf(debug) ) {
+  case "boolean":
+    return debug;
+  case "string":
+    if (debug === "false" ||
+      debug === "undefined" ||
+      debug === "null") {
+      return false;
+    }
+    if (debug === "true") {
+      return true;
+    }
+    const tab = debug.split(/,| /);
+    if (tab[0] === "*") {
+      return true;
+    }
+    return tab;
+  case "undefined":
+    return false;
+  case "array":
+    if (debug[0] === "*") {
+      return true;
+    }
+    return debug;
+  case "object":
+    return false;
+  default:
+    return false;
+  }
+}
+
 const conditionOptions = function (environment, debug = undefined) {
+  debug = formatDebug(debug);
+  let obj = null;
   if (environment === "development") {
-    return {
+    obj = {
       severity: {
         operator: "<=",
         data: (debug === false) ? 6 : 7
       }
     };
+  } else {
+    obj = {
+      severity: {
+        operator: "<=",
+        data: (debug) ? 7 : 6
+      }
+    };
   }
-  return {
-    severity: {
-      operator: "<=",
-      data: (debug === true) ? 7 : 6
+  if (typeof debug === "object") {
+    obj.msgid = {
+      data: debug
     }
-  };
+  }
+  return obj;
 };
 
 /*
@@ -162,10 +203,8 @@ const checkFormatMsgId = function (ele) {
   case "number":
     res = ele;
     break;
-  case "object":
-    if (ele instanceof RegExp) {
-      res = ele;
-    }
+  case "RegExp":
+    res = ele;
     break;
   case "array":
     res = ele;
@@ -270,7 +309,8 @@ const sanitizeConditions = function (settingsCondition) {
         }
         res = checkFormatMsgId(condi.data);
         if (res !== false) {
-          if (nodefony.typeOf(res) === "array") {
+          let format = nodefony.typeOf(res);
+          if (format === "array") {
             condi.data = {};
             for (let i = 0; i < res.length; i++) {
               condi.data[res[i]] = "||";
@@ -374,6 +414,10 @@ class Syslog extends nodefony.Events {
      */
     this.start = 0;
     this.fire = this.settings.async ? super.fireAsync : super.fire;
+  }
+
+  static formatDebug(debug){
+    return formatDebug(debug)
   }
 
   init(environment = nodefony.environment, debug = nodefony.debug, options = null) {
@@ -603,10 +647,6 @@ class Syslog extends nodefony.Events {
   listenWithConditions(conditions, callback) {
     return this.filter(conditions, callback);
   }
-
-  /*logger() {
-    return this.log.apply(this, arguments);
-  }*/
 
   error(data) {
     return this.log(data, "ERROR");

@@ -565,11 +565,18 @@ class cliKernel extends nodefony.cli {
       data.push(2);
       data.push(3);
     }
-    syslog.listenWithConditions( {
+    let conditions = {
       severity: {
         data: data
       }
-    }, (pdu) => {
+    };
+    const format = nodefony.Syslog.formatDebug(debug || this.debug);
+    if (typeof format === "object") {
+      conditions.msgid = {
+        data: debug
+      }
+    }
+    syslog.listenWithConditions( conditions, (pdu) => {
       return nodefony.Syslog.normalizeLog.call(this, pdu, this.cluster);
     });
   }

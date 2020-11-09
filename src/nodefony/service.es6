@@ -27,8 +27,6 @@ class Service {
       if (notificationsCenter === false) {
         this.options = options;
       } else {
-        //optimize
-        //this.options = nodefony.extend(true, options, defaultOptions);
         this.options = nodefony.extend(true, {}, defaultOptions, options);
       }
     }
@@ -121,12 +119,17 @@ class Service {
       }
       return this.syslog.log(pci, severity, msgid, msg);
     } catch (e) {
-      console.log(severity , msgid, msg, " : ", pci);
+      console.log(severity, msgid, msg, " : ", pci);
+      console.warn(e);
     }
   }
 
   logger(one, ...args) {
-    console.trace(nodefony.Syslog.wrapper(this.log(one, "DEBUG")).text, one, ...args);
+    return console.debug(nodefony.Syslog.wrapper(this.log(one, "DEBUG")).text, one, ...args);
+  }
+
+  trace(one, ...args) {
+    return console.trace(nodefony.Syslog.wrapper(this.log(one, "DEBUG")).text, one, ...args);
   }
 
   eventNames(...args) {

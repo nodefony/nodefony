@@ -354,7 +354,7 @@ class Kernel extends nodefony.Service {
         process.env.BABEL_ENV = 'production';
       }
     }
-    process.env.DEBUG_MODE = this.debug;
+    process.env.NODE_DEBUG = this.debug;
   }
 
   logEnv() {
@@ -1087,6 +1087,9 @@ class Kernel extends nodefony.Service {
     if (!this.settings.system.log.active) {
       return;
     }
+    if (this.debug){
+      this.debug = this.settings.system.log.debug || true ;
+    }
     return this.cli.initSyslog(this.environment, this.debug);
   }
 
@@ -1111,7 +1114,7 @@ class Kernel extends nodefony.Service {
    */
   log(pci, severity, msgid, msg) {
     if (!msgid) {
-      msgid = this.cli.clc.magenta("KERNEL " + this.type + " ");
+      msgid = this.cli.clc.magenta("KERNEL");
     }
     return super.log(pci, severity, msgid, msg);
   }
