@@ -1,41 +1,39 @@
 /**
- * 
+ *
  */
 stage.registerController("appController", function() {
-	
-
 	/**
-	 * 
+	 *
 	 */
 	stage.Controller.prototype.viewOptions = {
 		"hideHeader": false,
 		"hideAside" : false,
 		"hideFooter": false
 	};
-	
+
 	/**
-	 * 
+	 *
 	 */
 	stage.Controller.prototype.renderContent = function(partial, variables, options) {
 		var options = stage.extend(true, {}, this.viewOptions, options);
-		
+
 		$(".app-header")[options.hideHeader?"addClass":"removeClass"]("hide");
 		$(".app-footer")[options.hideFooter?"addClass":"removeClass"]("hide");
-		
+
 		// remove left margins for content and footer
 		$(".app-aside")[options.hideAside?"addClass":"removeClass"]("hide");
 		$(".app-content")[options.hideAside?"addClass":"removeClass"]("aside-hide");
 		$(".app-footer")[options.hideAside?"addClass":"removeClass"]("aside-hide");
-		
+
 		return this.renderPartial(partial, variables);
 	};
-	
+
 	/**
  	 * Render a classic scrollable page in the content
  	 * area.
  	 */
 	stage.Controller.prototype.renderDefaultContent = function(partial, variables, options) {
-		var view = this.renderContent(partial, variables, options);			
+		var view = this.renderContent(partial, variables, options);
 		var layout = '<div class="app-content-body">' + view + '</div>';
 		this.render($(".app-content").removeClass("full"), layout);
 	};
@@ -50,7 +48,7 @@ stage.registerController("appController", function() {
 		this.render($(".app-content").addClass("full"), layout);
 	};
 
-	var regfragment = /^({.*})({.*})$/g;  
+	var regfragment = /^({.*})({.*})$/g;
 	var fragment = function(message){
 		try {
 			if ( this.fragment ){
@@ -63,7 +61,7 @@ stage.registerController("appController", function() {
 				fragment.call(this,res[1])
 				fragment.call(this,res[2])
 				return ;
-			}		
+			}
 			var pdu = new stage.PDU();
 			pdu.parseJson(this.message);
 			this.serverSyslog.logger(pdu);
@@ -72,14 +70,13 @@ stage.registerController("appController", function() {
 			//console.log("FRAGMENTE")
 			this.fragment = true ;
 			return ;
-		}	
+		}
 	};
 
 	var parseMessage = function(message){
 		//console.log(message)
 		try {
-			var json = JSON.parse(message) ; 
-
+			var json = JSON.parse(message) ;
 			if ( json.pdu ){
 				//return fragment.call(this, JSON.stringify( message.pdu) );
 			}
@@ -98,10 +95,10 @@ stage.registerController("appController", function() {
 
 				}
 				pm2_graph.updateTable($("#pm2-status"), json.pm2);
-				//this.logger(json.pm2,"INFO");	
-			}	
+				//this.logger(json.pm2,"INFO");
+			}
 		}catch(e){
-			this.logger(e,"ERROR");	
+			this.logger(e,"ERROR");
 		}
 	};
 
@@ -127,7 +124,7 @@ stage.registerController("appController", function() {
 	};
 
 	/**
-	 * 
+	 *
 	 */
 	var controller = class controller  extends stage.Controller {
 
@@ -138,16 +135,15 @@ stage.registerController("appController", function() {
 			this.config = this.module.config;
 			this.kernel.listen(this, "onReady", function(){
 				this.realtime = this.get("realtime") ;
-				this.serverSyslog = this.get("serverSyslog");	
-				this.realtime.listen(this, "onConnect", onConnect );
-				this.realtime.listen(this, "onSubscribe", function(service, message, realtime){
+				this.serverSyslog = this.get("serverSyslog");
+				this.realtime.listen(this, "connect", onConnect );
+				this.realtime.listen(this, "subscribe", function(service, message, realtime){
 					if (service === "monitoring"){
-						this.realtime.listen(this, "onMessage", serverMessages );
+						this.realtime.listen(this, "message", serverMessages );
 					}
 				})
-
-				this.realtime.listen(this, "onUnSubscribe", function(service, message, realtime){
-					this.realtime.unListen("onMessage" , serverMessages) ;
+				this.realtime.listen(this, "unsubscribe", function(service, message, realtime){
+					this.realtime.unListen("message" , serverMessages) ;
 					console.log("onUnSubscribe service : " + service)
 				})
 			});
@@ -174,19 +170,19 @@ stage.registerController("appController", function() {
 								window.location = "/";
 							break;
 							default:
-								App.logger("Error: " + textStatus + ": " + errorThrown, "ERROR");	
+								App.logger("Error: " + textStatus + ": " + errorThrown, "ERROR");
 						}
 						return ;
 					}
-					//App.logger("Error: " + textStatus + ": " + errorThrown, "ERROR");	
+					//App.logger("Error: " + textStatus + ": " + errorThrown, "ERROR");
 				}
 			});
 		}
-	
+
 		/**
-	 	* 
+	 	*
 	 	*/
-		indexAction () {		
+		indexAction () {
 			this.render( this.kernel.uiContainer , this.renderPartial("appModule::index", {config: this.config}), "prepend") ;
 
 			// section elements definition
@@ -194,12 +190,12 @@ stage.registerController("appController", function() {
 			section.header 	= $(".app-header");
 			section.aside 	= $(".app-aside");
 			section.content = $(".app-content");
-			section.footer 	= $(".app-footer");		
+			section.footer 	= $(".app-footer");
 			this.kernel.set("section", section);
 
 			// load the nav menu
 			this.module.controllers.navController.indexAction();
-		
+
 			// rewind initial route
 			var location = this.get("location");
 			var browser = this.get("browser");
@@ -207,14 +203,14 @@ stage.registerController("appController", function() {
 			if (location.hash() === "" || location.hash() ==="/") {
 				this.redirect(this.router.generateUrl("dashboard"));
 			} else {
-				browser.url(location.initialUrl);	
+				browser.url(location.initialUrl);
 			}
 		}
 
 		/**
-	 	* 
+	 	*
 	 	*/
-		["404Action"] () {		
+		["404Action"] () {
 			this.renderDefaultContent("appModule::404", {
 				"product": this.kernel.product,
 				"version": this.kernel.version
@@ -224,17 +220,17 @@ stage.registerController("appController", function() {
 				"hideFooter": true
 			});
 		};
-		
+
 		/**
-	 	* 
+	 	*
 	 	*/
-		["500Action"] (error) {		
+		["500Action"] (error) {
 			if (!$(".app-content").length) {
 				var view = this.renderPartial("appModule::500", { error: error });
 				$("body").html(view);
 				return ;
 			}
-			
+
 			this.renderDefaultContent("appModule::500", {
 				"error": error,
 				"product": this.kernel.product,

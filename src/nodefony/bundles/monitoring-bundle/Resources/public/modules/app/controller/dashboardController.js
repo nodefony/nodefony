@@ -154,7 +154,9 @@ stage.registerController("dashboardController", function() {
       var layout = null;
       var realtime = this.get("realtime");
       if (!realtime.subscribedService.monitoring) {
-        realtime.subscribe("monitoring")
+        if (realtime.connected){
+          realtime.subscribe("monitoring")
+        }
       }
 
       switch (this.config.content.dashboard["@layout"]) {

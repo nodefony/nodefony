@@ -31,7 +31,7 @@ monitoring-offline:
   defaults: {"controller": "framework:default:500"}
 
 monitoring-module:
-  pattern:             /nodefony/{module}
+  pattern:             /nodefony/modules/{module}
   defaults: {"controller": "monitoring:default:index"}
 
 monitoring-realtime:

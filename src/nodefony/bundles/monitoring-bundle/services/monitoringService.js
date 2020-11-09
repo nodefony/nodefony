@@ -112,7 +112,7 @@ module.exports = class monitoring extends nodefony.Service {
             this.log("CONNECT PM2 REALTIME MONITORING", "DEBUG");
             // PM2 REALTIME
             interval = setInterval(() => {
-              pm2.describe(this.name, (err, list) => {
+              pm2.describe(this.kernel.projectName || "nodefony", (err, list) => {
                 let clusters = {
                   pm2: [],
                   name: this.name

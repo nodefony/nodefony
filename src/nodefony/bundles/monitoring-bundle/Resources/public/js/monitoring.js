@@ -16,13 +16,16 @@ require("./flot/jquery.flot.crosshair.js");
 const smoothie = require("./smoothie/smoothie.js");
 require("../css/json-view/jquery.jsonview.css");
 
+const nodefony = require('nodefony-client')
+const socket = require("nodefony-client/dist/socket");
+socket(nodefony);
 module.exports = function () {
 
   // expose  in gobal window object
   window["stage"] = stage;
   window["SmoothieChart"] = smoothie.SmoothieChart;
   window["TimeSeries"] = smoothie.TimeSeries;
-
+  window.nodefony = nodefony ;
   /*
    *
    *	Class Bundle App client side
@@ -40,7 +43,7 @@ module.exports = function () {
       //== Kernel
       var environment = $(".environment").attr("value");
       var debug = $(".debug").attr("value");
-      this.kernel = new stage.appKernel("/nodefony/app", environment, {
+      this.kernel = new stage.appKernel("/nodefony/modules/app", environment, {
         debug: debug,
         location: {
           html5Mode: false
