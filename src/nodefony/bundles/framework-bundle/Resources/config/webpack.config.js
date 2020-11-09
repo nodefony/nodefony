@@ -124,8 +124,8 @@ module.exports = merge(config, {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "./css/[name].css",
-      allChunks: true
+      filename: "./css/[name].css"
+      //allChunks: true
     })
   ],
   devServer: {

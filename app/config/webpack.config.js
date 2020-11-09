@@ -136,9 +136,7 @@ module.exports = merge(config, {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      fallback: "style-loader",
-      filename: "./css/[name].css",
-      allChunks: true
+      filename: "./css/[name].css"
     }),
     new webpack.DefinePlugin({
       'process.env': {
