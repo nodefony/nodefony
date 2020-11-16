@@ -1,7 +1,9 @@
 const path = require("path");
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const { merge } = require('webpack-merge');
+const {
+  merge
+} = require('webpack-merge');
 const precss = require('precss');
 const autoprefixer = require('autoprefixer');
 
@@ -16,6 +18,7 @@ const publicPath = `/${bundleName}-bundle/assets/`;
 
 let config = null;
 let dev = true;
+const debug = kernel.debug ? "*" : false;
 if (kernel.environment === "dev") {
   config = require("./webpack/webpack.dev.config.js");
 } else {
@@ -42,7 +45,10 @@ module.exports = merge(config, {
   externals: {},
   resolve: {
     extensions: ['.js', '.json', '.jsx', '.css', '.mjs'],
-    fallback: { "path": false }
+    fallback: {
+      "path": false,
+      "assert": false
+    }
   },
   module: {
     rules: [{
@@ -142,10 +148,12 @@ module.exports = merge(config, {
       filename: "./css/[name].css"
     }),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-      'process.env.DEBUG': JSON.stringify(process.env.DEBUG),
-      'process.env.GRAPHIQL': JSON.stringify(bundleConfig.graphiql),
-      'process.env.SWAGGER': JSON.stringify(bundleConfig.swagger)
+      'process.env': {
+        'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        "NODE_DEBUG": JSON.stringify(debug),
+        "GRAPHIQL": JSON.stringify(bundleConfig.graphiql),
+        "SWAGGER": JSON.stringify(bundleConfig.swagger)
+      }
     })
   ],
   devServer: {

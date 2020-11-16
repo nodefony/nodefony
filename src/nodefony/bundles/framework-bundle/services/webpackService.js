@@ -386,7 +386,8 @@ module.exports = class webpack extends nodefony.Service {
           });
         }
       } catch (e) {
-        this.log(e, 'ERROR');
+        this.log(`Error webpack ${bundle.name}`, 'ERROR');
+        this.trace(e)
         return reject(e);
       }
       try {

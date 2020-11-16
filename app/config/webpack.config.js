@@ -12,6 +12,7 @@ const bundleName = path.basename(path.resolve(__dirname, ".."));
 const publicPath = bundleName + "/assets/";
 
 let config = null;
+const debug = kernel.debug ? "*" : false ;
 let dev = true;
 if (kernel.environment === "dev") {
   config = require("./webpack/webpack.dev.config.js");
@@ -140,7 +141,8 @@ module.exports = merge(config, {
     }),
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        "NODE_DEBUG": JSON.stringify(debug)
       }
     })
   ],

@@ -28,14 +28,13 @@ const publicPath = "/{{bundleName}}/assets/";
 
 let wpconfig = null;
 let dev = true;
+const debug = kernel.debug ? "*" : false ;
 if (kernel.environment === "dev") {
   wpconfig = require("./webpack/webpack.dev.config.js");
 } else {
   wpconfig = require("./webpack/webpack.prod.config.js");
   dev = false;
 }
-
-const debug = kernel.debug ? "*" : false ;
 
 module.exports = merge(wpconfig, {
   //context: context,

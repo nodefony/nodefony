@@ -1,5 +1,5 @@
 const path = require("path");
-//const webpack = require('webpack');
+const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const precss = require('precss');
@@ -11,6 +11,7 @@ const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
 const publicPath = bundleName + "/assets/";
 
 let config = null;
+const debug = kernel.debug ? "*" : false ;
 if (kernel.environment === "dev") {
   config = require("./webpack/webpack.dev.config.js");
 } else {
@@ -100,6 +101,12 @@ module.exports = merge({
     new MiniCssExtractPlugin({
       filename: "./css/[name].css"
       //allChunks: true
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        "NODE_DEBUG":JSON.stringify(debug)
+      }
     })
   ]
 }, config);
