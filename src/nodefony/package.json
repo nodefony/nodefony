@@ -78,7 +78,7 @@
     "semver": "^7.3.2",
     "shelljs": "^0.8.4",
     "shortid": "^2.2.16",
-    "simple-git": "^2.21.0",
+    "simple-git": "^2.22.0",
     "spdx": "^0.5.2",
     "twig": "^1.15.3",
     "uuid": "^8.3.1",
@@ -87,12 +87,12 @@
     "yarn": "^1.22.10"
   },
   "devDependencies": {
-    "babel-loader": "^8.1.0",
+    "babel-loader": "^8.2.1",
     "babel-polyfill": "^6.26.0",
     "terser-webpack-plugin": "^5.0.3",
     "webpack": "^5.4.0",
     "webpack-cli": "^4.2.0",
-    "webpack-merge": "^5.3.0"
+    "webpack-merge": "^5.4.0"
   },
   "repository": {
     "type": "git",
