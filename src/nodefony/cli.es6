@@ -225,15 +225,6 @@ class CLI extends nodefony.Service {
     return this.idle = setInterval(() => {}, 0);
   }
 
-  log(pci, severity, msgid, msg) {
-    if (!msgid) {
-      try {
-        msgid = clc.magenta(`${this.name}`);
-      } catch (e) {}
-    }
-    return super.log(pci, severity, msgid, msg);
-  }
-
   checkVersion(version = null) {
     if (!version) {
       version = this.version;

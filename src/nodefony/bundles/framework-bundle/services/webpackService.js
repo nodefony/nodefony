@@ -13,7 +13,7 @@ module.exports = class webpack extends nodefony.Service {
       this.socksSettings = this.kernel.getBundle("http").settings.sockjs;
       this.webPackSettings = this.kernel.getBundle("framework").settings.webpack;
       this.outputFileSystem = this.setFileSystem();
-      return this ;
+      return this;
     });
 
     this.version = this.getWebpackVersion();
@@ -52,7 +52,7 @@ module.exports = class webpack extends nodefony.Service {
             shell.cd(this.kernel.rootDir);
           });
       }
-      return this ;
+      return this;
     });
 
     if (this.production) {
@@ -108,6 +108,32 @@ module.exports = class webpack extends nodefony.Service {
     return process.env.WEBPACK_VERSION;
   }
 
+  loggerError(errors) {
+    if (nodefony.isArray(errors)) {
+      errors.forEach((item) => {
+        if (this.kernel.debug) {
+          if (item.details) {
+            this.logger(item.details);
+          }
+          if (item.stack) {
+            this.logger(item.stack);
+          }
+        }
+        if (item.moduleName) {
+          this.log(item.moduleIdentifier, "ERROR");
+          this.log(item.moduleName, "ERROR");
+        }
+        if (item.message) {
+          this.log(item.message, "ERROR");
+        } else {
+          console.error(item);
+        }
+      });
+    } else {
+      return this.loggerError([info.errors])
+    }
+  }
+
   loggerStat(err, stats, bundle, file, watcher) {
     if (err) {
       throw err;
@@ -115,12 +141,9 @@ module.exports = class webpack extends nodefony.Service {
     const info = stats.toJson();
     let error = stats.hasErrors();
     if (error) {
-      if (info.errors && nodefony.typeOf(info.errors) === "array") {
-        this.log(info.errors.join("\n"), "ERROR");
-        console.trace(info.errors);
-      } else {
-        console.trace(info.errors)
-        this.log(info.errors, "ERROR");
+      if (info.errors) {
+        this.log(`Webpack bundle ${bundle} config : ${file}`, "ERROR");
+        this.loggerError(info.errors)
       }
     } else {
       if (bundle) {
@@ -488,8 +511,8 @@ module.exports = class webpack extends nodefony.Service {
     let table = this.kernel.cli.displayTable(null, options);
     try {
       for (let ele in config.entry) {
-        let entry = config.entry[ele].import ? config.entry[ele].import.toString() :config.entry[ele] ;
-        let lib = (config.output.library && config.output.library.name) ? config.output.library.name : config.output.library ;
+        let entry = config.entry[ele].import ? config.entry[ele].import.toString() : config.entry[ele];
+        let lib = (config.output.library && config.output.library.name) ? config.output.library.name : config.output.library;
         if (config.output) {
           table.push([
             ele,

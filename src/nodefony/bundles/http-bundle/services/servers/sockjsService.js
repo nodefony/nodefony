@@ -147,7 +147,7 @@ module.exports = class sockjs extends nodefony.Service {
   addCompiler(compiler, basename, config = {}) {
     this.compilers[basename] = new sockCompiler(this, "SOCKJS_" + basename, compiler);
     this.log("Add sock-js compiler  : " + "SOCKJS_" + basename, "DEBUG");
-    this.log("dev config : " + config, "DEBUG");
+    this.log( config, "DEBUG");
     if (this.compilers[basename].initsockClient) {
       this.removeListener("onConnection", this.compilers[basename].initsockClient);
     }

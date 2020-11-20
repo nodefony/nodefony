@@ -5,7 +5,7 @@ class generateProject extends nodefony.Builder {
     this.name = null;
     this.pathSkeleton = path.resolve(__dirname, "skeletons");
     this.bundleUsersPath = path.resolve(nodefony.path, "cli", "builder", "bundles", "users-bundle");
-    this.bundlePath = path.resolve(nodefony.path, "cli", "builder", "bundles", "users-bundle");
+    //this.bundlePath = path.resolve(nodefony.path, "cli", "builder", "bundles", "users-bundle");
     if (this.cmd === "create:project" || this.cmd === "create") {
       if (args && args[0]) {
         this.name = args[0];

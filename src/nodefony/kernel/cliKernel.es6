@@ -537,7 +537,7 @@ class cliKernel extends nodefony.cli {
     return this.git;
   }
 
-  initSyslog(environment, debug, options = {}) {
+  initSyslog(environment, debug, options = null) {
     if (!this.kernel) {
       return super.initSyslog(environment, debug, options);
     }

@@ -80,10 +80,7 @@ module.exports = merge(wpconfig, {
             }]
           }
         }]
-      }, {
-        test: /jquery\..*\.js/,
-        use: "imports-loader?$=jquery,jQuery=jquery,this=>window"
-      }, {% endif %}{
+      },{% endif %}{
         test: /\.(sa|sc|c)ss$/,
         use: [
           //'css-hot-loader',
