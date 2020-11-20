@@ -1,7 +1,7 @@
 .\" Manpage for nodefony.
 .\" Contact ccamensuli@ngmail.com to correct errors or typos.
 
-.TH man 8 "" "4.0.0" "NODEFONY 4.0.0 man page"
+.TH man 8 "" "6.0.0" "NODEFONY 6.0.0 man page"
 .SH NAME
 nodefony --  High Level Node Program for manage a nodefony project
 .SH SYNOPSIS

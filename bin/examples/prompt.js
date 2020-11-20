@@ -92,9 +92,10 @@ const questions = [{
 
 const cli = new nodefony.cli("CLI", null, null, {
   onStart: (cli) => {
-    cli.prompt(questions).then(function (answers) {
-      console.log('\nOrder receipt:');
-      console.log(JSON.stringify(answers, null, '  '));
-    });
+    cli.prompt(questions)
+      .then(function (answers) {
+        console.log('\nOrder receipt:');
+        console.log(JSON.stringify(answers, null, '  '));
+      });
   }
 });

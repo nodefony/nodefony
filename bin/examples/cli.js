@@ -9,15 +9,15 @@ try {
 
 const simpleLogger = function (cli) {
   return new Promise((resolve, reject) => {
-    cli.logger("START simpleLogger : " + cli.getEmoji("clapper"));
-    cli.logger("Emoji : " + cli.getEmoji());
+    cli.log("START simpleLogger : " + cli.getEmoji("clapper"));
+    cli.log("Emoji : " + cli.getEmoji());
     cli.blankLine();
-    cli.logger("Emoji : " + cli.getEmoji(), "DEBUG");
+    cli.log("Emoji : " + cli.getEmoji(), "DEBUG");
     cli.blankLine();
-    cli.logger("Emoji : " + cli.getEmoji(), "ERROR");
+    cli.log("Emoji : " + cli.getEmoji(), "ERROR");
     cli.blankLine();
-    cli.logger("Emoji : " + cli.getEmoji(), "WARNING");
-    cli.logger("END simpleLogger : " + cli.getEmoji("checkered_flag"));
+    cli.log("Emoji : " + cli.getEmoji(), "WARNING");
+    cli.log("END simpleLogger : " + cli.getEmoji("checkered_flag"));
     resolve(cli);
   });
 };
@@ -26,10 +26,10 @@ const simpleLogger = function (cli) {
 const cli = new nodefony.cli("MY CLI", {
   resize: true,
   onResize: (cli) => {
-    cli.logger("RESIZE : " + cli.getEmoji());
+    cli.log("RESIZE : " + cli.getEmoji());
   },
   onStart: (cli) => {
-    cli.logger("ON START");
+    cli.log("ON START");
     // PROMISE
     simpleLogger(cli).then((cli) => {
         // SPINNER
@@ -56,7 +56,7 @@ const cli = new nodefony.cli("MY CLI", {
         return Sparkline2(cli, 30);
       })
       .then((cli) => {
-        cli.logger("TERMINATE MY CLI : " + cli.getEmoji("checkered_flag"));
+        cli.log("TERMINATE MY CLI : " + cli.getEmoji("checkered_flag"));
         cli.terminate();
       })
       .catch((e) => {
@@ -83,16 +83,16 @@ var severity = [
 ];
 const spinner = function (cli, time) {
   return new Promise((resolve, reject) => {
-    cli.logger("START SPINNER : " + cli.getEmoji("clapper"));
+    cli.log("START SPINNER : " + cli.getEmoji("clapper"));
     cli.startSpinner("MY CLI", ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷']);
     cli.blankLine();
-    cli.logger("MESSAGE : " + cli.getEmoji());
+    cli.log("MESSAGE : " + cli.getEmoji());
     var interval = setInterval(() => {
-      cli.logger("MESSAGE : " + cli.getEmoji(), severity[random(7)]);
+      cli.spinlog("MESSAGE : " + cli.getEmoji(), severity[random(7)]);
     }, 0);
     setTimeout(() => {
       cli.stopSpinner();
-      cli.logger("END SPINNER : " + cli.getEmoji("checkered_flag"));
+      cli.log("END SPINNER : " + cli.getEmoji("checkered_flag"));
       clearInterval(interval);
       resolve(cli);
     }, time || 2000);
@@ -101,7 +101,7 @@ const spinner = function (cli, time) {
 
 const tableExample = function (cli) {
   return new Promise((resolve, reject) => {
-    cli.logger("START TABLE : " + cli.getEmoji("clapper"));
+    cli.log("START TABLE : " + cli.getEmoji("clapper"));
     let options = {
       head: [
         "COLUMN 1",
@@ -120,21 +120,22 @@ const tableExample = function (cli) {
       tab.push([severity[random(7)], random(100), random(200), random(300)]);
     }
     let table2 = cli.displayTable(tab, options);
-    cli.logger("END TABLE : " + cli.getEmoji("checkered_flag"));
+    cli.log("END TABLE : " + cli.getEmoji("checkered_flag"));
     resolve(cli);
   });
 };
 
 const progress = function (cli, time) {
   return new Promise((resolve, reject) => {
-    cli.logger("START PROGRESS : " + cli.getEmoji("clapper"));
-    var pg = cli.createProgress(50);
+    cli.log("START PROGRESS : " + cli.getEmoji("clapper"));
     var i = 0;
+    var pg = cli.createProgress(50);
     var interval = setInterval(() => {
-      cli.logger(pg.update(++i, 50));
+      cli.log(pg.update(++i, 50), "SPINNER")
       if (i === 50) {
+        cli.blankLine();
         clearInterval(interval);
-        cli.logger("END PROGRESS : " + cli.getEmoji("checkered_flag"));
+        cli.log("\u001b[13pEND PROGRESS : " + cli.getEmoji("checkered_flag"));
         resolve(cli);
       }
     }, time || 50);
@@ -143,17 +144,18 @@ const progress = function (cli, time) {
 
 const progress2 = function (cli, time) {
   return new Promise((resolve, reject) => {
-    cli.logger("START PROGRESS 2 : " + cli.getEmoji("clapper"));
+    cli.log("START PROGRESS 2 : " + cli.getEmoji("clapper"));
     var pg = cli.createProgress(100);
     var i = 0;
-    cli.startSpinner("PROGRESS");
+    //cli.startSpinner("PROGRESS");
     var interval = setInterval(() => {
-      cli.logger("MY PROGRESS " + pg.update(++i, 100));
+      cli.log( pg.update(++i, 100), "SPINNER")
       if (i === 100) {
+        cli.blankLine();
         clearInterval(interval);
-        cli.stopSpinner();
-        cli.logger("MY PROGRESS " + pg.update(i, 100));
-        cli.logger("END PROGRESS 2 : " + cli.getEmoji("checkered_flag"));
+        //cli.stopSpinner();
+        cli.log("MY PROGRESS " + pg.update(i, 100));
+        cli.log("END PROGRESS 2 : " + cli.getEmoji("checkered_flag"));
         resolve(cli);
       }
     }, time || 30);
@@ -162,30 +164,31 @@ const progress2 = function (cli, time) {
 
 const Sparkline = function (cli, time) {
   return new Promise((resolve, reject) => {
-    cli.logger("START Sparkline  : " + cli.getEmoji("clapper"));
+    cli.log("START Sparkline  : " + cli.getEmoji("clapper"));
     var sl = cli.createSparkline([10, 12, 3, 7, 12, 9, 23, 10, 9, 19, 16, 18, 12, 12], " reqs/sec");
-    cli.logger(sl);
-    cli.logger("END Sparkline  : " + cli.getEmoji("checkered_flag"));
+    cli.log(sl);
+    cli.log("END Sparkline  : " + cli.getEmoji("checkered_flag"));
     resolve(cli);
   });
 };
 
 const Sparkline2 = function (cli, time) {
   return new Promise((resolve, reject) => {
-    cli.logger("START Sparkline  : " + cli.getEmoji("clapper"));
+    cli.log("START Sparkline  : " + cli.getEmoji("clapper"));
     var i = 0;
     var tab = [];
     cli.startSpinner("Sparkline");
+    const sl = cli.createSparkline(tab, " reqs/sec");
     var myInterval = setInterval(() => {
       ++i;
       tab.push(random(200));
       var sl = cli.createSparkline(tab, " reqs/sec");
-      cli.logger(sl);
+      cli.log(sl, "SPINNER")
       if (i === 100) {
         cli.blankLine();
         clearInterval(myInterval);
         cli.stopSpinner();
-        cli.logger("END Sparkline2 : " + cli.getEmoji("checkered_flag"));
+        cli.log("END Sparkline2 : " + cli.getEmoji("checkered_flag"));
         resolve(cli);
       }
     }, time || 30);
