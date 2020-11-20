@@ -246,7 +246,7 @@ class sequelize extends nodefony.Orm {
 
   getConnectorSettings(tab) {
     for (let dbname in this.settings.connectors) {
-      let conn = ["", "", "", ""];
+      let conn = ["", "", "", "", ""];
       conn[0] = dbname;
       for (let data in this.settings.connectors[dbname]) {
         switch (data) {
@@ -261,6 +261,9 @@ class sequelize extends nodefony.Orm {
           break;
         }
       }
+      if (this.connections[dbname]){
+        conn[4] = ( this.connections[dbname].state);
+      }
       tab.push(conn);
     }
     return tab;
@@ -269,14 +272,16 @@ class sequelize extends nodefony.Orm {
   displayTable(severity = "DEBUG") {
     let options = {
       head: [
-        "ORM CONNECTOR NAME",
+        "CONNECTOR NAME",
         "DRIVER",
         "NAME DATABASE",
-        "HOST"
+        "HOST",
+        "status"
       ]
     };
     let table = this.kernel.cli.displayTable(null, options);
     this.getConnectorSettings(table);
+
     let res = table.toString();
     this.log("ORM CONNECTORS LIST  : \n" + res, severity);
     return res;
