@@ -37,7 +37,7 @@ class Events extends events.EventEmitter {
    */
   fire(...args) {
     try {
-      return this.emit(...args);
+      return super.emit(...args);
     } catch (e) {
       throw e;
     }
@@ -85,6 +85,7 @@ class Events extends events.EventEmitter {
       }
       if (context) {
         this.listen(context || this, res[0], localSettings[i]);
+        continue;
       }
       this.on(res[0], localSettings[i]);
     }
