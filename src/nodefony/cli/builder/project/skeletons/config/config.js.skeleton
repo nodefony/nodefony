@@ -78,7 +78,7 @@ module.exports = {
      */
     servers: {
       statics: statics,
-      protocol: "1.1", //  2.0 || 1.1
+      protocol: "2.0", //  1.1 || 2.0 || 3.0 quic (not implemented)
       http: true,
       https: true,
       ws: true,
