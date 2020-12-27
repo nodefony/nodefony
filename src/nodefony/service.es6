@@ -117,7 +117,9 @@ class Service {
       if (!msgid) {
         msgid = this.name;
       }
-      return this.syslog.log(pci, severity, msgid, msg);
+      if(this.syslog){
+        return this.syslog.log(pci, severity, msgid, msg);
+      }
     } catch (e) {
       console.log(severity, msgid, msg, " : ", pci);
       console.warn(e);
@@ -130,6 +132,13 @@ class Service {
 
   trace(one, ...args) {
     return console.trace(nodefony.Syslog.wrapper(this.log(one, "DEBUG")).text, one, ...args);
+  }
+
+  spinlog(message){
+    //process.stdout.write("\u001b[0G");
+    //process.stdout.write(message);
+    //process.stdout.write("\u001b[90m\u001b[0m");
+    return this.log(message, "SPINNER");
   }
 
   eventNames(...args) {

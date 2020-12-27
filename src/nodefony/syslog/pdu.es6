@@ -19,7 +19,8 @@
     "WARNING",
     "NOTICE",
     "INFO",
-    "DEBUG"
+    "DEBUG",
+    "SPINNER"
   ];
   sysLogSeverity.EMERGENCY = 0;
   sysLogSeverity.ALERT = 1;
@@ -29,6 +30,7 @@
   sysLogSeverity.NOTICE = 5;
   sysLogSeverity.INFO = 6;
   sysLogSeverity.DEBUG = 7;
+  sysLogSeverity.SPINNER = -1;
 
   const translateSeverity = function (severity = "INFO") {
     let myseverity = null;

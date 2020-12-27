@@ -5,7 +5,7 @@ const green = clc.green;
 const yellow = clc.yellow.bold;
 
 const formatDebug = function (debug) {
-  switch (nodefony.typeOf(debug) ) {
+  switch (nodefony.typeOf(debug)) {
   case "boolean":
     return debug;
   case "string":
@@ -416,7 +416,7 @@ class Syslog extends nodefony.Events {
     this.fire = this.settings.async ? super.fireAsync : super.fire;
   }
 
-  static formatDebug(debug){
+  static formatDebug(debug) {
     return formatDebug(debug)
   }
 
@@ -715,10 +715,9 @@ class Syslog extends nodefony.Events {
     if (pdu.payload === "" || pdu.payload === undefined) {
       console.warn(`${pdu.severityName} ${pdu.msgid} : logger message empty !!!!`);
       console.trace(pdu);
-      return;
+      return pdu;
     }
     let message = pdu.payload;
-    let wrap = Syslog.wrapper(pdu, message);
     switch (typeof message) {
     case "object":
       switch (true) {
@@ -734,13 +733,19 @@ class Syslog extends nodefony.Events {
           message = new nodefony.Error(message);
         }
         break;
-      default:
-        //message = util.inspect(message);
       }
       break;
     default:
     }
-    return wrap.logger(`${pid} ${wrap.text}`, message);
+    if (pdu.severity === -1) {
+      process.stdout.write("\u001b[0G")
+      process.stdout.write(`${green(pdu.msgid)} : ${message}`);
+      process.stdout.write("\u001b[90m\u001b[0m")
+      return pdu;
+    }
+    let wrap = Syslog.wrapper(pdu, message);
+    wrap.logger(`${pid} ${wrap.text}`, message);
+    return pdu;
   }
 }
 
