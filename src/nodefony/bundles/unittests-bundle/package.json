@@ -13,7 +13,7 @@
   "dependencies": {
     "chai": "^4.2.0",
     "mocha": "^8.2.1",
-    "websocket": "^1.0.32"
+    "websocket": "^1.0.33"
   },
   "repository": {
     "type": "git",

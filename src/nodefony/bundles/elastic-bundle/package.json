@@ -16,7 +16,7 @@
     "shortid": "^2.2.16"
   },
   "devDependencies": {
-    "node-pre-gyp": "^0.16.0"
+    "node-pre-gyp": "^0.17.0"
   },
   "licenses": [
     {

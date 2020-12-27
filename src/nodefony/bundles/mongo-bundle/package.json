@@ -15,7 +15,7 @@
     "mongodb": "^3.6.3"
   },
   "devDependencies": {
-    "node-pre-gyp": "^0.16.0"
+    "node-pre-gyp": "^0.17.0"
   },
   "licenses": [
     {
