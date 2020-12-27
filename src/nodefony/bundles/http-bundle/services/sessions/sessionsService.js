@@ -27,30 +27,30 @@ module.exports = class sessions extends nodefony.Service {
 
   setAutoStart(setting) {
     switch (setting) {
-      case true:
-      case "":
-      case undefined:
-        return "default";
-      case false:
-      case null:
-        return null;
-      default:
-        if (typeof setting === "string") {
-          return setting;
-        }
-        throw new Error("Session start settings config error : " + setting);
+    case true:
+    case "":
+    case undefined:
+      return "default";
+    case false:
+    case null:
+      return null;
+    default:
+      if (typeof setting === "string") {
+        return setting;
+      }
+      throw new Error("Session start settings config error : " + setting);
     }
   }
 
   initializeStorage() {
     let storage = null;
     switch (this.settings.handler) {
-      case "orm":
-      case "ORM":
-        storage = nodefony.session.storage[this.kernel.getOrm()];
-        break;
-      default:
-        storage = nodefony.session.storage[this.settings.handler];
+    case "orm":
+    case "ORM":
+      storage = nodefony.session.storage[this.kernel.getOrm()];
+      break;
+    default:
+      storage = nodefony.session.storage[this.settings.handler];
     }
     if (storage) {
       this.storage = new storage(this);
@@ -65,22 +65,23 @@ module.exports = class sessions extends nodefony.Service {
   }
 
   start(context, sessionContext) {
-    if ( context.sessionStarting ){
+
+    if (context.sessionStarting) {
       this.log("SESSION ALLREADY STARTED ", "DEBUG");
-      return new Promise( (resolve) =>{
-        context.once("onSessionStart", (session) =>{
+      return new Promise((resolve) => {
+        context.once("onSessionStart", (session) => {
           return resolve(session);
         });
       });
     }
     return new Promise((resolve, reject) => {
-      if (context.session ) {
+      if (context.session) {
         if (context.session.status === "active") {
           this.log("SESSION ALLREADY STARTED ==> " + context.session.name + " : " + context.session.id, "DEBUG");
           return resolve(context.session);
         }
       }
-      context.sessionStarting = true ;
+      context.sessionStarting = true;
       try {
         sessionContext = this.setAutoStart(sessionContext);
         if (this.probaGarbage()) {
@@ -93,7 +94,7 @@ module.exports = class sessions extends nodefony.Service {
               throw new Error("SESSION START session storage ERROR");
             }
             context.session = session;
-            context.sessionStarting = false ;
+            context.sessionStarting = false;
             session.setMetaBag("url", url.parse(context.url));
             context.fire("onSessionStart", session);
             return resolve(session);
@@ -130,7 +131,7 @@ module.exports = class sessions extends nodefony.Service {
 
   addContextSession(context) {
     if (this.storage) {
-      this.once( "onReady", () => {
+      this.once("onReady", () => {
         this.storage.open(context);
       });
     }

@@ -84,8 +84,8 @@
     const idConnection = client.idConnection;
     const idClient = client.id;
     if (idConnection && idClient) {
-      if (this.connections[idConnection]) {
-        return this.connections[idConnection].clients[client].close()
+      if (this.connections[idConnection] && this.connections[idConnection].clients[idClient] ) {
+        return this.connections[idConnection].clients[idClient].close()
         .then(()=>{
           delete this.connections[idConnection].clients[idClient];
         });

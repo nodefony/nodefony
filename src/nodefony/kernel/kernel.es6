@@ -1478,11 +1478,11 @@ class Kernel extends nodefony.Service {
    *  @method terminate
    */
   terminate(code) {
-    if (this.debug) {
-      console.trace(code);
-    }
     if (code === undefined) {
       code = 0;
+    }
+    if (this.debug) {
+      console.trace(code);
     }
     try {
       if (fs.existsSync(this.cacheLink)) {
