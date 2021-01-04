@@ -34,13 +34,17 @@ nodefony.register("Session", function () {
 
   const setMetasSession = function () {
     let time = new Date();
+    let ua= null;
     this.setMetaBag("lifetime", this.settings.cookie.maxAge);
     this.setMetaBag("context", this.contextSession || null);
     this.setMetaBag("request", this.context.type);
     this.setMetaBag("created", time);
-    this.setMetaBag("remoteAddress", this.context.getRemoteAddress());
-    this.setMetaBag("host", this.context.getHost());
-    let ua = this.context.getUserAgent();
+    try {
+      this.setMetaBag("remoteAddress", this.context.getRemoteAddress());
+      this.setMetaBag("host", this.context.getHost());
+      ua = this.context.getUserAgent();
+    } catch (e) {
+    }
     if (ua) {
       this.setMetaBag("user_agent", ua);
     } else {
@@ -97,7 +101,12 @@ nodefony.register("Session", function () {
       this.id = id || this.setId();
       setMetasSession.call(this);
       this.manager.log("NEW SESSION CREATE : " + this.id, "DEBUG");
-      this.cookieSession = this.setCookieSession(lifetime);
+      try{
+        this.cookieSession = this.setCookieSession(lifetime);
+      }catch(e){
+        throw new Error(`Request Finish can't create cookieSession`);
+        //this.log(`,"WARNING")
+      }
       this.status = "active";
       return this;
     }
@@ -187,22 +196,22 @@ nodefony.register("Session", function () {
         switch (this.strategy) {
         case "migrate":
           return this.storage.start(this.id, this.contextSession)
-          .then(async (result) => {
-            this.deSerialize(result);
-            if (!this.isValidSession(result, this.context)) {
-              this.manager.log("INVALID SESSION ==> " + this.name + " : " + this.id, "WARNING");
-              await this.destroy();
+            .then(async (result) => {
+              this.deSerialize(result);
+              if (!this.isValidSession(result, this.context)) {
+                this.manager.log("INVALID SESSION ==> " + this.name + " : " + this.id, "WARNING");
+                await this.destroy();
+                this.contextSession = contextSession;
+                return this.create(this.lifetime, null);
+              }
+              this.remove();
+              this.manager.log(`STRATEGY MIGRATE SESSION  ==> ${this.name} : ${this.id}`, "DEBUG");
+              this.migrated = true;
               this.contextSession = contextSession;
               return this.create(this.lifetime, null);
-            }
-            this.remove();
-            this.manager.log(`STRATEGY MIGRATE SESSION  ==> ${this.name} : ${this.id}`, "DEBUG");
-            this.migrated = true;
-            this.contextSession = contextSession;
-            return this.create(this.lifetime, null);
-          }).catch((error) => {
-            throw error;
-          });
+            }).catch((error) => {
+              throw error;
+            });
         case "invalidate":
           this.manager.log("STRATEGY INVALIDATE SESSION ==> " + this.name + " : " + this.id, "DEBUG");
           await this.destroy();
@@ -405,7 +414,7 @@ nodefony.register("Session", function () {
       }
     }
 
-    delete(cookieDelete = false){
+    delete(cookieDelete = false) {
       return this.destroy(cookieDelete);
     }
 
@@ -432,7 +441,12 @@ nodefony.register("Session", function () {
         lifetime = this.lifetime;
       }
       await this.destroy();
-      return this.create(lifetime, id);
+      try {
+        return this.create(lifetime, id);
+      } catch (e) {
+        this.log(e, "WARNING")
+        return this;
+      }
     }
 
     async migrate(destroy, lifetime, id) {
@@ -443,11 +457,19 @@ nodefony.register("Session", function () {
       if (destroy) {
         await this.remove(destroy);
       }
-      return this.create(lifetime, id);
+      try {
+        return this.create(lifetime, id);
+      } catch (e) {
+        this.log(e, "WARNING")
+        return this;
+      }
     }
 
     setId() {
-      let ip = this.context.getRemoteAddress();
+      let ip = "";
+      try {
+        ip = this.context.getRemoteAddress();
+      } catch (e) {}
       let date = new Date().getTime();
       let concat = ip + date + this.randomValueHex(16) + Math.random() * 10;
       let hash = null;
