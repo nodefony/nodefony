@@ -146,7 +146,7 @@ nodefony.register.call(nodefony.context, "http", function () {
             }
             if (this.response.response) {
               if (this.response.stream) {
-                this.timeoutid = this.response.stream.setTimeout(this.response.timeout, () => {
+                this.timeoutid = this.response.response.setTimeout(this.response.timeout, () => {
                   this.timeoutExpired = true;
                   this.fire("onTimeout", this);
                 });
