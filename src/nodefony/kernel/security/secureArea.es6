@@ -88,7 +88,7 @@ module.exports = nodefony.register("SecuredArea", function () {
         securityError.code = 401;
       }
       if (this.kernel.debug) {
-        this.log(securityError, "ERROR");
+        //this.log(securityError, "ERROR");
       }
       switch (context.type) {
       case "HTTP":
