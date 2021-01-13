@@ -33,8 +33,8 @@ class restController extends nodefony.Controller {
         throw new nodefony.authorizationError("Unauthorized", 401, this.context);
       }
     }
-    if (query && query.role && query.role.length) {
-      if (query.role.indexOf("ROLE_ADMIN") >= 0 && (!granted)) {
+    if (query && query.roles && query.roles.length) {
+      if (query.roles.indexOf("ROLE_ADMIN") >= 0 && (!granted)) {
         throw new nodefony.authorizationError("Unauthorized Role", 401, this.context);
       }
     }
