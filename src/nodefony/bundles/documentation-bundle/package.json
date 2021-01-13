@@ -32,11 +32,11 @@
     "precss": "^4.0.0",
     "resolve-url-loader": "^3.1.2",
     "reveal.js": "^4.0.2",
-    "sass-loader": "^10.1.0",
+    "sass-loader": "^10.1.1",
     "semver": "^7.3.4",
     "simple-git": "^2.31.0",
-    "terser-webpack-plugin": "^5.0.3",
-    "webpack": "^5.11.1",
+    "terser-webpack-plugin": "^5.1.1",
+    "webpack": "^5.13.0",
     "webpack-merge": "^5.7.3"
   },
   "repository": {
