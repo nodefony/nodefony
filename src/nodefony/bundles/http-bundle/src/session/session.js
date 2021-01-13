@@ -7,13 +7,13 @@ nodefony.register("Session", function () {
   const algorithm = 'aes-256-ctr';
   const password = 'd6F3Efeq';
 
-  const checkSecureReferer = function () {
+  const checkSecureReferer = function (context) {
     let host = null;
     switch (this.context.type) {
     case "HTTP":
     case "HTTPS":
     case "HTTP2":
-      host = this.context.request.request.headers.host;
+      host = context.getHost();
       break;
     case "WEBSOCKET":
     case "WEBSOCKET SECURE":
