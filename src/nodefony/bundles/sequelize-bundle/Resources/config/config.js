@@ -7,6 +7,9 @@ module.exports = {
       dbname: path.resolve("app", "Resources", "databases", "nodefony.db"),
       options: {
         dialect: "sqlite",
+        retry: {
+          max: 5
+        },
         pool: {
           max: 5,
           min: 0,
