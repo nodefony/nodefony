@@ -29,7 +29,7 @@ jobs:
       run:            |
         git submodule sync
         git submodule update --init --recursive
-        npm install --no-audit
+        npm ci --no-audit
         npm link src/nodefony
         npm run build --if-present
         nodefony start
@@ -78,7 +78,7 @@ jobs:
         git submodule sync
         git submodule update --init --recursive
         npm cache clean --force
-        npm install --no-audit
+        npm ci --no-audit
         npm link src/nodefony
         npm run build --if-present
         nodefony start
@@ -115,7 +115,7 @@ jobs:
       run:            |
         git submodule sync
         git submodule update --init --recursive
-        npm install --no-audit
+        npm ci --no-audit
         npm link src/nodefony
         npm run build --if-present
         nodefony start
