@@ -175,14 +175,14 @@ class cliKernel extends nodefony.cli {
   }
 
   showBanner(data) {
-    if (this.commander && this.commander.json) {
+    if (this.commander && this.commander.opts().json) {
       return;
     }
     return super.showBanner(data);
   }
 
   async showAsciify(name = null) {
-    if (this.commander && this.commander.json) {
+    if (this.commander && this.commander.opts().json) {
       return Promise.resolve();
     }
     return await super.showAsciify(name);
@@ -250,7 +250,7 @@ class cliKernel extends nodefony.cli {
       try {
         let instance = new nodefony.commands[cmd](this, this.kernel);
         this.commands.nodefony[instance.name] = instance;
-        if (this.commander.debug) {
+        if (this.commander.opts().debug) {
           this.log(`Register Command ${instance.name}`, "DEBUG", `Nodefony`);
         }
       } catch (e) {
@@ -284,7 +284,7 @@ class cliKernel extends nodefony.cli {
           try {
             let instance = new this.classCommand[bundle][i](this, this.kernel.bundles[bundle]);
             this.commands[bundle][instance.name] = instance;
-            if (this.commander.debug) {
+            if (this.commander.opts().debug) {
               this.log(`Register Command ${instance.name}`, "DEBUG", `Bundle ${bundle}`);
             }
           } catch (e) {
@@ -541,7 +541,7 @@ class cliKernel extends nodefony.cli {
     if (!this.kernel) {
       return super.initSyslog(environment, debug, options);
     }
-    if (this.commander.json) {
+    if (this.commander.opts().json) {
       return;
     }
     let syslog = this.syslog;
@@ -712,7 +712,7 @@ class cliKernel extends nodefony.cli {
       }
       ele.push(await this.npmList(this.kernel.bundles[bundle].path, tab));
     }
-    if (this.commander.json) {
+    if (this.commander.opts().json) {
       return process.stdout.write(JSON.stringify(ele));
     }
     let headers = [

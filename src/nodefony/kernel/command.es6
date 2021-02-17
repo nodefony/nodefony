@@ -6,8 +6,8 @@ class Command extends nodefony.Service {
       this.bundleName = bundle.name;
     }
     this.cli = cli;
-    this.interactive = this.cli.commander.interactive;
-    this.json = this.cli.commander.json;
+    this.interactive = this.cli.commander.opts().interactive;
+    this.json = this.cli.commander.opts().json;
     this.tasks = {};
     this.optionsTables = this.cli.optionsTables;
   }

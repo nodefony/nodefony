@@ -116,7 +116,7 @@ class Kernel extends nodefony.Service {
     this.cli = cli;
     this.type = cli.type;
     this.package = mypackage;
-    this.debug = (!!cli.commander.debug) || false;
+    this.debug = (!!cli.commander.opts().debug) || false;
     this.setEnv(environment);
     // Manage Kernel Container
     this.set("kernel", this);
@@ -1034,8 +1034,8 @@ class Kernel extends nodefony.Service {
   initCluster() {
     this.processId = process.pid;
     this.process = process;
-    if (this.console && this.cli && this.cli.commander && this.cli.commander.json) {
-      return "";
+    if (this.console && this.cli && this.cli.commander && this.cli.commander.opts().json) {
+      return;
     }
     if (cluster.isMaster) {
       console.log(this.logEnv());

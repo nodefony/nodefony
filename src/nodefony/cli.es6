@@ -358,13 +358,15 @@ class CLI extends nodefony.Service {
 
   async parseCommand(argv) {
     const parser = await this.commander.parse(argv || process.argv);
-    if (this.commander.debug) {
-      this.debug = this.commander.debug;
+    let debug = this.commander.opts().debug;
+    if (debug) {
+      this.debug = debug;
     } else {
       this.debug = false;
     }
-    if (this.commander.interactive) {
-      this.interactive = this.commander.interactive;
+    let interactive = this.commander.opts().interactive;
+    if (interactive) {
+      this.interactive = interactive;
     } else {
       this.interactive = false;
     }
@@ -693,7 +695,7 @@ class CLI extends nodefony.Service {
     return new Promise((resolve, reject) => {
       let cmd = null;
       try {
-        this.debug = this.commander.debug || false;
+        this.debug = this.commander.opts().debug || false;
         this.log(`Command : npm ${argv.join(' ')} in cwd : ${cwd}`);
         //const exe = path.resolve(nodefony.path, "node_modules", ".bin", "npm");
         let exe = null;
@@ -737,7 +739,7 @@ class CLI extends nodefony.Service {
       let cmd = null;
       try {
         this.log(`Command : yarn ${argv.join(' ')} in cwd : ${cwd}`);
-        this.debug = this.commander.debug || false;
+        this.debug = this.commander.opts().debug || false;
         //const exe = path.resolve(nodefony.path, "node_modules", ".bin", "npm");
         let exe = null;
         if (process.platform === "win32") {
