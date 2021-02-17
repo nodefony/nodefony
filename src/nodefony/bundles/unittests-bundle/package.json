@@ -12,7 +12,7 @@
   ],
   "dependencies": {
     "chai": "^4.3.0",
-    "mocha": "^8.2.1",
+    "mocha": "^8.3.0",
     "websocket": "^1.0.33"
   },
   "repository": {
