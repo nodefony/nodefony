@@ -18,7 +18,7 @@ require("../css/json-view/jquery.jsonview.css");
 
 const nodefony = require('nodefony-client')
 const socket = require("nodefony-client/dist/socket");
-socket(nodefony);
+socket.default(nodefony);
 module.exports = function () {
 
   // expose  in gobal window object
