@@ -13,9 +13,9 @@ module.exports = class bundlesTask extends nodefony.Task {
     );*/
   }
 
-  async dependencies() {
+  /*async dependencies() {
     return await this.cli.listPackage(this.kernel.rootDir);
-  }
+  }*/
 
   async install(...args) {
     try {

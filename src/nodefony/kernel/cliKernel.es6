@@ -696,7 +696,8 @@ class cliKernel extends nodefony.cli {
     }
   }
 
-  async listPackage(myPath) {
+  // deprecated
+  /*async listPackage(myPath) {
     let tab = [];
     let ele = [];
     try {
@@ -728,6 +729,7 @@ class cliKernel extends nodefony.cli {
     return ele;
   }
 
+  // deprecated
   async npmList(cwd = path.resolve("."), ele = []) {
     return new Promise((resolve, reject) => {
       try {
@@ -784,7 +786,7 @@ class cliKernel extends nodefony.cli {
         });
       });
     });
-  }
+  }*/
 
   async installPackage(bundle, env) {
     try {

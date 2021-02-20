@@ -34,7 +34,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
 
     async rebuild(cwd) {
       try {
-        await this.listPackage(cwd);
+        //await this.listPackage(cwd);
         return cwd;
       } catch (e) {
         throw e;
@@ -144,10 +144,11 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
         .then(() => {
           return this.matchHomeRoute("/")
             .then(() => {
-              return this.listPackage(cwd)
+              return cwd
+              /*return this.listPackage(cwd)
                 .then(() => {
                   return cwd;
-                });
+                });*/
             });
         });
     }

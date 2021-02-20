@@ -528,7 +528,7 @@ class Nodefony {
     cli.setHelp("", "rebuild", "Rebuild Nodefony Framework (Recompilation when node version change )");
     cli.setHelp("", "install", "Install Nodefony Project");
     cli.setHelp("", "certificates", `Generate HTTPS Certificates  'Change default openssl configuration in config/openssl'`);
-    cli.setHelp("", "dependencies", "List Project dependencies");
+    //cli.setHelp("", "dependencies", "List Project dependencies");
     cli.setHelp("", "outdated", "List Project dependencies outdated");
     cli.setHelp("", "version", "Get Project Version");
   }
@@ -718,8 +718,8 @@ class Nodefony {
       return cli.setCommand("nodefony:outdated");
     case "test":
       return cli.setCommand("unitest:launch:all");
-    case "dependencies":
-      return cli.setCommand("nodefony:bundles:dependencies");
+    //case "dependencies":
+      //return cli.setCommand("nodefony:bundles:dependencies");
     default:
       if (cli.kernel) {
         return await cli.kernel.matchCommand()
