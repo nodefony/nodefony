@@ -11,8 +11,8 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "^7.12.17",
-    "@babel/preset-env": "^7.12.17",
+    "@babel/core": "^7.13.1",
+    "@babel/preset-env": "^7.13.5",
     "autoprefixer": "^10.2.4",
     "babel-loader": "^8.2.2",
     "bootstrap": "^4.6.0",
@@ -30,7 +30,7 @@
     "resolve-url-loader": "^3.1.2",
     "sass-loader": "^11.0.1",
     "terser-webpack-plugin": "^5.1.1",
-    "webpack": "^5.23.0",
+    "webpack": "^5.24.1",
     "webpack-merge": "^5.7.3"
   },
   "repository": {
