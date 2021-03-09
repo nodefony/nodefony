@@ -3,7 +3,7 @@ let builderGenerater = null;
 let builderTools = null;
 let builderPM2 = null;
 try {
-  builderInstall = require(path.resolve(__dirname, "install", "install.js"));
+  builderInstall = require(path.resolve(__dirname , "install", "install.js"));
   builderGenerater = require(path.resolve(__dirname, "generate", "generate.es6"));
   builderTools = require(path.resolve(__dirname, "tools", "tools.es6"));
   builderPM2 = require(path.resolve(__dirname, "tools", "pm2.es6"));
@@ -62,7 +62,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
 
   onStart(cmd = this.cmd, args = this.args) {
     //this.log(`Commnand : ${cmd} Arguments : ${args}`, "DEBUG", "CLI ONSTART");
-    this.interactive = this.commander.interactive || false;
+    this.interactive = this.commander.opts().interactive|| false;
     if (!cmd && !process.argv.slice(2).length && (!process.argv[2])) {
       this.buildMenu();
       this.interactive = true;
