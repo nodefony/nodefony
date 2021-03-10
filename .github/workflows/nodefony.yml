@@ -15,11 +15,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     # ACTION LOCAL TEST
-    - name:           Hello world action step
-      id:             hello
-      uses:           ./tools/actions/hello # Uses an action in the root directory
-      with:
-        who-to-greet: 'Nodefony Test Action'
+    #- name:          Hello world action step
+    #  id:            hello
+    #  uses:          ./tools/actions/hello # Uses an action in the root directory
+    #  with:
+    #    who-to-greet: 'Nodefony Test Action'
     # Use the output from the `hello` step
     - name:           Get the output time
       shell:          bash
@@ -63,11 +63,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     # ACTION LOCAL TEST
-    - name:           Hello world action step
-      id:             hello
-      uses:           ./tools/actions/hello # Uses an action in the root directory
-      with:
-        who-to-greet: 'Nodefony Test Action'
+    #- name:          Hello world action step
+    #  id:            hello
+    #  uses:          ./tools/actions/hello # Uses an action in the root directory
+    #  with:
+    #    who-to-greet: 'Nodefony Test Action'
     # Use the output from the `hello` step
     - name:           Get the output time
       shell:          bash
@@ -101,11 +101,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     # ACTION LOCAL TEST
-    - name:           Hello world action step
-      id:             hello
-      uses:           ./tools/actions/hello # Uses an action in the root directory
-      with:
-        who-to-greet: 'Nodefony Test Action'
+    #- name:          Hello world action step
+    #  id:            hello
+    #  uses:          ./tools/actions/hello # Uses an action in the root directory
+    #  with:
+    #    who-to-greet: 'Nodefony Test Action'
     # Use the output from the `hello` step
     - name:           Get the output time
       shell:          bash
