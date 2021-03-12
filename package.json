@@ -49,11 +49,11 @@
     "node": ">=10"
   },
   "dependencies": {
-    "mongoose": "^5.11.19",
+    "mongoose": "^5.12.0",
     "pm2": "^4.5.5",
     "pm2-logrotate": "^2.7.0",
     "sequelize": "^6.5.0",
-    "webpack": "^5.24.4",
+    "webpack": "^5.25.0",
     "webpack-dev-server": "^3.11.2"
   },
   "devDependencies": {
