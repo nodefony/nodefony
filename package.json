@@ -53,7 +53,7 @@
     "pm2": "^4.5.5",
     "pm2-logrotate": "^2.7.0",
     "sequelize": "^6.5.1",
-    "webpack": "^5.25.0",
+    "webpack": "^5.26.3",
     "webpack-dev-server": "^3.11.2"
   },
   "devDependencies": {
