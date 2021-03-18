@@ -15,5 +15,16 @@ class sequelizeCommand extends nodefony.Command {
     this.setTask("entity", entityTask);
     this.setTask("generate", generateTask);
   }
+
+  showHelp() {
+    this.setHelp("sequelize:migrate",
+      "Apply all Migrations pending for all connectors"
+    );
+    super.showHelp();
+  }
+
+  migrate(){
+    return this.tasks["migrate"].up();
+  }
 }
 module.exports = sequelizeCommand;

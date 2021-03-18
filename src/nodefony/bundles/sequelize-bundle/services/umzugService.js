@@ -94,15 +94,47 @@ class umzug extends nodefony.Service {
     }
   }
 
-  async umzug(...args) {
+  /*async umzug(...args) {
     for (let connection in this.sequelizeService.connections) {
       let migrator = this.createMigrator(connection, this.sequelizeService.connections[connection].db);
       await this.run(migrator, ...args)
     }
+  }*/
+
+  revertAll(connectorName){
+    return new Promise(async (resolve, reject) => {
+      if (connectorName) {
+        try {
+          const connection = this.sequelizeService.getConnection(connectorName);
+          if (connection) {
+            const migrator = this.createMigrator(connectorName, connection);
+            this.log(`Revert all connector ${connectorName}`)
+            return resolve(await migrator.down({ to: 0}));
+          }
+          throw new Error(`Connector not found : ${connectorName}`)
+        } catch (e) {
+          return reject(e);
+        }
+      }
+      try {
+        let result = {}
+        for (let connection in this.sequelizeService.connections) {
+          const migrator = this.createMigrator(connection, this.sequelizeService.connections[connection].db);
+          this.log(`Revert all connector ${connection}`)
+          result[connection] = await migrator.down({ to: 0});
+        }
+        return resolve(result);
+      } catch (e) {
+        return reject(e);
+      }
+    });
   }
 
   async migrate(connectorName= null) {
     return await this.up(connectorName);
+  }
+  async revert(connectorName= null) {
+    return await this.revertAll(connectorName);
   }
 
   pending(connectorName) {
@@ -174,11 +206,11 @@ class umzug extends nodefony.Service {
           const connection = this.sequelizeService.getConnection(connectorName);
           if (connection) {
             let migrator = this.createMigrator(connectorName, connection);
+            this.log(`Migrate connector ${connectorName}`)
             return resolve(await migrator.up());
           }
           throw new Error(`Connector not found : ${connectorName}`)
         } catch (e) {
-          console.log(e)
           return reject(e);
         }
       }
@@ -186,6 +218,7 @@ class umzug extends nodefony.Service {
         let result = {}
         for (let connection in this.sequelizeService.connections) {
           const migrator = this.createMigrator(connection, this.sequelizeService.connections[connection].db);
+          this.log(`Migrate connector ${connection}`)
           result[connection] = await migrator.up();
         }
         return resolve(result);
@@ -202,6 +235,7 @@ class umzug extends nodefony.Service {
           const connection = this.sequelizeService.getConnection(connectorName);
           if (connection) {
             const migrator = this.createMigrator(connectorName, connection);
+            this.log(`Revert connector ${connectorName}`)
             return resolve(await migrator.down());
           }
           throw new Error(`Connector not found : ${connectorName}`)
@@ -213,6 +247,7 @@ class umzug extends nodefony.Service {
         let result = {}
         for (let connection in this.sequelizeService.connections) {
           const migrator = this.createMigrator(connection, this.sequelizeService.connections[connection].db);
+          this.log(`Revert connector ${connection}`)
           result[connection] = await migrator.down();
         }
         return resolve(result);

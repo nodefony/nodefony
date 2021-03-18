@@ -9,20 +9,20 @@ class migrateTask extends nodefony.Task {
     this.setHelp("sequelize:migrate:status",
       "Current Status Migrations"
     );
-    this.setHelp("sequelize:migrate:umzug",
-      "Executing cli umzug"
-    );
     this.setHelp("sequelize:migrate:executed",
       "Getting all executed migrations"
     );
     this.setHelp("sequelize:migrate:pending",
       "Getting all pending migrations"
     );
-    this.setHelp("sequelize:migrate:up [connector] [step] ",
+    this.setHelp("sequelize:migrate:up [connector]",
       "Executing pending migrations  $ nodefony sequelize:migrate:up nodefony "
     );
-    this.setHelp("sequelize:migrate:down [connector] [step]",
+    this.setHelp("sequelize:migrate:down [connector]",
       "Reverting executed migration  $ nodefony sequelize:migrate:down nodefony "
+    );
+    this.setHelp("sequelize:migrate:revert [connector]",
+      "Reverting all executed migrations  $ nodefony sequelize:migrate:revert "
     );
   }
 
@@ -32,13 +32,8 @@ class migrateTask extends nodefony.Task {
     await this.umzugService.executed();
   }
 
-  async all(...args) {
-    console.log(args)
-    //await this.umzugService.migrateAll()
-    return true
-  }
-
   async executed(connector) {
+    //await this.run(connector)
     if (this.kernel.ready) {
       return await this.umzugService.executed(connector)
     } else {
@@ -88,6 +83,17 @@ class migrateTask extends nodefony.Task {
       });
     }
   }
+
+  async revert(connector) {
+    if (this.kernel.ready) {
+      return await this.umzugService.revertAll(connector)
+    } else {
+      this.sequelizeService.once("onOrmReady", async () => {
+        return await this.umzugService.revertAll(connector)
+      });
+    }
+  }
+
 
 }
 
