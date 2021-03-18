@@ -79,9 +79,9 @@ class generateProject extends nodefony.Builder {
         let mypath = path.resolve(this.path, "src", "bundles");
         this.cli.cp('-Rf', this.bundleUsersPath, mypath);
         return this.cli.packageManager.call(this.cli, ["install"], path.resolve(mypath, "users-bundle"))
-        .then(( res)=>{
-          return resolve(res);
-        });
+          .then((res) => {
+            return resolve(res);
+          });
       } catch (e) {
         return reject(e);
       }
@@ -334,6 +334,19 @@ class generateProject extends nodefony.Builder {
         }, {
           name: "tmp",
           type: "directory"
+        }, {
+          name: "migrations",
+          type: "directory",
+          childs: [{
+            name: "nodefony",
+            type: "directory",
+            childs: [{
+              name: "00_migration.js.example",
+              type: "file",
+              skeleton: path.resolve(this.pathSkeleton, "migrations", "migrations.skeleton.js"),
+              params: this.response
+            }]
+          }]
         }, {
           name: "config",
           type: "directory",
