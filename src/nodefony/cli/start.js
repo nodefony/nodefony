@@ -2,11 +2,13 @@ let builderInstall = null;
 let builderGenerater = null;
 let builderTools = null;
 let builderPM2 = null;
+let builderSequelize = null;
 try {
   builderInstall = require(path.resolve(__dirname , "install", "install.js"));
   builderGenerater = require(path.resolve(__dirname, "generate", "generate.es6"));
   builderTools = require(path.resolve(__dirname, "tools", "tools.es6"));
   builderPM2 = require(path.resolve(__dirname, "tools", "pm2.es6"));
+  builderSequelize = require(path.resolve(__dirname, "sequelize", "sequelize.js"));
 } catch (e) {
   throw e;
 }
@@ -365,6 +367,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
         this.choices.push(`Install Project`);
         this.choices.push(`Build Project`);
         this.choices.push(`Rebuild Project`);
+        this.choices.push(`Sequelize`);
         this.choices.push(`${this.generateString}`);
         this.choices.push(`Tools`);
         this.choices.push(`PM2 Tools`);
@@ -411,6 +414,8 @@ module.exports = class cliStart extends nodefony.cliKernel {
               return "microservice";
             case `${this.generateString}`:
               return "generate";
+            case `Sequelize`:
+              return "sequelize";
             case `Run Test`:
               return "test";
             case `Install`:
@@ -455,6 +460,8 @@ module.exports = class cliStart extends nodefony.cliKernel {
             return this.setCommand("install");
           case "generate":
             return this.generateCli(true);
+          case "sequelize":
+            return this.sequelizeCli(true);
           case "pm2":
             return this.pm2Cli(true);
           case "tools":
@@ -654,6 +661,11 @@ module.exports = class cliStart extends nodefony.cliKernel {
 
   pm2Cli(interactive) {
     let generater = new builderPM2(this);
+    return generater.run(interactive);
+  }
+
+  sequelizeCli(interactive){
+    let generater = new builderSequelize(this);
     return generater.run(interactive);
   }
 

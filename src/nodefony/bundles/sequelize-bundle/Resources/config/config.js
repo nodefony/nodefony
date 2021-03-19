@@ -17,5 +17,10 @@ module.exports = {
         }
       }
     }
+  },
+  migrations: {
+    storage: "sequelize", // sequelize || memory || json
+    path: path.resolve(kernel.path, "migrations"),
+    options: {}
   }
 };
