@@ -32,7 +32,7 @@
     "nodefony": "bin/nodefony"
   },
   "dependencies": {
-    "@babel/core": "^7.13.13",
+    "@babel/core": "^7.13.14",
     "@babel/parser": "^7.13.13",
     "@babel/preset-env": "^7.13.12",
     "@nodefony/documentation-bundle": "^6.5.1",
@@ -58,7 +58,7 @@
     "cli-table": "^0.3.6",
     "clui": "^0.3.6",
     "commander": "^7.1.0",
-    "core-js": "^3.9.1",
+    "core-js": "^3.10.0",
     "create-react-app": "^4.0.3",
     "graphql": "^15.5.0",
     "inquirer": "^8.0.0",
@@ -70,8 +70,8 @@
     "moment": "^2.29.1",
     "node-cron": "^3.0.0",
     "node-emoji": "^1.10.0",
-    "npm": "^7.7.5",
-    "pm2": "^4.5.5",
+    "npm": "^7.7.6",
+    "pm2": "^4.5.6",
     "promise": "^8.1.0",
     "request": "^2.88.2",
     "semver": "^7.3.4",
