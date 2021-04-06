@@ -55,11 +55,11 @@
     "swagger-ui": "^3.46.0",
     "swagger-ui-dist": "^3.46.0",
     "terser-webpack-plugin": "^5.1.1",
-    "webpack": "^5.28.0",
+    "webpack": "^5.30.0",
     "webpack-merge": "^5.7.3"
   },
   "devDependencies": {
-    "node-gyp": "^7.1.2",
+    "node-gyp": "^8.0.0",
     "node-pre-gyp": "^0.17.0",
     "sequelize-cli": "^6.2.0"
   },

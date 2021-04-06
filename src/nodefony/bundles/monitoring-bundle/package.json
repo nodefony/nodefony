@@ -30,7 +30,7 @@
     "shortid": "^2.2.16",
     "terser-webpack-plugin": "^5.1.1",
     "useragent": "^2.3.0",
-    "webpack": "^5.28.0",
+    "webpack": "^5.30.0",
     "webpack-merge": "^5.7.3"
   },
   "repository": {
