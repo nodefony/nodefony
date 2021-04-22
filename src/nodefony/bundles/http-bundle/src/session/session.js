@@ -204,7 +204,7 @@ nodefony.register("Session", function () {
                 this.contextSession = contextSession;
                 return this.create(this.lifetime, null);
               }
-              this.remove();
+              await this.remove();
               this.manager.log(`STRATEGY MIGRATE SESSION  ==> ${this.name} : ${this.id}`, "DEBUG");
               this.migrated = true;
               this.contextSession = contextSession;
