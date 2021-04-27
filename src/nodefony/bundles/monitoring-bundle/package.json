@@ -23,14 +23,14 @@
     "less": "^4.1.1",
     "less-loader": "^8.1.1",
     "mini-css-extract-plugin": "^1.5.0",
-    "nodefony-client": "^6.0.0-beta.17",
+    "nodefony-client": "6.0.0-beta.16",
     "optimize-css-assets-webpack-plugin": "^5.0.4",
     "qs": "^6.10.1",
     "request": "^2.88.2",
     "shortid": "^2.2.16",
     "terser-webpack-plugin": "^5.1.1",
     "useragent": "^2.3.0",
-    "webpack": "^5.35.0",
+    "webpack": "^5.36.0",
     "webpack-merge": "^5.7.3"
   },
   "repository": {
