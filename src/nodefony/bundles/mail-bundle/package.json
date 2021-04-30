@@ -12,10 +12,10 @@
   ],
   "dependencies": {
     "juice": "^7.0.0",
-    "nodemailer": "^6.5.0"
+    "nodemailer": "^6.6.0"
   },
   "devDependencies": {
-    "node-pre-gyp": "^0.17.0"
+    "@mapbox/node-pre-gyp": "^1.0.4"
   },
   "repository": {
     "type": "git",

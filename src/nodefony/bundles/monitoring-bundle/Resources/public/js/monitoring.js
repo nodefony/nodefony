@@ -17,7 +17,7 @@ const smoothie = require("./smoothie/smoothie.js");
 require("../css/json-view/jquery.jsonview.css");
 
 const nodefony = require('nodefony-client')
-const socket = require("nodefony-client/dist/socket");
+const socket = require("nodefony-client/src/transports/socket/socket");
 socket.default(nodefony);
 module.exports = function () {
 

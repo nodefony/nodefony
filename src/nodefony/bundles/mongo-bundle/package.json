@@ -15,7 +15,7 @@
     "mongodb": "^3.6.6"
   },
   "devDependencies": {
-    "node-pre-gyp": "^0.17.0"
+    "@mapbox/node-pre-gyp": "^1.0.4"
   },
   "licenses": [
     {
