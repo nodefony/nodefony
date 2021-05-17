@@ -15,7 +15,7 @@
     "nodemailer": "^6.6.0"
   },
   "devDependencies": {
-    "@mapbox/node-pre-gyp": "^1.0.4"
+    "@mapbox/node-pre-gyp": "^1.0.5"
   },
   "repository": {
     "type": "git",
