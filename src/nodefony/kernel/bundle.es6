@@ -613,7 +613,7 @@ class Bundle extends nodefony.Service {
             this.log("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name, "DEBUG");
           } else {
             ext = result[ele];
-            this.log("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name + " BUT BUNDLE " + name + " NOT YET REGISTERED ", "DEBUG");
+            this.log("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name + " BUT BUNDLE " + name + " NOT YET REGISTERED ", "WARNING");
           }
           if (this.kernel.bundles[name]) {
             this.kernel.bundles[name].settings = ext;
