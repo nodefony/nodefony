@@ -15,6 +15,7 @@ import 'highlight.js/styles/atom-one-dark.css';
 //import 'highlight.js/styles/atom-one-light.css';
 //import 'highlight.js/styles/github.css';
 //import 'highlight.js/styles/purebasic.css';
+import $ from "jquery";
 
 class Documentation {
 
@@ -32,7 +33,7 @@ class Documentation {
       hljs.registerLanguage('yaml', yaml);
       hljs.registerLanguage('twig', twig);
       hljs.registerLanguage('nginx', nginx);
-      hljs.initHighlighting();
+      hljs.highlightAll();
     });
   }
 

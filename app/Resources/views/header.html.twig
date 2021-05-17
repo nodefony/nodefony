@@ -1,55 +1,59 @@
 {% set user = getUser() %}
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#header_nodefony" aria-controls="header_nodefony" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#header_nodefony" aria-controls="header_nodefony" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
     <a class="navbar-brand mr-5" href="/">
       <img src="/app/images/app-logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
       <span class="navbar-text pt-0 pb-0">{{nodefony.name|escape}}</span>
     </a>
-  <div class="collapse navbar-collapse" id="header_nodefony">
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      {% if  urlDoc %}
-        <li class="nav-item active">
-          <form class="form-inline" action="{{urlDoc}}">
-            <button class="btn btn-sm btn-outline-secondary" type="submit">Documentation</button>
+    <div class="collapse navbar-collapse" id="header_nodefony">
+      <ul class="navbar-nav me-auto ">
+        {% if  urlDoc %}
+          <li class="nav-item">
+            <form class="form-inline" action="{{urlDoc}}">
+              <button class="btn btn-sm btn-outline-secondary" type="submit">Documentation</button>
+            </form>
+          </li>
+        {% endif %}
+      </ul>
+
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <form action="{{url('lang')}}" name="formLang" id="formLang" class="d-flex ml-5">
+            <div class="input-group input-group-sm" style="top:5px;margin-right:5px">
+              <label class="input-group-text">{{"lang"| trans("messages") }} : </label>
+              <select class="form-select form-select-sm " name="language"  id="language">
+                {% for opt in langs %}
+                {% if locale == opt.value %}
+                <option value="{{ opt.value|escape}}" selected>
+                  {{ opt.name|escape }}
+                </option>
+                {% else %}
+                <option value="{{ opt.value|escape}}">
+                  {{ opt.name|escape }}</option>
+                  {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
           </form>
         </li>
-      {% endif %}
-    </ul>
-    <ul class="navbar-nav mt-2 mt-lg-0">
-      <form action="{{url('lang')}}" name="formLang" id="formLang" class="form-inline">
-        <div class="form-inline input-group">
-          <div class="input-group-prepend">
-            <label class="input-group-text" for="inputGroupSelect01">{{"lang"| trans("messages") }} : </label>
-          </div>
-          <select class="custom-select align-middle mr-4" name="language"  id="language">
-            {% for opt in langs %}
-            {% if locale == opt.value %}
-            <option value="{{ opt.value|escape}}" selected>
-              {{ opt.name|escape }}
-            </option>
-            {% else %}
-            <option value="{{ opt.value|escape}}">
-              {{ opt.name|escape }}</option>
-              {% endif %}
-              {% endfor %}
-            </select>
-        </div>
-      </form>
-
       {% if  user %}
+        <li class="nav-link fa fa-user pr-3" style="font-size:x-large">
         {% if user.image %}
           <img width="32px" height= "32px" class="rounded-circle" src="{{user.image}}" alt="image">
-        {% else %}
-          <li class="nav-link fa fa-user pr-3" style="font-size:x-large"></li>
         {% endif %}
-        <li class="nav-item dropdown dropleft">
-          <a href="" class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-expanded="true">
+          </li>
+        <li class="nav-item dropdown dropstart">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+           {{user.username}}</a>
+          <!--a href="" class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-expanded="true">
                 {{user.username}}
-          </a>
-          <div class="dropdown-menu p-0 mt-5" aria-labelledby="navbarDropdownMenuLink" style="width: 18rem;">
+          </a-->
+          <div class="dropdown-menu p-0 mt-5 " aria-labelledby="navbarDropdownMenuLink" style="width: 18rem;">
+
             <div class="card" style="width: 18rem;">
               <div class="card-header">
                   <h5 class="card-title">Profile</h5>
@@ -64,7 +68,6 @@
                   <p>{{"username"|trans("login")}} : {{ user.username|escape }}</p>
                   <p>{{"surname"|trans("login")}} : <i> {{ user.surname|escape }} </i> </p>
                   <p>{{"name"|trans("login")}} : <i> {{ user.name|escape }} </i> </p>
-                  </span>
                 </div>
               </div>
               <div class="card-footer text-muted">
@@ -84,6 +87,7 @@
             {{"login"|trans("login")}}
         </a>
       {% endif %}
-    </ul>
+      </ul>
+    </div>
   </div>
 </nav>
