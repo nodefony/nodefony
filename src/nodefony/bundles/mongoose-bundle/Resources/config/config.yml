@@ -1,6 +1,6 @@
 ########## nodefony CONFIG BUNDLE  mongooseBundle  ############
-type        :              "nodefony"
-locale      :              en_en
+type        :               "nodefony"
+locale      :               en_en
 
 
 #
@@ -14,25 +14,25 @@ locale      :              en_en
 #      watch:			true            # by default services false !
 #    or
 #      watch:
-#        controllers     : true
-#        config         :  true		# only  routing
-#        views          :  true
-#        translations   :  true
-#        webpack        :  true
-#        services       :  true
-watch       :              false
+#        controllers     :  true
+#        config         :   true		# only  routing
+#        views          :   true
+#        translations   :   true
+#        webpack        :   true
+#        services       :   true
+watch       :               false
 
 mongoose:
-  debug:                   false
+  debug:                    false
   connectors:
     nodefony:
-      host:                "127.0.0.1"
-      port:                27017
-      dbname:              "nodefony"
+      host:                 "127.0.0.1"
+      port:                 27017
+      dbname:               "nodefony"
       settings:
-        #user:             "nodefony"
-        #pass:             "nodefony"
-        authSource:        "admin"
-        reconnectTries:    100
-        reconnectInterval: 5000
-        autoReconnect:     true
+        #user:              "nodefony"
+        #pass:              "nodefony"
+        authSource:         "admin"
+        #reconnectTries:    100
+        #reconnectInterval: 5000
+        #autoReconnect:     true
