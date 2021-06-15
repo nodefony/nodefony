@@ -355,6 +355,8 @@ Fri Jul 27 2018 17:01:11 INFO nodefony : WELCOME PROJECT : myproject 1.0.0
 $ npm -g install npx
 
 $ npx --node-arg=--inspect nodefony dev
+// new version npx > 7
+$ npx --node-options=--inspect nodefony dev
 
 # check chrome://inspect in your browser
 ```

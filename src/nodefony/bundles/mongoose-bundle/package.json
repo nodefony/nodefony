@@ -17,8 +17,8 @@
     "directory": "src/nodefony/bundles/mongoose-bundle"
   },
   "dependencies": {
-    "mongodb": "^3.6.6",
-    "mongoose": "^5.12.9"
+    "mongodb": "^3.6.9",
+    "mongoose": "^5.12.13"
   },
   "devDependencies": {},
   "contributors": [
