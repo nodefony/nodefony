@@ -290,7 +290,7 @@ class generateBundle extends nodefony.Builder {
         };
         json.system.bundles[this.name] = `file:${this.bundlePath}`;
       }
-      fs.writeFileSync(configPath, yaml.safeDump(json), {
+      fs.writeFileSync(configPath, yaml.dump(json), {
         encoding: 'utf8'
       });
 

@@ -443,7 +443,7 @@ class Kernel extends nodefony.Service {
           delete yml.system.bundles[bundle];
           if (remove) {
             try {
-              fs.writeFileSync(pathConfig, yaml.safeDump(yml), {
+              fs.writeFileSync(pathConfig, yaml.dump(yml), {
                 encoding: 'utf8'
               });
               this.log(nameConfig + " : " + bundle + " Bundle don't exist in file : " + pathConfig, "WARNING");
