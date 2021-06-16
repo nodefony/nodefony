@@ -3,25 +3,6 @@
 ## v6.5.5 (16/06/2021)
 - [nodefony changelog 6.5.5](https://github.com/nodefony/nodefony/commit/14fe7b5c9a2ee6f7956dc6f5371f666eb8b981f8)
 - [nodefony release 6.5.5](https://github.com/nodefony/nodefony/commit/1957fef0bcd5870e7337ff42fb1c719a7000a081)
-
----
-
-## v6.5.4 (16/06/2021)
-
-
----
-
-## v6.5.3 (16/06/2021)
-
-
----
-
-## v6.5.2 (16/06/2021)
-
-
----
-
-## v6.5.1 (16/06/2021)
 - [upgrade git module](https://github.com/nodefony/nodefony/commit/4c4d2690fdb792766da04f9fb0f8e089f4dab831)
 - [webassembly bundle experimental](https://github.com/nodefony/nodefony/commit/515ec272c215a388ca4c3b9d77657970ce0e09ea)
 - [change deprecated method  yaml parser api](https://github.com/nodefony/nodefony/commit/930291966a6b925f92f85335480e1fc9b6e32219)
@@ -31,13 +12,25 @@
 - [new mongoose config for new version](https://github.com/nodefony/nodefony/commit/7aaa0c95fd7370ade475f37e083aec12f2f1e628)
 - [upgrade deps](https://github.com/nodefony/nodefony/commit/2a7a3d8b96a4b8cba8eff021e05bc20146ae736c)
 - [debug mongoose config](https://github.com/nodefony/nodefony/commit/5fb9109c9a55fcc51f8905fa87a5efdd00f20d55)
+
+---
+
+## v6.5.4 (16/06/2021)
 - [nodefony changelog 6.5.4](https://github.com/nodefony/nodefony/commit/0488d9486b5e2214d6d164ba1a8bad62e1c380ae)
 - [nodefony release 6.5.4](https://github.com/nodefony/nodefony/commit/c6704d22d05f5e5b01eb75f538212073b334d171)
 - [upgrade deps](https://github.com/nodefony/nodefony/commit/4abb67e31e12fabaf8efd6b41f4aad7c94fd4cdb)
 - [add api login jwt refresh method](https://github.com/nodefony/nodefony/commit/77ca393a7032c767f24c30765d079d03ef5b0ca4)
+
+---
+
+## v6.5.3 (16/06/2021)
 - [nodefony changelog 6.5.3](https://github.com/nodefony/nodefony/commit/35a524448955dc434c8c7a4e78058588fec3c49a)
 - [nodefony release 6.5.3](https://github.com/nodefony/nodefony/commit/3915745fcaba1dc543b285e90bc3f33241a9b83c)
 - [upgrade deps](https://github.com/nodefony/nodefony/commit/5f977a2ba8db4eae0ab7d82511d5c386663332bb)
+
+---
+
+## v6.5.2 (16/06/2021)
 - [nodefony changelog 6.5.2](https://github.com/nodefony/nodefony/commit/f05553f23a932b1e0911839b5773fe7dbad7676e)
 - [nodefony release 6.5.2](https://github.com/nodefony/nodefony/commit/a1ecc197d2386477fd97fbd6822b186a49054ccd)
 - [upgrade deps](https://github.com/nodefony/nodefony/commit/487c7e5ab8aef262591e20ad8bf077c41cd47746)
@@ -45,7 +38,13 @@
 - [debug change session context](https://github.com/nodefony/nodefony/commit/483c0729e3578c7de960a11d35150907a660d764)
 - [upgrade deps](https://github.com/nodefony/nodefony/commit/b6900bebef6137d254a8a550b8f8b1547419d8cf)
 - [upgrade deps](https://github.com/nodefony/nodefony/commit/fe09741a47a7d01b9d07733d41f19f3955544f94)
-- [nodefony changelog 6.5.1](https://github.com/nodefony/nodefony/commit/995219a2b81867342078e248dd64a5dc8de3aa0b)
+- [nodefony changelog 6.5.1](https://github.com/nodefony/nodefony/commit
+
+---
+
+## v6.5.1 (16/06/2021)
+
+/995219a2b81867342078e248dd64a5dc8de3aa0b)
 - [nodefony release 6.5.1](https://github.com/nodefony/nodefony/commit/c1467a48cbbc1baf251869cf3e0657fac839ab27)
 - [change version 6.5.1](https://github.com/nodefony/nodefony/commit/2c712274bf811d10adebffe59d879a354481b7a8)
 
