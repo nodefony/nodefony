@@ -1,4 +1,5 @@
-# Changelog
+
+---
 
 ## v6.5.4 (16/06/2021)
 - [nodefony changelog 6.5.4](https://github.com/nodefony/nodefony/commit/0488d9486b5e2214d6d164ba1a8bad62e1c380ae)
