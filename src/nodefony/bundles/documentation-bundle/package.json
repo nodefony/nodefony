@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/documentation-bundle",
-  "version": "6.5.4",
+  "version": "6.5.5",
   "description": "Nodefony Framework Bundle Documentation ",
   "main": "documentationBundle.js",
   "contributors": [],
@@ -16,7 +16,7 @@
     "async": "^3.2.0",
     "babel-loader": "^8.2.2",
     "bootstrap": "^4.6.0",
-    "cheerio": "^1.0.0-rc.10",
+    "cheerio": "^0.22.0",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "css-loader": "^5.2.6",
     "expose-loader": "^3.0.0",
