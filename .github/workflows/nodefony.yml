@@ -1,35 +1,35 @@
-name:                    nodefony
-on:                      [push]
+name:                 nodefony
+on:                   [push]
 jobs:
   build-linux:
-    runs-on:             ${{ matrix.os }}
-    name:                Nodefony Build Linux
+    runs-on:          ${{ matrix.os }}
+    name:             Nodefony Build Linux
     strategy:
       matrix:
-        os:              [ubuntu-latest]
-        node-version:    [12.x, 14.x, 15.x]
+        os:           [ubuntu-latest]
+        node-version: [12.x, 14.x, 16.X]
     steps:
-    - uses:              actions/checkout@v1
-    - name:              Use Node.js ${{ matrix.node-version }}
-      uses:              actions/setup-node@v1
+    - uses:           actions/checkout@v1
+    - name:           Use Node.js ${{ matrix.node-version }}
+      uses:           actions/setup-node@v1
       with:
-        node-version:    ${{ matrix.node-version }}
-    - uses:              webfactory/ssh-agent@v0.4.1
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-    # ACTION LOCAL TEST
-    #- name:             Hello world action step
-    #  id:               hello
-    #  uses:             ./tools/actions/hello # Uses an action in the root directory
+        node-version: ${{ matrix.node-version }}
+    #- uses:          webfactory/ssh-agent@v0.4.1
     #  with:
-    #    who-to-greet:   'Nodefony Test Action'
+    #    ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    # ACTION LOCAL TEST
+    #- name:          Hello world action step
+    #  id:            hello
+    #  uses:          ./tools/actions/hello # Uses an action in the root directory
+    #  with:
+    #    who-to-greet: 'Nodefony Test Action'
     # Use the output from the `hello` step
-    - name:              Get the output time
-      shell:             bash
-      run:               echo "The time was ${{ steps.hello.outputs.time }}"
-    - name:              npm install, build, and test
-      shell:             bash
-      run:               |
+    - name:           Get the output time
+      shell:          bash
+      run:            echo "The time was ${{ steps.hello.outputs.time }}"
+    - name:           npm install, build, and test
+      shell:          bash
+      run:            |
         git submodule sync
         git submodule update --init --recursive
         npm install --no-audit --force
@@ -39,48 +39,48 @@ jobs:
         sleep 120;
         npm test
       env:
-        CI:              true
+        CI:           true
     services:
       nginx:
-        image:           nginx
+        image:        nginx
         ports:
           - 8080:80
         env:
-          NGINX_PORT:    80
+          NGINX_PORT: 80
       redis:
-        image:           redis
+        image:        redis
         ports:
           - 6379/tcp
 
   build-osx:
-    runs-on:             ${{ matrix.os }}
-    name:                Nodefony Build MacOS
+    runs-on:          ${{ matrix.os }}
+    name:             Nodefony Build MacOS
     strategy:
       matrix:
-        os:              [macOS-latest]
-        node-version:    [12.x, 14.x, 15.x]
+        os:           [macOS-latest]
+        node-version: [12.x, 14.x, 16.X]
     steps:
-    - uses:              actions/checkout@v1
-    - name:              Use Node.js ${{ matrix.node-version }}
-      uses:              actions/setup-node@v1
+    - uses:           actions/checkout@v1
+    - name:           Use Node.js ${{ matrix.node-version }}
+      uses:           actions/setup-node@v1
       with:
-        node-version:    ${{ matrix.node-version }}
-    - uses:              webfactory/ssh-agent@v0.4.1
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-    # ACTION LOCAL TEST
-    #- name:             Hello world action step
-    #  id:               hello
-    #  uses:             ./tools/actions/hello # Uses an action in the root directory
+        node-version: ${{ matrix.node-version }}
+    #- uses:          webfactory/ssh-agent@v0.4.1
     #  with:
-    #    who-to-greet:   'Nodefony Test Action'
+    #    ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    # ACTION LOCAL TEST
+    #- name:          Hello world action step
+    #  id:            hello
+    #  uses:          ./tools/actions/hello # Uses an action in the root directory
+    #  with:
+    #    who-to-greet: 'Nodefony Test Action'
     # Use the output from the `hello` step
-    - name:              Get the output time
-      shell:             bash
-      run:               echo "The time was ${{ steps.hello.outputs.time }}"
-    - name:              npm install, build, and test
-      shell:             bash
-      run:               |
+    - name:           Get the output time
+      shell:          bash
+      run:            echo "The time was ${{ steps.hello.outputs.time }}"
+    - name:           npm install, build, and test
+      shell:          bash
+      run:            |
         git submodule sync
         git submodule update --init --recursive
         npm cache clean --force
@@ -91,37 +91,37 @@ jobs:
         sleep 120;
         npm test
       env:
-        CI:              true
+        CI:           true
 
   build-windows:
-    runs-on:             ${{ matrix.os }}
-    name:                Nodefony Build Windows
+    runs-on:          ${{ matrix.os }}
+    name:             Nodefony Build Windows
     strategy:
       matrix:
-        os:              [windows-latest]
-        node-version:    [12.x, 14.x, 15.x]
+        os:           [windows-latest]
+        node-version: [12.x, 14.x, 16.X]
     steps:
-    - uses:              actions/checkout@v1
-    - name:              Use Node.js ${{ matrix.node-version }}
-      uses:              actions/setup-node@v1
+    - uses:           actions/checkout@v1
+    - name:           Use Node.js ${{ matrix.node-version }}
+      uses:           actions/setup-node@v1
       with:
-        node-version:    ${{ matrix.node-version }}
-    - uses:              webfactory/ssh-agent@v0.4.1
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-    # ACTION LOCAL TEST
-    #- name:             Hello world action step
-    #  id:               hello
-    #  uses:             ./tools/actions/hello # Uses an action in the root directory
+        node-version: ${{ matrix.node-version }}
+    #- uses:          webfactory/ssh-agent@v0.4.1
     #  with:
-    #    who-to-greet:   'Nodefony Test Action'
+    #    ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    # ACTION LOCAL TEST
+    #- name:          Hello world action step
+    #  id:            hello
+    #  uses:          ./tools/actions/hello # Uses an action in the root directory
+    #  with:
+    #    who-to-greet: 'Nodefony Test Action'
     # Use the output from the `hello` step
-    - name:              Get the output time
-      shell:             bash
-      run:               echo "The time was ${{ steps.hello.outputs.time }}"
-    - name:              npm install, build, and test
-      shell:             bash
-      run:               |
+    - name:           Get the output time
+      shell:          bash
+      run:            echo "The time was ${{ steps.hello.outputs.time }}"
+    - name:           npm install, build, and test
+      shell:          bash
+      run:            |
         git submodule sync
         git submodule update --init --recursive
         npm install --no-audit --force
@@ -131,4 +131,4 @@ jobs:
         sleep 120;
         npm test
       env:
-        CI:              true
+        CI:           true
