@@ -31,9 +31,8 @@ jobs:
       shell:             bash
       run:               |
         npm install --no-audit --force
-        npm link src/nodefony
         npm run build --if-present
-        nodefony start
+        npx nodefony start
         sleep 120;
         npm test
       env:
@@ -81,9 +80,8 @@ jobs:
       run:               |
         npm cache clean --force
         npm install --no-audit --force
-        npm link src/nodefony
         npm run build --if-present
-        nodefony start
+        npx nodefony start
         sleep 120;
         npm test
       env:
@@ -119,9 +117,8 @@ jobs:
       shell:             bash
       run:               |
         npm install --no-audit --force
-        npm link src/nodefony
         npm run build --if-present
-        nodefony start
+        npx nodefony start
         sleep 120;
         npm test
       env:
