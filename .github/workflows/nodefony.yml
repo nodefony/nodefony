@@ -9,14 +9,14 @@ jobs:
         os:              [ubuntu-latest]
         node-version:    [12.x, 14.x, 16.X]
     steps:
+    - uses:              webfactory/ssh-agent@v0.4.1
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     - uses:              actions/checkout@v1
     - name:              Use Node.js ${{ matrix.node-version }}
       uses:              actions/setup-node@v1
       with:
         node-version:    ${{ matrix.node-version }}
-    - uses:              webfactory/ssh-agent@v0.4.1
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     # ACTION LOCAL TEST
     #- name:             Hello world action step
     #  id:               hello
@@ -58,14 +58,14 @@ jobs:
         os:              [macOS-latest]
         node-version:    [12.x, 14.x, 16.X]
     steps:
+    - uses:              webfactory/ssh-agent@v0.4.1
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     - uses:              actions/checkout@v1
     - name:              Use Node.js ${{ matrix.node-version }}
       uses:              actions/setup-node@v1
       with:
         node-version:    ${{ matrix.node-version }}
-    - uses:              webfactory/ssh-agent@v0.4.1
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     # ACTION LOCAL TEST
     #- name:             Hello world action step
     #  id:               hello
@@ -97,14 +97,14 @@ jobs:
         os:              [windows-latest]
         node-version:    [12.x, 14.x, 16.X]
     steps:
+    - uses:              webfactory/ssh-agent@v0.4.1
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     - uses:              actions/checkout@v1
     - name:              Use Node.js ${{ matrix.node-version }}
       uses:              actions/setup-node@v1
       with:
         node-version:    ${{ matrix.node-version }}
-    - uses:              webfactory/ssh-agent@v0.4.1
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     # ACTION LOCAL TEST
     #- name:             Hello world action step
     #  id:               hello
