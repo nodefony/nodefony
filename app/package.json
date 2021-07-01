@@ -30,7 +30,7 @@
     "node-sass": "^6.0.1",
     "optimize-css-assets-webpack-plugin": "^6.0.1",
     "postcss": "^8.3.5",
-    "postcss-loader": "^6.1.0",
+    "postcss-loader": "^6.1.1",
     "postcss-preset-env": "^6.7.0",
     "precss": "^4.0.0",
     "raw-loader": "^4.0.2",
