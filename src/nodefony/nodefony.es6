@@ -568,11 +568,14 @@ class Nodefony {
         const kernel = new nodefony.appKernel(environment, cli, options);
         return await kernel.start();
       } else {
-        await cli.setCommand("webpack:dump");
+        let options = cli.commander.opts();
+        if( options.dump ){
+          await cli.setCommand("webpack:dump");
+        }
         cli.setType("SERVER");
         this.manageCache(cli);
         process.env.MODE_START = "PM2_START";
-        return this.pm2Start(cli);
+        return this.pm2Start(cli, options);
       }
       break;
     case "stop":
@@ -839,7 +842,7 @@ class Nodefony {
   /*
    * PM2
    */
-  pm2Start(cli) {
+  pm2Start(cli, options) {
     return new Promise((resolve, reject) => {
       this.setPm2Config();
       if (!this.pm2Config) {
@@ -861,6 +864,7 @@ class Nodefony {
           cli.terminate(1);
           return;
         }
+        console.log( util.inspect(this.pm2Config,{depth:10}) );
         pm2.start(this.pm2Config, (err /*, apps*/ ) => {
           if (err) {
             cli.logger(err.stack || err, "ERROR");
@@ -911,8 +915,8 @@ Examples with pm2 native tools :
 $ npx pm2 monit
 $ npx pm2 --lines 1000 logs
                     `);
-                  resolve(pm2.disconnect());
-                  if (cli.commander.daemon) {
+                  //resolve(pm2.disconnect());
+                  if (options.daemon) {
                     cli.terminate(0);
                   }
                 });

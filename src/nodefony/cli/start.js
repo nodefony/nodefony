@@ -174,7 +174,8 @@ module.exports = class cliStart extends nodefony.cliKernel {
 
   initOptions() {
     this.setOption('-d, --debug ', 'Nodefony debug');
-    this.setOption('--no-daemon', 'Nodefony Deamon off for production mode', true);
+    this.setOption('--no-daemon', 'Nodefony Deamon off for production mode (usefull for docker)', true);
+    this.setOption('--no-dump', 'Nodefony Start don\'t run Webpack Production Mode', true);
     this.setOption('-h, --help ', 'Nodefony help');
     this.setOption('-f, --force ', 'Force disable interactive mode');
     this.setOption('-i, --interactive ', 'Nodefony cli Interactive Mode');
