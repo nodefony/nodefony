@@ -6,6 +6,8 @@
   ########################
   # Node Package Manager
 
+# find ./ -iname "package-lock.json" ! -path '*/node_modules/*' ! -path '*/clones/*'
+
 #Publishing with tags
 npm publish --tag beta
 
