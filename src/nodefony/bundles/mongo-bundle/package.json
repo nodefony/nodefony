@@ -12,7 +12,7 @@
     "javascript"
   ],
   "dependencies": {
-    "mongodb": "^3.6.9"
+    "mongodb": "^3.6.10"
   },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "^1.0.5"

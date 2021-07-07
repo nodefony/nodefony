@@ -49,7 +49,7 @@
     "sass-loader": "^12.1.0",
     "style-loader": "^3.0.0",
     "terser-webpack-plugin": "^5.1.4",
-    "webpack": "^5.42.1",
+    "webpack": "^5.43.0",
     "webpack-merge": "^5.8.0"
 {% endif %}
   },
