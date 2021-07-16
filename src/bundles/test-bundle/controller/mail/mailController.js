@@ -29,7 +29,7 @@ module.exports = class mailController extends nodefony.controller {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(html);
-    await page.emulateMedia("print");
+    await page.emulateMediaType("print");
     let buffer = await page.pdf({
       format: 'A4',
       printBackground: true
