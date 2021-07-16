@@ -2,8 +2,6 @@ const path = require("path");
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { merge } = require('webpack-merge');
-const precss = require('precss');
-const autoprefixer = require('autoprefixer');
 
 // Default context <bundle base directory>
 //const context = path.resolve(__dirname, "..", "Resources", "public");
@@ -32,7 +30,8 @@ module.exports = merge(config, {
     publicPath: publicPath,
     filename: "./js/[name].js",
     library: "[name]",
-    libraryExport: "default"
+    libraryExport: "default",
+    assetModuleFilename:'[hash][ext][query]'
   },
   externals: {},
   resolve: {},
@@ -70,16 +69,6 @@ module.exports = merge(config, {
             sourceMap: true
           }
         }, {
-          loader: 'resolve-url-loader',
-          options: {}
-        }, {
-          loader: 'postcss-loader', // Run post css actions
-          options: {
-            postcssOptions: {
-              plugins: [autoprefixer({}), precss({})]
-            }
-          }
-        }, {
           loader: "sass-loader",
           options: {
             sourceMap: true
@@ -88,56 +77,45 @@ module.exports = merge(config, {
       ]
     }, {
       test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-      use: [{
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]',
-          outputPath: 'fonts/', // where the fonts will go
-          publicPath: `/${bundleName}/assets/fonts/` // override the default path
-        }
-      }]
+      type: 'asset/inline'
     }, {
       // IMAGES
       test: /\.(gif|png|jpe?g|svg)$/i,
-      use: [{
-          loader: "file-loader",
+      type: 'asset/resource',
+      generator: {
+         filename: "images/[name][ext][query]",
+      }
+      /*use: [{
+          loader: 'image-webpack-loader',
           options: {
-            name: "[name].[ext]",
-            publicPath: `/${bundleName}/assets/images/`,
-            outputPath: "/images/"
+            disable: dev,
+            mozjpeg: {
+              progressive: true,
+              quality: 65
+            },
+            // optipng.enabled: false will disable optipng
+            optipng: {
+              enabled: false,
+            },
+            pngquant: {
+              quality: '65-90',
+              speed: 4
+            },
+            gifsicle: {
+              interlaced: false,
+            },
+            // the webp option will enable WEBP
+            webp: {
+              quality: 75
+            }
           }
         }
-        /*, {
-                  loader: 'image-webpack-loader',
-                  options: {
-                    disable: dev,
-                    mozjpeg: {
-                      progressive: true,
-                      quality: 65
-                    },
-                    // optipng.enabled: false will disable optipng
-                    optipng: {
-                      enabled: false,
-                    },
-                    pngquant: {
-                      quality: '65-90',
-                      speed: 4
-                    },
-                    gifsicle: {
-                      interlaced: false,
-                    },
-                    // the webp option will enable WEBP
-                    webp: {
-                      quality: 75
-                    }
-                  }
-                }*/
-      ]
+      ]*/
     }]
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "./css/[name].css"
+      filename: "css/[name].css"
     }),
     new webpack.DefinePlugin({
       'process.env': {

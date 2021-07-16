@@ -17,8 +17,7 @@
     "babel-loader": "^8.2.2",
     "bootstrap": "=3.3.7",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
-    "css-loader": "^5.2.6",
-    "file-loader": "^6.2.0",
+    "css-loader": "^6.0.0",
     "font-awesome": "^4.7.0",
     "less": "^4.1.1",
     "less-loader": "^10.0.0",
@@ -30,7 +29,7 @@
     "shortid": "^2.2.16",
     "terser-webpack-plugin": "^5.1.4",
     "useragent": "^2.3.0",
-    "webpack": "^5.43.0",
+    "webpack": "^5.45.1",
     "webpack-merge": "^5.8.0"
   },
   "repository": {

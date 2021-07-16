@@ -2,8 +2,6 @@ const path = require("path");
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const precss = require('precss');
-const autoprefixer = require('autoprefixer');
 
 const context = path.resolve(__dirname, "..", "public");
 const public = path.resolve(__dirname, "..", "public", "assets");
@@ -71,16 +69,6 @@ module.exports = merge({
             sourceMap: true
           }
           }, {
-          loader: 'resolve-url-loader',
-          options: {}
-          }, {
-          loader: 'postcss-loader', // Run post css actions
-          options: {
-            postcssOptions: {
-              plugins: [autoprefixer({}), precss({})]
-            }
-          }
-          }, {
           loader: "sass-loader",
           options: {
             sourceMap: true
@@ -90,11 +78,14 @@ module.exports = merge({
     }, {
       // FONTS
       test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '/assets/fonts/' + '&outputPath=/fonts/',
+      type: 'asset/inline'
     }, {
       // IMAGES
       test: new RegExp("\.(jpg|png|gif)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '/assets/images/' + '&outputPath=/images/'
+      type: 'asset/resource',
+      generator: {
+         filename: "images/[name][ext][query]",
+      }
     }]
   },
   plugins: [

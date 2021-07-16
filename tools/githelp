@@ -7,11 +7,12 @@ https://www.atlassian.com/git/tutorials/what-is-git
 $ git tag -a release01
 $ git push origin release01
 
-
 // REMOVE TAG :
 $ git tag -d release01
 $ git push origin :refs/tags/release01
 
+// DELETE REMOTE BRANCH
+$ git push origin --delete myBranch
 
 // ADD REMOTE BRANCH
 git push -u origin <branch_name>

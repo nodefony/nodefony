@@ -54,23 +54,12 @@ module.exports = merge({
         'less-loader'
       ]
     }, {
-      // SASS
-      test: new RegExp(".scss$"),
-      use: [{
-        loader: 'style-loader'
-      }, {
-        loader: 'css-loader'
-      }, {
-        loader: 'sass-loader'
-      }]
-    }, {
-      // FONTS
-      test: new RegExp("\.(eot|woff2?|ttf)([\?]?.*)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '/assets/fonts/' + '&outputPath=/fonts/',
+      test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+      type: 'asset/inline'
     }, {
       // IMAGES
-      test: new RegExp("\.(jpg|png|gif|svg)$"),
-      use: 'file-loader?name=[name].[ext]&publicPath=/' + bundleName + '/assets/images/' + '&outputPath=/images/'
+      test: /\.(gif|png|jpe?g|svg)$/i,
+      type: 'asset/inline'
     }]
   },
   plugins: [

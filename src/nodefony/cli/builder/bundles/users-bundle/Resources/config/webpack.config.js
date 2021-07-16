@@ -4,8 +4,6 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const {
   merge
 } = require('webpack-merge');
-const precss = require('precss');
-const autoprefixer = require('autoprefixer');
 
 // Default context <bundle base directory>
 //const context = path.resolve(__dirname, "..", "public");
@@ -98,16 +96,6 @@ module.exports = merge(config, {
               sourceMap: true
             }
           }, {
-            loader: 'resolve-url-loader',
-            options: {}
-          }, {
-            loader: 'postcss-loader', // Run post css actions
-            options: {
-              postcssOptions: {
-                plugins: [autoprefixer({}), precss({})]
-              }
-            }
-          }, {
             loader: "sass-loader",
             options: {
               sourceMap: true
@@ -116,14 +104,7 @@ module.exports = merge(config, {
         ]
       }, {
         test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: '[name].[ext]',
-            outputPath: 'fonts/', // where the fonts will go
-            publicPath: `${publicPath}fonts/` // override the default path
-          }
-        }]
+        type: 'asset/inline'
       }, {
         test: /\.svg$/,
         use: [{
@@ -132,14 +113,10 @@ module.exports = merge(config, {
       }, {
         // IMAGES
         test: /\.(gif|png|jpe?g|svg)$/i,
-        use: [{
-          loader: "file-loader",
-          options: {
-            name: "[name].[ext]",
-            publicPath: `${publicPath}/images/`,
-            outputPath: "/images/"
-          }
-          }]
+        type: 'asset/resource',
+        generator: {
+           filename: "images/[name][ext][query]",
+        }
       }
     ]
   },
