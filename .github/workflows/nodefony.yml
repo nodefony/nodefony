@@ -36,7 +36,9 @@ jobs:
       run:               |
         npm cache clean --force
         npm install --no-audit --force --legacy-peer-deps
-        yarn link ./src/nodefony
+        cd ./src/nodefony
+        yarn link
+        cd -
         npm run build --if-present
         npx nodefony start
         sleep 120;
@@ -90,7 +92,9 @@ jobs:
       run:               |
         npm cache clean --force
         npm install --no-audit --force --legacy-peer-deps
-        yarn link ./src/nodefony
+        cd ./src/nodefony
+        yarn link
+        cd -
         npm run build --if-present
         npx nodefony start
         sleep 120;
@@ -133,7 +137,9 @@ jobs:
       run:               |
         npm cache clean --force
         npm install --no-audit --force --legacy-peer-deps
-        yarn link ./src/nodefony
+        cd ./src/nodefony
+        yarn link
+        cd -
         npm run build --if-present
         npx nodefony start
         sleep 120;
