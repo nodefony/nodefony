@@ -11,6 +11,8 @@ jobs:
     steps:
     - name:              Use latest NPM
       run:               sudo npm i -g npm
+    - name:              Use latest Yarn
+      run:               sudo npm i -g yarn
     - uses:              webfactory/ssh-agent@v0.4.1
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -34,6 +36,7 @@ jobs:
       run:               |
         npm cache clean --force
         npm install --no-audit --force --legacy-peer-deps
+        yarn link ./src/nodefony
         npm run build --if-present
         npx nodefony start
         sleep 120;
@@ -62,6 +65,8 @@ jobs:
     steps:
     - name:              Use latest NPM
       run:               sudo npm i -g npm
+    - name:              Use latest Yarn
+      run:               sudo npm i -g yarn
     - uses:              webfactory/ssh-agent@v0.4.1
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -85,6 +90,7 @@ jobs:
       run:               |
         npm cache clean --force
         npm install --no-audit --force --legacy-peer-deps
+        yarn link ./src/nodefony
         npm run build --if-present
         npx nodefony start
         sleep 120;
@@ -102,6 +108,8 @@ jobs:
     steps:
     - name:              Use latest NPM on windows
       run:               npm i -g npm
+    - name:              Use latest Yarn
+      run:               npm i -g yarn
     - uses:              webfactory/ssh-agent@v0.4.1
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -125,6 +133,7 @@ jobs:
       run:               |
         npm cache clean --force
         npm install --no-audit --force --legacy-peer-deps
+        yarn link ./src/nodefony
         npm run build --if-present
         npx nodefony start
         sleep 120;
