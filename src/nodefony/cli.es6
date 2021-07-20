@@ -377,7 +377,7 @@ class CLI extends nodefony.Service {
     return this.commander.option(option, description, callback);
   }
   setCommandVersion(version) {
-    if (typeof this.commander.version === "function") {
+    if (this.commander && typeof this.commander.version === "function") {
       return this.commander.version(version, '-v, --version', 'Nodefony Current Version');
     }
   }
