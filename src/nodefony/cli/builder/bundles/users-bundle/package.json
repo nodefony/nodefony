@@ -27,7 +27,7 @@
     "bootstrap": "^5.0.2",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "css-hot-loader": "^1.4.4",
-    "css-loader": "^6.0.0",
+    "css-loader": "^6.2.0",
     "expose-loader": "^3.0.0",
     "faker": "^5.5.3",
     "font-awesome": "^4.7.0",
