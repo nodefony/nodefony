@@ -37,7 +37,7 @@ jobs:
         npm cache clean --force
         npm install --no-audit --force --legacy-peer-deps
         cd ./src/nodefony
-        yarn link
+        npm link
         cd -
         npm run build --if-present
         npx nodefony start
@@ -66,9 +66,9 @@ jobs:
         node-version:    [12.x, 14.x, 16.X]
     steps:
     - name:              Use latest NPM
-      run:               sudo npm i -g npm
+      run:               npm i -g npm
     - name:              Use latest Yarn
-      run:               sudo npm i -g yarn
+      run:               npm i -g yarn
     - uses:              webfactory/ssh-agent@v0.4.1
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -93,7 +93,7 @@ jobs:
         npm cache clean --force
         npm install --no-audit --force --legacy-peer-deps
         cd ./src/nodefony
-        yarn link
+        npm link
         cd -
         npm run build --if-present
         npx nodefony start
@@ -138,7 +138,7 @@ jobs:
         npm cache clean --force
         npm install --no-audit --force --legacy-peer-deps
         cd ./src/nodefony
-        yarn link
+        npm link
         cd -
         npm run build --if-present
         npx nodefony start
