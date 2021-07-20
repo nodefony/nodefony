@@ -212,7 +212,7 @@ class cliKernel extends nodefony.cli {
         this.args = args;
       }
     } else {
-      if (this.commander.args && this.commander.args.length) {
+      if (this.commander && this.commander.args && this.commander.args.length) {
         if (typeof this.commander.args[0] === "string") {
           this.pattern = this.commander.args[0].split(":");
         } else {
@@ -541,7 +541,7 @@ class cliKernel extends nodefony.cli {
     if (!this.kernel) {
       return super.initSyslog(environment, debug, options);
     }
-    if (this.commander.opts().json) {
+    if (this.commander && this.commander.opts().json) {
       return;
     }
     let syslog = this.syslog;
