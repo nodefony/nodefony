@@ -33,7 +33,7 @@ jobs:
       shell:             bash
       run:               |
         npm cache clean --force
-        npm install --no-audit --force
+        npm install --no-audit --force --legacy-peer-deps
         npm link ./src/nodefony
         npm run build --if-present
         npx nodefony start
@@ -85,7 +85,7 @@ jobs:
       shell:             bash
       run:               |
         npm cache clean --force
-        npm install --no-audit --force
+        npm install --no-audit --force --legacy-peer-deps
         npm link ./src/nodefony
         npm run build --if-present
         npx nodefony start
@@ -126,7 +126,7 @@ jobs:
       shell:             bash
       run:               |
         npm cache clean --force
-        npm install --no-audit --force
+        npm install --no-audit --force --legacy-peer-deps
         npm link ./src/nodefony
         npm run build --if-present
         npx nodefony start
