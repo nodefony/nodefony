@@ -10,7 +10,7 @@ jobs:
         node-version:    [12.x, 14.x, 16.X]
     steps:
     - name:              Use latest NPM
-      run:               sudo npm i -g npm
+      run:               sudo npm i -g --force npm
     - name:              Use latest Yarn
       run:               sudo npm i -g yarn
     - uses:              webfactory/ssh-agent@v0.4.1
@@ -66,7 +66,7 @@ jobs:
         node-version:    [12.x, 14.x, 16.X]
     steps:
     - name:              Use latest NPM
-      run:               npm i -g npm
+      run:               npm i -g --force npm
     - name:              Use latest Yarn
       run:               npm i -g yarn
     - uses:              webfactory/ssh-agent@v0.4.1
@@ -111,7 +111,7 @@ jobs:
         node-version:    [12.x, 14.x, 16.X]
     steps:
     - name:              Use latest NPM on windows
-      run:               npm i -g npm
+      run:               npm i -g --force npm
     - name:              Use latest Yarn
       run:               npm i -g yarn
     - uses:              webfactory/ssh-agent@v0.4.1
