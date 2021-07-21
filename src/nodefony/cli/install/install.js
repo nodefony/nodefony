@@ -17,7 +17,7 @@ module.exports = class installProject extends nodefony.Builder {
         .then(() => {
           return this.cli.packageManager.call(this.cli, ["install"], cwd)
             .then(() => {
-              if (nodefony.isCore && process.platform !== "win32") {
+              if (false && nodefony.isCore && process.platform !== "win32") {
                 return this.npmLink(path.resolve("."), path.resolve("src", "nodefony"))
                   .catch((e) => {
                     return reject(e);

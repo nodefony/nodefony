@@ -13,8 +13,8 @@
   ],
   "repository": {},
   "dependencies": {
-    "@babel/core": "^7.14.6",
-    "@babel/preset-env": "^7.14.7",
+    "@babel/core": "^7.14.8",
+    "@babel/preset-env": "^7.14.8",
     "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "css-hot-loader": "^1.4.4",
@@ -33,7 +33,7 @@
     "raw-loader": "^4.0.2",
     "resolve-url-loader": "^4.0.0",
     "sass-loader": "^12.1.0",
-    "style-loader": "^3.1.0",
+    "style-loader": "^3.2.1",
     "terser-webpack-plugin": "^5.1.4",
     "webpack": "^5.45.1",
     "webpack-merge": "^5.7.3"
