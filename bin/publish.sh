@@ -116,7 +116,9 @@ npm_publish () {
   rm -rf node_modules ;
   rm -f package.lock.json;
   rm -f yarn.lock;
-  yarn;
+  echo "CLEAN $1 DIRECTORY OK";
+  ls -l;
+  #yarn;
   npm install;
   sleep 2;
   npm publish --access=public;
