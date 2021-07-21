@@ -1,7 +1,7 @@
 {
-  "name": "nodefony-dev",
+  "name": "nodefony-core",
   "version": "6.0.0",
-  "description": "Nodefony Node.js Web Framework",
+  "description": "Core Nodefony Node.js Web Framework",
   "main": "./src/nodefony/core/autoloader.es6",
   "scripts": {
     "nodefony": "node src/nodefony/bin/nodefony",
