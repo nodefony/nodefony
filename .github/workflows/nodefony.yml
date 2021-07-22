@@ -128,6 +128,8 @@ jobs:
     - name:              npm install, build, and test
       shell:             bash
       run:               |
+        openssl version -d
+        pwd
         npm cache clean --force
         npm install --no-audit --force --legacy-peer-deps
         npm install --no-audit --force --legacy-peer-deps ./src/nodefony
