@@ -110,6 +110,8 @@ jobs:
       run:               npm i -g --force npm
     - name:              Use latest Yarn
       run:               npm i -g yarn
+    - name:              Use clean Yarn cache on windows
+      run:               yarn cache clean
     - uses:              actions/checkout@v2
     - name:              Use Node.js ${{ matrix.node-version }}
       uses:              actions/setup-node@v2
