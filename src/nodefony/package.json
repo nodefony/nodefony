@@ -74,7 +74,7 @@
     "pm2": "^5.1.0",
     "promise": "^8.1.0",
     "request": "^2.88.2",
-    "semver": "^7.3.4",
+    "semver": "^7.3.5",
     "shelljs": "^0.8.4",
     "shortid": "^2.2.16",
     "simple-git": "^2.41.1",
