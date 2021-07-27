@@ -38,7 +38,7 @@ jobs:
         npm install --no-audit --force --legacy-peer-deps
         npm install --no-audit --force --legacy-peer-deps ./src/nodefony
         npm run build --if-present
-        npx nodefony start
+        npm run nodefony start
         sleep 120;
         npm test
       env:
@@ -92,7 +92,7 @@ jobs:
         npm install --no-audit --force --legacy-peer-deps
         npm install --no-audit --force --legacy-peer-deps ./src/nodefony
         npm run build --if-present
-        npx nodefony start
+        npm run nodefony start
         sleep 120;
         npm test
       env:
@@ -132,7 +132,7 @@ jobs:
         npm install --no-audit --force --legacy-peer-deps
         npm install --no-audit --force --legacy-peer-deps ./src/nodefony
         npm run build --if-present
-        npx nodefony start
+        npm run nodefony start
         sleep 120;
         npm test
       env:
