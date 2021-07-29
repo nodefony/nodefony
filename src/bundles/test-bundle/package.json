@@ -31,10 +31,10 @@
     "optimize-css-assets-webpack-plugin": "^6.0.1",
     "puppeteer": "^10.1.0",
     "request": "^2.88.2",
-    "rxjs": "^7.2.0",
+    "rxjs": "^7.3.0",
     "sass-loader": "^12.1.0",
     "terser-webpack-plugin": "^5.1.4",
-    "webpack": "^5.46.0",
+    "webpack": "^5.47.1",
     "webpack-merge": "^5.8.0",
     "websocket": "^1.0.34"
   },
