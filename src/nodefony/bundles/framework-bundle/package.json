@@ -27,7 +27,7 @@
     "optimize-css-assets-webpack-plugin": "^6.0.1",
     "sass-loader": "^12.1.0",
     "terser-webpack-plugin": "^5.1.4",
-    "webpack": "^5.48.0",
+    "webpack": "^5.49.0",
     "webpack-merge": "^5.8.0"
   },
   "repository": {
