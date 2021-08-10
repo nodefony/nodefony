@@ -45,8 +45,8 @@
     "sass-loader": "^12.1.0",
     "style-loader": "^3.2.1",
     "svg-inline-loader": "^0.8.2",
-    "swagger-ui": "^3.51.2",
-    "swagger-ui-dist": "3.51.2",
+    "swagger-ui": "^3.52.0",
+    "swagger-ui-dist": "^3.52.0",
     "terser-webpack-plugin": "^5.1.4",
     "webpack": "^5.49.0",
     "webpack-merge": "^5.8.0"
