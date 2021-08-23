@@ -49,11 +49,11 @@
     "node": ">=10"
   },
   "dependencies": {
-    "mongoose": "^5.13.6",
-    "pm2": "^5.1.0",
+    "mongoose": "^5.13.7",
+    "pm2": "^5.1.1",
     "pm2-logrotate": "^2.7.0",
     "sequelize": "^6.6.5",
-    "webpack": "^5.50.0",
+    "webpack": "^5.51.1",
     "webpack-dev-server": "^3.11.2"
   },
   "devDependencies": {
@@ -61,7 +61,7 @@
     "editorconfig": "^0.15.3",
     "github-release-notes": "^0.17.3",
     "jshint": "^2.13.1",
-    "node-gyp": "^8.1.0"
+    "node-gyp": "^8.2.0"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md",
