@@ -49,22 +49,29 @@ const sockCompiler = class sockCompiler extends nodefony.Service {
   }
 
   sendStats(stats, force, connection) {
-    if (!force &&
+    const shouldEmit =
+      !force &&
       stats &&
       (!stats.errors || stats.errors.length === 0) &&
+      (!stats.warnings || stats.warnings.length === 0) &&
       stats.assets &&
-      stats.assets.every(asset => !asset.emitted)
-    ) {
-      return this.sockWrite('still-ok', null, connection);
+      stats.assets.every((asset) => !asset.emitted);
+
+    if (shouldEmit) {
+      this.sockWrite('still-ok', null, connection);
+      return;
     }
     this.sockWrite('hash', stats.hash, connection);
-    if (stats.errors.length > 0) {
-      this.sockWrite('errors', stats.errors, connection);
-    } else if (stats.warnings.length > 0) {
-      this.sockWrite('warnings', stats.warnings, connection);
-    } else {
-      this.sockWrite('ok', null, connection);
-    }
+    if (stats.errors.length > 0 || stats.warnings.length > 0) {
+     if (stats.warnings.length > 0) {
+       this.sockWrite('warnings', stats.warnings, connection);
+     }
+     if (stats.errors.length > 0) {
+       this.sockWrite('errors', stats.errors, connection);
+     }
+   } else {
+     this.sockWrite('ok', null, connection);
+   }
   }
 
   clean() {
@@ -108,9 +115,8 @@ module.exports = class sockjs extends nodefony.Service {
           this.clientOverlay = false;
         }
         this.hot = this.settings.hot || false;
-        this.hotOnly = this.settings.hotOnly || false;
         this.progress = this.settings.progress || false;
-        this.clientLogLevel = this.settings.logLevel || "none";
+        this.logging = this.settings.logging || "none";
         this.websocket = this.settings.websocket;
         this.protocol = this.settings.protocol.toLowerCase();
         this.setPrefix(this.settings.prefix || defaultPrefix);
@@ -153,7 +159,8 @@ module.exports = class sockjs extends nodefony.Service {
     }
     let progress = config.progress || this.progress;
     if (progress && config.watch) {
-      const progressPlugin = new this.compilers[basename].webpack.webpack.ProgressPlugin((percent, msg, addInfo) => {
+      const { ProgressPlugin } = compiler.webpack || require("webpack");
+      const progressPlugin = new ProgressPlugin((percent, msg, addInfo, pluginName) => {
         percent = Math.floor(percent * 100);
         if (percent === 100) {
           msg = 'Compilation completed';
@@ -164,7 +171,8 @@ module.exports = class sockjs extends nodefony.Service {
         this.compilers[basename].log(`${percent} % : ${msg}`, "INFO", `WEBPACK ${this.compilers[basename].name} Progress`);
         this.sockWrite('progress-update', {
           percent,
-          msg
+          msg,
+          pluginName
         });
 
       });
@@ -179,13 +187,15 @@ module.exports = class sockjs extends nodefony.Service {
       if (overlay) {
         this.sockWrite("overlay", overlay, conn);
       }
-      let hot = (config.hot || config.hotOnly) || (this.hot || this.hotOnly);
+      let hot = (config.hot) || (this.hot);
       if (hot) {
         this.sockWrite("hot", null, conn);
+      }else{
+        this.sockWrite("liveReload", null, conn);
       }
-      let clientLogLevel = (config.clientLogLevel || this.clientLogLevel);
-      if (clientLogLevel) {
-        this.sockWrite("log-level", this.clientLogLevel, conn);
+
+      if (config.logging || this.logging) {
+        this.sockWrite("logging", (config.logging || this.logging), conn);
       }
       if (this.compilers[basename].stats) {
         this.compilers[basename].sendStats(this.compilers[basename].stats, false, conn);
@@ -253,7 +263,7 @@ module.exports = class sockjs extends nodefony.Service {
       }
       return this.sockWrite("errors", [myError]);
     case "change":
-      return this.sockWrite("content-changed");
+      return this.sockWrite("static-changed", data);
     default:
       return;
     }

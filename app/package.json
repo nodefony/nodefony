@@ -37,7 +37,8 @@
   },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "^1.0.5",
-    "node-gyp": "^8.2.0"
+    "node-gyp": "^8.2.0",
+    "webpack-dev-server": "^4.1.0"
   },
   "license": "",
   "readmeFilename": "README.md",

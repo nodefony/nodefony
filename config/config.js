@@ -88,11 +88,9 @@ module.exports = {
      * DEV SERVER
      */
     devServer: {
-      inline: true,
-      hot: false,
-      hotOnly: false,
+      hot: false, // true  || only || false
       overlay: true,
-      logLevel: "info", // none, error, warning or info
+      logging: "info", // none, error, warning or info
       progress: false,
       protocol: "https",
       websocket: true

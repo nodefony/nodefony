@@ -125,7 +125,7 @@ module.exports = merge(config, {
     })
   ],
   devServer: {
-    inline: true,
-    hot: false
+    hot: false, // false || true || "only",
+    progress:false
   }
 });
