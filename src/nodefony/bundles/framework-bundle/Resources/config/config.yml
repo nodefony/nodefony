@@ -22,8 +22,7 @@ webpack:
   outputFileSystem        : "file-system"
   stats                    :
     colors                : true
-    verbose               : true
-    maxModules            : 16     #Infinity
+    preset                : normal # normal || minimal || verbose || detailed  || summary
   watchOptions:
     ignoreInitial         : false
     persistent            : true

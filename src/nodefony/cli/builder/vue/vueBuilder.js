@@ -80,7 +80,7 @@ class Vue extends nodefony.builders.sandbox {
         return this.checkTypeScript()
           .then(async () => {
             let packages = ["clean-webpack-plugin"];
-            let packagesDev = ["@vue/cli"];
+            let packagesDev = ["@vue/cli","webpack-dev-server@3.11.2"];
             await this.addPackage(packages, false);
             await this.addPackage(packagesDev, true);
             if(this.response.addons.vuetify){
