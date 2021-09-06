@@ -19,7 +19,7 @@
     "pgtools": "^0.3.2",
     "sequelize": "^6.6.5",
     "sqlite3": "^5.0.2",
-    "tedious": "^12.0.0",
+    "tedious": "^12.2.0",
     "umzug": "3.0.0-beta-cli.17"
   },
   "repository": {
