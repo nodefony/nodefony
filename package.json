@@ -54,7 +54,7 @@
     "pm2-logrotate": "^2.7.0",
     "sequelize": "^6.6.5",
     "webpack": "^5.52.0",
-    "webpack-dev-server": "^4.1.0"
+    "webpack-dev-server": "^4.1.1"
   },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "^1.0.5",
