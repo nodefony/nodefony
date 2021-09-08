@@ -10,9 +10,6 @@ const defaultconfigServer = {
 };
 
 const defaultConfigConnection = {
-  //useMongoClient: true,
-  //reconnectTries: Number.MAX_VALUE,
-  //autoReconnect: true,
   socketTimeoutMS: 0,
   keepAlive: true,
   useNewUrlParser: true
@@ -23,7 +20,6 @@ class mongoose extends nodefony.Orm {
   constructor(container, kernel, autoLoader) {
     super("mongoose", container, kernel, autoLoader);
     this.engine = Mongoose;
-    this.engine.set('useCreateIndex', true);
   }
 
   static isError(error) {
@@ -65,8 +61,7 @@ class mongoose extends nodefony.Orm {
     let url = `mongodb://${host}:${port}/${config.dbname}`;
 
     let settings = nodefony.extend(true, {}, defaultConfigConnection, config.settings);
-    settings.promiseLibrary = BlueBird;
-    return this.engine.createConnection(url, settings)
+    return this.engine.createConnection(url, settings).asPromise()
       .then((db) => {
         this.connections[name] = db;
         db.on('close', () => {
@@ -103,13 +98,6 @@ class mongoose extends nodefony.Orm {
       }).catch(error => {
         this.log(`Cannot connect to mongodb ( ${host}:${port}/${config.dbname} )`, "ERROR");
         this.log(error, "ERROR");
-        /*if (this.timeoutid) {
-          clearTimeout(this.timeoutid);
-        }
-        this.timeoutid = setTimeout(() => {
-          this.timeoutid = null;
-          //this.createConnection(name, config);
-        }, settings.reconnectInterval * 1000);*/
       });
   }
 

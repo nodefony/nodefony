@@ -3,6 +3,7 @@
  *
  *       @see MONGO BUNDLE config for more options
  *       @more options https://mongoosejs.com/docs/connections.html
+ *              https://mongoosejs.com/docs/api.html#mongoose_Mongoose-createConnection
  *
  *       By default nodefony create connector name nodefony
  *       for manage Sessions / Users
@@ -18,12 +19,10 @@ module.exports = {
         settings: {
           user: "",
           pass: "",
-          authSource: "admin",
-          //reconnectTries: 100,
-          //reconnectInterval: 5000,
-          //autoReconnect: true,
-          //poolSize: 5,
-          useUnifiedTopology:true
+          //useUnifiedTopology:true,
+          maxPoolSize: 50,
+          wtimeoutMS: 2500,
+          useNewUrlParser: true
         }
       }
     }
