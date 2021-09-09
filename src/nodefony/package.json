@@ -58,7 +58,7 @@
     "cli-table": "^0.3.6",
     "clui": "^0.3.6",
     "commander": "^8.1.0",
-    "core-js": "^3.17.2",
+    "core-js": "^3.17.3",
     "create-react-app": "^4.0.3",
     "graphql": "^15.5.3",
     "inquirer": "^8.1.2",

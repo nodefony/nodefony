@@ -22,7 +22,7 @@
 {% endif %}
 {% if addons.bootstrap %}
     "@popperjs/core": "^2.10.1",
-    "bootstrap": "^5.1.0",
+    "bootstrap": "^5.1.1",
     "jquery": "^3.6.0",
     "font-awesome": "^4.7.0",
 {% endif %}
@@ -48,7 +48,7 @@
   },
   "devDependencies": {
 {% if addons.webpack %}
-    "webpack-dev-server": "^4.1.0",
+    "webpack-dev-server": "^4.1.1",
 {% endif %}
     "@mapbox/node-pre-gyp": "^1.0.5",
     "node-gyp": "^8.2.0"

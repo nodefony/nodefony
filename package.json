@@ -17,6 +17,9 @@
   "bin": {
     "nodefony": "src/nodefony/bin/nodefony"
   },
+  "workspaces": [
+    "src/nodefony"
+  ],
   "keywords": [
     "nodefony",
     "node.js",
