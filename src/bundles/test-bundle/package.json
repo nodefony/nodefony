@@ -13,7 +13,7 @@
   ],
   "dependencies": {
     "@babel/core": "^7.15.5",
-    "@babel/preset-env": "^7.15.4",
+    "@babel/preset-env": "^7.15.6",
     "@popperjs/core": "^2.10.1",
     "babel-loader": "^8.2.2",
     "bootstrap": "^5.1.1",
@@ -33,8 +33,8 @@
     "request": "^2.88.2",
     "rxjs": "^7.3.0",
     "sass-loader": "^12.1.0",
-    "terser-webpack-plugin": "^5.2.3",
-    "webpack": "^5.52.0",
+    "terser-webpack-plugin": "^5.2.4",
+    "webpack": "^5.52.1",
     "webpack-merge": "^5.8.0",
     "websocket": "^1.0.34"
   },
