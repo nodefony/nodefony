@@ -36,7 +36,7 @@
     "html-webpack-plugin": "^5.3.2",
     "imports-loader": "^3.0.0",
     "jquery": "^3.6.0",
-    "mini-css-extract-plugin": "^2.2.2",
+    "mini-css-extract-plugin": "^2.3.0",
     "mongoose-paginate-v2": "^1.4.2",
     "node-sass": "^6.0.1",
     "optimize-css-assets-webpack-plugin": "^6.0.1",
@@ -45,10 +45,10 @@
     "sass-loader": "^12.1.0",
     "style-loader": "^3.2.1",
     "svg-inline-loader": "^0.8.2",
-    "swagger-ui": "^3.52.1",
-    "swagger-ui-dist": "^3.52.1",
+    "swagger-ui": "^3.52.2",
+    "swagger-ui-dist": "^3.52.2",
     "terser-webpack-plugin": "^5.2.4",
-    "webpack": "^5.52.1",
+    "webpack": "^5.53.0",
     "webpack-merge": "^5.8.0"
   },
   "devDependencies": {

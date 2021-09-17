@@ -26,7 +26,7 @@
     "jquery": "^3.6.0",
     "less": "^4.1.1",
     "less-loader": "^10.0.0",
-    "mini-css-extract-plugin": "^2.2.2",
+    "mini-css-extract-plugin": "^2.3.0",
     "node-sass": "^6.0.1",
     "optimize-css-assets-webpack-plugin": "^6.0.1",
     "puppeteer": "^10.2.0",
@@ -34,7 +34,7 @@
     "rxjs": "^7.3.0",
     "sass-loader": "^12.1.0",
     "terser-webpack-plugin": "^5.2.4",
-    "webpack": "^5.52.1",
+    "webpack": "^5.53.0",
     "webpack-merge": "^5.8.0",
     "websocket": "^1.0.34"
   },
