@@ -18,7 +18,7 @@
   "repository": {},
   "dependencies": {
 {% if addons.workbox %}
-    "workbox-webpack-plugin": "^6.2.4",
+    "workbox-webpack-plugin": "^6.3.0",
 {% endif %}
 {% if addons.bootstrap %}
     "@popperjs/core": "^2.10.1",
@@ -28,27 +28,27 @@
 {% endif %}
 {% if addons.webpack %}
     "@babel/core": "^7.15.5",
-    "@babel/preset-env": "^7.15.4",
+    "@babel/preset-env": "^7.15.6",
     "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^4.0.0",
     "css-hot-loader": "^1.4.4",
-    "css-loader": "^6.2.0",
+    "css-loader": "^6.3.0",
     "expose-loader": "^3.0.0",
     "html-webpack-plugin": "^5.3.2",
     "imports-loader": "^3.0.0",
-    "mini-css-extract-plugin": "^2.2.2",
+    "mini-css-extract-plugin": "^2.3.0",
     "node-sass": "^6.0.1",
     "optimize-css-assets-webpack-plugin": "^6.0.1",
     "sass-loader": "^12.1.0",
-    "style-loader": "^3.2.1",
-    "terser-webpack-plugin": "^5.2.3",
-    "webpack": "^5.52.0",
+    "style-loader": "^3.3.0",
+    "terser-webpack-plugin": "^5.2.4",
+    "webpack": "^5.53.0",
     "webpack-merge": "^5.8.0"
 {% endif %}
   },
   "devDependencies": {
 {% if addons.webpack %}
-    "webpack-dev-server": "^4.1.1",
+    "webpack-dev-server": "^4.2.1",
 {% endif %}
     "@mapbox/node-pre-gyp": "^1.0.5",
     "node-gyp": "^8.2.0"
