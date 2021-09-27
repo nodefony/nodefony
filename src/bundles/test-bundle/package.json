@@ -34,7 +34,7 @@
     "rxjs": "^7.3.0",
     "sass-loader": "^12.1.0",
     "terser-webpack-plugin": "^5.2.4",
-    "webpack": "^5.53.0",
+    "webpack": "^5.54.0",
     "webpack-merge": "^5.8.0",
     "websocket": "^1.0.34"
   },
