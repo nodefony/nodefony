@@ -120,7 +120,7 @@ module.exports = merge(wpconfig, {
     })
   ],
   devServer: {
-    inline: true,
-    hot: false
+    hot: false, // false || true || "only",
+    progress:false
   }
 });

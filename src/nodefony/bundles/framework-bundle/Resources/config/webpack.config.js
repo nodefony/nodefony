@@ -1,5 +1,5 @@
 const path = require("path");
-//const webpack = require('webpack');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { merge } = require('webpack-merge');
 
@@ -9,6 +9,7 @@ const public = path.resolve(__dirname, "..", "public", "assets");
 const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
 const publicPath = bundleName + "/assets/";
 
+const debug = kernel.debug ? "*" : false ;
 let config = null;
 let dev = true;
 if (kernel.environment === "dev") {
@@ -77,10 +78,16 @@ module.exports = merge(config, {
     new MiniCssExtractPlugin({
       filename: "./css/[name].css"
       //allChunks: true
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        "NODE_DEBUG": JSON.stringify(debug)
+      }
     })
   ],
   devServer: {
-    inline: true,
-    hot: false
+    hot: false, // false || true || "only",
+    progress:false
   }
 });
