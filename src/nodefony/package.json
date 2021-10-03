@@ -77,14 +77,14 @@
     "semver": "^7.3.5",
     "shelljs": "^0.8.4",
     "shortid": "^2.2.16",
-    "simple-git": "^2.45.1",
+    "simple-git": "^2.46.0",
     "spdx": "^0.5.2",
     "terser-webpack-plugin": "^5.2.4",
     "twig": "^1.15.4",
     "uuid": "^8.3.2",
-    "webpack": "^5.54.0",
+    "webpack": "^5.56.0",
     "xml2js": "^0.4.23",
-    "yarn": "^1.22.11"
+    "yarn": "^1.22.15"
   },
   "devDependencies": {
     "babel-loader": "^8.2.2",
