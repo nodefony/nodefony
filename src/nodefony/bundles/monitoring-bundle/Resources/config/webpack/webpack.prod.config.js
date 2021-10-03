@@ -1,4 +1,4 @@
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+//const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
@@ -16,13 +16,13 @@ module.exports = {
     ]
   },
   plugins: [
-    new OptimizeCssAssetsPlugin({
+    /*new OptimizeCssAssetsPlugin({
       cssProcessorOptions: {
         discardComments: {
           removeAll: true
         }
       },
       canPrint: true
-    })
+    })*/
   ]
 };
