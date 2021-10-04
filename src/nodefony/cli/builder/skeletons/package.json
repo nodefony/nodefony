@@ -41,13 +41,13 @@
     "sass-loader": "^12.1.0",
     "style-loader": "^3.3.0",
     "terser-webpack-plugin": "^5.2.4",
-    "webpack": "^5.56.0",
+    "webpack": "^5.56.1",
     "webpack-merge": "^5.8.0"
 {% endif %}
   },
   "devDependencies": {
 {% if addons.webpack %}
-    "webpack-dev-server": "^4.3.0",
+    "webpack-dev-server": "^4.3.1",
 {% endif %}
     "@mapbox/node-pre-gyp": "^1.0.5",
     "node-gyp": "^8.2.0"
