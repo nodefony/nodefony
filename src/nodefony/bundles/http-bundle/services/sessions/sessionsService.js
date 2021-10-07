@@ -103,6 +103,7 @@ module.exports = class sessions extends nodefony.Service {
             return reject(err);
           });
       } catch (e) {
+        this.log(e,"ERROR");
         return reject(e);
       }
     });

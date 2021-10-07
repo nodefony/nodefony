@@ -4,9 +4,6 @@
  */
 nodefony.register("Session", function () {
 
-  const algorithm = 'aes-256-ctr';
-  const password = 'd6F3Efeq';
-
   const checkSecureReferer = function (context) {
     let host = null;
     switch (this.context.type) {
@@ -74,6 +71,8 @@ nodefony.register("Session", function () {
       this.lifetime = this.settings.cookie.maxAge;
       this.saved = false;
       this.flashBag = {};
+      this.key = this.settings.encrypt.password
+      this.iv = this.settings.encrypt.iv
     }
 
     get(name) {
@@ -84,17 +83,17 @@ nodefony.register("Session", function () {
     }
 
     encrypt(text) {
-      let cipher = crypto.createCipher(algorithm, password);
-      let crypted = cipher.update(text, 'utf8', 'hex');
-      crypted += cipher.final('hex');
-      return crypted;
+      const cipher = crypto.createCipheriv('aes-256-ctr', this.key, this.iv)
+      let encrypted = cipher.update(text, 'utf8', 'hex')
+      encrypted += cipher.final('hex')
+      return encrypted
     }
 
     decrypt(text) {
-      let decipher = crypto.createDecipher(algorithm, password);
-      let dec = decipher.update(text, 'hex', 'utf8');
-      dec += decipher.final('utf8');
-      return dec;
+      const decipher = crypto.createDecipheriv('aes-256-ctr', this.key, this.iv)
+      let decrypted = decipher.update(text, 'hex', 'utf8')
+      decrypted += decipher.final('utf8')
+      return decrypted
     }
 
     create(lifetime, id) {
@@ -135,6 +134,7 @@ nodefony.register("Session", function () {
         }
       } catch (e) {
         return new Promise((resolve, reject) => {
+          this.log(e,"ERROR");
           return reject(e);
         });
       }
