@@ -15,6 +15,10 @@ module.exports = {
     /**
      * FIREWALL  AREAS
      */
-    firewalls: {}
+    firewalls: {
+      app_area:{
+        pattern: /^\/app/
+      }
+    }
   }
 };

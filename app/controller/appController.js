@@ -8,7 +8,10 @@ module.exports = class appController extends nodefony.controller {
 
   /**
    *  @see Route home in routing.js
-   */
+   *
+   *    @Route ("/app",
+   *      name="app")
+   **/
   indexAction() {
     return this.render("app::index.html.twig", {
       user: this.getUser(),
