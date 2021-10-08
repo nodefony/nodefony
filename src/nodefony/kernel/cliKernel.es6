@@ -1,5 +1,5 @@
 const simpleGit = require('simple-git');
-const npm = require("npm");
+//const npm = require("npm");
 
 const charsTable = {
   'top': '',
