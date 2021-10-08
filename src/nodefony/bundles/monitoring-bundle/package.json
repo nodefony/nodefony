@@ -21,14 +21,14 @@
     "font-awesome": "^4.7.0",
     "less": "^4.1.2",
     "less-loader": "^10.0.0",
-    "mini-css-extract-plugin": "^2.4.1",
+    "mini-css-extract-plugin": "^2.4.2",
     "nodefony-client": "^6.0.0-beta.18",
     "qs": "^6.10.1",
     "request": "^2.88.2",
     "shortid": "^2.2.16",
     "terser-webpack-plugin": "^5.2.3",
     "useragent": "^2.3.0",
-    "webpack": "^5.57.1",
+    "webpack": "^5.58.0",
     "webpack-merge": "^5.8.0"
   },
   "repository": {
