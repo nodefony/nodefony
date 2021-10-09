@@ -52,11 +52,11 @@
     "node": ">=10"
   },
   "dependencies": {
-    "mongoose": "^6.0.9",
+    "mongoose": "^6.0.10",
     "pm2": "^5.1.2",
     "pm2-logrotate": "^2.7.0",
     "sequelize": "^6.6.5",
-    "webpack": "^5.58.0",
+    "webpack": "^5.58.1",
     "webpack-dev-server": "^4.3.1"
   },
   "devDependencies": {
