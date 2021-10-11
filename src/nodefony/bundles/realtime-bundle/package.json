@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/realtime-bundle",
-  "version": "6.6.0",
+  "version": "6.8.0",
   "description": "Nodefony Framework Bundle Realtime ",
   "contributors": [],
   "main": "realtimeBundle.js",
@@ -26,5 +26,5 @@
     }
   ],
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
-  "readmeFilename": "README.md"
+  "readmeFilename": "readme.md"
 }

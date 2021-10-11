@@ -1,1 +1,1 @@
-# BUNDLE NODEFONY SEQUELIZE
+# # Welcome to sequelize-bundle
