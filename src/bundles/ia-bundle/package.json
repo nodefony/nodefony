@@ -1,0 +1,66 @@
+{
+  "name": "ia-bundle",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
+  },
+  "dependencies": {
+    "@tensorflow-models/mobilenet": "^2.1.0",
+    "@tensorflow-models/speech-commands": "^0.5.4",
+    "@tensorflow/tfjs": "^3.9.0",
+    "@tensorflow/tfjs-node": "^3.9.0",
+    "@tensorflow/tfjs-node-gpu": "^3.9.0",
+    "@tensorflow/tfjs-vis": "^1.5.1",
+    "asciify-image": "^0.1.8",
+    "clean-webpack-plugin": "^4.0.0",
+    "core-js": "^3.18.2",
+    "gpu.js": "^2.11.4",
+    "jpeg-js": "^0.4.3",
+    "leaflet": "^1.7.1",
+    "ml5": "^0.7.1",
+    "p5": "^1.4.0",
+    "vue": "3.2.12",
+    "vue-i18n": "^9.1.9",
+    "vue-router": "^4.0.0-0",
+    "vuex": "^4.0.0-0"
+  },
+  "devDependencies": {
+    "@intlify/vue-i18n-loader": "^3.2.0",
+    "@vue/cli": "^4.5.13",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.2.20",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^8.0.0",
+    "eslint-plugin-vue": "^7.19.1",
+    "expose-loader": "^3.0.0",
+    "vue-cli-plugin-i18n": "^2.3.1",
+    "webpack-dev-server": "=3.11.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
