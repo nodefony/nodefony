@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/monitoring-bundle",
-  "version": "6.8.0",
+  "version": "6.9.0",
   "description": "Nodefony Framework Bundle Monitoring",
   "contributors": [],
   "main": "monitoringBundle.js",
@@ -20,7 +20,7 @@
     "css-loader": "^6.4.0",
     "font-awesome": "^4.7.0",
     "less": "^4.1.2",
-    "less-loader": "^10.0.0",
+    "less-loader": "^10.1.0",
     "mini-css-extract-plugin": "^2.4.2",
     "nodefony-client": "^6.0.0-beta.18",
     "qs": "^6.10.1",
