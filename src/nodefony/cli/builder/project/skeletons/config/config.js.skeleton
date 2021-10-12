@@ -95,7 +95,7 @@ module.exports = {
       logging: "info", // none, error, warning or info
       progress: false,
       protocol: "https",
-      websocket: true`
+      websocket: true
     },
 
     /**
