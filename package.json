@@ -11,6 +11,7 @@
     "outdated": "npm outdated --deph=0",
     "build": "node src/nodefony/bin/nodefony build",
     "test": "node src/nodefony/bin/nodefony unitest:launch:all",
+    "publish": "./bin/publish.sh",
     "changelog": "gren changelog --username=nodefony  --repo=nodefony --tags=all --data-source=commits --override --generate"
   },
   "private": true,

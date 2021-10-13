@@ -202,22 +202,33 @@ publish (){
   publish_nodefony
 }
 
+cleanFramework(){
+    find ./ -iname "package-lock.json" ! -path '*/node_modules/*' ! -path '*/clones/*' | xargs rm -f
+    find ./ -iname "yarn.lock" ! -path '*/node_modules/*' ! -path '*/clones/*' | xargs rm -f
+}
+
 menu () {
-  declare -a commands=("publish" "changelog" "Quit");
+  declare -a commands=("publish" "changelog" "clean" "Quit" );
   # MENU
   select yn in ${commands[@]}; do
     case $yn in
       "changelog" )
         generate_changelog;
+        exit 0;
         break ;;
       "publish" )
         publish ;
+        exit 0;
+        break ;;
+      "clean" )
+        cleanFramework ;
+        exit 0;
         break ;;
       #"build" )
       #  build ;
       #  break ;;
       "Quit" )
-        exit;
+        exit 0;
     esac
   done
 }

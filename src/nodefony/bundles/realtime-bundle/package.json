@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/realtime-bundle",
-  "version": "6.9.0",
+  "version": "6.9.1",
   "description": "Nodefony Framework Bundle Realtime ",
   "contributors": [],
   "main": "realtimeBundle.js",
