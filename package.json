@@ -18,7 +18,6 @@
     "nodefony": "src/nodefony/bin/nodefony"
   },
   "workspaces": [
-    "src/nodefony"
   ],
   "keywords": [
     "nodefony",
