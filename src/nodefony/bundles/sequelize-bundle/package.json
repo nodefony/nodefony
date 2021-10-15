@@ -13,7 +13,7 @@
   "dependencies": {
     "@alt3/sequelize-to-json-schemas": "^0.3.56",
     "cls-hooked": "^4.2.2",
-    "mysql2": "^2.3.0",
+    "mysql2": "^2.3.1",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
     "pgtools": "^0.3.2",
