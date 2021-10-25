@@ -51,19 +51,19 @@
     "node": ">=10"
   },
   "dependencies": {
-    "mongoose": "^6.0.11",
+    "mongoose": "^6.0.12",
     "pm2": "^5.1.2",
     "pm2-logrotate": "^2.7.0",
-    "sequelize": "^6.7.0",
-    "webpack": "^5.58.2",
+    "sequelize": "^6.8.0",
+    "webpack": "^5.59.1",
     "webpack-dev-server": "^4.3.1"
   },
   "devDependencies": {
-    "@mapbox/node-pre-gyp": "^1.0.5",
+    "@mapbox/node-pre-gyp": "^1.0.6",
     "editorconfig": "^0.15.3",
     "github-release-notes": "^0.17.3",
     "jshint": "^2.13.1",
-    "node-gyp": "^8.2.0"
+    "node-gyp": "^8.3.0"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md",
