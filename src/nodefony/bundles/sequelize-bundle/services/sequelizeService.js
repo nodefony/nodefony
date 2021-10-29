@@ -1,6 +1,9 @@
 //const cls = require('cls-hooked');
 //const namespace = cls.createNamespace('nodefony');
-const { Sequelize } = require('sequelize');
+nodefony.Sequelize = require('sequelize');
+const {
+  Sequelize
+} = nodefony.Sequelize;
 //Sequelize.useCLS(namespace);
 const {
   JsonSchemaManager,
@@ -261,8 +264,8 @@ class sequelize extends nodefony.Orm {
           break;
         }
       }
-      if (this.connections[dbname]){
-        conn[4] = ( this.connections[dbname].state);
+      if (this.connections[dbname]) {
+        conn[4] = (this.connections[dbname].state);
       }
       tab.push(conn);
     }

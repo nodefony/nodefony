@@ -1,4 +1,8 @@
-const { Sequelize, DataTypes, Model } = require("sequelize");
+const {
+  Sequelize,
+  DataTypes,
+  Model
+} = nodefony.Sequelize; //require("sequelize");
 const validator = require('validator');
 /*
  *
