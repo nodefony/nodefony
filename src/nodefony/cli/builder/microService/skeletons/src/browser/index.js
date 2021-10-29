@@ -1,5 +1,4 @@
-const nodefony = require("nodefony");
-const io = require('socket.io-client');
+const nodefony = require("nodefony-client");
 
 import "./index.css";
 /*
@@ -11,7 +10,6 @@ class App extends nodefony.Service {
     this.initSyslog();
     this.log("INIT APP CLIENT");
     this.log(`Nodefony Client version : ${nodefony.version}`);
-    this.io = io();
   }
 }
 

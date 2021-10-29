@@ -3,7 +3,7 @@ const package = require(path.resolve("package.json"));
 const env = process.env.NODE_ENV;
 const logName = `${package.name}.log`;
 
-let cpu = require('os').cpus().length;
+let cpu = 2 // require('os').cpus().length;
 let exec_mode = "cluster";
 let watch = false;
 let autorestart =true ;

@@ -1,6 +1,7 @@
 const nodefony = require("nodefony");
 const path = require("path");
 const config = require(path.resolve("config", "config.js"));
+const ejs = require('ejs');
 
 // examples services
 const Server = require(path.resolve("src", "node", "services", "servers", "http.js"));
@@ -46,8 +47,11 @@ class Service extends nodefony.Service {
     // add in service container
     this.set("http", http);
     http.on("request", async (request, response) => {
-      response.statusCode = 200;
-      response.setHeader('Content-Type', 'text/html');
+      //response.statusCode = 200;
+      //response.setHeader('Content-Type', 'text/html');
+      response.writeHead(200, {
+        'Content-Type': 'text/html;charset=utf-8'
+      })
       http.log(` ${response.statusCode} url : http://${http.settings.hostname}:${http.settings.port}/`);
       response.end(await this.renderHtml());
     });
@@ -83,57 +87,13 @@ class Service extends nodefony.Service {
   }
 
   async renderHtml() {
-    return `<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="utf-8">
-  <title>Nodefony Microservice</title>
-  <style>
-    body { font: 13px Helvetica, Arial; }
-  </style>
-</head>
-<body>
-  <p align="center">
-    <img src="https://github.com/nodefony/nodefony-core/raw/master/src/nodefony/bundles/framework-bundle/Resources/public/images/nodefony-logo.png"><br>
-  </p>
-  <h1 align="center">NODEFONY V6 Micro Service</h1>
-  <h2 align="center">Socket Io <h2>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
-  <script
-  src="https://code.jquery.com/jquery-3.4.1.min.js"
-  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-  crossorigin="anonymous"></script>
-
-  <script>
-    var socket = io('/',{
-      transports: [ 'websocket' ],
-      forceNew: true
+    const filename = path.resolve("dist", "socketio.ejs")
+    const res = await ejs.renderFile(filename, {
+      body: ""
+    }, {
+      async: true
     });
-
-    socket.on("connect_error", function(e){
-      console.error(e);
-    });
-
-    socket.on('connect', function(){
-      console.log("connect", socket.connected);
-      setTimeout(()=>{
-        socket.emit("microservice", "send after 5 s");
-      }, 5000);
-
-    });
-
-    socket.on('microservice', function(data){
-      console.log(data);
-    });
-
-    socket.on('disconnect', function(){
-      console.log("disconnect");
-    });
-  </script>
-</body>
-</html>
-    `;
+    return res;
   }
 
   terminate(code){

@@ -1,5 +1,11 @@
 const nodefony = require("nodefony");
 const https = require('https');
+const serveStatic = require('serve-static');
+const dist = path.resolve("dist");
+const serve = serveStatic(dist, {
+  index: false
+});
+
 
 class Server extends nodefony.Service {
   constructor(service){
@@ -16,7 +22,9 @@ class Server extends nodefony.Service {
     return new Promise((resolve, reject) => {
       this.log("Starting Server HTTPS", "INFO");
       this.server = https.createServer(this.settings.certificates, (req, res) => {
-        return this.fire("request", req, res);
+        return serve(req, res, () => {
+          return this.fire("request", req, res);
+        });
       });
 
       this.server.listen(this.settings.port, this.settings.hostname, () => {
