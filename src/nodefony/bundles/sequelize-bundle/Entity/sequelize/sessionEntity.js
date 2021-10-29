@@ -1,4 +1,8 @@
-const { Sequelize, DataTypes, Model } = require("sequelize");
+const {
+  Sequelize,
+  DataTypes,
+  Model
+} = nodefony.Sequelize;
 
 module.exports = class session extends nodefony.Entity {
 
