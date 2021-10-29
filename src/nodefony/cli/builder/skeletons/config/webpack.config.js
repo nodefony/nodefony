@@ -12,16 +12,16 @@ const {InjectManifest} = require('workbox-webpack-plugin');
 // Default context <bundle base directory>
 //const context = path.resolve(__dirname, "..", "Resources", "public");
 const public = path.resolve(__dirname, "..", "Resources", "public", "assets");
-const package = require(path.resolve("package.json"));
+const bundlePackage = require(path.resolve("package.json"));
 {% else %}
 // Default context <bundle base directory>
 //const context = path.resolve(__dirname, "..", "public");
 const public = path.resolve(__dirname, "..", "public", "assets");
-const package = require(path.resolve("package.json"));
+const bundlePackage = require(path.resolve("package.json"));
 {% endif %}
 
 const bundleConfig = require(path.resolve(__dirname, "config.js"));
-const bundleName = package.name;
+const bundleName = bundlePackage.name;
 const publicPath = "/{{bundleName}}/assets/";
 
 let wpconfig = null;
