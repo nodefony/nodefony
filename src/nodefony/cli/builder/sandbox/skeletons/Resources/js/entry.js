@@ -29,8 +29,8 @@ class {{shortName | capitalize }}  {
           .then(registration => {
             if (registration) {
               console.log(`Service Worker registered! Scope: ${registration.scope}`);
-              if (window.nodefony) {
-                window.nodefony.monitoringWorkbox(registration);
+              if (window.debugbar) {
+                window.debugbar.monitoringWorkbox(registration);
               }
             }
             return registration;
