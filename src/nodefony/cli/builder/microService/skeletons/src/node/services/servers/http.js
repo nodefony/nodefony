@@ -2,6 +2,12 @@ const nodefony = require("nodefony");
 const http = require('http');
 const path = require("path");
 
+const serveStatic = require('serve-static');
+const dist = path.resolve("dist");
+const serve = serveStatic(dist, {
+  index: false
+});
+
 class Server extends nodefony.Service {
   constructor(service) {
     super("HTTP Server", service.container);
@@ -17,7 +23,9 @@ class Server extends nodefony.Service {
     return new Promise((resolve, reject) => {
       this.log("Starting Server HTTP", "INFO");
       this.server = http.createServer((req, res) => {
-        return this.fire("request", req, res);
+        return serve(req, res, () => {
+          return this.fire("request", req, res);
+        });
       });
 
       this.server.listen(this.settings.port, this.settings.hostname, () => {

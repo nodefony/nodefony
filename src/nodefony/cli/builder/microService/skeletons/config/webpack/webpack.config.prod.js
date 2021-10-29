@@ -1,5 +1,4 @@
 const TerserPlugin = require('terser-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   mode: 'production',
@@ -19,11 +18,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      fallback: "style-loader",
-      filename: "./css/[name].min.css",
-      allChunks: true
-    })
+
   ]
 
 

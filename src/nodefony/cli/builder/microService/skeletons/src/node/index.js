@@ -3,6 +3,7 @@ const path = require("path");
 const Server = require(path.resolve("src", "node", "services", "servers", "http.js"));
 const ServerSecure = require(path.resolve("src", "node", "services", "servers", "https.js"));
 const Markdown = require(path.resolve("src", "node", "services", "markdown", "markdown.js"));
+const ejs = require('ejs');
 
 class Service extends nodefony.Service {
 
@@ -31,8 +32,11 @@ class Service extends nodefony.Service {
     this.set("http", http);
     await http.start();
     http.on("request", async (request, response) => {
-      response.statusCode = 200;
-      response.setHeader('Content-Type', 'text/html');
+      //response.statusCode = 200;
+      //response.setHeader('Content-Type', 'text/html');
+      response.writeHead(200, {
+        'Content-Type': 'text/html;charset=utf-8'
+      })
       http.log(` ${response.statusCode} url : http://${http.settings.hostname}:${http.settings.port}/`);
       response.end(await this.renderHtml());
     });
@@ -45,8 +49,11 @@ class Service extends nodefony.Service {
     this.set("https", https);
     await https.start();
     https.on("request", async (request, response) => {
-      response.statusCode = 200;
-      response.setHeader('Content-Type', 'text/html');
+      //response.statusCode = 200;
+      //response.setHeader('Content-Type', 'text/html');
+      response.writeHead(200, {
+        'Content-Type': 'text/html;charset=utf-8'
+      })
       https.log(` ${response.statusCode} url : https://${https.settings.hostname}:${https.settings.port}/`);
       response.end(await this.renderHtml());
     });
@@ -56,20 +63,13 @@ class Service extends nodefony.Service {
   async renderHtml() {
     const readme = path.resolve("README.md");
     const md = await this.markdown.fileToMarkdown(readme);
-    return `<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="utf-8">
-  <title>Nodefony Microservice</title>
-  <style>
-    body { font: 13px Helvetica, Arial; }
-  </style>
-</head>
-<body>
-  ${md}
-</body>
-</html>
-    `;
+    const filename = path.resolve("dist", "index.ejs")
+    const res = await ejs.renderFile(filename, {
+      body: md
+    }, {
+      async: true
+    });
+    return res;
   }
 
   getMarkdown() {
