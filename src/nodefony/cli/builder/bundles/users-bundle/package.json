@@ -36,7 +36,7 @@
     "html-webpack-plugin": "^5.5.0",
     "imports-loader": "^3.1.1",
     "jquery": "^3.6.0",
-    "mini-css-extract-plugin": "^2.4.3",
+    "mini-css-extract-plugin": "^2.4.4",
     "mongoose-paginate-v2": "^1.4.2",
     "node-sass": "^6.0.1",
     "react": "^17.0.2",

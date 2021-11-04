@@ -33,6 +33,7 @@ module.exports = merge(wpconfig, {
     publicPath: publicPath,
     filename: "./js/[name].js",
     library: "[name]",
+    hashFunction: "xxhash64",
     libraryExport: "default"
   },
   externals: {},
