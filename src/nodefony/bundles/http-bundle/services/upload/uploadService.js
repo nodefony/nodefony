@@ -28,9 +28,9 @@ module.exports = class upload extends nodefony.Service {
     });
   }
 
-  createUploadFile(file) {
+  createUploadFile(file, name) {
     try {
-      return new uploadedFile(file);
+      return new uploadedFile(file, name);
     } catch (error) {
       throw error;
     }
@@ -46,13 +46,16 @@ module.exports = class upload extends nodefony.Service {
 
 const uploadedFile = class uploadedFile extends nodefony.fileClass {
 
-  constructor(fomiFile) {
-    super(fomiFile.path);
+  constructor(fomiFile, name) {
+    super(fomiFile.filepath);
     this.fomiFile = fomiFile;
     this.size = this.getSize();
     this.prettySize = this.getPrettySize();
-    this.filename = this.realName();
+    this.filename = this.realName(name);
     this.mimeType = this.getMimeType();
+    this.lastModifiedDate = this.fomiFile.lastModifiedDate;
+    this.hashAlgorithm = this.fomiFile.hashAlgorithm;
+    this.hash = this.fomiFile.hash;
   }
 
   getSize() {
@@ -63,13 +66,13 @@ const uploadedFile = class uploadedFile extends nodefony.fileClass {
     return nodefony.cli.niceBytes(this.fomiFile.size);
   }
 
-  realName() {
-    return this.fomiFile.name;
+  realName(name= null) {
+    return this.fomiFile.originalFilename || name || this.fomiFile.newFilename ;
   }
 
   getMimeType() {
     if (this.fomiFile) {
-      return this.fomiFile.type || super.getMimeType(this.filename);
+      return this.fomiFile.mimetype || super.getMimeType(this.filename);
     }
     return super.getMimeType();
   }

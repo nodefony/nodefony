@@ -3,11 +3,11 @@ module.exports = {
   locale: "fr__FR",
 
   watch: {
-    controllers: true,
-    config: true,
-    views: true,
-    translations: true,
-    services: true,
+    controllers: false,
+    config: false,
+    views: false,
+    translations: false,
+    services: false,
     webpack: false
   },
 
