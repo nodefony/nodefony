@@ -1,6 +1,6 @@
 const Mocha = require('mocha');
 
-const regFile = /^(.*)Test\.js$/;
+const regFile = /^(.*)Test\.js$|^(.*)Test\.mjs$/;
 
 module.exports = class unitTest extends nodefony.Service {
 

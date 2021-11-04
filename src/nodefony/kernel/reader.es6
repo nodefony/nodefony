@@ -57,6 +57,7 @@ const load = function (name, pathFile) {
       break;
     case ".js":
     case ".es6":
+    case ".mjs":
     case ".es7":
       Array.prototype.unshift.call(arguments, file);
       switch (true) {
