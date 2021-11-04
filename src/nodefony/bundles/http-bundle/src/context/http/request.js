@@ -10,27 +10,22 @@ module.exports = nodefony.register("Request", function () {
   class Parser {
     constructor(request) {
       this.request = request;
+      this.chunks = [];
       this.request.request.on("data", (data) => {
-        //console.log("data : ")
         try {
           this.write(data);
-          //console.log(this.request.data)
         } catch (e) {
           throw e;
         }
       });
     }
     write(buffer) {
-      if (this.request.data.length >= (this.request.dataSize + buffer.length)) {
-        buffer.copy(this.request.data, this.request.dataSize);
-      } else {
-        this.request.data = Buffer.concat([this.request.data, buffer]);
-      }
-      this.request.dataSize += buffer.length;
-      return buffer.length;
+      this.chunks.push(buffer);
+      return buffer;
     }
-    parse() {
-      this.request.context.requestEnded = true;
+    async parse() {
+      this.request.data = Buffer.concat(this.chunks);
+      return this;
     }
   }
 
@@ -39,17 +34,15 @@ module.exports = nodefony.register("Request", function () {
       super(request);
       this.queryStringParser = this.request.context.queryStringParser || {};
     }
-    parse() {
+    async parse() {
       try {
+        await super.parse();
         this.request.queryPost = QS.parse(this.request.data.toString(this.charset), this.queryStringParser);
-        //this.request.context.setParameters("query.post", this.request.queryPost);
         this.request.query = nodefony.extend({}, this.request.query, this.request.queryPost);
-        //this.request.context.setParameters("query.request", this.request.query);
-        super.parse();
+        this.request.context.requestEnded = true;
+        return this;
       } catch (err) {
         throw err;
-        //this.request.context.fire("onError", this.request.context.container, err);
-        //throw err;
       }
     }
   }
@@ -59,16 +52,18 @@ module.exports = nodefony.register("Request", function () {
       super(request);
       this.xmlParser = new xmlParser(settingsXml);
     }
-    parse() {
-      this.xmlParser.parseString(this.request.data.toString(this.charset), (err, result) => {
-        if (err) {
-          //this.request.context.fire("onError", this.request.context.container, err);
-          throw err;
-        }
-        this.request.queryPost = result;
-        //this.request.context.setParameters("query.post", this.request.queryPost);
-        super.parse();
-      });
+    async parse() {
+      await super.parse();
+      return new Promise((resolve, reject) => {
+        this.xmlParser.parseString(this.request.data.toString(this.charset), (err, result) => {
+          if (err) {
+            return reject(err);
+          }
+          this.request.queryPost = result;
+          this.request.context.requestEnded = true;
+          return resolve(this);
+        });
+      })
     }
   }
 
@@ -180,7 +175,7 @@ module.exports = nodefony.register("Request", function () {
       this.initialize();
     }
 
-    initialize(){
+    initialize() {
       return this.parseRequest()
         .then((parser) => {
           switch (true) {
@@ -201,7 +196,7 @@ module.exports = nodefony.register("Request", function () {
             break;
           default:
             if (!parser) {
-              this.request.once("end",() => {
+              this.request.once("end", () => {
                 try {
                   if (this.context.finished) {
                     return;
@@ -244,15 +239,32 @@ module.exports = nodefony.register("Request", function () {
             }
             return resolve(this.parser);
           default:
+            const parserInst = new Parser(this);
             let opt = nodefony.extend(this.context.requestSettings, {
-              encoding: this.charset
+              encoding: this.charset === "utf8" ? "utf-8" : this.charset
             });
-            this.parser = new formidable.IncomingForm(opt);
-            this.parser.parse(this.request, (err, fields, files) => {
+            this.parser = formidable(opt);
+            this.parser.parse(this.request, async (err, fields, files) => {
               if (err) {
-                return reject(err);
+                this.log(`err.message use Simple parser`,"WARNING");
+                switch (err.code) {
+                case 1003:
+                case 1011:
+                  try {
+                    this.parser = parserInst;
+                  } catch (e) {
+                    return reject(e);
+                  }
+                  return resolve(await this.parser.parse());
+                  break;
+                default:
+                  console.error(err)
+                  err.code = err.httpCode
+                  return reject(err);
+                }
               }
               try {
+                await parserInst.parse();
                 this.queryPost = fields;
                 this.query = nodefony.extend({}, this.query, this.queryPost);
                 if (Object.keys(files).length) {
@@ -264,14 +276,14 @@ module.exports = nodefony.register("Request", function () {
                             this.createFileUpload(multifiles, files[file][multifiles], opt.maxFileSize);
                           }
                         } else {
-                          if (files[file].name) {
+                          if (files[file].filepath) {
                             this.createFileUpload(file, files[file], opt.maxFileSize);
                           }
                         }
                       } else {
                         if (nodefony.isArray(files[file])) {
                           for (let multifiles in files[file]) {
-                            this.createFileUpload(multifiles, files[file][multifiles], opt.maxFileSize);
+                            this.createFileUpload(null, files[file][multifiles], opt.maxFileSize);
                           }
                         } else {
                           this.createFileUpload(file, files[file], opt.maxFileSize);
@@ -298,14 +310,11 @@ module.exports = nodefony.register("Request", function () {
 
     createFileUpload(name, file, maxSize) {
       if (file.size > maxSize) {
-        throw new Error('maxFileSize exceeded, received ' + file.size + ' bytes of file data for : ' + file.name);
+        throw new Error('maxFileSize exceeded, received ' + file.size + ' bytes of file data for : ' + file.originalFilename || name || file.newFilename);
       }
-      let fileUpload = this.context.uploadService.createUploadFile(file);
+      let fileUpload = this.context.uploadService.createUploadFile(file, name);
       let index = this.queryFile.push(fileUpload);
-      name = name || file.name;
-      if (name !== "null" || "undefined") {
-        this.queryFile[name] = this.queryFile[index - 1];
-      }
+      this.queryFile[fileUpload.filename] = this.queryFile[index - 1];
       return fileUpload;
     }
 
@@ -373,6 +382,10 @@ module.exports = nodefony.register("Request", function () {
       delete this.data;
       this.body = null;
       delete this.body;
+      if(this.parser && this.parser.chunks){
+        this.parser.chunks = null;
+        delete this.parser.chunks;
+      }
       this.parser = null;
       delete this.parser;
       this.queryPost = null;

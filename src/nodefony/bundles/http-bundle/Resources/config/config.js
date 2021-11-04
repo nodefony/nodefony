@@ -24,16 +24,18 @@ const createIv = function () {
   return crypto.createHash('sha256').update(String(readFile(sercretPath))).digest('base64').substr(0, 16);
 };
 const iv = createIv();
+const tmpDir = kernel.tmpDir.path || "/tmp"
 
 module.exports = {
   watch: false,
   // For more options parser formidable @see : https://github.com/felixge/node-formidable
   request: {
-    uploadDir: "/tmp",
-    maxFileSize: 10485760, // 10MB
+    uploadDir: tmpDir,
+    maxFileSize: 524288000, // 500 MB  //10MB 10485760
     multiples: true,
     maxFieldsSize: 2097152, // 2MB
-    maxFields: 1000
+    maxFields: 1000,
+    encoding: 'utf-8'
   },
   //For more options parser QS @see : https://github.com/ljharb/qs
   queryString: {

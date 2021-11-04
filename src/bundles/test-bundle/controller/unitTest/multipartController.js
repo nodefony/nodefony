@@ -14,7 +14,8 @@ module.exports = class multipartController extends nodefony.controller {
       query: this.query,
       get: this.queryGet,
       post: this.queryPost,
-      file: this.queryFile
+      file: this.queryFile,
+      data:this.request.data.toString()
     });
   }
 };
