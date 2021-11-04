@@ -44,7 +44,7 @@ module.exports = function () {
    * @module NODEFONY
    *
    */
-  const regJs = /.*\.js$|.*\.es6$|.*\.es7$/;
+  const regJs = /.*\.js$|.*\.es6$|.*\.es7$|.*\.(mjs)$/;
 
   class Autoload {
 
@@ -174,7 +174,7 @@ module.exports = function () {
         }
         console.error(e);
         if(this.kernel){
-          this.kernel.terminate(1);  
+          this.kernel.terminate(1);
         }
         throw e;
       }
@@ -234,7 +234,8 @@ module.exports = function () {
     }
 
     autoloadEach(ele) {
-      if (regJs.exec(ele.path)) {
+      let res = regJs.exec(ele.path)
+      if (res) {
         this.load.call(this, ele.path);
         this.log(ele.path, "DEBUG");
       }

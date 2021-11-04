@@ -501,7 +501,7 @@ class Bundle extends nodefony.Service {
     let config = false;
     let services = false;
     //let entities = false;
-    let regJs = new RegExp(".*\.js$|.*\.es6$|.*\.es7$");
+    let regJs = new RegExp(".*\.js$|.*\.es6$|.*\.es7$|.*\.mjs$");
     try {
       switch (typeof this.settings.watch) {
       case "object":
