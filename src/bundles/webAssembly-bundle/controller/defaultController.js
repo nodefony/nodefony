@@ -5,7 +5,7 @@ let WASI = null
 try{
   const wasi = require('wasi');
   WASI = wasi.WASI;
-}catch(e){}
+}catch(e){console.error(e)}
 
 /**
  *	@class defaultController

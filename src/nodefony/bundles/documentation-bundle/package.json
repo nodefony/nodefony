@@ -23,7 +23,7 @@
     "font-awesome": "^4.7.0",
     "highlight.js": "^11.3.1",
     "jquery": "^3.6.0",
-    "mini-css-extract-plugin": "^2.4.3",
+    "mini-css-extract-plugin": "^2.4.4",
     "node-sass": "^6.0.1",
     "popper.js": "^1.16.1",
     "reveal.js": "^4.1.3",

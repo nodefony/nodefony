@@ -5,6 +5,7 @@
 assets
 **/assets/**
 app/Resources/public/assets/
+app/Resources/views/base.html.twig
 src/bundles/test-bundle/Resources/public/assets/
 src/bundles/webAssembly-bundle/build
 src/nodefony/browser/dist
