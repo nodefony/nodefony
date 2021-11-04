@@ -9,29 +9,26 @@
     {{ render( controller("app:app:header" )) }}
   {% endblock %}
 
-  <div class="container text-center mt-8">
-    <div class="row justify-content-center nodefony">
-      <div class="col-md-12">
-        {% if info %}
-        <div class="alert alert-primary alert-dismissible fade show mt-2" role="alert">
-          <strong>INFO :</strong> {{info|escape}}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-
-        {% endif %}
-        {% if error %}
-        <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
-          <strong>INFO :</strong> {{error|escape}}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        {% endif %}
-        <img class="mb-4" src="{{CDN('image')}}/app/images/app-logo.png" alt="">
-        <h1>
-          {% filter upper %}
-            {{nodefony.name|escape}}
-          {% endfilter %}
-        </h1>
-        <p>{{description|escape}}</p>
+  <main>
+    <div class="px-4 py-5 my-5 text-center nodefony">
+      {% if info %}
+      <div class="alert alert-primary alert-dismissible fade show mt-2" role="alert">
+        <strong>INFO :</strong> {{info|escape}}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endif %}
+      {% if error %}
+      <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+        <strong>INFO :</strong> {{error|escape}}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endif %}
+      <img class="d-block mx-auto mb-4" src="{{CDN('image')}}/app/images/app-logo.png" alt="nodefony" >
+      <h1 class="display-5 fw-bold">  {% filter upper %}
+          {{nodefony.name|escape}}
+        {% endfilter %}</h1>
+      <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4"> {{description|escape}} </p>
         <p class="h2 mt-3">
           {{trans("welcome")}}
         </p>
@@ -39,14 +36,12 @@
           {{user.name|escape}}
           {{user.surname|escape}}
         </p>
-        <p class="h2 mt-3 mb-5">
-          <a href="{{url('nodefony-user')}}" class="btn btn-secondary" tabindex="-1" role="button">
-            {{"users"|trans}}
-          </a>
-        </p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <a href="{{url('nodefony-user')}}" class="btn btn-secondary btn-lg px-4 gap-3" tabindex="-1" role="button">{{"users"|trans}}</a>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 
   {% block footer %}
     {{ render( controller("app:app:footer" )) }}

@@ -3,3 +3,6 @@
 welcome   : Welcome
 lang      : Language
 users     : Users
+signin    : Sign In
+signout   : Sign Out
+signup    : Sign Up

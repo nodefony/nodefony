@@ -31,7 +31,11 @@ module.exports = {
    *      }
    *
    */
-  watch: false,
+  watch: true,
+
+  devServer: {
+    hot: false
+  },
 
   /*
    *   OVERRIDE BUNDLES CONFIG

@@ -6,13 +6,23 @@ module.exports = class appController extends nodefony.controller {
     this.startSession();
   }
 
+
   /**
    *  @see Route home in routing.js
+   *
+   *    @Route ("/",
+   *      name="home")
+   **/
+  indexAction() {
+    return this.redirectToRoute("app");
+  }
+
+  /**
    *
    *    @Route ("/app",
    *      name="app")
    **/
-  indexAction() {
+  appAction() {
     return this.render("app::index.html.twig", {
       user: this.getUser(),
       description: this.kernel.package.description

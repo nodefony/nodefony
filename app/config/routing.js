@@ -1,12 +1,12 @@
 // ROUTING
 
 module.exports = {
-  home: {
+  /*home: {
     pattern: "/",
     defaults: {
       controller: "app:app:index"
     }
-  },
+  },*/
   /*documentation: {
     pattern: "/documentation",
     defaults: {

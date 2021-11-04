@@ -37,6 +37,7 @@ module.exports = merge(config, {
     path: public,
     publicPath: publicPath,
     filename: "./js/[name].js",
+    hashFunction: "xxhash64",
     library: "[name]",
     libraryExport: "default"
   },

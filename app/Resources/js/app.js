@@ -17,8 +17,31 @@ import '../scss/custom.scss';
  */
 class App  {
   constructor() {
-
+    if(process.env.NODE_ENV === "production" ){
+      this.workbox();
+    }
     this.addEvents();
+  }
+
+  workbox(){
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/app/service-worker.js', {
+            scope: "/app/"
+          })
+          .then(registration => {
+            if (registration) {
+              console.log(`Service Worker registered! Scope: ${registration.scope}`);
+              if (window.debugbar) {
+                window.debugbar.monitoringWorkbox(registration);
+              }
+            }
+            return registration;
+          }).catch(err => {
+            console.error(`Service Worker registration failed: ${err}`);
+          });
+      });
+    }
   }
 
   addEvents() {

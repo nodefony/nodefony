@@ -3,3 +3,6 @@
 welcome   : Bienvenue
 lang      : Langue
 users     : Utilisateurs
+signin    : Se Connecter
+signout   : Se Déconnecter
+signup    : "S'enregistrer"
