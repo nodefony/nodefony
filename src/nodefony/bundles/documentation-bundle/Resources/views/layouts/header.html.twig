@@ -1,119 +1,90 @@
 {% set user = getUser() %}
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog " role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Search</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <i class="fa fa-refresh fa-spin close spinner" ></i>
-         <span aria-hidden="true">&times;</span>
-       </button>
-      </div>
-      <div class="modal-body scroll-wrap">
-        <div class="container text-center">
-          <i class="fa fa-spinner fa-spin fa-3x fa-fw spinner"></i>
-        </div>
-        <ul id="search" class="list-group"></ul>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="container-fluid">
+  <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+    <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+      <img src="/app/images/app-logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+      <span style="color:#0167b8" class="fs-4 nodefony"><h3>{{nodefony.name|escape}}</h3></span>
+    </a>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#header_nodefony" aria-controls="header_nodefony" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <a class="navbar-brand mr-5" href="/">
-    <img src="/app/images/app-logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-    <span class="navbar-text pt-0 pb-0">{{nodefony.name|escape}}</span>
-  </a>
-  <div class="collapse navbar-collapse" id="header_nodefony">
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <li class="nav-item active">
-        <nav class="navbar navbar-light bg-light">
-          <form class="form-inline">
-            <input id="inputSearch" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="{{ " search" | trans() }}" />
-            <button id="buttonSearch" data-toggle="modal" data-target="#myModal" class="btn btn-outline-success my-2 my-sm-0" type="button">
-              {{ "search" | trans() }}
-            </button>
-          </form>
-        </nav>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#" style="color:red">{{ "progress" | trans() | upper()}}</a>
-      </li>
-    </ul>
-    {% if nodefony.core %}
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <form action="{{url('documentation-version')}}" id='formVersion' method="POST" class="form-inline">
-          <div class="form-inline input-group">
-            <div class="input-group-prepend">
-              <label class="input-group-text" for="version">Nodefony</label>
-            </div>
-            <select class="custom-select align-middle mr-4" name="version" id="version"></select>
-          </div>
-        </form>
-      </li>
-      <li class="nav-item">
-        <form action="{{url('documentation-version')}}" id='formProject' method="POST" class="form-inline">
-          <div class="form-inline input-group">
-            <div class="input-group-prepend">
-              <label class="input-group-text" for="version">{{nodefony.name}}</label>
-            </div>
-            <select class="custom-select align-middle mr-4" name="project" id="project"></select>
-          </div>
-        </form>
-      </li>
-    </ul>
-    {% else %}
-    <ul class="navbar-nav mt-2 mt-lg-0">
-      <li class="nav-item">
-      <a href="{{url('documentation-version',{version:nodefony.version,bundle:'nodefony'})}}" class="mr-3 nav-link btn btn-sm btn-outline-primary">
-        Documentation
-      </a>
-      </li>
-    </ul>
-    {% endif %}
-    <ul class="navbar-nav mt-2 mt-lg-0">
-      <form action="{{url('doc-lang')}}" name="formLang" id="formLang" class="form-inline">
-        <div class="form-inline input-group">
-          <div class="input-group-prepend">
-            <label class="input-group-text" for="inputGroupSelect01">{{"lang"| trans("messages") }}
-              :
-            </label>
-          </div>
-          <select class="custom-select align-middle mr-4" name="language" id="language">
-            {% for opt in langs %}
-              {% if locale == opt.value %}
-                <option value="{{ opt.value|escape}}" selected="selected">
-                  {{ opt.name|escape }}
-                </option>
-              {% else %}
-                <option value="{{ opt.value|escape}}">
-                  {{ opt.name|escape }}</option>
-              {% endif %}
-            {% endfor %}
-          </select>
-        </div>
-      </form>
-
-      {% if user %}
-        {% if user.image %}
-          <img width="32px" height="32px" class="rounded-circle" src="{{user.image}}" alt="image">
-        {% else %}
-          <li class="nav-link fa fa-user pr-3" style="font-size:x-large"></li>
-        {% endif %}
-        <li class="nav-item ">
-          <a href="" class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-expanded="true">
-            {{user.username}}
-          </a>
-        </li>
+    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+      {% if  urlDoc %}
+        <li><a href="{{urlDoc}}" class="btn btn-outline-secondary px-2">Documentation</a></li>
       {% endif %}
     </ul>
-  </div>
-</nav>
+
+    <form action="{{url('lang')}}" name="formLang" id="formLang" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li class="nav-item">
+            <div class="input-group input-group-sm">
+              <label class="input-group-text">{{"lang"| trans("messages") }} : </label>
+              <select class="form-select form-select-sm " name="language"  id="language">
+                {% for opt in langs %}
+                {% if locale == opt.value %}
+                <option value="{{ opt.value|escape}}" selected>
+                  {{ opt.name|escape }}
+                </option>
+                {% else %}
+                <option value="{{ opt.value|escape}}">
+                  {{ opt.name|escape }}</option>
+                  {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+        </li>
+      </ul>
+    </form>
+
+    {% if  user %}
+    <div class="dropdown text-end">
+      <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+        {% if user.image %}
+          <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+        {% else %}
+            <i class="text-large fa fa-user"></i>
+        {% endif %}
+      </a>
+      <ul class="dropdown-menu text-small border-0" aria-labelledby="dropdownUser1">
+        <div class="card " style="width: 18rem;height:100%">
+          <div class="card-header">
+              <h5 class="card-title">Profile</h5>
+          </div>
+          <div class="card-body text-center" >
+            {% if user.image %}
+              <img width="100px" height="100px"src="{{ user.image|escape }}" alt=""></img>
+            {% else %}
+              <img width="100px" height="100px" src="/framework-bundle/images/nodefony-logo.png" alt="nodefony-logo"></img>
+            {% endif %}
+            <div class="user-info">
+              <p>{{"username"|trans("login")}} : {{ user.username|escape }}</p>
+              <p>{{"surname"|trans("login")}} : <i> {{ user.surname|escape }} </i> </p>
+              <p>{{"name"|trans("login")}} : <i> {{ user.name|escape }} </i> </p>
+            </div>
+          </div>
+          <div class="card-footer text-muted">
+            <a href ="{{url("logout")}}" class="card-link">{{"logout"|trans("login")}}</a>
+            <a href ="{{url("nodefony-user-update",{username:user.username})}}" class="card-link">{{"update"|trans("login")}}</a>
+          </div>
+        </div>
+      </ul>
+    </div>
+    {% else %}
+
+    <div class=" text-end">
+      <a href="{{url("login",{type:"secure"})}}"
+          class="btn btn-sm btn-outline-secondary"
+          role="button"
+          aria-pressed="false">
+          {{trans("signin")}}
+      </a>
+      <a href="{{url("nodefony-user-create")}}"
+          class="btn btn-sm btn-outline-primary"
+          role="button"
+          aria-pressed="false">
+          {{trans("signup")}}
+      </a>
+
+    </div>
+    {% endif %}
+  </header>
+</div>
