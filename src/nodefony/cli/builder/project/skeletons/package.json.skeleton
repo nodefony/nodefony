@@ -34,17 +34,17 @@
     "node": ">=10"
   },
   "dependencies": {
-    "mongoose": "^6.0.10",
+    "mongoose": "^6.0.12",
     "nodefony": "^{{version}}",
     "pm2": "^5.1.2",
     "pm2-logrotate": "^2.7.0",
-    "sequelize": "^6.7.0",
-    "webpack": "^5.58.1",
-    "webpack-dev-server": "^4.3.1"
+    "sequelize": "^6.9.0",
+    "webpack": "^5.62.1",
+    "webpack-dev-server": "^4.4.0"
   },
   "devDependencies": {
-    "@mapbox/node-pre-gyp": "^1.0.5",
-    "node-gyp": "^8.2.0"
+    "@mapbox/node-pre-gyp": "^1.0.6",
+    "node-gyp": "^8.4.0"
   },
   "author": "{{authorFullName}} <{{authorMail}}>",
   "readmeFilename": "README.md",
