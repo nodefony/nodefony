@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.16.0",
-    "@babel/parser": "^7.16.2",
+    "@babel/parser": "^7.16.3",
     "@babel/preset-env": "^7.16.0",
     "@nodefony/documentation-bundle": "^6.9.1",
     "@nodefony/elastic-bundle": "^6.9.1",
@@ -78,10 +78,10 @@
     "shortid": "^2.2.16",
     "simple-git": "^2.47.0",
     "spdx": "^0.5.2",
-    "terser-webpack-plugin": "^5.2.4",
+    "terser-webpack-plugin": "^5.2.5",
     "twig": "^1.15.4",
     "uuid": "^8.3.2",
-    "webpack": "^5.62.1",
+    "webpack": "^5.64.0",
     "xml2js": "^0.4.23",
     "yarn": "^1.22.17"
   },
