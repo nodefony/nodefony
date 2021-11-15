@@ -203,7 +203,9 @@ module.exports = nodefony.register("SecuredArea", function () {
                   if (context.user && context.user.lang) {
                     context.session.set("lang", context.user.lang);
                   } else {
-                    context.session.set("lang", context.translation.defaultLocale);
+                    if( ! context.session.get("lang") ){
+                      context.session.set("lang", context.translation.defaultLocale);
+                    }
                   }
                 }
                 return resolve(context);

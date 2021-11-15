@@ -92,6 +92,10 @@ class Controller extends nodefony.Service {
 
   startSession(sessionContext) {
     let sessionService = this.get("sessions");
+    // is subRequest
+    if (this.context.parent){
+      return this.getSession()
+    }
     if (!this.context.requestEnded) {
       return this.sessionAutoStart = sessionService.setAutoStart(sessionContext);
     } else {

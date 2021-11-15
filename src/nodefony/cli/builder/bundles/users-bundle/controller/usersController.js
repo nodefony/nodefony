@@ -56,7 +56,7 @@ class usersController extends nodefony.Controller {
 
   /**
    *    @see Route by Annotaion
-   *    @Method ({ "GET"})
+   *    @Method ({ "GET", "POST"})
    *    @Route ("/lang", name="lang")
    */
   langAction() {
