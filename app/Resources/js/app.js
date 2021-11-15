@@ -17,10 +17,10 @@ import '../scss/custom.scss';
  */
 class App  {
   constructor() {
+    this.addEvents();
     if(process.env.NODE_ENV === "production" ){
       this.workbox();
     }
-    this.addEvents();
   }
 
   workbox(){

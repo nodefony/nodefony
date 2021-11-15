@@ -137,7 +137,9 @@ const Translation = class Translation extends nodefony.Service {
     this.defaultLocale = this.setLocal(Lang);
 
     if (this.context.session) {
-      this.context.session.set("lang", this.defaultLocale);
+      if (! this.context.session.get("lang") ){
+        this.context.session.set("lang", this.defaultLocale);
+      }
     }
     if (!this.service.getParameters(`translate.${this.defaultLocale}`)) {
       this.service.getFileLocale(this.defaultLocale);
