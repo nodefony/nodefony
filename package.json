@@ -18,7 +18,9 @@
   "bin": {
     "nodefony": "src/nodefony/bin/nodefony"
   },
-  "workspaces": [],
+  "workspaces": [
+    "src/nodefony"
+  ],
   "keywords": [
     "nodefony",
     "node.js",
@@ -51,15 +53,15 @@
     "node": ">=10"
   },
   "dependencies": {
-    "mongoose": "^6.0.12",
+    "mongoose": "^6.0.13",
     "pm2": "^5.1.2",
     "pm2-logrotate": "^2.7.0",
-    "sequelize": "^6.9.0",
-    "webpack": "^5.64.0",
+    "sequelize": "^6.11.0",
+    "webpack": "^5.64.1",
     "webpack-dev-server": "^4.5.0"
   },
   "devDependencies": {
-    "@mapbox/node-pre-gyp": "^1.0.6",
+    "@mapbox/node-pre-gyp": "^1.0.7",
     "editorconfig": "^0.15.3",
     "github-release-notes": "^0.17.3",
     "jshint": "^2.13.1",
