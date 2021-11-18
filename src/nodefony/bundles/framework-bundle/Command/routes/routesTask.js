@@ -72,7 +72,7 @@ class displayTask extends nodefony.Task {
     //if (firstMatch) {
       head.push("FIRST MATCH");
     //}
-    let table = this.cli.displayTable(null, {
+    let table = this.cli.displayTable([], {
       head: head
     });
     for (let i = 0; i < ele.length; i++) {
