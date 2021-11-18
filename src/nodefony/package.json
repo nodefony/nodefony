@@ -33,8 +33,8 @@
   },
   "dependencies": {
     "@babel/core": "^7.16.0",
-    "@babel/parser": "^7.16.3",
-    "@babel/preset-env": "^7.16.0",
+    "@babel/parser": "^7.16.4",
+    "@babel/preset-env": "^7.16.4",
     "@nodefony/documentation-bundle": "^6.9.1",
     "@nodefony/elastic-bundle": "^6.9.1",
     "@nodefony/framework-bundle": "^6.9.1",
@@ -54,7 +54,7 @@
     "chai": "^4.3.4",
     "chokidar": "^3.5.2",
     "cli-color": "^2.0.1",
-    "cli-table": "^0.3.6",
+    "cli-table": "^0.3.8",
     "clui": "^0.3.6",
     "commander": "^8.3.0",
     "core-js": "^3.19.1",
@@ -81,7 +81,7 @@
     "terser-webpack-plugin": "^5.2.5",
     "twig": "^1.15.4",
     "uuid": "^8.3.2",
-    "webpack": "^5.64.0",
+    "webpack": "^5.64.1",
     "xml2js": "^0.4.23",
     "yarn": "^1.22.17"
   },

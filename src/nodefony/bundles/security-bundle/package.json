@@ -24,7 +24,7 @@
     "passport-oauth2": "^1.6.1"
   },
   "devDependencies": {
-    "@mapbox/node-pre-gyp": "^1.0.6",
+    "@mapbox/node-pre-gyp": "^1.0.7",
     "node-gyp": "^8.4.0"
   },
   "repository": {
