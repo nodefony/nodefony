@@ -1,4 +1,4 @@
-const Table = require('cli-table');
+const Table = require('cli-table3');
 const asciify = require('asciify');
 //const inquirer = require('inquirer');
 //const commander = require('commander');
@@ -440,25 +440,19 @@ class CLI extends nodefony.Service {
     return false;
   }
 
-  displayTable(datas, options, syslog) {
+  displayTable(datas, options= defaultTableCli, syslog=null) {
+    if( !datas || ! datas.length){
+      return new Table(nodefony.extend({}, defaultTableCli, options ));
+    }
     let table = null;
     try {
-      table = new Table(options || defaultTableCli);
+      table = new Table(nodefony.extend({}, defaultTableCli, options ));
       if (datas) {
         for (let i = 0; i < datas.length; i++) {
           table.push(datas[i]);
         }
         if (syslog) {
           syslog.log(`\n${table.toString()}`);
-          /*if (syslog.logger) {
-            syslog.logger(table.toString());
-          } else {
-            if (syslog.log) {
-              syslog.log(table.toString());
-            } else {
-              this.log(`\n${table.toString()}`);
-            }
-          }*/
         } else {
           console.log(table.toString());
         }

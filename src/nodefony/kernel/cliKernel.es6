@@ -585,7 +585,7 @@ class cliKernel extends nodefony.cli {
   assetInstall() {
     return new Promise((resolve, reject) => {
       try {
-        let table = this.displayTable(null, {
+        let table = this.displayTable([], {
           head: [
             "BUNDLES",
             "DESTINATION PATH",
