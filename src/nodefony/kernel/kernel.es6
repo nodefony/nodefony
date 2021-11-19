@@ -285,7 +285,7 @@ class Kernel extends nodefony.Service {
   }
 
   displayCommand(commands) {
-    let table = this.cli.displayTable(null, {
+    let table = this.cli.displayTable([], {
       head: [
           "BUNDLES",
           "COMMAND NAME"

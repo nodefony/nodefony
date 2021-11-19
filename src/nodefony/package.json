@@ -54,7 +54,7 @@
     "chai": "^4.3.4",
     "chokidar": "^3.5.2",
     "cli-color": "^2.0.1",
-    "cli-table": "^0.3.8",
+    "cli-table3": "^0.6.0",
     "clui": "^0.3.6",
     "commander": "^8.3.0",
     "core-js": "^3.19.1",

@@ -763,7 +763,7 @@ class Nodefony {
   tablePm2(cli, apps) {
     //console.log(apps)
     let table = null;
-    table = cli.displayTable(null, {
+    table = cli.displayTable([], {
       head: [
         cli.clc.blue("App name"),
         cli.clc.blue("id"),

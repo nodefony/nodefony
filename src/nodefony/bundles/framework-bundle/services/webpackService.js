@@ -580,7 +580,7 @@ displayConfigTable(config) {
         "WATCHER"
       ]
   };
-  let table = this.kernel.cli.displayTable(null, options);
+  let table = this.kernel.cli.displayTable([], options);
   try {
     for (let ele in config.entry) {
       let entry = config.entry[ele].import ? config.entry[ele].import.toString() : config.entry[ele];

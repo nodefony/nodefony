@@ -85,7 +85,7 @@ class usersCommand extends nodefony.Command {
         "Enabled"
       ]
     };
-    let table = this.cli.displayTable(null, options);
+    let table = this.cli.displayTable([], options);
     for (let i = 0; i < obj.length; i++) {
       const user = obj[i];
       table.push([
