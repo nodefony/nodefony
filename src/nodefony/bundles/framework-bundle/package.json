@@ -26,7 +26,7 @@
     "node-sass": "^6.0.1",
     "sass-loader": "^12.3.0",
     "terser-webpack-plugin": "^5.2.5",
-    "webpack": "^5.64.1",
+    "webpack": "^5.64.2",
     "webpack-merge": "^5.8.0"
   },
   "repository": {

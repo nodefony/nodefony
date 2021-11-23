@@ -57,7 +57,7 @@
     "pm2": "^5.1.2",
     "pm2-logrotate": "^2.7.0",
     "sequelize": "^6.11.0",
-    "webpack": "^5.64.1",
+    "webpack": "^5.64.2",
     "webpack-dev-server": "^4.5.0"
   },
   "devDependencies": {
@@ -65,7 +65,7 @@
     "editorconfig": "^0.15.3",
     "github-release-notes": "^0.17.3",
     "jshint": "^2.13.1",
-    "node-gyp": "^8.4.0"
+    "node-gyp": "^8.4.1"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md",

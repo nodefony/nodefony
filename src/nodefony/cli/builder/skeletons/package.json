@@ -18,7 +18,7 @@
   "repository": {},
   "dependencies": {
 {% if addons.workbox %}
-    "workbox-webpack-plugin": "^6.3.0",
+    "workbox-webpack-plugin": "^6.4.1",
 {% endif %}
 {% if addons.bootstrap %}
     "@popperjs/core": "^2.10.2",
@@ -28,7 +28,7 @@
 {% endif %}
 {% if addons.webpack %}
     "@babel/core": "^7.16.0",
-    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
     "babel-loader": "^8.2.3",
     "clean-webpack-plugin": "^4.0.0",
     "css-hot-loader": "^1.4.4",
@@ -38,13 +38,13 @@
     "favicons-webpack-plugin": "^5.0.2",
     "html-webpack-plugin": "^5.5.0",
     "imports-loader": "^3.1.1",
-    "mini-css-extract-plugin": "^2.4.4",
+    "mini-css-extract-plugin": "^2.4.5",
     "node-sass": "^6.0.1",
     "sass-loader": "^12.3.0",
     "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "^3.3.1",
-    "terser-webpack-plugin": "^5.2.4",
-    "webpack": "^5.62.1",
+    "terser-webpack-plugin": "^5.2.5",
+    "webpack": "^5.64.2",
     "webpack-merge": "^5.8.0"
 {% endif %}
   },
@@ -52,8 +52,8 @@
 {% if addons.webpack %}
     "webpack-dev-server": "^4.4.0",
 {% endif %}
-    "@mapbox/node-pre-gyp": "^1.0.6",
-    "node-gyp": "^8.4.0"
+    "@mapbox/node-pre-gyp": "^1.0.7",
+    "node-gyp": "^8.4.1"
   },
   "license": "",
   "readmeFilename": "README.md",
