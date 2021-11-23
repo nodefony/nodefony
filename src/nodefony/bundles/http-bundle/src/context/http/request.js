@@ -469,15 +469,28 @@ module.exports = nodefony.register("Request", function () {
       return url.parse(sUrl, query);
     }
 
+    /*cleanUrl(Url){
+      let parse =  url.parse(Url)
+      let myurl = null
+      if( parse.pathname ){
+        let pathname = parse.pathname.substring(0, parse.pathname.lastIndexOf('/')) ;
+        if( pathname){
+          parse.pathname = pathname
+        }
+      }
+      return url.format(parse)
+    }*/
+
     getFullUrl(request) {
+      let myurl = `://${this.host}${request.url}`;
       // proxy mode
       if (this.headers && this.headers['x-forwarded-for']) {
-        return this.headers['x-forwarded-proto'] + "://" + this.host + request.url;
+        return `${this.headers['x-forwarded-proto']}${myurl}`;
       }
       if (request.connection.encrypted) {
-        return 'https://' + this.host + request.url;
+        return `https${myurl}`;
       } else {
-        return 'http://' + this.host + request.url;
+        return `http${myurl}`;
       }
     }
 

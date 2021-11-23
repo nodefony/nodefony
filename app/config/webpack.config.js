@@ -157,7 +157,7 @@ module.exports = merge(config, {
       publicPath: publicPath,
       favicons: {
         appName: 'nodefony-core',
-        start_url: '/app/?homescreen=1',
+        start_url: '/app/',
         appDescription: 'Project nodefony-core',
         developerName: 'ccamensuli@gmail.com',
         developerURL: "https://nodefony.net", // prevent retrieving from the nearest package.json

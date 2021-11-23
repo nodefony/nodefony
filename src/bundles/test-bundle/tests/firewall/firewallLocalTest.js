@@ -144,8 +144,8 @@ describe("BUNDLE TEST", function () {
         }
         assert.deepStrictEqual(body, "");
         assert.deepStrictEqual(response.headers.location, "/test/firewall/jwt");
-        assert.deepStrictEqual(response.statusCode, 302);
-        assert.deepStrictEqual(response.statusMessage, 'Found');
+        assert.deepStrictEqual(response.statusCode, 301);
+        assert.deepStrictEqual(response.statusMessage, 'Moved Permanently');
         let session = response.headers["set-cookie"][0];
         assert(session);
         assert(new RegExp("^nodefony=.*$").test(session));

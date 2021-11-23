@@ -445,7 +445,7 @@ class httpKernel extends nodefony.Service {
       }
       try {
         if (error) {
-          throw error;
+          return reject(error)
         }
         // DOMAIN VALID
         if (this.kernel.domainCheck) {
@@ -458,13 +458,11 @@ class httpKernel extends nodefony.Service {
             return resolve(ret);
           }
         }catch(e){
-          if (e.code && e.code === 404){
-            throw e;
-          }
-          if (context.resolver){
-            throw e;
+          if (e.code && e.code === 404 || context.resolver){
+            return reject(e)
           }
           this.log(e, "ERROR");
+          //continue
         }
 
         if (context.secure || context.isControlledAccess) {

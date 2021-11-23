@@ -20,13 +20,14 @@ module.exports = nodefony.register("http2Request", function () {
 
     getFullUrl() {
       // proxy mode
+      let myurl = `://${this.host}${this.headers[":path"]}`;
       if (this.headers && this.headers['x-forwarded-for']) {
-        return this.headers['x-forwarded-proto'] + "://" + this.host + this.headers[":path"];
+        return `${this.headers['x-forwarded-proto']}${myurl}`;
       }
       if (this.headers[":scheme"] === "https") {
-        return 'https://' + this.host + this.headers[":path"];
+        return `https${myurl}`;
       } else {
-        return 'http://' + this.host + this.headers[":path"];
+        return `http${myurl}`;
       }
     }
   };

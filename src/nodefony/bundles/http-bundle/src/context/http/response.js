@@ -277,11 +277,11 @@ module.exports = nodefony.register("Response", function () {
     redirect(url, status, headers) {
       this.context.isRedirect = true;
       status = parseInt(status, 10);
-      if (status === 301) {
+      if (status === 302) {
         this.setStatusCode(status);
       } else {
-        status = 302;
-        this.setStatusCode(302);
+        status = 301;
+        this.setStatusCode(301);
       }
       if (headers) {
         switch (nodefony.typeOf(headers)) {

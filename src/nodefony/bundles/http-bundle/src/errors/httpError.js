@@ -160,7 +160,7 @@ module.exports = nodefony.register("httpError", function () {
           if (message.message) {
             return this.message = message.message;
           }
-          return this.message = JSON.stringify(message);
+          return this.message = util.inspect(message,{depth:0});
 
         } catch (e) {
           this.error = e;
