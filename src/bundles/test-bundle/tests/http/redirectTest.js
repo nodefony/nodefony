@@ -142,8 +142,8 @@ describe("BUNDLE TEST", function () {
       global.options.method = 'GET';
       delete global.options.headers;
       let request = http.request(global.options, function (res) {
-        assert.equal(res.statusCode, 302);
-        assert.equal(res.statusMessage, "Found");
+        assert.equal(res.statusCode, 301);
+        assert.equal(res.statusMessage, "Moved Permanently");
         assert.equal(res.headers.location, "/");
         done();
       });

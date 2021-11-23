@@ -600,7 +600,7 @@ module.exports = class apiController extends nodefony.controller {
       events: bundle.notificationsCenter._events,
       waitBundleReady: bundle.waitBundleReady,
       locale: bundle.locale,
-      files: bundle.resourcesFiles.toJson()
+      files: bundle.resourcesFiles ? bundle.resourcesFiles.toJson() : null
     };
     //let security  = this.get("security");
     return this.renderRest({

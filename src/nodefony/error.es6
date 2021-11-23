@@ -263,7 +263,8 @@ class nodefonyError extends Error {
         if (message.message) {
           this.message = message.message;
         } else {
-          this.message = JSON.stringify(message);
+          //this.message = JSON.stringify(message);
+          this.message = util.inspect(message,{depth:0});
         }
       } catch (e) {
         this.error = e;
