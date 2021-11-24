@@ -12,6 +12,7 @@
     "build": "node src/nodefony/bin/nodefony build",
     "test": "node src/nodefony/bin/nodefony unitest:launch:all",
     "publish": "./bin/publish.sh",
+    "certificates": "./bin/generateCertificates.sh",
     "changelog": "gren changelog --username=nodefony  --repo=nodefony --tags=all --data-source=commits --override --generate"
   },
   "private": true,
