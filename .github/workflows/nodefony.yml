@@ -127,11 +127,15 @@ jobs:
     #- name:             Get the output time
     #  shell:            bash
     #  run:              echo "The time was ${{ steps.hello.outputs.time }}"
+    - name:              Generate Certificates
+      shell:             bash
+      run:               |
+        pwd
+        openssl version -d
+        npm rum certificates --if-present
     - name:              npm install, build, and test
       shell:             bash
       run:               |
-        openssl version -d
-        pwd
         npm cache clean --force
         npm install --no-audit --force --legacy-peer-deps
         npm install --no-audit --force --legacy-peer-deps ./src/nodefony
