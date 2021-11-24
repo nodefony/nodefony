@@ -99,7 +99,8 @@ module.exports = class installProject extends nodefony.Builder {
         this.checkDirectoryExist(directory);
         this.log(`Generate openssl certificates in : ${directory}`);
         let cmd = null;
-        cmd = this.cli.spawn(path.resolve(cwd, "bin", "generateCertificates.sh"), [], {
+        cmd = this.cli.spawn("bash", [path.resolve(cwd, "bin", "generateCertificates.sh")], {
+        //cmd = this.cli.spawn(path.resolve(cwd, "bin", "generateCertificates.sh"), [], {
           cwd: cwd,
           shell: true,
           stdio: "inherit"
