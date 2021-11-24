@@ -42,8 +42,24 @@
  *
  */
 module.exports = {
-  debug: false,
-  connectors: {
-
+    debug: false,
+    connectors: {
+      // nodefony: {
+      //   driver: "mysql",
+      //   dbname: 'nodefony',
+      //   username: 'root',
+      //   password: 'nodefony',
+      //   options: {
+      //     dialect: "mysql",
+      //     host: "localhost",
+      //     port: "3306",
+      //     pool: {
+      //       max: 5,
+      //       min: 0,
+      //       idle: 10000,
+      //       acquire: 60000
+      //     }
+      //   }
+      // }
+    }
   }
-};

@@ -31,7 +31,7 @@
     "semver": "^7.3.5",
     "simple-git": "^2.47.0",
     "terser-webpack-plugin": "^5.2.5",
-    "webpack": "^5.64.2",
+    "webpack": "^5.64.3",
     "webpack-merge": "^5.8.0"
   },
   "repository": {
