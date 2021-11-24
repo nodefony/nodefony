@@ -31,8 +31,9 @@
     "expose-loader": "^3.1.0",
     "faker": "^5.5.3",
     "font-awesome": "^4.7.0",
-    "graphiql": "^1.5.1",
+    "graphiql": "^1.5.3",
     "graphql": "15.7.2",
+    "graphql-ws": "^5.5.5",
     "html-webpack-plugin": "^5.5.0",
     "imports-loader": "^3.1.1",
     "jquery": "^3.6.0",
@@ -47,7 +48,7 @@
     "swagger-ui": "^4.0.1",
     "swagger-ui-dist": "^4.0.1",
     "terser-webpack-plugin": "^5.2.5",
-    "webpack": "^5.64.2",
+    "webpack": "^5.64.3",
     "webpack-merge": "^5.8.0"
   },
   "devDependencies": {

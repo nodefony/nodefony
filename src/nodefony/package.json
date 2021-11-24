@@ -81,7 +81,7 @@
     "terser-webpack-plugin": "^5.2.5",
     "twig": "^1.15.4",
     "uuid": "^8.3.2",
-    "webpack": "^5.64.2",
+    "webpack": "^5.64.3",
     "xml2js": "^0.4.23",
     "yarn": "^1.22.17"
   },
