@@ -130,6 +130,7 @@ jobs:
     - name:              Generate Certificates
       shell:             bash
       run:               |
+        echo $PATH
         pwd
         openssl version -d
         npm rum certificates --if-present
