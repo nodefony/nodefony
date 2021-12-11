@@ -23,12 +23,12 @@
     "less-loader": "^10.2.0",
     "mini-css-extract-plugin": "^2.4.5",
     "nodefony-client": "^6.0.0-beta.18",
-    "qs": "^6.10.1",
+    "qs": "^6.10.2",
     "request": "^2.88.2",
     "shortid": "^2.2.16",
     "terser-webpack-plugin": "^5.2.5",
     "useragent": "^2.3.0",
-    "webpack": "^5.64.3",
+    "webpack": "^5.65.0",
     "webpack-merge": "^5.8.0"
   },
   "repository": {

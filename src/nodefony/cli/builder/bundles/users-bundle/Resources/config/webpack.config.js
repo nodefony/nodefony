@@ -126,6 +126,9 @@ module.exports = merge(config, {
       filename: "./css/[name].css"
     }),
     new webpack.DefinePlugin({
+      'process':{
+        platform:`'${process.platform}'`
+      },
       'process.env': {
         'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         "NODE_DEBUG": JSON.stringify(debug),

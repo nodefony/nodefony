@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from "react-dom";
 import GraphiQL from "graphiql";
-import { createGraphiQLFetcher } from '@graphiql/toolkit';
+//import { createGraphiQLFetcher } from '@graphiql/toolkit';
 import "graphiql/graphiql.min.css";
 import "./index.css";
 const NODE_ENV = process.env.NODE_ENV ;
@@ -20,8 +20,12 @@ function fetcher(graphQLParams) {
     body: JSON.stringify(graphQLParams),
     credentials: 'same-origin',
   }).then(response => response.json().then((ele)=>{
-    //console.log(ele)
+    if(ele.error){
+      return ele.error;
+    }
     return ele.data;
+  }).catch(e =>{
+    throw e;
   }));
 }
 
