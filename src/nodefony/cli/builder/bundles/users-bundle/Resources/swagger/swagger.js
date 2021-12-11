@@ -36,14 +36,15 @@ class Swagger {
       urls: this.config.urls,
       "urls.primaryName": this.config.primaryName,
       dom_id: '#swagger',
-      //defaultModelsExpandDepth: -1,
+      validatorUrl:"none",
+      defaultModelsExpandDepth: -1,
       deepLinking: true,
       presets: [
         SwaggerUI.presets.apis,
         SwaggerUIStandalonePreset
       ],
       plugins: [
-        SwaggerUIBundle.plugins.DownloadUrl
+        //SwaggerUIBundle.plugins.DownloadUrl
       ],
       layout: "StandaloneLayout",
       requestInterceptor: function (request) {

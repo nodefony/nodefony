@@ -10,7 +10,7 @@
  *
  */
 require("../css/test.css");
-
+require("jquery");
 module.exports = function () {
   /*
    *	Class
