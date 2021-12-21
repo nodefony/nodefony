@@ -10,12 +10,12 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/preset-env": "^7.16.4",
+    "@babel/core": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
     "@nodefony/stage": "^0.2.4",
     "async": "^3.2.2",
     "babel-loader": "^8.2.3",
-    "bootstrap": "^4.6.0",
+    "bootstrap": "4.6.1",
     "cheerio": "^0.22.0",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.5.1",
@@ -30,7 +30,7 @@
     "sass-loader": "^12.4.0",
     "semver": "^7.3.5",
     "simple-git": "^2.48.0",
-    "terser-webpack-plugin": "^5.2.5",
+    "terser-webpack-plugin": "^5.3.0",
     "webpack": "^5.65.0",
     "webpack-merge": "^5.8.0"
   },

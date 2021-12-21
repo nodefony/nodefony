@@ -17,10 +17,10 @@
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
     "pgtools": "^0.3.2",
-    "sequelize": "^6.12.0-beta.2",
+    "sequelize": "^6.12.0",
     "sqlite3": "^5.0.2",
     "tedious": "^14.0.0",
-    "umzug": "3.0.0-beta-cli.17"
+    "umzug": "^3.0.0"
   },
   "repository": {
     "type": "git",
