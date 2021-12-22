@@ -9,23 +9,33 @@ class graphqlApi extends JsonApi {
 
   constructor(config = {}, context = null) {
     let schema = null;
-    if (config.schema){
+    if (config.schema) {
       schema = config.schema;
       delete config.schema;
     }
     super(config, context);
     this.json.operationName = null;
     this.setResultName(config.resultName || "data");
-    if ( schema ){
+    if (schema) {
       this.setSchema(schema);
     }
   }
 
-  async query(query, variables = null, operationName = null) {
+  async query(query, variables = null, operationName = null, fieldResolver = null, typeResolver = null) {
     const controller = this.get("controller");
     this.json.operationName = operationName;
     try {
-      let res = await nodefony.graphql.graphql(this.schema, query, controller, this, variables, operationName);
+      const conf = {
+        schema: this.schema,
+        source: query,
+        rootValue: controller,
+        contextValue: this,
+        variableValues: variables,
+        operationName: operationName,
+        fieldResolver: fieldResolver,
+        typeResolver: typeResolver
+      }
+      let res = await nodefony.graphql.graphql(conf);
       if (res.errors && res.errors.length) {
         throw res.errors;
       }
@@ -40,9 +50,9 @@ class graphqlApi extends JsonApi {
     return this.schema;
   }
 
-  setSchema(schema){
-    this.schema = schema ;
-    return this.schema ;
+  setSchema(schema) {
+    this.schema = schema;
+    return this.schema;
   }
 }
 
