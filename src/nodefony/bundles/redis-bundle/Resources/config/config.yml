@@ -69,13 +69,5 @@ watch       : false
 #      prefix      : ""
 #
 redis :
-  debug                         : true
-  globalOptions :
-    family                      : IPv4
-    disable_resubscribing       : false
-    tls                         : null
-    no_ready_check              : false
-    socket_keepalive            : false
-    return_buffers              : false
-    retry_unfulfilled_commands  : true
+  debug       : true
   connections : ~
