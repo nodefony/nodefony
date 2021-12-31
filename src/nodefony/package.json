@@ -32,9 +32,9 @@
     "nodefony": "bin/nodefony"
   },
   "dependencies": {
-    "@babel/core": "^7.16.5",
-    "@babel/parser": "^7.16.6",
-    "@babel/preset-env": "^7.16.5",
+    "@babel/core": "^7.16.7",
+    "@babel/parser": "^7.16.7",
+    "@babel/preset-env": "^7.16.7",
     "@nodefony/documentation-bundle": "^6.9.1",
     "@nodefony/elastic-bundle": "^6.9.1",
     "@nodefony/framework-bundle": "^6.9.1",

@@ -10,8 +10,8 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "^7.16.5",
-    "@babel/preset-env": "^7.16.5",
+    "@babel/core": "^7.16.7",
+    "@babel/preset-env": "^7.16.7",
     "@nodefony/stage": "^0.2.4",
     "async": "^3.2.2",
     "babel-loader": "^8.2.3",
@@ -24,7 +24,7 @@
     "highlight.js": "^11.3.1",
     "jquery": "^3.6.0",
     "mini-css-extract-plugin": "^2.4.5",
-    "node-sass": "^7.0.0",
+    "node-sass": "^7.0.1",
     "popper.js": "^1.16.1",
     "reveal.js": "^4.2.1",
     "sass-loader": "^12.4.0",

@@ -11,9 +11,6 @@ Nodefony is Node.js full-stack web framework.
 
 Nodefony can be used to develop a complete solution to create a Fullstack Web Application, Secure Api, or Microservices.
 
-The Nodefony project is inspired by the PHP Symfony framework, a developer can find most of the concepts, configurations and patterns of Symfony framework.
-
-Nodefony is not an exhaustive port of symfony !
 
 ## Table of content
 
