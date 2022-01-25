@@ -17,9 +17,9 @@
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
     "pgtools": "^0.3.2",
-    "sequelize": "^6.13.0",
+    "sequelize": "^6.14.1",
     "sqlite3": "^5.0.2",
-    "tedious": "^14.0.0",
+    "tedious": "^14.1.0",
     "umzug": "^3.0.0"
   },
   "repository": {

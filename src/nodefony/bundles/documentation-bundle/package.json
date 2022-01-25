@@ -10,8 +10,8 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "^7.16.7",
-    "@babel/preset-env": "^7.16.8",
+    "@babel/core": "^7.16.12",
+    "@babel/preset-env": "^7.16.11",
     "@nodefony/stage": "^0.2.4",
     "async": "^3.2.3",
     "babel-loader": "^8.2.3",
@@ -23,15 +23,15 @@
     "font-awesome": "^4.7.0",
     "highlight.js": "^11.4.0",
     "jquery": "^3.6.0",
-    "mini-css-extract-plugin": "^2.5.0",
+    "mini-css-extract-plugin": "^2.5.3",
     "node-sass": "^7.0.1",
     "popper.js": "^1.16.1",
     "reveal.js": "^4.2.1",
     "sass-loader": "^12.4.0",
     "semver": "^7.3.5",
-    "simple-git": "^2.48.0",
+    "simple-git": "^3.1.0",
     "terser-webpack-plugin": "^5.3.0",
-    "webpack": "^5.66.0",
+    "webpack": "^5.67.0",
     "webpack-merge": "^5.8.0"
   },
   "repository": {

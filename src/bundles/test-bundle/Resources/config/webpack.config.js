@@ -1,7 +1,7 @@
 const path = require("path");
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin").default;
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const context = path.resolve(__dirname, "..", "public");
 const public = path.resolve(__dirname, "..", "public", "assets");
