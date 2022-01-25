@@ -82,9 +82,10 @@ publish_nodefony () {
 upgrade_nodefony () {
   cd $pathnodefony;
   add_bundle;
+  npm config set save-exact=true
   for package in ${packages[@]}; do
     echo "UPGRADE PACKAGE nodefony with : @nodefony/$package@$version";
-    npm install @nodefony/$package@$version
+    npm install --save @nodefony/$package@$version
   done
 }
 
