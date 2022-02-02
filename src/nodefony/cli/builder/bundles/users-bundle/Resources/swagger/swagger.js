@@ -39,6 +39,7 @@ class Swagger {
       validatorUrl:"none",
       defaultModelsExpandDepth: -1,
       deepLinking: true,
+      persistAuthorization: true,
       presets: [
         SwaggerUI.presets.apis,
         SwaggerUIStandalonePreset

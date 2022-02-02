@@ -1,5 +1,10 @@
-const Sequelize = require("sequelize");
-const Model = Sequelize.Model;
+//const Sequelize = require("sequelize");
+//const Model = Sequelize.Model;
+const {
+  Sequelize,
+  DataTypes,
+  Model
+} = nodefony.Sequelize;
 /*
  *
  *
@@ -23,24 +28,24 @@ module.exports = class jwt extends nodefony.Entity {
   getSchema() {
     return {
       id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
       },
       username: {
-        type: Sequelize.STRING(256)
+        type: DataTypes.STRING(256)
       },
       refreshToken: {
-        type: Sequelize.TEXT('medium'),
+        type: DataTypes.TEXT,
         //primaryKey: true,
         //unique: true,
         allowNull: false
       },
       token: {
-        type: Sequelize.TEXT('medium'),
+        type: DataTypes.TEXT,
       },
       active: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         defaultValue: true
       }
     };
