@@ -30,18 +30,17 @@ nodefony.register("Session", function () {
   };
 
   const setMetasSession = function () {
-    let time = new Date();
-    let ua= null;
+    //let time = new Date();
+    let ua = null;
     this.setMetaBag("lifetime", this.settings.cookie.maxAge);
     this.setMetaBag("context", this.contextSession || null);
     this.setMetaBag("request", this.context.type);
-    this.setMetaBag("created", time);
+    //this.setMetaBag("created", time);
     try {
       this.setMetaBag("remoteAddress", this.context.getRemoteAddress());
       this.setMetaBag("host", this.context.getHost());
       ua = this.context.getUserAgent();
-    } catch (e) {
-    }
+    } catch (e) {}
     if (ua) {
       this.setMetaBag("user_agent", ua);
     } else {
@@ -73,6 +72,9 @@ nodefony.register("Session", function () {
       this.flashBag = {};
       this.key = this.settings.encrypt.password
       this.iv = this.settings.encrypt.iv
+      this.created = null;
+      this.updated = null;
+      this.username = null
     }
 
     get(name) {
@@ -100,9 +102,9 @@ nodefony.register("Session", function () {
       this.id = id || this.setId();
       setMetasSession.call(this);
       this.manager.log("NEW SESSION CREATE : " + this.id, "DEBUG");
-      try{
+      try {
         this.cookieSession = this.setCookieSession(lifetime);
-      }catch(e){
+      } catch (e) {
         throw new Error(`Request Finish can't create cookieSession`);
         //this.log(`,"WARNING")
       }
@@ -134,7 +136,7 @@ nodefony.register("Session", function () {
         }
       } catch (e) {
         return new Promise((resolve, reject) => {
-          this.log(e,"ERROR");
+          this.log(e, "ERROR");
           return reject(e);
         });
       }
@@ -271,7 +273,9 @@ nodefony.register("Session", function () {
           return false;
         }
       }
-      let lastUsed = new Date(this.getMetaBag("lastUsed")).getTime();
+      //console.log( this.updated , new Date(this.updated) )
+      const lastUsed = new Date(this.updated).getTime();
+      //let lastUsed = new Date(this.getMetaBag("lastUsed")).getTime();
       let now = new Date().getTime();
       if (this.lifetime === 0) {
         /*if ( lastUsed && lastUsed + ( this.settings.gc_maxlifetime * 1000 ) < now ){
@@ -394,6 +398,9 @@ nodefony.register("Session", function () {
       for (let flash in obj.flashBag) {
         this.setFlashBag(flash, obj.flashBag[flash]);
       }
+      this.created = obj.created;
+      this.updated = obj.updated;
+      this.username = obj.username
     }
 
     remove(cookieDelete) {
@@ -495,22 +502,25 @@ nodefony.register("Session", function () {
     }
 
     save(user, sessionContext) {
-      return this.storage.write(this.id, this.serialize(user), sessionContext).then(( /*result*/ ) => {
-        if (!this.context) {
-          throw new Error("SAVE SESSION ERROR context already deleted ");
-        } else {
-          this.saved = true;
-          if (this.context) {
-            this.context.fire("onSaveSession", this);
+      return this.storage.write(this.id, this.serialize(user), sessionContext)
+        .then((session) => {
+          this.created = session.createdAt
+          this.updated = session.updatedAt
+          if (!this.context) {
+            throw new Error("SAVE SESSION ERROR context already deleted ");
+          } else {
+            this.saved = true;
+            if (this.context) {
+              this.context.fire("onSaveSession", this);
+            }
+            return this;
           }
-          return this;
-        }
-      }).catch((error) => {
-        //console.trace(error);
-        //this.log(error, "ERROR");
-        this.saved = false;
-        throw error;
-      });
+        }).catch((error) => {
+          //console.trace(error);
+          //this.log(error, "ERROR");
+          this.saved = false;
+          throw error;
+        });
     }
 
     getName() {

@@ -509,7 +509,9 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
           metas: context.session.metaBag(),
           attributes: context.session.attributes(),
           flashes: context.session.flashBags(),
-          context: context.session.contextSession
+          context: context.session.contextSession,
+          created:context.session.created,
+          updated:context.session.updated
         };
       });
     }

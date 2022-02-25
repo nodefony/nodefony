@@ -15,20 +15,25 @@ module.exports = class session extends nodefony.Entity {
      */
     super(bundle, "session", "sequelize", "nodefony");
 
-    /*this.orm.on("onOrmReady", ( orm ) => {
+    this.orm.on("onOrmReady", ( orm ) => {
         let user = this.orm.getEntity("user");
-        console.log(user instanceof Model)
-        console.log(this.model)
+        //console.log(user instanceof Model)
+        //console.log(this.model)
         if (user) {
           this.model.belongsTo(user, {
-            foreignKey: 'username',
-            constraints: false
+            foreignKey: {
+              allowNull: true,
+              name:"username"
+            },
+            targetKey:"username",
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
           });
         } else {
           this.log("ENTITY ASSOCIATION user NOT AVAILABLE" , "WARNING");
           //throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
         }
-      });*/
+      });
   }
 
   getSchema() {
@@ -40,13 +45,13 @@ module.exports = class session extends nodefony.Entity {
       context: {
         type: DataTypes.STRING(126),
         defaultValue: "default",
-        primaryKey: true
+        //primaryKey: true
       },
-      username: {
+      /*username: {
         type: DataTypes.STRING(126),
         defaultValue: "",
         allowNull: true
-      },
+      },*/
       Attributes: {
         type: DataTypes.JSON
         /*set(value) {

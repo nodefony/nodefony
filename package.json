@@ -57,7 +57,7 @@
     "mongoose": "6.2.3",
     "pm2": "5.2.0",
     "pm2-logrotate": "^2.7.0",
-    "sequelize": "6.16.2",
+    "sequelize": "6.17.0",
     "webpack": "5.69.1",
     "webpack-dev-server": "4.7.4"
   },

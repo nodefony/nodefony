@@ -798,6 +798,14 @@
               <span class="label-nodefony label-success">{{session.id}}</span>
             </li>
             <li>
+              <label>Created</label>
+              <span >{{session.created}}</span>
+            </li>
+            <li>
+              <label>Updated</label>
+              <span >{{session.updated}}</span>
+            </li>
+            <li>
               <label>Metas</label>
               <span >
                 {% for key, value in session.metas %}
@@ -805,18 +813,6 @@
                     <li>
                       <label style="margin:0 0 2px 20px" class="label-nodefony  label-default">{{ key  }}</label>
                       <span style="margin:0 0 2px 20px">{{value}}</span>
-                    </li>
-                  {% endif %}
-                  {% if key == "created" %}
-                    <li>
-                      <label style="margin:0 0 2px 20px" class="label-nodefony  label-default">{{ key  }}</label>
-                      <span style="margin:0 0 2px 20px">{{value|date("d/m/Y g:ia")}}</span>
-                    </li>
-                  {% endif %}
-                  {% if key == "lastUsed" %}
-                    <li>
-                      <label style="margin:0 0 2px 20px" class="label-nodefony  label-default">{{ key  }}</label>
-                      <span style="margin:0 0 2px 20px">{{value|date('d/m/Y g:ia')}}</span>
                     </li>
                   {% endif %}
                   {% if key == "context" %}

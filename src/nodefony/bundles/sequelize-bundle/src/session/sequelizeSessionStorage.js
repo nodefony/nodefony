@@ -36,7 +36,7 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
     constructor(manager) {
       this.manager = manager;
       this.orm = this.manager.get("sequelize");
-      this.orm.on("onOrmReady", () =>{
+      this.orm.on("onOrmReady", () => {
         this.entity = this.orm.getEntity("session");
       });
       /*this.manager.kernel.once( "onReady", () => {
@@ -137,7 +137,10 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
               id: result.session_id,
               flashBag: result.flashBag,
               metaBag: result.metaBag,
-              Attributes: result.Attributes
+              Attributes: result.Attributes,
+              created: result.createdAt,
+              updated: result.updatedAt,
+              username: result.username
             };
           } else {
             return {};
@@ -166,8 +169,8 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
               session_id: id,
               context: (contextSession || "default")
             }
-          }).then(function () {
-            return serialize;
+          }).then((session) => {
+            return session;
           }).catch(function (error) {
             throw error;
           });
