@@ -44,9 +44,13 @@ module.exports = merge(config, {
   externals: {},
   resolve: {
     extensions: ['.js', '.json', '.jsx', '.css', '.mjs'],
+    alias: {
+      "@modules": path.join(__dirname, "..", "..", "node_modules")
+    },
     fallback: {
       "path": false,
-      "assert": false
+      "assert": false,
+      buffer: require.resolve('buffer/')
     }
   },
   module: {
@@ -122,6 +126,9 @@ module.exports = merge(config, {
     ]
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    }),
     new MiniCssExtractPlugin({
       filename: "./css/[name].css"
     }),
