@@ -147,7 +147,9 @@ class Vue extends nodefony.builders.sandbox {
           stdio: "inherit"
         }, (code) => {
           if (code === 1) {
-            return reject(new Error("install Vue cli new error : " + code));
+            this.log( new Error(`install Vue cli new error : ${code} ${args}`) ,"ERROR")
+            //return reject(new Error("install Vue cli new error : " + code));
+            return resolve(cmd);
           }
           return resolve(cmd);
         });
