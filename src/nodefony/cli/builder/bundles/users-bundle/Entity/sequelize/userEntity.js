@@ -44,7 +44,7 @@ class userEntity extends nodefony.Entity {
         allowNull: false,
         validate: {
           is: {
-            args: /[^\w]|_|-|./g,
+            args: /^[\w-_.]+$/,
             msg: `username allow alphanumeric and ( _ | - | . ) characters`
           }
           /*notIn: {
@@ -100,7 +100,7 @@ class userEntity extends nodefony.Entity {
         allowNull: true,
         validate: {
           is: {
-            args: /[^\w]|_|-|.|'/g,
+            args: /^[\w-_.]*$/,
             msg: `name allow alphanumeric characters`
           }
         }
@@ -110,7 +110,7 @@ class userEntity extends nodefony.Entity {
         allowNull: true,
         validate: {
           is: {
-            args: /[^\w]|_|-|.|''/g,
+            args: /^[\w-_.]*$/,
             msg: `surname allow alphanumeric characters`
           }
         }
