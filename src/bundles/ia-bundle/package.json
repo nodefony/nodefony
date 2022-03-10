@@ -21,7 +21,7 @@
     "gpu.js": "2.15.0",
     "jpeg-js": "^0.4.3",
     "leaflet": "^1.7.1",
-    "ml5": "0.10.3",
+    "ml5": "0.10.4",
     "p5": "1.4.1",
     "vue": "3.2.31",
     "vue-i18n": "^9.1.9",
@@ -29,7 +29,7 @@
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
-    "@intlify/vue-i18n-loader": "^3.3.0",
+    "@intlify/vue-i18n-loader": "4.1.0",
     "@vue/cli": "5.0.1",
     "@vue/cli-plugin-babel": "5.0.1",
     "@vue/cli-plugin-eslint": "5.0.1",
