@@ -68,7 +68,6 @@ class loadTask extends nodefony.Task {
 
   constructor(name, command) {
     super(name, command);
-    this.cli.idle();
     this.bundle = command.bundle;
     this.config = {
       hostname: this.kernel.settings.system.domain,

@@ -1,6 +1,7 @@
 const cron = require('node-cron');
 const defaultOptions = {
   scheduled: true,
+  recoverMissedExecutions: false,
   timezone: "Europe/Paris"
 };
 
@@ -17,13 +18,13 @@ class Cron extends nodefony.Service {
     this.cronTab = {};
   }
 
-  showTasks() {
-
+  getTasks() {
+    return this.cron.getTasks()
   }
 
   getTask(name) {
     if (!name) {
-      return this.cronTab;
+      throw new Error(`Task : ${name} not exist in cron tab`);
     }
     if (name in this.cronTab) {
       return this.cronTab[name];
@@ -56,37 +57,14 @@ class Cron extends nodefony.Service {
     if (name in this.cronTab) {
       throw new Error(`Task name  : ${name} already exist in cron tab`);
     }
-
     try {
+      options.name = name ;
       this.cronTab[name] = this.cron.schedule(param, callback, options);
-      const status = this.getStatus( name );
-      switch(status){
-        case "scheduled":
-          this.log(`Start Task : ${name}  status : ${status}`,"INFO", "CRONTAB");
-        break;
-        default:
-          this.log(`Create Task : ${name} Start task to begin ! `,"INFO", "CRONTAB");
-      }
       return this.cronTab[name];
     } catch (e) {
       throw e;
     }
   }
-
-  getStatus(name){
-    if (!name) {
-      throw new Error("Cron getStatus bad parameters name ");
-    }
-    if (name in this.cronTab) {
-      try {
-        return this.cronTab[name].getStatus();
-      } catch (e) {
-        throw e;
-      }
-    }
-    throw new Error(`Cron getStatus name: ${name} not found in cron tab !`);
-  }
-
 
   startTask(name) {
     if (!name) {

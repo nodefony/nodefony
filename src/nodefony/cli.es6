@@ -2,7 +2,10 @@ const Table = require('cli-table3');
 const asciify = require('asciify');
 //const inquirer = require('inquirer');
 //const commander = require('commander');
-const { program, command } = require('commander');
+const {
+  program,
+  command
+} = require('commander');
 const spawn = require('child_process').spawn;
 const spawnSync = require('child_process').spawnSync;
 const moment = require("moment");
@@ -222,7 +225,20 @@ class CLI extends nodefony.Service {
   }
 
   idle() {
-    return this.idle = setInterval(() => {}, 0);
+    let resolve = null
+    let reject = null
+    const promise = new Promise((res, rej) => {
+      resolve = res
+      reject = rej
+    })
+    return function () {
+      return {
+        resolve,
+        promise,
+        reject
+      }
+    }()
+    //return this.idleId = setInterval(() => {}, 0);
   }
 
   checkVersion(version = null) {
@@ -440,13 +456,13 @@ class CLI extends nodefony.Service {
     return false;
   }
 
-  displayTable(datas, options= defaultTableCli, syslog=null) {
-    if( !datas || ! datas.length){
-      return new Table(nodefony.extend({}, defaultTableCli, options ));
+  displayTable(datas, options = defaultTableCli, syslog = null) {
+    if (!datas || !datas.length) {
+      return new Table(nodefony.extend({}, defaultTableCli, options));
     }
     let table = null;
     try {
-      table = new Table(nodefony.extend({}, defaultTableCli, options ));
+      table = new Table(nodefony.extend({}, defaultTableCli, options));
       if (datas) {
         for (let i = 0; i < datas.length; i++) {
           table.push(datas[i]);
