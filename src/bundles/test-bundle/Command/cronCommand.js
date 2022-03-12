@@ -9,6 +9,9 @@ class cronCommand extends nodefony.Command {
     this.setHelp("cron:test",
       "cron tab test"
     );
+    this.setHelp("cron:script",
+      "cron tab test"
+    );
     super.showHelp();
   }
 
@@ -32,6 +35,30 @@ class cronCommand extends nodefony.Command {
       task.stop();
       return resolve()
     }, 35000)
+    return promise
+  }
+
+  script(){
+    let {
+      resolve,
+      promise
+    } = this.cli.idle()
+
+    let script = path.resolve(__dirname, "..","bin","test.js")
+    console.log(script)
+    const task = this.cronService.createTask("myScript", "*/10 * * * * *", {
+      scheduled: true,
+    }, script)
+
+    task.on("task-done", (ret)=>{
+      console.log("done",ret)
+    })
+
+    setTimeout(() => {
+      task.stop();
+      return resolve()
+    }, 35000)
+
     return promise
   }
 
