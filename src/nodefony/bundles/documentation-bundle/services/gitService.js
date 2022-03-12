@@ -1,4 +1,4 @@
-const promiseGit = require('simple-git/promise');
+const promiseGit = require('simple-git');
 const remote = `https://github.com/nodefony/nodefony.git`;
 const useNodefonyVersion = `v${nodefony.version}`;
 

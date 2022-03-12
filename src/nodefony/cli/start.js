@@ -492,7 +492,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
     let gitP, cwd, git;
     try {
       cwd = path.resolve(project.location, project.name);
-      gitP = require('simple-git/promise');
+      gitP = require('simple-git');
       git = gitP(cwd);
     } catch (e) {
       throw e;

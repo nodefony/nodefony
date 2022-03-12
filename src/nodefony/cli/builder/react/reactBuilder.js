@@ -146,7 +146,7 @@ class React extends nodefony.builders.sandbox {
     let gitP, cwd, gitS, gitC;
     try {
       cwd = path.resolve(this.response.path);
-      gitP = require('simple-git/promise');
+      gitP = require('simple-git');
       gitS = gitP(cwd);
       gitC = gitP(this.location);
     } catch (e) {
@@ -183,7 +183,7 @@ class React extends nodefony.builders.sandbox {
     let gitP, cwd, git;
     try {
       cwd = path.resolve(this.response.path);
-      gitP = require('simple-git/promise');
+      gitP = require('simple-git');
       git = gitP(cwd);
     } catch (e) {
       throw e;
