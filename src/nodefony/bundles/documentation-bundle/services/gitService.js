@@ -81,7 +81,7 @@ module.exports = class git extends nodefony.Service {
     const Git = promiseGit(this.clonePath);
     this.log(`git clone nodefony documentation in ${this.clonePath}`);
     return Git
-      .silent(true)
+      //.silent(true)
       .clone(remote)
       .then(() => {
         this.log(`git clone ok nodefony documentation`);
