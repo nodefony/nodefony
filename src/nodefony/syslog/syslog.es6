@@ -673,6 +673,9 @@ class Syslog extends nodefony.Events {
   }
 
   static wrapper(pdu) {
+    if (!pdu) {
+      throw new Error('Syslog pdu not defined')
+    }
     const date = new Date(pdu.timeStamp);
     switch (pdu.severity) {
     case 0:
