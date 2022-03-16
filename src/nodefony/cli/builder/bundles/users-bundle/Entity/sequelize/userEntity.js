@@ -157,7 +157,19 @@ class userEntity extends nodefony.Entity {
   }
 
   registerModel(db) {
-    class MyModel extends Model {}
+    class MyModel extends Model {
+      hasRole(name){
+        for (let role in this.roles) {
+          if (this.roles[role] === name) {
+            return true;
+          }
+        }
+        return false;
+      }
+      isGranted(role){
+        return this.hasRole(role);
+      }
+    }
     MyModel.init(this.getSchema(), {
       sequelize: db,
       modelName: this.name,

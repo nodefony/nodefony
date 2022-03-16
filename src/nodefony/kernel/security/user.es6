@@ -39,6 +39,19 @@ class User {
     return this.roles;
   }
 
+  hasRole(name){
+    for (let role in this.roles) {
+      if (this.roles[role] === name) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  isGranted(role){
+    return this.hasRole(role);
+  }
+
   getPassword() {
     return this.password;
   }
