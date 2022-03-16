@@ -174,7 +174,8 @@ class Route {
     } else {
       pattern = pattern.replace(/([\/.])/g, '\\$1');
     }
-    this.pattern = new RegExp('^' + pattern + '[\\/]?$', 'i');
+    this.pattern = new RegExp('^' + pattern + '[/]?$', 'i');
+    //this.pattern = new RegExp('^' + pattern +'$' , 'i');
     return this.pattern;
   }
 
