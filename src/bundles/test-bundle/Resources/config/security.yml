@@ -248,8 +248,8 @@ security:
       #   passport-ldap:
       #     provider:                             false
       #     server:
-      #       url:                                'ldap://control-server.efixo.com'
-      #       searchBase:                         'dc=efixo,dc=com'
+      #       url:                                'ldap://control-server.nodefony.com'
+      #       searchBase:                         'dc=nodefony,dc=com'
       #       searchFilter:                       '(uid={{username}})'
       #     usernameField:                        'username'
       #     passwordField:                        'passwd'
