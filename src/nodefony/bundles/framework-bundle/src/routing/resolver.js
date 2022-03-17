@@ -224,7 +224,8 @@ ${clc.red("query")} : ${controller.query ? JSON.stringify(controller.query, null
       break;
     case (type === "string"):
     case result instanceof String:
-      return this.context.send(result);
+      this.context.send(result);
+      return result
     case result instanceof nodefony.subRequest:
       switch (true) {
       case result.result instanceof Promise:
@@ -243,11 +244,11 @@ ${clc.red("query")} : ${controller.query ? JSON.stringify(controller.query, null
       return result;
     case (type === "object"):
       if (this.defaultView) {
-        try{
+        try {
           return this.returnController(this.get("controller").renderSync(this.defaultView, result));
-        }catch(e){
-            this.log(e,"WARNING")
-            return result;
+        } catch (e) {
+          this.log(e, "WARNING")
+          return result;
         }
       } else {
         throw new Error("default view not exist");
