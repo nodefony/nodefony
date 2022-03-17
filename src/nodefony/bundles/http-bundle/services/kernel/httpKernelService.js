@@ -304,6 +304,9 @@ class httpKernel extends nodefony.Service {
       try {
         let ctx = await this.onRequestEnd(context, error);
         if (ctx instanceof nodefony.Context) {
+          if( ctx.secure || ctx.isControlledAccess){
+            return resolve(context);
+          }
           return resolve(await ctx.handle());
         }
         return resolve(context);

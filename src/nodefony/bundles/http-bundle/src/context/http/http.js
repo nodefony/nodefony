@@ -224,7 +224,7 @@ nodefony.register.call(nodefony.context, "http", function () {
     }
 
     write(data, encoding) {
-      if (this.finished) {
+      if (this.finished || this.sended) {
         return;
       }
       if (!this.profiler) {

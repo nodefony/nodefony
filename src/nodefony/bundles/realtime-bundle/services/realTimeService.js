@@ -27,8 +27,6 @@ class realTime extends nodefony.Service {
     case "HTTP":
     case "HTTPS":
     case "HTTP2":
-      //handshake
-      context.setContextJson();
       let data = this.protocol.onMessage(message, context);
       let url = nodefony.extend({}, context.request.url);
       if (context.scheme === "https") {
@@ -38,8 +36,7 @@ class realTime extends nodefony.Service {
         url.protocol = "ws:";
         data.ext.url = url;
       }
-      return context.send(JSON.stringify(data));
-      break;
+      return data
     case "WEBSOCKET":
     case "WEBSOCKET SECURE":
       this.onMessage(message, context);

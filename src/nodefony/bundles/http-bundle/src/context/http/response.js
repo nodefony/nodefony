@@ -97,16 +97,22 @@ module.exports = nodefony.register("Response", function () {
           obj[name] = value;
           return this.addTrailers(obj);
         }
-        return this.response.setHeader(name, value);
+        if (!this.response.headersSent) {
+          return this.response.setHeader(name, value);
+        }
       }
     }
 
     setHeaders(obj) {
-      if (obj instanceof Object) {
-        for (let head in obj) {
-          this.setHeader(head, obj[head]);
+      if (!this.response.headersSent) {
+        if (obj instanceof Object) {
+          for (let head in obj) {
+            this.setHeader(head, obj[head]);
+          }
         }
+        return this.headers = this.response.getHeaders();
       }
+      this.log("headers already sended ","WARNING")
       return this.headers = this.response.getHeaders();
     }
 

@@ -14,8 +14,8 @@ module.exports = class defaultController extends nodefony.controller {
     case "GET":
       return this.getResponse("PING");
     case "POST":
-      this.realtime.handleConnection(this.query, this.context);
-      return ;
+      const res = this.realtime.handleConnection(this.query, this.context);
+      return this.renderJson(res);
     case "WEBSOCKET":
       if (message) {
         this.realtime.handleConnection(message.utf8Data, this.context);
