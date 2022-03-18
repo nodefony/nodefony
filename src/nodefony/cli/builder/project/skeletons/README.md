@@ -134,9 +134,9 @@ You can follow Nodefony build with github actions at **<https://github.com/nodef
 
   To install or update nvm, you can use the install script:
 ```sh
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 # or
-wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
 $ source ~/.bashrc # or source ~/.bash_profile
 $ nvm ls-remote # show all remote versions  
