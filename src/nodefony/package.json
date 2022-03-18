@@ -1,6 +1,6 @@
 {
   "name": "nodefony",
-  "version": "6.11.0",
+  "version": "6.12.0",
   "main": "autoloader.es6",
   "description": "Nodefony Framework Core",
   "contributors": [],
