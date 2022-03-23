@@ -16,7 +16,7 @@ import twig from 'highlight.js/lib/languages/twig';
 import nginx from 'highlight.js/lib/languages/nginx';
 
 import "reveal.js/dist/reveal.css";
-import "reveal.js/dist/theme/sky.css";
+import "reveal.js/dist/theme/white.css";
 
 //import "reveal.js/dist/theme/moon.css";
 //import "reveal.js/dist/theme/source/solarized.scss";
