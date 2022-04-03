@@ -12,11 +12,11 @@
     "javascript"
   ],
   "dependencies": {
-    "redis": "4.0.4",
+    "redis": "4.0.6",
     "shortid": "^2.2.16"
   },
   "devDependencies": {
-    "@mapbox/node-pre-gyp": "^1.0.8"
+    "@mapbox/node-pre-gyp": "1.0.9"
   },
   "licenses": [
     {

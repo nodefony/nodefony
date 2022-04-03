@@ -33,12 +33,12 @@
     "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "^3.3.1",
     "terser-webpack-plugin": "5.3.1",
-    "webpack": "5.70.0",
+    "webpack": "5.71.0",
     "webpack-merge": "^5.8.0",
     "workbox-webpack-plugin": "6.5.2"
   },
   "devDependencies": {
-    "@mapbox/node-pre-gyp": "^1.0.8",
+    "@mapbox/node-pre-gyp": "1.0.9",
     "node-gyp": "9.0.0",
     "webpack-dev-server": "4.7.4"
   },
