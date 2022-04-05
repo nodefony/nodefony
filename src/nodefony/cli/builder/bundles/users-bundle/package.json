@@ -21,7 +21,7 @@
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
-    "@popperjs/core": "2.11.4",
+    "@popperjs/core": "2.11.5",
     "@withshepherd/faker": "5.5.5",
     "babel-loader": "8.2.4",
     "babel-register": "^6.26.0",

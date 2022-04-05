@@ -29,7 +29,7 @@
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
-    "@intlify/vue-i18n-loader": "4.1.0",
+    "@intlify/vue-i18n-loader": "4.2.0",
     "@vue/cli": "5.0.4",
     "@vue/cli-plugin-babel": "5.0.4",
     "@vue/cli-plugin-eslint": "5.0.4",
@@ -42,7 +42,7 @@
     "eslint-plugin-vue": "8.5.0",
     "expose-loader": "^3.1.0",
     "vue-cli-plugin-i18n": "^2.3.1",
-    "webpack-dev-server": "4.7.4"
+    "webpack-dev-server": "4.8.0"
   },
   "eslintConfig": {
     "root": true,
