@@ -12,7 +12,7 @@
   ],
   "repository": {},
   "dependencies": {
-    "@babel/core": "7.17.8",
+    "@babel/core": "7.17.9",
     "@babel/preset-env": "^7.16.11",
     "@popperjs/core": "2.11.5",
     "babel-loader": "8.2.4",
@@ -33,14 +33,14 @@
     "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "^3.3.1",
     "terser-webpack-plugin": "5.3.1",
-    "webpack": "5.71.0",
+    "webpack": "5.72.0",
     "webpack-merge": "^5.8.0",
     "workbox-webpack-plugin": "6.5.2"
   },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "1.0.9",
     "node-gyp": "9.0.0",
-    "webpack-dev-server": "4.8.0"
+    "webpack-dev-server": "4.8.1"
   },
   "license": "",
   "readmeFilename": "README.md",
