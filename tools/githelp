@@ -3,6 +3,42 @@ https://en.wikipedia.org/wiki/Glob_(programming)
 https://gist.github.com/JamesMGreene/cdd0ac49f90c987e45ac
 https://www.atlassian.com/git/tutorials/what-is-git
 
+
+Commits Conventionnels
+
+feat	Introduction d’une nouvelle feature (fonctionnalité)
+fix	Correction d’une erreur (bug)
+docs	Modification de la documentation uniquement
+style	Changement qui n’affecte pas la signification du code (espace, formatage, points-virgules manquants, etc.)
+refactor	Changement de code qui ne corrige pas d’erreur et n’ajoute pas de fonctionnalité
+perf	Changement de code qui améliore les performances
+test	Ajout de tests manquants ou correction des tests existants
+revert	Annule un commit précédent. Le message commencer par «revert:» : suivi du message du commit à annuler
+build	Changement qui affectent le système de compilation ou les dépendances externes
+ci	Modification des fichiers de configuration d’intégration continue (CI)
+chore	Changement des scripts de construction du logiciel uniquement (pas de changement du code de l’application)
+
+
+fix(bazel): pin `@microsoft/api-extractor` (#32187)
+
+The API of `@microsoft/api-extractor` changed in a minor version which
+is causes an error when using dts flattening downstream.
+
+API wil be updated on master #32185
+
+PR Close #32187
+
+
+On reconnait la structure suivante:
+
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer]
+
+
+
 // ADD TAG
 $ git tag -a release01
 $ git push origin release01
