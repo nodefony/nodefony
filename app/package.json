@@ -35,7 +35,7 @@
     "terser-webpack-plugin": "5.3.1",
     "webpack": "5.72.0",
     "webpack-merge": "^5.8.0",
-    "workbox-webpack-plugin": "6.5.2"
+    "workbox-webpack-plugin": "6.5.3"
   },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "1.0.9",

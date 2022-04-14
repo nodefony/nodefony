@@ -28,8 +28,8 @@
     "popper.js": "^1.16.1",
     "reveal.js": "4.3.1",
     "sass-loader": "12.6.0",
-    "semver": "7.3.6",
-    "simple-git": "3.5.0",
+    "semver": "7.3.7",
+    "simple-git": "3.6.0",
     "terser-webpack-plugin": "5.3.1",
     "webpack": "5.72.0",
     "webpack-merge": "^5.8.0"
