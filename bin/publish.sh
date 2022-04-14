@@ -54,7 +54,7 @@ publish_demo_bundles () {
       echo "PUBLISH BUNDLE : @nodefony/$file";
       npm_publish $pathdemo/$file ;
       echo "COMMIT DEMO-BUNDLE $version";
-      git commit -a -m "demo-bundle release $version"
+      git commit -a -m "chore(release): demo-bundle release $version"
       echo "PUSH DEMO-BUNDLE TO REMOTE";
       git push
       echo "TAG DEMO-BUNDLE v$version";
@@ -96,7 +96,7 @@ commit_project () {
     case $yn in
       Yes )
         echo "COMMIT PROJECT $version";
-        git commit -a -m "nodefony release $version"
+        git commit -a -m "chore(release): nodefony release $version"
         echo "PUSH PROJECT TO REMOTE";
         git push
         echo "TAG PROJECT v$version";
@@ -148,7 +148,7 @@ tools (){
         echo "copy CHANGELOG.md";
         cp CHANGELOG.md $pathnodefony ;
         echo "COMMIT CHANGELOG PROJECT $version";
-        git commit -a -m "nodefony changelog $version"
+        git commit -a -m "docs(changelog): nodefony changelog $version"
         git push
         break ;;
       No )

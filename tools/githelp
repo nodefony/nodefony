@@ -4,7 +4,7 @@ https://gist.github.com/JamesMGreene/cdd0ac49f90c987e45ac
 https://www.atlassian.com/git/tutorials/what-is-git
 
 
-Commits Conventionnels
+Commits Conventionnels : https://www.conventionalcommits.org/fr/v1.0.0/
 
 feat	Introduction d’une nouvelle feature (fonctionnalité)
 fix	Correction d’une erreur (bug)
