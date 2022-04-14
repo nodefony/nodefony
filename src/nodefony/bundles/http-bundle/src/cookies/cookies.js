@@ -91,6 +91,7 @@ nodefony.register("cookies", function() {
         this.secure = name.secure;
         this.maxAge = name.maxAge;
         this.sameSite = name.sameSite;
+        this.priority = name.priority;
       } else {
         this.settings = nodefony.extend({}, cookieDefaultSettings, settings);
         if (!name) {
@@ -106,6 +107,7 @@ nodefony.register("cookies", function() {
         this.httpOnly = this.setHttpOnly(this.settings.httpOnly);
         this.secure = this.setSecure(this.settings.secure);
         this.sameSite = this.setSameSite(this.settings.sameSite);
+        this.priority = this.setPriority(this.settings.priority);
       }
     }
 
@@ -188,6 +190,10 @@ nodefony.register("cookies", function() {
       }
     }
 
+    setPriority(val){
+      return val;
+    }
+
     getMaxAge() {
       if (this.expires && this.expires instanceof Date) {
         let ms = (this.expires.getTime() - new Date().getTime());
@@ -261,6 +267,9 @@ nodefony.register("cookies", function() {
       if (this.secure) {
         tab.push('Secure');
       }
+      if (this.priority) {
+        tab.push('Priority=' + this.priority);
+      }
       return tab.join('; ');
     }
 
@@ -288,6 +297,9 @@ nodefony.register("cookies", function() {
       }
       if (this.secure) {
         obj['secure'] = true
+      }
+      if (this.priority) {
+        obj['priority'] = this.priority
       }
       return obj;
     }
