@@ -13,7 +13,7 @@
   ],
   "repository": {},
   "dependencies": {
-    "@babel/core": "7.17.8",
+    "@babel/core": "7.17.9",
     "@babel/preset-env": "^7.16.11",
     "babel-loader": "8.2.4",
     "clean-webpack-plugin": "^4.0.0",
@@ -34,12 +34,12 @@
     "sass-loader": "12.6.0",
     "style-loader": "^3.3.1",
     "terser-webpack-plugin": "5.3.1",
-    "webpack": "5.70.0",
-    "webpack-dev-server": "4.7.4",
+    "webpack": "5.72.0",
+    "webpack-dev-server": "4.8.1",
     "webpack-merge": "^5.7.3"
   },
   "devDependencies": {
-    "@mapbox/node-pre-gyp": "^1.0.8",
+    "@mapbox/node-pre-gyp": "1.0.9",
     "@wasm-tool/wasm-pack-plugin": "^1.6.0",
     "cpp-wasm-loader": "^0.9.0",
     "node-gyp": "9.0.0",
