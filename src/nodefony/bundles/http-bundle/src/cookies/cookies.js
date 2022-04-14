@@ -263,6 +263,35 @@ nodefony.register("cookies", function() {
       }
       return tab.join('; ');
     }
+
+    serializeWebSocket(){
+      let obj= {};
+      obj.name = this.name
+      obj.value = this.value
+      if (this.maxAge) {
+        obj['maxage'] = this.maxAge
+      }
+      if (this.domain) {
+        obj['domain'] = this.domain
+      }
+      if (this.path) {
+        obj['path'] = this.path
+      }
+      if (this.sameSite) {
+        obj['samesite'] = this.sameSite
+      }
+      if (this.expires) {
+        obj['expires'] = this.expires.toUTCString()
+      }
+      if (this.httpOnly) {
+        obj['httponly'] = true
+      }
+      if (this.secure) {
+        obj['secure'] = true
+      }
+      return obj;
+    }
+
   };
 
   return {

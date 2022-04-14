@@ -22,6 +22,7 @@ nodefony.register("wsResponse", function () {
       this.encoding = this.setEncoding('utf8');
       // struct headers
       this.headers = {};
+      this.cookiesToSet = []
       this.type = "utf8";
     }
 
@@ -106,14 +107,6 @@ nodefony.register("wsResponse", function () {
       delete this.body;
     }
 
-    addCookie(cookie) {
-      if (cookie instanceof nodefony.cookies.cookie) {
-        this.cookies[cookie.name] = cookie;
-      } else {
-        throw new Error("Response addCookies not valid cookies");
-      }
-    }
-
     setEncoding(encoding) {
       return this.encoding = encoding;
     }
@@ -157,6 +150,14 @@ nodefony.register("wsResponse", function () {
       return this.statusMessage;
     }
 
+    addCookie(cookie) {
+      if (cookie instanceof nodefony.cookies.cookie) {
+        this.cookies[cookie.name] = cookie;
+      } else {
+        throw new Error("Response addCookies not valid cookies");
+      }
+    }
+
     setCookies() {
       for (var cook in this.cookies) {
         this.setCookie(this.cookies[cook]);
@@ -164,8 +165,10 @@ nodefony.register("wsResponse", function () {
     }
 
     setCookie(cookie) {
-      this.log("ADD COOKIE ==> " + cookie.serialize(), "DEBUG");
-      this.setHeader('Set-Cookie', cookie.serialize());
+      let serialize = cookie.serializeWebSocket();
+      this.log("ADD COOKIE ==> " + serialize, "DEBUG");
+      this.cookiesToSet.push(serialize)
+      //this.setHeader('Set-Cookie', cookie.serialize());
     }
 
     //ADD INPLICIT HEADER

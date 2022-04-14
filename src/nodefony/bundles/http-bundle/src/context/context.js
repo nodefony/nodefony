@@ -159,6 +159,14 @@ nodefony.register("Context", () => {
       }
     }
 
+    getCookies(){
+      let tab = [];
+      for (let cookie in this.cookies){
+        tab.push(this.cookies[cookie])
+      }
+      return tab
+    }
+
     parseCookies() {
       return nodefony.cookies.cookiesParser(this);
     }

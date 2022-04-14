@@ -56,8 +56,9 @@ nodefony.register.call(nodefony.context, "websocket", function () {
       this.domain = this.getHostName();
       this.validDomain = this.isValidDomain();
       // LISTEN EVENTS
-      this.once("connect", () => {
-        this.connect(this.resolver.acceptedProtocol);
+      this.rejected = false
+      this.request.on( "requestRejected", ()=>{
+          this.rejected = true
       });
       //case proxy
       this.proxy = null;
@@ -94,11 +95,15 @@ nodefony.register.call(nodefony.context, "websocket", function () {
     connect() {
       return new Promise((resolve, reject) => {
         try {
+          if( this.rejected){
+            return
+          }
           let acceptedProtocol = null;
           if (this.resolver) {
             acceptedProtocol = this.resolver.acceptedProtocol;
           }
-          this.connection = this.request.accept(acceptedProtocol, this.origin);
+          this.response.setCookies();
+          this.connection = this.request.accept(acceptedProtocol, this.origin, this.response.cookiesToSet);
           this.response.setConnection(this.connection);
           this.connection.on('close', onClose.bind(this));
           this.requestEnded = true;
@@ -180,7 +185,10 @@ nodefony.register.call(nodefony.context, "websocket", function () {
           }*/
           return this.resolver.callController(message);
         } else {
-          this.request.reject();
+          if(!this.rejected){
+            this.request.reject();
+            this.rejected = true
+          }
         }
       } catch (e) {
         throw e;
@@ -188,6 +196,9 @@ nodefony.register.call(nodefony.context, "websocket", function () {
     }
 
     handle(data) {
+      if( this.rejected){
+        return
+      }
       try {
         this.locale = this.translation.handle();
         if (!this.resolver) {
@@ -196,7 +207,10 @@ nodefony.register.call(nodefony.context, "websocket", function () {
           try {
             this.resolver.match(this.resolver.route, this);
           } catch (e) {
-            this.request.reject();
+            if(!this.rejected){
+              this.request.reject();
+              this.rejected = true
+            }
             throw e;
           }
         }
@@ -204,9 +218,27 @@ nodefony.register.call(nodefony.context, "websocket", function () {
         this.fire("onRequest", this, this.resolver);
         this.kernel.fire("onRequest", this, this.resolver);
         if (this.resolver.resolve) {
-          return this.resolver.callController(data || null);
+          return this.saveSession()
+          .then((session) => {
+            if (session) {
+              this.log("SAVE SESSION ID : " + session.id, "DEBUG");
+            }
+            return this.resolver.callController(data || null);
+          })
+          .catch((error) => {
+            if(!this.rejected ){
+              if( this.request._resolved  ){
+                return this.close( parseInt(error.code, 10)+3000, error.message)
+              }
+              this.request.reject();
+              this.rejected = true
+            }
+          })
         } else {
-          this.request.reject();
+          if(!this.rejected){
+            this.request.reject();
+            this.rejected = true
+          }
         }
       } catch (e) {
         throw e;

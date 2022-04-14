@@ -99,25 +99,25 @@ class httpKernel extends nodefony.Service {
       }
       if (context.listenerCount("onError")) {
         return context.handle(error)
-        .then((ret)=>{
-          if(context){
-            if (context.notificationsCenter){
-              context.removeAllListeners("onError");
+          .then((ret) => {
+            if (context) {
+              if (context.notificationsCenter) {
+                context.removeAllListeners("onError");
+              }
+              context.logRequest(httpError);
             }
-            context.logRequest(httpError);
-          }
-          return ret;
-        }).catch(e=>{
-          if ( ! (e instanceof nodefony.Resolver) ){
-            this.log(e, "ERROR");
-          }
-          if(context){
-            if (context.notificationsCenter){
-              context.removeAllListeners("onError");
+            return ret;
+          }).catch(e => {
+            if (!(e instanceof nodefony.Resolver)) {
+              this.log(e, "ERROR");
             }
-          }
-          return this.onError(container, error);
-        });
+            if (context) {
+              if (context.notificationsCenter) {
+                context.removeAllListeners("onError");
+              }
+            }
+            return this.onError(container, error);
+          });
         //context.logRequest(httpError);
         //return httpError.resolver.callController(httpError);
       }
@@ -131,7 +131,10 @@ class httpKernel extends nodefony.Service {
       if (context.method === "WEBSOCKET" &&
         context.response &&
         !context.response.connection) {
-        context.request.reject(httpError.code ? httpError.code : null, httpError.message);
+        if (!context.rejected) {
+          context.request.reject(httpError.code ? httpError.code : null, httpError.message);
+          context.rejected = true
+        }
         context.fire("onFinish", context);
         return context;
       }
@@ -225,19 +228,19 @@ class httpKernel extends nodefony.Service {
 
   handle(request, response, type) {
     // SCOPE REQUEST ;
-    let log = null ;
+    let log = null;
     let container = this.container.enterScope("request");
     switch (type) {
     case "HTTP":
     case "HTTPS":
     case "HTTP2":
-      log = clc.cyan.bgBlue(`${request.url}`) ;
-      this.log(`REQUEST HANDLE ${type} : ${log}`,"DEBUG")
+      log = clc.cyan.bgBlue(`${request.url}`);
+      this.log(`REQUEST HANDLE ${type} : ${log}`, "DEBUG")
       return this.handleHttp(container, request, response, type);
     case "WEBSOCKET":
     case "WEBSOCKET SECURE":
-      log = clc.cyan.bgBlue(`${request.resource}`) ;
-      this.log(`REQUEST HANDLE ${type} : ${log}`,"DEBUG")
+      log = clc.cyan.bgBlue(`${request.resource}`);
+      this.log(`REQUEST HANDLE ${type} : ${log}`, "DEBUG")
       return this.handleWebsocket(container, request, type);
     }
   }
@@ -251,8 +254,8 @@ class httpKernel extends nodefony.Service {
       }
       if (context.security) {
         let res = this.firewall.handleCrossDomain(context);
-        if (context.crossDomain && context.method === "OPTIONS"){
-          if (res === 204){
+        if (context.crossDomain && context.method === "OPTIONS") {
+          if (res === 204) {
             return resolve(res);
           }
         }
@@ -304,7 +307,7 @@ class httpKernel extends nodefony.Service {
       try {
         let ctx = await this.onRequestEnd(context, error);
         if (ctx instanceof nodefony.Context) {
-          if( ctx.secure || ctx.isControlledAccess){
+          if (ctx.secure || ctx.isControlledAccess) {
             return resolve(context);
           }
           return resolve(await ctx.handle());
@@ -343,7 +346,7 @@ class httpKernel extends nodefony.Service {
           }
           // FRONT CONTROLLER
           let ret = await this.handleFrontController(context);
-          if (ret === 204){
+          if (ret === 204) {
             return resolve(ret);
           }
           // FIREWALL
@@ -424,6 +427,7 @@ class httpKernel extends nodefony.Service {
       }
       try {
         let connection = await this.onConnect(context, error);
+        // FIREWALL
         if (context.secure || context.isControlledAccess) {
           return resolve(await this.firewall.handleSecurity(context, connection));
         }
@@ -455,13 +459,13 @@ class httpKernel extends nodefony.Service {
           this.checkValidDomain(context);
         }
         // FRONT CONTROLLER
-        try{
+        try {
           let ret = await this.handleFrontController(context);
-          if (ret === 204){
+          if (ret === 204) {
             return resolve(ret);
           }
-        }catch(e){
-          if (e.code && e.code === 404 || context.resolver){
+        } catch (e) {
+          if (e.code && e.code === 404 || context.resolver) {
             return reject(e)
           }
           this.log(e, "ERROR");
