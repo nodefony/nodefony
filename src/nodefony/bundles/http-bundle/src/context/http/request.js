@@ -1,5 +1,10 @@
 const QS = require('qs');
-const formidable = require("formidable");
+const { syncBuiltinESMExports } = require('module');
+syncBuiltinESMExports();
+let formidable = null
+import('formidable').then((esmFS) => {
+  formidable = esmFS.default
+})
 
 module.exports = nodefony.register("Request", function () {
 

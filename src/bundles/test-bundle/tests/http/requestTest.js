@@ -9,20 +9,18 @@
  *	kernel :   instance of kernel who launch the test
  *
  */
-//import http from "http"
-//import https from "https"
-//import util from "util"
-//import Url from "url"
-//import FormData from "form-data"
-//import querystring from "querystring"
-//import fetch from "node-fetch"
-//import request from "request"
 const http = require("http");
 const https = require("https");
 const util = require('util');
 const Url = require('url');
-const FormData = require('form-data');
-const fetch = require('node-fetch');
+const {
+  syncBuiltinESMExports
+} = require('module');
+syncBuiltinESMExports();
+let fetch = null
+let FormData = null
+let Blob = null
+let fileFromPath = null
 const querystring = require('querystring');
 const assert = require('assert');
 const request = require('request');
@@ -52,7 +50,20 @@ const options = {
 
 describe("BUNDLE TEST", function () {
 
-  before(function () {
+  before(async function () {
+    fetch = await import('node-fetch')
+      .then((esmFS) => {
+        return esmFS.default
+      })
+    FormData = await import('formdata-node')
+      .then((esmFS) => {
+        Blob = esmFS.Blob
+        return esmFS.FormData
+      })
+    fileFromPath = await import('formdata-node/file-from-path')
+      .then((esmFS) => {
+        return esmFS.fileFromPath
+      })
     global.options = {
       hostname: kernel.settings.system.domain,
       port: kernel.settings.system.httpPort,
@@ -378,8 +389,8 @@ describe("BUNDLE TEST", function () {
     });
     it("request-query-post", function (done) {
       const params = new Url.URLSearchParams({
-        'fôo':"bâr",
-        foo:"bar"
+        'fôo': "bâr",
+        foo: "bar"
       });
       global.options.path = `/test/unit/request/multipart?${params.toString()}`;
       let url = `http://${kernel.hostHttp}${global.options.path}`;
@@ -406,8 +417,8 @@ describe("BUNDLE TEST", function () {
 
     it("fetch-query-post", async () => {
       const params = new Url.URLSearchParams({
-        'fôo':"bâr",
-        foo:"bar"
+        'fôo': "bâr",
+        foo: "bar"
       });
       global.options.path = `/test/unit/request/multipart?${params.toString()}`;
       let url = `https://${kernel.hostHttps}${global.options.path}`;
@@ -430,8 +441,8 @@ describe("BUNDLE TEST", function () {
 
     it("fetch-query-post-octets", async () => {
       const params = new Url.URLSearchParams({
-        'fôo':"bâr",
-        foo:"bar"
+        'fôo': "bâr",
+        foo: "bar"
       });
       global.options.path = `/test/unit/request/multipart?${params.toString()}`;
       let url = `https://${kernel.hostHttps}${global.options.path}`;
@@ -454,8 +465,8 @@ describe("BUNDLE TEST", function () {
     });
     it("fetch-query-post-buffer", async () => {
       const params = new Url.URLSearchParams({
-        'fôo':"bâr",
-        foo:"bar"
+        'fôo': "bâr",
+        foo: "bar"
       });
       global.options.path = `/test/unit/request/multipart?${params.toString()}`;
       let url = `https://${kernel.hostHttps}${global.options.path}`;
@@ -506,17 +517,18 @@ describe("BUNDLE TEST", function () {
         }
         let json = JSON.parse(body);
         //console.log( util.inspect(json, { depth: 8 }));
-        assert.deepStrictEqual(json.query.my_field, "ézézézézézézé<<<<<>>>>>zézézézézézé@@@@ê");
-        assert.deepStrictEqual(json.query["myval-spécial"], "ézézézézézézézézézézézézé@@@@ê");
+        assert.deepStrictEqual(json.query.my_field, ["ézézézézézézé<<<<<>>>>>zézézézézézé@@@@ê"]);
+        assert.deepStrictEqual(json.query["myval-spécial"], ["ézézézézézézézézézézézézé@@@@ê"]);
         //assert.deepStrictEqual(json.file.my_buffer, new Buffer.from([1, 2, 3]).toString());
         assert.deepStrictEqual(json.get, {});
         assert(nodefony.isArray(json.file));
         assert.deepStrictEqual(json.file.length, 3);
         let name = 0
+        //console.log(json.file, json.file.length)
         for (let i = 0; i < json.file.length; i++) {
           switch (json.file[i].filename) {
           case "my_buffer":
-            name++
+            //name++
             //assert.deepStrictEqual(json.file.my_buffer, new Buffer([1, 2, 3]).toString());
             break;
           case "topsecrêt.txt":
@@ -526,7 +538,7 @@ describe("BUNDLE TEST", function () {
           default:
           }
         }
-        assert.deepStrictEqual(name, 3);
+        assert.deepStrictEqual(name, 2);
         done();
       });
     });
@@ -592,8 +604,8 @@ describe("BUNDLE TEST", function () {
       form.append('myname', text);
       let obj = JSON.stringify({
         foo: 'bar',
-        myinterger:3,
-        "foo-bar":"3",
+        myinterger: 3,
+        "foo-bar": "3",
         _attachments: {
           'message.txt': {
             follows: true,
@@ -604,11 +616,19 @@ describe("BUNDLE TEST", function () {
       })
       form.append('myname2', obj);
       form.append('my_buffer', new Buffer.from([1, 2, 3]));
-      let img = fs.createReadStream(path.resolve("..", __dirname, "images", "pdf.png"))
-      form.append('my_logo', img);
-      form.append('file', img, {
+      form.append('my_buffer2', new Blob (new Buffer.from([1, 2, 3])));
+
+      const blob = new Blob(["Some content"], {type: "text/plain"})
+      form.set("myblob", blob)
+
+      //let img = fs.createReadStream(path.resolve("..", __dirname, "images", "pdf.png"))
+      //console.log(img)
+      //form.append('my_logo', new Blob(img));
+      /*form.set('file', img, {
         filename: 'unicycle.png'
-      });
+      });*/
+      form.append("file", await fileFromPath(path.resolve("..", __dirname, "images", "pdf.png")), "unicycle.png")
+      //form.append('file',new Blob(img), "unicycle.png")
       form.append('my_integer', 1);
       //form.append( 'my_boolean', true );
 
@@ -620,13 +640,16 @@ describe("BUNDLE TEST", function () {
       const uploadResponse = await fetch(url, myoptions);
       const json = await uploadResponse.json();
       //console.log(json)
+      //console.log(json.post)
       assert.deepStrictEqual(json.query.foo, "bar");
       assert.deepStrictEqual(json.query["fôo"], "bâr");
       assert.deepStrictEqual(json.get.foo, "bar");
       assert.deepStrictEqual(json.get["fôo"], "bâr");
-      assert.deepStrictEqual(json.post.myname2, obj);
-      assert.deepStrictEqual(json.post.myname, text);
+      assert.deepStrictEqual(json.post.myname2, [obj]);
+      assert.deepStrictEqual(json.post.myname, [text]);
+      assert.deepStrictEqual(json.post.my_buffer, ['\x01\x02\x03']);
       assert.deepStrictEqual(json.file.length, 3);
+
       return json
     })
 
