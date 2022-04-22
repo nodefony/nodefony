@@ -155,6 +155,7 @@ module.exports = merge(config, {
       outputPath: public,
       prefix: publicPath,
       publicPath: publicPath,
+      inject:true,
       favicons: {
         appName: 'nodefony-core',
         start_url: '/app/',
