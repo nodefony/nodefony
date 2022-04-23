@@ -8,6 +8,7 @@ jobs:
       matrix:
         os:              [ubuntu-latest]
         node-version:    [14.x,16.x,18.x]
+      fail-fast:         false
     steps:
     - name:              Use latest NPM
       run:               sudo npm i -g --force npm
@@ -62,6 +63,7 @@ jobs:
       matrix:
         os:              [macOS-latest]
         node-version:    [14.x,16.x,18.x]
+      fail-fast:         false
     steps:
     - name:              Use latest NPM
       run:               npm i -g --force npm
@@ -105,6 +107,7 @@ jobs:
       matrix:
         os:              [windows-latest]
         node-version:    [14.x,16.x,18.x]
+      fail-fast:         false
     steps:
     - name:              Use latest NPM on windows
       run:               npm i -g --force npm
