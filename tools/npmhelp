@@ -61,3 +61,5 @@ rm -rf node_modules && npm install  	  yarn upgrade
 npm version major                    	  yarn version --major
 npm version minor                    	  yarn version --minor
 npm version patch                    	  yarn version --patch
+
+yarn install --ignore-engines
