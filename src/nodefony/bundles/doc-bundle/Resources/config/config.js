@@ -36,6 +36,9 @@ module.exports = {
    */
   watch: true,
 
+  swagger: require(path.resolve(__dirname, ".." ,"swagger", "config.js")),
+  graphigl: require(path.resolve(__dirname, "..", "graphiql", "config.js")),
+
   /**
    * DEV SERVER
    */

@@ -9,22 +9,22 @@
  *	@param {class} container
  *
  */
- 
- class docBundle  extends nodefony.Bundle {
 
-  constructor (name, kernel, container){
+class docBundle extends nodefony.Bundle {
+
+  constructor(name, kernel, container) {
     // Mother Class constructor
-    super( name, kernel, container );
+    super(name, kernel, container);
 
-  // Load core bundle library
-  //this.autoLoader.loadDirectory( path.resolve( this.path, "src" ) );
+    // Load core bundle library
+    //this.autoLoader.loadDirectory( path.resolve( this.path, "src" ) );
 
- /*
-  *	If you want kernel wait doc event <<onReady>>
-  *
-  *      this.waitBundleReady = true ;
-  */
+    /*
+     *	If you want kernel wait doc event <<onReady>>
+     *
+     *      this.waitBundleReady = true ;
+     */
   }
 }
 
-module.exports = docBundle ;
+module.exports = docBundle;

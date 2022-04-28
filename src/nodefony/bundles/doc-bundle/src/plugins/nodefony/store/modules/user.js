@@ -84,6 +84,12 @@ const getters = {
     }
     return "";
   },
+  getFullName(state){
+    if (state.user) {
+      return `${state.user.name} ${state.user.surname}`
+    }
+    return "";
+  },
   getLocale(){
     // lang/Pays
     if (state.user) {

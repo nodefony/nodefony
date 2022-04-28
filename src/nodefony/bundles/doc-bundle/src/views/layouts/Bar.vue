@@ -1,0 +1,85 @@
+<template>
+<v-app-bar app>
+  <template v-slot:prepend>
+    <v-app-bar-nav-icon v-if="isAuthenticated" @click="toogleDrawer"></v-app-bar-nav-icon>
+
+    <router-link :to="{ name: 'Home'}" custom v-slot="{ navigate, href, route }">
+      <v-btn icon>
+        <v-img width="35px" height="35px" @click="navigate" src="/app/images/app-logo.png" />
+      </v-btn>
+    </router-link>
+    <router-link :to="{ name: 'Home'}" custom v-slot="{ navigate, href, route }">
+      <v-app-bar-title class="text-indigo-darken-4 mx-5" @click="navigate">Nodefony</v-app-bar-title>
+    </router-link>
+  </template>
+
+
+  <v-spacer></v-spacer>
+
+  <router-link :to="{ name: 'Login'}" custom v-slot="{ navigate }">
+    <v-btn @click="navigate" v-if="!isAuthenticated" class="ma-2" outlined color="indigo">
+      Login
+    </v-btn>
+    <v-menu v-else min-width="200px" rounded anchor="bottom" origin="end">
+      <template v-slot:activator="{ props }">
+        <v-btn icon v-bind="props">
+          <v-avatar color="cyan">
+            <span class="white--text text-h5">{{ getInitials }}</span>
+          </v-avatar>
+        </v-btn>
+        <!--v-hover v-slot="{ isHovering, props }">
+          <Suspense>
+            <user-card v-if="isHovering" width="300" tile />
+          </Suspense>
+        </v-hover-->
+
+      </template>
+
+      <Suspense>
+        <user-card width="300" account tile />
+      </Suspense>
+    </v-menu>
+
+  </router-link>
+
+
+
+</v-app-bar>
+</template>
+
+<script>
+// @ is an alias to /src
+import {
+  mapGetters,
+  mapActions,
+  mapMutations
+} from 'vuex';
+import User from '@/components/users/User.vue'
+
+export default {
+  name: 'Bar',
+  components: {
+    "user-card": User
+  },
+  data: () => ({}),
+  computed: {
+    ...mapGetters([
+      'isAuthenticated',
+      'getInitials'
+    ])
+  },
+
+  methods: {
+    ...mapMutations([
+      'toogleDrawer',
+    ]),
+    ...mapActions({}),
+  }
+}
+</script>
+
+<style scoped lang="scss">
+.title {
+    color: "indigo--darken-4";
+}
+</style>
