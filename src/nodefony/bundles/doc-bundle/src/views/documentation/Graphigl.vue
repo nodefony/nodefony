@@ -8,7 +8,7 @@
 // @ is an alias to /src
 
 export default {
-  name: 'Graphigl',
+  name: 'IframeGraphigl',
   components: {},
   data() {
     return {

@@ -42,7 +42,7 @@
 <script>
 // @ is an alias to /src
 export default {
-  name: 'User',
+  name: 'UserProfile',
   components: {}
 }
 </script>
@@ -50,9 +50,9 @@ export default {
 <script setup>
 import {
   ref,
-  watch,
-  onMounted,
-  onUnmounted,
+  //watch,
+  //onMounted,
+  //onUnmounted,
   computed,
   reactive,
   inject
@@ -88,13 +88,13 @@ const getFullName = computed(() => store.getters.getFullName)
 const getTrigramme = computed(() => store.getters.getTrigramme)
 
 const getAvatar = computed(() => {
-  if (profile) {
+  if (profile.value) {
     return profile.value.image
   }
   return null
 })
 const subtitle = computed(() => {
-  if (profile) {
+  if (profile.value) {
     return `${profile.value.email}`
   }
   return ""

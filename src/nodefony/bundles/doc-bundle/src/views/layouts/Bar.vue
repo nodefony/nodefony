@@ -57,7 +57,7 @@ import {
 import User from '@/components/users/User.vue'
 
 export default {
-  name: 'Bar',
+  name: 'AppBar',
   components: {
     "user-card": User
   },

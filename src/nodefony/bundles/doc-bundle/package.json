@@ -9,7 +9,7 @@
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
   },
   "dependencies": {
-    "@apollo/client": "3.6.0",
+    "@apollo/client": "3.6.1",
     "@babel/preset-env": "7.16.11",
     "@babel/preset-react": "7.16.7",
     "@mdi/font": "6.6.96",

@@ -11,6 +11,7 @@
 *
 *        GENERATE BY nodefony-core BUILDER
 */
+const path= require("path")
 
 module.exports = {
   type        : "vue",

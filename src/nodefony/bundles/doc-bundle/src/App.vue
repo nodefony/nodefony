@@ -16,9 +16,9 @@
 <script>
 // @ is an alias to /src
 import {
-  mapGetters,
-  mapActions,
-  mapMutations
+  //mapGetters,
+  //mapActions,
+  //mapMutations
 } from 'vuex';
 import Navigation from '/src/views/layouts/Navigation.vue'
 import Bar from '/src/views/layouts/Bar.vue'

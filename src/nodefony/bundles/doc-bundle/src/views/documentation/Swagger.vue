@@ -8,7 +8,7 @@
 // @ is an alias to /src
 
 export default {
-  name: 'Swagger',
+  name: 'IframeSwagger',
   components: {},
   data() {
     return {

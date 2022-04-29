@@ -41,7 +41,7 @@ import {
 } from 'vuex';
 import User from '@/components/users/User.vue'
 export default {
-  name: 'Navigation',
+  name: 'AppNavigation',
   components: {
     "user-card": User
   },

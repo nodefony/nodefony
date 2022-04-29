@@ -61,7 +61,7 @@ import {
 
 
 export default {
-  name: 'Login',
+  name: 'AppLogin',
   setup() {
     const {
       t

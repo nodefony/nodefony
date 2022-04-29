@@ -14,12 +14,14 @@ const title = Package.name;
 const htmlPlugin = require('html-webpack-plugin');
 const bundleConfig = require(path.resolve("Resources", "config", "config.js"));
 let dev = true;
-if (kernel.environment !== "dev") {
-  dev = false;
-}
+let debug = false
 
-const debug = kernel.debug ? "*" : false;
-
+try{
+  if (kernel.environment !== "dev") {
+    dev = false;
+  }
+  debug = kernel.debug ? "*" : false;
+}catch(e){}
 
 const packageVuetify = require(path.resolve("node_modules", "vuetify", "package.json"));
 
@@ -47,6 +49,7 @@ module.exports = {
       .tap(args => {
         args[0].title = title;
         args[0].template = template;
+        args[0].chunks= ['app'];
         return args;
       });
 
