@@ -170,7 +170,7 @@ module.exports = class webpack extends nodefony.Service {
       }
       if (stats.hasWarnings()) {
         if (info.warnings.length) {
-          this.log(info.warnings, "WARNING");
+          this.log(info.warnings, "DEBUG");
         }
       }
     }
