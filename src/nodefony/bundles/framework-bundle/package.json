@@ -11,8 +11,8 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "7.17.9",
-    "@babel/preset-env": "^7.16.11",
+    "@babel/core": "7.17.10",
+    "@babel/preset-env": "7.17.10",
     "@popperjs/core": "2.11.5",
     "babel-loader": "8.2.5",
     "bootstrap": "^5.1.3",

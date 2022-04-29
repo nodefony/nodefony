@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@apollo/client": "3.6.1",
-    "@babel/preset-env": "7.16.11",
+    "@babel/preset-env": "7.17.10",
     "@babel/preset-react": "7.16.7",
     "@mdi/font": "6.6.96",
     "@vue/apollo-option": "4.0.0-alpha.16",
@@ -32,7 +32,7 @@
     "webfontloader": "^1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "7.17.9",
+    "@babel/core": "7.17.10",
     "@babel/eslint-parser": "^7.12.16",
     "@intlify/vue-i18n-loader": "4.2.0",
     "@vue/cli": "5.0.4",
