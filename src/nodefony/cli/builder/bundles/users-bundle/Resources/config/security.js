@@ -74,7 +74,7 @@ module.exports = {
           usernameField: 'username',
           passwordField: 'passwd'
         },
-        stateless: true,
+        stateless: false,
         redirectHttps: true,
         crossDomain: cors
       },
