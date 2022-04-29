@@ -99,12 +99,10 @@ module.exports = {
     },
     plugins: [
       new webpack.DefinePlugin({
-        'process.env': {
-          'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-          "NODE_DEBUG": JSON.stringify(debug),
-          "SWAGGER": JSON.stringify(bundleConfig.swagger),
-          "GRAPHIQL": JSON.stringify(bundleConfig.graphigl)
-        }
+        'process.env.NODE_ENV':JSON.stringify(process.env.NODE_ENV),
+        'process.env.NODE_DEBUG':JSON.stringify(debug),
+        'process.env.SWAGGER':JSON.stringify(bundleConfig.swagger),
+        'process.env.GRAPHIQL':JSON.stringify(bundleConfig.graphigl)
       }),
       new CleanWebpackPlugin({
         cleanOnceBeforeBuildPatterns: [`${outputDir}/hot/*.hot-update.*`],
