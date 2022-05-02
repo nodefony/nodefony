@@ -7,6 +7,7 @@ import HomeView from '@/views/Home.vue'
 import Login from '@/views/Login.vue';
 import Swagger from '@/views/documentation/Swagger.vue'
 import Graphigl from '@/views/documentation/Graphigl.vue'
+import Reveal from '@/views/documentation/slides/reveal.vue'
 
 const ifAuthenticated = (to, from, next) => {
   if (Store.getters.isAuthenticated) {
@@ -59,6 +60,11 @@ const routes = [
     path: '/graphigl',
     name: 'Graphigl',
     component: Graphigl,
+    beforeEnter: ifAuthenticated
+  },{
+    path: '/presentation',
+    name: 'Reveal',
+    component: Reveal,
     beforeEnter: ifAuthenticated
   }
 ]

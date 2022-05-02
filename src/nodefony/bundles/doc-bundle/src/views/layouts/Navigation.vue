@@ -11,7 +11,7 @@
 
       <v-list-group v-if="isAdmin">
         <template v-slot:activator="{ props }">
-          <v-list-item v-bind="props" prepend-icon="mdi-link-variant" title="App" value="CollectLinks"></v-list-item>
+          <v-list-item v-bind="props" prepend-icon="mdi-link-variant" title="App" value="app"></v-list-item>
         </template>
       </v-list-group>
 
@@ -24,6 +24,15 @@
         <v-list-item prepend-icon="mdi-api " title="Swagger" value="swagger" to="/swagger"></v-list-item>
         <v-list-item prepend-icon="mdi-api " title="Graphigl" value="graphgl" to="/graphigl"></v-list-item>
       </v-list-group>
+
+      <v-divider></v-divider>
+      <v-list-group v-if="isAdmin">
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" prepend-icon="mdi-file-powerpoint-box" title="Presentation" value="presentation"></v-list-item>
+        </template>
+        <v-list-item prepend-icon="mdi-application-outline" title="Example" value="example" to="/presentation"></v-list-item>
+      </v-list-group>
+
 
     </v-list>
 

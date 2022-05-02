@@ -68,9 +68,7 @@ const defaultQuery = `
   users {
     username
     name
-  }
-  CollectLinks{
-    username
+    surname
   }
 }
 
