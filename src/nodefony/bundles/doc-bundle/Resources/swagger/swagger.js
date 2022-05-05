@@ -28,7 +28,7 @@ class Swagger {
         logo[0].children[0].src = this.config.logo;
 
         const newDiv = document.createElement("div");
-        const newContent = document.createTextNode('D-Lake Api');
+        const newContent = document.createTextNode('Nodefony Api');
         newDiv.appendChild(newContent);
         logo[0].append(newDiv)
 
