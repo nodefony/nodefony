@@ -4,10 +4,13 @@ import {
 } from 'vue-router'
 import Store from '@/store';
 import HomeView from '@/views/Home.vue'
+import Readme from '@/views//nodefony/Readme.vue'
 import Login from '@/views/Login.vue';
 import Swagger from '@/views/documentation/Swagger.vue'
 import Graphigl from '@/views/documentation/Graphigl.vue'
-import Reveal from '@/views/documentation/slides/reveal.vue'
+import Reveal from '@/views/presentations/slides/reveal.vue'
+import Bundles from '@/views/bundles/Bundle.vue'
+import Connectors from '@/views/databases/Connector.vue'
 
 const ifAuthenticated = (to, from, next) => {
   if (Store.getters.isAuthenticated) {
@@ -65,6 +68,23 @@ const routes = [
     path: '/presentation',
     name: 'Reveal',
     component: Reveal,
+    beforeEnter: ifAuthenticated
+  },{
+    path: '/bundle/:name',
+    name: 'Bundles',
+    props:true,
+    component: Bundles,
+    beforeEnter: ifAuthenticated
+  },{
+    path: '/database/connectors/:name',
+    name: 'Connectors',
+    props:true,
+    component: Connectors,
+    beforeEnter: ifAuthenticated
+  },{
+    path: '/nodefony/readme',
+    name: 'nodefonyreadme',
+    component: Readme,
     beforeEnter: ifAuthenticated
   }
 ]
