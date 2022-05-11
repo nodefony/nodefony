@@ -17,7 +17,7 @@
     "@tensorflow/tfjs-vis": "^1.5.1",
     "asciify-image": "^0.1.8",
     "clean-webpack-plugin": "^4.0.0",
-    "core-js": "3.22.4",
+    "core-js": "3.22.5",
     "gpu.js": "2.15.2",
     "jpeg-js": "^0.4.3",
     "leaflet": "1.8.0",

@@ -24,14 +24,14 @@
     "highlight.js": "11.5.1",
     "jquery": "^3.6.0",
     "mini-css-extract-plugin": "2.6.0",
-    "node-sass": "^7.0.1",
     "popper.js": "^1.16.1",
     "reveal.js": "4.3.1",
+    "sass": "1.51.0",
     "sass-loader": "12.6.0",
     "semver": "7.3.7",
     "simple-git": "3.7.1",
     "terser-webpack-plugin": "5.3.1",
-    "webpack": "5.72.0",
+    "webpack": "5.72.1",
     "webpack-merge": "^5.8.0"
   },
   "repository": {
