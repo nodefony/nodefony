@@ -6,11 +6,11 @@
  *  @Route ("/api/graphql")
  */
 
-const userSchema = require(path.resolve(__dirname, "..", "..", "..", "..", "..", "cli/builder/bundles/users-bundle/controller/api/graphql/userSchema.js"));
-const user = require(path.resolve(__dirname, "..", "..", "..", "..", "..", "cli/builder/bundles/users-bundle/controller/api/graphql/usersApi.js"));
 const nodefonySchema = require(path.resolve(__dirname, "schemas", "nodefonySchema.js"));
-const router = require(path.resolve(__dirname, "router", "router.js"))
-const config = require(path.resolve(__dirname, "configurations", "config.js"))
+const router = require(path.resolve(__dirname, "router", "router.js"));
+const Config = require(path.resolve(__dirname, "configurations", "config.js"));
+const usersStaticProvider = kernel.getBundles("users").getController('graphql').provider;
+const usersStaticSchema = kernel.getBundles("users").getController('graphql').schema;
 
 class graphqlController extends nodefony.Controller {
 
@@ -19,24 +19,18 @@ class graphqlController extends nodefony.Controller {
     // start session
     this.startSession();
     try {
-      const schema = nodefony.api.Graphql.mergeSchemas({
-        //schemas: [userSchema]
-        schemas: [userSchema, nodefonySchema]
-      })
-
-      const apis = nodefony.extend({}, user, router, config)
       // graphql api
       this.api = new nodefony.api.Graphql({
         name: "nodefony-grahql-api",
         version: this.bundle.version,
         description: "nodefony graphql Api",
         basePath: "/api/graphql",
-        schema: schema,
-        rootValue: apis
+        schema: graphqlController.schema(this),
+        rootValue: graphqlController.provider(this)
       }, this.context);
     } catch (e) {
       this.log(e, "ERROR");
-      throw e
+      throw e;
     }
   }
 
@@ -58,6 +52,19 @@ class graphqlController extends nodefony.Controller {
       this.api.log(e, "ERROR");
       throw e;
     }
+  }
+
+
+  static provider(context){
+      const usersProvider =  usersStaticProvider(context);
+      return  nodefony.extend({}, usersProvider, router, Config);
+  }
+
+  static schema(context){
+    const usersShema = usersStaticSchema(context);
+    return nodefony.api.Graphql.mergeSchemas({
+      schemas: [usersShema, nodefonySchema]
+    });
   }
 
 }

@@ -8,6 +8,7 @@ class graphqlController extends nodefony.Controller {
 
   constructor(container, context) {
     super(container, context);
+
     // service entity
     this.usersService = this.get("users");
     // graphql api
@@ -16,7 +17,8 @@ class graphqlController extends nodefony.Controller {
       version: this.bundle.version,
       description: "Nodefony Users graphql Api",
       basePath: "/api/graphql/users",
-      schema: userSchema
+      schema: userSchema,
+      rootValue:graphqlController.provider(this)
     }, this.context);
   }
 
@@ -39,21 +41,37 @@ class graphqlController extends nodefony.Controller {
     }
   }
 
-  //  provides all functions for each API endpoint
 
-  async user(field) {
-    return await this.usersService.findOne(field.username);
+  static provider(context){
+    // service entity
+    const usersService = context.get("users");
+    return {
+      async user(field) {
+        return await usersService.findOne(field.username);
+      },
+
+      async users() {
+        let res = await usersService.find();
+        return res.rows   ;
+      },
+
+      async addUser(field) {
+        let res = await usersService.create(field);
+        return res;
+      }
+    };
   }
 
-  async users() {
-    let res = await this.usersService.find();
-    return res.rows   ;
+
+  static schema(context){
+    return userSchema;
   }
 
-  async addUser(field) {
-    let res = await this.usersService.create(field);
-    return res;
+  static types(){
+
   }
+
+
 
 }
 
