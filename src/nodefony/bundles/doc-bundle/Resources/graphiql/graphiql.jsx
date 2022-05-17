@@ -64,14 +64,38 @@ const defaultQuery = `
 #   Auto Complete:  Ctrl-Space (or just start typing)
 #
 
-{
-  users {
-    username
+query Router($bundle: String!) {
+  routes:getRouteByBundle(name: $bundle){
     name
+    path
+    host
+    variables
+    bypassFirewall
+    defaultLang
+    hash
+    prefix
+    schemes
+    filePath
+    bundle
+    index
+  }
+  configs:getConfigByBundle(name: $bundle)
+  users:users {
     surname
+    name
+    enabled
+    userNonExpired
+    credentialsNonExpired
+    accountNonLocked
+    lang
+    gender
+    url
+    createdAt
+    updatedAt
+    image
+    roles
   }
 }
-
 `;
 
 

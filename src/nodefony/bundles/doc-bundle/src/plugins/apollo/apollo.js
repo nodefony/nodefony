@@ -1,6 +1,9 @@
 import nodefony from 'nodefony-client'
 import nodefonyClient from './nodefonyClient.js'
-import { createApolloProvider } from '@vue/apollo-option'
+import nodefonyClientWS from './nodefonyClientWs.js'
+import {
+  createApolloProvider
+} from '@vue/apollo-option'
 
 class Apollo extends nodefony.Kernel {
 
@@ -36,13 +39,39 @@ class Apollo extends nodefony.Kernel {
     this.addNodefonyClient()
   }
 
-  addNodefonyClient(){
+  addNodefonyClient() {
     const nodefonyProvider = createApolloProvider({
       defaultClient: nodefonyClient,
     })
     this.app.use(nodefonyProvider)
     return nodefonyProvider
   }
+
+
+  /*addNodefonyClientWss() {
+    const url = `wss://${window.location.host}/api/ws/graphql`
+    const link = nodefonyClientWS(url)
+    this.checkQueryWs(link.client).catch(e=>{
+      console.log(e, e.reason , e.code, e.message)
+    })
+  }
+
+  checkQueryWs(client) {
+    // query
+    return new Promise((resolve, reject) => {
+      let result;
+      client.subscribe({
+        query: '{ hello }',
+      }, {
+        next: (data) => (result = data),
+        error: reject,
+        complete: () => resolve(result),
+      }, );
+
+
+      console.log(result)
+    });
+  }*/
 
 
 }

@@ -6,7 +6,7 @@
       <section>
         <img data-src="/app/images/app-logo.png">
         <h1>Nodefony<sup>®</sup></h1>
-        <img width="200px" height="123px" data-src="{{CDN('image')}}/framework-bundle/images/nodejs/nodejs-new-pantone-black.png" />
+        <img width="200px" height="123px" data-src="/framework-bundle/images/nodejs/nodejs-new-pantone-black.png" />
         <h5 class="nodefony-grey" style="text-align:center">
           Framework Web Fullstack
         </h5>

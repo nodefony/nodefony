@@ -32,7 +32,11 @@ const schema = /* GraphQL */`
     getRouteByBundle(name: String!): [Route]
     getConfig :String
     getConfigByBundle(name: String!):String
+    getBundlePackage(name: String!):String
   }
+
+
+
 
 
 `;

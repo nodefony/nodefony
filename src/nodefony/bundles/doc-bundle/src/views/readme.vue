@@ -1,5 +1,5 @@
 <template>
-<v-container fluid class="">
+<v-container fluid class="overflow-auto">
   <Markdown v-if="source" :source="source" :highlight="highlight" html breaks :anchor="{}" :emoji="{}" linkify />
 </v-container>
 </template>

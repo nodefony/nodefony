@@ -1,5 +1,5 @@
 module.exports = {
-  projectName: "NODEDONY",
+  projectName: "NODEFONY",
   logo: "/app/images/app-logo.png",
   urls: [{
     url: "/api/users/documentation",

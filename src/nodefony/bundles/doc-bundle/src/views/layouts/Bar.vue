@@ -9,7 +9,7 @@
       </v-btn>
     </router-link>
     <router-link :to="{ name: 'Home'}" custom v-slot="{ navigate, href, route }">
-      <v-app-bar-title class="text-indigo-darken-4 mx-5" @click="navigate">Nodefony</v-app-bar-title>
+      <v-app-bar-title class="nodefony mx-5 mt-3" style="font-size:35px" @click="navigate">Nodefony</v-app-bar-title>
     </router-link>
   </template>
 

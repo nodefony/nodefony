@@ -12,16 +12,17 @@ const {
 } = require('clean-webpack-plugin');
 const title = Package.name;
 const htmlPlugin = require('html-webpack-plugin');
+const GoogleFontsPlugin = require("@beyonk/google-fonts-webpack-plugin")
 const bundleConfig = require(path.resolve("Resources", "config", "config.js"));
 let dev = true;
 let debug = false
 
-try{
+try {
   if (kernel.environment !== "dev") {
     dev = false;
   }
   debug = kernel.debug ? "*" : false;
-}catch(e){}
+} catch (e) {}
 
 const packageVuetify = require(path.resolve("node_modules", "vuetify", "package.json"));
 
@@ -37,7 +38,7 @@ try {
 } catch (e) {}
 
 module.exports = {
-  lintOnSave: true,
+  lintOnSave: false,
   publicPath: publicPath,
   outputDir: outputDir,
   indexPath: indexPath,
@@ -49,7 +50,7 @@ module.exports = {
       .tap(args => {
         args[0].title = title;
         args[0].template = template;
-        args[0].chunks= ['app'];
+        args[0].chunks = ['app'];
         return args;
       });
 
@@ -88,8 +89,8 @@ module.exports = {
     },
     resolve: {
       alias: {
-        //"@bundles": path.join(__dirname, ".."),
-        //"@app": path.join(__dirname, "..","..","..", "app")
+        "@bundles": path.join(__dirname, ".."),
+        "@app": path.join(__dirname, "..", "..", "..", "app")
       },
       extensions: ['.js', '.json', '.jsx', '.css', '.mjs'],
       fallback: {
@@ -99,10 +100,18 @@ module.exports = {
     },
     plugins: [
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV':JSON.stringify(process.env.NODE_ENV),
-        'process.env.NODE_DEBUG':JSON.stringify(debug),
-        'process.env.SWAGGER':JSON.stringify(bundleConfig.swagger),
-        'process.env.GRAPHIQL':JSON.stringify(bundleConfig.graphigl)
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        'process.env.NODE_DEBUG': JSON.stringify(debug),
+        'process.env.SWAGGER': JSON.stringify(bundleConfig.swagger),
+        'process.env.GRAPHIQL': JSON.stringify(bundleConfig.graphigl)
+      }),
+      new GoogleFontsPlugin({
+        fonts: [{
+          family: "Gochi Hand"
+          }],
+        path: "assets/fonts",
+        //local:false
+        /* ...options */
       }),
       new CleanWebpackPlugin({
         cleanOnceBeforeBuildPatterns: [`${outputDir}/hot/*.hot-update.*`],
@@ -157,7 +166,7 @@ module.exports = {
   },
 
   transpileDependencies: [
-    "vuetify"
+    //"vuetify"
   ],
 
   pluginOptions: {

@@ -11,6 +11,7 @@ import Graphigl from '@/views/documentation/Graphigl.vue'
 import Reveal from '@/views/presentations/slides/reveal.vue'
 import Bundles from '@/views/bundles/Bundle.vue'
 import Connectors from '@/views/databases/Connector.vue'
+import DashboardMonitoring from '@/views/monitoring/Dashboard.vue'
 
 const ifAuthenticated = (to, from, next) => {
   if (Store.getters.isAuthenticated) {
@@ -85,6 +86,11 @@ const routes = [
     path: '/nodefony/readme',
     name: 'nodefonyreadme',
     component: Readme,
+    beforeEnter: ifAuthenticated
+  },{
+    path: '/monitoring/dashboard',
+    name: 'DashboardMonitoring',
+    component: DashboardMonitoring,
     beforeEnter: ifAuthenticated
   }
 ]
