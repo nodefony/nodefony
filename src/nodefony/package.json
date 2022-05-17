@@ -32,8 +32,8 @@
     "nodefony": "bin/nodefony"
   },
   "dependencies": {
-    "@babel/core": "7.17.10",
-    "@babel/parser": "7.17.10",
+    "@babel/core": "7.17.12",
+    "@babel/parser": "7.17.12",
     "@graphql-tools/merge": "8.2.11",
     "@graphql-tools/schema": "8.3.11",
     "@nodefony/documentation-bundle": "6.12.0",
@@ -70,7 +70,7 @@
     "moment": "2.29.3",
     "node-cron": "^3.0.0",
     "node-emoji": "^1.11.0",
-    "npm": "8.9.0",
+    "npm": "8.10.0",
     "pm2": "5.2.0",
     "promise": "^8.1.0",
     "request": "^2.88.2",
