@@ -7,19 +7,27 @@ const Connections = require(path.resolve(__dirname, "..", "src", "connections.js
 
 class realTime extends nodefony.Service {
 
-  constructor(container, kernel) {
-    super("REALTIME", container, );
+  constructor(container) {
+    super("NODEFONY-SOCKET", container);
     this.version = "1.0";
     this.connections = new Connections();
     this.services = {};
     this.protocol = new nodefony.io.protocol.bayeux();
     this.on("onError", this.onError.bind(this));
-    this.kernel.once("onReady", () => {
-      this.settings = this.container.getParameters("bundles.realtime");
-      for (let services in this.settings.services) {
-        this.registerService(services, this.settings.services[services]);
-      }
-    });
+    if(this.kernel.ready){
+      this.initialize()
+    }else{
+      this.kernel.once("onReady", () => {
+        this.initialize()
+      });
+    }
+  }
+
+  initialize(){
+    this.settings = this.container.getParameters("bundles.realtime");
+    for (let services in this.settings.services) {
+      this.registerService(services, this.settings.services[services]);
+    }
   }
 
   handleConnection(message, context) {
@@ -255,7 +263,7 @@ class realTime extends nodefony.Service {
         try {
           socket = this.createSocket(serv.type, options);
           let id = null;
-          this.log(`Try to connect tcp socket ${serv.domain}:${serv.port}`,"INFO");
+          this.log(`Try to connect tcp socket ${serv.domain}:${serv.port}`, "INFO");
           this.log(options, "DEBUG");
           socket.connect(serv.port, serv.domain)
             .then((ret) => {
@@ -375,7 +383,7 @@ class realTime extends nodefony.Service {
         try {
           socket = this.createSocket(serv.type, options);
           let id = null;
-          this.log(`Try to connect udp socket  ${serv.domain}:${serv.port}`,"INFO");
+          this.log(`Try to connect udp socket  ${serv.domain}:${serv.port}`, "INFO");
           this.log(options, "DEBUG");
           socket.connect(serv.port, serv.domain)
             .then((ret) => {
