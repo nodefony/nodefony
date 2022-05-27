@@ -10,8 +10,8 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "7.17.12",
-    "@babel/preset-env": "7.17.12",
+    "@babel/core": "7.18.2",
+    "@babel/preset-env": "7.18.2",
     "@nodefony/stage": "^0.2.4",
     "async": "^3.2.3",
     "babel-loader": "8.2.5",
@@ -26,8 +26,8 @@
     "mini-css-extract-plugin": "2.6.0",
     "popper.js": "^1.16.1",
     "reveal.js": "4.3.1",
-    "sass": "1.51.0",
-    "sass-loader": "12.6.0",
+    "sass": "1.52.1",
+    "sass-loader": "13.0.0",
     "semver": "7.3.7",
     "simple-git": "3.7.1",
     "terser-webpack-plugin": "5.3.1",
