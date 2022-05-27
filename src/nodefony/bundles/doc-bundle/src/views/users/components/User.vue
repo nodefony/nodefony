@@ -28,6 +28,9 @@
           <v-btn rounded variant="text" @click="logout">
             Disconnect
           </v-btn>
+          <v-btn rounded variant="text" @click="goProfile">
+            Profile
+          </v-btn>
 
         </div>
       </div>
@@ -42,7 +45,7 @@
 <script>
 // @ is an alias to /src
 export default {
-  name: 'UserProfile',
+  name: 'User',
   components: {}
 }
 </script>
@@ -50,9 +53,9 @@ export default {
 <script setup>
 import {
   ref,
-  //watch,
-  //onMounted,
-  //onUnmounted,
+  watch,
+  onMounted,
+  onUnmounted,
   computed,
   reactive,
   inject
@@ -88,13 +91,13 @@ const getFullName = computed(() => store.getters.getFullName)
 const getTrigramme = computed(() => store.getters.getTrigramme)
 
 const getAvatar = computed(() => {
-  if (profile.value) {
+  if (profile) {
     return profile.value.image
   }
   return null
 })
 const subtitle = computed(() => {
-  if (profile.value) {
+  if (profile) {
     return `${profile.value.email}`
   }
   return ""
@@ -104,6 +107,14 @@ const subtitle = computed(() => {
 const getUserProfile = (url) => store.dispatch("USER_REQUEST", url)
 const logoutApi = () => store.dispatch("AUTH_LOGOUT")
 
+const goProfile = async function() {
+  return router.push({
+    name: "UserProfile",
+    params: {
+      username: profile.value.username
+    }
+  })
+}
 const logout = async function() {
   await logoutApi()
   return router.go('/login')
@@ -117,8 +128,8 @@ if (isAuthenticated.value && !getProfile.value) {
       return ele
     })
     .catch((e) => {
-      //document.location = `/si/login`;
       return router.go('/login')
+      //document.location = `/si/login`;
     });
 } else {
   profile.value = getProfile.value

@@ -15,11 +15,20 @@
     </v-card>
   </v-container-->
   <v-container fluid class="d-flex flex-row flex-wrap overflow-auto">
+
     <v-card min-width="300" min-height="200" v-for="n in 7" :key="n" class="d-flex flex-column  flex-grow-1 flex-shrink-1 my-5 mx-5" outlined tile min->
-      <div>
+      <v-toolbar theme="dark" color="#233056">
+        <template v-slot:prepend>
+          <v-list-item class="pl-0" title="Nodefony" value="nodefony" prepend-avatar="/app/images/app-logo.png">
+          </v-list-item>
+        </template>
+        <template v-slot:append>
+        </template>
         Flex {{n}}
-      </div>
+      </v-toolbar>
+
     </v-card>
+
   </v-container>
 </v-card>
 <!--v-layout class="d-flex align-center flex-column mt-10">

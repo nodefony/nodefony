@@ -12,7 +12,7 @@ class Result extends Array {
           res.clean();
         }
       } else {
-        throw new Error(`Result bad type must be an array ${res}`);
+        throw new Error(`Result bad type must be an array : ${res}`);
       }
     } else {
       super();

@@ -267,8 +267,8 @@ class Finder extends nodefony.Events {
       result = this.ckeckPath(Path);
       this.settingsToListen(settings);
       let options = nodefony.extend({}, this.settings, settings);
-      for (let i = 0; i < result.length; i++) {
-        await parser.call(this, result[i], undefined, options, options.depth, result[i]);
+      for await (let res of result) {
+        await parser.call(this, res, undefined, options, options.depth, res)
       }
     } catch (e) {
       this.fire("onError", e);

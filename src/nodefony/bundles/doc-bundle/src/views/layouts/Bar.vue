@@ -54,7 +54,7 @@ import {
   mapActions,
   mapMutations
 } from 'vuex';
-import User from '@/components/users/User.vue'
+import User from '@/views/users/components/User.vue'
 
 export default {
   name: 'AppBar',

@@ -7,9 +7,11 @@
  */
 
 const nodefonySchema = require(path.resolve(__dirname, "schemas", "nodefonySchema.js"));
-const router = require(path.resolve(__dirname, "providers",  "router.js"));
-const Package = require(path.resolve(__dirname, "providers",  "package.js"));
-const Config = require(path.resolve(__dirname, "configurations", "config.js"));
+const Router = require(path.resolve(__dirname, "providers", "router.js"));
+const Bundle = require(path.resolve(__dirname, "providers", "bundle.js"));
+const Config = require(path.resolve(__dirname, "providers", "config.js"));
+const Services = require(path.resolve(__dirname, "providers", "services.js"));
+const Orm = require(path.resolve(__dirname, "providers", "orm.js"));
 const usersStaticProvider = kernel.getBundles("users").getController('graphql').provider;
 const usersStaticSchema = kernel.getBundles("users").getController('graphql').schema;
 
@@ -74,7 +76,7 @@ class graphqlController extends nodefony.Controller {
 
   static provider(context) {
     const usersProvider = usersStaticProvider(context);
-    return nodefony.extend({}, usersProvider, router, Config,Package );
+    return nodefony.extend({}, usersProvider, Router, Config, Bundle, Services, Orm);
   }
 
   static schema(context) {

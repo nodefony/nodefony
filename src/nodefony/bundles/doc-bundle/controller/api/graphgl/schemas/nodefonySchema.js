@@ -31,8 +31,17 @@ const schema = /* GraphQL */`
     getRoutes: [Route]
     getRouteByBundle(name: String!): [Route]
     getConfig :String
+    getBundles(registred:Boolean) :String
     getConfigByBundle(name: String!):String
     getBundlePackage(name: String!):String
+    getServices :String
+    getServicesbyBundle(name: String!):String
+    getOrm: String
+    getConnectors: String
+    getConnector(name: String!): String
+    getEntities: String
+    getEntity(name: String!): String
+    getEntitiesByBundle(name: String!): String
   }
 
 

@@ -1,8 +1,13 @@
 //const _ = require("lodash");
 class FileResult extends nodefony.Result {
   constructor(res) {
-    super(res);
+    if(typeof(res) === 'number'){
+      super();
+    }else{
+      super(res);
+    }
   }
+
   toString() {
     let txt = ``;
     for (let index = 0; index < this.length; index++) {
