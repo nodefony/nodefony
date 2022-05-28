@@ -57,7 +57,7 @@
     "cli-color": "2.0.2",
     "cli-table3": "0.6.2",
     "clui": "^0.3.6",
-    "commander": "9.2.0",
+    "commander": "9.3.0",
     "core-js": "3.22.7",
     "create-react-app": "5.0.1",
     "graphql": "16.5.0",
