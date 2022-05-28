@@ -36,7 +36,7 @@ module.exports = class appController extends nodefony.controller {
     let urlDoc = null;
     let doc = this.kernel.getBundles("documentation") ;
     if (doc) {
-      urlDoc = this.generateUrl("nodefony-doc");
+      urlDoc = this.generateUrl("index-documentation");
     }
     return this.render("app::header.html.twig", {
       langs: this.get("translation").getLangs(),
