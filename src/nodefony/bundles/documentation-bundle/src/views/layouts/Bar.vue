@@ -24,7 +24,10 @@
       <template v-slot:activator="{ props }">
         <v-btn icon v-bind="props">
           <v-avatar color="cyan">
-            <span class="white--text text-h5">{{ getInitials }}</span>
+            <span v-if="getInitials" class="white--text text-h5">{{ getInitials }}</span>
+            <span v-else class="white--text text-h5">
+              <v-icon size="25">mdi-account</v-icon>
+            </span>
           </v-avatar>
         </v-btn>
         <!--v-hover v-slot="{ isHovering, props }">

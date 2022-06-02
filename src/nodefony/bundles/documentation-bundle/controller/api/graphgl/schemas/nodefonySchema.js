@@ -28,14 +28,23 @@ const schema = /* GraphQL */`
 
   # the schema allows the following query:
   type Query {
+    getNodefonyStatus: String
+    getApplicationSettings: String
+    getKernelSettings: String
+    getServers : String
+    getServerHttp: String
+    getServerHttps: String
+    getServerWebsocket: String
+    getServerWebsocketSecure: String
+    getNetwork: String
     getRoutes: [Route]
     getRouteByBundle(name: String!): [Route]
-    getConfig :String
-    getBundles(registred:Boolean) :String
-    getConfigByBundle(name: String!):String
-    getBundlePackage(name: String!):String
-    getServices :String
-    getServicesbyBundle(name: String!):String
+    getConfig: String
+    getBundles(registred: Boolean): String
+    getConfigByBundle(name: String!): String
+    getBundlePackage(name: String!): String
+    getServices: String
+    getServicesbyBundle(name: String!): String
     getOrm: String
     getConnectors: String
     getConnector(name: String!): String

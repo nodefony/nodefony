@@ -13,7 +13,7 @@ module.exports = {
     const package = path.resolve(bundle.path, "package.json")
     const pack = require(package)
     return {
-      name: name , //pack.name.replace("@nodefony/", "").replace("-bundle", "").replace("Bundle", ""),
+      name: name, //pack.name.replace("@nodefony/", "").replace("-bundle", "").replace("Bundle", ""),
       packageName: pack.name,
       path: bundle.path,
       version: pack.version,
@@ -22,7 +22,6 @@ module.exports = {
   },
 
   async getBundles(field, context) {
-
     const {
       registred
     } = field
@@ -78,12 +77,12 @@ module.exports = {
           return result[0].children
             .map((bundle) => {
               const name = context.kernel.regBundleName.exec(bundle.name)
-              if(name){
+              if (name) {
                 return this.loadBundleUnregister(name[1], bundle)
               }
             })
             .filter((bundle) => {
-              if( bundle){
+              if (bundle) {
                 if (!(bundle.name in objRegistred)) {
                   return bundle
                 }
@@ -97,7 +96,5 @@ module.exports = {
     tab = tab.concat(result)
     return JSON.stringify(tab)
   }
-
-
 
 }

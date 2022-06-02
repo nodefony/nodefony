@@ -1,64 +1,130 @@
 <template>
-<v-card flat class="h-100 overflow-auto">
+<v-container fluid v-if="nodefony" class="overflow-auto">
 
-  <v-container fluid class="d-flex  justify-center">
+  <!--v-container fluid class="d-flex  justify-center">
     <v-img class="" width="100" height="91" src="/framework-bundle/images/nodefony-logo.png" />
   </v-container>
   <v-container fluid class="d-flex  justify-center pt-0">
     <v-card-title style="font-size:50px" class="nodefony">{{name}}</v-card-title>
-  </v-container>
-  <!--v-container fluid class="d-flex flex-row  align-items-stretch flex-wrap ">
-    <v-card min-width="300" min-height="200" v-for="n in 5" :key="n" class="d-flex flex-column flex-wrap flex-grow-1 flex-shrink-1  pa-2 ma-2 mt-auto" outlined tile min->
-      <div>
-        Flex {{n}}
-      </div>
-    </v-card>
+    <v-chip inline>{{nodefony.status.version}}</v-chip>
   </v-container-->
-  <v-container fluid class="d-flex flex-row flex-wrap overflow-auto">
 
-    <v-card min-width="300" min-height="200" v-for="n in 7" :key="n" class="d-flex flex-column  flex-grow-1 flex-shrink-1 my-5 mx-5" outlined tile min->
+  <v-row fluid class="flex-row ">
+    <n-nodefony-status :nodefony="nodefony" />
+    <n-nodefony-network :nodefony="nodefony" />
+  </v-row>
+
+  <v-row fluid class=" flex-row">
+
+    <n-nodefony-application :app="nodefony.application" />
+
+
+    <v-card min-width="300" min-height="200" class="d-flex flex-column  flex-grow-1 flex-shrink-1 my-5 mx-5" outlined tile min->
+      <v-toolbar rounded theme="dark" color="#233056">
+        <template v-slot:prepend>
+          <v-icon>mdi-box</v-icon>
+        </template>
+        <template v-slot:append>
+        </template>
+        Bundles
+      </v-toolbar>
+    </v-card>
+    <v-card min-width="300" min-height="200" class="d-flex flex-column  flex-grow-1 flex-shrink-1 my-5 mx-5" outlined tile min->
+      <v-toolbar rounded theme="dark" color="#233056">
+        <template v-slot:prepend>
+          <v-icon>mdi-box</v-icon>
+        </template>
+        <template v-slot:append>
+        </template>
+        ORM
+      </v-toolbar>
+    </v-card>
+    <v-card min-width="300" min-height="200" class="d-flex flex-column  flex-grow-1 flex-shrink-1 my-5 mx-5" outlined tile min->
+      <v-toolbar rounded theme="dark" color="#233056">
+        <template v-slot:prepend>
+          <v-icon>mdi-box</v-icon>
+        </template>
+        <template v-slot:append>
+        </template>
+        Users
+      </v-toolbar>
+    </v-card>
+    <v-card min-width="300" min-height="200" class="d-flex flex-column  flex-grow-1 flex-shrink-1 my-5 mx-5" outlined tile min->
       <v-toolbar theme="dark" color="#233056">
         <template v-slot:prepend>
-          <v-list-item class="pl-0" title="Nodefony" value="nodefony" prepend-avatar="/app/images/app-logo.png">
-          </v-list-item>
+          <v-icon>mdi-box</v-icon>
+        </template>
+        <template v-slot:append>
+        </template>
+        Routing
+      </v-toolbar>
+    </v-card>
+    <!--v-card min-width="300" min-height="200" v-for="n in 7" :key="n" class="d-flex flex-column  flex-grow-1 flex-shrink-1 my-5 mx-5" outlined tile min->
+
+      <v-toolbar theme="dark" color="#233056">
+        <template v-slot:prepend>
+          <v-icon>mdi-box</v-icon>
         </template>
         <template v-slot:append>
         </template>
         Flex {{n}}
       </v-toolbar>
 
-    </v-card>
-
-  </v-container>
-</v-card>
-<!--v-layout class="d-flex align-center flex-column mt-10">
-  <v-img :aspect-ratio="1" class="" width="200" height="182" src="/framework-bundle/images/nodefony-logo.png" />
-  <h1 class="nodefony" style="font-size:75px"> {{name}}</h1>
-
-  <v-img :aspect-ratio="2" class="" width="200" height="182" src="/framework-bundle/images/nodejs/nodejs-new-pantone-black.png" />
-
-
-</v-layout-->
+    </v-card-->
+  </v-row>
+</v-container>
 </template>
 <script>
+import gql from 'graphql-tag'
+import NodefonyStatus from '@/views/nodefony/NodefonyStatus'
+import NodefonyNetwork from '@/views/nodefony/NodefonyNetwork'
+import NodefonyApplication from '@/views/nodefony/NodefonyApplication'
 export default {
   name: 'HomeView',
-  components: {},
-
-  setup() {
-
+  components: {
+    "n-nodefony-status": NodefonyStatus,
+    "n-nodefony-network": NodefonyNetwork,
+    "n-nodefony-application": NodefonyApplication
   },
-  data() {
-    return {
-      name: "Nodefony"
+  apollo: {
+    nodefony: {
+      // gql query
+      query: gql `
+      query getNodefony {
+        status:getNodefonyStatus
+        servers:getServers
+        network:getNetwork
+        application:getApplicationSettings
+        kernel:getKernelSettings
+      }
+	    `,
+      update: (data) => {
+        return {
+          status: JSON.parse(data.status),
+          servers: JSON.parse(data.servers),
+          network: JSON.parse(data.network),
+          application: JSON.parse(data.application),
+          kernel: JSON.parse(data.kernel)
+        }
+      },
+      // Reactive parameters
+      variables() {
+        // Use vue reactive properties here
+      },
     }
   },
-  beforeMount() {
+  setup() {},
+  data() {
+    return {
+      name: "Nodefony",
+      modelNodefony: 0
+    }
+  },
+  computed: {
 
   },
-  mounted() {
-
-  },
+  beforeMount() {},
+  mounted() {},
   methods: {
 
   }

@@ -145,7 +145,7 @@ jobs:
         npm install --no-audit --force --legacy-peer-deps ./src/nodefony
         npm run build --if-present
         npm run nodefony start
-        sleep 120;
+        sleep 180;
         npm test
       env:
         CI:              true

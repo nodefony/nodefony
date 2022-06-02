@@ -63,3 +63,6 @@ npm version minor                    	  yarn version --minor
 npm version patch                    	  yarn version --patch
 
 yarn install --ignore-engines
+
+yarn config set ignore-engines true
+yarn config set ignore-platform true

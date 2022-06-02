@@ -13,10 +13,22 @@ module.exports = {
     session_fixation_strategy: "migrate",
 
     /**
+     *  FIREWALL  Authorization
+     */
+    access_control: [{
+      path: /^\/nodefony/,
+      roles: ["ROLE_MONITORING"],
+      requires_channel: "https",
+      /*allow_if: {
+        roles: ["ROLE_ADMIN"]
+      }*/
+    }],
+
+    /**
      * FIREWALL  AREAS
      */
     firewalls: {
-      app_area:{
+      app_area: {
         pattern: /^\/app/
       }
     }

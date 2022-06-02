@@ -9,6 +9,7 @@ module.exports = class httpServer extends nodefony.Service {
     this.domain = this.httpKernel.kernel.settings.system.domain;
     this.ready = false;
     this.type = "HTTP";
+    this.protocol = "1.1";
     this.address = null;
     this.family = null;
     this.server = null;

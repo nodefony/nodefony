@@ -219,7 +219,7 @@ class Kernel extends nodefony.Service {
 
   getLocalExternalIP() {
     return [].concat(...Object.values(os.networkInterfaces()))
-      .find((details) => details.family === 'IPv4' && !details.internal);
+      .find((details) =>  !details.internal);
   }
 
   getNetworkInterfaces() {

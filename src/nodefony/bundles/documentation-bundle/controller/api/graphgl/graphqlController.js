@@ -6,20 +6,21 @@
  *  @Route ("/api")
  */
 
-const nodefonySchema = require(path.resolve(__dirname, "schemas", "nodefonySchema.js"));
+const NodefonySchema = require(path.resolve(__dirname, "schemas", "nodefonySchema.js"));
 const Router = require(path.resolve(__dirname, "providers", "router.js"));
 const Bundle = require(path.resolve(__dirname, "providers", "bundle.js"));
 const Config = require(path.resolve(__dirname, "providers", "config.js"));
 const Services = require(path.resolve(__dirname, "providers", "services.js"));
 const Orm = require(path.resolve(__dirname, "providers", "orm.js"));
+const Nodefony = require(path.resolve(__dirname, "providers", "nodefony.js"));
 let usersStaticSchema = null
 let usersStaticProvider = null
 
-if( kernel.ready){
+if (kernel.ready) {
   usersStaticSchema = kernel.getBundles("users").getController('graphql').schema;
   usersStaticProvider = kernel.getBundles("users").getController('graphql').provider;
-}else{
-  kernel.on("onReady", ()=>{
+} else {
+  kernel.on("onReady", () => {
     usersStaticSchema = kernel.getBundles("users").getController('graphql').schema;
     usersStaticProvider = kernel.getBundles("users").getController('graphql').provider;
   })
@@ -90,15 +91,15 @@ class graphqlController extends nodefony.Controller {
 
   static provider(context) {
 
-    const usersProvider = usersStaticProvider(context);
-    return nodefony.extend({}, usersProvider, Router, Config, Bundle, Services, Orm);
+    const UsersProvider = usersStaticProvider(context);
+    return nodefony.extend(Nodefony, UsersProvider, Router, Config, Bundle, Services, Orm);
   }
 
   static schema(context) {
 
-    const usersShema = usersStaticSchema(context);
+    const UsersShema = usersStaticSchema(context);
     return nodefony.api.Graphql.mergeSchemas({
-      schemas: [usersShema, nodefonySchema]
+      schemas: [UsersShema, NodefonySchema]
     });
   }
 

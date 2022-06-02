@@ -31,7 +31,6 @@
     "css-loader": "6.7.1",
     "expose-loader": "4.0.0",
     "font-awesome": "^4.7.0",
-    "graphiql": "1.9.3",
     "graphql": "16.5.0",
     "graphql-ws": "5.8.2",
     "html-webpack-plugin": "^5.5.0",
@@ -45,10 +44,8 @@
     "sass-loader": "13.0.0",
     "style-loader": "^3.3.1",
     "svg-inline-loader": "^0.8.2",
-    "swagger-ui": "4.11.1",
-    "swagger-ui-dist": "4.11.1",
-    "terser-webpack-plugin": "5.3.1",
-    "webpack": "5.72.1",
+    "terser-webpack-plugin": "5.3.3",
+    "webpack": "5.73.0",
     "webpack-merge": "^5.8.0"
   },
   "devDependencies": {

@@ -7,7 +7,10 @@
       <div class="mx-auto text-center">
         <v-avatar color="cyan" size="36px">
           <v-img v-if="getAvatar" alt="Avatar" :src="getAvatar"></v-img>
-          <span v-else class="white--text text-h5">{{ getInitials }}</span>
+          <span v-else-if="getInitials" class="white--text text-h5">{{ getInitials }}</span>
+          <span v-else class="white--text text-h5">
+            <v-icon>mdi-account</v-icon>
+          </span>
           <!--v-icon
                 v-else
                 :color="cyan"

@@ -31,7 +31,6 @@ module.exports = class httpsServer extends nodefony.Service {
     this.key = null;
     this.cert = null;
     this.ca = null;
-    this.address = null;
     this.family = null;
     this.type = "HTTPS";
     this.server = null;
