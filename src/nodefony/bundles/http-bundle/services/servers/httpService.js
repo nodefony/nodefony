@@ -85,11 +85,17 @@ module.exports = class httpServer extends nodefony.Service {
     });
 
     this.once("onTerminate", () => {
-      if (this.server) {
-        this.server.close(() => {
-          this.log(this.type + " SHUTDOWN Server is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
-        });
-      }
+      return new Promise((resolve, reject)=>{
+        if (this.server) {
+          this.server.closeAllConnections()
+          this.server.close(() => {
+            this.log(this.type + " SHUTDOWN Server is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
+            return resolve(true)
+          });
+          return
+        }
+        return resolve(true)
+      })
     });
 
     this.server.on("clientError", (e, socket) => {

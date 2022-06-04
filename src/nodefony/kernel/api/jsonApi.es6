@@ -80,13 +80,13 @@ class JsonApi extends Api {
         json.severity = "INFO";
       }
       if (!json.code) {
-        if (this.context) {
+        if (this.context && this.context.response) {
           json.code = this.context.response.getStatusCode();
         } else {
           json.code = 200;
         }
       }
-      if (!json.message && this.context) {
+      if (!json.message && this.context && this.context.response) {
         json.message = this.context.response.getStatusMessage(json.code);
       }
       return json[this.resultName] = payload;
@@ -104,6 +104,12 @@ class JsonApi extends Api {
       this.sanitize(payload, json);
       if (this.context) {
         const controller = this.context.get("controller");
+        if(!controller){
+          return json;
+          //this.log(payload,"ERROR")
+          //this.log(`Controller not found`,"ERROR")
+          //throw new Error(`Controller not found`);
+        }
         if (this.debug) {
           json.pdu = new nodefony.PDU({
             message: json.message,

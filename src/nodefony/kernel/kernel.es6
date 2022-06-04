@@ -1477,7 +1477,7 @@ class Kernel extends nodefony.Service {
    *
    *  @method terminate
    */
-  terminate(code) {
+  async terminate(code) {
     if (code === undefined) {
       code = 0;
     }
@@ -1492,10 +1492,9 @@ class Kernel extends nodefony.Service {
           this.log(e, "WARNING");
         }
       }
-      this.fire("onTerminate", this, code);
+      await this.fireAsync("onTerminate", this, code);
     } catch (e) {
       this.log(e, "ERROR");
-      //console.trace(e);
       code = 1;
     }
     process.nextTick(() => {

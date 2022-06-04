@@ -203,12 +203,26 @@ module.exports = class httpsServer extends nodefony.Service {
       this.fire("onClientError", e, socket);
     });
 
-    this.on("onTerminate", () => {
-      if (this.server) {
-        this.server.close(() => {
-          this.log(this.type + " SHUTDOWN Server is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
-        });
-      }
+    this.once("onTerminate", () => {
+      return new Promise((resolve, reject)=>{
+        if (this.server) {
+          if(this.protocol  === "2.0"){
+            this.server.close(() => {
+              this.log(this.type + " SHUTDOWN Server HTTP2 is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
+              //return resolve(true)
+            });
+            return resolve(true)
+          }else{
+            this.server.closeAllConnections()
+            this.server.close(() => {
+              this.log(this.type + " SHUTDOWN Server HTTPS is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
+              return resolve(true)
+            });
+          }
+          return ;
+        }
+        return resolve(true)
+      })
     });
     return this.server;
   }

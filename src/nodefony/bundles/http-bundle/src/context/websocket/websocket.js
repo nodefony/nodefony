@@ -227,10 +227,12 @@ nodefony.register.call(nodefony.context, "websocket", function () {
           })
           .catch((error) => {
             if(!this.rejected ){
-              if( this.request._resolved  ){
-                return this.close( parseInt(error.code, 10)+3000, error.message)
+              if(this.request){
+                if( this.request._resolved  ){
+                  return this.close( parseInt(error.code, 10)+3000, error.message)
+                }
+                this.request.reject();
               }
-              this.request.reject();
               this.rejected = true
             }
           })
@@ -258,6 +260,20 @@ nodefony.register.call(nodefony.context, "websocket", function () {
           this.fire("onMessage", data, this, "SEND");
           this.fire("onSend", data, this);
           return this.response.send(data, type);
+        }
+      }
+      return null;
+    }
+
+    broadcast(data, type) {
+      if (this.response) {
+        if (!data) {
+          data = this.response.body;
+        }
+        if (data) {
+          this.fire("onMessage", data, this, "BROADCAST");
+          this.fire("onBroadcast", data, this);
+          return this.response.broadcast(data, type);
         }
       }
       return null;

@@ -81,6 +81,29 @@ nodefony.register("wsResponse", function () {
       this.body = "";
     }
 
+    broadcast(data, type){
+      if (data) {
+        switch (type) {
+        case "utf8":
+          this.connection.broadcastUTF(data.utf8Data);
+          break;
+        case "binary":
+          this.connection.broadcastBytes(data.binaryData);
+          break;
+        default:
+          this.connection.broadcast(data);
+        }
+      } else {
+        if (this.body) {
+          if (!type) {
+            type = this.encoding;
+          }
+          return this.broadcast(this.body);
+        }
+      }
+      this.body = "";
+    }
+
     close(reasonCode, description) {
       if (this.connection.state === "open") {
         try {

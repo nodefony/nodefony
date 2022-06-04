@@ -31,11 +31,29 @@ module.exports = class websocketServerSecure extends nodefony.Service {
             return this.httpKernel.onWebsocketRequest(request, this.type);
           });
 
-          this.once("onTerminate", () => {
-            if (this.websocketServer && this.ready) {
-              this.websocketServer.shutDown();
-              this.log(" SHUTDOWN WEBSOCKET SECURE Server is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
-            }
+          this.prependOnceListener("onTerminate", () => {
+            return new Promise((resolve, reject) => {
+              if (this.websocketServer && this.ready) {
+                this.websocketServer.broadcast(JSON.stringify({
+                  nodefony: {
+                    state:'shutDown'
+                  }
+                }));
+                setTimeout(() => {
+                  try {
+                    if( this.websocketServer.config.httpServer ){
+                      this.websocketServer.shutDown();
+                    }
+                    this.log(" SHUTDOWN WEBSOCKET SECURE Server is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
+                    return resolve(true)
+                  } catch (e) {
+                    return reject(e)
+                  }
+                }, 500)
+                return
+              }
+              return resolve(true)
+            })
           });
 
           if (this.websocketServer) {
