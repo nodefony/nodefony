@@ -59,7 +59,7 @@ module.exports = {
   },
 
   configureWebpack: {
-    devtool: process.env.NODE_ENV === "development" ? "source-map" : "",
+    devtool: process.env.NODE_ENV === "development" ? "source-map" : false,
     entry: {
       swagger: ["/Resources/swagger/swagger.js"],
       graphiql: ["/Resources/graphiql/graphiql.jsx"]
@@ -164,10 +164,11 @@ module.exports = {
       }),
     ]
   },
+  transpileDependencies: true,
 
-  transpileDependencies: [
+  /*transpileDependencies: [
     //"vuetify"
-  ],
+  ],*/
 
   pluginOptions: {
     i18n: {
@@ -178,6 +179,14 @@ module.exports = {
       runtimeOnly: false,
       compositionOnly: false,
       fullInstall: true
+    }
+  },
+  pwa: {
+    manifestOptions: {
+      //start_url: "doc"
+    },
+    workboxOptions: {
+      chunks: ['app']
     }
   }
 };

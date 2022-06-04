@@ -34,7 +34,6 @@ class graphqlController extends nodefony.Controller {
     // start session
     this.startSession();
     try {
-
       // graphql api
       this.api = new nodefony.api.Graphql({
         name: "nodefony-grahql-api",
@@ -44,8 +43,6 @@ class graphqlController extends nodefony.Controller {
         schema: graphqlController.schema(this),
         rootValue: graphqlController.provider(this)
       }, this.context);
-
-
     } catch (e) {
       this.log(e, "ERROR");
       throw e;
@@ -77,7 +74,6 @@ class graphqlController extends nodefony.Controller {
    *      name="api-nodefony-ws-graphql",
    *      requirements={"protocol" = "graphql-transport-ws"}
    *    )
-   *    @Firewall ({bypass:true})
    */
   /*graphqlWsAction(message) {
     if(message){
