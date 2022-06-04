@@ -28,7 +28,7 @@
     "imports-loader": "4.0.0",
     "jquery": "^3.6.0",
     "mini-css-extract-plugin": "2.6.0",
-    "sass": "1.52.1",
+    "sass": "1.52.2",
     "sass-loader": "13.0.0",
     "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "^3.3.1",

@@ -34,7 +34,7 @@
     "puppeteer": "14.2.1",
     "request": "^2.88.2",
     "rxjs": "7.5.5",
-    "sass": "1.52.1",
+    "sass": "1.52.2",
     "sass-loader": "13.0.0",
     "terser-webpack-plugin": "5.3.3",
     "webpack": "5.73.0",
