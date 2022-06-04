@@ -36,6 +36,8 @@ jobs:
       shell:             bash
       run:               |
         npm cache clean --force
+        yarn config set ignore-engines true
+        yarn config set ignore-platform true
         npm install --no-audit --force --legacy-peer-deps
         npm install --no-audit --force --legacy-peer-deps ./src/nodefony
         npm run build --if-present
@@ -91,6 +93,8 @@ jobs:
       shell:             bash
       run:               |
         npm cache clean --force
+        yarn config set ignore-engines true
+        yarn config set ignore-platform true
         npm install --no-audit --force --legacy-peer-deps
         npm install --no-audit --force --legacy-peer-deps ./src/nodefony
         npm run build --if-present
@@ -141,6 +145,8 @@ jobs:
       shell:             bash
       run:               |
         npm cache clean --force
+        yarn config set ignore-engines true
+        yarn config set ignore-platform true
         npm install --no-audit --force --legacy-peer-deps
         npm install --no-audit --force --legacy-peer-deps ./src/nodefony
         npm run build --if-present

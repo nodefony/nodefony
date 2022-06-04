@@ -30,7 +30,7 @@ module.exports = {
       });
   },
   configureWebpack: {
-    devtool: process.env.NODE_ENV === "development" ? "source-map" : "",
+    devtool: process.env.NODE_ENV === "development" ? "source-map" : false,
     output:{
       hotUpdateChunkFilename:'hot/[id].[hash].hot-update.js',
       hotUpdateMainFilename: 'hot/[hash].hot-update.json'

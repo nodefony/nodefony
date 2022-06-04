@@ -26,6 +26,7 @@ const paths = [
 
 module.exports = {
   mode: "production",
+  devtool: false,
   watch: false,
   optimization: {
     minimizer: [
