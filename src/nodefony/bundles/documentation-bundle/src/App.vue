@@ -1,10 +1,8 @@
 <template>
 <v-app id="nodefony">
-  <app-navigation>
-  </app-navigation>
+  <app-navigation />
 
-  <app-bar>
-  </app-bar>
+  <app-bar />
 
   <v-main ref="main">
     <router-view :key="$route.fullPath"></router-view>

@@ -42,6 +42,13 @@ class Apollo extends nodefony.Kernel {
   addNodefonyClient() {
     const nodefonyProvider = createApolloProvider({
       defaultClient: nodefonyClient,
+      defaultOptions: {
+        // apollo options applied to all queries in components
+        $query: {
+          //loadingKey: 'loading',
+          fetchPolicy: 'cache-and-network',
+        }
+      }
     })
     this.app.use(nodefonyProvider)
     return nodefonyProvider
@@ -75,8 +82,5 @@ class Apollo extends nodefony.Kernel {
 
 
 }
-
-
-
 
 export default new Apollo("VUE-APPOLO-PLUGIN", process.env);

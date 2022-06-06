@@ -164,11 +164,11 @@ module.exports = {
       }),
     ]
   },
-  transpileDependencies: true,
-
-  /*transpileDependencies: [
+  //transpileDependencies: true,
+  transpileDependencies: [
     //"vuetify"
-  ],*/
+  ],
+
 
   pluginOptions: {
     i18n: {
@@ -182,8 +182,11 @@ module.exports = {
     }
   },
   pwa: {
+    //manifestPath:"",
     manifestOptions: {
-      //start_url: "doc"
+      start_url: "./doc",
+      id:"./doc",
+      scope:"./doc"
     },
     workboxOptions: {
       chunks: ['app']

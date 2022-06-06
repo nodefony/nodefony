@@ -13,6 +13,17 @@ class defaultController extends nodefony.Controller {
   }
 
   /**
+   *    @Route ("/doc/manifest.json",
+   *      name="index-doc-manifest")
+   */
+  manifesAction() {
+    const manifestPath = path.resolve(this.bundle.path,'Resources','public','manifest.json')
+    const file = this.getFile(manifestPath)
+    this.setContentType( "application/manifest+json");
+    return file.readAsync();
+  }
+
+  /**
    *    @Route ("/doc*",
    *      name="index-documentation")
    */
@@ -22,6 +33,9 @@ class defaultController extends nodefony.Controller {
       description: this.bundle.package.description
     });
   }
+
+
+
   /**
    *    @Method ({"GET"})
    *    @Route (

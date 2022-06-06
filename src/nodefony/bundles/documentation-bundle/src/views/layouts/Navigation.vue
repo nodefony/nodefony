@@ -67,10 +67,10 @@
       </v-list-item>
       <v-list-group>
         <template v-slot:activator="{ props }">
-          <v-list-item v-bind="props" title="Connectors" value="Connectors">
+          <v-list-item v-bind="props" title="Schemas" value="Connectors">
           </v-list-item>
         </template>
-        <v-list-item title="nodefony" value="nodefonydatabase" to="/database/connectors/nodefony">
+        <v-list-item title="nodefony" value="nodefonyconnector" to="/database/connectors/nodefony">
         </v-list-item>
       </v-list-group>
     </v-list-group>

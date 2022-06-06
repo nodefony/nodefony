@@ -53,7 +53,7 @@ module.exports = {
     };
   },
 
-  _matrice(cpuUsage, cpus, timeout = 1000) {
+  _matrice(cpuUsage, cpus, timeout = 800) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         return resolve(this.getCpuUsage(cpuUsage, cpus))

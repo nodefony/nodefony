@@ -9,7 +9,7 @@
     </template>
     <v-toolbar-title>ORM Entity</v-toolbar-title>
     <v-spacer></v-spacer>
-    <div class="mr-2" @click="goToEntity"> {{entity.name}}</div>
+    <v-btn color="grey" density="compact" variant="outlined" class="mr-2" @click="goToEntity"> {{entity.name}}</v-btn>
   </v-toolbar>
 
   <v-list density="compact" style="">
@@ -48,6 +48,11 @@
       <v-chip class="text-caption" density="compact">{{nbAttributes}}</v-chip>
     </v-list-item>
   </v-list>
+  <v-container v-if="diagram">
+    <div class="mermaid text-center">
+      {{diagram}}
+    </div>
+  </v-container>
   <v-container v-if="!widget && attributes">
     <v-card-title>Schema</v-card-title>
     <v-table fixed-header density="compact">
@@ -90,6 +95,7 @@
 
 <script>
 import gql from 'graphql-tag'
+import mermaid from '@/plugins/nodefony/compositions/mermaid.js'
 export default {
   name: "n-orm-entity",
   props: {
@@ -109,9 +115,22 @@ export default {
       default: null
     }
   },
-  mounted() {
+  setup() {
+    const {
+      parseEntitySchema,
+      init
+    } = mermaid();
 
+    return {
+      parseEntitySchema,
+      init
+    }
   },
+  data() {
+    return {}
+  },
+  beforeMount() {},
+  mounted() {},
   apollo: {
     request: {
       // gql query
@@ -137,8 +156,14 @@ export default {
     }
   },
   computed: {
+    diagram() {
+      const dia = this.parseEntitySchema(this.name, this.schema, this.attributes)
+      this.$nextTick(() => {
+        this.init();
+      })
+      return dia
+    },
     entity() {
-      console.log(this.skipQuery, this.ormEntity)
       if (this.skipQuery && this.ormEntity) {
         return this.ormEntity
       }

@@ -2,6 +2,7 @@
 node_modules
 /dist
 /Resources/public/hot
+/Resources/public/img
 
 
 # local env files

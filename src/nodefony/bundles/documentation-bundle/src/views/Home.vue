@@ -1,5 +1,22 @@
 <template>
-<v-container fluid v-if="nodefony" class="overflow-auto">
+<div v-if="$apollo.queries.nodefony.loading">
+
+
+  <v-container style="height: 400px;">
+    <v-row class="fill-height" align-content="center" justify="center">
+      <v-row class="text-subtitle-1 text-center">
+        <v-img class="" width="100" height="91" src="/framework-bundle/images/nodefony-logo.png" />
+      </v-row>
+      <v-col class="text-subtitle-1 text-center" cols="12">
+        Getting Nodefony Monitoring
+      </v-col>
+      <v-col cols="6">
+        <v-progress-linear color="deep-purple accent-4" indeterminate rounded height="6"></v-progress-linear>
+      </v-col>
+    </v-row>
+  </v-container>
+</div>
+<v-container v-else fluid v-if="nodefony" class="overflow-auto">
 
   <!--v-container fluid class="d-flex  justify-center">
     <v-img class="" width="100" height="91" src="/framework-bundle/images/nodefony-logo.png" />
@@ -9,7 +26,7 @@
     <v-chip inline>{{nodefony.status.version}}</v-chip>
   </v-container-->
 
-  <v-row fluid class="flex-row ">
+  <v-row fluid class="flex-row">
     <n-nodefony-status :nodefony="nodefony" />
     <n-nodefony-network :nodefony="nodefony" />
   </v-row>
@@ -111,13 +128,14 @@ export default {
       variables() {
         // Use vue reactive properties here
       },
+      //pollInterval: 300
     }
   },
   setup() {},
   data() {
     return {
       name: "Nodefony",
-      modelNodefony: 0
+      modelNodefony: 0,
     }
   },
   computed: {

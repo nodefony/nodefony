@@ -1,75 +1,86 @@
 <template>
-<v-layout fluid style="text-align: center">
-  <div class="mermaid">
-    {{data}}
+<v-container fluid v-if="connector">
+  <n-orm-connection :connector="connector" />
+  <div v-if="diagram" class="mermaid text-center">
+    {{diagram}}
   </div>
-
-  <div class="mermaid">
-    {{data2}}
-  </div>
-</v-layout>
+</v-container>
 </template>
 <script>
-import mermaid from "mermaid";
+import gql from 'graphql-tag'
+import mermaid from '@/plugins/nodefony/compositions/mermaid.js'
+import Connection from '@bundles/documentation-bundle/src/views/databases/Connection.vue'
 export default {
   name: 'connectorView',
   components: {
-
+    'n-orm-connection': Connection
+  },
+  props: {
+    name: {
+      type: String
+    }
+  },
+  apollo: {
+    request: {
+      // gql query
+      query: gql `
+        query getConnector($name: String!) {
+          connector:getConnector(name:$name)
+        }
+	    `,
+      update: (data) => {
+        return {
+          connector: JSON.parse(data.connector)
+        }
+      },
+      // Reactive parameters
+      variables() {
+        // Use vue reactive properties here
+        return {
+          name: this.name
+        }
+      },
+      // Disable the query
+      skip() {
+        return this.skipQuery
+      }
+    }
   },
 
   setup() {
-
+    const {
+      parseConnectorSchema,
+      init
+    } = mermaid();
+    return {
+      parseConnectorSchema,
+      init
+    }
   },
   data() {
     return {
-
-      defaultConfig: {
-        theme: "default",
-        startOnLoad: false,
-        securityLevel: "loose"
-      },
-      data: `
-      classDiagram
-        Animal <|-- Duck
-        Animal <|-- Fish
-        Animal <|-- Zebra
-        Animal : +int age
-        Animal : +String gender
-        Animal: +isMammal()
-        Animal: +mate()
-        class Duck{
-            +String beakColor
-            +swim()
-            +quack()
-        }
-        class Fish{
-            -int sizeInFeet
-            -canEat()
-        }
-        class Zebra{
-            +bool is_wild
-            +run()
-        }
-      `,
-      data2: `
-      sequenceDiagram
-        autonumber
-        Alice->>John: Hello John, how are you?
-        loop Healthcheck
-            John->>John: Fight against hypochondria
-        end
-        Note right of John: Rational thoughts!
-        John-->>Alice: Great!
-        John->>Bob: How about you?
-        Bob-->>John: Jolly good!
-      `
+      skipQuery: false,
     }
   },
-  beforeMount() {
-    mermaid.initialize(this.defaultConfig);
-  },
-  mounted() {
-    mermaid.init()
+  mounted() {},
+  computed: {
+    connector() {
+      if (!this.skipQuery && this.request) {
+        return this.request.connector
+      }
+      return null
+    },
+    diagram() {
+      if (this.connector && this.connector.entities) {
+        const dia = this.parseConnectorSchema(this.name, this.connector.entities)
+        this.$nextTick(() => {
+          console.log(dia)
+          this.init();
+        })
+        return dia
+      }
+      return ""
+    },
   },
   methods: {
 

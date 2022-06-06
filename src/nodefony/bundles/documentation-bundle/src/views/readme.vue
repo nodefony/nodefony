@@ -1,10 +1,12 @@
 <template>
 <v-container fluid class="overflow-auto">
   <Markdown v-if="source" :source="source" :highlight="highlight" html breaks :anchor="{}" :emoji="{}" linkify />
+
 </v-container>
 </template>
 <script>
 import Markdown from 'vue3-markdown-it';
+
 import {
   ref,
   toRefs
@@ -21,7 +23,21 @@ export default {
     return {
       highlight: {
         auto: true
+      },
+
+      options: {
+        markdownIt: {
+          linkify: true
+        },
+        linkAttributes: {
+          attrs: {
+            target: '_self',
+            rel: 'noopener'
+          }
+        }
       }
+
+
     }
   },
   async setup(props) {
