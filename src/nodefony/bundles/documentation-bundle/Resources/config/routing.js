@@ -1,15 +1,15 @@
 /**
  *
  * ===============================================================================
- *      ROUTING BUNDLE doc-bundle
+ *      ROUTING BUNDLE documentation-bundle
  *
- *  Copyright © /2022     | 
+ *  Copyright © /2022     |
  *
  * ===============================================================================
  *
  *        GENERATE BY nodefony-core BUILDER
  *
- *        doc ROUTING  doc-bundle
+ *        doc ROUTING  documentation-bundle
  **/
 
 

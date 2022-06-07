@@ -1,7 +1,7 @@
 /**
 *
 *
-*	nodefony-core CONFIG BUNDLE  doc-bundle
+*	nodefony-core CONFIG BUNDLE  documentation-bundle
 *
 * ===============================================================================
 *
@@ -35,7 +35,7 @@ module.exports = {
    *      }
    *
    */
-  watch: true,
+  watch: false,
 
   swagger: require(path.resolve(__dirname, ".." ,"swagger", "config.js")),
   graphigl: require(path.resolve(__dirname, "..", "graphiql", "config.js")),

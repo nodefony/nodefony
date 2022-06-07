@@ -25,6 +25,7 @@ if (kernel.ready) {
     usersStaticProvider = kernel.getBundles("users").getController('graphql').provider;
   })
 }
+console.log(usersStaticSchema)
 
 
 class graphqlController extends nodefony.Controller {
