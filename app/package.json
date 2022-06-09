@@ -28,7 +28,7 @@
     "imports-loader": "4.0.0",
     "jquery": "^3.6.0",
     "mini-css-extract-plugin": "2.6.0",
-    "sass": "1.52.2",
+    "sass": "1.52.3",
     "sass-loader": "13.0.0",
     "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "^3.3.1",
@@ -40,7 +40,7 @@
   "devDependencies": {
     "@mapbox/node-pre-gyp": "1.0.9",
     "node-gyp": "9.0.0",
-    "webpack-dev-server": "4.9.1"
+    "webpack-dev-server": "4.9.2"
   },
   "license": "",
   "readmeFilename": "README.md",

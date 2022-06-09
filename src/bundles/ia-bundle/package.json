@@ -19,13 +19,13 @@
     "clean-webpack-plugin": "^4.0.0",
     "core-js": "3.22.8",
     "gpu.js": "2.15.2",
-    "jpeg-js": "^0.4.3",
+    "jpeg-js": "0.4.4",
     "leaflet": "1.8.0",
     "ml5": "0.12.2",
     "p5": "1.4.1",
-    "vue": "3.2.36",
+    "vue": "3.2.37",
     "vue-i18n": "9.1.10",
-    "vue-router": "4.0.15",
+    "vue-router": "4.0.16",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
@@ -36,13 +36,13 @@
     "@vue/cli-plugin-router": "5.0.4",
     "@vue/cli-plugin-vuex": "5.0.4",
     "@vue/cli-service": "5.0.4",
-    "@vue/compiler-sfc": "3.2.36",
+    "@vue/compiler-sfc": "3.2.37",
     "babel-eslint": "^10.1.0",
-    "eslint": "8.16.0",
+    "eslint": "8.17.0",
     "eslint-plugin-vue": "9.1.0",
     "expose-loader": "4.0.0",
     "vue-cli-plugin-i18n": "^2.3.1",
-    "webpack-dev-server": "4.9.1"
+    "webpack-dev-server": "4.9.2"
   },
   "eslintConfig": {
     "root": true,
