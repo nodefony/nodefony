@@ -41,7 +41,7 @@ class Apollo extends nodefony.Kernel {
 
   addNodefonyClient() {
     const nodefonyProvider = createApolloProvider({
-      defaultClient: nodefonyClient,
+      defaultClient: nodefonyClient(this.nodefony),
       defaultOptions: {
         // apollo options applied to all queries in components
         $query: {
