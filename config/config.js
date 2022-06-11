@@ -105,7 +105,7 @@ module.exports = {
      */
     bundles: {
       "test-bundle": path.resolve("src", "bundles", "test-bundle"),
-      "users-bundle": path.resolve("src", "nodefony", "cli", "builder", "bundles", "users-bundle")
+      "users-bundle": path.resolve("src", "nodefony", "cli", "builder", "bundles", "users-bundle"),
       //"demo-bundle": "file:src/bundles/demo-bundle",
       //"webAssembly-bundle": "file:src/bundles/webAssembly-bundle",
       //"ia-bundle": "file:src/bundles/ia-bundle"
