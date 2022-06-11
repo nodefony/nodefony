@@ -14,7 +14,7 @@
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
   },
   "dependencies": {
-    "@apollo/client": "3.6.6",
+    "@apollo/client": "3.6.7",
     "@babel/preset-env": "7.18.2",
     "@babel/preset-react": "7.17.12",
     "@beyonk/google-fonts-webpack-plugin": "1.7.0",
@@ -55,7 +55,7 @@
     "@vue/cli-plugin-vuex": "5.0.4",
     "@vue/cli-service": "5.0.4",
     "eslint": "8.17.0",
-    "eslint-plugin-vue": "9.1.0",
+    "eslint-plugin-vue": "9.1.1",
     "sass": "1.52.3",
     "sass-loader": "13.0.0",
     "vue-cli-plugin-i18n": "~2.3.1",
