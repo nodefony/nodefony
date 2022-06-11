@@ -34,9 +34,22 @@ module.exports = {
   configureWebpack: {
     devtool: process.env.NODE_ENV === "development" ? "source-map" : "",
     output:{
-      hotUpdateChunkFilename:'hot/[id].[hash].hot-update.js',
-      hotUpdateMainFilename: 'hot/[hash].hot-update.json',
+      hotUpdateChunkFilename:'hot/[id].[fullhash].hot-update.js',
+      hotUpdateMainFilename: 'hot/[fullhash].hot-update.json',
       //hashFunction: "xxhash64"
+    },
+    resolve: {
+      alias: {
+        "@bundles": path.join(__dirname, ".."),
+        "@app": path.join(__dirname, "..", "..", "..", "app")
+      },
+      extensions: ['.js', '.json', '.jsx', '.css', '.mjs'],
+      fallback: {
+        "path": false,
+        "assert": false,
+        "util":false,
+        "fs":false
+      }
     },
     plugins: [
       new CleanWebpackPlugin({
