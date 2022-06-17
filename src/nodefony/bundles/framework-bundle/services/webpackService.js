@@ -415,11 +415,6 @@ loadConfig(file, bundle, reload) {
       } catch (e) {
         return reject(e);
       }
-      /*try {
-        devServer = this.addDevServerEntrypoints(config, watch, type, bundle, webpack);
-      } catch (e) {
-        return reject(e);
-      }*/
       //context
       if (!config.context) {
         config.context = Path;

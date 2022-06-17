@@ -1,97 +1,98 @@
+/**
+ *	@class defaultController
+ *	@constructor
+ *	@param {class} container
+ *	@param {class} context
+ */
+class defaultController extends nodefony.Controller {
+
+  constructor(container, context) {
+    super(container, context);
+    // start session
+    this.startSession();
+  }
+
   /**
-   *	The class is a **`default` CONTROLLER** .
-   *	@module NODEFONY
-   *	@main NODEFONY
-   *	@class defaultController
-   *	@constructor
-   *	@param {class} container
-   *	@param {class} context
-   *
+   *    @Route ("/doc/manifest.json",
+   *      name="index-doc-manifest")
    */
-  module.exports = class defaultController extends nodefony.controller {
+  manifesAction() {
+    const manifestPath = path.resolve(this.bundle.path,'Resources','public','manifest.json')
+    const file = this.getFile(manifestPath)
+    this.setContentType( "application/manifest+json");
+    return file.readAsync();
+  }
 
-    constructor(container, context) {
-      super(container, context);
+  /**
+   *    @Route ("/doc*",
+   *      name="monitoring-index")
+   */
+  indexAction() {
+    return this.render("monitoring-bundle::index.html.twig", {
+      name: this.bundle.name,
+      description: this.bundle.package.description
+    });
+  }
+
+
+
+  /**
+   *    @Method ({"GET"})
+   *    @Route (
+   *      "/app/documentation/swagger",
+   *      name="api-doc-swagger"
+   *    )
+   */
+  swaggerAction() {
+    this.hideDebugBar()
+    return this.render("monitoring-bundle:swagger:index.html.twig", {
+      title: "Swagger openapi"
+    });
+  }
+
+  /**
+   *    @Method ({"GET"})
+   *    @Route (
+   *      "/app/documentation/graphql",
+   *      name="api-doc-graphql"
+   *    )
+   */
+  graphiqlAction() {
+    this.hideDebugBar()
+    return this.render("monitoring-bundle:graphiql:index.html.twig", {
+      title: "graphiql"
+    });
+  }
+
+  /**
+   *    @Method ({"GET"})
+   *    @Route (
+   *      "/nodefony/documentation/{bundle}/readme",
+   *      name="nodefony-documentation-readme"
+   *    )
+   */
+  async readmeAction(bundle){
+    let Bundle = null
+    if( bundle === "nodefony"){
+      Bundle = this.kernel
+    }else{
+      Bundle = this.kernel.getBundle(bundle)
     }
 
-    indexAction(module) {
-      if (module) {
-        this.response.setHeader('Content-Type', "application/xml");
-        if (module === "app") {
-          let bundles = function () {
-            let obj = {};
-            for (let bundle in this.kernel.bundles) {
-              obj[bundle] = {
-                name: this.kernel.bundles[bundle].name,
-                version: this.kernel.bundles[bundle].settings.version,
-                config: this.container.getParameters("bundles." + bundle)
-              };
-            }
-            return obj;
-          }.call(this);
-
-          return this.render('monitoringBundle::' + module + '.xml.twig', {
-            bundles: bundles,
-            user: this.context.user
-          }).catch(e=>{
-            this.log(e,"ERROR");
-            this.response.setHeader('Content-Type', "text/html");
-            return this.createNotFoundException();
-          });
-        }
-        return this.render('monitoringBundle::' + module + '.xml.twig')
-        .catch(e=>{
-          this.log(e,"ERROR");
-          this.response.setHeader('Content-Type', "text/html");
-          return this.createNotFoundException();
-        });
-      } else {
-        return this.render('monitoringBundle::index.html.twig', {
-          environment: this.kernel.environment,
-          debug: this.kernel.debug
-        }).catch(e=>{
-          this.log(e,"ERROR");
-          this.response.setHeader('Content-Type', "text/html");
-          return this.createNotFoundException();
-        });
+    try {
+      const readmePath = path.resolve(Bundle.path, "README.md")
+      if( readmePath ){
+        const readme = this.getFile(readmePath)
+        return this.renderJson({readme: await readme.readAsync()})
       }
+      throw new Error('readme not found')
+    }catch(e){
+      return this.createNotFoundException('readme not found')
     }
 
-    /**
-     *
-     *
-     *
-     *
-     **/
-    realTimeAction(message) {
-      let realtime = this.get("realTime");
-      let context = this.getContext();
-      switch (this.getRequest().method) {
-      case "GET":
-        return this.getResponse("PING");
-      case "POST":
-        return realtime.handleConnection(this.getParameters("query").request, context);
-      case "WEBSOCKET":
-        if (message) {
-          realtime.handleConnection(message.utf8Data, context);
-        }
-        break;
-      default:
-        throw new Error("REALTIME METHOD NOT ALLOWED");
-      }
-    }
+  }
 
-    testLoadAction(message) {
-      let context = this.getContext();
-      let serverLoad = this.get("serverLoad");
-      switch (this.getRequest().method) {
-      case "WEBSOCKET":
-        if (message) {
-          serverLoad.handleConnection(JSON.parse(message.utf8Data), context);
-        }
-        break;
-      default:
-        throw new Error("REALTIME METHOD NOT ALLOWED");
-      }
-    }
-  };
+
+}
+
+module.exports = defaultController;

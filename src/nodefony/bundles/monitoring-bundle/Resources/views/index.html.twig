@@ -1,30 +1,17 @@
-{% extends "./base.html.twig" %}
-
-{% block meta %}
-  {{parent()}}
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-{% endblock %}
-
-{% block title %}Nodefony Monitoring{% endblock %}
-
-{% block body %}
-  <div class="hide environment" value="{{environment}}"></div>
-  <div class="hide debug" value="{{debug}}">{{debug}}</div>
-{% endblock %}
-
-{% block stylesheets %}
-
-  <!-- WEBPACK BUNDLE -->
-  <link href="{{CDN('stylesheet')}}/monitoring-bundle/assets/css/monitoring.css" rel="stylesheet"/>
-  <link href="{{CDN('stylesheet')}}/monitoring-bundle/vendors/dataTable/css/dataTables.bootstrap.min.css" rel="stylesheet"/>
-
-{% endblock %}
-
-{% block javascripts %}
-
-  <!-- WEBPACK BUNDLE -->
-  <script type="text/javascript" src="{{CDN('javascript')}}/monitoring-bundle/assets/js/monitoring.js"></script>
-  <script type="text/javascript" src="{{CDN('javascript')}}/monitoring-bundle/vendors/dataTable/js/jquery.dataTables.js"></script>
-  <script type="text/javascript" src="{{CDN('javascript')}}/monitoring-bundle/vendors/dataTable/js/dataTables.bootstrap.js"></script>
-  <script type="text/javascript" src="{{CDN('javascript')}}/monitoring-bundle/vendors/jquery.timeago/jquery.timeago.js"></script>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if IE]><link rel="icon" href="/monitoring-bundle/favicon.ico"><![endif]-->
+    <title>@nodefony/monitoring-bundle</title>
+  <script defer src="/monitoring-bundle/assets/js/chunk-vendors.js"></script><script defer src="/monitoring-bundle/assets/js/app.js"></script><link rel="icon" type="image/svg+xml" href="/monitoring-bundle/img/icons/favicon.svg"><link rel="icon" type="image/png" sizes="32x32" href="/monitoring-bundle/img/icons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/monitoring-bundle/img/icons/favicon-16x16.png"><link rel="manifest" href="/monitoring-bundle/manifest.json"><meta name="theme-color" content="#4DBA87"><meta name="apple-mobile-web-app-capable" content="no"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="@nodefony/monitoring-bundle"><link rel="apple-touch-icon" href="/monitoring-bundle/img/icons/apple-touch-icon-152x152.png"><link rel="mask-icon" href="/monitoring-bundle/img/icons/safari-pinned-tab.svg" color="#4DBA87"><meta name="msapplication-TileImage" content="/monitoring-bundle/img/icons/msapplication-icon-144x144.png"><meta name="msapplication-TileColor" content="#000000"></head>
+  <body>
+    <noscript>
+      <strong>We're sorry but @nodefony/monitoring-bundle doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

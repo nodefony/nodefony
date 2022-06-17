@@ -68,13 +68,10 @@ const regPackageFile = /^\s*file:(.*)/;
 const bundlesCore = {
   "framework-bundle": "framework",
   "monitoring-bundle": "monitoring",
-  "documentation-bundle": "documentation",
-  "assetic-bundle": "assetic",
   "http-bundle": "http",
   "realtime-bundle": "realtime",
   "security-bundle": "security",
   "sequelize-bundle": "sequelize",
-  "mongo-bundle": "mongo",
   "unittests-bundle": "unittests",
   "redis-bundle": "redis",
   "mongoose-bundle": "mongoose",
@@ -687,6 +684,15 @@ class Kernel extends nodefony.Service {
         res = this.searchPackage("security-bundle");
         bundles.push(res);
       }
+      /*if (this.settings.system.documentation) {
+        res = this.searchPackage("documentation-bundle");
+        bundles.push(res);
+      }*/
+      if (this.settings.system.monitoring) {
+        res = this.searchPackage("monitoring-bundle");
+        bundles.push(res);
+      }
+
       switch (this.settings.orm) {
       case "sequelize":
         res = this.searchPackage("sequelize-bundle");
@@ -703,14 +709,6 @@ class Kernel extends nodefony.Service {
       }
       if (this.settings.system.realtime) {
         res = this.searchPackage("realtime-bundle");
-        bundles.push(res);
-      }
-      if (this.settings.system.monitoring) {
-        res = this.searchPackage("monitoring-bundle");
-        bundles.push(res);
-      }
-      if (this.settings.system.documentation) {
-        res = this.searchPackage("documentation-bundle");
         bundles.push(res);
       }
       if (this.settings.system.unitTest || this.type === "CONSOLE") {

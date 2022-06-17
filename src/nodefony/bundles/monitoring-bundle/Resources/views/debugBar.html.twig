@@ -267,7 +267,7 @@
     <li class="separator"></li>
     <li>
       <label class="label-nodefony nodefony-responsive-sm">
-        <a target="blank" href='{{path("monitoring-index")}}#/config/App'>{{projectName}}</a>
+        <a target="blank" href='{{path("monitoring-index")}}/config/App'>{{projectName}}</a>
       </label>
       <label class="label-nodefony label-default">{{environment}}</label>
       <div class="details">
@@ -275,7 +275,7 @@
           <li>
             <strong>
               <label>
-                <a style="color:#0337ab" target="blank" href='{{path("monitoring-index")}}#/config/App'>
+                <a style="color:#0337ab" target="blank" href='{{path("monitoring-index")}}/config/App'>
                   APP</a>
               </label>
               <span title="{{bundles.app.title}}" class="label-nodefony label-default">{{bundles.app.version}}</span>
@@ -357,7 +357,7 @@
             {% if key != "app" %}
               <li>
                 <label>
-                  <a style="color:#2f2f2f" target="blank" href='{{path("monitoring-index")}}#/config/{{key}}'>{{ key }}</a>
+                  <a style="color:#2f2f2f" target="blank" href='{{path("monitoring-index")}}/config/{{key}}'>{{ key }}</a>
                 </label>
                 {% if value.loader == "package" %}
                   <span title="{{value.title}}" class="label-nodefony label-success">{{value.version}}</span>
@@ -377,7 +377,7 @@
 
     <li >
       <label class="label-nodefony nodefony-responsive-md">
-        <a target="blank" href='{{path("monitoring-index")}}#/services'>SERVICES</a>
+        <a target="blank" href='{{path("monitoring-index")}}/services'>SERVICES</a>
       </label>
       <label class="label-nodefony label-default">{{nbServices}}</label>
       <div class="details">
@@ -463,7 +463,7 @@
       <label class="label-nodefony nodefony-responsive-sm">
         {% if id %}
           <label class="label-nodefony nodefony-responsive-sm">
-            <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=securityNav'>
+            <a target="blank" href='{{path("monitoring-index")}}/request/{{id}}?tab=securityNav'>
               FIREWALL</a>
           </label>
         {% else %}
@@ -631,7 +631,7 @@
       {% if route.name != "undefined" %}
         <label class="label-nodefony label-default nodefony-responsive-md">@
           {% if id %}
-            <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=request'>{{route.name}}</a>
+            <a target="blank" href='{{path("monitoring-index")}}/request/{{id}}?tab=request'>{{route.name}}</a>
           {% else %}
             {{route.name}}
           {% endif %}
@@ -705,7 +705,7 @@
       <label class="label-nodefony label-success">{{ request.protocol | upper }}</label>
       {% if id %}
         <label class="label-nodefony nodefony-responsive-md">
-          <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}'>REQUEST</a>
+          <a target="blank" href='{{path("monitoring-index")}}/request/{{id}}'>REQUEST</a>
         </label>
       {% else %}
         <label class="label-nodefony nodefony-responsive-md">REQUEST</label>
@@ -739,7 +739,7 @@
               {% if id %}
                 <li>
                   <label class="label-nodefony">
-                    <a class="nodefony-title" target="blank" href='{{path("monitoring-index")}}#/request/{{id}}'>SHOW HEADERS</a>
+                    <a class="nodefony-title" target="blank" href='{{path("monitoring-index")}}/request/{{id}}'>SHOW HEADERS</a>
                   </label>
                 </li>
               {% endif %}
@@ -862,7 +862,7 @@
     <li>
       {% if id %}
         <label class="label-nodefony nodefony-responsive-md">
-          <a target="blank" href='{{path("monitoring-index")}}#/request/{{id}}?tab=response'>RESPONSE</a>
+          <a target="blank" href='{{path("monitoring-index")}}/request/{{id}}?tab=response'>RESPONSE</a>
         </label>
       {% else %}
         <label class="label-nodefony nodefony-responsive-md">RESPONSE</label>
