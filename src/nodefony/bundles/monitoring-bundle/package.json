@@ -20,7 +20,7 @@
     "@beyonk/google-fonts-webpack-plugin": "1.7.0",
     "@highlightjs/vue-plugin": "2.1.0",
     "@mdi/font": "6.7.96",
-    "@vue/apollo-option": "4.0.0-alpha.17",
+    "@vue/apollo-option": "4.0.0-alpha.18",
     "clean-webpack-plugin": "4.0.0",
     "core-js": "3.23.2",
     "graphiql": "1.9.9",
