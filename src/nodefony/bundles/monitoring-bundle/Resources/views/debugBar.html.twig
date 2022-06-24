@@ -702,7 +702,7 @@
       {% if proxy %}
         <label class="label-nodefony label-default">PROXY</label>
       {% endif %}
-      <label class="label-nodefony label-success">{{ request.protocol | upper }}</label>
+      <label class="label-nodefony label-success">{{ request.scheme | upper }}</label>
       {% if id %}
         <label class="label-nodefony nodefony-responsive-md">
           <a target="blank" href='{{path("monitoring-index")}}/request/{{id}}'>REQUEST</a>

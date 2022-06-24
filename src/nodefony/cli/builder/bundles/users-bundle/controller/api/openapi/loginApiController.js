@@ -33,7 +33,6 @@ class loginApiController extends nodefony.Controller {
   /**
    *    @Method ({"OPTIONS"})
    *    @Route ( "",name="api-login-options",)
-   *    @Firewall ({bypass:true})
    */
   optionsAction() {
     try {
@@ -83,7 +82,6 @@ class loginApiController extends nodefony.Controller {
    *      "/token",
    *      name="api-login-jwt-token"
    *    )
-   *    @Firewall ({bypass:true})
    */
   async tokenAction() {
     try {

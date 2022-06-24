@@ -47,7 +47,7 @@ export default {
 
     const source = ref(null);
     const getReadme = async (bundle) => {
-      const url = `/nodefony/documentation/${bundle}/readme`
+      const url = `/documentation/${bundle}/readme`
       return fetch(url, {
           credentials: 'include',
           headers: {

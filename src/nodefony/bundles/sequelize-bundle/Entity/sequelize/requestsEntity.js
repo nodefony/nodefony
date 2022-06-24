@@ -21,7 +21,31 @@ module.exports = class requests extends nodefony.Entity {
      *   @param connection name
      */
     super(bundle, "requests", "sequelize", "nodefony");
-
+    this.orm.on("onOrmReady", ( orm ) => {
+        let user = this.orm.getEntity("user");
+        if (user) {
+          user.hasMany(this.model, {
+            foreignKey: {
+              allowNull: true,
+              name:"username"
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
+          })
+          this.model.belongsTo(user, {
+            foreignKey: {
+              allowNull: true,
+              name:"username"
+            },
+            targetKey:"username",
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
+          });
+        } else {
+          this.log("ENTITY ASSOCIATION user NOT AVAILABLE" , "WARNING");
+          //throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
+        }
+      });
   }
 
   getSchema() {
@@ -49,10 +73,10 @@ module.exports = class requests extends nodefony.Entity {
       state: {
         type: DataTypes.STRING
       },
-      protocole: {
+      protocol: {
         type: DataTypes.STRING
       },
-      username: {
+      scheme: {
         type: DataTypes.STRING
       },
       data: {

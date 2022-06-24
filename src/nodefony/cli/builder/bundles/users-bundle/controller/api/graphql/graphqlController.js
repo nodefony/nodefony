@@ -25,7 +25,6 @@ class graphqlController extends nodefony.Controller {
   /**
    *    @Method ({"GET", "POST","OPTIONS"})
    *    @Route ( "*",name="api-user-graphql")
-   *    @Firewall ({bypass:true})
    */
   graphqlAction() {
     try {

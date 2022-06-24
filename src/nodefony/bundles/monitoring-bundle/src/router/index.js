@@ -40,9 +40,8 @@ const ifAuthenticated = (to, from, next) => {
     return next();
   }
   //next('Login');
-  document.location = `/doc/login`;
+  document.location = `/nodefony/login`;
 };
-
 
 const allReadyLogin = (to, from, next) => {
   if (Store.getters.isAuthenticated) {
@@ -50,7 +49,6 @@ const allReadyLogin = (to, from, next) => {
   }
   return next();
 };
-
 
 const routes = [
   {
@@ -122,7 +120,7 @@ const routes = [
     component: Connectors,
     beforeEnter: ifAuthenticated
   }, {
-    path: '/nodefony/readme',
+    path: '/readme',
     name: 'nodefonyreadme',
     component: Readme,
     beforeEnter: ifAuthenticated
@@ -145,7 +143,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory("doc"),
+  history: createWebHistory("nodefony"),
   routes
 })
 

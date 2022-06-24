@@ -7,7 +7,7 @@ module.exports = class Monitor extends nodefony.Service {
 
   constructor(container, kernel) {
     super("MONITOR", container, kernel.notificationsCenter);
-    this.settings = this.bundle.settings
+
     this.infoKernel = this.bundle.infoKernel;
     this.infoBundles = {}
     this.httpKernel = this.container.get("httpKernel");
@@ -18,14 +18,11 @@ module.exports = class Monitor extends nodefony.Service {
     this.orm = null
     this.infoOrm = null
     this.storageProfiling = null
-    if (this.settings.profiler.active) {
-      this.storageProfiling = this.settings.profiler.storage;
-    }
     this.requestEntity = null
     this.kernelSetting = null
     this.bundles = null
 
-    if (this.kernel.ready){
+    if (this.kernel.ready) {
       this.mailer = this.get("mailer");
       this.orm = this.get(this.kernel.settings.orm);
       if (this.orm) {
@@ -34,15 +31,9 @@ module.exports = class Monitor extends nodefony.Service {
       this.eventboot()
       this.eventReady()
       this.eventPostReady()
-    }else{
+    } else {
       this.once("onBoot", async () => {
-        this.mailer = this.get("mailer");
-        this.orm = this.get(this.kernel.settings.orm);
-        this.orm.once("onOrmReady", () => {
-          if (this.orm) {
-            this.eventOrmReady()
-          }
-        })
+
         return this.eventboot()
       })
       this.once("onReady", async () => {
@@ -52,11 +43,11 @@ module.exports = class Monitor extends nodefony.Service {
         return this.eventPostReady()
       })
     }
-    this.initialize()
+
     this.gitInfo = this.initGit()
   }
 
-  initialize(){
+  initialize() {
     this.on("onServerRequest", (request /*, response, logString, d*/ ) => {
       request.nodefony_time = new Date().getTime();
     });
@@ -66,7 +57,18 @@ module.exports = class Monitor extends nodefony.Service {
   }
 
   async eventboot() {
-    this.log("Monitoring Event onBoot","DEBUG")
+    this.log("Monitoring Event onBoot", "DEBUG")
+    this.mailer = this.get("mailer");
+    this.orm = this.get(this.kernel.settings.orm);
+    this.settings = this.bundle.settings
+    this.orm.once("onOrmReady", () => {
+      if (this.orm) {
+        this.eventOrmReady()
+      }
+    })
+    if (this.settings.profiler.active) {
+      this.storageProfiling = this.settings.profiler.storage;
+    }
   }
 
   async eventReady() {
@@ -77,11 +79,11 @@ module.exports = class Monitor extends nodefony.Service {
         default: this.mailer.config.default
       };
     }
+    this.initialize()
   }
 
   async eventPostReady() {
-    this.log("Monitoring Event onPostReady","DEBUG")
-
+    this.log("Monitoring Event onPostReady", "DEBUG")
     this.kernelSetting = nodefony.extend(true, {}, this.kernel.settings, {
       templating: this.kernel.settings.templating + " " + this.templating.version,
       orm: this.orm ? this.kernel.settings.orm + " " + this.orm.engine.version : "",
@@ -138,7 +140,6 @@ module.exports = class Monitor extends nodefony.Service {
       this.infoTemplate = this.getTemplating()
       this.services = this.getServices()
     }
-
     //console.log(this.infoKernel, this.infoOrm, this.infoBundles, this.kernelSetting)
   }
 
@@ -184,7 +185,6 @@ module.exports = class Monitor extends nodefony.Service {
         let options = {
           host: this.orm.connections[connection].host + ":" + this.orm.connections[connection].port
         };
-
         if (this.orm.connections[connection]) {
           this.infoOrm.connections[connection].db = {
             config: this.orm.connections[connection].config,
@@ -297,6 +297,7 @@ module.exports = class Monitor extends nodefony.Service {
   }
 
   onRequest(context /*, resolver*/ ) {
+    context.profiler = this.canMonitoring(context);
     if (this.kernel.environment === "prod" &&
       !this.settings.forceDebugBarProd &&
       !context.profiler) {
@@ -305,7 +306,6 @@ module.exports = class Monitor extends nodefony.Service {
     let agent = null;
     let tmp = null;
     let myUserAgent = null;
-    context.profiler = this.canMonitoring(context);
 
     try {
       if (context.request.headers) {
@@ -376,7 +376,6 @@ module.exports = class Monitor extends nodefony.Service {
       };
     }
     context.profiling = {
-      id: null,
       bundle: context.resolver.bundle ? context.resolver.bundle.name : "undefined",
       bundles: this.bundles,
       cdn: this.cdn,
@@ -396,7 +395,8 @@ module.exports = class Monitor extends nodefony.Service {
       projectName: this.kernel.projectName,
       queryPost: context.request.queryPost,
       queryGet: context.request.queryGet,
-      protocole: context.scheme,
+      protocol: context.protocol,
+      scheme: context.scheme,
       cookies: context.cookies,
       events: {},
       twig: [],
@@ -565,6 +565,7 @@ module.exports = class Monitor extends nodefony.Service {
       remoteAddress: context.remoteAddress,
       crossDomain: context.crossDomain,
       protocol: context.protocol,
+      scheme: context.scheme,
       isControlledAccess: context.isControlledAccess,
       accessControl: accessControl,
       accessControlList: tokenRoles
@@ -612,7 +613,8 @@ module.exports = class Monitor extends nodefony.Service {
     context.profiling.request = {
       url: context.url,
       method: context.request.method,
-      protocol: context.scheme,
+      protocol: context.protocol,
+      scheme: context.scheme,
       remoteAddress: context.request.remoteAddress,
       queryPost: context.request.queryPost,
       queryGet: context.request.queryGet,
@@ -622,10 +624,12 @@ module.exports = class Monitor extends nodefony.Service {
       content: content,
       "content-type": context.request.contentType
     };
-    context.on("onSendMonitoring", this.onSendMonitoring.bind(this));
+    context.on("onSendMonitoring", (response, context) => {
+      return this.onSendMonitoring(response, context)
+    });
   }
 
-  websocketRequest(context) {
+  async websocketRequest(context) {
     context.profiling.timeStamp = context.request.nodefony_time;
     let conf = null;
     let configServer = {};
@@ -643,7 +647,8 @@ module.exports = class Monitor extends nodefony.Service {
         url: context.url,
         headers: context.request.httpRequest.headers,
         method: context.request.httpRequest.method,
-        protocol: context.scheme,
+        protocol: context.protocol,
+        scheme: context.scheme,
         remoteAddress: context.request.remoteAddress,
         serverConfig: configServer,
       };
@@ -652,7 +657,8 @@ module.exports = class Monitor extends nodefony.Service {
         url: context.url,
         headers: "",
         method: "",
-        protocol: context.scheme,
+        protocol: context.protocol,
+        scheme: context.scheme,
         remoteAddress: context.request.remoteAddress,
         serverConfig: null,
       };
@@ -672,6 +678,10 @@ module.exports = class Monitor extends nodefony.Service {
       message: [],
     };
     if (context.profiler) {
+      await this.saveProfile(context)
+        .catch(e => {
+          this.log(e, "ERROR");
+        });
       context.on("onMessage", (message, Context, direction) => {
         let ele = {
           date: new Date().toTimeString(),
@@ -698,8 +708,8 @@ module.exports = class Monitor extends nodefony.Service {
         });
       });
     }
-
     context.on("onFinish", ( /*Context, reasonCode, description*/ ) => {
+      console.log("onFinish")
       if (context.profiling) {
         context.profiling.response.statusCode = context.connection.state;
       }
@@ -714,13 +724,6 @@ module.exports = class Monitor extends nodefony.Service {
         });
       }
     });
-
-    if (context.profiler) {
-      this.saveProfile(context)
-        .catch(e => {
-          this.log(e, "ERROR");
-        });
-    }
   }
 
   onSendMonitoring(response, context) {
@@ -750,6 +753,7 @@ module.exports = class Monitor extends nodefony.Service {
           throw error;
         });
     }
+    return Promise.resolve(context)
   }
 
   canMonitoring(context) {
@@ -807,6 +811,7 @@ module.exports = class Monitor extends nodefony.Service {
   }
 
   saveProfile(context) {
+    //console.log('SAVE ', this.settings, context.profiler, this.storageProfiling)
     if (context.profiling) {
       switch (this.storageProfiling) {
       case "syslog":
@@ -821,14 +826,9 @@ module.exports = class Monitor extends nodefony.Service {
           return resolve(context);
         });
       case "orm":
-        let user = null;
+        let user = context.user ? context.user.username : null;
         let data = null;
         // DATABASE ENTITY
-        if (context.profiling.context_secure) {
-          user = context.profiling.context_secure.user ? context.profiling.context_secure.user.username : "";
-        } else {
-          user = "";
-        }
         try {
           /*console.log(require('util').inspect(context.profiling, {
             depth: 100
@@ -840,14 +840,15 @@ module.exports = class Monitor extends nodefony.Service {
         switch (this.kernel.getOrm()) {
         case "sequelize":
           return this.requestEntity.create({
-              id: null,
+              //id: null,
               remoteAddress: context.profiling.context.remoteAddress,
               userAgent: context.profiling.userAgent.toString,
               url: context.profiling.request.url,
               route: context.profiling.route.name,
               method: context.profiling.request.method,
               state: context.profiling.response.statusCode,
-              protocole: context.profiling.context.scheme,
+              protocol: context.protocol,
+              scheme: context.scheme,
               username: user,
               data: data
             }, {
@@ -871,7 +872,8 @@ module.exports = class Monitor extends nodefony.Service {
               route: context.profiling.route.name,
               method: context.profiling.request.method,
               state: context.profiling.response.statusCode,
-              protocole: context.profiling.context.scheme,
+              protocol: context.protocol,
+              scheme: context.scheme,
               username: user,
               data: data
             })

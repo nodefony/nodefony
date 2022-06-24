@@ -20,6 +20,14 @@ module.exports = class session extends nodefony.Entity {
         //console.log(user instanceof Model)
         //console.log(this.model)
         if (user) {
+          user.hasMany(this.model, {
+            foreignKey: {
+              allowNull: true,
+              name:"username"
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
+          })
           this.model.belongsTo(user, {
             foreignKey: {
               allowNull: true,

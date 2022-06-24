@@ -13,38 +13,25 @@ class defaultController extends nodefony.Controller {
   }
 
   /**
-   *    @Route ("/doc/manifest.json",
+   *    @Route ("/nodefony/manifest.json",
    *      name="index-doc-manifest")
    */
-  manifesAction() {
+  async manifesAction() {
     const manifestPath = path.resolve(this.bundle.path,'Resources','public','manifest.json')
     const file = this.getFile(manifestPath)
     this.setContentType( "application/manifest+json");
-    return file.readAsync();
+    return await file.readAsync();
   }
-
-  /**
-   *    @Route ("/doc*",
-   *      name="monitoring-index")
-   */
-  indexAction() {
-    return this.render("monitoring-bundle::index.html.twig", {
-      name: this.bundle.name,
-      description: this.bundle.package.description
-    });
-  }
-
-
-
   /**
    *    @Method ({"GET"})
    *    @Route (
-   *      "/app/documentation/swagger",
+   *      "/api/nodefony/swagger",
    *      name="api-doc-swagger"
    *    )
    */
   swaggerAction() {
     this.hideDebugBar()
+    this.response.setHeader("X-Frame-Options", "SAMEORIGIN")
     return this.render("monitoring-bundle:swagger:index.html.twig", {
       title: "Swagger openapi"
     });
@@ -53,12 +40,13 @@ class defaultController extends nodefony.Controller {
   /**
    *    @Method ({"GET"})
    *    @Route (
-   *      "/app/documentation/graphql",
+   *      "/api/nodefony/graphql",
    *      name="api-doc-graphql"
    *    )
    */
   graphiqlAction() {
     this.hideDebugBar()
+    this.response.setHeader("X-Frame-Options", "SAMEORIGIN")
     return this.render("monitoring-bundle:graphiql:index.html.twig", {
       title: "graphiql"
     });
@@ -67,8 +55,8 @@ class defaultController extends nodefony.Controller {
   /**
    *    @Method ({"GET"})
    *    @Route (
-   *      "/nodefony/documentation/{bundle}/readme",
-   *      name="nodefony-documentation-readme"
+   *      "/documentation/{bundle}/readme",
+   *      name="nodefony-idocumentation-readme"
    *    )
    */
   async readmeAction(bundle){
@@ -89,8 +77,20 @@ class defaultController extends nodefony.Controller {
     }catch(e){
       return this.createNotFoundException('readme not found')
     }
-
   }
+
+
+  /**
+   *    @Route ("/nodefony*",
+   *      name="monitoring-index")
+   */
+  indexAction() {
+    return this.render("monitoring-bundle::index.html.twig", {
+      name: this.bundle.name,
+      description: this.bundle.package.description
+    });
+  }
+
 
 
 }

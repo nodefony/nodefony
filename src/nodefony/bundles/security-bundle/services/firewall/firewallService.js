@@ -376,7 +376,7 @@ module.exports = class security extends nodefony.Service {
           }
         }
         if (context.security && context.security.stateLess) {
-          if (context.sessionAutoStart) {
+          if (context.sessionAutoStart || context.hasSession()) {
             context.sessionAutoStart = context.security.sessionContext;
             return this.sessionService.start(context, context.sessionAutoStart)
               .then((session) => {

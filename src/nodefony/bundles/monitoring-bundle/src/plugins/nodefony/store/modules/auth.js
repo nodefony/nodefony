@@ -34,7 +34,8 @@ const getters = {
   getUser: state => state.username,
   isAuthenticated: state => !!state.token,
   authStatus: state => state.status,
-  isLoading: state => state.loading
+  isLoading: state => state.loading,
+  token: state => state.token
 }
 
 const actions = {

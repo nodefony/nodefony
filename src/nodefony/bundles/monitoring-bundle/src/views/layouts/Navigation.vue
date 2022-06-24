@@ -23,7 +23,7 @@
           <v-list-item class="pl-0" v-bind="props" title="Nodefony" value="nodefony" prepend-avatar="/app/images/app-logo.png">
           </v-list-item>
         </template>
-        <v-list-item prepend-icon="mdi-language-markdown" title="readme" value="readme" to="/nodefony/readme"></v-list-item>
+        <v-list-item prepend-icon="mdi-language-markdown" title="readme" value="readme" to="/readme"></v-list-item>
         <v-list-item prepend-icon="mdi-api" title="Kernel" value="kernel"></v-list-item>
         <v-list-item prepend-icon="mdi-api" title="Api" value="api"></v-list-item>
         <v-list-item prepend-icon="mdi-api" title="controller" value="controller"></v-list-item>
