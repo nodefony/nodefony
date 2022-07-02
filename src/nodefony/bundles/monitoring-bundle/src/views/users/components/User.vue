@@ -82,6 +82,8 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['profile', "error"])
+
 //data
 const profile = ref(null)
 
@@ -123,19 +125,24 @@ const logout = async function() {
   return router.go('/login')
 }
 
+onMounted(() => {})
+
 if (isAuthenticated.value && !getProfile.value) {
   // profile
   await getUserProfile(`/api/users/${getUser.value}`)
     .then((ele) => {
       profile.value = ele.result;
+      emit("profile", profile.value)
       return ele
     })
     .catch((e) => {
+      emit("error", e)
       return router.go('/login')
       //document.location = `/si/login`;
     });
 } else {
   profile.value = getProfile.value
+  emit("profile", profile.value)
 }
 </script>
 

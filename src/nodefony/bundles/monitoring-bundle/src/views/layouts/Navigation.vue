@@ -50,7 +50,7 @@
     <v-list-item prepend-icon="mdi-view-module-outline" title="Services" value="services" to="/services"></v-list-item>
     <v-divider></v-divider>
 
-    <v-list-item prepend-icon="mdi-router" title="Router" value="router">
+    <v-list-item prepend-icon="mdi-router" title="Router" value="router" :to="{name:'Routes'}">
     </v-list-item>
     <v-divider></v-divider>
 
@@ -76,7 +76,8 @@
     </v-list-group>
     <v-divider></v-divider>
 
-    <v-list-item prepend-icon="mdi-cookie-lock" title="Sessions" value="sessions"></v-list-item>
+    <v-list-item prepend-icon="mdi-cookie-lock" title="Sessions" value="sessions" :to="{name:'Sessions'}">
+    </v-list-item>
     <v-divider></v-divider>
 
     <v-list-group v-if="isAdmin">

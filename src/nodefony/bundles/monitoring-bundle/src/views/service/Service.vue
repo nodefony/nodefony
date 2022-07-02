@@ -1,28 +1,24 @@
 <template>
 <v-container fluid class="pa-0 w-100 h-100" style="position:absolute">
 
-  <v-card color="#233056" theme="dark" style="">
-    <div class="absolute d-flex flex-no-wrap justify-space-between">
-      <div class="flex-grow-0 ">
-        <v-icon>mdi-view-module</v-icon>
-        <v-card-title class="text-h5">
-          Services
-          <v-badge color="error" v-if="nbService" :content="nbService" inline></v-badge>
-        </v-card-title>
-        <v-card-subtitle>
-        </v-card-subtitle>
-      </div>
-      <div class="flex-grow-1 ">
-      </div>
-      <v-avatar class="ma-3 flex-grow-0" size="125" rounded="0">
-        <v-icon color="#43853d" class="mr-2" size="125">mdi-service</v-icon>
-      </v-avatar>
-    </div>
-  </v-card>
+  <v-toolbar color="#233056" theme="dark" extended flat>
+    <v-app-bar-title>
+      Services
+      <v-badge color="info" v-if="nbService" :content="nbService" inline>
+      </v-badge>
+    </v-app-bar-title>
+    <v-card-subtitle>routes</v-card-subtitle>
+    <template v-slot:prepend>
+
+    </template>
+    <template v-slot:append>
+      <v-icon size="50" color="#43853d" rounded="0">mdi-view-module</v-icon>
+    </template>
+  </v-toolbar>
 
   <v-container v-if="services" fluid class="w-100 pa-0 h-100" style="position:absolute">
 
-    <v-table fixed-header class="overflow-auto" style="height:calc(100% - 1px)">
+    <v-table fixed-header class="overflow-auto" style="height:calc(100% - 60px)">
       <thead>
         <tr>
           <th class="text-left">

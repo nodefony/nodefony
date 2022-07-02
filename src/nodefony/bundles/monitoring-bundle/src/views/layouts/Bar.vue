@@ -13,7 +13,6 @@
     </router-link>
   </template>
 
-
   <v-spacer></v-spacer>
 
   <router-link :to="{ name: 'Login'}" custom v-slot="{ navigate }">
@@ -37,15 +36,12 @@
         </v-hover-->
 
       </template>
-
       <Suspense>
-        <user-card width="300" account tile />
+        <user-card width="300" @profile="onProfile" @error="onError" account tile />
       </Suspense>
     </v-menu>
 
   </router-link>
-
-
 
 </v-app-bar>
 </template>
@@ -65,18 +61,30 @@ export default {
     "user-card": User
   },
   data: () => ({}),
+  mounted() {
+    if (!this.isAuthenticated) {
+      this.$emit("error")
+    } else {
+      this.$emit("profile")
+    }
+  },
   computed: {
     ...mapGetters([
       'isAuthenticated',
       'getInitials'
     ])
   },
-
   methods: {
     ...mapMutations([
       'toogleDrawer',
     ]),
     ...mapActions({}),
+    onProfile(profile) {
+      this.$emit("profile", profile)
+    },
+    onError(error) {
+      this.$emit("error", error)
+    }
   }
 }
 </script>

@@ -9,6 +9,8 @@ import UserHome from '@/views/users/UsersHome.vue';
 import UserProfile from '@/views/users/UserProfile.vue';
 import UserStepper from '@/views/users/UserStepper.vue';
 
+import Routes from '@/views/router/routes.vue';
+import Sessions from '@/views/sessions/sessions.vue';
 
 import Reveal from '@/views/presentations/slides/reveal.vue'
 import Bundles from '@/views/bundles/Bundle.vue'
@@ -70,15 +72,28 @@ const routes = [
     path: '/users',
     name: 'usersHome',
     component: UserHome,
+    beforeEnter: ifAuthenticated
   }, {
     path: '/users/add',
     name: 'UserStepper',
     component: UserStepper,
+    beforeEnter: ifAuthenticated
   }, {
     path: '/users/:username',
     name: 'UserProfile',
     props: true,
     component: UserProfile,
+    beforeEnter: ifAuthenticated
+  }, {
+    path: '/routes',
+    name: 'Routes',
+    component: Routes,
+    beforeEnter: ifAuthenticated
+  }, {
+    path: '/sessions',
+    name: 'Sessions',
+    component: Sessions,
+    beforeEnter: ifAuthenticated
   }, {
     path: '/swagger',
     name: 'Swagger',

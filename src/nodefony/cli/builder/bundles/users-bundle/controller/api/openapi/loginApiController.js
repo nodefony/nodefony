@@ -82,6 +82,7 @@ class loginApiController extends nodefony.Controller {
    *      "/token",
    *      name="api-login-jwt-token"
    *    )
+   *    @Firewall ({bypass:true})
    */
   async tokenAction() {
     try {
@@ -130,7 +131,7 @@ class loginApiController extends nodefony.Controller {
    *      "/refresh",
    *      name="api-login-jwt-refresh"
    *    )
-   *
+   *    @Firewall ({bypass:true})
    */
   async refreshAction() {
     // get refreshToken from request

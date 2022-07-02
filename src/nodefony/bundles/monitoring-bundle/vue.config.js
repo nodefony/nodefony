@@ -112,8 +112,8 @@ module.exports = {
       }]
     },
     output: {
-      hotUpdateChunkFilename: 'hot/[id].[fullhash].hot-update.js',
-      hotUpdateMainFilename: 'hot/[fullhash].hot-update.json'
+      hotUpdateChunkFilename: 'hot/[runtime].[fullhash].hot-update.js',
+      hotUpdateMainFilename: 'hot/[runtime].[fullhash].hot-update.json'
     },
     resolve: {
       alias: {

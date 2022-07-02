@@ -1,10 +1,10 @@
 <template>
 <v-app id="nodefony">
-  <app-navigation />
+  <app-navigation v-if="profile" />
 
-  <app-bar />
+  <app-bar @profile="onProfile" @error="onError" />
 
-  <v-main ref="main">
+  <v-main v-if="profile" ref="main">
     <router-view :key="$route.fullPath"></router-view>
   </v-main>
 </v-app>
@@ -24,6 +24,21 @@ export default {
   components: {
     "app-navigation": Navigation,
     "app-bar": Bar,
+  },
+  data() {
+    return {
+      profile: false
+    }
+  },
+  beforeMount() {},
+  methods: {
+    onProfile() {
+      this.profile = true
+    },
+    onError() {
+      this.profile = true
+    }
+
   }
 }
 </script>

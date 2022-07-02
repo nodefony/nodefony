@@ -682,48 +682,51 @@ module.exports = class Monitor extends nodefony.Service {
         .catch(e => {
           this.log(e, "ERROR");
         });
-      context.on("onMessage", (message, Context, direction) => {
-        let ele = {
-          date: new Date().toTimeString(),
-          data: message,
-          direction: direction
-        };
-        try {
-          //console.log(context.profiling)
-          if (JSON.stringify(context.profiling.response).length < 60000) {
-            if (message && context.profiling) {
+      if (context.connection.state === 'open') {
+        context.on("onMessage", (message, Context, direction) => {
+          let ele = {
+            date: new Date().toTimeString(),
+            data: message,
+            direction: direction
+          };
+          try {
+            //console.log(context.profiling)
+            if (JSON.stringify(context.profiling.response).length < 60000) {
+              if (message && context.profiling) {
+                context.profiling.response.message.push(ele);
+              }
+            } else {
+              context.profiling.response.message.length = 0;
               context.profiling.response.message.push(ele);
             }
-          } else {
-            context.profiling.response.message.length = 0;
-            context.profiling.response.message.push(ele);
+          } catch (e) {
+            this.log(e, "WARNING");
           }
-        } catch (e) {
-          this.log(e, "WARNING");
-        }
-        this.updateProfile(context, (error /*, result*/ ) => {
-          if (error) {
-            this.kernel.log(error);
-          }
+          this.updateProfile(context, (error /*, result*/ ) => {
+            if (error) {
+              this.kernel.log(error);
+            }
+          });
         });
-      });
+      }
     }
-    context.on("onFinish", ( /*Context, reasonCode, description*/ ) => {
-      console.log("onFinish")
-      if (context.profiling) {
-        context.profiling.response.statusCode = context.connection.state;
-      }
-      if (context.profiler) {
-        this.updateProfile(context, (error /*, result*/ ) => {
-          if (error) {
-            this.kernel.log(error);
-          }
-          if (context) {
-            delete context.profiling;
-          }
-        });
-      }
-    });
+    if(context.connection.state === 'open'){
+      context.on("onFinish", ( /*Context, reasonCode, description*/ ) => {
+        if (context.profiling) {
+          context.profiling.response.statusCode = context.connection.state;
+        }
+        if (context.profiler) {
+          this.updateProfile(context, (error /*, result*/ ) => {
+            if (error) {
+              this.kernel.log(error);
+            }
+            if (context) {
+              delete context.profiling;
+            }
+          });
+        }
+      });
+    }  
   }
 
   onSendMonitoring(response, context) {

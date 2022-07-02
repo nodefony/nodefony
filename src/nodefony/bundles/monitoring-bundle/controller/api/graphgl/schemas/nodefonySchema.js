@@ -52,6 +52,10 @@ const schema = /* GraphQL */`
     getEntity(name: String!): String
     getEntitiesByBundle(name: String!): String
     getEntitiesByConnector(name: String!): String
+    getSessions: String
+    getSessionsByUser(username: String!): String
+    getrequests: String
+    getRequestsByUser(username: String!): String
   }
 
 
