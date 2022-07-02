@@ -211,7 +211,7 @@ module.exports = nodefony.register("SecuredArea", function () {
                 return resolve(context);
               }
               if (context.session) {
-                context.session.migrate();
+                //context.session.migrate();
                 context.session.setMetaBag("security", {
                   firewall: this.name,
                   token: token ? token.serialize() : null

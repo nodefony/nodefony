@@ -65,7 +65,6 @@ module.exports = class sessions extends nodefony.Service {
   }
 
   start(context, sessionContext) {
-
     if (context.sessionStarting) {
       this.log("SESSION ALLREADY STARTED ", "DEBUG");
       return new Promise((resolve) => {
@@ -103,7 +102,7 @@ module.exports = class sessions extends nodefony.Service {
             return reject(err);
           });
       } catch (e) {
-        this.log(e,"ERROR");
+        this.log(e, "ERROR");
         return reject(e);
       }
     });
