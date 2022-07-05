@@ -9,6 +9,8 @@
 const NodefonySchema = require(path.resolve(__dirname, "schemas", "nodefonySchema.js"));
 const Router = require(path.resolve(__dirname, "providers", "router.js"));
 const Sessions = require(path.resolve(__dirname, "providers", "sessions.js"));
+const Requests = require(path.resolve(__dirname, "providers", "requests.js"));
+const Logs = require(path.resolve(__dirname, "providers", "logs.js"));
 const Bundle = require(path.resolve(__dirname, "providers", "bundle.js"));
 const Config = require(path.resolve(__dirname, "providers", "config.js"));
 const Services = require(path.resolve(__dirname, "providers", "services.js"));
@@ -86,8 +88,16 @@ class graphqlController extends nodefony.Controller {
 
   static provider(context) {
     const UsersProvider = usersStaticProvider(context);
-    const prov =  nodefony.extend(Nodefony, Router, Config, Bundle, Services, Orm, Sessions);
-    if (UsersProvider){
+    const prov = nodefony.extend(Nodefony,
+      Router,
+      Config,
+      Bundle,
+      Services,
+      Orm,
+      Sessions,
+      Requests,
+      Logs);
+    if (UsersProvider) {
       return nodefony.extend(prov, UsersProvider)
     }
     return prov
@@ -96,7 +106,7 @@ class graphqlController extends nodefony.Controller {
   static schema(context) {
     let UsersShema = null
     const schemas = [NodefonySchema]
-    if (usersStaticSchema){
+    if (usersStaticSchema) {
       UsersShema = usersStaticSchema(context);
       schemas.push(UsersShema)
     }

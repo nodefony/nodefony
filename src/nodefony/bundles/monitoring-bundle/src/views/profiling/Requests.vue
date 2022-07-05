@@ -1,13 +1,13 @@
 <template >
-<v-container v-if="sessions" fluid class="w-100 pa-0 h-100" style="position:absolute">
+<v-container v-if="requests" fluid class="w-100 pa-0 h-100" style="position:absolute">
 
   <v-toolbar color="#233056" theme="dark" extended flat>
     <v-app-bar-title>
-      Sessions
-      <v-badge color="info" v-if="nbSessions" :content="nbSessions" inline>
+      Requests
+      <v-badge color="info" v-if="nbRequests" :content="nbRequests" inline>
       </v-badge>
     </v-app-bar-title>
-    <v-card-subtitle>sessions</v-card-subtitle>
+    <v-card-subtitle>Requests</v-card-subtitle>
     <template v-slot:prepend>
       <v-icon size="50" color="#43853d" rounded="0">mdi-router</v-icon>
     </template>
@@ -20,41 +20,54 @@
     <thead>
       <tr>
         <th class="text-left">
+          url
+        </th>
+        <th class="text-left">
           user
         </th>
         <th class="text-left">
           id
         </th>
         <th class="text-left">
-          context
+          remoteAddress
         </th>
         <th class="text-left">
-          createdAt
+          userAgent
+        </th>
+
+        <th class="text-left">
+          route
         </th>
         <th class="text-left">
-          updatedAt
+          method
         </th>
         <th class="text-left">
-          Attributes
+          state
         </th>
         <th class="text-left">
-          flashBag
+          protocol
         </th>
         <th class="text-left">
-          metaBag
+          scheme
         </th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item in sessions" :key="item.session_id">
-        <td>{{ item.username }}</td>
-        <td>{{ item.session_id }}</td>
-        <td>{{ item.context }}</td>
-        <td>{{ item.createdAt }}</td>
-        <td>{{ item.updatedAt }}</td>
-        <td>{{ item.Attributes }}</td>
-        <td>{{ item.flashBag }}</td>
-        <td>{{ item.metaBag }}</td>
+      <tr v-for="item in reverseRequests" :key="item.id" @click="goRequest(item.id)">
+        <td>{{ item.url }}</td>
+        <td>
+          <div v-if="item.user">
+            {{ item.user.username }}
+          </div>
+        </td>
+        <td>{{ item.id }}</td>
+        <td>{{ item.remoteAddress }}</td>
+        <td>{{ item.userAgent }}</td>
+        <td>{{ item.route }}</td>
+        <td>{{ item.method }}</td>
+        <td>{{ item.state }}</td>
+        <td>{{ item.protocol }}</td>
+        <td>{{ item.scheme }}</td>
       </tr>
     </tbody>
   </v-table>
@@ -64,7 +77,7 @@
 <script>
 import gql from 'graphql-tag'
 export default {
-  name: "n-sessions",
+  name: "n-requests",
   inject: ["nodefony"],
   components: {},
   props: {},
@@ -72,13 +85,13 @@ export default {
     request: {
       // gql query
       query: gql `
-      query getSessions {
-        sessions:getSessions
+      query getRequests {
+        requests:getRequests
       }
 	    `,
       update: (data) => {
         return {
-          sessions: JSON.parse(data.sessions),
+          requests: JSON.parse(data.requests),
         }
       },
       // Reactive parameters
@@ -101,17 +114,22 @@ export default {
   },
 
   computed: {
-    sessions() {
-      if (this.request && this.request.sessions) {
-        return this.request.sessions.rows
+    requests() {
+      if (this.request && this.request.requests) {
+        return this.request.requests.rows
       }
       return null
     },
-    nbSessions() {
-      if (this.request && this.sessions) {
-        return this.request.sessions.count
+    nbRequests() {
+      if (this.request && this.requests) {
+        return this.request.requests.count
       }
       return null
+    },
+    reverseRequests() {
+      if (this.requests) {
+        return this.requests.reverse()
+      }
     }
   },
 
@@ -122,7 +140,14 @@ export default {
 
   },
   methods: {
-
+    goRequest(id) {
+      this.$router.push({
+        name: "RequestProfiling",
+        params: {
+          id: id
+        }
+      })
+    }
   }
 }
 </script>

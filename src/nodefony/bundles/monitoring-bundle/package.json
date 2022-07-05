@@ -21,6 +21,7 @@
     "@highlightjs/vue-plugin": "2.1.0",
     "@mdi/font": "6.9.96",
     "@vue/apollo-option": "4.0.0-alpha.18",
+    "ansi-to-html": "0.7.2",
     "clean-webpack-plugin": "4.0.0",
     "core-js": "3.23.3",
     "graphiql": "1.9.10",

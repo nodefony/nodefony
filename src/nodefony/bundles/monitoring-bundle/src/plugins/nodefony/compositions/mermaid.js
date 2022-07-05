@@ -90,7 +90,6 @@ function mermaid() {
   }
 
   const init = function () {
-    console.log('init')
     return mermaidEngine.init()
   }
 

@@ -17,14 +17,21 @@ import Bundles from '@/views/bundles/Bundle.vue'
 import DatabaseDashboard from '@/views/databases/Dashboard.vue'
 import Entity from '@/views/databases/Entity'
 import Connectors from '@/views/databases/Connector.vue'
-import DashboardMonitoring from '@/views/monitoring/Dashboard.vue'
-import DashboardProfiling from '@/views/profiling/Dashboard.vue'
 
+
+import DashboardMonitoring from '@/views/monitoring/Dashboard.vue'
+
+// profiling
+import DashboardProfiling from '@/views/profiling/Dashboard.vue'
+import RequestsProfiling from '@/views/profiling/Requests.vue'
+import RequestProfiling from '@/views/profiling/Request.vue'
 // Doc
 import Readme from '@/views//nodefony/Readme.vue'
 import Swagger from '@/views/documentation/Swagger.vue'
 import Graphigl from '@/views/documentation/Graphigl.vue'
 
+// logs
+import Logs from '@/views/logs/Logs.vue'
 //service
 import Service from '@/views/service/Service.vue'
 
@@ -122,7 +129,7 @@ const routes = [
     beforeEnter: ifAuthenticated,
     children: [{
       path: 'entity/:name',
-      name:"OrmEntity",
+      name: "OrmEntity",
       props: true,
       components: {
         orm: Entity,
@@ -150,9 +157,25 @@ const routes = [
     component: DashboardProfiling,
     beforeEnter: ifAuthenticated
   }, {
+    path: '/profiling/requests',
+    name: 'RequestsProfiling',
+    component: RequestsProfiling,
+    beforeEnter: ifAuthenticated
+  }, {
+    path: '/profiling/requests/:id',
+    name: 'RequestProfiling',
+    props: true,
+    component: RequestProfiling,
+    beforeEnter: ifAuthenticated
+  }, {
     path: '/services',
     name: 'Services',
     component: Service,
+    beforeEnter: ifAuthenticated
+  }, {
+    path: '/logs',
+    name: 'Logs',
+    component: Logs,
     beforeEnter: ifAuthenticated
   }
 ]

@@ -1,5 +1,5 @@
 <template>
-<v-card v-if="entity" class="w-100" outlined tile>
+<v-card v-if="entity" class="w-100 overflow-auto" outlined tile>
   <v-toolbar density="compact" theme="dark" color="#233056">
     <template v-slot:prepend>
       <v-icon>mdi-database-edit</v-icon>

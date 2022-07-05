@@ -70,7 +70,7 @@
           <v-list-item v-bind="props" title="Schemas" value="Connectors">
           </v-list-item>
         </template>
-        <v-list-item title="nodefony" value="nodefonyconnector" to="/database/connectors/nodefony">
+        <v-list-item v-for="(connector) in connectors" :title="connector.name" :key="connector.name" :to="`/database/connectors/${connector.name}`">
         </v-list-item>
       </v-list-group>
     </v-list-group>
@@ -91,7 +91,7 @@
     </v-list-group>
     <v-divider></v-divider>
 
-    <v-list-item prepend-icon="mdi-math-log " title="Syslog" value="syslog"></v-list-item>
+    <v-list-item prepend-icon="mdi-math-log " title="Syslog" value="syslog" to="/logs"></v-list-item>
     <v-divider></v-divider>
 
     <v-list-group v-if="isAdmin">
@@ -107,6 +107,8 @@
         <v-list-item v-bind="props" prepend-icon="mdi-web-sync" title="Profiling" value="profiling"></v-list-item>
       </template>
       <v-list-item prepend-icon="mdi-monitor-dashboard" title="Dashboard" value="dashboardProfiling" to="/profiling/dashboard">
+      </v-list-item>
+      <v-list-item prepend-icon="mdi-monitor" title="Requests" value="requestsProfiling" to="/profiling/requests">
       </v-list-item>
     </v-list-group>
 
@@ -156,12 +158,13 @@ export default {
       query: gql `
       query getBundles($registred: Boolean) {
         bundles:getBundles(registred: $registred)
+        connectors:getConnectors
       }
       `,
       update: (data) => {
         return {
           bundles: JSON.parse(data.bundles),
-
+          connectors: JSON.parse(data.connectors)
         }
       },
       // Reactive parameters
@@ -182,6 +185,13 @@ export default {
     ]),
     isAdmin() {
       return this.hasRole("ROLE_ADMIN")
+    },
+
+    connectors() {
+      if (!this.request) {
+        return null
+      }
+      return this.request.connectors
     },
 
     bundles() {
