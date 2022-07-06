@@ -5,9 +5,34 @@
 	<app-bar @profile="onProfile"
 	         @error="onError" />
 
-	<v-main v-if="profile"
-	        ref="main">
-		<router-view :key="$route.fullPath"></router-view>
+	<v-main ref="main">
+		<!--v-container v-if="$apollo.loading"
+		             style="height: 400px;">
+			<v-row class="fill-height"
+			       align-content="center"
+			       justify="center">
+				<v-row class="text-subtitle-1 text-center">
+					<v-img class=""
+					       width="100"
+					       height="91"
+					       src="/framework-bundle/images/nodefony-logo.png" />
+				</v-row>
+				<v-col class="text-subtitle-1 text-center"
+				       cols="12">
+					Getting Nodefony Monitoring
+				</v-col>
+				<v-col cols="6">
+					<v-progress-linear color="deep-purple accent-4"
+					                   indeterminate
+					                   rounded
+					                   height="6">
+					</v-progress-linear>
+				</v-col>
+			</v-row>
+		</v-container-->
+		<router-view v-if="profile"
+		             :key="$route.fullPath">
+		</router-view>
 	</v-main>
 </v-app>
 </template>
@@ -32,6 +57,7 @@ export default {
 			profile: false
 		}
 	},
+	mounted() {},
 	beforeMount() {},
 	methods: {
 		onProfile() {

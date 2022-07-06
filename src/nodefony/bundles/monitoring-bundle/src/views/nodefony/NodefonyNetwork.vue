@@ -13,7 +13,7 @@
 		<template v-slot:prepend>
 			<v-list-item class="pl-0"
 			             title="Network"
-			             prepend-avatar="/app/images/app-logo.png">
+			             prepend-avatar="/framework-bundle/images/nodefony-logo.png">
 			</v-list-item>
 		</template>
 

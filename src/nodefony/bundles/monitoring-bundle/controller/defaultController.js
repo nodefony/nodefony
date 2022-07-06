@@ -60,22 +60,25 @@ class defaultController extends nodefony.Controller {
    *    )
    */
   async readmeAction(bundle){
-    let Bundle = null
+    let Bundle = null;
     if( bundle === "nodefony"){
-      Bundle = this.kernel
+      Bundle = this.kernel;
     }else{
-      Bundle = this.kernel.getBundle(bundle)
+      Bundle = this.kernel.getBundle(bundle);
     }
-
+    //check unregistered
+    if( ! Bundle){
+      Bundle = await this.kernel.getUnregistredBundle(bundle);
+    }
     try {
-      const readmePath = path.resolve(Bundle.path, "README.md")
+      const readmePath = path.resolve(Bundle.path, "README.md");
       if( readmePath ){
-        const readme = this.getFile(readmePath)
-        return this.renderJson({readme: await readme.readAsync()})
+        const readme = this.getFile(readmePath);
+        return this.renderJson({readme: await readme.readAsync()});
       }
-      throw new Error('readme not found')
+      throw new Error('readme not found');
     }catch(e){
-      return this.createNotFoundException('readme not found')
+      return this.createNotFoundException('readme not found');
     }
   }
 

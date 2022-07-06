@@ -16,7 +16,7 @@
 			             class="pl-0 nodefony"
 			             title="Nodefony"
 			             value="nodefony"
-			             prepend-avatar="/app/images/app-logo.png">
+			             prepend-avatar="/framework-bundle/images/nodefony-logo.png">
 			</v-list-item>
 		</template>
 		<template v-slot:append>
@@ -25,17 +25,17 @@
 		</template>
 		<template v-slot:extension>
 			<v-tabs v-model="modelNodefony">
-				<v-tab :value="1">
+				<v-tab value="nodefony">
 					Nodefony
 				</v-tab>
-				<v-tab :value="2">
+				<v-tab value="process">
 					Processus
 				</v-tab>
 
-				<v-tab :value="3">
+				<v-tab value="kernel">
 					Kernel
-				</v-tab>
-				<v-tab :value="4">
+				</v-tab>kernel
+				<v-tab value="node">
 					Node.js
 					<v-chip size="small"
 					        class="ml-1"
@@ -50,7 +50,7 @@
 	          style="max-height:300px"
 	          class="overflow-auto">
 
-		<v-window-item :value="1">
+		<v-window-item :value="nodefony">
 			<v-list density="compact"
 			        style="">
 				<div v-for=" (value, key) in nodefony.status"
@@ -70,7 +70,7 @@
 			</v-list>
 		</v-window-item>
 
-		<v-window-item :value="2">
+		<v-window-item value="process">
 			<div v-for=" (value, key) in nodefony.status.process"
 			     :key="key">
 				<v-list-item v-if="key !== 'clusters'"
@@ -104,7 +104,7 @@
 			</div>
 		</v-window-item>
 
-		<v-window-item :value="3">
+		<v-window-item value="kernel">
 			<div v-for=" (value, key) in nodefony.kernel.system"
 			     :key="key">
 				<v-list-item v-if="key !== 'servers' && key !== 'bundles'"
@@ -122,7 +122,7 @@
 
 		</v-window-item>
 
-		<v-window-item :value="4">
+		<v-window-item value="node">
 			<v-table density="compact">
 				<v-card-title>
 					Node.js :

@@ -21,17 +21,16 @@
 
 		<template v-slot:extension>
 			<v-tabs v-model="model">
-				<v-tab :value="1">
+				<v-tab value="app">
 					App
 				</v-tab>
-
 			</v-tabs>
 		</template>
 	</v-toolbar>
 
 	<v-window v-model="model"
 	          class="overflow-auto">
-		<v-window-item :value="1">
+		<v-window-item value="app">
 			<div v-for=" (value, key) in app.App"
 			     :key="key">
 				<v-list-item class="text-caption">
@@ -65,7 +64,7 @@ export default {
 	},
 	data() {
 		return {
-			model: 1
+			model: "app"
 		}
 	}
 

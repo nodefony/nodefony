@@ -1,5 +1,6 @@
 <template>
-<v-container v-if="interfaces">
+<v-container fluid
+             v-if="interfaces">
 	<v-card theme="dark"
 	        variant="outlined"
 	        rounded

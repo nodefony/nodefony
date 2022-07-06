@@ -1,5 +1,6 @@
 <template>
-<v-container v-if="server">
+<v-container fluid
+             v-if="server">
 	<v-tabs v-model="model">
 		<v-tab :value="1">
 			Server

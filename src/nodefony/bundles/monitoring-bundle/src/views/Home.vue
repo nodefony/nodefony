@@ -40,13 +40,14 @@
 	<v-row fluid
 	       class="flex-row">
 		<n-nodefony-status :nodefony="nodefony" />
-		<n-nodefony-network :nodefony="nodefony" />
+		<n-nodefony-application :app="nodefony.application" />
+
 	</v-row>
 
 	<v-row fluid
 	       class="flex-row">
+		<n-nodefony-network :nodefony="nodefony" />
 
-		<n-nodefony-application :app="nodefony.application" />
 
 		<!--v-card min-width="300" min-height="200" class="d-flex flex-column  flex-grow-1 flex-shrink-1 my-5 mx-5" outlined tile min->
       <v-toolbar rounded theme="dark" color="#233056">

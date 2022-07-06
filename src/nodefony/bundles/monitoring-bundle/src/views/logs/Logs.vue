@@ -41,10 +41,10 @@
 					severityName
 				</th>
 				<th class="text-left">
-					payload
+					msgid
 				</th>
 				<th class="text-left">
-					msgid
+					payload
 				</th>
 				<th class="text-left">
 					typePayload
@@ -65,8 +65,8 @@
 			    :key="item.id">
 				<td>{{ new Date(item.timeStamp) }}</td>
 				<td>{{ item.severityName }}</td>
-				<td v-html="convertHtml(item.payload)"></td>
 				<td v-html="convertHtml(item.msgid)"></td>
+				<td v-html="convertHtml(item.payload)"></td>
 				<td>{{ item.typePayload }}</td>
 				<td>{{ item.moduleName }}</td>
 				<td>{{ item.msg }}</td>

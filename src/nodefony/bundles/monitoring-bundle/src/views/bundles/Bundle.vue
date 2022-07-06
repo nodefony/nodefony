@@ -14,7 +14,7 @@
 
 			<v-icon size="60"
 			        class="mx-3 my-auto"
-			        color="green darken-2">
+			        :color="colorRegistred">
 				{{icon}}
 			</v-icon>
 
@@ -30,7 +30,8 @@
 		        v-model="tab"
 		        direction="vertical"
 		        color="primary">
-			<v-tab value="dashboard">
+			<v-tab v-if="isRegistred"
+			       value="dashboard">
 				<v-icon :size="iconSize"
 				        start>
 					mdi-monitor-dashboard
@@ -66,102 +67,104 @@
 				</v-badge>
 			</v-tab>
 			<v-divider></v-divider>
-			<v-tab value="config">
-				<v-icon :size="iconSize"
-				        start>
-					mdi-tools
-				</v-icon>
-				Configurations
-			</v-tab>
-			<v-divider></v-divider>
-			<v-tab value="routing">
-				<v-icon :size="iconSize"
-				        start>
-					mdi-protocol
-				</v-icon>
-				Routing
-				<v-badge inline
-				         v-if="bundle"
-				         :content="bundle.routes.length"
-				         class="ml-2"
-				         color="error">
-				</v-badge>
-				<v-badge inline
-				         v-else
-				         :content="0"
-				         class="ml-2"
-				         color="error">
-				</v-badge>
-			</v-tab>
-			<v-divider></v-divider>
-			<v-tab value="services">
-				<v-icon :size="iconSize"
-				        start>
-					mdi-view-module
-				</v-icon>
-				Services
-				<v-badge inline
-				         v-if="bundle"
-				         :content="totalServices"
-				         class="ml-2"
-				         color="error">
-				</v-badge>
-				<v-badge inline
-				         v-else
-				         :content="0"
-				         class="ml-2"
-				         color="error">
-				</v-badge>
-			</v-tab>
-			<v-divider></v-divider>
-			<v-tab value="firewall">
-				<v-icon :size="iconSize"
-				        start>
-					mdi-wall-fire
-				</v-icon>
-				Firewall
-			</v-tab>
-			<v-divider></v-divider>
-			<v-tab value="entity">
-				<v-icon :size="iconSize"
-				        start>
-					mdi-database
-				</v-icon>
-				ORM Database
-			</v-tab>
-			<v-divider></v-divider>
-			<v-tab value="webpack">
-				<v-icon :size="iconSize"
-				        start>
-					mdi-webpack
-				</v-icon>
-				WEBPACK
-			</v-tab>
-			<v-divider></v-divider>
-			<v-tab value="tests">
-				<v-icon :size="iconSize"
-				        start>
-					mdi-hospital-box
-				</v-icon>
-				Unit Tests
-			</v-tab>
-			<v-divider></v-divider>
-			<v-tab value="command">
-				<v-icon :size="iconSize"
-				        start>
-					mdi-language-javascript
-				</v-icon>
-				Commands
-			</v-tab>
-			<v-divider></v-divider>
-			<v-tab value="fixtures">
-				<v-icon :size="iconSize"
-				        start>
-					mdi-database-plus-outline
-				</v-icon>
-				Fixtures
-			</v-tab>
-			<v-divider></v-divider>
+			<div v-if="isRegistred">
+				<v-tab value="config">
+					<v-icon :size="iconSize"
+					        start>
+						mdi-tools
+					</v-icon>
+					Configurations
+				</v-tab>
+				<v-divider></v-divider>
+				<v-tab value="routing">
+					<v-icon :size="iconSize"
+					        start>
+						mdi-protocol
+					</v-icon>
+					Routing
+					<v-badge inline
+					         v-if="bundle"
+					         :content="bundle.routes.length"
+					         class="ml-2"
+					         color="error">
+					</v-badge>
+					<v-badge inline
+					         v-else
+					         :content="0"
+					         class="ml-2"
+					         color="error">
+					</v-badge>
+				</v-tab>
+				<v-divider></v-divider>
+				<v-tab value="services">
+					<v-icon :size="iconSize"
+					        start>
+						mdi-view-module
+					</v-icon>
+					Services
+					<v-badge inline
+					         v-if="bundle"
+					         :content="totalServices"
+					         class="ml-2"
+					         color="error">
+					</v-badge>
+					<v-badge inline
+					         v-else
+					         :content="0"
+					         class="ml-2"
+					         color="error">
+					</v-badge>
+				</v-tab>
+				<v-divider></v-divider>
+				<v-tab value="firewall">
+					<v-icon :size="iconSize"
+					        start>
+						mdi-wall-fire
+					</v-icon>
+					Firewall
+				</v-tab>
+				<v-divider></v-divider>
+				<v-tab value="entity">
+					<v-icon :size="iconSize"
+					        start>
+						mdi-database
+					</v-icon>
+					ORM Database
+				</v-tab>
+				<v-divider></v-divider>
+				<v-tab value="webpack">
+					<v-icon :size="iconSize"
+					        start>
+						mdi-webpack
+					</v-icon>
+					WEBPACK
+				</v-tab>
+				<v-divider></v-divider>
+				<v-tab value="tests">
+					<v-icon :size="iconSize"
+					        start>
+						mdi-hospital-box
+					</v-icon>
+					Unit Tests
+				</v-tab>
+				<v-divider></v-divider>
+				<v-tab value="command">
+					<v-icon :size="iconSize"
+					        start>
+						mdi-language-javascript
+					</v-icon>
+					Commands
+				</v-tab>
+				<v-divider></v-divider>
+				<v-tab value="fixtures">
+					<v-icon :size="iconSize"
+					        start>
+						mdi-database-plus-outline
+					</v-icon>
+					Fixtures
+				</v-tab>
+				<v-divider></v-divider>
+			</div>
 			<v-tab value="documentation">
 				<v-icon :size="iconSize"
 				        start>
@@ -179,7 +182,8 @@
 		<v-window v-if="bundle"
 		          v-model="tab">
 
-			<v-window-item value="dashboard">
+			<v-window-item v-if="isRegistred"
+			               value="dashboard">
 				<v-card flat>
 					<v-container v-if="bundleTypeIcon"
 					             fluid
@@ -216,8 +220,6 @@
 									<v-img width="60"
 									       height="51"
 									       src="/framework-bundle/images/nodejs/nodejs-new-pantone-white.png" />
-									<!--v-list-item class="pl-0" :title="bundle.package.name" prepend-avatar="/framework-bundle/images/nodejs/nodejs-new-pantone-white.png">
-                  </v-list-item-->
 								</template>
 								<template v-slot:append>
 									<v-chip text-color="white"
@@ -231,9 +233,8 @@
 								{{bundle.package.name}}
 							</v-toolbar>
 
-
 						</v-card>
-						<v-card min-width="300"
+						<!--v-card min-width="300"
 						        min-height="200"
 						        v-for="n in 7"
 						        :key="n"
@@ -255,7 +256,7 @@
 								Flex {{n}}
 							</v-toolbar>
 
-						</v-card>
+						</v-card-->
 
 					</v-container>
 
@@ -271,27 +272,28 @@
 					</v-card-text>
 				</v-card>
 			</v-window-item>
+			<div v-if="isRegistred">
+				<v-window-item value="config">
+					<n-bundle-config :name="name"
+					                 :config="bundle.config" />
+				</v-window-item>
 
-			<v-window-item value="config">
-				<n-bundle-config :name="name"
-				                 :config="bundle.config" />
-			</v-window-item>
-
-			<v-window-item value="package">
-				<n-bundle-package v-if="bundle && bundle.package"
-				                  :package="bundle.package" />
-			</v-window-item>
+				<v-window-item value="package">
+					<n-bundle-package v-if="bundle && bundle.package"
+					                  :package="bundle.package" />
+				</v-window-item>
 
 
-			<v-window-item value="routing">
-				<n-bundle-routing v-if="bundle && bundle.routes"
-				                  :routes="bundle.routes" />
-			</v-window-item>
+				<v-window-item value="routing">
+					<n-bundle-routing v-if="bundle && bundle.routes"
+					                  :routes="bundle.routes" />
+				</v-window-item>
 
-			<v-window-item value="services">
-				<n-bundle-services v-if="bundle && bundle.services"
-				                   :services="bundle.services" />
-			</v-window-item>
+				<v-window-item value="services">
+					<n-bundle-services v-if="bundle && bundle.services"
+					                   :services="bundle.services" />
+				</v-window-item>
+			</div>
 
 		</v-window>
 	</v-main>
@@ -346,16 +348,18 @@ export default {
           index
         }
         config:getConfigByBundle(name: $bundle)
-        package:getBundlePackage(name: $bundle)
         services:getServicesbyBundle(name: $bundle)
+        bunble:getBundle(name:$bundle)
       }
 	    `,
 			update: (data) => {
+				const parseBundle = JSON.parse(data.bunble)
 				return {
 					routes: data.routes,
 					config: JSON.parse(data.config),
-					package: JSON.parse(data.package),
-					services: JSON.parse(data.services)
+					package: parseBundle.package,
+					services: JSON.parse(data.services),
+					bunble: parseBundle
 				}
 			},
 			// Reactive parameters
@@ -369,7 +373,7 @@ export default {
 	},
 	data() {
 		return {
-			tab: 1,
+			tab: "dashboard",
 			bundle: null,
 			iconSize: 35
 		}
@@ -401,6 +405,20 @@ export default {
 				return this.bundle.services.length
 			}
 			return 0
+		},
+		isRegistred() {
+			if (this.bundle && this.bundle.bunble) {
+				this.tab = "dashboard"
+				return this.bundle.bunble.registred
+			}
+			this.tab = "readme"
+			return false
+		},
+		colorRegistred() {
+			if (this.isRegistred) {
+				return 'green darken-2'
+			}
+			return "red darken-2"
 		}
 
 	},
@@ -445,16 +463,9 @@ export default {
 			icon
 		}
 	},
-
-	beforeMount() {
-
-	},
-	mounted() {
-
-	},
-	methods: {
-
-	}
+	beforeMount() {},
+	mounted() {},
+	methods: {}
 }
 </script>
 
