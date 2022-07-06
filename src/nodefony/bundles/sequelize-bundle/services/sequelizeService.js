@@ -340,56 +340,56 @@ class sequelize extends nodefony.Orm {
   }
 
   getConnectorsList(name=null){
-    let obj = {}
+    let obj = {};
     for (let ele in this.connections) {
       if( name){
         if( name !== ele){
-          continue
+          continue;
         }
       }
-      obj[ele] = this.connections[ele]
-      delete obj[ele].orm
-      delete obj[ele].db
-      delete obj[ele].intervalId
+      obj[ele] = this.connections[ele];
+      delete obj[ele].orm;
+      delete obj[ele].db;
+      delete obj[ele].intervalId;
     }
     return obj;
   }
 
   parseAtribute(attributes) {
-    const obj = {}
+    const obj = {};
     for (let attr in attributes) {
       obj[attr] = {
         fieldName: attributes[attr].fieldName,
         field: attributes[attr].field,
         defaultValue: attributes[attr].defaultValue,
         type:attributes[attr].type.toString()
-      }
+      };
     }
-    return obj
+    return obj;
   }
 
   getEntitiesList(bundle=null, name=null){
-    let obj = {}
+    let obj = {};
     for (let ele in this.entities) {
       if( bundle){
-          if( bundle !== obj[ele].bundleName){
-            continue
+          if( bundle !== this.entities[ele].bundle.name){
+            continue;
           }
       }
       if( name){
         if( name !== ele){
-          continue
+          continue;
         }
       }
-      obj[ele] = {}
-      obj[ele].name = this.entities[ele].name
-      obj[ele].attributes = this.parseAtribute(this.entities[ele].model.getAttributes())
-      obj[ele].tableName = this.entities[ele].model.getTableName()
-      obj[ele].connectorName = this.entities[ele].connectionName
-      obj[ele].bundleName = this.entities[ele].bundle.name
-      obj[ele].schema = this.getOpenApiSchema(this.entities[ele].model)
+      obj[ele] = {};
+      obj[ele].name = this.entities[ele].name;
+      obj[ele].attributes = this.parseAtribute(this.entities[ele].model.getAttributes());
+      obj[ele].tableName = this.entities[ele].model.getTableName();
+      obj[ele].connectorName = this.entities[ele].connectionName;
+      obj[ele].bundleName = this.entities[ele].bundle.name;
+      obj[ele].schema = this.getOpenApiSchema(this.entities[ele].model);
     }
-    return obj
+    return obj;
   }
 
   /*getOpenApiSchema(entity) {

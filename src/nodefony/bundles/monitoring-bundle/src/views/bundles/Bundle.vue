@@ -28,6 +28,7 @@
 		<v-divider></v-divider>
 		<v-tabs density="compact"
 		        v-model="tab"
+		        class="w-100"
 		        direction="vertical"
 		        color="primary">
 			<v-tab v-if="isRegistred"
@@ -67,8 +68,10 @@
 				</v-badge>
 			</v-tab>
 			<v-divider></v-divider>
-			<div v-if="isRegistred">
-				<v-tab value="config">
+			<div v-if="isRegistred"
+			     class="w-100">
+				<v-tab value="config"
+				       class="w-100">
 					<v-icon :size="iconSize"
 					        start>
 						mdi-tools
@@ -76,7 +79,8 @@
 					Configurations
 				</v-tab>
 				<v-divider></v-divider>
-				<v-tab value="routing">
+				<v-tab value="routing"
+				       class="w-100">
 					<v-icon :size="iconSize"
 					        start>
 						mdi-protocol
@@ -96,7 +100,8 @@
 					</v-badge>
 				</v-tab>
 				<v-divider></v-divider>
-				<v-tab value="services">
+				<v-tab value="services"
+				       class="w-100">
 					<v-icon :size="iconSize"
 					        start>
 						mdi-view-module
@@ -116,7 +121,8 @@
 					</v-badge>
 				</v-tab>
 				<v-divider></v-divider>
-				<v-tab value="firewall">
+				<v-tab value="firewall"
+				       class="w-100">
 					<v-icon :size="iconSize"
 					        start>
 						mdi-wall-fire
@@ -124,15 +130,29 @@
 					Firewall
 				</v-tab>
 				<v-divider></v-divider>
-				<v-tab value="entity">
+				<v-tab value="orm"
+				       class="w-100">
 					<v-icon :size="iconSize"
 					        start>
 						mdi-database
 					</v-icon>
-					ORM Database
+					ORM Entities
+					<v-badge inline
+					         v-if="bundle"
+					         :content="totalEntities"
+					         class="ml-2"
+					         color="error">
+					</v-badge>
+					<v-badge inline
+					         v-else
+					         content="0"
+					         class="ml-2"
+					         color="error">
+					</v-badge>
 				</v-tab>
 				<v-divider></v-divider>
-				<v-tab value="webpack">
+				<v-tab value="webpack"
+				       class="w-100">
 					<v-icon :size="iconSize"
 					        start>
 						mdi-webpack
@@ -140,7 +160,8 @@
 					WEBPACK
 				</v-tab>
 				<v-divider></v-divider>
-				<v-tab value="tests">
+				<v-tab value="tests"
+				       class="w-100">
 					<v-icon :size="iconSize"
 					        start>
 						mdi-hospital-box
@@ -148,7 +169,8 @@
 					Unit Tests
 				</v-tab>
 				<v-divider></v-divider>
-				<v-tab value="command">
+				<v-tab value="command"
+				       class="w-100">
 					<v-icon :size="iconSize"
 					        start>
 						mdi-language-javascript
@@ -156,7 +178,8 @@
 					Commands
 				</v-tab>
 				<v-divider></v-divider>
-				<v-tab value="fixtures">
+				<v-tab value="fixtures"
+				       class="w-100">
 					<v-icon :size="iconSize"
 					        start>
 						mdi-database-plus-outline
@@ -232,6 +255,9 @@
 								        size="60">mdi-npm</v-icon>
 								{{bundle.package.name}}
 							</v-toolbar>
+							<v-layout>
+
+							</v-layout>
 
 						</v-card>
 						<!--v-card min-width="300"
@@ -293,6 +319,18 @@
 					<n-bundle-services v-if="bundle && bundle.services"
 					                   :services="bundle.services" />
 				</v-window-item>
+
+				<v-window-item value="firewall">
+
+				</v-window-item>
+
+				<v-window-item value="orm">
+					<n-bundle-orm :entities="bundle.entities" />
+				</v-window-item>
+
+				<v-window-item value="webpack">
+
+				</v-window-item>
 			</div>
 
 		</v-window>
@@ -315,6 +353,7 @@ import Package from '@/views/bundles/package.vue';
 import Routing from '@/views/bundles/routing.vue';
 import Config from '@/views/bundles/config.vue';
 import Services from '@/views/bundles/services.vue';
+import Orm from '@/views/bundles/orm.vue';
 import gql from 'graphql-tag'
 export default {
 	name: 'BundleView',
@@ -323,7 +362,8 @@ export default {
 		'n-bundle-package': Package,
 		'n-bundle-routing': Routing,
 		'n-bundle-config': Config,
-		'n-bundle-services': Services
+		'n-bundle-services': Services,
+		'n-bundle-orm': Orm
 	},
 	props: {
 		//name: String
@@ -349,7 +389,8 @@ export default {
         }
         config:getConfigByBundle(name: $bundle)
         services:getServicesbyBundle(name: $bundle)
-        bunble:getBundle(name:$bundle)
+        bunble:getBundle(name: $bundle)
+        entities: getEntitiesByBundle(name: $bundle)
       }
 	    `,
 			update: (data) => {
@@ -359,7 +400,8 @@ export default {
 					config: JSON.parse(data.config),
 					package: parseBundle.package,
 					services: JSON.parse(data.services),
-					bunble: parseBundle
+					bunble: parseBundle,
+					entities: JSON.parse(data.entities),
 				}
 			},
 			// Reactive parameters
@@ -392,17 +434,23 @@ export default {
 		totalPackages() {
 			let dev = 0
 			let dep = 0
-			if (this.bundle.package && this.bundle.package.devDependencies) {
+			if (this.bundle && this.bundle.package && this.bundle.package.devDependencies) {
 				dev = Object.keys(this.bundle.package.devDependencies).length || 0
 			}
-			if (this.bundle.package && this.bundle.package.dependencies) {
+			if (this.bundle && this.bundle.package && this.bundle.package.dependencies) {
 				dep = Object.keys(this.bundle.package.dependencies).length || 0
 			}
 			return (dev + dep)
 		},
 		totalServices() {
-			if (this.bundle.services) {
+			if (this.bundle && this.bundle.services) {
 				return this.bundle.services.length
+			}
+			return 0
+		},
+		totalEntities() {
+			if (this.bundle && this.bundle.entities) {
+				return Object.keys(this.bundle.entities).length
 			}
 			return 0
 		},

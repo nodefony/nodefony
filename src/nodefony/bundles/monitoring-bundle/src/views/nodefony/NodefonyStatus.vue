@@ -34,7 +34,7 @@
 
 				<v-tab value="kernel">
 					Kernel
-				</v-tab>kernel
+				</v-tab>
 				<v-tab value="node">
 					Node.js
 					<v-chip size="small"
@@ -50,7 +50,7 @@
 	          style="max-height:300px"
 	          class="overflow-auto">
 
-		<v-window-item :value="nodefony">
+		<v-window-item value="nodefony">
 			<v-list density="compact"
 			        style="">
 				<div v-for=" (value, key) in nodefony.status"
@@ -161,7 +161,7 @@ export default {
 	},
 	data() {
 		return {
-			modelNodefony: 0
+			modelNodefony: "nodefony"
 		}
 	},
 
