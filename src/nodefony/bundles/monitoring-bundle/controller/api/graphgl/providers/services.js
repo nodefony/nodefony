@@ -30,12 +30,11 @@ module.exports = {
         services[service].bundle = serv.bundle.name
       }
       tab.push(services[service])
-
-
     }
+    
     for( let service in nodefony.services){
       if( ! (service in services) )  {
-        console.log(service)
+        //console.log(service)
       }else{
 
       }

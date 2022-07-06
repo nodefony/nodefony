@@ -1,61 +1,72 @@
 <template>
 <v-card flat>
-  <v-card-text>
-    <v-list density="compact">
-      <v-list-item v-for="(item, key) in config" density="compact" :key="key">
-        <v-list-item-header>
-          <v-list-item-title>{{key}} : </v-list-item-title>
-        </v-list-item-header>:<wbr>
-        <v-list-item-subtitle>{{item}}</v-list-item-subtitle>
-      </v-list-item>
-    </v-list>
-  </v-card-text>
+
+	<v-container class="overflow-auto">
+		<vue-json-pretty :path="name"
+		                 :data="config"
+		                 @click="handleClick"> </vue-json-pretty>
+		<!--v-list density="compact">
+			<v-list-item v-for="(item, key) in config"
+			             density="compact"
+			             :key="key">
+				<v-list-item-header>
+					<v-list-item-title>{{key}} : </v-list-item-title>
+				</v-list-item-header>:<wbr>
+				<v-list-item-subtitle>{{item}}</v-list-item-subtitle>
+			</v-list-item>
+		</v-list-->
+	</v-container>
 </v-card>
 </template>
 
 
 <script>
 import {
-  useRoute
-} from 'vue-router'
-import {
-  ref,
-  reactive,
-  toRefs,
-  computed
+	ref,
+	reactive,
+	toRefs,
+	computed
 } from "vue";
 
+import VueJsonPretty from 'vue-json-pretty';
+import 'vue-json-pretty/lib/styles.css';
 
 export default {
-  name: 'RoutingView',
-  components: {
+	name: 'n-bundle-config',
+	components: {
+		VueJsonPretty,
+	},
+	props: {
+		config: {
+			type: Object,
+			default: null
+		},
+		name: {
+			type: String,
+			required: true
+		}
+	},
+	data() {
+		return {
 
-  },
-  props: {
-    config: {
-      type: Object,
-      default: null
-    }
-  },
-  data() {
-    return {
+		}
+	},
+	computed: {
 
-    }
-  },
-  computed: {
-
-  },
+	},
 
 
-  beforeMount() {
+	beforeMount() {
 
-  },
-  mounted() {
+	},
+	mounted() {
 
-  },
-  methods: {
-
-  }
+	},
+	methods: {
+		handleClick(ele) {
+			console.log(ele)
+		}
+	}
 }
 </script>
 

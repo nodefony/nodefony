@@ -1,45 +1,56 @@
 
 <template>
-<v-container fluid class="pa-0">
+<v-container fluid
+             class="pa-0">
 
-  <v-card v-if="profile" v-bind="{...$props, ...$attrs}">
-    <v-card-text class="ma-0">
-      <div class="mx-auto text-center">
-        <v-avatar color="cyan" size="36px">
-          <v-img v-if="getAvatar" alt="Avatar" :src="getAvatar"></v-img>
-          <span v-else-if="getInitials" class="white--text text-h5">{{ getInitials }}</span>
-          <span v-else class="white--text text-h5">
-            <v-icon>mdi-account</v-icon>
-          </span>
-          <!--v-icon
+	<v-card v-if="profile"
+	        v-bind="{...$props, ...$attrs}">
+		<v-card-text class="ma-0">
+			<div class="mx-auto text-center">
+				<v-avatar color="cyan"
+				          size="36px">
+					<v-img v-if="getAvatar"
+					       alt="Avatar"
+					       :src="getAvatar"></v-img>
+					<span v-else-if="getInitials"
+					      class="white--text text-h5">{{ getInitials }}</span>
+					<span v-else
+					      class="white--text text-h5">
+						<v-icon>mdi-account</v-icon>
+					</span>
+					<!--v-icon
                 v-else
                 :color="cyan"
                 :icon="mdi-account"
               ></v-icon-->
-        </v-avatar>
+				</v-avatar>
 
-        <h3>{{ getFullName }}</h3>
-        <p class="text-caption mt-1">
-          {{ profile.email }}
-        </p>
-        <div v-if="account">
-          <v-divider class="my-3"></v-divider>
-          <!--v-btn rounded variant="text">
+				<h3>{{ getFullName }}</h3>
+				<p class="text-caption mt-1">
+					{{ profile.email }}
+				</p>
+				<div v-if="account">
+					<v-divider class="my-3"></v-divider>
+					<!--v-btn rounded variant="text">
             Edit Account
           </v-btn>
           <v-divider class="my-3"></v-divider-->
-          <v-btn rounded variant="text" @click="logout">
-            Disconnect
-          </v-btn>
-          <v-btn rounded variant="text" @click="goProfile">
-            Profile
-          </v-btn>
+					<v-btn rounded
+					       variant="text"
+					       @click="logout">
+						Disconnect
+					</v-btn>
+					<v-btn rounded
+					       variant="text"
+					       @click="goProfile">
+						Profile
+					</v-btn>
 
-        </div>
-      </div>
-    </v-card-text>
-  </v-card>
-  <!--/v-menu-->
+				</div>
+			</div>
+		</v-card-text>
+	</v-card>
+	<!--/v-menu-->
 
 </v-container>
 </template>
@@ -48,38 +59,38 @@
 <script>
 // @ is an alias to /src
 export default {
-  name: 'User',
-  components: {}
+	name: 'User',
+	components: {}
 }
 </script>
 
 <script setup>
 import {
-  ref,
-  watch,
-  onMounted,
-  onUnmounted,
-  computed,
-  reactive,
-  inject
+	ref,
+	watch,
+	onMounted,
+	onUnmounted,
+	computed,
+	reactive,
+	inject
 } from 'vue'
 
 import {
-  useStore
+	useStore
 } from 'vuex'
 const store = useStore()
 import {
-  useRouter,
-  useRoute
+	useRouter,
+	useRoute
 } from 'vue-router'
 const router = useRouter()
 
 // props
 const props = defineProps({
-  account: {
-    type: Boolean,
-    default: false
-  }
+	account: {
+		type: Boolean,
+		default: false
+	}
 })
 
 const emit = defineEmits(['profile', "error"])
@@ -96,16 +107,16 @@ const getFullName = computed(() => store.getters.getFullName)
 const getTrigramme = computed(() => store.getters.getTrigramme)
 
 const getAvatar = computed(() => {
-  if (profile) {
-    return profile.value.image
-  }
-  return null
+	if (profile) {
+		return profile.value.image
+	}
+	return null
 })
 const subtitle = computed(() => {
-  if (profile) {
-    return `${profile.value.email}`
-  }
-  return ""
+	if (profile) {
+		return `${profile.value.email}`
+	}
+	return ""
 })
 
 // Methods
@@ -113,36 +124,36 @@ const getUserProfile = (url) => store.dispatch("USER_REQUEST", url)
 const logoutApi = () => store.dispatch("AUTH_LOGOUT")
 
 const goProfile = async function() {
-  return router.push({
-    name: "UserProfile",
-    params: {
-      username: profile.value.username
-    }
-  })
+	return router.push({
+		name: "UserProfile",
+		params: {
+			username: profile.value.username
+		}
+	})
 }
 const logout = async function() {
-  await logoutApi()
-  return router.go('/login')
+	await logoutApi()
+	return router.go('/login')
 }
 
 onMounted(() => {})
 
 if (isAuthenticated.value && !getProfile.value) {
-  // profile
-  await getUserProfile(`/api/users/${getUser.value}`)
-    .then((ele) => {
-      profile.value = ele.result;
-      emit("profile", profile.value)
-      return ele
-    })
-    .catch((e) => {
-      emit("error", e)
-      return router.go('/login')
-      //document.location = `/si/login`;
-    });
+	// profile
+	await getUserProfile(`/api/users/${getUser.value}`)
+		.then((ele) => {
+			profile.value = ele.result;
+			emit("profile", profile.value)
+			return ele
+		})
+		.catch((e) => {
+			emit("error", e)
+			return router.go('/login')
+			//document.location = `/si/login`;
+		});
 } else {
-  profile.value = getProfile.value
-  emit("profile", profile.value)
+	profile.value = getProfile.value
+	emit("profile", profile.value)
 }
 </script>
 

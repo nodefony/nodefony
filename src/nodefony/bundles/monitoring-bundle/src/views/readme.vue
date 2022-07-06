@@ -1,6 +1,14 @@
 <template>
-<v-container fluid class="overflow-auto">
-  <Markdown v-if="source" :source="source" :highlight="highlight" html breaks :anchor="{}" :emoji="{}" linkify />
+<v-container fluid
+             class="overflow-auto">
+	<Markdown v-if="source"
+	          :source="source"
+	          :highlight="highlight"
+	          html
+	          breaks
+	          :anchor="{}"
+	          :emoji="{}"
+	          linkify />
 
 </v-container>
 </template>
@@ -8,86 +16,86 @@
 import Markdown from 'vue3-markdown-it';
 
 import {
-  ref,
-  toRefs
+	ref,
+	toRefs
 } from "vue";
 export default {
-  name: 'ReadmeView',
-  components: {
-    Markdown,
-  },
-  props: {
-    bundle: String
-  },
-  data() {
-    return {
-      highlight: {
-        auto: true
-      },
+	name: 'ReadmeView',
+	components: {
+		Markdown,
+	},
+	props: {
+		bundle: String
+	},
+	data() {
+		return {
+			highlight: {
+				auto: true
+			},
 
-      options: {
-        markdownIt: {
-          linkify: true
-        },
-        linkAttributes: {
-          attrs: {
-            target: '_self',
-            rel: 'noopener'
-          }
-        }
-      }
-
-
-    }
-  },
-  async setup(props) {
-    const {
-      bundle
-    } = toRefs(props)
-
-    const source = ref(null);
-    const getReadme = async (bundle) => {
-      const url = `/documentation/${bundle}/readme`
-      return fetch(url, {
-          credentials: 'include',
-          headers: {
-            "Accept": 'application/json',
-            "Content-Type": "application/json",
-            "User-Agent": "nodefony"
-          }
-        })
-        .then(async (response) => {
-          try {
-            if (response.ok) {
-              return await response.json();
-            }
-          } catch (error) {
-            error.response = response;
-            throw error;
-          }
-          let error = new Error(response.statusText);
-          error.response = await response.json();
-          throw error;
-        })
-    }
+			options: {
+				markdownIt: {
+					linkify: true
+				},
+				linkAttributes: {
+					attrs: {
+						target: '_self',
+						rel: 'noopener'
+					}
+				}
+			}
 
 
+		}
+	},
+	async setup(props) {
+		const {
+			bundle
+		} = toRefs(props)
 
-    if (bundle.value) {
-      const res = await getReadme(bundle.value)
-      if (res.readme) {
-        source.value = res.readme
-      }
-    }
+		const source = ref(null);
+		const getReadme = async (bundle) => {
+			const url = `/documentation/${bundle}/readme`
+			return fetch(url, {
+					credentials: 'include',
+					headers: {
+						"Accept": 'application/json',
+						"Content-Type": "application/json",
+						"User-Agent": "nodefony"
+					}
+				})
+				.then(async (response) => {
+					try {
+						if (response.ok) {
+							return await response.json();
+						}
+					} catch (error) {
+						error.response = response;
+						throw error;
+					}
+					let error = new Error(response.statusText);
+					error.response = await response.json();
+					throw error;
+				})
+		}
 
-    return {
-      bundle,
-      source
-    }
-  },
-  beforeMount() {},
-  mounted() {},
-  methods: {}
+
+
+		if (bundle.value) {
+			const res = await getReadme(bundle.value)
+			if (res.readme) {
+				source.value = res.readme
+			}
+		}
+
+		return {
+			bundle,
+			source
+		}
+	},
+	beforeMount() {},
+	mounted() {},
+	methods: {}
 }
 </script>
 

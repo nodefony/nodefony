@@ -10,7 +10,7 @@ module.exports = {
     if( bunble){
       return JSON.stringify(bunble.settings)
     }
-    return {}
+    return JSON.stringify({})
   }
 
 }
