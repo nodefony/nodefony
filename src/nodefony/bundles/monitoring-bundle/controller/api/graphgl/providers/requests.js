@@ -7,21 +7,21 @@ module.exports = {
     const userEntity = orm.getEntity("user");
     const {
       query
-    } = field
+    } = field;
     switch (ormName) {
     case "sequelize":
       let options = {
-        attributes: ["id", "remoteAddress", "userAgent", "url", "route", "method", "state", "protocol", "scheme"],
+        attributes: ["id", "createdAt", "updatedAt", "remoteAddress", "userAgent", "url", "route", "method", "state", "protocol","time", "scheme"],
         include: [{
           model: userEntity
         }],
-      }
+      };
       if (query) {
         if (query.start) {
-          options.offset = parseInt(query.start, 10)
+          options.offset = parseInt(query.start, 10);
         }
         if (query.length) {
-          options.limit = parseInt(query.length, 10)
+          options.limit = parseInt(query.length, 10);
         }
         if (query.order.length) {
           options.order = [];
@@ -39,17 +39,17 @@ module.exports = {
         })
         .catch((error) => {
           context.log(error, "ERROR");
-          throw new nodefony.Error(error)
+          throw new nodefony.Error(error);
         });
     case 'mongoose':
-      break
+      break;
     }
   },
 
   getRequestsById(field, context) {
     const {
       id
-    } = field
+    } = field;
     const orm = context.getORM();
     let ormName = context.kernel.getOrm();
     const requestsEntity = orm.getEntity("requests");
@@ -70,10 +70,10 @@ module.exports = {
         })
         .catch((error) => {
           context.log(error, "ERROR");
-          throw new nodefony.Error(error)
+          throw new nodefony.Error(error);
         });
     default:
       return JSON.stringify([]);
     }
   }
-}
+};

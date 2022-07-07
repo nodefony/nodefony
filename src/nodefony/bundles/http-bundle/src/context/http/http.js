@@ -223,13 +223,13 @@ nodefony.register.call(nodefony.context, "http", function () {
       }
     }
 
-    write(data, encoding) {
+    async write(data, encoding) {
       if (this.finished || this.sended) {
         return;
       }
       if (!this.profiler) {
         if (this.profiling) {
-          this.fire("onSendMonitoring", this.response, this);
+          await this.fireAsync("onSendMonitoring", this.response, this);
         }
         /*
          * WRITE RESPONSE

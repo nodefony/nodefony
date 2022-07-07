@@ -35,13 +35,22 @@
 		<thead>
 			<tr>
 				<th class="text-left">
-					url
-				</th>
-				<th class="text-left">
-					user
+					Create
 				</th>
 				<th class="text-left">
 					id
+				</th>
+				<th class="text-left">
+					url
+				</th>
+				<th class="text-left">
+					method
+				</th>
+				<th class="text-left">
+					state
+				</th>
+				<th class="text-left">
+					user
 				</th>
 				<th class="text-left">
 					remoteAddress
@@ -49,15 +58,11 @@
 				<th class="text-left">
 					userAgent
 				</th>
-
 				<th class="text-left">
 					route
 				</th>
 				<th class="text-left">
-					method
-				</th>
-				<th class="text-left">
-					state
+					time (ms)
 				</th>
 				<th class="text-left">
 					protocol
@@ -71,18 +76,20 @@
 			<tr v-for="item in reverseRequests"
 			    :key="item.id"
 			    @click="goRequest(item.id)">
+				<td>{{ getFormatDate(item.createdAt) }}</td>
+				<td>{{ item.id }}</td>
 				<td>{{ item.url }}</td>
+				<td>{{ item.method }}</td>
+				<td>{{ item.state }}</td>
 				<td>
 					<div v-if="item.user">
 						{{ item.user.username }}
 					</div>
 				</td>
-				<td>{{ item.id }}</td>
 				<td>{{ item.remoteAddress }}</td>
 				<td>{{ item.userAgent }}</td>
 				<td>{{ item.route }}</td>
-				<td>{{ item.method }}</td>
-				<td>{{ item.state }}</td>
+				<td>{{ item.time }}</td>
 				<td>{{ item.protocol }}</td>
 				<td>{{ item.scheme }}</td>
 			</tr>
@@ -149,13 +156,8 @@ export default {
 			}
 		}
 	},
-
-	beforeMount() {
-
-	},
-	mounted() {
-
-	},
+	beforeMount() {},
+	mounted() {},
 	methods: {
 		goRequest(id) {
 			this.$router.push({
@@ -164,6 +166,9 @@ export default {
 					id: id
 				}
 			})
+		},
+		getFormatDate(date) {
+			return this.$moment(date).format('LLLL')
 		}
 	}
 }

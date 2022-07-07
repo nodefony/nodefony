@@ -4,11 +4,11 @@ import {
   USER_SUCCESS,
   USER_LOADING,
   USER_PROFILE
-} from '../actions/user'
+} from '../actions/user';
 
 import {
   AUTH_LOGOUT
-} from '../actions/auth'
+} from '../actions/auth';
 
 import {
   Api as baseApi
@@ -21,9 +21,9 @@ const Api = new baseApi("users", {
 });
 
 import countries from "i18n-iso-countries";
-import en from "i18n-iso-countries/langs/en.json"
+import en from "i18n-iso-countries/langs/en.json";
 countries.registerLocale(en);
-import fr from "i18n-iso-countries/langs/fr.json"
+import fr from "i18n-iso-countries/langs/fr.json";
 countries.registerLocale(fr);
 const reg = /^(..){1}_?(..)?$/;
 
@@ -31,31 +31,31 @@ const state = {
   status: '',
   error: null,
   user: null
-}
+};
 
 const getters = {
   getProfile: state => state.user,
   getProfileUsername(state) {
     if (state.user) {
-      return state.user.username
+      return state.user.username;
     }
   },
   getRoles(state) {
     if (state.user) {
-      return state.user.roles
+      return state.user.roles;
     }
-    return []
+    return [];
     //throw new Error('User profile not defined !')
   },
   hasRole: (state) => (role) => {
     if (state.user) {
       const res = state.user.roles.indexOf(role);
       if (res >= 0) {
-        return true
+        return true;
       }
-      return false
+      return false;
     }
-    return false
+    return false;
   },
   isProfileLoaded: state => state.status === 'success',
   getTrigramme(state) {
@@ -74,7 +74,7 @@ const getters = {
   },
   getProfileName(state) {
     if (state.user) {
-      return state.user.name
+      return state.user.name;
     }
     return "";
   },
@@ -86,7 +86,7 @@ const getters = {
   },
   getFullName(state){
     if (state.user) {
-      return `${state.user.name} ${state.user.surname}`
+      return `${state.user.name} ${state.user.surname}`;
     }
     return "";
   },
@@ -95,38 +95,46 @@ const getters = {
     if (state.user) {
       let res = reg.exec(state.user.lang);
       if (res){
-        let lang = res[1]
-        let country = res[2].toUpperCase()
-        let locale = countries.getName(country, lang, {select: "all"});
-        locale.push(countries.alpha3ToAlpha2(locale[2]))
-        locale.push(lang)
-        return locale;
+        let lang = res[1];
+        let country = res[2].toUpperCase();
+        try{
+          let locale = countries.getName(country, lang, {select: "all"});
+          locale.push(countries.alpha3ToAlpha2(locale[2]));
+          locale.push(lang);
+          return locale;
+        }catch(e){
+          return [lang];
+        }
       }
     }
-    let locale = countries.getName("US", "en", {select: "all"});
-    locale.push(countries.alpha3ToAlpha2(locale[2]))
-    return locale;
+    try{
+      let locale = countries.getName("US", "en", {select: "all"});
+      locale.push(countries.alpha3ToAlpha2(locale[2]));
+      return locale;
+    }catch(e){
+      return ["en"];
+    }
   }
 
-}
+};
 
 const actions = {
   [USER_REQUEST]: ({
     commit,
     dispatch
   }, url) => {
-    commit(USER_LOADING)
+    commit(USER_LOADING);
     return Api.http(url)
       .then(resp => {
-        commit(USER_SUCCESS, resp)
-        commit(USER_PROFILE, resp.result)
-        return resp
+        commit(USER_SUCCESS, resp);
+        commit(USER_PROFILE, resp.result);
+        return resp;
       })
       .catch(e => {
         Api.clearToken();
-        commit(USER_ERROR, e)
+        commit(USER_ERROR, e);
         throw e;
-      })
+      });
   },
   getAllUsers({
     commit,
@@ -134,39 +142,39 @@ const actions = {
   }){
     return Api.http("/api/users")
     .then(resp => {
-      return resp
+      return resp;
     })
     .catch(e => {
       throw e;
-    })
+    });
   }
-}
+};
 
 const mutations = {
   [USER_LOADING]: (state) => {
-    state.status = 'loading'
+    state.status = 'loading';
   },
   [USER_SUCCESS]: (state, resp) => {
-    state.status = 'success'
+    state.status = 'success';
     // Vue.set(state, 'profile', resp.result)
   },
   [USER_ERROR]: (state, error) => {
-    state.status = 'error'
+    state.status = 'error';
     state.error = error;
     state.user = null;
   },
   [AUTH_LOGOUT]: (state) => {
-    state.status = ''
-    state.user = null
+    state.status = '';
+    state.user = null;
   },
   [USER_PROFILE]: (state, user) => {
-    state.user = user
+    state.user = user;
   }
-}
+};
 
 export default {
   state,
   getters,
   actions,
   mutations
-}
+};

@@ -79,6 +79,9 @@ module.exports = class requests extends nodefony.Entity {
       scheme: {
         type: DataTypes.STRING
       },
+      time:{
+        type: DataTypes.NUMBER
+      },
       data: {
         type: DataTypes.TEXT
       }

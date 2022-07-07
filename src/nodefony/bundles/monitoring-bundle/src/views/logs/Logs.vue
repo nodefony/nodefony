@@ -146,8 +146,11 @@ export default {
 
 	methods: {
 		convertHtml(value) {
-			let res = this.convert.toHtml(value)
-			return res
+			try {
+				return this.convert.toHtml(value)
+			} catch (e) {
+				return value
+			}
 		}
 	}
 }

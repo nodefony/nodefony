@@ -21,6 +21,9 @@ const schema = {
   route: {
     type: String
   },
+  time: {
+    type: Number
+  },
   method: {
     type: String
   },
@@ -31,7 +34,8 @@ const schema = {
     type: String
   },
   username: {
-    type: String
+    type: String,
+    ref: 'user'
   },
   data: {
     type: String

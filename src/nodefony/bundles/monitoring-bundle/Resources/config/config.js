@@ -59,6 +59,15 @@ module.exports = {
   profiler: {
     active: true,
     storage: 'orm'
+  },
+  /* override realtime bundle */
+  "realtime-bundle":{
+    services:{
+      monitoring:{
+        type:        "tcp",
+        port:        1318,
+        domain:      "localhost"
+      }
+    }
   }
-
 };

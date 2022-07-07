@@ -1,4 +1,3 @@
-
 <template>
 <v-container fluid
              class="pa-0">
@@ -45,7 +44,6 @@
 					       @click="goProfile">
 						Profile
 					</v-btn>
-
 				</div>
 			</div>
 		</v-card-text>
@@ -54,7 +52,6 @@
 
 </v-container>
 </template>
-
 
 <script>
 // @ is an alias to /src
@@ -93,11 +90,10 @@ const props = defineProps({
 	}
 })
 
+const moment = inject('moment')
 const emit = defineEmits(['profile', "error"])
-
 //data
 const profile = ref(null)
-
 // computed
 const getUser = computed(() => store.getters.getUser)
 const isAuthenticated = computed(() => store.getters.isAuthenticated)
@@ -105,6 +101,12 @@ const getProfile = computed(() => store.getters.getProfile)
 const getInitials = computed(() => store.getters.getInitials)
 const getFullName = computed(() => store.getters.getFullName)
 const getTrigramme = computed(() => store.getters.getTrigramme)
+const locale = computed(() => {
+	if (store.getters.getLocale && store.getters.getLocale.length) {
+		return setMomentLocale(store.getters.getLocale[store.getters.getLocale.length - 1])
+	}
+	return setMomentLocale()
+})
 
 const getAvatar = computed(() => {
 	if (profile) {
@@ -123,6 +125,13 @@ const subtitle = computed(() => {
 const getUserProfile = (url) => store.dispatch("USER_REQUEST", url)
 const logoutApi = () => store.dispatch("AUTH_LOGOUT")
 
+const setMomentLocale = (locale) => {
+	if (locale) {
+		return moment.locale(locale)
+	}
+	return moment.locale()
+}
+
 const goProfile = async function() {
 	return router.push({
 		name: "UserProfile",
@@ -136,7 +145,11 @@ const logout = async function() {
 	return router.go('/login')
 }
 
-onMounted(() => {})
+onMounted(() => {
+	if (store.getters.getLocale && store.getters.getLocale.length) {
+		setMomentLocale(store.getters.getLocale[store.getters.getLocale.length - 1])
+	}
+})
 
 if (isAuthenticated.value && !getProfile.value) {
 	// profile

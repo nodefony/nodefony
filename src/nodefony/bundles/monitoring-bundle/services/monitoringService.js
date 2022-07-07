@@ -52,12 +52,20 @@ module.exports = class monitoring extends nodefony.Service {
     this.syslog = kernel.syslog;
     this.node_start = this.kernel.node_start;
 
-    this.once("onReady", () => {
-      this.port = this.container.getParameters("bundles.realtime.services.monitoring.port") || 1318;
-      if (this.realTime && this.kernel.type === "SERVER") {
-        this.createServer();
-      }
-    });
+    if( this.kernel.ready){
+      this.initilize();
+    }else{
+      this.once("onReady", () => {
+        this.initilize();
+      });
+    }
+  }
+
+  initilize(){
+    this.port = this.container.getParameters("bundles.realtime.services.monitoring.port") || 1318;
+    if (this.realTime && this.kernel.type === "SERVER") {
+      this.createServer();
+    }
   }
 
   log(pci, severity, msgid) {
@@ -119,6 +127,7 @@ module.exports = class monitoring extends nodefony.Service {
                 };
                 if (list) {
                   for (let i = 0; i < list.length; i++) {
+                    list[i].monit.timestamp = new Date().getTime();
                     clusters.pm2.push({
                       monit: list[i].monit,
                       name: list[i].name,
@@ -157,7 +166,8 @@ module.exports = class monitoring extends nodefony.Service {
             let ele = {
               monit: {
                 memory: stats.memory.rss,
-                cpu: cpu.percent
+                cpu: cpu.percent,
+                timestamp:new Date().getTime()
               },
               name: this.name,
               pid: this.kernel.processId,
@@ -272,23 +282,35 @@ module.exports = class monitoring extends nodefony.Service {
   }
 
   stopServer() {
-    this.stopped = true;
-    for (let i = 0; i < this.connections.length; i++) {
-      this.log("CLOSE CONNECTIONS SERVICE REALTIME : " + this.name);
-      if (this.connections[i].listener) {
-        this.syslog.unListen("onLog", this.connections[i].listener);
+    return new Promise((resolve, reject)=>{
+      this.stopped = true;
+      for (let i = 0; i < this.connections.length; i++) {
+        this.log("CLOSE CONNECTIONS SERVICE REALTIME : " + this.name);
+        if (this.connections[i].listener) {
+          this.syslog.unListen("onLog", this.connections[i].listener);
+        }
+        this.connections[i].socket.end();
+        let id = this.connections[i].id;
+        delete this.connections[id];
       }
-      this.connections[i].socket.end();
-      let id = this.connections[i].id;
-      delete this.connections[id];
-    }
-    this.connections.length = 0;
-    if (this.server) {
-      try {
-        this.server.close();
-      } catch (e) {
-        this.log(e, "ERROR");
+      this.connections.length = 0;
+      if (this.server) {
+        try {
+          this.server.close((error)=>{
+            if( error){
+              return reject(error);
+            }
+            return resolve(this.server);
+          });
+        } catch (e) {
+          this.log(e, "ERROR");
+          return reject(e);
+        }
       }
-    }
+    });
+  }
+
+  async close(){
+    await this.stopServer();
   }
 };

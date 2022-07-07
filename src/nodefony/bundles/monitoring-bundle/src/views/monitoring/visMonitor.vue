@@ -4,9 +4,11 @@
 	           color="#0337ab">
 		<template v-slot:prepend>
 			<v-icon>mdi-monitor</v-icon>
+			<v-toolbar-title>{{name}}</v-toolbar-title>
 		</template>
 		<template v-slot:append>
 		</template>
+
 	</v-toolbar>
 	<div ref="vis"></div>
 </v-card>
@@ -21,6 +23,10 @@ export default {
 		monit: {
 			type: Object,
 			default: null
+		},
+		name: {
+			type: String,
+			required: true
 		}
 	},
 	data() {
@@ -29,6 +35,11 @@ export default {
 			delay: 500,
 			cpuDataset: new vis.DataSet(),
 			memoryDataset: new vis.DataSet()
+		}
+	},
+	watch: {
+		monit(value) {
+			this.addCpuPoint(value.timestamp, value.cpu)
 		}
 	},
 	mounted() {
@@ -43,6 +54,8 @@ export default {
 					}
 				}
 			},
+			moment: this.$moment,
+			locale: 'fr',
 			drawPoints: {
 				style: 'circle' // square, circle
 			},
@@ -51,64 +64,11 @@ export default {
 			},
 			graphHeight: "200px"
 		}
-		this.graph2d = new vis.Graph2d(this.$refs.vis, this.cpuDatase, options);
+		this.graph2d = new vis.Graph2d(this.$refs.vis, this.cpuDataset, options);
 		this.renderStep();
 	},
 	computed: {
-		cpu() {
-			if (this.monit) {
-				thi.addCpuPoint(this.monit.cpu)
-				return this.monit.cpu
-			}
-			return null
-		},
-		memory() {
-			if (this.monit) {
-				return this.monit.memory
-			}
-			return null
-		},
-		cpuDatase() {
-			console.log("passs")
-			if (this.graph2d && this.monit && this.cpu) {
-				const date = vis.moment(this.cpu) || vis.moment();
-				this.cpuDataset.add({
-					x: date,
-					y: this.monit.cpu,
-					label: `${this.cpu}%`
-				});
-				const range = this.graph2d.getWindow();
-				const interval = range.end - range.start;
-				const oldIds = this.cpuDataset.getIds({
-					filter: function(item) {
-						return item.x < range.start - interval;
-					}
-				});
-				this.cpuDataset.remove(oldIds);
-				return this.cpuDataset
-			}
-			return this.cpuDataset
-		},
-		memoryDatase() {
-			if (this.graph2d && this.monit && this.memory) {
-				const date = vis.moment(this.monit.timestamp) || vis.moment();
-				this.memoryDataset.add({
-					x: date,
-					y: this.monit.memory,
-					label: `${this.memory} Bytes`
-				});
-				const range = this.graph2d.getWindow();
-				const interval = range.end - range.start;
-				const oldIds = this.memoryDataset.getIds({
-					filter: function(item) {
-						return item.x < range.start - interval;
-					}
-				});
-				this.memoryDataset.remove(oldIds);
-				return this.memoryDataset
-			}
-			return this.memoryDataset
-		}
+
 	},
 	methods: {
 		renderStep() {
@@ -121,9 +81,27 @@ export default {
 			}
 			setTimeout(this.renderStep, this.delay);
 		},
-		addCpuPoint() {
-			console.log('pasasasasasasa')
-		}
+
+		addCpuPoint(now, cpu) {
+			const date = vis.moment(now) || vis.moment();
+			cpu = parseFloat(cpu, 10)
+			if (cpu == NaN || cpu == Infinity) {
+				return
+			}
+			this.cpuDataset.add({
+				x: date,
+				y: cpu,
+				label: `${cpu}%`
+			});
+			const range = this.graph2d.getWindow();
+			const interval = range.end - range.start;
+			const oldIds = this.cpuDataset.getIds({
+				filter: function(item) {
+					return item.x < range.start - interval;
+				}
+			});
+			this.cpuDataset.remove(oldIds);
+		},
 
 	}
 

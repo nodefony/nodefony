@@ -14,8 +14,9 @@
 
   </v-card-->
 	<n-vis-monitor v-if="pm2"
-	               :monit="monit"
-	               style="width:100%;height:200px" />
+	               :monit="monitor"
+	               :name="name"
+	               style="width:100%;height:400px" />
 </v-container>
 </template>
 <script>
@@ -64,47 +65,28 @@ export default {
 	data() {
 		return {
 			name: "nodefony",
-			dataset: new vis.DataSet(),
-			delay: 500,
 			pm2: null,
-			monit: null
+			monit: null,
+			name: "cluster"
 		}
 	},
 	beforeMount() {
 
 	},
 	computed: {
-
+		monitor() {
+			if (this.monit) {
+				return this.monit
+			}
+			return null
+		}
 	},
 	async mounted() {
 		this.sock.on("message", (service, message, socket) => {
 			const res = JSON.parse(message)
 			this.pm2 = res.pm2[0]
 			this.monit = res.pm2[0].monit
-			//this.addCpuPoint(vis.moment(), this.pm2.monit.cpu)
 		});
-		let options = {
-			start: vis.moment().add(-30, 'seconds'), // changed so its faster
-			end: vis.moment(),
-			dataAxis: {
-				left: {
-					range: {
-						min: -5,
-						max: 110
-					}
-				}
-			},
-			drawPoints: {
-				style: 'circle' // square, circle
-			},
-			shaded: {
-				orientation: 'bottom' // top, bottom
-			},
-			graphHeight: "200px"
-		}
-		//this.$graph2d = new vis.Graph2d(this.$refs.vis, this.dataset, options);
-		//this.renderStep();
-
 	},
 	async beforeUnmount() {
 		await this.sock.unSubscribe("monitoring")
@@ -112,32 +94,7 @@ export default {
 		this.sock.destroy()
 	},
 	methods: {
-		renderStep() {
-			// move the window (you can think of different strategies).
-			const now = vis.moment();
-			const range = this.$graph2d.getWindow();
-			const interval = range.end - range.start;
-			if (now > range.end) {
-				this.$graph2d.setWindow(now - 0.1 * interval, now + 0.9 * interval);
-			}
-			setTimeout(this.renderStep, this.delay);
-		},
-		addCpuPoint(now, cpu) {
-			const date = now;
-			this.dataset.add({
-				x: date,
-				y: cpu,
-				label: `${cpu}%`
-			});
-			const range = this.$graph2d.getWindow();
-			const interval = range.end - range.start;
-			const oldIds = this.dataset.getIds({
-				filter: function(item) {
-					return item.x < range.start - interval;
-				}
-			});
-			this.dataset.remove(oldIds);
-		},
+
 	}
 }
 </script>
