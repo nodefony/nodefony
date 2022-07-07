@@ -714,16 +714,16 @@ class Bundle extends nodefony.Service {
     }
   }
 
-  reloadService(name, Path, force) {
+  async reloadService(name, Path, force) {
     try {
       let File = new nodefony.fileClass(Path);
-      this.reloadWatcherService(File, Path, force);
+      await this.reloadWatcherService(File, Path, force);
     } catch (e) {
       throw e;
     }
   }
 
-  reloadWatcherService(File, Path, force) {
+  async reloadWatcherService(File, Path, force) {
     try {
       if (File) {
         let Class = this.loadService(File, force);
@@ -733,7 +733,7 @@ class Bundle extends nodefony.Service {
             class: Class
           });
           injector.getServiceName();
-          injector.restartService();
+          await injector.restartService();
         } else {
           let error = new Error(Class.name + " Service is not found or not register reboot server or check config file ");
           throw error;

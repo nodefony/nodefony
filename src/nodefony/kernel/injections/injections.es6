@@ -259,9 +259,13 @@ class Injector extends nodefony.Service {
     }
   }
 
-  restartService() {
+  async restartService() {
     this.log("RESTART : " + this.name, "INFO");
     try {
+      const service = this.get(this.name);
+      if( service && service.close){
+        await service.close();
+      }
       this.remove(this.name);
       return this.startService(true);
     } catch (e) {

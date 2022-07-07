@@ -321,7 +321,7 @@ class Watcher extends nodefony.Watcher {
     });
   }
   listenWatcherServices() {
-    this.on('all', (event, Path) => {
+    this.on('all', async (event, Path) => {
       switch (event) {
       case "addDir":
         this.log(Path, "INFO", event);
@@ -340,10 +340,10 @@ class Watcher extends nodefony.Watcher {
             // service
           case this.bundle.regService.test(basename):
             let File = new nodefony.fileClass(file);
-            this.bundle.reloadWatcherService(File, file, true);
+            await this.bundle.reloadWatcherService(File, file, true);
             break;
           default:
-            this.bundle.reloadWatcherService(null, file);
+            await this.bundle.reloadWatcherService(null, file);
           }
           if (this.sockjs) {
             this.sockjs.sendWatcher("change", file);
