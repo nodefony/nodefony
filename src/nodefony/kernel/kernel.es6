@@ -857,11 +857,6 @@ class Kernel extends nodefony.Service {
         res = this.searchPackage("documentation-bundle");
         bundles.push(res);
       }*/
-      if (this.settings.system.monitoring) {
-        res = this.searchPackage("monitoring-bundle");
-        bundles.push(res);
-      }
-
       switch (this.settings.orm) {
         case "sequelize":
           res = this.searchPackage("sequelize-bundle");
@@ -898,6 +893,10 @@ class Kernel extends nodefony.Service {
       }
       if (this.settings.system.mail) {
         res = this.searchPackage("mail-bundle");
+        bundles.push(res);
+      }
+      if (this.settings.system.monitoring) {
+        res = this.searchPackage("monitoring-bundle");
         bundles.push(res);
       }
     } catch (e) {

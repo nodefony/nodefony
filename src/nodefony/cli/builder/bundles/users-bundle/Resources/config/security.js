@@ -39,7 +39,7 @@ module.exports = {
     /**
      *  FIREWALL  Authorization
      */
-    access_control: [{}],
+    access_control: [],
 
     firewalls: {
       // SECURITY AREA  <passport-local>
