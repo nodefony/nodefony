@@ -67,7 +67,7 @@
     "lodash.isregexp": "^4.0.1",
     "markdown-it": "13.0.1",
     "mime": "^3.0.0",
-    "moment": "2.29.3",
+    "moment": "^2.29.4",
     "node-cron": "3.0.1",
     "node-emoji": "^1.11.0",
     "npm": "8.13.2",
