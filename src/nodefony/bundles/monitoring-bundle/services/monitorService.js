@@ -646,7 +646,7 @@ module.exports = class Monitor extends nodefony.Service {
       context.profiling.request = {
         url: context.url,
         headers: context.request.httpRequest.headers,
-        method: context.request.httpRequest.method,
+        method: context.method,
         protocol: context.protocol,
         scheme: context.scheme,
         remoteAddress: context.request.remoteAddress,
@@ -656,7 +656,7 @@ module.exports = class Monitor extends nodefony.Service {
       context.profiling.request = {
         url: context.url,
         headers: "",
-        method: "",
+        method: context.method,
         protocol: context.protocol,
         scheme: context.scheme,
         remoteAddress: context.request.remoteAddress,
@@ -782,6 +782,7 @@ module.exports = class Monitor extends nodefony.Service {
 
   updateProfile(context, callback) {
     if (context.profiling) {
+      context.profiling.timeRequest = parseInt((new Date().getTime()) - (context.profiling.timeStamp), 10);
       let id = context.profiling.id;
       switch (this.storageProfiling) {
         case "syslog":
@@ -817,6 +818,7 @@ module.exports = class Monitor extends nodefony.Service {
   saveProfile(context) {
     //console.log('SAVE ', this.settings, context.profiler, this.storageProfiling)
     if (context.profiling) {
+      context.profiling.timeRequest = parseInt((new Date().getTime()) - (context.profiling.timeStamp), 10);
       switch (this.storageProfiling) {
         case "syslog":
           return new Promise((resolve, reject) => {
