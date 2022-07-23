@@ -61,7 +61,7 @@
     "core-js": "3.23.5",
     "create-react-app": "5.0.1",
     "graphql": "16.5.0",
-    "inquirer": "8.2.4",
+    "inquirer": "9.0.2",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
     "lodash.isregexp": "^4.0.1",
