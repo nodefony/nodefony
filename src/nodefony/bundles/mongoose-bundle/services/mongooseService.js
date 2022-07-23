@@ -12,7 +12,8 @@ const defaultconfigServer = {
 const defaultConfigConnection = {
   socketTimeoutMS: 0,
   keepAlive: true,
-  useNewUrlParser: true
+  //useNewUrlParser: true,
+  //replicaSet: 'rs'
 };
 
 class mongoose extends nodefony.Orm {
@@ -32,24 +33,33 @@ class mongoose extends nodefony.Orm {
 
   boot() {
     super.boot();
-    this.kernel.once("onBoot", async () => {
-      this.settings = nodefony.extend({}, defaultconfigServer, this.bundle.settings.mongoose);
-      if (this.settings.connectors && Object.keys(this.settings.connectors).length) {
-        for (let name in this.settings.connectors) {
-          this.createConnection(name, this.settings.connectors[name]);
-        }
-      } else {
-        process.nextTick(() => {
-          this.log('onOrmReady', "DEBUG", "EVENTS MOOGODB");
-          this.fire('onOrmReady', this);
-          this.ready = true;
-        });
-      }
-    });
-
-    this.kernel.once("onReady", () => {
+    if (this.kernel.ready) {
+      this.initialize()
       this.displayTable("INFO");
-    });
+    } else {
+      this.kernel.once("onBoot", async () => {
+        this.initialize()
+      });
+
+      this.kernel.once("onReady", () => {
+        this.displayTable("INFO");
+      });
+    }
+  }
+
+  initialize() {
+    this.settings = nodefony.extend({}, defaultconfigServer, this.bundle.settings.mongoose);
+    if (this.settings.connectors && Object.keys(this.settings.connectors).length) {
+      for (let name in this.settings.connectors) {
+        this.createConnection(name, this.settings.connectors[name]);
+      }
+    } else {
+      process.nextTick(() => {
+        this.log('onOrmReady', "DEBUG", "EVENTS MOOGODB");
+        this.fire('onOrmReady', this);
+        this.ready = true;
+      });
+    }
   }
 
   createConnection(name, config) {
@@ -153,16 +163,85 @@ class mongoose extends nodefony.Orm {
       throw new Error(`Entity : ${entityName} not found`);
     }
     let db = entity.db;
-    return await db.startSession.call(db);
+    const session = await db.startSession.call(db);
+    await session.startTransaction()
+    return session
   }
 
-  getTransaction(entityName) {
+  async getTransaction(entityName) {
     const entity = this.getNodefonyEntity(entityName);
     if (!entity) {
       throw new Error(`Entity : ${entityName} not found`);
     }
     let db = entity.db;
-    return db.startSession.bind(db);
+    const session = await db.startSession.bind(db);
+    await session.startTransaction()
+    return session
+  }
+
+  getConnectorsList(name = null) {
+    let obj = {}
+    for (let ele in this.connections) {
+      if (name) {
+        if (name !== ele) {
+          continue
+        }
+      }
+      const conn = this.connections[ele];
+      obj[ele] = {
+        name: conn.name,
+        type: 'mongodb',
+        state: conn.states[conn._readyState],
+        options: conn._connectionOptions
+      }
+      obj[ele].settings = {
+        host: conn.host,
+        port: conn.port,
+        path: conn._connectionString
+      }
+    }
+    return obj;
+  }
+
+  parseAtribute(attributes) {
+    const obj = {}
+    for (let attr in attributes) {
+      if (attr === "__v") {
+        continue
+      }
+      obj[attr] = {
+        fieldName: attributes[attr].path,
+        field: attributes[attr].path,
+        defaultValue: attributes[attr].defaultValue,
+        type: attributes[attr].instance
+      }
+    }
+    return obj
+  }
+
+  getEntitiesList(bundle = null, name = null) {
+    //console.log(this.entities, this.connections)
+    let obj = {}
+    for (let ele in this.entities) {
+      if (bundle) {
+        if (bundle !== this.entities[ele].bundle.name) {
+          continue;
+        }
+      }
+      if (name) {
+        if (name !== ele) {
+          continue;
+        }
+      }
+      obj[ele] = {};
+      obj[ele].name = this.entities[ele].name;
+      obj[ele].attributes = this.parseAtribute(this.entities[ele].model.schema.paths);
+      obj[ele].tableName = name; //this.entities[ele].model.getTableName();
+      obj[ele].connectorName = this.entities[ele].connectionName;
+      obj[ele].bundleName = this.entities[ele].bundle.name;
+      obj[ele].schema = this.getOpenApiSchema(this.entities[ele].model);
+    }
+    return obj
   }
 
   getOpenApiSchema(entity) {

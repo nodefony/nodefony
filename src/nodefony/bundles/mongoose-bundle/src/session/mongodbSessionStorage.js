@@ -23,7 +23,6 @@ nodefony.register.call(nodefony.session.storage, "mongoose", function () {
     });
   };
 
-
   const dbSessionStorage = class dbSessionStorage {
 
     constructor(manager) {
@@ -31,6 +30,7 @@ nodefony.register.call(nodefony.session.storage, "mongoose", function () {
       this.orm = this.manager.get("mongoose");
       this.orm.on("onOrmReady", () => {
         this.entity = this.orm.getEntity("session");
+        this.userEntity = this.orm.getEntity("user");
       });
       /*this.manager.kernel.on( "onReady", () => {
         this.entity = this.orm.getEntity("session");
@@ -112,13 +112,15 @@ nodefony.register.call(nodefony.session.storage, "mongoose", function () {
         };
       }
       return this.entity.findOne(where)
+        .populate('username')
         .then((result) => {
           if (result) {
             return {
               id: result.session_id,
               flashBag: result.flashBag,
               metaBag: result.metaBag,
-              Attributes: result.Attributes
+              Attributes: result.Attributes,
+              username:result.username
             };
           } else {
             return {};
@@ -129,11 +131,15 @@ nodefony.register.call(nodefony.session.storage, "mongoose", function () {
         });
     }
 
-    write(id, serialize, contextSession) {
+    async write(id, serialize, contextSession) {
       let data = nodefony.extend({}, serialize, {
         session_id: id,
         context: contextSession || "default"
       });
+      if( data.username ){
+        let myuser = await this.userEntity.findOne({username:data.username.username})
+        data.username = myuser._id
+      }
       return this.entity.updateOne({
           session_id: id,
           context: (contextSession || "default")

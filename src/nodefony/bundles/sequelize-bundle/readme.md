@@ -1,1 +1,1 @@
-# # Welcome to sequelize-bundle
+# Welcome to sequelize-bundle

@@ -400,7 +400,7 @@ nodefony.register("Session", function () {
       }
       this.created = obj.created;
       this.updated = obj.updated;
-      this.username = obj.username
+      this.username = obj.user || obj.username
     }
 
     remove(cookieDelete) {

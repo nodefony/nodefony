@@ -42,6 +42,15 @@ module.exports = {
           throw new nodefony.Error(error);
         });
     case 'mongoose':
+        return requestsEntity.find( {})
+        .populate('username')
+        .then((results) => {
+          //console.log(results)
+          return JSON.stringify({
+            count:Object.keys(results).length,
+            rows:results
+          });
+        })
       break;
     }
   },

@@ -60,6 +60,23 @@ module.exports = {
       //       acquire: 60000
       //     }
       //   }
+      // },
+      // nodefony: {
+      //   driver: "postgres",
+      //   dbname: 'nodefony',
+      //   username: 'postgres',
+      //   password: 'postgrespw',
+      //   options: {
+      //     dialect: "postgres",
+      //     host: "localhost",
+      //     port: "55000",
+      //     pool: {
+      //       max: 5,
+      //       min: 0,
+      //       idle: 10000,
+      //       acquire: 60000
+      //     }
+      //   }
       // }
     }
   }

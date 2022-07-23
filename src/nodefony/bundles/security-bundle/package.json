@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "1.0.9",
-    "node-gyp": "9.0.0"
+    "node-gyp": "9.1.0"
   },
   "repository": {
     "type": "git",

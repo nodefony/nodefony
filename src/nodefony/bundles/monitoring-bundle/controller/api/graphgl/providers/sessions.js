@@ -5,16 +5,21 @@ module.exports = {
     let storage = sessionServices.settings.handler;
     switch (storage) {
     case "orm":
-      let orm = context.getORM();
-      let ormName = context.kernel.getOrm();
-      let sessionEntity = orm.getEntity("session");
+      const orm = context.getORM();
+      const ormName = context.kernel.getOrm();
+      const sessionEntity = orm.getEntity("session");
+      const userEntity = orm.getEntity("user");
       switch (ormName) {
       case "sequelize":
+        let options = {
+          include: [{
+            model: userEntity,
+            required: false
+        }]
+        }
         if (field.query && field.query.type && field.query.type === "dataTable") {
-          let options = {
-            offset: parseInt(field.query.start, 10),
-            limit: parseInt(field.query.length, 10)
-          };
+          options.offset = parseInt(field.query.start, 10);
+          options.limit = parseInt(field.query.length, 10);
           if (field.query.order.length) {
             options.order = [];
             for (let i = 0; i < field.query.order.length; i++) {
@@ -37,7 +42,7 @@ module.exports = {
               throw new nodefony.Error(error)
             });
         } else {
-          return sessionEntity.findAndCountAll()
+          return sessionEntity.findAndCountAll(options)
             .then((results) => {
               return JSON.stringify(results);
             })
@@ -55,7 +60,7 @@ module.exports = {
           count: 0
         };
         let sort = {};
-        if (field.query.order.length) {
+        if (field.query && field.query.order.length) {
           for (let i = 0; i < field.query.order.length; i++) {
             let name = field.query.columns[parseInt(field.query.order[i].column, 10)].name;
             let dir = field.query.order[i].dir;
@@ -65,14 +70,14 @@ module.exports = {
           sort.createdAt = -1;
         }
         return sessionEntity.find({}, {})
-          //.populate('username')
-          .sort(sort)
-          .skip(parseInt(field.query.start, 10))
-          .limit(parseInt(field.query.length, 10))
-          .then((result) => {
-            //console.log(result)
+          .populate('username')
+          //.sort(sort)
+          //.skip(parseInt(field.query.start, 10))
+          //.limit(parseInt(field.query.length, 10))
+          .then(async (result) => {
             sessions.rows = result;
-            return sessionEntity.count();
+            sessions.count = await sessionEntity.count();
+            return JSON.stringify(sessions);
           }).then((result) => {
             return result
           })
@@ -91,28 +96,35 @@ module.exports = {
   getSessionsByUser(field, context) {
     let sessionServices = context.get("sessions");
     let storage = sessionServices.settings.handler;
-    const {username} = field
+    const {
+      username
+    } = field
     switch (storage) {
     case "orm":
-      let orm = context.getORM();
-      let ormName = context.kernel.getOrm();
-      let sessionEntity = orm.getEntity("session");
+      const orm = context.getORM();
+      const ormName = context.kernel.getOrm();
+      const sessionEntity = orm.getEntity("session");
+      const userEntity = orm.getEntity("user");
       switch (ormName) {
       case "sequelize":
-      return sessionEntity.findAndCountAll({
-        where:{
-          username:username
-        }
-      })
-        .then((results) => {
-          return JSON.stringify(results);
-        })
-        .catch((error) => {
-          if (error) {
-            context.log(error, "ERROR");
-            throw new nodefony.Error(error)
-          }
-        });
+        return sessionEntity.findAndCountAll({
+            where: {
+              username: username
+            },
+            include: [{
+              model: userEntity,
+              required: false
+            }]
+          })
+          .then((results) => {
+            return JSON.stringify(results);
+          })
+          .catch((error) => {
+            if (error) {
+              context.log(error, "ERROR");
+              throw new nodefony.Error(error)
+            }
+          });
         break;
       default:
         throw new nodefony.Error(` ORM ${ormName} not implemented`)

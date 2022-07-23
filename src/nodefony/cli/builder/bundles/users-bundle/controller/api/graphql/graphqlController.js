@@ -4,11 +4,10 @@
  */
 const userSchema = require("./userSchema.js");
 
-class graphqlController extends nodefony.Controller {
+module.exports = class graphqlController extends nodefony.Controller {
 
   constructor(container, context) {
     super(container, context);
-
     // service entity
     this.usersService = this.get("users");
     // graphql api
@@ -18,7 +17,7 @@ class graphqlController extends nodefony.Controller {
       description: "Nodefony Users graphql Api",
       basePath: "/api/graphql/users",
       schema: userSchema,
-      rootValue:graphqlController.provider(this)
+      rootValue: graphqlController.provider(this.context)
     }, this.context);
   }
 
@@ -40,38 +39,31 @@ class graphqlController extends nodefony.Controller {
     }
   }
 
-
-  static provider(context){
+  static provider(context) {
     // service entity
     const usersService = context.get("users");
     return {
-      async user(field) {
-        return await usersService.findOne(field.username);
+      async user(field, context) {
+        const user = context.getUser()
+        return await usersService.findOne(field.username, user);
       },
-
-      async users() {
-        let res = await usersService.find();
-        return res.rows   ;
+      async users(field, context) {
+        const user = context.getUser()
+        let res = await usersService.find({}, {}, user);
+        return res.rows;
       },
-
-      async addUser(field) {
-        let res = await usersService.create(field);
+      async addUser(field, context) {
+        const user = context.getUser()
+        let res = await usersService.create(field, user);
         return res;
       }
     };
   }
 
-
-  static schema(context){
+  static schema(context) {
     return userSchema;
   }
 
-  static types(){
-
-  }
-
-
+  static types() {}
 
 }
-
-module.exports = graphqlController;

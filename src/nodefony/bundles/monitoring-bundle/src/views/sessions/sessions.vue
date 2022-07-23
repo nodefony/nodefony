@@ -52,25 +52,32 @@
 				<th class="text-left">
 					Attributes
 				</th>
-				<th class="text-left">
-					flashBag
-				</th>
-				<th class="text-left">
+				<!--th class="text-left">
+          flashBag
+        </th>
+        <th class="text-left">
 					metaBag
-				</th>
+				</th-->
 			</tr>
 		</thead>
 		<tbody>
 			<tr v-for="item in sessions"
 			    :key="item.session_id">
-				<td>{{ item.username }}</td>
+				<td>
+					<div v-if="item.user">
+						{{ item.user.username }}
+					</div>
+					<div v-else-if="item.username">
+						{{ item.username.username }}
+					</div>
+				</td>
 				<td>{{ item.session_id }}</td>
 				<td>{{ item.context }}</td>
 				<td>{{ item.createdAt }}</td>
 				<td>{{ item.updatedAt }}</td>
 				<td>{{ item.Attributes }}</td>
-				<td>{{ item.flashBag }}</td>
-				<td>{{ item.metaBag }}</td>
+				<!--td>{{ item.flashBag }}</td>
+        <td>{{ item.metaBag }}</td-->
 			</tr>
 		</tbody>
 	</v-table>

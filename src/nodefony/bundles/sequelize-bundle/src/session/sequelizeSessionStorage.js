@@ -36,8 +36,9 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
     constructor(manager) {
       this.manager = manager;
       this.orm = this.manager.get("sequelize");
-      this.orm.on("onOrmReady", () => {
+      this.orm.once("onOrmReady", () => {
         this.entity = this.orm.getEntity("session");
+        this.userEntity = this.orm.getEntity("user");
       });
       /*this.manager.kernel.once( "onReady", () => {
         this.entity = this.orm.getEntity("session");
@@ -121,13 +122,21 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
           where: {
             session_id: id,
             context: (contextSession)
-          }
+          },
+          include: [{
+            model: this.userEntity,
+            required:false
+          }]
         };
       } else {
         myWhere = {
           where: {
             session_id: id
-          }
+          },
+          include: [{
+            model: this.userEntity,
+            required:false
+          }]
         };
       }
       return this.entity.findOne(myWhere)
@@ -152,11 +161,13 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function () {
     }
 
     write(id, serialize, contextSession) {
-
       let data = nodefony.extend({}, serialize, {
         session_id: id,
         context: contextSession || "default"
       });
+      if (data.username){
+        data.username = data.username.username
+      }
       return this.entity.findOne({
         where: {
           session_id: id,
