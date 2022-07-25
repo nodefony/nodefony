@@ -1,3 +1,7 @@
+/*const {
+  Transaction
+} = nodefony.Sequelize;*/
+
 module.exports = {
   locale: "en_en",
   debug: true,
@@ -7,6 +11,7 @@ module.exports = {
       dbname: path.resolve("app", "Resources", "databases", "nodefony.db"),
       options: {
         dialect: "sqlite",
+        //isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
         retry: {
           max: 5
         },

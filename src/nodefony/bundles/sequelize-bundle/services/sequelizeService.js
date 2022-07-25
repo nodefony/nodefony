@@ -299,25 +299,25 @@ class sequelize extends nodefony.Orm {
   }
 
   getConnection(connector){
-    return this.connections[connector] || null
+    return this.connections[connector] || null;
   }
 
   getTransactionConnector(connector){
     let connection = this.getConnection(connector);
     if( connection){
-      let db = connection.getConnection()
+      let db = connection.getConnection();
       return db.transaction.bind(db);
     }
-    throw new error(`transaction not found for CONNECTOR : ${name}`)
+    throw new error(`transaction not found for CONNECTOR : ${name}`);
   }
 
-  async startTransaction(entityName) {
+  async startTransaction(entityName, options) {
     const entity = this.getNodefonyEntity(entityName);
     if (!entity) {
       throw new Error(`Entity : ${entityName} not found`);
     }
     let db = entity.db;
-    return await db.transaction.call(db);
+    return await db.transaction.call(db, options);
   }
 
   getTransaction(entityName) {
