@@ -33,7 +33,7 @@
     "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "^3.3.1",
     "terser-webpack-plugin": "5.3.3",
-    "webpack": "5.73.0",
+    "webpack": "5.74.0",
     "webpack-merge": "^5.8.0",
     "workbox-webpack-plugin": "6.5.3"
   },

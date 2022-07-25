@@ -17,7 +17,7 @@
     "@tensorflow/tfjs-vis": "^1.5.1",
     "asciify-image": "^0.1.8",
     "clean-webpack-plugin": "^4.0.0",
-    "core-js": "3.23.5",
+    "core-js": "3.24.0",
     "gpu.js": "2.15.2",
     "jpeg-js": "0.4.4",
     "leaflet": "1.8.0",
@@ -39,7 +39,7 @@
     "@vue/compiler-sfc": "3.2.37",
     "babel-eslint": "^10.1.0",
     "eslint": "8.20.0",
-    "eslint-plugin-vue": "9.2.0",
+    "eslint-plugin-vue": "9.3.0",
     "expose-loader": "4.0.0",
     "vue-cli-plugin-i18n": "^2.3.1",
     "webpack-dev-server": "4.9.3"

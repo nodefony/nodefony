@@ -58,7 +58,7 @@
     "cli-table3": "0.6.2",
     "clui": "^0.3.6",
     "commander": "9.4.0",
-    "core-js": "3.23.5",
+    "core-js": "3.24.0",
     "create-react-app": "5.0.1",
     "graphql": "16.5.0",
     "inquirer": "9.0.2",
@@ -82,7 +82,7 @@
     "terser-webpack-plugin": "5.3.3",
     "twig": "^1.15.4",
     "uuid": "^8.3.2",
-    "webpack": "5.73.0",
+    "webpack": "5.74.0",
     "xml2js": "^0.4.23",
     "yarn": "1.22.19"
   },

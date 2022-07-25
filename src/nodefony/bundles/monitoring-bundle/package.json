@@ -23,7 +23,7 @@
     "@vue/apollo-option": "4.0.0-alpha.20",
     "ansi-to-html": "0.7.2",
     "clean-webpack-plugin": "4.0.0",
-    "core-js": "3.23.5",
+    "core-js": "3.24.0",
     "graphiql": "1.10.0",
     "graphql": "16.5.0",
     "graphql-ws": "5.9.1",
@@ -61,13 +61,13 @@
     "@vue/cli-plugin-vuex": "5.0.8",
     "@vue/cli-service": "5.0.8",
     "eslint": "8.20.0",
-    "eslint-plugin-vue": "^9.2.0",
+    "eslint-plugin-vue": "9.3.0",
     "sass": "1.54.0",
     "sass-loader": "13.0.2",
     "vue-cli-plugin-i18n": "~2.3.1",
     "vue-cli-plugin-vuetify": "2.5.1",
     "webpack-dev-server": "4.9.3",
-    "webpack-plugin-vuetify": "2.0.0-alpha.11"
+    "webpack-plugin-vuetify": "2.0.0-alpha.12"
   },
   "repository": {
     "type": "git",
