@@ -298,18 +298,19 @@
 					</v-card-text>
 				</v-card>
 			</v-window-item>
+			<v-window-item v-if="isRegistred"
+			               value="config">
+				<n-bundle-config :name="name"
+				                 :config="bundle.config" />
+			</v-window-item>
+
+			<v-window-item value="package">
+				<n-bundle-package v-if="bundle && bundle.package"
+				                  :package="bundle.package" />
+			</v-window-item>
+
+
 			<div v-if="isRegistred">
-				<v-window-item value="config">
-					<n-bundle-config :name="name"
-					                 :config="bundle.config" />
-				</v-window-item>
-
-				<v-window-item value="package">
-					<n-bundle-package v-if="bundle && bundle.package"
-					                  :package="bundle.package" />
-				</v-window-item>
-
-
 				<v-window-item value="routing">
 					<n-bundle-routing v-if="bundle && bundle.routes"
 					                  :routes="bundle.routes" />
