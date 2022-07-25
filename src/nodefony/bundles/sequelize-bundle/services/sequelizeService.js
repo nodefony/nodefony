@@ -358,11 +358,17 @@ class sequelize extends nodefony.Orm {
   parseAtribute(attributes) {
     const obj = {};
     for (let attr in attributes) {
+      let type = null;
+      try{
+        type = attributes[attr].type.toString();
+      }catch(e){
+        type = attributes[attr].type.values;
+      }
       obj[attr] = {
         fieldName: attributes[attr].fieldName,
         field: attributes[attr].field,
         defaultValue: attributes[attr].defaultValue,
-        type:attributes[attr].type.toString()
+        type:type
       };
     }
     return obj;
