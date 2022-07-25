@@ -6,7 +6,7 @@
  *
  */
 //const Mongoose = require('mongoose');
-const Schema = require('mongoose').Schema;
+const {Schema} = require('mongoose');
 
 const schema = {
   remoteAddress: {
@@ -30,12 +30,15 @@ const schema = {
   state: {
     type: String
   },
-  protocole: {
+  protocol: {
+    type: String
+  },
+  scheme: {
     type: String
   },
   username: {
     type: String,
-    ref: 'user'
+    ref:"user"
   },
   data: {
     type: String

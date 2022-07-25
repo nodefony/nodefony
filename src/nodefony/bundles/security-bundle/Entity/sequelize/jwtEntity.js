@@ -38,7 +38,6 @@ module.exports = class jwt extends nodefony.Entity {
               allowNull: true,
               name:"username"
             },
-            targetKey:"username",
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE'
           });

@@ -85,6 +85,9 @@
 					<div v-if="item.user">
 						{{ item.user.username }}
 					</div>
+					<div v-else="item.username">
+						{{ item.username ? item.username.username : '' }}
+					</div>
 				</td>
 				<td>{{ item.remoteAddress }}</td>
 				<td>{{ item.userAgent }}</td>

@@ -13,7 +13,7 @@ const schema = {
   },
   username: {
     type: String,
-    ref: 'user'
+    ref:"user"
   },
   Attributes: {
     type: Object,

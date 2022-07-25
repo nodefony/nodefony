@@ -1,7 +1,12 @@
 const Table = require('cli-table3');
 const asciify = require('asciify');
-//const inquirer = require('inquirer');
-//const commander = require('commander');
+let inquirer = null
+const inquirerImport = async()=>{
+  inquirer = await import('inquirer')
+    .then((esmFS) => {
+      return esmFS.default
+    })
+}
 const {
   program,
   command
@@ -107,7 +112,11 @@ class CLI extends nodefony.Service {
     if (this.options.autoLogger) {
       this.initSyslog();
     }
-    this.initUi();
+    this.initUi()
+    this.prependOnceListener("onStart",async () => {
+      await inquirerImport()
+      this.initPrompt()
+    })
     this.initCommander();
 
     if (this.options.warning) {
@@ -178,7 +187,7 @@ class CLI extends nodefony.Service {
         .then(() => {
           if (this.options.autostart) {
             try {
-              this.fire("onStart", this);
+              this.fireAsync("onStart", this);
             } catch (e) {
               throw e;
             }
@@ -187,7 +196,7 @@ class CLI extends nodefony.Service {
     } else {
       if (this.options.autostart) {
         try {
-          this.fire("onStart", this);
+          this.fireAsync("onStart", this);
         } catch (e) {
           this.log(e, "ERROR");
         }
@@ -204,17 +213,17 @@ class CLI extends nodefony.Service {
               return resolve(this);
             });
           } else {
-            this.fire("onStart", this);
+            this.fireAsync("onStart", this);
             return resolve(this);
           }
         } else {
           if (this.options.asciify) {
             this.once("onAsciify", () => {
-              this.fire("onStart", this);
+              this.fireAsync("onStart", this);
               return resolve(this);
             });
           } else {
-            this.fire("onStart", this);
+            this.fireAsync("onStart", this);
             return resolve(this);
           }
         }
@@ -328,14 +337,6 @@ class CLI extends nodefony.Service {
 
   initUi() {
     this.clc = clc;
-    this.inquirer = inquirer;
-    if (this.options.prompt === "rxjs") {
-      this.prompt = new Rx.Subject();
-      let prompt = inquirer.createPromptModule();
-      prompt(this.prompt);
-    } else {
-      this.prompt = inquirer.createPromptModule();
-    }
     this.clui = require("clui");
     this.emoji = require("node-emoji");
     this.spinner = null;
@@ -347,6 +348,17 @@ class CLI extends nodefony.Service {
     }.call(this);
     if (this.options.resize) {
       this.resize();
+    }
+  }
+
+  initPrompt() {
+    this.inquirer = inquirer;
+    if (this.options.prompt === "rxjs") {
+      this.prompt = new Rx.Subject();
+      let prompt = inquirer.createPromptModule();
+      prompt(this.prompt);
+    } else {
+      this.prompt = inquirer.createPromptModule();
     }
   }
 

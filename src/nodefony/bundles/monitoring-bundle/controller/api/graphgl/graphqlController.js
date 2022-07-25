@@ -30,7 +30,7 @@ if (kernel.ready) {
 }
 
 
-class graphqlController extends nodefony.Controller {
+module.exports = class graphqlController extends nodefony.Controller {
 
   constructor(container, context) {
     super(container, context);
@@ -42,7 +42,7 @@ class graphqlController extends nodefony.Controller {
         description: "nodefony graphql Api",
         basePath: "/api/graphql",
         schema: graphqlController.schema(this),
-        rootValue: graphqlController.provider(this)
+        rootValue: graphqlController.provider(this.context)
       }, this.context);
     } catch (e) {
       this.log(e, "ERROR");
@@ -116,5 +116,3 @@ class graphqlController extends nodefony.Controller {
   }
 
 }
-
-module.exports = graphqlController;

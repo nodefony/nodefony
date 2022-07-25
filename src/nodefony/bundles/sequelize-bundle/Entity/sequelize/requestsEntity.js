@@ -37,7 +37,6 @@ module.exports = class requests extends nodefony.Entity {
               allowNull: true,
               name:"username"
             },
-            targetKey:"username",
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE'
           });
@@ -80,7 +79,7 @@ module.exports = class requests extends nodefony.Entity {
         type: DataTypes.STRING
       },
       time:{
-        type: DataTypes.NUMBER
+        type: DataTypes.FLOAT
       },
       data: {
         type: DataTypes.TEXT

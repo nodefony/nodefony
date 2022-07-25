@@ -5,7 +5,7 @@ class authorizationError extends nodefony.httpError {
     } else {
       super(message, code, null);
     }
-    if (context.token) {
+    if (context && context.token) {
       this.token = context.token;
       this.parserSecure();
     }

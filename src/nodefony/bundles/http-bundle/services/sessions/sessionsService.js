@@ -111,7 +111,7 @@ module.exports = class sessions extends nodefony.Service {
   saveSession(context) {
     if (context.session) {
       if (!context.session.saved) {
-        return context.session.save(context.user ? context.user.username : null, context.session.contextSession);
+        return context.session.save(context.user ? context.user : null, context.session.contextSession);
       }
     }
     return new Promise((resolve) => {
