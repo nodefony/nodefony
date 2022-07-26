@@ -62,7 +62,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
     return await this.onStart(this.cmd, this.args);
   }
 
-  onStart(cmd = this.cmd, args = this.args) {
+  async onStart(cmd = this.cmd, args = this.args) {
     //this.log(`Commnand : ${cmd} Arguments : ${args}`, "DEBUG", "CLI ONSTART");
     this.interactive = this.commander.opts().interactive|| false;
     if (!cmd && !process.argv.slice(2).length && (!process.argv[2])) {
@@ -126,6 +126,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
   }
 
   async initialize() {
+    await super.start()
     this.initHelp();
     this.initOptions();
     await this.parseCommand(process.argv);

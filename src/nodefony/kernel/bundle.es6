@@ -260,7 +260,11 @@ class Bundle extends nodefony.Service {
       }
     });
     // BUNDLE EVENTS
-    this.fire("onRegister", this);
+    this.register()
+  }
+
+  async register(){
+    return await this.emitAsync("onRegister", this);
   }
 
   static excludeDir() {
@@ -273,7 +277,7 @@ class Bundle extends nodefony.Service {
   async initialize() {
     // Register services before boot
     return await this.registerServices()
-      .then((results) => {
+      .then(async (results) => {
         let dir = null;
         if (this.name === "app") {
           dir = this.findResult;
@@ -292,7 +296,7 @@ class Bundle extends nodefony.Service {
           throw new Error("Bundle must have config directory");
         }
         //EVENT BOOT BUNDLE
-        this.fire("onInitialize", this);
+        await this.emitAsync("onInitialize", this);
         return results;
       });
   }
@@ -313,25 +317,18 @@ class Bundle extends nodefony.Service {
   boot() {
     return new Promise(async (resolve, reject) => {
       try {
-
         //EVENT BOOT BUNDLE
-        this.fire("onBoot", this);
-
+        await this.emitAsync("onBoot", this);
         // finder controller
         await this.findControllerFiles();
-
         // finder views
         await this.findViewFiles();
-
         // I18N
         await this.registerI18n(this.locale);
-
         // Register Controller
         await this.registerControllers();
-
         // Register Views
         await this.registerViews();
-
         if (this.kernel.type === "CONSOLE") {
           await this.registerFixtures();
         }
@@ -339,7 +336,7 @@ class Bundle extends nodefony.Service {
         return reject(e);
       }
       if (this.waitBundleReady === false) {
-        this.fire("onReady", this);
+        await this.emitAsync("onReady", this);
       }
       return resolve(this);
     });
@@ -371,9 +368,9 @@ class Bundle extends nodefony.Service {
     delete this.entityFiles;
   }
 
-  fire() {
+  emitAsync() {
     this.log(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
-    return super.fire.apply(this, arguments);
+    return super.emitAsync.apply(this, arguments);
   }
 
   initWebpack() {

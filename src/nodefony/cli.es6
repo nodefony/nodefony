@@ -204,8 +204,8 @@ class CLI extends nodefony.Service {
     }
   }
 
-  async start() {
-    return new Promise((resolve, reject) => {
+  start() {
+    return new Promise(async (resolve, reject) => {
       try {
         if (this.options.autostart) {
           if (this.options.asciify) {
@@ -213,17 +213,17 @@ class CLI extends nodefony.Service {
               return resolve(this);
             });
           } else {
-            this.fireAsync("onStart", this);
+            await this.fireAsync("onStart", this);
             return resolve(this);
           }
         } else {
           if (this.options.asciify) {
-            this.once("onAsciify", () => {
-              this.fireAsync("onStart", this);
+            this.once("onAsciify", async () => {
+              await this.fireAsync("onStart", this);
               return resolve(this);
             });
           } else {
-            this.fireAsync("onStart", this);
+            await this.fireAsync("onStart", this);
             return resolve(this);
           }
         }
