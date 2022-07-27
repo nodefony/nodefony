@@ -1,6 +1,7 @@
-/*const {
-  Transaction
-} = nodefony.Sequelize;*/
+const {
+  //Transaction,
+  Sequelize
+} = nodefony.Sequelize;
 
 module.exports = {
   locale: "en_en",
@@ -13,6 +14,13 @@ module.exports = {
         dialect: "sqlite",
         //isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
         retry: {
+          match: [
+            Sequelize.ConnectionError,
+            Sequelize.ConnectionTimedOutError,
+            Sequelize.TimeoutError,
+            /Deadlock/i,
+            'SQLITE_BUSY'
+          ],
           max: 5
         },
         pool: {
