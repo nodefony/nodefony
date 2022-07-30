@@ -70,6 +70,10 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
         command = this.cli.getCommand("sequelize", "sequelize");
         task = command.getTask("create");
         await task.database();
+      } catch (e) {
+        this.log(e, "WARNING");
+      }
+      try {
         command = this.cli.getCommand("sequelize", "sequelize");
         task = command.getTask("sync");
         return await task.entities(force);
@@ -93,12 +97,12 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
       try {
         this.log("INITIALIZE Mongoose");
         this.log("Generate Mongoose Fixtures");
-        if( this.kernel.bundles.users){
+        if (this.kernel.bundles.users) {
           let command = this.cli.getCommand("users", "users");
           let task = command.getTask("fixtures");
           return await task.default();
         }
-        return true ;
+        return true;
       } catch (e) {
         throw e;
       }
