@@ -95,6 +95,15 @@ class connectionDB {
     this.connect(type, this.settings);
   }
 
+  toObject() {
+    return {
+      state: this.state,
+      nane: this.name,
+      type: this.type,
+      settings: this.settings
+    }
+  }
+
   setConnection(db, config) {
     if (!db) {
       throw new Error("Cannot create class connection without db native");
@@ -114,6 +123,7 @@ class connectionDB {
       severity = "DEBUG";
     }
     this.log('Connection been established successfully Type : ' + this.type + " Database : " + config.dbname, severity);
+    return db;
   }
 
   getConnection() {
@@ -140,7 +150,7 @@ class connectionDB {
         conn
           .authenticate()
           .then(() => {
-            this.setConnection(conn, config);
+            return this.setConnection(conn, config);
           })
           .catch(err => {
             this.log('Unable to connect to the database : ' + err, "ERROR");
@@ -298,13 +308,13 @@ class sequelize extends nodefony.Orm {
     }
   }
 
-  getConnection(connector){
-    return this.connections[connector] || null;
+  getConnection(connector) {
+    return this.connections[connector] || null;
   }
 
-  getTransactionConnector(connector){
+  getTransactionConnector(connector) {
     let connection = this.getConnection(connector);
-    if( connection){
+    if (connection) {
       let db = connection.getConnection();
       return db.transaction.bind(db);
     }
@@ -339,18 +349,15 @@ class sequelize extends nodefony.Orm {
     }
   }
 
-  getConnectorsList(name=null){
+  getConnectorsList(name = null) {
     let obj = {};
     for (let ele in this.connections) {
-      if( name){
-        if( name !== ele){
+      if (name) {
+        if (name !== ele) {
           continue;
         }
       }
-      obj[ele] = this.connections[ele];
-      delete obj[ele].orm;
-      delete obj[ele].db;
-      delete obj[ele].intervalId;
+      obj[ele] = this.connections[ele].toObject();
     }
     return obj;
   }
@@ -359,31 +366,31 @@ class sequelize extends nodefony.Orm {
     const obj = {};
     for (let attr in attributes) {
       let type = null;
-      try{
+      try {
         type = attributes[attr].type.toString();
-      }catch(e){
+      } catch (e) {
         type = attributes[attr].type.values;
       }
       obj[attr] = {
         fieldName: attributes[attr].fieldName,
         field: attributes[attr].field,
         defaultValue: attributes[attr].defaultValue,
-        type:type
+        type: type
       };
     }
     return obj;
   }
 
-  getEntitiesList(bundle=null, name=null){
+  getEntitiesList(bundle = null, name = null) {
     let obj = {};
     for (let ele in this.entities) {
-      if( bundle){
-          if( bundle !== this.entities[ele].bundle.name){
-            continue;
-          }
+      if (bundle) {
+        if (bundle !== this.entities[ele].bundle.name) {
+          continue;
+        }
       }
-      if( name){
-        if( name !== ele){
+      if (name) {
+        if (name !== ele) {
           continue;
         }
       }

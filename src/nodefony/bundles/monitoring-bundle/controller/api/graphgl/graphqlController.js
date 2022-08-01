@@ -15,6 +15,7 @@ const Bundle = require(path.resolve(__dirname, "providers", "bundle.js"));
 const Config = require(path.resolve(__dirname, "providers", "config.js"));
 const Services = require(path.resolve(__dirname, "providers", "services.js"));
 const Orm = require(path.resolve(__dirname, "providers", "orm.js"));
+const Migrations = require(path.resolve(__dirname, "providers", "migration.js"));
 const Nodefony = require(path.resolve(__dirname, "providers", "nodefony.js"));
 let usersStaticSchema = null
 let usersStaticProvider = null
@@ -96,6 +97,7 @@ module.exports = class graphqlController extends nodefony.Controller {
       Orm,
       Sessions,
       Requests,
+      Migrations,
       Logs);
     if (UsersProvider) {
       return nodefony.extend(prov, UsersProvider)

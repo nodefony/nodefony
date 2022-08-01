@@ -6,6 +6,7 @@ const {
 module.exports = {
   locale: "en_en",
   debug: true,
+  //watch: true,
   connectors: {
     nodefony: {
       driver: 'sqlite',

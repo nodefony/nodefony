@@ -127,17 +127,17 @@
 			             value="dashboarddatabase"
 			             to="/database">
 			</v-list-item>
-			<v-list-group>
+			<v-list-group v-if="connectors">
 				<template v-slot:activator="{ props }">
 					<v-list-item v-bind="props"
 					             title="Schemas"
 					             value="Connectors">
 					</v-list-item>
 				</template>
-				<v-list-item v-for="(connector) in connectors"
-				             :title="connector.name"
-				             :key="connector.name"
-				             :to="`/database/connectors/${connector.name}`">
+				<v-list-item v-for="(connector, key, index) in connectors"
+				             :title="key"
+				             :key="key"
+				             :to="`/database/connectors/${key}`">
 				</v-list-item>
 			</v-list-group>
 		</v-list-group>
@@ -236,6 +236,22 @@
 			             value="pm2config">
 			</v-list-item>
 		</v-list-group>
+		<v-divider></v-divider>
+
+		<v-list-group v-if="isAdmin">
+			<template v-slot:activator="{ props }">
+				<v-list-item v-bind="props"
+				             prepend-icon="mdi-database-sync-outline"
+				             title="Migrations"
+				             value="migrate"></v-list-item>
+			</template>
+			<v-list-item prepend-icon="mdi-database-sync-outline"
+			             title="Status"
+			             value="migrateStatus"
+			             to="/migrate/status">
+			</v-list-item>
+		</v-list-group>
+		<v-divider></v-divider>
 
 	</v-list>
 

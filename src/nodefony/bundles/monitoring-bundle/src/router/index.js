@@ -35,6 +35,9 @@ import Logs from '@/views/logs/Logs.vue'
 //service
 import Service from '@/views/service/Service.vue'
 
+//migrate
+import Migrate from '@/views/migrate/Migrate.vue'
+
 const ifAuthenticated = (to, from, next) => {
   if (Store.getters.isAuthenticated) {
     let redirect = window.sessionStorage.getItem("redirect")
@@ -177,6 +180,11 @@ const routes = [
     name: 'Logs',
     component: Logs,
     beforeEnter: ifAuthenticated
+  }, {
+    path: '/migrate/status',
+    name: 'Migrate',
+    component: Migrate,
+    beforeEnter: ifAuthenticated,
   }
 ]
 

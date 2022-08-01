@@ -58,8 +58,15 @@ const schema = /* GraphQL */`
     getRequests: String
     getRequestsById(id: String!): String
     getLogs: String
+    getMigrations: String
   }
 
+  type Mutation {
+    upMigrate(name: String!, path: String!, connector: String! ): String
+    downMigrate(name: String!, path: String!, connector: String! ): String
+    allMigrate(connector: String ): String
+    allRevert(connector: String ): String
+  }
 
 `;
 module.exports = nodefony.graphql.buildSchema(schema);
