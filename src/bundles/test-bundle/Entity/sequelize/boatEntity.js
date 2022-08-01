@@ -12,7 +12,7 @@ module.exports = class boat extends nodefony.Entity {
      *   @param orm name
      *   @param connection name
      */
-    super(bundle, "boat", "sequelize", "nodefony");
+    super(bundle, "boat", "sequelize", "myconnector");
 
   }
 

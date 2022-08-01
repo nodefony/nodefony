@@ -9,7 +9,7 @@ class Migrate extends nodefony.Service {
 	}
 
 	async up({ context: queryInterface }){
-		await queryInterface.createTable('boat', {
+		await queryInterface.createTable('boats', {
 	    id: {
 	      type: Sequelize.INTEGER,
 	      primaryKey: true,
@@ -25,7 +25,7 @@ class Migrate extends nodefony.Service {
 	}
 
 	async down({ context: queryInterface }){
-		await queryInterface.dropTable('boat');
+		await queryInterface.dropTable('boats');
 	}
 }
 

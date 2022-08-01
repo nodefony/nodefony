@@ -54,7 +54,7 @@ class generateTask extends nodefony.Task {
   }
 
   installEntities(force = false) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
         let tab = [];
         for (let connectionName in this.ormService.connections) {
@@ -64,12 +64,9 @@ class generateTask extends nodefony.Task {
             continue;
           }
           this.log("DATABASE  : " + connection.options.dialect + " CONNECTION : " + connectionName, "INFO");
-          tab.push(this.sync(connectionName, connection, force));
+          tab.push( await this.sync(connectionName, connection, force))
         }
-        return Promise.all(tab)
-          .then((ele) => {
-            return resolve(ele);
-          });
+        return tab
       } catch (e) {
         return reject(e);
       }
