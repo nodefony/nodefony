@@ -53,6 +53,16 @@ export default (nodefony) =>{
 
   const requestRefreshToken = async () => {
     return await nodefony.api.getToken()
+    .catch(async e=>{
+      try{
+        await nodefony.store.dispatch('AUTH_LOGOUT')
+      }catch(e){
+        await nodefony.store.commit('AUTH_LOGOUT')
+      }
+      return nodefony.router.push({
+        name:"Login"
+      });
+    })
   }
 
   const getAuthHeaders = (headers) => {
