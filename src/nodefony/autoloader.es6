@@ -173,7 +173,7 @@ module.exports = function () {
           delete Module._cache[filename];
         }
         console.error(e);
-        if(this.kernel){
+        if (this.kernel) {
           this.kernel.terminate(1);
         }
         throw e;
@@ -234,10 +234,12 @@ module.exports = function () {
     }
 
     autoloadEach(ele) {
-      let res = regJs.exec(ele.path)
-      if (res) {
-        this.load.call(this, ele.path);
-        this.log(ele.path, "DEBUG");
+      if (!ele.isDirectory()) {
+        let res = regJs.exec(ele.path)
+        if (res) {
+          this.load.call(this, ele.path);
+          this.log(ele.path, "DEBUG");
+        }
       }
     }
 

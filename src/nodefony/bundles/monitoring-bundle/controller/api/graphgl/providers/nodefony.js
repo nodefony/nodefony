@@ -161,6 +161,7 @@ module.exports = {
     }
     return JSON.stringify(obj);
   },
+
   getServerWebsocket(field, context) {
     const package = context.kernel.getBundles("http").package
     const ws = context.get("websocketServer")
@@ -176,8 +177,8 @@ module.exports = {
       config: conf
     }
     return JSON.stringify(obj);
-
   },
+
   getServerWebsocketSecure(field, context) {
     const package = context.kernel.getBundles("http").package
     const wss = context.get("websocketServerSecure")
@@ -201,8 +202,12 @@ module.exports = {
       interfaces: context.kernel.getNetworkInterfaces()
     }
     return JSON.stringify(obj);
+  },
+
+  getProfilingStatus(field, context){
+    const monitoring = context.kernel.getBundle("monitoring")
+    let obj = {settings:monitoring.settings};
+    return JSON.stringify(obj);
   }
-
-
 
 }

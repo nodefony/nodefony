@@ -1,5 +1,4 @@
-<template>
-<d-app-layout>
+	<template>
 
 	<div class="d-flex flex-row imgage_montain w-100 rounded-lg">
 		<span class="back_gradient"></span>
@@ -53,19 +52,18 @@
 		</v-layout>
 	</div>
 	<v-window class="w-100 h-100"
-	          style="padding:200px 15px 0 15px"
+	          style="padding:200px 0 0 0"
 	          v-model="currentItem">
 		<v-window-item :value="1">
-			<v-row>
+			<v-container fluid>
+				<v-row>
 				<v-col class="col-md-6 col-lg-4 col-12 mt-5">
 					<div class="text-h6">Profile Informations</div>
 					<v-list density="compact"
 					        class="mx-auto">
 
 						<v-list-item v-for="(value, key) in profile">
-							<v-list-item-header>
 								<v-list-item-title class="text-subtitle-2">{{key}}</v-list-item-title>
-							</v-list-item-header>
 							<div class="text-caption"
 							     v-if="key !== 'roles'">
 								{{value}}
@@ -85,12 +83,17 @@
 
 				</v-col>
 			</v-row>
+			</v-container>
 		</v-window-item>
 
 		<v-window-item :value="2">
-			<d-user-stepper v-if="profile"
+			<n-user-stepper v-if="profile"
 			                :profile="profile"
 			                @update="changeTab(1)" />
+		</v-window-item>
+
+		<v-window-item :value="4" >
+			<n-session  class='pa-0 ma-0' :username="profile.username"/>
 		</v-window-item>
 	</v-window>
 	<!--v-container fluid
@@ -99,17 +102,18 @@
 
 	</v-container-->
 
-</d-app-layout>
 </template>
 
-
 <script>
+import gql from 'graphql-tag'
 import UserStepper from '@/views/users/UserStepper'
+import Session from '@/views/sessions/sessions'
 export default {
-	name: "d-users-profile",
+	name: "n-users-profile",
 	inject: ['nodefony'],
 	components: {
-		"d-user-stepper": UserStepper,
+		"n-user-stepper": UserStepper,
+		"n-session": Session,
 	},
 	props: {
 		username: {
@@ -118,12 +122,55 @@ export default {
 	},
 	data() {
 		return {
-			profile: null,
 			currentItem: 0
 		}
 	},
+	apollo: {
+		request: {
+			// gql query
+			query: gql `
+      query getProfile($username: String!) {
+        user:user(username: $username){
+					username
+    			surname
+    			name
+			    enabled
+			    userNonExpired
+			    credentialsNonExpired
+			    accountNonLocked
+			    email
+			    lang
+			    gender
+			    url
+			    createdAt
+			    updatedAt
+			    image
+			    roles
+				}
+        #sessions:getSessionsByUser(username: $username){
+				#	session_id
+				#}
+				#jwts:getTokenByUser
+      }
+	    `,
+			update: (data) => {
+				return {
+					profile: data.user,
+					sessions: data.sessions,
+					//jwts: data.jwts
+				}
+			},
+			// Reactive parameters
+			variables() {
+				// Use vue reactive properties here
+				return {
+					username: this.username,
+				}
+			},
+		}
+	},
 	async mounted() {
-		await this.getUserProfile();
+		//await this.getUserProfile();
 	},
 	computed: {
 		fullname() {
@@ -131,13 +178,25 @@ export default {
 				return `${this.profile.name} ${this.profile.surname}`
 			}
 			return ""
+		},
+		profile() {
+			if (this.request) {
+				return this.request.profile
+			}
+			return null
+		},
+		sessions() {
+			if (this.request) {
+				return this.request.sessions
+			}
+			return []
 		}
 	},
 	methods: {
 		changeTab(index) {
 			this.currentItem = index
 		},
-		getUserProfile() {
+		/*getUserProfile() {
 			return this.nodefony.request(`users/${this.username}`, "GET", {
 					headers: {
 						"content-type": "application/json"
@@ -155,7 +214,7 @@ export default {
 						}
 					})
 				})
-		}
+		}*/
 	}
 
 }

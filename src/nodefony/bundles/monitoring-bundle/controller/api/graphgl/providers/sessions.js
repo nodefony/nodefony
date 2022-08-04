@@ -1,6 +1,10 @@
 module.exports = {
   //  provides all functions for each API endpoint
   getSessions(field, context) {
+    const {username} = field
+    if(username){
+      return this.getSessionsByUser(field, context)
+    }
     let sessionServices = context.get("sessions");
     let storage = sessionServices.settings.handler;
     switch (storage) {
@@ -32,7 +36,7 @@ module.exports = {
           return sessionEntity.findAndCountAll(options)
             .then((results) => {
               try {
-                return JSON.stringify(results);
+                return results.rows;
               } catch (e) {
                 throw new nodefony.Error(error)
               }
@@ -44,7 +48,7 @@ module.exports = {
         } else {
           return sessionEntity.findAndCountAll(options)
             .then((results) => {
-              return JSON.stringify(results);
+              return results.rows;
             })
             .catch((error) => {
               if (error) {
@@ -77,7 +81,7 @@ module.exports = {
           .then(async (result) => {
             sessions.rows = result;
             sessions.count = await sessionEntity.count();
-            return JSON.stringify(sessions);
+            return result //JSON.stringify(sessions);
           }).then((result) => {
             return result
           })
@@ -117,7 +121,7 @@ module.exports = {
             }]
           })
           .then((results) => {
-            return JSON.stringify(results);
+            return results.rows
           })
           .catch((error) => {
             if (error) {

@@ -90,23 +90,39 @@ export default {
 	name: "n-sessions",
 	inject: ["nodefony"],
 	components: {},
-	props: {},
+	props: {
+		username: {
+			type: String,
+		}
+	},
 	apollo: {
 		request: {
 			// gql query
 			query: gql `
-      query getSessions {
-        sessions:getSessions
+      query getSessions($username: String) {
+        sessions:getSessions(username: $username){
+          session_id
+          context
+          Attributes
+          flashBag
+          metaBag
+          user {
+            username
+          }
+        }
       }
 	    `,
 			update: (data) => {
 				return {
-					sessions: JSON.parse(data.sessions),
+					sessions: data.sessions,
 				}
 			},
 			// Reactive parameters
 			variables() {
 				// Use vue reactive properties here
+				return {
+					username: this.username,
+				}
 			},
 		}
 	},
@@ -126,13 +142,13 @@ export default {
 	computed: {
 		sessions() {
 			if (this.request && this.request.sessions) {
-				return this.request.sessions.rows
+				return this.request.sessions
 			}
 			return null
 		},
 		nbSessions() {
 			if (this.request && this.sessions) {
-				return this.request.sessions.count
+				return this.request.sessions.length
 			}
 			return null
 		}

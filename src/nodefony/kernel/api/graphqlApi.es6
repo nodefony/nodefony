@@ -1,8 +1,4 @@
 const JsonApi = require(path.resolve(__dirname, "jsonApi.es6"));
-/*const {
-  graphql,
-  buildSchema
-} = require('graphql');*/
 nodefony.graphql = require('graphql');
 nodefony["graphql-tools"] = {};
 nodefony["graphql-tools"].schema = require("@graphql-tools/schema");
@@ -18,11 +14,11 @@ class graphqlApi extends JsonApi {
       schema = config.schema;
       delete config.schema;
     }
-    if( config.rootValue){
+    if (config.rootValue) {
       rootValue = config.rootValue;
       delete config.rootValue;
     }
-    if( config.contextValue){
+    if (config.contextValue) {
       contextValue = config.contextValue;
       delete config.contextValue;
     }
@@ -35,21 +31,25 @@ class graphqlApi extends JsonApi {
     if (rootValue) {
       this.setRootValue(rootValue);
     }
-    if(contextValue){
+    if (contextValue) {
       this.setContextValue(contextValue);
     }
   }
 
-  static mergeSchemas(options){
+  static mergeSchemas(options) {
     return nodefony["graphql-tools"].schema.mergeSchemas(options);
   }
 
-  static mergeTypeDefs(options){
+  static mergeTypeDefs(options) {
     return nodefony["graphql-tools"].merge.mergeTypeDefs(options);
   }
 
-  static mergeResolvers(tab){
+  static mergeResolvers(tab) {
     return nodefony["graphql-tools"].merge.mergeResolvers(tab);
+  }
+
+  static makeExecutableSchema(options) {
+    return nodefony["graphql-tools"].schema.makeExecutableSchema(options);
   }
 
   async query(query, variables = null, operationName = null, fieldResolver = null, typeResolver = null) {
@@ -81,6 +81,13 @@ class graphqlApi extends JsonApi {
     return this.schema;
   }
 
+  printSchema() {
+    if (this.schema) {
+      return nodefony.graphql.printSchema(this.schema)
+    }
+    return ''
+  }
+
   setSchema(schema) {
     this.schema = schema;
     return this.schema;
@@ -89,7 +96,7 @@ class graphqlApi extends JsonApi {
     this.rootValue = rootValue;
     return this.rootValue;
   }
-  setContextValue(contextValue){
+  setContextValue(contextValue) {
     this.contextValue = contextValue;
     return this.contextValue;
   }

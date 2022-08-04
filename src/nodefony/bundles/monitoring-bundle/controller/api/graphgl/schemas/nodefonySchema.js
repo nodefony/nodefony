@@ -1,34 +1,9 @@
 const schema = /* GraphQL */`
-  scalar Date
-  scalar Url
-  scalar Array
-  scalar Object
-
-  type Route {
-    name: String!
-    path: String
-    host: String
-    variables: Array
-    bypassFirewall: Boolean
-    defaultLang: String
-    hash: String
-    prefix: String
-    schemes: String
-    filePath: String
-    bundle: String
-    index: Int
-  }
-
-  #type Config {
-  #  type: String
-  #  locale: String
-  #  watch : Boolean
-  #}
-
 
   # the schema allows the following query:
   type Query {
     getNodefonyStatus: String
+    getProfilingStatus: String
     getApplicationSettings: String
     getKernelSettings: String
     getServers : String
@@ -53,8 +28,9 @@ const schema = /* GraphQL */`
     getEntity(name: String!): String
     getEntitiesByBundle(name: String!): String
     getEntitiesByConnector(name: String!): String
-    getSessions: String
-    getSessionsByUser(username: String!): String
+    # sessions
+    getSessions(username: String): [Session]
+    getSessionsByUser(username: String!): [Session]
     getRequests: String
     getRequestsById(id: String!): String
     getLogs: String
@@ -69,4 +45,4 @@ const schema = /* GraphQL */`
   }
 
 `;
-module.exports = nodefony.graphql.buildSchema(schema);
+module.exports = schema;

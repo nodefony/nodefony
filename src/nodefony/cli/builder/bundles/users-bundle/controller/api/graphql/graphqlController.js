@@ -3,6 +3,7 @@
  *
  */
 const userSchema = require("./userSchema.js");
+const userType = require("./userType.js");
 
 module.exports = class graphqlController extends nodefony.Controller {
 
@@ -16,7 +17,7 @@ module.exports = class graphqlController extends nodefony.Controller {
       version: this.bundle.version,
       description: "Nodefony Users graphql Api",
       basePath: "/api/graphql/users",
-      schema: userSchema,
+      schema: graphqlController.schema(this.context),
       rootValue: graphqlController.provider(this.context)
     }, this.context);
   }
@@ -61,9 +62,13 @@ module.exports = class graphqlController extends nodefony.Controller {
   }
 
   static schema(context) {
-    return userSchema;
+    return  nodefony.api.Graphql.makeExecutableSchema({
+      typeDefs: [graphqlController.types(context)]
+    });
   }
 
-  static types() {}
+  static types(context) {
+    return [userType, userSchema];
+  }
 
 }

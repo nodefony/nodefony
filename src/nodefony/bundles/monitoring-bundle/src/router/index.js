@@ -38,6 +38,12 @@ import Service from '@/views/service/Service.vue'
 //migrate
 import Migrate from '@/views/migrate/Migrate.vue'
 
+//firewall
+import Firewall from '@/views/firewall/Firewall.vue'
+
+// PM2
+import Pm2 from '@/views/pm2/Pm2.vue'
+
 const ifAuthenticated = (to, from, next) => {
   if (Store.getters.isAuthenticated) {
     let redirect = window.sessionStorage.getItem("redirect")
@@ -51,13 +57,20 @@ const ifAuthenticated = (to, from, next) => {
     }
     return next();
   }
-  //next('Login');
-  document.location = `/nodefony/login`;
+  try {
+    return next({
+      name: "Login"
+    })
+  } catch (e) {
+    return document.location = `/nodefony/login`;
+  }
 };
 
 const allReadyLogin = (to, from, next) => {
   if (Store.getters.isAuthenticated) {
-    return next('Home');
+    return next({
+      name: "Home"
+    });
   }
   return next();
 };
@@ -185,6 +198,19 @@ const routes = [
     name: 'Migrate',
     component: Migrate,
     beforeEnter: ifAuthenticated,
+  }, {
+    path: '/firewall/home',
+    name: 'Firewall',
+    component: Firewall,
+    beforeEnter: ifAuthenticated,
+  }, {
+    path: '/pm2/home',
+    name: 'PM2',
+    component: Pm2,
+    beforeEnter: ifAuthenticated,
+  }, {
+    path: '/:pathMatch(.*)',
+    component: HomeView
   }
 ]
 

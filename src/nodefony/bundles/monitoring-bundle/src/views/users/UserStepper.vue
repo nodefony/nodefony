@@ -195,7 +195,7 @@ import {
 
 
 export default {
-	name: 'UserStepper',
+	name: 'n-user-stepper',
 	components: {},
 	inject: ['nodefony'],
 	props: {

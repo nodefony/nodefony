@@ -57,9 +57,7 @@
 				     :key="key">
 					<v-list-item v-if="key !=='node' && key !=='process'"
 					             class="text-caption">
-						<v-list-item-header class="text-subtitle-2">
-							<v-list-item-title>{{key}}</v-list-item-title>
-						</v-list-item-header>
+						<v-list-item-title>{{key}}</v-list-item-title>
 						<v-chip inline
 						        density="compact"
 						        variant="outlined"
@@ -75,9 +73,7 @@
 			     :key="key">
 				<v-list-item v-if="key !== 'clusters'"
 				             class="text-caption">
-					<v-list-item-header class="text-subtitle-2">
-						<v-list-item-title>{{key}}</v-list-item-title>
-					</v-list-item-header>
+					<v-list-item-title>{{key}}</v-list-item-title>
 					<v-chip inline
 					        density="compact"
 					        variant="outlined"
@@ -105,20 +101,21 @@
 		</v-window-item>
 
 		<v-window-item value="kernel">
-			<div v-for=" (value, key) in nodefony.kernel.system"
-			     :key="key">
-				<v-list-item v-if="key !== 'servers' && key !== 'bundles'"
-				             class="text-caption">
-					<v-list-item-header class="text-subtitle-2">
-						<v-list-item-title>{{key}}</v-list-item-title>
-					</v-list-item-header>
-					<v-chip inline
-					        density="compact"
-					        variant="outlined"
-					        color='blue'>{{value}}</v-chip>
-				</v-list-item>
-				<v-divider></v-divider>
-			</div>
+			<v-table density="compact">
+				<tbody v-for=" (value, key) in nodefony.kernel.system"
+				       :key="key">
+					<tr v-if="key !== 'servers' && key !== 'bundles'">
+						<td>{{ key}}</td>
+						<td>
+							<v-chip inline
+							        density="compact"
+							        variant="outlined"
+							        color='blue'>{{value}}
+							</v-chip>
+						</td>
+					</tr>
+				</tbody>
+			</v-table>
 
 		</v-window-item>
 
@@ -135,17 +132,6 @@
 					</tr>
 				</tbody>
 			</v-table>
-			<!--v-list density="compact" style="">
-          <div v-for=" (value, key) in nodefony.status.node" :key="key">
-            <v-list-item class="text-caption">
-              <v-list-item-header class="text-subtitle-2">
-                <v-list-item-title>{{key}}</v-list-item-title>
-              </v-list-item-header>
-              <v-chip inline>{{value}}</v-chip>
-            </v-list-item>
-            <v-divider></v-divider>
-          </div>
-        </v-list-->
 		</v-window-item>
 
 	</v-window>

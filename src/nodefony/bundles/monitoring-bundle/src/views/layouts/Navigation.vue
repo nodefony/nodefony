@@ -111,7 +111,9 @@
 
 		<v-list-item prepend-icon="mdi-security"
 		             title="Firewall"
-		             value="firewall"></v-list-item>
+		             value="firewall"
+		             :to="{name:'Firewall'}">
+		</v-list-item>
 		<v-divider></v-divider>
 
 
@@ -190,7 +192,7 @@
 		</v-list-group>
 
 		<v-divider></v-divider>
-		<v-list-group v-if="isAdmin">
+		<v-list-group v-if="isAdmin && hasProfiling">
 			<template v-slot:activator="{ props }">
 				<v-list-item v-bind="props"
 				             prepend-icon="mdi-web-sync"
@@ -207,9 +209,9 @@
 			             value="requestsProfiling"
 			             to="/profiling/requests">
 			</v-list-item>
+			<v-divider></v-divider>
 		</v-list-group>
 
-		<v-divider></v-divider>
 		<v-list-group v-if="isAdmin">
 			<template v-slot:activator="{ props }">
 				<v-list-item v-bind="props"
@@ -224,18 +226,17 @@
 			</v-list-item>
 		</v-list-group>
 		<v-divider></v-divider>
-		<v-list-group v-if="isAdmin">
-			<template v-slot:activator="{ props }">
-				<v-list-item v-bind="props"
-				             prepend-icon="mdi-alpha-p-box"
-				             title="PM2"
-				             value="pm2"></v-list-item>
+
+		<v-list-item title="PM2"
+		             :to="{name:'PM2'}"
+		             value="PM2">
+			<template v-slot:prepend>
+				<img width="55"
+				     height="20"
+				     :src="imagePm2"
+				     alt="PM2">
 			</template>
-			<v-list-item prepend-icon="mdi-cog"
-			             title="config"
-			             value="pm2config">
-			</v-list-item>
-		</v-list-group>
+		</v-list-item>
 		<v-divider></v-divider>
 
 		<v-list-group v-if="isAdmin">
@@ -268,13 +269,14 @@ import {
 } from 'vuex';
 import User from '@/views/users/components/User.vue'
 import gql from 'graphql-tag'
+import imagePm2 from '@/../public/img/pm2-logo.png'
 export default {
 	name: 'AppNavigation',
 	components: {
 		"user-card": User
 	},
 	data: () => ({
-
+		imagePm2: imagePm2
 	}),
 	apollo: {
 		request: {
@@ -283,12 +285,14 @@ export default {
       query getBundles($registred: Boolean) {
         bundles:getBundles(registred: $registred)
         connectors:getConnectors
+        profiling:getProfilingStatus
       }
       `,
 			update: (data) => {
 				return {
 					bundles: JSON.parse(data.bundles),
-					connectors: JSON.parse(data.connectors)
+					connectors: JSON.parse(data.connectors),
+					profiling: JSON.parse(data.profiling)
 				}
 			},
 			// Reactive parameters
@@ -309,6 +313,16 @@ export default {
 		]),
 		isAdmin() {
 			return this.hasRole("ROLE_ADMIN")
+		},
+
+		hasProfiling() {
+			if (!this.request) {
+				return false
+			}
+			if (this.request.profiling) {
+				return this.request.profiling.settings.profiler.active
+			}
+			return false
 		},
 
 		connectors() {

@@ -7,6 +7,7 @@
  */
 
 const NodefonySchema = require(path.resolve(__dirname, "schemas", "nodefonySchema.js"));
+const NodefonyType = require(path.resolve(__dirname, "schemas", "nodefonyType.js"));
 const Router = require(path.resolve(__dirname, "providers", "router.js"));
 const Sessions = require(path.resolve(__dirname, "providers", "sessions.js"));
 const Requests = require(path.resolve(__dirname, "providers", "requests.js"));
@@ -21,11 +22,11 @@ let usersStaticSchema = null
 let usersStaticProvider = null
 
 if (kernel.ready) {
-  usersStaticSchema = kernel.getBundles("users").getController('graphql').schema;
+  usersStaticType = kernel.getBundles("users").getController('graphql').types;
   usersStaticProvider = kernel.getBundles("users").getController('graphql').provider;
 } else {
   kernel.on("onReady", () => {
-    usersStaticSchema = kernel.getBundles("users").getController('graphql').schema;
+    usersStaticType = kernel.getBundles("users").getController('graphql').types;
     usersStaticProvider = kernel.getBundles("users").getController('graphql').provider;
   })
 }
@@ -42,7 +43,7 @@ module.exports = class graphqlController extends nodefony.Controller {
         version: this.bundle.version,
         description: "nodefony graphql Api",
         basePath: "/api/graphql",
-        schema: graphqlController.schema(this),
+        schema: graphqlController.schema(this.context),
         rootValue: graphqlController.provider(this.context)
       }, this.context);
     } catch (e) {
@@ -106,15 +107,19 @@ module.exports = class graphqlController extends nodefony.Controller {
   }
 
   static schema(context) {
-    let UsersShema = null
-    const schemas = [NodefonySchema]
-    if (usersStaticSchema) {
-      UsersShema = usersStaticSchema(context);
-      schemas.push(UsersShema)
+    return nodefony.api.Graphql.makeExecutableSchema({
+      typeDefs: graphqlController.types(context)
+    })
+  }
+
+  static types(context){
+    let UserType = null ;
+    const types = [NodefonyType, NodefonySchema]
+    if(usersStaticType){
+      UserType = usersStaticType(context);
+      types.push(UserType);
     }
-    return nodefony.api.Graphql.mergeSchemas({
-      schemas: schemas
-    });
+    return types
   }
 
 }

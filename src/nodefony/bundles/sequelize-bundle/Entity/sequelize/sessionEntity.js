@@ -115,21 +115,6 @@ module.exports = class session extends nodefony.Entity {
       modelName: this.name
     });
     return MyModel;
-
-    /*let model = db.define(this.name, this.getSchema(), {
-      logging: false
-    });
-
-    model.fetchAll = function (callback) {
-      return this.findAll().then(function (result) {
-        return callback(null, result);
-      }).catch(function (error) {
-        if (error) {
-          return callback(error, null);
-        }
-      });
-    };
-
-    return model;*/
+    
   }
 };
