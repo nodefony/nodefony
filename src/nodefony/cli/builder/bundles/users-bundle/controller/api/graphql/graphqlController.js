@@ -2,8 +2,8 @@
  *    @Route ("/api/graphql/users")
  *
  */
-const userSchema = require("./userSchema.js");
 const userType = require("./userType.js");
+const userResolver = require("./userResolver.js");
 
 module.exports = class graphqlController extends nodefony.Controller {
 
@@ -18,7 +18,7 @@ module.exports = class graphqlController extends nodefony.Controller {
       description: "Nodefony Users graphql Api",
       basePath: "/api/graphql/users",
       schema: graphqlController.schema(this.context),
-      rootValue: graphqlController.provider(this.context)
+      rootValue: this
     }, this.context);
   }
 
@@ -40,35 +40,18 @@ module.exports = class graphqlController extends nodefony.Controller {
     }
   }
 
-  static provider(context) {
-    // service entity
-    const usersService = context.get("users");
-    return {
-      async user(field, context) {
-        const user = context.getUser()
-        return await usersService.findOne(field.username, user);
-      },
-      async users(field, context) {
-        const user = context.getUser()
-        let res = await usersService.find({}, {}, user);
-        return res.rows;
-      },
-      async addUser(field, context) {
-        const user = context.getUser()
-        let res = await usersService.create(field, user);
-        return res;
-      }
-    };
-  }
-
   static schema(context) {
     return  nodefony.api.Graphql.makeExecutableSchema({
-      typeDefs: [graphqlController.types(context)]
+      typeDefs: graphqlController.types(context),
+      resolvers: graphqlController.resolvers(context)
     });
   }
 
   static types(context) {
-    return [userType, userSchema];
+    return [userType];
+  }
+  static resolvers(context) {
+    return [userResolver]
   }
 
 }

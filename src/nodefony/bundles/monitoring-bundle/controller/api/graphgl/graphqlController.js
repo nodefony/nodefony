@@ -6,30 +6,30 @@
  *  @Route ("/api")
  */
 
-const NodefonySchema = require(path.resolve(__dirname, "schemas", "nodefonySchema.js"));
+//schemas
 const NodefonyType = require(path.resolve(__dirname, "schemas", "nodefonyType.js"));
-const Router = require(path.resolve(__dirname, "providers", "router.js"));
-const Sessions = require(path.resolve(__dirname, "providers", "sessions.js"));
-const Requests = require(path.resolve(__dirname, "providers", "requests.js"));
-const Logs = require(path.resolve(__dirname, "providers", "logs.js"));
-const Bundle = require(path.resolve(__dirname, "providers", "bundle.js"));
-const Config = require(path.resolve(__dirname, "providers", "config.js"));
-const Services = require(path.resolve(__dirname, "providers", "services.js"));
-const Orm = require(path.resolve(__dirname, "providers", "orm.js"));
-const Migrations = require(path.resolve(__dirname, "providers", "migration.js"));
-const Nodefony = require(path.resolve(__dirname, "providers", "nodefony.js"));
 let usersStaticSchema = null
 let usersStaticProvider = null
-
 if (kernel.ready) {
   usersStaticType = kernel.getBundles("users").getController('graphql').types;
-  usersStaticProvider = kernel.getBundles("users").getController('graphql').provider;
+  usersStaticResolver = kernel.getBundles("users").getController('graphql').resolvers;
 } else {
   kernel.on("onReady", () => {
     usersStaticType = kernel.getBundles("users").getController('graphql').types;
-    usersStaticProvider = kernel.getBundles("users").getController('graphql').provider;
+    usersStaticResolver = kernel.getBundles("users").getController('graphql').resolvers;
   })
 }
+//resolvers
+const Router = require(path.resolve(__dirname, "resolvers", "router.js"));
+const Sessions = require(path.resolve(__dirname, "resolvers", "sessions.js"));
+const Requests = require(path.resolve(__dirname, "resolvers", "requests.js"));
+const Logs = require(path.resolve(__dirname, "resolvers", "logs.js"));
+const Bundle = require(path.resolve(__dirname, "resolvers", "bundle.js"));
+const Config = require(path.resolve(__dirname, "resolvers", "config.js"));
+const Services = require(path.resolve(__dirname, "resolvers", "services.js"));
+const Orm = require(path.resolve(__dirname, "resolvers", "orm.js"));
+const Migrations = require(path.resolve(__dirname, "resolvers", "migration.js"));
+const Nodefony = require(path.resolve(__dirname, "resolvers", "nodefony.js"));
 
 
 module.exports = class graphqlController extends nodefony.Controller {
@@ -44,7 +44,7 @@ module.exports = class graphqlController extends nodefony.Controller {
         description: "nodefony graphql Api",
         basePath: "/api/graphql",
         schema: graphqlController.schema(this.context),
-        rootValue: graphqlController.provider(this.context)
+        rootValue: this
       }, this.context);
     } catch (e) {
       this.log(e, "ERROR");
@@ -88,38 +88,58 @@ module.exports = class graphqlController extends nodefony.Controller {
     }
   }*/
 
-  static provider(context) {
+  /*static provider(context) {
     const UsersProvider = usersStaticProvider(context);
-    const prov = nodefony.extend(Nodefony,
-      Router,
-      Config,
-      Bundle,
-      Services,
-      Orm,
-      Sessions,
-      Requests,
-      Migrations,
-      Logs);
+    const prov = nodefony.extend(
+      //Nodefony,
+      //Router,
+      //Config,
+      //Bundle,
+      //Services,
+      //Orm,
+      //Sessions,
+      //Requests,
+      //Migrations,
+      //Logs
+    );
     if (UsersProvider) {
       return nodefony.extend(prov, UsersProvider)
     }
     return prov
-  }
+  }*/
 
   static schema(context) {
     return nodefony.api.Graphql.makeExecutableSchema({
-      typeDefs: graphqlController.types(context)
+      typeDefs: graphqlController.types(context),
+      resolvers: graphqlController.resolvers(context),
     })
   }
 
-  static types(context){
-    let UserType = null ;
-    const types = [NodefonyType, NodefonySchema]
-    if(usersStaticType){
-      UserType = usersStaticType(context);
-      types.push(UserType);
+  static types(context) {
+    const types = [NodefonyType]
+    if (usersStaticType) {
+      types.push(usersStaticType(context));
     }
     return types
+  }
+
+  static resolvers(context) {
+    const resolvers =  [
+      Nodefony,
+      Config,
+      Bundle,
+      Services,
+      Router,
+      Orm,
+      Sessions,
+      Requests,
+      Logs,
+      Migrations
+    ];
+    if( usersStaticResolver){
+      resolvers.push(usersStaticResolver(context));
+    }
+    return resolvers;
   }
 
 }

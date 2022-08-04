@@ -21,6 +21,17 @@ const type = `
     image: String
     roles : Array
   }
+
+  # the schema allows the following query:
+  type Query {
+    user(username: String!): User
+    users: [User]
+  }
+
+  # this schema allows the following mutation:
+  type Mutation {
+    addUser(username: String!, email: String!, password: String!): User
+  }
 `
 
 module.exports = type
