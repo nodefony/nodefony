@@ -1,4 +1,3 @@
-import "./debugBar.css";
 
 const listen = function() {
   if (document.addEventListener) {
@@ -191,4 +190,4 @@ class Nodefony {
   }
 }
 
-export default new Nodefony();
+document.nodefony =  new Nodefony();

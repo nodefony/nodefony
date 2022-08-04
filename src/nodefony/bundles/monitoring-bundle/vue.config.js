@@ -57,13 +57,13 @@ module.exports = {
         args[0].chunks = ['app'];
         return args;
       });
-    config.module.rule("css")
+    /*config.module.rule("css")
       .exclude
       .add(/debugBar.css$/)
     //console.log( config.module.rule())
     config.module.rule("js")
       .exclude
-      .add(/debugBar.js$/)
+      .add(/debugBar.js$/)*/
 
   },
 
@@ -72,7 +72,7 @@ module.exports = {
     entry: {
       swagger: ["/Resources/swagger/swagger.js"],
       graphiql: ["/Resources/graphiql/graphiql.jsx"],
-      debugBar: ["/Resources/debugbar/debugBar.js"]
+      //debugBar: ["/Resources/debugbar/debugBar.js"]
     },
     module: {
       rules: [{
@@ -91,7 +91,7 @@ module.exports = {
                ],
           }
         }]
-      }, {
+      }/*, {
         test: /debugBar\.css$/i,
         use: [
           MiniCssExtractPlugin.loader,
@@ -109,7 +109,7 @@ module.exports = {
               ],
             }
         }]
-      }]
+      }*/]
     },
     output: {
       hotUpdateChunkFilename: 'hot/[runtime].[fullhash].hot-update.js',
