@@ -80,6 +80,16 @@
 <script>
 import gql from 'graphql-tag'
 import Convert from 'ansi-to-html'
+import nodefony from 'nodefony-client'
+import {
+	ref,
+	watch,
+	onMounted,
+	onUnmounted,
+	computed,
+	reactive,
+	inject
+} from 'vue'
 
 export default {
 	name: "n-logs",
@@ -93,9 +103,11 @@ export default {
 		}
 	},
 	mounted() {
-		console.log("psasas")
-		this.convert = new Convert()
-		console.log(this.convert)
+		try {
+			this.convert = new Convert();
+		} catch (e) {
+			this.log(e, "ERROR")
+		}
 	},
 	apollo: {
 		request: {
@@ -116,15 +128,7 @@ export default {
 			},
 		}
 	},
-	watch: {
-
-	},
-
-	setup(props) {
-
-		return {}
-	},
-
+	watch: {},
 	computed: {
 		logs() {
 			if (this.request && this.request.logs) {
@@ -139,11 +143,7 @@ export default {
 			return null
 		}
 	},
-
-	beforeMount() {
-
-	},
-
+	beforeMount() {},
 	methods: {
 		convertHtml(value) {
 			try {
