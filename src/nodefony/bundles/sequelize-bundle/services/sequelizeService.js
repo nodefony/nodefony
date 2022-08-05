@@ -130,7 +130,7 @@ class connectionDB {
     return this.db;
   }
 
-  connect(type, config) {
+  async connect(type, config) {
     if (this.orm.debug) {
       config.options.logging = (value) => {
         this.log(value, "INFO");
@@ -145,7 +145,31 @@ class connectionDB {
         config.options.storage = path.resolve(config.dbname);
         break;
       }
-      conn = new this.orm.engine(config.dbname, config.username, config.password, config.options);
+      let username = config.username
+      let password = config.password
+      try {
+        if (config.credentials && nodefony.typeOf(config.credentials) === 'function') {
+            this.log(`Try Get Credentials (async method)`);
+            let auth = await config.credentials(this);
+            if( auth.username ){
+              this.log(`Add username Credential for connector ${this.name}`);
+              username= auth.username
+            }else{
+              this.log(`Credentials (async method) no username secret`,"WARNING")
+            }
+            if( auth.password ){
+              this.log(`Add password Credential for connector ${this.name}`);
+              password= auth.password
+            }else{
+              this.log(`Credentials (async method) no password secret`,"WARNING")
+            }
+            this.log(`Success Credential (async method) ${auth}`, "DEBUG");
+        }
+      } catch (e) {
+        this.log(e, "WARNING")
+      }
+      this.log(`Try Connect engine database`, "DEBUG")
+      conn = new this.orm.engine(config.dbname, username, password, config.options);
       process.nextTick(() => {
         conn
           .authenticate()

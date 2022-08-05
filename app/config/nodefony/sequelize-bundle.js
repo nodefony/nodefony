@@ -41,42 +41,58 @@
  *         }
  *
  */
-module.exports = {
-    debug: false,
-    connectors: {
-      // nodefony: {
-      //   driver: "mysql",
-      //   dbname: 'nodefony',
-      //   username: 'root',
-      //   password: 'nodefony',
-      //   options: {
-      //     dialect: "mysql",
-      //     host: "localhost",
-      //     port: "3306",
-      //     pool: {
-      //       max: 5,
-      //       min: 0,
-      //       idle: 10000,
-      //       acquire: 60000
-      //     }
-      //   }
-      // },
-      // nodefony: {
-      //   driver: "postgres",
-      //   dbname: 'nodefony',
-      //   username: 'postgres',
-      //   password: 'postgrespw',
-      //   options: {
-      //     dialect: "postgres",
-      //     host: "localhost",
-      //     port: "55000",
-      //     pool: {
-      //       max: 5,
-      //       min: 0,
-      //       idle: 10000,
-      //       acquire: 60000
-      //     }
-      //   }
-      // }
-    }
+const vault = () => {
+  return () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        serviceVault = kernel.get("vault");
+        const token = await serviceVault.getConnectorCredentials("nodefony")
+        return resolve(token.data)
+      } catch (e) {
+        return reject(e)
+      }
+    })
   }
+}
+
+
+module.exports = {
+  debug: false,
+  connectors: {
+    // nodefony: {
+    //   driver: "mysql",
+    //   dbname: 'nodefony',
+    //   username: 'root',
+    //   password: 'nodefony',
+    //   options: {
+    //     dialect: "mysql",
+    //     host: "localhost",
+    //     port: "3306",
+    //     pool: {
+    //       max: 5,
+    //       min: 0,
+    //       idle: 10000,
+    //       acquire: 60000
+    //     }
+    //   }
+    // },
+    // nodefony: {
+    //   driver: "postgres",
+    //   dbname: 'nodefony',
+    //   username: 'postgres',
+    //   password: 'postgrespw',
+    //   credentials: vault(),
+    //   options: {
+    //     dialect: "postgres",
+    //     host: "localhost",
+    //     port: "5432",
+    //     pool: {
+    //       max: 30,
+    //       min: 0,
+    //       idle: 10000,
+    //       acquire: 60000
+    //     }
+    //   }
+    // }
+  }
+}

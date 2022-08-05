@@ -8,8 +8,12 @@ module.exports = class vault extends nodefony.Service {
       this.kernel.prependOnceListener('onBoot', () => {
         try{
           return this.initialize(true)
+          .catch(e=>{
+            return true
+          })
         }catch(e){
           this.log(e,"ERROR")
+          return true
         }
       });
       /*this.kernel.prependOnceListener("onReady", async () => {
@@ -24,13 +28,17 @@ module.exports = class vault extends nodefony.Service {
   }
 
   async initialize(prepare) {
-    this.options = this.bundle.settings.vault
-    this.config = this.options.config
-    this.vault = await require("node-vault")(this.options.connect);
-    //this.vaultStatus = await this.status();
-    if (prepare) {
-      this.log(`initialize vault service`)
-      return await this.prepareAuth()
+    try{
+      this.options = this.bundle.settings.vault
+      this.config = this.options.config
+      this.vault = await require("node-vault")(this.options.connect);
+      //this.vaultStatus = await this.status();
+      if (prepare) {
+        this.log(`initialize vault service`)
+        return await this.prepareAuth()
+      }
+    }catch(e){
+      throw e
     }
   }
 

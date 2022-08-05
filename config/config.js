@@ -108,7 +108,8 @@ module.exports = {
       "users-bundle": path.resolve("src", "nodefony", "cli", "builder", "bundles", "users-bundle"),
       //"demo-bundle": "file:src/bundles/demo-bundle",
       //"webAssembly-bundle": "file:src/bundles/webAssembly-bundle",
-      //"ia-bundle": "file:src/bundles/ia-bundle"
+      //"ia-bundle": "file:src/bundles/ia-bundle",
+      //"vault-bundle": "file:src/bundles/vault-bundle"
     },
     /**
      * SYSLOG NODEFONY

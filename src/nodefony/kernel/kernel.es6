@@ -1127,6 +1127,7 @@ class Kernel extends nodefony.Service {
       await this.emitAsync("onReady", this, tab);
     } catch (e) {
       this.log(e, "WARNING", "EVENTS onReady");
+      throw e
     }
     this.ready = true;
 
