@@ -266,7 +266,7 @@
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
-  background-image: url("../public/images/lock-open.svg");
+  background-image: url("/monitoring-bundle/images/lock-open.svg");
   margin-top: 4px;
   margin-right: 5px;
   margin-left: 10px;

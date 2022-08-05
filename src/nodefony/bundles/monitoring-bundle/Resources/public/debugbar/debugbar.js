@@ -190,4 +190,4 @@ class Nodefony {
   }
 }
 
-document.nodefony =  new Nodefony();
+window.debugbar =  new Nodefony();
