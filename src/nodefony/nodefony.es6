@@ -83,7 +83,7 @@ class Nodefony {
     }
   }
 
-  generateId(...args){
+  generateId(...args) {
     return uuid.v4(...args);
   }
 
@@ -569,7 +569,7 @@ class Nodefony {
         return await kernel.start();
       } else {
         let options = cli.commander.opts();
-        if( options.dump ){
+        if (options.dump) {
           await cli.setCommand("webpack:dump");
         }
         cli.setType("SERVER");
@@ -640,22 +640,109 @@ class Nodefony {
       break;
     case "kill":
       cli.keepAlive = true;
-      pm2.killDaemon((error, proc) => {
-        if (error) {
-          cli.logger(error, "ERROR");
-          return cli.terminate(-1);
+      return new Promise(async (resolve, reject) => {
+        const util = require('node:util');
+        const exec = util.promisify(require('node:child_process').exec);
+        let ret = null
+        try {
+          const {
+            stdout,
+            stderr
+          } = await exec('npx pm2 kill');
+          if (stderr) {
+            cli.log(`Kill PM2 MANAGER ${stderr}`, "WARNING");
+          } else {
+            cli.log(`Kill PM2 MANAGER success ${stdout}`);
+            ret = 0
+          }
+        } catch (e) {
+          cli.log(`Kill PM2 MANAGER ${e}`, "ERROR");
         }
-        cli.logger(`Kill PM2 MANAGER success :  ${proc.success}`);
-        pm2.list((error, processDescriptionList) => {
+        try {
+          const {
+            stdout,
+            stderr
+          } = await exec('pkill pm2');
+          if (stderr) {
+            cli.log(`pkill pm2 ${stderr}`, "WARNING");
+          } else {
+            cli.log(`pkill pm2 success ${stdout}`);
+            ret = 0
+          }
+        } catch (e) {
+          cli.log(`pkill pm2 ${e}`, "WARNING");
+        }
+        try {
+          const {
+            stdout,
+            stderr
+          } = await exec('killall pm2');
+          if (stderr) {
+            cli.log(`killall pm2  ${stderr}`, "WARNING");
+          } else {
+            cli.log(`killall pm2 success ${stdout}`);
+            ret = 0
+          }
+        } catch (e) {
+          cli.log(`killall pm2 ${e}`, "WARNING");
+        }
+        if (ret = 0) {
+          return resolve(process.exit(ret));
+        }
+        return resolve(process.exit(-1));
+        //try {
+        /*let res = await pm2.killDaemon((err, proc) => {
+          console.log("passsssss")
+          if (err) {
+            cli.logger(err, "ERROR");
+            pm2.disconnect()
+            process.nextTick(() => {
+              return reject(cli.terminate(-1));
+            })
+          }
+        })*/
+        /*res = pm2.disconnect(() => {
+          cli.logger(`Kill PM2 MANAGER success `);
+          process.nextTick(() => {
+            return resolve(process.exit(0));
+          })
+          console.log("pass")
+        })*/
+        /*return pm2.killDaemon((error, proc) => {
+          console.log("passss killDaemon")
           if (error) {
             cli.logger(error, "ERROR");
-            return cli.terminate(-1);
+            pm2.disconnect()
+            process.nextTick(() => {
+              return reject(cli.terminate(-1));
+            })
+          }
+          cli.logger(`Kill PM2 MANAGER success :  ${proc.success}`);
+          pm2.disconnect()
+          process.nextTick(() => {
+            return resolve(process.exit(0));
+          })*/
+        /*return pm2.list((error, processDescriptionList) => {
+          if (error) {
+            cli.logger(error, "ERROR");
+            pm2.disconnect()
+            process.nextTick(() => {
+              return reject(process.exit(-1));
+            })
           }
           this.tablePm2(cli, processDescriptionList);
-          return process.exit(0);
-        });
-      });
-      break;
+          pm2.disconnect()
+          process.nextTick(() => {
+            return resolve(process.exit(0));
+          })
+        });*/
+        //});
+        //} catch (e) {
+        //  pm2.disconnect()
+        //  cli.log(e)
+        //  return reject(cli.terminate(-1));
+        //}
+      })
     case "status":
     case "list":
       cli.keepAlive = true;
@@ -665,7 +752,11 @@ class Nodefony {
           return cli.terminate(-1);
         }
         this.tablePm2(cli, processDescriptionList);
-        return process.exit(0);
+        pm2.disconnect(() => {
+          process.nextTick(() => {
+            return process.exit(0);
+          })
+        })
       });
       break;
     case "log":
@@ -721,7 +812,7 @@ class Nodefony {
       return cli.setCommand("nodefony:outdated");
     case "test":
       return cli.setCommand("unitest:launch:all");
-    //case "dependencies":
+      //case "dependencies":
       //return cli.setCommand("nodefony:bundles:dependencies");
     default:
       if (cli.kernel) {
@@ -864,7 +955,9 @@ class Nodefony {
           cli.terminate(1);
           return;
         }
-        console.log( util.inspect(this.pm2Config,{depth:10}) );
+        console.log(util.inspect(this.pm2Config, {
+          depth: 10
+        }));
         pm2.start(this.pm2Config, (err /*, apps*/ ) => {
           if (err) {
             cli.logger(err.stack || err, "ERROR");

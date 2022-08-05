@@ -2,10 +2,11 @@ const vm = require("vm");
 const path = require("path");
 const Module = require("module");
 const fs = require('fs');
+const pm2 = require('pm2');
+//console.log(require.resolve("pm2"))
 const Nodefony = require(path.resolve(__dirname, "nodefony.es6"));
 
 module.exports = function () {
-
   // Create Context copy library in context  see load runInThisContext
   const context = vm.createContext(this);
 
@@ -31,10 +32,9 @@ module.exports = function () {
   context.twig = require("twig");
   context.crypto = require("crypto");
   context.BlueBird = require("bluebird");
-  context.pm2 = require('pm2');
+  context.pm2 = pm2;
   //context.Rx = require("rxjs");
   const nodefony = new Nodefony(context);
-
 
   /**
    *  Nodefony autoloader
