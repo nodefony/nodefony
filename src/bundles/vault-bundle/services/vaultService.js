@@ -5,19 +5,22 @@ module.exports = class vault extends nodefony.Service {
     if (this.kernel.ready) {
       this.initialize(true)
     } else {
-      this.kernel.once('onBoot', () => {
-        this.initialize()
+      this.kernel.prependOnceListener('onBoot', () => {
+        try{
+          return this.initialize(true)
+        }catch(e){
+          this.log(e,"ERROR")
+        }
       });
-      this.kernel.once("onReady", async () => {
+      /*this.kernel.prependOnceListener("onReady", async () => {
         try {
           return await this.prepareAuth()
         } catch (e) {
           this.log(e, "ERROR")
-          return
         }
-      })
+      })*/
     }
-    this.path = this.kernel.tmpDir.path;
+    this.auditpath = this.kernel.tmpDir.path;
   }
 
   async initialize(prepare) {
@@ -142,11 +145,11 @@ module.exports = class vault extends nodefony.Service {
         secret_id: this.secretId,
         mount_point: `${this.config.auths.approle.mountPoint}`,
       })
-      .then((res) => {
+      .then(async (res) => {
         if (init) {
-          return this.initializeSecrets(res)
+          await this.initializeSecrets(res)
         }
-        return res
+        return vault
       })
       .catch((err) => {
         this.log(err, "ERROR")
@@ -164,7 +167,7 @@ module.exports = class vault extends nodefony.Service {
       })
   }
 
-  addSecrets(secret, vault, options = {}) {
+  addSecrets(secret, vault = null, options = {}) {
     const engine = vault || this.vault;
     return engine.write(secret.path, secret.data)
       .then(() => {
@@ -180,11 +183,38 @@ module.exports = class vault extends nodefony.Service {
       });
   }
 
+  getSercret(secret, vault, options = {}) {
+    const engine = vault ;
+    return engine.read(secret.path)
+      .then((res) => {
+        //return engine.delete(secret.path)
+        return res
+      })
+      .catch((error) => {
+        this.log(error, "ERROR")
+        throw error
+      });
+  }
+
   async initializeSecrets(login, vault = null) {
-    this.log(`Add vault secrets nodefony config `)
+    this.log(`Add vault secrets default nodefony config`)
     for await (const secret of this.config.secrets) {
       await this.addSecrets(secret, vault)
     }
+  }
+
+  async getConnectorCredentials(connector = "nodefony") {
+    return this.login()
+      .then((vault) => {
+        let Path = `nodefony/data/databases/connector/${connector}`
+        return this.getSercret({
+          path: Path
+        }, vault)
+      })
+      .catch(e => {
+        this.log(e, "ERROR")
+        throw e
+      })
   }
 
   /*test() {

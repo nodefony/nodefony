@@ -70,12 +70,12 @@ module.exports = {
       },
       policy: {
         name: 'nodefony-policy',
-        rules: '{ "path": { "nodefony/data": { "policy": "write" } } }',
+        rules: '{ "path": { "nodefony/data/*": { "policy": "write" } } }',
       },
       secrets: [{
         path: "nodefony/data/databases/connector/nodefony",
         data: {
-          name: "nodefony",
+          username: "root",
           password: "nodefony"
         }
     }]
