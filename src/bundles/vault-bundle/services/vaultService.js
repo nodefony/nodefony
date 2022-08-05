@@ -37,23 +37,18 @@ module.exports = class vault extends nodefony.Service {
   }
 
   nodefonyPolicy() {
+    console.log(this.options.policy)
     return this.vault.policies()
       .then(() => {
-        return this.vault.addPolicy({
-          name: 'nodefony-policy',
-          rules: '{ "path": { "secret/data/corp/si/services/netbox/*": { "policy": "read" } } }',
-        });
+        return this.vault.addPolicy(this.options.policy);
       })
       .then(() => this.vault.getPolicy({
-        name: 'nodefony-policy'
+        name: this.options.policy.name
       }))
       .then(this.vault.policies)
       .then((result) => {
-        //console.log(result);
+
         return result
-        /*return this.vault.removePolicy({
-          name: 'netbox'
-        });*/
       })
       .catch((err) => {
         this.log(err, "ERROR")
@@ -70,12 +65,12 @@ module.exports = class vault extends nodefony.Service {
         return this.vault.enableAuth({
           mount_point: this.options.mountPoint,
           type: 'approle',
-          description: 'Approle auth',
+          description: 'Approle auth Nodefony',
         });
       })
       .then(() => this.vault.addApproleRole({
         role_name: this.options.roleName,
-        policies: 'nodefony-policy'
+        policies: this.options.policy.name
       }))
       .then(() => Promise.all([this.vault.getApproleRoleId({
           role_name: this.options.roleName
@@ -105,16 +100,11 @@ module.exports = class vault extends nodefony.Service {
         secret_id: this.secretId
       })
       .then(() => {
-        return this.readNetboxToken(vault)
-      })
-      .then((response) => {
-        if (response && response.data) {
-          return response.data.data;
-        }
-        return null
+        return vault;
       })
       .catch((err) => {
         this.log(err, "ERROR")
+        throw err
       })
   }
 
@@ -126,26 +116,6 @@ module.exports = class vault extends nodefony.Service {
       .catch((err) => {
         this.log(err, "ERROR")
       })
-  }
-
-  readNetboxToken(vault) {
-    let pathVault = null;
-    switch (this.kernel.environment) {
-      case "prod":
-        pathVault = this.options.netbox.prod
-        break;
-      case "dev":
-        pathVault = this.options.netbox.dev
-        break;
-    }
-    return vault.read(pathVault)
-      .then((data) => {
-        return data
-      })
-      .catch((error) => {
-        this.log(error, "ERROR", `VAULT path: ${pathVault}`)
-        throw error;
-      });
   }
 
   /*test() {

@@ -1,20 +1,20 @@
 /**
-*
-*
-*	d-lake-si CONFIG BUNDLE  vault-bundle
-*
-* ===============================================================================
-*
-*  Copyright © 2022/2022        admin | admin@nodefony.com
-*
-* ===============================================================================
-*
-*        GENERATE BY d-lake-si BUILDER
-*/
+ *
+ *
+ *	d-lake-si CONFIG BUNDLE  vault-bundle
+ *
+ * ===============================================================================
+ *
+ *  Copyright © 2022/2022        admin | admin@nodefony.com
+ *
+ * ===============================================================================
+ *
+ *        GENERATE BY d-lake-si BUILDER
+ */
 
 module.exports = {
-  type        : "sandbox",
-  locale      : "en_en",
+  type: "sandbox",
+  locale: "en_en",
 
   /**
    *    WATCHERS
@@ -52,15 +52,15 @@ module.exports = {
    *
    *	example : create an other database connector
    */
-   vault:{
-     apiVersion: 'v1', // default
-     endpoint: 'http://localhost:8200', // default
-     token: 'hvs.GdQ7VosAKxq7f1gV8k8ZbIw4',
-     mountPoint:'approle',
-     roleName:'nodefony-role',
-     netbox:{
-       dev:"secret/data/corp/si/services/netbox/dev/token",
-       prod:"secret/data/corp/si/services/netbox/prod/token"
-     }
-   }
-};
+  vault: {
+    apiVersion: 'v1', // default
+    endpoint: 'http://localhost:8200', // default
+    token: 'hvs.RkIXePX5oRXhzNAQ1JO5uqgn',
+    mountPoint: 'approle',
+    roleName: 'nodefony-role',
+    policy: {
+      name: 'nodefony-policy',
+      rules: '{ "path": { "secret/data/nodefony": { "policy": "read" } } }',
+    }
+  }
+}
