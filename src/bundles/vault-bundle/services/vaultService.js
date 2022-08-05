@@ -9,9 +9,9 @@ module.exports = class vault extends nodefony.Service {
         this.initialize()
       });
       this.kernel.once("onReady", async () => {
-        try{
+        try {
           return await this.prepareAuth()
-        }catch(e){
+        } catch (e) {
           this.log(e, "ERROR")
           return
         }
@@ -22,32 +22,55 @@ module.exports = class vault extends nodefony.Service {
 
   async initialize(prepare) {
     this.options = this.bundle.settings.vault
-    this.vault = await require("node-vault")(this.options);
+    this.config = this.options.config
+    this.vault = await require("node-vault")(this.options.connect);
     //this.vaultStatus = await this.status();
     if (prepare) {
+      this.log(`initialize vault service`)
       return await this.prepareAuth()
     }
   }
 
   async prepareAuth() {
+    await this.createInitialMount();
     // policy
-    await this.nodefonyPolicy()
+    await this.nodefonyPolicy();
     // creer auth approle
-    return await this.auth()
+    return await this.auth();
+  }
+
+  createInitialMount() {
+    return this.vault.mounts()
+      .then((results) => {
+        if (results.hasOwnProperty(`${this.config.mount.path}/`)) {
+          return results[`${this.config.mount.path}/`];
+        }
+        return this.vault.mount({
+          mount_point: this.config.mount.path,
+          type: 'generic',
+          description: 'Nodefony mount Point'
+        })
+      })
+      .catch((err) => {
+        this.log(err.message, "WARNING")
+        //throw err
+      });
   }
 
   nodefonyPolicy() {
-    console.log(this.options.policy)
     return this.vault.policies()
-      .then(() => {
-        return this.vault.addPolicy(this.options.policy);
+      .then((results) => {
+        if (results.policies.includes(`${this.config.policy.name}`)) {
+          return results;
+        }
+        this.log(`Create vault nodefony policy : ${this.config.policy.name}`)
+        return this.vault.addPolicy(this.config.policy)
       })
       .then(() => this.vault.getPolicy({
-        name: this.options.policy.name
+        name: this.config.policy.name
       }))
       .then(this.vault.policies)
       .then((result) => {
-
         return result
       })
       .catch((err) => {
@@ -57,32 +80,50 @@ module.exports = class vault extends nodefony.Service {
   }
 
   auth() {
+    let exist = false
     return this.vault.auths()
       .then((result) => {
-        if (result.hasOwnProperty('approle/')) {
-          return undefined;
+        if (result.hasOwnProperty(`${this.config.auths.approle.mountPoint}/`)) {
+          exist = true
+          return result;
         }
+        this.log(`enableAuth vault nodefony authentication approle`)
         return this.vault.enableAuth({
-          mount_point: this.options.mountPoint,
-          type: 'approle',
-          description: 'Approle auth Nodefony',
-        });
+            mount_point: `${this.config.auths.approle.mountPoint}`,
+            type: 'approle',
+            description: 'Approle auth Nodefony',
+          })
+          .then(() => {
+            return result
+          })
       })
-      .then(() => this.vault.addApproleRole({
-        role_name: this.options.roleName,
-        policies: this.options.policy.name
-      }))
-      .then(() => Promise.all([this.vault.getApproleRoleId({
-          role_name: this.options.roleName
-        }),
-        this.vault.getApproleRoleSecret({
-          role_name: this.options.roleName
+      .then((result) => {
+        if (exist) {
+          return result;
+        }
+        this.log(`Create vault nodefony authentication approle name : ${this.config.auths.approle.roleName}`)
+        return this.vault.addApproleRole({
+          mount_point: `${this.config.auths.approle.mountPoint}`,
+          role_name: this.config.auths.approle.roleName,
+          policies: this.config.policy.name
         })
-      ]))
+      })
+      .then(() => {
+        this.log(`Get vault nodefony auth credentials (id, secret) role : ${this.config.auths.approle.roleName}`)
+        return Promise.all([this.vault.getApproleRoleId({
+            mount_point: `${this.config.auths.approle.mountPoint}`,
+            role_name: this.config.auths.approle.roleName
+          }),
+        this.vault.getApproleRoleSecret({
+            mount_point: `${this.config.auths.approle.mountPoint}`,
+            role_name: this.config.auths.approle.roleName
+          })
+      ])
+      })
       .then((result) => {
         this.roleId = result[0].data.role_id;
         this.secretId = result[1].data.secret_id;
-        return result
+        return this.login(null, true);
       })
       .catch((err) => {
         this.log(err, "ERROR")
@@ -90,17 +131,22 @@ module.exports = class vault extends nodefony.Service {
       });
   }
 
-  async login(endpoint = this.options.endpoint) {
+  async login(endpoint = this.options.connect.endpoint, init = false) {
+    this.log(`Authentication vault server ${this.options.connect.endpoint}`)
     const vault = await require("node-vault")({
       apiVersion: 'v1',
       endpoint: endpoint
     });
     return vault.approleLogin({
         role_id: this.roleId,
-        secret_id: this.secretId
+        secret_id: this.secretId,
+        mount_point: `${this.config.auths.approle.mountPoint}`,
       })
-      .then(() => {
-        return vault;
+      .then((res) => {
+        if (init) {
+          return this.initializeSecrets(res)
+        }
+        return res
       })
       .catch((err) => {
         this.log(err, "ERROR")
@@ -116,6 +162,29 @@ module.exports = class vault extends nodefony.Service {
       .catch((err) => {
         this.log(err, "ERROR")
       })
+  }
+
+  addSecrets(secret, vault, options = {}) {
+    const engine = vault || this.vault;
+    return engine.write(secret.path, secret.data)
+      .then(() => {
+        return this.vault.read(secret.path)
+      })
+      .then((res) => {
+        //return engine.delete(secret.path)
+        return res
+      })
+      .catch((error) => {
+        this.log(error, "ERROR")
+        throw error
+      });
+  }
+
+  async initializeSecrets(login, vault = null) {
+    this.log(`Add vault secrets nodefony config `)
+    for await (const secret of this.config.secrets) {
+      await this.addSecrets(secret, vault)
+    }
   }
 
   /*test() {

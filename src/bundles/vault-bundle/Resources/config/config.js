@@ -53,14 +53,32 @@ module.exports = {
    *	example : create an other database connector
    */
   vault: {
-    apiVersion: 'v1', // default
-    endpoint: 'http://localhost:8200', // default
-    token: 'hvs.RkIXePX5oRXhzNAQ1JO5uqgn',
-    mountPoint: 'approle',
-    roleName: 'nodefony-role',
-    policy: {
-      name: 'nodefony-policy',
-      rules: '{ "path": { "secret/data/nodefony": { "policy": "read" } } }',
+    connect:{
+      apiVersion: 'v1', // default
+      endpoint: 'http://localhost:8200', // default
+      token: 'hvs.RkIXePX5oRXhzNAQ1JO5uqgn',
+    },
+    config: {
+      mount:{
+        path: "nodefony",
+      },
+      auths:{
+        approle:{
+          mountPoint: 'nodefony-auth',
+          roleName: 'nodefony-role',
+        }
+      },
+      policy: {
+        name: 'nodefony-policy',
+        rules: '{ "path": { "nodefony/data": { "policy": "write" } } }',
+      },
+      secrets: [{
+        path: "nodefony/data/databases/connector/nodefony",
+        data: {
+          name: "nodefony",
+          password: "nodefony"
+        }
+    }]
     }
   }
 }
