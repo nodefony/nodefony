@@ -11,7 +11,7 @@
 			<v-img class=""
 			       width="35"
 			       height=">35"
-			       :src="imageSqLite" />
+			       :src="ormImage" />
 		</template>
 		<v-toolbar-title>Connector {{connector.type}}</v-toolbar-title>
 		<v-chip :color="colorConnect"
@@ -84,6 +84,7 @@
 
 <script>
 import imageSqLite from '@/../public/img/sqlite.webp'
+import imagePostGres from '@/../public/img/postgres.svg.png'
 export default {
 	name: "n-orm-connection",
 	props: {
@@ -97,9 +98,7 @@ export default {
 		}
 	},
 	data() {
-		return {
-			imageSqLite: imageSqLite
-		}
+		return {}
 	},
 	computed: {
 		colorConnect() {
@@ -109,6 +108,19 @@ export default {
 				}
 			}
 			return 'red'
+		},
+		ormImage() {
+			if (this.connector) {
+				switch (this.connector.type) {
+					case "postgres":
+						return imagePostGres
+					case "sqlite":
+						return imageSqLite
+					default:
+						return imageSqLite
+				}
+			}
+			return imageSqLite
 		}
 	}
 }
