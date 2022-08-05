@@ -1,0 +1,25 @@
+{
+  "name": "vault",
+  "version": "1.0.0",
+  "description": "vault description",
+  "author": "admin <admin@nodefony.com>",
+  "main": "vaultBundle.js",
+  "scripts": {},
+  "private": true,
+  "keywords": [
+    "nodefony",
+    "javascript",
+    "vault"
+  ],
+  "repository": {},
+  "dependencies": {
+    "node-vault": "^0.9.22"
+  },
+  "devDependencies": {
+    "@mapbox/node-pre-gyp": "1.0.9",
+    "node-gyp": "^9.1.0"
+  },
+  "license": "",
+  "readmeFilename": "README.md",
+  "contributors": []
+}
