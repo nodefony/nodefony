@@ -69,6 +69,7 @@ module.exports = {
 
   configureWebpack: {
     devtool: process.env.NODE_ENV === "development" ? "source-map" : false,
+    //context:path.resolve("."),
     entry: {
       swagger: ["/Resources/swagger/swagger.js"],
       graphiql: ["/Resources/graphiql/graphiql.jsx"],

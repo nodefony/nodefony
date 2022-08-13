@@ -14,7 +14,7 @@
   "dependencies": {
     "@babel/core": "7.18.10",
     "@babel/preset-env": "7.18.10",
-    "@popperjs/core": "2.11.5",
+    "@popperjs/core": "2.11.6",
     "babel-loader": "8.2.5",
     "bootstrap": "5.2.0",
     "clean-webpack-plugin": "^4.0.0",
@@ -25,14 +25,14 @@
     "favicons-webpack-plugin": "^5.0.2",
     "font-awesome": "^4.7.0",
     "html-webpack-plugin": "^5.5.0",
-    "imports-loader": "4.0.0",
+    "imports-loader": "4.0.1",
     "jquery": "^3.6.0",
     "mini-css-extract-plugin": "2.6.1",
-    "sass": "1.54.2",
+    "sass": "1.54.4",
     "sass-loader": "13.0.2",
     "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "^3.3.1",
-    "terser-webpack-plugin": "5.3.3",
+    "terser-webpack-plugin": "5.3.4",
     "webpack": "5.74.0",
     "webpack-merge": "^5.8.0",
     "workbox-webpack-plugin": "6.5.4"
@@ -40,7 +40,7 @@
   "devDependencies": {
     "@mapbox/node-pre-gyp": "1.0.9",
     "node-gyp": "9.1.0",
-    "webpack-dev-server": "4.9.3"
+    "webpack-dev-server": "4.10.0"
   },
   "license": "",
   "readmeFilename": "README.md",
