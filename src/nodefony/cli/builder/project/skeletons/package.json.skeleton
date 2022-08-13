@@ -34,13 +34,13 @@
     "node": ">=12"
   },
   "dependencies": {
-    "mongoose": "6.4.6",
+    "mongoose": "6.5.2",
     "nodefony": "^{{version}}",
     "pm2": "5.2.0",
     "pm2-logrotate": "^2.7.0",
     "sequelize": "6.21.3",
-    "webpack": "5.73.0",
-    "webpack-dev-server": "4.9.3"
+    "webpack": "5.74.0",
+    "webpack-dev-server": "4.10.0"
   },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "1.0.9",
