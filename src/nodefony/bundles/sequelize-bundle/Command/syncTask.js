@@ -66,7 +66,7 @@ class generateTask extends nodefony.Task {
           this.log("DATABASE  : " + connection.options.dialect + " CONNECTION : " + connectionName, "INFO");
           tab.push( await this.sync(connectionName, connection, force))
         }
-        return tab
+        return resolve(tab)
       } catch (e) {
         return reject(e);
       }

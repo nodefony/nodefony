@@ -78,6 +78,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
         task = command.getTask("sync");
         return await task.entities(force);
       } catch (e) {
+        this.log(e, "ERROR");
         throw e;
       }
     }
