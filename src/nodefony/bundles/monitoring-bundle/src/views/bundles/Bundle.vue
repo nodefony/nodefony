@@ -306,7 +306,8 @@
 
 			<v-window-item value="package">
 				<n-bundle-package v-if="bundle && bundle.package"
-				                  :package="bundle.package" />
+				                  :package="bundle.package"
+				                  :bundleName="name" />
 			</v-window-item>
 
 

@@ -60,7 +60,7 @@
     "@vue/cli-plugin-router": "5.0.8",
     "@vue/cli-plugin-vuex": "5.0.8",
     "@vue/cli-service": "5.0.8",
-    "eslint": "8.21.0",
+    "eslint": "8.22.0",
     "eslint-plugin-vue": "9.3.0",
     "sass": "1.54.4",
     "sass-loader": "13.0.2",

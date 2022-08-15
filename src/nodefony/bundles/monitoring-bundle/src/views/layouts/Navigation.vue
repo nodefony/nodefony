@@ -64,6 +64,12 @@
 		</v-list-group>
 		<v-divider></v-divider>
 
+		<v-list-item prepend-icon="mdi-npm"
+		             title="Packages"
+		             value="npm"
+		             to="/npm"></v-list-item>
+		<v-divider></v-divider>
+
 
 		<v-list-group v-if="bundles">
 			<template v-slot:activator="{ props }">

@@ -69,7 +69,7 @@ const type = `
     getRequestsById(id: String!): String
     getLogs: String
     getMigrations: String
-    myTestQuery: String
+    outdated(bundle: String , dev: Boolean): String
   }
 
   type Mutation {

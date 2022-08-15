@@ -25,6 +25,7 @@ const Sessions = require(path.resolve(__dirname, "resolvers", "sessions.js"));
 const Requests = require(path.resolve(__dirname, "resolvers", "requests.js"));
 const Logs = require(path.resolve(__dirname, "resolvers", "logs.js"));
 const Bundle = require(path.resolve(__dirname, "resolvers", "bundle.js"));
+const Outdated = require(path.resolve(__dirname, "resolvers", "outdated.js"));
 const Config = require(path.resolve(__dirname, "resolvers", "config.js"));
 const Services = require(path.resolve(__dirname, "resolvers", "services.js"));
 const Orm = require(path.resolve(__dirname, "resolvers", "orm.js"));
@@ -128,6 +129,7 @@ module.exports = class graphqlController extends nodefony.Controller {
       Nodefony,
       Config,
       Bundle,
+      Outdated,
       Services,
       Router,
       Orm,

@@ -9,6 +9,8 @@ import UserHome from '@/views/users/UsersHome.vue';
 import UserProfile from '@/views/users/UserProfile.vue';
 import UserStepper from '@/views/users/UserStepper.vue';
 
+import Npm from '@/views/npm/npm.vue';
+
 import Routes from '@/views/router/routes.vue';
 import Sessions from '@/views/sessions/sessions.vue';
 
@@ -106,6 +108,11 @@ const routes = [
     name: 'UserProfile',
     props: true,
     component: UserProfile,
+    beforeEnter: ifAuthenticated
+  }, {
+    path: '/npm',
+    name: 'Npm',
+    component: Npm,
     beforeEnter: ifAuthenticated
   }, {
     path: '/routes',
