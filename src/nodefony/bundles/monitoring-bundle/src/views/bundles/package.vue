@@ -14,10 +14,21 @@
 				<v-list bg-color="#233056"
 				        density="compact">
 					<v-list-item density="compact">
-						<v-list-item-title>Dependencies : {{nbDependencies}}</v-list-item-title>
+						<v-list-item-title>Dependencies :
+							<v-badge color="info"
+							         :content="nbDependencies"
+							         inline>
+							</v-badge>
+
+						</v-list-item-title>
 					</v-list-item>
 					<v-list-item density="compact">
-						<v-list-item-title>Dev Dependencies : {{nbDevDependencies}}</v-list-item-title>
+						<v-list-item-title>Dev Dependencies :
+							<v-badge color="info"
+							         :content="nbDevDependencies"
+							         inline>
+							</v-badge>
+						</v-list-item-title>
 					</v-list-item>
 				</v-list>
 			</div>
@@ -26,7 +37,11 @@
 			</div>
 			<v-list-item density="compact">
 				<v-list-item-title>
-					outdated : {{nbOutdated}}
+					outdated :
+					<v-badge :color="nbOutdated?'error':'info'"
+					         :content="nbOutdated"
+					         inline>
+					</v-badge>
 				</v-list-item-title>
 				<div v-if="$apollo.loading">Check outdated
 					<v-progress-linear indeterminate

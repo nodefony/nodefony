@@ -10,7 +10,8 @@ const template = path.resolve('public', 'index.html');
 const {
   CleanWebpackPlugin
 } = require('clean-webpack-plugin');
-const title = Package.name;
+//const title = Package.name;
+const title = `Nodefony ${nodefony.version}`;
 const htmlPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const GoogleFontsPlugin = require("@beyonk/google-fonts-webpack-plugin")
@@ -113,7 +114,9 @@ module.exports = {
       }*/]
     },
     output: {
-      hotUpdateChunkFilename: 'hot/[runtime].[fullhash].hot-update.js',
+      //hotUpdateChunkFilename: 'hot/[runtime].[fullhash].hot-update.js',
+      //hotUpdateMainFilename: 'hot/[runtime].[fullhash].hot-update.json'
+      hotUpdateChunkFilename: 'hot/[id].[fullhash].hot-update.js',
       hotUpdateMainFilename: 'hot/[runtime].[fullhash].hot-update.json'
     },
     resolve: {
