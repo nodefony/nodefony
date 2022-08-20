@@ -28,11 +28,11 @@
     "imports-loader": "4.0.1",
     "jquery": "^3.6.0",
     "mini-css-extract-plugin": "2.6.1",
-    "sass": "1.54.4",
+    "sass": "1.54.5",
     "sass-loader": "13.0.2",
     "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "^3.3.1",
-    "terser-webpack-plugin": "5.3.4",
+    "terser-webpack-plugin": "5.3.5",
     "webpack": "5.74.0",
     "webpack-merge": "^5.8.0",
     "workbox-webpack-plugin": "6.5.4"
