@@ -62,10 +62,10 @@ module.exports = {
           }
           break;
         case "mongoose":
-          let sessions = {
+          /*let sessions = {
             rows: null,
             count: 0
-          };
+          };*/
           let sort = {};
           if (field.query && field.query.order.length) {
             for (let i = 0; i < field.query.order.length; i++) {
@@ -82,8 +82,8 @@ module.exports = {
             //.skip(parseInt(field.query.start, 10))
             //.limit(parseInt(field.query.length, 10))
             .then(async (result) => {
-              sessions.rows = result;
-              sessions.count = await sessionEntity.count();
+              //sessions.rows = result;
+              //sessions.count = await sessionEntity.count();
               return result //JSON.stringify(sessions);
             }).then((result) => {
               return result
@@ -131,6 +131,31 @@ module.exports = {
                 context.log(error, "ERROR");
                 throw new nodefony.Error(error)
               }
+            });
+          break;
+        case "mongoose":
+          return sessionEntity.find({}, {})
+            .populate({
+              path: 'username',
+              match: {
+                username: username
+              },
+            })
+            //.sort(sort)
+            //.skip(parseInt(field.query.start, 10))
+            //.limit(parseInt(field.query.length, 10))
+            .then(async (result) => {
+              //console.log("passs", result)
+              return result.filter((session) => {
+                if (session.username) {
+                  if (session.username.username === username) {
+                    return session
+                  }
+                }
+              })
+            })
+            .catch(e => {
+              throw e;
             });
           break;
         default:

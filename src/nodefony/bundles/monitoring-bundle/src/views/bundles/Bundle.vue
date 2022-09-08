@@ -220,7 +220,7 @@
 						<v-img class=""
 						       width="60"
 						       height="51"
-						       src="/framework-bundle/images/nodefony-logo.png" />
+						       :src="nodefony.logo" />
 					</v-container>
 
 					<v-container fluid
@@ -367,6 +367,7 @@ export default {
 		'n-bundle-services': Services,
 		'n-bundle-orm': Orm
 	},
+	inject: ["nodefony"],
 	props: {
 		//name: String
 	},
@@ -380,6 +381,7 @@ export default {
           path
           host
           variables
+          requirements
           bypassFirewall
           defaultLang
           hash

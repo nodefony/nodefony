@@ -24,9 +24,7 @@
 			     :key="key">
 				<v-list-item v-if="key != 'settings' && key != 'config' && key != 'http2'"
 				             class="text-caption">
-					<v-list-item-header class="text-subtitle-2">
-						<v-list-item-title>{{key}}</v-list-item-title>
-					</v-list-item-header>
+					<v-list-item-title>{{key}}</v-list-item-title>
 					<v-chip inline
 					        density="compact"
 					        variant="outlined"
@@ -84,9 +82,7 @@
 
 				<v-list-item v-else
 				             class="text-caption">
-					<v-list-item-header class="text-subtitle-2">
-						<v-list-item-title>{{key}}</v-list-item-title>
-					</v-list-item-header>
+					<v-list-item-title>{{key}}</v-list-item-title>
 					<v-chip inline
 					        density="compact"
 					        variant="outlined"
@@ -101,9 +97,7 @@
 			<div v-for=" (value, key) in server.config"
 			     :key="key">
 				<v-list-item class="text-caption">
-					<v-list-item-header class="text-subtitle-2">
-						<v-list-item-title>{{key}}</v-list-item-title>
-					</v-list-item-header>
+					<v-list-item-title>{{key}}</v-list-item-title>
 					<v-chip inline
 					        density="compact"
 					        variant="outlined"

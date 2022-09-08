@@ -101,12 +101,12 @@ query Router($bundle: String!) {
 
 const container = document.getElementById("graphiql");
 const Logo = () => {
-  return <span className="graphiql-container" style={{width:"15%"}}>
-    <img width="30px" heigth="30px" src={config.logo}></img>
-    <span className="">
-      {config.projectName}
+  return <span className="graphiql-session-header">
+    <img width="50px" heigth="50px" src={config.logo} style={{marginTop:"0px",opacity:1}}></img>
+    <span className="title">
+      <span>{config.projectName}</span>
     </span>
-  </span>;
+    </span>
 }
 
 // See GraphiQL Readme - Advanced Usage section for more examples like this

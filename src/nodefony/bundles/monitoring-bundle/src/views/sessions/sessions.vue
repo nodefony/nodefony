@@ -28,59 +28,60 @@
 			        rounded="0">mdi-protocol</v-icon>
 		</template>
 	</v-toolbar>
-
-	<v-table fixed-header
-	         class="overflow-auto"
-	         style="height:calc(100% - 30px)">
-		<thead>
-			<tr>
-				<th class="text-left">
-					user
-				</th>
-				<th class="text-left">
-					id
-				</th>
-				<th class="text-left">
-					context
-				</th>
-				<th class="text-left">
-					createdAt
-				</th>
-				<th class="text-left">
-					updatedAt
-				</th>
-				<th class="text-left">
-					Attributes
-				</th>
-				<!--th class="text-left">
+	<v-window class="">
+		<v-table fixed-header
+		         class="overflow-auto"
+		         style="height:calc(100% - 30px)">
+			<thead>
+				<tr>
+					<th class="text-left">
+						user
+					</th>
+					<th class="text-left">
+						createdAt
+					</th>
+					<th class="text-left">
+						id
+					</th>
+					<th class="text-left">
+						context
+					</th>
+					<th class="text-left">
+						updatedAt
+					</th>
+					<th class="text-left">
+						Attributes
+					</th>
+					<!--th class="text-left">
           flashBag
         </th>
         <th class="text-left">
 					metaBag
 				</th-->
-			</tr>
-		</thead>
-		<tbody>
-			<tr v-for="item in sessions"
-			    :key="item.session_id">
-				<td>
-					<div v-if="item.user">
-						{{ item.user.username }}
-					</div>
-					<div v-else-if="item.username">
-						{{ item.username.username }}
-					</div>
-				</td>
-				<td>{{ item.session_id }}</td>
-				<td>{{ item.context }}</td>
-				<td>{{ item.createdAt }}</td>
-				<td>{{ item.updatedAt }}</td>
-				<td>{{ item.Attributes }}</td>
-				<!--td>{{ item.flashBag }}</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="item in sessions"
+				    :key="item.session_id">
+					<td>
+						<div v-if="item.user">
+							{{ item.user.username }}
+						</div>
+						<div v-else-if="item.username">
+							{{ item.username.username }}
+						</div>
+					</td>
+					<td>{{ new Date(item.createdAt) }}</td>
+					<td>{{ item.session_id }}</td>
+					<td>{{ item.context }}</td>
+					<td>{{ new Date(item.updatedAt) }}</td>
+					<td>{{ item.Attributes }}</td>
+					<!--td>{{ item.flashBag }}</td>
         <td>{{ item.metaBag }}</td-->
-			</tr>
-		</tbody>
-	</v-table>
+				</tr>
+			</tbody>
+		</v-table>
+	</v-window>
 </v-container>
 </template>
 
@@ -106,6 +107,8 @@ export default {
           Attributes
           flashBag
           metaBag
+          createdAt
+          updatedAt
           user {
             username
           }

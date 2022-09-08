@@ -1,5 +1,5 @@
 <template>
-<v-card v-if="nodefony"
+<v-card v-if="api"
         min-width="300"
         min-height="200"
         max-height="380"
@@ -12,15 +12,15 @@
 	           color="#233056">
 		<template v-slot:prepend>
 			<v-list-item class="pl-0"
-			             title="Network"
-			             prepend-avatar="/framework-bundle/images/nodefony-logo.png">
+			             :prepend-avatar="nodefony.logo"
+			             title="Network">
 			</v-list-item>
 		</template>
 
 		<template v-slot:extension>
 			<v-tabs v-model="modelNetwork"
 			        centered>
-				<v-tab v-for="(server, key) in nodefony.servers"
+				<v-tab v-for="(server, key) in api.servers"
 				       :key="key"
 				       :value="key">
 					{{key}}
@@ -38,10 +38,10 @@
 
 		<v-window-item class="overflow-auto"
 		               value="interfaces">
-			<n-nodefony-interface :interfaces="nodefony.network.interfaces" />
+			<n-nodefony-interface :interfaces="api.network.interfaces" />
 		</v-window-item>
 
-		<v-window-item v-for="(server, key) in nodefony.servers"
+		<v-window-item v-for="(server, key) in api.servers"
 		               :key="key"
 		               :value="key">
 			<n-nodefony-server :server="server" />
@@ -57,12 +57,13 @@ import NodefonyServer from '@/views/nodefony/NodefonyServer'
 import NodefonyInterface from '@/views/nodefony/NodefonyInterface'
 export default {
 	name: "NodefonyNetwork",
+	inject: ["nodefony"],
 	components: {
 		"n-nodefony-server": NodefonyServer,
 		"n-nodefony-interface": NodefonyInterface
 	},
 	props: {
-		nodefony: Object,
+		api: Object,
 		default: null
 	},
 	data() {

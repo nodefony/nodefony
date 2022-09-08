@@ -34,9 +34,7 @@
 			<div v-for=" (value, key) in app.App"
 			     :key="key">
 				<v-list-item class="text-caption">
-					<v-list-item-header class="text-subtitle-2">
-						<v-list-item-title>{{key}}</v-list-item-title>
-					</v-list-item-header>
+					<v-list-item-title>{{key}}</v-list-item-title>
 					<v-chip inline
 					        density="compact"
 					        variant="outlined"

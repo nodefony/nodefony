@@ -8,8 +8,8 @@
 
 //schemas
 const NodefonyType = require(path.resolve(__dirname, "schemas", "nodefonyType.js"));
-let usersStaticSchema = null
-let usersStaticProvider = null
+let usersStaticType = null
+let usersStaticResolver = null
 if (kernel.ready) {
   usersStaticType = kernel.getBundles("users").getController('graphql').types;
   usersStaticResolver = kernel.getBundles("users").getController('graphql').resolvers;
@@ -32,20 +32,20 @@ const Orm = require(path.resolve(__dirname, "resolvers", "orm.js"));
 const Migrations = require(path.resolve(__dirname, "resolvers", "migration.js"));
 const Nodefony = require(path.resolve(__dirname, "resolvers", "nodefony.js"));
 
-
 module.exports = class graphqlController extends nodefony.Controller {
 
   constructor(container, context) {
     super(container, context);
     try {
       // graphql api
+      const schema = graphqlController.schema(this.context)
       this.api = new nodefony.api.Graphql({
         name: "nodefony-grahql-api",
         version: this.bundle.version,
         description: "nodefony graphql Api",
         basePath: "/api/graphql",
-        schema: graphqlController.schema(this.context),
-        rootValue: this
+        schema: schema,
+        //rootValue: this
       }, this.context);
     } catch (e) {
       this.log(e, "ERROR");
@@ -63,6 +63,7 @@ module.exports = class graphqlController extends nodefony.Controller {
         .then((data) => {
           return this.api.render(data);
         }).catch((e) => {
+          this.api.logger(this.query.query, "WARNING")
           this.api.log(e, "ERROR");
           return this.api.renderError(e, 400);
         });

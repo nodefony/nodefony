@@ -7,6 +7,7 @@ const type = `
     path: String
     host: String
     variables: Array
+    requirements: Object
     bypassFirewall: Boolean
     defaultLang: String
     hash: String
@@ -23,6 +24,8 @@ const type = `
     Attributes: Object
     flashBag: Object
     metaBag: Object
+    createdAt: Date
+    updatedAt: Date
     user: User
   }
 

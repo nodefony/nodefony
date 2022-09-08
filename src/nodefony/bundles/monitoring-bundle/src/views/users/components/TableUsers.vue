@@ -17,7 +17,7 @@
 				</v-btn>
 				<v-btn color="green darken-1"
 				       text
-				       @click="deleteUser()">
+				       @click="deleteUserQl()">
 					Confirmer
 				</v-btn>
 			</v-card-actions>
@@ -39,8 +39,9 @@
 				</th>
 			</tr>
 		</thead>
-		<tbody class="text-center">
-			<tr v-for="item in users"
+		<tbody class="text-center"
+		       v-if="request">
+			<tr v-for="item in request.users"
 			    :key="item.username">
 
 				<td>{{ item.username }}</td>
@@ -56,7 +57,6 @@
 						{{ name }}
 					</v-chip>
 				</td>
-
 
 				<td>
 					<v-btn size="small"
@@ -92,8 +92,74 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
 export default {
 	name: 'd-users-table',
+	data() {
+		return {
+			selected: null,
+			agree: false
+		}
+	},
+	apollo: {
+		request: {
+			// gql query
+			query: gql `
+      query  {
+        users:users{
+					username
+    			surname
+    			name
+			    enabled
+			    userNonExpired
+			    credentialsNonExpired
+			    accountNonLocked
+			    email
+			    lang
+			    gender
+			    url
+			    createdAt
+			    updatedAt
+			    image
+			    roles
+				}
+
+      }
+	    `,
+			update: (data) => {
+				return {
+					users: data.users
+				}
+			},
+			// Reactive parameters
+			variables() {
+				// Use vue reactive properties here
+				return {}
+			},
+		}
+	},
+	methods: {
+		deleteUserQl(user = this.selected) {
+			return this.$apollo.mutate({
+					// Query
+					mutation: gql `mutation ( $username:String! ) {
+            deleteUser( username: $username){
+              username
+            }
+          }`,
+					variables: {
+						username: user.username,
+					}
+				})
+				.then(async (response) => {
+					this.agree = false
+					await this.$apollo.queries.request.refetch()
+				})
+				.catch(() => {
+					this.agree = false
+				})
+		},
+	}
 
 }
 </script>
@@ -116,7 +182,6 @@ import {
 	useRouter
 } from 'vue-router'
 const router = useRouter()
-
 const nodefony = inject('nodefony')
 
 //events
@@ -137,13 +202,13 @@ const headersUsers = reactive({
 	]
 })
 
-const users = ref([]);
+//const users = ref([]);
 
-const agree = ref(false);
-const selected = ref(null);
+//const agree = ref(false);
+//const selected = ref(null);
 
 onMounted(() => {
-	getUsers()
+	//getUsers()
 })
 
 // computed
@@ -154,8 +219,7 @@ const headers = computed(() => {
 })
 
 //methods
-const getUsers = function() {
-
+/*const getUsers = function() {
 	return nodefony.request(`users`, "GET", {
 			headers: {
 				"content-type": "application/json"
@@ -167,8 +231,8 @@ const getUsers = function() {
 		.catch((e) => {
 			console.error(e)
 		})
+}*/
 
-}
 const goUser = (id) => {
 	return router.push({
 		name: 'UserProfile',
@@ -178,8 +242,7 @@ const goUser = (id) => {
 	})
 }
 
-const deleteUser = (user = selected) => {
-
+/*const deleteUser = (user = selected) => {
 	return nodefony.request(`users/${user.value.username}`, "DELETE", {
 			headers: {
 				"content-type": "application/json"
@@ -193,7 +256,7 @@ const deleteUser = (user = selected) => {
 			agree.value = false
 			console.error(e)
 		})
-}
+}*/
 </script>
 
 

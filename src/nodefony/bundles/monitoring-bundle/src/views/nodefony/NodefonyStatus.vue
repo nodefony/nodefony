@@ -1,5 +1,5 @@
 <template >
-<v-card v-if="nodefony"
+<v-card v-if="api"
         rounded
         min-width="300"
         min-height="200"
@@ -12,16 +12,16 @@
 	           theme="dark"
 	           color="#233056">
 		<template v-slot:prepend>
-			<v-list-item style="color:white;font-size:1.5rem"
+			<v-list-item style="color:white;font-size:2rem"
 			             class="pl-0 nodefony"
+			             :prepend-avatar="nodefony.logo"
 			             title="Nodefony"
-			             value="nodefony"
-			             prepend-avatar="/framework-bundle/images/nodefony-logo.png">
+			             value="nodefony">
 			</v-list-item>
 		</template>
 		<template v-slot:append>
 			<v-chip inline
-			        class="mt-2">{{nodefony.status.version}}</v-chip>
+			        class="mt-2">{{api.status.version}}</v-chip>
 		</template>
 		<template v-slot:extension>
 			<v-tabs v-model="modelNodefony">
@@ -40,7 +40,7 @@
 					<v-chip size="small"
 					        class="ml-1"
 					        variant="outlined"
-					        density="compact">{{nodefony.status.node.node}}</v-chip>
+					        density="compact">{{api.status.node.node}}</v-chip>
 				</v-tab>
 
 			</v-tabs>
@@ -53,7 +53,7 @@
 		<v-window-item value="nodefony">
 			<v-list density="compact"
 			        style="">
-				<div v-for=" (value, key) in nodefony.status"
+				<div v-for=" (value, key) in api.status"
 				     :key="key">
 					<v-list-item v-if="key !=='node' && key !=='process'"
 					             class="text-caption">
@@ -69,7 +69,7 @@
 		</v-window-item>
 
 		<v-window-item value="process">
-			<div v-for=" (value, key) in nodefony.status.process"
+			<div v-for=" (value, key) in api.status.process"
 			     :key="key">
 				<v-list-item v-if="key !== 'clusters'"
 				             class="text-caption">
@@ -82,10 +82,10 @@
 				<v-table v-else>
 					<v-card-title>
 						Clusters
-						<v-chip inline>{{nodefony.status.process.clusters.name}} </v-chip>
+						<v-chip inline>{{api.status.process.clusters.name}} </v-chip>
 					</v-card-title>
 					<tbody>
-						<tr v-for=" (value, key) in nodefony.status.process.clusters.pm2"
+						<tr v-for=" (value, key) in api.status.process.clusters.pm2"
 						    :key="key">
 							<td>{{ value.name }}</td>
 							<td>{{ value.monit.memory }}</td>
@@ -102,7 +102,7 @@
 
 		<v-window-item value="kernel">
 			<v-table density="compact">
-				<tbody v-for=" (value, key) in nodefony.kernel.system"
+				<tbody v-for=" (value, key) in api.kernel.system"
 				       :key="key">
 					<tr v-if="key !== 'servers' && key !== 'bundles'">
 						<td>{{ key}}</td>
@@ -125,7 +125,7 @@
 					Node.js :
 				</v-card-title>
 				<tbody>
-					<tr v-for=" (value, key) in nodefony.status.node"
+					<tr v-for=" (value, key) in api.status.node"
 					    :key="key">
 						<td>{{ key }}</td>
 						<td>{{ value }}</td>
@@ -141,8 +141,9 @@
 <script>
 export default {
 	name: "NodefonyStatus",
+	inject: ["nodefony"],
 	props: {
-		nodefony: Object,
+		api: Object,
 		default: null
 	},
 	data() {

@@ -12,7 +12,7 @@
 					       alt="Avatar"
 					       :src="getAvatar"></v-img>
 					<span v-else-if="getInitials"
-					      class="white--text text-h5">{{ getInitials }}</span>
+					      class="white--text text-h6">{{ getInitials }}</span>
 					<span v-else
 					      class="white--text text-h5">
 						<v-icon>mdi-account</v-icon>
@@ -165,8 +165,13 @@ if (isAuthenticated.value && !getProfile.value) {
 			//document.location = `/si/login`;
 		});
 } else {
-	profile.value = getProfile.value
-	emit("profile", profile.value)
+	if (!getProfile.value) {
+		let error = new Error(`No profile`);
+		emit("error", error)
+	} else {
+		profile.value = getProfile.value
+		emit("profile", profile.value)
+	}
 }
 </script>
 

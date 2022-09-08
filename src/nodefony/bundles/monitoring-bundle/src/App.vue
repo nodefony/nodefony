@@ -50,7 +50,7 @@ export default {
 	name: 'App',
 	components: {
 		"app-navigation": Navigation,
-		"app-bar": Bar,
+		"app-bar": Bar
 	},
 	data() {
 		return {
@@ -66,7 +66,6 @@ export default {
 		onError() {
 			this.profile = true
 		}
-
 	}
 }
 </script>

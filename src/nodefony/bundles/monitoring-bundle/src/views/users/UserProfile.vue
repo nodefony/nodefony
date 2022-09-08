@@ -1,8 +1,8 @@
 	<template>
 
-	<div class="d-flex flex-row imgage_montain w-100 rounded-lg">
+	<div class="d-flex flex-row image_back w-100 rounded-lg">
 		<span class="back_gradient"></span>
-		<v-card class=""
+		<v-card class="image_back"
 		        width="400"
 		        height="200"
 		        tile>
@@ -15,10 +15,13 @@
 					<!--v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img-->
 					<v-icon size="150">mdi-account</v-icon>
 				</v-avatar>
-				<v-list-item class="text-white"
-				             :title="fullname"
-				             :subtitle="username">
-				</v-list-item>
+				<v-list-item
+				class="text-white"
+        :title="fullname"
+        :subtitle="username"
+      	>
+			</v-list-item>
+
 			</v-img>
 		</v-card>
 
@@ -52,7 +55,7 @@
 		</v-layout>
 	</div>
 	<v-window class="w-100 h-100"
-	          style="padding:200px 0 0 0"
+	          style="padding:0 0 0 0"
 	          v-model="currentItem">
 		<v-window-item :value="1">
 			<v-container fluid>
@@ -147,9 +150,6 @@ export default {
 			    image
 			    roles
 				}
-        #sessions:getSessionsByUser(username: $username){
-				#	session_id
-				#}
 				#jwts:getTokenByUser
       }
 	    `,
@@ -181,7 +181,11 @@ export default {
 		},
 		profile() {
 			if (this.request) {
-				return this.request.profile
+				const profile = Object.assign({}, this.request.profile)
+				if (profile.__typename) {
+					delete profile.__typename
+				}
+				return profile
 			}
 			return null
 		},
@@ -193,28 +197,10 @@ export default {
 		}
 	},
 	methods: {
-		changeTab(index) {
+		async changeTab(index) {
+			await this.$apollo.queries.request.refetch()
 			this.currentItem = index
-		},
-		/*getUserProfile() {
-			return this.nodefony.request(`users/${this.username}`, "GET", {
-					headers: {
-						"content-type": "application/json"
-					}
-				})
-				.then((result) => {
-					this.profile = result.result
-					return this.profile
-				})
-				.catch(e => {
-					this.$router.push({
-						name: "NotFound",
-						params: {
-							code: e.code
-						}
-					})
-				})
-		}*/
+		}
 	}
 
 }
@@ -222,8 +208,7 @@ export default {
 
 
 <style lang="scss" scoped>
-.imgage_montain {
-    position: absolute;
+.image_back {
     height: 200px;
     background-color: #233056;
     background-position: 50% center;

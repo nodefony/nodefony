@@ -13,11 +13,14 @@
 					<v-row justify="center"
 					       align="center"
 					       class="mb-3">
-						<img src="/app/images/app-logo.png" />
+						<img :src="nodefony.logo" />
 					</v-row>
 					<v-row justify="center"
 					       align="center">
-						<v-card-title>Nodefony </v-card-title>
+						<v-card-title class="nodefony"
+						              style="font-size:35px">
+							Nodefony
+						</v-card-title>
 					</v-row>
 				</v-col>
 			</v-row>
@@ -45,19 +48,23 @@
 				        ref="form">
 					<v-text-field v-model="username"
 					              placeholder="username"
+					              autocomplete="username"
 					              :counter="50"
 					              :rules="nameRules"
 					              :label="t('username')"
+					              clearable
 					              required
 					              prepend-icon="mdi-account-circle" />
 
 					<v-text-field :label="t('password')"
 					              v-model="password"
 					              placeholder="password"
+					              autocomplete="current-password"
 					              prepend-icon="mdi-lock"
-					              :type="showPassword ? 'text' : 'password'"
+					              :type="showPassword ? 'input' : 'password'"
 					              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
 					              @click:append="showPassword = !showPassword"
+					              clearable
 					              required />
 
 					<v-btn type="submit"
@@ -92,6 +99,7 @@ import {
 
 export default {
 	name: 'AppLogin',
+	inject: ["nodefony"],
 	setup() {
 		const {
 			t
@@ -123,12 +131,16 @@ export default {
 	}),
 
 	async mounted() {
-		await this.clear();
-		//this.openNavBar();
-		if (this.$route.name === "Logout") {
-			await this.logout()
+		try {
+			await this.clear();
+			//this.openNavBar();
+			if (this.$route.name === "Logout") {
+				await this.logout()
+			}
+			await this.closeDrawer();
+		} catch (e) {
+			console.error(e)
 		}
-		await this.closeDrawer();
 		//this.notify(this.log("sldlskdjsldkssss"), {}, "alert")
 		//this.notify(this.log("sldlskdjsldk"))
 		//this.notify(this.log("sldlskdjsldk"))
@@ -215,16 +227,12 @@ export default {
 				}
 			}
 		}
-
 	}
 }
 </script>
 
-
 <style lang="scss">
-
 </style>
-
 
 <i18n>
 {

@@ -14,7 +14,7 @@
 	          v-model="step">
 		<v-form ref="form"
 		        class="h-100"
-		        model="form"
+		        v-model="form"
 		        lazy-validation>
 
 			<v-window-item :value="1"
@@ -163,7 +163,7 @@
 			       :disabled="false"
 			       class="white--text"
 			       color="deep-purple accent-4"
-			       @click="updateUser"
+			       @click="updateUserQl"
 			       depressed>
 				Update
 			</v-btn>
@@ -171,7 +171,7 @@
 			       :disabled="false"
 			       class="white--text"
 			       color="deep-purple accent-4"
-			       @click="addUser"
+			       @click="addUserQl"
 			       depressed>
 				Submit
 			</v-btn>
@@ -179,8 +179,6 @@
 	</v-window>
 </v-card>
 </template>
-
-
 
 <script>
 // @ is an alias to /src
@@ -192,8 +190,7 @@ import {
 	mapActions,
 	mapMutations
 } from 'vuex';
-
-
+import gql from 'graphql-tag'
 export default {
 	name: 'n-user-stepper',
 	components: {},
@@ -208,6 +205,8 @@ export default {
 		return {
 			form: false,
 			formData: {},
+			currentUser: null,
+			message: null,
 			step: 1,
 			roles: ["ROLE_ADMIN", "ROLE_USER"],
 			genres: ["Homme", "Femme", 'none'],
@@ -221,7 +220,9 @@ export default {
 	},
 	mounted() {
 		if (this.profile) {
-			this.formData = this.profile
+			delete this.profile.__typename
+			this.formData = Object.assign({}, this.profile)
+			this.currentUser = this.formData.username
 		}
 	},
 	computed: {
@@ -246,7 +247,6 @@ export default {
 					return ''
 			}
 		},
-
 	},
 	methods: {
 		addUser() {
@@ -258,13 +258,57 @@ export default {
 				})
 				.then(async (response) => {
 					return await this.goUser(response.result.user.username)
-
 				})
 				.catch((e) => {
-
-					console.error(e)
+					this.message = e
+					throw e
 				})
+		},
+		addUserQl() {
 
+			return this.$apollo.mutate({
+					// Query
+					mutation: gql `mutation ( $query:UserInput! ) {
+            addUser( input: $query){
+              username
+            }
+          }`,
+					variables: {
+						query: this.formData,
+					}
+				})
+				.then(async (response) => {
+					return await this.goUser(response.data.addUser.username)
+				})
+				.catch((e) => {
+					this.message = e
+					throw e
+				})
+		},
+		updateUserQl() {
+			let input = Object.assign({}, this.formData)
+			delete input.createdAt
+			delete input.updatedAt
+			delete input.__typename
+			return this.$apollo.mutate({
+					// Query
+					mutation: gql `mutation ($username:String!, $query:UserInput! ) {
+            updateUser(username:$username, input: $query){
+              username
+            }
+          }`,
+					variables: {
+						query: input,
+						username: this.currentUser
+					}
+				})
+				.then(async (response) => {
+					return await this.goUser(response.data.updateUser.username)
+				})
+				.catch((e) => {
+					this.message = e
+					throw e
+				})
 		},
 		updateUser() {
 			return this.nodefony.request(`users/${this.formData.username}`, "PUT", {
@@ -277,7 +321,8 @@ export default {
 					return await this.goUser(response.result.user.username)
 				})
 				.catch((e) => {
-					console.error(e)
+					this.message = e
+					throw e
 				})
 		},
 		goUser(username) {

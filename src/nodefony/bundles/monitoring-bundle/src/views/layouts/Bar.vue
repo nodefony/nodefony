@@ -11,7 +11,7 @@
 				<v-img width="35px"
 				       height="35px"
 				       @click="navigate"
-				       src="/framework-bundle/images/nodefony-logo.png" />
+				       :src="nodefony.logo" />
 			</v-btn>
 		</router-link>
 		<router-link :to="{ name: 'Home'}"
@@ -33,8 +33,10 @@
 		       class="ma-2"
 		       outlined
 		       color="indigo">
-			Login
 		</v-btn>
+		<v-avatar v-if="!isAuthenticated"
+		          color="cyan">
+		</v-avatar>
 		<v-menu v-else
 		        min-width="200px"
 		        rounded
@@ -67,9 +69,7 @@
 				           tile />
 			</Suspense>
 		</v-menu>
-
 	</router-link>
-
 </v-app-bar>
 </template>
 
@@ -87,6 +87,7 @@ export default {
 	components: {
 		"user-card": User
 	},
+	inject: ["nodefony"],
 	data: () => ({}),
 	mounted() {
 		if (!this.isAuthenticated) {

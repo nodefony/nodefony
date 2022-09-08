@@ -1,5 +1,5 @@
 <template>
-<div v-if="$apollo.queries.nodefony.loading">
+<div v-if="$apollo.queries.home.loading">
 
 	<v-container style="height: 400px;">
 		<v-row class="fill-height"
@@ -9,7 +9,8 @@
 				<v-img class=""
 				       width="100"
 				       height="91"
-				       src="/framework-bundle/images/nodefony-logo.png" />
+				       :src="nodefony.logo" />
+
 			</v-row>
 			<v-col class="text-subtitle-1 text-center"
 			       cols="12">
@@ -26,9 +27,8 @@
 </div>
 <v-container v-else
              fluid
-             v-if="nodefony"
+             v-if="home"
              class="overflow-auto">
-
 	<!--v-container fluid class="d-flex  justify-center">
     <v-img class="" width="100" height="91" src="/framework-bundle/images/nodefony-logo.png" />
   </v-container>
@@ -39,14 +39,13 @@
 
 	<v-row fluid
 	       class="flex-row">
-		<n-nodefony-status :nodefony="nodefony" />
-		<n-nodefony-application :app="nodefony.application" />
-
+		<n-nodefony-status :api="home" />
+		<n-nodefony-application :app="home.application" />
 	</v-row>
 
 	<v-row fluid
 	       class="flex-row">
-		<n-nodefony-network :nodefony="nodefony" />
+		<n-nodefony-network :api="home" />
 
 
 		<!--v-card min-width="300" min-height="200" class="d-flex flex-column  flex-grow-1 flex-shrink-1 my-5 mx-5" outlined tile min->
@@ -116,8 +115,9 @@ export default {
 		"n-nodefony-network": NodefonyNetwork,
 		"n-nodefony-application": NodefonyApplication
 	},
+	inject: ["nodefony"],
 	apollo: {
-		nodefony: {
+		home: {
 			// gql query
 			query: gql `
       query getNodefony {
@@ -151,14 +151,10 @@ export default {
 			modelNodefony: 0,
 		}
 	},
-	computed: {
-
-	},
+	computed: {},
 	beforeMount() {},
 	mounted() {},
-	methods: {
-
-	}
+	methods: {}
 }
 </script>
 

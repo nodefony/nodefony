@@ -3,8 +3,8 @@ import qs from 'querystring';
 import moment from 'moment';
 import 'moment/locale/fr';
 //import media from "nodefony-client/src/medias/medias";
-
 //media(nodefony);
+import Logo from './images/nodefony-logo.png'
 
 import {
   //defineComponent,
@@ -40,6 +40,7 @@ class Nodefony extends nodefony.Kernel {
     });
     this.notifyTab = new Map();
     this.application = null;
+    this.logo = Logo
   }
 
   showBanner() {

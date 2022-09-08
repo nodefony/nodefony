@@ -78,40 +78,42 @@ module.exports = {
     },
     module: {
       rules: [{
-        // BABEL TRANSCODE
-        test: /\.(jsx)$/,
-        exclude: new RegExp("node_modules"),
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            //presets: ['@babel/preset-env', '@babel/preset-react']
-            presets: [
-                 ['@babel/preset-env', {
-                modules: false
-              }],
-                 '@babel/preset-react',
-               ],
-          }
-        }]
-      }/*, {
-        test: /debugBar\.css$/i,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader'
-        ]
-      }, {
-        test: /debugBar\.js$/i,
-        use: [{
+          // BABEL TRANSCODE
+          test: /\.(jsx)$/,
+          exclude: new RegExp("node_modules"),
+          use: [{
             loader: 'babel-loader',
             options: {
+              //presets: ['@babel/preset-env', '@babel/preset-react']
               presets: [
                  ['@babel/preset-env', {
                   modules: false
-                  }]
-              ],
+              }],
+                 '@babel/preset-react',
+               ],
             }
         }]
-      }*/]
+      }
+        /*, {
+                test: /debugBar\.css$/i,
+                use: [
+                  MiniCssExtractPlugin.loader,
+                  'css-loader'
+                ]
+              }, {
+                test: /debugBar\.js$/i,
+                use: [{
+                    loader: 'babel-loader',
+                    options: {
+                      presets: [
+                         ['@babel/preset-env', {
+                          modules: false
+                          }]
+                      ],
+                    }
+                }]
+              }*/
+        ]
     },
     output: {
       //hotUpdateChunkFilename: 'hot/[runtime].[fullhash].hot-update.js',
@@ -131,6 +133,19 @@ module.exports = {
       }
     },
     plugins: [
+      /*new webpack.ProgressPlugin({
+        activeModules: false,
+        entries: true,
+        handler(percentage, message, ...args) {
+          console.info(percentage, message, ...args);
+        },
+        modules: true,
+        //modulesCount: 5000,
+        profile: true,
+        dependencies: true,
+        //dependenciesCount: 10000,
+        percentBy: null
+      }),*/
       new MiniCssExtractPlugin({
         filename: "./assets/css/[name].css"
       }),

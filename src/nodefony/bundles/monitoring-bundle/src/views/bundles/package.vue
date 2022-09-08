@@ -136,7 +136,7 @@
 				<tbody>
 					<tr v-for="( value, key) in devDependencies"
 					    :key="key"
-					    :bgcolor="dependenciesOutdated[key]?'#f5f5f5':''">
+					    :bgcolor="devDependenciesOutdated[key]?'#f5f5f5':''">
 						<td>{{ key }}</td>
 						<td>{{ value }}</td>
 						<td v-if="devDependenciesOutdated[key]"> {{devDependenciesOutdated[key].wanted}}</td>

@@ -47,6 +47,9 @@
 					Prefix
 				</th>
 				<th class="text-left">
+					Methods
+				</th>
+				<th class="text-left">
 					Uri
 				</th>
 				<th class="text-left">
@@ -74,6 +77,8 @@
 				<td>{{ item.bundle }}</td>
 				<td>{{ item.name }}</td>
 				<td>{{ item.prefix }}</td>
+				<td v-if="item.requirements">{{ item.requirements.method }}</td>
+				<td v-else></td>
 				<td>{{ item.path }}</td>
 				<td>{{ item.host }}</td>
 				<td>{{ item.variables }}</td>
@@ -107,6 +112,7 @@ export default {
           path
           host
           variables
+          requirements
           bypassFirewall
           defaultLang
           hash

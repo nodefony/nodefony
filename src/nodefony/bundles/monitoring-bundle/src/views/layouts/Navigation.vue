@@ -23,9 +23,39 @@
 
 		<v-list-group>
 			<template v-slot:activator="{ props }">
+				<v-list-item class="pl-0"
+				             v-bind="props"
+				             title="Nodefony"
+				             value="nodefony">
+					<template v-slot:prepend>
+						<v-img width="50"
+						       height="25"
+						       :src="nodefony.logo"
+						       alt="nodefony" />
+					</template>
+				</v-list-item>
+			</template>
+			<v-list-item prepend-icon="mdi-language-markdown"
+			             title="readme"
+			             value="readme"
+			             to="/readme"></v-list-item>
+			<v-list-item prepend-icon="mdi-book-open-variant"
+			             title="Kernel"
+			             value="kernel"></v-list-item>
+			<v-list-item prepend-icon="mdi-book-open-variant"
+			             title="Api"
+			             value="api"></v-list-item>
+			<v-list-item prepend-icon="mdi-book-open-variant"
+			             title="controller"
+			             value="controller"></v-list-item>
+		</v-list-group>
+		<v-divider></v-divider>
+
+		<v-list-group>
+			<template v-slot:activator="{ props }">
 				<v-list-item v-bind="props"
-				             prepend-icon="mdi-help-rhombus"
-				             title="Documentation"
+				             prepend-icon="mdi-api"
+				             title="Api"
 				             value="documentation"></v-list-item>
 			</template>
 			<v-list-item prepend-icon="mdi-api "
@@ -37,29 +67,6 @@
 			             value="graphgl"
 			             to="/graphigl"></v-list-item>
 
-			<v-list-group>
-				<template v-slot:activator="{ props }">
-					<v-list-item class="pl-0"
-					             v-bind="props"
-					             title="Nodefony"
-					             value="nodefony"
-					             prepend-avatar="/framework-bundle/images/nodefony-logo.png">
-					</v-list-item>
-				</template>
-				<v-list-item prepend-icon="mdi-language-markdown"
-				             title="readme"
-				             value="readme"
-				             to="/readme"></v-list-item>
-				<v-list-item prepend-icon="mdi-api"
-				             title="Kernel"
-				             value="kernel"></v-list-item>
-				<v-list-item prepend-icon="mdi-api"
-				             title="Api"
-				             value="api"></v-list-item>
-				<v-list-item prepend-icon="mdi-api"
-				             title="controller"
-				             value="controller"></v-list-item>
-			</v-list-group>
 			<v-divider></v-divider>
 		</v-list-group>
 		<v-divider></v-divider>
@@ -237,10 +244,10 @@
 		             :to="{name:'PM2'}"
 		             value="PM2">
 			<template v-slot:prepend>
-				<img width="55"
-				     height="20"
-				     :src="imagePm2"
-				     alt="PM2">
+				<v-img width="55"
+				       height="20"
+				       :src="imagePm2"
+				       alt="PM2" />
 			</template>
 		</v-list-item>
 		<v-divider></v-divider>
@@ -281,6 +288,7 @@ export default {
 	components: {
 		"user-card": User
 	},
+	inject: ["nodefony"],
 	data: () => ({
 		imagePm2: imagePm2
 	}),
