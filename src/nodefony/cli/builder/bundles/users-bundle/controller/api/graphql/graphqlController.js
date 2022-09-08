@@ -32,6 +32,7 @@ module.exports = class graphqlController extends nodefony.Controller {
         .then((data) => {
           return this.api.render(data);
         }).catch((e) => {
+          this.api.logger(this.query.query, "WARNING")
           this.api.logger(e, "ERROR");
           return this.api.renderError(e, 400);
         });

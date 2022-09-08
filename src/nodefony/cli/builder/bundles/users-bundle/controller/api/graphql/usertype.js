@@ -22,6 +22,24 @@ const type = `
     roles : Array
   }
 
+  input UserInput {
+    username: String!
+    surname: String
+    name: String
+    enabled: Boolean
+    password: String
+    confirm: String
+    userNonExpired: Boolean
+    credentialsNonExpired : Boolean
+    accountNonLocked: Boolean
+    email : String!
+    lang : String
+    gender: String
+    url : Url
+    image: String
+    roles : Array
+  }
+
   # the schema allows the following query:
   type Query {
     user(username: String!): User
@@ -30,7 +48,10 @@ const type = `
 
   # this schema allows the following mutation:
   type Mutation {
-    addUser(username: String!, email: String!, password: String!): User
+    addUser(input: UserInput!): User!
+    updateUser(username:String!, input: UserInput!): User!
+    deleteUser(username:String!): User!
+    deleteUsers(users:Array!): [User]!
   }
 `
 

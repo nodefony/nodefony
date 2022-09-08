@@ -72,8 +72,18 @@ module.exports = class users extends nodefony.Service {
       query: query
     }
     switch (action) {
-    case "insert":
     case "update":
+    if (!obj.isAdmin) {
+      if( query.where ){
+        if( user.username !== query.where.username ){
+          throw new nodefony.authorizationError('User not authorized', 403)
+        }
+      }else{
+        throw new nodefony.authorizationError('User not authorized', 403)
+      }
+    }
+    break;
+    case "insert":
     case "delete":
       if (!obj.isAdmin) {
         throw new nodefony.authorizationError('User not authorized', 403)
@@ -330,9 +340,9 @@ module.exports = class users extends nodefony.Service {
         return this.entity.create([query], {
             //session: transaction
           })
-          .then(async (user) => {
+          .then(async (myuser) => {
             //await transaction.commitTransaction();
-            return user;
+            return myuser[0] || myuser;
           })
           .catch(async e => {
             throw await this.sanitizeError(e, transaction);
