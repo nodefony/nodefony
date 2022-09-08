@@ -11,6 +11,11 @@ module.exports = {
     stats: {
       colors: true,
       preset: 'normal', // normal || minimal || verbose || detailed  || summary
+    },
+    watchOptions: {
+      aggregateTimeout: 600,
+      poll: false,
+      followSymlinks: true
     }
   }
 };

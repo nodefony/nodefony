@@ -13,7 +13,7 @@
 #      watch:
 #        controller:		true
 #        views:			true
-#        translations:      true
+#        translations: true
 #
 watch                     : false
 
@@ -24,10 +24,6 @@ webpack:
     colors                : true
     preset                : normal # normal || minimal || verbose || detailed  || summary
   watchOptions:
-    ignoreInitial         : false
-    persistent            : true
-    followSymlinks        : false
-    depth                 : 0
-    atomic                : false
-    alwaysStat            : true
-    ignorePermissionErrors: true
+    aggregateTimeout      : 600
+    poll                  : false
+    followSymlinks        : true

@@ -397,7 +397,7 @@ loadConfig(file, bundle, reload) {
         };
         break;
       default:
-        if(type== 'vue'){
+        if(type === 'vue'){
           process.VUE_CLI_SERVICE = null
         }
         config = require(file.path);
