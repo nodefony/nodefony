@@ -15,12 +15,12 @@
     "cls-hooked": "^4.2.2",
     "mariadb": "3.0.1",
     "mysql2": "^2.3.3",
-    "pg": "8.7.3",
+    "pg": "8.8.0",
     "pg-hstore": "^2.3.4",
     "pgtools": "^0.3.2",
     "sequelize": "6.21.4",
     "sqlite3": "5.0.11",
-    "tedious": "15.0.1",
+    "tedious": "15.1.0",
     "umzug": "3.2.1"
   },
   "repository": {

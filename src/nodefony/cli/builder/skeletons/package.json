@@ -22,13 +22,13 @@
 {% endif %}
 {% if addons.bootstrap %}
     "@popperjs/core": "2.11.6",
-    "bootstrap": "5.2.0",
-    "jquery": "^3.6.0",
+    "bootstrap": "5.2.1",
+    "jquery": "3.6.1",
     "font-awesome": "^4.7.0",
 {% endif %}
 {% if addons.webpack %}
-    "@babel/core": "7.18.10",
-    "@babel/preset-env": "7.18.10",
+    "@babel/core": "7.19.0",
+    "@babel/preset-env": "7.19.0",
     "babel-loader": "8.2.5",
     "clean-webpack-plugin": "^4.0.0",
     "css-hot-loader": "^1.4.4",
@@ -39,20 +39,21 @@
     "html-webpack-plugin": "^5.5.0",
     "imports-loader": "4.0.1",
     "mini-css-extract-plugin": "2.6.1",
-    "sass": "1.54.4",
+    "sass": "1.54.9",
     "sass-loader": "13.0.2",
     "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "^3.3.1",
-    "terser-webpack-plugin": "5.3.4",
+    "terser-webpack-plugin": "5.3.6",
     "webpack": "5.74.0",
     "webpack-merge": "^5.8.0"
+
 {% endif %}
   },
   "devDependencies": {
 {% if addons.webpack %}
-    "webpack-dev-server": "4.10.0",
+    "webpack-dev-server": "4.11.0",
 {% endif %}
-    "@mapbox/node-pre-gyp": "1.0.9",
+    "@mapbox/node-pre-gyp": "1.0.10",
     "node-gyp": "9.1.0"
   },
   "license": "",

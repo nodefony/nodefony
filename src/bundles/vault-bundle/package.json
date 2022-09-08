@@ -16,7 +16,7 @@
     "node-vault": "^0.9.22"
   },
   "devDependencies": {
-    "@mapbox/node-pre-gyp": "1.0.9",
+    "@mapbox/node-pre-gyp": "1.0.10",
     "node-gyp": "^9.1.0"
   },
   "license": "",

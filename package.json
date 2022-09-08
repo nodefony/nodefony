@@ -51,15 +51,15 @@
     "node": ">=12"
   },
   "dependencies": {
-    "mongoose": "6.5.2",
+    "mongoose": "6.5.5",
     "pm2": "5.2.0",
     "pm2-logrotate": "^2.7.0",
     "sequelize": "6.21.4",
     "webpack": "5.74.0",
-    "webpack-dev-server": "4.10.0"
+    "webpack-dev-server": "4.11.0"
   },
   "devDependencies": {
-    "@mapbox/node-pre-gyp": "1.0.9",
+    "@mapbox/node-pre-gyp": "1.0.10",
     "editorconfig": "^0.15.3",
     "github-release-notes": "^0.17.3",
     "jshint": "2.13.5",
