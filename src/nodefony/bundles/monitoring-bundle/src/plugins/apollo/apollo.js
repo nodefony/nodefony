@@ -4,6 +4,9 @@ import nodefonyClientWS from './nodefonyClientWs.js'
 import {
   createApolloProvider
 } from '@vue/apollo-option'
+import {
+  ApolloClient,
+} from '@apollo/client/core'
 
 class Apollo extends nodefony.Kernel {
 
@@ -34,14 +37,23 @@ class Apollo extends nodefony.Kernel {
     this.set("router", this.router);
     this.set("i18n", this.i18n);
     this.set("nodefony", this.nodefony);
-    this.showBanner()
     app.provide('appolo', this)
-    this.addNodefonyClient()
+    this.client = nodefonyClient(this.nodefony);
+    this.provider = this.addProvider()
+    this.app.use(this.provider)
+    this.showBanner()
   }
 
-  addNodefonyClient() {
-    const nodefonyProvider = createApolloProvider({
-      defaultClient: nodefonyClient(this.nodefony),
+  showBanner() {
+    this.logger(`${this.name}\n\n`,
+      `\tVersion :\t\t\t ${this.client.version}\n`,
+      `\n\n\n`
+    );
+  }
+
+  addProvider() {
+    return createApolloProvider({
+      defaultClient: this.client,
       defaultOptions: {
         // apollo options applied to all queries in components
         $query: {
@@ -50,8 +62,6 @@ class Apollo extends nodefony.Kernel {
         }
       }
     })
-    this.app.use(nodefonyProvider)
-    return nodefonyProvider
   }
 
 

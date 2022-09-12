@@ -233,12 +233,12 @@ module.exports = {
   pwa: {
     //manifestPath:"",
     manifestOptions: {
-      start_url: "./doc",
-      id: "./doc",
-      scope: "./doc"
+      start_url: "./nodefony",
+      id: "./monitoring-bundle",
+      scope: "./nodefony"
     },
     workboxOptions: {
-      chunks: ['app']
+      chunks: ['app', "swagger", "graphiql"]
     }
   }
 };

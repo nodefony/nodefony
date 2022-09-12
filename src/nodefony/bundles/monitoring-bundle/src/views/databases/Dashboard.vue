@@ -121,7 +121,10 @@
 				<tbody>
 					<tr v-for="item in connectors"
 					    :key="item.name">
-						<td>{{ item.name }}</td>
+						<td>
+							<v-chip @click="goConnector(item.name)"
+							        density="compact">{{item.name}}</v-chip>
+						</td>
 						<td>{{ item.type }}</td>
 						<td>{{ item.state }}</td>
 						<td>{{ item.options }}</td>
@@ -151,10 +154,18 @@
 				<tbody>
 					<tr v-for="item in entities"
 					    :key="item.name">
-						<td>{{ item.name }}</td>
+						<td>
+							<v-chip @click="goEntity(item.name)"
+							        density="compact">{{item.name}}
+							</v-chip>
+						</td>
 						<td>{{ item.tableName }}</td>
 						<td>{{ item.bundleName }}</td>
-						<td>{{ item.connectorName }}</td>
+						<td>
+							<v-chip @click="goConnector(item.connectorName)"
+							        density="compact">{{item.connectorName}}
+							</v-chip>
+						</td>
 					</tr>
 				</tbody>
 			</v-table>
@@ -271,7 +282,22 @@ export default {
 
 	},
 	methods: {
-
+		goConnector(name) {
+			return this.$router.push({
+				name: 'Connectors',
+				params: {
+					name: name
+				}
+			})
+		},
+		goEntity(name) {
+			return this.$router.push({
+				path: `/database/entity/${name}`,
+				param: {
+					entity: name
+				}
+			})
+		}
 	}
 }
 </script>

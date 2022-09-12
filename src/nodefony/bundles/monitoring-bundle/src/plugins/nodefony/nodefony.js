@@ -44,7 +44,7 @@ class Nodefony extends nodefony.Kernel {
   }
 
   showBanner() {
-    this.logger(`\tVUE NODEFONY PLUGIN\n\n`,
+    this.logger(`${this.name}\n\n`,
       `\tVersion :\t\t\t ${this.version}\n`,
       `\tenvironment :\t\t ${this.environment}\n`,
       `\tvue :\t\t\t\t ${this.vueVersion}\n`,

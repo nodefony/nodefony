@@ -7,6 +7,7 @@ module.exports = {
       return JSON.stringify({
         name: orm,
         debug: Orm.debug,
+        version:Orm.engine.version
       });
     },
 

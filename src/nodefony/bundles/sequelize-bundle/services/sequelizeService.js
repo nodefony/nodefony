@@ -98,7 +98,7 @@ class connectionDB {
   toObject() {
     return {
       state: this.state,
-      nane: this.name,
+      name: this.name,
       type: this.type,
       settings: this.settings
     }
