@@ -47,6 +47,7 @@ class Nodefony extends nodefony.Kernel {
     this.logger(`${this.name}\n\n`,
       `\tVersion :\t\t\t ${this.version}\n`,
       `\tenvironment :\t\t ${this.environment}\n`,
+      `\tnodefony-client :\t ${nodefony.version}\n`,
       `\tvue :\t\t\t\t ${this.vueVersion}\n`,
       `\tvuetify :\t\t\t ${this.vuetifyVersion}\n`,
       `\tdebug :\t\t\t\t`,

@@ -31,7 +31,6 @@
     "css-loader": "6.7.1",
     "expose-loader": "4.0.0",
     "font-awesome": "^4.7.0",
-    "graphql": "16.6.0",
     "html-webpack-plugin": "^5.5.0",
     "imports-loader": "4.0.1",
     "jquery": "3.6.1",

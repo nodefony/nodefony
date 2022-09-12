@@ -1,6 +1,6 @@
 import nodefony from 'nodefony-client'
 import nodefonyClient from './nodefonyClient.js'
-import nodefonyClientWS from './nodefonyClientWs.js'
+//import nodefonyClientWS from './nodefonyClientWs.js'
 import {
   createApolloProvider
 } from '@vue/apollo-option'
