@@ -416,7 +416,7 @@ You can find certificate authority (ca) here:
 #### Access to Secure App with URL : <https://localhost:5152>
 #### Access to App with URL : <http://localhost:5151>
 
-[![nodefony](https://raw.githubusercontent.com/nodefony/nodefony/master/src/nodefony/bundles/documentation-bundle/Resources/public/images/nodefony.png)](https://nodefony.net)
+[![nodefony](https://raw.githubusercontent.com/nodefony/nodefony/master/src/nodefony/bundles/monitoring-bundle/Resources/public/images/nodefony.png)](https://nodefony.net)
 
 ## <a name="configurations"></a>Framework Configurations
 
@@ -713,7 +713,7 @@ module.exports = webpackMerge(config, {
 
 Access to monitoring route with URL : <http://localhost:5151/nodefony>
 
-[![MONITORING](https://raw.githubusercontent.com/nodefony/nodefony/master/src/nodefony/doc/cluster.png)](https://nodefony.net/nodefony)
+[![MONITORING](https://raw.githubusercontent.com/nodefony/nodefony/master/src/nodefony/bundles/monitoring-bundle/Resources/public/images/monitor.png)](https://nodefony.net/nodefony)
 
 Monitoring in progress !!!
 
