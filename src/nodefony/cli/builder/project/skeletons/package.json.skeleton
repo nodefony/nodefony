@@ -34,11 +34,11 @@
     "node": ">=12"
   },
   "dependencies": {
-    "mongoose": "6.5.5",
+    "mongoose": "6.6.0",
     "nodefony": "^{{version}}",
     "pm2": "5.2.0",
     "pm2-logrotate": "^2.7.0",
-    "sequelize": "6.21.4",
+    "sequelize": "6.21.6",
     "webpack": "5.74.0",
     "webpack-dev-server": "4.11.0"
   },
