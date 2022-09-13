@@ -34,6 +34,7 @@
     "node": ">=12"
   },
   "dependencies": {
+    "graphql": "16.6.0",
     "mongoose": "6.6.0",
     "nodefony": "^{{version}}",
     "pm2": "5.2.0",
