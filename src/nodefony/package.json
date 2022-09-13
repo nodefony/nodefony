@@ -49,6 +49,7 @@
     "@nodefony/sequelize-bundle": "7.0.0-beta.1",
     "@nodefony/unittests-bundle": "7.0.0-beta.1",
     "@vue/cli": "5.0.8",
+    "@vue/cli-service": "5.0.8",
     "@vue/cli-service-global": "4.5.19",
     "asciify": "^1.3.5",
     "bluebird": "^3.7.2",
