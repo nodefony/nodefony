@@ -1,4 +1,8 @@
-const Sequelize = require("sequelize");
+const {
+  Sequelize,
+  DataTypes,
+  Model
+} = nodefony.Sequelize;
 /*
  *    ENTITY boat
  */
@@ -19,15 +23,15 @@ module.exports = class boat extends nodefony.Entity {
   getSchema() {
     return {
       id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
       name: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       size: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       }
     };
   }
