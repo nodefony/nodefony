@@ -27,8 +27,8 @@
     "font-awesome": "^4.7.0",
 {% endif %}
 {% if addons.webpack %}
-    "@babel/core": "7.19.0",
-    "@babel/preset-env": "7.19.0",
+    "@babel/core": "7.19.1",
+    "@babel/preset-env": "7.19.1",
     "babel-loader": "8.2.5",
     "clean-webpack-plugin": "^4.0.0",
     "css-hot-loader": "^1.4.4",

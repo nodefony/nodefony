@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@apollo/client": "3.6.9",
-    "@babel/preset-env": "7.19.0",
+    "@babel/preset-env": "7.19.1",
     "@babel/preset-react": "7.18.6",
     "@beyonk/google-fonts-webpack-plugin": "1.7.0",
     "@highlightjs/vue-plugin": "2.1.0",
@@ -61,8 +61,8 @@
     "webpack-plugin-vuetify": "2.0.0-alpha.13"
   },
   "devDependencies": {
-    "@babel/core": "7.19.0",
-    "@babel/eslint-parser": "7.18.9",
+    "@babel/core": "7.19.1",
+    "@babel/eslint-parser": "7.19.1",
     "eslint": "8.23.1",
     "eslint-plugin-vue": "9.4.0",
     "html-webpack-plugin": "5.5.0",
