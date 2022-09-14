@@ -2,7 +2,8 @@
 const webpack = require('webpack');
 const path = require('path');
 const Package = require(path.resolve("package.json"));
-const packageVue = require(path.resolve("node_modules", "vue", "package.json"));
+const vueDir = path.dirname(require.resolve("vue"))
+const packageVue = require(path.resolve(vueDir, "package.json"));
 const outputDir = path.resolve("Resources", "public");
 const indexPath = path.resolve("Resources", "views", 'index.html.twig');
 const publicPath = "/monitoring-bundle";
@@ -29,7 +30,8 @@ try {
   debug = kernel.debug ? "*" : false;
 } catch (e) {}
 
-const packageVuetify = require(path.resolve("node_modules", "vuetify", "package.json"));
+const vuetifyDir = path.dirname(require.resolve("vuetify"))
+const packageVuetify = require(path.resolve(vuetifyDir, "..", "package.json"));
 
 process.env.VUE_APP_VERSION = Package.version;
 process.env.VUE_APP_VUE_VERSION = packageVue.version;

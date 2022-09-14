@@ -452,7 +452,14 @@ class Bundle extends nodefony.Service {
         }
         break;
       case "vue":
-        file = path.resolve(this.path, "node_modules", "@vue", "cli-service", "webpack.config.js");
+        try{
+          file = path.resolve(this.path, "node_modules", "@vue", "cli-service", "webpack.config.js");
+          new nodefony.fileClass(file);
+        }catch(e){
+          let cliService = require.resolve("@vue/cli-service");
+          file = path.resolve(path.dirname(cliService), "..", "webpack.config.js");
+        }
+        //console.log(file , require.resolve("@vue/cli-service"))
         try {
           this.webpackConfigFile = new nodefony.fileClass(file);
           process.env.VUE_CLI_CONTEXT = this.path;

@@ -82,6 +82,9 @@ module.exports = class webpack extends nodefony.Service {
       let tab = [];
       try {
         for (let bundle in this.kernel.bundles) {
+          if( this.kernel.isBundleCore(bundle) && !this.kernel.isCore){
+            continue;
+          }
           let myBundle = this.kernel.bundles[bundle];
           shell.cd(myBundle.path);
           let res = await myBundle.initWebpack.call(myBundle);
