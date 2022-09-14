@@ -16,7 +16,7 @@ module.exports = class mongooseBundle extends nodefony.Bundle {
     this.waitBundleReady = true;
   }
 
-  boot(){
+  /*boot(){
     return new Promise((resolve, reject)=>{
       try{
         let orm = this.get("mongoose");
@@ -29,6 +29,6 @@ module.exports = class mongooseBundle extends nodefony.Bundle {
         return reject(e);
       }
     });
-  }
+  }*/
 
 };

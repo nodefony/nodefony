@@ -11,7 +11,7 @@
     this.waitBundleReady = true;
   }
 
-  boot(){
+  /*boot(){
     return new Promise((resolve, reject)=>{
       try{
         let orm = this.get("sequelize");
@@ -24,7 +24,7 @@
         return reject(e);
       }
     });
-  }
+  }*/
 }
 
 module.exports = sequelizeBundle ;

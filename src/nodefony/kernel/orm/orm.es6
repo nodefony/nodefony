@@ -5,7 +5,7 @@ const connectionMonitor = function ( /*name, db*/ ) {
       if (this.kernel.type !== "CONSOLE") {
         this.log('onOrmReady', "INFO", `EVENTS ${this.name} ORM`);
       }
-        //this.log('onOrmReady', "INFO", `EVENTS ${this.name} ORM`);
+      //this.log('onOrmReady', "INFO", `EVENTS ${this.name} ORM`);
       this.fire('onOrmReady', this);
       this.ready = true;
     });
@@ -23,6 +23,12 @@ class Orm extends nodefony.Service {
     this.connections = {};
     this.connectionNotification = 0;
     this.ready = false;
+    this.prependOnceListener("onOrmReady", async () => {
+      if (this.bundle.booted) {
+        await this.bundle.emitAsync("onReady", this.bundle);
+      }
+      this.bundle.ready = true
+    })
   }
 
   boot() {

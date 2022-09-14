@@ -164,6 +164,8 @@ class Bundle extends nodefony.Service {
     this.version = this.package.version;
     this.packageName = this.package.name;
     this.isCore = this.kernel.isBundleCore(this.name);
+    this.ready = false
+    this.booted = false
 
     // services
     this.injectionService = this.get("injection");
@@ -235,7 +237,7 @@ class Bundle extends nodefony.Service {
           this.locale = this.translation.defaultLocale;
         }
         // I18n
-        this.i18nFiles =  await this.findI18nFiles();
+        this.i18nFiles = await this.findI18nFiles();
 
         // Register Entity
         await this.registerEntities();
@@ -250,20 +252,20 @@ class Bundle extends nodefony.Service {
     });
 
     this.kernel.once("onPostReady", async () => {
-      switch(this.kernel.environment){
-        case 'production':
-        case 'prod':
-        case 'preprod':
-        case 'preproduction':
-          this.clean();
-          break;
+      switch (this.kernel.environment) {
+      case 'production':
+      case 'prod':
+      case 'preprod':
+      case 'preproduction':
+        this.clean();
+        break;
       }
     });
     // BUNDLE EVENTS
     this.register()
   }
 
-  async register(){
+  async register() {
     return await this.emitAsync("onRegister", this);
   }
 
@@ -335,8 +337,14 @@ class Bundle extends nodefony.Service {
       } catch (e) {
         return reject(e);
       }
+      this.booted = true;
       if (this.waitBundleReady === false) {
         await this.emitAsync("onReady", this);
+        this.ready = true
+      } else {
+        if (this.ready) {
+          await this.emitAsync("onReady", this);
+        }
       }
       return resolve(this);
     });
@@ -452,10 +460,10 @@ class Bundle extends nodefony.Service {
         }
         break;
       case "vue":
-        try{
+        try {
           file = path.resolve(this.path, "node_modules", "@vue", "cli-service", "webpack.config.js");
           new nodefony.fileClass(file);
-        }catch(e){
+        } catch (e) {
           let cliService = require.resolve("@vue/cli-service");
           file = path.resolve(path.dirname(cliService), "..", "webpack.config.js");
         }
@@ -943,7 +951,7 @@ class Bundle extends nodefony.Service {
       } else {
         views = this.viewFiles;
       }
-      views.getFiles().forEach(async (file) => {
+      for await (const file of views.getFiles()) {
         try {
           let ele = await this.recompileTemplate(file, true);
           if (ele) {
@@ -957,7 +965,22 @@ class Bundle extends nodefony.Service {
           return reject(e);
           //throw e;
         }
-      });
+      }
+      /*views.getFiles().forEach(async (file) => {
+        try {
+          let ele = await this.recompileTemplate(file, true);
+          if (ele) {
+            if (ele.basename === ".") {
+              this.log("Register Template   : '" + this.name + "Bundle:" + "" + ":" + ele.name + "'", "DEBUG");
+            } else {
+              this.log("Register Template   : '" + this.name + "Bundle:" + ele.basename + ":" + ele.name + "'", "DEBUG");
+            }
+          }
+        } catch (e) {
+          return reject(e);
+          //throw e;
+        }
+      });*/
       return resolve(views);
     });
   }
@@ -1080,9 +1103,9 @@ class Bundle extends nodefony.Service {
   async getPublicDirectory() {
     try {
       return await new nodefony.Finder2({
-        excludeDir: /^docs$|^tests|^node_modules|^assets$/
-      })
-      .in(path.resolve(this.path, "Resources", "public"));
+          excludeDir: /^docs$|^tests|^node_modules|^assets$/
+        })
+        .in(path.resolve(this.path, "Resources", "public"));
     } catch (e) {
       return null;
     }
