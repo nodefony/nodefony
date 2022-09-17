@@ -55,7 +55,7 @@
     "vue-json-pretty": "2.2.2",
     "vue-router": "4.1.5",
     "vue3-markdown-it": "1.0.10",
-    "vuetify": "3.0.0-beta.10",
+    "vuetify": "3.0.0-beta.11",
     "vuex": "^4.0.0",
     "webfontloader": "^1.0.0",
     "webpack-plugin-vuetify": "2.0.0-alpha.13"
@@ -64,7 +64,7 @@
     "@babel/core": "7.19.1",
     "@babel/eslint-parser": "7.19.1",
     "eslint": "8.23.1",
-    "eslint-plugin-vue": "9.4.0",
+    "eslint-plugin-vue": "9.5.1",
     "html-webpack-plugin": "5.5.0",
     "sass": "1.54.9",
     "sass-loader": "13.0.2",
