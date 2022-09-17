@@ -425,7 +425,7 @@ class Kernel extends nodefony.Service {
       .catch(e => {
         this.log(e, "ERROR");
       });
-    if (result.length) {
+    if (result && result.length) {
       return result[0];
     }
     return null;
@@ -458,7 +458,7 @@ class Kernel extends nodefony.Service {
           return result[0].children
             .map((bundle) => {
               const name = this.regBundleName.exec(bundle.name);
-              if (!(name[1] in this.bundles)) {
+              if (name && !(name[1] in this.bundles)) {
                 return this.loadBundleUnregister(name[1], bundle);
               }
               return false;
@@ -505,7 +505,9 @@ class Kernel extends nodefony.Service {
       .catch(e => {
         this.log(e, "ERROR");
       });
-    tab = tab.concat(result);
+    if (result) {
+      tab = tab.concat(result);
+    }
     return tab;
   }
 
