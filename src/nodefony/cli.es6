@@ -1,7 +1,7 @@
 //const Table = require('cli-table3');
 const asciify = require('asciify');
 let inquirer = null
-const inquirerImport = async()=>{
+const inquirerImport = async () => {
   inquirer = await import('inquirer')
     .then((esmFS) => {
       return esmFS.default
@@ -9,7 +9,7 @@ const inquirerImport = async()=>{
 }
 
 let Table = null
-const cliTableImport = async()=>{
+const cliTableImport = async () => {
   Table = await import('cli-table3')
     .then((esmFS) => {
       return esmFS.default
@@ -121,11 +121,18 @@ class CLI extends nodefony.Service {
       this.initSyslog();
     }
     this.initUi()
-    this.prependOnceListener("onStart",async () => {
+    this.prependOnceListener("onStart", async () => {
       await inquirerImport()
+        .catch((e) => {
+          this.log(e, "WARNING")
+        });
       await cliTableImport()
+        .catch((e) => {
+          this.log(e, "WARNING")
+          Table = require("cli-table3")
+        });
       this.initPrompt()
-    })
+    });
     this.initCommander();
 
     if (this.options.warning) {
