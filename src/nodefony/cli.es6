@@ -200,19 +200,25 @@ class CLI extends nodefony.Service {
      */
     if (name && this.options.asciify) {
       this.showAsciify(name)
-        .then(() => {
+        .then(async () => {
           if (this.options.autostart) {
             try {
-              this.fireAsync("onStart", this);
+              await this.fireAsync("onStart", this);
             } catch (e) {
-              throw e;
+              this.log(e, "ERROR");
             }
           }
         });
     } else {
       if (this.options.autostart) {
         try {
-          this.fireAsync("onStart", this);
+          (async () => {
+            try {
+              await this.fireAsync("onStart", this);
+            } catch (e) {
+              this.log(e, "ERROR");
+            }
+          })
         } catch (e) {
           this.log(e, "ERROR");
         }
