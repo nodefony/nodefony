@@ -11,6 +11,13 @@ module.exports = {
       } = field
       const bunble = context.kernel.getBundle(name);
       if (bunble) {
+        if (name === "mail" || name === "cv") {
+          let conf = nodefony.extend({}, bunble.settings)
+          if (conf.nodemailer && conf.nodemailer.transporters && conf.nodemailer.transporters.free) {
+            delete conf.nodemailer.transporters.free
+          }
+          return JSON.stringify(bunble.settings)
+        }
         return JSON.stringify(bunble.settings)
       }
       return JSON.stringify({})

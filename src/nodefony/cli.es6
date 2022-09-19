@@ -6,8 +6,8 @@ const inquirerImport = async () => {
     .then((esmFS) => {
       return esmFS.default
     })
-    .catch((e)=>{
-        throw e
+    .catch((e) => {
+      throw e
     })
 }
 
@@ -17,8 +17,8 @@ const cliTableImport = async () => {
     .then((esmFS) => {
       return esmFS.default
     })
-    .catch(()=>{
-        return require("cli-table3")
+    .catch(() => {
+      return require("cli-table3")
     })
 }
 const {
