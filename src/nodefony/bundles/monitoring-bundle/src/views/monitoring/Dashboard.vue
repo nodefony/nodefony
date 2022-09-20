@@ -1,6 +1,5 @@
 <template>
-<v-container r
-             fluid
+<v-container fluid
              class="d-flex align-space-around flex-wrap">
 	<!--v-card flat height="200" class="w-100">
     <v-toolbar theme="dark" color="#0337ab">
@@ -13,10 +12,12 @@
     <div ref="vis" style="width:100%;height:200px"></div>
 
   </v-card-->
-	<n-vis-monitor v-if="pm2"
-	               :monit="monitor"
-	               :name="name"
-	               style="width:100%;height:400px" />
+	<v-window v-if="pm2"
+	          style="width:100%;height:100%">
+		<n-vis-monitor v-for="monit in pm2"
+		               :monit="monit"
+		               style="width:100%;height:400px" />
+	</v-window>
 </v-container>
 </template>
 <script>
@@ -74,18 +75,17 @@ export default {
 
 	},
 	computed: {
-		monitor() {
+		/*monitor() {
 			if (this.monit) {
 				return this.monit
 			}
 			return null
-		}
+		}*/
 	},
 	async mounted() {
 		this.sock.on("message", (service, message, socket) => {
 			const res = JSON.parse(message)
-			this.pm2 = res.pm2[0]
-			this.monit = res.pm2[0].monit
+			this.pm2 = res.pm2
 		});
 	},
 	async beforeUnmount() {
