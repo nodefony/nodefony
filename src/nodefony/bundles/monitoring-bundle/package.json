@@ -47,7 +47,8 @@
     "swagger-ui": "4.14.0",
     "swagger-ui-dist": "4.14.0",
     "useragent": "2.3.0",
-    "vis": "4.21.0-EOL",
+    "vis-data": "7.1.4",
+    "vis-timeline": "7.7.0",
     "vue": "=3.2.37",
     "vue-cli-plugin-i18n": "~2.3.1",
     "vue-cli-plugin-vuetify": "2.5.8",
@@ -69,7 +70,7 @@
     "sass": "1.54.9",
     "sass-loader": "13.0.2",
     "webpack": "5.74.0",
-    "webpack-dev-server": "4.11.0"
+    "webpack-dev-server": "4.11.1"
   },
   "resolutions": {},
   "repository": {
