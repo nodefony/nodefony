@@ -15,8 +15,15 @@
 </template>
 
 <script>
-import vis from 'vis'
-import 'vis/dist/vis-timeline-graph2d.min.css';
+import moment from 'moment';
+import {
+	Graph2d
+} from "vis-timeline/peer";
+import {
+	DataSet
+} from "vis-data/peer";
+
+import 'vis-timeline/dist/vis-timeline-graph2d.min.css';
 export default {
 	name: "n-vis-monitor",
 	props: {
@@ -33,8 +40,8 @@ export default {
 		return {
 			graph2d: null,
 			delay: 500,
-			cpuDataset: new vis.DataSet(),
-			memoryDataset: new vis.DataSet()
+			cpuDataset: new DataSet(),
+			memoryDataset: new DataSet()
 		}
 	},
 	watch: {
@@ -44,8 +51,8 @@ export default {
 	},
 	mounted() {
 		let options = {
-			start: vis.moment().add(-30, 'seconds'), // changed so its faster
-			end: vis.moment(),
+			start: moment().add(-30, 'seconds'), // changed so its faster
+			end: moment(),
 			dataAxis: {
 				left: {
 					range: {
@@ -64,7 +71,7 @@ export default {
 			},
 			graphHeight: "200px"
 		}
-		this.graph2d = new vis.Graph2d(this.$refs.vis, this.cpuDataset, options);
+		this.graph2d = new Graph2d(this.$refs.vis, this.cpuDataset, options);
 		this.renderStep();
 	},
 	computed: {
@@ -73,7 +80,7 @@ export default {
 	methods: {
 		renderStep() {
 			// move the window (you can think of different strategies).
-			const now = vis.moment();
+			const now = moment();
 			const range = this.graph2d.getWindow();
 			const interval = range.end - range.start;
 			if (now > range.end) {
@@ -83,7 +90,7 @@ export default {
 		},
 
 		addCpuPoint(now, cpu) {
-			const date = vis.moment(now) || vis.moment();
+			const date = moment(now) || moment();
 			cpu = parseFloat(cpu, 10)
 			if (cpu == NaN || cpu == Infinity) {
 				return
