@@ -12,9 +12,9 @@
 	<v-window class="w-100 h-100 mx-auto"
 	          style="height:800px"
 	          v-model="step">
-		<v-form ref="form"
+		<v-form :ref="`myform`"
 		        class="h-100"
-		        v-model="form"
+		        :v-model="form"
 		        lazy-validation>
 
 			<v-window-item :value="1"
@@ -149,7 +149,7 @@
 			</v-btn>
 			<v-btn v-if="! profile"
 			       text
-			       @click="$refs.form.reset()">
+			       @click="$refs.myform.reset()">
 				Clear
 			</v-btn>
 			<v-spacer></v-spacer>
