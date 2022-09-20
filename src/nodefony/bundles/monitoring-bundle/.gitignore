@@ -3,6 +3,10 @@ node_modules
 /dist
 /Resources/public/hot
 /Resources/public/img
+/Resources/views/base.graphiql.html.twig
+/Resources/views/base.html.twig
+/Resources/views/index.html.twig
+/Resources/public/fonts.css
 
 
 # local env files

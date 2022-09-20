@@ -404,9 +404,7 @@ loadConfig(file, bundle, reload) {
           process.VUE_CLI_SERVICE = null
         }
         config = require(file.path);
-        watchOptions = nodefony.extend({
-          ignored: /node_modules/
-        }, this.webPackSettings.watchOptions);
+        watchOptions = nodefony.extend( {}, this.webPackSettings.watchOptions, config.watchOptions || {});
       }
       const webpack5 = this.isWebpack5(webpack);
       try {

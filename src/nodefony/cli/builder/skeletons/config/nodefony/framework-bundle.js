@@ -13,7 +13,8 @@ module.exports = {
       preset: 'normal' // normal || minimal || verbose || detailed  || summary
     },
     watchOptions: {
-      aggregateTimeout: 600,
+      ignored: /node_modules|assets/,
+      aggregateTimeout: 1000,
       poll: false,
       followSymlinks: true
     }

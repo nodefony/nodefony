@@ -12,7 +12,7 @@ const {
   CleanWebpackPlugin
 } = require('clean-webpack-plugin');
 //const title = Package.name;
-const title = `Nodefony ${nodefony.version}`;
+const title = `Nodefony`;
 const htmlPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const GoogleFontsPlugin = require("@beyonk/google-fonts-webpack-plugin")
@@ -32,6 +32,7 @@ try {
 
 const vuetifyDir = path.dirname(require.resolve("vuetify"))
 const packageVuetify = require(path.resolve(vuetifyDir, "..", "package.json"));
+const nodeModule = path.resolve(process.cwd(),"node_modules")
 
 process.env.VUE_APP_VERSION = Package.version;
 process.env.VUE_APP_VUE_VERSION = packageVue.version;
@@ -71,8 +72,18 @@ module.exports = {
   },
 
   configureWebpack: {
+    //context:process.cwd(),
+    watchOptions: {
+      aggregateTimeout: 2000,
+      ignored: /node_modules|assets/,
+      followSymlinks:false
+    },
+    performance: {
+      hints: false,
+      maxEntrypointSize: 11000000,
+      maxAssetSize: 11000000
+    },
     devtool: process.env.NODE_ENV === "development" ? "source-map" : false,
-    //context:path.resolve("."),
     entry: {
       swagger: ["/Resources/swagger/swagger.js"],
       graphiql: ["/Resources/graphiql/graphiql.jsx"],
@@ -132,7 +143,8 @@ module.exports = {
       fallback: {
         "path": false,
         "assert": false
-      }
+      },
+      modules: [nodeModule]
     },
     plugins: [
       /*new webpack.ProgressPlugin({
@@ -240,7 +252,8 @@ module.exports = {
       scope: "./nodefony"
     },
     workboxOptions: {
-      chunks: ['app', "swagger", "graphiql"]
+      chunks: ['app', "swagger", "graphiql"],
+      maximumFileSizeToCacheInBytes: 9000000
     }
   }
 };
