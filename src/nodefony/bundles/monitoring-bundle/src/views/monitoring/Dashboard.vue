@@ -25,8 +25,6 @@ import nodefony from 'nodefony-client'
 import Socket from 'nodefony-client/src/transports/socket/socket'
 Socket(nodefony)
 import NVisMonitor from '@bundles/monitoring-bundle/src/views/monitoring/visMonitor'
-import vis from 'vis'
-import 'vis/dist/vis-timeline-graph2d.min.css';
 
 export default {
 	name: 'DashboardMonitoring',
