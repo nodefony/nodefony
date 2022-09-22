@@ -164,8 +164,8 @@ export default {
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url("../../Resources/public/assets/fonts/GochiHand-Regular.eot");
-    src: local('Gochi Hand'), url("../../Resources/public/assets/fonts/GochiHand-Regular.eot") format("embedded-opentype"), url("../../Resources/public/assets/fonts/GochiHand-Regular.woff2") format("woff2"), url("../../Resources/public/assets/fonts/GochiHand-Regular.woff") format("woff"), url("../../Resources/public/assets/fonts/GochiHand-Regular.ttf") format("truetype"), url("../../Resources/public/assets/fonts/GochiHand-Regular.svg") format("svg");
+    src: url("../../Resources/public/fonts/GochiHand-Regular.eot");
+    src: local('Gochi Hand'), url("../../Resources/public/fonts/GochiHand-Regular.eot") format("embedded-opentype"), url("../../Resources/public/fonts/GochiHand-Regular.woff2") format("woff2"), url("../../Resources/public/fonts/GochiHand-Regular.woff") format("woff"), url("../../Resources/public/fonts/GochiHand-Regular.ttf") format("truetype"), url("../../Resources/public/fonts/GochiHand-Regular.svg") format("svg");
 }
 .nodefony {
     font-family: 'Gochi Hand' !important;
