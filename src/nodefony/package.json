@@ -5,8 +5,8 @@
   "description": "Nodefony Framework Core",
   "contributors": [],
   "scripts": {
-    "nodefony": "./bin/nodefony",
-    "start": "./bin/nodefony"
+    "nodefony": "node ./bin/nodefony",
+    "start": "node ./bin/nodefony"
   },
   "private": false,
   "keywords": [
@@ -100,12 +100,10 @@
   },
   "resolutions": {},
   "license": "CECILL-B",
-  "licenses": [
-    {
-      "type": "CECILL-B",
-      "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
-    }
-  ],
+  "licenses": [{
+    "type": "CECILL-B",
+    "url": "http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html"
+  }],
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md"
 }
