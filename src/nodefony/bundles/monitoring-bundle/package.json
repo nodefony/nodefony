@@ -32,7 +32,7 @@
     "ansi-to-html": "0.7.2",
     "cheerio": "1.0.0-rc.12",
     "clean-webpack-plugin": "4.0.0",
-    "core-js": "3.25.2",
+    "core-js": "3.25.3",
     "graphiql": "2.0.8",
     "highlight.js": "11.6.0",
     "i18n-iso-countries": "7.5.0",
@@ -64,7 +64,7 @@
   "devDependencies": {
     "@babel/core": "7.19.1",
     "@babel/eslint-parser": "7.19.1",
-    "eslint": "8.23.1",
+    "eslint": "8.24.0",
     "eslint-plugin-vue": "9.5.1",
     "html-webpack-plugin": "5.5.0",
     "sass": "1.55.0",
