@@ -88,7 +88,7 @@ export default {
 		} = this.niceByte(this.maxMemory)
 		this.groupMemory = `% memory (${value} ${unit})`
 		let options = {
-			start: moment().add(-30, 'seconds'), // changed so its faster
+			start: moment().add(-120, 'seconds'), // changed so its faster
 			end: moment(),
 			dataAxis: {
 				left: {
@@ -102,13 +102,14 @@ export default {
 			locale: 'fr',
 			legend: true,
 			defaultGroup: "",
-			drawPoints: {
+			drawPoints: false,
+			/* {
 				style: 'circle' // square, circle
-			},
+			},*/
 			shaded: {
 				orientation: 'bottom' // top, bottom
 			},
-			graphHeight: "200px"
+			graphHeight: "150px"
 		}
 		this.graph2d = new Graph2d(this.$refs.vis, this.monitDataset, options);
 		this.renderStep();
