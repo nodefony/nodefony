@@ -1,10 +1,5 @@
-
-
-class UnixSocket {
-  constructor(){
+module.exports = class UnixSocket {
+  constructor() {
 
   }
-}
-
-
-module.exports = UnixSocket
+};
