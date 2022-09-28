@@ -32,8 +32,8 @@
     "nodefony": "bin/nodefony"
   },
   "dependencies": {
-    "@babel/core": "7.19.1",
-    "@babel/parser": "7.19.1",
+    "@babel/core": "^7.19.3",
+    "@babel/parser": "^7.19.3",
     "@graphql-tools/merge": "8.3.6",
     "@graphql-tools/schema": "9.0.4",
     "@graphql-tools/utils": "8.12.0",

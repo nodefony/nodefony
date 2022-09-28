@@ -23,7 +23,7 @@
     "leaflet": "1.9.1",
     "ml5": "0.12.2",
     "p5": "1.4.2",
-    "vue": "3.2.39",
+    "vue": "^3.2.40",
     "vue-i18n": "9.2.2",
     "vue-router": "4.1.5",
     "vuex": "^4.0.0-0"
@@ -36,7 +36,7 @@
     "@vue/cli-plugin-router": "5.0.8",
     "@vue/cli-plugin-vuex": "5.0.8",
     "@vue/cli-service": "5.0.8",
-    "@vue/compiler-sfc": "3.2.39",
+    "@vue/compiler-sfc": "^3.2.40",
     "babel-eslint": "^10.1.0",
     "eslint": "8.24.0",
     "eslint-plugin-vue": "9.5.1",

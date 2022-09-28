@@ -13,8 +13,8 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "7.19.1",
-    "@babel/preset-env": "7.19.1",
+    "@babel/core": "^7.19.3",
+    "@babel/preset-env": "^7.19.3",
     "@popperjs/core": "2.11.6",
     "babel-loader": "8.2.5",
     "bootstrap": "5.2.1",
