@@ -22,8 +22,8 @@ module.exports = {
             include: [{
               model: userEntity,
               required: false
-        }]
-          }
+            }]
+          };
           if (field.query && field.query.type && field.query.type === "dataTable") {
             options.offset = parseInt(field.query.start, 10);
             options.limit = parseInt(field.query.length, 10);

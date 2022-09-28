@@ -37,6 +37,11 @@ const type = `
     user: User
   }
 
+  type JwtDecode {
+    jwt:Jwt,
+    decode:Object
+  }
+
   # the schema allows the following query:
   type Query {
     getNodefonyStatus: String
@@ -73,6 +78,8 @@ const type = `
     getLogs: String
     getMigrations: String
     outdated(bundle: String , dev: Boolean): String
+    # Jwt
+    getActivity(username: String) :[JwtDecode]
   }
 
   type Mutation {
@@ -81,7 +88,6 @@ const type = `
     allMigrate(connector: String ): String
     allRevert(connector: String ): String
   }
+`;
 
-`
-
-module.exports = type
+module.exports = type;

@@ -95,6 +95,11 @@
 			                @update="changeTab(1)" />
 		</v-window-item>
 
+		<v-window-item :value="3">
+			<n-user-activity v-if="activity" :activity="activity"/>
+		</v-window-item>
+
+
 		<v-window-item :value="4" >
 			<n-session  class='pa-0 ma-0' :username="profile.username"/>
 		</v-window-item>
@@ -111,12 +116,15 @@
 import gql from 'graphql-tag'
 import UserStepper from '@/views/users/UserStepper'
 import Session from '@/views/sessions/sessions'
+import Activity from '@/views/users/UserActivity'
+import moment from 'moment'
 export default {
 	name: "n-users-profile",
 	inject: ['nodefony'],
 	components: {
 		"n-user-stepper": UserStepper,
 		"n-session": Session,
+		"n-user-activity": Activity,
 	},
 	props: {
 		username: {
@@ -150,13 +158,19 @@ export default {
 			    image
 			    roles
 				}
-				#jwts:getTokenByUser
+				activity:getActivity(username: $username){
+			    decode
+			    jwt {
+			      id
+			    }
+			  }
       }
 	    `,
 			update: (data) => {
 				return {
 					profile: data.user,
 					sessions: data.sessions,
+					activity: data.activity,
 					//jwts: data.jwts
 				}
 			},
@@ -194,7 +208,24 @@ export default {
 				return this.request.sessions
 			}
 			return []
-		}
+		},
+		activity() {
+			if (this.request) {
+				return this.request.activity.map((item) => {
+					if (item.jwt) {
+						return {
+							type: "JWT",
+							id: item.jwt.id,
+							user: item.decode.data.user.username,
+							exp: moment(item.decode.exp * 1000),
+							iat: moment(item.decode.iat * 1000),
+						}
+					}
+					return {}
+				})
+			}
+			return []
+		},
 	},
 	methods: {
 		async changeTab(index) {

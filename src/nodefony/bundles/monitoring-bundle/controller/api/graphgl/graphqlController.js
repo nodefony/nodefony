@@ -31,6 +31,7 @@ const Services = require(path.resolve(__dirname, "resolvers", "services.js"));
 const Orm = require(path.resolve(__dirname, "resolvers", "orm.js"));
 const Migrations = require(path.resolve(__dirname, "resolvers", "migration.js"));
 const Nodefony = require(path.resolve(__dirname, "resolvers", "nodefony.js"));
+const Jwt = require(path.resolve(__dirname, "resolvers", "jwt.js"));
 
 module.exports = class graphqlController extends nodefony.Controller {
 
@@ -38,7 +39,7 @@ module.exports = class graphqlController extends nodefony.Controller {
     super(container, context);
     try {
       // graphql api
-      const schema = graphqlController.schema(this.context)
+      const schema = graphqlController.schema(this.context);
       this.api = new nodefony.api.Graphql({
         name: "nodefony-grahql-api",
         version: this.bundle.version,
@@ -137,7 +138,8 @@ module.exports = class graphqlController extends nodefony.Controller {
       Sessions,
       Requests,
       Logs,
-      Migrations
+      Migrations,
+      Jwt
     ];
     if( usersStaticResolver){
       resolvers.push(usersStaticResolver(context));
