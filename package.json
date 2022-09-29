@@ -51,11 +51,11 @@
     "node": ">=12"
   },
   "dependencies": {
+    "@sequelize/core": "7.0.0-alpha.18",
     "graphql": "16.6.0",
     "mongoose": "6.6.2",
     "pm2": "5.2.0",
     "pm2-logrotate": "^2.7.0",
-    "sequelize": "^6.23.2",
     "webpack": "5.74.0",
     "webpack-dev-server": "4.11.1"
   },

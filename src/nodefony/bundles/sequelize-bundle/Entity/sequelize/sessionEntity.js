@@ -23,18 +23,18 @@ module.exports = class session extends nodefony.Entity {
           user.hasMany(this.model, {
             foreignKey: {
               allowNull: true,
-              name:"username"
+              name:"username",
+              onDelete: 'CASCADE',
+              onUpdate: 'CASCADE'
             },
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE'
-          })
+          });
           this.model.belongsTo(user, {
             foreignKey: {
               allowNull: true,
-              name:"username"
-            },
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE'
+              name:"username",
+              onDelete: 'CASCADE',
+              onUpdate: 'CASCADE'
+            }
           });
         } else {
           this.log("ENTITY ASSOCIATION user NOT AVAILABLE" , "WARNING");
@@ -88,11 +88,11 @@ module.exports = class session extends nodefony.Entity {
       },
       createdAt: {
         type: DataTypes.DATE,
-        defaultValue: Sequelize.NOW
+        defaultValue: DataTypes.NOW
       },
       updatedAt: {
         type: DataTypes.DATE,
-        defaultValue: Sequelize.NOW
+        defaultValue: DataTypes.NOW
       }
     };
   }
@@ -115,6 +115,6 @@ module.exports = class session extends nodefony.Entity {
       modelName: this.name
     });
     return MyModel;
-    
+
   }
 };

@@ -67,7 +67,7 @@ class userEntity extends nodefony.Entity {
         type: DataTypes.BOOLEAN,
         defaultValue: false
       },
-      "2fa-token": Sequelize.STRING(256),
+      "2fa-token": DataTypes.STRING(256),
       enabled: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
@@ -202,6 +202,7 @@ class userEntity extends nodefony.Entity {
       freezeTableName: true,
       //add indexes
       indexes: [{
+        name:"user-email",
         unique: true,
         fields: ['email']
       }]

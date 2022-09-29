@@ -1,6 +1,6 @@
 //const cls = require('cls-hooked');
 //const namespace = cls.createNamespace('nodefony');
-nodefony.Sequelize = require('sequelize');
+nodefony.Sequelize = require('@sequelize/core');
 const {
   Sequelize
 } = nodefony.Sequelize;

@@ -12,13 +12,13 @@
   ],
   "dependencies": {
     "@alt3/sequelize-to-json-schemas": "^0.3.56",
+    "@sequelize/core": "7.0.0-alpha.18",
     "cls-hooked": "^4.2.2",
     "mariadb": "3.0.1",
     "mysql2": "^2.3.3",
     "pg": "8.8.0",
     "pg-hstore": "^2.3.4",
     "pgtools": "^0.3.2",
-    "sequelize": "^6.23.2",
     "sqlite3": "5.1.1",
     "tedious": "15.1.0",
     "umzug": "3.2.1"

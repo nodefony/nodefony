@@ -28,18 +28,18 @@ module.exports = class jwt extends nodefony.Entity {
           user.hasMany(this.model, {
             foreignKey: {
               allowNull: true,
-              name:"username"
+              name:"username",
+              onDelete: 'CASCADE',
+              onUpdate: 'CASCADE'
             },
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE'
-          })
+          });
           this.model.belongsTo(user, {
             foreignKey: {
               allowNull: true,
-              name:"username"
-            },
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE'
+              name:"username",
+              onDelete: 'CASCADE',
+              onUpdate: 'CASCADE'
+            }
           });
         } else {
           this.log("ENTITY ASSOCIATION user NOT AVAILABLE" , "WARNING");
