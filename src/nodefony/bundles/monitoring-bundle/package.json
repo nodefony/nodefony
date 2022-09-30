@@ -14,7 +14,7 @@
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
   },
   "dependencies": {
-    "@apollo/client": "3.6.9",
+    "@apollo/client": "^3.6.10",
     "@babel/preset-env": "^7.19.3",
     "@babel/preset-react": "7.18.6",
     "@beyonk/google-fonts-webpack-plugin": "1.7.0",
@@ -44,8 +44,8 @@
     "reveal.js": "4.3.1",
     "roboto-fontface": "*",
     "style-loader": "3.3.1",
-    "swagger-ui": "4.14.1",
-    "swagger-ui-dist": "4.14.1",
+    "swagger-ui": "^4.14.2",
+    "swagger-ui-dist": "^4.14.2",
     "useragent": "2.3.0",
     "vis-data": "7.1.4",
     "vis-timeline": "7.7.0",
