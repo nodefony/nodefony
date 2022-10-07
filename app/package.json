@@ -29,7 +29,7 @@
     "jquery": "3.6.1",
     "mini-css-extract-plugin": "2.6.1",
     "sass": "1.55.0",
-    "sass-loader": "13.0.2",
+    "sass-loader": "^13.1.0",
     "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "^3.3.1",
     "terser-webpack-plugin": "5.3.6",
@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "1.0.10",
-    "node-gyp": "9.1.0",
+    "node-gyp": "^9.2.0",
     "webpack-dev-server": "4.11.1"
   },
   "license": "",

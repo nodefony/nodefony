@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "1.0.10",
-    "node-gyp": "^9.1.0"
+    "node-gyp": "^9.2.0"
   },
   "license": "",
   "readmeFilename": "README.md",
