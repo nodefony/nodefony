@@ -70,6 +70,9 @@ module.exports = nodefony.register("SecuredArea", function () {
           if (redirect) {
             return null;
           }
+          if( context.originUrl.href === "*"){
+            return 200;
+          }
           return 401;
         }
       }
