@@ -134,7 +134,7 @@ module.exports = class webpack extends nodefony.Service {
         }
       });
     } else {
-      return this.loggerError([info.errors])
+      return this.loggerError([errors]);
     }
   }
 
@@ -147,7 +147,7 @@ module.exports = class webpack extends nodefony.Service {
     if (error) {
       if (info.errors) {
         this.log(`Webpack bundle ${bundle} config : ${file}`, "ERROR");
-        this.loggerError(info.errors)
+        this.loggerError(info.errors);
       }
     } else {
       if (bundle) {
@@ -181,7 +181,7 @@ module.exports = class webpack extends nodefony.Service {
 
   isWebpack5(webpack) {
     try {
-      return semver.gte(webpack.version, '5.0.0')
+      return semver.gte(webpack.version, '5.0.0');
     } catch (e) {
       this.log(e, "ERROR");
       return false;
@@ -401,7 +401,7 @@ loadConfig(file, bundle, reload) {
         break;
       default:
         if(type === 'vue'){
-          process.VUE_CLI_SERVICE = null
+          process.VUE_CLI_SERVICE = null;
         }
         config = require(file.path);
         watchOptions = nodefony.extend( {}, this.webPackSettings.watchOptions, config.watchOptions || {});
@@ -457,6 +457,23 @@ loadConfig(file, bundle, reload) {
         bundle.webpackCompiler.hooks.beforeCompile.tap("beforeCompile", () => {
           shell.cd(Path);
         });
+        /*bundle.webpackCompiler.hooks.run.tap("run", () => {
+          console.log("run");
+        });
+        bundle.webpackCompiler.hooks.beforeRun.tap("beforeRun", () => {
+          console.log("beforeRun");
+        });
+        bundle.webpackCompiler.hooks.compile.tap("compile", () => {
+          console.log("compile");
+        });
+        bundle.webpackCompiler.hooks.afterCompile.tap("afterCompile", (compilation) => {
+          console.log("afterCompile", compilation.namedChunks);
+        });
+        bundle.webpackCompiler.hooks.invalid.tap("invalid", (filename, changeTime) => {
+          this.log('INVALID HOOK WEBPACK', "DEBUG");
+          this.log(filename, "DEBUG");
+          this.log(changeTime, "DEBUG");
+        });*/
         bundle.webpackCompiler.hooks.done.tap("done", () => {
           bundle.fire("onWebpackDone", bundle.webpackCompiler, reload);
           this.nbCompiled++;
@@ -482,7 +499,7 @@ loadConfig(file, bundle, reload) {
       }
     } catch (e) {
       this.log(`Error webpack ${bundle.name}`, 'ERROR');
-      this.trace(e)
+      this.trace(e);
       return reject(e);
     }
     try {
@@ -553,14 +570,21 @@ runCompiler(compiler, id, bundle, file, devServer) {
       this.log(`Webpack Compile ${bundle} :  ${file}\n` + this.displayConfigTable(compiler.options), "DEBUG");
       compiler.run((err, stats) => {
         this.loggerStat(err, stats, bundle, file, false, devServer);
+        compiler.close((closeErr) => {
+          if( closeErr){
+            this.log(closeErr, "ERROR");
+          }
+          return resolve(compiler);
+        });
         if (err) {
+          console.trace(err);
           throw err;
           //return reject(err);
         }
-        return resolve(compiler);
+        //return resolve(compiler);
       });
     } catch (e) {
-      console.trace(e)
+      console.trace(e);
       this.log(e, 'ERROR');
       return resolve(compiler);
     }
