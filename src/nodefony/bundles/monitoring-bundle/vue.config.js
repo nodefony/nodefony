@@ -2,7 +2,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const Package = require(path.resolve("package.json"));
-const vueDir = path.dirname(require.resolve("vue"))
+const vueDir = path.dirname(require.resolve("vue"));
 const packageVue = require(path.resolve(vueDir, "package.json"));
 const outputDir = path.resolve("Resources", "public");
 const indexPath = path.resolve("Resources", "views", 'index.html.twig');
@@ -25,14 +25,14 @@ try {
   if (kernel.environment !== "dev") {
     dev = false;
   } else {
-    watch = true
+    watch = true;
   }
   debug = kernel.debug ? "*" : false;
 } catch (e) {}
 
-const vuetifyDir = path.dirname(require.resolve("vuetify"))
+const vuetifyDir = path.dirname(require.resolve("vuetify"));
 const packageVuetify = require(path.resolve(vuetifyDir, "..", "package.json"));
-const nodeModule = path.resolve(process.cwd(),"node_modules")
+const nodeModule = path.resolve(process.cwd(),"node_modules");
 
 process.env.VUE_APP_VERSION = Package.version;
 process.env.VUE_APP_VUE_VERSION = packageVue.version;
@@ -75,7 +75,7 @@ module.exports = {
     //context:process.cwd(),
     watchOptions: {
       aggregateTimeout: 2000,
-      ignored: /node_modules|assets/,
+      ignored: /node_modules|assets|Resources|dist|tmp|public/,
       followSymlinks:false
     },
     performance: {
@@ -83,7 +83,13 @@ module.exports = {
       maxEntrypointSize: 11000000,
       maxAssetSize: 11000000
     },
-    devtool: process.env.NODE_ENV === "development" ? "source-map" : false,
+    optimization:{
+      runtimeChunk: true,
+      removeAvailableModules: false,
+      removeEmptyChunks: false,
+      splitChunks: false,
+    },
+    devtool: process.env.NODE_ENV === "development" ? "eval-cheap-module-source-map" : false,
     entry: {
       swagger: ["/Resources/swagger/swagger.js"],
       graphiql: ["/Resources/graphiql/graphiql.jsx"],
@@ -137,7 +143,9 @@ module.exports = {
     resolve: {
       alias: {
         "@bundles": path.join(__dirname, ".."),
-        "@app": path.join(__dirname, "..", "..", "..", "app")
+        "@app": path.join(__dirname, "..", "..", "..", "app"),
+        "vue": path.resolve(`./node_modules/vue`),
+        "vue-router":path.resolve(`./node_modules/vue-router`)
       },
       extensions: ['.js', '.json', '.jsx', '.css', '.mjs'],
       fallback: {
@@ -148,7 +156,7 @@ module.exports = {
     },
     plugins: [
       /*new webpack.ProgressPlugin({
-        activeModules: false,
+        activeModules: true,
         entries: true,
         handler(percentage, message, ...args) {
           console.info(percentage, message, ...args);
@@ -158,7 +166,7 @@ module.exports = {
         profile: true,
         dependencies: true,
         //dependenciesCount: 10000,
-        percentBy: null
+        percentBy:"entries"
       }),*/
       new MiniCssExtractPlugin({
         filename: "./assets/css/[name].css"
@@ -230,7 +238,7 @@ module.exports = {
   },
   //transpileDependencies: true,
   transpileDependencies: [
-    //"vuetify"
+    "vuetify"
   ],
 
   pluginOptions: {
