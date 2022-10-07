@@ -1,4 +1,5 @@
-# Changelog
+
+---
 
 ## v7.0.0-beta.7 (01/01/1970)
 - [chore(release): nodefony release 7.0.0-beta.7](https://github.com/nodefony/nodefony/commit/a5b8a8921ff298385955199d911d9a4f97634940)
