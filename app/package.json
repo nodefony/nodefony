@@ -13,7 +13,7 @@
   "repository": {},
   "dependencies": {
     "@babel/core": "^7.19.3",
-    "@babel/preset-env": "^7.19.3",
+    "@babel/preset-env": "^7.19.4",
     "@popperjs/core": "2.11.6",
     "babel-loader": "8.2.5",
     "bootstrap": "^5.2.2",
@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "1.0.10",
-    "node-gyp": "^9.2.0",
+    "node-gyp": "^9.3.0",
     "webpack-dev-server": "4.11.1"
   },
   "license": "",

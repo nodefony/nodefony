@@ -14,7 +14,7 @@
   ],
   "dependencies": {
     "@babel/core": "^7.19.3",
-    "@babel/preset-env": "^7.19.3",
+    "@babel/preset-env": "^7.19.4",
     "@popperjs/core": "2.11.6",
     "babel-loader": "8.2.5",
     "bootstrap": "^5.2.2",
@@ -31,7 +31,7 @@
     "mini-css-extract-plugin": "2.6.1",
     "node-fetch": "3.2.10",
     "nodefony-client": "6.0.2",
-    "puppeteer": "^18.2.1",
+    "puppeteer": "^19.0.0",
     "request": "^2.88.2",
     "rxjs": "7.5.7",
     "sass": "1.55.0",
