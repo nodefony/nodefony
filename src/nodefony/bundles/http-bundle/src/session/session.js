@@ -2,6 +2,16 @@
  *
  *    CLASS SESSION
  */
+ let crypto;
+ try {
+   crypto = require('node:crypto');
+ } catch (err) {
+   crypto = require('crypto');
+   //console.log('crypto support is disabled!', err);
+ }
+ const {createHash, createCipheriv, createDecipheriv, randomBytes} = crypto
+
+
 nodefony.register("Session", function () {
 
   const checkSecureReferer = function (context) {
@@ -85,14 +95,14 @@ nodefony.register("Session", function () {
     }
 
     encrypt(text) {
-      const cipher = crypto.createCipheriv('aes-256-ctr', this.key, this.iv)
+      const cipher = createCipheriv('aes-256-ctr', this.key, this.iv)
       let encrypted = cipher.update(text, 'utf8', 'hex')
       encrypted += cipher.final('hex')
       return encrypted
     }
 
     decrypt(text) {
-      const decipher = crypto.createDecipheriv('aes-256-ctr', this.key, this.iv)
+      const decipher = createDecipheriv('aes-256-ctr', this.key, this.iv)
       let decrypted = decipher.update(text, 'hex', 'utf8')
       decrypted += decipher.final('utf8')
       return decrypted
@@ -482,13 +492,13 @@ nodefony.register("Session", function () {
       let hash = null;
       switch (this.settings.hash_function) {
       case "md5":
-        hash = crypto.createHash('md5');
+        hash = createHash('md5');
         break;
       case "sha1":
-        hash = crypto.createHash('sha1');
+        hash = createHash('sha1');
         break;
       default:
-        hash = crypto.createHash('md5');
+        hash = createHash('md5');
       }
       let res = hash.update(concat).digest("hex");
 
@@ -532,7 +542,7 @@ nodefony.register("Session", function () {
     }
 
     randomValueHex(len) {
-      return crypto.randomBytes(Math.ceil(len / 2))
+      return randomBytes(Math.ceil(len / 2))
         .toString('hex') // convert to hexadecimal format
         .slice(0, len); // return required number of characters
     }

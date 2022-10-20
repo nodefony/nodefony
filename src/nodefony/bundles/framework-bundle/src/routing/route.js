@@ -5,7 +5,14 @@ const decode = function (str) {
     return str;
   }
 };
-
+let crypto;
+try {
+  crypto = require('node:crypto');
+} catch (err) {
+  crypto = require('crypto');
+  //console.log('crypto support is disabled!', err);
+}
+const {createHash} = crypto
 /*
  *	CLASS ROUTE
  *
@@ -62,7 +69,7 @@ class Route {
   }
 
   generateId() {
-    this.hash = crypto.createHash("md5").update(JSON.stringify(this)).digest("hex");
+    this.hash = createHash("md5").update(JSON.stringify(this)).digest("hex");
     return this.hash;
   }
 
