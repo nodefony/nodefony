@@ -41,7 +41,7 @@
     "nodefony-client": "6.0.2",
     "raw-loader": "4.0.2",
     "register-service-worker": "^1.7.2",
-    "reveal.js": "4.3.1",
+    "reveal.js": "^4.4.0",
     "roboto-fontface": "*",
     "style-loader": "3.3.1",
     "swagger-ui": "^4.14.3",
@@ -62,7 +62,7 @@
     "webpack-plugin-vuetify": "^2.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.3",
+    "@babel/core": "^7.19.6",
     "@babel/eslint-parser": "7.19.1",
     "eslint": "^8.25.0",
     "eslint-plugin-vue": "^9.6.0",
