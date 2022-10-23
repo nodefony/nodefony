@@ -13,7 +13,7 @@ module.exports = {
     //node_args           : "--expose-gc",
     watch: false,
     exec_mode: "cluster",
-    instances: 5, //cpu,
+    instances: cpu, //5, //cpu,
     max_memory_restart: "1024M",
     autorestart: true,
     max_restarts: 10,
