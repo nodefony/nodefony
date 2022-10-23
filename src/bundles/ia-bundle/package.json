@@ -41,6 +41,7 @@
     "eslint": "^8.25.0",
     "eslint-plugin-vue": "^9.6.0",
     "expose-loader": "4.0.0",
+    "node-gyp": "^9.3.0",
     "vue-cli-plugin-i18n": "^2.3.1",
     "webpack-dev-server": "4.11.1"
   },
