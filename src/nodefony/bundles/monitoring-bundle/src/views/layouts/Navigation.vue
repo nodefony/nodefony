@@ -145,6 +145,7 @@
 			<v-list-group v-if="connectors">
 				<template v-slot:activator="{ props }">
 					<v-list-item v-bind="props"
+                        prepend-icon="mdi-drawing-box"
 					             title="Schemas"
 					             value="Connectors">
 					</v-list-item>

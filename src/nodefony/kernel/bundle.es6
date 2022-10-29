@@ -172,11 +172,11 @@ class Bundle extends nodefony.Service {
     this.reader = this.kernel.reader;
 
     // webpack
-    this.webPackConfig = null;
     this.webpackWatch = false;
     this.webpackCompiler = null;
     this.webPackConfig = null;
     this.watching = null;
+    this.lastWebpackStats = null;
 
     // config
     this.regConfigFile = regConfigFile;
@@ -374,6 +374,8 @@ class Bundle extends nodefony.Service {
     delete this.fixtureFiles;
     this.entityFiles = null;
     delete this.entityFiles;
+    this.lastWebpackStats = null
+    delete this.lastWebpackStats;
   }
 
   emitAsync() {

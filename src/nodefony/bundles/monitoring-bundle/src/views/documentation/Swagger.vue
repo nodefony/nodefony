@@ -6,7 +6,7 @@
 	<iframe v-if="loaded && html"
 	        ref="iframe"
 	        :sandbox="sandbox"
-	        :style="iframe.style"
+	        :style="style"
 	        :height="iframe.style.height"
 	        :width="iframe.style.width"
 	        type="text/html"
@@ -38,13 +38,22 @@ export default {
 	mounted() {
 		this.iframe.style = {
 			/*position: 'absolute',*/
-			width: window.innerWidth,
-			height: window.innerHeight,
+      width: "100%",
+      height:"100vh",
 		}
 		this.loadIframe()
 	},
 	computed: {
 		...mapGetters(['token']),
+    heigth(){
+      return `calc(100vh - 64px)`
+    },
+    style(){
+      return {
+        width: "100%",
+  			height:this.heigth,
+      }
+    }
 	},
 	methods: {
 		loadIframe() {

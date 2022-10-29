@@ -157,6 +157,13 @@ const routes = [
       components: {
         orm: Entity,
       }
+    },{
+      path: '/database/connectors/:name/schema',
+      name: "ConnectorsSchema",
+      props: true,
+      components: {
+        orm: Connectors,
+      }
     }]
   }, {
     path: '/database/connectors/:name',

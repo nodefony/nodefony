@@ -1,1 +1,14 @@
-@font-face{font-family:Gochi Hand;font-style:normal;font-weight:400;font-display:swap;src:url(assets/fonts/GochiHand-Regular.eot);src:local("Gochi Hand"),url(assets/fonts/GochiHand-Regular.eot) format("embedded-opentype"),url(assets/fonts/GochiHand-Regular.woff2) format("woff2"),url(assets/fonts/GochiHand-Regular.woff) format("woff"),url(assets/fonts/GochiHand-Regular.ttf) format("truetype"),url(assets/fonts/GochiHand-Regular.svg) format("svg")}
+/* === Gochi Hand - regular */
+@font-face {
+	font-family: 'Gochi Hand';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url("./assets/fonts/GochiHand-Regular.eot");
+	src: local('Gochi Hand'),
+		url("./assets/fonts/GochiHand-Regular.eot") format("embedded-opentype"),
+		url("./assets/fonts/GochiHand-Regular.woff2") format("woff2"),
+		url("./assets/fonts/GochiHand-Regular.woff") format("woff"),
+		url("./assets/fonts/GochiHand-Regular.ttf") format("truetype"),
+		url("./assets/fonts/GochiHand-Regular.svg") format("svg");
+}

@@ -32,6 +32,7 @@ const Orm = require(path.resolve(__dirname, "resolvers", "orm.js"));
 const Migrations = require(path.resolve(__dirname, "resolvers", "migration.js"));
 const Nodefony = require(path.resolve(__dirname, "resolvers", "nodefony.js"));
 const Jwt = require(path.resolve(__dirname, "resolvers", "jwt.js"));
+const Webpack = require(path.resolve(__dirname, "resolvers", "webpack.js"));
 
 module.exports = class graphqlController extends nodefony.Controller {
 
@@ -139,7 +140,8 @@ module.exports = class graphqlController extends nodefony.Controller {
       Requests,
       Logs,
       Migrations,
-      Jwt
+      Jwt,
+      Webpack
     ];
     if( usersStaticResolver){
       resolvers.push(usersStaticResolver(context));

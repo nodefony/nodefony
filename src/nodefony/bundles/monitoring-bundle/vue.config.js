@@ -93,6 +93,7 @@ module.exports = {
     entry: {
       swagger: ["/Resources/swagger/swagger.js"],
       graphiql: ["/Resources/graphiql/graphiql.jsx"],
+      analyser: ["/Resources/analyser/analyser.js"],
       //debugBar: ["/Resources/debugbar/debugBar.js"]
     },
     module: {
@@ -145,7 +146,8 @@ module.exports = {
         "@bundles": path.join(__dirname, ".."),
         "@app": path.join(__dirname, "..", "..", "..", "app"),
         "vue": path.resolve(`./node_modules/vue`),
-        "vue-router":path.resolve(`./node_modules/vue-router`)
+        "vue-router":path.resolve(`./node_modules/vue-router`),
+        "bundle-analyser":path.resolve(`./node_modules/webpack-bundle-analyzer/public/viewer.js`)
       },
       extensions: ['.js', '.json', '.jsx', '.css', '.mjs'],
       fallback: {
@@ -234,6 +236,27 @@ module.exports = {
         chunks: ['graphiql'],
         templateParameters: bundleConfig
       }),
+      new htmlPlugin({
+        filename: path.resolve("Resources", "views", "analyser.html.twig"),
+        template: path.resolve("Resources", "templates", "base.html.twig"),
+        title: bundleConfig.name,
+        //favicon: dev ? "./Resources/public/images/app-logo.png" : false,
+        cache: !dev,
+        inject: "body",
+        minify: {
+          collapseWhitespace: true,
+          keepClosingSlash: true,
+          removeComments: true,
+          removeRedundantAttributes: true,
+          removeScriptTypeAttributes: true,
+          removeStyleLinkTypeAttributes: true,
+          useShortDoctype: true
+        },
+        xhtml: true,
+        chunks: ['analyser'],
+        templateParameters: bundleConfig
+
+      })
     ]
   },
   //transpileDependencies: true,

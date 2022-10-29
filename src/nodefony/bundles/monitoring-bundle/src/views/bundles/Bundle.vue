@@ -331,7 +331,7 @@
 				</v-window-item>
 
 				<v-window-item value="webpack">
-
+          <n-bundle-webpack-analyzer :bundle="name"/>
 				</v-window-item>
 			</div>
 
@@ -357,6 +357,7 @@ import Config from '@/views/bundles/config.vue';
 import Services from '@/views/bundles/services.vue';
 import Orm from '@/views/bundles/orm.vue';
 import gql from 'graphql-tag'
+import WebpackAnalyzer from '@/views/bundles/webpack/analyzer.vue';
 export default {
 	name: 'BundleView',
 	components: {
@@ -365,7 +366,8 @@ export default {
 		'n-bundle-routing': Routing,
 		'n-bundle-config': Config,
 		'n-bundle-services': Services,
-		'n-bundle-orm': Orm
+		'n-bundle-orm': Orm,
+    'n-bundle-webpack-analyzer':WebpackAnalyzer
 	},
 	inject: ["nodefony"],
 	props: {

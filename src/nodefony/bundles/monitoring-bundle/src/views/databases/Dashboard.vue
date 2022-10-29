@@ -2,7 +2,7 @@
 <v-layout v-if="orm"
           class="w-100 h-100"
           style="position:absolute">
-	<v-navigation-drawer width="250"
+	<v-navigation-drawer width="250" v-model="mydrawer"
 	                     permanent>
 		<v-card class="d-flex"
 		        max-width="250"
@@ -14,12 +14,10 @@
 			       height="80"
 			       :src="imageOrm" />
 			<v-list-item line="three">
-				<v-list-item-header>
 					<v-list-item-title class="text-h5">{{name}}</v-list-item-title>
 					<v-list-item-subtitle>ORM</v-list-item-subtitle>
 					<v-list-item-subtitle>Debug : {{orm.orm.debug}}</v-list-item-subtitle>
 					<v-list-item-subtitle>Version : {{orm.orm.version}}</v-list-item-subtitle>
-				</v-list-item-header>
 			</v-list-item>
 		</v-card>
 		<v-tabs density="compact"
@@ -45,7 +43,7 @@
 					<v-chip density="compact"
 					        inline> {{nbConnectors}}</v-chip>
 				</v-tab>
-				<v-divider></v-divider>
+				<v-divider> </v-divider>
 				<v-tab value="entities">
 					<v-icon :size="iconSize"
 					        start>
@@ -55,8 +53,17 @@
 					<v-chip density="compact"
 					        inline> {{nbEntities}}</v-chip>
 				</v-tab>
-				<v-divider></v-divider>
+
 			</div>
+      <v-divider> </v-divider>
+      <v-tab  v-for="(connector, key) in connectors" value="`schema-${key}`" key="`schema-${key}`" :to="{name:'ConnectorsSchema',params:{name:key}}">
+        <v-icon :size="iconSize"
+                start>
+          mdi-drawing-box
+        </v-icon>
+        Schema {{key}}
+      </v-tab>
+      <v-divider> </v-divider>
 		</v-tabs>
 
 	</v-navigation-drawer>
@@ -198,7 +205,8 @@ export default {
 	data() {
 		return {
 			tab: "dashboard",
-			iconSize: 25
+			iconSize: 25,
+      mydrawer:true
 		}
 	},
 	mounted() {},
@@ -232,6 +240,7 @@ export default {
 	computed: {
 		routeChild() {
 			switch (this.$route.name) {
+				case "ConnectorsSchema":
 				case "OrmEntity":
 					return true
 				default:

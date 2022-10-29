@@ -531,6 +531,9 @@ loadConfig(file, bundle, reload) {
             this.log("\n" + this.displayConfigTable(config), "DEBUG");
           }
           this.loggerStat(err, stats, basename, file.name, true, devServer);
+          if( this.kernel.environment !== "prod" ){
+            bundle.lastWebpackStats = stats
+          }
         });
         this.kernel.once("onTerminate", () => {
           if (bundle.watching) {
@@ -546,7 +549,7 @@ loadConfig(file, bundle, reload) {
           }
         }
         let idfile = basename + "_" + file.name;
-        await this.runCompiler(bundle.webpackCompiler, idfile, basename, file.name, devServer);
+        await this.runCompiler(bundle.webpackCompiler, idfile, basename, file.name, devServer, bundle );
       }
     } catch (e) {
       return reject(e);
@@ -554,7 +557,7 @@ loadConfig(file, bundle, reload) {
   });
 }
 
-runCompiler(compiler, id, bundle, file, devServer) {
+runCompiler(compiler, id, bundleBase, file, devServer, bundle) {
   return new Promise((resolve, reject) => {
     try {
       if (this.production) {
@@ -567,9 +570,12 @@ runCompiler(compiler, id, bundle, file, devServer) {
         } catch (e) {}
       }
       //this.log("BUNDLE : " + bundle + " WEBPACK COMPILE : " + file, "DEBUG");
-      this.log(`Webpack Compile ${bundle} :  ${file}\n` + this.displayConfigTable(compiler.options), "DEBUG");
+      this.log(`Webpack Compile ${bundleBase} :  ${file}\n` + this.displayConfigTable(compiler.options), "DEBUG");
       compiler.run((err, stats) => {
-        this.loggerStat(err, stats, bundle, file, false, devServer);
+         if( this.kernel.environment !== "prod" ){
+           bundle.lastWebpackStats = stats
+         }
+        this.loggerStat(err, stats, bundleBase, file, false, devServer);
         compiler.close((closeErr) => {
           if( closeErr){
             this.log(closeErr, "ERROR");

@@ -1,29 +1,6 @@
 <template>
 <div v-if="$apollo.queries.home.loading">
-
-	<v-container style="height: 400px;">
-		<v-row class="fill-height"
-		       align-content="center"
-		       justify="center">
-			<v-row class="text-subtitle-1 text-center">
-				<v-img class=""
-				       width="100"
-				       height="91"
-				       :src="nodefony.logo" />
-
-			</v-row>
-			<v-col class="text-subtitle-1 text-center"
-			       cols="12">
-				Getting Nodefony Monitoring
-			</v-col>
-			<v-col cols="6">
-				<v-progress-linear color="deep-purple accent-4"
-				                   indeterminate
-				                   rounded
-				                   height="6"></v-progress-linear>
-			</v-col>
-		</v-row>
-	</v-container>
+	<n-nodefony-loader />
 </div>
 <v-container v-else
              fluid
@@ -108,12 +85,14 @@ import gql from 'graphql-tag'
 import NodefonyStatus from '@/views/nodefony/NodefonyStatus'
 import NodefonyNetwork from '@/views/nodefony/NodefonyNetwork'
 import NodefonyApplication from '@/views/nodefony/NodefonyApplication'
+import NodefonyLoader from '@/views/loaders/loader'
 export default {
 	name: 'HomeView',
 	components: {
 		"n-nodefony-status": NodefonyStatus,
 		"n-nodefony-network": NodefonyNetwork,
-		"n-nodefony-application": NodefonyApplication
+		"n-nodefony-application": NodefonyApplication,
+		"n-nodefony-loader": NodefonyLoader
 	},
 	inject: ["nodefony"],
 	apollo: {

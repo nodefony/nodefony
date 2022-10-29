@@ -57,12 +57,16 @@ const type = `
     getRoutes: [Route]
     getRouteByBundle(name: String!): [Route]
     getConfig: String
+    # bundle
     getBundle(name: String!): String
     getBundles(registred: Boolean): String
     getConfigByBundle(name: String!): String
     getBundlePackage(name: String!): String
     getServices: String
     getServicesbyBundle(name: String!): String
+    outdated(bundle: String , dev: Boolean): String
+    getWebpackConfigBundle(name: String, dev: Boolean): String
+    # orm
     getOrm: String
     getConnectors: String
     getConnector(name: String!): String
@@ -70,14 +74,15 @@ const type = `
     getEntity(name: String!): String
     getEntitiesByBundle(name: String!): String
     getEntitiesByConnector(name: String!): String
+    getMigrations: String
     # sessions
     getSessions(username: String): [Session]
     getSessionsByUser(username: String!): [Session]
+    # Request
     getRequests: String
     getRequestsById(id: String!): String
+    # log
     getLogs: String
-    getMigrations: String
-    outdated(bundle: String , dev: Boolean): String
     # Jwt
     getActivity(username: String) :[JwtDecode]
   }
