@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "graphql": "16.6.0",
-    "mongoose": "^6.6.7",
+    "mongoose": "^6.7.0",
     "pm2": "^5.2.2",
     "pm2-logrotate": "^2.7.0",
     "sequelize": "^6.25.3",
@@ -61,7 +61,7 @@
   },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "1.0.10",
-    "editorconfig": "^1.0.0",
+    "editorconfig": "^1.0.1",
     "github-release-notes": "^0.17.3",
     "jshint": "2.13.5",
     "node-gyp": "^9.3.0"

@@ -23,7 +23,7 @@
     "@babel/preset-react": "7.18.6",
     "@popperjs/core": "2.11.6",
     "@withshepherd/faker": "5.5.5",
-    "babel-loader": "8.2.5",
+    "babel-loader": "^9.0.0",
     "babel-register": "^6.26.0",
     "bootstrap": "^5.2.2",
     "clean-webpack-plugin": "^4.0.0",
@@ -47,7 +47,7 @@
   "devDependencies": {
     "@mapbox/node-pre-gyp": "1.0.10",
     "node-gyp": "^9.3.0",
-    "sequelize-cli": "^6.5.1",
+    "sequelize-cli": "^6.5.2",
     "stream": "0.0.2"
   },
   "license": "CECILL-B",
