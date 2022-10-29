@@ -17,8 +17,8 @@ const cliTableImport = async () => {
     .then((esmFS) => {
       return esmFS.default
     })
-    .catch(() => {
-      return require("cli-table3")
+    .catch((e) => {
+      throw e
     })
 }
 const {
@@ -135,7 +135,7 @@ class CLI extends nodefony.Service {
       await cliTableImport()
         .catch((e) => {
           this.log(e, "WARNING")
-          Table = require("cli-table3")
+          //Table = require("cli-table3")
         });
       this.initPrompt()
     });
