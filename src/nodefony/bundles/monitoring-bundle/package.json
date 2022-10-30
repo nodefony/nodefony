@@ -33,7 +33,7 @@
     "cheerio": "1.0.0-rc.12",
     "clean-webpack-plugin": "4.0.0",
     "core-js": "^3.26.0",
-    "graphiql": "^2.0.12",
+    "graphiql": "^2.0.13",
     "highlight.js": "11.6.0",
     "i18n-iso-countries": "7.5.0",
     "mermaid": "9.1.7",
