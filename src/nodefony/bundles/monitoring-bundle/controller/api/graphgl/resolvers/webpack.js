@@ -6,10 +6,10 @@ module.exports = {
         name
       } = field
       const bundle = context.kernel.getBundle(name);
-      const config = await bundle.findWebPackConfig()
+      //const compiler = await bundle.findWebPackConfig()
       const res = {
         file: bundle.webpackConfigFile.path,
-        config: ""
+        //config: bundle.webPackConfig
       }
       return JSON.stringify(res);
     }

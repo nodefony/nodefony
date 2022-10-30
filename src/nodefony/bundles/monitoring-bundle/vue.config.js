@@ -32,7 +32,7 @@ try {
 
 const vuetifyDir = path.dirname(require.resolve("vuetify"));
 const packageVuetify = require(path.resolve(vuetifyDir, "..", "package.json"));
-const nodeModule = path.resolve(process.cwd(),"node_modules");
+const nodeModule = path.resolve(process.cwd(), "node_modules");
 
 process.env.VUE_APP_VERSION = Package.version;
 process.env.VUE_APP_VUE_VERSION = packageVue.version;
@@ -76,14 +76,14 @@ module.exports = {
     watchOptions: {
       aggregateTimeout: 2000,
       ignored: /node_modules|assets|Resources|dist|tmp|public/,
-      followSymlinks:false
+      followSymlinks: false
     },
     performance: {
       hints: false,
       maxEntrypointSize: 11000000,
       maxAssetSize: 11000000
     },
-    optimization:{
+    optimization: {
       runtimeChunk: true,
       removeAvailableModules: false,
       removeEmptyChunks: false,
@@ -94,9 +94,13 @@ module.exports = {
       swagger: ["/Resources/swagger/swagger.js"],
       graphiql: ["/Resources/graphiql/graphiql.jsx"],
       analyser: ["/Resources/analyser/analyser.js"],
-      //debugBar: ["/Resources/debugbar/debugBar.js"]
     },
     module: {
+      parser: {
+        javascript: {
+          exportsPresence: false,
+        },
+      },
       rules: [{
           // BABEL TRANSCODE
           test: /\.(jsx)$/,
@@ -106,14 +110,14 @@ module.exports = {
             options: {
               //presets: ['@babel/preset-env', '@babel/preset-react']
               presets: [
-                 ['@babel/preset-env', {
+                ['@babel/preset-env', {
                   modules: false
-              }],
-                 '@babel/preset-react',
-               ],
+                }],
+                '@babel/preset-react',
+              ],
             }
-        }]
-      }
+          }]
+        }
         /*, {
                 test: /debugBar\.css$/i,
                 use: [
@@ -133,11 +137,9 @@ module.exports = {
                     }
                 }]
               }*/
-        ]
+      ]
     },
     output: {
-      //hotUpdateChunkFilename: 'hot/[runtime].[fullhash].hot-update.js',
-      //hotUpdateMainFilename: 'hot/[runtime].[fullhash].hot-update.json'
       hotUpdateChunkFilename: 'hot/[id].[fullhash].hot-update.js',
       hotUpdateMainFilename: 'hot/[runtime].[fullhash].hot-update.json'
     },
@@ -146,8 +148,8 @@ module.exports = {
         "@bundles": path.join(__dirname, ".."),
         "@app": path.join(__dirname, "..", "..", "..", "app"),
         "vue": path.resolve(`./node_modules/vue`),
-        "vue-router":path.resolve(`./node_modules/vue-router`),
-        "bundle-analyser":path.resolve(`./node_modules/webpack-bundle-analyzer/public/viewer.js`)
+        "vue-router": path.resolve(`./node_modules/vue-router`),
+        "bundle-analyser": path.resolve(`./node_modules/webpack-bundle-analyzer/public/viewer.js`)
       },
       extensions: ['.js', '.json', '.jsx', '.css', '.mjs'],
       fallback: {
@@ -182,7 +184,7 @@ module.exports = {
       new GoogleFontsPlugin({
         fonts: [{
           family: "Gochi Hand"
-          }],
+        }],
         path: "assets/fonts",
         //local:false
         /* ...options */
@@ -255,7 +257,6 @@ module.exports = {
         xhtml: true,
         chunks: ['analyser'],
         templateParameters: bundleConfig
-
       })
     ]
   },
