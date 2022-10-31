@@ -23,7 +23,7 @@
     "@babel/preset-react": "7.18.6",
     "@popperjs/core": "2.11.6",
     "@withshepherd/faker": "5.5.5",
-    "babel-loader": "^9.0.0",
+    "babel-loader": "^9.0.1",
     "babel-register": "^6.26.0",
     "bootstrap": "^5.2.2",
     "clean-webpack-plugin": "^4.0.0",

@@ -34,9 +34,9 @@
   "dependencies": {
     "@babel/core": "^7.19.6",
     "@babel/parser": "^7.20.0",
-    "@graphql-tools/merge": "^8.3.7",
-    "@graphql-tools/schema": "^9.0.5",
-    "@graphql-tools/utils": "^8.13.0",
+    "@graphql-tools/merge": "^8.3.8",
+    "@graphql-tools/schema": "^9.0.6",
+    "@graphql-tools/utils": "^8.13.1",
     "@nodefony/elastic-bundle": "7.0.0-beta.8",
     "@nodefony/framework-bundle": "7.0.0-beta.8",
     "@nodefony/http-bundle": "7.0.0-beta.8",
@@ -88,7 +88,7 @@
     "yarn": "1.22.19"
   },
   "devDependencies": {
-    "babel-loader": "^9.0.0",
+    "babel-loader": "^9.0.1",
     "babel-polyfill": "^6.26.0",
     "webpack-cli": "4.10.0",
     "webpack-merge": "^5.8.0"
