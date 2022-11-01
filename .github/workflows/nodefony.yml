@@ -35,6 +35,7 @@ jobs:
     - name:              npm install, build, and test
       shell:             bash
       run:               |
+        npm -g install pnpm
         npm cache clean --force
         yarn config set ignore-engines true
         yarn config set ignore-platform true
@@ -96,6 +97,7 @@ jobs:
     - name:              npm install, build, and test
       shell:             bash
       run:               |
+        npm -g install pnpm
         npm cache clean --force
         yarn config set ignore-engines true
         yarn config set ignore-platform true
@@ -152,6 +154,7 @@ jobs:
     - name:              npm install, build, and test
       shell:             bash
       run:               |
+        npm -g install pnpm
         npm cache clean --force
         yarn config set ignore-engines true
         yarn config set ignore-platform true
