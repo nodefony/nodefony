@@ -273,7 +273,7 @@ class Bundle extends nodefony.Service {
     return /^public$|^node_modules$|^clones$|^\.git|assets$|tmp$|doc$|build$|css$|scss$|public$/;
   }
   static exclude() {
-    return /yarn.lock$|package-lock.json$|yarn-error.log$|package.json$/;
+    return /yarn.lock$|package-lock.json$|pnpm-lock.yaml|yarn-error.log$|package.json$/;
   }
 
   async initialize() {

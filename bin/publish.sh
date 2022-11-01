@@ -117,6 +117,7 @@ npm_publish () {
   rm -rf node_modules ;
   rm -f package.lock.json;
   rm -f yarn.lock;
+  rm -f pnpm-lock.yaml;
   echo "CLEAN $1 DIRECTORY OK";
   ls -l;
   #yarn;
@@ -206,6 +207,7 @@ publish (){
 cleanFramework(){
     find ./ -iname "package-lock.json" ! -path '*/node_modules/*' ! -path '*/clones/*' | xargs rm -f
     find ./ -iname "yarn.lock" ! -path '*/node_modules/*' ! -path '*/clones/*' | xargs rm -f
+    find ./ -iname "pnpm-lock.yaml" ! -path '*/node_modules/*' ! -path '*/clones/*' | xargs rm -f
 }
 
 menu () {

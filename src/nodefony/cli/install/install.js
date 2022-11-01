@@ -55,6 +55,7 @@ module.exports = class installProject extends nodefony.Builder {
       this.cli.rm("-rf", path.resolve(cwd, "node_modules"));
       this.cli.rm("-rf", path.resolve(cwd, "yarn.lock"));
       this.cli.rm("-rf", path.resolve(cwd, "package-lock.json"));
+      this.cli.rm("-rf", path.resolve(cwd, "ppnpm-lock.yaml"));
     } catch (e) {
       throw e;
     }
@@ -194,6 +195,9 @@ module.exports = class installProject extends nodefony.Builder {
         this.removeDirectory(npmLock);
         let yarnLock = path.resolve(cwd, "yarn.lock");
         this.removeDirectory(yarnLock);
+        let pnpmLock = path.resolve(cwd, "pnpm-lock.yaml");
+        this.removeDirectory(pnpmLock);
+
         return resolve(this.installFramework(cwd));
       } catch (e) {
         return reject(e);
