@@ -11,6 +11,7 @@ app/Resources/databases/*
 node_modules/**
 **/node_modules/**
 npm-debug.log
+pnpm-lock.yaml
 *.[oa]
 
 config/certificates/**/*

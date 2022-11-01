@@ -139,6 +139,9 @@ class cliKernel extends nodefony.cli {
     case 'yarn':
       this.packageManager = this.yarn;
       break;
+    case 'pnpm':
+      this.packageManager = this.pnpm;
+      break;
     default:
       this.packageManager = this.npm;
     }

@@ -33,6 +33,7 @@
 
 npm-debug.log
 yarn-error.log
+pnpm-lock.yaml
 
 node_modules
 node_modules/**

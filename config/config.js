@@ -167,7 +167,8 @@ module.exports = {
    *
    *       npm
    *       yarn
+   *       pnpm
    */
-  packageManager: "yarn"
+  packageManager: "pnpm"
 
 };

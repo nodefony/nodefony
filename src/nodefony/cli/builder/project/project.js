@@ -231,7 +231,7 @@ class generateProject extends nodefony.Builder {
         message: 'Choose a default Package Manager : ',
         default: 0,
         pageSize: 2,
-        choices: ["npm", "yarn"],
+        choices: ["npm", "yarn","pnpm"],
         filter: (value) => {
           if (this.cli[value]) {
             this.cli.packageManager = this.cli[value];

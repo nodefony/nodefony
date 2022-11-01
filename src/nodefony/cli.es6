@@ -73,43 +73,43 @@ class CLI extends nodefony.Service {
 
   constructor(name, container, notificationsCenter, options) {
     switch (arguments.length) {
-    case 0:
-      options = nodefony.extend({}, defaultOptions);
-      name = options.processName;
-      super(options.processName, null, null, options);
-      break;
-    case 1:
-      if (typeof name === "object" && name !== null) {
-        options = nodefony.extend({}, defaultOptions, name);
+      case 0:
+        options = nodefony.extend({}, defaultOptions);
         name = options.processName;
         super(options.processName, null, null, options);
-      } else {
-        options = nodefony.extend({}, defaultOptions);
-        name = name || options.processName;
-        super(name, null, null, options);
-      }
-      break;
-    case 2:
-      if (container instanceof nodefony.Container) {
-        options = nodefony.extend({}, defaultOptions);
-        name = name || options.processName;
-        super(name, container, null, options);
-      } else {
-        if (typeof container === "object" && container !== null) {
-          options = nodefony.extend({}, defaultOptions, container);
-          name = name || options.processName;
-          super(name, null, null, options);
+        break;
+      case 1:
+        if (typeof name === "object" && name !== null) {
+          options = nodefony.extend({}, defaultOptions, name);
+          name = options.processName;
+          super(options.processName, null, null, options);
         } else {
           options = nodefony.extend({}, defaultOptions);
           name = name || options.processName;
-          super(name, container, null, options);
+          super(name, null, null, options);
         }
-      }
-      break;
-    default:
-      options = nodefony.extend({}, defaultOptions, options);
-      name = name || options.processName;
-      super(name, container, notificationsCenter, options);
+        break;
+      case 2:
+        if (container instanceof nodefony.Container) {
+          options = nodefony.extend({}, defaultOptions);
+          name = name || options.processName;
+          super(name, container, null, options);
+        } else {
+          if (typeof container === "object" && container !== null) {
+            options = nodefony.extend({}, defaultOptions, container);
+            name = name || options.processName;
+            super(name, null, null, options);
+          } else {
+            options = nodefony.extend({}, defaultOptions);
+            name = name || options.processName;
+            super(name, container, null, options);
+          }
+        }
+        break;
+      default:
+        options = nodefony.extend({}, defaultOptions, options);
+        name = name || options.processName;
+        super(name, container, notificationsCenter, options);
     }
     this.environment = process.env.NODE_ENV || "production";
     process.env.NODE_ENV = this.environment;
@@ -268,7 +268,7 @@ class CLI extends nodefony.Service {
       resolve = res
       reject = rej
     })
-    return function () {
+    return function() {
       return {
         resolve,
         promise,
@@ -368,7 +368,7 @@ class CLI extends nodefony.Service {
     this.clui = require("clui");
     this.emoji = require("node-emoji");
     this.spinner = null;
-    this.blankLine = function () {
+    this.blankLine = function() {
       const myLine = new this.clui.Line().fill();
       return () => {
         myLine.output();
@@ -622,12 +622,12 @@ class CLI extends nodefony.Service {
             return resolve(file);
           } catch (e) {
             switch (e.code) {
-            case "EEXIST":
-              if (force) {
-                file = new nodefony.fileClass(myPath);
-                return resolve(file);
-              }
-              break;
+              case "EEXIST":
+                if (force) {
+                  file = new nodefony.fileClass(myPath);
+                  return resolve(file);
+                }
+                break;
             }
             return reject(e);
           }
@@ -643,13 +643,13 @@ class CLI extends nodefony.Service {
       return file;
     } catch (e) {
       switch (e.code) {
-      case "EEXIST":
-        if (force) {
-          file = new nodefony.fileClass(myPath);
-          callback(file);
-          return file;
-        }
-        break;
+        case "EEXIST":
+          if (force) {
+            file = new nodefony.fileClass(myPath);
+            callback(file);
+            return file;
+          }
+          break;
       }
       throw e;
     }
@@ -729,31 +729,51 @@ class CLI extends nodefony.Service {
     }
   }
 
-  async npm(argv = [], cwd = path.resolve("."), env = "dev") {
+  getCommandManager(manager) {
+    if (process.platform === "win32") {
+      switch (manager) {
+        case "npm":
+          return 'npm.cmd';
+        case "yarn":
+          return 'yarn.cmd';
+        case "pnpm":
+          return 'pnpm.cmd';
+        default:
+          throw new Error(`bad manager : ${manager}`)
+      }
+    } else {
+      switch (manager) {
+        case "npm":
+          return 'npm';
+        case "yarn":
+          return 'yarn';
+        case "pnpm":
+          return 'pnpm';
+        default:
+          throw new Error(`bad manager : ${manager}`)
+      }
+    }
+  }
+
+  runPackageManager(argv = [], cwd = path.resolve("."), env = "dev", manager) {
     switch (env) {
-    case "dev":
-    case "development":
-      process.env.NODE_ENV = "development";
-      break;
-    case "prod":
-    case "production":
-      process.env.NODE_ENV = "production";
-      break;
-    default:
-      process.env.NODE_ENV = this.environment;
+      case "dev":
+      case "development":
+        process.env.NODE_ENV = "development";
+        break;
+      case "prod":
+      case "production":
+        process.env.NODE_ENV = "production";
+        break;
+      default:
+        process.env.NODE_ENV = this.environment;
     }
     return new Promise((resolve, reject) => {
       let cmd = null;
       try {
         this.debug = this.commander.opts().debug || false;
-        this.log(`Command : npm ${argv.join(' ')} in cwd : ${cwd}`);
-        //const exe = path.resolve(nodefony.path, "node_modules", ".bin", "npm");
-        let exe = null;
-        if (process.platform === "win32") {
-          exe = 'npm.cmd';
-        } else {
-          exe = 'npm';
-        }
+        this.log(`Command : ${manager} ${argv.join(' ')} in cwd : ${cwd}`);
+        let exe = this.getCommandManager(manager);
         cmd = this.spawn(exe, argv, {
           cwd: cwd,
           env: process.env,
@@ -763,7 +783,7 @@ class CLI extends nodefony.Service {
           if (code === 0) {
             return resolve(code);
           }
-          return resolve(new Error(`Command : npm ${argv.join(' ')}  cwd : ${cwd} Error Code : ${code}`));
+          return resolve(new Error(`Command : ${manager} ${argv.join(' ')}  cwd : ${cwd} Error Code : ${code}`));
         });
       } catch (e) {
         this.log(e, "ERROR");
@@ -772,47 +792,15 @@ class CLI extends nodefony.Service {
     });
   }
 
+  async npm(argv = [], cwd = path.resolve("."), env = "dev") {
+    return this.runPackageManager(argv, cwd, env, "npm")
+  }
+
   async yarn(argv = [], cwd = path.resolve("."), env = "dev") {
-    switch (env) {
-    case "dev":
-    case "development":
-      process.env.NODE_ENV = "development";
-      break;
-    case "prod":
-    case "production":
-      process.env.NODE_ENV = "production";
-      break;
-    default:
-      process.env.NODE_ENV = this.environment;
-    }
-    return new Promise((resolve, reject) => {
-      let cmd = null;
-      try {
-        this.log(`Command : yarn ${argv.join(' ')} in cwd : ${cwd}`);
-        this.debug = this.commander.opts().debug || false;
-        //const exe = path.resolve(nodefony.path, "node_modules", ".bin", "npm");
-        let exe = null;
-        if (process.platform === "win32") {
-          exe = 'yarn.cmd';
-        } else {
-          exe = 'yarn';
-        }
-        cmd = this.spawn(exe, argv, {
-          cwd: cwd,
-          env: process.env,
-          stdio: "inherit",
-          NODE_ENV: process.env.NODE_ENV
-        }, (code) => {
-          if (code === 0) {
-            return resolve(code);
-          }
-          return resolve(new Error(`Command : yarn ${argv.join(' ')}  cwd : ${cwd} Error Code : ${code}`));
-        });
-      } catch (e) {
-        this.log(e, "ERROR");
-        return reject(e);
-      }
-    });
+    return this.runPackageManager(argv, cwd, env, "yarn")
+  }
+  async pnpm(argv = [], cwd = path.resolve("."), env = "dev") {
+    return this.runPackageManager(argv, cwd, env, "pnpm")
   }
 
   spawn(command, args, options = {}, close = null) {

@@ -171,6 +171,7 @@ module.exports = {
    *
    *       npm
    *       yarn
+   *       pnpm
    */
   packageManager: "{{packageManager}}"
 
