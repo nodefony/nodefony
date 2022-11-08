@@ -169,17 +169,18 @@ tools (){
 
 generate_changelog () {
   cd $pathproject
-  mv CHANGELOG.md CHANGELOG.md.old
-  if [ $1 ]
-  then
-    ./node_modules/.bin/gren changelog --username=nodefony  --repo=nodefony --tags=$1 --data-source=commits --generate  --override
-  else
-    ./node_modules/.bin/gren changelog --username=nodefony  --repo=nodefony --tags=v$version --data-source=commits --generate  --override
-  fi
-  sed -i "" 's,# Changelog,---,g' CHANGELOG.md.old
-  echo >> CHANGELOG.md;
-  cat CHANGELOG.md.old >> CHANGELOG.md ;
-  rm CHANGELOG.md.old ;
+  npm run changelog
+  #mv CHANGELOG.md CHANGELOG.md.old
+  #if [ $1 ]
+  #then
+  #  ./node_modules/.bin/gren changelog --username=nodefony  --repo=nodefony --tags=$1 --data-source=commits --generate  --override
+  #else
+  #  ./node_modules/.bin/gren changelog --username=nodefony  --repo=nodefony --tags=v$version --data-source=commits --generate  --override
+  #fi
+  #sed -i "" 's,# Changelog,---,g' CHANGELOG.md.old
+  #echo >> CHANGELOG.md;
+  #cat CHANGELOG.md.old >> CHANGELOG.md ;
+  #rm CHANGELOG.md.old ;
 }
 
 publish (){

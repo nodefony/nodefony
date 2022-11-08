@@ -13,7 +13,7 @@
     "test": "node src/nodefony/bin/nodefony unitest:launch:all",
     "publish": "bash bin/publish.sh",
     "certificates": "bash bin/generateCertificates.sh",
-    "changelog": "gren changelog --username=nodefony  --repo=nodefony --tags=all --data-source=commits --override --generate"
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
   },
   "private": true,
   "bin": {
@@ -52,17 +52,17 @@
   },
   "dependencies": {
     "graphql": "16.6.0",
-    "mongoose": "^6.7.1",
+    "mongoose": "^6.7.2",
     "pm2": "^5.2.2",
     "pm2-logrotate": "^2.7.0",
-    "sequelize": "^6.25.3",
+    "sequelize": "^6.25.5",
     "webpack": "5.74.0",
     "webpack-dev-server": "4.11.1"
   },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "1.0.10",
+    "conventional-changelog-cli": "^2.2.2",
     "editorconfig": "^1.0.1",
-    "github-release-notes": "^0.17.3",
     "jshint": "2.13.5",
     "node-gyp": "^9.3.0"
   },
