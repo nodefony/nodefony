@@ -13,10 +13,10 @@
     "javascript"
   ],
   "dependencies": {
-    "@babel/core": "^7.19.6",
-    "@babel/preset-env": "^7.19.4",
+    "@babel/core": "^7.20.2",
+    "@babel/preset-env": "^7.20.2",
     "@popperjs/core": "2.11.6",
-    "babel-loader": "^9.0.1",
+    "babel-loader": "^9.1.0",
     "bootstrap": "^5.2.2",
     "clean-webpack-plugin": "^4.0.0",
     "css-hot-loader": "^1.4.4",
@@ -34,7 +34,7 @@
     "puppeteer": "^19.2.2",
     "request": "^2.88.2",
     "rxjs": "7.5.7",
-    "sass": "1.55.0",
+    "sass": "1.56.0",
     "sass-loader": "^13.1.0",
     "terser-webpack-plugin": "5.3.6",
     "webpack": "5.74.0",

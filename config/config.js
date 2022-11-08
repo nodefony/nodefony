@@ -169,6 +169,6 @@ module.exports = {
    *       yarn
    *       pnpm
    */
-  packageManager: "pnpm"
+  packageManager: "yarn"
 
 };
