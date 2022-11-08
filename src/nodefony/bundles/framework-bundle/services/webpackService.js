@@ -425,12 +425,13 @@ loadConfig(file, bundle, reload) {
       }
       if (config.cache === undefined) {
         if (this.production) {
-          config.cache = this.webPackSettings.cache;
-        } else {
           config.cache = false;
+        } else {
+          config.cache = this.webPackSettings.cache;
         }
       }
       bundle.webPackConfig = config;
+      //console.log(config)
       //this.log(config, "DEBUG");
       this.log(`Webpack (${webpack.version}) Compile bundle :  ${bundle.name}  `);
       try {
