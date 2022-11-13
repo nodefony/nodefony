@@ -61,9 +61,9 @@ module.exports = class serverStatics extends nodefony.Service {
       throw new Error("Static file path not Defined ");
     }
     let opt = nodefony.extend({}, this.global, options);
-    if (typeof opt.maxAge === "string") {
-      opt.maxAge = parseInt(eval(opt.maxAge), 10);
-    }
+    /*if (typeof opt.maxAge === "string") {
+      //opt.maxAge = parseInt(eval(opt.maxAge), 10);
+    }*/
     let server = this.serveStatic(Path, opt);
     this.servers[Path] = server;
     return server;
