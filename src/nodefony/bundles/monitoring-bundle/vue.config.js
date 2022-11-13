@@ -61,21 +61,20 @@ module.exports = {
         args[0].chunks = ['app'];
         return args;
       });
-    /*config.module.rule("css")
-      .exclude
-      .add(/debugBar.css$/)
-    //console.log( config.module.rule())
-    config.module.rule("js")
-      .exclude
-      .add(/debugBar.js$/)*/
-
   },
 
   configureWebpack: {
     //context:process.cwd(),
+    cache:true,
+    infrastructureLogging: {
+      //appendOnly: true,
+      //level: 'verbose',
+      //debug: true,
+      //colors: true,
+    },
     watchOptions: {
-      aggregateTimeout: 2000,
-      ignored: /node_modules|assets|Resources|dist|tmp|public/,
+      aggregateTimeout: 1000,
+      ignored: /node_modules|assets|dist|tmp|public|Entity/,
       followSymlinks: false
     },
     performance: {
@@ -88,6 +87,7 @@ module.exports = {
       removeAvailableModules: false,
       removeEmptyChunks: false,
       splitChunks: false,
+      //emitOnErrors: true,
     },
     devtool: process.env.NODE_ENV === "development" ? "eval-cheap-module-source-map" : false,
     entry: {
@@ -118,25 +118,6 @@ module.exports = {
             }
           }]
         }
-        /*, {
-                test: /debugBar\.css$/i,
-                use: [
-                  MiniCssExtractPlugin.loader,
-                  'css-loader'
-                ]
-              }, {
-                test: /debugBar\.js$/i,
-                use: [{
-                    loader: 'babel-loader',
-                    options: {
-                      presets: [
-                         ['@babel/preset-env', {
-                          modules: false
-                          }]
-                      ],
-                    }
-                }]
-              }*/
       ]
     },
     output: {
@@ -156,12 +137,12 @@ module.exports = {
         "path": false,
         "assert": false
       },
-      modules: [nodeModule]
+      //modules: [nodeModule]
     },
     plugins: [
       /*new webpack.ProgressPlugin({
-        activeModules: true,
         entries: true,
+        activeModules:true,
         handler(percentage, message, ...args) {
           console.info(percentage, message, ...args);
         },
@@ -181,14 +162,13 @@ module.exports = {
         'process.env.SWAGGER': JSON.stringify(bundleConfig.swagger),
         'process.env.GRAPHIQL': JSON.stringify(bundleConfig.graphigl)
       }),
-      new GoogleFontsPlugin({
+      /*new GoogleFontsPlugin({
         fonts: [{
           family: "Gochi Hand"
         }],
         path: "assets/fonts",
         //local:false
-        /* ...options */
-      }),
+      }),*/
       new CleanWebpackPlugin({
         cleanOnceBeforeBuildPatterns: [`${outputDir}/hot/*.hot-update.*`],
         dry: false,
@@ -204,7 +184,7 @@ module.exports = {
         template: path.resolve("Resources", "templates", "base.html.twig"),
         title: bundleConfig.name,
         //favicon: dev ? "./Resources/public/images/app-logo.png" : false,
-        cache: !dev,
+        cache: dev,
         minify: {
           collapseWhitespace: true,
           keepClosingSlash: true,
@@ -223,7 +203,7 @@ module.exports = {
         template: path.resolve("Resources", "templates", "base.html.twig"),
         title: bundleConfig.name,
         //favicon: dev ? "./Resources/public/images/app-logo.png" : false,
-        cache: !dev,
+        cache: dev,
         inject: "body",
         minify: {
           collapseWhitespace: true,
@@ -243,7 +223,7 @@ module.exports = {
         template: path.resolve("Resources", "templates", "base.html.twig"),
         title: bundleConfig.name,
         //favicon: dev ? "./Resources/public/images/app-logo.png" : false,
-        cache: !dev,
+        cache: dev,
         inject: "body",
         minify: {
           collapseWhitespace: true,

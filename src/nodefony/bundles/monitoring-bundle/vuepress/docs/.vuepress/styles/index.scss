@@ -1,0 +1,23 @@
+// place your custom styles here
+@import url('https://fonts.googleapis.com/css2?family=Gochi+Hand&display=swap');
+
+#main-title{
+  font-family: 'Gochi Hand', cursive;
+  color: #0167b8;
+}
+
+.navbar .site-name{
+  font-family: 'Gochi Hand', cursive;
+  color: #0167b8;
+  font-size: 2em
+}
+
+a.feature > img {
+  width: 60px;
+  height: 60px;
+}
+
+a.feature > svg {
+  width: 60px;
+  height: 60px;
+}

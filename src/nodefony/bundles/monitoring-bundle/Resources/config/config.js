@@ -12,6 +12,16 @@
  *        GENERATE BY nodefony-core BUILDER
  */
 const path = require("path")
+const serveStatic = require('serve-static');
+
+const setCustomCacheControl= (res, Path)=>{
+  if (serveStatic.mime.lookup(Path) === 'text/html') {
+    // Custom Cache-Control for HTML files
+    res.setHeader('Cache-Control', 'public, max-age=0')
+    res.setHeader('content-type', 'text/html; charset=UTF-8')
+    //res.setHeader('Content-Security-Policy',`frame-src ${kernel.domain}`)
+  }
+}
 
 module.exports = {
   type: "vue",
@@ -61,6 +71,18 @@ module.exports = {
     storage: 'orm'
   },
   /* override realtime bundle */
+  "http-bundle":{
+    statics: {
+      vuepress: {
+        path: path.resolve("src","nodefony","bundles","monitoring-bundle","vuepress","public"),
+        options: {
+          index:['index.html'],
+          maxAge: 0,
+          setHeaders: setCustomCacheControl
+        }
+      }
+    }
+  },
   "realtime-bundle":{
     services:{
       monitoring:{

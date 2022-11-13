@@ -3,8 +3,6 @@ const monitoring = kernel.getBundle("monitoring-bundle")
 const analyzer = require(path.resolve(monitoring.path, "node_modules", "webpack-bundle-analyzer", "lib", "analyzer.js"));
 const _ = require('lodash');
 
-
-
 /**
  *	@class defaultController
  *	@constructor
@@ -20,6 +18,17 @@ class defaultController extends nodefony.Controller {
   }
 
   /**
+   *    @Route ("/nodefony*",
+   *      name="monitoring-index")
+   */
+  indexAction() {
+    return this.render("monitoring-bundle::index.html.twig", {
+      name: this.bundle.name,
+      description: this.bundle.package.description
+    });
+  }
+
+  /**
    *    @Route ("/nodefony/manifest.json",
    *      name="index-doc-manifest")
    */
@@ -29,6 +38,7 @@ class defaultController extends nodefony.Controller {
     this.setContentType("application/manifest+json");
     return await file.readAsync();
   }
+
   /**
    *    @Method ({"GET"})
    *    @Route (
@@ -57,6 +67,96 @@ class defaultController extends nodefony.Controller {
     return this.render("monitoring-bundle:graphiql:index.html.twig", {
       title: "graphiql"
     });
+  }
+
+  /**
+   *    @Method ({"GET"})
+   *    @Route (
+   *      "/documentation/webpackanalyser/{mybundle}",
+   *      name="api-doc-webpackanalyser"
+   *    )
+   */
+  analyserAction(mybundle) {
+
+    if( this.kernel.environment === "prod" ){
+      throw new Error(`Webpack Analyzer not available in production `);
+    }
+    this.response.setHeader("X-Frame-Options", "SAMEORIGIN")
+    this.hideDebugBar();
+    return new Promise(async (resolve, reject) => {
+      const bundle = this.kernel.getBundle(mybundle);
+      //let chartData = null
+      //let entrypoints = null
+      //let defaultSizes = null
+      //let info = null
+      if (!bundle) {
+        throw new Error(`Bundle ${mybundle} not registred`)
+      }
+      let compiler = bundle.webpackCompiler;
+      if (!compiler) {
+        shell.cd(bundle.path);
+        compiler = await bundle.initWebpack.call(bundle);
+        shell.cd(this.kernel.rootDir);
+        if( !compiler){
+          return reject(new Error(`Bundle ${mybundle} has no  webpack configuration` ))
+        }
+      }
+      try {
+        if (bundle.lastWebpackStats) {
+          const data = this.generateAnalyzerData(bundle.lastWebpackStats, compiler)
+          return resolve(this.render("monitoring-bundle:analyser:index.html.twig", data))
+        } else {
+          await compiler.close((closeErr) => {
+            if (closeErr) {
+              this.log(closeErr, "ERROR");
+            }
+          })
+          return compiler.run((err, stats) => {
+            if (err) {
+              return reject(err)
+            }
+            const data = this.generateAnalyzerData(stats, compiler)
+            return resolve(this.render("monitoring-bundle:analyser:index.html.twig", data))
+          })
+        }
+
+      } catch (e) {
+        this.log(e, "ERROR")
+        return reject(e)
+      }
+    })
+  }
+
+  /**
+   *    @Method ({"GET"})
+   *    @Route (
+   *      "/documentation/{bundle}/readme",
+   *      name="nodefony-documentation-readme"
+   *    )
+   */
+  async readmeAction(bundle) {
+    let Bundle = null;
+    if (bundle === "nodefony") {
+      Bundle = this.kernel;
+    } else {
+      Bundle = this.kernel.getBundle(bundle);
+    }
+    //check unregistered
+    if (!Bundle) {
+      Bundle = await this.kernel.getUnregistredBundle(bundle);
+    }
+    try {
+      const readmePath = path.resolve(Bundle.path, "README.md");
+      if (readmePath) {
+        const readme = this.getFile(readmePath);
+        return this.renderJson({
+          readme: await readme.readAsync()
+        });
+      }
+      throw new Error('readme not found');
+    } catch (e) {
+      return this.createNotFoundException('readme not found');
+    }
   }
 
   getChartData(analyzerOpts, ...args) {
@@ -123,111 +223,6 @@ class defaultController extends nodefony.Controller {
       throw e
     }
   }
-
-  /**
-   *    @Method ({"GET"})
-   *    @Route (
-   *      "/documentation/webpackanalyser/{mybundle}",
-   *      name="api-doc-webpackanalyser"
-   *    )
-   */
-  analyserAction(mybundle) {
-
-    if( this.kernel.environment === "prod" ){
-      throw new Error(`Webpack Analyzer not available in production `);
-    }
-    this.response.setHeader("X-Frame-Options", "SAMEORIGIN")
-    this.hideDebugBar();
-    return new Promise(async (resolve, reject) => {
-      const bundle = this.kernel.getBundle(mybundle);
-      //let chartData = null
-      //let entrypoints = null
-      //let defaultSizes = null
-      //let info = null
-      if (!bundle) {
-        throw new Error(`Bundle ${mybundle} not registred`)
-      }
-      let compiler = bundle.webpackCompiler;
-      if (!compiler) {
-        shell.cd(bundle.path);
-        compiler = await bundle.initWebpack.call(bundle);
-        shell.cd(this.kernel.rootDir);
-        if( !compiler){
-          return reject(new Error(`Bundle ${mybundle} has no  webpack configuration` ))
-        }
-      }
-      try {
-        if (bundle.lastWebpackStats) {
-          const data = this.generateAnalyzerData(bundle.lastWebpackStats, compiler)
-          return resolve(this.render("monitoring-bundle:analyser:index.html.twig", data))
-        } else {
-          await compiler.close((closeErr) => {
-            if (closeErr) {
-              this.log(closeErr, "ERROR");
-            }
-          })
-          return compiler.run((err, stats) => {
-            if (err) {
-              return reject(err)
-            }
-            const data = this.generateAnalyzerData(stats, compiler)
-            return resolve(this.render("monitoring-bundle:analyser:index.html.twig", data))
-          })
-        }
-
-      } catch (e) {
-        this.log(e, "ERROR")
-        return reject(e)
-      }
-    })
-  }
-
-  /**
-   *    @Method ({"GET"})
-   *    @Route (
-   *      "/documentation/{bundle}/readme",
-   *      name="nodefony-idocumentation-readme"
-   *    )
-   */
-  async readmeAction(bundle) {
-    let Bundle = null;
-    if (bundle === "nodefony") {
-      Bundle = this.kernel;
-    } else {
-      Bundle = this.kernel.getBundle(bundle);
-    }
-    //check unregistered
-    if (!Bundle) {
-      Bundle = await this.kernel.getUnregistredBundle(bundle);
-    }
-    try {
-      const readmePath = path.resolve(Bundle.path, "README.md");
-      if (readmePath) {
-        const readme = this.getFile(readmePath);
-        return this.renderJson({
-          readme: await readme.readAsync()
-        });
-      }
-      throw new Error('readme not found');
-    } catch (e) {
-      return this.createNotFoundException('readme not found');
-    }
-  }
-
-
-  /**
-   *    @Route ("/nodefony*",
-   *      name="monitoring-index")
-   */
-  indexAction() {
-    return this.render("monitoring-bundle::index.html.twig", {
-      name: this.bundle.name,
-      description: this.bundle.package.description
-    });
-  }
-
-
-
 }
 
 module.exports = defaultController;

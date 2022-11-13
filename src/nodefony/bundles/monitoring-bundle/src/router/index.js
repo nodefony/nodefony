@@ -32,6 +32,8 @@ import Readme from '@/views//nodefony/Readme.vue'
 import Swagger from '@/views/documentation/Swagger.vue'
 import Graphigl from '@/views/documentation/Graphigl.vue'
 
+ import Documentation from '@/views/documentation/Documentation'
+
 // logs
 import Logs from '@/views/logs/Logs.vue'
 //service
@@ -128,6 +130,11 @@ const routes = [
     path: '/swagger',
     name: 'Swagger',
     component: Swagger,
+    beforeEnter: ifAuthenticated
+  }, {
+    path: '/documentation',
+    name: 'Documentation',
+    component: Documentation,
     beforeEnter: ifAuthenticated
   }, {
     path: '/graphigl',
