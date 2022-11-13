@@ -56,14 +56,14 @@
     "pm2": "^5.2.2",
     "pm2-logrotate": "^2.7.0",
     "sequelize": "^6.25.5",
-    "webpack": "5.74.0",
+    "webpack": "^5.75.0",
     "webpack-dev-server": "4.11.1"
   },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "1.0.10",
     "conventional-changelog-cli": "^2.2.2",
     "editorconfig": "^1.0.1",
-    "jshint": "2.13.5",
+    "jshint": "^2.13.6",
     "node-gyp": "^9.3.0"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
