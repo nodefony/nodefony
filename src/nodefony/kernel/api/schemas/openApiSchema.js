@@ -41,11 +41,11 @@ class openApiSchema extends nodefony.Service {
     this.obj.servers = this.getServers();
     if (entity) {
       switch (this.ormName) {
-      case "mongoose":
-        this.setSchema(entity.collection.collectionName, entity);
-        break;
-      default:
-        this.setSchema(entity.name, entity);
+        case "mongoose":
+          this.setSchema(entity.collection.collectionName, entity);
+          break;
+        default:
+          this.setSchema(entity.name, entity);
       }
     }
     return this.obj;
@@ -67,8 +67,8 @@ class openApiSchema extends nodefony.Service {
   }
 
   getServers() {
-    return [{
-      "url": `https://${this.kernel.domain}:{port}`,
+    let tab = []
+    let base = {
       "description": this.kernel.description,
       "variables": {
         "port": {
@@ -82,7 +82,18 @@ class openApiSchema extends nodefony.Service {
           "default": this.api.basePath || ""
         }
       }
-    }];
+    }
+    if (this.kernel.domain === '0.0.0.0') {
+      tab.push({
+        "url": `https://localhost:{port}`,
+        ...base
+      })
+    }
+    tab.push({
+      "url": `https://${this.kernel.domain}:{port}`,
+      ...base
+    });
+    return tab;
   }
 
   getLicence(licence = "", url = "") {
@@ -129,6 +140,26 @@ class openApiSchema extends nodefony.Service {
       }
       if (entity) {
         this.obj.components.schemas[name] = this.orm.getOpenApiSchema(entity);
+        for (let ele in this.obj.components.schemas[name].properties) {
+          if (this.obj.components.schemas[ele]) {
+            continue
+          }
+          let attr = this.obj.components.schemas[name].properties[ele]
+          if (attr.items && attr.items['$ref']) {
+            let entityRef = this.orm.getEntity(ele)
+            if (entityRef) {
+              this.obj.components.schemas[ele] = this.orm.getOpenApiSchema(entityRef)
+            } else {
+              if (ele.endsWith("s")) {
+                ele = ele.slice(0, -1)
+                entityRef = this.orm.getEntity(ele)
+                if (entityRef) {
+                  this.obj.components.schemas[ele] = this.orm.getOpenApiSchema(entityRef)
+                }
+              }
+            }
+          }
+        }
       }
     } catch (e) {
       this.log(e, "WARNING");

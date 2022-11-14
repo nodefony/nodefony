@@ -69,11 +69,9 @@ export default {
 					this.loaded = true
 
 					this.$nextTick(() => {
-						console.log(this.$refs)
 						const content = this.$refs.iframe.contentWindow ||
 							this.$refs.iframe.contentDocument.document ||
 							this.$refs.iframe.contentDocument;
-						console.log(content)
 						content.document.open();
 						content.document.write(this.html);
 						content.document.close();
