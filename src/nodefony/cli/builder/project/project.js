@@ -338,7 +338,7 @@ class generateProject extends nodefony.Builder {
           name: "migrations",
           type: "directory",
           childs: [{
-            name: "nodefony",
+            name: "sequelize",
             type: "directory",
             childs: [{
               name: "00_migration.js.example",
@@ -346,6 +346,12 @@ class generateProject extends nodefony.Builder {
               skeleton: path.resolve(this.pathSkeleton, "migrations", "migrations.skeleton.js"),
               params: this.response
             }]
+          },{
+            name: "mongoose",
+            type: "directory",
+          },{
+            name: "seedeers",
+            type: "directory",
           }]
         }, {
           name: "config",

@@ -4,6 +4,7 @@ module.exports = {
     arguments: ["@container", "@kernel", "@autoLoader"]
   },
   umzug: {
+    environment: ["development", "CONSOLE"],
     class: nodefony.services.umzug,
     arguments: ["@container", "@sequelize"]
   }

@@ -15,7 +15,7 @@ module.exports = class session extends nodefony.Entity {
      */
     super(bundle, "session", "sequelize", "nodefony");
 
-    this.orm.on("onOrmReady", ( orm ) => {
+    /*this.orm.on("onOrmReady", ( orm ) => {
         let user = this.orm.getEntity("user");
         //console.log(user instanceof Model)
         //console.log(this.model)
@@ -40,7 +40,7 @@ module.exports = class session extends nodefony.Entity {
           this.log("ENTITY ASSOCIATION user NOT AVAILABLE" , "WARNING");
           //throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
         }
-      });
+      });*/
   }
 
   getSchema() {
@@ -99,6 +99,32 @@ module.exports = class session extends nodefony.Entity {
 
   registerModel(db) {
     class MyModel extends Model {
+
+      static associate(models) {
+        // define association here
+        if (models.user) {
+          models.user.hasMany(models.session, {
+            foreignKey: {
+              allowNull: true,
+              name:"username"
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
+          })
+          models.session.belongsTo(models.user, {
+            foreignKey: {
+              allowNull: true,
+              name:"username"
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
+          });
+        } else {
+          this.log("ENTITY ASSOCIATION user NOT AVAILABLE" , "WARNING");
+          //throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
+        }
+      }
+
       fetchAll(callback) {
         return this.findAll()
           .then(function(result) {
@@ -115,6 +141,6 @@ module.exports = class session extends nodefony.Entity {
       modelName: this.name
     });
     return MyModel;
-    
+
   }
 };

@@ -4,8 +4,8 @@ const { Sequelize } = require('sequelize');
 class Migrate extends nodefony.Service {
 	constructor(kernel) {
 		super("Migrate", kernel.container);
-		this.serviceUmzug = this.get("umzug");
-		this.orm = this.kernel.getOrm();
+		//this.serviceUmzug = this.get("umzug");
+		//this.orm = this.kernel.getOrm();
 	}
 
 	async up({ context: queryInterface }){

@@ -21,7 +21,7 @@ module.exports = class requests extends nodefony.Entity {
      *   @param connection name
      */
     super(bundle, "requests", "sequelize", "nodefony");
-    this.orm.on("onOrmReady", ( orm ) => {
+    /*this.orm.on("onOrmReady", ( orm ) => {
         let user = this.orm.getEntity("user");
         if (user) {
           user.hasMany(this.model, {
@@ -44,7 +44,7 @@ module.exports = class requests extends nodefony.Entity {
           this.log("ENTITY ASSOCIATION user NOT AVAILABLE" , "WARNING");
           //throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
         }
-      });
+      });*/
   }
 
   getSchema() {
@@ -78,7 +78,7 @@ module.exports = class requests extends nodefony.Entity {
       scheme: {
         type: DataTypes.STRING
       },
-      time:{
+      time: {
         type: DataTypes.FLOAT
       },
       data: {
@@ -88,11 +88,39 @@ module.exports = class requests extends nodefony.Entity {
   }
 
   registerModel(db) {
-    class MyModel extends Model{}
+    class MyModel extends Model {
+
+      static associate(models) {
+        // define association here
+        if (models.user) {
+          models.user.hasMany(models.requests, {
+            foreignKey: {
+              allowNull: true,
+              name: "username"
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
+          })
+          models.requests.belongsTo(models.user, {
+            foreignKey: {
+              allowNull: true,
+              name: "username"
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
+          });
+        } else {
+          this.log("ENTITY ASSOCIATION user NOT AVAILABLE", "WARNING");
+          //throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
+        }
+      }
+
+    }
+
     MyModel.init(this.getSchema(), {
       sequelize: db,
       modelName: this.name,
-      logging:this.logger.bind(this)
+      logging: this.logger.bind(this)
     });
     return MyModel;
   }

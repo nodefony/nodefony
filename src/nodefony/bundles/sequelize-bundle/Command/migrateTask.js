@@ -6,7 +6,7 @@ class migrateTask extends nodefony.Task {
   }
 
   showHelp() {
-    this.setHelp("sequelize:migrate:status",
+    this.setHelp("sequelize:migrate:status [connector]",
       "Current Status Migrations"
     );
     this.setHelp("sequelize:migrate:executed",
@@ -24,12 +24,15 @@ class migrateTask extends nodefony.Task {
     this.setHelp("sequelize:migrate:revert [connector]",
       "Reverting all executed migrations  $ nodefony sequelize:migrate:revert "
     );
+    this.setHelp("sequelize:migrate:create [connector] filenane",
+      "Generate template migration file  $ nodefony sequelize:migrate:create userMigrate.js"
+    );
   }
 
-  async status() {
+  async status(connector) {
     this.log(`Status ....`);
-    await this.umzugService.pending();
-    await this.umzugService.executed();
+    await this.umzugService.pending(connector);
+    await this.umzugService.executed(connector);
   }
 
   async executed(connector) {
@@ -94,6 +97,15 @@ class migrateTask extends nodefony.Task {
     }
   }
 
+  async create(connector, name) {
+    if (this.kernel.ready) {
+      return await this.umzugService.create(connector, name)
+    } else {
+      this.sequelizeService.once("onOrmReady", async () => {
+        return await this.umzugService.create(connector, name)
+      });
+    }
+  }
 
 }
 

@@ -33,7 +33,8 @@ module.exports = {
       const umzug = context.get("umzug")
       let errors = []
       try {
-        const res = await umzug.migrate(field.connector, {
+        const res = await umzug.up(field.connector, {
+            step: 1,
             migrations: [field.name]
           })
           .catch((e) => {

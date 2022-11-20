@@ -4,6 +4,7 @@ const entityTask = require(path.resolve(__dirname, "entityTask.js"));
 const generateTask = require(path.resolve(__dirname, "generateTask.js"));
 const createTask = require(path.resolve(__dirname, "createTask.js"));
 const migrateTask = require(path.resolve(__dirname, "migrateTask.js"));
+const seedeersTask = require(path.resolve(__dirname, "seedeersTask.js"));
 
 class sequelizeCommand extends nodefony.Command {
   constructor(cli, bundle) {
@@ -14,6 +15,7 @@ class sequelizeCommand extends nodefony.Command {
     this.setTask("query", queryTask);
     this.setTask("entity", entityTask);
     this.setTask("generate", generateTask);
+    this.setTask("seedeers", seedeersTask);
   }
 
   showHelp() {

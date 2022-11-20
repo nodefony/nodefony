@@ -264,12 +264,21 @@ class sequelize extends nodefony.Orm {
           this.createConnection(name, this.settings.connectors[name]);
         }
       } else {
-        process.nextTick(() => {
+        process.nextTick(async () => {
           this.log('onOrmReady', "DEBUG", "EVENTS SEQUELIZE");
-          this.fire('onOrmReady', this);
+          await this.fireAsync('onOrmReady', this);
           this.ready = true;
         });
       }
+    });
+
+    this.prependOnceListener("onOrmReady", async (...args) => {
+        for(let entity in this.entities){
+          if( this.entities[entity].model && this.entities[entity].model.associate){
+            await this.entities[entity].model.associate(this.entities[entity].db.models)
+            this.log(`ASSOCIATE model : ${this.entities[entity].model.name}`,"DEBUG");
+          }
+        }
     });
 
     this.kernel.once("onReady", async () => {

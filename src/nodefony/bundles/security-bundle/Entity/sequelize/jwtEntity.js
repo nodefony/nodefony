@@ -22,7 +22,7 @@ module.exports = class jwt extends nodefony.Entity {
      *   @param connection name
      */
     super(bundle, "jwt", "sequelize", "nodefony");
-    this.orm.on("onOrmReady", ( orm ) => {
+    /*this.orm.on("onOrmReady", ( orm ) => {
         let user = this.orm.getEntity("user");
         if (user) {
           user.hasMany(this.model, {
@@ -45,7 +45,7 @@ module.exports = class jwt extends nodefony.Entity {
           this.log("ENTITY ASSOCIATION user NOT AVAILABLE" , "WARNING");
           //throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
         }
-      });
+      });*/
   }
 
   getSchema() {
@@ -73,6 +73,32 @@ module.exports = class jwt extends nodefony.Entity {
 
   registerModel(db) {
     class MyModel extends Model {
+
+      static associate(models) {
+        if (models.user) {
+          models.user.hasMany(models.jwt, {
+            foreignKey: {
+              allowNull: true,
+              name:"username"
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
+          })
+          models.jwt.belongsTo(models.user, {
+            foreignKey: {
+              allowNull: true,
+              name:"username"
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
+          });
+        } else {
+          this.log("ENTITY ASSOCIATION user NOT AVAILABLE" , "WARNING");
+          //throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
+        }
+
+      }
+
       static getRefreshToken(token) {
         const request = {
           where: {
