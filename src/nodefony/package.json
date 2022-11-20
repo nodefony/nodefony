@@ -34,9 +34,9 @@
   "dependencies": {
     "@babel/core": "^7.20.2",
     "@babel/parser": "^7.20.3",
-    "@graphql-tools/merge": "^8.3.11",
-    "@graphql-tools/schema": "^9.0.9",
-    "@graphql-tools/utils": "^9.1.0",
+    "@graphql-tools/merge": "^8.3.12",
+    "@graphql-tools/schema": "^9.0.10",
+    "@graphql-tools/utils": "^9.1.1",
     "@nodefony/elastic-bundle": "7.0.0-beta.8",
     "@nodefony/framework-bundle": "7.0.0-beta.8",
     "@nodefony/http-bundle": "7.0.0-beta.8",
@@ -59,7 +59,7 @@
     "cli-table3": "0.6.3",
     "clui": "^0.3.6",
     "commander": "^9.4.1",
-    "core-js": "^3.26.0",
+    "core-js": "^3.26.1",
     "create-react-app": "5.0.1",
     "graphql": "16.6.0",
     "inquirer": "^9.1.4",
@@ -71,7 +71,7 @@
     "moment": "2.29.4",
     "node-cron": "3.0.2",
     "node-emoji": "^1.11.0",
-    "npm": "^9.1.1",
+    "npm": "^9.1.2",
     "pm2": "^5.2.2",
     "promise": "^8.3.0",
     "request": "^2.88.2",
@@ -90,7 +90,7 @@
   "devDependencies": {
     "babel-loader": "^9.1.0",
     "babel-polyfill": "^6.26.0",
-    "webpack-cli": "4.10.0",
+    "webpack-cli": "^5.0.0",
     "webpack-merge": "^5.8.0"
   },
   "repository": {
