@@ -16,41 +16,38 @@
     "{{name}}"
   ],
   "repository": {},
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
 {% if addons.workbox %}
     "workbox-webpack-plugin": "6.5.4",
 {% endif %}
 {% if addons.bootstrap %}
     "@popperjs/core": "2.11.6",
-    "bootstrap": "^5.2.2",
+    "bootstrap": "^5.2.3",
     "jquery": "3.6.1",
     "font-awesome": "^4.7.0",
 {% endif %}
 {% if addons.webpack %}
-    "@babel/core": "^7.19.6",
-    "@babel/preset-env": "^7.19.4",
-    "babel-loader": "^9.0.0",
+    "@babel/core": "^7.20.2",
+    "@babel/preset-env": "^7.20.2",
+    "babel-loader": "^9.1.0",
     "clean-webpack-plugin": "^4.0.0",
     "css-hot-loader": "^1.4.4",
-    "css-loader": "6.7.1",
+    "css-loader": "^6.7.2",
     "expose-loader": "4.0.0",
     "favicons": "6.2.2",
     "favicons-webpack-plugin": "^5.0.2",
     "html-webpack-plugin": "^5.5.0",
     "imports-loader": "4.0.1",
-    "mini-css-extract-plugin": "2.6.1",
-    "sass": "1.55.0",
-    "sass-loader": "^13.1.0",
+    "mini-css-extract-plugin": "^2.7.0",
+    "sass": "^1.56.1",
+    "sass-loader": "^13.2.0",
     "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "^3.3.1",
     "terser-webpack-plugin": "5.3.6",
-    "webpack": "5.74.0",
-    "webpack-merge": "^5.8.0"
-{% endif %}
-  },
-  "devDependencies": {
-{% if addons.webpack %}
+    "webpack": "^5.75.0",
     "webpack-dev-server": "4.11.1",
+    "webpack-merge": "^5.8.0",
 {% endif %}
     "@mapbox/node-pre-gyp": "1.0.10",
     "node-gyp": "^9.3.0"

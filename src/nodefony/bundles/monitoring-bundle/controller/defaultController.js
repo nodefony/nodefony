@@ -1,14 +1,16 @@
 let analyzer = null
-try{
-  let analyzerResolve = require.resolve("webpack-bundle-analyzer")
-  let lib = path.dirname(analyzerResolve)
-  analyzer = require(path.resolve(lib,"analyzer.js"))
-}catch(e){
+if( kernel.environment === 'dev'){
   try{
-    const monitoring = kernel.getBundle("monitoring-bundle")
-    analyzer = require(path.resolve(monitoring.path, "node_modules", "webpack-bundle-analyzer", "lib", "analyzer.js"));
+    let analyzerResolve = require.resolve("webpack-bundle-analyzer")
+    let lib = path.dirname(analyzerResolve)
+    analyzer = require(path.resolve(lib,"analyzer.js"))
   }catch(e){
-    kernel.log(e, "WARNING")
+    try{
+      const monitoring = kernel.getBundle("monitoring-bundle")
+      analyzer = require(path.resolve(monitoring.path, "node_modules", "webpack-bundle-analyzer", "lib", "analyzer.js"));
+    }catch(e){
+      kernel.log(e, "WARNING")
+    }
   }
 }
 const _ = require('lodash');

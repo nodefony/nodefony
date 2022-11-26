@@ -32,7 +32,7 @@ try {
 
 const vuetifyDir = path.dirname(require.resolve("vuetify"));
 const packageVuetify = require(path.resolve(vuetifyDir, "..", "package.json"));
-const nodeModule = path.resolve(process.cwd(), "node_modules");
+//const nodeModule = path.resolve(process.cwd(), "node_modules");
 
 process.env.VUE_APP_VERSION = Package.version;
 process.env.VUE_APP_VUE_VERSION = packageVue.version;
@@ -65,7 +65,7 @@ module.exports = {
 
   configureWebpack: {
     //context:process.cwd(),
-    cache:true,
+    cache:false,
     infrastructureLogging: {
       //appendOnly: true,
       //level: 'verbose',
