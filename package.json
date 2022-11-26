@@ -14,8 +14,8 @@
     "publish": "bash bin/publish.sh",
     "certificates": "bash bin/generateCertificates.sh",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
-    "dev-migrate":"bash bin/dev-migrate.sh",
-    "prod-migrate":"bash bin/prod-migrate.sh"
+    "dev-migrate": "bash bin/dev-migrate.sh",
+    "prod-migrate": "bash bin/prod-migrate.sh"
   },
   "private": true,
   "bin": {
@@ -54,10 +54,10 @@
   },
   "dependencies": {
     "graphql": "16.6.0",
-    "mongoose": "^6.7.2",
+    "mongoose": "^6.7.3",
     "pm2": "^5.2.2",
     "pm2-logrotate": "^2.7.0",
-    "sequelize": "^6.25.7",
+    "sequelize": "^6.25.8",
     "webpack": "^5.75.0",
     "webpack-dev-server": "4.11.1"
   },

@@ -29,7 +29,7 @@
     "@popperjs/core": "2.11.6",
     "babel-loader": "^9.1.0",
     "babel-register": "^6.26.0",
-    "bootstrap": "^5.2.2",
+    "bootstrap": "^5.2.3",
     "clean-webpack-plugin": "^4.0.0",
     "css-hot-loader": "^1.4.4",
     "css-loader": "^6.7.2",
