@@ -1,4 +1,8 @@
-# [7.0.0](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.9...v7.0.0) (2022-11-26)
+# [7.0.0](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.10...v7.0.0) (2022-11-26)
+
+
+
+# [7.0.0-beta.10](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.9...v7.0.0-beta.10) (2022-11-26)
 
 
 
