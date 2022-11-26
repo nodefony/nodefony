@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/monitoring-bundle",
-  "version": "7.0.0-beta.9",
+  "version": "7.0.0-beta.10",
   "private": false,
   "main": "monitoringBundle.js",
   "keywords": [
@@ -14,7 +14,14 @@
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
     "prepare": "cd vuepress && npm install && npm run  docs:build"
   },
-  "files":["vuepress/public/documentation","controller", "Entity", "Resources", "src", "services"],
+  "files": [
+    "vuepress/public/documentation",
+    "controller",
+    "Entity",
+    "Resources",
+    "src",
+    "services"
+  ],
   "dependencies": {
     "cheerio": "1.0.0-rc.12",
     "lodash": "4.17.21",
