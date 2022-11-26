@@ -115,6 +115,7 @@ nodefony.register("Session", function () {
       try {
         this.cookieSession = this.setCookieSession(lifetime);
       } catch (e) {
+        this.log(e,"WARNING")
         throw new Error(`Request Finish can't create cookieSession`);
         //this.log(`,"WARNING")
       }
