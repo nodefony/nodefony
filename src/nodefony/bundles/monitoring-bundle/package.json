@@ -14,9 +14,13 @@
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
     "prepare": "cd vuepress && npm install && npm run  docs:build"
   },
+  "files":["vuepress/public/documentation","controller", "Entity", "Resources", "src", "services"],
   "dependencies": {
     "cheerio": "1.0.0-rc.12",
-    "useragent": "2.3.0"
+    "lodash": "4.17.21",
+    "useragent": "2.3.0",
+    "webpack": "^5.75.0",
+    "webpack-bundle-analyzer": "^4.7.0"
   },
   "devDependencies": {
     "@apollo/client": "^3.7.1",
@@ -69,8 +73,6 @@
     "vuetify": "3.0.2",
     "vuex": "^4.1.0",
     "webfontloader": "^1.0.0",
-    "webpack": "^5.75.0",
-    "webpack-bundle-analyzer": "^4.7.0",
     "webpack-dev-server": "4.11.1",
     "webpack-plugin-vuetify": "^2.0.0"
   },

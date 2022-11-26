@@ -14,6 +14,7 @@
 /.settings
 /nbproject/private/
 
+Resources/public/hot/*
 
 .git
 .github
@@ -31,4 +32,4 @@
 npm-debug.log
 yarn-error.log
 
-/node_modules
+node_modules

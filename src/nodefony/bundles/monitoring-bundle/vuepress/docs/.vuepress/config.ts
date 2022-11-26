@@ -6,7 +6,7 @@ const base = "/documentation/";
 
 export default defineUserConfig({
   base,
-  dest: './dist',
+  dest: './public/documentation',
   locales: {
     '/': {
       lang: 'en-US',

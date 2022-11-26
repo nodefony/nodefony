@@ -7,6 +7,7 @@ node_modules
 /Resources/views/base.html.twig
 /Resources/views/index.html.twig
 /Resources/public/fonts.css
+/vuepress/public
 
 
 # local env files

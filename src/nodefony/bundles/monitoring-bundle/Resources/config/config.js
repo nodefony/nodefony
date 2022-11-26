@@ -14,7 +14,7 @@
 const path = require("path")
 const serveStatic = require('serve-static');
 
-const setCustomCacheControl= (res, Path)=>{
+const setCustomCacheControl = (res, Path) => {
   if (serveStatic.mime.lookup(Path) === 'text/html') {
     // Custom Cache-Control for HTML files
     res.setHeader('Cache-Control', 'public, max-age=0')
@@ -71,24 +71,24 @@ module.exports = {
     storage: 'orm'
   },
   /* override realtime bundle */
-  "http-bundle":{
+  "http-bundle": {
     statics: {
       vuepress: {
-        path: path.resolve("src","nodefony","bundles","monitoring-bundle","vuepress","public"),
+        path: path.resolve(__dirname, "..", "..", "vuepress", "public"),
         options: {
-          index:['index.html'],
+          index: ['index.html'],
           maxAge: 0,
           setHeaders: setCustomCacheControl
         }
       }
     }
   },
-  "realtime-bundle":{
-    services:{
-      monitoring:{
-        type:        "tcp",
-        port:        1318,
-        domain:      "localhost"
+  "realtime-bundle": {
+    services: {
+      monitoring: {
+        type: "tcp",
+        port: 1318,
+        domain: "localhost"
       }
     }
   }
