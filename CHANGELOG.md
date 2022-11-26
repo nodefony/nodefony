@@ -1,3 +1,33 @@
+# [7.0.0](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.9...v7.0.0) (2022-11-26)
+
+
+
+# [7.0.0-beta.9](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.8...v7.0.0-beta.9) (2022-11-26)
+
+
+### Bug Fixes
+
+* **esm:** try debug cli-table ci/cd ([07f38d9](https://github.com/nodefony/nodefony/commit/07f38d9072547a62996caacae0d5802b26c7ee57))
+* **log:** session log warning ([7e5ce1e](https://github.com/nodefony/nodefony/commit/7e5ce1edcd4ea85d3e679ea730344a3080c8f335))
+* **monitoring:** clean comments ([90e11d1](https://github.com/nodefony/nodefony/commit/90e11d1935f98b6a17224e75c9a7953f4388da1a))
+* **monitoring:** clean repo ([267bcdc](https://github.com/nodefony/nodefony/commit/267bcdca4c15a5da3c12afb7d86c72e69de0f891))
+* **node19:** cryto unvailable in global context ([747a508](https://github.com/nodefony/nodefony/commit/747a508ab40f03a216eeab8ba09950800d19d344))
+* **node19:** remove crypto from global context ([5324b6b](https://github.com/nodefony/nodefony/commit/5324b6bb88013ad4903abdd16cb5fff13cac8ec8))
+* **openapi:** debug swagger shemas to add sequelize associations ([98a6b66](https://github.com/nodefony/nodefony/commit/98a6b66714246135591d6613dddfa197b1d73e6a))
+* **pnpm:** add pnmp in builder ([34d1f64](https://github.com/nodefony/nodefony/commit/34d1f64213c04b5c29b4c04a794278f830757d8e))
+* **server-static:** max age type ([4e4e7fe](https://github.com/nodefony/nodefony/commit/4e4e7fe5c2263015c8a23766e766ad79ad602769))
+* **webpack:** debug cache config webpack ([fc1eced](https://github.com/nodefony/nodefony/commit/fc1eceddb1aeb32c1da09542eabf45ef4485da20))
+
+
+### Features
+
+* **changelog:** [#54](https://github.com/nodefony/nodefony/issues/54) genarate conventional commits ([c869c95](https://github.com/nodefony/nodefony/commit/c869c9569c4377bcfaa78cf15187c40135e6e3e9))
+* **monitoring:** add webpack analyzer ([63904e5](https://github.com/nodefony/nodefony/commit/63904e52b4531566a6b14a9c03beeeb8fa143f9d))
+* **pnpm:** add package manager pnpm ([24b81b0](https://github.com/nodefony/nodefony/commit/24b81b09c55098f9c6d624f51eb0e21c0554b1ad))
+* **vuepress:** add vuepress SSR for documentation ([ca5a6bd](https://github.com/nodefony/nodefony/commit/ca5a6bdca3ac7aee77d8f74c1bd90e5b9e5b6cb1))
+
+
+
 # [7.0.0-beta.8](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.7...v7.0.0-beta.8) (2022-10-07)
 
 
@@ -543,3 +573,6 @@
 
 
 ## [2.1.3](https://github.com/nodefony/nodefony/compare/v2.1.2...v2.1.3) (2017-04-29)
+
+
+
