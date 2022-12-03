@@ -432,16 +432,22 @@ class Kernel extends nodefony.Service {
   }
 
   loadBundleUnregister(name, bundle) {
-    const mypackage = path.resolve(bundle.path, "package.json");
-    const pack = require(mypackage);
-    return {
-      name: name, //pack.name.replace("@nodefony/", "").replace("-bundle", "").replace("Bundle", ""),
-      packageName: pack.name,
-      package: pack,
-      path: bundle.path,
-      version: pack.version,
-      registred: false
-    };
+    try{
+      const mypackage = path.resolve(bundle.path, "package.json");
+      const pack = require(mypackage);
+      return {
+        name: name, //pack.name.replace("@nodefony/", "").replace("-bundle", "").replace("Bundle", ""),
+        packageName: pack.name,
+        package: pack,
+        path: bundle.path,
+        version: pack.version,
+        registred: false
+      };
+    }catch(e){
+      this.log(e, "WARNING")
+      return false
+    }
+
   }
 
   async getUnregistredBundles() {
