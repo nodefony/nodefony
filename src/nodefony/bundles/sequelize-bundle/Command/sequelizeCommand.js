@@ -22,11 +22,17 @@ class sequelizeCommand extends nodefony.Command {
     this.setHelp("sequelize:migrate",
       "Apply all Migrations pending for all connectors"
     );
+    this.setHelp("sequelize:revert",
+      "Revert all Migrations executed for all connectors"
+    );
     super.showHelp();
   }
 
   migrate(){
     return this.tasks["migrate"].up();
+  }
+  revert(){
+    return this.tasks["migrate"].revert();
   }
 }
 module.exports = sequelizeCommand;

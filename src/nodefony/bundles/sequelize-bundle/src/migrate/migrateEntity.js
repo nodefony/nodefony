@@ -1,11 +1,11 @@
 class MigrateEntity extends nodefony.Service {
 
-  constructor(entiyName, queryInterface, kernel) {
+  constructor(entityName, queryInterface, kernel) {
     super("migrate", kernel.container);
-    this.entiyName = entiyName
+    this.entityName = entityName
     this.queryInterface = queryInterface
     this.sequelize = this.queryInterface.sequelize
-    this.model = this.sequelize.model(this.entiyName);
+    this.model = this.getSequelizeModel();
     this.cli = this.kernel.cli
   }
 
@@ -15,16 +15,24 @@ class MigrateEntity extends nodefony.Service {
     return this.transaction
   }
 
+  getSequelizeModel(){
+    return this.sequelize.model(this.entityName) || null;
+  }
+
   async describeTable(log = false) {
-    const desc = await this.queryInterface.describeTable(this.entiyName)
-    if (log) {
-      this.logDefinition(desc)
+    try {
+      const desc = await this.queryInterface.describeTable(this.entityName)
+      if (log) {
+        this.logDefinition(desc)
+      }
+      return desc
+    } catch (e) {
+      return null
     }
-    return desc
   }
 
   async findAll(log = false) {
-    this.log(`List ${this.entiyName} ${this.cli.getEmoji("clapper")}`);
+    this.log(`List ${this.entityName} ${this.cli.getEmoji("clapper")}`);
     const descriptions = await this.model.findAll()
     if (log) {
       try {
@@ -39,9 +47,9 @@ class MigrateEntity extends nodefony.Service {
             if (!head.includes(item)) {
               head.push(item)
             }
-            if( datas[item]){
+            if (datas[item]) {
               entityTab.push(datas[item].toString())
-            }else{
+            } else {
               entityTab.push(datas[item])
             }
           }
@@ -49,12 +57,12 @@ class MigrateEntity extends nodefony.Service {
         }
 
         let maxWidth = process.stdout.columns || 20;
-        if(process.stdout.columns){
-          maxWidth= process.stdout.columns / head.length
-        }else{
+        if (process.stdout.columns) {
+          maxWidth = process.stdout.columns / head.length
+        } else {
           maxWidth = 20
         }
-        const colWidths =[]
+        const colWidths = []
         let table = this.cli.displayTable(details, {
           head,
           width: maxWidth,
@@ -70,7 +78,7 @@ class MigrateEntity extends nodefony.Service {
   }
 
   logDefinition(descriptions) {
-    this.log(`Entity ${this.entiyName} ${this.cli.getEmoji("clapper")}`);
+    this.log(`Entity ${this.entityName} ${this.cli.getEmoji("clapper")}`);
     const head = ["Column"]
     const details = []
     for (let entity in descriptions) {
@@ -93,12 +101,15 @@ class MigrateEntity extends nodefony.Service {
   }
 
   addColumn(cname, options) {
+    if (!this.tableDefinition) {
+      throw new Error(`No table definition`)
+    }
     if (Object.hasOwn(this.tableDefinition, cname)) {
-      this.log(`Nothing to do : column ${cname} already exists in ${this.entiyName}`);
+      this.log(`Nothing to do : column ${cname} already exists in ${this.entityName}`);
       return this.model;
     }
     return this.queryInterface.addColumn(
-        this.entiyName,
+        this.entityName,
         cname,
         options, {
           transaction: this.transaction
@@ -116,17 +127,20 @@ class MigrateEntity extends nodefony.Service {
   }
 
   removeColumn(cname) {
+    if (!this.tableDefinition) {
+      throw new Error(`No table definition`)
+    }
     if (!Object.hasOwn(this.tableDefinition, cname)) {
-      this.log(`Nothing to do : column ${cname} already deleted from ${this.entiyName}`);
+      this.log(`Nothing to do : column ${cname} already deleted from ${this.entityName}`);
       return this.model;
     }
     return this.queryInterface.removeColumn(
-        this.entiyName,
+        this.entityName,
         cname, {
           transaction: this.transaction
         }
       ).then(async () => {
-        this.log(`Table ${this.entiyName} removeColumn ${cname}`);
+        this.log(`Table ${this.entityName} removeColumn ${cname}`);
         return {
           model: this.model,
           transaction: this.transaction
@@ -137,10 +151,64 @@ class MigrateEntity extends nodefony.Service {
       })
   }
 
+  dropTable() {
+    try {
+      return this.queryInterface.dropTable(this.entityName, {
+          transaction: this.transaction
+        })
+        .then(async (result) => {
+          this.log(`dropTable ${this.entityName}`);
+          return {
+            result,
+            model: this.model,
+            transaction: this.transaction
+          };
+        })
+    } catch (e) {
+      throw e
+    }
+  }
+
+  createTable(definition) {
+    try {
+      return this.queryInterface.createTable(this.entityName, definition, {
+          transaction: this.transaction
+        })
+        .then(async (result) => {
+          this.log(`createTable ${this.entityName}`);
+          return {
+            result,
+            model: this.model,
+            transaction: this.transaction
+          };
+        })
+    } catch (e) {
+      throw e
+    }
+  }
+
+  addConstraint(options) {
+    try {
+      return this.queryInterface.addConstraint(this.entityName, options, {
+          transaction: this.transaction
+        })
+        .then(async (result) => {
+          this.log(`addConstraint ${this.entityName}`);
+          return {
+            result,
+            model: this.model,
+            transaction: this.transaction
+          };
+        })
+    } catch (e) {
+      throw e
+    }
+  }
+
   async commit() {
     if (this.transaction) {
       if (!this.transaction.finished) {
-        this.log(`Commit transaction on table ${this.entiyName}`);
+        this.log(`Commit transaction on table ${this.entityName}`);
         return await this.transaction.commit();
       }
       this.log("Commit Transaction already finished", "WARNING")
@@ -152,7 +220,7 @@ class MigrateEntity extends nodefony.Service {
   async rollback() {
     if (this.transaction) {
       if (!this.transaction.finished) {
-        this.log(`Rollback transaction on table ${this.entiyName}`);
+        this.log(`Rollback transaction on table ${this.entityName}`);
         return await this.transaction.rollback();
       }
       this.log("Rollback Transaction already finished", "WARNING")

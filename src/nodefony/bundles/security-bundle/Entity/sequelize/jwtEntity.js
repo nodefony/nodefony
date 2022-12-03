@@ -22,30 +22,6 @@ module.exports = class jwt extends nodefony.Entity {
      *   @param connection name
      */
     super(bundle, "jwt", "sequelize", "nodefony");
-    /*this.orm.on("onOrmReady", ( orm ) => {
-        let user = this.orm.getEntity("user");
-        if (user) {
-          user.hasMany(this.model, {
-            foreignKey: {
-              allowNull: true,
-              name:"username"
-            },
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE'
-          })
-          this.model.belongsTo(user, {
-            foreignKey: {
-              allowNull: true,
-              name:"username"
-            },
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE'
-          });
-        } else {
-          this.log("ENTITY ASSOCIATION user NOT AVAILABLE" , "WARNING");
-          //throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
-        }
-      });*/
   }
 
   getSchema() {
@@ -79,7 +55,7 @@ module.exports = class jwt extends nodefony.Entity {
           models.user.hasMany(models.jwt, {
             foreignKey: {
               allowNull: true,
-              name:"username"
+              name: "username"
             },
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE'
@@ -87,16 +63,15 @@ module.exports = class jwt extends nodefony.Entity {
           models.jwt.belongsTo(models.user, {
             foreignKey: {
               allowNull: true,
-              name:"username"
+              name: "username"
             },
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE'
           });
         } else {
-          this.log("ENTITY ASSOCIATION user NOT AVAILABLE" , "WARNING");
+          this.log("ENTITY ASSOCIATION user NOT AVAILABLE", "WARNING");
           //throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
         }
-
       }
 
       static getRefreshToken(token) {
@@ -116,7 +91,7 @@ module.exports = class jwt extends nodefony.Entity {
             token: token,
             active: active
           }, {
-            transaction: transaction
+            transaction
           })
           .then((mytoken) => {
             transaction.commit();
@@ -137,9 +112,8 @@ module.exports = class jwt extends nodefony.Entity {
               where: {
                 username: username,
                 refreshToken: refreshToken
-              }
-            }, {
-              transaction: transaction
+              },
+              transaction
             })
             .then((mytoken) => {
               transaction.commit();
@@ -165,7 +139,7 @@ module.exports = class jwt extends nodefony.Entity {
         try {
           transaction = await db.transaction.call(db);
           return this.destroy(opt, {
-              transaction: transaction
+              transaction
             })
             .then((mytoken) => {
               transaction.commit();
@@ -198,7 +172,7 @@ module.exports = class jwt extends nodefony.Entity {
         try {
           transaction = await db.transaction.call(db);
           return this.destroy(opt, {
-              transaction: transaction
+              transaction
             })
             .then((mytoken) => {
               transaction.commit();

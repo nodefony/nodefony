@@ -141,20 +141,20 @@ class generateProject extends nodefony.Builder {
         filter: (value) => {
           let front = null;
           switch (value) {
-          case "Sandbox (without Front framwork)":
-            front = "sandbox";
-            break;
-          case "Vue.js":
-            front = "vue";
-            break;
-          case "React":
-            front = 'react';
-            break;
-          case "Electron":
-            front = 'electron';
-            break;
-          default:
-            front = value;
+            case "Sandbox (without Front framwork)":
+              front = "sandbox";
+              break;
+            case "Vue.js":
+              front = "vue";
+              break;
+            case "React":
+              front = 'react';
+              break;
+            case "Electron":
+              front = 'electron';
+              break;
+            default:
+              front = value;
           }
           return front;
         }
@@ -231,7 +231,7 @@ class generateProject extends nodefony.Builder {
         message: 'Choose a default Package Manager : ',
         default: 0,
         pageSize: 2,
-        choices: ["npm", "yarn","pnpm"],
+        choices: ["npm", "yarn", "pnpm"],
         filter: (value) => {
           if (this.cli[value]) {
             this.cli.packageManager = this.cli[value];
@@ -270,9 +270,9 @@ class generateProject extends nodefony.Builder {
         if (response.addons.length) {
           for (let i = 0; i < response.addons.length; i++) {
             switch (response.addons[i]) {
-            case "Users Management":
-              addons.users = true;
-              break;
+              case "Users Management":
+                addons.users = true;
+                break;
             }
           }
         }
@@ -296,6 +296,10 @@ class generateProject extends nodefony.Builder {
       }).catch(e => {
         throw e;
       });
+  }
+
+  getPadDate() {
+    return new Date().toISOString().split('.')[0].replace(/[^\d]/gi, '')
   }
 
   createBuilder(response) {
@@ -341,15 +345,39 @@ class generateProject extends nodefony.Builder {
             name: "sequelize",
             type: "directory",
             childs: [{
-              name: "00_migration.js.example",
-              type: "file",
-              skeleton: path.resolve(this.pathSkeleton, "migrations", "migrations.skeleton.js"),
-              params: this.response
+              name: "nodefony",
+              type: "directory",
+              childs: [{
+                name: `${this.getPadDate()}-migrate-entity.js.example`,
+                type: "file",
+                skeleton: path.resolve(this.pathSkeleton, "migrations", "migrations.skeleton.js"),
+                params: this.response
+              }, {
+                name: "20221119210432-create-user.js",
+                skeleton: path.resolve(this.pathSkeleton, "migrations", "20221119210432-create-user.js"),
+                type: "file",
+                params: this.response
+              }, {
+                name: "20221119210433-create-session.js",
+                skeleton: path.resolve(this.pathSkeleton, "migrations", "20221119210433-create-session.js"),
+                type: "file",
+                params: this.response
+              }, {
+                name: "20221119210434-create-requests.js",
+                skeleton: path.resolve(this.pathSkeleton, "migrations", "20221119210434-create-requests.js"),
+                type: "file",
+                params: this.response
+              }, {
+                name: "20221119210435-create-jwts.js",
+                skeleton: path.resolve(this.pathSkeleton, "migrations", "20221119210435-create-jwts.js"),
+                type: "file",
+                params: this.response
+              }]
             }]
-          },{
+          }, {
             name: "mongoose",
             type: "directory",
-          },{
+          }, {
             name: "seedeers",
             type: "directory",
           }]
