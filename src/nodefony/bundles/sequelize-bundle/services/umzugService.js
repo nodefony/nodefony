@@ -2,7 +2,7 @@ const {
   Sequelize
 } = require('sequelize');
 
-const MigrateEntity = require(path.resolve(__dirname, "..", "src", "migrate", "MigrateEntity.js"));
+const MigrateEntity = require(path.resolve(__dirname, "..", "src", "migrate", "migrateEntity.js"));
 
 const {
   Umzug,

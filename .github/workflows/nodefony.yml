@@ -161,9 +161,8 @@ jobs:
         npm install --no-audit --force --legacy-peer-deps
         npm install --no-audit --force --legacy-peer-deps ./src/nodefony
         cd ./src/nodefony
-        yarn link
+        yarn global add .
         cd -
-        yarn link "nodefony"
         npm run build --if-present
         npm run nodefony start
         sleep 180;
