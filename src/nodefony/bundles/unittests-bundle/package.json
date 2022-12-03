@@ -11,9 +11,7 @@
     "javascript"
   ],
   "dependencies": {
-    "chai": "^4.3.7",
-    "mocha": "^10.1.0",
-    "websocket": "^1.0.34"
+    "mocha": "^10.1.0"
   },
   "repository": {
     "type": "git",

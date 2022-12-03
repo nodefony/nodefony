@@ -9,6 +9,11 @@ node_modules
 /Resources/public/fonts.css
 /vuepress/public
 
+/Resources/views/analyser.html.twig
+/Resources/views/base.graphiql.html.twig
+/Resources/views/base.html.twig
+/Resources/views/index.html.twig
+
 
 # local env files
 .env.local
