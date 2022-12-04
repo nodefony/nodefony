@@ -6,6 +6,7 @@ const {
 module.exports = {
   locale: "en_en",
   debug: true,
+  strategy: "migrate", // sync || migrate || none  when nodefony build  or  nodefony install
   //watch: true,
   connectors: {
     nodefony: {

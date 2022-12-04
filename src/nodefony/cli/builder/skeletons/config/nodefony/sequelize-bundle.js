@@ -2,7 +2,7 @@
  *  OVERRIDE ORM SEQUELIZE BUNDLE
  *
  *       @see SEQUELIZE BUNDLE config for more options
- *       @more options http://docs.sequelizejs.com/class/lib/sequelize.js~Sequelize.html
+ *       @more options https://sequelize.org/docs/v6/other-topics/dialect-specific-things/
  *
  *       Nodefony Database Management
  *        dialect :               'mysql'|'sqlite'|'postgres'|'mssql'
@@ -43,5 +43,37 @@
  */
 module.exports = {
   debug: false,
-  connectors: {}
+  strategy: "migrate", // sync || migrate || none  when nodefony build  or  nodefony install
+  connectors: {
+    nodefony: {
+      driver: 'sqlite',
+      dbname: path.resolve("app", "Resources", "databases", "nodefony.db"),
+      options: {
+        dialect: "sqlite",
+        isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+        retry: {
+          match: [
+            Sequelize.ConnectionError,
+            Sequelize.ConnectionTimedOutError,
+            Sequelize.TimeoutError,
+            /Deadlock/i,
+            'SQLITE_BUSY'
+          ],
+          max: 5
+        },
+        pool: {
+          max: 5,
+          min: 0,
+          idle: 10000
+        }
+      }
+    }
+  },
+  migrations: {
+    storage: "sequelize", // sequelize || memory || json
+    path: path.resolve(kernel.path, "migrations", "sequelize"),
+    seedeersPath: path.resolve(kernel.path, "migrations", "seedeers"),
+    storageSeedeers:"json",
+    options: {}
+  }
 };

@@ -11,7 +11,7 @@ module.exports = class installProject extends nodefony.Builder {
     return super.log(pci, severity, msgid, msg);
   }
 
-  async install(cwd = path.resolve(".")) {
+  async install(cwd = path.resolve("."), args, interactive) {
     return new Promise((resolve, reject) => {
       return this.installFramework(cwd)
         .then(() => {
@@ -27,7 +27,7 @@ module.exports = class installProject extends nodefony.Builder {
               }
             })
             .then(() => {
-              this.cli.parseNodefonyCommand("install", [cwd]);
+              this.cli.parseNodefonyCommand("install", [cwd, args, interactive]);
               return resolve(cwd);
             })
             .catch((e) => {
@@ -37,12 +37,12 @@ module.exports = class installProject extends nodefony.Builder {
     });
   }
 
-  async build(cwd = path.resolve(".")) {
+  async build(cwd = path.resolve("."), args, interactive) {
     await this.generateCertificates(cwd);
     return cwd;
   }
 
-  rebuild(cwd = path.resolve(".")) {
+  rebuild(cwd = path.resolve("."), args, interactive) {
     let cmd = null;
     switch (nodefony.packageManager) {
     case 'yarn':
@@ -59,7 +59,7 @@ module.exports = class installProject extends nodefony.Builder {
     } catch (e) {
       throw e;
     }
-    return this.cli.packageManager.call(this.cli, cmd, cwd, "development")
+    return this.cli.packageManager.call(this.cli, cmd, cwd, "production")
       .then(() => {
         return cwd;
       });

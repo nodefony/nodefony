@@ -139,6 +139,7 @@ class CLI extends nodefony.Service {
         });
       this.initPrompt()
     });
+    this.commander= null;
     this.initCommander();
 
     if (this.options.warning) {
@@ -357,10 +358,12 @@ class CLI extends nodefony.Service {
       if (this.options.version) {
         this.setCommandVersion(this.options.version);
       }
+      return program
       /*this.on("onStart", () => {
         //this.commander.parse(process.argv);
       });*/
     }
+    return null
   }
 
   initUi() {
@@ -755,14 +758,31 @@ class CLI extends nodefony.Service {
     }
   }
 
-  runPackageManager(argv = [], cwd = path.resolve("."), env = "dev", manager) {
+  runPackageManager(argv = [], cwd = path.resolve("."), env, manager) {
     switch (env) {
       case "dev":
       case "development":
+        switch (manager) {
+          case "npm":
+          case "yarn":
+          case "pnpm":
+            break;
+        }
         process.env.NODE_ENV = "development";
         break;
       case "prod":
       case "production":
+        switch (manager) {
+          case "npm":
+            argv.push("--omit=dev")
+            break;
+          case "yarn":
+            argv.push("--production")
+            break;
+          case "pnpm":
+            argv.push("--prod")
+            break;
+        }
         process.env.NODE_ENV = "production";
         break;
       default:
@@ -771,7 +791,7 @@ class CLI extends nodefony.Service {
     return new Promise((resolve, reject) => {
       let cmd = null;
       try {
-        this.debug = this.commander.opts().debug || false;
+        this.debug = this.commander ? (this.commander.opts().debug || false) : false;
         this.log(`Command : ${manager} ${argv.join(' ')} in cwd : ${cwd}`);
         let exe = this.getCommandManager(manager);
         cmd = this.spawn(exe, argv, {

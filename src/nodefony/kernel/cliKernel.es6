@@ -810,7 +810,7 @@ class cliKernel extends nodefony.cli {
     }
   }
 
-  async rebuildPackage(bundle, env = "development") {
+  async rebuildPackage(bundle, env = "production") {
     let cmd = null;
     switch (nodefony.packageManager) {
     case 'yarn':

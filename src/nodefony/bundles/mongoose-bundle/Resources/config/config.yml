@@ -24,6 +24,8 @@ watch       :               false
 
 mongoose:
   debug:                    false
+  # // sync || migrate || none  when nodefony build  or  nodefony install
+  strategy:                 "none"
   connectors:
     nodefony:
       host:                 "127.0.0.1"

@@ -21,6 +21,7 @@ class mongoose extends nodefony.Orm {
   constructor(container, kernel, autoLoader) {
     super("mongoose", container, kernel, autoLoader);
     this.engine = Mongoose;
+    this.strategy = 'migrate'
   }
 
   static isError(error) {
@@ -49,6 +50,9 @@ class mongoose extends nodefony.Orm {
 
   initialize() {
     this.settings = nodefony.extend({}, defaultconfigServer, this.bundle.settings.mongoose);
+    if (this.settings.strategy) {
+      this.strategy = this.settings.strategy
+    }
     if (this.settings.connectors && Object.keys(this.settings.connectors).length) {
       for (let name in this.settings.connectors) {
         this.createConnection(name, this.settings.connectors[name]);
@@ -138,15 +142,15 @@ class mongoose extends nodefony.Orm {
       conn[0] = dbname;
       for (let data in this.settings.connectors[dbname]) {
         switch (data) {
-        case "dbname":
-          conn[1] = this.settings.connectors[dbname][data];
-          break;
-        case "host":
-          conn[3] = this.settings.connectors[dbname][data];
-          break;
-        case "port":
-          conn[3] += ":" + this.settings.connectors[dbname][data];
-          break;
+          case "dbname":
+            conn[1] = this.settings.connectors[dbname][data];
+            break;
+          case "host":
+            conn[3] = this.settings.connectors[dbname][data];
+            break;
+          case "port":
+            conn[3] += ":" + this.settings.connectors[dbname][data];
+            break;
         }
       }
       table.push(conn);
@@ -260,38 +264,38 @@ class mongoose extends nodefony.Orm {
         prop.default = attributes[ele].defaultValue;
       }
       switch (attributes[ele].instance) {
-      case "String":
-      case 'SchemaString':
-      case 'SchemaBuffer':
-      case 'SchemaObjectId':
-      case 'ObjectId':
-      case 'ObjectID':
-      case 'SchemaDate':
-        prop.type = "string";
-        break;
-      case 'Number':
-      case 'SchemaNumber':
-        prop.type = "number";
-        break;
-      case 'Mixed':
-        prop.type = "object";
-        break;
-      case "Array":
-      case 'DocumentArray':
-      case 'SchemaArray':
-        prop.type = "array";
-        break;
-      case 'Boolean':
-      case 'SchemaBoolean':
-        prop.type = "boolean";
-        break;
-      case "Date":
-        prop.type = "string";
-        prop.format = "date";
-        break;
-      default:
-        prop.type = "string";
-        prop.format = attributes[ele].instance;
+        case "String":
+        case 'SchemaString':
+        case 'SchemaBuffer':
+        case 'SchemaObjectId':
+        case 'ObjectId':
+        case 'ObjectID':
+        case 'SchemaDate':
+          prop.type = "string";
+          break;
+        case 'Number':
+        case 'SchemaNumber':
+          prop.type = "number";
+          break;
+        case 'Mixed':
+          prop.type = "object";
+          break;
+        case "Array":
+        case 'DocumentArray':
+        case 'SchemaArray':
+          prop.type = "array";
+          break;
+        case 'Boolean':
+        case 'SchemaBoolean':
+          prop.type = "boolean";
+          break;
+        case "Date":
+          prop.type = "string";
+          prop.format = "date";
+          break;
+        default:
+          prop.type = "string";
+          prop.format = attributes[ele].instance;
       }
     }
     return attr;

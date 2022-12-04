@@ -15,7 +15,8 @@
   "dependencies": {
     "puppeteer": "^19.3.0",
     "querystring": "0.2.1",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "websocket": "^1.0.34"
   },
   "devDependencies": {
     "@babel/core": "7.20.5",
@@ -36,14 +37,13 @@
     "mini-css-extract-plugin": "2.7.1",
     "node-fetch": "^3.3.0",
     "nodefony-client": "6.0.2",
-    "rxjs": "7.5.7",
+    "rxjs": "7.6.0",
     "sass": "^1.56.1",
     "sass-loader": "^13.2.0",
     "terser-webpack-plugin": "5.3.6",
     "webpack": "^5.75.0",
     "webpack-dev-server": "4.11.1",
-    "webpack-merge": "^5.8.0",
-    "websocket": "^1.0.34"
+    "webpack-merge": "^5.8.0"
   },
   "contributors": [
     {}

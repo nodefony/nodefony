@@ -4,7 +4,7 @@ let builderTools = null;
 let builderPM2 = null;
 let builderSequelize = null;
 try {
-  builderInstall = require(path.resolve(__dirname , "install", "install.js"));
+  builderInstall = require(path.resolve(__dirname, "install", "install.js"));
   builderGenerater = require(path.resolve(__dirname, "generate", "generate.es6"));
   builderTools = require(path.resolve(__dirname, "tools", "tools.es6"));
   builderPM2 = require(path.resolve(__dirname, "tools", "pm2.es6"));
@@ -20,12 +20,13 @@ module.exports = class cliStart extends nodefony.cliKernel {
       asciify: false,
       autostart: false,
       signals: true,
+      commander: true,
       clean: true,
       promiseRejection: true,
       version: nodefony.version,
-      events:{
+      events: {
         nbListeners: 60,
-        captureRejections:true
+        captureRejections: true
       }
     });
     this.choices = [];
@@ -64,7 +65,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
 
   async onStart(cmd = this.cmd, args = this.args) {
     //this.log(`Commnand : ${cmd} Arguments : ${args}`, "DEBUG", "CLI ONSTART");
-    this.interactive = this.commander.opts().interactive|| false;
+    this.interactive = this.commander.opts().interactive || false;
     if (!cmd && !process.argv.slice(2).length && (!process.argv[2])) {
       this.buildMenu();
       this.interactive = true;
@@ -231,17 +232,17 @@ module.exports = class cliStart extends nodefony.cliKernel {
       case "rebuild":
         try {
           if (nodefony.isTrunk) {
-            return this.rebuild()
+            return this.rebuild(path.resolve("."), args, this.interactive)
               .then((cwd) => {
-                this.parseNodefonyCommand("nodefony:rebuild", [cwd]);
+                this.parseNodefonyCommand("nodefony:rebuild", [cwd, args, this.interactive]);
                 return nodefony.start(command, args, this);
               })
               .then(() => {
-                return this.installProject()
+                return this.installProject(path.resolve("."), args, this.interactive)
                   .then(() => {
-                    return this.buildProject()
+                    return this.buildProject(path.resolve("."), args, this.interactive)
                       .then((cwd) => {
-                        this.parseNodefonyCommand("nodefony:build", [cwd]);
+                        this.parseNodefonyCommand("nodefony:build", [cwd, args, this.interactive]);
                         return nodefony.start(command, args, this);
                       });
                   });
@@ -257,11 +258,11 @@ module.exports = class cliStart extends nodefony.cliKernel {
       case "build":
         try {
           if (nodefony.isTrunk) {
-            return this.installProject()
+            return this.installProject(path.resolve("."), args, this.interactive)
               .then(() => {
-                return this.buildProject()
+                return this.buildProject(path.resolve("."), args, this.interactive)
                   .then((cwd) => {
-                    this.parseNodefonyCommand("nodefony:build", [cwd]);
+                    this.parseNodefonyCommand("nodefony:build", [cwd, args, this.interactive]);
                     return nodefony.start(command, args, this);
                   });
               });
@@ -275,7 +276,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
         break;
       case "install":
         if (nodefony.isTrunk) {
-          return this.installProject()
+          return this.installProject(path.resolve("."), args, this.interactive)
             .then((...args) => {
               return nodefony.start(command, args, this)
                 .then((...args) => {
@@ -528,13 +529,13 @@ module.exports = class cliStart extends nodefony.cliKernel {
               let cwd = path.resolve(project.location, project.name);
               this.log(`Create Project ${obj.response.name} complete`, "INFO");
               this.cd(cwd);
-              return this.installProject(cwd)
+              return this.installProject(cwd, args, interactive)
                 .then(() => {
-                  return this.buildProject(cwd)
+                  return this.buildProject(cwd, args, interactive)
                     .then((cwd) => {
                       try {
                         nodefony.checkTrunk(cwd);
-                        this.parseNodefonyCommand("nodefony:build", [cwd]);
+                        this.parseNodefonyCommand("nodefony:build", [cwd, args, interactive]);
                         return nodefony.start(command, args, this);
                       } catch (e) {
                         throw e;
@@ -564,33 +565,33 @@ module.exports = class cliStart extends nodefony.cliKernel {
     }
   }
 
-  createMicroService(command, args, interactive = false){
+  createMicroService(command, args, interactive = false) {
     let microService = new nodefony.builders.microService(this, command, args);
     return microService.run(interactive)
       .then((obj) => {
         return this.gitInit(microService, obj.response)
-        .then(()=>{
-          let cwd = path.resolve(microService.location, microService.name);
-          this.log(`Nodefony Micro Service ${obj.response.name} complete`, "INFO");
-          this.cd(cwd);
-          return this.npm(["install"], cwd)
-          .then(()=>{
-            return this.generateCertificates(cwd)
-            .then(()=>{
-              this.log(`cd ${obj.response.name}`);
-              this.log(`npm start`);
-              return cwd;
-            });
+          .then(() => {
+            let cwd = path.resolve(microService.location, microService.name);
+            this.log(`Nodefony Micro Service ${obj.response.name} complete`, "INFO");
+            this.cd(cwd);
+            return this.npm(["install"], cwd)
+              .then(() => {
+                return this.generateCertificates(cwd)
+                  .then(() => {
+                    this.log(`cd ${obj.response.name}`);
+                    this.log(`npm start`);
+                    return cwd;
+                  });
+              });
+          }).catch(e => {
+            if (e.code || e.code === 0) {
+              this.log(e, "INFO");
+              this.terminate(e.code);
+            }
+            this.log(e, "ERROR");
+            this.terminate(e.code || 1);
           });
-        }).catch(e =>{
-          if (e.code || e.code === 0) {
-            this.log(e, "INFO");
-            this.terminate(e.code);
-          }
-          this.log(e, "ERROR");
-          this.terminate(e.code || 1);
-        });
-      }).catch(e =>{
+      }).catch(e => {
         if (e.code || e.code === 0) {
           this.log(e, "INFO");
           this.terminate(e.code);
@@ -600,10 +601,10 @@ module.exports = class cliStart extends nodefony.cliKernel {
       });
   }
 
-  installProject(cwd = path.resolve(".")) {
+  installProject(cwd = path.resolve("."), args, interactive=false) {
     try {
       let installer = new builderInstall(this);
-      return installer.install(cwd)
+      return installer.install(cwd, args, interactive)
         .then((ret) => {
           this.log("Install Complete");
           return ret;
@@ -617,10 +618,10 @@ module.exports = class cliStart extends nodefony.cliKernel {
     }
   }
 
-  rebuild(cwd = path.resolve(".")) {
+  rebuild(cwd = path.resolve("."), args, interactive=false) {
     try {
       let installer = new builderInstall(this);
-      return installer.rebuild(cwd)
+      return installer.rebuild(cwd, args, interactive)
         .then((ret) => {
           this.log(`Rebuild Complete : ${cwd}`);
           return ret;
@@ -634,10 +635,10 @@ module.exports = class cliStart extends nodefony.cliKernel {
     }
   }
 
-  buildProject(cwd = path.resolve(".")) {
+  buildProject(cwd = path.resolve("."), args , interactive) {
     try {
       let installer = new builderInstall(this);
-      return installer.build(cwd)
+      return installer.build(cwd, args, interactive)
         .then((ret) => {
           this.log("Build Complete");
           return ret;
@@ -666,7 +667,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
     return generater.run(interactive);
   }
 
-  sequelizeCli(interactive){
+  sequelizeCli(interactive) {
     let generater = new builderSequelize(this);
     return generater.run(interactive);
   }

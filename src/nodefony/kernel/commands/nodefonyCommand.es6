@@ -1,4 +1,4 @@
-module.exports = nodefony.register.call(nodefony.commands, "nodefony", function () {
+module.exports = nodefony.register.call(nodefony.commands, "nodefony", function() {
 
   class nodefonyCommand extends nodefony.Command {
 
@@ -11,9 +11,21 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
       return super.showHelp();
     }
 
-    async install(cwd) {
+    async install(cwd, args = [], interactive = false) {
       try {
+        let strategy = null
+        let force = false
+        if (args.includes("migrate")) {
+          strategy = "migrate"
+        }
+        if (args.includes("sync")) {
+          strategy = "sync"
+        }
+        if (args.includes("force")) {
+          force = true
+        }
         this.log("INSTALL NODEFONY FRAMEWORK");
+        await this.installOrm(force, strategy);
         return await this.displayInfo(cwd);
       } catch (error) {
         this.log(error, "ERROR");
@@ -21,18 +33,12 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
       }
     }
 
-    async build(cwd) {
-      try {
-        this.log("BUILD NODEFONY FRAMEWORK");
-        await this.installOrm();
-        return this.displayInfo(cwd);
-      } catch (error) {
-        this.log(error, "ERROR");
-        throw error;
-      }
+    async build(cwd, args = [], interactive = false) {
+      this.log("BUILD NODEFONY FRAMEWORK");
+      return this.install(cwd, args, interactive);
     }
 
-    async rebuild(cwd) {
+    async rebuild(cwd, args, interactive = false) {
       try {
         //await this.listPackage(cwd);
         return cwd;
@@ -41,42 +47,54 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function 
       }
     }
 
-    installOrm(force = false) {
+    installOrm(force = false, strategy) {
       this.log("INITIALIZE ORM");
       this.orm = this.cli.kernel.getOrm();
       switch (this.orm) {
-      case "sequelize":
-        return this.installSequelize(force)
-          .then(() => {
-            return this.generateSequelizeFixture();
-          }).catch((e) => {
-            throw e;
-          });
-      case "mongoose":
-        return this.installMongoose()
-          .catch((e) => {
-            throw e;
-          });
-      default:
-        throw new Error(`ORM not defined : $(this.orm)`);
+        case "sequelize":
+          return this.installSequelize(force, strategy || this.cli.kernel.getOrmStrategy())
+            .then(() => {
+              return this.generateSequelizeFixture();
+            }).catch((e) => {
+              throw e;
+            });
+        case "mongoose":
+          return this.installMongoose()
+            .catch((e) => {
+              throw e;
+            });
+        default:
+          throw new Error(`ORM not defined : $(this.orm)`);
       }
     }
 
-    async installSequelize(force = false) {
+    async installSequelize(force = false, strategy = "migrate") {
       this.log("INITIALIZE SEQUELIZE");
       let command = null;
       let task = null;
+      let res = null
       try {
         command = this.cli.getCommand("sequelize", "sequelize");
         task = command.getTask("create");
-        await task.database();
+        res = await task.database();
       } catch (e) {
         this.log(e, "WARNING");
       }
+      if (!force && strategy === 'none') {
+        return res
+      }
       try {
         command = this.cli.getCommand("sequelize", "sequelize");
-        task = command.getTask("sync");
-        return await task.entities(force);
+        // with migrate
+        if (!force && strategy === "migrate") {
+          task = command.getTask("migrate");
+          return await task.up();
+        }
+        // with sysnc
+        if (strategy === "sync") {
+          task = command.getTask("sync");
+          return await task.entities(force);
+        }
       } catch (e) {
         this.log(e, "ERROR");
         throw e;

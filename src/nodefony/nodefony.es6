@@ -115,10 +115,10 @@ class Nodefony {
     try {
       let ext = path.extname(file);
       switch (ext) {
-      case ".js":
-        return require(file);
-      case ".yml":
-        return yaml.load(this.readFileSync(file));
+        case ".js":
+          return require(file);
+        case ".yml":
+          return yaml.load(this.readFileSync(file));
       }
     } catch (e) {
       if (log) {
@@ -181,11 +181,11 @@ class Nodefony {
 
   isPromise(obj) {
     switch (true) {
-    case obj instanceof Promise:
-    case obj instanceof BlueBird:
-      return true;
-    default:
-      return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
+      case obj instanceof Promise:
+      case obj instanceof BlueBird:
+        return true;
+      default:
+        return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
     }
   }
 
@@ -506,8 +506,9 @@ class Nodefony {
     // Servers
     cli.setTitleHelp(`${cli.clc.cyan("Servers")}`);
     cli.setHelp("", "dev", "Run Nodefony Development Server");
-    cli.setHelp("", "preprod", "Run Nodefony Preprod Server ( Usefull to check Clusters Node )");
+    cli.setHelp("", "preprod", "Run Nodefony Preprod Server ( Usefull to check Clusters Node use os.cpus().length )");
     cli.setHelp("", "prod", "Run Nodefony Production Server ( PM2 mode )");
+    cli.setHelp("", "start", "Run Nodefony Production Server before transpile for prodution ( dump + PM2 mode ) ");
     cli.setTitleHelp(cli.clc.cyan("PM2 Process Manager 2"));
     cli.setHelp("", "stop [name]", "Stop Production Project");
     cli.setHelp("", "reload [name]", "Reload Production Project");
@@ -524,9 +525,9 @@ class Nodefony {
     // nodefony
     cli.setTitleHelp(cli.clc.cyan("nodefony"));
     cli.setHelp("", "create [-i] name [path]", "Create New Nodefony Project");
-    cli.setHelp("", "build", "Build Nodefony Framework");
-    cli.setHelp("", "rebuild", "Rebuild Nodefony Framework (Recompilation when node version change )");
-    cli.setHelp("", "install", "Install Nodefony Project");
+    cli.setHelp("", "build [sync|migrate]", "Build Nodefony Framework ,transpile, certificats, skeleton , install (default orm migrate)");
+    cli.setHelp("", "install [sync|migrate]", "Install Nodefony Project transpile, sync or migrate Orm (default orm migrate)");
+    cli.setHelp("", "rebuild", "Rebuild Nodefony Framework in production (Usefull when node version change )");
     cli.setHelp("", "certificates", `Generate HTTPS Certificates  'Change default openssl configuration in config/openssl'`);
     //cli.setHelp("", "dependencies", "List Project dependencies");
     cli.setHelp("", "outdated", "List Project dependencies outdated");
@@ -540,314 +541,314 @@ class Nodefony {
     let environment = false;
     let name = nodefony.projectName;
     switch (cmd) {
-    case "dev":
-    case "development":
-      cli.keepAlive = true;
-      this.manageCache(cli);
-      environment = "dev";
-      process.env.MODE_START = "NODEFONY_DEV";
-      cli.setType("SERVER");
-      const kernel = new nodefony.appKernel(environment, cli, options);
-      return await kernel.start();
-    case "preprod":
-    case "preproduction":
-      cli.keepAlive = true;
-      this.manageCache(cli);
-      environment = "prod";
-      process.env.MODE_START = "NODEFONY";
-      cli.setType("SERVER");
-      return this.preProd(environment, cli, options);
-    case "production":
-    case "prod":
-    case "start":
-    case "pm2":
-      cli.keepAlive = true;
-      environment = "prod";
-      if (process.env.MODE_START && process.env.MODE_START === "PM2") {
+      case "dev":
+      case "development":
+        cli.keepAlive = true;
+        this.manageCache(cli);
+        environment = "dev";
+        process.env.MODE_START = "NODEFONY_DEV";
         cli.setType("SERVER");
         const kernel = new nodefony.appKernel(environment, cli, options);
         return await kernel.start();
-      } else {
-        let options = cli.commander.opts();
-        if (options.dump) {
-          await cli.setCommand("webpack:dump");
-        }
-        cli.setType("SERVER");
+      case "preprod":
+      case "preproduction":
+        cli.keepAlive = true;
         this.manageCache(cli);
-        process.env.MODE_START = "PM2_START";
-        return this.pm2Start(cli, options);
-      }
-      break;
-    case "stop":
-      cli.keepAlive = true;
-      if (args.length) {
-        name = args[0];
-      }
-      pm2.stop(name, (error, proc) => {
-        if (error) {
-          cli.logger(error, "ERROR");
-          cli.terminate(-1);
-        }
-        cli.logger(`PM2 Stop Project  ${name}`);
-        this.tablePm2(cli, proc);
-        cli.terminate(0);
-      });
-      break;
-    case "reload":
-      cli.keepAlive = true;
-      if (args.length) {
-        name = args[0];
-      }
-      pm2.reload(name, (error, proc) => {
-        if (error) {
-          cli.logger(error, "ERROR");
-          return cli.terminate(-1);
-        }
-        cli.logger(`PM2 reload Project  ${name}`);
-        this.tablePm2(cli, proc);
-        return cli.terminate(0);
-      });
-      break;
-    case "restart":
-      cli.keepAlive = true;
-      if (args.length) {
-        name = args[0];
-      }
-      pm2.restart(name, (error, proc) => {
-        if (error) {
-          cli.logger(error, "ERROR");
-          return cli.terminate(-1);
-        }
-        cli.logger(`PM2 restart Project  ${name}`);
-        this.tablePm2(cli, proc);
-        return cli.terminate(0);
-      });
-      break;
-    case "delete":
-      cli.keepAlive = true;
-      if (args.length) {
-        name = args[0];
-      }
-      pm2.delete(name, (error, proc) => {
-        if (error) {
-          cli.logger(error, "ERROR");
-          return cli.terminate(-1);
-        }
-        cli.logger(`PM2 delete Project  ${name}`);
-        this.tablePm2(cli, proc);
-        return cli.terminate(0);
-      });
-      break;
-    case "kill":
-      cli.keepAlive = true;
-      return new Promise(async (resolve, reject) => {
-        const util = require('node:util');
-        const exec = util.promisify(require('node:child_process').exec);
-        let ret = null
-        try {
-          const {
-            stdout,
-            stderr
-          } = await exec('npx pm2 kill');
-          if (stderr) {
-            cli.log(`Kill PM2 MANAGER ${stderr}`, "WARNING");
-          } else {
-            cli.log(`Kill PM2 MANAGER success ${stdout}`);
-            ret = 0
+        environment = "prod";
+        process.env.MODE_START = "NODEFONY";
+        cli.setType("SERVER");
+        return this.preProd(environment, cli, options);
+      case "production":
+      case "prod":
+      case "start":
+      case "pm2":
+        cli.keepAlive = true;
+        environment = "prod";
+        if (process.env.MODE_START && process.env.MODE_START === "PM2") {
+          cli.setType("SERVER");
+          const kernel = new nodefony.appKernel(environment, cli, options);
+          return await kernel.start();
+        } else {
+          let options = cli.commander.opts();
+          if (options.dump && !(cmd === "prod" || cmd === "production" || cmd === "pm2")) {
+            await cli.setCommand("webpack:dump");
           }
-        } catch (e) {
-          cli.log(`Kill PM2 MANAGER ${e}`, "ERROR");
+          cli.setType("SERVER");
+          this.manageCache(cli);
+          process.env.MODE_START = "PM2_START";
+          return this.pm2Start(cli, options);
         }
-        try {
-          const {
-            stdout,
-            stderr
-          } = await exec('pkill pm2');
-          if (stderr) {
-            cli.log(`pkill pm2 ${stderr}`, "WARNING");
-          } else {
-            cli.log(`pkill pm2 success ${stdout}`);
-            ret = 0
-          }
-        } catch (e) {
-          cli.log(`pkill pm2 ${e}`, "WARNING");
+        break;
+      case "stop":
+        cli.keepAlive = true;
+        if (args.length) {
+          name = args[0];
         }
-        try {
-          const {
-            stdout,
-            stderr
-          } = await exec('killall pm2');
-          if (stderr) {
-            cli.log(`killall pm2  ${stderr}`, "WARNING");
-          } else {
-            cli.log(`killall pm2 success ${stdout}`);
-            ret = 0
-          }
-        } catch (e) {
-          cli.log(`killall pm2 ${e}`, "WARNING");
-        }
-        if (ret = 0) {
-          return resolve(process.exit(ret));
-        }
-        return resolve(process.exit(-1));
-        //try {
-        /*let res = await pm2.killDaemon((err, proc) => {
-          console.log("passsssss")
-          if (err) {
-            cli.logger(err, "ERROR");
-            pm2.disconnect()
-            process.nextTick(() => {
-              return reject(cli.terminate(-1));
-            })
-          }
-        })*/
-        /*res = pm2.disconnect(() => {
-          cli.logger(`Kill PM2 MANAGER success `);
-          process.nextTick(() => {
-            return resolve(process.exit(0));
-          })
-          console.log("pass")
-        })*/
-        /*return pm2.killDaemon((error, proc) => {
-          console.log("passss killDaemon")
+        pm2.stop(name, (error, proc) => {
           if (error) {
             cli.logger(error, "ERROR");
-            pm2.disconnect()
-            process.nextTick(() => {
-              return reject(cli.terminate(-1));
-            })
+            cli.terminate(-1);
           }
-          cli.logger(`Kill PM2 MANAGER success :  ${proc.success}`);
-          pm2.disconnect()
-          process.nextTick(() => {
-            return resolve(process.exit(0));
+          cli.logger(`PM2 Stop Project  ${name}`);
+          this.tablePm2(cli, proc);
+          cli.terminate(0);
+        });
+        break;
+      case "reload":
+        cli.keepAlive = true;
+        if (args.length) {
+          name = args[0];
+        }
+        pm2.reload(name, (error, proc) => {
+          if (error) {
+            cli.logger(error, "ERROR");
+            return cli.terminate(-1);
+          }
+          cli.logger(`PM2 reload Project  ${name}`);
+          this.tablePm2(cli, proc);
+          return cli.terminate(0);
+        });
+        break;
+      case "restart":
+        cli.keepAlive = true;
+        if (args.length) {
+          name = args[0];
+        }
+        pm2.restart(name, (error, proc) => {
+          if (error) {
+            cli.logger(error, "ERROR");
+            return cli.terminate(-1);
+          }
+          cli.logger(`PM2 restart Project  ${name}`);
+          this.tablePm2(cli, proc);
+          return cli.terminate(0);
+        });
+        break;
+      case "delete":
+        cli.keepAlive = true;
+        if (args.length) {
+          name = args[0];
+        }
+        pm2.delete(name, (error, proc) => {
+          if (error) {
+            cli.logger(error, "ERROR");
+            return cli.terminate(-1);
+          }
+          cli.logger(`PM2 delete Project  ${name}`);
+          this.tablePm2(cli, proc);
+          return cli.terminate(0);
+        });
+        break;
+      case "kill":
+        cli.keepAlive = true;
+        return new Promise(async (resolve, reject) => {
+          const util = require('node:util');
+          const exec = util.promisify(require('node:child_process').exec);
+          let ret = null
+          try {
+            const {
+              stdout,
+              stderr
+            } = await exec('npx pm2 kill');
+            if (stderr) {
+              cli.log(`Kill PM2 MANAGER ${stderr}`, "WARNING");
+            } else {
+              cli.log(`Kill PM2 MANAGER success ${stdout}`);
+              ret = 0
+            }
+          } catch (e) {
+            cli.log(`Kill PM2 MANAGER ${e}`, "ERROR");
+          }
+          try {
+            const {
+              stdout,
+              stderr
+            } = await exec('pkill pm2');
+            if (stderr) {
+              cli.log(`pkill pm2 ${stderr}`, "WARNING");
+            } else {
+              cli.log(`pkill pm2 success ${stdout}`);
+              ret = 0
+            }
+          } catch (e) {
+            cli.log(`pkill pm2 ${e}`, "WARNING");
+          }
+          try {
+            const {
+              stdout,
+              stderr
+            } = await exec('killall pm2');
+            if (stderr) {
+              cli.log(`killall pm2  ${stderr}`, "WARNING");
+            } else {
+              cli.log(`killall pm2 success ${stdout}`);
+              ret = 0
+            }
+          } catch (e) {
+            cli.log(`killall pm2 ${e}`, "WARNING");
+          }
+          if (ret = 0) {
+            return resolve(process.exit(ret));
+          }
+          return resolve(process.exit(-1));
+          //try {
+          /*let res = await pm2.killDaemon((err, proc) => {
+            console.log("passsssss")
+            if (err) {
+              cli.logger(err, "ERROR");
+              pm2.disconnect()
+              process.nextTick(() => {
+                return reject(cli.terminate(-1));
+              })
+            }
           })*/
-        /*return pm2.list((error, processDescriptionList) => {
-          if (error) {
-            cli.logger(error, "ERROR");
+          /*res = pm2.disconnect(() => {
+            cli.logger(`Kill PM2 MANAGER success `);
+            process.nextTick(() => {
+              return resolve(process.exit(0));
+            })
+            console.log("pass")
+          })*/
+          /*return pm2.killDaemon((error, proc) => {
+            console.log("passss killDaemon")
+            if (error) {
+              cli.logger(error, "ERROR");
+              pm2.disconnect()
+              process.nextTick(() => {
+                return reject(cli.terminate(-1));
+              })
+            }
+            cli.logger(`Kill PM2 MANAGER success :  ${proc.success}`);
             pm2.disconnect()
             process.nextTick(() => {
-              return reject(process.exit(-1));
+              return resolve(process.exit(0));
+            })*/
+          /*return pm2.list((error, processDescriptionList) => {
+            if (error) {
+              cli.logger(error, "ERROR");
+              pm2.disconnect()
+              process.nextTick(() => {
+                return reject(process.exit(-1));
+              })
+            }
+            this.tablePm2(cli, processDescriptionList);
+            pm2.disconnect()
+            process.nextTick(() => {
+              return resolve(process.exit(0));
             })
+          });*/
+          //});
+          //} catch (e) {
+          //  pm2.disconnect()
+          //  cli.log(e)
+          //  return reject(cli.terminate(-1));
+          //}
+        })
+      case "status":
+      case "list":
+        cli.keepAlive = true;
+        pm2.list((error, processDescriptionList) => {
+          if (error) {
+            cli.logger(error, "ERROR");
+            return cli.terminate(-1);
           }
           this.tablePm2(cli, processDescriptionList);
-          pm2.disconnect()
-          process.nextTick(() => {
-            return resolve(process.exit(0));
+          pm2.disconnect(() => {
+            process.nextTick(() => {
+              return process.exit(0);
+            })
           })
-        });*/
-        //});
-        //} catch (e) {
-        //  pm2.disconnect()
-        //  cli.log(e)
-        //  return reject(cli.terminate(-1));
-        //}
-      })
-    case "status":
-    case "list":
-      cli.keepAlive = true;
-      pm2.list((error, processDescriptionList) => {
-        if (error) {
-          cli.logger(error, "ERROR");
-          return cli.terminate(-1);
+        });
+        break;
+      case "log":
+      case "logs":
+        cli.keepAlive = true;
+        let myname = null;
+        let line = 20;
+        if (this.isTrunk) {
+          myname = nodefony.projectName;
+        } else {
+          myname = "all";
         }
-        this.tablePm2(cli, processDescriptionList);
-        pm2.disconnect(() => {
-          process.nextTick(() => {
-            return process.exit(0);
-          })
-        })
-      });
-      break;
-    case "log":
-    case "logs":
-      cli.keepAlive = true;
-      let myname = null;
-      let line = 20;
-      if (this.isTrunk) {
-        myname = nodefony.projectName;
-      } else {
-        myname = "all";
-      }
-      if (args.length) {
-        myname = args[0];
-        if (args[1]) {
-          line = args[1];
+        if (args.length) {
+          myname = args[0];
+          if (args[1]) {
+            line = args[1];
+          }
         }
-      }
-      cli.reset();
-      cli.logger(`PM2 LOG MANAGEMENT project : ${myname}  line : ${line}`, "INFO");
-      pm2.streamLogs(myname, line);
-      break;
-    case "clean-log":
-      cli.keepAlive = true;
-      pm2.flush((error, result) => {
-        if (error) {
-          cli.logger(error, "ERROR");
-          return cli.terminate(-1);
+        cli.reset();
+        cli.logger(`PM2 LOG MANAGEMENT project : ${myname}  line : ${line}`, "INFO");
+        pm2.streamLogs(myname, line);
+        break;
+      case "clean-log":
+        cli.keepAlive = true;
+        pm2.flush((error, result) => {
+          if (error) {
+            cli.logger(error, "ERROR");
+            return cli.terminate(-1);
+          }
+          cli.logger(`clean log ${nodefony.projectName}`);
+          this.tablePm2(cli, result);
+          return process.exit(0);
+        });
+        break;
+      case "pm2-logrotate":
+        return cli.npm(["run", "pm2", "install", "pm2-logrotate"]);
+      case "pm2-save":
+        return cli.npm(["run", "pm2", "save"]);
+      case "pm2-startup":
+        return cli.spawn("npx", ["pm2", "startup"], {
+          cwd: process.cwd(),
+          env: process.env,
+          stdio: "inherit"
+        }).then((code) => {
+          cli.log(`[PM2] Init System found To setup the Startup Script, copy/paste the previous command :)`);
+          return code;
+        }).catch(e => {
+          cli.log(e, "ERROR");
+        });
+      case "pm2-unstartup":
+        return cli.npm(["run", "pm2", "unstartup"]);
+      case "outdated":
+        return cli.setCommand("nodefony:outdated");
+      case "test":
+        return cli.setCommand("unitest:launch:all");
+        //case "dependencies":
+        //return cli.setCommand("nodefony:bundles:dependencies");
+      default:
+        if (cli.kernel) {
+          return await cli.kernel.matchCommand()
+            .then((command) => {
+              let name = "";
+              if (command && command.name) {
+                name = command.name;
+              }
+              cli.logger(`${cli.getEmoji("checkered_flag")}`, "INFO", `Command ${name}`);
+              return command;
+            })
+            .catch((error) => {
+              throw error;
+              //this.logger(error, "ERROR", `COMMAND`);
+            });
         }
-        cli.logger(`clean log ${nodefony.projectName}`);
-        this.tablePm2(cli, result);
-        return process.exit(0);
-      });
-      break;
-    case "pm2-logrotate":
-      return cli.npm(["run", "pm2", "install", "pm2-logrotate"]);
-    case "pm2-save":
-      return cli.npm(["run", "pm2", "save"]);
-    case "pm2-startup":
-      return cli.spawn("npx", ["pm2", "startup"], {
-        cwd: process.cwd(),
-        env: process.env,
-        stdio: "inherit"
-      }).then((code) => {
-        cli.log(`[PM2] Init System found To setup the Startup Script, copy/paste the previous command :)`);
-        return code;
-      }).catch(e => {
-        cli.log(e, "ERROR");
-      });
-    case "pm2-unstartup":
-      return cli.npm(["run", "pm2", "unstartup"]);
-    case "outdated":
-      return cli.setCommand("nodefony:outdated");
-    case "test":
-      return cli.setCommand("unitest:launch:all");
-      //case "dependencies":
-      //return cli.setCommand("nodefony:bundles:dependencies");
-    default:
-      if (cli.kernel) {
-        return await cli.kernel.matchCommand()
-          .then((command) => {
-            let name = "";
-            if (command && command.name) {
-              name = command.name;
-            }
-            cli.logger(`${cli.getEmoji("checkered_flag")}`, "INFO", `Command ${name}`);
-            return command;
-          })
-          .catch((error) => {
-            throw error;
-            //this.logger(error, "ERROR", `COMMAND`);
-          });
-      }
-      if (this.appKernel) {
-        environment = "prod";
-        cli.setType("CONSOLE");
-        process.env.MODE_START = "NODEFONY_CONSOLE";
-        this.manageCache(cli);
-        let kernel = new this.appKernel(environment, cli, options);
-        return await kernel.start()
-          .catch(e => {
-            throw e;
-          });
-      }
-      if (cli.commander.hasOwnProperty('help')) {
-        cli.clear();
-        cli.showHelp();
-        return Promise.resolve();
-      }
-      let error = new Error("No nodefony trunk detected !");
-      throw error;
+        if (this.appKernel) {
+          environment = "prod";
+          cli.setType("CONSOLE");
+          process.env.MODE_START = "NODEFONY_CONSOLE";
+          this.manageCache(cli);
+          let kernel = new this.appKernel(environment, cli, options);
+          return await kernel.start()
+            .catch(e => {
+              throw e;
+            });
+        }
+        if (cli.commander.hasOwnProperty('help')) {
+          cli.clear();
+          cli.showHelp();
+          return Promise.resolve();
+        }
+        let error = new Error("No nodefony trunk detected !");
+        throw error;
     }
   }
 
@@ -1032,7 +1033,7 @@ $ npx pm2 --lines 1000 logs
       for (let i = 0; i < instances; i++) {
         cluster.fork();
       }
-      cluster.on('disconnect', function ( /*worker*/ ) {
+      cluster.on('disconnect', function( /*worker*/ ) {
         console.error('disconnect!');
       });
       cluster.on('fork', (worker) => {
@@ -1041,7 +1042,7 @@ $ npx pm2 --lines 1000 logs
           if (msg && msg.worker === wid) {
             return;
           }
-          Object.keys(cluster.workers).forEach(function (id) {
+          Object.keys(cluster.workers).forEach(function(id) {
             if (id !== wid) {
               //console.log("CLUSTER SEND FROM  "+ wid + " to " + id)
               cluster.workers[id].send(nodefony.extend(msg, {

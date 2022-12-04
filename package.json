@@ -14,8 +14,8 @@
     "publish": "bash bin/publish.sh",
     "certificates": "bash bin/generateCertificates.sh",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
-    "dev-migrate": "bash bin/dev-migrate.sh",
-    "prod-migrate": "bash bin/prod-migrate.sh"
+    "dev-deploy": "bash bin/dev-deploy.sh",
+    "prod-deploy": "bash bin/prod-deploy.sh"
   },
   "private": true,
   "bin": {
