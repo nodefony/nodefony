@@ -363,11 +363,11 @@ class umzug extends nodefony.Service {
     //this.log(`Create migrator for connector : ${connectorName}`);
     try {
       const sequelize = connection;
-      const connectorMigratorPath = path.resolve(this.migrationPath, connectorName, "*.js");
-      let template = path.resolve(__dirname, "..", "src", "migrate", 'templates/sample-migration.js');
+      const connectorMigratorPath = path.resolve(this.migrationPath, connectorName);
+      let template = path.resolve(__dirname, "..", "src", "migrate", 'templates', 'sample-migration.js');
       let options = {
         migrations: {
-          glob: connectorMigratorPath
+          glob: `${connectorMigratorPath}/*.js`
         },
         context: sequelize.getQueryInterface(),
         storage: this.getStorage(sequelize, connectorName),
@@ -389,28 +389,32 @@ class umzug extends nodefony.Service {
     }
   }
 
+  getPadDate() {
+    return new Date().toISOString().split('.')[0].replace(/[^\d]/gi, '')
+  }
+
   async create(connectorName = "nodefony", filepath = "migrate-nodefony.js") {
     const connection = this.sequelizeService.getConnection(connectorName);
     if (connection) {
       const db = connection.getConnection();
       let migrator = this.createMigrator(connectorName, db, true);
       return await migrator.create({
-        name: filepath
+        name: filepath,
+        prefix: "TIMESTAMP"
       })
     }
     throw new Error(`Bad Connector`);
   }
 
   // Seedeers
-
   createMigratorSeedeers(connectorName, connection, create = false) {
     try {
       const sequelize = connection;
-      const connectorSeedeersPath = path.resolve(this.seedeersPath, connectorName, "*.js");
-      let template = path.resolve(__dirname, "..", "src", "migrate", 'templates/sample-seedeers.js');
+      const connectorSeedeersPath = path.resolve(this.seedeersPath, connectorName);
+      let template = path.resolve(__dirname, "..", "src", "migrate", 'templates', 'sample-seedeers.js');
       let options = {
         migrations: {
-          glob: connectorSeedeersPath
+          glob: `${connectorSeedeersPath}/*.js`
         },
         context: sequelize.getQueryInterface(),
         storage: this.getStorage(sequelize, connectorName, true),
