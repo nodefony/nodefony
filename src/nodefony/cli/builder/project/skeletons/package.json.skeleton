@@ -35,11 +35,11 @@
   },
   "dependencies": {
     "graphql": "16.6.0",
-    "mongoose": "^6.7.3",
-    "nodefony": "^{{version}}",
+    "mongoose": "6.8.0",
+    "nodefony": "{{version}}",
     "pm2": "^5.2.2",
     "pm2-logrotate": "^2.7.0",
-    "sequelize": "^6.25.8",
+    "sequelize": "6.26.0",
     "webpack": "^5.75.0",
     "webpack-dev-server": "4.11.1"
   },

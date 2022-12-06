@@ -15,7 +15,6 @@
     "cls-hooked": "^4.2.2",
     "mariadb": "^3.0.2",
     "mysql2": "^2.3.3",
-    "oracledb": "5.5.0",
     "pg": "8.8.0",
     "pg-hstore": "^2.3.4",
     "pgtools": "^0.3.2",
