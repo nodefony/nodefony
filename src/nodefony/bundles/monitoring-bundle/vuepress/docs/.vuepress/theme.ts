@@ -20,6 +20,7 @@ export default hopeTheme({
   iconAssets: 'fontawesome',
   logo: '/images/doc-logo.png',
   repo: 'nodefony/nodefony',
+  pure: true,
   docsDir: 'src/nodefony/bundles/monitorings-bundle/vuepress/docs',
   pageInfo: ['Author', 'Original', 'Date', 'Category', 'Tag', 'ReadingTime'],
   locales: {

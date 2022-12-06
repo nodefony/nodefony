@@ -13,6 +13,12 @@ actions:
   - text: Docs
     link: /guide/
 
+  - text: Online Demo 🪀
+    link: https://nodefony.net
+
+  - text: readme
+    link: /nodefony/
+
 features:
   - title: Servers http / http2
     icon: /images/http2.svg
