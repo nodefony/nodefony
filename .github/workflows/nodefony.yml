@@ -32,7 +32,7 @@ jobs:
     #- name:             Get the output time
     #  shell:            bash
     #  run:              echo "The time was ${{ steps.hello.outputs.time }}"
-    - name:              npm install, build, and test
+    - name:              prepare deploy
       shell:             bash
       run:               |
         npm -g install pnpm
@@ -45,9 +45,17 @@ jobs:
         yarn link
         cd -
         yarn link "nodefony"
-        npm run build --if-present
-        npm run nodefony start
-        sleep 15;
+      env:
+        CI:              true
+    - name:              deploy
+      shell:             bash
+      run:               |
+        npm run prod-deploy
+      env:
+        CI:              true
+    - name:              test
+      shell:             bash
+      run:               |
         npm test
       env:
         CI:              true
@@ -107,8 +115,7 @@ jobs:
         yarn link
         cd -
         yarn link "nodefony"
-        npm run build --if-present
-        npm run nodefony start
+        npm run prod-deploy
         sleep 15;
         npm test
       env:
@@ -163,8 +170,7 @@ jobs:
         cd ./src/nodefony
         yarn global add $PWD
         cd -
-        npm run build --if-present
-        npm run nodefony start
+        npm run prod-deploy
         sleep 15;
         npm test
       env:
