@@ -1,13 +1,19 @@
 import { sidebar } from 'vuepress-theme-hope';
 
 export const enSidebar = sidebar({
-  '/': [
-    '',
+  '/': ['',
+    {
+      icon: 'cubes',
+      text: 'readme',
+      prefix: 'readme/',
+      link: 'nodefony/',
+      children: 'structure',
+    },
     {
       icon: 'discover',
-      text: 'Demo',
-      prefix: 'demo/',
-      link: 'demo/',
+      text: 'Hope',
+      prefix: 'hope/',
+      link: 'hope/',
       children: 'structure',
     }
   ],

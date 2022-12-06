@@ -21,7 +21,7 @@ export default hopeTheme({
   logo: '/images/doc-logo.png',
   repo: 'nodefony/nodefony',
   pure: true,
-  docsDir: 'src/nodefony/bundles/monitorings-bundle/vuepress/docs',
+  docsDir: 'src/nodefony/bundles/monitoring-bundle/vuepress/docs',
   pageInfo: ['Author', 'Original', 'Date', 'Category', 'Tag', 'ReadingTime'],
   locales: {
     lang:"en_EN",
@@ -147,9 +147,9 @@ export default hopeTheme({
         ],
         shortcuts: [
           {
-            name: 'Demo',
-            short_name: 'Demo',
-            url: '/demo/',
+            name: 'hope',
+            short_name: 'hope',
+            url: '/hope/',
             icons: [
               {
                 src: '/img/icons/guide-maskable.png',

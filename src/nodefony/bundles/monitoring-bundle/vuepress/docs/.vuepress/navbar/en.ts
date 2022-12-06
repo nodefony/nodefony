@@ -3,14 +3,14 @@ import { version } from '../version';
 
 export const enNavbar = navbar([
   '/',
-  { text: 'Demo', icon: 'discover', link: '/demo/' },
+  /*{ text: 'Hope', icon: 'discover', link: '/Hope/' },*/
   {
     text: version,
     icon: 'note',
     children: [
       {
         text: 'V6 Docs',
-        link: 'https://vuepress-theme-hope.github.io/v2/',
+        link: '',
       }
 
     ],
