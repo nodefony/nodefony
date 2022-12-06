@@ -364,16 +364,36 @@ class umzug extends nodefony.Service {
     try {
       const sequelize = connection;
       const connectorMigratorPath = path.resolve(this.migrationPath, connectorName);
-      let template = path.resolve(__dirname, "..", "src", "migrate", 'templates', 'sample-migration.js');
       let options = {
         migrations: {
-          glob: `${connectorMigratorPath}/*.js`
+          glob: `${connectorMigratorPath}/*.{js,ts,up.sql}`,
+          resolve: (params) => {
+            if (!params.path.endsWith('.sql')) {
+              return Umzug.defaultResolver(params)
+            }
+            const {
+              context: sequelize
+            } = params
+            return {
+              name: params.name,
+              up: async () => {
+                const sql = fs.readFileSync(params.path).toString()
+                return sequelize.query(sql)
+              },
+              down: async () => {
+                // Get the corresponding `.down.sql` file to undo this migration
+                const sql = fs.readFileSync(params.path.replace('.up.sql', '.down.sql')).toString()
+                return sequelize.query(sql)
+              }
+            }
+          }
         },
         context: sequelize.getQueryInterface(),
         storage: this.getStorage(sequelize, connectorName),
         logger: logger(this),
       }
       if (create) {
+        let template = path.resolve(__dirname, "..", "src", "migrate", 'templates', 'sample-migration.js');
         options.create = {
           folder: path.join(this.migrationPath, connectorName),
           template: filepath => [
@@ -411,16 +431,36 @@ class umzug extends nodefony.Service {
     try {
       const sequelize = connection;
       const connectorSeedeersPath = path.resolve(this.seedeersPath, connectorName);
-      let template = path.resolve(__dirname, "..", "src", "migrate", 'templates', 'sample-seedeers.js');
       let options = {
         migrations: {
-          glob: `${connectorSeedeersPath}/*.js`
+          glob: `${connectorSeedeersPath}/*.{js,ts,up.sql}`,
+          resolve: (params) => {
+            if (!params.path.endsWith('.sql')) {
+              return Umzug.defaultResolver(params)
+            }
+            const {
+              context: sequelize
+            } = params
+            return {
+              name: params.name,
+              up: async () => {
+                const sql = fs.readFileSync(params.path).toString()
+                return sequelize.query(sql)
+              },
+              down: async () => {
+                // Get the corresponding `.down.sql` file to undo this migration
+                const sql = fs.readFileSync(params.path.replace('.up.sql', '.down.sql')).toString()
+                return sequelize.query(sql)
+              }
+            }
+          }
         },
         context: sequelize.getQueryInterface(),
         storage: this.getStorage(sequelize, connectorName, true),
         logger: logger(this),
       }
       if (create) {
+        let template = path.resolve(__dirname, "..", "src", "migrate", 'templates', 'sample-seedeers.js');
         options.create = {
           folder: path.join(this.seedeersPath, connectorName),
           template: filepath => [
@@ -447,8 +487,6 @@ class umzug extends nodefony.Service {
     }
     throw new Error(`Bad Connector`);
   }
-
-
 
   async run(migrator, ...args) {
     this.log(`Run migrator Command : ${args}`);
