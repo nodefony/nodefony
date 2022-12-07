@@ -45,10 +45,6 @@ module.exports = {
    *
    */
   watch: true,
-
-  swagger: require(path.resolve(__dirname, "..", "swagger", "config.js")),
-  graphigl: require(path.resolve(__dirname, "..", "graphiql", "config.js")),
-
   /**
    * DEV SERVER
    */
@@ -70,6 +66,10 @@ module.exports = {
     active: true,
     storage: 'orm'
   },
+  
+  swagger: require(path.resolve(__dirname, "..", "swagger", "config.js")),
+  graphigl: require(path.resolve(__dirname, "..", "graphiql", "config.js")),
+
   /* override realtime bundle */
   "http-bundle": {
     statics: {
@@ -83,6 +83,7 @@ module.exports = {
       }
     }
   },
+
   "realtime-bundle": {
     services: {
       monitoring: {
