@@ -13,7 +13,7 @@
     "javascript"
   ],
   "dependencies": {
-    "puppeteer": "^19.3.0",
+    "puppeteer": "19.4.0",
     "querystring": "0.2.1",
     "request": "^2.88.2",
     "websocket": "^1.0.34"
