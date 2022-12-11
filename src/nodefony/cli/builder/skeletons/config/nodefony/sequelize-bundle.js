@@ -41,6 +41,11 @@
  *         }
  *
  */
+ const {
+   Transaction,
+   Sequelize
+ } = nodefony.Sequelize;
+
 module.exports = {
   debug: false,
   strategy: "migrate", // sync || migrate || none  when nodefony build  or  nodefony install
