@@ -362,6 +362,9 @@ class umzug extends nodefony.Service {
   createMigrator(connectorName, connection, create = false) {
     //this.log(`Create migrator for connector : ${connectorName}`);
     try {
+      if (!connection) {
+        throw new Error(`connector : ${connectorName} not ready`);
+      }
       const sequelize = connection;
       const connectorMigratorPath = path.resolve(this.migrationPath, connectorName);
       let options = {
@@ -429,6 +432,9 @@ class umzug extends nodefony.Service {
   // Seedeers
   createMigratorSeedeers(connectorName, connection, create = false) {
     try {
+      if (!connection) {
+        throw new Error(`connector : ${connectorName} not ready`);
+      }
       const sequelize = connection;
       const connectorSeedeersPath = path.resolve(this.seedeersPath, connectorName);
       let options = {
