@@ -129,7 +129,7 @@ The development framework will not be ported to typescript, but will wait for th
 
 -   EMBEDDED SYSTEM ( Very difficult : large memory footprint )  
 
-## <a name="install"></a> Linux or OSX Installation (Recommanded)
+## <a name="install"></a> Linux or OSX Installation
 
 **[NVM](https://github.com/nvm-sh/nvm#installation-and-update) Installation (Node Version Manager )** :
  -   [NVM](https://github.com/creationix/nvm) Node Version Manager - Simple bash script to manage multiple active node.js versions
@@ -211,7 +211,8 @@ npm run nodefony
 **By using npx**
 ***note: npx is included with npm > v5.2 or can be installed separately.***
 ```bash
-npx nodefony
+npx nodefony -v
+7.0.0-beta.10
 ```
 
 **The long way with the full path**
