@@ -10,7 +10,7 @@ const createMysql = function (settings) {
   }).then(connection => {
     return connection.query(`CREATE DATABASE IF NOT EXISTS ${settings.dbname};`)
       .then((result) => {
-        this.log(`Database : ${settings.dbname} create or successfully checked`);
+        this.log(`Database : ${settings.dbname} create or successfully checked`, "mysql");
         return result;
       });
   });
@@ -27,12 +27,12 @@ const createPostgres = function (settings) {
     pgtools.createdb(config, settings.dbname, (err, res) => {
       if (err) {
         if (err && err.pgErr && err.pgErr.code === "42P04") {
-          this.log(`Database : ${settings.dbname}  successfully checked`);
+          this.log(`Database : ${settings.dbname}  successfully checked`, "postgres");
           return resolve(res);
         }
         return reject(err);
       }
-      this.log(`Database : ${settings.dbname}  successfull created`);
+      this.log(`Database : ${settings.dbname}  successfull created`, "postgres");
       return resolve(res);
     });
   });
