@@ -49,8 +49,7 @@ const sockCompiler = class sockCompiler extends nodefony.Service {
   }
 
   sendStats(stats, force, connection) {
-    const shouldEmit =
-      !force &&
+    const shouldEmit = !force &&
       stats &&
       (!stats.errors || stats.errors.length === 0) &&
       (!stats.warnings || stats.warnings.length === 0) &&
@@ -63,15 +62,15 @@ const sockCompiler = class sockCompiler extends nodefony.Service {
     }
     this.sockWrite('hash', stats.hash, connection);
     if (stats.errors.length > 0 || stats.warnings.length > 0) {
-     if (stats.warnings.length > 0) {
-       this.sockWrite('warnings', stats.warnings, connection);
-     }
-     if (stats.errors.length > 0) {
-       this.sockWrite('errors', stats.errors, connection);
-     }
-   } else {
-     this.sockWrite('ok', null, connection);
-   }
+      if (stats.warnings.length > 0) {
+        this.sockWrite('warnings', stats.warnings, connection);
+      }
+      if (stats.errors.length > 0) {
+        this.sockWrite('errors', stats.errors, connection);
+      }
+    } else {
+      this.sockWrite('ok', null, connection);
+    }
   }
 
   clean() {
@@ -126,20 +125,20 @@ module.exports = class sockjs extends nodefony.Service {
       this.bundle.on('onCreateServer', (type, service) => {
         //this[type] = service ;
         switch (type) {
-        case "HTTP":
-        case "HTTPS":
-          let proto = type.toLowerCase();
-          if (proto === this.protocol) {
-            this.createServer(service, proto);
-            if (type === "HTTP") {
-              this.websocketServer = this.get("websocketServer");
+          case "HTTP":
+          case "HTTPS":
+            let proto = type.toLowerCase();
+            if (proto === this.protocol) {
+              this.createServer(service, proto);
+              if (type === "HTTP") {
+                this.websocketServer = this.get("websocketServer");
+              }
+              if (type === "HTTPS") {
+                this.websocketServer = this.get("websocketServerSecure");
+              }
+              this.fire("onCreateSockServer", this[proto], service);
             }
-            if (type === "HTTPS") {
-              this.websocketServer = this.get("websocketServerSecure");
-            }
-            this.fire("onCreateSockServer", this[proto], service);
-          }
-          break;
+            break;
         }
       });
     }
@@ -153,13 +152,15 @@ module.exports = class sockjs extends nodefony.Service {
   addCompiler(compiler, basename, config = {}) {
     this.compilers[basename] = new sockCompiler(this, "SOCKJS_" + basename, compiler);
     this.log("Add sock-js compiler  : " + "SOCKJS_" + basename, "DEBUG");
-    this.log( config, "DEBUG");
+    this.log(config, "DEBUG");
     if (this.compilers[basename].initsockClient) {
       this.removeListener("onConnection", this.compilers[basename].initsockClient);
     }
     let progress = config.progress || this.progress;
     if (progress && config.watch) {
-      const { ProgressPlugin } = compiler.webpack || require("webpack");
+      const {
+        ProgressPlugin
+      } = compiler.webpack || require("webpack");
       const progressPlugin = new ProgressPlugin((percent, msg, addInfo, pluginName) => {
         percent = Math.floor(percent * 100);
         if (percent === 100) {
@@ -190,7 +191,7 @@ module.exports = class sockjs extends nodefony.Service {
       let hot = (config.hot) || (this.hot);
       if (hot) {
         this.sockWrite("hot", null, conn);
-      }else{
+      } else {
         this.sockWrite("liveReload", null, conn);
       }
 
@@ -254,23 +255,26 @@ module.exports = class sockjs extends nodefony.Service {
 
   sendWatcher(type, data /*, force*/ ) {
     switch (type) {
-    case "error":
-      let myError = null;
-      if (data.stack) {
-        myError = data.stack;
-      } else {
-        myError = util.inspect(data);
-      }
-      return this.sockWrite("errors", [myError]);
-    case "change":
-      return this.sockWrite("static-changed", data);
-    default:
-      return;
+      case "error":
+        let myError = null;
+        if (data.stack) {
+          myError = data.stack;
+        } else {
+          myError = util.inspect(data);
+        }
+        return this.sockWrite("errors", [myError]);
+      case "change":
+        return this.sockWrite("static-changed", data);
+      default:
+        return;
     }
   }
 
   sockWrite(type, data, connection) {
     try {
+      if ((!data && !type)) {
+        return
+      }
       let msg = null;
       if (!data) {
         msg = JSON.stringify({

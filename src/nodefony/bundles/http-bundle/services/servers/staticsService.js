@@ -72,6 +72,7 @@ module.exports = class serverStatics extends nodefony.Service {
   getStatic(server, request, response) {
     return new Promise((resolve, reject) => {
       server(request, response, (err) => {
+        // static not found 404
         if (err) {
           return reject(err);
         }
