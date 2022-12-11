@@ -207,7 +207,9 @@ module.exports = class security extends nodefony.Service {
               }
               //context.fire("onError", context.container, error);
               if (context.session) {
-                await context.session.invalidate();
+                if (context.response) {
+                  await context.session.invalidate();
+                }
               }
               return reject(error);
             });
@@ -488,7 +490,7 @@ module.exports = class security extends nodefony.Service {
       if (context.security) {
         factory = context.security.getFactory(context.token.factory);
         if (factory) {
-          this.log(`Logout factory : ${factory.name} token : ${context.token.name} `,"DEBUG");
+          this.log(`Logout factory : ${factory.name} token : ${context.token.name} `, "DEBUG");
           return factory.logout(context)
             .catch(e => {
               throw e;
@@ -497,7 +499,7 @@ module.exports = class security extends nodefony.Service {
       }
       factory = this.getFactory(context.token.factory);
       if (factory) {
-        this.log(`Logout factory : ${factory.name}`,"DEBUG");
+        this.log(`Logout factory : ${factory.name}`, "DEBUG");
         return factory.logout(context)
           .catch(e => {
             throw e;
