@@ -183,12 +183,13 @@ describe("BUNDLE TEST", function(){
         it("promise-bluebird-10", function(done){
             global.options.path ='/test/unit/promise/promise10';
             var request = http.request(global.options,function(res) {
-                assert.equal(res.statusCode, 200);
+              //console.log(res)
                 res.setEncoding('utf8');
                 //var id = res.headers["set-cookie"][0].split(";")[0].split("=")[1] ;
                 //console.log(id)
                 res.on('data',  (chunk) => {
                     JSON.parse(chunk);
+                    assert.equal(res.statusCode, 200);
                     //assert.deepStrictEqual(res, null);
                     done();
                 });

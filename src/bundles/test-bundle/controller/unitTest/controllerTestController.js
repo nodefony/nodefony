@@ -428,12 +428,13 @@ module.exports = class controllerTestController extends nodefony.controller {
    *  promise sequelise
    *
    */
-  promise10() {
+  async promise10() {
     //var orm = this.getORM();
     var userEntity = this.orm.getEntity("user");
     var sessionEntity = this.orm.getEntity("session");
     let query = null;
     let query2 = null;
+    let session = await this.startSession()
     switch (this.ormName) {
     case "sequelize":
       query = {
@@ -444,7 +445,7 @@ module.exports = class controllerTestController extends nodefony.controller {
       query2 = {
         where: {
           //user_id: ele[0].id
-          session_id: this.getSession() ? this.getSession().id : 0
+          session_id: this.getSession() ? this.getSession().id : "0"
         }
       };
       break;
@@ -454,7 +455,7 @@ module.exports = class controllerTestController extends nodefony.controller {
       };
       query2 = {
         //user_id: ele[0].id
-        session_id: this.getSession() ? this.getSession().id : 0
+        session_id: this.getSession() ? this.getSession().id : "0"
       };
       break;
     }
