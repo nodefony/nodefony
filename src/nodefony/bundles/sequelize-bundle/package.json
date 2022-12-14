@@ -18,8 +18,8 @@
     "pg": "8.8.0",
     "pg-hstore": "^2.3.4",
     "pgtools": "^0.3.2",
-    "sequelize": "6.26.0",
-    "sqlite3": "^5.1.2",
+    "sequelize": "6.27.0",
+    "sqlite3": "5.1.4",
     "tedious": "^15.1.2",
     "umzug": "3.2.1"
   },
