@@ -42,18 +42,27 @@ jobs:
         npm install --no-audit --force --legacy-peer-deps
         npm install --no-audit --force --legacy-peer-deps ./src/nodefony
         cd ./src/nodefony
+        pwd
         yarn link
         cd -
-        yarn link "nodefony"
+        pwd
+        yarn link nodefony
+        yarn
       env:
         CI:              true
-    - name:              deploy
+    - name:              Deploy Project (prod-deploy)
       shell:             bash
       run:               |
         npm run prod-deploy
       env:
         CI:              true
-    - name:              test
+    - name:              Start Project
+      shell:             bash
+      run:               |
+        npm start
+      env:
+        CI:              true
+    - name:              Test Project
       shell:             bash
       run:               |
         npm test
@@ -102,7 +111,7 @@ jobs:
     #- name:             Get the output time
     #  shell:            bash
     #  run:              echo "The time was ${{ steps.hello.outputs.time }}"
-    - name:              npm install, build, and test
+    - name:              prepare deploy
       shell:             bash
       run:               |
         npm -g install pnpm
@@ -112,11 +121,29 @@ jobs:
         npm install --no-audit --force --legacy-peer-deps
         npm install --no-audit --force --legacy-peer-deps ./src/nodefony
         cd ./src/nodefony
+        pwd
         yarn link
         cd -
-        yarn link "nodefony"
+        pwd
+        yarn link nodefony
+        yarn
+      env:
+        CI:              true
+    - name:              Deploy Project (prod-deploy)
+      shell:             bash
+      run:               |
         npm run prod-deploy
-        sleep 15;
+      env:
+        CI:              true
+    - name:              Start Project
+      shell:             bash
+      run:               |
+        npm start
+      env:
+        CI:              true
+    - name:              Test Project
+      shell:             bash
+      run:               |
         npm test
       env:
         CI:              true

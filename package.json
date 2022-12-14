@@ -6,7 +6,7 @@
   "scripts": {
     "nodefony": "node src/nodefony/bin/nodefony",
     "pm2": "node src/nodefony/node_modules/.bin/pm2",
-    "start": "node src/nodefony/bin/nodefony dev",
+    "start": "node src/nodefony/bin/nodefony start",
     "dev": "node src/nodefony/bin/nodefony dev",
     "outdated": "npm outdated --deph=0",
     "build": "node src/nodefony/bin/nodefony build",
