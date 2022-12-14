@@ -362,56 +362,76 @@ module.exports = class security extends nodefony.Service {
     }
   }
 
+  startSession(context, state = "statefull") {
+    if(! context.sessionAutoStart){
+      if( context.security){
+        context.sessionAutoStart = context.security.sessionContext;
+      }
+    }
+    return this.sessionService.start(context, context.sessionAutoStart)
+      .then((session) => {
+        if (state === "stateless") {
+          return this.handleStateLess(context)
+            .catch(async (error) => {
+              await session.invalidate()
+                .then(() => {
+                  throw error
+                })
+                .catch(e => {
+                  throw error
+                })
+            });
+        }
+        if (state === "statefull") {
+          let token = this.getSessionToken(context, session);
+          if (token) {
+            return context;
+          } else {
+            if (context.security) {
+              return this.handleStateLess(context)
+                .catch(async (error) => {
+                  await session.invalidate()
+                    .then(() => {
+                      throw error
+                    })
+                    .catch(e => {
+                      throw error
+                    })
+                });
+            }
+            return context;
+          }
+        }
+      })
+      .catch( (e) => {
+        throw e
+      })
+  }
+
   handle(context) {
     return new Promise((resolve, reject) => {
       try {
-        /*try {
-          if (this.handleCrossDomain(context) === 204) {
-            return resolve();
-          }
-        } catch (error) {
-          return reject(error);
-        }*/
         if (context.type === "HTTP" && this.httpsReady) {
           if (context.security && context.security.redirect_Https) {
             return resolve(this.redirectHttps(context));
           }
         }
         if (context.security && context.security.stateLess) {
-          if (context.sessionAutoStart || context.hasSession()) {
-            context.sessionAutoStart = context.security.sessionContext;
-            return this.sessionService.start(context, context.sessionAutoStart)
-              .then((session) => {
-                return this.handleStateLess(context)
-                  .then((ctx) => {
-                    if (ctx.isControlledAccess && (!ctx.checkLogin)) {
-                      return resolve(this.authorizationService.handle(ctx));
-                    } else {
-                      return resolve(ctx);
-                    }
-                  })
-                  .catch((error) => {
-                    if (!error.code) {
-                      error.code = 401;
-                    }
-                    session.invalidate();
-                    return reject(error);
-                  });
+          if (context.sessionAutoStart /*|| context.hasSession()*/) {
+            return this.startSession(context, "stateless")
+              .then((ctx) => {
+                return resolve(ctx);
               })
               .catch((error) => {
                 if (!error.code) {
                   error.code = 401;
                 }
-                return reject(error);
-              });
+                return reject(error)
+              })
           }
           return this.handleStateLess(context)
             .then((ctx) => {
-              if (ctx.isControlledAccess && (!ctx.checkLogin)) {
-                return resolve(this.authorizationService.handle(ctx));
-              } else {
-                return resolve(ctx);
-              }
+              return resolve(ctx);
             })
             .catch((error) => {
               if (!error.code) {
@@ -420,16 +440,9 @@ module.exports = class security extends nodefony.Service {
               return reject(error);
             });
         }
-        if (context.security) {
-          context.sessionAutoStart = context.security.sessionContext;
-        }
         return this.handleStateFull(context)
           .then((ctx) => {
-            if (ctx.isControlledAccess && (!ctx.checkLogin)) {
-              return resolve(this.authorizationService.handle(ctx));
-            } else {
-              return resolve(ctx);
-            }
+            return resolve(ctx);
           })
           .catch((error) => {
             if (!error.code) {
@@ -444,42 +457,31 @@ module.exports = class security extends nodefony.Service {
   }
 
   handleStateLess(context) {
-    return context.security.handle(context);
+    return context.security.handle(context)
+      .then((ctx) => {
+        if (ctx.isControlledAccess && (!ctx.checkLogin)) {
+          return this.authorizationService.handle(ctx);
+        } else {
+          return ctx;
+        }
+      })
+      .catch(e => {
+        throw e;
+      })
   }
 
   handleStateFull(context) {
-    return this.sessionService.start(context, context.sessionAutoStart)
-      .then((session) => {
-        try {
-          if (!(session instanceof nodefony.Session)) {
-            throw new Error("SESSION START session storage ERROR");
-          }
-          let token = this.getSessionToken(context, session);
-          if (token) {
-            return context;
-          } else {
-            /*if (context.method === "WEBSOCKET") {
-              if (context.security && context.security.factories.length && !context.security.anonymous) {
-                let error = new Error("Unauthorized");
-                error.code = 401;
-                throw error;
-              }
-            }*/
-            if (context.security) {
-              return this.handleStateLess(context);
-            }
-            return context;
-          }
-        } catch (error) {
-          if (!error.code) {
-            error.code = 500;
-          }
-          throw error;
+    return this.startSession(context)
+      .then((ctx) => {
+        if (ctx.isControlledAccess && (!ctx.checkLogin)) {
+          return this.authorizationService.handle(ctx);
+        } else {
+          return ctx;
         }
       })
-      .catch((error) => {
-        throw error;
-      });
+      .catch(e => {
+        throw e;
+      })
   }
 
   logout(context) {

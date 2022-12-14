@@ -45,6 +45,11 @@ module.exports = nodefony.register("http2Response", () => {
               this.setHeader('Content-Length', this.getLength());
             }
             this.headers = nodefony.extend(this.getHeaders(), headers);
+            if( this.statusCode ){
+              if(parseInt(this.statusCode, 10 ) > 599 ){
+                this.statusCode = 500
+              }
+            }
             this.headers[HTTP2_HEADER_STATUS] = this.statusCode;
             return this.stream.respond(
               this.headers, {

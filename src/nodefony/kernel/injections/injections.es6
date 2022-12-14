@@ -233,14 +233,14 @@ class Injector extends nodefony.Service {
     return ele;
   }
 
-  startService(restart) {
+  async startService(restart) {
     try {
-      let instance = this.reflect();
+      let instance = await this.reflect();
       this.set(this.name, instance);
       if (this.calls) {
         for (let call in this.calls) {
           if (instance[call]) {
-            this.call(instance, instance[call], this.calls[call]);
+            await this.call(instance, instance[call], this.calls[call]);
           } else {
             this.log('Method ' + call + ' in service ' + this.name + ' not found', "ERROR");
             continue;
@@ -292,9 +292,9 @@ class Injector extends nodefony.Service {
     }
   }
 
-  reflect() {
+  async reflect() {
     try {
-      return Reflect.construct(this.Class, this.injections);
+      return  await Reflect.construct(this.Class, this.injections)
     } catch (e) {
       this.log("ERRROR SERVICE CLASS " + this.name + " " + e.message, "ERROR");
       throw e;
@@ -365,7 +365,7 @@ class Injection extends nodefony.Service {
     }(this);
   }
 
-  nodeReader(jsonServices) {
+  async nodeReader(jsonServices) {
     for (let lib in jsonServices) {
       if (jsonServices[lib].class) {
         if (jsonServices[lib].environment) {
@@ -393,7 +393,7 @@ class Injection extends nodefony.Service {
         }
         try {
           let injector = this.setInjector(lib, jsonServices[lib]);
-          injector.startService();
+          await injector.startService();
         } catch (e) {
           throw e;
         }

@@ -193,33 +193,30 @@ nodefony.register.call(nodefony.context, "http", function () {
         });
       }
       return this.saveSession()
-        .then((session) => {
+        .then(async (session) => {
           if (session) {
             this.log("SAVE SESSION ID : " + session.id, "DEBUG");
           }
-          this.fire("onSend", this.response, this);
+          await this.fireAsync("onSend", this.response, this);
           this.writeHead();
           if (!this.isRedirect) {
             return this.write(data, type);
           }
           return this.response.end();
         })
-        .catch((error) => {
+        .catch(async (error) => {
           this.log(error, "ERROR");
-          if (this.session) {
-            this.session.destroy(true);
-          }
-          this.writeHead();
+          this.writeHead(error.code || 500);
           this.write(data, type);
           return error;
         });
     }
 
-    writeHead() {
+    writeHead(statusCode, headers) {
       // cookies
       if (this.response) {
         this.response.setCookies();
-        this.response.writeHead();
+        this.response.writeHead(statusCode, headers);
       }
     }
 
@@ -239,7 +236,7 @@ nodefony.register.call(nodefony.context, "http", function () {
         // END REQUEST
         return this.close();
       }
-      this.fire("onSendMonitoring", this.response, this);
+      await this.fireAsync("onSendMonitoring", this.response, this);
       return this;
     }
 
@@ -247,8 +244,8 @@ nodefony.register.call(nodefony.context, "http", function () {
       return this.response.flush(data, encoding);
     }
 
-    close() {
-      this.fire("onClose", this);
+    async close() {
+      await this.fireAsync("onClose", this);
       // END REQUEST
       this.profiling = null;
       delete this.profiling;

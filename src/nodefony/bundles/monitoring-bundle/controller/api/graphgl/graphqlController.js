@@ -39,6 +39,7 @@ module.exports = class graphqlController extends nodefony.Controller {
   constructor(container, context) {
     super(container, context);
     try {
+      //this.startSession("graphql")
       // graphql api
       const schema = graphqlController.schema(this.context);
       this.api = new nodefony.api.Graphql({
@@ -60,6 +61,7 @@ module.exports = class graphqlController extends nodefony.Controller {
    *    @Route ( "/graphql",name="api-nodefony-graphql")
    */
   graphqlAction() {
+    //console.log(this.getSession() ? this.getSession().contextSession : null)
     try {
       return this.api.query(this.query.query, this.query.variables, this.query.operationName)
         .then((data) => {

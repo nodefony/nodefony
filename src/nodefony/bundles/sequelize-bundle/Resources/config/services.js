@@ -1,7 +1,11 @@
 module.exports = {
   sequelize: {
     class: nodefony.services.sequelize,
-    arguments: ["@container", "@kernel", "@autoLoader"]
+    arguments: ["@container", "@kernel", "@autoLoader"],
+    calls: [{
+      method: "boot",
+      arguments: []
+    }]
   },
   umzug: {
     environment: ["development", "CONSOLE"],

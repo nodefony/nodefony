@@ -41,18 +41,14 @@
  *         }
  *
  */
-const vault = () => {
-  return () => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        serviceVault = kernel.get("vault");
-        const token = await serviceVault.getConnectorCredentials("nodefony")
-        return resolve(token.data)
-      } catch (e) {
-        return reject(e)
-      }
-    })
-  }
+const {
+  //Transaction,
+  Sequelize
+} = nodefony.Sequelize;
+
+const vault = async () => {
+  const serviceVault = kernel.get("vault");
+  return await serviceVault.getConnectorCredentials("nodefony")
 }
 
 module.exports = {
@@ -64,6 +60,7 @@ module.exports = {
     //   dbname: 'nodefony',
     //   username: 'root',
     //   password: 'nodefony',
+    // // credentials: vault,
     //   options: {
     //     dialect: "mysql",
     //     host: "localhost",
@@ -80,8 +77,8 @@ module.exports = {
     //   driver: "postgres",
     //   dbname: 'nodefony',
     //   username: 'postgres',
-    //   password: 'postgrespw',
-    //   credentials: vault(),
+    //   password: 'nodefony',
+    //   // credentials: vault,
     //   options: {
     //     dialect: "postgres",
     //     host: "localhost",
@@ -91,7 +88,18 @@ module.exports = {
     //       min: 0,
     //       idle: 10000,
     //       acquire: 60000
-    //     }
+    //     },
+    //     retry: {
+    //       match: [
+    //         Sequelize.ConnectionError,
+    //         Sequelize.ConnectionTimedOutError,
+    //         Sequelize.ConnectionRefusedError,
+    //         Sequelize.TimeoutError,
+    //         /Deadlock/i
+    //       ],
+    //       max: Infinity
+    //     },
+    //
     //   }
     // }
   }

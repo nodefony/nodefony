@@ -1,22 +1,9 @@
-const connectionMonitor = function ( /*name, db*/ ) {
-  this.connectionNotification++;
-  if (Object.keys(this.settings.connectors).length === this.connectionNotification) {
-    process.nextTick(async () => {
-      if (this.kernel.type !== "CONSOLE") {
-        this.log('onOrmReady', "INFO", `EVENTS ${this.name} ORM`);
-      }
-      //this.log('onOrmReady', "INFO", `EVENTS ${this.name} ORM`);
-      await this.emitAsync('onOrmReady', this);
-      this.ready = true;
-    });
-  }
-};
 
 class Orm extends nodefony.Service {
 
   constructor(name, container /*, kernel, autoLoader*/ ) {
     super(name, container, null, {
-      events:{
+      events: {
         nbListeners: 100,
       }
     });
@@ -29,15 +16,48 @@ class Orm extends nodefony.Service {
     this.ready = false;
     this.prependOnceListener("onOrmReady", async () => {
       if (this.bundle.booted) {
-        await this.bundle.emitAsync("onReady", this.bundle);
+        return await this.bundle.emitAsync("onReady", this.bundle)
+          .then(() => {
+            this.bundle.ready = true
+          })
+          .catch(e => {
+            throw e
+          })
       }
       this.bundle.ready = true
     })
   }
 
   boot() {
-    this.on("onConnect", connectionMonitor.bind(this));
-    this.on("onErrorConnection", connectionMonitor.bind(this));
+    this.on("onConnect", async (connection) => {
+      return this.ormReady(connection)
+    })
+    this.on("onErrorConnection", async (connection, error) => {
+      return this.ormReady(connection, error)
+    })
+  }
+
+  ormReady(connection, error = null) {
+    const nbConnectors = Object.keys(this.settings.connectors).length
+    this.connectionNotification++;
+    if( error){
+      this.log(error, "ERROR")
+    }
+    if (nbConnectors === this.connectionNotification) {
+      process.nextTick(async () => {
+        return await this.emitAsync('onOrmReady', this)
+          .then(() => {
+            if (this.kernel.type !== "CONSOLE") {
+              this.log('onOrmReady', "INFO", `EVENTS ${this.name} ORM`);
+            }
+            this.connectionNotification = 0
+            this.ready = true;
+          })
+          .catch(e => {
+            this.log(e, "ERROR")
+          })
+      });
+    }
   }
 
   log(pci, severity, msgid, msg) {
@@ -86,10 +106,10 @@ class Orm extends nodefony.Service {
   getEntityTable(severity = "DEBUG") {
     let options = {
       head: [
-          "NAME ENTITY",
-          "BUNDLE",
-          "CONNECTION"
-        ]
+        "NAME ENTITY",
+        "BUNDLE",
+        "CONNECTION"
+      ]
     };
     let table = this.kernel.cli.displayTable(null, options);
     for (let entity in this.entities) {

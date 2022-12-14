@@ -86,16 +86,16 @@ class httpKernel extends nodefony.Service {
       let result = null;
       let errorType = nodefony.isError(error);
       switch (errorType) {
-      case "securityError":
-      case "httpError":
-        httpError = error;
-        break;
-      default:
-        if (context.response && context.response.statusCode === 200) {
-          httpError = new nodefony.httpError(error, 500, container);
-        } else {
-          httpError = new nodefony.httpError(error, null, container);
-        }
+        case "securityError":
+        case "httpError":
+          httpError = error;
+          break;
+        default:
+          if (context.response && context.response.statusCode === 200) {
+            httpError = new nodefony.httpError(error, 500, container);
+          } else {
+            httpError = new nodefony.httpError(error, null, container);
+          }
       }
       if (context.listenerCount("onError")) {
         return context.handle(error)
@@ -231,17 +231,17 @@ class httpKernel extends nodefony.Service {
     let log = null;
     let container = this.container.enterScope("request");
     switch (type) {
-    case "HTTP":
-    case "HTTPS":
-    case "HTTP2":
-      log = clc.cyan.bgBlue(`${request.url}`);
-      this.log(`REQUEST HANDLE ${type} : ${log}`, "DEBUG")
-      return this.handleHttp(container, request, response, type);
-    case "WEBSOCKET":
-    case "WEBSOCKET SECURE":
-      log = clc.cyan.bgBlue(`${request.resource}`);
-      this.log(`REQUEST HANDLE ${type} : ${log}`, "DEBUG")
-      return this.handleWebsocket(container, request, type);
+      case "HTTP":
+      case "HTTPS":
+      case "HTTP2":
+        log = clc.cyan.bgBlue(`${request.url}`);
+        this.log(`REQUEST HANDLE ${type} : ${log}`, "DEBUG")
+        return this.handleHttp(container, request, response, type);
+      case "WEBSOCKET":
+      case "WEBSOCKET SECURE":
+        log = clc.cyan.bgBlue(`${request.resource}`);
+        this.log(`REQUEST HANDLE ${type} : ${log}`, "DEBUG")
+        return this.handleWebsocket(container, request, type);
     }
   }
 
@@ -325,6 +325,23 @@ class httpKernel extends nodefony.Service {
     });
   }
 
+
+  startSession(context) {
+    if ((context.sessionAutoStart || context.hasSession())) {
+      return this.sessionService.start(context, context.sessionAutoStart)
+        .then((session) => {
+          if (this.firewall) {
+            this.firewall.getSessionToken(context, session);
+          }
+          return session
+        })
+        .catch(e => {
+          throw e
+        })
+    }
+  }
+
+
   onRequestEnd(context, error = null) {
     return new Promise((resolve, reject) => {
       // EVENT
@@ -345,7 +362,10 @@ class httpKernel extends nodefony.Service {
             this.checkValidDomain(context);
           }
           // FRONT CONTROLLER
-          let ret = await this.handleFrontController(context);
+          let ret = await this.handleFrontController(context)
+            .catch(e => {
+              throw e
+            })
           if (ret === 204) {
             return resolve(ret);
           }
@@ -362,23 +382,19 @@ class httpKernel extends nodefony.Service {
             return resolve(res);
           }
           // SESSIONS
-          if (context.sessionAutoStart || context.hasSession()) {
-            let session = await this.sessionService.start(context, context.sessionAutoStart);
-            if (!(session instanceof nodefony.Session)) {
-              this.log(new Error("SESSION START session storage ERROR"), "WARNING");
+          try {
+            let session = await this.startSession(context);
+            // CSRF TOKEN
+            if (context.csrf) {
+              let token = await this.csrfService.handle(context);
+              if (token) {
+                this.log(`CSRF TOKEN OK`, "DEBUG");
+              }
             }
-            if (this.firewall) {
-              this.firewall.getSessionToken(context, session);
-            }
+            return resolve(context);
+          }catch(e){
+            return reject(e)
           }
-          // CSRF TOKEN
-          if (context.csrf) {
-            let token = await this.csrfService.handle(context);
-            if (token) {
-              this.log(`CSRF TOKEN OK`, "DEBUG");
-            }
-          }
-          return resolve(context);
         } catch (e) {
           return reject(e);
         }
@@ -460,7 +476,10 @@ class httpKernel extends nodefony.Service {
         }
         // FRONT CONTROLLER
         try {
-          let ret = await this.handleFrontController(context);
+          let ret = await this.handleFrontController(context)
+            .catch(e => {
+              throw e
+            });
           if (ret === 204) {
             return resolve(ret);
           }
@@ -476,13 +495,20 @@ class httpKernel extends nodefony.Service {
           return resolve(await context.connect());
         }
         // SESSIONS
-        if (context.sessionAutoStart || context.hasSession()) {
-          let session = await this.sessionService.start(context, context.sessionAutoStart);
-          if (!(session instanceof nodefony.Session)) {
-            this.log(new Error("SESSION START session storage ERROR"), "WARNING");
-          }
-          if (this.firewall) {
-            this.firewall.getSessionToken(context, session);
+        if (!context.sessionStarting && (context.sessionAutoStart || context.hasSession())) {
+          try {
+            let session = await this.sessionService.start(context, context.sessionAutoStart)
+              .catch((error) => {
+                return reject(error);
+              })
+            if (!(session instanceof nodefony.Session)) {
+              this.log(new Error("SESSION START session storage ERROR"), "WARNING");
+            }
+            if (this.firewall) {
+              this.firewall.getSessionToken(context, session);
+            }
+          } catch (e) {
+            throw e
           }
         }
         return resolve(await context.connect());
@@ -523,36 +549,36 @@ class httpKernel extends nodefony.Service {
     try {
       let alias = [];
       switch (nodefony.typeOf(this.kernel.domainAlias)) {
-      case "string":
-        alias = this.kernel.domainAlias.split(" ");
-        Array.prototype.unshift.call(alias, "^" + this.kernel.domain + "$");
-        for (let i = 0; i < alias.length; i++) {
-          if (i === 0) {
-            str = alias[i];
-          } else {
-            str += "|" + alias[i];
+        case "string":
+          alias = this.kernel.domainAlias.split(" ");
+          Array.prototype.unshift.call(alias, "^" + this.kernel.domain + "$");
+          for (let i = 0; i < alias.length; i++) {
+            if (i === 0) {
+              str = alias[i];
+            } else {
+              str += "|" + alias[i];
+            }
           }
-        }
-        break;
-      case "object":
-        let first = true;
-        for (let myAlias in this.kernel.domainAlias) {
-          if (first) {
-            first = false;
-            str = this.kernel.domainAlias[myAlias];
-          } else {
-            str += "|" + this.kernel.domainAlias[myAlias];
+          break;
+        case "object":
+          let first = true;
+          for (let myAlias in this.kernel.domainAlias) {
+            if (first) {
+              first = false;
+              str = this.kernel.domainAlias[myAlias];
+            } else {
+              str += "|" + this.kernel.domainAlias[myAlias];
+            }
           }
-        }
-        break;
-      case "array":
-        str = "^" + this.kernel.domain + "$";
-        for (let i = 0; i < this.kernel.domainAlias.length; i++) {
-          str += "|" + this.kernel.domainAlias[i];
-        }
-        break;
-      default:
-        throw new Error("Config file bad format for domain alias must be a string ");
+          break;
+        case "array":
+          str = "^" + this.kernel.domain + "$";
+          for (let i = 0; i < this.kernel.domainAlias.length; i++) {
+            str += "|" + this.kernel.domainAlias[i];
+          }
+          break;
+        default:
+          throw new Error("Config file bad format for domain alias must be a string ");
       }
       if (str) {
         this.regAlias = new RegExp(str);
@@ -687,30 +713,30 @@ class httpKernel extends nodefony.Service {
       }
     }
     switch (typeof this.cdn) {
-    case "object":
-      if (!this.cdn) {
+      case "object":
+        if (!this.cdn) {
+          return "";
+        }
+        if (this.cdn.global) {
+          return this.cdn.global;
+        }
+        if (!type) {
+          let txt = "CDN ERROR getCDN bad argument type  ";
+          this.log(txt, "ERROR");
+          throw new Error(txt);
+        }
+        if (type in this.cdn) {
+          if (this.cdn[type][wish]) {
+            return this.cdn[type][wish];
+          }
+        }
         return "";
-      }
-      if (this.cdn.global) {
-        return this.cdn.global;
-      }
-      if (!type) {
-        let txt = "CDN ERROR getCDN bad argument type  ";
+      case "string":
+        return this.cdn || "";
+      default:
+        let txt = "CDN CONFIG ERROR ";
         this.log(txt, "ERROR");
         throw new Error(txt);
-      }
-      if (type in this.cdn) {
-        if (this.cdn[type][wish]) {
-          return this.cdn[type][wish];
-        }
-      }
-      return "";
-    case "string":
-      return this.cdn || "";
-    default:
-      let txt = "CDN CONFIG ERROR ";
-      this.log(txt, "ERROR");
-      throw new Error(txt);
     }
   }
 

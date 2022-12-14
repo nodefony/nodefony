@@ -2,30 +2,35 @@
  *
  *    CLASS SESSION
  */
- let crypto;
- try {
-   crypto = require('node:crypto');
- } catch (err) {
-   crypto = require('crypto');
-   //console.log('crypto support is disabled!', err);
- }
- const {createHash, createCipheriv, createDecipheriv, randomBytes} = crypto
+let crypto;
+try {
+  crypto = require('node:crypto');
+} catch (err) {
+  crypto = require('crypto');
+  //console.log('crypto support is disabled!', err);
+}
+const {
+  createHash,
+  createCipheriv,
+  createDecipheriv,
+  randomBytes
+} = crypto
 
 
-nodefony.register("Session", function () {
+nodefony.register("Session", function() {
 
-  const checkSecureReferer = function (context) {
+  const checkSecureReferer = function(context) {
     let host = null;
     switch (this.context.type) {
-    case "HTTP":
-    case "HTTPS":
-    case "HTTP2":
-      host = context.getHost();
-      break;
-    case "WEBSOCKET":
-    case "WEBSOCKET SECURE":
-      host = this.context.request.httpRequest.headers.host;
-      break;
+      case "HTTP":
+      case "HTTPS":
+      case "HTTP2":
+        host = context.getHost();
+        break;
+      case "WEBSOCKET":
+      case "WEBSOCKET SECURE":
+        host = this.context.request.httpRequest.headers.host;
+        break;
     }
     let meta = this.getMetaBag("host");
     if (host === meta) {
@@ -39,7 +44,7 @@ nodefony.register("Session", function () {
     }
   };
 
-  const setMetasSession = function () {
+  const setMetasSession = function() {
     //let time = new Date();
     let ua = null;
     this.setMetaBag("lifetime", this.settings.cookie.maxAge);
@@ -115,7 +120,7 @@ nodefony.register("Session", function () {
       try {
         this.cookieSession = this.setCookieSession(lifetime);
       } catch (e) {
-        this.log(e,"WARNING")
+        this.log(e, "WARNING")
         throw new Error(`Request Finish can't create cookieSession`);
         //this.log(`,"WARNING")
       }
@@ -136,46 +141,50 @@ nodefony.register("Session", function () {
       try {
         let ret = this.checkStatus();
         switch (ret) {
-        case false:
-          return new Promise((resolve /*, reject*/ ) => {
-            return resolve(this);
-          });
-        case "restart":
-          return this.start(context, contextSession);
-        default:
-          return this.getSession(contextSession);
+          case false:
+            return new Promise((resolve /*, reject*/ ) => {
+              return resolve(this);
+            });
+          case "restart":
+            return this.start(context, contextSession)
+              .catch(e => {
+                throw e
+              });
+          default:
+            return this.getSession(contextSession)
+              .catch(e => {
+                throw e
+              });
         }
       } catch (e) {
-        return new Promise((resolve, reject) => {
-          this.log(e, "ERROR");
-          return reject(e);
-        });
+        this.log(e, "ERROR");
+        throw e
       }
     }
 
     checkStatus() {
       switch (this.status) {
-      case "active":
-        this.manager.log("SESSION ALLREADY STARTED ==> " + this.name + " : " + this.id, "WARNING");
-        return false;
-      case "disabled":
-        try {
-          this.storage = this.manager.initializeStorage();
-          if (this.storage) {
-            this.status = "none";
-            return "restart";
+        case "active":
+          this.manager.log("SESSION ALLREADY STARTED ==> " + this.name + " : " + this.id, "WARNING");
+          return false;
+        case "disabled":
+          try {
+            this.storage = this.manager.initializeStorage();
+            if (this.storage) {
+              this.status = "none";
+              return "restart";
+            }
+          } catch (e) {
+            this.manager.log("SESSION STORAGE HANDLER NOT FOUND ", "ERROR");
+            throw new Error("SESSION STORAGE HANDLER NOT FOUND ");
           }
-        } catch (e) {
-          this.manager.log("SESSION STORAGE HANDLER NOT FOUND ", "ERROR");
-          throw new Error("SESSION STORAGE HANDLER NOT FOUND ");
-        }
-        break;
-      default:
-        return true;
+          break;
+        default:
+          return true;
       }
     }
 
-    getSession(contextSession) {
+    async getSession(contextSession) {
       if (this.settings.use_cookies) {
         if (this.context.cookieSession) {
           this.id = this.getId(this.context.cookieSession.value);
@@ -189,16 +198,17 @@ nodefony.register("Session", function () {
         }
       }
       if (this.id) {
-        return this.checkChangeContext(contextSession);
+        return this.checkChangeContext(contextSession)
+          .catch(e => {
+            throw e
+          })
       } else {
-        return new Promise((resolve, reject) => {
+        try {
           this.clear();
-          try {
-            return resolve(this.create(this.lifetime, null));
-          } catch (e) {
-            return reject(e);
-          }
-        });
+          return this.create(this.lifetime, null)
+        } catch (e) {
+          throw e
+        }
       }
     }
 
@@ -207,38 +217,39 @@ nodefony.register("Session", function () {
       if (contextSession && this.contextSession !== contextSession) {
         this.manager.log(`SESSION CONTEXT CHANGE : ${this.contextSession} ==> ${contextSession}`);
         switch (this.strategy) {
-        case "migrate":
-          return this.storage.start(this.id, this.contextSession)
-            .then(async (result) => {
-              this.deSerialize(result);
-              if (!this.isValidSession(result, this.context)) {
-                this.manager.log("INVALID SESSION ==> " + this.name + " : " + this.id, "WARNING");
-                await this.destroy();
+          case "migrate":
+            return this.storage.start(this.id, this.contextSession)
+              .then(async (result) => {
+                this.deSerialize(result);
+                if (!this.isValidSession(result, this.context)) {
+                  this.manager.log("INVALID SESSION ==> " + this.name + " : " + this.id, "WARNING");
+                  await this.destroy();
+                  this.contextSession = contextSession;
+                  return this.create(this.lifetime, null);
+                }
+                await this.remove();
+                this.manager.log(`STRATEGY MIGRATE SESSION  ==> ${this.name} : ${this.id}`, "DEBUG");
+                this.migrated = true;
                 this.contextSession = contextSession;
                 return this.create(this.lifetime, null);
+              })
+              .catch((error) => {
+                throw error;
+              });
+          case "invalidate":
+            this.manager.log("STRATEGY INVALIDATE SESSION ==> " + this.name + " : " + this.id, "DEBUG");
+            await this.destroy();
+            this.contextSession = contextSession;
+            return new Promise((resolve, reject) => {
+              try {
+                return resolve(this.create(this.lifetime, null));
+              } catch (e) {
+                return reject(e);
               }
-              await this.remove();
-              this.manager.log(`STRATEGY MIGRATE SESSION  ==> ${this.name} : ${this.id}`, "DEBUG");
-              this.migrated = true;
-              this.contextSession = contextSession;
-              return this.create(this.lifetime, null);
-            }).catch((error) => {
-              throw error;
             });
-        case "invalidate":
-          this.manager.log("STRATEGY INVALIDATE SESSION ==> " + this.name + " : " + this.id, "DEBUG");
-          await this.destroy();
-          this.contextSession = contextSession;
-          return new Promise((resolve, reject) => {
-            try {
-              return resolve(this.create(this.lifetime, null));
-            } catch (e) {
-              return reject(e);
-            }
-          });
-        case "none":
-          this.strategyNone = true;
-          break;
+          case "none":
+            this.strategyNone = true;
+            break;
         }
         if (!this.strategyNone) {
           return new Promise((resolve /*, reject*/ ) => {
@@ -248,29 +259,41 @@ nodefony.register("Session", function () {
       }
       return this.storage.start(this.id, this.contextSession)
         .then(async (result) => {
-          if (result && Object.keys(result).length) {
-            this.deSerialize(result);
-            if (!this.isValidSession(result, this.context)) {
-              this.manager.log("SESSION ==> " + this.name + " : " + this.id + "  session invalid ", "ERROR");
-              await this.invalidate();
-            }
-          } else {
-            if (this.settings.use_strict_mode) {
-              if (!this.strategyNone) {
-                this.manager.log("SESSION ==> " + this.name + " : " + this.id + " use_strict_mode ", "ERROR");
+          try {
+            if (result && Object.keys(result).length) {
+              this.deSerialize(result);
+              if (!this.isValidSession(result, this.context)) {
+                this.manager.log("SESSION ==> " + this.name + " : " + this.id + "  session invalid ", "ERROR");
                 await this.invalidate();
               }
+            } else {
+              if (this.settings.use_strict_mode) {
+                if (!this.strategyNone) {
+                  this.manager.log("SESSION ==> " + this.name + " : " + this.id + " use_strict_mode ", "ERROR");
+                  await this.invalidate();
+                }
+              }
             }
+            this.status = "active";
+            return this;
+          } catch (e) {
+            throw e
           }
-          this.status = "active";
-          return this;
-        }).catch(async (error) => {
+        })
+        .catch(async (error) => {
           if (error) {
-            this.manager.log("SESSION ==> " + this.name + " : " + this.id + " " + error, "ERROR");
-            if (!this.strategyNone) {
-              await this.invalidate();
+            try {
+              this.manager.log("SESSION ==> " + this.name + " : " + this.id + " " + error, "ERROR");
+              if (!this.strategyNone) {
+                await this.invalidate()
+                  .catch(e => {
+                    throw e
+                  })
+              }
+              throw error;
+            } catch (e) {
+              throw error;
             }
-            throw error;
           }
         });
     }
@@ -414,8 +437,8 @@ nodefony.register("Session", function () {
       this.username = obj.user || obj.username
     }
 
-    remove(cookieDelete) {
-      try {
+    async remove(cookieDelete) {
+      if (this.saved) {
         return this.storage.destroy(this.id, this.contextSession)
           .then(() => {
             if (cookieDelete) {
@@ -426,9 +449,6 @@ nodefony.register("Session", function () {
             this.manager.log(e, "ERROR");
             throw e;
           });
-      } catch (e) {
-        this.manager.log(e, "ERROR");
-        throw e;
       }
     }
 
@@ -443,9 +463,9 @@ nodefony.register("Session", function () {
 
     clear() {
       delete this.protoService;
-      this.protoService = function () {};
+      this.protoService = function() {};
       delete this.protoParameters;
-      this.protoParameters = function () {};
+      this.protoParameters = function() {};
       delete this.services;
       this.services = new this.protoService();
       delete this.parameters;
@@ -458,13 +478,13 @@ nodefony.register("Session", function () {
       if (!lifetime) {
         lifetime = this.lifetime;
       }
-      await this.destroy();
-      try {
-        return this.create(lifetime, id);
-      } catch (e) {
-        this.log(e, "WARNING")
-        return this;
-      }
+      return await this.destroy()
+        .then(() => {
+          return this.create(lifetime, id)
+        })
+        .catch((e) => {
+          throw e
+        })
     }
 
     async migrate(destroy, lifetime, id) {
@@ -472,10 +492,13 @@ nodefony.register("Session", function () {
       if (!lifetime) {
         lifetime = this.lifetime;
       }
-      if (destroy) {
-        await this.remove(destroy);
-      }
       try {
+        if (destroy) {
+          await this.remove(destroy)
+            .catch(e => {
+              throw e;
+            })
+        }
         return this.create(lifetime, id);
       } catch (e) {
         this.log(e, "WARNING")
@@ -492,14 +515,14 @@ nodefony.register("Session", function () {
       let concat = ip + date + this.randomValueHex(16) + Math.random() * 10;
       let hash = null;
       switch (this.settings.hash_function) {
-      case "md5":
-        hash = createHash('md5');
-        break;
-      case "sha1":
-        hash = createHash('sha1');
-        break;
-      default:
-        hash = createHash('md5');
+        case "md5":
+          hash = createHash('md5');
+          break;
+        case "sha1":
+          hash = createHash('sha1');
+          break;
+        default:
+          hash = createHash('md5');
       }
       let res = hash.update(concat).digest("hex");
 

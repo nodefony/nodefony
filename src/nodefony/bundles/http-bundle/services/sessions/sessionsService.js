@@ -27,85 +27,108 @@ module.exports = class sessions extends nodefony.Service {
 
   setAutoStart(setting) {
     switch (setting) {
-    case true:
-    case "":
-    case undefined:
-      return "default";
-    case false:
-    case null:
-      return null;
-    default:
-      if (typeof setting === "string") {
-        return setting;
-      }
-      throw new Error("Session start settings config error : " + setting);
+      case true:
+      case "":
+      case undefined:
+        return "default";
+      case false:
+      case null:
+        return null;
+      default:
+        if (typeof setting === "string") {
+          return setting;
+        }
+        throw new Error("Session start settings config error : " + setting);
     }
   }
 
   initializeStorage() {
     let storage = null;
     switch (this.settings.handler) {
-    case "orm":
-    case "ORM":
-      storage = nodefony.session.storage[this.kernel.getOrm()];
-      break;
-    default:
-      storage = nodefony.session.storage[this.settings.handler];
+      case "orm":
+      case "ORM":
+        storage = nodefony.session.storage[this.kernel.getOrm()];
+        break;
+      default:
+        storage = nodefony.session.storage[this.settings.handler];
     }
-    if (storage) {
-      this.storage = new storage(this);
-      this.on("onReady", () => {
-        this.storage.open("default");
-      });
-    } else {
-      this.storage = null;
-      this.log("SESSION HANDLER STORAGE NOT FOUND :" + this.settings.handler, "ERROR");
+    try {
+      if (storage) {
+        this.storage = new storage(this);
+        this.on("onReady", () => {
+          this.storage.open("default");
+        });
+      } else {
+        this.storage = null;
+        this.log("SESSION HANDLER STORAGE NOT FOUND :" + this.settings.handler, "ERROR");
+      }
+      return this.storage;
+    } catch (e) {
+      throw e
     }
-    return this.storage;
   }
 
   start(context, sessionContext) {
-    if (context.sessionStarting) {
-      this.log("SESSION ALLREADY STARTED ", "DEBUG");
-      return new Promise((resolve) => {
-        context.once("onSessionStart", (session) => {
-          return resolve(session);
-        });
-      });
-    }
     return new Promise((resolve, reject) => {
+      if (context.sessionStarting) {
+        if (context.session) {
+          return resolve(context.session)
+        } else {
+          return context.once("onSessionStart", (session, error) => {
+            if (session) {
+              return resolve(session);
+            }
+            return reject(error || new Error(`Bad Session`))
+          });
+        }
+      }
       if (context.session) {
         if (context.session.status === "active") {
           this.log("SESSION ALLREADY STARTED ==> " + context.session.name + " : " + context.session.id, "DEBUG");
           return resolve(context.session);
         }
       }
-      context.sessionStarting = true;
-      try {
+      let inst = null
+      try{
+        context.sessionStarting = true;
         sessionContext = this.setAutoStart(sessionContext);
         if (this.probaGarbage()) {
           this.storage.gc(this.settings.gc_maxlifetime, sessionContext);
         }
-        let inst = this.createSession(this.defaultSessionName, this.settings);
-        return inst.start(context, sessionContext)
-          .then((session) => {
-            if (!session) {
-              throw new Error("SESSION START session storage ERROR");
-            }
+        inst = this.createSession(this.defaultSessionName, this.settings);
+      }catch(e){
+        context.fire("onSessionStart", null, e);
+        return reject(e)
+      }
+      return inst.start(context, sessionContext)
+        .then(async (session) => {
+          try {
             context.session = session;
             context.sessionStarting = false;
             session.setMetaBag("url", url.parse(context.url));
-            context.fire("onSessionStart", session);
+            if( context.cleaned){
+              return reject(e);
+            }
+            context.fire("onSessionStart", session, null);
             return resolve(session);
-          })
-          .catch((err) => {
+          } catch (e) {
+            if(context.cleaned){
+              return reject(e);
+            }
+            context.fire("onSessionStart", null, e);
+            return reject(e)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+          if(context.cleaned){
             return reject(err);
-          });
-      } catch (e) {
-        this.log(e, "ERROR");
-        return reject(e);
-      }
-    });
+          }
+          context.fire("onSessionStart", null, err);
+          return reject(err);
+        });
+
+    })
   }
 
   saveSession(context) {

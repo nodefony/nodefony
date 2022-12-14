@@ -14,8 +14,8 @@ const myerror = function(err) {
   if (this.state !== "DISCONNECTED") {
     this.orm.kernel.fire('onError', err, this);
   }
-  this.log(err, "ERROR");
-  this.log(this.settings, "INFO", `CONFIGURATION Sequelize ${this.name}`);
+  //this.log(err, "ERROR");
+  //this.log(this.settings, "INFO", `CONFIGURATION Sequelize ${this.name}`);
   if (err.code) {
     switch (err.code) {
       case 'PROTOCOL_CONNECTION_LOST':
@@ -86,13 +86,17 @@ class connectionDB {
     this.db = null;
     this.orm = orm;
     this.intervalId = null;
-    /*if (options.options) {
-      options.options = nodefony.extend(true, {
-        operatorsAliases: operatorsAliases
-      }, options.options);
-    }*/
     this.settings = options;
-    this.connect(type, this.settings);
+  }
+
+  async close() {
+    if (this.db) {
+      this.log(`Close connection ${this.name}`)
+      this.db.close()
+        .catch((e) => {
+          throw e
+        })
+    }
   }
 
   toObject() {
@@ -111,7 +115,6 @@ class connectionDB {
     this.db = db;
     /*this.db.afterDisconnect((connection)=>{
       this.log(connection,"WARNING");
-
     });
     this.db.beforeConnect((config)=>{
       this.log(config, "WARNING");
@@ -170,21 +173,21 @@ class connectionDB {
       }
       this.log(`Try Connect engine database`, "DEBUG")
       conn = new this.orm.engine(config.dbname, username, password, config.options);
-      process.nextTick(() => {
-        conn
-          .authenticate()
-          .then(() => {
-            return this.setConnection(conn, config);
-          })
-          .catch(err => {
-            this.log('Unable to connect to the database : ' + err, "ERROR");
-            myerror.call(this, err);
-            this.orm.fire('onErrorConnection', this.name, conn, this.orm);
-          });
-      });
+      //process.nextTick(() => {
+      return conn
+        .authenticate()
+        .then(() => {
+          return this.setConnection(conn, config);
+        })
+        .catch(err => {
+          this.log('Unable to connect to the database : ' + err, "ERROR");
+          myerror.call(this, err);
+          this.orm.fire('onErrorConnection', this, err);
+        });
+      //});
     } catch (err) {
       myerror.call(this, err);
-      this.orm.fire('onErrorConnection', this.name, conn, this.orm);
+      this.orm.fire('onErrorConnection', this, err);
     }
     return conn;
   }
@@ -208,7 +211,10 @@ class sequelize extends nodefony.Orm {
     super("sequelize", container, kernel, autoLoader);
     this.engine = Sequelize;
     this.strategy = 'migrate'
-    this.boot();
+    //this.boot();
+    this.kernel.on("onTerminate", async () => {
+      await this.closeConnections()
+    })
   }
 
   static isError(error) {
@@ -255,43 +261,57 @@ class sequelize extends nodefony.Orm {
       ${clc.blue("Type :")} ${error.errorType}`;
   }
 
+  async closeConnections() {
+    for (let connection in this.connections) {
+      await this.connections[connection].close();
+    }
+  }
+
   boot() {
-    super.boot();
-    this.kernel.once('onBoot', async ( /*kernel*/ ) => {
-      this.settings = this.getParameters("bundles.sequelize");
-      this.debug = this.settings.debug;
-      if (this.settings.strategy) {
-        this.strategy = this.settings.strategy
-      }
-      if (this.settings.connectors && Object.keys(this.settings.connectors).length) {
-        for (let name in this.settings.connectors) {
-          this.createConnection(name, this.settings.connectors[name]);
+    return new Promise((resolve, reject) => {
+      super.boot();
+      this.kernel.once('onBoot', async ( /*kernel*/ ) => {
+        this.settings = this.getParameters("bundles.sequelize");
+        this.debug = this.settings.debug;
+        if (this.settings.strategy) {
+          this.strategy = this.settings.strategy
         }
-      } else {
-        process.nextTick(async () => {
-          this.log('onOrmReady', "DEBUG", "EVENTS SEQUELIZE");
-          await this.fireAsync('onOrmReady', this);
-          this.ready = true;
-        });
-      }
-    });
-
-    this.prependOnceListener("onOrmReady", async (...args) => {
-      for (let entity in this.entities) {
-        if (this.entities[entity].model && this.entities[entity].model.associate) {
-          await this.entities[entity].model.associate(this.entities[entity].db.models)
-          this.log(`ASSOCIATE model : ${this.entities[entity].model.name}`, "DEBUG");
+        if (this.settings.connectors && Object.keys(this.settings.connectors).length) {
+          for (let name in this.settings.connectors) {
+            await this.createConnection(name, this.settings.connectors[name]);
+          }
+        } else {
+          process.nextTick(async () => {
+            this.log('onOrmReady', "DEBUG", "EVENTS SEQUELIZE");
+            try {
+              await this.fireAsync('onOrmReady', this);
+              this.ready = true;
+              return resolve(this)
+            } catch (e) {
+              this.log(e, "ERROR", "EVENTS onOrmReady");
+              return reject(e)
+            }
+          });
         }
-      }
-    });
+      });
 
-    this.kernel.once("onReady", async () => {
-      if (this.kernel.type === "SERVER") {
-        this.displayTable("INFO");
-      } else {
-        this.displayTable();
-      }
-    });
+      this.prependOnceListener("onOrmReady", async (...args) => {
+        for (let entity in this.entities) {
+          if (this.entities[entity].model && this.entities[entity].model.associate) {
+            await this.entities[entity].model.associate(this.entities[entity].db.models)
+            this.log(`ASSOCIATE model : ${this.entities[entity].model.name}`, "DEBUG");
+          }
+        }
+      });
+
+      this.kernel.once("onReady", async () => {
+        if (this.kernel.type === "SERVER") {
+          this.displayTable("INFO");
+        } else {
+          this.displayTable();
+        }
+      });
+    })
   }
 
   getConnectorSettings(tab) {
@@ -337,12 +357,16 @@ class sequelize extends nodefony.Orm {
     return res;
   }
 
-  createConnection(name, config) {
+  async createConnection(name, config) {
     try {
-      return this.connections[name] = new connectionDB(name, config.driver, config, this);
+      this.connections[name] = new connectionDB(name, config.driver, config, this);
     } catch (e) {
       throw e;
     }
+    return await this.connections[name].connect(config.driver, config)
+      .catch(e => {
+        throw e
+      })
   }
 
   getConnection(connector) {

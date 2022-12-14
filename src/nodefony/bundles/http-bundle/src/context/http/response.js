@@ -208,6 +208,11 @@ module.exports = nodefony.register("Response", function () {
           if (this.context.method === "HEAD" || this.context.contentLength) {
             this.setHeader('Content-Length', this.getLength());
           }
+          if( this.statusCode ){
+            if(parseInt(this.statusCode, 10 ) > 599 ){
+              this.statusCode = 500
+            }
+          }
           return this.response.writeHead(
             this.statusCode,
             this.statusMessage,

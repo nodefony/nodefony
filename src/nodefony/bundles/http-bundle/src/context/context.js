@@ -38,7 +38,7 @@ nodefony.register("Context", () => {
       this.accessControl = null;
       this.isControlledAccess = false;
       this.contentLength = false;
-
+      this.cleaned = false
       this.once("onRequest", () => {
         this.requested = true;
       });
@@ -103,6 +103,7 @@ nodefony.register("Context", () => {
     }
 
     clean() {
+      this.cleaned = true
       this.kernelHttp = null;
       delete this.kernelHttp;
       this.router = null;

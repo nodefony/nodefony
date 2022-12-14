@@ -8,7 +8,7 @@ module.exports = {
   debugBar: true,
   forceDebugBarProd: true,
   profiler: {
-    active: true,
+    active: false,
     storage: "orm"
   },
 
