@@ -32,7 +32,7 @@ jobs:
     #- name:             Get the output time
     #  shell:            bash
     #  run:              echo "The time was ${{ steps.hello.outputs.time }}"
-    - name:              prepare deploy
+    - name:              Install Nodefony
       shell:             bash
       run:               |
         npm -g install pnpm
@@ -111,7 +111,7 @@ jobs:
     #- name:             Get the output time
     #  shell:            bash
     #  run:              echo "The time was ${{ steps.hello.outputs.time }}"
-    - name:              prepare deploy
+    - name:              Install Nodefony
       shell:             bash
       run:               |
         npm -g install pnpm
@@ -185,7 +185,7 @@ jobs:
         pwd
         openssl version -d
         npm rum certificates --if-present
-    - name:              prepare deploy
+    - name:              Install Nodefony
       shell:             bash
       run:               |
         npm -g install pnpm
