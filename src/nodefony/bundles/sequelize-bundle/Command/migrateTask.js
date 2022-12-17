@@ -31,14 +31,28 @@ class migrateTask extends nodefony.Task {
 
   async status(connector) {
     this.log(`Status ....`);
-    await this.umzugService.pending(connector);
-    await this.umzugService.executed(connector);
+    await this.umzugService.pending(connector)
+    .catch(e=>{
+      console.trace(e)
+      this.log(e, "ERROR")
+      throw e
+    })
+    await this.umzugService.executed(connector)
+    .catch(e=>{
+      console.trace(e)
+      this.log(e, "ERROR")
+      throw e
+    })
   }
 
   async executed(connector) {
     //await this.run(connector)
     if (this.kernel.ready) {
       return await this.umzugService.executed(connector)
+      .catch(e=>{
+        this.log(e, "ERROR")
+        throw e
+      })
     } else {
       return new Promise((resolve, reject) => {
         try {
@@ -71,18 +85,34 @@ class migrateTask extends nodefony.Task {
   async up(connector) {
     if (this.kernel.ready) {
       return await this.umzugService.up(connector)
+      .catch(e=>{
+        this.log(e, "ERROR")
+        throw e
+      })
     } else {
       this.sequelizeService.once("onOrmReady", async () => {
         return await this.umzugService.up(connector)
+        .catch(e=>{
+          this.log(e, "ERROR")
+          throw e
+        })
       });
     }
   }
   async down(connector) {
     if (this.kernel.ready) {
       return await this.umzugService.down(connector)
+      .catch(e=>{
+        this.log(e, "ERROR")
+        throw e
+      })
     } else {
       this.sequelizeService.once("onOrmReady", async () => {
         return await this.umzugService.down(connector)
+        .catch(e=>{
+          this.log(e, "ERROR")
+          throw e
+        })
       });
     }
   }
@@ -90,9 +120,17 @@ class migrateTask extends nodefony.Task {
   async revert(connector) {
     if (this.kernel.ready) {
       return await this.umzugService.revertAll(connector)
+      .catch(e=>{
+        this.log(e, "ERROR")
+        throw e
+      })
     } else {
       this.sequelizeService.once("onOrmReady", async () => {
         return await this.umzugService.revertAll(connector)
+        .catch(e=>{
+          this.log(e, "ERROR")
+          throw e
+        })
       });
     }
   }
@@ -100,9 +138,17 @@ class migrateTask extends nodefony.Task {
   async create(connector, name) {
     if (this.kernel.ready) {
       return await this.umzugService.create(connector, name)
+      .catch(e=>{
+        this.log(e, "ERROR")
+        throw e
+      })
     } else {
       this.sequelizeService.once("onOrmReady", async () => {
         return await this.umzugService.create(connector, name)
+        .catch(e=>{
+          this.log(e, "ERROR")
+          throw e
+        })
       });
     }
   }
