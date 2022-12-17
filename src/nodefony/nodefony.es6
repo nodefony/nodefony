@@ -593,22 +593,31 @@ class Nodefony {
             this.manageCache(cli);
             process.env.MODE_START = "PM2_START";
             return await this.pm2Start(cli, options)
-              .then(async (deamon) => {
+              .then((deamon) => {
                 if (deamon) {
                   cli.logger(`DAEMONIZE Process
                       --no-daemon  if don't want DAEMONIZE  (Usefull for docker)`);
-                  cli.log(`terminate code 0`)
-                  await pm2.disconnect()
-                  return cli.terminate(0);
+                  return pm2.disconnect(() => {
+                    cli.log(`pm2.disconnect`)
+                    cli.log(`terminate code 0`)
+                    return cli.terminate(0);
+                  })
                 }
                 cli.log(`NO DAEMONIZE`)
                 return
               })
-              .catch(async (e) => {
+              .catch((e) => {
                 cli.log(e, "ERROR")
-                await pm2.disconnect()
-                cli.log(`terminate code 1`)
-                return cli.terminate(1);
+                console.trace(e)
+                return pm2.disconnect(() => {
+                  cli.log(`pm2.disconnect`)
+                  cli.log(`terminate code 1`)
+                  return cli.terminate(1);
+                  /*pm2.killDaemon(() => {
+                    cli.logger(`pm2 killDaemon `, "ERROR");
+                    cli.log(`terminate code 1`)
+                  })*/
+                })
               })
           }
         } catch (e) {
@@ -621,14 +630,16 @@ class Nodefony {
         if (args.length) {
           name = args[0];
         }
-        pm2.stop(name, (error, proc) => {
+        return pm2.stop(name, (error, proc) => {
           if (error) {
             cli.logger(error, "ERROR");
             cli.terminate(-1);
           }
           cli.logger(`PM2 Stop Project  ${name}`);
           this.tablePm2(cli, proc);
-          cli.terminate(0);
+          return pm2.disconnect(() => {
+            cli.terminate(0);
+          })
         });
         break;
       case "reload":
@@ -636,14 +647,16 @@ class Nodefony {
         if (args.length) {
           name = args[0];
         }
-        pm2.reload(name, (error, proc) => {
+        return pm2.reload(name, (error, proc) => {
           if (error) {
             cli.logger(error, "ERROR");
             return cli.terminate(-1);
           }
           cli.logger(`PM2 reload Project  ${name}`);
           this.tablePm2(cli, proc);
-          return cli.terminate(0);
+          return pm2.disconnect(() => {
+            return cli.terminate(0);
+          })
         });
         break;
       case "restart":
@@ -651,14 +664,16 @@ class Nodefony {
         if (args.length) {
           name = args[0];
         }
-        pm2.restart(name, (error, proc) => {
+        return pm2.restart(name, (error, proc) => {
           if (error) {
             cli.logger(error, "ERROR");
             return cli.terminate(-1);
           }
           cli.logger(`PM2 restart Project  ${name}`);
           this.tablePm2(cli, proc);
-          return cli.terminate(0);
+          return pm2.disconnect(() => {
+            return cli.terminate(0);
+          })
         });
         break;
       case "delete":
@@ -666,14 +681,16 @@ class Nodefony {
         if (args.length) {
           name = args[0];
         }
-        pm2.delete(name, (error, proc) => {
+        return pm2.delete(name, (error, proc) => {
           if (error) {
             cli.logger(error, "ERROR");
             return cli.terminate(-1);
           }
           cli.logger(`PM2 delete Project  ${name}`);
           this.tablePm2(cli, proc);
-          return cli.terminate(0);
+          return pm2.disconnect(() => {
+            return cli.terminate(0);
+          })
         });
         break;
       case "kill":
@@ -692,6 +709,7 @@ class Nodefony {
             } else {
               cli.log(`Kill PM2 MANAGER success ${stdout}`);
               ret = 0
+              return resolve(process.exit(ret))
             }
           } catch (e) {
             cli.log(`Kill PM2 MANAGER ${e}`, "ERROR");
@@ -728,71 +746,19 @@ class Nodefony {
             return resolve(process.exit(ret));
           }
           return resolve(process.exit(-1));
-          //try {
-          /*let res = await pm2.killDaemon((err, proc) => {
-            console.log("passsssss")
-            if (err) {
-              cli.logger(err, "ERROR");
-              pm2.disconnect()
-              process.nextTick(() => {
-                return reject(cli.terminate(-1));
-              })
-            }
-          })*/
-          /*res = pm2.disconnect(() => {
-            cli.logger(`Kill PM2 MANAGER success `);
-            process.nextTick(() => {
-              return resolve(process.exit(0));
-            })
-            console.log("pass")
-          })*/
-          /*return pm2.killDaemon((error, proc) => {
-            console.log("passss killDaemon")
-            if (error) {
-              cli.logger(error, "ERROR");
-              pm2.disconnect()
-              process.nextTick(() => {
-                return reject(cli.terminate(-1));
-              })
-            }
-            cli.logger(`Kill PM2 MANAGER success :  ${proc.success}`);
-            pm2.disconnect()
-            process.nextTick(() => {
-              return resolve(process.exit(0));
-            })*/
-          /*return pm2.list((error, processDescriptionList) => {
-            if (error) {
-              cli.logger(error, "ERROR");
-              pm2.disconnect()
-              process.nextTick(() => {
-                return reject(process.exit(-1));
-              })
-            }
-            this.tablePm2(cli, processDescriptionList);
-            pm2.disconnect()
-            process.nextTick(() => {
-              return resolve(process.exit(0));
-            })
-          });*/
-          //});
-          //} catch (e) {
-          //  pm2.disconnect()
-          //  cli.log(e)
-          //  return reject(cli.terminate(-1));
-          //}
         })
       case "status":
       case "list":
         cli.keepAlive = true;
-        pm2.list((error, processDescriptionList) => {
+        return pm2.list((error, processDescriptionList) => {
           if (error) {
             cli.logger(error, "ERROR");
             return cli.terminate(-1);
           }
           this.tablePm2(cli, processDescriptionList);
-          pm2.disconnect(() => {
-            process.nextTick(() => {
-              return process.exit(0);
+          return pm2.disconnect(() => {
+            return pm2.disconnect(() => {
+              return cli.terminate(0);
             })
           })
         });
@@ -819,14 +785,16 @@ class Nodefony {
         break;
       case "clean-log":
         cli.keepAlive = true;
-        pm2.flush((error, result) => {
+        return pm2.flush((error, result) => {
           if (error) {
             cli.logger(error, "ERROR");
             return cli.terminate(-1);
           }
           cli.logger(`clean log ${nodefony.projectName}`);
           this.tablePm2(cli, result);
-          return process.exit(0);
+          return pm2.disconnect(() => {
+            return cli.terminate(0);
+          })
         });
         break;
       case "pm2-logrotate":
@@ -994,8 +962,7 @@ class Nodefony {
       pm2.connect((err) => {
         if (err) {
           cli.logger(err, "ERROR");
-          cli.terminate(1);
-          return;
+          return reject(err);
         }
         console.log(util.inspect(this.pm2Config, {
           depth: 10
@@ -1050,22 +1017,16 @@ Examples with pm2 native tools :
 $ npx pm2 monit
 $ npx pm2 --lines 1000 logs
                     `);
-                  //resolve(pm2.disconnect());
-
                   return resolve(options.daemon)
                 });
               });
             } catch (e) {
-              await pm2.killDaemon()
-              cli.logger(`pm2 killDaemon `, "ERROR");
+
               return reject(e);
             }
           });
         });
       });
-    }).
-    catch(e => {
-      throw e
     })
   }
 
