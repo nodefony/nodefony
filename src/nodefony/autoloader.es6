@@ -172,10 +172,10 @@ module.exports = function () {
         if (Module._cache[filename]) {
           delete Module._cache[filename];
         }
-        console.error(e);
-        if (this.kernel) {
+        //console.error(e);
+        /*if (this.kernel) {
           this.kernel.terminate(1);
-        }
+        }*/
         throw e;
       }
     }

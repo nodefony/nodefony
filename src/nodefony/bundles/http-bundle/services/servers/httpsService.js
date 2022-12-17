@@ -182,7 +182,8 @@ module.exports = class httpsServer extends nodefony.Service {
 
     this.server.on("error", (error) => {
       let myError = new nodefony.Error(error);
-      switch (error.errno) {
+      const txtError = typeof error.code=== 'string'? error.code : error.errno ;
+      switch (txtError) {
       case "ENOTFOUND":
         this.log("CHECK DOMAIN IN /etc/hosts or config unable to connect to : " + this.domain, "ERROR");
         this.log(myError, "CRITIC");
@@ -190,9 +191,11 @@ module.exports = class httpsServer extends nodefony.Service {
       case "EADDRINUSE":
         this.log("Domain : " + this.domain + " Port : " + this.port + " ==> ALREADY USE ", "ERROR");
         this.log(myError, "CRITIC");
+        this.server.close();
         setTimeout(() => {
-          this.server.close();
+          return this.kernel.terminate(1)
         }, 1000);
+        throw error
         break;
       default:
         this.log(myError, "CRITIC");

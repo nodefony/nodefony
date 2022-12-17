@@ -22,6 +22,13 @@
  */
 const path = require("path");
 
+switch (kernel.appEnvironment) {
+  case "production":
+  case "preprod":
+  case "development":
+  default:
+}
+
 let certificats = {
   options: {
     rejectUnauthorized: true

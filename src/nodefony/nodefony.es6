@@ -92,6 +92,7 @@ class Nodefony {
       this.projectPackage = require(path.resolve(cwd, "package.json"));
       this.projectVersion = this.projectPackage.version;
       this.projectName = this.projectPackage.name;
+      this.context.kernel = {}
       this.kernelConfig = this.loadConfig(this.kernelConfigPath);
       this.appConfig = this.loadConfig(this.appConfigPath, console.warn);
       this.packageManager = this.kernelConfig.packageManager || "npm";
@@ -577,12 +578,12 @@ class Nodefony {
             cli.setType("SERVER");
             const kernel = new nodefony.appKernel(environment, cli, options);
             return await kernel.start()
-            .catch(async (e) => {
-              cli.log(e, "ERROR");
-              cli.log(`terminate code 1`)
-              await cli.terminate(1)
-              throw e
-            });
+              .catch(async (e) => {
+                cli.log(e, "ERROR");
+                cli.log(`terminate code 1`)
+                await cli.terminate(1)
+                throw e
+              });
           } else {
             let options = cli.commander.opts();
             if (options.dump && !(cmd === "prod" || cmd === "production" || cmd === "pm2")) {

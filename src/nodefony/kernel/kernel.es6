@@ -557,14 +557,14 @@ class Kernel extends nodefony.Service {
       this.settings.environment = this.environment;
       this.settings.debug = this.debug;
       this.setParameters("kernel", this.settings);
-      this.httpPort = nodefony.kernelConfig.system.httpPort || null;
-      this.httpsPort = nodefony.kernelConfig.system.httpsPort || null;
-      this.domain = nodefony.kernelConfig.system.domain || null;
-      this.hostname = nodefony.kernelConfig.system.domain || null;
+      this.httpPort = this.settings.system.httpPort || null;
+      this.httpsPort = this.settings.system.httpsPort || null;
+      this.domain = this.settings.system.domain || null;
+      this.hostname = this.settings.system.domain || null;
       this.hostHttp = this.hostname + ":" + this.httpPort;
       this.hostHttps = this.hostname + ":" + this.httpsPort;
-      this.domainAlias = nodefony.kernelConfig.system.domainAlias;
-      this.domainCheck = nodefony.kernelConfig.system.domainCheck;
+      this.domainAlias = this.settings.system.domainAlias;
+      this.domainCheck = this.settings.system.domainCheck;
       this.initializeLog();
       if (!this.settings.system.bundles) {
         this.settings.system.bundles = {};
@@ -1096,8 +1096,9 @@ class Kernel extends nodefony.Service {
       try {
         tab.push(await this.bundles[name].initialize());
       } catch (e) {
-        this.log(e, "ERROR");
-        continue;
+        //this.log(e, "ERROR");
+        throw e
+        //continue;
       }
     }
 
@@ -1502,36 +1503,42 @@ class Kernel extends nodefony.Service {
     return new Promise(async (resolve, reject) => {
       switch (nodefony.typeOf(bundles)) {
         case "array":
-          for (let i = 0; i < bundles.length; i++) {
-            let Path = await this.isBundleDirectory(bundles[i]);
-            if (Path && Path.length) {
-              try {
-                let bundle = this.loadBundle(Path[0], "filesystem");
-                await bundle.find();
-              } catch (e) {
-                this.log(e, "ERROR");
-              }
-            } else {
-              try {
-                Path = this.isNodeModule(bundles[i]);
-                if (Path) {
-                  let bundle = this.loadBundle(Path, "package");
+          try {
+            for (let i = 0; i < bundles.length; i++) {
+              let Path = await this.isBundleDirectory(bundles[i]);
+              if (Path && Path.length) {
+                try {
+                  let bundle = this.loadBundle(Path[0], "filesystem");
                   await bundle.find();
-                } else {
-                  this.log("GLOBAL CONFIG REGISTER : ", "INFO");
-                  this.log(this.configBundle, "INFO");
-                  let gene = this.readGeneratedConfig();
-                  if (gene) {
-                    this.log("GENERATED CONFIG REGISTER file ./config/GeneratedConfig.yml : ", "INFO");
-                    this.log(gene, "INFO");
-                  }
+                } catch (e) {
+                  this.log(e, "ERROR");
+                  throw e
                 }
-              } catch (e) {
-                this.log(e, "ERROR");
+              } else {
+                try {
+                  Path = this.isNodeModule(bundles[i]);
+                  if (Path) {
+                    let bundle = this.loadBundle(Path, "package");
+                    await bundle.find();
+                  } else {
+                    this.log("GLOBAL CONFIG REGISTER : ", "INFO");
+                    this.log(this.configBundle, "INFO");
+                    let gene = this.readGeneratedConfig();
+                    if (gene) {
+                      this.log("GENERATED CONFIG REGISTER file ./config/GeneratedConfig.yml : ", "INFO");
+                      this.log(gene, "INFO");
+                    }
+                  }
+                } catch (e) {
+                  this.log(e, "ERROR");
+                  throw e
+                }
               }
             }
+            return resolve(bundles);
+          } catch (e) {
+            return reject(e)
           }
-          return resolve(bundles);
         default:
           return reject(new Error("registerBundles argument bundles must be an array "));
       }
@@ -1572,60 +1579,103 @@ class Kernel extends nodefony.Service {
     return this.bundles.app;
   }
 
+  // CONFIG
+  readConfigFile(bundle, Path, callback) {
+    try {
+      this.log(bundle + " CONFIG LOAD FILE :" + Path, "DEBUG", "KERNEL READER");
+      return this.reader.readConfig(Path, this.name, callback);
+    } catch (e) {
+      this.log(e, "ERROR", "BUNDLE " + bundle + " CONFIG :" + Path);
+      throw e
+    }
+  }
+  readRoutingFile(bundle, Path) {
+    // ROUTING
+    try {
+      this.log(bundle + " ROUTER LOAD FILE :" + Path, "DEBUG", "KERNEL READER");
+      let router = this.get("router");
+      if (router) {
+        return router.reader(Path, this.name);
+      } else {
+        this.log(bundle + " Router service not ready to LOAD FILE :" + Path, "WARNING", "KERNEL READER");
+      }
+    } catch (e) {
+      this.log(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG ROUTING :" + Path);
+      throw e
+    }
+  }
+  readServicesFile(bundle, Path, callback) {
+    try {
+      this.log(bundle + " LOAD FILE :" + Path, "DEBUG", "KERNEL READER");
+      return this.get("injection").reader(Path, this.name);
+    } catch (e) {
+      this.log(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG SERVICE :" + Path);
+      throw e
+    }
+  }
+
+  readSecurityFile(bundle, Path, callback) {
+    try {
+      let firewall = this.get("security");
+      if (firewall) {
+        this.log(bundle + " SECURITY LOAD FILE :" + Path, "DEBUG", "KERNEL READER");
+        return firewall.reader(Path, this.name);
+      } else {
+        this.log(bundle + " SECURITY LOAD FILE :" + Path + " BUT SERVICE NOT READY", "WARNING");
+      }
+    } catch (e) {
+      this.log(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG SECURITY :" + Path);
+      throw e
+    }
+  }
+
+  findConfigFile(ele, callback) {
+    let name = this.name.toUpperCase();
+    switch (true) {
+      case /^config\..*$/.test(ele.name):
+        try {
+          return this.kernel.readConfigFile.call(this, name, ele.path, callback)
+        } catch (e) {
+          throw e
+        }
+      case /^routing\..*$/.test(ele.name):
+        try {
+
+          return this.kernel.readRoutingFile.call(this, name, ele.path, callback)
+        } catch (e) {
+          throw e
+        }
+      case /^services\..*$/.test(ele.name):
+        try {
+          return this.kernel.readServicesFile.call(this, name, ele.path, callback)
+        } catch (e) {
+          throw e
+        }
+      case /^security\..*$/.test(ele.name):
+        try {
+          return this.kernel.readSecurityFile.call(this, name, ele.path, callback)
+        } catch (e) {
+          throw e
+        }
+    }
+  }
+
   /**
    *
    *  @method readConfig
    */
   readConfig(error, result, callback) {
-    let name = this.name.toUpperCase();
     if (error) {
-      this.log(error, "ERROR");
+      throw error
     } else {
+      if (!result) {
+        throw new Error(`readConfig no result found`);
+      }
       result.forEach((ele) => {
-        switch (true) {
-          case /^config\..*$/.test(ele.name):
-            try {
-              this.log(name + " CONFIG LOAD FILE :" + ele.path, "DEBUG", "KERNEL READER");
-              this.reader.readConfig(ele.path, this.name, callback);
-            } catch (e) {
-              this.log(e, "ERROR", "BUNDLE " + name + " CONFIG :" + ele.path);
-            }
-            break;
-          case /^routing\..*$/.test(ele.name):
-            // ROUTING
-            try {
-              this.log(name + " ROUTER LOAD FILE :" + ele.path, "DEBUG", "KERNEL READER");
-              let router = this.get("router");
-              if (router) {
-                router.reader(ele.path, this.name);
-              } else {
-                this.log(name + " Router service not ready to LOAD FILE :" + ele.path, "WARNING", "KERNEL READER");
-              }
-            } catch (e) {
-              this.log(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG ROUTING :" + ele.path);
-            }
-            break;
-          case /^services\..*$/.test(ele.name):
-            try {
-              this.log(name + " LOAD FILE :" + ele.path, "DEBUG", "KERNEL READER");
-              this.get("injection").reader(ele.path, this.name);
-            } catch (e) {
-              this.log(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG SERVICE :" + ele.path);
-            }
-            break;
-          case /^security\..*$/.test(ele.name):
-            try {
-              let firewall = this.get("security");
-              if (firewall) {
-                this.log(name + " SECURITY LOAD FILE :" + ele.path, "DEBUG", "KERNEL READER");
-                firewall.reader(ele.path, this.name);
-              } else {
-                this.log(name + " SECURITY LOAD FILE :" + ele.path + " BUT SERVICE NOT READY", "WARNING");
-              }
-            } catch (e) {
-              this.log(e, "ERROR", "BUNDLE " + this.name.toUpperCase() + " CONFIG SECURITY :" + ele.path);
-            }
-            break;
+        try {
+          this.kernel.findConfigFile.call(this, ele, callback)
+        } catch (e) {
+          throw e
         }
       });
     }

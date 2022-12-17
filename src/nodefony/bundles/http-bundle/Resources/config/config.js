@@ -136,7 +136,7 @@ module.exports = {
    *        https://github.com/3rd-Eden/memcached
    */
   session: {
-    applyTransaction: true, // sequelize transaction session entity 
+    applyTransaction: true, // sequelize transaction session entity
     start: false, // false || true || Name Session Context
     use_strict_mode: true,
     name: "nodefony",
