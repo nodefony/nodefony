@@ -47,8 +47,8 @@ module.exports = {
   "sequelize-bundle": require(path.resolve(dirConfig, "sequelize-bundle.js")),
   "mongoose-bundle": require(path.resolve(dirConfig, "mongoose-bundle.js")),
   "mail-bundle": require(path.resolve(dirConfig, "mail-bundle.js")),
-  "redis-bundle": require(path.resolve(dirConfig, "redis-bundle.js")),
-  "elastic-bundle": require(path.resolve(dirConfig, "elastic-bundle.js")),
+  //"redis-bundle": require(path.resolve(dirConfig, "redis-bundle.js")),
+  //"elastic-bundle": require(path.resolve(dirConfig, "elastic-bundle.js")),
   "realtime-bundle": require(path.resolve(dirConfig, "realtime-bundle.js"))
 
 };

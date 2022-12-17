@@ -114,6 +114,7 @@ class Kernel extends nodefony.Service {
     this.type = cli.type;
     this.package = mypackage;
     this.debug = (!!cli.commander.opts().debug) || false;
+    this.appEnvironment = null
     this.setEnv(environment);
     // Manage Kernel Container
     this.set("kernel", this);
@@ -249,7 +250,6 @@ class Kernel extends nodefony.Service {
             // Manage Template engine
             this.initTemplate();
           } catch (e) {
-            console.error(e);
             throw e;
           }
           this.started = true;
@@ -258,8 +258,7 @@ class Kernel extends nodefony.Service {
               throw e;
             });
         })
-        .catch((e) => {
-          //this.log(e, "ERROR");
+        .catch(async (e) => {
           throw e;
         });
     }
@@ -536,10 +535,13 @@ class Kernel extends nodefony.Service {
   }
 
   logEnv() {
-    let txt = this.cli.clc.blue("      \x1b KERNEL " + this.type);
-    txt += " Cluster : " + this.cli.clc.magenta(this.typeCluster);
-    txt += " Environment : " + this.cli.clc.magenta(this.environment);
-    txt += " Debug :" + this.cli.clc.magenta(this.debug) + "\n";
+    let txt = `      \x1b ${this.cli.clc.blue(this.type)} `;
+    txt += ` ${this.cli.clc.magenta('Cluster')} : ${this.typeCluster} `;
+    txt += ` ${this.cli.clc.magenta('Nodefony Environment')} : ${this.environment}  `;
+    if (this.appEnvironment) {
+      txt += ` ${this.cli.clc.magenta('App Environment')} : ${this.appEnvironment.environment}  `;
+    }
+    txt += ` ${this.cli.clc.magenta('Debug')} : ${this.debug}\n`;
     return txt;
   }
 
@@ -1030,8 +1032,14 @@ class Kernel extends nodefony.Service {
             }
             //this.fire("onRegister", this);
             await this.emitAsync("onRegister", this);
-            return await this.initializeBundles();
-          });
+            return await this.initializeBundles()
+              .catch(e => {
+                throw e
+              })
+          })
+          .catch(e => {
+            throw e
+          })
       })
       .catch(e => {
         throw e;
