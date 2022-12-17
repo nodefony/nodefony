@@ -88,7 +88,8 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function(
         // with migrate
         if (!force && strategy === "migrate") {
           task = command.getTask("migrate");
-          return await task.up();
+          await task.up();
+          return await task.status();
         }
         // with sysnc
         if (strategy === "sync") {
