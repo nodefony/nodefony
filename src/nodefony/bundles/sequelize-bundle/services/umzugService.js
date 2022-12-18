@@ -196,6 +196,7 @@ class umzug extends nodefony.Service {
           }
           throw new Error(`Connector not found : ${connectorName}`);
         } catch (e) {
+          console.trace(e)
           return reject(e);
         }
       }
@@ -217,6 +218,7 @@ class umzug extends nodefony.Service {
         }
         return resolve(result);
       } catch (e) {
+        console.trace(e)
         return reject(e);
       }
     });

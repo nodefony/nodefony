@@ -20,7 +20,7 @@ class generateTask extends nodefony.Task {
     );
   }
 
-  entity(){
+  entity() {
     return this.run();
   }
 
@@ -136,7 +136,7 @@ class generateTask extends nodefony.Task {
         }]);
       }).then((response) => {
         response.connector = this.connector;
-        this.dialect = response.connection.options.dialect;
+        this.dialect = response.connection.settings.options.dialect;
         for (let type in this.dataType[this.dialect]) {
           this.types.push(type);
         }
@@ -198,7 +198,7 @@ class generateTask extends nodefony.Task {
   }
 
   createClassEntity(response) {
-    this.location = path.resolve(response.bundle.path, "Entity");
+    this.location = path.resolve(response.bundle.path, "Entity", "sequelize");
     response.name = this.entityName;
     try {
       let Path = path.resolve(this.location, `${this.entityName}Entity.js`);

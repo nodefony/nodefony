@@ -37,7 +37,7 @@ class migrateTask extends nodefony.Task {
       this.log(e, "ERROR")
       throw e
     })
-    await this.umzugService.executed(connector)
+    return await this.umzugService.executed(connector)
     .catch(e=>{
       console.trace(e)
       this.log(e, "ERROR")

@@ -79,7 +79,7 @@ const vault = async () => {
 const connectors = {}
 switch (kernel.appEnvironment.environment) {
   case "production":
-  case "container":
+  case "preprod":
   case "development":
   default:
     connectors.nodefony = {
