@@ -180,6 +180,9 @@ class umzug extends nodefony.Service {
           const connection = this.sequelizeService.getConnection(connectorName);
           if (connection) {
             const db = connection.getConnection()
+            if (!db) {
+              throw new error(`Connector ${connectorName} not found`)
+            }
             let migrator = null
             if (type === "migrate") {
               migrator = this.createMigrator(connectorName, db);
@@ -188,7 +191,7 @@ class umzug extends nodefony.Service {
             }
             let data = await migrator.pending();
             if (table && data.length) {
-              this.showTable(data, "pending", connectorName, severity);
+              this.showTable(data, "pending", connectorName, db, severity);
             }
             let res = {}
             res[connectorName] = data
@@ -205,6 +208,9 @@ class umzug extends nodefony.Service {
         for (let connection in this.sequelizeService.connections) {
           const name = this.sequelizeService.connections[connection].name
           const db = this.sequelizeService.connections[connection].getConnection();
+          if (!db) {
+            throw new error(`Connector ${name} not found`)
+          }
           let migrator = null
           if (type === "migrate") {
             migrator = this.createMigrator(name, db);
@@ -213,7 +219,7 @@ class umzug extends nodefony.Service {
           }
           result[connection] = await migrator.pending()
           if (table && result[connection] && result[connection].length) {
-            this.showTable(result[connection], "pending", connection, severity);
+            this.showTable(result[connection], "pending", connection, db, severity);
           }
         }
         return resolve(result);
@@ -231,6 +237,9 @@ class umzug extends nodefony.Service {
           const connection = this.sequelizeService.getConnection(connectorName);
           if (connection) {
             const db = connection.getConnection()
+            if (!db) {
+              throw new error(`Connector ${connectorName} not found`)
+            }
             let migrator = null
             if (type === "migrate") {
               migrator = this.createMigrator(connectorName, db);
@@ -239,7 +248,7 @@ class umzug extends nodefony.Service {
             }
             let data = await migrator.executed();
             if (table && data.length) {
-              this.showTable(data, "executed", connectorName);
+              this.showTable(data, "executed", connectorName, db);
             }
             let res = {}
             res[connectorName] = data
@@ -255,6 +264,9 @@ class umzug extends nodefony.Service {
         for (let connection in this.sequelizeService.connections) {
           const name = this.sequelizeService.connections[connection].name
           const db = this.sequelizeService.connections[connection].getConnection();
+          if (!db) {
+            throw new error(`Connector ${name} not found`)
+          }
           let migrator = null
           if (type === "migrate") {
             migrator = this.createMigrator(name, db);
@@ -263,7 +275,7 @@ class umzug extends nodefony.Service {
           }
           result[connection] = await migrator.executed();
           if (table && result[connection] && result[connection].length) {
-            this.showTable(result[connection], "executed", connection);
+            this.showTable(result[connection], "executed", connection, db);
           }
         }
         return resolve(result);
@@ -505,11 +517,12 @@ class umzug extends nodefony.Service {
     return await migrator.runAsCLI(args);
   }
 
-  showTable(data, type, connectionName, severity = "INFO") {
+  showTable(data, type, connectionName, db, severity = "INFO") {
     let options = {
       head: [
         "NAME",
         "CONNECTOR",
+        "DRIVER",
         "PATH FILE",
         "STATE"
       ]
@@ -519,8 +532,9 @@ class umzug extends nodefony.Service {
       let tab = ["", ""];
       tab[0] = data[i].name;
       tab[1] = connectionName
-      tab[2] = data[i].path;
-      tab[3] = type;
+      tab[2] = db.options.dialect
+      tab[3] = data[i].path;
+      tab[4] = type;
       table.push(tab);
     }
     let res = table.toString();
