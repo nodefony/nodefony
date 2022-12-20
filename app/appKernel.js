@@ -16,9 +16,9 @@ module.exports = class appKernel extends nodefony.kernel {
       this.appEnvironment = this.getAppEnvironment()
       if (this.appEnvironment.environment === 'development') {
         this.once("onPreRegister", () => {
-          if (this.type === "SERVER") {
-            //return this.showBanner()
-          }
+          /*if (this.type === "SERVER") {
+              return this.showBanner()
+          }*/
         })
       }
     } catch (e) {
@@ -77,27 +77,26 @@ module.exports = class appKernel extends nodefony.kernel {
   }
 
   /* VAULT BUNDLE */
-
   getVaultEnvironment(environment) {
     switch (environment) {
       case 'production':
         return {
           active: true,
-          prepareAuth: false,
-          getVaultCredentialsApprole: this.getVaultCredentialsApprole(environment)
+            prepareAuth: false,
+            getVaultCredentialsApprole: this.getVaultCredentialsApprole(environment)
         }
       case 'preprod':
         return {
           active: true,
-          prepareAuth: true,
-          getVaultCredentialsApprole: this.getVaultCredentialsApprole(environment)
+            prepareAuth: true,
+            getVaultCredentialsApprole: this.getVaultCredentialsApprole(environment)
         }
       case 'development':
       default:
         return {
           active: false,
-          prepareAuth: true,
-          getVaultCredentialsApprole: this.getVaultCredentialsApprole(environment)
+            prepareAuth: true,
+            getVaultCredentialsApprole: this.getVaultCredentialsApprole(environment)
         }
     }
   }

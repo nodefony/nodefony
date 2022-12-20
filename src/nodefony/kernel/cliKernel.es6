@@ -33,7 +33,7 @@ const optionsTitleTables = {
   style: styleTable
 };
 
-const createAssetDirectory = function (myPath, callback) {
+const createAssetDirectory = function(myPath, callback) {
   try {
     if (fs.existsSync(myPath)) {
       return callback(fs.statSync(myPath));
@@ -52,7 +52,7 @@ const createAssetDirectory = function (myPath, callback) {
   }
 };
 
-const parseAssetsBundles = async function (table) {
+const parseAssetsBundles = async function(table) {
   let bundles = this.kernel.getBundles();
   let result = null;
   let name = null;
@@ -101,7 +101,7 @@ const parseAssetsBundles = async function (table) {
 };
 
 const regHidden = /^\./;
-const isHiddenFile = function (name) {
+const isHiddenFile = function(name) {
   return regHidden.test(name);
 };
 const defaultOptions = {
@@ -136,14 +136,14 @@ class cliKernel extends nodefony.cli {
     this.publicPath = null;
     this.keepAlive = false;
     switch (nodefony.packageManager) {
-    case 'yarn':
-      this.packageManager = this.yarn;
-      break;
-    case 'pnpm':
-      this.packageManager = this.pnpm;
-      break;
-    default:
-      this.packageManager = this.npm;
+      case 'yarn':
+        this.packageManager = this.yarn;
+        break;
+      case 'pnpm':
+        this.packageManager = this.pnpm;
+        break;
+      default:
+        this.packageManager = this.npm;
     }
     this.parseNodefonyCommand();
   }
@@ -164,16 +164,16 @@ class cliKernel extends nodefony.cli {
 
   setType(type) {
     switch (type) {
-    case "console":
-    case "CONSOLE":
-      this.type = "CONSOLE";
-      break;
-    case "server":
-    case "SERVER":
-      this.type = "SERVER";
-      break;
-    default:
-      throw new Error(`cliKernel Bad Type : ${type}`);
+      case "console":
+      case "CONSOLE":
+        this.type = "CONSOLE";
+        break;
+      case "server":
+      case "SERVER":
+        this.type = "SERVER";
+        break;
+      default:
+        throw new Error(`cliKernel Bad Type : ${type}`);
     }
   }
 
@@ -579,7 +579,7 @@ class cliKernel extends nodefony.cli {
         data: debug
       }
     }
-    syslog.listenWithConditions( conditions, (pdu) => {
+    syslog.listenWithConditions(conditions, (pdu) => {
       return nodefony.Syslog.normalizeLog.call(this, pdu, this.cluster);
     });
   }
@@ -627,16 +627,16 @@ class cliKernel extends nodefony.cli {
 
     let files = null;
     switch (true) {
-    case stat.isFile():
-      throw new Error(dir + " is not a directory");
-    case stat.isDirectory():
-      files = fs.readdirSync(dir);
-      break;
-    case stat.isSymbolicLink():
-      files = fs.realpathSync(dir);
-      break;
-    default:
-      throw new Error(dir + " is not a directory");
+      case stat.isFile():
+        throw new Error(dir + " is not a directory");
+      case stat.isDirectory():
+        files = fs.readdirSync(dir);
+        break;
+      case stat.isSymbolicLink():
+        files = fs.realpathSync(dir);
+        break;
+      default:
+        throw new Error(dir + " is not a directory");
     }
     let totalSizeBytes = 0;
     let dirSize = null;
@@ -648,22 +648,22 @@ class cliKernel extends nodefony.cli {
         return totalSizeBytes;
       }
       switch (true) {
-      case stat.isFile():
-        if (!isHiddenFile(files[i])) {
-          totalSizeBytes += stat.size;
-        }
-        break;
-      case stat.isDirectory():
-        dirSize = this.getSizeDirectory(myPath, exclude);
-        totalSizeBytes += dirSize;
-        break;
-      case stat.isSymbolicLink():
-        //console.log("isSymbolicLink")
-        try {
-          dirSize = this.getSizeDirectory(fs.realpathSync(myPath), exclude);
+        case stat.isFile():
+          if (!isHiddenFile(files[i])) {
+            totalSizeBytes += stat.size;
+          }
+          break;
+        case stat.isDirectory():
+          dirSize = this.getSizeDirectory(myPath, exclude);
           totalSizeBytes += dirSize;
-        } catch (e) {}
-        break;
+          break;
+        case stat.isSymbolicLink():
+          //console.log("isSymbolicLink")
+          try {
+            dirSize = this.getSizeDirectory(fs.realpathSync(myPath), exclude);
+            totalSizeBytes += dirSize;
+          } catch (e) {}
+          break;
       }
     }
     return totalSizeBytes;
@@ -813,11 +813,11 @@ class cliKernel extends nodefony.cli {
   async rebuildPackage(bundle, env = "production") {
     let cmd = null;
     switch (nodefony.packageManager) {
-    case 'yarn':
-      cmd = ["install", "--force"];
-      break;
-    default:
-      cmd = ["install"];
+      case 'yarn':
+        cmd = ["install", "--force"];
+        break;
+      default:
+        cmd = ["install"];
     }
     try {
       if (bundle instanceof nodefony.Bundle) {

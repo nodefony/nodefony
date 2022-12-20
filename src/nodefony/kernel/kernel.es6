@@ -1723,7 +1723,7 @@ class Kernel extends nodefony.Service {
       code = 0;
     }
     if (this.debug) {
-      console.trace(code);
+      console.trace(`terminate : ${code}`);
     }
     try {
       if (fs.existsSync(this.cacheLink)) {

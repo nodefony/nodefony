@@ -131,12 +131,8 @@ module.exports = class cliStart extends nodefony.cliKernel {
     this.initHelp();
     this.initOptions();
     await this.parseCommand(process.argv);
-    let res = null;
-    if (res = process.argv.slice(2).length && process.argv[2]) {
-      // event action not fire when help command
-      if (res === "--help" || res === "-h") {
-        return await this.onStart("help");
-      }
+    if (process.argv.slice(2).includes("--help") || process.argv.slice(2).includes("-h")) {
+      return await this.onStart("help");
     }
     return await this.onStart();
   }
@@ -236,9 +232,9 @@ module.exports = class cliStart extends nodefony.cliKernel {
               .then((cwd) => {
                 this.parseNodefonyCommand("nodefony:rebuild", [cwd, args, this.interactive]);
                 return nodefony.start(command, args, this)
-                .catch(e=>{
-                  throw e
-                })
+                  .catch(e => {
+                    throw e
+                  })
               })
               .then(() => {
                 return this.installProject(path.resolve("."), args, this.interactive)
@@ -247,9 +243,9 @@ module.exports = class cliStart extends nodefony.cliKernel {
                       .then((cwd) => {
                         this.parseNodefonyCommand("nodefony:build", [cwd, args, this.interactive]);
                         return nodefony.start(command, args, this)
-                        .catch(e=>{
-                          throw e
-                        })
+                          .catch(e => {
+                            throw e
+                          })
                       });
                   });
               });
@@ -270,9 +266,9 @@ module.exports = class cliStart extends nodefony.cliKernel {
                   .then((cwd) => {
                     this.parseNodefonyCommand("nodefony:build", [cwd, args, this.interactive]);
                     return nodefony.start(command, args, this)
-                    .catch(e=>{
-                      throw e
-                    })
+                      .catch(e => {
+                        throw e
+                      })
                   });
               });
           }
@@ -314,8 +310,11 @@ module.exports = class cliStart extends nodefony.cliKernel {
             .then(() => {
               return this.showHelp();
             })
-            .catch(() => {
+            .catch((e) => {
               this.showHelp();
+              if (command === "help") {
+                return
+              }
               throw e
             });
         }
@@ -330,9 +329,9 @@ module.exports = class cliStart extends nodefony.cliKernel {
               return this.matchCommand();
             }
             return await nodefony.start(command, args, this)
-            .catch(e=>{
-              throw e
-            })
+              .catch(e => {
+                throw e
+              })
           } catch (e) {
             try {
               if (this.rawCommand) {
@@ -352,9 +351,9 @@ module.exports = class cliStart extends nodefony.cliKernel {
         } else {
           try {
             return await nodefony.start(this.rawCommand, args, this)
-            .catch(e=>{
-              throw e
-            })
+              .catch(e => {
+                throw e
+              })
           } catch (e) {
             try {
               if (this.rawCommand) {
@@ -553,9 +552,9 @@ module.exports = class cliStart extends nodefony.cliKernel {
                         nodefony.checkTrunk(cwd);
                         this.parseNodefonyCommand("nodefony:build", [cwd, args, interactive]);
                         return nodefony.start(command, args, this)
-                        .catch(e=>{
-                          throw e
-                        })
+                          .catch(e => {
+                            throw e
+                          })
                       } catch (e) {
                         throw e;
                       }
@@ -620,7 +619,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
       });
   }
 
-  installProject(cwd = path.resolve("."), args, interactive=false) {
+  installProject(cwd = path.resolve("."), args, interactive = false) {
     try {
       let installer = new builderInstall(this);
       return installer.install(cwd, args, interactive)
@@ -637,7 +636,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
     }
   }
 
-  rebuild(cwd = path.resolve("."), args, interactive=false) {
+  rebuild(cwd = path.resolve("."), args, interactive = false) {
     try {
       let installer = new builderInstall(this);
       return installer.rebuild(cwd, args, interactive)
@@ -654,7 +653,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
     }
   }
 
-  buildProject(cwd = path.resolve("."), args , interactive) {
+  buildProject(cwd = path.resolve("."), args, interactive) {
     try {
       let installer = new builderInstall(this);
       return installer.build(cwd, args, interactive)
