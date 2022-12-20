@@ -26,7 +26,7 @@ class defaultController extends nodefony.Controller {
   constructor(container, context) {
     super(container, context);
     // start session
-    this.startSession();
+    //this.startSession();
   }
 
   /**
