@@ -54,10 +54,10 @@
   },
   "dependencies": {
     "graphql": "16.6.0",
-    "mongoose": "6.8.0",
+    "mongoose": "6.8.1",
     "pm2": "^5.2.2",
     "pm2-logrotate": "^2.7.0",
-    "sequelize": "6.27.0",
+    "sequelize": "6.28.0",
     "webpack": "^5.75.0",
     "webpack-dev-server": "4.11.1"
   },
@@ -66,7 +66,7 @@
     "conventional-changelog-cli": "^2.2.2",
     "editorconfig": "^1.0.1",
     "jshint": "^2.13.6",
-    "node-gyp": "^9.3.0"
+    "node-gyp": "9.3.1"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md",
