@@ -22,13 +22,6 @@
  */
 const path = require("path");
 
-switch (kernel.appEnvironment) {
-  case "production":
-  case "preprod":
-  case "development":
-  default:
-}
-
 let certificats = {
   options: {
     rejectUnauthorized: true
@@ -40,20 +33,20 @@ let monitoring = true;
 let documentation = true;
 let unitTest = true;
 let domainCheck = false;
-if (process.env && process.env.NODE_ENV === "production") {
-  certificats.key = path.resolve("config", "certificates", "server", "privkey.pem");
-  certificats.cert = path.resolve("config", "certificates", "server", "fullchain.pem");
-  certificats.ca = path.resolve("config", "certificates", "ca", "nodefony-root-ca.crt.pem");
-  CDN = null;
-  statics = true;
-  documentation = true;
-  monitoring = true;
-  unitTest = true;
-  domainCheck = true;
-} else {
-  certificats.key = path.resolve("config", "certificates", "server", "privkey.pem");
-  certificats.cert = path.resolve("config", "certificates", "server", "fullchain.pem");
-  certificats.ca = path.resolve("config", "certificates", "ca", "nodefony-root-ca.crt.pem");
+
+switch (kernel.appEnvironment) {
+  case "production":
+  case "development":
+  default:
+    certificats.key = path.resolve("config", "certificates", "server", "privkey.pem");
+    certificats.cert = path.resolve("config", "certificates", "server", "fullchain.pem");
+    certificats.ca = path.resolve("config", "certificates", "ca", "nodefony-root-ca.crt.pem");
+    CDN = null;
+    statics = true;
+    documentation = true;
+    monitoring = true;
+    unitTest = true;
+    domainCheck = true;
 }
 
 module.exports = {
@@ -123,7 +116,7 @@ module.exports = {
      */
     log: {
       active: true,
-      debug: "*"
+      debug: "*" // ["WEBPACK","ROUTER","bundle-sequelize"]
     }
   },
   /**

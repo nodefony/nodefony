@@ -55,7 +55,8 @@ module.exports = {
     env: {
       "NODE_ENV": "production",
       "MODE_START": "PM2",
-      "NODEFONY_DEBUG": false
+      "NODEFONY_DEBUG": false,
+      "NODEFONY_ENV_APP": "production"
     }
   }]
 };

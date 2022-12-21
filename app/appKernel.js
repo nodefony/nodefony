@@ -61,14 +61,13 @@ module.exports = class appKernel extends nodefony.kernel {
   }
 
   getVariableEnvironment() {
+    if (process.env.NODEFONY_ENV_APP) {
+      return process.env.NODEFONY_ENV_APP
+    }
     const production = process.env.NODE_ENV === "production"
-    const preprod = process.env.NODE_ENV === "preprod"
     const development = process.env.NODE_ENV === "development"
     if (production) {
       return 'production'
-    }
-    if (preprod) {
-      return 'preprod'
     }
     if (development) {
       return 'development'
@@ -85,12 +84,6 @@ module.exports = class appKernel extends nodefony.kernel {
             prepareAuth: false,
             getVaultCredentialsApprole: this.getVaultCredentialsApprole(environment)
         }
-      case 'preprod':
-        return {
-          active: true,
-            prepareAuth: true,
-            getVaultCredentialsApprole: this.getVaultCredentialsApprole(environment)
-        }
       case 'development':
       default:
         return {
@@ -103,13 +96,6 @@ module.exports = class appKernel extends nodefony.kernel {
   getDatabaseEnvironment(environment) {
     switch (environment) {
       case 'production':
-        return {
-          vault: {
-            active: true,
-            path: "nodefony/data/postgresql/connector/nodefony"
-          },
-        }
-      case 'preprod':
         return {
           vault: {
             active: true,
@@ -136,7 +122,6 @@ module.exports = class appKernel extends nodefony.kernel {
             secret_id: ""
           }
         }
-      case 'preprod':
       case 'development':
       default:
         return null

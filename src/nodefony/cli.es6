@@ -112,7 +112,7 @@ class CLI extends nodefony.Service {
         super(name, container, notificationsCenter, options);
     }
     this.environment = process.env.NODE_ENV || "production";
-    process.env.NODE_ENV = this.environment;
+    //process.env.NODE_ENV = this.environment;
     this.unhandledRejections = new Map();
 
     this.setProcessTitle();
@@ -139,7 +139,7 @@ class CLI extends nodefony.Service {
         });
       this.initPrompt()
     });
-    this.commander= null;
+    this.commander = null;
     this.initCommander();
 
     if (this.options.warning) {
@@ -349,7 +349,7 @@ class CLI extends nodefony.Service {
   }
 
   logEnv() {
-    return blue("      \x1b " + this.name) + " NODE_ENV : " + magenta(this.environment);
+    return blue("      \x1b " + this.name) + " Nodefony Environment : " + magenta(this.environment);
   }
 
   initCommander() {
@@ -759,6 +759,7 @@ class CLI extends nodefony.Service {
   }
 
   runPackageManager(argv = [], cwd = path.resolve("."), env, manager) {
+    const currentenv = process.env.NODE_ENV
     switch (env) {
       case "dev":
       case "development":
@@ -800,12 +801,14 @@ class CLI extends nodefony.Service {
           stdio: "inherit",
           NODE_ENV: process.env.NODE_ENV
         }, (code) => {
+          process.env.NODE_ENV = currentenv;
           if (code === 0) {
             return resolve(code);
           }
           return resolve(new Error(`Command : ${manager} ${argv.join(' ')}  cwd : ${cwd} Error Code : ${code}`));
         });
       } catch (e) {
+        process.env.NODE_ENV = currentenv;
         this.log(e, "ERROR");
         return reject(e);
       }

@@ -245,6 +245,7 @@ class Kernel extends nodefony.Service {
           try {
             // config
             this.readKernelConfig();
+            this.setNodeEnv(this.environment)
             // Clusters
             this.initCluster();
             // Manage Template engine
@@ -522,11 +523,27 @@ class Kernel extends nodefony.Service {
         case "dev":
         case "development":
           this.environment = "dev";
+          //process.env.NODE_ENV = "development";
+          //process.env.BABEL_ENV = 'development';
+          break;
+        default:
+          this.environment = "prod";
+          //process.env.NODE_ENV = "production";
+          //process.env.BABEL_ENV = 'production';
+      }
+    }
+    //process.env.NODE_DEBUG = this.debug;
+  }
+
+  setNodeEnv(environment){
+    if (environment in defaultEnvEnable) {
+      switch (environment) {
+        case "dev":
+        case "development":
           process.env.NODE_ENV = "development";
           process.env.BABEL_ENV = 'development';
           break;
         default:
-          this.environment = "prod";
           process.env.NODE_ENV = "production";
           process.env.BABEL_ENV = 'production';
       }

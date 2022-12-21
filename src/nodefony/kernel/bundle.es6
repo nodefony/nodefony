@@ -461,12 +461,12 @@ class Bundle extends nodefony.Service {
         case "react":
           file = null;
           try {
-            switch (process.env.NODE_ENV) {
+            file = path.resolve(this.path, "config", "webpack.config.js");
+            /*switch (process.env.NODE_ENV) {
               case "development":
               case "production":
-                file = path.resolve(this.path, "config", "webpack.config.js");
                 break;
-            }
+            }*/
             res = new nodefony.fileClass(file);
             process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
             return resolve(this.loadWebpackConfig(res));
@@ -673,7 +673,7 @@ class Bundle extends nodefony.Service {
 
   log(pci, severity, msgid, msg) {
     if (!msgid) {
-      msgid = "BUNDLE " + this.name;
+      msgid = `bundle-${this.name}`;
     }
     return super.log(pci, severity, msgid, msg);
   }

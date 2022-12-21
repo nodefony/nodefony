@@ -1,6 +1,6 @@
 // plugin Reader
-const pluginReader = function () {
-  const importXmlConfig = function (file, prefix, callback, parser) {
+const pluginReader = function() {
+  const importXmlConfig = function(file, prefix, callback, parser) {
     if (parser) {
       file = this.render(file, parser.data, parser.options);
     }
@@ -18,12 +18,12 @@ const pluginReader = function () {
       }
       for (let key in node) {
         switch (key) {
-        case 'parameters':
-          parameters = this.xmlToJson.call(this, node[key][0].parameter);
-          break;
-        case 'services':
-          services = this.xmlToJson.call(this, node[key][0].service);
-          break;
+          case 'parameters':
+            parameters = this.xmlToJson.call(this, node[key][0].parameter);
+            break;
+          case 'services':
+            services = this.xmlToJson.call(this, node[key][0].service);
+            break;
         }
       }
       if (callback) {
@@ -31,65 +31,65 @@ const pluginReader = function () {
       }
     });
   };
-  const nomarlizeXmlJson = function (services, parameters, callback) {
+  const nomarlizeXmlJson = function(services, parameters, callback) {
     for (let key in services) {
       for (let param in services[key]) {
         let values = null;
         switch (param) {
-        case 'argument':
-          values = [];
-          for (let elm = 0; elm < services[key][param].length; elm++) {
-            if (services[key][param][elm].type && services[key][param][elm].id) {
-              if (services[key][param][elm].type == 'service') {
-                values.push('@' + services[key][param][elm].id);
-              }
-            }
-          }
-          services[key]['arguments'] = values;
-          delete services[key][param];
-          break;
-        case 'property':
-          values = {};
-          for (let elm = 0; elm < services[key][param].length; elm++) {
-            if (services[key][param][elm].type && services[key][param][elm].id && services[key][param][elm].name) {
-              if (services[key][param][elm].type == 'service') {
-                values[services[key][param][elm].name] = '@' + services[key][param][elm].id;
-              }
-            }
-          }
-          services[key].properties = values;
-          delete services[key][param];
-          break;
-
-        case 'call':
-          values = [];
-          for (let elm = 0; elm < services[key][param].length; elm++) {
-            let tab = [];
-            for (let sparam in services[key][param][elm]) {
-              switch (sparam) {
-              case 'method':
-                tab[0] = services[key][param][elm][sparam];
-                break;
-              case 'argument':
-                let args = [];
-                for (let selem = 0; selem < services[key][param][elm][sparam].length; selem++) {
-                  if (services[key][param][elm][sparam][selem].type && services[key][param][elm][sparam][selem].id) {
-                    if (services[key][param][elm][sparam][selem].type == 'service') {
-                      args.push('@' + services[key][param][elm][sparam][selem].id);
-                    }
-                  }
+          case 'argument':
+            values = [];
+            for (let elm = 0; elm < services[key][param].length; elm++) {
+              if (services[key][param][elm].type && services[key][param][elm].id) {
+                if (services[key][param][elm].type == 'service') {
+                  values.push('@' + services[key][param][elm].id);
                 }
-                tab[1] = args;
-                break;
               }
             }
-            values.push(tab);
-          }
-          services[key].calls = values;
-          delete services[key][param];
-          break;
-        case 'scope':
-          break;
+            services[key]['arguments'] = values;
+            delete services[key][param];
+            break;
+          case 'property':
+            values = {};
+            for (let elm = 0; elm < services[key][param].length; elm++) {
+              if (services[key][param][elm].type && services[key][param][elm].id && services[key][param][elm].name) {
+                if (services[key][param][elm].type == 'service') {
+                  values[services[key][param][elm].name] = '@' + services[key][param][elm].id;
+                }
+              }
+            }
+            services[key].properties = values;
+            delete services[key][param];
+            break;
+
+          case 'call':
+            values = [];
+            for (let elm = 0; elm < services[key][param].length; elm++) {
+              let tab = [];
+              for (let sparam in services[key][param][elm]) {
+                switch (sparam) {
+                  case 'method':
+                    tab[0] = services[key][param][elm][sparam];
+                    break;
+                  case 'argument':
+                    let args = [];
+                    for (let selem = 0; selem < services[key][param][elm][sparam].length; selem++) {
+                      if (services[key][param][elm][sparam][selem].type && services[key][param][elm][sparam][selem].id) {
+                        if (services[key][param][elm][sparam][selem].type == 'service') {
+                          args.push('@' + services[key][param][elm][sparam][selem].id);
+                        }
+                      }
+                    }
+                    tab[1] = args;
+                    break;
+                }
+              }
+              values.push(tab);
+            }
+            services[key].calls = values;
+            delete services[key][param];
+            break;
+          case 'scope':
+            break;
         }
       }
     }
@@ -97,16 +97,16 @@ const pluginReader = function () {
       renderParameters.call(this, callback, services, parameters);
     }
   };
-  const renderParameters = function (callback, services, parameters) {
-    if (parameters && Object.keys(parameters).length > 0 && typeof (services) === 'object' && Object.keys(services).length > 0) {
+  const renderParameters = function(callback, services, parameters) {
+    if (parameters && Object.keys(parameters).length > 0 && typeof(services) === 'object' && Object.keys(services).length > 0) {
       services = JSON.parse(this.render(JSON.stringify(services), parameters));
     }
     callback(services);
   };
-  const getServicesXML = function (file, bundle, parser, callback) {
+  const getServicesXML = function(file, bundle, parser, callback) {
     importXmlConfig.call(this, file, '', callback, parser);
   };
-  const getServicesJSON = function (file, bundle, parser, callback) {
+  const getServicesJSON = function(file, bundle, parser, callback) {
     if (parser) {
       file = this.render(file, parser.data, parser.options);
     }
@@ -115,7 +115,7 @@ const pluginReader = function () {
       renderParameters.call(this, callback, json.services, json.parameters);
     }
   };
-  const getServicesYML = function (file, bundle, parser, callback) {
+  const getServicesYML = function(file, bundle, parser, callback) {
     if (parser) {
       file = this.render(file, parser.data, parser.options);
     }
@@ -124,7 +124,7 @@ const pluginReader = function () {
       renderParameters.call(this, callback, json.services, json.parameters);
     }
   };
-  const javascript = function (file, bundle, parser, callback) {
+  const javascript = function(file, bundle, parser, callback) {
     try {
       callback(this.loader.load(file, true));
     } catch (e) {
@@ -172,17 +172,17 @@ class Injector extends nodefony.Service {
   getServiceClass(service) {
     let Class = null;
     switch (nodefony.typeOf(service.class)) {
-    case "array":
-      Class = this.services[service.class[0]];
-      break;
-    case "function":
-      Class = service.class;
-      break;
-    case "string":
-      Class = this.services[service.class];
-      break;
-    default:
-      throw new Error("Service Name " + this.className + " bad Class");
+      case "array":
+        Class = this.services[service.class[0]];
+        break;
+      case "function":
+        Class = service.class;
+        break;
+      case "string":
+        Class = this.services[service.class];
+        break;
+      default:
+        throw new Error("Service Name " + this.className + " bad Class");
     }
     if (!Class) {
       throw new Error("Service Name " + this.className + " class not found");
@@ -215,17 +215,17 @@ class Injector extends nodefony.Service {
         let method = null;
         let args = null;
         switch (nodefony.typeOf(service.calls[i])) {
-        case "array":
-          method = service.calls[i][0];
-          args = service.calls[i][1];
-          break;
-        case "object":
-          method = service.calls[i].method;
-          args = service.calls[i].arguments;
-          break;
-        default:
-          this.log(service.calls, 'ERROR');
-          throw new Error("Service bad Calls config ");
+          case "array":
+            method = service.calls[i][0];
+            args = service.calls[i][1];
+            break;
+          case "object":
+            method = service.calls[i].method;
+            args = service.calls[i].arguments;
+            break;
+          default:
+            this.log(service.calls, 'ERROR');
+            throw new Error("Service bad Calls config ");
         }
         ele[method] = this.findInjections(args);
       }
@@ -263,7 +263,7 @@ class Injector extends nodefony.Service {
     this.log("RESTART : " + this.name, "INFO");
     try {
       const service = this.get(this.name);
-      if( service && service.close){
+      if (service && service.close) {
         await service.close();
       }
       this.remove(this.name);
@@ -294,7 +294,7 @@ class Injector extends nodefony.Service {
 
   async reflect() {
     try {
-      return  await Reflect.construct(this.Class, this.injections)
+      return await Reflect.construct(this.Class, this.injections)
     } catch (e) {
       this.log("ERRROR SERVICE CLASS " + this.name + " " + e.message, "ERROR");
       throw e;
@@ -323,24 +323,24 @@ class Injector extends nodefony.Service {
     if (args instanceof Array) {
       for (let elm = 0; elm < args.length; elm++) {
         switch (nodefony.typeOf(args[elm])) {
-        case "string":
-          let name = null;
-          switch (args[elm][0]) {
-          case '@':
-            name = args[elm].substring(1);
-            let service = this.get(name);
-            if (service) {
-              tab.push(service);
-            } else {
-              this.log("Injection Service  : " + name + " not found !!", "ERROR");
+          case "string":
+            let name = null;
+            switch (args[elm][0]) {
+              case '@':
+                name = args[elm].substring(1);
+                let service = this.get(name);
+                if (service) {
+                  tab.push(service);
+                } else {
+                  this.log("Injection Service  : " + name + " not found !!", "ERROR");
+                }
+                break;
+              default:
+                tab.push(args[elm]);
             }
             break;
           default:
             tab.push(args[elm]);
-          }
-          break;
-        default:
-          tab.push(args[elm]);
         }
       }
     }
@@ -357,9 +357,9 @@ class Injection extends nodefony.Service {
     super("injection", container, container.get("notificationsCenter"));
     this.injectors = {};
 
-    this.reader = function (context) {
+    this.reader = function(context) {
       const func = context.get("reader").loadPlugin("injection", pluginReader);
-      return function (result, bundle, parser) {
+      return function(result, bundle, parser) {
         return func(result, bundle, parser, context.nodeReader.bind(context));
       };
     }(this);
@@ -370,25 +370,23 @@ class Injection extends nodefony.Service {
       if (jsonServices[lib].class) {
         if (jsonServices[lib].environment) {
           let inject = false;
-          if (process.env && process.env.NODE_ENV) {
-            if (nodefony.typeOf(jsonServices[lib].environment) === "array") {
-              let res = jsonServices[lib].environment.indexOf(process.env.NODE_ENV);
-              if (res >= 0) {
-                inject = true;
-              }
-              res = jsonServices[lib].environment.indexOf(this.kernel.type);
-              if (res >= 0) {
-                inject = true;
-              }
-            } else {
-              if (jsonServices[lib].environment === process.env.NODE_ENV) {
-                inject = true;
-              }
+          if (nodefony.typeOf(jsonServices[lib].environment) === "array") {
+            let res = jsonServices[lib].environment.indexOf(process.env.NODE_ENV);
+            if (res >= 0) {
+              inject = true;
             }
-            if (!inject) {
-              this.log(`environment : ${process.env.NODE_ENV} BYPASS SERVICE START : ${lib}`, "DEBUG");
-              continue;
+            res = jsonServices[lib].environment.indexOf(this.kernel.type);
+            if (res >= 0) {
+              inject = true;
             }
+          } else {
+            if (jsonServices[lib].environment === process.env.NODE_ENV) {
+              inject = true;
+            }
+          }
+          if (!inject) {
+            this.log(`environment : ${process.env.NODE_ENV} BYPASS SERVICE START : ${lib}`, "DEBUG");
+            continue;
           }
         }
         try {
