@@ -12,7 +12,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
-    "prepare": "cd vuepress && npm install --production=false && npm run  docs:build"
+    "prepare": "cd vuepress && yarn install && yarn docs:build "
   },
   "files": [
     "vuepress/public/documentation",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@apollo/client": "3.7.3",
-    "@babel/core": "7.20.5",
+    "@babel/core": "7.20.7",
     "@babel/eslint-parser": "7.19.1",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-react": "7.18.6",
