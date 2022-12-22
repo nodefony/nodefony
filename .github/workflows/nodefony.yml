@@ -17,9 +17,9 @@ jobs:
     - uses:              webfactory/ssh-agent@v0.4.1
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-    - uses:              actions/checkout@v2
+    - uses:              actions/checkout@v3
     - name:              Use Node.js ${{ matrix.node-version }}
-      uses:              actions/setup-node@v2
+      uses:              actions/setup-node@v3
       with:
         node-version:    ${{ matrix.node-version }}
     # ACTION LOCAL TEST
@@ -96,9 +96,9 @@ jobs:
     - uses:              webfactory/ssh-agent@v0.4.1
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-    - uses:              actions/checkout@v2
+    - uses:              actions/checkout@v3
     - name:              Use Node.js ${{ matrix.node-version }}
-      uses:              actions/setup-node@v2
+      uses:              actions/setup-node@v3
       with:
         node-version:    ${{ matrix.node-version }}
     # ACTION LOCAL TEST
@@ -163,9 +163,9 @@ jobs:
       run:               npm i -g yarn
     - name:              Use clean Yarn cache on windows
       run:               yarn cache clean
-    - uses:              actions/checkout@v2
+    - uses:              actions/checkout@v3
     - name:              Use Node.js ${{ matrix.node-version }}
-      uses:              actions/setup-node@v2
+      uses:              actions/setup-node@v3
       with:
         node-version:    ${{ matrix.node-version }}
     # ACTION LOCAL TEST
