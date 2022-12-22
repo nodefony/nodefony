@@ -90,6 +90,7 @@ export default {
 		let options = {
 			start: moment().add(-120, 'seconds'), // changed so its faster
 			end: moment(),
+			moveable:false,
 			dataAxis: {
 				left: {
 					range: {
