@@ -14,7 +14,7 @@ jobs:
       run:               sudo npm i -g --force npm
     - name:              Use latest Yarn
       run:               sudo npm i -g yarn
-    - uses:              webfactory/ssh-agent@v0.4.1
+    - uses:              webfactory/ssh-agent@v0.7.0
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     - uses:              actions/checkout@v3
@@ -93,7 +93,7 @@ jobs:
       run:               npm i -g --force npm
     - name:              Use latest Yarn
       run:               npm i -g yarn
-    - uses:              webfactory/ssh-agent@v0.4.1
+    - uses:              webfactory/ssh-agent@v0.7.0
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     - uses:              actions/checkout@v3
