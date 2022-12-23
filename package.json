@@ -1,6 +1,6 @@
 {
   "name": "nodefony-core",
-  "version": "7.0.0",
+  "version": "7.0.0-beta.11",
   "description": "Core Nodefony Node.js Web Framework",
   "main": "./src/nodefony/core/autoloader.es6",
   "scripts": {
@@ -13,7 +13,7 @@
     "test": "node src/nodefony/bin/nodefony unitest:launch:all",
     "publish": "bash bin/publish.sh",
     "certificates": "bash bin/generateCertificates.sh",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "changelog": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -s -r 0",
     "dev-deploy": "bash bin/dev-deploy.sh",
     "prod-deploy": "bash bin/prod-deploy.sh"
   },
