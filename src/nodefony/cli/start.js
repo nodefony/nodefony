@@ -50,7 +50,10 @@ module.exports = class cliStart extends nodefony.cliKernel {
         return commander;
       });
     // INIT
-    this.initialize();
+    this.initialize()
+    .catch(e=>{
+        this.terminate(e.code || 1)
+    })
   }
 
   async setCommand(cmd, args = []) {
@@ -123,6 +126,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
           }
           return this.terminate(1);
         }
+        throw e
       });
   }
 
@@ -132,9 +136,15 @@ module.exports = class cliStart extends nodefony.cliKernel {
     this.initOptions();
     await this.parseCommand(process.argv);
     if (process.argv.slice(2).includes("--help") || process.argv.slice(2).includes("-h")) {
-      return await this.onStart("help");
+      return await this.onStart("help")
+      .catch(e=>{
+        throw e
+      })
     }
-    return await this.onStart();
+    return await this.onStart()
+    .catch(e=>{
+      throw e
+    })
   }
 
   /*async onCommand(cmd = this.cmd, args = this.args) {

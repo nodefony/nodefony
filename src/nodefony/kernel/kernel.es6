@@ -1031,36 +1031,40 @@ class Kernel extends nodefony.Service {
   async preRegister(bundles) {
     try {
       //this.fire("onPreRegister", this);
-      await this.emitAsync("onPreRegister", this);
-      this.preRegistered = true;
-    } catch (e) {
-      this.log(e);
-    }
-    return await this.registerBundles(bundles)
-      .then(async (res) => {
-        this.preboot = true;
-        //this.fire("onPreBoot", this);
-        await this.emitAsync("onPreBoot", this);
-        this.log(res, "DEBUG", "REGISTER BUNDLES");
-        return await this.registerBundles(this.configBundle)
-          .then(async (res) => {
-            if (res.length) {
-              this.log(res, "DEBUG", "REGISTER BUNDLES");
-            }
-            //this.fire("onRegister", this);
-            await this.emitAsync("onRegister", this);
-            return await this.initializeBundles()
-              .catch(e => {
-                throw e
-              })
-          })
-          .catch(e => {
-            throw e
-          })
-      })
+      await this.emitAsync("onPreRegister", this)
       .catch(e => {
-        throw e;
-      });
+        throw e
+      })
+      this.preRegistered = true;
+      return await this.registerBundles(bundles)
+        .then(async (res) => {
+          this.preboot = true;
+          //this.fire("onPreBoot", this);
+          await this.emitAsync("onPreBoot", this);
+          this.log(res, "DEBUG", "REGISTER BUNDLES");
+          return await this.registerBundles(this.configBundle)
+            .then(async (res) => {
+              if (res.length) {
+                this.log(res, "DEBUG", "REGISTER BUNDLES");
+              }
+              //this.fire("onRegister", this);
+              await this.emitAsync("onRegister", this);
+              return await this.initializeBundles()
+                .catch(e => {
+                  throw e
+                })
+            })
+            .catch(e => {
+              throw e
+            })
+        })
+        .catch(e => {
+          throw e;
+        });
+    } catch (e) {
+      this.log(e,"ERROR");
+      throw e
+    }
   }
 
   async onReady() {

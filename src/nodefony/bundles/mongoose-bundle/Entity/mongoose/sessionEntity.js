@@ -39,10 +39,6 @@ module.exports = class session extends nodefony.Entity {
      *   @param connection name
      */
     super(bundle, "session", "mongoose", "nodefony");
-    this.once("onConnect", (name, db) => {
-      this.model = this.registerModel(db);
-      this.orm.setEntity(this);
-    });
   }
 
   registerModel(db) {

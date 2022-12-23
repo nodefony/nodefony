@@ -22,6 +22,9 @@ class mongoose extends nodefony.Orm {
     super("mongoose", container, kernel, autoLoader);
     this.engine = Mongoose;
     this.strategy = 'migrate'
+    this.kernel.on("onTerminate", async () => {
+      await this.closeConnections()
+    })
   }
 
   static isError(error) {
@@ -32,38 +35,54 @@ class mongoose extends nodefony.Orm {
     return `${error.message}`;
   }
 
-  boot() {
-    super.boot();
-    if (this.kernel.ready) {
-      this.initialize()
-      this.displayTable("INFO");
-    } else {
-      this.kernel.once("onBoot", async () => {
-        this.initialize()
-      });
-
-      this.kernel.once("onReady", () => {
-        this.displayTable("INFO");
-      });
+  async closeConnections() {
+    for (let conn in this.connections) {
+      await this.connections[conn].close()
+        .then(() => {
+          this.log(`close mongo connection ${conn} `)
+        })
+        .catch(e => {
+          this.log(e, "ERROR")
+        })
     }
   }
 
-  initialize() {
-    this.settings = nodefony.extend({}, defaultconfigServer, this.bundle.settings.mongoose);
-    if (this.settings.strategy) {
-      this.strategy = this.settings.strategy
-    }
-    if (this.settings.connectors && Object.keys(this.settings.connectors).length) {
-      for (let name in this.settings.connectors) {
-        this.createConnection(name, this.settings.connectors[name]);
-      }
-    } else {
-      process.nextTick(() => {
-        this.log('onOrmReady', "DEBUG", "EVENTS MOOGODB");
-        this.fire('onOrmReady', this);
-        this.ready = true;
+  boot() {
+    return new Promise((resolve, reject) => {
+      super.boot();
+      this.kernel.once('onBoot', async ( /*kernel*/ ) => {
+        this.settings = nodefony.extend({}, defaultconfigServer, this.bundle.settings.mongoose);
+        this.debug = this.settings.debug;
+        if (this.settings.strategy) {
+          this.strategy = this.settings.strategy
+        }
+        if (this.settings.connectors && Object.keys(this.settings.connectors).length) {
+          for (let name in this.settings.connectors) {
+            await this.createConnection(name, this.settings.connectors[name]);
+          }
+        } else {
+          process.nextTick(async () => {
+            this.log('onOrmReady', "DEBUG", "EVENTS MOOGOOSE");
+            try {
+              await this.fireAsync('onOrmReady', this);
+              this.ready = true;
+              return resolve(this)
+            } catch (e) {
+              this.log(e, "ERROR", "EVENTS onOrmReady");
+              return reject(e)
+            }
+          });
+        }
+      })
+
+      this.kernel.once("onReady", async () => {
+        if (this.kernel.type === "SERVER") {
+          this.displayTable("INFO");
+        } else {
+          this.displayTable();
+        }
       });
-    }
+    })
   }
 
   createConnection(name, config) {
@@ -111,7 +130,9 @@ class mongoose extends nodefony.Orm {
         return db;
       }).catch(error => {
         this.log(`Cannot connect to mongodb ( ${host}:${port}/${config.dbname} )`, "ERROR");
-        this.log(error, "ERROR");
+        this.fire('onErrorConnection', null, error);
+        //this.log(error, "ERROR");
+        throw error
       });
   }
 
@@ -132,13 +153,14 @@ class mongoose extends nodefony.Orm {
         `${this.name.toUpperCase()} CONNECTIONS NAME`,
         "NAME DATABASE",
         "DRIVER",
-        "URI"
+        "URI",
+        "status"
       ]
     };
     let table = this.kernel.cli.displayTable(null, options);
     //let tab = [];
     for (let dbname in this.settings.connectors) {
-      let conn = ["", "", "mongodb", ""];
+      let conn = ["", "", "mongodb", "", ""];
       conn[0] = dbname;
       for (let data in this.settings.connectors[dbname]) {
         switch (data) {
@@ -153,6 +175,7 @@ class mongoose extends nodefony.Orm {
             break;
         }
       }
+      conn[4] = this.connections[dbname].states[this.connections[dbname]._readyState]
       table.push(conn);
     }
     if (this.kernel && this.kernel.type === "CONSOLE") {

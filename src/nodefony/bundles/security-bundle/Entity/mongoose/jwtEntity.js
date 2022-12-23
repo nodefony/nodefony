@@ -16,10 +16,6 @@ module.exports = class jwt extends nodefony.Entity {
      *   @param connection name
      */
     super(bundle, "jwt", "mongoose", "nodefony");
-    this.once("onConnect", (name, db) => {
-      this.model = this.registerModel(db);
-      this.orm.setEntity(this);
-    });
   }
 
   getSchema() {
@@ -43,7 +39,6 @@ module.exports = class jwt extends nodefony.Entity {
   }
 
   registerModel(db) {
-
     let mySchema = new Schema(this.getSchema(), {
       timestamps: {
         createdAt: 'createdAt',

@@ -1,6 +1,6 @@
-nodefony.register.call(nodefony.session.storage, "mongoose", function () {
+nodefony.register.call(nodefony.session.storage, "mongoose", function() {
 
-  const finderGC = function (msMaxlifetime, contextSession) {
+  const finderGC = function(msMaxlifetime, contextSession) {
     let where = {
       context: contextSession,
       updatedAt: {
@@ -120,7 +120,7 @@ nodefony.register.call(nodefony.session.storage, "mongoose", function () {
               flashBag: result.flashBag,
               metaBag: result.metaBag,
               Attributes: result.Attributes,
-              username:result.username
+              username: result.username
             };
           } else {
             return {};
@@ -136,8 +136,10 @@ nodefony.register.call(nodefony.session.storage, "mongoose", function () {
         session_id: id,
         context: contextSession || "default"
       });
-      if( data.username ){
-        let myuser = await this.userEntity.findOne({username:data.username.username})
+      if (data.username) {
+        let myuser = await this.userEntity.findOne({
+          username: data.username.username
+        })
         data.username = myuser._id
       }
       return this.entity.updateOne({
@@ -155,10 +157,7 @@ nodefony.register.call(nodefony.session.storage, "mongoose", function () {
           return data;
         })
         .catch((error) => {
-          if (error) {
-            this.manager.logger(error, "ERROR");
-            return error;
-          }
+          throw error;
         });
     }
 

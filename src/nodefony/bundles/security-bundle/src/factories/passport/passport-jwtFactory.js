@@ -26,10 +26,6 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
       this.jwt = jwt;
       this.orm = this.kernel.getORM();
       this.jwtConfig = this.kernel.getBundle("security").settings["passport-jwt"];
-      this.entity = null;
-      this.orm.on("onOrmReady", () => {
-        this.entity = this.orm.getEntity("jwt");
-      });
     }
 
     logout(context) {
@@ -41,7 +37,8 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
         this.log(`logout jwt token`,'DEBUG');
         this.log( query,'DEBUG');
         if (query.refreshToken) {
-          let res = await this.entity.deleteRefreshToken(query.refreshToken);
+          const entity = this.orm.getEntity("jwt");
+          let res = await entity.deleteRefreshToken(query.refreshToken);
           this.log(`delete jwt refrestoken : ${res}`,'DEBUG');
           if (res) {
             return resolve(super.logout(context));
@@ -114,14 +111,16 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
       const refreshToken = this.generateJwtToken({
         username: name
       }, opt);
-      await this.entity.setRefreshToken(name, token, refreshToken);
+      const entity = this.orm.getEntity("jwt");
+      await entity.setRefreshToken(name, token, refreshToken);
       return refreshToken;
     }
 
     verifyRefreshToken(refreshtoken) {
       return new Promise(async (resolve, reject) => {
         try {
-          const mytoken = await this.entity.getRefreshToken(refreshtoken);
+          const entity = this.orm.getEntity("jwt");
+          const mytoken = await entity.getRefreshToken(refreshtoken);
           if (!mytoken) {
             return reject(new Error("Refresh Token not found"));
           }
@@ -140,11 +139,13 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
       });
     }
     async updateJwtRefreshToken(name, token, refreshToken) {
-      return await this.entity.updateRefreshToken(name, token, refreshToken);
+      const entity = this.orm.getEntity("jwt");
+      return await entity.updateRefreshToken(name, token, refreshToken);
     }
 
     async truncateJwtToken(username = null) {
-      return await this.entity.truncate(username);
+      const entity = this.orm.getEntity("jwt");
+      return await entity.truncate(username);
     }
 
     decodeJwtToken(token) {

@@ -9,20 +9,21 @@
  *       for manage Sessions / Users
  */
 module.exports = {
-  mongoose:{
-    debug: false,
+  mongoose: {
+    debug: true,
     connectors: {
       nodefony: {
         host: "localhost",
         port: 27017,
         dbname: "nodefony",
         settings: {
-          user: "",
-          pass: "",
-          //useUnifiedTopology:true,
+          user: "nodefony",
+          pass: "nodefony",
           maxPoolSize: 50,
-          wtimeoutMS: 2500,
-          useNewUrlParser: true
+          useNewUrlParser: true,
+          serverSelectionTimeoutMS: 5000,
+          socketTimeoutMS: 5000,
+          connectTimeoutMS: 5000
         }
       }
     }
