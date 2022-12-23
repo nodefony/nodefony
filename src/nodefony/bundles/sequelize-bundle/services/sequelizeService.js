@@ -211,7 +211,6 @@ class sequelize extends nodefony.Orm {
     super("sequelize", container, kernel, autoLoader);
     this.engine = Sequelize;
     this.strategy = 'migrate'
-    //this.boot();
     this.kernel.on("onTerminate", async () => {
       await this.closeConnections()
     })

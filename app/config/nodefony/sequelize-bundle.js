@@ -65,11 +65,11 @@
  *          }
  *        }
  */
- let Transaction , Sequelize
- if (nodefony.Sequelize){
-   Transaction = nodefony.Sequelize.Transaction
-   Sequelize = nodefony.Sequelize.Sequelize
- }
+let Transaction, Sequelize
+if (nodefony.Sequelize) {
+  Transaction = nodefony.Sequelize.Transaction
+  Sequelize = nodefony.Sequelize.Sequelize
+}
 
 const vault = async () => {
   const serviceVault = kernel.get("vault");
@@ -105,33 +105,35 @@ switch (kernel.appEnvironment.environment) {
           idle: 10000
         }
       }
-      // dbname: 'nodefony',
-      // username: 'postgres',
-      // password: 'nodefony',
-      // // credentials: vault,
-      // options: {
-      //   dialect: "postgres",
-      //   host: "localhost",
-      //   port: "5432",
-      //   pool: {
-      //     max: 30,
-      //     min: 0,
-      //     idle: 10000,
-      //     acquire: 60000
-      //   },
-      //   retry: {
-      //     match: [
-      //       Sequelize.ConnectionError,
-      //       Sequelize.ConnectionTimedOutError,
-      //       Sequelize.ConnectionRefusedError,
-      //       Sequelize.TimeoutError,
-      //       /Deadlock/i
-      //     ],
-      //     max: Infinity
-      //   }
-      // }
-
     }
+    /*connectors.nodefony = {
+      driver: "postgres",
+      dbname: 'nodefony',
+      username: 'postgres',
+      password: 'nodefony',
+      //credentials: vault,
+      options: {
+        dialect: "postgres",
+        host: "localhost",
+        port: "5432",
+        //isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+        retry: {
+          match: [
+            Sequelize.ConnectionError,
+            Sequelize.ConnectionTimedOutError,
+            Sequelize.TimeoutError,
+            /Deadlock/i
+          ],
+          max: 5
+        },
+        pool: {
+          max: 20,
+          min: 0,
+          idle: 10000,
+          acquire: 60000
+        }
+      }
+    }*/
 }
 
 module.exports = {
