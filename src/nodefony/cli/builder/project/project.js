@@ -353,23 +353,23 @@ class generateProject extends nodefony.Builder {
                 skeleton: path.resolve(this.pathSkeleton, "migrations", "migrations.skeleton.js"),
                 params: this.response
               }, {
-                name: "20221119210432-create-user.js",
-                skeleton: path.resolve(this.pathSkeleton, "migrations", "20221119210432-create-user.js"),
+                name: "20221119210432-entity-user.js",
+                skeleton: path.resolve(this.pathSkeleton, "migrations", "20221119210432-entity-user.js"),
                 type: "file",
                 params: this.response
               }, {
-                name: "20221119210433-create-session.js",
-                skeleton: path.resolve(this.pathSkeleton, "migrations", "20221119210433-create-session.js"),
+                name: "20221119210433-entity-session.js",
+                skeleton: path.resolve(this.pathSkeleton, "migrations", "20221119210433-entity-session.js"),
                 type: "file",
                 params: this.response
               }, {
-                name: "20221119210434-create-requests.js",
-                skeleton: path.resolve(this.pathSkeleton, "migrations", "20221119210434-create-requests.js"),
+                name: "20221119210434-entity-requests.js",
+                skeleton: path.resolve(this.pathSkeleton, "migrations", "20221119210434-entity-requests.js"),
                 type: "file",
                 params: this.response
               }, {
-                name: "20221119210435-create-jwts.js",
-                skeleton: path.resolve(this.pathSkeleton, "migrations", "20221119210435-create-jwts.js"),
+                name: "20221119210435-entity-jwts.js",
+                skeleton: path.resolve(this.pathSkeleton, "migrations", "20221119210435-entity-jwts.js"),
                 type: "file",
                 params: this.response
               }]
@@ -428,6 +428,18 @@ class generateProject extends nodefony.Builder {
             type: "file",
             chmod: 755,
             skeleton: path.resolve(this.pathSkeleton, "bin", "generateCertificates.sh.skeleton"),
+            params: this.response
+          }, {
+            name: "dev-deploy.sh",
+            type: "file",
+            chmod: 755,
+            skeleton: path.resolve(this.pathSkeleton, "bin", "dev-deploy.sh"),
+            params: this.response
+          }, {
+            name: "prod-deploy.sh",
+            type: "file",
+            chmod: 755,
+            skeleton: path.resolve(this.pathSkeleton, "bin", "prod-deploy.sh"),
             params: this.response
           }]
         }, {

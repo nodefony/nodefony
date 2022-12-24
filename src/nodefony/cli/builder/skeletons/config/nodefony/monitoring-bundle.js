@@ -4,7 +4,6 @@
  *    see MONITORING BUNDLE config for more options
  *
  */
-
 module.exports = {
   debugBar: true,
   forceDebugBarProd: false,
@@ -26,7 +25,7 @@ module.exports = {
     primaryName: "users"
   },
 
-  // entry point graphigl monitoring only 1 URL (use merge in graphgl controller ) 
+  // entry point graphigl monitoring only 1 URL (use merge in graphgl controller )
   graphigl:{
     projectName: "Nodefony Graphql Api",
     logo: "/app/images/app-logo.png",

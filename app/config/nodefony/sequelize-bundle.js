@@ -145,5 +145,12 @@ switch (kernel.appEnvironment.environment) {
 module.exports = {
   debug: false,
   strategy: "migrate", // sync || migrate || none  when nodefony build  or  nodefony install
-  connectors: connectors
+  connectors: connectors,
+  migrations: {
+    storage: "sequelize", // sequelize || memory || json
+    path: path.resolve(kernel.path, "migrations", "sequelize"),
+    seedeersPath: path.resolve(kernel.path, "migrations", "seedeers"),
+    storageSeedeers:"json",
+    options: {}
+  }
 }

@@ -47,7 +47,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function(
       }
     }
 
-    installOrm(force = false, strategy) {
+    installOrm(force = false, strategy = null) {
       this.log("INITIALIZE ORM");
       this.orm = this.cli.kernel.getOrm();
       switch (this.orm) {

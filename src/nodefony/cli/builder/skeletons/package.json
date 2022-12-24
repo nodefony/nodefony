@@ -24,23 +24,23 @@
 {% if addons.bootstrap %}
     "@popperjs/core": "2.11.6",
     "bootstrap": "^5.2.3",
-    "jquery": "3.6.1",
+    "jquery": "3.6.3",
     "font-awesome": "^4.7.0",
 {% endif %}
 {% if addons.webpack %}
-    "@babel/core": "7.20.5",
+    "@babel/core": "7.20.7",
     "@babel/preset-env": "^7.20.2",
     "babel-loader": "^9.1.0",
     "clean-webpack-plugin": "^4.0.0",
     "css-hot-loader": "^1.4.4",
-    "css-loader": "^6.7.2",
+    "css-loader": "6.7.3",
     "expose-loader": "4.0.0",
     "favicons": "7.0.2",
     "favicons-webpack-plugin": "6.0.0",
     "html-webpack-plugin": "^5.5.0",
     "imports-loader": "4.0.1",
     "mini-css-extract-plugin": "2.7.2",
-    "sass": "^1.56.1",
+    "sass": "1.57.1",
     "sass-loader": "^13.2.0",
     "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "^3.3.1",
@@ -50,7 +50,7 @@
     "webpack-merge": "^5.8.0",
 {% endif %}
     "@mapbox/node-pre-gyp": "1.0.10",
-    "node-gyp": "^9.3.0"
+    "node-gyp": "^9.3.1"
   },
   "license": "",
   "readmeFilename": "README.md",
