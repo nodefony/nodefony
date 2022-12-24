@@ -73,19 +73,25 @@ if (nodefony.Sequelize) {
 
 const vault = async () => {
   const serviceVault = kernel.get("vault");
-  return await serviceVault.getConnectorCredentials("nodefony")
+  return await serviceVault.getSecret({
+      path: "nodefony/data/database/postgresql/connector/nodefony"
+    })
+    .then((secret) => {
+      return secret.data.data
+    })
+    .catch(e => {
+      throw e
+    })
 }
 
 const connectors = {}
 switch (kernel.appEnvironment.environment) {
   case "production":
-  case "preprod":
   case "development":
   default:
     connectors.nodefony = {
       driver: 'sqlite',
       dbname: path.resolve("app", "Resources", "databases", "nodefony.db"),
-      // credentials: vault,
       options: {
         dialect: "sqlite",
         //isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
@@ -94,8 +100,8 @@ switch (kernel.appEnvironment.environment) {
             //Sequelize.ConnectionError,
             //Sequelize.ConnectionTimedOutError,
             //Sequelize.TimeoutError,
-            ///Deadlock/i,
-            //'SQLITE_BUSY'
+            /Deadlock/i,
+            'SQLITE_BUSY'
           ],
           max: Infinity
         },
@@ -119,9 +125,9 @@ switch (kernel.appEnvironment.environment) {
         //isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
         retry: {
           match: [
-            Sequelize.ConnectionError,
-            Sequelize.ConnectionTimedOutError,
-            Sequelize.TimeoutError,
+            //Sequelize.ConnectionError,
+            //Sequelize.ConnectionTimedOutError,
+            //Sequelize.TimeoutError,
             /Deadlock/i
           ],
           max: 5

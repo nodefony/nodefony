@@ -12,6 +12,18 @@
  *        GENERATE BY d-lake-si BUILDER
  */
 
+let connect = {}
+switch (kernel.appEnvironment.environment) {
+  case "production":
+  case "development":
+  default:
+    connect = {
+      apiVersion: 'v1', // default
+      endpoint: 'http://localhost:8200', // default
+      token: 'hvs.mejHci5BDdqjiFuAWAhmlyjX',
+    }
+}
+
 module.exports = {
   type: "sandbox",
   locale: "en_en",
@@ -53,17 +65,16 @@ module.exports = {
    *	example : create an other database connector
    */
   vault: {
-    connect:{
-      apiVersion: 'v1', // default
-      endpoint: 'http://localhost:8200', // default
-      token: 'hvs.RkIXePX5oRXhzNAQ1JO5uqgn',
-    },
+    connect: connect,
+    getCredentialsApprole: kernel.appEnvironment.vault.getVaultCredentialsApprole,
+    prepareAuth: kernel.appEnvironment.vault.prepareAuth,
+    active: kernel.appEnvironment.vault.active,
     config: {
-      mount:{
+      mount: {
         path: "nodefony",
       },
-      auths:{
-        approle:{
+      auths: {
+        approle: {
           mountPoint: 'nodefony-auth',
           roleName: 'nodefony-role',
         }
@@ -73,12 +84,24 @@ module.exports = {
         rules: '{ "path": { "nodefony/data/*": { "policy": "write" } } }',
       },
       secrets: [{
-        path: "nodefony/data/databases/connector/nodefony",
+        path: "nodefony/data/database/postgresql/connector/nodefony",
         data: {
-          username: "root",
+          username: "postgres",
           password: "nodefony"
         }
-    }]
+      }, {
+        path: "nodefony/data/database/mongo/connector/nodefony",
+        data: {
+          user: "nodefony",
+          pass: "nodefony"
+        }
+      }, {
+        path: "nodefony/data/database/mysql/connector/nodefony",
+        data: {
+          username: "mysql",
+          password: "nodefony"
+        }
+      }]
     }
   }
 }

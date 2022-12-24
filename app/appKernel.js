@@ -56,7 +56,7 @@ module.exports = class appKernel extends nodefony.kernel {
     return {
       environment: environment,
       database: this.getDatabaseEnvironment(environment),
-      //vault: this.getVaultEnvironment(environment)
+      vault: this.getVaultEnvironment(environment)
     }
   }
 
@@ -87,7 +87,7 @@ module.exports = class appKernel extends nodefony.kernel {
       case 'development':
       default:
         return {
-          active: false,
+          active: true,
             prepareAuth: true,
             getVaultCredentialsApprole: this.getVaultCredentialsApprole(environment)
         }

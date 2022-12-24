@@ -85,15 +85,39 @@ class mongoose extends nodefony.Orm {
     })
   }
 
-  createConnection(name, config) {
+  async createConnection(name, config) {
     if (!name) {
       throw new Error("Mongodb createConnnetion no name connection");
     }
     let host = config.host || this.settings.host;
     let port = config.port || this.settings.port;
     let url = `mongodb://${host}:${port}/${config.dbname}`;
-
     let settings = nodefony.extend(true, {}, defaultConfigConnection, config.settings);
+    try {
+      if (config.credentials && nodefony.typeOf(config.credentials) === 'function') {
+        this.log(`Try Get Credentials (async method)`);
+        let auth = await config.credentials(this)
+          .catch(e => {
+            throw e
+          })
+        if (auth.user) {
+          this.log(`Add username Credential for connector ${this.name}`);
+          settings.user = auth.user
+        } else {
+          this.log(`Credentials (async method) no username secret`, "WARNING")
+        }
+        if (auth.pass) {
+          this.log(`Add password Credential for connector ${this.name}`);
+          settings.pass = auth.pass
+        } else {
+          this.log(`Credentials (async method) no password secret`, "WARNING")
+        }
+        this.log(`Success Credential (async method) ${auth}`, "DEBUG");
+      }
+    } catch (e) {
+      this.log(e, "ERROR")
+      throw e
+    }
     return this.engine.createConnection(url, settings).asPromise()
       .then((db) => {
         this.connections[name] = db;

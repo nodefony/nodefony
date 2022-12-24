@@ -153,7 +153,10 @@ class connectionDB {
       try {
         if (config.credentials && nodefony.typeOf(config.credentials) === 'function') {
           this.log(`Try Get Credentials (async method)`);
-          let auth = await config.credentials(this);
+          let auth = await config.credentials(this)
+            .catch(e => {
+              throw e
+            })
           if (auth.username) {
             this.log(`Add username Credential for connector ${this.name}`);
             username = auth.username
