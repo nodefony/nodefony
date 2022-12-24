@@ -13,22 +13,19 @@ const readFile = function (Path) {
     throw e;
   }
 };
-let crypto;
-try {
-  crypto = require('node:crypto');
-} catch (err) {
-  crypto = require('crypto');
-}
-const {createHash} = crypto;
+const {
+  createHash,
+} = require('node:crypto');
+
 const createSecret = function () {
   let sercretPath = path.resolve("config", "certificates", "ca", "private", "ca.key.pem");
-  return createHash('sha256').update(String(readFile(sercretPath))).digest('base64').substr(0, 32);
+  return createHash('sha512').update(readFile(sercretPath)).digest('base64').substr(0, 32);
 };
 const secret = createSecret();
 
 const createIv = function () {
   let sercretPath = path.resolve("config", "certificates", "ca", "public", "public.key.pem");
-  return createHash('sha256').update(String(readFile(sercretPath))).digest('base64').substr(0, 16);
+  return createHash('sha512').update(readFile(sercretPath)).digest('base64').substr(0, 16);
 };
 const iv = createIv();
 const tmpDir = kernel.tmpDir.path || "/tmp"
