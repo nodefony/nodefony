@@ -47,7 +47,7 @@
     "@vue/cli-service": "5.0.8",
     "ansi-to-html": "0.7.2",
     "clean-webpack-plugin": "4.0.0",
-    "core-js": "^3.26.1",
+    "core-js": "3.27.0",
     "eslint": "8.30.0",
     "eslint-plugin-vue": "^9.8.0",
     "graphiql": "^2.2.0",
