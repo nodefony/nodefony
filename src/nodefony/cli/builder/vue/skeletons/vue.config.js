@@ -1,19 +1,33 @@
 // vue.config.js
+const {
+  defineConfig
+} = require('@vue/cli-service')
+const webpack = require('webpack');
 const path = require('path');
 const Package = require(path.resolve("package.json"));
-const packageVue = require(path.resolve("node_modules","vue","package.json"));
+const packageVue = require(path.resolve("node_modules", "vue", "package.json"));
 const outputDir = path.resolve("Resources", "public");
 const indexPath = path.resolve("Resources", "views", 'index.html.twig');
 const publicPath = "/{{bundleName}}";
 const template = path.resolve('public', 'index.html');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const {
+  CleanWebpackPlugin
+} = require('clean-webpack-plugin');
 const title = Package.name;
 const nodeModule = path.resolve(process.cwd(), "node_modules");
+
+{% if addons.vuetify %}
+const vuetifyDir = path.dirname(require.resolve("vuetify"));
+const packageVuetify = require(path.resolve(vuetifyDir, "..", "package.json"));
+{% endif %}
 
 process.env.VUE_APP_VERSION = Package.version;
 process.env.VUE_APP_VUE_VERSION = packageVue.version;
 process.env.VUE_APP_DEBUG = process.env.DEBUG_MODE;
 process.env.VUE_APP_NODE_ENV = process.env.NODE_ENV;
+{% if addons.vuetify %}
+process.env.VUE_APP_VUETIFY_VERSION = packageVuetify.version;
+{% endif %}
 try {
   process.env.VUE_APP_DOMAIN = kernel.domain;
   process.env.VUE_APP_HTTP_PORT = kernel.httpPort;
@@ -34,8 +48,7 @@ try {
   debug = kernel.debug ? "*" : false;
 } catch (e) {}
 
-
-module.exports = {
+module.exports = defineConfig({
   lintOnSave: false,
   publicPath: publicPath,
   outputDir: outputDir,
@@ -51,7 +64,9 @@ module.exports = {
         return args;
       });
   },
+
   configureWebpack: {
+    cache: true,
     devtool: process.env.NODE_ENV === "development" ? "source-map" : false,
     watchOptions: {
       aggregateTimeout: 2000,
@@ -104,8 +119,11 @@ module.exports = {
       }),
     ]
   }{% if addons.vuetify %},
+  pluginOptions: {
+    vuetify: {}
+  },
   transpileDependencies: [
     "vuetify"
   ]
   {% endif %}
-};
+})

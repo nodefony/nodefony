@@ -7,7 +7,7 @@ class Vue extends nodefony.builders.sandbox {
         bootstrap: false,
         vuetify: true,
         i18n: true,
-        apollo:false
+        apollo: false
       }
     }));
     this.pathSkeleton = path.resolve(__dirname, "skeletons");
@@ -17,16 +17,16 @@ class Vue extends nodefony.builders.sandbox {
 
   run() {
     return super.run(true).
-      then(async (res)=>{
-        if(this.response.addons.i18n){
-          try{
-            await this.addI18n();
-          }catch(e){
-            this.log(e, "WARNING");
-          }
+    then(async (res) => {
+      if (this.response.addons.i18n) {
+        try {
+          await this.addI18n();
+        } catch (e) {
+          this.log(e, "WARNING");
         }
-        return res;
-      });
+      }
+      return res;
+    });
   }
 
   async interaction() {
@@ -38,34 +38,36 @@ class Vue extends nodefony.builders.sandbox {
       name: 'addons',
       pageSize: 10,
       choices: [{
-        name: "vuetify",
-        checked: this.response.addons.vuetify
-      }, {
-        name: 'i18n',
-        checked: this.response.addons.i18n
-      }/*, {
-        name: 'apollo-client',
-        checked: this.response.addons.apollo
-      }*/]
+          name: "vuetify",
+          checked: this.response.addons.vuetify
+        }, {
+          name: 'i18n',
+          checked: this.response.addons.i18n
+        }
+        /*, {
+                name: 'apollo-client',
+                checked: this.response.addons.apollo
+              }*/
+      ]
     }];
     return this.cli.prompt(promtOptions)
       .then((response) => {
         let addons = {
           vuetify: false,
           i18n: false,
-          apollo:false
+          apollo: false
         };
         for (let i = 0; i < response.addons.length; i++) {
           switch (response.addons[i]) {
-          case "vuetify":
-            addons.vuetify = true;
-            break;
-          case "i18n":
-            addons.i18n = true;
-            break;
-          case "apollo-client":
-            addons.apollo = true;
-            break;
+            case "vuetify":
+              addons.vuetify = true;
+              break;
+            case "i18n":
+              addons.i18n = true;
+              break;
+            case "apollo-client":
+              addons.apollo = true;
+              break;
           }
         }
         delete response.addons;
@@ -79,14 +81,14 @@ class Vue extends nodefony.builders.sandbox {
       .then((location) => {
         return this.checkTypeScript()
           .then(async () => {
-            let packages = ["clean-webpack-plugin"];
-            let packagesDev = ["@vue/cli","webpack-dev-server@3.11.2"];
-            await this.addPackage(packages, false);
+            //let packages = ["clean-webpack-plugin"];
+            let packagesDev = ["@vue/cli", "webpack-dev-server", "clean-webpack-plugin", "webpack"];
+            //  await this.addPackage(packages, false);
             await this.addPackage(packagesDev, true);
-            if(this.response.addons.vuetify){
+            if (this.response.addons.vuetify) {
               await this.addVuetify();
             }
-            if(this.response.addons.apollo){
+            if (this.response.addons.apollo) {
               await this.addApolloClient();
             }
             return super.generate(response, force)
@@ -109,34 +111,38 @@ class Vue extends nodefony.builders.sandbox {
   async addPackage(name, env = null, location = this.vueLocation) {
     let args = [];
     let packageManager = null;
-    let command = null ;
-    switch( nodefony.typeOf(name) ){
+    let command = null;
+    switch (nodefony.typeOf(name)) {
       case "array":
         args = name;
-      break;
+        break;
       case "string":
         args.push(name);
-      break;
+        break;
       default:
         return location;
     }
     switch (nodefony.packageManager) {
-    case 'yarn':
-      packageManager = this.cli.yarn.bind(this.cli);
-      command = ["add"].concat(args);
-      break;
-    default:
-      packageManager = this.cli.npm.bind(this.cli);
-      command = ["install"].concat(args) ;
+      case 'yarn':
+        packageManager = this.cli.yarn.bind(this.cli);
+        command = ["add"].concat(args);
+        break;
+      case 'pnpm':
+        packageManager = this.cli.pnpm.bind(this.cli);
+        command = ["install"].concat(args);
+        break;
+      default:
+        packageManager = this.cli.npm.bind(this.cli);
+        command = ["install"].concat(args);
     }
-    if(env){
-       command.push("-D") ;
+    if (env) {
+      command.push("-D");
     }
     await packageManager(command, location);
     return location;
   }
 
-  addVuePlugin(args = [], location = this.vueLocation){
+  addVuePlugin(args = [], location = this.vueLocation) {
     return new Promise(async (resolve, reject) => {
       this.log("install Vue plugin : " + args.join(" "));
       let cmd = null;
@@ -147,7 +153,7 @@ class Vue extends nodefony.builders.sandbox {
           stdio: "inherit"
         }, (code) => {
           if (code === 1) {
-            this.log( new Error(`install Vue cli new error : ${code} ${args}`) ,"ERROR")
+            this.log(new Error(`install Vue cli new error : ${code} ${args}`), "ERROR")
             //return reject(new Error("install Vue cli new error : " + code));
             return resolve(cmd);
           }
@@ -178,7 +184,8 @@ class Vue extends nodefony.builders.sandbox {
       "apollo-client",
       "apollo-link",
       "apollo-link-context",
-      "apollo-link-http"]
+      "apollo-link-http"
+    ]
     await this.addPackage(packages);
     return Promise.resolve(this.vueLocation)
   }
@@ -228,7 +235,7 @@ class Vue extends nodefony.builders.sandbox {
     return cliPath;
   }
 
-  getLocation(){
+  getLocation() {
     switch (this.cli.response.command) {
       case "bundle":
         return this.cli.response.location;
@@ -241,12 +248,12 @@ class Vue extends nodefony.builders.sandbox {
     let name = null;
     let location = this.getLocation();
     switch (this.cli.response.command) {
-    case "project":
-      name = "app";
-      break;
-    case "bundle":
-      name = this.cli.response.bundleName;
-      break;
+      case "project":
+        name = "app";
+        break;
+      case "bundle":
+        name = this.cli.response.bundleName;
+        break;
     }
     this.vueLocation = path.resolve(location, name);
     return new Promise((resolve, reject) => {

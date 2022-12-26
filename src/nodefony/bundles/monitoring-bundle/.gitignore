@@ -14,6 +14,8 @@ node_modules
 /Resources/views/base.html.twig
 /Resources/views/index.html.twig
 
+Resources/public/service-worker.js
+Resources/public/workbox-*
 
 # local env files
 .env.local

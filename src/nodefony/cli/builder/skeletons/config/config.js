@@ -43,7 +43,7 @@ module.exports = {
     controllers: true,
     config: true,
     translations: true,
-    views: false,
+    views: true,
     webpack: true
   },
   {% else %}

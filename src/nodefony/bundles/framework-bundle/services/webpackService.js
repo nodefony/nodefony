@@ -397,22 +397,22 @@ module.exports = class webpack extends nodefony.Service {
             } else {
               config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
             }
-            watchOptions = {
+            /*watchOptions = {
               ignored: new RegExp(
                 `^(?!${path
                 .normalize(Path + '/')
                 .replace(/[\\]+/g, '\\\\')}).+[\\\\/]node_modules[\\\\/]`,
                 'g'
               )
-            };
+            };*/
             break;
           default:
             if (type === 'vue') {
               process.VUE_CLI_SERVICE = null;
             }
             config = require(file.path);
-            watchOptions = nodefony.extend({}, this.webPackSettings.watchOptions, config.watchOptions || {});
         }
+        watchOptions = nodefony.extend({}, this.webPackSettings.watchOptions, config.watchOptions || {});
         const webpack5 = this.isWebpack5(webpack);
         try {
           if (webpack5) {

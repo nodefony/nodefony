@@ -1,4 +1,7 @@
 // vue.config.js
+const {
+  defineConfig
+} = require('@vue/cli-service')
 const webpack = require('webpack');
 const path = require('path');
 const Package = require(path.resolve("package.json"));
@@ -45,7 +48,7 @@ try {
   process.env.VUE_APP_HTTPS_PORT = kernel.httpsPort;
 } catch (e) {}
 
-module.exports = {
+module.exports = defineConfig({
   lintOnSave: false,
   publicPath: publicPath,
   outputDir: outputDir,
@@ -65,7 +68,7 @@ module.exports = {
 
   configureWebpack: {
     //context:process.cwd(),
-    cache:false,
+    cache: true,
     infrastructureLogging: {
       //appendOnly: true,
       //level: 'verbose',
@@ -102,23 +105,22 @@ module.exports = {
         },
       },
       rules: [{
-          // BABEL TRANSCODE
-          test: /\.(jsx)$/,
-          exclude: new RegExp("node_modules"),
-          use: [{
-            loader: 'babel-loader',
-            options: {
-              //presets: ['@babel/preset-env', '@babel/preset-react']
-              presets: [
-                ['@babel/preset-env', {
-                  modules: false
-                }],
-                '@babel/preset-react',
-              ],
-            }
-          }]
-        }
-      ]
+        // BABEL TRANSCODE
+        test: /\.(jsx)$/,
+        exclude: new RegExp("node_modules"),
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            //presets: ['@babel/preset-env', '@babel/preset-react']
+            presets: [
+              ['@babel/preset-env', {
+                modules: false
+              }],
+              '@babel/preset-react',
+            ],
+          }
+        }]
+      }]
     },
     output: {
       hotUpdateChunkFilename: 'hot/[id].[fullhash].hot-update.js',
@@ -257,6 +259,7 @@ module.exports = {
     }
   },
   pwa: {
+    name: 'nodefony-monitoring',
     //manifestPath:"",
     manifestOptions: {
       start_url: "./nodefony",
@@ -268,4 +271,4 @@ module.exports = {
       maximumFileSizeToCacheInBytes: 9000000
     }
   }
-};
+})
