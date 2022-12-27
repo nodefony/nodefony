@@ -307,11 +307,9 @@ module.exports = class security extends nodefony.Service {
         if (factory) {
           token = factory.createToken(context);
           token.unserialize(context.metaSecurity.token);
-          if (token) {
-            if (!token.isAuthenticated()) {
-              this.deleteSessionToken(context, session);
-              return null;
-            }
+          if (!token.isAuthenticated()) {
+            this.deleteSessionToken(context, session);
+            return null;
           }
           context.user = token.user;
           context.token = token;

@@ -33,7 +33,12 @@ class defaultController extends nodefony.Controller {
    *    @Route ("/nodefony*",
    *      name="monitoring-index")
    */
-  indexAction() {
+  async indexAction() {
+    if(this.context.request.url.pathname === "/nodefony/login"){
+      if( this.session){
+        await this.session.invalidate()
+      }
+    }
     return this.render("monitoring-bundle::index.html.twig", {
       name: this.bundle.name,
       description: this.bundle.package.description
