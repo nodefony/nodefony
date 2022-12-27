@@ -297,7 +297,7 @@ class sequelize extends nodefony.Orm {
         }
       });
 
-      this.prependOnceListener("onOrmReady", async (...args) => {
+      this.prependOnceListener("onOrmReady", async () => {
         for (let entity in this.entities) {
           if (this.entities[entity].model && this.entities[entity].model.associate) {
             await this.entities[entity].model.associate(this.entities[entity].db.models)

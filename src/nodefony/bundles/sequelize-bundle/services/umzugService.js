@@ -2,6 +2,8 @@ const {
   Sequelize
 } = require('sequelize');
 
+const twig = require("twig")
+
 const MigrateEntity = require(path.resolve(__dirname, "..", "src", "migrate", "migrateEntity.js"));
 
 const {
@@ -39,7 +41,15 @@ class umzug extends nodefony.Service {
     super("umzug", container);
     this.sequelizeService = sequelize;
     this.migrationPath = this.getMigrationPath();
-    this.seedeersPath = this.getSeedeersPath()
+    this.seedeersPath = this.getSeedeersPath();
+    this.twigOptions = {
+      views: process.cwd(),
+      'twig options': {
+        async: false,
+        cache: false
+      }
+    };
+    this.twig = twig
     this.initialize();
   }
 
@@ -373,7 +383,7 @@ class umzug extends nodefony.Service {
     });
   }
 
-  createMigrator(connectorName, connection, create = false) {
+  createMigrator(connectorName, connection, create = false, template = null) {
     //this.log(`Create migrator for connector : ${connectorName}`);
     try {
       if (!connection) {
@@ -410,13 +420,23 @@ class umzug extends nodefony.Service {
         logger: logger(this),
       }
       if (create) {
-        let template = path.resolve(__dirname, "..", "src", "migrate", 'templates', 'sample-migration.js');
         options.create = {
           folder: path.join(this.migrationPath, connectorName),
-          template: filepath => [
-            // read template from filesystem
-            [filepath, fs.readFileSync(template).toString()],
-          ]
+          template: async (filepath) => {
+            if (template) {
+              const parser = await this.renderTwig(template)
+                .catch(e => {
+                  throw e
+                })
+              return [
+                [filepath, parser]
+              ]
+            }
+            template = path.resolve(__dirname, "..", "src", "migrate", 'templates', 'sample-migration.js');
+            return [
+              [filepath, fs.readFileSync(template).toString()]
+            ]
+          }
         }
       }
       return new Umzug(options);
@@ -430,15 +450,38 @@ class umzug extends nodefony.Service {
     return new Date().toISOString().split('.')[0].replace(/[^\d]/gi, '')
   }
 
-  async create(connectorName = "nodefony", filepath = "migrate-nodefony.js") {
+  async renderTwig(template) {
+    //console.log(template)
+    return new Promise((resolve, reject) => {
+      try {
+        return this.twig.renderFile(template.path, template.data, (error, result) => {
+          if (error) {
+            return reject(error);
+          }
+
+          return resolve(result);
+        });
+      } catch (e) {
+        return reject(e)
+      }
+    })
+  }
+
+  async create(connectorName = "nodefony", filepath = "migrate-nodefony.js", options = {}, template = null) {
     const connection = this.sequelizeService.getConnection(connectorName);
     if (connection) {
       const db = connection.getConnection();
-      let migrator = this.createMigrator(connectorName, db, true);
-      return await migrator.create({
+      let migrator = this.createMigrator(connectorName, db, true, template);
+      let defaultoptions = {
         name: filepath,
         prefix: "TIMESTAMP"
-      })
+      }
+      const settings = nodefony.extend({}, defaultoptions, options)
+      return await migrator.create(settings)
+        .catch(e => {
+          console.log(e)
+          throw e
+        })
     }
     throw new Error(`Bad Connector`);
   }

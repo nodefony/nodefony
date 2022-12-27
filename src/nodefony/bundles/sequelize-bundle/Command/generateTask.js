@@ -6,9 +6,11 @@ class generateTask extends nodefony.Task {
     this.builder = new nodefony.Builder(this.cli);
     this.connectionsSettings = [];
     this.connections = [];
+    this.umzug = this.get("umzug")
     this.bundles = this.getBundles();
     this.location = path.resolve("Entity", "sequelize");
-    this.skeleton = path.resolve(__dirname, "skeletons", "entity.skeleton");
+    this.skeleton = path.resolve(__dirname, "skeletons", "entity.skeleton.js");
+    this.skeletonMigrate = path.resolve(__dirname, "skeletons", "migrateEntity.skeleton.js");
     this.dataType = this.orm.engine.DataTypes;
     this.types = [];
     this.models = [];
@@ -130,9 +132,14 @@ class generateTask extends nodefony.Task {
           }
         }, {
           type: 'confirm',
+          name: 'migrate',
+          message: `Do you want define migrate model ?`,
+          default: true
+        }, {
+          type: 'confirm',
           name: 'column_generate',
           message: `Do you want define model ?`,
-          default: false
+          default: true
         }]);
       }).then((response) => {
         response.connector = this.connector;
@@ -186,7 +193,7 @@ class generateTask extends nodefony.Task {
             type: 'confirm',
             message: `Model <${name}> Do you want to define other column `,
             name: 'column_generate',
-            default: false
+            default: true
           }])
           .then((confirm) => {
             if (confirm.column_generate) {
@@ -197,7 +204,7 @@ class generateTask extends nodefony.Task {
       });
   }
 
-  createClassEntity(response) {
+  async createClassEntity(response) {
     this.location = path.resolve(response.bundle.path, "Entity", "sequelize");
     response.name = this.entityName;
     try {
@@ -221,12 +228,31 @@ class generateTask extends nodefony.Task {
       } else {
         response.models = JSON.stringify({});
       }
-
       response.entityPath = Path;
-      return this.builder.createFile(Path, this.skeleton, true, response);
+      const fileEntity = this.builder.createFile(Path, this.skeleton, true, response);
+      if (response.migrate) {
+        await this.createMigration(response)
+          .catch(e => {
+            this.log(e,"ERROR")
+          })
+      }
+      return fileEntity
     } catch (e) {
       throw e;
     }
+  }
+
+  async createMigration(response) {
+    let fileMigrate = `${response.name}-entity.js`
+    return await this.umzug.create(response.connector, fileMigrate, {
+        //allowConfusingOrdering:true
+      }, {
+        path:this.skeletonMigrate,
+        data:response
+      })
+      .catch((e) => {
+        throw e
+      })
   }
 }
 
