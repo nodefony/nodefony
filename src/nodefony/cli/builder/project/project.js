@@ -346,14 +346,14 @@ class generateProject extends nodefony.Builder {
             name: "sequelize",
             type: "directory",
             childs: [{
+              name: `${this.getPadDate()}-migrate-entity.js.example`,
+              type: "file",
+              skeleton: path.resolve(this.pathSkeleton, "migrations", "migrations.skeleton.js"),
+              params: this.response
+            }, {
               name: "nodefony",
               type: "directory",
               childs: [{
-                name: `${this.getPadDate()}-migrate-entity.js.example`,
-                type: "file",
-                skeleton: path.resolve(this.pathSkeleton, "migrations", "migrations.skeleton.js"),
-                params: this.response
-              }, {
                 name: "2022.12.25T17.37.37.entity-user.js",
                 skeleton: path.resolve(this.pathSkeleton, "migrations", "2022.12.25T17.37.37.entity-user.js"),
                 type: "file",

@@ -209,31 +209,13 @@ class generateTask extends nodefony.Task {
     response.name = this.entityName;
     try {
       let Path = path.resolve(this.location, `${this.entityName}Entity.js`);
-      if (this.models.length) {
-        let obj = "{\n";
-        this.models.map((ele, index) => {
-          obj += `    ${ele.name}: {\n`;
-          if (ele.type) {
-            obj += `      type: Sequelize.${ele.type}\n`;
-          }
-          obj += `    }`;
-          if (this.models.length !== 1 && index + 1 !== this.models.length) {
-            obj += ",\n";
-          } else {
-            obj += "\n";
-          }
-        });
-        obj += "}";
-        response.models = obj;
-      } else {
-        response.models = JSON.stringify({});
-      }
+      response.models = this.parseColumns(this.models, response.migrate)
       response.entityPath = Path;
       const fileEntity = this.builder.createFile(Path, this.skeleton, true, response);
       if (response.migrate) {
         await this.createMigration(response)
           .catch(e => {
-            this.log(e,"ERROR")
+            this.log(e, "ERROR")
           })
       }
       return fileEntity
@@ -242,13 +224,53 @@ class generateTask extends nodefony.Task {
     }
   }
 
+  parseColumns(models, migrate) {
+    if (!models.length) {
+      return `{
+          createdAt: {
+            allowNull: false,
+            type: DataTypes.DATE
+          },
+          updatedAt: {
+            allowNull: false,
+            type: DataTypes.DATE
+          }
+        }`
+    }
+    let obj = `\t{\n`
+    models.map((ele, index) => {
+      obj += `\t\t${ele.name}: {\n`;
+      if (ele.type) {
+        obj += `\t\t  type: DataTypes.${ele.type}\n`;
+      }
+      obj += `\t\t}`;
+      if (models.length !== 1 && index + 1 !== models.length) {
+        obj += ",\n";
+      } else {
+        if (migrate) {
+          obj += `,\n`;
+          obj += `\t\tcreatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE
+    },
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE
+    }`
+        }
+        obj += `\n`;
+      }
+    })
+    return obj += `\t}`
+  }
+
   async createMigration(response) {
     let fileMigrate = `entity-${response.name}.js`
     return await this.umzug.create(response.connector, fileMigrate, {
         //allowConfusingOrdering:true
       }, {
-        path:this.skeletonMigrate,
-        data:response
+        path: this.skeletonMigrate,
+        data: response
       })
       .catch((e) => {
         throw e
