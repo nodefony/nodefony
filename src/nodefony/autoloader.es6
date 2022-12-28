@@ -88,7 +88,7 @@ module.exports = function () {
         this.loadDirectory(path.resolve(__dirname, "kernel"), /^tests$|^tasks$/);
         this.loadDirectory(path.resolve(__dirname, "protocols"), /^tests$/);
         context.nodefony.cliStart = require(path.resolve(__dirname, "cli", "start.js"));
-        context.nodefony.appKernel = this.loadAppKernel();
+        context.nodefony.appKernel = this.loadAppKernel(undefined, true);
 
         //services
       } catch (e) {

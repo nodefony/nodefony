@@ -482,6 +482,11 @@ class cliKernel extends nodefony.cli {
         }
       }
     } else {
+      if (this.commander && this.commander.rawArgs.length) {
+        if (this.commander.rawArgs[2] === "help" || this.commander.rawArgs[2] === "-h" || this.commander.rawArgs[2] === "--help") {
+          return
+        }
+      }
       throw new Error("No Command found");
     }
   }

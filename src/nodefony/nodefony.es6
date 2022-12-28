@@ -423,11 +423,25 @@ class Nodefony {
     }
   }
 
-  loadAppKernel(cwd = path.resolve(".")) {
+  loadAppKernel(cwd = path.resolve("."), detectError = false) {
     try {
-      return this.appKernel = require(path.resolve(cwd, "app", "appKernel.js"));
+      let detectpath = path.resolve(cwd, "app", "appKernel.js")
+      try {
+        fs.lstatSync(detectpath);
+      } catch (e) {
+        if (detectError) {
+          console.error(e)
+          throw e
+        }
+        return null
+      }
+      return this.appKernel = require(detectpath);
     } catch (e) {
-      return null;
+      if (e.message === "Class extends value undefined is not a constructor or null") {
+        return null
+      }
+      console.trace(e)
+      return null
     }
   }
 
@@ -841,11 +855,16 @@ class Nodefony {
           cli.setType("CONSOLE");
           process.env.MODE_START = "NODEFONY_CONSOLE";
           this.manageCache(cli);
-          let kernel = new this.appKernel(environment, cli, options);
-          return await kernel.start()
-            .catch(e => {
-              throw e;
-            });
+          try{
+            let kernel = new this.appKernel(environment, cli, options);
+            return await kernel.start()
+              .catch(e => {
+                throw e;
+              });
+          }catch(e){
+            console.error(e);
+            throw e
+          }
         }
         if (cli.commander.hasOwnProperty('help')) {
           cli.clear();

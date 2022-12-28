@@ -16,9 +16,9 @@ module.exports = class appKernel extends nodefony.kernel {
       this.appEnvironment = this.getAppEnvironment()
       if (this.appEnvironment.environment === 'development') {
         this.once("onPreRegister", () => {
-          /*if (this.type === "SERVER") {
+          if (this.type === "SERVER") {
               return this.showBanner()
-          }*/
+          }
         })
       }
     } catch (e) {
@@ -32,7 +32,7 @@ module.exports = class appKernel extends nodefony.kernel {
       let module = this.appEnvironment[ele]
       switch (ele) {
         case "environment":
-          banner = `       ${magenta(" Environement")} : ${green(module)}`;
+          banner = `       ${magenta("Application Environement")} : ${green(module)}`;
           console.log(banner)
           this.cli.blankLine();
           break;

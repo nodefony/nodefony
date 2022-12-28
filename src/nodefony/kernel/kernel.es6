@@ -114,7 +114,9 @@ class Kernel extends nodefony.Service {
     this.type = cli.type;
     this.package = mypackage;
     this.debug = (!!cli.commander.opts().debug) || false;
-    this.appEnvironment = null
+    this.appEnvironment = {
+      environment: process.env.NODE_ENV
+    }
     this.setEnv(environment);
     // Manage Kernel Container
     this.set("kernel", this);
@@ -523,19 +525,20 @@ class Kernel extends nodefony.Service {
         case "dev":
         case "development":
           this.environment = "dev";
-          //process.env.NODE_ENV = "development";
-          //process.env.BABEL_ENV = 'development';
+          if (!this.appEnvironment.environment) {
+            this.appEnvironment.environment = "development";
+          }
           break;
         default:
           this.environment = "prod";
-          //process.env.NODE_ENV = "production";
-          //process.env.BABEL_ENV = 'production';
+          if (!this.appEnvironment.environment) {
+            this.appEnvironment.environment = "production";
+          }
       }
     }
-    //process.env.NODE_DEBUG = this.debug;
   }
 
-  setNodeEnv(environment){
+  setNodeEnv(environment) {
     if (environment in defaultEnvEnable) {
       switch (environment) {
         case "dev":
@@ -1032,9 +1035,9 @@ class Kernel extends nodefony.Service {
     try {
       //this.fire("onPreRegister", this);
       await this.emitAsync("onPreRegister", this)
-      .catch(e => {
-        throw e
-      })
+        .catch(e => {
+          throw e
+        })
       this.preRegistered = true;
       return await this.registerBundles(bundles)
         .then(async (res) => {
@@ -1062,7 +1065,7 @@ class Kernel extends nodefony.Service {
           throw e;
         });
     } catch (e) {
-      this.log(e,"ERROR");
+      this.log(e, "ERROR");
       throw e
     }
   }
