@@ -1,4 +1,4 @@
-## [7.0.0-beta.11](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.10...v7.0.0-beta.11) (2022-12-23)
+## [7.0.0-beta.11](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.10...v7.0.0-beta.11) (2022-12-28)
 
 
 ### Features
@@ -10,14 +10,20 @@
 ### Bug Fixes
 
 * **build:** add file monitoring ([f69be5c](https://github.com/nodefony/nodefony/commit/f69be5c2aace9bfad0e323487200e89fef99cf38))
+* **build:** cli build debug migrate ([0252883](https://github.com/nodefony/nodefony/commit/0252883c420e960bf587d2c3b4b6409a304f02bd))
 * **build:** debug case ([dd026da](https://github.com/nodefony/nodefony/commit/dd026da1e75fa172e770bee49c25b517fca2a6c0))
+* **builder:** debug cli builder ([6796885](https://github.com/nodefony/nodefony/commit/67968857cd720975df11add72b905dd63c602cb0))
 * **build:** log database ([95aaf03](https://github.com/nodefony/nodefony/commit/95aaf03816906c2fdaf3a1bfaa29da260b79adf9))
 * **cli:** clean command cli ([df0daef](https://github.com/nodefony/nodefony/commit/df0daef29b0e6f72b6795ed35c59de9ec5acc71c))
+* **conventional-commit:** change preset ([b1c32be](https://github.com/nodefony/nodefony/commit/b1c32be6b863ff07372ba4276353376b2d4b3d5c))
 * **doc:** readme ([f7c01fc](https://github.com/nodefony/nodefony/commit/f7c01fc3d4443018f1b3131ab436cbab5e1d58d8))
+* **entity:** generate entity add migrate file ([a12b055](https://github.com/nodefony/nodefony/commit/a12b05596d2e86153f16625c901689b7b7875a67))
 * **environment:** manage  node_env on kernel life cycle ([c63fd36](https://github.com/nodefony/nodefony/commit/c63fd367fc0cd40307c9550670e5b10a58b22c8a))
+* **environment:** set appEnvironmenti default  when not defined ([f6514a1](https://github.com/nodefony/nodefony/commit/f6514a1361c802f1bd6366cf199c10dea8a342ab))
 * **framework:** clean service ([95d550c](https://github.com/nodefony/nodefony/commit/95d550c96b81f518b7c87934f89e88a36bf5405c))
 * **framework:** clean session invalidate when response already sended ([06c44d1](https://github.com/nodefony/nodefony/commit/06c44d127751b8c9e88afd75c350f13ab201aa78))
 * **install:** add log on install ([9f10b68](https://github.com/nodefony/nodefony/commit/9f10b682341f4e6b82ea87a7efd6688cce9f4b30))
+* **migrate:** add migration file on generate entity ([2996715](https://github.com/nodefony/nodefony/commit/2996715b1bfbac256b8a191e36a76fe8618d5cbe))
 * **migrate:** better logs ([a93a3c1](https://github.com/nodefony/nodefony/commit/a93a3c1db3a9e5d43244ade91069d9cf362048b6))
 * **migration:** rename filemigrate ([526aaba](https://github.com/nodefony/nodefony/commit/526aaba3ff4bff10c853077a7f3f371fe566f073))
 * **mongoose:** debug mongoose connection ([7c37f85](https://github.com/nodefony/nodefony/commit/7c37f85cbdf4fd36f38227b41c1f4baf29622ec5))
@@ -29,12 +35,16 @@
 * **orm:** unzug service clean ([7a4a1d6](https://github.com/nodefony/nodefony/commit/7a4a1d654f4dfb434afe80c0b05d6a55b644db68))
 * **pm2:** clean start pm2  maxrestart   manage errors ([37bda51](https://github.com/nodefony/nodefony/commit/37bda51000754b208a1a1059c1403efcbe55d664))
 * **pm2:** pm2 kill | disconnect all command ([e26dcdd](https://github.com/nodefony/nodefony/commit/e26dcdd051ba18f2d17d76724cf86233410d8b1c))
+* **security:** debug double authentification session + jwt ([2bac45d](https://github.com/nodefony/nodefony/commit/2bac45da9ac7297aed65ad6cceeddbf5bedcd327))
+* **security:** vulnerability jwt ([704f85f](https://github.com/nodefony/nodefony/commit/704f85f717ecb632c4f8ef2598c067f40bb414aa))
 * **sequelize:** debug generate entity ([89065bc](https://github.com/nodefony/nodefony/commit/89065bc13eef8e23d5ff0f1bd6b184cc4a059150))
 * **sequelize:** debug sekeleton config sequelize ([bde0743](https://github.com/nodefony/nodefony/commit/bde07439a00d708ecb1b2581cdfc3a2051532f52))
 * **sequelize:** new design migration add files migrate entities core (sessions jwt user request) ([61fcc6c](https://github.com/nodefony/nodefony/commit/61fcc6c425422a26a313a13ec403aa6078db52f7))
 * **sequlize:** clea sequelize config ([3a0c92e](https://github.com/nodefony/nodefony/commit/3a0c92ebb53ee8413d759ee5ef0d8a3589b4456d))
 * **test:** debug test postgres ([41ede4a](https://github.com/nodefony/nodefony/commit/41ede4aee1dfef6b8c73e61544ce71e338e57c73))
 * **umzug:** clean log ([337b2fe](https://github.com/nodefony/nodefony/commit/337b2febc9d6b8b44fa580e149f8f6a2b430ddd8))
+* **vault:** new bundle vault | manage secrets credentials (orm)  async with vault ([c06ab30](https://github.com/nodefony/nodefony/commit/c06ab30c65befb62cae2588a2959c01224cfad87))
+* **vue:** debug vue cli ([f83ed11](https://github.com/nodefony/nodefony/commit/f83ed117aad6cf76b6bf26fcb61ea65f6b15c366))
 * **webpack:** clean log debug ([7a0a263](https://github.com/nodefony/nodefony/commit/7a0a2635416f409ca84602c47bbc7a442e94df59))
 
 ## [7.0.0-beta.10](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.9...v7.0.0-beta.10) (2022-11-26)
@@ -404,3 +414,4 @@
 ### [2.1.4](https://github.com/nodefony/nodefony/compare/v2.1.3...v2.1.4) (2017-05-08)
 
 ### [2.1.3](https://github.com/nodefony/nodefony/compare/v2.1.2...v2.1.3) (2017-04-29)
+
