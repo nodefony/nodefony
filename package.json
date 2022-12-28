@@ -1,6 +1,6 @@
 {
   "name": "nodefony-core",
-  "version": "7.0.0-beta.11",
+  "version": "7.0.0-beta.12",
   "description": "Core Nodefony Node.js Web Framework",
   "main": "./src/nodefony/core/autoloader.es6",
   "scripts": {
@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "graphql": "16.6.0",
-    "mongoose": "6.8.1",
+    "mongoose": "6.8.2",
     "pm2": "^5.2.2",
     "pm2-logrotate": "^2.7.0",
     "sequelize": "6.28.0",
