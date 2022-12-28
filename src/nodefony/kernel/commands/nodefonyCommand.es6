@@ -25,8 +25,8 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function(
           force = true
         }
         this.log("INSTALL NODEFONY FRAMEWORK");
-        await this.installOrm(force, strategy);
-        return await this.displayInfo(cwd);
+        return await this.installOrm(force, strategy);
+        //return await this.displayInfo(cwd);
       } catch (error) {
         this.log(error, "ERROR");
         throw error;

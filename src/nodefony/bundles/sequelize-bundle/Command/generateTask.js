@@ -243,7 +243,7 @@ class generateTask extends nodefony.Task {
   }
 
   async createMigration(response) {
-    let fileMigrate = `${response.name}-entity.js`
+    let fileMigrate = `entity-${response.name}.js`
     return await this.umzug.create(response.connector, fileMigrate, {
         //allowConfusingOrdering:true
       }, {

@@ -299,7 +299,8 @@ class generateProject extends nodefony.Builder {
   }
 
   getPadDate() {
-    return new Date().toISOString().split('.')[0].replace(/[^\d]/gi, '')
+    //return new Date().toISOString().split('.')[0].replace(/[^\d]/gi, '')
+    return new Date().toISOString().replace(/\.\d{3}Z$/, '').replace(/\W/g, '.');
   }
 
   createBuilder(response) {
@@ -353,23 +354,23 @@ class generateProject extends nodefony.Builder {
                 skeleton: path.resolve(this.pathSkeleton, "migrations", "migrations.skeleton.js"),
                 params: this.response
               }, {
-                name: "20221119210432-entity-user.js",
-                skeleton: path.resolve(this.pathSkeleton, "migrations", "20221119210432-entity-user.js"),
+                name: "2022.12.25T17.37.37.entity-user.js",
+                skeleton: path.resolve(this.pathSkeleton, "migrations", "2022.12.25T17.37.37.entity-user.js"),
                 type: "file",
                 params: this.response
               }, {
-                name: "20221119210433-entity-session.js",
-                skeleton: path.resolve(this.pathSkeleton, "migrations", "20221119210433-entity-session.js"),
+                name: "2022.12.25T17.37.38.entity-session.js",
+                skeleton: path.resolve(this.pathSkeleton, "migrations", "2022.12.25T17.37.38.entity-session.js"),
                 type: "file",
                 params: this.response
               }, {
-                name: "20221119210434-entity-requests.js",
-                skeleton: path.resolve(this.pathSkeleton, "migrations", "20221119210434-entity-requests.js"),
+                name: "2022.12.25T17.37.39.entity-requests.js",
+                skeleton: path.resolve(this.pathSkeleton, "migrations", "2022.12.25T17.37.39.entity-requests.js"),
                 type: "file",
                 params: this.response
               }, {
-                name: "20221119210435-entity-jwts.js",
-                skeleton: path.resolve(this.pathSkeleton, "migrations", "20221119210435-entity-jwts.js"),
+                name: "2022.12.25T17.37.40.entity-jwts.js",
+                skeleton: path.resolve(this.pathSkeleton, "migrations", "2022.12.25T17.37.40.entity-jwts.js"),
                 type: "file",
                 params: this.response
               }]

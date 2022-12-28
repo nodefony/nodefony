@@ -5,7 +5,7 @@ class SandBox extends nodefony.Builder {
     this.force = true;
     nodefony.extend(true, this.response, {
       addons: {
-        webpack: true,
+        webpack: false,
         bootstrap: false,
         command: false,
         unittest: false,
