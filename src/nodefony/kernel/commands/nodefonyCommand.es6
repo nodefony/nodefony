@@ -15,6 +15,9 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function(
       try {
         let strategy = null
         let force = false
+        if (!args) {
+          args = []
+        }
         if (args.includes("migrate")) {
           strategy = "migrate"
         }
