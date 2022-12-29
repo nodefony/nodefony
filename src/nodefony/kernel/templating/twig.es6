@@ -73,7 +73,8 @@ class Twig extends nodefony.Template {
     if (cdn) {
       return `${res}${cdn}`;
     } else {
-      return `${res}${context.request.url.host}`;
+      return ``
+      //return `${res}${context.request.url.host}`;
     }
   }
 
