@@ -1,7 +1,7 @@
 /**
  *
  *
- *	d-lake-si CONFIG BUNDLE  vault-bundle
+ *	 CONFIG BUNDLE  vault-bundle
  *
  * ===============================================================================
  *
@@ -9,7 +9,7 @@
  *
  * ===============================================================================
  *
- *        GENERATE BY d-lake-si BUILDER
+ * 
  */
 
 let connect = {}
@@ -46,7 +46,7 @@ module.exports = {
    *      }
    *
    */
-  watch: true,
+  watch: false,
 
   /**
    * DEV SERVER

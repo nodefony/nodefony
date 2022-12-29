@@ -21,8 +21,6 @@ const isObject = (object) => {
   return object != null && typeof object === 'object';
 }
 
-
-
 module.exports = class vault extends nodefony.Service {
 
   constructor(container) {
@@ -302,7 +300,6 @@ module.exports = class vault extends nodefony.Service {
         return res
       })
       .catch((error) => {
-        this.log(error, "ERROR")
         if (error.response) {
           throw error.response
         }
@@ -320,7 +317,10 @@ module.exports = class vault extends nodefony.Service {
           .catch(e => {
             return null
           })
-        let res = deepEqual(secret.data, oldSecret.data.data )
+        let res = null
+        if (oldSecret) {
+          res = deepEqual(secret.data, oldSecret.data.data)
+        }
         if (res) {
           this.log(`Secret : ${secret.path} already Exist`)
           continue
@@ -330,21 +330,10 @@ module.exports = class vault extends nodefony.Service {
             this.log(e, "ERROR")
           })
       } catch (e) {
-        this.log(e.response, "ERROR")
+        this.log(e.response || e, "ERROR")
         throw e
       }
     }
-  }
-
-  async getConnectorCredentials(connector = "nodefony") {
-    let Path = `nodefony/data/databases/connector/${connector}`
-    return this.getSecret({
-        path: Path
-      })
-      .catch(e => {
-        this.log(e, "ERROR")
-        throw e
-      })
   }
 
   /*test() {
