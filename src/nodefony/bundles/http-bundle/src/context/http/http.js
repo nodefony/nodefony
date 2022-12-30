@@ -77,12 +77,15 @@ nodefony.register.call(nodefony.context, "http", function () {
           this.type = request.headers["x-forwarded-proto"].toUpperCase();
         }
         this.proxy = {
-          proxyServer: request.headers["x-forwarded-server"],
+          proxyServer: request.headers["x-forwarded-server"] || 'unknown',
           proxyProto: request.headers["x-forwarded-proto"],
+          proxyScheme:request.headers["x-forwarded-scheme"],
           proxyPort: request.headers["x-forwarded-port"],
           proxyFor: request.headers["x-forwarded-for"],
           proxyHost: request.headers["x-forwarded-host"],
-          proxyVia: request.headers.via
+          proxyUri: request.headers["x-original-uri"],
+          proxyRealIp: request.headers["x-real-ip"],
+          proxyVia: request.headers.via || 'unknown'
         };
         this.log("PROXY REQUEST x-forwarded VIA : " + this.proxy.proxyVia, "DEBUG");
       }
