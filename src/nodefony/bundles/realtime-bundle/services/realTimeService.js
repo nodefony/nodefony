@@ -40,6 +40,12 @@ class realTime extends nodefony.Service {
       case "HTTP2":
         let data = this.protocol.onMessage(message, context);
         let url = nodefony.extend({}, context.request.url);
+        if(context.proxy && context.proxy.proxyHost){
+          url.hostname = context.proxy.proxyHost
+          url.host = `${context.proxy.proxyHost}:${context.proxy.proxyPort}`
+          url.href = `${context.proxy.proxyProto}://${context.proxy.proxyHost}${url.pathname}`
+          url.port = context.proxy.proxyPort
+        }
         if (context.scheme === "https") {
           url.protocol = "wss:";
           data.ext.url = url;
