@@ -1,3 +1,15 @@
+## [7.0.0-beta.12](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.11...v7.0.0-beta.12) (2023-01-02)
+
+
+### Bug Fixes
+
+* **cdn:** twig CDN method  return ''  when config is not defined ([3ad82bc](https://github.com/nodefony/nodefony/commit/3ad82bc8ca30396ae42f5b3f162e5fd870182503))
+* **cli:** add test with fetch service ([5a97cc7](https://github.com/nodefony/nodefony/commit/5a97cc7f600b2e4cb496a56735b930548728336c))
+* **codespaces:** add headers proxy ([75d61d4](https://github.com/nodefony/nodefony/commit/75d61d41fd7972d5f8b8a1e0aa66c4b6efd7365a))
+* **command:** debug install and build command no args ([ed9cbb9](https://github.com/nodefony/nodefony/commit/ed9cbb96247ba694939f8531f7ac6f973efd3a37))
+* **realtime:** change url realtime  when proxy ([8ea0a8b](https://github.com/nodefony/nodefony/commit/8ea0a8b25c1feb022977dd01a8827c987ae19ab2))
+* **vault:** clean vault bundle ([9effab2](https://github.com/nodefony/nodefony/commit/9effab2cf443344a7677163ac4d360585533461e))
+
 ## [7.0.0-beta.11](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.10...v7.0.0-beta.11) (2022-12-28)
 
 
