@@ -1,3 +1,13 @@
+## [7.0.0-beta.12](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.13...v7.0.0-beta.12) (2023-01-03)
+
+## [7.0.0-beta.13](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.12...v7.0.0-beta.13) (2023-01-03)
+
+
+### Bug Fixes
+
+* **documentation:** debug enviroment url swagger and graphiql ([c35adc0](https://github.com/nodefony/nodefony/commit/c35adc04cc31b740f679af75888744f197a191e9))
+* **monitoring:** clean bundle ([20237fa](https://github.com/nodefony/nodefony/commit/20237fa54fec5d02bb987a7e2f04bad1e368bc8f))
+
 ## [7.0.0-beta.12](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.11...v7.0.0-beta.12) (2023-01-02)
 
 
