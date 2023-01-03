@@ -14,4 +14,8 @@
 
 {% block javascripts %}
   <!-- WEBPACK BUNDLE -->
+
+  <script>
+    window.swagger = JSON.parse({{config}})
+  </script>
 {% endblock %}

@@ -7,11 +7,9 @@ import {
 import "swagger-ui/dist/swagger-ui.css";
 import "./swagger.css";
 
-const configSwagger = process.env.SWAGGER;
-
 class Swagger {
   constructor() {
-    this.config = configSwagger;
+    this.config = window.swagger;
     this.initialize();
     this.changeLogo();
   }

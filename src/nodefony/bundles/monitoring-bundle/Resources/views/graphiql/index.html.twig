@@ -28,6 +28,9 @@
 {% block javascripts %}
 
   <!-- WEBPACK BUNDLE -->
+  <script>
+    window.graphiql = JSON.parse({{config}})
+  </script>
   {{ parent() }}
 
 {% endblock %}

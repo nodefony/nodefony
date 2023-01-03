@@ -7,8 +7,7 @@ import "graphiql/graphiql.min.css";
 import "./index.css";
 const NODE_ENV = process.env.NODE_ENV ;
 const DEBUG = process.env.DEBUG ;
-const config = process.env.GRAPHIQL ;
-
+const config =  window.graphiql
 const URL = config.url;
 
 function fetcher(graphQLParams) {

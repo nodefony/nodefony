@@ -1,14 +1,14 @@
 let analyzer = null
-if( kernel.environment === 'dev'){
-  try{
+if (kernel.environment === 'dev') {
+  try {
     let analyzerResolve = require.resolve("webpack-bundle-analyzer")
     let lib = path.dirname(analyzerResolve)
-    analyzer = require(path.resolve(lib,"analyzer.js"))
-  }catch(e){
-    try{
+    analyzer = require(path.resolve(lib, "analyzer.js"))
+  } catch (e) {
+    try {
       const monitoring = kernel.getBundle("monitoring-bundle")
       analyzer = require(path.resolve(monitoring.path, "node_modules", "webpack-bundle-analyzer", "lib", "analyzer.js"));
-    }catch(e){
+    } catch (e) {
       kernel.log(e, "WARNING")
     }
   }
@@ -34,8 +34,8 @@ class defaultController extends nodefony.Controller {
    *      name="monitoring-index")
    */
   async indexAction() {
-    if(this.context.request.url.pathname === "/nodefony/login"){
-      if( this.session){
+    if (this.context.request.url.pathname === "/nodefony/login") {
+      if (this.session) {
         await this.session.invalidate()
       }
     }
@@ -67,7 +67,8 @@ class defaultController extends nodefony.Controller {
     this.hideDebugBar()
     this.response.setHeader("X-Frame-Options", "SAMEORIGIN")
     return this.render("monitoring-bundle:swagger:index.html.twig", {
-      title: "Swagger openapi"
+      title: "Swagger openapi",
+      config: `'${JSON.stringify(this.bundle.settings.swagger)}'`
     });
   }
 
@@ -82,7 +83,8 @@ class defaultController extends nodefony.Controller {
     this.hideDebugBar()
     this.response.setHeader("X-Frame-Options", "SAMEORIGIN")
     return this.render("monitoring-bundle:graphiql:index.html.twig", {
-      title: "graphiql"
+      title: "graphiql",
+      config: `'${JSON.stringify(this.bundle.settings.graphigl)}'`
     });
   }
 
@@ -94,8 +96,7 @@ class defaultController extends nodefony.Controller {
    *    )
    */
   analyserAction(mybundle) {
-
-    if( this.kernel.environment === "prod" ){
+    if (this.kernel.environment === "prod") {
       throw new Error(`Webpack Analyzer not available in production `);
     }
     this.response.setHeader("X-Frame-Options", "SAMEORIGIN")
@@ -114,8 +115,8 @@ class defaultController extends nodefony.Controller {
         shell.cd(bundle.path);
         compiler = await bundle.initWebpack.call(bundle);
         shell.cd(this.kernel.rootDir);
-        if( !compiler){
-          return reject(new Error(`Bundle ${mybundle} has no  webpack configuration` ))
+        if (!compiler) {
+          return reject(new Error(`Bundle ${mybundle} has no  webpack configuration`))
         }
       }
       try {
