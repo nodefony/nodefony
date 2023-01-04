@@ -97,30 +97,64 @@ const users = [{
 class Seedeers extends nodefony.Service {
   constructor(kernel) {
     super(path.basename(__filename), kernel.container);
+    this.orm = this.kernel.getORM()
+    this.entity = this.orm.getNodefonyEntity("user")
   }
 
   async up({
-    context: queryInterface
+    name,
+    context: queryInterface,
+    context: sequelize
   }) {
+    let transaction = null
     return await queryInterface.describeTable("user")
       .then(async (tableDefinition) => {
         const date = new Date()
-        const datas = users.map((user) => {
+        for (let user of users) {
           user.createdAt = date
           user.updatedAt = date
           user.roles = JSON.stringify(user.roles)
+          this.entity.validPassword(user.password);
+          const hash = await this.entity.encode(user.password)
+            .catch(err => {
+              this.logger(err, "ERROR");
+              throw err;
+            });
+          user.password = hash
+        }
+        /*const datas = users.map(async (user) => {
+          user.createdAt = date
+          user.updatedAt = date
+          user.roles = JSON.stringify(user.roles)
+          this.entity.validPassword(user.password);
+          const hash = await this.entity.encode(user.password)
+            .catch(err => {
+              this.logger(err, "ERROR");
+              throw err;
+            });
+          user.password = hash
           return user
-        })
-        return await queryInterface.bulkInsert("user", datas)
-          .then((nb) => {
-            this.log(`Add ${nb} seeds`)
-            return datas
+        })*/
+        transaction = await queryInterface.sequelize.transaction();
+        return await queryInterface.bulkInsert("user", users, {
+            transaction
           })
-          .catch(e => {
+          .then(async (nb) => {
+            await transaction.commit();
+            this.log(`Add ${nb} seeds`)
+            return users
+          })
+          .catch(async (e) => {
+            if (transaction && !transaction.finished) {
+              await transaction.rollback();
+            }
             throw e
           })
       })
-      .catch(e => {
+      .catch(async (e) => {
+        if (transaction && !transaction.finished) {
+          await transaction.rollback();
+        }
         throw e
       })
   }
