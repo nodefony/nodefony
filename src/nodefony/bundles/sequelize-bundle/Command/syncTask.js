@@ -89,7 +89,7 @@ class generateTask extends nodefony.Task {
               },
               hooks: true
             }).then((db) => {
-              this.log("DATABASE :" + db.config.database + " CONNECTION : " + connectionName + " CREATE ALL TABLES", "INFO");
+              this.log("DATABASE :" + db.config.database + " CONNECTION : " + connectionName  , "INFO", "SYNC SEQUELIZE");
               return resolve(connectionName);
             }).catch((error) => {
               this.log("DATABASE :" + connection.config.database + " CONNECTION : " + connectionName + " : " + error, "ERROR");
@@ -107,7 +107,7 @@ class generateTask extends nodefony.Task {
           },
           hooks: true
         }).then((db) => {
-          this.log("DATABASE :" + db.config.database + " CONNECTION : " + connectionName + " CREATE ALL TABLES", "INFO");
+          this.log("DATABASE :" + db.config.database + " CONNECTION : " + connectionName , "INFO", "SYNC SEQUELIZE");
           return resolve(connectionName);
         }).catch((error) => {
           this.log("DATABASE :" + connection.config.database + " CONNECTION : " + connectionName + " : " + error, "ERROR");

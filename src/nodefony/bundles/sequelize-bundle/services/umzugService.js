@@ -203,6 +203,9 @@ class umzug extends nodefony.Service {
             if (table && data.length) {
               this.showTable(data, "pending", connectorName, db, severity);
             }
+            if( ! data.length){
+              this.log(`${type} : ${connectorName}  Nothing Pending`);
+            }
             let res = {}
             res[connectorName] = data
             return resolve(res);
@@ -230,6 +233,9 @@ class umzug extends nodefony.Service {
           result[connection] = await migrator.pending()
           if (table && result[connection] && result[connection].length) {
             this.showTable(result[connection], "pending", connection, db, severity);
+          }
+          if( result[connection] && ! result[connection].length){
+            this.log(`${type} : ${connection}  Nothing Pending`);
           }
         }
         return resolve(result);
@@ -260,6 +266,9 @@ class umzug extends nodefony.Service {
             if (table && data.length) {
               this.showTable(data, "executed", connectorName, db);
             }
+            if( ! data.length){
+              this.log(`${type} : ${connectorName}  Nothing Executed`);
+            }
             let res = {}
             res[connectorName] = data
             return resolve(data);
@@ -286,6 +295,9 @@ class umzug extends nodefony.Service {
           result[connection] = await migrator.executed();
           if (table && result[connection] && result[connection].length) {
             this.showTable(result[connection], "executed", connection, db);
+          }
+          if( result[connection] && ! result[connection].length ){
+            this.log(`${type} : ${connection}  Nothing Executed`);
           }
         }
         return resolve(result);

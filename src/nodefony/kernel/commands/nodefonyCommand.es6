@@ -56,9 +56,10 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function(
       switch (this.orm) {
         case "sequelize":
           return this.installSequelize(force, strategy || this.cli.kernel.getOrmStrategy())
-            .then(() => {
+            /*.then(() => {
               return this.generateSequelizeFixture();
-            }).catch((e) => {
+            })*/
+            .catch((e) => {
               throw e;
             });
         case "mongoose":
@@ -92,12 +93,20 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", function(
         if (!force && strategy === "migrate") {
           task = command.getTask("migrate");
           await task.up();
+          await task.status();
+          task = command.getTask("sync");
+          await task.entities(force);
+          task = command.getTask("seedeers");
+          await task.up();
           return await task.status();
         }
         // with sysnc
         if (strategy === "sync") {
           task = command.getTask("sync");
-          return await task.entities(force);
+          await task.entities(force);
+          task = command.getTask("seedeers");
+          await task.up();
+          return await task.status();
         }
       } catch (e) {
         this.log(e, "ERROR");
