@@ -32,7 +32,7 @@
     "nodefony": "bin/nodefony"
   },
   "dependencies": {
-    "@babel/core": "7.20.7",
+    "@babel/core": "7.20.12",
     "@babel/parser": "7.20.7",
     "@graphql-tools/merge": "8.3.14",
     "@graphql-tools/schema": "9.0.12",
@@ -88,7 +88,7 @@
     "yarn": "1.22.19"
   },
   "devDependencies": {
-    "babel-loader": "^9.1.0",
+    "babel-loader": "9.1.2",
     "babel-polyfill": "^6.26.0",
     "webpack-cli": "5.0.1",
     "webpack-merge": "^5.8.0"

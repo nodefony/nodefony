@@ -16,10 +16,10 @@
     "webpack": "^5.75.0"
   },
   "devDependencies": {
-    "@babel/core": "7.20.7",
+    "@babel/core": "7.20.12",
     "@babel/preset-env": "^7.20.2",
     "@popperjs/core": "2.11.6",
-    "babel-loader": "^9.1.0",
+    "babel-loader": "9.1.2",
     "bootstrap": "^5.2.3",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "6.7.3",
