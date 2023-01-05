@@ -65,7 +65,7 @@ module.exports = class sequlizeBuilder extends nodefony.Builder {
     case "create":
       return this.cli.setCommand("sequelize:create:database");
     case "sync":
-      return this.cli.setCommand("sequelize:sync");
+      return this.sync()
     case "migrate":
       return this.cli.setCommand("sequelize:migrate:up");
     case "migrateP":
@@ -80,4 +80,20 @@ module.exports = class sequlizeBuilder extends nodefony.Builder {
     }
   }
 
+  sync(){
+    return this.cli.prompt([{
+      type: 'list',
+      name: 'sync',
+      message: `Synchronize type`,
+      default: 0,
+      pageSize: 3,
+      choices: ["sync", "alter", "force"],
+      filter: (value) => {
+        return value;
+      }
+    }])
+    .then((response)=>{
+      return this.cli.setCommand("sequelize:sync", [response.sync]);
+    })
+  }
 };
