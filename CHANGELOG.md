@@ -1,3 +1,18 @@
+## [7.0.0-beta.14](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.13...v7.0.0-beta.14) (2023-01-06)
+
+
+### Features
+
+* **sequelize:** add sync alter on cli || manage response prompt ([e4ce684](https://github.com/nodefony/nodefony/commit/e4ce684e2625d788c3d97d6088b37b2dabb3fdc1))
+
+
+### Bug Fixes
+
+* **build:** changelog ([c6f3db9](https://github.com/nodefony/nodefony/commit/c6f3db9965572bef6b4e0c557cf4ef871fa29d3a))
+* **sequelize:** add users seeder ([ab36609](https://github.com/nodefony/nodefony/commit/ab3660978c6700cd90a9ea0cd98e5815dc616667))
+* **sequelize:** hash user  password on seed ([765e1c9](https://github.com/nodefony/nodefony/commit/765e1c9483a1ae3740fdd6720395ad453035dba7))
+* **sequelize:** sync and seed on install ([7a8cd21](https://github.com/nodefony/nodefony/commit/7a8cd21a233d7af59b4b5cddecb07f298633c11e))
+
 ## [7.0.0-beta.13](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.12...v7.0.0-beta.13) (2023-01-03)
 
 
