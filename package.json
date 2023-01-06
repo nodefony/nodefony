@@ -1,6 +1,6 @@
 {
   "name": "nodefony-core",
-  "version": "7.0.0-beta.13",
+  "version": "7.0.0-beta.14",
   "description": "Core Nodefony Node.js Web Framework",
   "main": "./src/nodefony/core/autoloader.es6",
   "scripts": {
