@@ -22,6 +22,7 @@ module.exports = class appKernel extends nodefony.kernel {
         })
       }
     } catch (e) {
+      console.error(e)
       throw e;
     }
   }
@@ -61,8 +62,8 @@ module.exports = class appKernel extends nodefony.kernel {
   }
 
   getVariableEnvironment() {
-    if (process.env.NODEFONY_ENV_APP) {
-      return process.env.NODEFONY_ENV_APP
+    if (process.env.NODEFONY_ENV) {
+      return process.env.NODEFONY_ENV
     }
     const production = process.env.NODE_ENV === "production"
     const development = process.env.NODE_ENV === "development"
