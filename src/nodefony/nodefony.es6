@@ -1,6 +1,11 @@
 const execSync = require('child_process').execSync;
 const uuid = require("uuid");
 
+const myobj = {}
+const hasOwn = myobj.hasOwnProperty
+const fnToString = hasOwn.toString;
+const ObjectFunctionString = fnToString.call(Object);
+const getProto = Object.getPrototypeOf
 /**
  *  The class is a **`Nodefony Nodefony `** .
  *  @class Nodefony
@@ -8,8 +13,6 @@ const uuid = require("uuid");
  *  @module Nodefony
  *
  */
-const myObj = {};
-
 class Nodefony {
 
   constructor(context) {
@@ -194,21 +197,25 @@ class Nodefony {
     return value === undefined;
   }
 
-  isPlainObject(obj) {
-    let proto, Ctor;
-    // Detect obvious negatives
-    // Use toString instead of jQuery.type to catch host objects
-    if (!obj || myObj.toString.call(obj) !== "[object Object]") {
+  isEmptyObject(obj) {
+    let name;
+    for (name in obj) {
       return false;
     }
-    proto = Object.getPrototypeOf(obj);
-    // Objects with no prototype (e.g., `Object.create( null )`) are plain
+    return true;
+  }
+
+  isPlainObject(obj) {
+    let proto, Ctor;
+    if (!obj || toString.call(obj) !== "[object Object]") {
+      return false;
+    }
+    proto = getProto(obj);
     if (!proto) {
       return true;
     }
-    // Objects with prototype are plain iff they were constructed by a global Object function
-    Ctor = myObj.hasOwnProperty.call(proto, "constructor") && proto.constructor;
-    return typeof Ctor === "function" && myObj.hasOwnProperty.toString.call(Ctor) === myObj.hasOwnProperty.toString.call(Object);
+    Ctor = hasOwn.call(proto, "constructor") && proto.constructor;
+    return typeof Ctor === "function" && fnToString.call(Ctor) === ObjectFunctionString;
   }
 
   /**
@@ -219,7 +226,6 @@ class Nodefony {
   typeOf(value) {
     let t = typeof value;
     if (t === 'object') {
-
       if (value === null) {
         return null;
       }
@@ -270,35 +276,38 @@ class Nodefony {
       i++;
     }
     // Handle case when target is a string or something (possible in deep copy)
-    if (typeof target !== "object" && this.isFunction(target)) {
+    if (typeof target !== "object" && typeof target !== "function") {
       target = {};
     }
-    // Extend jQuery itself if only one argument is passed
+    // Extend Nodefony itself if only one argument is passed
     if (i === length) {
       target = this;
       i--;
     }
     for (; i < length; i++) {
       // Only deal with non-null/undefined values
-      if ((options = arguments[i]) !== null) {
+      if ((options = arguments[i]) != null) {
         // Extend the base object
         for (name in options) {
-          src = target[name];
           copy = options[name];
+          // Prevent Object.prototype pollution
           // Prevent never-ending loop
-          if (target === copy) {
+          if (name === "__proto__" || target === copy) {
             continue;
           }
           // Recurse if we're merging plain objects or arrays
-          let bool = this.typeOf(copy);
-          if (deep && copy && (bool === "object" ||
-              (copyIsArray = (bool === "array")))) {
-            if (copyIsArray) {
-              copyIsArray = false;
-              clone = src && bool === "array" ? src : [];
+          if (deep && copy && (this.isPlainObject(copy) ||
+              (copyIsArray = Array.isArray(copy)))) {
+            src = target[name];
+            // Ensure proper type for the source value
+            if (copyIsArray && !Array.isArray(src)) {
+              clone = [];
+            } else if (!copyIsArray && !this.isPlainObject(src)) {
+              clone = {};
             } else {
-              clone = src && bool === "object" ? src : {};
+              clone = src;
             }
+            copyIsArray = false;
             // Never move original objects, clone them
             target[name] = this.extend(deep, clone, copy);
             // Don't bring in undefined values
@@ -855,13 +864,13 @@ class Nodefony {
           cli.setType("CONSOLE");
           process.env.MODE_START = "NODEFONY_CONSOLE";
           this.manageCache(cli);
-          try{
+          try {
             let kernel = new this.appKernel(environment, cli, options);
             return await kernel.start()
               .catch(e => {
                 throw e;
               });
-          }catch(e){
+          } catch (e) {
             console.error(e);
             throw e
           }
