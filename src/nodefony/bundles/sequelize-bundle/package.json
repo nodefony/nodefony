@@ -14,7 +14,7 @@
     "@alt3/sequelize-to-json-schemas": "^0.3.56",
     "cls-hooked": "^4.2.2",
     "mariadb": "^3.0.2",
-    "mysql2": "^2.3.3",
+    "mysql2": "3.0.1",
     "pg": "8.8.0",
     "pg-hstore": "^2.3.4",
     "pgtools": "^0.3.2",
