@@ -188,7 +188,7 @@ class SandBox extends nodefony.Builder {
     bundle.push({
       name: "package.json",
       type: "file",
-      skeleton: path.resolve(this.globalSkeleton, "package.json"),
+      skeleton: path.resolve(this.globalSkeleton, "package.json.twig"),
       params: this.response
     });
     bundle.push({

@@ -311,7 +311,7 @@ class generateProject extends nodefony.Builder {
         childs: [{
           name: "package.json",
           type: "file",
-          skeleton: path.resolve(this.pathSkeleton, "package.json.skeleton"),
+          skeleton: path.resolve(this.pathSkeleton, "package.json.twig"),
           params: this.response
         }, {
           name: ".gitignore",
