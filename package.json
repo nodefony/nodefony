@@ -15,7 +15,8 @@
     "certificates": "bash bin/generateCertificates.sh",
     "changelog": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -s -r 0",
     "dev-deploy": "bash bin/dev-deploy.sh",
-    "prod-deploy": "bash bin/prod-deploy.sh"
+    "prod-deploy": "bash bin/prod-deploy.sh",
+    "lint": "eslint ."
   },
   "private": true,
   "bin": {
@@ -64,13 +65,15 @@
   "devDependencies": {
     "@mapbox/node-pre-gyp": "1.0.10",
     "conventional-changelog-cli": "^2.2.2",
-    "editorconfig": "^1.0.1",
-    "jshint": "^2.13.6",
-    "node-gyp": "9.3.1"
+    "eslint": "^8.0.1",
+    "eslint-config-standard": "17.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-promise": "^6.0.0",
+    "node-gyp": "9.3.1",
+    "prettier": "2.8.3"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
-  "readmeFilename": "README.md",
-  "contributors": [
-    {}
-  ]
+  "readmeFilename": "README.md"
 }

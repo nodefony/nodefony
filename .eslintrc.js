@@ -1,0 +1,65 @@
+module.exports = {
+  env: {
+    browser: true,
+    node: true,
+    commonjs: true,
+    es2021: true
+  },
+  extends: ["standard"],
+  plugins: ["prettier"],
+  overrides: [],
+  parserOptions: {
+    ecmaVersion: "latest",
+    sourceType: "module"
+  },
+  globals: {
+    nodefony: true,
+    kernel: true,
+    process: true,
+    require: true,
+    console: true,
+    module: true,
+    exports: true,
+    yaml: true,
+    util: true,
+    fs: true,
+    path: true,
+    cluster: true,
+    xmlParser: true,
+    async: true,
+    crypto: true,
+    Sequelize: true,
+    url: true,
+    http: true,
+    https: true,
+    pm2: true,
+    WebSocketServer: true,
+    nodedomain: true,
+    dns: true,
+    Promise: true,
+    zone: true,
+    it: true,
+    describe: true,
+    before: true,
+    beforeEach: true,
+    BlueBird: true,
+    twig: true,
+    shell: true,
+    clc: true,
+    notDefinded: true,
+    varNotExit: true,
+    window: true,
+    document: true,
+    navigator: true,
+    stage: true,
+    $: true,
+    jQuery: true,
+    Rx: true,
+    inquirer: true,
+    workbox: true
+  },
+  rules: {
+    quotes: ["error", "double"]
+    // "prettier/prettier": "error"
+  }
+}

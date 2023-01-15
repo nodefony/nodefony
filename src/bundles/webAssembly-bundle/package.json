@@ -24,7 +24,7 @@
     "html-webpack-plugin": "^5.5.0",
     "imports-loader": "4.0.1",
     "mini-css-extract-plugin": "2.7.2",
-    "postcss": "8.4.20",
+    "postcss": "8.4.21",
     "postcss-loader": "7.0.2",
     "postcss-preset-env": "^7.8.3",
     "precss": "^4.0.0",
