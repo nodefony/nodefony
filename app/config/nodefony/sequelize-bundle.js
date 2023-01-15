@@ -72,10 +72,10 @@ if (nodefony.Sequelize) {
 }
 
 const vault = async () => {
-  const serviceVault = kernel.get("vault");
+  const serviceVault = kernel.get("vault")
   return await serviceVault.getSecret({
-      path: "nodefony/data/database/postgresql/connector/nodefony"
-    })
+    path: "nodefony/data/database/postgresql/connector/nodefony"
+  })
     .then((secret) => {
       return secret.data.data
     })
@@ -90,18 +90,15 @@ switch (kernel.appEnvironment.environment) {
   case "development":
   default:
     connectors.nodefony = {
-      driver: 'sqlite',
+      driver: "sqlite",
       dbname: path.resolve("app", "Resources", "databases", "nodefony.db"),
       options: {
         dialect: "sqlite",
-        //isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+        // isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
         retry: {
           match: [
-            //Sequelize.ConnectionError,
-            //Sequelize.ConnectionTimedOutError,
-            //Sequelize.TimeoutError,
             /Deadlock/i,
-            'SQLITE_BUSY'
+            "SQLITE_BUSY"
           ],
           max: Infinity
         },
@@ -112,7 +109,35 @@ switch (kernel.appEnvironment.environment) {
         }
       }
     }
-    /*connectors.nodefony = {
+    /* connectors.nodefony = {
+      driver: "mysql",
+      dbname: 'nodefony',
+      username: 'root',
+      password: 'nodefony',
+      //credentials: vault,
+      options: {
+        dialect: "mysql",
+        host: "localhost",
+        port: "3306",
+        //isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+        retry: {
+          match: [
+            Sequelize.ConnectionError,
+            Sequelize.ConnectionTimedOutError,
+            Sequelize.TimeoutError,
+            /Deadlock/i,
+          ],
+          max: 5
+        },
+        pool: {
+          max: 20,
+          min: 0,
+          idle: 10000,
+          acquire: 60000
+        }
+      }
+    } */
+    /* connectors.nodefony = {
       driver: "postgres",
       dbname: 'nodefony',
       username: 'postgres',
@@ -139,18 +164,18 @@ switch (kernel.appEnvironment.environment) {
           acquire: 60000
         }
       }
-    }*/
+    } */
 }
 
 module.exports = {
   debug: false,
   strategy: "migrate", // sync || migrate || none  when nodefony build  or  nodefony install
-  connectors: connectors,
+  connectors,
   migrations: {
     storage: "sequelize", // sequelize || memory || json
     path: path.resolve(kernel.path, "migrations", "sequelize"),
     seedeersPath: path.resolve(kernel.path, "migrations", "seedeers"),
-    storageSeedeers:"sequelize",
+    storageSeedeers: "sequelize",
     options: {}
   }
 }

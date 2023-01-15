@@ -17,9 +17,9 @@ module.exports = {
         //isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
         retry: {
           match: [
-            Sequelize.ConnectionError,
-            Sequelize.ConnectionTimedOutError,
-            Sequelize.TimeoutError,
+            //Sequelize.ConnectionError,
+            //Sequelize.ConnectionTimedOutError,
+            //Sequelize.TimeoutError,
             /Deadlock/i,
             'SQLITE_BUSY'
           ],
