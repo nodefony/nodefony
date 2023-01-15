@@ -1,7 +1,7 @@
 <template>
 <v-container fluid
              class="pa-0 w-100 h-100"
-             style="position:absolute">
+             >
 
 	<v-toolbar color="#233056"
 	           theme="dark"
@@ -29,7 +29,7 @@
 	<v-container v-if="services"
 	             fluid
 	             class="w-100 pa-0 h-100"
-	             style="position:absolute">
+	             >
 
 		<v-table fixed-header
 		         class="overflow-auto"

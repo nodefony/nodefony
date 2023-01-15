@@ -3,7 +3,8 @@ module.exports = {
     //  provides all functions for each API endpoint
     getSessions(obj, field, context, info) {
       const {
-        username
+        username,
+        query
       } = field
       if (username) {
         return this.getSessionsByUser(obj, field, context, info)
@@ -24,22 +25,31 @@ module.exports = {
               required: false
             }]
           };
-          if (field.query && field.query.type && field.query.type === "dataTable") {
-            options.offset = parseInt(field.query.start, 10);
-            options.limit = parseInt(field.query.length, 10);
-            if (field.query.order.length) {
+          if (query && query.type && query.type === "dataTable") {
+            options.offset = parseInt(query.startIndex, 10);
+            options.limit = parseInt(query.itemsPerPage, 10);
+            if (query.sortBy && query.sortBy.length) {
               options.order = [];
-              for (let i = 0; i < field.query.order.length; i++) {
+              for (let i = 0; i < query.sortBy.length; i++) {
+                const key=  query.sortBy[i].key
+                const order = query.sortBy[i].order
                 let tab = [];
-                tab.push(field.query.columns[parseInt(field.query.order[i].column, 10)].name);
-                tab.push(field.query.order[i].dir);
+                if( key === "user"){
+                  tab.push("username");
+                }else{
+                  tab.push(key);
+                }
+                tab.push(order);
                 options.order.push(tab);
               }
             }
             return sessionEntity.findAndCountAll(options)
               .then((results) => {
                 try {
-                  return results.rows;
+                  return {
+                    total: results.count,
+                    sessions:results.rows
+                  };
                 } catch (e) {
                   throw new nodefony.Error(error)
                 }
@@ -51,7 +61,10 @@ module.exports = {
           } else {
             return sessionEntity.findAndCountAll(options)
               .then((results) => {
-                return results.rows;
+                return {
+                  total: results.count,
+                  sessions:results.rows
+                };
               })
               .catch((error) => {
                 if (error) {

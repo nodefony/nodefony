@@ -29,6 +29,11 @@ const type = `
     user: User
   }
 
+  type resultSession {
+    sessions:[Session]
+    total: Int
+  }
+
   type Jwt {
     id: Int!
     refreshToken: String!
@@ -76,8 +81,8 @@ const type = `
     getEntitiesByConnector(name: String!): String
     getMigrations: String
     # sessions
-    getSessions(username: String): [Session]
-    getSessionsByUser(username: String!): [Session]
+    getSessions(username: String, query: Object): resultSession
+    getSessionsByUser(username: String!, query: Object): resultSession
     # Request
     getRequests: String
     getRequestsById(id: String!): String
