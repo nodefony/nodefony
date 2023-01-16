@@ -65,7 +65,7 @@
   "devDependencies": {
     "@mapbox/node-pre-gyp": "1.0.10",
     "conventional-changelog-cli": "^2.2.2",
-    "eslint": "^8.0.1",
+    "eslint": "8.32.0",
     "eslint-config-standard": "17.0.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0",

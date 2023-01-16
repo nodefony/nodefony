@@ -48,7 +48,7 @@
     "ansi-to-html": "0.7.2",
     "clean-webpack-plugin": "4.0.0",
     "core-js": "3.27.1",
-    "eslint": "8.31.0",
+    "eslint": "8.32.0",
     "eslint-plugin-vue": "9.9.0",
     "graphiql": "^2.2.0",
     "highlight.js": "^11.7.0",
