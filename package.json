@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "graphql": "16.6.0",
-    "mongoose": "6.8.3",
+    "mongoose": "6.8.4",
     "pm2": "^5.2.2",
     "pm2-logrotate": "^2.7.0",
     "sequelize": "6.28.0",
@@ -67,7 +67,7 @@
     "conventional-changelog-cli": "^2.2.2",
     "eslint": "8.32.0",
     "eslint-config-standard": "17.0.0",
-    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-import": "2.27.5",
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-promise": "^6.0.0",
