@@ -1,11 +1,18 @@
 module.exports = {
+  root: true,
   env: {
     browser: true,
     node: true,
     commonjs: true,
     es2021: true
   },
-  extends: ["standard"],
+  // Extends: ["standard"],
+  extends: [
+    "plugin:vue/vue3-essential",
+    // 'eslint:recommended',
+    "eslint:all"
+    // 'standard'
+  ],
   plugins: ["prettier"],
   overrides: [],
   parserOptions: {
@@ -59,7 +66,23 @@ module.exports = {
     workbox: true
   },
   rules: {
-    quotes: ["error", "double"]
+    "quotes": ["error", "double"],
+    "padded-blocks": ["error", "never"],
+    "id-length": ["error", {min: 1}],
+    "indent": ["error", 2],
+    "function-call-argument-newline": ["error", "consistent"],
+    "array-bracket-newline": ["error", "consistent"],
+    "quote-props": [0],
+    "no-return-await": [0],
+    "sort-keys": [0],
+    "array-element-newline": [0],
+    "dot-location": [0],
+    "multiline-comment-style": [0],
+    "capitalized-comments": [0],
+    "max-lines-per-function": ["warn", 100],
+    "no-await-in-loop": [0],
+    "max-statements": ["warn", 20],
+    "no-magic-numbers": [0]
     // "prettier/prettier": "error"
   }
-}
+};
