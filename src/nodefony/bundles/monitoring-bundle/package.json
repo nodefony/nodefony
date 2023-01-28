@@ -28,7 +28,7 @@
     "useragent": "2.3.0"
   },
   "devDependencies": {
-    "@apollo/client": "3.7.4",
+    "@apollo/client": "3.7.5",
     "@babel/core": "7.20.12",
     "@babel/eslint-parser": "7.19.1",
     "@babel/preset-env": "^7.20.2",
@@ -47,10 +47,10 @@
     "@vue/cli-service": "5.0.8",
     "ansi-to-html": "0.7.2",
     "clean-webpack-plugin": "4.0.0",
-    "core-js": "3.27.1",
+    "core-js": "3.27.2",
     "eslint": "8.32.0",
     "eslint-plugin-vue": "9.9.0",
-    "graphiql": "^2.2.0",
+    "graphiql": "2.2.0",
     "highlight.js": "^11.7.0",
     "html-webpack-plugin": "5.5.0",
     "i18n-iso-countries": "7.5.0",
@@ -81,7 +81,7 @@
     "webpack": "^5.75.0",
     "webpack-bundle-analyzer": "^4.7.0",
     "webpack-dev-server": "4.11.1",
-    "webpack-plugin-vuetify": "^2.0.0"
+    "webpack-plugin-vuetify": "2.0.1"
   },
   "resolutions": {},
   "repository": {

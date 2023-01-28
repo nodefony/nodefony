@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "graphql": "16.6.0",
-    "mongoose": "6.8.4",
+    "mongoose": "6.9.0",
     "pm2": "^5.2.2",
     "pm2-logrotate": "^2.7.0",
     "sequelize": "6.28.0",
@@ -68,10 +68,9 @@
     "eslint": "8.32.0",
     "eslint-config-standard": "17.0.0",
     "eslint-plugin-import": "2.27.5",
-    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-node": "11.1.0",
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-vue": "9.9.0",
     "node-gyp": "9.3.1",
     "prettier": "2.8.3"
   },

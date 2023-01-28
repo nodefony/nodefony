@@ -15,7 +15,7 @@
     "cls-hooked": "^4.2.2",
     "mariadb": "^3.0.2",
     "mysql2": "3.0.1",
-    "pg": "8.8.0",
+    "pg": "8.9.0",
     "pg-hstore": "^2.3.4",
     "pgtools": "^0.3.2",
     "sequelize": "6.28.0",
@@ -38,6 +38,6 @@
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "readme.md",
   "devDependencies": {
-    "sequelize-cli": "^6.5.2"
+    "sequelize-cli": "6.6.0"
   }
 }
