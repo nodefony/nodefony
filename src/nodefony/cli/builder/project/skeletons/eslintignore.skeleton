@@ -1,0 +1,15 @@
+assets
+**/assets/**
+app/Resources/public/assets/
+app/Resources/views/base.html.twig
+config/generatedConfig.yml
+app/Resources/databases/*
+web/*
+
+node_modules
+**/node_modules/**
+
+**/workbox-*
+**/hot/*
+**/service-worker.js
+

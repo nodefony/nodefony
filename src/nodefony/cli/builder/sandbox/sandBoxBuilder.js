@@ -123,7 +123,7 @@ class SandBox extends nodefony.Builder {
         childs: [{
             name: "package.json",
             type: "file",
-            skeleton: path.resolve(this.globalSkeleton, "package.json"),
+            skeleton: path.resolve(this.globalSkeleton, "package.json.twig"),
             params: this.response
           }, {
             name: "appKernel.js",

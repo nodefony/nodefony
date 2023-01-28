@@ -319,14 +319,14 @@ class generateProject extends nodefony.Builder {
           skeleton: path.resolve(this.pathSkeleton, "gitignore.skeleton"),
           params: this.response
         }, {
-          name: ".jshintrc",
+          name: ".eslintrc.js",
           type: "file",
-          skeleton: path.resolve(this.pathSkeleton, "jshintrc.skeleton"),
+          skeleton: path.resolve(this.pathSkeleton, "eslintrc.js.skeleton"),
           params: this.response
         }, {
-          name: ".jshintignore",
+          name: ".eslintignore",
           type: "file",
-          skeleton: path.resolve(this.pathSkeleton, "jshintignore.skeleton"),
+          skeleton: path.resolve(this.pathSkeleton, "eslintignore.skeleton"),
           params: this.response
         }, {
           name: ".editorconfig",

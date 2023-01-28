@@ -1,0 +1,97 @@
+module.exports = {
+  root: true,
+  env: {
+    browser: true,
+    node: true,
+    commonjs: true,
+    es2021: true
+  },
+  // Extends: ["standard"],
+  extends: [
+    "plugin:vue/vue3-essential",
+    // 'eslint:recommended',
+    "eslint:all"
+    // 'standard'
+  ],
+  plugins: ["prettier"],
+  overrides: [],
+  parserOptions: {
+    ecmaVersion: "latest",
+    sourceType: "module"
+  },
+  globals: {
+    nodefony: true,
+    kernel: true,
+    process: true,
+    require: true,
+    console: true,
+    module: true,
+    exports: true,
+    yaml: true,
+    util: true,
+    fs: true,
+    path: true,
+    cluster: true,
+    xmlParser: true,
+    async: true,
+    crypto: true,
+    Sequelize: true,
+    url: true,
+    http: true,
+    https: true,
+    pm2: true,
+    WebSocketServer: true,
+    nodedomain: true,
+    dns: true,
+    Promise: true,
+    zone: true,
+    it: true,
+    describe: true,
+    before: true,
+    beforeEach: true,
+    BlueBird: true,
+    twig: true,
+    shell: true,
+    clc: true,
+    notDefinded: true,
+    varNotExit: true,
+    window: true,
+    document: true,
+    navigator: true,
+    stage: true,
+    $: true,
+    jQuery: true,
+    Rx: true,
+    inquirer: true,
+    workbox: true
+  },
+  rules: {
+    "no-console": process.env.NODE_ENV === "production"
+      ? "warn"
+      : "off",
+    "no-debugger": process.env.NODE_ENV === "production"
+      ? "warn"
+      : "off",
+    "quotes": ["error", "double"],
+    "max-len": ["error", {"code": 150}],
+    "padded-blocks": ["error", "never"],
+    "id-length": ["error", {min: 1}],
+    "indent": ["error", 2],
+    "function-call-argument-newline": ["error", "consistent"],
+    "array-bracket-newline": ["error", "consistent"],
+    "quote-props": [0],
+    "no-return-await": [0],
+    "sort-keys": [0],
+    "array-element-newline": [0],
+    "dot-location": [0],
+    "multiline-comment-style": [0],
+    "capitalized-comments": [0],
+    "max-lines-per-function": ["warn", 100],
+    "no-await-in-loop": [0],
+    "max-statements": ["warn", 20],
+    "no-magic-numbers": [0],
+    "sort-vars": ["off"],
+    "no-ternary": ["off"],
+    "multiline-ternary": ["error", "always-multiline"]
+  }
+};
