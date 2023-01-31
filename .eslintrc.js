@@ -14,10 +14,11 @@ module.exports = {
   ],
   plugins: ["vue", "markdown"],
   overrides: [{
+    files: ["*.es6"]
+  }, {
     files: ["*.md"],
     parser: "markdown-eslint-parser"
-  },
-  {
+  }, {
     files: ["*.md.js"], // Will match js code inside *.md files
     rules: {
       // Example - disable 2 core eslint rules 'no-unused-vars' and 'no-undef'

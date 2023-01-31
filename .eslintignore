@@ -6,6 +6,17 @@ src/bundles/test-bundle/Resources/public/assets/
 src/bundles/webAssembly-bundle/build
 config/generatedConfig.yml
 src/bundles/webAssembly-bundle/build
+src/bundles/demo-bundle/Resources/public/clean
+src/bundles/demo-bundle/Resources/public/plugins
+src/bundles/demo-bundle/Resources/public/datatable
+src/bundles/demo-bundle/Resources/public/fancybox
+src/bundles/demo-bundle/Resources/public/flickity
+src/bundles/demo-bundle/Resources/public/webaudio/js/bootstrap-slider.js
+src/bundles/demo-bundle/Resources/public/webaudio/js/excanvas.js
+src/bundles/demo-bundle/Resources/public/webaudio/js/jquery.knob.js
+src/bundles/demo-bundle/Resources/public/js/smoothie.js
+src/bundles/demo-bundle/Resources/public/jQuery.filer-1.0.5
+src/bundles/webAssembly-bundle/*
 app/Resources/databases/*
 src/nodefony/cli/builder/skeletons/package.json
 **/skeletons/**
