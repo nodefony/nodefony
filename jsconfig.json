@@ -1,0 +1,10 @@
+{
+  "exclude": [
+    "node_modules",
+    "web",
+    "dist",
+    "assets",
+    "tools",
+    "tmp"
+  ]
+}

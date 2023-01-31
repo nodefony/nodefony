@@ -1,4 +1,5 @@
 {
+  "exclude": ["node_modules", "controller", "public","services", "vuepress"],
   "compilerOptions": {
     "target": "es5",
     "module": "esnext",
